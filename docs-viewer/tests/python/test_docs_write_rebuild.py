@@ -3,9 +3,12 @@
 
 from __future__ import annotations
 
+import json
 import sys
 import tempfile
 from pathlib import Path
+
+from repo_factory import docs_scope_record
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -38,6 +41,14 @@ def with_fake_python(value: str = "/tmp/python"):
     original = write_rebuild.PYTHON_EXECUTABLE
     write_rebuild.PYTHON_EXECUTABLE = value
     return original
+
+
+def write_scope_config(path: Path, scopes: list[dict[str, object]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps({"schema_version": "docs_scopes_v2", "scopes": scopes}, indent=2) + "\n",
+        encoding="utf-8",
+    )
 
 
 def test_rebuild_scope_outputs_preserves_full_command_shapes() -> None:
@@ -86,7 +97,7 @@ def test_rebuild_scope_outputs_extracts_docs_and_search_diagnostics() -> None:
             stdout=(
                 "Targeted search index JSON done. Wrote: 1. Skipped: 0. "
                 "Changed: 2. Removed: 1. Unchanged: 3. Full fallback: 0. "
-                "Path: docs-viewer/generated/search/studio/index.json\n"
+                "Path: docs-viewer/published/search/studio/index.json\n"
             )
         )
 
@@ -229,40 +240,30 @@ def test_targeted_docs_build_uses_index_tree_without_flat_index() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
         config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
-        config_path.parent.mkdir(parents=True)
-        config_path.write_text(
-            """{
-  "schema_version": "docs_scopes_v1",
-  "scopes": [
-    {
-      "scope_id": "library",
-      "source": "docs-viewer/source/library",
-      "media_path_prefix": "docs/library",
-      "output": "docs-viewer/generated/docs/library",
-      "search_output": "docs-viewer/generated/search/library/index.json",
-      "publish_output": "site/assets/data/docs/scopes/library",
-      "publish_search_output": "site/assets/data/search/library/index.json",
-      "viewer_base_url": "/library/",
-      "include_scope_param": false,
-      "default_doc_id": "library"
-    }
-  ]
-}
-""",
-            encoding="utf-8",
+        write_scope_config(
+            config_path,
+            [
+                docs_scope_record(
+                    "library",
+                    scope_type="public",
+                    viewer_base_url="/library/",
+                    include_scope_param=False,
+                    default_doc_id="library",
+                )
+            ],
         )
         source_root = repo_root / "docs-viewer/source/library"
         source_root.mkdir(parents=True)
         (source_root / "library.md").write_text("---\ndoc_id: library\ntitle: Library\n---\n# Library\n", encoding="utf-8")
         (source_root / "child.md").write_text("---\ndoc_id: child\ntitle: Child\n---\n# Child\n", encoding="utf-8")
-        (repo_root / "docs-viewer/generated/docs/library/by-id").mkdir(parents=True)
-        (repo_root / "docs-viewer/generated/docs/library/by-id/library.json").write_text("{}", encoding="utf-8")
-        (repo_root / "docs-viewer/generated/docs/library/index-tree.json").write_text(
+        (repo_root / "docs-viewer/published/docs/library/by-id").mkdir(parents=True)
+        (repo_root / "docs-viewer/published/docs/library/by-id/library.json").write_text("{}", encoding="utf-8")
+        (repo_root / "docs-viewer/published/docs/library/index-tree.json").write_text(
             """{"docs":[{"doc_id":"library","children":[{"doc_id":"child"}]}]}""",
             encoding="utf-8",
         )
-        (repo_root / "docs-viewer/generated/docs/library/references").mkdir(parents=True)
-        (repo_root / "docs-viewer/generated/docs/library/references/index.json").write_text("{}", encoding="utf-8")
+        (repo_root / "docs-viewer/published/docs/library/references").mkdir(parents=True)
+        (repo_root / "docs-viewer/published/docs/library/references/index.json").write_text("{}", encoding="utf-8")
 
         reason = write_rebuild.targeted_docs_build_fallback_reason(repo_root, "library", ["child"])
 
@@ -363,27 +364,7 @@ def test_current_scope_source_root_uses_fresh_repo_config() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
         config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
-        config_path.parent.mkdir(parents=True)
-        config_path.write_text(
-            """{
-  "schema_version": "docs_scopes_v1",
-  "scopes": [
-    {
-      "scope_id": "fresh-scope",
-      "scope_type": "local",
-      "source": "docs-viewer/source/fresh-scope",
-      "media_path_prefix": "docs/fresh-scope",
-      "output": "docs-viewer/generated/docs/fresh-scope",
-      "search_output": "docs-viewer/generated/search/fresh-scope/index.json",
-      "viewer_base_url": "/docs/",
-      "include_scope_param": true,
-      "default_doc_id": ""
-    }
-  ]
-}
-""",
-            encoding="utf-8",
-        )
+        write_scope_config(config_path, [docs_scope_record("fresh-scope")])
 
         root = write_rebuild.current_scope_source_root(repo_root, "fresh-scope")
 
@@ -523,26 +504,7 @@ def test_rebuild_all_docs_outputs_uses_current_scope_config() -> None:
         with tempfile.TemporaryDirectory() as temp_path:
             repo_root = Path(temp_path)
             config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
-            config_path.parent.mkdir(parents=True)
-            config_path.write_text(
-                """{
-  "schema_version": "docs_scopes_v1",
-  "scopes": [
-    {
-      "scope_id": "studio",
-      "source": "docs-viewer/source/studio",
-      "media_path_prefix": "docs/studio",
-      "output": "docs-viewer/generated/docs/studio",
-      "search_output": "docs-viewer/generated/search/studio/index.json",
-      "viewer_base_url": "/docs/",
-      "include_scope_param": true,
-      "default_doc_id": "dev-home"
-    }
-  ]
-}
-""",
-                encoding="utf-8",
-            )
+            write_scope_config(config_path, [docs_scope_record("studio", default_doc_id="dev-home")])
             result = write_rebuild.rebuild_all_docs_outputs(repo_root)
     finally:
         write_rebuild.subprocess.run = original_run
@@ -569,33 +531,17 @@ def test_rebuild_all_docs_outputs_rejects_local_assets_outputs() -> None:
         with tempfile.TemporaryDirectory() as temp_path:
             repo_root = Path(temp_path)
             config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
-            config_path.parent.mkdir(parents=True)
-            config_path.write_text(
-                """{
-  "schema_version": "docs_scopes_v1",
-  "scopes": [
-    {
-      "scope_id": "studio",
-      "source": "docs-viewer/source/studio",
-      "media_path_prefix": "docs/studio",
-      "output": "site/assets/data/docs/scopes/studio",
-      "search_output": "site/assets/data/search/studio/index.json",
-      "viewer_base_url": "/docs/",
-      "include_scope_param": true,
-      "default_doc_id": "dev-home"
-    }
-  ]
-}
-""",
-                encoding="utf-8",
-            )
+            record = docs_scope_record("studio", default_doc_id="dev-home")
+            record["published"]["documents"]["location"]["path"] = "site/assets/data/docs/scopes/studio"
+            record["published"]["search"]["location"]["path"] = "site/assets/data/search/studio/index.json"
+            write_scope_config(config_path, [record])
             try:
                 write_rebuild.rebuild_all_docs_outputs(repo_root)
             except ValueError as exc:
-                assert "local scope 'studio'" in str(exc)
-                assert "site/assets/data/docs/scopes" in str(exc)
+                assert "scopes[0].published.documents" in str(exc)
+                assert "docs-viewer/published/docs" in str(exc)
             else:
-                raise AssertionError("Expected docs rebuild to reject local public generated roots")
+                raise AssertionError("Expected docs rebuild to reject a public path used for local published output")
     finally:
         write_rebuild.subprocess.run = original_run
         write_rebuild.PYTHON_EXECUTABLE = original_python

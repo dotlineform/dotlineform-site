@@ -13,7 +13,7 @@ if str(DOCS_BUILD_DIR) not in sys.path:
     sys.path.insert(0, str(DOCS_BUILD_DIR))
 
 from build_docs import DocsDataBuilder, DocRecord, parse_source  # noqa: E402
-from docs_scope_config import DocsScopeConfig, load_docs_scope_configs, resolve_scope_path  # noqa: E402
+from docs_scope_config import DocsScopeConfig, document_source_path, load_docs_scope_configs, resolve_scope_path  # noqa: E402
 from docs_data_sharing.rendered_content import doc_content_text  # noqa: E402
 from docs_data_sharing.source_records import (  # noqa: E402
     DataSharingDocsSourceRecord,
@@ -54,9 +54,11 @@ def load_data_sharing_docs_source_context(repo_root: Path, scope: str) -> DataSh
     if config is None:
         raise ValueError(f"unknown docs scope for Data Sharing source context: {scope}")
 
-    source_root = resolve_scope_path(root, config.source)
+    source_root = resolve_scope_path(root, document_source_path(config))
     if not source_root.exists() or not source_root.is_dir():
-        raise RuntimeError(f"missing source root for scope {normalized_scope}: {config.source.as_posix()}")
+        raise RuntimeError(
+            f"missing source root for scope {normalized_scope}: {document_source_path(config).as_posix()}"
+        )
 
     builder = DocsDataBuilder(repo_root=root, config=config)
     source_docs = builder.load_docs()

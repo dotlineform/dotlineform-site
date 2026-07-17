@@ -43,8 +43,8 @@ External body.
         )
         try:
             exit_code, stdout, stderr = run_cli(root, ["--scope", "private", "--write"])
-            index_tree = read_json(external_root / "generated/docs/private/index-tree.json")
-            payload = read_json(external_root / f"generated/docs/private/by-id/{PRIVATE_DOC_ID}.json")
+            index_tree = read_json(external_root / "published/docs/private/index-tree.json")
+            payload = read_json(external_root / f"published/docs/private/by-id/{PRIVATE_DOC_ID}.json")
         finally:
             if old_projects_base is None:
                 os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
@@ -54,5 +54,5 @@ External body.
     assert exit_code == 0
     assert stderr == ""
     assert "scope=private" in stdout
-    assert index_tree["docs"][0]["content_url"] == f"/docs/generated/payload?scope=private&doc_id={PRIVATE_DOC_ID}"
+    assert index_tree["docs"][0]["content_url"] == f"/docs/doc?scope=private&doc_id={PRIVATE_DOC_ID}"
     assert payload["doc_id"] == PRIVATE_DOC_ID

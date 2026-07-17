@@ -7,7 +7,15 @@ import json
 from pathlib import Path
 from typing import Any
 
-from docs_scope_config import CONFIG_REL_PATH, DocsScopeConfig, load_docs_scope_configs, path_label, resolve_scope_path
+from docs_scope_config import (
+    CONFIG_REL_PATH,
+    DocsScopeConfig,
+    document_source_path,
+    load_docs_scope_configs,
+    published_documents_path,
+    published_search_path,
+    resolve_scope_path,
+)
 
 
 BROWSER_CONFIG_REL_PATH = Path("docs-viewer/config/defaults/docs-viewer-config.json")
@@ -61,16 +69,16 @@ def _browser_docs_viewer_settings(repo_root: Path) -> dict[str, Any]:
     return docs_viewer if isinstance(docs_viewer, dict) else {}
 
 
-def generated_docs_index_tree_path(repo_root: Path, config: DocsScopeConfig) -> Path:
-    return resolve_scope_path(repo_root, config.output) / "index-tree.json"
+def published_docs_index_tree_path(repo_root: Path, config: DocsScopeConfig) -> Path:
+    return resolve_scope_path(repo_root, published_documents_path(config)) / "index-tree.json"
 
 
 def _read_viewer_options(repo_root: Path, config: DocsScopeConfig) -> tuple[dict[str, Any], list[str]]:
-    index_tree_path = generated_docs_index_tree_path(repo_root, config)
+    index_tree_path = published_docs_index_tree_path(repo_root, config)
     warnings: list[str] = []
     payload = _load_json(index_tree_path, f"generated docs index tree for {config.scope_id}")
     if not payload:
-        warnings.append(f"Generated docs index tree is missing: {path_label(repo_root, index_tree_path)}")
+        warnings.append("Published docs index tree is missing.")
         return {}, warnings
     viewer_options = payload.get("viewer_options")
     if viewer_options is None:
@@ -93,18 +101,12 @@ def _safe_raw_subset(raw: dict[str, Any]) -> dict[str, Any]:
     allowed = {
         "scope_id",
         "scope_type",
-        "source",
-        "media_path_prefix",
-        "output",
-        "search_output",
         "viewer_base_url",
         "include_scope_param",
         "default_doc_id",
         "non_loadable_doc_ids",
         "manage_only_tree_root_ids",
         "allow_unresolved_parent_ids",
-        "import_media_storage",
-        "sub_scopes",
     }
     return {key: raw[key] for key in sorted(allowed) if key in raw}
 
@@ -133,18 +135,27 @@ def build_source_config_report(repo_root: Path) -> dict[str, Any]:
                 "browser_config": browser,
                 "browser_config_path": BROWSER_CONFIG_REL_PATH.as_posix(),
                 "viewer_options": viewer_options,
-                "generated": {
-                    "docs_output": path_label(repo_root, config.output),
-                    "docs_index_tree": path_label(repo_root, generated_docs_index_tree_path(repo_root, config)),
-                    "recent": path_label(repo_root, resolve_scope_path(repo_root, config.output) / "recent.json"),
-                    "docs_payload_root": path_label(repo_root, resolve_scope_path(repo_root, config.output) / "by-id"),
-                    "search_index": path_label(repo_root, config.search_output),
-                    "publish_output": config.publish_output.as_posix(),
-                    "publish_search_index": config.publish_search_output.as_posix(),
+                "artifacts": {
+                    "published_documents_available": published_docs_index_tree_path(repo_root, config).is_file(),
+                    "published_search_available": resolve_scope_path(
+                        repo_root,
+                        published_search_path(config),
+                    ).is_file(),
+                },
+                "roles": {
+                    "source": {"provider": config.source.location.provider},
+                    "published_documents": {"provider": config.published.documents.location.provider},
+                    "published_search": {"provider": config.published.search.location.provider},
+                    "media": {
+                        media_type: {
+                            "provider": media.location.provider,
+                            "reference_prefix": media.reference_prefix.as_posix(),
+                            "served_path_prefix": media.served_path_prefix,
+                        }
+                        for media_type, media in sorted(config.published.media.items())
+                    },
                 },
                 "paths": {
-                    "source_root": path_label(repo_root, config.source),
-                    "media_path_prefix": config.media_path_prefix.as_posix(),
                     "route_base": config.viewer_base_url,
                 },
                 "warnings": warnings,

@@ -10,7 +10,7 @@ from typing import Any
 
 from bs4 import BeautifulSoup
 
-from docs_scope_config import SCOPE_ROOTS
+from docs_scope_config import DOCUMENT_SOURCE_ROOTS
 
 HTML_STAGED_SUFFIXES = {".html", ".htm"}
 MARKDOWN_STAGED_SUFFIXES = {".md", ".markdown"}
@@ -129,8 +129,8 @@ def relative_path(base: Path, path: Path) -> str:
 
 def normalize_scope(scope: str) -> str:
     value = str(scope or "").strip().lower()
-    if value not in SCOPE_ROOTS:
-        raise ValueError(f"scope must be one of: {', '.join(sorted(SCOPE_ROOTS.keys()))}")
+    if value not in DOCUMENT_SOURCE_ROOTS:
+        raise ValueError(f"scope must be one of: {', '.join(sorted(DOCUMENT_SOURCE_ROOTS.keys()))}")
     return value
 
 

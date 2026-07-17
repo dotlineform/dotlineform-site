@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Scope-aware Docs Viewer media storage and R2 publication."""
+"""Scope-aware Docs Viewer media placement and publication."""
 
 from __future__ import annotations
 
@@ -7,37 +7,33 @@ import datetime as dt
 import mimetypes
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Iterable, Mapping, Protocol, Sequence
+from typing import Iterable, Mapping, Sequence
 
+from docs_artifact_locations import (
+    EXTERNAL_LOCAL_PROVIDER,
+    REPOSITORY_PROVIDER,
+    REPLACE_CAPABILITY,
+    STAT_CAPABILITY,
+    VERIFY_BYTES_CAPABILITY,
+    WRITE_CAPABILITY,
+    ArtifactLocationAdapter,
+    ArtifactStat,
+    artifact_location_adapter,
+    authenticated_remote_client_for_locations,
+)
 from docs_scope_config import (
-    LOCAL_EXTERNAL_SCOPE_TYPE,
+    DocsPublishedMediaConfig,
     DocsScopeConfig,
     load_docs_scope_configs,
-    resolve_external_data_root,
-    resolve_scope_path,
+    published_media_config,
 )
 from services.paths import configured_workspace_paths
-from studio.services.media.publish_media_to_r2 import (
-    DEFAULT_ENV_FILES,
-    R2Client,
-    RemoteObject,
-    content_type_for,
-    file_md5,
-    load_r2_credentials,
-)
+from studio.services.media.publish_media_to_r2 import content_type_for, file_md5
 
 
 DOCS_MEDIA_CLASSES = {"files", "img"}
 DOCS_MEDIA_ROUTE_PREFIX = "/docs/media/"
 SUCCESSFUL_UPLOAD_STATUSES = {"unchanged", "uploaded", "overwritten"}
-
-
-class DocsRemoteClient(Protocol):
-    def head_object(self, key: str) -> RemoteObject | None:
-        ...
-
-    def put_object(self, key: str, path: Path, content_type: str) -> None:
-        ...
 
 
 @dataclass(frozen=True)
@@ -47,7 +43,6 @@ class DocsMediaFile:
     filename: str
     local_path: Path
     source_root: Path
-    object_key: str
     size: int
     md5: str
 
@@ -83,18 +78,6 @@ def validate_media_filename(value: str) -> str:
     return filename
 
 
-def docs_media_object_key(config: DocsScopeConfig, media_class: str, filename: str) -> str:
-    normalized_class = validate_media_class(media_class)
-    normalized_filename = validate_media_filename(filename)
-    prefix = config.media_path_prefix.as_posix().strip("/")
-    expected_prefix = f"docs/{config.scope_id}"
-    if prefix != expected_prefix:
-        raise ValueError(
-            f"R2 Docs media scope {config.scope_id!r} must use media_path_prefix {expected_prefix!r}"
-        )
-    return f"{prefix}/{normalized_class}/{normalized_filename}"
-
-
 def docs_media_file(
     config: DocsScopeConfig,
     *,
@@ -104,6 +87,7 @@ def docs_media_file(
     filename: str | None = None,
 ) -> DocsMediaFile:
     normalized_class = validate_media_class(media_class)
+    published_media_config(config, normalized_class)
     normalized_filename = validate_media_filename(filename or local_path.name)
     resolved_root = source_root.resolve()
     resolved_path = local_path.resolve()
@@ -117,22 +101,21 @@ def docs_media_file(
         filename=normalized_filename,
         local_path=resolved_path,
         source_root=resolved_root,
-        object_key=docs_media_object_key(config, normalized_class, normalized_filename),
         size=resolved_path.stat().st_size,
         md5=file_md5(resolved_path),
     )
 
 
-def remote_matches(item: DocsMediaFile, remote: RemoteObject) -> bool:
-    etag = remote.etag.strip().strip('"').lower()
-    return remote.size == item.size and etag == item.md5
+def artifact_matches(item: DocsMediaFile, stat: ArtifactStat, adapter: ArtifactLocationAdapter) -> bool:
+    if stat.size != item.size:
+        return False
+    etag = stat.etag.strip().strip('"').lower()
+    if etag and "-" not in etag:
+        return etag == item.md5
+    return adapter.verify_bytes(item.filename, item.local_path.read_bytes())
 
 
-def _result(
-    item: DocsMediaFile,
-    status: str,
-    reason: str = "",
-) -> DocsMediaPublishResult:
+def _result(item: DocsMediaFile, status: str, reason: str = "") -> DocsMediaPublishResult:
     return DocsMediaPublishResult(
         scope=item.scope,
         media_class=item.media_class,
@@ -146,44 +129,57 @@ def _result(
 def plan_and_publish_docs_media(
     files: Sequence[DocsMediaFile],
     *,
-    client: DocsRemoteClient,
+    adapters: Mapping[str, ArtifactLocationAdapter],
     write: bool,
     force: bool,
 ) -> list[DocsMediaPublishResult]:
-    """Preflight a complete Docs media set, then publish it without exposing remote keys."""
+    """Preflight a complete logical media set, then publish through location adapters."""
 
     if not files:
         return []
     identities = [(item.scope, item.media_class, item.filename) for item in files]
     if len(set(identities)) != len(identities):
         raise ValueError("Docs media publication contains duplicate scope/class/filename identities")
+    for media_class in {item.media_class for item in files}:
+        adapter = adapters.get(media_class)
+        if adapter is None:
+            raise ValueError(f"Docs media role {media_class!r} has no location adapter")
+        adapter.require(
+            WRITE_CAPABILITY,
+            REPLACE_CAPABILITY,
+            STAT_CAPABILITY,
+            VERIFY_BYTES_CAPABILITY,
+            role=f"published.media.{media_class}",
+        )
 
-    checked: list[tuple[DocsMediaFile, RemoteObject | None, str]] = []
+    checked: list[tuple[DocsMediaFile, ArtifactStat | None, str]] = []
     preflight_failed = False
     for item in files:
+        adapter = adapters[item.media_class]
         try:
-            remote = client.head_object(item.object_key)
-        except Exception:  # pragma: no cover - defensive remote boundary
+            existing = adapter.stat(item.filename)
+            matches = existing is not None and artifact_matches(item, existing, adapter)
+        except Exception:  # pragma: no cover - defensive provider boundary
             checked.append((item, None, "failed"))
             preflight_failed = True
             continue
-        if remote is not None and remote_matches(item, remote):
-            checked.append((item, remote, "unchanged"))
-        elif remote is not None and not force:
-            checked.append((item, remote, "blocked_changed"))
+        if matches:
+            checked.append((item, existing, "unchanged"))
+        elif existing is not None and not force:
+            checked.append((item, existing, "blocked_changed"))
             preflight_failed = True
         else:
-            checked.append((item, remote, "ready"))
+            checked.append((item, existing, "ready"))
 
     if preflight_failed:
         results: list[DocsMediaPublishResult] = []
-        for item, _remote, status in checked:
+        for item, _existing, status in checked:
             if status == "failed":
-                results.append(_result(item, status, "remote comparison failed"))
+                results.append(_result(item, status, "artifact comparison failed"))
             elif status == "blocked_changed":
-                results.append(_result(item, status, "remote object differs; use a new filename or force the CLI upload"))
+                results.append(_result(item, status, "published bytes differ; use a new filename or an explicit force"))
             elif status == "unchanged":
-                results.append(_result(item, status, "remote bytes already match"))
+                results.append(_result(item, status, "published bytes already match"))
             else:
                 results.append(_result(item, "not_attempted", "complete-set preflight did not pass"))
         return results
@@ -192,29 +188,52 @@ def plan_and_publish_docs_media(
         return [
             _result(
                 item,
-                "unchanged" if status == "unchanged" else "would_overwrite" if remote is not None else "would_upload",
-                "remote bytes already match" if status == "unchanged" else "dry-run",
+                "unchanged" if status == "unchanged" else "would_overwrite" if existing is not None else "would_upload",
+                "published bytes already match" if status == "unchanged" else "dry-run",
             )
-            for item, remote, status in checked
+            for item, existing, status in checked
         ]
 
-    results = []
-    upload_failed = False
-    for item, remote, status in checked:
+    results: list[DocsMediaPublishResult] = []
+    write_failed = False
+    for item, existing, status in checked:
         if status == "unchanged":
-            results.append(_result(item, "unchanged", "remote bytes already match"))
+            results.append(_result(item, "unchanged", "published bytes already match"))
             continue
-        if upload_failed:
-            results.append(_result(item, "not_attempted", "stopped after a remote upload failure"))
+        if write_failed:
+            results.append(_result(item, "not_attempted", "stopped after a publication failure"))
             continue
+        adapter = adapters[item.media_class]
         try:
-            client.put_object(item.object_key, item.local_path, content_type_for(item.local_path))
-        except Exception:  # pragma: no cover - defensive remote boundary
-            results.append(_result(item, "failed", "remote upload failed"))
-            upload_failed = True
+            data = item.local_path.read_bytes()
+            adapter.replace(item.filename, data, content_type=content_type_for(item.local_path))
+            if not adapter.verify_bytes(item.filename, data):
+                raise RuntimeError("published bytes did not verify")
+        except Exception:  # pragma: no cover - defensive provider boundary
+            results.append(_result(item, "failed", "artifact publication failed"))
+            write_failed = True
             continue
-        results.append(_result(item, "overwritten" if remote is not None else "uploaded"))
+        results.append(_result(item, "overwritten" if existing is not None else "uploaded"))
     return results
+
+
+def media_adapters_for_scope(
+    repo_root: Path,
+    config: DocsScopeConfig,
+    media_classes: Iterable[str],
+    *,
+    remote_client: object | None = None,
+) -> dict[str, ArtifactLocationAdapter]:
+    adapters: dict[str, ArtifactLocationAdapter] = {}
+    for media_class in sorted(set(media_classes)):
+        media = published_media_config(config, media_class)
+        adapters[media_class] = artifact_location_adapter(
+            repo_root,
+            media.location,
+            served_path_prefix=media.served_path_prefix,
+            remote_client=remote_client,  # type: ignore[arg-type]
+        )
+    return adapters
 
 
 def publish_docs_media_files(
@@ -223,7 +242,7 @@ def publish_docs_media_files(
     *,
     write: bool,
     force: bool = False,
-    client: DocsRemoteClient | None = None,
+    client: object | None = None,
     env_files: Iterable[Path] | None = None,
     environ: Mapping[str, str] | None = None,
 ) -> list[DocsMediaPublishResult]:
@@ -236,25 +255,23 @@ def publish_docs_media_files(
     config = load_docs_scope_configs(repo_root).get(scope)
     if config is None:
         raise ValueError(f"Unknown Docs media scope: {scope!r}")
-    if config.scope_type != "public" or config.import_media_storage.storage_mode != "r2_upload":
-        raise ValueError(f"Docs media scope {scope!r} is not configured for public R2 publication")
-    for item in files:
-        expected_key = docs_media_object_key(config, item.media_class, item.filename)
-        if item.object_key != expected_key:
-            raise ValueError("Docs media object key does not match the configured scope contract")
 
-    remote_client = client
-    if remote_client is None:
-        selected_env_files = list(env_files) if env_files is not None else [
-            repo_root / path for path in DEFAULT_ENV_FILES
-        ]
-        try:
-            credentials = load_r2_credentials(env_files=selected_env_files, environ=environ)
-        except SystemExit as exc:
-            message = str(exc).removeprefix("Error: ")
-            raise RuntimeError(message) from exc
-        remote_client = R2Client(credentials)
-    return plan_and_publish_docs_media(files, client=remote_client, write=write, force=force)
+    media_classes = {item.media_class for item in files}
+    locations = [published_media_config(config, media_class).location for media_class in media_classes]
+    remote_client = authenticated_remote_client_for_locations(
+        repo_root,
+        locations,
+        client=client,  # type: ignore[arg-type]
+        env_files=env_files,
+        environ=environ,
+    )
+    adapters = media_adapters_for_scope(
+        repo_root,
+        config,
+        media_classes,
+        remote_client=remote_client,
+    )
+    return plan_and_publish_docs_media(files, adapters=adapters, write=write, force=force)
 
 
 def docs_publish_succeeded(results: Sequence[DocsMediaPublishResult]) -> bool:
@@ -275,7 +292,7 @@ def docs_publish_report(
         "generated_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "scope": "docs",
         "docs_scope": scope,
-        "action": "upload",
+        "action": "publish",
         "mode": "write" if write else "dry-run",
         "force": force,
         "counts": dict(sorted(counts.items())),
@@ -291,7 +308,7 @@ def run_docs_staged_media_publish(
     staged_filename: str,
     write: bool,
     force: bool,
-    client: DocsRemoteClient | None = None,
+    client: object | None = None,
     env_files: Iterable[Path] | None = None,
     environ: Mapping[str, str] | None = None,
 ) -> dict[str, object]:
@@ -321,30 +338,23 @@ def run_docs_staged_media_publish(
     return docs_publish_report(scope=config.scope_id, results=results, write=write, force=force)
 
 
-def scope_owned_media_root_for_scope(repo_root: Path, config: DocsScopeConfig) -> Path:
-    storage_mode = config.import_media_storage.storage_mode
-    if config.scope_type == "public" or storage_mode not in {"external_assets", "repo_assets"}:
-        raise ValueError(f"Docs scope {config.scope_id!r} does not use scope-owned local media")
-    resolved_repo_root = repo_root.resolve()
-    source_root = resolve_scope_path(resolved_repo_root, config.source).resolve()
-    containment_root = (
-        resolve_external_data_root().resolve()
-        if config.scope_type == LOCAL_EXTERNAL_SCOPE_TYPE
-        else resolved_repo_root
-    )
-    if not source_root.is_relative_to(containment_root):
-        raise ValueError("Docs source root escapes its configured storage boundary")
+def local_media_config(config: DocsScopeConfig, media_class: str) -> DocsPublishedMediaConfig:
+    media = published_media_config(config, validate_media_class(media_class))
+    if media.location.provider not in {REPOSITORY_PROVIDER, EXTERNAL_LOCAL_PROVIDER}:
+        raise ValueError(
+            f"Docs scope {config.scope_id!r} media role {media_class!r} is not locally served"
+        )
+    return media
 
-    media_root = (source_root / "media").resolve()
-    if not media_root.is_relative_to(source_root):
-        raise ValueError("Docs media root escapes the scope source root")
-    if storage_mode == "repo_assets":
-        configured_root = (
-            resolved_repo_root / config.import_media_storage.repo_assets_path_prefix
-        ).resolve()
-        if configured_root != media_root:
-            raise ValueError("Repo Docs media root must be the scope source media directory")
-    return media_root
+
+def scope_owned_media_root_for_scope(repo_root: Path, config: DocsScopeConfig) -> Path:
+    roots = {
+        artifact_location_adapter(repo_root, local_media_config(config, media_class).location).root.parent
+        for media_class in sorted(DOCS_MEDIA_CLASSES)
+    }
+    if len(roots) != 1:
+        raise ValueError(f"Docs scope {config.scope_id!r} local media types do not share one owned media root")
+    return next(iter(roots))
 
 
 def ensure_media_directory_structure(
@@ -356,7 +366,6 @@ def ensure_media_directory_structure(
     source_root = resolved_media_root.parent
     if not source_root.is_dir():
         raise FileNotFoundError(f"Docs scope source root does not exist: {source_root}")
-
     directories = (
         resolved_media_root,
         *(resolved_media_root / media_class for media_class in sorted(DOCS_MEDIA_CLASSES)),
@@ -383,15 +392,17 @@ def ensure_configured_scope_owned_media_directories(
     configured_scopes = configs if configs is not None else load_docs_scope_configs(repo_root)
     materialized: dict[str, tuple[Path, ...]] = {}
     for scope_id, config in configured_scopes.items():
-        if (
-            config.scope_type == "public"
-            or config.import_media_storage.storage_mode not in {"external_assets", "repo_assets"}
-        ):
+        providers = {
+            media.location.provider
+            for media_type, media in config.published.media.items()
+            if media_type in DOCS_MEDIA_CLASSES
+        }
+        if not providers or not providers.issubset({REPOSITORY_PROVIDER, EXTERNAL_LOCAL_PROVIDER}):
             continue
         media_root = scope_owned_media_root_for_scope(repo_root, config)
         materialized[scope_id] = ensure_media_directory_structure(
             media_root,
-            keep_in_source_control=config.import_media_storage.storage_mode == "repo_assets",
+            keep_in_source_control=providers == {REPOSITORY_PROVIDER},
         )
     return materialized
 
@@ -415,9 +426,10 @@ def local_media_path_from_route(repo_root: Path, request_path: str) -> tuple[Pat
     config = load_docs_scope_configs(repo_root).get(scope)
     if config is None:
         raise FileNotFoundError(f"Docs media scope not found: {scope!r}")
-    root = scope_owned_media_root_for_scope(repo_root, config)
-    path = (root / normalized_class / normalized_filename).resolve()
-    if not path.is_relative_to(root) or not path.is_file():
+    media = local_media_config(config, normalized_class)
+    adapter = artifact_location_adapter(repo_root, media.location, served_path_prefix=media.served_path_prefix)
+    path = adapter.resolve(normalized_filename)  # type: ignore[attr-defined]
+    if not path.is_file():
         raise FileNotFoundError(f"Docs media file not found: {scope}/{normalized_class}/{normalized_filename}")
     return path, normalized_class
 
@@ -434,17 +446,19 @@ __all__ = [
     "DOCS_MEDIA_ROUTE_PREFIX",
     "DocsMediaFile",
     "DocsMediaPublishResult",
+    "artifact_matches",
     "docs_media_file",
-    "docs_media_object_key",
     "docs_publish_report",
     "docs_publish_succeeded",
     "ensure_configured_scope_owned_media_directories",
     "ensure_media_directory_structure",
+    "local_media_config",
     "local_media_path_from_route",
     "local_media_route",
+    "media_adapters_for_scope",
     "plan_and_publish_docs_media",
     "publish_docs_media_files",
-    "scope_owned_media_root_for_scope",
     "run_docs_staged_media_publish",
     "safe_content_type",
+    "scope_owned_media_root_for_scope",
 ]

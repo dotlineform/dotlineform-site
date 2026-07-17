@@ -16,6 +16,7 @@ import docs_source_model as source_model
 from docs_scope_config import (
     DocsScopeConfig,
     PUBLIC_SCOPE_TYPE,
+    document_source_path,
     load_docs_scope_configs,
     resolve_scope_path,
 )
@@ -177,7 +178,7 @@ def require_copy_source_root(
         raise ValueError(
             f"public target scope {config.scope_id!r} is not available for subtree copy"
         )
-    root = resolve_scope_path(repo_root, config.source)
+    root = resolve_scope_path(repo_root, document_source_path(config))
     if not root.exists() or not root.is_dir():
         raise ValueError(f"source root for scope {config.scope_id!r} is unavailable")
     if not os.access(root, os.R_OK | os.X_OK):

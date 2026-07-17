@@ -9,7 +9,20 @@
       "viewer_base_url": "/library/",
       "include_scope_param": false,
       "default_doc_id": "d-20260330-172255-8399b7",
-      "media_path_prefix": "docs/library",
+      "media": {
+        "files": {
+          "reference_prefix": "docs/library/files",
+          "served_path_prefix": "https://media.dotlineform.com/docs/library/files"
+        },
+        "html": {
+          "reference_prefix": "docs/library/html",
+          "served_path_prefix": "/assets/docs/interactive/library"
+        },
+        "img": {
+          "reference_prefix": "docs/library/img",
+          "served_path_prefix": "https://media.dotlineform.com/docs/library/img"
+        }
+      },
       "index_tree_url": "/assets/data/docs/scopes/library/index-tree.json",
       "recent_url": "/assets/data/docs/scopes/library/recent.json",
       "search_index_url": "/assets/data/search/library/index.json",
@@ -32,7 +45,16 @@
       "viewer_base_url": "/analysis/",
       "include_scope_param": false,
       "default_doc_id": "d-20260426-164043-e14f49",
-      "media_path_prefix": "docs/analysis",
+      "media": {
+        "files": {
+          "reference_prefix": "docs/analysis/files",
+          "served_path_prefix": "https://media.dotlineform.com/docs/analysis/files"
+        },
+        "img": {
+          "reference_prefix": "docs/analysis/img",
+          "served_path_prefix": "https://media.dotlineform.com/docs/analysis/img"
+        }
+      },
       "index_tree_url": "/assets/data/docs/scopes/analysis/index-tree.json",
       "recent_url": "/assets/data/docs/scopes/analysis/recent.json",
       "search_index_url": "/assets/data/search/analysis/index.json",
@@ -63,7 +85,16 @@
       "viewer_base_url": "/moments/",
       "include_scope_param": false,
       "default_doc_id": "",
-      "media_path_prefix": "docs/moments",
+      "media": {
+        "files": {
+          "reference_prefix": "docs/moments/files",
+          "served_path_prefix": "https://media.dotlineform.com/docs/moments/files"
+        },
+        "img": {
+          "reference_prefix": "docs/moments/img",
+          "served_path_prefix": "https://media.dotlineform.com/docs/moments/img"
+        }
+      },
       "index_tree_url": "/assets/data/docs/scopes/moments/index-tree.json",
       "recent_url": "/assets/data/docs/scopes/moments/recent.json",
       "search_index_url": "/assets/data/search/moments/index.json",

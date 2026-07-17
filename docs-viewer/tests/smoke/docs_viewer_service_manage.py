@@ -160,16 +160,16 @@ def assert_manage_route_contract(state: dict[str, object], base_url: str) -> Non
         or state["sourceBaseUrl"] != base_url
     ):
         raise AssertionError(f"manage route did not receive service base URL: {state!r}")
-    if docs_paths.get("index_tree_url") != "/docs-viewer/generated/docs/studio/index-tree.json":
+    if docs_paths.get("index_tree_url") != "/docs-viewer/published/docs/studio/index-tree.json":
         raise AssertionError(f"manage route config missing index_tree_url: {state!r}")
-    if docs_paths.get("recent_url") != "/docs-viewer/generated/docs/studio/recent.json":
+    if docs_paths.get("recent_url") != "/docs-viewer/published/docs/studio/recent.json":
         raise AssertionError(f"manage route config missing recent_url: {state!r}")
-    if docs_paths.get("search_index_url") != "/docs-viewer/generated/search/studio/index.json":
+    if docs_paths.get("search_index_url") != "/docs-viewer/published/search/studio/index.json":
         raise AssertionError(f"manage route config missing search_index_url: {state!r}")
 
 
 def assert_generated_requests(paths: set[str]) -> None:
-    for expected in ["/docs/generated/index-tree", "/docs/generated/payload"]:
+    for expected in ["/docs/index-tree", "/docs/doc"]:
         if expected not in paths:
             raise AssertionError(f"expected generated service request {expected!r}; saw {sorted(paths)!r}")
 
@@ -569,7 +569,7 @@ def exercise_manage_route(
     page.on(
         "request",
         lambda request: generated_requests.append(request.url)
-        if "/docs/generated/" in request.url
+        if any(path in request.url for path in ("/docs/index-tree", "/docs/doc"))
         else None,
     )
     page.on(

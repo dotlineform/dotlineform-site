@@ -232,7 +232,16 @@ def exercise_review_route(page: Page, base_url: str, timeout_ms: int) -> None:
     if page.locator("#docsViewerManageSourceButton, #docsViewerManageSourceSaveButton").count() != 0:
         raise AssertionError("Docs Review still rendered source-edit controls")
 
-    if any("/docs/generated/" in url or "/docs/source" in url for url in requests):
+    configured_scope_paths = (
+        "/docs/index-tree",
+        "/docs/recent",
+        "/docs/doc",
+        "/docs/search",
+        "/docs/references",
+        "/docs/reference-target",
+        "/docs/source",
+    )
+    if any(any(path in url for path in configured_scope_paths) for url in requests):
         raise AssertionError("Docs Review crossed into configured-scope generated/source services")
     if any("/docs-review/packages/source" in url for url in requests):
         raise AssertionError("Docs Review requested a retired package source endpoint")

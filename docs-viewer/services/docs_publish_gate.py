@@ -9,7 +9,17 @@ import shutil
 from pathlib import Path
 from typing import Any
 
-from docs_scope_config import DocsScopeConfig, DocsSubScopeConfig, is_public_readonly_scope, load_docs_scope_configs, resolve_scope_path
+from docs_scope_config import (
+    DocsScopeConfig,
+    DocsSubScopeConfig,
+    is_public_readonly_scope,
+    load_docs_scope_configs,
+    public_documents_path,
+    public_search_path,
+    published_documents_path,
+    published_search_path,
+    resolve_scope_path,
+)
 
 
 PUBLISH_SCHEMA_VERSION = "docs_publish_gate_v1"
@@ -40,15 +50,15 @@ def normalize_scope(repo_root: Path, value: Any) -> tuple[str, DocsScopeConfig]:
 
 def validate_publish_paths(repo_root: Path, config: DocsScopeConfig) -> dict[str, Path]:
     paths = {
-        "working_docs_root": resolve_scope_path(repo_root, config.output),
-        "working_search_index": resolve_scope_path(repo_root, config.search_output),
-        "published_docs_root": (repo_root / config.publish_output).resolve(),
-        "published_search_index": (repo_root / config.publish_search_output).resolve(),
+        "working_docs_root": resolve_scope_path(repo_root, published_documents_path(config)),
+        "working_search_index": resolve_scope_path(repo_root, published_search_path(config)),
+        "published_docs_root": (repo_root / (public_documents_path(config) or Path("."))).resolve(),
+        "published_search_index": (repo_root / (public_search_path(config) or Path("."))).resolve(),
     }
+    if public_documents_path(config) is None or public_search_path(config) is None:
+        raise ValueError(f"scope {config.scope_id!r} has no public projection")
     for label, path in paths.items():
         repo_relative(repo_root, path)
-        if label.startswith("published_") and path.relative_to(repo_root.resolve()).parts[:2] == ("docs-viewer", "generated"):
-            raise ValueError(f"{label} must not publish under docs-viewer/generated")
     if paths["working_docs_root"] == paths["published_docs_root"]:
         raise ValueError("working docs root and published docs root must be separate")
     if paths["working_search_index"] == paths["published_search_index"]:
@@ -64,13 +74,15 @@ def validate_sub_scope_publish_paths(repo_root: Path, config: DocsScopeConfig) -
     paths_by_sub_scope: dict[str, dict[str, Path]] = {}
     for sub_scope in config.sub_scopes:
         paths = {
-            "working_docs_root": resolve_scope_path(repo_root, sub_scope.output),
-            "published_docs_root": (repo_root / sub_scope.publish_output).resolve(),
+            "working_docs_root": resolve_scope_path(repo_root, published_documents_path(sub_scope)),
+            "published_docs_root": (
+                repo_root / (public_documents_path(sub_scope) or Path("."))
+            ).resolve(),
         }
+        if public_documents_path(sub_scope) is None:
+            raise ValueError(f"sub-scope {sub_scope.sub_scope} has no public projection")
         for label, path in paths.items():
             repo_relative(repo_root, path)
-            if label.startswith("published_") and path.relative_to(repo_root.resolve()).parts[:2] == ("docs-viewer", "generated"):
-                raise ValueError(f"sub-scope {sub_scope.sub_scope} {label} must not publish under docs-viewer/generated")
         if paths["working_docs_root"] == paths["published_docs_root"]:
             raise ValueError(f"sub-scope {sub_scope.sub_scope} working docs root and published docs root must be separate")
         if not paths["working_docs_root"].is_dir():

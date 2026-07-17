@@ -22,9 +22,6 @@ from docs_scope_config import (
     EXTERNAL_DATA_ROOT_MARKER,
     load_docs_scope_configs,
     resolve_external_data_root,
-    resolve_scope_path,
-    safe_relative_path,
-    safe_scope_data_path,
 )
 from docs_scope_external_validation import external_scope_id_sync_blocker
 from docs_document_identity import (
@@ -43,8 +40,9 @@ from docs_scope_manifest import (
     append_scope_config,
     append_scope_manifest_record,
     default_source_doc_text,
-    generated_search_index_path,
     load_manifest,
+    local_published_docs_output_path,
+    local_published_search_index_path,
     manifest_scopes_by_id,
     normalize_publishing_mode,
     normalize_scope_id,
@@ -52,8 +50,10 @@ from docs_scope_manifest import (
     normalize_title,
     planned_external_source_root,
     planned_scope_config_record,
+    planned_source_output_path,
     planned_storage_contract,
-    published_search_index_path,
+    public_projection_docs_output_path,
+    public_projection_search_index_path,
     require_confirmed,
     validate_planned_storage_paths,
 )
@@ -71,21 +71,15 @@ def apply_build_commands(preview: dict[str, Any], *, dry_run: bool) -> list[dict
 
 
 def sync_public_publish_outputs(repo_root: Path, config: dict[str, Any], *, include_search: bool) -> None:
-    docs_source = repo_root / safe_relative_path(config.get("output"), field="planned_scope_config.output")
-    docs_target = repo_root / safe_relative_path(config.get("publish_output"), field="planned_scope_config.publish_output")
+    docs_source = local_published_docs_output_path(repo_root, config)
+    docs_target = public_projection_docs_output_path(repo_root, config)
     if docs_source.exists():
         if docs_target.exists():
             shutil.rmtree(docs_target)
         shutil.copytree(docs_source, docs_target)
     if include_search:
-        search_source = repo_root / safe_relative_path(
-            config.get("search_output"),
-            field="planned_scope_config.search_output",
-        )
-        search_target = repo_root / safe_relative_path(
-            config.get("publish_search_output"),
-            field="planned_scope_config.publish_search_output",
-        )
+        search_source = local_published_search_index_path(repo_root, config)
+        search_target = public_projection_search_index_path(repo_root, config)
         if search_source.exists():
             search_target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(search_source, search_target)
@@ -102,14 +96,7 @@ def apply_create_scope(
     preview = plan_create_scope_preview(repo_root, body)
     manifest = load_manifest(repo_root)
     scope_id = str(preview["scope_id"])
-    source_root = resolve_scope_path(
-        repo_root,
-        safe_scope_data_path(
-            preview["planned_scope_config"]["source"],
-            field="planned_scope_config.source",
-            allow_external=preview["publishing_mode"] == LOCAL_EXTERNAL_MODE,
-        ),
-    )
+    source_root = planned_source_output_path(repo_root, preview["planned_scope_config"])
     default_doc_path = source_root / f"{preview['planned_scope_config']['default_doc_id']}.md"
     rebuild = None
 
@@ -233,7 +220,7 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
     if scope_id in manifest_scopes_by_id(manifest):
         raise ValueError(f"scope_id {scope_id!r} already exists in docs scope manifest")
 
-    created_source_root = resolve_scope_path(repo_root, source_root)
+    created_source_root = planned_source_output_path(repo_root, planned_scope_config)
     created_files = [
         path_record(repo_root, "source_root", created_source_root, action="create"),
         path_record(repo_root, "default_source_doc", created_source_root / f"{default_doc_id}.md", action="create"),
@@ -270,24 +257,17 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
     if public_route_path:
         created_files.append(path_record(repo_root, "route_file", route_file_for_public_path(repo_root, public_route_path), action="create"))
         changed_files.extend(route_registry_path_records(repo_root, action="change"))
-    docs_output = resolve_scope_path(
-        repo_root,
-        safe_scope_data_path(
-            planned_scope_config["output"],
-            field="planned_scope_config.output",
-            allow_external=publishing_mode == LOCAL_EXTERNAL_MODE,
-        )
-    )
-    created_files.append(path_record(repo_root, "generated_docs_root", docs_output, action="create"))
+    docs_output = local_published_docs_output_path(repo_root, planned_scope_config)
+    created_files.append(path_record(repo_root, "published_docs_root", docs_output, action="create"))
     created_files.extend(
         [
-            path_record(repo_root, "generated_docs_index_tree", docs_output / "index-tree.json", action="create"),
-            path_record(repo_root, "generated_docs_recent", docs_output / "recent.json", action="create"),
-            path_record(repo_root, "generated_docs_payload_root", docs_output / "by-id", action="create"),
+            path_record(repo_root, "published_docs_index_tree", docs_output / "index-tree.json", action="create"),
+            path_record(repo_root, "published_docs_recent", docs_output / "recent.json", action="create"),
+            path_record(repo_root, "published_docs_payload_root", docs_output / "by-id", action="create"),
             path_record(
                 repo_root,
-                "generated_search_index",
-                generated_search_index_path(repo_root, planned_scope_config),
+                "published_search_index",
+                local_published_search_index_path(repo_root, planned_scope_config),
                 action="create",
             ),
         ]
@@ -295,23 +275,20 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
 
     publish_files: list[dict[str, Any]] = []
     if publishing_mode == PUBLIC_MODE:
-        published_output = repo_root / safe_relative_path(
-            planned_scope_config["publish_output"],
-            field="planned_scope_config.publish_output",
-        )
-        publish_files.append(path_record(repo_root, "published_docs_root", published_output, action="publish"))
+        public_output = public_projection_docs_output_path(repo_root, planned_scope_config)
+        publish_files.append(path_record(repo_root, "public_docs_root", public_output, action="publish"))
         publish_files.extend(
             [
-                path_record(repo_root, "published_docs_index_tree", published_output / "index-tree.json", action="publish"),
-                path_record(repo_root, "published_docs_recent", published_output / "recent.json", action="publish"),
-                path_record(repo_root, "published_docs_payload_root", published_output / "by-id", action="publish"),
+                path_record(repo_root, "public_docs_index_tree", public_output / "index-tree.json", action="publish"),
+                path_record(repo_root, "public_docs_recent", public_output / "recent.json", action="publish"),
+                path_record(repo_root, "public_docs_payload_root", public_output / "by-id", action="publish"),
             ]
         )
         publish_files.append(
             path_record(
                 repo_root,
-                "published_search_index",
-                published_search_index_path(repo_root, planned_scope_config),
+                "public_search_index",
+                public_projection_search_index_path(repo_root, planned_scope_config),
                 action="publish",
             )
         )

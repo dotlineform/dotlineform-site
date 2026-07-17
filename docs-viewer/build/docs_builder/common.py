@@ -19,10 +19,16 @@ for path in (DOCS_SERVICES_DIR, SHARED_PYTHON_DIR):
 from docs_scope_config import (  # noqa: E402
     CONFIG_REL_PATH,
     DocsScopeConfig,
+    document_source_path,
     is_public_readonly_scope,
     load_docs_scope_configs,
     normalize_viewer_base_url,
     path_is_under_configured_sub_scope_source,
+    public_documents_path,
+    public_search_path,
+    publication_documents_path,
+    published_documents_path,
+    published_search_path,
     resolve_scope_path,
     scope_uses_external_data,
 )

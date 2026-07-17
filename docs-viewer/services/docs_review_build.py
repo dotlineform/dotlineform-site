@@ -15,10 +15,13 @@ if str(BUILD_DIR) not in sys.path:
 
 from docs_builder.pipeline import DocsDataBuilder  # noqa: E402
 from docs_builder.source import DocRecord  # noqa: E402
+from docs_artifact_locations import ArtifactLocation, EXTERNAL_LOCAL_PROVIDER  # noqa: E402
 from docs_scope_config import (  # noqa: E402
     LOCAL_EXTERNAL_SCOPE_TYPE,
-    DocsImportMediaConfig,
+    DocsPublishedArtifactConfig,
+    DocsPublishedConfig,
     DocsScopeConfig,
+    DocsSourceConfig,
 )
 
 
@@ -101,24 +104,31 @@ def synthetic_review_config(
     return DocsScopeConfig(
         scope_id=package_id,
         scope_type=LOCAL_EXTERNAL_SCOPE_TYPE,
-        source=source_dir,
-        media_path_prefix=Path("assets/media"),
-        output=generated_dir,
-        search_output=generated_dir / "search" / "index.json",
-        publish_output=generated_dir,
-        publish_search_output=generated_dir / "search" / "index.json",
+        source=DocsSourceConfig(
+            location=ArtifactLocation(provider=EXTERNAL_LOCAL_PROVIDER, path=source_dir),
+            documents_path=Path("."),
+            build_media={},
+            sub_scopes_path=Path("."),
+        ),
+        published=DocsPublishedConfig(
+            documents=DocsPublishedArtifactConfig(
+                location=ArtifactLocation(provider=EXTERNAL_LOCAL_PROVIDER, path=generated_dir)
+            ),
+            search=DocsPublishedArtifactConfig(
+                location=ArtifactLocation(
+                    provider=EXTERNAL_LOCAL_PROVIDER,
+                    path=generated_dir / "search" / "index.json",
+                )
+            ),
+            media={},
+        ),
+        public_projection=None,
         viewer_base_url="/docs-review/",
         include_scope_param=False,
         default_doc_id=default_doc_id,
         non_loadable_doc_ids=(),
         manage_only_tree_root_ids=(),
         allow_unresolved_parent_ids=False,
-        import_media_storage=DocsImportMediaConfig(
-            storage_mode="staging_manual",
-            media_path_prefix=Path("assets/media"),
-            repo_assets_path_prefix=Path("assets/media"),
-            repo_assets_public_path_prefix="/docs-review/assets/media",
-        ),
         sub_scopes=(),
     )
 

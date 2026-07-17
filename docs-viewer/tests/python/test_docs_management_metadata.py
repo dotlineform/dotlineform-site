@@ -5,7 +5,8 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from types import SimpleNamespace
+
+from repo_factory import docs_scope_record
 
 from docs_management_test_support import (
     docs_management_mutations,
@@ -18,20 +19,20 @@ from docs_management_test_support import (
 def test_management_request_refreshes_scope_model_from_config() -> None:
     source_model = docs_management_mutations.source_model
     original_configs = dict(source_model.DOCS_SCOPE_CONFIGS)
-    original_roots = dict(source_model.SCOPE_ROOTS)
+    original_roots = dict(source_model.DOCUMENT_SOURCE_ROOTS)
     try:
         with make_repo() as temp_path:
             repo_root = Path(temp_path)
             write_docs_scope_config(repo_root)
-            source_model.SCOPE_ROOTS["retired"] = Path("docs-viewer/source/retired")
+            source_model.DOCUMENT_SOURCE_ROOTS["retired"] = Path("docs-viewer/source/retired")
             docs_management_service.refresh_source_model_scope_configs(repo_root)
-            assert list(source_model.SCOPE_ROOTS) == ["studio"]
-            assert source_model.SCOPE_ROOTS["studio"] == Path("docs-viewer/source/studio")
+            assert list(source_model.DOCUMENT_SOURCE_ROOTS) == ["studio"]
+            assert source_model.DOCUMENT_SOURCE_ROOTS["studio"] == Path("docs-viewer/source/studio")
     finally:
         source_model.DOCS_SCOPE_CONFIGS.clear()
         source_model.DOCS_SCOPE_CONFIGS.update(original_configs)
-        source_model.SCOPE_ROOTS.clear()
-        source_model.SCOPE_ROOTS.update(original_roots)
+        source_model.DOCUMENT_SOURCE_ROOTS.clear()
+        source_model.DOCUMENT_SOURCE_ROOTS.update(original_roots)
 
 def test_hidden_doc_is_editable_in_dry_run() -> None:
     with make_repo() as temp_path:
@@ -138,24 +139,9 @@ def test_external_scope_default_doc_delete_uses_workspace_relative_path(tmp_path
     config_path.write_text(
         json.dumps(
             {
-                "schema_version": "docs_scopes_v1",
+                "schema_version": "docs_scopes_v2",
                 "scopes": [
-                    {
-                        "scope_id": "dlf",
-                        "scope_type": "local_external",
-                        "external_data_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer",
-                        "source": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/dlf",
-                        "media_path_prefix": "docs/dlf",
-                        "output": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/docs/dlf",
-                        "search_output": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/search/dlf/index.json",
-                        "viewer_base_url": "/docs/",
-                        "include_scope_param": True,
-                        "default_doc_id": "dlf",
-                        "non_loadable_doc_ids": [],
-                        "manage_only_tree_root_ids": [],
-                        "allow_unresolved_parent_ids": False,
-                        "import_media_storage": {"storage_mode": "external_assets"},
-                    }
+                    docs_scope_record("dlf", scope_type="local_external", default_doc_id="dlf")
                 ],
             },
             indent=2,
@@ -166,17 +152,9 @@ def test_external_scope_default_doc_delete_uses_workspace_relative_path(tmp_path
 
     source_model = docs_management_mutations.source_model
     original_configs = dict(source_model.DOCS_SCOPE_CONFIGS)
-    original_roots = dict(source_model.SCOPE_ROOTS)
+    original_roots = dict(source_model.DOCUMENT_SOURCE_ROOTS)
     original_rebuild = docs_management_service.write_rebuild.rebuild_scope_outputs
-    source_model.DOCS_SCOPE_CONFIGS["dlf"] = SimpleNamespace(
-        scope_type="local_external",
-        source=source_root,
-        allow_unresolved_parent_ids=False,
-        default_doc_id="dlf",
-        non_loadable_doc_ids=(),
-        sub_scopes=(),
-    )
-    source_model.SCOPE_ROOTS["dlf"] = source_root
+    docs_management_service.refresh_source_model_scope_configs(repo_root)
     docs_management_service.write_rebuild.rebuild_scope_outputs = lambda *_args, **_kwargs: {"ok": True}
     try:
         preview = docs_management_mutations.plan_delete_preview(repo_root, "dlf", "dlf")
@@ -192,8 +170,8 @@ def test_external_scope_default_doc_delete_uses_workspace_relative_path(tmp_path
     finally:
         source_model.DOCS_SCOPE_CONFIGS.clear()
         source_model.DOCS_SCOPE_CONFIGS.update(original_configs)
-        source_model.SCOPE_ROOTS.clear()
-        source_model.SCOPE_ROOTS.update(original_roots)
+        source_model.DOCUMENT_SOURCE_ROOTS.clear()
+        source_model.DOCUMENT_SOURCE_ROOTS.update(original_roots)
         docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild
 
     assert preview["path"] == "source/dlf/dlf.md"

@@ -6,9 +6,12 @@ from urllib.parse import quote
 
 from .common import (
     DocsScopeConfig,
+    document_source_path,
     json_text,
     monotonic_time,
     read_text,
+    publication_documents_path,
+    published_documents_path,
     resolve_scope_path,
     write_text,
 )
@@ -28,15 +31,19 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         super().__init__(
             repo_root=repo_root,
             config=config,
-            source_dir=sub_scope.source,
-            output_dir=sub_scope.output,
+            source_dir=document_source_path(sub_scope),
+            output_dir=published_documents_path(sub_scope),
         )
         self.sub_scope_id = sub_scope.sub_scope
         self.output_url_base = self.output_url_base_for(self.output_url_dir())
         self._parent_report_doc_id: str | None = None
 
     def output_url_dir(self) -> Path:
-        output = self.sub_scope_config.publish_output if self.public_readonly_scope else self.sub_scope_config.output
+        output = (
+            publication_documents_path(self.sub_scope_config)
+            if self.public_readonly_scope
+            else published_documents_path(self.sub_scope_config)
+        )
         return resolve_scope_path(self.repo_root, output)
 
     def parent_report_doc_id(self) -> str:

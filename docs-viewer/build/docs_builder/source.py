@@ -13,6 +13,7 @@ from .common import (
     humanize,
     normalize_text,
     plain_text_from_html,
+    publication_documents_path,
     read_json,
     resolve_scope_path,
     scope_uses_external_data,
@@ -220,17 +221,17 @@ class SourceLoadingMixin:
 
     def content_url_for(self, doc_id: str) -> str:
         if scope_uses_external_data(self.config):
-            return f"/docs/generated/payload?scope={quote(self.scope_id)}&doc_id={quote(str(doc_id))}"
+            return f"/docs/doc?scope={quote(self.scope_id)}&doc_id={quote(str(doc_id))}"
         return f"{self.output_url_base}/by-id/{quote(str(doc_id))}.json"
 
     def output_url_dir(self) -> Path:
         if self.public_readonly_scope:
-            return self.repo_root / self.config.publish_output
+            return self.repo_root / publication_documents_path(self.config)
         return self.output_dir
 
     def output_url_base_for(self, output_dir: Path) -> str:
         if scope_uses_external_data(self.config):
-            return f"/docs/generated/external/{quote(self.scope_id)}"
+            return f"/docs/published/external/{quote(self.scope_id)}"
         try:
             relative = output_dir.resolve().relative_to(self.repo_root)
         except ValueError as exc:

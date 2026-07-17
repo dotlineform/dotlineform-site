@@ -471,7 +471,7 @@ def test_collection_apply_keeps_source_success_when_generation_or_report_write_f
     assert report_failure["warnings"][-1]["code"] == "result_report_write_failed"
 
 
-def test_collection_apply_materializes_inline_media_and_keeps_asset_failure_non_blocking(monkeypatch) -> None:
+def test_collection_apply_materializes_inline_media_and_blocks_source_when_publication_fails(monkeypatch) -> None:
     stub_markdown_validation(monkeypatch)
     with make_repo() as temp:
         root = Path(temp)
@@ -489,19 +489,19 @@ def test_collection_apply_materializes_inline_media_and_keeps_asset_failure_non_
         )
 
         payload = apply_package(root, "media.jsonl", [], rebuild=fake_rebuild([]))
-        paths = configured_workspace_paths(root)
         local_doc_id = payload["records"][0]["doc_id"]
-        media_path = paths.import_staging / f"{local_doc_id}-image-01.png"
+        media_path = root / "docs-viewer/source/library/media/img" / f"{local_doc_id}-image-01.png"
         _front_matter, body = docs_source_model.parse_source(
             root / "docs-viewer/source/library" / f"{payload['records'][0]['doc_id']}.md"
         )
+        media_bytes = media_path.read_bytes()
 
-    assert media_path.read_bytes() == b"hello"
+    assert media_bytes == b"hello"
     assert f"[[media:docs/library/img/{local_doc_id}-image-01.png]]" in body
     assert payload["records"][0]["inline_media_written"][0]["source_path"] == media_path.name
-    assert payload["manual_copy_instructions"] == [
-        f"Copy {local_doc_id}-image-01.png to docs/library/img/{local_doc_id}-image-01.png."
-    ]
+    assert payload["records"][0]["inline_media_written"][0]["location_provider"] == "repository"
+    assert payload["records"][0]["inline_media_written"][0]["publish_status"] == "uploaded"
+    assert payload["manual_copy_instructions"] == []
 
     monkeypatch.setattr(
         collection_apply,
@@ -526,14 +526,11 @@ def test_collection_apply_materializes_inline_media_and_keeps_asset_failure_non_
         asset_doc_id = asset_failure["records"][0]["doc_id"]
         source_path = root / "docs-viewer/source/library" / f"{asset_doc_id}.md"
         source_exists = source_path.exists()
-        _front_matter, asset_body = docs_source_model.parse_source(
-            source_path
-        )
 
-    assert source_exists is True
-    assert asset_failure["records"][0]["status"] == "created"
-    assert asset_failure["records"][0]["warnings"][-1]["code"] == "asset_materialization_failed"
-    assert f"[[media:docs/library/img/{asset_doc_id}-image-01.png]]" in asset_body
+    assert source_exists is False
+    assert asset_failure["outcome"] == "failed"
+    assert asset_failure["records"][0]["status"] == "failed"
+    assert asset_failure["records"][0]["error"] == "asset store unavailable"
 
 
 def test_collection_apply_rejects_browser_plan_fields_and_skipped_new_parent(monkeypatch) -> None:

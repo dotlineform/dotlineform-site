@@ -68,7 +68,7 @@ def assert_helper_modules(page: Page) -> None:
             const smoke = window.__docsViewerSemanticPickerSmoke;
             const registry = smoke.registry.normalizeSemanticReferenceRegistry({
                 schema_version: 'docs_semantic_reference_registry_v1',
-                target_lookup_url: '/docs-viewer/generated/semantic-references/target-lookup.json',
+                target_lookup_url: '/docs-viewer/published/semantic-references/target-lookup.json',
                 kinds: [
                     { kind: 'series', source_editor: { picker: true, selection_search: true } },
                     { kind: 'work', source_editor: { picker: true, selection_search: true } }
@@ -91,7 +91,7 @@ def assert_helper_modules(page: Page) -> None:
         }"""
     )
     if result != {
-        "targetLookupUrl": "/docs-viewer/generated/semantic-references/target-lookup.json",
+        "targetLookupUrl": "/docs-viewer/published/semantic-references/target-lookup.json",
         "rows": ["series:005", "work:00638"],
         "matches": ["series:005", "work:00638"],
         "token": "[[ref:series:005|3 symbols]]",
@@ -133,7 +133,7 @@ def assert_picker_inserts_token(page: Page) -> None:
             };
             const registryPayload = {
                 schema_version: 'docs_semantic_reference_registry_v1',
-                target_lookup_url: '/docs-viewer/generated/semantic-references/target-lookup.json',
+                target_lookup_url: '/docs-viewer/published/semantic-references/target-lookup.json',
                 kinds: [
                     { kind: 'series', source_editor: { picker: true, selection_search: true } },
                     { kind: 'work', source_editor: { picker: true, selection_search: true } }
@@ -213,7 +213,7 @@ def assert_selection_seeded_query_clears_after_source_delete(page: Page) -> None
             };
             const registryPayload = {
                 schema_version: 'docs_semantic_reference_registry_v1',
-                target_lookup_url: '/docs-viewer/generated/semantic-references/target-lookup.json',
+                target_lookup_url: '/docs-viewer/published/semantic-references/target-lookup.json',
                 kinds: [
                     { kind: 'series', source_editor: { picker: true, selection_search: true } },
                     { kind: 'work', source_editor: { picker: true, selection_search: true } }
@@ -307,7 +307,7 @@ def assert_picker_inserts_token_at_caret(page: Page) -> None:
             };
             const registryPayload = {
                 schema_version: 'docs_semantic_reference_registry_v1',
-                target_lookup_url: '/docs-viewer/generated/semantic-references/target-lookup.json',
+                target_lookup_url: '/docs-viewer/published/semantic-references/target-lookup.json',
                 kinds: [
                     { kind: 'series', source_editor: { picker: true, selection_search: true } },
                     { kind: 'work', source_editor: { picker: true, selection_search: true } }

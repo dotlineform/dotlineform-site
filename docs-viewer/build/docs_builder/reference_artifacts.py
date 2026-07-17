@@ -27,7 +27,7 @@ class ReferenceArtifactsMixin:
     def reference_target_url(self, target_kind: str, target_id: str) -> str:
         if scope_uses_external_data(self.config):
             return (
-                f"/docs/generated/reference-target?scope={quote(self.scope_id)}"
+                f"/docs/reference-target?scope={quote(self.scope_id)}"
                 f"&target_kind={quote(str(target_kind))}&target_slug={quote(str(target_id))}"
             )
         return f"{self.output_url_base}/references/by-target/{quote(str(target_kind))}/{quote(str(target_id))}.json"

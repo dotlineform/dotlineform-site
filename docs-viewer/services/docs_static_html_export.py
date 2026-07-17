@@ -15,6 +15,7 @@ from urllib.parse import parse_qs, urlsplit
 from docs_scope_config import (
     LOCAL_EXTERNAL_SCOPE_TYPE,
     DocsScopeConfig,
+    published_documents_path,
     is_public_readonly_scope,
     load_docs_scope_configs,
     path_is_relative_to,
@@ -78,7 +79,7 @@ def resolve_projects_base_dir() -> Path:
 
 
 def resolve_repo_backed_scope_input_paths(repo_root: Path, scope: str, config: DocsScopeConfig) -> StaticHtmlExportPaths:
-    generated_root = resolve_scope_path(repo_root, config.output).resolve()
+    generated_root = resolve_scope_path(repo_root, published_documents_path(config)).resolve()
     repo_resolved = repo_root.resolve()
     if not path_is_relative_to(generated_root, repo_resolved):
         raise ValueError(f"scope {scope!r} generated output is not repo-backed")

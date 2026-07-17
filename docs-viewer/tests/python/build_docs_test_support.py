@@ -12,6 +12,7 @@ from io import StringIO
 from pathlib import Path
 
 from repo_factory import (
+    docs_scope_record,
     read_json,
     write_docs_scope_config,
     write_json,
@@ -45,7 +46,7 @@ def write_semantic_reference_registry(root: Path) -> None:
         root / "docs-viewer/config/semantic-references/registry.json",
         {
             "schema_version": "docs_semantic_reference_registry_v1",
-            "target_lookup_url": "/docs-viewer/generated/semantic-references/target-lookup.json",
+            "target_lookup_url": "/docs-viewer/published/semantic-references/target-lookup.json",
             "kinds": [
                 {
                     "kind": "work",
@@ -119,21 +120,11 @@ def write_scope_config(root: Path) -> None:
     write_docs_scope_config(
         root,
         [
-            {
-                "scope_id": "studio",
-                "scope_type": "local",
-                "meta": "local management",
-                "source": "docs-viewer/source/studio",
-                "media_path_prefix": "docs/studio",
-                "output": "docs-viewer/generated/docs/studio",
-                "search_output": "docs-viewer/generated/search/studio/index.json",
-                "viewer_base_url": "/docs/",
-                "include_scope_param": True,
-                "default_doc_id": PARENT_DOC_ID,
-                "non_loadable_doc_ids": [],
-                "manage_only_tree_root_ids": [],
-                "allow_unresolved_parent_ids": False,
-            }
+            docs_scope_record(
+                "studio",
+                meta="local management",
+                default_doc_id=PARENT_DOC_ID,
+            )
         ],
         {
             "recent_limit": 10,
@@ -151,22 +142,12 @@ def write_external_scope_config(root: Path, external_root: Path) -> None:
     write_docs_scope_config(
         root,
         [
-            {
-                "scope_id": "private",
-                "scope_type": "local_external",
-                "meta": "external local",
-                "external_data_root": EXTERNAL_DATA_ROOT_MARKER,
-                "source": f"{EXTERNAL_DATA_ROOT_MARKER}/source/private",
-                "media_path_prefix": "docs/private",
-                "output": f"{EXTERNAL_DATA_ROOT_MARKER}/generated/docs/private",
-                "search_output": f"{EXTERNAL_DATA_ROOT_MARKER}/generated/search/private/index.json",
-                "viewer_base_url": "/docs/",
-                "include_scope_param": True,
-                "default_doc_id": PRIVATE_DOC_ID,
-                "non_loadable_doc_ids": [],
-                "manage_only_tree_root_ids": [],
-                "allow_unresolved_parent_ids": False,
-            }
+            docs_scope_record(
+                "private",
+                scope_type="local_external",
+                meta="external local",
+                default_doc_id=PRIVATE_DOC_ID,
+            )
         ],
     )
 
@@ -176,23 +157,15 @@ def write_public_scope_config(root: Path) -> None:
     write_docs_scope_config(
         root,
         [
-            {
-                "scope_id": "library",
-                "scope_type": "public",
-                "meta": "public scope",
-                "source": "docs-viewer/source/library",
-                "media_path_prefix": "docs/library",
-                "output": "docs-viewer/generated/docs/library",
-                "search_output": "docs-viewer/generated/search/library/index.json",
-                "publish_output": "site/assets/data/docs/scopes/library",
-                "publish_search_output": "site/assets/data/search/library/index.json",
-                "viewer_base_url": "/library/",
-                "include_scope_param": False,
-                "default_doc_id": PARENT_DOC_ID,
-                "non_loadable_doc_ids": [],
-                "manage_only_tree_root_ids": [MANAGE_ROOT_DOC_ID],
-                "allow_unresolved_parent_ids": False,
-            }
+            docs_scope_record(
+                "library",
+                scope_type="public",
+                meta="public scope",
+                viewer_base_url="/library/",
+                include_scope_param=False,
+                default_doc_id=PARENT_DOC_ID,
+                manage_only_tree_root_ids=[MANAGE_ROOT_DOC_ID],
+            )
         ],
         {"recent_limit": 2},
     )
@@ -246,9 +219,9 @@ viewer_report_subscope: tags
 ---
 # Child
 
-Intro with [parent](/docs/?scope=studio&doc={PARENT_DOC_ID}), ![Diagram]([[media:docs/studio/diagram.png]]), and [[ref:work:638|three signs]].
+Intro with [parent](/docs/?scope=studio&doc={PARENT_DOC_ID}), ![Diagram]([[media:docs/studio/img/diagram.png]]), and [[ref:work:638|three signs]].
 
-![Measured diagram]([[media:docs/studio/measured-diagram.png width=800 height=600]])
+![Measured diagram]([[media:docs/studio/img/measured-diagram.png width=800 height=600]])
 
 <!-- [[ref:work:638999|commented missing work]] -->
 

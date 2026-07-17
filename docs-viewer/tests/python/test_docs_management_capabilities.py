@@ -122,10 +122,13 @@ def test_source_config_report_reads_known_config_files() -> None:
     assert payload["schema_version"] == "docs_source_config_report_v1"
     assert payload["source_config_path"] == "docs-viewer/config/scopes/docs_scopes.json"
     assert payload["scopes"][0]["scope_id"] == "studio"
-    assert payload["scopes"][0]["source_config"]["source"] == "docs-viewer/source/studio"
-    assert payload["scopes"][0]["browser_config"]["index_tree_url"] == "/docs-viewer/generated/docs/studio/index-tree.json"
-    assert payload["scopes"][0]["browser_config"]["recent_url"] == "/docs-viewer/generated/docs/studio/recent.json"
-    assert payload["scopes"][0]["generated"]["docs_index_tree"] == "docs-viewer/generated/docs/studio/index-tree.json"
-    assert payload["scopes"][0]["generated"]["recent"] == "docs-viewer/generated/docs/studio/recent.json"
-    assert payload["scopes"][0]["generated"]["search_index"] == "docs-viewer/generated/search/studio/index.json"
+    assert payload["scopes"][0]["source_config"]["scope_type"] == "local"
+    assert payload["scopes"][0]["roles"]["source"]["provider"] == "repository"
+    assert payload["scopes"][0]["roles"]["published_documents"]["provider"] == "repository"
+    assert payload["scopes"][0]["browser_config"]["index_tree_url"] == "/docs-viewer/published/docs/studio/index-tree.json"
+    assert payload["scopes"][0]["browser_config"]["recent_url"] == "/docs-viewer/published/docs/studio/recent.json"
+    assert payload["scopes"][0]["artifacts"] == {
+        "published_documents_available": True,
+        "published_search_available": True,
+    }
     assert payload["scopes"][0]["warnings"] == []

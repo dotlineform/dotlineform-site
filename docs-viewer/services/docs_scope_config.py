@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-"""Shared Docs Viewer scope configuration."""
+"""Role-first Docs Viewer scope configuration."""
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 import json
 from pathlib import Path
 import re
 import sys
-from typing import Any
+from typing import Any, Mapping
 
 
 _BOOTSTRAP_START = Path(__file__).resolve()
@@ -18,6 +18,24 @@ for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
             sys.path.insert(0, str(_candidate))
         break
 
+from docs_artifact_locations import (  # noqa: E402
+    DELETE_CAPABILITY,
+    EXTERNAL_LOCAL_PROVIDER,
+    LIST_CAPABILITY,
+    LOCAL_STAGING_CAPABILITY,
+    R2_PROVIDER,
+    READ_CAPABILITY,
+    REPLACE_CAPABILITY,
+    REPOSITORY_PROVIDER,
+    SERVED_REFERENCE_CAPABILITY,
+    STAT_CAPABILITY,
+    SUPPORTED_LOCATION_PROVIDERS,
+    VERIFY_BYTES_CAPABILITY,
+    WRITE_CAPABILITY,
+    ArtifactLocation,
+    filesystem_location_root,
+    require_location_capabilities,
+)
 from studio.shared.python.external_workspace_paths import (  # noqa: E402
     ExternalWorkspaceRoot,
     resolve_external_workspace_root,
@@ -26,43 +44,104 @@ from studio.shared.python.external_workspace_paths import (  # noqa: E402
 
 
 CONFIG_REL_PATH = Path("docs-viewer/config/scopes/docs_scopes.json")
-SCHEMA_VERSION = "docs_scopes_v1"
+SCHEMA_VERSION = "docs_scopes_v2"
 DOCS_VIEWER_MANAGE_ROUTE_BASE_URL = "/docs/"
 PUBLIC_DOCS_OUTPUT_ROOT = Path("site/assets/data/docs/scopes")
 PUBLIC_SEARCH_OUTPUT_ROOT = Path("site/assets/data/search")
-WORKING_DOCS_OUTPUT_ROOT = Path("docs-viewer/generated/docs")
-WORKING_SEARCH_OUTPUT_ROOT = Path("docs-viewer/generated/search")
+PUBLISHED_DOCS_OUTPUT_ROOT = Path("docs-viewer/published/docs")
+PUBLISHED_SEARCH_OUTPUT_ROOT = Path("docs-viewer/published/search")
 PUBLIC_SCOPE_TYPE = "public"
+LOCAL_SCOPE_TYPE = "local"
 LOCAL_EXTERNAL_SCOPE_TYPE = "local_external"
+SUPPORTED_SCOPE_TYPES = {PUBLIC_SCOPE_TYPE, LOCAL_SCOPE_TYPE, LOCAL_EXTERNAL_SCOPE_TYPE}
 DOTLINEFORM_PROJECTS_BASE_DIR_ENV = "DOTLINEFORM_PROJECTS_BASE_DIR"
 EXTERNAL_DATA_ROOT_MARKER = f"${DOTLINEFORM_PROJECTS_BASE_DIR_ENV}/docs-viewer"
+SUB_SCOPE_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9_-]*\Z")
+MEDIA_TYPE_PATTERN = re.compile(r"\A[a-z][a-z0-9_-]*\Z")
+
+SOURCE_CAPABILITIES = frozenset(
+    {
+        LIST_CAPABILITY,
+        READ_CAPABILITY,
+        WRITE_CAPABILITY,
+        REPLACE_CAPABILITY,
+        DELETE_CAPABILITY,
+        STAT_CAPABILITY,
+        VERIFY_BYTES_CAPABILITY,
+        LOCAL_STAGING_CAPABILITY,
+    }
+)
+PAYLOAD_CAPABILITIES = SOURCE_CAPABILITIES
+PUBLISHED_MEDIA_CAPABILITIES = frozenset(
+    {
+        LIST_CAPABILITY,
+        READ_CAPABILITY,
+        WRITE_CAPABILITY,
+        REPLACE_CAPABILITY,
+        DELETE_CAPABILITY,
+        STAT_CAPABILITY,
+        VERIFY_BYTES_CAPABILITY,
+        SERVED_REFERENCE_CAPABILITY,
+        LOCAL_STAGING_CAPABILITY,
+    }
+)
 
 
 @dataclass(frozen=True)
-class DocsImportMediaConfig:
-    storage_mode: str
-    media_path_prefix: Path
-    repo_assets_path_prefix: Path
-    repo_assets_public_path_prefix: str
+class DocsBuildMediaConfig:
+    path: Path
+    producer: str
+    publishes_to: str
+
+
+@dataclass(frozen=True)
+class DocsSourceConfig:
+    location: ArtifactLocation
+    documents_path: Path
+    build_media: Mapping[str, DocsBuildMediaConfig]
+    sub_scopes_path: Path
+
+
+@dataclass(frozen=True)
+class DocsPublishedArtifactConfig:
+    location: ArtifactLocation
+
+
+@dataclass(frozen=True)
+class DocsPublishedMediaConfig:
+    media_type: str
+    reference_prefix: Path
+    location: ArtifactLocation
+    served_path_prefix: str
+    build_inputs: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class DocsPublishedConfig:
+    documents: DocsPublishedArtifactConfig
+    search: DocsPublishedArtifactConfig
+    media: Mapping[str, DocsPublishedMediaConfig]
+
+
+@dataclass(frozen=True)
+class DocsPublicProjectionConfig:
+    documents: DocsPublishedArtifactConfig
+    search: DocsPublishedArtifactConfig | None
 
 
 @dataclass(frozen=True)
 class DocsScopeConfig:
     scope_id: str
     scope_type: str
-    source: Path
-    media_path_prefix: Path
-    output: Path
-    search_output: Path
-    publish_output: Path
-    publish_search_output: Path
+    source: DocsSourceConfig
+    published: DocsPublishedConfig
+    public_projection: DocsPublicProjectionConfig | None
     viewer_base_url: str
     include_scope_param: bool
     default_doc_id: str
     non_loadable_doc_ids: tuple[str, ...]
     manage_only_tree_root_ids: tuple[str, ...]
     allow_unresolved_parent_ids: bool
-    import_media_storage: DocsImportMediaConfig
     sub_scopes: tuple["DocsSubScopeConfig", ...]
 
 
@@ -70,18 +149,9 @@ class DocsScopeConfig:
 class DocsSubScopeConfig:
     sub_scope: str
     title: str
-    source: Path
-    output: Path
-    publish_output: Path
-
-
-SUPPORTED_IMPORT_MEDIA_STORAGE_MODES = {
-    "external_assets",
-    "repo_assets",
-    "r2_upload",
-    "staging_manual",
-}
-SUB_SCOPE_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9_-]*\Z")
+    source: DocsSourceConfig
+    published: DocsPublishedConfig
+    public_projection: DocsPublicProjectionConfig | None
 
 
 def default_repo_root() -> Path:
@@ -92,17 +162,23 @@ def default_repo_root() -> Path:
     raise ValueError("could not resolve repo root")
 
 
-def safe_relative_path(value: Any, *, field: str) -> Path:
+def safe_relative_path(value: Any, *, field: str, allow_current: bool = False) -> Path:
     text = str(value or "").strip()
+    if allow_current and text in {"", "."}:
+        return Path(".")
     if not text:
         raise ValueError(f"docs scope config field {field} is required")
     path = Path(text)
     if path.is_absolute() or ".." in path.parts:
         raise ValueError(f"docs scope config field {field} must be a safe relative path")
+    if not allow_current and any(part in {"", "."} for part in path.parts):
+        raise ValueError(f"docs scope config field {field} must be a safe relative path")
     return path
 
 
 def safe_scope_data_path(value: Any, *, field: str, allow_external: bool = False) -> Path:
+    """Validate a filesystem path used by lifecycle request/preview code."""
+
     text = str(value or "").strip()
     if not text:
         raise ValueError(f"docs scope config field {field} is required")
@@ -110,12 +186,8 @@ def safe_scope_data_path(value: Any, *, field: str, allow_external: bool = False
         return resolve_external_data_marker_path(text, field=field)
     path = Path(text)
     if path.is_absolute():
-        if not allow_external:
-            raise ValueError(f"docs scope config field {field} must be a safe relative path")
-        if ".." in path.parts:
-            raise ValueError(f"docs scope config field {field} must not contain parent path segments")
-        if path.parent == path:
-            raise ValueError(f"docs scope config field {field} must not be the filesystem root")
+        if not allow_external or ".." in path.parts or path.parent == path:
+            raise ValueError(f"docs scope config field {field} must be a safe configured path")
         return path
     if ".." in path.parts:
         raise ValueError(f"docs scope config field {field} must be a safe relative path")
@@ -166,6 +238,10 @@ def resolve_scope_path(repo_root: Path, path: Path) -> Path:
     return path.resolve() if path.is_absolute() else repo_root / path
 
 
+def resolve_location_path(repo_root: Path, location: ArtifactLocation) -> Path:
+    return filesystem_location_root(repo_root, location)
+
+
 def path_label(repo_root: Path, path: Path) -> str:
     if not path.is_absolute():
         return path.as_posix()
@@ -175,12 +251,6 @@ def path_label(repo_root: Path, path: Path) -> str:
         return resolved_path.relative_to(resolved_root).as_posix()
     except ValueError:
         return resolved_path.as_posix()
-
-
-def scope_uses_external_data(config: "DocsScopeConfig") -> bool:
-    return config.scope_type == LOCAL_EXTERNAL_SCOPE_TYPE or any(
-        path.is_absolute() for path in (config.source, config.output, config.search_output)
-    )
 
 
 def string_tuple(value: Any, *, field: str) -> tuple[str, ...]:
@@ -198,6 +268,27 @@ def normalize_viewer_base_url(value: Any) -> str:
     return text if text.endswith("/") else f"{text}/"
 
 
+def normalize_sub_scope_id(value: Any, *, field: str) -> str:
+    text = str(value or "").strip().lower()
+    if not SUB_SCOPE_ID_PATTERN.fullmatch(text):
+        raise ValueError(
+            f"docs scope config field {field} must start with a lowercase letter or digit "
+            "and contain only lowercase letters, digits, hyphens, or underscores"
+        )
+    return text
+
+
+def normalize_served_path_prefix(value: Any, *, field: str) -> str:
+    text = str(value or "").strip()
+    is_absolute_url = text.startswith(("https://", "http://"))
+    if not text or (not text.startswith("/") and not is_absolute_url):
+        raise ValueError(f"docs scope config field {field} must be an absolute path or URL")
+    path_text = text.split("://", 1)[-1].partition("/")[2] if is_absolute_url else text.lstrip("/")
+    if ".." in Path(path_text).parts:
+        raise ValueError(f"docs scope config field {field} must not contain parent path segments")
+    return text.rstrip("/")
+
+
 def path_is_relative_to(path: Path, parent: Path) -> bool:
     try:
         path.relative_to(parent)
@@ -210,281 +301,368 @@ def path_is_strict_relative_to(path: Path, parent: Path) -> bool:
     return path != parent and path_is_relative_to(path, parent)
 
 
-def normalize_sub_scope_id(value: Any, *, field: str) -> str:
-    text = str(value or "").strip().lower()
-    if not text:
-        raise ValueError(f"docs scope config field {field} is required")
-    if not SUB_SCOPE_ID_PATTERN.fullmatch(text):
-        raise ValueError(
-            f"docs scope config field {field} must start with a lowercase letter or digit "
-            "and contain only lowercase letters, digits, hyphens, or underscores"
-        )
-    return text
-
-
 def is_public_readonly_scope(*, viewer_base_url: str, include_scope_param: bool) -> bool:
     return not include_scope_param and normalize_viewer_base_url(viewer_base_url) != DOCS_VIEWER_MANAGE_ROUTE_BASE_URL
 
 
-def validate_generated_output_contract(
-    *,
-    scope_id: str,
-    output: Path,
-    search_output: Path,
-    viewer_base_url: str,
-    include_scope_param: bool,
-    field_prefix: str,
-) -> None:
-    if is_public_readonly_scope(viewer_base_url=viewer_base_url, include_scope_param=include_scope_param):
-        if path_is_relative_to(output, PUBLIC_DOCS_OUTPUT_ROOT):
-            raise ValueError(
-                f"docs scope config {field_prefix}.output for public scope {scope_id!r} "
-                "must be working generated output under docs-viewer/generated/docs"
-            )
-        if path_is_relative_to(search_output, PUBLIC_SEARCH_OUTPUT_ROOT):
-            raise ValueError(
-                f"docs scope config {field_prefix}.search_output for public scope {scope_id!r} "
-                "must be working generated output under docs-viewer/generated/search"
-            )
-        return
-    if path_is_relative_to(output, PUBLIC_DOCS_OUTPUT_ROOT):
-        raise ValueError(
-            f"docs scope config {field_prefix}.output for local scope {scope_id!r} "
-            "must not be under site/assets/data/docs/scopes"
-        )
-    if path_is_relative_to(search_output, PUBLIC_SEARCH_OUTPUT_ROOT):
-        raise ValueError(
-            f"docs scope config {field_prefix}.search_output for local scope {scope_id!r} "
-            "must not be under site/assets/data/search"
-        )
-
-
-def normalize_doc_id(value: Any, *, field: str) -> str:
-    text = str(value or "").strip()
-    return text
-
-
-def normalize_public_path_prefix(value: Any, *, fallback: str, field: str) -> str:
-    text = str(value or "").strip() or fallback
-    if not text.startswith("/"):
-        text = f"/{text}"
-    if ".." in Path(text.lstrip("/")).parts:
-        raise ValueError(f"docs scope config field {field} must not contain parent path segments")
-    return text.rstrip("/")
-
-
-def public_url_fallback_for_repo_assets_path(path: Path) -> str:
-    parts = path.parts
-    if len(parts) >= 2 and parts[0] == "site" and parts[1] == "assets":
-        return "/" + Path(*parts[1:]).as_posix()
-    return f"/{path.as_posix().strip('/')}"
-
-
-def normalize_import_media_storage(
-    item: dict[str, Any],
-    *,
-    scope_id: str,
-    scope_type: str,
-    media_path_prefix: Path,
-    public_readonly: bool,
-    index: int,
-) -> DocsImportMediaConfig:
-    raw = item.get("import_media_storage")
-    if raw is None:
-        raw = {}
+def normalize_location(raw: Any, *, field: str) -> ArtifactLocation:
     if not isinstance(raw, dict):
-        raise ValueError(f"docs scope config scopes[{index}].import_media_storage must be an object")
+        raise ValueError(f"docs scope config field {field} must be an object")
+    provider = str(raw.get("provider") or "").strip().lower()
+    if provider not in SUPPORTED_LOCATION_PROVIDERS:
+        supported = ", ".join(sorted(SUPPORTED_LOCATION_PROVIDERS))
+        raise ValueError(f"docs scope config field {field}.provider must be one of: {supported}")
+    path_text = str(raw.get("path") or "").strip()
+    if not path_text:
+        raise ValueError(f"docs scope config field {field}.path is required")
+    if provider == REPOSITORY_PROVIDER:
+        path = safe_relative_path(path_text, field=f"{field}.path")
+    elif provider == EXTERNAL_LOCAL_PROVIDER:
+        path = resolve_external_data_marker_path(path_text, field=f"{field}.path")
+    else:
+        path = safe_relative_path(path_text, field=f"{field}.path")
+    return ArtifactLocation(provider=provider, path=path)
 
-    default_storage_mode = "external_assets" if scope_type == LOCAL_EXTERNAL_SCOPE_TYPE else "staging_manual"
-    storage_mode = str(raw.get("storage_mode") or default_storage_mode).strip()
-    if storage_mode not in SUPPORTED_IMPORT_MEDIA_STORAGE_MODES:
-        supported = ", ".join(sorted(SUPPORTED_IMPORT_MEDIA_STORAGE_MODES))
-        raise ValueError(
-            f"docs scope config scopes[{index}].import_media_storage.storage_mode "
-            f"must be one of: {supported}"
+
+def normalize_artifact(raw: Any, *, field: str) -> DocsPublishedArtifactConfig:
+    if not isinstance(raw, dict):
+        raise ValueError(f"docs scope config field {field} must be an object")
+    return DocsPublishedArtifactConfig(location=normalize_location(raw.get("location"), field=f"{field}.location"))
+
+
+def normalize_build_media(raw: Any, *, field: str) -> dict[str, DocsBuildMediaConfig]:
+    if raw is None:
+        return {}
+    if not isinstance(raw, dict):
+        raise ValueError(f"docs scope config field {field} must be an object")
+    result: dict[str, DocsBuildMediaConfig] = {}
+    for media_type, item in raw.items():
+        normalized_type = str(media_type or "").strip().lower()
+        item_field = f"{field}.{normalized_type}"
+        if not MEDIA_TYPE_PATTERN.fullmatch(normalized_type) or not isinstance(item, dict):
+            raise ValueError(f"docs scope config field {item_field} must be a named media object")
+        producer = str(item.get("producer") or "").strip()
+        publishes_to = str(item.get("publishes_to") or "").strip().lower()
+        if not producer or not publishes_to:
+            raise ValueError(f"docs scope config field {item_field} requires producer and publishes_to")
+        result[normalized_type] = DocsBuildMediaConfig(
+            path=safe_relative_path(item.get("path"), field=f"{item_field}.path"),
+            producer=producer,
+            publishes_to=publishes_to,
         )
-    if scope_type == LOCAL_EXTERNAL_SCOPE_TYPE and storage_mode != "external_assets":
-        raise ValueError(
-            f"docs scope config scopes[{index}] external local scopes must use "
-            "import_media_storage.storage_mode 'external_assets'"
+    return result
+
+
+def normalize_source(raw: Any, *, field: str) -> DocsSourceConfig:
+    if not isinstance(raw, dict):
+        raise ValueError(f"docs scope config field {field} must be an object")
+    source = DocsSourceConfig(
+        location=normalize_location(raw.get("location"), field=f"{field}.location"),
+        documents_path=safe_relative_path(
+            raw.get("documents_path"),
+            field=f"{field}.documents_path",
+            allow_current=True,
+        ),
+        build_media=normalize_build_media(raw.get("build_media"), field=f"{field}.build_media"),
+        sub_scopes_path=safe_relative_path(
+            raw.get("sub_scopes_path"),
+            field=f"{field}.sub_scopes_path",
+            allow_current=True,
+        ),
+    )
+    require_location_capabilities(source.location, SOURCE_CAPABILITIES, role=f"{field}.documents")
+    return source
+
+
+def normalize_published_media(raw: Any, *, scope_id: str, field: str) -> dict[str, DocsPublishedMediaConfig]:
+    if not isinstance(raw, dict) or not raw:
+        raise ValueError(f"docs scope config field {field} must be a non-empty object")
+    result: dict[str, DocsPublishedMediaConfig] = {}
+    for media_type, item in raw.items():
+        normalized_type = str(media_type or "").strip().lower()
+        item_field = f"{field}.{normalized_type}"
+        if not MEDIA_TYPE_PATTERN.fullmatch(normalized_type) or not isinstance(item, dict):
+            raise ValueError(f"docs scope config field {item_field} must be a named media object")
+        reference_prefix = safe_relative_path(item.get("reference_prefix"), field=f"{item_field}.reference_prefix")
+        expected_reference = Path("docs") / scope_id / normalized_type
+        if reference_prefix != expected_reference:
+            raise ValueError(
+                f"docs scope config field {item_field}.reference_prefix must be {expected_reference.as_posix()}"
+            )
+        location = normalize_location(item.get("location"), field=f"{item_field}.location")
+        served_path_prefix = normalize_served_path_prefix(
+            item.get("served_path_prefix"),
+            field=f"{item_field}.served_path_prefix",
         )
-    if storage_mode == "external_assets" and scope_type != LOCAL_EXTERNAL_SCOPE_TYPE:
-        raise ValueError(
-            f"docs scope config scopes[{index}].import_media_storage.storage_mode "
-            "'external_assets' is only valid for external local scopes"
+        build_inputs = string_tuple(item.get("build_inputs"), field=f"{item_field}.build_inputs")
+        require_location_capabilities(location, PUBLISHED_MEDIA_CAPABILITIES, role=item_field)
+        result[normalized_type] = DocsPublishedMediaConfig(
+            media_type=normalized_type,
+            reference_prefix=reference_prefix,
+            location=location,
+            served_path_prefix=served_path_prefix,
+            build_inputs=build_inputs,
         )
-    if storage_mode == "r2_upload" and (scope_type != "public" or not public_readonly):
+    return result
+
+
+def normalize_published(raw: Any, *, scope_id: str, field: str, require_media: bool = True) -> DocsPublishedConfig:
+    if not isinstance(raw, dict):
+        raise ValueError(f"docs scope config field {field} must be an object")
+    documents = normalize_artifact(raw.get("documents"), field=f"{field}.documents")
+    search = normalize_artifact(raw.get("search"), field=f"{field}.search")
+    require_location_capabilities(documents.location, PAYLOAD_CAPABILITIES, role=f"{field}.documents")
+    require_location_capabilities(search.location, PAYLOAD_CAPABILITIES, role=f"{field}.search")
+    media_raw = raw.get("media")
+    media = normalize_published_media(media_raw, scope_id=scope_id, field=f"{field}.media") if require_media else (
+        normalize_published_media(media_raw, scope_id=scope_id, field=f"{field}.media") if media_raw else {}
+    )
+    return DocsPublishedConfig(documents=documents, search=search, media=media)
+
+
+def normalize_public_projection(raw: Any, *, field: str, search_required: bool = True) -> DocsPublicProjectionConfig | None:
+    if raw is None:
+        return None
+    if not isinstance(raw, dict):
+        raise ValueError(f"docs scope config field {field} must be an object or null")
+    documents = normalize_artifact(raw.get("documents"), field=f"{field}.documents")
+    search = normalize_artifact(raw.get("search"), field=f"{field}.search") if raw.get("search") is not None else None
+    if search_required and search is None:
+        raise ValueError(f"docs scope config field {field}.search is required")
+    for name, artifact in (("documents", documents), ("search", search)):
+        if artifact is not None and artifact.location.provider != REPOSITORY_PROVIDER:
+            raise ValueError(f"docs scope config field {field}.{name} must use provider 'repository'")
+    return DocsPublicProjectionConfig(documents=documents, search=search)
+
+
+def location_child_path(location: ArtifactLocation, relative: Path) -> Path:
+    return location.path if relative == Path(".") else location.path / relative
+
+
+def source_container_path(config: DocsScopeConfig | DocsSubScopeConfig) -> Path:
+    return config.source.location.path
+
+
+def document_source_path(config: DocsScopeConfig | DocsSubScopeConfig) -> Path:
+    return location_child_path(config.source.location, config.source.documents_path)
+
+
+def published_documents_path(config: DocsScopeConfig | DocsSubScopeConfig) -> Path:
+    return config.published.documents.location.path
+
+
+def published_search_path(config: DocsScopeConfig | DocsSubScopeConfig) -> Path:
+    return config.published.search.location.path
+
+
+def public_documents_path(config: DocsScopeConfig | DocsSubScopeConfig) -> Path | None:
+    return config.public_projection.documents.location.path if config.public_projection else None
+
+
+def public_search_path(config: DocsScopeConfig | DocsSubScopeConfig) -> Path | None:
+    projection = config.public_projection
+    return projection.search.location.path if projection and projection.search else None
+
+
+def publication_documents_path(config: DocsScopeConfig | DocsSubScopeConfig) -> Path:
+    return public_documents_path(config) or published_documents_path(config)
+
+
+def publication_search_path(config: DocsScopeConfig | DocsSubScopeConfig) -> Path:
+    return public_search_path(config) or published_search_path(config)
+
+
+def scope_media_reference_root(config: DocsScopeConfig) -> Path:
+    return Path("docs") / config.scope_id
+
+
+def published_media_config(config: DocsScopeConfig, media_type: str) -> DocsPublishedMediaConfig:
+    normalized = str(media_type or "").strip().lower()
+    try:
+        return config.published.media[normalized]
+    except KeyError as exc:
+        supported = ", ".join(sorted(config.published.media))
         raise ValueError(
-            f"docs scope config scopes[{index}].import_media_storage.storage_mode "
-            "'r2_upload' is only valid for public read-only scopes"
-        )
-    if storage_mode == "r2_upload" and media_path_prefix != Path("docs") / scope_id:
+            f"Docs scope {config.scope_id!r} has no published media role {normalized!r}; configured: {supported}"
+        ) from exc
+
+
+def scope_uses_external_data(config: DocsScopeConfig) -> bool:
+    locations = [
+        config.source.location,
+        config.published.documents.location,
+        config.published.search.location,
+        *(media.location for media in config.published.media.values()),
+    ]
+    return any(location.provider == EXTERNAL_LOCAL_PROVIDER for location in locations)
+
+
+def validate_scope_policy(config: DocsScopeConfig, *, field: str) -> None:
+    expected_provider = EXTERNAL_LOCAL_PROVIDER if config.scope_type == LOCAL_EXTERNAL_SCOPE_TYPE else REPOSITORY_PROVIDER
+    if config.source.location.provider != expected_provider:
         raise ValueError(
-            f"docs scope config scopes[{index}].media_path_prefix for r2_upload "
-            f"must be docs/{scope_id}"
+            f"docs scope config {field}.source.location for {config.scope_type!r} scope must use provider {expected_provider!r}"
         )
-    if scope_type == LOCAL_EXTERNAL_SCOPE_TYPE and (
-        "repo_assets_path_prefix" in raw or "repo_assets_public_path_prefix" in raw
+    for role_name, artifact in (
+        ("published.documents", config.published.documents),
+        ("published.search", config.published.search),
     ):
-        raise ValueError(
-            f"docs scope config scopes[{index}] external local media must not configure repo asset destinations"
-        )
-    repo_assets_path_prefix = safe_relative_path(
-        raw.get("repo_assets_path_prefix") or f"site/assets/docs/{scope_id}",
-        field=f"scopes[{index}].import_media_storage.repo_assets_path_prefix",
-    )
-    public_path_prefix = normalize_public_path_prefix(
-        raw.get("repo_assets_public_path_prefix"),
-        fallback=public_url_fallback_for_repo_assets_path(repo_assets_path_prefix),
-        field=f"scopes[{index}].import_media_storage.repo_assets_public_path_prefix",
-    )
-    return DocsImportMediaConfig(
-        storage_mode=storage_mode,
-        media_path_prefix=media_path_prefix,
-        repo_assets_path_prefix=repo_assets_path_prefix,
-        repo_assets_public_path_prefix=public_path_prefix,
-    )
-
-
-def publish_output_paths_for(
-    item: dict[str, Any],
-    *,
-    scope_id: str,
-    public_readonly: bool,
-    output: Path,
-    search_output: Path,
-    index: int,
-) -> tuple[Path, Path]:
-    if public_readonly:
-        publish_output = safe_relative_path(
-            item.get("publish_output"),
-            field=f"scopes[{index}].publish_output",
-        )
-        publish_search_output = safe_relative_path(
-            item.get("publish_search_output"),
-            field=f"scopes[{index}].publish_search_output",
-        )
-        expected_docs_parent = PUBLIC_DOCS_OUTPUT_ROOT
-        expected_search_parent = PUBLIC_SEARCH_OUTPUT_ROOT / scope_id
-        if not path_is_relative_to(publish_output, expected_docs_parent):
+        if artifact.location.provider != expected_provider:
             raise ValueError(
-                f"docs scope config scopes[{index}].publish_output for public scope {scope_id!r} "
-                "must be under site/assets/data/docs/scopes"
+                f"docs scope config {field}.{role_name} for {config.scope_type!r} scope "
+                f"must use provider {expected_provider!r}"
             )
-        if not path_is_relative_to(publish_search_output, expected_search_parent):
+    if expected_provider == REPOSITORY_PROVIDER:
+        if not path_is_relative_to(config.published.documents.location.path, PUBLISHED_DOCS_OUTPUT_ROOT):
             raise ValueError(
-                f"docs scope config scopes[{index}].publish_search_output for public scope {scope_id!r} "
-                f"must be under {expected_search_parent.as_posix()}"
+                f"docs scope config {field}.published.documents must remain under "
+                f"{PUBLISHED_DOCS_OUTPUT_ROOT.as_posix()}"
             )
-        return publish_output, publish_search_output
-    return (output, search_output)
-
-
-def validate_nested_sub_scope_path(
-    *,
-    scope_id: str,
-    sub_scope: str,
-    path: Path,
-    parent_path: Path,
-    field: str,
-    parent_field: str,
-) -> None:
-    if not path_is_strict_relative_to(path, parent_path):
-        raise ValueError(
-            f"docs scope config {field} for sub-scope {scope_id}/{sub_scope} "
-            f"must be under {parent_field}"
-        )
+        if not path_is_relative_to(config.published.search.location.path, PUBLISHED_SEARCH_OUTPUT_ROOT):
+            raise ValueError(
+                f"docs scope config {field}.published.search must remain under "
+                f"{PUBLISHED_SEARCH_OUTPUT_ROOT.as_posix()}"
+            )
+    public_readonly = is_public_readonly_scope(
+        viewer_base_url=config.viewer_base_url,
+        include_scope_param=config.include_scope_param,
+    )
+    if config.scope_type == LOCAL_EXTERNAL_SCOPE_TYPE and public_readonly:
+        raise ValueError(f"docs scope config {field} external local scopes must use the management route")
+    if public_readonly != (config.public_projection is not None):
+        requirement = "configure" if public_readonly else "not configure"
+        raise ValueError(f"docs scope config {field} must {requirement} public_projection")
+    if config.public_projection is not None:
+        if not path_is_relative_to(config.public_projection.documents.location.path, PUBLIC_DOCS_OUTPUT_ROOT):
+            raise ValueError(
+                f"docs scope config {field}.public_projection.documents must remain under "
+                f"{PUBLIC_DOCS_OUTPUT_ROOT.as_posix()}"
+            )
+        if config.public_projection.search is not None and not path_is_relative_to(
+            config.public_projection.search.location.path,
+            PUBLIC_SEARCH_OUTPUT_ROOT,
+        ):
+            raise ValueError(
+                f"docs scope config {field}.public_projection.search must remain under "
+                f"{PUBLIC_SEARCH_OUTPUT_ROOT.as_posix()}"
+            )
+    if config.scope_type == LOCAL_EXTERNAL_SCOPE_TYPE:
+        source_root = config.source.location.path
+        external_root = resolve_external_data_root()
+        if not source_root.is_relative_to(external_root):
+            raise ValueError(f"docs scope config {field}.source must remain under {EXTERNAL_DATA_ROOT_MARKER}")
+        for role_name, artifact in (
+            ("published.documents", config.published.documents),
+            ("published.search", config.published.search),
+        ):
+            if not artifact.location.path.is_relative_to(external_root):
+                raise ValueError(
+                    f"docs scope config {field}.{role_name} must remain under {EXTERNAL_DATA_ROOT_MARKER}"
+                )
+        for media_type, media in config.published.media.items():
+            if media.location.provider != EXTERNAL_LOCAL_PROVIDER:
+                raise ValueError(
+                    f"docs scope config {field}.published.media.{media_type} for external local scope "
+                    "must use provider 'external_local'"
+                )
+            if not media.location.path.is_relative_to(source_root):
+                raise ValueError(
+                    f"docs scope config {field}.published.media.{media_type}.location must remain beneath the source scope"
+                )
+    else:
+        for media_type, media in config.published.media.items():
+            if media.location.provider == EXTERNAL_LOCAL_PROVIDER:
+                raise ValueError(
+                    f"docs scope config {field}.published.media.{media_type} for repository-backed scope "
+                    "must use provider 'repository' or 'r2'"
+                )
+    for build_type, build in config.source.build_media.items():
+        if build.publishes_to not in config.published.media:
+            raise ValueError(
+                f"docs scope config {field}.source.build_media.{build_type}.publishes_to "
+                f"references unconfigured media type {build.publishes_to!r}"
+            )
 
 
 def normalize_sub_scope_configs(
-    item: dict[str, Any],
+    raw: Any,
     *,
-    scope_id: str,
-    source: Path,
-    output: Path,
-    publish_output: Path,
-    public_readonly: bool,
-    allow_external_data: bool,
-    index: int,
+    parent: DocsScopeConfig,
+    field: str,
 ) -> tuple[DocsSubScopeConfig, ...]:
-    raw_sub_scopes = item.get("sub_scopes")
-    if raw_sub_scopes is None:
+    if raw is None:
         return ()
-    if not isinstance(raw_sub_scopes, list):
-        raise ValueError(f"docs scope config scopes[{index}].sub_scopes must be an array")
-
+    if not isinstance(raw, list):
+        raise ValueError(f"docs scope config field {field} must be an array")
     configs: list[DocsSubScopeConfig] = []
     seen: set[str] = set()
-    for sub_index, raw_sub_scope in enumerate(raw_sub_scopes):
-        field_prefix = f"scopes[{index}].sub_scopes[{sub_index}]"
-        if not isinstance(raw_sub_scope, dict):
-            raise ValueError(f"docs scope config {field_prefix} must be an object")
-        sub_scope = normalize_sub_scope_id(raw_sub_scope.get("sub_scope"), field=f"{field_prefix}.sub_scope")
+    for index, item in enumerate(raw):
+        item_field = f"{field}[{index}]"
+        if not isinstance(item, dict):
+            raise ValueError(f"docs scope config field {item_field} must be an object")
+        sub_scope = str(item.get("sub_scope") or "").strip().lower()
+        if not SUB_SCOPE_ID_PATTERN.fullmatch(sub_scope):
+            raise ValueError(f"docs scope config field {item_field}.sub_scope is invalid")
         if sub_scope in seen:
-            raise ValueError(f"docs scope config sub_scope {sub_scope!r} is duplicated in scope {scope_id!r}")
+            raise ValueError(f"docs scope config sub_scope {sub_scope!r} is duplicated in scope {parent.scope_id!r}")
         seen.add(sub_scope)
-
-        sub_source = safe_scope_data_path(
-            raw_sub_scope.get("source"),
-            field=f"{field_prefix}.source",
-            allow_external=allow_external_data,
+        source = normalize_source(item.get("source"), field=f"{item_field}.source")
+        published = normalize_published(
+            item.get("published"),
+            scope_id=parent.scope_id,
+            field=f"{item_field}.published",
+            require_media=False,
         )
-        sub_output = safe_scope_data_path(
-            raw_sub_scope.get("output"),
-            field=f"{field_prefix}.output",
-            allow_external=allow_external_data,
+        projection = normalize_public_projection(
+            item.get("public_projection"),
+            field=f"{item_field}.public_projection",
+            search_required=False,
         )
-        if public_readonly:
-            sub_publish_output = safe_relative_path(
-                raw_sub_scope.get("publish_output"),
-                field=f"{field_prefix}.publish_output",
+        if source.location.provider != parent.source.location.provider:
+            raise ValueError(f"docs scope config sub-scope {parent.scope_id}/{sub_scope} must use its parent source provider")
+        expected_source_parent = location_child_path(parent.source.location, parent.source.sub_scopes_path)
+        if not path_is_strict_relative_to(source.location.path, expected_source_parent):
+            raise ValueError(
+                f"docs scope config sub-scope {parent.scope_id}/{sub_scope} source must be beneath the parent sub_scopes_path"
             )
-        else:
-            sub_publish_output = sub_output
-
-        validate_nested_sub_scope_path(
-            scope_id=scope_id,
-            sub_scope=sub_scope,
-            path=sub_source,
-            parent_path=source,
-            field=f"{field_prefix}.source",
-            parent_field=f"scopes[{index}].source",
-        )
-        validate_nested_sub_scope_path(
-            scope_id=scope_id,
-            sub_scope=sub_scope,
-            path=sub_output,
-            parent_path=output,
-            field=f"{field_prefix}.output",
-            parent_field=f"scopes[{index}].output",
-        )
-        if public_readonly:
-            validate_nested_sub_scope_path(
-                scope_id=scope_id,
-                sub_scope=sub_scope,
-                path=sub_publish_output,
-                parent_path=publish_output,
-                field=f"{field_prefix}.publish_output",
-                parent_field=f"scopes[{index}].publish_output",
+        if published.documents.location.provider != parent.published.documents.location.provider:
+            raise ValueError(f"docs scope config sub-scope {parent.scope_id}/{sub_scope} must use its parent payload provider")
+        if not path_is_strict_relative_to(
+            published.documents.location.path,
+            parent.published.documents.location.path,
+        ):
+            raise ValueError(
+                f"docs scope config sub-scope {parent.scope_id}/{sub_scope} published documents must be beneath the parent"
             )
-
+        if bool(projection) != bool(parent.public_projection):
+            raise ValueError(
+                f"docs scope config sub-scope {parent.scope_id}/{sub_scope} public_projection must match its parent exposure"
+            )
+        if projection and parent.public_projection and not path_is_strict_relative_to(
+            projection.documents.location.path,
+            parent.public_projection.documents.location.path,
+        ):
+            raise ValueError(
+                f"docs scope config sub-scope {parent.scope_id}/{sub_scope} public documents must be beneath the parent"
+            )
         configs.append(
             DocsSubScopeConfig(
                 sub_scope=sub_scope,
-                title=str(raw_sub_scope.get("title") or "").strip(),
-                source=sub_source,
-                output=sub_output,
-                publish_output=sub_publish_output,
+                title=str(item.get("title") or "").strip(),
+                source=source,
+                published=published,
+                public_projection=projection,
             )
         )
     return tuple(configs)
 
 
 def configured_sub_scope_source_relpaths(config: DocsScopeConfig) -> tuple[Path, ...]:
+    parent_source = document_source_path(config)
     relpaths: list[Path] = []
     for sub_scope in config.sub_scopes:
         try:
-            relpath = sub_scope.source.relative_to(config.source)
+            relpath = document_source_path(sub_scope).relative_to(parent_source)
         except ValueError:
             continue
         if relpath.parts:
@@ -497,7 +675,10 @@ def path_is_under_configured_sub_scope_source(path: Path, source_dir: Path, conf
         relpath = path.relative_to(source_dir)
     except ValueError:
         return False
-    return any(path_is_relative_to(relpath, sub_scope_relpath) for sub_scope_relpath in configured_sub_scope_source_relpaths(config))
+    return any(
+        path_is_relative_to(relpath, sub_scope_relpath)
+        for sub_scope_relpath in configured_sub_scope_source_relpaths(config)
+    )
 
 
 def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScopeConfig]:
@@ -517,133 +698,113 @@ def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScop
 
     configs: dict[str, DocsScopeConfig] = {}
     for index, item in enumerate(raw_scopes):
+        field = f"scopes[{index}]"
         if not isinstance(item, dict):
-            raise ValueError(f"docs scope config scopes[{index}] must be an object")
+            raise ValueError(f"docs scope config {field} must be an object")
         scope_id = str(item.get("scope_id") or "").strip().lower()
         if not scope_id:
-            raise ValueError(f"docs scope config scopes[{index}].scope_id is required")
+            raise ValueError(f"docs scope config {field}.scope_id is required")
         if scope_id in configs:
             raise ValueError(f"docs scope config scope_id {scope_id!r} is duplicated")
         scope_type = str(item.get("scope_type") or "").strip().lower()
-        allow_external_data = scope_type == LOCAL_EXTERNAL_SCOPE_TYPE
-        if allow_external_data:
-            external_data_root = str(item.get("external_data_root") or "").strip()
-            if external_data_root != EXTERNAL_DATA_ROOT_MARKER:
-                raise ValueError(
-                    f"docs scope config scopes[{index}].external_data_root must be {EXTERNAL_DATA_ROOT_MARKER}"
-                )
-        media_path_prefix = safe_relative_path(
-            item.get("media_path_prefix") or f"docs/{scope_id}",
-            field=f"scopes[{index}].media_path_prefix",
-        )
-        output = safe_scope_data_path(
-            item.get("output"),
-            field=f"scopes[{index}].output",
-            allow_external=allow_external_data,
-        )
-        search_output = safe_scope_data_path(
-            item.get("search_output"),
-            field=f"scopes[{index}].search_output",
-            allow_external=allow_external_data,
-        )
+        if scope_type not in SUPPORTED_SCOPE_TYPES:
+            supported = ", ".join(sorted(SUPPORTED_SCOPE_TYPES))
+            raise ValueError(f"docs scope config {field}.scope_type must be one of: {supported}")
         viewer_base_url = normalize_viewer_base_url(item.get("viewer_base_url"))
         include_scope_param = item.get("include_scope_param") is True
-        if allow_external_data and is_public_readonly_scope(
-            viewer_base_url=viewer_base_url,
-            include_scope_param=include_scope_param,
-        ):
-            raise ValueError(f"docs scope config scopes[{index}] external local scopes must use the management route")
-        source = safe_scope_data_path(
-            item.get("source"),
-            field=f"scopes[{index}].source",
-            allow_external=allow_external_data,
-        )
-        if allow_external_data:
-            external_root = resolve_external_data_root()
-            if not (
-                source.is_absolute()
-                and output.is_absolute()
-                and search_output.is_absolute()
-                and path_is_relative_to(source, external_root)
-                and path_is_relative_to(output, external_root)
-                and path_is_relative_to(search_output, external_root)
-            ):
-                raise ValueError(
-                    f"docs scope config scopes[{index}] external local scopes must use paths under {EXTERNAL_DATA_ROOT_MARKER}"
-                )
-        public_readonly = is_public_readonly_scope(
-            viewer_base_url=viewer_base_url,
-            include_scope_param=include_scope_param,
-        )
-        validate_generated_output_contract(
-            scope_id=scope_id,
-            output=output,
-            search_output=search_output,
-            viewer_base_url=viewer_base_url,
-            include_scope_param=include_scope_param,
-            field_prefix=f"scopes[{index}]",
-        )
-        publish_output, publish_search_output = publish_output_paths_for(
-            item,
-            scope_id=scope_id,
-            public_readonly=public_readonly,
-            output=output,
-            search_output=search_output,
-            index=index,
-        )
-        import_media_storage = normalize_import_media_storage(
-            item,
+        preliminary = DocsScopeConfig(
             scope_id=scope_id,
             scope_type=scope_type,
-            media_path_prefix=media_path_prefix,
-            public_readonly=public_readonly,
-            index=index,
-        )
-        sub_scopes = normalize_sub_scope_configs(
-            item,
-            scope_id=scope_id,
-            source=source,
-            output=output,
-            publish_output=publish_output,
-            public_readonly=public_readonly,
-            allow_external_data=allow_external_data,
-            index=index,
-        )
-        configs[scope_id] = DocsScopeConfig(
-            scope_id=scope_id,
-            scope_type=scope_type,
-            source=source,
-            media_path_prefix=media_path_prefix,
-            output=output,
-            search_output=search_output,
-            publish_output=publish_output,
-            publish_search_output=publish_search_output,
-            viewer_base_url=viewer_base_url,
-            include_scope_param=include_scope_param,
-            default_doc_id=normalize_doc_id(
-                item.get("default_doc_id"),
-                field=f"scopes[{index}].default_doc_id",
+            source=normalize_source(item.get("source"), field=f"{field}.source"),
+            published=normalize_published(item.get("published"), scope_id=scope_id, field=f"{field}.published"),
+            public_projection=normalize_public_projection(
+                item.get("public_projection"),
+                field=f"{field}.public_projection",
             ),
+            viewer_base_url=viewer_base_url,
+            include_scope_param=include_scope_param,
+            default_doc_id=str(item.get("default_doc_id") or "").strip(),
             non_loadable_doc_ids=string_tuple(
                 item.get("non_loadable_doc_ids"),
-                field=f"scopes[{index}].non_loadable_doc_ids",
+                field=f"{field}.non_loadable_doc_ids",
             ),
             manage_only_tree_root_ids=string_tuple(
                 item.get("manage_only_tree_root_ids"),
-                field=f"scopes[{index}].manage_only_tree_root_ids",
+                field=f"{field}.manage_only_tree_root_ids",
             ),
             allow_unresolved_parent_ids=item.get("allow_unresolved_parent_ids") is True,
-            import_media_storage=import_media_storage,
-            sub_scopes=sub_scopes,
+            sub_scopes=(),
         )
+        validate_scope_policy(preliminary, field=field)
+        config = replace(
+            preliminary,
+            sub_scopes=normalize_sub_scope_configs(
+                item.get("sub_scopes"),
+                parent=preliminary,
+                field=f"{field}.sub_scopes",
+            ),
+        )
+        configs[scope_id] = config
     return configs
 
 
 DOCS_SCOPE_CONFIGS = load_docs_scope_configs()
-SCOPE_ROOTS = {scope: config.source for scope, config in DOCS_SCOPE_CONFIGS.items()}
-MEDIA_PATH_PREFIXES = {
-    scope: config.media_path_prefix for scope, config in DOCS_SCOPE_CONFIGS.items()
+DOCUMENT_SOURCE_ROOTS = {
+    scope: document_source_path(config)
+    for scope, config in DOCS_SCOPE_CONFIGS.items()
 }
-IMPORT_MEDIA_CONFIGS = {
-    scope: config.import_media_storage for scope, config in DOCS_SCOPE_CONFIGS.items()
-}
+
+
+__all__ = [
+    "CONFIG_REL_PATH",
+    "DOCS_SCOPE_CONFIGS",
+    "DOCUMENT_SOURCE_ROOTS",
+    "DOCS_VIEWER_MANAGE_ROUTE_BASE_URL",
+    "DOTLINEFORM_PROJECTS_BASE_DIR_ENV",
+    "DocsBuildMediaConfig",
+    "DocsPublicProjectionConfig",
+    "DocsPublishedArtifactConfig",
+    "DocsPublishedConfig",
+    "DocsPublishedMediaConfig",
+    "DocsScopeConfig",
+    "DocsSourceConfig",
+    "DocsSubScopeConfig",
+    "EXTERNAL_DATA_ROOT_MARKER",
+    "LOCAL_EXTERNAL_SCOPE_TYPE",
+    "LOCAL_SCOPE_TYPE",
+    "PUBLISHED_DOCS_OUTPUT_ROOT",
+    "PUBLISHED_SEARCH_OUTPUT_ROOT",
+    "PUBLIC_DOCS_OUTPUT_ROOT",
+    "PUBLIC_SCOPE_TYPE",
+    "PUBLIC_SEARCH_OUTPUT_ROOT",
+    "SCHEMA_VERSION",
+    "configured_sub_scope_source_relpaths",
+    "default_repo_root",
+    "document_source_path",
+    "is_public_readonly_scope",
+    "load_docs_scope_configs",
+    "location_child_path",
+    "normalize_viewer_base_url",
+    "normalize_sub_scope_id",
+    "path_is_relative_to",
+    "path_is_strict_relative_to",
+    "path_is_under_configured_sub_scope_source",
+    "path_label",
+    "public_documents_path",
+    "public_search_path",
+    "publication_documents_path",
+    "publication_search_path",
+    "published_documents_path",
+    "published_media_config",
+    "published_search_path",
+    "resolve_external_data_marker_path",
+    "resolve_external_data_root",
+    "resolve_external_data_workspace",
+    "resolve_location_path",
+    "resolve_scope_path",
+    "safe_relative_path",
+    "safe_scope_data_path",
+    "scope_uses_external_data",
+    "scope_media_reference_root",
+    "source_container_path",
+]

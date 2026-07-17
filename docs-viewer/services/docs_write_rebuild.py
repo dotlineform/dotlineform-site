@@ -11,7 +11,13 @@ import time
 from pathlib import Path
 from typing import Any, Callable, Dict, Optional
 
-from docs_scope_config import DOCS_SCOPE_CONFIGS, load_docs_scope_configs, resolve_scope_path
+from docs_scope_config import (
+    DOCS_SCOPE_CONFIGS,
+    document_source_path,
+    load_docs_scope_configs,
+    published_documents_path,
+    resolve_scope_path,
+)
 from docs_source_model import scope_root
 from docs_watch_suppression import (
     DEFAULT_COMPLETE_TTL_SECONDS,
@@ -37,7 +43,7 @@ def current_scope_source_root(repo_root: Path, scope: str) -> Path:
     config = configs.get(scope)
     if config is None:
         raise ValueError(f"scope {scope!r} is not configured")
-    return resolve_scope_path(repo_root, config.source)
+    return resolve_scope_path(repo_root, document_source_path(config))
 
 
 def python_builder_command(script: str, *args: str) -> list[str]:
@@ -80,7 +86,7 @@ def targeted_docs_build_fallback_reason(repo_root: Path, scope: str, target_doc_
     except (KeyError, FileNotFoundError, ValueError) as exc:
         return f"full-scope fallback: docs scope config unavailable: {exc}"
 
-    output_dir = resolve_scope_path(repo_root, config.output)
+    output_dir = resolve_scope_path(repo_root, published_documents_path(config))
     index_tree_path = output_dir / "index-tree.json"
     references_index_path = output_dir / "references" / "index.json"
     if not index_tree_path.exists():

@@ -18,10 +18,10 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, quote, urljoin, urlparse
 
-from docs_scope_config import DOCS_SCOPE_CONFIGS
+from docs_scope_config import DOCS_SCOPE_CONFIGS, published_documents_path
 
 
-SCOPE_OUTPUT_DIRS = {scope: config.output for scope, config in DOCS_SCOPE_CONFIGS.items()}
+SCOPE_OUTPUT_DIRS = {scope: published_documents_path(config) for scope, config in DOCS_SCOPE_CONFIGS.items()}
 TEMP_BASE_URL = "https://dotlineform.local"
 WHITESPACE_PATTERN = re.compile(r"\s+")
 

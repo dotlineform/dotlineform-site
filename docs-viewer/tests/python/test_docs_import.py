@@ -8,6 +8,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+from repo_factory import docs_scope_record
+
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DOCS_SERVICES_DIR = REPO_ROOT / "docs-viewer" / "services"
@@ -32,22 +34,16 @@ def make_repo() -> tempfile.TemporaryDirectory:
         root / "docs-viewer/config/scopes/docs_scopes.json",
         json.dumps(
             {
-                "schema_version": "docs_scopes_v1",
+                "schema_version": "docs_scopes_v2",
                 "scopes": [
-                    {
-                        "scope_id": "library",
-                        "scope_type": "public",
-                        "source": "docs-viewer/source/library",
-                        "media_path_prefix": "docs/library",
-                        "output": "docs-viewer/generated/docs/library",
-                        "search_output": "docs-viewer/generated/search/library/index.json",
-                        "publish_output": "site/assets/data/docs/scopes/library",
-                        "publish_search_output": "site/assets/data/search/library/index.json",
-                        "viewer_base_url": "/library/",
-                        "include_scope_param": False,
-                        "default_doc_id": "library",
-                        "allow_unresolved_parent_ids": True,
-                    }
+                    docs_scope_record(
+                        "library",
+                        scope_type="public",
+                        viewer_base_url="/library/",
+                        include_scope_param=False,
+                        default_doc_id="library",
+                        allow_unresolved_parent_ids=True,
+                    )
                 ],
             }
         )

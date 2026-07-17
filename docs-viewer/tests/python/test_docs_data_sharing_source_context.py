@@ -8,6 +8,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+from repo_factory import docs_scope_record
+
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DOCS_SERVICES_DIR = REPO_ROOT / "docs-viewer" / "services"
@@ -39,22 +41,16 @@ def scope_config(
     include_scope_param: bool = True,
     allow_unresolved_parent_ids: bool = False,
 ) -> dict[str, object]:
-    config = {
-        "scope_id": scope_id,
-        "scope_type": "local" if include_scope_param else "public",
-        "source": source or f"docs-viewer/source/{scope_id}",
-        "media_path_prefix": f"docs/{scope_id}",
-        "output": output or f"docs-viewer/generated/docs/{scope_id}",
-        "search_output": f"docs-viewer/generated/search/{scope_id}/index.json",
-        "viewer_base_url": viewer_base_url,
-        "include_scope_param": include_scope_param,
-        "default_doc_id": scope_id,
-        "allow_unresolved_parent_ids": allow_unresolved_parent_ids,
-    }
-    if not include_scope_param:
-        config["publish_output"] = f"site/assets/data/docs/scopes/{scope_id}"
-        config["publish_search_output"] = f"site/assets/data/search/{scope_id}/index.json"
-    return config
+    return docs_scope_record(
+        scope_id,
+        scope_type="local" if include_scope_param else "public",
+        source_path=source,
+        published_docs_path=output,
+        viewer_base_url=viewer_base_url,
+        include_scope_param=include_scope_param,
+        default_doc_id=scope_id,
+        allow_unresolved_parent_ids=allow_unresolved_parent_ids,
+    )
 
 
 def write_scope_config(root: Path, scopes: list[dict[str, object]]) -> None:
@@ -70,7 +66,7 @@ def write_scope_config(root: Path, scopes: list[dict[str, object]]) -> None:
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v1",
+            "schema_version": "docs_scopes_v2",
             "scopes": scopes,
         },
     )
@@ -168,7 +164,7 @@ def test_source_context_uses_scope_config_without_scope_name_branches() -> None:
                 scope_config(
                     "research",
                     source="docs-viewer/source/research",
-                    output="custom/generated/docs/research",
+                    output="docs-viewer/published/docs/research",
                     viewer_base_url="/research/",
                     include_scope_param=False,
                 ),

@@ -29,14 +29,14 @@ def external_data_sharing_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPa
     workspace.mkdir(parents=True)
     (projects_base / "docs-viewer").mkdir()
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
-    from docs_scope_config import DOCS_SCOPE_CONFIGS, SCOPE_ROOTS
+    from docs_scope_config import DOCS_SCOPE_CONFIGS, DOCUMENT_SOURCE_ROOTS
 
     original_configs = dict(DOCS_SCOPE_CONFIGS)
-    original_roots = dict(SCOPE_ROOTS)
+    original_roots = dict(DOCUMENT_SOURCE_ROOTS)
     try:
         yield workspace
     finally:
         DOCS_SCOPE_CONFIGS.clear()
         DOCS_SCOPE_CONFIGS.update(original_configs)
-        SCOPE_ROOTS.clear()
-        SCOPE_ROOTS.update(original_roots)
+        DOCUMENT_SOURCE_ROOTS.clear()
+        DOCUMENT_SOURCE_ROOTS.update(original_roots)

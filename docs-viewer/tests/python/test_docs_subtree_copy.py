@@ -12,6 +12,8 @@ from dataclasses import replace
 from http import HTTPStatus
 from pathlib import Path
 
+from repo_factory import docs_scope_record
+
 import pytest
 
 
@@ -41,42 +43,16 @@ def write_json(path: Path, payload: dict[str, object]) -> None:
 
 
 def scope_config(scope: str, *, scope_type: str = "local") -> dict[str, object]:
-    config: dict[str, object] = {
-        "scope_id": scope,
-        "scope_type": scope_type,
-        "source": f"docs-viewer/source/{scope}",
-        "media_path_prefix": f"docs/{scope}",
-        "output": f"docs-viewer/generated/docs/{scope}",
-        "search_output": f"docs-viewer/generated/search/{scope}/index.json",
-        "viewer_base_url": "/docs/",
-        "include_scope_param": True,
-        "default_doc_id": "",
-        "non_loadable_doc_ids": [],
-        "manage_only_tree_root_ids": [],
-        "allow_unresolved_parent_ids": False,
-    }
-    if scope_type == "public":
-        config.update({
-            "viewer_base_url": f"/{scope}/",
-            "include_scope_param": False,
-            "publish_output": f"site/assets/data/docs/scopes/{scope}",
-            "publish_search_output": f"site/assets/data/search/{scope}/index.json",
-            "import_media_storage": {"storage_mode": "r2_upload"},
-        })
-    return config
+    return docs_scope_record(
+        scope,
+        scope_type=scope_type,
+        viewer_base_url=f"/{scope}/" if scope_type == "public" else "/docs/",
+        include_scope_param=scope_type != "public",
+    )
 
 
 def external_scope_config(scope: str) -> dict[str, object]:
-    marker = "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
-    config = scope_config(scope, scope_type="local_external")
-    config.update({
-        "external_data_root": marker,
-        "source": f"{marker}/source/{scope}",
-        "output": f"{marker}/generated/docs/{scope}",
-        "search_output": f"{marker}/generated/search/{scope}/index.json",
-        "import_media_storage": {"storage_mode": "external_assets"},
-    })
-    return config
+    return docs_scope_record(scope, scope_type="local_external")
 
 
 def write_doc(
@@ -115,7 +91,7 @@ def make_repo(
     write_json(
         repo_root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v1",
+            "schema_version": "docs_scopes_v2",
             "scopes": [
                 scope_config("source", scope_type=source_type),
                 scope_config("target", scope_type=target_type),
@@ -823,10 +799,10 @@ def test_apply_copy_subtree_builds_loadable_and_searchable_target_outputs(tmp_pa
         activity_logger=lambda *_args, **_kwargs: None,
     )
 
-    output_root = repo_root / "docs-viewer/generated/docs/target"
+    output_root = repo_root / "docs-viewer/published/docs/target"
     tree_payload = json.loads((output_root / "index-tree.json").read_text(encoding="utf-8"))
     search_payload = json.loads(
-        (repo_root / "docs-viewer/generated/search/target/index.json").read_text(encoding="utf-8")
+        (repo_root / "docs-viewer/published/search/target/index.json").read_text(encoding="utf-8")
     )
 
     def tree_ids(records: list[dict[str, object]]) -> set[str]:

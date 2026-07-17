@@ -74,7 +74,7 @@ def manifest_delete_path_records(repo_root: Path, record: dict[str, Any]) -> tup
                 missing_files.append(planned)
 
         append_planned_path(kind, path)
-        if kind in {"generated_search_index", "published_search_index"} and path.parent.exists():
+        if kind in {"published_search_index", "public_search_index"} and path.parent.exists():
             append_planned_path(kind.removesuffix("_index") + "_root", path.parent)
     return delete_files, missing_files
 

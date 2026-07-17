@@ -5,11 +5,13 @@ from typing import Any
 
 from .common import (
     DocsScopeConfig,
+    document_source_path,
     is_public_readonly_scope,
     load_site_tools_config,
     monotonic_time,
     normalize_doc_ids,
     normalize_viewer_base_url,
+    published_documents_path,
     resolve_scope_path,
     utc_timestamp,
 )
@@ -44,8 +46,8 @@ class DocsDataBuilder(
         self.repo_root = repo_root.resolve()
         self.config = config
         self.scope_id = config.scope_id
-        self.source_dir = resolve_scope_path(self.repo_root, source_dir or config.source)
-        self.output_dir = resolve_scope_path(self.repo_root, output_dir or config.output)
+        self.source_dir = resolve_scope_path(self.repo_root, source_dir or document_source_path(config))
+        self.output_dir = resolve_scope_path(self.repo_root, output_dir or published_documents_path(config))
         self.items_dir = self.output_dir / "by-id"
         self.viewer_base_url = normalize_viewer_base_url(viewer_base_url or config.viewer_base_url)
         self.include_scope_param = config.include_scope_param

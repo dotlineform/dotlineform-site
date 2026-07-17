@@ -38,7 +38,8 @@ from docs_source_model import is_doc_timestamp, load_scope_docs, recent_edit_con
 from docs_scope_config import (
     CONFIG_REL_PATH,
     DOCS_SCOPE_CONFIGS,
-    SCOPE_ROOTS,
+    DOCUMENT_SOURCE_ROOTS,
+    document_source_path,
     load_docs_scope_configs,
     path_is_under_configured_sub_scope_source,
     resolve_scope_path,
@@ -150,8 +151,8 @@ def config_file_signature(path: Path) -> tuple[int, int]:
 def sync_scope_config_globals(configs: dict[str, Any]) -> None:
     DOCS_SCOPE_CONFIGS.clear()
     DOCS_SCOPE_CONFIGS.update(configs)
-    SCOPE_ROOTS.clear()
-    SCOPE_ROOTS.update({scope: config.source for scope, config in configs.items()})
+    DOCUMENT_SOURCE_ROOTS.clear()
+    DOCUMENT_SOURCE_ROOTS.update({scope: document_source_path(config) for scope, config in configs.items()})
 
 
 def desired_watch_state_specs(repo_root: Path, configs: dict[str, Any]) -> dict[str, dict[str, Any]]:
@@ -161,7 +162,7 @@ def desired_watch_state_specs(repo_root: Path, configs: dict[str, Any]) -> dict[
             "scope": scope,
             "sub_scope": "",
             "label": scope,
-            "root": resolve_scope_path(repo_root, config.source),
+            "root": resolve_scope_path(repo_root, document_source_path(config)),
             "config": config,
         }
         for sub_scope in config.sub_scopes:
@@ -170,7 +171,7 @@ def desired_watch_state_specs(repo_root: Path, configs: dict[str, Any]) -> dict[
                 "scope": scope,
                 "sub_scope": sub_scope.sub_scope,
                 "label": label,
-                "root": resolve_scope_path(repo_root, sub_scope.source),
+                "root": resolve_scope_path(repo_root, document_source_path(sub_scope)),
                 "config": config,
             }
     return specs
@@ -290,7 +291,7 @@ def affected_doc_ids_log_text(doc_ids: Optional[list[str]]) -> str:
 
 def parsed_doc_snapshot(repo_root: Path, scope: str) -> Dict[str, Dict[str, Any]]:
     docs = load_scope_docs(repo_root, scope)
-    root = resolve_scope_path(repo_root, SCOPE_ROOTS[scope])
+    root = resolve_scope_path(repo_root, DOCUMENT_SOURCE_ROOTS[scope])
     return {
         doc.path.relative_to(root).as_posix(): {
             "filename": doc.path.relative_to(root).as_posix(),

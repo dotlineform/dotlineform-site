@@ -1,7 +1,7 @@
 {
   "schema_version": "docs_scope_manifest_v1",
   "tool_id": "docs-viewer-scope-lifecycle",
-  "updated_at": "2026-07-15T19:10:26Z",
+  "updated_at": "2026-07-17T18:48:59Z",
   "scopes": [
     {
       "scope_id": "analysis",
@@ -12,7 +12,7 @@
       "tool_id": "",
       "repo_status_at_creation": "tracked",
       "created_at": "",
-      "updated_at": "2026-05-15T00:00:00Z",
+      "updated_at": "2026-07-17T18:48:59Z",
       "files": [
         {
           "kind": "source_root",
@@ -39,31 +39,61 @@
           "exists": true
         },
         {
-          "kind": "generated_docs_root",
+          "kind": "published_docs_root",
+          "path": "docs-viewer/published/docs/analysis",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "published_docs_index_tree",
+          "path": "docs-viewer/published/docs/analysis/index-tree.json",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "published_docs_recent",
+          "path": "docs-viewer/published/docs/analysis/recent.json",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "published_docs_payload_root",
+          "path": "docs-viewer/published/docs/analysis/by-id",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "published_search_index",
+          "path": "docs-viewer/published/search/analysis/index.json",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "public_docs_root",
           "path": "site/assets/data/docs/scopes/analysis",
           "action": "track",
           "exists": true
         },
         {
-          "kind": "generated_docs_index_tree",
+          "kind": "public_docs_index_tree",
           "path": "site/assets/data/docs/scopes/analysis/index-tree.json",
           "action": "track",
           "exists": true
         },
         {
-          "kind": "generated_docs_recent",
+          "kind": "public_docs_recent",
           "path": "site/assets/data/docs/scopes/analysis/recent.json",
           "action": "track",
           "exists": true
         },
         {
-          "kind": "generated_docs_payload_root",
+          "kind": "public_docs_payload_root",
           "path": "site/assets/data/docs/scopes/analysis/by-id",
           "action": "track",
           "exists": true
         },
         {
-          "kind": "generated_search_index",
+          "kind": "public_search_index",
           "path": "site/assets/data/search/analysis/index.json",
           "action": "track",
           "exists": true
@@ -84,7 +114,7 @@
       "tool_id": "",
       "repo_status_at_creation": "tracked",
       "created_at": "",
-      "updated_at": "2026-05-15T00:00:00Z",
+      "updated_at": "2026-07-17T18:48:59Z",
       "files": [
         {
           "kind": "source_root",
@@ -111,31 +141,61 @@
           "exists": true
         },
         {
-          "kind": "generated_docs_root",
+          "kind": "published_docs_root",
+          "path": "docs-viewer/published/docs/library",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "published_docs_index_tree",
+          "path": "docs-viewer/published/docs/library/index-tree.json",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "published_docs_recent",
+          "path": "docs-viewer/published/docs/library/recent.json",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "published_docs_payload_root",
+          "path": "docs-viewer/published/docs/library/by-id",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "published_search_index",
+          "path": "docs-viewer/published/search/library/index.json",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "public_docs_root",
           "path": "site/assets/data/docs/scopes/library",
           "action": "track",
           "exists": true
         },
         {
-          "kind": "generated_docs_index_tree",
+          "kind": "public_docs_index_tree",
           "path": "site/assets/data/docs/scopes/library/index-tree.json",
           "action": "track",
           "exists": true
         },
         {
-          "kind": "generated_docs_recent",
+          "kind": "public_docs_recent",
           "path": "site/assets/data/docs/scopes/library/recent.json",
           "action": "track",
           "exists": true
         },
         {
-          "kind": "generated_docs_payload_root",
+          "kind": "public_docs_payload_root",
           "path": "site/assets/data/docs/scopes/library/by-id",
           "action": "track",
           "exists": true
         },
         {
-          "kind": "generated_search_index",
+          "kind": "public_search_index",
           "path": "site/assets/data/search/library/index.json",
           "action": "track",
           "exists": true
@@ -156,7 +216,7 @@
       "tool_id": "",
       "repo_status_at_creation": "tracked",
       "created_at": "",
-      "updated_at": "2026-05-15T00:00:00Z",
+      "updated_at": "2026-07-17T18:48:59Z",
       "files": [
         {
           "kind": "source_root",
@@ -177,26 +237,32 @@
           "exists": true
         },
         {
-          "kind": "generated_docs_root",
-          "path": "docs-viewer/generated/docs/studio",
+          "kind": "published_docs_root",
+          "path": "docs-viewer/published/docs/studio",
           "action": "track",
           "exists": true
         },
         {
-          "kind": "generated_docs_index",
-          "path": "docs-viewer/generated/docs/studio/index.json",
+          "kind": "published_docs_index_tree",
+          "path": "docs-viewer/published/docs/studio/index-tree.json",
           "action": "track",
           "exists": true
         },
         {
-          "kind": "generated_docs_payload_root",
-          "path": "docs-viewer/generated/docs/studio/by-id",
+          "kind": "published_docs_recent",
+          "path": "docs-viewer/published/docs/studio/recent.json",
           "action": "track",
           "exists": true
         },
         {
-          "kind": "generated_search_index",
-          "path": "docs-viewer/generated/search/studio/index.json",
+          "kind": "published_docs_payload_root",
+          "path": "docs-viewer/published/docs/studio/by-id",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "published_search_index",
+          "path": "docs-viewer/published/search/studio/index.json",
           "action": "track",
           "exists": true
         }
@@ -216,7 +282,7 @@
       "tool_id": "docs-viewer-scope-lifecycle",
       "repo_status_at_creation": "tracked",
       "created_at": "2026-06-17T21:33:28Z",
-      "updated_at": "2026-06-17T21:33:28Z",
+      "updated_at": "2026-07-17T18:48:59Z",
       "files": [
         {
           "kind": "source_root",
@@ -237,66 +303,6 @@
           "exists": true
         },
         {
-          "kind": "generated_docs_root",
-          "path": "docs-viewer/generated/docs/moments",
-          "action": "track",
-          "exists": false
-        },
-        {
-          "kind": "generated_docs_index_tree",
-          "path": "docs-viewer/generated/docs/moments/index-tree.json",
-          "action": "track",
-          "exists": false
-        },
-        {
-          "kind": "generated_docs_recent",
-          "path": "docs-viewer/generated/docs/moments/recent.json",
-          "action": "track",
-          "exists": false
-        },
-        {
-          "kind": "generated_docs_payload_root",
-          "path": "docs-viewer/generated/docs/moments/by-id",
-          "action": "track",
-          "exists": false
-        },
-        {
-          "kind": "generated_search_index",
-          "path": "docs-viewer/generated/search/moments/index.json",
-          "action": "track",
-          "exists": false
-        },
-        {
-          "kind": "published_docs_root",
-          "path": "site/assets/data/docs/scopes/moments",
-          "action": "track",
-          "exists": false
-        },
-        {
-          "kind": "published_docs_index_tree",
-          "path": "site/assets/data/docs/scopes/moments/index-tree.json",
-          "action": "track",
-          "exists": false
-        },
-        {
-          "kind": "published_docs_recent",
-          "path": "site/assets/data/docs/scopes/moments/recent.json",
-          "action": "track",
-          "exists": false
-        },
-        {
-          "kind": "published_docs_payload_root",
-          "path": "site/assets/data/docs/scopes/moments/by-id",
-          "action": "track",
-          "exists": false
-        },
-        {
-          "kind": "published_search_index",
-          "path": "site/assets/data/search/moments/index.json",
-          "action": "track",
-          "exists": false
-        },
-        {
           "kind": "scope_config",
           "path": "docs-viewer/config/scopes/docs_scopes.json",
           "action": "track",
@@ -311,6 +317,66 @@
         {
           "kind": "public_route_config",
           "path": "site/docs-viewer/config/routes/docs-viewer-public-routes.json",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "published_docs_root",
+          "path": "docs-viewer/published/docs/moments",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "published_docs_index_tree",
+          "path": "docs-viewer/published/docs/moments/index-tree.json",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "published_docs_recent",
+          "path": "docs-viewer/published/docs/moments/recent.json",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "published_docs_payload_root",
+          "path": "docs-viewer/published/docs/moments/by-id",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "published_search_index",
+          "path": "docs-viewer/published/search/moments/index.json",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "public_docs_root",
+          "path": "site/assets/data/docs/scopes/moments",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "public_docs_index_tree",
+          "path": "site/assets/data/docs/scopes/moments/index-tree.json",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "public_docs_recent",
+          "path": "site/assets/data/docs/scopes/moments/recent.json",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "public_docs_payload_root",
+          "path": "site/assets/data/docs/scopes/moments/by-id",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "public_search_index",
+          "path": "site/assets/data/search/moments/index.json",
           "action": "track",
           "exists": true
         }
@@ -331,7 +397,7 @@
       "tool_id": "docs-viewer-scope-lifecycle",
       "repo_status_at_creation": "external",
       "created_at": "2026-07-13T21:21:25Z",
-      "updated_at": "2026-07-15T19:10:26Z",
+      "updated_at": "2026-07-17T18:48:59Z",
       "files": [
         {
           "kind": "source_root",
@@ -348,44 +414,39 @@
           "exists": true
         },
         {
-          "kind": "generated_docs_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/generated/docs/notes",
-          "location": "external",
-          "action": "track",
-          "exists": false
-        },
-        {
-          "kind": "generated_docs_index_tree",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/generated/docs/notes/index-tree.json",
-          "location": "external",
-          "action": "track",
-          "exists": false
-        },
-        {
-          "kind": "generated_docs_recent",
-          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/docs/notes/recent.json",
-          "location": "external",
-          "action": "track",
-          "exists": false
-        },
-        {
-          "kind": "generated_docs_payload_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/generated/docs/notes/by-id",
-          "location": "external",
-          "action": "track",
-          "exists": false
-        },
-        {
-          "kind": "generated_search_index",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/generated/search/notes/index.json",
-          "location": "external",
-          "action": "track",
-          "exists": false
-        },
-        {
           "kind": "scope_config",
           "path": "docs-viewer/config/scopes/docs_scopes.json",
           "location": "repo",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "published_docs_root",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/published/docs/notes",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "published_docs_index_tree",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/published/docs/notes/index-tree.json",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "published_docs_recent",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/published/docs/notes/recent.json",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "published_docs_payload_root",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/published/docs/notes/by-id",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "published_search_index",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/published/search/notes/index.json",
           "action": "track",
           "exists": true
         }
@@ -407,7 +468,7 @@
       "tool_id": "docs-viewer-scope-lifecycle",
       "repo_status_at_creation": "tracked",
       "created_at": "2026-07-14T08:09:45Z",
-      "updated_at": "2026-07-14T08:09:45Z",
+      "updated_at": "2026-07-17T18:48:59Z",
       "files": [
         {
           "kind": "source_root",
@@ -424,44 +485,39 @@
           "exists": true
         },
         {
-          "kind": "generated_docs_root",
-          "path": "docs-viewer/generated/docs/processing",
-          "location": "repo",
-          "action": "track",
-          "exists": false
-        },
-        {
-          "kind": "generated_docs_index_tree",
-          "path": "docs-viewer/generated/docs/processing/index-tree.json",
-          "location": "repo",
-          "action": "track",
-          "exists": false
-        },
-        {
-          "kind": "generated_docs_recent",
-          "path": "docs-viewer/generated/docs/processing/recent.json",
-          "location": "repo",
-          "action": "track",
-          "exists": false
-        },
-        {
-          "kind": "generated_docs_payload_root",
-          "path": "docs-viewer/generated/docs/processing/by-id",
-          "location": "repo",
-          "action": "track",
-          "exists": false
-        },
-        {
-          "kind": "generated_search_index",
-          "path": "docs-viewer/generated/search/processing/index.json",
-          "location": "repo",
-          "action": "track",
-          "exists": false
-        },
-        {
           "kind": "scope_config",
           "path": "docs-viewer/config/scopes/docs_scopes.json",
           "location": "repo",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "published_docs_root",
+          "path": "docs-viewer/published/docs/processing",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "published_docs_index_tree",
+          "path": "docs-viewer/published/docs/processing/index-tree.json",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "published_docs_recent",
+          "path": "docs-viewer/published/docs/processing/recent.json",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "published_docs_payload_root",
+          "path": "docs-viewer/published/docs/processing/by-id",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "published_search_index",
+          "path": "docs-viewer/published/search/processing/index.json",
           "action": "track",
           "exists": true
         }

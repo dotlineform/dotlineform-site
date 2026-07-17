@@ -32,20 +32,20 @@ def normalize_scope(repo_root: Path, value: Any) -> str:
 def docs_generated_read_payload(repo_root: Path, path: str, params: dict[str, list[str]]) -> dict[str, object]:
     scope = normalize_scope(repo_root, docs_api_query_value(params, "scope"))
 
-    if path in {routes.GENERATED_INDEX_TREE_PATH, routes.GENERATED_INDEX_TREE_ALT_PATH}:
+    if path == routes.GENERATED_INDEX_TREE_PATH:
         return docs_generated_reads.read_generated_docs_index_tree(repo_root, scope)
-    if path in {routes.GENERATED_RECENT_PATH, routes.GENERATED_RECENT_ALT_PATH}:
+    if path == routes.GENERATED_RECENT_PATH:
         return docs_generated_reads.read_generated_recent(repo_root, scope)
-    if path in {routes.GENERATED_SEARCH_PATH, routes.GENERATED_SEARCH_ALT_PATH}:
+    if path == routes.GENERATED_SEARCH_PATH:
         return docs_generated_reads.read_generated_search_index(repo_root, scope)
-    if path in {routes.GENERATED_PAYLOAD_PATH, routes.GENERATED_PAYLOAD_ALT_PATH}:
+    if path == routes.GENERATED_PAYLOAD_PATH:
         doc_id = docs_api_query_value(params, "doc_id") or docs_api_query_value(params, "doc")
         if not doc_id:
             raise ValueError("doc_id is required")
         return docs_generated_reads.read_generated_doc_payload(repo_root, scope, doc_id)
-    if path in {routes.GENERATED_REFERENCES_PATH, routes.GENERATED_REFERENCES_ALT_PATH}:
+    if path == routes.GENERATED_REFERENCES_PATH:
         return docs_generated_reads.read_generated_references_index(repo_root, scope)
-    if path in {routes.GENERATED_REFERENCE_TARGET_PATH, routes.GENERATED_REFERENCE_TARGET_ALT_PATH}:
+    if path == routes.GENERATED_REFERENCE_TARGET_PATH:
         target_kind = docs_api_query_value(params, "target_kind")
         target_slug = docs_api_query_value(params, "target_slug")
         if not target_kind or not target_slug:
@@ -61,17 +61,11 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         return capabilities_payload(repo_root)
     if path in {
         routes.GENERATED_INDEX_TREE_PATH,
-        routes.GENERATED_INDEX_TREE_ALT_PATH,
         routes.GENERATED_RECENT_PATH,
-        routes.GENERATED_RECENT_ALT_PATH,
         routes.GENERATED_PAYLOAD_PATH,
-        routes.GENERATED_PAYLOAD_ALT_PATH,
         routes.GENERATED_SEARCH_PATH,
-        routes.GENERATED_SEARCH_ALT_PATH,
         routes.GENERATED_REFERENCES_PATH,
-        routes.GENERATED_REFERENCES_ALT_PATH,
         routes.GENERATED_REFERENCE_TARGET_PATH,
-        routes.GENERATED_REFERENCE_TARGET_ALT_PATH,
     }:
         return docs_generated_read_payload(repo_root, path, params)
     if path == routes.SOURCE_CONFIG_PATH:

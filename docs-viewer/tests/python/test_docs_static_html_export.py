@@ -9,6 +9,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+from repo_factory import docs_scope_record
+
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DOCS_SERVICES_DIR = REPO_ROOT / "docs-viewer" / "services"
@@ -29,44 +31,17 @@ def write_scope_config(root: Path) -> None:
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v1",
+            "schema_version": "docs_scopes_v2",
             "scopes": [
-                {
-                    "scope_id": "studio",
-                    "scope_type": "local",
-                    "source": "docs-viewer/source/studio",
-                    "media_path_prefix": "docs/studio",
-                    "output": "docs-viewer/generated/docs/studio",
-                    "search_output": "docs-viewer/generated/search/studio/index.json",
-                    "viewer_base_url": "/docs/",
-                    "include_scope_param": True,
-                    "default_doc_id": "parent",
-                },
-                {
-                    "scope_id": "library",
-                    "scope_type": "public",
-                    "source": "docs-viewer/source/library",
-                    "media_path_prefix": "docs/library",
-                    "output": "docs-viewer/generated/docs/library",
-                    "search_output": "docs-viewer/generated/search/library/index.json",
-                    "publish_output": "site/assets/data/docs/scopes/library",
-                    "publish_search_output": "site/assets/data/search/library/index.json",
-                    "viewer_base_url": "/library/",
-                    "include_scope_param": False,
-                    "default_doc_id": "library",
-                },
-                {
-                    "scope_id": "external",
-                    "scope_type": "local_external",
-                    "external_data_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer",
-                    "source": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/external",
-                    "media_path_prefix": "docs/external",
-                    "output": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/docs/external",
-                    "search_output": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/search/external/index.json",
-                    "viewer_base_url": "/docs/",
-                    "include_scope_param": True,
-                    "default_doc_id": "external",
-                },
+                docs_scope_record("studio", default_doc_id="parent"),
+                docs_scope_record(
+                    "library",
+                    scope_type="public",
+                    viewer_base_url="/library/",
+                    include_scope_param=False,
+                    default_doc_id="library",
+                ),
+                docs_scope_record("external", scope_type="local_external", default_doc_id="external"),
             ],
         },
     )
@@ -77,19 +52,19 @@ def prepare_repo(root: Path, projects_root: Path) -> None:
     (projects_root / "docs-viewer").mkdir(parents=True, exist_ok=True)
     write_scope_config(root)
     write_json(
-        root / "docs-viewer/generated/docs/studio/index-tree.json",
+        root / "docs-viewer/published/docs/studio/index-tree.json",
         {
             "schema": "docs_index_tree_v1",
             "docs": [
                 {
                     "doc_id": "parent",
                     "title": "Parent & Root",
-                    "content_url": "/docs-viewer/generated/docs/studio/by-id/parent.json",
+                    "content_url": "/docs-viewer/published/docs/studio/by-id/parent.json",
                     "children": [
                         {
                             "doc_id": "child",
                             "title": "Child",
-                            "content_url": "/docs-viewer/generated/docs/studio/by-id/child.json",
+                            "content_url": "/docs-viewer/published/docs/studio/by-id/child.json",
                         }
                     ],
                 }
@@ -97,7 +72,7 @@ def prepare_repo(root: Path, projects_root: Path) -> None:
         },
     )
     write_json(
-        root / "docs-viewer/generated/docs/studio/by-id/parent.json",
+        root / "docs-viewer/published/docs/studio/by-id/parent.json",
         {
             "doc_id": "parent",
             "title": "Parent & Root",
@@ -105,7 +80,7 @@ def prepare_repo(root: Path, projects_root: Path) -> None:
         },
     )
     write_json(
-        root / "docs-viewer/generated/docs/studio/by-id/child.json",
+        root / "docs-viewer/published/docs/studio/by-id/child.json",
         {
             "doc_id": "child",
             "title": "Child",

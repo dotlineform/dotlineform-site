@@ -11,6 +11,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+from repo_factory import docs_scope_record
+
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DOCS_EXPORT_PATH = REPO_ROOT / "docs-viewer" / "services" / "docs_export.py"
@@ -109,22 +111,16 @@ def write_scope_config(root: Path) -> None:
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v1",
+            "schema_version": "docs_scopes_v2",
             "scopes": [
-                {
-                    "scope_id": "library",
-                    "scope_type": "public",
-                    "source": "docs-viewer/source/library",
-                    "media_path_prefix": "docs/library",
-                    "output": "docs-viewer/generated/docs/library",
-                    "search_output": "docs-viewer/generated/search/library/index.json",
-                    "publish_output": "site/assets/data/docs/scopes/library",
-                    "publish_search_output": "site/assets/data/search/library/index.json",
-                    "viewer_base_url": "/library/",
-                    "include_scope_param": False,
-                    "default_doc_id": "library",
-                    "allow_unresolved_parent_ids": True,
-                }
+                docs_scope_record(
+                    "library",
+                    scope_type="public",
+                    viewer_base_url="/library/",
+                    include_scope_param=False,
+                    default_doc_id="library",
+                    allow_unresolved_parent_ids=True,
+                )
             ],
         },
     )
@@ -759,22 +755,17 @@ def test_missing_source_context_returns_structured_export_error() -> None:
         write_json(
             root / "docs-viewer/config/scopes/docs_scopes.json",
             {
-                "schema_version": "docs_scopes_v1",
+                "schema_version": "docs_scopes_v2",
                 "scopes": [
-                    {
-                        "scope_id": "library",
-                        "scope_type": "public",
-                        "source": "docs-viewer/source/missing-library",
-                        "media_path_prefix": "docs/library",
-                            "output": "docs-viewer/generated/docs/library",
-                            "search_output": "docs-viewer/generated/search/library/index.json",
-                            "publish_output": "site/assets/data/docs/scopes/library",
-                            "publish_search_output": "site/assets/data/search/library/index.json",
-                        "viewer_base_url": "/library/",
-                        "include_scope_param": False,
-                        "default_doc_id": "library",
-                        "allow_unresolved_parent_ids": True,
-                    }
+                    docs_scope_record(
+                        "library",
+                        scope_type="public",
+                        source_path="docs-viewer/source/missing-library",
+                        viewer_base_url="/library/",
+                        include_scope_param=False,
+                        default_doc_id="library",
+                        allow_unresolved_parent_ids=True,
+                    )
                 ],
             },
         )

@@ -13,6 +13,7 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
+import xml.etree.ElementTree as ET
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Dict, Iterable, List, Mapping, Protocol, Sequence
@@ -91,6 +92,13 @@ class R2Credentials:
 @dataclass(frozen=True)
 class RemoteObject:
     size: int | None
+    etag: str
+
+
+@dataclass(frozen=True)
+class RemoteListObject:
+    key: str
+    size: int
     etag: str
 
 
@@ -1028,7 +1036,7 @@ def print_docs_report(report: Mapping[str, object]) -> None:
 
 
 class R2Client:
-    """Minimal S3-compatible client for R2 HEAD and PUT operations."""
+    """Small S3-compatible client for the artifact operations Docs Viewer needs."""
 
     def __init__(self, credentials: R2Credentials) -> None:
         self.credentials = credentials
@@ -1045,6 +1053,50 @@ class R2Client:
             if exc.code == 404:
                 return None
             raise RuntimeError(f"HEAD {key} failed with HTTP {exc.code}") from exc
+
+    def get_object(self, key: str) -> bytes:
+        request = self._request("GET", key, body=b"")
+        try:
+            with urllib.request.urlopen(request, timeout=120) as response:
+                return response.read()
+        except urllib.error.HTTPError as exc:
+            if exc.code == 404:
+                raise FileNotFoundError(f"R2 object not found: {key}") from exc
+            raise RuntimeError(f"GET {key} failed with HTTP {exc.code}") from exc
+
+    def list_objects(self, prefix: str) -> list[RemoteListObject]:
+        objects: list[RemoteListObject] = []
+        continuation_token = ""
+        while True:
+            query = {"list-type": "2", "prefix": prefix}
+            if continuation_token:
+                query["continuation-token"] = continuation_token
+            request = self._request("GET", "", body=b"", query=query)
+            try:
+                with urllib.request.urlopen(request, timeout=120) as response:
+                    payload = response.read()
+            except urllib.error.HTTPError as exc:
+                raise RuntimeError(f"LIST {prefix} failed with HTTP {exc.code}") from exc
+            root = ET.fromstring(payload)
+            namespace = root.tag.partition("}")[0].lstrip("{")
+            qualify = (lambda name: f"{{{namespace}}}{name}") if namespace else (lambda name: name)
+            for item in root.findall(qualify("Contents")):
+                key = str(item.findtext(qualify("Key")) or "")
+                if not key:
+                    continue
+                objects.append(
+                    RemoteListObject(
+                        key=key,
+                        size=int(item.findtext(qualify("Size")) or "0"),
+                        etag=str(item.findtext(qualify("ETag")) or ""),
+                    )
+                )
+            if str(root.findtext(qualify("IsTruncated")) or "").lower() != "true":
+                break
+            continuation_token = str(root.findtext(qualify("NextContinuationToken")) or "")
+            if not continuation_token:
+                raise RuntimeError("R2 LIST response was truncated without a continuation token")
+        return objects
 
     def put_object(self, key: str, path: Path, content_type: str) -> None:
         body = path.read_bytes()
@@ -1072,11 +1124,17 @@ class R2Client:
         *,
         body: bytes,
         content_type: str = "",
+        query: Mapping[str, str] | None = None,
     ) -> urllib.request.Request:
         parsed = urllib.parse.urlparse(self.credentials.endpoint)
         encoded_key = "/".join(urllib.parse.quote(part, safe="") for part in key.split("/"))
         path = f"/{urllib.parse.quote(self.credentials.bucket, safe='')}/{encoded_key}"
-        url = urllib.parse.urlunparse((parsed.scheme, parsed.netloc, path, "", "", ""))
+        canonical_query = urllib.parse.urlencode(
+            sorted((query or {}).items()),
+            quote_via=urllib.parse.quote,
+            safe="-_.~",
+        )
+        url = urllib.parse.urlunparse((parsed.scheme, parsed.netloc, path, "", canonical_query, ""))
         now = dt.datetime.now(dt.timezone.utc)
         amz_date = now.strftime("%Y%m%dT%H%M%SZ")
         date_stamp = now.strftime("%Y%m%d")
@@ -1094,6 +1152,7 @@ class R2Client:
         authorization = self._authorization(
             method=method,
             canonical_uri=path,
+            canonical_query=canonical_query,
             headers=headers,
             payload_hash=payload_hash,
             amz_date=amz_date,
@@ -1107,6 +1166,7 @@ class R2Client:
         *,
         method: str,
         canonical_uri: str,
+        canonical_query: str = "",
         headers: Mapping[str, str],
         payload_hash: str,
         amz_date: str,
@@ -1118,7 +1178,7 @@ class R2Client:
             [
                 method,
                 canonical_uri,
-                "",
+                canonical_query,
                 canonical_headers,
                 signed_headers,
                 payload_hash,

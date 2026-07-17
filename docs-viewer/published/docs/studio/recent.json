@@ -6,15 +6,15 @@
     {
       "doc_id": "d-20260717-132231-8cfc4d",
       "title": "Docs Viewer Source And Publication Model Refactor Delivery",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260717-132231-8cfc4d.json",
-      "timestamp": "2026-07-17 17:00:57",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260717-132231-8cfc4d.json",
+      "timestamp": "2026-07-17 20:28:08",
       "parent_id": "d-20260717-132231-5eae95",
       "parent_title": "Docs Viewer Source And Publication Model Refactor"
     },
     {
       "doc_id": "d-20260717-170057-b9c4e3",
       "title": "Source And Publication Refactor SSR-1 Inventory",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260717-170057-b9c4e3.json",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260717-170057-b9c4e3.json",
       "timestamp": "2026-07-17 17:00:57",
       "parent_id": "d-20260717-132231-8cfc4d",
       "parent_title": "Docs Viewer Source And Publication Model Refactor Delivery"
@@ -22,7 +22,7 @@
     {
       "doc_id": "d-20260717-132231-5eae95",
       "title": "Docs Viewer Source And Publication Model Refactor",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260717-132231-5eae95.json",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260717-132231-5eae95.json",
       "timestamp": "2026-07-17 15:00:57",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap"
@@ -30,7 +30,7 @@
     {
       "doc_id": "d-20260717-142549-d66485",
       "title": "Source, Build, Published, And Location Concept",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260717-142549-d66485.json",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260717-142549-d66485.json",
       "timestamp": "2026-07-17 15:00:57",
       "parent_id": "d-20260717-132231-5eae95",
       "parent_title": "Docs Viewer Source And Publication Model Refactor"
@@ -38,7 +38,7 @@
     {
       "doc_id": "d-20260714-234030-1e0af6",
       "title": "Docs Viewer Roadmap",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260714-234030-1e0af6.json",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260714-234030-1e0af6.json",
       "timestamp": "2026-07-17 14:38:45",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
@@ -46,7 +46,7 @@
     {
       "doc_id": "d-20260716-204013-3be4e1",
       "title": "Button Placement",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260716-204013-3be4e1.json",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260716-204013-3be4e1.json",
       "timestamp": "2026-07-16 22:42:25",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap"
@@ -54,7 +54,7 @@
     {
       "doc_id": "d-20260528-224754-964108",
       "title": "Panel Hosts and Control Surfaces",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260528-224754-964108.json",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260528-224754-964108.json",
       "timestamp": "2026-07-16 22:42:25",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer"
@@ -62,7 +62,7 @@
     {
       "doc_id": "d-20260605-125108-1d1ef3",
       "title": "Runtime Module Ownership",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260605-125108-1d1ef3.json",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260605-125108-1d1ef3.json",
       "timestamp": "2026-07-16 22:42:25",
       "parent_id": "d-20260331-000000-c313fd",
       "parent_title": "Runtime"
@@ -70,7 +70,7 @@
     {
       "doc_id": "d-20260716-193410-6d4efe",
       "title": "Copy Subtree To Scope",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260716-193410-6d4efe.json",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260716-193410-6d4efe.json",
       "timestamp": "2026-07-16 22:23:46",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap"
@@ -78,11 +78,11 @@
     {
       "doc_id": "d-20260716-193410-bd64e3",
       "title": "Copy Subtree To Scope Delivery",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260716-193410-bd64e3.json",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260716-193410-bd64e3.json",
       "timestamp": "2026-07-16 22:23:46",
       "parent_id": "d-20260716-193410-6d4efe",
       "parent_title": "Copy Subtree To Scope"
     }
   ],
-  "generated_at": "2026-07-17T16:06:53Z"
+  "generated_at": "2026-07-17T19:28:42Z"
 }

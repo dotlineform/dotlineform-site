@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 
 import docs_document_identity_migration as migration
+from repo_factory import docs_scope_record
 
 
 def _write(path: Path, text: str) -> None:
@@ -91,16 +92,9 @@ def test_apply_plan_rewrites_source_hierarchy_links_and_config(tmp_path: Path) -
     _write(source_root / "parent.md", parent_source)
     _write(source_root / "child.md", child_source)
     scope_config = {
-        "schema_version": "docs_scopes_v1",
+        "schema_version": "docs_scopes_v2",
         "scopes": [
-            {
-                "scope_id": "studio",
-                "scope_type": "local",
-                "source": "docs-viewer/source/studio",
-                "default_doc_id": "parent",
-                "non_loadable_doc_ids": [],
-                "manage_only_tree_root_ids": [],
-            }
+            docs_scope_record("studio", default_doc_id="parent")
         ],
     }
     _write(root / migration.SOURCE_CONFIG_PATH, json.dumps(scope_config) + "\n")
@@ -196,16 +190,9 @@ def test_external_scope_plan_apply_and_verify_use_configured_marker(
         repo_root / migration.SOURCE_CONFIG_PATH,
         json.dumps(
             {
-                "schema_version": "docs_scopes_v1",
+                "schema_version": "docs_scopes_v2",
                 "scopes": [
-                    {
-                        "scope_id": "notes",
-                        "scope_type": "local_external",
-                        "source": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/notes",
-                        "default_doc_id": "tmp",
-                        "non_loadable_doc_ids": [],
-                        "manage_only_tree_root_ids": [],
-                    }
+                    docs_scope_record("notes", scope_type="local_external", default_doc_id="tmp")
                 ],
             }
         )

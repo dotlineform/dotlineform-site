@@ -8,6 +8,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+from repo_factory import docs_scope_record, docs_sub_scope_record
+
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DOCS_SERVICES_DIR = REPO_ROOT / "docs-viewer" / "services"
@@ -31,32 +33,16 @@ def write_scope_config(root: Path) -> None:
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v1",
+            "schema_version": "docs_scopes_v2",
             "scopes": [
-                {
-                    "scope_id": "studio",
-                    "scope_type": "local",
-                    "source": "docs-viewer/source/studio",
-                    "media_path_prefix": "docs/studio",
-                    "output": "docs-viewer/generated/docs/studio",
-                    "search_output": "docs-viewer/generated/search/studio/index.json",
-                    "viewer_base_url": "/docs/",
-                    "include_scope_param": True,
-                    "default_doc_id": "studio",
-                },
-                {
-                    "scope_id": "library",
-                    "scope_type": "public",
-                    "source": "docs-viewer/source/library",
-                    "media_path_prefix": "docs/library",
-                    "output": "docs-viewer/generated/docs/library",
-                    "search_output": "docs-viewer/generated/search/library/index.json",
-                    "publish_output": "site/assets/data/docs/scopes/library",
-                    "publish_search_output": "site/assets/data/search/library/index.json",
-                    "viewer_base_url": "/library/",
-                    "include_scope_param": False,
-                    "default_doc_id": "library",
-                },
+                docs_scope_record("studio", default_doc_id="studio"),
+                docs_scope_record(
+                    "library",
+                    scope_type="public",
+                    viewer_base_url="/library/",
+                    include_scope_param=False,
+                    default_doc_id="library",
+                ),
             ],
         },
     )
@@ -65,7 +51,7 @@ def write_scope_config(root: Path) -> None:
 def prepare_publish_repo(root: Path) -> None:
     write_scope_config(root)
     write_json(
-        root / "docs-viewer/generated/docs/library/index-tree.json",
+        root / "docs-viewer/published/docs/library/index-tree.json",
         {
             "schema": "docs_index_tree_v1",
             "viewer_options": {"manage_only_tree_root_ids": ["manage-root"]},
@@ -99,7 +85,7 @@ def prepare_publish_repo(root: Path) -> None:
         },
     )
     write_json(
-        root / "docs-viewer/generated/docs/library/recent.json",
+        root / "docs-viewer/published/docs/library/recent.json",
         {
             "schema": "docs_recent_v1",
             "basis": "edited",
@@ -110,7 +96,7 @@ def prepare_publish_repo(root: Path) -> None:
         },
     )
     write_json(
-        root / "docs-viewer/generated/docs/library/.publish/recent.json",
+        root / "docs-viewer/published/docs/library/.publish/recent.json",
         {
             "schema": "docs_recent_v1",
             "basis": "edited",
@@ -119,26 +105,26 @@ def prepare_publish_repo(root: Path) -> None:
             ],
         },
     )
-    write_json(root / "docs-viewer/generated/docs/library/by-id/library.json", {"title": "Library"})
-    write_json(root / "docs-viewer/generated/docs/library/by-id/hidden.json", {"title": "Hidden"})
-    write_json(root / "docs-viewer/generated/docs/library/by-id/hidden-child.json", {"title": "Hidden Child"})
-    write_json(root / "docs-viewer/generated/docs/library/by-id/manage-root.json", {"title": "Manage Root"})
+    write_json(root / "docs-viewer/published/docs/library/by-id/library.json", {"title": "Library"})
+    write_json(root / "docs-viewer/published/docs/library/by-id/hidden.json", {"title": "Hidden"})
+    write_json(root / "docs-viewer/published/docs/library/by-id/hidden-child.json", {"title": "Hidden Child"})
+    write_json(root / "docs-viewer/published/docs/library/by-id/manage-root.json", {"title": "Manage Root"})
     write_json(
-        root / "docs-viewer/generated/docs/library/references/index.json",
+        root / "docs-viewer/published/docs/library/references/index.json",
         {
             "header": {"schema": "docs_semantic_references_index_v1", "scope": "library", "count": 1, "target_count": 1},
             "targets": [],
         },
     )
     write_json(
-        root / "docs-viewer/generated/docs/library/references/by-doc/hidden.json",
+        root / "docs-viewer/published/docs/library/references/by-doc/hidden.json",
         {
             "header": {"schema": "docs_semantic_references_by_doc_v1", "scope": "library", "doc_id": "hidden", "count": 1},
             "references": [{"source_doc_id": "hidden", "target_kind": "work", "target_id": "00638"}],
         },
     )
     write_json(
-        root / "docs-viewer/generated/docs/library/references/by-target/work/00638.json",
+        root / "docs-viewer/published/docs/library/references/by-target/work/00638.json",
         {
             "header": {"schema": "docs_semantic_references_by_target_v1", "scope": "library", "count": 1},
             "target_key": "work:00638",
@@ -151,7 +137,7 @@ def prepare_publish_repo(root: Path) -> None:
             "references": [{"source_doc_id": "hidden", "source_title": "Hidden"}],
         },
     )
-    write_json(root / "docs-viewer/generated/search/library/index.json", {"entries": [{"id": "library"}]})
+    write_json(root / "docs-viewer/published/search/library/index.json", {"entries": [{"id": "library"}]})
     write_json(root / "site/assets/data/docs/scopes/library/index-tree.json", {"docs": []})
     write_json(root / "site/assets/data/docs/scopes/library/by-id/stale.json", {"title": "Stale"})
     write_json(root / "site/assets/data/docs/scopes/library/by-id/hidden.json", {"title": "Old Hidden"})
@@ -196,17 +182,11 @@ def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> No
         config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
         config = json.loads(config_path.read_text(encoding="utf-8"))
         config["scopes"][1]["sub_scopes"] = [
-            {
-                "sub_scope": "tags",
-                "title": "Tags",
-                "source": "docs-viewer/source/library/tags",
-                "output": "docs-viewer/generated/docs/library/tags",
-                "publish_output": "site/assets/data/docs/scopes/library/tags",
-            }
+            docs_sub_scope_record("library", "tags", title="Tags", scope_type="public")
         ]
         write_json(config_path, config)
-        write_json(repo_root / "docs-viewer/generated/docs/library/tags/manifest.json", {"doc_ids": "scale"})
-        write_json(repo_root / "docs-viewer/generated/docs/library/tags/by-id/scale.json", {"doc_id": "scale", "title": "Scale"})
+        write_json(repo_root / "docs-viewer/published/docs/library/tags/manifest.json", {"doc_ids": "scale"})
+        write_json(repo_root / "docs-viewer/published/docs/library/tags/by-id/scale.json", {"doc_id": "scale", "title": "Scale"})
         write_json(repo_root / "site/assets/data/docs/scopes/library/tags/manifest.json", {"doc_ids": "old"})
         write_json(repo_root / "site/assets/data/docs/scopes/library/tags/by-id/old.json", {"doc_id": "old"})
 
@@ -243,16 +223,10 @@ def test_publish_rejects_configured_sub_scope_without_manifest() -> None:
         config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
         config = json.loads(config_path.read_text(encoding="utf-8"))
         config["scopes"][1]["sub_scopes"] = [
-            {
-                "sub_scope": "tags",
-                "title": "Tags",
-                "source": "docs-viewer/source/library/tags",
-                "output": "docs-viewer/generated/docs/library/tags",
-                "publish_output": "site/assets/data/docs/scopes/library/tags",
-            }
+            docs_sub_scope_record("library", "tags", title="Tags", scope_type="public")
         ]
         write_json(config_path, config)
-        (repo_root / "docs-viewer/generated/docs/library/tags").mkdir(parents=True)
+        (repo_root / "docs-viewer/published/docs/library/tags").mkdir(parents=True)
 
         try:
             docs_publish_gate.publish_confirm(repo_root, {"scope": "library"})

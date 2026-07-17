@@ -103,12 +103,15 @@ def test_watcher_pauses_and_can_resume_when_scope_root_is_temporarily_missing(tm
 def test_watcher_reconciles_scope_and_sub_scope_state_from_config(tmp_path: Path) -> None:
     module = load_docs_live_rebuild_watcher_module()
     original_configs = dict(module.DOCS_SCOPE_CONFIGS)
-    original_roots = dict(module.SCOPE_ROOTS)
+    original_roots = dict(module.DOCUMENT_SOURCE_ROOTS)
 
     def config(source: str, sub_scopes=()):
         return SimpleNamespace(
             scope_type="local",
-            source=Path(source),
+            source=SimpleNamespace(
+                location=SimpleNamespace(path=Path(source)),
+                documents_path=Path("."),
+            ),
             sub_scopes=tuple(sub_scopes),
         )
 
@@ -132,7 +135,13 @@ def test_watcher_reconciles_scope_and_sub_scope_state_from_config(tmp_path: Path
         assert changes == {"added": [], "removed": [], "reloaded": ["notes"]}
         assert states["notes"]["root"] == tmp_path / "external/source/notes"
 
-        tags = SimpleNamespace(sub_scope="tags", source=Path("external/source/archive/tags"))
+        tags = SimpleNamespace(
+            sub_scope="tags",
+            source=SimpleNamespace(
+                location=SimpleNamespace(path=Path("external/source/archive/tags")),
+                documents_path=Path("."),
+            ),
+        )
         changes = module.reconcile_watch_states(
             tmp_path,
             states,
@@ -145,12 +154,12 @@ def test_watcher_reconciles_scope_and_sub_scope_state_from_config(tmp_path: Path
             "reloaded": [],
         }
         assert sorted(states) == ["archive", "archive/tags"]
-        assert module.SCOPE_ROOTS == {"archive": Path("external/source/archive")}
+        assert module.DOCUMENT_SOURCE_ROOTS == {"archive": Path("external/source/archive")}
     finally:
         module.DOCS_SCOPE_CONFIGS.clear()
         module.DOCS_SCOPE_CONFIGS.update(original_configs)
-        module.SCOPE_ROOTS.clear()
-        module.SCOPE_ROOTS.update(original_roots)
+        module.DOCUMENT_SOURCE_ROOTS.clear()
+        module.DOCUMENT_SOURCE_ROOTS.update(original_roots)
 
 
 def test_watcher_formats_affected_doc_ids_for_logs() -> None:

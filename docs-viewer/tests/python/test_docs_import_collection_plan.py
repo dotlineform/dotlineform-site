@@ -180,7 +180,7 @@ def test_collection_plan_covers_every_record_collision_parent_and_media_without_
         "collisions": 1,
         "record_errors": 0,
         "media_plans": 1,
-        "warnings": 2,
+        "warnings": 1,
         "blockers": 0,
     }
     assert [record["action"] for record in payload["records"]] == [

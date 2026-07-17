@@ -22,12 +22,12 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
         prepare_repo(root)
         result = run_builder(root)
 
-        index_tree = read_json(root / "docs-viewer/generated/docs/studio/index-tree.json")
-        recent = read_json(root / "docs-viewer/generated/docs/studio/recent.json")
-        child = read_json(root / f"docs-viewer/generated/docs/studio/by-id/{CHILD_DOC_ID}.json")
-        references_index = read_json(root / "docs-viewer/generated/docs/studio/references/index.json")
-        target_payload = read_json(root / "docs-viewer/generated/docs/studio/references/by-target/work/00638.json")
-        by_doc = read_json(root / f"docs-viewer/generated/docs/studio/references/by-doc/{CHILD_DOC_ID}.json")
+        index_tree = read_json(root / "docs-viewer/published/docs/studio/index-tree.json")
+        recent = read_json(root / "docs-viewer/published/docs/studio/recent.json")
+        child = read_json(root / f"docs-viewer/published/docs/studio/by-id/{CHILD_DOC_ID}.json")
+        references_index = read_json(root / "docs-viewer/published/docs/studio/references/index.json")
+        target_payload = read_json(root / "docs-viewer/published/docs/studio/references/by-target/work/00638.json")
+        by_doc = read_json(root / f"docs-viewer/published/docs/studio/references/by-doc/{CHILD_DOC_ID}.json")
 
     docs = result["index_payload"]["docs"]
     assert [doc["doc_id"] for doc in docs] == [PARENT_DOC_ID, CHILD_DOC_ID]
@@ -35,7 +35,7 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
     assert docs[1]["date"] == "2026-06-02"
     assert docs[1]["date_display"] == "June 2026"
     assert docs[1]["ui_status"] == "done"
-    assert docs[1]["content_url"] == f"/docs-viewer/generated/docs/studio/by-id/{CHILD_DOC_ID}.json"
+    assert docs[1]["content_url"] == f"/docs-viewer/published/docs/studio/by-id/{CHILD_DOC_ID}.json"
     assert isinstance(docs[1]["content_text_length"], int)
 
     assert index_tree["schema"] == "docs_index_tree_v1"
@@ -45,7 +45,7 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
     assert tree_child == {
         "doc_id": CHILD_DOC_ID,
         "title": "Child",
-        "content_url": f"/docs-viewer/generated/docs/studio/by-id/{CHILD_DOC_ID}.json",
+        "content_url": f"/docs-viewer/published/docs/studio/by-id/{CHILD_DOC_ID}.json",
         "ui_status": "done",
     }
     assert "parent_id" not in tree_child
@@ -65,9 +65,9 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
 
     content_html = child["content_html"]
     assert f'href="/docs/?scope=studio&amp;doc={PARENT_DOC_ID}"' in content_html
-    assert 'src="https://media.example.test/docs/studio/diagram.png"' in content_html
+    assert 'src="/docs/media/studio/img/diagram.png"' in content_html
     assert (
-        '<img src="https://media.example.test/docs/studio/measured-diagram.png" '
+        '<img src="/docs/media/studio/img/measured-diagram.png" '
         'alt="Measured diagram" width="800" height="600"'
     ) in content_html
     assert 'title="Alt text"' in content_html
@@ -86,7 +86,7 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
     assert "638999" not in json.dumps(references_index)
     assert "638998" not in json.dumps(references_index)
     assert references_index["targets"][0]["target_key"] == "work:00638"
-    assert references_index["targets"][0]["bucket_url"] == "/docs-viewer/generated/docs/studio/references/by-target/work/00638.json"
+    assert references_index["targets"][0]["bucket_url"] == "/docs-viewer/published/docs/studio/references/by-target/work/00638.json"
     assert target_payload["header"]["schema"] == "docs_semantic_references_by_target_v1"
     assert target_payload["target_kind"] == "work"
     assert target_payload["references"][0]["source_doc_id"] == CHILD_DOC_ID
@@ -100,11 +100,11 @@ def test_python_docs_builder_preserves_existing_payloads_for_targeted_builds() -
         root = Path(temp_path)
         prepare_repo(root)
         run_builder(root)
-        parent_before = read_json(root / f"docs-viewer/generated/docs/studio/by-id/{PARENT_DOC_ID}.json")
+        parent_before = read_json(root / f"docs-viewer/published/docs/studio/by-id/{PARENT_DOC_ID}.json")
         write_source_docs(root, child_body_suffix="Updated targeted body.")
         result = run_builder(root, only_doc_ids=[CHILD_DOC_ID])
-        parent_after = read_json(root / f"docs-viewer/generated/docs/studio/by-id/{PARENT_DOC_ID}.json")
-        child_after = read_json(root / f"docs-viewer/generated/docs/studio/by-id/{CHILD_DOC_ID}.json")
+        parent_after = read_json(root / f"docs-viewer/published/docs/studio/by-id/{PARENT_DOC_ID}.json")
+        child_after = read_json(root / f"docs-viewer/published/docs/studio/by-id/{CHILD_DOC_ID}.json")
 
     assert parent_after == parent_before
     assert "Updated targeted body." in child_after["content_html"]
@@ -118,8 +118,8 @@ def test_python_docs_builder_registry_backed_references_do_not_validate_target_e
         prepare_repo(root)
         write_source_docs(root, child_body_suffix="Missing target [[ref:work:99999|still links]].")
         result = run_builder(root)
-        child = read_json(root / f"docs-viewer/generated/docs/studio/by-id/{CHILD_DOC_ID}.json")
-        missing_target = read_json(root / "docs-viewer/generated/docs/studio/references/by-target/work/99999.json")
+        child = read_json(root / f"docs-viewer/published/docs/studio/by-id/{CHILD_DOC_ID}.json")
+        missing_target = read_json(root / "docs-viewer/published/docs/studio/references/by-target/work/99999.json")
 
     assert result["diagnostics"]["warning_count"] == 0
     assert 'href="/works/?work=99999"' in child["content_html"]

@@ -34,11 +34,11 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
         write_public_source_docs(root)
         config = load_docs_scope_configs(root)["library"]
         result = build_docs.DocsDataBuilder(repo_root=root, config=config).run(write=True)
-        index_tree = read_json(root / "docs-viewer/generated/docs/library/index-tree.json")
-        recent = read_json(root / "docs-viewer/generated/docs/library/recent.json")
-        publication_recent = read_json(root / "docs-viewer/generated/docs/library/.publish/recent.json")
-        child_payload = read_json(root / f"docs-viewer/generated/docs/library/by-id/{CHILD_DOC_ID}.json")
-        hidden_payload = read_json(root / f"docs-viewer/generated/docs/library/by-id/{HIDDEN_DOC_ID}.json")
+        index_tree = read_json(root / "docs-viewer/published/docs/library/index-tree.json")
+        recent = read_json(root / "docs-viewer/published/docs/library/recent.json")
+        publication_recent = read_json(root / "docs-viewer/published/docs/library/.publish/recent.json")
+        child_payload = read_json(root / f"docs-viewer/published/docs/library/by-id/{CHILD_DOC_ID}.json")
+        hidden_payload = read_json(root / f"docs-viewer/published/docs/library/by-id/{HIDDEN_DOC_ID}.json")
         manage_browser_config = build_docs.browser_scope_config_payload(root, [config])
         public_browser_config = build_docs.browser_scope_config_payload(root, [config], published=True)
 
@@ -122,8 +122,8 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
     assert "content_html" in child_payload
     assert public_by_id_forbidden_keys.isdisjoint(child_payload)
     assert hidden_payload["title"] == "Hidden"
-    assert manage_browser_config["scopes"][0]["index_tree_url"] == "/docs-viewer/generated/docs/library/index-tree.json"
-    assert manage_browser_config["scopes"][0]["recent_url"] == "/docs-viewer/generated/docs/library/recent.json"
+    assert manage_browser_config["scopes"][0]["index_tree_url"] == "/docs-viewer/published/docs/library/index-tree.json"
+    assert manage_browser_config["scopes"][0]["recent_url"] == "/docs-viewer/published/docs/library/recent.json"
     assert public_browser_config["scopes"][0]["index_tree_url"] == "/assets/data/docs/scopes/library/index-tree.json"
     assert public_browser_config["scopes"][0]["recent_url"] == "/assets/data/docs/scopes/library/recent.json"
     assert public_browser_config["scopes"][0]["search"]["index_url"] == "/assets/data/search/library/index.json"
@@ -153,8 +153,8 @@ viewer_report_subscope: tags
         config = load_docs_scope_configs(root)["library"]
 
         build_docs.DocsDataBuilder(repo_root=root, config=config).run(write=True)
-        report_payload = read_json(root / f"docs-viewer/generated/docs/library/by-id/{REPORT_DOC_ID}.json")
-        index_tree = read_json(root / "docs-viewer/generated/docs/library/index-tree.json")
+        report_payload = read_json(root / f"docs-viewer/published/docs/library/by-id/{REPORT_DOC_ID}.json")
+        index_tree = read_json(root / "docs-viewer/published/docs/library/index-tree.json")
 
     assert report_payload["viewer_report"] == "docs_subscope"
     assert report_payload["viewer_report_access"] == "public"

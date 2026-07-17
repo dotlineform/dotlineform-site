@@ -17,8 +17,11 @@ from docs_scope_config import (
     CONFIG_REL_PATH,
     EXTERNAL_DATA_ROOT_MARKER,
     LOCAL_EXTERNAL_SCOPE_TYPE,
+    document_source_path,
     load_docs_scope_configs,
     path_label,
+    published_documents_path,
+    published_search_path,
     resolve_external_data_root,
 )
 from docs_scope_external_validation import external_scope_id_sync_blocker
@@ -53,17 +56,18 @@ def scope_rename_eligible(config: Any, manifest_record: dict[str, Any] | None) -
 def external_scope_roots(external_root: Path, scope_id: str) -> dict[str, Path]:
     return {
         "source_root": external_root / "source" / scope_id,
-        "generated_docs_root": external_root / "generated" / "docs" / scope_id,
-        "generated_search_root": external_root / "generated" / "search" / scope_id,
+        "published_docs_root": external_root / "published" / "docs" / scope_id,
+        "published_search_root": external_root / "published" / "search" / scope_id,
     }
 
 
 def expected_config_paths(scope_id: str) -> dict[str, str]:
     return {
-        "source": f"{EXTERNAL_DATA_ROOT_MARKER}/source/{scope_id}",
-        "media_path_prefix": f"docs/{scope_id}",
-        "output": f"{EXTERNAL_DATA_ROOT_MARKER}/generated/docs/{scope_id}",
-        "search_output": f"{EXTERNAL_DATA_ROOT_MARKER}/generated/search/{scope_id}/index.json",
+        "source_root": f"{EXTERNAL_DATA_ROOT_MARKER}/source/{scope_id}",
+        "published_docs_root": f"{EXTERNAL_DATA_ROOT_MARKER}/published/docs/{scope_id}",
+        "published_search_root": f"{EXTERNAL_DATA_ROOT_MARKER}/published/search/{scope_id}",
+        "media_reference_root": f"docs/{scope_id}",
+        "media_served_root": f"/docs/media/{scope_id}",
     }
 
 
@@ -74,6 +78,57 @@ def _renamed_config_path(value: Any, old_prefix: str, new_prefix: str) -> str:
     if text.startswith(old_prefix + "/"):
         return new_prefix + text[len(old_prefix):]
     return text
+
+
+def _rename_location(container: Any, old_prefix: str, new_prefix: str) -> None:
+    if not isinstance(container, dict):
+        return
+    location = container.get("location")
+    if not isinstance(location, dict):
+        return
+    location["path"] = _renamed_config_path(location.get("path"), old_prefix, new_prefix)
+
+
+def _rename_scope_role_paths(
+    record: dict[str, Any],
+    old_paths: dict[str, str],
+    new_paths: dict[str, str],
+) -> None:
+    source = record.get("source")
+    _rename_location(source, old_paths["source_root"], new_paths["source_root"])
+
+    published = record.get("published")
+    if isinstance(published, dict):
+        _rename_location(
+            published.get("documents"),
+            old_paths["published_docs_root"],
+            new_paths["published_docs_root"],
+        )
+        _rename_location(
+            published.get("search"),
+            old_paths["published_search_root"],
+            new_paths["published_search_root"],
+        )
+        media = published.get("media")
+        if isinstance(media, dict):
+            for media_record in media.values():
+                if not isinstance(media_record, dict):
+                    continue
+                media_record["reference_prefix"] = _renamed_config_path(
+                    media_record.get("reference_prefix"),
+                    old_paths["media_reference_root"],
+                    new_paths["media_reference_root"],
+                )
+                _rename_location(
+                    media_record,
+                    old_paths["source_root"],
+                    new_paths["source_root"],
+                )
+                media_record["served_path_prefix"] = _renamed_config_path(
+                    media_record.get("served_path_prefix"),
+                    old_paths["media_served_root"],
+                    new_paths["media_served_root"],
+                )
 
 
 def _path_present(path: Path) -> bool:
@@ -146,9 +201,9 @@ def plan_rename_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         old_roots = external_scope_roots(external_root, old_scope_id)
         new_roots = external_scope_roots(external_root, new_scope_id)
         configured_paths = {
-            "source_root": config.source,
-            "generated_docs_root": config.output,
-            "generated_search_root": config.search_output.parent,
+            "source_root": document_source_path(config),
+            "published_docs_root": published_documents_path(config),
+            "published_search_root": published_search_path(config).parent,
         }
         for kind, configured_path in configured_paths.items():
             if configured_path.resolve() != old_roots[kind].resolve():
@@ -207,19 +262,13 @@ def _renamed_scope_config_payload(
     target["scope_id"] = new_scope_id
     old_paths = expected_config_paths(old_scope_id)
     new_paths = expected_config_paths(new_scope_id)
-    target.update(new_paths)
+    _rename_scope_role_paths(target, old_paths, new_paths)
     sub_scopes = target.get("sub_scopes")
     if isinstance(sub_scopes, list):
         for sub_scope in sub_scopes:
             if not isinstance(sub_scope, dict):
                 continue
-            sub_scope["source"] = _renamed_config_path(
-                sub_scope.get("source"), old_paths["source"], new_paths["source"]
-            )
-            for key in ("output", "publish_output"):
-                sub_scope[key] = _renamed_config_path(
-                    sub_scope.get(key), old_paths["output"], new_paths["output"]
-                )
+            _rename_scope_role_paths(sub_scope, old_paths, new_paths)
 
     settings = payload.get("docs_viewer")
     if isinstance(settings, dict):
@@ -275,7 +324,7 @@ def _move_external_roots(
     new_roots: dict[str, Path],
 ) -> list[dict[str, str]]:
     moved: list[dict[str, str]] = []
-    for kind in ("generated_docs_root", "generated_search_root", "source_root"):
+    for kind in ("published_docs_root", "published_search_root", "source_root"):
         source = old_roots[kind]
         target = new_roots[kind]
         if not _path_present(source):

@@ -89,17 +89,23 @@ function sourceRows(scope) {
   const config = scope.source_config || {};
   return [
     ["scope_id", config.scope_id],
-    ["source", config.source],
-    ["media_path_prefix", config.media_path_prefix],
-    ["output", config.output],
+    ["scope_type", config.scope_type],
     ["viewer_base_url", config.viewer_base_url],
     ["include_scope_param", config.include_scope_param],
     ["default_doc_id", config.default_doc_id],
     ["allow_unresolved_parent_ids", config.allow_unresolved_parent_ids],
     ["non_loadable_doc_ids", config.non_loadable_doc_ids],
-    ["manage_only_tree_root_ids", config.manage_only_tree_root_ids],
-    ["import_media_storage", config.import_media_storage],
-    ["sub_scopes", config.sub_scopes]
+    ["manage_only_tree_root_ids", config.manage_only_tree_root_ids]
+  ];
+}
+
+function roleRows(scope) {
+  const roles = scope.roles || {};
+  return [
+    ["source", roles.source],
+    ["published documents", roles.published_documents],
+    ["published search", roles.published_search],
+    ["published media", roles.media]
   ];
 }
 
@@ -109,7 +115,7 @@ function browserRows(scope) {
     ["viewer_base_url", config.viewer_base_url],
     ["include_scope_param", config.include_scope_param],
     ["default_doc_id", config.default_doc_id],
-    ["media_path_prefix", config.media_path_prefix],
+    ["media", config.media],
     ["index_tree_url", config.index_tree_url],
     ["recent_url", config.recent_url],
     ["search_index_url", config.search_index_url],
@@ -117,14 +123,11 @@ function browserRows(scope) {
   ];
 }
 
-function generatedRows(scope) {
-  const generated = scope.generated || {};
+function artifactRows(scope) {
+  const artifacts = scope.artifacts || {};
   return [
-    ["docs_output", generated.docs_output],
-    ["docs_index_tree", generated.docs_index_tree],
-    ["recent", generated.recent],
-    ["docs_payload_root", generated.docs_payload_root],
-    ["search_index", generated.search_index],
+    ["published documents available", artifacts.published_documents_available],
+    ["published search available", artifacts.published_search_available],
     ["viewer_options", scope.viewer_options || {}]
   ];
 }
@@ -160,8 +163,9 @@ function appendScope(parent, scope) {
   section.appendChild(heading);
   section.appendChild(meta);
   appendGroup(section, "Source config", sourceRows(scope));
+  appendGroup(section, "Roles and locations", roleRows(scope));
   appendGroup(section, "Browser projection", browserRows(scope));
-  appendGroup(section, "Generated outputs", generatedRows(scope));
+  appendGroup(section, "Published artifacts", artifactRows(scope));
   appendWarnings(section, scope.warnings);
   parent.appendChild(section);
 }

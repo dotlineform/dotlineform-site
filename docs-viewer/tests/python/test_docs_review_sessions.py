@@ -10,6 +10,7 @@ import tempfile
 from pathlib import Path
 
 import pytest
+from repo_factory import docs_scope_record
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -37,23 +38,9 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v1",
+            "schema_version": "docs_scopes_v2",
             "scopes": [
-                {
-                    "scope_id": "studio",
-                    "scope_type": "local",
-                    "source": "docs-viewer/source/studio",
-                    "media_path_prefix": "docs/studio",
-                    "output": "docs-viewer/generated/docs/studio",
-                    "search_output": "docs-viewer/generated/search/studio/index.json",
-                    "viewer_base_url": "/docs/",
-                    "include_scope_param": True,
-                    "default_doc_id": "",
-                    "non_loadable_doc_ids": [],
-                    "manage_only_tree_root_ids": [],
-                    "allow_unresolved_parent_ids": False,
-                    "import_media_storage": {"storage_mode": "staging_manual"},
-                }
+                docs_scope_record("studio")
             ],
         },
     )

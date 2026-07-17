@@ -136,6 +136,17 @@ class ContentRenderingMixin:
         if re.match(r"\A[a-z][a-z0-9+\-.]*://", relative_path, re.IGNORECASE):
             return relative_path
         clean_path = relative_path.lstrip("/")
+        for media in self.config.published.media.values():
+            reference_prefix = media.reference_prefix.as_posix().strip("/")
+            if clean_path == reference_prefix:
+                return media.served_path_prefix
+            if clean_path.startswith(f"{reference_prefix}/"):
+                identity = clean_path.removeprefix(f"{reference_prefix}/")
+                return f"{media.served_path_prefix}/{identity}"
+        if clean_path.startswith(f"docs/{self.scope_id}/"):
+            raise RuntimeError(
+                f"Docs media reference has no configured published role in scope {self.scope_id}: {clean_path}"
+            )
         media = self.site_config.get("media")
         media_base = str(media.get("base") if isinstance(media, dict) else "").strip()
         return f"/{clean_path}" if not media_base else f"{media_base.rstrip('/')}/{clean_path}"

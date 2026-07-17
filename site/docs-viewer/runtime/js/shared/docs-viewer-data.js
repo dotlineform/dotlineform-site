@@ -149,7 +149,7 @@ export function fetchIndexTreeWithRetry(options) {
   return fetchPreferredGeneratedJson(
     settings.indexTreeUrl,
     "Failed to load docs index tree",
-    managementReloadPath("/docs/generated/index-tree", { scope: settings.viewerScope }),
+    managementReloadPath("/docs/index-tree", { scope: settings.viewerScope }),
     Object.assign({}, settings, { attempt: currentAttempt, useSearchCapability: false })
   )
     .then(function (payload) {

@@ -54,7 +54,7 @@ STATIC_PREFIXES = (
     "/assets/data/",
     "/assets/docs/",
     "/docs-viewer/config/",
-    "/docs-viewer/generated/",
+    "/docs-viewer/published/",
     "/docs-viewer/static/",
 )
 RUNTIME_STATIC_ROUTES = (
@@ -88,17 +88,11 @@ RETIRED_STATIC_PATHS = {
 MAX_BODY_BYTES = 1024 * 1024
 GENERATED_READ_PATHS = {
     routes.GENERATED_INDEX_TREE_PATH,
-    routes.GENERATED_INDEX_TREE_ALT_PATH,
     routes.GENERATED_RECENT_PATH,
-    routes.GENERATED_RECENT_ALT_PATH,
     routes.GENERATED_PAYLOAD_PATH,
-    routes.GENERATED_PAYLOAD_ALT_PATH,
     routes.GENERATED_SEARCH_PATH,
-    routes.GENERATED_SEARCH_ALT_PATH,
     routes.GENERATED_REFERENCES_PATH,
-    routes.GENERATED_REFERENCES_ALT_PATH,
     routes.GENERATED_REFERENCE_TARGET_PATH,
-    routes.GENERATED_REFERENCE_TARGET_ALT_PATH,
 }
 REVIEW_SESSION_READ_PATHS = {
     routes.REVIEW_SESSIONS_PATH,

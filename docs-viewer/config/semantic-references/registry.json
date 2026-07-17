@@ -1,6 +1,6 @@
 {
   "schema_version": "docs_semantic_reference_registry_v1",
-  "target_lookup_url": "/docs-viewer/generated/semantic-references/target-lookup.json",
+  "target_lookup_url": "/docs-viewer/published/semantic-references/target-lookup.json",
   "kinds": [
     {
       "kind": "work",

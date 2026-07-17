@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from .common import read_text, write_text
+from .common import load_docs_scope_configs, published_documents_path, read_text, write_text
 from .semantic_registry import (
     SemanticReferenceKind,
     load_semantic_reference_registry,
@@ -16,7 +16,7 @@ from .semantic_registry import (
 
 
 SEMANTIC_TARGET_LOOKUP_SCHEMA_VERSION = "docs_semantic_reference_target_lookup_v1"
-DEFAULT_SEMANTIC_TARGET_LOOKUP_PATH = Path("docs-viewer/generated/semantic-references/target-lookup.json")
+DEFAULT_SEMANTIC_TARGET_LOOKUP_PATH = Path("docs-viewer/published/semantic-references/target-lookup.json")
 
 CATALOGUE_KIND_SOURCES = {
     "work": {
@@ -33,8 +33,7 @@ CATALOGUE_KIND_SOURCES = {
 
 DOCS_SCOPE_KIND_SOURCES = {
     "moment": {
-        "index_tree": "docs-viewer/generated/docs/moments/index-tree.json",
-        "by_id": "docs-viewer/generated/docs/moments/by-id",
+        "scope_id": "moments",
     },
 }
 
@@ -232,8 +231,13 @@ class SemanticTargetLookupBuilder:
             docs_source = DOCS_SCOPE_KIND_SOURCES.get(kind.kind)
             if docs_source is None:
                 continue
-            payload = load_json(self.repo_root / str(docs_source["index_tree"]))
-            source_with_options = dict(docs_source)
+            scope_config = load_docs_scope_configs(self.repo_root)[str(docs_source["scope_id"])]
+            docs_root = published_documents_path(scope_config)
+            payload = load_json(self.repo_root / docs_root / "index-tree.json")
+            source_with_options = {
+                **docs_source,
+                "by_id": (docs_root / "by-id").as_posix(),
+            }
             viewer_options = payload.get("viewer_options") if isinstance(payload, dict) else {}
             non_loadable_doc_ids = viewer_options.get("non_loadable_doc_ids") if isinstance(viewer_options, dict) else []
             source_with_options["non_loadable_doc_ids"] = set(non_loadable_doc_ids or [])

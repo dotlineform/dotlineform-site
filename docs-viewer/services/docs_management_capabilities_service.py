@@ -13,10 +13,15 @@ import docs_subtree_copy
 import docs_source_model as source_model
 from docs_scope_config import (
     DOCS_SCOPE_CONFIGS,
+    DOCUMENT_SOURCE_ROOTS,
     LOCAL_EXTERNAL_SCOPE_TYPE,
-    SCOPE_ROOTS,
+    document_source_path,
     is_public_readonly_scope,
     path_label,
+    publication_documents_path,
+    publication_search_path,
+    published_documents_path,
+    published_search_path,
     resolve_scope_path,
 )
 from services.paths import workspace_status
@@ -25,7 +30,7 @@ from services.paths import workspace_status
 def capability_scope_docs(repo_root: Path, scope: str, root: Path) -> list[Any]:
     if not root.exists():
         return []
-    if scope in SCOPE_ROOTS:
+    if scope in DOCUMENT_SOURCE_ROOTS:
         return source_model.load_scope_docs(repo_root, scope)
 
     docs = []
@@ -55,7 +60,7 @@ def capability_scope_docs(repo_root: Path, scope: str, root: Path) -> list[Any]:
 def capability_scope_root_label(repo_root: Path, scope: str, config: Any) -> str:
     if config.scope_type == LOCAL_EXTERNAL_SCOPE_TYPE:
         return (Path("source") / scope).as_posix()
-    return path_label(repo_root, config.source)
+    return path_label(repo_root, document_source_path(config))
 
 
 def copy_subtree_target_available(repo_root: Path, config: Any) -> bool:
@@ -85,10 +90,10 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
         scope_configs = DOCS_SCOPE_CONFIGS
     for scope in sorted(scope_configs):
         config = scope_configs[scope]
-        root = resolve_scope_path(repo_root, config.source)
+        root = resolve_scope_path(repo_root, document_source_path(config))
         scope_docs = capability_scope_docs(repo_root, scope, root)
         manifest_record = manifest_scopes.get(scope)
-        generated_data_path = resolve_scope_path(repo_root, config.output) / "index-tree.json"
+        generated_data_path = resolve_scope_path(repo_root, published_documents_path(config)) / "index-tree.json"
         publishable = is_public_readonly_scope(
             viewer_base_url=config.viewer_base_url,
             include_scope_param=config.include_scope_param,
@@ -98,7 +103,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             "scope_type": config.scope_type,
             "root": capability_scope_root_label(repo_root, scope, config),
             "generated_data_reads": generated_data_path.exists(),
-            "generated_search_reads": resolve_scope_path(repo_root, config.search_output).exists(),
+            "generated_search_reads": resolve_scope_path(repo_root, published_search_path(config)).exists(),
             "publishable": publishable,
             "copy_subtree_target": copy_subtree_target_available(repo_root, config),
             "count": len(scope_docs),
@@ -116,9 +121,9 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                     {
                         "sub_scope": sub_scope.sub_scope,
                         "title": sub_scope.title,
-                        "source": path_label(repo_root, sub_scope.source),
-                        "output": path_label(repo_root, sub_scope.output),
-                        "publish_output": path_label(repo_root, sub_scope.publish_output),
+                        "source": path_label(repo_root, document_source_path(sub_scope)),
+                        "output": path_label(repo_root, published_documents_path(sub_scope)),
+                        "publish_output": path_label(repo_root, publication_documents_path(sub_scope)),
                     }
                     for sub_scope in config.sub_scopes
                 ],
@@ -127,8 +132,8 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 "status": publishable,
                 "confirm": publishable,
                 "apply": publishable,
-                "published_docs_root": config.publish_output.as_posix(),
-                "published_search_index": config.publish_search_output.as_posix(),
+                "published_docs_root": publication_documents_path(config).as_posix(),
+                "published_search_index": publication_search_path(config).as_posix(),
             },
             "static_html_export": docs_static_html_export.scope_static_html_export_capability(repo_root, scope, config),
         }

@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import unquote, urlsplit
 
+from docs_artifact_locations import local_artifact_path
 from docs_import_common import (
     APPLE_NOTES_CAPTION_SPAN_PATTERN,
     FILE_MEDIA_STAGED_SUFFIXES,
@@ -21,8 +22,7 @@ from docs_import_common import (
     slugify,
 )
 from docs_import_media import build_media_plan
-from docs_media_storage import scope_owned_media_root_for_scope
-from docs_scope_config import load_docs_scope_configs
+from docs_scope_config import load_docs_scope_configs, published_media_config
 from services.paths import marker_path
 
 def retarget_markdown_package_media_plans(
@@ -174,16 +174,11 @@ def next_package_media_filename(
     safe_extension = extension.lower().lstrip(".")
     staging_root = staging_root.resolve()
     scope_config = load_docs_scope_configs(repo_root)[normalized_scope]
-    storage_mode = scope_config.import_media_storage.storage_mode
-    local_asset_root = (
-        (scope_owned_media_root_for_scope(repo_root, scope_config) / media_class).resolve()
-        if storage_mode in {"external_assets", "repo_assets"}
-        else None
-    )
+    media = published_media_config(scope_config, media_class)
     index = 1
     while True:
         filename = f"{safe_doc_id}-{suffix}-{index:02d}.{safe_extension}"
-        local_asset_path = (local_asset_root / filename).resolve() if local_asset_root is not None else None
+        local_asset_path = local_artifact_path(repo_root, media.location, filename)
         if (
             filename not in used_filenames
             and not (staging_root / filename).exists()
@@ -223,21 +218,7 @@ def build_package_media_plan(
             "max_width": 800,
             "resize_only_if_wider": True,
         }
-    if plan["manual_copy_required"]:
-        plan["staging_path"] = marker_path(staging_root / filename, workspace_root=workspace_root)
     return plan
-
-
-def package_media_warning(plan: dict[str, Any]) -> str:
-    if plan.get("kind") == "attachment":
-        return (
-            f"Copy {plan.get('source_path')} to the media path {plan.get('media_path')} "
-            "before the rendered download link will work."
-        )
-    return (
-        f"Copy {plan.get('source_path')} to the media path {plan.get('media_path')} "
-        "before the rendered doc can display it."
-    )
 
 
 def readable_package_image_title(doc_id: str, image_index: int) -> str:
@@ -316,8 +297,6 @@ def rewrite_markdown_package_media_links(
         )
         plans.append(plan)
         plans_by_target[key] = plan
-        if plan["manual_copy_required"]:
-            warnings.append(package_media_warning(plan))
         return plan
 
     def plan_for_attachment(target: str, label: str) -> dict[str, Any] | None:
@@ -354,8 +333,6 @@ def rewrite_markdown_package_media_links(
         )
         plans.append(plan)
         plans_by_target[key] = plan
-        if plan["manual_copy_required"]:
-            warnings.append(package_media_warning(plan))
         return plan
 
     def replace_image(match: re.Match[str]) -> str:

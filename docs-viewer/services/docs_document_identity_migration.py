@@ -32,6 +32,7 @@ from docs_document_identity import (  # noqa: E402
 PLAN_SCHEMA = "docs_document_identity_migration_v1"
 SOURCE_CONFIG_PATH = Path("docs-viewer/config/scopes/docs_scopes.json")
 SCOPE_MANIFEST_PATH = Path("docs-viewer/config/scopes/docs_scope_manifest.json")
+SOURCE_CONFIG_SCHEMA = "docs_scopes_v2"
 DEFAULT_PLAN_PATH = Path("var/docs/document-identity/mapping.json")
 FRONT_MATTER_PATTERN = re.compile(r"\A---\s*\n(?P<header>.*?)\n---(?P<tail>\s*\n?)", re.DOTALL)
 URL_PATTERN = re.compile(r"/(?:docs|library|analysis|moments)/\?[^\s)>'\"<]+")
@@ -126,6 +127,19 @@ def _source_locator_for_path(spec: dict[str, Any], path: Path) -> str:
     return (Path(spec["root"]) / relative_path).as_posix()
 
 
+def _configured_source_root(value: Any, *, field: str) -> str:
+    if not isinstance(value, dict):
+        raise ValueError(f"document migration {field} must be an object")
+    location = value.get("location")
+    if not isinstance(location, dict):
+        raise ValueError(f"document migration {field}.location must be an object")
+    root = str(location.get("path") or "").strip()
+    documents_path = str(value.get("documents_path") or ".").strip()
+    if not root or not documents_path:
+        raise ValueError(f"document migration {field} requires location.path and documents_path")
+    return (Path(root) / documents_path).as_posix()
+
+
 def _namespace_specs(
     repo_root: Path,
     *,
@@ -133,6 +147,8 @@ def _namespace_specs(
     scope_ids: set[str] | None = None,
 ) -> list[dict[str, Any]]:
     config = json.loads((repo_root / SOURCE_CONFIG_PATH).read_text(encoding="utf-8"))
+    if config.get("schema_version") != SOURCE_CONFIG_SCHEMA:
+        raise ValueError(f"document migration source config must use {SOURCE_CONFIG_SCHEMA}")
     selected_scopes = {str(scope_id or "").strip() for scope_id in (scope_ids or set()) if str(scope_id or "").strip()}
     configured_scopes = {
         str(scope.get("scope_id") or "").strip()
@@ -156,7 +172,7 @@ def _namespace_specs(
                     f"document migration scope {scope_id!r} is external-local; pass --include-external"
                 )
             continue
-        source = str(scope.get("source") or "").strip()
+        source = _configured_source_root(scope.get("source"), field=f"scope {scope_id!r}.source")
         if not scope_id or not source:
             continue
         if source.startswith("$") and scope_type != "local_external":
@@ -166,7 +182,10 @@ def _namespace_specs(
             if not isinstance(sub_scope, dict):
                 continue
             sub_id = str(sub_scope.get("sub_scope") or "").strip()
-            sub_source = str(sub_scope.get("source") or "").strip()
+            sub_source = _configured_source_root(
+                sub_scope.get("source"),
+                field=f"scope {scope_id!r} sub-scope {sub_id!r}.source",
+            )
             if not sub_id or not sub_source:
                 continue
             if sub_source.startswith("$") and scope_type != "local_external":

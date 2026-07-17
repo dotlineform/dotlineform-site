@@ -9,7 +9,6 @@ import docs_import_media
 import docs_import_preview
 import docs_import_source_service as import_source_service
 import docs_write_rebuild as write_rebuild
-from services.paths import configured_workspace_paths
 
 from docs_import_test_support import (
     handle_import_source,
@@ -58,13 +57,15 @@ def test_html_import_extracts_inline_png_to_staged_media_plan() -> None:
             docs_import_preview.validate_markdown_preview = original_validation
 
         source_text = (root / payload["path"]).read_text(encoding="utf-8")
-        media_path = configured_workspace_paths(root).import_staging / "inline-diagram-image-01.png"
+        media_path = root / "docs-viewer/source/library/media/img/inline-diagram-image-01.png"
         media_bytes = media_path.read_bytes()
 
     assert payload["ok"] is True
     assert payload["import_preview"]["media_plans"][0]["source_path"] == "inline-diagram-image-01.png"
     assert payload["import_preview"]["media_plans"][0]["media_path"] == "docs/library/img/inline-diagram-image-01.png"
-    assert payload["inline_media_written"][0]["staging_path"] == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/inline-diagram-image-01.png"
+    assert payload["inline_media_written"][0]["location_provider"] == "repository"
+    assert payload["inline_media_written"][0]["artifact_identity"] == "inline-diagram-image-01.png"
+    assert payload["inline_media_written"][0]["publish_status"] == "uploaded"
     assert media_bytes == b"inline-png"
     assert "data:image/png;base64" not in source_text
     assert "![Layered diagram]([[media:docs/library/img/inline-diagram-image-01.png]])" in source_text
@@ -97,7 +98,7 @@ def test_markdown_import_extracts_inline_png_with_incremented_filename() -> None
             docs_import_preview.validate_markdown_preview = original_validation
 
         source_text = (root / payload["path"]).read_text(encoding="utf-8")
-        media_path = configured_workspace_paths(root).import_staging / "inline-note-image-02.png"
+        media_path = root / "docs-viewer/source/library/media/img/inline-note-image-02.png"
         media_bytes = media_path.read_bytes()
 
     assert payload["ok"] is True
@@ -134,7 +135,7 @@ def test_inline_media_write_skips_invalid_data_urls_before_valid_images() -> Non
             docs_import_preview.validate_markdown_preview = original_validation
 
         source_text = (root / payload["path"]).read_text(encoding="utf-8")
-        media_path = configured_workspace_paths(root).import_staging / "mixed-inline-image-01.png"
+        media_path = root / "docs-viewer/source/library/media/img/mixed-inline-image-01.png"
         media_bytes = media_path.read_bytes()
 
     assert payload["ok"] is True
@@ -184,8 +185,8 @@ Some text.
             docs_import_preview.validate_markdown_preview = original_validation
 
         source_text = (root / payload["path"]).read_text(encoding="utf-8")
-        webp_path = configured_workspace_paths(root).import_staging / "my-note-image-01.webp"
-        attachment_path = configured_workspace_paths(root).import_staging / "my-note-attachment-01.pdf"
+        webp_path = root / "docs-viewer/source/library/media/img/my-note-image-01.webp"
+        attachment_path = root / "docs-viewer/source/library/media/files/my-note-attachment-01.pdf"
         from PIL import Image
 
         with Image.open(webp_path) as converted:

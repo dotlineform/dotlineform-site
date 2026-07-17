@@ -12,6 +12,8 @@ from io import StringIO
 from pathlib import Path
 from typing import Any
 
+from repo_factory import docs_scope_record, docs_sub_scope_record
+
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 BUILD_DIR = REPO_ROOT / "docs-viewer" / "build"
@@ -19,9 +21,6 @@ if str(BUILD_DIR) not in sys.path:
     sys.path.insert(0, str(BUILD_DIR))
 
 import build_search  # noqa: E402
-
-EXTERNAL_DATA_ROOT_MARKER = "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
-
 
 def write_json(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -41,22 +40,13 @@ def write_scope_config(root: Path) -> None:
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v1",
+            "schema_version": "docs_scopes_v2",
             "scopes": [
-                {
-                    "scope_id": "studio",
-                    "scope_type": "local",
-                    "source": "docs-viewer/source/studio",
-                    "media_path_prefix": "docs/studio",
-                    "output": "docs-viewer/generated/docs/studio",
-                    "search_output": "docs-viewer/generated/search/studio/index.json",
-                    "viewer_base_url": "/docs/",
-                    "include_scope_param": True,
-                    "default_doc_id": "parent",
-                    "non_loadable_doc_ids": [],
-                    "manage_only_tree_root_ids": ["manage-root"],
-                    "allow_unresolved_parent_ids": False,
-                }
+                docs_scope_record(
+                    "studio",
+                    default_doc_id="parent",
+                    manage_only_tree_root_ids=["manage-root"],
+                )
             ],
         },
     )
@@ -67,23 +57,13 @@ def write_external_scope_config(root: Path, external_root: Path) -> None:
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v1",
+            "schema_version": "docs_scopes_v2",
             "scopes": [
-                {
-                    "scope_id": "private",
-                    "scope_type": "local_external",
-                    "external_data_root": EXTERNAL_DATA_ROOT_MARKER,
-                    "source": f"{EXTERNAL_DATA_ROOT_MARKER}/source/private",
-                    "media_path_prefix": "docs/private",
-                    "output": f"{EXTERNAL_DATA_ROOT_MARKER}/generated/docs/private",
-                    "search_output": f"{EXTERNAL_DATA_ROOT_MARKER}/generated/search/private/index.json",
-                    "viewer_base_url": "/docs/",
-                    "include_scope_param": True,
-                    "default_doc_id": "private",
-                    "non_loadable_doc_ids": [],
-                    "manage_only_tree_root_ids": [],
-                    "allow_unresolved_parent_ids": False,
-                }
+                docs_scope_record(
+                    "private",
+                    scope_type="local_external",
+                    default_doc_id="private",
+                )
             ],
         },
     )
@@ -138,11 +118,11 @@ def test_python_docs_search_builder_writes_current_schema_and_hash() -> None:
         root = Path(temp_path)
         prepare_repo(root)
         exit_code, stdout, stderr = run_cli(root, ["--scope", "studio", "--write"])
-        payload = read_json(root / "docs-viewer/generated/search/studio/index.json")
+        payload = read_json(root / "docs-viewer/published/search/studio/index.json")
 
     assert exit_code == 0
     assert stderr == ""
-    assert "Wrote docs-viewer/generated/search/studio/index.json with 2 studio search entries" in stdout
+    assert "Wrote docs-viewer/published/search/studio/index.json with 2 studio search entries" in stdout
     header = payload["header"]
     entries = payload["entries"]
     assert header["schema"] == "search_index_studio_v1"
@@ -188,11 +168,7 @@ def test_python_docs_search_builder_excludes_configured_sub_scope_sources() -> N
         config_path = root / "docs-viewer/config/scopes/docs_scopes.json"
         payload = read_json(config_path)
         payload["scopes"][0]["sub_scopes"] = [
-            {
-                "sub_scope": "tags",
-                "source": "docs-viewer/source/studio/tags",
-                "output": "docs-viewer/generated/docs/studio/tags",
-            }
+            docs_sub_scope_record("studio", "tags")
         ]
         write_json(config_path, payload)
         write_text(
@@ -208,11 +184,11 @@ Sub-scope detail body.
         )
 
         exit_code, stdout, stderr = run_cli(root, ["--scope", "studio", "--write"])
-        payload = read_json(root / "docs-viewer/generated/search/studio/index.json")
+        payload = read_json(root / "docs-viewer/published/search/studio/index.json")
 
     assert exit_code == 0
     assert stderr == ""
-    assert "Wrote docs-viewer/generated/search/studio/index.json with 2 studio search entries" in stdout
+    assert "Wrote docs-viewer/published/search/studio/index.json with 2 studio search entries" in stdout
     assert "detail" not in {entry["id"] for entry in payload["entries"]}
 
 
@@ -225,8 +201,8 @@ def test_python_docs_search_builder_dry_run_does_not_write() -> None:
         assert exit_code == 0
         assert stderr == ""
         assert "Dry run: 2 studio search entries" in stdout
-        assert "Would write: docs-viewer/generated/search/studio/index.json" in stdout
-        assert not (root / "docs-viewer/generated/search/studio/index.json").exists()
+        assert "Would write: docs-viewer/published/search/studio/index.json" in stdout
+        assert not (root / "docs-viewer/published/search/studio/index.json").exists()
 
 
 def test_python_docs_search_builder_skips_unchanged_second_write_and_force_rewrites() -> None:
@@ -234,17 +210,17 @@ def test_python_docs_search_builder_skips_unchanged_second_write_and_force_rewri
         root = Path(temp_path)
         prepare_repo(root)
         run_cli(root, ["--scope", "studio", "--write"])
-        first_payload = read_json(root / "docs-viewer/generated/search/studio/index.json")
+        first_payload = read_json(root / "docs-viewer/published/search/studio/index.json")
         second_exit, second_stdout, second_stderr = run_cli(root, ["--scope", "studio", "--write"])
         force_exit, force_stdout, force_stderr = run_cli(root, ["--scope", "studio", "--write", "--force"])
-        force_payload = read_json(root / "docs-viewer/generated/search/studio/index.json")
+        force_payload = read_json(root / "docs-viewer/published/search/studio/index.json")
 
     assert second_exit == 0
     assert second_stderr == ""
     assert "Search index JSON done. Wrote: 0. Skipped: 1." in second_stdout
     assert force_exit == 0
     assert force_stderr == ""
-    assert "Wrote docs-viewer/generated/search/studio/index.json with 2 studio search entries" in force_stdout
+    assert "Wrote docs-viewer/published/search/studio/index.json with 2 studio search entries" in force_stdout
     assert force_payload["header"]["version"] == first_payload["header"]["version"]
 
 
@@ -256,7 +232,7 @@ def test_python_docs_search_builder_targeted_update_patches_existing_entry() -> 
         write_source_docs(root, child_title="Child Updated")
 
         exit_code, stdout, stderr = run_cli(root, ["--scope", "studio", "--write", "--only-doc-ids", "child", "--remove-missing"])
-        payload = read_json(root / "docs-viewer/generated/search/studio/index.json")
+        payload = read_json(root / "docs-viewer/published/search/studio/index.json")
 
     assert exit_code == 0
     assert stderr == ""
@@ -280,7 +256,7 @@ def test_python_docs_search_builder_targeted_remove_requires_remove_missing() ->
             raise AssertionError("targeted removal without --remove-missing should fail")
 
         exit_code, stdout, stderr = run_cli(root, ["--scope", "studio", "--write", "--only-doc-ids", "child", "--remove-missing"])
-        payload = read_json(root / "docs-viewer/generated/search/studio/index.json")
+        payload = read_json(root / "docs-viewer/published/search/studio/index.json")
 
     assert "requires --remove-missing" in error
     assert exit_code == 0
@@ -294,7 +270,7 @@ def test_python_docs_search_builder_targeted_without_existing_index_falls_back_f
         root = Path(temp_path)
         prepare_repo(root)
         exit_code, stdout, stderr = run_cli(root, ["--scope", "studio", "--write", "--only-doc-ids", "child", "--remove-missing"])
-        payload = read_json(root / "docs-viewer/generated/search/studio/index.json")
+        payload = read_json(root / "docs-viewer/published/search/studio/index.json")
 
     assert exit_code == 0
     assert stderr == ""
@@ -339,7 +315,7 @@ External search body.
         )
         try:
             exit_code, stdout, stderr = run_cli(root, ["--scope", "private", "--write"])
-            payload = read_json(external_root / "generated/search/private/index.json")
+            payload = read_json(external_root / "published/search/private/index.json")
         finally:
             if old_projects_base is None:
                 os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)

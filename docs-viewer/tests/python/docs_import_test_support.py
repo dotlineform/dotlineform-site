@@ -9,6 +9,7 @@ from pathlib import Path
 
 from repo_factory import (
     data_sharing_workspace_root,
+    docs_scope_record,
     make_docs_import_repo,
     write_docs_scope_config,
     write_library_doc as write_fixture_library_doc,
@@ -91,20 +92,17 @@ def write_scope_config(root: Path) -> None:
     write_docs_scope_config(
         root,
         [
-            {
-                "scope_id": "library",
-                "scope_type": "public",
-                "source": "docs-viewer/source/library",
-                "media_path_prefix": "docs/library",
-                "output": "docs-viewer/generated/docs/library",
-                "search_output": "docs-viewer/generated/search/library/index.json",
-                "publish_output": "site/assets/data/docs/scopes/library",
-                "publish_search_output": "site/assets/data/search/library/index.json",
-                "viewer_base_url": "/library/",
-                "include_scope_param": False,
-                "default_doc_id": "library",
-                "allow_unresolved_parent_ids": True,
-            }
+            docs_scope_record(
+                "library",
+                scope_type="public",
+                viewer_base_url="/library/",
+                include_scope_param=False,
+                default_doc_id="library",
+                allow_unresolved_parent_ids=True,
+                media_provider="repository",
+                media_location_root="docs-viewer/source/library/media",
+                media_served_root="/docs/media/library",
+            )
         ],
     )
 

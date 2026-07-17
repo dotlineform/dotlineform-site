@@ -17,6 +17,7 @@ if str(SHARED_PYTHON_DIR) not in sys.path:
     sys.path.insert(0, str(SHARED_PYTHON_DIR))
 
 from markdown_renderer import markdown_renderer_contract, render_markdown_document  # noqa: E402
+from docs_scope_config import DOCUMENT_SOURCE_ROOTS  # noqa: E402
 
 from docs_import_common import (  # noqa: E402
     FILE_MEDIA_STAGED_SUFFIXES,
@@ -734,7 +735,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--repo-root", default="", help="Override repo root auto-detection.")
     parser.add_argument("--source-html", default="", help="Import directly from an HTML file path.")
     parser.add_argument("--staged-filename", default="", help="Import from the configured shared import staging root.")
-    parser.add_argument("--scope", default="studio", choices=sorted(SCOPE_ROOTS.keys()), help="Target docs scope.")
+    parser.add_argument(
+        "--scope",
+        default="studio",
+        choices=sorted(DOCUMENT_SOURCE_ROOTS.keys()),
+        help="Target docs scope.",
+    )
     parser.add_argument("--include-prompt-meta", action="store_true", help="Include clearly identifiable prompt/meta blocks.")
     parser.add_argument("--markdown-preview-out", default="", help="Optional path to write the Markdown preview.")
     return parser.parse_args(argv)

@@ -13,6 +13,10 @@ from .common import (
     is_public_readonly_scope,
     json_text,
     normalize_viewer_base_url,
+    public_documents_path,
+    public_search_path,
+    published_documents_path,
+    published_search_path,
     read_text,
     scope_uses_external_data,
     write_text,
@@ -35,31 +39,25 @@ def raw_scope_items(repo_root: Path) -> dict[str, dict[str, Any]]:
 
 def browser_docs_index_tree_url(config: DocsScopeConfig, *, published: bool = False) -> str:
     if scope_uses_external_data(config):
-        return f"/docs/generated/index-tree?scope={quote(config.scope_id)}"
-    output = config.publish_output if published and is_public_readonly_scope(
-        viewer_base_url=config.viewer_base_url,
-        include_scope_param=config.include_scope_param,
-    ) else config.output
+        return f"/docs/index-tree?scope={quote(config.scope_id)}"
+    output = public_documents_path(config) if published else published_documents_path(config)
+    output = output or published_documents_path(config)
     return f"{browser_path_for_repo_relative(output)}/index-tree.json"
 
 
 def browser_docs_recent_url(config: DocsScopeConfig, *, published: bool = False) -> str:
     if scope_uses_external_data(config):
-        return f"/docs/generated/recent?scope={quote(config.scope_id)}"
-    output = config.publish_output if published and is_public_readonly_scope(
-        viewer_base_url=config.viewer_base_url,
-        include_scope_param=config.include_scope_param,
-    ) else config.output
+        return f"/docs/recent?scope={quote(config.scope_id)}"
+    output = public_documents_path(config) if published else published_documents_path(config)
+    output = output or published_documents_path(config)
     return f"{browser_path_for_repo_relative(output)}/recent.json"
 
 
 def browser_search_index_url(config: DocsScopeConfig, *, published: bool = False) -> str:
     if scope_uses_external_data(config):
-        return f"/docs/generated/search?scope={quote(config.scope_id)}"
-    output = config.publish_search_output if published and is_public_readonly_scope(
-        viewer_base_url=config.viewer_base_url,
-        include_scope_param=config.include_scope_param,
-    ) else config.search_output
+        return f"/docs/search?scope={quote(config.scope_id)}"
+    output = public_search_path(config) if published else published_search_path(config)
+    output = output or published_search_path(config)
     return browser_path_for_repo_relative(output)
 
 
@@ -75,11 +73,8 @@ def browser_search_policy_payload(config: DocsScopeConfig, *, published: bool = 
 
 def browser_sub_scope_output_url_base(config: DocsScopeConfig, sub_scope: Any) -> str:
     if scope_uses_external_data(config):
-        return f"/docs/generated/external/{quote(config.scope_id)}/{quote(sub_scope.sub_scope)}"
-    output = sub_scope.publish_output if is_public_readonly_scope(
-        viewer_base_url=config.viewer_base_url,
-        include_scope_param=config.include_scope_param,
-    ) else sub_scope.output
+        return f"/docs/published/external/{quote(config.scope_id)}/{quote(sub_scope.sub_scope)}"
+    output = public_documents_path(sub_scope) or published_documents_path(sub_scope)
     return browser_path_for_repo_relative(output)
 
 
@@ -129,7 +124,13 @@ def browser_scope_record(
         "viewer_base_url": normalize_viewer_base_url(config.viewer_base_url),
         "include_scope_param": config.include_scope_param is True,
         "default_doc_id": config.default_doc_id,
-        "media_path_prefix": config.media_path_prefix.as_posix(),
+        "media": {
+            media_type: {
+                "reference_prefix": media.reference_prefix.as_posix(),
+                "served_path_prefix": media.served_path_prefix,
+            }
+            for media_type, media in sorted(config.published.media.items())
+        },
         "index_tree_url": browser_docs_index_tree_url(config, published=published),
         "recent_url": browser_docs_recent_url(config, published=published),
         "search_index_url": browser_search_index_url(config, published=published),

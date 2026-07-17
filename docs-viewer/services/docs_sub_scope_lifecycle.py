@@ -17,9 +17,11 @@ from docs_lifecycle_paths import (
 from docs_scope_config import (
     CONFIG_REL_PATH,
     DocsScopeConfig,
-    is_public_readonly_scope,
+    document_source_path,
     load_docs_scope_configs,
     normalize_sub_scope_id,
+    public_documents_path,
+    published_documents_path,
     resolve_scope_path,
 )
 from docs_scope_manifest import (
@@ -41,11 +43,34 @@ def find_raw_scope_config(payload: dict[str, Any], scope_id: str) -> dict[str, A
     raise ValueError(f"scope_id {scope_id!r} is missing from docs scope config")
 
 
-def append_path_text(value: Any, child: str) -> str:
+def append_path_text(value: Any, *children: str) -> str:
     text = str(value or "").strip()
     if not text:
         raise ValueError("sub-scope parent path is required")
-    return (Path(text) / child).as_posix()
+    path = Path(text)
+    for child in children:
+        if child and child != ".":
+            path /= child
+    return path.as_posix()
+
+
+def raw_location(container: Any, *, field: str) -> dict[str, Any]:
+    if not isinstance(container, dict):
+        raise ValueError(f"{field} must be an object")
+    location = container.get("location")
+    if not isinstance(location, dict):
+        raise ValueError(f"{field}.location must be an object")
+    provider = str(location.get("provider") or "").strip()
+    path = str(location.get("path") or "").strip()
+    if not provider or not path:
+        raise ValueError(f"{field}.location requires provider and path")
+    return {"provider": provider, "path": path}
+
+
+def child_location(container: Any, *children: str, field: str) -> dict[str, Any]:
+    location = raw_location(container, field=field)
+    location["path"] = append_path_text(location["path"], *children)
+    return location
 
 
 def planned_sub_scope_config_record(
@@ -54,25 +79,68 @@ def planned_sub_scope_config_record(
     sub_scope: str,
     title: str,
 ) -> dict[str, Any]:
-    public_readonly = is_public_readonly_scope(
-        viewer_base_url=parent_config.viewer_base_url,
-        include_scope_param=parent_config.include_scope_param,
+    raw_source = raw_parent_config.get("source")
+    if not isinstance(raw_source, dict):
+        raise ValueError("parent source role must be an object")
+    raw_published = raw_parent_config.get("published")
+    if not isinstance(raw_published, dict):
+        raise ValueError("parent published role must be an object")
+    source_location = child_location(
+        raw_source,
+        str(raw_source.get("sub_scopes_path") or "."),
+        sub_scope,
+        field="parent source",
     )
-    publish_parent = raw_parent_config.get("publish_output") if public_readonly else raw_parent_config.get("output")
+    published_documents = raw_published.get("documents")
+    published_search = raw_published.get("search")
+    search_location = raw_location(published_search, field="parent published search")
+    search_location["path"] = (
+        Path(search_location["path"]).parent / sub_scope / "index.json"
+    ).as_posix()
+    raw_projection = raw_parent_config.get("public_projection")
+    projection = None
+    if parent_config.public_projection is not None:
+        if not isinstance(raw_projection, dict):
+            raise ValueError("parent public projection must be an object")
+        projection = {
+            "documents": {
+                "location": child_location(
+                    raw_projection.get("documents"),
+                    sub_scope,
+                    field="parent public documents",
+                )
+            },
+            "search": None,
+        }
     return {
         "sub_scope": sub_scope,
         "title": title,
-        "source": append_path_text(raw_parent_config.get("source"), sub_scope),
-        "output": append_path_text(raw_parent_config.get("output"), sub_scope),
-        "publish_output": append_path_text(publish_parent, sub_scope),
+        "source": {
+            "location": source_location,
+            "documents_path": ".",
+            "build_media": {},
+            "sub_scopes_path": ".",
+        },
+        "published": {
+            "documents": {
+                "location": child_location(
+                    published_documents,
+                    sub_scope,
+                    field="parent published documents",
+                )
+            },
+            "search": {"location": search_location},
+            "media": {},
+        },
+        "public_projection": projection,
     }
 
 
 def append_sub_scope_config(repo_root: Path, parent_scope: str, sub_scope_config: dict[str, Any]) -> None:
     config_path = repo_root / CONFIG_REL_PATH
     payload = load_json_object(config_path, "docs scope config")
-    if payload.get("schema_version") != "docs_scopes_v1":
-        raise ValueError("docs scope config schema_version must be docs_scopes_v1")
+    if payload.get("schema_version") != "docs_scopes_v2":
+        raise ValueError("docs scope config schema_version must be docs_scopes_v2")
     parent_record = find_raw_scope_config(payload, parent_scope)
     sub_scopes = parent_record.setdefault("sub_scopes", [])
     if not isinstance(sub_scopes, list):
@@ -87,8 +155,8 @@ def append_sub_scope_config(repo_root: Path, parent_scope: str, sub_scope_config
 def remove_sub_scope_config(repo_root: Path, parent_scope: str, sub_scope: str) -> None:
     config_path = repo_root / CONFIG_REL_PATH
     payload = load_json_object(config_path, "docs scope config")
-    if payload.get("schema_version") != "docs_scopes_v1":
-        raise ValueError("docs scope config schema_version must be docs_scopes_v1")
+    if payload.get("schema_version") != "docs_scopes_v2":
+        raise ValueError("docs scope config schema_version must be docs_scopes_v2")
     parent_record = find_raw_scope_config(payload, parent_scope)
     sub_scopes = parent_record.get("sub_scopes")
     if not isinstance(sub_scopes, list):
@@ -113,40 +181,53 @@ def sub_scope_storage_contract(
     *,
     public_static_assets: bool,
 ) -> dict[str, Any]:
+    source = sub_scope_config.get("source")
+    published = sub_scope_config.get("published")
+    projection = sub_scope_config.get("public_projection")
+    source_root = raw_location(source, field="planned sub-scope source")["path"]
+    published_docs = raw_location(
+        published.get("documents") if isinstance(published, dict) else None,
+        field="planned sub-scope published documents",
+    )["path"]
+    public_docs = (
+        raw_location(projection.get("documents"), field="planned sub-scope public documents")["path"]
+        if isinstance(projection, dict)
+        else published_docs
+    )
     return {
         "publishing_mode": "parent_scope",
         "public_static_assets": public_static_assets,
         "access": "embedded_detail_documents",
-        "source_root": str(sub_scope_config.get("source") or ""),
-        "docs_output": str(sub_scope_config.get("output") or ""),
-        "publish_output": str(sub_scope_config.get("publish_output") or sub_scope_config.get("output") or ""),
+        "source_root": source_root,
+        "docs_output": published_docs,
+        "publish_output": public_docs,
         "search_output": "",
         "summary": (
-            f"Sub-scope under {parent_scope}: creates nested source and generated payload roots. "
+            f"Sub-scope under {parent_scope}: creates nested source and published payload roots. "
             "It does not create a top-level scope, default document, route, or scope selector entry."
         ),
     }
 
 
 def sub_scope_path_records(repo_root: Path, parent_config: DocsScopeConfig, sub_scope: str) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    public_readonly = is_public_readonly_scope(
-        viewer_base_url=parent_config.viewer_base_url,
-        include_scope_param=parent_config.include_scope_param,
+    source_root = resolve_scope_path(
+        repo_root,
+        parent_config.source.location.path / parent_config.source.sub_scopes_path / sub_scope,
     )
-    source_root = resolve_scope_path(repo_root, parent_config.source / sub_scope)
-    docs_output = resolve_scope_path(repo_root, parent_config.output / sub_scope)
+    docs_output = resolve_scope_path(repo_root, published_documents_path(parent_config) / sub_scope)
     records = [
         path_record(repo_root, "sub_scope_source_root", source_root, action="create"),
-        path_record(repo_root, "sub_scope_generated_docs_root", docs_output, action="create"),
-        path_record(repo_root, "sub_scope_generated_docs_payload_root", docs_output / "by-id", action="create"),
+        path_record(repo_root, "sub_scope_published_docs_root", docs_output, action="create"),
+        path_record(repo_root, "sub_scope_published_docs_payload_root", docs_output / "by-id", action="create"),
     ]
     publish_records: list[dict[str, Any]] = []
-    if public_readonly:
-        publish_output = resolve_scope_path(repo_root, parent_config.publish_output / sub_scope)
+    public_output = public_documents_path(parent_config)
+    if public_output is not None:
+        publish_output = resolve_scope_path(repo_root, public_output / sub_scope)
         publish_records.extend(
             [
-                path_record(repo_root, "sub_scope_published_docs_root", publish_output, action="publish"),
-                path_record(repo_root, "sub_scope_published_docs_payload_root", publish_output / "by-id", action="publish"),
+                path_record(repo_root, "sub_scope_public_docs_root", publish_output, action="publish"),
+                path_record(repo_root, "sub_scope_public_docs_payload_root", publish_output / "by-id", action="publish"),
             ]
         )
     return records, publish_records
@@ -174,10 +255,7 @@ def plan_create_sub_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict
     ]
     if conflicts:
         raise ValueError(f"sub-scope creation would overwrite existing paths: {', '.join(conflicts)}")
-    public_readonly = is_public_readonly_scope(
-        viewer_base_url=parent_config.viewer_base_url,
-        include_scope_param=parent_config.include_scope_param,
-    )
+    public_readonly = parent_config.public_projection is not None
 
     return {
         "ok": True,
@@ -245,16 +323,13 @@ def apply_create_sub_scope(repo_root: Path, body: dict[str, Any], *, dry_run: bo
 
 
 def sub_scope_delete_path_records(repo_root: Path, sub_scope_config: Any, parent_config: DocsScopeConfig) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    public_readonly = is_public_readonly_scope(
-        viewer_base_url=parent_config.viewer_base_url,
-        include_scope_param=parent_config.include_scope_param,
-    )
     candidate_paths = [
-        ("sub_scope_source_root", resolve_scope_path(repo_root, sub_scope_config.source)),
-        ("sub_scope_generated_docs_root", resolve_scope_path(repo_root, sub_scope_config.output)),
+        ("sub_scope_source_root", resolve_scope_path(repo_root, document_source_path(sub_scope_config))),
+        ("sub_scope_published_docs_root", resolve_scope_path(repo_root, published_documents_path(sub_scope_config))),
     ]
-    if public_readonly:
-        candidate_paths.append(("sub_scope_published_docs_root", resolve_scope_path(repo_root, sub_scope_config.publish_output)))
+    public_output = public_documents_path(sub_scope_config)
+    if public_output is not None:
+        candidate_paths.append(("sub_scope_public_docs_root", resolve_scope_path(repo_root, public_output)))
 
     delete_files: list[dict[str, Any]] = []
     missing_files: list[dict[str, Any]] = []

@@ -31,8 +31,10 @@ from build_docs import (  # noqa: E402
 )
 from docs_scope_config import (  # noqa: E402
     DocsScopeConfig,
+    document_source_path,
     load_docs_scope_configs,
     path_is_under_configured_sub_scope_source,
+    published_search_path,
     resolve_scope_path,
 )
 
@@ -164,7 +166,7 @@ class DocsViewerSearchDataBuilder:
         self.scope = normalize(scope)
         self.scope_config = self.docs_scope_config(self.scope)
         self.schema = f"search_index_{self.scope}_v1"
-        self.output_path = self.resolve_path(output_path or self.scope_config.search_output)
+        self.output_path = self.resolve_path(output_path or published_search_path(self.scope_config))
 
     def run(
         self,
@@ -208,7 +210,7 @@ class DocsViewerSearchDataBuilder:
         return self.build_targeted_docs_payload(entries, target_doc_ids, remove_missing)
 
     def load_source_docs(self) -> list[SearchDocRecord]:
-        source_dir = resolve_scope_path(self.repo_root, self.scope_config.source)
+        source_dir = resolve_scope_path(self.repo_root, document_source_path(self.scope_config))
         paths = [
             path for path in sorted(source_dir.glob("**/*.md"))
             if not path_is_under_configured_sub_scope_source(path, source_dir, self.scope_config)

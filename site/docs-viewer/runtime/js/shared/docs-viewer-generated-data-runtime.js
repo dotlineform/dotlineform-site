@@ -139,7 +139,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     return fetchPreferredGeneratedJson(
       contentUrl,
       "Failed to load " + contentUrl,
-      managementReloadPath("/docs/generated/payload", { scope: viewerScope, doc_id: docId }),
+      managementReloadPath("/docs/doc", { scope: viewerScope, doc_id: docId }),
       dataRequestOptions(Object.assign({}, requestSettings, {
         useSearchCapability: false,
         viewerScope: viewerScope
@@ -153,7 +153,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     return fetchPreferredGeneratedJson(
       requestSettings.searchIndexUrl,
       "Failed to load search data",
-      managementReloadPath("/docs/generated/search", { scope: viewerScope }),
+      managementReloadPath("/docs/search", { scope: viewerScope }),
       dataRequestOptions(Object.assign({}, requestSettings, {
         useSearchCapability: true,
         viewerScope: viewerScope
@@ -167,7 +167,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     return fetchPreferredGeneratedJson(
       requestSettings.recentUrl,
       "Failed to load Recent docs",
-      managementReloadPath("/docs/generated/recent", { scope: viewerScope }),
+      managementReloadPath("/docs/recent", { scope: viewerScope }),
       dataRequestOptions(Object.assign({}, requestSettings, {
         useSearchCapability: false,
         viewerScope: viewerScope
@@ -185,7 +185,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     return fetchPreferredGeneratedJson(
       appendAssetVersion(baseUrl + "/references/index.json"),
       "Failed to load docs references",
-      managementReloadPath("/docs/generated/references", { scope: targetScope }),
+      managementReloadPath("/docs/references", { scope: targetScope }),
       dataRequestOptions({
         viewerScope: targetScope,
         reloadNonce: "",
@@ -202,7 +202,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     return fetchPreferredGeneratedJson(
       appendAssetVersion(requestSettings.staticUrl),
       "Failed to load docs reference target",
-      managementReloadPath("/docs/generated/reference-target", {
+      managementReloadPath("/docs/reference-target", {
         scope: targetScope,
         target_kind: targetKind,
         target_slug: targetSlug

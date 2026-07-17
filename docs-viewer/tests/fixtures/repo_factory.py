@@ -53,12 +53,174 @@ def write_site_tools_config(root: Path, *, media_base: str = "https://media.exam
 
 def write_docs_scope_config(root: Path, scopes: list[dict[str, object]], docs_viewer: dict[str, object] | None = None) -> None:
     payload: dict[str, object] = {
-        "schema_version": "docs_scopes_v1",
+        "schema_version": "docs_scopes_v2",
         "scopes": scopes,
     }
     if docs_viewer is not None:
         payload["docs_viewer"] = docs_viewer
     write_json(root / "docs-viewer/config/scopes/docs_scopes.json", payload, indent=2)
+
+
+def docs_scope_record(
+    scope_id: str,
+    *,
+    scope_type: str = "local",
+    source_path: str | None = None,
+    published_docs_path: str | None = None,
+    published_search_path: str | None = None,
+    viewer_base_url: str = "/docs/",
+    include_scope_param: bool = True,
+    default_doc_id: str = "",
+    non_loadable_doc_ids: list[str] | None = None,
+    manage_only_tree_root_ids: list[str] | None = None,
+    allow_unresolved_parent_ids: bool = False,
+    media_provider: str | None = None,
+    media_location_root: str | None = None,
+    media_served_root: str | None = None,
+    public_docs_path: str | None = None,
+    public_search_path: str | None = None,
+    sub_scopes: list[dict[str, object]] | None = None,
+    meta: str = "",
+) -> dict[str, object]:
+    external = scope_type == "local_external"
+    local_provider = "external_local" if external else "repository"
+    source = source_path or (
+        f"$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/{scope_id}"
+        if external
+        else f"docs-viewer/source/{scope_id}"
+    )
+    published_docs = published_docs_path or (
+        f"$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/published/docs/{scope_id}"
+        if external
+        else f"docs-viewer/published/docs/{scope_id}"
+    )
+    published_search = published_search_path or (
+        f"$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/published/search/{scope_id}/index.json"
+        if external
+        else f"docs-viewer/published/search/{scope_id}/index.json"
+    )
+    resolved_media_provider = media_provider or (
+        "external_local" if external else ("r2" if scope_type == "public" else "repository")
+    )
+    media_root = media_location_root or (
+        f"{source}/media" if resolved_media_provider in {"repository", "external_local"} else f"docs/{scope_id}"
+    )
+    served_root = (media_served_root or (
+        f"https://media.example.test/docs/{scope_id}"
+        if resolved_media_provider == "r2"
+        else f"/docs/media/{scope_id}"
+    )).rstrip("/")
+    media = {
+        media_type: {
+            "reference_prefix": f"docs/{scope_id}/{media_type}",
+            "location": {
+                "provider": resolved_media_provider,
+                "path": f"{media_root.rstrip('/')}/{media_type}",
+            },
+            "served_path_prefix": f"{served_root}/{media_type}",
+            "build_inputs": [],
+        }
+        for media_type in ("img", "files")
+    }
+    public_projection = None
+    if scope_type == "public":
+        public_projection = {
+            "documents": {
+                "location": {
+                    "provider": "repository",
+                    "path": public_docs_path or f"site/assets/data/docs/scopes/{scope_id}",
+                }
+            },
+            "search": {
+                "location": {
+                    "provider": "repository",
+                    "path": public_search_path or f"site/assets/data/search/{scope_id}/index.json",
+                }
+            },
+        }
+    return {
+        "scope_id": scope_id,
+        "scope_type": scope_type,
+        "meta": meta or scope_type.replace("_", " "),
+        "source": {
+            "location": {"provider": local_provider, "path": source},
+            "documents_path": ".",
+            "build_media": {},
+            "sub_scopes_path": ".",
+        },
+        "published": {
+            "documents": {"location": {"provider": local_provider, "path": published_docs}},
+            "search": {"location": {"provider": local_provider, "path": published_search}},
+            "media": media,
+        },
+        "public_projection": public_projection,
+        "viewer_base_url": viewer_base_url,
+        "include_scope_param": include_scope_param,
+        "default_doc_id": default_doc_id,
+        "non_loadable_doc_ids": non_loadable_doc_ids or [],
+        "manage_only_tree_root_ids": manage_only_tree_root_ids or [],
+        "allow_unresolved_parent_ids": allow_unresolved_parent_ids,
+        "sub_scopes": sub_scopes or [],
+    }
+
+
+def docs_sub_scope_record(
+    scope_id: str,
+    sub_scope: str,
+    *,
+    title: str = "",
+    scope_type: str = "local",
+    source_path: str | None = None,
+    published_docs_path: str | None = None,
+    published_search_path: str | None = None,
+    public_docs_path: str | None = None,
+) -> dict[str, object]:
+    external = scope_type == "local_external"
+    provider = "external_local" if external else "repository"
+    marker = "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
+    source = source_path or (
+        f"{marker}/source/{scope_id}/{sub_scope}"
+        if external
+        else f"docs-viewer/source/{scope_id}/{sub_scope}"
+    )
+    published_docs = published_docs_path or (
+        f"{marker}/published/docs/{scope_id}/{sub_scope}"
+        if external
+        else f"docs-viewer/published/docs/{scope_id}/{sub_scope}"
+    )
+    published_search = published_search_path or (
+        f"{marker}/published/search/{scope_id}/{sub_scope}/index.json"
+        if external
+        else f"docs-viewer/published/search/{scope_id}/{sub_scope}/index.json"
+    )
+    return {
+        "sub_scope": sub_scope,
+        "title": title,
+        "source": {
+            "location": {"provider": provider, "path": source},
+            "documents_path": ".",
+            "build_media": {},
+            "sub_scopes_path": ".",
+        },
+        "published": {
+            "documents": {"location": {"provider": provider, "path": published_docs}},
+            "search": {"location": {"provider": provider, "path": published_search}},
+            "media": {},
+        },
+        "public_projection": (
+            {
+                "documents": {
+                    "location": {
+                        "provider": "repository",
+                        "path": public_docs_path or f"site/assets/data/docs/scopes/{scope_id}/{sub_scope}",
+                    }
+                },
+                "search": None,
+            }
+            if scope_type == "public"
+            else None
+        ),
+    }
 
 
 def write_doc(
@@ -128,20 +290,17 @@ def write_library_scope_config(root: Path, *, allow_unresolved_parent_ids: bool 
     write_docs_scope_config(
         root,
         [
-            {
-                "scope_id": "library",
-                "scope_type": "public",
-                "source": "docs-viewer/source/library",
-                "media_path_prefix": "docs/library",
-                "output": "docs-viewer/generated/docs/library",
-                "search_output": "docs-viewer/generated/search/library/index.json",
-                "publish_output": "site/assets/data/docs/scopes/library",
-                "publish_search_output": "site/assets/data/search/library/index.json",
-                "viewer_base_url": "/library/",
-                "include_scope_param": False,
-                "default_doc_id": "library",
-                "allow_unresolved_parent_ids": allow_unresolved_parent_ids,
-            }
+            docs_scope_record(
+                "library",
+                scope_type="public",
+                viewer_base_url="/library/",
+                include_scope_param=False,
+                default_doc_id="library",
+                allow_unresolved_parent_ids=allow_unresolved_parent_ids,
+                media_provider="repository",
+                media_location_root="docs-viewer/source/library/media",
+                media_served_root="/docs/media/library",
+            )
         ],
     )
 
@@ -323,6 +482,22 @@ def make_docs_import_repo(format_value: Callable[[object], str] = str) -> tempfi
     temp_dir: tempfile.TemporaryDirectory[str] = tempfile.TemporaryDirectory()
     root = Path(temp_dir.name)
     write_json(root / "site-tools/config/site-tools.json", {"schema_version": "site_tools_config_v1"}, indent=2)
+    write_json(
+        root / "docs-viewer/config/routes/docs-viewer-routes.json",
+        {
+            "schema_version": "docs_viewer_routes_v1",
+            "routes": [
+                {
+                    "route_id": "manage",
+                    "app_kind": "manage",
+                    "default_scope_id": "studio",
+                    "features": ["recent"],
+                    "recent_basis": "edited",
+                }
+            ],
+        },
+        indent=2,
+    )
     (data_sharing_workspace_root() / "import-staging").mkdir(parents=True, exist_ok=True)
     write_library_scope_config(root)
     write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""}, format_value=format_value)

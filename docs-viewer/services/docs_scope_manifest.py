@@ -13,10 +13,17 @@ from typing import Any
 from docs_scope_config import (
     CONFIG_REL_PATH,
     EXTERNAL_DATA_ROOT_MARKER,
+    PUBLISHED_DOCS_OUTPUT_ROOT,
+    PUBLISHED_SEARCH_OUTPUT_ROOT,
     PUBLIC_DOCS_OUTPUT_ROOT,
     PUBLIC_SEARCH_OUTPUT_ROOT,
     DocsScopeConfig,
+    document_source_path,
     load_docs_scope_configs,
+    public_documents_path,
+    public_search_path,
+    published_documents_path,
+    published_search_path,
     resolve_external_data_marker_path,
     resolve_scope_path,
     safe_relative_path,
@@ -53,25 +60,87 @@ def utc_now() -> str:
     return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def generated_search_index_path(repo_root: Path, config: DocsScopeConfig | dict[str, Any]) -> Path:
-    if isinstance(config, DocsScopeConfig):
-        return resolve_scope_path(repo_root, config.search_output)
-    return resolve_scope_path(
-        repo_root,
-        safe_scope_data_path(config.get("search_output"), field="planned_scope_config.search_output", allow_external=True),
+def _planned_location_path(raw: Any, *, field: str, allow_external: bool) -> Path:
+    if not isinstance(raw, dict):
+        raise ValueError(f"{field} must be an object")
+    provider = str(raw.get("provider") or "").strip()
+    return safe_scope_data_path(
+        raw.get("path"),
+        field=f"{field}.path",
+        allow_external=allow_external and provider == "external_local",
     )
 
 
-def published_docs_output_path(repo_root: Path, config: DocsScopeConfig | dict[str, Any]) -> Path:
-    if isinstance(config, DocsScopeConfig):
-        return repo_root / config.publish_output
-    return repo_root / safe_relative_path(config.get("publish_output"), field="planned_scope_config.publish_output")
+def _planned_role_location(config: dict[str, Any], *keys: str) -> Any:
+    value: Any = config
+    for key in keys:
+        if not isinstance(value, dict):
+            return None
+        value = value.get(key)
+    return value
 
 
-def published_search_index_path(repo_root: Path, config: DocsScopeConfig | dict[str, Any]) -> Path:
+def local_published_search_index_path(repo_root: Path, config: DocsScopeConfig | dict[str, Any]) -> Path:
     if isinstance(config, DocsScopeConfig):
-        return repo_root / config.publish_search_output
-    return repo_root / safe_relative_path(config.get("publish_search_output"), field="planned_scope_config.publish_search_output")
+        return resolve_scope_path(repo_root, published_search_path(config))
+    return resolve_scope_path(
+        repo_root,
+        _planned_location_path(
+            _planned_role_location(config, "published", "search", "location"),
+            field="planned_scope_config.published.search.location",
+            allow_external=True,
+        ),
+    )
+
+
+def local_published_docs_output_path(repo_root: Path, config: DocsScopeConfig | dict[str, Any]) -> Path:
+    if isinstance(config, DocsScopeConfig):
+        return resolve_scope_path(repo_root, published_documents_path(config))
+    return resolve_scope_path(
+        repo_root,
+        _planned_location_path(
+            _planned_role_location(config, "published", "documents", "location"),
+            field="planned_scope_config.published.documents.location",
+            allow_external=True,
+        ),
+    )
+
+
+def planned_source_output_path(repo_root: Path, config: dict[str, Any]) -> Path:
+    return resolve_scope_path(
+        repo_root,
+        _planned_location_path(
+            _planned_role_location(config, "source", "location"),
+            field="planned_scope_config.source.location",
+            allow_external=True,
+        ),
+    )
+
+
+def public_projection_docs_output_path(repo_root: Path, config: DocsScopeConfig | dict[str, Any]) -> Path:
+    if isinstance(config, DocsScopeConfig):
+        path = public_documents_path(config)
+        if path is None:
+            raise ValueError(f"scope {config.scope_id!r} has no public document projection")
+        return repo_root / path
+    return repo_root / _planned_location_path(
+        _planned_role_location(config, "public_projection", "documents", "location"),
+        field="planned_scope_config.public_projection.documents.location",
+        allow_external=False,
+    )
+
+
+def public_projection_search_index_path(repo_root: Path, config: DocsScopeConfig | dict[str, Any]) -> Path:
+    if isinstance(config, DocsScopeConfig):
+        path = public_search_path(config)
+        if path is None:
+            raise ValueError(f"scope {config.scope_id!r} has no public search projection")
+        return repo_root / path
+    return repo_root / _planned_location_path(
+        _planned_role_location(config, "public_projection", "search", "location"),
+        field="planned_scope_config.public_projection.search.location",
+        allow_external=False,
+    )
 
 
 def git_path_status(repo_root: Path, path: Path) -> str:
@@ -91,14 +160,14 @@ def git_path_status(repo_root: Path, path: Path) -> str:
 def default_source_doc_record(repo_root: Path, config: DocsScopeConfig) -> dict[str, Any] | None:
     if not config.default_doc_id:
         return None
-    candidate = resolve_scope_path(repo_root, config.source) / f"{config.default_doc_id}.md"
+    candidate = resolve_scope_path(repo_root, document_source_path(config)) / f"{config.default_doc_id}.md"
     if candidate.exists():
         return path_record(repo_root, "default_source_doc", candidate)
     return None
 
 
 def backfilled_scope_record(repo_root: Path, config: DocsScopeConfig) -> dict[str, Any]:
-    source_root = resolve_scope_path(repo_root, config.source)
+    source_root = resolve_scope_path(repo_root, document_source_path(config))
     route_path = route_file_for_config(repo_root, config)
     readonly_route = route_is_readonly(route_path)
     scope_type = "public" if readonly_route else "local"
@@ -112,24 +181,24 @@ def backfilled_scope_record(repo_root: Path, config: DocsScopeConfig) -> dict[st
         files.append(default_doc)
     if route_path.exists():
         files.append(path_record(repo_root, "route_file", route_path))
-    docs_output = resolve_scope_path(repo_root, config.output)
-    files.append(path_record(repo_root, "generated_docs_root", docs_output))
+    docs_output = resolve_scope_path(repo_root, published_documents_path(config))
+    files.append(path_record(repo_root, "published_docs_root", docs_output))
     files.extend(
         [
-            path_record(repo_root, "generated_docs_index_tree", docs_output / "index-tree.json"),
-            path_record(repo_root, "generated_docs_recent", docs_output / "recent.json"),
-            path_record(repo_root, "generated_docs_payload_root", docs_output / "by-id"),
-            path_record(repo_root, "generated_search_index", generated_search_index_path(repo_root, config)),
+            path_record(repo_root, "published_docs_index_tree", docs_output / "index-tree.json"),
+            path_record(repo_root, "published_docs_recent", docs_output / "recent.json"),
+            path_record(repo_root, "published_docs_payload_root", docs_output / "by-id"),
+            path_record(repo_root, "published_search_index", local_published_search_index_path(repo_root, config)),
         ]
     )
     if scope_type == "public":
         files.extend(
             [
-                path_record(repo_root, "published_docs_root", repo_root / config.publish_output),
-                path_record(repo_root, "published_docs_index_tree", repo_root / config.publish_output / "index-tree.json"),
-                path_record(repo_root, "published_docs_recent", repo_root / config.publish_output / "recent.json"),
-                path_record(repo_root, "published_docs_payload_root", repo_root / config.publish_output / "by-id"),
-                path_record(repo_root, "published_search_index", published_search_index_path(repo_root, config)),
+                path_record(repo_root, "public_docs_root", public_projection_docs_output_path(repo_root, config)),
+                path_record(repo_root, "public_docs_index_tree", public_projection_docs_output_path(repo_root, config) / "index-tree.json"),
+                path_record(repo_root, "public_docs_recent", public_projection_docs_output_path(repo_root, config) / "recent.json"),
+                path_record(repo_root, "public_docs_payload_root", public_projection_docs_output_path(repo_root, config) / "by-id"),
+                path_record(repo_root, "public_search_index", public_projection_search_index_path(repo_root, config)),
             ]
         )
     return {
@@ -249,40 +318,36 @@ def planned_external_source_root_marker(scope_id: str) -> Path:
     return Path(EXTERNAL_DATA_ROOT_MARKER) / "source" / scope_id
 
 
-def planned_external_docs_output_marker(scope_id: str) -> Path:
-    return Path(EXTERNAL_DATA_ROOT_MARKER) / "generated" / "docs" / scope_id
+def planned_external_published_docs_marker(scope_id: str) -> Path:
+    return Path(EXTERNAL_DATA_ROOT_MARKER) / "published" / "docs" / scope_id
 
 
-def planned_external_search_output_marker(scope_id: str) -> Path:
-    return Path(EXTERNAL_DATA_ROOT_MARKER) / "generated" / "search" / scope_id / "index.json"
+def planned_external_published_search_marker(scope_id: str) -> Path:
+    return Path(EXTERNAL_DATA_ROOT_MARKER) / "published" / "search" / scope_id / "index.json"
 
 
-def planned_docs_output(scope_id: str, publishing_mode: str, external_data_root: Path | None = None) -> Path:
+def planned_published_docs_path(scope_id: str, publishing_mode: str, external_data_root: Path | None = None) -> Path:
     if publishing_mode == LOCAL_EXTERNAL_MODE:
         if external_data_root is None:
             raise ValueError("external_data_root is required for external local scopes")
-        return external_data_root / "generated" / "docs" / scope_id
-    return Path("docs-viewer/generated/docs") / scope_id
+        return external_data_root / "published" / "docs" / scope_id
+    return PUBLISHED_DOCS_OUTPUT_ROOT / scope_id
 
 
-def planned_search_output(scope_id: str, publishing_mode: str, external_data_root: Path | None = None) -> Path:
+def planned_published_search_path(scope_id: str, publishing_mode: str, external_data_root: Path | None = None) -> Path:
     if publishing_mode == LOCAL_EXTERNAL_MODE:
         if external_data_root is None:
             raise ValueError("external_data_root is required for external local scopes")
-        return external_data_root / "generated" / "search" / scope_id / "index.json"
-    return Path("docs-viewer/generated/search") / scope_id / "index.json"
+        return external_data_root / "published" / "search" / scope_id / "index.json"
+    return PUBLISHED_SEARCH_OUTPUT_ROOT / scope_id / "index.json"
 
 
-def planned_publish_output(scope_id: str, publishing_mode: str) -> Path:
-    if publishing_mode == PUBLIC_MODE:
-        return PUBLIC_DOCS_OUTPUT_ROOT / scope_id
-    return planned_docs_output(scope_id, publishing_mode)
+def planned_public_docs_projection(scope_id: str) -> Path:
+    return PUBLIC_DOCS_OUTPUT_ROOT / scope_id
 
 
-def planned_publish_search_output(scope_id: str, publishing_mode: str) -> Path:
-    if publishing_mode == PUBLIC_MODE:
-        return PUBLIC_SEARCH_OUTPUT_ROOT / scope_id / "index.json"
-    return planned_search_output(scope_id, publishing_mode)
+def planned_public_search_projection(scope_id: str) -> Path:
+    return PUBLIC_SEARCH_OUTPUT_ROOT / scope_id / "index.json"
 
 
 def planned_scope_type(publishing_mode: str) -> str:
@@ -311,29 +376,39 @@ def path_is_relative_to(path: Path, parent: Path) -> bool:
 
 def validate_planned_storage_paths(scope_id: str, publishing_mode: str, config: dict[str, Any]) -> None:
     allow_external = publishing_mode == LOCAL_EXTERNAL_MODE
-    docs_output = safe_scope_data_path(
-        config.get("output"),
-        field="planned_scope_config.output",
+    source_root = _planned_location_path(
+        _planned_role_location(config, "source", "location"),
+        field="planned_scope_config.source.location",
         allow_external=allow_external,
     )
-    search_output = safe_scope_data_path(
-        config.get("search_output"),
-        field="planned_scope_config.search_output",
+    docs_output = _planned_location_path(
+        _planned_role_location(config, "published", "documents", "location"),
+        field="planned_scope_config.published.documents.location",
+        allow_external=allow_external,
+    )
+    search_output = _planned_location_path(
+        _planned_role_location(config, "published", "search", "location"),
+        field="planned_scope_config.published.search.location",
         allow_external=allow_external,
     )
     if publishing_mode == PUBLIC_MODE:
-        publish_output = safe_relative_path(config.get("publish_output"), field="planned_scope_config.publish_output")
-        publish_search_output = safe_relative_path(
-            config.get("publish_search_output"),
-            field="planned_scope_config.publish_search_output",
+        publish_output = _planned_location_path(
+            _planned_role_location(config, "public_projection", "documents", "location"),
+            field="planned_scope_config.public_projection.documents.location",
+            allow_external=False,
         )
-        if path_is_relative_to(docs_output, PUBLIC_DOCS_OUTPUT_ROOT):
+        publish_search_output = _planned_location_path(
+            _planned_role_location(config, "public_projection", "search", "location"),
+            field="planned_scope_config.public_projection.search.location",
+            allow_external=False,
+        )
+        if not path_is_relative_to(docs_output, PUBLISHED_DOCS_OUTPUT_ROOT):
             raise ValueError(
-                f"public scope {scope_id!r} must write working generated docs under docs-viewer/generated/docs"
+                f"public scope {scope_id!r} must write local published docs under docs-viewer/published/docs"
             )
-        if path_is_relative_to(search_output, PUBLIC_SEARCH_OUTPUT_ROOT):
+        if not path_is_relative_to(search_output, PUBLISHED_SEARCH_OUTPUT_ROOT):
             raise ValueError(
-                f"public scope {scope_id!r} must write working generated search under docs-viewer/generated/search"
+                f"public scope {scope_id!r} must write local published search under docs-viewer/published/search"
             )
         if not path_is_relative_to(publish_output, PUBLIC_DOCS_OUTPUT_ROOT):
             raise ValueError(
@@ -345,21 +420,16 @@ def validate_planned_storage_paths(scope_id: str, publishing_mode: str, config: 
             )
         return
     if publishing_mode == LOCAL_EXTERNAL_MODE:
-        source_root = safe_scope_data_path(
-            config.get("source"),
-            field="planned_scope_config.source",
-            allow_external=True,
-        )
         if not source_root.is_absolute() or not docs_output.is_absolute() or not search_output.is_absolute():
-            raise ValueError(f"external local scope {scope_id!r} must use external source and generated paths")
+            raise ValueError(f"external local scope {scope_id!r} must use external source and published paths")
         return
-    if path_is_relative_to(docs_output, PUBLIC_DOCS_OUTPUT_ROOT):
+    if not path_is_relative_to(docs_output, PUBLISHED_DOCS_OUTPUT_ROOT):
         raise ValueError(
-            f"local tracked scope {scope_id!r} must not write generated docs under site/assets/data/docs/scopes"
+            f"local tracked scope {scope_id!r} must write published docs under docs-viewer/published/docs"
         )
-    if path_is_relative_to(search_output, PUBLIC_SEARCH_OUTPUT_ROOT):
+    if not path_is_relative_to(search_output, PUBLISHED_SEARCH_OUTPUT_ROOT):
         raise ValueError(
-            f"local tracked scope {scope_id!r} must not write generated search under site/assets/data/search"
+            f"local tracked scope {scope_id!r} must write published search under docs-viewer/published/search"
         )
 
 
@@ -372,70 +442,105 @@ def planned_scope_config_record(
     external_data_root: Path | None = None,
 ) -> dict[str, Any]:
     viewer_base_url = public_route_path or "/docs/"
-    if publishing_mode == PUBLIC_MODE:
-        import_media_storage = {"storage_mode": "r2_upload"}
-    elif publishing_mode == LOCAL_EXTERNAL_MODE:
-        import_media_storage = {"storage_mode": "external_assets"}
-    else:
-        import_media_storage = {
-            "storage_mode": "repo_assets",
-            "repo_assets_path_prefix": (source_root / "media").as_posix(),
-            "repo_assets_public_path_prefix": f"/docs/media/{scope_id}",
+    source_path = (
+        planned_external_source_root_marker(scope_id)
+        if publishing_mode == LOCAL_EXTERNAL_MODE
+        else source_root
+    ).as_posix()
+    local_provider = "external_local" if publishing_mode == LOCAL_EXTERNAL_MODE else "repository"
+    docs_path = (
+        planned_external_published_docs_marker(scope_id)
+        if publishing_mode == LOCAL_EXTERNAL_MODE
+        else planned_published_docs_path(scope_id, publishing_mode)
+    ).as_posix()
+    search_path = (
+        planned_external_published_search_marker(scope_id)
+        if publishing_mode == LOCAL_EXTERNAL_MODE
+        else planned_published_search_path(scope_id, publishing_mode)
+    ).as_posix()
+    media: dict[str, Any] = {}
+    for media_type in ("img", "files"):
+        if publishing_mode == PUBLIC_MODE:
+            media_provider = "r2"
+            media_path = f"docs/{scope_id}/{media_type}"
+            served_path = f"https://media.dotlineform.com/docs/{scope_id}/{media_type}"
+        else:
+            media_provider = local_provider
+            media_path = f"{source_path}/media/{media_type}"
+            served_path = f"/docs/media/{scope_id}/{media_type}"
+        media[media_type] = {
+            "reference_prefix": f"docs/{scope_id}/{media_type}",
+            "location": {"provider": media_provider, "path": media_path},
+            "served_path_prefix": served_path,
+            "build_inputs": [],
         }
     record = {
         "scope_id": scope_id,
         "scope_type": planned_scope_type(publishing_mode),
         "meta": planned_scope_meta(publishing_mode),
-        "source": (
-            planned_external_source_root_marker(scope_id)
-            if publishing_mode == LOCAL_EXTERNAL_MODE
-            else source_root
-        ).as_posix(),
-        "media_path_prefix": f"docs/{scope_id}",
-        "output": (
-            planned_external_docs_output_marker(scope_id)
-            if publishing_mode == LOCAL_EXTERNAL_MODE
-            else planned_docs_output(scope_id, publishing_mode)
-        ).as_posix(),
-        "search_output": (
-            planned_external_search_output_marker(scope_id)
-            if publishing_mode == LOCAL_EXTERNAL_MODE
-            else planned_search_output(scope_id, publishing_mode)
-        ).as_posix(),
+        "source": {
+            "location": {"provider": local_provider, "path": source_path},
+            "documents_path": ".",
+            "build_media": {},
+            "sub_scopes_path": ".",
+        },
+        "published": {
+            "documents": {"location": {"provider": local_provider, "path": docs_path}},
+            "search": {"location": {"provider": local_provider, "path": search_path}},
+            "media": media,
+        },
+        "public_projection": (
+            {
+                "documents": {
+                    "location": {
+                        "provider": "repository",
+                        "path": planned_public_docs_projection(scope_id).as_posix(),
+                    }
+                },
+                "search": {
+                    "location": {
+                        "provider": "repository",
+                        "path": planned_public_search_projection(scope_id).as_posix(),
+                    }
+                },
+            }
+            if publishing_mode == PUBLIC_MODE
+            else None
+        ),
         "viewer_base_url": viewer_base_url,
         "include_scope_param": public_route_path == "",
         "default_doc_id": default_doc_id,
         "non_loadable_doc_ids": [],
         "manage_only_tree_root_ids": [],
         "allow_unresolved_parent_ids": False,
-        "import_media_storage": import_media_storage,
+        "sub_scopes": [],
     }
-    if publishing_mode == LOCAL_EXTERNAL_MODE:
-        record["external_data_root"] = EXTERNAL_DATA_ROOT_MARKER
-    if publishing_mode != LOCAL_EXTERNAL_MODE:
-        record["publish_output"] = planned_publish_output(scope_id, publishing_mode).as_posix()
-        record["publish_search_output"] = planned_publish_search_output(scope_id, publishing_mode).as_posix()
     return record
 
 
 def planned_storage_contract(preview: dict[str, Any]) -> dict[str, Any]:
     publishing_mode = str(preview["publishing_mode"])
     config = preview["planned_scope_config"]
-    docs_output = str(config["output"])
-    search_output = str(config["search_output"])
-    publish_output = str(config.get("publish_output") or docs_output)
-    publish_search_output = str(config.get("publish_search_output") or search_output)
+    source_root = str(_planned_role_location(config, "source", "location", "path") or "")
+    docs_output = str(_planned_role_location(config, "published", "documents", "location", "path") or "")
+    search_output = str(_planned_role_location(config, "published", "search", "location", "path") or "")
+    publish_output = str(
+        _planned_role_location(config, "public_projection", "documents", "location", "path") or docs_output
+    )
+    publish_search_output = str(
+        _planned_role_location(config, "public_projection", "search", "location", "path") or search_output
+    )
     if publishing_mode == PUBLIC_MODE:
         summary = (
-            "Public read-only scope: generated docs and search payloads are working local outputs under "
-            "docs-viewer/generated/ until Publish docs syncs them to public static assets under assets/."
+            "Public read-only scope: local published docs and search payloads live under "
+            "docs-viewer/published/ until Publish docs syncs them to public static assets under assets/."
         )
         access = "public_readonly_route_and_local_manage"
         public_static_assets = True
     elif publishing_mode == LOCAL_COMMITTED_MODE:
         summary = (
-            "Local tracked scope: generated docs and search payloads are tracked non-public Docs Viewer "
-            "runtime data under docs-viewer/generated/ and no public route is created."
+            "Local tracked scope: published docs and search payloads are tracked non-public Docs Viewer "
+            "runtime data under docs-viewer/published/ and no public route is created."
         )
         access = "local_manage_only"
         public_static_assets = False
@@ -447,7 +552,7 @@ def planned_storage_contract(preview: dict[str, Any]) -> dict[str, Any]:
         "publishing_mode": publishing_mode,
         "public_static_assets": public_static_assets,
         "access": access,
-        "source_root": str(config.get("source") or ""),
+        "source_root": source_root,
         "docs_output": docs_output,
         "search_output": search_output,
         "publish_output": publish_output,
@@ -477,8 +582,8 @@ def default_source_doc_text(title: str, default_doc_id: str, added_date: str) ->
 def append_scope_config(repo_root: Path, scope_config: dict[str, Any]) -> None:
     config_path = repo_root / CONFIG_REL_PATH
     payload = load_json_object(config_path, "docs scope config")
-    if payload.get("schema_version") != "docs_scopes_v1":
-        raise ValueError("docs scope config schema_version must be docs_scopes_v1")
+    if payload.get("schema_version") != "docs_scopes_v2":
+        raise ValueError("docs scope config schema_version must be docs_scopes_v2")
     scopes = payload.get("scopes")
     if not isinstance(scopes, list):
         raise ValueError("docs scope config scopes must be an array")
@@ -492,8 +597,8 @@ def append_scope_config(repo_root: Path, scope_config: dict[str, Any]) -> None:
 def remove_scope_config(repo_root: Path, scope_id: str) -> None:
     config_path = repo_root / CONFIG_REL_PATH
     payload = load_json_object(config_path, "docs scope config")
-    if payload.get("schema_version") != "docs_scopes_v1":
-        raise ValueError("docs scope config schema_version must be docs_scopes_v1")
+    if payload.get("schema_version") != "docs_scopes_v2":
+        raise ValueError("docs scope config schema_version must be docs_scopes_v2")
     scopes = payload.get("scopes")
     if not isinstance(scopes, list):
         raise ValueError("docs scope config scopes must be an array")

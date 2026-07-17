@@ -9,6 +9,7 @@ from typing import Any
 
 from docs_data_sharing import source_context as docs_source_context
 from docs_returned_import_common import issue, normalize_text, scope_title
+from docs_scope_config import document_source_path
 
 def load_current_docs_context(repo_root: Path, scope: str) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     issues: list[dict[str, Any]] = []
@@ -35,7 +36,7 @@ def load_current_docs_context(repo_root: Path, scope: str) -> tuple[dict[str, An
     context.update(
         {
             "source_loaded": True,
-            "source_root": loaded_context.scope_config.source.as_posix(),
+            "source_root": document_source_path(loaded_context.scope_config).as_posix(),
             "doc_count": len(docs_by_id),
             "renderable_count": len(set(renderable_ids)),
             "docs_by_id": docs_by_id,

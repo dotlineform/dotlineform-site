@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from docs_scope_config import CONFIG_REL_PATH, load_docs_scope_configs, resolve_scope_path
+from docs_scope_config import CONFIG_REL_PATH, document_source_path, load_docs_scope_configs, resolve_scope_path
 import docs_source_model as source_model
 
 
@@ -37,18 +37,17 @@ EDITABLE_SCOPE_FIELDS: dict[str, EditableScopeField] = {
 }
 
 BLOCKED_SCOPE_FIELDS = {
-    "scope_id": "Scope identity controls route and generated-data ownership.",
+    "scope_id": "Scope identity controls route and published-artifact ownership.",
     "scope_type": "Scope type controls availability labeling and should be guarded with route ownership.",
-    "source": "Source roots are install-time config and require manual review.",
-    "media_path_prefix": "Media prefixes are install-time config and affect imports.",
-    "output": "Generated output roots are install-time config and affect build artifacts.",
-    "search_output": "Generated search output paths are install-time config and affect build artifacts.",
+    "source": "Canonical source roles and locations are install-time config and require manual review.",
+    "published": "Published artifact roles and locations are install-time config and affect builders and imports.",
+    "public_projection": "Public projections are install-time config and affect publication and public routes.",
     "viewer_base_url": "Route bases are install-time config and affect public URLs.",
     "include_scope_param": "Route parameter behavior is part of the portable route contract.",
-    "non_loadable_doc_ids": "Tree loading behavior depends on generated docs structure.",
-    "manage_only_tree_root_ids": "Manage-only tree behavior depends on generated docs structure.",
+    "non_loadable_doc_ids": "Tree loading behavior depends on published docs structure.",
+    "manage_only_tree_root_ids": "Manage-only tree behavior depends on published docs structure.",
     "allow_unresolved_parent_ids": "Parent validation policy affects source validation.",
-    "import_media_storage": "Import media storage affects local write destinations.",
+    "sub_scopes": "Sub-scope roles and locations are managed through the scope lifecycle workflow.",
 }
 
 DEFERRED_GLOBAL_FIELDS = {
@@ -115,9 +114,11 @@ def _scope_payload(config: Any) -> dict[str, Any]:
 def _validate_default_doc_id(repo_root: Path, config: Any, value: str) -> list[str]:
     if not value:
         return []
-    root = resolve_scope_path(repo_root, config.source)
+    root = resolve_scope_path(repo_root, document_source_path(config))
     if not root.exists():
-        raise ValueError(f"missing source root for scope {config.scope_id}: {config.source.as_posix()}")
+        raise ValueError(
+            f"missing source root for scope {config.scope_id}: {document_source_path(config).as_posix()}"
+        )
     docs = []
     for path in sorted(root.glob("*.md")):
         front_matter, _body = source_model.parse_source(path)

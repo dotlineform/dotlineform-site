@@ -23,8 +23,9 @@ from docs_document_identity import (
 
 from docs_scope_config import (
     DOCS_SCOPE_CONFIGS,
-    SCOPE_ROOTS,
+    DOCUMENT_SOURCE_ROOTS,
     DocsScopeConfig,
+    document_source_path,
     path_is_under_configured_sub_scope_source,
     resolve_scope_path,
 )
@@ -306,13 +307,13 @@ def default_viewable_for_config(config: DocsScopeConfig) -> bool:
 
 def normalize_scope(scope: Any) -> str:
     value = str(scope or "").strip().lower()
-    if value not in SCOPE_ROOTS:
-        raise ValueError(f"scope must be one of: {', '.join(sorted(SCOPE_ROOTS.keys()))}")
+    if value not in DOCUMENT_SOURCE_ROOTS:
+        raise ValueError(f"scope must be one of: {', '.join(sorted(DOCUMENT_SOURCE_ROOTS.keys()))}")
     return value
 
 
 def scope_root(repo_root: Path, scope: str) -> Path:
-    return resolve_scope_path(repo_root, SCOPE_ROOTS[scope])
+    return resolve_scope_path(repo_root, DOCUMENT_SOURCE_ROOTS[scope])
 
 
 def scope_markdown_paths(root: Path, scope: str) -> list[Path]:
@@ -332,7 +333,7 @@ def scope_markdown_paths(root: Path, scope: str) -> list[Path]:
 
 def load_scope_docs_for_config(repo_root: Path, config: DocsScopeConfig) -> list[ScopeDoc]:
     scope = config.scope_id
-    root = resolve_scope_path(repo_root, config.source)
+    root = resolve_scope_path(repo_root, document_source_path(config))
     if not root.exists():
         raise ValueError(f"missing source root for scope {scope}: {root}")
 

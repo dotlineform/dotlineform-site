@@ -80,8 +80,10 @@ def refresh_source_model_scope_configs(repo_root: Path) -> None:
     configs = load_docs_scope_configs(repo_root)
     source_model.DOCS_SCOPE_CONFIGS.clear()
     source_model.DOCS_SCOPE_CONFIGS.update(configs)
-    source_model.SCOPE_ROOTS.clear()
-    source_model.SCOPE_ROOTS.update({scope: config.source for scope, config in configs.items()})
+    source_model.DOCUMENT_SOURCE_ROOTS.clear()
+    source_model.DOCUMENT_SOURCE_ROOTS.update(
+        {scope: source_model.document_source_path(config) for scope, config in configs.items()}
+    )
 
 
 def capabilities_payload(repo_root: Path) -> dict[str, object]:

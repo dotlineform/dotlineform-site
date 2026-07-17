@@ -443,7 +443,7 @@ function lifecycleRelativePath(value, root) {
   if (!path) return "";
   if (root && path.startsWith(root + "/")) return path.slice(root.length + 1);
   if (root) {
-    var anchors = ["/source/", "/generated/"];
+    var anchors = ["/source/", "/published/"];
     var anchor = anchors.find(function (candidate) {
       return path.includes(candidate);
     });
@@ -455,12 +455,12 @@ function lifecycleRelativePath(value, root) {
 function lifecycleFileRows(payload, records) {
   var labels = {
     default_source_doc: "default doc",
-    generated_docs_index_tree: "index",
-    generated_docs_recent: "Recent",
-    generated_search_index: "search index",
     published_docs_index_tree: "index",
     published_docs_recent: "Recent",
     published_search_index: "search index",
+    public_docs_index_tree: "public index",
+    public_docs_recent: "public Recent",
+    public_search_index: "public search index",
     route_file: "public route",
     scope_config: "scope config",
     scope_manifest: "scope manifest",
@@ -469,15 +469,15 @@ function lifecycleFileRows(payload, records) {
   };
   var omittedKinds = new Set([
     "source_root",
-    "generated_docs_root",
-    "generated_docs_payload_root",
     "published_docs_root",
     "published_docs_payload_root",
+    "public_docs_root",
+    "public_docs_payload_root",
     "sub_scope_source_root",
-    "sub_scope_generated_docs_root",
-    "sub_scope_generated_docs_payload_root",
     "sub_scope_published_docs_root",
-    "sub_scope_published_docs_payload_root"
+    "sub_scope_published_docs_payload_root",
+    "sub_scope_public_docs_root",
+    "sub_scope_public_docs_payload_root"
   ]);
   var root = externalLifecycleRoot(payload);
   return (Array.isArray(records) ? records : []).filter(function (record) {
@@ -518,24 +518,24 @@ function lifecycleStorageRows(payload, root) {
     ? payload.storage_contract
     : {};
   var sourceRecord = lifecycleRecord(payload, ["source_root", "sub_scope_source_root"]);
-  var generatedRecord = lifecycleRecord(payload, ["generated_docs_root", "sub_scope_generated_docs_root"]);
-  var searchRecord = lifecycleRecord(payload, "generated_search_index");
   var publishedRecord = lifecycleRecord(payload, ["published_docs_root", "sub_scope_published_docs_root"]);
   var publishedSearchRecord = lifecycleRecord(payload, "published_search_index");
+  var publicRecord = lifecycleRecord(payload, ["public_docs_root", "sub_scope_public_docs_root"]);
+  var publicSearchRecord = lifecycleRecord(payload, "public_search_index");
   var docsOutput = normalizeText(contract.docs_output);
   var publishOutput = normalizeText(contract.publish_output);
   var searchOutput = normalizeText(contract.search_output);
   var publishSearchOutput = normalizeText(contract.publish_search_output);
   return [
     ["source", lifecycleRelativePath(contract.source_root || (sourceRecord && sourceRecord.path), root)],
-    ["generated", lifecycleRelativePath(docsOutput || (generatedRecord && generatedRecord.path), root)],
-    ["search", lifecycleRelativePath(searchOutput || (searchRecord && searchRecord.path), root)],
-    ["published", publishOutput && publishOutput !== docsOutput
+    ["published", lifecycleRelativePath(docsOutput || (publishedRecord && publishedRecord.path), root)],
+    ["search", lifecycleRelativePath(searchOutput || (publishedSearchRecord && publishedSearchRecord.path), root)],
+    ["public", publishOutput && publishOutput !== docsOutput
       ? lifecycleRelativePath(publishOutput, root)
-      : lifecycleRelativePath(publishedRecord && publishedRecord.path, root)],
+      : lifecycleRelativePath(publicRecord && publicRecord.path, root)],
     ["public search", publishSearchOutput && publishSearchOutput !== searchOutput
       ? lifecycleRelativePath(publishSearchOutput, root)
-      : lifecycleRelativePath(publishedSearchRecord && publishedSearchRecord.path, root)]
+      : lifecycleRelativePath(publicSearchRecord && publicSearchRecord.path, root)]
   ];
 }
 
