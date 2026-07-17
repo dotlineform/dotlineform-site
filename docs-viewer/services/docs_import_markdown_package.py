@@ -21,7 +21,7 @@ from docs_import_common import (
     slugify,
 )
 from docs_import_media import build_media_plan
-from docs_media_storage import local_media_root_for_scope
+from docs_media_storage import scope_owned_media_root_for_scope
 from docs_scope_config import load_docs_scope_configs
 from services.paths import marker_path
 
@@ -176,7 +176,7 @@ def next_package_media_filename(
     scope_config = load_docs_scope_configs(repo_root)[normalized_scope]
     storage_mode = scope_config.import_media_storage.storage_mode
     local_asset_root = (
-        (local_media_root_for_scope(repo_root, scope_config) / media_class).resolve()
+        (scope_owned_media_root_for_scope(repo_root, scope_config) / media_class).resolve()
         if storage_mode in {"external_assets", "repo_assets"}
         else None
     )

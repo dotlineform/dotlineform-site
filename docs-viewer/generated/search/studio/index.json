@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4ecef20ab63497aad6cba8c35ff9e7bc",
-    "generated_at_utc": "2026-07-16T21:43:47Z",
-    "count": 234
+    "version": "blake2b-9700c683e18638ddf659147027102e2e",
+    "generated_at_utc": "2026-07-16T23:13:40Z",
+    "count": 235
   },
   "entries": [
     {
@@ -1460,10 +1460,10 @@
       "kind": "doc",
       "title": "Docs Images And Assets",
       "href": "/docs/?scope=studio&doc=d-20260423-155039-e36925",
-      "last_updated": "2026-07-14",
+      "last_updated": "2026-07-16",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-14 • Docs Viewer",
+      "display_meta": "2026-07-16 • Docs Viewer",
       "search_terms": [
         "docs images and assets",
         "docs",
@@ -1472,36 +1472,36 @@
         "assets",
         "docs viewer",
         "viewer",
-        "2026-07-14",
+        "2026-07-16",
         "2026",
         "07",
-        "14",
+        "16",
         "d-20260423-155039-e36925"
       ],
-      "search_text": "docs images and assets docs images and assets docs viewer viewer 2026-07-14 2026 07 14 d-20260423-155039-e36925"
+      "search_text": "docs images and assets docs images and assets docs viewer viewer 2026-07-16 2026 07 16 d-20260423-155039-e36925"
     },
     {
       "id": "d-20260424-000000-fc8b5d",
       "kind": "doc",
       "title": "Docs Import",
       "href": "/docs/?scope=studio&doc=d-20260424-000000-fc8b5d",
-      "last_updated": "2026-07-15",
+      "last_updated": "2026-07-16",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-15 • Docs Viewer",
+      "display_meta": "2026-07-16 • Docs Viewer",
       "search_terms": [
         "docs import",
         "docs",
         "import",
         "docs viewer",
         "viewer",
-        "2026-07-15",
+        "2026-07-16",
         "2026",
         "07",
-        "15",
+        "16",
         "d-20260424-000000-fc8b5d"
       ],
-      "search_text": "docs import docs import docs viewer viewer 2026-07-15 2026 07 15 d-20260424-000000-fc8b5d"
+      "search_text": "docs import docs import docs viewer viewer 2026-07-16 2026 07 16 d-20260424-000000-fc8b5d"
     },
     {
       "id": "d-20260514-164722-3de65e",
@@ -2326,10 +2326,10 @@
       "kind": "doc",
       "title": "Media And Asset Handling",
       "href": "/docs/?scope=studio&doc=d-20260514-184303-7914e2",
-      "last_updated": "2026-07-14",
+      "last_updated": "2026-07-17",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-14 • Docs Viewer",
+      "display_meta": "2026-07-17 • Docs Viewer",
       "search_terms": [
         "media and asset handling",
         "media",
@@ -2339,13 +2339,13 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-14",
+        "2026-07-17",
         "2026",
         "07",
-        "14",
+        "17",
         "d-20260514-184303-7914e2"
       ],
-      "search_text": "media and asset handling media and asset handling docs viewer docs viewer 2026-07-14 2026 07 14 d-20260514-184303-7914e2"
+      "search_text": "media and asset handling media and asset handling docs viewer docs viewer 2026-07-17 2026 07 17 d-20260514-184303-7914e2"
     },
     {
       "id": "d-20260424-000000-291cc8",
@@ -2550,10 +2550,10 @@
       "kind": "doc",
       "title": "Scope Lifecycle",
       "href": "/docs/?scope=studio&doc=d-20260515-000000-f43740",
-      "last_updated": "2026-07-15",
+      "last_updated": "2026-07-17",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-15 • Docs Viewer",
+      "display_meta": "2026-07-17 • Docs Viewer",
       "search_terms": [
         "scope lifecycle",
         "scope",
@@ -2561,13 +2561,13 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-15",
+        "2026-07-17",
         "2026",
         "07",
-        "15",
+        "17",
         "d-20260515-000000-f43740"
       ],
-      "search_text": "scope lifecycle scope lifecycle docs viewer docs viewer 2026-07-15 2026 07 15 d-20260515-000000-f43740"
+      "search_text": "scope lifecycle scope lifecycle docs viewer docs viewer 2026-07-17 2026 07 17 d-20260515-000000-f43740"
     },
     {
       "id": "d-20260518-214029-eb6598",
@@ -2672,10 +2672,10 @@
       "kind": "doc",
       "title": "Source Organisation",
       "href": "/docs/?scope=studio&doc=d-20260423-000000-8fd731",
-      "last_updated": "2026-07-14",
+      "last_updated": "2026-07-17",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-14 • Docs Viewer",
+      "display_meta": "2026-07-17 • Docs Viewer",
       "search_terms": [
         "source organisation",
         "source",
@@ -2683,13 +2683,13 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-14",
+        "2026-07-17",
         "2026",
         "07",
-        "14",
+        "17",
         "d-20260423-000000-8fd731"
       ],
-      "search_text": "source organisation source organisation docs viewer docs viewer 2026-07-14 2026 07 14 d-20260423-000000-8fd731"
+      "search_text": "source organisation source organisation docs viewer docs viewer 2026-07-17 2026 07 17 d-20260423-000000-8fd731"
     },
     {
       "id": "d-20260531-152622-ed2451",
@@ -3551,25 +3551,25 @@
       "kind": "doc",
       "title": "Docs Viewer Roadmap",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-1e0af6",
-      "last_updated": "2026-07-16 22:42:25",
+      "last_updated": "2026-07-16 23:56:30",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-16 22:42:25 • Roadmap",
+      "display_meta": "2026-07-16 23:56:30 • Roadmap",
       "search_terms": [
         "docs viewer roadmap",
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-16 22:42:25",
+        "2026-07-16 23:56:30",
         "2026",
         "07",
         "16",
-        "22",
-        "42",
-        "25",
+        "23",
+        "56",
+        "30",
         "d-20260714-234030-1e0af6"
       ],
-      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-16 22:42:25 2026 07 16 22 42 25 d-20260714-234030-1e0af6"
+      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-16 23:56:30 2026 07 16 23 56 30 d-20260714-234030-1e0af6"
     },
     {
       "id": "d-20260716-204013-3be4e1",
@@ -3691,10 +3691,10 @@
       "kind": "doc",
       "title": "Document Visualisations",
       "href": "/docs/?scope=studio&doc=d-20260715-181845-0158f9",
-      "last_updated": "2026-07-15",
+      "last_updated": "2026-07-16",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-15 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-16 • Docs Viewer Roadmap",
       "search_terms": [
         "document visualisations",
         "document",
@@ -3703,46 +3703,46 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-15",
+        "2026-07-16",
         "2026",
         "07",
-        "15",
+        "16",
         "d-20260715-181845-0158f9"
       ],
-      "search_text": "document visualisations document visualisations docs viewer roadmap docs viewer roadmap 2026-07-15 2026 07 15 d-20260715-181845-0158f9"
+      "search_text": "document visualisations document visualisations docs viewer roadmap docs viewer roadmap 2026-07-16 2026 07 16 d-20260715-181845-0158f9"
     },
     {
       "id": "d-20260715-181845-524859",
       "kind": "doc",
       "title": "Document Visualisations Concept",
       "href": "/docs/?scope=studio&doc=d-20260715-181845-524859",
-      "last_updated": "2026-07-15",
+      "last_updated": "2026-07-17",
       "parent_id": "d-20260715-181845-0158f9",
       "parent_title": "Document Visualisations",
-      "display_meta": "2026-07-15 • Document Visualisations",
+      "display_meta": "2026-07-17 • Document Visualisations",
       "search_terms": [
         "document visualisations concept",
         "document",
         "visualisations",
         "concept",
         "document visualisations",
-        "2026-07-15",
+        "2026-07-17",
         "2026",
         "07",
-        "15",
+        "17",
         "d-20260715-181845-524859"
       ],
-      "search_text": "document visualisations concept document visualisations concept document visualisations 2026-07-15 2026 07 15 d-20260715-181845-524859"
+      "search_text": "document visualisations concept document visualisations concept document visualisations 2026-07-17 2026 07 17 d-20260715-181845-524859"
     },
     {
       "id": "d-20260714-194217-b2bdd7",
       "kind": "doc",
       "title": "External Asset Collections",
       "href": "/docs/?scope=studio&doc=d-20260714-194217-b2bdd7",
-      "last_updated": "2026-07-14",
+      "last_updated": "2026-07-16",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-14 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-16 • Docs Viewer Roadmap",
       "search_terms": [
         "external asset collections",
         "external",
@@ -3752,23 +3752,49 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-14",
+        "2026-07-16",
         "2026",
         "07",
-        "14",
+        "16",
         "d-20260714-194217-b2bdd7"
       ],
-      "search_text": "external asset collections external asset collections docs viewer roadmap docs viewer roadmap 2026-07-14 2026 07 14 d-20260714-194217-b2bdd7"
+      "search_text": "external asset collections external asset collections docs viewer roadmap docs viewer roadmap 2026-07-16 2026 07 16 d-20260714-194217-b2bdd7"
+    },
+    {
+      "id": "d-20260714-234030-a63b0b",
+      "kind": "doc",
+      "title": "External Asset Collection Association Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260714-234030-a63b0b",
+      "last_updated": "2026-07-16",
+      "parent_id": "d-20260714-194217-b2bdd7",
+      "parent_title": "External Asset Collections",
+      "display_meta": "2026-07-16 • External Asset Collections",
+      "search_terms": [
+        "external asset collection association delivery",
+        "external",
+        "asset",
+        "collection",
+        "association",
+        "delivery",
+        "external asset collections",
+        "collections",
+        "2026-07-16",
+        "2026",
+        "07",
+        "16",
+        "d-20260714-234030-a63b0b"
+      ],
+      "search_text": "external asset collection association delivery external asset collection association delivery external asset collections collections 2026-07-16 2026 07 16 d-20260714-234030-a63b0b"
     },
     {
       "id": "d-20260714-234030-19a064",
       "kind": "doc",
       "title": "External Asset Collections Architecture",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-19a064",
-      "last_updated": "2026-07-14",
+      "last_updated": "2026-07-16",
       "parent_id": "d-20260714-194217-b2bdd7",
       "parent_title": "External Asset Collections",
-      "display_meta": "2026-07-14 • External Asset Collections",
+      "display_meta": "2026-07-16 • External Asset Collections",
       "search_terms": [
         "external asset collections architecture",
         "external",
@@ -3776,23 +3802,23 @@
         "collections",
         "architecture",
         "external asset collections",
-        "2026-07-14",
+        "2026-07-16",
         "2026",
         "07",
-        "14",
+        "16",
         "d-20260714-234030-19a064"
       ],
-      "search_text": "external asset collections architecture external asset collections architecture external asset collections 2026-07-14 2026 07 14 d-20260714-234030-19a064"
+      "search_text": "external asset collections architecture external asset collections architecture external asset collections 2026-07-16 2026 07 16 d-20260714-234030-19a064"
     },
     {
       "id": "d-20260714-234030-f2b36c",
       "kind": "doc",
       "title": "External Asset Collections Concept",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-f2b36c",
-      "last_updated": "2026-07-14",
+      "last_updated": "2026-07-16",
       "parent_id": "d-20260714-194217-b2bdd7",
       "parent_title": "External Asset Collections",
-      "display_meta": "2026-07-14 • External Asset Collections",
+      "display_meta": "2026-07-16 • External Asset Collections",
       "search_terms": [
         "external asset collections concept",
         "external",
@@ -3800,38 +3826,41 @@
         "collections",
         "concept",
         "external asset collections",
-        "2026-07-14",
+        "2026-07-16",
         "2026",
         "07",
-        "14",
+        "16",
         "d-20260714-234030-f2b36c"
       ],
-      "search_text": "external asset collections concept external asset collections concept external asset collections 2026-07-14 2026 07 14 d-20260714-234030-f2b36c"
+      "search_text": "external asset collections concept external asset collections concept external asset collections 2026-07-16 2026 07 16 d-20260714-234030-f2b36c"
     },
     {
-      "id": "d-20260714-234030-a63b0b",
+      "id": "d-20260716-235630-055f0c",
       "kind": "doc",
-      "title": "External Asset Lifecycle Delivery",
-      "href": "/docs/?scope=studio&doc=d-20260714-234030-a63b0b",
-      "last_updated": "2026-07-14",
-      "parent_id": "d-20260714-194217-b2bdd7",
-      "parent_title": "External Asset Collections",
-      "display_meta": "2026-07-14 • External Asset Collections",
+      "title": "External-Local Scope Media Layout",
+      "href": "/docs/?scope=studio&doc=d-20260716-235630-055f0c",
+      "last_updated": "2026-07-17",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap",
+      "display_meta": "2026-07-17 • Docs Viewer Roadmap",
       "search_terms": [
-        "external asset lifecycle delivery",
+        "external-local scope media layout",
         "external",
-        "asset",
-        "lifecycle",
-        "delivery",
-        "external asset collections",
-        "collections",
-        "2026-07-14",
+        "local",
+        "scope",
+        "media",
+        "layout",
+        "docs viewer roadmap",
+        "docs",
+        "viewer",
+        "roadmap",
+        "2026-07-17",
         "2026",
         "07",
-        "14",
-        "d-20260714-234030-a63b0b"
+        "17",
+        "d-20260716-235630-055f0c"
       ],
-      "search_text": "external asset lifecycle delivery external asset lifecycle delivery external asset collections collections 2026-07-14 2026 07 14 d-20260714-234030-a63b0b"
+      "search_text": "external-local scope media layout external local scope media layout docs viewer roadmap docs viewer roadmap 2026-07-17 2026 07 17 d-20260716-235630-055f0c"
     },
     {
       "id": "d-20260714-151900-6fa23e",

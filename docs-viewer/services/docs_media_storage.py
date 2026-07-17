@@ -14,6 +14,7 @@ from docs_scope_config import (
     DocsScopeConfig,
     load_docs_scope_configs,
     resolve_external_data_root,
+    resolve_scope_path,
 )
 from services.paths import configured_workspace_paths
 from studio.services.media.publish_media_to_r2 import (
@@ -320,35 +321,79 @@ def run_docs_staged_media_publish(
     return docs_publish_report(scope=config.scope_id, results=results, write=write, force=force)
 
 
-def external_media_root_for_scope(config: DocsScopeConfig) -> Path:
-    if (
-        config.scope_type != LOCAL_EXTERNAL_SCOPE_TYPE
-        or config.import_media_storage.storage_mode != "external_assets"
-    ):
-        raise ValueError(f"Docs scope {config.scope_id!r} is not an external-local media scope")
-    external_root = resolve_external_data_root().resolve()
-    media_root = (external_root / "media" / config.scope_id).resolve()
-    if not media_root.is_relative_to(external_root):
-        raise ValueError("External Docs media root escapes the configured external workspace")
-    return media_root
-
-
-def repo_media_root_for_scope(repo_root: Path, config: DocsScopeConfig) -> Path:
-    if config.scope_type == "public" or config.import_media_storage.storage_mode != "repo_assets":
-        raise ValueError(f"Docs scope {config.scope_id!r} is not a local repo-media scope")
+def scope_owned_media_root_for_scope(repo_root: Path, config: DocsScopeConfig) -> Path:
+    storage_mode = config.import_media_storage.storage_mode
+    if config.scope_type == "public" or storage_mode not in {"external_assets", "repo_assets"}:
+        raise ValueError(f"Docs scope {config.scope_id!r} does not use scope-owned local media")
     resolved_repo_root = repo_root.resolve()
-    media_root = (
-        resolved_repo_root / config.import_media_storage.repo_assets_path_prefix
-    ).resolve()
-    if not media_root.is_relative_to(resolved_repo_root):
-        raise ValueError("Repo Docs media root escapes the repository")
+    source_root = resolve_scope_path(resolved_repo_root, config.source).resolve()
+    containment_root = (
+        resolve_external_data_root().resolve()
+        if config.scope_type == LOCAL_EXTERNAL_SCOPE_TYPE
+        else resolved_repo_root
+    )
+    if not source_root.is_relative_to(containment_root):
+        raise ValueError("Docs source root escapes its configured storage boundary")
+
+    media_root = (source_root / "media").resolve()
+    if not media_root.is_relative_to(source_root):
+        raise ValueError("Docs media root escapes the scope source root")
+    if storage_mode == "repo_assets":
+        configured_root = (
+            resolved_repo_root / config.import_media_storage.repo_assets_path_prefix
+        ).resolve()
+        if configured_root != media_root:
+            raise ValueError("Repo Docs media root must be the scope source media directory")
     return media_root
 
 
-def local_media_root_for_scope(repo_root: Path, config: DocsScopeConfig) -> Path:
-    if config.import_media_storage.storage_mode == "external_assets":
-        return external_media_root_for_scope(config)
-    return repo_media_root_for_scope(repo_root, config)
+def ensure_media_directory_structure(
+    media_root: Path,
+    *,
+    keep_in_source_control: bool = False,
+) -> tuple[Path, ...]:
+    resolved_media_root = media_root.resolve()
+    source_root = resolved_media_root.parent
+    if not source_root.is_dir():
+        raise FileNotFoundError(f"Docs scope source root does not exist: {source_root}")
+
+    directories = (
+        resolved_media_root,
+        *(resolved_media_root / media_class for media_class in sorted(DOCS_MEDIA_CLASSES)),
+    )
+    for directory in directories:
+        if directory.is_symlink():
+            raise ValueError(f"Configured Docs media directory must not be a symlink: {directory}")
+        if directory.exists() and not directory.is_dir():
+            raise NotADirectoryError(f"Configured Docs media directory is not a directory: {directory}")
+        directory.mkdir(exist_ok=True)
+    if keep_in_source_control:
+        for directory in directories[1:]:
+            marker = directory / ".gitkeep"
+            if marker.is_symlink() or (marker.exists() and not marker.is_file()):
+                raise ValueError(f"Configured Docs media marker must be a regular file: {marker}")
+            marker.touch(exist_ok=True)
+    return directories
+
+
+def ensure_configured_scope_owned_media_directories(
+    repo_root: Path,
+    configs: Mapping[str, DocsScopeConfig] | None = None,
+) -> dict[str, tuple[Path, ...]]:
+    configured_scopes = configs if configs is not None else load_docs_scope_configs(repo_root)
+    materialized: dict[str, tuple[Path, ...]] = {}
+    for scope_id, config in configured_scopes.items():
+        if (
+            config.scope_type == "public"
+            or config.import_media_storage.storage_mode not in {"external_assets", "repo_assets"}
+        ):
+            continue
+        media_root = scope_owned_media_root_for_scope(repo_root, config)
+        materialized[scope_id] = ensure_media_directory_structure(
+            media_root,
+            keep_in_source_control=config.import_media_storage.storage_mode == "repo_assets",
+        )
+    return materialized
 
 
 def local_media_route(scope: str, media_class: str, filename: str) -> str:
@@ -370,7 +415,7 @@ def local_media_path_from_route(repo_root: Path, request_path: str) -> tuple[Pat
     config = load_docs_scope_configs(repo_root).get(scope)
     if config is None:
         raise FileNotFoundError(f"Docs media scope not found: {scope!r}")
-    root = local_media_root_for_scope(repo_root, config)
+    root = scope_owned_media_root_for_scope(repo_root, config)
     path = (root / normalized_class / normalized_filename).resolve()
     if not path.is_relative_to(root) or not path.is_file():
         raise FileNotFoundError(f"Docs media file not found: {scope}/{normalized_class}/{normalized_filename}")
@@ -393,13 +438,13 @@ __all__ = [
     "docs_media_object_key",
     "docs_publish_report",
     "docs_publish_succeeded",
-    "external_media_root_for_scope",
+    "ensure_configured_scope_owned_media_directories",
+    "ensure_media_directory_structure",
     "local_media_path_from_route",
-    "local_media_root_for_scope",
     "local_media_route",
     "plan_and_publish_docs_media",
     "publish_docs_media_files",
-    "repo_media_root_for_scope",
+    "scope_owned_media_root_for_scope",
     "run_docs_staged_media_publish",
     "safe_content_type",
 ]

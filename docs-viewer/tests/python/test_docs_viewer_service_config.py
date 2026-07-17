@@ -10,6 +10,45 @@ import pytest
 
 from docs_viewer_service_test_support import REPO_ROOT, docs_viewer_service, write_json
 
+
+def test_service_startup_materializes_configured_media_directories(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[Path] = []
+    closed: list[bool] = []
+    config = docs_viewer_service.DocsViewerServiceConfig(
+        host="127.0.0.1",
+        port=8776,
+        base_url="http://127.0.0.1:8776",
+        management_enabled=False,
+        generated_reads_enabled=True,
+        watch_enabled=True,
+    )
+
+    class FakeServer:
+        server_address = ("127.0.0.1", 8776)
+
+        def serve_forever(self) -> None:
+            raise KeyboardInterrupt
+
+        def server_close(self) -> None:
+            closed.append(True)
+
+    monkeypatch.setattr(docs_viewer_service, "load_service_config", lambda *_args, **_kwargs: config)
+    monkeypatch.setattr(
+        docs_viewer_service.media_storage,
+        "ensure_configured_scope_owned_media_directories",
+        lambda repo_root: calls.append(repo_root),
+    )
+    monkeypatch.setattr(docs_viewer_service, "DocsViewerServer", lambda *_args, **_kwargs: FakeServer())
+
+    exit_code = docs_viewer_service.main([])
+
+    assert exit_code == 0
+    assert calls == [REPO_ROOT]
+    assert closed == [True]
+
+
 def test_load_service_config_reads_env_local() -> None:
     with tempfile.TemporaryDirectory() as temp_dir:
         repo_root = Path(temp_dir)

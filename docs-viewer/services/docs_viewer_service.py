@@ -695,6 +695,12 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     try:
+        media_storage.ensure_configured_scope_owned_media_directories(REPO_ROOT)
+    except (OSError, ValueError) as error:
+        print(f"ERROR: Could not materialize configured Docs media directories: {error}", file=sys.stderr)
+        return 1
+
+    try:
         server = DocsViewerServer((config.host, config.port), REPO_ROOT, config, access_log_enabled=args.access_log)
     except OSError as error:
         print(

@@ -876,6 +876,12 @@
               "ui_status": "proposed",
               "children": [
                 {
+                  "doc_id": "d-20260714-234030-a63b0b",
+                  "title": "External Asset Collection Association Delivery",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260714-234030-a63b0b.json",
+                  "ui_status": "proposed"
+                },
+                {
                   "doc_id": "d-20260714-234030-19a064",
                   "title": "External Asset Collections Architecture",
                   "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260714-234030-19a064.json",
@@ -886,14 +892,14 @@
                   "title": "External Asset Collections Concept",
                   "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260714-234030-f2b36c.json",
                   "ui_status": "proposed"
-                },
-                {
-                  "doc_id": "d-20260714-234030-a63b0b",
-                  "title": "External Asset Lifecycle Delivery",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260714-234030-a63b0b.json",
-                  "ui_status": "planned"
                 }
               ]
+            },
+            {
+              "doc_id": "d-20260716-235630-055f0c",
+              "title": "External-Local Scope Media Layout",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260716-235630-055f0c.json",
+              "ui_status": "done"
             },
             {
               "doc_id": "d-20260714-151900-6fa23e",
@@ -1326,5 +1332,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-16T21:43:47Z"
+  "generated_at": "2026-07-16T22:58:34Z"
 }

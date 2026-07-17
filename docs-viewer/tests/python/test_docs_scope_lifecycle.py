@@ -437,6 +437,10 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
             default_doc_path = external_root / f"source/research/{default_doc_id}.md"
             default_doc_exists = default_doc_path.exists()
             default_doc_text = default_doc_path.read_text(encoding="utf-8")
+            media_directories_exist = all(
+                (external_root / "source/research/media" / media_class).is_dir()
+                for media_class in ("files", "img")
+            )
             route_exists = (repo_root / "research/index.md").exists()
     finally:
         docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild
@@ -451,6 +455,9 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     assert payload["build_commands"][0]["status"] == "completed"
     assert calls == [(repo_root, "research", {"include_search": True})]
     assert default_doc_exists is True
+    assert media_directories_exist is True
+    assert any(file["kind"] == "scope_media_img_root" for file in payload["created_files"])
+    assert any(file["kind"] == "scope_media_files_root" for file in payload["created_files"])
     assert "viewable:" not in default_doc_text
     assert "published:" not in default_doc_text
     assert "hidden:" not in default_doc_text
@@ -592,8 +599,8 @@ def test_scope_rename_apply_moves_external_roots_and_preserves_links_and_doc_ids
                 + f"\n[Old scope link](/docs/?scope=research&doc={default_doc_id})\n",
                 encoding="utf-8",
             )
-            media_path = external_root / "media/research/example.png"
-            media_path.parent.mkdir(parents=True)
+            media_path = external_root / "source/research/media/img/example.png"
+            media_path.parent.mkdir(parents=True, exist_ok=True)
             media_path.write_bytes(b"image")
             write_json(external_root / "generated/docs/research/index-tree.json", {"docs": []})
             write_json(external_root / "generated/search/research/index.json", {"entries": []})
@@ -615,13 +622,13 @@ def test_scope_rename_apply_moves_external_roots_and_preserves_links_and_doc_ids
             else:
                 raise AssertionError("scope rename apply should require explicit confirmation")
 
-            conflicting_media_root = external_root / "media/field-notes"
-            conflicting_media_root.mkdir(parents=True)
+            conflicting_source_root = external_root / "source/field-notes"
+            conflicting_source_root.mkdir(parents=True)
             blocked_preview = docs_management_service.docs_scope_rename.plan_rename_scope_preview(
                 repo_root,
                 {"scope_id": "research", "new_scope_id": "field-notes"},
             )
-            conflicting_media_root.rmdir()
+            conflicting_source_root.rmdir()
             preview = docs_management_service.docs_scope_rename.plan_rename_scope_preview(
                 repo_root,
                 {"scope_id": "research", "new_scope_id": "field-notes"},
@@ -647,7 +654,7 @@ def test_scope_rename_apply_moves_external_roots_and_preserves_links_and_doc_ids
 
     assert "confirm must be true" in confirmation_error
     assert blocked_preview["allowed"] is False
-    assert any("rename target already exists: media root" in blocker for blocker in blocked_preview["blockers"])
+    assert any("rename target already exists: source root" in blocker for blocker in blocked_preview["blockers"])
     assert preview["allowed"] is True
     assert preview["warnings"] == [docs_management_service.docs_scope_rename.LINK_REWRITE_WARNING]
     assert payload["ok"] is True
@@ -659,11 +666,10 @@ def test_scope_rename_apply_moves_external_roots_and_preserves_links_and_doc_ids
         (repo_root, "field-notes", {"include_search": True}),
     ]
     assert not (external_root / "source/research").exists()
-    assert not (external_root / "media/research").exists()
     assert not (external_root / "generated/docs/research").exists()
     assert not (external_root / "generated/search/research").exists()
     assert (external_root / "source/field-notes/notes").is_dir()
-    assert (external_root / "media/field-notes/example.png").read_bytes() == b"image"
+    assert (external_root / "source/field-notes/media/img/example.png").read_bytes() == b"image"
     assert (external_root / "generated/docs/field-notes/index-tree.json").exists()
     assert (external_root / "generated/search/field-notes/index.json").exists()
     assert renamed_scope["default_doc_id"] == default_doc_id
@@ -780,6 +786,14 @@ def test_scope_create_apply_skips_public_route_for_local_scopes() -> None:
             manifest_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scope_manifest.json").read_text(encoding="utf-8"))
             default_doc_id = source_payload["scopes"][1]["default_doc_id"]
             default_doc_text = (repo_root / f"docs-viewer/source/notes/{default_doc_id}.md").read_text(encoding="utf-8")
+            media_directories_exist = all(
+                (repo_root / "docs-viewer/source/notes/media" / media_class).is_dir()
+                for media_class in ("files", "img")
+            )
+            media_markers_exist = all(
+                (repo_root / "docs-viewer/source/notes/media" / media_class / ".gitkeep").is_file()
+                for media_class in ("files", "img")
+            )
             route_exists = (repo_root / "notes/index.md").exists()
     finally:
         docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild
@@ -787,6 +801,8 @@ def test_scope_create_apply_skips_public_route_for_local_scopes() -> None:
     assert payload["ok"] is True
     assert payload["urls"]["public"] == ""
     assert route_exists is False
+    assert media_directories_exist is True
+    assert media_markers_exist is True
     assert "viewable:" not in default_doc_text
     assert "published:" not in default_doc_text
     assert "hidden:" not in default_doc_text
@@ -1053,6 +1069,76 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
         and file["path"] == "docs-viewer/generated/search/research/index.json"
         for file in payload["missing_files"]
     )
+
+
+def test_scope_delete_apply_removes_external_scope_owned_media_with_source_root() -> None:
+    original_create_rebuild = docs_management_service.write_rebuild.rebuild_scope_outputs
+    original_delete_rebuild = docs_management_service.write_rebuild.rebuild_all_docs_outputs
+    original_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
+    docs_management_service.write_rebuild.rebuild_scope_outputs = (
+        lambda *_args, **_kwargs: {"ok": True}
+    )
+    docs_management_service.write_rebuild.rebuild_all_docs_outputs = (
+        lambda *_args, **_kwargs: {"ok": True, "steps": [], "search": {"mode": "full", "doc_ids": []}}
+    )
+    try:
+        with make_repo() as temp_path:
+            repo_root = Path(temp_path)
+            projects_root = (repo_root.parent / f"{repo_root.name}-external-docs-data").resolve()
+            external_root = projects_root / "docs-viewer"
+            external_root.mkdir(parents=True)
+            os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
+            write_docs_scope_config(repo_root)
+            docs_management_service.handle_scope_create_apply(
+                repo_root,
+                {
+                    "scope_id": "research",
+                    "title": "Research",
+                    "publishing_mode": "local_external",
+                    "confirm": True,
+                },
+                dry_run=False,
+            )
+            media_path = external_root / "source/research/media/img/diagram.svg"
+            media_path.parent.mkdir(parents=True, exist_ok=True)
+            media_path.write_text("<svg/>", encoding="utf-8")
+            preview = docs_management_service.docs_scope_delete.plan_delete_scope_preview(
+                repo_root,
+                {"scope_id": "research"},
+            )
+            payload = docs_management_service.handle_scope_delete_apply(
+                repo_root,
+                {"scope_id": "research", "confirm": True},
+                dry_run=False,
+            )
+            source_root_exists = (external_root / "source/research").exists()
+            config_payload = json.loads(
+                (repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8")
+            )
+            config_scope_ids = {
+                str(scope.get("scope_id") or "")
+                for scope in config_payload.get("scopes", [])
+                if isinstance(scope, dict)
+            }
+    finally:
+        docs_management_service.write_rebuild.rebuild_scope_outputs = original_create_rebuild
+        docs_management_service.write_rebuild.rebuild_all_docs_outputs = original_delete_rebuild
+        if original_projects_base is None:
+            os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
+        else:
+            os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = original_projects_base
+
+    assert preview["allowed"] is True
+    assert any(
+        file["kind"] == "source_root"
+        and file["path"] == (external_root / "source/research").as_posix()
+        for file in preview["delete_files"]
+    )
+    assert not any(file["kind"] == "media_root" for file in preview["delete_files"])
+    assert payload["ok"] is True
+    assert source_root_exists is False
+    assert "research" not in config_scope_ids
+
 
 def test_scope_delete_apply_removes_user_created_public_route_and_payloads() -> None:
     create_calls: list[tuple[Path, str, dict[str, object]]] = []

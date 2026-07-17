@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from docs_lifecycle_paths import path_record, write_text_atomic
+from docs_media_storage import ensure_media_directory_structure
 from docs_route_lifecycle import (
     append_public_route_record,
     normalize_route_path,
@@ -35,6 +36,7 @@ from docs_document_identity import (
 from docs_scope_manifest import (
     LIFECYCLE_APPLY_SCHEMA_VERSION,
     LIFECYCLE_PREVIEW_SCHEMA_VERSION,
+    LOCAL_COMMITTED_MODE,
     LOCAL_EXTERNAL_MODE,
     MANIFEST_REL_PATH,
     PUBLIC_MODE,
@@ -113,6 +115,11 @@ def apply_create_scope(
 
     if not dry_run:
         source_root.mkdir(parents=True, exist_ok=False)
+        if preview["publishing_mode"] != PUBLIC_MODE:
+            ensure_media_directory_structure(
+                source_root / "media",
+                keep_in_source_control=preview["publishing_mode"] == LOCAL_COMMITTED_MODE,
+            )
         write_text_atomic(
             default_doc_path,
             default_source_doc_text(
@@ -231,6 +238,31 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         path_record(repo_root, "source_root", created_source_root, action="create"),
         path_record(repo_root, "default_source_doc", created_source_root / f"{default_doc_id}.md", action="create"),
     ]
+    if publishing_mode != PUBLIC_MODE:
+        created_files.extend(
+            [
+                path_record(repo_root, "scope_media_root", created_source_root / "media", action="create"),
+                path_record(repo_root, "scope_media_img_root", created_source_root / "media" / "img", action="create"),
+                path_record(repo_root, "scope_media_files_root", created_source_root / "media" / "files", action="create"),
+            ]
+        )
+    if publishing_mode == LOCAL_COMMITTED_MODE:
+        created_files.extend(
+            [
+                path_record(
+                    repo_root,
+                    "scope_media_img_marker",
+                    created_source_root / "media" / "img" / ".gitkeep",
+                    action="create",
+                ),
+                path_record(
+                    repo_root,
+                    "scope_media_files_marker",
+                    created_source_root / "media" / "files" / ".gitkeep",
+                    action="create",
+                ),
+            ]
+        )
     changed_files = [
         path_record(repo_root, "scope_config", repo_root / CONFIG_REL_PATH, action="change"),
         path_record(repo_root, "scope_manifest", repo_root / MANIFEST_REL_PATH, action="change"),

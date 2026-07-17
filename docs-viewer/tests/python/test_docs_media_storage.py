@@ -17,6 +17,7 @@ from docs_media_storage import (
     DocsMediaPublishResult,
     docs_media_file,
     docs_publish_report,
+    ensure_configured_scope_owned_media_directories,
     local_media_path_from_route,
     plan_and_publish_docs_media,
     run_docs_staged_media_publish,
@@ -50,13 +51,14 @@ def scope_config(
     *,
     scope_type: str,
     storage_mode: str,
+    source: Path | None = None,
     repo_assets_path_prefix: str = "site/assets/docs/example",
     repo_assets_public_path_prefix: str = "/assets/docs/example",
 ) -> DocsScopeConfig:
     return DocsScopeConfig(
         scope_id=scope,
         scope_type=scope_type,
-        source=Path(f"docs-viewer/source/{scope}"),
+        source=source or Path(f"docs-viewer/source/{scope}"),
         media_path_prefix=Path(f"docs/{scope}"),
         output=Path(f"docs-viewer/generated/docs/{scope}"),
         search_output=Path(f"docs-viewer/generated/search/{scope}/index.json"),
@@ -311,7 +313,7 @@ def test_local_media_route_confines_repo_and_external_scope_assets(
             "docs_media_storage.load_docs_scope_configs",
             lambda _repo_root: {"studio": escaped_root_config},
         )
-        with pytest.raises(ValueError, match="media root escapes"):
+        with pytest.raises(ValueError, match="must be the scope source media directory"):
             local_media_path_from_route(tmp_path, "/docs/media/studio/img/diagram.png")
     html = tmp_path / "widget.html"
     html.write_text("<script>alert(1)</script>", encoding="utf-8")
@@ -319,8 +321,13 @@ def test_local_media_route_confines_repo_and_external_scope_assets(
         safe_content_type(html)
 
     external_root = tmp_path / "external/docs-viewer"
-    external_config = scope_config("private", scope_type="local_external", storage_mode="external_assets")
-    external_file = external_root / "media/private/files/notes.pdf"
+    external_config = scope_config(
+        "private",
+        scope_type="local_external",
+        storage_mode="external_assets",
+        source=external_root / "source/private",
+    )
+    external_file = external_root / "source/private/media/files/notes.pdf"
     external_file.parent.mkdir(parents=True)
     external_file.write_bytes(b"pdf")
     monkeypatch.setattr(
@@ -335,7 +342,64 @@ def test_local_media_route_confines_repo_and_external_scope_assets(
     assert media_class == "files"
 
 
-def test_external_import_materializes_below_derived_scope_media_root(
+def test_configured_local_media_directories_are_materialized(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo_source = tmp_path / "docs-viewer/source/studio"
+    repo_source.mkdir(parents=True)
+    external_root = tmp_path / "external/docs-viewer"
+    external_source = external_root / "source/notes"
+    external_source.mkdir(parents=True)
+    configs = {
+        "studio": scope_config(
+            "studio",
+            scope_type="local",
+            storage_mode="repo_assets",
+            repo_assets_path_prefix="docs-viewer/source/studio/media",
+            repo_assets_public_path_prefix="/docs/media/studio",
+        ),
+        "notes": scope_config(
+            "notes",
+            scope_type="local_external",
+            storage_mode="external_assets",
+            source=external_source,
+        ),
+        "library": scope_config(
+            "library",
+            scope_type="public",
+            storage_mode="r2_upload",
+        ),
+    }
+    monkeypatch.setattr("docs_media_storage.resolve_external_data_root", lambda: external_root)
+
+    materialized = ensure_configured_scope_owned_media_directories(tmp_path, configs)
+    ensure_configured_scope_owned_media_directories(tmp_path, configs)
+
+    assert set(materialized) == {"notes", "studio"}
+    assert all((repo_source / "media" / media_class).is_dir() for media_class in ("files", "img"))
+    assert all(
+        (repo_source / "media" / media_class / ".gitkeep").is_file()
+        for media_class in ("files", "img")
+    )
+    assert all((external_source / "media" / media_class).is_dir() for media_class in ("files", "img"))
+    assert not any(
+        (external_source / "media" / media_class / ".gitkeep").exists()
+        for media_class in ("files", "img")
+    )
+    assert not (tmp_path / "docs-viewer/source/library/media").exists()
+    if hasattr(os, "symlink"):
+        repo_img = repo_source / "media/img"
+        (repo_img / ".gitkeep").unlink()
+        repo_img.rmdir()
+        outside = tmp_path / "outside-img"
+        outside.mkdir()
+        os.symlink(outside, repo_img)
+        with pytest.raises(ValueError, match="must not be a symlink"):
+            ensure_configured_scope_owned_media_directories(tmp_path, configs)
+
+
+def test_external_import_materializes_below_scope_source_media_root(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -361,9 +425,9 @@ def test_external_import_materializes_below_derived_scope_media_root(
         include_prompt_meta=False,
     )
 
-    target = external_root / "media/dlf/img/diagram.png"
+    target = external_root / "source/dlf/media/img/diagram.png"
     assert target.read_bytes() == b"diagram"
-    assert written[0]["media_path"] == "media/dlf/img/diagram.png"
+    assert written[0]["media_path"] == "media/img/diagram.png"
     assert written[0]["media_link"] == "/docs/media/dlf/img/diagram.png"
     assert str(external_root) not in json.dumps(written)
 

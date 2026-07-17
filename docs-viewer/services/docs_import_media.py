@@ -25,10 +25,9 @@ from docs_scope_config import DOCS_SCOPE_CONFIGS, IMPORT_MEDIA_CONFIGS, MEDIA_PA
 from docs_media_storage import (
     docs_media_file,
     docs_publish_succeeded,
-    external_media_root_for_scope,
     local_media_route,
     publish_docs_media_files,
-    repo_media_root_for_scope,
+    scope_owned_media_root_for_scope,
 )
 from services.paths import marker_path
 
@@ -228,7 +227,7 @@ def package_media_target_path(repo_root: Path, staging_root: Path, plan: dict[st
         target_rel = Path(str(plan.get("repo_asset_path") or ""))
         if not str(target_rel) or target_rel.name != filename:
             raise ValueError(f"Invalid package media repo asset path: {target_rel.as_posix()!r}")
-        target_root = repo_media_root_for_scope(repo_root, scope_configs_for(repo_root)[scope])
+        target_root = scope_owned_media_root_for_scope(repo_root, scope_configs_for(repo_root)[scope])
         target_path = (repo_root / target_rel).resolve()
         if not target_path.is_relative_to(target_root):
             raise ValueError(f"Package media target escapes repo assets root: {target_rel.as_posix()!r}")
@@ -241,7 +240,10 @@ def package_media_target_path(repo_root: Path, staging_root: Path, plan: dict[st
         return target_path
     if plan.get("storage_mode") == "external_assets":
         media_class = str(plan.get("media_class") or "").strip()
-        target_root = (external_media_root_for_scope(scope_configs_for(repo_root)[scope]) / media_class).resolve()
+        target_root = (
+            scope_owned_media_root_for_scope(repo_root, scope_configs_for(repo_root)[scope])
+            / media_class
+        ).resolve()
         target_path = (target_root / filename).resolve()
         if not target_path.is_relative_to(target_root):
             raise ValueError(f"Package media filename escapes external media root: {filename!r}")
@@ -433,7 +435,7 @@ def materialize_inline_raster_media(
             if not str(target_rel) or target_rel.name != filename:
                 raise ValueError(f"Invalid inline media repo asset path: {target_rel.as_posix()!r}")
             scope = normalized_scope
-            target_root = repo_media_root_for_scope(repo_root, scope_configs_for(repo_root)[scope])
+            target_root = scope_owned_media_root_for_scope(repo_root, scope_configs_for(repo_root)[scope])
             target_path = (repo_root / target_rel).resolve()
             if not target_path.is_relative_to(target_root):
                 raise ValueError(f"Inline media target escapes repo assets root: {target_rel.as_posix()!r}")
@@ -444,7 +446,10 @@ def materialize_inline_raster_media(
                 raise ValueError(f"Inline media filename escapes staging root: {filename!r}")
         elif plan.get("storage_mode") == "external_assets":
             media_class = str(plan.get("media_class") or "").strip()
-            target_root = (external_media_root_for_scope(scope_configs_for(repo_root)[normalized_scope]) / media_class).resolve()
+            target_root = (
+                scope_owned_media_root_for_scope(repo_root, scope_configs_for(repo_root)[normalized_scope])
+                / media_class
+            ).resolve()
             target_path = (target_root / filename).resolve()
             if not target_path.is_relative_to(target_root):
                 raise ValueError(f"Inline media filename escapes external media root: {filename!r}")
@@ -489,7 +494,7 @@ def materialize_inline_raster_media(
             target_rel = Path(str(plan.get("repo_asset_path") or ""))
             if not str(target_rel) or target_rel.name != filename:
                 raise ValueError(f"Invalid source media repo asset path: {target_rel.as_posix()!r}")
-            target_root = repo_media_root_for_scope(
+            target_root = scope_owned_media_root_for_scope(
                 repo_root,
                 scope_configs_for(repo_root)[normalized_scope],
             )
@@ -499,11 +504,14 @@ def materialize_inline_raster_media(
             target_display = target_rel.as_posix()
         else:
             media_class = str(plan.get("media_class") or "").strip()
-            target_root = (external_media_root_for_scope(scope_configs_for(repo_root)[normalized_scope]) / media_class).resolve()
+            target_root = (
+                scope_owned_media_root_for_scope(repo_root, scope_configs_for(repo_root)[normalized_scope])
+                / media_class
+            ).resolve()
             target_path = (target_root / filename).resolve()
             if not target_path.is_relative_to(target_root):
                 raise ValueError(f"Source media filename escapes external media root: {filename!r}")
-            target_display = f"media/{normalized_scope}/{media_class}/{filename}"
+            target_display = f"media/{media_class}/{filename}"
         if target_path.exists():
             raise FileExistsError(f"Source media target already exists: {target_display}")
         target_path.parent.mkdir(parents=True, exist_ok=True)
@@ -700,7 +708,7 @@ def build_media_plan(
     if config.storage_mode == "repo_assets":
         media_path = repo_asset_rel_path_for(normalized_scope, media_class, source_path.name, repo_root=repo_root)
     elif config.storage_mode == "external_assets":
-        media_path = f"media/{normalized_scope}/{media_class}/{source_path.name}"
+        media_path = f"media/{media_class}/{source_path.name}"
     else:
         media_path = media_path_for(normalized_scope, media_class, source_path.name, repo_root=repo_root)
     return {
