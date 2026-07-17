@@ -4,20 +4,28 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260717-132231-8cfc4d",
+      "title": "Docs Viewer Source And Publication Model Refactor Delivery",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260717-132231-8cfc4d.json",
+      "timestamp": "2026-07-17 17:00:57",
+      "parent_id": "d-20260717-132231-5eae95",
+      "parent_title": "Docs Viewer Source And Publication Model Refactor"
+    },
+    {
+      "doc_id": "d-20260717-170057-b9c4e3",
+      "title": "Source And Publication Refactor SSR-1 Inventory",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260717-170057-b9c4e3.json",
+      "timestamp": "2026-07-17 17:00:57",
+      "parent_id": "d-20260717-132231-8cfc4d",
+      "parent_title": "Docs Viewer Source And Publication Model Refactor Delivery"
+    },
+    {
       "doc_id": "d-20260717-132231-5eae95",
       "title": "Docs Viewer Source And Publication Model Refactor",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260717-132231-5eae95.json",
       "timestamp": "2026-07-17 15:00:57",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap"
-    },
-    {
-      "doc_id": "d-20260717-132231-8cfc4d",
-      "title": "Docs Viewer Source And Publication Model Refactor Delivery",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260717-132231-8cfc4d.json",
-      "timestamp": "2026-07-17 15:00:57",
-      "parent_id": "d-20260717-132231-5eae95",
-      "parent_title": "Docs Viewer Source And Publication Model Refactor"
     },
     {
       "doc_id": "d-20260717-142549-d66485",
@@ -74,15 +82,7 @@
       "timestamp": "2026-07-16 22:23:46",
       "parent_id": "d-20260716-193410-6d4efe",
       "parent_title": "Copy Subtree To Scope"
-    },
-    {
-      "doc_id": "d-20260607-222033-78a47c",
-      "title": "Create And Import Endpoints",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260607-222033-78a47c.json",
-      "timestamp": "2026-07-16 22:19:35",
-      "parent_id": "d-20260607-222033-647b52",
-      "parent_title": "Endpoint Overview"
     }
   ],
-  "generated_at": "2026-07-17T14:01:45Z"
+  "generated_at": "2026-07-17T16:06:53Z"
 }

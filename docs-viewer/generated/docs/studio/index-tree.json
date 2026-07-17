@@ -879,7 +879,15 @@
                   "doc_id": "d-20260717-132231-8cfc4d",
                   "title": "Docs Viewer Source And Publication Model Refactor Delivery",
                   "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260717-132231-8cfc4d.json",
-                  "ui_status": "planned"
+                  "ui_status": "in-progress",
+                  "children": [
+                    {
+                      "doc_id": "d-20260717-170057-b9c4e3",
+                      "title": "Source And Publication Refactor SSR-1 Inventory",
+                      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260717-170057-b9c4e3.json",
+                      "ui_status": "report"
+                    }
+                  ]
                 },
                 {
                   "doc_id": "d-20260717-142549-d66485",
@@ -1352,5 +1360,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-17T13:42:01Z"
+  "generated_at": "2026-07-17T16:06:53Z"
 }

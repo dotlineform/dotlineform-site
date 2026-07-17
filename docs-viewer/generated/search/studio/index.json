@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-383069abde1703e95d067ed8c07f654d",
-    "generated_at_utc": "2026-07-17T14:01:45Z",
-    "count": 238
+    "version": "blake2b-5bfbfcac6c1c1eef724cda26b49d4579",
+    "generated_at_utc": "2026-07-17T16:06:53Z",
+    "count": 239
   },
   "entries": [
     {
@@ -3768,10 +3768,10 @@
       "kind": "doc",
       "title": "Docs Viewer Source And Publication Model Refactor Delivery",
       "href": "/docs/?scope=studio&doc=d-20260717-132231-8cfc4d",
-      "last_updated": "2026-07-17 15:00:57",
+      "last_updated": "2026-07-17 17:00:57",
       "parent_id": "d-20260717-132231-5eae95",
       "parent_title": "Docs Viewer Source And Publication Model Refactor",
-      "display_meta": "2026-07-17 15:00:57 • Docs Viewer Source And Publication Model Refactor",
+      "display_meta": "2026-07-17 17:00:57 • Docs Viewer Source And Publication Model Refactor",
       "search_terms": [
         "docs viewer source and publication model refactor delivery",
         "docs",
@@ -3783,16 +3783,48 @@
         "refactor",
         "delivery",
         "docs viewer source and publication model refactor",
-        "2026-07-17 15:00:57",
+        "2026-07-17 17:00:57",
         "2026",
         "07",
         "17",
-        "15",
         "00",
         "57",
         "d-20260717-132231-8cfc4d"
       ],
-      "search_text": "docs viewer source and publication model refactor delivery docs viewer source and publication model refactor delivery docs viewer source and publication model refactor 2026-07-17 15:00:57 2026 07 17 15 00 57 d-20260717-132231-8cfc4d"
+      "search_text": "docs viewer source and publication model refactor delivery docs viewer source and publication model refactor delivery docs viewer source and publication model refactor 2026-07-17 17:00:57 2026 07 17 00 57 d-20260717-132231-8cfc4d"
+    },
+    {
+      "id": "d-20260717-170057-b9c4e3",
+      "kind": "doc",
+      "title": "Source And Publication Refactor SSR-1 Inventory",
+      "href": "/docs/?scope=studio&doc=d-20260717-170057-b9c4e3",
+      "last_updated": "2026-07-17 17:00:57",
+      "parent_id": "d-20260717-132231-8cfc4d",
+      "parent_title": "Docs Viewer Source And Publication Model Refactor Delivery",
+      "display_meta": "2026-07-17 17:00:57 • Docs Viewer Source And Publication Model Refactor Delivery",
+      "search_terms": [
+        "source and publication refactor ssr-1 inventory",
+        "source",
+        "and",
+        "publication",
+        "refactor",
+        "ssr",
+        "1",
+        "inventory",
+        "docs viewer source and publication model refactor delivery",
+        "docs",
+        "viewer",
+        "model",
+        "delivery",
+        "2026-07-17 17:00:57",
+        "2026",
+        "07",
+        "17",
+        "00",
+        "57",
+        "d-20260717-170057-b9c4e3"
+      ],
+      "search_text": "source and publication refactor ssr-1 inventory source and publication refactor ssr 1 inventory docs viewer source and publication model refactor delivery docs viewer model delivery 2026-07-17 17:00:57 2026 07 17 00 57 d-20260717-170057-b9c4e3"
     },
     {
       "id": "d-20260717-142549-d66485",
