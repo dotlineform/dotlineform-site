@@ -870,34 +870,6 @@
               ]
             },
             {
-              "doc_id": "d-20260717-132231-5eae95",
-              "title": "Docs Viewer Source And Publication Model Refactor",
-              "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260717-132231-5eae95.json",
-              "ui_status": "planned",
-              "children": [
-                {
-                  "doc_id": "d-20260717-132231-8cfc4d",
-                  "title": "Docs Viewer Source And Publication Model Refactor Delivery",
-                  "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260717-132231-8cfc4d.json",
-                  "ui_status": "in-progress",
-                  "children": [
-                    {
-                      "doc_id": "d-20260717-170057-b9c4e3",
-                      "title": "Source And Publication Refactor SSR-1 Inventory",
-                      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260717-170057-b9c4e3.json",
-                      "ui_status": "report"
-                    }
-                  ]
-                },
-                {
-                  "doc_id": "d-20260717-142549-d66485",
-                  "title": "Source, Build, Published, And Location Concept",
-                  "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260717-142549-d66485.json",
-                  "ui_status": "planned"
-                }
-              ]
-            },
-            {
               "doc_id": "d-20260714-194217-b2bdd7",
               "title": "External Asset Collections",
               "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260714-194217-b2bdd7.json",
@@ -1360,5 +1332,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-17T19:21:26Z"
+  "generated_at": "2026-07-17T21:40:54Z"
 }
