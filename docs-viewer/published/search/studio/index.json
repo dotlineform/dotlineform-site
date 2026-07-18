@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a6ed527bad3cb3d2ccd382a2001e3011",
-    "generated_at_utc": "2026-07-18T20:53:07Z",
-    "count": 251
+    "version": "blake2b-8068602a6182f10b838fd46d3390e754",
+    "generated_at_utc": "2026-07-18T22:31:44Z",
+    "count": 252
   },
   "entries": [
     {
@@ -3802,25 +3802,25 @@
       "kind": "doc",
       "title": "Docs Viewer Roadmap",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-1e0af6",
-      "last_updated": "2026-07-18 21:42:06",
+      "last_updated": "2026-07-18 23:31:35",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-18 21:42:06 • Roadmap",
+      "display_meta": "2026-07-18 23:31:35 • Roadmap",
       "search_terms": [
         "docs viewer roadmap",
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-18 21:42:06",
+        "2026-07-18 23:31:35",
         "2026",
         "07",
         "18",
-        "21",
-        "42",
-        "06",
+        "23",
+        "31",
+        "35",
         "d-20260714-234030-1e0af6"
       ],
-      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-18 21:42:06 2026 07 18 21 42 06 d-20260714-234030-1e0af6"
+      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-18 23:31:35 2026 07 18 23 31 35 d-20260714-234030-1e0af6"
     },
     {
       "id": "d-20260716-204013-3be4e1",
@@ -4643,6 +4643,35 @@
         "d-20260718-105957-c72b2a"
       ],
       "search_text": "standalone docs viewer concept standalone docs viewer concept standalone docs viewer 2026-07-18 12:18:33 2026 07 18 12 33 d-20260718-105957-c72b2a"
+    },
+    {
+      "id": "d-20260718-233015-a1836e",
+      "kind": "doc",
+      "title": "Word Document Import",
+      "href": "/docs/?scope=studio&doc=d-20260718-233015-a1836e",
+      "last_updated": "2026-07-18 23:30:15",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap",
+      "display_meta": "2026-07-18 23:30:15 • Docs Viewer Roadmap",
+      "search_terms": [
+        "word document import",
+        "word",
+        "document",
+        "import",
+        "docs viewer roadmap",
+        "docs",
+        "viewer",
+        "roadmap",
+        "2026-07-18 23:30:15",
+        "2026",
+        "07",
+        "18",
+        "23",
+        "30",
+        "15",
+        "d-20260718-233015-a1836e"
+      ],
+      "search_text": "word document import word document import docs viewer roadmap docs viewer roadmap 2026-07-18 23:30:15 2026 07 18 23 30 15 d-20260718-233015-a1836e"
     },
     {
       "id": "d-20260715-092247-f3fd52",
