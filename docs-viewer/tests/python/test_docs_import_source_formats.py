@@ -7,7 +7,9 @@ from pathlib import Path
 
 import docs_import_preview
 import docs_import_source_service as import_source_service
+import docs_management_service
 import docs_write_rebuild as write_rebuild
+from repo_factory import docs_scope_record, write_docs_scope_config
 
 from docs_import_test_support import (
     handle_import_source,
@@ -59,6 +61,45 @@ def test_markdown_import_create_wraps_body_with_generated_front_matter() -> None
     assert "title: Imported Markdown" in source_text
     assert "# Imported Markdown" in source_text
     assert "Body from staged Markdown" in source_text
+
+
+def test_markdown_import_create_returns_external_workspace_relative_path(tmp_path: Path) -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_docs_scope_config(
+            root,
+            [docs_scope_record("notes", scope_type="local_external")],
+        )
+        external_documents = tmp_path / "projects-base/docs-viewer/source/notes/documents"
+        external_documents.mkdir(parents=True)
+        write_staged_markdown(
+            root,
+            "external-note.md",
+            "# External Note\n\nBody stored outside the repository.\n",
+        )
+        docs_management_service.refresh_source_model_scope_configs(root)
+        original_rebuild = stub_rebuild()
+        original_validation = docs_import_preview.validate_markdown_preview
+        docs_import_preview.validate_markdown_preview = lambda markdown, *, title="": {
+            "ok": True,
+            "html_chars": len(markdown),
+            "renderer": "stub",
+        }
+        try:
+            payload = handle_import_source(
+                root,
+                {"scope": "notes", "staged_filename": "external-note.md"},
+                dry_run=False,
+            )
+        finally:
+            write_rebuild.perform_source_write_and_rebuild = original_rebuild
+            docs_import_preview.validate_markdown_preview = original_validation
+
+        target = external_documents / f"{payload['doc_id']}.md"
+
+    assert payload["ok"] is True
+    assert payload["path"] == f"source/notes/documents/{payload['doc_id']}.md"
+    assert target.is_file()
 
 def test_text_import_autolinks_plain_urls() -> None:
     with make_repo() as temp:

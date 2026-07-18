@@ -6,12 +6,20 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Dict
 
-from docs_scope_config import DOCS_SCOPE_CONFIGS
+from docs_scope_config import DOCS_SCOPE_CONFIGS, resolve_external_data_root
 from docs_source_model import slugify
 
 
 def relative_path(repo_root: Path, path: Path) -> str:
-    return path.resolve().relative_to(repo_root.resolve()).as_posix()
+    resolved_path = path.resolve()
+    try:
+        return resolved_path.relative_to(repo_root.resolve()).as_posix()
+    except ValueError:
+        pass
+    try:
+        return resolved_path.relative_to(resolve_external_data_root().resolve()).as_posix()
+    except ValueError as exc:
+        raise ValueError("source path is outside the repo and external Docs Viewer root") from exc
 
 
 def viewer_url_for(scope: str, doc_id: str) -> str:
