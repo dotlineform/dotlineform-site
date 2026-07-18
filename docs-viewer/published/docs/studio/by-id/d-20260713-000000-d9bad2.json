@@ -2,9 +2,9 @@
   "doc_id": "d-20260713-000000-d9bad2",
   "title": "Source Documentation and Linting",
   "added_date": "2026-07-13 00:00:00",
-  "last_updated": "2026-07-15",
+  "last_updated": "2026-07-18 12:57:56",
   "viewer_url": "/docs/?scope=studio&doc=d-20260713-000000-d9bad2",
   "parent_id": "d-20260715-092247-f3fd52",
   "ui_status": "draft",
-  "content_html": "<h1>Source Documentation and Linting</h1>\n<p>Explore useful source-documentation and lint conventions that improve code re-entry and automated feedback without demanding comments on obvious code.</p>\n<h2>Feature Documents</h2>\n<ul>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260713-133928-c786c7\">Concept</a> — proposed JSDoc, docstring, Ruff, and ESLint direction and adoption questions.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260715-092247-f3fd52\">Repository Roadmap</a> — relative importance and sequence.</li>\n</ul>\n<p>No architecture or delivery is active. Stable repository guidance should change only after representative code proves the conventions and tool choices.</p>\n"
+  "content_html": "<h1>Source Documentation and Linting</h1>\n<p>Explore useful source-documentation and lint conventions that improve code re-entry and automated feedback without demanding comments on obvious code.</p>\n<h2>Feature Documents</h2>\n<ul>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260713-133928-c786c7\">Concept</a> — proposed JSDoc, docstring, Ruff, and ESLint direction and adoption questions.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260715-092247-f3fd52\">Repository Roadmap</a> — relative importance and sequence.</li>\n</ul>\n<p>A bounded Docs Viewer pilot delivery is proposed; no implementation is active. Stable repository guidance should change only after representative code proves the conventions and tool choices.</p>\n"
 }

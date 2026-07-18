@@ -6,24 +6,43 @@
       "scope_type": "local",
       "meta": "local management",
       "source": {
-        "location": { "provider": "repository", "path": "docs-viewer/source/studio" },
+        "location": {
+          "provider": "repository",
+          "path": "docs-viewer/source/studio"
+        },
         "documents_path": "documents",
         "build_media": {},
         "sub_scopes_path": "sub-scopes"
       },
       "published": {
-        "documents": { "location": { "provider": "repository", "path": "docs-viewer/published/docs/studio" } },
-        "search": { "location": { "provider": "repository", "path": "docs-viewer/published/search/studio/index.json" } },
+        "documents": {
+          "location": {
+            "provider": "repository",
+            "path": "docs-viewer/published/docs/studio"
+          }
+        },
+        "search": {
+          "location": {
+            "provider": "repository",
+            "path": "docs-viewer/published/search/studio/index.json"
+          }
+        },
         "media": {
           "img": {
             "reference_prefix": "docs/studio/img",
-            "location": { "provider": "repository", "path": "docs-viewer/published/docs/studio/media/img" },
+            "location": {
+              "provider": "repository",
+              "path": "docs-viewer/published/docs/studio/media/img"
+            },
             "served_path_prefix": "/docs/media/studio/img",
             "build_inputs": []
           },
           "files": {
             "reference_prefix": "docs/studio/files",
-            "location": { "provider": "repository", "path": "docs-viewer/published/docs/studio/media/files" },
+            "location": {
+              "provider": "repository",
+              "path": "docs-viewer/published/docs/studio/media/files"
+            },
             "served_path_prefix": "/docs/media/studio/files",
             "build_inputs": []
           }
@@ -32,7 +51,7 @@
       "public_projection": null,
       "viewer_base_url": "/docs/",
       "include_scope_param": true,
-      "default_doc_id": "d-20260419-000000-d2e47b",
+      "default_doc_id": "d-20260428-000000-f5ff18",
       "non_loadable_doc_ids": [],
       "manage_only_tree_root_ids": [],
       "allow_unresolved_parent_ids": false,
@@ -43,38 +62,70 @@
       "scope_type": "public",
       "meta": "public scope",
       "source": {
-        "location": { "provider": "repository", "path": "docs-viewer/source/library" },
+        "location": {
+          "provider": "repository",
+          "path": "docs-viewer/source/library"
+        },
         "documents_path": "documents",
         "build_media": {},
         "sub_scopes_path": "sub-scopes"
       },
       "published": {
-        "documents": { "location": { "provider": "repository", "path": "docs-viewer/published/docs/library" } },
-        "search": { "location": { "provider": "repository", "path": "docs-viewer/published/search/library/index.json" } },
+        "documents": {
+          "location": {
+            "provider": "repository",
+            "path": "docs-viewer/published/docs/library"
+          }
+        },
+        "search": {
+          "location": {
+            "provider": "repository",
+            "path": "docs-viewer/published/search/library/index.json"
+          }
+        },
         "media": {
           "img": {
             "reference_prefix": "docs/library/img",
-            "location": { "provider": "repository", "path": "site/assets/data/docs/scopes/library/media/img" },
+            "location": {
+              "provider": "repository",
+              "path": "site/assets/data/docs/scopes/library/media/img"
+            },
             "served_path_prefix": "/assets/data/docs/scopes/library/media/img",
             "build_inputs": []
           },
           "files": {
             "reference_prefix": "docs/library/files",
-            "location": { "provider": "r2", "path": "docs/library/files" },
+            "location": {
+              "provider": "r2",
+              "path": "docs/library/files"
+            },
             "served_path_prefix": "https://media.dotlineform.com/docs/library/files",
             "build_inputs": []
           },
           "html": {
             "reference_prefix": "docs/library/html",
-            "location": { "provider": "repository", "path": "site/assets/data/docs/scopes/library/media/html" },
+            "location": {
+              "provider": "repository",
+              "path": "site/assets/data/docs/scopes/library/media/html"
+            },
             "served_path_prefix": "/assets/data/docs/scopes/library/media/html",
             "build_inputs": []
           }
         }
       },
       "public_projection": {
-        "documents": { "location": { "provider": "repository", "path": "site/assets/data/docs/scopes/library" } },
-        "search": { "location": { "provider": "repository", "path": "site/assets/data/search/library/index.json" } }
+        "documents": {
+          "location": {
+            "provider": "repository",
+            "path": "site/assets/data/docs/scopes/library"
+          }
+        },
+        "search": {
+          "location": {
+            "provider": "repository",
+            "path": "site/assets/data/search/library/index.json"
+          }
+        }
       },
       "viewer_base_url": "/library/",
       "include_scope_param": false,
@@ -89,32 +140,61 @@
       "scope_type": "public",
       "meta": "public scope",
       "source": {
-        "location": { "provider": "repository", "path": "docs-viewer/source/analysis" },
+        "location": {
+          "provider": "repository",
+          "path": "docs-viewer/source/analysis"
+        },
         "documents_path": "documents",
         "build_media": {},
         "sub_scopes_path": "sub-scopes"
       },
       "published": {
-        "documents": { "location": { "provider": "repository", "path": "docs-viewer/published/docs/analysis" } },
-        "search": { "location": { "provider": "repository", "path": "docs-viewer/published/search/analysis/index.json" } },
+        "documents": {
+          "location": {
+            "provider": "repository",
+            "path": "docs-viewer/published/docs/analysis"
+          }
+        },
+        "search": {
+          "location": {
+            "provider": "repository",
+            "path": "docs-viewer/published/search/analysis/index.json"
+          }
+        },
         "media": {
           "img": {
             "reference_prefix": "docs/analysis/img",
-            "location": { "provider": "repository", "path": "site/assets/data/docs/scopes/analysis/media/img" },
+            "location": {
+              "provider": "repository",
+              "path": "site/assets/data/docs/scopes/analysis/media/img"
+            },
             "served_path_prefix": "/assets/data/docs/scopes/analysis/media/img",
             "build_inputs": []
           },
           "files": {
             "reference_prefix": "docs/analysis/files",
-            "location": { "provider": "r2", "path": "docs/analysis/files" },
+            "location": {
+              "provider": "r2",
+              "path": "docs/analysis/files"
+            },
             "served_path_prefix": "https://media.dotlineform.com/docs/analysis/files",
             "build_inputs": []
           }
         }
       },
       "public_projection": {
-        "documents": { "location": { "provider": "repository", "path": "site/assets/data/docs/scopes/analysis" } },
-        "search": { "location": { "provider": "repository", "path": "site/assets/data/search/analysis/index.json" } }
+        "documents": {
+          "location": {
+            "provider": "repository",
+            "path": "site/assets/data/docs/scopes/analysis"
+          }
+        },
+        "search": {
+          "location": {
+            "provider": "repository",
+            "path": "site/assets/data/search/analysis/index.json"
+          }
+        }
       },
       "viewer_base_url": "/analysis/",
       "include_scope_param": false,
@@ -127,18 +207,36 @@
           "sub_scope": "tags",
           "title": "Tags",
           "source": {
-            "location": { "provider": "repository", "path": "docs-viewer/source/analysis/sub-scopes/tags" },
+            "location": {
+              "provider": "repository",
+              "path": "docs-viewer/source/analysis/sub-scopes/tags"
+            },
             "documents_path": "documents",
             "build_media": {},
             "sub_scopes_path": "sub-scopes"
           },
           "published": {
-            "documents": { "location": { "provider": "repository", "path": "docs-viewer/published/docs/analysis/sub-scopes/tags" } },
-            "search": { "location": { "provider": "repository", "path": "docs-viewer/published/search/analysis/sub-scopes/tags/index.json" } },
+            "documents": {
+              "location": {
+                "provider": "repository",
+                "path": "docs-viewer/published/docs/analysis/sub-scopes/tags"
+              }
+            },
+            "search": {
+              "location": {
+                "provider": "repository",
+                "path": "docs-viewer/published/search/analysis/sub-scopes/tags/index.json"
+              }
+            },
             "media": {}
           },
           "public_projection": {
-            "documents": { "location": { "provider": "repository", "path": "site/assets/data/docs/scopes/analysis/tags" } },
+            "documents": {
+              "location": {
+                "provider": "repository",
+                "path": "site/assets/data/docs/scopes/analysis/tags"
+              }
+            },
             "search": null
           }
         }
@@ -149,32 +247,61 @@
       "scope_type": "public",
       "meta": "public scope",
       "source": {
-        "location": { "provider": "repository", "path": "docs-viewer/source/moments" },
+        "location": {
+          "provider": "repository",
+          "path": "docs-viewer/source/moments"
+        },
         "documents_path": "documents",
         "build_media": {},
         "sub_scopes_path": "sub-scopes"
       },
       "published": {
-        "documents": { "location": { "provider": "repository", "path": "docs-viewer/published/docs/moments" } },
-        "search": { "location": { "provider": "repository", "path": "docs-viewer/published/search/moments/index.json" } },
+        "documents": {
+          "location": {
+            "provider": "repository",
+            "path": "docs-viewer/published/docs/moments"
+          }
+        },
+        "search": {
+          "location": {
+            "provider": "repository",
+            "path": "docs-viewer/published/search/moments/index.json"
+          }
+        },
         "media": {
           "img": {
             "reference_prefix": "docs/moments/img",
-            "location": { "provider": "r2", "path": "docs/moments/img" },
+            "location": {
+              "provider": "r2",
+              "path": "docs/moments/img"
+            },
             "served_path_prefix": "https://media.dotlineform.com/docs/moments/img",
             "build_inputs": []
           },
           "files": {
             "reference_prefix": "docs/moments/files",
-            "location": { "provider": "r2", "path": "docs/moments/files" },
+            "location": {
+              "provider": "r2",
+              "path": "docs/moments/files"
+            },
             "served_path_prefix": "https://media.dotlineform.com/docs/moments/files",
             "build_inputs": []
           }
         }
       },
       "public_projection": {
-        "documents": { "location": { "provider": "repository", "path": "site/assets/data/docs/scopes/moments" } },
-        "search": { "location": { "provider": "repository", "path": "site/assets/data/search/moments/index.json" } }
+        "documents": {
+          "location": {
+            "provider": "repository",
+            "path": "site/assets/data/docs/scopes/moments"
+          }
+        },
+        "search": {
+          "location": {
+            "provider": "repository",
+            "path": "site/assets/data/search/moments/index.json"
+          }
+        }
       },
       "viewer_base_url": "/moments/",
       "include_scope_param": false,
@@ -189,24 +316,43 @@
       "scope_type": "local_external",
       "meta": "external local",
       "source": {
-        "location": { "provider": "external_local", "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/notes" },
+        "location": {
+          "provider": "external_local",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/notes"
+        },
         "documents_path": "documents",
         "build_media": {},
         "sub_scopes_path": "sub-scopes"
       },
       "published": {
-        "documents": { "location": { "provider": "external_local", "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/published/docs/notes" } },
-        "search": { "location": { "provider": "external_local", "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/published/search/notes/index.json" } },
+        "documents": {
+          "location": {
+            "provider": "external_local",
+            "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/published/docs/notes"
+          }
+        },
+        "search": {
+          "location": {
+            "provider": "external_local",
+            "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/published/search/notes/index.json"
+          }
+        },
         "media": {
           "img": {
             "reference_prefix": "docs/notes/img",
-            "location": { "provider": "external_local", "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/notes/media/img" },
+            "location": {
+              "provider": "external_local",
+              "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/notes/media/img"
+            },
             "served_path_prefix": "/docs/media/notes/img",
             "build_inputs": []
           },
           "files": {
             "reference_prefix": "docs/notes/files",
-            "location": { "provider": "external_local", "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/notes/media/files" },
+            "location": {
+              "provider": "external_local",
+              "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/notes/media/files"
+            },
             "served_path_prefix": "/docs/media/notes/files",
             "build_inputs": []
           }
@@ -226,24 +372,43 @@
       "scope_type": "local",
       "meta": "local management",
       "source": {
-        "location": { "provider": "repository", "path": "docs-viewer/source/processing" },
+        "location": {
+          "provider": "repository",
+          "path": "docs-viewer/source/processing"
+        },
         "documents_path": "documents",
         "build_media": {},
         "sub_scopes_path": "sub-scopes"
       },
       "published": {
-        "documents": { "location": { "provider": "repository", "path": "docs-viewer/published/docs/processing" } },
-        "search": { "location": { "provider": "repository", "path": "docs-viewer/published/search/processing/index.json" } },
+        "documents": {
+          "location": {
+            "provider": "repository",
+            "path": "docs-viewer/published/docs/processing"
+          }
+        },
+        "search": {
+          "location": {
+            "provider": "repository",
+            "path": "docs-viewer/published/search/processing/index.json"
+          }
+        },
         "media": {
           "img": {
             "reference_prefix": "docs/processing/img",
-            "location": { "provider": "repository", "path": "docs-viewer/published/docs/processing/media/img" },
+            "location": {
+              "provider": "repository",
+              "path": "docs-viewer/published/docs/processing/media/img"
+            },
             "served_path_prefix": "/docs/media/processing/img",
             "build_inputs": []
           },
           "files": {
             "reference_prefix": "docs/processing/files",
-            "location": { "provider": "repository", "path": "docs-viewer/published/docs/processing/media/files" },
+            "location": {
+              "provider": "repository",
+              "path": "docs-viewer/published/docs/processing/media/files"
+            },
             "served_path_prefix": "/docs/media/processing/files",
             "build_inputs": []
           }

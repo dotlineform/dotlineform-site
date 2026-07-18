@@ -4,85 +4,81 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "d-20260717-231652-d6d49e",
-      "title": "Extract Imported SVG To Published Media",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260717-231652-d6d49e.json",
-      "timestamp": "2026-07-18 09:15:33",
-      "parent_id": "d-20260714-234030-1e0af6",
-      "parent_title": "Docs Viewer Roadmap"
-    },
-    {
-      "doc_id": "d-20260717-231652-4890d2",
-      "title": "Extract Imported SVG To Published Media Delivery",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260717-231652-4890d2.json",
-      "timestamp": "2026-07-18 09:15:33",
-      "parent_id": "d-20260717-231652-d6d49e",
-      "parent_title": "Extract Imported SVG To Published Media"
-    },
-    {
-      "doc_id": "d-20260714-234030-1e0af6",
-      "title": "Docs Viewer Roadmap",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260714-234030-1e0af6.json",
-      "timestamp": "2026-07-17 23:16:52",
+      "doc_id": "d-20260715-092247-f3fd52",
+      "title": "Repository Roadmap",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260715-092247-f3fd52.json",
+      "timestamp": "2026-07-18 13:02:06",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
     },
     {
-      "doc_id": "d-20260717-231652-5d90c2",
-      "title": "Source Editor Add Image And Add File",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260717-231652-5d90c2.json",
-      "timestamp": "2026-07-17 23:16:52",
-      "parent_id": "d-20260714-234030-1e0af6",
-      "parent_title": "Docs Viewer Roadmap"
+      "doc_id": "d-20260428-000000-f5ff18",
+      "title": "Roadmap",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260428-000000-f5ff18.json",
+      "timestamp": "2026-07-18 13:02:06"
     },
     {
-      "doc_id": "d-20260423-165116-c83a81",
-      "title": "Broken Links Script",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260423-165116-c83a81.json",
-      "timestamp": "2026-07-17 22:19:08",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
+      "doc_id": "d-20260715-092247-6bbb5e",
+      "title": "Search Mechanics",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260715-092247-6bbb5e.json",
+      "timestamp": "2026-07-18 13:02:06",
+      "parent_id": "d-20260718-130206-81e5b0",
+      "parent_title": "Search Roadmap"
     },
     {
-      "doc_id": "d-20260715-181845-0158f9",
-      "title": "Diagrams",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260715-181845-0158f9.json",
-      "timestamp": "2026-07-17 22:19:08",
-      "parent_id": "d-20260714-234030-1e0af6",
-      "parent_title": "Docs Viewer Roadmap"
+      "doc_id": "d-20260718-130206-81e5b0",
+      "title": "Search Roadmap",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260718-130206-81e5b0.json",
+      "timestamp": "2026-07-18 13:02:06",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
     },
     {
-      "doc_id": "d-20260419-000000-0516ab",
-      "title": "Docs Data",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260419-000000-0516ab.json",
-      "timestamp": "2026-07-17 22:19:08",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
+      "doc_id": "d-20260718-125756-a41c70",
+      "title": "Docs Viewer Source Documentation And Linting Pilot Delivery",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260718-125756-a41c70.json",
+      "timestamp": "2026-07-18 12:57:56",
+      "parent_id": "d-20260713-000000-d9bad2",
+      "parent_title": "Source Documentation and Linting"
     },
     {
-      "doc_id": "d-20260424-000000-fc8b5d",
-      "title": "Docs Import",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260424-000000-fc8b5d.json",
-      "timestamp": "2026-07-17 22:19:08",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
+      "doc_id": "d-20260718-124244-3f7a92",
+      "title": "Git",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260718-124244-3f7a92.json",
+      "timestamp": "2026-07-18 12:57:56",
+      "parent_id": "d-20260718-114645-7b9d24",
+      "parent_title": "Docs Viewer Core Refactor"
     },
     {
-      "doc_id": "d-20260514-164722-3de65e",
-      "title": "Docs Import Architecture",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260514-164722-3de65e.json",
-      "timestamp": "2026-07-17 22:19:08",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
+      "doc_id": "d-20260713-000000-d9bad2",
+      "title": "Source Documentation and Linting",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260713-000000-d9bad2.json",
+      "timestamp": "2026-07-18 12:57:56",
+      "parent_id": "d-20260715-092247-f3fd52",
+      "parent_title": "Repository Roadmap"
     },
     {
-      "doc_id": "d-20260423-000000-c9f3ea",
-      "title": "Docs Viewer Builder",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260423-000000-c9f3ea.json",
-      "timestamp": "2026-07-17 22:19:08",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
+      "doc_id": "d-20260718-114645-7b9d24",
+      "title": "Docs Viewer Core Refactor",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260718-114645-7b9d24.json",
+      "timestamp": "2026-07-18 12:42:44"
+    },
+    {
+      "doc_id": "d-20260718-114201-4e7a93",
+      "title": "Docs Viewer Core Refactor Working Method",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260718-114201-4e7a93.json",
+      "timestamp": "2026-07-18 12:42:44",
+      "parent_id": "d-20260718-114645-7b9d24",
+      "parent_title": "Docs Viewer Core Refactor"
+    },
+    {
+      "doc_id": "d-20260718-121833-9fa2d4",
+      "title": "Docs Viewer Core Definition Analysis Delivery",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260718-121833-9fa2d4.json",
+      "timestamp": "2026-07-18 12:37:34",
+      "parent_id": "d-20260718-114645-7b9d24",
+      "parent_title": "Docs Viewer Core Refactor"
     }
   ],
-  "generated_at": "2026-07-18T08:16:15Z"
+  "generated_at": "2026-07-18T12:02:30Z"
 }
