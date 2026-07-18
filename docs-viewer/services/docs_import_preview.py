@@ -20,17 +20,14 @@ from markdown_renderer import markdown_renderer_contract, render_markdown_docume
 from docs_scope_config import DOCUMENT_SOURCE_ROOTS  # noqa: E402
 
 from docs_import_common import (  # noqa: E402
-    FILE_MEDIA_STAGED_SUFFIXES,
     HTML_STAGED_SUFFIXES,
     IMPORT_RESULTS_DIR_NAME,
+    DOCUMENT_STAGED_SUFFIXES,
     MARKDOWN_HEADING_PATTERN,
     MARKDOWN_IMAGE_PATTERN,
     MARKDOWN_LINK_PATTERN,
     MARKDOWN_STAGED_SUFFIXES,
     PLAIN_URL_PATTERN,
-    RASTER_IMAGE_STAGED_SUFFIXES,
-    SOURCE_IMPORTER_BY_SUFFIX,
-    SVG_STAGED_SUFFIXES,
     SUPPORTED_STAGED_SUFFIXES,
     TEXT_STAGED_SUFFIXES,
     autolink_plain_urls,
@@ -50,7 +47,6 @@ from docs_import_content import CONTENT_INTENT_REPLACE, ImportContent  # noqa: E
 from docs_html_markdown import (  # noqa: E402
     extract_html_title,
     parse_html_document,
-    sanitize_svg_source,
 )
 from docs_import_markdown_package import (  # noqa: E402
     find_package_markdown_file,
@@ -59,8 +55,7 @@ from docs_import_markdown_package import (  # noqa: E402
 )
 from docs_import_media import (  # noqa: E402
     apply_inline_raster_media_plans,
-    build_file_media_summary,
-    build_image_summary,
+    apply_inline_svg_media_plans,
 )
 from services.paths import configured_workspace_paths, marker_path  # noqa: E402
 
@@ -85,7 +80,7 @@ def validate_markdown_preview(markdown: str, *, title: str = "") -> dict[str, An
         "renderer": "studio/shared/python/markdown_renderer.py",
         "renderer_contract": contract,
         "sanitizer_boundary": {
-            "import_html": "docs_html_markdown structured conversion and SVG serialization",
+            "import_html": "structured conversion plus sanitized SVG media extraction",
             "raw_markdown_html": "allowed by renderer contract; authored Markdown remains trusted input",
             "sanitizes_html": False,
         },
@@ -150,10 +145,16 @@ def list_staged_import_source_files(
     if not staging_root.exists():
         return []
     files: list[dict[str, Any]] = []
+    registered_formats = registered_source_formats or {}
     candidates = [
         path
         for path in staging_root.iterdir()
-        if path.is_file() and not path.is_symlink() and path.suffix.lower() in SUPPORTED_STAGED_SUFFIXES
+        if path.is_file()
+        and not path.is_symlink()
+        and (
+            path.suffix.lower() in DOCUMENT_STAGED_SUFFIXES
+            or path.name in registered_formats
+        )
     ]
     package_candidates = [
         path
@@ -171,7 +172,7 @@ def list_staged_import_source_files(
             {
                 "filename": path.name,
                 "path": marker_path(path, workspace_root=workspace_root),
-                "source_format": (registered_source_formats or {}).get(path.name) or source_format_for_path(path),
+                "source_format": registered_formats.get(path.name) or source_format_for_path(path),
                 "size_bytes": stat.st_size,
                 "modified_utc": dt.datetime.fromtimestamp(stat.st_mtime, tz=dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
             }
@@ -234,27 +235,6 @@ def generate_import_preview(
             source_path=source_path,
             scope=scope,
         )
-    if source_format == "svg":
-        return generate_svg_import_preview(
-            repo_root,
-            workspace_root=workspace_root,
-            source_path=source_path,
-            scope=scope,
-        )
-    if source_format == "image":
-        return generate_image_import_preview(
-            repo_root,
-            workspace_root=workspace_root,
-            source_path=source_path,
-            scope=scope,
-        )
-    if source_format == "file":
-        return generate_file_media_import_preview(
-            repo_root,
-            workspace_root=workspace_root,
-            source_path=source_path,
-            scope=scope,
-        )
     return generate_html_import_preview(
         repo_root,
         staging_root=staging_root,
@@ -285,6 +265,7 @@ def generate_html_import_preview(
         workspace_root=workspace_root,
     )
     summary.pop("_inline_media_source_markdown", None)
+    summary.pop("_inline_svg_source_markup", None)
     summary["source_path"] = import_artifact_path(repo_root, source_path, workspace_root)
     summary["source_html"] = summary["source_path"]
     return summary
@@ -336,11 +317,20 @@ def generate_html_content_import_preview(
     summary["tag_counts"] = dict(parsed.tag_counts.most_common())
     summary["comment_count"] = parsed.comment_count
     summary["_inline_media_source_markdown"] = str(summary.get("markdown_preview") or "")
+    summary["_inline_svg_source_markup"] = source_html
     if repo_root is None:
         from docs_scope_config import default_repo_root
 
         repo_root = default_repo_root()
     apply_inline_raster_media_plans(repo_root, staging_root, workspace_root, summary, normalized_scope)
+    apply_inline_svg_media_plans(
+        repo_root,
+        staging_root,
+        workspace_root,
+        summary,
+        normalized_scope,
+        source_svg_markup=source_html,
+    )
     summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
     return summary
 
@@ -617,89 +607,6 @@ def generate_normalized_import_content_preview(
         title=record.title,
         doc_id=record.doc_id,
     )
-
-
-def generate_svg_import_preview(
-    repo_root: Path,
-    *,
-    workspace_root: Path,
-    source_path: Path,
-    scope: str,
-) -> dict[str, Any]:
-    normalized_scope = normalize_scope(scope)
-    source_svg = source_path.read_text(encoding="utf-8", errors="replace")
-    sanitized_svg, svg_title, warnings, svg_count = sanitize_svg_source(source_svg)
-    title = svg_title or humanize(source_path.stem) or "Imported Diagram"
-    markdown = f"# {title}\n\n{sanitized_svg}".strip()
-    summary = {
-        "title": title,
-        "title_source": "svg_title" if svg_title else "filename",
-        "proposed_doc_id": slugify(source_path.stem or title),
-        "proposed_doc_id_source": "filename",
-        "source_stats": {
-            "chars": len(source_svg),
-            "links": len(PLAIN_URL_PATTERN.findall(source_svg)),
-            "images": source_svg.lower().count("<image"),
-            "svg": svg_count,
-            "details": 0,
-        },
-        "image_summary": {
-            "external": 0,
-            "data_urls": 0,
-            "repo_local_or_other": 0,
-        },
-        "warnings": warnings,
-        "markdown_preview": markdown,
-        "scope": normalized_scope,
-        "source_format": "svg",
-        "source_path": import_artifact_path(repo_root, source_path, workspace_root),
-        "source_svg": import_artifact_path(repo_root, source_path, workspace_root),
-        "staging_root": marker_path(source_path.parent, workspace_root=workspace_root),
-        "tag_counts": {"svg": svg_count} if svg_count else {},
-        "comment_count": 0,
-    }
-    summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
-    return summary
-
-
-def generate_image_import_preview(
-    repo_root: Path,
-    *,
-    workspace_root: Path,
-    source_path: Path,
-    scope: str,
-) -> dict[str, Any]:
-    normalized_scope = normalize_scope(scope)
-    summary = build_image_summary(source_path, normalized_scope, repo_root=repo_root)
-    summary["scope"] = normalized_scope
-    summary["source_format"] = "image"
-    summary["source_path"] = import_artifact_path(repo_root, source_path, workspace_root)
-    summary["source_media"] = summary["source_path"]
-    summary["staging_root"] = marker_path(source_path.parent, workspace_root=workspace_root)
-    summary["tag_counts"] = {}
-    summary["comment_count"] = 0
-    summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
-    return summary
-
-
-def generate_file_media_import_preview(
-    repo_root: Path,
-    *,
-    workspace_root: Path,
-    source_path: Path,
-    scope: str,
-) -> dict[str, Any]:
-    normalized_scope = normalize_scope(scope)
-    summary = build_file_media_summary(source_path, normalized_scope, repo_root=repo_root)
-    summary["scope"] = normalized_scope
-    summary["source_format"] = "file"
-    summary["source_path"] = import_artifact_path(repo_root, source_path, workspace_root)
-    summary["source_media"] = summary["source_path"]
-    summary["staging_root"] = marker_path(source_path.parent, workspace_root=workspace_root)
-    summary["tag_counts"] = {}
-    summary["comment_count"] = 0
-    summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
-    return summary
 
 
 def detect_repo_root(explicit_root: str) -> Path:

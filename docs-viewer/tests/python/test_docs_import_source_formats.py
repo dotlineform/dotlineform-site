@@ -5,6 +5,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 import docs_import_preview
 import docs_import_source_service as import_source_service
 import docs_management_service
@@ -129,162 +131,22 @@ def test_text_import_autolinks_plain_urls() -> None:
     assert payload["import_preview"]["source_format"] == "text"
     assert "<https://example.com/path>" in source_text
 
-def test_svg_import_strips_unsafe_content() -> None:
+@pytest.mark.parametrize(
+    ("filename", "content"),
+    [
+        ("diagram.svg", b"<svg viewBox='0 0 10 10'></svg>"),
+        ("reference-image.png", b"fake image"),
+        ("reference-file.pdf", b"fake pdf"),
+    ],
+)
+def test_docs_import_rejects_standalone_media(filename: str, content: bytes) -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
-        write_staged_text(
-            root,
-            "diagram.svg",
-            """
-            <svg viewBox="0 0 10 10" onclick="alert(1)">
-              <title>Unsafe Diagram</title>
-              <defs>
-                <linearGradient id="background">
-                  <stop offset="0%" stop-color="#ffffff" />
-                  <stop offset="100%" stop-color="#000000" />
-                </linearGradient>
-              </defs>
+        write_staged_bytes(root, filename, content)
 
-              <rect width="10" height="10" fill="url(#background)" />
-              <script>alert(1)</script>
-            </svg>
-            """,
-        )
-        original_rebuild = stub_rebuild()
-        original_validation = docs_import_preview.validate_markdown_preview
-        docs_import_preview.validate_markdown_preview = lambda markdown, *, title="": {
-            "ok": True,
-            "html_chars": len(markdown),
-            "renderer": "stub",
-        }
-        try:
-            payload = handle_import_source(
+        with pytest.raises(ValueError, match="staged file must use one of these extensions"):
+            handle_import_source(
                 root,
-                {"scope": "library", "staged_filename": "diagram.svg"},
+                {"scope": "library", "staged_filename": filename},
                 dry_run=False,
             )
-        finally:
-            write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            docs_import_preview.validate_markdown_preview = original_validation
-
-        source_text = (root / payload["path"]).read_text(encoding="utf-8")
-        rendered = docs_import_preview.render_markdown_document(
-            payload["import_preview"]["markdown_preview"],
-            title=payload["title"],
-        )
-
-    assert payload["ok"] is True
-    assert payload["title"] == "Unsafe Diagram"
-    assert payload["import_preview"]["source_format"] == "svg"
-    assert "<script" not in source_text
-    assert "onclick" not in source_text
-    assert "<title>Unsafe Diagram</title>" in source_text
-    assert "<rect" in rendered.html
-    assert "<p><rect" not in rendered.html
-    assert any("script" in warning for warning in payload["import_preview"]["warnings"])
-
-def test_image_import_creates_media_path_plan_wrapper() -> None:
-    with make_repo() as temp:
-        root = Path(temp)
-        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
-        write_staged_bytes(root, "reference-image.png", b"fake image")
-        original_rebuild = stub_rebuild()
-        original_validation = docs_import_preview.validate_markdown_preview
-        docs_import_preview.validate_markdown_preview = lambda markdown, *, title="": {
-            "ok": True,
-            "html_chars": len(markdown),
-            "renderer": "stub",
-        }
-        try:
-            payload = handle_import_source(
-                root,
-                {"scope": "library", "staged_filename": "reference-image.png"},
-                dry_run=False,
-            )
-        finally:
-            write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            docs_import_preview.validate_markdown_preview = original_validation
-
-        source_text = (root / payload["path"]).read_text(encoding="utf-8")
-
-    assert payload["ok"] is True
-    assert payload["import_preview"]["source_format"] == "image"
-    assert payload["import_preview"]["media_plan"]["media_path"] == "docs/library/img/reference-image.png"
-    assert "[[media:docs/library/img/reference-image.png]]" in source_text
-
-def test_file_media_import_creates_file_media_path_plan_wrapper() -> None:
-    with make_repo() as temp:
-        root = Path(temp)
-        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
-        write_staged_bytes(root, "reference-file.pdf", b"fake pdf")
-        original_rebuild = stub_rebuild()
-        original_validation = docs_import_preview.validate_markdown_preview
-        docs_import_preview.validate_markdown_preview = lambda markdown, *, title="": {
-            "ok": True,
-            "html_chars": len(markdown),
-            "renderer": "stub",
-        }
-        try:
-            payload = handle_import_source(
-                root,
-                {"scope": "library", "staged_filename": "reference-file.pdf"},
-                dry_run=False,
-            )
-        finally:
-            write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            docs_import_preview.validate_markdown_preview = original_validation
-
-        source_text = (root / payload["path"]).read_text(encoding="utf-8")
-
-    assert payload["ok"] is True
-    assert payload["import_preview"]["source_format"] == "file"
-    assert payload["import_preview"]["media_plan"]["media_path"] == "docs/library/files/reference-file.pdf"
-    assert "[[media:docs/library/files/reference-file.pdf]]" in source_text
-
-def test_import_collision_prompts_for_replacement_doc_id() -> None:
-    with make_repo() as temp:
-        root = Path(temp)
-        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
-        write_library_doc(root, "reference-file.md", {"doc_id": "reference-file", "title": "Reference File", "parent_id": ""})
-        write_staged_bytes(root, "reference-file.pdf", b"fake pdf")
-        original_rebuild = stub_rebuild()
-        original_validation = docs_import_preview.validate_markdown_preview
-        docs_import_preview.validate_markdown_preview = lambda markdown, *, title="": {
-            "ok": True,
-            "html_chars": len(markdown),
-            "renderer": "stub",
-        }
-        try:
-            preview_payload = handle_import_source(
-                root,
-                {"scope": "library", "staged_filename": "reference-file.pdf"},
-                dry_run=False,
-            )
-            apply_payload = handle_import_source(
-                root,
-                {
-                    "scope": "library",
-                    "staged_filename": "reference-file.pdf",
-                    "replacement_doc_id": "reference-file-2",
-                },
-                dry_run=False,
-            )
-        finally:
-            write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            docs_import_preview.validate_markdown_preview = original_validation
-
-        source_path = root / apply_payload["path"]
-        source_exists = source_path.exists()
-        source_text = source_path.read_text(encoding="utf-8")
-
-    assert preview_payload["preview_only"] is True
-    assert preview_payload["replacement_doc_id_required"] is True
-    assert "replacement_title_required" not in preview_payload
-    assert preview_payload["collision"]["doc_id"] == "reference-file"
-    assert apply_payload["ok"] is True
-    assert apply_payload["operation"] == "create"
-    assert apply_payload["doc_id"].startswith("d-")
-    assert apply_payload["import_preview"]["source_doc_id"] == "reference-file-2"
-    assert source_exists
-    assert "title: Reference File" in source_text

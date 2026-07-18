@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""HTML parsing, SVG sanitizing, and HTML-to-Markdown conversion helpers."""
+"""HTML parsing and HTML-to-Markdown conversion helpers."""
 
 from __future__ import annotations
 
@@ -24,8 +24,6 @@ SEMANTIC_CALLOUT_CLASS_TOKENS = {"key"}
 LIST_WRAPPER_CLASS_TOKENS = {"legend"}
 PROMPT_META_TEXT_PREFIXES = ("[prompt]", "original prompt", "follow-up")
 ROWSPAN_COLSPAN_ATTRS = {"rowspan", "colspan"}
-SVG_EVENT_ATTR_PATTERN = re.compile(r"\son[a-z]+\s*=", re.IGNORECASE)
-SVG_EXTERNAL_REF_ATTRS = {"href", "xlink:href", "src"}
 SVG_MARKDOWN_BLANK_LINES_PATTERN = re.compile(r"\n(?:[ \t]*\n)+")
 
 
@@ -150,6 +148,12 @@ def serialize_node(node: Any, *, in_svg: bool = False) -> str:
     return f"<{tag}{attrs}>{inner}</{tag}>"
 
 
+def serialize_svg_node(node: Any) -> str:
+    """Keep inline SVG contiguous so Markdown renderers do not paragraphize its children."""
+
+    return SVG_MARKDOWN_BLANK_LINES_PATTERN.sub("\n", serialize_node(node)).strip()
+
+
 def walk(node: Any):
     yield node
     if isinstance(node, ElementNode):
@@ -170,38 +174,6 @@ def collect_all(node: ElementNode, tag: str) -> list[ElementNode]:
         if isinstance(candidate, ElementNode) and candidate.tag == tag:
             matches.append(candidate)
     return matches
-
-
-def svg_safety_warnings(source_svg: str, svg: Optional[ElementNode]) -> list[str]:
-    warnings: list[str] = []
-    if re.search(r"<\s*script\b", source_svg or "", flags=re.IGNORECASE):
-        warnings.append("SVG contained script content; unsafe script blocks were stripped.")
-    if SVG_EVENT_ATTR_PATTERN.search(source_svg or ""):
-        warnings.append("SVG contained event-handler attributes; unsafe on* attributes were stripped.")
-    external_refs: list[str] = []
-    if svg:
-        for node in walk(svg):
-            if not isinstance(node, ElementNode):
-                continue
-            for attr_name in SVG_EXTERNAL_REF_ATTRS:
-                value = node.attr(attr_name)
-                if value.startswith(("http://", "https://", "//")):
-                    external_refs.append(value)
-    if external_refs:
-        warnings.append(f"SVG contains {len(external_refs)} external reference(s); review the rendered output.")
-    return warnings
-
-
-def sanitize_svg_source(source_svg: str) -> tuple[str, str, list[str], int]:
-    parsed = parse_html_document(source_svg)
-    svg = find_first(parsed.root, "svg")
-    if svg is None:
-        return "", "", ["No <svg> root was found in the staged SVG file."], 0
-    title_node = find_first(svg, "title")
-    title = normalize_space(title_node.text_content()) if title_node else ""
-    warnings = svg_safety_warnings(source_svg, svg)
-    serialized_svg = SVG_MARKDOWN_BLANK_LINES_PATTERN.sub("\n", serialize_node(svg)).strip()
-    return serialized_svg, title, warnings, sum(1 for node in walk(svg) if isinstance(node, ElementNode) and node.tag == "svg")
 
 
 def extract_html_title(root: ElementNode) -> str:
@@ -282,7 +254,7 @@ def render_inline(node: Any) -> str:
             return f"![{alt}]({src})" if alt else src
         return src or alt
     if tag == "svg":
-        return serialize_node(node)
+        return serialize_svg_node(node)
     return "".join(render_inline(child) for child in node.children)
 
 
@@ -416,7 +388,7 @@ def render_block(node: Any, warnings: list[str], include_prompt_meta: bool) -> s
     if tag == "table":
         return render_table(node, warnings)
     if tag == "svg":
-        return serialize_node(node)
+        return serialize_svg_node(node)
     if tag == "img":
         return render_inline(node)
     return "\n\n".join(part for part in (render_block(child, warnings, include_prompt_meta) for child in node.children) if part)

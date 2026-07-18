@@ -262,7 +262,16 @@ def assert_action_target_definitions(page: Page) -> None:
         }"""
     )
     expected = {
-        "active": ["bookmark", "copy-subtree", "edit-metadata", "info", "markdown-save", "markdown-source"],
+        "active": [
+            "bookmark",
+            "copy-subtree",
+            "edit-metadata",
+            "info",
+            "markdown-save",
+            "markdown-source",
+            "source-add-file",
+            "source-add-image",
+        ],
         "all": ["move"],
         "document": ["open-vscode"],
         "exactlyOne": ["delete", "show"],
@@ -714,7 +723,7 @@ def exercise_manage_route(
             const actions = document.querySelector('[data-docs-viewer-control-surface-mount="main-view"]');
             return root?.dataset.documentDisplayMode === 'markdown-source'
                 && actions
-                && Array.from(actions.children).map(node => node.dataset.docsViewerControl).join(',') === 'open-vscode,save-markdown-source,markdown-source,info'
+                && Array.from(actions.children).map(node => node.dataset.docsViewerControl).join(',') === 'open-vscode,source-add-image,source-add-file,save-markdown-source,markdown-source,info'
                 && !document.querySelector('#docsViewerManageSourceSaveButton')?.disabled;
         }""",
         timeout=timeout_ms,

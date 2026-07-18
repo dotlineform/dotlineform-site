@@ -13,6 +13,7 @@ import docs_review_sessions
 from docs_scope_config import load_docs_scope_configs
 import docs_source_config_report
 import docs_source_config_settings
+import docs_staged_media_service
 from docs_management_capabilities_service import capabilities_payload
 from docs_management_source_service import read_source_body
 
@@ -79,6 +80,11 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         return read_source_body(repo_root, params)
     if path == routes.IMPORT_SOURCE_FILES_PATH:
         return import_source_service.handle_import_source_files(repo_root)
+    if path == routes.STAGED_MEDIA_FILES_PATH:
+        return docs_staged_media_service.list_staged_media_files(
+            repo_root,
+            docs_api_query_value(params, "media_kind"),
+        )
     if path == routes.REVIEW_SESSIONS_PATH:
         return docs_review_sessions.list_review_sessions(repo_root)
     if path == routes.REVIEW_SESSION_INDEX_TREE_PATH:

@@ -12,7 +12,6 @@ from docs_html_markdown import (
     html_to_markdown,
     is_prompt_meta_node,
     is_semantic_callout_node,
-    svg_safety_warnings,
     walk,
 )
 from docs_import_common import normalize_space, slugify
@@ -44,7 +43,6 @@ def build_summary(
             images.append(node.attr("src"))
         if node.tag == "svg":
             svg_count += 1
-            warnings.extend(svg_safety_warnings(source_html, node))
         if node.tag == "details":
             details_count += 1
         if is_prompt_meta_node(node):

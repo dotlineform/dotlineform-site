@@ -52,6 +52,18 @@ export function createDocsViewerManagementControlRenderers() {
         id: "docsViewerManageSourceSaveButton",
         emoji: "💾"
       });
+    },
+    "source-add-image": function (context) {
+      return renderDocumentActionButton(context, {
+        id: "docsViewerManageSourceAddImageButton",
+        emoji: "🧜‍♀️"
+      });
+    },
+    "source-add-file": function (context) {
+      return renderDocumentActionButton(context, {
+        id: "docsViewerManageSourceAddFileButton",
+        emoji: "📎"
+      });
     }
   };
 }

@@ -91,6 +91,19 @@ export function rebuildManagedDocSource(payload, options) {
   return fetchManagementJson("/docs/source/rebuild", "POST", scopedPayload(payload, options), options);
 }
 
+export function listStagedMedia(mediaKind, options) {
+  var kind = encodeURIComponent(String(mediaKind || "").trim());
+  return fetchManagementJson("/docs/staged-media-files?media_kind=" + kind, "GET", undefined, options);
+}
+
+export function previewStagedMedia(payload, options) {
+  return fetchManagementJson("/docs/staged-media-preview", "POST", scopedPayload(payload, options), options);
+}
+
+export function applyStagedMedia(payload, options) {
+  return fetchManagementJson("/docs/staged-media-apply", "POST", scopedPayload(payload, options), options);
+}
+
 export function readSourceConfigSettings(options) {
   var settings = options || {};
   var scope = encodeURIComponent(String(settings.scope || "").trim());

@@ -133,6 +133,9 @@ def apply_import_content_collection(
                 source_markdown=_clean_text(
                     document_plan.import_preview.get("_inline_media_source_markdown")
                 ),
+                source_svg_markup=_clean_text(
+                    document_plan.import_preview.get("_inline_svg_source_markup")
+                ),
             )
             apply_result = ImportDocumentApplyResult()
             try:

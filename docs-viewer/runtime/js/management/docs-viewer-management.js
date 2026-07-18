@@ -198,6 +198,14 @@ export function initDocsViewerManagement(context) {
         hidden: actionsHidden,
         disabled: actionsDisabled
       });
+      context.projectMainViewControlState("source-add-image", {
+        hidden: actionsHidden || !markdownMode,
+        disabled: actionsDisabled
+      });
+      context.projectMainViewControlState("source-add-file", {
+        hidden: actionsHidden || !markdownMode,
+        disabled: actionsDisabled
+      });
     }
   }
 
@@ -233,7 +241,17 @@ export function initDocsViewerManagement(context) {
       }],
       ["open-vscode", function () { actionController.handleOpenSource("vscode"); }],
       ["markdown-source", function () { actionController.handleMarkdownSource(); }],
-      ["save-markdown-source", function () { actionController.handleMarkdownSave(); }]
+      ["save-markdown-source", function () { actionController.handleMarkdownSave(); }],
+      ["source-add-image", function () {
+        if (root && typeof root.dispatchEvent === "function") {
+          root.dispatchEvent(new CustomEvent("docs-viewer-source-editor-add-image", { bubbles: true }));
+        }
+      }],
+      ["source-add-file", function () {
+        if (root && typeof root.dispatchEvent === "function") {
+          root.dispatchEvent(new CustomEvent("docs-viewer-source-editor-add-file", { bubbles: true }));
+        }
+      }]
     ]);
     var owner = owners.get(controlId);
     if (!owner) return false;

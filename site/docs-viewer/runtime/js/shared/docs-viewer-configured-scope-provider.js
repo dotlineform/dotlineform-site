@@ -161,6 +161,30 @@ export function createDocsViewerConfiguredScopeProvider(options) {
       }));
     };
   }
+  if (source && typeof source.listStagedMedia === "function") {
+    provider.listStagedMedia = function (mediaKind, optionsForList) {
+      var requestSettings = optionsForList || {};
+      return source.listStagedMedia(mediaKind, Object.assign({}, requestSettings, {
+        scope: scopeId(requestSettings.scope || activeScope())
+      }));
+    };
+  }
+  if (source && typeof source.previewStagedMedia === "function") {
+    provider.previewStagedMedia = function (payload, optionsForPreview) {
+      var requestSettings = optionsForPreview || {};
+      return source.previewStagedMedia(payload, Object.assign({}, requestSettings, {
+        scope: scopeId(requestSettings.scope || activeScope())
+      }));
+    };
+  }
+  if (source && typeof source.applyStagedMedia === "function") {
+    provider.applyStagedMedia = function (payload, optionsForApply) {
+      var requestSettings = optionsForApply || {};
+      return source.applyStagedMedia(payload, Object.assign({}, requestSettings, {
+        scope: scopeId(requestSettings.scope || activeScope())
+      }));
+    };
+  }
 
   return provider;
 }

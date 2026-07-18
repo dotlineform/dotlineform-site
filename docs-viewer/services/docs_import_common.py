@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -18,14 +17,9 @@ TEXT_STAGED_SUFFIXES = {".txt"}
 SVG_STAGED_SUFFIXES = {".svg"}
 RASTER_IMAGE_STAGED_SUFFIXES = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
 FILE_MEDIA_STAGED_SUFFIXES = {".pdf", ".zip", ".csv", ".tsv", ".json", ".jsonl", ".docx", ".xlsx", ".pptx"}
-SUPPORTED_STAGED_SUFFIXES = (
-    HTML_STAGED_SUFFIXES
-    | MARKDOWN_STAGED_SUFFIXES
-    | TEXT_STAGED_SUFFIXES
-    | SVG_STAGED_SUFFIXES
-    | RASTER_IMAGE_STAGED_SUFFIXES
-    | FILE_MEDIA_STAGED_SUFFIXES
-)
+DOCUMENT_STAGED_SUFFIXES = HTML_STAGED_SUFFIXES | MARKDOWN_STAGED_SUFFIXES | TEXT_STAGED_SUFFIXES
+TRUSTED_PACKAGE_CANDIDATE_SUFFIXES = {".json", ".jsonl"}
+SUPPORTED_STAGED_SUFFIXES = DOCUMENT_STAGED_SUFFIXES | TRUSTED_PACKAGE_CANDIDATE_SUFFIXES
 
 PLAIN_URL_PATTERN = re.compile(r"https?://[^\s<>\"]+")
 PLAIN_URL_TRAILING_PUNCTUATION = ".,;:!?)]}'"
@@ -60,26 +54,10 @@ INTERACTIVE_HTML_ROLE = "interactive-html"
 IMPORT_RESULTS_DIR_NAME = "results"
 
 
-@dataclass(frozen=True)
-class SourceImporter:
-    source_format: str
-    suffixes: set[str]
-    include_prompt_meta: bool = False
-    creates_remote_media_plan: bool = False
-
-
-SOURCE_IMPORTERS = [
-    SourceImporter("html", HTML_STAGED_SUFFIXES, include_prompt_meta=True),
-    SourceImporter("markdown", MARKDOWN_STAGED_SUFFIXES),
-    SourceImporter("text", TEXT_STAGED_SUFFIXES),
-    SourceImporter("svg", SVG_STAGED_SUFFIXES),
-    SourceImporter("image", RASTER_IMAGE_STAGED_SUFFIXES, creates_remote_media_plan=True),
-    SourceImporter("file", FILE_MEDIA_STAGED_SUFFIXES, creates_remote_media_plan=True),
-]
-SOURCE_IMPORTER_BY_SUFFIX = {
-    suffix: importer
-    for importer in SOURCE_IMPORTERS
-    for suffix in importer.suffixes
+SOURCE_FORMAT_BY_SUFFIX = {
+    **{suffix: "html" for suffix in HTML_STAGED_SUFFIXES},
+    **{suffix: "markdown" for suffix in MARKDOWN_STAGED_SUFFIXES},
+    **{suffix: "text" for suffix in TEXT_STAGED_SUFFIXES},
 }
 
 def normalize_space(text: str) -> str:
@@ -137,9 +115,9 @@ def normalize_scope(scope: str) -> str:
 def source_format_for_path(path: Path) -> str:
     if path.is_dir():
         return "markdown_package"
-    importer = SOURCE_IMPORTER_BY_SUFFIX.get(path.suffix.lower())
-    if importer:
-        return importer.source_format
+    source_format = SOURCE_FORMAT_BY_SUFFIX.get(path.suffix.lower())
+    if source_format:
+        return source_format
     raise ValueError(
         "staged file must use one of these extensions: "
         f"{', '.join(sorted(SUPPORTED_STAGED_SUFFIXES))}"

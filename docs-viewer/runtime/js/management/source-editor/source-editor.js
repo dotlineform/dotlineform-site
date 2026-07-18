@@ -100,6 +100,12 @@ function projectDirty(state) {
       busy: state.busy,
       disabled: state.busy || !state.loaded
     });
+    ["source-add-image", "source-add-file"].forEach(function (controlId) {
+      state.projectMainViewControlState(controlId, {
+        busy: state.busy,
+        disabled: state.busy || !state.loaded
+      });
+    });
   }
 }
 
@@ -270,6 +276,33 @@ function leaveSource(context, state) {
   });
 }
 
+function addStagedMedia(context, state, mediaKind) {
+  if (state.busy || !state.loaded) return Promise.resolve(null);
+  var provider = context.collectionProvider || {};
+  setBusy(state, true);
+  setStatus(state, mediaKind === "file" ? "Loading staged files..." : "Loading staged images...", false);
+  return import("./source-editor-media.js")
+    .then(function (module) {
+      return module.publishAndInsertStagedMedia({
+        adapter: state.semanticTokenAdapter,
+        mediaKind: mediaKind,
+        provider: provider,
+        root: context.root || document.body
+      });
+    })
+    .then(function (payload) {
+      setStatus(state, payload ? payload.summary_text || "Media reference inserted." : "", false);
+      return payload;
+    })
+    .catch(function (error) {
+      setStatus(state, error && error.message ? error.message : "Failed to add media.", true);
+      return null;
+    })
+    .finally(function () {
+      setBusy(state, false);
+    });
+}
+
 function bindEvents(context, state) {
   var root = context.root || document;
   var services = context.sourceEditorServices || {};
@@ -291,6 +324,12 @@ function bindEvents(context, state) {
   state.onToolbarSave = function () {
     rebuildSource(context, state);
   };
+  state.onToolbarAddImage = function () {
+    addStagedMedia(context, state, "image");
+  };
+  state.onToolbarAddFile = function () {
+    addStagedMedia(context, state, "file");
+  };
   state.onBeforeUnload = function (event) {
     if (!dirtyNow(state)) return;
     event.preventDefault();
@@ -305,6 +344,8 @@ function bindEvents(context, state) {
   }
   if (state.root) state.root.addEventListener("click", state.onClick);
   if (root && state.onToolbarSave) root.addEventListener("docs-viewer-source-editor-save", state.onToolbarSave);
+  if (root && state.onToolbarAddImage) root.addEventListener("docs-viewer-source-editor-add-image", state.onToolbarAddImage);
+  if (root && state.onToolbarAddFile) root.addEventListener("docs-viewer-source-editor-add-file", state.onToolbarAddFile);
   window.addEventListener("beforeunload", state.onBeforeUnload);
   projectDirty(state);
 }
@@ -319,6 +360,8 @@ function unbindEvents(context, state) {
   }
   if (state.root && state.onClick) state.root.removeEventListener("click", state.onClick);
   if (root && state.onToolbarSave) root.removeEventListener("docs-viewer-source-editor-save", state.onToolbarSave);
+  if (root && state.onToolbarAddImage) root.removeEventListener("docs-viewer-source-editor-add-image", state.onToolbarAddImage);
+  if (root && state.onToolbarAddFile) root.removeEventListener("docs-viewer-source-editor-add-file", state.onToolbarAddFile);
   if (state.onBeforeUnload) window.removeEventListener("beforeunload", state.onBeforeUnload);
   state.projectMainViewControlState = null;
 }

@@ -148,6 +148,30 @@ export function createDocsViewerManagementViewDefinitions() {
         renderer: "manage-open-vscode"
       },
       {
+        id: "source-add-image",
+        actionId: DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_IMAGE,
+        label: "Add image",
+        ownerType: "view",
+        ownerViewId: "rendered-document",
+        modeIds: ["markdown-source"],
+        surfaceId: "main-view",
+        appKinds: ["manage"],
+        features: ["source-editing"],
+        renderer: "source-add-image"
+      },
+      {
+        id: "source-add-file",
+        actionId: DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_FILE,
+        label: "Add file",
+        ownerType: "view",
+        ownerViewId: "rendered-document",
+        modeIds: ["markdown-source"],
+        surfaceId: "main-view",
+        appKinds: ["manage"],
+        features: ["source-editing"],
+        renderer: "source-add-file"
+      },
+      {
         id: "save-markdown-source",
         actionId: "markdown-save",
         label: "Save Markdown source",

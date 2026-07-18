@@ -41,12 +41,10 @@ def test_source_import_files_list_html_and_markdown() -> None:
     assert by_filename["source.html"]["source_format"] == "html"
     assert by_filename["source.md"]["source_format"] == "markdown"
     assert by_filename["source.txt"]["source_format"] == "text"
-    assert by_filename["source.svg"]["source_format"] == "svg"
-    assert by_filename["source.png"]["source_format"] == "image"
-    assert by_filename["source.pdf"]["source_format"] == "file"
     assert by_filename["package-note"]["source_format"] == "markdown_package"
     assert by_filename["package-note"]["package_markdown_count"] == 1
     assert by_filename["source.md"]["path"] == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/source.md"
+    assert {"source.svg", "source.png", "source.pdf"}.isdisjoint(by_filename)
 
 
 def test_supported_documents_collection_registers_before_generic_json_fallback() -> None:
@@ -64,7 +62,7 @@ def test_supported_documents_collection_registers_before_generic_json_fallback()
 
     by_filename = {item["filename"]: item for item in files}
     assert by_filename["reviewed-documents.jsonl"]["source_format"] == "data_sharing_documents"
-    assert by_filename["ordinary.json"]["source_format"] == "file"
+    assert "ordinary.json" not in by_filename
 
 
 def test_review_package_identity_attaches_only_to_its_matching_safe_staged_record() -> None:
@@ -183,9 +181,6 @@ def test_source_import_previews_validate_with_python_renderer() -> None:
         write_staged_html(root, "source.html", "<html><body><h1>Source</h1><p>Body.</p></body></html>")
         write_staged_markdown(root, "source.md", "# Source\n\n| A | B |\n| - | - |\n| 1 | 2 |\n")
         write_staged_text(root, "source.txt", "Source\n\nSee https://example.com/path.\n")
-        write_staged_text(root, "source.svg", "<svg viewBox='0 0 10 10'><title>Source</title><rect /></svg>\n")
-        write_staged_bytes(root, "source.png", b"fake image")
-        write_staged_bytes(root, "source.pdf", b"fake pdf")
         write_staged_package_file(root, "package-note", "Note.md", "# Package Note\n\nBody.\n")
         paths = configured_workspace_paths(root)
 
@@ -202,21 +197,18 @@ def test_source_import_previews_validate_with_python_renderer() -> None:
                 "source.html",
                 "source.md",
                 "source.txt",
-                "source.svg",
-                "source.png",
-                "source.pdf",
                 "package-note",
             ]
         ]
 
     source_formats = {preview["source_format"] for preview in previews}
-    assert source_formats == {"html", "markdown", "text", "svg", "image", "file", "markdown_package"}
+    assert source_formats == {"html", "markdown", "text", "markdown_package"}
     for preview in previews:
         validation = preview["markdown_validation"]
         assert validation["ok"] is True
         assert validation["renderer"] == "studio/shared/python/markdown_renderer.py"
         assert validation["renderer_contract"]["library"] == "markdown-it-py"
-        assert validation["sanitizer_boundary"]["import_html"] == "docs_html_markdown structured conversion and SVG serialization"
+        assert validation["sanitizer_boundary"]["import_html"] == "structured conversion plus sanitized SVG media extraction"
 
 def test_media_path_comes_from_scope_config() -> None:
     assert docs_import_media.media_path_for("analysis", "img", "diagram.png") == "docs/analysis/img/diagram.png"

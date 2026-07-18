@@ -28,7 +28,7 @@ from docs_import_data_sharing_package import (
     data_sharing_documents_source_format,
 )
 from docs_import_markdown_package import retarget_markdown_package_media_plans
-from docs_import_media import retarget_inline_raster_media_plans
+from docs_import_media import retarget_inline_media_plans
 from docs_import_preview import (
     generate_import_preview,
     list_staged_import_source_files,
@@ -45,6 +45,8 @@ from docs_import_source_interactive import (
     interactive_html_asset_plans,
 )
 from docs_source_model import (
+    allocate_doc_id,
+    current_doc_timestamp,
     load_scope_docs,
     normalize_scope,
 )
@@ -192,7 +194,7 @@ def handle_import_source(
                 preview,
                 scope,
             )
-        retarget_inline_raster_media_plans(repo_root, staging_root, workspace_root, preview, scope)
+        retarget_inline_media_plans(repo_root, staging_root, workspace_root, preview, scope)
 
     docs = load_scope_docs(repo_root, scope)
     proposed_doc_id = str(preview["proposed_doc_id"])
@@ -274,6 +276,24 @@ def handle_import_source(
     ensure_interactive_html_targets_available(interactive_plans, allow_overwrite=confirm_overwrite)
     operation = IMPORT_DOCUMENT_OVERWRITE if collision_doc is not None else IMPORT_DOCUMENT_CREATE
     doc_id = collision_doc.doc_id if collision_doc is not None else proposed_doc_id
+    create_added_date = ""
+    create_doc_id = ""
+    if operation == IMPORT_DOCUMENT_CREATE:
+        create_added_date = current_doc_timestamp()
+        unavailable = {identity for doc in docs for identity in (doc.doc_id, doc.path.stem)}
+        create_doc_id = allocate_doc_id(create_added_date, unavailable)
+        preview["proposed_doc_id"] = create_doc_id
+        preview["proposed_doc_id_source"] = "allocated-local-identity"
+        if source_path.is_dir():
+            retarget_markdown_package_media_plans(
+                repo_root,
+                staging_root,
+                workspace_root,
+                source_path,
+                preview,
+                scope,
+            )
+        retarget_inline_media_plans(repo_root, staging_root, workspace_root, preview, scope)
     title = str(preview.get("title") or (collision_doc.title if collision_doc else "Imported Doc")).strip()
     record = ImportContent(
         source_kind="staged-source",
@@ -294,6 +314,8 @@ def handle_import_source(
         docs=docs,
         target=collision_doc,
         import_preview=preview,
+        create_doc_id=create_doc_id,
+        create_added_date=create_added_date,
     )
     media_context = ImportDocumentMediaContext(
         staging_root=staging_root,

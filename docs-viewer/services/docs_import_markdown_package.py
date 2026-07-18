@@ -67,7 +67,7 @@ def retarget_markdown_package_media_plans(
         extension = "webp" if kind == "image" else Path(old_filename).suffix.lstrip(".")
         if kind == "image":
             image_index += 1
-            new_title = readable_package_image_title(proposed_doc_id, image_index)
+            new_title = old_title or readable_package_image_title(proposed_doc_id, image_index)
         else:
             new_title = str(plan.get("title") or humanize(source_path.stem) or old_filename)
         new_filename = next_package_media_filename(

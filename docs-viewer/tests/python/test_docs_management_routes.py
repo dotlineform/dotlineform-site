@@ -62,6 +62,12 @@ def test_copy_subtree_routes_are_management_owned() -> None:
     assert routes.COPY_SUBTREE_APPLY_PATH in routes.POST_PATHS
 
 
+def test_staged_media_routes_are_management_owned() -> None:
+    assert routes.STAGED_MEDIA_FILES_PATH in routes.GET_PATHS
+    assert routes.STAGED_MEDIA_PREVIEW_PATH in routes.POST_PATHS
+    assert routes.STAGED_MEDIA_APPLY_PATH in routes.POST_PATHS
+
+
 def main() -> None:
     test_get_routes_are_unique()
     test_post_routes_are_unique()
@@ -69,6 +75,7 @@ def main() -> None:
     test_review_session_routes_are_management_owned()
     test_static_html_export_routes_are_management_owned()
     test_copy_subtree_routes_are_management_owned()
+    test_staged_media_routes_are_management_owned()
     print("Docs Management route tests OK")
 
 

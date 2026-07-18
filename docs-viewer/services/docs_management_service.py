@@ -33,6 +33,7 @@ import docs_scope_rename  # noqa: E402
 import docs_source_config_report  # noqa: E402
 import docs_source_config_settings  # noqa: E402
 import docs_static_html_export  # noqa: E402
+import docs_staged_media_service  # noqa: E402
 import docs_sub_scope_lifecycle  # noqa: E402
 import docs_subtree_copy  # noqa: E402
 import docs_subtree_copy_apply  # noqa: E402
@@ -144,6 +145,23 @@ def docs_management_post_response(
     if path == routes.IMPORT_SOURCE_PATH:
         payload = handle_import_source(repo_root, body, dry_run)
         docs_activity.maybe_attach_import_source_activity(repo_root, body, payload, dry_run)
+        return HTTPStatus.OK, payload
+    if path == routes.STAGED_MEDIA_PREVIEW_PATH:
+        return HTTPStatus.OK, docs_staged_media_service.preview_staged_media(repo_root, body)
+    if path == routes.STAGED_MEDIA_APPLY_PATH:
+        payload = docs_staged_media_service.apply_staged_media(repo_root, body, write=not dry_run)
+        if not dry_run:
+            log_event(
+                repo_root,
+                "docs-staged-media-publish",
+                {
+                    "scope": payload["scope"],
+                    "media_kind": payload["media_kind"],
+                    "staged_filename": payload["staged_filename"],
+                    "media_identity": payload["media_identity"],
+                    "publish_status": payload["publish"]["status"],
+                },
+            )
         return HTTPStatus.OK, payload
     if path == routes.REVIEW_SESSION_BUILD_PATH:
         return HTTPStatus.OK, docs_review_sessions.build_review_session(repo_root, body)

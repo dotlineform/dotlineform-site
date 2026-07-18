@@ -14,7 +14,7 @@ from docs_import_content import (
     CONTENT_INTENT_REPLACE,
     ImportContent,
 )
-from docs_import_media import materialize_inline_raster_media
+from docs_import_media import materialize_import_media
 from docs_import_source_helpers import import_summary_text, relative_path, viewer_url_for
 from docs_import_source_interactive import materialize_interactive_html_assets
 from docs_management_mutations import metadata_search_doc_ids
@@ -53,6 +53,7 @@ class ImportDocumentMediaContext:
     interactive_html_plans: tuple[dict[str, Any], ...] = ()
     allow_interactive_html_overwrite: bool = False
     source_markdown: str = ""
+    source_svg_markup: str = ""
 
 
 @dataclass(frozen=True)
@@ -350,7 +351,7 @@ def materialize_import_document_media(
     inline_media_written: list[dict[str, Any]] = []
     interactive_html_written: list[dict[str, Any]] = []
     if media_context is not None:
-        inline_media_written = materialize_inline_raster_media(
+        inline_media_written = materialize_import_media(
             repo_root,
             staging_root=media_context.staging_root,
             workspace_root=media_context.workspace_root,
@@ -358,6 +359,7 @@ def materialize_import_document_media(
             import_preview=plan.import_preview,
             include_prompt_meta=media_context.include_prompt_meta,
             source_markdown=media_context.source_markdown,
+            source_svg_markup=media_context.source_svg_markup,
         )
         interactive_html_written = materialize_interactive_html_assets(
             repo_root,

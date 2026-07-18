@@ -34,6 +34,24 @@ def test_html_to_markdown_is_available_without_import_preview_summary() -> None:
     assert result.warnings == []
 
 
+def test_html_to_markdown_keeps_historical_inline_svg_children_out_of_paragraphs() -> None:
+    result = docs_html_markdown.html_to_markdown(
+        """
+        <html><body><svg viewBox="0 0 10 10">
+          <title>Diagram</title>
+
+          <rect width="10" height="10"></rect>
+        </svg></body></html>
+        """
+    )
+    rendered = docs_import_preview.render_markdown_document(result.markdown, title="Diagram")
+
+    assert "<svg" in result.markdown
+    assert "\n\n" not in result.markdown
+    assert "<rect" in rendered.html
+    assert "<p><rect" not in rendered.html
+
+
 def test_html_import_create_allocates_identity_independent_of_staged_filename() -> None:
     with make_repo() as temp:
         root = Path(temp)

@@ -731,6 +731,8 @@ def assert_view_mode_control_registry(page: Page) -> None:
                 }],
                 controls: [
                     { id: 'edit', ownerType: 'view', surfaceId: 'main-view', ownerViewId: 'rendered-document', modeIds: ['rendered-document'], appKinds: ['manage'], features: ['management'] },
+                    { id: 'source-add-image', ownerType: 'view', surfaceId: 'main-view', ownerViewId: 'rendered-document', modeIds: ['markdown-source'], appKinds: ['manage'], features: ['source-editing'] },
+                    { id: 'source-add-file', ownerType: 'view', surfaceId: 'main-view', ownerViewId: 'rendered-document', modeIds: ['markdown-source'], appKinds: ['manage'], features: ['source-editing'] },
                     { id: 'markdown-source', ownerType: 'view', surfaceId: 'main-view', ownerViewId: 'rendered-document', modeIds: ['rendered-document', 'markdown-source'], appKinds: ['manage'], features: ['source-editing'] },
                     { id: 'save-markdown-source', ownerType: 'view', surfaceId: 'main-view', ownerViewId: 'rendered-document', modeIds: ['markdown-source'], appKinds: ['manage'], features: ['source-editing'] },
                     { id: 'viewer-app-control', ownerType: 'app', surfaceId: 'app-viewer', appKinds: ['manage'] },
@@ -865,7 +867,13 @@ def assert_view_mode_control_registry(page: Page) -> None:
         "indexViewControls": ["index-view-control"],
         "manageMarkdownMode": True,
         "manageRenderedControls": ["bookmark", "info", "edit", "markdown-source"],
-        "manageSourceControls": ["info", "markdown-source", "save-markdown-source"],
+        "manageSourceControls": [
+            "info",
+            "source-add-image",
+            "source-add-file",
+            "markdown-source",
+            "save-markdown-source",
+        ],
         "mismatchedSurfaceRejected": True,
         "missingOwnerRejected": True,
         "publicEdit": False,
@@ -932,11 +940,17 @@ def assert_configured_scope_provider(page: Page) -> None:
                 window,
                 source: {
                     readSource: (docId, options) => { sourceCalls.push(['read', docId, options]); return Promise.resolve({ doc_id: docId }); },
-                    writeSource: (payload, options) => { sourceCalls.push(['write', payload.doc_id, options]); return Promise.resolve({ doc_id: payload.doc_id }); }
+                    writeSource: (payload, options) => { sourceCalls.push(['write', payload.doc_id, options]); return Promise.resolve({ doc_id: payload.doc_id }); },
+                    listStagedMedia: (kind, options) => { sourceCalls.push(['list-media', kind, options]); return Promise.resolve({ files: [] }); },
+                    previewStagedMedia: (payload, options) => { sourceCalls.push(['preview-media', payload.staged_filename, options]); return Promise.resolve(payload); },
+                    applyStagedMedia: (payload, options) => { sourceCalls.push(['apply-media', payload.staged_filename, options]); return Promise.resolve(payload); }
                 }
             });
             await withSource.readSource('doc-b');
             await withSource.writeSource({ doc_id: 'doc-b', source_body: '# B' });
+            await withSource.listStagedMedia('image');
+            await withSource.previewStagedMedia({ staged_filename: 'diagram.svg' });
+            await withSource.applyStagedMedia({ staged_filename: 'diagram.svg' });
             const packageProvider = {
                 readIndex: () => Promise.resolve({ docs: [] }),
                 readDocument: () => Promise.resolve({ doc_id: 'package-doc' })
@@ -989,7 +1003,15 @@ def assert_configured_scope_provider(page: Page) -> None:
     ]
     if result["readOnlyKeys"] != expected_read_only_keys:
         raise AssertionError(f"read-only provider exposed optional source methods: {result!r}")
-    if result["withSourceKeys"] != expected_read_only_keys + ["readSource", "writeSource"]:
+    expected_source_keys = [
+        "applyStagedMedia",
+        "listStagedMedia",
+        "previewStagedMedia",
+        *expected_read_only_keys,
+        "readSource",
+        "writeSource",
+    ]
+    if result["withSourceKeys"] != sorted(expected_source_keys):
         raise AssertionError(f"source provider method projection changed: {result!r}")
     if result["injectedProvider"] is not True or result["invalidProviderRejected"] is not True:
         raise AssertionError(f"code-owned collection provider injection changed: {result!r}")
@@ -1018,6 +1040,9 @@ def assert_configured_scope_provider(page: Page) -> None:
     if result["sourceCalls"] != [
         ["read", "doc-b", {"scope": "beta"}],
         ["write", "doc-b", {"scope": "beta"}],
+        ["list-media", "image", {"scope": "beta"}],
+        ["preview-media", "diagram.svg", {"scope": "beta"}],
+        ["apply-media", "diagram.svg", {"scope": "beta"}],
     ]:
         raise AssertionError(f"configured-scope provider source delegation changed: {result!r}")
 

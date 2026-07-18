@@ -13,6 +13,7 @@ GENERATED_REFERENCE_TARGET_PATH = "/docs/reference-target"
 SOURCE_CONFIG_PATH = "/docs/source-config"
 SOURCE_CONFIG_SETTINGS_PATH = "/docs/source-config-settings"
 IMPORT_SOURCE_FILES_PATH = "/docs/import-source-files"
+STAGED_MEDIA_FILES_PATH = "/docs/staged-media-files"
 REVIEW_SESSIONS_PATH = "/docs/review-sessions"
 REVIEW_SESSION_BUILD_PATH = "/docs/review-sessions/build"
 REVIEW_SESSION_DELETE_PATH = "/docs/review-sessions/delete"
@@ -24,6 +25,8 @@ SOURCE_REBUILD_PATH = "/docs/source/rebuild"
 OPEN_SOURCE_PATH = "/docs/open-source"
 BROKEN_LINKS_PATH = "/docs/broken-links"
 IMPORT_SOURCE_PATH = "/docs/import-source"
+STAGED_MEDIA_PREVIEW_PATH = "/docs/staged-media-preview"
+STAGED_MEDIA_APPLY_PATH = "/docs/staged-media-apply"
 UPDATE_METADATA_PATH = "/docs/update-metadata"
 UPDATE_VIEWABILITY_PATH = "/docs/update-viewability"
 UPDATE_VIEWABILITY_BULK_PATH = "/docs/update-viewability-bulk"
@@ -63,6 +66,7 @@ GET_PATHS = (
     SOURCE_CONFIG_SETTINGS_PATH,
     SOURCE_BODY_PATH,
     IMPORT_SOURCE_FILES_PATH,
+    STAGED_MEDIA_FILES_PATH,
     REVIEW_SESSIONS_PATH,
     REVIEW_SESSION_INDEX_TREE_PATH,
     REVIEW_SESSION_PAYLOAD_PATH,
@@ -75,6 +79,8 @@ POST_PATHS = (
     BROKEN_LINKS_PATH,
     SOURCE_CONFIG_SETTINGS_PATH,
     IMPORT_SOURCE_PATH,
+    STAGED_MEDIA_PREVIEW_PATH,
+    STAGED_MEDIA_APPLY_PATH,
     REVIEW_SESSION_BUILD_PATH,
     REVIEW_SESSION_DELETE_PATH,
     UPDATE_METADATA_PATH,

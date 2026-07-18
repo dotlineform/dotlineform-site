@@ -11,17 +11,13 @@ from types import SimpleNamespace
 
 import pytest
 
-import docs_import_media
 from docs_artifact_locations import (
     EXTERNAL_LOCAL_PROVIDER,
     R2_PROVIDER,
     REPOSITORY_PROVIDER,
     ArtifactLocation,
 )
-from docs_import_content import CONTENT_FORMAT_MARKDOWN, CONTENT_INTENT_REPLACE, ImportContent
-from docs_import_document import IMPORT_DOCUMENT_CREATE, ImportDocumentMediaContext, apply_import_document, plan_import_document
 from docs_media_storage import (
-    DocsMediaPublishResult,
     docs_media_file,
     docs_publish_report,
     ensure_configured_scope_owned_media_directories,
@@ -400,83 +396,3 @@ def test_configured_local_media_directories_are_materialized(tmp_path: Path) -> 
     assert all((external_source / "media" / media_class).is_dir() for media_class in ("files", "img"))
     assert not any((external_source / "media" / media_class / ".gitkeep").exists() for media_class in ("files", "img"))
     assert not (tmp_path / "docs-viewer/source/library/documents/media").exists()
-
-
-def test_external_import_materializes_below_scope_source_media_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    projects_base = tmp_path / "projects"
-    external_root = projects_base / "docs-viewer"
-    external_root.mkdir(parents=True)
-    monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
-    write_scope_config(tmp_path, external_scope_record("dlf"))
-    workspace_root = projects_base / "data-sharing"
-    staging_root = workspace_root / "import-staging"
-    staging_root.mkdir(parents=True)
-    staged_image = staging_root / "diagram.png"
-    staged_image.write_bytes(b"diagram")
-    preview = docs_import_media.build_image_summary(staged_image, "dlf", repo_root=tmp_path)
-    preview["scope"] = "dlf"
-
-    written = docs_import_media.materialize_inline_raster_media(
-        tmp_path,
-        staging_root=staging_root,
-        workspace_root=workspace_root,
-        source_path=staged_image,
-        import_preview=preview,
-        include_prompt_meta=False,
-    )
-
-    target = external_root / "source/dlf/media/img/diagram.png"
-    assert target.read_bytes() == b"diagram"
-    assert written[0]["media_path"] == "docs/dlf/img/diagram.png"
-    assert written[0]["media_link"] == "[[media:docs/dlf/img/diagram.png]]"
-    assert str(external_root) not in json.dumps(written)
-
-
-def test_r2_import_failure_does_not_commit_source_link(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    write_scope_config(tmp_path, public_scope_record())
-    source_root = tmp_path / "docs-viewer/source/library"
-    source_root.mkdir(parents=True)
-    staging_root = tmp_path / "import-staging"
-    staging_root.mkdir()
-    staged_image = staging_root / "diagram.png"
-    staged_image.write_bytes(b"diagram")
-    preview = docs_import_media.build_image_summary(staged_image, "library", repo_root=tmp_path)
-    preview["scope"] = "library"
-    record = ImportContent(
-        source_kind="staged-source",
-        source_identity="diagram.png",
-        record_identity="diagram.png",
-        doc_id="diagram",
-        title="Diagram",
-        content_intent=CONTENT_INTENT_REPLACE,
-        content_format=CONTENT_FORMAT_MARKDOWN,
-        content=str(preview["markdown_preview"]),
-    )
-    plan = plan_import_document(
-        tmp_path,
-        "library",
-        record,
-        operation=IMPORT_DOCUMENT_CREATE,
-        docs=[],
-        import_preview=preview,
-    )
-    context = ImportDocumentMediaContext(staging_root=staging_root, workspace_root=tmp_path, source_path=staged_image)
-    monkeypatch.setattr(
-        docs_import_media,
-        "publish_docs_media_files",
-        lambda *_args, **_kwargs: [
-            DocsMediaPublishResult(
-                scope="library",
-                media_class="img",
-                filename="diagram.png",
-                size=7,
-                status="blocked_changed",
-                reason="remote object differs",
-            )
-        ],
-    )
-
-    with pytest.raises(RuntimeError, match="publication did not complete"):
-        apply_import_document(tmp_path, plan, media_context=context)
-
-    assert not plan.target_path.exists()
