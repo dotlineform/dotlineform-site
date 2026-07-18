@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a3657e6a4d6474c3b5a8959a5fe1b76e",
-    "generated_at_utc": "2026-07-18T12:02:30Z",
-    "count": 247
+    "version": "blake2b-6c1b0703c16896e4c4b5bd402b4a5607",
+    "generated_at_utc": "2026-07-18T15:22:41Z",
+    "count": 251
   },
   "entries": [
     {
@@ -3476,6 +3476,33 @@
       "search_text": "analytics roadmap analytics roadmap 2026-07-15 2026 07 15 d-20260715-092247-c67bbf"
     },
     {
+      "id": "d-20260718-155350-d95b37",
+      "kind": "doc",
+      "title": "Analytics App Retirement",
+      "href": "/docs/?scope=studio&doc=d-20260718-155350-d95b37",
+      "last_updated": "2026-07-18 15:53:50",
+      "parent_id": "d-20260715-092247-c67bbf",
+      "parent_title": "Analytics Roadmap",
+      "display_meta": "2026-07-18 15:53:50 • Analytics Roadmap",
+      "search_terms": [
+        "analytics app retirement",
+        "analytics",
+        "app",
+        "retirement",
+        "analytics roadmap",
+        "roadmap",
+        "2026-07-18 15:53:50",
+        "2026",
+        "07",
+        "18",
+        "15",
+        "53",
+        "50",
+        "d-20260718-155350-d95b37"
+      ],
+      "search_text": "analytics app retirement analytics app retirement analytics roadmap roadmap 2026-07-18 15:53:50 2026 07 18 15 53 50 d-20260718-155350-d95b37"
+    },
+    {
       "id": "d-20260416-000000-1744c6",
       "kind": "doc",
       "title": "LLM Integration",
@@ -3772,24 +3799,25 @@
       "kind": "doc",
       "title": "Docs Viewer Roadmap",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-1e0af6",
-      "last_updated": "2026-07-18 11:49:18",
+      "last_updated": "2026-07-18 16:21:54",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-18 11:49:18 • Roadmap",
+      "display_meta": "2026-07-18 16:21:54 • Roadmap",
       "search_terms": [
         "docs viewer roadmap",
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-18 11:49:18",
+        "2026-07-18 16:21:54",
         "2026",
         "07",
         "18",
-        "11",
-        "49",
+        "16",
+        "21",
+        "54",
         "d-20260714-234030-1e0af6"
       ],
-      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-18 11:49:18 2026 07 18 11 49 d-20260714-234030-1e0af6"
+      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-18 16:21:54 2026 07 18 16 21 54 d-20260714-234030-1e0af6"
     },
     {
       "id": "d-20260716-204013-3be4e1",
@@ -3882,10 +3910,10 @@
       "kind": "doc",
       "title": "Dated Export Snapshots",
       "href": "/docs/?scope=studio&doc=d-20260716-193410-98d1a8",
-      "last_updated": "2026-07-16 19:34:10",
+      "last_updated": "2026-07-18 16:21:54",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-16 19:34:10 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-18 16:21:54 • Docs Viewer Roadmap",
       "search_terms": [
         "dated export snapshots",
         "dated",
@@ -3895,16 +3923,16 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-16 19:34:10",
+        "2026-07-18 16:21:54",
         "2026",
         "07",
+        "18",
         "16",
-        "19",
-        "34",
-        "10",
+        "21",
+        "54",
         "d-20260716-193410-98d1a8"
       ],
-      "search_text": "dated export snapshots dated export snapshots docs viewer roadmap docs viewer roadmap 2026-07-16 19:34:10 2026 07 16 19 34 10 d-20260716-193410-98d1a8"
+      "search_text": "dated export snapshots dated export snapshots docs viewer roadmap docs viewer roadmap 2026-07-18 16:21:54 2026 07 18 16 21 54 d-20260716-193410-98d1a8"
     },
     {
       "id": "d-20260715-181845-0158f9",
@@ -3957,6 +3985,35 @@
         "d-20260715-181845-524859"
       ],
       "search_text": "document visualisations concept document visualisations concept diagrams 2026-07-17 22:19:08 2026 07 17 22 19 08 d-20260715-181845-524859"
+    },
+    {
+      "id": "d-20260718-155350-c84e62",
+      "kind": "doc",
+      "title": "Document Packages In Docs Viewer",
+      "href": "/docs/?scope=studio&doc=d-20260718-155350-c84e62",
+      "last_updated": "2026-07-18 16:04:29",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap",
+      "display_meta": "2026-07-18 16:04:29 • Docs Viewer Roadmap",
+      "search_terms": [
+        "document packages in docs viewer",
+        "document",
+        "packages",
+        "in",
+        "docs",
+        "viewer",
+        "docs viewer roadmap",
+        "roadmap",
+        "2026-07-18 16:04:29",
+        "2026",
+        "07",
+        "18",
+        "16",
+        "04",
+        "29",
+        "d-20260718-155350-c84e62"
+      ],
+      "search_text": "document packages in docs viewer document packages in docs viewer docs viewer roadmap roadmap 2026-07-18 16:04:29 2026 07 18 16 04 29 d-20260718-155350-c84e62"
     },
     {
       "id": "d-20260714-194217-b2bdd7",
@@ -4165,10 +4222,10 @@
       "kind": "doc",
       "title": "Index Multiple Selection",
       "href": "/docs/?scope=studio&doc=d-20260714-151900-6fa23e",
-      "last_updated": "2026-07-15",
+      "last_updated": "2026-07-18 16:21:54",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-15 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-18 16:21:54 • Docs Viewer Roadmap",
       "search_terms": [
         "index multiple selection",
         "index",
@@ -4178,13 +4235,16 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-15",
+        "2026-07-18 16:21:54",
         "2026",
         "07",
-        "15",
+        "18",
+        "16",
+        "21",
+        "54",
         "d-20260714-151900-6fa23e"
       ],
-      "search_text": "index multiple selection index multiple selection docs viewer roadmap docs viewer roadmap 2026-07-15 2026 07 15 d-20260714-151900-6fa23e"
+      "search_text": "index multiple selection index multiple selection docs viewer roadmap docs viewer roadmap 2026-07-18 16:21:54 2026 07 18 16 21 54 d-20260714-151900-6fa23e"
     },
     {
       "id": "d-20260714-234030-f30d01",
@@ -4428,10 +4488,10 @@
       "kind": "doc",
       "title": "Semantic Reference Authoring",
       "href": "/docs/?scope=studio&doc=d-20260527-105208-c1a4d0",
-      "last_updated": "2026-07-14",
+      "last_updated": "2026-07-18 16:21:54",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-14 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-18 16:21:54 • Docs Viewer Roadmap",
       "search_terms": [
         "semantic reference authoring",
         "semantic",
@@ -4441,13 +4501,16 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-14",
+        "2026-07-18 16:21:54",
         "2026",
         "07",
-        "14",
+        "18",
+        "16",
+        "21",
+        "54",
         "d-20260527-105208-c1a4d0"
       ],
-      "search_text": "semantic reference authoring semantic reference authoring docs viewer roadmap docs viewer roadmap 2026-07-14 2026 07 14 d-20260527-105208-c1a4d0"
+      "search_text": "semantic reference authoring semantic reference authoring docs viewer roadmap docs viewer roadmap 2026-07-18 16:21:54 2026 07 18 16 21 54 d-20260527-105208-c1a4d0"
     },
     {
       "id": "d-20260714-234030-434069",
@@ -4810,6 +4873,35 @@
       "search_text": "studio roadmap studio roadmap 2026-07-15 2026 07 15 d-20260715-092247-81d19a"
     },
     {
+      "id": "d-20260718-155350-b73f1a",
+      "kind": "doc",
+      "title": "LLM-Assisted Tag Development",
+      "href": "/docs/?scope=studio&doc=d-20260718-155350-b73f1a",
+      "last_updated": "2026-07-18 15:53:50",
+      "parent_id": "d-20260715-092247-81d19a",
+      "parent_title": "Studio Roadmap",
+      "display_meta": "2026-07-18 15:53:50 • Studio Roadmap",
+      "search_terms": [
+        "llm-assisted tag development",
+        "llm",
+        "assisted",
+        "tag",
+        "development",
+        "studio roadmap",
+        "studio",
+        "roadmap",
+        "2026-07-18 15:53:50",
+        "2026",
+        "07",
+        "18",
+        "15",
+        "53",
+        "50",
+        "d-20260718-155350-b73f1a"
+      ],
+      "search_text": "llm-assisted tag development llm assisted tag development studio roadmap studio roadmap 2026-07-18 15:53:50 2026 07 18 15 53 50 d-20260718-155350-b73f1a"
+    },
+    {
       "id": "d-20260712-000000-45286c",
       "kind": "doc",
       "title": "Moments Composition Workspace",
@@ -4908,6 +5000,34 @@
         "d-20260712-000000-f49032"
       ],
       "search_text": "moments composition workspace concept moments composition workspace concept moments composition workspace 2026-07-15 2026 07 15 d-20260712-000000-f49032"
+    },
+    {
+      "id": "d-20260718-155350-a2d49c",
+      "kind": "doc",
+      "title": "Tag Management In Studio",
+      "href": "/docs/?scope=studio&doc=d-20260718-155350-a2d49c",
+      "last_updated": "2026-07-18 15:53:50",
+      "parent_id": "d-20260715-092247-81d19a",
+      "parent_title": "Studio Roadmap",
+      "display_meta": "2026-07-18 15:53:50 • Studio Roadmap",
+      "search_terms": [
+        "tag management in studio",
+        "tag",
+        "management",
+        "in",
+        "studio",
+        "studio roadmap",
+        "roadmap",
+        "2026-07-18 15:53:50",
+        "2026",
+        "07",
+        "18",
+        "15",
+        "53",
+        "50",
+        "d-20260718-155350-a2d49c"
+      ],
+      "search_text": "tag management in studio tag management in studio studio roadmap roadmap 2026-07-18 15:53:50 2026 07 18 15 53 50 d-20260718-155350-a2d49c"
     },
     {
       "id": "d-20260331-000000-5dcf32",

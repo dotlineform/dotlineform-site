@@ -1,0 +1,11 @@
+{
+  "doc_id": "d-20260718-155350-a2d49c",
+  "title": "Tag Management In Studio",
+  "added_date": "2026-07-18 15:53:50",
+  "last_updated": "2026-07-18 15:53:50",
+  "viewer_url": "/docs/?scope=studio&doc=d-20260718-155350-a2d49c",
+  "parent_id": "d-20260715-092247-81d19a",
+  "summary": "Return tag vocabulary, assignments, and editing workflows to the Studio app that owns catalogue works and series.",
+  "ui_status": "proposed",
+  "content_html": "<h1>Tag Management In Studio</h1>\n<h2>Outcome</h2>\n<p>Studio owns the canonical tag vocabulary, aliases, groups, work and series assignments, and the local tools used to maintain them.</p>\n<p>Tags are catalogue data about Works and Series. Keeping their source, validation, editors, and catalogue identities together removes an application boundary without changing the tag model.</p>\n<h2>Boundaries</h2>\n<ul>\n<li>Preserve stable tag, Work, and Series ids and their existing relationships.</li>\n<li>Move the current tag editors, validated write paths, coverage views, and canonical tag sources into Studio rather than redesigning them during the ownership move.</li>\n<li>Keep public catalogue output as a projection of Studio-owned source rather than a second tag authority.</li>\n<li>Keep descriptive tag documents in a Docs Viewer sub-scope. They may retain a tag-id relationship without becoming the canonical assignment store.</li>\n<li>Do not carry Data Sharing routes, document-package behavior, or a generic analysis framework into Studio with the tag tools.</li>\n</ul>\n<h2>Current Position</h2>\n<p>The current tag data, services, and routes live under <code>analytics-app/</code>. This feature records the target product owner only; no source, route, or runtime migration has been completed.</p>\n<h2>Related Feature</h2>\n<p><a href=\"/docs/?scope=studio&amp;doc=d-20260718-155350-b73f1a\">LLM-Assisted Tag Development</a> explores optional advisory use of tag and catalogue context without changing Studio's write authority.</p>\n"
+}

@@ -4,6 +4,70 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260716-193410-98d1a8",
+      "title": "Dated Export Snapshots",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260716-193410-98d1a8.json",
+      "timestamp": "2026-07-18 16:21:54",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap"
+    },
+    {
+      "doc_id": "d-20260714-234030-1e0af6",
+      "title": "Docs Viewer Roadmap",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260714-234030-1e0af6.json",
+      "timestamp": "2026-07-18 16:21:54",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260714-151900-6fa23e",
+      "title": "Index Multiple Selection",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260714-151900-6fa23e.json",
+      "timestamp": "2026-07-18 16:21:54",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap"
+    },
+    {
+      "doc_id": "d-20260527-105208-c1a4d0",
+      "title": "Semantic Reference Authoring",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260527-105208-c1a4d0.json",
+      "timestamp": "2026-07-18 16:21:54",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap"
+    },
+    {
+      "doc_id": "d-20260718-155350-c84e62",
+      "title": "Document Packages In Docs Viewer",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260718-155350-c84e62.json",
+      "timestamp": "2026-07-18 16:04:29",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap"
+    },
+    {
+      "doc_id": "d-20260718-155350-d95b37",
+      "title": "Analytics App Retirement",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260718-155350-d95b37.json",
+      "timestamp": "2026-07-18 15:53:50",
+      "parent_id": "d-20260715-092247-c67bbf",
+      "parent_title": "Analytics Roadmap"
+    },
+    {
+      "doc_id": "d-20260718-155350-b73f1a",
+      "title": "LLM-Assisted Tag Development",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260718-155350-b73f1a.json",
+      "timestamp": "2026-07-18 15:53:50",
+      "parent_id": "d-20260715-092247-81d19a",
+      "parent_title": "Studio Roadmap"
+    },
+    {
+      "doc_id": "d-20260718-155350-a2d49c",
+      "title": "Tag Management In Studio",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260718-155350-a2d49c.json",
+      "timestamp": "2026-07-18 15:53:50",
+      "parent_id": "d-20260715-092247-81d19a",
+      "parent_title": "Studio Roadmap"
+    },
+    {
       "doc_id": "d-20260715-092247-f3fd52",
       "title": "Repository Roadmap",
       "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260715-092247-f3fd52.json",
@@ -16,69 +80,7 @@
       "title": "Roadmap",
       "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260428-000000-f5ff18.json",
       "timestamp": "2026-07-18 13:02:06"
-    },
-    {
-      "doc_id": "d-20260715-092247-6bbb5e",
-      "title": "Search Mechanics",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260715-092247-6bbb5e.json",
-      "timestamp": "2026-07-18 13:02:06",
-      "parent_id": "d-20260718-130206-81e5b0",
-      "parent_title": "Search Roadmap"
-    },
-    {
-      "doc_id": "d-20260718-130206-81e5b0",
-      "title": "Search Roadmap",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260718-130206-81e5b0.json",
-      "timestamp": "2026-07-18 13:02:06",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260718-125756-a41c70",
-      "title": "Docs Viewer Source Documentation And Linting Pilot Delivery",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260718-125756-a41c70.json",
-      "timestamp": "2026-07-18 12:57:56",
-      "parent_id": "d-20260713-000000-d9bad2",
-      "parent_title": "Source Documentation and Linting"
-    },
-    {
-      "doc_id": "d-20260718-124244-3f7a92",
-      "title": "Git",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260718-124244-3f7a92.json",
-      "timestamp": "2026-07-18 12:57:56",
-      "parent_id": "d-20260718-114645-7b9d24",
-      "parent_title": "Docs Viewer Core Refactor"
-    },
-    {
-      "doc_id": "d-20260713-000000-d9bad2",
-      "title": "Source Documentation and Linting",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260713-000000-d9bad2.json",
-      "timestamp": "2026-07-18 12:57:56",
-      "parent_id": "d-20260715-092247-f3fd52",
-      "parent_title": "Repository Roadmap"
-    },
-    {
-      "doc_id": "d-20260718-114645-7b9d24",
-      "title": "Docs Viewer Core Refactor",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260718-114645-7b9d24.json",
-      "timestamp": "2026-07-18 12:42:44"
-    },
-    {
-      "doc_id": "d-20260718-114201-4e7a93",
-      "title": "Docs Viewer Core Refactor Working Method",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260718-114201-4e7a93.json",
-      "timestamp": "2026-07-18 12:42:44",
-      "parent_id": "d-20260718-114645-7b9d24",
-      "parent_title": "Docs Viewer Core Refactor"
-    },
-    {
-      "doc_id": "d-20260718-121833-9fa2d4",
-      "title": "Docs Viewer Core Definition Analysis Delivery",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260718-121833-9fa2d4.json",
-      "timestamp": "2026-07-18 12:37:34",
-      "parent_id": "d-20260718-114645-7b9d24",
-      "parent_title": "Docs Viewer Core Refactor"
     }
   ],
-  "generated_at": "2026-07-18T12:02:30Z"
+  "generated_at": "2026-07-18T15:22:41Z"
 }

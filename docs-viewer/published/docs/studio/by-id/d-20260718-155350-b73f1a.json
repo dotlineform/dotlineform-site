@@ -1,0 +1,11 @@
+{
+  "doc_id": "d-20260718-155350-b73f1a",
+  "title": "LLM-Assisted Tag Development",
+  "added_date": "2026-07-18 15:53:50",
+  "last_updated": "2026-07-18 15:53:50",
+  "viewer_url": "/docs/?scope=studio&doc=d-20260718-155350-b73f1a",
+  "parent_id": "d-20260715-092247-81d19a",
+  "summary": "Explore small advisory LLM queries over Studio-owned tag and catalogue context with deliberate manual writeback.",
+  "ui_status": "proposed",
+  "content_html": "<h1>LLM-Assisted Tag Development</h1>\n<h2>Outcome</h2>\n<p>Studio can supply enough tag and catalogue context for useful ad-hoc questions such as:</p>\n<ul>\n<li>expand the working definition of this tag;</li>\n<li>suggest tags that may be missing from these Works;</li>\n<li>compare related tags or propose aliases.</li>\n</ul>\n<p>The response supports human judgement. It is not an automated canonical update.</p>\n<h2>Intended Workflow</h2>\n<p>Studio supplies stable tag and Work ids with the minimum useful source context. A person reviews the response and manually edits either:</p>\n<ul>\n<li>Studio-owned canonical tag or assignment data; or</li>\n<li>a richer tag document in the Docs Viewer tag sub-scope.</li>\n</ul>\n<p>The eventual transport may be a direct LLM API call or a simple copy/export action. The first useful query should determine that choice.</p>\n<h2>Boundaries</h2>\n<ul>\n<li>No generic Data Sharing adapter or returned-package workflow.</li>\n<li>No automatic apply, promotion, or reconciliation path.</li>\n<li>No assumption that an LLM response is canonical, complete, or schema-valid.</li>\n<li>Preserve tag and Work ids as the join between compact catalogue data and richer explanatory documents.</li>\n<li>Keep prompts, model-specific options, and stored provenance proportionate to an actual retained workflow.</li>\n</ul>\n<h2>Current Position</h2>\n<p>This is a possible direction, not an implementation commitment. Manual use of an external LLM remains a valid complete workflow.</p>\n<h2>Related Feature</h2>\n<p><a href=\"/docs/?scope=studio&amp;doc=d-20260718-155350-a2d49c\">Tag Management In Studio</a> owns the canonical tag data and any eventual Studio-side query surface.</p>\n"
+}
