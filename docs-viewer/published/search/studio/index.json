@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-2a1625b7ea40ca88061ccfe40d1cf4d0",
-    "generated_at_utc": "2026-07-18T15:26:33Z",
-    "count": 251
+    "version": "blake2b-12f96b3c5d689dc849ca8f000ef3e92e",
+    "generated_at_utc": "2026-07-18T17:12:52Z",
+    "count": 250
   },
   "entries": [
     {
@@ -3799,25 +3799,24 @@
       "kind": "doc",
       "title": "Docs Viewer Roadmap",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-1e0af6",
-      "last_updated": "2026-07-18 16:21:54",
+      "last_updated": "2026-07-18 18:11:00",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-18 16:21:54 • Roadmap",
+      "display_meta": "2026-07-18 18:11:00 • Roadmap",
       "search_terms": [
         "docs viewer roadmap",
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-18 16:21:54",
+        "2026-07-18 18:11:00",
         "2026",
         "07",
         "18",
-        "16",
-        "21",
-        "54",
+        "11",
+        "00",
         "d-20260714-234030-1e0af6"
       ],
-      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-18 16:21:54 2026 07 18 16 21 54 d-20260714-234030-1e0af6"
+      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-18 18:11:00 2026 07 18 11 00 d-20260714-234030-1e0af6"
     },
     {
       "id": "d-20260716-204013-3be4e1",
@@ -4154,68 +4153,6 @@
         "d-20260716-235630-055f0c"
       ],
       "search_text": "external-local scope media layout external local scope media layout docs viewer roadmap docs viewer roadmap 2026-07-17 22:19:08 2026 07 17 22 19 08 d-20260716-235630-055f0c"
-    },
-    {
-      "id": "d-20260717-231652-d6d49e",
-      "kind": "doc",
-      "title": "Extract Imported SVG To Published Media",
-      "href": "/docs/?scope=studio&doc=d-20260717-231652-d6d49e",
-      "last_updated": "2026-07-18 09:15:33",
-      "parent_id": "d-20260714-234030-1e0af6",
-      "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-18 09:15:33 • Docs Viewer Roadmap",
-      "search_terms": [
-        "extract imported svg to published media",
-        "extract",
-        "imported",
-        "svg",
-        "to",
-        "published",
-        "media",
-        "docs viewer roadmap",
-        "docs",
-        "viewer",
-        "roadmap",
-        "2026-07-18 09:15:33",
-        "2026",
-        "07",
-        "18",
-        "09",
-        "15",
-        "33",
-        "d-20260717-231652-d6d49e"
-      ],
-      "search_text": "extract imported svg to published media extract imported svg to published media docs viewer roadmap docs viewer roadmap 2026-07-18 09:15:33 2026 07 18 09 15 33 d-20260717-231652-d6d49e"
-    },
-    {
-      "id": "d-20260717-231652-4890d2",
-      "kind": "doc",
-      "title": "Extract Imported SVG To Published Media Delivery",
-      "href": "/docs/?scope=studio&doc=d-20260717-231652-4890d2",
-      "last_updated": "2026-07-18 09:15:33",
-      "parent_id": "d-20260717-231652-d6d49e",
-      "parent_title": "Extract Imported SVG To Published Media",
-      "display_meta": "2026-07-18 09:15:33 • Extract Imported SVG To Published Media",
-      "search_terms": [
-        "extract imported svg to published media delivery",
-        "extract",
-        "imported",
-        "svg",
-        "to",
-        "published",
-        "media",
-        "delivery",
-        "extract imported svg to published media",
-        "2026-07-18 09:15:33",
-        "2026",
-        "07",
-        "18",
-        "09",
-        "15",
-        "33",
-        "d-20260717-231652-4890d2"
-      ],
-      "search_text": "extract imported svg to published media delivery extract imported svg to published media delivery extract imported svg to published media 2026-07-18 09:15:33 2026 07 18 09 15 33 d-20260717-231652-4890d2"
     },
     {
       "id": "d-20260714-151900-6fa23e",
@@ -4564,14 +4501,14 @@
       "search_text": "semantic reference authoring concept semantic reference authoring concept semantic reference authoring 2026-07-14 2026 07 14 d-20260714-234030-cb2789"
     },
     {
-      "id": "d-20260717-231652-5d90c2",
+      "id": "d-20260717-231652-d6d49e",
       "kind": "doc",
       "title": "Source Editor Add Image And Add File",
-      "href": "/docs/?scope=studio&doc=d-20260717-231652-5d90c2",
-      "last_updated": "2026-07-17 23:16:52",
+      "href": "/docs/?scope=studio&doc=d-20260717-231652-d6d49e",
+      "last_updated": "2026-07-18 18:11:00",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-17 23:16:52 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-18 18:11:00 • Docs Viewer Roadmap",
       "search_terms": [
         "source editor add image and add file",
         "source",
@@ -4584,16 +4521,44 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-17 23:16:52",
+        "2026-07-18 18:11:00",
         "2026",
         "07",
-        "17",
-        "23",
-        "16",
-        "52",
-        "d-20260717-231652-5d90c2"
+        "18",
+        "11",
+        "00",
+        "d-20260717-231652-d6d49e"
       ],
-      "search_text": "source editor add image and add file source editor add image and file docs viewer roadmap docs viewer roadmap 2026-07-17 23:16:52 2026 07 17 23 16 52 d-20260717-231652-5d90c2"
+      "search_text": "source editor add image and add file source editor add image and file docs viewer roadmap docs viewer roadmap 2026-07-18 18:11:00 2026 07 18 11 00 d-20260717-231652-d6d49e"
+    },
+    {
+      "id": "d-20260717-231652-4890d2",
+      "kind": "doc",
+      "title": "Source Editor Add Image And Add File Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260717-231652-4890d2",
+      "last_updated": "2026-07-18 18:11:00",
+      "parent_id": "d-20260717-231652-d6d49e",
+      "parent_title": "Source Editor Add Image And Add File",
+      "display_meta": "2026-07-18 18:11:00 • Source Editor Add Image And Add File",
+      "search_terms": [
+        "source editor add image and add file delivery",
+        "source",
+        "editor",
+        "add",
+        "image",
+        "and",
+        "file",
+        "delivery",
+        "source editor add image and add file",
+        "2026-07-18 18:11:00",
+        "2026",
+        "07",
+        "18",
+        "11",
+        "00",
+        "d-20260717-231652-4890d2"
+      ],
+      "search_text": "source editor add image and add file delivery source editor add image and file delivery source editor add image and add file 2026-07-18 18:11:00 2026 07 18 11 00 d-20260717-231652-4890d2"
     },
     {
       "id": "d-20260511-120352-90ffa6",

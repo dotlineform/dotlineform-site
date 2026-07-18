@@ -26,6 +26,7 @@ PROMPT_META_TEXT_PREFIXES = ("[prompt]", "original prompt", "follow-up")
 ROWSPAN_COLSPAN_ATTRS = {"rowspan", "colspan"}
 SVG_EVENT_ATTR_PATTERN = re.compile(r"\son[a-z]+\s*=", re.IGNORECASE)
 SVG_EXTERNAL_REF_ATTRS = {"href", "xlink:href", "src"}
+SVG_MARKDOWN_BLANK_LINES_PATTERN = re.compile(r"\n(?:[ \t]*\n)+")
 
 
 @dataclass
@@ -199,7 +200,8 @@ def sanitize_svg_source(source_svg: str) -> tuple[str, str, list[str], int]:
     title_node = find_first(svg, "title")
     title = normalize_space(title_node.text_content()) if title_node else ""
     warnings = svg_safety_warnings(source_svg, svg)
-    return serialize_node(svg), title, warnings, sum(1 for node in walk(svg) if isinstance(node, ElementNode) and node.tag == "svg")
+    serialized_svg = SVG_MARKDOWN_BLANK_LINES_PATTERN.sub("\n", serialize_node(svg)).strip()
+    return serialized_svg, title, warnings, sum(1 for node in walk(svg) if isinstance(node, ElementNode) and node.tag == "svg")
 
 
 def extract_html_title(root: ElementNode) -> str:

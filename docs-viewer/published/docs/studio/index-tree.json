@@ -946,20 +946,6 @@
               "ui_status": "done"
             },
             {
-              "doc_id": "d-20260717-231652-d6d49e",
-              "title": "Extract Imported SVG To Published Media",
-              "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260717-231652-d6d49e.json",
-              "ui_status": "planned",
-              "children": [
-                {
-                  "doc_id": "d-20260717-231652-4890d2",
-                  "title": "Extract Imported SVG To Published Media Delivery",
-                  "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260717-231652-4890d2.json",
-                  "ui_status": "planned"
-                }
-              ]
-            },
-            {
               "doc_id": "d-20260714-151900-6fa23e",
               "title": "Index Multiple Selection",
               "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260714-151900-6fa23e.json",
@@ -1048,10 +1034,18 @@
               ]
             },
             {
-              "doc_id": "d-20260717-231652-5d90c2",
+              "doc_id": "d-20260717-231652-d6d49e",
               "title": "Source Editor Add Image And Add File",
-              "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260717-231652-5d90c2.json",
-              "ui_status": "proposed"
+              "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260717-231652-d6d49e.json",
+              "ui_status": "ready",
+              "children": [
+                {
+                  "doc_id": "d-20260717-231652-4890d2",
+                  "title": "Source Editor Add Image And Add File Delivery",
+                  "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260717-231652-4890d2.json",
+                  "ui_status": "planned"
+                }
+              ]
             },
             {
               "doc_id": "d-20260511-120352-90ffa6",
@@ -1435,5 +1429,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-18T15:22:41Z"
+  "generated_at": "2026-07-18T17:12:52Z"
 }

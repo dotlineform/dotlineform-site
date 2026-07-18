@@ -139,8 +139,15 @@ def test_svg_import_strips_unsafe_content() -> None:
             """
             <svg viewBox="0 0 10 10" onclick="alert(1)">
               <title>Unsafe Diagram</title>
+              <defs>
+                <linearGradient id="background">
+                  <stop offset="0%" stop-color="#ffffff" />
+                  <stop offset="100%" stop-color="#000000" />
+                </linearGradient>
+              </defs>
+
+              <rect width="10" height="10" fill="url(#background)" />
               <script>alert(1)</script>
-              <rect width="10" height="10" />
             </svg>
             """,
         )
@@ -162,6 +169,10 @@ def test_svg_import_strips_unsafe_content() -> None:
             docs_import_preview.validate_markdown_preview = original_validation
 
         source_text = (root / payload["path"]).read_text(encoding="utf-8")
+        rendered = docs_import_preview.render_markdown_document(
+            payload["import_preview"]["markdown_preview"],
+            title=payload["title"],
+        )
 
     assert payload["ok"] is True
     assert payload["title"] == "Unsafe Diagram"
@@ -169,6 +180,8 @@ def test_svg_import_strips_unsafe_content() -> None:
     assert "<script" not in source_text
     assert "onclick" not in source_text
     assert "<title>Unsafe Diagram</title>" in source_text
+    assert "<rect" in rendered.html
+    assert "<p><rect" not in rendered.html
     assert any("script" in warning for warning in payload["import_preview"]["warnings"])
 
 def test_image_import_creates_media_path_plan_wrapper() -> None:
