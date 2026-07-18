@@ -71,6 +71,8 @@ def test_scope_create_preview_reports_public_readonly_site_route_and_payloads() 
     assert any(file["path"] == "site/assets/data/docs/scopes/research" for file in payload["publish_files"])
     assert any(file["path"] == "site/assets/data/docs/scopes/research/by-id" for file in payload["publish_files"])
     assert any(file["path"] == "site/assets/data/search/research/index.json" for file in payload["publish_files"])
+    assert any(file["path"] == "site/assets/data/docs/scopes/research/media/svg" for file in payload["created_files"])
+    assert any(file["path"] == "site/assets/data/docs/scopes/research/media/svg/.gitkeep" for file in payload["created_files"])
     changed_paths = {file["path"] for file in payload["changed_files"]}
     assert "docs-viewer/config/routes/docs-viewer-routes.json" in changed_paths
     assert "site/docs-viewer/config/routes/docs-viewer-public-routes.json" in changed_paths
@@ -443,7 +445,7 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
             default_doc_text = default_doc_path.read_text(encoding="utf-8")
             media_directories_exist = all(
                 (external_root / "source/research/media" / media_class).is_dir()
-                for media_class in ("files", "img")
+                for media_class in ("files", "img", "svg")
             )
             route_exists = (repo_root / "research/index.md").exists()
     finally:
@@ -461,6 +463,7 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     assert default_doc_exists is True
     assert media_directories_exist is True
     assert any(file["kind"] == "scope_media_img_root" for file in payload["created_files"])
+    assert any(file["kind"] == "scope_media_svg_root" for file in payload["created_files"])
     assert any(file["kind"] == "scope_media_files_root" for file in payload["created_files"])
     assert "viewable:" not in default_doc_text
     assert "published:" not in default_doc_text
@@ -749,6 +752,9 @@ def test_scope_create_apply_writes_public_site_route_config_and_payloads() -> No
             manifest_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scope_manifest.json").read_text(encoding="utf-8"))
             public_doc_exists = (repo_root / "site/assets/data/docs/scopes/research/by-id/research.json").exists()
             public_search_exists = (repo_root / "site/assets/data/search/research/index.json").exists()
+            public_svg_marker_exists = (
+                repo_root / "site/assets/data/docs/scopes/research/media/svg/.gitkeep"
+            ).exists()
     finally:
         docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild
 
@@ -775,6 +781,7 @@ def test_scope_create_apply_writes_public_site_route_config_and_payloads() -> No
     assert any(route["route_id"] == "research" for route in all_routes["routes"])
     assert public_doc_exists is True
     assert public_search_exists is True
+    assert public_svg_marker_exists is True
     records = {record["scope_id"]: record for record in manifest_payload["scopes"]}
     assert records["research"]["scope_type"] == "public"
     recorded_paths = {file["path"] for file in records["research"]["files"]}
@@ -807,11 +814,11 @@ def test_scope_create_apply_skips_public_route_for_local_scopes() -> None:
             default_doc_text = (repo_root / f"docs-viewer/source/notes/documents/{default_doc_id}.md").read_text(encoding="utf-8")
             media_directories_exist = all(
                 (repo_root / "docs-viewer/published/docs/notes/media" / media_class).is_dir()
-                for media_class in ("files", "img")
+                for media_class in ("files", "img", "svg")
             )
             media_markers_exist = all(
                 (repo_root / "docs-viewer/published/docs/notes/media" / media_class / ".gitkeep").is_file()
-                for media_class in ("files", "img")
+                for media_class in ("files", "img", "svg")
             )
             route_exists = (repo_root / "notes/index.md").exists()
     finally:

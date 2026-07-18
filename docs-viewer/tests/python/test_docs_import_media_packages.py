@@ -115,12 +115,13 @@ def test_html_import_extracts_sanitized_inline_svg_before_source_write() -> None
 
         source_text = (root / payload["path"]).read_text(encoding="utf-8")
         media_filename = f"{payload['doc_id']}-image-01.svg"
-        media_path = root / "site/assets/data/docs/scopes/library/media/img" / media_filename
+        media_path = root / "site/assets/data/docs/scopes/library/media/svg" / media_filename
         svg_text = media_path.read_text(encoding="utf-8")
 
     assert payload["import_preview"]["media_plans"][0]["source"] == "inline_svg"
     assert payload["inline_media_written"][0]["artifact_identity"] == media_filename
-    assert f"![Potential field]([[media:docs/library/img/{media_filename}]])" in source_text
+    assert payload["import_preview"]["media_plans"][0]["media_class"] == "svg"
+    assert f"![Potential field]([[media:docs/library/svg/{media_filename}]])" in source_text
     assert "<svg" not in source_text
     assert "onclick" not in svg_text
     assert "https://example.com" not in svg_text
@@ -158,7 +159,7 @@ def test_html_inline_svg_publication_failure_does_not_write_document_source(
             lambda *_args, **_kwargs: [
                 DocsMediaPublishResult(
                     scope="library",
-                    media_class="img",
+                    media_class="svg",
                     filename="blocked.svg",
                     size=0,
                     status="blocked_changed",

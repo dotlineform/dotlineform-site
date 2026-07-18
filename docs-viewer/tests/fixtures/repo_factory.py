@@ -77,7 +77,7 @@ def docs_scope_record(
     media_provider: str | None = None,
     media_location_root: str | None = None,
     media_served_root: str | None = None,
-    media_types: tuple[str, ...] = ("img", "files"),
+    media_types: tuple[str, ...] = ("img", "svg", "files"),
     public_docs_path: str | None = None,
     public_search_path: str | None = None,
     sub_scopes: list[dict[str, object]] | None = None,
@@ -305,7 +305,7 @@ def write_library_scope_config(root: Path, *, allow_unresolved_parent_ids: bool 
                 media_provider="repository",
                 media_location_root="site/assets/data/docs/scopes/library/media",
                 media_served_root="/assets/data/docs/scopes/library/media",
-                media_types=("img", "files", "html"),
+                media_types=("img", "svg", "files", "html"),
             )
         ],
     )

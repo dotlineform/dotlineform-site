@@ -60,7 +60,7 @@ DOTLINEFORM_PROJECTS_BASE_DIR_ENV = "DOTLINEFORM_PROJECTS_BASE_DIR"
 EXTERNAL_DATA_ROOT_MARKER = f"${DOTLINEFORM_PROJECTS_BASE_DIR_ENV}/docs-viewer"
 SUB_SCOPE_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9_-]*\Z")
 MEDIA_TYPE_PATTERN = re.compile(r"\A[a-z][a-z0-9_-]*\Z")
-PUBLISHED_MEDIA_TYPES = frozenset({"files", "html", "img"})
+PUBLISHED_MEDIA_TYPES = frozenset({"files", "html", "img", "svg"})
 BUILD_MEDIA_TYPES = frozenset({"mermaid"})
 
 SOURCE_CAPABILITIES = frozenset(

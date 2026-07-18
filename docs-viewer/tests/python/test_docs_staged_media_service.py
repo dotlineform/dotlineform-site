@@ -46,14 +46,14 @@ def test_staged_media_accepts_safe_spaces_and_unicode_in_media_identity() -> Non
             "staged_filename": filename,
             "label": "Energy wells",
         })
-        published = root / "site/assets/data/docs/scopes/library/media/img/energy-wells-memory-attractor-basins.svg"
+        published = root / "site/assets/data/docs/scopes/library/media/svg/energy-wells-memory-attractor-basins.svg"
 
         assert published.exists()
 
     assert [item["filename"] for item in listing["files"]] == [filename]
     assert payload["staged_filename"] == filename
     assert payload["published_filename"] == "energy-wells-memory-attractor-basins.svg"
-    assert payload["media_identity"].endswith("/energy-wells-memory-attractor-basins.svg")
+    assert payload["media_identity"] == "docs/library/svg/energy-wells-memory-attractor-basins.svg"
 
 
 def test_management_routes_expose_staged_media_listing_and_write_free_preview() -> None:
@@ -183,7 +183,7 @@ def test_add_svg_uses_shared_sanitizer_and_requires_confirmed_replacement() -> N
             "label": "Energy wells",
         }
         first = staged_media.apply_staged_media(root, request)
-        published = root / "site/assets/data/docs/scopes/library/media/img/diagram.svg"
+        published = root / "site/assets/data/docs/scopes/library/media/svg/diagram.svg"
         sanitized = published.read_text(encoding="utf-8")
 
         write_staged_text(root, "diagram.svg", "<svg xmlns='http://www.w3.org/2000/svg'><circle r='4'/></svg>")
@@ -194,6 +194,7 @@ def test_add_svg_uses_shared_sanitizer_and_requires_confirmed_replacement() -> N
         replaced_bytes = published.read_bytes()
 
     assert first["svg"]["title"] == "Energy wells"
+    assert first["markdown"] == "![Energy wells]([[media:docs/library/svg/diagram.svg]])"
     assert "<script" not in sanitized
     assert "onclick" not in sanitized
     assert "https://example.com" not in sanitized

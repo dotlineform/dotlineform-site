@@ -67,6 +67,7 @@ def inline_media_plan(
     filename: str,
     title: str,
     *,
+    media_class: str = "img",
     repo_root: Path | None = None,
     staging_root: Path,
     workspace_root: Path,
@@ -75,7 +76,7 @@ def inline_media_plan(
     source: str,
 ) -> dict[str, Any]:
     source_path = Path(filename)
-    plan = build_media_plan(scope, "img", source_path, title, repo_root=repo_root)
+    plan = build_media_plan(scope, media_class, source_path, title, repo_root=repo_root)
     plan.update(
         {
             "source": source,
@@ -188,6 +189,7 @@ def apply_inline_svg_media_plans(
             scope,
             filename,
             title,
+            media_class="svg",
             repo_root=repo_root,
             staging_root=staging_root,
             workspace_root=workspace_root,
@@ -238,11 +240,13 @@ def retarget_inline_media_plans(
         old_filename = str(plan.get("source_path") or "")
         extension = Path(old_filename).suffix.lstrip(".") or "png"
         source_kind = str(plan.get("source") or "")
+        media_class = "svg" if source_kind == "inline_svg" else "img"
         new_filename = next_inline_media_filename(staging_root, proposed_doc_id, extension, used_filenames)
         new_plan = inline_media_plan(
             scope,
             new_filename,
             str(plan.get("title") or f"Inline image {index + 1:02d}"),
+            media_class=media_class,
             repo_root=repo_root,
             staging_root=staging_root,
             workspace_root=workspace_root,
@@ -253,7 +257,7 @@ def retarget_inline_media_plans(
         if old_token:
             markdown = markdown.replace(old_token, new_plan["media_token"], 1)
         if old_filename != new_filename:
-            old_media_path = media_path_for(scope, "img", old_filename, repo_root=repo_root)
+            old_media_path = media_path_for(scope, media_class, old_filename, repo_root=repo_root)
             for warning_index, warning in enumerate(warnings):
                 if isinstance(warning, str) and old_filename in warning:
                     warnings[warning_index] = warning.replace(old_filename, new_filename).replace(

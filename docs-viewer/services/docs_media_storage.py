@@ -34,7 +34,7 @@ from studio.services.media.publish_media_to_r2 import content_type_for, file_md5
 
 
 DOCS_MEDIA_CLASSES = set(PUBLISHED_MEDIA_TYPES)
-DOCS_MEDIA_ROUTE_CLASSES = {"files", "img"}
+DOCS_MEDIA_ROUTE_CLASSES = {"files", "img", "svg"}
 DOCS_MEDIA_ROUTE_PREFIX = "/docs/media/"
 SUCCESSFUL_UPLOAD_STATUSES = {"unchanged", "uploaded", "overwritten"}
 

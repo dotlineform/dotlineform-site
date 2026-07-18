@@ -213,3 +213,5 @@ def test_source_import_previews_validate_with_python_renderer() -> None:
 def test_media_path_comes_from_scope_config() -> None:
     assert docs_import_media.media_path_for("analysis", "img", "diagram.png") == "docs/analysis/img/diagram.png"
     assert docs_import_media.media_token("analysis", "img", "diagram.png") == "[[media:docs/analysis/img/diagram.png]]"
+    assert docs_import_media.media_path_for("analysis", "svg", "diagram.svg") == "docs/analysis/svg/diagram.svg"
+    assert docs_import_media.media_token("analysis", "svg", "diagram.svg") == "[[media:docs/analysis/svg/diagram.svg]]"

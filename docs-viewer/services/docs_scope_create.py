@@ -33,7 +33,6 @@ from docs_document_identity import (
 from docs_scope_manifest import (
     LIFECYCLE_APPLY_SCHEMA_VERSION,
     LIFECYCLE_PREVIEW_SCHEMA_VERSION,
-    LOCAL_COMMITTED_MODE,
     LOCAL_EXTERNAL_MODE,
     MANIFEST_REL_PATH,
     PUBLIC_MODE,
@@ -74,9 +73,7 @@ def sync_public_publish_outputs(repo_root: Path, config: dict[str, Any], *, incl
     docs_source = local_published_docs_output_path(repo_root, config)
     docs_target = public_projection_docs_output_path(repo_root, config)
     if docs_source.exists():
-        if docs_target.exists():
-            shutil.rmtree(docs_target)
-        shutil.copytree(docs_source, docs_target)
+        shutil.copytree(docs_source, docs_target, dirs_exist_ok=True)
     if include_search:
         search_source = local_published_search_index_path(repo_root, config)
         search_target = public_projection_search_index_path(repo_root, config)
@@ -235,39 +232,29 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         path_record(repo_root, "default_source_doc", created_documents_root / f"{default_doc_id}.md", action="create"),
         path_record(repo_root, "source_sub_scopes_root", created_sub_scopes_root, action="create"),
     ]
-    if publishing_mode != PUBLIC_MODE:
-        raw_media = planned_scope_config["published"]["media"]
-        media_paths = {
-            media_type: (
-                created_source_root / "media" / media_type
-                if publishing_mode == LOCAL_EXTERNAL_MODE
-                else repo_root / str(raw_media[media_type]["location"]["path"])
+    raw_media = planned_scope_config["published"]["media"]
+    for media_type, media in raw_media.items():
+        location = media["location"]
+        provider = str(location["provider"])
+        if provider == "r2":
+            continue
+        media_path = (
+            created_source_root / "media" / media_type
+            if provider == "external_local"
+            else repo_root / str(location["path"])
+        )
+        created_files.append(
+            path_record(repo_root, f"scope_media_{media_type}_root", media_path, action="create")
+        )
+        if provider == "repository":
+            created_files.append(
+                path_record(
+                    repo_root,
+                    f"scope_media_{media_type}_marker",
+                    media_path / ".gitkeep",
+                    action="create",
+                )
             )
-            for media_type in ("files", "img")
-        }
-        created_files.extend(
-            [
-                path_record(repo_root, "scope_media_img_root", media_paths["img"], action="create"),
-                path_record(repo_root, "scope_media_files_root", media_paths["files"], action="create"),
-            ]
-        )
-    if publishing_mode == LOCAL_COMMITTED_MODE:
-        created_files.extend(
-            [
-                path_record(
-                    repo_root,
-                    "scope_media_img_marker",
-                    media_paths["img"] / ".gitkeep",
-                    action="create",
-                ),
-                path_record(
-                    repo_root,
-                    "scope_media_files_marker",
-                    media_paths["files"] / ".gitkeep",
-                    action="create",
-                ),
-            ]
-        )
     changed_files = [
         path_record(repo_root, "scope_config", repo_root / CONFIG_REL_PATH, action="change"),
         path_record(repo_root, "scope_manifest", repo_root / MANIFEST_REL_PATH, action="change"),

@@ -251,6 +251,10 @@ def write_docs_viewer_browser_config(root: Path) -> None:
                             "reference_prefix": "docs/studio/img",
                             "served_path_prefix": "/docs/media/studio/img",
                         },
+                        "svg": {
+                            "reference_prefix": "docs/studio/svg",
+                            "served_path_prefix": "/docs/media/studio/svg",
+                        },
                         "files": {
                             "reference_prefix": "docs/studio/files",
                             "served_path_prefix": "/docs/media/studio/files",

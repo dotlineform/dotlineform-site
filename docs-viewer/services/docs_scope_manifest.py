@@ -469,11 +469,16 @@ def planned_scope_config_record(
         else planned_published_search_path(scope_id, publishing_mode)
     ).as_posix()
     media: dict[str, Any] = {}
-    for media_type in ("img", "files"):
+    for media_type in ("img", "svg", "files"):
         if publishing_mode == PUBLIC_MODE:
-            media_provider = "r2"
-            media_path = f"docs/{scope_id}/{media_type}"
-            served_path = f"https://media.dotlineform.com/docs/{scope_id}/{media_type}"
+            if media_type == "svg":
+                media_provider = "repository"
+                media_path = f"{planned_public_docs_projection(scope_id).as_posix()}/media/svg"
+                served_path = f"/assets/data/docs/scopes/{scope_id}/media/svg"
+            else:
+                media_provider = "r2"
+                media_path = f"docs/{scope_id}/{media_type}"
+                served_path = f"https://media.dotlineform.com/docs/{scope_id}/{media_type}"
         elif publishing_mode == LOCAL_COMMITTED_MODE:
             media_provider = local_provider
             media_path = f"{planned_published_docs_path(scope_id, publishing_mode).as_posix()}/media/{media_type}"

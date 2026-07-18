@@ -157,7 +157,13 @@ def _staged_media_contract(repo_root: Path, body: dict[str, Any]) -> tuple[str, 
     source_path = _resolve_staged_media(workspace.import_staging, body.get("staged_filename"), kind)
     fallback = humanize(source_path.stem) or ("Image" if kind == STAGED_MEDIA_IMAGE else "File")
     label = normalize_label(body.get("label"), fallback=fallback)
-    media_class = "img" if kind == STAGED_MEDIA_IMAGE else "files"
+    media_class = (
+        "svg"
+        if kind == STAGED_MEDIA_IMAGE and source_path.suffix.lower() == ".svg"
+        else "img"
+        if kind == STAGED_MEDIA_IMAGE
+        else "files"
+    )
     return scope, kind, source_path, label, media_class, published_media_filename(source_path)
 
 

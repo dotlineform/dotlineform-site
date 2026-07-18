@@ -17,6 +17,10 @@
         "img": {
           "reference_prefix": "docs/studio/img",
           "served_path_prefix": "/docs/media/studio/img"
+        },
+        "svg": {
+          "reference_prefix": "docs/studio/svg",
+          "served_path_prefix": "/docs/media/studio/svg"
         }
       },
       "index_tree_url": "/docs-viewer/published/docs/studio/index-tree.json",
@@ -53,6 +57,10 @@
         "img": {
           "reference_prefix": "docs/library/img",
           "served_path_prefix": "/assets/data/docs/scopes/library/media/img"
+        },
+        "svg": {
+          "reference_prefix": "docs/library/svg",
+          "served_path_prefix": "/assets/data/docs/scopes/library/media/svg"
         }
       },
       "index_tree_url": "/docs-viewer/published/docs/library/index-tree.json",
@@ -85,6 +93,10 @@
         "img": {
           "reference_prefix": "docs/analysis/img",
           "served_path_prefix": "/assets/data/docs/scopes/analysis/media/img"
+        },
+        "svg": {
+          "reference_prefix": "docs/analysis/svg",
+          "served_path_prefix": "/assets/data/docs/scopes/analysis/media/svg"
         }
       },
       "index_tree_url": "/docs-viewer/published/docs/analysis/index-tree.json",
@@ -125,6 +137,10 @@
         "img": {
           "reference_prefix": "docs/moments/img",
           "served_path_prefix": "https://media.dotlineform.com/docs/moments/img"
+        },
+        "svg": {
+          "reference_prefix": "docs/moments/svg",
+          "served_path_prefix": "/assets/data/docs/scopes/moments/media/svg"
         }
       },
       "index_tree_url": "/docs-viewer/published/docs/moments/index-tree.json",
@@ -157,6 +173,10 @@
         "img": {
           "reference_prefix": "docs/notes/img",
           "served_path_prefix": "/docs/media/notes/img"
+        },
+        "svg": {
+          "reference_prefix": "docs/notes/svg",
+          "served_path_prefix": "/docs/media/notes/svg"
         }
       },
       "index_tree_url": "/docs/index-tree?scope=notes",
@@ -189,6 +209,10 @@
         "img": {
           "reference_prefix": "docs/processing/img",
           "served_path_prefix": "/docs/media/processing/img"
+        },
+        "svg": {
+          "reference_prefix": "docs/processing/svg",
+          "served_path_prefix": "/docs/media/processing/svg"
         }
       },
       "index_tree_url": "/docs-viewer/published/docs/processing/index-tree.json",

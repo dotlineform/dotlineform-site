@@ -224,7 +224,7 @@ def test_docs_scope_config_rejects_public_sub_scope_projection_outside_parent() 
             raise AssertionError("Expected public sub_scope projection outside the parent root to be rejected")
 
 
-def test_docs_scope_config_accepts_explicit_mermaid_to_img_build_contract() -> None:
+def test_docs_scope_config_accepts_explicit_mermaid_to_svg_build_contract() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         record = docs_scope_record("studio", default_doc_id="child")
@@ -232,16 +232,16 @@ def test_docs_scope_config_accepts_explicit_mermaid_to_img_build_contract() -> N
             "mermaid": {
                 "path": "media/mermaid",
                 "producer": "mermaid-cli",
-                "publishes_to": "img",
+                "publishes_to": "svg",
             }
         }
-        record["published"]["media"]["img"]["build_inputs"] = ["mermaid"]  # type: ignore[index]
+        record["published"]["media"]["svg"]["build_inputs"] = ["mermaid"]  # type: ignore[index]
         write_scope_record(repo_root, record)
 
         config = docs_scope_config.load_docs_scope_configs(repo_root)["studio"]
 
     assert config.source.build_media["mermaid"].path == Path("media/mermaid")
-    assert config.published.media["img"].build_inputs == ("mermaid",)
+    assert config.published.media["svg"].build_inputs == ("mermaid",)
 
 
 def test_docs_scope_config_rejects_unhandled_media_types() -> None:

@@ -102,7 +102,7 @@ def write_scope_config(root: Path) -> None:
                 media_provider="repository",
                 media_location_root="site/assets/data/docs/scopes/library/media",
                 media_served_root="/assets/data/docs/scopes/library/media",
-                media_types=("img", "files", "html"),
+                media_types=("img", "svg", "files", "html"),
             )
         ],
     )

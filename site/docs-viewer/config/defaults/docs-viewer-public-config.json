@@ -21,6 +21,10 @@
         "img": {
           "reference_prefix": "docs/library/img",
           "served_path_prefix": "/assets/data/docs/scopes/library/media/img"
+        },
+        "svg": {
+          "reference_prefix": "docs/library/svg",
+          "served_path_prefix": "/assets/data/docs/scopes/library/media/svg"
         }
       },
       "index_tree_url": "/assets/data/docs/scopes/library/index-tree.json",
@@ -53,6 +57,10 @@
         "img": {
           "reference_prefix": "docs/analysis/img",
           "served_path_prefix": "/assets/data/docs/scopes/analysis/media/img"
+        },
+        "svg": {
+          "reference_prefix": "docs/analysis/svg",
+          "served_path_prefix": "/assets/data/docs/scopes/analysis/media/svg"
         }
       },
       "index_tree_url": "/assets/data/docs/scopes/analysis/index-tree.json",
@@ -93,6 +101,10 @@
         "img": {
           "reference_prefix": "docs/moments/img",
           "served_path_prefix": "https://media.dotlineform.com/docs/moments/img"
+        },
+        "svg": {
+          "reference_prefix": "docs/moments/svg",
+          "served_path_prefix": "/assets/data/docs/scopes/moments/media/svg"
         }
       },
       "index_tree_url": "/assets/data/docs/scopes/moments/index-tree.json",

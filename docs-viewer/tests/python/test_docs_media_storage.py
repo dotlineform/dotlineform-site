@@ -118,7 +118,7 @@ def scope_config(
             served_path_prefix=f"{served_root}/{media_type}",
             build_inputs=(),
         )
-        for media_type in ("img", "files")
+        for media_type in ("img", "svg", "files")
     }
     public_projection = None
     if scope_type == "public":
@@ -321,13 +321,25 @@ def test_new_scope_defaults_follow_scope_owned_media_policy(tmp_path: Path) -> N
     )
 
     assert public["published"]["media"]["img"]["location"]["provider"] == R2_PROVIDER  # type: ignore[index]
+    assert public["published"]["media"]["svg"]["location"] == {  # type: ignore[index]
+        "provider": REPOSITORY_PROVIDER,
+        "path": "site/assets/data/docs/scopes/research/media/svg",
+    }
     assert local["published"]["media"]["img"]["location"] == {  # type: ignore[index]
         "provider": REPOSITORY_PROVIDER,
         "path": "docs-viewer/published/docs/notes/media/img",
     }
+    assert local["published"]["media"]["svg"]["location"] == {  # type: ignore[index]
+        "provider": REPOSITORY_PROVIDER,
+        "path": "docs-viewer/published/docs/notes/media/svg",
+    }
     assert external["published"]["media"]["img"]["location"] == {  # type: ignore[index]
         "provider": EXTERNAL_LOCAL_PROVIDER,
         "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/private/media/img",
+    }
+    assert external["published"]["media"]["svg"]["location"] == {  # type: ignore[index]
+        "provider": EXTERNAL_LOCAL_PROVIDER,
+        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/private/media/svg",
     }
 
 
@@ -341,6 +353,13 @@ def test_local_media_route_confines_repo_and_external_scope_assets(tmp_path: Pat
     resolved, media_class = local_media_path_from_route(tmp_path, "/docs/media/studio/img/diagram.png")
     assert resolved == repo_file.resolve()
     assert media_class == "img"
+    repo_svg = tmp_path / "docs-viewer/published/docs/studio/media/svg/diagram.svg"
+    repo_svg.parent.mkdir(parents=True)
+    repo_svg.write_text("<svg xmlns='http://www.w3.org/2000/svg'></svg>\n", encoding="utf-8")
+    resolved, media_class = local_media_path_from_route(tmp_path, "/docs/media/studio/svg/diagram.svg")
+    assert resolved == repo_svg.resolve()
+    assert media_class == "svg"
+    assert safe_content_type(repo_svg) == "image/svg+xml"
     with pytest.raises(ValueError, match="Invalid Docs media route"):
         local_media_path_from_route(tmp_path, "/docs/media/studio/img/nested/diagram.png")
     if hasattr(os, "symlink"):
@@ -391,8 +410,11 @@ def test_configured_local_media_directories_are_materialized(tmp_path: Path) -> 
     ensure_configured_scope_owned_media_directories(tmp_path, configs)
 
     assert set(materialized) == {"notes", "studio"}
-    assert all((repo_media / media_class).is_dir() for media_class in ("files", "img"))
-    assert all((repo_media / media_class / ".gitkeep").is_file() for media_class in ("files", "img"))
-    assert all((external_source / "media" / media_class).is_dir() for media_class in ("files", "img"))
-    assert not any((external_source / "media" / media_class / ".gitkeep").exists() for media_class in ("files", "img"))
+    assert all((repo_media / media_class).is_dir() for media_class in ("files", "img", "svg"))
+    assert all((repo_media / media_class / ".gitkeep").is_file() for media_class in ("files", "img", "svg"))
+    assert all((external_source / "media" / media_class).is_dir() for media_class in ("files", "img", "svg"))
+    assert not any(
+        (external_source / "media" / media_class / ".gitkeep").exists()
+        for media_class in ("files", "img", "svg")
+    )
     assert not (tmp_path / "docs-viewer/source/library/documents/media").exists()
