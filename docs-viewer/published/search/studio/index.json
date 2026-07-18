@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-6c1b0703c16896e4c4b5bd402b4a5607",
-    "generated_at_utc": "2026-07-18T15:22:41Z",
+    "version": "blake2b-2a1625b7ea40ca88061ccfe40d1cf4d0",
+    "generated_at_utc": "2026-07-18T15:26:33Z",
     "count": 251
   },
   "entries": [
@@ -4275,10 +4275,10 @@
       "kind": "doc",
       "title": "Index Multiple Selection Concept",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-876066",
-      "last_updated": "2026-07-15",
+      "last_updated": "2026-07-18 16:26:23",
       "parent_id": "d-20260714-151900-6fa23e",
       "parent_title": "Index Multiple Selection",
-      "display_meta": "2026-07-15 • Index Multiple Selection",
+      "display_meta": "2026-07-18 16:26:23 • Index Multiple Selection",
       "search_terms": [
         "index multiple selection concept",
         "index",
@@ -4286,13 +4286,16 @@
         "selection",
         "concept",
         "index multiple selection",
-        "2026-07-15",
+        "2026-07-18 16:26:23",
         "2026",
         "07",
-        "15",
+        "18",
+        "16",
+        "26",
+        "23",
         "d-20260714-234030-876066"
       ],
-      "search_text": "index multiple selection concept index multiple selection concept index multiple selection 2026-07-15 2026 07 15 d-20260714-234030-876066"
+      "search_text": "index multiple selection concept index multiple selection concept index multiple selection 2026-07-18 16:26:23 2026 07 18 16 26 23 d-20260714-234030-876066"
     },
     {
       "id": "d-20260715-215355-54ede0",
