@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4a6f20da43dba928e99b7a2720e013b5",
-    "generated_at_utc": "2026-07-17T22:20:13Z",
+    "version": "blake2b-8852d3c6af9aab9296089b4f9364326e",
+    "generated_at_utc": "2026-07-18T08:16:15Z",
     "count": 238
   },
   "entries": [
@@ -3962,10 +3962,10 @@
       "kind": "doc",
       "title": "Extract Imported SVG To Published Media",
       "href": "/docs/?scope=studio&doc=d-20260717-231652-d6d49e",
-      "last_updated": "2026-07-17 23:20:05",
+      "last_updated": "2026-07-18 09:15:33",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-17 23:20:05 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-18 09:15:33 • Docs Viewer Roadmap",
       "search_terms": [
         "extract imported svg to published media",
         "extract",
@@ -3978,26 +3978,26 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-17 23:20:05",
+        "2026-07-18 09:15:33",
         "2026",
         "07",
-        "17",
-        "23",
-        "20",
-        "05",
+        "18",
+        "09",
+        "15",
+        "33",
         "d-20260717-231652-d6d49e"
       ],
-      "search_text": "extract imported svg to published media extract imported svg to published media docs viewer roadmap docs viewer roadmap 2026-07-17 23:20:05 2026 07 17 23 20 05 d-20260717-231652-d6d49e"
+      "search_text": "extract imported svg to published media extract imported svg to published media docs viewer roadmap docs viewer roadmap 2026-07-18 09:15:33 2026 07 18 09 15 33 d-20260717-231652-d6d49e"
     },
     {
       "id": "d-20260717-231652-4890d2",
       "kind": "doc",
       "title": "Extract Imported SVG To Published Media Delivery",
       "href": "/docs/?scope=studio&doc=d-20260717-231652-4890d2",
-      "last_updated": "2026-07-17 23:16:52",
+      "last_updated": "2026-07-18 09:15:33",
       "parent_id": "d-20260717-231652-d6d49e",
       "parent_title": "Extract Imported SVG To Published Media",
-      "display_meta": "2026-07-17 23:16:52 • Extract Imported SVG To Published Media",
+      "display_meta": "2026-07-18 09:15:33 • Extract Imported SVG To Published Media",
       "search_terms": [
         "extract imported svg to published media delivery",
         "extract",
@@ -4008,16 +4008,16 @@
         "media",
         "delivery",
         "extract imported svg to published media",
-        "2026-07-17 23:16:52",
+        "2026-07-18 09:15:33",
         "2026",
         "07",
-        "17",
-        "23",
-        "16",
-        "52",
+        "18",
+        "09",
+        "15",
+        "33",
         "d-20260717-231652-4890d2"
       ],
-      "search_text": "extract imported svg to published media delivery extract imported svg to published media delivery extract imported svg to published media 2026-07-17 23:16:52 2026 07 17 23 16 52 d-20260717-231652-4890d2"
+      "search_text": "extract imported svg to published media delivery extract imported svg to published media delivery extract imported svg to published media 2026-07-18 09:15:33 2026 07 18 09 15 33 d-20260717-231652-4890d2"
     },
     {
       "id": "d-20260714-151900-6fa23e",
