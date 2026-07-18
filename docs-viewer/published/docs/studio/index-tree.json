@@ -897,13 +897,19 @@
               "doc_id": "d-20260715-181845-0158f9",
               "title": "Diagrams",
               "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260715-181845-0158f9.json",
-              "ui_status": "proposed",
+              "ui_status": "planned",
               "children": [
                 {
                   "doc_id": "d-20260715-181845-524859",
                   "title": "Document Diagrams Concept",
                   "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260715-181845-524859.json",
-                  "ui_status": "proposed"
+                  "ui_status": "planned"
+                },
+                {
+                  "doc_id": "d-20260718-214206-27df44",
+                  "title": "Mermaid Document Diagrams Delivery",
+                  "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260718-214206-27df44.json",
+                  "ui_status": "planned"
                 }
               ]
             },
@@ -1429,5 +1435,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-18T19:16:38Z"
+  "generated_at": "2026-07-18T20:44:20Z"
 }

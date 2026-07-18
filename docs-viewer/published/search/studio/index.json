@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4d81fd98ddcb7a54f2988c04e04feea0",
-    "generated_at_utc": "2026-07-18T20:21:56Z",
-    "count": 250
+    "version": "blake2b-a6ed527bad3cb3d2ccd382a2001e3011",
+    "generated_at_utc": "2026-07-18T20:53:07Z",
+    "count": 251
   },
   "entries": [
     {
@@ -3802,25 +3802,25 @@
       "kind": "doc",
       "title": "Docs Viewer Roadmap",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-1e0af6",
-      "last_updated": "2026-07-18 20:15:09",
+      "last_updated": "2026-07-18 21:42:06",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-18 20:15:09 • Roadmap",
+      "display_meta": "2026-07-18 21:42:06 • Roadmap",
       "search_terms": [
         "docs viewer roadmap",
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-18 20:15:09",
+        "2026-07-18 21:42:06",
         "2026",
         "07",
         "18",
-        "20",
-        "15",
-        "09",
+        "21",
+        "42",
+        "06",
         "d-20260714-234030-1e0af6"
       ],
-      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-18 20:15:09 2026 07 18 20 15 09 d-20260714-234030-1e0af6"
+      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-18 21:42:06 2026 07 18 21 42 06 d-20260714-234030-1e0af6"
     },
     {
       "id": "d-20260716-204013-3be4e1",
@@ -3942,51 +3942,77 @@
       "kind": "doc",
       "title": "Diagrams",
       "href": "/docs/?scope=studio&doc=d-20260715-181845-0158f9",
-      "last_updated": "2026-07-18 21:20:42",
+      "last_updated": "2026-07-18 21:52:33",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-18 21:20:42 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-18 21:52:33 • Docs Viewer Roadmap",
       "search_terms": [
         "diagrams",
         "docs viewer roadmap",
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-18 21:20:42",
+        "2026-07-18 21:52:33",
         "2026",
         "07",
         "18",
         "21",
-        "20",
-        "42",
+        "52",
+        "33",
         "d-20260715-181845-0158f9"
       ],
-      "search_text": "diagrams docs viewer roadmap docs viewer roadmap 2026-07-18 21:20:42 2026 07 18 21 20 42 d-20260715-181845-0158f9"
+      "search_text": "diagrams docs viewer roadmap docs viewer roadmap 2026-07-18 21:52:33 2026 07 18 21 52 33 d-20260715-181845-0158f9"
     },
     {
       "id": "d-20260715-181845-524859",
       "kind": "doc",
       "title": "Document Diagrams Concept",
       "href": "/docs/?scope=studio&doc=d-20260715-181845-524859",
-      "last_updated": "2026-07-18 21:20:42",
+      "last_updated": "2026-07-18 21:52:33",
       "parent_id": "d-20260715-181845-0158f9",
       "parent_title": "Diagrams",
-      "display_meta": "2026-07-18 21:20:42 • Diagrams",
+      "display_meta": "2026-07-18 21:52:33 • Diagrams",
       "search_terms": [
         "document diagrams concept",
         "document",
         "diagrams",
         "concept",
-        "2026-07-18 21:20:42",
+        "2026-07-18 21:52:33",
         "2026",
         "07",
         "18",
         "21",
-        "20",
-        "42",
+        "52",
+        "33",
         "d-20260715-181845-524859"
       ],
-      "search_text": "document diagrams concept document diagrams concept 2026-07-18 21:20:42 2026 07 18 21 20 42 d-20260715-181845-524859"
+      "search_text": "document diagrams concept document diagrams concept 2026-07-18 21:52:33 2026 07 18 21 52 33 d-20260715-181845-524859"
+    },
+    {
+      "id": "d-20260718-214206-27df44",
+      "kind": "doc",
+      "title": "Mermaid Document Diagrams Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260718-214206-27df44",
+      "last_updated": "2026-07-18 21:52:33",
+      "parent_id": "d-20260715-181845-0158f9",
+      "parent_title": "Diagrams",
+      "display_meta": "2026-07-18 21:52:33 • Diagrams",
+      "search_terms": [
+        "mermaid document diagrams delivery",
+        "mermaid",
+        "document",
+        "diagrams",
+        "delivery",
+        "2026-07-18 21:52:33",
+        "2026",
+        "07",
+        "18",
+        "21",
+        "52",
+        "33",
+        "d-20260718-214206-27df44"
+      ],
+      "search_text": "mermaid document diagrams delivery mermaid document diagrams delivery 2026-07-18 21:52:33 2026 07 18 21 52 33 d-20260718-214206-27df44"
     },
     {
       "id": "d-20260718-155350-c84e62",
