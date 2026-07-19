@@ -74,7 +74,7 @@ def config_payload() -> dict[str, object]:
             {
                 "id": "library",
                 "label": "Library",
-                "source": "docs-viewer/source/library/documents",
+                "source": "docs-viewer/scopes/library/source/documents",
             }
         ],
         "adapters": [

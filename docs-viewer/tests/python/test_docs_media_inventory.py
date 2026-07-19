@@ -87,7 +87,7 @@ def test_inventory_lists_unreferenced_owned_media_and_reports_missing_references
         "build_inputs": [],
     }
     write_config(tmp_path, record)
-    source = tmp_path / "docs-viewer/source/library/documents/library.md"
+    source = tmp_path / "docs-viewer/scopes/library/source/documents/library.md"
     source.parent.mkdir(parents=True)
     source.write_text(
         """---
@@ -138,7 +138,7 @@ def test_registered_producer_writes_only_to_configured_published_adapter(tmp_pat
     }
     record["published"]["media"]["svg"]["build_inputs"] = ["mermaid"]  # type: ignore[index]
     write_config(tmp_path, record)
-    source = tmp_path / "docs-viewer/source/studio/media/mermaid/diagram.mmd"
+    source = tmp_path / "docs-viewer/scopes/studio/source/media/mermaid/diagram.mmd"
     source.parent.mkdir(parents=True)
     source.write_text("graph TD; A-->B", encoding="utf-8")
     config = load_docs_scope_configs(tmp_path)["studio"]
@@ -165,7 +165,7 @@ def test_registered_producer_writes_only_to_configured_published_adapter(tmp_pat
 
     assert dry_run[0]["output_identities"] == ["diagram.svg"]
     assert written[0]["source_count"] == 1
-    assert (tmp_path / "docs-viewer/published/docs/studio/media/svg/diagram.svg").read_bytes() == b"<svg></svg>"
+    assert (tmp_path / "docs-viewer/scopes/studio/published/media/svg/diagram.svg").read_bytes() == b"<svg></svg>"
     assert not (source.parent / "diagram.svg").exists()
 
 

@@ -29,7 +29,7 @@ def test_python_docs_builder_writes_external_local_scope_outputs() -> None:
         write_catalogue_records(root)
         write_external_scope_config(root, external_root)
         write_text(
-            external_root / f"source/private/documents/{PRIVATE_DOC_ID}.md",
+            external_root / f"scopes/private/source/documents/{PRIVATE_DOC_ID}.md",
             f"""---
 doc_id: {PRIVATE_DOC_ID}
 title: Private
@@ -43,8 +43,10 @@ External body.
         )
         try:
             exit_code, stdout, stderr = run_cli(root, ["--scope", "private", "--write"])
-            index_tree = read_json(external_root / "published/docs/private/index-tree.json")
-            payload = read_json(external_root / f"published/docs/private/by-id/{PRIVATE_DOC_ID}.json")
+            index_tree = read_json(external_root / "scopes/private/published/documents/index-tree.json")
+            payload = read_json(
+                external_root / f"scopes/private/published/documents/by-id/{PRIVATE_DOC_ID}.json"
+            )
         finally:
             if old_projects_base is None:
                 os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)

@@ -38,7 +38,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v2",
+            "schema_version": "docs_scopes_v3",
             "scopes": [
                 docs_scope_record("studio")
             ],

@@ -72,7 +72,7 @@ def test_markdown_import_create_returns_external_workspace_relative_path(tmp_pat
             root,
             [docs_scope_record("notes", scope_type="local_external")],
         )
-        external_documents = tmp_path / "projects-base/docs-viewer/source/notes/documents"
+        external_documents = tmp_path / "projects-base/docs-viewer/scopes/notes/source/documents"
         external_documents.mkdir(parents=True)
         write_staged_markdown(
             root,
@@ -100,7 +100,7 @@ def test_markdown_import_create_returns_external_workspace_relative_path(tmp_pat
         target = external_documents / f"{payload['doc_id']}.md"
 
     assert payload["ok"] is True
-    assert payload["path"] == f"source/notes/documents/{payload['doc_id']}.md"
+    assert payload["path"] == f"scopes/notes/source/documents/{payload['doc_id']}.md"
     assert target.is_file()
 
 def test_text_import_autolinks_plain_urls() -> None:

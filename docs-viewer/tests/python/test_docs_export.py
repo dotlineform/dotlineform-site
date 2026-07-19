@@ -7,6 +7,7 @@ import copy
 import datetime as dt
 import importlib.util
 import json
+import shutil
 import sys
 import tempfile
 from pathlib import Path
@@ -111,7 +112,7 @@ def write_scope_config(root: Path) -> None:
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v2",
+            "schema_version": "docs_scopes_v3",
             "scopes": [
                 docs_scope_record(
                     "library",
@@ -152,7 +153,7 @@ def write_doc(
     if not viewable:
         lines.append("viewable: false")
     lines.extend(["---", "", body])
-    path = root / "docs-viewer/source/library/documents" / filename
+    path = root / "docs-viewer/scopes/library/source/documents" / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(lines), encoding="utf-8")
 
@@ -752,15 +753,15 @@ def test_document_content_json_output_declares_content_format() -> None:
 def test_missing_source_context_returns_structured_export_error() -> None:
     with make_repo() as temp:
         root = Path(temp)
+        shutil.rmtree(root / "docs-viewer/scopes/library/source")
         write_json(
             root / "docs-viewer/config/scopes/docs_scopes.json",
             {
-                "schema_version": "docs_scopes_v2",
+                "schema_version": "docs_scopes_v3",
                 "scopes": [
                     docs_scope_record(
                         "library",
                         scope_type="public",
-                        source_path="docs-viewer/source/missing-library",
                         viewer_base_url="/library/",
                         include_scope_param=False,
                         default_doc_id="library",
@@ -774,7 +775,7 @@ def test_missing_source_context_returns_structured_export_error() -> None:
     assert report["ok"] is False
     assert report["counts"] == {"selected": 0, "exported": 0, "skipped": 0, "failed": 0, "truncated": 0}
     assert report["output_written"] is False
-    assert "source context: missing source root for scope library: docs-viewer/source/missing-library/documents" in report["errors"]
+    assert "source context: missing source root for scope library: docs-viewer/scopes/library/source/documents" in report["errors"]
 
 
 def test_repo_representative_library_exports_dry_run_successfully() -> None:

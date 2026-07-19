@@ -105,6 +105,7 @@ def synthetic_review_config(
     return DocsScopeConfig(
         scope_id=package_id,
         scope_type=LOCAL_EXTERNAL_SCOPE_TYPE,
+        scope_root=ArtifactLocation(provider=EXTERNAL_LOCAL_PROVIDER, path=source_dir.parent),
         source=DocsSourceConfig(
             location=ArtifactLocation(provider=EXTERNAL_LOCAL_PROVIDER, path=source_dir),
             documents_path=Path("."),

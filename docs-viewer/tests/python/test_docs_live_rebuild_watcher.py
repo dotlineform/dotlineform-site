@@ -129,25 +129,25 @@ def test_watcher_reconciles_scope_and_sub_scope_state_from_config(tmp_path: Path
         changes = module.reconcile_watch_states(
             tmp_path,
             states,
-            {"notes": config("docs-viewer/source/notes")},
+            {"notes": config("docs-viewer/scopes/notes/source")},
             baseline=False,
         )
         assert changes == {"added": ["notes"], "removed": [], "reloaded": []}
-        assert states["notes"]["root"] == tmp_path / "docs-viewer/source/notes/documents"
+        assert states["notes"]["root"] == tmp_path / "docs-viewer/scopes/notes/source/documents"
 
         changes = module.reconcile_watch_states(
             tmp_path,
             states,
-            {"notes": config("external/source/notes")},
+            {"notes": config("external/scopes/notes/source")},
             baseline=False,
         )
         assert changes == {"added": [], "removed": [], "reloaded": ["notes"]}
-        assert states["notes"]["root"] == tmp_path / "external/source/notes/documents"
+        assert states["notes"]["root"] == tmp_path / "external/scopes/notes/source/documents"
 
         tags = SimpleNamespace(
             sub_scope="tags",
             source=SimpleNamespace(
-                location=SimpleNamespace(path=Path("external/source/archive/tags")),
+                location=SimpleNamespace(path=Path("external/scopes/notes/source/sub-scopes/tags")),
                 documents_path=Path("documents"),
             ),
         )
@@ -177,7 +177,7 @@ def test_watcher_registers_configured_mermaid_root_and_renders_only_changed_iden
     original_roots = dict(module.DOCUMENT_SOURCE_ROOTS)
     build = SimpleNamespace(path=Path("media/mermaid"), producer="mermaid", publishes_to="svg")
     source = SimpleNamespace(
-        location=SimpleNamespace(provider="repository", path=Path("docs-viewer/source/studio")),
+        location=SimpleNamespace(provider="repository", path=Path("docs-viewer/scopes/studio/source")),
         documents_path=Path("documents"),
         build_media={"mermaid": build},
     )
@@ -208,7 +208,7 @@ def test_watcher_registers_configured_mermaid_root_and_renders_only_changed_iden
             baseline=False,
         )
         media_state = states["studio/media/mermaid"]
-        assert media_state["root"] == tmp_path / "docs-viewer/source/studio/media/mermaid"
+        assert media_state["root"] == tmp_path / "docs-viewer/scopes/studio/source/media/mermaid"
         assert changes["added"] == ["studio", "studio/media/mermaid"]
         assert module.rebuild_build_media(
             tmp_path,

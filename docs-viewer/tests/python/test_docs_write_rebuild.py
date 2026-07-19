@@ -46,7 +46,7 @@ def with_fake_python(value: str = "/tmp/python"):
 def write_scope_config(path: Path, scopes: list[dict[str, object]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        json.dumps({"schema_version": "docs_scopes_v2", "scopes": scopes}, indent=2) + "\n",
+        json.dumps({"schema_version": "docs_scopes_v3", "scopes": scopes}, indent=2) + "\n",
         encoding="utf-8",
     )
 
@@ -97,7 +97,7 @@ def test_rebuild_scope_outputs_extracts_docs_and_search_diagnostics() -> None:
             stdout=(
                 "Targeted search index JSON done. Wrote: 1. Skipped: 0. "
                 "Changed: 2. Removed: 1. Unchanged: 3. Full fallback: 0. "
-                "Path: docs-viewer/published/search/studio/index.json\n"
+                "Path: docs-viewer/scopes/studio/published/search/index.json\n"
             )
         )
 
@@ -252,18 +252,18 @@ def test_targeted_docs_build_uses_index_tree_without_flat_index() -> None:
                 )
             ],
         )
-        source_root = repo_root / "docs-viewer/source/library/documents"
+        source_root = repo_root / "docs-viewer/scopes/library/source/documents"
         source_root.mkdir(parents=True)
         (source_root / "library.md").write_text("---\ndoc_id: library\ntitle: Library\n---\n# Library\n", encoding="utf-8")
         (source_root / "child.md").write_text("---\ndoc_id: child\ntitle: Child\n---\n# Child\n", encoding="utf-8")
-        (repo_root / "docs-viewer/published/docs/library/by-id").mkdir(parents=True)
-        (repo_root / "docs-viewer/published/docs/library/by-id/library.json").write_text("{}", encoding="utf-8")
-        (repo_root / "docs-viewer/published/docs/library/index-tree.json").write_text(
+        (repo_root / "docs-viewer/scopes/library/published/documents/by-id").mkdir(parents=True)
+        (repo_root / "docs-viewer/scopes/library/published/documents/by-id/library.json").write_text("{}", encoding="utf-8")
+        (repo_root / "docs-viewer/scopes/library/published/documents/index-tree.json").write_text(
             """{"docs":[{"doc_id":"library","children":[{"doc_id":"child"}]}]}""",
             encoding="utf-8",
         )
-        (repo_root / "docs-viewer/published/docs/library/references").mkdir(parents=True)
-        (repo_root / "docs-viewer/published/docs/library/references/index.json").write_text("{}", encoding="utf-8")
+        (repo_root / "docs-viewer/scopes/library/published/documents/references").mkdir(parents=True)
+        (repo_root / "docs-viewer/scopes/library/published/documents/references/index.json").write_text("{}", encoding="utf-8")
 
         reason = write_rebuild.targeted_docs_build_fallback_reason(repo_root, "library", ["child"])
 
@@ -286,19 +286,19 @@ def test_targeted_docs_build_falls_back_for_unindexed_source_without_payload() -
                 )
             ],
         )
-        source_root = repo_root / "docs-viewer/source/library/documents"
+        source_root = repo_root / "docs-viewer/scopes/library/source/documents"
         source_root.mkdir(parents=True)
         (source_root / "library.md").write_text("---\ndoc_id: library\ntitle: Library\n---\n# Library\n", encoding="utf-8")
         (source_root / "child.md").write_text("---\ndoc_id: child\ntitle: Child\n---\n# Child\n", encoding="utf-8")
         (source_root / "new.md").write_text("---\ndoc_id: new\ntitle: New\n---\n# New\n", encoding="utf-8")
-        (repo_root / "docs-viewer/published/docs/library/by-id").mkdir(parents=True)
-        (repo_root / "docs-viewer/published/docs/library/by-id/library.json").write_text("{}", encoding="utf-8")
-        (repo_root / "docs-viewer/published/docs/library/index-tree.json").write_text(
+        (repo_root / "docs-viewer/scopes/library/published/documents/by-id").mkdir(parents=True)
+        (repo_root / "docs-viewer/scopes/library/published/documents/by-id/library.json").write_text("{}", encoding="utf-8")
+        (repo_root / "docs-viewer/scopes/library/published/documents/index-tree.json").write_text(
             """{"docs":[{"doc_id":"library","children":[{"doc_id":"child"}]}]}""",
             encoding="utf-8",
         )
-        (repo_root / "docs-viewer/published/docs/library/references").mkdir(parents=True)
-        (repo_root / "docs-viewer/published/docs/library/references/index.json").write_text("{}", encoding="utf-8")
+        (repo_root / "docs-viewer/scopes/library/published/documents/references").mkdir(parents=True)
+        (repo_root / "docs-viewer/scopes/library/published/documents/references/index.json").write_text("{}", encoding="utf-8")
 
         reason = write_rebuild.targeted_docs_build_fallback_reason(repo_root, "library", ["child"])
 
@@ -331,7 +331,7 @@ def test_rebuild_scope_outputs_preserves_front_matter_failure_message() -> None:
     original_run = write_rebuild.subprocess.run
 
     def fake_run(_command, **_kwargs):
-        return Completed(returncode=1, stderr="problem with front-matter on doc docs-viewer/source/studio/documents/bad.md at line 7 column 1: could not find expected ':'")
+        return Completed(returncode=1, stderr="problem with front-matter on doc docs-viewer/scopes/studio/source/documents/bad.md at line 7 column 1: could not find expected ':'")
 
     write_rebuild.subprocess.run = fake_run
     try:
@@ -346,7 +346,7 @@ def test_rebuild_scope_outputs_preserves_front_matter_failure_message() -> None:
         write_rebuild.subprocess.run = original_run
         write_rebuild.PYTHON_EXECUTABLE = original_python
 
-    assert message == "problem with front-matter on doc docs-viewer/source/studio/documents/bad.md at line 7 column 1: could not find expected ':'"
+    assert message == "problem with front-matter on doc docs-viewer/scopes/studio/source/documents/bad.md at line 7 column 1: could not find expected ':'"
 
 
 def test_perform_source_write_and_rebuild_marks_pending_then_complete() -> None:
@@ -371,7 +371,7 @@ def test_perform_source_write_and_rebuild_marks_pending_then_complete() -> None:
     try:
         with tempfile.TemporaryDirectory() as temp_path:
             repo_root = Path(temp_path)
-            source_path = repo_root / "docs-viewer/source/studio/documents" / "child.md"
+            source_path = repo_root / "docs-viewer/scopes/studio/source/documents" / "child.md"
             source_path.parent.mkdir(parents=True)
             source_path.write_text("# Child\n", encoding="utf-8")
             result = write_rebuild.perform_source_write_and_rebuild(
@@ -403,7 +403,7 @@ def test_current_scope_source_root_uses_fresh_repo_config() -> None:
 
         root = write_rebuild.current_scope_source_root(repo_root, "fresh-scope")
 
-    assert root == repo_root / "docs-viewer/source/fresh-scope/documents"
+    assert root == repo_root / "docs-viewer/scopes/fresh-scope/source/documents"
 
 
 def test_perform_source_write_and_rebuild_clears_pending_on_exception() -> None:
@@ -424,7 +424,7 @@ def test_perform_source_write_and_rebuild_clears_pending_on_exception() -> None:
     try:
         with tempfile.TemporaryDirectory() as temp_path:
             repo_root = Path(temp_path)
-            source_path = repo_root / "docs-viewer/source/studio/documents" / "child.md"
+            source_path = repo_root / "docs-viewer/scopes/studio/source/documents" / "child.md"
             source_path.parent.mkdir(parents=True)
             source_path.write_text("# Child\n", encoding="utf-8")
             try:
@@ -468,7 +468,7 @@ def test_perform_source_write_and_rebuild_completes_only_reported_written_paths(
     try:
         with tempfile.TemporaryDirectory() as temp_path:
             repo_root = Path(temp_path)
-            source_root = repo_root / "docs-viewer/source/studio/documents"
+            source_root = repo_root / "docs-viewer/scopes/studio/source/documents"
             source_root.mkdir(parents=True)
             first = source_root / "first.md"
             second = source_root / "second.md"
@@ -567,14 +567,12 @@ def test_rebuild_all_docs_outputs_rejects_local_assets_outputs() -> None:
             repo_root = Path(temp_path)
             config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
             record = docs_scope_record("studio", default_doc_id="dev-home")
-            record["published"]["documents"]["location"]["path"] = "site/assets/data/docs/scopes/studio"
-            record["published"]["search"]["location"]["path"] = "site/assets/data/search/studio/index.json"
+            record["scope_root"]["path"] = "site/assets/data/docs/scopes/studio"
             write_scope_config(config_path, [record])
             try:
                 write_rebuild.rebuild_all_docs_outputs(repo_root)
             except ValueError as exc:
-                assert "scopes[0].published.documents" in str(exc)
-                assert "docs-viewer/published/docs" in str(exc)
+                assert "scopes[0].scope_root.path must be docs-viewer/scopes/studio" in str(exc)
             else:
                 raise AssertionError("Expected docs rebuild to reject a public path used for local published output")
     finally:

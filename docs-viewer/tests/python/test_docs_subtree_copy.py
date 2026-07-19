@@ -66,7 +66,7 @@ def write_doc(
     body: str | None = None,
     extra_front_matter: dict[str, object] | None = None,
 ) -> None:
-    root = repo_root / "docs-viewer/source" / scope / "documents"
+    root = repo_root / "docs-viewer/scopes" / scope / "source/documents"
     root.mkdir(parents=True, exist_ok=True)
     front_matter: dict[str, object] = {
         "doc_id": doc_id,
@@ -91,7 +91,7 @@ def make_repo(
     write_json(
         repo_root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v2",
+            "schema_version": "docs_scopes_v3",
             "scopes": [
                 scope_config("source", scope_type=source_type),
                 scope_config("target", scope_type=target_type),
@@ -121,13 +121,13 @@ def sequential_tokens(*tokens: str) -> subtree_copy.IdentityTokenFactory:
 def source_snapshot(repo_root: Path) -> dict[str, bytes]:
     return {
         path.relative_to(repo_root).as_posix(): path.read_bytes()
-        for path in sorted((repo_root / "docs-viewer/source").glob("**/*"))
+        for path in sorted((repo_root / "docs-viewer/scopes").glob("*/source/**/*"))
         if path.is_file()
     }
 
 
 def scope_snapshot(repo_root: Path, scope: str) -> dict[str, bytes]:
-    root = repo_root / "docs-viewer/source" / scope / "documents"
+    root = repo_root / "docs-viewer/scopes" / scope / "source/documents"
     return {
         path.name: path.read_bytes()
         for path in sorted(root.glob("*.md"))
@@ -402,7 +402,7 @@ def test_restore_copy_subtree_apply_plan_rejects_changed_source_and_config(tmp_p
         target_scope="target",
     )
     apply_plan = plan.apply_plan_payload()
-    root_path = repo_root / "docs-viewer/source/source/documents/root.md"
+    root_path = repo_root / "docs-viewer/scopes/source/source/documents/root.md"
     root_path.write_text(root_path.read_text(encoding="utf-8") + "Changed.\n", encoding="utf-8")
 
     with pytest.raises(ValueError, match="source content changed for 'root'"):
@@ -534,7 +534,7 @@ def test_copy_subtree_supports_external_local_target_root(
 ) -> None:
     projects_root = tmp_path / "projects"
     external_docs_root = projects_root / "docs-viewer"
-    target_root = external_docs_root / "source/target/documents"
+    target_root = external_docs_root / "scopes/target/source/documents"
     target_root.mkdir(parents=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", projects_root.as_posix())
     repo_root = make_repo(tmp_path)
@@ -663,7 +663,7 @@ def test_apply_copy_subtree_writes_only_target_and_coordinates_one_rebuild(
     ]
     target_front_matter = {
         path.stem: source_model.parse_source(path)[0]
-        for path in (repo_root / "docs-viewer/source/target/documents").glob("*.md")
+        for path in (repo_root / "docs-viewer/scopes/target/source/documents").glob("*.md")
         if path.stem in set(plan.id_map.values())
     }
     assert set(target_front_matter) == set(plan.id_map.values())
@@ -732,7 +732,7 @@ def test_repeated_copy_subtree_is_additive(tmp_path: Path) -> None:
 
     created_ids = [*first["created_doc_ids"], *second["created_doc_ids"]]
     assert len(created_ids) == len(set(created_ids)) == 8
-    assert all((repo_root / f"docs-viewer/source/target/documents/{doc_id}.md").exists() for doc_id in created_ids)
+    assert all((repo_root / f"docs-viewer/scopes/target/source/documents/{doc_id}.md").exists() for doc_id in created_ids)
     assert scope_snapshot(repo_root, "source") == source_before
 
 
@@ -799,10 +799,10 @@ def test_apply_copy_subtree_builds_loadable_and_searchable_target_outputs(tmp_pa
         activity_logger=lambda *_args, **_kwargs: None,
     )
 
-    output_root = repo_root / "docs-viewer/published/docs/target"
+    output_root = repo_root / "docs-viewer/scopes/target/published/documents"
     tree_payload = json.loads((output_root / "index-tree.json").read_text(encoding="utf-8"))
     search_payload = json.loads(
-        (repo_root / "docs-viewer/published/search/target/index.json").read_text(encoding="utf-8")
+        (repo_root / "docs-viewer/scopes/target/published/search/index.json").read_text(encoding="utf-8")
     )
 
     def tree_ids(records: list[dict[str, object]]) -> set[str]:
@@ -852,7 +852,7 @@ def test_apply_copy_subtree_rejects_changed_source_before_write(tmp_path: Path) 
         source_doc_id="root",
         target_scope="target",
     )
-    root_path = repo_root / "docs-viewer/source/source/documents/root.md"
+    root_path = repo_root / "docs-viewer/scopes/source/source/documents/root.md"
     root_path.write_text(root_path.read_text(encoding="utf-8") + "Changed after preview.\n", encoding="utf-8")
     target_before = scope_snapshot(repo_root, "target")
 
@@ -1011,7 +1011,7 @@ def test_plan_copy_subtree_rejects_missing_source_doc(tmp_path: Path) -> None:
 
 def test_plan_copy_subtree_rejects_unavailable_target_root(tmp_path: Path) -> None:
     repo_root = make_repo(tmp_path)
-    target_root = repo_root / "docs-viewer/source/target/documents"
+    target_root = repo_root / "docs-viewer/scopes/target/source/documents"
     for path in target_root.iterdir():
         path.unlink()
     target_root.rmdir()
@@ -1027,7 +1027,7 @@ def test_plan_copy_subtree_rejects_unavailable_target_root(tmp_path: Path) -> No
 
 def test_plan_copy_subtree_rejects_unavailable_source_root(tmp_path: Path) -> None:
     repo_root = make_repo(tmp_path)
-    source_root = repo_root / "docs-viewer/source/source/documents"
+    source_root = repo_root / "docs-viewer/scopes/source/source/documents"
     for path in source_root.iterdir():
         path.unlink()
     source_root.rmdir()
@@ -1046,7 +1046,7 @@ def test_plan_copy_subtree_rejects_non_writable_target_root(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     repo_root = make_repo(tmp_path)
-    target_root = (repo_root / "docs-viewer/source/target/documents").resolve()
+    target_root = (repo_root / "docs-viewer/scopes/target/source/documents").resolve()
     real_access = os.access
 
     def fake_access(path: os.PathLike[str] | str, mode: int) -> bool:

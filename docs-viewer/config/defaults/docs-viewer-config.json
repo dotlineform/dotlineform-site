@@ -23,13 +23,13 @@
           "served_path_prefix": "/docs/media/studio/svg"
         }
       },
-      "index_tree_url": "/docs-viewer/published/docs/studio/index-tree.json",
-      "recent_url": "/docs-viewer/published/docs/studio/recent.json",
-      "search_index_url": "/docs-viewer/published/search/studio/index.json",
+      "index_tree_url": "/docs-viewer/scopes/studio/published/documents/index-tree.json",
+      "recent_url": "/docs-viewer/scopes/studio/published/documents/recent.json",
+      "search_index_url": "/docs-viewer/scopes/studio/published/search/index.json",
       "search": {
         "domain": "docs_viewer",
         "schema": "search_index_studio_v1",
-        "index_url": "/docs-viewer/published/search/studio/index.json",
+        "index_url": "/docs-viewer/scopes/studio/published/search/index.json",
         "targeted_policy": "record_update",
         "targeted_operations": [
           "create",
@@ -63,13 +63,13 @@
           "served_path_prefix": "/assets/data/docs/scopes/library/media/svg"
         }
       },
-      "index_tree_url": "/docs-viewer/published/docs/library/index-tree.json",
-      "recent_url": "/docs-viewer/published/docs/library/recent.json",
-      "search_index_url": "/docs-viewer/published/search/library/index.json",
+      "index_tree_url": "/docs-viewer/scopes/library/published/documents/index-tree.json",
+      "recent_url": "/docs-viewer/scopes/library/published/documents/recent.json",
+      "search_index_url": "/docs-viewer/scopes/library/published/search/index.json",
       "search": {
         "domain": "docs_viewer",
         "schema": "search_index_library_v1",
-        "index_url": "/docs-viewer/published/search/library/index.json",
+        "index_url": "/docs-viewer/scopes/library/published/search/index.json",
         "targeted_policy": "record_update",
         "targeted_operations": [
           "create",
@@ -99,13 +99,13 @@
           "served_path_prefix": "/assets/data/docs/scopes/analysis/media/svg"
         }
       },
-      "index_tree_url": "/docs-viewer/published/docs/analysis/index-tree.json",
-      "recent_url": "/docs-viewer/published/docs/analysis/recent.json",
-      "search_index_url": "/docs-viewer/published/search/analysis/index.json",
+      "index_tree_url": "/docs-viewer/scopes/analysis/published/documents/index-tree.json",
+      "recent_url": "/docs-viewer/scopes/analysis/published/documents/recent.json",
+      "search_index_url": "/docs-viewer/scopes/analysis/published/search/index.json",
       "search": {
         "domain": "docs_viewer",
         "schema": "search_index_analysis_v1",
-        "index_url": "/docs-viewer/published/search/analysis/index.json",
+        "index_url": "/docs-viewer/scopes/analysis/published/search/index.json",
         "targeted_policy": "record_update",
         "targeted_operations": [
           "create",
@@ -143,13 +143,13 @@
           "served_path_prefix": "/assets/data/docs/scopes/moments/media/svg"
         }
       },
-      "index_tree_url": "/docs-viewer/published/docs/moments/index-tree.json",
-      "recent_url": "/docs-viewer/published/docs/moments/recent.json",
-      "search_index_url": "/docs-viewer/published/search/moments/index.json",
+      "index_tree_url": "/docs-viewer/scopes/moments/published/documents/index-tree.json",
+      "recent_url": "/docs-viewer/scopes/moments/published/documents/recent.json",
+      "search_index_url": "/docs-viewer/scopes/moments/published/search/index.json",
       "search": {
         "domain": "docs_viewer",
         "schema": "search_index_moments_v1",
-        "index_url": "/docs-viewer/published/search/moments/index.json",
+        "index_url": "/docs-viewer/scopes/moments/published/search/index.json",
         "targeted_policy": "record_update",
         "targeted_operations": [
           "create",
@@ -215,13 +215,13 @@
           "served_path_prefix": "/docs/media/processing/svg"
         }
       },
-      "index_tree_url": "/docs-viewer/published/docs/processing/index-tree.json",
-      "recent_url": "/docs-viewer/published/docs/processing/recent.json",
-      "search_index_url": "/docs-viewer/published/search/processing/index.json",
+      "index_tree_url": "/docs-viewer/scopes/processing/published/documents/index-tree.json",
+      "recent_url": "/docs-viewer/scopes/processing/published/documents/recent.json",
+      "search_index_url": "/docs-viewer/scopes/processing/published/search/index.json",
       "search": {
         "domain": "docs_viewer",
         "schema": "search_index_processing_v1",
-        "index_url": "/docs-viewer/published/search/processing/index.json",
+        "index_url": "/docs-viewer/scopes/processing/published/search/index.json",
         "targeted_policy": "record_update",
         "targeted_operations": [
           "create",

@@ -19,10 +19,7 @@ from docs_scope_config import (
     LOCAL_EXTERNAL_SCOPE_TYPE,
     load_docs_scope_configs,
     path_label,
-    published_documents_path,
-    published_search_path,
     resolve_external_data_root,
-    source_container_path,
 )
 from docs_scope_external_validation import external_scope_id_sync_blocker
 from docs_scope_manifest import (
@@ -55,17 +52,13 @@ def scope_rename_eligible(config: Any, manifest_record: dict[str, Any] | None) -
 
 def external_scope_roots(external_root: Path, scope_id: str) -> dict[str, Path]:
     return {
-        "source_root": external_root / "source" / scope_id,
-        "published_docs_root": external_root / "published" / "docs" / scope_id,
-        "published_search_root": external_root / "published" / "search" / scope_id,
+        "scope_root": external_root / "scopes" / scope_id,
     }
 
 
 def expected_config_paths(scope_id: str) -> dict[str, str]:
     return {
-        "source_root": f"{EXTERNAL_DATA_ROOT_MARKER}/source/{scope_id}",
-        "published_docs_root": f"{EXTERNAL_DATA_ROOT_MARKER}/published/docs/{scope_id}",
-        "published_search_root": f"{EXTERNAL_DATA_ROOT_MARKER}/published/search/{scope_id}",
+        "scope_root": f"{EXTERNAL_DATA_ROOT_MARKER}/scopes/{scope_id}",
         "media_reference_root": f"docs/{scope_id}",
         "media_served_root": f"/docs/media/{scope_id}",
     }
@@ -94,21 +87,16 @@ def _rename_scope_role_paths(
     old_paths: dict[str, str],
     new_paths: dict[str, str],
 ) -> None:
-    source = record.get("source")
-    _rename_location(source, old_paths["source_root"], new_paths["source_root"])
+    scope_root = record.get("scope_root")
+    if isinstance(scope_root, dict):
+        scope_root["path"] = _renamed_config_path(
+            scope_root.get("path"),
+            old_paths["scope_root"],
+            new_paths["scope_root"],
+        )
 
     published = record.get("published")
     if isinstance(published, dict):
-        _rename_location(
-            published.get("documents"),
-            old_paths["published_docs_root"],
-            new_paths["published_docs_root"],
-        )
-        _rename_location(
-            published.get("search"),
-            old_paths["published_search_root"],
-            new_paths["published_search_root"],
-        )
         media = published.get("media")
         if isinstance(media, dict):
             for media_record in media.values():
@@ -118,11 +106,6 @@ def _rename_scope_role_paths(
                     media_record.get("reference_prefix"),
                     old_paths["media_reference_root"],
                     new_paths["media_reference_root"],
-                )
-                _rename_location(
-                    media_record,
-                    old_paths["published_docs_root"],
-                    new_paths["published_docs_root"],
                 )
                 media_record["served_path_prefix"] = _renamed_config_path(
                     media_record.get("served_path_prefix"),
@@ -200,16 +183,12 @@ def plan_rename_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
             blockers.append(sync_blocker)
         old_roots = external_scope_roots(external_root, old_scope_id)
         new_roots = external_scope_roots(external_root, new_scope_id)
-        configured_paths = {
-            "source_root": source_container_path(config),
-            "published_docs_root": published_documents_path(config),
-            "published_search_root": published_search_path(config).parent,
-        }
+        configured_paths = {"scope_root": config.scope_root.path}
         for kind, configured_path in configured_paths.items():
             if configured_path.resolve() != old_roots[kind].resolve():
                 blockers.append(f"configured {kind.replace('_', ' ')} does not match the lifecycle-owned external path")
-        if not _path_present(old_roots["source_root"]):
-            blockers.append("external source root does not exist")
+        if not _path_present(old_roots["scope_root"]):
+            blockers.append("external scope root does not exist")
         for kind, target in new_roots.items():
             if _path_present(target):
                 blockers.append(f"rename target already exists: {kind.replace('_', ' ')}")
@@ -324,7 +303,7 @@ def _move_external_roots(
     new_roots: dict[str, Path],
 ) -> list[dict[str, str]]:
     moved: list[dict[str, str]] = []
-    for kind in ("published_docs_root", "published_search_root", "source_root"):
+    for kind in ("scope_root",):
         source = old_roots[kind]
         target = new_roots[kind]
         if not _path_present(source):

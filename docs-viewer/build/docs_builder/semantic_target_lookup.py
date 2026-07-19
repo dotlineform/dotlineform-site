@@ -16,7 +16,9 @@ from .semantic_registry import (
 
 
 SEMANTIC_TARGET_LOOKUP_SCHEMA_VERSION = "docs_semantic_reference_target_lookup_v1"
-DEFAULT_SEMANTIC_TARGET_LOOKUP_PATH = Path("docs-viewer/published/semantic-references/target-lookup.json")
+DEFAULT_SEMANTIC_TARGET_LOOKUP_PATH = Path(
+    "docs-viewer/data/generated/semantic-references/target-lookup.json"
+)
 
 CATALOGUE_KIND_SOURCES = {
     "work": {

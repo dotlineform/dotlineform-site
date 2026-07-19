@@ -2,8 +2,8 @@
 
 - Ask for confirmation before edits unless the request is trivial or the user has explicitly asked for the edit.
 - For code changes, summarize the intended change set and ask for confirmation before editing unless the request is trivial.
-- Use `docs-viewer/source/studio/documents/d-20260523-190651-7157ec.md` as the project implementation checklist. Keep durable repo guardrails there.
-- Use `docs-viewer/source/studio/documents/d-20260523-000000-bf7161.md` when lifecycle decisions, roadmap deliveries, task trackers, or closeout state need more context.
+- Use `docs-viewer/scopes/studio/source/documents/d-20260523-190651-7157ec.md` as the project implementation checklist. Keep durable repo guardrails there.
+- Use `docs-viewer/scopes/studio/source/documents/d-20260523-000000-bf7161.md` when lifecycle decisions, roadmap deliveries, task trackers, or closeout state need more context.
 - Compatibility aliases are prohibited unless justified before implementation with removal criteria.
 - If you find compatibility layers during new feature development, report and fix them immediately when non-trivial.
 - Tests and documents are not contracts for deciding how to implement code. They should follow current development objectives unless a constraint has been called out and agreed.
@@ -11,7 +11,7 @@
 - When discussing options, explain tradeoffs in a way that helps the user decide and iterate requirements.
 - Prefer targeted file reads, scoped diffs, and concise command output over broad searches or full diffs.
 - The public site has no deploy-time build or copy step: `site/` is the tracked GitHub Pages artifact. Local apps and `/docs/` may share site-owned config, CSS, and runtime files through explicit service route mapping, especially Docs Viewer public/shared assets.
-- For long multi-batch work, or before a long thread reaches context limits, produce a handoff with changed files, decisions made, remaining tasks, commands run, and known risks. Keep the delivery document to current/next state, checkboxes, decisions, and completion gates. When detailed working notes, scan inventories, or reusable verification history must survive between sessions, put them in temporary sibling documents, link them from the active delivery, and retire them at closeout as defined in `docs-viewer/source/studio/documents/d-20260523-000000-bf7161.md`.
+- For long multi-batch work, or before a long thread reaches context limits, produce a handoff with changed files, decisions made, remaining tasks, commands run, and known risks. Keep the delivery document to current/next state, checkboxes, decisions, and completion gates. When detailed working notes, scan inventories, or reusable verification history must survive between sessions, put them in temporary sibling documents, link them from the active delivery, and retire them at closeout as defined in `docs-viewer/scopes/studio/source/documents/d-20260523-000000-bf7161.md`.
 - For material new changes, requirements, or refactors, state the main benefits and risks. For trivial or mechanical edits, a short summary is enough.
 
 ## Processing Project Boundary
@@ -38,8 +38,8 @@
 
 ## Checks And Test Policy
 
-- Use `docs-viewer/source/studio/documents/d-20260501-174746-efd581.md`, `docs-viewer/source/studio/documents/d-20260514-135716-c70591.md`, and `docs-viewer/source/studio/documents/d-20260501-000000-49b626.md` as the maintained test policy.
-- `docs-viewer/source/studio/documents/d-20260627-212121-7cf7de.md` determines approach for subsequent testing and review of existing tests.
+- Use `docs-viewer/scopes/studio/source/documents/d-20260501-174746-efd581.md`, `docs-viewer/scopes/studio/source/documents/d-20260514-135716-c70591.md`, and `docs-viewer/scopes/studio/source/documents/d-20260501-000000-49b626.md` as the maintained test policy.
+- `docs-viewer/scopes/studio/source/documents/d-20260627-212121-7cf7de.md` determines approach for subsequent testing and review of existing tests.
 - Choose the smallest check that proves the changed contract. Do not run broad profiles just to produce more evidence.
 - Leave UI design testing to the user unless specifically requested; browser probes are brittle.
 - Before adding or expanding a permanent test, apply the review gate:
@@ -73,7 +73,7 @@
 
 ## Security And Sanitization
 
-- Use `docs-viewer/source/studio/documents/d-20260523-190651-7157ec.md` for sanitization triggers and local write-service safety.
+- Use `docs-viewer/scopes/studio/source/documents/d-20260523-190651-7157ec.md` for sanitization triggers and local write-service safety.
 - When a focused scan is needed for changed files, use:
   - `rg -n "/Users/|/home/|C:\\\\|miniconda|rbenv|api[_-]?key|token|secret|password|PRIVATE KEY" <changed-files>`
 

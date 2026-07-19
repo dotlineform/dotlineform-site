@@ -43,7 +43,7 @@ def write_source_doc(
     if not viewable:
         lines.append("viewable: false")
     lines.extend(["---", "", f"# {title}", "", body])
-    path = root / "docs-viewer/source/library/documents" / filename
+    path = root / "docs-viewer/scopes/library/source/documents" / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(lines), encoding="utf-8")
 
@@ -52,44 +52,36 @@ def write_docs_scope_config(root: Path) -> None:
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v2",
+            "schema_version": "docs_scopes_v3",
             "scopes": [
                 {
                     "scope_id": "library",
                     "scope_type": "public",
+                    "scope_root": {
+                        "provider": "repository",
+                        "path": "docs-viewer/scopes/library",
+                    },
                     "source": {
-                        "location": {"provider": "repository", "path": "docs-viewer/source/library"},
-                        "documents_path": "documents",
                         "build_media": {},
-                        "sub_scopes_path": "sub-scopes",
                     },
                     "published": {
-                        "documents": {
-                            "location": {"provider": "repository", "path": "docs-viewer/published/docs/library"}
-                        },
-                        "search": {
-                            "location": {
-                                "provider": "repository",
-                                "path": "docs-viewer/published/search/library/index.json",
-                            }
-                        },
                         "media": {
                             "img": {
                                 "reference_prefix": "docs/library/img",
                                 "location": {
                                     "provider": "repository",
-                                    "path": "docs-viewer/source/library/media/img",
+                                    "path": "site/assets/data/docs/scopes/library/media/img",
                                 },
-                                "served_path_prefix": "/docs/media/library/img",
+                                "served_path_prefix": "/assets/data/docs/scopes/library/media/img",
                                 "build_inputs": [],
                             },
                             "files": {
                                 "reference_prefix": "docs/library/files",
                                 "location": {
-                                    "provider": "repository",
-                                    "path": "docs-viewer/source/library/media/files",
+                                    "provider": "r2",
+                                    "path": "docs/library/files",
                                 },
-                                "served_path_prefix": "/docs/media/library/files",
+                                "served_path_prefix": "https://media.example.test/docs/library/files",
                                 "build_inputs": [],
                             },
                         },

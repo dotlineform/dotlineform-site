@@ -41,11 +41,13 @@ def scope_config(
     include_scope_param: bool = True,
     allow_unresolved_parent_ids: bool = False,
 ) -> dict[str, object]:
+    scope_root = Path(source).parent.as_posix() if source else f"docs-viewer/scopes/{scope_id}"
+    if output is not None and output != f"{scope_root}/published/documents":
+        raise ValueError("fixture output must be derived from scope_root")
     return docs_scope_record(
         scope_id,
         scope_type="local" if include_scope_param else "public",
-        source_path=source,
-        published_docs_path=output,
+        scope_root_path=scope_root,
         viewer_base_url=viewer_base_url,
         include_scope_param=include_scope_param,
         default_doc_id=scope_id,
@@ -66,7 +68,7 @@ def write_scope_config(root: Path, scopes: list[dict[str, object]]) -> None:
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v2",
+            "schema_version": "docs_scopes_v3",
             "scopes": scopes,
         },
     )
@@ -106,7 +108,7 @@ def write_doc(
     if ui_status:
         lines.append(f"ui_status: {ui_status}")
     lines.extend(["---", "", body])
-    write_text(root / f"docs-viewer/source/{scope}/documents/{filename}", "\n".join(lines))
+    write_text(root / f"docs-viewer/scopes/{scope}/source/documents/{filename}", "\n".join(lines))
 
 
 def test_source_records_include_locked_fields_and_rendered_text() -> None:
@@ -146,7 +148,7 @@ def test_source_records_include_locked_fields_and_rendered_text() -> None:
     assert child.parent_id == "parent"
     assert child.parent_title == "Parent"
     assert child.ui_status == "draft"
-    assert child.source_path == "docs-viewer/source/studio/documents/child.md"
+    assert child.source_path == "docs-viewer/scopes/studio/source/documents/child.md"
     assert child.viewer_url == "/docs/?scope=studio&doc=child"
     assert child.content_text_length == len("Details\n\nChild body with parent.")
     assert rendered_content.doc_headings(context, "child") == ["Details"]
@@ -163,8 +165,8 @@ def test_source_context_uses_scope_config_without_scope_name_branches() -> None:
                 scope_config("studio"),
                 scope_config(
                     "research",
-                    source="docs-viewer/source/research",
-                    output="docs-viewer/published/docs/research",
+                    source="docs-viewer/scopes/research/source",
+                    output="docs-viewer/scopes/research/published/documents",
                     viewer_base_url="/research/",
                     include_scope_param=False,
                 ),
@@ -325,7 +327,7 @@ def test_unknown_doc_path_safety() -> None:
         else:
             raise AssertionError("Expected unsafe unknown doc_id to be rejected")
 
-    assert context.records_by_id["nested-doc"].source_path == "docs-viewer/source/nested/documents/nested-doc.md"
+    assert context.records_by_id["nested-doc"].source_path == "docs-viewer/scopes/nested/source/documents/nested-doc.md"
 
 
 def test_nested_source_markdown_is_rejected() -> None:

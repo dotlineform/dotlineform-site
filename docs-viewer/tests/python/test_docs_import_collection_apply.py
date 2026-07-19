@@ -162,10 +162,10 @@ def test_collection_apply_creates_overwrites_skips_reports_and_rebuilds_once(mon
             rebuild=fake_rebuild(rebuild_calls),
             logs=logs,
         )
-        alpha_front_matter, alpha_body = docs_source_model.parse_source(root / "docs-viewer/source/library/documents/alpha.md")
+        alpha_front_matter, alpha_body = docs_source_model.parse_source(root / "docs-viewer/scopes/library/source/documents/alpha.md")
         new_doc_id = payload["records"][1]["doc_id"]
         new_front_matter, new_body = docs_source_model.parse_source(
-                root / "docs-viewer/source/library/documents" / f"{new_doc_id}.md"
+                root / "docs-viewer/scopes/library/source/documents" / f"{new_doc_id}.md"
         )
         report_path = configured_workspace_paths(root).root / str(payload["report_path"]).split("data-sharing/", 1)[1]
         report_text = report_path.read_text(encoding="utf-8")
@@ -372,7 +372,7 @@ def test_preserve_existing_apply_uses_current_body_without_revision_reconfirmati
             log_event=lambda *_args: None,
             perform_source_write_and_rebuild=fake_rebuild(rebuild_calls),
         )
-        front_matter, body = docs_source_model.parse_source(root / "docs-viewer/source/library/documents/preserved.md")
+        front_matter, body = docs_source_model.parse_source(root / "docs-viewer/scopes/library/source/documents/preserved.md")
 
     assert payload["preview_only"] is False
     assert payload["records"][0]["status"] == "overwritten"
@@ -408,7 +408,7 @@ def test_collection_apply_stops_after_source_failure_and_rebuilds_completed_writ
         payload = apply_package(root, "partial.jsonl", [], rebuild=fake_rebuild(rebuild_calls))
         result_ids = [record["doc_id"] for record in payload["records"]]
         delta_exists, epsilon_exists, zeta_exists = [
-                (root / "docs-viewer/source/library/documents" / f"{doc_id}.md").exists()
+                (root / "docs-viewer/scopes/library/source/documents" / f"{doc_id}.md").exists()
             for doc_id in result_ids
         ]
 
@@ -442,7 +442,7 @@ def test_collection_apply_keeps_source_success_when_generation_or_report_write_f
             rebuild=fake_rebuild(rebuild_calls, fail_generation=True),
         )
         source_exists = (
-            root / "docs-viewer/source/library/documents" / f"{payload['records'][0]['doc_id']}.md"
+            root / "docs-viewer/scopes/library/source/documents" / f"{payload['records'][0]['doc_id']}.md"
         ).exists()
 
     assert source_exists is True
@@ -492,7 +492,7 @@ def test_collection_apply_materializes_inline_media_and_blocks_source_when_publi
         local_doc_id = payload["records"][0]["doc_id"]
         media_path = root / "site/assets/data/docs/scopes/library/media/img" / f"{local_doc_id}-image-01.png"
         _front_matter, body = docs_source_model.parse_source(
-                root / "docs-viewer/source/library/documents" / f"{payload['records'][0]['doc_id']}.md"
+                root / "docs-viewer/scopes/library/source/documents" / f"{payload['records'][0]['doc_id']}.md"
         )
         media_bytes = media_path.read_bytes()
 
@@ -524,7 +524,7 @@ def test_collection_apply_materializes_inline_media_and_blocks_source_when_publi
         )
         asset_failure = apply_package(root, "asset-failure.jsonl", [], rebuild=fake_rebuild([]))
         asset_doc_id = asset_failure["records"][0]["doc_id"]
-        source_path = root / "docs-viewer/source/library/documents" / f"{asset_doc_id}.md"
+        source_path = root / "docs-viewer/scopes/library/source/documents" / f"{asset_doc_id}.md"
         source_exists = source_path.exists()
 
     assert source_exists is False

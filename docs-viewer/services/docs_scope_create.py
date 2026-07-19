@@ -20,6 +20,9 @@ from docs_route_lifecycle import (
 from docs_scope_config import (
     CONFIG_REL_PATH,
     EXTERNAL_DATA_ROOT_MARKER,
+    PUBLISHED_MEDIA_PATH,
+    SCOPE_SOURCE_PATH,
+    SOURCE_DOCUMENTS_PATH,
     load_docs_scope_configs,
     resolve_external_data_root,
 )
@@ -40,16 +43,16 @@ from docs_scope_manifest import (
     append_scope_manifest_record,
     default_source_doc_text,
     load_manifest,
+    local_scope_root_path,
     local_published_docs_output_path,
     local_published_search_index_path,
     manifest_scopes_by_id,
     normalize_publishing_mode,
     normalize_scope_id,
-    normalize_source_root,
+    normalize_scope_root,
     normalize_title,
-    planned_external_source_root,
+    planned_external_scope_root,
     planned_scope_config_record,
-    planned_source_output_path,
     planned_storage_contract,
     public_projection_docs_output_path,
     public_projection_search_index_path,
@@ -93,17 +96,16 @@ def apply_create_scope(
     preview = plan_create_scope_preview(repo_root, body)
     manifest = load_manifest(repo_root)
     scope_id = str(preview["scope_id"])
-    source_root = planned_source_output_path(repo_root, preview["planned_scope_config"])
-    raw_source = preview["planned_scope_config"]["source"]
-    documents_root = source_root / str(raw_source["documents_path"])
-    sub_scopes_root = source_root / str(raw_source["sub_scopes_path"])
+    scope_root = local_scope_root_path(repo_root, preview["planned_scope_config"])
+    source_root = scope_root / SCOPE_SOURCE_PATH
+    documents_root = source_root / SOURCE_DOCUMENTS_PATH
     default_doc_path = documents_root / f"{preview['planned_scope_config']['default_doc_id']}.md"
     rebuild = None
 
     if not dry_run:
-        source_root.mkdir(parents=True, exist_ok=False)
+        scope_root.mkdir(parents=True, exist_ok=False)
+        source_root.mkdir(exist_ok=False)
         documents_root.mkdir(exist_ok=False)
-        sub_scopes_root.mkdir(exist_ok=False)
         write_text_atomic(
             default_doc_path,
             default_source_doc_text(
@@ -198,15 +200,15 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         sync_blocker = external_scope_id_sync_blocker(scope_id, external_data_root)
         if sync_blocker:
             raise ValueError(sync_blocker)
-    source_root = (
-        planned_external_source_root(scope_id, external_data_root)
+    scope_root = (
+        planned_external_scope_root(scope_id, external_data_root)
         if external_data_root is not None
-        else normalize_source_root(body.get("source_root"), scope_id)
+        else normalize_scope_root(body.get("scope_root"), scope_id)
     )
     public_route_path = normalize_route_path(body.get("public_route_path")) if publishing_mode == PUBLIC_MODE else ""
     planned_scope_config = planned_scope_config_record(
         scope_id,
-        source_root,
+        scope_root,
         public_route_path,
         default_doc_id,
         publishing_mode,
@@ -222,26 +224,27 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
     if scope_id in manifest_scopes_by_id(manifest):
         raise ValueError(f"scope_id {scope_id!r} already exists in docs scope manifest")
 
-    created_source_root = planned_source_output_path(repo_root, planned_scope_config)
-    raw_source = planned_scope_config["source"]
-    created_documents_root = created_source_root / str(raw_source["documents_path"])
-    created_sub_scopes_root = created_source_root / str(raw_source["sub_scopes_path"])
+    created_scope_root = local_scope_root_path(repo_root, planned_scope_config)
+    created_source_root = created_scope_root / SCOPE_SOURCE_PATH
+    created_documents_root = created_source_root / SOURCE_DOCUMENTS_PATH
     created_files = [
+        path_record(repo_root, "scope_root", created_scope_root, action="create"),
         path_record(repo_root, "source_root", created_source_root, action="create"),
         path_record(repo_root, "source_documents_root", created_documents_root, action="create"),
         path_record(repo_root, "default_source_doc", created_documents_root / f"{default_doc_id}.md", action="create"),
-        path_record(repo_root, "source_sub_scopes_root", created_sub_scopes_root, action="create"),
     ]
     docs_output = local_published_docs_output_path(repo_root, planned_scope_config)
     raw_media = planned_scope_config["published"]["media"]
     for media_type, media in raw_media.items():
-        location = media["location"]
-        provider = str(location["provider"])
+        location = media.get("location")
+        provider = str(location["provider"]) if isinstance(location, dict) else str(
+            planned_scope_config["scope_root"]["provider"]
+        )
         if provider == "r2":
             continue
         media_path = (
-            docs_output / "media" / media_type
-            if provider == "external_local"
+            created_scope_root / PUBLISHED_MEDIA_PATH / media_type
+            if not isinstance(location, dict)
             else repo_root / str(location["path"])
         )
         created_files.append(

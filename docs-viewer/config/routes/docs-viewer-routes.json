@@ -76,9 +76,9 @@
         "management": { "base_url": "" }
       },
       "docs_paths": {
-        "index_tree_url": "/docs-viewer/published/docs/studio/index-tree.json",
-        "recent_url": "/docs-viewer/published/docs/studio/recent.json",
-        "search_index_url": "/docs-viewer/published/search/studio/index.json"
+        "index_tree_url": "/docs-viewer/scopes/studio/published/documents/index-tree.json",
+        "recent_url": "/docs-viewer/scopes/studio/published/documents/recent.json",
+        "search_index_url": "/docs-viewer/scopes/studio/published/search/index.json"
       },
       "config_urls": {
         "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-config.json",

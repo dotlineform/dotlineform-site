@@ -2,7 +2,7 @@
 
 Put focused browser smoke scripts here when a Studio or site UI change needs repeatable Codex-run coverage.
 
-Smoke checks should stay small and route-specific. Use `docs-viewer/source/studio/documents/d-20260501-000000-49b626.md` for readiness, hit-testing, and setup-action rules.
+Smoke checks should stay small and route-specific. Use `docs-viewer/scopes/studio/source/documents/d-20260501-000000-49b626.md` for readiness, hit-testing, and setup-action rules.
 
 Prefer naming scripts by the route or workflow they cover, for example:
 

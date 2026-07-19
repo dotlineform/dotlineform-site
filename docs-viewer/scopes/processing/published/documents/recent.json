@@ -6,19 +6,19 @@
     {
       "doc_id": "d-20260714-164200-381988",
       "title": "Processing Project Setup",
-      "content_url": "/docs-viewer/published/docs/processing/by-id/d-20260714-164200-381988.json",
-      "timestamp": "2026-07-17 21:30:19"
+      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-164200-381988.json",
+      "timestamp": "2026-07-19 22:41:57"
     },
     {
       "doc_id": "d-20260714-174600-cedc85",
       "title": "InkEngine",
-      "content_url": "/docs-viewer/published/docs/processing/by-id/d-20260714-174600-cedc85.json",
+      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-174600-cedc85.json",
       "timestamp": "2026-07-14 19:09:49"
     },
     {
       "doc_id": "d-20260714-181200-ca6556",
       "title": "De Bruijn B8 3 Linear",
-      "content_url": "/docs-viewer/published/docs/processing/by-id/d-20260714-181200-ca6556.json",
+      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-181200-ca6556.json",
       "timestamp": "2026-07-14 18:21:12",
       "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted"
@@ -26,13 +26,13 @@
     {
       "doc_id": "d-20260714-180800-4dcaca",
       "title": "files",
-      "content_url": "/docs-viewer/published/docs/processing/by-id/d-20260714-180800-4dcaca.json",
+      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-180800-4dcaca.json",
       "timestamp": "2026-07-14 18:21:12"
     },
     {
       "doc_id": "d-20260714-180700-4bb3af",
       "title": "N7 Subset Selection Strategies",
-      "content_url": "/docs-viewer/published/docs/processing/by-id/d-20260714-180700-4bb3af.json",
+      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-180700-4bb3af.json",
       "timestamp": "2026-07-14 18:21:12",
       "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files"
@@ -40,7 +40,7 @@
     {
       "doc_id": "d-20260714-180700-5d809c",
       "title": "N9 Sjt 1min All Fps",
-      "content_url": "/docs-viewer/published/docs/processing/by-id/d-20260714-180700-5d809c.json",
+      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-180700-5d809c.json",
       "timestamp": "2026-07-14 18:21:12",
       "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files"
@@ -48,7 +48,7 @@
     {
       "doc_id": "d-20260714-180700-b5896f",
       "title": "Permutation Subsets Fps 24 25 30 60",
-      "content_url": "/docs-viewer/published/docs/processing/by-id/d-20260714-180700-b5896f.json",
+      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-180700-b5896f.json",
       "timestamp": "2026-07-14 18:21:12",
       "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files"
@@ -56,7 +56,7 @@
     {
       "doc_id": "d-20260714-180700-5ba007",
       "title": "Permutation Subsets N7 N8 With Durations",
-      "content_url": "/docs-viewer/published/docs/processing/by-id/d-20260714-180700-5ba007.json",
+      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-180700-5ba007.json",
       "timestamp": "2026-07-14 18:21:12",
       "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files"
@@ -64,7 +64,7 @@
     {
       "doc_id": "d-20260714-180700-c98a19",
       "title": "Permutations 3to6 Indexed",
-      "content_url": "/docs-viewer/published/docs/processing/by-id/d-20260714-180700-c98a19.json",
+      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-180700-c98a19.json",
       "timestamp": "2026-07-14 18:21:12",
       "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files"
@@ -72,11 +72,11 @@
     {
       "doc_id": "d-20260714-180700-a15d97",
       "title": "Permutations 3to6 With Counts",
-      "content_url": "/docs-viewer/published/docs/processing/by-id/d-20260714-180700-a15d97.json",
+      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-180700-a15d97.json",
       "timestamp": "2026-07-14 18:21:12",
       "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files"
     }
   ],
-  "generated_at": "2026-07-17T20:40:52Z"
+  "generated_at": "2026-07-19T21:44:30Z"
 }

@@ -39,14 +39,14 @@ def _configure_mermaid_fixture(root: Path) -> None:
     record["published"]["media"]["svg"]["build_inputs"] = ["mermaid"]  # type: ignore[index]
     write_docs_scope_config(root, [record])
 
-    doc_path = root / "docs-viewer/source/library/documents/library.md"
+    doc_path = root / "docs-viewer/scopes/library/source/documents/library.md"
     doc_path.write_text(
         doc_path.read_text(encoding="utf-8")
         + "\n![Architecture]([[media:docs/library/svg/architecture.svg]])\n"
         + "![Missing]([[media:docs/library/svg/missing.svg]])\n",
         encoding="utf-8",
     )
-    source = root / "docs-viewer/source/library/media/mermaid/architecture.mmd"
+    source = root / "docs-viewer/scopes/library/source/media/mermaid/architecture.mmd"
     source.parent.mkdir(parents=True)
     source.write_text("flowchart LR\nA --> B\n", encoding="utf-8")
     published = root / "site/assets/data/docs/scopes/library/media/svg/architecture.svg"
@@ -107,7 +107,7 @@ def test_open_diagram_source_rederives_registered_local_source_without_returning
 
     assert status == HTTPStatus.OK
     assert calls[0][:3] == ["open", "-a", "Visual Studio Code"]
-    assert Path(calls[0][3]) == (root / "docs-viewer/source/library/media/mermaid/architecture.mmd").resolve()
+    assert Path(calls[0][3]) == (root / "docs-viewer/scopes/library/source/media/mermaid/architecture.mmd").resolve()
     assert payload["source_identity"] == "architecture.mmd"
     assert "path" not in payload
     assert str(root) not in str(payload)
@@ -144,7 +144,7 @@ def test_open_diagram_source_failure_does_not_expose_the_physical_path(
             lambda *_args, **_kwargs: SimpleNamespace(
                 returncode=1,
                 stdout="",
-                stderr=f"could not open {root}/docs-viewer/source/library/media/mermaid/architecture.mmd",
+                stderr=f"could not open {root}/docs-viewer/scopes/library/source/media/mermaid/architecture.mmd",
             ),
         )
 

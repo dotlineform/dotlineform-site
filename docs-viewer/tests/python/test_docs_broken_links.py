@@ -32,7 +32,7 @@ def load_docs_broken_links_module():
 
 docs_broken_links = load_docs_broken_links_module()
 FIXTURE_SCOPE_OUTPUT_DIRS = {
-    scope: Path("docs-viewer/published/docs") / scope
+    scope: Path("docs-viewer/scopes") / scope / "published/documents"
     for scope in docs_broken_links.SCOPE_OUTPUT_DIRS
 }
 
@@ -44,7 +44,7 @@ def write_json(path: Path, payload: dict[str, object]) -> None:
 
 def write_doc_payload(repo_root: Path, scope: str, doc_id: str, content_html: str) -> None:
     write_json(
-        repo_root / "docs-viewer/published/docs" / scope / "by-id" / f"{doc_id}.json",
+        repo_root / "docs-viewer/scopes" / scope / "published/documents/by-id" / f"{doc_id}.json",
         {
             "doc_id": doc_id,
             "title": "Source",
@@ -56,7 +56,7 @@ def write_doc_payload(repo_root: Path, scope: str, doc_id: str, content_html: st
 
 def write_public_reader_doc_payload(repo_root: Path, scope: str, doc_id: str, title: str, content_html: str) -> None:
     write_json(
-        repo_root / "docs-viewer/published/docs" / scope / "by-id" / f"{doc_id}.json",
+        repo_root / "docs-viewer/scopes" / scope / "published/documents/by-id" / f"{doc_id}.json",
         {
             "title": title,
             "last_updated": "2026-06-10",
@@ -76,14 +76,14 @@ def make_repo(content_html: str) -> Iterator[str]:
                 encoding="utf-8",
             )
             write_json(
-                repo_root / "docs-viewer/published/docs/studio/index-tree.json",
+                repo_root / "docs-viewer/scopes/studio/published/documents/index-tree.json",
                 {
                     "schema": "docs_index_tree_v1",
                     "docs": [
                         {
                             "doc_id": "source",
                             "title": "Source",
-                            "content_url": "/docs-viewer/published/docs/studio/by-id/source.json",
+                            "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/source.json",
                         }
                     ],
                 },

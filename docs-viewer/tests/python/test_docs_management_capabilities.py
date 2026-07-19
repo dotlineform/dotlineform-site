@@ -68,12 +68,12 @@ def test_capabilities_advertise_source_config_reads() -> None:
 
 
 def test_public_scope_is_not_a_copy_subtree_target(tmp_path: Path) -> None:
-    source_root = tmp_path / "docs-viewer/source/public"
+    source_root = tmp_path / "docs-viewer/scopes/public/source"
     source_root.mkdir(parents=True)
     config = SimpleNamespace(
         scope_id="public",
         scope_type="public",
-        source=Path("docs-viewer/source/public"),
+        source=Path("docs-viewer/scopes/public/source"),
     )
 
     assert copy_subtree_target_available(tmp_path, config) is False
@@ -82,12 +82,12 @@ def test_public_scope_is_not_a_copy_subtree_target(tmp_path: Path) -> None:
 def test_external_scope_capability_uses_portable_root_label() -> None:
     config = SimpleNamespace(
         scope_type="local_external",
-        source=Path("/Users/example/external/docs-viewer/source/research"),
+        scope_root=SimpleNamespace(path=Path("/Users/example/external/docs-viewer/scopes/research")),
     )
 
     label = capability_scope_root_label(Path("/repo"), "research", config)
 
-    assert label == "source/research"
+    assert label == "scopes/research"
 
 
 def test_missing_external_workspace_disables_only_import_and_review_capabilities(
@@ -125,8 +125,8 @@ def test_source_config_report_reads_known_config_files() -> None:
     assert payload["scopes"][0]["source_config"]["scope_type"] == "local"
     assert payload["scopes"][0]["roles"]["source"]["provider"] == "repository"
     assert payload["scopes"][0]["roles"]["published_documents"]["provider"] == "repository"
-    assert payload["scopes"][0]["browser_config"]["index_tree_url"] == "/docs-viewer/published/docs/studio/index-tree.json"
-    assert payload["scopes"][0]["browser_config"]["recent_url"] == "/docs-viewer/published/docs/studio/recent.json"
+    assert payload["scopes"][0]["browser_config"]["index_tree_url"] == "/docs-viewer/scopes/studio/published/documents/index-tree.json"
+    assert payload["scopes"][0]["browser_config"]["recent_url"] == "/docs-viewer/scopes/studio/published/documents/recent.json"
     assert payload["scopes"][0]["artifacts"] == {
         "published_documents_available": True,
         "published_search_available": True,

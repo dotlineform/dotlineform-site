@@ -32,8 +32,10 @@ from docs_document_identity import (  # noqa: E402
 PLAN_SCHEMA = "docs_document_identity_migration_v1"
 SOURCE_CONFIG_PATH = Path("docs-viewer/config/scopes/docs_scopes.json")
 SCOPE_MANIFEST_PATH = Path("docs-viewer/config/scopes/docs_scope_manifest.json")
-SOURCE_CONFIG_SCHEMA = "docs_scopes_v2"
+SOURCE_CONFIG_SCHEMA = "docs_scopes_v3"
+SCOPE_SOURCE_PATH = "source"
 SOURCE_DOCUMENTS_PATH = "documents"
+SOURCE_SUB_SCOPES_PATH = "sub-scopes"
 DEFAULT_PLAN_PATH = Path("var/docs/document-identity/mapping.json")
 FRONT_MATTER_PATTERN = re.compile(r"\A---\s*\n(?P<header>.*?)\n---(?P<tail>\s*\n?)", re.DOTALL)
 URL_PATTERN = re.compile(r"/(?:docs|library|analysis|moments)/\?[^\s)>'\"<]+")
@@ -128,21 +130,13 @@ def _source_locator_for_path(spec: dict[str, Any], path: Path) -> str:
     return (Path(spec["root"]) / relative_path).as_posix()
 
 
-def _configured_source_root(value: Any, *, field: str) -> str:
+def _configured_scope_root(value: Any, *, field: str) -> str:
     if not isinstance(value, dict):
         raise ValueError(f"document migration {field} must be an object")
-    location = value.get("location")
-    if not isinstance(location, dict):
-        raise ValueError(f"document migration {field}.location must be an object")
-    root = str(location.get("path") or "").strip()
-    documents_path = str(value.get("documents_path") or "").strip()
-    if not root or not documents_path:
-        raise ValueError(f"document migration {field} requires location.path and documents_path")
-    if documents_path != SOURCE_DOCUMENTS_PATH:
-        raise ValueError(
-            f"document migration {field}.documents_path must be {SOURCE_DOCUMENTS_PATH}"
-        )
-    return (Path(root) / documents_path).as_posix()
+    root = str(value.get("path") or "").strip()
+    if not root:
+        raise ValueError(f"document migration {field}.path is required")
+    return root
 
 
 def _namespace_specs(
@@ -177,7 +171,11 @@ def _namespace_specs(
                     f"document migration scope {scope_id!r} is external-local; pass --include-external"
                 )
             continue
-        source = _configured_source_root(scope.get("source"), field=f"scope {scope_id!r}.source")
+        scope_root = _configured_scope_root(
+            scope.get("scope_root"),
+            field=f"scope {scope_id!r}.scope_root",
+        )
+        source = (Path(scope_root) / SCOPE_SOURCE_PATH / SOURCE_DOCUMENTS_PATH).as_posix()
         if not scope_id or not source:
             continue
         if source.startswith("$") and scope_type != "local_external":
@@ -187,10 +185,13 @@ def _namespace_specs(
             if not isinstance(sub_scope, dict):
                 continue
             sub_id = str(sub_scope.get("sub_scope") or "").strip()
-            sub_source = _configured_source_root(
-                sub_scope.get("source"),
-                field=f"scope {scope_id!r} sub-scope {sub_id!r}.source",
-            )
+            sub_source = (
+                Path(scope_root)
+                / SCOPE_SOURCE_PATH
+                / SOURCE_SUB_SCOPES_PATH
+                / sub_id
+                / SOURCE_DOCUMENTS_PATH
+            ).as_posix()
             if not sub_id or not sub_source:
                 continue
             if sub_source.startswith("$") and scope_type != "local_external":

@@ -160,11 +160,11 @@ def assert_manage_route_contract(state: dict[str, object], base_url: str) -> Non
         or state["sourceBaseUrl"] != base_url
     ):
         raise AssertionError(f"manage route did not receive service base URL: {state!r}")
-    if docs_paths.get("index_tree_url") != "/docs-viewer/published/docs/studio/index-tree.json":
+    if docs_paths.get("index_tree_url") != "/docs-viewer/scopes/studio/published/documents/index-tree.json":
         raise AssertionError(f"manage route config missing index_tree_url: {state!r}")
-    if docs_paths.get("recent_url") != "/docs-viewer/published/docs/studio/recent.json":
+    if docs_paths.get("recent_url") != "/docs-viewer/scopes/studio/published/documents/recent.json":
         raise AssertionError(f"manage route config missing recent_url: {state!r}")
-    if docs_paths.get("search_index_url") != "/docs-viewer/published/search/studio/index.json":
+    if docs_paths.get("search_index_url") != "/docs-viewer/scopes/studio/published/search/index.json":
         raise AssertionError(f"manage route config missing search_index_url: {state!r}")
 
 
@@ -511,12 +511,12 @@ def assert_copy_subtree_module_contract(page: Page) -> None:
             const payload = {
                 copy_subtree: { preview: true, apply: true },
                 scopes: {
-                    studio: { scope_type: 'local', available: true, copy_subtree_target: true, root: 'source/studio' },
-                    public: { scope_type: 'public', available: true, copy_subtree_target: true, root: 'source/public' },
-                    notes: { scope_type: 'local_external', available: true, copy_subtree_target: true, root: 'source/notes' },
-                    processing: { scope_type: 'local', available: true, copy_subtree_target: true, root: 'source/processing' },
-                    missing: { scope_type: 'local', available: false, copy_subtree_target: true, root: 'source/missing' },
-                    readonly: { scope_type: 'local', available: true, copy_subtree_target: false, root: 'source/readonly' }
+                    studio: { scope_type: 'local', available: true, copy_subtree_target: true, root: 'scopes/studio' },
+                    public: { scope_type: 'public', available: true, copy_subtree_target: true, root: 'scopes/public' },
+                    notes: { scope_type: 'local_external', available: true, copy_subtree_target: true, root: 'scopes/notes' },
+                    processing: { scope_type: 'local', available: true, copy_subtree_target: true, root: 'scopes/processing' },
+                    missing: { scope_type: 'local', available: false, copy_subtree_target: true, root: 'scopes/missing' },
+                    readonly: { scope_type: 'local', available: true, copy_subtree_target: false, root: 'scopes/readonly' }
                 }
             };
             const requests = [];
@@ -544,8 +544,8 @@ def assert_copy_subtree_module_contract(page: Page) -> None:
     expected = {
         "supported": True,
         "targets": [
-            {"scopeId": "notes", "label": "notes", "root": "source/notes"},
-            {"scopeId": "processing", "label": "processing", "root": "source/processing"},
+            {"scopeId": "notes", "label": "notes", "root": "scopes/notes"},
+            {"scopeId": "processing", "label": "processing", "root": "scopes/processing"},
         ],
         "requests": [
             {
@@ -783,7 +783,7 @@ def exercise_manage_route(
         timeout=timeout_ms,
     )
     delete_options = delete_host.locator('[data-role="scope-delete-target"] option').all_inner_texts()
-    if not any(" - source/" in label for label in delete_options):
+    if not any(" - scopes/" in label for label in delete_options):
         raise AssertionError(f"External delete target should use a portable root label: {delete_options!r}")
     if any("/Users/" in label for label in delete_options):
         raise AssertionError(f"Delete target labels should not expose user-specific roots: {delete_options!r}")

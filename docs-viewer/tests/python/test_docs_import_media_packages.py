@@ -144,7 +144,7 @@ def test_html_inline_svg_publication_failure_does_not_write_document_source(
             "energy-wells.html",
             "<html><body><h1>Energy Wells</h1><svg><title>Potential field</title></svg></body></html>",
         )
-        documents_root = root / "docs-viewer/source/library/documents"
+        documents_root = root / "docs-viewer/scopes/library/source/documents"
         before = sorted(documents_root.glob("*.md"))
         original_rebuild = stub_rebuild()
         original_validation = docs_import_preview.validate_markdown_preview

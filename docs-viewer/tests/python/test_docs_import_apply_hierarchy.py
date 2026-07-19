@@ -72,8 +72,8 @@ def test_library_import_hierarchy_apply_writes_source_placement() -> None:
                 {"data_domain": "library", "operation": "apply", "apply_action": "hierarchy_apply", "staged_filename": "hierarchy.jsonl", "record_indices": [1], "confirm": True},
                 dry_run=False,
             )
-            alpha_front_matter, _ = source_model.parse_source(root / "docs-viewer/source/library/documents/alpha.md")
-            library_front_matter, _ = source_model.parse_source(root / "docs-viewer/source/library/documents/library.md")
+            alpha_front_matter, _ = source_model.parse_source(root / "docs-viewer/scopes/library/source/documents/alpha.md")
+            library_front_matter, _ = source_model.parse_source(root / "docs-viewer/scopes/library/source/documents/library.md")
     finally:
         write_rebuild.perform_source_write_and_rebuild = original_rebuild
 
@@ -102,7 +102,7 @@ def test_library_import_hierarchy_apply_allows_unknown_parent_and_dry_run_no_wri
             {"data_domain": "library", "operation": "apply", "apply_action": "hierarchy_apply", "staged_filename": "hierarchy.jsonl", "record_indices": [0], "confirm": True},
             dry_run=True,
         )
-        source_text = (root / "docs-viewer/source/library/documents/alpha.md").read_text(encoding="utf-8")
+        source_text = (root / "docs-viewer/scopes/library/source/documents/alpha.md").read_text(encoding="utf-8")
 
     assert payload["ok"] is True
     assert payload["hierarchy_apply_written"] is False

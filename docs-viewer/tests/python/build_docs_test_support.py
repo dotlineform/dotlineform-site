@@ -46,7 +46,7 @@ def write_semantic_reference_registry(root: Path) -> None:
         root / "docs-viewer/config/semantic-references/registry.json",
         {
             "schema_version": "docs_semantic_reference_registry_v1",
-            "target_lookup_url": "/docs-viewer/published/semantic-references/target-lookup.json",
+            "target_lookup_url": "/docs-viewer/data/generated/semantic-references/target-lookup.json",
             "kinds": [
                 {
                     "kind": "work",
@@ -197,7 +197,7 @@ def write_catalogue_records(root: Path) -> None:
 
 def write_source_docs(root: Path, *, child_body_suffix: str = "") -> None:
     write_text(
-        root / f"docs-viewer/source/studio/documents/{PARENT_DOC_ID}.md",
+        root / f"docs-viewer/scopes/studio/source/documents/{PARENT_DOC_ID}.md",
         f"""---
 doc_id: {PARENT_DOC_ID}
 title: Parent
@@ -211,7 +211,7 @@ Parent body.
 """,
     )
     write_text(
-        root / f"docs-viewer/source/studio/documents/{CHILD_DOC_ID}.md",
+        root / f"docs-viewer/scopes/studio/source/documents/{CHILD_DOC_ID}.md",
         f"""---
 doc_id: {CHILD_DOC_ID}
 title: Child
@@ -266,7 +266,7 @@ def write_public_source_docs(root: Path) -> None:
         parent_line = f"parent_id: {parent_id}\n" if parent_id else ""
         date_lines = "date: 2026-06-02\ndate_display: June 2026\n" if doc_id == CHILD_DOC_ID else ""
         write_text(
-            root / f"docs-viewer/source/library/documents/{doc_id}.md",
+            root / f"docs-viewer/scopes/library/source/documents/{doc_id}.md",
             f"""---
 doc_id: {doc_id}
 title: {json.dumps(title)}

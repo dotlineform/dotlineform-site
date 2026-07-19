@@ -8,13 +8,13 @@ from dataclasses import replace
 from pathlib import Path
 
 from docs_management_test_support import docs_scope_config, make_repo, write_docs_scope_config, write_json
-from repo_factory import docs_scope_record
+from repo_factory import docs_scope_record, docs_sub_scope_record
 
 
 def write_scope_record(repo_root: Path, record: dict[str, object]) -> None:
     write_json(
         repo_root / "docs-viewer/config/scopes/docs_scopes.json",
-        {"schema_version": "docs_scopes_v2", "scopes": [record]},
+        {"schema_version": "docs_scopes_v3", "scopes": [record]},
     )
 
 
@@ -25,59 +25,39 @@ def sub_scope_record(
     source_path: str | None = None,
     public_docs_path: str | None = None,
 ) -> dict[str, object]:
-    return {
-        "sub_scope": sub_scope,
-        "title": sub_scope.title(),
-        "source": {
-            "location": {
-                "provider": "repository",
-                "path": source_path or f"docs-viewer/source/{scope_id}/sub-scopes/{sub_scope}",
-            },
-            "documents_path": "documents",
-            "build_media": {},
-            "sub_scopes_path": "sub-scopes",
-        },
-        "published": {
-            "documents": {
-                "location": {
-                    "provider": "repository",
-                    "path": f"docs-viewer/published/docs/{scope_id}/sub-scopes/{sub_scope}",
-                }
-            },
-            "search": {
-                "location": {
-                    "provider": "repository",
-                    "path": f"docs-viewer/published/search/{scope_id}/sub-scopes/{sub_scope}/index.json",
-                }
-            },
-            "media": {},
-        },
-        "public_projection": {
-            "documents": {
-                "location": {
-                    "provider": "repository",
-                    "path": public_docs_path or f"site/assets/data/docs/scopes/{scope_id}/{sub_scope}",
-                }
-            },
-            "search": None,
-        },
-    }
+    record = docs_sub_scope_record(
+        scope_id,
+        sub_scope,
+        title=sub_scope.title(),
+        scope_type="public",
+        public_docs_path=public_docs_path,
+    )
+    if source_path is not None:
+        record["source"] = {
+            "location": {"provider": "repository", "path": source_path},
+        }
+    return record
 
 
-def test_docs_scope_config_requires_published_search_role() -> None:
+def test_docs_scope_config_rejects_repeated_published_search_role() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         record = docs_scope_record("studio", default_doc_id="child")
         published = record["published"]
         assert isinstance(published, dict)
-        published.pop("search")
+        published["search"] = {
+            "location": {
+                "provider": "repository",
+                "path": "docs-viewer/scopes/studio/published/search/index.json",
+            }
+        }
         write_scope_record(repo_root, record)
         try:
             docs_scope_config.load_docs_scope_configs(repo_root)
         except ValueError as exc:
-            assert "scopes[0].published.search" in str(exc)
+            assert "must not repeat scope-root paths: search" in str(exc)
         else:
-            raise AssertionError("Expected docs scope config to require a published search role")
+            raise AssertionError("Expected docs scope config to reject a repeated published search role")
 
 
 def test_docs_scope_config_requires_named_document_and_sub_scope_children() -> None:
@@ -90,8 +70,7 @@ def test_docs_scope_config_requires_named_document_and_sub_scope_children() -> N
             try:
                 docs_scope_config.load_docs_scope_configs(repo_root)
             except ValueError as exc:
-                expected = "documents" if field == "documents_path" else "sub-scopes"
-                assert f"{field} must be {expected}" in str(exc)
+                assert f"must not repeat scope-root paths: {field}" in str(exc)
             else:
                 raise AssertionError(f"Expected docs scope config to reject source {field}=.")
 
@@ -100,13 +79,12 @@ def test_docs_scope_config_rejects_local_published_payloads_in_public_assets() -
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         record = docs_scope_record("studio", default_doc_id="child")
-        record["published"]["documents"]["location"]["path"] = "site/assets/data/docs/scopes/studio"  # type: ignore[index]
+        record["scope_root"]["path"] = "site/assets/data/docs/scopes/studio"  # type: ignore[index]
         write_scope_record(repo_root, record)
         try:
             docs_scope_config.load_docs_scope_configs(repo_root)
         except ValueError as exc:
-            assert "scopes[0].published.documents" in str(exc)
-            assert "docs-viewer/published/docs" in str(exc)
+            assert "scopes[0].scope_root.path must be docs-viewer/scopes/studio" in str(exc)
         else:
             raise AssertionError("Expected local scope config to reject public asset payload roots")
 
@@ -126,8 +104,8 @@ def test_docs_scope_config_accepts_separate_public_projection() -> None:
         )
         config = docs_scope_config.load_docs_scope_configs(repo_root)["research"]
 
-    assert docs_scope_config.published_documents_path(config).as_posix() == "docs-viewer/published/docs/research"
-    assert docs_scope_config.published_search_path(config).as_posix() == "docs-viewer/published/search/research/index.json"
+    assert docs_scope_config.published_documents_path(config).as_posix() == "docs-viewer/scopes/research/published/documents"
+    assert docs_scope_config.published_search_path(config).as_posix() == "docs-viewer/scopes/research/published/search/index.json"
     assert docs_scope_config.public_documents_path(config).as_posix() == "site/assets/data/docs/scopes/research"
     assert docs_scope_config.public_search_path(config).as_posix() == "site/assets/data/search/research/index.json"
 
@@ -149,10 +127,10 @@ def test_docs_scope_config_accepts_nested_sub_scopes() -> None:
     sub_scope = config.sub_scopes[0]
     assert sub_scope.sub_scope == "tags"
     assert docs_scope_config.document_source_path(sub_scope).as_posix() == (
-        "docs-viewer/source/research/sub-scopes/tags/documents"
+        "docs-viewer/scopes/research/source/sub-scopes/tags/documents"
     )
     assert docs_scope_config.published_documents_path(sub_scope).as_posix() == (
-        "docs-viewer/published/docs/research/sub-scopes/tags"
+        "docs-viewer/scopes/research/published/documents/sub-scopes/tags"
     )
     assert docs_scope_config.public_documents_path(sub_scope).as_posix() == "site/assets/data/docs/scopes/research/tags"
 
@@ -165,7 +143,7 @@ def test_docs_scope_config_rejects_duplicate_sub_scopes() -> None:
         payload = json.loads(config_path.read_text(encoding="utf-8"))
         payload["scopes"][0]["sub_scopes"] = [
             sub_scope_record("studio", "tags"),
-            sub_scope_record("studio", "tags", source_path="docs-viewer/source/studio/sub-scopes/more-tags"),
+            sub_scope_record("studio", "tags"),
         ]
         for item in payload["scopes"][0]["sub_scopes"]:
             item["public_projection"] = None
@@ -178,13 +156,13 @@ def test_docs_scope_config_rejects_duplicate_sub_scopes() -> None:
             raise AssertionError("Expected duplicate sub_scope ids to be rejected")
 
 
-def test_docs_scope_config_rejects_sub_scope_paths_outside_parent() -> None:
+def test_docs_scope_config_rejects_repeated_sub_scope_paths() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         write_docs_scope_config(repo_root)
         config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
         payload = json.loads(config_path.read_text(encoding="utf-8"))
-        item = sub_scope_record("studio", "tags", source_path="docs-viewer/source/tags")
+        item = sub_scope_record("studio", "tags", source_path="docs-viewer/scopes/tags/source")
         item["public_projection"] = None
         payload["scopes"][0]["sub_scopes"] = [item]
         write_json(config_path, payload)
@@ -192,9 +170,9 @@ def test_docs_scope_config_rejects_sub_scope_paths_outside_parent() -> None:
             docs_scope_config.load_docs_scope_configs(repo_root)
         except ValueError as exc:
             assert "sub-scope studio/tags" in str(exc)
-            assert "source must be docs-viewer/source/studio/sub-scopes/tags" in str(exc)
+            assert "derives source and published paths from its parent scope_root" in str(exc)
         else:
-            raise AssertionError("Expected sub_scope source paths outside the parent source to be rejected")
+            raise AssertionError("Expected repeated sub_scope source paths to be rejected")
 
 
 def test_docs_scope_config_rejects_public_sub_scope_projection_outside_parent() -> None:
@@ -252,7 +230,7 @@ def test_docs_scope_config_rejects_unhandled_media_types() -> None:
             "reference_prefix": "docs/studio/video",
             "location": {
                 "provider": "repository",
-                "path": "docs-viewer/published/docs/studio/media/video",
+                "path": "docs-viewer/scopes/studio/published/documents/media/video",
             },
             "served_path_prefix": "/docs/media/studio/video",
             "build_inputs": [],

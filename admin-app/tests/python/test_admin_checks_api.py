@@ -39,7 +39,7 @@ def write_minimal_config(repo_root: Path) -> None:
         },
         "families": {
             "runtime-js": {"label": "Runtime JavaScript", "include": ["site/docs-viewer/runtime/js/"]},
-            "source-docs": {"label": "Source Docs", "include": ["docs-viewer/source/"]},
+            "source-docs": {"label": "Source Docs", "include": ["docs-viewer/scopes/*/source/"]},
         },
         "areas": {
             "search": {"label": "Search", "include": ["site/docs-viewer/runtime/js/**/*search*"], "shared": [], "routes": ["/library/"]}

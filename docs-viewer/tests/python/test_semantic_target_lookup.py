@@ -36,7 +36,7 @@ def write_registry(root: Path) -> None:
         root / "docs-viewer/config/semantic-references/registry.json",
         {
             "schema_version": "docs_semantic_reference_registry_v1",
-            "target_lookup_url": "/docs-viewer/published/semantic-references/target-lookup.json",
+            "target_lookup_url": "/docs-viewer/data/generated/semantic-references/target-lookup.json",
             "kinds": [
                 {
                     "kind": "series",
@@ -65,7 +65,7 @@ def write_catalogue(root: Path) -> None:
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v2",
+            "schema_version": "docs_scopes_v3",
             "scopes": [
                 docs_scope_record(
                     "moments",
@@ -103,7 +103,7 @@ def write_catalogue(root: Path) -> None:
         },
     )
     write_json(
-        root / "docs-viewer/published/docs/moments/index-tree.json",
+        root / "docs-viewer/scopes/moments/published/documents/index-tree.json",
         {
             "schema": "docs_index_tree_v1",
             "viewer_options": {"non_loadable_doc_ids": ["moments"]},
@@ -114,7 +114,7 @@ def write_catalogue(root: Path) -> None:
         },
     )
     write_json(
-        root / "docs-viewer/published/docs/moments/by-id/lotus-pond.json",
+        root / "docs-viewer/scopes/moments/published/documents/by-id/lotus-pond.json",
         {"title": "lotus pond", "date": "2024-10-23", "date_display": "c. 2024"},
     )
 
@@ -125,7 +125,7 @@ def test_semantic_target_lookup_builder_writes_compact_published_rows() -> None:
         write_registry(root)
         write_catalogue(root)
         result = SemanticTargetLookupBuilder(repo_root=root).run(write=True)
-        output_path = root / "docs-viewer/published/semantic-references/target-lookup.json"
+        output_path = root / "docs-viewer/data/generated/semantic-references/target-lookup.json"
         output_text = output_path.read_text(encoding="utf-8")
         payload = read_json(output_path)
 
@@ -155,7 +155,7 @@ def test_semantic_target_lookup_cli_writes_payload() -> None:
         finally:
             os.chdir(cwd)
 
-        payload = read_json(root / "docs-viewer/published/semantic-references/target-lookup.json")
+        payload = read_json(root / "docs-viewer/data/generated/semantic-references/target-lookup.json")
 
     assert exit_code == 0
     assert "Semantic target lookup (write)" in stdout.getvalue()

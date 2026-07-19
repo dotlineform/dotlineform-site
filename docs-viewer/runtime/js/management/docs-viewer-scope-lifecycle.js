@@ -59,7 +59,7 @@ var SCOPE_LIFECYCLE_TEXT = {
   scopePublicReadonlyMode: "public",
   scopeLocalCommittedMode: "local tracked",
   scopeLocalExternalMode: "external local",
-  scopeSourceRootLabel: "source root",
+  scopeRootLabel: "scope root",
   scopePublicRoutePathLabel: "public route path",
   scopePreviewButton: "Preview",
   scopeSaveButton: "Save",
@@ -186,9 +186,9 @@ function renderCreateFormHtml(capabilities) {
         '<span class="docsViewer__fieldLabel">' + escapeHtml(SCOPE_LIFECYCLE_TEXT.scopePublishingModeLabel) + '</span>' +
         '<select class="docsViewer__fieldInput" data-role="scope-publishing-mode">' + renderModeOptions(modes) + '</select>' +
       '</label>' +
-      '<label class="docsViewer__field" data-role="scope-source-root-field">' +
-        '<span class="docsViewer__fieldLabel">' + escapeHtml(SCOPE_LIFECYCLE_TEXT.scopeSourceRootLabel) + '</span>' +
-        '<input class="docsViewer__fieldInput" data-role="scope-source-root" type="text" autocomplete="off" spellcheck="false" required>' +
+      '<label class="docsViewer__field" data-role="scope-root-field">' +
+        '<span class="docsViewer__fieldLabel">' + escapeHtml(SCOPE_LIFECYCLE_TEXT.scopeRootLabel) + '</span>' +
+        '<input class="docsViewer__fieldInput" data-role="scope-root" type="text" autocomplete="off" spellcheck="false" required>' +
       '</label>' +
       '<label class="docsViewer__field" data-role="scope-route-field">' +
         '<span class="docsViewer__fieldLabel">' + escapeHtml(SCOPE_LIFECYCLE_TEXT.scopePublicRoutePathLabel) + '</span>' +
@@ -203,8 +203,8 @@ function wireCreateForm(api) {
   var scopeInput = host.querySelector('[data-role="scope-id"]');
   var titleInput = host.querySelector('[data-role="scope-title"]');
   var modeInput = host.querySelector('[data-role="scope-publishing-mode"]');
-  var sourceField = host.querySelector('[data-role="scope-source-root-field"]');
-  var sourceInput = host.querySelector('[data-role="scope-source-root"]');
+  var scopeRootField = host.querySelector('[data-role="scope-root-field"]');
+  var scopeRootInput = host.querySelector('[data-role="scope-root"]');
   var routeField = host.querySelector('[data-role="scope-route-field"]');
   var routeInput = host.querySelector('[data-role="scope-public-route-path"]');
 
@@ -212,9 +212,9 @@ function wireCreateForm(api) {
     return slugFromScopeInput(scopeInput && scopeInput.value);
   }
 
-  function expectedSourceRoot() {
+  function expectedScopeRoot() {
     var slug = slugFromScopeInput(scopeInput && scopeInput.value);
-    return slug ? "docs-viewer/source/" + slug : "";
+    return slug ? "docs-viewer/scopes/" + slug : "";
   }
 
   function expectedRoutePath() {
@@ -227,9 +227,9 @@ function wireCreateForm(api) {
       titleInput.value = expectedTitle();
       titleInput.dataset.auto = "true";
     }
-    if (sourceInput && (!sourceInput.value || sourceInput.dataset.auto === "true")) {
-      sourceInput.value = expectedSourceRoot();
-      sourceInput.dataset.auto = "true";
+    if (scopeRootInput && (!scopeRootInput.value || scopeRootInput.dataset.auto === "true")) {
+      scopeRootInput.value = expectedScopeRoot();
+      scopeRootInput.dataset.auto = "true";
     }
     if (routeInput && (!routeInput.value || routeInput.dataset.auto === "true")) {
       routeInput.value = expectedRoutePath();
@@ -241,15 +241,15 @@ function wireCreateForm(api) {
     var mode = normalizeText(modeInput && modeInput.value) || "local_external";
     if (routeField) routeField.hidden = mode !== "public_readonly";
     if (routeInput) routeInput.required = mode === "public_readonly";
-    if (sourceField) sourceField.hidden = mode === "local_external";
-    if (sourceInput) {
-      sourceInput.readOnly = mode === "local_external";
-      sourceInput.required = mode !== "local_external";
+    if (scopeRootField) scopeRootField.hidden = mode === "local_external";
+    if (scopeRootInput) {
+      scopeRootInput.readOnly = mode === "local_external";
+      scopeRootInput.required = mode !== "local_external";
       if (mode === "local_external") {
-        sourceInput.value = "";
-      } else if (!sourceInput.value || sourceInput.dataset.auto === "true") {
-        sourceInput.value = expectedSourceRoot();
-        sourceInput.dataset.auto = "true";
+        scopeRootInput.value = "";
+      } else if (!scopeRootInput.value || scopeRootInput.dataset.auto === "true") {
+        scopeRootInput.value = expectedScopeRoot();
+        scopeRootInput.dataset.auto = "true";
       }
     }
   }
@@ -257,7 +257,7 @@ function wireCreateForm(api) {
   if (scopeInput) {
     scopeInput.addEventListener("input", applyScopeDefaults);
   }
-  [titleInput, sourceInput, routeInput].forEach(function (input) {
+  [titleInput, scopeRootInput, routeInput].forEach(function (input) {
     if (!input) return;
     input.dataset.auto = "true";
     input.addEventListener("input", function () {
@@ -275,10 +275,10 @@ function collectCreatePayload(api) {
   var scopeId = normalizeText(host.querySelector('[data-role="scope-id"]')?.value).toLowerCase();
   var title = normalizeText(host.querySelector('[data-role="scope-title"]')?.value);
   var publishingMode = normalizeText(host.querySelector('[data-role="scope-publishing-mode"]')?.value) || "local_external";
-  var sourceRoot = normalizeText(host.querySelector('[data-role="scope-source-root"]')?.value);
+  var scopeRoot = normalizeText(host.querySelector('[data-role="scope-root"]')?.value);
   var publicRoutePath = normalizeText(host.querySelector('[data-role="scope-public-route-path"]')?.value);
 
-  if (!scopeId || !title || (publishingMode !== "local_external" && !sourceRoot)) {
+  if (!scopeId || !title || (publishingMode !== "local_external" && !scopeRoot)) {
     api.setStatus(SCOPE_LIFECYCLE_TEXT.scopeCreateRequiredMessage);
     return null;
   }
@@ -290,7 +290,7 @@ function collectCreatePayload(api) {
   return {
     scope_id: scopeId,
     title: title,
-    source_root: publishingMode === "local_external" ? "" : sourceRoot,
+    scope_root: publishingMode === "local_external" ? "" : scopeRoot,
     publishing_mode: publishingMode,
     public_route_path: publishingMode === "public_readonly" ? publicRoutePath : ""
   };
@@ -422,20 +422,23 @@ function externalLifecycleRoot(payload) {
   var contract = payload && payload.storage_contract && typeof payload.storage_contract === "object"
     ? payload.storage_contract
     : {};
-  var sourceRoot = normalizeText(contract.source_root);
-  var sourceRecord = lifecycleRecord(payload, ["source_root", "sub_scope_source_root"]);
-  var sourcePath = normalizeText(sourceRecord && sourceRecord.path);
-  if (normalizeText(sourceRecord && sourceRecord.location) !== "external" || !sourcePath) return "";
-  var sourceAnchor = sourceRoot.indexOf("/source/");
-  var relativeSource = sourceAnchor >= 0
-    ? sourceRoot.slice(sourceAnchor + 1)
+  var contractRoot = normalizeText(contract.scope_root || contract.source_root);
+  var rootRecord = lifecycleRecord(payload, ["scope_root", "source_root", "sub_scope_source_root"]);
+  var rootPath = normalizeText(rootRecord && rootRecord.path);
+  if (normalizeText(rootRecord && rootRecord.location) !== "external" || !rootPath) return "";
+  var scopeAnchor = contractRoot.indexOf("/scopes/");
+  var sourceAnchor = contractRoot.indexOf("/source/");
+  var relativeRoot = scopeAnchor >= 0
+    ? contractRoot.slice(scopeAnchor + 1)
+    : sourceAnchor >= 0
+      ? contractRoot.slice(sourceAnchor + 1)
     : [
         "source",
         normalizeText(payload && payload.parent_scope) || normalizeText(payload && payload.scope_id),
         normalizeText(payload && payload.sub_scope)
       ].filter(Boolean).join("/");
-  var suffix = "/" + relativeSource;
-  return sourcePath.endsWith(suffix) ? sourcePath.slice(0, -suffix.length) : "";
+  var suffix = "/" + relativeRoot;
+  return rootPath.endsWith(suffix) ? rootPath.slice(0, -suffix.length) : "";
 }
 
 function lifecycleRelativePath(value, root) {
@@ -469,6 +472,7 @@ function lifecycleFileRows(payload, records) {
   };
   var omittedKinds = new Set([
     "source_root",
+    "scope_root",
     "published_docs_root",
     "published_docs_payload_root",
     "public_docs_root",

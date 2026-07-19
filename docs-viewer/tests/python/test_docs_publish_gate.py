@@ -58,7 +58,7 @@ def write_scope_config(root: Path) -> None:
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v2",
+            "schema_version": "docs_scopes_v3",
             "scopes": [
                 docs_scope_record("studio", default_doc_id="studio"),
                 library,
@@ -70,7 +70,7 @@ def write_scope_config(root: Path) -> None:
 def prepare_publish_repo(root: Path) -> None:
     write_scope_config(root)
     write_json(
-        root / "docs-viewer/published/docs/library/index-tree.json",
+        root / "docs-viewer/scopes/library/published/documents/index-tree.json",
         {
             "schema": "docs_index_tree_v1",
             "viewer_options": {"manage_only_tree_root_ids": ["manage-root"]},
@@ -104,7 +104,7 @@ def prepare_publish_repo(root: Path) -> None:
         },
     )
     write_json(
-        root / "docs-viewer/published/docs/library/recent.json",
+        root / "docs-viewer/scopes/library/published/documents/recent.json",
         {
             "schema": "docs_recent_v1",
             "basis": "edited",
@@ -115,7 +115,7 @@ def prepare_publish_repo(root: Path) -> None:
         },
     )
     write_json(
-        root / "docs-viewer/published/docs/library/.publish/recent.json",
+        root / "docs-viewer/scopes/library/published/documents/.publish/recent.json",
         {
             "schema": "docs_recent_v1",
             "basis": "edited",
@@ -124,26 +124,26 @@ def prepare_publish_repo(root: Path) -> None:
             ],
         },
     )
-    write_json(root / "docs-viewer/published/docs/library/by-id/library.json", {"title": "Library"})
-    write_json(root / "docs-viewer/published/docs/library/by-id/hidden.json", {"title": "Hidden"})
-    write_json(root / "docs-viewer/published/docs/library/by-id/hidden-child.json", {"title": "Hidden Child"})
-    write_json(root / "docs-viewer/published/docs/library/by-id/manage-root.json", {"title": "Manage Root"})
+    write_json(root / "docs-viewer/scopes/library/published/documents/by-id/library.json", {"title": "Library"})
+    write_json(root / "docs-viewer/scopes/library/published/documents/by-id/hidden.json", {"title": "Hidden"})
+    write_json(root / "docs-viewer/scopes/library/published/documents/by-id/hidden-child.json", {"title": "Hidden Child"})
+    write_json(root / "docs-viewer/scopes/library/published/documents/by-id/manage-root.json", {"title": "Manage Root"})
     write_json(
-        root / "docs-viewer/published/docs/library/references/index.json",
+        root / "docs-viewer/scopes/library/published/documents/references/index.json",
         {
             "header": {"schema": "docs_semantic_references_index_v1", "scope": "library", "count": 1, "target_count": 1},
             "targets": [],
         },
     )
     write_json(
-        root / "docs-viewer/published/docs/library/references/by-doc/hidden.json",
+        root / "docs-viewer/scopes/library/published/documents/references/by-doc/hidden.json",
         {
             "header": {"schema": "docs_semantic_references_by_doc_v1", "scope": "library", "doc_id": "hidden", "count": 1},
             "references": [{"source_doc_id": "hidden", "target_kind": "work", "target_id": "00638"}],
         },
     )
     write_json(
-        root / "docs-viewer/published/docs/library/references/by-target/work/00638.json",
+        root / "docs-viewer/scopes/library/published/documents/references/by-target/work/00638.json",
         {
             "header": {"schema": "docs_semantic_references_by_target_v1", "scope": "library", "count": 1},
             "target_key": "work:00638",
@@ -156,7 +156,7 @@ def prepare_publish_repo(root: Path) -> None:
             "references": [{"source_doc_id": "hidden", "source_title": "Hidden"}],
         },
     )
-    write_json(root / "docs-viewer/published/search/library/index.json", {"entries": [{"id": "library"}]})
+    write_json(root / "docs-viewer/scopes/library/published/search/index.json", {"entries": [{"id": "library"}]})
     write_json(root / "site/assets/data/docs/scopes/library/index-tree.json", {"docs": []})
     write_json(root / "site/assets/data/docs/scopes/library/by-id/stale.json", {"title": "Stale"})
     write_json(root / "site/assets/data/docs/scopes/library/by-id/hidden.json", {"title": "Old Hidden"})
@@ -213,8 +213,8 @@ def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> No
             docs_sub_scope_record("library", "tags", title="Tags", scope_type="public")
         ]
         write_json(config_path, config)
-        write_json(repo_root / "docs-viewer/published/docs/library/sub-scopes/tags/manifest.json", {"doc_ids": "scale"})
-        write_json(repo_root / "docs-viewer/published/docs/library/sub-scopes/tags/by-id/scale.json", {"doc_id": "scale", "title": "Scale"})
+        write_json(repo_root / "docs-viewer/scopes/library/published/documents/sub-scopes/tags/manifest.json", {"doc_ids": "scale"})
+        write_json(repo_root / "docs-viewer/scopes/library/published/documents/sub-scopes/tags/by-id/scale.json", {"doc_id": "scale", "title": "Scale"})
         write_json(repo_root / "site/assets/data/docs/scopes/library/tags/manifest.json", {"doc_ids": "old"})
         write_json(repo_root / "site/assets/data/docs/scopes/library/tags/by-id/old.json", {"doc_id": "old"})
 
@@ -256,7 +256,7 @@ def test_publish_rejects_configured_sub_scope_without_manifest() -> None:
             docs_sub_scope_record("library", "tags", title="Tags", scope_type="public")
         ]
         write_json(config_path, config)
-        (repo_root / "docs-viewer/published/docs/library/sub-scopes/tags").mkdir(parents=True)
+        (repo_root / "docs-viewer/scopes/library/published/documents/sub-scopes/tags").mkdir(parents=True)
 
         try:
             docs_publish_gate.publish_confirm(repo_root, {"scope": "library"})

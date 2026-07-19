@@ -90,7 +90,7 @@ def test_add_image_publishes_then_returns_markdown_without_creating_a_doc() -> N
     with make_repo() as temp:
         root = Path(temp)
         write_staged_bytes(root, "photo.png", b"png bytes")
-        documents_root = root / "docs-viewer/source/library/documents"
+        documents_root = root / "docs-viewer/scopes/library/source/documents"
         before = sorted(documents_root.glob("*.md"))
 
         preview = staged_media.preview_staged_media(root, {
@@ -154,7 +154,7 @@ def test_add_image_uses_external_scope_owned_media_root(monkeypatch: pytest.Monk
             "staged_filename": "diagram.png",
             "label": "Diagram",
         })
-        target = projects_root / "docs-viewer/published/docs/notes/media/img/diagram.png"
+        target = projects_root / "docs-viewer/scopes/notes/published/media/img/diagram.png"
         target_bytes = target.read_bytes()
 
     assert target_bytes == b"diagram"
@@ -259,7 +259,7 @@ def test_add_mermaid_copies_canonical_source_renders_svg_and_returns_token(
         )
         staged = staged_media.configured_workspace_paths(root).import_staging / "architecture.mmd"
         monkeypatch.setattr(staged_media, "produce_mermaid_svg", _fake_mermaid_producer)
-        documents_root = root / "docs-viewer/source/library/documents"
+        documents_root = root / "docs-viewer/scopes/library/source/documents"
         before = sorted(documents_root.glob("*.md"))
 
         payload = staged_media.apply_staged_media(root, {
@@ -269,7 +269,7 @@ def test_add_mermaid_copies_canonical_source_renders_svg_and_returns_token(
             "label": "Architecture",
         })
         after = sorted(documents_root.glob("*.md"))
-        canonical = root / "docs-viewer/source/library/media/mermaid/architecture.mmd"
+        canonical = root / "docs-viewer/scopes/library/source/media/mermaid/architecture.mmd"
         published = root / "site/assets/data/docs/scopes/library/media/svg/architecture.svg"
 
         assert staged.is_file()
@@ -320,7 +320,7 @@ def test_add_mermaid_renders_before_configured_source_or_svg_publication(
                 "label": "Architecture",
             })
 
-        assert not (root / "docs-viewer/source/library/media/mermaid/architecture.mmd").exists()
+        assert not (root / "docs-viewer/scopes/library/source/media/mermaid/architecture.mmd").exists()
         assert not (root / "site/assets/data/docs/scopes/library/media/svg/architecture.svg").exists()
 
 

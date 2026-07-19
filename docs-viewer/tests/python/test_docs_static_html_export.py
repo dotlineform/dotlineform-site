@@ -31,7 +31,7 @@ def write_scope_config(root: Path) -> None:
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v2",
+            "schema_version": "docs_scopes_v3",
             "scopes": [
                 docs_scope_record("studio", default_doc_id="parent"),
                 docs_scope_record(
@@ -52,19 +52,19 @@ def prepare_repo(root: Path, projects_root: Path) -> None:
     (projects_root / "docs-viewer").mkdir(parents=True, exist_ok=True)
     write_scope_config(root)
     write_json(
-        root / "docs-viewer/published/docs/studio/index-tree.json",
+        root / "docs-viewer/scopes/studio/published/documents/index-tree.json",
         {
             "schema": "docs_index_tree_v1",
             "docs": [
                 {
                     "doc_id": "parent",
                     "title": "Parent & Root",
-                    "content_url": "/docs-viewer/published/docs/studio/by-id/parent.json",
+                    "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/parent.json",
                     "children": [
                         {
                             "doc_id": "child",
                             "title": "Child",
-                            "content_url": "/docs-viewer/published/docs/studio/by-id/child.json",
+                            "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/child.json",
                         }
                     ],
                 }
@@ -72,7 +72,7 @@ def prepare_repo(root: Path, projects_root: Path) -> None:
         },
     )
     write_json(
-        root / "docs-viewer/published/docs/studio/by-id/parent.json",
+        root / "docs-viewer/scopes/studio/published/documents/by-id/parent.json",
         {
             "doc_id": "parent",
             "title": "Parent & Root",
@@ -80,7 +80,7 @@ def prepare_repo(root: Path, projects_root: Path) -> None:
         },
     )
     write_json(
-        root / "docs-viewer/published/docs/studio/by-id/child.json",
+        root / "docs-viewer/scopes/studio/published/documents/by-id/child.json",
         {
             "doc_id": "child",
             "title": "Child",

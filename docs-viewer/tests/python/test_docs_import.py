@@ -34,7 +34,7 @@ def make_repo() -> tempfile.TemporaryDirectory:
         root / "docs-viewer/config/scopes/docs_scopes.json",
         json.dumps(
             {
-                "schema_version": "docs_scopes_v2",
+                "schema_version": "docs_scopes_v3",
                 "scopes": [
                     docs_scope_record(
                         "library",
@@ -65,7 +65,7 @@ def write_source_doc(root: Path, doc_id: str, title: str, *, parent_id: str = ""
     if parent_id:
         lines.append(f"parent_id: {parent_id}")
     lines.extend(["---", "", f"# {title}", "", "Body text."])
-    write_text(root / f"docs-viewer/source/library/documents/{doc_id}.md", "\n".join(lines))
+    write_text(root / f"docs-viewer/scopes/library/source/documents/{doc_id}.md", "\n".join(lines))
 
 
 def write_staged(root: Path, filename: str, payload: object | str) -> None:

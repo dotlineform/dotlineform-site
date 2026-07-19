@@ -53,7 +53,7 @@ def write_site_tools_config(root: Path, *, media_base: str = "https://media.exam
 
 def write_docs_scope_config(root: Path, scopes: list[dict[str, object]], docs_viewer: dict[str, object] | None = None) -> None:
     payload: dict[str, object] = {
-        "schema_version": "docs_scopes_v2",
+        "schema_version": "docs_scopes_v3",
         "scopes": scopes,
     }
     if docs_viewer is not None:
@@ -65,9 +65,7 @@ def docs_scope_record(
     scope_id: str,
     *,
     scope_type: str = "local",
-    source_path: str | None = None,
-    published_docs_path: str | None = None,
-    published_search_path: str | None = None,
+    scope_root_path: str | None = None,
     viewer_base_url: str = "/docs/",
     include_scope_param: bool = True,
     default_doc_id: str = "",
@@ -85,29 +83,17 @@ def docs_scope_record(
 ) -> dict[str, object]:
     external = scope_type == "local_external"
     local_provider = "external_local" if external else "repository"
-    source = source_path or (
-        f"$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/{scope_id}"
+    scope_root = scope_root_path or (
+        f"$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/{scope_id}"
         if external
-        else f"docs-viewer/source/{scope_id}"
-    )
-    published_docs = published_docs_path or (
-        f"$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/published/docs/{scope_id}"
-        if external
-        else f"docs-viewer/published/docs/{scope_id}"
-    )
-    published_search = published_search_path or (
-        f"$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/published/search/{scope_id}/index.json"
-        if external
-        else f"docs-viewer/published/search/{scope_id}/index.json"
+        else f"docs-viewer/scopes/{scope_id}"
     )
     resolved_media_provider = media_provider or (
         "external_local" if external else ("r2" if scope_type == "public" else "repository")
     )
     media_root = media_location_root or (
-        f"{published_docs}/media"
-        if resolved_media_provider == "external_local"
-        else f"docs-viewer/published/docs/{scope_id}/media"
-        if resolved_media_provider == "repository"
+        f"{scope_root}/published/media"
+        if resolved_media_provider == local_provider
         else f"docs/{scope_id}"
     )
     served_root = (media_served_root or (
@@ -115,18 +101,19 @@ def docs_scope_record(
         if resolved_media_provider == "r2"
         else f"/docs/media/{scope_id}"
     )).rstrip("/")
-    media = {
-        media_type: {
+    media: dict[str, dict[str, object]] = {}
+    for media_type in media_types:
+        record: dict[str, object] = {
             "reference_prefix": f"docs/{scope_id}/{media_type}",
-            "location": {
-                "provider": resolved_media_provider,
-                "path": f"{media_root.rstrip('/')}/{media_type}",
-            },
             "served_path_prefix": f"{served_root}/{media_type}",
             "build_inputs": [],
         }
-        for media_type in media_types
-    }
+        if media_location_root is not None or resolved_media_provider != local_provider:
+            record["location"] = {
+                "provider": resolved_media_provider,
+                "path": f"{media_root.rstrip('/')}/{media_type}",
+            }
+        media[media_type] = record
     public_projection = None
     if scope_type == "public":
         public_projection = {
@@ -147,15 +134,11 @@ def docs_scope_record(
         "scope_id": scope_id,
         "scope_type": scope_type,
         "meta": meta or scope_type.replace("_", " "),
+        "scope_root": {"provider": local_provider, "path": scope_root},
         "source": {
-            "location": {"provider": local_provider, "path": source},
-            "documents_path": "documents",
             "build_media": {},
-            "sub_scopes_path": "sub-scopes",
         },
         "published": {
-            "documents": {"location": {"provider": local_provider, "path": published_docs}},
-            "search": {"location": {"provider": local_provider, "path": published_search}},
             "media": media,
         },
         "public_projection": public_projection,
@@ -175,43 +158,11 @@ def docs_sub_scope_record(
     *,
     title: str = "",
     scope_type: str = "local",
-    source_path: str | None = None,
-    published_docs_path: str | None = None,
-    published_search_path: str | None = None,
     public_docs_path: str | None = None,
 ) -> dict[str, object]:
-    external = scope_type == "local_external"
-    provider = "external_local" if external else "repository"
-    marker = "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
-    source = source_path or (
-        f"{marker}/source/{scope_id}/sub-scopes/{sub_scope}"
-        if external
-        else f"docs-viewer/source/{scope_id}/sub-scopes/{sub_scope}"
-    )
-    published_docs = published_docs_path or (
-        f"{marker}/published/docs/{scope_id}/sub-scopes/{sub_scope}"
-        if external
-        else f"docs-viewer/published/docs/{scope_id}/sub-scopes/{sub_scope}"
-    )
-    published_search = published_search_path or (
-        f"{marker}/published/search/{scope_id}/sub-scopes/{sub_scope}/index.json"
-        if external
-        else f"docs-viewer/published/search/{scope_id}/sub-scopes/{sub_scope}/index.json"
-    )
     return {
         "sub_scope": sub_scope,
         "title": title,
-        "source": {
-            "location": {"provider": provider, "path": source},
-            "documents_path": "documents",
-            "build_media": {},
-            "sub_scopes_path": "sub-scopes",
-        },
-        "published": {
-            "documents": {"location": {"provider": provider, "path": published_docs}},
-            "search": {"location": {"provider": provider, "path": published_search}},
-            "media": {},
-        },
         "public_projection": (
             {
                 "documents": {
@@ -241,7 +192,7 @@ def write_doc(
     for key, value in front_matter.items():
         lines.append(f"{key}: {format_value(value)}")
     lines.extend(["---", "", body or f"# {front_matter['title']}", ""])
-    path = root / "docs-viewer/source" / scope / "documents" / filename
+    path = root / "docs-viewer/scopes" / scope / "source/documents" / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(lines), encoding="utf-8")
 
@@ -403,10 +354,10 @@ def write_documents_data_sharing_registry(root: Path) -> None:
                             "status": "active",
                             "selection_model": "documents",
                             "source_write_targets": {
-                                "documents": "docs-viewer/source/library/documents",
+                                "documents": "docs-viewer/scopes/library/source/documents",
                             },
                             "sources": {
-                                "source_root": "docs-viewer/source/library/documents",
+                                "source_root": "docs-viewer/scopes/library/source/documents",
                             },
                             "config": {
                                 "sharing_profiles_path": "data-sharing/adapters/documents/config/prepare-profiles.json",

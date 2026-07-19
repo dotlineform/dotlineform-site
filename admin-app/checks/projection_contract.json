@@ -125,12 +125,12 @@
       "id": "studio_docs_source",
       "classification": "canonical_source",
       "repo_paths": [
-        "docs-viewer/source/studio/documents/*.md"
+        "docs-viewer/scopes/studio/source/documents/*.md"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
-          "docs-viewer/source/studio"
+          "docs-viewer/scopes/studio/source"
         ]
       },
       "owner_doc": "data-models-studio"
@@ -139,14 +139,14 @@
       "id": "studio_docs_payloads",
       "classification": "docs_viewer_payload",
       "repo_paths": [
-        "docs-viewer/published/docs/studio/index-tree.json",
-        "docs-viewer/published/docs/studio/by-id/*.json",
-        "docs-viewer/published/docs/studio/references/**"
+        "docs-viewer/scopes/studio/published/documents/index-tree.json",
+        "docs-viewer/scopes/studio/published/documents/by-id/*.json",
+        "docs-viewer/scopes/studio/published/documents/references/**"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
-          "docs-viewer/published/docs/studio"
+          "docs-viewer/scopes/studio/published/documents"
         ]
       },
       "owner_doc": "data-models-studio"
@@ -155,12 +155,12 @@
       "id": "studio_docs_search",
       "classification": "docs_viewer_payload",
       "repo_paths": [
-        "docs-viewer/published/search/studio/index.json"
+        "docs-viewer/scopes/studio/published/search/index.json"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
-          "docs-viewer/published/search/studio"
+          "docs-viewer/scopes/studio/published/search"
         ]
       },
       "owner_doc": "search-build-pipeline-studio"
@@ -169,12 +169,12 @@
       "id": "library_docs_source",
       "classification": "canonical_source",
       "repo_paths": [
-        "docs-viewer/source/library/documents/*.md"
+        "docs-viewer/scopes/library/source/documents/*.md"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
-          "docs-viewer/source/library"
+          "docs-viewer/scopes/library/source"
         ]
       },
       "owner_doc": "data-models-library"
@@ -213,13 +213,13 @@
       "id": "analysis_docs_source",
       "classification": "canonical_source",
       "repo_paths": [
-        "docs-viewer/source/analysis/documents/*.md",
-        "docs-viewer/source/analysis/sub-scopes/*/documents/*.md"
+        "docs-viewer/scopes/analysis/source/documents/*.md",
+        "docs-viewer/scopes/analysis/source/sub-scopes/*/documents/*.md"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
-          "docs-viewer/source/analysis"
+          "docs-viewer/scopes/analysis/source"
         ]
       },
       "owner_doc": "data-models-analysis"

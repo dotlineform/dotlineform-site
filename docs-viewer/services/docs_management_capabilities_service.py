@@ -59,8 +59,8 @@ def capability_scope_docs(repo_root: Path, scope: str, root: Path) -> list[Any]:
 
 def capability_scope_root_label(repo_root: Path, scope: str, config: Any) -> str:
     if config.scope_type == LOCAL_EXTERNAL_SCOPE_TYPE:
-        return (Path("source") / scope).as_posix()
-    return path_label(repo_root, document_source_path(config))
+        return (Path("scopes") / scope).as_posix()
+    return path_label(repo_root, config.scope_root.path)
 
 
 def copy_subtree_target_available(repo_root: Path, config: Any) -> bool:

@@ -47,7 +47,7 @@ def test_python_docs_builder_scripts_load_repo_local_env_before_scope_config() -
                 capture_output=True,
                 check=False,
             )
-            for script in ("build_docs.py", "build_search.py")
+            for script in ("build_docs.py", "build_search.py", "build_semantic_target_lookup.py")
         ]
 
     assert all(result.returncode == 0 for result in results)
@@ -66,8 +66,8 @@ def test_python_docs_builder_writes_browser_configs_on_cli_write() -> None:
 
     assert browser_config["schema_version"] == "docs_viewer_config_v1"
     assert browser_config["scopes"][0]["scope_id"] == "studio"
-    assert browser_config["scopes"][0]["index_tree_url"] == "/docs-viewer/published/docs/studio/index-tree.json"
-    assert browser_config["scopes"][0]["recent_url"] == "/docs-viewer/published/docs/studio/recent.json"
+    assert browser_config["scopes"][0]["index_tree_url"] == "/docs-viewer/scopes/studio/published/documents/index-tree.json"
+    assert browser_config["scopes"][0]["recent_url"] == "/docs-viewer/scopes/studio/published/documents/recent.json"
     assert browser_config["docs_viewer"]["ui_statuses_by_scope"] == {"studio": [{"ui_status": "done", "label": "Done"}]}
     assert public_config["scopes"] == []
     assert site_public_config == public_config
@@ -101,7 +101,7 @@ def test_python_docs_builder_cli_dry_run_does_not_write_outputs() -> None:
         assert "docs would write: 2" in stdout
         assert "warnings: 0" in stdout
         assert diagnostics_from_stdout(stdout)["doc_payloads_changed"] == 2
-        assert not (root / "docs-viewer/published/docs/studio/references/index.json").exists()
+        assert not (root / "docs-viewer/scopes/studio/published/documents/references/index.json").exists()
         assert not (root / "docs-viewer/config/defaults/docs-viewer-config.json").exists()
         assert not (root / "docs-viewer/config/defaults/docs-viewer-public-config.json").exists()
 
@@ -143,15 +143,15 @@ def test_python_docs_builder_cli_targeted_write_updates_selected_doc_only() -> N
         root = Path(temp_path)
         prepare_repo(root)
         run_cli(root, ["--scope", "studio", "--write"])
-        parent_before = read_json(root / f"docs-viewer/published/docs/studio/by-id/{PARENT_DOC_ID}.json")
+        parent_before = read_json(root / f"docs-viewer/scopes/studio/published/documents/by-id/{PARENT_DOC_ID}.json")
         write_source_docs(root, child_body_suffix="CLI targeted update.")
 
         exit_code, stdout, stderr = run_cli(
             root,
             ["--scope", "studio", "--only-doc-ids", CHILD_DOC_ID, "--write", "--diagnostics"],
         )
-        parent_after = read_json(root / f"docs-viewer/published/docs/studio/by-id/{PARENT_DOC_ID}.json")
-        child_after = read_json(root / f"docs-viewer/published/docs/studio/by-id/{CHILD_DOC_ID}.json")
+        parent_after = read_json(root / f"docs-viewer/scopes/studio/published/documents/by-id/{PARENT_DOC_ID}.json")
+        child_after = read_json(root / f"docs-viewer/scopes/studio/published/documents/by-id/{CHILD_DOC_ID}.json")
         diagnostics = diagnostics_from_stdout(stdout)
 
     assert exit_code == 0
@@ -169,7 +169,7 @@ def test_python_docs_builder_script_reports_front_matter_errors_without_tracebac
         root = Path(temp_path)
         prepare_repo(root)
         write_text(
-            root / "docs-viewer/source/studio/documents/bad.md",
+            root / "docs-viewer/scopes/studio/source/documents/bad.md",
             """---
 doc_id: bad
 invalid front matter
@@ -195,7 +195,7 @@ def test_python_docs_builder_script_requires_doc_id_without_traceback() -> None:
         root = Path(temp_path)
         prepare_repo(root)
         write_text(
-            root / "docs-viewer/source/studio/documents/missing-doc-id.md",
+            root / "docs-viewer/scopes/studio/source/documents/missing-doc-id.md",
             """---
 title: Missing Doc Id
 ---
@@ -220,7 +220,7 @@ def test_python_docs_builder_script_rejects_legacy_doc_id_without_traceback() ->
         root = Path(temp_path)
         prepare_repo(root)
         write_text(
-            root / "docs-viewer/source/studio/documents/legacy.md",
+            root / "docs-viewer/scopes/studio/source/documents/legacy.md",
             """---
 doc_id: legacy
 title: Legacy

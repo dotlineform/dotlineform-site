@@ -44,7 +44,7 @@ def fake_config() -> dict[str, object]:
         "families": {
             "runtime-js": {"label": "Runtime JavaScript", "include": ["site/docs-viewer/runtime/js/"]},
             "services": {"label": "Services", "include": ["docs-viewer/services/"]},
-            "source-docs": {"label": "Source Docs", "include": ["docs-viewer/source/"]},
+            "source-docs": {"label": "Source Docs", "include": ["docs-viewer/scopes/*/source/"]},
         },
         "areas": {
             "search": {

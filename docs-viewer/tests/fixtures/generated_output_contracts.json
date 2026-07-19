@@ -34,7 +34,7 @@
         "last_updated": "2026-06-01",
         "parent_id": "sample-roadmap-feature",
         "viewer_url": "/docs/?scope=studio&doc=contract-fixture",
-        "content_url": "/docs-viewer/published/docs/studio/by-id/contract-fixture.json",
+        "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/contract-fixture.json",
         "content_text_length": 84
       },
       "contracts": [
@@ -55,7 +55,7 @@
       "doc_entry": {
         "doc_id": "contract-fixture",
         "title": "Contract Fixture",
-        "content_url": "/docs-viewer/published/docs/studio/by-id/contract-fixture.json",
+        "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/contract-fixture.json",
         "parent_id": "sample-roadmap-feature",
         "ui_status": "done"
       },
@@ -77,7 +77,7 @@
       "doc_entry": {
         "doc_id": "contract-fixture",
         "title": "Contract Fixture",
-        "content_url": "/docs-viewer/published/docs/studio/by-id/contract-fixture.json",
+        "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/contract-fixture.json",
         "timestamp": "2026-06-01 10:00:00",
         "parent_id": "sample-roadmap-feature",
         "parent_title": "Sample Roadmap Feature"
@@ -175,7 +175,7 @@
             "target_status": "published",
             "target_href": "/works/?work=00638",
             "count": 2,
-            "bucket_url": "/docs-viewer/published/docs/studio/references/by-target/work/00638.json"
+            "bucket_url": "/docs-viewer/scopes/studio/published/documents/references/by-target/work/00638.json"
           }
         ]
       },

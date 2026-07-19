@@ -159,14 +159,14 @@ def test_collection_plan_covers_every_record_collision_parent_and_media_without_
         )
         paths = configured_workspace_paths(root)
         before = files_snapshot(
-            root / "docs-viewer/source/library",
+            root / "docs-viewer/scopes/library/source",
             paths.import_staging,
         )
 
         plan = plan_package(root, "collection.jsonl")
         payload = plan.as_dict()
         after = files_snapshot(
-            root / "docs-viewer/source/library",
+            root / "docs-viewer/scopes/library/source",
             paths.import_staging,
         )
 

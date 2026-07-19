@@ -17,7 +17,7 @@ import docs_management_source_service as source_service  # noqa: E402
 
 
 def write_source(repo_root: Path, filename: str, text: str, scope: str = "studio") -> Path:
-    path = repo_root / "docs-viewer" / "source" / scope / "documents" / filename
+    path = repo_root / "docs-viewer" / "scopes" / scope / "source" / "documents" / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
     return path
@@ -165,7 +165,7 @@ def test_rebuild_source_body_noops_without_timestamp_or_rebuild(monkeypatch) -> 
 
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
-        source_path = repo_root / "docs-viewer/source/studio/documents/target.md"
+        source_path = repo_root / "docs-viewer/scopes/studio/source/documents/target.md"
         before = source_path.read_text(encoding="utf-8")
         read_payload = source_service.read_source_body(repo_root, {"scope": ["studio"], "doc_id": ["target"]})
         payload = source_service.rebuild_source_body(

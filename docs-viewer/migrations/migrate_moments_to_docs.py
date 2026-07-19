@@ -17,7 +17,7 @@ CANONICAL_MOMENTS_PATH = Path("studio/data/canonical/catalogue/moments.json")
 SOURCE_MARKDOWN_DIR = Path("studio/data/canonical/catalogue-markdown/moments")
 GENERATED_MOMENTS_INDEX_DIR = Path("site/assets/moments/index")
 DOCS_SCOPE_CONFIG_PATH = Path("docs-viewer/config/scopes/docs_scopes.json")
-DEFAULT_OUTPUT_DIR = Path("docs-viewer/source/moments/documents")
+DEFAULT_OUTPUT_DIR = Path("docs-viewer/scopes/moments/source/documents")
 TARGET_IMAGE_PREFIX = "docs/moments/img"
 TARGET_IMAGE_SIZE = 800
 
