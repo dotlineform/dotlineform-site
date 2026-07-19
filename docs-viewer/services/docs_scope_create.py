@@ -232,6 +232,7 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         path_record(repo_root, "default_source_doc", created_documents_root / f"{default_doc_id}.md", action="create"),
         path_record(repo_root, "source_sub_scopes_root", created_sub_scopes_root, action="create"),
     ]
+    docs_output = local_published_docs_output_path(repo_root, planned_scope_config)
     raw_media = planned_scope_config["published"]["media"]
     for media_type, media in raw_media.items():
         location = media["location"]
@@ -239,7 +240,7 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         if provider == "r2":
             continue
         media_path = (
-            created_source_root / "media" / media_type
+            docs_output / "media" / media_type
             if provider == "external_local"
             else repo_root / str(location["path"])
         )
@@ -262,7 +263,6 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
     if public_route_path:
         created_files.append(path_record(repo_root, "route_file", route_file_for_public_path(repo_root, public_route_path), action="create"))
         changed_files.extend(route_registry_path_records(repo_root, action="change"))
-    docs_output = local_published_docs_output_path(repo_root, planned_scope_config)
     created_files.append(path_record(repo_root, "published_docs_root", docs_output, action="create"))
     created_files.extend(
         [

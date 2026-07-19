@@ -121,8 +121,8 @@ def _rename_scope_role_paths(
                 )
                 _rename_location(
                     media_record,
-                    old_paths["source_root"],
-                    new_paths["source_root"],
+                    old_paths["published_docs_root"],
+                    new_paths["published_docs_root"],
                 )
                 media_record["served_path_prefix"] = _renamed_config_path(
                     media_record.get("served_path_prefix"),

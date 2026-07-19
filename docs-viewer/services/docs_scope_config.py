@@ -578,6 +578,7 @@ def validate_scope_policy(config: DocsScopeConfig, *, field: str) -> None:
             )
     if config.scope_type == LOCAL_EXTERNAL_SCOPE_TYPE:
         source_root = config.source.location.path
+        published_media_root = config.published.documents.location.path / "media"
         external_root = resolve_external_data_root()
         if not source_root.is_relative_to(external_root):
             raise ValueError(f"docs scope config {field}.source must remain under {EXTERNAL_DATA_ROOT_MARKER}")
@@ -595,9 +596,10 @@ def validate_scope_policy(config: DocsScopeConfig, *, field: str) -> None:
                     f"docs scope config {field}.published.media.{media_type} for external local scope "
                     "must use provider 'external_local'"
                 )
-            if not media.location.path.is_relative_to(source_root):
+            if not media.location.path.is_relative_to(published_media_root):
                 raise ValueError(
-                    f"docs scope config {field}.published.media.{media_type}.location must remain beneath the source scope"
+                    f"docs scope config {field}.published.media.{media_type}.location must remain beneath "
+                    "the published scope media root"
                 )
     else:
         for media_type, media in config.published.media.items():

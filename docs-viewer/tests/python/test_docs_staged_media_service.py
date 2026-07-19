@@ -154,7 +154,7 @@ def test_add_image_uses_external_scope_owned_media_root(monkeypatch: pytest.Monk
             "staged_filename": "diagram.png",
             "label": "Diagram",
         })
-        target = projects_root / "docs-viewer/source/notes/media/img/diagram.png"
+        target = projects_root / "docs-viewer/published/docs/notes/media/img/diagram.png"
         target_bytes = target.read_bytes()
 
     assert target_bytes == b"diagram"

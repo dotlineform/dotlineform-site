@@ -444,7 +444,7 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
             default_doc_exists = default_doc_path.exists()
             default_doc_text = default_doc_path.read_text(encoding="utf-8")
             media_directories_exist = all(
-                (external_root / "source/research/media" / media_class).is_dir()
+                (external_root / "published/docs/research/media" / media_class).is_dir()
                 for media_class in ("files", "img", "svg")
             )
             route_exists = (repo_root / "research/index.md").exists()
@@ -613,7 +613,7 @@ def test_scope_rename_apply_moves_external_roots_and_preserves_links_and_doc_ids
                 + f"\n[Old scope link](/docs/?scope=research&doc={default_doc_id})\n",
                 encoding="utf-8",
             )
-            media_path = external_root / "source/research/media/img/example.png"
+            media_path = external_root / "published/docs/research/media/img/example.png"
             media_path.parent.mkdir(parents=True, exist_ok=True)
             media_path.write_bytes(b"image")
             write_json(external_root / "published/docs/research/index-tree.json", {"docs": []})
@@ -683,12 +683,15 @@ def test_scope_rename_apply_moves_external_roots_and_preserves_links_and_doc_ids
     assert not (external_root / "published/docs/research").exists()
     assert not (external_root / "published/search/research").exists()
     assert (external_root / "source/field-notes/sub-scopes/notes").is_dir()
-    assert (external_root / "source/field-notes/media/img/example.png").read_bytes() == b"image"
+    assert (external_root / "published/docs/field-notes/media/img/example.png").read_bytes() == b"image"
     assert (external_root / "published/docs/field-notes/index-tree.json").exists()
     assert (external_root / "published/search/field-notes/index.json").exists()
     assert renamed_scope["default_doc_id"] == default_doc_id
     assert renamed_scope["source"]["location"]["path"] == f"{EXTERNAL_DATA_ROOT_MARKER}/source/field-notes"
     assert renamed_scope["published"]["media"]["img"]["reference_prefix"] == "docs/field-notes/img"
+    assert renamed_scope["published"]["media"]["img"]["location"]["path"] == (
+        f"{EXTERNAL_DATA_ROOT_MARKER}/published/docs/field-notes/media/img"
+    )
     assert renamed_scope["published"]["documents"]["location"]["path"] == (
         f"{EXTERNAL_DATA_ROOT_MARKER}/published/docs/field-notes"
     )
@@ -1101,7 +1104,7 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
     )
 
 
-def test_scope_delete_apply_removes_external_scope_owned_media_with_source_root() -> None:
+def test_scope_delete_apply_removes_external_scope_owned_media_with_published_docs_root() -> None:
     original_create_rebuild = docs_management_service.write_rebuild.rebuild_scope_outputs
     original_delete_rebuild = docs_management_service.write_rebuild.rebuild_all_docs_outputs
     original_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
@@ -1129,7 +1132,7 @@ def test_scope_delete_apply_removes_external_scope_owned_media_with_source_root(
                 },
                 dry_run=False,
             )
-            media_path = external_root / "source/research/media/img/diagram.svg"
+            media_path = external_root / "published/docs/research/media/img/diagram.svg"
             media_path.parent.mkdir(parents=True, exist_ok=True)
             media_path.write_text("<svg/>", encoding="utf-8")
             preview = docs_management_service.docs_scope_delete.plan_delete_scope_preview(
@@ -1142,6 +1145,7 @@ def test_scope_delete_apply_removes_external_scope_owned_media_with_source_root(
                 dry_run=False,
             )
             source_root_exists = (external_root / "source/research").exists()
+            published_docs_root_exists = (external_root / "published/docs/research").exists()
             config_payload = json.loads(
                 (repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8")
             )
@@ -1164,9 +1168,14 @@ def test_scope_delete_apply_removes_external_scope_owned_media_with_source_root(
         and file["path"] == (external_root / "source/research").as_posix()
         for file in preview["delete_files"]
     )
-    assert not any(file["kind"] == "media_root" for file in preview["delete_files"])
+    assert any(
+        file["kind"] == "scope_media_img_root"
+        and file["path"] == (external_root / "published/docs/research/media/img").as_posix()
+        for file in preview["delete_files"]
+    )
     assert payload["ok"] is True
     assert source_root_exists is False
+    assert published_docs_root_exists is False
     assert "research" not in config_scope_ids
 
 

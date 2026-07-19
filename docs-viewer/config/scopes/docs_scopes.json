@@ -408,7 +408,7 @@
             "reference_prefix": "docs/notes/img",
             "location": {
               "provider": "external_local",
-              "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/notes/media/img"
+              "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/published/docs/notes/media/img"
             },
             "served_path_prefix": "/docs/media/notes/img",
             "build_inputs": []
@@ -417,7 +417,7 @@
             "reference_prefix": "docs/notes/svg",
             "location": {
               "provider": "external_local",
-              "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/notes/media/svg"
+              "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/published/docs/notes/media/svg"
             },
             "served_path_prefix": "/docs/media/notes/svg",
             "build_inputs": [
@@ -428,7 +428,7 @@
             "reference_prefix": "docs/notes/files",
             "location": {
               "provider": "external_local",
-              "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/notes/media/files"
+              "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/published/docs/notes/media/files"
             },
             "served_path_prefix": "/docs/media/notes/files",
             "build_inputs": []

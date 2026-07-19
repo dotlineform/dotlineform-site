@@ -101,7 +101,7 @@ def scope_config(
     media_root = media_location_root or (
         Path(f"docs/{scope}")
         if media_provider == R2_PROVIDER
-        else source_path / "media"
+        else published_docs / "media"
         if media_provider == EXTERNAL_LOCAL_PROVIDER
         else Path(f"docs-viewer/published/docs/{scope}/media")
     )
@@ -290,6 +290,14 @@ def test_scope_config_enforces_external_media_containment_and_allows_local_r2(
     loaded = load_docs_scope_configs(tmp_path)["private"]
     assert {item.location.provider for item in loaded.published.media.values()} == {EXTERNAL_LOCAL_PROVIDER}
 
+    external["published"]["media"]["img"]["location"]["path"] = (  # type: ignore[index]
+        "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/private/media/img"
+    )
+    write_scope_config(tmp_path, external)
+    with pytest.raises(ValueError, match="published scope media root"):
+        load_docs_scope_configs(tmp_path)
+
+    external = external_scope_record()
     external["published"]["media"]["img"]["location"] = {  # type: ignore[index]
         "provider": REPOSITORY_PROVIDER,
         "path": "site/assets/docs/private/img",
@@ -335,11 +343,11 @@ def test_new_scope_defaults_follow_scope_owned_media_policy(tmp_path: Path) -> N
     }
     assert external["published"]["media"]["img"]["location"] == {  # type: ignore[index]
         "provider": EXTERNAL_LOCAL_PROVIDER,
-        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/private/media/img",
+        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/published/docs/private/media/img",
     }
     assert external["published"]["media"]["svg"]["location"] == {  # type: ignore[index]
         "provider": EXTERNAL_LOCAL_PROVIDER,
-        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/private/media/svg",
+        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/published/docs/private/media/svg",
     }
 
 
@@ -381,7 +389,7 @@ def test_local_media_route_confines_repo_and_external_scope_assets(tmp_path: Pat
         media_provider=EXTERNAL_LOCAL_PROVIDER,
         source=external_source,
     )
-    external_file = external_source / "media/files/notes.pdf"
+    external_file = external_root / "published/docs/private/media/files/notes.pdf"
     external_file.parent.mkdir(parents=True)
     external_file.write_bytes(b"pdf")
     monkeypatch.setattr("docs_media_storage.load_docs_scope_configs", lambda _repo_root: {"private": external_config})
@@ -394,6 +402,7 @@ def test_local_media_route_confines_repo_and_external_scope_assets(tmp_path: Pat
 def test_configured_local_media_directories_are_materialized(tmp_path: Path) -> None:
     repo_media = tmp_path / "docs-viewer/published/docs/studio/media"
     external_source = tmp_path / "external/docs-viewer/source/notes"
+    external_media = tmp_path / "external/docs-viewer/published/docs/notes/media"
     external_source.mkdir(parents=True)
     configs = {
         "studio": scope_config("studio", scope_type="local", media_provider=REPOSITORY_PROVIDER),
@@ -412,9 +421,9 @@ def test_configured_local_media_directories_are_materialized(tmp_path: Path) -> 
     assert set(materialized) == {"notes", "studio"}
     assert all((repo_media / media_class).is_dir() for media_class in ("files", "img", "svg"))
     assert all((repo_media / media_class / ".gitkeep").is_file() for media_class in ("files", "img", "svg"))
-    assert all((external_source / "media" / media_class).is_dir() for media_class in ("files", "img", "svg"))
+    assert all((external_media / media_class).is_dir() for media_class in ("files", "img", "svg"))
     assert not any(
-        (external_source / "media" / media_class / ".gitkeep").exists()
+        (external_media / media_class / ".gitkeep").exists()
         for media_class in ("files", "img", "svg")
     )
     assert not (tmp_path / "docs-viewer/source/library/documents/media").exists()

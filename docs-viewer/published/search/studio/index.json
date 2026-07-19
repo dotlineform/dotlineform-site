@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3f53997dcfc620231e0b0ee9922cdd10",
-    "generated_at_utc": "2026-07-19T15:55:35Z",
+    "version": "blake2b-0c77ef63c314ce2ac9e88c57d130919a",
+    "generated_at_utc": "2026-07-19T16:38:10Z",
     "count": 254
   },
   "entries": [
@@ -1485,10 +1485,10 @@
       "kind": "doc",
       "title": "Docs Images And Assets",
       "href": "/docs/?scope=studio&doc=d-20260423-155039-e36925",
-      "last_updated": "2026-07-19 12:15:22",
+      "last_updated": "2026-07-19 17:13:26",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-19 12:15:22 • Docs Viewer",
+      "display_meta": "2026-07-19 17:13:26 • Docs Viewer",
       "search_terms": [
         "docs images and assets",
         "docs",
@@ -1497,16 +1497,16 @@
         "assets",
         "docs viewer",
         "viewer",
-        "2026-07-19 12:15:22",
+        "2026-07-19 17:13:26",
         "2026",
         "07",
         "19",
-        "12",
-        "15",
-        "22",
+        "17",
+        "13",
+        "26",
         "d-20260423-155039-e36925"
       ],
-      "search_text": "docs images and assets docs images and assets docs viewer viewer 2026-07-19 12:15:22 2026 07 19 12 15 22 d-20260423-155039-e36925"
+      "search_text": "docs images and assets docs images and assets docs viewer viewer 2026-07-19 17:13:26 2026 07 19 17 13 26 d-20260423-155039-e36925"
     },
     {
       "id": "d-20260424-000000-fc8b5d",
@@ -2068,10 +2068,10 @@
       "kind": "doc",
       "title": "Scope Lifecycle Endpoints",
       "href": "/docs/?scope=studio&doc=d-20260607-222033-3e391b",
-      "last_updated": "2026-07-17 22:19:08",
+      "last_updated": "2026-07-19 17:13:26",
       "parent_id": "d-20260607-222033-647b52",
       "parent_title": "Endpoint Overview",
-      "display_meta": "2026-07-17 22:19:08 • Endpoint Overview",
+      "display_meta": "2026-07-19 17:13:26 • Endpoint Overview",
       "search_terms": [
         "scope lifecycle endpoints",
         "scope",
@@ -2080,16 +2080,16 @@
         "endpoint overview",
         "endpoint",
         "overview",
-        "2026-07-17 22:19:08",
+        "2026-07-19 17:13:26",
         "2026",
         "07",
-        "17",
-        "22",
         "19",
-        "08",
+        "17",
+        "13",
+        "26",
         "d-20260607-222033-3e391b"
       ],
-      "search_text": "scope lifecycle endpoints scope lifecycle endpoints endpoint overview endpoint overview 2026-07-17 22:19:08 2026 07 17 22 19 08 d-20260607-222033-3e391b"
+      "search_text": "scope lifecycle endpoints scope lifecycle endpoints endpoint overview endpoint overview 2026-07-19 17:13:26 2026 07 19 17 13 26 d-20260607-222033-3e391b"
     },
     {
       "id": "d-20260607-222033-d9b8b1",
@@ -2625,10 +2625,10 @@
       "kind": "doc",
       "title": "Scope Lifecycle",
       "href": "/docs/?scope=studio&doc=d-20260515-000000-f43740",
-      "last_updated": "2026-07-17 22:19:08",
+      "last_updated": "2026-07-19 17:13:26",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-17 22:19:08 • Docs Viewer",
+      "display_meta": "2026-07-19 17:13:26 • Docs Viewer",
       "search_terms": [
         "scope lifecycle",
         "scope",
@@ -2636,16 +2636,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-17 22:19:08",
+        "2026-07-19 17:13:26",
         "2026",
         "07",
-        "17",
-        "22",
         "19",
-        "08",
+        "17",
+        "13",
+        "26",
         "d-20260515-000000-f43740"
       ],
-      "search_text": "scope lifecycle scope lifecycle docs viewer docs viewer 2026-07-17 22:19:08 2026 07 17 22 19 08 d-20260515-000000-f43740"
+      "search_text": "scope lifecycle scope lifecycle docs viewer docs viewer 2026-07-19 17:13:26 2026 07 19 17 13 26 d-20260515-000000-f43740"
     },
     {
       "id": "d-20260518-214029-eb6598",
@@ -2756,10 +2756,10 @@
       "kind": "doc",
       "title": "Source Organisation",
       "href": "/docs/?scope=studio&doc=d-20260423-000000-8fd731",
-      "last_updated": "2026-07-19 12:37:19",
+      "last_updated": "2026-07-19 17:13:26",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-19 12:37:19 • Docs Viewer",
+      "display_meta": "2026-07-19 17:13:26 • Docs Viewer",
       "search_terms": [
         "source organisation",
         "source",
@@ -2767,15 +2767,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-19 12:37:19",
+        "2026-07-19 17:13:26",
         "2026",
         "07",
         "19",
-        "12",
-        "37",
+        "17",
+        "13",
+        "26",
         "d-20260423-000000-8fd731"
       ],
-      "search_text": "source organisation source organisation docs viewer docs viewer 2026-07-19 12:37:19 2026 07 19 12 37 d-20260423-000000-8fd731"
+      "search_text": "source organisation source organisation docs viewer docs viewer 2026-07-19 17:13:26 2026 07 19 17 13 26 d-20260423-000000-8fd731"
     },
     {
       "id": "d-20260531-152622-ed2451",
@@ -3838,25 +3839,25 @@
       "kind": "doc",
       "title": "Docs Viewer Roadmap",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-1e0af6",
-      "last_updated": "2026-07-19 16:54:51",
+      "last_updated": "2026-07-19 17:13:26",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-19 16:54:51 • Roadmap",
+      "display_meta": "2026-07-19 17:13:26 • Roadmap",
       "search_terms": [
         "docs viewer roadmap",
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-19 16:54:51",
+        "2026-07-19 17:13:26",
         "2026",
         "07",
         "19",
-        "16",
-        "54",
-        "51",
+        "17",
+        "13",
+        "26",
         "d-20260714-234030-1e0af6"
       ],
-      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-19 16:54:51 2026 07 19 16 54 51 d-20260714-234030-1e0af6"
+      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-19 17:13:26 2026 07 19 17 13 26 d-20260714-234030-1e0af6"
     },
     {
       "id": "d-20260716-204013-3be4e1",
@@ -4084,10 +4085,10 @@
       "kind": "doc",
       "title": "External Asset Collections",
       "href": "/docs/?scope=studio&doc=d-20260714-194217-b2bdd7",
-      "last_updated": "2026-07-16",
+      "last_updated": "2026-07-19 17:13:26",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-16 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-19 17:13:26 • Docs Viewer Roadmap",
       "search_terms": [
         "external asset collections",
         "external",
@@ -4097,23 +4098,26 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-16",
+        "2026-07-19 17:13:26",
         "2026",
         "07",
-        "16",
+        "19",
+        "17",
+        "13",
+        "26",
         "d-20260714-194217-b2bdd7"
       ],
-      "search_text": "external asset collections external asset collections docs viewer roadmap docs viewer roadmap 2026-07-16 2026 07 16 d-20260714-194217-b2bdd7"
+      "search_text": "external asset collections external asset collections docs viewer roadmap docs viewer roadmap 2026-07-19 17:13:26 2026 07 19 17 13 26 d-20260714-194217-b2bdd7"
     },
     {
       "id": "d-20260714-234030-a63b0b",
       "kind": "doc",
       "title": "External Asset Collection Association Delivery",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-a63b0b",
-      "last_updated": "2026-07-17 22:19:08",
+      "last_updated": "2026-07-19 17:13:26",
       "parent_id": "d-20260714-194217-b2bdd7",
       "parent_title": "External Asset Collections",
-      "display_meta": "2026-07-17 22:19:08 • External Asset Collections",
+      "display_meta": "2026-07-19 17:13:26 • External Asset Collections",
       "search_terms": [
         "external asset collection association delivery",
         "external",
@@ -4123,16 +4127,16 @@
         "delivery",
         "external asset collections",
         "collections",
-        "2026-07-17 22:19:08",
+        "2026-07-19 17:13:26",
         "2026",
         "07",
-        "17",
-        "22",
         "19",
-        "08",
+        "17",
+        "13",
+        "26",
         "d-20260714-234030-a63b0b"
       ],
-      "search_text": "external asset collection association delivery external asset collection association delivery external asset collections collections 2026-07-17 22:19:08 2026 07 17 22 19 08 d-20260714-234030-a63b0b"
+      "search_text": "external asset collection association delivery external asset collection association delivery external asset collections collections 2026-07-19 17:13:26 2026 07 19 17 13 26 d-20260714-234030-a63b0b"
     },
     {
       "id": "d-20260714-234030-19a064",
@@ -4193,10 +4197,10 @@
       "kind": "doc",
       "title": "External-Local Scope Media Layout",
       "href": "/docs/?scope=studio&doc=d-20260716-235630-055f0c",
-      "last_updated": "2026-07-17 22:19:08",
+      "last_updated": "2026-07-19 17:13:26",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-17 22:19:08 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-19 17:13:26 • Docs Viewer Roadmap",
       "search_terms": [
         "external-local scope media layout",
         "external",
@@ -4208,16 +4212,16 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-17 22:19:08",
+        "2026-07-19 17:13:26",
         "2026",
         "07",
-        "17",
-        "22",
         "19",
-        "08",
+        "17",
+        "13",
+        "26",
         "d-20260716-235630-055f0c"
       ],
-      "search_text": "external-local scope media layout external local scope media layout docs viewer roadmap docs viewer roadmap 2026-07-17 22:19:08 2026 07 17 22 19 08 d-20260716-235630-055f0c"
+      "search_text": "external-local scope media layout external local scope media layout docs viewer roadmap docs viewer roadmap 2026-07-19 17:13:26 2026 07 19 17 13 26 d-20260716-235630-055f0c"
     },
     {
       "id": "d-20260714-151900-6fa23e",
@@ -4493,10 +4497,10 @@
       "kind": "doc",
       "title": "Scope-First Storage Layout",
       "href": "/docs/?scope=studio&doc=d-20260719-144956-cb5cb4",
-      "last_updated": "2026-07-19 16:54:51",
+      "last_updated": "2026-07-19 17:37:56",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-19 16:54:51 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-19 17:37:56 • Docs Viewer Roadmap",
       "search_terms": [
         "scope-first storage layout",
         "scope",
@@ -4507,16 +4511,16 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-19 16:54:51",
+        "2026-07-19 17:37:56",
         "2026",
         "07",
         "19",
-        "16",
-        "54",
-        "51",
+        "17",
+        "37",
+        "56",
         "d-20260719-144956-cb5cb4"
       ],
-      "search_text": "scope-first storage layout scope first storage layout docs viewer roadmap docs viewer roadmap 2026-07-19 16:54:51 2026 07 19 16 54 51 d-20260719-144956-cb5cb4"
+      "search_text": "scope-first storage layout scope first storage layout docs viewer roadmap docs viewer roadmap 2026-07-19 17:37:56 2026 07 19 17 37 56 d-20260719-144956-cb5cb4"
     },
     {
       "id": "d-20260527-105208-c1a4d0",

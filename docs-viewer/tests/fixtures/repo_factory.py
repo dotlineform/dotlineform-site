@@ -104,7 +104,7 @@ def docs_scope_record(
         "external_local" if external else ("r2" if scope_type == "public" else "repository")
     )
     media_root = media_location_root or (
-        f"{source}/media"
+        f"{published_docs}/media"
         if resolved_media_provider == "external_local"
         else f"docs-viewer/published/docs/{scope_id}/media"
         if resolved_media_provider == "repository"
