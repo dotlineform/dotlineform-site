@@ -700,11 +700,6 @@
       ]
     },
     {
-      "doc_id": "d-20260719-144956-cb5cb4",
-      "title": "New Doc",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260719-144956-cb5cb4.json"
-    },
-    {
       "doc_id": "d-20260428-000000-f5ff18",
       "title": "Roadmap",
       "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260428-000000-f5ff18.json",
@@ -1028,6 +1023,12 @@
                   ]
                 }
               ]
+            },
+            {
+              "doc_id": "d-20260719-144956-cb5cb4",
+              "title": "Scope-First Storage Layout",
+              "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260719-144956-cb5cb4.json",
+              "ui_status": "proposed"
             },
             {
               "doc_id": "d-20260527-105208-c1a4d0",
@@ -1451,5 +1452,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-19T13:50:04Z"
+  "generated_at": "2026-07-19T15:55:35Z"
 }
