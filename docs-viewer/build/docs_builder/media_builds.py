@@ -11,6 +11,7 @@ from docs_artifact_locations import (
     authenticated_remote_client_for_locations,
     normalize_artifact_identity,
 )
+from docs_mermaid_media import produce_mermaid_svg
 from docs_scope_config import DocsScopeConfig
 
 
@@ -25,7 +26,7 @@ class MediaBuildContext:
 
 
 MediaProducer = Callable[[MediaBuildContext], Iterable[str]]
-REGISTERED_MEDIA_PRODUCERS: dict[str, MediaProducer] = {}
+REGISTERED_MEDIA_PRODUCERS: dict[str, MediaProducer] = {"mermaid": produce_mermaid_svg}
 
 
 def run_registered_media_builds(

@@ -50,6 +50,7 @@ docs-viewer/.tmp/
 docs-viewer/logs/
 docs-viewer/run/
 docs-viewer/var/
+docs-viewer/build/mermaid/node_modules/
 
 # all of var
 var/
