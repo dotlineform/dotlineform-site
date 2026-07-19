@@ -223,6 +223,16 @@ def is_semantic_callout_node(node: ElementNode) -> bool:
     return bool(classes & SEMANTIC_CALLOUT_CLASS_TOKENS)
 
 
+def wrap_markdown_emphasis(content: str, marker: str) -> str:
+    leading_length = len(content) - len(content.lstrip())
+    trailing_length = len(content) - len(content.rstrip())
+    core_end = len(content) - trailing_length if trailing_length else len(content)
+    core = content[leading_length:core_end]
+    if not core:
+        return content
+    return f"{content[:leading_length]}{marker}{core}{marker}{content[core_end:]}"
+
+
 def render_inline(node: Any) -> str:
     if isinstance(node, TextNode):
         if text_node_has_ancestor(node, {"a", "code", "pre"}):
@@ -230,9 +240,9 @@ def render_inline(node: Any) -> str:
         return autolink_plain_urls(node.text)
     tag = node.tag
     if tag in {"strong", "b"}:
-        return f"**{''.join(render_inline(child) for child in node.children).strip()}**"
+        return wrap_markdown_emphasis("".join(render_inline(child) for child in node.children), "**")
     if tag in {"em", "i"}:
-        return f"*{''.join(render_inline(child) for child in node.children).strip()}*"
+        return wrap_markdown_emphasis("".join(render_inline(child) for child in node.children), "*")
     if tag == "code":
         return f"`{normalize_space(node.text_content())}`"
     if tag in {"sub", "sup"}:

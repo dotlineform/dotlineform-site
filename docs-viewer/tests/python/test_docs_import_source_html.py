@@ -34,6 +34,25 @@ def test_html_to_markdown_is_available_without_import_preview_summary() -> None:
     assert result.warnings == []
 
 
+def test_html_to_markdown_preserves_whitespace_around_emphasis_runs() -> None:
+    result = docs_html_markdown.html_to_markdown(
+        """
+        <html><body>
+          <p><strong>Benefit Description: </strong>A supported benefit.</p>
+          <p>Before <em>emphasized </em>text and <b>bold</b>.</p>
+        </body></html>
+        """
+    )
+    rendered = docs_import_preview.render_markdown_document(result.markdown, title="Emphasis")
+
+    assert result.markdown == (
+        "**Benefit Description:** A supported benefit.\n\n"
+        "Before *emphasized* text and **bold**."
+    )
+    assert "<strong>Benefit Description:</strong> A supported benefit." in rendered.html
+    assert "**Benefit Description:**" not in rendered.html
+
+
 def test_html_to_markdown_keeps_historical_inline_svg_children_out_of_paragraphs() -> None:
     result = docs_html_markdown.html_to_markdown(
         """

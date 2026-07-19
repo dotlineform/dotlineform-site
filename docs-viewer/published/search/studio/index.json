@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-7c3f61f890b23379b18e9e2edaacad3a",
-    "generated_at_utc": "2026-07-19T18:09:39Z",
+    "version": "blake2b-ff1211c3c7665d255c4062eb6df2ac09",
+    "generated_at_utc": "2026-07-19T18:25:33Z",
     "count": 257
   },
   "entries": [
@@ -1536,10 +1536,10 @@
       "kind": "doc",
       "title": "HTML Import Mapping",
       "href": "/docs/?scope=studio&doc=d-20260719-182348-492a48",
-      "last_updated": "2026-07-19 19:07:17",
+      "last_updated": "2026-07-19 19:25:13",
       "parent_id": "d-20260424-000000-fc8b5d",
       "parent_title": "Docs Import",
-      "display_meta": "2026-07-19 19:07:17 • Docs Import",
+      "display_meta": "2026-07-19 19:25:13 • Docs Import",
       "search_terms": [
         "html import mapping",
         "html",
@@ -1547,14 +1547,15 @@
         "mapping",
         "docs import",
         "docs",
-        "2026-07-19 19:07:17",
+        "2026-07-19 19:25:13",
         "2026",
         "07",
         "19",
-        "17",
+        "25",
+        "13",
         "d-20260719-182348-492a48"
       ],
-      "search_text": "html import mapping html import mapping docs import docs 2026-07-19 19:07:17 2026 07 19 17 d-20260719-182348-492a48"
+      "search_text": "html import mapping html import mapping docs import docs 2026-07-19 19:25:13 2026 07 19 25 13 d-20260719-182348-492a48"
     },
     {
       "id": "d-20260719-182348-f326fd",
