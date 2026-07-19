@@ -125,7 +125,7 @@ function renderDiagramSources(context, article, state, requestId) {
 
     var heading = document.createElement("h4");
     heading.className = "docsViewer__diagramSourcesTitle";
-    heading.textContent = "Diagram sources";
+    heading.textContent = "Diagrams";
 
     var list = document.createElement("ul");
     list.className = "docsViewer__diagramSourcesList";
@@ -133,12 +133,9 @@ function renderDiagramSources(context, article, state, requestId) {
       var item = document.createElement("li");
       item.className = "docsViewer__diagramSourcesItem";
 
-      var label = document.createElement("span");
-      label.textContent = cleanString(source.label) || cleanString(source.source_identity) || "Diagram";
-
       var link = document.createElement("a");
       link.href = "#";
-      link.textContent = cleanString(source.open_label) || "Open in VS Code";
+      link.textContent = cleanString(source.label) || cleanString(source.source_identity) || "Diagram";
       link.addEventListener("click", function (event) {
         event.preventDefault();
         provider.openDiagramSource({
@@ -150,7 +147,7 @@ function renderDiagramSources(context, article, state, requestId) {
         });
       });
 
-      item.append(label, link);
+      item.appendChild(link);
       list.appendChild(item);
     });
 

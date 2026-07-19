@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3e5920410152ee5b847d8430afd5e961",
-    "generated_at_utc": "2026-07-19T10:49:45Z",
-    "count": 252
+    "version": "blake2b-4041f210fb784d8115a2a8e90b95eb5b",
+    "generated_at_utc": "2026-07-19T14:48:47Z",
+    "count": 254
   },
   "entries": [
     {
@@ -1165,10 +1165,10 @@
       "kind": "doc",
       "title": "Runtime Dependencies",
       "href": "/docs/?scope=studio&doc=d-20260423-204839-111501",
-      "last_updated": "2026-07-15",
+      "last_updated": "2026-07-19 12:37:19",
       "parent_id": "d-20260419-000000-d2e47b",
       "parent_title": "Dev Home",
-      "display_meta": "2026-07-15 • Dev Home",
+      "display_meta": "2026-07-19 12:37:19 • Dev Home",
       "search_terms": [
         "runtime dependencies",
         "runtime",
@@ -1176,13 +1176,15 @@
         "dev home",
         "dev",
         "home",
-        "2026-07-15",
+        "2026-07-19 12:37:19",
         "2026",
         "07",
-        "15",
+        "19",
+        "12",
+        "37",
         "d-20260423-204839-111501"
       ],
-      "search_text": "runtime dependencies runtime dependencies dev home dev home 2026-07-15 2026 07 15 d-20260423-204839-111501"
+      "search_text": "runtime dependencies runtime dependencies dev home dev home 2026-07-19 12:37:19 2026 07 19 12 37 d-20260423-204839-111501"
     },
     {
       "id": "d-20260423-000000-d274d3",
@@ -1307,19 +1309,21 @@
       "kind": "doc",
       "title": "Docs Viewer",
       "href": "/docs/?scope=studio&doc=d-20260424-000000-50b63f",
-      "last_updated": "2026-07-18",
-      "display_meta": "2026-07-18",
+      "last_updated": "2026-07-19 12:37:19",
+      "display_meta": "2026-07-19 12:37:19",
       "search_terms": [
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-18",
+        "2026-07-19 12:37:19",
         "2026",
         "07",
-        "18",
+        "19",
+        "12",
+        "37",
         "d-20260424-000000-50b63f"
       ],
-      "search_text": "docs viewer docs viewer 2026-07-18 2026 07 18 d-20260424-000000-50b63f"
+      "search_text": "docs viewer docs viewer 2026-07-19 12:37:19 2026 07 19 12 37 d-20260424-000000-50b63f"
     },
     {
       "id": "d-20260423-165116-e7f7e9",
@@ -1431,22 +1435,24 @@
       "kind": "doc",
       "title": "Dependencies",
       "href": "/docs/?scope=studio&doc=d-20260514-180120-b23811",
-      "last_updated": "2026-07-14",
+      "last_updated": "2026-07-19 12:37:19",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-14 • Docs Viewer",
+      "display_meta": "2026-07-19 12:37:19 • Docs Viewer",
       "search_terms": [
         "dependencies",
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-14",
+        "2026-07-19 12:37:19",
         "2026",
         "07",
-        "14",
+        "19",
+        "12",
+        "37",
         "d-20260514-180120-b23811"
       ],
-      "search_text": "dependencies docs viewer docs viewer 2026-07-14 2026 07 14 d-20260514-180120-b23811"
+      "search_text": "dependencies docs viewer docs viewer 2026-07-19 12:37:19 2026 07 19 12 37 d-20260514-180120-b23811"
     },
     {
       "id": "d-20260419-000000-0516ab",
@@ -1479,10 +1485,10 @@
       "kind": "doc",
       "title": "Docs Images And Assets",
       "href": "/docs/?scope=studio&doc=d-20260423-155039-e36925",
-      "last_updated": "2026-07-19 11:40:18",
+      "last_updated": "2026-07-19 12:15:22",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-19 11:40:18 • Docs Viewer",
+      "display_meta": "2026-07-19 12:15:22 • Docs Viewer",
       "search_terms": [
         "docs images and assets",
         "docs",
@@ -1491,16 +1497,16 @@
         "assets",
         "docs viewer",
         "viewer",
-        "2026-07-19 11:40:18",
+        "2026-07-19 12:15:22",
         "2026",
         "07",
         "19",
-        "11",
-        "40",
-        "18",
+        "12",
+        "15",
+        "22",
         "d-20260423-155039-e36925"
       ],
-      "search_text": "docs images and assets docs images and assets docs viewer viewer 2026-07-19 11:40:18 2026 07 19 11 40 18 d-20260423-155039-e36925"
+      "search_text": "docs images and assets docs images and assets docs viewer viewer 2026-07-19 12:15:22 2026 07 19 12 15 22 d-20260423-155039-e36925"
     },
     {
       "id": "d-20260424-000000-fc8b5d",
@@ -1632,6 +1638,32 @@
         "d-20260613-115624-3d377c"
       ],
       "search_text": "docs viewer public route shell template docs viewer public route shell template docs viewer 2026-07-17 22:19:08 2026 07 17 22 19 08 d-20260613-115624-3d377c"
+    },
+    {
+      "id": "d-20260719-123719-fb7565",
+      "kind": "doc",
+      "title": "Document Diagrams",
+      "href": "/docs/?scope=studio&doc=d-20260719-123719-fb7565",
+      "last_updated": "2026-07-19 12:37:19",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-07-19 12:37:19 • Docs Viewer",
+      "search_terms": [
+        "document diagrams",
+        "document",
+        "diagrams",
+        "docs viewer",
+        "docs",
+        "viewer",
+        "2026-07-19 12:37:19",
+        "2026",
+        "07",
+        "19",
+        "12",
+        "37",
+        "d-20260719-123719-fb7565"
+      ],
+      "search_text": "document diagrams document diagrams docs viewer docs viewer 2026-07-19 12:37:19 2026 07 19 12 37 d-20260719-123719-fb7565"
     },
     {
       "id": "d-20260715-094411-2b6e65",
@@ -2724,10 +2756,10 @@
       "kind": "doc",
       "title": "Source Organisation",
       "href": "/docs/?scope=studio&doc=d-20260423-000000-8fd731",
-      "last_updated": "2026-07-18 21:20:42",
+      "last_updated": "2026-07-19 12:37:19",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-18 21:20:42 • Docs Viewer",
+      "display_meta": "2026-07-19 12:37:19 • Docs Viewer",
       "search_terms": [
         "source organisation",
         "source",
@@ -2735,16 +2767,15 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-18 21:20:42",
+        "2026-07-19 12:37:19",
         "2026",
         "07",
-        "18",
-        "21",
-        "20",
-        "42",
+        "19",
+        "12",
+        "37",
         "d-20260423-000000-8fd731"
       ],
-      "search_text": "source organisation source organisation docs viewer docs viewer 2026-07-18 21:20:42 2026 07 18 21 20 42 d-20260423-000000-8fd731"
+      "search_text": "source organisation source organisation docs viewer docs viewer 2026-07-19 12:37:19 2026 07 19 12 37 d-20260423-000000-8fd731"
     },
     {
       "id": "d-20260531-152622-ed2451",
@@ -3136,23 +3167,47 @@
       "kind": "doc",
       "title": "Local Setup Toolchain",
       "href": "/docs/?scope=studio&doc=d-20260519-210908-2f8f00",
-      "last_updated": "2026-06-13",
+      "last_updated": "2026-07-19 12:37:19",
       "parent_id": "d-20260413-000000-d314b7",
       "parent_title": "Local Setup",
-      "display_meta": "2026-06-13 • Local Setup",
+      "display_meta": "2026-07-19 12:37:19 • Local Setup",
       "search_terms": [
         "local setup toolchain",
         "local",
         "setup",
         "toolchain",
         "local setup",
-        "2026-06-13",
+        "2026-07-19 12:37:19",
         "2026",
-        "06",
-        "13",
+        "07",
+        "19",
+        "12",
+        "37",
         "d-20260519-210908-2f8f00"
       ],
-      "search_text": "local setup toolchain local setup toolchain local setup 2026-06-13 2026 06 13 d-20260519-210908-2f8f00"
+      "search_text": "local setup toolchain local setup toolchain local setup 2026-07-19 12:37:19 2026 07 19 12 37 d-20260519-210908-2f8f00"
+    },
+    {
+      "id": "d-20260719-144956-cb5cb4",
+      "kind": "doc",
+      "title": "New Doc",
+      "href": "/docs/?scope=studio&doc=d-20260719-144956-cb5cb4",
+      "last_updated": "2026-07-19 15:48:47",
+      "display_meta": "2026-07-19 15:48:47",
+      "search_terms": [
+        "new doc",
+        "new",
+        "doc",
+        "2026-07-19 15:48:47",
+        "2026",
+        "07",
+        "19",
+        "15",
+        "48",
+        "47",
+        "d-20260719-144956-cb5cb4"
+      ],
+      "search_text": "new doc new doc 2026-07-19 15:48:47 2026 07 19 15 48 47 d-20260719-144956-cb5cb4"
     },
     {
       "id": "d-20260428-000000-f5ff18",
@@ -3805,25 +3860,24 @@
       "kind": "doc",
       "title": "Docs Viewer Roadmap",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-1e0af6",
-      "last_updated": "2026-07-19 11:40:18",
+      "last_updated": "2026-07-19 12:37:19",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-19 11:40:18 • Roadmap",
+      "display_meta": "2026-07-19 12:37:19 • Roadmap",
       "search_terms": [
         "docs viewer roadmap",
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-19 11:40:18",
+        "2026-07-19 12:37:19",
         "2026",
         "07",
         "19",
-        "11",
-        "40",
-        "18",
+        "12",
+        "37",
         "d-20260714-234030-1e0af6"
       ],
-      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-19 11:40:18 2026 07 19 11 40 18 d-20260714-234030-1e0af6"
+      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-19 12:37:19 2026 07 19 12 37 d-20260714-234030-1e0af6"
     },
     {
       "id": "d-20260716-204013-3be4e1",
@@ -3945,77 +3999,77 @@
       "kind": "doc",
       "title": "Diagrams",
       "href": "/docs/?scope=studio&doc=d-20260715-181845-0158f9",
-      "last_updated": "2026-07-19 11:49:18",
+      "last_updated": "2026-07-19 12:15:22",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-19 11:49:18 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-19 12:15:22 • Docs Viewer Roadmap",
       "search_terms": [
         "diagrams",
         "docs viewer roadmap",
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-19 11:49:18",
+        "2026-07-19 12:15:22",
         "2026",
         "07",
         "19",
-        "11",
-        "49",
-        "18",
+        "12",
+        "15",
+        "22",
         "d-20260715-181845-0158f9"
       ],
-      "search_text": "diagrams docs viewer roadmap docs viewer roadmap 2026-07-19 11:49:18 2026 07 19 11 49 18 d-20260715-181845-0158f9"
+      "search_text": "diagrams docs viewer roadmap docs viewer roadmap 2026-07-19 12:15:22 2026 07 19 12 15 22 d-20260715-181845-0158f9"
     },
     {
       "id": "d-20260715-181845-524859",
       "kind": "doc",
       "title": "Document Diagrams Concept",
       "href": "/docs/?scope=studio&doc=d-20260715-181845-524859",
-      "last_updated": "2026-07-19 11:40:18",
+      "last_updated": "2026-07-19 12:15:22",
       "parent_id": "d-20260715-181845-0158f9",
       "parent_title": "Diagrams",
-      "display_meta": "2026-07-19 11:40:18 • Diagrams",
+      "display_meta": "2026-07-19 12:15:22 • Diagrams",
       "search_terms": [
         "document diagrams concept",
         "document",
         "diagrams",
         "concept",
-        "2026-07-19 11:40:18",
+        "2026-07-19 12:15:22",
         "2026",
         "07",
         "19",
-        "11",
-        "40",
-        "18",
+        "12",
+        "15",
+        "22",
         "d-20260715-181845-524859"
       ],
-      "search_text": "document diagrams concept document diagrams concept 2026-07-19 11:40:18 2026 07 19 11 40 18 d-20260715-181845-524859"
+      "search_text": "document diagrams concept document diagrams concept 2026-07-19 12:15:22 2026 07 19 12 15 22 d-20260715-181845-524859"
     },
     {
       "id": "d-20260718-214206-27df44",
       "kind": "doc",
       "title": "Mermaid Document Diagrams Delivery",
       "href": "/docs/?scope=studio&doc=d-20260718-214206-27df44",
-      "last_updated": "2026-07-19 11:49:18",
+      "last_updated": "2026-07-19 12:15:22",
       "parent_id": "d-20260715-181845-0158f9",
       "parent_title": "Diagrams",
-      "display_meta": "2026-07-19 11:49:18 • Diagrams",
+      "display_meta": "2026-07-19 12:15:22 • Diagrams",
       "search_terms": [
         "mermaid document diagrams delivery",
         "mermaid",
         "document",
         "diagrams",
         "delivery",
-        "2026-07-19 11:49:18",
+        "2026-07-19 12:15:22",
         "2026",
         "07",
         "19",
-        "11",
-        "49",
-        "18",
+        "12",
+        "15",
+        "22",
         "d-20260718-214206-27df44"
       ],
-      "search_text": "mermaid document diagrams delivery mermaid document diagrams delivery 2026-07-19 11:49:18 2026 07 19 11 49 18 d-20260718-214206-27df44"
+      "search_text": "mermaid document diagrams delivery mermaid document diagrams delivery 2026-07-19 12:15:22 2026 07 19 12 15 22 d-20260718-214206-27df44"
     },
     {
       "id": "d-20260718-155350-c84e62",
@@ -4537,10 +4591,10 @@
       "kind": "doc",
       "title": "Source Editor Add Image And Add File",
       "href": "/docs/?scope=studio&doc=d-20260717-231652-d6d49e",
-      "last_updated": "2026-07-19 11:40:18",
+      "last_updated": "2026-07-19 12:37:19",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-19 11:40:18 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-19 12:37:19 • Docs Viewer Roadmap",
       "search_terms": [
         "source editor add image and add file",
         "source",
@@ -4553,16 +4607,15 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-19 11:40:18",
+        "2026-07-19 12:37:19",
         "2026",
         "07",
         "19",
-        "11",
-        "40",
-        "18",
+        "12",
+        "37",
         "d-20260717-231652-d6d49e"
       ],
-      "search_text": "source editor add image and add file source editor add image and file docs viewer roadmap docs viewer roadmap 2026-07-19 11:40:18 2026 07 19 11 40 18 d-20260717-231652-d6d49e"
+      "search_text": "source editor add image and add file source editor add image and file docs viewer roadmap docs viewer roadmap 2026-07-19 12:37:19 2026 07 19 12 37 d-20260717-231652-d6d49e"
     },
     {
       "id": "d-20260717-231652-4890d2",

@@ -84,7 +84,13 @@
           "path": "docs-viewer/source/library"
         },
         "documents_path": "documents",
-        "build_media": {},
+        "build_media": {
+          "mermaid": {
+            "path": "media/mermaid",
+            "producer": "mermaid",
+            "publishes_to": "svg"
+          }
+        },
         "sub_scopes_path": "sub-scopes"
       },
       "published": {
@@ -117,7 +123,9 @@
               "path": "site/assets/data/docs/scopes/library/media/svg"
             },
             "served_path_prefix": "/assets/data/docs/scopes/library/media/svg",
-            "build_inputs": []
+            "build_inputs": [
+              "mermaid"
+            ]
           },
           "files": {
             "reference_prefix": "docs/library/files",
@@ -171,7 +179,13 @@
           "path": "docs-viewer/source/analysis"
         },
         "documents_path": "documents",
-        "build_media": {},
+        "build_media": {
+          "mermaid": {
+            "path": "media/mermaid",
+            "producer": "mermaid",
+            "publishes_to": "svg"
+          }
+        },
         "sub_scopes_path": "sub-scopes"
       },
       "published": {
@@ -204,7 +218,9 @@
               "path": "site/assets/data/docs/scopes/analysis/media/svg"
             },
             "served_path_prefix": "/assets/data/docs/scopes/analysis/media/svg",
-            "build_inputs": []
+            "build_inputs": [
+              "mermaid"
+            ]
           },
           "files": {
             "reference_prefix": "docs/analysis/files",
@@ -365,7 +381,13 @@
           "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/notes"
         },
         "documents_path": "documents",
-        "build_media": {},
+        "build_media": {
+          "mermaid": {
+            "path": "media/mermaid",
+            "producer": "mermaid",
+            "publishes_to": "svg"
+          }
+        },
         "sub_scopes_path": "sub-scopes"
       },
       "published": {
@@ -398,7 +420,9 @@
               "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/notes/media/svg"
             },
             "served_path_prefix": "/docs/media/notes/svg",
-            "build_inputs": []
+            "build_inputs": [
+              "mermaid"
+            ]
           },
           "files": {
             "reference_prefix": "docs/notes/files",

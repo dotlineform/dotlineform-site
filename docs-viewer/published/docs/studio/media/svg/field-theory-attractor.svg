@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="600" viewBox="0 0 1400 600" role="img" aria-label="Potential wells versus memory attractor basins">
+  <title>Energy Wells ↔ Memory Attractor Basins</title>
+  <desc>Diagram-only SVG showing an analogy between a physical potential field (wells) and a memory attractor landscape (basins). Exported 2025-09-30 11:39:30 BST Europe/London.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#172032"/>
+      <stop offset="100%" stop-color="#0f1522"/>
+    </linearGradient>
+    <style type="text/css">
+      .panel { fill: url(#bg); stroke:#2a2f42; }
+      .title { fill:#94e2d5; font: 700 22px -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; }
+      .label { fill:#aab0c0; font: 400 16px -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; }
+      .curve { fill:none; stroke:#89b4fa; stroke-width:3; }
+      .dot { fill:#89b4fa; }
+      .note { fill:#aab0c0; font: 400 14px -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; }
+      .cap  { fill:#aab0c0; font: 400 14px -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; }
+      .footer { fill:#718096; font: 400 12px -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; }
+      .divider { stroke:#2a2f42; stroke-width:1.5; stroke-dasharray:6 8; }
+      .frame { stroke:#2a2f42; fill:none; }
+    </style>
+  </defs>
+
+  
+  <rect x="10" y="10" width="1380" height="580" class="frame"/>
+  <line x1="700" y1="60" x2="700" y2="560" class="divider"/>
+
+  
+  <rect x="30" y="60" width="640" height="500" class="panel"/>
+  <text x="350" y="95" text-anchor="middle" class="title">Physics: Potential Field</text>
+
+  
+  <path class="curve" d="M60,360 C150,240 240,440 330,320 S520,380 650,300"/>
+  <circle class="dot" cx="170" cy="345" r="8"/>
+  <circle class="dot" cx="335" cy="330" r="8"/>
+  <circle class="dot" cx="510" cy="335" r="8"/>
+  <text x="90" y="410" class="label">Potential wells</text>
+  <text x="90" y="435" class="label">Dynamics settle into minima</text>
+
+  
+  <rect x="730" y="60" width="640" height="500" class="panel"/>
+  <text x="1050" y="95" text-anchor="middle" class="title">Memory: Attractor Landscape</text>
+
+  <path class="curve" d="M760,420 C850,260 930,440 1010,280 S1200,380 1350,260"/>
+  <circle class="dot" cx="870" cy="360" r="8"/>
+  <circle class="dot" cx="1035" cy="330" r="8"/>
+  <circle class="dot" cx="1220" cy="320" r="8"/>
+  <text x="780" y="460" class="label">Attractor basins</text>
+  <text x="780" y="485" class="label">Stored patterns = stable states</text>
+
+  
+  <text x="700" y="585" text-anchor="middle" class="footer">Analogy: potential wells in a physical field ↔ basins of attraction in memory models (e.g., Hopfield networks). Exported 2025-09-30 11:39:30 BST.</text>
+
+  
+  <text x="700" y="560" text-anchor="middle" class="footer">Refs: Hopfield 1982 (PNAS 79:2554); Friston 2010 (Nat Rev Neurosci 11:127); McFadden 2002 (Int J Psychophysiol 35); Pockett 2012 (Front Psychol 3:63); Wheeler 1990 (AJP 58:51).</text>
+</svg>

@@ -4,85 +4,81 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "d-20260715-181845-0158f9",
-      "title": "Diagrams",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260715-181845-0158f9.json",
-      "timestamp": "2026-07-19 11:49:18",
-      "parent_id": "d-20260714-234030-1e0af6",
-      "parent_title": "Docs Viewer Roadmap"
+      "doc_id": "d-20260719-144956-cb5cb4",
+      "title": "New Doc",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260719-144956-cb5cb4.json",
+      "timestamp": "2026-07-19 15:48:47"
     },
     {
-      "doc_id": "d-20260718-214206-27df44",
-      "title": "Mermaid Document Diagrams Delivery",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260718-214206-27df44.json",
-      "timestamp": "2026-07-19 11:49:18",
-      "parent_id": "d-20260715-181845-0158f9",
-      "parent_title": "Diagrams"
-    },
-    {
-      "doc_id": "d-20260423-155039-e36925",
-      "title": "Docs Images And Assets",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260423-155039-e36925.json",
-      "timestamp": "2026-07-19 11:40:18",
+      "doc_id": "d-20260514-180120-b23811",
+      "title": "Dependencies",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260514-180120-b23811.json",
+      "timestamp": "2026-07-19 12:37:19",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer"
     },
     {
-      "doc_id": "d-20260423-000000-c9f3ea",
-      "title": "Docs Viewer Builder",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260423-000000-c9f3ea.json",
-      "timestamp": "2026-07-19 11:40:18",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
+      "doc_id": "d-20260424-000000-50b63f",
+      "title": "Docs Viewer",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260424-000000-50b63f.json",
+      "timestamp": "2026-07-19 12:37:19"
     },
     {
       "doc_id": "d-20260714-234030-1e0af6",
       "title": "Docs Viewer Roadmap",
       "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260714-234030-1e0af6.json",
-      "timestamp": "2026-07-19 11:40:18",
+      "timestamp": "2026-07-19 12:37:19",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
     },
     {
-      "doc_id": "d-20260715-181845-524859",
-      "title": "Document Diagrams Concept",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260715-181845-524859.json",
-      "timestamp": "2026-07-19 11:40:18",
-      "parent_id": "d-20260715-181845-0158f9",
-      "parent_title": "Diagrams"
-    },
-    {
-      "doc_id": "d-20260424-000000-5b64f6",
-      "title": "Live Rebuild Watcher",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260424-000000-5b64f6.json",
-      "timestamp": "2026-07-19 11:40:18",
+      "doc_id": "d-20260719-123719-fb7565",
+      "title": "Document Diagrams",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260719-123719-fb7565.json",
+      "timestamp": "2026-07-19 12:37:19",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer"
     },
     {
-      "doc_id": "d-20260514-184303-7914e2",
-      "title": "Media And Asset Handling",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260514-184303-7914e2.json",
-      "timestamp": "2026-07-19 11:40:18",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
+      "doc_id": "d-20260519-210908-2f8f00",
+      "title": "Local Setup Toolchain",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260519-210908-2f8f00.json",
+      "timestamp": "2026-07-19 12:37:19",
+      "parent_id": "d-20260413-000000-d314b7",
+      "parent_title": "Local Setup"
+    },
+    {
+      "doc_id": "d-20260423-204839-111501",
+      "title": "Runtime Dependencies",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260423-204839-111501.json",
+      "timestamp": "2026-07-19 12:37:19",
+      "parent_id": "d-20260419-000000-d2e47b",
+      "parent_title": "Dev Home"
     },
     {
       "doc_id": "d-20260717-231652-d6d49e",
       "title": "Source Editor Add Image And Add File",
       "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260717-231652-d6d49e.json",
-      "timestamp": "2026-07-19 11:40:18",
+      "timestamp": "2026-07-19 12:37:19",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap"
     },
     {
-      "doc_id": "d-20260512-142027-54b354",
-      "title": "Configuration And Extension Points",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260512-142027-54b354.json",
-      "timestamp": "2026-07-19 11:37:48",
+      "doc_id": "d-20260423-000000-8fd731",
+      "title": "Source Organisation",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260423-000000-8fd731.json",
+      "timestamp": "2026-07-19 12:37:19",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260715-181845-0158f9",
+      "title": "Diagrams",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260715-181845-0158f9.json",
+      "timestamp": "2026-07-19 12:15:22",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap"
     }
   ],
-  "generated_at": "2026-07-19T10:49:45Z"
+  "generated_at": "2026-07-19T14:48:47Z"
 }

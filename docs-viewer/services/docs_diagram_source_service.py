@@ -86,7 +86,6 @@ def _verified_diagram_sources(repo_root: Path, scope: str, doc_id: str) -> list[
                 "label": humanize(Path(source_identity).stem),
                 "media_identity": f"{reference_prefix}/{published_identity}",
                 "source_identity": source_identity,
-                "open_label": "Open in VS Code",
             }
         )
     return records

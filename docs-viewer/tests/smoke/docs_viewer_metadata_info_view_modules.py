@@ -286,8 +286,7 @@ def assert_manage_diagram_sources_are_logical_vscode_links(page: Page) -> None:
                         sources: [{
                             label: 'Architecture',
                             media_identity: 'docs/studio/svg/architecture.svg',
-                            source_identity: 'architecture.mmd',
-                            open_label: 'Open in VS Code'
+                            source_identity: 'architecture.mmd'
                         }]
                     }),
                     openDiagramSource: async (payload) => { opened.push(payload); return { ok: true }; }
@@ -308,9 +307,9 @@ def assert_manage_diagram_sources_are_logical_vscode_links(page: Page) -> None:
             };
         }"""
     )
-    if result["heading"] != "Diagram sources":
-        raise AssertionError(f"manage info did not render Diagram sources: {result!r}")
-    if "Architecture" not in result["itemText"] or "Open in VS Code" not in result["itemText"]:
+    if result["heading"] != "Diagrams":
+        raise AssertionError(f"manage info did not render Diagrams: {result!r}")
+    if result["itemText"] != "Architecture":
         raise AssertionError(f"diagram source link content changed: {result!r}")
     if result["href"] != "#":
         raise AssertionError(f"diagram source exposed a direct source URL: {result!r}")

@@ -74,7 +74,6 @@ def test_manage_diagram_sources_lists_only_verified_same_basename_pairs() -> Non
                 "label": "Architecture",
                 "media_identity": "docs/library/svg/architecture.svg",
                 "source_identity": "architecture.mmd",
-                "open_label": "Open in VS Code",
             }
         ],
     }
