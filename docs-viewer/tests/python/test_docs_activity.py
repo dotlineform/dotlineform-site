@@ -187,19 +187,16 @@ def import_source_body() -> dict[str, object]:
     }
 
 
-def test_import_source_activity_suppresses_preview_and_confirmation() -> None:
+def test_import_source_activity_suppresses_preview() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         repo_root = Path(tmp)
         write_activity_contract(repo_root)
         body = import_source_body()
         preview_payload = {"ok": True, "doc_id": "new-doc", "preview_only": True}
-        confirmation_payload = {"ok": True, "doc_id": "new-doc", "requires_overwrite_confirmation": True}
 
         docs_activity.maybe_attach_import_source_activity(repo_root, body, preview_payload, dry_run=False)
-        docs_activity.maybe_attach_import_source_activity(repo_root, body, confirmation_payload, dry_run=False)
 
         assert "activity_log" not in preview_payload
-        assert "activity_log" not in confirmation_payload
         assert activity_entries(repo_root) == []
 
 

@@ -125,7 +125,6 @@ function payloadWarnings(payload, includeFilename) {
 }
 
 export function resetDocsHtmlImportWarning(state) {
-  state.pendingOverwriteDocId = "";
   state.warningNode.hidden = true;
   setText(state.collisionMetaNode, "");
   state.confirmButton.hidden = true;
@@ -176,8 +175,7 @@ export function renderDocsHtmlImportResult(state, payloadOrPayloads) {
   state.resultNode.hidden = false;
 }
 
-export function renderDocsHtmlImportOverwriteWarning(state, payload) {
-  const collision = payload && payload.collision && typeof payload.collision === "object" ? payload.collision : {};
+export function renderDocsHtmlImportInteractiveOverwriteWarning(state, payload) {
   const preview = payload && payload.import_preview && typeof payload.import_preview === "object"
     ? payload.import_preview
     : {};
@@ -187,38 +185,22 @@ export function renderDocsHtmlImportOverwriteWarning(state, payload) {
   const interactiveTargetText = interactivePlans.length === 1
     ? normalizeText(interactivePlans[0] && (interactivePlans[0].target_path || interactivePlans[0].filename))
     : `${interactivePlans.length} script files`;
-  const isInteractiveAssetOverwrite = Boolean(payload && payload.requires_interactive_html_confirmation);
-  state.pendingOverwriteDocId = normalizeText(collision.doc_id);
   setText(
     state.collisionHeadingNode,
-    importText("collisionHeading")
+    importText("interactiveAssetCollisionHeading")
   );
   setText(
     state.collisionBodyNode,
-    isInteractiveAssetOverwrite
-      ? importText(
-        "interactiveAssetCollisionBody"
-      )
-      : importText(
-        "collisionBody"
-      )
+    importText("interactiveAssetCollisionBody")
   );
   setText(
     state.collisionMetaNode,
-    isInteractiveAssetOverwrite
-      ? importText(
-        "interactiveAssetOverwriteRequired",
-        {
-          path: interactiveTargetText
-        }
-      )
-      : importText(
-        "overwriteRequired",
-        {
-          doc_id: collision.doc_id || preview.proposed_doc_id || "",
-          title: collision.title || preview.title || ""
-        }
-      )
+    importText(
+      "interactiveAssetOverwriteRequired",
+      {
+        path: interactiveTargetText
+      }
+    )
   );
   state.warningNode.hidden = false;
   state.confirmButton.hidden = false;

@@ -292,7 +292,11 @@ def test_html_import_confirms_existing_role_marked_interactive_asset_target() ->
             )
             apply_payload = handle_import_source(
                 root,
-                {"scope": "library", "staged_filename": "worksheet.html", "confirm_overwrite": True},
+                {
+                    "scope": "library",
+                    "staged_filename": "worksheet.html",
+                    "confirm_interactive_html_overwrite": True,
+                },
                 dry_run=False,
             )
         finally:

@@ -2,11 +2,8 @@ import {
   fetchManagementJson
 } from "../management/docs-viewer-management-client.js";
 import {
-  openReplacementDocIdModal
-} from "./docs-html-import-modals.js";
-import {
   clearDocsHtmlImportResult,
-  renderDocsHtmlImportOverwriteWarning,
+  renderDocsHtmlImportInteractiveOverwriteWarning,
   renderDocsHtmlImportResult,
   renderDocsHtmlImportWarnings,
   resetDocsHtmlImportWarning
@@ -55,11 +52,6 @@ export function buildDocsImportActivityContext({
   };
 }
 
-function collisionDocId(payload) {
-  const collision = payload && payload.collision && typeof payload.collision === "object" ? payload.collision : {};
-  return normalizeText(collision.doc_id);
-}
-
 export function docsHtmlImportManagementOptions({
   managementBaseUrl = ""
 } = {}) {
@@ -79,45 +71,19 @@ function resetImportView(state, statusMessage) {
   setStatus(state.statusNode, "", statusMessage);
 }
 
-async function handleReplacementDocIdModal(state, payload) {
-  const result = await openReplacementDocIdModal({
-    root: state.root,
-    payload
-  });
-  if (!result || result.action === "cancel") {
-    setStatus(
-      state.statusNode,
-      "",
-      importText("filenameConflictCancelled")
-    );
-    return { action: "cancel" };
-  }
-  if (result.action === "replace" && result.overwriteDocId) {
-    return {
-      action: "replace",
-      overwriteDocId: result.overwriteDocId,
-      confirmOverwrite: true
-    };
-  }
-  if (result.action === "rename" && result.replacementDocId) {
-    return { action: "rename", replacementDocId: result.replacementDocId };
-  }
-  return { action: "cancel" };
-}
-
-function awaitOverwriteConfirmation(state, payload) {
-  renderDocsHtmlImportOverwriteWarning(state, payload);
+function awaitInteractiveHtmlConfirmation(state, payload) {
+  renderDocsHtmlImportInteractiveOverwriteWarning(state, payload);
   renderDocsHtmlImportWarnings(state, payload.import_preview && payload.import_preview.warnings);
   setStatus(
     state.statusNode,
     "warn",
-    payload.summary_text || importText("overwriteRequired")
+    payload.summary_text || importText("interactiveAssetCollisionHeading")
   );
   state.confirmButton.disabled = false;
   state.cancelButton.disabled = false;
   return new Promise((resolve) => {
-    state.pendingOverwriteResolver = (action) => {
-      state.pendingOverwriteResolver = null;
+    state.pendingInteractiveOverwriteResolver = (action) => {
+      state.pendingInteractiveOverwriteResolver = null;
       resetDocsHtmlImportWarning(state);
       resolve(action);
     };
@@ -128,20 +94,15 @@ async function requestImport(
   file,
   context,
   {
-    overwriteDocId = "",
-    confirmOverwrite = false,
-    replacementDocId = ""
+    confirmInteractiveHtmlOverwrite = false
   } = {}
 ) {
   const stagedFilename = normalizeText(file && file.filename);
-  const normalizedReplacementDocId = normalizeText(replacementDocId);
   return fetchManagementJson("/docs/import-source", "POST", {
     scope: context.scope,
     staged_filename: stagedFilename,
     include_prompt_meta: docsHtmlImportSourceFormatForRecord(file) === "html" ? Boolean(context.includePromptMeta) : false,
-    overwrite_doc_id: overwriteDocId,
-    confirm_overwrite: confirmOverwrite,
-    replacement_doc_id: normalizedReplacementDocId,
+    confirm_interactive_html_overwrite: confirmInteractiveHtmlOverwrite,
     preview_only: false,
     activity_context: buildDocsImportActivityContext({
       pageId: "docs-import",
@@ -178,34 +139,11 @@ async function importFileWithPrompts(state, file, context = {}) {
       managementBaseUrl: context.managementBaseUrl
     }, nextOptions);
 
-    if (payload.preview_only && payload.replacement_doc_id_required) {
-      renderDocsHtmlImportWarnings(state, payload.import_preview && payload.import_preview.warnings);
-      setStatus(
-        state.statusNode,
-        "warn",
-        payload.summary_text || importText("replacementDocIdRequired")
-      );
-      const choice = await handleReplacementDocIdModal(state, payload);
-      if (!choice || choice.action === "cancel") return { cancelled: true };
-      if (choice.action === "replace") {
-        nextOptions = {
-          overwriteDocId: choice.overwriteDocId,
-          confirmOverwrite: true
-        };
-        continue;
-      }
-      if (choice.action === "rename") {
-        nextOptions = { replacementDocId: choice.replacementDocId };
-        continue;
-      }
-    }
-
-    if (payload.preview_only && payload.requires_overwrite_confirmation) {
-      const action = await awaitOverwriteConfirmation(state, payload);
+    if (payload.preview_only && payload.requires_interactive_html_confirmation) {
+      const action = await awaitInteractiveHtmlConfirmation(state, payload);
       if (action !== "confirm") return { cancelled: true };
       nextOptions = {
-        overwriteDocId: collisionDocId(payload),
-        confirmOverwrite: true
+        confirmInteractiveHtmlOverwrite: true
       };
       continue;
     }
@@ -257,7 +195,7 @@ export async function runDocsHtmlImportWorkflow(
           "",
           files.length > 1
             ? importText("importCancelledPartial", { count: results.length, total: files.length })
-            : importText("filenameConflictCancelled")
+            : importText("overwriteCancelled")
         );
         return;
       }
@@ -295,7 +233,7 @@ export async function runDocsHtmlImportWorkflow(
     state.runButton.disabled = false;
     state.confirmButton.disabled = false;
     state.cancelButton.disabled = false;
-    state.pendingOverwriteResolver = null;
+    state.pendingInteractiveOverwriteResolver = null;
     onRunningChange(false);
   }
 }

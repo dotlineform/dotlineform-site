@@ -11,7 +11,6 @@ from docs_import_common import is_interactive_html_import_asset
 from docs_import_content import CONTENT_FORMAT_MARKDOWN, CONTENT_INTENT_REPLACE, ImportContent
 from docs_import_document import (
     IMPORT_DOCUMENT_CREATE,
-    IMPORT_DOCUMENT_OVERWRITE,
     ImportDocumentApplyResult,
     ImportDocumentMediaContext,
     apply_import_document,
@@ -36,9 +35,7 @@ from docs_import_preview import (
 )
 from docs_import_review_handoff import attach_review_package_associations
 from docs_import_source_helpers import (
-    apply_replacement_doc_id_to_preview,
     interactive_html_overwrite_summary,
-    relative_path,
 )
 from docs_import_source_interactive import (
     ensure_interactive_html_targets_available,
@@ -47,8 +44,8 @@ from docs_import_source_interactive import (
 from docs_source_model import (
     allocate_doc_id,
     current_doc_timestamp,
-    load_scope_docs,
     normalize_scope,
+    scope_root,
 )
 from services.paths import configured_workspace_paths, marker_path, workspace_status
 
@@ -61,6 +58,17 @@ PerformSourceWriteAndRebuild = Callable[..., Dict[str, Any]]
 class ImportSourceDependencies:
     log_event: LogEvent
     perform_source_write_and_rebuild: PerformSourceWriteAndRebuild
+
+
+def allocate_ordinary_import_doc_id(repo_root: Path, scope: str, added_date: str) -> str:
+    documents_root = scope_root(repo_root, scope)
+    if not documents_root.is_dir():
+        raise ValueError(f"missing source root for scope {scope}: {documents_root}")
+    for _attempt in range(100):
+        doc_id = allocate_doc_id(added_date)
+        if not (documents_root / f"{doc_id}.md").exists():
+            return doc_id
+    raise RuntimeError("could not allocate an available ordinary import document identity")
 
 
 def handle_import_source_files(repo_root: Path) -> Dict[str, Any]:
@@ -116,10 +124,8 @@ def handle_import_source(
     scope = normalize_scope(body.get("scope"))
     staged_filename = str(body.get("staged_filename") or "").strip()
     include_prompt_meta = bool(body.get("include_prompt_meta"))
-    overwrite_doc_id = str(body.get("overwrite_doc_id") or "").strip()
-    confirm_overwrite = bool(body.get("confirm_overwrite"))
+    confirm_interactive_html_overwrite = bool(body.get("confirm_interactive_html_overwrite"))
     preview_only = bool(body.get("preview_only"))
-    replacement_doc_id = str(body.get("replacement_doc_id") or "").strip()
     source_path = resolve_staged_import_source(staging_root, staged_filename)
     source_format = data_sharing_documents_source_format(
         repo_root,
@@ -186,56 +192,17 @@ def handle_import_source(
             preview.setdefault("warnings", []).append(
                 f"Interactive HTML asset target already exists: {interactive_plan['target_path']}."
             )
-    if replacement_doc_id:
-        apply_replacement_doc_id_to_preview(preview, replacement_doc_id)
-        if source_path.is_dir():
-            retarget_markdown_package_media_plans(
-                repo_root,
-                staging_root,
-                workspace_root,
-                source_path,
-                preview,
-                scope,
-            )
-        retarget_inline_media_plans(repo_root, staging_root, workspace_root, preview, scope)
-
-    docs = load_scope_docs(repo_root, scope)
-    proposed_doc_id = str(preview["proposed_doc_id"])
-    collision_doc = next(
-        (doc for doc in docs if doc.doc_id == proposed_doc_id or doc.path.stem == proposed_doc_id),
-        None,
-    )
-    collision = {
-        "exists": collision_doc is not None,
-        "doc_id": collision_doc.doc_id if collision_doc else "",
-        "title": collision_doc.title if collision_doc else "",
-        "path": relative_path(repo_root, collision_doc.path) if collision_doc else "",
-        "stem": collision_doc.path.stem if collision_doc else "",
-    }
-    preview["doc_id_collision"] = collision
-    replacement_required = collision_doc is not None and not (overwrite_doc_id and confirm_overwrite)
-    preview["replacement_doc_id_required"] = replacement_required
-
-    if overwrite_doc_id and collision_doc is None:
-        raise ValueError("overwrite_doc_id is only allowed when the generated import target collides with an existing doc")
-    if overwrite_doc_id and collision_doc and overwrite_doc_id != collision_doc.doc_id:
-        raise ValueError(f"overwrite_doc_id must match the colliding doc_id {collision_doc.doc_id!r}")
-
-    requires_doc_overwrite_confirmation = collision_doc is not None and not (overwrite_doc_id and confirm_overwrite)
     existing_interactive_plans = [plan for plan in interactive_plans if plan.get("target_exists")]
-    requires_interactive_html_confirmation = bool(existing_interactive_plans and not confirm_overwrite)
-    requires_overwrite_confirmation = requires_doc_overwrite_confirmation or requires_interactive_html_confirmation
-    if requires_doc_overwrite_confirmation:
-        preview.setdefault("warnings", []).append(
-            f"Proposed filename {preview['proposed_doc_id']}.md already exists in {scope}; enter a replacement doc_id before import."
-        )
+    requires_interactive_html_confirmation = bool(
+        existing_interactive_plans and not confirm_interactive_html_overwrite
+    )
     if requires_interactive_html_confirmation:
         for interactive_plan in existing_interactive_plans:
             preview.setdefault("warnings", []).append(
                 f"Interactive HTML asset {interactive_plan['target_path']} already exists; confirm overwrite to replace it."
             )
 
-    if dry_run or preview_only or requires_overwrite_confirmation:
+    if dry_run or preview_only or requires_interactive_html_confirmation:
         dependencies.log_event(
             repo_root,
             "docs-import-source-preview",
@@ -245,13 +212,9 @@ def handle_import_source(
                 "source_format": preview.get("source_format"),
                 "include_prompt_meta": include_prompt_meta,
                 "proposed_doc_id": preview["proposed_doc_id"],
-                "collision": collision["exists"],
                 "inline_media_count": len(preview.get("media_plans") or []),
                 "interactive_html_asset_count": len(interactive_plans),
-                "requires_overwrite_confirmation": requires_overwrite_confirmation,
-                "requires_doc_overwrite_confirmation": requires_doc_overwrite_confirmation,
                 "requires_interactive_html_confirmation": requires_interactive_html_confirmation,
-                "replacement_doc_id_required": bool(preview.get("replacement_doc_id_required")),
             },
         )
         return {
@@ -260,62 +223,53 @@ def handle_import_source(
             "staged_filename": staged_filename,
             "include_prompt_meta": include_prompt_meta,
             "preview_only": True,
-            "requires_overwrite_confirmation": requires_overwrite_confirmation,
-            "requires_doc_overwrite_confirmation": requires_doc_overwrite_confirmation,
             "requires_interactive_html_confirmation": requires_interactive_html_confirmation,
-            "replacement_doc_id_required": bool(preview.get("replacement_doc_id_required")),
-            "collision": collision,
             "import_preview": preview,
             "summary_text": (
-                f"Replacement doc_id required for {preview['proposed_doc_id']}."
-                if requires_doc_overwrite_confirmation
-                else interactive_html_overwrite_summary(existing_interactive_plans)
+                interactive_html_overwrite_summary(existing_interactive_plans)
                 if requires_interactive_html_confirmation and existing_interactive_plans
                 else f"Prepared import preview for {staged_filename}."
             ),
             "dry_run": dry_run,
         }
 
-    ensure_interactive_html_targets_available(interactive_plans, allow_overwrite=confirm_overwrite)
-    operation = IMPORT_DOCUMENT_OVERWRITE if collision_doc is not None else IMPORT_DOCUMENT_CREATE
-    doc_id = collision_doc.doc_id if collision_doc is not None else proposed_doc_id
-    create_added_date = ""
-    create_doc_id = ""
-    if operation == IMPORT_DOCUMENT_CREATE:
-        create_added_date = current_doc_timestamp()
-        unavailable = {identity for doc in docs for identity in (doc.doc_id, doc.path.stem)}
-        create_doc_id = allocate_doc_id(create_added_date, unavailable)
-        preview["proposed_doc_id"] = create_doc_id
-        preview["proposed_doc_id_source"] = "allocated-local-identity"
-        if source_path.is_dir():
-            retarget_markdown_package_media_plans(
-                repo_root,
-                staging_root,
-                workspace_root,
-                source_path,
-                preview,
-                scope,
-            )
-        retarget_inline_media_plans(repo_root, staging_root, workspace_root, preview, scope)
-    title = str(preview.get("title") or (collision_doc.title if collision_doc else "Imported Doc")).strip()
+    ensure_interactive_html_targets_available(
+        interactive_plans,
+        allow_overwrite=confirm_interactive_html_overwrite,
+    )
+    source_doc_id = str(preview["proposed_doc_id"])
+    create_added_date = current_doc_timestamp()
+    create_doc_id = allocate_ordinary_import_doc_id(repo_root, scope, create_added_date)
+    preview["proposed_doc_id"] = create_doc_id
+    preview["proposed_doc_id_source"] = "allocated-local-identity"
+    if source_path.is_dir():
+        retarget_markdown_package_media_plans(
+            repo_root,
+            staging_root,
+            workspace_root,
+            source_path,
+            preview,
+            scope,
+        )
+    retarget_inline_media_plans(repo_root, staging_root, workspace_root, preview, scope)
+    title = str(preview.get("title") or "Imported Doc").strip()
     record = ImportContent(
         source_kind="staged-source",
         source_identity=staged_filename,
         record_identity=staged_filename,
-        doc_id=doc_id,
+        doc_id=source_doc_id,
         title=title,
         content_intent=CONTENT_INTENT_REPLACE,
         content_format=CONTENT_FORMAT_MARKDOWN,
         content=str(preview.get("markdown_preview") or ""),
-        parent_id=collision_doc.parent_id if collision_doc is not None else "",
+        parent_id="",
     )
     plan = plan_import_document(
         repo_root,
         scope,
         record,
-        operation=operation,
-        docs=docs,
-        target=collision_doc,
+        operation=IMPORT_DOCUMENT_CREATE,
+        docs=[],
         import_preview=preview,
         create_doc_id=create_doc_id,
         create_added_date=create_added_date,
@@ -326,7 +280,7 @@ def handle_import_source(
         source_path=source_path,
         include_prompt_meta=include_prompt_meta,
         interactive_html_plans=tuple(interactive_plans),
-        allow_interactive_html_overwrite=confirm_overwrite,
+        allow_interactive_html_overwrite=confirm_interactive_html_overwrite,
         source_markdown=private_media_source_markdown,
     )
     apply_result = ImportDocumentApplyResult()
@@ -369,10 +323,7 @@ def handle_import_source(
         "staged_filename": staged_filename,
         "include_prompt_meta": include_prompt_meta,
         "preview_only": False,
-        "requires_overwrite_confirmation": False,
-        "requires_doc_overwrite_confirmation": False,
         "requires_interactive_html_confirmation": False,
-        "collision": collision,
         "import_preview": plan.import_preview,
         **result,
     }

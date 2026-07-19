@@ -32,6 +32,7 @@ from docs_source_model import (
     scope_root,
     slugify,
     write_text_atomic,
+    write_text_atomic_new,
 )
 
 
@@ -376,7 +377,9 @@ def materialize_import_document_media(
 def apply_import_document_source(plan: ImportDocumentPlan) -> None:
     """Atomically write only one already-validated planned source."""
 
-    if plan.target is None or plan.source_text != plan.target.source_text:
+    if plan.operation == IMPORT_DOCUMENT_CREATE:
+        write_text_atomic_new(plan.target_path, plan.source_text)
+    elif plan.target is not None and plan.source_text != plan.target.source_text:
         write_text_atomic(plan.target_path, plan.source_text)
 
 

@@ -178,7 +178,7 @@ def maybe_attach_import_source_activity(repo_root: Path, body: Dict[str, Any], p
             ),
         )
         return
-    if dry_run or payload.get("preview_only") or payload.get("requires_overwrite_confirmation"):
+    if dry_run or payload.get("preview_only"):
         return
     doc_id = str(payload.get("doc_id") or "").strip()
     if not doc_id:

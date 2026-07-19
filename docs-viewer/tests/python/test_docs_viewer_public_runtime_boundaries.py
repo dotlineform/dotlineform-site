@@ -48,7 +48,6 @@ def test_public_docs_viewer_entry_static_graph_excludes_manage_owned_modules() -
     }
     blocked_exact = {
         "docs-viewer/runtime/js/import/docs-html-import.js",
-        "docs-viewer/runtime/js/import/docs-html-import-modals.js",
         "docs-viewer/runtime/js/import/docs-html-import-render.js",
         "docs-viewer/runtime/js/import/docs-html-import-workflow.js",
         "docs-viewer/runtime/js/management/docs-viewer-manage.js",

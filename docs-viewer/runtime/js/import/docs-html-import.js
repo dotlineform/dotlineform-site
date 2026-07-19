@@ -462,15 +462,15 @@ function bindImportEvents(state) {
     openResultSource(state, link).catch((error) => console.warn("docs_import_source: unexpected open source failure", error));
   });
   state.confirmButton.addEventListener("click", () => {
-    if (state.pendingOverwriteResolver) {
-      state.pendingOverwriteResolver("confirm");
+    if (state.pendingInteractiveOverwriteResolver) {
+      state.pendingInteractiveOverwriteResolver("confirm");
       return;
     }
     runImport(state).catch((error) => console.warn("docs_import_source: unexpected overwrite failure", error));
   });
   state.cancelButton.addEventListener("click", () => {
-    if (state.pendingOverwriteResolver) {
-      state.pendingOverwriteResolver("cancel");
+    if (state.pendingInteractiveOverwriteResolver) {
+      state.pendingInteractiveOverwriteResolver("cancel");
       return;
     }
     resetDocsHtmlImportWarning(state);
@@ -596,8 +596,7 @@ export async function initDocsHtmlImport(options = {}) {
     warningsHeading: document.getElementById("docsHtmlImportWarningsHeading"),
     warningsList: document.getElementById("docsHtmlImportWarningsList"),
     collectionView: document.getElementById("docsImportCollectionView"),
-    pendingOverwriteDocId: "",
-    pendingOverwriteResolver: null,
+    pendingInteractiveOverwriteResolver: null,
     persistScope: options.persistScope !== false,
     routePath: normalizeText(options.routePath) || "/docs/",
     managementBaseUrl: normalizeText(options.managementBaseUrl),

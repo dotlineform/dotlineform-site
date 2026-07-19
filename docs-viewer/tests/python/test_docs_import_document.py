@@ -306,3 +306,25 @@ def test_create_plan_treats_external_identity_as_provenance_not_a_local_path() -
     assert source_model.is_immutable_doc_id(plan.doc_id)
     assert plan.record.provenance["source_doc_id"] == "../outside"
     assert plan.target_path.parent.name == "documents"
+
+
+def test_create_apply_refuses_a_target_that_appeared_after_planning() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        docs = source_model.load_scope_docs(root, "library")
+        record = import_content(doc_id="new-document")
+        plan = plan_import_document(
+            root,
+            "library",
+            record,
+            operation=IMPORT_DOCUMENT_CREATE,
+            docs=docs,
+            import_preview=normalized_preview(record),
+        )
+        plan.target_path.write_text("appeared after planning\n", encoding="utf-8")
+
+        with pytest.raises(FileExistsError, match="source path already exists"):
+            apply_import_document(root, plan)
+
+        assert plan.target_path.read_text(encoding="utf-8") == "appeared after planning\n"

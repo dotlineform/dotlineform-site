@@ -235,15 +235,9 @@ def test_docx_import_materializes_supported_image_before_source_write() -> None:
     assert "_inline_media_source_markdown" not in response_text
 
 
-def test_docx_collision_requires_confirmation_and_overwrites_through_shared_path() -> None:
+def test_docx_reimport_creates_independent_documents() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_library_doc(
-            root,
-            "word-images.md",
-            {"doc_id": "word-images", "title": "Existing Word", "parent_id": ""},
-            body="# Existing Word\n\nOld body.\n",
-        )
         write_staged_bytes(root, "word-images.docx", embedded_image_docx_bytes())
         original_rebuild = stub_rebuild()
         original_validation = docs_import_preview.validate_markdown_preview
@@ -253,34 +247,32 @@ def test_docx_collision_requires_confirmation_and_overwrites_through_shared_path
             "renderer": "stub",
         }
         try:
-            preview_payload = handle_import_source(
+            first_payload = handle_import_source(
                 root,
                 {"scope": "library", "staged_filename": "word-images.docx"},
                 dry_run=False,
             )
-            apply_payload = handle_import_source(
+            second_payload = handle_import_source(
                 root,
-                {
-                    "scope": "library",
-                    "staged_filename": "word-images.docx",
-                    "overwrite_doc_id": "word-images",
-                    "confirm_overwrite": True,
-                },
+                {"scope": "library", "staged_filename": "word-images.docx"},
                 dry_run=False,
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
             docs_import_preview.validate_markdown_preview = original_validation
 
-        source_text = (root / "docs-viewer/source/library/documents/word-images.md").read_text(encoding="utf-8")
+        first_source = (root / first_payload["path"]).read_text(encoding="utf-8")
+        second_source = (root / second_payload["path"]).read_text(encoding="utf-8")
 
-    assert preview_payload["preview_only"] is True
-    assert preview_payload["requires_doc_overwrite_confirmation"] is True
-    assert apply_payload["operation"] == "overwrite"
-    assert apply_payload["doc_id"] == "word-images"
-    assert "# Word Image Import" in source_text
-    assert "Old body." not in source_text
-    assert "[[media:docs/library/img/word-images-image-01.png]]" in source_text
+    assert first_payload["operation"] == "create"
+    assert second_payload["operation"] == "create"
+    assert first_payload["doc_id"].startswith("d-")
+    assert second_payload["doc_id"].startswith("d-")
+    assert first_payload["doc_id"] != second_payload["doc_id"]
+    assert "collision" not in first_payload
+    assert "requires_doc_overwrite_confirmation" not in first_payload
+    assert f"[[media:docs/library/img/{first_payload['doc_id']}-image-01.png]]" in first_source
+    assert f"[[media:docs/library/img/{second_payload['doc_id']}-image-01.png]]" in second_source
 
 
 def test_docx_media_publication_failure_does_not_write_document_source(

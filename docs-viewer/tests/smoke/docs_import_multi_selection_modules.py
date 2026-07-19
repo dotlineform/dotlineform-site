@@ -63,6 +63,26 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
         body = route.request.post_data_json
         import_requests.append(body)
         filename = str(body["staged_filename"])
+        if filename == "beta.html" and not body.get("confirm_interactive_html_overwrite"):
+            fulfill(
+                route,
+                {
+                    "ok": True,
+                    "preview_only": True,
+                    "scope": body["scope"],
+                    "staged_filename": filename,
+                    "requires_interactive_html_confirmation": True,
+                    "summary_text": "Interactive HTML asset overwrite required.",
+                    "import_preview": {
+                        "source_format": "html",
+                        "warnings": ["Interactive HTML asset target already exists."],
+                        "interactive_html_plans": [
+                            {"target_path": "docs/studio/html/beta-widget.html", "target_exists": True}
+                        ],
+                    },
+                },
+            )
+            return
         doc_id = Path(filename).stem
         source_format = next(
             record["source_format"] for record in staged_files if record["filename"] == filename
@@ -116,6 +136,7 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
           const selectionCount = document.getElementById('docsHtmlImportSelectionCount');
           const promptMetaWrap = document.getElementById('docsHtmlImportIncludePromptMetaWrap');
           const runButton = document.getElementById('docsHtmlImportRun');
+          const confirmButton = document.getElementById('docsHtmlImportConfirm');
           const selectionBar = document.getElementById('docsHtmlImportSelectionBar');
 
           const initial = {
@@ -138,6 +159,11 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
           };
 
           runButton.click();
+          for (let attempt = 0; attempt < 1000 && confirmButton.hidden; attempt += 1) {
+            await new Promise(resolve => setTimeout(resolve, 0));
+          }
+          if (confirmButton.hidden) throw new Error('interactive HTML replacement confirmation was not shown');
+          confirmButton.click();
           await terminalPromise;
           while (document.getElementById('docsHtmlImportRoot').dataset.studioBusy === 'true') {
             await new Promise(resolve => setTimeout(resolve, 0));
@@ -201,10 +227,17 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
     if [request["staged_filename"] for request in import_requests] != [
         "alpha.md",
         "beta.html",
+        "beta.html",
         "word.docx",
         "notes.json",
     ]:
         raise AssertionError(f"ordinary multi-import crossed the package boundary: {import_requests!r}")
+    beta_requests = [request for request in import_requests if request["staged_filename"] == "beta.html"]
+    if [request.get("confirm_interactive_html_overwrite") for request in beta_requests] != [False, True]:
+        raise AssertionError(f"interactive HTML replacement confirmation contract drifted: {import_requests!r}")
+    removed_fields = {"overwrite_doc_id", "replacement_doc_id"}
+    if any(removed_fields & set(request) for request in import_requests):
+        raise AssertionError(f"ordinary import still sent retired document collision fields: {import_requests!r}")
     if result["terminal"] != {"scope": "studio", "docId": "notes", "resultCount": 4}:
         raise AssertionError(f"multi-import did not identify the last imported doc: {result!r}")
 

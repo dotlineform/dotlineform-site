@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ff1211c3c7665d255c4062eb6df2ac09",
-    "generated_at_utc": "2026-07-19T18:25:33Z",
+    "version": "blake2b-4e32b1377df74caacd1e5fe91fb13f50",
+    "generated_at_utc": "2026-07-19T19:12:38Z",
     "count": 257
   },
   "entries": [
@@ -1512,24 +1512,26 @@
       "kind": "doc",
       "title": "Docs Import",
       "href": "/docs/?scope=studio&doc=d-20260424-000000-fc8b5d",
-      "last_updated": "2026-07-19 19:07:17",
+      "last_updated": "2026-07-19 20:11:37",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-19 19:07:17 • Docs Viewer",
+      "display_meta": "2026-07-19 20:11:37 • Docs Viewer",
       "search_terms": [
         "docs import",
         "docs",
         "import",
         "docs viewer",
         "viewer",
-        "2026-07-19 19:07:17",
+        "2026-07-19 20:11:37",
         "2026",
         "07",
         "19",
-        "17",
+        "20",
+        "11",
+        "37",
         "d-20260424-000000-fc8b5d"
       ],
-      "search_text": "docs import docs import docs viewer viewer 2026-07-19 19:07:17 2026 07 19 17 d-20260424-000000-fc8b5d"
+      "search_text": "docs import docs import docs viewer viewer 2026-07-19 20:11:37 2026 07 19 20 11 37 d-20260424-000000-fc8b5d"
     },
     {
       "id": "d-20260719-182348-492a48",
@@ -1589,10 +1591,10 @@
       "kind": "doc",
       "title": "Docs Import Architecture",
       "href": "/docs/?scope=studio&doc=d-20260514-164722-3de65e",
-      "last_updated": "2026-07-19 19:07:17",
+      "last_updated": "2026-07-19 20:11:37",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-19 19:07:17 • Docs Viewer",
+      "display_meta": "2026-07-19 20:11:37 • Docs Viewer",
       "search_terms": [
         "docs import architecture",
         "docs",
@@ -1600,14 +1602,16 @@
         "architecture",
         "docs viewer",
         "viewer",
-        "2026-07-19 19:07:17",
+        "2026-07-19 20:11:37",
         "2026",
         "07",
         "19",
-        "17",
+        "20",
+        "11",
+        "37",
         "d-20260514-164722-3de65e"
       ],
-      "search_text": "docs import architecture docs import architecture docs viewer viewer 2026-07-19 19:07:17 2026 07 19 17 d-20260514-164722-3de65e"
+      "search_text": "docs import architecture docs import architecture docs viewer viewer 2026-07-19 20:11:37 2026 07 19 20 11 37 d-20260514-164722-3de65e"
     },
     {
       "id": "d-20260711-214307-b4c800",
@@ -1982,10 +1986,10 @@
       "kind": "doc",
       "title": "Create And Import Endpoints",
       "href": "/docs/?scope=studio&doc=d-20260607-222033-78a47c",
-      "last_updated": "2026-07-18 19:10:57",
+      "last_updated": "2026-07-19 20:11:37",
       "parent_id": "d-20260607-222033-647b52",
       "parent_title": "Endpoint Overview",
-      "display_meta": "2026-07-18 19:10:57 • Endpoint Overview",
+      "display_meta": "2026-07-19 20:11:37 • Endpoint Overview",
       "search_terms": [
         "create and import endpoints",
         "create",
@@ -1995,16 +1999,16 @@
         "endpoint overview",
         "endpoint",
         "overview",
-        "2026-07-18 19:10:57",
+        "2026-07-19 20:11:37",
         "2026",
         "07",
-        "18",
         "19",
-        "10",
-        "57",
+        "20",
+        "11",
+        "37",
         "d-20260607-222033-78a47c"
       ],
-      "search_text": "create and import endpoints create and import endpoints endpoint overview endpoint overview 2026-07-18 19:10:57 2026 07 18 19 10 57 d-20260607-222033-78a47c"
+      "search_text": "create and import endpoints create and import endpoints endpoint overview endpoint overview 2026-07-19 20:11:37 2026 07 19 20 11 37 d-20260607-222033-78a47c"
     },
     {
       "id": "d-20260711-214307-6d6d46",
@@ -2295,23 +2299,26 @@
       "kind": "doc",
       "title": "Import Scripts",
       "href": "/docs/?scope=studio&doc=d-20260607-222033-c902f6",
-      "last_updated": "2026-07-12",
+      "last_updated": "2026-07-19 20:11:37",
       "parent_id": "d-20260607-222033-2a494e",
       "parent_title": "Scripts Overview",
-      "display_meta": "2026-07-12 • Scripts Overview",
+      "display_meta": "2026-07-19 20:11:37 • Scripts Overview",
       "search_terms": [
         "import scripts",
         "import",
         "scripts",
         "scripts overview",
         "overview",
-        "2026-07-12",
+        "2026-07-19 20:11:37",
         "2026",
         "07",
-        "12",
+        "19",
+        "20",
+        "11",
+        "37",
         "d-20260607-222033-c902f6"
       ],
-      "search_text": "import scripts import scripts scripts overview overview 2026-07-12 2026 07 12 d-20260607-222033-c902f6"
+      "search_text": "import scripts import scripts scripts overview overview 2026-07-19 20:11:37 2026 07 19 20 11 37 d-20260607-222033-c902f6"
     },
     {
       "id": "d-20260607-222033-f2a546",
@@ -4765,10 +4772,10 @@
       "kind": "doc",
       "title": "Word Document Import",
       "href": "/docs/?scope=studio&doc=d-20260718-233015-a1836e",
-      "last_updated": "2026-07-19 19:08:59",
+      "last_updated": "2026-07-19 20:11:37",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-19 19:08:59 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-19 20:11:37 • Docs Viewer Roadmap",
       "search_terms": [
         "word document import",
         "word",
@@ -4778,25 +4785,26 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-19 19:08:59",
+        "2026-07-19 20:11:37",
         "2026",
         "07",
         "19",
-        "08",
-        "59",
+        "20",
+        "11",
+        "37",
         "d-20260718-233015-a1836e"
       ],
-      "search_text": "word document import word document import docs viewer roadmap docs viewer roadmap 2026-07-19 19:08:59 2026 07 19 08 59 d-20260718-233015-a1836e"
+      "search_text": "word document import word document import docs viewer roadmap docs viewer roadmap 2026-07-19 20:11:37 2026 07 19 20 11 37 d-20260718-233015-a1836e"
     },
     {
       "id": "d-20260719-174421-aa4ff0",
       "kind": "doc",
       "title": "Word Document Import Delivery",
       "href": "/docs/?scope=studio&doc=d-20260719-174421-aa4ff0",
-      "last_updated": "2026-07-19 19:08:59",
+      "last_updated": "2026-07-19 20:11:37",
       "parent_id": "d-20260718-233015-a1836e",
       "parent_title": "Word Document Import",
-      "display_meta": "2026-07-19 19:08:59 • Word Document Import",
+      "display_meta": "2026-07-19 20:11:37 • Word Document Import",
       "search_terms": [
         "word document import delivery",
         "word",
@@ -4804,15 +4812,16 @@
         "import",
         "delivery",
         "word document import",
-        "2026-07-19 19:08:59",
+        "2026-07-19 20:11:37",
         "2026",
         "07",
         "19",
-        "08",
-        "59",
+        "20",
+        "11",
+        "37",
         "d-20260719-174421-aa4ff0"
       ],
-      "search_text": "word document import delivery word document import delivery word document import 2026-07-19 19:08:59 2026 07 19 08 59 d-20260719-174421-aa4ff0"
+      "search_text": "word document import delivery word document import delivery word document import 2026-07-19 20:11:37 2026 07 19 20 11 37 d-20260719-174421-aa4ff0"
     },
     {
       "id": "d-20260715-092247-f3fd52",
