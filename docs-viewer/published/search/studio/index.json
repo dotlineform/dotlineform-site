@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b36079c94a4b9cae558178ead944ef97",
-    "generated_at_utc": "2026-07-19T19:21:57Z",
-    "count": 257
+    "version": "blake2b-b190be5a1ebd96578b417932ad15778c",
+    "generated_at_utc": "2026-07-19T19:44:19Z",
+    "count": 258
   },
   "entries": [
     {
@@ -4551,10 +4551,10 @@
       "kind": "doc",
       "title": "Scope-First Storage Layout",
       "href": "/docs/?scope=studio&doc=d-20260719-144956-cb5cb4",
-      "last_updated": "2026-07-19 17:37:56",
+      "last_updated": "2026-07-19 20:43:24",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-19 17:37:56 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-19 20:43:24 • Docs Viewer Roadmap",
       "search_terms": [
         "scope-first storage layout",
         "scope",
@@ -4565,16 +4565,45 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-19 17:37:56",
+        "2026-07-19 20:43:24",
         "2026",
         "07",
         "19",
-        "17",
-        "37",
-        "56",
+        "20",
+        "43",
+        "24",
         "d-20260719-144956-cb5cb4"
       ],
-      "search_text": "scope-first storage layout scope first storage layout docs viewer roadmap docs viewer roadmap 2026-07-19 17:37:56 2026 07 19 17 37 56 d-20260719-144956-cb5cb4"
+      "search_text": "scope-first storage layout scope first storage layout docs viewer roadmap docs viewer roadmap 2026-07-19 20:43:24 2026 07 19 20 43 24 d-20260719-144956-cb5cb4"
+    },
+    {
+      "id": "d-20260719-202836-1769ad",
+      "kind": "doc",
+      "title": "Scope-First Storage Cutover Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260719-202836-1769ad",
+      "last_updated": "2026-07-19 20:43:24",
+      "parent_id": "d-20260719-144956-cb5cb4",
+      "parent_title": "Scope-First Storage Layout",
+      "display_meta": "2026-07-19 20:43:24 • Scope-First Storage Layout",
+      "search_terms": [
+        "scope-first storage cutover delivery",
+        "scope",
+        "first",
+        "storage",
+        "cutover",
+        "delivery",
+        "scope-first storage layout",
+        "layout",
+        "2026-07-19 20:43:24",
+        "2026",
+        "07",
+        "19",
+        "20",
+        "43",
+        "24",
+        "d-20260719-202836-1769ad"
+      ],
+      "search_text": "scope-first storage cutover delivery scope first storage cutover delivery scope-first storage layout layout 2026-07-19 20:43:24 2026 07 19 20 43 24 d-20260719-202836-1769ad"
     },
     {
       "id": "d-20260527-105208-c1a4d0",

@@ -1040,7 +1040,15 @@
               "doc_id": "d-20260719-144956-cb5cb4",
               "title": "Scope-First Storage Layout",
               "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260719-144956-cb5cb4.json",
-              "ui_status": "active"
+              "ui_status": "active",
+              "children": [
+                {
+                  "doc_id": "d-20260719-202836-1769ad",
+                  "title": "Scope-First Storage Cutover Delivery",
+                  "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260719-202836-1769ad.json",
+                  "ui_status": "planned"
+                }
+              ]
             },
             {
               "doc_id": "d-20260527-105208-c1a4d0",
@@ -1472,5 +1480,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-19T19:21:57Z"
+  "generated_at": "2026-07-19T19:31:46Z"
 }
