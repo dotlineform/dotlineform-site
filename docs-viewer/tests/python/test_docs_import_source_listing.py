@@ -11,6 +11,8 @@ import pytest
 import docs_import_media
 import docs_import_preview
 import docs_import_source_service as import_source_service
+from docs_import_common import FILE_MEDIA_STAGED_SUFFIXES
+from docs_import_docx_test_support import semantic_docx_bytes
 from services.paths import configured_workspace_paths
 
 from docs_import_test_support import (
@@ -24,12 +26,13 @@ from docs_import_test_support import (
     write_staged_text,
 )
 
-def test_source_import_files_list_html_and_markdown() -> None:
+def test_source_import_files_list_registered_document_formats() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_staged_html(root, "source.html", "<html><body><h1>Source</h1></body></html>")
         write_staged_markdown(root, "source.md", "# Source\n")
         write_staged_text(root, "source.txt", "Source\n")
+        write_staged_bytes(root, "source.docx", semantic_docx_bytes())
         write_staged_text(root, "source.svg", "<svg viewBox='0 0 10 10'></svg>\n")
         write_staged_bytes(root, "source.png", b"fake image")
         write_staged_bytes(root, "source.pdf", b"fake pdf")
@@ -41,6 +44,8 @@ def test_source_import_files_list_html_and_markdown() -> None:
     assert by_filename["source.html"]["source_format"] == "html"
     assert by_filename["source.md"]["source_format"] == "markdown"
     assert by_filename["source.txt"]["source_format"] == "text"
+    assert by_filename["source.docx"]["source_format"] == "docx"
+    assert ".docx" in FILE_MEDIA_STAGED_SUFFIXES
     assert by_filename["package-note"]["source_format"] == "markdown_package"
     assert by_filename["package-note"]["package_markdown_count"] == 1
     assert by_filename["source.md"]["path"] == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/source.md"

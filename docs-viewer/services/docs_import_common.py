@@ -12,12 +12,13 @@ from bs4 import BeautifulSoup
 from docs_scope_config import DOCUMENT_SOURCE_ROOTS
 
 HTML_STAGED_SUFFIXES = {".html", ".htm"}
+DOCX_STAGED_SUFFIXES = {".docx"}
 MARKDOWN_STAGED_SUFFIXES = {".md", ".markdown"}
 TEXT_STAGED_SUFFIXES = {".txt"}
 SVG_STAGED_SUFFIXES = {".svg"}
 RASTER_IMAGE_STAGED_SUFFIXES = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
 FILE_MEDIA_STAGED_SUFFIXES = {".pdf", ".zip", ".csv", ".tsv", ".json", ".jsonl", ".docx", ".xlsx", ".pptx"}
-DOCUMENT_STAGED_SUFFIXES = HTML_STAGED_SUFFIXES | MARKDOWN_STAGED_SUFFIXES | TEXT_STAGED_SUFFIXES
+DOCUMENT_STAGED_SUFFIXES = HTML_STAGED_SUFFIXES | DOCX_STAGED_SUFFIXES | MARKDOWN_STAGED_SUFFIXES | TEXT_STAGED_SUFFIXES
 TRUSTED_PACKAGE_CANDIDATE_SUFFIXES = {".json", ".jsonl"}
 SUPPORTED_STAGED_SUFFIXES = DOCUMENT_STAGED_SUFFIXES | TRUSTED_PACKAGE_CANDIDATE_SUFFIXES
 
@@ -56,6 +57,7 @@ IMPORT_RESULTS_DIR_NAME = "results"
 
 SOURCE_FORMAT_BY_SUFFIX = {
     **{suffix: "html" for suffix in HTML_STAGED_SUFFIXES},
+    **{suffix: "docx" for suffix in DOCX_STAGED_SUFFIXES},
     **{suffix: "markdown" for suffix in MARKDOWN_STAGED_SUFFIXES},
     **{suffix: "text" for suffix in TEXT_STAGED_SUFFIXES},
 }

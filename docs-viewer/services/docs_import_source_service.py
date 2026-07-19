@@ -173,7 +173,10 @@ def handle_import_source(
         source_path=source_path,
         scope=scope,
         include_prompt_meta=include_prompt_meta,
+        retain_private_media_source=True,
     )
+    private_media_source_markdown = str(preview.pop("_inline_media_source_markdown", "") or "")
+    preview.pop("_inline_svg_source_markup", None)
     interactive_plans = interactive_html_asset_plans(repo_root, staging_root, workspace_root, scope)
     if interactive_plans:
         preview["interactive_html_plans"] = interactive_plans
@@ -324,6 +327,7 @@ def handle_import_source(
         include_prompt_meta=include_prompt_meta,
         interactive_html_plans=tuple(interactive_plans),
         allow_interactive_html_overwrite=confirm_overwrite,
+        source_markdown=private_media_source_markdown,
     )
     apply_result = ImportDocumentApplyResult()
 

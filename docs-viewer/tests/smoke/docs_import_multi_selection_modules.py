@@ -31,6 +31,7 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
     staged_files = [
         {"filename": "alpha.md", "source_format": "markdown"},
         {"filename": "beta.html", "source_format": "html"},
+        {"filename": "word.docx", "source_format": "docx"},
         {"filename": "notes.json", "source_format": "file"},
         {
             "filename": "reviewed.jsonl",
@@ -169,9 +170,9 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
 
     expected_initial = {
         "type": "files",
-        "typeLabels": ["Files (3)", "Data Sharing packages (1)"],
+        "typeLabels": ["Documents (4)", "Data Sharing packages (1)"],
         "multiple": True,
-        "filenames": ["alpha.md", "beta.html", "notes.json"],
+        "filenames": ["alpha.md", "beta.html", "word.docx", "notes.json"],
         "selected": ["alpha.md"],
         "selectionCount": "1 selected",
         "promptMetaHidden": True,
@@ -180,8 +181,8 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
     if result["initial"] != expected_initial:
         raise AssertionError(f"unexpected initial ordinary-file mode: {result!r}")
     expected_select_all = {
-        "selected": ["alpha.md", "beta.html", "notes.json"],
-        "selectionCount": "3 selected",
+        "selected": ["alpha.md", "beta.html", "word.docx", "notes.json"],
+        "selectionCount": "4 selected",
         "selectAllLabel": "Clear selection",
         "promptMetaHidden": False,
     }
@@ -200,10 +201,11 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
     if [request["staged_filename"] for request in import_requests] != [
         "alpha.md",
         "beta.html",
+        "word.docx",
         "notes.json",
     ]:
         raise AssertionError(f"ordinary multi-import crossed the package boundary: {import_requests!r}")
-    if result["terminal"] != {"scope": "studio", "docId": "notes", "resultCount": 3}:
+    if result["terminal"] != {"scope": "studio", "docId": "notes", "resultCount": 4}:
         raise AssertionError(f"multi-import did not identify the last imported doc: {result!r}")
 
 

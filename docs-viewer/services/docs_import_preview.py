@@ -43,6 +43,7 @@ from docs_import_common import (  # noqa: E402
 from docs_import_html_parser import (  # noqa: E402
     build_summary,
 )
+from docs_import_docx import convert_docx_to_html  # noqa: E402
 from docs_import_content import CONTENT_INTENT_REPLACE, ImportContent  # noqa: E402
 from docs_html_markdown import (  # noqa: E402
     extract_html_title,
@@ -209,6 +210,7 @@ def generate_import_preview(
     source_path: Path,
     scope: str,
     include_prompt_meta: bool,
+    retain_private_media_source: bool = False,
 ) -> dict[str, Any]:
     source_format = source_format_for_path(source_path)
     if source_format == "markdown_package":
@@ -235,6 +237,15 @@ def generate_import_preview(
             source_path=source_path,
             scope=scope,
         )
+    if source_format == "docx":
+        return generate_docx_import_preview(
+            repo_root,
+            staging_root=staging_root,
+            workspace_root=workspace_root,
+            source_path=source_path,
+            scope=scope,
+            retain_private_media_source=retain_private_media_source,
+        )
     return generate_html_import_preview(
         repo_root,
         staging_root=staging_root,
@@ -243,6 +254,37 @@ def generate_import_preview(
         scope=scope,
         include_prompt_meta=include_prompt_meta,
     )
+
+
+def generate_docx_import_preview(
+    repo_root: Path,
+    *,
+    staging_root: Path,
+    workspace_root: Path,
+    source_path: Path,
+    scope: str,
+    retain_private_media_source: bool = False,
+) -> dict[str, Any]:
+    conversion = convert_docx_to_html(source_path)
+    title = conversion.title or humanize(source_path.stem) or "Imported Doc"
+    summary = generate_html_content_import_preview(
+        repo_root=repo_root,
+        source_html=conversion.html,
+        source_identity=source_path.stem,
+        scope=scope,
+        include_prompt_meta=False,
+        staging_root=staging_root,
+        workspace_root=workspace_root,
+        title=title,
+    )
+    if not retain_private_media_source:
+        summary.pop("_inline_media_source_markdown", None)
+    summary.pop("_inline_svg_source_markup", None)
+    summary["title_source"] = "docx-title" if conversion.title else "filename"
+    summary["source_format"] = "docx"
+    summary["source_path"] = import_artifact_path(repo_root, source_path, workspace_root)
+    summary.setdefault("warnings", []).extend(conversion.warnings)
+    return summary
 
 
 def generate_html_import_preview(
