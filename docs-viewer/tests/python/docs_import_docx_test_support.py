@@ -28,7 +28,7 @@ def embedded_image_docx_bytes() -> bytes:
             xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">
   <w:body>
     <w:p><w:pPr><w:pStyle w:val="Title"/></w:pPr><w:r><w:t>Word Image Import</w:t></w:r></w:p>
-    {_inline_image_xml("rIdPng", "Supported diagram", 1)}
+    {_inline_image_xml("rIdPng", "", 1)}
     {_inline_image_xml("rIdTiff", "Unsupported diagram", 2)}
     {_inline_image_xml("rIdMissing", "Unreadable diagram", 3)}
     <w:sectPr/>

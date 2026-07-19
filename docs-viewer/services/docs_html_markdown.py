@@ -272,10 +272,30 @@ def extract_table_rows(table: ElementNode) -> list[list[str]]:
         cells: list[str] = []
         for child in tr.children:
             if isinstance(child, ElementNode) and child.tag in {"th", "td"}:
-                cells.append(normalize_space("".join(render_inline(grand) for grand in child.children)))
+                cells.append(render_table_cell(child))
         if cells:
             rows.append(cells)
     return rows
+
+
+def render_table_cell(cell: ElementNode) -> str:
+    parts: list[str] = []
+    for child in cell.children:
+        if isinstance(child, ElementNode) and child.tag in {"ul", "ol"}:
+            items: list[str] = []
+            for item in child.children:
+                if not isinstance(item, ElementNode) or item.tag != "li":
+                    continue
+                text = normalize_space("".join(render_inline(grand) for grand in item.children))
+                if text:
+                    items.append(text)
+            if items:
+                parts.append("; ".join(items))
+            continue
+        text = normalize_space(render_inline(child))
+        if text:
+            parts.append(text)
+    return "<br>".join(parts)
 
 
 def render_table(table: ElementNode, warnings: list[str]) -> str:

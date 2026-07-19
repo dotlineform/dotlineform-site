@@ -52,6 +52,32 @@ def test_html_to_markdown_keeps_historical_inline_svg_children_out_of_paragraphs
     assert "<p><rect" not in rendered.html
 
 
+def test_html_to_markdown_preserves_table_cell_block_and_list_boundaries() -> None:
+    result = docs_html_markdown.html_to_markdown(
+        """
+        <table>
+          <tr><th>Step</th><th>Description</th></tr>
+          <tr>
+            <td><p>1</p></td>
+            <td>
+              <p>Travel somewhere nice.</p>
+              <p>There are many places to go:</p>
+              <ul><li>Here</li><li>There</li><li>Anywhere</li></ul>
+            </td>
+          </tr>
+        </table>
+        """
+    )
+
+    assert result.markdown == (
+        "| Step | Description |\n"
+        "| --- | --- |\n"
+        "| 1 | Travel somewhere nice.<br>There are many places to go:<br>"
+        "Here; There; Anywhere |"
+    )
+    assert result.warnings == []
+
+
 def test_html_import_create_allocates_identity_independent_of_staged_filename() -> None:
     with make_repo() as temp:
         root = Path(temp)

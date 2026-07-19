@@ -85,24 +85,26 @@ def _docx_image_converter(mammoth_module: Any, warnings: list[str]):
         nonlocal image_index
         image_index += 1
         label = normalize_space(str(getattr(image, "alt_text", "") or "")) or f"Word image {image_index:02d}"
+        attributes = {"alt": label}
         content_type = normalize_space(str(getattr(image, "content_type", "") or "")).lower()
         normalized_content_type = DOCX_IMAGE_CONTENT_TYPES.get(content_type)
         if not normalized_content_type:
             warnings.append(
                 f"Word image {label!r} uses unsupported media type {content_type or 'unknown'} and was omitted."
             )
-            return {}
+            return attributes
         try:
             with image.open() as image_file:
                 image_bytes = image_file.read()
         except Exception:
             warnings.append(f"Word image {label!r} could not be read and was omitted.")
-            return {}
+            return attributes
         if not image_bytes:
             warnings.append(f"Word image {label!r} was empty and was omitted.")
-            return {}
+            return attributes
         encoded = base64.b64encode(image_bytes).decode("ascii")
-        return {"src": f"data:{normalized_content_type};base64,{encoded}"}
+        attributes["src"] = f"data:{normalized_content_type};base64,{encoded}"
+        return attributes
 
     return mammoth_module.images.img_element(image_attributes)
 

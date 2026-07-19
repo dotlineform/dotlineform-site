@@ -186,7 +186,7 @@ def test_docx_preview_plans_supported_images_without_returning_conversion_bodies
     assert len(preview["media_plans"]) == 1
     assert preview["media_plans"][0]["mime_type"] == "image/png"
     assert preview["media_plans"][0]["size_bytes"] == len(b"word-png-bytes")
-    assert "Supported diagram" in preview["markdown_preview"]
+    assert "Word image 01" in preview["markdown_preview"]
     assert "Unsupported diagram" in preview["markdown_preview"]
     assert "Unreadable diagram" in preview["markdown_preview"]
     assert any("unsupported media type image/tiff and was omitted" in warning for warning in preview["warnings"])
