@@ -15,7 +15,7 @@ from .common import (
     resolve_scope_path,
     utc_timestamp,
 )
-from .media_builds import run_registered_media_builds
+from .media_builds import referenced_build_media_identities, run_registered_media_builds
 from .payloads import PayloadBuilderMixin
 from .reference_artifacts import ReferenceArtifactsMixin
 from .recent_policy import recent_basis_for_route
@@ -81,6 +81,17 @@ class DocsDataBuilder(
             semantic_references_by_doc: dict[str, list[dict[str, Any]]] = {}
 
         docs_for_item_build = [doc for doc in docs if doc.doc_id in target_doc_ids]
+        if self.targeted_build:
+            requested_media = referenced_build_media_identities(
+                self.config,
+                (doc.body_markdown for doc in docs_for_item_build),
+            )
+            media_builds = run_registered_media_builds(
+                self.repo_root,
+                self.config,
+                write=write,
+                requested_published_identities=requested_media,
+            )
         item_payloads = {
             doc.doc_id: self.item_entry(doc, docs, semantic_references_by_doc) for doc in docs_for_item_build
         }

@@ -15,12 +15,12 @@ for _path in (REPO_ROOT / "docs-viewer/build", REPO_ROOT / "docs-viewer/services
         sys.path.insert(0, str(_path))
 
 
-from docs_builder.media_builds import run_registered_media_builds
+from docs_builder.media_builds import referenced_build_media_identities, run_registered_media_builds
 import docs_builder.pipeline as pipeline
-from build_docs_test_support import CHILD_DOC_ID, prepare_repo, run_builder
+from build_docs_test_support import CHILD_DOC_ID, prepare_repo, run_builder, write_source_docs
 from docs_media_inventory import inventory_scope_media
 from docs_scope_config import load_docs_scope_configs
-from repo_factory import docs_scope_record, write_docs_scope_config, write_site_tools_config
+from repo_factory import docs_scope_record, read_json, write_docs_scope_config, write_json, write_site_tools_config
 
 
 class FakeR2Client:
@@ -51,6 +51,21 @@ class FakeR2Client:
 
 def write_config(repo_root: Path, record: dict[str, object]) -> None:
     write_docs_scope_config(repo_root, [record])
+
+
+def configure_mermaid_build(repo_root: Path) -> None:
+    config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
+    payload = read_json(config_path)
+    studio = payload["scopes"][0]  # type: ignore[index]
+    studio["source"]["build_media"] = {  # type: ignore[index]
+        "mermaid": {
+            "path": "media/mermaid",
+            "producer": "mermaid",
+            "publishes_to": "svg",
+        }
+    }
+    studio["published"]["media"]["svg"]["build_inputs"] = ["mermaid"]  # type: ignore[index]
+    write_json(config_path, payload, indent=2)
 
 
 def test_inventory_lists_unreferenced_owned_media_and_reports_missing_references(tmp_path: Path) -> None:
@@ -130,6 +145,7 @@ def test_registered_producer_writes_only_to_configured_published_adapter(tmp_pat
 
     def producer(context):
         assert [item.identity for item in context.source.list()] == ["diagram.mmd"]
+        assert context.requested_published_identities is None
         if context.write:
             context.published.replace("diagram.svg", b"<svg></svg>", content_type="image/svg+xml")
         return ["diagram.svg"]
@@ -153,16 +169,63 @@ def test_registered_producer_writes_only_to_configured_published_adapter(tmp_pat
     assert not (source.parent / "diagram.svg").exists()
 
 
-def test_full_build_invokes_media_stage_and_targeted_build_skips_it(tmp_path: Path, monkeypatch) -> None:
-    prepare_repo(tmp_path)
-    calls: list[tuple[str, bool]] = []
-    monkeypatch.setattr(
-        pipeline,
-        "run_registered_media_builds",
-        lambda _root, config, *, write: calls.append((config.scope_id, write)) or [],
+def test_referenced_build_media_identities_select_only_configured_same_scope_outputs(tmp_path: Path) -> None:
+    write_site_tools_config(tmp_path)
+    record = docs_scope_record("studio", default_doc_id="studio")
+    record["source"]["build_media"] = {  # type: ignore[index]
+        "mermaid": {
+            "path": "media/mermaid",
+            "producer": "mermaid",
+            "publishes_to": "svg",
+        }
+    }
+    record["published"]["media"]["svg"]["build_inputs"] = ["mermaid"]  # type: ignore[index]
+    write_config(tmp_path, record)
+    config = load_docs_scope_configs(tmp_path)["studio"]
+
+    requested = referenced_build_media_identities(
+        config,
+        [
+            """![Zeta]([[media:docs/studio/svg/zeta.svg]])
+![Measured]([[media:docs/studio/svg/alpha.svg width=800]])
+![Duplicate]([[media:docs/studio/svg/zeta.svg]])
+![Raster]([[media:docs/studio/img/raster.png]])
+![Other scope]([[media:docs/library/svg/other.svg]])
+"""
+        ],
     )
+
+    assert requested == {"mermaid": ("alpha.svg", "zeta.svg")}
+
+
+def test_full_and_targeted_builds_invoke_media_stage_with_expected_selection(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    prepare_repo(tmp_path)
+    configure_mermaid_build(tmp_path)
+    write_source_docs(
+        tmp_path,
+        child_body_suffix="![Referenced diagram]([[media:docs/studio/svg/referenced.svg]])",
+    )
+    calls: list[tuple[str, bool, object]] = []
+
+    def record_media_build(
+        _root,
+        config,
+        *,
+        write,
+        requested_published_identities=None,
+    ):
+        calls.append((config.scope_id, write, requested_published_identities))
+        return []
+
+    monkeypatch.setattr(pipeline, "run_registered_media_builds", record_media_build)
 
     run_builder(tmp_path, write=True)
     run_builder(tmp_path, only_doc_ids=[CHILD_DOC_ID], write=True)
 
-    assert calls == [("studio", True)]
+    assert calls == [
+        ("studio", True, None),
+        ("studio", True, {"mermaid": ("referenced.svg",)}),
+    ]

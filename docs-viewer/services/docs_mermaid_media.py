@@ -31,6 +31,7 @@ class MermaidBuildContext(Protocol):
     source: ArtifactLocationAdapter
     published: ArtifactLocationAdapter
     write: bool
+    requested_published_identities: tuple[str, ...] | None
 
 
 CommandRunner = Callable[..., subprocess.CompletedProcess[str]]
@@ -200,6 +201,12 @@ def produce_mermaid_svg(
     """Render, sanitize, publish, and verify configured Mermaid source media."""
 
     plans = plan_mermaid_media(context.source.list())
+    if context.requested_published_identities is not None:
+        requested = {
+            normalize_artifact_identity(identity)
+            for identity in context.requested_published_identities
+        }
+        plans = tuple(plan for plan in plans if plan.published_identity in requested)
     output_identities = tuple(plan.published_identity for plan in plans)
     if not context.write or not plans:
         return output_identities

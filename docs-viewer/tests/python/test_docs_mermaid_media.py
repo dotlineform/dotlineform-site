@@ -26,6 +26,7 @@ from docs_artifact_locations import (  # noqa: E402
 )
 from docs_builder.media_builds import REGISTERED_MEDIA_PRODUCERS, MediaBuildContext  # noqa: E402
 from docs_mermaid_media import plan_mermaid_media, produce_mermaid_svg  # noqa: E402
+from docs_scope_config import load_docs_scope_configs  # noqa: E402
 
 
 class FakeR2Client:
@@ -54,7 +55,12 @@ class FakeR2Client:
         del self.objects[key]
 
 
-def _context(tmp_path: Path, *, write: bool) -> MediaBuildContext:
+def _context(
+    tmp_path: Path,
+    *,
+    write: bool,
+    requested_published_identities: tuple[str, ...] | None = None,
+) -> MediaBuildContext:
     source_location = ArtifactLocation(REPOSITORY_PROVIDER, Path("source"))
     published_location = ArtifactLocation(REPOSITORY_PROVIDER, Path("published"))
     return MediaBuildContext(
@@ -64,6 +70,7 @@ def _context(tmp_path: Path, *, write: bool) -> MediaBuildContext:
         source=artifact_location_adapter(tmp_path, source_location),
         published=artifact_location_adapter(tmp_path, published_location),
         write=write,
+        requested_published_identities=requested_published_identities,
     )
 
 
@@ -103,6 +110,17 @@ def test_mermaid_producer_is_registered() -> None:
     assert REGISTERED_MEDIA_PRODUCERS["mermaid"] is produce_mermaid_svg
 
 
+def test_checked_studio_config_registers_and_materializes_mermaid_source() -> None:
+    config = load_docs_scope_configs(REPO_ROOT)["studio"]
+    build = config.source.build_media["mermaid"]
+
+    assert build.path == Path("media/mermaid")
+    assert build.producer == "mermaid"
+    assert build.publishes_to == "svg"
+    assert config.published.media["svg"].build_inputs == ("mermaid",)
+    assert (REPO_ROOT / config.source.location.path / build.path).is_dir()
+
+
 def test_dry_run_plans_sorted_same_basename_outputs_without_toolchain_or_writes(tmp_path: Path) -> None:
     context = _context(tmp_path, write=False)
     source_root = tmp_path / "source"
@@ -129,6 +147,41 @@ def test_plan_preserves_confined_subdirectories_and_ignores_non_mermaid_files() 
     assert [(item.source_identity, item.published_identity) for item in plans] == [
         ("nested/diagram.mmd", "nested/diagram.svg")
     ]
+
+
+def test_requested_outputs_render_only_matching_mermaid_sources(tmp_path: Path) -> None:
+    _write_source(tmp_path)
+    other_source = tmp_path / "source/other.mmd"
+    other_source.write_text(
+        """flowchart LR
+    accTitle: Other flow
+    accDescr: Only this requested diagram is rendered.
+    A --> B
+""",
+        encoding="utf-8",
+    )
+    rendered_inputs: list[str] = []
+
+    def render(command: list[str], **_options) -> subprocess.CompletedProcess[str]:
+        rendered_inputs.append(Path(command[command.index("--input") + 1]).name)
+        output = Path(command[command.index("--output") + 1])
+        output.write_text(_valid_svg(), encoding="utf-8")
+        return subprocess.CompletedProcess(command, 0, "", "")
+
+    outputs = produce_mermaid_svg(
+        _context(
+            tmp_path,
+            write=True,
+            requested_published_identities=("standalone.svg", "other.svg"),
+        ),
+        toolchain_root=_write_toolchain(tmp_path),
+        run_command=render,
+    )
+
+    assert outputs == ("other.svg",)
+    assert rendered_inputs == ["other.mmd"]
+    assert (tmp_path / "published/other.svg").is_file()
+    assert not (tmp_path / "published/architecture.svg").exists()
 
 
 def test_write_invokes_local_cli_sanitizes_publishes_and_verifies(tmp_path: Path) -> None:

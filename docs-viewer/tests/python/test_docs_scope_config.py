@@ -231,7 +231,7 @@ def test_docs_scope_config_accepts_explicit_mermaid_to_svg_build_contract() -> N
         record["source"]["build_media"] = {  # type: ignore[index]
             "mermaid": {
                 "path": "media/mermaid",
-                "producer": "mermaid-cli",
+                "producer": "mermaid",
                 "publishes_to": "svg",
             }
         }
