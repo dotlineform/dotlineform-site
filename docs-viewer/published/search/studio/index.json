@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-68bddd22f7b1ef16b52a72ebea5f24f4",
-    "generated_at_utc": "2026-07-19T16:45:36Z",
+    "version": "blake2b-23a8af9f4474ba7297efdc637ae4cd0d",
+    "generated_at_utc": "2026-07-19T17:01:54Z",
     "count": 255
   },
   "entries": [
@@ -4747,10 +4747,10 @@
       "kind": "doc",
       "title": "Word Document Import Delivery",
       "href": "/docs/?scope=studio&doc=d-20260719-174421-aa4ff0",
-      "last_updated": "2026-07-19 17:44:21",
+      "last_updated": "2026-07-19 18:01:38",
       "parent_id": "d-20260718-233015-a1836e",
       "parent_title": "Word Document Import",
-      "display_meta": "2026-07-19 17:44:21 • Word Document Import",
+      "display_meta": "2026-07-19 18:01:38 • Word Document Import",
       "search_terms": [
         "word document import delivery",
         "word",
@@ -4758,16 +4758,16 @@
         "import",
         "delivery",
         "word document import",
-        "2026-07-19 17:44:21",
+        "2026-07-19 18:01:38",
         "2026",
         "07",
         "19",
-        "17",
-        "44",
-        "21",
+        "18",
+        "01",
+        "38",
         "d-20260719-174421-aa4ff0"
       ],
-      "search_text": "word document import delivery word document import delivery word document import 2026-07-19 17:44:21 2026 07 19 17 44 21 d-20260719-174421-aa4ff0"
+      "search_text": "word document import delivery word document import delivery word document import 2026-07-19 18:01:38 2026 07 19 18 01 38 d-20260719-174421-aa4ff0"
     },
     {
       "id": "d-20260715-092247-f3fd52",
