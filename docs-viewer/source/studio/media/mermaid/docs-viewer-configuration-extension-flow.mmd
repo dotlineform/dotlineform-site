@@ -1,0 +1,18 @@
+flowchart TD
+    accTitle: Docs Viewer workflow availability
+    accDescr: Maintainer configuration becomes a browser-safe projection while code definitions and live capabilities gate whether a workflow is available.
+
+    config["Maintainer config"]
+    code["Code definitions"]
+    environment["Environment and filesystem"]
+    projection["Normalization and projection"]
+    browser["Browser-safe generated config"]
+    capabilities["Live capability gate"]
+    workflow["Available workflow"]
+
+    config --> projection
+    projection --> browser
+    browser --> capabilities
+    code --> capabilities
+    environment --> capabilities
+    capabilities --> workflow

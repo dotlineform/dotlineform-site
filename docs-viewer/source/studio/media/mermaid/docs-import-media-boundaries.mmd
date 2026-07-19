@@ -1,0 +1,25 @@
+flowchart TD
+    accTitle: Docs Import and source-editor media boundaries
+    accDescr: Staged document sources and standalone media take separate workflows, but both publish required media before canonical source is written and rebuilt.
+
+    staging["Shared staging"]
+    classify{"Owning workflow"}
+    import["Docs Import convert and plan"]
+    embedded["Embedded-media plan"]
+    editor["Add image or Add file"]
+    publish["Verified media publication"]
+    buffer["Dirty Markdown buffer"]
+    source["Canonical source write"]
+    rebuild["Targeted docs rebuild"]
+
+    staging --> classify
+    classify -- "Document source" --> import
+    import --> embedded
+    embedded -- "Assets present" --> publish
+    import -- "No assets" --> source
+    publish -- "Import path" --> source
+    classify -- "Standalone media" --> editor
+    editor --> publish
+    publish -- "Source-editor path" --> buffer
+    buffer -- "Rebuild doc" --> source
+    source --> rebuild

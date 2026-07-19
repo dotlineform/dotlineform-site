@@ -7,7 +7,7 @@
       "doc_id": "d-20260715-181845-0158f9",
       "title": "Diagrams",
       "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260715-181845-0158f9.json",
-      "timestamp": "2026-07-19 11:30:55",
+      "timestamp": "2026-07-19 11:49:18",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap"
     },
@@ -15,31 +15,7 @@
       "doc_id": "d-20260718-214206-27df44",
       "title": "Mermaid Document Diagrams Delivery",
       "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260718-214206-27df44.json",
-      "timestamp": "2026-07-19 11:30:55",
-      "parent_id": "d-20260715-181845-0158f9",
-      "parent_title": "Diagrams"
-    },
-    {
-      "doc_id": "d-20260714-234030-1e0af6",
-      "title": "Docs Viewer Roadmap",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260714-234030-1e0af6.json",
-      "timestamp": "2026-07-18 23:31:35",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260718-233015-a1836e",
-      "title": "Word Document Import",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260718-233015-a1836e.json",
-      "timestamp": "2026-07-18 23:30:15",
-      "parent_id": "d-20260714-234030-1e0af6",
-      "parent_title": "Docs Viewer Roadmap"
-    },
-    {
-      "doc_id": "d-20260715-181845-524859",
-      "title": "Document Diagrams Concept",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260715-181845-524859.json",
-      "timestamp": "2026-07-18 21:52:33",
+      "timestamp": "2026-07-19 11:49:18",
       "parent_id": "d-20260715-181845-0158f9",
       "parent_title": "Diagrams"
     },
@@ -47,7 +23,39 @@
       "doc_id": "d-20260423-155039-e36925",
       "title": "Docs Images And Assets",
       "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260423-155039-e36925.json",
-      "timestamp": "2026-07-18 21:20:42",
+      "timestamp": "2026-07-19 11:40:18",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260423-000000-c9f3ea",
+      "title": "Docs Viewer Builder",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260423-000000-c9f3ea.json",
+      "timestamp": "2026-07-19 11:40:18",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260714-234030-1e0af6",
+      "title": "Docs Viewer Roadmap",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260714-234030-1e0af6.json",
+      "timestamp": "2026-07-19 11:40:18",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260715-181845-524859",
+      "title": "Document Diagrams Concept",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260715-181845-524859.json",
+      "timestamp": "2026-07-19 11:40:18",
+      "parent_id": "d-20260715-181845-0158f9",
+      "parent_title": "Diagrams"
+    },
+    {
+      "doc_id": "d-20260424-000000-5b64f6",
+      "title": "Live Rebuild Watcher",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260424-000000-5b64f6.json",
+      "timestamp": "2026-07-19 11:40:18",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer"
     },
@@ -55,7 +63,7 @@
       "doc_id": "d-20260514-184303-7914e2",
       "title": "Media And Asset Handling",
       "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260514-184303-7914e2.json",
-      "timestamp": "2026-07-18 21:20:42",
+      "timestamp": "2026-07-19 11:40:18",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer"
     },
@@ -63,26 +71,18 @@
       "doc_id": "d-20260717-231652-d6d49e",
       "title": "Source Editor Add Image And Add File",
       "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260717-231652-d6d49e.json",
-      "timestamp": "2026-07-18 21:20:42",
+      "timestamp": "2026-07-19 11:40:18",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap"
     },
     {
-      "doc_id": "d-20260717-231652-4890d2",
-      "title": "Source Editor Add Image And Add File Delivery",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260717-231652-4890d2.json",
-      "timestamp": "2026-07-18 21:20:42",
-      "parent_id": "d-20260717-231652-d6d49e",
-      "parent_title": "Source Editor Add Image And Add File"
-    },
-    {
-      "doc_id": "d-20260607-222033-4b1d77",
-      "title": "Source Editor Endpoints",
-      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260607-222033-4b1d77.json",
-      "timestamp": "2026-07-18 21:20:42",
-      "parent_id": "d-20260607-222033-647b52",
-      "parent_title": "Endpoint Overview"
+      "doc_id": "d-20260512-142027-54b354",
+      "title": "Configuration And Extension Points",
+      "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260512-142027-54b354.json",
+      "timestamp": "2026-07-19 11:37:48",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-07-19T10:31:23Z"
+  "generated_at": "2026-07-19T10:49:45Z"
 }
