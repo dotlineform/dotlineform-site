@@ -45,6 +45,7 @@ export function createDocsViewerInfoPanelController(options) {
     return createDocsViewerHostedViewContext({
       allDocsById: documentIndex.allDocsById,
       buildTrail: settings.buildTrail,
+      collectionProvider: settings.collectionProvider,
       docsById: documentIndex.docsById,
       payloadCache: selectedDocument.payloadCache,
       appContext: appContext(),

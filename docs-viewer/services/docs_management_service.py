@@ -21,6 +21,7 @@ REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 
 import docs_activity  # noqa: E402
+import docs_diagram_source_service  # noqa: E402
 import docs_import_source_service as import_source_service  # noqa: E402
 import docs_management_mutations as mutations  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
@@ -113,6 +114,8 @@ def docs_management_post_response(
         return HTTPStatus.OK, rebuild_source_body(repo_root, body, dry_run)
     if path == routes.OPEN_SOURCE_PATH:
         return HTTPStatus.OK, open_source_doc(repo_root, body, dry_run)
+    if path == routes.OPEN_DIAGRAM_SOURCE_PATH:
+        return HTTPStatus.OK, docs_diagram_source_service.open_diagram_source(repo_root, body, dry_run)
     if path == routes.BROKEN_LINKS_PATH:
         payload = handle_broken_links(repo_root, body)
         docs_activity.maybe_attach_broken_links_activity(repo_root, body, payload)

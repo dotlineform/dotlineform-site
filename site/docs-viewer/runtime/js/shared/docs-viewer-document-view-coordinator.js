@@ -104,6 +104,7 @@ export function createDocsViewerDocumentViewCoordinator(options) {
     refs: settings.infoPanelRefs,
     registry: viewRegistry,
     appContext: settings.appContext,
+    collectionProvider: settings.collectionProvider,
     scopeConfig: settings.scopeConfig,
     selectedDocument: settings.selectedDocument,
     defaultViewId: function () {

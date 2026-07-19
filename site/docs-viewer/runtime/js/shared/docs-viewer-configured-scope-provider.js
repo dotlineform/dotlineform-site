@@ -161,6 +161,22 @@ export function createDocsViewerConfiguredScopeProvider(options) {
       }));
     };
   }
+  if (source && typeof source.readDiagramSources === "function") {
+    provider.readDiagramSources = function (docId, optionsForRead) {
+      var requestSettings = optionsForRead || {};
+      return source.readDiagramSources(docId, Object.assign({}, requestSettings, {
+        scope: scopeId(requestSettings.scope || activeScope())
+      }));
+    };
+  }
+  if (source && typeof source.openDiagramSource === "function") {
+    provider.openDiagramSource = function (payload, optionsForOpen) {
+      var requestSettings = optionsForOpen || {};
+      return source.openDiagramSource(payload, Object.assign({}, requestSettings, {
+        scope: scopeId(requestSettings.scope || activeScope())
+      }));
+    };
+  }
   if (source && typeof source.listStagedMedia === "function") {
     provider.listStagedMedia = function (mediaKind, optionsForList) {
       var requestSettings = optionsForList || {};

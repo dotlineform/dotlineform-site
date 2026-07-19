@@ -16,6 +16,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any, Dict, Optional
 
 _BOOTSTRAP_START = Path(__file__).resolve()
@@ -35,6 +36,12 @@ for path in (SCRIPTS_DIR, SCRIPTS_DOCS_DIR):
         sys.path.insert(0, str(path))
 
 from docs_source_model import is_doc_timestamp, load_scope_docs, recent_edit_content, scope_doc_sort_key
+from docs_artifact_locations import (
+    ArtifactLocation,
+    artifact_location_adapter,
+    authenticated_remote_client_for_locations,
+)
+from docs_mermaid_media import produce_mermaid_svg
 from docs_scope_config import (
     CONFIG_REL_PATH,
     DOCS_SCOPE_CONFIGS,
@@ -112,8 +119,24 @@ def snapshot_markdown_root(root: Path) -> Dict[str, tuple[int, int]]:
     return snapshot
 
 
+def snapshot_mermaid_root(root: Path) -> Dict[str, tuple[int, int]]:
+    if not root.exists():
+        raise FileNotFoundError(f"Source root not found: {root}")
+
+    snapshot: Dict[str, tuple[int, int]] = {}
+    for path in sorted(root.glob("**/*.mmd")):
+        try:
+            stat = path.stat()
+        except FileNotFoundError:
+            continue
+        snapshot[path.relative_to(root).as_posix()] = (stat.st_mtime_ns, stat.st_size)
+    return snapshot
+
+
 def state_snapshot(state: dict[str, Any]) -> Dict[str, tuple[int, int]]:
     root = state["root"]
+    if state.get("watch_kind") == "build_media":
+        return snapshot_mermaid_root(root)
     if state.get("sub_scope"):
         return snapshot_markdown_root(root)
     return snapshot_scope(root, state["scope"])
@@ -153,6 +176,28 @@ def sync_scope_config_globals(configs: dict[str, Any]) -> None:
 
 def desired_watch_state_specs(repo_root: Path, configs: dict[str, Any]) -> dict[str, dict[str, Any]]:
     specs: dict[str, dict[str, Any]] = {}
+
+    def add_build_media_specs(
+        scope: str,
+        sub_scope: str,
+        source_config: Any,
+        published_config: Any,
+    ) -> None:
+        for build_type, build in sorted(getattr(source_config, "build_media", {}).items()):
+            label_prefix = f"{scope}/{sub_scope}" if sub_scope else scope
+            label = f"{label_prefix}/media/{build_type}"
+            specs[label] = {
+                "scope": scope,
+                "sub_scope": sub_scope,
+                "label": label,
+                "root": resolve_scope_path(repo_root, source_config.location.path / build.path),
+                "config": configs[scope],
+                "watch_kind": "build_media",
+                "build_type": build_type,
+                "source_config": source_config,
+                "published_config": published_config,
+            }
+
     for scope, config in sorted(configs.items()):
         specs[scope] = {
             "scope": scope,
@@ -160,7 +205,9 @@ def desired_watch_state_specs(repo_root: Path, configs: dict[str, Any]) -> dict[
             "label": scope,
             "root": resolve_scope_path(repo_root, document_source_path(config)),
             "config": config,
+            "watch_kind": "documents",
         }
+        add_build_media_specs(scope, "", config.source, getattr(config, "published", None))
         for sub_scope in config.sub_scopes:
             label = f"{scope}/{sub_scope.sub_scope}"
             specs[label] = {
@@ -169,7 +216,14 @@ def desired_watch_state_specs(repo_root: Path, configs: dict[str, Any]) -> dict[
                 "label": label,
                 "root": resolve_scope_path(repo_root, document_source_path(sub_scope)),
                 "config": config,
+                "watch_kind": "documents",
             }
+            add_build_media_specs(
+                scope,
+                sub_scope.sub_scope,
+                sub_scope.source,
+                getattr(sub_scope, "published", None),
+            )
     return specs
 
 
@@ -186,7 +240,7 @@ def new_watch_state(repo_root: Path, spec: dict[str, Any], *, baseline: bool) ->
     }
     if not baseline:
         return state
-    if not state.get("sub_scope"):
+    if state.get("watch_kind") == "documents" and not state.get("sub_scope"):
         doc_snapshot, snapshot_error = try_parsed_doc_snapshot(repo_root, state["scope"])
         state["doc_snapshot"] = doc_snapshot
         state["startup_doc_error"] = snapshot_error
@@ -507,6 +561,62 @@ def rebuild_sub_scope(repo_root: Path, scope: str, sub_scope: str) -> bool:
     return True
 
 
+def rebuild_build_media(
+    repo_root: Path,
+    state: dict[str, Any],
+    changed_files: list[str],
+) -> bool:
+    build_type = str(state.get("build_type") or "").strip()
+    if build_type != "mermaid":
+        log(f"{state['label']} rebuild failed: unsupported build-media producer {build_type!r}")
+        return False
+
+    source_config = state["source_config"]
+    published_config = state["published_config"]
+    build = source_config.build_media[build_type]
+    published_media = published_config.media[build.publishes_to]
+    requested_outputs = tuple(
+        Path(filename).with_suffix(".svg").as_posix()
+        for filename in ordered_unique(changed_files)
+        if Path(filename).suffix.lower() == ".mmd"
+    )
+    if not requested_outputs:
+        return True
+
+    try:
+        remote_client = authenticated_remote_client_for_locations(
+            repo_root,
+            [published_media.location],
+        )
+        source = artifact_location_adapter(
+            repo_root,
+            ArtifactLocation(
+                provider=source_config.location.provider,
+                path=source_config.location.path / build.path,
+            ),
+        )
+        published = artifact_location_adapter(
+            repo_root,
+            published_media.location,
+            served_path_prefix=published_media.served_path_prefix,
+            remote_client=remote_client,
+        )
+        outputs = produce_mermaid_svg(
+            SimpleNamespace(
+                source=source,
+                published=published,
+                write=True,
+                requested_published_identities=requested_outputs,
+            )
+        )
+    except Exception as exc:  # noqa: BLE001 - watcher reports and retries on the next source change.
+        log(f"{state['label']} rebuild failed: {exc}")
+        return False
+
+    log(f"{state['label']} rendered: {', '.join(outputs) if outputs else 'no matching sources'}.")
+    return True
+
+
 def parse_args() -> argparse.Namespace:
     env = runtime_env()
     parser = argparse.ArgumentParser(description="Watch docs source roots and rebuild same-scope outputs.")
@@ -620,7 +730,11 @@ def main() -> int:
                 active_suppressions = load_active_watch_suppressions(repo_root, ready_scope)
                 if changed_files:
                     matching = [active_suppressions.get(filename) for filename in changed_files]
-                    if not state.get("sub_scope") and all(record is not None for record in matching):
+                    if (
+                        state.get("watch_kind") == "documents"
+                        and not state.get("sub_scope")
+                        and all(record is not None for record in matching)
+                    ):
                         if all(str(record.get("status") or "").strip() == SUPPRESSION_COMPLETE for record in matching):
                             clear_watch_suppressions(repo_root, ready_scope, changed_files)
                             current_doc_snapshot, snapshot_error = try_parsed_doc_snapshot(repo_root, ready_scope)
@@ -637,7 +751,10 @@ def main() -> int:
                             continue
                         continue
 
-                if state.get("sub_scope"):
+                if state.get("watch_kind") == "build_media":
+                    rebuild_succeeded = rebuild_build_media(repo_root, state, changed_files)
+                    current_doc_snapshot = None
+                elif state.get("sub_scope"):
                     rebuild_succeeded = rebuild_sub_scope(repo_root, ready_scope, state["sub_scope"])
                     current_doc_snapshot = None
                 else:

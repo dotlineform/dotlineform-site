@@ -2,6 +2,8 @@ import {
   applyStagedMedia,
   listStagedMedia,
   previewStagedMedia,
+  openManagedDiagramSource,
+  readManagedDiagramSources,
   readManagedDocSource,
   rebuildManagedDocSource
 } from "./docs-viewer-management-client.js";
@@ -32,6 +34,12 @@ export function createDocsViewerManagementSourceAdapter(options) {
     },
     writeSource: function (payload, optionsForWrite) {
       return rebuildManagedDocSource(payload, clientOptions(optionsForWrite));
+    },
+    readDiagramSources: function (docId, optionsForRead) {
+      return readManagedDiagramSources(docId, clientOptions(optionsForRead));
+    },
+    openDiagramSource: function (payload, optionsForOpen) {
+      return openManagedDiagramSource(payload, clientOptions(optionsForOpen));
     },
     listStagedMedia: function (mediaKind, optionsForList) {
       return listStagedMedia(mediaKind, clientOptions(optionsForList));

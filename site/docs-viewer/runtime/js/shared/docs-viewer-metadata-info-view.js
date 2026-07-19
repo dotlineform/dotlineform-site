@@ -100,11 +100,72 @@ function renderMetadataDetails(context, metadata) {
 
   article.append(title, list);
   mount.appendChild(article);
+  return article;
 }
 
-function renderMetadata(context) {
+function renderDiagramSources(context, article, state, requestId) {
+  var provider = context.collectionProvider || null;
+  var doc = context.selectedDoc || null;
+  if (
+    !doc
+    || !context.appContext
+    || context.appContext.kind !== "manage"
+    || !provider
+    || typeof provider.readDiagramSources !== "function"
+    || typeof provider.openDiagramSource !== "function"
+  ) return;
+
+  provider.readDiagramSources(doc.doc_id).then(function (payload) {
+    if (state.requestId !== requestId || !article.parentNode) return;
+    var sources = payload && Array.isArray(payload.sources) ? payload.sources : [];
+    if (!sources.length) return;
+
+    var section = document.createElement("section");
+    section.className = "docsViewer__diagramSources";
+
+    var heading = document.createElement("h4");
+    heading.className = "docsViewer__diagramSourcesTitle";
+    heading.textContent = "Diagram sources";
+
+    var list = document.createElement("ul");
+    list.className = "docsViewer__diagramSourcesList";
+    sources.forEach(function (source) {
+      var item = document.createElement("li");
+      item.className = "docsViewer__diagramSourcesItem";
+
+      var label = document.createElement("span");
+      label.textContent = cleanString(source.label) || cleanString(source.source_identity) || "Diagram";
+
+      var link = document.createElement("a");
+      link.href = "#";
+      link.textContent = cleanString(source.open_label) || "Open in VS Code";
+      link.addEventListener("click", function (event) {
+        event.preventDefault();
+        provider.openDiagramSource({
+          doc_id: doc.doc_id,
+          media_identity: cleanString(source.media_identity),
+          editor: "vscode"
+        }).catch(function (error) {
+          link.title = error && error.message ? error.message : "Could not open diagram source.";
+        });
+      });
+
+      item.append(label, link);
+      list.appendChild(item);
+    });
+
+    section.append(heading, list);
+    article.appendChild(section);
+  }).catch(function () {
+    // Document Info remains useful when the local source service is unavailable.
+  });
+}
+
+function renderMetadata(context, state) {
   var mount = context.mount;
   if (!mount) return;
+  state.requestId += 1;
+  var requestId = state.requestId;
   mount.replaceChildren();
 
   var doc = context.selectedDoc || null;
@@ -121,17 +182,21 @@ function renderMetadata(context) {
     renderLoading(mount);
     return;
   }
-  renderMetadataDetails(context, metadata);
+  var article = renderMetadataDetails(context, metadata);
+  renderDiagramSources(context, article, state, requestId);
 }
 
 export function createDocsViewerMetadataInfoView() {
+  var state = { requestId: 0 };
   return {
-    mount: renderMetadata,
-    update: renderMetadata,
+    mount: function (context) { renderMetadata(context, state); },
+    update: function (context) { renderMetadata(context, state); },
     unmount: function (context) {
+      state.requestId += 1;
       if (context && context.mount) context.mount.replaceChildren();
     },
     dispose: function (context) {
+      state.requestId += 1;
       if (context && context.mount) context.mount.replaceChildren();
     }
   };

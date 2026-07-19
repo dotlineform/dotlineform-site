@@ -265,6 +265,66 @@ def assert_manage_metadata(page: Page) -> None:
         raise AssertionError(f"manage info used selected tree metadata: {result!r}")
 
 
+def assert_manage_diagram_sources_are_logical_vscode_links(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const view = window.__docsViewerMetadataInfoViewSmoke.module.createDocsViewerMetadataInfoView();
+            const mount = document.createElement('div');
+            const opened = [];
+            const context = {
+                mount,
+                appContext: {
+                    kind: 'manage',
+                    serviceAvailability: { source: { available: true } }
+                },
+                selectedDoc: { doc_id: 'diagram-doc', title: 'Diagram doc' },
+                selectedMetadata: { doc_id: 'diagram-doc', title: 'Diagram doc' },
+                collectionProvider: {
+                    readDiagramSources: async (docId) => ({
+                        ok: true,
+                        doc_id: docId,
+                        sources: [{
+                            label: 'Architecture',
+                            media_identity: 'docs/studio/svg/architecture.svg',
+                            source_identity: 'architecture.mmd',
+                            open_label: 'Open in VS Code'
+                        }]
+                    }),
+                    openDiagramSource: async (payload) => { opened.push(payload); return { ok: true }; }
+                }
+            };
+            view.mount(context);
+            await Promise.resolve();
+            await Promise.resolve();
+            const link = mount.querySelector('.docsViewer__diagramSourcesItem a');
+            link.click();
+            await Promise.resolve();
+            return {
+                heading: mount.querySelector('.docsViewer__diagramSourcesTitle')?.textContent || '',
+                itemText: mount.querySelector('.docsViewer__diagramSourcesItem')?.textContent || '',
+                href: link.getAttribute('href'),
+                opened,
+                text: mount.textContent
+            };
+        }"""
+    )
+    if result["heading"] != "Diagram sources":
+        raise AssertionError(f"manage info did not render Diagram sources: {result!r}")
+    if "Architecture" not in result["itemText"] or "Open in VS Code" not in result["itemText"]:
+        raise AssertionError(f"diagram source link content changed: {result!r}")
+    if result["href"] != "#":
+        raise AssertionError(f"diagram source exposed a direct source URL: {result!r}")
+    expected_open = [{
+        "doc_id": "diagram-doc",
+        "media_identity": "docs/studio/svg/architecture.svg",
+        "editor": "vscode",
+    }]
+    if result["opened"] != expected_open:
+        raise AssertionError(f"diagram source link did not use the logical open contract: {result!r}")
+    if "/Users/" in result["text"] or "media/mermaid/" in result["text"]:
+        raise AssertionError(f"diagram source UI exposed a physical path: {result!r}")
+
+
 def smoke_fixture_path(site_root: Path) -> str:
     resolved_root = site_root.expanduser().resolve()
     if (resolved_root / "404.html").exists():
@@ -279,6 +339,7 @@ def run_smoke(page: Page, base_url: str, fixture_path: str) -> None:
     assert_context_hydrates_from_payload(page)
     assert_public_reader_metadata(page)
     assert_manage_metadata(page)
+    assert_manage_diagram_sources_are_logical_vscode_links(page)
 
 
 def main() -> None:

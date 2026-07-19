@@ -941,6 +941,8 @@ def assert_configured_scope_provider(page: Page) -> None:
                 source: {
                     readSource: (docId, options) => { sourceCalls.push(['read', docId, options]); return Promise.resolve({ doc_id: docId }); },
                     writeSource: (payload, options) => { sourceCalls.push(['write', payload.doc_id, options]); return Promise.resolve({ doc_id: payload.doc_id }); },
+                    readDiagramSources: (docId, options) => { sourceCalls.push(['read-diagrams', docId, options]); return Promise.resolve({ sources: [] }); },
+                    openDiagramSource: (payload, options) => { sourceCalls.push(['open-diagram', payload.media_identity, options]); return Promise.resolve({ ok: true }); },
                     listStagedMedia: (kind, options) => { sourceCalls.push(['list-media', kind, options]); return Promise.resolve({ files: [] }); },
                     previewStagedMedia: (payload, options) => { sourceCalls.push(['preview-media', payload.staged_filename, options]); return Promise.resolve(payload); },
                     applyStagedMedia: (payload, options) => { sourceCalls.push(['apply-media', payload.staged_filename, options]); return Promise.resolve(payload); }
@@ -948,6 +950,8 @@ def assert_configured_scope_provider(page: Page) -> None:
             });
             await withSource.readSource('doc-b');
             await withSource.writeSource({ doc_id: 'doc-b', source_body: '# B' });
+            await withSource.readDiagramSources('doc-b');
+            await withSource.openDiagramSource({ doc_id: 'doc-b', media_identity: 'docs/beta/svg/diagram.svg' });
             await withSource.listStagedMedia('image');
             await withSource.previewStagedMedia({ staged_filename: 'diagram.svg' });
             await withSource.applyStagedMedia({ staged_filename: 'diagram.svg' });
@@ -1006,8 +1010,10 @@ def assert_configured_scope_provider(page: Page) -> None:
     expected_source_keys = [
         "applyStagedMedia",
         "listStagedMedia",
+        "openDiagramSource",
         "previewStagedMedia",
         *expected_read_only_keys,
+        "readDiagramSources",
         "readSource",
         "writeSource",
     ]
@@ -1040,6 +1046,8 @@ def assert_configured_scope_provider(page: Page) -> None:
     if result["sourceCalls"] != [
         ["read", "doc-b", {"scope": "beta"}],
         ["write", "doc-b", {"scope": "beta"}],
+        ["read-diagrams", "doc-b", {"scope": "beta"}],
+        ["open-diagram", "docs/beta/svg/diagram.svg", {"scope": "beta"}],
         ["list-media", "image", {"scope": "beta"}],
         ["preview-media", "diagram.svg", {"scope": "beta"}],
         ["apply-media", "diagram.svg", {"scope": "beta"}],

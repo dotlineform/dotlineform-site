@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 import docs_generated_reads
+import docs_diagram_source_service
 import docs_import_source_service as import_source_service
 import docs_management_routes as routes
 import docs_publish_gate
@@ -85,6 +86,8 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
             repo_root,
             docs_api_query_value(params, "media_kind"),
         )
+    if path == routes.DIAGRAM_SOURCES_PATH:
+        return docs_diagram_source_service.list_diagram_sources(repo_root, params)
     if path == routes.REVIEW_SESSIONS_PATH:
         return docs_review_sessions.list_review_sessions(repo_root)
     if path == routes.REVIEW_SESSION_INDEX_TREE_PATH:

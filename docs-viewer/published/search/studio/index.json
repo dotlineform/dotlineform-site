@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-cff372adf330f2970f876d064c15d057",
-    "generated_at_utc": "2026-07-19T10:09:06Z",
+    "version": "blake2b-0c244a4a834edd75d687910e809ad8f9",
+    "generated_at_utc": "2026-07-19T10:31:24Z",
     "count": 252
   },
   "entries": [
@@ -3942,26 +3942,26 @@
       "kind": "doc",
       "title": "Diagrams",
       "href": "/docs/?scope=studio&doc=d-20260715-181845-0158f9",
-      "last_updated": "2026-07-19 11:08:36",
+      "last_updated": "2026-07-19 11:30:55",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-19 11:08:36 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-19 11:30:55 • Docs Viewer Roadmap",
       "search_terms": [
         "diagrams",
         "docs viewer roadmap",
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-19 11:08:36",
+        "2026-07-19 11:30:55",
         "2026",
         "07",
         "19",
         "11",
-        "08",
-        "36",
+        "30",
+        "55",
         "d-20260715-181845-0158f9"
       ],
-      "search_text": "diagrams docs viewer roadmap docs viewer roadmap 2026-07-19 11:08:36 2026 07 19 11 08 36 d-20260715-181845-0158f9"
+      "search_text": "diagrams docs viewer roadmap docs viewer roadmap 2026-07-19 11:30:55 2026 07 19 11 30 55 d-20260715-181845-0158f9"
     },
     {
       "id": "d-20260715-181845-524859",
@@ -3993,26 +3993,26 @@
       "kind": "doc",
       "title": "Mermaid Document Diagrams Delivery",
       "href": "/docs/?scope=studio&doc=d-20260718-214206-27df44",
-      "last_updated": "2026-07-19 11:08:36",
+      "last_updated": "2026-07-19 11:30:55",
       "parent_id": "d-20260715-181845-0158f9",
       "parent_title": "Diagrams",
-      "display_meta": "2026-07-19 11:08:36 • Diagrams",
+      "display_meta": "2026-07-19 11:30:55 • Diagrams",
       "search_terms": [
         "mermaid document diagrams delivery",
         "mermaid",
         "document",
         "diagrams",
         "delivery",
-        "2026-07-19 11:08:36",
+        "2026-07-19 11:30:55",
         "2026",
         "07",
         "19",
         "11",
-        "08",
-        "36",
+        "30",
+        "55",
         "d-20260718-214206-27df44"
       ],
-      "search_text": "mermaid document diagrams delivery mermaid document diagrams delivery 2026-07-19 11:08:36 2026 07 19 11 08 36 d-20260718-214206-27df44"
+      "search_text": "mermaid document diagrams delivery mermaid document diagrams delivery 2026-07-19 11:30:55 2026 07 19 11 30 55 d-20260718-214206-27df44"
     },
     {
       "id": "d-20260718-155350-c84e62",

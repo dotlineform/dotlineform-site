@@ -22,14 +22,15 @@ def test_staged_media_listing_separates_images_and_files() -> None:
         root = Path(temp)
         write_staged_bytes(root, "photo.png", b"png")
         write_staged_text(root, "diagram.svg", "<svg xmlns='http://www.w3.org/2000/svg'/>")
+        write_staged_text(root, "architecture.mmd", "flowchart LR\nA --> B\n")
         write_staged_bytes(root, "notes.pdf", b"pdf")
         write_staged_text(root, "document.md", "# Document\n")
 
         images = staged_media.list_staged_media_files(root, "image")["files"]
         files = staged_media.list_staged_media_files(root, "file")["files"]
 
-    assert [item["filename"] for item in images] == ["diagram.svg", "photo.png"]
-    assert [item["media_format"] for item in images] == ["svg", "raster"]
+    assert [item["filename"] for item in images] == ["architecture.mmd", "diagram.svg", "photo.png"]
+    assert [item["media_format"] for item in images] == ["mermaid", "svg", "raster"]
     assert [item["filename"] for item in files] == ["notes.pdf"]
 
 
@@ -203,6 +204,151 @@ def test_add_svg_uses_shared_sanitizer_and_requires_confirmed_replacement() -> N
     assert replacement["requires_replace_confirmation"] is True
     assert replaced["publish"]["status"] == "overwritten"
     assert b"<circle" in replaced_bytes
+
+
+def _configure_library_mermaid(root: Path) -> None:
+    record = docs_scope_record(
+        "library",
+        scope_type="public",
+        viewer_base_url="/library/",
+        include_scope_param=False,
+        default_doc_id="library",
+        allow_unresolved_parent_ids=True,
+        media_provider="repository",
+        media_location_root="site/assets/data/docs/scopes/library/media",
+        media_served_root="/assets/data/docs/scopes/library/media",
+        media_types=("img", "svg", "files", "html"),
+    )
+    record["source"]["build_media"] = {  # type: ignore[index]
+        "mermaid": {
+            "path": "media/mermaid",
+            "producer": "mermaid",
+            "publishes_to": "svg",
+        }
+    }
+    record["published"]["media"]["svg"]["build_inputs"] = ["mermaid"]  # type: ignore[index]
+    write_docs_scope_config(root, [record])
+
+
+def _fake_mermaid_producer(context) -> tuple[str, ...]:
+    source = context.source.read("architecture.mmd").decode("utf-8")
+    if "FAIL" in source:
+        raise RuntimeError("fixture renderer failed")
+    width = "20" if "changed" in source else "10"
+    rendered = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 50">
+<title>Architecture flow</title><desc>Verified fixture diagram.</desc><rect width="{width}" height="10"/>
+</svg>""".encode("utf-8")
+    context.published.replace("architecture.svg", rendered, content_type="image/svg+xml")
+    return ("architecture.svg",)
+
+
+def test_add_mermaid_copies_canonical_source_renders_svg_and_returns_token(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        _configure_library_mermaid(root)
+        write_staged_text(
+            root,
+            "architecture.mmd",
+            """flowchart LR
+    accTitle: Architecture flow
+    accDescr: Source flows to a rendered diagram.
+    A --> B
+""",
+        )
+        staged = staged_media.configured_workspace_paths(root).import_staging / "architecture.mmd"
+        monkeypatch.setattr(staged_media, "produce_mermaid_svg", _fake_mermaid_producer)
+        documents_root = root / "docs-viewer/source/library/documents"
+        before = sorted(documents_root.glob("*.md"))
+
+        payload = staged_media.apply_staged_media(root, {
+            "scope": "library",
+            "media_kind": "image",
+            "staged_filename": "architecture.mmd",
+            "label": "Architecture",
+        })
+        after = sorted(documents_root.glob("*.md"))
+        canonical = root / "docs-viewer/source/library/media/mermaid/architecture.mmd"
+        published = root / "site/assets/data/docs/scopes/library/media/svg/architecture.svg"
+
+        assert staged.is_file()
+        assert canonical.read_bytes() == staged.read_bytes()
+        assert b"<rect" in published.read_bytes()
+
+    assert payload["media_format"] == "mermaid"
+    assert payload["source_identity"] == "architecture.mmd"
+    assert payload["media_identity"] == "docs/library/svg/architecture.svg"
+    assert payload["markdown"] == "![Architecture]([[media:docs/library/svg/architecture.svg]])"
+    assert before == after
+
+
+def test_add_mermaid_normalizes_the_canonical_extension() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        _configure_library_mermaid(root)
+        write_staged_text(root, "Architecture.MMD", "flowchart LR\nA --> B\n")
+
+        _scope, _kind, _source, _label, media_class, media_filename = staged_media._staged_media_contract(
+            root,
+            {
+                "scope": "library",
+                "media_kind": "image",
+                "staged_filename": "Architecture.MMD",
+                "label": "Architecture",
+            },
+        )
+
+    assert media_class == "mermaid"
+    assert media_filename == "Architecture.mmd"
+
+
+def test_add_mermaid_renders_before_configured_source_or_svg_publication(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        _configure_library_mermaid(root)
+        write_staged_text(root, "architecture.mmd", "FAIL\n")
+        monkeypatch.setattr(staged_media, "produce_mermaid_svg", _fake_mermaid_producer)
+
+        with pytest.raises(RuntimeError, match="fixture renderer failed"):
+            staged_media.apply_staged_media(root, {
+                "scope": "library",
+                "media_kind": "image",
+                "staged_filename": "architecture.mmd",
+                "label": "Architecture",
+            })
+
+        assert not (root / "docs-viewer/source/library/media/mermaid/architecture.mmd").exists()
+        assert not (root / "site/assets/data/docs/scopes/library/media/svg/architecture.svg").exists()
+
+
+def test_add_mermaid_requires_confirmation_when_canonical_or_rendered_bytes_change(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        _configure_library_mermaid(root)
+        monkeypatch.setattr(staged_media, "produce_mermaid_svg", _fake_mermaid_producer)
+        request = {
+            "scope": "library",
+            "media_kind": "image",
+            "staged_filename": "architecture.mmd",
+            "label": "Architecture",
+        }
+        write_staged_text(root, "architecture.mmd", "initial\n")
+        staged_media.apply_staged_media(root, request)
+        write_staged_text(root, "architecture.mmd", "changed\n")
+
+        preview = staged_media.preview_staged_media(root, request)
+        with pytest.raises(ValueError, match="confirm replacement"):
+            staged_media.apply_staged_media(root, request)
+        payload = staged_media.apply_staged_media(root, {**request, "confirm_replace": True})
+
+    assert preview["collision"] == "replace"
+    assert preview["requires_replace_confirmation"] is True
+    assert payload["publish"]["status"] == "overwritten"
 
 
 def test_add_media_publication_failure_returns_no_insertable_payload(

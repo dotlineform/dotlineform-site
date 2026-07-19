@@ -724,6 +724,35 @@ body.docs-viewer-service{
   overflow-wrap: anywhere;
 }
 
+.docsViewer__diagramSources{
+  margin-top: var(--docs-viewer-space-4);
+  padding-top: var(--docs-viewer-space-3);
+  border-top: 1px solid var(--docs-viewer-border);
+}
+
+.docsViewer__diagramSourcesTitle{
+  margin: 0;
+  font-size: var(--docs-viewer-font-small);
+  line-height: var(--docs-viewer-line-snug);
+}
+
+.docsViewer__diagramSourcesList{
+  display: grid;
+  gap: 0.45rem;
+  margin: var(--docs-viewer-space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.docsViewer__diagramSourcesItem{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.3rem 0.75rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .docsViewer__bookmarkPill{
   box-sizing: border-box;
   display: inline-flex;

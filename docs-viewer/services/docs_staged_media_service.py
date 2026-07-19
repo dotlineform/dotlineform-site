@@ -8,10 +8,17 @@ import re
 import shutil
 import tempfile
 from contextlib import contextmanager
-from dataclasses import asdict
+from dataclasses import asdict, dataclass
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any, Iterator
 
+from docs_artifact_locations import (
+    ArtifactLocation,
+    ArtifactLocationAdapter,
+    artifact_location_adapter,
+    authenticated_remote_client_for_locations,
+)
 from docs_import_common import (
     FILE_MEDIA_STAGED_SUFFIXES,
     RASTER_IMAGE_STAGED_SUFFIXES,
@@ -26,6 +33,7 @@ from docs_media_storage import (
     publish_docs_media_files,
     validate_media_filename,
 )
+from docs_mermaid_media import produce_mermaid_svg
 from docs_scope_config import load_docs_scope_configs
 from docs_svg_sanitizer import SanitizedSvg, sanitize_svg_bytes
 from services.paths import configured_workspace_paths, marker_path, workspace_status
@@ -34,7 +42,22 @@ from services.paths import configured_workspace_paths, marker_path, workspace_st
 STAGED_MEDIA_IMAGE = "image"
 STAGED_MEDIA_FILE = "file"
 STAGED_MEDIA_KINDS = {STAGED_MEDIA_IMAGE, STAGED_MEDIA_FILE}
+MERMAID_STAGED_SUFFIXES = {".mmd"}
 TOKEN_SAFE_MEDIA_FILENAME_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
+
+
+@dataclass(frozen=True)
+class PreparedMermaidMedia:
+    source_identity: str
+    published_identity: str
+    source_bytes: bytes
+    published_bytes: bytes
+    source_adapter: ArtifactLocationAdapter
+    published_adapter: ArtifactLocationAdapter
+    sanitized: SanitizedSvg
+    collision: str
+    published_status: str
+    source_status: str
 
 
 def normalize_media_kind(value: Any) -> str:
@@ -46,7 +69,7 @@ def normalize_media_kind(value: Any) -> str:
 
 def media_suffixes(kind: str) -> set[str]:
     return (
-        RASTER_IMAGE_STAGED_SUFFIXES | SVG_STAGED_SUFFIXES
+        RASTER_IMAGE_STAGED_SUFFIXES | SVG_STAGED_SUFFIXES | MERMAID_STAGED_SUFFIXES
         if normalize_media_kind(kind) == STAGED_MEDIA_IMAGE
         else FILE_MEDIA_STAGED_SUFFIXES
     )
@@ -111,7 +134,15 @@ def list_staged_media_files(repo_root: Path, kind: str) -> dict[str, Any]:
             "filename": path.name,
             "path": marker_path(path, workspace_root=workspace.root),
             "media_kind": normalized_kind,
-            "media_format": "svg" if path.suffix.lower() == ".svg" else "raster" if normalized_kind == STAGED_MEDIA_IMAGE else "file",
+            "media_format": (
+                "mermaid"
+                if path.suffix.lower() == ".mmd"
+                else "svg"
+                if path.suffix.lower() == ".svg"
+                else "raster"
+                if normalized_kind == STAGED_MEDIA_IMAGE
+                else "file"
+            ),
             "suggested_label": humanize(path.stem),
             "size_bytes": stat.st_size,
             "modified_utc": dt.datetime.fromtimestamp(stat.st_mtime, tz=dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -158,21 +189,149 @@ def _staged_media_contract(repo_root: Path, body: dict[str, Any]) -> tuple[str, 
     fallback = humanize(source_path.stem) or ("Image" if kind == STAGED_MEDIA_IMAGE else "File")
     label = normalize_label(body.get("label"), fallback=fallback)
     media_class = (
-        "svg"
+        "mermaid"
+        if kind == STAGED_MEDIA_IMAGE and source_path.suffix.lower() == ".mmd"
+        else "svg"
         if kind == STAGED_MEDIA_IMAGE and source_path.suffix.lower() == ".svg"
         else "img"
         if kind == STAGED_MEDIA_IMAGE
         else "files"
     )
-    return scope, kind, source_path, label, media_class, published_media_filename(source_path)
+    media_filename = published_media_filename(source_path)
+    if media_class == "mermaid":
+        media_filename = Path(media_filename).with_suffix(".mmd").name
+    return scope, kind, source_path, label, media_class, media_filename
 
 
 def _markdown_token(kind: str, label: str, media_token: str) -> str:
     return f"![{label}]({media_token})" if kind == STAGED_MEDIA_IMAGE else f"[{label}]({media_token})"
 
 
+def _artifact_status(adapter: ArtifactLocationAdapter, identity: str, data: bytes) -> str:
+    existing = adapter.stat(identity)
+    if existing is None:
+        return "new"
+    return "unchanged" if adapter.verify_bytes(identity, data) else "replace"
+
+
+def _prepared_mermaid_media(
+    repo_root: Path,
+    scope: str,
+    source_path: Path,
+    source_filename: str,
+) -> PreparedMermaidMedia:
+    config = load_docs_scope_configs(repo_root)[scope]
+    build = config.source.build_media.get("mermaid")
+    if build is None or build.producer != "mermaid" or build.publishes_to != "svg":
+        raise ValueError(f"scope {scope!r} does not configure Mermaid source media")
+    published_media = config.published.media.get("svg")
+    if published_media is None or "mermaid" not in published_media.build_inputs:
+        raise ValueError(f"scope {scope!r} does not register Mermaid as an SVG build input")
+
+    source_identity = source_filename
+    published_identity = Path(source_filename).with_suffix(".svg").as_posix()
+    source_bytes = source_path.read_bytes()
+    remote_client = authenticated_remote_client_for_locations(
+        repo_root,
+        [published_media.location],
+    )
+    source_adapter = artifact_location_adapter(
+        repo_root,
+        ArtifactLocation(
+            provider=config.source.location.provider,
+            path=config.source.location.path / build.path,
+        ),
+    )
+    published_adapter = artifact_location_adapter(
+        repo_root,
+        published_media.location,
+        served_path_prefix=published_media.served_path_prefix,
+        remote_client=remote_client,
+    )
+
+    with tempfile.TemporaryDirectory(prefix="docs-staged-mermaid-render-") as temp_dir:
+        temp_root = Path(temp_dir).resolve()
+        temporary_source = artifact_location_adapter(
+            temp_root,
+            ArtifactLocation(provider="repository", path=Path("source")),
+        )
+        temporary_published = artifact_location_adapter(
+            temp_root,
+            ArtifactLocation(provider="repository", path=Path("published")),
+        )
+        temporary_source.replace(source_identity, source_bytes, content_type="text/plain")
+        context = SimpleNamespace(
+            source=temporary_source,
+            published=temporary_published,
+            write=True,
+            requested_published_identities=(published_identity,),
+        )
+        outputs = produce_mermaid_svg(context)
+        if outputs != (published_identity,):
+            raise RuntimeError(f"Mermaid producer did not render {published_identity!r}")
+        published_bytes = temporary_published.read(published_identity)
+
+    sanitized = sanitize_svg_bytes(published_bytes)
+    source_status = _artifact_status(source_adapter, source_identity, source_bytes)
+    published_status = _artifact_status(published_adapter, published_identity, published_bytes)
+    statuses = {source_status, published_status}
+    collision = "replace" if "replace" in statuses else "unchanged" if statuses == {"unchanged"} else "new"
+    return PreparedMermaidMedia(
+        source_identity=source_identity,
+        published_identity=published_identity,
+        source_bytes=source_bytes,
+        published_bytes=published_bytes,
+        source_adapter=source_adapter,
+        published_adapter=published_adapter,
+        sanitized=sanitized,
+        collision=collision,
+        published_status=published_status,
+        source_status=source_status,
+    )
+
+
+def _mermaid_preview_payload(
+    repo_root: Path,
+    scope: str,
+    kind: str,
+    source_path: Path,
+    label: str,
+    prepared: PreparedMermaidMedia,
+) -> dict[str, Any]:
+    plan = build_media_plan(
+        scope,
+        "svg",
+        Path(prepared.published_identity),
+        label,
+        repo_root=repo_root,
+    )
+    return {
+        "ok": True,
+        "scope": scope,
+        "media_kind": kind,
+        "media_format": "mermaid",
+        "staged_filename": source_path.name,
+        "source_identity": prepared.source_identity,
+        "published_filename": Path(prepared.published_identity).name,
+        "label": label,
+        "media_identity": plan["media_path"],
+        "media_token": plan["media_token"],
+        "markdown": _markdown_token(kind, label, plan["media_token"]),
+        "collision": prepared.collision,
+        "requires_replace_confirmation": prepared.collision == "replace",
+        "size_bytes": len(prepared.published_bytes),
+        "svg": {
+            "title": prepared.sanitized.title,
+            "diagnostics": prepared.sanitized.diagnostics(),
+        },
+    }
+
+
 def preview_staged_media(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     scope, kind, source_path, label, media_class, media_filename = _staged_media_contract(repo_root, body)
+    if media_class == "mermaid":
+        prepared = _prepared_mermaid_media(repo_root, scope, source_path, media_filename)
+        return _mermaid_preview_payload(repo_root, scope, kind, source_path, label, prepared)
     config = load_docs_scope_configs(repo_root)[scope]
     with _prepared_media_source(source_path, kind, media_filename) as (prepared_path, source_root, sanitized):
         item = docs_media_file(
@@ -206,12 +365,69 @@ def preview_staged_media(repo_root: Path, body: dict[str, Any]) -> dict[str, Any
 
 
 def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = True) -> dict[str, Any]:
+    scope, kind, source_path, label, media_class, media_filename = _staged_media_contract(repo_root, body)
+    if media_class == "mermaid":
+        prepared = _prepared_mermaid_media(repo_root, scope, source_path, media_filename)
+        preview = _mermaid_preview_payload(repo_root, scope, kind, source_path, label, prepared)
+        confirm_replace = bool(body.get("confirm_replace"))
+        if preview["requires_replace_confirmation"] and not confirm_replace:
+            raise ValueError("canonical Mermaid source or published SVG bytes differ; confirm replacement or cancel")
+        if write:
+            prepared.source_adapter.replace(
+                prepared.source_identity,
+                prepared.source_bytes,
+                content_type="text/plain",
+            )
+            if not prepared.source_adapter.verify_bytes(prepared.source_identity, prepared.source_bytes):
+                raise RuntimeError("Canonical Mermaid source publication verification failed")
+            prepared.published_adapter.replace(
+                prepared.published_identity,
+                prepared.published_bytes,
+                content_type="image/svg+xml",
+            )
+            if not prepared.published_adapter.verify_bytes(prepared.published_identity, prepared.published_bytes):
+                raise RuntimeError("Mermaid SVG publication verification failed")
+        published_status = (
+            "unchanged"
+            if prepared.published_status == "unchanged"
+            else "overwritten"
+            if prepared.published_status == "replace" and write
+            else "uploaded"
+            if write
+            else "would_overwrite"
+            if prepared.published_status == "replace"
+            else "would_upload"
+        )
+        return {
+            **preview,
+            "preview_only": not write,
+            "source_publish": {
+                "identity": prepared.source_identity,
+                "status": prepared.source_status,
+                "size": len(prepared.source_bytes),
+            },
+            "publish": {
+                "scope": scope,
+                "media_class": "svg",
+                "filename": prepared.published_identity,
+                "size": len(prepared.published_bytes),
+                "status": published_status,
+                "reason": "",
+            },
+            "summary_text": (
+                f"Published {source_path.name} and rendered Mermaid SVG."
+                if write and prepared.collision != "unchanged"
+                else f"Verified {source_path.name} and rendered Mermaid SVG."
+                if write
+                else f"Prepared Mermaid publication preview for {source_path.name}."
+            ),
+        }
+
     preview = preview_staged_media(repo_root, body)
     confirm_replace = bool(body.get("confirm_replace"))
     if preview["requires_replace_confirmation"] and not confirm_replace:
         raise ValueError("published media bytes differ; confirm replacement or cancel")
 
-    scope, kind, source_path, label, media_class, media_filename = _staged_media_contract(repo_root, body)
     config = load_docs_scope_configs(repo_root)[scope]
     with _prepared_media_source(source_path, kind, media_filename) as (prepared_path, source_root, _sanitized):
         item = docs_media_file(

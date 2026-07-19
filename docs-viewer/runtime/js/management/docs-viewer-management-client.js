@@ -91,6 +91,22 @@ export function rebuildManagedDocSource(payload, options) {
   return fetchManagementJson("/docs/source/rebuild", "POST", scopedPayload(payload, options), options);
 }
 
+export function readManagedDiagramSources(docId, options) {
+  var settings = options || {};
+  var scope = encodeURIComponent(String(settings.scope || "").trim());
+  var targetDocId = encodeURIComponent(String(docId || "").trim());
+  var query = [];
+  if (scope) query.push("scope=" + scope);
+  if (targetDocId) query.push("doc_id=" + targetDocId);
+  return fetchManagementJson("/docs/diagram-sources" + (query.length ? "?" + query.join("&") : ""), "GET", undefined, options);
+}
+
+export function openManagedDiagramSource(payload, options) {
+  return fetchManagementJson("/docs/open-diagram-source", "POST", scopedPayload(Object.assign({
+    editor: "vscode"
+  }, payload || {}), options), options);
+}
+
 export function listStagedMedia(mediaKind, options) {
   var kind = encodeURIComponent(String(mediaKind || "").trim());
   return fetchManagementJson("/docs/staged-media-files?media_kind=" + kind, "GET", undefined, options);
