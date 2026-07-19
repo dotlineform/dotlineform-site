@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-0c77ef63c314ce2ac9e88c57d130919a",
-    "generated_at_utc": "2026-07-19T16:38:10Z",
-    "count": 254
+    "version": "blake2b-68bddd22f7b1ef16b52a72ebea5f24f4",
+    "generated_at_utc": "2026-07-19T16:45:36Z",
+    "count": 255
   },
   "entries": [
     {
@@ -3839,25 +3839,25 @@
       "kind": "doc",
       "title": "Docs Viewer Roadmap",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-1e0af6",
-      "last_updated": "2026-07-19 17:13:26",
+      "last_updated": "2026-07-19 17:44:21",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-19 17:13:26 • Roadmap",
+      "display_meta": "2026-07-19 17:44:21 • Roadmap",
       "search_terms": [
         "docs viewer roadmap",
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-19 17:13:26",
+        "2026-07-19 17:44:21",
         "2026",
         "07",
         "19",
         "17",
-        "13",
-        "26",
+        "44",
+        "21",
         "d-20260714-234030-1e0af6"
       ],
-      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-19 17:13:26 2026 07 19 17 13 26 d-20260714-234030-1e0af6"
+      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-19 17:44:21 2026 07 19 17 44 21 d-20260714-234030-1e0af6"
     },
     {
       "id": "d-20260716-204013-3be4e1",
@@ -4718,10 +4718,10 @@
       "kind": "doc",
       "title": "Word Document Import",
       "href": "/docs/?scope=studio&doc=d-20260718-233015-a1836e",
-      "last_updated": "2026-07-18 23:30:15",
+      "last_updated": "2026-07-19 17:44:21",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-18 23:30:15 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-19 17:44:21 • Docs Viewer Roadmap",
       "search_terms": [
         "word document import",
         "word",
@@ -4731,16 +4731,43 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-18 23:30:15",
+        "2026-07-19 17:44:21",
         "2026",
         "07",
-        "18",
-        "23",
-        "30",
-        "15",
+        "19",
+        "17",
+        "44",
+        "21",
         "d-20260718-233015-a1836e"
       ],
-      "search_text": "word document import word document import docs viewer roadmap docs viewer roadmap 2026-07-18 23:30:15 2026 07 18 23 30 15 d-20260718-233015-a1836e"
+      "search_text": "word document import word document import docs viewer roadmap docs viewer roadmap 2026-07-19 17:44:21 2026 07 19 17 44 21 d-20260718-233015-a1836e"
+    },
+    {
+      "id": "d-20260719-174421-aa4ff0",
+      "kind": "doc",
+      "title": "Word Document Import Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260719-174421-aa4ff0",
+      "last_updated": "2026-07-19 17:44:21",
+      "parent_id": "d-20260718-233015-a1836e",
+      "parent_title": "Word Document Import",
+      "display_meta": "2026-07-19 17:44:21 • Word Document Import",
+      "search_terms": [
+        "word document import delivery",
+        "word",
+        "document",
+        "import",
+        "delivery",
+        "word document import",
+        "2026-07-19 17:44:21",
+        "2026",
+        "07",
+        "19",
+        "17",
+        "44",
+        "21",
+        "d-20260719-174421-aa4ff0"
+      ],
+      "search_text": "word document import delivery word document import delivery word document import 2026-07-19 17:44:21 2026 07 19 17 44 21 d-20260719-174421-aa4ff0"
     },
     {
       "id": "d-20260715-092247-f3fd52",
