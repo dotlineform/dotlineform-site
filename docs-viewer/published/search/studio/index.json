@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4e32b1377df74caacd1e5fe91fb13f50",
-    "generated_at_utc": "2026-07-19T19:12:38Z",
+    "version": "blake2b-b36079c94a4b9cae558178ead944ef97",
+    "generated_at_utc": "2026-07-19T19:21:57Z",
     "count": 257
   },
   "entries": [
@@ -4772,10 +4772,10 @@
       "kind": "doc",
       "title": "Word Document Import",
       "href": "/docs/?scope=studio&doc=d-20260718-233015-a1836e",
-      "last_updated": "2026-07-19 20:11:37",
+      "last_updated": "2026-07-19 20:21:57",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-19 20:11:37 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-19 20:21:57 • Docs Viewer Roadmap",
       "search_terms": [
         "word document import",
         "word",
@@ -4785,26 +4785,26 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-19 20:11:37",
+        "2026-07-19 20:21:57",
         "2026",
         "07",
         "19",
         "20",
-        "11",
-        "37",
+        "21",
+        "57",
         "d-20260718-233015-a1836e"
       ],
-      "search_text": "word document import word document import docs viewer roadmap docs viewer roadmap 2026-07-19 20:11:37 2026 07 19 20 11 37 d-20260718-233015-a1836e"
+      "search_text": "word document import word document import docs viewer roadmap docs viewer roadmap 2026-07-19 20:21:57 2026 07 19 20 21 57 d-20260718-233015-a1836e"
     },
     {
       "id": "d-20260719-174421-aa4ff0",
       "kind": "doc",
       "title": "Word Document Import Delivery",
       "href": "/docs/?scope=studio&doc=d-20260719-174421-aa4ff0",
-      "last_updated": "2026-07-19 20:11:37",
+      "last_updated": "2026-07-19 20:21:49",
       "parent_id": "d-20260718-233015-a1836e",
       "parent_title": "Word Document Import",
-      "display_meta": "2026-07-19 20:11:37 • Word Document Import",
+      "display_meta": "2026-07-19 20:21:49 • Word Document Import",
       "search_terms": [
         "word document import delivery",
         "word",
@@ -4812,16 +4812,16 @@
         "import",
         "delivery",
         "word document import",
-        "2026-07-19 20:11:37",
+        "2026-07-19 20:21:49",
         "2026",
         "07",
         "19",
         "20",
-        "11",
-        "37",
+        "21",
+        "49",
         "d-20260719-174421-aa4ff0"
       ],
-      "search_text": "word document import delivery word document import delivery word document import 2026-07-19 20:11:37 2026 07 19 20 11 37 d-20260719-174421-aa4ff0"
+      "search_text": "word document import delivery word document import delivery word document import 2026-07-19 20:21:49 2026 07 19 20 21 49 d-20260719-174421-aa4ff0"
     },
     {
       "id": "d-20260715-092247-f3fd52",

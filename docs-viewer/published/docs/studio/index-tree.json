@@ -1094,13 +1094,13 @@
               "doc_id": "d-20260718-233015-a1836e",
               "title": "Word Document Import",
               "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260718-233015-a1836e.json",
-              "ui_status": "shipped",
+              "ui_status": "done",
               "children": [
                 {
                   "doc_id": "d-20260719-174421-aa4ff0",
                   "title": "Word Document Import Delivery",
                   "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260719-174421-aa4ff0.json",
-                  "ui_status": "shipped"
+                  "ui_status": "done"
                 }
               ]
             }
@@ -1472,5 +1472,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-19T18:09:39Z"
+  "generated_at": "2026-07-19T19:21:57Z"
 }
