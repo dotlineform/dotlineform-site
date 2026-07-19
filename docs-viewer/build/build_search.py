@@ -14,6 +14,11 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
+from docs_builder.runtime_bootstrap import apply_repo_local_env
+
+if __name__ == "__main__":
+    apply_repo_local_env()
+
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 BUILD_DIR = REPO_ROOT / "docs-viewer" / "build"

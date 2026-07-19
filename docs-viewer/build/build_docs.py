@@ -3,6 +3,11 @@
 
 from __future__ import annotations
 
+from docs_builder.runtime_bootstrap import apply_repo_local_env
+
+if __name__ == "__main__":
+    apply_repo_local_env()
+
 from docs_builder.browser_config import (
     browser_docs_index_tree_url,
     browser_docs_recent_url,

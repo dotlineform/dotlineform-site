@@ -18,7 +18,7 @@ from docs_scope_config import (
     published_documents_path,
     resolve_scope_path,
 )
-from docs_source_model import scope_root
+from docs_source_model import load_scope_docs_for_config, scope_root
 from docs_watch_suppression import (
     DEFAULT_COMPLETE_TTL_SECONDS,
     DEFAULT_PENDING_TTL_SECONDS,
@@ -99,16 +99,20 @@ def targeted_docs_build_fallback_reason(repo_root: Path, scope: str, target_doc_
     except (OSError, json.JSONDecodeError) as exc:
         return f"full-scope fallback: existing docs index tree unreadable: {exc}"
     docs = index_payload.get("docs") if isinstance(index_payload, dict) else None
-    records = iter_docs_tree_records(docs)
-    if not records:
+    if not iter_docs_tree_records(docs):
         return "full-scope fallback: existing docs index tree has no docs array"
 
+    try:
+        current_docs = load_scope_docs_for_config(repo_root, config)
+    except (OSError, ValueError) as exc:
+        return f"full-scope fallback: current source docs unavailable: {exc}"
+
     target_set = set(target_doc_ids)
-    missing_payload_ids: list[str] = []
-    for item in records:
-        doc_id = str(item.get("doc_id") or "").strip()
-        if doc_id and doc_id not in target_set and not (output_dir / "by-id" / f"{doc_id}.json").exists():
-            missing_payload_ids.append(doc_id)
+    missing_payload_ids = [
+        doc.doc_id
+        for doc in current_docs
+        if doc.doc_id not in target_set and not (output_dir / "by-id" / f"{doc.doc_id}.json").exists()
+    ]
     if missing_payload_ids:
         return "full-scope fallback: existing payloads missing for unselected docs"
     return ""

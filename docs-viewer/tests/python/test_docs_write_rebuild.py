@@ -270,6 +270,41 @@ def test_targeted_docs_build_uses_index_tree_without_flat_index() -> None:
     assert reason == ""
 
 
+def test_targeted_docs_build_falls_back_for_unindexed_source_without_payload() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
+        write_scope_config(
+            config_path,
+            [
+                docs_scope_record(
+                    "library",
+                    scope_type="public",
+                    viewer_base_url="/library/",
+                    include_scope_param=False,
+                    default_doc_id="library",
+                )
+            ],
+        )
+        source_root = repo_root / "docs-viewer/source/library/documents"
+        source_root.mkdir(parents=True)
+        (source_root / "library.md").write_text("---\ndoc_id: library\ntitle: Library\n---\n# Library\n", encoding="utf-8")
+        (source_root / "child.md").write_text("---\ndoc_id: child\ntitle: Child\n---\n# Child\n", encoding="utf-8")
+        (source_root / "new.md").write_text("---\ndoc_id: new\ntitle: New\n---\n# New\n", encoding="utf-8")
+        (repo_root / "docs-viewer/published/docs/library/by-id").mkdir(parents=True)
+        (repo_root / "docs-viewer/published/docs/library/by-id/library.json").write_text("{}", encoding="utf-8")
+        (repo_root / "docs-viewer/published/docs/library/index-tree.json").write_text(
+            """{"docs":[{"doc_id":"library","children":[{"doc_id":"child"}]}]}""",
+            encoding="utf-8",
+        )
+        (repo_root / "docs-viewer/published/docs/library/references").mkdir(parents=True)
+        (repo_root / "docs-viewer/published/docs/library/references/index.json").write_text("{}", encoding="utf-8")
+
+        reason = write_rebuild.targeted_docs_build_fallback_reason(repo_root, "library", ["child"])
+
+    assert reason == "full-scope fallback: existing payloads missing for unselected docs"
+
+
 def test_rebuild_scope_outputs_skips_empty_targeted_search() -> None:
     calls: list[list[str]] = []
     original_python = with_fake_python()

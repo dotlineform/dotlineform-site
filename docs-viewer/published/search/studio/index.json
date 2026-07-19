@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b190be5a1ebd96578b417932ad15778c",
-    "generated_at_utc": "2026-07-19T19:44:19Z",
-    "count": 258
+    "version": "blake2b-f76b317530f971cf8cfe6c693fc00c34",
+    "generated_at_utc": "2026-07-19T20:30:50Z",
+    "count": 259
   },
   "entries": [
     {
@@ -4581,10 +4581,10 @@
       "kind": "doc",
       "title": "Scope-First Storage Cutover Delivery",
       "href": "/docs/?scope=studio&doc=d-20260719-202836-1769ad",
-      "last_updated": "2026-07-19 20:43:24",
+      "last_updated": "2026-07-19 21:29:46",
       "parent_id": "d-20260719-144956-cb5cb4",
       "parent_title": "Scope-First Storage Layout",
-      "display_meta": "2026-07-19 20:43:24 • Scope-First Storage Layout",
+      "display_meta": "2026-07-19 21:29:46 • Scope-First Storage Layout",
       "search_terms": [
         "scope-first storage cutover delivery",
         "scope",
@@ -4594,16 +4594,45 @@
         "delivery",
         "scope-first storage layout",
         "layout",
-        "2026-07-19 20:43:24",
+        "2026-07-19 21:29:46",
+        "2026",
+        "07",
+        "19",
+        "21",
+        "29",
+        "46",
+        "d-20260719-202836-1769ad"
+      ],
+      "search_text": "scope-first storage cutover delivery scope first storage cutover delivery scope-first storage layout layout 2026-07-19 21:29:46 2026 07 19 21 29 46 d-20260719-202836-1769ad"
+    },
+    {
+      "id": "d-20260719-205459-c7e58a",
+      "kind": "doc",
+      "title": "Scope-First Storage Cutover Working Notes",
+      "href": "/docs/?scope=studio&doc=d-20260719-205459-c7e58a",
+      "last_updated": "2026-07-19 20:57:20",
+      "parent_id": "d-20260719-144956-cb5cb4",
+      "parent_title": "Scope-First Storage Layout",
+      "display_meta": "2026-07-19 20:57:20 • Scope-First Storage Layout",
+      "search_terms": [
+        "scope-first storage cutover working notes",
+        "scope",
+        "first",
+        "storage",
+        "cutover",
+        "working",
+        "notes",
+        "scope-first storage layout",
+        "layout",
+        "2026-07-19 20:57:20",
         "2026",
         "07",
         "19",
         "20",
-        "43",
-        "24",
-        "d-20260719-202836-1769ad"
+        "57",
+        "d-20260719-205459-c7e58a"
       ],
-      "search_text": "scope-first storage cutover delivery scope first storage cutover delivery scope-first storage layout layout 2026-07-19 20:43:24 2026 07 19 20 43 24 d-20260719-202836-1769ad"
+      "search_text": "scope-first storage cutover working notes scope first storage cutover working notes scope-first storage layout layout 2026-07-19 20:57:20 2026 07 19 20 57 d-20260719-205459-c7e58a"
     },
     {
       "id": "d-20260527-105208-c1a4d0",

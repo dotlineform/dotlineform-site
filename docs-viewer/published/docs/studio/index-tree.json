@@ -1046,7 +1046,13 @@
                   "doc_id": "d-20260719-202836-1769ad",
                   "title": "Scope-First Storage Cutover Delivery",
                   "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260719-202836-1769ad.json",
-                  "ui_status": "planned"
+                  "ui_status": "active"
+                },
+                {
+                  "doc_id": "d-20260719-205459-c7e58a",
+                  "title": "Scope-First Storage Cutover Working Notes",
+                  "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260719-205459-c7e58a.json",
+                  "ui_status": "active"
                 }
               ]
             },
@@ -1480,5 +1486,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-19T19:31:46Z"
+  "generated_at": "2026-07-19T20:28:38Z"
 }
