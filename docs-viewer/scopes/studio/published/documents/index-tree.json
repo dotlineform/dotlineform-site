@@ -1093,7 +1093,7 @@
                   "doc_id": "d-20260720-174842-4c2f6a",
                   "title": "DSO-0 — Behavior And Dependency Findings",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-174842-4c2f6a.json",
-                  "ui_status": "active"
+                  "ui_status": "completed"
                 }
               ]
             },
@@ -1562,5 +1562,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-20T16:52:28Z"
+  "generated_at": "2026-07-20T17:14:44Z"
 }

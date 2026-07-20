@@ -7,7 +7,7 @@
       "doc_id": "d-20260720-172819-93d6b2",
       "title": "Document Sharing Ownership Cutover Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-172819-93d6b2.json",
-      "timestamp": "2026-07-20 17:48:42",
+      "timestamp": "2026-07-20 18:14:09",
       "parent_id": "d-20260718-155350-c84e62",
       "parent_title": "Share Document Packages"
     },
@@ -15,9 +15,17 @@
       "doc_id": "d-20260720-174842-4c2f6a",
       "title": "DSO-0 — Behavior And Dependency Findings",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-174842-4c2f6a.json",
-      "timestamp": "2026-07-20 17:48:42",
+      "timestamp": "2026-07-20 18:14:09",
       "parent_id": "d-20260718-155350-c84e62",
       "parent_title": "Share Document Packages"
+    },
+    {
+      "doc_id": "d-20260718-155350-c84e62",
+      "title": "Share Document Packages",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-155350-c84e62.json",
+      "timestamp": "2026-07-20 18:14:09",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap"
     },
     {
       "doc_id": "d-20260714-234030-1e0af6",
@@ -52,14 +60,6 @@
       "parent_title": "Roadmap"
     },
     {
-      "doc_id": "d-20260718-155350-c84e62",
-      "title": "Share Document Packages",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-155350-c84e62.json",
-      "timestamp": "2026-07-20 17:28:19",
-      "parent_id": "d-20260714-234030-1e0af6",
-      "parent_title": "Docs Viewer Roadmap"
-    },
-    {
       "doc_id": "d-20260720-170419-c4b8f1",
       "title": "Current Site Baseline Review Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-170419-c4b8f1.json",
@@ -82,5 +82,5 @@
       "timestamp": "2026-07-20 17:04:17"
     }
   ],
-  "generated_at": "2026-07-20T16:52:28Z"
+  "generated_at": "2026-07-20T17:14:44Z"
 }

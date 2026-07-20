@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-594dc2fadcf08ef276b6472d4154b000",
-    "generated_at_utc": "2026-07-20T16:52:28Z",
+    "version": "blake2b-2a30627dbe0856af91ab8746a7bc667b",
+    "generated_at_utc": "2026-07-20T17:14:44Z",
     "count": 271
   },
   "entries": [
@@ -4725,10 +4725,10 @@
       "kind": "doc",
       "title": "Share Document Packages",
       "href": "/docs/?scope=studio&doc=d-20260718-155350-c84e62",
-      "last_updated": "2026-07-20 17:28:19",
+      "last_updated": "2026-07-20 18:14:09",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-20 17:28:19 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-20 18:14:09 • Docs Viewer Roadmap",
       "search_terms": [
         "share document packages",
         "share",
@@ -4738,26 +4738,26 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-20 17:28:19",
+        "2026-07-20 18:14:09",
         "2026",
         "07",
         "20",
-        "17",
-        "28",
-        "19",
+        "18",
+        "14",
+        "09",
         "d-20260718-155350-c84e62"
       ],
-      "search_text": "share document packages share document packages docs viewer roadmap docs viewer roadmap 2026-07-20 17:28:19 2026 07 20 17 28 19 d-20260718-155350-c84e62"
+      "search_text": "share document packages share document packages docs viewer roadmap docs viewer roadmap 2026-07-20 18:14:09 2026 07 20 18 14 09 d-20260718-155350-c84e62"
     },
     {
       "id": "d-20260720-172819-93d6b2",
       "kind": "doc",
       "title": "Document Sharing Ownership Cutover Delivery",
       "href": "/docs/?scope=studio&doc=d-20260720-172819-93d6b2",
-      "last_updated": "2026-07-20 17:48:42",
+      "last_updated": "2026-07-20 18:14:09",
       "parent_id": "d-20260718-155350-c84e62",
       "parent_title": "Share Document Packages",
-      "display_meta": "2026-07-20 17:48:42 • Share Document Packages",
+      "display_meta": "2026-07-20 18:14:09 • Share Document Packages",
       "search_terms": [
         "document sharing ownership cutover delivery",
         "document",
@@ -4768,26 +4768,26 @@
         "share document packages",
         "share",
         "packages",
-        "2026-07-20 17:48:42",
+        "2026-07-20 18:14:09",
         "2026",
         "07",
         "20",
-        "17",
-        "48",
-        "42",
+        "18",
+        "14",
+        "09",
         "d-20260720-172819-93d6b2"
       ],
-      "search_text": "document sharing ownership cutover delivery document sharing ownership cutover delivery share document packages share packages 2026-07-20 17:48:42 2026 07 20 17 48 42 d-20260720-172819-93d6b2"
+      "search_text": "document sharing ownership cutover delivery document sharing ownership cutover delivery share document packages share packages 2026-07-20 18:14:09 2026 07 20 18 14 09 d-20260720-172819-93d6b2"
     },
     {
       "id": "d-20260720-174842-4c2f6a",
       "kind": "doc",
       "title": "DSO-0 — Behavior And Dependency Findings",
       "href": "/docs/?scope=studio&doc=d-20260720-174842-4c2f6a",
-      "last_updated": "2026-07-20 17:48:42",
+      "last_updated": "2026-07-20 18:14:09",
       "parent_id": "d-20260718-155350-c84e62",
       "parent_title": "Share Document Packages",
-      "display_meta": "2026-07-20 17:48:42 • Share Document Packages",
+      "display_meta": "2026-07-20 18:14:09 • Share Document Packages",
       "search_terms": [
         "dso-0 — behavior and dependency findings",
         "dso",
@@ -4800,16 +4800,16 @@
         "share",
         "document",
         "packages",
-        "2026-07-20 17:48:42",
+        "2026-07-20 18:14:09",
         "2026",
         "07",
         "20",
-        "17",
-        "48",
-        "42",
+        "18",
+        "14",
+        "09",
         "d-20260720-174842-4c2f6a"
       ],
-      "search_text": "dso-0 — behavior and dependency findings dso 0 behavior and dependency findings share document packages share document packages 2026-07-20 17:48:42 2026 07 20 17 48 42 d-20260720-174842-4c2f6a"
+      "search_text": "dso-0 — behavior and dependency findings dso 0 behavior and dependency findings share document packages share document packages 2026-07-20 18:14:09 2026 07 20 18 14 09 d-20260720-174842-4c2f6a"
     },
     {
       "id": "d-20260720-173806-5f2c9a",
