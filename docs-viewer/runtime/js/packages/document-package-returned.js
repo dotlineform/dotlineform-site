@@ -23,6 +23,17 @@ import {
   updatePackageScopeUrl
 } from "./document-package-view.js";
 
+const RETURNED_APPLY_CONTROLS = Object.freeze({
+  summary_apply: {
+    actionId: "apply-returned-summaries",
+    controlId: "documentPackageReturnedSummaryApply"
+  },
+  hierarchy_apply: {
+    actionId: "apply-returned-hierarchy",
+    controlId: "documentPackageReturnedHierarchyApply"
+  }
+});
+
 function returnedState(root) {
   return {
     root,
@@ -92,9 +103,27 @@ function renderActionButtons(state) {
   state.reviewActions.innerHTML = state.reviewActionRecords.map((action) => `
     <button class="docsPackageButton" type="button" data-package-review-action="${escapePackageHtml(action.id)}" disabled>${escapePackageHtml(action.label || action.id)}</button>
   `).join("");
-  state.applyActions.innerHTML = state.applyActionRecords.map((action) => `
-    <button class="docsPackageButton" type="button" data-package-apply-action="${escapePackageHtml(action.id)}" disabled>${escapePackageHtml(action.label || action.id)}</button>
-  `).join("");
+  state.applyActions.innerHTML = state.applyActionRecords.map((action) => {
+    const control = RETURNED_APPLY_CONTROLS[action.id] || {};
+    const idAttribute = control.controlId ? ` id="${escapePackageHtml(control.controlId)}"` : "";
+    return `
+      <button class="docsPackageButton"${idAttribute} type="button" data-package-apply-action="${escapePackageHtml(action.id)}" disabled>${escapePackageHtml(action.label || action.id)}</button>
+    `;
+  }).join("");
+}
+
+function returnedApplyActivityContext(request, actionId) {
+  const control = RETURNED_APPLY_CONTROLS[actionId];
+  if (!control) return null;
+  return {
+    page_id: "docs-package-returned",
+    action_id: control.actionId,
+    route: "/docs/packages/returned/",
+    control_id: control.controlId,
+    control_selector: `#${control.controlId}`,
+    correlation_id: `document-package-apply:${actionId}:${request.staged_filename}:${Date.now()}`,
+    staged_filename: request.staged_filename
+  };
 }
 
 function blockedReason(file) {
@@ -269,7 +298,8 @@ async function runReturnedApply(state, actionId, button) {
       ...request,
       apply_action: actionId,
       confirm: true,
-      dry_run: false
+      dry_run: false,
+      activity_context: returnedApplyActivityContext(request, actionId)
     });
     setPackageStatus(state.status, "success", applied.summary_text || "Returned package applied.");
     await showDocumentPackageResult({

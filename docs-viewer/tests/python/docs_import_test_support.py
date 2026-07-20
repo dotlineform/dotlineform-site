@@ -21,12 +21,9 @@ from repo_factory import (
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DOCS_DIR = REPO_ROOT / "docs-viewer" / "services"
-DATA_SHARING_DIR = REPO_ROOT / "data-sharing"
-ANALYTICS_SERVER_DIR = REPO_ROOT / "analytics-app" / "app" / "server"
-ANALYTICS_PACKAGE_DIR = ANALYTICS_SERVER_DIR / "analytics_app"
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
-for path in (DOCS_DIR, DATA_SHARING_DIR, ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
+for path in (DOCS_DIR,):
     text = str(path)
     if text not in sys.path:
         sys.path.insert(0, text)
@@ -36,52 +33,15 @@ import docs_import_source_service as import_source_service  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
 from docs_management_import_service import handle_import_source as handle_managed_import_source  # noqa: E402
-from adapters.documents import prepare as documents_prepare  # noqa: E402
-from adapters.documents import returned as documents_returned  # noqa: E402
-import analytics_data_sharing_api  # noqa: E402
-
-
-def handle_documents_import_files(root: Path, data_domain: str) -> dict[str, object]:
-    adapter = analytics_data_sharing_api.data_sharing_service.resolve_for_service(root, data_domain, "list_returned")
-    return documents_returned.list_returned_packages(
-        root,
-        data_domain,
-        adapter=adapter,
-        dependencies=analytics_data_sharing_api.documents_data_sharing_dependencies(),
-    )
+from docs_document_packages import service as document_package_service  # noqa: E402
 
 
 def handle_documents_import_preview(root: Path, body: dict[str, object], dry_run: bool) -> dict[str, object]:
-    adapter = analytics_data_sharing_api.data_sharing_service.resolve_for_service(root, body.get("data_domain"), "review")
-    return documents_returned.review_returned_package(
-        root,
-        body,
-        dry_run,
-        adapter=adapter,
-        dependencies=analytics_data_sharing_api.documents_data_sharing_dependencies(),
-    )
+    return document_package_service.review_returned(root, {**body, "dry_run": dry_run})
 
 
 def handle_documents_import_apply(root: Path, body: dict[str, object], dry_run: bool) -> dict[str, object]:
-    adapter = analytics_data_sharing_api.data_sharing_service.resolve_for_service(root, body.get("data_domain"), "apply")
-    return documents_returned.apply_returned_changes(
-        root,
-        body,
-        dry_run,
-        adapter=adapter,
-        dependencies=analytics_data_sharing_api.documents_data_sharing_dependencies(),
-    )
-
-
-def handle_docs_export(root: Path, body: dict[str, object], dry_run: bool) -> dict[str, object]:
-    adapter = analytics_data_sharing_api.data_sharing_service.resolve_for_service(root, body.get("data_domain"), "prepare")
-    return documents_prepare.prepare_package(
-        root,
-        body,
-        dry_run,
-        adapter=adapter,
-        dependencies=analytics_data_sharing_api.documents_data_sharing_dependencies(),
-    )
+    return document_package_service.apply_returned(root, {**body, "dry_run": dry_run})
 
 
 def make_repo() -> tempfile.TemporaryDirectory:

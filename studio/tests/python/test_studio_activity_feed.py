@@ -51,23 +51,23 @@ def write_context_contract(repo_root: Path) -> None:
         json.dumps(
             {
                 "pages": {
-                    "data-sharing-prepare": {
-                        "label": "data sharing prepare",
-                        "route": "/analytics/data-sharing/prepare/",
+                    "catalogue-work": {
+                        "label": "catalogue work editor",
+                        "route": "/studio/catalogue-work/",
                         "actions": {
-                            "prepare-share-package": {
-                                "label": "prepare share package",
-                                "control_id": "dataSharingPrepareRun",
-                                "control_selector": "#dataSharingPrepareRun",
-                                "endpoint": "/data-sharing/prepare",
-                                "record_id_field": "export_id",
+                            "save-work": {
+                                "label": "save work",
+                                "control_id": "catalogueWorkSave",
+                                "control_selector": "#catalogueWorkSave",
+                                "endpoint": "/catalogue/work/save",
+                                "record_id_field": "work_id",
                             }
                         },
                     }
                 },
                 "script_purposes": {
-                    "prepare-share-package": {
-                        "label": "prepare share package",
+                    "save-canonical-data": {
+                        "label": "save canonical data",
                     }
                 },
             }
@@ -143,36 +143,36 @@ def test_context_normalizer_validates_contract_action() -> None:
         context = studio_activity.normalize_activity_context_from_contract(
             repo_root,
             {
-                "page_id": "data-sharing-prepare",
-                "action_id": "prepare-share-package",
-                "route": "/analytics/data-sharing/prepare/",
-                "control_id": "dataSharingPrepareRun",
-                "control_selector": "#dataSharingPrepareRun",
-                "correlation_id": "export:test",
-                "export_id": "library:missing-summary",
+                "page_id": "catalogue-work",
+                "action_id": "save-work",
+                "route": "/studio/catalogue-work/",
+                "control_id": "catalogueWorkSave",
+                "control_selector": "#catalogueWorkSave",
+                "correlation_id": "save-work:test",
+                "work_id": "00001",
             },
-            endpoint="/data-sharing/prepare",
-            record_id="library:missing-summary",
+            endpoint="/catalogue/work/save",
+            record_id="00001",
         )
-        if context["action_id"] != "prepare-share-package":
+        if context["action_id"] != "save-work":
             raise AssertionError("action id was not preserved")
-        if context["export_id"] != "library:missing-summary":
+        if context["work_id"] != "00001":
             raise AssertionError("record id was not preserved")
 
         try:
             studio_activity.normalize_activity_context_from_contract(
                 repo_root,
                 {
-                    "page_id": "data-sharing-prepare",
-                    "action_id": "prepare-share-package",
-                    "route": "/analytics/data-sharing/prepare/",
-                    "control_id": "dataSharingPrepareRun",
-                    "control_selector": "#dataSharingPrepareRun",
-                    "correlation_id": "export:test",
-                    "export_id": "library:missing-summary",
+                    "page_id": "catalogue-work",
+                    "action_id": "save-work",
+                    "route": "/studio/catalogue-work/",
+                    "control_id": "catalogueWorkSave",
+                    "control_selector": "#catalogueWorkSave",
+                    "correlation_id": "save-work:test",
+                    "work_id": "00001",
                 },
-                endpoint="/data-sharing/apply",
-                record_id="library:missing-summary",
+                endpoint="/catalogue/series/save",
+                record_id="00001",
             )
         except ValueError as exc:
             if "endpoint" not in str(exc):

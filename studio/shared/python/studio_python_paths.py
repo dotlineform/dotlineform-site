@@ -22,7 +22,6 @@ def ensure_studio_python_paths(start: str | Path | None = None) -> Path:
         repo_root / "studio" / "app" / "server",
         repo_root / "studio" / "services",
         repo_root / "docs-viewer" / "services",
-        repo_root / "data-sharing",
     ]
     for path in reversed(paths):
         text = str(path)

@@ -31,7 +31,7 @@ def test_library_import_hierarchy_apply_preflight_reports_missing_target_doc() -
         )
         payload = handle_documents_import_apply(
             root,
-            {"data_domain": "documents", "operation": "apply", "apply_action": "hierarchy_apply", "staged_filename": "hierarchy.jsonl"},
+            {"scope": "library", "apply_action": "hierarchy_apply", "staged_filename": "hierarchy.jsonl"},
             dry_run=True,
         )
 
@@ -69,7 +69,7 @@ def test_library_import_hierarchy_apply_writes_source_placement() -> None:
             )
             payload = handle_documents_import_apply(
                 root,
-                {"data_domain": "documents", "operation": "apply", "apply_action": "hierarchy_apply", "staged_filename": "hierarchy.jsonl", "confirm": True},
+                {"scope": "library", "apply_action": "hierarchy_apply", "staged_filename": "hierarchy.jsonl", "confirm": True},
                 dry_run=False,
             )
             alpha_front_matter, _ = source_model.parse_source(root / "docs-viewer/scopes/library/source/documents/alpha.md")
@@ -99,7 +99,7 @@ def test_library_import_hierarchy_apply_allows_unknown_parent_and_dry_run_no_wri
         write_returned_jsonl(root, "hierarchy.jsonl", [{"doc_id": "alpha", "title": "Alpha", "parent_id": "external-root"}])
         payload = handle_documents_import_apply(
             root,
-            {"data_domain": "documents", "operation": "apply", "apply_action": "hierarchy_apply", "staged_filename": "hierarchy.jsonl", "confirm": True},
+            {"scope": "library", "apply_action": "hierarchy_apply", "staged_filename": "hierarchy.jsonl", "confirm": True},
             dry_run=True,
         )
         source_text = (root / "docs-viewer/scopes/library/source/documents/alpha.md").read_text(encoding="utf-8")
@@ -126,7 +126,7 @@ def test_library_import_hierarchy_apply_reports_unchanged_and_skipped_rows() -> 
         )
         payload = handle_documents_import_apply(
             root,
-            {"data_domain": "documents", "operation": "apply", "apply_action": "hierarchy_apply", "staged_filename": "hierarchy.jsonl"},
+            {"scope": "library", "apply_action": "hierarchy_apply", "staged_filename": "hierarchy.jsonl"},
             dry_run=True,
         )
 

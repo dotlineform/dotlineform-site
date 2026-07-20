@@ -60,8 +60,7 @@
     "studio": {
       "label": "Studio",
       "include": [
-        "studio/",
-        "data-sharing/"
+        "studio/"
       ],
       "exclude": [
         "studio/**/__pycache__/**",
@@ -84,7 +83,6 @@
         "site/assets/site/",
         "site/assets/work_details/",
         "site/assets/works/",
-        "data-sharing/",
         "docs-viewer/",
         "site-tools/",
         "studio/"
@@ -134,7 +132,6 @@
       "include": [
         "admin-app/app/server/",
         "analytics-app/app/server/",
-        "data-sharing/data_sharing/",
         "docs-viewer/services/",
         "studio/app/server/",
         "studio/services/",
@@ -147,7 +144,6 @@
         "admin-app/checks/",
         "admin-app/commands/",
         "bin/",
-        "data-sharing/schemas/",
         "docs-viewer/bin/",
         "docs-viewer/build/",
         "studio/commands/",
@@ -160,7 +156,6 @@
         "_data/",
         "admin-app/app/frontend/config/",
         "analytics-app/app/frontend/config/",
-        "data-sharing/config/",
         "docs-viewer/config/",
         "studio/data/config/",
         "**/*.yml",
@@ -239,13 +234,9 @@
       "include": [
         "**/*import*",
         "**/*export*",
-        "data-sharing/",
-        "docs-viewer/services/docs_document_packages/",
-        "docs-viewer/services/documents_data_sharing_adapter.py"
+        "docs-viewer/services/docs_document_packages/"
       ],
-      "shared": [
-        "docs-viewer/services/docs_management_data_sharing_service.py"
-      ]
+      "shared": []
     },
     "config": {
       "label": "Config",
@@ -473,40 +464,6 @@
         "analytics-app/app/frontend/js/analytics-app.js"
       ],
       "areas": []
-    },
-    "/analytics/data-sharing/prepare/": {
-      "label": "Analytics Data Sharing Prepare",
-      "path": "/analytics/data-sharing/prepare/",
-      "status": "inventory-only",
-      "include": [
-        "analytics-app/app/frontend/routes/data-sharing-prepare.html",
-        "analytics-app/app/frontend/js/data-sharing-prepare*",
-        "analytics-app/app/frontend/js/analytics-ui-text.js"
-      ],
-      "shared": [
-        "analytics-app/app/frontend/analytics-shell.html",
-        "analytics-app/app/frontend/js/analytics-app.js"
-      ],
-      "areas": [
-        "import-export"
-      ]
-    },
-    "/analytics/data-sharing/review/": {
-      "label": "Analytics Data Sharing Review",
-      "path": "/analytics/data-sharing/review/",
-      "status": "inventory-only",
-      "include": [
-        "analytics-app/app/frontend/routes/data-sharing-review.html",
-        "analytics-app/app/frontend/js/data-sharing-review*",
-        "analytics-app/app/frontend/js/analytics-ui-text.js"
-      ],
-      "shared": [
-        "analytics-app/app/frontend/analytics-shell.html",
-        "analytics-app/app/frontend/js/analytics-app.js"
-      ],
-      "areas": [
-        "import-export"
-      ]
     },
     "/studio/": {
       "label": "Studio Home",

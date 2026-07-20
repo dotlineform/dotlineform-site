@@ -163,18 +163,6 @@ def make_repo(config: dict | None = None) -> tempfile.TemporaryDirectory:
     root = Path(temp_dir.name)
     (root / "site-tools/config").mkdir(parents=True, exist_ok=True); (root / "site-tools/config/site-tools.json").write_text("{\"schema_version\":\"site_tools_config_v1\"}\n", encoding="utf-8")
     write_json(root / "docs-viewer/config/document-packages/profiles.json", config or BASE_CONFIG)
-    write_json(
-        root / "data-sharing/config/adapters.json",
-        {
-            "schema_version": "data_sharing_adapters_v3",
-            "paths": {
-                "outbound_package_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports",
-                "returned_package_staging_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging",
-                "review_output_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview",
-                "metadata_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta",
-            },
-        },
-    )
     write_scope_config(root)
     write_doc(root, "library.md", doc_id="library", title="Library", body="# Library\n\nBody text.")
     write_doc(

@@ -15,17 +15,8 @@ from repo_factory import docs_scope_record, write_json
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DOCS_DIR = REPO_ROOT / "docs-viewer" / "services"
 DOCS_MANAGEMENT_SERVICE_PATH = DOCS_DIR / "docs_management_service.py"
-DATA_SHARING_DIR = REPO_ROOT / "data-sharing"
-ANALYTICS_SERVER_DIR = REPO_ROOT / "analytics-app" / "app" / "server"
-ANALYTICS_PACKAGE_DIR = ANALYTICS_SERVER_DIR / "analytics_app"
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
-for path in (DATA_SHARING_DIR, ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
-    text = str(path)
-    if text not in sys.path:
-        sys.path.insert(0, text)
-
-
 def load_docs_management_module(module_name: str, module_path: Path):
     if str(DOCS_DIR) not in sys.path:
         sys.path.insert(0, str(DOCS_DIR))
@@ -42,9 +33,6 @@ docs_management_service = load_docs_management_module("docs_management_service",
 docs_management_mutations = sys.modules["docs_management_mutations"]
 docs_scope_config = sys.modules["docs_scope_config"]
 docs_source_model = sys.modules["docs_source_model"]
-from docs_document_packages import package as document_package  # noqa: E402
-from adapters.documents import prepare as documents_prepare  # noqa: E402
-import analytics_data_sharing_api  # noqa: E402
 
 EXTERNAL_DATA_ROOT_MARKER = "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
 
@@ -101,66 +89,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
             "doc_id": "other",
             "title": "Other",
             "viewable": True,
-        },
-    )
-    write_json(
-        repo_root / "data-sharing/config/adapters.json",
-        {
-            "schema_version": "data_sharing_adapters_v3",
-            "dispatch": [
-                {"data_domain": "documents", "operation": "prepare", "adapter_id": "documents"},
-            ],
-            "paths": {
-                "outbound_package_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports",
-                "returned_package_staging_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging",
-                "review_output_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview",
-                "metadata_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta",
-            },
-            "adapters": [
-                {
-                    "id": "documents",
-                    "module": "documents",
-                    "label": "Documents",
-                    "status": "active",
-                    "portability": {"package": "docs-viewer-documents-data-sharing"},
-                    "data_domains": {
-                        "documents": {
-                            "app": "docs-viewer",
-                            "label": "Documents",
-                            "status": "active",
-                            "selection_model": "documents",
-                            "record_selectors": {
-                                "docs_scope": {
-                                    "source": "docs_scope_config",
-                                    "required": True,
-                                },
-                            },
-                            "source_write_targets": {
-                                "documents": "docs-viewer/scopes/library/source/documents",
-                            },
-                            "sources": {
-                                "docs_scope_config": "docs-viewer/config/scopes/docs_scopes.json",
-                                "docs_payload_root": "site/assets/data/docs/scopes/library/by-id",
-                                "source_root": "docs-viewer/scopes/library/source/documents",
-                            },
-                            "config": {
-                                "sharing_profiles_path": "docs-viewer/config/document-packages/profiles.json",
-                            },
-                        }
-                    },
-                    "capabilities": [
-                        {
-                            "operation": "prepare",
-                            "status": "active",
-                            "selection_model": "documents",
-                            "input_formats": [],
-                            "output_formats": ["json", "jsonl"],
-                            "path_contract": {"output_root": "outbound_package_root"},
-                            "activity": {"script_purpose": "data-sharing-prepare", "record_groups": ["documents"]},
-                        }
-                    ],
-                }
-            ],
         },
     )
     return temp_dir

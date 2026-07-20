@@ -18,13 +18,8 @@ from studio_activity import (
 
 DOCS_MANAGEMENT_LOG_REL_PATH = Path("var/docs/logs/docs_management_service.log")
 DOCS_ACTIVITY_SOURCE_REFS = [{"kind": "log", "path": str(DOCS_MANAGEMENT_LOG_REL_PATH)}]
-LEGACY_DATA_SHARING_PREPARE_PATH = "/prepare"
-LEGACY_DATA_SHARING_APPLY_PATH = "/apply"
 DOCUMENT_PACKAGE_PREPARE_PATH = "/docs/packages/prepare"
 DOCUMENT_PACKAGE_APPLY_PATH = "/docs/packages/returned/apply"
-# Temporary Analytics Data Sharing contract names; removed with the legacy routes in DSO-3.
-DATA_SHARING_PREPARE_PATH = LEGACY_DATA_SHARING_PREPARE_PATH
-DATA_SHARING_APPLY_PATH = LEGACY_DATA_SHARING_APPLY_PATH
 
 
 def utc_now() -> str:
@@ -111,40 +106,25 @@ def maybe_attach_broken_links_activity(repo_root: Path, body: Dict[str, Any], pa
 def maybe_attach_docs_export_activity(repo_root: Path, body: Dict[str, Any], payload: Dict[str, Any], dry_run: bool) -> None:
     if dry_run or not payload.get("output_written"):
         return
-    if str(payload.get("adapter_id") or "").strip() not in {"", "documents"}:
-        return
     counts = payload.get("counts") if isinstance(payload.get("counts"), dict) else {}
     issue_counts = payload.get("issue_counts") if isinstance(payload.get("issue_counts"), dict) else {}
     output_file = str(payload.get("output_file") or "").strip()
+    export_id = str(payload.get("export_id") or "").strip()
     exported = int(counts.get("exported") or 0)
     failed = int(counts.get("failed") or 0)
     warnings = int(issue_counts.get("warnings") or 0)
-    legacy_request = "config_id" in body and "profile_id" not in body
-    selection = body.get("selection") if isinstance(body.get("selection"), dict) else {}
-    activity_domain = (
-        str(payload.get("data_domain") or body.get("data_domain") or "documents")
-        if legacy_request
-        else "documents"
-    )
-    activity_profile = str(
-        payload.get("profile_id")
-        or payload.get("config_id")
-        or body.get("profile_id")
-        or body.get("config_id")
-        or ""
-    )
+    activity_body = dict(body)
+    raw_context = body.get("activity_context")
+    if isinstance(raw_context, dict):
+        activity_body["activity_context"] = {**raw_context, "export_id": export_id}
     attach_docs_activity(
         repo_root,
-        body,
+        activity_body,
         payload,
-        endpoint=(
-            LEGACY_DATA_SHARING_PREPARE_PATH
-            if legacy_request
-            else DOCUMENT_PACKAGE_PREPARE_PATH
-        ),
+        endpoint=DOCUMENT_PACKAGE_PREPARE_PATH,
         script_purpose_id="prepare-share-package",
-        record_id=f"{activity_domain}:{activity_profile}",
-        record_groups={"docs": compact_ids(body.get("doc_ids") or selection.get("doc_ids"))},
+        record_id=export_id,
+        record_groups={"docs": compact_ids(body.get("doc_ids"))},
         detail_items=[
             str(payload.get("summary_text") or f"Exported {exported} document(s).").strip(),
             f"Output file: {output_file}" if output_file else "",
@@ -244,11 +224,7 @@ def maybe_attach_documents_import_apply_activity(repo_root: Path, body: Dict[str
         repo_root,
         body,
         payload,
-        endpoint=(
-            LEGACY_DATA_SHARING_APPLY_PATH
-            if str((body.get("activity_context") or {}).get("route") or "").startswith("/analytics/")
-            else DOCUMENT_PACKAGE_APPLY_PATH
-        ),
+        endpoint=DOCUMENT_PACKAGE_APPLY_PATH,
         script_purpose_id="update-docs-source",
         record_id=str(body.get("staged_filename") or "").strip(),
         record_groups={"docs": doc_ids},

@@ -319,7 +319,15 @@ async function runPrepare(state) {
       select_all: false,
       target_format: packageText(state.formatSelect.value),
       content_format: packageText(state.contentFormatSelect.value),
-      dry_run: false
+      dry_run: false,
+      activity_context: {
+        page_id: "docs-package-prepare",
+        action_id: "prepare-document-package",
+        route: "/docs/packages/prepare/",
+        control_id: "documentPackagePrepareRun",
+        control_selector: "#documentPackagePrepareRun",
+        correlation_id: `document-package-prepare:${Date.now()}`
+      }
     });
     setPackageStatus(state.status, "success", payload.summary_text || "Document package prepared.");
     await showDocumentPackageResult({

@@ -57,6 +57,11 @@ def test_document_package_route_assets_are_docs_viewer_owned() -> None:
     assert "record_indices" not in runtime
     assert "/analytics/" not in runtime
     assert "data-sharing" not in runtime.lower()
+    assert 'page_id: "docs-package-prepare"' in runtime
+    assert 'action_id: "prepare-document-package"' in runtime
+    assert 'page_id: "docs-package-returned"' in runtime
+    assert 'actionId: "apply-returned-summaries"' in runtime
+    assert 'actionId: "apply-returned-hierarchy"' in runtime
     assert 'type="checkbox"' not in shells[1]
 
 

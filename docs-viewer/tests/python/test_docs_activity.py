@@ -29,15 +29,15 @@ def write_activity_contract(repo_root: Path) -> None:
         json.dumps(
             {
                 "pages": {
-                    "data-sharing-prepare": {
-                        "label": "data sharing prepare",
-                        "route": "/analytics/data-sharing/prepare/",
+                    "docs-package-prepare": {
+                        "label": "document package prepare",
+                        "route": "/docs/packages/prepare/",
                         "actions": {
-                            "prepare-share-package": {
-                                "label": "prepare share package",
-                                "control_id": "dataSharingPrepareRun",
-                                "control_selector": "#dataSharingPrepareRun",
-                                "endpoint": docs_activity.DATA_SHARING_PREPARE_PATH,
+                            "prepare-document-package": {
+                                "label": "prepare document package",
+                                "control_id": "documentPackagePrepareRun",
+                                "control_selector": "#documentPackagePrepareRun",
+                                "endpoint": docs_activity.DOCUMENT_PACKAGE_PREPARE_PATH,
                                 "record_id_field": "export_id",
                             }
                         },
@@ -62,15 +62,15 @@ def write_activity_contract(repo_root: Path) -> None:
                             }
                         },
                     },
-                    "data-sharing-review": {
-                        "label": "data sharing review",
-                        "route": "/analytics/data-sharing/review/",
+                    "docs-package-returned": {
+                        "label": "returned document packages",
+                        "route": "/docs/packages/returned/",
                         "actions": {
                             "apply-returned-summaries": {
                                 "label": "apply returned summaries",
-                                "control_id": "dataSharingReviewUpdateSummary",
-                                "control_selector": "#dataSharingReviewUpdateSummary",
-                                "endpoint": docs_activity.DATA_SHARING_APPLY_PATH,
+                                "control_id": "documentPackageReturnedSummaryApply",
+                                "control_selector": "#documentPackageReturnedSummaryApply",
+                                "endpoint": docs_activity.DOCUMENT_PACKAGE_APPLY_PATH,
                                 "record_id_field": "staged_filename",
                             }
                         },
@@ -111,17 +111,15 @@ def activity_entries(repo_root: Path) -> list[dict[str, object]]:
 
 def export_body() -> dict[str, object]:
     return {
-        "data_domain": "library",
-        "config_id": "document-content",
+        "profile_id": "document-content",
         "doc_ids": ["library", "longform", "notes"],
         "activity_context": {
-            "page_id": "data-sharing-prepare",
-            "action_id": "prepare-share-package",
-            "route": "/analytics/data-sharing/prepare/",
-            "control_id": "dataSharingPrepareRun",
-            "control_selector": "#dataSharingPrepareRun",
+            "page_id": "docs-package-prepare",
+            "action_id": "prepare-document-package",
+            "route": "/docs/packages/prepare/",
+            "control_id": "documentPackagePrepareRun",
+            "control_selector": "#documentPackagePrepareRun",
             "correlation_id": "export:library",
-            "export_id": "library:document-content",
         },
     }
 
@@ -133,8 +131,8 @@ def test_docs_export_activity_suppresses_dry_run_and_no_write() -> None:
         payload = {
             "ok": True,
             "output_written": True,
-            "data_domain": "library",
-            "config_id": "document-content",
+            "export_id": "ds_20260720T120000Z",
+            "profile_id": "document-content",
             "counts": {"exported": 3, "failed": 0},
             "issue_counts": {"warnings": 0},
         }
@@ -156,8 +154,8 @@ def test_docs_export_activity_writes_compact_doc_ids() -> None:
         payload = {
             "ok": True,
             "output_written": True,
-            "data_domain": "library",
-            "config_id": "document-content",
+            "export_id": "ds_20260720T120000Z",
+            "profile_id": "document-content",
             "output_file": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/export.jsonl",
             "counts": {"exported": 3, "failed": 0},
             "issue_counts": {"warnings": 0},
@@ -168,6 +166,7 @@ def test_docs_export_activity_writes_compact_doc_ids() -> None:
         assert payload["activity_log"]["written_count"] == 1
         entry = activity_entries(repo_root)[0]
         assert entry["status"] == "completed"
+        assert entry["user_action_id"] == "prepare-document-package"
         assert entry["record_groups"]["docs"]["sample_ids"] == ["library", "longform", "notes"]
         assert entry["source_refs"] == docs_activity.DOCS_ACTIVITY_SOURCE_REFS
 
@@ -245,11 +244,11 @@ def import_apply_body(confirm: bool) -> dict[str, object]:
         "staged_filename": "content.jsonl",
         "confirm": confirm,
         "activity_context": {
-            "page_id": "data-sharing-review",
+            "page_id": "docs-package-returned",
             "action_id": "apply-returned-summaries",
-            "route": "/analytics/data-sharing/review/",
-            "control_id": "dataSharingReviewUpdateSummary",
-            "control_selector": "#dataSharingReviewUpdateSummary",
+            "route": "/docs/packages/returned/",
+            "control_id": "documentPackageReturnedSummaryApply",
+            "control_selector": "#documentPackageReturnedSummaryApply",
             "correlation_id": "import-apply:content",
             "staged_filename": "content.jsonl",
         },
@@ -271,6 +270,31 @@ def test_import_apply_activity_suppresses_unconfirmed_apply() -> None:
 
         assert "activity_log" not in payload
         assert activity_entries(repo_root) == []
+
+
+def test_import_apply_activity_uses_direct_returned_package_contract() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        repo_root = Path(tmp)
+        write_activity_contract(repo_root)
+        payload = {
+            "ok": True,
+            "summary_apply_written": True,
+            "updates": [{"doc_id": "library"}],
+            "counts": {"errors": 0, "warnings": 0},
+        }
+
+        docs_activity.maybe_attach_documents_import_apply_activity(
+            repo_root,
+            import_apply_body(True),
+            payload,
+            dry_run=False,
+        )
+
+        assert payload["activity_log"]["written_count"] == 1
+        entry = activity_entries(repo_root)[0]
+        assert entry["page_id"] == "docs-package-returned"
+        assert entry["user_action_id"] == "apply-returned-summaries"
+        assert entry["record_groups"]["docs"]["sample_ids"] == ["library"]
 
 
 def test_broken_links_activity_uses_warning_status_for_broken_links() -> None:
@@ -303,8 +327,10 @@ def test_broken_links_activity_uses_warning_status_for_broken_links() -> None:
 def main() -> None:
     test_docs_export_activity_suppresses_dry_run_and_no_write()
     test_docs_export_activity_writes_compact_doc_ids()
-    test_import_source_activity_suppresses_preview_and_confirmation()
+    test_import_source_activity_suppresses_preview()
+    test_collection_import_activity_records_grouped_result_and_safe_report_path()
     test_import_apply_activity_suppresses_unconfirmed_apply()
+    test_import_apply_activity_uses_direct_returned_package_contract()
     test_broken_links_activity_uses_warning_status_for_broken_links()
     print("Docs activity tests OK")
 

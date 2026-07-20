@@ -60,24 +60,6 @@ const DEFAULT_ANALYTICS_CONFIG = {
         "script": "/analytics/app/frontend/js/series-tag-editor-page.js",
         "shell_type": "html-template",
         "nav": false
-      },
-      "data_sharing_prepare": {
-        "label": "prepare share",
-        "title": "Prepare Share Package",
-        "path": "/analytics/data-sharing/prepare/",
-        "template": "/analytics/app/frontend/routes/data-sharing-prepare.html",
-        "script": "/analytics/app/frontend/js/data-sharing-prepare.js",
-        "shell_type": "html-template",
-        "nav": false
-      },
-      "data_sharing_review": {
-        "label": "review share",
-        "title": "Review Returned Package",
-        "path": "/analytics/data-sharing/review/",
-        "template": "/analytics/app/frontend/routes/data-sharing-review.html",
-        "script": "/analytics/app/frontend/js/data-sharing-review.js",
-        "shell_type": "html-template",
-        "nav": false
       }
     }
   },

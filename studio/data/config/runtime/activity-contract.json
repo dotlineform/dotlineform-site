@@ -507,43 +507,43 @@
         }
       }
     },
-    "data-sharing-prepare": {
-      "label": "data sharing prepare",
-      "route": "/analytics/data-sharing/prepare/",
+    "docs-package-prepare": {
+      "label": "document package prepare",
+      "route": "/docs/packages/prepare/",
       "actions": {
-        "prepare-share-package": {
-          "label": "prepare share package",
+        "prepare-document-package": {
+          "label": "prepare document package",
           "status": "v1-target",
-          "control_id": "dataSharingPrepareRun",
-          "control_selector": "#dataSharingPrepareRun",
+          "control_id": "documentPackagePrepareRun",
+          "control_selector": "#documentPackagePrepareRun",
           "control_label": "Prepare package",
-          "endpoint": "/data-sharing/prepare",
+          "endpoint": "/docs/packages/prepare",
           "record_family": "share_package",
           "record_id_field": "export_id",
           "no_change_activity": "skip",
           "report_forced_rewrites": true,
-          "notes": "Covers writing configured docs share-package artifacts. Selection/filter changes remain excluded.",
+          "notes": "Covers writing configured document-package artifacts. Selection and filter changes remain excluded.",
           "script_purposes": [
             {
               "id": "prepare-share-package",
               "optional": false,
-              "when": "the Data Sharing service writes an outbound package"
+              "when": "the Docs Viewer package service writes an outbound package"
             }
           ]
         }
       }
     },
-    "data-sharing-review": {
-      "label": "data sharing review",
-      "route": "/analytics/data-sharing/review/",
+    "docs-package-returned": {
+      "label": "returned document packages",
+      "route": "/docs/packages/returned/",
       "actions": {
         "apply-returned-summaries": {
           "label": "apply returned summaries",
           "status": "v1-target",
-          "control_id": "dataSharingReviewUpdateSummary",
-          "control_selector": "#dataSharingReviewUpdateSummary",
+          "control_id": "documentPackageReturnedSummaryApply",
+          "control_selector": "#documentPackageReturnedSummaryApply",
           "control_label": "Update summaries",
-          "endpoint": "/data-sharing/apply",
+          "endpoint": "/docs/packages/returned/apply",
           "record_family": "docs_import",
           "record_id_field": "staged_filename",
           "no_change_activity": "skip",
@@ -560,10 +560,10 @@
         "apply-returned-hierarchy": {
           "label": "apply returned hierarchy",
           "status": "v1-target",
-          "control_id": "dataSharingReviewApplyHierarchy",
-          "control_selector": "#dataSharingReviewApplyHierarchy",
+          "control_id": "documentPackageReturnedHierarchyApply",
+          "control_selector": "#documentPackageReturnedHierarchyApply",
           "control_label": "Update hierarchy",
-          "endpoint": "/data-sharing/apply",
+          "endpoint": "/docs/packages/returned/apply",
           "record_family": "docs_import",
           "record_id_field": "staged_filename",
           "no_change_activity": "skip",
@@ -574,66 +574,6 @@
               "id": "update-docs-source",
               "optional": false,
               "when": "selected source docs receive imported hierarchy changes"
-            }
-          ]
-        },
-        "apply-returned-tag-registry": {
-          "label": "apply returned tag registry",
-          "status": "v1-target",
-          "control_id": "dataSharingReviewApplyTagRegistry",
-          "control_selector": "#dataSharingReviewApplyTagRegistry",
-          "control_label": "Apply tag registry changes",
-          "endpoint": "/data-sharing/apply",
-          "record_family": "tag_registry",
-          "record_id_field": "staged_filename",
-          "no_change_activity": "skip",
-          "report_forced_rewrites": true,
-          "notes": "Covers confirmed tag registry writes from returned package review. Preflight remains excluded.",
-          "script_purposes": [
-            {
-              "id": "save-tag-data",
-              "optional": false,
-              "when": "selected returned tag registry rows update tag data"
-            }
-          ]
-        },
-        "apply-returned-tag-aliases": {
-          "label": "apply returned tag aliases",
-          "status": "v1-target",
-          "control_id": "dataSharingReviewApplyTagAliases",
-          "control_selector": "#dataSharingReviewApplyTagAliases",
-          "control_label": "Apply tag alias changes",
-          "endpoint": "/data-sharing/apply",
-          "record_family": "tag_aliases",
-          "record_id_field": "staged_filename",
-          "no_change_activity": "skip",
-          "report_forced_rewrites": true,
-          "notes": "Covers confirmed tag alias writes from returned package review. Preflight remains excluded.",
-          "script_purposes": [
-            {
-              "id": "save-tag-data",
-              "optional": false,
-              "when": "selected returned tag alias rows update alias data"
-            }
-          ]
-        },
-        "apply-returned-tag-assignments": {
-          "label": "apply returned tag assignments",
-          "status": "v1-target",
-          "control_id": "dataSharingReviewApplyTagAssignments",
-          "control_selector": "#dataSharingReviewApplyTagAssignments",
-          "control_label": "Apply tag assignment changes",
-          "endpoint": "/data-sharing/apply",
-          "record_family": "tag_assignments",
-          "record_id_field": "staged_filename",
-          "no_change_activity": "skip",
-          "report_forced_rewrites": true,
-          "notes": "Covers confirmed tag assignment writes from returned package review. Preflight remains excluded.",
-          "script_purposes": [
-            {
-              "id": "save-tag-data",
-              "optional": false,
-              "when": "selected returned tag assignment rows update assignment data"
             }
           ]
         }

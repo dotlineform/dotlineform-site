@@ -42,15 +42,14 @@ def test_runtime_config_exposes_analytics_routes_and_services() -> None:
     assert payload["app"]["routes"]["tag_registry"]["path"] == "/analytics/tag-registry/"
     assert payload["app"]["routes"]["tag_registry"]["template"] == "/analytics/app/frontend/routes/tag-registry.html"
     assert payload["app"]["routes"]["tag_registry"]["shell_type"] == "html-template"
-    assert payload["app"]["routes"]["data_sharing_prepare"]["path"] == "/analytics/data-sharing/prepare/"
-    assert payload["app"]["routes"]["data_sharing_prepare"]["template"] == "/analytics/app/frontend/routes/data-sharing-prepare.html"
+    assert "data_sharing_prepare" not in payload["app"]["routes"]
+    assert "data_sharing_review" not in payload["app"]["routes"]
     assert any(view["id"] == "analytics_home" and view["path"] == "/analytics/" for view in runtime["views"])
     assert any(view["id"] == "tag_registry" and view["path"] == "/analytics/tag-registry/" for view in runtime["views"])
     assert any(view["id"] == "tag_aliases" and view["path"] == "/analytics/tag-aliases/" for view in runtime["views"])
     assert any(view["id"] == "series_tags" and view["path"] == "/analytics/series-tags/" for view in runtime["views"])
     assert any(view["id"] == "series_tag_editor" and view["path"] == "/analytics/series-tag-editor/" for view in runtime["views"])
-    assert any(view["id"] == "data_sharing_prepare" and view["path"] == "/analytics/data-sharing/prepare/" for view in runtime["views"])
-    assert any(view["id"] == "data_sharing_review" and view["path"] == "/analytics/data-sharing/review/" for view in runtime["views"])
+    assert not any(view["id"].startswith("data_sharing") for view in runtime["views"])
     assert "external_links" not in payload
 
     analytics = runtime["services"]["analytics"]
@@ -67,19 +66,7 @@ def test_runtime_config_exposes_analytics_routes_and_services() -> None:
     assert analytics["mutate_tag"] == "/analytics/api/mutate-tag"
     assert analytics["promote_tag_alias"] == "/analytics/api/promote-tag-alias"
 
-    data_sharing = runtime["services"]["data_sharing"]
-    assert data_sharing == {
-        "base": "/analytics/api/data-sharing",
-        "health": "/analytics/api/data-sharing/health",
-        "config": "/analytics/api/data-sharing/config",
-        "selectable_records": "/analytics/api/data-sharing/selectable-records",
-        "returned_packages": "/analytics/api/data-sharing/returned-packages",
-        "returned_records": "/analytics/api/data-sharing/returned-records",
-        "prepare": "/analytics/api/data-sharing/prepare",
-        "review": "/analytics/api/data-sharing/review",
-        "apply": "/analytics/api/data-sharing/apply",
-        "context": "/analytics/api/data-sharing/context",
-    }
+    assert set(runtime["services"]) == {"analytics"}
 
     assert "analytics" not in runtime["data_paths"]
     assert runtime["data_paths"]["site"]["series_index"] == "/assets/data/series_index.json"
@@ -114,8 +101,8 @@ def test_analytics_shell_route_paths_are_config_driven() -> None:
     assert paths["/analytics/tag-aliases/"] == "tag_aliases"
     assert paths["/analytics/series-tags/"] == "series_tags"
     assert paths["/analytics/series-tag-editor/"] == "series_tag_editor"
-    assert paths["/analytics/data-sharing/prepare/"] == "data_sharing_prepare"
-    assert paths["/analytics/data-sharing/review/"] == "data_sharing_review"
+    assert "/analytics/data-sharing/prepare/" not in paths
+    assert "/analytics/data-sharing/review/" not in paths
 
 
 def test_analytics_tag_groups_route_returns_existing_payload() -> None:
@@ -138,7 +125,7 @@ def test_analytics_tag_groups_route_returns_existing_payload() -> None:
     assert "001" in assignments_payload["series"]
 
 
-def test_static_path_policy_serves_analytics_paths_and_shared_data_sharing_config() -> None:
+def test_static_path_policy_serves_analytics_paths_and_rejects_retired_surfaces() -> None:
     def allowed(path: str) -> bool:
         return AnalyticsAppRequestHandler.is_allowed_static_path(object(), path)
 
@@ -160,6 +147,15 @@ def test_static_path_policy_serves_analytics_paths_and_shared_data_sharing_confi
     assert allowed("/studio/app/frontend/js/tag-registry.js") is False
     assert allowed("/studio/app/assets/css/studio.css") is False
     assert allowed("/data-sharing/data_sharing/services/registry.py") is False
+
+
+def test_analytics_server_does_not_compose_retired_data_sharing_api() -> None:
+    server_source = (ANALYTICS_PACKAGE_DIR / "analytics_app_server.py").read_text(encoding="utf-8")
+    config_source = (ANALYTICS_PACKAGE_DIR / "analytics_app_config.py").read_text(encoding="utf-8")
+
+    assert "analytics_data_sharing_api" not in server_source
+    assert "/analytics/api/data-sharing" not in server_source
+    assert "data_sharing" not in config_source
 
 
 def test_analytics_save_tags_dry_run_route_uses_assignment_contract() -> None:

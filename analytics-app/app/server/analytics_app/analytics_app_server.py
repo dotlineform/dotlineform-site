@@ -12,7 +12,7 @@ import sys
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import parse_qs, unquote, urlparse, urlsplit
+from urllib.parse import unquote, urlparse, urlsplit
 
 _BOOTSTRAP_START = Path(__file__).resolve()
 for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
@@ -42,7 +42,6 @@ from analytics_app_config import (  # noqa: E402
     normalize_route_path,
     runtime_config,
 )
-from analytics_data_sharing_api import data_sharing_get_payload, data_sharing_post_response  # noqa: E402
 
 
 STATIC_PREFIXES = (
@@ -84,16 +83,11 @@ class AnalyticsAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler)
     def do_GET(self) -> None:
         request = urlsplit(self.path)
         path = unquote(request.path)
-        query = parse_qs(request.query)
-
         if path == "/health":
             self.send_json({"status": "ok", "app": "analytics"})
             return
         if path == "/analytics/runtime-config.json":
             self.send_json(runtime_config(self.repo_root, self.version))
-            return
-        if path.startswith("/analytics/api/data-sharing/"):
-            self.send_data_sharing_api_json(path.removeprefix("/analytics/api/data-sharing"), query)
             return
         if path.startswith("/analytics/api/"):
             self.send_analytics_api_json(path.removeprefix("/analytics/api"))
@@ -110,12 +104,6 @@ class AnalyticsAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler)
     def do_POST(self) -> None:
         request = urlsplit(self.path)
         path = unquote(request.path)
-        if path.startswith("/analytics/api/data-sharing/"):
-            if not self.origin_allowed_for_local_api():
-                self.send_json({"ok": False, "error": "Origin not allowed"}, HTTPStatus.FORBIDDEN)
-                return
-            self.send_data_sharing_api_post_json(path.removeprefix("/analytics/api/data-sharing"))
-            return
         if path.startswith("/analytics/api/"):
             if not self.origin_allowed_for_local_api():
                 self.send_json({"ok": False, "error": "Origin not allowed"}, HTTPStatus.FORBIDDEN)
@@ -193,32 +181,10 @@ class AnalyticsAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler)
         except RuntimeError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
 
-    def send_data_sharing_api_json(self, api_path: str, query: dict[str, list[str]]) -> None:
-        try:
-            self.send_json(data_sharing_get_payload(self.repo_root, api_path, query))
-        except FileNotFoundError as error:
-            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
-        except ValueError as error:
-            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
-        except RuntimeError as error:
-            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
-
     def send_analytics_api_post_json(self, api_path: str) -> None:
         try:
             body = self.read_json_body()
             status, payload = analytics_post_response(self.repo_root, api_path, body)
-            self.send_json(payload, status)
-        except FileNotFoundError as error:
-            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
-        except ValueError as error:
-            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
-        except RuntimeError as error:
-            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
-
-    def send_data_sharing_api_post_json(self, api_path: str) -> None:
-        try:
-            body = self.read_json_body()
-            status, payload = data_sharing_post_response(self.repo_root, api_path, body)
             self.send_json(payload, status)
         except FileNotFoundError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)

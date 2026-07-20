@@ -31,7 +31,7 @@ def test_library_import_summary_apply_preflight_reports_missing_target_doc() -> 
         )
         payload = handle_documents_import_apply(
             root,
-            {"data_domain": "documents", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "content.jsonl"},
+            {"scope": "library", "apply_action": "summary_apply", "staged_filename": "content.jsonl"},
             dry_run=True,
         )
 
@@ -57,7 +57,7 @@ def test_library_import_summary_apply_defaults_to_all_records() -> None:
         )
         payload = handle_documents_import_apply(
             root,
-            {"data_domain": "documents", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "content.jsonl"},
+            {"scope": "library", "apply_action": "summary_apply", "staged_filename": "content.jsonl"},
             dry_run=True,
         )
 
@@ -86,7 +86,7 @@ def test_library_import_summary_apply_writes_source() -> None:
             write_returned_jsonl(root, "content.jsonl", [{"doc_id": "alpha", "title": "Alpha", "summary": "New summary."}])
             payload = handle_documents_import_apply(
                 root,
-                {"data_domain": "documents", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "content.jsonl", "confirm": True},
+                {"scope": "library", "apply_action": "summary_apply", "staged_filename": "content.jsonl", "confirm": True},
                 dry_run=False,
             )
             source_text = (root / "docs-viewer/scopes/library/source/documents/alpha.md").read_text(encoding="utf-8")
@@ -148,7 +148,7 @@ def test_documents_data_sharing_apply_uses_python_docs_rebuild_commands() -> Non
             write_returned_jsonl(root, "content.jsonl", [{"doc_id": "alpha", "title": "Alpha", "summary": "New summary."}])
             payload = handle_documents_import_apply(
                 root,
-                {"data_domain": "documents", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "content.jsonl", "confirm": True},
+                {"scope": "library", "apply_action": "summary_apply", "staged_filename": "content.jsonl", "confirm": True},
                 dry_run=False,
             )
     finally:
@@ -177,7 +177,7 @@ def test_library_import_summary_apply_skips_unchanged_and_missing_summary_rows()
         )
         payload = handle_documents_import_apply(
             root,
-            {"data_domain": "documents", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "content.jsonl"},
+            {"scope": "library", "apply_action": "summary_apply", "staged_filename": "content.jsonl"},
             dry_run=True,
         )
 

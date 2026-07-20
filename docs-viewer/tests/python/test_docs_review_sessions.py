@@ -44,18 +44,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
             ],
         },
     )
-    write_json(
-        root / "data-sharing/config/adapters.json",
-        {
-            "schema_version": "data_sharing_adapters_v3",
-            "paths": {
-                "outbound_package_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports",
-                "returned_package_staging_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging",
-                "review_output_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview",
-                "metadata_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta",
-            },
-        },
-    )
     return temp
 
 
@@ -101,10 +89,6 @@ def test_review_session_routes_are_registered() -> None:
 def test_review_sessions_use_fixed_document_package_preview_root() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        registry_path = root / "data-sharing/config/adapters.json"
-        registry = json.loads(registry_path.read_text(encoding="utf-8"))
-        registry["paths"]["review_output_root"] = "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/custom-reviews"
-        write_json(registry_path, registry)
         session = workspace_paths().import_preview / "session-custom"
         (session / "source").mkdir(parents=True)
 

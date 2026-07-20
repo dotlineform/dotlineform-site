@@ -7,11 +7,6 @@ import os
 from pathlib import Path
 from urllib.parse import urlsplit
 
-try:
-    from analytics_data_sharing_api import service_endpoints as data_sharing_service_endpoints
-except ModuleNotFoundError:  # pragma: no cover - supports package-style imports in tests/tools.
-    from .analytics_data_sharing_api import service_endpoints as data_sharing_service_endpoints
-
 
 ANALYTICS_ROUTE_REQUIRED_FIELDS: tuple[str, ...] = (
     "label",
@@ -77,7 +72,6 @@ ANALYTICS_SERVICE_ENDPOINTS: dict[str, object] = {
         "tag_registry": "/analytics/api/tag-registry",
         "save_tags": "/analytics/api/save-tags",
     },
-    "data_sharing": {},
 }
 
 ANALYTICS_MODAL_EVENT = "analytics:open-modal"
@@ -203,9 +197,7 @@ def analytics_shell_route_paths(repo_root: Path, payload: dict[str, object] | No
 
 
 def analytics_service_endpoints(_repo_root: Path) -> dict[str, object]:
-    endpoints = {service: dict(values) for service, values in ANALYTICS_SERVICE_ENDPOINTS.items()}
-    endpoints["data_sharing"] = data_sharing_service_endpoints()
-    return endpoints
+    return {service: dict(values) for service, values in ANALYTICS_SERVICE_ENDPOINTS.items()}
 
 
 def asset_version(repo_root: Path) -> str:
@@ -221,8 +213,6 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "analytics-app" / "app" / "frontend" / "js" / "tag-aliases.js",
         repo_root / "analytics-app" / "app" / "frontend" / "js" / "series-tags.js",
         repo_root / "analytics-app" / "app" / "frontend" / "js" / "series-tag-editor-page.js",
-        repo_root / "analytics-app" / "app" / "frontend" / "js" / "data-sharing-prepare.js",
-        repo_root / "analytics-app" / "app" / "frontend" / "js" / "data-sharing-review.js",
         repo_root / "analytics-app" / "app" / "frontend" / "js" / "catalogue-public-links.js",
         repo_root / "analytics-app" / "app" / "frontend" / "js" / "analytics-tag-editor.js",
         repo_root / "analytics-app" / "app" / "frontend" / "js" / "analytics-ui-text.js",
