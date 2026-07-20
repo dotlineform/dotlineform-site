@@ -27,11 +27,13 @@ def write_returned_package(
     *,
     selected_doc_ids: list[str],
     rows: list[dict[str, object]],
+    filename: str = "returned.jsonl",
+    scope: str = "library",
 ) -> None:
     paths = workspace_paths()
     paths.import_staging.mkdir(parents=True, exist_ok=True)
     paths.meta.mkdir(parents=True, exist_ok=True)
-    (paths.import_staging / "returned.jsonl").write_text(
+    (paths.import_staging / filename).write_text(
         "".join(
             json.dumps(row) + "\n"
             for row in [
@@ -55,7 +57,7 @@ def write_returned_package(
                 "data_domain": "documents",
                 "config_id": "document-content",
                 "profile_id": "document-content",
-                "scope": "library",
+                "scope": scope,
                 "target_format": "jsonl",
                 "record_shape": "document_rows",
                 "generated_at": "2026-07-20T12:00:00Z",
@@ -284,6 +286,55 @@ def test_returned_listing_projects_document_fields_without_adapter_identity() ->
     assert payload["files"][0]["profile_id"] == "document-content"
     assert {"app", "adapter_id", "config_id", "data_domain"}.isdisjoint(
         payload["files"][0]
+    )
+
+
+def test_returned_listing_separates_scope_owned_and_unassigned_files() -> None:
+    with make_docs_import_repo() as temp:
+        repo_root = Path(temp)
+        write_returned_package(
+            "ds_20260720T120000Z",
+            selected_doc_ids=["alpha"],
+            rows=[{"doc_id": "alpha", "title": "Alpha"}],
+            filename="library.jsonl",
+        )
+        write_returned_package(
+            "ds_20260720T120001Z",
+            selected_doc_ids=["studio-doc"],
+            rows=[{"doc_id": "studio-doc", "title": "Studio"}],
+            filename="studio.jsonl",
+            scope="studio",
+        )
+        write_returned_package(
+            "ds_20260720T120002Z",
+            selected_doc_ids=["alpha"],
+            rows=[{"doc_id": "alpha", "title": "Alpha"}],
+            filename="unscoped.jsonl",
+            scope="",
+        )
+        (workspace_paths().import_staging / "orphan.jsonl").write_text(
+            json.dumps(
+                {
+                    "record_type": "data_sharing_header",
+                    "schema_version": "data_sharing_returned_package_v1",
+                    "export_id": "ds_20260720T120003Z",
+                }
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+
+        payload = service.returned_payload(repo_root, {"scope": ["library"]})
+
+    assert [item["filename"] for item in payload["files"]] == ["library.jsonl"]
+    assert payload["blocked_files"] == []
+    assert {item["filename"] for item in payload["unassigned_files"]} == {
+        "orphan.jsonl",
+        "unscoped.jsonl",
+    }
+    assert all(
+        {"app", "adapter_id", "config_id", "data_domain"}.isdisjoint(item)
+        for item in payload["unassigned_files"]
     )
 
 

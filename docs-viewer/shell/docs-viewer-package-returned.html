@@ -32,12 +32,12 @@ __LOCAL_BROWSER_ICON_LINKS__
         <div>
           <p class="docsPackageHeader__eyebrow">Docs Viewer</p>
           <h1>Returned document packages</h1>
-          <p class="docsPackageHeader__summary">Inspect and act on one complete returned package. Rows are evidence, not a second selection.</p>
+          <p class="docsPackageHeader__summary">Inspect and act on one complete returned package for the current Docs Viewer scope. Rows are evidence, not a second selection.</p>
         </div>
         <nav class="docsPackageNav" aria-label="Document package routes">
-          <a href="/docs/packages/prepare/">Prepare</a>
-          <a aria-current="page" href="/docs/packages/returned/">Returned packages</a>
-          <a href="/docs/">Docs Viewer</a>
+          <a href="/docs/packages/prepare/" data-package-scope-link="/docs/packages/prepare/">Prepare</a>
+          <a aria-current="page" href="/docs/packages/returned/" data-package-scope-link="/docs/packages/returned/">Returned packages</a>
+          <a href="/docs/" data-package-scope-link="/docs/">Docs Viewer</a>
         </nav>
       </header>
 
@@ -50,12 +50,10 @@ __LOCAL_BROWSER_ICON_LINKS__
         </div>
 
         <div class="docsPackageChoiceGrid docsPackageChoiceGrid--returned">
-          <label class="docsPackageField" for="documentPackageReturnedScope">
+          <div class="docsPackageScopeContext">
             <span>scope</span>
-            <select id="documentPackageReturnedScope">
-              <option value="">Select a scope</option>
-            </select>
-          </label>
+            <strong id="documentPackageReturnedScopeValue">Required scope</strong>
+          </div>
           <label class="docsPackageField docsPackageField--wide" for="documentPackageReturnedFile">
             <span>staged package</span>
             <select id="documentPackageReturnedFile" size="5" disabled></select>
@@ -67,7 +65,7 @@ __LOCAL_BROWSER_ICON_LINKS__
           </dl>
         </div>
 
-        <p class="docsPackageSelectionSummary" id="documentPackageReturnedSummary">Select a scope and staged package.</p>
+        <p class="docsPackageSelectionSummary" id="documentPackageReturnedSummary">Loading staged packages for this scope…</p>
         <div class="docsPackageDocumentList docsPackageDocumentList--readonly" id="documentPackageReturnedDocuments" aria-live="polite">
           <p class="docsPackageEmpty">No returned package inspected.</p>
         </div>
@@ -75,6 +73,11 @@ __LOCAL_BROWSER_ICON_LINKS__
         <section class="docsPackageBlocked" id="documentPackageReturnedBlocked" hidden>
           <h2>Blocked packages</h2>
           <ul id="documentPackageReturnedBlockedList"></ul>
+        </section>
+        <section class="docsPackageBlocked" id="documentPackageReturnedUnassigned" hidden>
+          <h2>Unassigned staging files</h2>
+          <p>These shared-workspace files do not have trusted scope metadata and are not actionable from this scope.</p>
+          <ul id="documentPackageReturnedUnassignedList"></ul>
         </section>
         <div id="documentPackageReturnedModalHost"></div>
       </div>

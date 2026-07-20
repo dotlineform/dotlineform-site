@@ -13,14 +13,14 @@ import {
   escapePackageHtml,
   formatPackageBytes,
   packageIssueMessage,
+  packageScopeLabel,
   packageText,
-  renderPackageOptions,
   renderReturnedPackageRows,
   selectedScopeFromUrl,
   setPackageBusy,
   setPackageReady,
   setPackageStatus,
-  updatePackageScopeUrl
+  syncPackageScopeLinks
 } from "./document-package-view.js";
 
 const RETURNED_APPLY_CONTROLS = Object.freeze({
@@ -41,7 +41,7 @@ function returnedState(root) {
     inspectButton: document.getElementById("documentPackageReturnedInspect"),
     reviewActions: document.getElementById("documentPackageReturnedReviewActions"),
     applyActions: document.getElementById("documentPackageReturnedApplyActions"),
-    scopeSelect: document.getElementById("documentPackageReturnedScope"),
+    scopeValue: document.getElementById("documentPackageReturnedScopeValue"),
     fileSelect: document.getElementById("documentPackageReturnedFile"),
     context: document.getElementById("documentPackageReturnedContext"),
     profileValue: document.getElementById("documentPackageReturnedProfile"),
@@ -51,12 +51,16 @@ function returnedState(root) {
     documentsNode: document.getElementById("documentPackageReturnedDocuments"),
     blocked: document.getElementById("documentPackageReturnedBlocked"),
     blockedList: document.getElementById("documentPackageReturnedBlockedList"),
+    unassigned: document.getElementById("documentPackageReturnedUnassigned"),
+    unassignedList: document.getElementById("documentPackageReturnedUnassignedList"),
     modalHost: document.getElementById("documentPackageReturnedModalHost"),
     scopes: [],
+    scope: "",
     reviewActionRecords: [],
     applyActionRecords: [],
     files: [],
     blockedFiles: [],
+    unassignedFiles: [],
     inspected: false,
     workspaceAvailable: false,
     busy: false,
@@ -72,7 +76,7 @@ function selectedReturnedFile(state) {
 function selectedRequest(state) {
   const file = selectedReturnedFile(state);
   return {
-    scope: packageText(state.scopeSelect.value),
+    scope: packageText(state.scope),
     staged_filename: packageText(file && file.filename)
   };
 }
@@ -88,8 +92,7 @@ function syncReturnedContext(state) {
 function syncReturnedControls(state) {
   const file = selectedReturnedFile(state);
   const fileReady = Boolean(file && file.metadata_ok !== false);
-  state.scopeSelect.disabled = state.busy;
-  state.fileSelect.disabled = state.busy || !state.files.length;
+  state.fileSelect.disabled = state.busy || !state.scope || !state.files.length;
   state.inspectButton.disabled = state.busy || !file;
   state.reviewActions.querySelectorAll("button").forEach((button) => {
     button.disabled = state.busy || !fileReady || !state.inspected;
@@ -118,7 +121,7 @@ function returnedApplyActivityContext(request, actionId) {
   return {
     page_id: "docs-package-returned",
     action_id: control.actionId,
-    route: "/docs/packages/returned/",
+    route: `/docs/packages/returned/?scope=${encodeURIComponent(request.scope)}`,
     control_id: control.controlId,
     control_selector: `#${control.controlId}`,
     correlation_id: `document-package-apply:${actionId}:${request.staged_filename}:${Date.now()}`,
@@ -140,6 +143,14 @@ function renderBlockedFiles(state) {
   `).join("");
 }
 
+function renderUnassignedFiles(state) {
+  state.unassigned.hidden = !state.unassignedFiles.length;
+  state.unassignedList.innerHTML = state.unassignedFiles.map((file) => {
+    const reason = packageText(file && file.metadata_error) || "trusted scope metadata is missing";
+    return `<li><strong>${escapePackageHtml(packageText(file && file.filename) || "unnamed package")}</strong> — ${escapePackageHtml(reason)}</li>`;
+  }).join("");
+}
+
 function renderReturnedFileOptions(state) {
   state.fileSelect.innerHTML = state.files.map((file) => {
     const filename = packageText(file.filename);
@@ -150,6 +161,7 @@ function renderReturnedFileOptions(state) {
   state.inspected = false;
   syncReturnedContext(state);
   renderBlockedFiles(state);
+  renderUnassignedFiles(state);
   syncReturnedControls(state);
 }
 
@@ -161,16 +173,16 @@ function resetInspection(state, message = "Select a staged package to inspect it
 }
 
 async function loadReturnedFiles(state) {
-  const scope = packageText(state.scopeSelect.value);
+  const scope = packageText(state.scope);
   const version = ++state.requestVersion;
   state.files = [];
   state.blockedFiles = [];
-  updatePackageScopeUrl(scope);
-  resetInspection(state, scope ? "Loading staged packages…" : "Select a scope and staged package.");
+  state.unassignedFiles = [];
+  resetInspection(state, scope ? "Loading staged packages…" : "A valid Docs Viewer scope is required.");
   if (!scope) {
     state.fileSelect.innerHTML = "";
     renderReturnedFileOptions(state);
-    setPackageStatus(state.status, "", "Select a scope to list staged packages.");
+    setPackageStatus(state.status, "error", "Open this route from Docs Viewer Actions for a scope.");
     return;
   }
   state.busy = true;
@@ -182,12 +194,21 @@ async function loadReturnedFiles(state) {
     if (version !== state.requestVersion) return;
     state.files = Array.isArray(payload.files) ? payload.files : [];
     state.blockedFiles = Array.isArray(payload.blocked_files) ? payload.blocked_files : [];
+    state.unassignedFiles = Array.isArray(payload.unassigned_files) ? payload.unassigned_files : [];
     renderReturnedFileOptions(state);
     const count = state.files.length;
+    const unassignedCount = state.unassignedFiles.length;
+    state.summary.textContent = count
+      ? "Select a staged package to inspect its complete document set."
+      : `No staged packages for ${packageScopeLabel(state.scopes, state.scope)}.`;
+    const loadedMessage = count === 1 ? "Loaded 1 staged package." : `Loaded ${count} staged packages.`;
+    const unassignedMessage = unassignedCount
+      ? `${unassignedCount === 1 ? "1 unassigned staging file is" : `${unassignedCount} unassigned staging files are`} reported separately.`
+      : "";
     setPackageStatus(
       state.status,
-      count ? "success" : "",
-      count === 1 ? "Loaded 1 staged package." : `Loaded ${count} staged packages.`
+      unassignedCount ? "warn" : (count ? "success" : ""),
+      [loadedMessage, unassignedMessage].filter(Boolean).join(" ")
     );
   } catch (error) {
     if (version !== state.requestVersion) return;
@@ -331,7 +352,6 @@ async function runReturnedApply(state, actionId, button) {
 }
 
 function bindReturnedEvents(state) {
-  state.scopeSelect.addEventListener("change", () => loadReturnedFiles(state));
   state.fileSelect.addEventListener("change", () => {
     syncReturnedContext(state);
     resetInspection(state);
@@ -356,22 +376,21 @@ async function initDocumentPackageReturned() {
   try {
     const payload = await getDocumentPackageConfig();
     state.scopes = Array.isArray(payload.scopes) ? payload.scopes : [];
+    state.scope = selectedScopeFromUrl(state.scopes);
     state.reviewActionRecords = Array.isArray(payload.review_actions) ? payload.review_actions : [];
     state.applyActionRecords = Array.isArray(payload.apply_actions) ? payload.apply_actions : [];
     state.workspaceAvailable = payload.workspace && payload.workspace.available === true;
-    renderPackageOptions(state.scopeSelect, state.scopes, {
-      valueKey: "scope",
-      labelKey: "label",
-      placeholder: "Select a scope",
-      selectedValue: selectedScopeFromUrl(state.scopes)
-    });
+    state.scopeValue.textContent = state.scope ? packageScopeLabel(state.scopes, state.scope) : "Scope required";
+    if (state.scope) delete state.scopeValue.dataset.state;
+    else state.scopeValue.dataset.state = "error";
+    syncPackageScopeLinks(state.scope);
     renderActionButtons(state);
-    if (!state.workspaceAvailable) {
+    if (!state.scope) {
+      setPackageStatus(state.status, "error", "Open this route from Docs Viewer Actions for a scope.");
+    } else if (!state.workspaceAvailable) {
       setPackageStatus(state.status, "warn", packageText(payload.workspace && payload.workspace.message) || "The document-package workspace is unavailable.");
-    } else if (state.scopeSelect.value) {
-      await loadReturnedFiles(state);
     } else {
-      setPackageStatus(state.status, "", "Select a scope to list staged packages.");
+      await loadReturnedFiles(state);
     }
   } catch (error) {
     setPackageStatus(state.status, "error", error.message || "Document-package configuration could not be loaded.");

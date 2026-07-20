@@ -32,12 +32,12 @@ __LOCAL_BROWSER_ICON_LINKS__
         <div>
           <p class="docsPackageHeader__eyebrow">Docs Viewer</p>
           <h1>Prepare document package</h1>
-          <p class="docsPackageHeader__summary">Select a scope, profile, and complete document set, then write one JSON or JSONL package.</p>
+          <p class="docsPackageHeader__summary">Choose a profile and complete document set from the current Docs Viewer scope, then write one JSON or JSONL package.</p>
         </div>
         <nav class="docsPackageNav" aria-label="Document package routes">
-          <a aria-current="page" href="/docs/packages/prepare/">Prepare</a>
-          <a href="/docs/packages/returned/">Returned packages</a>
-          <a href="/docs/">Docs Viewer</a>
+          <a aria-current="page" href="/docs/packages/prepare/" data-package-scope-link="/docs/packages/prepare/">Prepare</a>
+          <a href="/docs/packages/returned/" data-package-scope-link="/docs/packages/returned/">Returned packages</a>
+          <a href="/docs/" data-package-scope-link="/docs/">Docs Viewer</a>
         </nav>
       </header>
 
@@ -49,12 +49,10 @@ __LOCAL_BROWSER_ICON_LINKS__
         </div>
 
         <div class="docsPackageChoiceGrid docsPackageChoiceGrid--prepare">
-          <label class="docsPackageField" for="documentPackagePrepareScope">
+          <div class="docsPackageScopeContext">
             <span>scope</span>
-            <select id="documentPackagePrepareScope">
-              <option value="">Select a scope</option>
-            </select>
-          </label>
+            <strong id="documentPackagePrepareScopeValue">Required scope</strong>
+          </div>
           <label class="docsPackageField" for="documentPackagePrepareProfile">
             <span>profile</span>
             <select id="documentPackagePrepareProfile"></select>
@@ -85,7 +83,7 @@ __LOCAL_BROWSER_ICON_LINKS__
         </div>
 
         <div class="docsPackageDocumentList" id="documentPackagePrepareDocuments" aria-live="polite">
-          <p class="docsPackageEmpty">Select a scope to load documents.</p>
+          <p class="docsPackageEmpty">Loading scope documents…</p>
         </div>
         <div id="documentPackagePrepareModalHost"></div>
       </div>

@@ -10,6 +10,7 @@ import {
 } from "./document-package-modal.js";
 import {
   escapePackageHtml,
+  packageScopeLabel,
   packageText,
   profileForId,
   renderPackageOptions,
@@ -18,7 +19,7 @@ import {
   setPackageBusy,
   setPackageReady,
   setPackageStatus,
-  updatePackageScopeUrl
+  syncPackageScopeLinks
 } from "./document-package-view.js";
 
 function prepareState(root) {
@@ -27,7 +28,7 @@ function prepareState(root) {
     status: document.getElementById("documentPackagePrepareStatus"),
     runButton: document.getElementById("documentPackagePrepareRun"),
     contextButton: document.getElementById("documentPackagePrepareContext"),
-    scopeSelect: document.getElementById("documentPackagePrepareScope"),
+    scopeValue: document.getElementById("documentPackagePrepareScopeValue"),
     profileSelect: document.getElementById("documentPackagePrepareProfile"),
     formatSelect: document.getElementById("documentPackagePrepareFormat"),
     contentFormatField: document.getElementById("documentPackagePrepareContentFormatField"),
@@ -42,6 +43,7 @@ function prepareState(root) {
     modalHost: document.getElementById("documentPackagePrepareModalHost"),
     profiles: [],
     scopes: [],
+    scope: "",
     documents: [],
     selectedIds: new Set(),
     workspaceAvailable: false,
@@ -106,16 +108,15 @@ function syncPrepareControls(state) {
   const canRun = Boolean(
     !state.busy
     && state.workspaceAvailable
-    && packageText(state.scopeSelect.value)
+    && packageText(state.scope)
     && profile
     && state.selectedIds.size
   );
   state.runButton.disabled = !canRun;
-  state.contextButton.disabled = state.busy || !state.workspaceAvailable || !profile;
-  state.scopeSelect.disabled = state.busy;
-  state.profileSelect.disabled = state.busy || !state.profiles.length;
-  state.formatSelect.disabled = state.busy || !profile;
-  state.contentFormatSelect.disabled = state.busy || !profile;
+  state.contextButton.disabled = state.busy || !state.workspaceAvailable || !state.scope || !profile;
+  state.profileSelect.disabled = state.busy || !state.scope || !state.profiles.length;
+  state.formatSelect.disabled = state.busy || !state.scope || !profile;
+  state.contentFormatSelect.disabled = state.busy || !state.scope || !profile;
   state.filterInput.disabled = state.busy || !hasDocuments;
   state.selectAllButton.disabled = state.busy || !visibleSelectableDocumentIds(state).length;
   state.clearButton.disabled = state.busy || !state.selectedIds.size;
@@ -181,20 +182,19 @@ function renderProfileOptions(state) {
   const selection = profile && typeof profile.selection === "object" ? profile.selection : {};
   const treeProfile = packageText(profile && profile.record_shape) === "document_tree";
   state.descendantsField.hidden = !profile;
-  state.descendantsInput.disabled = treeProfile;
+  state.descendantsInput.disabled = !state.scope || treeProfile;
   state.descendantsInput.checked = treeProfile || selection.include_descendants !== false;
   syncPrepareControls(state);
 }
 
 async function loadDocuments(state) {
-  const scope = packageText(state.scopeSelect.value);
+  const scope = packageText(state.scope);
   const version = ++state.requestVersion;
   state.selectedIds.clear();
   state.documents = [];
-  updatePackageScopeUrl(scope);
   if (!scope) {
-    state.documentsNode.innerHTML = '<p class="docsPackageEmpty">Select a scope to load documents.</p>';
-    setPackageStatus(state.status, "", "Select a scope, profile, and document set.");
+    state.documentsNode.innerHTML = '<p class="docsPackageEmpty">Open this route from Docs Viewer Actions for a scope.</p>';
+    setPackageStatus(state.status, "error", "A valid Docs Viewer scope is required.");
     syncPrepareControls(state);
     return;
   }
@@ -305,7 +305,7 @@ async function editContext(state) {
 
 async function runPrepare(state) {
   const profile = selectedProfile(state);
-  const scope = packageText(state.scopeSelect.value);
+  const scope = packageText(state.scope);
   if (!profile || !scope || !state.selectedIds.size || state.busy) return;
   state.busy = true;
   setPackageBusy(state.root, true);
@@ -323,7 +323,7 @@ async function runPrepare(state) {
       activity_context: {
         page_id: "docs-package-prepare",
         action_id: "prepare-document-package",
-        route: "/docs/packages/prepare/",
+        route: `/docs/packages/prepare/?scope=${encodeURIComponent(scope)}`,
         control_id: "documentPackagePrepareRun",
         control_selector: "#documentPackagePrepareRun",
         correlation_id: `document-package-prepare:${Date.now()}`
@@ -355,7 +355,6 @@ async function runPrepare(state) {
 }
 
 function bindPrepareEvents(state) {
-  state.scopeSelect.addEventListener("change", () => loadDocuments(state));
   state.profileSelect.addEventListener("change", () => renderProfileOptions(state));
   state.filterInput.addEventListener("input", () => renderDocuments(state));
   state.descendantsInput.addEventListener("change", () => renderDocuments(state));
@@ -380,25 +379,25 @@ async function initDocumentPackagePrepare() {
     const payload = await getDocumentPackageConfig();
     state.profiles = Array.isArray(payload.profiles) ? payload.profiles : [];
     state.scopes = Array.isArray(payload.scopes) ? payload.scopes : [];
+    state.scope = selectedScopeFromUrl(state.scopes);
     state.workspaceAvailable = payload.workspace && payload.workspace.available === true;
-    renderPackageOptions(state.scopeSelect, state.scopes, {
-      valueKey: "scope",
-      labelKey: "label",
-      placeholder: "Select a scope",
-      selectedValue: selectedScopeFromUrl(state.scopes)
-    });
+    state.scopeValue.textContent = state.scope ? packageScopeLabel(state.scopes, state.scope) : "Scope required";
+    if (state.scope) delete state.scopeValue.dataset.state;
+    else state.scopeValue.dataset.state = "error";
+    syncPackageScopeLinks(state.scope);
     renderPackageOptions(state.profileSelect, state.profiles, {
       valueKey: "profile_id",
       labelKey: "label",
       selectedValue: packageText(state.profiles[0] && state.profiles[0].profile_id)
     });
     renderProfileOptions(state);
-    if (!state.workspaceAvailable) {
+    if (!state.scope) {
+      state.documentsNode.innerHTML = '<p class="docsPackageEmpty">Open this route from Docs Viewer Actions for a scope.</p>';
+      setPackageStatus(state.status, "error", "A valid Docs Viewer scope is required.");
+    } else if (!state.workspaceAvailable) {
       setPackageStatus(state.status, "warn", packageText(payload.workspace && payload.workspace.message) || "The document-package workspace is unavailable.");
-    } else if (state.scopeSelect.value) {
-      await loadDocuments(state);
     } else {
-      setPackageStatus(state.status, "", "Select a scope, profile, and document set.");
+      await loadDocuments(state);
     }
   } catch (error) {
     setPackageStatus(state.status, "error", error.message || "Document-package configuration could not be loaded.");

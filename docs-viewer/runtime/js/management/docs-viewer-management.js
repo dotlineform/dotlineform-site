@@ -69,6 +69,9 @@ export function initDocsViewerManagement(context) {
   var manageActions = manageRow ? manageRow.querySelector(".docsViewer__manageActions") : null;
   var manageActionsButton = document.getElementById("docsViewerManageActionsButton");
   var manageActionsMenu = document.getElementById("docsViewerManageActionsMenu");
+  var manageScopeLinks = manageActionsMenu
+    ? Array.from(manageActionsMenu.querySelectorAll("[data-docs-viewer-scope-href]"))
+    : [];
   var manageRebuildButton = document.getElementById("docsViewerManageRebuildButton");
   var manageSettingsButton = document.getElementById("docsViewerManageSettingsButton");
   var managePublishButton = document.getElementById("docsViewerManagePublishButton");
@@ -97,6 +100,15 @@ export function initDocsViewerManagement(context) {
 
   function viewerScope() {
     return context.viewerScope();
+  }
+
+  function syncManageScopeLinks() {
+    var scope = String(viewerScope() || "").trim();
+    manageScopeLinks.forEach(function (link) {
+      var baseHref = String(link.dataset.docsViewerScopeHref || "").trim();
+      if (!baseHref) return;
+      link.href = scope ? baseHref + "?scope=" + encodeURIComponent(scope) : baseHref;
+    });
   }
 
   function managementClientOptions() {
@@ -280,6 +292,7 @@ export function initDocsViewerManagement(context) {
     if (!manageRow) return;
 
     routeSession.managementContext = typeof context.isManagementContext === "function" && context.isManagementContext();
+    syncManageScopeLinks();
     if (!routeSession.managementContext) {
       syncManagementStatus("", false);
       hideAppManagementControls();

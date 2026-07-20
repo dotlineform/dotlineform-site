@@ -63,6 +63,11 @@ def test_document_package_route_assets_are_docs_viewer_owned() -> None:
     assert 'actionId: "apply-returned-summaries"' in runtime
     assert 'actionId: "apply-returned-hierarchy"' in runtime
     assert 'type="checkbox"' not in shells[1]
+    assert 'id="documentPackagePrepareScope"' not in shells[0]
+    assert 'id="documentPackageReturnedScope"' not in shells[1]
+    assert all('data-package-scope-link="/docs/' in shell for shell in shells)
+    assert "syncPackageScopeLinks" in runtime
+    assert "unassigned_files" in runtime
 
 
 def test_moments_css_is_loaded_by_public_and_manage_shells() -> None:

@@ -184,7 +184,7 @@ def returned_payload(repo_root: Path, params: dict[str, list[str]]) -> dict[str,
         staging_root=roots.import_staging,
         metadata_root=roots.meta,
     )
-    for collection_name in ("files", "blocked_files"):
+    for collection_name in ("files", "blocked_files", "unassigned_files"):
         report[collection_name] = [
             {
                 key: value

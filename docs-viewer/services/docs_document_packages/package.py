@@ -155,35 +155,33 @@ def list_returned_document_packages(
         metadata_root=metadata_root,
     )
     report["scope"] = normalized_scope
-    staged_files = [
-        item
-        for item in report.get("files", [])
-        if not item.get("metadata_ok")
-        or (
-            str(item.get("data_domain") or "").strip() == "documents"
-            and (
-                not str(item.get("scope") or "").strip()
-                or str(item.get("scope") or "").strip() == normalized_scope
-            )
-        )
-    ]
+    staged_files: list[dict[str, Any]] = []
+    unassigned_files: list[dict[str, Any]] = []
+    for item in report.get("files", []):
+        if not item.get("metadata_ok"):
+            unassigned_files.append(item)
+            continue
+        if str(item.get("data_domain") or "").strip() != "documents":
+            continue
+        item_scope = str(item.get("scope") or "").strip().lower()
+        if not item_scope:
+            unassigned_files.append(item)
+            continue
+        if item_scope == normalized_scope:
+            staged_files.append(item)
     importable_profile_ids = supported_return_import_profile_ids()
     files: list[dict[str, Any]] = []
-    blocked_files: list[dict[str, Any]] = [
-        item
-        for item in report.get("blocked_files", [])
-        if (
-            str(item.get("data_domain") or "").strip() == "documents"
-            and (
-                not str(item.get("scope") or "").strip()
-                or str(item.get("scope") or "").strip() == normalized_scope
-            )
-        )
-    ]
-    for item in staged_files:
-        if not item.get("metadata_ok"):
-            files.append(item)
+    blocked_files: list[dict[str, Any]] = []
+    for item in report.get("blocked_files", []):
+        if str(item.get("data_domain") or "").strip() != "documents":
             continue
+        item_scope = str(item.get("scope") or "").strip().lower()
+        if not item_scope:
+            unassigned_files.append(item)
+            continue
+        if item_scope == normalized_scope:
+            blocked_files.append(item)
+    for item in staged_files:
         profile_id = str(item.get("profile_id") or "").strip()
         if item.get("supports_return_import") is False:
             blocked = dict(item)
@@ -201,4 +199,5 @@ def list_returned_document_packages(
         files.append(item)
     report["files"] = files
     report["blocked_files"] = blocked_files
+    report["unassigned_files"] = unassigned_files
     return report

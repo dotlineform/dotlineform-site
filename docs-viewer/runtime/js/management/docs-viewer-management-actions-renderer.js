@@ -111,7 +111,7 @@ function renderActionMenuItem(item) {
   var label = escapeHtml(item.label);
   if (item.href) {
     return [
-      '        <a class="docsViewer__actionMenuItem" role="menuitem" id="' + escapeHtml(item.id) + '" href="' + escapeHtml(item.href) + '" target="_blank" rel="noopener noreferrer" aria-label="' + label + '" title="' + label + '"' + hidden + '>',
+      '        <a class="docsViewer__actionMenuItem" role="menuitem" id="' + escapeHtml(item.id) + '" href="' + escapeHtml(item.href) + '" data-docs-viewer-scope-href="' + escapeHtml(item.href) + '" target="_blank" rel="noopener noreferrer" aria-label="' + label + '" title="' + label + '"' + hidden + '>',
       '          <span class="docsViewer__actionMenuEmoji" aria-hidden="true">' + escapeHtml(item.emoji || "") + "</span>",
       '          <span class="docsViewer__actionMenuLabel">' + label + "</span>",
       "        </a>"

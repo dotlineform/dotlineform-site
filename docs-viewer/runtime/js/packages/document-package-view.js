@@ -33,12 +33,21 @@ export function selectedScopeFromUrl(scopes) {
   return (scopes || []).some((item) => packageText(item.scope) === requested) ? requested : "";
 }
 
-export function updatePackageScopeUrl(scope) {
-  const url = new URL(window.location.href);
+export function packageScopeLabel(scopes, scope) {
   const normalized = packageText(scope);
-  if (normalized) url.searchParams.set("scope", normalized);
-  else url.searchParams.delete("scope");
-  window.history.replaceState({}, "", url);
+  const record = (scopes || []).find((item) => packageText(item && item.scope) === normalized);
+  return packageText(record && record.label) || normalized;
+}
+
+export function syncPackageScopeLinks(scope) {
+  const normalized = packageText(scope);
+  document.querySelectorAll("[data-package-scope-link]").forEach((link) => {
+    const baseHref = packageText(link.dataset.packageScopeLink);
+    if (!baseHref) return;
+    const url = new URL(baseHref, window.location.origin);
+    if (normalized) url.searchParams.set("scope", normalized);
+    link.href = `${url.pathname}${url.search}${url.hash}`;
+  });
 }
 
 export function renderPackageOptions(node, items, options = {}) {
