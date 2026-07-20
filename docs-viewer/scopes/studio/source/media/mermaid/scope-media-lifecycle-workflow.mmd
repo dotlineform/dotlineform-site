@@ -1,0 +1,14 @@
+flowchart TD
+    accTitle: Possible future scope media lifecycle workflow
+    accDescr: A future lifecycle action previews references, requires explicit confirmation, revalidates provider state, applies one exact mutation, and refreshes the inventory.
+
+    select["Select one media identity"] --> preview["Preview current bytes, ownership, and references"]
+    preview --> status{"Referenced or produced?"}
+    status -- "yes" --> affected["Show affected documents or producer relationship"]
+    status -- "no" --> unreferenced["Show unreferenced state without declaring it disposable"]
+    affected --> confirm{"Explicit replace or delete confirmation"}
+    unreferenced --> confirm
+    confirm -- "cancel" --> unchanged["No mutation"]
+    confirm -- "confirm" --> revalidate["Revalidate identity and provider state"]
+    revalidate --> mutate["Apply one exact mutation"]
+    mutate --> refresh["Verify and refresh inventory"]

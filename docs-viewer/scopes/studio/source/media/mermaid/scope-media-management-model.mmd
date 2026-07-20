@@ -1,0 +1,12 @@
+flowchart LR
+    accTitle: Scope media management model
+    accDescr: Scope configuration, registered media locations, build source, and document references feed a provider-independent inventory used by a manage-only inspection surface.
+
+    config["Scope configuration"] --> inventory["Scope media inventory"]
+    local["Scope-local media"] --> inventory
+    repository["Registered repository media"] --> inventory
+    remote["Registered R2 media"] --> inventory
+    build["Build-media source"] --> inventory
+    references["Document and sub-scope references"] --> inventory
+    inventory --> surface["Manage-only inventory surface"]
+    surface --> decisions["Inspect references, gaps, size, role, and location policy"]

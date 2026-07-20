@@ -1,0 +1,12 @@
+flowchart LR
+    accTitle: Read-only scope media inventory workflow
+    accDescr: An author opens the Scope Media surface, which asks the local Docs service for a provider-independent inventory assembled from configuration, references, and registered stores.
+
+    author["Author opens Scope Media with an active scope"] --> surface["Scope Media surface"]
+    surface --> service["Local Docs service"]
+    service --> inventory["Resolve scope configuration and document references"]
+    inventory --> stores["List registered repository, external-local, and R2 locations"]
+    stores --> evidence["Collect media identities and byte evidence"]
+    evidence --> rows["Normalize items and missing references"]
+    rows --> surface
+    surface --> inspect["Filter, inspect, copy reference, or open item"]
