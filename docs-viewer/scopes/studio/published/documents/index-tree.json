@@ -176,58 +176,6 @@
       ]
     },
     {
-      "doc_id": "d-20260513-171600-a1eeb9",
-      "title": "Data Sharing",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260513-171600-a1eeb9.json",
-      "children": [
-        {
-          "doc_id": "d-20260506-000000-211c99",
-          "title": "Analytics Data Sharing Runtime",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260506-000000-211c99.json"
-        },
-        {
-          "doc_id": "d-20260621-000000-ada8c8",
-          "title": "Data Sharing Adapter Architecture",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260621-000000-ada8c8.json"
-        },
-        {
-          "doc_id": "d-20260506-113500-99395d",
-          "title": "Data Sharing Adapter Registry",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260506-113500-99395d.json"
-        },
-        {
-          "doc_id": "d-20260627-113800-55dd63",
-          "title": "Data Sharing Export Metadata",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260627-113800-55dd63.json"
-        },
-        {
-          "doc_id": "d-20260715-084611-f25940",
-          "title": "Data Sharing Overview",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-f25940.json"
-        },
-        {
-          "doc_id": "d-20260621-000000-baa17e",
-          "title": "Documents Adapter Bridge",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260621-000000-baa17e.json"
-        },
-        {
-          "doc_id": "d-20260503-141500-98fa03",
-          "title": "Documents Prepare Profiles",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260503-141500-98fa03.json"
-        },
-        {
-          "doc_id": "d-20260627-225625-1c9b7e",
-          "title": "Documents Returned Package Review",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260627-225625-1c9b7e.json"
-        },
-        {
-          "doc_id": "d-20260621-000000-4461b0",
-          "title": "Tags Data Sharing Adapter",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260621-000000-4461b0.json"
-        }
-      ]
-    },
-    {
       "doc_id": "d-20260419-000000-d2e47b",
       "title": "Dev Home",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260419-000000-d2e47b.json",
@@ -386,16 +334,6 @@
           "doc_id": "d-20260715-094411-2b6e65",
           "title": "Document Identity",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-094411-2b6e65.json"
-        },
-        {
-          "doc_id": "d-20260503-150500-b0f1df",
-          "title": "Documents Package Preparation Script",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260503-150500-b0f1df.json"
-        },
-        {
-          "doc_id": "d-20260503-202500-316d29",
-          "title": "Documents Returned Package Script",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260503-202500-316d29.json"
         },
         {
           "doc_id": "d-20260623-221357-a97b66",
@@ -826,19 +764,6 @@
               ]
             },
             {
-              "doc_id": "d-20260715-092247-4b7382",
-              "title": "Portable Document Packages",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-4b7382.json",
-              "children": [
-                {
-                  "doc_id": "d-20260711-012238-8a04a6",
-                  "title": "Full Document Export Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260711-012238-8a04a6.json",
-                  "ui_status": "in-progress"
-                }
-              ]
-            },
-            {
               "doc_id": "d-20260623-000000-8b3359",
               "title": "Shareable Content Blocks",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260623-000000-8b3359.json",
@@ -1081,19 +1006,52 @@
               "doc_id": "d-20260718-155350-c84e62",
               "title": "Share Document Packages",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-155350-c84e62.json",
-              "ui_status": "proposed",
+              "ui_status": "done",
               "children": [
+                {
+                  "doc_id": "d-20260627-113800-55dd63",
+                  "title": "Document Package Export Metadata",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260627-113800-55dd63.json"
+                },
                 {
                   "doc_id": "d-20260720-172819-93d6b2",
                   "title": "Document Sharing Ownership Cutover Delivery",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-172819-93d6b2.json",
-                  "ui_status": "active"
+                  "ui_status": "done"
                 },
                 {
-                  "doc_id": "d-20260720-174842-4c2f6a",
-                  "title": "DSO-0 — Behavior And Dependency Findings",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-174842-4c2f6a.json",
-                  "ui_status": "completed"
+                  "doc_id": "d-20260503-150500-b0f1df",
+                  "title": "Documents Package Preparation Script",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260503-150500-b0f1df.json"
+                },
+                {
+                  "doc_id": "d-20260503-141500-98fa03",
+                  "title": "Documents Prepare Profiles",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260503-141500-98fa03.json"
+                },
+                {
+                  "doc_id": "d-20260627-225625-1c9b7e",
+                  "title": "Documents Returned Package Review",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260627-225625-1c9b7e.json"
+                },
+                {
+                  "doc_id": "d-20260715-092247-4b7382",
+                  "title": "Portable Document Packages",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-4b7382.json",
+                  "ui_status": "proposed",
+                  "children": [
+                    {
+                      "doc_id": "d-20260711-012238-8a04a6",
+                      "title": "Full Document Export Delivery",
+                      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260711-012238-8a04a6.json",
+                      "ui_status": "proposed"
+                    }
+                  ]
+                },
+                {
+                  "doc_id": "d-20260503-202500-316d29",
+                  "title": "Returned Document Package Parser",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260503-202500-316d29.json"
                 }
               ]
             },
@@ -1562,5 +1520,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-20T18:12:44Z"
+  "generated_at": "2026-07-20T20:47:41Z"
 }

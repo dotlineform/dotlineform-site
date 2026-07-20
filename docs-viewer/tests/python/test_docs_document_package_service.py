@@ -215,6 +215,60 @@ def test_atomic_return_uses_order_insensitive_exact_set_equality() -> None:
     }
 
 
+def test_invalid_returned_record_blocks_every_review_and_apply_action() -> None:
+    with make_docs_import_repo() as temp:
+        repo_root = Path(temp)
+        write_returned_package(
+            "ds_20260720T120000Z",
+            selected_doc_ids=["alpha"],
+            rows=[{"doc_id": "alpha"}],
+        )
+        source_path = repo_root / "docs-viewer/scopes/library/source/documents/alpha.md"
+        source_before = source_path.read_text(encoding="utf-8")
+
+        inspection = service.inspect_returned(
+            repo_root,
+            {"scope": "library", "staged_filename": "returned.jsonl"},
+        )
+        reviews = {
+            action: service.review_returned(
+                repo_root,
+                {
+                    "scope": "library",
+                    "staged_filename": "returned.jsonl",
+                    "review_action": action,
+                    "dry_run": False,
+                },
+            )
+            for action in ("content", "summaries", "hierarchy")
+        }
+        applies = {
+            action: service.apply_returned(
+                repo_root,
+                {
+                    "scope": "library",
+                    "staged_filename": "returned.jsonl",
+                    "apply_action": action,
+                    "confirm": True,
+                    "dry_run": False,
+                },
+            )
+            for action in ("summary_apply", "hierarchy_apply")
+        }
+
+        assert source_path.read_text(encoding="utf-8") == source_before
+
+    assert inspection["ok"] is False
+    assert "missing_title" in {item["code"] for item in inspection["issues"]}
+    assert all(payload["ok"] is False for payload in reviews.values())
+    assert reviews["content"]["review_source_folder_written"] is False
+    assert reviews["summaries"]["review_written"] is False
+    assert reviews["hierarchy"]["review_written"] is False
+    assert all(payload["ok"] is False for payload in applies.values())
+    assert applies["summary_apply"]["summary_apply_written"] is False
+    assert applies["hierarchy_apply"]["hierarchy_apply_written"] is False
+
+
 def test_returned_listing_projects_document_fields_without_adapter_identity() -> None:
     with make_docs_import_repo() as temp:
         repo_root = Path(temp)

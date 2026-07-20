@@ -196,7 +196,7 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
 
     expected_initial = {
         "type": "files",
-        "typeLabels": ["Documents (4)", "Data Sharing packages (1)"],
+        "typeLabels": ["Documents (4)", "Document packages (1)"],
         "multiple": True,
         "filenames": ["alpha.md", "beta.html", "word.docx", "notes.json"],
         "selected": ["alpha.md"],

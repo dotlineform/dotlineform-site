@@ -4,83 +4,83 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260523-190651-7157ec",
+      "title": "Development Checklist",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260523-190651-7157ec.json",
+      "timestamp": "2026-07-20 21:46:37",
+      "parent_id": "d-20260419-000000-d2e47b",
+      "parent_title": "Dev Home"
+    },
+    {
       "doc_id": "d-20260720-172819-93d6b2",
       "title": "Document Sharing Ownership Cutover Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-172819-93d6b2.json",
-      "timestamp": "2026-07-20 20:53:26",
+      "timestamp": "2026-07-20 21:46:37",
       "parent_id": "d-20260718-155350-c84e62",
       "parent_title": "Share Document Packages"
     },
     {
-      "doc_id": "d-20260718-114645-7b9d24",
-      "title": "Docs Viewer Core Refactor",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-114645-7b9d24.json",
-      "timestamp": "2026-07-20 20:21:38"
+      "doc_id": "d-20260711-012238-814555",
+      "title": "Knowledge System Vision",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260711-012238-814555.json",
+      "timestamp": "2026-07-20 21:46:37",
+      "parent_id": "d-20260331-000000-4a16b0",
+      "parent_title": "Architecture"
     },
     {
-      "doc_id": "d-20260714-234030-1e0af6",
-      "title": "Docs Viewer Roadmap",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-1e0af6.json",
-      "timestamp": "2026-07-20 20:21:38",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
+      "doc_id": "d-20260715-084611-7c7c8d",
+      "title": "Repository Maintenance",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-7c7c8d.json",
+      "timestamp": "2026-07-20 21:46:37",
+      "parent_id": "d-20260715-092247-f3fd52",
+      "parent_title": "Repository Roadmap"
     },
     {
-      "doc_id": "d-20260718-155350-c84e62",
-      "title": "Share Document Packages",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-155350-c84e62.json",
-      "timestamp": "2026-07-20 19:59:16",
-      "parent_id": "d-20260714-234030-1e0af6",
-      "parent_title": "Docs Viewer Roadmap"
+      "doc_id": "d-20260602-234732-ea94b3",
+      "title": "Configuration Map",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-234732-ea94b3.json",
+      "timestamp": "2026-07-20 21:40:08",
+      "parent_id": "d-20260423-000000-d015e6",
+      "parent_title": "Studio"
     },
     {
-      "doc_id": "d-20260514-164722-3de65e",
-      "title": "Docs Import Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260514-164722-3de65e.json",
-      "timestamp": "2026-07-20 19:09:50",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
+      "doc_id": "d-20260711-012238-8a04a6",
+      "title": "Full Document Export Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260711-012238-8a04a6.json",
+      "timestamp": "2026-07-20 21:40:08",
+      "parent_id": "d-20260715-092247-4b7382",
+      "parent_title": "Portable Document Packages"
     },
     {
-      "doc_id": "d-20260621-000000-baa17e",
-      "title": "Documents Adapter Bridge",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260621-000000-baa17e.json",
-      "timestamp": "2026-07-20 19:09:50",
-      "parent_id": "d-20260513-171600-a1eeb9",
-      "parent_title": "Data Sharing"
+      "doc_id": "d-20260413-000000-d314b7",
+      "title": "Local Setup",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260413-000000-d314b7.json",
+      "timestamp": "2026-07-20 21:40:08"
     },
     {
-      "doc_id": "d-20260503-150500-b0f1df",
-      "title": "Documents Package Preparation Script",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260503-150500-b0f1df.json",
-      "timestamp": "2026-07-20 19:09:50",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
+      "doc_id": "d-20260522-080600-a2b102",
+      "title": "Local Studio App",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260522-080600-a2b102.json",
+      "timestamp": "2026-07-20 21:40:08",
+      "parent_id": "d-20260423-000000-d015e6",
+      "parent_title": "Studio"
     },
     {
-      "doc_id": "d-20260627-225625-1c9b7e",
-      "title": "Documents Returned Package Review",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260627-225625-1c9b7e.json",
-      "timestamp": "2026-07-20 19:09:50",
-      "parent_id": "d-20260513-171600-a1eeb9",
-      "parent_title": "Data Sharing"
+      "doc_id": "d-20260715-092247-4b7382",
+      "title": "Portable Document Packages",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-4b7382.json",
+      "timestamp": "2026-07-20 21:40:08",
+      "parent_id": "d-20260718-155350-c84e62",
+      "parent_title": "Share Document Packages"
     },
     {
-      "doc_id": "d-20260605-125108-c68916",
-      "title": "Generated Data Contracts",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260605-125108-c68916.json",
-      "timestamp": "2026-07-20 19:09:50",
-      "parent_id": "d-20260331-000000-c313fd",
-      "parent_title": "Runtime"
-    },
-    {
-      "doc_id": "d-20260607-222033-c902f6",
-      "title": "Import Scripts",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-c902f6.json",
-      "timestamp": "2026-07-20 19:09:50",
-      "parent_id": "d-20260607-222033-2a494e",
-      "parent_title": "Scripts Overview"
+      "doc_id": "d-20260419-000000-86255c",
+      "title": "Tag Source Data",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260419-000000-86255c.json",
+      "timestamp": "2026-07-20 21:40:08",
+      "parent_id": "d-20260506-181900-d08dbe",
+      "parent_title": "Analytics"
     }
   ],
-  "generated_at": "2026-07-20T19:54:03Z"
+  "generated_at": "2026-07-20T20:47:41Z"
 }
