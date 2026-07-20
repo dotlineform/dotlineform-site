@@ -1087,7 +1087,13 @@
                   "doc_id": "d-20260720-172819-93d6b2",
                   "title": "Document Sharing Ownership Cutover Delivery",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-172819-93d6b2.json",
-                  "ui_status": "proposed"
+                  "ui_status": "active"
+                },
+                {
+                  "doc_id": "d-20260720-174842-4c2f6a",
+                  "title": "DSO-0 — Behavior And Dependency Findings",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-174842-4c2f6a.json",
+                  "ui_status": "active"
                 }
               ]
             },
@@ -1556,5 +1562,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-20T16:38:47Z"
+  "generated_at": "2026-07-20T16:52:28Z"
 }
