@@ -25,6 +25,7 @@ from tests.smoke.route_ready_helpers import wait_for_route_ready  # noqa: E402
 
 
 DOCS_VIEWER_DOC_ID = "d-20260424-000000-50b63f"
+INLINE_MERMAID_DOC_ID = "d-20260720-102658-b55348"
 
 
 def start_server() -> tuple[DocsViewerServer, str]:
@@ -570,11 +571,12 @@ def exercise_manage_route(
     page: Page,
     base_url: str,
     timeout_ms: int,
-) -> tuple[set[str], set[str], set[str], set[str], str]:
+) -> tuple[set[str], set[str], set[str], set[str], set[str], str]:
     generated_requests: list[str] = []
     import_module_requests: list[str] = []
     scope_lifecycle_requests: list[str] = []
     copy_subtree_requests: list[str] = []
+    inline_mermaid_requests: list[str] = []
     page.on(
         "request",
         lambda request: generated_requests.append(request.url)
@@ -599,6 +601,12 @@ def exercise_manage_route(
         if "/docs-viewer/runtime/js/management/docs-viewer-copy-subtree-workflow.js" in request.url
         else None,
     )
+    page.on(
+        "request",
+        lambda request: inline_mermaid_requests.append(request.url)
+        if "/docs-viewer/runtime/vendor/mermaid/" in request.url
+        else None,
+    )
 
     page.goto(f"{base_url}/docs/?scope=studio&doc={DOCS_VIEWER_DOC_ID}", wait_until="domcontentloaded")
     wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
@@ -606,6 +614,8 @@ def exercise_manage_route(
     assert_open_source_target_handoff(page)
     assert_delete_uses_first_remaining_root(page)
     assert_manage_route_contract(manage_route_state(page), base_url)
+    if inline_mermaid_requests:
+        raise AssertionError(f"diagram-free local document loaded Mermaid: {inline_mermaid_requests!r}")
     if import_module_requests:
         raise AssertionError(f"Docs Import modules loaded before the import action: {import_module_requests!r}")
     if scope_lifecycle_requests:
@@ -788,11 +798,39 @@ def exercise_manage_route(
     if any("/Users/" in label for label in delete_options):
         raise AssertionError(f"Delete target labels should not expose user-specific roots: {delete_options!r}")
     delete_host.locator('button[data-role="modal-cancel"]').evaluate("button => button.click()")
+
+    page.goto(f"{base_url}/docs/?scope=studio&doc={INLINE_MERMAID_DOC_ID}", wait_until="domcontentloaded")
+    wait_for_manage_doc(page, "Inline Mermaid Rendering Concept", timeout_ms)
+    page.wait_for_function(
+        """() => {
+            const host = document.querySelector(
+                '.docsViewer__diagram[data-docs-viewer-diagram-kind="inline-mermaid"]'
+            );
+            return host &&
+                host.children.length === 1 &&
+                host.firstElementChild?.localName === 'svg' &&
+                host.querySelector('title')?.textContent.trim() === 'Inline Mermaid reader lifecycle' &&
+                host.querySelector('desc')?.textContent.trim().startsWith('Canonical Markdown becomes');
+        }""",
+        timeout=timeout_ms,
+    )
+    inline_state = page.locator("#docsViewerContent").evaluate(
+        """content => ({
+            diagrams: content.querySelectorAll(
+                '.docsViewer__diagram[data-docs-viewer-diagram-kind="inline-mermaid"]'
+            ).length,
+            remainingFences: content.querySelectorAll('pre > code.language-mermaid').length,
+            failureCount: content.querySelectorAll('.docsViewer__diagramError').length
+        })"""
+    )
+    if inline_state != {"diagrams": 1, "remainingFences": 0, "failureCount": 0}:
+        raise AssertionError(f"Studio inline Mermaid proof did not render cleanly: {inline_state!r}")
     return (
         request_paths(generated_requests),
         request_paths(import_module_requests),
         request_paths(scope_lifecycle_requests),
         request_paths(copy_subtree_requests),
+        request_paths(inline_mermaid_requests),
         page.url,
     )
 
@@ -818,6 +856,7 @@ def main(argv: list[str] | None = None) -> int:
                     import_module_paths,
                     scope_lifecycle_paths,
                     copy_subtree_paths,
+                    inline_mermaid_paths,
                     final_url,
                 ) = exercise_manage_route(
                     page,
@@ -834,6 +873,9 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"expected lazy scope lifecycle module request; saw {sorted(scope_lifecycle_paths)!r}")
         if "/docs-viewer/runtime/js/management/docs-viewer-copy-subtree-workflow.js" not in copy_subtree_paths:
             raise AssertionError(f"expected lazy copy subtree module request; saw {sorted(copy_subtree_paths)!r}")
+        expected_mermaid_path = "/docs-viewer/runtime/vendor/mermaid/11.16.0/mermaid.min.js"
+        if inline_mermaid_paths != {expected_mermaid_path}:
+            raise AssertionError(f"Studio proof did not load the one checked Mermaid asset: {sorted(inline_mermaid_paths)!r}")
         if query_value(final_url, "mode"):
             raise AssertionError(f"expected clean manage URL without mode query, got {final_url}")
         if errors:

@@ -2,6 +2,9 @@ import {
   startDocsViewerManageApp
 } from "../shared/docs-viewer-app-boot.js";
 import {
+  docsViewerInlineMermaidAdapter
+} from "../shared/docs-viewer-inline-mermaid.js";
+import {
   mountDocsViewerManageDocumentExtras
 } from "./docs-viewer-management-document-reports.js";
 import {
@@ -32,6 +35,7 @@ startDocsViewerManageApp({
     "markdown-source": "semantic-token-picker",
     "rendered-document": "metadata-info"
   },
+  inlineMermaidAdapter: docsViewerInlineMermaidAdapter,
   managementShellRenderers: createDocsViewerManagementShellRenderers(),
   mountDocumentExtras: mountDocsViewerManageDocumentExtras
 });

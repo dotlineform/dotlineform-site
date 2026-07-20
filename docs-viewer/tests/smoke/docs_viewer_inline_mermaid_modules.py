@@ -414,6 +414,86 @@ def assert_document_mount_generation_contract(page: Page) -> None:
         raise AssertionError(f"document mount generations were not distinct: {result!r}")
 
 
+def assert_exact_scope_gate(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const { inlineMermaid, documentController } = window.__docsViewerInlineMermaidSmoke;
+
+            async function exercise(scopeId, scopeType, contentHtml) {
+                let loadCalls = 0;
+                let mountCalls = 0;
+                const rendererAdapter = inlineMermaid.createDocsViewerInlineMermaidAdapter({
+                    loadMermaid: async () => {
+                        loadCalls += 1;
+                        return {
+                            initialize() {},
+                            async render() {
+                                return {
+                                    svg: '<svg xmlns="http://www.w3.org/2000/svg"><title>scope gate</title><desc>scope gate proof</desc></svg>'
+                                };
+                            }
+                        };
+                    }
+                });
+                const content = document.createElement('article');
+                const controller = documentController.initDocsViewerDocumentController({
+                    content,
+                    toolbar: document.createElement('div'),
+                    results: document.createElement('div'),
+                    more: document.createElement('div'),
+                    inlineMermaidAdapter: {
+                        mountDocument(context) {
+                            mountCalls += 1;
+                            return rendererAdapter.mountDocument(context);
+                        }
+                    },
+                    viewerScope: () => scopeId,
+                    scopeConfig: {
+                        scopeConfigsById: new Map([[scopeId, { scopeId, scopeType }]])
+                    },
+                    selectedDocument: { selectedDocId: '' },
+                    routeSession: { managementContext: false },
+                    hasActiveQuery: () => false,
+                    clearResultsStatus: () => {},
+                    setRecentModeActive: () => {},
+                    projectDocumentShell: () => {},
+                    renderBookmarkToggle: () => {},
+                    renderBookmarkUi: () => {},
+                    renderManagementUi: () => {},
+                    renderMeta: () => {},
+                    renderSearchMode: () => {},
+                    renderSidebar: () => {},
+                    statusCommands: { setStatus: () => {} }
+                });
+                document.body.appendChild(content);
+                controller.renderPayload({ doc_id: scopeId, title: scopeId }, { content_html: contentHtml }, '');
+                await new Promise(resolve => setTimeout(resolve, 0));
+                return {
+                    mountCalls,
+                    loadCalls,
+                    diagramCount: content.querySelectorAll('.docsViewer__diagram').length,
+                    fenceCount: content.querySelectorAll('pre > code.language-mermaid').length
+                };
+            }
+
+            const fence = '<pre><code class="language-mermaid">scope gate</code></pre>';
+            return {
+                arbitraryLocal: await exercise('another-local-scope', 'local', fence),
+                diagramFreeLocal: await exercise('diagram-free-local', 'local', '<p>No diagram</p>'),
+                external: await exercise('notes', 'local_external', fence),
+                publicScope: await exercise('library', 'public', fence)
+            };
+        }"""
+    )
+    if result["arbitraryLocal"] != {"mountCalls": 1, "loadCalls": 1, "diagramCount": 1, "fenceCount": 0}:
+        raise AssertionError(f"an arbitrary configured local scope was not eligible: {result!r}")
+    if result["diagramFreeLocal"] != {"mountCalls": 1, "loadCalls": 0, "diagramCount": 0, "fenceCount": 0}:
+        raise AssertionError(f"a diagram-free local mount loaded Mermaid: {result!r}")
+    unsupported = {"mountCalls": 0, "loadCalls": 0, "diagramCount": 0, "fenceCount": 1}
+    if result["external"] != unsupported or result["publicScope"] != unsupported:
+        raise AssertionError(f"an unsupported scope did not retain its Mermaid fence without loading: {result!r}")
+
+
 def run_smoke(page: Page, base_url: str) -> None:
     page.goto(f"{base_url}/404.html", wait_until="domcontentloaded")
     install_fixture(page)
@@ -422,6 +502,7 @@ def run_smoke(page: Page, base_url: str) -> None:
     assert_accessible_svg_contract(page)
     assert_checked_browser_runtime_renders(page)
     assert_document_mount_generation_contract(page)
+    assert_exact_scope_gate(page)
 
 
 def main() -> None:

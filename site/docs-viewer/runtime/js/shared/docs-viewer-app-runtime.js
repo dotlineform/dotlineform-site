@@ -296,6 +296,7 @@ export function startDocsViewerRuntime(options) {
     content: content,
     collectionProvider: collectionProvider,
     hasActiveQuery: hasActiveQuery,
+    inlineMermaidAdapter: settings.inlineMermaidAdapter,
     managementService: managementService,
     mountDocumentExtras: settings.mountDocumentExtras,
     more: more,

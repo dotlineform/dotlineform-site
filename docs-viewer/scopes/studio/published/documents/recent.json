@@ -7,7 +7,7 @@
       "doc_id": "d-20260720-102658-7de33d",
       "title": "Inline Mermaid Rendering Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-102658-7de33d.json",
-      "timestamp": "2026-07-20 13:09:55",
+      "timestamp": "2026-07-20 13:24:05",
       "parent_id": "d-20260715-181845-0158f9",
       "parent_title": "Diagrams"
     },
@@ -15,7 +15,7 @@
       "doc_id": "d-20260720-102658-b55348",
       "title": "Inline Mermaid Rendering Concept",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-102658-b55348.json",
-      "timestamp": "2026-07-20 12:22:50",
+      "timestamp": "2026-07-20 13:17:56",
       "parent_id": "d-20260715-181845-0158f9",
       "parent_title": "Diagrams"
     },
@@ -80,5 +80,5 @@
       "timestamp": "2026-07-20 10:18:26"
     }
   ],
-  "generated_at": "2026-07-20T12:10:16Z"
+  "generated_at": "2026-07-20T12:24:25Z"
 }

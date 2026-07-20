@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+import json
 from pathlib import Path
 import sys
 from threading import Thread
@@ -148,10 +149,55 @@ def assert_payload_requests(route: str, paths: set[str], scope: str, doc_id: str
 
 def assert_no_inline_mermaid_asset_request(route: str, paths: set[str]) -> None:
     mermaid_requests = sorted(
-        path for path in paths if path.startswith("/docs-viewer/runtime/vendor/mermaid/")
+        path for path in paths
+        if path.startswith("/docs-viewer/runtime/vendor/mermaid/")
+        or path == "/docs-viewer/runtime/js/shared/docs-viewer-inline-mermaid.js"
     )
     if mermaid_requests:
         raise AssertionError(f"{route} loaded the local-only Mermaid runtime: {mermaid_requests!r}")
+
+
+def exercise_public_inline_mermaid_exclusion(page: Page, base_url: str, timeout_ms: int) -> None:
+    request_urls: list[str] = []
+    page.on("request", lambda request: request_urls.append(request.url))
+    payload_path = f"/assets/data/docs/scopes/library/by-id/{LIBRARY_DOC_ID}.json"
+    payload_pattern = f"**{payload_path}*"
+
+    def add_inline_mermaid_fence(route) -> None:
+        response = route.fetch()
+        payload = response.json()
+        payload["content_html"] = str(payload.get("content_html") or "") + (
+            '<pre><code class="language-mermaid">flowchart LR\n'
+            "  Public --&gt; Source\n"
+            "</code></pre>"
+        )
+        route.fulfill(status=200, content_type="application/json", body=json.dumps(payload))
+
+    page.route(payload_pattern, add_inline_mermaid_fence)
+    try:
+        page.goto(
+            route_url(base_url, f"/library/?doc={LIBRARY_DOC_ID}"),
+            wait_until="domcontentloaded",
+        )
+        wait_for_rendered_doc(page, LIBRARY_DOC_ID, "Library", timeout_ms)
+        state = page.locator("#docsViewerContent").evaluate(
+            """content => ({
+                diagrams: content.querySelectorAll('.docsViewer__diagram').length,
+                fences: content.querySelectorAll('pre > code.language-mermaid').length,
+                failures: content.querySelectorAll('.docsViewer__diagramError').length,
+                mermaidGlobal: Boolean(window.mermaid)
+            })"""
+        )
+    finally:
+        page.unroute(payload_pattern, add_inline_mermaid_fence)
+
+    expected = {"diagrams": 0, "fences": 1, "failures": 0, "mermaidGlobal": False}
+    if state != expected:
+        raise AssertionError(
+            f"public Mermaid fence did not remain readable source: {state!r}; "
+            f"requests={sorted(request_paths(request_urls))!r}"
+        )
+    assert_no_inline_mermaid_asset_request("/library/ injected Mermaid fence", request_paths(request_urls))
 
 
 def assert_public_info_panel(page: Page, route: str, title: str, timeout_ms: int) -> None:
@@ -368,6 +414,24 @@ def main() -> int:
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
             try:
+                fence_context = browser.new_context()
+                try:
+                    fence_page = fence_context.new_page()
+                    fence_page.on("pageerror", lambda exc: errors.append(str(exc)))
+                    fence_page.on(
+                        "requestfailed",
+                        lambda request: request_failures.append(f"{request.url}: {request.failure}"),
+                    )
+                    fence_page.on(
+                        "response",
+                        lambda response: http_failures.append(f"{response.status}: {response.url}")
+                        if response.status >= 400
+                        else None,
+                    )
+                    exercise_public_inline_mermaid_exclusion(fence_page, base_url, args.timeout_ms)
+                finally:
+                    fence_context.close()
+
                 page = browser.new_page()
                 page.on("pageerror", lambda exc: errors.append(str(exc)))
                 page.on("requestfailed", lambda request: request_failures.append(f"{request.url}: {request.failure}"))

@@ -61,7 +61,8 @@ export function initDocsViewerDocumentController(context) {
 
   function mountInlineMermaid(doc, payload, mountGeneration) {
     var adapter = context.inlineMermaidAdapter;
-    if (!adapter || typeof adapter.mountDocument !== "function") return;
+    var scopeType = currentScopeType();
+    if (scopeType !== "local" || !adapter || typeof adapter.mountDocument !== "function") return;
     Promise.resolve(adapter.mountDocument({
       content: content,
       doc: doc,
@@ -71,7 +72,7 @@ export function initDocsViewerDocumentController(context) {
       },
       mountGeneration: mountGeneration,
       payload: payload,
-      scopeType: currentScopeType(),
+      scopeType: scopeType,
       viewerScope: currentViewerScope(),
       window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
     })).catch(function (error) {
