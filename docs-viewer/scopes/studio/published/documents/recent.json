@@ -7,15 +7,31 @@
       "doc_id": "d-20260720-120201-343f33",
       "title": "Diagram Detail View Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-120201-343f33.json",
-      "timestamp": "2026-07-20 15:34:46",
+      "timestamp": "2026-07-20 15:53:57",
       "parent_id": "d-20260715-181845-0158f9",
       "parent_title": "Diagrams"
+    },
+    {
+      "doc_id": "d-20260715-181845-0158f9",
+      "title": "Diagrams",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-181845-0158f9.json",
+      "timestamp": "2026-07-20 15:53:57",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap"
+    },
+    {
+      "doc_id": "d-20260714-234030-1e0af6",
+      "title": "Docs Viewer Roadmap",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-1e0af6.json",
+      "timestamp": "2026-07-20 15:53:57",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
     },
     {
       "doc_id": "d-20260719-123719-fb7565",
       "title": "Document Diagrams",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260719-123719-fb7565.json",
-      "timestamp": "2026-07-20 14:16:46",
+      "timestamp": "2026-07-20 15:53:57",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer"
     },
@@ -44,28 +60,12 @@
       "parent_title": "Diagrams"
     },
     {
-      "doc_id": "d-20260715-181845-0158f9",
-      "title": "Diagrams",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-181845-0158f9.json",
-      "timestamp": "2026-07-20 12:02:01",
-      "parent_id": "d-20260714-234030-1e0af6",
-      "parent_title": "Docs Viewer Roadmap"
-    },
-    {
       "doc_id": "d-20260718-155350-c84e62",
       "title": "Share Document Packages",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-155350-c84e62.json",
       "timestamp": "2026-07-20 10:35:25",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap"
-    },
-    {
-      "doc_id": "d-20260714-234030-1e0af6",
-      "title": "Docs Viewer Roadmap",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-1e0af6.json",
-      "timestamp": "2026-07-20 10:26:58",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
     },
     {
       "doc_id": "d-20260419-000000-d2e47b",
@@ -80,5 +80,5 @@
       "timestamp": "2026-07-20 10:18:26"
     }
   ],
-  "generated_at": "2026-07-20T14:35:14Z"
+  "generated_at": "2026-07-20T14:57:23Z"
 }

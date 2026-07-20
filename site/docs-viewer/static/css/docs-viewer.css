@@ -1155,11 +1155,11 @@ body.docs-viewer-service{
 
 @media (max-width: 820px){
   .docsViewer{
-    grid-template-columns: 1fr !important;
+    grid-template-columns: minmax(0, 1fr) !important;
   }
 
   .docsViewer[data-info-panel-state="open"]{
-    grid-template-columns: 1fr !important;
+    grid-template-columns: minmax(0, 1fr) !important;
   }
 
   .docsViewer__controls{
