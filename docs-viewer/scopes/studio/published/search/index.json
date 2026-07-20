@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d02811fe4533cd5e1fcb5655080b1215",
-    "generated_at_utc": "2026-07-20T14:57:23Z",
-    "count": 262
+    "version": "blake2b-b440fa5b0b2d90ff2e6736a5e9aba0d0",
+    "generated_at_utc": "2026-07-20T15:19:24Z",
+    "count": 265
   },
   "entries": [
     {
@@ -572,17 +572,17 @@
       "kind": "doc",
       "title": "Architecture",
       "href": "/docs/?scope=studio&doc=d-20260331-000000-4a16b0",
-      "last_updated": "2026-07-11",
-      "display_meta": "2026-07-11",
+      "last_updated": "2026-07-20",
+      "display_meta": "2026-07-20",
       "search_terms": [
         "architecture",
-        "2026-07-11",
+        "2026-07-20",
         "2026",
         "07",
-        "11",
+        "20",
         "d-20260331-000000-4a16b0"
       ],
-      "search_text": "architecture 2026-07-11 2026 07 11 d-20260331-000000-4a16b0"
+      "search_text": "architecture 2026-07-20 2026 07 20 d-20260331-000000-4a16b0"
     },
     {
       "id": "d-20260711-012238-814555",
@@ -656,29 +656,6 @@
       "search_text": "projection contract validation projection contract validation architecture 2026-05-30 2026 05 30 d-20260523-224407-911c73"
     },
     {
-      "id": "d-20260602-192905-260208",
-      "kind": "doc",
-      "title": "Public Route Model",
-      "href": "/docs/?scope=studio&doc=d-20260602-192905-260208",
-      "last_updated": "2026-06-13",
-      "parent_id": "d-20260331-000000-4a16b0",
-      "parent_title": "Architecture",
-      "display_meta": "2026-06-13 • Architecture",
-      "search_terms": [
-        "public route model",
-        "public",
-        "route",
-        "model",
-        "architecture",
-        "2026-06-13",
-        "2026",
-        "06",
-        "13",
-        "d-20260602-192905-260208"
-      ],
-      "search_text": "public route model public route model architecture 2026-06-13 2026 06 13 d-20260602-192905-260208"
-    },
-    {
       "id": "d-20260419-000000-d5b655",
       "kind": "doc",
       "title": "Shared Artifact Patterns",
@@ -700,32 +677,6 @@
         "d-20260419-000000-d5b655"
       ],
       "search_text": "shared artifact patterns shared artifact patterns architecture 2026-07-15 2026 07 15 d-20260419-000000-d5b655"
-    },
-    {
-      "id": "d-20260331-000000-6d51e9",
-      "kind": "doc",
-      "title": "Site Shell Runtime",
-      "href": "/docs/?scope=studio&doc=d-20260331-000000-6d51e9",
-      "last_updated": "2026-07-19 22:33:42",
-      "parent_id": "d-20260331-000000-4a16b0",
-      "parent_title": "Architecture",
-      "display_meta": "2026-07-19 22:33:42 • Architecture",
-      "search_terms": [
-        "site shell runtime",
-        "site",
-        "shell",
-        "runtime",
-        "architecture",
-        "2026-07-19 22:33:42",
-        "2026",
-        "07",
-        "19",
-        "22",
-        "33",
-        "42",
-        "d-20260331-000000-6d51e9"
-      ],
-      "search_text": "site shell runtime site shell runtime architecture 2026-07-19 22:33:42 2026 07 19 22 33 42 d-20260331-000000-6d51e9"
     },
     {
       "id": "d-20260524-214228-7247ef",
@@ -5598,6 +5549,136 @@
       "search_text": "selectable list selectable list shared ui shared ui 2026-07-15 2026 07 15 d-20260627-144244-b9cdf0"
     },
     {
+      "id": "d-20260720-161656-1357d0",
+      "kind": "doc",
+      "title": "Site",
+      "href": "/docs/?scope=studio&doc=d-20260720-161656-1357d0",
+      "last_updated": "2026-07-20",
+      "display_meta": "2026-07-20",
+      "search_terms": [
+        "site",
+        "2026-07-20",
+        "2026",
+        "07",
+        "20",
+        "d-20260720-161656-1357d0"
+      ],
+      "search_text": "site 2026-07-20 2026 07 20 d-20260720-161656-1357d0"
+    },
+    {
+      "id": "d-20260331-000000-33a9c5",
+      "kind": "doc",
+      "title": "Public Catalogue Data Flow",
+      "href": "/docs/?scope=studio&doc=d-20260331-000000-33a9c5",
+      "last_updated": "2026-07-20",
+      "parent_id": "d-20260720-161656-1357d0",
+      "parent_title": "Site",
+      "display_meta": "2026-07-20 • Site",
+      "search_terms": [
+        "public catalogue data flow",
+        "public",
+        "catalogue",
+        "data",
+        "flow",
+        "site",
+        "2026-07-20",
+        "2026",
+        "07",
+        "20",
+        "d-20260331-000000-33a9c5"
+      ],
+      "search_text": "public catalogue data flow public catalogue data flow site 2026-07-20 2026 07 20 d-20260331-000000-33a9c5"
+    },
+    {
+      "id": "d-20260720-161658-42fee0",
+      "kind": "doc",
+      "title": "Public Catalogue Design",
+      "href": "/docs/?scope=studio&doc=d-20260720-161658-42fee0",
+      "last_updated": "2026-07-20",
+      "parent_id": "d-20260720-161656-1357d0",
+      "parent_title": "Site",
+      "display_meta": "2026-07-20 • Site",
+      "search_terms": [
+        "public catalogue design",
+        "public",
+        "catalogue",
+        "design",
+        "site",
+        "2026-07-20",
+        "2026",
+        "07",
+        "20",
+        "d-20260720-161658-42fee0"
+      ],
+      "search_text": "public catalogue design public catalogue design site 2026-07-20 2026 07 20 d-20260720-161658-42fee0"
+    },
+    {
+      "id": "d-20260602-192905-260208",
+      "kind": "doc",
+      "title": "Public Route Model",
+      "href": "/docs/?scope=studio&doc=d-20260602-192905-260208",
+      "last_updated": "2026-07-20",
+      "parent_id": "d-20260720-161656-1357d0",
+      "parent_title": "Site",
+      "display_meta": "2026-07-20 • Site",
+      "search_terms": [
+        "public route model",
+        "public",
+        "route",
+        "model",
+        "site",
+        "2026-07-20",
+        "2026",
+        "07",
+        "20",
+        "d-20260602-192905-260208"
+      ],
+      "search_text": "public route model public route model site 2026-07-20 2026 07 20 d-20260602-192905-260208"
+    },
+    {
+      "id": "d-20260720-161657-0f6696",
+      "kind": "doc",
+      "title": "Site Overview",
+      "href": "/docs/?scope=studio&doc=d-20260720-161657-0f6696",
+      "last_updated": "2026-07-20",
+      "parent_id": "d-20260720-161656-1357d0",
+      "parent_title": "Site",
+      "display_meta": "2026-07-20 • Site",
+      "search_terms": [
+        "site overview",
+        "site",
+        "overview",
+        "2026-07-20",
+        "2026",
+        "07",
+        "20",
+        "d-20260720-161657-0f6696"
+      ],
+      "search_text": "site overview site overview 2026-07-20 2026 07 20 d-20260720-161657-0f6696"
+    },
+    {
+      "id": "d-20260331-000000-6d51e9",
+      "kind": "doc",
+      "title": "Site Shell Runtime",
+      "href": "/docs/?scope=studio&doc=d-20260331-000000-6d51e9",
+      "last_updated": "2026-07-20",
+      "parent_id": "d-20260720-161656-1357d0",
+      "parent_title": "Site",
+      "display_meta": "2026-07-20 • Site",
+      "search_terms": [
+        "site shell runtime",
+        "site",
+        "shell",
+        "runtime",
+        "2026-07-20",
+        "2026",
+        "07",
+        "20",
+        "d-20260331-000000-6d51e9"
+      ],
+      "search_text": "site shell runtime site shell runtime 2026-07-20 2026 07 20 d-20260331-000000-6d51e9"
+    },
+    {
       "id": "d-20260423-000000-d015e6",
       "kind": "doc",
       "title": "Studio",
@@ -6118,30 +6199,6 @@
         "d-20260427-223830-e0b422"
       ],
       "search_text": "project state report project state report studio 2026-07-15 2026 07 15 d-20260427-223830-e0b422"
-    },
-    {
-      "id": "d-20260331-000000-33a9c5",
-      "kind": "doc",
-      "title": "Public Catalogue Data Flow",
-      "href": "/docs/?scope=studio&doc=d-20260331-000000-33a9c5",
-      "last_updated": "2026-07-15",
-      "parent_id": "d-20260423-000000-d015e6",
-      "parent_title": "Studio",
-      "display_meta": "2026-07-15 • Studio",
-      "search_terms": [
-        "public catalogue data flow",
-        "public",
-        "catalogue",
-        "data",
-        "flow",
-        "studio",
-        "2026-07-15",
-        "2026",
-        "07",
-        "15",
-        "d-20260331-000000-33a9c5"
-      ],
-      "search_text": "public catalogue data flow public catalogue data flow studio 2026-07-15 2026 07 15 d-20260331-000000-33a9c5"
     },
     {
       "id": "d-20260508-093841-3e27b1",

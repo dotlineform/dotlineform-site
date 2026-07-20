@@ -164,20 +164,9 @@
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260523-224407-911c73.json"
         },
         {
-          "doc_id": "d-20260602-192905-260208",
-          "title": "Public Route Model",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-192905-260208.json",
-          "ui_status": "stable"
-        },
-        {
           "doc_id": "d-20260419-000000-d5b655",
           "title": "Shared Artifact Patterns",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260419-000000-d5b655.json"
-        },
-        {
-          "doc_id": "d-20260331-000000-6d51e9",
-          "title": "Site Shell Runtime",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-6d51e9.json"
         },
         {
           "doc_id": "d-20260524-214228-7247ef",
@@ -1299,6 +1288,39 @@
       ]
     },
     {
+      "doc_id": "d-20260720-161656-1357d0",
+      "title": "Site",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-161656-1357d0.json",
+      "children": [
+        {
+          "doc_id": "d-20260331-000000-33a9c5",
+          "title": "Public Catalogue Data Flow",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-33a9c5.json"
+        },
+        {
+          "doc_id": "d-20260720-161658-42fee0",
+          "title": "Public Catalogue Design",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-161658-42fee0.json"
+        },
+        {
+          "doc_id": "d-20260602-192905-260208",
+          "title": "Public Route Model",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-192905-260208.json",
+          "ui_status": "stable"
+        },
+        {
+          "doc_id": "d-20260720-161657-0f6696",
+          "title": "Site Overview",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-161657-0f6696.json"
+        },
+        {
+          "doc_id": "d-20260331-000000-6d51e9",
+          "title": "Site Shell Runtime",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-6d51e9.json"
+        }
+      ]
+    },
+    {
       "doc_id": "d-20260423-000000-d015e6",
       "title": "Studio",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260423-000000-d015e6.json",
@@ -1416,11 +1438,6 @@
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260427-223830-e0b422.json"
         },
         {
-          "doc_id": "d-20260331-000000-33a9c5",
-          "title": "Public Catalogue Data Flow",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-33a9c5.json"
-        },
-        {
           "doc_id": "d-20260508-093841-3e27b1",
           "title": "Publish Media To R2",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260508-093841-3e27b1.json"
@@ -1503,5 +1520,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-20T14:55:23Z"
+  "generated_at": "2026-07-20T15:19:24Z"
 }
