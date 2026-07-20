@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-68fdb7a59c261b55eabd3b28dd122ca2",
-    "generated_at_utc": "2026-07-20T13:18:37Z",
+    "version": "blake2b-e5e8a47519789409f7cf63c092b5934b",
+    "generated_at_utc": "2026-07-20T13:39:01Z",
     "count": 262
   },
   "entries": [
@@ -4119,10 +4119,10 @@
       "kind": "doc",
       "title": "Diagram Detail View Delivery",
       "href": "/docs/?scope=studio&doc=d-20260720-120201-343f33",
-      "last_updated": "2026-07-20 12:02:01",
+      "last_updated": "2026-07-20 14:37:35",
       "parent_id": "d-20260715-181845-0158f9",
       "parent_title": "Diagrams",
-      "display_meta": "2026-07-20 12:02:01 • Diagrams",
+      "display_meta": "2026-07-20 14:37:35 • Diagrams",
       "search_terms": [
         "diagram detail view delivery",
         "diagram",
@@ -4130,16 +4130,16 @@
         "view",
         "delivery",
         "diagrams",
-        "2026-07-20 12:02:01",
+        "2026-07-20 14:37:35",
         "2026",
         "07",
         "20",
-        "12",
-        "02",
-        "01",
+        "14",
+        "37",
+        "35",
         "d-20260720-120201-343f33"
       ],
-      "search_text": "diagram detail view delivery diagram detail view delivery diagrams 2026-07-20 12:02:01 2026 07 20 12 02 01 d-20260720-120201-343f33"
+      "search_text": "diagram detail view delivery diagram detail view delivery diagrams 2026-07-20 14:37:35 2026 07 20 14 37 35 d-20260720-120201-343f33"
     },
     {
       "id": "d-20260715-181845-524859",

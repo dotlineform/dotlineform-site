@@ -4,6 +4,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260720-120201-343f33",
+      "title": "Diagram Detail View Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-120201-343f33.json",
+      "timestamp": "2026-07-20 14:37:35",
+      "parent_id": "d-20260715-181845-0158f9",
+      "parent_title": "Diagrams"
+    },
+    {
       "doc_id": "d-20260719-123719-fb7565",
       "title": "Document Diagrams",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260719-123719-fb7565.json",
@@ -32,14 +40,6 @@
       "title": "Inline Mermaid Rendering Concept",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-102658-b55348.json",
       "timestamp": "2026-07-20 13:40:46",
-      "parent_id": "d-20260715-181845-0158f9",
-      "parent_title": "Diagrams"
-    },
-    {
-      "doc_id": "d-20260720-120201-343f33",
-      "title": "Diagram Detail View Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-120201-343f33.json",
-      "timestamp": "2026-07-20 12:02:01",
       "parent_id": "d-20260715-181845-0158f9",
       "parent_title": "Diagrams"
     },
@@ -80,5 +80,5 @@
       "timestamp": "2026-07-20 10:18:26"
     }
   ],
-  "generated_at": "2026-07-20T13:18:37Z"
+  "generated_at": "2026-07-20T13:39:01Z"
 }
