@@ -865,6 +865,84 @@ body.docs-viewer-service{
   border-inline-start: 3px solid var(--docs-viewer-border-strong);
 }
 
+.docsViewer__diagramFrame{
+  box-sizing: border-box;
+  display: block;
+  position: relative;
+  max-width: 100%;
+  margin-block: 1rem;
+}
+
+.docsViewer__diagramViewport{
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.docsViewer__diagramViewport > img{
+  display: block;
+  margin: 0;
+}
+
+.docsViewer__diagramDetailControl,
+.docsViewer__diagramDetailControl:visited{
+  box-sizing: border-box;
+  position: absolute;
+  inset-block-start: var(--docs-viewer-space-2);
+  inset-inline-end: var(--docs-viewer-space-2);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 1px solid var(--docs-viewer-border-strong);
+  border-radius: 0.375rem;
+  background: var(--docs-viewer-panel);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.12);
+  color: var(--docs-viewer-link);
+  opacity: 1;
+  text-decoration: none;
+}
+
+.docsViewer__diagramDetailControl:focus-visible{
+  outline: 2px solid var(--docs-viewer-border-strong);
+  outline-offset: 2px;
+}
+
+.docsViewer__diagramDetailIcon{
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine){
+  .docsViewer__diagramDetailControl,
+  .docsViewer__diagramDetailControl:visited{
+    opacity: 0.58;
+    transition: opacity 120ms ease;
+  }
+
+  .docsViewer__diagramFrame:hover .docsViewer__diagramDetailControl,
+  .docsViewer__diagramFrame:focus-within .docsViewer__diagramDetailControl,
+  .docsViewer__diagramDetailControl:hover,
+  .docsViewer__diagramDetailControl:focus-visible{
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .docsViewer__diagramDetailControl{
+    transition: none;
+  }
+}
+
 .docsViewer__diagram{
   box-sizing: border-box;
   max-width: 100%;

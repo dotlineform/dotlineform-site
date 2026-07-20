@@ -59,6 +59,24 @@ export function initDocsViewerDocumentController(context) {
     });
   }
 
+  function mountDiagramDetails(doc, payload) {
+    var adapter = context.diagramDetailAdapter;
+    if (!adapter || typeof adapter.mountDocument !== "function") return;
+    try {
+      adapter.mountDocument({
+        content: content,
+        doc: doc,
+        document: content ? content.ownerDocument : null,
+        payload: payload,
+        scopeType: currentScopeType(),
+        viewerScope: currentViewerScope(),
+        window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+      });
+    } catch (error) {
+      console.warn("docs_viewer: diagram detail adapter unavailable", error);
+    }
+  }
+
   function mountInlineMermaid(doc, payload, mountGeneration) {
     var adapter = context.inlineMermaidAdapter;
     var scopeType = currentScopeType();
@@ -158,6 +176,7 @@ export function initDocsViewerDocumentController(context) {
     showDocPane();
     context.renderMeta(doc);
     content.innerHTML = payload.content_html || "";
+    mountDiagramDetails(doc, payload);
     mountInlineMermaid(doc, payload, mountGeneration);
     mountDocumentExtras(doc, payload);
     document.title = doc.title + " | dotlineform";

@@ -36,6 +36,25 @@ def test_public_docs_viewer_entry_static_imports_only_public_runtime_modules() -
 
     assert blocked == []
 
+
+def test_persistent_diagram_detail_is_shared_by_public_and_manage_but_not_review() -> None:
+    public_entry = REPO_ROOT / "site/docs-viewer/runtime/js/public/docs-viewer-public.js"
+    public_graph = {
+        path.relative_to(REPO_ROOT).as_posix()
+        for path in public_entry_static_import_graph(REPO_ROOT, public_entry)
+    }
+    manage_entry = (REPO_ROOT / "docs-viewer/runtime/js/management/docs-viewer-manage.js").read_text(
+        encoding="utf-8"
+    )
+    review_entry = (REPO_ROOT / "docs-viewer/runtime/js/review/docs-viewer-review.js").read_text(
+        encoding="utf-8"
+    )
+
+    assert "site/docs-viewer/runtime/js/shared/docs-viewer-diagram-detail.js" in public_graph
+    assert "docs-viewer-diagram-detail.js" in manage_entry
+    assert "docs-viewer-diagram-detail.js" not in review_entry
+
+
 def test_public_docs_viewer_entry_static_graph_excludes_manage_document_actions() -> None:
     entry = REPO_ROOT / "site/docs-viewer/runtime/js/public/docs-viewer-public.js"
     graph = public_entry_static_import_graph(REPO_ROOT, entry)

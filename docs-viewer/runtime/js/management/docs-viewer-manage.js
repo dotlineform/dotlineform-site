@@ -2,6 +2,9 @@ import {
   startDocsViewerManageApp
 } from "../shared/docs-viewer-app-boot.js";
 import {
+  docsViewerDiagramDetailAdapter
+} from "../shared/docs-viewer-diagram-detail.js";
+import {
   docsViewerInlineMermaidAdapter
 } from "./docs-viewer-inline-mermaid.js";
 import {
@@ -30,6 +33,7 @@ startDocsViewerManageApp({
     createDocsViewerManagementControlRenderers()
   ),
   createSourceAdapter: createDocsViewerManagementSourceAdapter,
+  diagramDetailAdapter: docsViewerDiagramDetailAdapter,
   viewRegistryContributions: createDocsViewerManagementViewDefinitions(),
   infoPanelDefaultViewByDocumentMode: {
     "markdown-source": "semantic-token-picker",

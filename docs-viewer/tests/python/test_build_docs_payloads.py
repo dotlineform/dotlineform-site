@@ -70,6 +70,11 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
         '<img src="/docs/media/studio/img/measured-diagram.png" '
         'alt="Measured diagram" width="800" height="600"'
     ) in content_html
+    assert (
+        '<img src="/docs/media/studio/svg/persistent-diagram.svg" '
+        'alt="Persistent SVG diagram" data-docs-viewer-diagram-kind="persistent-svg"'
+    ) in content_html
+    assert content_html.count('data-docs-viewer-diagram-kind="persistent-svg"') == 1
     assert 'title="Alt text"' in content_html
     assert 'href="/works/?work=00638"' in content_html
     assert "[[ref:work:638999|commented missing work]]" in content_html

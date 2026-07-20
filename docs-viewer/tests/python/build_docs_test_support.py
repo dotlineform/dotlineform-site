@@ -231,6 +231,8 @@ Intro with [parent](/docs/?scope=studio&doc={PARENT_DOC_ID}), ![Diagram]([[media
 
 ![Measured diagram]([[media:docs/studio/img/measured-diagram.png width=800 height=600]])
 
+![Persistent SVG diagram]([[media:docs/studio/svg/persistent-diagram.svg]])
+
 <!-- [[ref:work:638999|commented missing work]] -->
 
 <!--

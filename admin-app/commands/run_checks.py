@@ -157,6 +157,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/python/test_generated_output_contract_fixtures.py",
                 "studio/tests/smoke/local_studio_app_docs_viewer.py",
                 "docs-viewer/tests/smoke/docs_viewer_index_panel_modules.py",
+                "docs-viewer/tests/smoke/docs_viewer_diagram_detail_modules.py",
                 "docs-viewer/tests/smoke/docs_viewer_inline_mermaid_modules.py",
                 "docs-viewer/tests/smoke/docs_viewer_index_panel_route.py",
                 "analytics-app/tests/smoke/local_analytics_app_alias_apis.py",
@@ -393,6 +394,16 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 str(PUBLIC_SITE_ROOT),
             ),
             "Smoke-check explicit app context, route access, service surfaces, and router module contracts.",
+        ),
+        CheckCommand(
+            "docs-viewer-diagram-detail-module-smoke",
+            (
+                sys.executable,
+                "docs-viewer/tests/smoke/docs_viewer_diagram_detail_modules.py",
+                "--site-root",
+                str(PUBLIC_SITE_ROOT),
+            ),
+            "Smoke-check persistent diagram eligibility, stable targets, accessible controls, and ordinary document mounting.",
         ),
         CheckCommand(
             "docs-viewer-inline-mermaid-module-smoke",

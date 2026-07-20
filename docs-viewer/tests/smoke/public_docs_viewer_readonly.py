@@ -162,18 +162,30 @@ def exercise_public_inline_mermaid_exclusion(page: Page, base_url: str, timeout_
     page.on("request", lambda request: request_urls.append(request.url))
     payload_path = f"/assets/data/docs/scopes/library/by-id/{LIBRARY_DOC_ID}.json"
     payload_pattern = f"**{payload_path}*"
+    diagram_path = "/assets/data/docs/scopes/library/media/svg/detail-proof.svg"
+    diagram_pattern = f"**{diagram_path}*"
 
     def add_inline_mermaid_fence(route) -> None:
         response = route.fetch()
         payload = response.json()
         payload["content_html"] = str(payload.get("content_html") or "") + (
+            f'<p><img data-docs-viewer-diagram-kind="persistent-svg" src="{diagram_path}" '
+            'alt="Persistent public detail proof"></p>'
             '<pre><code class="language-mermaid">flowchart LR\n'
             "  Public --&gt; Source\n"
             "</code></pre>"
         )
         route.fulfill(status=200, content_type="application/json", body=json.dumps(payload))
 
+    def serve_detail_proof(route) -> None:
+        route.fulfill(
+            status=200,
+            content_type="image/svg+xml",
+            body='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 1"></svg>',
+        )
+
     page.route(payload_pattern, add_inline_mermaid_fence)
+    page.route(diagram_pattern, serve_detail_proof)
     try:
         page.goto(
             route_url(base_url, f"/library/?doc={LIBRARY_DOC_ID}"),
@@ -185,13 +197,27 @@ def exercise_public_inline_mermaid_exclusion(page: Page, base_url: str, timeout_
                 diagrams: content.querySelectorAll('.docsViewer__diagram').length,
                 fences: content.querySelectorAll('pre > code.language-mermaid').length,
                 failures: content.querySelectorAll('.docsViewer__diagramError').length,
-                mermaidGlobal: Boolean(window.mermaid)
+                mermaidGlobal: Boolean(window.mermaid),
+                detailFrames: content.querySelectorAll('.docsViewer__diagramFrame').length,
+                detailControls: content.querySelectorAll('.docsViewer__diagramDetailControl').length,
+                detailHref: content.querySelector('.docsViewer__diagramDetailControl')?.getAttribute('href') || '',
+                detailLabel: content.querySelector('.docsViewer__diagramDetailControl')?.getAttribute('aria-label') || ''
             })"""
         )
     finally:
         page.unroute(payload_pattern, add_inline_mermaid_fence)
+        page.unroute(diagram_pattern, serve_detail_proof)
 
-    expected = {"diagrams": 0, "fences": 1, "failures": 0, "mermaidGlobal": False}
+    expected = {
+        "diagrams": 0,
+        "fences": 1,
+        "failures": 0,
+        "mermaidGlobal": False,
+        "detailFrames": 1,
+        "detailControls": 1,
+        "detailHref": diagram_path,
+        "detailLabel": "Open diagram in new tab",
+    }
     if state != expected:
         raise AssertionError(
             f"public Mermaid fence did not remain readable source: {state!r}; "

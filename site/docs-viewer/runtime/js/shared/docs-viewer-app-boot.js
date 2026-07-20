@@ -196,6 +196,7 @@ export function resolveDocsViewerAppBootContext(options) {
         createCollectionProvider: settings.createCollectionProvider,
         createSourceAdapter: settings.createSourceAdapter,
         controlRendererContributions: settings.controlRendererContributions || {},
+        diagramDetailAdapter: settings.diagramDetailAdapter,
         routeContext: routeContext,
         viewRegistry: viewRegistry,
         infoPanelDefaultViewByDocumentMode: settings.infoPanelDefaultViewByDocumentMode,

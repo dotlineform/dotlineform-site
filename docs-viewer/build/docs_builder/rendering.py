@@ -113,8 +113,20 @@ class ContentRenderingMixin:
             "src": self.resolve_media_url(media_path),
             "alt": self.unescape_markdown_label(match.group("alt")),
         }
+        if self.published_media_type_for_reference(media_path) == "svg":
+            attrs["data-docs-viewer-diagram-kind"] = "persistent-svg"
         attrs.update(media_attrs)
         return f"<img {self.html_attrs(attrs)}>"
+
+    def published_media_type_for_reference(self, raw_path: str) -> str:
+        clean_path = str(raw_path or "").strip().lstrip("/")
+        if not clean_path or re.match(r"\A[a-z][a-z0-9+\-.]*://", clean_path, re.IGNORECASE):
+            return ""
+        for media_type, media in self.config.published.media.items():
+            reference_prefix = media.reference_prefix.as_posix().strip("/")
+            if clean_path == reference_prefix or clean_path.startswith(f"{reference_prefix}/"):
+                return media_type
+        return ""
 
     def parse_media_token(self, raw_body: str) -> tuple[str, dict[str, int]]:
         parts = raw_body.strip().split()

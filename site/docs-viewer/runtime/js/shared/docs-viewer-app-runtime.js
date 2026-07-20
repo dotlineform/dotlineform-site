@@ -295,6 +295,7 @@ export function startDocsViewerRuntime(options) {
     clearResultsStatus: clearResultsStatus,
     content: content,
     collectionProvider: collectionProvider,
+    diagramDetailAdapter: settings.diagramDetailAdapter,
     hasActiveQuery: hasActiveQuery,
     inlineMermaidAdapter: settings.inlineMermaidAdapter,
     managementService: managementService,
