@@ -7,6 +7,7 @@ export function initDocsViewerDocumentController(context) {
   var toolbar = context.toolbar;
   var results = context.results;
   var more = context.more;
+  var documentMountGeneration = 0;
 
   function currentViewerScope() {
     return typeof context.viewerScope === "function" ? context.viewerScope() : context.viewerScope;
@@ -14,6 +15,19 @@ export function initDocsViewerDocumentController(context) {
 
   function managementContextActive() {
     return Boolean(routeSession && routeSession.managementContext);
+  }
+
+  function nextDocumentMountGeneration() {
+    documentMountGeneration += 1;
+    return documentMountGeneration;
+  }
+
+  function currentScopeType() {
+    var configsById = scopeConfigState && scopeConfigState.scopeConfigsById;
+    var scopeConfig = configsById && typeof configsById.get === "function"
+      ? configsById.get(currentViewerScope())
+      : null;
+    return scopeConfig ? String(scopeConfig.scopeType || "").trim().toLowerCase() : "";
   }
 
   function setStatus(message, isError) {
@@ -45,6 +59,26 @@ export function initDocsViewerDocumentController(context) {
     });
   }
 
+  function mountInlineMermaid(doc, payload, mountGeneration) {
+    var adapter = context.inlineMermaidAdapter;
+    if (!adapter || typeof adapter.mountDocument !== "function") return;
+    Promise.resolve(adapter.mountDocument({
+      content: content,
+      doc: doc,
+      document: content ? content.ownerDocument : null,
+      isCurrentMount: function () {
+        return mountGeneration === documentMountGeneration;
+      },
+      mountGeneration: mountGeneration,
+      payload: payload,
+      scopeType: currentScopeType(),
+      viewerScope: currentViewerScope(),
+      window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+    })).catch(function (error) {
+      console.warn("docs_viewer: inline Mermaid adapter unavailable", error);
+    });
+  }
+
   function scrollToHash(hash) {
     if (!hash) {
       window.scrollTo({ top: 0, behavior: "auto" });
@@ -58,6 +92,7 @@ export function initDocsViewerDocumentController(context) {
   }
 
   function hideDocPane() {
+    nextDocumentMountGeneration();
     projectDocumentShell({
       toolbarHidden: true,
       contentHidden: true
@@ -79,6 +114,7 @@ export function initDocsViewerDocumentController(context) {
 
   function renderDocumentStatus(message, isError, options) {
     var settings = options || {};
+    nextDocumentMountGeneration();
     showDocPane();
     if (settings.hideMeta) {
       projectDocumentShell({
@@ -106,6 +142,7 @@ export function initDocsViewerDocumentController(context) {
   }
 
   function renderPayload(doc, payload, hash) {
+    var mountGeneration = nextDocumentMountGeneration();
     selectedDocument.selectedDocId = doc.doc_id;
     context.renderSidebar();
     context.renderBookmarkUi();
@@ -120,6 +157,7 @@ export function initDocsViewerDocumentController(context) {
     showDocPane();
     context.renderMeta(doc);
     content.innerHTML = payload.content_html || "";
+    mountInlineMermaid(doc, payload, mountGeneration);
     mountDocumentExtras(doc, payload);
     document.title = doc.title + " | dotlineform";
     setStatus("", false);
@@ -139,6 +177,7 @@ export function initDocsViewerDocumentController(context) {
   }
 
   function renderDocLoadingState(doc) {
+    nextDocumentMountGeneration();
     context.renderSidebar();
     showDocPane();
     context.renderMeta(doc);

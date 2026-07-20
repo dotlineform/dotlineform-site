@@ -861,6 +861,41 @@ body.docs-viewer-service{
   word-break: normal;
 }
 
+.docsViewer__content pre[data-docs-viewer-inline-mermaid-state="rendering"]{
+  border-inline-start: 3px solid var(--docs-viewer-border-strong);
+}
+
+.docsViewer__diagram{
+  box-sizing: border-box;
+  max-width: 100%;
+  margin-block: 1rem;
+  padding: var(--docs-viewer-space-3);
+  overflow-x: auto;
+  border: 1px solid var(--docs-viewer-border);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.docsViewer__diagram > svg{
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin-inline: auto;
+}
+
+.docsViewer__diagramError{
+  margin: 1rem 0 0.5rem;
+  padding: var(--docs-viewer-space-2) var(--docs-viewer-space-3);
+  border-inline-start: 3px solid var(--docs-viewer-link-hover);
+  background: var(--docs-viewer-panel-2);
+  color: var(--docs-viewer-text);
+}
+
+.docsViewer__diagramError + pre{
+  margin-top: 0;
+}
+
 .docsViewer__content table{
   display: block;
   max-width: 100%;

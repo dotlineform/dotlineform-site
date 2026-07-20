@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-615aca2b2693f24ac2bcbe0dec8ea994",
-    "generated_at_utc": "2026-07-20T11:41:37Z",
+    "version": "blake2b-e5e1ee296499a6e0e5b2aba14c3c971d",
+    "generated_at_utc": "2026-07-20T12:10:16Z",
     "count": 262
   },
   "entries": [
@@ -4198,10 +4198,10 @@
       "kind": "doc",
       "title": "Inline Mermaid Rendering Delivery",
       "href": "/docs/?scope=studio&doc=d-20260720-102658-7de33d",
-      "last_updated": "2026-07-20 12:41:05",
+      "last_updated": "2026-07-20 13:09:55",
       "parent_id": "d-20260715-181845-0158f9",
       "parent_title": "Diagrams",
-      "display_meta": "2026-07-20 12:41:05 • Diagrams",
+      "display_meta": "2026-07-20 13:09:55 • Diagrams",
       "search_terms": [
         "inline mermaid rendering delivery",
         "inline",
@@ -4209,16 +4209,16 @@
         "rendering",
         "delivery",
         "diagrams",
-        "2026-07-20 12:41:05",
+        "2026-07-20 13:09:55",
         "2026",
         "07",
         "20",
-        "12",
-        "41",
-        "05",
+        "13",
+        "09",
+        "55",
         "d-20260720-102658-7de33d"
       ],
-      "search_text": "inline mermaid rendering delivery inline mermaid rendering delivery diagrams 2026-07-20 12:41:05 2026 07 20 12 41 05 d-20260720-102658-7de33d"
+      "search_text": "inline mermaid rendering delivery inline mermaid rendering delivery diagrams 2026-07-20 13:09:55 2026 07 20 13 09 55 d-20260720-102658-7de33d"
     },
     {
       "id": "d-20260718-214206-27df44",
