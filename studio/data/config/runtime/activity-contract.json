@@ -951,6 +951,19 @@
         "Cleaned generated artifacts for {record_id}"
       ]
     },
+    "publish-media-to-r2": {
+      "label": "publish media to R2",
+      "status": "v1-target",
+      "artifact_families": [
+        "source-json",
+        "work-json",
+        "remote-media"
+      ],
+      "detail_templates": [
+        "Published work media to R2 for {work_id}",
+        "Confirmed work media version {media_version}"
+      ]
+    },
     "rebuild-published-work-data": {
       "label": "rebuild published work data",
       "status": "v1-target",
