@@ -3,7 +3,7 @@ import {
 } from "../shared/docs-viewer-app-boot.js";
 import {
   docsViewerInlineMermaidAdapter
-} from "../shared/docs-viewer-inline-mermaid.js";
+} from "./docs-viewer-inline-mermaid.js";
 import {
   mountDocsViewerManageDocumentExtras
 } from "./docs-viewer-management-document-reports.js";

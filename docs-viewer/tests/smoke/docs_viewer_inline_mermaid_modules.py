@@ -12,9 +12,28 @@ from threading import Thread
 from playwright.sync_api import Page, sync_playwright
 
 
+REPO_ROOT = Path(__file__).resolve().parents[3]
+DOCS_VIEWER_SHARED_RUNTIME_PREFIX = "/docs-viewer/runtime/js/shared/"
+DOCS_VIEWER_REPO_RUNTIME_PREFIX = "/docs-viewer/runtime/js/"
+DOCS_VIEWER_REPO_VENDOR_PREFIX = "/docs-viewer/runtime/vendor/"
+
+
 class QuietStaticHandler(SimpleHTTPRequestHandler):
     def log_message(self, format, *args):  # noqa: A003
         return
+
+    def translate_path(self, path: str) -> str:
+        clean_path = path.split("?", 1)[0].split("#", 1)[0]
+        if clean_path.startswith(DOCS_VIEWER_SHARED_RUNTIME_PREFIX):
+            relative_path = clean_path.removeprefix(DOCS_VIEWER_SHARED_RUNTIME_PREFIX)
+            return str(REPO_ROOT / "site/docs-viewer/runtime/js/shared" / relative_path)
+        if clean_path.startswith(DOCS_VIEWER_REPO_RUNTIME_PREFIX):
+            relative_path = clean_path.removeprefix(DOCS_VIEWER_REPO_RUNTIME_PREFIX)
+            return str(REPO_ROOT / "docs-viewer/runtime/js" / relative_path)
+        if clean_path.startswith(DOCS_VIEWER_REPO_VENDOR_PREFIX):
+            relative_path = clean_path.removeprefix(DOCS_VIEWER_REPO_VENDOR_PREFIX)
+            return str(REPO_ROOT / "docs-viewer/runtime/vendor" / relative_path)
+        return super().translate_path(path)
 
 
 def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
@@ -45,7 +64,7 @@ def install_fixture(page: Page) -> None:
                 if (!existing) document.head.appendChild(link);
             });
             document.body.classList.add('docsViewer');
-            const inlineMermaid = await import('/docs-viewer/runtime/js/shared/docs-viewer-inline-mermaid.js');
+            const inlineMermaid = await import('/docs-viewer/runtime/js/management/docs-viewer-inline-mermaid.js');
             const documentController = await import('/docs-viewer/runtime/js/shared/docs-viewer-document-controller.js');
             window.__docsViewerInlineMermaidSmoke = { inlineMermaid, documentController };
         }"""

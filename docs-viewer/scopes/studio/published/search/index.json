@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-49882932633aa586d69cf26506f6f459",
-    "generated_at_utc": "2026-07-20T12:41:49Z",
+    "version": "blake2b-68fdb7a59c261b55eabd3b28dd122ca2",
+    "generated_at_utc": "2026-07-20T13:18:37Z",
     "count": 262
   },
   "entries": [
@@ -1699,10 +1699,10 @@
       "kind": "doc",
       "title": "Document Diagrams",
       "href": "/docs/?scope=studio&doc=d-20260719-123719-fb7565",
-      "last_updated": "2026-07-20 13:40:46",
+      "last_updated": "2026-07-20 14:16:46",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-20 13:40:46 • Docs Viewer",
+      "display_meta": "2026-07-20 14:16:46 • Docs Viewer",
       "search_terms": [
         "document diagrams",
         "document",
@@ -1710,16 +1710,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-20 13:40:46",
+        "2026-07-20 14:16:46",
         "2026",
         "07",
         "20",
-        "13",
-        "40",
+        "14",
+        "16",
         "46",
         "d-20260719-123719-fb7565"
       ],
-      "search_text": "document diagrams document diagrams docs viewer docs viewer 2026-07-20 13:40:46 2026 07 20 13 40 46 d-20260719-123719-fb7565"
+      "search_text": "document diagrams document diagrams docs viewer docs viewer 2026-07-20 14:16:46 2026 07 20 14 16 46 d-20260719-123719-fb7565"
     },
     {
       "id": "d-20260715-094411-2b6e65",
@@ -4198,10 +4198,10 @@
       "kind": "doc",
       "title": "Inline Mermaid Rendering Delivery",
       "href": "/docs/?scope=studio&doc=d-20260720-102658-7de33d",
-      "last_updated": "2026-07-20 13:40:46",
+      "last_updated": "2026-07-20 14:16:46",
       "parent_id": "d-20260715-181845-0158f9",
       "parent_title": "Diagrams",
-      "display_meta": "2026-07-20 13:40:46 • Diagrams",
+      "display_meta": "2026-07-20 14:16:46 • Diagrams",
       "search_terms": [
         "inline mermaid rendering delivery",
         "inline",
@@ -4209,16 +4209,16 @@
         "rendering",
         "delivery",
         "diagrams",
-        "2026-07-20 13:40:46",
+        "2026-07-20 14:16:46",
         "2026",
         "07",
         "20",
-        "13",
-        "40",
+        "14",
+        "16",
         "46",
         "d-20260720-102658-7de33d"
       ],
-      "search_text": "inline mermaid rendering delivery inline mermaid rendering delivery diagrams 2026-07-20 13:40:46 2026 07 20 13 40 46 d-20260720-102658-7de33d"
+      "search_text": "inline mermaid rendering delivery inline mermaid rendering delivery diagrams 2026-07-20 14:16:46 2026 07 20 14 16 46 d-20260720-102658-7de33d"
     },
     {
       "id": "d-20260718-214206-27df44",

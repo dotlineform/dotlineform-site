@@ -84,7 +84,7 @@ def test_static_path_policy_is_docs_viewer_scoped() -> None:
 def test_runtime_static_route_prefixes_resolve_to_owning_roots() -> None:
     assert docs_viewer_service.runtime_static_relative_path(
         "/docs-viewer/runtime/vendor/mermaid/11.16.0/mermaid.min.js"
-    ) == Path("site/docs-viewer/runtime/vendor/mermaid/11.16.0/mermaid.min.js")
+    ) == Path("docs-viewer/runtime/vendor/mermaid/11.16.0/mermaid.min.js")
     assert docs_viewer_service.runtime_static_relative_path(
         "/docs-viewer/runtime/js/public/docs-viewer-public.js"
     ) == Path("site/docs-viewer/runtime/js/public/docs-viewer-public.js")

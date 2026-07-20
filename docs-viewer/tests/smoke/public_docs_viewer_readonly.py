@@ -151,7 +151,7 @@ def assert_no_inline_mermaid_asset_request(route: str, paths: set[str]) -> None:
     mermaid_requests = sorted(
         path for path in paths
         if path.startswith("/docs-viewer/runtime/vendor/mermaid/")
-        or path == "/docs-viewer/runtime/js/shared/docs-viewer-inline-mermaid.js"
+        or path == "/docs-viewer/runtime/js/management/docs-viewer-inline-mermaid.js"
     )
     if mermaid_requests:
         raise AssertionError(f"{route} loaded the local-only Mermaid runtime: {mermaid_requests!r}")

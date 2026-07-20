@@ -26,7 +26,7 @@ if (installedManifest.version !== browserVersion) {
 
 const outputRoot = join(
   repoRoot,
-  "site/docs-viewer/runtime/vendor/mermaid",
+  "docs-viewer/runtime/vendor/mermaid",
   browserVersion
 );
 const outputs = [
