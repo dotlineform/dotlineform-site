@@ -146,6 +146,14 @@ def assert_payload_requests(route: str, paths: set[str], scope: str, doc_id: str
         raise AssertionError(f"{route} missed expected compact payload requests {missing!r}; saw {sorted(paths)!r}")
 
 
+def assert_no_inline_mermaid_asset_request(route: str, paths: set[str]) -> None:
+    mermaid_requests = sorted(
+        path for path in paths if path.startswith("/docs-viewer/runtime/vendor/mermaid/")
+    )
+    if mermaid_requests:
+        raise AssertionError(f"{route} loaded the local-only Mermaid runtime: {mermaid_requests!r}")
+
+
 def assert_public_info_panel(page: Page, route: str, title: str, timeout_ms: int) -> None:
     page.locator("#docsViewerInfoToggle").click()
     page.wait_for_function(
@@ -229,7 +237,9 @@ def exercise_public_route(
     )
     exercise_search(page, route, title, timeout_ms)
     route_scope = urlparse(route).path.strip("/").split("/", 1)[0]
-    assert_payload_requests(route, request_paths(request_urls), route_scope, doc_id)
+    paths = request_paths(request_urls)
+    assert_payload_requests(route, paths, route_scope, doc_id)
+    assert_no_inline_mermaid_asset_request(route, paths)
 
 
 def exercise_public_subscope_report(page: Page, base_url: str, timeout_ms: int) -> None:
@@ -252,6 +262,7 @@ def exercise_public_subscope_report(page: Page, base_url: str, timeout_ms: int) 
     if query_value(page.url, "doc") != TAGS_DOC_ID:
         raise AssertionError(f"public report parent doc should remain selected, got {page.url}")
     paths = request_paths(request_urls)
+    assert_no_inline_mermaid_asset_request("/analysis/ sub-scope report", paths)
     if "/assets/data/docs/public-reports.json" not in paths:
         raise AssertionError(f"public report did not read public report registry; saw {sorted(paths)!r}")
     if "/assets/data/docs/scopes/analysis/tags/manifest.json" not in paths:

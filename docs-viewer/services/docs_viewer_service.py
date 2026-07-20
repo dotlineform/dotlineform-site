@@ -62,6 +62,7 @@ SCOPE_PUBLISHED_STATIC_PATTERN = re.compile(
     r"\A/docs-viewer/scopes/[a-z][a-z0-9-]*/published/(?:documents|media|search)(?:/|\Z)"
 )
 RUNTIME_STATIC_ROUTES = (
+    ("/docs-viewer/runtime/vendor/", Path("site/docs-viewer/runtime/vendor")),
     ("/docs-viewer/runtime/js/public/", Path("site/docs-viewer/runtime/js/public")),
     ("/docs-viewer/runtime/js/shared/", Path("site/docs-viewer/runtime/js/shared")),
     ("/docs-viewer/runtime/js/management/", Path("docs-viewer/runtime/js/management")),

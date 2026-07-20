@@ -46,6 +46,13 @@ def test_enables_table_rule_by_default() -> None:
     assert_contains(html, "<td>2</td>", "table cell")
 
 
+def test_preserves_mermaid_fence_for_browser_adapter() -> None:
+    html = render_markdown_to_html("```mermaid\nflowchart LR\n    A --> B\n```\n")
+
+    assert_contains(html, '<pre><code class="language-mermaid">', "Mermaid code class")
+    assert_contains(html, "flowchart LR", "Mermaid source")
+
+
 def test_raw_html_is_explicit_and_unsanitized_by_default() -> None:
     html = render_markdown_to_html("<section><span>Raw</span></section>\n")
 
@@ -72,6 +79,7 @@ def test_contract_records_no_external_plugins() -> None:
 def main() -> None:
     test_renders_commonmark_blocks_and_inline_code()
     test_enables_table_rule_by_default()
+    test_preserves_mermaid_fence_for_browser_adapter()
     test_raw_html_is_explicit_and_unsanitized_by_default()
     test_raw_html_can_be_escaped_for_untrusted_input()
     test_contract_records_no_external_plugins()

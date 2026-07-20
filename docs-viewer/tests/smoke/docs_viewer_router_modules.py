@@ -593,6 +593,39 @@ def assert_route_feature_projection_and_startup(page: Page) -> None:
             } catch (error) {
                 scopeDiscoveryRejectedMissingScopes = /requires a scopes array/.test(String(error && error.message || ''));
             }
+            const projectedScopeState = {
+                scopeConfig: {},
+                searchRecent: {},
+                documentIndex: { docs: [] }
+            };
+            const projectedScopeController = configController.initDocsViewerConfigController({
+                allowScopeQuery: false,
+                configService: {
+                    fetchDocsViewerConfig: () => Promise.resolve({
+                        schema_version: 'docs_viewer_config_v1',
+                        scopes: [
+                            { scope_id: 'studio', scope_type: 'local', index_tree_url: '/studio/index.json' },
+                            { scope_id: 'notes', scope_type: 'local_external', index_tree_url: '/notes/index.json' },
+                            { scope_id: 'library', scope_type: 'public', index_tree_url: '/library/index.json' }
+                        ]
+                    })
+                },
+                defaultRecentLimit: 10,
+                documentIndex: projectedScopeState.documentIndex,
+                featurePolicy: minimal,
+                managementController: () => null,
+                renderRecentMode: () => {},
+                renderSidebar: () => {},
+                root: document.createElement('div'),
+                routeCommands: { applyRouteGlobals: () => {} },
+                routeSession: {},
+                scopeConfig: projectedScopeState.scopeConfig,
+                searchRecent: projectedScopeState.searchRecent,
+                uiStatusEmojiMaxLength: 8,
+                viewerBaseUrl: () => '/docs/',
+                viewerScope: () => 'studio'
+            });
+            await projectedScopeController.loadConfiguredScopes();
             return {
                 calls,
                 dependencyRejected,
@@ -608,6 +641,9 @@ def assert_route_feature_projection_and_startup(page: Page) -> None:
                     recentLimit: viewerSettingsState.searchRecent.recentLimit,
                     scopeDiscoveryRejectedMissingScopes
                 },
+                projectedScopeTypes: Object.fromEntries(
+                    Array.from(projectedScopeState.scopeConfig.scopeConfigsById.entries()).map(([scopeId, config]) => [scopeId, config.scopeType])
+                ),
                 toolbarControls: {
                     minimalRecent: Boolean(minimalToolbarMount.querySelector('#docsViewerRecentButton')),
                     minimalSearch: Boolean(minimalToolbarMount.querySelector('#docsViewerSearchInput')),
@@ -643,6 +679,12 @@ def assert_route_feature_projection_and_startup(page: Page) -> None:
         "scopeDiscoveryRejectedMissingScopes": True,
     }:
         raise AssertionError(f"viewer settings still depend on configured-scope discovery: {result!r}")
+    if result["projectedScopeTypes"] != {
+        "library": "public",
+        "notes": "local_external",
+        "studio": "local",
+    }:
+        raise AssertionError(f"browser scopeType projection changed: {result!r}")
     if result["toolbarControls"] != {
         "minimalRecent": False,
         "minimalSearch": False,
