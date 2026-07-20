@@ -1080,7 +1080,22 @@
             {
               "doc_id": "d-20260718-155350-c84e62",
               "title": "Share Document Packages",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-155350-c84e62.json"
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-155350-c84e62.json",
+              "ui_status": "proposed",
+              "children": [
+                {
+                  "doc_id": "d-20260720-172819-93d6b2",
+                  "title": "Document Sharing Ownership Cutover Delivery",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-172819-93d6b2.json",
+                  "ui_status": "proposed"
+                }
+              ]
+            },
+            {
+              "doc_id": "d-20260720-173806-5f2c9a",
+              "title": "Share Sub-Scope Documents",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-173806-5f2c9a.json",
+              "ui_status": "paused"
             },
             {
               "doc_id": "d-20260717-231652-d6d49e",
@@ -1174,6 +1189,27 @@
                   "title": "Search Mechanics Review Delivery",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-c2fa6f.json",
                   "ui_status": "paused"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "doc_id": "d-20260720-170417-8e2a4c",
+          "title": "Site Roadmap",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-170417-8e2a4c.json",
+          "children": [
+            {
+              "doc_id": "d-20260720-170418-a7c93d",
+              "title": "Site Review And Cleanup",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-170418-a7c93d.json",
+              "ui_status": "proposed",
+              "children": [
+                {
+                  "doc_id": "d-20260720-170419-c4b8f1",
+                  "title": "Current Site Baseline Review Delivery",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-170419-c4b8f1.json",
+                  "ui_status": "proposed"
                 }
               ]
             }
@@ -1520,5 +1556,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-20T15:19:24Z"
+  "generated_at": "2026-07-20T16:38:47Z"
 }

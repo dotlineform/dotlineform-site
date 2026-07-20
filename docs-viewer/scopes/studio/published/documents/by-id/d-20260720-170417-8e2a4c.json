@@ -1,0 +1,9 @@
+{
+  "doc_id": "d-20260720-170417-8e2a4c",
+  "title": "Site Roadmap",
+  "added_date": "2026-07-20 17:04:17",
+  "last_updated": "2026-07-20 17:04:17",
+  "viewer_url": "/docs/?scope=studio&doc=d-20260720-170417-8e2a4c",
+  "parent_id": "d-20260428-000000-f5ff18",
+  "content_html": "<h1>Site Roadmap</h1>\n<p>This roadmap coordinates deliberate work on the tracked public site and catalogue runtime centred on <code>/series/</code>. Public Docs Viewer reader features remain on the <a href=\"/docs/?scope=studio&amp;doc=d-20260714-234030-1e0af6\">Docs Viewer Roadmap</a>.</p>\n<table>\n<thead>\n<tr>\n<th style=\"text-align:right\">suggested order</th>\n<th>feature</th>\n<th>status</th>\n<th>depends on</th>\n<th>outcome</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td style=\"text-align:right\">1</td>\n<td><a href=\"/docs/?scope=studio&amp;doc=d-20260720-170418-a7c93d\">Site Review And Cleanup</a></td>\n<td>proposed</td>\n<td>—</td>\n<td>establish an evidence-backed post-refactor baseline, then restore clear routing, state, CSS, shell, and verification ownership without redesigning the public catalogue</td>\n</tr>\n</tbody>\n</table>\n<p>Bug fixes and small maintenance continue normally. Add another feature only when it has a coherent Site outcome distinct from this baseline review and cleanup.</p>\n"
+}
