@@ -354,14 +354,9 @@
     },
     {
       "doc_id": "d-20260714-092047-06a5db",
-      "title": "processing",
+      "title": "Processing",
       "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-092047-06a5db.json",
       "ui_status": "draft"
-    },
-    {
-      "doc_id": "d-20260714-164200-381988",
-      "title": "Processing Project Setup",
-      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-164200-381988.json"
     },
     {
       "doc_id": "d-20260714-173500-48f96d",
@@ -696,5 +691,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-19T21:02:50Z"
+  "generated_at": "2026-07-20T09:19:33Z"
 }

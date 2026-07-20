@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-20617511ea2e8271aeb8cad807c6ad5c",
-    "generated_at_utc": "2026-07-20T09:06:14Z",
-    "count": 257
+    "version": "blake2b-ad04c66a3a4fa062936b1bfde77b630f",
+    "generated_at_utc": "2026-07-20T09:19:35Z",
+    "count": 259
   },
   "entries": [
     {
@@ -732,26 +732,26 @@
       "kind": "doc",
       "title": "Source Tree Ownership",
       "href": "/docs/?scope=studio&doc=d-20260524-214228-7247ef",
-      "last_updated": "2026-07-19 22:33:42",
+      "last_updated": "2026-07-20 10:18:26",
       "parent_id": "d-20260331-000000-4a16b0",
       "parent_title": "Architecture",
-      "display_meta": "2026-07-19 22:33:42 • Architecture",
+      "display_meta": "2026-07-20 10:18:26 • Architecture",
       "search_terms": [
         "source tree ownership",
         "source",
         "tree",
         "ownership",
         "architecture",
-        "2026-07-19 22:33:42",
+        "2026-07-20 10:18:26",
         "2026",
         "07",
-        "19",
-        "22",
-        "33",
-        "42",
+        "20",
+        "10",
+        "18",
+        "26",
         "d-20260524-214228-7247ef"
       ],
-      "search_text": "source tree ownership source tree ownership architecture 2026-07-19 22:33:42 2026 07 19 22 33 42 d-20260524-214228-7247ef"
+      "search_text": "source tree ownership source tree ownership architecture 2026-07-20 10:18:26 2026 07 20 10 18 26 d-20260524-214228-7247ef"
     },
     {
       "id": "d-20260513-171600-a1eeb9",
@@ -998,22 +998,22 @@
       "kind": "doc",
       "title": "Dev Home",
       "href": "/docs/?scope=studio&doc=d-20260419-000000-d2e47b",
-      "last_updated": "2026-07-19 22:33:42",
-      "display_meta": "2026-07-19 22:33:42",
+      "last_updated": "2026-07-20 10:18:26",
+      "display_meta": "2026-07-20 10:18:26",
       "search_terms": [
         "dev home",
         "dev",
         "home",
-        "2026-07-19 22:33:42",
+        "2026-07-20 10:18:26",
         "2026",
         "07",
-        "19",
-        "22",
-        "33",
-        "42",
+        "20",
+        "10",
+        "18",
+        "26",
         "d-20260419-000000-d2e47b"
       ],
-      "search_text": "dev home dev home 2026-07-19 22:33:42 2026 07 19 22 33 42 d-20260419-000000-d2e47b"
+      "search_text": "dev home dev home 2026-07-20 10:18:26 2026 07 20 10 18 26 d-20260419-000000-d2e47b"
     },
     {
       "id": "d-20260414-000000-f22e3e",
@@ -3255,6 +3255,51 @@
         "d-20260519-210908-2f8f00"
       ],
       "search_text": "local setup toolchain local setup toolchain local setup 2026-07-19 12:37:19 2026 07 19 12 37 d-20260519-210908-2f8f00"
+    },
+    {
+      "id": "d-20260720-101826-994dd0",
+      "kind": "doc",
+      "title": "Processing",
+      "href": "/docs/?scope=studio&doc=d-20260720-101826-994dd0",
+      "last_updated": "2026-07-20 10:18:26",
+      "display_meta": "2026-07-20 10:18:26",
+      "search_terms": [
+        "processing",
+        "2026-07-20 10:18:26",
+        "2026",
+        "07",
+        "20",
+        "10",
+        "18",
+        "26",
+        "d-20260720-101826-994dd0"
+      ],
+      "search_text": "processing 2026-07-20 10:18:26 2026 07 20 10 18 26 d-20260720-101826-994dd0"
+    },
+    {
+      "id": "d-20260714-164200-381988",
+      "kind": "doc",
+      "title": "Processing Project Setup",
+      "href": "/docs/?scope=studio&doc=d-20260714-164200-381988",
+      "last_updated": "2026-07-20 10:18:26",
+      "parent_id": "d-20260720-101826-994dd0",
+      "parent_title": "Processing",
+      "display_meta": "2026-07-20 10:18:26 • Processing",
+      "search_terms": [
+        "processing project setup",
+        "processing",
+        "project",
+        "setup",
+        "2026-07-20 10:18:26",
+        "2026",
+        "07",
+        "20",
+        "10",
+        "18",
+        "26",
+        "d-20260714-164200-381988"
+      ],
+      "search_text": "processing project setup processing project setup 2026-07-20 10:18:26 2026 07 20 10 18 26 d-20260714-164200-381988"
     },
     {
       "id": "d-20260428-000000-f5ff18",

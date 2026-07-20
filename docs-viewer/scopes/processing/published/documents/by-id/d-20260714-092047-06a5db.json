@@ -1,9 +1,10 @@
 {
   "doc_id": "d-20260714-092047-06a5db",
-  "title": "processing",
+  "title": "Processing",
   "added_date": "2026-07-14 09:20:47",
-  "last_updated": "2026-07-14",
+  "last_updated": "2026-07-20 10:18:26",
   "viewer_url": "/docs/?scope=processing&doc=d-20260714-092047-06a5db",
+  "summary": "Entry point for conceptual and technical documentation owned by the separate Processing project.",
   "ui_status": "draft",
-  "content_html": "<h1>processing</h1>\n<p>Start writing processing docs here.</p>\n"
+  "content_html": "<h1>Processing</h1>\n<p>This scope owns conceptual and technical documentation for the Processing work: artwork ideas, recovered project knowledge, sketch and algorithm architecture, authoring and rendering methods, experiments, and implementation reference.</p>\n<p>Repository hosting and integration are owned in Studio documentation:</p>\n<ul>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260720-101826-994dd0\">Processing</a> defines the ownership boundary and routes to current integration documents.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260714-164200-381988\">Processing Project Setup</a> records repository shape, environment, lifecycle, and shared-system integration.</li>\n</ul>\n<p>Keep project-specific reasoning here even when the corresponding source is hosted under the repository's <code>processing/</code> root. Repository co-location does not make Processing a website module or transfer its technical documentation to Studio.</p>\n"
 }
