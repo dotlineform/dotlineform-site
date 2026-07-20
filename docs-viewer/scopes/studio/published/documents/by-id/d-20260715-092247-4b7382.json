@@ -4,7 +4,6 @@
   "added_date": "2026-07-15 09:22:47",
   "last_updated": "2026-07-20 21:40:08",
   "viewer_url": "/docs/?scope=studio&doc=d-20260715-092247-4b7382",
-  "parent_id": "d-20260718-155350-c84e62",
-  "ui_status": "proposed",
+  "parent_id": "d-20260714-234030-1e0af6",
   "content_html": "<h1>Portable Document Packages</h1>\n<p>Explore a later integrated Docs Viewer package that preserves canonical document source and its owned dependencies when rendered-content exchange is insufficient.</p>\n<h2>Feature Documents</h2>\n<ul>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260711-012238-8a04a6\">Full Document Export Delivery</a> — proposed source-faithful, export-only package work.</li>\n</ul>\n<p>The shipped <a href=\"/docs/?scope=studio&amp;doc=d-20260718-155350-c84e62\">Share Document Packages</a> boundary remains authoritative. No <code>document-full-source</code> profile is enabled. This feature does not imply that source-faithful packages support return import; any future return path needs its own reviewed validation and apply boundary.</p>\n"
 }

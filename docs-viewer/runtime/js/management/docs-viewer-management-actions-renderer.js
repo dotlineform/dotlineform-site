@@ -18,6 +18,18 @@ var MANAGEMENT_ACTION_MENU_ITEMS = [
     label: "Import"
   },
   {
+    id: "docsViewerManagePreparePackageLink",
+    href: "/docs/packages/prepare/",
+    emoji: "📦",
+    label: "Prepare package"
+  },
+  {
+    id: "docsViewerManageReturnedPackagesLink",
+    href: "/docs/packages/returned/",
+    emoji: "📥",
+    label: "Returned packages"
+  },
+  {
     id: "docsViewerManageDeleteButton",
     actionId: ACTION_IDS.DELETE,
     emoji: "🗑️",
@@ -97,6 +109,14 @@ function renderActionMenuItem(item) {
   var hidden = item.hidden ? " hidden" : "";
   var action = item.actionId ? ' data-docs-viewer-action="' + escapeHtml(item.actionId) + '"' : "";
   var label = escapeHtml(item.label);
+  if (item.href) {
+    return [
+      '        <a class="docsViewer__actionMenuItem" role="menuitem" id="' + escapeHtml(item.id) + '" href="' + escapeHtml(item.href) + '" target="_blank" rel="noopener noreferrer" aria-label="' + label + '" title="' + label + '"' + hidden + '>',
+      '          <span class="docsViewer__actionMenuEmoji" aria-hidden="true">' + escapeHtml(item.emoji || "") + "</span>",
+      '          <span class="docsViewer__actionMenuLabel">' + label + "</span>",
+      "        </a>"
+    ].join("");
+  }
   return [
     '        <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="' + escapeHtml(item.id) + '"' + action + ' aria-label="' + label + '" title="' + label + '"' + hidden + ">",
     '          <span class="docsViewer__actionMenuEmoji" aria-hidden="true">' + escapeHtml(item.emoji || "") + "</span>",

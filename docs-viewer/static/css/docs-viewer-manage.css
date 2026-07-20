@@ -763,6 +763,7 @@ select.docsViewer__fieldInput--listbox{
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
   line-height: var(--docs-viewer-line-snug, var(--line-snug, 1.25));
   text-align: left;
+  text-decoration: none;
   cursor: pointer;
 }
 
