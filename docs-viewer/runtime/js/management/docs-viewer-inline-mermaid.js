@@ -206,6 +206,22 @@ export function createDocsViewerInlineMermaidAdapter(options) {
             warn("docs_viewer: inline Mermaid bindings unavailable", bindingError);
           }
         }
+        var detailAdapter = context.diagramDetailAdapter;
+        if (detailAdapter && typeof detailAdapter.registerInlineDiagram === "function") {
+          try {
+            detailAdapter.registerInlineDiagram({
+              content: root,
+              doc: context.doc,
+              document: documentRef,
+              host: host,
+              mountGeneration: context.mountGeneration,
+              viewerScope: context.viewerScope,
+              window: windowRef
+            });
+          } catch (detailError) {
+            warn("docs_viewer: inline Mermaid detail registration unavailable", detailError);
+          }
+        }
       } catch (error) {
         if (!isCurrentMount() || !root.contains(pre)) {
           releaseStaleFence(root, pre);

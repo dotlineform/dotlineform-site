@@ -884,6 +884,11 @@ body.docs-viewer-service{
   margin: 0;
 }
 
+.docsViewer__diagramViewport > .docsViewer__diagram{
+  margin: 0;
+  overflow-x: visible;
+}
+
 .docsViewer__diagramDetailControl,
 .docsViewer__diagramDetailControl:visited{
   box-sizing: border-box;

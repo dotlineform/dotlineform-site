@@ -77,12 +77,27 @@ export function initDocsViewerDocumentController(context) {
     }
   }
 
+  function releaseDiagramDetails() {
+    var adapter = context.diagramDetailAdapter;
+    if (!adapter || typeof adapter.releaseDocument !== "function") return;
+    try {
+      adapter.releaseDocument({
+        content: content,
+        document: content ? content.ownerDocument : null,
+        window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+      });
+    } catch (error) {
+      console.warn("docs_viewer: diagram detail resource cleanup unavailable", error);
+    }
+  }
+
   function mountInlineMermaid(doc, payload, mountGeneration) {
     var adapter = context.inlineMermaidAdapter;
     var scopeType = currentScopeType();
     if (scopeType !== "local" || !adapter || typeof adapter.mountDocument !== "function") return;
     Promise.resolve(adapter.mountDocument({
       content: content,
+      diagramDetailAdapter: context.diagramDetailAdapter,
       doc: doc,
       document: content ? content.ownerDocument : null,
       isCurrentMount: function () {
@@ -141,6 +156,7 @@ export function initDocsViewerDocumentController(context) {
       });
     }
     if (!content) return;
+    releaseDiagramDetails();
     content.textContent = "";
     var status = document.createElement("p");
     status.className = "docsViewer__panelStatus muted small";
@@ -175,6 +191,7 @@ export function initDocsViewerDocumentController(context) {
 
     showDocPane();
     context.renderMeta(doc);
+    releaseDiagramDetails();
     content.innerHTML = payload.content_html || "";
     mountDiagramDetails(doc, payload);
     mountInlineMermaid(doc, payload, mountGeneration);
@@ -201,6 +218,7 @@ export function initDocsViewerDocumentController(context) {
     context.renderSidebar();
     showDocPane();
     context.renderMeta(doc);
+    releaseDiagramDetails();
     content.textContent = "";
   }
 
