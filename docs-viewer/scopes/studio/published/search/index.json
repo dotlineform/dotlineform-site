@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-fa025dc9cfaf4446bdd69684ae8f5a27",
-    "generated_at_utc": "2026-07-20T18:40:22Z",
+    "version": "blake2b-3c0bf2b8d4a32e266183133da5ca3b2e",
+    "generated_at_utc": "2026-07-20T19:00:09Z",
     "count": 271
   },
   "entries": [
@@ -4729,10 +4729,10 @@
       "kind": "doc",
       "title": "Share Document Packages",
       "href": "/docs/?scope=studio&doc=d-20260718-155350-c84e62",
-      "last_updated": "2026-07-20 19:39:52",
+      "last_updated": "2026-07-20 19:59:16",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-20 19:39:52 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-20 19:59:16 • Docs Viewer Roadmap",
       "search_terms": [
         "share document packages",
         "share",
@@ -4742,26 +4742,26 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-20 19:39:52",
+        "2026-07-20 19:59:16",
         "2026",
         "07",
         "20",
         "19",
-        "39",
-        "52",
+        "59",
+        "16",
         "d-20260718-155350-c84e62"
       ],
-      "search_text": "share document packages share document packages docs viewer roadmap docs viewer roadmap 2026-07-20 19:39:52 2026 07 20 19 39 52 d-20260718-155350-c84e62"
+      "search_text": "share document packages share document packages docs viewer roadmap docs viewer roadmap 2026-07-20 19:59:16 2026 07 20 19 59 16 d-20260718-155350-c84e62"
     },
     {
       "id": "d-20260720-172819-93d6b2",
       "kind": "doc",
       "title": "Document Sharing Ownership Cutover Delivery",
       "href": "/docs/?scope=studio&doc=d-20260720-172819-93d6b2",
-      "last_updated": "2026-07-20 19:39:52",
+      "last_updated": "2026-07-20 19:59:16",
       "parent_id": "d-20260718-155350-c84e62",
       "parent_title": "Share Document Packages",
-      "display_meta": "2026-07-20 19:39:52 • Share Document Packages",
+      "display_meta": "2026-07-20 19:59:16 • Share Document Packages",
       "search_terms": [
         "document sharing ownership cutover delivery",
         "document",
@@ -4772,16 +4772,16 @@
         "share document packages",
         "share",
         "packages",
-        "2026-07-20 19:39:52",
+        "2026-07-20 19:59:16",
         "2026",
         "07",
         "20",
         "19",
-        "39",
-        "52",
+        "59",
+        "16",
         "d-20260720-172819-93d6b2"
       ],
-      "search_text": "document sharing ownership cutover delivery document sharing ownership cutover delivery share document packages share packages 2026-07-20 19:39:52 2026 07 20 19 39 52 d-20260720-172819-93d6b2"
+      "search_text": "document sharing ownership cutover delivery document sharing ownership cutover delivery share document packages share packages 2026-07-20 19:59:16 2026 07 20 19 59 16 d-20260720-172819-93d6b2"
     },
     {
       "id": "d-20260720-174842-4c2f6a",

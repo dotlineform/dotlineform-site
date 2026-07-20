@@ -19,6 +19,9 @@ from docs_viewer_service import DocsViewerServer, DocsViewerServiceConfig
 from repo_factory import make_docs_import_repo
 
 
+REPO_ROOT = Path(__file__).resolve().parents[3]
+
+
 def write_returned_package(
     export_id: str,
     *,
@@ -84,6 +87,15 @@ def test_fixed_routes_and_config_contract() -> None:
         "/docs/packages/returned/apply",
     }
     assert [profile["profile_id"] for profile in payload["profiles"]] == ["document-content"]
+    assert payload["profiles"][0]["selection"] == {
+        "mode": "explicit_doc_ids",
+        "include_descendants": False,
+    }
+    assert payload["profiles"][0]["external_context"]["task"] == "review_document_content"
+    assert payload["profiles"][0]["document_fields"] == [
+        {"output_path": "doc_id", "required": True},
+        {"output_path": "title", "required": True},
+    ]
     assert payload["scopes"] == [{"scope": "library", "label": "Library"}]
     assert payload["workspace"].keys() == {"available", "message"}
 
@@ -259,6 +271,16 @@ def test_atomic_return_rejects_invalid_trusted_routing_identity(
 def test_docs_viewer_http_service_hosts_same_origin_document_package_routes() -> None:
     with make_docs_import_repo() as temp:
         repo_root = Path(temp)
+        shell_root = repo_root / "docs-viewer/shell"
+        shell_root.mkdir(parents=True, exist_ok=True)
+        for filename in (
+            "docs-viewer-package-prepare.html",
+            "docs-viewer-package-returned.html",
+        ):
+            shell_root.joinpath(filename).write_text(
+                (REPO_ROOT / "docs-viewer/shell" / filename).read_text(encoding="utf-8"),
+                encoding="utf-8",
+            )
         config = DocsViewerServiceConfig(
             host="127.0.0.1",
             port=0,
@@ -282,6 +304,14 @@ def test_docs_viewer_http_service_hosts_same_origin_document_package_routes() ->
         try:
             with urllib.request.urlopen(f"{base_url}{routes.CONFIG_PATH}", timeout=5) as response:
                 config_payload = json.loads(response.read().decode("utf-8"))
+            with urllib.request.urlopen(
+                f"{base_url}/docs/packages/prepare/", timeout=5
+            ) as response:
+                prepare_shell = response.read().decode("utf-8")
+            with urllib.request.urlopen(
+                f"{base_url}/docs/packages/returned/", timeout=5
+            ) as response:
+                returned_shell = response.read().decode("utf-8")
             request = urllib.request.Request(
                 f"{base_url}{routes.PREPARE_PATH}",
                 data=json.dumps(
@@ -309,6 +339,8 @@ def test_docs_viewer_http_service_hosts_same_origin_document_package_routes() ->
             thread.join(timeout=5)
 
     assert config_payload["ok"] is True
+    assert "Prepare document package" in prepare_shell
+    assert "Returned document packages" in returned_shell
     assert prepare_payload["ok"] is True
     assert prepare_payload["output_written"] is False
     assert error.value.code == 403

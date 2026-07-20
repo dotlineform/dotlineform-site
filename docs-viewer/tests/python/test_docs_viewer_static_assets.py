@@ -36,6 +36,30 @@ def test_manage_shell_loads_feature_owned_css_after_shared_management_css() -> N
     )
 
 
+def test_document_package_route_assets_are_docs_viewer_owned() -> None:
+    shells = [
+        (REPO_ROOT / "docs-viewer/shell/docs-viewer-package-prepare.html").read_text(
+            encoding="utf-8"
+        ),
+        (REPO_ROOT / "docs-viewer/shell/docs-viewer-package-returned.html").read_text(
+            encoding="utf-8"
+        ),
+    ]
+    runtime_root = REPO_ROOT / "docs-viewer/runtime/js/packages"
+    runtime = "\n".join(
+        path.read_text(encoding="utf-8") for path in sorted(runtime_root.glob("*.js"))
+    )
+
+    assert "docs-viewer-packages.css" in shells[0]
+    assert "document-package-prepare.js" in shells[0]
+    assert "document-package-returned.js" in shells[1]
+    assert "data-domain" not in "\n".join(shells).lower()
+    assert "record_indices" not in runtime
+    assert "/analytics/" not in runtime
+    assert "data-sharing" not in runtime.lower()
+    assert 'type="checkbox"' not in shells[1]
+
+
 def test_moments_css_is_loaded_by_public_and_manage_shells() -> None:
     public_shell = (REPO_ROOT / "site/moments/index.html").read_text(encoding="utf-8")
     manage_shell = (REPO_ROOT / "docs-viewer/shell/docs-viewer-manage.html").read_text(
@@ -56,6 +80,7 @@ def test_static_path_policy_is_docs_viewer_scoped() -> None:
     assert allowed("/docs-viewer/runtime/vendor/mermaid/11.16.0/LICENSE") is True
     assert allowed("/docs-viewer/runtime/js/management/docs-viewer-manage.js") is True
     assert allowed("/docs-viewer/runtime/js/import/docs-html-import.js") is True
+    assert allowed("/docs-viewer/runtime/js/packages/document-package-client.js") is True
     assert allowed("/docs-viewer/runtime/js/reports/docs-viewer-reports.js") is True
     assert allowed("/docs-viewer/runtime/js/docs-viewer-public.js") is False
     assert allowed("/docs-viewer/runtime/js/docs-viewer-manage.js") is False
@@ -67,6 +92,7 @@ def test_static_path_policy_is_docs_viewer_scoped() -> None:
     assert allowed("/docs-viewer/static/css/docs-viewer-source-editor.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-import.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-review.css") is True
+    assert allowed("/docs-viewer/static/css/docs-viewer-packages.css") is True
     assert allowed("/apple-touch-icon-precomposed.png") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-base.css") is False
     assert allowed("/docs-viewer/static/css/docs-viewer-management.css") is False
@@ -97,6 +123,9 @@ def test_runtime_static_route_prefixes_resolve_to_owning_roots() -> None:
     assert docs_viewer_service.runtime_static_relative_path(
         "/docs-viewer/runtime/js/import/docs-html-import.js"
     ) == Path("docs-viewer/runtime/js/import/docs-html-import.js")
+    assert docs_viewer_service.runtime_static_relative_path(
+        "/docs-viewer/runtime/js/packages/document-package-client.js"
+    ) == Path("docs-viewer/runtime/js/packages/document-package-client.js")
     assert docs_viewer_service.runtime_static_relative_path(
         "/docs-viewer/runtime/js/reports/docs-viewer-reports.js"
     ) == Path("docs-viewer/runtime/js/reports/docs-viewer-reports.js")

@@ -109,6 +109,20 @@ def dry_run_value(body: dict[str, Any]) -> bool:
 def profile_contract(config: dict[str, Any]) -> dict[str, Any]:
     target = config.get("target") if isinstance(config.get("target"), dict) else {}
     content = config.get("content_format") if isinstance(config.get("content_format"), dict) else {}
+    selection = config.get("selection") if isinstance(config.get("selection"), dict) else {}
+    external_context = (
+        config.get("external_context")
+        if isinstance(config.get("external_context"), dict)
+        else {}
+    )
+    document_fields = [
+        {
+            "output_path": str(field.get("output_path") or "").strip(),
+            "required": field.get("required") is True,
+        }
+        for field in config.get("document_fields", [])
+        if isinstance(field, dict) and str(field.get("output_path") or "").strip()
+    ]
     return {
         "profile_id": str(config.get("id") or "").strip(),
         "label": str(config.get("label") or "").strip(),
@@ -119,6 +133,12 @@ def profile_contract(config: dict[str, Any]) -> dict[str, Any]:
         "content_format": default_content_format(config),
         "supported_content_formats": supported_content_formats(config),
         "supports_return_import": supports_return_import(config),
+        "selection": {
+            "mode": str(selection.get("mode") or "").strip(),
+            "include_descendants": selection.get("include_descendants") is not False,
+        },
+        "external_context": external_context,
+        "document_fields": document_fields,
     }
 
 

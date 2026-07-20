@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="dlf-asset-version" content="docs-viewer-packages-static">
+  <title>Prepare document package | Docs Viewer</title>
+__LOCAL_BROWSER_ICON_LINKS__
+  <script>
+    (function () {
+      try {
+        var theme = localStorage.getItem("theme");
+        document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+      } catch (error) {
+        document.documentElement.setAttribute("data-theme", "light");
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="/docs-viewer/static/css/docs-viewer.css?v=docs-viewer-packages-static">
+  <link rel="stylesheet" href="/docs-viewer/static/css/docs-viewer-packages.css?v=docs-viewer-packages-static">
+</head>
+<body class="docs-viewer-service docsPackageRoute">
+  <main class="docs-viewer-service__main">
+    <section
+      class="docsViewer docsPackageApp"
+      id="documentPackagePrepareRoot"
+      data-document-package-route="prepare"
+      data-document-package-ready="false"
+      data-document-package-busy="false"
+    >
+      <header class="docsPackageHeader">
+        <div>
+          <p class="docsPackageHeader__eyebrow">Docs Viewer</p>
+          <h1>Prepare document package</h1>
+          <p class="docsPackageHeader__summary">Select a scope, profile, and complete document set, then write one JSON or JSONL package.</p>
+        </div>
+        <nav class="docsPackageNav" aria-label="Document package routes">
+          <a aria-current="page" href="/docs/packages/prepare/">Prepare</a>
+          <a href="/docs/packages/returned/">Returned packages</a>
+          <a href="/docs/">Docs Viewer</a>
+        </nav>
+      </header>
+
+      <div class="docsPackagePanel">
+        <div class="docsPackageActions">
+          <button class="docsPackageButton docsPackageButton--primary" id="documentPackagePrepareRun" type="button" disabled>Prepare package</button>
+          <button class="docsPackageButton" id="documentPackagePrepareContext" type="button" disabled>Edit context</button>
+          <p class="docsPackageStatus" id="documentPackagePrepareStatus" role="status">Loading document-package configuration…</p>
+        </div>
+
+        <div class="docsPackageChoiceGrid docsPackageChoiceGrid--prepare">
+          <label class="docsPackageField" for="documentPackagePrepareScope">
+            <span>scope</span>
+            <select id="documentPackagePrepareScope">
+              <option value="">Select a scope</option>
+            </select>
+          </label>
+          <label class="docsPackageField" for="documentPackagePrepareProfile">
+            <span>profile</span>
+            <select id="documentPackagePrepareProfile"></select>
+          </label>
+          <label class="docsPackageField" for="documentPackagePrepareFormat">
+            <span>package format</span>
+            <select id="documentPackagePrepareFormat"></select>
+          </label>
+          <label class="docsPackageField" id="documentPackagePrepareContentFormatField" for="documentPackagePrepareContentFormat" hidden>
+            <span>content format</span>
+            <select id="documentPackagePrepareContentFormat"></select>
+          </label>
+        </div>
+
+        <label class="docsPackageToggle" id="documentPackagePrepareDescendantsField" hidden>
+          <input id="documentPackagePrepareDescendants" type="checkbox">
+          <span>Include descendants when selecting a parent document</span>
+        </label>
+
+        <div class="docsPackageListTools">
+          <label class="docsPackageSearch" for="documentPackagePrepareFilter">
+            <span class="visually-hidden">Filter documents</span>
+            <input id="documentPackagePrepareFilter" type="search" placeholder="filter documents" autocomplete="off">
+          </label>
+          <button class="docsPackagePill" id="documentPackagePrepareSelectAll" type="button" disabled>Select all</button>
+          <button class="docsPackagePill" id="documentPackagePrepareClear" type="button" disabled>Clear</button>
+          <p class="docsPackageSelectionSummary" id="documentPackagePrepareSelectionSummary">0 documents selected.</p>
+        </div>
+
+        <div class="docsPackageDocumentList" id="documentPackagePrepareDocuments" aria-live="polite">
+          <p class="docsPackageEmpty">Select a scope to load documents.</p>
+        </div>
+        <div id="documentPackagePrepareModalHost"></div>
+      </div>
+    </section>
+    <script type="module" src="/docs-viewer/runtime/js/packages/document-package-prepare.js?v=docs-viewer-packages-static"></script>
+  </main>
+</body>
+</html>

@@ -51,8 +51,16 @@ LOOPBACK_HOSTS = {"127.0.0.1", "localhost", "::1"}
 DEFAULT_SERVICE_CONFIG = REPO_ROOT / "docs-viewer" / "config" / "defaults" / "docs-viewer-service.json"
 MANAGE_PAGE_TEMPLATE = REPO_ROOT / "docs-viewer" / "shell" / "docs-viewer-manage.html"
 REVIEW_PAGE_TEMPLATE = REPO_ROOT / "docs-viewer" / "shell" / "docs-viewer-review.html"
+PACKAGE_PREPARE_PAGE_TEMPLATE = (
+    REPO_ROOT / "docs-viewer" / "shell" / "docs-viewer-package-prepare.html"
+)
+PACKAGE_RETURNED_PAGE_TEMPLATE = (
+    REPO_ROOT / "docs-viewer" / "shell" / "docs-viewer-package-returned.html"
+)
 MANAGE_ROUTE = "/docs/"
 REVIEW_ROUTE = "/docs-review/"
+PACKAGE_PREPARE_ROUTE = "/docs/packages/prepare/"
+PACKAGE_RETURNED_ROUTE = "/docs/packages/returned/"
 STATIC_PREFIXES = (
     "/assets/data/",
     "/assets/docs/",
@@ -70,6 +78,7 @@ RUNTIME_STATIC_ROUTES = (
     ("/docs-viewer/runtime/js/management/", Path("docs-viewer/runtime/js/management")),
     ("/docs-viewer/runtime/js/review/", Path("docs-viewer/runtime/js/review")),
     ("/docs-viewer/runtime/js/import/", Path("docs-viewer/runtime/js/import")),
+    ("/docs-viewer/runtime/js/packages/", Path("docs-viewer/runtime/js/packages")),
     ("/docs-viewer/runtime/js/reports/", Path("docs-viewer/runtime/js/reports")),
     ("/docs-viewer/runtime/js/local/", Path("docs-viewer/runtime/js/local")),
 )
@@ -231,12 +240,15 @@ def asset_version(repo_root: Path) -> str:
     candidates = [
         repo_root / "docs-viewer" / "shell" / "docs-viewer-manage.html",
         repo_root / "docs-viewer" / "shell" / "docs-viewer-review.html",
+        repo_root / "docs-viewer" / "shell" / "docs-viewer-package-prepare.html",
+        repo_root / "docs-viewer" / "shell" / "docs-viewer-package-returned.html",
         repo_root / "site" / "docs-viewer" / "static" / "css" / "docs-viewer.css",
         repo_root / "site" / "docs-viewer" / "static" / "css" / "docs-viewer-moments.css",
         repo_root / "site" / "docs-viewer" / "static" / "css" / "docs-viewer-reports.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-manage.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-source-editor.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-import.css",
+        repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-packages.css",
         repo_root / "docs-viewer" / "config" / "defaults" / "docs-viewer-config.json",
         repo_root / "docs-viewer" / "config" / "routes" / "docs-viewer-routes.json",
         repo_root / "site" / "docs-viewer" / "config" / "routes" / "docs-viewer-public-routes.json",
@@ -288,6 +300,14 @@ def manage_page_path(repo_root: Path) -> Path:
 
 def review_page_path(repo_root: Path) -> Path:
     return repo_root / REVIEW_PAGE_TEMPLATE.relative_to(REPO_ROOT)
+
+
+def package_prepare_page_path(repo_root: Path) -> Path:
+    return repo_root / PACKAGE_PREPARE_PAGE_TEMPLATE.relative_to(REPO_ROOT)
+
+
+def package_returned_page_path(repo_root: Path) -> Path:
+    return repo_root / PACKAGE_RETURNED_PAGE_TEMPLATE.relative_to(REPO_ROOT)
 
 
 def apply_capability_flags(payload: dict[str, object], config: DocsViewerServiceConfig) -> dict[str, object]:
@@ -362,6 +382,18 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
             return
         if path in {"/docs-review", REVIEW_ROUTE}:
             self.send_static_html(review_page_path(self.repo_root))
+            return
+        if path == PACKAGE_PREPARE_ROUTE:
+            if not self.config.management_enabled:
+                self.send_error(HTTPStatus.NOT_FOUND, "Not found")
+                return
+            self.send_static_html(package_prepare_page_path(self.repo_root))
+            return
+        if path == PACKAGE_RETURNED_ROUTE:
+            if not self.config.management_enabled:
+                self.send_error(HTTPStatus.NOT_FOUND, "Not found")
+                return
+            self.send_static_html(package_returned_page_path(self.repo_root))
             return
         if path == "/docs-viewer/config/routes/docs-viewer-routes.json":
             self.send_json(render_route_config_registry(self.repo_root, self.config))
