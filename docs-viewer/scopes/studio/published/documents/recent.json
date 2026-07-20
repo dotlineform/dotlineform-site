@@ -4,6 +4,62 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260718-155350-c84e62",
+      "title": "Share Document Packages",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-155350-c84e62.json",
+      "timestamp": "2026-07-20 10:35:25",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap"
+    },
+    {
+      "doc_id": "d-20260715-181845-0158f9",
+      "title": "Diagrams",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-181845-0158f9.json",
+      "timestamp": "2026-07-20 10:26:58",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap"
+    },
+    {
+      "doc_id": "d-20260714-234030-1e0af6",
+      "title": "Docs Viewer Roadmap",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-1e0af6.json",
+      "timestamp": "2026-07-20 10:26:58",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260719-123719-fb7565",
+      "title": "Document Diagrams",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260719-123719-fb7565.json",
+      "timestamp": "2026-07-20 10:26:58",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260629-152159-ac1af9",
+      "title": "Export",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260629-152159-ac1af9.json",
+      "timestamp": "2026-07-20 10:26:58",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260720-102658-b55348",
+      "title": "Inline Mermaid Rendering Concept",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-102658-b55348.json",
+      "timestamp": "2026-07-20 10:26:58",
+      "parent_id": "d-20260715-181845-0158f9",
+      "parent_title": "Diagrams"
+    },
+    {
+      "doc_id": "d-20260720-102658-7de33d",
+      "title": "Inline Mermaid Rendering Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-102658-7de33d.json",
+      "timestamp": "2026-07-20 10:26:58",
+      "parent_id": "d-20260715-181845-0158f9",
+      "parent_title": "Diagrams"
+    },
+    {
       "doc_id": "d-20260419-000000-d2e47b",
       "title": "Dev Home",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260419-000000-d2e47b.json",
@@ -22,63 +78,7 @@
       "timestamp": "2026-07-20 10:18:26",
       "parent_id": "d-20260720-101826-994dd0",
       "parent_title": "Processing"
-    },
-    {
-      "doc_id": "d-20260524-214228-7247ef",
-      "title": "Source Tree Ownership",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260524-214228-7247ef.json",
-      "timestamp": "2026-07-20 10:18:26",
-      "parent_id": "d-20260331-000000-4a16b0",
-      "parent_title": "Architecture"
-    },
-    {
-      "doc_id": "d-20260714-234030-1e0af6",
-      "title": "Docs Viewer Roadmap",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-1e0af6.json",
-      "timestamp": "2026-07-20 10:00:17",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260716-235630-055f0c",
-      "title": "External-Local Scope Media Layout",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260716-235630-055f0c.json",
-      "timestamp": "2026-07-20 10:00:17",
-      "parent_id": "d-20260714-234030-1e0af6",
-      "parent_title": "Docs Viewer Roadmap"
-    },
-    {
-      "doc_id": "d-20260514-184303-7914e2",
-      "title": "Media And Asset Handling",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260514-184303-7914e2.json",
-      "timestamp": "2026-07-20 10:00:17",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260515-000000-f43740",
-      "title": "Scope Lifecycle",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260515-000000-f43740.json",
-      "timestamp": "2026-07-20 10:00:17",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260720-100017-7e52de",
-      "title": "Scope Media Inventory Surface Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-100017-7e52de.json",
-      "timestamp": "2026-07-20 10:00:17",
-      "parent_id": "d-20260720-100017-9855dd",
-      "parent_title": "Scope Media Management"
-    },
-    {
-      "doc_id": "d-20260720-100017-9855dd",
-      "title": "Scope Media Management",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-100017-9855dd.json",
-      "timestamp": "2026-07-20 10:00:17",
-      "parent_id": "d-20260714-234030-1e0af6",
-      "parent_title": "Docs Viewer Roadmap"
     }
   ],
-  "generated_at": "2026-07-20T09:19:34Z"
+  "generated_at": "2026-07-20T09:35:25Z"
 }

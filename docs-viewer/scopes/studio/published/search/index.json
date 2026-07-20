@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ad04c66a3a4fa062936b1bfde77b630f",
-    "generated_at_utc": "2026-07-20T09:19:35Z",
-    "count": 259
+    "version": "blake2b-963720dee9e51feef3122309cfd1c839",
+    "generated_at_utc": "2026-07-20T09:35:25Z",
+    "count": 261
   },
   "entries": [
     {
@@ -1699,10 +1699,10 @@
       "kind": "doc",
       "title": "Document Diagrams",
       "href": "/docs/?scope=studio&doc=d-20260719-123719-fb7565",
-      "last_updated": "2026-07-19 12:37:19",
+      "last_updated": "2026-07-20 10:26:58",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-19 12:37:19 • Docs Viewer",
+      "display_meta": "2026-07-20 10:26:58 • Docs Viewer",
       "search_terms": [
         "document diagrams",
         "document",
@@ -1710,15 +1710,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-19 12:37:19",
+        "2026-07-20 10:26:58",
         "2026",
         "07",
-        "19",
-        "12",
-        "37",
+        "20",
+        "10",
+        "26",
+        "58",
         "d-20260719-123719-fb7565"
       ],
-      "search_text": "document diagrams document diagrams docs viewer docs viewer 2026-07-19 12:37:19 2026 07 19 12 37 d-20260719-123719-fb7565"
+      "search_text": "document diagrams document diagrams docs viewer docs viewer 2026-07-20 10:26:58 2026 07 20 10 26 58 d-20260719-123719-fb7565"
     },
     {
       "id": "d-20260715-094411-2b6e65",
@@ -1838,25 +1839,25 @@
       "kind": "doc",
       "title": "Export",
       "href": "/docs/?scope=studio&doc=d-20260629-152159-ac1af9",
-      "last_updated": "2026-07-19 22:33:42",
+      "last_updated": "2026-07-20 10:26:58",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-19 22:33:42 • Docs Viewer",
+      "display_meta": "2026-07-20 10:26:58 • Docs Viewer",
       "search_terms": [
         "export",
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-19 22:33:42",
+        "2026-07-20 10:26:58",
         "2026",
         "07",
-        "19",
-        "22",
-        "33",
-        "42",
+        "20",
+        "10",
+        "26",
+        "58",
         "d-20260629-152159-ac1af9"
       ],
-      "search_text": "export docs viewer docs viewer 2026-07-19 22:33:42 2026 07 19 22 33 42 d-20260629-152159-ac1af9"
+      "search_text": "export docs viewer docs viewer 2026-07-20 10:26:58 2026 07 20 10 26 58 d-20260629-152159-ac1af9"
     },
     {
       "id": "d-20260623-000000-c99cef",
@@ -3952,25 +3953,25 @@
       "kind": "doc",
       "title": "Docs Viewer Roadmap",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-1e0af6",
-      "last_updated": "2026-07-20 10:00:17",
+      "last_updated": "2026-07-20 10:26:58",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-20 10:00:17 • Roadmap",
+      "display_meta": "2026-07-20 10:26:58 • Roadmap",
       "search_terms": [
         "docs viewer roadmap",
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-20 10:00:17",
+        "2026-07-20 10:26:58",
         "2026",
         "07",
         "20",
         "10",
-        "00",
-        "17",
+        "26",
+        "58",
         "d-20260714-234030-1e0af6"
       ],
-      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-20 10:00:17 2026 07 20 10 00 17 d-20260714-234030-1e0af6"
+      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-20 10:26:58 2026 07 20 10 26 58 d-20260714-234030-1e0af6"
     },
     {
       "id": "d-20260716-204013-3be4e1",
@@ -4092,26 +4093,26 @@
       "kind": "doc",
       "title": "Diagrams",
       "href": "/docs/?scope=studio&doc=d-20260715-181845-0158f9",
-      "last_updated": "2026-07-19 12:15:22",
+      "last_updated": "2026-07-20 10:26:58",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-19 12:15:22 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-20 10:26:58 • Docs Viewer Roadmap",
       "search_terms": [
         "diagrams",
         "docs viewer roadmap",
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-19 12:15:22",
+        "2026-07-20 10:26:58",
         "2026",
         "07",
-        "19",
-        "12",
-        "15",
-        "22",
+        "20",
+        "10",
+        "26",
+        "58",
         "d-20260715-181845-0158f9"
       ],
-      "search_text": "diagrams docs viewer roadmap docs viewer roadmap 2026-07-19 12:15:22 2026 07 19 12 15 22 d-20260715-181845-0158f9"
+      "search_text": "diagrams docs viewer roadmap docs viewer roadmap 2026-07-20 10:26:58 2026 07 20 10 26 58 d-20260715-181845-0158f9"
     },
     {
       "id": "d-20260715-181845-524859",
@@ -4139,6 +4140,60 @@
       "search_text": "document diagrams concept document diagrams concept 2026-07-19 22:33:42 2026 07 19 22 33 42 d-20260715-181845-524859"
     },
     {
+      "id": "d-20260720-102658-b55348",
+      "kind": "doc",
+      "title": "Inline Mermaid Rendering Concept",
+      "href": "/docs/?scope=studio&doc=d-20260720-102658-b55348",
+      "last_updated": "2026-07-20 10:26:58",
+      "parent_id": "d-20260715-181845-0158f9",
+      "parent_title": "Diagrams",
+      "display_meta": "2026-07-20 10:26:58 • Diagrams",
+      "search_terms": [
+        "inline mermaid rendering concept",
+        "inline",
+        "mermaid",
+        "rendering",
+        "concept",
+        "diagrams",
+        "2026-07-20 10:26:58",
+        "2026",
+        "07",
+        "20",
+        "10",
+        "26",
+        "58",
+        "d-20260720-102658-b55348"
+      ],
+      "search_text": "inline mermaid rendering concept inline mermaid rendering concept diagrams 2026-07-20 10:26:58 2026 07 20 10 26 58 d-20260720-102658-b55348"
+    },
+    {
+      "id": "d-20260720-102658-7de33d",
+      "kind": "doc",
+      "title": "Inline Mermaid Rendering Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260720-102658-7de33d",
+      "last_updated": "2026-07-20 10:26:58",
+      "parent_id": "d-20260715-181845-0158f9",
+      "parent_title": "Diagrams",
+      "display_meta": "2026-07-20 10:26:58 • Diagrams",
+      "search_terms": [
+        "inline mermaid rendering delivery",
+        "inline",
+        "mermaid",
+        "rendering",
+        "delivery",
+        "diagrams",
+        "2026-07-20 10:26:58",
+        "2026",
+        "07",
+        "20",
+        "10",
+        "26",
+        "58",
+        "d-20260720-102658-7de33d"
+      ],
+      "search_text": "inline mermaid rendering delivery inline mermaid rendering delivery diagrams 2026-07-20 10:26:58 2026 07 20 10 26 58 d-20260720-102658-7de33d"
+    },
+    {
       "id": "d-20260718-214206-27df44",
       "kind": "doc",
       "title": "Mermaid Document Diagrams Delivery",
@@ -4163,35 +4218,6 @@
         "d-20260718-214206-27df44"
       ],
       "search_text": "mermaid document diagrams delivery mermaid document diagrams delivery 2026-07-19 12:15:22 2026 07 19 12 15 22 d-20260718-214206-27df44"
-    },
-    {
-      "id": "d-20260718-155350-c84e62",
-      "kind": "doc",
-      "title": "Document Packages In Docs Viewer",
-      "href": "/docs/?scope=studio&doc=d-20260718-155350-c84e62",
-      "last_updated": "2026-07-18 16:04:29",
-      "parent_id": "d-20260714-234030-1e0af6",
-      "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-18 16:04:29 • Docs Viewer Roadmap",
-      "search_terms": [
-        "document packages in docs viewer",
-        "document",
-        "packages",
-        "in",
-        "docs",
-        "viewer",
-        "docs viewer roadmap",
-        "roadmap",
-        "2026-07-18 16:04:29",
-        "2026",
-        "07",
-        "18",
-        "16",
-        "04",
-        "29",
-        "d-20260718-155350-c84e62"
-      ],
-      "search_text": "document packages in docs viewer document packages in docs viewer docs viewer roadmap roadmap 2026-07-18 16:04:29 2026 07 18 16 04 29 d-20260718-155350-c84e62"
     },
     {
       "id": "d-20260716-235630-055f0c",
@@ -4713,6 +4739,35 @@
         "d-20260714-234030-cb2789"
       ],
       "search_text": "semantic reference authoring concept semantic reference authoring concept semantic reference authoring 2026-07-14 2026 07 14 d-20260714-234030-cb2789"
+    },
+    {
+      "id": "d-20260718-155350-c84e62",
+      "kind": "doc",
+      "title": "Share Document Packages",
+      "href": "/docs/?scope=studio&doc=d-20260718-155350-c84e62",
+      "last_updated": "2026-07-20 10:35:25",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap",
+      "display_meta": "2026-07-20 10:35:25 • Docs Viewer Roadmap",
+      "search_terms": [
+        "share document packages",
+        "share",
+        "document",
+        "packages",
+        "docs viewer roadmap",
+        "docs",
+        "viewer",
+        "roadmap",
+        "2026-07-20 10:35:25",
+        "2026",
+        "07",
+        "20",
+        "10",
+        "35",
+        "25",
+        "d-20260718-155350-c84e62"
+      ],
+      "search_text": "share document packages share document packages docs viewer roadmap docs viewer roadmap 2026-07-20 10:35:25 2026 07 20 10 35 25 d-20260718-155350-c84e62"
     },
     {
       "id": "d-20260717-231652-d6d49e",

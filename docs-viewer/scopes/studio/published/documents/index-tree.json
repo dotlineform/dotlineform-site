@@ -926,7 +926,7 @@
               "doc_id": "d-20260715-181845-0158f9",
               "title": "Diagrams",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-181845-0158f9.json",
-              "ui_status": "done",
+              "ui_status": "proposed",
               "children": [
                 {
                   "doc_id": "d-20260715-181845-524859",
@@ -935,18 +935,24 @@
                   "ui_status": "done"
                 },
                 {
+                  "doc_id": "d-20260720-102658-b55348",
+                  "title": "Inline Mermaid Rendering Concept",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-102658-b55348.json",
+                  "ui_status": "proposed"
+                },
+                {
+                  "doc_id": "d-20260720-102658-7de33d",
+                  "title": "Inline Mermaid Rendering Delivery",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-102658-7de33d.json",
+                  "ui_status": "proposed"
+                },
+                {
                   "doc_id": "d-20260718-214206-27df44",
                   "title": "Mermaid Document Diagrams Delivery",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-214206-27df44.json",
                   "ui_status": "done"
                 }
               ]
-            },
-            {
-              "doc_id": "d-20260718-155350-c84e62",
-              "title": "Document Packages In Docs Viewer",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-155350-c84e62.json",
-              "ui_status": "proposed"
             },
             {
               "doc_id": "d-20260716-235630-055f0c",
@@ -1075,6 +1081,11 @@
                   "ui_status": "proposed"
                 }
               ]
+            },
+            {
+              "doc_id": "d-20260718-155350-c84e62",
+              "title": "Share Document Packages",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-155350-c84e62.json"
             },
             {
               "doc_id": "d-20260717-231652-d6d49e",
@@ -1486,5 +1497,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-20T09:19:34Z"
+  "generated_at": "2026-07-20T09:35:08Z"
 }
