@@ -9,7 +9,7 @@ from typing import Any
 
 import docs_review_packages as packages
 import docs_review_routes as routes
-from services.paths import workspace_status
+from docs_document_packages.workspace import workspace_status
 
 
 def _query_value(query: dict[str, list[str]], name: str) -> str:

@@ -16,7 +16,7 @@ from repo_factory import docs_scope_record
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-DOCS_EXPORT_PATH = REPO_ROOT / "docs-viewer" / "services" / "docs_export.py"
+DOCS_EXPORT_PATH = REPO_ROOT / "docs-viewer" / "services" / "docs_document_packages" / "export.py"
 DOCS_SERVICES_DIR = REPO_ROOT / "docs-viewer" / "services"
 if str(DOCS_SERVICES_DIR) not in sys.path:
     sys.path.insert(0, str(DOCS_SERVICES_DIR))
@@ -25,7 +25,7 @@ if str(DOCS_SERVICES_DIR) not in sys.path:
 def load_docs_export_module():
     spec = importlib.util.spec_from_file_location("docs_export", DOCS_EXPORT_PATH)
     if spec is None or spec.loader is None:
-        raise RuntimeError("Could not load docs_export.py")
+        raise RuntimeError("Could not load docs_document_packages/export.py")
     module = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
@@ -33,8 +33,8 @@ def load_docs_export_module():
 
 
 docs_export = load_docs_export_module()
-import docs_export_config  # noqa: E402
-from services.paths import resolve_marker_path  # noqa: E402
+import docs_document_packages.export_config  # noqa: E402
+from docs_document_packages.workspace import resolve_marker_path  # noqa: E402
 
 
 def artifact_path(value: str) -> Path:
@@ -162,7 +162,7 @@ def make_repo(config: dict | None = None) -> tempfile.TemporaryDirectory:
     temp_dir = tempfile.TemporaryDirectory()
     root = Path(temp_dir.name)
     (root / "site-tools/config").mkdir(parents=True, exist_ok=True); (root / "site-tools/config/site-tools.json").write_text("{\"schema_version\":\"site_tools_config_v1\"}\n", encoding="utf-8")
-    write_json(root / "data-sharing/adapters/documents/config/prepare-profiles.json", config or BASE_CONFIG)
+    write_json(root / "docs-viewer/config/document-packages/profiles.json", config or BASE_CONFIG)
     write_json(
         root / "data-sharing/config/adapters.json",
         {
@@ -579,8 +579,8 @@ def test_export_run_times_use_utc_metadata_and_local_filename_time() -> None:
 
 
 def test_repo_documents_prepare_profiles_load_and_validate() -> None:
-    payload = docs_export_config.load_config_file(REPO_ROOT)
-    payload_errors, payload_warnings = docs_export_config.validate_config_payload(payload)
+    payload = docs_document_packages.export_config.load_config_file(REPO_ROOT)
+    payload_errors, payload_warnings = docs_document_packages.export_config.validate_config_payload(payload)
     assert payload_errors == []
     assert payload_warnings == []
 
@@ -591,13 +591,13 @@ def test_repo_documents_prepare_profiles_load_and_validate() -> None:
         "document-tree",
     ]
     for config in configs:
-        errors, warnings = docs_export_config.validate_export_config(config)
+        errors, warnings = docs_document_packages.export_config.validate_export_config(config)
         assert errors == []
         assert warnings == []
 
     full_fields = {
         field["source"]
-        for field in docs_export_config.find_export_config(payload, "document-content")["document_fields"]
+        for field in docs_document_packages.export_config.find_export_config(payload, "document-content")["document_fields"]
     }
     assert "content" in full_fields
     assert "current_summary" in full_fields
@@ -611,18 +611,18 @@ def test_repo_documents_prepare_profiles_load_and_validate() -> None:
     assert relationship_fields <= full_fields
     assert "sort_order" not in full_fields
 
-    full_config = docs_export_config.find_export_config(payload, "document-content")
-    assert docs_export_config.supported_target_formats(full_config) == ["jsonl", "json"]
-    assert docs_export_config.supported_content_formats(full_config) == ["markdown", "plain_text"]
-    assert docs_export_config.default_content_format(full_config) == "markdown"
-    tree_config = docs_export_config.find_export_config(payload, "document-tree")
+    full_config = docs_document_packages.export_config.find_export_config(payload, "document-content")
+    assert docs_document_packages.export_config.supported_target_formats(full_config) == ["jsonl", "json"]
+    assert docs_document_packages.export_config.supported_content_formats(full_config) == ["markdown", "plain_text"]
+    assert docs_document_packages.export_config.default_content_format(full_config) == "markdown"
+    tree_config = docs_document_packages.export_config.find_export_config(payload, "document-tree")
     assert tree_config["workflow"]["supports_return_import"] is False
     assert tree_config["target"]["record_shape"] == "document_tree"
-    assert docs_export_config.supported_target_formats(tree_config) == ["json"]
+    assert docs_document_packages.export_config.supported_target_formats(tree_config) == ["json"]
 
 
 def test_repo_full_document_content_exports_relationship_fields() -> None:
-    config = docs_export_config.load_config_file(REPO_ROOT)
+    config = docs_document_packages.export_config.load_config_file(REPO_ROOT)
     fixed_generated_at = "2026-05-04T12:00:00Z"
     fixed_filename_dt = dt.datetime(2026, 5, 4, 13, 0, 0, tzinfo=dt.timezone(dt.timedelta(hours=1)))
     original_export_run_times = docs_export.export_run_times
@@ -670,7 +670,7 @@ def test_repo_full_document_content_exports_relationship_fields() -> None:
 
 
 def test_export_uses_source_context_for_markdown_document_content() -> None:
-    config = docs_export_config.load_config_file(REPO_ROOT)
+    config = docs_document_packages.export_config.load_config_file(REPO_ROOT)
     with make_repo(copy.deepcopy(config)) as temp:
         root = Path(temp)
 
@@ -711,7 +711,7 @@ def test_markdown_document_content_export_preserves_inline_mermaid_source() -> N
             "After diagram.",
         ]
     )
-    config = docs_export_config.load_config_file(REPO_ROOT)
+    config = docs_document_packages.export_config.load_config_file(REPO_ROOT)
     with make_repo(copy.deepcopy(config)) as temp:
         root = Path(temp)
         write_doc(
@@ -738,7 +738,7 @@ def test_markdown_document_content_export_preserves_inline_mermaid_source() -> N
 
 
 def test_document_content_plain_text_override_preserves_existing_content_behavior() -> None:
-    config = docs_export_config.load_config_file(REPO_ROOT)
+    config = docs_document_packages.export_config.load_config_file(REPO_ROOT)
     with make_repo(copy.deepcopy(config)) as temp:
         root = Path(temp)
 
@@ -763,7 +763,7 @@ def test_document_content_plain_text_override_preserves_existing_content_behavio
 
 
 def test_document_content_json_output_declares_content_format() -> None:
-    config = docs_export_config.load_config_file(REPO_ROOT)
+    config = docs_document_packages.export_config.load_config_file(REPO_ROOT)
     with make_repo(copy.deepcopy(config)) as temp:
         root = Path(temp)
 

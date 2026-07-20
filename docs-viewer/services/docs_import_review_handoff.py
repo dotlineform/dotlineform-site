@@ -9,8 +9,8 @@ from pathlib import Path
 import re
 from typing import Any
 
-from docs_import_data_sharing_package import COLLECTION_SOURCE_FORMAT
-from docs_returned_import_files import (
+from docs_import_document_package import COLLECTION_SOURCE_FORMAT
+from docs_document_packages.returned_files import (
     export_id_from_json_payload,
     export_id_from_jsonl_header,
     parse_json_file,

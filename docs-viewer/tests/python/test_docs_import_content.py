@@ -15,7 +15,7 @@ from docs_import_content import (
     ImportContent,
 )
 from docs_import_test_support import make_repo, write_staged_html, write_staged_markdown, write_staged_text
-from services.paths import configured_workspace_paths
+from docs_document_packages.workspace import configured_workspace_paths
 
 
 def make_content(**changes: object) -> ImportContent:

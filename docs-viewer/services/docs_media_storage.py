@@ -29,7 +29,7 @@ from docs_scope_config import (
     published_media_config,
     resolve_location_path,
 )
-from services.paths import configured_workspace_paths
+from docs_document_packages.workspace import configured_workspace_paths
 from studio.services.media.publish_media_to_r2 import content_type_for, file_md5
 
 

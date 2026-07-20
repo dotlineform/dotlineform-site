@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Data Sharing documents to ImportContent adapter tests."""
+"""Returned document-package to ImportContent normalization tests."""
 
 from __future__ import annotations
 
 import pytest
 
-from adapters.documents.returned import normalize_documents_import_content
+from docs_import_document_package_content import normalize_documents_import_content
 from docs_import_content import (
     CONTENT_INTENT_EMPTY_NEW,
     CONTENT_INTENT_PRESERVE_EXISTING,
@@ -133,16 +133,16 @@ def test_omitted_content_retains_preserve_existing_and_empty_new_intent() -> Non
     assert new.content_intent == CONTENT_INTENT_EMPTY_NEW
     assert new.content is None
 
-    trusted_missing = normalize_documents_import_content(
+    selected_but_missing = normalize_documents_import_content(
         [{"doc_id": "exported-but-missing", "title": "Exported"}],
         package_metadata=compact_metadata(selected_doc_ids=["exported-but-missing"]),
         current_doc_ids=set(),
     ).records[0]
-    assert trusted_missing.content_intent == CONTENT_INTENT_PRESERVE_EXISTING
+    assert selected_but_missing.content_intent == CONTENT_INTENT_EMPTY_NEW
 
 
 def test_adapter_rejects_unmapped_or_ambiguous_wrapper_contracts() -> None:
-    with pytest.raises(ValueError, match="unsupported Data Sharing documents import contract"):
+    with pytest.raises(ValueError, match="unsupported returned document package contract"):
         normalize_documents_import_content(
             [{"doc_id": "alpha", "title": "Alpha", "content": "Body"}],
             package_metadata={"export_id": "ds_1"},

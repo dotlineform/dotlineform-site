@@ -23,7 +23,7 @@ from docs_import_test_support import (
     write_staged_bytes,
 )
 from docs_media_storage import DocsMediaPublishResult
-from services.paths import configured_workspace_paths
+from docs_document_packages.workspace import configured_workspace_paths
 
 
 def _preview(root: Path, filename: str) -> dict[str, object]:

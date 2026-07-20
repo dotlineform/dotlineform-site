@@ -27,7 +27,7 @@ from services.dispatch import (  # noqa: E402
     handler_for,
 )
 from services.dispatch import selectable_records as dispatch_selectable_records  # noqa: E402
-from services.returned_metadata import list_staged_files_with_metadata  # noqa: E402
+from docs_document_packages.metadata import list_staged_files_with_metadata  # noqa: E402
 from workflows.apply import apply_returned_changes as dispatch_apply_returned_changes  # noqa: E402
 from workflows.list_returned import list_returned_packages as dispatch_list_returned_packages  # noqa: E402
 from workflows.prepare import prepare_package as dispatch_prepare_package  # noqa: E402

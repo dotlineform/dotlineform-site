@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Returned package dispatch for Documents Data Sharing."""
+"""Temporary legacy returned-route dispatch into Docs Viewer document packages."""
 
 from __future__ import annotations
 
@@ -8,7 +8,6 @@ from typing import Any, Dict, Optional
 
 from .context import DocumentsDataSharingDependencies
 from .families import documents
-from .import_content import DocumentsImportContentBatch, normalize_documents_import_content
 
 
 def list_returned_packages(
@@ -51,10 +50,8 @@ def apply_returned_changes(
 
 
 __all__ = [
-    "DocumentsImportContentBatch",
     "apply_returned_changes",
     "list_returned_packages",
-    "normalize_documents_import_content",
     "returned_records",
     "review_returned_package",
 ]

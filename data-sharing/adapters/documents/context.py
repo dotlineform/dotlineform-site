@@ -18,8 +18,8 @@ for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
                 sys.path.insert(0, str(_path))
         break
 
-from docs_data_sharing.write import (  # noqa: E402
-    DocsDataSharingWriteDependencies,
+from docs_document_packages.write import (  # noqa: E402
+    DocumentPackageWriteDependencies,
     PerformSourceWriteAndRebuild,
 )
 import docs_source_model as source_model  # noqa: E402
@@ -33,8 +33,8 @@ class DocumentsDataSharingDependencies:
     log_event: LogEvent
     perform_source_write_and_rebuild: PerformSourceWriteAndRebuild
 
-    def write_dependencies(self) -> DocsDataSharingWriteDependencies:
-        return DocsDataSharingWriteDependencies(
+    def write_dependencies(self) -> DocumentPackageWriteDependencies:
+        return DocumentPackageWriteDependencies(
             perform_source_write_and_rebuild=self.perform_source_write_and_rebuild,
         )
 

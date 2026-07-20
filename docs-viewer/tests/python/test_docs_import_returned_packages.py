@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from docs_import_test_support import (
@@ -15,16 +16,26 @@ from docs_import_test_support import (
 from repo_factory import data_sharing_workspace_root, resolve_data_sharing_marker
 
 
-def write_content_meta(root: Path, export_id: str, generated_at: str = "2026-06-27T20:50:10Z") -> None:
+def write_content_meta(
+    root: Path,
+    export_id: str,
+    generated_at: str = "2026-06-27T20:50:10Z",
+    *,
+    selected_doc_ids: list[str] | None = None,
+) -> None:
     del root
     path = data_sharing_workspace_root() / f"meta/{export_id}.meta.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         (
-            '{"export_id": "'
+            '{"schema_version": "data_sharing_export_meta_v1", "export_id": "'
             + export_id
             + '", "app": "docs-viewer", "adapter_id": "documents", "data_domain": "documents", '
             + '"config_id": "document-content", "profile_id": "document-content", "scope": "library", '
+            + '"target_format": "jsonl", "record_shape": "document_rows", "supports_return_import": true, '
+            + '"selected_doc_ids": '
+            + json.dumps(selected_doc_ids or ["alpha"])
+            + ", "
             + '"generated_at": "'
             + generated_at
             + '"}\n'
@@ -39,7 +50,7 @@ def test_library_import_files_lists_json_and_jsonl_only() -> None:
         write_staged(root, "content.jsonl", [{"doc_id": "alpha", "title": "Alpha", "content": "Body."}])
         write_staged(root, "relationships.json", {"records": []})
         (data_sharing_workspace_root() / "import-staging/notes.txt").write_text("ignore\n", encoding="utf-8")
-        payload = handle_documents_import_files(root, "library")
+        payload = handle_documents_import_files(root, "documents")
 
     assert payload["ok"] is True
     assert payload["scope"] == "library"
@@ -69,24 +80,24 @@ def test_library_import_review_writes_selected_record_document() -> None:
         write_content_meta(root, export_id)
         payload = handle_documents_import_preview(
             root,
-            {"data_domain": "library", "operation": "review", "staged_filename": "content.jsonl", "record_indices": [0]},
+            {"data_domain": "documents", "operation": "review", "staged_filename": "content.jsonl"},
             dry_run=False,
         )
         review_path = resolve_data_sharing_marker(str(payload["review_file"]))
         review_text = review_path.read_text(encoding="utf-8")
 
     assert payload["ok"] is True
-    assert payload["summary_text"] == "Generated Library import review for 1 selected document."
+    assert payload["summary_text"] == "Generated Documents import review for 1 document."
     assert payload["review_rows"][0]["record_index"] == 0
     assert payload["selected_records"] == [{"record_index": 0, "doc_id": "alpha"}]
     assert payload["review_written"] is True
     assert "preview_files" not in payload
     assert "preview_written" not in payload
-    assert review_path.name == "20260627-215010-library-document-content.md"
+    assert review_path.name == "20260627-215010-documents-document-content.md"
     assert "| alpha | Alpha | Preview summary. | library |" in review_text
 
 
-def test_library_import_review_defaults_to_all_records_and_appends_issues() -> None:
+def test_library_import_review_rejects_an_invalid_atomic_package() -> None:
     with make_repo() as temp:
         root = Path(temp)
         export_id = "ds_20260627T205010Z"
@@ -106,18 +117,15 @@ def test_library_import_review_defaults_to_all_records_and_appends_issues() -> N
         write_content_meta(root, export_id)
         payload = handle_documents_import_preview(
             root,
-            {"data_domain": "library", "operation": "review", "review_action": "summaries", "staged_filename": "content.jsonl"},
+            {"data_domain": "documents", "operation": "review", "review_action": "summaries", "staged_filename": "content.jsonl"},
             dry_run=False,
         )
-        review_text = resolve_data_sharing_marker(str(payload["review_file"])).read_text(encoding="utf-8")
 
-    assert payload["ok"] is True
-    assert payload["selected_records"] == [
-        {"record_index": 0, "doc_id": "alpha"},
-        {"record_index": 1, "doc_id": ""},
-    ]
-    assert "## Issues" in review_text
-    assert "| warning | missing_doc_id | 2 |  | Missing | record is missing doc_id |" in review_text
+    assert payload["ok"] is False
+    assert payload["selected_records"] == []
+    assert payload["review_file"] == ""
+    assert payload["review_written"] is False
+    assert {item["code"] for item in payload["issues"]} == {"missing_doc_id"}
 
 def test_documents_import_rejects_unconfigured_data_domain() -> None:
     with make_repo() as temp:
@@ -142,7 +150,7 @@ def test_docs_export_summary_text_uses_context_aware_document_plural() -> None:
         singular = handle_docs_export(
             root,
             {
-                "data_domain": "library",
+                "data_domain": "documents",
                 "config_id": "document-content",
                 "selection": {
                     "docs_scope": "library",
@@ -156,7 +164,7 @@ def test_docs_export_summary_text_uses_context_aware_document_plural() -> None:
         plural = handle_docs_export(
             root,
             {
-                "data_domain": "library",
+                "data_domain": "documents",
                 "config_id": "document-content",
                 "selection": {
                     "docs_scope": "library",

@@ -23,7 +23,7 @@ from docs_import_common import (
 )
 from docs_import_media import build_media_plan
 from docs_scope_config import load_docs_scope_configs, published_media_config
-from services.paths import marker_path
+from docs_document_packages.workspace import marker_path
 
 def retarget_markdown_package_media_plans(
     repo_root: Path,

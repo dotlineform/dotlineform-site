@@ -58,7 +58,7 @@ from docs_import_media import (  # noqa: E402
     apply_inline_raster_media_plans,
     apply_inline_svg_media_plans,
 )
-from services.paths import configured_workspace_paths, marker_path  # noqa: E402
+from docs_document_packages.workspace import configured_workspace_paths, marker_path  # noqa: E402
 
 
 def import_artifact_path(repo_root: Path, path: Path, workspace_root: Path) -> str:

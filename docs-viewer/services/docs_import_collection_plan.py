@@ -24,7 +24,7 @@ from docs_source_model import (
     doc_id_matches_added_date,
     is_immutable_doc_id,
 )
-from services.paths import marker_path
+from docs_document_packages.workspace import marker_path
 
 
 MEDIA_PLAN_FIELDS = (

@@ -8,7 +8,7 @@ from typing import Any, Dict
 import docs_import_source_service as import_source_service
 import docs_write_rebuild as write_rebuild
 from docs_management_context import log_event
-from services.paths import configured_workspace_paths, workspace_status
+from docs_document_packages.workspace import configured_workspace_paths, workspace_status
 
 
 def import_source_dependencies() -> import_source_service.ImportSourceDependencies:

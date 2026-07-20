@@ -14,17 +14,17 @@ from docs_import_collection_result import safe_generation_result
 import docs_import_preview
 import docs_source_model
 import docs_write_rebuild
-from docs_import_data_sharing_documents import (
-    apply_data_sharing_documents_collection,
-    plan_data_sharing_documents_collection,
+from docs_import_document_package_collection import (
+    apply_document_package_collection,
+    plan_document_package_collection,
 )
-from services.paths import configured_workspace_paths
+from docs_document_packages.workspace import configured_workspace_paths
 
 from docs_import_test_support import handle_import_source, make_repo, write_library_doc, write_staged
 from repo_factory import data_sharing_workspace_root
 
 
-def write_collection_metadata(export_id: str) -> None:
+def write_collection_metadata(export_id: str, records: list[dict[str, object]]) -> None:
     path = data_sharing_workspace_root() / "meta" / f"{export_id}.meta.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
@@ -34,7 +34,7 @@ def write_collection_metadata(export_id: str) -> None:
                 "export_id": export_id,
                 "app": "docs-viewer",
                 "adapter_id": "documents",
-                "data_domain": "library",
+                "data_domain": "documents",
                 "scope": "library",
                 "profile_id": "document-content",
                 "config_id": "document-content",
@@ -42,6 +42,13 @@ def write_collection_metadata(export_id: str) -> None:
                 "record_shape": "document_rows",
                 "supports_return_import": True,
                 "content_format": "markdown",
+                "selected_doc_ids": list(
+                    dict.fromkeys(
+                        str(record.get("doc_id") or "").strip()
+                        for record in records
+                        if str(record.get("doc_id") or "").strip()
+                    )
+                ),
             }
         )
         + "\n",
@@ -50,7 +57,7 @@ def write_collection_metadata(export_id: str) -> None:
 
 
 def write_collection(root: Path, filename: str, records: list[dict[str, object]], export_id: str) -> None:
-    write_collection_metadata(export_id)
+    write_collection_metadata(export_id, records)
     write_staged(
         root,
         filename,
@@ -99,7 +106,7 @@ def apply_package(
     source_sha256: str | None = None,
 ) -> dict[str, object]:
     paths = configured_workspace_paths(root)
-    preview = plan_data_sharing_documents_collection(
+    preview = plan_document_package_collection(
         root,
         scope="library",
         staged_filename=filename,
@@ -107,7 +114,7 @@ def apply_package(
         workspace_root=paths.root,
         metadata_root=paths.meta,
     ).as_dict()
-    return apply_data_sharing_documents_collection(
+    return apply_document_package_collection(
         root,
         scope="library",
         staged_filename=filename,
@@ -330,7 +337,7 @@ def test_preserve_existing_apply_uses_current_body_without_revision_reconfirmati
             "ds_20260712T160009Z",
         )
         paths = configured_workspace_paths(root)
-        preview = plan_data_sharing_documents_collection(
+        preview = plan_document_package_collection(
             root,
             scope="library",
             staged_filename="preserve.jsonl",
@@ -350,7 +357,7 @@ def test_preserve_existing_apply_uses_current_body_without_revision_reconfirmati
             body="# Current\n\nNewest canonical body.\n",
         )
 
-        payload = apply_data_sharing_documents_collection(
+        payload = apply_document_package_collection(
             root,
             scope="library",
             staged_filename="preserve.jsonl",

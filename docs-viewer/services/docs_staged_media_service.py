@@ -36,7 +36,7 @@ from docs_media_storage import (
 from docs_mermaid_media import produce_mermaid_svg
 from docs_scope_config import load_docs_scope_configs
 from docs_svg_sanitizer import SanitizedSvg, sanitize_svg_bytes
-from services.paths import configured_workspace_paths, marker_path, workspace_status
+from docs_document_packages.workspace import configured_workspace_paths, marker_path, workspace_status
 
 
 STAGED_MEDIA_IMAGE = "image"

@@ -194,6 +194,15 @@ def test_apply_capability_flags_respects_local_service_flags() -> None:
             "html_import": True,
             "docs_export": True,
             "library_import": True,
+            "document_packages": {
+                "available": True,
+                "prepare": True,
+                "context": True,
+                "inspect_returned": True,
+                "review_returned": True,
+                "apply_returned": True,
+                "atomic_return": True,
+            },
             "scope_lifecycle": {
                 "create_apply": True,
                 "rename_apply": True,
@@ -225,6 +234,15 @@ def test_apply_capability_flags_respects_local_service_flags() -> None:
     assert capabilities["generated_data_reads"] is False
     assert capabilities["source_config_settings_writes"] is False
     assert capabilities["html_import"] is False
+    assert capabilities["document_packages"] == {
+        "available": True,
+        "prepare": False,
+        "context": False,
+        "inspect_returned": False,
+        "review_returned": False,
+        "apply_returned": False,
+        "atomic_return": True,
+    }
     assert capabilities["scope_lifecycle"]["create_apply"] is False
     assert capabilities["scope_lifecycle"]["rename_apply"] is False
     assert capabilities["scope_lifecycle"]["sub_scope_create_apply"] is False

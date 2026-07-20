@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 from docs_import_test_support import handle_documents_import_preview, make_repo, write_staged
-import docs_data_sharing.review_sources as review_sources
+import docs_document_packages.review_sources as review_sources
 import docs_review_packages
 import docs_source_model as source_model
 from repo_factory import data_sharing_workspace_root, resolve_data_sharing_marker
@@ -24,6 +24,7 @@ def write_content_meta(
     data_domain: str = "documents",
     profile_id: str = "document-content",
     content_format: str = "markdown",
+    selected_doc_ids: list[str] | None = None,
 ) -> None:
     del root
     path = data_sharing_workspace_root() / f"meta/{export_id}.meta.json"
@@ -44,6 +45,7 @@ def write_content_meta(
                 "generated_at": generated_at,
                 "supports_return_import": True,
                 "content_format": content_format,
+                "selected_doc_ids": selected_doc_ids or ["alpha"],
             }
         )
         + "\n",
@@ -77,7 +79,7 @@ def test_review_source_folder_rejects_missing_export_id() -> None:
 
         payload = handle_documents_import_preview(
             root,
-            {"data_domain": "library", "operation": "review", "review_action": "source_folder", "staged_filename": "content.json"},
+            {"data_domain": "documents", "operation": "review", "review_action": "source_folder", "staged_filename": "content.json"},
             dry_run=False,
         )
 
@@ -101,7 +103,7 @@ def test_review_source_folder_rejects_missing_and_mismatched_metadata() -> None:
         )
         missing_payload = handle_documents_import_preview(
             root,
-            {"data_domain": "library", "operation": "review", "review_action": "source_folder", "staged_filename": "missing-meta.jsonl"},
+            {"data_domain": "documents", "operation": "review", "review_action": "source_folder", "staged_filename": "missing-meta.jsonl"},
             dry_run=False,
         )
 
@@ -117,7 +119,7 @@ def test_review_source_folder_rejects_missing_and_mismatched_metadata() -> None:
         write_content_meta(root, mismatched_export_id, metadata_export_id="ds_20260627T205012Z")
         mismatch_payload = handle_documents_import_preview(
             root,
-            {"data_domain": "library", "operation": "review", "review_action": "source_folder", "staged_filename": "mismatch.jsonl"},
+            {"data_domain": "documents", "operation": "review", "review_action": "source_folder", "staged_filename": "mismatch.jsonl"},
             dry_run=False,
         )
 
@@ -143,7 +145,7 @@ def test_review_source_folder_rejects_unsafe_metadata_derived_folder_id() -> Non
 
         payload = handle_documents_import_preview(
             root,
-            {"data_domain": "library", "operation": "review", "review_action": "source_folder", "staged_filename": "content.jsonl"},
+            {"data_domain": "documents", "operation": "review", "review_action": "source_folder", "staged_filename": "content.jsonl"},
             dry_run=False,
         )
 
@@ -175,7 +177,7 @@ def test_review_source_folder_uses_shared_markdown_content_normalization() -> No
 
         payload = handle_documents_import_preview(
             root,
-            {"data_domain": "library", "operation": "review", "review_action": "source_folder", "staged_filename": "renamed-return.jsonl"},
+            {"data_domain": "documents", "operation": "review", "review_action": "source_folder", "staged_filename": "renamed-return.jsonl"},
             dry_run=False,
         )
         manifest = json.loads(resolve_data_sharing_marker(str(payload["manifest_path"])).read_text(encoding="utf-8"))
@@ -258,7 +260,7 @@ Full-source body.
         payload = handle_documents_import_preview(
             root,
             {
-                "data_domain": "library",
+                "data_domain": "documents",
                 "operation": "review",
                 "review_action": "source_folder",
                 "staged_filename": "full-source.jsonl",
@@ -293,7 +295,7 @@ def test_review_source_folder_roots_parent_outside_compact_package_and_warns() -
         write_content_meta(root, export_id)
         payload = handle_documents_import_preview(
             root,
-            {"data_domain": "library", "operation": "review", "review_action": "source_folder", "staged_filename": "content.jsonl"},
+            {"data_domain": "documents", "operation": "review", "review_action": "source_folder", "staged_filename": "content.jsonl"},
             dry_run=False,
         )
         source_path = resolve_data_sharing_marker(str(payload["source_files"][0]["path"]))
@@ -334,7 +336,7 @@ def test_persistent_review_reads_survive_staged_package_deletion_without_reconve
         write_content_meta(root, export_id)
         payload = handle_documents_import_preview(
             root,
-            {"data_domain": "library", "operation": "review", "review_action": "source_folder", "staged_filename": "content.jsonl"},
+            {"data_domain": "documents", "operation": "review", "review_action": "source_folder", "staged_filename": "content.jsonl"},
             dry_run=False,
         )
         staged_path = data_sharing_workspace_root() / "import-staging/content.jsonl"
@@ -381,7 +383,7 @@ def test_persistent_review_build_failure_publishes_no_partial_package(
         monkeypatch.setattr(review_sources, "publish_review_package", fail_publication)
         payload = handle_documents_import_preview(
             root,
-            {"data_domain": "library", "operation": "review", "review_action": "source_folder", "staged_filename": "content.jsonl"},
+            {"data_domain": "documents", "operation": "review", "review_action": "source_folder", "staged_filename": "content.jsonl"},
             dry_run=False,
         )
         package_path = resolve_data_sharing_marker(str(payload["folder_path"]))
@@ -409,7 +411,7 @@ def test_review_source_folder_preserves_existing_body_and_materializes_empty_new
                 {"doc_id": "alpha", "title": "Alpha", "parent_id": "new-parent"},
             ],
         )
-        write_content_meta(root, export_id)
+        write_content_meta(root, export_id, selected_doc_ids=["new-parent", "alpha"])
         _current_front_matter, current_alpha_body = source_model.parse_source(
             root / "docs-viewer/scopes/library/source/documents/alpha.md"
         )
@@ -417,7 +419,7 @@ def test_review_source_folder_preserves_existing_body_and_materializes_empty_new
         payload = handle_documents_import_preview(
             root,
             {
-                "data_domain": "library",
+                "data_domain": "documents",
                 "operation": "review",
                 "review_action": "source_folder",
                 "staged_filename": "hierarchy-only.jsonl",
@@ -453,11 +455,11 @@ def test_review_source_folder_rejects_package_local_hierarchy_cycle() -> None:
                 {"doc_id": "beta", "title": "Beta", "parent_id": "alpha", "content": "Beta body."},
             ],
         )
-        write_content_meta(root, export_id)
+        write_content_meta(root, export_id, selected_doc_ids=["alpha", "beta"])
 
         payload = handle_documents_import_preview(
             root,
-            {"data_domain": "library", "operation": "review", "review_action": "source_folder", "staged_filename": "content.jsonl"},
+            {"data_domain": "documents", "operation": "review", "review_action": "source_folder", "staged_filename": "content.jsonl"},
             dry_run=False,
         )
 
@@ -481,11 +483,15 @@ def test_review_source_folder_skips_invalid_rows_and_does_not_write() -> None:
                 {"doc_id": "missing-content", "title": "Missing content"},
             ],
         )
-        write_content_meta(root, export_id)
+        write_content_meta(
+            root,
+            export_id,
+            selected_doc_ids=["alpha", "missing-title", "missing-content"],
+        )
 
         payload = handle_documents_import_preview(
             root,
-            {"data_domain": "library", "operation": "review", "review_action": "source_folder", "staged_filename": "content.jsonl"},
+            {"data_domain": "documents", "operation": "review", "review_action": "source_folder", "staged_filename": "content.jsonl"},
             dry_run=False,
         )
 
@@ -495,7 +501,7 @@ def test_review_source_folder_skips_invalid_rows_and_does_not_write() -> None:
     assert [item["code"] for item in payload["skipped_records"]] == ["missing_doc_id", "missing_title"]
 
 
-def test_review_source_folder_rejects_existing_timestamped_package() -> None:
+def test_review_source_folder_rejects_a_changed_atomic_return_before_existing_folder_checks() -> None:
     with make_repo() as temp:
         root = Path(temp)
         export_id = "ds_20260627T205010Z"
@@ -510,7 +516,7 @@ def test_review_source_folder_rejects_existing_timestamped_package() -> None:
         )
         first = handle_documents_import_preview(
             root,
-            {"data_domain": "library", "operation": "review", "review_action": "source_folder", "staged_filename": "content.jsonl"},
+            {"data_domain": "documents", "operation": "review", "review_action": "source_folder", "staged_filename": "content.jsonl"},
             dry_run=False,
         )
         stale_path = resolve_data_sharing_marker(str(first["folder_path"])) / "source" / "stale.md"
@@ -526,17 +532,19 @@ def test_review_source_folder_rejects_existing_timestamped_package() -> None:
 
         second = handle_documents_import_preview(
             root,
-            {"data_domain": "library", "operation": "review", "review_action": "source_folder", "staged_filename": "content.jsonl"},
+            {"data_domain": "documents", "operation": "review", "review_action": "source_folder", "staged_filename": "content.jsonl"},
             dry_run=False,
         )
         first_body = source_folder_body(root, first, "alpha.md")
-        beta_path = resolve_data_sharing_marker(str(second["source_path"])) / "beta.md"
 
-    assert first["folder_id"] == second["folder_id"]
+    assert first["folder_id"] == "20260627-215010-documents-document-content"
+    assert second["folder_id"] == ""
     assert second["ok"] is False
     assert second["review_source_folder_written"] is False
-    assert second["counts"]["errors"] == 1
-    assert [item["code"] for item in second["issues"]] == ["review_package_exists"]
+    assert second["counts"]["errors"] == 2
+    assert {item["code"] for item in second["issues"]} == {
+        "missing_prepared_documents",
+        "unexpected_returned_documents",
+    }
     assert stale_path.exists() is True
     assert first_body == "First body."
-    assert beta_path.exists() is False

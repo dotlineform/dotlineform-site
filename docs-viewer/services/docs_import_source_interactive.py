@@ -13,7 +13,7 @@ from docs_import_common import HTML_STAGED_SUFFIXES, is_interactive_html_import_
 from docs_media_storage import docs_media_file, docs_publish_succeeded, publish_docs_media_files
 from docs_scope_config import load_docs_scope_configs, published_media_config
 from docs_source_model import normalize_scope, slugify
-from services.paths import marker_path
+from docs_document_packages.workspace import marker_path
 
 INTERACTIVE_HTML_FILENAME_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]*\.html$")
 

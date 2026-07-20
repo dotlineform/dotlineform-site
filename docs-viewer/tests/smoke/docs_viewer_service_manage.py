@@ -70,6 +70,22 @@ def assert_service_basics(base_url: str) -> None:
         raise AssertionError(f"expected Docs Viewer management to be enabled: {capabilities!r}")
     if studio_caps.get("available") is not True or studio_caps.get("generated_data_reads") is not True:
         raise AssertionError(f"expected real Studio generated data reads: {studio_caps!r}")
+    package_capability = capabilities.get("capabilities", {}).get("document_packages", {})
+    if package_capability.get("atomic_return") is not True:
+        raise AssertionError(f"expected atomic document-package capability: {package_capability!r}")
+
+    package_config = read_json_url(f"{base_url}/docs/packages/config")
+    profile_ids = {
+        item.get("profile_id")
+        for item in package_config.get("profiles", [])
+        if isinstance(item, dict)
+    }
+    if package_config.get("ok") is not True or profile_ids != {"document-content", "document-tree"}:
+        raise AssertionError(f"unexpected document-package config: {package_config!r}")
+
+    documents = read_json_url(f"{base_url}/docs/packages/documents?scope=studio")
+    if documents.get("ok") is not True or not documents.get("records"):
+        raise AssertionError(f"expected direct Studio package source records: {documents!r}")
 
 
 def assert_origin_rejection(base_url: str) -> None:
@@ -90,6 +106,20 @@ def assert_origin_rejection(base_url: str) -> None:
             raise AssertionError(f"expected disallowed Origin to return 403, got {error.code}") from error
     else:
         raise AssertionError("disallowed Origin should be rejected")
+
+    package_request = urllib.request.Request(
+        f"{base_url}/docs/packages/config",
+        headers={"Origin": "https://example.com"},
+    )
+    try:
+        urllib.request.urlopen(package_request, timeout=10)
+    except urllib.error.HTTPError as error:
+        if error.code != 403:
+            raise AssertionError(
+                f"expected package API to reject disallowed Origin with 403, got {error.code}"
+            ) from error
+    else:
+        raise AssertionError("document-package API should reject a disallowed Origin")
 
 
 def wait_for_manage_doc(page: Page, title: str, timeout_ms: int) -> None:

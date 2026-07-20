@@ -21,7 +21,7 @@ sys.path.insert(0, str(REPO_ROOT))
 sys.path.insert(0, str(REPO_ROOT / "docs-viewer" / "services"))
 
 from docs_viewer_service import DocsViewerServer, DocsViewerServiceConfig  # noqa: E402
-from services.paths import workspace_paths  # noqa: E402
+from docs_document_packages.workspace import workspace_paths  # noqa: E402
 from tests.smoke.route_ready_helpers import wait_for_route_ready  # noqa: E402
 
 

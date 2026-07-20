@@ -10,7 +10,7 @@ from typing import Any
 
 from docs_management_source_service import split_source_exact
 from docs_review_build import build_review_package
-from services.paths import configured_workspace_paths, marker_path
+from docs_document_packages.workspace import configured_workspace_paths, marker_path
 
 PACKAGE_SCHEMA_VERSION = "docs_review_validated_package_v1"
 PACKAGES_SCHEMA_VERSION = "docs_review_packages_v1"

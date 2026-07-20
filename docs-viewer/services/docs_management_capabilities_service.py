@@ -24,7 +24,7 @@ from docs_scope_config import (
     published_search_path,
     resolve_scope_path,
 )
-from services.paths import workspace_status
+from docs_document_packages.workspace import workspace_status
 
 
 def capability_scope_docs(repo_root: Path, scope: str, root: Path) -> list[Any]:
@@ -148,6 +148,16 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             "source_editor": True,
             "html_import": docs_import_workspace["available"],
             "docs_export": True,
+            "document_packages": {
+                "available": data_sharing_workspace["available"],
+                "message": data_sharing_workspace["message"],
+                "prepare": data_sharing_workspace["available"],
+                "context": True,
+                "inspect_returned": data_sharing_workspace["available"],
+                "review_returned": data_sharing_workspace["available"],
+                "apply_returned": data_sharing_workspace["available"],
+                "atomic_return": True,
+            },
             "copy_subtree": {
                 "preview": True,
                 "apply": True,

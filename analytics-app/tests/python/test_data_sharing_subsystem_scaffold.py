@@ -10,6 +10,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SUBSYSTEM_ROOT = REPO_ROOT / "data-sharing"
+DOCS_SERVICES_ROOT = REPO_ROOT / "docs-viewer" / "services"
 
 
 def import_subsystem_module(name: str):
@@ -18,10 +19,16 @@ def import_subsystem_module(name: str):
     return importlib.import_module(name)
 
 
+def import_docs_service_module(name: str):
+    if str(DOCS_SERVICES_ROOT) not in sys.path:
+        sys.path.insert(0, str(DOCS_SERVICES_ROOT))
+    return importlib.import_module(name)
+
+
 def test_subsystem_root_and_core_modules_are_importable() -> None:
     adapters = import_subsystem_module("adapters")
     dispatch = import_subsystem_module("services.dispatch")
-    paths = import_subsystem_module("services.paths")
+    workspace = import_docs_service_module("docs_document_packages.workspace")
     registry = import_subsystem_module("services.registry")
     prepare = import_subsystem_module("workflows.prepare")
     list_returned = import_subsystem_module("workflows.list_returned")
@@ -34,21 +41,21 @@ def test_subsystem_root_and_core_modules_are_importable() -> None:
     assert list_returned.OPERATION == "list_returned"
     assert review.OPERATION == "review"
     assert apply.OPERATION == "apply"
-    assert paths.EXPORT_ROOT == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports"
-    assert paths.IMPORT_STAGING_ROOT == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging"
-    assert paths.IMPORT_PREVIEW_ROOT == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview"
-    assert paths.META_ROOT == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta"
+    assert workspace.EXPORT_ROOT == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports"
+    assert workspace.IMPORT_STAGING_ROOT == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging"
+    assert workspace.IMPORT_PREVIEW_ROOT == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview"
+    assert workspace.META_ROOT == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta"
     assert registry.ADAPTER_REGISTRY_REL_PATH.as_posix() == "data-sharing/config/adapters.json"
-    assert registry.DOCUMENTS_PREPARE_PROFILES_REL_PATH.as_posix() == "data-sharing/adapters/documents/config/prepare-profiles.json"
+    assert registry.DOCUMENTS_PREPARE_PROFILES_REL_PATH.as_posix() == "docs-viewer/config/document-packages/profiles.json"
 
 
 def test_workspace_resolver_requires_existing_readable_writable_root(tmp_path: Path, monkeypatch) -> None:
-    paths = import_subsystem_module("services.paths")
+    paths = import_docs_service_module("docs_document_packages.workspace")
     monkeypatch.delenv(paths.PROJECTS_BASE_DIR_ENV, raising=False)
     try:
         paths.resolve_workspace_root()
     except ValueError as exc:
-        assert "is required for Data Sharing" in str(exc)
+        assert "is required for document packages" in str(exc)
     else:
         raise AssertionError("missing workspace environment must fail closed")
 
@@ -68,7 +75,7 @@ def test_workspace_resolver_requires_existing_readable_writable_root(tmp_path: P
 
 
 def test_workspace_marker_resolution_rejects_escape(tmp_path: Path, monkeypatch) -> None:
-    paths = import_subsystem_module("services.paths")
+    paths = import_docs_service_module("docs_document_packages.workspace")
     projects_base = tmp_path / "projects"
     (projects_base / "data-sharing").mkdir(parents=True)
     monkeypatch.setenv(paths.PROJECTS_BASE_DIR_ENV, str(projects_base))
@@ -102,11 +109,11 @@ def test_subsystem_contains_expected_headless_ownership_roots() -> None:
     assert missing == []
 
 
-def test_subsystem_config_files_live_under_data_sharing_boundary() -> None:
+def test_generic_subsystem_and_document_package_config_have_separate_owners() -> None:
     expected = [
         SUBSYSTEM_ROOT / "config" / "adapters.json",
         SUBSYSTEM_ROOT / "config" / "adapters.schema.json",
-        SUBSYSTEM_ROOT / "adapters" / "documents" / "config" / "prepare-profiles.json",
+        REPO_ROOT / "docs-viewer" / "config" / "document-packages" / "profiles.json",
     ]
     missing = [path.relative_to(REPO_ROOT).as_posix() for path in expected if not path.is_file()]
     assert missing == []
@@ -140,7 +147,7 @@ def test_subsystem_has_no_server_ui_or_browser_files() -> None:
 def main() -> None:
     test_subsystem_root_and_core_modules_are_importable()
     test_subsystem_contains_expected_headless_ownership_roots()
-    test_subsystem_config_files_live_under_data_sharing_boundary()
+    test_generic_subsystem_and_document_package_config_have_separate_owners()
     test_subsystem_has_no_server_ui_or_browser_files()
 
 

@@ -38,6 +38,8 @@ if str(SERVICE_DIR) not in sys.path:
 
 import docs_management_routes as routes  # noqa: E402
 import docs_management_service as docs_service  # noqa: E402
+import docs_document_package_routes as package_routes  # noqa: E402
+from docs_document_packages import service as package_service  # noqa: E402
 import docs_media_storage as media_storage  # noqa: E402
 import docs_review_routes as review_routes  # noqa: E402
 import docs_review_service as review_service  # noqa: E402
@@ -303,6 +305,13 @@ def apply_capability_flags(payload: dict[str, object], config: DocsViewerService
             "library_import",
         ):
             capabilities[key] = False
+        document_packages = capabilities.get("document_packages")
+        if isinstance(document_packages, dict):
+            document_packages["prepare"] = False
+            document_packages["context"] = False
+            document_packages["inspect_returned"] = False
+            document_packages["review_returned"] = False
+            document_packages["apply_returned"] = False
         lifecycle = capabilities.get("scope_lifecycle")
         if isinstance(lifecycle, dict):
             for key in (
@@ -371,6 +380,15 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         if path == routes.CAPABILITIES_PATH:
             self.send_capabilities_json()
             return
+        if path in package_routes.GET_PATHS:
+            if not self.config.management_enabled:
+                self.send_json({"ok": False, "error": "Docs Viewer management is disabled"}, HTTPStatus.FORBIDDEN)
+                return
+            if not self.origin_allowed_for_local_api():
+                self.send_json({"ok": False, "error": "Origin not allowed"}, HTTPStatus.FORBIDDEN)
+                return
+            self.send_document_package_json(path, query)
+            return
         if path in GENERATED_READ_PATHS and not self.config.generated_reads_enabled:
             self.send_json({"ok": False, "error": "Generated reads are disabled"}, HTTPStatus.FORBIDDEN)
             return
@@ -430,7 +448,7 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
                 return
             self.send_review_api_post_json(path)
             return
-        if path not in routes.POST_PATHS:
+        if path not in routes.POST_PATHS and path not in package_routes.POST_PATHS:
             self.send_error(HTTPStatus.NOT_FOUND, "Not found")
             return
         if not self.config.management_enabled:
@@ -439,12 +457,19 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         if not self.origin_allowed_for_local_api():
             self.send_json({"ok": False, "error": "Origin not allowed"}, HTTPStatus.FORBIDDEN)
             return
-        self.send_docs_api_post_json(path)
+        if path in package_routes.POST_PATHS:
+            self.send_document_package_post_json(path)
+        else:
+            self.send_docs_api_post_json(path)
 
     def do_OPTIONS(self) -> None:
         request = urlsplit(self.path)
         path = unquote(request.path)
-        if path not in routes.OPTIONS_PATHS and path not in review_routes.OPTIONS_PATHS:
+        if (
+            path not in routes.OPTIONS_PATHS
+            and path not in review_routes.OPTIONS_PATHS
+            and path not in package_routes.OPTIONS_PATHS
+        ):
             self.send_error(HTTPStatus.NOT_FOUND, "Not found")
             return
         if not self.origin_allowed_for_local_api():
@@ -489,6 +514,16 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         except RuntimeError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
 
+    def send_document_package_json(self, api_path: str, query: dict[str, list[str]]) -> None:
+        try:
+            self.send_json(package_service.get_payload(self.repo_root, api_path, query))
+        except FileNotFoundError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
+        except ValueError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
+        except RuntimeError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
+
     def send_capabilities_json(self) -> None:
         try:
             payload = apply_capability_flags(docs_service.capabilities_payload(self.repo_root), self.config)
@@ -504,6 +539,21 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         try:
             body = self.read_json_body()
             status, payload = docs_service.docs_management_post_response(self.repo_root, api_path, body)
+            self.send_json(payload, status)
+        except FileNotFoundError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
+        except ValueError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
+        except RuntimeError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
+
+    def send_document_package_post_json(self, api_path: str) -> None:
+        try:
+            status, payload = package_service.post_response(
+                self.repo_root,
+                api_path,
+                self.read_json_body(),
+            )
             self.send_json(payload, status)
         except FileNotFoundError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)

@@ -25,7 +25,7 @@ from docs_media_storage import (
     publish_docs_media_files,
 )
 from docs_svg_sanitizer import sanitize_svg_bytes
-from services.paths import marker_path
+from docs_document_packages.workspace import marker_path
 
 
 INLINE_SVG_PATTERN = re.compile(r"<svg\b[^>]*>.*?</svg>", re.IGNORECASE | re.DOTALL)

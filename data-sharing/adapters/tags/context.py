@@ -28,7 +28,7 @@ if str(ANALYTICS_APP_SERVER_DIR) not in sys.path:
 
 from tag_services import tag_source_model
 from data_sharing_adapters import AdapterResolution, safe_relative_path
-from services.paths import marker_path
+from docs_document_packages.workspace import marker_path
 from studio_activity import append_studio_activity, normalize_activity_context_from_contract, studio_activity_entry
 
 

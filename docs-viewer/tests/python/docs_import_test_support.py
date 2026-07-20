@@ -131,7 +131,7 @@ def write_returned_jsonl(
                 "export_id": export_id,
                 "app": "docs-viewer",
                 "adapter_id": "documents",
-                "data_domain": scope,
+                "data_domain": "documents",
                 "profile_id": profile_id,
                 "config_id": profile_id,
                 "scope": scope,
@@ -139,6 +139,11 @@ def write_returned_jsonl(
                 "record_shape": "document_rows",
                 "supports_return_import": True,
                 "generated_at": "2026-06-27T12:00:00Z",
+                "selected_doc_ids": [
+                    str(record.get("doc_id") or "").strip()
+                    for record in records
+                    if str(record.get("doc_id") or "").strip()
+                ],
             }
         )
         + "\n",

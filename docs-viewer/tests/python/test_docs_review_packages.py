@@ -11,7 +11,7 @@ import pytest
 import docs_review_packages
 import docs_review_routes
 import docs_review_service
-from services.paths import workspace_paths
+from docs_document_packages.workspace import workspace_paths
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]

@@ -30,9 +30,8 @@ from adapters.documents import adapter as documents_data_sharing_adapter  # noqa
 from adapters.documents import context as documents_data_sharing_context  # noqa: E402
 from adapters.tags import adapter as tags_data_sharing_adapter  # noqa: E402
 from adapters.tags import context as tags_data_sharing_context  # noqa: E402
-from docs_data_sharing import activity as documents_data_sharing_activity  # noqa: E402
-from docs_returned_import_profiles import supported_return_import_profile_ids  # noqa: E402
-from services.paths import workspace_status  # noqa: E402
+from docs_document_packages.returned_profiles import supported_return_import_profile_ids  # noqa: E402
+from docs_document_packages.workspace import workspace_status  # noqa: E402
 try:
     from analytics_app import data_sharing_service  # noqa: E402
     from analytics_app import data_sharing_adapters  # noqa: E402
@@ -400,7 +399,6 @@ def data_sharing_post_response(
 ) -> tuple[HTTPStatus, dict[str, object]]:
     if api_path == PREPARE_PATH:
         payload = data_sharing_service.prepare_package(repo_root, body, dry_run, DATA_SHARING_HANDLERS)
-        documents_data_sharing_activity.maybe_attach_docs_export_activity(repo_root, body, payload, dry_run)
         return HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload
     if api_path == CONTEXT_PATH:
         data_domain = str(body.get("data_domain") or "").strip()
@@ -423,6 +421,5 @@ def data_sharing_post_response(
         return HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload
     if api_path == APPLY_PATH:
         payload = data_sharing_service.apply_returned_changes(repo_root, body, dry_run, DATA_SHARING_HANDLERS)
-        documents_data_sharing_activity.maybe_attach_documents_import_apply_activity(repo_root, body, payload, dry_run)
         return HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload
     raise FileNotFoundError("Not found")

@@ -150,7 +150,7 @@ def test_static_path_policy_serves_analytics_paths_and_shared_data_sharing_confi
     assert allowed("/shared/frontend/js/selectable-list.js") is True
     assert allowed("/shared/frontend/css/selectable-list.css") is True
     assert allowed("/data-sharing/config/adapters.json") is False
-    assert allowed("/data-sharing/adapters/documents/config/prepare-profiles.json") is False
+    assert allowed("/docs-viewer/config/document-packages/profiles.json") is False
     assert allowed("/shared/python/markdown_renderer.py") is False
     assert allowed("/analytics/data/canonical/tag-registry.json") is True
     assert allowed("/docs-viewer/generated/docs/studio/index.json") is False

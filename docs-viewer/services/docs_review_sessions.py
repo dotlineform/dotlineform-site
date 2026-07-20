@@ -9,7 +9,7 @@ import re
 import shutil
 from typing import Any
 
-from services.paths import configured_workspace_paths, marker_path
+from docs_document_packages.workspace import configured_workspace_paths, marker_path
 
 SAFE_SESSION_ID_PATTERN = re.compile(r"\A[A-Za-z0-9][A-Za-z0-9._-]*\Z")
 SAFE_DOC_ID_PATTERN = re.compile(r"\A[A-Za-z0-9_-]+\Z")

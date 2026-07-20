@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Docs data sharing export tests."""
+"""Temporary Analytics bridge tests for Docs Viewer package export."""
 
 from __future__ import annotations
 
@@ -7,14 +7,14 @@ from pathlib import Path
 
 from docs_management_test_support import (
     analytics_data_sharing_api,
-    docs_data_sharing_package,
+    document_package,
     documents_prepare,
     make_repo,
 )
 
 def test_docs_export_request_passes_target_format() -> None:
     calls: list[dict[str, object]] = []
-    original_build_export = docs_data_sharing_package.build_export
+    original_build_export = document_package.build_export
 
     def fake_build_export(**kwargs):
         calls.append(kwargs)
@@ -27,7 +27,7 @@ def test_docs_export_request_passes_target_format() -> None:
             "issue_counts": {"errors": 0, "warnings": 0},
         }
 
-    docs_data_sharing_package.build_export = fake_build_export
+    document_package.build_export = fake_build_export
     try:
         with make_repo() as temp_path:
             repo_root = Path(temp_path)
@@ -51,7 +51,7 @@ def test_docs_export_request_passes_target_format() -> None:
                 dependencies=analytics_data_sharing_api.documents_data_sharing_dependencies(),
             )
     finally:
-        docs_data_sharing_package.build_export = original_build_export
+        document_package.build_export = original_build_export
 
     assert result["ok"] is True
     assert result["target_format"] == "json"

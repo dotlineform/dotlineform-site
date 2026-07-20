@@ -17,8 +17,8 @@ if str(DOCS_SERVICES_DIR) not in sys.path:
     sys.path.insert(0, str(DOCS_SERVICES_DIR))
 
 
-import docs_returned_import_parser  # noqa: E402
-from services.paths import workspace_paths  # noqa: E402
+import docs_document_packages.returned_parser  # noqa: E402
+from docs_document_packages.workspace import workspace_paths  # noqa: E402
 
 
 def write_text(path: Path, text: str) -> None:
@@ -99,7 +99,7 @@ def write_internal_meta(
     export_id: str,
     profile_id: str,
     *,
-    supports_return_import: bool | None = None,
+    supports_return_import: bool = True,
 ) -> None:
     payload = {
         "schema_version": "data_sharing_export_meta_v1",
@@ -112,9 +112,9 @@ def write_internal_meta(
         "scope": "library",
         "target_format": "jsonl",
         "record_shape": "document_rows",
+        "selected_doc_ids": ["alpha"],
     }
-    if supports_return_import is not None:
-        payload["supports_return_import"] = supports_return_import
+    payload["supports_return_import"] = supports_return_import
     write_text(
         workspace_paths().meta / f"{export_id}.meta.json",
         json.dumps(payload) + "\n",
@@ -123,7 +123,7 @@ def write_internal_meta(
 
 def parse(root: Path, filename: str) -> dict:
     paths = workspace_paths()
-    return docs_returned_import_parser.parse_staged_import(
+    return docs_document_packages.returned_parser.parse_staged_import(
         repo_root=root,
         scope="library",
         staged_file=filename,
@@ -186,6 +186,8 @@ def test_config_id_is_not_a_profile_id_fallback() -> None:
                     "scope": "library",
                     "target_format": "jsonl",
                     "record_shape": "document_rows",
+                    "supports_return_import": True,
+                    "selected_doc_ids": ["alpha"],
                 }
             )
             + "\n",
@@ -340,7 +342,7 @@ def test_parser_rejects_paths_outside_staging_root() -> None:
         outside = root / "outside.json"
         outside.write_text("[]\n", encoding="utf-8")
         paths = workspace_paths()
-        report = docs_returned_import_parser.parse_staged_import(
+        report = docs_document_packages.returned_parser.parse_staged_import(
             repo_root=root,
             scope="library",
             staged_file=str(outside),

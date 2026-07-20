@@ -119,7 +119,7 @@ def test_config_payload_publishes_public_workflow_metadata_without_static_paths(
 def test_config_payload_publishes_prepare_profile_return_import_support() -> None:
     with make_repo() as temp_path:
         root = Path(temp_path)
-        profile_path = root / "data-sharing/adapters/documents/config/prepare-profiles.json"
+        profile_path = root / "docs-viewer/config/document-packages/profiles.json"
         profile_payload = json.loads(profile_path.read_text(encoding="utf-8"))
         profile_payload["configs"][0]["workflow"] = {"supports_return_import": False}
         profile_path.write_text(json.dumps(profile_payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -138,7 +138,7 @@ def test_config_disables_workspace_capabilities_with_setup_guidance(monkeypatch)
         payload = analytics_data_sharing_api.data_sharing_get_payload(Path(temp_path), "/config", {})
 
     assert payload["workspace"]["available"] is False
-    assert "DOTLINEFORM_PROJECTS_BASE_DIR is required for Data Sharing" in payload["workspace"]["message"]
+    assert "DOTLINEFORM_PROJECTS_BASE_DIR is required for document packages" in payload["workspace"]["message"]
     active_capabilities = payload["adapters"][0]["capabilities"]
     assert {item["status"] for item in active_capabilities} == {"disabled"}
     assert all("create $DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing" in item["message"] for item in active_capabilities)
@@ -223,7 +223,7 @@ def test_context_endpoint_updates_documents_prepare_profile_context() -> None:
             dry_run=False,
         )
         profile_payload = json.loads(
-            (root / "data-sharing/adapters/documents/config/prepare-profiles.json").read_text(encoding="utf-8")
+            (root / "docs-viewer/config/document-packages/profiles.json").read_text(encoding="utf-8")
         )
 
     assert status == HTTPStatus.OK

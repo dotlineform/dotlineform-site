@@ -16,7 +16,7 @@ if str(SHARED_PYTHON_DIR) not in sys.path:
     sys.path.insert(0, str(SHARED_PYTHON_DIR))
 
 from json_markdown_report import write_json_markdown_report  # noqa: E402
-from services.paths import marker_path  # noqa: E402
+from docs_document_packages.workspace import marker_path  # noqa: E402
 
 
 RESULT_STATUSES = ("created", "overwritten", "skipped", "failed", "not-attempted")

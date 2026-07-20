@@ -177,7 +177,7 @@ def domain_payload(status: str = "active", data_domain: str = "documents") -> di
             "docs_scope_config": "docs-viewer/config/scopes/docs_scopes.json",
         },
         "config": {
-            "sharing_profiles_path": "data-sharing/adapters/documents/config/prepare-profiles.json",
+            "sharing_profiles_path": "docs-viewer/config/document-packages/profiles.json",
         },
     }
 
@@ -315,7 +315,7 @@ def write_adapter_registry(root: Path, payload: dict[str, object] | None = None)
 
 def write_prepare_profiles(root: Path) -> None:
     write_json(
-        root / "data-sharing/adapters/documents/config/prepare-profiles.json",
+        root / "docs-viewer/config/document-packages/profiles.json",
         {
             "schema_version": "documents_prepare_profiles_v1",
             "configs": [

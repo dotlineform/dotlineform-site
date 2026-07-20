@@ -224,7 +224,7 @@ def test_static_path_policy_serves_current_studio_allowlists() -> None:
     assert allowed("/studio/data/generated/catalogue-lookup/work-search.json") is True
     assert allowed("/assets/docs/interactive/library/coincidence-salience.html") is False
     assert allowed("/data-sharing/config/adapters.json") is False
-    assert allowed("/data-sharing/adapters/documents/config/prepare-profiles.json") is False
+    assert allowed("/docs-viewer/config/document-packages/profiles.json") is False
     assert allowed("/assets/works/img/00001.jpg") is True
     assert allowed("/assets/js/work.js") is True
     assert allowed("/studio/data/generated/project-state/report.json") is False
@@ -256,7 +256,7 @@ def test_studio_transport_does_not_publish_data_sharing_defaults() -> None:
 
 def test_studio_server_excludes_data_sharing_config() -> None:
     assert StudioAppRequestHandler.is_allowed_static_path(object(), "/data-sharing/config/adapters.json") is False
-    assert StudioAppRequestHandler.is_allowed_static_path(object(), "/data-sharing/adapters/documents/config/prepare-profiles.json") is False
+    assert StudioAppRequestHandler.is_allowed_static_path(object(), "/docs-viewer/config/document-packages/profiles.json") is False
 
 def test_local_studio_asset_version_does_not_follow_public_main_css() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:

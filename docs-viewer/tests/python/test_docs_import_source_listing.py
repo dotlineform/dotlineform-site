@@ -13,7 +13,7 @@ import docs_import_preview
 import docs_import_source_service as import_source_service
 from docs_import_common import FILE_MEDIA_STAGED_SUFFIXES
 from docs_import_docx_test_support import semantic_docx_bytes
-from services.paths import configured_workspace_paths
+from docs_document_packages.workspace import configured_workspace_paths
 
 from docs_import_test_support import (
     make_repo,

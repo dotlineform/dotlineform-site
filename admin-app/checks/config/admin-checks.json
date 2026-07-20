@@ -240,7 +240,7 @@
         "**/*import*",
         "**/*export*",
         "data-sharing/",
-        "docs-viewer/services/docs_data_sharing/",
+        "docs-viewer/services/docs_document_packages/",
         "docs-viewer/services/documents_data_sharing_adapter.py"
       ],
       "shared": [

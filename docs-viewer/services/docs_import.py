@@ -12,7 +12,7 @@ import json
 import sys
 from pathlib import Path
 
-from docs_returned_import_parser import parse_staged_import as _parse_staged_import
+from docs_document_packages.returned_parser import parse_staged_import as _parse_staged_import
 
 
 def detect_repo_root(explicit_root: str | None = None) -> Path:

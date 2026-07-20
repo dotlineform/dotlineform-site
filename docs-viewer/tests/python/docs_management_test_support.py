@@ -42,7 +42,7 @@ docs_management_service = load_docs_management_module("docs_management_service",
 docs_management_mutations = sys.modules["docs_management_mutations"]
 docs_scope_config = sys.modules["docs_scope_config"]
 docs_source_model = sys.modules["docs_source_model"]
-from docs_data_sharing import package as docs_data_sharing_package  # noqa: E402
+from docs_document_packages import package as document_package  # noqa: E402
 from adapters.documents import prepare as documents_prepare  # noqa: E402
 import analytics_data_sharing_api  # noqa: E402
 
@@ -144,7 +144,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
                                 "source_root": "docs-viewer/scopes/library/source/documents",
                             },
                             "config": {
-                                "sharing_profiles_path": "data-sharing/adapters/documents/config/prepare-profiles.json",
+                                "sharing_profiles_path": "docs-viewer/config/document-packages/profiles.json",
                             },
                         }
                     },

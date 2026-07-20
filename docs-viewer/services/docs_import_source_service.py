@@ -18,13 +18,13 @@ from docs_import_document import (
     import_document_result,
     plan_import_document,
 )
-from docs_import_data_sharing_documents import (
-    apply_data_sharing_documents_collection,
-    plan_data_sharing_documents_collection,
+from docs_import_document_package_collection import (
+    apply_document_package_collection,
+    plan_document_package_collection,
 )
-from docs_import_data_sharing_package import (
+from docs_import_document_package import (
     COLLECTION_SOURCE_FORMAT,
-    data_sharing_documents_source_format,
+    document_package_source_format,
 )
 from docs_import_markdown_package import retarget_markdown_package_media_plans
 from docs_import_media import retarget_inline_media_plans
@@ -47,7 +47,7 @@ from docs_source_model import (
     normalize_scope,
     scope_root,
 )
-from services.paths import configured_workspace_paths, marker_path, workspace_status
+from docs_document_packages.workspace import configured_workspace_paths, marker_path, workspace_status
 
 
 LogEvent = Callable[[Path, str, Dict[str, Any]], None]
@@ -86,7 +86,7 @@ def handle_import_source_files(repo_root: Path) -> Dict[str, Any]:
         path.name: source_format
         for path in workspace_paths.import_staging.iterdir()
         if (
-            source_format := data_sharing_documents_source_format(
+            source_format := document_package_source_format(
                 repo_root,
                 path,
                 metadata_root=workspace_paths.meta,
@@ -127,14 +127,14 @@ def handle_import_source(
     confirm_interactive_html_overwrite = bool(body.get("confirm_interactive_html_overwrite"))
     preview_only = bool(body.get("preview_only"))
     source_path = resolve_staged_import_source(staging_root, staged_filename)
-    source_format = data_sharing_documents_source_format(
+    source_format = document_package_source_format(
         repo_root,
         source_path,
         metadata_root=metadata_root,
     )
     if source_format == COLLECTION_SOURCE_FORMAT:
         if not (dry_run or preview_only):
-            return apply_data_sharing_documents_collection(
+            return apply_document_package_collection(
                 repo_root,
                 scope=scope,
                 staged_filename=staged_filename,
@@ -145,7 +145,7 @@ def handle_import_source(
                 log_event=dependencies.log_event,
                 perform_source_write_and_rebuild=dependencies.perform_source_write_and_rebuild,
             )
-        plan = plan_data_sharing_documents_collection(
+        plan = plan_document_package_collection(
             repo_root,
             scope=scope,
             staged_filename=staged_filename,

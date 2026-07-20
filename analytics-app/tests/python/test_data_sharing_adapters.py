@@ -50,7 +50,7 @@ def test_active_documents_adapter_resolves_with_v3_workspace_paths(external_data
         assert resolution.adapter_id == "documents"
         assert resolution.path("outbound_package_root") == external_data_sharing_workspace / "exports"
         assert resolution.path_marker("outbound_package_root") == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports"
-        assert resolution.config_path("sharing_profiles_path").as_posix() == "data-sharing/adapters/documents/config/prepare-profiles.json"
+        assert resolution.config_path("sharing_profiles_path").as_posix() == "docs-viewer/config/document-packages/profiles.json"
         assert resolution.capability["selection_model"] == "documents"
         assert resolution.capability["output_formats"] == ["json"]
         assert resolution.domain["record_selectors"]["docs_scope"]["source"] == "docs_scope_config"

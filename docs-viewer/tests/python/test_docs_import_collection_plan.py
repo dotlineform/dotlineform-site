@@ -8,8 +8,8 @@ from pathlib import Path
 
 import docs_import_preview
 import pytest
-from docs_import_data_sharing_documents import plan_data_sharing_documents_collection
-from services.paths import configured_workspace_paths
+from docs_import_document_package_collection import plan_document_package_collection
+from docs_document_packages.workspace import configured_workspace_paths
 
 from docs_import_test_support import handle_import_source, make_repo, write_staged
 from repo_factory import data_sharing_workspace_root
@@ -30,7 +30,7 @@ def write_collection_metadata(
                 "export_id": export_id,
                 "app": "docs-viewer",
                 "adapter_id": "documents",
-                "data_domain": "library",
+                "data_domain": "documents",
                 "scope": "library",
                 "profile_id": profile_id,
                 "config_id": profile_id,
@@ -69,8 +69,9 @@ def files_snapshot(*roots: Path) -> dict[str, bytes]:
 
 
 def plan_package(root: Path, filename: str):
+    trust_staged_selection(filename)
     paths = configured_workspace_paths(root)
-    return plan_data_sharing_documents_collection(
+    return plan_document_package_collection(
         root,
         scope="library",
         staged_filename=filename,
@@ -78,6 +79,25 @@ def plan_package(root: Path, filename: str):
         workspace_root=paths.root,
         metadata_root=paths.meta,
     )
+
+
+def trust_staged_selection(filename: str) -> None:
+    staged_path = data_sharing_workspace_root() / "import-staging" / filename
+    rows = [json.loads(line) for line in staged_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    header = rows[0]
+    export_id = str(header.get("export_id") or "")
+    metadata_path = data_sharing_workspace_root() / "meta" / f"{export_id}.meta.json"
+    if not metadata_path.exists():
+        return
+    metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+    metadata["selected_doc_ids"] = list(
+        dict.fromkeys(
+            str(row.get("doc_id") or "").strip()
+            for row in rows[1:]
+            if isinstance(row, dict) and str(row.get("doc_id") or "").strip()
+        )
+    )
+    metadata_path.write_text(json.dumps(metadata) + "\n", encoding="utf-8")
 
 
 def test_collection_preview_dispatches_through_existing_import_post(monkeypatch) -> None:
@@ -94,6 +114,7 @@ def test_collection_preview_dispatches_through_existing_import_post(monkeypatch)
                 {"doc_id": "post-preview", "title": "POST Preview", "content": "Body."},
             ],
         )
+        trust_staged_selection("post-preview.jsonl")
 
         payload = handle_import_source(
             root,

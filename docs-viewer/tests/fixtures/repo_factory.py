@@ -264,7 +264,7 @@ def write_library_scope_config(root: Path, *, allow_unresolved_parent_ids: bool 
 
 def write_documents_prepare_profiles(root: Path) -> None:
     write_json(
-        root / "data-sharing/adapters/documents/config/prepare-profiles.json",
+        root / "docs-viewer/config/document-packages/profiles.json",
         {
             "schema_version": "documents_prepare_profiles_v1",
             "configs": [
@@ -273,8 +273,7 @@ def write_documents_prepare_profiles(root: Path) -> None:
                     "label": "Document content",
                     "description": "Exports document content.",
                     "enabled": True,
-                    "data_domains": ["library"],
-                    "scopes": ["library"],
+                    "data_domains": ["documents"],
                     "target": {
                         "format": "jsonl",
                         "record_shape": "document_rows",
@@ -334,10 +333,10 @@ def write_documents_data_sharing_registry(root: Path) -> None:
                 "metadata_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta",
             },
             "dispatch": [
-                {"data_domain": "library", "operation": "prepare", "adapter_id": "documents"},
-                {"data_domain": "library", "operation": "list_returned", "adapter_id": "documents"},
-                {"data_domain": "library", "operation": "review", "adapter_id": "documents"},
-                {"data_domain": "library", "operation": "apply", "adapter_id": "documents"},
+                {"data_domain": "documents", "operation": "prepare", "adapter_id": "documents"},
+                {"data_domain": "documents", "operation": "list_returned", "adapter_id": "documents"},
+                {"data_domain": "documents", "operation": "review", "adapter_id": "documents"},
+                {"data_domain": "documents", "operation": "apply", "adapter_id": "documents"},
             ],
             "adapters": [
                 {
@@ -347,9 +346,9 @@ def write_documents_data_sharing_registry(root: Path) -> None:
                     "status": "active",
                     "portability": {"package": "docs-viewer-documents-data-sharing"},
                     "data_domains": {
-                        "library": {
+                        "documents": {
                             "app": "docs-viewer",
-                            "label": "Library",
+                            "label": "Documents",
                             "scope": "library",
                             "status": "active",
                             "selection_model": "documents",
@@ -360,7 +359,7 @@ def write_documents_data_sharing_registry(root: Path) -> None:
                                 "source_root": "docs-viewer/scopes/library/source/documents",
                             },
                             "config": {
-                                "sharing_profiles_path": "data-sharing/adapters/documents/config/prepare-profiles.json",
+                                "sharing_profiles_path": "docs-viewer/config/document-packages/profiles.json",
                             },
                         }
                     },

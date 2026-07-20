@@ -9,7 +9,7 @@ import pytest
 
 from docs_import_test_support import make_repo
 import docs_review_materialization as materialization
-from services.paths import configured_workspace_paths
+from docs_document_packages.workspace import configured_workspace_paths
 
 
 def test_failed_generated_build_removes_temporary_package(

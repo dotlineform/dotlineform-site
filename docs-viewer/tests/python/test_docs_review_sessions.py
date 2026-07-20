@@ -23,7 +23,7 @@ import docs_management_read_service  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
 import docs_management_service  # noqa: E402
 import docs_review_sessions  # noqa: E402
-from services.paths import workspace_paths  # noqa: E402
+from docs_document_packages.workspace import workspace_paths  # noqa: E402
 
 
 def write_json(path: Path, payload: object) -> None:
@@ -98,19 +98,19 @@ def test_review_session_routes_are_registered() -> None:
     assert routes.REVIEW_SESSION_DELETE_PATH in routes.POST_PATHS
 
 
-def test_review_sessions_use_configured_external_preview_root() -> None:
+def test_review_sessions_use_fixed_document_package_preview_root() -> None:
     with make_repo() as temp:
         root = Path(temp)
         registry_path = root / "data-sharing/config/adapters.json"
         registry = json.loads(registry_path.read_text(encoding="utf-8"))
         registry["paths"]["review_output_root"] = "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/custom-reviews"
         write_json(registry_path, registry)
-        session = workspace_paths().root / "custom-reviews/session-custom"
+        session = workspace_paths().import_preview / "session-custom"
         (session / "source").mkdir(parents=True)
 
         payload = docs_review_sessions.list_review_sessions(root)
 
-    assert payload["root"] == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/custom-reviews"
+    assert payload["root"] == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview"
     assert [item["session_id"] for item in payload["sessions"]] == ["session-custom"]
 
 

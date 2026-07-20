@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from services.paths import resolve_marker_path, resolve_workspace_root, safe_workspace_marker_path
+from docs_document_packages.workspace import resolve_marker_path, resolve_workspace_root, safe_workspace_marker_path
 
 
 REGISTRY_REL_PATH = Path("data-sharing/config/adapters.json")
