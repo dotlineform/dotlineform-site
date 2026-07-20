@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e9c4b72ad59d281ae61d7d27ad035fbe",
-    "generated_at_utc": "2026-07-20T19:22:42Z",
+    "version": "blake2b-9ba73c7de4b6a894bdccdc68833b3a54",
+    "generated_at_utc": "2026-07-20T19:34:04Z",
     "count": 271
   },
   "entries": [
@@ -4756,10 +4756,10 @@
       "kind": "doc",
       "title": "Document Sharing Ownership Cutover Delivery",
       "href": "/docs/?scope=studio&doc=d-20260720-172819-93d6b2",
-      "last_updated": "2026-07-20 19:59:16",
+      "last_updated": "2026-07-20 20:33:15",
       "parent_id": "d-20260718-155350-c84e62",
       "parent_title": "Share Document Packages",
-      "display_meta": "2026-07-20 19:59:16 • Share Document Packages",
+      "display_meta": "2026-07-20 20:33:15 • Share Document Packages",
       "search_terms": [
         "document sharing ownership cutover delivery",
         "document",
@@ -4770,16 +4770,15 @@
         "share document packages",
         "share",
         "packages",
-        "2026-07-20 19:59:16",
+        "2026-07-20 20:33:15",
         "2026",
         "07",
         "20",
-        "19",
-        "59",
-        "16",
+        "33",
+        "15",
         "d-20260720-172819-93d6b2"
       ],
-      "search_text": "document sharing ownership cutover delivery document sharing ownership cutover delivery share document packages share packages 2026-07-20 19:59:16 2026 07 20 19 59 16 d-20260720-172819-93d6b2"
+      "search_text": "document sharing ownership cutover delivery document sharing ownership cutover delivery share document packages share packages 2026-07-20 20:33:15 2026 07 20 33 15 d-20260720-172819-93d6b2"
     },
     {
       "id": "d-20260720-174842-4c2f6a",
