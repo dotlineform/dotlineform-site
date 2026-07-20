@@ -25,6 +25,7 @@ LIST_WRAPPER_CLASS_TOKENS = {"legend"}
 PROMPT_META_TEXT_PREFIXES = ("[prompt]", "original prompt", "follow-up")
 ROWSPAN_COLSPAN_ATTRS = {"rowspan", "colspan"}
 SVG_MARKDOWN_BLANK_LINES_PATTERN = re.compile(r"\n(?:[ \t]*\n)+")
+CODE_FENCE_INFO_PATTERN = re.compile(r"^[a-z0-9_+-]+$", re.IGNORECASE)
 
 
 @dataclass
@@ -359,6 +360,26 @@ def render_list(node: ElementNode, warnings: list[str], indent: int = 0, ordered
     return [line for line in lines if line.strip()]
 
 
+def code_fence_info(node: ElementNode) -> str:
+    code = next(
+        (
+            child
+            for child in node.children
+            if isinstance(child, ElementNode) and child.tag == "code"
+        ),
+        None,
+    )
+    if code is None:
+        return ""
+    for token in code.class_tokens():
+        if not token.startswith("language-"):
+            continue
+        info = token.removeprefix("language-")
+        if CODE_FENCE_INFO_PATTERN.fullmatch(info):
+            return info
+    return ""
+
+
 def render_block(node: Any, warnings: list[str], include_prompt_meta: bool) -> str:
     if isinstance(node, TextNode):
         return escape_markdown_pipes(normalize_space(node.text))
@@ -394,7 +415,7 @@ def render_block(node: Any, warnings: list[str], include_prompt_meta: bool) -> s
         inner = normalize_space("".join(render_inline(child) for child in node.children))
         return "\n".join(f"> {line}".rstrip() for line in inner.splitlines() if line.strip())
     if tag == "pre":
-        return fence_code(node.text_content())
+        return fence_code(node.text_content(), info=code_fence_info(node))
     if tag == "ul":
         return "\n".join(render_list(node, warnings, ordered=False))
     if tag == "ol":

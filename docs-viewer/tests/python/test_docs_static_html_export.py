@@ -126,6 +126,31 @@ def test_render_doc_page_and_rewrite_internal_links() -> None:
     assert 'href="../styles.css"' in html
 
 
+def test_render_doc_page_preserves_inline_mermaid_code_without_runtime() -> None:
+    mermaid_block = "\n".join(
+        [
+            '<pre><code class="language-mermaid">flowchart LR',
+            "  Source --&gt; StaticExport",
+            "</code></pre>",
+        ]
+    )
+    html = exporter.render_doc_html(
+        {
+            "doc_id": "inline-mermaid",
+            "title": "Inline Mermaid",
+            "content_html": f"<h1>Inline Mermaid</h1>\n{mermaid_block}",
+        },
+        scope="studio",
+    )
+
+    assert mermaid_block in html
+    assert "<svg" not in html
+    assert 'data-docs-viewer-diagram-kind="inline-mermaid"' not in html
+    assert "mermaid.min.js" not in html
+    assert "docs-viewer-inline-mermaid.js" not in html
+    assert "<script" not in html
+
+
 def test_index_page_renders_tree_links() -> None:
     html = exporter.render_index_html(
         {"docs": [{"doc_id": "parent", "title": "Parent", "children": [{"doc_id": "child", "title": "Child"}]}]},

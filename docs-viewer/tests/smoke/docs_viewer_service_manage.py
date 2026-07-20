@@ -26,6 +26,7 @@ from tests.smoke.route_ready_helpers import wait_for_route_ready  # noqa: E402
 
 DOCS_VIEWER_DOC_ID = "d-20260424-000000-50b63f"
 INLINE_MERMAID_DOC_ID = "d-20260720-102658-b55348"
+INLINE_MERMAID_DELIVERY_DOC_ID = "d-20260720-102658-7de33d"
 
 
 def start_server() -> tuple[DocsViewerServer, str]:
@@ -114,6 +115,105 @@ def wait_for_manage_doc(page: Page, title: str, timeout_ms: int) -> None:
         arg=title,
         timeout=timeout_ms,
     )
+
+
+def assert_inline_mermaid_browser_review(page: Page, timeout_ms: int) -> None:
+    def visual_state() -> dict[str, object]:
+        return page.locator("#docsViewerContent").evaluate(
+            """content => {
+                const host = content.querySelector(
+                    '.docsViewer__diagram[data-docs-viewer-diagram-kind="inline-mermaid"]'
+                );
+                const svg = host?.querySelector(':scope > svg');
+                const children = Array.from(content.children);
+                const hostIndex = children.indexOf(host);
+                const focusableSelector = 'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
+                return {
+                    theme: document.documentElement.getAttribute('data-theme') || '',
+                    hostBackground: host ? getComputedStyle(host).backgroundColor : '',
+                    hostOverflowX: host ? getComputedStyle(host).overflowX : '',
+                    svgDisplay: svg ? getComputedStyle(svg).display : '',
+                    svgTitle: svg?.querySelector('title')?.textContent.trim() || '',
+                    svgDescription: svg?.querySelector('desc')?.textContent.trim() || '',
+                    hostRole: host?.getAttribute('role'),
+                    hostTabIndex: host?.getAttribute('tabindex'),
+                    focusableCount: host?.querySelectorAll(focusableSelector).length ?? -1,
+                    directChild: host?.parentElement === content,
+                    hostIndex,
+                    childCount: children.length,
+                    previousText: host?.previousElementSibling?.textContent.trim() || '',
+                    nextText: host?.nextElementSibling?.textContent.trim() || ''
+                };
+            }"""
+        )
+
+    initial = visual_state()
+    theme_toggle = page.locator("[data-docs-viewer-theme-toggle]")
+    if theme_toggle.count() != 1 or theme_toggle.is_hidden():
+        raise AssertionError("Docs Viewer theme toggle is not available for diagram review")
+    theme_toggle.click()
+    page.wait_for_function(
+        "previous => document.documentElement.getAttribute('data-theme') !== previous",
+        arg=initial["theme"],
+        timeout=timeout_ms,
+    )
+    toggled = visual_state()
+    states = {str(initial["theme"]): initial, str(toggled["theme"]): toggled}
+    if set(states) != {"light", "dark"}:
+        raise AssertionError(f"diagram review did not exercise both themes: {states!r}")
+    for theme, state in states.items():
+        if state["hostBackground"] != "rgb(255, 255, 255)" or state["svgDisplay"] != "block":
+            raise AssertionError(f"inline diagram lost its neutral readable surface in {theme}: {state!r}")
+        if state["hostOverflowX"] != "auto":
+            raise AssertionError(f"inline diagram responsive overflow changed in {theme}: {state!r}")
+        if state["svgTitle"] != "Inline Mermaid reader lifecycle" or not str(state["svgDescription"]).startswith(
+            "Canonical Markdown becomes"
+        ):
+            raise AssertionError(f"inline diagram accessible text changed in {theme}: {state!r}")
+
+    reading_state = toggled
+    if (
+        reading_state["hostRole"] is not None
+        or reading_state["hostTabIndex"] is not None
+        or reading_state["focusableCount"] != 0
+        or not reading_state["directChild"]
+        or not 0 < int(reading_state["hostIndex"]) < int(reading_state["childCount"]) - 1
+        or not reading_state["previousText"]
+        or not reading_state["nextText"]
+    ):
+        raise AssertionError(f"inline diagram changed keyboard or document reading order: {reading_state!r}")
+
+    page.set_viewport_size({"width": 420, "height": 820})
+    page.wait_for_timeout(50)
+    responsive = page.locator("#docsViewerContent").evaluate(
+        """content => {
+            const host = content.querySelector(
+                '.docsViewer__diagram[data-docs-viewer-diagram-kind="inline-mermaid"]'
+            );
+            const svg = host?.querySelector(':scope > svg');
+            const contentRect = content.getBoundingClientRect();
+            const hostRect = host?.getBoundingClientRect();
+            const svgRect = svg?.getBoundingClientRect();
+            return {
+                contentWidth: contentRect.width,
+                hostWidth: hostRect?.width || 0,
+                svgWidth: svgRect?.width || 0,
+                containedLeft: Boolean(hostRect && hostRect.left >= contentRect.left - 1),
+                containedRight: Boolean(hostRect && hostRect.right <= contentRect.right + 1),
+                svgContained: Boolean(hostRect && svgRect && svgRect.width <= host.clientWidth + 1)
+            };
+        }"""
+    )
+    if (
+        responsive["hostWidth"] <= 0
+        or responsive["svgWidth"] <= 0
+        or responsive["hostWidth"] > responsive["contentWidth"] + 1
+        or not responsive["containedLeft"]
+        or not responsive["containedRight"]
+        or not responsive["svgContained"]
+    ):
+        raise AssertionError(f"inline diagram did not remain contained at a narrow viewport: {responsive!r}")
+    page.set_viewport_size({"width": 1280, "height": 900})
 
 
 def manage_route_state(page: Page) -> dict[str, object]:
@@ -825,6 +925,28 @@ def exercise_manage_route(
     )
     if inline_state != {"diagrams": 1, "remainingFences": 0, "failureCount": 0}:
         raise AssertionError(f"Studio inline Mermaid proof did not render cleanly: {inline_state!r}")
+    assert_inline_mermaid_browser_review(page, timeout_ms)
+
+    delivery_link = page.locator(
+        f'#docsViewerContent a[href*="doc={INLINE_MERMAID_DELIVERY_DOC_ID}"]'
+    ).first
+    if delivery_link.count() != 1:
+        raise AssertionError("Inline Mermaid Concept should link to its delivery tracker")
+    delivery_link.click()
+    wait_for_manage_doc(page, "Inline Mermaid Rendering Delivery", timeout_ms)
+    if page.locator("#docsViewerContent .docsViewer__diagram").count() != 0:
+        raise AssertionError("diagram-free delivery document should not acquire an inline diagram")
+    page.go_back()
+    wait_for_manage_doc(page, "Inline Mermaid Rendering Concept", timeout_ms)
+    page.wait_for_selector(
+        '.docsViewer__diagram[data-docs-viewer-diagram-kind="inline-mermaid"]',
+        state="visible",
+        timeout=timeout_ms,
+    )
+    if len(inline_mermaid_requests) != 1:
+        raise AssertionError(
+            f"repeated mounts did not reuse the session Mermaid asset: {inline_mermaid_requests!r}"
+        )
     return (
         request_paths(generated_requests),
         request_paths(import_module_requests),

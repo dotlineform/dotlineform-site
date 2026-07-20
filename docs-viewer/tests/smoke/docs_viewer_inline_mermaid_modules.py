@@ -30,6 +30,21 @@ def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
 def install_fixture(page: Page) -> None:
     page.evaluate(
         """async () => {
+            await new Promise((resolve, reject) => {
+                const existing = document.querySelector('link[data-inline-mermaid-smoke-styles]');
+                if (existing?.sheet) {
+                    resolve();
+                    return;
+                }
+                const link = existing || document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = '/docs-viewer/static/css/docs-viewer.css';
+                link.dataset.inlineMermaidSmokeStyles = 'true';
+                link.addEventListener('load', resolve, { once: true });
+                link.addEventListener('error', () => reject(new Error('Docs Viewer stylesheet did not load.')), { once: true });
+                if (!existing) document.head.appendChild(link);
+            });
+            document.body.classList.add('docsViewer');
             const inlineMermaid = await import('/docs-viewer/runtime/js/shared/docs-viewer-inline-mermaid.js');
             const documentController = await import('/docs-viewer/runtime/js/shared/docs-viewer-document-controller.js');
             window.__docsViewerInlineMermaidSmoke = { inlineMermaid, documentController };
@@ -154,7 +169,12 @@ def assert_session_renderer_and_failure_containment(page: Page) -> None:
                 failureText: failureStatus?.textContent || '',
                 failureRole: failureStatus?.getAttribute('role') || '',
                 failureLive: failureStatus?.getAttribute('aria-live') || '',
-                failureAssociated: retainedSource?.parentElement?.getAttribute('aria-describedby') === failureStatus?.id
+                failureAssociated: retainedSource?.parentElement?.getAttribute('aria-describedby') === failureStatus?.id,
+                failureBeforeSource: failureStatus?.nextElementSibling === retainedSource?.parentElement,
+                failureDisplay: failureStatus ? getComputedStyle(failureStatus).display : '',
+                failureVisibility: failureStatus ? getComputedStyle(failureStatus).visibility : '',
+                failureBorderWidth: failureStatus ? getComputedStyle(failureStatus).borderInlineStartWidth : '',
+                sourceDisplay: retainedSource?.parentElement ? getComputedStyle(retainedSource.parentElement).display : ''
             };
         }"""
     )
@@ -195,6 +215,14 @@ def assert_session_renderer_and_failure_containment(page: Page) -> None:
         raise AssertionError(f"visible Mermaid failure copy changed: {result!r}")
     if result["failureRole"] != "status" or result["failureLive"] != "polite" or not result["failureAssociated"]:
         raise AssertionError(f"Mermaid failure was not politely associated with its source: {result!r}")
+    if (
+        not result["failureBeforeSource"]
+        or result["failureDisplay"] == "none"
+        or result["failureVisibility"] != "visible"
+        or result["failureBorderWidth"] != "3px"
+        or result["sourceDisplay"] == "none"
+    ):
+        raise AssertionError(f"Mermaid failure and retained source were not visibly ordered: {result!r}")
     if result["warnings"] != [{"message": "docs_viewer: inline Mermaid diagram unavailable", "detail": "synthetic parser detail"}]:
         raise AssertionError(f"Mermaid detailed failure did not stay in diagnostics: {result!r}")
 
@@ -300,16 +328,48 @@ def assert_checked_browser_runtime_renders(page: Page) -> None:
             content.appendChild(pre);
             document.body.appendChild(content);
             const mountResult = await inlineMermaid.docsViewerInlineMermaidAdapter.mountDocument({ content });
+
+            const mixed = document.createElement('article');
+            mixed.innerHTML = [
+                '<pre><code class="language-mermaid">flowchart LR\\n  accTitle: First mixed proof\\n  accDescr: The first valid diagram renders before a contained error\\n  A --&gt; B</code></pre>',
+                '<pre><code class="language-mermaid">not a Mermaid diagram</code></pre>',
+                '<pre><code class="language-mermaid">sequenceDiagram\\n  accTitle: Later mixed proof\\n  accDescr: A later valid diagram renders after an invalid source\\n  participant A\\n  participant B\\n  A-&gt;&gt;B: Continue</code></pre>'
+            ].join('');
+            document.body.appendChild(mixed);
+            const diagnostics = [];
+            const originalWarn = console.warn;
+            console.warn = (...args) => {
+                if (String(args[0] || '').startsWith('docs_viewer:')) {
+                    diagnostics.push({ message: String(args[0]), detail: String(args[1]?.message || args[1] || '') });
+                }
+            };
+            let mixedResult;
+            try {
+                mixedResult = await inlineMermaid.docsViewerInlineMermaidAdapter.mountDocument({ content: mixed });
+            } finally {
+                console.warn = originalWarn;
+            }
             const script = document.querySelector('script[data-docs-viewer-inline-mermaid-runtime]');
             const host = content.querySelector('.docsViewer__diagram');
+            const mixedError = mixed.querySelector('.docsViewer__diagramError');
+            const mixedSource = mixed.querySelector('pre > code.language-mermaid');
             return {
                 mountResult,
+                mixedResult,
                 assetVersion: script?.dataset.docsViewerInlineMermaidRuntime || '',
                 assetPath: script?.getAttribute('src') || '',
                 hostKind: host?.dataset.docsViewerDiagramKind || '',
                 title: host?.querySelector('svg title')?.textContent || '',
                 description: host?.querySelector('svg desc')?.textContent || '',
-                sourceCount: content.querySelectorAll('pre > code.language-mermaid').length
+                sourceCount: content.querySelectorAll('pre > code.language-mermaid').length,
+                mixedHostCount: mixed.querySelectorAll('.docsViewer__diagram').length,
+                mixedSourceCount: mixed.querySelectorAll('pre > code.language-mermaid').length,
+                mixedSource: mixedSource?.textContent || '',
+                mixedErrorText: mixedError?.textContent || '',
+                mixedDiagnosticCount: diagnostics.length,
+                mixedDiagnosticMessage: diagnostics[0]?.message || '',
+                mixedDiagnosticHasDetail: Boolean(diagnostics[0]?.detail),
+                diagnosticLeakedToContent: diagnostics.some(item => mixed.textContent.includes(item.detail))
             };
         }"""
     )
@@ -321,6 +381,19 @@ def assert_checked_browser_runtime_renders(page: Page) -> None:
         raise AssertionError(f"checked Mermaid render did not use the settled host: {result!r}")
     if result["title"] != "Inline renderer proof" or result["description"] != "A short path from source to rendered SVG":
         raise AssertionError(f"checked Mermaid render did not preserve accessible text: {result!r}")
+    if result["mixedResult"] != {"found": 3, "rendered": 2, "failed": 1, "stale": False}:
+        raise AssertionError(f"checked Mermaid runtime did not contain an invalid middle diagram: {result!r}")
+    if result["mixedHostCount"] != 2 or result["mixedSourceCount"] != 1 or result["mixedSource"] != "not a Mermaid diagram":
+        raise AssertionError(f"checked Mermaid runtime did not retain only the failed source: {result!r}")
+    if result["mixedErrorText"] != "Diagram could not be rendered. Mermaid source is shown below.":
+        raise AssertionError(f"checked Mermaid runtime fallback changed: {result!r}")
+    if (
+        result["mixedDiagnosticCount"] != 1
+        or result["mixedDiagnosticMessage"] != "docs_viewer: inline Mermaid diagram unavailable"
+        or not result["mixedDiagnosticHasDetail"]
+        or result["diagnosticLeakedToContent"]
+    ):
+        raise AssertionError(f"checked Mermaid diagnostic was not console-only: {result!r}")
 
 
 def assert_document_mount_generation_contract(page: Page) -> None:

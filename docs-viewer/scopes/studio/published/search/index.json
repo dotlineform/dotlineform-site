@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-446cc8a8fe63d5a3675465bd13364e7a",
-    "generated_at_utc": "2026-07-20T12:24:25Z",
+    "version": "blake2b-49882932633aa586d69cf26506f6f459",
+    "generated_at_utc": "2026-07-20T12:41:49Z",
     "count": 262
   },
   "entries": [
@@ -1699,10 +1699,10 @@
       "kind": "doc",
       "title": "Document Diagrams",
       "href": "/docs/?scope=studio&doc=d-20260719-123719-fb7565",
-      "last_updated": "2026-07-20 10:26:58",
+      "last_updated": "2026-07-20 13:40:46",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-20 10:26:58 • Docs Viewer",
+      "display_meta": "2026-07-20 13:40:46 • Docs Viewer",
       "search_terms": [
         "document diagrams",
         "document",
@@ -1710,16 +1710,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-20 10:26:58",
+        "2026-07-20 13:40:46",
         "2026",
         "07",
         "20",
-        "10",
-        "26",
-        "58",
+        "13",
+        "40",
+        "46",
         "d-20260719-123719-fb7565"
       ],
-      "search_text": "document diagrams document diagrams docs viewer docs viewer 2026-07-20 10:26:58 2026 07 20 10 26 58 d-20260719-123719-fb7565"
+      "search_text": "document diagrams document diagrams docs viewer docs viewer 2026-07-20 13:40:46 2026 07 20 13 40 46 d-20260719-123719-fb7565"
     },
     {
       "id": "d-20260715-094411-2b6e65",
@@ -1839,25 +1839,25 @@
       "kind": "doc",
       "title": "Export",
       "href": "/docs/?scope=studio&doc=d-20260629-152159-ac1af9",
-      "last_updated": "2026-07-20 10:26:58",
+      "last_updated": "2026-07-20 13:40:46",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-20 10:26:58 • Docs Viewer",
+      "display_meta": "2026-07-20 13:40:46 • Docs Viewer",
       "search_terms": [
         "export",
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-20 10:26:58",
+        "2026-07-20 13:40:46",
         "2026",
         "07",
         "20",
-        "10",
-        "26",
-        "58",
+        "13",
+        "40",
+        "46",
         "d-20260629-152159-ac1af9"
       ],
-      "search_text": "export docs viewer docs viewer 2026-07-20 10:26:58 2026 07 20 10 26 58 d-20260629-152159-ac1af9"
+      "search_text": "export docs viewer docs viewer 2026-07-20 13:40:46 2026 07 20 13 40 46 d-20260629-152159-ac1af9"
     },
     {
       "id": "d-20260623-000000-c99cef",
@@ -4171,10 +4171,10 @@
       "kind": "doc",
       "title": "Inline Mermaid Rendering Concept",
       "href": "/docs/?scope=studio&doc=d-20260720-102658-b55348",
-      "last_updated": "2026-07-20 13:17:56",
+      "last_updated": "2026-07-20 13:40:46",
       "parent_id": "d-20260715-181845-0158f9",
       "parent_title": "Diagrams",
-      "display_meta": "2026-07-20 13:17:56 • Diagrams",
+      "display_meta": "2026-07-20 13:40:46 • Diagrams",
       "search_terms": [
         "inline mermaid rendering concept",
         "inline",
@@ -4182,26 +4182,26 @@
         "rendering",
         "concept",
         "diagrams",
-        "2026-07-20 13:17:56",
+        "2026-07-20 13:40:46",
         "2026",
         "07",
         "20",
         "13",
-        "17",
-        "56",
+        "40",
+        "46",
         "d-20260720-102658-b55348"
       ],
-      "search_text": "inline mermaid rendering concept inline mermaid rendering concept diagrams 2026-07-20 13:17:56 2026 07 20 13 17 56 d-20260720-102658-b55348"
+      "search_text": "inline mermaid rendering concept inline mermaid rendering concept diagrams 2026-07-20 13:40:46 2026 07 20 13 40 46 d-20260720-102658-b55348"
     },
     {
       "id": "d-20260720-102658-7de33d",
       "kind": "doc",
       "title": "Inline Mermaid Rendering Delivery",
       "href": "/docs/?scope=studio&doc=d-20260720-102658-7de33d",
-      "last_updated": "2026-07-20 13:24:05",
+      "last_updated": "2026-07-20 13:40:46",
       "parent_id": "d-20260715-181845-0158f9",
       "parent_title": "Diagrams",
-      "display_meta": "2026-07-20 13:24:05 • Diagrams",
+      "display_meta": "2026-07-20 13:40:46 • Diagrams",
       "search_terms": [
         "inline mermaid rendering delivery",
         "inline",
@@ -4209,16 +4209,16 @@
         "rendering",
         "delivery",
         "diagrams",
-        "2026-07-20 13:24:05",
+        "2026-07-20 13:40:46",
         "2026",
         "07",
         "20",
         "13",
-        "24",
-        "05",
+        "40",
+        "46",
         "d-20260720-102658-7de33d"
       ],
-      "search_text": "inline mermaid rendering delivery inline mermaid rendering delivery diagrams 2026-07-20 13:24:05 2026 07 20 13 24 05 d-20260720-102658-7de33d"
+      "search_text": "inline mermaid rendering delivery inline mermaid rendering delivery diagrams 2026-07-20 13:40:46 2026 07 20 13 40 46 d-20260720-102658-7de33d"
     },
     {
       "id": "d-20260718-214206-27df44",

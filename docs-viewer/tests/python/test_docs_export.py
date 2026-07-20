@@ -694,6 +694,49 @@ def test_export_uses_source_context_for_markdown_document_content() -> None:
     assert rows_by_doc_id["library"]["content"] == "# Library\n\nBody text."
 
 
+def test_markdown_document_content_export_preserves_inline_mermaid_source() -> None:
+    mermaid_markdown = "\n".join(
+        [
+            "# Library",
+            "",
+            "Before diagram.",
+            "",
+            "```mermaid",
+            "flowchart LR",
+            "  accTitle: Export preservation proof",
+            "  accDescr: Source remains Markdown in the package",
+            "  Source --> Package",
+            "```",
+            "",
+            "After diagram.",
+        ]
+    )
+    config = docs_export_config.load_config_file(REPO_ROOT)
+    with make_repo(copy.deepcopy(config)) as temp:
+        root = Path(temp)
+        write_doc(
+            root,
+            "library.md",
+            doc_id="library",
+            title="Library",
+            body=mermaid_markdown,
+        )
+
+        report = docs_export.build_export(
+            repo_root=root,
+            config_id="document-content",
+            scope="library",
+            selected_doc_ids=["library"],
+            select_all=False,
+            missing_summary_only=None,
+            write=True,
+        )
+        rows = [json.loads(line) for line in artifact_path(report["output_file"]).read_text(encoding="utf-8").splitlines()]
+
+    assert report["ok"] is True, report
+    assert rows[1]["content"] == mermaid_markdown
+
+
 def test_document_content_plain_text_override_preserves_existing_content_behavior() -> None:
     config = docs_export_config.load_config_file(REPO_ROOT)
     with make_repo(copy.deepcopy(config)) as temp:
@@ -841,6 +884,7 @@ def main() -> None:
         test_repo_documents_prepare_profiles_load_and_validate,
         test_repo_full_document_content_exports_relationship_fields,
         test_export_uses_source_context_for_markdown_document_content,
+        test_markdown_document_content_export_preserves_inline_mermaid_source,
         test_document_content_plain_text_override_preserves_existing_content_behavior,
         test_document_content_json_output_declares_content_format,
         test_missing_source_context_returns_structured_export_error,

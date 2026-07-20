@@ -42,6 +42,7 @@ APPLE_NOTES_CAPTION_SPAN_PATTERN = re.compile(
     r"(?P<body>.*?)</span>",
     re.IGNORECASE | re.DOTALL,
 )
+SAFE_CODE_FENCE_INFO_PATTERN = re.compile(r"^[a-z0-9_+-]+$", re.IGNORECASE)
 
 INLINE_RASTER_EXTENSIONS = {
     "gif": "gif",
@@ -95,9 +96,12 @@ def humanize(value: str) -> str:
     return " ".join(part.capitalize() for part in re.split(r"[_\-\s]+", value.strip()) if part)
 
 
-def fence_code(text: str) -> str:
+def fence_code(text: str, *, info: str = "") -> str:
     content = text.rstrip("\n")
-    return f"```\n{content}\n```"
+    normalized_info = str(info or "").strip()
+    if normalized_info and not SAFE_CODE_FENCE_INFO_PATTERN.fullmatch(normalized_info):
+        normalized_info = ""
+    return f"```{normalized_info}\n{content}\n```"
 
 
 def relative_path(base: Path, path: Path) -> str:
