@@ -14,6 +14,7 @@ from .common import (
     SITE_DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH,
     load_docs_scope_configs,
 )
+from .runtime_bootstrap import apply_projects_base_dir_override
 from .pipeline import DocsDataBuilder
 from .source import FrontMatterSyntaxError, InvalidDocIdError, MissingDocIdError
 from .sub_scope import SubScopeDocsBuilder, selected_sub_scope
@@ -22,6 +23,10 @@ from .sub_scope import SubScopeDocsBuilder, selected_sub_scope
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build Docs Viewer generated document payloads.")
     parser.add_argument("--scope", action="append", default=[], help="Limit build to a named docs scope.")
+    parser.add_argument(
+        "--projects-base-dir",
+        help="Override DOTLINEFORM_PROJECTS_BASE_DIR for this build after loading .env.local.",
+    )
     parser.add_argument("--source", help="Override docs source directory for a single selected scope.")
     parser.add_argument("--output", help="Override docs data output directory for a single selected scope.")
     parser.add_argument("--viewer-base-url", help="Override viewer page URL base for a single selected scope.")
@@ -34,6 +39,8 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv or sys.argv[1:])
+    if args.projects_base_dir:
+        apply_projects_base_dir_override(args.projects_base_dir)
     repo_root = Path.cwd().resolve()
     configs_by_scope = load_docs_scope_configs(repo_root)
     requested_scopes = [scope.strip().lower() for scope in args.scope if scope.strip()]

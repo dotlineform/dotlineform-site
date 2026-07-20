@@ -53,6 +53,37 @@ def test_python_docs_builder_scripts_load_repo_local_env_before_scope_config() -
     assert all(result.returncode == 0 for result in results)
     assert all("DOTLINEFORM_PROJECTS_BASE_DIR is required" not in result.stderr for result in results)
 
+
+def test_python_docs_builders_accept_explicit_projects_base_after_repo_local_env() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        unavailable_projects_root = root / "unavailable-projects"
+        isolated_projects_root = root / "isolated-projects"
+        (isolated_projects_root / "docs-viewer").mkdir(parents=True)
+        write_site_tools_config(root, media_base="")
+        write_external_scope_config(root, isolated_projects_root / "docs-viewer")
+        write_text(root / ".env.local", f"DOTLINEFORM_PROJECTS_BASE_DIR={unavailable_projects_root}\n")
+
+        results = [
+            subprocess.run(
+                [
+                    sys.executable,
+                    str(BUILD_DIR / script),
+                    "--projects-base-dir",
+                    str(isolated_projects_root),
+                    "--help",
+                ],
+                cwd=root,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            for script in ("build_docs.py", "build_search.py")
+        ]
+
+    assert all(result.returncode == 0 for result in results)
+    assert all("external_data_root" not in result.stderr for result in results)
+
 def test_python_docs_builder_writes_browser_configs_on_cli_write() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)

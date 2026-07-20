@@ -14,10 +14,14 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
-from docs_builder.runtime_bootstrap import apply_repo_local_env
+from docs_builder.runtime_bootstrap import (
+    apply_projects_base_dir_override,
+    apply_repo_local_env,
+    projects_base_dir_from_argv,
+)
 
 if __name__ == "__main__":
-    apply_repo_local_env()
+    apply_repo_local_env(projects_base_dir=projects_base_dir_from_argv(sys.argv[1:]))
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -535,6 +539,10 @@ class DocsViewerSearchDataBuilder:
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build Docs Viewer search indexes.")
     parser.add_argument("--scope", default=DEFAULT_SCOPE, help="Docs Viewer search scope to build.")
+    parser.add_argument(
+        "--projects-base-dir",
+        help="Override DOTLINEFORM_PROJECTS_BASE_DIR for this build after loading .env.local.",
+    )
     parser.add_argument("--output", help="Generated search index output path.")
     parser.add_argument("--only-doc-ids", action="append", default=[], help="Comma-separated doc ids for targeted docs-domain search updates.")
     parser.add_argument("--only-records", help="Catalogue-only targeted search records.")
@@ -549,6 +557,8 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv or sys.argv[1:])
+    if args.projects_base_dir:
+        apply_projects_base_dir_override(args.projects_base_dir)
     repo_root = Path.cwd().resolve()
     builder = DocsViewerSearchDataBuilder(
         repo_root=repo_root,

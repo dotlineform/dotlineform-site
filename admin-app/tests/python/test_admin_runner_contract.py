@@ -43,6 +43,21 @@ def test_admin_runner_expands_admin_smoke_profile_without_studio_risk_route() ->
     assert "studio/tests/smoke/local_studio_app_risk_route.py" not in argv_text
 
 
+def test_admin_runner_docs_profile_uses_one_isolated_projects_base_contract() -> None:
+    runner = load_runner_module()
+
+    commands = runner.expand_profiles(["docs"])
+
+    assert [command.name for command in commands] == [
+        "docs-python-pytest",
+        "studio-docs-build",
+        "studio-search-build",
+    ]
+    assert all(command.isolated_projects_base for command in commands)
+    assert commands[0].projects_base_argument is False
+    assert all(command.projects_base_argument for command in commands[1:])
+
+
 def test_admin_runner_writes_summary_paths_under_admin_root(tmp_path, monkeypatch) -> None:
     runner = load_runner_module()
     runs_dir = REPO_ROOT / "var" / "admin" / "test-runs" / "pytest-runner-contract"
@@ -92,3 +107,29 @@ def test_admin_runner_executes_representative_app_local_pytest(tmp_path) -> None
     finally:
         if log_dir.exists():
             shutil.rmtree(log_dir)
+
+
+def test_admin_runner_materializes_isolated_projects_base_for_opted_in_command(tmp_path, monkeypatch) -> None:
+    runner = load_runner_module()
+    monkeypatch.setattr(runner, "REPO_ROOT", tmp_path)
+    log_path = tmp_path / "run" / "isolated-command.log"
+    log_path.parent.mkdir(parents=True)
+    command = runner.CheckCommand(
+        "isolated-command",
+        (
+            sys.executable,
+            "-c",
+            "import os; raise SystemExit(0 if os.environ.get('DOTLINEFORM_PROJECTS_BASE_DIR') else 2)",
+        ),
+        "Run with an isolated Projects base.",
+        isolated_projects_base=True,
+        projects_base_argument=True,
+    )
+
+    result = runner.run_command(command, log_path)
+
+    projects_base = log_path.parent / "isolated-projects"
+    assert result["exit_code"] == 0
+    assert projects_base.joinpath("docs-viewer").is_dir()
+    assert result["command"][-2:] == ["--projects-base-dir", str(projects_base.resolve())]
+    assert str(projects_base.resolve()) in log_path.read_text(encoding="utf-8")

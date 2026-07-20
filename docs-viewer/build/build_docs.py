@@ -3,10 +3,12 @@
 
 from __future__ import annotations
 
-from docs_builder.runtime_bootstrap import apply_repo_local_env
+import sys
+
+from docs_builder.runtime_bootstrap import apply_repo_local_env, projects_base_dir_from_argv
 
 if __name__ == "__main__":
-    apply_repo_local_env()
+    apply_repo_local_env(projects_base_dir=projects_base_dir_from_argv(sys.argv[1:]))
 
 from docs_builder.browser_config import (
     browser_docs_index_tree_url,

@@ -55,6 +55,7 @@
   - Repo whitespace: `git diff --check`
   - Broader blast radius: `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile <profile>`
 - Before running Python tests that import Docs Viewer services, export `.env.local` in the same shell (`set -a; source .env.local; set +a`). Scope configuration is loaded during test collection, and configured external-local scopes require `DOTLINEFORM_PROJECTS_BASE_DIR`; a test run without it can fail during collection before any tests execute.
+- `admin-app/commands/run_checks.py --profile docs` is self-contained: it gives its Python and Studio builder steps a run-owned writable Projects base and must not read or write the configured external-local workspace. Direct focused commands still need an explicit suitable environment.
 - Use the smallest relevant `run_checks.py` profile, such as `quick`, `catalogue`, `docs`, `admin-smoke`, `analytics-smoke`, `docs-viewer-smoke`, or `studio-smoke`.
 - When `admin-app/commands/run_checks.py` is used, report the profile, pass/fail result, and `var/admin/test-runs/.../summary.md` path.
 - For commands that bind loopback ports or launch browser smokes, run them with elevated localhost/browser permissions in the Codex sandbox. Keep pure syntax checks, `git diff --check`, JSON parsing, and non-network pytest runs sandboxed.

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3c0bf2b8d4a32e266183133da5ca3b2e",
-    "generated_at_utc": "2026-07-20T19:00:09Z",
+    "version": "blake2b-e9c4b72ad59d281ae61d7d27ad035fbe",
+    "generated_at_utc": "2026-07-20T19:22:42Z",
     "count": 271
   },
   "entries": [
@@ -2887,24 +2887,23 @@
       "kind": "doc",
       "title": "Docs Viewer Core Refactor",
       "href": "/docs/?scope=studio&doc=d-20260718-114645-7b9d24",
-      "last_updated": "2026-07-18 12:42:44",
-      "display_meta": "2026-07-18 12:42:44",
+      "last_updated": "2026-07-20 20:21:38",
+      "display_meta": "2026-07-20 20:21:38",
       "search_terms": [
         "docs viewer core refactor",
         "docs",
         "viewer",
         "core",
         "refactor",
-        "2026-07-18 12:42:44",
+        "2026-07-20 20:21:38",
         "2026",
         "07",
-        "18",
-        "12",
-        "42",
-        "44",
+        "20",
+        "21",
+        "38",
         "d-20260718-114645-7b9d24"
       ],
-      "search_text": "docs viewer core refactor docs viewer core refactor 2026-07-18 12:42:44 2026 07 18 12 42 44 d-20260718-114645-7b9d24"
+      "search_text": "docs viewer core refactor docs viewer core refactor 2026-07-20 20:21:38 2026 07 20 21 38 d-20260718-114645-7b9d24"
     },
     {
       "id": "d-20260718-121833-9fa2d4",
@@ -3910,25 +3909,24 @@
       "kind": "doc",
       "title": "Docs Viewer Roadmap",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-1e0af6",
-      "last_updated": "2026-07-20 17:38:06",
+      "last_updated": "2026-07-20 20:21:38",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-20 17:38:06 • Roadmap",
+      "display_meta": "2026-07-20 20:21:38 • Roadmap",
       "search_terms": [
         "docs viewer roadmap",
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-20 17:38:06",
+        "2026-07-20 20:21:38",
         "2026",
         "07",
         "20",
-        "17",
+        "21",
         "38",
-        "06",
         "d-20260714-234030-1e0af6"
       ],
-      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-20 17:38:06 2026 07 20 17 38 06 d-20260714-234030-1e0af6"
+      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-20 20:21:38 2026 07 20 21 38 d-20260714-234030-1e0af6"
     },
     {
       "id": "d-20260716-204013-3be4e1",

@@ -4,6 +4,20 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260718-114645-7b9d24",
+      "title": "Docs Viewer Core Refactor",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-114645-7b9d24.json",
+      "timestamp": "2026-07-20 20:21:38"
+    },
+    {
+      "doc_id": "d-20260714-234030-1e0af6",
+      "title": "Docs Viewer Roadmap",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-1e0af6.json",
+      "timestamp": "2026-07-20 20:21:38",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
       "doc_id": "d-20260720-172819-93d6b2",
       "title": "Document Sharing Ownership Cutover Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-172819-93d6b2.json",
@@ -66,23 +80,7 @@
       "timestamp": "2026-07-20 19:09:50",
       "parent_id": "d-20260607-222033-2a494e",
       "parent_title": "Scripts Overview"
-    },
-    {
-      "doc_id": "d-20260514-184303-7914e2",
-      "title": "Media And Asset Handling",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260514-184303-7914e2.json",
-      "timestamp": "2026-07-20 19:09:50",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260720-174842-4c2f6a",
-      "title": "DSO-0 — Behavior And Dependency Findings",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-174842-4c2f6a.json",
-      "timestamp": "2026-07-20 18:14:09",
-      "parent_id": "d-20260718-155350-c84e62",
-      "parent_title": "Share Document Packages"
     }
   ],
-  "generated_at": "2026-07-20T19:00:09Z"
+  "generated_at": "2026-07-20T19:22:42Z"
 }

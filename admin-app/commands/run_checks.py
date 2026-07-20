@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import os
 import re
 import shlex
 import subprocess
@@ -27,6 +28,8 @@ class CheckCommand:
     name: str
     argv: tuple[str, ...]
     description: str
+    isolated_projects_base: bool = False
+    projects_base_argument: bool = False
 
 
 def site_validate_argv() -> tuple[str, ...]:
@@ -370,16 +373,21 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/python/test_generated_output_contract_fixtures.py",
             ),
             "Run docs-profile Python tests through pytest collection.",
+            isolated_projects_base=True,
         ),
         CheckCommand(
             "studio-docs-build",
             (sys.executable, "docs-viewer/build/build_docs.py", "--scope", "studio", "--write"),
             "Regenerate Studio docs-viewer payloads.",
+            isolated_projects_base=True,
+            projects_base_argument=True,
         ),
         CheckCommand(
             "studio-search-build",
             (sys.executable, "docs-viewer/build/build_search.py", "--scope", "studio", "--write"),
             "Regenerate Studio docs search payload.",
+            isolated_projects_base=True,
+            projects_base_argument=True,
         ),
     ),
     "docs-viewer-smoke": (
@@ -644,26 +652,51 @@ def expand_profiles(profile_names: Iterable[str]) -> list[CheckCommand]:
     return commands
 
 
+def isolated_projects_base(command: CheckCommand, *, log_path: Path) -> Path | None:
+    if not command.isolated_projects_base:
+        return None
+    projects_base = log_path.parent / "isolated-projects"
+    (projects_base / "docs-viewer").mkdir(parents=True, exist_ok=True)
+    return projects_base.resolve()
+
+
+def command_argv(command: CheckCommand, *, projects_base: Path | None) -> tuple[str, ...]:
+    if not command.projects_base_argument:
+        return command.argv
+    if projects_base is None:
+        raise ValueError(f"check command {command.name!r} requires an isolated Projects base")
+    return (*command.argv, "--projects-base-dir", str(projects_base))
+
+
 def run_command(command: CheckCommand, log_path: Path) -> dict[str, object]:
     started = time.monotonic()
     started_at = dt.datetime.now(dt.timezone.utc).isoformat()
+    projects_base = isolated_projects_base(command, log_path=log_path)
+    argv = command_argv(command, projects_base=projects_base)
+    environ = None
+    if projects_base is not None:
+        environ = dict(os.environ)
+        environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = str(projects_base)
     header = [
         f"name: {command.name}",
         f"description: {command.description}",
         f"cwd: {REPO_ROOT}",
-        f"command: {command_text(command.argv)}",
+        f"command: {command_text(argv)}",
         f"started_at_utc: {started_at}",
         "",
     ]
+    if projects_base is not None:
+        header.insert(4, f"projects_base: {projects_base}")
 
     try:
         result = subprocess.run(
-            command.argv,
+            argv,
             cwd=REPO_ROOT,
             text=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             check=False,
+            env=environ,
         )
         output = result.stdout or ""
         exit_code = result.returncode
@@ -682,7 +715,7 @@ def run_command(command: CheckCommand, log_path: Path) -> dict[str, object]:
     return {
         "name": command.name,
         "description": command.description,
-        "command": list(command.argv),
+        "command": list(argv),
         "exit_code": exit_code,
         "duration_seconds": round(duration, 2),
         "log": str(log_path.relative_to(REPO_ROOT)),
