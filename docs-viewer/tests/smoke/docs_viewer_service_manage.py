@@ -155,24 +155,32 @@ def assert_inline_mermaid_browser_review(page: Page, timeout_ms: int) -> None:
                     '.docsViewer__diagram[data-docs-viewer-diagram-kind="inline-mermaid"]'
                 );
                 const svg = host?.querySelector(':scope > svg');
+                const viewport = host?.parentElement;
+                const frame = viewport?.parentElement;
                 const children = Array.from(content.children);
-                const hostIndex = children.indexOf(host);
+                const frameIndex = children.indexOf(frame);
                 const focusableSelector = 'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
                 return {
                     theme: document.documentElement.getAttribute('data-theme') || '',
                     hostBackground: host ? getComputedStyle(host).backgroundColor : '',
                     hostOverflowX: host ? getComputedStyle(host).overflowX : '',
+                    viewportOverflowX: viewport ? getComputedStyle(viewport).overflowX : '',
                     svgDisplay: svg ? getComputedStyle(svg).display : '',
                     svgTitle: svg?.querySelector('title')?.textContent.trim() || '',
                     svgDescription: svg?.querySelector('desc')?.textContent.trim() || '',
                     hostRole: host?.getAttribute('role'),
                     hostTabIndex: host?.getAttribute('tabindex'),
                     focusableCount: host?.querySelectorAll(focusableSelector).length ?? -1,
-                    directChild: host?.parentElement === content,
-                    hostIndex,
+                    directViewportChild: viewport?.classList.contains('docsViewer__diagramViewport')
+                        && host?.parentElement === viewport,
+                    directFrameChild: frame?.classList.contains('docsViewer__diagramFrame')
+                        && viewport?.parentElement === frame,
+                    frameKind: frame?.dataset.docsViewerDiagramFrame || '',
+                    frameDirectChild: frame?.parentElement === content,
+                    frameIndex,
                     childCount: children.length,
-                    previousText: host?.previousElementSibling?.textContent.trim() || '',
-                    nextText: host?.nextElementSibling?.textContent.trim() || ''
+                    previousText: frame?.previousElementSibling?.textContent.trim() || '',
+                    nextText: frame?.nextElementSibling?.textContent.trim() || ''
                 };
             }"""
         )
@@ -194,7 +202,7 @@ def assert_inline_mermaid_browser_review(page: Page, timeout_ms: int) -> None:
     for theme, state in states.items():
         if state["hostBackground"] != "rgb(255, 255, 255)" or state["svgDisplay"] != "block":
             raise AssertionError(f"inline diagram lost its neutral readable surface in {theme}: {state!r}")
-        if state["hostOverflowX"] != "auto":
+        if state["hostOverflowX"] != "visible" or state["viewportOverflowX"] != "auto":
             raise AssertionError(f"inline diagram responsive overflow changed in {theme}: {state!r}")
         if state["svgTitle"] != "Inline Mermaid reader lifecycle" or not str(state["svgDescription"]).startswith(
             "Canonical Markdown becomes"
@@ -206,8 +214,11 @@ def assert_inline_mermaid_browser_review(page: Page, timeout_ms: int) -> None:
         reading_state["hostRole"] is not None
         or reading_state["hostTabIndex"] is not None
         or reading_state["focusableCount"] != 0
-        or not reading_state["directChild"]
-        or not 0 < int(reading_state["hostIndex"]) < int(reading_state["childCount"]) - 1
+        or not reading_state["directViewportChild"]
+        or not reading_state["directFrameChild"]
+        or reading_state["frameKind"] != "inline-mermaid"
+        or not reading_state["frameDirectChild"]
+        or not 0 < int(reading_state["frameIndex"]) < int(reading_state["childCount"]) - 1
         or not reading_state["previousText"]
         or not reading_state["nextText"]
     ):
