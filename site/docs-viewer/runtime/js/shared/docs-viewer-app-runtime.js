@@ -254,6 +254,12 @@ export function startDocsViewerRuntime(options) {
     nav: nav,
     pathEl: pathEl,
     renderBookmarkToggle: renderBookmarkToggle,
+    renderIndexSelectionGutter: function (doc) {
+      var controller = managementRuntime ? managementRuntime.controller() : null;
+      return controller && typeof controller.renderIndexSelectionGutter === "function"
+        ? controller.renderIndexSelectionGutter(doc)
+        : null;
+    },
     scopeConfig: appSession.domains.scopeConfig,
     selectedDocument: appSession.domains.selectedDocument,
     statusForIndexDoc: documentIndex.statusForIndexDoc,

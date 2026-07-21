@@ -112,6 +112,16 @@ export function createDocsViewerManagementViewDefinitions() {
         renderer: "manage-theme-toggle"
       },
       {
+        id: "index-selection",
+        label: "Select documents",
+        ownerType: "view",
+        ownerViewId: "index-tree",
+        surfaceId: "index-view",
+        appKinds: ["manage"],
+        features: ["management"],
+        renderer: "manage-index-selection"
+      },
+      {
         id: "copy-subtree",
         actionId: DOCS_VIEWER_ACTION_IDS.COPY_SUBTREE,
         label: "Copy subtree to scope…",

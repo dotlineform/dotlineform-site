@@ -8,6 +8,9 @@ import {
   rowDropParentIdFromEvent,
   terminalRootDropTargetFromEvent
 } from "./docs-viewer-drag-drop.js";
+import {
+  visibleDocsViewerIndexSelectionDocIds
+} from "./docs-viewer-index-selection.js";
 
 export function createDocsViewerManagementInteractionController(options) {
   var nav = options.nav;
@@ -16,6 +19,7 @@ export function createDocsViewerManagementInteractionController(options) {
   var routeSession = options.routeSession || {};
   var searchRecent = options.searchRecent || {};
   var selectedDocument = options.selectedDocument || {};
+  var indexSelection = options.indexSelection || null;
   var context = options.context;
   var refs = options.refs || {};
   var callbacks = options.callbacks || {};
@@ -49,6 +53,16 @@ export function createDocsViewerManagementInteractionController(options) {
 
   function editFromIndexEnabled() {
     return routeSession.managementContext && management.managementAvailable && !management.managementBusy && !searchRecent.searchRouteActive;
+  }
+
+  function indexSelectionEnabled() {
+    return Boolean(
+      indexSelection
+      && indexSelection.snapshot().selectionModeActive
+      && routeSession.managementContext
+      && management.managementAvailable
+      && !management.managementBusy
+    );
   }
 
   function dragDropOptions() {
@@ -169,6 +183,18 @@ export function createDocsViewerManagementInteractionController(options) {
     if (!nav) return;
 
     nav.addEventListener("click", function (event) {
+      var selectionCheckbox = event.target.closest("[data-docs-viewer-selection-checkbox]");
+      if (selectionCheckbox && nav.contains(selectionCheckbox)) {
+        event.stopPropagation();
+        if (!indexSelectionEnabled()) return;
+        hideContextMenu();
+        var docId = selectionCheckbox.dataset.docsViewerSelectionCheckbox || "";
+        var nextState = event.shiftKey
+          ? indexSelection.selectRange(docId, visibleDocsViewerIndexSelectionDocIds(nav))
+          : indexSelection.toggle(docId);
+        if (callbacks.onIndexSelectionChange) callbacks.onIndexSelectionChange(nextState);
+        return;
+      }
       if (event.detail >= 2 && !event.target.closest("[data-toggle-doc-id]")) {
         if (editFromIndexEnabled() && documentIndex.docsById.has(selectedDocument.selectedDocId)) {
           suppressNextClick = false;

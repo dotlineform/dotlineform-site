@@ -36,7 +36,9 @@ import {
   resolveDocsViewerAction
 } from "./docs-viewer-action-definitions.js";
 import {
-  createDocsViewerIndexSelectionOwner
+  createDocsViewerIndexSelectionGutter,
+  createDocsViewerIndexSelectionOwner,
+  projectDocsViewerIndexSelectionRows
 } from "./docs-viewer-index-selection.js";
 
 var MANAGEMENT_TEXT = {
@@ -268,6 +270,43 @@ export function initDocsViewerManagement(context) {
     });
   }
 
+  function indexSelectionAvailable() {
+    return Boolean(
+      routeSession.managementContext
+      && management.managementChecked
+      && management.managementAvailable
+    );
+  }
+
+  function renderIndexSelectionGutter(doc) {
+    return createDocsViewerIndexSelectionGutter({
+      document: document,
+      doc: doc,
+      state: indexSelection.snapshot(),
+      disabled: !indexSelectionAvailable() || management.managementBusy
+    });
+  }
+
+  function projectIndexSelection() {
+    var snapshot = indexSelection.snapshot();
+    var available = indexSelectionAvailable();
+    if (typeof context.projectIndexViewControlState === "function") {
+      context.projectIndexViewControlState("index-selection", {
+        hidden: !available,
+        disabled: !available || management.managementBusy,
+        active: snapshot.selectionModeActive,
+        count: snapshot.selectedDocIds.length,
+        label: snapshot.selectionModeActive ? "Done selecting documents" : "Select documents"
+      });
+    }
+    projectDocsViewerIndexSelectionRows({
+      nav: nav,
+      state: snapshot,
+      disabled: !available || management.managementBusy
+    });
+    return snapshot;
+  }
+
   function handleMainViewControl(detail) {
     var controlId = String(detail && detail.controlId || "").trim();
     var actionId = String(detail && detail.actionId || "").trim();
@@ -301,6 +340,27 @@ export function initDocsViewerManagement(context) {
   function handleIndexViewControl(detail) {
     var controlId = String(detail && detail.controlId || "").trim();
     var actionId = String(detail && detail.actionId || "").trim();
+    if (controlId === "index-selection") {
+      if (String(detail && detail.eventType || "") !== "click") return false;
+      var eventTarget = detail && detail.event && detail.event.target;
+      var commandTarget = eventTarget && typeof eventTarget.closest === "function"
+        ? eventTarget.closest("[data-docs-viewer-selection-command]")
+        : null;
+      var command = commandTarget ? String(commandTarget.dataset.docsViewerSelectionCommand || "") : "";
+      if (!command || !indexSelectionAvailable() || management.managementBusy) return false;
+      if (command === "enter") {
+        indexSelection.enter();
+        if (typeof context.renderSidebar === "function") context.renderSidebar();
+      } else if (command === "clear") {
+        indexSelection.clear();
+      } else if (command === "done") {
+        indexSelection.exit();
+      } else {
+        return false;
+      }
+      projectIndexSelection();
+      return true;
+    }
     if (controlId !== "copy-subtree" || actionId !== DOCS_VIEWER_ACTION_IDS.COPY_SUBTREE) return false;
     var resolution = resolveAction(actionId);
     var sourceDoc = actionTargetDoc(resolution);
@@ -320,6 +380,7 @@ export function initDocsViewerManagement(context) {
 
     routeSession.managementContext = typeof context.isManagementContext === "function" && context.isManagementContext();
     syncManageScopeLinks();
+    projectIndexSelection();
     if (!routeSession.managementContext) {
       syncManagementStatus("", false);
       hideAppManagementControls();
@@ -605,6 +666,7 @@ export function initDocsViewerManagement(context) {
     routeSession: routeSession,
     searchRecent: searchRecent,
     selectedDocument: selectedDocument,
+    indexSelection: indexSelection,
     context: context,
     refs: {
       contextMenu: shellRefs.contextMenu
@@ -638,6 +700,9 @@ export function initDocsViewerManagement(context) {
         if (!actionController) return;
         eventRouter.hideManageActionsMenu();
         metadataWorkflow.openForDocId(docId);
+      },
+      onIndexSelectionChange: function () {
+        projectIndexSelection();
       },
       onMoveDoc: function (movingDocId, parentId) {
         if (actionController) actionController.handleMoveDoc(movingDocId, parentId);
@@ -796,6 +861,7 @@ export function initDocsViewerManagement(context) {
     initialize: initializeManagement,
     openImportModal: importController.open,
     render: renderManagementUi,
+    renderIndexSelectionGutter: renderIndexSelectionGutter,
     updateNavDragState: updateNavDragState
   };
 }

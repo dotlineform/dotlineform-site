@@ -115,3 +115,50 @@ export function createDocsViewerIndexSelectionOwner(options = {}) {
     }
   });
 }
+
+export function createDocsViewerIndexSelectionGutter(options = {}) {
+  var documentRef = options.document || document;
+  var doc = options.doc && typeof options.doc === "object" ? options.doc : {};
+  var docId = normalizeDocId(doc.doc_id);
+  var state = createDocsViewerIndexSelectionState(options.state);
+  var gutter = documentRef.createElement("span");
+  gutter.className = "docsViewer__indexSelectionGutter";
+  gutter.dataset.docsViewerSelectionGutter = docId;
+  gutter.hidden = !state.selectionModeActive;
+
+  var checkbox = documentRef.createElement("input");
+  checkbox.className = "docsViewer__indexSelectionCheckbox";
+  checkbox.type = "checkbox";
+  checkbox.dataset.docsViewerSelectionCheckbox = docId;
+  checkbox.checked = state.selectedDocIds.indexOf(docId) !== -1;
+  checkbox.disabled = Boolean(options.disabled);
+  checkbox.setAttribute("aria-label", "Select " + (normalizeDocId(doc.title) || docId));
+  gutter.appendChild(checkbox);
+  return gutter;
+}
+
+export function projectDocsViewerIndexSelectionRows(options = {}) {
+  var nav = options.nav || null;
+  var state = createDocsViewerIndexSelectionState(options.state);
+  var selected = new Set(state.selectedDocIds);
+  if (!nav) return state;
+  nav.querySelectorAll("[data-docs-viewer-selection-gutter]").forEach(function (gutter) {
+    var checkbox = gutter.querySelector("[data-docs-viewer-selection-checkbox]");
+    var docId = normalizeDocId(gutter.dataset.docsViewerSelectionGutter);
+    gutter.hidden = !state.selectionModeActive;
+    if (!checkbox) return;
+    checkbox.checked = selected.has(docId);
+    checkbox.disabled = Boolean(options.disabled);
+  });
+  return state;
+}
+
+export function visibleDocsViewerIndexSelectionDocIds(nav) {
+  if (!nav) return [];
+  return normalizeDocIds(Array.from(nav.querySelectorAll("[data-docs-viewer-selection-checkbox]"))
+    .filter(function (checkbox) {
+      var gutter = checkbox.closest("[data-docs-viewer-selection-gutter]");
+      return gutter && !gutter.hidden && !checkbox.hidden;
+    })
+    .map(function (checkbox) { return checkbox.dataset.docsViewerSelectionCheckbox; }));
+}

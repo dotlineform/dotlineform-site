@@ -11,6 +11,80 @@
   margin-left: auto;
 }
 
+.docsViewer__indexSelectionControl{
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.docsViewer__indexSelectionButton{
+  appearance: none;
+  border: 0;
+  border-radius: 0.45rem;
+  padding: 0.18rem 0.3rem;
+  background: transparent;
+  color: var(--docs-viewer-text);
+  font: inherit;
+  font-size: var(--docs-viewer-font-caption, 0.75rem);
+  line-height: var(--docs-viewer-line-snug);
+  cursor: pointer;
+}
+
+.docsViewer__indexSelectionButton:hover,
+.docsViewer__indexSelectionButton:focus-visible{
+  background: var(--docs-viewer-panel-2);
+}
+
+.docsViewer__indexSelectionButton:focus-visible{
+  outline: 2px solid var(--docs-viewer-border-strong);
+  outline-offset: 1px;
+}
+
+.docsViewer__indexSelectionButton[disabled]{
+  opacity: 0.55;
+  cursor: default;
+}
+
+.docsViewer__indexSelectionCount{
+  color: var(--docs-viewer-muted);
+  font-size: var(--docs-viewer-font-caption, 0.75rem);
+}
+
+.docsViewer__navItem{
+  position: relative;
+}
+
+.docsViewer__indexSelectionGutter{
+  position: absolute;
+  inset-inline-start: -0.85rem;
+  top: 0.18rem;
+  display: inline-flex;
+  width: 0.75rem;
+  height: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.docsViewer__indexSelectionGutter[hidden]{
+  display: none;
+}
+
+.docsViewer__indexSelectionCheckbox{
+  box-sizing: border-box;
+  width: 0.78rem;
+  height: 0.78rem;
+  margin: 0;
+  accent-color: currentColor;
+  cursor: pointer;
+}
+
+.docsViewer__indexSelectionCheckbox:focus-visible{
+  outline: 2px solid var(--docs-viewer-border-strong);
+  outline-offset: 2px;
+}
+
 
 html[data-theme="light"]{
   color-scheme: light;

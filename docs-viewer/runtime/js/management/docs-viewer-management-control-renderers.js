@@ -13,8 +13,50 @@ function renderDocumentActionButton(context, options) {
   return button;
 }
 
+function selectionCommandButton(documentRef, command, label) {
+  var button = documentRef.createElement("button");
+  button.type = "button";
+  button.className = "docsViewer__indexSelectionButton";
+  button.dataset.docsViewerSelectionCommand = command;
+  button.textContent = label;
+  return button;
+}
+
+function renderIndexSelectionControl(context) {
+  var state = context.control.state || {};
+  var active = Boolean(state.active);
+  var disabled = Boolean(state.disabled);
+  var count = Number.isFinite(Number(state.count)) ? Number(state.count) : 0;
+  var root = context.existingRoot;
+  if (!root || root.tagName !== "DIV") {
+    root = context.document.createElement("div");
+    root.className = "docsViewer__indexSelectionControl";
+    root.setAttribute("role", "group");
+    root.setAttribute("aria-label", "Index selection");
+  }
+
+  if (!active) {
+    var selectButton = selectionCommandButton(context.document, "enter", "Select");
+    selectButton.disabled = disabled;
+    root.replaceChildren(selectButton);
+    return { root: root, interactive: selectButton };
+  }
+
+  var countLabel = context.document.createElement("output");
+  countLabel.className = "docsViewer__indexSelectionCount";
+  countLabel.setAttribute("aria-live", "polite");
+  countLabel.textContent = count + " selected";
+  var clearButton = selectionCommandButton(context.document, "clear", "Clear");
+  clearButton.disabled = disabled || count === 0;
+  var doneButton = selectionCommandButton(context.document, "done", "Done");
+  doneButton.disabled = disabled;
+  root.replaceChildren(countLabel, clearButton, doneButton);
+  return { root: root, interactive: doneButton };
+}
+
 export function createDocsViewerManagementControlRenderers() {
   return {
+    "manage-index-selection": renderIndexSelectionControl,
     "manage-copy-subtree": function (context) {
       return renderDocumentActionButton(context, {
         id: "docsViewerManageCopySubtreeButton",

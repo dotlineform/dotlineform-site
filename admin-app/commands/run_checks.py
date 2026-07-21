@@ -408,7 +408,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "--site-root",
                 str(REPO_ROOT),
             ),
-            "Smoke-check manage-index selection state transitions and singular action-target isolation.",
+            "Smoke-check manage-index selection state, projection, Shift range, and singular action-target isolation.",
         ),
         CheckCommand(
             "docs-viewer-tree-move-projection-module-smoke",

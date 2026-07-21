@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-873f49683c85f3f56bd02a3d1b53a46e",
-    "generated_at_utc": "2026-07-21T07:06:05Z",
+    "version": "blake2b-9fabd69a4f59545693271f399f72d614",
+    "generated_at_utc": "2026-07-21T07:24:42Z",
     "count": 265
   },
   "entries": [
@@ -4088,10 +4088,10 @@
       "kind": "doc",
       "title": "Index Multiple Selection",
       "href": "/docs/?scope=studio&doc=d-20260714-151900-6fa23e",
-      "last_updated": "2026-07-21 08:05:19",
+      "last_updated": "2026-07-21 08:24:16",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-21 08:05:19 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-21 08:24:16 • Docs Viewer Roadmap",
       "search_terms": [
         "index multiple selection",
         "index",
@@ -4101,16 +4101,16 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-21 08:05:19",
+        "2026-07-21 08:24:16",
         "2026",
         "07",
         "21",
         "08",
-        "05",
-        "19",
+        "24",
+        "16",
         "d-20260714-151900-6fa23e"
       ],
-      "search_text": "index multiple selection index multiple selection docs viewer roadmap docs viewer roadmap 2026-07-21 08:05:19 2026 07 21 08 05 19 d-20260714-151900-6fa23e"
+      "search_text": "index multiple selection index multiple selection docs viewer roadmap docs viewer roadmap 2026-07-21 08:24:16 2026 07 21 08 24 16 d-20260714-151900-6fa23e"
     },
     {
       "id": "d-20260714-234030-f30d01",
@@ -4168,10 +4168,10 @@
       "kind": "doc",
       "title": "Index Multiple Selection Delivery",
       "href": "/docs/?scope=studio&doc=d-20260721-074902-838446",
-      "last_updated": "2026-07-21 08:05:19",
+      "last_updated": "2026-07-21 08:24:16",
       "parent_id": "d-20260714-151900-6fa23e",
       "parent_title": "Index Multiple Selection",
-      "display_meta": "2026-07-21 08:05:19 • Index Multiple Selection",
+      "display_meta": "2026-07-21 08:24:16 • Index Multiple Selection",
       "search_terms": [
         "index multiple selection delivery",
         "index",
@@ -4179,16 +4179,16 @@
         "selection",
         "delivery",
         "index multiple selection",
-        "2026-07-21 08:05:19",
+        "2026-07-21 08:24:16",
         "2026",
         "07",
         "21",
         "08",
-        "05",
-        "19",
+        "24",
+        "16",
         "d-20260721-074902-838446"
       ],
-      "search_text": "index multiple selection delivery index multiple selection delivery index multiple selection 2026-07-21 08:05:19 2026 07 21 08 05 19 d-20260721-074902-838446"
+      "search_text": "index multiple selection delivery index multiple selection delivery index multiple selection 2026-07-21 08:24:16 2026 07 21 08 24 16 d-20260721-074902-838446"
     },
     {
       "id": "d-20260715-215355-54ede0",

@@ -112,6 +112,12 @@ export function initDocsViewerSidebarRenderer(context) {
       }
       link.appendChild(document.createTextNode(doc.title));
       row.appendChild(link);
+      var selectionGutter = typeof context.renderIndexSelectionGutter === "function"
+        ? context.renderIndexSelectionGutter(doc)
+        : null;
+      if (selectionGutter && selectionGutter.nodeType === 1) {
+        item.appendChild(selectionGutter);
+      }
       item.appendChild(row);
 
       if (hasChildren && documentIndex.expandedDocIds.has(doc.doc_id)) {

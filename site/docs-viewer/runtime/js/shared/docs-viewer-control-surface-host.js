@@ -41,6 +41,11 @@ function applyControlState(parts, control) {
   if (Object.prototype.hasOwnProperty.call(state, "busy")) {
     setBooleanAttribute(root, "aria-busy", state.busy);
   }
+  if (Object.prototype.hasOwnProperty.call(state, "active")) {
+    root.dataset.docsViewerControlActive = state.active ? "true" : "false";
+  } else {
+    delete root.dataset.docsViewerControlActive;
+  }
   var label = Object.prototype.hasOwnProperty.call(state, "label") ? state.label : control.label;
   if (label && interactive) {
     interactive.setAttribute("aria-label", label);
