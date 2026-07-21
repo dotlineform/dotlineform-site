@@ -35,12 +35,45 @@ import {
   createDocsViewerActionContext,
   resolveDocsViewerAction
 } from "./docs-viewer-action-definitions.js";
+import {
+  createDocsViewerIndexSelectionOwner
+} from "./docs-viewer-index-selection.js";
 
 var MANAGEMENT_TEXT = {
   checkingNote: "Checking manage mode...",
   clearSearchNote: "Clear search to manage the current doc.",
   unavailableNote: "Docs management service unavailable."
 };
+
+export function createDocsViewerManagementActionContext(options = {}) {
+  var selectedDocument = options.selectedDocument || {};
+  var indexSelection = options.indexSelection || createDocsViewerIndexSelectionOwner();
+  var contextOptions = {
+    activeDocId: selectedDocument.selectedDocId,
+    selectedDocIds: indexSelection.selectedDocIds()
+  };
+  if (Object.prototype.hasOwnProperty.call(options, "invocationDocId")) {
+    contextOptions.invocationDocId = options.invocationDocId;
+  }
+  return createDocsViewerActionContext(contextOptions);
+}
+
+export function createDocsViewerManagementActionResolver(options = {}) {
+  var selectedDocument = options.selectedDocument || {};
+  var indexSelection = options.indexSelection || createDocsViewerIndexSelectionOwner();
+
+  return function resolveAction(actionId, targetDocId) {
+    var contextOptions = {
+      indexSelection: indexSelection,
+      selectedDocument: selectedDocument
+    };
+    if (arguments.length > 1) contextOptions.invocationDocId = targetDocId;
+    return resolveDocsViewerAction(
+      actionId,
+      createDocsViewerManagementActionContext(contextOptions)
+    );
+  };
+}
 
 export function initDocsViewerManagement(context) {
   var root = context.root;
@@ -97,6 +130,7 @@ export function initDocsViewerManagement(context) {
   var scopeLifecycleController = null;
   var settingsWorkflow = null;
   var actionController = null;
+  var indexSelection = createDocsViewerIndexSelectionOwner();
 
   function viewerScope() {
     return context.viewerScope();
@@ -125,17 +159,10 @@ export function initDocsViewerManagement(context) {
     return documentIndex.docsById.get(selectedDocument.selectedDocId) || null;
   }
 
-  function resolveAction(actionId, targetDocId) {
-    var contextOptions = {
-      activeDocId: selectedDocument.selectedDocId,
-      selectedDocIds: Array.isArray(management.selectedDocIds) ? management.selectedDocIds : []
-    };
-    if (arguments.length > 1) contextOptions.invocationDocId = targetDocId;
-    return resolveDocsViewerAction(
-      actionId,
-      createDocsViewerActionContext(contextOptions)
-    );
-  }
+  var resolveAction = createDocsViewerManagementActionResolver({
+    indexSelection: indexSelection,
+    selectedDocument: selectedDocument
+  });
 
   function actionTargetDoc(resolution) {
     if (!resolution || !resolution.enabled || resolution.targetDocIds.length !== 1) return null;
@@ -765,6 +792,7 @@ export function initDocsViewerManagement(context) {
     handleMainViewControl: handleMainViewControl,
     handleRootClick: eventRouter.handleRootClick,
     hideContextMenu: hideContextMenu,
+    indexSelection: indexSelection,
     initialize: initializeManagement,
     openImportModal: importController.open,
     render: renderManagementUi,
