@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e9dfd7940619ad013474b9c1e9156967",
-    "generated_at_utc": "2026-07-21T06:32:37Z",
-    "count": 264
+    "version": "blake2b-134b0c1fe5553c88114f43311b0c1238",
+    "generated_at_utc": "2026-07-21T06:51:25Z",
+    "count": 265
   },
   "entries": [
     {
@@ -4087,10 +4087,10 @@
       "kind": "doc",
       "title": "Index Multiple Selection",
       "href": "/docs/?scope=studio&doc=d-20260714-151900-6fa23e",
-      "last_updated": "2026-07-18 16:21:54",
+      "last_updated": "2026-07-21 07:49:02",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-18 16:21:54 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-21 07:49:02 • Docs Viewer Roadmap",
       "search_terms": [
         "index multiple selection",
         "index",
@@ -4100,16 +4100,15 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-18 16:21:54",
+        "2026-07-21 07:49:02",
         "2026",
         "07",
-        "18",
-        "16",
         "21",
-        "54",
+        "49",
+        "02",
         "d-20260714-151900-6fa23e"
       ],
-      "search_text": "index multiple selection index multiple selection docs viewer roadmap docs viewer roadmap 2026-07-18 16:21:54 2026 07 18 16 21 54 d-20260714-151900-6fa23e"
+      "search_text": "index multiple selection index multiple selection docs viewer roadmap docs viewer roadmap 2026-07-21 07:49:02 2026 07 21 49 02 d-20260714-151900-6fa23e"
     },
     {
       "id": "d-20260714-234030-f30d01",
@@ -4161,6 +4160,32 @@
         "d-20260714-234030-876066"
       ],
       "search_text": "index multiple selection concept index multiple selection concept index multiple selection 2026-07-18 16:26:23 2026 07 18 16 26 23 d-20260714-234030-876066"
+    },
+    {
+      "id": "d-20260721-074902-838446",
+      "kind": "doc",
+      "title": "Index Multiple Selection Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260721-074902-838446",
+      "last_updated": "2026-07-21 07:49:02",
+      "parent_id": "d-20260714-151900-6fa23e",
+      "parent_title": "Index Multiple Selection",
+      "display_meta": "2026-07-21 07:49:02 • Index Multiple Selection",
+      "search_terms": [
+        "index multiple selection delivery",
+        "index",
+        "multiple",
+        "selection",
+        "delivery",
+        "index multiple selection",
+        "2026-07-21 07:49:02",
+        "2026",
+        "07",
+        "21",
+        "49",
+        "02",
+        "d-20260721-074902-838446"
+      ],
+      "search_text": "index multiple selection delivery index multiple selection delivery index multiple selection 2026-07-21 07:49:02 2026 07 21 49 02 d-20260721-074902-838446"
     },
     {
       "id": "d-20260715-215355-54ede0",

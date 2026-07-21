@@ -928,6 +928,12 @@
                   "title": "Index Multiple Selection Concept",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-876066.json",
                   "ui_status": "proposed"
+                },
+                {
+                  "doc_id": "d-20260721-074902-838446",
+                  "title": "Index Multiple Selection Delivery",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260721-074902-838446.json",
+                  "ui_status": "proposed"
                 }
               ]
             },
@@ -1525,5 +1531,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-21T06:32:37Z"
+  "generated_at": "2026-07-21T06:51:25Z"
 }
