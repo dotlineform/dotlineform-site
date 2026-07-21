@@ -7,9 +7,49 @@
       "doc_id": "d-20260714-234030-1e0af6",
       "title": "Docs Viewer Roadmap",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-1e0af6.json",
-      "timestamp": "2026-07-21 07:25:00",
+      "timestamp": "2026-07-21 07:34:00",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260715-215355-54ede0",
+      "title": "Local Tree Move Projection",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-215355-54ede0.json",
+      "timestamp": "2026-07-21 07:34:00",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap"
+    },
+    {
+      "doc_id": "d-20260715-215355-9a559b",
+      "title": "Local Tree Move Projection Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-215355-9a559b.json",
+      "timestamp": "2026-07-21 07:34:00",
+      "parent_id": "d-20260715-215355-54ede0",
+      "parent_title": "Local Tree Move Projection"
+    },
+    {
+      "doc_id": "d-20260715-215355-ff7123",
+      "title": "Local Tree Move Projection Concept",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-215355-ff7123.json",
+      "timestamp": "2026-07-21 07:34:00",
+      "parent_id": "d-20260715-215355-54ede0",
+      "parent_title": "Local Tree Move Projection"
+    },
+    {
+      "doc_id": "d-20260715-213643-54d952",
+      "title": "Local Tree Move Projection Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-213643-54d952.json",
+      "timestamp": "2026-07-21 07:34:00",
+      "parent_id": "d-20260715-215355-54ede0",
+      "parent_title": "Local Tree Move Projection"
+    },
+    {
+      "doc_id": "d-20260331-000000-c313fd",
+      "title": "Runtime",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-c313fd.json",
+      "timestamp": "2026-07-21 07:34:00",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
     },
     {
       "doc_id": "d-20260720-230623-c7e921",
@@ -42,45 +82,7 @@
       "timestamp": "2026-07-20 21:46:37",
       "parent_id": "d-20260718-155350-c84e62",
       "parent_title": "Share Document Packages"
-    },
-    {
-      "doc_id": "d-20260711-012238-814555",
-      "title": "Knowledge System Vision",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260711-012238-814555.json",
-      "timestamp": "2026-07-20 21:46:37",
-      "parent_id": "d-20260331-000000-4a16b0",
-      "parent_title": "Architecture"
-    },
-    {
-      "doc_id": "d-20260715-084611-7c7c8d",
-      "title": "Repository Maintenance",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-7c7c8d.json",
-      "timestamp": "2026-07-20 21:46:37",
-      "parent_id": "d-20260715-092247-f3fd52",
-      "parent_title": "Repository Roadmap"
-    },
-    {
-      "doc_id": "d-20260602-234732-ea94b3",
-      "title": "Configuration Map",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-234732-ea94b3.json",
-      "timestamp": "2026-07-20 21:40:08",
-      "parent_id": "d-20260423-000000-d015e6",
-      "parent_title": "Studio"
-    },
-    {
-      "doc_id": "d-20260711-012238-8a04a6",
-      "title": "Full Document Export Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260711-012238-8a04a6.json",
-      "timestamp": "2026-07-20 21:40:08",
-      "parent_id": "d-20260715-092247-4b7382",
-      "parent_title": "Portable Document Packages"
-    },
-    {
-      "doc_id": "d-20260413-000000-d314b7",
-      "title": "Local Setup",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260413-000000-d314b7.json",
-      "timestamp": "2026-07-20 21:40:08"
     }
   ],
-  "generated_at": "2026-07-21T06:25:34Z"
+  "generated_at": "2026-07-21T06:32:37Z"
 }

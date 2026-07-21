@@ -935,25 +935,25 @@
               "doc_id": "d-20260715-215355-54ede0",
               "title": "Local Tree Move Projection",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-215355-54ede0.json",
-              "ui_status": "in-progress",
+              "ui_status": "done",
               "children": [
                 {
                   "doc_id": "d-20260715-215355-9a559b",
                   "title": "Local Tree Move Projection Architecture",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-215355-9a559b.json",
-                  "ui_status": "planned"
+                  "ui_status": "done"
                 },
                 {
                   "doc_id": "d-20260715-215355-ff7123",
                   "title": "Local Tree Move Projection Concept",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-215355-ff7123.json",
-                  "ui_status": "planned"
+                  "ui_status": "done"
                 },
                 {
                   "doc_id": "d-20260715-213643-54d952",
                   "title": "Local Tree Move Projection Delivery",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-213643-54d952.json",
-                  "ui_status": "in-progress"
+                  "ui_status": "done"
                 }
               ]
             },
@@ -1525,5 +1525,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-21T06:24:33Z"
+  "generated_at": "2026-07-21T06:32:37Z"
 }

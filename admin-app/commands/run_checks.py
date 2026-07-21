@@ -158,6 +158,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/tests/smoke/local_studio_app_docs_viewer.py",
                 "docs-viewer/tests/smoke/docs_viewer_index_panel_modules.py",
                 "docs-viewer/tests/smoke/docs_viewer_tree_move_projection_modules.py",
+                "docs-viewer/tests/smoke/docs_viewer_tree_move_projection_route.py",
                 "docs-viewer/tests/smoke/docs_viewer_diagram_detail_modules.py",
                 "docs-viewer/tests/smoke/docs_viewer_inline_mermaid_modules.py",
                 "docs-viewer/tests/smoke/docs_viewer_index_panel_route.py",
@@ -407,6 +408,14 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 str(REPO_ROOT),
             ),
             "Smoke-check committed move model ordering, mounted subtree identity, cache invalidation, and explicit recovery.",
+        ),
+        CheckCommand(
+            "docs-viewer-tree-move-projection-route-smoke",
+            (
+                sys.executable,
+                "docs-viewer/tests/smoke/docs_viewer_tree_move_projection_route.py",
+            ),
+            "Smoke-check a real manage-route drag/drop projects the committed move without reloading the index or displayed document.",
         ),
         CheckCommand(
             "docs-viewer-inline-mermaid-module-smoke",
