@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-9fabd69a4f59545693271f399f72d614",
-    "generated_at_utc": "2026-07-21T07:24:42Z",
+    "version": "blake2b-9eb848ed04c3e0872de761cb8c55e754",
+    "generated_at_utc": "2026-07-21T22:50:55Z",
     "count": 265
   },
   "entries": [
@@ -2490,25 +2490,24 @@
       "kind": "doc",
       "title": "Runtime Module Ownership",
       "href": "/docs/?scope=studio&doc=d-20260605-125108-1d1ef3",
-      "last_updated": "2026-07-16 22:42:25",
+      "last_updated": "2026-07-21 23:50:07",
       "parent_id": "d-20260331-000000-c313fd",
       "parent_title": "Runtime",
-      "display_meta": "2026-07-16 22:42:25 • Runtime",
+      "display_meta": "2026-07-21 23:50:07 • Runtime",
       "search_terms": [
         "runtime module ownership",
         "runtime",
         "module",
         "ownership",
-        "2026-07-16 22:42:25",
+        "2026-07-21 23:50:07",
         "2026",
         "07",
-        "16",
-        "22",
-        "42",
-        "25",
+        "21",
+        "23",
+        "50",
         "d-20260605-125108-1d1ef3"
       ],
-      "search_text": "runtime module ownership runtime module ownership 2026-07-16 22:42:25 2026 07 16 22 42 25 d-20260605-125108-1d1ef3"
+      "search_text": "runtime module ownership runtime module ownership 2026-07-21 23:50:07 2026 07 21 23 50 d-20260605-125108-1d1ef3"
     },
     {
       "id": "d-20260515-000000-f43740",
@@ -3730,25 +3729,24 @@
       "kind": "doc",
       "title": "Docs Viewer Roadmap",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-1e0af6",
-      "last_updated": "2026-07-21 08:05:19",
+      "last_updated": "2026-07-21 23:50:07",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-21 08:05:19 • Roadmap",
+      "display_meta": "2026-07-21 23:50:07 • Roadmap",
       "search_terms": [
         "docs viewer roadmap",
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-21 08:05:19",
+        "2026-07-21 23:50:07",
         "2026",
         "07",
         "21",
-        "08",
-        "05",
-        "19",
+        "23",
+        "50",
         "d-20260714-234030-1e0af6"
       ],
-      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-21 08:05:19 2026 07 21 08 05 19 d-20260714-234030-1e0af6"
+      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-21 23:50:07 2026 07 21 23 50 d-20260714-234030-1e0af6"
     },
     {
       "id": "d-20260716-204013-3be4e1",
@@ -4088,10 +4086,10 @@
       "kind": "doc",
       "title": "Index Multiple Selection",
       "href": "/docs/?scope=studio&doc=d-20260714-151900-6fa23e",
-      "last_updated": "2026-07-21 08:24:16",
+      "last_updated": "2026-07-21 23:50:07",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-21 08:24:16 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-21 23:50:07 • Docs Viewer Roadmap",
       "search_terms": [
         "index multiple selection",
         "index",
@@ -4101,16 +4099,15 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-21 08:24:16",
+        "2026-07-21 23:50:07",
         "2026",
         "07",
         "21",
-        "08",
-        "24",
-        "16",
+        "23",
+        "50",
         "d-20260714-151900-6fa23e"
       ],
-      "search_text": "index multiple selection index multiple selection docs viewer roadmap docs viewer roadmap 2026-07-21 08:24:16 2026 07 21 08 24 16 d-20260714-151900-6fa23e"
+      "search_text": "index multiple selection index multiple selection docs viewer roadmap docs viewer roadmap 2026-07-21 23:50:07 2026 07 21 23 50 d-20260714-151900-6fa23e"
     },
     {
       "id": "d-20260714-234030-f30d01",
@@ -4168,10 +4165,10 @@
       "kind": "doc",
       "title": "Index Multiple Selection Delivery",
       "href": "/docs/?scope=studio&doc=d-20260721-074902-838446",
-      "last_updated": "2026-07-21 08:24:16",
+      "last_updated": "2026-07-21 23:50:07",
       "parent_id": "d-20260714-151900-6fa23e",
       "parent_title": "Index Multiple Selection",
-      "display_meta": "2026-07-21 08:24:16 • Index Multiple Selection",
+      "display_meta": "2026-07-21 23:50:07 • Index Multiple Selection",
       "search_terms": [
         "index multiple selection delivery",
         "index",
@@ -4179,16 +4176,15 @@
         "selection",
         "delivery",
         "index multiple selection",
-        "2026-07-21 08:24:16",
+        "2026-07-21 23:50:07",
         "2026",
         "07",
         "21",
-        "08",
-        "24",
-        "16",
+        "23",
+        "50",
         "d-20260721-074902-838446"
       ],
-      "search_text": "index multiple selection delivery index multiple selection delivery index multiple selection 2026-07-21 08:24:16 2026 07 21 08 24 16 d-20260721-074902-838446"
+      "search_text": "index multiple selection delivery index multiple selection delivery index multiple selection 2026-07-21 23:50:07 2026 07 21 23 50 d-20260721-074902-838446"
     },
     {
       "id": "d-20260715-215355-54ede0",

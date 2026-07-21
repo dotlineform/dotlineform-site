@@ -128,6 +128,10 @@ export function startDocsViewerRuntime(options) {
     onBeforePanelInteraction: hideContextMenu,
     onIndexProjection: function (projection) {
       latestIndexProjection = projection || null;
+      var controller = managementRuntime ? managementRuntime.controller() : null;
+      if (controller && typeof controller.handleIndexViewChange === "function") {
+        controller.handleIndexViewChange(latestIndexProjection && latestIndexProjection.activeViewId);
+      }
       renderAppViewerControls();
       renderIndexViewControls();
     }
@@ -353,6 +357,14 @@ export function startDocsViewerRuntime(options) {
     includeScopeParam: function () { return includeScopeParam; },
     preserveQueryParams: function () { return preserveQueryParams; },
     more: more,
+    onIndexReplaced: function (replacement) {
+      var controller = managementRuntime ? managementRuntime.controller() : null;
+      if (!controller || typeof controller.reconcileIndexSelectionReload !== "function") return;
+      var docs = replacement && Array.isArray(replacement.docs) ? replacement.docs : [];
+      controller.reconcileIndexSelectionReload(docs.map(function (doc) {
+        return doc && doc.doc_id;
+      }));
+    },
     renderBookmarkUi: renderBookmarkUi,
     renderDocLoadingState: renderDocLoadingState,
     renderManagementUi: renderManagementUi,
@@ -475,6 +487,11 @@ export function startDocsViewerRuntime(options) {
       SEARCH_BATCH_SIZE: SEARCH_BATCH_SIZE
     },
     context: {
+      activeIndexViewId: function () {
+        return latestIndexProjection && latestIndexProjection.activeViewId
+          ? latestIndexProjection.activeViewId
+          : panelLayout.projectViewState().index.activeViewId;
+      },
       applyDocVisibility: documentIndex.applyDocVisibility,
       cancelSearchDebounce: cancelSearchDebounce,
       cssEscape: cssEscape,

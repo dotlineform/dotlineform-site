@@ -132,10 +132,26 @@ export function initDocsViewerManagement(context) {
   var scopeLifecycleController = null;
   var settingsWorkflow = null;
   var actionController = null;
-  var indexSelection = createDocsViewerIndexSelectionOwner();
+  var indexSelection = createDocsViewerIndexSelectionOwner({
+    initialScopeId: viewerScope()
+  });
 
   function viewerScope() {
     return context.viewerScope();
+  }
+
+  function activeIndexViewId() {
+    return typeof context.activeIndexViewId === "function"
+      ? String(context.activeIndexViewId() || "").trim()
+      : "index-tree";
+  }
+
+  function indexSelectionLifecycleContext(indexViewId) {
+    return {
+      scopeId: viewerScope(),
+      managementContext: routeSession.managementContext,
+      indexViewId: arguments.length ? String(indexViewId || "").trim() : activeIndexViewId()
+    };
   }
 
   function syncManageScopeLinks() {
@@ -273,6 +289,7 @@ export function initDocsViewerManagement(context) {
   function indexSelectionAvailable() {
     return Boolean(
       routeSession.managementContext
+      && activeIndexViewId() === "index-tree"
       && management.managementChecked
       && management.managementAvailable
     );
@@ -304,6 +321,22 @@ export function initDocsViewerManagement(context) {
       state: snapshot,
       disabled: !available || management.managementBusy
     });
+    return snapshot;
+  }
+
+  function reconcileIndexSelectionReload(eligibleDocIds) {
+    routeSession.managementContext = typeof context.isManagementContext === "function" && context.isManagementContext();
+    var snapshot = indexSelection.reconcileReload(
+      eligibleDocIds,
+      indexSelectionLifecycleContext()
+    );
+    projectIndexSelection();
+    return snapshot;
+  }
+
+  function handleIndexViewChange(indexViewId) {
+    var snapshot = indexSelection.syncContext(indexSelectionLifecycleContext(indexViewId));
+    projectIndexSelection();
     return snapshot;
   }
 
@@ -379,6 +412,7 @@ export function initDocsViewerManagement(context) {
     if (!manageRow) return;
 
     routeSession.managementContext = typeof context.isManagementContext === "function" && context.isManagementContext();
+    indexSelection.syncContext(indexSelectionLifecycleContext());
     syncManageScopeLinks();
     projectIndexSelection();
     if (!routeSession.managementContext) {
@@ -599,6 +633,7 @@ export function initDocsViewerManagement(context) {
     documentIndex.showNonViewable = Boolean(draftToggle.checked);
     routeSession.managementContext = typeof context.isManagementContext === "function" && context.isManagementContext();
     context.applyDocVisibility();
+    reconcileIndexSelectionReload(documentIndex.docs.map(function (doc) { return doc.doc_id; }));
     context.renderSidebar();
     context.renderBookmarkUi();
     renderManagementUi();
@@ -853,6 +888,7 @@ export function initDocsViewerManagement(context) {
     canDragCurrentDoc: canDragCurrentDoc,
     handleDocumentKeydown: eventRouter.handleDocumentKeydown,
     handleAppManagementControl: handleAppManagementControl,
+    handleIndexViewChange: handleIndexViewChange,
     handleIndexViewControl: handleIndexViewControl,
     handleMainViewControl: handleMainViewControl,
     handleRootClick: eventRouter.handleRootClick,
@@ -860,6 +896,7 @@ export function initDocsViewerManagement(context) {
     indexSelection: indexSelection,
     initialize: initializeManagement,
     openImportModal: importController.open,
+    reconcileIndexSelectionReload: reconcileIndexSelectionReload,
     render: renderManagementUi,
     renderIndexSelectionGutter: renderIndexSelectionGutter,
     updateNavDragState: updateNavDragState

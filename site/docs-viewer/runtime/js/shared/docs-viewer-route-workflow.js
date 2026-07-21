@@ -303,6 +303,13 @@ export function initDocsViewerRouteWorkflow(context) {
     state.allDocs = Array.isArray(payload.docs) ? payload.docs.slice().sort(compareDocs) : [];
     context.syncNonViewableVisibilityForRequestedDoc();
     context.applyDocVisibility();
+    if (typeof context.onIndexReplaced === "function") {
+      context.onIndexReplaced({
+        docs: state.docs.slice(),
+        managementContext: state.managementContext,
+        scopeId: viewerScope()
+      });
+    }
 
     context.renderSidebar();
     context.renderBookmarkUi();

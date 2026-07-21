@@ -93,6 +93,31 @@ def dispatch_route_move(page: Page, move: dict[str, str]) -> None:
     )
 
 
+def establish_move_selection(page: Page, move: dict[str, str]) -> list[str]:
+    selected_doc_ids = [move["movingDocId"], move["unrelatedDocId"]]
+    page.locator('[data-docs-viewer-selection-command="enter"]').click()
+    for doc_id in selected_doc_ids:
+        page.locator(f'[data-docs-viewer-selection-checkbox="{doc_id}"]').click()
+    page.evaluate(
+        """detail => {
+            const nav = document.querySelector('#docsViewerNav');
+            const before = window.__docsViewerTreeMoveRouteSmoke;
+            before.activeLink = nav.querySelector('.docsViewer__navLink.is-active');
+            before.movingItem = nav.querySelector(
+                `[data-doc-row-id="${CSS.escape(detail.move.movingDocId)}"]`
+            ).closest('.docsViewer__navItem');
+            before.targetItem = nav.querySelector(
+                `[data-doc-row-id="${CSS.escape(detail.move.targetDocId)}"]`
+            ).closest('.docsViewer__navItem');
+            before.unrelatedItem = nav.querySelector(
+                `[data-doc-row-id="${CSS.escape(detail.move.unrelatedDocId)}"]`
+            ).closest('.docsViewer__navItem');
+        }""",
+        {"move": move},
+    )
+    return selected_doc_ids
+
+
 def projected_route_state(page: Page, move: dict[str, str]) -> dict[str, object]:
     return page.evaluate(
         """move => {
@@ -122,6 +147,12 @@ def projected_route_state(page: Page, move: dict[str, str]) -> dict[str, object]
                 targetExpanded: targetToggle?.getAttribute('aria-expanded') || '',
                 targetIdentityPreserved: targetItem === before.targetItem,
                 unrelatedIdentityPreserved: unrelatedItem === before.unrelatedItem,
+                checkedDocIds: Array.from(nav.querySelectorAll(
+                    '[data-docs-viewer-selection-checkbox]:checked'
+                )).map(checkbox => checkbox.dataset.docsViewerSelectionCheckbox),
+                selectionCount: document.querySelector(
+                    '.docsViewer__indexSelectionCount'
+                )?.textContent.trim() || '',
                 url: window.location.href,
                 beforeDisplayedDocId: before.displayedDocId,
                 beforeDisplayedHeading: before.displayedHeading,
@@ -172,6 +203,7 @@ def assert_real_manage_route_projection(page: Page, base_url: str, timeout_ms: i
     page.goto(f"{base_url}/docs/?scope=studio&doc={DOCS_VIEWER_DOC_ID}", wait_until="domcontentloaded")
     wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
     move = choose_route_move(page)
+    selected_doc_ids = establish_move_selection(page, move)
     index_count_before = len(index_requests)
 
     dispatch_route_move(page, move)
@@ -218,6 +250,10 @@ def assert_real_manage_route_projection(page: Page, base_url: str, timeout_ms: i
         raise AssertionError(f"real route move changed the displayed route: {state!r}")
     if state["displayedHeading"] != state["beforeDisplayedHeading"]:
         raise AssertionError(f"real route move changed the displayed document: {state!r}")
+    if sorted(state["checkedDocIds"]) != sorted(selected_doc_ids):
+        raise AssertionError(f"successful local move changed the checked set: {state!r}")
+    if state["selectionCount"] != "2 selected":
+        raise AssertionError(f"successful local move changed selection mode or count: {state!r}")
     if state["marker"] != "mounted-before-move":
         raise AssertionError(f"real route move reloaded the browser: {state!r}")
     if page_errors:

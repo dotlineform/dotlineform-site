@@ -158,6 +158,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/tests/smoke/local_studio_app_docs_viewer.py",
                 "docs-viewer/tests/smoke/docs_viewer_index_panel_modules.py",
                 "docs-viewer/tests/smoke/docs_viewer_index_selection_modules.py",
+                "docs-viewer/tests/smoke/docs_viewer_index_selection_lifecycle_route.py",
                 "docs-viewer/tests/smoke/docs_viewer_tree_move_projection_modules.py",
                 "docs-viewer/tests/smoke/docs_viewer_tree_move_projection_route.py",
                 "docs-viewer/tests/smoke/docs_viewer_diagram_detail_modules.py",
@@ -408,7 +409,15 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "--site-root",
                 str(REPO_ROOT),
             ),
-            "Smoke-check manage-index selection state, projection, Shift range, and singular action-target isolation.",
+            "Smoke-check manage-index selection state, lifecycle, projection, Shift range, and singular action-target isolation.",
+        ),
+        CheckCommand(
+            "docs-viewer-index-selection-lifecycle-route-smoke",
+            (
+                sys.executable,
+                "docs-viewer/tests/smoke/docs_viewer_index_selection_lifecycle_route.py",
+            ),
+            "Smoke-check real manage-route selection reconciliation, view exit, and full browser reload reset.",
         ),
         CheckCommand(
             "docs-viewer-tree-move-projection-module-smoke",

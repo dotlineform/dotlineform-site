@@ -92,9 +92,34 @@ export function reconcileDocsViewerIndexSelection(state, eligibleDocIds) {
 
 export function createDocsViewerIndexSelectionOwner(options = {}) {
   var current = createDocsViewerIndexSelectionState(options.initialState);
+  var owningScopeId = normalizeDocId(options.initialScopeId);
 
   function transition(nextState) {
     current = nextState;
+    return current;
+  }
+
+  function lifecycleContext(contextOptions) {
+    var context = contextOptions || {};
+    return {
+      scopeId: normalizeDocId(context.scopeId),
+      managementContext: Boolean(context.managementContext),
+      indexViewId: normalizeDocId(context.indexViewId)
+    };
+  }
+
+  function syncContext(contextOptions) {
+    var context = lifecycleContext(contextOptions);
+    var scopeChanged = context.scopeId !== owningScopeId;
+    owningScopeId = context.scopeId;
+    if (
+      scopeChanged
+      || !context.scopeId
+      || !context.managementContext
+      || context.indexViewId !== "index-tree"
+    ) {
+      return transition(exitDocsViewerIndexSelection());
+    }
     return current;
   }
 
@@ -112,7 +137,20 @@ export function createDocsViewerIndexSelectionOwner(options = {}) {
     exit: function () { return transition(exitDocsViewerIndexSelection()); },
     reconcile: function (eligibleDocIds) {
       return transition(reconcileDocsViewerIndexSelection(current, eligibleDocIds));
-    }
+    },
+    reconcileReload: function (eligibleDocIds, contextOptions) {
+      var context = lifecycleContext(contextOptions);
+      syncContext(context);
+      if (
+        context.scopeId
+        && context.managementContext
+        && context.indexViewId === "index-tree"
+      ) {
+        return transition(reconcileDocsViewerIndexSelection(current, eligibleDocIds));
+      }
+      return current;
+    },
+    syncContext: syncContext
   });
 }
 

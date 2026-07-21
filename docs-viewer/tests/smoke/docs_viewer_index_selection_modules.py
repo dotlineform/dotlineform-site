@@ -52,6 +52,37 @@ def assert_selection_state(page: Page) -> None:
             owner.toggle('d', true);
             const missingAnchorRange = owner.selectRange('a', ['a', 'b', 'c']);
             const exited = owner.exit();
+            const lifecycleOwner = module.createDocsViewerIndexSelectionOwner({ initialScopeId: 'studio' });
+            const studioTreeContext = {
+                scopeId: 'studio',
+                managementContext: true,
+                indexViewId: 'index-tree'
+            };
+            lifecycleOwner.syncContext(studioTreeContext);
+            lifecycleOwner.enter();
+            lifecycleOwner.toggle('keep');
+            lifecycleOwner.toggle('prune');
+            const reloaded = lifecycleOwner.reconcileReload(['keep', 'other'], studioTreeContext);
+            const navigationPreserved = lifecycleOwner.snapshot();
+            const viewExit = lifecycleOwner.syncContext({
+                ...studioTreeContext,
+                indexViewId: 'index-graph'
+            });
+            const treeReturn = lifecycleOwner.syncContext(studioTreeContext);
+            lifecycleOwner.enter();
+            lifecycleOwner.toggle('keep');
+            const scopeExit = lifecycleOwner.syncContext({
+                scopeId: 'other',
+                managementContext: true,
+                indexViewId: 'index-tree'
+            });
+            lifecycleOwner.enter();
+            lifecycleOwner.toggle('other');
+            const managementExit = lifecycleOwner.syncContext({
+                scopeId: 'other',
+                managementContext: false,
+                indexViewId: 'index-tree'
+            });
             return {
                 inactive,
                 entered,
@@ -62,6 +93,12 @@ def assert_selection_state(page: Page) -> None:
                 cleared,
                 missingAnchorRange,
                 exited,
+                reloaded,
+                navigationPreserved,
+                viewExit,
+                treeReturn,
+                scopeExit,
+                managementExit,
                 frozen: Object.isFrozen(firstToggle) && Object.isFrozen(firstToggle.selectedDocIds),
                 selectedCopyIsIndependent: owner.selectedDocIds() !== owner.snapshot().selectedDocIds
             };
@@ -109,6 +146,36 @@ def assert_selection_state(page: Page) -> None:
             "rangeAnchorDocId": "a",
         },
         "exited": {
+            "selectionModeActive": False,
+            "selectedDocIds": [],
+            "rangeAnchorDocId": "",
+        },
+        "reloaded": {
+            "selectionModeActive": True,
+            "selectedDocIds": ["keep"],
+            "rangeAnchorDocId": "",
+        },
+        "navigationPreserved": {
+            "selectionModeActive": True,
+            "selectedDocIds": ["keep"],
+            "rangeAnchorDocId": "",
+        },
+        "viewExit": {
+            "selectionModeActive": False,
+            "selectedDocIds": [],
+            "rangeAnchorDocId": "",
+        },
+        "treeReturn": {
+            "selectionModeActive": False,
+            "selectedDocIds": [],
+            "rangeAnchorDocId": "",
+        },
+        "scopeExit": {
+            "selectionModeActive": False,
+            "selectedDocIds": [],
+            "rangeAnchorDocId": "",
+        },
+        "managementExit": {
             "selectionModeActive": False,
             "selectedDocIds": [],
             "rangeAnchorDocId": "",
