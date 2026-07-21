@@ -155,6 +155,7 @@
         "shared/docs-viewer-status-controller.js",
         "shared/docs-subscope-report.js",
         "shared/docs-viewer-top-bar-renderer.js",
+        "shared/docs-viewer-tree-move-projection.js",
         "shared/docs-viewer-tree-payload-adapter.js",
         "shared/docs-viewer-tree.js",
         "shared/docs-viewer-view-context.js",

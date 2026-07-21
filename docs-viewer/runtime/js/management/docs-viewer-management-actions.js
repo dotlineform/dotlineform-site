@@ -88,6 +88,7 @@ export function createDocsViewerManagementActionController(options) {
   var root = options.root;
   var documentIndex = options.documentIndex || {};
   var management = options.management || {};
+  var searchRecent = options.searchRecent || {};
   var selectedDocument = options.selectedDocument || {};
   var context = options.context;
   var refs = options.refs || {};
@@ -147,6 +148,44 @@ export function createDocsViewerManagementActionController(options) {
 
   function reloadViewerConfiguration() {
     return callbacks.reloadViewerConfiguration ? callbacks.reloadViewerConfiguration() : Promise.resolve(null);
+  }
+
+  function committedMoveRecord(response, expectedDocId) {
+    var record = response && response.record && typeof response.record === "object" ? response.record : null;
+    var docId = String(record && record.doc_id || "").trim();
+    if (!record || !Object.prototype.hasOwnProperty.call(record, "parent_id") || docId !== expectedDocId) {
+      throw new Error("Move service returned an invalid committed move record.");
+    }
+    return record;
+  }
+
+  function invalidateCommittedMoveCaches(record) {
+    var docId = String(record && record.doc_id || "").trim();
+    if (docId && selectedDocument.payloadCache && typeof selectedDocument.payloadCache.delete === "function") {
+      selectedDocument.payloadCache.delete(docId);
+    }
+    searchRecent.searchEntries = [];
+    searchRecent.searchLoaded = false;
+    searchRecent.searchRequestPromise = null;
+    searchRecent.recentEntries = [];
+    searchRecent.recentLoaded = false;
+    searchRecent.recentRequestPromise = null;
+  }
+
+  function recoverCommittedMoveProjection(error) {
+    var detail = error && error.message ? error.message : "unknown local projection failure";
+    if (window.console && typeof window.console.error === "function") {
+      window.console.error("docs_viewer: committed move projection failed", error);
+    }
+    setManagementMessage("Move committed, but the local index update failed. Reloading the index...", true);
+    return reloadDocsIndex(selectedDocument.selectedDocId, "")
+      .then(function () {
+        setManagementMessage("Move committed. The index was reloaded after a local update failed.", true);
+      })
+      .catch(function (recoveryError) {
+        var recoveryDetail = recoveryError && recoveryError.message ? recoveryError.message : "index reload failed";
+        throw new Error("Move committed, but local projection failed (" + detail + ") and recovery failed (" + recoveryDetail + ").");
+      });
   }
 
   async function viewabilityTargetDocIds(doc) {
@@ -598,10 +637,22 @@ export function createDocsViewerManagementActionController(options) {
     clearDragState();
     setManagementMessage("Moving " + movingDoc.title + "...", false);
 
-    moveManagedDoc(movingDoc.doc_id, nextParentId, managementClientOptions())
-      .then(function () {
+    return moveManagedDoc(movingDoc.doc_id, nextParentId, managementClientOptions())
+      .then(function (response) {
+        var record;
+        setManagementBusy(false);
+        try {
+          record = committedMoveRecord(response, movingDoc.doc_id);
+          if (typeof callbacks.projectCommittedMove !== "function") {
+            throw new Error("Docs Viewer local move projection is unavailable.");
+          }
+          callbacks.projectCommittedMove(record);
+          invalidateCommittedMoveCaches(record);
+        } catch (error) {
+          setManagementBusy(true);
+          return recoverCommittedMoveProjection(error);
+        }
         setManagementMessage("", false);
-        return reloadDocsIndex(movingDoc.doc_id, "");
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Move failed.", true);

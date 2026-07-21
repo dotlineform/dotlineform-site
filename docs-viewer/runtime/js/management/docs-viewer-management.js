@@ -622,6 +622,7 @@ export function initDocsViewerManagement(context) {
     root: root,
     documentIndex: documentIndex,
     management: management,
+    searchRecent: searchRecent,
     selectedDocument: selectedDocument,
     context: context,
     refs: {},
@@ -635,6 +636,12 @@ export function initDocsViewerManagement(context) {
       },
       hideContextMenu: hideContextMenu,
       managementClientOptions: managementClientOptions,
+      projectCommittedMove: function (record) {
+        if (typeof context.projectCommittedMove !== "function") {
+          throw new Error("Docs Viewer local move projection is unavailable.");
+        }
+        return context.projectCommittedMove(record);
+      },
       reloadDocsIndex: reloadDocsIndex,
       reloadViewerConfiguration: reloadViewerConfiguration,
       refreshManagementCapabilities: refreshManagementCapabilities,

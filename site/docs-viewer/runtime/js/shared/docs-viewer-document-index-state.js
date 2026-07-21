@@ -5,6 +5,9 @@ import {
   isDocNonViewable,
   isDocViewable
 } from "./docs-viewer-tree.js";
+import {
+  projectCommittedTreeMoveModel
+} from "./docs-viewer-tree-move-projection.js";
 
 export function createDocsViewerDocumentIndexState(options) {
   var settings = options || {};
@@ -126,12 +129,17 @@ export function createDocsViewerDocumentIndexState(options) {
     return docId;
   }
 
+  function projectCommittedMove(record) {
+    return projectCommittedTreeMoveModel(state, record);
+  }
+
   return {
     applyDocVisibility: applyDocVisibility,
     defaultDocId: defaultDocId,
     findAllDocById: findAllDocById,
     isManageOnlyTreeDoc: isManageOnlyTreeDoc,
     isNonLoadableDoc: isNonLoadableDoc,
+    projectCommittedMove: projectCommittedMove,
     resolveLoadableDocId: resolveLoadableDocId,
     statusForIndexDoc: statusForIndexDoc,
     syncNonViewableVisibilityForRequestedDoc: syncNonViewableVisibilityForRequestedDoc,

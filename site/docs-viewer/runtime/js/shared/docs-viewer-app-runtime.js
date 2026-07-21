@@ -37,6 +37,9 @@ import {
   createDocsViewerManagementRuntimeAdapter
 } from "./docs-viewer-runtime-lazy-controller.js";
 import {
+  createDocsViewerTreeMoveProjection
+} from "./docs-viewer-tree-move-projection.js";
+import {
   DOCS_VIEWER_RUNTIME_DEFAULTS,
   createDocsViewerAppComposition,
   startDocsViewerStartupPhases
@@ -448,6 +451,15 @@ export function startDocsViewerRuntime(options) {
     viewerScope: function () { return viewerScope; }
   });
 
+  var treeMoveProjection = managementEnabled ? createDocsViewerTreeMoveProjection({
+    documentIndex: documentIndex,
+    documentIndexState: appSession.domains.documentIndex,
+    renderMeta: renderMeta,
+    selectedDocument: appSession.domains.selectedDocument,
+    sidebar: sidebarRenderer,
+    updateInfoPanel: documentViewCoordinator.updateInfoPanel
+  }) : null;
+
   managementRuntime = managementEnabled ? createDocsViewerManagementRuntimeAdapter({
     managementUi: managementUiEnabled,
     appShellReady: appShellReady,
@@ -492,6 +504,7 @@ export function startDocsViewerRuntime(options) {
       projectMainViewControlState: function (controlId, controlState) {
         projectMainViewControlState("management", controlId, controlState);
       },
+      projectCommittedMove: treeMoveProjection.project,
       nav: nav,
       renderBookmarkUi: renderBookmarkUi,
       renderRecentMode: renderRecentMode,

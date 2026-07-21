@@ -1,6 +1,9 @@
 import {
   isDocNonViewable
 } from "./docs-viewer-tree.js";
+import {
+  projectCommittedTreeMoveDom
+} from "./docs-viewer-tree-move-projection.js";
 
 export function initDocsViewerSidebarRenderer(context) {
   var documentIndex = context.documentIndex;
@@ -147,9 +150,23 @@ export function initDocsViewerSidebarRenderer(context) {
     context.renderBookmarkToggle();
   }
 
+  function projectCommittedMove(projection) {
+    if (!projection || !projection.changed) return null;
+    expandTrail(projection.parentId);
+    return projectCommittedTreeMoveDom({
+      cssEscape: context.cssEscape,
+      document: nav.ownerDocument,
+      documentIndex: documentIndex,
+      nav: nav,
+      projection: projection,
+      renderNavList: renderNavList
+    });
+  }
+
   return {
     buildTrail: buildTrail,
     expandTrail: expandTrail,
+    projectCommittedMove: projectCommittedMove,
     renderMeta: renderMeta,
     renderSidebar: renderSidebar
   };
