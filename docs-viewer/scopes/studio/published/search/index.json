@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c054261e055f90cf6e564a5221f4ca23",
-    "generated_at_utc": "2026-07-22T14:29:21Z",
-    "count": 268
+    "version": "blake2b-eaede46463e8f90abb6413ebc0133f58",
+    "generated_at_utc": "2026-07-22T16:57:58Z",
+    "count": 269
   },
   "entries": [
     {
@@ -4075,6 +4075,38 @@
         "d-20260720-230623-c7e921"
       ],
       "search_text": "document sharing ui redesign document sharing ui redesign docs viewer roadmap docs viewer roadmap 2026-07-22 15:14:46 2026 07 22 15 14 46 d-20260720-230623-c7e921"
+    },
+    {
+      "id": "d-20260722-165733-88d9ff",
+      "kind": "doc",
+      "title": "Missing-Summary Package Preparation Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260722-165733-88d9ff",
+      "last_updated": "2026-07-22 17:57:36",
+      "parent_id": "d-20260720-230623-c7e921",
+      "parent_title": "Document Sharing UI Redesign",
+      "display_meta": "2026-07-22 17:57:36 • Document Sharing UI Redesign",
+      "search_terms": [
+        "missing-summary package preparation delivery",
+        "missing",
+        "summary",
+        "package",
+        "preparation",
+        "delivery",
+        "document sharing ui redesign",
+        "document",
+        "sharing",
+        "ui",
+        "redesign",
+        "2026-07-22 17:57:36",
+        "2026",
+        "07",
+        "22",
+        "17",
+        "57",
+        "36",
+        "d-20260722-165733-88d9ff"
+      ],
+      "search_text": "missing-summary package preparation delivery missing summary package preparation delivery document sharing ui redesign document sharing ui redesign 2026-07-22 17:57:36 2026 07 22 17 57 36 d-20260722-165733-88d9ff"
     },
     {
       "id": "d-20260722-133457-e90e21",

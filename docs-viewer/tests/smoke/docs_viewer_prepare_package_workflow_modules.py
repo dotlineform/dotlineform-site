@@ -259,7 +259,7 @@ def install_workflow_fixture(page: Page, prepare_outcome: str = "success") -> No
                     return {
                         ok: true,
                         summary_text: 'Prepared package with 4 document(s).',
-                        counts: { selected: 4, exported: 4, failed: 0 },
+                        counts: { truncated: 0, skipped: 0, failed: 0, exported: 4, selected: 4 },
                         output_file: '/packages/output.json',
                         metadata_file: '/packages/output.meta.json',
                         warnings: ['One field was truncated.']
@@ -318,6 +318,9 @@ def exercise_success(page: Page, timeout_ms: int) -> None:
     ):
         if expected_text not in result_text:
             raise AssertionError(f"Prepare result omitted {expected_text!r}: {result_text!r}")
+    count_labels = page.locator(".docsViewerPackagePrepare__counts dt").all_text_contents()
+    if count_labels != ["selected", "exported", "failed", "skipped", "truncated"]:
+        raise AssertionError(f"Prepare result count order changed: {count_labels!r}")
     page.locator('[data-role="modal-primary"]').click()
     result = page.evaluate(
         """async () => {

@@ -25,6 +25,14 @@ import {
   openDocsViewerManagementModal
 } from "../management/docs-viewer-management-modal-shell.js";
 
+const DOCUMENT_PACKAGE_PREPARE_COUNT_ORDER = Object.freeze([
+  "selected",
+  "exported",
+  "failed",
+  "skipped",
+  "truncated"
+]);
+
 function formatLabel(value) {
   const normalized = packageText(value);
   if (normalized === "plain_text") return "Plain text";
@@ -121,7 +129,13 @@ export function documentPackagePrepareResultHtml(payload) {
   const report = payload && typeof payload === "object" ? payload : {};
   const summary = packageText(report.summary_text);
   const counts = report.counts && typeof report.counts === "object" ? report.counts : {};
-  const countRows = Object.entries(counts).filter(([, value]) => Number.isFinite(Number(value)));
+  const orderedCountKeys = new Set(DOCUMENT_PACKAGE_PREPARE_COUNT_ORDER);
+  const countRows = [
+    ...DOCUMENT_PACKAGE_PREPARE_COUNT_ORDER
+      .filter((key) => Object.prototype.hasOwnProperty.call(counts, key))
+      .map((key) => [key, counts[key]]),
+    ...Object.entries(counts).filter(([key]) => !orderedCountKeys.has(key))
+  ].filter(([, value]) => Number.isFinite(Number(value)));
   const paths = [
     report.output_file,
     report.metadata_file,
