@@ -198,7 +198,6 @@ def test_apply_capability_flags_respects_local_service_flags() -> None:
                 "available": True,
                 "prepare": True,
                 "context": True,
-                "inspect_returned": True,
                 "review_returned": True,
                 "atomic_return": True,
             },
@@ -237,7 +236,6 @@ def test_apply_capability_flags_respects_local_service_flags() -> None:
         "available": True,
         "prepare": False,
         "context": False,
-        "inspect_returned": False,
         "review_returned": False,
         "atomic_return": True,
     }

@@ -84,7 +84,6 @@ def test_fixed_routes_and_config_contract() -> None:
     assert set(routes.POST_PATHS) == {
         "/docs/packages/prepare",
         "/docs/packages/context",
-        "/docs/packages/returned/inspect",
         "/docs/packages/returned/review",
     }
     assert [profile["profile_id"] for profile in payload["profiles"]] == ["document-content"]
@@ -324,11 +323,7 @@ def test_atomic_return_uses_order_insensitive_exact_set_equality() -> None:
                 {"doc_id": "library", "title": "Library"},
             ],
         )
-        complete = service.inspect_returned(
-            repo_root,
-            {"scope": "library", "staged_filename": "returned.jsonl"},
-        )
-        review = service.review_returned(
+        complete_review = service.review_returned(
             repo_root,
             {
                 "scope": "library",
@@ -344,24 +339,21 @@ def test_atomic_return_uses_order_insensitive_exact_set_equality() -> None:
                 {"doc_id": "outside", "title": "Outside"},
             ],
         )
-        changed = service.inspect_returned(
-            repo_root,
-            {"scope": "library", "staged_filename": "returned.jsonl"},
-        )
         changed_status, changed_response = service.post_response(
             repo_root,
-            routes.RETURNED_INSPECT_PATH,
-            {"scope": "library", "staged_filename": "returned.jsonl"},
+            routes.RETURNED_REVIEW_PATH,
+            {
+                "scope": "library",
+                "staged_filename": "returned.jsonl",
+                "dry_run": True,
+            },
         )
 
-    assert complete["ok"] is True
-    assert review["ok"] is True
-    assert "selected_records" not in review
-    assert all("selectable" not in row for row in complete["review_rows"])
-    assert changed["ok"] is False
+    assert complete_review["ok"] is True
+    assert "selected_records" not in complete_review
     assert int(changed_status) == 400
     assert changed_response["ok"] is False
-    assert {item["code"] for item in changed["issues"]} >= {
+    assert {item["code"] for item in changed_response["issues"]} >= {
         "missing_prepared_documents",
         "unexpected_returned_documents",
     }
@@ -420,10 +412,6 @@ def test_invalid_returned_record_blocks_complete_review() -> None:
         source_path = repo_root / "docs-viewer/scopes/library/source/documents/alpha.md"
         source_before = source_path.read_text(encoding="utf-8")
 
-        inspection = service.inspect_returned(
-            repo_root,
-            {"scope": "library", "staged_filename": "returned.jsonl"},
-        )
         review = service.review_returned(
             repo_root,
             {
@@ -435,9 +423,8 @@ def test_invalid_returned_record_blocks_complete_review() -> None:
 
         assert source_path.read_text(encoding="utf-8") == source_before
 
-    assert inspection["ok"] is False
-    assert "missing_title" in {item["code"] for item in inspection["issues"]}
     assert review["ok"] is False
+    assert "missing_title" in {item["code"] for item in review["issues"]}
     assert review["review_package_id"] == ""
     assert review["review_url"] == ""
     assert review["review_existing"] is False
@@ -594,25 +581,22 @@ def test_atomic_return_rejects_invalid_trusted_routing_identity(
         metadata[field] = value
         metadata_path.write_text(json.dumps(metadata) + "\n", encoding="utf-8")
 
-        payload = service.inspect_returned(
+        payload = service.review_returned(
             repo_root,
-            {"scope": "library", "staged_filename": "returned.jsonl"},
+            {
+                "scope": "library",
+                "staged_filename": "returned.jsonl",
+                "dry_run": True,
+            },
         )
 
     assert payload["ok"] is False
     assert issue_code in {item["code"] for item in payload["issues"]}
 
 
-def test_docs_viewer_http_service_retires_prepare_page_and_keeps_package_api() -> None:
+def test_docs_viewer_http_service_retires_package_pages_and_keeps_package_api() -> None:
     with make_docs_import_repo() as temp:
         repo_root = Path(temp)
-        shell_root = repo_root / "docs-viewer/shell"
-        shell_root.mkdir(parents=True, exist_ok=True)
-        for filename in ("docs-viewer-package-returned.html",):
-            shell_root.joinpath(filename).write_text(
-                (REPO_ROOT / "docs-viewer/shell" / filename).read_text(encoding="utf-8"),
-                encoding="utf-8",
-            )
         config = DocsViewerServiceConfig(
             host="127.0.0.1",
             port=0,
@@ -638,10 +622,12 @@ def test_docs_viewer_http_service_retires_prepare_page_and_keeps_package_api() -
                 config_payload = json.loads(response.read().decode("utf-8"))
             with pytest.raises(urllib.error.HTTPError) as prepare_route_error:
                 urllib.request.urlopen(f"{base_url}/docs/packages/prepare/", timeout=5)
+            with pytest.raises(urllib.error.HTTPError) as returned_route_error:
+                urllib.request.urlopen(f"{base_url}/docs/packages/returned/", timeout=5)
             with urllib.request.urlopen(
-                f"{base_url}/docs/packages/returned/", timeout=5
+                f"{base_url}{routes.RETURNED_PATH}?scope=library", timeout=5
             ) as response:
-                returned_shell = response.read().decode("utf-8")
+                returned_payload = json.loads(response.read().decode("utf-8"))
             request = urllib.request.Request(
                 f"{base_url}{routes.PREPARE_PATH}",
                 data=json.dumps(
@@ -657,6 +643,19 @@ def test_docs_viewer_http_service_retires_prepare_page_and_keeps_package_api() -
             )
             with urllib.request.urlopen(request, timeout=5) as response:
                 prepare_payload = json.loads(response.read().decode("utf-8"))
+            retired_inspect = urllib.request.Request(
+                f"{base_url}/docs/packages/returned/inspect",
+                data=json.dumps(
+                    {
+                        "scope": "library",
+                        "staged_filename": "returned.jsonl",
+                    }
+                ).encode("utf-8"),
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            with pytest.raises(urllib.error.HTTPError) as inspect_error:
+                urllib.request.urlopen(retired_inspect, timeout=5)
             rejected = urllib.request.Request(
                 f"{base_url}{routes.CONFIG_PATH}",
                 headers={"Origin": "https://example.com"},
@@ -670,7 +669,9 @@ def test_docs_viewer_http_service_retires_prepare_page_and_keeps_package_api() -
 
     assert config_payload["ok"] is True
     assert prepare_route_error.value.code == 404
-    assert "Returned document packages" in returned_shell
+    assert returned_route_error.value.code == 404
+    assert returned_payload["ok"] is True
     assert prepare_payload["ok"] is True
     assert prepare_payload["output_written"] is False
+    assert inspect_error.value.code == 404
     assert error.value.code == 403

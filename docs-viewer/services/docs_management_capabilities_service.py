@@ -153,7 +153,6 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 "message": data_sharing_workspace["message"],
                 "prepare": data_sharing_workspace["available"],
                 "context": True,
-                "inspect_returned": data_sharing_workspace["available"],
                 "review_returned": data_sharing_workspace["available"],
                 "atomic_return": True,
             },

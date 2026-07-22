@@ -4,7 +4,6 @@ export const DOCUMENT_PACKAGE_ENDPOINTS = Object.freeze({
   returned: "/docs/packages/returned",
   prepare: "/docs/packages/prepare",
   context: "/docs/packages/context",
-  inspectReturned: "/docs/packages/returned/inspect",
   reviewReturned: "/docs/packages/returned/review"
 });
 
@@ -75,10 +74,6 @@ export function prepareDocumentPackage(payload) {
 
 export function saveDocumentPackageContext(payload) {
   return postDocumentPackageJson(DOCUMENT_PACKAGE_ENDPOINTS.context, payload);
-}
-
-export function inspectReturnedDocumentPackage(payload) {
-  return postDocumentPackageJson(DOCUMENT_PACKAGE_ENDPOINTS.inspectReturned, payload);
 }
 
 export function reviewReturnedDocumentPackage(payload) {

@@ -36,10 +36,7 @@ def test_manage_shell_loads_feature_owned_css_after_shared_management_css() -> N
     )
 
 
-def test_document_package_browser_assets_are_docs_viewer_owned() -> None:
-    returned_shell = (
-        REPO_ROOT / "docs-viewer/shell/docs-viewer-package-returned.html"
-    ).read_text(encoding="utf-8")
+def test_document_package_actions_own_the_surviving_browser_assets() -> None:
     management_runtime = "\n".join(
         (
             REPO_ROOT / "docs-viewer/runtime/js/management" / filename
@@ -54,27 +51,23 @@ def test_document_package_browser_assets_are_docs_viewer_owned() -> None:
         path.read_text(encoding="utf-8") for path in sorted(runtime_root.glob("*.js"))
     )
 
-    assert "docs-viewer-packages.css" in returned_shell
-    assert "document-package-returned.js" in returned_shell
     assert not (REPO_ROOT / "docs-viewer/shell/docs-viewer-package-prepare.html").exists()
+    assert not (REPO_ROOT / "docs-viewer/shell/docs-viewer-package-returned.html").exists()
     assert not (runtime_root / "document-package-prepare.js").exists()
-    assert "/docs/packages/prepare/" not in returned_shell
+    assert not (runtime_root / "document-package-modal.js").exists()
+    assert not (runtime_root / "document-package-returned.js").exists()
+    assert not (REPO_ROOT / "docs-viewer/static/css/docs-viewer-packages.css").exists()
     assert "docsViewerManagePreparePackageButton" in management_runtime
     assert "docsViewerManageReviewPackageButton" in management_runtime
     assert "docsViewerManageReturnedPackagesLink" not in management_runtime
     assert 'page_id: "docs-manage"' in management_runtime
-    assert "data-domain" not in returned_shell.lower()
     assert "record_indices" not in runtime
     assert "/analytics/" not in runtime
     assert "data-sharing" not in runtime.lower()
-    assert 'id="documentPackageReturnedReview"' in returned_shell
     assert "review_action" not in runtime
     assert "/docs/packages/returned/apply" not in runtime
-    assert 'type="checkbox"' not in returned_shell
-    assert 'id="documentPackageReturnedScope"' not in returned_shell
-    assert 'data-package-scope-link="/docs/' in returned_shell
-    assert "syncPackageScopeLinks" in runtime
-    assert "unassigned_files" in runtime
+    assert "/docs/packages/returned/inspect" not in runtime
+    assert "reviewReturnedDocumentPackage" in runtime
 
 
 def test_moments_css_is_loaded_by_public_and_manage_shells() -> None:
@@ -109,7 +102,9 @@ def test_static_path_policy_is_docs_viewer_scoped() -> None:
     assert allowed("/docs-viewer/static/css/docs-viewer-source-editor.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-import.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-review.css") is True
-    assert allowed("/docs-viewer/static/css/docs-viewer-packages.css") is True
+    assert allowed("/docs-viewer/static/css/docs-viewer-packages.css") is False
+    assert allowed("/docs-viewer/runtime/js/packages/document-package-modal.js") is False
+    assert allowed("/docs-viewer/runtime/js/packages/document-package-returned.js") is False
     assert allowed("/apple-touch-icon-precomposed.png") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-base.css") is False
     assert allowed("/docs-viewer/static/css/docs-viewer-management.css") is False

@@ -23,7 +23,6 @@ from docs_document_packages.package import (
     selectable_document_records,
     update_document_prepare_context,
 )
-from docs_document_packages.review import parse_returned_document_records
 from docs_document_packages.review_sources import create_review_source_folder
 from docs_document_packages.workspace import configured_workspace_paths, workspace_status
 from docs_import_document_package_content import normalize_documents_import_content
@@ -283,19 +282,6 @@ def update_context(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     return payload
 
 
-def inspect_returned(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    scope = require_scope(repo_root, body.get("scope"))
-    staged_filename = str(body.get("staged_filename") or "").strip()
-    roots = configured_workspace_paths(repo_root)
-    return parse_returned_document_records(
-        repo_root,
-        scope=scope,
-        staged_filename=staged_filename,
-        staging_root=roots.import_staging,
-        metadata_root=roots.meta,
-    )
-
-
 def content_review_response(payload: dict[str, Any]) -> dict[str, Any]:
     ok = payload.get("ok") is True
     existing = ok and payload.get("review_existing") is True
@@ -375,8 +361,6 @@ def post_response(
         payload = prepare_package(repo_root, body)
     elif path == routes.CONTEXT_PATH:
         payload = update_context(repo_root, body)
-    elif path == routes.RETURNED_INSPECT_PATH:
-        payload = inspect_returned(repo_root, body)
     elif path == routes.RETURNED_REVIEW_PATH:
         payload = review_returned(repo_root, body)
     else:
