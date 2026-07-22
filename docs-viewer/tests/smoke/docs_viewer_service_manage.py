@@ -457,6 +457,7 @@ def assert_action_target_definitions(page: Page) -> None:
             "publish-docs",
             "rebuild-docs",
             "rename-scope",
+            "review-document-package",
             "settings",
         ],
         "emptySelectionContext": {
@@ -606,6 +607,7 @@ def assert_action_target_definitions(page: Page) -> None:
             "publish-docs",
             "rebuild-docs",
             "rename-scope",
+            "review-document-package",
             "settings",
         ],
         "unknownRejected": True,

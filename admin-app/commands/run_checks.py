@@ -161,6 +161,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/smoke/docs_viewer_prepare_package_workflow_modules.py",
                 "docs-viewer/tests/smoke/docs_viewer_review_package_workflow_modules.py",
                 "docs-viewer/tests/smoke/docs_viewer_prepare_package_workflow_route.py",
+                "docs-viewer/tests/smoke/docs_viewer_review_package_workflow_route.py",
                 "docs-viewer/tests/smoke/docs_viewer_index_selection_lifecycle_route.py",
                 "docs-viewer/tests/smoke/docs_viewer_tree_move_projection_modules.py",
                 "docs-viewer/tests/smoke/docs_viewer_tree_move_projection_route.py",
@@ -443,12 +444,21 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Smoke-check real manage-route Prepare registration, package reads, request attribution, and ready/busy selection preservation.",
         ),
         CheckCommand(
+            "docs-viewer-review-package-workflow-route-smoke",
+            (
+                sys.executable,
+                "docs-viewer/tests/smoke/docs_viewer_review_package_workflow_route.py",
+            ),
+            "Smoke-check real manage-route Review registration, lazy workflow loading, endpoint agreement, new-tab result, and ready/busy state.",
+        ),
+        CheckCommand(
             "docs-viewer-index-selection-lifecycle-route-smoke",
             (
                 sys.executable,
                 "docs-viewer/tests/smoke/docs_viewer_index_selection_lifecycle_route.py",
             ),
             "Smoke-check real manage-route selection reconciliation, view exit, and full browser reload reset.",
+            isolated_projects_base=True,
         ),
         CheckCommand(
             "docs-viewer-tree-move-projection-module-smoke",
@@ -467,6 +477,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/smoke/docs_viewer_tree_move_projection_route.py",
             ),
             "Smoke-check a real manage-route drag/drop projects the committed move without reloading the index or displayed document.",
+            isolated_projects_base=True,
         ),
         CheckCommand(
             "docs-viewer-inline-mermaid-module-smoke",
@@ -485,6 +496,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/smoke/docs_viewer_service_manage.py",
             ),
             "Smoke-check the standalone Docs Viewer service manage route boundary and API base.",
+            isolated_projects_base=True,
         ),
         CheckCommand(
             "docs-viewer-service-review-smoke",
@@ -493,6 +505,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/smoke/docs_viewer_service_review.py",
             ),
             "Smoke-check the standalone Docs Review route, provider, temporary source write, and API authority boundary.",
+            isolated_projects_base=True,
         ),
         CheckCommand(
             "public-docs-viewer-readonly-smoke",
