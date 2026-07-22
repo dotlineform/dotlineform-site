@@ -913,7 +913,8 @@
                 {
                   "doc_id": "d-20260722-165733-88d9ff",
                   "title": "Missing-Summary Package Preparation Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260722-165733-88d9ff.json"
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260722-165733-88d9ff.json",
+                  "ui_status": "complete"
                 },
                 {
                   "doc_id": "d-20260722-133457-e90e21",
@@ -1555,5 +1556,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-22T16:25:20Z"
+  "generated_at": "2026-07-22T18:23:13Z"
 }

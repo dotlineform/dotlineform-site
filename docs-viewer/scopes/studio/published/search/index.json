@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-9ccfa9a2851ae8c0c45653961bf6e598",
-    "generated_at_utc": "2026-07-22T18:02:53Z",
+    "version": "blake2b-a0d5e3662f0eba1e05ef1ae430a33db1",
+    "generated_at_utc": "2026-07-22T18:23:13Z",
     "count": 269
   },
   "entries": [
@@ -1645,10 +1645,10 @@
       "kind": "doc",
       "title": "Endpoint Overview",
       "href": "/docs/?scope=studio&doc=d-20260607-222033-647b52",
-      "last_updated": "2026-07-22 18:58:16",
+      "last_updated": "2026-07-22 19:18:08",
       "parent_id": "d-20260424-000000-04d75e",
       "parent_title": "Management Services",
-      "display_meta": "2026-07-22 18:58:16 • Management Services",
+      "display_meta": "2026-07-22 19:18:08 • Management Services",
       "search_terms": [
         "endpoint overview",
         "endpoint",
@@ -1656,16 +1656,16 @@
         "management services",
         "management",
         "services",
-        "2026-07-22 18:58:16",
+        "2026-07-22 19:18:08",
         "2026",
         "07",
         "22",
+        "19",
         "18",
-        "58",
-        "16",
+        "08",
         "d-20260607-222033-647b52"
       ],
-      "search_text": "endpoint overview endpoint overview management services management services 2026-07-22 18:58:16 2026 07 22 18 58 16 d-20260607-222033-647b52"
+      "search_text": "endpoint overview endpoint overview management services management services 2026-07-22 19:18:08 2026 07 22 19 18 08 d-20260607-222033-647b52"
     },
     {
       "id": "d-20260607-222033-78a47c",
@@ -1890,10 +1890,10 @@
       "kind": "doc",
       "title": "Source Mutation Endpoints",
       "href": "/docs/?scope=studio&doc=d-20260607-222033-ce5515",
-      "last_updated": "2026-07-22 18:58:16",
+      "last_updated": "2026-07-22 19:18:08",
       "parent_id": "d-20260607-222033-647b52",
       "parent_title": "Endpoint Overview",
-      "display_meta": "2026-07-22 18:58:16 • Endpoint Overview",
+      "display_meta": "2026-07-22 19:18:08 • Endpoint Overview",
       "search_terms": [
         "source mutation endpoints",
         "source",
@@ -1902,16 +1902,16 @@
         "endpoint overview",
         "endpoint",
         "overview",
-        "2026-07-22 18:58:16",
+        "2026-07-22 19:18:08",
         "2026",
         "07",
         "22",
+        "19",
         "18",
-        "58",
-        "16",
+        "08",
         "d-20260607-222033-ce5515"
       ],
-      "search_text": "source mutation endpoints source mutation endpoints endpoint overview endpoint overview 2026-07-22 18:58:16 2026 07 22 18 58 16 d-20260607-222033-ce5515"
+      "search_text": "source mutation endpoints source mutation endpoints endpoint overview endpoint overview 2026-07-22 19:18:08 2026 07 22 19 18 08 d-20260607-222033-ce5515"
     },
     {
       "id": "d-20260519-202931-66c794",
@@ -2248,10 +2248,10 @@
       "kind": "doc",
       "title": "Package Prepare",
       "href": "/docs/?scope=studio&doc=d-20260722-151224-7b61c4",
-      "last_updated": "2026-07-22 15:27:18",
+      "last_updated": "2026-07-22 19:18:08",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-22 15:27:18 • Docs Viewer",
+      "display_meta": "2026-07-22 19:18:08 • Docs Viewer",
       "search_terms": [
         "package prepare",
         "package",
@@ -2259,26 +2259,26 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-22 15:27:18",
+        "2026-07-22 19:18:08",
         "2026",
         "07",
         "22",
-        "15",
-        "27",
+        "19",
         "18",
+        "08",
         "d-20260722-151224-7b61c4"
       ],
-      "search_text": "package prepare package prepare docs viewer docs viewer 2026-07-22 15:27:18 2026 07 22 15 27 18 d-20260722-151224-7b61c4"
+      "search_text": "package prepare package prepare docs viewer docs viewer 2026-07-22 19:18:08 2026 07 22 19 18 08 d-20260722-151224-7b61c4"
     },
     {
       "id": "d-20260503-141500-98fa03",
       "kind": "doc",
       "title": "Package Prepare Profiles",
       "href": "/docs/?scope=studio&doc=d-20260503-141500-98fa03",
-      "last_updated": "2026-07-22 15:27:50",
+      "last_updated": "2026-07-22 19:18:08",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-22 15:27:50 • Docs Viewer",
+      "display_meta": "2026-07-22 19:18:08 • Docs Viewer",
       "search_terms": [
         "package prepare profiles",
         "package",
@@ -2287,26 +2287,26 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-22 15:27:50",
+        "2026-07-22 19:18:08",
         "2026",
         "07",
         "22",
-        "15",
-        "27",
-        "50",
+        "19",
+        "18",
+        "08",
         "d-20260503-141500-98fa03"
       ],
-      "search_text": "package prepare profiles package prepare profiles docs viewer docs viewer 2026-07-22 15:27:50 2026 07 22 15 27 50 d-20260503-141500-98fa03"
+      "search_text": "package prepare profiles package prepare profiles docs viewer docs viewer 2026-07-22 19:18:08 2026 07 22 19 18 08 d-20260503-141500-98fa03"
     },
     {
       "id": "d-20260503-150500-b0f1df",
       "kind": "doc",
       "title": "Package Prepare Script",
       "href": "/docs/?scope=studio&doc=d-20260503-150500-b0f1df",
-      "last_updated": "2026-07-22 15:26:58",
+      "last_updated": "2026-07-22 19:18:08",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-22 15:26:58 • Docs Viewer",
+      "display_meta": "2026-07-22 19:18:08 • Docs Viewer",
       "search_terms": [
         "package prepare script",
         "package",
@@ -2315,16 +2315,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-22 15:26:58",
+        "2026-07-22 19:18:08",
         "2026",
         "07",
         "22",
-        "15",
-        "26",
-        "58",
+        "19",
+        "18",
+        "08",
         "d-20260503-150500-b0f1df"
       ],
-      "search_text": "package prepare script package prepare script docs viewer docs viewer 2026-07-22 15:26:58 2026 07 22 15 26 58 d-20260503-150500-b0f1df"
+      "search_text": "package prepare script package prepare script docs viewer docs viewer 2026-07-22 19:18:08 2026 07 22 19 18 08 d-20260503-150500-b0f1df"
     },
     {
       "id": "d-20260503-202500-316d29",
@@ -2752,10 +2752,10 @@
       "kind": "doc",
       "title": "Viewable field",
       "href": "/docs/?scope=studio&doc=d-20260424-000000-e2408a",
-      "last_updated": "2026-07-22 18:58:16",
+      "last_updated": "2026-07-22 19:18:08",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-22 18:58:16 • Docs Viewer",
+      "display_meta": "2026-07-22 19:18:08 • Docs Viewer",
       "search_terms": [
         "viewable field",
         "viewable",
@@ -2763,16 +2763,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-22 18:58:16",
+        "2026-07-22 19:18:08",
         "2026",
         "07",
         "22",
+        "19",
         "18",
-        "58",
-        "16",
+        "08",
         "d-20260424-000000-e2408a"
       ],
-      "search_text": "viewable field viewable field docs viewer docs viewer 2026-07-22 18:58:16 2026 07 22 18 58 16 d-20260424-000000-e2408a"
+      "search_text": "viewable field viewable field docs viewer docs viewer 2026-07-22 19:18:08 2026 07 22 19 18 08 d-20260424-000000-e2408a"
     },
     {
       "id": "d-20260718-114645-7b9d24",
@@ -4084,10 +4084,10 @@
       "kind": "doc",
       "title": "Missing-Summary Package Preparation Delivery",
       "href": "/docs/?scope=studio&doc=d-20260722-165733-88d9ff",
-      "last_updated": "2026-07-22 19:02:33",
+      "last_updated": "2026-07-22 19:22:44",
       "parent_id": "d-20260720-230623-c7e921",
       "parent_title": "Document Sharing UI Redesign",
-      "display_meta": "2026-07-22 19:02:33 • Document Sharing UI Redesign",
+      "display_meta": "2026-07-22 19:22:44 • Document Sharing UI Redesign",
       "search_terms": [
         "missing-summary package preparation delivery",
         "missing",
@@ -4100,16 +4100,15 @@
         "sharing",
         "ui",
         "redesign",
-        "2026-07-22 19:02:33",
+        "2026-07-22 19:22:44",
         "2026",
         "07",
         "22",
         "19",
-        "02",
-        "33",
+        "44",
         "d-20260722-165733-88d9ff"
       ],
-      "search_text": "missing-summary package preparation delivery missing summary package preparation delivery document sharing ui redesign document sharing ui redesign 2026-07-22 19:02:33 2026 07 22 19 02 33 d-20260722-165733-88d9ff"
+      "search_text": "missing-summary package preparation delivery missing summary package preparation delivery document sharing ui redesign document sharing ui redesign 2026-07-22 19:22:44 2026 07 22 19 44 d-20260722-165733-88d9ff"
     },
     {
       "id": "d-20260722-133457-e90e21",
@@ -4177,10 +4176,10 @@
       "kind": "doc",
       "title": "Index Multiple Selection",
       "href": "/docs/?scope=studio&doc=d-20260714-151900-6fa23e",
-      "last_updated": "2026-07-22 15:14:46",
+      "last_updated": "2026-07-22 19:18:08",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-22 15:14:46 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-22 19:18:08 • Docs Viewer Roadmap",
       "search_terms": [
         "index multiple selection",
         "index",
@@ -4190,16 +4189,16 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-22 15:14:46",
+        "2026-07-22 19:18:08",
         "2026",
         "07",
         "22",
-        "15",
-        "14",
-        "46",
+        "19",
+        "18",
+        "08",
         "d-20260714-151900-6fa23e"
       ],
-      "search_text": "index multiple selection index multiple selection docs viewer roadmap docs viewer roadmap 2026-07-22 15:14:46 2026 07 22 15 14 46 d-20260714-151900-6fa23e"
+      "search_text": "index multiple selection index multiple selection docs viewer roadmap docs viewer roadmap 2026-07-22 19:18:08 2026 07 22 19 18 08 d-20260714-151900-6fa23e"
     },
     {
       "id": "d-20260714-234030-f30d01",
@@ -4288,10 +4287,10 @@
       "kind": "doc",
       "title": "Index Multiple Selection Delivery",
       "href": "/docs/?scope=studio&doc=d-20260721-074902-838446",
-      "last_updated": "2026-07-21 23:50:07",
+      "last_updated": "2026-07-22 19:18:08",
       "parent_id": "d-20260714-151900-6fa23e",
       "parent_title": "Index Multiple Selection",
-      "display_meta": "2026-07-21 23:50:07 • Index Multiple Selection",
+      "display_meta": "2026-07-22 19:18:08 • Index Multiple Selection",
       "search_terms": [
         "index multiple selection delivery",
         "index",
@@ -4299,15 +4298,16 @@
         "selection",
         "delivery",
         "index multiple selection",
-        "2026-07-21 23:50:07",
+        "2026-07-22 19:18:08",
         "2026",
         "07",
-        "21",
-        "23",
-        "50",
+        "22",
+        "19",
+        "18",
+        "08",
         "d-20260721-074902-838446"
       ],
-      "search_text": "index multiple selection delivery index multiple selection delivery index multiple selection 2026-07-21 23:50:07 2026 07 21 23 50 d-20260721-074902-838446"
+      "search_text": "index multiple selection delivery index multiple selection delivery index multiple selection 2026-07-22 19:18:08 2026 07 22 19 18 08 d-20260721-074902-838446"
     },
     {
       "id": "d-20260715-215355-54ede0",

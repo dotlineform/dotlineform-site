@@ -7,7 +7,7 @@
       "doc_id": "d-20260722-165733-88d9ff",
       "title": "Missing-Summary Package Preparation Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260722-165733-88d9ff.json",
-      "timestamp": "2026-07-22 19:02:33",
+      "timestamp": "2026-07-22 19:22:44",
       "parent_id": "d-20260720-230623-c7e921",
       "parent_title": "Document Sharing UI Redesign"
     },
@@ -15,9 +15,65 @@
       "doc_id": "d-20260607-222033-647b52",
       "title": "Endpoint Overview",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-647b52.json",
-      "timestamp": "2026-07-22 18:58:16",
+      "timestamp": "2026-07-22 19:18:08",
       "parent_id": "d-20260424-000000-04d75e",
       "parent_title": "Management Services"
+    },
+    {
+      "doc_id": "d-20260714-151900-6fa23e",
+      "title": "Index Multiple Selection",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-151900-6fa23e.json",
+      "timestamp": "2026-07-22 19:18:08",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap"
+    },
+    {
+      "doc_id": "d-20260721-074902-838446",
+      "title": "Index Multiple Selection Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260721-074902-838446.json",
+      "timestamp": "2026-07-22 19:18:08",
+      "parent_id": "d-20260714-151900-6fa23e",
+      "parent_title": "Index Multiple Selection"
+    },
+    {
+      "doc_id": "d-20260722-151224-7b61c4",
+      "title": "Package Prepare",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260722-151224-7b61c4.json",
+      "timestamp": "2026-07-22 19:18:08",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260503-141500-98fa03",
+      "title": "Package Prepare Profiles",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260503-141500-98fa03.json",
+      "timestamp": "2026-07-22 19:18:08",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260503-150500-b0f1df",
+      "title": "Package Prepare Script",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260503-150500-b0f1df.json",
+      "timestamp": "2026-07-22 19:18:08",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260607-222033-ce5515",
+      "title": "Source Mutation Endpoints",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-ce5515.json",
+      "timestamp": "2026-07-22 19:18:08",
+      "parent_id": "d-20260607-222033-647b52",
+      "parent_title": "Endpoint Overview"
+    },
+    {
+      "doc_id": "d-20260424-000000-e2408a",
+      "title": "Viewable field",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260424-000000-e2408a.json",
+      "timestamp": "2026-07-22 19:18:08",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
     },
     {
       "doc_id": "d-20260722-000158-9c0f3e",
@@ -26,63 +82,7 @@
       "timestamp": "2026-07-22 18:58:16",
       "parent_id": "d-20260714-151900-6fa23e",
       "parent_title": "Index Multiple Selection"
-    },
-    {
-      "doc_id": "d-20260607-222033-ce5515",
-      "title": "Source Mutation Endpoints",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-ce5515.json",
-      "timestamp": "2026-07-22 18:58:16",
-      "parent_id": "d-20260607-222033-647b52",
-      "parent_title": "Endpoint Overview"
-    },
-    {
-      "doc_id": "d-20260424-000000-e2408a",
-      "title": "Viewable field",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260424-000000-e2408a.json",
-      "timestamp": "2026-07-22 18:58:16",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260627-225625-1c9b7e",
-      "title": "Package Return Review",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260627-225625-1c9b7e.json",
-      "timestamp": "2026-07-22 15:29:21",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260503-202500-316d29",
-      "title": "Package Return Parser",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260503-202500-316d29.json",
-      "timestamp": "2026-07-22 15:28:43",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260503-141500-98fa03",
-      "title": "Package Prepare Profiles",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260503-141500-98fa03.json",
-      "timestamp": "2026-07-22 15:27:50",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260722-151224-7b61c4",
-      "title": "Package Prepare",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260722-151224-7b61c4.json",
-      "timestamp": "2026-07-22 15:27:18",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260503-150500-b0f1df",
-      "title": "Package Prepare Script",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260503-150500-b0f1df.json",
-      "timestamp": "2026-07-22 15:26:58",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-07-22T18:02:53Z"
+  "generated_at": "2026-07-22T18:23:13Z"
 }
