@@ -6,6 +6,7 @@ export const INLINE_MERMAID_ERROR_MESSAGE = "Diagram could not be rendered. Merm
 function mermaidInitializationConfig() {
   return {
     startOnLoad: false,
+    suppressErrorRendering: true,
     theme: "neutral",
     securityLevel: "strict",
     htmlLabels: false,

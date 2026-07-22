@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-54fa5f2652378ff272fc227f28490577",
-    "generated_at_utc": "2026-07-21T23:03:46Z",
+    "version": "blake2b-c3e984a262c5d4fb41c0b3911d20727f",
+    "generated_at_utc": "2026-07-22T10:17:01Z",
     "count": 266
   },
   "entries": [
@@ -4171,10 +4171,10 @@
       "kind": "doc",
       "title": "Index Multiple Selection Consumer Assessment",
       "href": "/docs/?scope=studio&doc=d-20260722-000158-9c0f3e",
-      "last_updated": "2026-07-22 00:01:58",
+      "last_updated": "2026-07-22 11:16:37",
       "parent_id": "d-20260714-151900-6fa23e",
       "parent_title": "Index Multiple Selection",
-      "display_meta": "2026-07-22 00:01:58 • Index Multiple Selection",
+      "display_meta": "2026-07-22 11:16:37 • Index Multiple Selection",
       "search_terms": [
         "index multiple selection consumer assessment",
         "index",
@@ -4183,16 +4183,16 @@
         "consumer",
         "assessment",
         "index multiple selection",
-        "2026-07-22 00:01:58",
+        "2026-07-22 11:16:37",
         "2026",
         "07",
         "22",
-        "00",
-        "01",
-        "58",
+        "11",
+        "16",
+        "37",
         "d-20260722-000158-9c0f3e"
       ],
-      "search_text": "index multiple selection consumer assessment index multiple selection consumer assessment index multiple selection 2026-07-22 00:01:58 2026 07 22 00 01 58 d-20260722-000158-9c0f3e"
+      "search_text": "index multiple selection consumer assessment index multiple selection consumer assessment index multiple selection 2026-07-22 11:16:37 2026 07 22 11 16 37 d-20260722-000158-9c0f3e"
     },
     {
       "id": "d-20260721-074902-838446",

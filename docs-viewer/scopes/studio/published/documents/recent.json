@@ -4,6 +4,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260722-000158-9c0f3e",
+      "title": "Index Multiple Selection Consumer Assessment",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260722-000158-9c0f3e.json",
+      "timestamp": "2026-07-22 11:16:37",
+      "parent_id": "d-20260714-151900-6fa23e",
+      "parent_title": "Index Multiple Selection"
+    },
+    {
       "doc_id": "d-20260714-234030-1e0af6",
       "title": "Docs Viewer Roadmap",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-1e0af6.json",
@@ -44,14 +52,6 @@
       "parent_title": "Index Multiple Selection"
     },
     {
-      "doc_id": "d-20260722-000158-9c0f3e",
-      "title": "Index Multiple Selection Consumer Assessment",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260722-000158-9c0f3e.json",
-      "timestamp": "2026-07-22 00:01:58",
-      "parent_id": "d-20260714-151900-6fa23e",
-      "parent_title": "Index Multiple Selection"
-    },
-    {
       "doc_id": "d-20260721-074902-838446",
       "title": "Index Multiple Selection Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260721-074902-838446.json",
@@ -84,5 +84,5 @@
       "parent_title": "Local Tree Move Projection"
     }
   ],
-  "generated_at": "2026-07-21T23:03:46Z"
+  "generated_at": "2026-07-22T10:17:01Z"
 }

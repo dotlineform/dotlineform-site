@@ -202,6 +202,7 @@ def assert_session_renderer_and_failure_containment(page: Page) -> None:
         raise AssertionError(f"Mermaid did not load and initialize once per adapter session: {result!r}")
     expected_config = {
         "startOnLoad": False,
+        "suppressErrorRendering": True,
         "theme": "neutral",
         "securityLevel": "strict",
         "htmlLabels": False,
@@ -388,7 +389,8 @@ def assert_checked_browser_runtime_renders(page: Page) -> None:
                 mixedDiagnosticCount: diagnostics.length,
                 mixedDiagnosticMessage: diagnostics[0]?.message || '',
                 mixedDiagnosticHasDetail: Boolean(diagnostics[0]?.detail),
-                diagnosticLeakedToContent: diagnostics.some(item => mixed.textContent.includes(item.detail))
+                diagnosticLeakedToContent: diagnostics.some(item => mixed.textContent.includes(item.detail)),
+                mermaidErrorArtifactCount: document.querySelectorAll('[id^="ddocs-viewer-inline-mermaid-"]').length
             };
         }"""
     )
@@ -406,6 +408,8 @@ def assert_checked_browser_runtime_renders(page: Page) -> None:
         raise AssertionError(f"checked Mermaid runtime did not retain only the failed source: {result!r}")
     if result["mixedErrorText"] != "Diagram could not be rendered. Mermaid source is shown below.":
         raise AssertionError(f"checked Mermaid runtime fallback changed: {result!r}")
+    if result["mermaidErrorArtifactCount"] != 0:
+        raise AssertionError(f"Mermaid left its own error rendering in the document body: {result!r}")
     if (
         result["mixedDiagnosticCount"] != 1
         or result["mixedDiagnosticMessage"] != "docs_viewer: inline Mermaid diagram unavailable"
