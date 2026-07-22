@@ -300,9 +300,19 @@ def validate_export_config(config: dict[str, Any]) -> tuple[list[str], list[str]
     selection_mode = normalize_text(selection.get("mode"))
     if selection_mode not in SUPPORTED_SELECTION_MODES:
         errors.append(f"config {config_id}: unsupported selection.mode {selection_mode!r}")
-    for key in ["include_descendants", "include_non_viewable"]:
+    for key in [
+        "include_descendants",
+        "include_non_viewable",
+        "supports_include_non_viewable",
+        "supports_missing_summary_only",
+        "default_missing_summary_only",
+    ]:
         if not isinstance(selection.get(key), bool):
             errors.append(f"config {config_id}: selection.{key} must be true or false")
+    if selection.get("default_missing_summary_only") and not selection.get("supports_missing_summary_only"):
+        errors.append(
+            f"config {config_id}: selection.default_missing_summary_only requires missing-summary support"
+        )
     if record_shape == "document_tree" and selection.get("include_descendants") is not True:
         errors.append(f"config {config_id}: document_tree exports require selection.include_descendants true")
 

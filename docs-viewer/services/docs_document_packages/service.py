@@ -106,10 +106,20 @@ def dry_run_value(body: dict[str, Any]) -> bool:
     return value
 
 
+def optional_boolean_value(body: dict[str, Any], key: str) -> bool | None:
+    if key not in body:
+        return None
+    value = body.get(key)
+    if not isinstance(value, bool):
+        raise ValueError(f"{key} must be true or false")
+    return value
+
+
 def profile_contract(config: dict[str, Any]) -> dict[str, Any]:
     target = config.get("target") if isinstance(config.get("target"), dict) else {}
     content = config.get("content_format") if isinstance(config.get("content_format"), dict) else {}
     selection = config.get("selection") if isinstance(config.get("selection"), dict) else {}
+    limits = config.get("limits") if isinstance(config.get("limits"), dict) else {}
     external_context = (
         config.get("external_context")
         if isinstance(config.get("external_context"), dict)
@@ -136,6 +146,13 @@ def profile_contract(config: dict[str, Any]) -> dict[str, Any]:
         "selection": {
             "mode": str(selection.get("mode") or "").strip(),
             "include_descendants": selection.get("include_descendants") is not False,
+            "include_non_viewable": selection.get("include_non_viewable") is not False,
+            "supports_include_non_viewable": selection.get("supports_include_non_viewable") is True,
+            "supports_missing_summary_only": selection.get("supports_missing_summary_only") is True,
+            "default_missing_summary_only": selection.get("default_missing_summary_only") is True,
+        },
+        "limits": {
+            "max_documents": limits.get("max_documents") if isinstance(limits.get("max_documents"), int) else None,
         },
         "external_context": external_context,
         "document_fields": document_fields,
@@ -223,6 +240,8 @@ def prepare_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     if not isinstance(select_all, bool):
         raise ValueError("select_all must be true or false")
     dry_run = dry_run_value(body)
+    missing_summary_only = optional_boolean_value(body, "missing_summary_only")
+    include_non_viewable = optional_boolean_value(body, "include_non_viewable")
     roots = configured_workspace_paths(repo_root)
     payload = build_document_package(
         repo_root,
@@ -231,7 +250,8 @@ def prepare_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         config_id=profile_id,
         raw_doc_ids=doc_ids,
         select_all=select_all,
-        missing_summary_only=None,
+        missing_summary_only=missing_summary_only,
+        include_non_viewable=include_non_viewable,
         dry_run=dry_run,
         config_path="",
         target_format=str(body.get("target_format") or "").strip(),

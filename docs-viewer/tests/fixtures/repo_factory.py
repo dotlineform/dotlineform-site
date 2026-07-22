@@ -286,7 +286,8 @@ def write_documents_prepare_profiles(root: Path) -> None:
                         "mode": "explicit_doc_ids",
                         "include_descendants": False,
                         "include_non_viewable": True,
-                        "supports_missing_summary_only": False,
+                        "supports_include_non_viewable": True,
+                        "supports_missing_summary_only": True,
                         "default_missing_summary_only": False,
                     },
                     "limits": {

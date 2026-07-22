@@ -63,7 +63,8 @@ BASE_CONFIG = {
                 "mode": "explicit_doc_ids",
                 "include_descendants": True,
                 "include_non_viewable": True,
-                "supports_missing_summary_only": False,
+                "supports_include_non_viewable": True,
+                "supports_missing_summary_only": True,
                 "default_missing_summary_only": False,
             },
             "limits": {
@@ -194,11 +195,79 @@ def run_export(root: Path, **overrides):
 
 def test_missing_summary_filter_reports_expected_skips() -> None:
     with make_repo() as temp:
-        report = run_export(Path(temp))
+        report = run_export(
+            Path(temp),
+            selected_doc_ids=["library", "child-with-summary"],
+            missing_summary_only=True,
+        )
     assert report["ok"] is True
-    assert report["counts"] == {"selected": 1, "exported": 1, "skipped": 0, "failed": 0, "truncated": 0}
-    assert report["skipped_summary"] == {}
-    assert report["warnings"] == []
+    assert report["counts"] == {"selected": 2, "exported": 1, "skipped": 1, "failed": 0, "truncated": 0}
+    assert report["selected_doc_ids"] == ["library"]
+    assert report["skipped_summary"] == {"has_summary": 1}
+    assert report["warnings"] == [
+        "selection: 1 document(s) skipped because they already have summaries"
+    ]
+
+
+def test_non_viewable_override_is_revalidated_inside_submitted_target() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_doc(
+            root,
+            "child-with-summary.md",
+            doc_id="child-with-summary",
+            title="Child With Summary",
+            parent_id="library",
+            summary="Existing summary.",
+            viewable=False,
+        )
+        report = run_export(
+            root,
+            selected_doc_ids=["library", "child-with-summary"],
+            missing_summary_only=False,
+            include_non_viewable=False,
+        )
+
+    assert report["ok"] is True
+    assert report["counts"] == {"selected": 2, "exported": 1, "skipped": 1, "failed": 0, "truncated": 0}
+    assert report["selected_doc_ids"] == ["library"]
+    assert report["skipped_summary"] == {"non_viewable": 1}
+    assert report["counts"]["selected"] == sum(
+        report["counts"][key] for key in ("exported", "failed", "skipped")
+    )
+
+
+def test_zero_result_keeps_submitted_target_inside_count_invariant() -> None:
+    with make_repo() as temp:
+        report = run_export(
+            Path(temp),
+            selected_doc_ids=["child-with-summary"],
+            missing_summary_only=True,
+        )
+
+    assert report["ok"] is False
+    assert report["counts"] == {"selected": 1, "exported": 0, "skipped": 1, "failed": 0, "truncated": 0}
+    assert report["selected_doc_ids"] == []
+    assert report["skipped"] == [{"doc_id": "child-with-summary", "reason": "has_summary"}]
+    assert "selection: no exportable documents remain after applying filters" in report["errors"]
+
+
+def test_unsupported_filter_choices_fail_before_source_selection() -> None:
+    config = copy.deepcopy(BASE_CONFIG)
+    config["configs"][0]["selection"]["supports_missing_summary_only"] = False
+    config["configs"][0]["selection"]["supports_include_non_viewable"] = False
+    with make_repo(config) as temp:
+        missing_summary = run_export(Path(temp), missing_summary_only=True)
+        non_viewable = run_export(
+            Path(temp),
+            missing_summary_only=False,
+            include_non_viewable=False,
+        )
+
+    assert missing_summary["ok"] is False
+    assert "config document-content: missing_summary_only true is not supported" in missing_summary["errors"]
+    assert non_viewable["ok"] is False
+    assert "config document-content: include_non_viewable cannot override the profile default" in non_viewable["errors"]
 
 
 def test_selected_doc_resolution_uses_explicit_ids_only() -> None:
@@ -226,6 +295,7 @@ def test_unknown_selected_doc_blocks_export() -> None:
     with make_repo() as temp:
         report = run_export(Path(temp), selected_doc_ids=["missing-doc"])
     assert report["ok"] is False
+    assert report["counts"]["selected"] == 1
     assert report["counts"]["skipped"] == 1
     assert report["skipped_summary"] == {"unknown_doc_id": 1}
     assert "selection: unknown doc_id value(s): missing-doc" in report["errors"]
@@ -600,10 +670,20 @@ def test_repo_documents_prepare_profiles_load_and_validate() -> None:
     assert "sort_order" not in full_fields
 
     full_config = docs_document_packages.export_config.find_export_config(payload, "document-content")
+    assert full_config["selection"] == {
+        "mode": "explicit_doc_ids",
+        "include_descendants": True,
+        "include_non_viewable": True,
+        "supports_include_non_viewable": True,
+        "supports_missing_summary_only": True,
+        "default_missing_summary_only": False,
+    }
     assert docs_document_packages.export_config.supported_target_formats(full_config) == ["jsonl", "json"]
     assert docs_document_packages.export_config.supported_content_formats(full_config) == ["markdown", "plain_text"]
     assert docs_document_packages.export_config.default_content_format(full_config) == "markdown"
     tree_config = docs_document_packages.export_config.find_export_config(payload, "document-tree")
+    assert tree_config["selection"]["supports_include_non_viewable"] is False
+    assert tree_config["selection"]["supports_missing_summary_only"] is False
     assert tree_config["workflow"]["supports_return_import"] is False
     assert tree_config["target"]["record_shape"] == "document_tree"
     assert docs_document_packages.export_config.supported_target_formats(tree_config) == ["json"]

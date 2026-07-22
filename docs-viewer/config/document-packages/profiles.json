@@ -24,7 +24,8 @@
         "mode": "explicit_doc_ids",
         "include_descendants": true,
         "include_non_viewable": true,
-        "supports_missing_summary_only": false,
+        "supports_include_non_viewable": true,
+        "supports_missing_summary_only": true,
         "default_missing_summary_only": false
       },
       "workflow": {
@@ -153,6 +154,7 @@
         "mode": "explicit_doc_ids",
         "include_descendants": true,
         "include_non_viewable": true,
+        "supports_include_non_viewable": false,
         "supports_missing_summary_only": false,
         "default_missing_summary_only": false
       },

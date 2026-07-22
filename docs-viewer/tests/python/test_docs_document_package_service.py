@@ -92,7 +92,12 @@ def test_fixed_routes_and_config_contract() -> None:
     assert payload["profiles"][0]["selection"] == {
         "mode": "explicit_doc_ids",
         "include_descendants": False,
+        "include_non_viewable": True,
+        "supports_include_non_viewable": True,
+        "supports_missing_summary_only": True,
+        "default_missing_summary_only": False,
     }
+    assert payload["profiles"][0]["limits"] == {"max_documents": None}
     assert payload["profiles"][0]["external_context"]["task"] == "review_document_content"
     assert payload["profiles"][0]["document_fields"] == [
         {"output_path": "doc_id", "required": True},
@@ -147,6 +152,164 @@ def test_prepare_uses_direct_fields_and_rejects_adapter_contract_fields() -> Non
     assert "adapter_id" not in payload
     assert payload["counts"]["exported"] == 1
     assert payload["output_written"] is False
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("missing_summary_only", None),
+        ("missing_summary_only", "true"),
+        ("include_non_viewable", None),
+        ("include_non_viewable", 1),
+    ],
+)
+def test_prepare_type_checks_filter_choices(field: str, value: object) -> None:
+    with make_docs_import_repo() as temp:
+        with pytest.raises(ValueError, match=rf"{field} must be true or false"):
+            service.prepare_package(
+                Path(temp),
+                {
+                    "scope": "library",
+                    "profile_id": "document-content",
+                    "doc_ids": ["alpha"],
+                    field: value,
+                    "dry_run": True,
+                },
+            )
+
+
+def test_prepare_revalidates_stale_summary_without_broadening_target() -> None:
+    with make_docs_import_repo() as temp:
+        repo_root = Path(temp)
+        source_path = repo_root / "docs-viewer/scopes/library/source/documents/alpha.md"
+        source_path.write_text(
+            source_path.read_text(encoding="utf-8").replace(
+                "---\n\n# Body",
+                "summary: Existing summary.\n---\n\n# Body",
+            ),
+            encoding="utf-8",
+        )
+        status, payload = service.post_response(
+            repo_root,
+            routes.PREPARE_PATH,
+            {
+                "scope": "library",
+                "profile_id": "document-content",
+                "doc_ids": ["library", "alpha"],
+                "select_all": False,
+                "missing_summary_only": True,
+                "include_non_viewable": True,
+                "dry_run": True,
+            },
+        )
+
+    assert int(status) == 200
+    assert payload["selected_doc_ids"] == ["library"]
+    assert payload["exported_doc_ids"] == ["library"]
+    assert payload["skipped"] == [{"doc_id": "alpha", "reason": "has_summary"}]
+    assert payload["counts"] == {"selected": 2, "exported": 1, "skipped": 1, "failed": 0, "truncated": 0}
+
+
+def test_direct_prepare_treats_tree_doc_ids_as_the_final_target() -> None:
+    with make_docs_import_repo() as temp:
+        repo_root = Path(temp)
+        profiles_path = repo_root / "docs-viewer/config/document-packages/profiles.json"
+        profiles = json.loads(profiles_path.read_text(encoding="utf-8"))
+        tree_profile = json.loads(json.dumps(profiles["configs"][0]))
+        tree_profile.update(
+            {
+                "id": "document-tree",
+                "label": "Document tree",
+                "target": {"format": "json", "record_shape": "document_tree"},
+                "output": {
+                    "path_pattern": "{timestamp}-{data_domain}-{profile_id}.json",
+                    "timestamp_format": "%Y%m%d-%H%M%S",
+                },
+                "workflow": {"supports_return_import": False},
+            }
+        )
+        tree_profile["selection"] = {
+            "mode": "explicit_doc_ids",
+            "include_descendants": True,
+            "include_non_viewable": True,
+            "supports_include_non_viewable": False,
+            "supports_missing_summary_only": False,
+            "default_missing_summary_only": False,
+        }
+        profiles["configs"].append(tree_profile)
+        profiles_path.write_text(json.dumps(profiles, indent=2) + "\n", encoding="utf-8")
+
+        status, payload = service.post_response(
+            repo_root,
+            routes.PREPARE_PATH,
+            {
+                "scope": "library",
+                "profile_id": "document-tree",
+                "doc_ids": ["library"],
+                "select_all": False,
+                "missing_summary_only": False,
+                "include_non_viewable": True,
+                "dry_run": True,
+            },
+        )
+        missing_status, missing_payload = service.post_response(
+            repo_root,
+            routes.PREPARE_PATH,
+            {
+                "scope": "library",
+                "profile_id": "document-tree",
+                "doc_ids": ["library"],
+                "select_all": False,
+                "missing_summary_only": True,
+                "include_non_viewable": True,
+                "dry_run": True,
+            },
+        )
+        non_viewable_status, non_viewable_payload = service.post_response(
+            repo_root,
+            routes.PREPARE_PATH,
+            {
+                "scope": "library",
+                "profile_id": "document-tree",
+                "doc_ids": ["library"],
+                "select_all": False,
+                "missing_summary_only": False,
+                "include_non_viewable": False,
+                "dry_run": True,
+            },
+        )
+
+    assert int(status) == 200
+    assert payload["selected_doc_ids"] == ["library"]
+    assert payload["exported_doc_ids"] == ["library"]
+    assert payload["counts"] == {"selected": 1, "exported": 1, "skipped": 0, "failed": 0, "truncated": 0}
+    assert int(missing_status) == 400
+    assert "config document-tree: missing_summary_only true is not supported" in missing_payload["errors"]
+    assert int(non_viewable_status) == 400
+    assert (
+        "config document-tree: include_non_viewable cannot override the profile default"
+        in non_viewable_payload["errors"]
+    )
+
+
+def test_package_document_feed_keeps_non_viewable_source_selectable() -> None:
+    with make_docs_import_repo() as temp:
+        repo_root = Path(temp)
+        source_path = repo_root / "docs-viewer/scopes/library/source/documents/alpha.md"
+        source_path.write_text(
+            source_path.read_text(encoding="utf-8").replace(
+                "---\n\n# Body",
+                "viewable: false\n---\n\n# Body",
+            ),
+            encoding="utf-8",
+        )
+        payload = service.documents_payload(repo_root, {"scope": ["library"]})
+
+    alpha = next(record for record in payload["records"] if record["doc_id"] == "alpha")
+    assert alpha["viewable"] is False
+    assert alpha["selectable"] is True
+    assert "published" not in alpha
+    assert alpha["issues"] == [{"level": "warning", "message": "Document is not viewable."}]
 
 
 def test_atomic_return_uses_order_insensitive_exact_set_equality() -> None:

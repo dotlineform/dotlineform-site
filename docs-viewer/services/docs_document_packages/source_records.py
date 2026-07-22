@@ -15,7 +15,6 @@ class DocumentPackageSourceRecord:
     doc_id: str
     scope: str
     title: str
-    published: bool
     summary: str
     added_date: str
     last_updated: str
@@ -26,15 +25,6 @@ class DocumentPackageSourceRecord:
     source_path: str
     viewer_url: str
     content_text_length: int
-
-
-def front_matter_bool(front_matter: dict[str, Any], key: str, default: bool) -> bool:
-    if key not in front_matter:
-        return default
-    value = front_matter[key]
-    if isinstance(value, bool):
-        return value
-    return str(value or "").strip().lower() not in {"false", "0", "no", "off"}
 
 
 def source_path_for_record(repo_root: Path, source_root: Path, doc: Any) -> str:
@@ -49,14 +39,12 @@ def source_record_from_doc(
     scope: str,
     doc: Any,
     parent_title: str,
-    published: bool,
     content_text_length: int,
 ) -> DocumentPackageSourceRecord:
     return DocumentPackageSourceRecord(
         doc_id=doc.doc_id,
         scope=scope,
         title=doc.title,
-        published=published,
         summary=doc.summary,
         added_date=doc.added_date,
         last_updated=doc.last_updated,

@@ -105,6 +105,71 @@ export function expandDocumentPackageSelection(documents, checkedDocIds, include
   return expanded;
 }
 
+export function projectDocumentPackageSelection(options = {}) {
+  const profile = options.profile || null;
+  const selection = profile && typeof profile.selection === "object" ? profile.selection : {};
+  const documents = Array.isArray(options.documents) ? options.documents : [];
+  const documentsById = new Map(
+    documents.map((record) => [documentId(record), record]).filter(([docId]) => Boolean(docId))
+  );
+  const includeDescendants = documentPackageProfileRequiresDescendants(profile)
+    ? true
+    : options.includeDescendants === true;
+  const supportsMissingSummaryOnly = selection.supports_missing_summary_only === true;
+  const missingSummaryOnly = supportsMissingSummaryOnly
+    ? Object.prototype.hasOwnProperty.call(options, "missingSummaryOnly")
+      ? options.missingSummaryOnly === true
+      : selection.default_missing_summary_only === true
+    : false;
+  const supportsIncludeNonViewable = selection.supports_include_non_viewable === true;
+  const defaultIncludeNonViewable = selection.include_non_viewable !== false;
+  const includeNonViewable = supportsIncludeNonViewable
+    ? Object.prototype.hasOwnProperty.call(options, "includeNonViewable")
+      ? options.includeNonViewable !== false
+      : defaultIncludeNonViewable
+    : defaultIncludeNonViewable;
+
+  const expandedDocIds = expandDocumentPackageSelection(
+    documents,
+    options.checkedDocIds,
+    includeDescendants
+  );
+  const afterViewability = expandedDocIds.filter((docId) => {
+    const record = documentsById.get(docId);
+    return includeNonViewable || !record || record.viewable !== false;
+  });
+  const excludedNonViewableCount = expandedDocIds.length - afterViewability.length;
+  const afterSummary = afterViewability.filter((docId) => {
+    const record = documentsById.get(docId);
+    return !missingSummaryOnly || !packageText(record && record.summary);
+  });
+  const excludedWithSummaryCount = afterViewability.length - afterSummary.length;
+  const rawMaxDocuments = profile && profile.limits && profile.limits.max_documents;
+  const maxDocuments = Number.isInteger(rawMaxDocuments) && rawMaxDocuments > 0
+    ? rawMaxDocuments
+    : null;
+  const docIds = maxDocuments === null ? afterSummary : afterSummary.slice(0, maxDocuments);
+  const excludedByLimitCount = afterSummary.length - docIds.length;
+  const includedNonViewableCount = docIds.filter((docId) => {
+    const record = documentsById.get(docId);
+    return record && record.viewable === false;
+  }).length;
+
+  return {
+    docIds,
+    includeDescendants,
+    missingSummaryOnly,
+    includeNonViewable,
+    supportsMissingSummaryOnly,
+    supportsIncludeNonViewable,
+    total: docIds.length,
+    excludedNonViewableCount,
+    excludedWithSummaryCount,
+    excludedByLimitCount,
+    includedNonViewableCount
+  };
+}
+
 export function documentPackageExternalContext(profile) {
   const context = profile && typeof profile.external_context === "object" ? profile.external_context : {};
   const descriptions = context && typeof context.field_descriptions === "object"
@@ -144,23 +209,17 @@ export function documentPackageExternalContextChanged(profile, externalContext) 
 export function createDocumentPackagePrepareRequest(options = {}) {
   const scope = packageText(options.scope).toLowerCase();
   const profile = options.profile || null;
-  const checkedDocIds = normalizeIds(options.checkedDocIds);
+  const effectiveDocIds = normalizeIds(options.effectiveDocIds);
   if (!scope) throw new Error("A Docs Viewer scope is required.");
   if (!profile || !packageText(profile.profile_id)) throw new Error("A document-package profile is required.");
-  if (!checkedDocIds.length) throw new Error("Select one or more documents.");
+  if (!effectiveDocIds.length) throw new Error("No documents remain for package preparation.");
 
-  const eligibility = documentPackageSelectionEligibility(options.documents, checkedDocIds);
+  const eligibility = documentPackageSelectionEligibility(options.documents, effectiveDocIds);
   if (eligibility.ineligibleDocIds.length) {
     throw new Error(
-      "Checked documents are unavailable for package preparation: " + eligibility.ineligibleDocIds.join(", ")
+      "Target documents are unavailable for package preparation: " + eligibility.ineligibleDocIds.join(", ")
     );
   }
-
-  const includeDescendants = documentPackageProfileRequiresDescendants(profile)
-    ? true
-    : options.includeDescendants === true;
-  const docIds = expandDocumentPackageSelection(options.documents, checkedDocIds, includeDescendants);
-  if (!docIds.length) throw new Error("No checked documents are eligible for package preparation.");
 
   const targetFormats = documentPackageTargetFormats(profile);
   const requestedTargetFormat = packageText(options.targetFormat) || packageText(profile.target_format) || targetFormats[0];
@@ -177,8 +236,10 @@ export function createDocumentPackagePrepareRequest(options = {}) {
   return {
     scope,
     profile_id: packageText(profile.profile_id),
-    doc_ids: docIds,
+    doc_ids: effectiveDocIds,
     select_all: false,
+    missing_summary_only: options.missingSummaryOnly === true,
+    include_non_viewable: options.includeNonViewable !== false,
     target_format: requestedTargetFormat,
     content_format: requestedContentFormat,
     dry_run: false,

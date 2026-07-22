@@ -38,7 +38,6 @@ def source_record_to_export_doc(record: source_records.DocumentPackageSourceReco
         "doc_id": record.doc_id,
         "scope": record.scope,
         "title": record.title,
-        "published": record.published,
         "summary": record.summary,
         "added_date": record.added_date,
         "last_updated": record.last_updated,
@@ -93,6 +92,7 @@ def selected_docs(
     selected_doc_ids: list[str],
     select_all: bool,
     missing_summary_only: bool | None,
+    include_non_viewable: bool | None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, str]], list[str], list[str]]:
     selection = context.config.get("selection", {})
     mode = normalize_text(selection.get("mode"))
@@ -102,9 +102,6 @@ def selected_docs(
 
     if select_all and selected_doc_ids:
         warnings.append("selection: explicit doc_ids were ignored because select_all is true")
-    if missing_summary_only and not selection.get("supports_missing_summary_only"):
-        warnings.append("selection: missing_summary_only was ignored because the selected config does not support it")
-
     if mode == "all_matching" or select_all:
         requested_ids = [normalize_text(doc.get("doc_id")) for doc in context.docs]
     else:
@@ -121,7 +118,7 @@ def selected_docs(
         if doc is None:
             skipped.append({"doc_id": doc_id, "reason": "unknown_doc_id"})
             continue
-        if not selection.get("include_non_viewable") and doc.get("viewable") is False:
+        if not effective_include_non_viewable(context.config, include_non_viewable) and doc.get("viewable") is False:
             skipped.append({"doc_id": doc_id, "reason": "non_viewable"})
             continue
         if effective_missing_summary_only(context.config, missing_summary_only) and normalize_text(doc.get("summary")):
@@ -178,6 +175,13 @@ def effective_missing_summary_only(config: dict[str, Any], override: bool | None
             return False
         return override
     return bool(selection.get("default_missing_summary_only")) if selection.get("supports_missing_summary_only") else False
+
+
+def effective_include_non_viewable(config: dict[str, Any], override: bool | None) -> bool:
+    selection = config.get("selection", {})
+    if override is not None and selection.get("supports_include_non_viewable"):
+        return override
+    return selection.get("include_non_viewable") is not False
 
 
 def skipped_reason_counts(skipped: list[dict[str, str]]) -> dict[str, int]:

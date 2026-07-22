@@ -86,7 +86,6 @@ def write_doc(
     added_date: str = "2026-01-01",
     last_updated: str = "2026-01-02",
     viewable: bool = True,
-    published: bool = True,
     ui_status: str = "",
     body: str = "Body text.",
 ) -> None:
@@ -103,8 +102,6 @@ def write_doc(
         lines.append(f"parent_id: {parent_id}")
     if not viewable:
         lines.append("viewable: false")
-    if not published:
-        lines.append("published: false")
     if ui_status:
         lines.append(f"ui_status: {ui_status}")
     lines.extend(["---", "", body])
@@ -132,7 +129,6 @@ def test_source_records_include_locked_fields_and_rendered_text() -> None:
             title="Child",
             parent_id="parent",
             viewable=False,
-            published=False,
             ui_status="draft",
             body="# Child\n\n## Details\n\nChild **body** with [parent](parent.md).",
         )
@@ -143,7 +139,6 @@ def test_source_records_include_locked_fields_and_rendered_text() -> None:
     assert child.scope == "studio"
     assert child.doc_id == "child"
     assert child.title == "Child"
-    assert child.published is False
     assert child.viewable is False
     assert child.parent_id == "parent"
     assert child.parent_title == "Parent"
@@ -255,7 +250,7 @@ def test_selectable_document_records_use_source_context() -> None:
             doc_id="doc",
             title="Source Title",
             summary="Source summary.",
-            published=False,
+            viewable=False,
             body="# Source Title\n\nSource body.",
         )
 
@@ -276,11 +271,10 @@ def test_selectable_document_records_use_source_context() -> None:
             "type": "document",
             "meta": "doc",
             "parent_id": "",
-            "published": False,
-            "viewable": True,
-            "selectable": False,
+            "viewable": False,
+            "selectable": True,
             "children": [],
-            "issues": [{"level": "warning", "message": "Document is not published."}],
+            "issues": [{"level": "warning", "message": "Document is not viewable."}],
             "content_text_length": len("Source body."),
             "summary": "Source summary.",
         }

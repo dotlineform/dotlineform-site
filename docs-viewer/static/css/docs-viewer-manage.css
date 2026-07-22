@@ -466,6 +466,27 @@ select.docsViewer__fieldInput--listbox{
   color: var(--docs-viewer-link-hover, var(--link-hover, #111));
 }
 
+.docsViewerPackagePrepare__selectionSummary{
+  display: grid;
+  gap: 0.35rem;
+  border-radius: 0.45rem;
+  background: var(--docs-viewer-panel-2, var(--panel-2, #f6f6f6));
+  padding: 0.65rem 0.75rem;
+}
+
+.docsViewerPackagePrepare__selectionSummary > p,
+.docsViewerPackagePrepare__selectionSummary > ul{
+  margin: 0;
+}
+
+.docsViewerPackagePrepare__selectionSummary > p{
+  font-weight: 600;
+}
+
+.docsViewerPackagePrepare__selectionSummary > ul{
+  padding-inline-start: 1.1rem;
+}
+
 .docsViewerPackagePrepare__context{
   border-top: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
   padding-top: 0.75rem;

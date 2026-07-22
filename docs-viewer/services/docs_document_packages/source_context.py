@@ -12,12 +12,11 @@ DOCS_BUILD_DIR = REPO_ROOT / "docs-viewer" / "build"
 if str(DOCS_BUILD_DIR) not in sys.path:
     sys.path.insert(0, str(DOCS_BUILD_DIR))
 
-from build_docs import DocsDataBuilder, DocRecord, parse_source  # noqa: E402
+from build_docs import DocsDataBuilder, DocRecord  # noqa: E402
 from docs_scope_config import DocsScopeConfig, document_source_path, load_docs_scope_configs, resolve_scope_path  # noqa: E402
 from docs_document_packages.rendered_content import doc_content_text  # noqa: E402
 from docs_document_packages.source_records import (  # noqa: E402
     DocumentPackageSourceRecord,
-    front_matter_bool,
     source_record_from_doc,
 )
 
@@ -81,7 +80,6 @@ def load_document_package_source_context(repo_root: Path, scope: str) -> Documen
     )
 
     for doc in builder.ordered_docs_for_index(source_docs):
-        front_matter, _body = parse_source(source_file_path(context, doc))
         parent = source_docs_by_id.get(doc.parent_id)
         content_text = doc_content_text(context, doc.doc_id)
         records.append(
@@ -91,7 +89,6 @@ def load_document_package_source_context(repo_root: Path, scope: str) -> Documen
                 scope=normalized_scope,
                 doc=doc,
                 parent_title=parent.title if parent else "",
-                published=front_matter_bool(front_matter, "published", True),
                 content_text_length=len(content_text),
             )
         )
