@@ -479,14 +479,14 @@ def assert_prepare_action_menu_projection(page: Page) -> None:
             });
             document.body.replaceChildren(rendered.root);
             const prepare = document.querySelector('#docsViewerManagePreparePackageButton');
-            const returned = document.querySelector('#docsViewerManageReturnedPackagesLink');
+            const review = document.querySelector('#docsViewerManageReviewPackageButton');
             const registered = {
                 prepareTag: prepare?.tagName || '',
                 prepareActionId: prepare?.dataset.docsViewerAction || '',
                 prepareHref: prepare?.getAttribute('href'),
-                returnedTag: returned?.tagName || '',
-                returnedHref: returned?.getAttribute('href') || '',
-                returnedScopeHref: returned?.dataset.docsViewerScopeHref || ''
+                reviewTag: review?.tagName || '',
+                reviewActionId: review?.dataset.docsViewerAction || '',
+                reviewHref: review?.getAttribute('href')
             };
             management.projectDocsViewerPreparePackageActionControl(prepare, {
                 disabled: true,
@@ -516,9 +516,9 @@ def assert_prepare_action_menu_projection(page: Page) -> None:
             "prepareTag": "BUTTON",
             "prepareActionId": "prepare-document-package",
             "prepareHref": None,
-            "returnedTag": "A",
-            "returnedHref": "/docs/packages/returned/",
-            "returnedScopeHref": "/docs/packages/returned/",
+            "reviewTag": "BUTTON",
+            "reviewActionId": "review-document-package",
+            "reviewHref": None,
         },
         "disabled": {
             "disabled": True,

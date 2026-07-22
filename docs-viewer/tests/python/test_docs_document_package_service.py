@@ -447,9 +447,54 @@ def test_returned_listing_projects_document_fields_without_adapter_identity() ->
     assert payload["ok"] is True
     assert len(payload["files"]) == 1
     assert payload["files"][0]["profile_id"] == "document-content"
+    assert payload["files"][0]["document_count"] == 1
     assert {"app", "adapter_id", "config_id", "data_domain"}.isdisjoint(
         payload["files"][0]
     )
+
+
+def test_returned_listing_excludes_invalid_and_export_only_packages() -> None:
+    with make_docs_import_repo() as temp:
+        repo_root = Path(temp)
+        write_returned_package(
+            "ds_20260720T120000Z",
+            selected_doc_ids=["library", "alpha"],
+            rows=[
+                {"doc_id": "library", "title": "Library"},
+                {"doc_id": "alpha", "title": "Alpha"},
+            ],
+            filename="reviewable.jsonl",
+        )
+        write_returned_package(
+            "ds_20260720T120001Z",
+            selected_doc_ids=["alpha", "missing"],
+            rows=[{"doc_id": "alpha", "title": "Alpha"}],
+            filename="incomplete.jsonl",
+        )
+        write_returned_package(
+            "ds_20260720T120002Z",
+            selected_doc_ids=["alpha"],
+            rows=[{"doc_id": "alpha", "title": "Alpha"}],
+            filename="tree.jsonl",
+        )
+        tree_metadata_path = workspace_paths().meta / "ds_20260720T120002Z.meta.json"
+        tree_metadata = json.loads(tree_metadata_path.read_text(encoding="utf-8"))
+        tree_metadata.update(
+            {
+                "config_id": "document-tree",
+                "profile_id": "document-tree",
+                "supports_return_import": False,
+            }
+        )
+        tree_metadata_path.write_text(json.dumps(tree_metadata) + "\n", encoding="utf-8")
+
+        payload = service.returned_payload(repo_root, {"scope": ["library"]})
+
+    assert [item["filename"] for item in payload["files"]] == ["reviewable.jsonl"]
+    assert payload["files"][0]["document_count"] == 2
+    blocked_by_name = {item["filename"]: item for item in payload["blocked_files"]}
+    assert blocked_by_name["incomplete.jsonl"]["blocked_reason"] == "invalid_returned_package"
+    assert blocked_by_name["tree.jsonl"]["blocked_reason"] == "export_only_profile"
 
 
 def test_returned_listing_separates_scope_owned_and_unassigned_files() -> None:

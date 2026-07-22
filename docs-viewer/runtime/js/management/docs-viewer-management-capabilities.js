@@ -36,6 +36,29 @@ export function documentPackagePrepareCapability(capabilities) {
   return { available: true, reason: "" };
 }
 
+export function documentPackageReviewCapability(capabilities) {
+  var documentPackages = capabilities && capabilities.document_packages;
+  if (!documentPackages || typeof documentPackages !== "object") {
+    return {
+      available: false,
+      reason: "Review package capability is unavailable."
+    };
+  }
+  if (documentPackages.available !== true) {
+    return {
+      available: false,
+      reason: String(documentPackages.message || "The document-package workspace is unavailable.").trim()
+    };
+  }
+  if (documentPackages.review_returned !== true) {
+    return {
+      available: false,
+      reason: "Review package capability is unavailable."
+    };
+  }
+  return { available: true, reason: "" };
+}
+
 export function scopeManagementCapabilities(capabilities, scope) {
   var scopeId = normalizeScopeId(scope);
   if (!capabilities || !capabilities.scopes || !scopeId) return null;

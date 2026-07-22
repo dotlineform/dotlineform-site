@@ -546,6 +546,54 @@ select.docsViewer__fieldInput--listbox{
   overflow-wrap: anywhere;
 }
 
+.docsViewerReviewPackage__tableWrap{
+  max-block-size: min(24rem, 52vh);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.docsViewerReviewPackage__table{
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
+}
+
+.docsViewerReviewPackage__table th,
+.docsViewerReviewPackage__table td{
+  border-bottom: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  padding: 0.55rem 0.45rem;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.docsViewerReviewPackage__table th{
+  color: var(--docs-viewer-muted, var(--muted, #555));
+  font-weight: 600;
+}
+
+.docsViewerReviewPackage__table th:last-child,
+.docsViewerReviewPackage__count{
+  text-align: right;
+  white-space: nowrap;
+}
+
+.docsViewerReviewPackage__choice{
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.docsViewerReviewPackage__choice span{
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.docsViewerReviewPackage__empty{
+  color: var(--docs-viewer-muted, var(--muted, #555));
+}
+
 .docsViewer__settingsWarnings ul{
   margin: 0;
   padding-left: 1.1rem;

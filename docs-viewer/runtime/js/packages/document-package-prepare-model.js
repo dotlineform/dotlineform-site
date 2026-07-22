@@ -206,6 +206,13 @@ export function documentPackageExternalContextChanged(profile, externalContext) 
   return JSON.stringify(documentPackageExternalContext(profile)) !== JSON.stringify(externalContext || {});
 }
 
+export function documentPackageProfileLabel(profile) {
+  const label = packageText(profile && profile.label) || packageText(profile && profile.profile_id);
+  return profile && profile.supports_return_import === false
+    ? `${label} (export only)`
+    : label;
+}
+
 export function createDocumentPackagePrepareRequest(options = {}) {
   const scope = packageText(options.scope).toLowerCase();
   const profile = options.profile || null;

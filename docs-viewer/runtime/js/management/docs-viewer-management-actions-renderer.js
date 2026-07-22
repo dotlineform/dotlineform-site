@@ -24,10 +24,10 @@ var MANAGEMENT_ACTION_MENU_ITEMS = [
     label: "Prepare package"
   },
   {
-    id: "docsViewerManageReturnedPackagesLink",
-    href: "/docs/packages/returned/",
-    emoji: "📥",
-    label: "Returned packages"
+    id: "docsViewerManageReviewPackageButton",
+    actionId: ACTION_IDS.REVIEW_DOCUMENT_PACKAGE,
+    emoji: "🔎",
+    label: "Review package"
   },
   {
     id: "docsViewerManageDeleteButton",

@@ -12,6 +12,7 @@ from docs_document_packages.export import (
 )
 from docs_document_packages.export_config import update_external_context_config
 from docs_document_packages.returned_profiles import supported_return_import_profile_ids
+from docs_document_packages.returned_parser import parse_staged_import
 from docs_document_packages import source_context
 from docs_document_packages.metadata import list_staged_files_with_metadata
 import docs_source_model as source_model
@@ -195,7 +196,29 @@ def list_returned_document_packages(
             blocked["blocked_reason"] = "unsupported_import_profile"
             blocked_files.append(blocked)
             continue
+        validation = parse_staged_import(
+            repo_root=repo_root,
+            scope=normalized_scope,
+            staged_file=str(item.get("filename") or "").strip(),
+            staging_root=staging_root,
+            metadata_root=metadata_root,
+        )
+        if validation.get("ok") is not True:
+            blocked = dict(item)
+            blocked["return_import_supported"] = True
+            blocked["blocked_reason"] = "invalid_returned_package"
+            blocked_files.append(blocked)
+            continue
+        counts = validation.get("counts") if isinstance(validation.get("counts"), dict) else {}
+        record_count = counts.get("records")
+        if not isinstance(record_count, int) or isinstance(record_count, bool) or record_count < 1:
+            blocked = dict(item)
+            blocked["return_import_supported"] = True
+            blocked["blocked_reason"] = "invalid_returned_package"
+            blocked_files.append(blocked)
+            continue
         item["return_import_supported"] = True
+        item["document_count"] = record_count
         files.append(item)
     report["files"] = files
     report["blocked_files"] = blocked_files

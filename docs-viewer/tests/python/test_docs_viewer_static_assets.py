@@ -60,6 +60,8 @@ def test_document_package_browser_assets_are_docs_viewer_owned() -> None:
     assert not (runtime_root / "document-package-prepare.js").exists()
     assert "/docs/packages/prepare/" not in returned_shell
     assert "docsViewerManagePreparePackageButton" in management_runtime
+    assert "docsViewerManageReviewPackageButton" in management_runtime
+    assert "docsViewerManageReturnedPackagesLink" not in management_runtime
     assert 'page_id: "docs-manage"' in management_runtime
     assert "data-domain" not in returned_shell.lower()
     assert "record_indices" not in runtime

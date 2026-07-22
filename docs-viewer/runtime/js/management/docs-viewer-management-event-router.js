@@ -72,6 +72,7 @@ export function createDocsViewerManagementEventRouter(options = {}) {
       ["import", ["openImport", {}]],
       ["settings", ["openSettings", {}]],
       ["prepare-document-package", ["preparePackage", { hideContextMenu: true, hideManageActionsMenu: true }]],
+      ["review-document-package", ["reviewPackage", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["publish-docs", ["publish", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["export-docs", ["exportDocs", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["new", ["createDoc", { hideContextMenu: true, hideManageActionsMenu: true }]],

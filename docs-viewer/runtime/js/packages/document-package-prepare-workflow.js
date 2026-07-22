@@ -11,6 +11,7 @@ import {
   documentPackageExternalContextChanged,
   documentPackageExternalContextMissingValues,
   documentPackageProfile,
+  documentPackageProfileLabel,
   documentPackageProfileIncludesDescendants,
   documentPackageProfileRequiresDescendants,
   documentPackageSelectionEligibility,
@@ -351,7 +352,7 @@ function openPrepareOptions(options) {
         profileSelect,
         profiles.map((profile) => packageText(profile && profile.profile_id)).filter(Boolean),
         currentProfileId,
-        (profileId) => packageText(documentPackageProfile(profiles, profileId)?.label) || profileId
+        (profileId) => documentPackageProfileLabel(documentPackageProfile(profiles, profileId)) || profileId
       );
       profileSelect.addEventListener("change", function () {
         captureCurrentProfile();

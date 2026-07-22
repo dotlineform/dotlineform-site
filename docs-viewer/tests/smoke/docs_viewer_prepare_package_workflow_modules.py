@@ -295,6 +295,7 @@ def install_workflow_fixture(page: Page, prepare_outcome: str = "success") -> No
             const contentProfile = {
                 profile_id: 'document-content',
                 label: 'Document content',
+                supports_return_import: true,
                 description: 'Document summaries and content.',
                 target_format: 'jsonl',
                 supported_target_formats: ['jsonl', 'json'],
@@ -320,6 +321,7 @@ def install_workflow_fixture(page: Page, prepare_outcome: str = "success") -> No
                 ...contentProfile,
                 profile_id: 'document-tree',
                 label: 'Document tree',
+                supports_return_import: false,
                 description: 'Document hierarchy.',
                 target_format: 'json',
                 supported_target_formats: ['json'],
@@ -420,6 +422,9 @@ def exercise_success(page: Page, timeout_ms: int) -> None:
         raise AssertionError("Prepare workflow did not render the three content-profile choices")
     if page.locator("[data-package-profile]").count() != 1:
         raise AssertionError("Prepare workflow did not render its profile control")
+    profile_labels = page.locator("[data-package-profile] option").all_text_contents()
+    if profile_labels != ["Document content", "Document tree (export only)"]:
+        raise AssertionError(f"Prepare workflow projected unexpected profile labels: {profile_labels!r}")
     modal_text = page.locator('[data-role="docs-viewer-management-modal"]').inner_text()
     if "checked document" in modal_text:
         raise AssertionError(f"Prepare workflow retained the raw checked-count note: {modal_text!r}")

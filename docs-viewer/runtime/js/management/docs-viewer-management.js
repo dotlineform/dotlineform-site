@@ -4,6 +4,7 @@ import {
 import {
   createDocsViewerManagementCapabilityController,
   documentPackagePrepareCapability,
+  documentPackageReviewCapability,
   scopePublishSupported,
   scopeStaticHtmlExportSupported
 } from "./docs-viewer-management-capabilities.js";
@@ -118,6 +119,42 @@ export function projectDocsViewerPreparePackageActionControl(button, state) {
   return controlState;
 }
 
+export function docsViewerReviewPackageActionControlState(options = {}) {
+  var disabledReason = "";
+  if (!options.managementChecked) {
+    disabledReason = "Checking Review package availability.";
+  } else if (!options.managementAvailable) {
+    disabledReason = "Review package is unavailable.";
+  } else if (options.managementBusy) {
+    disabledReason = "Docs management is busy.";
+  } else if (!String(options.scope || "").trim()) {
+    disabledReason = "A Docs Viewer scope is required.";
+  } else {
+    var capability = documentPackageReviewCapability(options.capabilities);
+    if (!capability.available) disabledReason = capability.reason;
+  }
+  return {
+    disabled: Boolean(disabledReason),
+    disabledReason: disabledReason
+  };
+}
+
+export function projectDocsViewerReviewPackageActionControl(button, state) {
+  if (!button) return null;
+  var controlState = state || { disabled: true, disabledReason: "Review package is unavailable." };
+  var label = "Review package";
+  var accessibleLabel = controlState.disabledReason ? label + ". " + controlState.disabledReason : label;
+  button.disabled = Boolean(controlState.disabled);
+  button.title = accessibleLabel;
+  button.setAttribute("aria-label", accessibleLabel);
+  if (controlState.disabledReason) {
+    button.dataset.docsViewerDisabledReason = controlState.disabledReason;
+  } else {
+    delete button.dataset.docsViewerDisabledReason;
+  }
+  return controlState;
+}
+
 export function initDocsViewerManagement(context) {
   var root = context.root;
   var nav = context.nav;
@@ -145,9 +182,6 @@ export function initDocsViewerManagement(context) {
   var manageActions = manageRow ? manageRow.querySelector(".docsViewer__manageActions") : null;
   var manageActionsButton = document.getElementById("docsViewerManageActionsButton");
   var manageActionsMenu = document.getElementById("docsViewerManageActionsMenu");
-  var manageScopeLinks = manageActionsMenu
-    ? Array.from(manageActionsMenu.querySelectorAll("[data-docs-viewer-scope-href]"))
-    : [];
   var manageRebuildButton = document.getElementById("docsViewerManageRebuildButton");
   var manageSettingsButton = document.getElementById("docsViewerManageSettingsButton");
   var managePublishButton = document.getElementById("docsViewerManagePublishButton");
@@ -158,6 +192,7 @@ export function initDocsViewerManagement(context) {
   var manageToolbarImportButton = document.getElementById("docsViewerManageToolbarImportButton");
   var manageImportButtons = [manageImportButton, manageToolbarImportButton].filter(Boolean);
   var managePreparePackageButton = document.getElementById("docsViewerManagePreparePackageButton");
+  var manageReviewPackageButton = document.getElementById("docsViewerManageReviewPackageButton");
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
   var manageDeleteButton = document.getElementById("docsViewerManageDeleteButton");
   var importRoot = shellRef("importRoot", "docsHtmlImportRoot");
@@ -170,6 +205,7 @@ export function initDocsViewerManagement(context) {
   var metadataWorkflow = null;
   var modalController = null;
   var preparePackageWorkflowRequest = null;
+  var reviewPackageWorkflowRequest = null;
   var scopeLifecycleController = null;
   var settingsWorkflow = null;
   var actionController = null;
@@ -193,15 +229,6 @@ export function initDocsViewerManagement(context) {
       managementContext: routeSession.managementContext,
       indexViewId: arguments.length ? String(indexViewId || "").trim() : activeIndexViewId()
     };
-  }
-
-  function syncManageScopeLinks() {
-    var scope = String(viewerScope() || "").trim();
-    manageScopeLinks.forEach(function (link) {
-      var baseHref = String(link.dataset.docsViewerScopeHref || "").trim();
-      if (!baseHref) return;
-      link.href = scope ? baseHref + "?scope=" + encodeURIComponent(scope) : baseHref;
-    });
   }
 
   function managementClientOptions() {
@@ -389,6 +416,23 @@ export function initDocsViewerManagement(context) {
     );
   }
 
+  function reviewPackageActionControlState() {
+    return docsViewerReviewPackageActionControlState({
+      capabilities: management.managementCapabilities,
+      managementAvailable: management.managementAvailable,
+      managementBusy: management.managementBusy,
+      managementChecked: management.managementChecked,
+      scope: viewerScope()
+    });
+  }
+
+  function projectReviewPackageAction() {
+    return projectDocsViewerReviewPackageActionControl(
+      manageReviewPackageButton,
+      reviewPackageActionControlState()
+    );
+  }
+
   function reconcileIndexSelectionReload(eligibleDocIds) {
     routeSession.managementContext = typeof context.isManagementContext === "function" && context.isManagementContext();
     var snapshot = indexSelection.reconcileReload(
@@ -476,6 +520,10 @@ export function initDocsViewerManagement(context) {
       actionId === DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE
       && preparePackageActionControlState().disabled
     ) return false;
+    if (
+      actionId === DOCS_VIEWER_ACTION_IDS.REVIEW_DOCUMENT_PACKAGE
+      && reviewPackageActionControlState().disabled
+    ) return false;
     return eventRouter.handleAppManagementControl(detail);
   }
 
@@ -484,8 +532,8 @@ export function initDocsViewerManagement(context) {
 
     routeSession.managementContext = typeof context.isManagementContext === "function" && context.isManagementContext();
     indexSelection.syncContext(indexSelectionLifecycleContext());
-    syncManageScopeLinks();
     projectIndexSelection();
+    projectReviewPackageAction();
     if (!routeSession.managementContext) {
       syncManagementStatus("", false);
       hideAppManagementControls();
@@ -731,6 +779,50 @@ export function initDocsViewerManagement(context) {
       });
   }
 
+  function loadReviewPackageWorkflow() {
+    if (reviewPackageWorkflowRequest) return reviewPackageWorkflowRequest;
+    reviewPackageWorkflowRequest = import("../packages/document-package-review-workflow.js")
+      .then(function (module) {
+        if (!module || typeof module.openDocumentPackageReviewWorkflow !== "function") {
+          throw new Error("Review package workflow is unavailable.");
+        }
+        return module;
+      })
+      .catch(function (error) {
+        reviewPackageWorkflowRequest = null;
+        throw error;
+      });
+    return reviewPackageWorkflowRequest;
+  }
+
+  function handleReviewPackage() {
+    if (reviewPackageActionControlState().disabled) return Promise.resolve(null);
+    return loadReviewPackageWorkflow()
+      .then(function (module) {
+        return module.openDocumentPackageReviewWorkflow({
+          root: root,
+          scope: viewerScope(),
+          restoreFocus: manageReviewPackageButton,
+          callbacks: {
+            hideManageActionsMenu: eventRouter.hideManageActionsMenu,
+            setBusy: function (busy) {
+              setManagementBusy(busy);
+              renderManagementUi();
+            },
+            setMessage: setManagementMessage
+          }
+        });
+      })
+      .catch(function (error) {
+        setManagementBusy(false);
+        setManagementMessage(
+          error && error.message ? error.message : "Review package workflow is unavailable.",
+          true
+        );
+        return null;
+      });
+  }
+
   function applyConfig(config) {
     applyDocsViewerManagementConfig({
       config: config,
@@ -872,6 +964,7 @@ export function initDocsViewerManagement(context) {
       exportDocs: function () { actionController.handleExportDocs(); },
       openImport: function () { importController.open(); },
       preparePackage: handlePreparePackage,
+      reviewPackage: handleReviewPackage,
       openSettings: function () { settingsWorkflow.open(); },
       publish: function () { actionController.handlePublishDocs(); },
       renameScope: function () { scopeLifecycleController.renameScope(); },

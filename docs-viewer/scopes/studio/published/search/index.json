@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-482e5ba7eee512e7cbceec8e44a53bb9",
-    "generated_at_utc": "2026-07-22T19:42:36Z",
+    "version": "blake2b-922b549711d6d2a2a23a3c0ad6b5f9cc",
+    "generated_at_utc": "2026-07-22T20:03:23Z",
     "count": 270
   },
   "entries": [
@@ -4145,10 +4145,10 @@
       "kind": "doc",
       "title": "Review Package UI Redesign Delivery",
       "href": "/docs/?scope=studio&doc=d-20260722-204025-15ea54",
-      "last_updated": "2026-07-22 20:40:25",
+      "last_updated": "2026-07-22",
       "parent_id": "d-20260720-230623-c7e921",
       "parent_title": "Document Sharing UI Redesign",
-      "display_meta": "2026-07-22 20:40:25 • Document Sharing UI Redesign",
+      "display_meta": "2026-07-22 • Document Sharing UI Redesign",
       "search_terms": [
         "review package ui redesign delivery",
         "review",
@@ -4159,16 +4159,13 @@
         "document sharing ui redesign",
         "document",
         "sharing",
-        "2026-07-22 20:40:25",
+        "2026-07-22",
         "2026",
         "07",
         "22",
-        "20",
-        "40",
-        "25",
         "d-20260722-204025-15ea54"
       ],
-      "search_text": "review package ui redesign delivery review package ui redesign delivery document sharing ui redesign document sharing 2026-07-22 20:40:25 2026 07 22 20 40 25 d-20260722-204025-15ea54"
+      "search_text": "review package ui redesign delivery review package ui redesign delivery document sharing ui redesign document sharing 2026-07-22 2026 07 22 d-20260722-204025-15ea54"
     },
     {
       "id": "d-20260716-235630-055f0c",
