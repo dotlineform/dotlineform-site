@@ -380,6 +380,51 @@ def test_atomic_return_uses_order_insensitive_exact_set_equality() -> None:
     }
 
 
+def test_content_review_projects_safe_new_or_existing_review_identity() -> None:
+    with make_docs_import_repo() as temp:
+        repo_root = Path(temp)
+        write_returned_package(
+            "ds_20260720T120000Z",
+            selected_doc_ids=["alpha"],
+            rows=[{"doc_id": "alpha", "title": "Alpha", "content": "Reviewed body."}],
+        )
+        request = {
+            "scope": "library",
+            "staged_filename": "returned.jsonl",
+            "review_action": "content",
+            "dry_run": False,
+        }
+
+        first = service.review_returned(repo_root, request)
+        second = service.review_returned(repo_root, request)
+        package_path = workspace_paths().import_preview / first["review_package_id"]
+
+    safe_keys = {
+        "ok",
+        "review_action",
+        "review_package_id",
+        "review_url",
+        "review_existing",
+        "counts",
+        "issues",
+        "summary_text",
+    }
+    assert safe_keys <= set(first)
+    assert first["ok"] is True
+    assert first["review_action"] == "content"
+    assert first["review_existing"] is False
+    assert first["review_package_id"]
+    assert first["review_url"] == f"/docs-review/?package={first['review_package_id']}"
+    assert first["summary_text"] == f"Prepared Docs Review package {first['review_package_id']}."
+    assert package_path.is_dir()
+    assert safe_keys <= set(second)
+    assert second["ok"] is True
+    assert second["review_package_id"] == first["review_package_id"]
+    assert second["review_url"] == first["review_url"]
+    assert second["review_existing"] is True
+    assert second["summary_text"] == f"Docs Review package {first['review_package_id']} already exists."
+
+
 def test_invalid_returned_record_blocks_every_review_and_apply_action() -> None:
     with make_docs_import_repo() as temp:
         repo_root = Path(temp)
@@ -426,7 +471,9 @@ def test_invalid_returned_record_blocks_every_review_and_apply_action() -> None:
     assert inspection["ok"] is False
     assert "missing_title" in {item["code"] for item in inspection["issues"]}
     assert all(payload["ok"] is False for payload in reviews.values())
-    assert reviews["content"]["review_source_folder_written"] is False
+    assert reviews["content"]["review_package_id"] == ""
+    assert reviews["content"]["review_url"] == ""
+    assert reviews["content"]["review_existing"] is False
     assert reviews["summaries"]["review_written"] is False
     assert reviews["hierarchy"]["review_written"] is False
     assert all(payload["ok"] is False for payload in applies.values())

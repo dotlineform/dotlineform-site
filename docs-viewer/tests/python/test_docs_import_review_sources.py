@@ -223,6 +223,92 @@ def test_review_source_folder_uses_shared_markdown_content_normalization() -> No
     assert generated["generated_repaired"] is False
 
 
+def test_review_source_folder_reuses_an_exact_existing_validated_package(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        export_id = "ds_20260627T205010Z"
+        write_staged(
+            root,
+            "content.jsonl",
+            [
+                {"record_type": "data_sharing_header", "export_id": export_id},
+                {"doc_id": "alpha", "title": "Alpha", "content": "Stable body."},
+            ],
+        )
+        write_content_meta(root, export_id)
+        request = {
+            "scope": "library",
+            "review_action": "content",
+            "staged_filename": "content.jsonl",
+        }
+
+        first = handle_documents_import_preview(root, request, dry_run=False)
+        package_path = resolve_data_sharing_marker(str(first["folder_path"]))
+        before = {
+            path.relative_to(package_path).as_posix(): (path.read_bytes(), path.stat().st_mtime_ns)
+            for path in package_path.rglob("*")
+            if path.is_file()
+        }
+
+        def reject_duplicate_publication(*_args, **_kwargs):
+            raise AssertionError("an exact existing review package must not be rebuilt")
+
+        monkeypatch.setattr(review_sources, "publish_review_package", reject_duplicate_publication)
+        second = handle_documents_import_preview(root, request, dry_run=False)
+        after = {
+            path.relative_to(package_path).as_posix(): (path.read_bytes(), path.stat().st_mtime_ns)
+            for path in package_path.rglob("*")
+            if path.is_file()
+        }
+
+    assert first["ok"] is True
+    assert first["review_existing"] is False
+    assert first["review_source_folder_written"] is True
+    assert second["ok"] is True
+    assert second["folder_id"] == first["folder_id"]
+    assert second["review_existing"] is True
+    assert second["review_source_folder_written"] is False
+    assert second["generated"]["document_count"] == 1
+    assert second["summary_text"] == f"Docs Review package {first['folder_id']} already exists."
+    assert after == before
+
+
+def test_review_source_folder_rejects_mismatched_existing_package_without_overwrite() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        export_id = "ds_20260627T205010Z"
+        write_staged(
+            root,
+            "content.jsonl",
+            [
+                {"record_type": "data_sharing_header", "export_id": export_id},
+                {"doc_id": "alpha", "title": "Alpha", "content": "Stable body."},
+            ],
+        )
+        write_content_meta(root, export_id)
+        request = {
+            "scope": "library",
+            "review_action": "content",
+            "staged_filename": "content.jsonl",
+        }
+
+        first = handle_documents_import_preview(root, request, dry_run=False)
+        source_path = resolve_data_sharing_marker(str(first["source_path"])) / "alpha.md"
+        tampered = source_path.read_text(encoding="utf-8").replace("Stable body.", "Existing changed body.")
+        source_path.write_text(tampered, encoding="utf-8")
+        second = handle_documents_import_preview(root, request, dry_run=False)
+
+    assert first["ok"] is True
+    assert second["ok"] is False
+    assert second["review_existing"] is False
+    assert second["review_source_folder_written"] is False
+    assert second["counts"]["errors"] == 1
+    assert [item["code"] for item in second["issues"]] == ["review_package_identity_mismatch"]
+    assert source_path.read_text(encoding="utf-8") == tampered
+
+
 def test_review_source_folder_uses_full_source_adapter_mapping() -> None:
     with make_repo() as temp:
         root = Path(temp)

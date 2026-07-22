@@ -113,9 +113,13 @@ def assert_action_contract(page: Page) -> None:
         raise AssertionError(f"unexpected Review package Action contract: {result!r}")
 
 
-def install_workflow_fixture(page: Page, returned_scope: str = "studio") -> None:
+def install_workflow_fixture(
+    page: Page,
+    returned_scope: str = "studio",
+    review_mode: str = "new",
+) -> None:
     page.evaluate(
-        """async (returnedScope) => {
+        """async ({ returnedScope, reviewMode }) => {
             const workflow = await import(
                 '/docs-viewer/runtime/js/packages/document-package-review-workflow.js'
             );
@@ -153,6 +157,34 @@ def install_workflow_fixture(page: Page, returned_scope: str = "studio") -> None
                             blocked_files: [{ filename: 'blocked.jsonl' }],
                             unassigned_files: [{ filename: 'orphan.jsonl' }]
                         };
+                    },
+                    review: async (payload) => {
+                        window.reviewFixture.calls.push({ method: 'review', payload });
+                        if (reviewMode === 'failure') {
+                            const error = new Error('Docs Review package was not prepared.');
+                            error.payload = {
+                                ok: false,
+                                issues: [{
+                                    level: 'error',
+                                    code: 'review_package_identity_mismatch',
+                                    message: 'Existing review identity does not match.'
+                                }],
+                                folder_path: '/private/workspace/must-not-be-exposed'
+                            };
+                            throw error;
+                        }
+                        return {
+                            ok: true,
+                            review_action: 'content',
+                            review_package_id: '20260722-204025-documents-document-content',
+                            review_url: '/docs-review/?package=20260722-204025-documents-document-content',
+                            review_existing: reviewMode === 'existing',
+                            counts: { records: 1, valid_records: 1, errors: 0, warnings: 0 },
+                            issues: [],
+                            summary_text: reviewMode === 'existing'
+                                ? 'Docs Review package already exists.'
+                                : 'Prepared Docs Review package.'
+                        };
                     }
                 },
                 callbacks: {
@@ -164,7 +196,7 @@ def install_workflow_fixture(page: Page, returned_scope: str = "studio") -> None
                 return result;
             });
         }""",
-        returned_scope,
+        {"returnedScope": returned_scope, "reviewMode": review_mode},
     )
 
 
@@ -185,6 +217,18 @@ def exercise_reviewable_list(page: Page, timeout_ms: int) -> None:
         raise AssertionError("Review package did not select exactly one package by default")
     radios.nth(1).check()
     page.locator('[data-role="modal-primary"]').click()
+    page.wait_for_selector(
+        '[data-role="docs-viewer-management-modal"] h2:text("Review package prepared")',
+        timeout=timeout_ms,
+    )
+    link = page.locator(".docsViewerReviewPackage__resultLink a")
+    if link.inner_text() != "Open in Docs Review":
+        raise AssertionError(f"unexpected new-review link label: {link.inner_text()!r}")
+    if link.get_attribute("href") != "/docs-review/?package=20260722-204025-documents-document-content":
+        raise AssertionError(f"unexpected new-review link target: {link.get_attribute('href')!r}")
+    if link.get_attribute("target") != "_blank" or link.get_attribute("rel") != "noopener noreferrer":
+        raise AssertionError("Review package did not keep the accepted new-tab browser boundary")
+    page.locator('[data-role="modal-primary"]').click()
     result = page.evaluate(
         """async () => {
             await window.reviewWorkflowPromise;
@@ -194,10 +238,21 @@ def exercise_reviewable_list(page: Page, timeout_ms: int) -> None:
     if result["calls"] != [
         {"method": "config"},
         {"method": "returned", "scope": "studio"},
+        {
+            "method": "review",
+            "payload": {
+                "scope": "studio",
+                "staged_filename": "beta.jsonl",
+                "review_action": "content",
+                "dry_run": False,
+            },
+        },
     ]:
         raise AssertionError(f"unexpected Review package requests: {result['calls']!r}")
-    if result["busy"] != [True, False]:
+    if result["busy"] != [True, False, True, False]:
         raise AssertionError(f"unexpected Review package ready/busy state: {result['busy']!r}")
+    if result["result"].get("ok") is not True:
+        raise AssertionError(f"Review package did not report materialization success: {result!r}")
     if result["result"]["selectedFilename"] != "beta.jsonl":
         raise AssertionError(f"Review package did not retain the selected package: {result!r}")
     if [item["filename"] for item in result["result"]["files"]] != [
@@ -205,6 +260,56 @@ def exercise_reviewable_list(page: Page, timeout_ms: int) -> None:
         "beta.jsonl",
     ]:
         raise AssertionError(f"Review package exposed a blocked list entry: {result!r}")
+
+
+def exercise_existing_review(page: Page, timeout_ms: int) -> None:
+    install_workflow_fixture(page, review_mode="existing")
+    page.wait_for_selector('[data-role="docs-viewer-management-modal"]', timeout=timeout_ms)
+    page.locator('[data-role="modal-primary"]').click()
+    page.wait_for_selector(
+        '[data-role="docs-viewer-management-modal"] h2:text("Review package already prepared")',
+        timeout=timeout_ms,
+    )
+    link = page.locator(".docsViewerReviewPackage__resultLink a")
+    if link.inner_text() != "Open existing review":
+        raise AssertionError(f"unexpected existing-review link label: {link.inner_text()!r}")
+    if link.get_attribute("href") != "/docs-review/?package=20260722-204025-documents-document-content":
+        raise AssertionError(f"unexpected existing-review link target: {link.get_attribute('href')!r}")
+    page.locator('[data-role="modal-primary"]').click()
+    result = page.evaluate(
+        """async () => {
+            await window.reviewWorkflowPromise;
+            return window.reviewFixture;
+        }"""
+    )
+    if result["result"].get("ok") is not True or result["result"]["payload"].get("review_existing") is not True:
+        raise AssertionError(f"Review package did not return the existing review: {result!r}")
+
+
+def exercise_review_failure(page: Page, timeout_ms: int) -> None:
+    install_workflow_fixture(page, review_mode="failure")
+    page.wait_for_selector('[data-role="docs-viewer-management-modal"]', timeout=timeout_ms)
+    page.locator('[data-role="modal-primary"]').click()
+    page.wait_for_selector(
+        '[data-role="docs-viewer-management-modal"] h2:text("Review package was not prepared")',
+        timeout=timeout_ms,
+    )
+    modal_text = page.locator('[data-role="docs-viewer-management-modal"]').inner_text()
+    if "Existing review identity does not match." not in modal_text:
+        raise AssertionError(f"Review package did not expose the focused issue: {modal_text!r}")
+    if "private/workspace" in modal_text:
+        raise AssertionError(f"Review package exposed an internal workspace path: {modal_text!r}")
+    page.locator('[data-role="modal-primary"]').click()
+    result = page.evaluate(
+        """async () => {
+            await window.reviewWorkflowPromise;
+            return window.reviewFixture;
+        }"""
+    )
+    if result["result"].get("ok") is not False:
+        raise AssertionError(f"Review package did not retain the failed result: {result!r}")
+    if result["busy"] != [True, False, True, False]:
+        raise AssertionError(f"unexpected Review package failure busy state: {result['busy']!r}")
 
 
 def exercise_scope_mismatch(page: Page, timeout_ms: int) -> None:
@@ -243,6 +348,8 @@ def main(argv: list[str] | None = None) -> int:
             setup_page(page, base_url, args.timeout_ms)
             assert_action_contract(page)
             exercise_reviewable_list(page, args.timeout_ms)
+            exercise_existing_review(page, args.timeout_ms)
+            exercise_review_failure(page, args.timeout_ms)
             exercise_scope_mismatch(page, args.timeout_ms)
             browser.close()
             if errors:

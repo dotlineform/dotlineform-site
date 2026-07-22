@@ -594,6 +594,15 @@ select.docsViewer__fieldInput--listbox{
   color: var(--docs-viewer-muted, var(--muted, #555));
 }
 
+.docsViewerReviewPackage__issues{
+  margin-block: 0.75rem 0;
+  padding-inline-start: 1.2rem;
+}
+
+.docsViewerReviewPackage__resultLink{
+  margin-block: 0.85rem 0;
+}
+
 .docsViewer__settingsWarnings ul{
   margin: 0;
   padding-left: 1.1rem;

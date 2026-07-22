@@ -18,7 +18,7 @@ from docs_import_content import (
 )
 from docs_import_preview import generate_normalized_import_content_preview
 from docs_management_source_service import split_source_exact
-from docs_review_materialization import publish_review_package
+from docs_review_materialization import match_existing_review_package, publish_review_package
 from docs_document_packages.returned_common import (
     SUPPORTED_EXTENSIONS,
     issue,
@@ -571,15 +571,6 @@ def create_review_source_folder(
             )
         issues.extend(validate_materialized_sources(materialized_sources))
 
-    if folder_path is not None and folder_path.exists():
-        issues.append(
-            issue(
-                "error",
-                "review_package_exists",
-                f"timestamped Docs Review package already exists: {folder_id}",
-            )
-        )
-
     issue_counts = count_issues(issues)
     ok = issue_counts["errors"] == 0
     counts = {
@@ -636,9 +627,53 @@ def create_review_source_folder(
     if metadata_path is not None:
         manifest["source_metadata_file"] = relative_path(repo_root, metadata_path)
 
+    existing_review = False
+    existing_generated: dict[str, Any] = {}
+    if (
+        folder_path is not None
+        and (folder_path.exists() or folder_path.is_symlink())
+        and ok
+    ):
+        try:
+            existing_generated = match_existing_review_package(
+                package_path=folder_path,
+                package_id=folder_id,
+                source_records=materialized_sources,
+                manifest=manifest,
+            )
+            existing_review = True
+        except (OSError, ValueError) as exc:
+            issues.append(
+                issue(
+                    "error",
+                    "review_package_identity_mismatch",
+                    f"existing Docs Review package does not match the selected returned package: {exc}",
+                )
+            )
+            issue_counts = count_issues(issues)
+            counts = {
+                "records": len(raw_rows),
+                "valid_records": len(normalized_records),
+                "skipped_records": skipped_record_count(skipped_records),
+                **issue_counts,
+            }
+            ok = False
+            manifest["status"] = ""
+            manifest["validation"] = {
+                "counts": counts,
+                "issues": issues,
+                "skipped_records": skipped_records,
+            }
+
     generated: dict[str, Any] = {}
     package_written = False
-    if ok and folder_path is not None and not dry_run:
+    if existing_review:
+        generated = {
+            "document_count": int(existing_generated.get("document_count") or 0),
+            "asset_count": 0,
+            "warnings": [],
+        }
+    elif ok and folder_path is not None and not dry_run:
         try:
             build = publish_review_package(
                 repo_root,
@@ -680,7 +715,7 @@ def create_review_source_folder(
     package_path = relative_path(repo_root, folder_path) if folder_path is not None else ""
     source_path = relative_path(repo_root, folder_path / "source") if folder_path is not None else ""
     if ok:
-        action = "Validated" if dry_run else "Published"
+        action = "Matched existing" if existing_review else ("Validated" if dry_run else "Published")
         summary_text = (
             f"{action} Docs Review package {folder_id} with {len(source_files)} "
             "rendered-derived text documents."
@@ -708,6 +743,7 @@ def create_review_source_folder(
         "manifest": manifest,
         "review_source_folder_written": package_written,
         "review_generated_written": package_written,
+        "review_existing": existing_review,
         "generated": generated,
         "summary_text": summary_text,
     }

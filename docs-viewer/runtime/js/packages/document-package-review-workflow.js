@@ -1,8 +1,10 @@
 import {
   getDocumentPackageConfig,
-  getReturnedDocumentPackages
+  getReturnedDocumentPackages,
+  reviewReturnedDocumentPackage
 } from "./document-package-client.js";
 import {
+  packageIssueMessage,
   packageText
 } from "./document-package-view.js";
 import {
@@ -57,6 +59,27 @@ export function documentPackageReviewTableHtml(files) {
   ].join("");
 }
 
+export function documentPackageReviewResult(payload) {
+  if (!payload || payload.ok !== true) {
+    throw new Error("Docs Review package was not prepared.");
+  }
+  const packageId = packageText(payload && payload.review_package_id);
+  if (!/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(packageId)) {
+    throw new Error("Docs Review package identity is invalid.");
+  }
+  const reviewUrl = `/docs-review/?package=${encodeURIComponent(packageId)}`;
+  if (packageText(payload && payload.review_url) !== reviewUrl) {
+    throw new Error("Docs Review package URL is invalid.");
+  }
+  const existing = payload && payload.review_existing === true;
+  return {
+    packageId,
+    reviewUrl,
+    existing,
+    linkLabel: existing ? "Open existing review" : "Open in Docs Review"
+  };
+}
+
 function showReviewPackageList(options) {
   return openDocsViewerManagementModal({
     root: options.root,
@@ -65,12 +88,20 @@ function showReviewPackageList(options) {
     size: "compact",
     bodyHtml: documentPackageReviewTableHtml(options.files),
     focusSelector: options.files.length ? 'input[name="docsViewerReviewPackage"]' : "",
-    actions: [{ role: "modal-primary", label: "Close" }],
+    actions: [
+      { role: "modal-primary", label: "Review package", disabled: !options.files.length },
+      { role: "modal-cancel", label: "Cancel" }
+    ],
     onSubmit: function (api) {
       const selected = api.host.querySelector('input[name="docsViewerReviewPackage"]:checked');
+      const selectedFilename = packageText(selected && selected.value);
+      if (!selectedFilename) {
+        api.setStatus("Choose one package to review.");
+        return false;
+      }
       return {
-        confirmed: false,
-        selectedFilename: packageText(selected && selected.value)
+        confirmed: true,
+        selectedFilename
       };
     }
   });
@@ -78,12 +109,39 @@ function showReviewPackageList(options) {
 
 function showReviewPackageError(options) {
   const message = packageText(options.message) || "Reviewable packages could not be loaded.";
+  const issues = (Array.isArray(options.issues) ? options.issues : [])
+    .map(packageIssueMessage)
+    .filter(Boolean);
   return openDocsViewerManagementModal({
     root: options.root,
     restoreFocus: options.restoreFocus,
-    title: "Review packages unavailable",
+    title: options.title || "Review packages unavailable",
     size: "compact",
-    bodyHtml: '<p class="docsViewer__modalNote muted small">' + escapeHtml(message) + '</p>',
+    bodyHtml: [
+      '<p class="docsViewer__modalNote muted small">' + escapeHtml(message) + '</p>',
+      issues.length ? '<ul class="docsViewerReviewPackage__issues">' + issues.map((issue) => (
+        '<li>' + escapeHtml(issue) + '</li>'
+      )).join("") + '</ul>' : ""
+    ].join(""),
+    actions: [{ role: "modal-primary", label: "Close" }]
+  });
+}
+
+function showReviewPackageResult(options) {
+  const result = documentPackageReviewResult(options.payload);
+  const summary = packageText(options.payload && options.payload.summary_text);
+  return openDocsViewerManagementModal({
+    root: options.root,
+    restoreFocus: options.restoreFocus,
+    title: result.existing ? "Review package already prepared" : "Review package prepared",
+    size: "compact",
+    bodyHtml: [
+      summary ? '<p class="docsViewer__modalNote muted small">' + escapeHtml(summary) + '</p>' : "",
+      '<p class="docsViewerReviewPackage__resultLink">',
+      '  <a href="' + escapeHtml(result.reviewUrl) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(result.linkLabel) + '</a>',
+      '</p>'
+    ].join(""),
+    focusSelector: ".docsViewerReviewPackage__resultLink a",
     actions: [{ role: "modal-primary", label: "Close" }]
   });
 }
@@ -95,6 +153,7 @@ export async function openDocumentPackageReviewWorkflow(options = {}) {
   const client = {
     getConfig: getDocumentPackageConfig,
     getReturned: getReturnedDocumentPackages,
+    review: reviewReturnedDocumentPackage,
     ...(options.client || {})
   };
   const setBusy = (busy) => {
@@ -151,9 +210,51 @@ export async function openDocumentPackageReviewWorkflow(options = {}) {
     restoreFocus: options.restoreFocus,
     files
   });
+  const selectedFilename = packageText(result && result.selectedFilename);
+  if (!result || !result.confirmed || !selectedFilename) {
+    return { confirmed: false, files, selectedFilename };
+  }
+
+  let reviewPayload;
+  try {
+    setBusy(true);
+    setMessage("Preparing the complete package for Docs Review...", false);
+    reviewPayload = await client.review({
+      scope,
+      staged_filename: selectedFilename,
+      review_action: "content",
+      dry_run: false
+    });
+    documentPackageReviewResult(reviewPayload);
+    setMessage(packageText(reviewPayload.summary_text) || "Review package prepared.", false);
+  } catch (error) {
+    const payload = error && error.payload && typeof error.payload === "object"
+      ? error.payload
+      : {};
+    const message = packageText(error && error.message) || "Review package could not be prepared.";
+    setMessage(message, true);
+    await showReviewPackageError({
+      root,
+      restoreFocus: options.restoreFocus,
+      title: "Review package was not prepared",
+      message,
+      issues: payload.issues
+    });
+    return { confirmed: true, ok: false, error, files, selectedFilename, payload };
+  } finally {
+    setBusy(false);
+  }
+
+  await showReviewPackageResult({
+    root,
+    restoreFocus: options.restoreFocus,
+    payload: reviewPayload
+  });
   return {
-    confirmed: false,
+    confirmed: true,
+    ok: true,
     files,
-    selectedFilename: packageText(result && result.selectedFilename)
+    selectedFilename,
+    payload: reviewPayload
   };
 }

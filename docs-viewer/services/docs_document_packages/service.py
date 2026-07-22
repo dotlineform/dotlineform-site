@@ -316,6 +316,47 @@ def inspect_returned(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     )
 
 
+def content_review_response(payload: dict[str, Any]) -> dict[str, Any]:
+    ok = payload.get("ok") is True
+    existing = ok and payload.get("review_existing") is True
+    written = ok and payload.get("review_source_folder_written") is True
+    ready = existing or written
+    package_id = str(payload.get("folder_id") or "").strip() if ready else ""
+    if ready and not package_id:
+        response = dict(payload)
+        response.update({
+            "ok": False,
+            "review_action": "content",
+            "review_package_id": "",
+            "review_url": "",
+            "review_existing": False,
+            "issues": list(payload.get("issues") or []) + [
+                {
+                    "level": "error",
+                    "code": "missing_review_package_id",
+                    "message": "Docs Review package identity is unavailable.",
+                }
+            ],
+            "summary_text": "Docs Review package was not prepared.",
+        })
+        return response
+    if existing:
+        summary_text = f"Docs Review package {package_id} already exists."
+    elif written:
+        summary_text = f"Prepared Docs Review package {package_id}."
+    else:
+        summary_text = str(payload.get("summary_text") or "Docs Review package was not prepared.").strip()
+    response = dict(payload)
+    response.update({
+        "review_action": "content",
+        "review_package_id": package_id,
+        "review_url": f"/docs-review/?package={package_id}" if package_id else "",
+        "review_existing": existing,
+        "summary_text": summary_text,
+    })
+    return response
+
+
 def review_returned(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     scope = require_scope(repo_root, body.get("scope"))
     staged_filename = str(body.get("staged_filename") or "").strip()
@@ -325,15 +366,17 @@ def review_returned(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     dry_run = dry_run_value(body)
     roots = configured_workspace_paths(repo_root)
     if review_action == "content":
-        payload = create_review_source_folder(
-            repo_root,
-            scope=scope,
-            staged_filename=staged_filename,
-            dry_run=dry_run,
-            staging_root=roots.import_staging,
-            metadata_root=roots.meta,
-            preview_root=roots.import_preview,
-            normalize_import_content=normalize_documents_import_content,
+        payload = content_review_response(
+            create_review_source_folder(
+                repo_root,
+                scope=scope,
+                staged_filename=staged_filename,
+                dry_run=dry_run,
+                staging_root=roots.import_staging,
+                metadata_root=roots.meta,
+                preview_root=roots.import_preview,
+                normalize_import_content=normalize_documents_import_content,
+            )
         )
     else:
         payload = review_returned_document_package(
