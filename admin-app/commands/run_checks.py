@@ -159,6 +159,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/smoke/docs_viewer_index_panel_modules.py",
                 "docs-viewer/tests/smoke/docs_viewer_index_selection_modules.py",
                 "docs-viewer/tests/smoke/docs_viewer_prepare_package_workflow_modules.py",
+                "docs-viewer/tests/smoke/docs_viewer_prepare_package_workflow_route.py",
                 "docs-viewer/tests/smoke/docs_viewer_index_selection_lifecycle_route.py",
                 "docs-viewer/tests/smoke/docs_viewer_tree_move_projection_modules.py",
                 "docs-viewer/tests/smoke/docs_viewer_tree_move_projection_route.py",
@@ -421,6 +422,14 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 str(REPO_ROOT),
             ),
             "Smoke-check checked-id package requests, compact modal options, result detail, cancellation, and selection preservation.",
+        ),
+        CheckCommand(
+            "docs-viewer-prepare-package-workflow-route-smoke",
+            (
+                sys.executable,
+                "docs-viewer/tests/smoke/docs_viewer_prepare_package_workflow_route.py",
+            ),
+            "Smoke-check real manage-route Prepare registration, package reads, request attribution, and ready/busy selection preservation.",
         ),
         CheckCommand(
             "docs-viewer-index-selection-lifecycle-route-smoke",

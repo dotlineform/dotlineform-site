@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c580b18d7ead57e8011a5363dba78b3b",
-    "generated_at_utc": "2026-07-22T13:26:45Z",
-    "count": 267
+    "version": "blake2b-779e9a52223e46ffbafd586c4c2a9e34",
+    "generated_at_utc": "2026-07-22T14:16:23Z",
+    "count": 268
   },
   "entries": [
     {
@@ -1515,10 +1515,10 @@
       "kind": "doc",
       "title": "Documents Package Preparation Script",
       "href": "/docs/?scope=studio&doc=d-20260503-150500-b0f1df",
-      "last_updated": "2026-07-20 21:34:28",
+      "last_updated": "2026-07-22 15:14:46",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-20 21:34:28 • Docs Viewer",
+      "display_meta": "2026-07-22 15:14:46 • Docs Viewer",
       "search_terms": [
         "documents package preparation script",
         "documents",
@@ -1528,26 +1528,26 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-20 21:34:28",
+        "2026-07-22 15:14:46",
         "2026",
         "07",
-        "20",
-        "21",
-        "34",
-        "28",
+        "22",
+        "15",
+        "14",
+        "46",
         "d-20260503-150500-b0f1df"
       ],
-      "search_text": "documents package preparation script documents package preparation script docs viewer docs viewer 2026-07-20 21:34:28 2026 07 20 21 34 28 d-20260503-150500-b0f1df"
+      "search_text": "documents package preparation script documents package preparation script docs viewer docs viewer 2026-07-22 15:14:46 2026 07 22 15 14 46 d-20260503-150500-b0f1df"
     },
     {
       "id": "d-20260503-141500-98fa03",
       "kind": "doc",
       "title": "Documents Prepare Profiles",
       "href": "/docs/?scope=studio&doc=d-20260503-141500-98fa03",
-      "last_updated": "2026-07-20 21:34:28",
+      "last_updated": "2026-07-22 15:14:46",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-20 21:34:28 • Docs Viewer",
+      "display_meta": "2026-07-22 15:14:46 • Docs Viewer",
       "search_terms": [
         "documents prepare profiles",
         "documents",
@@ -1556,16 +1556,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-20 21:34:28",
+        "2026-07-22 15:14:46",
         "2026",
         "07",
-        "20",
-        "21",
-        "34",
-        "28",
+        "22",
+        "15",
+        "14",
+        "46",
         "d-20260503-141500-98fa03"
       ],
-      "search_text": "documents prepare profiles documents prepare profiles docs viewer docs viewer 2026-07-20 21:34:28 2026 07 20 21 34 28 d-20260503-141500-98fa03"
+      "search_text": "documents prepare profiles documents prepare profiles docs viewer docs viewer 2026-07-22 15:14:46 2026 07 22 15 14 46 d-20260503-141500-98fa03"
     },
     {
       "id": "d-20260627-225625-1c9b7e",
@@ -1760,10 +1760,10 @@
       "kind": "doc",
       "title": "Endpoint Overview",
       "href": "/docs/?scope=studio&doc=d-20260607-222033-647b52",
-      "last_updated": "2026-07-22 14:25:10",
+      "last_updated": "2026-07-22 15:14:46",
       "parent_id": "d-20260424-000000-04d75e",
       "parent_title": "Management Services",
-      "display_meta": "2026-07-22 14:25:10 • Management Services",
+      "display_meta": "2026-07-22 15:14:46 • Management Services",
       "search_terms": [
         "endpoint overview",
         "endpoint",
@@ -1771,16 +1771,16 @@
         "management services",
         "management",
         "services",
-        "2026-07-22 14:25:10",
+        "2026-07-22 15:14:46",
         "2026",
         "07",
         "22",
+        "15",
         "14",
-        "25",
-        "10",
+        "46",
         "d-20260607-222033-647b52"
       ],
-      "search_text": "endpoint overview endpoint overview management services management services 2026-07-22 14:25:10 2026 07 22 14 25 10 d-20260607-222033-647b52"
+      "search_text": "endpoint overview endpoint overview management services management services 2026-07-22 15:14:46 2026 07 22 15 14 46 d-20260607-222033-647b52"
     },
     {
       "id": "d-20260607-222033-78a47c",
@@ -2490,24 +2490,25 @@
       "kind": "doc",
       "title": "Runtime Module Ownership",
       "href": "/docs/?scope=studio&doc=d-20260605-125108-1d1ef3",
-      "last_updated": "2026-07-21 23:50:07",
+      "last_updated": "2026-07-22 15:14:46",
       "parent_id": "d-20260331-000000-c313fd",
       "parent_title": "Runtime",
-      "display_meta": "2026-07-21 23:50:07 • Runtime",
+      "display_meta": "2026-07-22 15:14:46 • Runtime",
       "search_terms": [
         "runtime module ownership",
         "runtime",
         "module",
         "ownership",
-        "2026-07-21 23:50:07",
+        "2026-07-22 15:14:46",
         "2026",
         "07",
-        "21",
-        "23",
-        "50",
+        "22",
+        "15",
+        "14",
+        "46",
         "d-20260605-125108-1d1ef3"
       ],
-      "search_text": "runtime module ownership runtime module ownership 2026-07-21 23:50:07 2026 07 21 23 50 d-20260605-125108-1d1ef3"
+      "search_text": "runtime module ownership runtime module ownership 2026-07-22 15:14:46 2026 07 22 15 14 46 d-20260605-125108-1d1ef3"
     },
     {
       "id": "d-20260515-000000-f43740",
@@ -3729,25 +3730,25 @@
       "kind": "doc",
       "title": "Docs Viewer Roadmap",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-1e0af6",
-      "last_updated": "2026-07-22 14:25:10",
+      "last_updated": "2026-07-22 15:14:46",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-22 14:25:10 • Roadmap",
+      "display_meta": "2026-07-22 15:14:46 • Roadmap",
       "search_terms": [
         "docs viewer roadmap",
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-22 14:25:10",
+        "2026-07-22 15:14:46",
         "2026",
         "07",
         "22",
+        "15",
         "14",
-        "25",
-        "10",
+        "46",
         "d-20260714-234030-1e0af6"
       ],
-      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-22 14:25:10 2026 07 22 14 25 10 d-20260714-234030-1e0af6"
+      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-22 15:14:46 2026 07 22 15 14 46 d-20260714-234030-1e0af6"
     },
     {
       "id": "d-20260716-204013-3be4e1",
@@ -4027,10 +4028,10 @@
       "kind": "doc",
       "title": "Document Sharing UI Redesign",
       "href": "/docs/?scope=studio&doc=d-20260720-230623-c7e921",
-      "last_updated": "2026-07-22 14:25:10",
+      "last_updated": "2026-07-22 15:14:46",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-22 14:25:10 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-22 15:14:46 • Docs Viewer Roadmap",
       "search_terms": [
         "document sharing ui redesign",
         "document",
@@ -4041,26 +4042,26 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-22 14:25:10",
+        "2026-07-22 15:14:46",
         "2026",
         "07",
         "22",
+        "15",
         "14",
-        "25",
-        "10",
+        "46",
         "d-20260720-230623-c7e921"
       ],
-      "search_text": "document sharing ui redesign document sharing ui redesign docs viewer roadmap docs viewer roadmap 2026-07-22 14:25:10 2026 07 22 14 25 10 d-20260720-230623-c7e921"
+      "search_text": "document sharing ui redesign document sharing ui redesign docs viewer roadmap docs viewer roadmap 2026-07-22 15:14:46 2026 07 22 15 14 46 d-20260720-230623-c7e921"
     },
     {
       "id": "d-20260722-133457-e90e21",
       "kind": "doc",
       "title": "Prepare Package UI Redesign Delivery",
       "href": "/docs/?scope=studio&doc=d-20260722-133457-e90e21",
-      "last_updated": "2026-07-22 14:25:10",
+      "last_updated": "2026-07-22 15:14:46",
       "parent_id": "d-20260720-230623-c7e921",
       "parent_title": "Document Sharing UI Redesign",
-      "display_meta": "2026-07-22 14:25:10 • Document Sharing UI Redesign",
+      "display_meta": "2026-07-22 15:14:46 • Document Sharing UI Redesign",
       "search_terms": [
         "prepare package ui redesign delivery",
         "prepare",
@@ -4071,16 +4072,16 @@
         "document sharing ui redesign",
         "document",
         "sharing",
-        "2026-07-22 14:25:10",
+        "2026-07-22 15:14:46",
         "2026",
         "07",
         "22",
+        "15",
         "14",
-        "25",
-        "10",
+        "46",
         "d-20260722-133457-e90e21"
       ],
-      "search_text": "prepare package ui redesign delivery prepare package ui redesign delivery document sharing ui redesign document sharing 2026-07-22 14:25:10 2026 07 22 14 25 10 d-20260722-133457-e90e21"
+      "search_text": "prepare package ui redesign delivery prepare package ui redesign delivery document sharing ui redesign document sharing 2026-07-22 15:14:46 2026 07 22 15 14 46 d-20260722-133457-e90e21"
     },
     {
       "id": "d-20260716-235630-055f0c",
@@ -4118,10 +4119,10 @@
       "kind": "doc",
       "title": "Index Multiple Selection",
       "href": "/docs/?scope=studio&doc=d-20260714-151900-6fa23e",
-      "last_updated": "2026-07-22 14:25:10",
+      "last_updated": "2026-07-22 15:14:46",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-22 14:25:10 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-22 15:14:46 • Docs Viewer Roadmap",
       "search_terms": [
         "index multiple selection",
         "index",
@@ -4131,16 +4132,16 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-22 14:25:10",
+        "2026-07-22 15:14:46",
         "2026",
         "07",
         "22",
+        "15",
         "14",
-        "25",
-        "10",
+        "46",
         "d-20260714-151900-6fa23e"
       ],
-      "search_text": "index multiple selection index multiple selection docs viewer roadmap docs viewer roadmap 2026-07-22 14:25:10 2026 07 22 14 25 10 d-20260714-151900-6fa23e"
+      "search_text": "index multiple selection index multiple selection docs viewer roadmap docs viewer roadmap 2026-07-22 15:14:46 2026 07 22 15 14 46 d-20260714-151900-6fa23e"
     },
     {
       "id": "d-20260714-234030-f30d01",
@@ -4201,10 +4202,10 @@
       "kind": "doc",
       "title": "Index Multiple Selection Consumer Assessment",
       "href": "/docs/?scope=studio&doc=d-20260722-000158-9c0f3e",
-      "last_updated": "2026-07-22 14:25:10",
+      "last_updated": "2026-07-22 15:14:46",
       "parent_id": "d-20260714-151900-6fa23e",
       "parent_title": "Index Multiple Selection",
-      "display_meta": "2026-07-22 14:25:10 • Index Multiple Selection",
+      "display_meta": "2026-07-22 15:14:46 • Index Multiple Selection",
       "search_terms": [
         "index multiple selection consumer assessment",
         "index",
@@ -4213,16 +4214,16 @@
         "consumer",
         "assessment",
         "index multiple selection",
-        "2026-07-22 14:25:10",
+        "2026-07-22 15:14:46",
         "2026",
         "07",
         "22",
+        "15",
         "14",
-        "25",
-        "10",
+        "46",
         "d-20260722-000158-9c0f3e"
       ],
-      "search_text": "index multiple selection consumer assessment index multiple selection consumer assessment index multiple selection 2026-07-22 14:25:10 2026 07 22 14 25 10 d-20260722-000158-9c0f3e"
+      "search_text": "index multiple selection consumer assessment index multiple selection consumer assessment index multiple selection 2026-07-22 15:14:46 2026 07 22 15 14 46 d-20260722-000158-9c0f3e"
     },
     {
       "id": "d-20260721-074902-838446",
@@ -4725,10 +4726,10 @@
       "kind": "doc",
       "title": "Share Document Packages",
       "href": "/docs/?scope=studio&doc=d-20260718-155350-c84e62",
-      "last_updated": "2026-07-22 14:25:10",
+      "last_updated": "2026-07-22 15:14:46",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-22 14:25:10 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-22 15:14:46 • Docs Viewer Roadmap",
       "search_terms": [
         "share document packages",
         "share",
@@ -4738,16 +4739,16 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-22 14:25:10",
+        "2026-07-22 15:14:46",
         "2026",
         "07",
         "22",
+        "15",
         "14",
-        "25",
-        "10",
+        "46",
         "d-20260718-155350-c84e62"
       ],
-      "search_text": "share document packages share document packages docs viewer roadmap docs viewer roadmap 2026-07-22 14:25:10 2026 07 22 14 25 10 d-20260718-155350-c84e62"
+      "search_text": "share document packages share document packages docs viewer roadmap docs viewer roadmap 2026-07-22 15:14:46 2026 07 22 15 14 46 d-20260718-155350-c84e62"
     },
     {
       "id": "d-20260720-172819-93d6b2",
@@ -4778,6 +4779,34 @@
         "d-20260720-172819-93d6b2"
       ],
       "search_text": "document sharing ownership cutover delivery document sharing ownership cutover delivery share document packages share packages 2026-07-22 14:25:10 2026 07 22 14 25 10 d-20260720-172819-93d6b2"
+    },
+    {
+      "id": "d-20260722-151224-7b61c4",
+      "kind": "doc",
+      "title": "Prepare Package",
+      "href": "/docs/?scope=studio&doc=d-20260722-151224-7b61c4",
+      "last_updated": "2026-07-22 15:12:24",
+      "parent_id": "d-20260718-155350-c84e62",
+      "parent_title": "Share Document Packages",
+      "display_meta": "2026-07-22 15:12:24 • Share Document Packages",
+      "search_terms": [
+        "prepare package",
+        "prepare",
+        "package",
+        "share document packages",
+        "share",
+        "document",
+        "packages",
+        "2026-07-22 15:12:24",
+        "2026",
+        "07",
+        "22",
+        "15",
+        "12",
+        "24",
+        "d-20260722-151224-7b61c4"
+      ],
+      "search_text": "prepare package prepare package share document packages share document packages 2026-07-22 15:12:24 2026 07 22 15 12 24 d-20260722-151224-7b61c4"
     },
     {
       "id": "d-20260720-173806-5f2c9a",
