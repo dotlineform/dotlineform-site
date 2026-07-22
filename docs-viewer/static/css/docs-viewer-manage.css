@@ -484,6 +484,14 @@ select.docsViewer__fieldInput--listbox{
   margin-top: 0.75rem;
 }
 
+.docsViewerPackagePrepare__contextFields{
+  max-block-size: min(20rem, 34vh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-block-end: 0.5rem;
+  padding-inline-end: 0.35rem;
+}
+
 .docsViewerPackagePrepare__summary,
 .docsViewerPackagePrepare__resultSection > ul{
   margin: 0;
@@ -491,9 +499,11 @@ select.docsViewer__fieldInput--listbox{
 
 .docsViewerPackagePrepare__counts{
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.5rem;
   margin: 0;
+  max-width: 16rem;
+  width: 100%;
 }
 
 .docsViewerPackagePrepare__counts > div{
