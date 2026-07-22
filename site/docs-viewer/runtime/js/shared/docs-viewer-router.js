@@ -161,9 +161,6 @@ export function applyViewerRoute(options) {
   if (state && typeof settings.managementContextActive === "function") {
     state.managementContext = settings.managementContextActive();
   }
-  if (typeof settings.syncNonViewableVisibilityForRequestedDoc === "function") {
-    settings.syncNonViewableVisibilityForRequestedDoc();
-  }
   if (typeof settings.applyDocVisibility === "function") {
     settings.applyDocVisibility();
   }

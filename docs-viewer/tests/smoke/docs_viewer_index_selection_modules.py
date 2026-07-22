@@ -42,6 +42,10 @@ def assert_selection_state(page: Page) -> None:
                 selectedDocIds: ['stale'],
                 rangeAnchorDocId: 'stale'
             });
+            const inactiveSelectAll = module.selectAllDocsViewerIndexSelection(
+                inactive,
+                ['non-viewable', 'collapsed-child']
+            );
             const owner = module.createDocsViewerIndexSelectionOwner();
             const entered = owner.enter();
             const firstToggle = owner.toggle('b');
@@ -51,6 +55,12 @@ def assert_selection_state(page: Page) -> None:
             const cleared = owner.clear();
             owner.toggle('d', true);
             const missingAnchorRange = owner.selectRange('a', ['a', 'b', 'c']);
+            const selectedAll = owner.selectAll([
+                'root',
+                'non-viewable',
+                'collapsed-child',
+                'root'
+            ]);
             const exited = owner.exit();
             const lifecycleOwner = module.createDocsViewerIndexSelectionOwner({ initialScopeId: 'studio' });
             const studioTreeContext = {
@@ -85,6 +95,7 @@ def assert_selection_state(page: Page) -> None:
             });
             return {
                 inactive,
+                inactiveSelectAll,
                 entered,
                 firstToggle,
                 duplicateCheck,
@@ -92,6 +103,7 @@ def assert_selection_state(page: Page) -> None:
                 reconciled,
                 cleared,
                 missingAnchorRange,
+                selectedAll,
                 exited,
                 reloaded,
                 navigationPreserved,
@@ -106,6 +118,11 @@ def assert_selection_state(page: Page) -> None:
     )
     expected = {
         "inactive": {
+            "selectionModeActive": False,
+            "selectedDocIds": [],
+            "rangeAnchorDocId": "",
+        },
+        "inactiveSelectAll": {
             "selectionModeActive": False,
             "selectedDocIds": [],
             "rangeAnchorDocId": "",
@@ -144,6 +161,11 @@ def assert_selection_state(page: Page) -> None:
             "selectionModeActive": True,
             "selectedDocIds": ["d", "a"],
             "rangeAnchorDocId": "a",
+        },
+        "selectedAll": {
+            "selectionModeActive": True,
+            "selectedDocIds": ["root", "non-viewable", "collapsed-child"],
+            "rangeAnchorDocId": "",
         },
         "exited": {
             "selectionModeActive": False,
@@ -390,6 +412,65 @@ def assert_action_target_isolation(page: Page) -> None:
         raise AssertionError(f"checked ids changed current action targets: {result!r}")
 
 
+def assert_manage_index_visibility_contract(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const appSession = await import('/docs-viewer/runtime/js/shared/docs-viewer-app-session.js');
+            const indexState = await import('/docs-viewer/runtime/js/shared/docs-viewer-document-index-state.js');
+            const selection = await import('/docs-viewer/runtime/js/management/docs-viewer-index-selection.js');
+            const docs = [
+                { doc_id: 'root', parent_id: '', title: 'Root', viewable: true },
+                { doc_id: 'non-viewable', parent_id: 'root', title: 'Non-viewable', viewable: false },
+                { doc_id: 'gated-child', parent_id: 'non-viewable', title: 'Gated child', viewable: true }
+            ];
+            const createIndex = managementContext => {
+                const session = appSession.createDocsViewerAppSession({});
+                session.state.managementContext = managementContext;
+                session.state.allDocs = docs.map(doc => ({ ...doc }));
+                const index = indexState.createDocsViewerDocumentIndexState({ state: session.state });
+                index.applyDocVisibility();
+                return { session, index };
+            };
+            const managed = createIndex(true);
+            const owner = selection.createDocsViewerIndexSelectionOwner({
+                initialState: {
+                    selectionModeActive: true,
+                    selectedDocIds: ['non-viewable'],
+                    rangeAnchorDocId: 'non-viewable'
+                }
+            });
+            managed.session.state.allDocs.find(doc => doc.doc_id === 'non-viewable').viewable = true;
+            managed.index.applyDocVisibility();
+            const afterViewabilityChange = owner.snapshot();
+            const publicIndex = createIndex(false);
+            return {
+                manageDocIds: managed.session.state.docs.map(doc => doc.doc_id),
+                manageChildIds: (managed.session.state.childrenByParent.get('non-viewable') || [])
+                    .map(doc => doc.doc_id),
+                publicDocIds: publicIndex.session.state.docs.map(doc => doc.doc_id),
+                selectedAfterViewabilityChange: afterViewabilityChange.selectedDocIds,
+                anchorAfterViewabilityChange: afterViewabilityChange.rangeAnchorDocId,
+                stateOwnsVisibilityToggle: Object.prototype.hasOwnProperty.call(
+                    managed.session.state,
+                    'showNonViewable'
+                ),
+                domainOwnsVisibilityToggle: managed.session.domains.documentIndex.has('showNonViewable')
+            };
+        }"""
+    )
+    expected = {
+        "manageDocIds": ["gated-child", "non-viewable", "root"],
+        "manageChildIds": ["gated-child"],
+        "publicDocIds": ["root"],
+        "selectedAfterViewabilityChange": ["non-viewable"],
+        "anchorAfterViewabilityChange": "non-viewable",
+        "stateOwnsVisibilityToggle": False,
+        "domainOwnsVisibilityToggle": False,
+    }
+    if result != expected:
+        raise AssertionError(f"unexpected manage/public index visibility contract: {result!r}")
+
+
 def assert_prepare_action_menu_projection(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -467,6 +548,7 @@ def assert_selection_projection_and_interaction(page: Page) -> None:
             const selection = await import('/docs-viewer/runtime/js/management/docs-viewer-index-selection.js');
             const interactions = await import('/docs-viewer/runtime/js/management/docs-viewer-management-interactions.js');
             const renderers = await import('/docs-viewer/runtime/js/management/docs-viewer-management-control-renderers.js');
+            const appRenderers = await import('/docs-viewer/runtime/js/management/docs-viewer-management-actions-renderer.js');
             const hostedViews = await import('/docs-viewer/runtime/js/management/docs-viewer-management-hosted-views.js');
             const sidebarModule = await import('/docs-viewer/runtime/js/shared/docs-viewer-sidebar.js');
             document.body.innerHTML = `
@@ -546,11 +628,31 @@ def assert_selection_projection_and_interaction(page: Page) -> None:
                 existingRoot: null
             });
             const activeControl = controlRenderer({
-                control: { state: { active: true, count: owner.selectedDocIds().length, disabled: false } },
+                control: {
+                    state: {
+                        active: true,
+                        count: owner.selectedDocIds().length,
+                        disabled: false,
+                        total: docs.length
+                    }
+                },
                 document,
                 existingRoot: inactiveControl.root
             });
-            const controlDefinition = hostedViews.createDocsViewerManagementViewDefinitions().controls
+            const completedControl = controlRenderer({
+                control: {
+                    state: {
+                        active: true,
+                        count: docs.length,
+                        disabled: false,
+                        total: docs.length
+                    }
+                },
+                document,
+                existingRoot: null
+            });
+            const controlDefinitions = hostedViews.createDocsViewerManagementViewDefinitions().controls;
+            const controlDefinition = controlDefinitions
                 .find(control => control.id === 'index-selection');
             return {
                 activeDocId: selectedDocument.selectedDocId,
@@ -560,6 +662,12 @@ def assert_selection_projection_and_interaction(page: Page) -> None:
                 controlCommands: Array.from(activeControl.root.querySelectorAll('[data-docs-viewer-selection-command]'))
                     .map(button => button.dataset.docsViewerSelectionCommand),
                 controlCount: activeControl.root.querySelector('output').textContent,
+                selectAllDisabled: activeControl.root.querySelector(
+                    '[data-docs-viewer-selection-command="select-all"]'
+                ).disabled,
+                completedSelectAllDisabled: completedControl.root.querySelector(
+                    '[data-docs-viewer-selection-command="select-all"]'
+                ).disabled,
                 controlDefinition: controlDefinition && {
                     appKinds: controlDefinition.appKinds,
                     ownerViewId: controlDefinition.ownerViewId,
@@ -572,6 +680,12 @@ def assert_selection_projection_and_interaction(page: Page) -> None:
                 linkGeometryStable: before.x === after.x && before.y === after.y
                     && before.width === after.width && before.height === after.height,
                 projectionCount,
+                removedVisibilityControl: !controlDefinitions.some(
+                    control => control.id === 'manage-show-non-viewable'
+                ) && !Object.prototype.hasOwnProperty.call(
+                    appRenderers.createDocsViewerManagementAppControlRenderers(),
+                    'manage-show-non-viewable'
+                ),
                 selectedDocIds: owner.selectedDocIds(),
                 visibleDocIds: selection.visibleDocsViewerIndexSelectionDocIds(nav)
             };
@@ -581,8 +695,10 @@ def assert_selection_projection_and_interaction(page: Page) -> None:
         "activeDocId": "a",
         "activeLinkStillActive": True,
         "checkedDocIds": ["b", "c", "d"],
-        "controlCommands": ["clear", "done"],
+        "controlCommands": ["select-all", "clear", "done"],
         "controlCount": "3 selected",
+        "selectAllDisabled": False,
+        "completedSelectAllDisabled": True,
         "controlDefinition": {
             "appKinds": ["manage"],
             "ownerViewId": "index-tree",
@@ -593,6 +709,7 @@ def assert_selection_projection_and_interaction(page: Page) -> None:
         "gutterIsRowSibling": True,
         "linkGeometryStable": True,
         "projectionCount": 2,
+        "removedVisibilityControl": True,
         "selectedDocIds": ["b", "c", "d"],
         "visibleDocIds": ["a", "b", "c", "d"],
     }
@@ -615,6 +732,7 @@ def main(argv: list[str] | None = None) -> int:
             page.add_style_tag(url=f"{base_url}/site/docs-viewer/static/css/docs-viewer.css")
             page.add_style_tag(url=f"{base_url}/docs-viewer/static/css/docs-viewer-manage.css")
             assert_selection_state(page)
+            assert_manage_index_visibility_contract(page)
             assert_action_target_isolation(page)
             assert_prepare_action_menu_projection(page)
             assert_selection_projection_and_interaction(page)

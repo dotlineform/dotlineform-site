@@ -97,7 +97,6 @@ function createStateDefaults(settings) {
     generatedDataReadAvailable: false,
     generatedDataReadRequestPromise: null,
     generatedDataCapabilities: null,
-    showNonViewable: true,
     docNonViewableEmoji: "\uD83D\uDEAB",
     reloadNonce: "",
     reloadExpectedDocId: "",
@@ -166,8 +165,7 @@ function createStateDomains(state, settings) {
       "childrenByParent",
       "expandedDocIds",
       "nonLoadableDocIds",
-      "manageOnlyTreeRootIds",
-      "showNonViewable"
+      "manageOnlyTreeRootIds"
     ]),
     selectedDocument: stateDomain("selectedDocument", "generated static data or local generated-read service", state, [
       "selectedDocId",

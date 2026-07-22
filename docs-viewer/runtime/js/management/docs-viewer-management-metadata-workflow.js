@@ -13,7 +13,6 @@ var METADATA_TEXT = {
 export function createDocsViewerManagementMetadataWorkflow(options = {}) {
   var documentIndex = options.documentIndex || {};
   var management = options.management || {};
-  var routeSession = options.routeSession || {};
   var refs = options.refs || {};
   var callbacks = options.callbacks || {};
 
@@ -28,10 +27,7 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
   function parentOptions(doc) {
     var blockedIds = collectDescendantDocIds(documentIndex.allDocs, doc.doc_id, new Set([doc.doc_id]));
     var options = [{ value: "", label: METADATA_TEXT.parentRootOption }];
-    var docsByParent = buildChildrenMap(documentIndex.allDocs, {
-      managementContext: routeSession.managementContext,
-      showNonViewable: documentIndex.showNonViewable
-    });
+    var docsByParent = buildChildrenMap(documentIndex.allDocs);
     function pushChildren(parentId, depth) {
       (docsByParent.get(parentId) || []).forEach(function (candidate) {
         if (!blockedIds.has(candidate.doc_id)) {

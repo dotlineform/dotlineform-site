@@ -27,6 +27,7 @@ function renderIndexSelectionControl(context) {
   var active = Boolean(state.active);
   var disabled = Boolean(state.disabled);
   var count = Number.isFinite(Number(state.count)) ? Number(state.count) : 0;
+  var total = Number.isFinite(Number(state.total)) ? Number(state.total) : 0;
   var root = context.existingRoot;
   if (!root || root.tagName !== "DIV") {
     root = context.document.createElement("div");
@@ -46,11 +47,13 @@ function renderIndexSelectionControl(context) {
   countLabel.className = "docsViewer__indexSelectionCount";
   countLabel.setAttribute("aria-live", "polite");
   countLabel.textContent = count + " selected";
+  var selectAllButton = selectionCommandButton(context.document, "select-all", "Select all");
+  selectAllButton.disabled = disabled || total === 0 || count === total;
   var clearButton = selectionCommandButton(context.document, "clear", "Clear");
   clearButton.disabled = disabled || count === 0;
   var doneButton = selectionCommandButton(context.document, "done", "Done");
   doneButton.disabled = disabled;
-  root.replaceChildren(countLabel, clearButton, doneButton);
+  root.replaceChildren(countLabel, selectAllButton, clearButton, doneButton);
   return { root: root, interactive: doneButton };
 }
 

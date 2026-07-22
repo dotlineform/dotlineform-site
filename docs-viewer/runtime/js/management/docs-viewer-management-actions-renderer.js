@@ -182,22 +182,6 @@ function renderManagementActionsMenu(context) {
   return { root: root, interactive: root.querySelector("#docsViewerManageActionsButton") };
 }
 
-function renderDraftToggle(context) {
-  var root = context.existingRoot;
-  var input = root ? root.querySelector("#docsViewerDraftToggle") : null;
-  if (!root || !input) {
-    root = elementFromMarkup(context.document, [
-      '<label class="docsViewer__draftToggle">',
-      '  <input class="docsViewer__draftInput" id="docsViewerDraftToggle" type="checkbox" aria-label="Show non-viewable docs">',
-      '  <span class="docsViewer__draftLabel">Show non-viewable</span>',
-      "</label>"
-    ].join(""));
-    input = root.querySelector("#docsViewerDraftToggle");
-  }
-  input.checked = Boolean(context.control.state && context.control.state.pressed);
-  return { root: root, interactive: input };
-}
-
 function renderScopeControl(context) {
   var root = context.existingRoot;
   if (!root || !root.querySelector("#docsViewerScopeSelect")) {
@@ -242,7 +226,6 @@ export function createDocsViewerManagementAppControlRenderers() {
     "manage-show": function (context) {
       return renderActionButton(context, { id: "docsViewerManageViewableButton", text: "Show" });
     },
-    "manage-show-non-viewable": renderDraftToggle,
     "manage-scope-select": renderScopeControl,
     "manage-theme-toggle": renderThemeToggle
   };

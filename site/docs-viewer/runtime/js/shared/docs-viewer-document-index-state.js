@@ -2,7 +2,6 @@ import {
   buildChildrenMap,
   hasNonViewableAncestor,
   compareDocs,
-  isDocNonViewable,
   isDocViewable
 } from "./docs-viewer-tree.js";
 import {
@@ -28,7 +27,7 @@ export function createDocsViewerDocumentIndexState(options) {
   function shouldIncludeDoc(doc) {
     if (!state.managementContext && isManageOnlyTreeDoc(doc)) return false;
     if (!state.managementContext) return isDocViewable(doc) && !hasNonViewableAncestor(doc, state.allDocsById);
-    return isDocViewable(doc) || state.showNonViewable;
+    return true;
   }
 
   function applyDocVisibility() {
@@ -43,10 +42,7 @@ export function createDocsViewerDocumentIndexState(options) {
         return [doc.doc_id, doc];
       })
     );
-    state.childrenByParent = buildChildrenMap(state.docs, {
-      managementContext: state.managementContext,
-      showNonViewable: state.showNonViewable
-    });
+    state.childrenByParent = buildChildrenMap(state.docs);
   }
 
   function findAllDocById(docId) {
@@ -54,16 +50,6 @@ export function createDocsViewerDocumentIndexState(options) {
       if (state.allDocs[i].doc_id === docId) return state.allDocs[i];
     }
     return null;
-  }
-
-  function syncNonViewableVisibilityForRequestedDoc(getCurrentDocId) {
-    if (!state.managementContext) return;
-    var requestedDocId = typeof getCurrentDocId === "function" ? getCurrentDocId() : "";
-    if (!requestedDocId) return;
-    var requestedDoc = findAllDocById(requestedDocId);
-    if (requestedDoc && isDocNonViewable(requestedDoc)) {
-      state.showNonViewable = true;
-    }
   }
 
   function isNonLoadableDoc(doc) {
@@ -142,7 +128,6 @@ export function createDocsViewerDocumentIndexState(options) {
     projectCommittedMove: projectCommittedMove,
     resolveLoadableDocId: resolveLoadableDocId,
     statusForIndexDoc: statusForIndexDoc,
-    syncNonViewableVisibilityForRequestedDoc: syncNonViewableVisibilityForRequestedDoc,
     viewerTargetDocId: viewerTargetDocId
   };
 }

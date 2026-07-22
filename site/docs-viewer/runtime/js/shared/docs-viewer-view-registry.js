@@ -144,10 +144,11 @@ export function normalizeDocsViewerControlState(record) {
     if (Object.prototype.hasOwnProperty.call(source, key)) state[key] = Boolean(source[key]);
   });
   if (Object.prototype.hasOwnProperty.call(source, "label")) state.label = cleanString(source.label);
-  if (Object.prototype.hasOwnProperty.call(source, "count")) {
-    var count = Number(source.count);
-    state.count = Number.isFinite(count) ? count : 0;
-  }
+  ["count", "total"].forEach(function (key) {
+    if (!Object.prototype.hasOwnProperty.call(source, key)) return;
+    var value = Number(source[key]);
+    state[key] = Number.isFinite(value) ? value : 0;
+  });
   return state;
 }
 

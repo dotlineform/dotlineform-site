@@ -84,16 +84,6 @@ export function createDocsViewerManagementViewDefinitions() {
         renderer: "manage-show"
       },
       {
-        id: "manage-show-non-viewable",
-        actionId: DOCS_VIEWER_ACTION_IDS.SHOW_NON_VIEWABLE,
-        label: "Show non-viewable docs",
-        ownerType: "app",
-        surfaceId: "app-management",
-        appKinds: ["manage"],
-        features: ["management"],
-        renderer: "manage-show-non-viewable"
-      },
-      {
         id: "manage-scope",
         label: "Docs scope",
         ownerType: "app",

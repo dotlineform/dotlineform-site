@@ -284,7 +284,6 @@ export function initDocsViewerRouteWorkflow(context) {
       setRecentModeActive: context.setRecentModeActive,
       setStatus: setStatus,
       state: state,
-      syncNonViewableVisibilityForRequestedDoc: context.syncNonViewableVisibilityForRequestedDoc,
       viewerScope: viewerScope()
     });
     if (typeof context.updateInfoPanel === "function") {
@@ -301,7 +300,6 @@ export function initDocsViewerRouteWorkflow(context) {
     state.nonLoadableDocIds = normalizeDocIdSet(viewerOptions.non_loadable_doc_ids, []);
     state.manageOnlyTreeRootIds = normalizeDocIdSet(viewerOptions.manage_only_tree_root_ids, []);
     state.allDocs = Array.isArray(payload.docs) ? payload.docs.slice().sort(compareDocs) : [];
-    context.syncNonViewableVisibilityForRequestedDoc();
     context.applyDocVisibility();
     if (typeof context.onIndexReplaced === "function") {
       context.onIndexReplaced({

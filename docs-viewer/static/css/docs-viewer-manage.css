@@ -947,22 +947,3 @@ select.docsViewer__fieldInput--listbox{
 .docsViewer__actionMenuItem:disabled:hover{
   background: transparent;
 }
-
-.docsViewer__draftToggle{
-  display: inline-flex;
-  align-items: center;
-  gap: 0.38rem;
-  min-height: 2.3rem;
-  color: var(--docs-viewer-text, var(--text, #111));
-  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
-  line-height: var(--docs-viewer-line-snug, var(--line-snug, 1.25));
-}
-
-.docsViewer__draftInput{
-  margin: 0;
-}
-
-.docsViewer__draftInput:focus-visible{
-  outline: 2px solid var(--docs-viewer-border-strong, var(--border-strong, #aaa));
-  outline-offset: 2px;
-}

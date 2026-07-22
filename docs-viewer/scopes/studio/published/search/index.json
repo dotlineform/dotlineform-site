@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b856d352cdcd6fc4890dedee3b4ff4a9",
-    "generated_at_utc": "2026-07-22T17:30:17Z",
+    "version": "blake2b-19cf63f461d9675fe459628fbcb96484",
+    "generated_at_utc": "2026-07-22T17:47:05Z",
     "count": 269
   },
   "entries": [
@@ -2749,10 +2749,10 @@
       "kind": "doc",
       "title": "Viewable field",
       "href": "/docs/?scope=studio&doc=d-20260424-000000-e2408a",
-      "last_updated": "2026-07-19 22:33:42",
+      "last_updated": "2026-07-22 18:44:10",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-19 22:33:42 • Docs Viewer",
+      "display_meta": "2026-07-22 18:44:10 • Docs Viewer",
       "search_terms": [
         "viewable field",
         "viewable",
@@ -2760,16 +2760,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-19 22:33:42",
+        "2026-07-22 18:44:10",
         "2026",
         "07",
-        "19",
         "22",
-        "33",
-        "42",
+        "18",
+        "44",
+        "10",
         "d-20260424-000000-e2408a"
       ],
-      "search_text": "viewable field viewable field docs viewer docs viewer 2026-07-19 22:33:42 2026 07 19 22 33 42 d-20260424-000000-e2408a"
+      "search_text": "viewable field viewable field docs viewer docs viewer 2026-07-22 18:44:10 2026 07 22 18 44 10 d-20260424-000000-e2408a"
     },
     {
       "id": "d-20260718-114645-7b9d24",
@@ -4081,10 +4081,10 @@
       "kind": "doc",
       "title": "Missing-Summary Package Preparation Delivery",
       "href": "/docs/?scope=studio&doc=d-20260722-165733-88d9ff",
-      "last_updated": "2026-07-22 18:29:58",
+      "last_updated": "2026-07-22 18:46:45",
       "parent_id": "d-20260720-230623-c7e921",
       "parent_title": "Document Sharing UI Redesign",
-      "display_meta": "2026-07-22 18:29:58 • Document Sharing UI Redesign",
+      "display_meta": "2026-07-22 18:46:45 • Document Sharing UI Redesign",
       "search_terms": [
         "missing-summary package preparation delivery",
         "missing",
@@ -4097,16 +4097,16 @@
         "sharing",
         "ui",
         "redesign",
-        "2026-07-22 18:29:58",
+        "2026-07-22 18:46:45",
         "2026",
         "07",
         "22",
         "18",
-        "29",
-        "58",
+        "46",
+        "45",
         "d-20260722-165733-88d9ff"
       ],
-      "search_text": "missing-summary package preparation delivery missing summary package preparation delivery document sharing ui redesign document sharing ui redesign 2026-07-22 18:29:58 2026 07 22 18 29 58 d-20260722-165733-88d9ff"
+      "search_text": "missing-summary package preparation delivery missing summary package preparation delivery document sharing ui redesign document sharing ui redesign 2026-07-22 18:46:45 2026 07 22 18 46 45 d-20260722-165733-88d9ff"
     },
     {
       "id": "d-20260722-133457-e90e21",

@@ -161,7 +161,6 @@ export function initDocsViewerManagement(context) {
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
   var manageDeleteButton = document.getElementById("docsViewerManageDeleteButton");
   var manageViewableButton = document.getElementById("docsViewerManageViewableButton");
-  var draftToggle = document.getElementById("docsViewerDraftToggle");
   var importRoot = shellRef("importRoot", "docsHtmlImportRoot");
   var importBootStatus = shellRef("importBootStatus", "docsHtmlImportBootStatus");
   var capabilityController = null;
@@ -321,7 +320,6 @@ export function initDocsViewerManagement(context) {
       "manage-actions",
       "manage-publish",
       "manage-show",
-      "manage-show-non-viewable",
       "manage-scope",
       "manage-theme"
     ].forEach(function (controlId) {
@@ -338,6 +336,12 @@ export function initDocsViewerManagement(context) {
     );
   }
 
+  function eligibleIndexSelectionDocIds() {
+    return documentIndex.docs.map(function (doc) {
+      return String(doc && doc.doc_id || "").trim();
+    }).filter(Boolean);
+  }
+
   function renderIndexSelectionGutter(doc) {
     return createDocsViewerIndexSelectionGutter({
       document: document,
@@ -350,12 +354,14 @@ export function initDocsViewerManagement(context) {
   function projectIndexSelection() {
     var snapshot = indexSelection.snapshot();
     var available = indexSelectionAvailable();
+    var eligibleDocIds = eligibleIndexSelectionDocIds();
     if (typeof context.projectIndexViewControlState === "function") {
       context.projectIndexViewControlState("index-selection", {
         hidden: !available,
         disabled: !available || management.managementBusy,
         active: snapshot.selectionModeActive,
         count: snapshot.selectedDocIds.length,
+        total: eligibleDocIds.length,
         label: snapshot.selectionModeActive ? "Done selecting documents" : "Select documents"
       });
     }
@@ -445,6 +451,8 @@ export function initDocsViewerManagement(context) {
       if (command === "enter") {
         indexSelection.enter();
         if (typeof context.renderSidebar === "function") context.renderSidebar();
+      } else if (command === "select-all") {
+        indexSelection.selectAll(eligibleIndexSelectionDocIds());
       } else if (command === "clear") {
         indexSelection.clear();
       } else if (command === "done") {
@@ -555,11 +563,6 @@ export function initDocsViewerManagement(context) {
       hidden: managementActionsHidden,
       disabled: !management.managementAvailable || viewableDisabled
     });
-    projectAppControl("manage-show-non-viewable", {
-      hidden: managementActionsHidden,
-      disabled: !management.managementAvailable || management.managementBusy,
-      pressed: documentIndex.showNonViewable
-    });
     projectAppControl("manage-scope", { hidden: managementActionsHidden });
     projectAppControl("manage-theme", {
       hidden: false,
@@ -593,10 +596,6 @@ export function initDocsViewerManagement(context) {
     projectDocumentActionButtons(!management.managementChecked || !management.managementAvailable, !management.managementAvailable || editDisabled);
     manageDeleteButton.disabled = !management.managementAvailable || deleteDisabled;
     manageViewableButton.disabled = !management.managementAvailable || viewableDisabled;
-    if (draftToggle) {
-      draftToggle.disabled = !management.managementAvailable || management.managementBusy;
-      draftToggle.checked = documentIndex.showNonViewable;
-    }
     if (metadataWorkflow) metadataWorkflow.render();
     if (settingsWorkflow) settingsWorkflow.render();
   }
@@ -748,31 +747,6 @@ export function initDocsViewerManagement(context) {
       });
   }
 
-  function handleDraftToggleChange() {
-    if (!draftToggle) return;
-    documentIndex.showNonViewable = Boolean(draftToggle.checked);
-    routeSession.managementContext = typeof context.isManagementContext === "function" && context.isManagementContext();
-    context.applyDocVisibility();
-    reconcileIndexSelectionReload(documentIndex.docs.map(function (doc) { return doc.doc_id; }));
-    context.renderSidebar();
-    context.renderBookmarkUi();
-    renderManagementUi();
-
-    var currentDocId = selectedDocument.selectedDocId;
-    var targetDocId = currentDocId && documentIndex.docsById.has(currentDocId) ? currentDocId : context.defaultDocId();
-    if (searchRecent.recentModeActive) {
-      context.renderRecentMode();
-      return;
-    }
-    if (searchRecent.searchRouteActive) {
-      context.renderSearchMode();
-      return;
-    }
-    if (targetDocId) {
-      loadRouteDoc(targetDocId, { historyMode: "replace", hash: "" });
-    }
-  }
-
   function applyConfig(config) {
     applyDocsViewerManagementConfig({
       config: config,
@@ -918,8 +892,7 @@ export function initDocsViewerManagement(context) {
       openSettings: function () { settingsWorkflow.open(); },
       publish: function () { actionController.handlePublishDocs(); },
       renameScope: function () { scopeLifecycleController.renameScope(); },
-      rebuild: function () { actionController.handleRebuildDocs(); },
-      toggleDraft: handleDraftToggleChange
+      rebuild: function () { actionController.handleRebuildDocs(); }
     },
     controllers: {
       interaction: function () { return interactionController; },

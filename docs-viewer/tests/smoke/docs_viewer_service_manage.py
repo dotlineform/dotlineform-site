@@ -592,7 +592,6 @@ def assert_action_target_definitions(page: Page) -> None:
             "rename-scope",
             "settings",
             "show",
-            "show-non-viewable",
         ],
         "unknownRejected": True,
         "unknownSurfaceActionIds": [],

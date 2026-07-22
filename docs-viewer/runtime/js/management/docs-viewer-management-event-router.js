@@ -67,10 +67,6 @@ export function createDocsViewerManagementEventRouter(options = {}) {
       toggleManageActionsMenu();
       return true;
     }
-    if (controlId === "manage-show-non-viewable" && detail.eventType === "change") {
-      invoke("toggleDraft", { hideContextMenu: true });
-      return true;
-    }
     var commandsByAction = new Map([
       ["rebuild-docs", ["rebuild", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["import", ["openImport", {}]],

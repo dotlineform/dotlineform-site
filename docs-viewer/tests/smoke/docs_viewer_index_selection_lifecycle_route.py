@@ -26,6 +26,20 @@ def checked_doc_ids(page: Page) -> list[str]:
     )
 
 
+def nested_index_doc_ids(records: list[dict[str, object]]) -> list[str]:
+    doc_ids: list[str] = []
+    for record in records:
+        doc_id = str(record.get("doc_id") or "").strip()
+        if doc_id:
+            doc_ids.append(doc_id)
+        children = record.get("children")
+        if isinstance(children, list):
+            doc_ids.extend(
+                nested_index_doc_ids([child for child in children if isinstance(child, dict)])
+            )
+    return doc_ids
+
+
 def choose_selection_docs(page: Page) -> dict[str, str]:
     result = page.evaluate(
         """() => {
@@ -72,16 +86,21 @@ def click_checkbox(page: Page, doc_id: str, *, shift: bool = False) -> None:
 
 def assert_selection_lifecycle(page: Page, base_url: str, timeout_ms: int) -> None:
     index_request_count = 0
+    initial_index_docs: list[dict[str, object]] = []
     prune_doc_id = ""
     prune_reloads = False
     page_errors: list[str] = []
     page.on("pageerror", lambda error: page_errors.append(error.stack or str(error)))
 
     def fulfill_index(route: Route) -> None:
-        nonlocal index_request_count
+        nonlocal index_request_count, initial_index_docs
         index_request_count += 1
         response = route.fetch()
         payload = response.json()
+        if not initial_index_docs:
+            initial_index_docs = [
+                dict(record) for record in payload.get("docs", []) if isinstance(record, dict)
+            ]
         if prune_reloads and prune_doc_id:
             payload["docs"] = [
                 record
@@ -105,7 +124,35 @@ def assert_selection_lifecycle(page: Page, base_url: str, timeout_ms: int) -> No
     page.goto(f"{base_url}/docs/?scope=studio&doc={DOCS_VIEWER_DOC_ID}", wait_until="domcontentloaded")
     wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
 
+    if page.locator('[data-docs-viewer-control="manage-show-non-viewable"]').count():
+        raise AssertionError("manage route retained the Show non-viewable control")
+    if page.locator("#docsViewerDraftToggle").count():
+        raise AssertionError("manage route retained the Show non-viewable input")
+    if not initial_index_docs:
+        raise AssertionError("manage route did not load the canonical index population")
     click_selection_command(page, "enter")
+    click_selection_command(page, "select-all")
+    selection_projection = page.evaluate(
+        """() => ({
+            count: document.querySelector('.docsViewer__indexSelectionCount')?.textContent.trim(),
+            selectAllDisabled: document.querySelector(
+                '[data-docs-viewer-selection-command="select-all"]'
+            )?.disabled
+        })"""
+    )
+    canonical_doc_ids = nested_index_doc_ids(initial_index_docs)
+    expected_selection_count = f"{len(set(canonical_doc_ids))} selected"
+    if selection_projection != {
+        "count": expected_selection_count,
+        "selectAllDisabled": True,
+    }:
+        raise AssertionError(
+            "Select all did not project the complete manage-index population: "
+            f"expected {expected_selection_count!r}, got {selection_projection!r}"
+        )
+    if page.locator("[data-docs-viewer-selection-checkbox]:not(:checked)").count():
+        raise AssertionError("Select all left a rendered manage-index row unchecked")
+    click_selection_command(page, "clear")
     selection_docs = choose_selection_docs(page)
     prune_doc_id = selection_docs["prunedDocId"]
     click_checkbox(page, selection_docs["preservedDocId"])

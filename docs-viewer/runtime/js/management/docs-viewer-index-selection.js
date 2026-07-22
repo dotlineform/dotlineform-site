@@ -74,6 +74,12 @@ export function clearDocsViewerIndexSelection(state) {
   return selectionState(current.selectionModeActive, [], "");
 }
 
+export function selectAllDocsViewerIndexSelection(state, eligibleDocIds) {
+  var current = createDocsViewerIndexSelectionState(state);
+  if (!current.selectionModeActive) return current;
+  return selectionState(true, eligibleDocIds, "");
+}
+
 export function exitDocsViewerIndexSelection() {
   return selectionState(false, [], "");
 }
@@ -132,6 +138,9 @@ export function createDocsViewerIndexSelectionOwner(options = {}) {
     },
     selectRange: function (docId, visibleDocIds) {
       return transition(selectDocsViewerIndexSelectionRange(current, docId, visibleDocIds));
+    },
+    selectAll: function (eligibleDocIds) {
+      return transition(selectAllDocsViewerIndexSelection(current, eligibleDocIds));
     },
     clear: function () { return transition(clearDocsViewerIndexSelection(current)); },
     exit: function () { return transition(exitDocsViewerIndexSelection()); },

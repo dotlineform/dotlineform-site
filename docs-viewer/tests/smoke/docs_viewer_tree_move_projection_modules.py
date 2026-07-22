@@ -59,7 +59,6 @@ def assert_model_and_dom_projection(page: Page) -> None:
                 managementContext: true,
                 manageOnlyTreeRootIds: new Set(),
                 nonLoadableDocIds: new Set(),
-                showNonViewable: true,
                 uiStatusByValue: new Map()
             };
             const documentIndex = stateModule.createDocsViewerDocumentIndexState({ state });

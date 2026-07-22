@@ -121,8 +121,12 @@ def exercise_prepare_action(page: Page, base_url: str, timeout_ms: int) -> None:
     option_modal = page.locator('[data-role="docs-viewer-management-modal"]')
     if option_modal.locator("[data-docs-viewer-selection-checkbox]").count():
         raise AssertionError("Prepare modal rendered a second document selection")
-    if option_modal.locator('input[type="checkbox"]').count() != 1:
-        raise AssertionError("Prepare modal should contain only the descendants option checkbox")
+    if option_modal.locator('input[type="checkbox"]').count() != 3:
+        raise AssertionError("Prepare modal should contain descendants and both content filters")
+    if option_modal.locator("[data-package-missing-summary-only]").is_checked():
+        raise AssertionError("missing-summary filter should default off")
+    if not option_modal.locator("[data-package-include-non-viewable]").is_checked():
+        raise AssertionError("non-viewable inclusion should default on")
     option_modal.locator("[data-package-include-descendants]").uncheck()
 
     install_busy_observer(page)

@@ -388,9 +388,6 @@ export function startDocsViewerRuntime(options) {
       setStatus: statusController.setStatus,
       startBusy: statusController.startBusy
     },
-    syncNonViewableVisibilityForRequestedDoc: function () {
-      documentIndex.syncNonViewableVisibilityForRequestedDoc(getCurrentDocId);
-    },
     updateInfoPanel: documentViewCoordinator.updateInfoPanel,
     viewerBaseUrl: function () { return viewerBaseUrl; },
     viewerPathname: function () { return viewerPathname; },
@@ -579,10 +576,6 @@ export function startDocsViewerRuntime(options) {
 
   function handleScopeChange() {
     configController.handleScopeChange();
-  }
-
-  function getCurrentDocId() {
-    return routeWorkflow.currentDocId();
   }
 
   function getCurrentHash() {

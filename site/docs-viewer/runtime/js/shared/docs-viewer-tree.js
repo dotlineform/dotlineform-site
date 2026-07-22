@@ -15,17 +15,10 @@ export function compareDocs(left, right) {
   return 0;
 }
 
-export function buildChildrenMap(docs, options) {
-  var settings = options || {};
+export function buildChildrenMap(docs) {
   var childrenByParent = new Map();
-  var visibleDocIds = new Set(docs.map(function (doc) {
-    return doc.doc_id;
-  }));
   docs.forEach(function (doc) {
     var parentId = doc.parent_id || "";
-    if (settings.managementContext && !settings.showNonViewable && parentId && !visibleDocIds.has(parentId)) {
-      parentId = "";
-    }
     if (!childrenByParent.has(parentId)) {
       childrenByParent.set(parentId, []);
     }
