@@ -25,9 +25,7 @@ export const DOCS_VIEWER_ACTION_IDS = Object.freeze({
   PUBLISH_DOCS: "publish-docs",
   REBUILD_DOCS: "rebuild-docs",
   RENAME_SCOPE: "rename-scope",
-  SETTINGS: "settings",
-  SHOW: "show",
-  SHOW_NON_VIEWABLE: "show-non-viewable"
+  SETTINGS: "settings"
 });
 
 export const DOCS_VIEWER_ACTION_TARGETS = Object.freeze({
@@ -80,9 +78,7 @@ export const DOCS_VIEWER_ACTION_DEFINITIONS = Object.freeze({
   [IDS.PUBLISH_DOCS]: actionDefinition(IDS.PUBLISH_DOCS, TARGETS.SCOPE),
   [IDS.REBUILD_DOCS]: actionDefinition(IDS.REBUILD_DOCS, TARGETS.SCOPE),
   [IDS.RENAME_SCOPE]: actionDefinition(IDS.RENAME_SCOPE, TARGETS.SCOPE),
-  [IDS.SETTINGS]: actionDefinition(IDS.SETTINGS, TARGETS.SCOPE),
-  [IDS.SHOW]: actionDefinition(IDS.SHOW, TARGETS.ACTIVE_DOCUMENT),
-  [IDS.SHOW_NON_VIEWABLE]: actionDefinition(IDS.SHOW_NON_VIEWABLE, TARGETS.SCOPE)
+  [IDS.SETTINGS]: actionDefinition(IDS.SETTINGS, TARGETS.SCOPE)
 });
 
 function normalizeId(value) {

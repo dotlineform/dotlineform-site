@@ -73,23 +73,6 @@ def test_update_metadata_can_change_viewability_in_dry_run() -> None:
     assert result["changes"]["viewable_changed"] is True
     assert result["changes"]["status_changed"] is False
 
-def test_hidden_doc_viewability_can_be_changed_in_dry_run() -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
-        result = docs_management_service.handle_update_viewability(
-            repo_root,
-            {
-                "scope": "studio",
-                "doc_id": "non-viewable-doc",
-                "viewable": True,
-            },
-            dry_run=True,
-        )
-
-    assert result["ok"] is True
-    assert result["changed_doc_ids"] == ["non-viewable-doc"]
-    assert result["records"][0]["viewable"] is True
-
 def test_hidden_parent_delete_is_blocked_only_by_children() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)

@@ -160,7 +160,6 @@ export function initDocsViewerManagement(context) {
   var managePreparePackageButton = document.getElementById("docsViewerManagePreparePackageButton");
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
   var manageDeleteButton = document.getElementById("docsViewerManageDeleteButton");
-  var manageViewableButton = document.getElementById("docsViewerManageViewableButton");
   var importRoot = shellRef("importRoot", "docsHtmlImportRoot");
   var importBootStatus = shellRef("importBootStatus", "docsHtmlImportBootStatus");
   var capabilityController = null;
@@ -319,7 +318,6 @@ export function initDocsViewerManagement(context) {
       "manage-import",
       "manage-actions",
       "manage-publish",
-      "manage-show",
       "manage-scope",
       "manage-theme"
     ].forEach(function (controlId) {
@@ -520,13 +518,10 @@ export function initDocsViewerManagement(context) {
     syncManagementStatus(noteText, noteIsError);
     if (copySubtreeController) copySubtreeController.render();
 
-    if (!manageRebuildButton || !manageNewButton || !manageDeleteButton || !manageViewableButton) return;
+    if (!manageRebuildButton || !manageNewButton || !manageDeleteButton) return;
 
     var editAction = resolveAction(DOCS_VIEWER_ACTION_IDS.EDIT_METADATA);
     var deleteAction = resolveAction(DOCS_VIEWER_ACTION_IDS.DELETE);
-    var showAction = resolveAction(DOCS_VIEWER_ACTION_IDS.SHOW);
-    var showDoc = actionTargetDoc(showAction);
-    var draftDoc = Boolean(showDoc && isDocNonViewable(showDoc));
     var editDisabled = (
       management.managementBusy ||
       !editAction.enabled ||
@@ -536,12 +531,6 @@ export function initDocsViewerManagement(context) {
       management.managementBusy ||
       !deleteAction.enabled ||
       searchRecent.searchRouteActive
-    );
-    var viewableDisabled = (
-      management.managementBusy ||
-      !showAction.enabled ||
-      searchRecent.searchRouteActive ||
-      !draftDoc
     );
     var publishAvailable = management.managementAvailable && scopePublishSupported(management.managementCapabilities, viewerScope());
     var exportAvailable = management.managementAvailable && scopeStaticHtmlExportSupported(management.managementCapabilities, viewerScope());
@@ -558,10 +547,6 @@ export function initDocsViewerManagement(context) {
     projectAppControl("manage-publish", {
       hidden: managementActionsHidden || !publishAvailable,
       disabled: management.managementBusy || !publishAvailable
-    });
-    projectAppControl("manage-show", {
-      hidden: managementActionsHidden,
-      disabled: !management.managementAvailable || viewableDisabled
     });
     projectAppControl("manage-scope", { hidden: managementActionsHidden });
     projectAppControl("manage-theme", {
@@ -595,7 +580,6 @@ export function initDocsViewerManagement(context) {
     manageNewButton.disabled = management.managementBusy || !management.managementAvailable;
     projectDocumentActionButtons(!management.managementChecked || !management.managementAvailable, !management.managementAvailable || editDisabled);
     manageDeleteButton.disabled = !management.managementAvailable || deleteDisabled;
-    manageViewableButton.disabled = !management.managementAvailable || viewableDisabled;
     if (metadataWorkflow) metadataWorkflow.render();
     if (settingsWorkflow) settingsWorkflow.render();
   }
@@ -886,7 +870,6 @@ export function initDocsViewerManagement(context) {
       deleteScope: function () { scopeLifecycleController.deleteScope(); },
       deleteSubScope: function () { scopeLifecycleController.deleteSubScope(); },
       exportDocs: function () { actionController.handleExportDocs(); },
-      makeViewable: function () { actionController.handleMakeViewable(); },
       openImport: function () { importController.open(); },
       preparePackage: handlePreparePackage,
       openSettings: function () { settingsWorkflow.open(); },

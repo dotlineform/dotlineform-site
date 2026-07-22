@@ -66,8 +66,6 @@ from docs_management_mutation_service import (  # noqa: E402
     handle_sub_scope_create_apply,
     handle_sub_scope_delete_apply,
     handle_update_metadata,
-    handle_update_viewability,
-    handle_update_viewability_bulk,
 )
 from docs_management_read_service import (  # noqa: E402
     docs_api_query_value,
@@ -172,10 +170,6 @@ def docs_management_post_response(
         return HTTPStatus.OK, docs_review_sessions.delete_review_session(repo_root, body)
     if path == routes.UPDATE_METADATA_PATH:
         return HTTPStatus.OK, handle_update_metadata(repo_root, body, dry_run)
-    if path == routes.UPDATE_VIEWABILITY_PATH:
-        return HTTPStatus.OK, handle_update_viewability(repo_root, body, dry_run)
-    if path == routes.UPDATE_VIEWABILITY_BULK_PATH:
-        return HTTPStatus.OK, handle_update_viewability_bulk(repo_root, body, dry_run)
     if path == routes.CREATE_PATH:
         return HTTPStatus.OK, handle_create(repo_root, body, dry_run)
     if path == routes.REBUILD_PATH:

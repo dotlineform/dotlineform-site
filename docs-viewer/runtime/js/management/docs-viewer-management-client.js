@@ -207,13 +207,6 @@ export function applySubScopeDelete(parentScope, subScope, options) {
   }, options);
 }
 
-export function updateManagedDocsViewability(docIds, viewable, options) {
-  return fetchManagementJson("/docs/update-viewability-bulk", "POST", scopedPayload({
-    doc_ids: docIds,
-    viewable: Boolean(viewable)
-  }, options), options);
-}
-
 export function moveManagedDoc(docId, parentId, options) {
   return fetchManagementJson("/docs/move", "POST", scopedPayload({
     doc_id: docId,

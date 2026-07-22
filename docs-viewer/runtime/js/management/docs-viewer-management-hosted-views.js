@@ -74,16 +74,6 @@ export function createDocsViewerManagementViewDefinitions() {
         renderer: "manage-toolbar-publish"
       },
       {
-        id: "manage-show",
-        actionId: DOCS_VIEWER_ACTION_IDS.SHOW,
-        label: "Show",
-        ownerType: "app",
-        surfaceId: "app-management",
-        appKinds: ["manage"],
-        features: ["management"],
-        renderer: "manage-show"
-      },
-      {
         id: "manage-scope",
         label: "Docs scope",
         ownerType: "app",

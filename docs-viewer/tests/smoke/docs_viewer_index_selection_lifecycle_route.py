@@ -128,6 +128,10 @@ def assert_selection_lifecycle(page: Page, base_url: str, timeout_ms: int) -> No
         raise AssertionError("manage route retained the Show non-viewable control")
     if page.locator("#docsViewerDraftToggle").count():
         raise AssertionError("manage route retained the Show non-viewable input")
+    if page.locator('[data-docs-viewer-control="manage-show"]').count():
+        raise AssertionError("manage route retained the Show control")
+    if page.locator("#docsViewerManageViewableButton").count():
+        raise AssertionError("manage route retained the Show action button")
     if not initial_index_docs:
         raise AssertionError("manage route did not load the canonical index population")
     click_selection_command(page, "enter")

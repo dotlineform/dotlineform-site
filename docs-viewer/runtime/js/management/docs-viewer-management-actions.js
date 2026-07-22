@@ -9,36 +9,19 @@ import {
   previewManagedDocDelete,
   rebuildManagedDocs,
   updateSourceConfigSettings,
-  updateManagedDocMetadata,
-  updateManagedDocsViewability
+  updateManagedDocMetadata
 } from "./docs-viewer-management-client.js";
-import {
-  isDocNonViewable,
-  isDocViewable
-} from "../shared/docs-viewer-tree.js";
-import {
-  resolveViewabilityTargetDocIds
-} from "./docs-viewer-management-action-workflow.js";
 import {
   DOCS_VIEWER_ACTION_IDS
 } from "./docs-viewer-action-definitions.js";
 import {
   buildDocsViewerDeletePreviewBody,
-  openDocsViewerChoiceModal,
   openDocsViewerConfirmModal,
   openDocsViewerTextInputModal
 } from "./docs-viewer-management-modals.js";
 
 var ACTION_TEXT = {
   cancelButton: "Cancel",
-  confirmContinueButton: "Continue",
-  viewableAncestorPrompt: "Showing this doc also requires showing these parent docs:\n\n{titles}\n\nContinue?",
-  viewableAncestorTitle: "Show parent docs",
-  viewableDescendantPrompt: "Choose whether to show only this doc or include its descendant docs.",
-  viewableDescendantTitle: "Show descendants",
-  viewableDescendantSelectedLabel: "Selected doc only",
-  viewableDescendantAllLabel: "Selected doc and descendants",
-  viewableInvalidChoice: "Show update cancelled: expected `all` or `selected`.",
   createDocTitle: "New doc title",
   createChildDocTitle: "New child title",
   createSiblingDocTitle: "New sibling title",
@@ -186,43 +169,6 @@ export function createDocsViewerManagementActionController(options) {
         var recoveryDetail = recoveryError && recoveryError.message ? recoveryError.message : "index reload failed";
         throw new Error("Move committed, but local projection failed (" + detail + ") and recovery failed (" + recoveryDetail + ").");
       });
-  }
-
-  async function viewabilityTargetDocIds(doc) {
-    return resolveViewabilityTargetDocIds({
-      doc: doc,
-      allDocs: documentIndex.allDocs,
-      findDocById: context.findAllDocById,
-      confirmAncestors: function (detail) {
-        var ancestorMessage = context.formatText(ACTION_TEXT.viewableAncestorPrompt, {
-          titles: detail.titles
-        });
-        return openDocsViewerConfirmModal({
-          root: root,
-          title: ACTION_TEXT.viewableAncestorTitle,
-          body: ancestorMessage,
-          primaryLabel: ACTION_TEXT.confirmContinueButton,
-          cancelLabel: ACTION_TEXT.cancelButton
-        });
-      },
-      chooseDescendants: function () {
-        return openDocsViewerChoiceModal({
-          root: root,
-          title: ACTION_TEXT.viewableDescendantTitle,
-          body: ACTION_TEXT.viewableDescendantPrompt,
-          value: "selected",
-          choices: [
-            { value: "selected", label: ACTION_TEXT.viewableDescendantSelectedLabel },
-            { value: "all", label: ACTION_TEXT.viewableDescendantAllLabel }
-          ],
-          primaryLabel: ACTION_TEXT.confirmContinueButton,
-          cancelLabel: ACTION_TEXT.cancelButton
-        });
-      },
-      onInvalidChoice: function () {
-        setManagementMessage(ACTION_TEXT.viewableInvalidChoice, true);
-      }
-    });
   }
 
   function writeClipboardText(text) {
@@ -601,30 +547,6 @@ export function createDocsViewerManagementActionController(options) {
       });
   }
 
-  async function handleMakeViewable() {
-    var doc = actionTargetDoc(DOCS_VIEWER_ACTION_IDS.SHOW);
-    if (!doc || isDocViewable(doc)) return;
-    var targetDocIds = await viewabilityTargetDocIds(doc);
-    if (!targetDocIds) return;
-
-    setManagementBusy(true);
-    var countText = targetDocIds.length === 1 ? doc.title : targetDocIds.length + " docs";
-    setManagementMessage("Showing " + countText + "...", false);
-
-    updateManagedDocsViewability(targetDocIds, true, managementClientOptions())
-      .then(function () {
-        setManagementMessage("", false);
-        return reloadDocsIndex(doc.doc_id, "");
-      })
-      .catch(function (error) {
-        setManagementMessage(error.message || "Viewability update failed.", true);
-      })
-      .finally(function () {
-        setManagementBusy(false);
-        renderManagementUi();
-      });
-  }
-
   function handleMoveDoc(docId, parentId) {
     var movingDocId = String(docId || "").trim();
     if (!movingDocId) return;
@@ -714,7 +636,6 @@ export function createDocsViewerManagementActionController(options) {
     handleEditMetadataSave: handleEditMetadataSave,
     handleMarkdownSave: handleMarkdownSave,
     handleMarkdownSource: handleMarkdownSource,
-    handleMakeViewable: handleMakeViewable,
     handleMoveDoc: handleMoveDoc,
     handleOpenSource: handleOpenSource,
     handleExportDocs: handleExportDocs,

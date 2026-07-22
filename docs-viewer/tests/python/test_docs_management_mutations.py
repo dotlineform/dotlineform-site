@@ -220,27 +220,6 @@ def test_metadata_viewable_plan_writes_current_viewability() -> None:
     assert 'last_updated: "2026-05-01 10:00"' in plan.source_writes[0].text
 
 
-def test_viewability_bulk_plan_expands_descendants_and_skips_unchanged_docs() -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
-        plan = mutations.plan_update_viewability_bulk(
-            repo_root,
-            {
-                "scope": "studio",
-                "doc_ids": ["target", "target"],
-                "viewable": False,
-                "include_descendants": True,
-            },
-        )
-
-    assert plan.response["doc_ids"] == ["target", "target-child"]
-    assert plan.response["changed_doc_ids"] == ["target", "target-child"]
-    assert plan.search_doc_ids == ["target", "target-child"]
-    for write in plan.source_writes:
-        assert "viewable: false" in write.text
-        assert "hidden:" not in write.text
-
-
 def test_move_plan_noops_when_parent_is_unchanged() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
@@ -327,7 +306,6 @@ def main() -> None:
         test_metadata_plan_removes_empty_date_fields,
         test_metadata_status_only_plan_suppresses_search_target,
         test_metadata_viewable_plan_writes_current_viewability,
-        test_viewability_bulk_plan_expands_descendants_and_skips_unchanged_docs,
         test_move_plan_noops_when_parent_is_unchanged,
         test_move_plan_keeps_search_target_for_reparent,
         test_move_plan_supports_moving_parent_subtree,

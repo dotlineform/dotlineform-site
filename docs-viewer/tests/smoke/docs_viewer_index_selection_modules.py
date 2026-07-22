@@ -246,7 +246,6 @@ def assert_action_target_isolation(page: Page) -> None:
                     prepareContext: caseResolver('prepare-document-package', 'context').targetDocIds,
                     prepareDisabledReason: caseResolver('prepare-document-package').disabledReason,
                     delete: caseResolver('delete').targetDocIds,
-                    show: caseResolver('show').targetDocIds,
                     copyActive: caseResolver('copy-link').targetDocIds,
                     copyContext: caseResolver('copy-link', 'context').targetDocIds,
                     moveActive: caseResolver('move').targetDocIds,
@@ -258,7 +257,7 @@ def assert_action_target_isolation(page: Page) -> None:
                 .filter(definition => definition.target === definitions.DOCS_VIEWER_ACTION_TARGETS.SELECTION)
                 .map(definition => definition.id)
                 .sort();
-            const activeActionIds = ['delete', 'show'];
+            const activeActionIds = ['delete'];
             const documentActionIds = ['copy-link', 'move', 'new-child', 'new-sibling', 'open', 'open-vscode'];
             const resolveTargets = (actionIds, invocation) => Object.fromEntries(actionIds.map(actionId => {
                 const resolution = invocation
@@ -356,7 +355,6 @@ def assert_action_target_isolation(page: Page) -> None:
                 "prepareContext": [],
                 "prepareDisabledReason": "Select one or more documents.",
                 "delete": ["active"],
-                "show": ["active"],
                 "copyActive": ["active"],
                 "copyContext": ["context"],
                 "moveActive": ["active"],
@@ -368,7 +366,6 @@ def assert_action_target_isolation(page: Page) -> None:
                 "prepareContext": ["checked-a"],
                 "prepareDisabledReason": "",
                 "delete": ["active"],
-                "show": ["active"],
                 "copyActive": ["active"],
                 "copyContext": ["context"],
                 "moveActive": ["active"],
@@ -380,7 +377,6 @@ def assert_action_target_isolation(page: Page) -> None:
                 "prepareContext": ["checked-a", "checked-b"],
                 "prepareDisabledReason": "",
                 "delete": ["active"],
-                "show": ["active"],
                 "copyActive": ["active"],
                 "copyContext": ["context"],
                 "moveActive": ["active"],
@@ -389,7 +385,6 @@ def assert_action_target_isolation(page: Page) -> None:
         ],
         "activeTargets": {
             "delete": ["active"],
-            "show": ["active"],
         },
         "documentActiveTargets": {
             "copy-link": ["active"],
@@ -680,12 +675,14 @@ def assert_selection_projection_and_interaction(page: Page) -> None:
                 linkGeometryStable: before.x === after.x && before.y === after.y
                     && before.width === after.width && before.height === after.height,
                 projectionCount,
-                removedVisibilityControl: !controlDefinitions.some(
-                    control => control.id === 'manage-show-non-viewable'
-                ) && !Object.prototype.hasOwnProperty.call(
-                    appRenderers.createDocsViewerManagementAppControlRenderers(),
-                    'manage-show-non-viewable'
-                ),
+                removedViewabilityControls: !controlDefinitions.some(
+                    control => ['manage-show', 'manage-show-non-viewable'].includes(control.id)
+                ) && ['manage-show', 'manage-show-non-viewable'].every(controlId => (
+                    !Object.prototype.hasOwnProperty.call(
+                        appRenderers.createDocsViewerManagementAppControlRenderers(),
+                        controlId
+                    )
+                )),
                 selectedDocIds: owner.selectedDocIds(),
                 visibleDocIds: selection.visibleDocsViewerIndexSelectionDocIds(nav)
             };
@@ -709,7 +706,7 @@ def assert_selection_projection_and_interaction(page: Page) -> None:
         "gutterIsRowSibling": True,
         "linkGeometryStable": True,
         "projectionCount": 2,
-        "removedVisibilityControl": True,
+        "removedViewabilityControls": True,
         "selectedDocIds": ["b", "c", "d"],
         "visibleDocIds": ["a", "b", "c", "d"],
     }

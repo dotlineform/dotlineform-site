@@ -76,7 +76,6 @@ export function createDocsViewerManagementEventRouter(options = {}) {
       ["export-docs", ["exportDocs", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["new", ["createDoc", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["delete", ["deleteDoc", { hideContextMenu: true, hideManageActionsMenu: true }]],
-      ["show", ["makeViewable", { hideContextMenu: true }]],
       ["new-scope", ["createScope", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["rename-scope", ["renameScope", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["delete-scope", ["deleteScope", { hideContextMenu: true, hideManageActionsMenu: true }]],

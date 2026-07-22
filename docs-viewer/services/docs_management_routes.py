@@ -30,8 +30,6 @@ IMPORT_SOURCE_PATH = "/docs/import-source"
 STAGED_MEDIA_PREVIEW_PATH = "/docs/staged-media-preview"
 STAGED_MEDIA_APPLY_PATH = "/docs/staged-media-apply"
 UPDATE_METADATA_PATH = "/docs/update-metadata"
-UPDATE_VIEWABILITY_PATH = "/docs/update-viewability"
-UPDATE_VIEWABILITY_BULK_PATH = "/docs/update-viewability-bulk"
 CREATE_PATH = "/docs/create"
 REBUILD_PATH = "/docs/rebuild"
 MOVE_PATH = "/docs/move"
@@ -88,8 +86,6 @@ POST_PATHS = (
     REVIEW_SESSION_BUILD_PATH,
     REVIEW_SESSION_DELETE_PATH,
     UPDATE_METADATA_PATH,
-    UPDATE_VIEWABILITY_PATH,
-    UPDATE_VIEWABILITY_BULK_PATH,
     CREATE_PATH,
     REBUILD_PATH,
     MOVE_PATH,

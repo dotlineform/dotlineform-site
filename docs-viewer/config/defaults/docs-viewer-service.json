@@ -46,8 +46,6 @@
     "broken_links": "/docs/broken-links",
     "import_source": "/docs/import-source",
     "update_metadata": "/docs/update-metadata",
-    "update_viewability": "/docs/update-viewability",
-    "update_viewability_bulk": "/docs/update-viewability-bulk",
     "create": "/docs/create",
     "rebuild": "/docs/rebuild",
     "move": "/docs/move",

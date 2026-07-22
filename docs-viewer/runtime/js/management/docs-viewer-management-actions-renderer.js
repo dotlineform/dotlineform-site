@@ -223,9 +223,6 @@ export function createDocsViewerManagementAppControlRenderers() {
     "manage-toolbar-publish": function (context) {
       return renderActionButton(context, { id: "docsViewerManageToolbarPublishButton", text: "Publish" });
     },
-    "manage-show": function (context) {
-      return renderActionButton(context, { id: "docsViewerManageViewableButton", text: "Show" });
-    },
     "manage-scope-select": renderScopeControl,
     "manage-theme-toggle": renderThemeToggle
   };

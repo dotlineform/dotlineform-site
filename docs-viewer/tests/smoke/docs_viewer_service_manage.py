@@ -122,6 +122,24 @@ def assert_origin_rejection(base_url: str) -> None:
         raise AssertionError("document-package API should reject a disallowed Origin")
 
 
+def assert_dedicated_viewability_endpoints_retired(base_url: str) -> None:
+    payload = json.dumps({"scope": "studio", "doc_id": DOCS_VIEWER_DOC_ID}).encode("utf-8")
+    for path in ("/docs/update-viewability", "/docs/update-viewability-bulk"):
+        request = urllib.request.Request(
+            f"{base_url}{path}",
+            data=payload,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        try:
+            urllib.request.urlopen(request, timeout=10)
+        except urllib.error.HTTPError as error:
+            if error.code != 404:
+                raise AssertionError(f"expected retired {path} to return 404, got {error.code}") from error
+        else:
+            raise AssertionError(f"retired endpoint remained available: {path}")
+
+
 def wait_for_manage_doc(page: Page, title: str, timeout_ms: int) -> None:
     wait_for_route_ready(
         page,
@@ -414,7 +432,6 @@ def assert_action_target_definitions(page: Page) -> None:
             "info",
             "markdown-save",
             "markdown-source",
-            "show",
             "source-add-file",
             "source-add-image",
         ],
@@ -441,7 +458,6 @@ def assert_action_target_definitions(page: Page) -> None:
             "rebuild-docs",
             "rename-scope",
             "settings",
-            "show-non-viewable",
         ],
         "emptySelectionContext": {
             "activeDocId": "active",
@@ -591,7 +607,6 @@ def assert_action_target_definitions(page: Page) -> None:
             "rebuild-docs",
             "rename-scope",
             "settings",
-            "show",
         ],
         "unknownRejected": True,
         "unknownSurfaceActionIds": [],
@@ -887,6 +902,14 @@ def exercise_manage_route(
         }""",
         timeout=timeout_ms,
     )
+    metadata_viewability = page.locator("#docsViewerMetadataNonViewableInput")
+    metadata_viewability_description = page.locator("#docsViewerMetadataNonViewableDescription")
+    if metadata_viewability.get_attribute("aria-describedby") != "docsViewerMetadataNonViewableDescription":
+        raise AssertionError("metadata viewability checkbox should expose its ancestor-effect guidance")
+    if metadata_viewability_description.inner_text().strip() != (
+        "Changes only this document. A non-viewable parent still prevents it from appearing publicly."
+    ):
+        raise AssertionError("metadata viewability guidance did not explain non-viewable ancestors")
     page.locator("#docsViewerMetadataCancelButton").evaluate("button => button.click()")
 
     page.locator("#docsViewerManageSourceButton").evaluate("button => button.click()")
@@ -1029,6 +1052,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         assert_service_basics(base_url)
         assert_origin_rejection(base_url)
+        assert_dedicated_viewability_endpoints_retired(base_url)
 
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
