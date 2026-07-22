@@ -33,7 +33,6 @@ from docs_import_preview import (
     list_staged_import_source_files,
     resolve_staged_import_source,
 )
-from docs_import_review_handoff import attach_review_package_associations
 from docs_import_source_helpers import (
     interactive_html_overwrite_summary,
 )
@@ -103,11 +102,7 @@ def handle_import_source_files(repo_root: Path) -> Dict[str, Any]:
         "available": True,
         "staging_root": marker_path(workspace_paths.import_staging, workspace_root=workspace_paths.root),
         "message": "",
-        "files": attach_review_package_associations(
-            files,
-            import_preview_root=workspace_paths.import_preview,
-            import_staging_root=workspace_paths.import_staging,
-        ),
+        "files": files,
     }
 
 

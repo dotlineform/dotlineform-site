@@ -222,7 +222,6 @@ export async function openDocumentPackageReviewWorkflow(options = {}) {
     reviewPayload = await client.review({
       scope,
       staged_filename: selectedFilename,
-      review_action: "content",
       dry_run: false
     });
     documentPackageReviewResult(reviewPayload);

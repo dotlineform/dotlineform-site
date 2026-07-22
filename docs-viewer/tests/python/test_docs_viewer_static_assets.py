@@ -67,9 +67,9 @@ def test_document_package_browser_assets_are_docs_viewer_owned() -> None:
     assert "record_indices" not in runtime
     assert "/analytics/" not in runtime
     assert "data-sharing" not in runtime.lower()
-    assert 'page_id: "docs-package-returned"' in runtime
-    assert 'actionId: "apply-returned-summaries"' in runtime
-    assert 'actionId: "apply-returned-hierarchy"' in runtime
+    assert 'id="documentPackageReturnedReview"' in returned_shell
+    assert "review_action" not in runtime
+    assert "/docs/packages/returned/apply" not in runtime
     assert 'type="checkbox"' not in returned_shell
     assert 'id="documentPackageReturnedScope"' not in returned_shell
     assert 'data-package-scope-link="/docs/' in returned_shell

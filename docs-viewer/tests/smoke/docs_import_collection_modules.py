@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke-check focused Docs Import collection preview and decision ownership."""
+"""Smoke-check focused Docs Import whole-package preview and confirmation ownership."""
 
 from __future__ import annotations
 
@@ -44,7 +44,7 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
                   "preview_only": false,
                   "confirmed": true,
                   "outcome": "completed",
-                  "counts": {"created": 0, "overwritten": 3, "skipped": 0, "failed": 0, "not_attempted": 0},
+                  "counts": {"created": 0, "overwritten": 3, "failed": 0, "not_attempted": 0},
                   "records": [
                     {"record_index": 0, "doc_id": "alpha", "title": "Alpha", "status": "overwritten", "warnings": []},
                     {"record_index": 1, "doc_id": "beta", "title": "Beta", "status": "overwritten", "warnings": []},
@@ -63,14 +63,19 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
               "collection": true,
               "source_format": "data_sharing_documents",
               "preview_only": true,
-              "requires_decisions": true,
-              "ready_for_confirmation": false,
+              "ready_for_confirmation": true,
               "package": {"export_id": "ds_20260712T170000Z", "source_sha256": "abc123"},
+              "planned_identities": [],
+              "planned_actions": [
+                {"record_index": 0, "action": "overwrite", "doc_id": "alpha", "target_doc_id": "alpha"},
+                {"record_index": 1, "action": "overwrite", "doc_id": "beta", "target_doc_id": "beta"},
+                {"record_index": 2, "action": "overwrite", "doc_id": "gamma", "target_doc_id": "gamma"}
+              ],
               "counts": {"records": 3, "creates": 0, "collisions": 3, "record_errors": 0, "media_plans": 0},
               "records": [
-                {"record_index": 0, "doc_id": "alpha", "title": "Alpha", "action": "decision-required", "decision_kind": "collision", "allowed_actions": ["overwrite", "skip", "cancel"], "collision": {"exists": true, "doc_id": "alpha"}, "parent": {}, "media_plans": [], "warnings": [], "errors": []},
-                {"record_index": 1, "doc_id": "beta", "title": "Beta", "action": "decision-required", "decision_kind": "collision", "allowed_actions": ["overwrite", "skip", "cancel"], "collision": {"exists": true, "doc_id": "beta"}, "parent": {}, "media_plans": [], "warnings": [], "errors": []},
-                {"record_index": 2, "doc_id": "gamma", "title": "Gamma", "action": "decision-required", "decision_kind": "collision", "allowed_actions": ["overwrite", "skip", "cancel"], "collision": {"exists": true, "doc_id": "gamma"}, "parent": {}, "media_plans": [], "warnings": [], "errors": []}
+                {"record_index": 0, "doc_id": "alpha", "title": "Alpha", "action": "overwrite", "collision": {"exists": true, "doc_id": "alpha"}, "parent": {}, "media_plans": [], "warnings": [], "errors": []},
+                {"record_index": 1, "doc_id": "beta", "title": "Beta", "action": "overwrite", "collision": {"exists": true, "doc_id": "beta"}, "parent": {}, "media_plans": [], "warnings": [], "errors": []},
+                {"record_index": 2, "doc_id": "gamma", "title": "Gamma", "action": "overwrite", "collision": {"exists": true, "doc_id": "gamma"}, "parent": {}, "media_plans": [], "warnings": [], "errors": []}
               ],
               "blockers": [],
               "warnings": []
@@ -102,10 +107,6 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
             scope: 'library',
             managementBaseUrl: baseUrl
           });
-          document.querySelector('[data-collection-decision="overwrite"]').click();
-          const afterFirst = controller.snapshot();
-          document.querySelector('[data-collection-apply-all]').checked = true;
-          document.querySelector('[data-collection-decision="overwrite"]').click();
           const readySnapshot = controller.snapshot();
           const readyStatus = document.getElementById('status').textContent;
           await controller.confirmApply();
@@ -117,9 +118,8 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
             scope: 'library',
             managementBaseUrl: baseUrl
           });
-          document.querySelector('[data-collection-decision="cancel"]').click();
+          document.querySelector('[data-collection-command="cancel"]').click();
           return {
-            afterFirst,
             readySnapshot,
             readyStatus,
             resultSnapshot,
@@ -128,18 +128,14 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
             terminalResultCount,
             terminalResultDetail,
             cancelledSnapshot: controller.snapshot(),
-            cancelDecisionVisible: Boolean(document.querySelector('[data-collection-decision]')),
+            recordDecisionVisible: Boolean(document.querySelector('[data-collection-decision]')),
             recordCount: document.querySelectorAll('.docsViewerImport__collectionRecords > li').length
           };
         }""",
         base_url,
     )
     if result["readySnapshot"]["phase"] != "confirmation":
-        raise AssertionError(f"collection decisions did not remain controller-owned: {result!r}")
-    if result["afterFirst"]["phase"] != "decision" or result["afterFirst"]["decisions"] != {"0": "overwrite"}:
-        raise AssertionError(f"unchecked apply-to-all changed remaining collisions: {result!r}")
-    if result["readySnapshot"]["decisions"] != {"0": "overwrite", "1": "overwrite", "2": "overwrite"}:
-        raise AssertionError(f"apply-to-all did not resolve collision decisions: {result!r}")
+        raise AssertionError(f"whole-package plan did not reach confirmation: {result!r}")
     if result["recordCount"] != 3 or "ready for confirmation" not in result["readyStatus"]:
         raise AssertionError(f"collection view projection failed: {result!r}")
     if result["resultSnapshot"]["phase"] != "result" or not result["resultReportVisible"]:
@@ -150,22 +146,25 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
         raise AssertionError(f"confirmed apply did not identify the first imported collection doc: {result!r}")
     if result["busyStates"] != [True, False, True, False, True, False]:
         raise AssertionError(f"collection busy state did not bracket preview/apply requests: {result!r}")
-    if result["cancelledSnapshot"]["phase"] != "cancelled" or result["cancelDecisionVisible"]:
-        raise AssertionError(f"pre-apply cancellation left active decision controls: {result!r}")
+    if result["cancelledSnapshot"]["phase"] != "cancelled" or result["recordDecisionVisible"]:
+        raise AssertionError(f"whole-package cancellation exposed record decisions: {result!r}")
     expected_preview = {"scope": "library", "staged_filename": "reviewed.jsonl", "preview_only": True}
     if requests[0] != expected_preview or requests[2] != expected_preview:
         raise AssertionError(f"collection preview did not use the existing import POST safely: {requests!r}")
     apply_request = requests[1]
     if apply_request.get("export_id") != "ds_20260712T170000Z" or apply_request.get("source_sha256") != "abc123":
         raise AssertionError(f"confirmed package identity was not submitted: {apply_request!r}")
-    if apply_request.get("decisions") != [
-        {"record_index": 0, "action": "overwrite", "target_doc_id": "alpha", "note": ""},
-        {"record_index": 1, "action": "overwrite", "target_doc_id": "beta", "note": ""},
-        {"record_index": 2, "action": "overwrite", "target_doc_id": "gamma", "note": ""},
+    if apply_request.get("planned_actions") != [
+        {"record_index": 0, "action": "overwrite", "doc_id": "alpha", "target_doc_id": "alpha"},
+        {"record_index": 1, "action": "overwrite", "doc_id": "beta", "target_doc_id": "beta"},
+        {"record_index": 2, "action": "overwrite", "doc_id": "gamma", "target_doc_id": "gamma"},
     ]:
-        raise AssertionError(f"explicit expanded decisions did not match the reviewed plan: {apply_request!r}")
+        raise AssertionError(f"confirmed package actions did not match the reviewed plan: {apply_request!r}")
+    if "decisions" in apply_request:
+        raise AssertionError(f"whole-package import exposed record decisions: {apply_request!r}")
     if set(apply_request) != {
-        "scope", "staged_filename", "preview_only", "confirm", "export_id", "source_sha256", "decisions", "activity_context"
+        "scope", "staged_filename", "preview_only", "confirm", "export_id", "source_sha256",
+        "planned_identities", "planned_actions", "activity_context"
     }:
         raise AssertionError(f"apply request widened beyond the safe collection contract: {apply_request!r}")
 

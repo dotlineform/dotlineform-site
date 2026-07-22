@@ -200,7 +200,6 @@ def test_apply_capability_flags_respects_local_service_flags() -> None:
                 "context": True,
                 "inspect_returned": True,
                 "review_returned": True,
-                "apply_returned": True,
                 "atomic_return": True,
             },
             "scope_lifecycle": {
@@ -240,7 +239,6 @@ def test_apply_capability_flags_respects_local_service_flags() -> None:
         "context": False,
         "inspect_returned": False,
         "review_returned": False,
-        "apply_returned": False,
         "atomic_return": True,
     }
     assert capabilities["scope_lifecycle"]["create_apply"] is False

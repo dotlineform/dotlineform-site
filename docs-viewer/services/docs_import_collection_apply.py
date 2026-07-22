@@ -7,7 +7,6 @@ import copy
 from pathlib import Path
 from typing import Any, Callable
 
-from docs_import_collection_decisions import resolve_collection_apply_request
 from docs_import_collection_plan import DocumentsCollectionPlan, collection_issue
 from docs_import_collection_result import (
     shape_collection_result,
@@ -32,6 +31,125 @@ class NoAppliedCollectionWrites(RuntimeError):
 
 def _clean_text(value: Any) -> str:
     return str(value or "").strip()
+
+
+COLLECTION_APPLY_BODY_FIELDS = {
+    "scope",
+    "staged_filename",
+    "preview_only",
+    "confirm",
+    "export_id",
+    "source_sha256",
+    "planned_identities",
+    "planned_actions",
+    "activity_context",
+}
+PLANNED_ACTION_FIELDS = {"record_index", "action", "doc_id", "target_doc_id"}
+
+
+def _refreshed_collection_plan(
+    plan: DocumentsCollectionPlan,
+    issues: list[dict[str, Any]],
+) -> dict[str, Any]:
+    payload = plan.as_dict()
+    payload["preview_only"] = True
+    payload["reconfirmation_required"] = True
+    payload["ready_for_confirmation"] = False
+    payload["revalidation_issues"] = copy.deepcopy(issues)
+    return payload
+
+
+def _validated_confirmed_actions(body: dict[str, Any]) -> list[dict[str, Any]]:
+    extra_fields = sorted(set(body) - COLLECTION_APPLY_BODY_FIELDS)
+    if extra_fields:
+        raise ValueError("collection apply does not accept fields: " + ", ".join(extra_fields))
+    if body.get("preview_only") is not False:
+        raise ValueError("collection apply requires preview_only false")
+    if body.get("confirm") is not True:
+        raise ValueError("collection apply requires confirm true")
+    raw_actions = body.get("planned_actions")
+    if not isinstance(raw_actions, list):
+        raise ValueError("collection apply requires planned_actions from the confirmed preview")
+    actions: list[dict[str, Any]] = []
+    seen_indices: set[int] = set()
+    for raw in raw_actions:
+        if not isinstance(raw, dict) or set(raw) != PLANNED_ACTION_FIELDS:
+            raise ValueError(
+                "planned action fields must be record_index, action, doc_id, target_doc_id"
+            )
+        record_index = raw.get("record_index")
+        if (
+            not isinstance(record_index, int)
+            or isinstance(record_index, bool)
+            or record_index < 0
+        ):
+            raise ValueError("planned action record_index must be a non-negative integer")
+        if record_index in seen_indices:
+            raise ValueError(f"duplicate planned action for record_index {record_index}")
+        seen_indices.add(record_index)
+        action = _clean_text(raw.get("action"))
+        if action not in {"create", "overwrite"}:
+            raise ValueError("planned action must be create or overwrite")
+        actions.append(
+            {
+                "record_index": record_index,
+                "action": action,
+                "doc_id": _clean_text(raw.get("doc_id")),
+                "target_doc_id": _clean_text(raw.get("target_doc_id")),
+            }
+        )
+    return actions
+
+
+def _resolve_collection_apply_request(
+    plan: DocumentsCollectionPlan,
+    body: dict[str, Any],
+) -> tuple[dict[int, str], dict[str, Any] | None]:
+    confirmed_actions = _validated_confirmed_actions(body)
+    confirmed_export_id = _clean_text(body.get("export_id"))
+    confirmed_source_sha256 = _clean_text(body.get("source_sha256"))
+    if not confirmed_export_id or not confirmed_source_sha256:
+        raise ValueError("collection apply requires confirmed export_id and source_sha256")
+    current_package = (
+        plan.response.get("package")
+        if isinstance(plan.response.get("package"), dict)
+        else {}
+    )
+    if (
+        confirmed_export_id != _clean_text(current_package.get("export_id"))
+        or confirmed_source_sha256 != _clean_text(current_package.get("source_sha256"))
+    ):
+        return {}, _refreshed_collection_plan(
+            plan,
+            [
+                collection_issue(
+                    "warning",
+                    "package_identity_changed",
+                    "staged package identity changed; review the refreshed plan",
+                )
+            ],
+        )
+    if plan.response.get("blockers"):
+        return {}, _refreshed_collection_plan(
+            plan,
+            [collection_issue("error", "plan_blocked", "refreshed collection plan is blocked")],
+        )
+    current_actions = plan.response.get("planned_actions")
+    if not isinstance(current_actions, list) or confirmed_actions != current_actions:
+        return {}, _refreshed_collection_plan(
+            plan,
+            [
+                collection_issue(
+                    "warning",
+                    "target_state_changed",
+                    "planned package actions changed; review the refreshed plan",
+                )
+            ],
+        )
+    return {
+        int(action["record_index"]): str(action["action"])
+        for action in current_actions
+    }, None
 
 
 def _safe_error_message(error: Exception, repo_root: Path, workspace_root: Path) -> str:
@@ -70,9 +188,9 @@ def apply_import_content_collection(
     log_event: LogEvent,
     perform_source_write_and_rebuild: PerformSourceWriteAndRebuild,
 ) -> dict[str, Any]:
-    """Revalidate browser decisions, apply in package order, rebuild once, and report."""
+    """Revalidate one confirmed whole-package plan, apply in order, rebuild, and report."""
 
-    decisions, actions, refreshed = resolve_collection_apply_request(plan, body)
+    _actions, refreshed = _resolve_collection_apply_request(plan, body)
     if refreshed is not None:
         return refreshed
 
@@ -82,34 +200,14 @@ def apply_import_content_collection(
     manual_copy: list[str] = []
     for record in response_records:
         index = int(record["record_index"])
-        action = actions[index]
-        if action == "skip":
-            result = _base_record_result(record, "skipped")
-            decision = decisions[index]
-            result["reason"] = _clean_text(record.get("decision_kind")) or "collision"
-            if decision.note:
-                result["note"] = decision.note
-            log_event(
-                repo_root,
-                "docs-import-collection-record-skipped",
-                {
-                    "scope": plan.response["scope"],
-                    "staged_filename": plan.response["staged_filename"],
-                    "record_index": index,
-                    "doc_id": record.get("doc_id", ""),
-                    "reason": result["reason"],
-                    "note": decision.note,
-                },
-            )
-        else:
-            result = _base_record_result(record, "pending")
+        result = _base_record_result(record, "pending")
         results.append(result)
         result_by_index[index] = result
 
     changed_paths = [
         document_plan.target_path
         for index, document_plan in enumerate(plan.document_plans)
-        if document_plan is not None and actions.get(index) != "skip"
+        if document_plan is not None
     ]
     docs_doc_ids: list[str] = []
     search_doc_ids: list[str] = []
@@ -118,8 +216,6 @@ def apply_import_content_collection(
     def write_collection_documents() -> None:
         nonlocal source_failed
         for index, document_plan in enumerate(plan.document_plans):
-            if actions.get(index) == "skip":
-                continue
             result = result_by_index[index]
             if document_plan is None:
                 result["status"] = "failed"

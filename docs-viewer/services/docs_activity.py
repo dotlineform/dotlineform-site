@@ -19,7 +19,6 @@ from studio_activity import (
 DOCS_MANAGEMENT_LOG_REL_PATH = Path("var/docs/logs/docs_management_service.log")
 DOCS_ACTIVITY_SOURCE_REFS = [{"kind": "log", "path": str(DOCS_MANAGEMENT_LOG_REL_PATH)}]
 DOCUMENT_PACKAGE_PREPARE_PATH = "/docs/packages/prepare"
-DOCUMENT_PACKAGE_APPLY_PATH = "/docs/packages/returned/apply"
 
 
 def utc_now() -> str:
@@ -207,30 +206,4 @@ def maybe_attach_import_source_activity(repo_root: Path, body: Dict[str, Any], p
         },
         detail_items=details,
         status="completed",
-    )
-
-
-def maybe_attach_documents_import_apply_activity(repo_root: Path, body: Dict[str, Any], payload: Dict[str, Any], dry_run: bool) -> None:
-    if dry_run or not body.get("confirm"):
-        return
-    if not (payload.get("summary_apply_written") or payload.get("hierarchy_apply_written")):
-        return
-    updates = payload.get("updates") if isinstance(payload.get("updates"), list) else []
-    doc_ids = [str(item.get("doc_id") or "").strip() for item in updates if isinstance(item, dict)]
-    counts = payload.get("counts") if isinstance(payload.get("counts"), dict) else {}
-    errors = int(counts.get("errors") or 0)
-    warnings = int(counts.get("warnings") or 0)
-    attach_docs_activity(
-        repo_root,
-        body,
-        payload,
-        endpoint=DOCUMENT_PACKAGE_APPLY_PATH,
-        script_purpose_id="update-docs-source",
-        record_id=str(body.get("staged_filename") or "").strip(),
-        record_groups={"docs": doc_ids},
-        detail_items=[
-            str(payload.get("summary_text") or "Updated imported docs source data.").strip(),
-            f"Updated {len(doc_ids)} source doc(s).",
-        ],
-        status=docs_activity_status(ok=bool(payload.get("ok")), errors=errors, warnings=warnings),
     )

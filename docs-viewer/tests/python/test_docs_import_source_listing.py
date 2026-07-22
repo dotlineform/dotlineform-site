@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 import pytest
@@ -68,50 +67,6 @@ def test_supported_documents_collection_registers_before_generic_json_fallback()
     by_filename = {item["filename"]: item for item in files}
     assert by_filename["reviewed-documents.jsonl"]["source_format"] == "data_sharing_documents"
     assert "ordinary.json" not in by_filename
-
-
-def test_review_package_identity_attaches_only_to_its_matching_safe_staged_record() -> None:
-    with make_repo() as temp:
-        root = Path(temp)
-        export_id = "ds_20260712T180000Z"
-        filename = "reviewed-documents.jsonl"
-        write_returned_jsonl(
-            root,
-            filename,
-            [{"doc_id": "reviewed-doc", "title": "Reviewed Doc", "content": "Body."}],
-            export_id=export_id,
-        )
-        paths = configured_workspace_paths(root)
-        package = paths.import_preview / "reviewed-package"
-        package.mkdir(parents=True)
-        (package / "manifest.json").write_text(
-            json.dumps(
-                {
-                    "schema_version": "docs_review_validated_package_v1",
-                    "package_id": "reviewed-package",
-                    "status": "validated",
-                    "source_scope": "library",
-                    "source_export_id": export_id,
-                    "staged_filename": filename,
-                }
-            )
-            + "\n",
-            encoding="utf-8",
-        )
-
-        listed = import_source_service.handle_import_source_files(root)["files"]
-        matching = next(record for record in listed if record["filename"] == filename)
-
-        assert matching["review_package_ids"] == ["reviewed-package"]
-        assert "package_path" not in matching
-        assert "preview_path" not in matching
-
-        manifest = json.loads((package / "manifest.json").read_text(encoding="utf-8"))
-        manifest["source_export_id"] = "ds_20260712T180001Z"
-        (package / "manifest.json").write_text(json.dumps(manifest) + "\n", encoding="utf-8")
-        mismatched = import_source_service.handle_import_source_files(root)["files"]
-
-    assert "review_package_ids" not in next(record for record in mismatched if record["filename"] == filename)
 
 
 def test_source_import_ignores_repo_local_staging_and_rejects_traversal() -> None:

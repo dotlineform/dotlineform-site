@@ -726,7 +726,6 @@ def create_review_source_folder(
     return {
         "ok": ok,
         "schema_version": SCHEMA_VERSION,
-        "review_action": "source_folder",
         "source_export_id": export_id,
         "source_scope": source_scope,
         "source_profile_id": clean_text(metadata.get("profile_id")) if metadata else "",

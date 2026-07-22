@@ -62,19 +62,6 @@ def write_activity_contract(repo_root: Path) -> None:
                             }
                         },
                     },
-                    "docs-package-returned": {
-                        "label": "returned document packages",
-                        "route": "/docs/packages/returned/",
-                        "actions": {
-                            "apply-returned-summaries": {
-                                "label": "apply returned summaries",
-                                "control_id": "documentPackageReturnedSummaryApply",
-                                "control_selector": "#documentPackageReturnedSummaryApply",
-                                "endpoint": docs_activity.DOCUMENT_PACKAGE_APPLY_PATH,
-                                "record_id_field": "staged_filename",
-                            }
-                        },
-                    },
                     "docs-broken-links": {
                         "label": "docs broken links",
                         "route": "/docs/?scope=studio&doc=docs-broken-links",
@@ -239,64 +226,6 @@ def test_collection_import_activity_records_grouped_result_and_safe_report_path(
         assert entry["record_groups"]["docs"]["sample_ids"] == ["alpha"]
         assert entry["record_groups"]["files"]["sample_ids"] == [payload["report_path"]]
         assert any("Repair metadata." in item for item in entry["detail_items"])
-
-
-def import_apply_body(confirm: bool) -> dict[str, object]:
-    return {
-        "staged_filename": "content.jsonl",
-        "confirm": confirm,
-        "activity_context": {
-            "page_id": "docs-package-returned",
-            "action_id": "apply-returned-summaries",
-            "route": "/docs/packages/returned/",
-            "control_id": "documentPackageReturnedSummaryApply",
-            "control_selector": "#documentPackageReturnedSummaryApply",
-            "correlation_id": "import-apply:content",
-            "staged_filename": "content.jsonl",
-        },
-    }
-
-
-def test_import_apply_activity_suppresses_unconfirmed_apply() -> None:
-    with tempfile.TemporaryDirectory() as tmp:
-        repo_root = Path(tmp)
-        write_activity_contract(repo_root)
-        payload = {
-            "ok": True,
-            "summary_apply_written": True,
-            "updates": [{"doc_id": "library"}],
-            "counts": {"errors": 0, "warnings": 0},
-        }
-
-        docs_activity.maybe_attach_documents_import_apply_activity(repo_root, import_apply_body(False), payload, dry_run=False)
-
-        assert "activity_log" not in payload
-        assert activity_entries(repo_root) == []
-
-
-def test_import_apply_activity_uses_direct_returned_package_contract() -> None:
-    with tempfile.TemporaryDirectory() as tmp:
-        repo_root = Path(tmp)
-        write_activity_contract(repo_root)
-        payload = {
-            "ok": True,
-            "summary_apply_written": True,
-            "updates": [{"doc_id": "library"}],
-            "counts": {"errors": 0, "warnings": 0},
-        }
-
-        docs_activity.maybe_attach_documents_import_apply_activity(
-            repo_root,
-            import_apply_body(True),
-            payload,
-            dry_run=False,
-        )
-
-        assert payload["activity_log"]["written_count"] == 1
-        entry = activity_entries(repo_root)[0]
-        assert entry["page_id"] == "docs-package-returned"
-        assert entry["user_action_id"] == "apply-returned-summaries"
-        assert entry["record_groups"]["docs"]["sample_ids"] == ["library"]
 
 
 def test_broken_links_activity_uses_warning_status_for_broken_links() -> None:

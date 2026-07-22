@@ -112,22 +112,3 @@ export function showDocumentPackageResult(options = {}) {
     bodyHtml: bodyHtml || "<p>The action completed.</p>"
   });
 }
-
-export function confirmDocumentPackageApply(options = {}) {
-  const payload = options.payload && typeof options.payload === "object" ? options.payload : {};
-  const bodyHtml = [
-    `<p>${escapePackageHtml(packageText(payload.summary_text) || "Apply the complete returned package to its supported canonical targets?")}</p>`,
-    packageCountsHtml(payload.counts),
-    packageIssuesHtml(payload)
-  ].filter(Boolean).join("");
-  return openDocumentPackageModal({
-    host: options.host,
-    restoreFocus: options.restoreFocus,
-    title: options.title || "Apply returned package?",
-    meta: options.meta,
-    bodyHtml,
-    primaryLabel: options.primaryLabel || "Apply package",
-    cancelLabel: "Cancel",
-    danger: true
-  });
-}

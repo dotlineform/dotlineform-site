@@ -127,9 +127,6 @@ function applyResolvedRouteDataset(root, documentRef, routeContext) {
     setDatasetBoolean(root, "includeScopeParam", routeContext && routeContext.includeScopeParam);
     root.dataset.viewerBaseUrl = routeContext && routeContext.viewerBaseUrl ? routeContext.viewerBaseUrl : "";
     root.dataset.viewerScope = routeContext && routeContext.viewerScope ? routeContext.viewerScope : "";
-    root.dataset.docsImportReviewPackageId = routeContext && routeContext.importReviewPackageId
-      ? routeContext.importReviewPackageId
-      : "";
     if (routeShell.pageTitle) root.dataset.pageTitle = routeShell.pageTitle;
     if (routeShell.bodyClass) root.dataset.bodyClass = routeShell.bodyClass;
   }

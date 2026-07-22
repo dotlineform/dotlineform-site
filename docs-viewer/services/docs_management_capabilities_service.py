@@ -155,7 +155,6 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 "context": True,
                 "inspect_returned": data_sharing_workspace["available"],
                 "review_returned": data_sharing_workspace["available"],
-                "apply_returned": data_sharing_workspace["available"],
                 "atomic_return": True,
             },
             "copy_subtree": {

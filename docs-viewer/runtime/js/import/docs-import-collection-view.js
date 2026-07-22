@@ -24,18 +24,11 @@ function issueList(title, issues) {
   ].join("");
 }
 
-function recordAction(record, decisions) {
-  const decision = normalizeText(decisions && decisions[record.record_index]);
-  return decision || normalizeText(record.action).replace(/-/g, " ");
+function recordAction(record) {
+  return normalizeText(record.action).replace(/-/g, " ");
 }
 
-function decisionLabel(action) {
-  if (action === "overwrite") return importText("collectionOverwriteButton");
-  if (action === "skip") return importText("collectionSkipButton");
-  return action;
-}
-
-function recordList(records, decisions) {
+function recordList(records) {
   return [
     '<ol class="docsViewerImport__collectionRecords">',
     ...records.map((record) => {
@@ -57,46 +50,13 @@ function recordList(records, decisions) {
       return [
         "<li>",
         `<span class="docsViewerImport__collectionRecordTitle">${escapeHtml(title)}</span>`,
-        `<span class="docsViewerImport__collectionRecordAction">${escapeHtml(recordAction(record, decisions))}</span>`,
+        `<span class="docsViewerImport__collectionRecordAction">${escapeHtml(recordAction(record))}</span>`,
         details ? `<span class="docsViewerImport__collectionRecordMeta">${escapeHtml(details)}</span>` : "",
         issues.length ? `<ul>${issues.map((issue) => `<li>${escapeHtml(issue && issue.message)}</li>`).join("")}</ul>` : "",
         "</li>"
       ].join("");
     }),
     "</ol>"
-  ].join("");
-}
-
-function decisionPanel(decision) {
-  if (!decision) return "";
-  const record = decision.record;
-  const label = normalizeText(record.title) || normalizeText(record.doc_id) || importText("collectionRecordFallback", {
-    number: Number(record.record_index) + 1
-  });
-  const collision = record.collision && record.collision.exists;
-  const allowed = Array.isArray(record.allowed_actions) ? record.allowed_actions : [];
-  const buttons = allowed
-    .filter((action) => action !== "cancel")
-    .map((action) => `<button type="button" class="docsViewerImport__button" data-collection-decision="${escapeHtml(action)}">${escapeHtml(decisionLabel(action))}</button>`);
-  buttons.push(`<button type="button" class="docsViewerImport__button" data-collection-decision="cancel">${escapeHtml(importText("cancelOverwriteButton"))}</button>`);
-  return [
-    '<section class="docsViewerImport__collectionDecision">',
-    `<h4>${escapeHtml(collision ? importText("collectionResolveCollisionHeading") : importText("collectionResolveRecordErrorHeading"))}</h4>`,
-    `<p>${escapeHtml(label)}</p>`,
-    collision ? [
-      '<label class="docsViewerImport__toggle">',
-      '<input type="checkbox" data-collection-apply-all>',
-      `<span>${escapeHtml(importText("collectionApplyAllLabel"))}</span>`,
-      "</label>"
-    ].join("") : "",
-    !collision ? [
-      '<label class="docsViewerImport__field">',
-      `<span class="docsViewerImport__fieldLabel">${escapeHtml(importText("collectionSkipNoteLabel"))}</span>`,
-      '<textarea class="docsViewerImport__input" rows="3" data-collection-skip-note></textarea>',
-      "</label>"
-    ].join("") : "",
-    `<div class="docsViewerImport__collectionDecisionActions">${buttons.join("")}</div>`,
-    "</section>"
   ].join("");
 }
 
@@ -122,7 +82,6 @@ function resultPanel(result) {
   const summary = [
     importText("collectionCreatesCount", { count: Number(counts.created || 0) }),
     importText("collectionOverwrittenCount", { count: Number(counts.overwritten || 0) }),
-    importText("collectionSkippedCount", { count: Number(counts.skipped || 0) }),
     importText("collectionFailedCount", { count: Number(counts.failed || 0) }),
     importText("collectionNotAttemptedCount", { count: Number(counts.not_attempted || 0) })
   ].join(" · ");
@@ -138,11 +97,11 @@ function resultPanel(result) {
       ...record,
       action: record.status,
       media_plans: []
-    })) : [], {})
+    })) : [])
   ].join("");
 }
 
-export function renderDocsImportCollectionView(host, viewState, onDecision) {
+export function renderDocsImportCollectionView(host, viewState, onCommand) {
   if (!host) return;
   const state = viewState || {};
   const plan = state.plan && typeof state.plan === "object" ? state.plan : null;
@@ -176,25 +135,13 @@ export function renderDocsImportCollectionView(host, viewState, onDecision) {
     "</section>",
     issueList(importText("collectionBlockersHeading"), plan.blockers),
     issueList(importText("collectionWarningsHeading"), plan.warnings),
-    recordList(Array.isArray(plan.records) ? plan.records : [], state.decisions || {}),
-    decisionPanel(state.currentDecision),
+    recordList(Array.isArray(plan.records) ? plan.records : []),
     confirmationPanel(state.phase),
   ].join("");
-  host.querySelectorAll("[data-collection-decision]").forEach((button) => {
-    button.addEventListener("click", () => {
-      if (typeof onDecision !== "function") return;
-      onDecision({
-        type: "decision",
-        action: normalizeText(button.dataset.collectionDecision),
-        applyToAll: Boolean(host.querySelector("[data-collection-apply-all]")?.checked),
-        note: normalizeText(host.querySelector("[data-collection-skip-note]")?.value)
-      });
-    });
-  });
   host.querySelectorAll("[data-collection-command]").forEach((button) => {
     button.addEventListener("click", () => {
-      if (typeof onDecision !== "function") return;
-      onDecision({ type: normalizeText(button.dataset.collectionCommand) });
+      if (typeof onCommand !== "function") return;
+      onCommand({ type: normalizeText(button.dataset.collectionCommand) });
     });
   });
 }

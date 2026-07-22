@@ -193,8 +193,8 @@ def test_collection_plan_covers_every_record_collision_parent_and_media_without_
 
     assert before == after
     assert payload["ok"] is True
-    assert payload["ready_for_confirmation"] is False
-    assert payload["requires_decisions"] is True
+    assert payload["ready_for_confirmation"] is True
+    assert "requires_decisions" not in payload
     assert payload["counts"] == {
         "records": 3,
         "creates": 2,
@@ -207,16 +207,16 @@ def test_collection_plan_covers_every_record_collision_parent_and_media_without_
     assert [record["action"] for record in payload["records"]] == [
         "create",
         "create",
-        "decision-required",
+        "overwrite",
     ]
     assert [record["content_intent"] for record in payload["records"]] == [
         "empty-new",
         "replace",
         "preserve-existing",
     ]
-    assert payload["records"][2]["decision_kind"] == "collision"
-    assert payload["records"][2]["allowed_actions"] == ["overwrite", "skip", "cancel"]
     assert payload["records"][2]["collision"]["doc_id"] == "alpha"
+    assert all("decision_kind" not in record for record in payload["records"])
+    assert all("allowed_actions" not in record for record in payload["records"])
     new_parent_id = payload["records"][0]["doc_id"]
     beta_id = payload["records"][1]["doc_id"]
     assert payload["records"][0]["source_doc_id"] == "new-parent"
@@ -232,6 +232,11 @@ def test_collection_plan_covers_every_record_collision_parent_and_media_without_
     assert payload["new_parent_dependencies"] == [
         {"doc_id": beta_id, "record_index": 1, "parent_id": new_parent_id, "parent_record_index": 0},
         {"doc_id": "alpha", "record_index": 2, "parent_id": new_parent_id, "parent_record_index": 0},
+    ]
+    assert payload["planned_actions"] == [
+        {"record_index": 0, "action": "create", "doc_id": new_parent_id, "target_doc_id": ""},
+        {"record_index": 1, "action": "create", "doc_id": beta_id, "target_doc_id": ""},
+        {"record_index": 2, "action": "overwrite", "doc_id": "alpha", "target_doc_id": "alpha"},
     ]
     serialized = json.dumps(payload)
     assert "Keep this link" not in serialized
@@ -332,7 +337,7 @@ def test_collection_plan_blocks_malformed_or_unsafe_record_identity(monkeypatch)
     assert payload["records"][3]["action"] == "blocked"
 
 
-def test_collection_plan_keeps_invalid_front_matter_as_explicit_record_decision(monkeypatch) -> None:
+def test_collection_plan_blocks_invalid_front_matter_for_the_whole_package(monkeypatch) -> None:
     stub_markdown_validation(monkeypatch)
     with make_repo() as temp:
         root = Path(temp)
@@ -355,12 +360,11 @@ def test_collection_plan_keeps_invalid_front_matter_as_explicit_record_decision(
         payload = plan_package(root, "invalid-front-matter.jsonl").as_dict()
 
     assert payload["ok"] is True
-    assert payload["counts"]["blockers"] == 0
+    assert payload["counts"]["blockers"] == 1
     assert payload["counts"]["record_errors"] == 1
+    assert payload["ready_for_confirmation"] is False
     record = payload["records"][0]
-    assert record["action"] == "decision-required"
-    assert record["decision_kind"] == "invalid-record"
-    assert record["allowed_actions"] == ["skip", "cancel"]
+    assert record["action"] == "blocked"
     assert record["errors"][0]["code"] == "invalid_front_matter"
 
 
@@ -389,7 +393,7 @@ def test_collection_plan_preserves_existing_parent_when_parent_is_omitted() -> N
     }
 
 
-def test_collection_plan_keeps_unsupported_content_format_as_record_decision() -> None:
+def test_collection_plan_blocks_unsupported_content_format() -> None:
     with make_repo() as temp:
         root = Path(temp)
         export_id = "ds_20260712T130004Z"
@@ -408,8 +412,10 @@ def test_collection_plan_keeps_unsupported_content_format_as_record_decision() -
 
     assert payload["ok"] is True
     assert payload["counts"]["record_errors"] == 1
+    assert payload["counts"]["blockers"] == 1
+    assert payload["ready_for_confirmation"] is False
     assert payload["records"][0]["errors"][0]["code"] == "unsupported_content_format"
-    assert payload["records"][0]["allowed_actions"] == ["skip", "cancel"]
+    assert payload["records"][0]["action"] == "blocked"
     assert plan.normalized_records == (None,)
     assert plan.document_plans == (None,)
 

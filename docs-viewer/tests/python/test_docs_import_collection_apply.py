@@ -9,7 +9,6 @@ from pathlib import Path
 import pytest
 
 import docs_import_collection_apply as collection_apply
-import docs_import_collection_decisions as collection_decisions
 from docs_import_collection_result import safe_generation_result
 import docs_import_preview
 import docs_source_model
@@ -98,12 +97,12 @@ def fake_rebuild(calls: list[dict[str, object]], *, fail_generation: bool = Fals
 def apply_package(
     root: Path,
     filename: str,
-    decisions: list[dict[str, object]],
     *,
     rebuild,
     logs: list[tuple[str, dict[str, object]]] | None = None,
     export_id: str | None = None,
     source_sha256: str | None = None,
+    planned_actions: list[dict[str, object]] | None = None,
 ) -> dict[str, object]:
     paths = configured_workspace_paths(root)
     preview = plan_document_package_collection(
@@ -123,8 +122,12 @@ def apply_package(
             "staged_filename": filename,
             "preview_only": False,
             "confirm": True,
-            "decisions": decisions,
             "planned_identities": preview.get("planned_identities", []),
+            "planned_actions": (
+                planned_actions
+                if planned_actions is not None
+                else preview.get("planned_actions", [])
+            ),
             "export_id": export_id if export_id is not None else preview.get("package", {}).get("export_id", ""),
             "source_sha256": source_sha256 if source_sha256 is not None else preview.get("package", {}).get("source_sha256", ""),
         },
@@ -136,7 +139,7 @@ def apply_package(
     )
 
 
-def test_collection_apply_creates_overwrites_skips_reports_and_rebuilds_once(monkeypatch) -> None:
+def test_collection_apply_creates_and_overwrites_complete_records_once(monkeypatch) -> None:
     stub_markdown_validation(monkeypatch)
     rebuild_calls: list[dict[str, object]] = []
     logs: list[tuple[str, dict[str, object]]] = []
@@ -145,16 +148,28 @@ def test_collection_apply_creates_overwrites_skips_reports_and_rebuilds_once(mon
         write_library_doc(
             root,
             "alpha.md",
-            {"doc_id": "alpha", "title": "Old Alpha", "parent_id": "", "added_date": "2020-01-01"},
+            {
+                "doc_id": "alpha",
+                "title": "Old Alpha",
+                "parent_id": "",
+                "summary": "Old summary",
+                "added_date": "2020-01-01",
+            },
             body="# Old Alpha\n\nOld body.\n",
         )
+        write_library_doc(root, "new-parent.md", {"doc_id": "new-parent", "title": "Parent", "parent_id": ""})
         write_collection(
             root,
             "apply.jsonl",
             [
-                {"doc_id": "alpha", "title": "Alpha", "content": "# Alpha\n\nNew body."},
+                {
+                    "doc_id": "alpha",
+                    "title": "Alpha",
+                    "summary": "Returned summary",
+                    "parent_id": "new-parent",
+                    "content": "# Alpha\n\nNew body.",
+                },
                 {"doc_id": "new-doc", "title": "New Doc", "content": "# New Doc\n\nBody."},
-                {"doc_id": "invalid", "title": "Invalid", "content": "Body.", "viewable": "false"},
             ],
             "ds_20260712T160000Z",
         )
@@ -162,10 +177,6 @@ def test_collection_apply_creates_overwrites_skips_reports_and_rebuilds_once(mon
         payload = apply_package(
             root,
             "apply.jsonl",
-            [
-                {"record_index": 0, "action": "overwrite", "target_doc_id": "alpha"},
-                {"record_index": 2, "action": "skip", "note": "Needs metadata repair."},
-            ],
             rebuild=fake_rebuild(rebuild_calls),
             logs=logs,
         )
@@ -181,13 +192,13 @@ def test_collection_apply_creates_overwrites_skips_reports_and_rebuilds_once(mon
     assert payload["counts"] == {
         "created": 1,
         "overwritten": 1,
-        "skipped": 1,
         "failed": 0,
         "not_attempted": 0,
     }
-    assert [record["status"] for record in payload["records"]] == ["overwritten", "created", "skipped"]
-    assert payload["records"][2]["note"] == "Needs metadata repair."
+    assert [record["status"] for record in payload["records"]] == ["overwritten", "created"]
     assert alpha_front_matter["added_date"] == "2020-01-01"
+    assert alpha_front_matter["summary"] == "Returned summary"
+    assert alpha_front_matter["parent_id"] == "new-parent"
     assert "New body." in alpha_body
     assert new_front_matter["doc_id"] == new_doc_id
     assert payload["records"][1]["source_doc_id"] == "new-doc"
@@ -205,8 +216,8 @@ def test_collection_apply_creates_overwrites_skips_reports_and_rebuilds_once(mon
     )
     assert "## overwritten" in report_text
     assert "## created" in report_text
-    assert "## skipped" in report_text
-    assert any(event == "docs-import-collection-record-skipped" for event, _details in logs)
+    assert "## skipped" not in report_text
+    assert not any(event == "docs-import-collection-record-skipped" for event, _details in logs)
 
 
 def test_collection_confirmed_apply_dispatches_through_existing_import_post(monkeypatch) -> None:
@@ -241,7 +252,7 @@ def test_collection_confirmed_apply_dispatches_through_existing_import_post(monk
                 "export_id": preview["package"]["export_id"],
                 "source_sha256": preview["package"]["source_sha256"],
                 "planned_identities": preview["planned_identities"],
-                "decisions": [],
+                "planned_actions": preview["planned_actions"],
             },
             False,
         )
@@ -251,34 +262,7 @@ def test_collection_confirmed_apply_dispatches_through_existing_import_post(monk
     assert rebuild_calls[0]["docs_doc_ids"] == [payload["records"][0]["doc_id"]]
 
 
-def test_collection_all_skipped_writes_report_without_rebuild(monkeypatch) -> None:
-    stub_markdown_validation(monkeypatch)
-    rebuild_calls: list[dict[str, object]] = []
-    with make_repo() as temp:
-        root = Path(temp)
-        write_library_doc(root, "skipped.md", {"doc_id": "skipped", "title": "Skipped", "parent_id": ""})
-        write_collection(
-            root,
-            "all-skipped.jsonl",
-            [{"doc_id": "skipped", "title": "Returned", "content": "Replacement."}],
-            "ds_20260712T160010Z",
-        )
-
-        payload = apply_package(
-            root,
-            "all-skipped.jsonl",
-            [{"record_index": 0, "action": "skip", "target_doc_id": "skipped"}],
-            rebuild=fake_rebuild(rebuild_calls),
-        )
-
-    assert payload["outcome"] == "completed"
-    assert payload["counts"]["skipped"] == 1
-    assert payload["generation"]["status"] == "not-run"
-    assert payload["report_path"]
-    assert rebuild_calls == []
-
-
-def test_collection_apply_returns_refreshed_plan_for_missing_or_changed_collision_decision(monkeypatch) -> None:
+def test_collection_apply_returns_refreshed_plan_for_changed_action_or_package_identity(monkeypatch) -> None:
     stub_markdown_validation(monkeypatch)
     rebuild_calls: list[dict[str, object]] = []
     with make_repo() as temp:
@@ -291,25 +275,36 @@ def test_collection_apply_returns_refreshed_plan_for_missing_or_changed_collisio
             "ds_20260712T160001Z",
         )
 
-        missing = apply_package(root, "drift.jsonl", [], rebuild=fake_rebuild(rebuild_calls))
+        missing = apply_package(
+            root,
+            "drift.jsonl",
+            planned_actions=[],
+            rebuild=fake_rebuild(rebuild_calls),
+        )
         changed = apply_package(
             root,
             "drift.jsonl",
-            [{"record_index": 0, "action": "overwrite", "target_doc_id": "different"}],
+            planned_actions=[
+                {
+                    "record_index": 0,
+                    "action": "overwrite",
+                    "doc_id": "alpha",
+                    "target_doc_id": "different",
+                }
+            ],
             rebuild=fake_rebuild(rebuild_calls),
         )
         package_changed = apply_package(
             root,
             "drift.jsonl",
-            [{"record_index": 0, "action": "overwrite", "target_doc_id": "alpha"}],
             rebuild=fake_rebuild(rebuild_calls),
             source_sha256="different",
         )
 
     assert missing["preview_only"] is True
     assert missing["reconfirmation_required"] is True
-    assert missing["revalidation_issues"][0]["code"] == "decision_required"
-    assert changed["revalidation_issues"][0]["code"] == "collision_target_changed"
+    assert missing["revalidation_issues"][0]["code"] == "target_state_changed"
+    assert changed["revalidation_issues"][0]["code"] == "target_state_changed"
     assert package_changed["revalidation_issues"][0]["code"] == "package_identity_changed"
     assert rebuild_calls == []
 
@@ -325,7 +320,9 @@ def test_preserve_existing_apply_uses_current_body_without_revision_reconfirmati
             {
                 "doc_id": "preserved",
                 "title": "Old title",
-                "parent_id": "",
+                "parent_id": "library",
+                "summary": "Current summary",
+                "viewable": False,
                 "custom_field": "before",
             },
             body="# Current\n\nInitial canonical body.\n",
@@ -351,7 +348,9 @@ def test_preserve_existing_apply_uses_current_body_without_revision_reconfirmati
             {
                 "doc_id": "preserved",
                 "title": "Changed after preview",
-                "parent_id": "",
+                "parent_id": "library",
+                "summary": "Newest summary",
+                "viewable": False,
                 "custom_field": "changed after preview",
             },
             body="# Current\n\nNewest canonical body.\n",
@@ -369,9 +368,7 @@ def test_preserve_existing_apply_uses_current_body_without_revision_reconfirmati
                 "export_id": preview["package"]["export_id"],
                 "source_sha256": preview["package"]["source_sha256"],
                 "planned_identities": preview.get("planned_identities", []),
-                "decisions": [
-                    {"record_index": 0, "action": "overwrite", "target_doc_id": "preserved"}
-                ],
+                "planned_actions": preview["planned_actions"],
             },
             staging_root=paths.import_staging,
             workspace_root=paths.root,
@@ -384,6 +381,9 @@ def test_preserve_existing_apply_uses_current_body_without_revision_reconfirmati
     assert payload["preview_only"] is False
     assert payload["records"][0]["status"] == "overwritten"
     assert front_matter["title"] == "Returned title"
+    assert front_matter["parent_id"] == "library"
+    assert front_matter["summary"] == "Newest summary"
+    assert front_matter["viewable"] is False
     assert front_matter["custom_field"] == "changed after preview"
     assert "Newest canonical body." in body
 
@@ -412,7 +412,7 @@ def test_collection_apply_stops_after_source_failure_and_rebuilds_completed_writ
             "ds_20260712T160002Z",
         )
 
-        payload = apply_package(root, "partial.jsonl", [], rebuild=fake_rebuild(rebuild_calls))
+        payload = apply_package(root, "partial.jsonl", rebuild=fake_rebuild(rebuild_calls))
         result_ids = [record["doc_id"] for record in payload["records"]]
         delta_exists, epsilon_exists, zeta_exists = [
                 (root / "docs-viewer/scopes/library/source/documents" / f"{doc_id}.md").exists()
@@ -445,7 +445,6 @@ def test_collection_apply_keeps_source_success_when_generation_or_report_write_f
         payload = apply_package(
             root,
             "generation.jsonl",
-            [],
             rebuild=fake_rebuild(rebuild_calls, fail_generation=True),
         )
         source_exists = (
@@ -471,7 +470,7 @@ def test_collection_apply_keeps_source_success_when_generation_or_report_write_f
             [{"doc_id": "delta", "title": "Delta", "content": "Delta."}],
             "ds_20260712T160004Z",
         )
-        report_failure = apply_package(root, "report-failure.jsonl", [], rebuild=fake_rebuild([]))
+        report_failure = apply_package(root, "report-failure.jsonl", rebuild=fake_rebuild([]))
 
     assert report_failure["outcome"] == "completed"
     assert report_failure["report_path"] == ""
@@ -495,7 +494,7 @@ def test_collection_apply_materializes_inline_media_and_blocks_source_when_publi
             "ds_20260712T160006Z",
         )
 
-        payload = apply_package(root, "media.jsonl", [], rebuild=fake_rebuild([]))
+        payload = apply_package(root, "media.jsonl", rebuild=fake_rebuild([]))
         local_doc_id = payload["records"][0]["doc_id"]
         media_path = root / "site/assets/data/docs/scopes/library/media/img" / f"{local_doc_id}-image-01.png"
         _front_matter, body = docs_source_model.parse_source(
@@ -529,7 +528,7 @@ def test_collection_apply_materializes_inline_media_and_blocks_source_when_publi
             ],
             "ds_20260712T160007Z",
         )
-        asset_failure = apply_package(root, "asset-failure.jsonl", [], rebuild=fake_rebuild([]))
+        asset_failure = apply_package(root, "asset-failure.jsonl", rebuild=fake_rebuild([]))
         asset_doc_id = asset_failure["records"][0]["doc_id"]
         source_path = root / "docs-viewer/scopes/library/source/documents" / f"{asset_doc_id}.md"
         source_exists = source_path.exists()
@@ -540,16 +539,16 @@ def test_collection_apply_materializes_inline_media_and_blocks_source_when_publi
     assert asset_failure["records"][0]["error"] == "asset store unavailable"
 
 
-def test_collection_apply_rejects_browser_plan_fields_and_skipped_new_parent(monkeypatch) -> None:
+def test_collection_apply_rejects_browser_plan_fields_and_blocks_invalid_package(monkeypatch) -> None:
     stub_markdown_validation(monkeypatch)
     with pytest.raises(ValueError, match="does not accept fields"):
-        collection_decisions.parse_collection_decisions(
+        collection_apply._validated_confirmed_actions(
             {
                 "scope": "library",
                 "staged_filename": "unsafe.jsonl",
                 "preview_only": False,
                 "confirm": True,
-                "decisions": [],
+                "planned_actions": [],
                 "export_id": "ds_unsafe",
                 "source_sha256": "unsafe",
                 "target_path": "/tmp/unsafe.md",
@@ -570,7 +569,6 @@ def test_collection_apply_rejects_browser_plan_fields_and_skipped_new_parent(mon
         payload = apply_package(
             root,
             "parent-skip.jsonl",
-            [{"record_index": 0, "action": "skip", "note": "Invalid parent."}],
             rebuild=fake_rebuild([]),
         )
 

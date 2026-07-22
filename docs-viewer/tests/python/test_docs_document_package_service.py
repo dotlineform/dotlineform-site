@@ -86,7 +86,6 @@ def test_fixed_routes_and_config_contract() -> None:
         "/docs/packages/context",
         "/docs/packages/returned/inspect",
         "/docs/packages/returned/review",
-        "/docs/packages/returned/apply",
     }
     assert [profile["profile_id"] for profile in payload["profiles"]] == ["document-content"]
     assert payload["profiles"][0]["selection"] == {
@@ -103,6 +102,8 @@ def test_fixed_routes_and_config_contract() -> None:
         {"output_path": "doc_id", "required": True},
         {"output_path": "title", "required": True},
     ]
+    assert "review_actions" not in payload
+    assert "apply_actions" not in payload
     assert payload["scopes"] == [{"scope": "library", "label": "Library"}]
     assert payload["workspace"].keys() == {"available", "message"}
 
@@ -139,7 +140,6 @@ def test_prepare_uses_direct_fields_and_rejects_adapter_contract_fields() -> Non
                 {
                     "scope": "library",
                     "staged_filename": "returned.jsonl",
-                    "review_action": "summaries",
                     "record_indices": [0],
                 },
             )
@@ -333,16 +333,6 @@ def test_atomic_return_uses_order_insensitive_exact_set_equality() -> None:
             {
                 "scope": "library",
                 "staged_filename": "returned.jsonl",
-                "review_action": "summaries",
-                "dry_run": True,
-            },
-        )
-        apply = service.apply_returned(
-            repo_root,
-            {
-                "scope": "library",
-                "staged_filename": "returned.jsonl",
-                "apply_action": "summary_apply",
                 "dry_run": True,
             },
         )
@@ -367,10 +357,7 @@ def test_atomic_return_uses_order_insensitive_exact_set_equality() -> None:
     assert complete["ok"] is True
     assert review["ok"] is True
     assert "selected_records" not in review
-    assert all("selectable" not in row for row in review["review_rows"])
-    assert apply["ok"] is True
-    assert apply["apply_action"] == "summary_apply"
-    assert {"adapter_id", "data_domain", "operation", "selected_records"}.isdisjoint(apply)
+    assert all("selectable" not in row for row in complete["review_rows"])
     assert changed["ok"] is False
     assert int(changed_status) == 400
     assert changed_response["ok"] is False
@@ -391,7 +378,6 @@ def test_content_review_projects_safe_new_or_existing_review_identity() -> None:
         request = {
             "scope": "library",
             "staged_filename": "returned.jsonl",
-            "review_action": "content",
             "dry_run": False,
         }
 
@@ -401,7 +387,6 @@ def test_content_review_projects_safe_new_or_existing_review_identity() -> None:
 
     safe_keys = {
         "ok",
-        "review_action",
         "review_package_id",
         "review_url",
         "review_existing",
@@ -411,7 +396,6 @@ def test_content_review_projects_safe_new_or_existing_review_identity() -> None:
     }
     assert safe_keys <= set(first)
     assert first["ok"] is True
-    assert first["review_action"] == "content"
     assert first["review_existing"] is False
     assert first["review_package_id"]
     assert first["review_url"] == f"/docs-review/?package={first['review_package_id']}"
@@ -425,7 +409,7 @@ def test_content_review_projects_safe_new_or_existing_review_identity() -> None:
     assert second["summary_text"] == f"Docs Review package {first['review_package_id']} already exists."
 
 
-def test_invalid_returned_record_blocks_every_review_and_apply_action() -> None:
+def test_invalid_returned_record_blocks_complete_review() -> None:
     with make_docs_import_repo() as temp:
         repo_root = Path(temp)
         write_returned_package(
@@ -440,45 +424,36 @@ def test_invalid_returned_record_blocks_every_review_and_apply_action() -> None:
             repo_root,
             {"scope": "library", "staged_filename": "returned.jsonl"},
         )
-        reviews = {
-            action: service.review_returned(
-                repo_root,
-                {
-                    "scope": "library",
-                    "staged_filename": "returned.jsonl",
-                    "review_action": action,
-                    "dry_run": False,
-                },
-            )
-            for action in ("content", "summaries", "hierarchy")
-        }
-        applies = {
-            action: service.apply_returned(
-                repo_root,
-                {
-                    "scope": "library",
-                    "staged_filename": "returned.jsonl",
-                    "apply_action": action,
-                    "confirm": True,
-                    "dry_run": False,
-                },
-            )
-            for action in ("summary_apply", "hierarchy_apply")
-        }
+        review = service.review_returned(
+            repo_root,
+            {
+                "scope": "library",
+                "staged_filename": "returned.jsonl",
+                "dry_run": False,
+            },
+        )
 
         assert source_path.read_text(encoding="utf-8") == source_before
 
     assert inspection["ok"] is False
     assert "missing_title" in {item["code"] for item in inspection["issues"]}
-    assert all(payload["ok"] is False for payload in reviews.values())
-    assert reviews["content"]["review_package_id"] == ""
-    assert reviews["content"]["review_url"] == ""
-    assert reviews["content"]["review_existing"] is False
-    assert reviews["summaries"]["review_written"] is False
-    assert reviews["hierarchy"]["review_written"] is False
-    assert all(payload["ok"] is False for payload in applies.values())
-    assert applies["summary_apply"]["summary_apply_written"] is False
-    assert applies["hierarchy_apply"]["hierarchy_apply_written"] is False
+    assert review["ok"] is False
+    assert review["review_package_id"] == ""
+    assert review["review_url"] == ""
+    assert review["review_existing"] is False
+
+
+def test_review_rejects_retired_action_discriminator() -> None:
+    with make_docs_import_repo() as temp:
+        with pytest.raises(ValueError, match="review_action is not supported"):
+            service.review_returned(
+                Path(temp),
+                {
+                    "scope": "library",
+                    "staged_filename": "returned.jsonl",
+                    "review_action": "content",
+                },
+            )
 
 
 def test_returned_listing_projects_document_fields_without_adapter_identity() -> None:

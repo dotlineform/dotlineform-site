@@ -3,55 +3,15 @@
 
 from __future__ import annotations
 
-import datetime as dt
-import json
-from pathlib import Path
-import re
 from typing import Any, Dict
 
 from docs_document_packages.returned_common import scope_title
 from docs_document_packages.returned_parser import parse_staged_import
 import docs_source_model as source_model
-from docs_document_packages.workspace import marker_path
-
-
-FILENAME_RE = re.compile(r"[^a-z0-9-]+")
 
 
 def normalize_text(value: Any) -> str:
     return str(value or "").strip()
-
-
-def filename_slug(value: Any, fallback: str) -> str:
-    slug = FILENAME_RE.sub("-", normalize_text(value).lower()).strip("-")
-    return slug or fallback
-
-
-def local_filename_timestamp(value: dt.datetime | None = None) -> str:
-    timestamp = value or dt.datetime.now().astimezone()
-    return timestamp.astimezone().strftime("%Y%m%d-%H%M%S")
-
-
-def source_filename_timestamp(report: Dict[str, Any]) -> str:
-    generated_at = normalize_text(report.get("generated_at"))
-    try:
-        timestamp = dt.datetime.strptime(generated_at, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=dt.timezone.utc)
-    except ValueError as exc:
-        raise ValueError(f"package metadata generated_at must be UTC YYYY-MM-DDTHH:MM:SSZ: {generated_at}") from exc
-    return local_filename_timestamp(timestamp)
-
-
-def yaml_scalar(value: Any) -> str:
-    return json.dumps("" if value is None else str(value), ensure_ascii=False)
-
-
-def markdown_table_cell(value: Any) -> str:
-    return re.sub(r"\s+", " ", str(value or "")).strip().replace("|", "\\|")
-
-
-def record_summary(record: Dict[str, Any]) -> str:
-    metadata = record.get("metadata") if isinstance(record.get("metadata"), dict) else {}
-    return str(metadata.get("summary") or "")
 
 
 def record_issue_map(report: Dict[str, Any]) -> dict[int, list[Dict[str, Any]]]:
@@ -146,150 +106,4 @@ def parse_returned_document_records(
         metadata_root=metadata_root,
     )
     report["review_rows"] = build_review_rows(report, normalized_scope)
-    return report
-
-
-def review_markdown(
-    *,
-    source_file: str,
-    profile_id: str,
-    scope: str,
-    records: list[Dict[str, Any]],
-    issues: list[Dict[str, Any]],
-) -> str:
-    lines = [
-        "---",
-        f"source_file: {yaml_scalar(source_file)}",
-        f"profile_id: {yaml_scalar(profile_id)}",
-        f"scope: {yaml_scalar(scope)}",
-        "---",
-        "",
-        "| doc_id | title | summary | parent_id |",
-        "| --- | --- | --- | --- |",
-    ]
-    for record in records:
-        lines.append(
-            "| "
-            + " | ".join(
-                [
-                    markdown_table_cell(record.get("doc_id")),
-                    markdown_table_cell(record.get("title")),
-                    markdown_table_cell(record_summary(record)),
-                    markdown_table_cell(record.get("parent_id")),
-                ]
-            )
-            + " |"
-        )
-    if issues:
-        lines.extend([
-            "",
-            "## Issues",
-            "",
-            "| level | code | row | doc_id | title | message |",
-            "| --- | --- | --- | --- | --- | --- |",
-        ])
-        records_by_index = {
-            int(record.get("record_index")): record
-            for record in records
-            if isinstance(record.get("record_index"), int)
-        }
-        for item in issues:
-            if not isinstance(item, dict):
-                continue
-            record_index = item.get("record_index") if isinstance(item.get("record_index"), int) else None
-            record = records_by_index.get(record_index) if record_index is not None else {}
-            lines.append(
-                "| "
-                + " | ".join(
-                    [
-                        markdown_table_cell(item.get("level")),
-                        markdown_table_cell(item.get("code")),
-                        markdown_table_cell(record_index + 1 if record_index is not None else ""),
-                        markdown_table_cell(item.get("doc_id") or record.get("doc_id")),
-                        markdown_table_cell(record.get("title")),
-                        markdown_table_cell(item.get("message")),
-                    ]
-                )
-                + " |"
-            )
-    return "\n".join(lines).rstrip() + "\n"
-
-
-def resolve_review_output_path(
-    repo_root: Path,
-    *,
-    preview_root: Path,
-    timestamp: str,
-    data_domain: str,
-    profile_id: str,
-) -> Path:
-    del repo_root
-    filename = (
-        f"{filename_slug(timestamp, 'review')}-"
-        f"{filename_slug(data_domain, 'data')}-"
-        f"{filename_slug(profile_id, 'profile')}.md"
-    )
-    root = preview_root.resolve()
-    path = (root / filename).resolve()
-    if path != root and root not in path.parents:
-        raise ValueError("review output path must stay under preview root")
-    return path
-
-
-def review_returned_document_package(
-    repo_root: Path,
-    *,
-    scope: str,
-    staged_filename: str,
-    dry_run: bool,
-    staging_root: Path,
-    metadata_root: Path,
-    preview_root: Path,
-    data_domain: str,
-) -> Dict[str, Any]:
-    normalized_scope = source_model.normalize_scope(scope)
-    report = parse_returned_document_records(
-        repo_root=repo_root,
-        scope=normalized_scope,
-        staged_filename=staged_filename,
-        staging_root=staging_root,
-        metadata_root=metadata_root,
-    )
-    report_records = [record for record in report.get("records", []) if isinstance(record, dict)]
-    if not report.get("ok"):
-        report["review_records"] = []
-        report["review_file"] = ""
-        report["review_written"] = False
-        return report
-    records = report_records
-    profile_id = normalize_text(report.get("source_profile_id"))
-    source_scope = normalize_text(report.get("source_scope")) or normalized_scope
-    timestamp = source_filename_timestamp(report)
-    output_path = resolve_review_output_path(
-        repo_root,
-        preview_root=preview_root,
-        timestamp=timestamp,
-        data_domain=data_domain,
-        profile_id=profile_id,
-    )
-    content = review_markdown(
-        source_file=normalize_text(report.get("input_file")),
-        profile_id=profile_id,
-        scope=source_scope,
-        records=records,
-        issues=[issue for issue in report.get("issues", []) if isinstance(issue, dict)],
-    )
-    if not dry_run and report.get("ok"):
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.write_text(content, encoding="utf-8")
-    report["review_records"] = [
-        {
-            "record_index": int(record.get("record_index")),
-            "doc_id": normalize_text(record.get("doc_id")),
-        }
-        for record in records
-        if isinstance(record.get("record_index"), int)
-    ]
-    report["review_file"] = marker_path(output_path)
-    report["review_written"] = bool(not dry_run and report.get("ok"))
     return report

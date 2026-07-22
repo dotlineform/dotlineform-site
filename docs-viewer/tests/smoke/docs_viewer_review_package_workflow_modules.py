@@ -175,7 +175,6 @@ def install_workflow_fixture(
                         }
                         return {
                             ok: true,
-                            review_action: 'content',
                             review_package_id: '20260722-204025-documents-document-content',
                             review_url: '/docs-review/?package=20260722-204025-documents-document-content',
                             review_existing: reviewMode === 'existing',
@@ -243,7 +242,6 @@ def exercise_reviewable_list(page: Page, timeout_ms: int) -> None:
             "payload": {
                 "scope": "studio",
                 "staged_filename": "beta.jsonl",
-                "review_action": "content",
                 "dry_run": False,
             },
         },

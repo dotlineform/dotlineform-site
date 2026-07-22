@@ -484,26 +484,12 @@ def _validate_hierarchy(
 def _record_response(repo_root: Path, state: CollectionRecordState) -> dict[str, Any]:
     record = state.normalized
     errors = copy.deepcopy(state.errors)
-    if state.blocked:
+    if state.blocked or record is None or errors:
         action = "blocked"
-        decision_kind = ""
-        allowed_actions: list[str] = []
-    elif record is None:
-        action = "decision-required" if errors else "blocked"
-        decision_kind = "invalid-record" if errors else ""
-        allowed_actions = ["skip", "cancel"] if errors else []
-    elif errors:
-        action = "decision-required"
-        decision_kind = "invalid-record"
-        allowed_actions = ["skip", "cancel"]
     elif state.collision is not None:
-        action = "decision-required"
-        decision_kind = "collision"
-        allowed_actions = ["overwrite", "skip", "cancel"]
+        action = IMPORT_DOCUMENT_OVERWRITE
     else:
-        action = "create"
-        decision_kind = ""
-        allowed_actions = []
+        action = IMPORT_DOCUMENT_CREATE
     media_plans = _safe_media_plans(state.import_preview)
     declared_asset_plans: list[dict[str, Any]] = []
     if record is not None:
@@ -523,11 +509,6 @@ def _record_response(repo_root: Path, state: CollectionRecordState) -> dict[str,
         "title": state.title,
         "content_intent": record.content_intent if record is not None else "unknown",
         "action": action,
-        "candidate_action": (
-            IMPORT_DOCUMENT_OVERWRITE if state.collision is not None else IMPORT_DOCUMENT_CREATE
-        ) if record is not None else "",
-        "decision_kind": decision_kind,
-        "allowed_actions": allowed_actions,
         "collision": _collision_payload(repo_root, state.collision),
         "target_path": target_path,
         "parent": copy.deepcopy(state.parent_resolution),
@@ -557,9 +538,9 @@ def blocked_collection_plan(
         "staged_filename": staged_filename,
         "preview_only": True,
         "ready_for_confirmation": False,
-        "requires_decisions": False,
         "package": {},
         "planned_identities": [],
+        "planned_actions": [],
         "records": [],
         "new_parent_dependencies": [],
         "blockers": safe_blockers,
@@ -607,6 +588,8 @@ def plan_import_content_collection(
     hierarchy_blockers, dependencies = _validate_hierarchy(states, docs)
     blockers.extend(hierarchy_blockers)
     record_responses = [_record_response(repo_root, state) for state in states]
+    for record_response in record_responses:
+        blockers.extend(copy.deepcopy(record_response["errors"]))
     blockers = _sanitize_issue_paths(blockers, workspace_root)
     for record_response in record_responses:
         record_response["warnings"] = _sanitize_issue_paths(
@@ -623,7 +606,20 @@ def plan_import_content_collection(
     create_count = sum(record["action"] == "create" for record in record_responses)
     media_plan_count = sum(len(record["media_plans"]) for record in record_responses)
     warning_count = len(package_warnings) + sum(len(record["warnings"]) for record in record_responses)
-    requires_decisions = bool(record_error_count or collision_count)
+    planned_actions = [
+        {
+            "record_index": record["record_index"],
+            "action": record["action"],
+            "doc_id": record["doc_id"],
+            "target_doc_id": (
+                record["collision"]["doc_id"]
+                if record["action"] == IMPORT_DOCUMENT_OVERWRITE
+                else ""
+            ),
+        }
+        for record in record_responses
+        if record["action"] in {IMPORT_DOCUMENT_CREATE, IMPORT_DOCUMENT_OVERWRITE}
+    ]
     response = {
         "ok": True,
         "plan_valid": not blockers,
@@ -632,10 +628,10 @@ def plan_import_content_collection(
         "scope": scope,
         "staged_filename": staged_filename,
         "preview_only": True,
-        "ready_for_confirmation": not blockers and not requires_decisions,
-        "requires_decisions": requires_decisions,
+        "ready_for_confirmation": not blockers,
         "package": copy.deepcopy(package_projection),
         "planned_identities": identity_rows,
+        "planned_actions": planned_actions,
         "records": record_responses,
         "new_parent_dependencies": dependencies,
         "blockers": blockers,

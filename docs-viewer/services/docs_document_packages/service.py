@@ -9,8 +9,6 @@ from typing import Any
 
 import docs_activity
 import docs_document_package_routes as routes
-from docs_document_packages.apply_hierarchy import apply_hierarchy_updates
-from docs_document_packages.apply_summaries import apply_summary_updates
 from docs_document_packages.export_config import (
     default_content_format,
     load_config_file,
@@ -25,18 +23,13 @@ from docs_document_packages.package import (
     selectable_document_records,
     update_document_prepare_context,
 )
-from docs_document_packages.review import (
-    parse_returned_document_records,
-    review_returned_document_package,
-)
+from docs_document_packages.review import parse_returned_document_records
 from docs_document_packages.review_sources import create_review_source_folder
 from docs_document_packages.workspace import configured_workspace_paths, workspace_status
-from docs_document_packages.write import DocumentPackageWriteDependencies
 from docs_import_document_package_content import normalize_documents_import_content
 from docs_management_context import log_event
 from docs_scope_config import load_docs_scope_configs
 import docs_source_model as source_model
-import docs_write_rebuild
 
 
 DOCUMENTS_DATA_DOMAIN = "documents"
@@ -48,17 +41,6 @@ FORBIDDEN_REQUEST_FIELDS = {
     "record_indices",
     "selection",
 }
-REVIEW_ACTIONS = (
-    {"id": "content", "label": "Review content"},
-    {"id": "summaries", "label": "Review summaries"},
-    {"id": "hierarchy", "label": "Review hierarchy"},
-)
-APPLY_ACTIONS = (
-    {"id": "summary_apply", "label": "Update summaries"},
-    {"id": "hierarchy_apply", "label": "Apply hierarchy"},
-)
-
-
 def refresh_source_model_scope_configs(repo_root: Path) -> dict[str, Any]:
     configs = load_docs_scope_configs(repo_root)
     source_model.DOCS_SCOPE_CONFIGS.clear()
@@ -177,8 +159,6 @@ def config_payload(repo_root: Path) -> dict[str, Any]:
             {"scope": scope, "label": source_model.humanize(scope)}
             for scope in sorted(configs)
         ],
-        "review_actions": list(REVIEW_ACTIONS),
-        "apply_actions": list(APPLY_ACTIONS),
         "workspace": {
             "available": bool(status.get("available")),
             "message": str(status.get("message") or ""),
@@ -326,7 +306,6 @@ def content_review_response(payload: dict[str, Any]) -> dict[str, Any]:
         response = dict(payload)
         response.update({
             "ok": False,
-            "review_action": "content",
             "review_package_id": "",
             "review_url": "",
             "review_existing": False,
@@ -348,7 +327,6 @@ def content_review_response(payload: dict[str, Any]) -> dict[str, Any]:
         summary_text = str(payload.get("summary_text") or "Docs Review package was not prepared.").strip()
     response = dict(payload)
     response.update({
-        "review_action": "content",
         "review_package_id": package_id,
         "review_url": f"/docs-review/?package={package_id}" if package_id else "",
         "review_existing": existing,
@@ -360,26 +338,12 @@ def content_review_response(payload: dict[str, Any]) -> dict[str, Any]:
 def review_returned(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     scope = require_scope(repo_root, body.get("scope"))
     staged_filename = str(body.get("staged_filename") or "").strip()
-    review_action = str(body.get("review_action") or "").strip()
-    if review_action not in {item["id"] for item in REVIEW_ACTIONS}:
-        raise ValueError("review_action must be content, summaries, or hierarchy")
+    if "review_action" in body:
+        raise ValueError("review_action is not supported; returned-package review always prepares full content")
     dry_run = dry_run_value(body)
     roots = configured_workspace_paths(repo_root)
-    if review_action == "content":
-        payload = content_review_response(
-            create_review_source_folder(
-                repo_root,
-                scope=scope,
-                staged_filename=staged_filename,
-                dry_run=dry_run,
-                staging_root=roots.import_staging,
-                metadata_root=roots.meta,
-                preview_root=roots.import_preview,
-                normalize_import_content=normalize_documents_import_content,
-            )
-        )
-    else:
-        payload = review_returned_document_package(
+    payload = content_review_response(
+        create_review_source_folder(
             repo_root,
             scope=scope,
             staged_filename=staged_filename,
@@ -387,72 +351,20 @@ def review_returned(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
             staging_root=roots.import_staging,
             metadata_root=roots.meta,
             preview_root=roots.import_preview,
-            data_domain=DOCUMENTS_DATA_DOMAIN,
+            normalize_import_content=normalize_documents_import_content,
         )
-        if payload.get("ok"):
-            count = len(payload.get("review_records", []))
-            label = "hierarchy" if review_action == "hierarchy" else "summaries"
-            payload["summary_text"] = f"Reviewed {label} for {count} document(s)."
+    )
     log_event(
         repo_root,
         "document-package-review",
         {
             "scope": scope,
             "staged_filename": staged_filename,
-            "review_action": review_action,
             "dry_run": dry_run,
             "ok": bool(payload.get("ok")),
         },
     )
     return payload
-
-
-def apply_returned(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    scope = require_scope(repo_root, body.get("scope"))
-    staged_filename = str(body.get("staged_filename") or "").strip()
-    apply_action = str(body.get("apply_action") or "").strip()
-    if apply_action not in {item["id"] for item in APPLY_ACTIONS}:
-        raise ValueError("apply_action must be summary_apply or hierarchy_apply")
-    confirmed = body.get("confirm", False)
-    if not isinstance(confirmed, bool):
-        raise ValueError("confirm must be true or false")
-    dry_run = dry_run_value(body)
-    roots = configured_workspace_paths(repo_root)
-    common = {
-        "scope": scope,
-        "staged_filename": staged_filename,
-        "confirmed": confirmed,
-        "dry_run": dry_run,
-        "staging_root": roots.import_staging,
-        "metadata_root": roots.meta,
-        "subject_label": "Documents",
-        "dependencies": DocumentPackageWriteDependencies(
-            perform_source_write_and_rebuild=docs_write_rebuild.perform_source_write_and_rebuild,
-        ),
-    }
-    payload = (
-        apply_summary_updates(repo_root, **common)
-        if apply_action == "summary_apply"
-        else apply_hierarchy_updates(repo_root, **common)
-    )
-    payload.pop("operation", None)
-    payload["apply_action"] = apply_action
-    log_event(
-        repo_root,
-        "document-package-apply",
-        {
-            "scope": scope,
-            "staged_filename": staged_filename,
-            "apply_action": apply_action,
-            "dry_run": dry_run,
-            "confirmed": confirmed,
-            "ok": bool(payload.get("ok")),
-        },
-    )
-    docs_activity.maybe_attach_documents_import_apply_activity(repo_root, body, payload, dry_run)
-    return payload
-
-
 def post_response(
     repo_root: Path,
     path: str,
@@ -467,8 +379,6 @@ def post_response(
         payload = inspect_returned(repo_root, body)
     elif path == routes.RETURNED_REVIEW_PATH:
         payload = review_returned(repo_root, body)
-    elif path == routes.RETURNED_APPLY_PATH:
-        payload = apply_returned(repo_root, body)
     else:
         raise FileNotFoundError("Not found")
     return (

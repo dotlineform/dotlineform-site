@@ -534,52 +534,6 @@
         }
       }
     },
-    "docs-package-returned": {
-      "label": "returned document packages",
-      "route": "/docs/packages/returned/",
-      "actions": {
-        "apply-returned-summaries": {
-          "label": "apply returned summaries",
-          "status": "v1-target",
-          "control_id": "documentPackageReturnedSummaryApply",
-          "control_selector": "#documentPackageReturnedSummaryApply",
-          "control_label": "Update summaries",
-          "endpoint": "/docs/packages/returned/apply",
-          "record_family": "docs_import",
-          "record_id_field": "staged_filename",
-          "no_change_activity": "skip",
-          "report_forced_rewrites": true,
-          "notes": "Covers confirmed summary-field writes from returned package review. Preflight remains excluded.",
-          "script_purposes": [
-            {
-              "id": "update-docs-source",
-              "optional": false,
-              "when": "selected source docs receive imported summary values"
-            }
-          ]
-        },
-        "apply-returned-hierarchy": {
-          "label": "apply returned hierarchy",
-          "status": "v1-target",
-          "control_id": "documentPackageReturnedHierarchyApply",
-          "control_selector": "#documentPackageReturnedHierarchyApply",
-          "control_label": "Update hierarchy",
-          "endpoint": "/docs/packages/returned/apply",
-          "record_family": "docs_import",
-          "record_id_field": "staged_filename",
-          "no_change_activity": "skip",
-          "report_forced_rewrites": true,
-          "notes": "Covers confirmed parent-id writes from returned package review. Preflight remains excluded.",
-          "script_purposes": [
-            {
-              "id": "update-docs-source",
-              "optional": false,
-              "when": "selected source docs receive imported hierarchy changes"
-            }
-          ]
-        }
-      }
-    },
     "docs-broken-links": {
       "label": "docs broken links",
       "route": "/docs/?scope=studio&doc=docs-broken-links",

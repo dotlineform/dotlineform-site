@@ -19,7 +19,7 @@ from json_markdown_report import write_json_markdown_report  # noqa: E402
 from docs_document_packages.workspace import marker_path  # noqa: E402
 
 
-RESULT_STATUSES = ("created", "overwritten", "skipped", "failed", "not-attempted")
+RESULT_STATUSES = ("created", "overwritten", "failed", "not-attempted")
 REPORT_SECTION_ORDER = (
     "package_identity",
     "target_scope",
@@ -28,7 +28,6 @@ REPORT_SECTION_ORDER = (
     "generation",
     "created",
     "overwritten",
-    "skipped",
     "failed",
     "not_attempted",
     "warnings",

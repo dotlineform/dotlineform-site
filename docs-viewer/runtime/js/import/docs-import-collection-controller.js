@@ -31,25 +31,12 @@ function managementOptions(baseUrl) {
   };
 }
 
-function unresolvedRecords(state) {
-  const records = state.plan && Array.isArray(state.plan.records) ? state.plan.records : [];
-  return records.filter((record) => (
-    record
-    && record.action === "decision-required"
-    && !state.decisions[record.record_index]
-  ));
-}
-
 function viewState(state) {
   return {
     active: state.active,
     phase: state.phase,
     plan: state.plan,
-    decisions: { ...state.decisions },
-    result: state.result,
-    currentDecision: state.phase === "decision" && unresolvedRecords(state).length
-      ? { record: unresolvedRecords(state)[0] }
-      : null
+    result: state.result
   };
 }
 
@@ -68,15 +55,13 @@ export function createDocsImportCollectionController(options = {}) {
     stagedFilename: "",
     scope: "",
     plan: null,
-    decisions: {},
-    notes: {},
     result: null,
     managementBaseUrl: "",
     busy: false
   };
 
   function render() {
-    renderDocsImportCollectionView(host, viewState(state), chooseDecision);
+    renderDocsImportCollectionView(host, viewState(state), handleCommand);
   }
 
   function setBusy(busy) {
@@ -89,8 +74,6 @@ export function createDocsImportCollectionController(options = {}) {
     if (!state.active) {
       state.phase = "idle";
       state.plan = null;
-      state.decisions = {};
-      state.notes = {};
       state.result = null;
     }
     render();
@@ -102,14 +85,12 @@ export function createDocsImportCollectionController(options = {}) {
     state.stagedFilename = "";
     state.scope = "";
     state.plan = null;
-    state.decisions = {};
-    state.notes = {};
     state.result = null;
     render();
     if (message) setStatus(statusNode, "", message);
   }
 
-  function chooseDecision({ type = "decision", action, applyToAll = false, note = "" } = {}) {
+  function handleCommand({ type = "" } = {}) {
     if (type === "confirm") {
       confirmApply().catch((error) => console.warn("docs_import_collection: apply failed", error));
       return;
@@ -120,37 +101,6 @@ export function createDocsImportCollectionController(options = {}) {
       render();
       return;
     }
-    const current = unresolvedRecords(state)[0];
-    if (!current) return;
-    const normalizedAction = normalizeText(action);
-    if (normalizedAction === "cancel") {
-      state.phase = "cancelled";
-      state.decisions = {};
-      setStatus(statusNode, "", importText("collectionCancelledStatus"));
-      render();
-      return;
-    }
-    if (!Array.isArray(current.allowed_actions) || !current.allowed_actions.includes(normalizedAction)) return;
-    state.decisions[current.record_index] = normalizedAction;
-    if (current.decision_kind === "invalid-record" && normalizedAction === "skip") {
-      state.notes[current.record_index] = normalizeText(note);
-    }
-    if (applyToAll && current.decision_kind === "collision") {
-      unresolvedRecords(state).forEach((record) => {
-        if (
-          record.decision_kind === "collision"
-          && Array.isArray(record.allowed_actions)
-          && record.allowed_actions.includes(normalizedAction)
-        ) {
-          state.decisions[record.record_index] = normalizedAction;
-        }
-      });
-    }
-    if (!unresolvedRecords(state).length) {
-      state.phase = "confirmation";
-      setStatus(statusNode, "success", importText("collectionReadyStatus"));
-    }
-    render();
   }
 
   async function preview({ file, scope, managementBaseUrl = "" } = {}) {
@@ -165,8 +115,6 @@ export function createDocsImportCollectionController(options = {}) {
     state.scope = normalizedScope;
     state.managementBaseUrl = normalizeText(managementBaseUrl);
     state.plan = null;
-    state.decisions = {};
-    state.notes = {};
     state.result = null;
     setBusy(true);
     setStatus(statusNode, "", importText("collectionPlanningStatus", { filename: stagedFilename }));
@@ -184,9 +132,6 @@ export function createDocsImportCollectionController(options = {}) {
       if (Array.isArray(payload.blockers) && payload.blockers.length) {
         state.phase = "blocked";
         setStatus(statusNode, "error", importText("collectionBlockedStatus"));
-      } else if (payload.requires_decisions) {
-        state.phase = "decision";
-        setStatus(statusNode, "warn", importText("collectionDecisionsStatus"));
       } else {
         state.phase = "confirmation";
         setStatus(statusNode, "success", importText("collectionReadyStatus"));
@@ -209,16 +154,6 @@ export function createDocsImportCollectionController(options = {}) {
     const packageIdentity = state.plan.package && typeof state.plan.package === "object"
       ? state.plan.package
       : {};
-    const decisions = (Array.isArray(state.plan.records) ? state.plan.records : [])
-      .filter((record) => state.decisions[record.record_index])
-      .map((record) => ({
-        record_index: record.record_index,
-        action: state.decisions[record.record_index],
-        target_doc_id: record.decision_kind === "collision"
-          ? normalizeText(record.collision && record.collision.doc_id)
-          : "",
-        note: state.notes[record.record_index] || ""
-      }));
     state.phase = "applying";
     setBusy(true);
     setStatus(statusNode, "", importText("collectionApplyingStatus"));
@@ -234,7 +169,9 @@ export function createDocsImportCollectionController(options = {}) {
         planned_identities: Array.isArray(state.plan.planned_identities)
           ? state.plan.planned_identities
           : [],
-        decisions,
+        planned_actions: Array.isArray(state.plan.planned_actions)
+          ? state.plan.planned_actions
+          : [],
         activity_context: buildDocsImportActivityContext({
           pageId: "docs-import",
           actionId: "import-docs-collection",
@@ -247,10 +184,8 @@ export function createDocsImportCollectionController(options = {}) {
       }, managementOptions(state.managementBaseUrl));
       if (payload && payload.preview_only === true) {
         state.plan = payload;
-        state.decisions = {};
-        state.notes = {};
         const blocked = Array.isArray(payload.blockers) && payload.blockers.length;
-        state.phase = blocked ? "blocked" : payload.requires_decisions ? "decision" : "confirmation";
+        state.phase = blocked ? "blocked" : "confirmation";
         setStatus(
           statusNode,
           blocked ? "error" : "warn",
@@ -300,7 +235,6 @@ export function createDocsImportCollectionController(options = {}) {
       phase: state.phase,
       stagedFilename: state.stagedFilename,
       scope: state.scope,
-      decisions: { ...state.decisions },
       busy: state.busy
     })
   };

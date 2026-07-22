@@ -105,7 +105,7 @@ def apply_document_package_collection(
     log_event: Callable[[Path, str, dict[str, Any]], None],
     perform_source_write_and_rebuild: Callable[..., dict[str, Any]],
 ) -> dict[str, Any]:
-    """Recompute one trusted package plan and synchronously apply explicit decisions."""
+    """Recompute and synchronously apply one confirmed whole-package plan."""
 
     if body.get("preview_only") is not False:
         raise ValueError("collection apply requires preview_only false")

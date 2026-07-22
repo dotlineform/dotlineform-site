@@ -39,11 +39,6 @@ from docs_document_packages import service as document_package_service  # noqa: 
 def handle_documents_import_preview(root: Path, body: dict[str, object], dry_run: bool) -> dict[str, object]:
     return document_package_service.review_returned(root, {**body, "dry_run": dry_run})
 
-
-def handle_documents_import_apply(root: Path, body: dict[str, object], dry_run: bool) -> dict[str, object]:
-    return document_package_service.apply_returned(root, {**body, "dry_run": dry_run})
-
-
 def make_repo() -> tempfile.TemporaryDirectory:
     return make_docs_import_repo(source_model.format_front_matter_value)
 

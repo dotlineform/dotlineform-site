@@ -209,21 +209,6 @@ function selectedRecordsForMode(state, mode) {
   ));
 }
 
-export function docsImportReviewHandoff(files, packageId) {
-  const normalizedPackageId = normalizeText(packageId);
-  const file = normalizedPackageId ? files.find((record) => (
-    isDocsImportCollectionRecord(record)
-    && Array.isArray(record && record.review_package_ids)
-    && record.review_package_ids.some((value) => normalizeText(value) === normalizedPackageId)
-  )) || null : null;
-  return {
-    requested: Boolean(normalizedPackageId),
-    packageId: normalizedPackageId,
-    file,
-    available: Boolean(file)
-  };
-}
-
 function selectedImportFiles(state) {
   if (state.importMode !== DOCS_IMPORT_MODE_FILES) return [];
   return selectedRecordsForMode(state, DOCS_IMPORT_MODE_FILES);
@@ -270,13 +255,9 @@ function syncSourceFormatControls(state) {
 
 function syncImportInputControls(state) {
   const records = docsImportFilesForMode(state.files, state.importMode);
-  const handoff = docsImportReviewHandoff(state.files, state.reviewPackageId);
-  const handoffUnavailable = state.importMode === DOCS_IMPORT_MODE_DATA_SHARING
-    && handoff.requested
-    && !handoff.available;
   state.typeSelect.disabled = state.isRunning || !state.serviceAvailable;
   state.scopeSelect.disabled = state.isRunning || !state.serviceAvailable;
-  state.fileSelect.disabled = state.isRunning || !state.serviceAvailable || !records.length || handoffUnavailable;
+  state.fileSelect.disabled = state.isRunning || !state.serviceAvailable || !records.length;
   syncSourceFormatControls(state);
 }
 
@@ -299,7 +280,7 @@ function selectFileOptions(state, filenames) {
   });
 }
 
-function renderStagedFileList(state, handoff) {
+function renderStagedFileList(state) {
   const records = docsImportFilesForMode(state.files, state.importMode);
   const availableValues = new Set(records.map((file) => normalizeText(file && file.filename)));
   const previousSelection = (state.selectedFilenamesByMode[state.importMode] || [])
@@ -309,15 +290,7 @@ function renderStagedFileList(state, handoff) {
   setText(state.fileLabelNode, importText(packageMode ? "packageLabel" : "fileLabel"));
   state.fileSelect.innerHTML = records.map(stagedFileOption).join("");
 
-  if (packageMode && handoff.requested && !handoff.available) {
-    state.fileSelect.insertAdjacentHTML(
-      "afterbegin",
-      `<option value="" disabled>${escapeHtml(importText("collectionHandoffUnavailableStatus"))}</option>`
-    );
-    state.fileSelect.value = "";
-  } else if (packageMode && handoff.file) {
-    state.fileSelect.value = normalizeText(handoff.file.filename);
-  } else if (previousSelection.length) {
+  if (previousSelection.length) {
     selectFileOptions(state, packageMode ? previousSelection.slice(0, 1) : previousSelection);
   } else if (records.length) {
     selectFileOptions(state, [normalizeText(records[0] && records[0].filename)]);
@@ -325,24 +298,17 @@ function renderStagedFileList(state, handoff) {
     state.fileSelect.value = "";
   }
 
-  state.fileSelect.disabled = !records.length || Boolean(packageMode && handoff.requested && !handoff.available);
+  state.fileSelect.disabled = !records.length;
   rememberSelectedFilenames(state);
   state.collectionController.reset({
     active: Boolean(selectedCollectionFile(state))
   });
   syncImportInputControls(state);
 
-  let statusState = "";
-  let statusMessage = "";
-  if (packageMode && handoff.requested && !handoff.available) {
-    statusState = "error";
-    statusMessage = importText("collectionHandoffUnavailableStatus");
-  } else if (packageMode && handoff.file) {
-    statusMessage = importText("collectionHandoffReadyStatus");
-  } else if (!records.length) {
-    statusState = "warn";
-    statusMessage = importText(packageMode ? "noPackagesInMode" : "noFilesInMode");
-  }
+  const statusState = records.length ? "" : "warn";
+  const statusMessage = records.length
+    ? ""
+    : importText(packageMode ? "noPackagesInMode" : "noFilesInMode");
   setStatus(
     state.statusNode,
     statusState,
@@ -356,18 +322,15 @@ function renderStagedFiles(state, files) {
   resetImportView(state, "");
   state.collectionController.reset({ active: false });
 
-  const handoff = docsImportReviewHandoff(files, state.reviewPackageId);
-  if (handoff.requested) {
-    state.importMode = DOCS_IMPORT_MODE_DATA_SHARING;
-  } else if (!docsImportFilesForMode(files, state.importMode).length) {
+  if (!docsImportFilesForMode(files, state.importMode).length) {
     state.importMode = docsImportFilesForMode(files, DOCS_IMPORT_MODE_DATA_SHARING).length
       ? DOCS_IMPORT_MODE_DATA_SHARING
       : DOCS_IMPORT_MODE_FILES;
   }
   renderImportModeOptions(state);
-  renderStagedFileList(state, handoff);
+  renderStagedFileList(state);
 
-  if (!files.length && !handoff.requested) {
+  if (!files.length) {
     setStatus(state.statusNode, "warn", importText("noFiles"));
   }
   markRouteReady(state, true);
@@ -413,7 +376,7 @@ function bindImportEvents(state) {
     state.importMode = normalizeImportMode(state.typeSelect.value);
     resetImportView(state, "");
     state.collectionController.reset({ active: false });
-    renderStagedFileList(state, docsImportReviewHandoff(state.files, state.reviewPackageId));
+    renderStagedFileList(state);
     markRouteReady(state, true);
   });
   state.scopeSelect.addEventListener("change", () => {
@@ -610,7 +573,6 @@ export async function initDocsHtmlImport(options = {}) {
       [DOCS_IMPORT_MODE_DATA_SHARING]: []
     },
     docsScopeIds: [],
-    reviewPackageId: normalizeText(options.reviewPackageId),
     onBusyChange: typeof options.onBusyChange === "function" ? options.onBusyChange : () => {},
     onTerminalResult: typeof options.onTerminalResult === "function" ? options.onTerminalResult : () => {}
   };

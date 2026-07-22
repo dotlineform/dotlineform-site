@@ -36,7 +36,6 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
         {
             "filename": "reviewed.jsonl",
             "source_format": "data_sharing_documents",
-            "review_package_ids": ["fixture-review"],
         },
     ]
 

@@ -35,17 +35,13 @@ function renderReviewPackageControls(context) {
     buildButton.setAttribute("data-docs-viewer-review-action", "repair");
     var assetsButton = createButton(context.document, "Assets");
     assetsButton.setAttribute("data-docs-viewer-review-action", "assets");
-    var importLink = context.document.createElement("a");
-    importLink.className = "docsViewer__actionButton docsViewer__reviewImportLink";
-    importLink.textContent = "Import";
-    importLink.hidden = true;
     var canonicalLink = context.document.createElement("a");
     canonicalLink.className = "docsViewer__actionButton docsViewer__reviewCanonicalLink";
     canonicalLink.textContent = "Open canonical";
     canonicalLink.target = "_blank";
     canonicalLink.rel = "noopener";
     canonicalLink.hidden = true;
-    mount.append(select, buildButton, assetsButton, importLink, canonicalLink);
+    mount.append(select, buildButton, assetsButton, canonicalLink);
   }
   return { root: mount, interactive: mount.querySelector("select") };
 }
@@ -61,7 +57,6 @@ export function createDocsViewerReviewController(options) {
   var provider = null;
   var manifest = null;
   var canonicalLink = null;
-  var importLink = null;
 
   function projectCanonicalLink(docId) {
     if (!canonicalLink || !manifest) return;
@@ -70,15 +65,6 @@ export function createDocsViewerReviewController(options) {
     canonicalLink.hidden = !(sourceScope && selectedDocId);
     canonicalLink.href = sourceScope && selectedDocId
       ? "/docs/?scope=" + encodeURIComponent(sourceScope) + "&doc=" + encodeURIComponent(selectedDocId)
-      : "";
-  }
-
-  function projectImportLink() {
-    if (!importLink || !manifest || !provider) return;
-    var packageId = String(manifest.package_id || provider.activeCollectionId() || "").trim();
-    importLink.hidden = !packageId;
-    importLink.href = packageId
-      ? "/docs/?import=1&review_package=" + encodeURIComponent(packageId)
       : "";
   }
 
@@ -100,9 +86,8 @@ export function createDocsViewerReviewController(options) {
     var select = mount.querySelector("select");
     var buildButton = mount.querySelector('[data-docs-viewer-review-action="repair"]');
     var assetsButton = mount.querySelector('[data-docs-viewer-review-action="assets"]');
-    importLink = mount.querySelector(".docsViewer__reviewImportLink");
     canonicalLink = mount.querySelector(".docsViewer__reviewCanonicalLink");
-    if (!select || !buildButton || !assetsButton || !importLink || !canonicalLink) {
+    if (!select || !buildButton || !assetsButton || !canonicalLink) {
       return Promise.reject(new Error("Docs Review package controls failed to render."));
     }
 
@@ -135,7 +120,6 @@ export function createDocsViewerReviewController(options) {
     return Promise.all([provider.listCollections(), provider.readManifest()]).then(function (results) {
       var packages = results[0];
       manifest = results[1].manifest || {};
-      projectImportLink();
       var activePackage = packages.find(function (record) {
         return record.package_id === provider.activeCollectionId();
       });

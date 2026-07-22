@@ -708,7 +708,6 @@ export function initDocsViewerManagement(context) {
       url.searchParams.set("scope", importedScope);
       url.searchParams.set("doc", importedDocId);
       url.searchParams.delete("import");
-      url.searchParams.delete("review_package");
       url.searchParams.delete("q");
       url.hash = "";
       window.location.assign(url.toString());
