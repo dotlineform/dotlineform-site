@@ -36,36 +36,41 @@ def test_manage_shell_loads_feature_owned_css_after_shared_management_css() -> N
     )
 
 
-def test_document_package_route_assets_are_docs_viewer_owned() -> None:
-    shells = [
-        (REPO_ROOT / "docs-viewer/shell/docs-viewer-package-prepare.html").read_text(
-            encoding="utf-8"
-        ),
-        (REPO_ROOT / "docs-viewer/shell/docs-viewer-package-returned.html").read_text(
-            encoding="utf-8"
-        ),
-    ]
+def test_document_package_browser_assets_are_docs_viewer_owned() -> None:
+    returned_shell = (
+        REPO_ROOT / "docs-viewer/shell/docs-viewer-package-returned.html"
+    ).read_text(encoding="utf-8")
+    management_runtime = "\n".join(
+        (
+            REPO_ROOT / "docs-viewer/runtime/js/management" / filename
+        ).read_text(encoding="utf-8")
+        for filename in (
+            "docs-viewer-management-actions-renderer.js",
+            "docs-viewer-management.js",
+        )
+    )
     runtime_root = REPO_ROOT / "docs-viewer/runtime/js/packages"
     runtime = "\n".join(
         path.read_text(encoding="utf-8") for path in sorted(runtime_root.glob("*.js"))
     )
 
-    assert "docs-viewer-packages.css" in shells[0]
-    assert "document-package-prepare.js" in shells[0]
-    assert "document-package-returned.js" in shells[1]
-    assert "data-domain" not in "\n".join(shells).lower()
+    assert "docs-viewer-packages.css" in returned_shell
+    assert "document-package-returned.js" in returned_shell
+    assert not (REPO_ROOT / "docs-viewer/shell/docs-viewer-package-prepare.html").exists()
+    assert not (runtime_root / "document-package-prepare.js").exists()
+    assert "/docs/packages/prepare/" not in returned_shell
+    assert "docsViewerManagePreparePackageButton" in management_runtime
+    assert 'page_id: "docs-manage"' in management_runtime
+    assert "data-domain" not in returned_shell.lower()
     assert "record_indices" not in runtime
     assert "/analytics/" not in runtime
     assert "data-sharing" not in runtime.lower()
-    assert 'page_id: "docs-package-prepare"' in runtime
-    assert 'action_id: "prepare-document-package"' in runtime
     assert 'page_id: "docs-package-returned"' in runtime
     assert 'actionId: "apply-returned-summaries"' in runtime
     assert 'actionId: "apply-returned-hierarchy"' in runtime
-    assert 'type="checkbox"' not in shells[1]
-    assert 'id="documentPackagePrepareScope"' not in shells[0]
-    assert 'id="documentPackageReturnedScope"' not in shells[1]
-    assert all('data-package-scope-link="/docs/' in shell for shell in shells)
+    assert 'type="checkbox"' not in returned_shell
+    assert 'id="documentPackageReturnedScope"' not in returned_shell
+    assert 'data-package-scope-link="/docs/' in returned_shell
     assert "syncPackageScopeLinks" in runtime
     assert "unassigned_files" in runtime
 

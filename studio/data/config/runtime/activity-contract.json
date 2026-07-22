@@ -507,22 +507,23 @@
         }
       }
     },
-    "docs-package-prepare": {
-      "label": "document package prepare",
-      "route": "/docs/packages/prepare/",
+    "docs-manage": {
+      "label": "docs manage",
+      "surface": "docs",
+      "route": "/docs/",
       "actions": {
         "prepare-document-package": {
           "label": "prepare document package",
           "status": "v1-target",
-          "control_id": "documentPackagePrepareRun",
-          "control_selector": "#documentPackagePrepareRun",
+          "control_id": "docsViewerManagePreparePackageButton",
+          "control_selector": "#docsViewerManagePreparePackageButton",
           "control_label": "Prepare package",
           "endpoint": "/docs/packages/prepare",
           "record_family": "share_package",
           "record_id_field": "export_id",
           "no_change_activity": "skip",
           "report_forced_rewrites": true,
-          "notes": "Covers writing configured document-package artifacts. Selection and filter changes remain excluded.",
+          "notes": "Covers writing configured document-package artifacts from checked Docs Viewer documents. Selection and option changes remain excluded.",
           "script_purposes": [
             {
               "id": "prepare-share-package",

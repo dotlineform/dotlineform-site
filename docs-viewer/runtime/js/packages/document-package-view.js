@@ -50,24 +50,6 @@ export function syncPackageScopeLinks(scope) {
   });
 }
 
-export function renderPackageOptions(node, items, options = {}) {
-  if (!node) return;
-  const valueKey = options.valueKey || "id";
-  const labelKey = options.labelKey || "label";
-  const placeholder = packageText(options.placeholder);
-  const selectedValue = packageText(options.selectedValue);
-  const rows = [];
-  if (placeholder) rows.push(`<option value="">${escapePackageHtml(placeholder)}</option>`);
-  (items || []).forEach((item) => {
-    const value = packageText(item && item[valueKey]);
-    if (!value) return;
-    const label = packageText(item && item[labelKey]) || value;
-    const selected = value === selectedValue ? " selected" : "";
-    rows.push(`<option value="${escapePackageHtml(value)}"${selected}>${escapePackageHtml(label)}</option>`);
-  });
-  node.innerHTML = rows.join("");
-}
-
 export function profileForId(profiles, profileId) {
   const normalized = packageText(profileId);
   return (profiles || []).find((profile) => packageText(profile && profile.profile_id) === normalized) || null;
@@ -85,75 +67,6 @@ export function packageIssueMessage(issue) {
   if (typeof issue === "string") return packageText(issue);
   if (!issue || typeof issue !== "object") return "";
   return packageText(issue.message || issue.error || issue.code);
-}
-
-function documentDepth(record, byId, active = new Set()) {
-  const id = packageText(record && (record.doc_id || record.id));
-  const parentId = packageText(record && record.parent_id);
-  if (!id || !parentId || active.has(id)) return 0;
-  const parent = byId.get(parentId);
-  if (!parent) return 0;
-  active.add(id);
-  return 1 + documentDepth(parent, byId, active);
-}
-
-function prepareRowMeta(record) {
-  const parts = [packageText(record.doc_id || record.id)];
-  if (record.viewable === false) parts.push("not viewable");
-  if (record.published === false) parts.push("not published");
-  if (!packageText(record.summary)) parts.push("no summary");
-  return parts.filter(Boolean).join(" · ");
-}
-
-export function renderSelectablePackageDocuments(container, documents, options = {}) {
-  if (!container) return [];
-  const filter = packageText(options.filter).toLowerCase();
-  const selectedIds = options.selectedIds instanceof Set ? options.selectedIds : new Set();
-  const byId = new Map(
-    (documents || []).map((record) => [packageText(record && (record.doc_id || record.id)), record])
-  );
-  const visible = (documents || []).filter((record) => {
-    const haystack = `${packageText(record && record.title)} ${packageText(record && record.doc_id)}`.toLowerCase();
-    return !filter || haystack.includes(filter);
-  });
-  if (!visible.length) {
-    container.innerHTML = `<p class="docsPackageEmpty">${filter ? "No documents match the filter." : "No documents are available."}</p>`;
-    return [];
-  }
-  container.innerHTML = "";
-  visible.forEach((record) => {
-    const docId = packageText(record && (record.doc_id || record.id));
-    const selectable = Boolean(docId && record.selectable !== false);
-    const row = document.createElement("div");
-    row.className = "docsPackageDocumentRow";
-    row.style.setProperty("--package-row-depth", String(documentDepth(record, byId)));
-
-    const label = document.createElement("label");
-    label.className = "docsPackageDocumentRow__label";
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.value = docId;
-    checkbox.checked = selectedIds.has(docId);
-    checkbox.disabled = !selectable;
-    checkbox.addEventListener("change", () => {
-      if (typeof options.onToggle === "function") options.onToggle(docId, checkbox.checked);
-    });
-    const text = document.createElement("span");
-    text.className = "docsPackageDocumentRow__text";
-    text.innerHTML = `
-      <span class="docsPackageDocumentRow__title">${escapePackageHtml(packageText(record.title) || docId)}</span>
-      <span class="docsPackageDocumentRow__meta">${escapePackageHtml(prepareRowMeta(record))}</span>
-    `;
-    label.append(checkbox, text);
-
-    const size = document.createElement("span");
-    size.className = "docsPackageDocumentRow__size";
-    const length = Number(record.content_text_length || 0);
-    size.textContent = length > 0 ? `${length.toLocaleString()} chars` : "";
-    row.append(label, size);
-    container.appendChild(row);
-  });
-  return visible;
 }
 
 export function renderReturnedPackageRows(container, rows) {

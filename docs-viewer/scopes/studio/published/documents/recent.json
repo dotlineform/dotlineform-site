@@ -7,7 +7,7 @@
       "doc_id": "d-20260714-234030-1e0af6",
       "title": "Docs Viewer Roadmap",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-1e0af6.json",
-      "timestamp": "2026-07-22 14:11:41",
+      "timestamp": "2026-07-22 14:25:10",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
     },
@@ -15,7 +15,7 @@
       "doc_id": "d-20260720-172819-93d6b2",
       "title": "Document Sharing Ownership Cutover Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-172819-93d6b2.json",
-      "timestamp": "2026-07-22 14:11:41",
+      "timestamp": "2026-07-22 14:25:10",
       "parent_id": "d-20260718-155350-c84e62",
       "parent_title": "Share Document Packages"
     },
@@ -23,15 +23,23 @@
       "doc_id": "d-20260720-230623-c7e921",
       "title": "Document Sharing UI Redesign",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-230623-c7e921.json",
-      "timestamp": "2026-07-22 14:11:41",
+      "timestamp": "2026-07-22 14:25:10",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap"
+    },
+    {
+      "doc_id": "d-20260607-222033-647b52",
+      "title": "Endpoint Overview",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-647b52.json",
+      "timestamp": "2026-07-22 14:25:10",
+      "parent_id": "d-20260424-000000-04d75e",
+      "parent_title": "Management Services"
     },
     {
       "doc_id": "d-20260714-151900-6fa23e",
       "title": "Index Multiple Selection",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-151900-6fa23e.json",
-      "timestamp": "2026-07-22 14:11:41",
+      "timestamp": "2026-07-22 14:25:10",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap"
     },
@@ -39,7 +47,7 @@
       "doc_id": "d-20260722-000158-9c0f3e",
       "title": "Index Multiple Selection Consumer Assessment",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260722-000158-9c0f3e.json",
-      "timestamp": "2026-07-22 14:11:41",
+      "timestamp": "2026-07-22 14:25:10",
       "parent_id": "d-20260714-151900-6fa23e",
       "parent_title": "Index Multiple Selection"
     },
@@ -47,7 +55,7 @@
       "doc_id": "d-20260722-133457-e90e21",
       "title": "Prepare Package UI Redesign Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260722-133457-e90e21.json",
-      "timestamp": "2026-07-22 14:11:41",
+      "timestamp": "2026-07-22 14:25:10",
       "parent_id": "d-20260720-230623-c7e921",
       "parent_title": "Document Sharing UI Redesign"
     },
@@ -55,7 +63,7 @@
       "doc_id": "d-20260718-155350-c84e62",
       "title": "Share Document Packages",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-155350-c84e62.json",
-      "timestamp": "2026-07-22 14:11:41",
+      "timestamp": "2026-07-22 14:25:10",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap"
     },
@@ -74,15 +82,7 @@
       "timestamp": "2026-07-22 00:01:58",
       "parent_id": "d-20260714-151900-6fa23e",
       "parent_title": "Index Multiple Selection"
-    },
-    {
-      "doc_id": "d-20260721-074902-838446",
-      "title": "Index Multiple Selection Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260721-074902-838446.json",
-      "timestamp": "2026-07-21 23:50:07",
-      "parent_id": "d-20260714-151900-6fa23e",
-      "parent_title": "Index Multiple Selection"
     }
   ],
-  "generated_at": "2026-07-22T13:12:58Z"
+  "generated_at": "2026-07-22T13:26:45Z"
 }

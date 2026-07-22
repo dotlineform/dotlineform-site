@@ -29,14 +29,14 @@ def write_activity_contract(repo_root: Path) -> None:
         json.dumps(
             {
                 "pages": {
-                    "docs-package-prepare": {
-                        "label": "document package prepare",
-                        "route": "/docs/packages/prepare/",
+                    "docs-manage": {
+                        "label": "docs manage",
+                        "route": "/docs/",
                         "actions": {
                             "prepare-document-package": {
                                 "label": "prepare document package",
-                                "control_id": "documentPackagePrepareRun",
-                                "control_selector": "#documentPackagePrepareRun",
+                                "control_id": "docsViewerManagePreparePackageButton",
+                                "control_selector": "#docsViewerManagePreparePackageButton",
                                 "endpoint": docs_activity.DOCUMENT_PACKAGE_PREPARE_PATH,
                                 "record_id_field": "export_id",
                             }
@@ -114,11 +114,11 @@ def export_body() -> dict[str, object]:
         "profile_id": "document-content",
         "doc_ids": ["library", "longform", "notes"],
         "activity_context": {
-            "page_id": "docs-package-prepare",
+            "page_id": "docs-manage",
             "action_id": "prepare-document-package",
-            "route": "/docs/packages/prepare/",
-            "control_id": "documentPackagePrepareRun",
-            "control_selector": "#documentPackagePrepareRun",
+            "route": "/docs/",
+            "control_id": "docsViewerManagePreparePackageButton",
+            "control_selector": "#docsViewerManagePreparePackageButton",
             "correlation_id": "export:library",
         },
     }
@@ -166,9 +166,11 @@ def test_docs_export_activity_writes_compact_doc_ids() -> None:
         assert payload["activity_log"]["written_count"] == 1
         entry = activity_entries(repo_root)[0]
         assert entry["status"] == "completed"
+        assert entry["page_id"] == "docs-manage"
         assert entry["user_action_id"] == "prepare-document-package"
         assert entry["record_groups"]["docs"]["sample_ids"] == ["library", "longform", "notes"]
         assert entry["source_refs"] == docs_activity.DOCS_ACTIVITY_SOURCE_REFS
+        assert payload["activity_context"]["control_id"] == "docsViewerManagePreparePackageButton"
 
 
 def import_source_body() -> dict[str, object]:

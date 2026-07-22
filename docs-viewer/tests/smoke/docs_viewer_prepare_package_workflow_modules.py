@@ -271,6 +271,14 @@ def install_workflow_fixture(page: Page, prepare_outcome: str = "success") -> No
                 scope: 'studio',
                 checkedDocIds: window.prepareFixture.selection.slice(),
                 restoreFocus: document.querySelector('#restoreFocus'),
+                activityContext: {
+                    page_id: 'docs-manage',
+                    action_id: 'prepare-document-package',
+                    route: '/docs/',
+                    control_id: 'docsViewerManagePreparePackageButton',
+                    control_selector: '#docsViewerManagePreparePackageButton',
+                    correlation_id: 'prepare:test'
+                },
                 client,
                 callbacks: {
                     setBusy: (busy) => window.prepareFixture.busy.push(busy),
@@ -326,7 +334,11 @@ def exercise_success(page: Page, timeout_ms: int) -> None:
         raise AssertionError(f"unexpected expanded checked ids: {request!r}")
     if request["select_all"] is not False or request["target_format"] != "json":
         raise AssertionError(f"unexpected package request options: {request!r}")
-    if request["content_format"] != "plain_text" or request["activity_context"] != {}:
+    if (
+        request["content_format"] != "plain_text"
+        or request["activity_context"]["page_id"] != "docs-manage"
+        or request["activity_context"]["control_id"] != "docsViewerManagePreparePackageButton"
+    ):
         raise AssertionError(f"unexpected package request context: {request!r}")
     if context_calls[0]["payload"]["external_context"]["task"] != "Review selected docs":
         raise AssertionError(f"context edit was not saved: {context_calls!r}")

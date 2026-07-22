@@ -373,15 +373,12 @@ def test_atomic_return_rejects_invalid_trusted_routing_identity(
     assert issue_code in {item["code"] for item in payload["issues"]}
 
 
-def test_docs_viewer_http_service_hosts_same_origin_document_package_routes() -> None:
+def test_docs_viewer_http_service_retires_prepare_page_and_keeps_package_api() -> None:
     with make_docs_import_repo() as temp:
         repo_root = Path(temp)
         shell_root = repo_root / "docs-viewer/shell"
         shell_root.mkdir(parents=True, exist_ok=True)
-        for filename in (
-            "docs-viewer-package-prepare.html",
-            "docs-viewer-package-returned.html",
-        ):
+        for filename in ("docs-viewer-package-returned.html",):
             shell_root.joinpath(filename).write_text(
                 (REPO_ROOT / "docs-viewer/shell" / filename).read_text(encoding="utf-8"),
                 encoding="utf-8",
@@ -409,10 +406,8 @@ def test_docs_viewer_http_service_hosts_same_origin_document_package_routes() ->
         try:
             with urllib.request.urlopen(f"{base_url}{routes.CONFIG_PATH}", timeout=5) as response:
                 config_payload = json.loads(response.read().decode("utf-8"))
-            with urllib.request.urlopen(
-                f"{base_url}/docs/packages/prepare/", timeout=5
-            ) as response:
-                prepare_shell = response.read().decode("utf-8")
+            with pytest.raises(urllib.error.HTTPError) as prepare_route_error:
+                urllib.request.urlopen(f"{base_url}/docs/packages/prepare/", timeout=5)
             with urllib.request.urlopen(
                 f"{base_url}/docs/packages/returned/", timeout=5
             ) as response:
@@ -444,7 +439,7 @@ def test_docs_viewer_http_service_hosts_same_origin_document_package_routes() ->
             thread.join(timeout=5)
 
     assert config_payload["ok"] is True
-    assert "Prepare document package" in prepare_shell
+    assert prepare_route_error.value.code == 404
     assert "Returned document packages" in returned_shell
     assert prepare_payload["ok"] is True
     assert prepare_payload["output_written"] is False

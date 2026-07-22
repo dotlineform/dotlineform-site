@@ -89,8 +89,7 @@
   grid-template-columns: max-content max-content max-content minmax(14rem, 1fr);
 }
 
-.docsPackageButton,
-.docsPackagePill {
+.docsPackageButton {
   box-sizing: border-box;
   appearance: none;
   border: 1px solid var(--docs-viewer-border-strong);
@@ -119,16 +118,13 @@
 }
 
 .docsPackageButton:hover:not(:disabled),
-.docsPackageButton:focus-visible:not(:disabled),
-.docsPackagePill:hover:not(:disabled),
-.docsPackagePill:focus-visible:not(:disabled) {
+.docsPackageButton:focus-visible:not(:disabled) {
   border-color: var(--docs-viewer-text);
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--docs-viewer-text) 12%, transparent);
   outline: none;
 }
 
-.docsPackageButton:disabled,
-.docsPackagePill:disabled {
+.docsPackageButton:disabled {
   cursor: not-allowed;
   opacity: 0.48;
 }
@@ -157,10 +153,6 @@
   display: grid;
   gap: 0.7rem;
   align-items: stretch;
-}
-
-.docsPackageChoiceGrid--prepare {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .docsPackageChoiceGrid--returned {
@@ -209,7 +201,6 @@
 }
 
 .docsPackageField select,
-.docsPackageSearch input,
 .docsPackageModal input,
 .docsPackageModal textarea {
   box-sizing: border-box;
@@ -223,7 +214,6 @@
 }
 
 .docsPackageField select,
-.docsPackageSearch input,
 .docsPackageModal input {
   min-height: 2.15rem;
   padding: 0.34rem 0.5rem;
@@ -234,7 +224,6 @@
 }
 
 .docsPackageField select:focus-visible,
-.docsPackageSearch input:focus-visible,
 .docsPackageModal input:focus-visible,
 .docsPackageModal textarea:focus-visible {
   border-color: var(--docs-viewer-text);
@@ -265,33 +254,6 @@
   overflow-wrap: anywhere;
 }
 
-.docsPackageToggle {
-  display: inline-flex;
-  width: fit-content;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: var(--docs-viewer-text-sm);
-}
-
-.docsPackageListTools {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  align-items: center;
-}
-
-.docsPackageSearch {
-  flex: 1 1 16rem;
-  max-width: 24rem;
-}
-
-.docsPackagePill {
-  min-height: 1.9rem;
-  border-radius: 999px;
-  padding: 0.25rem 0.65rem;
-  font-size: var(--docs-viewer-text-xs);
-}
-
 .docsPackageSelectionSummary {
   margin: 0 0 0 0.45rem;
   color: var(--docs-viewer-muted);
@@ -318,18 +280,6 @@
   border-top: 0;
 }
 
-.docsPackageDocumentRow__label {
-  display: flex;
-  min-width: 0;
-  align-items: center;
-  gap: 0.55rem;
-}
-
-.docsPackageDocumentRow__label input {
-  flex: 0 0 auto;
-  margin: 0;
-}
-
 .docsPackageDocumentRow__text {
   display: grid;
   min-width: 0;
@@ -349,12 +299,6 @@
 
 .docsPackageDocumentRow__issues[data-state="error"] {
   color: #9d3434;
-}
-
-.docsPackageDocumentRow__size {
-  color: var(--docs-viewer-muted);
-  font-size: var(--docs-viewer-text-xs);
-  font-variant-numeric: tabular-nums;
 }
 
 .docsPackageEmpty {
@@ -538,8 +482,7 @@
     justify-content: flex-start;
   }
 
-  .docsPackageActions,
-  .docsPackageActions--returned {
+  .docsPackageActions {
     grid-template-columns: repeat(3, max-content);
   }
 
@@ -547,7 +490,6 @@
     grid-column: 1 / -1;
   }
 
-  .docsPackageChoiceGrid--prepare,
   .docsPackageChoiceGrid--returned {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -555,8 +497,6 @@
 
 @media (max-width: 620px) {
   .docsPackageActions,
-  .docsPackageActions--returned,
-  .docsPackageChoiceGrid--prepare,
   .docsPackageChoiceGrid--returned {
     grid-template-columns: minmax(0, 1fr);
   }

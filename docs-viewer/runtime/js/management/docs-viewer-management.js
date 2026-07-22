@@ -720,6 +720,14 @@ export function initDocsViewerManagement(context) {
           scope: viewerScope(),
           checkedDocIds: checkedDocIds,
           restoreFocus: managePreparePackageButton,
+          activityContext: {
+            page_id: "docs-manage",
+            action_id: "prepare-document-package",
+            route: "/docs/",
+            control_id: "docsViewerManagePreparePackageButton",
+            control_selector: "#docsViewerManagePreparePackageButton",
+            correlation_id: "prepare-document-package:" + String(Date.now())
+          },
           callbacks: {
             hideManageActionsMenu: eventRouter.hideManageActionsMenu,
             setBusy: function (busy) {
