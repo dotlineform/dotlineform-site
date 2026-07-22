@@ -466,6 +466,55 @@ select.docsViewer__fieldInput--listbox{
   color: var(--docs-viewer-link-hover, var(--link-hover, #111));
 }
 
+.docsViewerPackagePrepare__context{
+  border-top: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  padding-top: 0.75rem;
+}
+
+.docsViewerPackagePrepare__context > summary{
+  cursor: pointer;
+  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
+  font-weight: 600;
+}
+
+.docsViewerPackagePrepare__contextFields,
+.docsViewerPackagePrepare__resultSection{
+  display: grid;
+  gap: 0.7rem;
+  margin-top: 0.75rem;
+}
+
+.docsViewerPackagePrepare__summary,
+.docsViewerPackagePrepare__resultSection > ul{
+  margin: 0;
+}
+
+.docsViewerPackagePrepare__counts{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.docsViewerPackagePrepare__counts > div{
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.docsViewerPackagePrepare__counts dt{
+  color: var(--docs-viewer-muted, var(--muted, #555));
+}
+
+.docsViewerPackagePrepare__counts dd{
+  margin: 0;
+  font-weight: 600;
+}
+
+.docsViewerPackagePrepare__resultSection > code{
+  overflow-wrap: anywhere;
+}
+
 .docsViewer__settingsWarnings ul{
   margin: 0;
   padding-left: 1.1rem;

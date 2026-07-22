@@ -63,7 +63,7 @@ function renderModalFrame(options) {
 
 export function openDocsViewerManagementModal(options = {}) {
   var host = createModalHost({ root: options.root });
-  var restoreFocus = document.activeElement;
+  var restoreFocus = options.restoreFocus || document.activeElement;
   var scrollRoots = [document.documentElement, document.body].filter(Boolean).map(function (node) {
     var overflow = node.style.overflow;
     node.style.overflow = "hidden";

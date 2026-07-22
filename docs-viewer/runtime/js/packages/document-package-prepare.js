@@ -5,6 +5,11 @@ import {
   saveDocumentPackageContext
 } from "./document-package-client.js";
 import {
+  documentPackageContentFormats,
+  documentPackageDescendantIds,
+  documentPackageTargetFormats
+} from "./document-package-prepare-model.js";
+import {
   openDocumentPackageModal,
   showDocumentPackageResult
 } from "./document-package-modal.js";
@@ -75,28 +80,6 @@ function visibleSelectableDocumentIds(state) {
     .filter(Boolean);
 }
 
-function descendantIds(state, docId) {
-  const childrenByParent = new Map();
-  state.documents.forEach((record) => {
-    const parentId = packageText(record && record.parent_id);
-    const childId = packageText(record && (record.doc_id || record.id));
-    if (!parentId || !childId) return;
-    if (!childrenByParent.has(parentId)) childrenByParent.set(parentId, []);
-    childrenByParent.get(parentId).push(childId);
-  });
-  const descendants = [];
-  const pending = [...(childrenByParent.get(docId) || [])];
-  const seen = new Set();
-  while (pending.length) {
-    const childId = pending.shift();
-    if (!childId || seen.has(childId)) continue;
-    seen.add(childId);
-    descendants.push(childId);
-    pending.push(...(childrenByParent.get(childId) || []));
-  }
-  return descendants;
-}
-
 function updateSelectionSummary(state) {
   const count = state.selectedIds.size;
   state.selectionSummary.textContent = count === 1 ? "1 document selected." : `${count} documents selected.`;
@@ -133,7 +116,9 @@ function renderDocuments(state) {
     selectedIds: state.selectedIds,
     onToggle(docId, selected) {
       const affected = [docId];
-      if (state.descendantsInput.checked) affected.push(...descendantIds(state, docId));
+      if (state.descendantsInput.checked) {
+        affected.push(...documentPackageDescendantIds(state.documents, docId));
+      }
       affected.forEach((affectedId) => {
         if (!allowedIds.has(affectedId)) return;
         if (selected) state.selectedIds.add(affectedId);
@@ -145,32 +130,16 @@ function renderDocuments(state) {
   syncPrepareControls(state);
 }
 
-function supportedFormats(profile) {
-  const formats = Array.isArray(profile && profile.supported_target_formats)
-    ? profile.supported_target_formats.map(packageText).filter(Boolean)
-    : [];
-  const fallback = packageText(profile && profile.target_format);
-  return formats.length ? formats : [fallback].filter(Boolean);
-}
-
-function supportedContentFormats(profile) {
-  const formats = Array.isArray(profile && profile.supported_content_formats)
-    ? profile.supported_content_formats.map(packageText).filter(Boolean)
-    : [];
-  const fallback = packageText(profile && profile.content_format);
-  return formats.length ? formats : [fallback].filter(Boolean);
-}
-
 function renderProfileOptions(state) {
   const profile = selectedProfile(state) || state.profiles[0] || null;
   if (profile && state.profileSelect.value !== profile.profile_id) {
     state.profileSelect.value = profile.profile_id;
   }
-  const formats = supportedFormats(profile).map((id) => ({ id, label: id.toUpperCase() }));
+  const formats = documentPackageTargetFormats(profile).map((id) => ({ id, label: id.toUpperCase() }));
   renderPackageOptions(state.formatSelect, formats, {
     selectedValue: packageText(profile && profile.target_format) || packageText(formats[0] && formats[0].id)
   });
-  const contentFormats = supportedContentFormats(profile).map((id) => ({
+  const contentFormats = documentPackageContentFormats(profile).map((id) => ({
     id,
     label: id === "plain_text" ? "Plain text" : id.charAt(0).toUpperCase() + id.slice(1)
   }));

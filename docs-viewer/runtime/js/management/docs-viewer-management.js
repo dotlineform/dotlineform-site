@@ -171,6 +171,7 @@ export function initDocsViewerManagement(context) {
   var interactionController = null;
   var metadataWorkflow = null;
   var modalController = null;
+  var preparePackageWorkflowRequest = null;
   var scopeLifecycleController = null;
   var settingsWorkflow = null;
   var actionController = null;
@@ -692,6 +693,53 @@ export function initDocsViewerManagement(context) {
     renderManagementUi();
   }
 
+  function loadPreparePackageWorkflow() {
+    if (preparePackageWorkflowRequest) return preparePackageWorkflowRequest;
+    preparePackageWorkflowRequest = import("../packages/document-package-prepare-workflow.js")
+      .then(function (module) {
+        if (!module || typeof module.openDocumentPackagePrepareWorkflow !== "function") {
+          throw new Error("Prepare package workflow is unavailable.");
+        }
+        return module;
+      })
+      .catch(function (error) {
+        preparePackageWorkflowRequest = null;
+        throw error;
+      });
+    return preparePackageWorkflowRequest;
+  }
+
+  function handlePreparePackage() {
+    var resolution = resolveAction(DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE);
+    if (!resolution.enabled || preparePackageActionControlState().disabled) return Promise.resolve(null);
+    var checkedDocIds = resolution.targetDocIds.slice();
+    return loadPreparePackageWorkflow()
+      .then(function (module) {
+        return module.openDocumentPackagePrepareWorkflow({
+          root: root,
+          scope: viewerScope(),
+          checkedDocIds: checkedDocIds,
+          restoreFocus: managePreparePackageButton,
+          callbacks: {
+            hideManageActionsMenu: eventRouter.hideManageActionsMenu,
+            setBusy: function (busy) {
+              setManagementBusy(busy);
+              renderManagementUi();
+            },
+            setMessage: setManagementMessage
+          }
+        });
+      })
+      .catch(function (error) {
+        setManagementBusy(false);
+        setManagementMessage(
+          error && error.message ? error.message : "Prepare package workflow is unavailable.",
+          true
+        );
+        return null;
+      });
+  }
+
   function handleDraftToggleChange() {
     if (!draftToggle) return;
     documentIndex.showNonViewable = Boolean(draftToggle.checked);
@@ -858,6 +906,7 @@ export function initDocsViewerManagement(context) {
       exportDocs: function () { actionController.handleExportDocs(); },
       makeViewable: function () { actionController.handleMakeViewable(); },
       openImport: function () { importController.open(); },
+      preparePackage: handlePreparePackage,
       openSettings: function () { settingsWorkflow.open(); },
       publish: function () { actionController.handlePublishDocs(); },
       renameScope: function () { scopeLifecycleController.renameScope(); },
