@@ -13,6 +13,29 @@ function scopeLifecycleCapabilities(capabilities) {
     : null;
 }
 
+export function documentPackagePrepareCapability(capabilities) {
+  var documentPackages = capabilities && capabilities.document_packages;
+  if (!documentPackages || typeof documentPackages !== "object") {
+    return {
+      available: false,
+      reason: "Prepare package capability is unavailable."
+    };
+  }
+  if (documentPackages.available !== true) {
+    return {
+      available: false,
+      reason: String(documentPackages.message || "The document-package workspace is unavailable.").trim()
+    };
+  }
+  if (documentPackages.prepare !== true) {
+    return {
+      available: false,
+      reason: "Prepare package capability is unavailable."
+    };
+  }
+  return { available: true, reason: "" };
+}
+
 export function scopeManagementCapabilities(capabilities, scope) {
   var scopeId = normalizeScopeId(scope);
   if (!capabilities || !capabilities.scopes || !scopeId) return null;

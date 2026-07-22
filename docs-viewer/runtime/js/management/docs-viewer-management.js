@@ -3,6 +3,7 @@ import {
 } from "../shared/docs-viewer-tree.js";
 import {
   createDocsViewerManagementCapabilityController,
+  documentPackagePrepareCapability,
   scopePublishSupported,
   scopeStaticHtmlExportSupported
 } from "./docs-viewer-management-capabilities.js";
@@ -77,6 +78,46 @@ export function createDocsViewerManagementActionResolver(options = {}) {
   };
 }
 
+export function docsViewerPreparePackageActionControlState(options = {}) {
+  var resolution = options.resolution || null;
+  var disabledReason = "";
+  if (!options.managementChecked) {
+    disabledReason = "Checking Prepare package availability.";
+  } else if (!options.managementAvailable) {
+    disabledReason = "Prepare package is unavailable.";
+  } else if (options.managementBusy) {
+    disabledReason = "Docs management is busy.";
+  } else {
+    var capability = documentPackagePrepareCapability(options.capabilities);
+    if (!capability.available) disabledReason = capability.reason;
+    else if (!resolution || !resolution.enabled) {
+      disabledReason = resolution && resolution.disabledReason
+        ? resolution.disabledReason
+        : "Select one or more documents.";
+    }
+  }
+  return {
+    disabled: Boolean(disabledReason),
+    disabledReason: disabledReason
+  };
+}
+
+export function projectDocsViewerPreparePackageActionControl(button, state) {
+  if (!button) return null;
+  var controlState = state || { disabled: true, disabledReason: "Prepare package is unavailable." };
+  var label = "Prepare package";
+  var accessibleLabel = controlState.disabledReason ? label + ". " + controlState.disabledReason : label;
+  button.disabled = Boolean(controlState.disabled);
+  button.title = accessibleLabel;
+  button.setAttribute("aria-label", accessibleLabel);
+  if (controlState.disabledReason) {
+    button.dataset.docsViewerDisabledReason = controlState.disabledReason;
+  } else {
+    delete button.dataset.docsViewerDisabledReason;
+  }
+  return controlState;
+}
+
 export function initDocsViewerManagement(context) {
   var root = context.root;
   var nav = context.nav;
@@ -116,6 +157,7 @@ export function initDocsViewerManagement(context) {
   var manageImportButton = document.getElementById("docsViewerManageImportButton");
   var manageToolbarImportButton = document.getElementById("docsViewerManageToolbarImportButton");
   var manageImportButtons = [manageImportButton, manageToolbarImportButton].filter(Boolean);
+  var managePreparePackageButton = document.getElementById("docsViewerManagePreparePackageButton");
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
   var manageDeleteButton = document.getElementById("docsViewerManageDeleteButton");
   var manageViewableButton = document.getElementById("docsViewerManageViewableButton");
@@ -321,7 +363,25 @@ export function initDocsViewerManagement(context) {
       state: snapshot,
       disabled: !available || management.managementBusy
     });
+    projectPreparePackageAction();
     return snapshot;
+  }
+
+  function preparePackageActionControlState() {
+    return docsViewerPreparePackageActionControlState({
+      capabilities: management.managementCapabilities,
+      managementAvailable: management.managementAvailable,
+      managementBusy: management.managementBusy,
+      managementChecked: management.managementChecked,
+      resolution: resolveAction(DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE)
+    });
+  }
+
+  function projectPreparePackageAction() {
+    return projectDocsViewerPreparePackageActionControl(
+      managePreparePackageButton,
+      preparePackageActionControlState()
+    );
   }
 
   function reconcileIndexSelectionReload(eligibleDocIds) {
@@ -405,6 +465,10 @@ export function initDocsViewerManagement(context) {
   function handleAppManagementControl(detail) {
     var actionId = String(detail && detail.actionId || "").trim();
     if (actionId && !resolveAction(actionId).enabled) return false;
+    if (
+      actionId === DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE
+      && preparePackageActionControlState().disabled
+    ) return false;
     return eventRouter.handleAppManagementControl(detail);
   }
 

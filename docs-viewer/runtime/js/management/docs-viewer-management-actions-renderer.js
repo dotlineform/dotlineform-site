@@ -18,8 +18,8 @@ var MANAGEMENT_ACTION_MENU_ITEMS = [
     label: "Import"
   },
   {
-    id: "docsViewerManagePreparePackageLink",
-    href: "/docs/packages/prepare/",
+    id: "docsViewerManagePreparePackageButton",
+    actionId: ACTION_IDS.PREPARE_DOCUMENT_PACKAGE,
     emoji: "📦",
     label: "Prepare package"
   },

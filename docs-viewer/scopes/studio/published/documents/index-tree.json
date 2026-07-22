@@ -903,7 +903,15 @@
               "doc_id": "d-20260720-230623-c7e921",
               "title": "Document Sharing UI Redesign",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-230623-c7e921.json",
-              "ui_status": "paused"
+              "ui_status": "in-progress",
+              "children": [
+                {
+                  "doc_id": "d-20260722-133457-e90e21",
+                  "title": "Prepare Package UI Redesign Delivery",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260722-133457-e90e21.json",
+                  "ui_status": "in-progress"
+                }
+              ]
             },
             {
               "doc_id": "d-20260716-235630-055f0c",
@@ -1537,5 +1545,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-21T23:03:46Z"
+  "generated_at": "2026-07-22T12:52:46Z"
 }

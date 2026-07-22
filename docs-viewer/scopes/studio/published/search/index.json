@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c3e984a262c5d4fb41c0b3911d20727f",
-    "generated_at_utc": "2026-07-22T10:17:01Z",
-    "count": 266
+    "version": "blake2b-3ee47e7def2825ce2e496884c564dafd",
+    "generated_at_utc": "2026-07-22T12:53:40Z",
+    "count": 267
   },
   "entries": [
     {
@@ -3729,25 +3729,25 @@
       "kind": "doc",
       "title": "Docs Viewer Roadmap",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-1e0af6",
-      "last_updated": "2026-07-22 00:01:58",
+      "last_updated": "2026-07-22 13:52:00",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-22 00:01:58 • Roadmap",
+      "display_meta": "2026-07-22 13:52:00 • Roadmap",
       "search_terms": [
         "docs viewer roadmap",
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-22 00:01:58",
+        "2026-07-22 13:52:00",
         "2026",
         "07",
         "22",
+        "13",
+        "52",
         "00",
-        "01",
-        "58",
         "d-20260714-234030-1e0af6"
       ],
-      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-22 00:01:58 2026 07 22 00 01 58 d-20260714-234030-1e0af6"
+      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-22 13:52:00 2026 07 22 13 52 00 d-20260714-234030-1e0af6"
     },
     {
       "id": "d-20260716-204013-3be4e1",
@@ -4027,10 +4027,10 @@
       "kind": "doc",
       "title": "Document Sharing UI Redesign",
       "href": "/docs/?scope=studio&doc=d-20260720-230623-c7e921",
-      "last_updated": "2026-07-22 00:01:58",
+      "last_updated": "2026-07-22 13:52:00",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-22 00:01:58 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-22 13:52:00 • Docs Viewer Roadmap",
       "search_terms": [
         "document sharing ui redesign",
         "document",
@@ -4041,16 +4041,46 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-22 00:01:58",
+        "2026-07-22 13:52:00",
         "2026",
         "07",
         "22",
+        "13",
+        "52",
         "00",
-        "01",
-        "58",
         "d-20260720-230623-c7e921"
       ],
-      "search_text": "document sharing ui redesign document sharing ui redesign docs viewer roadmap docs viewer roadmap 2026-07-22 00:01:58 2026 07 22 00 01 58 d-20260720-230623-c7e921"
+      "search_text": "document sharing ui redesign document sharing ui redesign docs viewer roadmap docs viewer roadmap 2026-07-22 13:52:00 2026 07 22 13 52 00 d-20260720-230623-c7e921"
+    },
+    {
+      "id": "d-20260722-133457-e90e21",
+      "kind": "doc",
+      "title": "Prepare Package UI Redesign Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260722-133457-e90e21",
+      "last_updated": "2026-07-22 13:52:00",
+      "parent_id": "d-20260720-230623-c7e921",
+      "parent_title": "Document Sharing UI Redesign",
+      "display_meta": "2026-07-22 13:52:00 • Document Sharing UI Redesign",
+      "search_terms": [
+        "prepare package ui redesign delivery",
+        "prepare",
+        "package",
+        "ui",
+        "redesign",
+        "delivery",
+        "document sharing ui redesign",
+        "document",
+        "sharing",
+        "2026-07-22 13:52:00",
+        "2026",
+        "07",
+        "22",
+        "13",
+        "52",
+        "00",
+        "d-20260722-133457-e90e21"
+      ],
+      "search_text": "prepare package ui redesign delivery prepare package ui redesign delivery document sharing ui redesign document sharing 2026-07-22 13:52:00 2026 07 22 13 52 00 d-20260722-133457-e90e21"
     },
     {
       "id": "d-20260716-235630-055f0c",
@@ -4088,10 +4118,10 @@
       "kind": "doc",
       "title": "Index Multiple Selection",
       "href": "/docs/?scope=studio&doc=d-20260714-151900-6fa23e",
-      "last_updated": "2026-07-22 00:01:58",
+      "last_updated": "2026-07-22 13:52:00",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-22 00:01:58 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-22 13:52:00 • Docs Viewer Roadmap",
       "search_terms": [
         "index multiple selection",
         "index",
@@ -4101,16 +4131,16 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-22 00:01:58",
+        "2026-07-22 13:52:00",
         "2026",
         "07",
         "22",
+        "13",
+        "52",
         "00",
-        "01",
-        "58",
         "d-20260714-151900-6fa23e"
       ],
-      "search_text": "index multiple selection index multiple selection docs viewer roadmap docs viewer roadmap 2026-07-22 00:01:58 2026 07 22 00 01 58 d-20260714-151900-6fa23e"
+      "search_text": "index multiple selection index multiple selection docs viewer roadmap docs viewer roadmap 2026-07-22 13:52:00 2026 07 22 13 52 00 d-20260714-151900-6fa23e"
     },
     {
       "id": "d-20260714-234030-f30d01",
@@ -4171,10 +4201,10 @@
       "kind": "doc",
       "title": "Index Multiple Selection Consumer Assessment",
       "href": "/docs/?scope=studio&doc=d-20260722-000158-9c0f3e",
-      "last_updated": "2026-07-22 11:16:37",
+      "last_updated": "2026-07-22 13:52:00",
       "parent_id": "d-20260714-151900-6fa23e",
       "parent_title": "Index Multiple Selection",
-      "display_meta": "2026-07-22 11:16:37 • Index Multiple Selection",
+      "display_meta": "2026-07-22 13:52:00 • Index Multiple Selection",
       "search_terms": [
         "index multiple selection consumer assessment",
         "index",
@@ -4183,16 +4213,16 @@
         "consumer",
         "assessment",
         "index multiple selection",
-        "2026-07-22 11:16:37",
+        "2026-07-22 13:52:00",
         "2026",
         "07",
         "22",
-        "11",
-        "16",
-        "37",
+        "13",
+        "52",
+        "00",
         "d-20260722-000158-9c0f3e"
       ],
-      "search_text": "index multiple selection consumer assessment index multiple selection consumer assessment index multiple selection 2026-07-22 11:16:37 2026 07 22 11 16 37 d-20260722-000158-9c0f3e"
+      "search_text": "index multiple selection consumer assessment index multiple selection consumer assessment index multiple selection 2026-07-22 13:52:00 2026 07 22 13 52 00 d-20260722-000158-9c0f3e"
     },
     {
       "id": "d-20260721-074902-838446",

@@ -220,6 +220,9 @@ def assert_action_target_isolation(page: Page) -> None:
                 });
                 return {
                     selectedDocIds,
+                    prepareActive: caseResolver('prepare-document-package').targetDocIds,
+                    prepareContext: caseResolver('prepare-document-package', 'context').targetDocIds,
+                    prepareDisabledReason: caseResolver('prepare-document-package').disabledReason,
                     delete: caseResolver('delete').targetDocIds,
                     show: caseResolver('show').targetDocIds,
                     copyActive: caseResolver('copy-link').targetDocIds,
@@ -245,6 +248,52 @@ def assert_action_target_isolation(page: Page) -> None:
                 actionContext,
                 isolationCases,
                 selectionActionIds,
+                prepareControlStates: {
+                    empty: management.docsViewerPreparePackageActionControlState({
+                        capabilities: { document_packages: { available: true, prepare: true } },
+                        managementAvailable: true,
+                        managementBusy: false,
+                        managementChecked: true,
+                        resolution: definitions.resolveDocsViewerAction(
+                            'prepare-document-package',
+                            definitions.createDocsViewerActionContext({ activeDocId: 'active' })
+                        )
+                    }),
+                    capabilityUnavailable: management.docsViewerPreparePackageActionControlState({
+                        capabilities: {},
+                        managementAvailable: true,
+                        managementBusy: false,
+                        managementChecked: true,
+                        resolution: resolver('prepare-document-package')
+                    }),
+                    busy: management.docsViewerPreparePackageActionControlState({
+                        capabilities: { document_packages: { available: true, prepare: true } },
+                        managementAvailable: true,
+                        managementBusy: true,
+                        managementChecked: true,
+                        resolution: resolver('prepare-document-package')
+                    }),
+                    workspaceUnavailable: management.docsViewerPreparePackageActionControlState({
+                        capabilities: {
+                            document_packages: {
+                                available: false,
+                                message: 'Package workspace is offline.',
+                                prepare: false
+                            }
+                        },
+                        managementAvailable: true,
+                        managementBusy: false,
+                        managementChecked: true,
+                        resolution: resolver('prepare-document-package')
+                    }),
+                    ready: management.docsViewerPreparePackageActionControlState({
+                        capabilities: { document_packages: { available: true, prepare: true } },
+                        managementAvailable: true,
+                        managementBusy: false,
+                        managementChecked: true,
+                        resolution: resolver('prepare-document-package')
+                    })
+                },
                 activeTargets: resolveTargets(activeActionIds),
                 documentActiveTargets: resolveTargets(documentActionIds),
                 documentInvocationTargets: resolveTargets(documentActionIds, 'context')
@@ -258,10 +307,32 @@ def assert_action_target_isolation(page: Page) -> None:
             "primaryDocId": "context",
             "selectedDocIds": ["checked-a", "checked-b"],
         },
-        "selectionActionIds": [],
+        "selectionActionIds": ["prepare-document-package"],
+        "prepareControlStates": {
+            "empty": {
+                "disabled": True,
+                "disabledReason": "Select one or more documents.",
+            },
+            "capabilityUnavailable": {
+                "disabled": True,
+                "disabledReason": "Prepare package capability is unavailable.",
+            },
+            "busy": {
+                "disabled": True,
+                "disabledReason": "Docs management is busy.",
+            },
+            "workspaceUnavailable": {
+                "disabled": True,
+                "disabledReason": "Package workspace is offline.",
+            },
+            "ready": {"disabled": False, "disabledReason": ""},
+        },
         "isolationCases": [
             {
                 "selectedDocIds": [],
+                "prepareActive": [],
+                "prepareContext": [],
+                "prepareDisabledReason": "Select one or more documents.",
                 "delete": ["active"],
                 "show": ["active"],
                 "copyActive": ["active"],
@@ -271,6 +342,9 @@ def assert_action_target_isolation(page: Page) -> None:
             },
             {
                 "selectedDocIds": ["checked-a"],
+                "prepareActive": ["checked-a"],
+                "prepareContext": ["checked-a"],
+                "prepareDisabledReason": "",
                 "delete": ["active"],
                 "show": ["active"],
                 "copyActive": ["active"],
@@ -280,6 +354,9 @@ def assert_action_target_isolation(page: Page) -> None:
             },
             {
                 "selectedDocIds": ["checked-a", "checked-b"],
+                "prepareActive": ["checked-a", "checked-b"],
+                "prepareContext": ["checked-a", "checked-b"],
+                "prepareDisabledReason": "",
                 "delete": ["active"],
                 "show": ["active"],
                 "copyActive": ["active"],
@@ -311,6 +388,77 @@ def assert_action_target_isolation(page: Page) -> None:
     }
     if result != expected:
         raise AssertionError(f"checked ids changed current action targets: {result!r}")
+
+
+def assert_prepare_action_menu_projection(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const management = await import('/docs-viewer/runtime/js/management/docs-viewer-management.js');
+            const renderers = await import('/docs-viewer/runtime/js/management/docs-viewer-management-actions-renderer.js');
+            const render = renderers.createDocsViewerManagementAppControlRenderers()['manage-actions-menu'];
+            const rendered = render({
+                control: { id: 'manage-actions', label: 'Actions', state: {} },
+                document,
+                existingRoot: null
+            });
+            document.body.replaceChildren(rendered.root);
+            const prepare = document.querySelector('#docsViewerManagePreparePackageButton');
+            const returned = document.querySelector('#docsViewerManageReturnedPackagesLink');
+            const registered = {
+                prepareTag: prepare?.tagName || '',
+                prepareActionId: prepare?.dataset.docsViewerAction || '',
+                prepareHref: prepare?.getAttribute('href'),
+                returnedTag: returned?.tagName || '',
+                returnedHref: returned?.getAttribute('href') || '',
+                returnedScopeHref: returned?.dataset.docsViewerScopeHref || ''
+            };
+            management.projectDocsViewerPreparePackageActionControl(prepare, {
+                disabled: true,
+                disabledReason: 'Select one or more documents.'
+            });
+            const disabled = {
+                disabled: prepare.disabled,
+                reason: prepare.dataset.docsViewerDisabledReason,
+                ariaLabel: prepare.getAttribute('aria-label'),
+                title: prepare.title
+            };
+            management.projectDocsViewerPreparePackageActionControl(prepare, {
+                disabled: false,
+                disabledReason: ''
+            });
+            const enabled = {
+                disabled: prepare.disabled,
+                hasReason: Object.prototype.hasOwnProperty.call(prepare.dataset, 'docsViewerDisabledReason'),
+                ariaLabel: prepare.getAttribute('aria-label'),
+                title: prepare.title
+            };
+            return { registered, disabled, enabled };
+        }"""
+    )
+    expected = {
+        "registered": {
+            "prepareTag": "BUTTON",
+            "prepareActionId": "prepare-document-package",
+            "prepareHref": None,
+            "returnedTag": "A",
+            "returnedHref": "/docs/packages/returned/",
+            "returnedScopeHref": "/docs/packages/returned/",
+        },
+        "disabled": {
+            "disabled": True,
+            "reason": "Select one or more documents.",
+            "ariaLabel": "Prepare package. Select one or more documents.",
+            "title": "Prepare package. Select one or more documents.",
+        },
+        "enabled": {
+            "disabled": False,
+            "hasReason": False,
+            "ariaLabel": "Prepare package",
+            "title": "Prepare package",
+        },
+    }
+    if result != expected:
+        raise AssertionError(f"unexpected Prepare package Action menu projection: {result!r}")
 
 
 def assert_selection_projection_and_interaction(page: Page) -> None:
@@ -468,6 +616,7 @@ def main(argv: list[str] | None = None) -> int:
             page.add_style_tag(url=f"{base_url}/docs-viewer/static/css/docs-viewer-manage.css")
             assert_selection_state(page)
             assert_action_target_isolation(page)
+            assert_prepare_action_menu_projection(page)
             assert_selection_projection_and_interaction(page)
             browser.close()
         print("Docs Viewer index selection module contracts OK")
