@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a0d5e3662f0eba1e05ef1ae430a33db1",
-    "generated_at_utc": "2026-07-22T18:23:13Z",
-    "count": 269
+    "version": "blake2b-482e5ba7eee512e7cbceec8e44a53bb9",
+    "generated_at_utc": "2026-07-22T19:42:36Z",
+    "count": 270
   },
   "entries": [
     {
@@ -770,10 +770,10 @@
       "kind": "doc",
       "title": "Development Checklist",
       "href": "/docs/?scope=studio&doc=d-20260523-190651-7157ec",
-      "last_updated": "2026-07-20 21:46:37",
+      "last_updated": "2026-07-22 20:40:25",
       "parent_id": "d-20260419-000000-d2e47b",
       "parent_title": "Dev Home",
-      "display_meta": "2026-07-20 21:46:37 • Dev Home",
+      "display_meta": "2026-07-22 20:40:25 • Dev Home",
       "search_terms": [
         "development checklist",
         "development",
@@ -781,16 +781,16 @@
         "dev home",
         "dev",
         "home",
-        "2026-07-20 21:46:37",
+        "2026-07-22 20:40:25",
         "2026",
         "07",
+        "22",
         "20",
-        "21",
-        "46",
-        "37",
+        "40",
+        "25",
         "d-20260523-190651-7157ec"
       ],
-      "search_text": "development checklist development checklist dev home dev home 2026-07-20 21:46:37 2026 07 20 21 46 37 d-20260523-190651-7157ec"
+      "search_text": "development checklist development checklist dev home dev home 2026-07-22 20:40:25 2026 07 22 20 40 25 d-20260523-190651-7157ec"
     },
     {
       "id": "d-20260523-000000-bf7161",
@@ -4054,10 +4054,10 @@
       "kind": "doc",
       "title": "Document Sharing UI Redesign",
       "href": "/docs/?scope=studio&doc=d-20260720-230623-c7e921",
-      "last_updated": "2026-07-22 15:14:46",
+      "last_updated": "2026-07-22 20:40:25",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-22 15:14:46 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-22 20:40:25 • Docs Viewer Roadmap",
       "search_terms": [
         "document sharing ui redesign",
         "document",
@@ -4068,16 +4068,16 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-22 15:14:46",
+        "2026-07-22 20:40:25",
         "2026",
         "07",
         "22",
-        "15",
-        "14",
-        "46",
+        "20",
+        "40",
+        "25",
         "d-20260720-230623-c7e921"
       ],
-      "search_text": "document sharing ui redesign document sharing ui redesign docs viewer roadmap docs viewer roadmap 2026-07-22 15:14:46 2026 07 22 15 14 46 d-20260720-230623-c7e921"
+      "search_text": "document sharing ui redesign document sharing ui redesign docs viewer roadmap docs viewer roadmap 2026-07-22 20:40:25 2026 07 22 20 40 25 d-20260720-230623-c7e921"
     },
     {
       "id": "d-20260722-165733-88d9ff",
@@ -4139,6 +4139,36 @@
         "d-20260722-133457-e90e21"
       ],
       "search_text": "prepare package ui redesign delivery prepare package ui redesign delivery document sharing ui redesign document sharing 2026-07-22 15:14:46 2026 07 22 15 14 46 d-20260722-133457-e90e21"
+    },
+    {
+      "id": "d-20260722-204025-15ea54",
+      "kind": "doc",
+      "title": "Review Package UI Redesign Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260722-204025-15ea54",
+      "last_updated": "2026-07-22 20:40:25",
+      "parent_id": "d-20260720-230623-c7e921",
+      "parent_title": "Document Sharing UI Redesign",
+      "display_meta": "2026-07-22 20:40:25 • Document Sharing UI Redesign",
+      "search_terms": [
+        "review package ui redesign delivery",
+        "review",
+        "package",
+        "ui",
+        "redesign",
+        "delivery",
+        "document sharing ui redesign",
+        "document",
+        "sharing",
+        "2026-07-22 20:40:25",
+        "2026",
+        "07",
+        "22",
+        "20",
+        "40",
+        "25",
+        "d-20260722-204025-15ea54"
+      ],
+      "search_text": "review package ui redesign delivery review package ui redesign delivery document sharing ui redesign document sharing 2026-07-22 20:40:25 2026 07 22 20 40 25 d-20260722-204025-15ea54"
     },
     {
       "id": "d-20260716-235630-055f0c",
