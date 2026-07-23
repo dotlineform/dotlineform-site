@@ -44,6 +44,7 @@ def test_capabilities_advertise_source_config_reads() -> None:
         "preview": True,
         "apply": True,
     }
+    assert "review_sessions" not in payload["capabilities"]["docs_review"]
     assert payload["capabilities"]["scope_lifecycle"]["manifest"] is True
     assert payload["capabilities"]["scope_lifecycle"]["create_preview"] is True
     assert payload["capabilities"]["scope_lifecycle"]["create_apply"] is True

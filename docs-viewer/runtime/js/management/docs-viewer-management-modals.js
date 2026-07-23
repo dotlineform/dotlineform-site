@@ -3,9 +3,11 @@ import {
   renderSettingsWarningsMarkup
 } from "./docs-viewer-management-render.js";
 import {
-  normalizeText,
-  trapDocsViewerModalFocus
+  normalizeText
 } from "./docs-viewer-management-modal-shell.js";
+import {
+  trapDocsViewerModalFocus
+} from "./docs-viewer-modal-lifecycle.js";
 import {
   createDocsViewerMetadataParentPicker
 } from "./docs-viewer-management-parent-picker.js";

@@ -11,9 +11,6 @@ import {
   renderDocsViewerManagementShell
 } from "/docs-viewer/runtime/js/management/docs-viewer-management-shell-renderer.js";
 import {
-  createDocsViewerReviewSessionsController
-} from "/docs-viewer/runtime/js/management/docs-viewer-review-sessions-controller.js";
-import {
   renderDocsHtmlImportInteractiveOverwriteWarning,
   renderDocsHtmlImportResult,
   renderDocsHtmlImportWarnings
@@ -429,67 +426,6 @@ async function mountImport(context, state) {
   await afterPaint(context.document);
 }
 
-function reviewSessions(count = 2) {
-  return Array.from({ length: count }, (_, index) => ({
-    session_id: `review-session-${index + 1}`,
-    built: index % 2 === 0,
-    manifest: {
-      title: `Review session ${index + 1}`,
-      source_scope: "studio",
-      profile_id: index % 2 === 0 ? "document-content" : "document-tree",
-      content_format: index % 2 === 0 ? "jsonl" : "json"
-    }
-  }));
-}
-
-function fixtureResponse(payload, status = 200) {
-  return new Response(JSON.stringify(payload), {
-    status,
-    headers: { "Content-Type": "application/json" }
-  });
-}
-
-async function mountReview(context, state) {
-  const root = resetFixture(context);
-  const invoker = context.document.createElement("button");
-  invoker.type = "button";
-  invoker.textContent = "Open Review Sessions";
-  const mount = context.document.createElement("div");
-  root.append(invoker, mount);
-  invoker.focus();
-  const sessions = state === "empty" ? [] : reviewSessions(state === "long" ? 20 : 3);
-  const pendingBuild = new Promise(() => {});
-  const clientFetch = (url, options = {}) => {
-    if (state === "failure") {
-      return Promise.reject(new Error("Review sessions are unavailable from the fixture client."));
-    }
-    if (String(options.method || "GET").toUpperCase() === "GET") {
-      return Promise.resolve(fixtureResponse({ ok: true, sessions }));
-    }
-    if (state === "busy") return pendingBuild;
-    return Promise.resolve(fixtureResponse({
-      ok: true,
-      summary_text: "Review session fixture action completed."
-    }));
-  };
-  const controller = createDocsViewerReviewSessionsController({
-    document: context.document,
-    mount,
-    clientOptions: () => ({
-      baseUrl: "http://127.0.0.1:9",
-      fetch: clientFetch
-    }),
-    callbacks: {
-      onOpenSession: () => {}
-    }
-  });
-  await controller.open().catch(() => {});
-  if (state === "busy" && sessions[0]) {
-    void controller.buildSession(sessions[0]);
-  }
-  await afterPaint(context.document);
-}
-
 const PACK_STYLES = [
   "/docs-viewer/static/css/docs-viewer-theme.css",
   "/docs-viewer/static/css/docs-viewer.css",
@@ -527,30 +463,12 @@ const REVIEW_RECIPES = [
     mode: "side-by-side"
   },
   {
-    id: "import-review-long-content",
-    label: "Long-body scrolling — Import / Review Sessions",
-    question: "Do long-content modals give body scrolling and stable actions deliberate ownership?",
-    primarySpecimenId: "import-collection-long",
-    comparisonSpecimenId: "review-sessions-long",
-    dimensions: ["body scrolling", "card height", "stable actions", "overflow"],
-    mode: "side-by-side"
-  },
-  {
     id: "metadata-parent-lifecycle",
     label: "Nested control — Metadata parent picker",
     question: "Does the parent picker retain its nested keyboard contract without changing the enclosing Metadata modal?",
     primarySpecimenId: "metadata-parent-selected",
     comparisonSpecimenId: "metadata-normal",
     dimensions: ["initial focus", "arrow navigation", "nested Escape", "focus return"],
-    mode: "sequential"
-  },
-  {
-    id: "dynamic-review-lifecycle",
-    label: "Lifecycle baseline — Dynamic / Review Sessions",
-    question: "Do the dynamic and persistent modal paths follow the same lifecycle contract where no workflow exception applies?",
-    primarySpecimenId: "dynamic-confirm-normal",
-    comparisonSpecimenId: "review-sessions-selected",
-    dimensions: ["initial focus", "Tab wrapping", "Escape", "backdrop", "focus return"],
     mode: "sequential"
   }
 ];
@@ -702,41 +620,6 @@ const REGISTRY = [
     family: "import",
     state: "long-content",
     mount: (context) => mountImport(context, "collection")
-  },
-  {
-    id: "review-sessions-empty",
-    label: "Review Sessions empty",
-    family: "review-sessions",
-    state: "empty",
-    mount: (context) => mountReview(context, "empty")
-  },
-  {
-    id: "review-sessions-selected",
-    label: "Review Sessions selected",
-    family: "review-sessions",
-    state: "selected",
-    mount: (context) => mountReview(context, "selected")
-  },
-  {
-    id: "review-sessions-busy",
-    label: "Review Sessions building",
-    family: "review-sessions",
-    state: "busy",
-    mount: (context) => mountReview(context, "busy")
-  },
-  {
-    id: "review-sessions-failure",
-    label: "Review Sessions failure",
-    family: "review-sessions",
-    state: "failure",
-    mount: (context) => mountReview(context, "failure")
-  },
-  {
-    id: "review-sessions-long",
-    label: "Review Sessions long list",
-    family: "review-sessions",
-    state: "long-content",
-    mount: (context) => mountReview(context, "long")
   }
 ];
 

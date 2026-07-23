@@ -164,8 +164,7 @@ var MANAGEMENT_SHELL_MARKUP = [
   '      </div>',
   '    </form>',
   '  </div>',
-  '</div>',
-  '<div id="docsViewerManagementModalMount" data-docs-viewer-management-modal-mount></div>'
+  '</div>'
 ].join("");
 
 function nodeById(documentRef, id) {
@@ -228,7 +227,6 @@ export function findDocsViewerManagementShellRefs(options) {
     settingsWarnings: nodeById(documentRef, "docsViewerSettingsWarnings"),
     settingsStatus: nodeById(documentRef, "docsViewerSettingsStatus"),
     settingsCancelButton: nodeById(documentRef, "docsViewerSettingsCancelButton"),
-    settingsSaveButton: nodeById(documentRef, "docsViewerSettingsSaveButton"),
-    managementModalMount: nodeById(documentRef, "docsViewerManagementModalMount")
+    settingsSaveButton: nodeById(documentRef, "docsViewerSettingsSaveButton")
   };
 }

@@ -70,12 +70,9 @@ def test_dedicated_viewability_config_entries_are_retired() -> None:
         )
 
 
-def test_review_session_routes_are_management_owned() -> None:
-    assert routes.REVIEW_SESSIONS_PATH in routes.GET_PATHS
-    assert routes.REVIEW_SESSION_INDEX_TREE_PATH in routes.GET_PATHS
-    assert routes.REVIEW_SESSION_PAYLOAD_PATH in routes.GET_PATHS
-    assert routes.REVIEW_SESSION_BUILD_PATH in routes.POST_PATHS
-    assert routes.REVIEW_SESSION_DELETE_PATH in routes.POST_PATHS
+def test_abandoned_review_session_routes_remain_retired() -> None:
+    paths = (*routes.GET_PATHS, *routes.POST_PATHS)
+    assert not any(path.startswith("/docs/review-sessions") for path in paths)
 
 
 def test_static_html_export_routes_are_management_owned() -> None:

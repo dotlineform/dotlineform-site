@@ -28,7 +28,7 @@ def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
 def assert_shared_focus_trap(page: Page) -> None:
     result = page.evaluate(
         """async () => {
-          const modalModule = await import('/docs-viewer/runtime/js/management/docs-viewer-management-modal-shell.js');
+          const modalModule = await import('/docs-viewer/runtime/js/management/docs-viewer-modal-lifecycle.js');
           document.documentElement.setAttribute('data-theme', 'dark');
           for (const href of [
             '/site/docs-viewer/static/css/docs-viewer-theme.css',
@@ -164,6 +164,19 @@ def assert_choice_modal_radio_navigation(page: Page) -> None:
     page.keyboard.press("ArrowUp")
     up_wraps = state()
     page.keyboard.press("Escape")
+    closed = page.evaluate(
+        """async () => {
+          const result = await window.choiceModalResult;
+          await new Promise(resolve => setTimeout(resolve, 0));
+          return {
+            confirmed: Boolean(result && result.confirmed),
+            focusReturnedTo: document.activeElement?.id || '',
+            htmlOverflow: document.documentElement.style.overflow,
+            bodyOverflow: document.body.style.overflow,
+            scrollY: window.scrollY
+          };
+        }"""
+    )
 
     result = {
         "opened": opened,
@@ -173,6 +186,7 @@ def assert_choice_modal_radio_navigation(page: Page) -> None:
         "downToMoments": down_to_moments,
         "downWraps": down_wraps,
         "upWraps": up_wraps,
+        "closed": closed,
     }
     expected = {
         "opened": {
@@ -224,71 +238,16 @@ def assert_choice_modal_radio_navigation(page: Page) -> None:
             "outlineStyle": "solid",
             "outlineWidth": "2px",
         },
+        "closed": {
+            "confirmed": False,
+            "focusReturnedTo": "open",
+            "htmlOverflow": "",
+            "bodyOverflow": "",
+            "scrollY": 400,
+        },
     }
     if result != expected:
         raise AssertionError(f"unexpected choice modal radio navigation: {result!r}")
-
-
-def assert_review_sessions_modal(page: Page) -> None:
-    result = page.evaluate(
-        """async () => {
-          const sessionsModule = await import('/docs-viewer/runtime/js/management/docs-viewer-review-sessions-modal.js');
-          document.body.innerHTML = `
-            <main class="docsViewer">
-              <button id="outside">Outside</button>
-              <div id="mount"></div>
-            </main>`;
-          const outside = document.querySelector('#outside');
-          const mount = document.querySelector('#mount');
-          let closeCount = 0;
-          let sessionsModal;
-          sessionsModal = sessionsModule.createDocsViewerReviewSessionsModal({
-            document,
-            mount,
-            callbacks: {
-              onClose() {
-                closeCount += 1;
-                sessionsModal.close();
-              }
-            }
-          });
-
-          outside.focus();
-          sessionsModal.open();
-          await new Promise(resolve => setTimeout(resolve, 0));
-          const focusedOnOpen = document.activeElement?.textContent || '';
-
-          document.activeElement.dispatchEvent(new KeyboardEvent('keydown', {
-            key: 'Tab',
-            bubbles: true,
-            cancelable: true
-          }));
-          const focusedAfterTab = document.activeElement?.textContent || '';
-
-          document.dispatchEvent(new KeyboardEvent('keydown', {
-            key: 'Escape',
-            bubbles: true,
-            cancelable: true
-          }));
-          await new Promise(resolve => setTimeout(resolve, 0));
-          return {
-            closeCount,
-            focusedOnOpen,
-            focusedAfterTab,
-            focusReturnedTo: document.activeElement?.id || '',
-            hidden: mount.querySelector('.docsViewer__modal')?.hidden
-          };
-        }"""
-    )
-    expected = {
-        "closeCount": 1,
-        "focusedOnOpen": "Cancel",
-        "focusedAfterTab": "Cancel",
-        "focusReturnedTo": "outside",
-        "hidden": True,
-    }
-    if result != expected:
-        raise AssertionError(f"unexpected review sessions modal focus behavior: {result!r}")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -306,7 +265,6 @@ def main(argv: list[str] | None = None) -> int:
                 page.goto(base_url, wait_until="domcontentloaded")
                 assert_shared_focus_trap(page)
                 assert_choice_modal_radio_navigation(page)
-                assert_review_sessions_modal(page)
             finally:
                 browser.close()
             if errors:

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-09a53ccd48325d91d66653817905cf18",
-    "generated_at_utc": "2026-07-23T16:16:15Z",
+    "version": "blake2b-1e7cfc602eebb4e0defa41962b39d57f",
+    "generated_at_utc": "2026-07-23T17:09:34Z",
     "count": 276
   },
   "entries": [
@@ -4049,10 +4049,10 @@
       "kind": "doc",
       "title": "Docs Viewer Manage Theme Restoration",
       "href": "/docs/?scope=studio&doc=d-20260723-101224-e62173",
-      "last_updated": "2026-07-23 11:29:27",
+      "last_updated": "2026-07-23 18:03:12",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-23 11:29:27 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-23 18:03:12 • Docs Viewer Roadmap",
       "search_terms": [
         "docs viewer manage theme restoration",
         "docs",
@@ -4062,16 +4062,16 @@
         "restoration",
         "docs viewer roadmap",
         "roadmap",
-        "2026-07-23 11:29:27",
+        "2026-07-23 18:03:12",
         "2026",
         "07",
         "23",
-        "11",
-        "29",
-        "27",
+        "18",
+        "03",
+        "12",
         "d-20260723-101224-e62173"
       ],
-      "search_text": "docs viewer manage theme restoration docs viewer manage theme restoration docs viewer roadmap roadmap 2026-07-23 11:29:27 2026 07 23 11 29 27 d-20260723-101224-e62173"
+      "search_text": "docs viewer manage theme restoration docs viewer manage theme restoration docs viewer roadmap roadmap 2026-07-23 18:03:12 2026 07 23 18 03 12 d-20260723-101224-e62173"
     },
     {
       "id": "d-20260723-101224-74d214",
@@ -4107,10 +4107,10 @@
       "kind": "doc",
       "title": "Docs Viewer Modal Consistency",
       "href": "/docs/?scope=studio&doc=d-20260723-091111-aaa2d6",
-      "last_updated": "2026-07-23 10:12:24",
+      "last_updated": "2026-07-23 18:03:12",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-23 10:12:24 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-23 18:03:12 • Docs Viewer Roadmap",
       "search_terms": [
         "docs viewer modal consistency",
         "docs",
@@ -4119,26 +4119,26 @@
         "consistency",
         "docs viewer roadmap",
         "roadmap",
-        "2026-07-23 10:12:24",
+        "2026-07-23 18:03:12",
         "2026",
         "07",
         "23",
-        "10",
+        "18",
+        "03",
         "12",
-        "24",
         "d-20260723-091111-aaa2d6"
       ],
-      "search_text": "docs viewer modal consistency docs viewer modal consistency docs viewer roadmap roadmap 2026-07-23 10:12:24 2026 07 23 10 12 24 d-20260723-091111-aaa2d6"
+      "search_text": "docs viewer modal consistency docs viewer modal consistency docs viewer roadmap roadmap 2026-07-23 18:03:12 2026 07 23 18 03 12 d-20260723-091111-aaa2d6"
     },
     {
       "id": "d-20260723-091112-5e1b62",
       "kind": "doc",
       "title": "Docs Viewer Modal Consistency Delivery",
       "href": "/docs/?scope=studio&doc=d-20260723-091112-5e1b62",
-      "last_updated": "2026-07-23 17:16:03",
+      "last_updated": "2026-07-23 18:09:22",
       "parent_id": "d-20260723-091111-aaa2d6",
       "parent_title": "Docs Viewer Modal Consistency",
-      "display_meta": "2026-07-23 17:16:03 • Docs Viewer Modal Consistency",
+      "display_meta": "2026-07-23 18:09:22 • Docs Viewer Modal Consistency",
       "search_terms": [
         "docs viewer modal consistency delivery",
         "docs",
@@ -4147,26 +4147,26 @@
         "consistency",
         "delivery",
         "docs viewer modal consistency",
-        "2026-07-23 17:16:03",
+        "2026-07-23 18:09:22",
         "2026",
         "07",
         "23",
-        "17",
-        "16",
-        "03",
+        "18",
+        "09",
+        "22",
         "d-20260723-091112-5e1b62"
       ],
-      "search_text": "docs viewer modal consistency delivery docs viewer modal consistency delivery docs viewer modal consistency 2026-07-23 17:16:03 2026 07 23 17 16 03 d-20260723-091112-5e1b62"
+      "search_text": "docs viewer modal consistency delivery docs viewer modal consistency delivery docs viewer modal consistency 2026-07-23 18:09:22 2026 07 23 18 09 22 d-20260723-091112-5e1b62"
     },
     {
       "id": "d-20260723-093229-dd63ab",
       "kind": "doc",
       "title": "UI Workbench Concept",
       "href": "/docs/?scope=studio&doc=d-20260723-093229-dd63ab",
-      "last_updated": "2026-07-23 17:11:05",
+      "last_updated": "2026-07-23 18:03:12",
       "parent_id": "d-20260723-091111-aaa2d6",
       "parent_title": "Docs Viewer Modal Consistency",
-      "display_meta": "2026-07-23 17:11:05 • Docs Viewer Modal Consistency",
+      "display_meta": "2026-07-23 18:03:12 • Docs Viewer Modal Consistency",
       "search_terms": [
         "ui workbench concept",
         "ui",
@@ -4177,26 +4177,26 @@
         "viewer",
         "modal",
         "consistency",
-        "2026-07-23 17:11:05",
+        "2026-07-23 18:03:12",
         "2026",
         "07",
         "23",
-        "17",
-        "11",
-        "05",
+        "18",
+        "03",
+        "12",
         "d-20260723-093229-dd63ab"
       ],
-      "search_text": "ui workbench concept ui workbench concept docs viewer modal consistency docs viewer modal consistency 2026-07-23 17:11:05 2026 07 23 17 11 05 d-20260723-093229-dd63ab"
+      "search_text": "ui workbench concept ui workbench concept docs viewer modal consistency docs viewer modal consistency 2026-07-23 18:03:12 2026 07 23 18 03 12 d-20260723-093229-dd63ab"
     },
     {
       "id": "d-20260723-155929-ef9c14",
       "kind": "doc",
       "title": "UI Workbench Guide",
       "href": "/docs/?scope=studio&doc=d-20260723-155929-ef9c14",
-      "last_updated": "2026-07-23 17:11:05",
+      "last_updated": "2026-07-23 18:03:12",
       "parent_id": "d-20260723-093229-dd63ab",
       "parent_title": "UI Workbench Concept",
-      "display_meta": "2026-07-23 17:11:05 • UI Workbench Concept",
+      "display_meta": "2026-07-23 18:03:12 • UI Workbench Concept",
       "search_terms": [
         "ui workbench guide",
         "ui",
@@ -4204,16 +4204,16 @@
         "guide",
         "ui workbench concept",
         "concept",
-        "2026-07-23 17:11:05",
+        "2026-07-23 18:03:12",
         "2026",
         "07",
         "23",
-        "17",
-        "11",
-        "05",
+        "18",
+        "03",
+        "12",
         "d-20260723-155929-ef9c14"
       ],
-      "search_text": "ui workbench guide ui workbench guide ui workbench concept concept 2026-07-23 17:11:05 2026 07 23 17 11 05 d-20260723-155929-ef9c14"
+      "search_text": "ui workbench guide ui workbench guide ui workbench concept concept 2026-07-23 18:03:12 2026 07 23 18 03 12 d-20260723-155929-ef9c14"
     },
     {
       "id": "d-20260720-230623-c7e921",
@@ -5153,10 +5153,10 @@
       "kind": "doc",
       "title": "Standalone Docs Viewer Concept",
       "href": "/docs/?scope=studio&doc=d-20260718-105957-c72b2a",
-      "last_updated": "2026-07-19 22:41:57",
+      "last_updated": "2026-07-23 18:03:12",
       "parent_id": "d-20260511-120352-90ffa6",
       "parent_title": "Standalone Docs Viewer",
-      "display_meta": "2026-07-19 22:41:57 • Standalone Docs Viewer",
+      "display_meta": "2026-07-23 18:03:12 • Standalone Docs Viewer",
       "search_terms": [
         "standalone docs viewer concept",
         "standalone",
@@ -5164,16 +5164,16 @@
         "viewer",
         "concept",
         "standalone docs viewer",
-        "2026-07-19 22:41:57",
+        "2026-07-23 18:03:12",
         "2026",
         "07",
-        "19",
-        "22",
-        "41",
-        "57",
+        "23",
+        "18",
+        "03",
+        "12",
         "d-20260718-105957-c72b2a"
       ],
-      "search_text": "standalone docs viewer concept standalone docs viewer concept standalone docs viewer 2026-07-19 22:41:57 2026 07 19 22 41 57 d-20260718-105957-c72b2a"
+      "search_text": "standalone docs viewer concept standalone docs viewer concept standalone docs viewer 2026-07-23 18:03:12 2026 07 23 18 03 12 d-20260718-105957-c72b2a"
     },
     {
       "id": "d-20260718-233015-a1836e",

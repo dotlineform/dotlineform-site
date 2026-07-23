@@ -15,11 +15,6 @@ SOURCE_CONFIG_SETTINGS_PATH = "/docs/source-config-settings"
 IMPORT_SOURCE_FILES_PATH = "/docs/import-source-files"
 STAGED_MEDIA_FILES_PATH = "/docs/staged-media-files"
 DIAGRAM_SOURCES_PATH = "/docs/diagram-sources"
-REVIEW_SESSIONS_PATH = "/docs/review-sessions"
-REVIEW_SESSION_BUILD_PATH = "/docs/review-sessions/build"
-REVIEW_SESSION_DELETE_PATH = "/docs/review-sessions/delete"
-REVIEW_SESSION_INDEX_TREE_PATH = "/docs/review-sessions/index-tree"
-REVIEW_SESSION_PAYLOAD_PATH = "/docs/review-sessions/payload"
 
 SOURCE_BODY_PATH = "/docs/source"
 SOURCE_REBUILD_PATH = "/docs/source/rebuild"
@@ -68,9 +63,6 @@ GET_PATHS = (
     IMPORT_SOURCE_FILES_PATH,
     STAGED_MEDIA_FILES_PATH,
     DIAGRAM_SOURCES_PATH,
-    REVIEW_SESSIONS_PATH,
-    REVIEW_SESSION_INDEX_TREE_PATH,
-    REVIEW_SESSION_PAYLOAD_PATH,
     PUBLISH_STATUS_PATH,
 )
 
@@ -83,8 +75,6 @@ POST_PATHS = (
     IMPORT_SOURCE_PATH,
     STAGED_MEDIA_PREVIEW_PATH,
     STAGED_MEDIA_APPLY_PATH,
-    REVIEW_SESSION_BUILD_PATH,
-    REVIEW_SESSION_DELETE_PATH,
     UPDATE_METADATA_PATH,
     CREATE_PATH,
     REBUILD_PATH,

@@ -26,7 +26,6 @@ import docs_import_source_service as import_source_service  # noqa: E402
 import docs_management_mutations as mutations  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
 import docs_publish_gate  # noqa: E402
-import docs_review_sessions  # noqa: E402
 import docs_scope_create  # noqa: E402
 import docs_scope_delete  # noqa: E402
 import docs_scope_manifest  # noqa: E402
@@ -164,10 +163,6 @@ def docs_management_post_response(
                 },
             )
         return HTTPStatus.OK, payload
-    if path == routes.REVIEW_SESSION_BUILD_PATH:
-        return HTTPStatus.OK, docs_review_sessions.build_review_session(repo_root, body)
-    if path == routes.REVIEW_SESSION_DELETE_PATH:
-        return HTTPStatus.OK, docs_review_sessions.delete_review_session(repo_root, body)
     if path == routes.UPDATE_METADATA_PATH:
         return HTTPStatus.OK, handle_update_metadata(repo_root, body, dry_run)
     if path == routes.CREATE_PATH:

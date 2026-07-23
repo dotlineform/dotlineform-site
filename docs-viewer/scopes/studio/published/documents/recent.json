@@ -7,15 +7,39 @@
       "doc_id": "d-20260723-091112-5e1b62",
       "title": "Docs Viewer Modal Consistency Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-091112-5e1b62.json",
-      "timestamp": "2026-07-23 17:16:03",
+      "timestamp": "2026-07-23 18:09:22",
       "parent_id": "d-20260723-091111-aaa2d6",
       "parent_title": "Docs Viewer Modal Consistency"
+    },
+    {
+      "doc_id": "d-20260723-101224-e62173",
+      "title": "Docs Viewer Manage Theme Restoration",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-101224-e62173.json",
+      "timestamp": "2026-07-23 18:03:12",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap"
+    },
+    {
+      "doc_id": "d-20260723-091111-aaa2d6",
+      "title": "Docs Viewer Modal Consistency",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-091111-aaa2d6.json",
+      "timestamp": "2026-07-23 18:03:12",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap"
+    },
+    {
+      "doc_id": "d-20260718-105957-c72b2a",
+      "title": "Standalone Docs Viewer Concept",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-105957-c72b2a.json",
+      "timestamp": "2026-07-23 18:03:12",
+      "parent_id": "d-20260511-120352-90ffa6",
+      "parent_title": "Standalone Docs Viewer"
     },
     {
       "doc_id": "d-20260723-093229-dd63ab",
       "title": "UI Workbench Concept",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-093229-dd63ab.json",
-      "timestamp": "2026-07-23 17:11:05",
+      "timestamp": "2026-07-23 18:03:12",
       "parent_id": "d-20260723-091111-aaa2d6",
       "parent_title": "Docs Viewer Modal Consistency"
     },
@@ -23,7 +47,7 @@
       "doc_id": "d-20260723-155929-ef9c14",
       "title": "UI Workbench Guide",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-155929-ef9c14.json",
-      "timestamp": "2026-07-23 17:11:05",
+      "timestamp": "2026-07-23 18:03:12",
       "parent_id": "d-20260723-093229-dd63ab",
       "parent_title": "UI Workbench Concept"
     },
@@ -34,14 +58,6 @@
       "timestamp": "2026-07-23 12:23:51",
       "parent_id": "d-20260718-114645-7b9d24",
       "parent_title": "Docs Viewer Core Refactor"
-    },
-    {
-      "doc_id": "d-20260723-101224-e62173",
-      "title": "Docs Viewer Manage Theme Restoration",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-101224-e62173.json",
-      "timestamp": "2026-07-23 11:29:27",
-      "parent_id": "d-20260714-234030-1e0af6",
-      "parent_title": "Docs Viewer Roadmap"
     },
     {
       "doc_id": "d-20260723-101224-74d214",
@@ -60,29 +76,13 @@
       "parent_title": "Roadmap"
     },
     {
-      "doc_id": "d-20260723-091111-aaa2d6",
-      "title": "Docs Viewer Modal Consistency",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-091111-aaa2d6.json",
-      "timestamp": "2026-07-23 10:12:24",
-      "parent_id": "d-20260714-234030-1e0af6",
-      "parent_title": "Docs Viewer Roadmap"
-    },
-    {
       "doc_id": "d-20260722-204025-15ea54",
       "title": "Review Package UI Redesign Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260722-204025-15ea54.json",
       "timestamp": "2026-07-22 22:45:08",
       "parent_id": "d-20260720-230623-c7e921",
       "parent_title": "Document Sharing UI Redesign"
-    },
-    {
-      "doc_id": "d-20260523-190651-7157ec",
-      "title": "Development Checklist",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260523-190651-7157ec.json",
-      "timestamp": "2026-07-22 22:40:23",
-      "parent_id": "d-20260419-000000-d2e47b",
-      "parent_title": "Dev Home"
     }
   ],
-  "generated_at": "2026-07-23T16:16:15Z"
+  "generated_at": "2026-07-23T17:09:33Z"
 }

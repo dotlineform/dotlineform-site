@@ -174,7 +174,6 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 "available": data_sharing_workspace["available"],
                 "message": data_sharing_workspace["message"],
                 "workspace_root": data_sharing_workspace["root"],
-                "review_sessions": data_sharing_workspace["available"],
             },
             "scope_lifecycle": {
                 "manifest": True,

@@ -1,3 +1,7 @@
+import {
+  createDocsViewerModalLifecycle
+} from "./docs-viewer-modal-lifecycle.js";
+
 export function normalizeText(value) {
   return String(value == null ? "" : value).trim();
 }
@@ -64,11 +68,6 @@ function renderModalFrame(options) {
 export function openDocsViewerManagementModal(options = {}) {
   var host = createModalHost({ root: options.root });
   var restoreFocus = options.restoreFocus || document.activeElement;
-  var scrollRoots = [document.documentElement, document.body].filter(Boolean).map(function (node) {
-    var overflow = node.style.overflow;
-    node.style.overflow = "hidden";
-    return { node: node, overflow: overflow };
-  });
   host.innerHTML = renderModalFrame(options);
 
   var modal = host.querySelector('[data-role="docs-viewer-management-modal"]');
@@ -79,6 +78,8 @@ export function openDocsViewerManagementModal(options = {}) {
   var focusTarget = options.focusSelector ? host.querySelector(options.focusSelector) : primary;
 
   return new Promise(function (resolve) {
+    var settled = false;
+
     function setStatus(message) {
       if (!statusNode) return;
       statusNode.textContent = message || "";
@@ -90,30 +91,18 @@ export function openDocsViewerManagementModal(options = {}) {
       }
     }
 
-    function cleanup() {
+    function close(value) {
+      if (settled) return;
+      settled = true;
+      lifecycle.close();
       host.innerHTML = "";
-      document.removeEventListener("keydown", onKeydown);
-      scrollRoots.forEach(function (record) {
-        record.node.style.overflow = record.overflow;
-      });
-      try {
-        if (restoreFocus && typeof restoreFocus.focus === "function") {
-          restoreFocus.focus({ preventScroll: true });
-        }
-      } catch (_error) {
-        // Focus return is best effort.
-      }
+      resolve(value);
     }
 
     var api = {
       host: host,
       setStatus: setStatus
     };
-
-    function close(value) {
-      cleanup();
-      resolve(value);
-    }
 
     function cancel() {
       close({ confirmed: false });
@@ -128,27 +117,16 @@ export function openDocsViewerManagementModal(options = {}) {
       close(result || { confirmed: true });
     }
 
-    function onKeydown(event) {
-      if (modal && (
-        event.key === "Tab" ||
-        event.key === "ArrowDown" ||
-        event.key === "ArrowRight" ||
-        event.key === "ArrowUp" ||
-        event.key === "ArrowLeft"
-      )) {
-        modal.dataset.keyboardNavigation = "true";
-      }
-      if (navigateDocsViewerModalRadioGroup(event, modal)) return;
-      if (trapDocsViewerModalFocus(event, modal)) return;
-      if (event.key === "Escape") {
-        event.preventDefault();
+    var lifecycle = createDocsViewerModalLifecycle({
+      cancelElements: cancelNodes,
+      document: document,
+      initialFocus: focusTarget,
+      modal: modal,
+      onRequestClose: function () {
         cancel();
-      }
-    }
-
-    document.addEventListener("keydown", onKeydown);
-    cancelNodes.forEach(function (node) {
-      node.addEventListener("click", cancel);
+      },
+      restoreFocus: restoreFocus,
+      selectInitialFocus: true
     });
     if (primary) primary.addEventListener("click", submit);
     if (form) {
@@ -157,103 +135,11 @@ export function openDocsViewerManagementModal(options = {}) {
         submit();
       });
     }
-    if (modal) {
-      modal.addEventListener("pointerdown", function () {
-        delete modal.dataset.keyboardNavigation;
-      });
-      modal.addEventListener("click", function (event) {
-        if (event.target === modal) cancel();
-      });
-    }
     if (typeof options.onOpen === "function") {
       options.onOpen(api);
     }
-
-    window.setTimeout(function () {
-      try {
-        if (focusTarget && typeof focusTarget.focus === "function") focusTarget.focus({ preventScroll: true });
-        if (focusTarget && typeof focusTarget.select === "function") focusTarget.select();
-      } catch (_error) {
-        // Focus is a convenience only.
-      }
-    }, 0);
+    lifecycle.open();
   });
-}
-
-function focusableControls(container) {
-  if (!container) return [];
-  var controls = Array.from(container.querySelectorAll([
-    "button:not([disabled])",
-    "input:not([disabled])",
-    "select:not([disabled])",
-    "textarea:not([disabled])",
-    "a[href]",
-    "[tabindex]:not([tabindex='-1'])"
-  ].join(","))).filter(function (node) {
-    return !node.hidden && node.getClientRects && node.getClientRects().length;
-  });
-  return controls.filter(function (node) {
-    if (node.type !== "radio" || !node.name) return true;
-    var group = controls.filter(function (candidate) {
-      return candidate.type === "radio" &&
-        candidate.name === node.name &&
-        candidate.form === node.form;
-    });
-    var checked = group.find(function (candidate) { return candidate.checked; });
-    return node === (checked || group[0]);
-  });
-}
-
-export function navigateDocsViewerModalRadioGroup(event, modal) {
-  var directions = {
-    ArrowDown: 1,
-    ArrowRight: 1,
-    ArrowUp: -1,
-    ArrowLeft: -1
-  };
-  var direction = directions[event && event.key];
-  if (!direction || !modal) return false;
-  var documentRef = modal.ownerDocument || document;
-  var active = documentRef.activeElement;
-  if (!active || !modal.contains(active) || active.type !== "radio" || !active.name) return false;
-  var radios = Array.from(modal.querySelectorAll('input[type="radio"]')).filter(function (candidate) {
-    return !candidate.disabled &&
-      !candidate.hidden &&
-      candidate.name === active.name &&
-      candidate.form === active.form &&
-      candidate.getClientRects &&
-      candidate.getClientRects().length;
-  });
-  var activeIndex = radios.indexOf(active);
-  if (activeIndex < 0 || !radios.length) return false;
-
-  event.preventDefault();
-  var nextIndex = (activeIndex + direction + radios.length) % radios.length;
-  var next = radios[nextIndex];
-  if (next === active) return true;
-  next.checked = true;
-  next.focus({ preventScroll: true });
-  next.dispatchEvent(new Event("input", { bubbles: true }));
-  next.dispatchEvent(new Event("change", { bubbles: true }));
-  return true;
-}
-
-export function trapDocsViewerModalFocus(event, modal) {
-  if (!modal || event.key !== "Tab") return false;
-  var controls = focusableControls(modal);
-  if (!controls.length) return false;
-  var documentRef = modal.ownerDocument || document;
-  var active = documentRef.activeElement;
-  var activeIndex = modal.contains(active) ? controls.indexOf(active) : -1;
-  var nextIndex;
-  if (event.shiftKey) {
-    nextIndex = activeIndex <= 0 ? controls.length - 1 : activeIndex - 1;
-  } else {
-    nextIndex = activeIndex < 0 || activeIndex >= controls.length - 1 ? 0 : activeIndex + 1;
-  }
-  event.preventDefault();
-  controls[nextIndex].focus({ preventScroll: true });
-  return true;
 }
 
 export function openDocsViewerConfirmModal(options = {}) {

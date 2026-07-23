@@ -414,6 +414,16 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Smoke-check the Admin-hosted Docs Viewer workbench registry, production specimen mounts, and write-free browser boundary.",
         ),
         CheckCommand(
+            "docs-viewer-modal-lifecycle-module-smoke",
+            (
+                sys.executable,
+                "docs-viewer/tests/smoke/docs_viewer_modal_focus_modules.py",
+                "--site-root",
+                str(REPO_ROOT),
+            ),
+            "Smoke-check the shared production modal lifecycle and dynamic-shell focus, keyboard, close, scroll, and cleanup contracts.",
+        ),
+        CheckCommand(
             "docs-viewer-diagram-detail-module-smoke",
             (
                 sys.executable,
