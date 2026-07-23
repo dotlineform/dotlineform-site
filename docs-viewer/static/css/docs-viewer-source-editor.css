@@ -50,7 +50,7 @@
 }
 
 .docsViewerSourceEditor__dirty{
-  color: var(--docs-viewer-accent, #8a5a00);
+  color: var(--docs-viewer-warning);
 }
 
 .docsViewerSourceEditor__actionButton{
@@ -59,10 +59,10 @@
   width: 2rem;
   min-width: 2rem;
   height: 2rem;
-  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border: 1px solid var(--docs-viewer-border);
   border-radius: 999px;
-  background: var(--docs-viewer-panel, var(--panel, #fff));
-  color: var(--docs-viewer-text, inherit);
+  background: var(--docs-viewer-panel);
+  color: var(--docs-viewer-text);
   font: inherit;
   font-size: 1rem;
   line-height: 1;
@@ -73,17 +73,18 @@
 }
 
 .docsViewerSourceEditor__actionButton:hover{
-  background: var(--docs-viewer-panel-2, var(--panel-2, #f6f6f6));
+  background: var(--docs-viewer-panel-2);
 }
 
 .docsViewerSourceEditor__actionButton:focus-visible{
-  outline: 2px solid var(--docs-viewer-border-strong, var(--border-strong, #9a9a9a));
+  outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: 2px;
 }
 
 .docsViewerSourceEditor__actionButton[disabled]{
+  color: var(--docs-viewer-disabled);
   cursor: default;
-  opacity: 0.72;
+  opacity: 1;
 }
 
 .docsViewerSourceEditor__actionButton[data-source-editor-action="back"]{
@@ -98,10 +99,10 @@
   display: flex;
   flex: 1 1 auto;
   min-height: 0;
-  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border: 1px solid var(--docs-viewer-border);
   border-radius: 8px;
   overflow: hidden;
-  background: var(--docs-viewer-panel, var(--panel, #fff));
+  background: var(--docs-viewer-panel);
 }
 
 .docsViewerSourceEditor__textarea{
@@ -125,11 +126,6 @@
   tab-size: 2;
 }
 
-html[data-theme="dark"] .docsViewerSourceEditor__editor{
-  background: #151515;
-  border-color: #3a3a3a;
-}
-
 .docsViewerSemanticPicker{
   display: grid;
   gap: 0.75rem;
@@ -144,17 +140,17 @@ html[data-theme="dark"] .docsViewerSourceEditor__editor{
   box-sizing: border-box;
   width: 100%;
   min-height: 2rem;
-  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border: 1px solid var(--docs-viewer-border);
   border-radius: 6px;
   padding: 0.42rem 0.55rem;
   font: inherit;
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
-  color: inherit;
-  background: var(--docs-viewer-panel, var(--panel, #fff));
+  color: var(--docs-viewer-text);
+  background: var(--docs-viewer-panel);
 }
 
 .docsViewerSemanticPicker__input:focus-visible{
-  outline: 2px solid var(--docs-viewer-border-strong, var(--border-strong, #9a9a9a));
+  outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: 1px;
 }
 
@@ -164,7 +160,7 @@ html[data-theme="dark"] .docsViewerSourceEditor__editor{
 }
 
 .docsViewerSemanticPicker__status.is-error{
-  color: var(--docs-viewer-danger, #a22a2a);
+  color: var(--docs-viewer-danger);
 }
 
 .docsViewerSemanticPicker__results{
@@ -176,25 +172,30 @@ html[data-theme="dark"] .docsViewerSourceEditor__editor{
   display: grid;
   gap: 0.18rem;
   width: 100%;
-  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border: 1px solid var(--docs-viewer-border);
   border-radius: 6px;
   padding: 0.55rem;
-  background: var(--docs-viewer-panel, var(--panel, #fff));
-  color: inherit;
+  background: var(--docs-viewer-panel);
+  color: var(--docs-viewer-text);
   font: inherit;
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
   text-align: left;
   cursor: pointer;
 }
 
-.docsViewerSemanticPicker__row:hover,
+.docsViewerSemanticPicker__row:hover{
+  border-color: var(--docs-viewer-border-strong);
+  background: var(--docs-viewer-panel-2);
+}
+
 .docsViewerSemanticPicker__row.is-active{
-  border-color: var(--docs-viewer-border-strong, var(--border-strong, #9a9a9a));
-  background: var(--docs-viewer-panel-2, var(--panel-2, #f6f6f6));
+  border-color: var(--docs-viewer-border-strong);
+  background: var(--docs-viewer-selection-bg);
+  color: var(--docs-viewer-selection-text);
 }
 
 .docsViewerSemanticPicker__row:focus-visible{
-  outline: 2px solid var(--docs-viewer-border-strong, var(--border-strong, #9a9a9a));
+  outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: 1px;
 }
 
@@ -214,11 +215,11 @@ html[data-theme="dark"] .docsViewerSourceEditor__editor{
 .docsViewerSemanticPicker__rowKind,
 .docsViewerSemanticPicker__rowId{
   flex: 0 0 auto;
-  color: var(--docs-viewer-muted, var(--muted, #555));
+  color: var(--docs-viewer-muted);
 }
 
 .docsViewerSemanticPicker__rowMeta{
-  color: var(--docs-viewer-muted, var(--muted, #555));
+  color: var(--docs-viewer-muted);
 }
 
 @media (max-width: 720px){

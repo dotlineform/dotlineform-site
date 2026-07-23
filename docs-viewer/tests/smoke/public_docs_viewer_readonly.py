@@ -18,6 +18,11 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT))
 
 from tests.smoke.route_ready_helpers import wait_for_route_ready
+from docs_viewer_theme_smoke_helpers import (
+    assert_docs_viewer_theme_pair,
+    assert_docs_viewer_theme_state,
+    read_docs_viewer_theme_state,
+)
 
 
 LIBRARY_DOC_ID = "d-20260330-172255-8399b7"
@@ -145,6 +150,75 @@ def assert_payload_requests(route: str, paths: set[str], scope: str, doc_id: str
     missing = [path for path in [expected_tree, expected_recent, expected_doc, expected_search] if path not in paths]
     if missing:
         raise AssertionError(f"{route} missed expected compact payload requests {missing!r}; saw {sorted(paths)!r}")
+
+
+def set_public_theme(page: Page, theme: str, timeout_ms: int) -> None:
+    toggle = page.locator("#themeToggle")
+    if toggle.count() != 1 or toggle.is_hidden():
+        raise AssertionError("public route did not render one visible theme toggle")
+    current = page.locator("html").get_attribute("data-theme")
+    if current != theme:
+        toggle.click()
+    page.wait_for_function(
+        """expected => {
+            const toggle = document.querySelector('#themeToggle');
+            const isDark = expected === 'dark';
+            const visibleIcons = Array.from(
+                toggle?.querySelectorAll('[data-theme-icon]') || []
+            ).filter(icon => !icon.hasAttribute('hidden'));
+            return document.documentElement.getAttribute('data-theme') === expected &&
+                toggle?.getAttribute('aria-pressed') === (isDark ? 'true' : 'false') &&
+                toggle?.getAttribute('aria-label') === (
+                    isDark ? 'Switch to light mode' : 'Switch to dark mode'
+                ) &&
+                visibleIcons.length === 1 &&
+                visibleIcons[0].dataset.themeIcon === expected;
+        }""",
+        arg=theme,
+        timeout=timeout_ms,
+    )
+
+
+def assert_public_theme_contract(
+    page: Page,
+    doc_id: str,
+    title: str,
+    timeout_ms: int,
+) -> None:
+    set_public_theme(page, "light", timeout_ms)
+    light = read_docs_viewer_theme_state(page)
+    assert_docs_viewer_theme_state(
+        light,
+        theme="light",
+        management_ui=False,
+        body_uses_viewer_palette=False,
+    )
+
+    set_public_theme(page, "dark", timeout_ms)
+    dark = read_docs_viewer_theme_state(page)
+    assert_docs_viewer_theme_state(
+        dark,
+        theme="dark",
+        management_ui=False,
+        body_uses_viewer_palette=False,
+    )
+    assert_docs_viewer_theme_pair(light, dark)
+
+    page.reload(wait_until="domcontentloaded")
+    wait_for_rendered_doc(page, doc_id, title, timeout_ms)
+    persisted_dark = read_docs_viewer_theme_state(page)
+    assert_docs_viewer_theme_state(
+        persisted_dark,
+        theme="dark",
+        management_ui=False,
+        body_uses_viewer_palette=False,
+    )
+    if persisted_dark.get("tokens") != dark.get("tokens"):
+        raise AssertionError(
+            f"reloaded public dark theme did not retain the shared palette: {persisted_dark!r}"
+        )
+
+    set_public_theme(page, "light", timeout_ms)
 
 
 def assert_no_inline_mermaid_asset_request(route: str, paths: set[str]) -> None:
@@ -282,6 +356,7 @@ def exercise_public_route(
     timeout_ms: int,
     *,
     expect_document_controls: bool = True,
+    verify_theme: bool = False,
 ) -> None:
     request_urls: list[str] = []
     page.on("request", lambda request: request_urls.append(request.url))
@@ -290,6 +365,8 @@ def exercise_public_route(
     if query_value(page.url, "mode"):
         raise AssertionError(f"{route} should remove mode query state, got {page.url}")
     assert_public_route_contract(route, public_route_state(page))
+    if verify_theme:
+        assert_public_theme_contract(page, doc_id, title, timeout_ms)
     if expect_document_controls:
         assert_public_info_panel(page, route, title, timeout_ms)
     else:
@@ -473,6 +550,7 @@ def main() -> int:
                     LIBRARY_DOC_ID,
                     "Library",
                     args.timeout_ms,
+                    verify_theme=True,
                 )
                 exercise_public_route(
                     page,

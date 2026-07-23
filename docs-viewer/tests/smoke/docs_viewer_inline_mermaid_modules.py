@@ -49,20 +49,27 @@ def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
 def install_fixture(page: Page) -> None:
     page.evaluate(
         """async () => {
-            await new Promise((resolve, reject) => {
-                const existing = document.querySelector('link[data-inline-mermaid-smoke-styles]');
-                if (existing?.sheet) {
-                    resolve();
-                    return;
-                }
-                const link = existing || document.createElement('link');
-                link.rel = 'stylesheet';
-                link.href = '/docs-viewer/static/css/docs-viewer.css';
-                link.dataset.inlineMermaidSmokeStyles = 'true';
-                link.addEventListener('load', resolve, { once: true });
-                link.addEventListener('error', () => reject(new Error('Docs Viewer stylesheet did not load.')), { once: true });
-                if (!existing) document.head.appendChild(link);
-            });
+            document.documentElement.setAttribute('data-theme', 'light');
+            for (const href of [
+                '/docs-viewer/static/css/docs-viewer-theme.css',
+                '/docs-viewer/static/css/docs-viewer.css'
+            ]) {
+                await new Promise((resolve, reject) => {
+                    const existing = document.querySelector(`link[href="${href}"]`);
+                    if (existing?.sheet) {
+                        resolve();
+                        return;
+                    }
+                    const link = existing || document.createElement('link');
+                    link.rel = 'stylesheet';
+                    link.href = href;
+                    link.addEventListener('load', resolve, { once: true });
+                    link.addEventListener('error', () => reject(
+                        new Error(`Docs Viewer stylesheet did not load: ${href}`)
+                    ), { once: true });
+                    if (!existing) document.head.appendChild(link);
+                });
+            }
             document.body.classList.add('docsViewer');
             const inlineMermaid = await import('/docs-viewer/runtime/js/management/docs-viewer-inline-mermaid.js');
             const documentController = await import('/docs-viewer/runtime/js/shared/docs-viewer-document-controller.js');

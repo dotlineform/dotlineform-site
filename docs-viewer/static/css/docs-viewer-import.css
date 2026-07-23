@@ -4,11 +4,7 @@
   --docs-viewer-import-radius-lg: 0.5rem;
   --docs-viewer-import-control-height: 2rem;
   --docs-viewer-import-button-width: 5.75rem;
-  --docs-viewer-import-default-value: color-mix(in srgb, var(--docs-viewer-muted, var(--muted, #555)) 78%, transparent);
-  --docs-viewer-import-focus-ring: color-mix(in srgb, var(--docs-viewer-border-strong, var(--border-strong, #777)) 18%, transparent);
-  --docs-viewer-import-success: #1d6a3b;
-  --docs-viewer-import-warn: #9d5a00;
-  --docs-viewer-import-danger: #a22a2a;
+  --docs-viewer-import-default-value: var(--docs-viewer-muted);
   max-width: none;
   margin: 0;
 }
@@ -17,9 +13,9 @@
 .docsViewerImport__panel{
   display: grid;
   gap: 0.8rem;
-  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border: 1px solid var(--docs-viewer-border);
   border-radius: var(--docs-viewer-import-radius-lg);
-  background: var(--docs-viewer-panel, var(--panel, #fff));
+  background: var(--docs-viewer-panel);
   padding: 0.9rem;
 }
 
@@ -27,14 +23,14 @@
   box-sizing: border-box;
   width: 100%;
   max-width: 100%;
-  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border: 1px solid var(--docs-viewer-border);
   border-radius: var(--docs-viewer-import-radius-sm);
   padding: 0.48rem 0.55rem;
   font: inherit;
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
   line-height: var(--docs-viewer-line-snug, var(--line-snug, 1.25));
-  color: inherit;
-  background: var(--docs-viewer-panel, var(--panel, #fff));
+  color: var(--docs-viewer-text);
+  background: var(--docs-viewer-panel);
 }
 
 .docsViewerImport__input::placeholder{
@@ -54,15 +50,15 @@
 }
 
 .docsViewerImport__input:disabled{
-  color: var(--docs-viewer-import-default-value);
-  background: var(--docs-viewer-panel, var(--panel, #fff));
+  color: var(--docs-viewer-disabled);
+  background: var(--docs-viewer-panel);
   cursor: not-allowed;
 }
 
 .docsViewerImport__input:focus{
-  outline: none;
-  border-color: var(--docs-viewer-border-strong, var(--border-strong, #777));
-  box-shadow: 0 0 0 2px var(--docs-viewer-import-focus-ring);
+  outline: 2px solid var(--docs-viewer-focus-ring);
+  outline-offset: 2px;
+  border-color: var(--docs-viewer-focus-ring);
 }
 
 .docsViewerImport__field{
@@ -76,7 +72,7 @@
 
 .docsViewerImport__fieldLabel{
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
-  color: var(--docs-viewer-muted, var(--muted, #555));
+  color: var(--docs-viewer-muted);
   text-transform: lowercase;
 }
 
@@ -109,9 +105,9 @@
   --button-height: var(--docs-viewer-import-control-height);
   --button-font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
   --button-default-width: var(--docs-viewer-import-button-width);
-  border: 1px solid var(--docs-viewer-border-strong, var(--border-strong, #aaa));
-  background: var(--docs-viewer-panel, var(--panel, #fff));
-  color: inherit;
+  border: 1px solid var(--docs-viewer-border-strong);
+  background: var(--docs-viewer-panel);
+  color: var(--docs-viewer-text);
   border-radius: var(--docs-viewer-import-radius-sm);
   padding: 0.42rem 0.7rem;
   font: inherit;
@@ -132,14 +128,14 @@
 }
 
 .docsViewerImport__button:disabled{
-  color: var(--docs-viewer-muted, var(--muted, #555));
+  color: var(--docs-viewer-disabled);
   cursor: not-allowed;
 }
 
 .docsViewerImport__meta{
   margin: 0.25rem 0 0.75rem;
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
-  color: var(--docs-viewer-muted, var(--muted, #555));
+  color: var(--docs-viewer-muted);
 }
 
 .docsViewerImport__status{
@@ -158,15 +154,15 @@
 }
 
 .docsViewerImport__status[data-state="success"]{
-  color: var(--docs-viewer-import-success);
+  color: var(--docs-viewer-success);
 }
 
 .docsViewerImport__status[data-state="warn"]{
-  color: var(--docs-viewer-import-warn);
+  color: var(--docs-viewer-warning);
 }
 
 .docsViewerImport__status[data-state="error"]{
-  color: var(--docs-viewer-import-danger);
+  color: var(--docs-viewer-danger);
 }
 
 .docsViewerImport__intro,
@@ -178,7 +174,7 @@
 .docsViewerImport__intro,
 .docsViewerImport__toggleHint,
 .docsViewerImport__warning > p{
-  color: var(--docs-viewer-muted, var(--muted, #555));
+  color: var(--docs-viewer-muted);
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
 }
 
@@ -226,9 +222,9 @@
   display: grid;
   gap: 0.5rem;
   padding: 0.9rem 1rem;
-  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border: 1px solid var(--docs-viewer-border);
   border-radius: 1rem;
-  background: var(--docs-viewer-panel, var(--panel, #fff));
+  background: var(--docs-viewer-panel);
 }
 
 .docsViewerImport__warning[hidden],
@@ -244,7 +240,7 @@
 }
 
 .docsViewerImport__warning > h3{
-  color: var(--docs-viewer-import-warn);
+  color: var(--docs-viewer-warning);
 }
 
 .docsViewerImport__resultGrid{
@@ -289,7 +285,7 @@
   display: grid;
   gap: 0.45rem;
   padding: 0.8rem 0.9rem;
-  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border: 1px solid var(--docs-viewer-border);
   border-radius: var(--docs-viewer-import-radius-md);
 }
 
@@ -322,7 +318,7 @@
 
 .docsViewerImport__collectionRecords > li{
   padding: 0.55rem 0.65rem;
-  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border: 1px solid var(--docs-viewer-border);
   border-radius: var(--docs-viewer-import-radius-sm);
 }
 
@@ -337,12 +333,12 @@
 }
 
 .docsViewerImport__collectionRecordAction{
-  color: var(--docs-viewer-import-warn);
+  color: var(--docs-viewer-warning);
   text-transform: capitalize;
 }
 
 .docsViewerImport__collectionRecordMeta{
-  color: var(--docs-viewer-muted, var(--muted, #555));
+  color: var(--docs-viewer-muted);
 }
 
 .docsViewerImport__collectionDecisionActions{
@@ -471,7 +467,7 @@
 }
 
 .docsViewer__importBody .docsViewerImport__fieldLabel{
-  color: var(--docs-viewer-text, var(--text, #111));
+  color: var(--docs-viewer-text);
 }
 
 .docsViewer__importBody .docsViewerImport__fieldControl{
@@ -492,7 +488,7 @@
   display: grid;
   gap: 0.55rem;
   padding: 0.75rem 0.3rem 0.3rem;
-  background: var(--docs-viewer-panel, var(--panel, #fff));
+  background: var(--docs-viewer-panel);
 }
 
 @media (max-width: 700px){

@@ -1,0 +1,54 @@
+/* Shared Docs Viewer light/dark palette.
+ *
+ * This is the only raw palette owner for Docs Viewer surfaces. Public, manage,
+ * review, and future standalone hosts load it before docs-viewer.css. Hosts may
+ * override individual --docs-viewer-theme-* roles on their viewer root.
+ */
+
+html[data-theme="light"]{
+  color-scheme: light;
+  --docs-viewer-theme-canvas: #fbfaf7;
+  --docs-viewer-theme-surface: #fafafa;
+  --docs-viewer-theme-surface-subtle: #f6f6f6;
+  --docs-viewer-theme-text: #111;
+  --docs-viewer-theme-text-muted: #444;
+  --docs-viewer-theme-border: #e6e6e6;
+  --docs-viewer-theme-border-strong: #cfcfcf;
+  --docs-viewer-theme-link: #3f3f3f;
+  --docs-viewer-theme-link-hover: #1e1e1e;
+  --docs-viewer-theme-link-visited: #5b2aa6;
+  --docs-viewer-theme-focus-ring: #3f3f3f;
+  --docs-viewer-theme-selection-surface: #dce8f8;
+  --docs-viewer-theme-selection-text: #111;
+  --docs-viewer-theme-overlay: rgb(0 0 0 / 0.34);
+  --docs-viewer-theme-text-disabled: #777;
+  --docs-viewer-theme-busy: #555;
+  --docs-viewer-theme-success: #1d6a3b;
+  --docs-viewer-theme-warning: #8a5a00;
+  --docs-viewer-theme-danger: #a22a2a;
+  --docs-viewer-theme-shadow-pop: 0 8px 24px rgb(0 0 0 / 0.08);
+}
+
+html[data-theme="dark"]{
+  color-scheme: dark;
+  --docs-viewer-theme-canvas: #0f0f10;
+  --docs-viewer-theme-surface: #161618;
+  --docs-viewer-theme-surface-subtle: #1c1c1f;
+  --docs-viewer-theme-text: #f2f2f2;
+  --docs-viewer-theme-text-muted: #c7c7c7;
+  --docs-viewer-theme-border: #2b2b30;
+  --docs-viewer-theme-border-strong: #3a3a40;
+  --docs-viewer-theme-link: #7bb0ff;
+  --docs-viewer-theme-link-hover: #a7c9ff;
+  --docs-viewer-theme-link-visited: #c39bff;
+  --docs-viewer-theme-focus-ring: #a7c9ff;
+  --docs-viewer-theme-selection-surface: #263b60;
+  --docs-viewer-theme-selection-text: #f2f2f2;
+  --docs-viewer-theme-overlay: rgb(0 0 0 / 0.68);
+  --docs-viewer-theme-text-disabled: #85858c;
+  --docs-viewer-theme-busy: #c7c7c7;
+  --docs-viewer-theme-success: #79c995;
+  --docs-viewer-theme-warning: #e0ad65;
+  --docs-viewer-theme-danger: #ff9a9a;
+  --docs-viewer-theme-shadow-pop: 0 10px 30px rgb(0 0 0 / 0.36);
+}

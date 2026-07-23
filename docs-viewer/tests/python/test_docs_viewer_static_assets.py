@@ -10,6 +10,7 @@ from docs_viewer_service_test_support import REPO_ROOT, docs_viewer_service
 
 def test_asset_version_uses_canonical_site_css() -> None:
     for filename in (
+        "docs-viewer-theme.css",
         "docs-viewer.css",
         "docs-viewer-reports.css",
         "docs-viewer-moments.css",
@@ -21,6 +22,112 @@ def test_asset_version_uses_canonical_site_css() -> None:
             shared_css.write_text("/* shared css */\n", encoding="utf-8")
 
             assert docs_viewer_service.asset_version(repo_root) != "1"
+
+
+def test_docs_viewer_theme_has_one_shared_palette_owner() -> None:
+    theme_css = (
+        REPO_ROOT / "site/docs-viewer/static/css/docs-viewer-theme.css"
+    ).read_text(encoding="utf-8")
+    base_css = (REPO_ROOT / "site/docs-viewer/static/css/docs-viewer.css").read_text(
+        encoding="utf-8"
+    )
+    manage_css = (
+        REPO_ROOT / "docs-viewer/static/css/docs-viewer-manage.css"
+    ).read_text(encoding="utf-8")
+    public_host_css = (REPO_ROOT / "site/assets/css/main.css").read_text(encoding="utf-8")
+    theme_roles = (
+        "canvas",
+        "surface",
+        "surface-subtle",
+        "text",
+        "text-muted",
+        "border",
+        "border-strong",
+        "link",
+        "link-hover",
+        "link-visited",
+        "focus-ring",
+        "selection-surface",
+        "selection-text",
+        "overlay",
+        "text-disabled",
+        "busy",
+        "success",
+        "warning",
+        "danger",
+        "shadow-pop",
+    )
+
+    assert 'html[data-theme="light"]' in theme_css
+    assert 'html[data-theme="dark"]' in theme_css
+    for role in theme_roles:
+        token = f"--docs-viewer-theme-{role}:"
+        assert theme_css.count(token) == 2
+    assert "--docs-viewer-theme-" in base_css
+    assert "--docs-viewer-theme-" not in manage_css
+    assert "--docs-viewer-theme-" not in public_host_css
+    assert "data-allow-management" not in manage_css
+
+
+def test_manage_theme_consumers_use_semantic_tokens() -> None:
+    component_css = {
+        filename: (REPO_ROOT / "docs-viewer/static/css" / filename).read_text(
+            encoding="utf-8"
+        )
+        for filename in (
+            "docs-viewer-manage.css",
+            "docs-viewer-import.css",
+            "docs-viewer-source-editor.css",
+        )
+    }
+    combined_css = "\n".join(component_css.values())
+
+    for host_token in (
+        "--text",
+        "--muted",
+        "--bg",
+        "--panel",
+        "--panel-2",
+        "--border",
+        "--border-strong",
+        "--link",
+        "--link-hover",
+        "--link-visited",
+    ):
+        assert f"var({host_token}" not in combined_css
+    assert "html[data-theme" not in combined_css
+    assert "--docs-viewer-import-success" not in component_css["docs-viewer-import.css"]
+    assert "--docs-viewer-import-warn" not in component_css["docs-viewer-import.css"]
+    assert "--docs-viewer-import-danger" not in component_css["docs-viewer-import.css"]
+    for token in (
+        "--docs-viewer-focus-ring",
+        "--docs-viewer-selection-bg",
+        "--docs-viewer-selection-text",
+        "--docs-viewer-overlay",
+        "--docs-viewer-disabled",
+        "--docs-viewer-busy",
+        "--docs-viewer-success",
+        "--docs-viewer-warning",
+        "--docs-viewer-danger",
+        "--docs-viewer-shadow-pop",
+    ):
+        assert token in combined_css
+
+
+def test_docs_viewer_shells_load_shared_theme_before_base_css() -> None:
+    shell_paths = (
+        "docs-viewer/shell/docs-viewer-manage.html",
+        "docs-viewer/shell/docs-viewer-review.html",
+        "docs-viewer/templates/public-route/index.html",
+        "site/analysis/index.html",
+        "site/library/index.html",
+        "site/moments/index.html",
+    )
+
+    for relative_path in shell_paths:
+        shell = (REPO_ROOT / relative_path).read_text(encoding="utf-8")
+        assert shell.index("docs-viewer-theme.css") < shell.index("docs-viewer.css")
+        assert "data-allow-management" not in shell
 
 
 def test_manage_shell_loads_feature_owned_css_after_shared_management_css() -> None:
@@ -95,6 +202,7 @@ def test_static_path_policy_is_docs_viewer_scoped() -> None:
     assert allowed("/docs-viewer/runtime/js/docs-viewer-public.js") is False
     assert allowed("/docs-viewer/runtime/js/docs-viewer-manage.js") is False
     assert allowed("/docs-viewer/runtime/js/docs-viewer.js") is False
+    assert allowed("/docs-viewer/static/css/docs-viewer-theme.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-reports.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-moments.css") is True
@@ -146,6 +254,9 @@ def test_runtime_static_route_prefixes_resolve_to_owning_roots() -> None:
     ) is None
 
 def test_shared_static_routes_resolve_to_owning_roots() -> None:
+    assert docs_viewer_service.shared_static_relative_path(
+        "/docs-viewer/static/css/docs-viewer-theme.css"
+    ) == Path("site/docs-viewer/static/css/docs-viewer-theme.css")
     assert docs_viewer_service.shared_static_relative_path(
         "/docs-viewer/static/css/docs-viewer.css"
     ) == Path("site/docs-viewer/static/css/docs-viewer.css")

@@ -396,6 +396,16 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Smoke-check explicit app context, route access, service surfaces, and router module contracts.",
         ),
         CheckCommand(
+            "docs-viewer-theme-module-smoke",
+            (
+                sys.executable,
+                "docs-viewer/tests/smoke/docs_viewer_theme_modules.py",
+                "--site-root",
+                str(REPO_ROOT),
+            ),
+            "Smoke-check theme normalization, synchronized toggle projection, and persisted-selection ownership.",
+        ),
+        CheckCommand(
             "docs-viewer-diagram-detail-module-smoke",
             (
                 sys.executable,

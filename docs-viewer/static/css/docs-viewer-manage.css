@@ -38,12 +38,13 @@
 }
 
 .docsViewer__indexSelectionButton:focus-visible{
-  outline: 2px solid var(--docs-viewer-border-strong);
+  outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: 1px;
 }
 
 .docsViewer__indexSelectionButton[disabled]{
-  opacity: 0.55;
+  color: var(--docs-viewer-disabled);
+  opacity: 1;
   cursor: default;
 }
 
@@ -81,55 +82,8 @@
 }
 
 .docsViewer__indexSelectionCheckbox:focus-visible{
-  outline: 2px solid var(--docs-viewer-border-strong);
+  outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: 2px;
-}
-
-
-html[data-theme="light"]{
-  color-scheme: light;
-}
-
-html[data-theme="dark"]{
-  color-scheme: dark;
-}
-
-html[data-theme="light"] .docsViewer[data-allow-management="true"]{
-  --docs-viewer-theme-text: #111;
-  --docs-viewer-theme-muted: #444;
-  --docs-viewer-theme-bg: #fbfaf7;
-  --docs-viewer-theme-panel: #fafafa;
-  --docs-viewer-theme-panel-2: #f6f6f6;
-  --docs-viewer-theme-border: #e6e6e6;
-  --docs-viewer-theme-border-strong: #cfcfcf;
-  --docs-viewer-theme-link: #3f3f3f;
-  --docs-viewer-theme-link-hover: #1e1e1e;
-  --docs-viewer-theme-link-visited: #5b2aa6;
-}
-
-html[data-theme="dark"] .docsViewer[data-allow-management="true"]{
-  --docs-viewer-theme-text: #f2f2f2;
-  --docs-viewer-theme-muted: #c7c7c7;
-  --docs-viewer-theme-bg: #0f0f10;
-  --docs-viewer-theme-panel: #161618;
-  --docs-viewer-theme-panel-2: #1c1c1f;
-  --docs-viewer-theme-border: #2b2b30;
-  --docs-viewer-theme-border-strong: #3a3a40;
-  --docs-viewer-theme-link: #7bb0ff;
-  --docs-viewer-theme-link-hover: #a7c9ff;
-  --docs-viewer-theme-link-visited: #c39bff;
-}
-
-html[data-theme="light"] body.docs-viewer-shell,
-html[data-theme="light"] body.docs-viewer-service{
-  color: #111;
-  background: #fbfaf7;
-}
-
-html[data-theme="dark"] body.docs-viewer-shell,
-html[data-theme="dark"] body.docs-viewer-service{
-  color: #f2f2f2;
-  background: #0f0f10;
 }
 
 
@@ -164,8 +118,8 @@ html[data-theme="dark"] body.docs-viewer-service{
   bottom: -0.2rem;
   height: 3px;
   border-radius: 999px;
-  background: var(--docs-viewer-border-strong, var(--border-strong, #aaa));
-  box-shadow: 0 0 0 2px var(--docs-viewer-bg, var(--bg, #fff));
+  background: var(--docs-viewer-focus-ring);
+  box-shadow: 0 0 0 2px var(--docs-viewer-bg);
   pointer-events: none;
 }
 
@@ -174,12 +128,13 @@ html[data-theme="dark"] body.docs-viewer-service{
 }
 
 .docsViewer__navRow.is-drop-inside{
-  background: color-mix(in srgb, var(--docs-viewer-panel-2, var(--panel-2, #f6f6f6)) 72%, transparent);
-  box-shadow: inset 0 0 0 1px var(--docs-viewer-border, var(--border, #d8d8d8));
+  background: var(--docs-viewer-selection-bg);
+  color: var(--docs-viewer-selection-text);
+  box-shadow: inset 0 0 0 1px var(--docs-viewer-border-strong);
 }
 
 .docsViewer__nav.is-drop-root{
-  box-shadow: inset 0 0 0 2px var(--docs-viewer-border-strong, var(--border-strong, #aaa));
+  box-shadow: inset 0 0 0 2px var(--docs-viewer-focus-ring);
 }
 
 .docsViewer__contextMenu{
@@ -187,10 +142,10 @@ html[data-theme="dark"] body.docs-viewer-service{
   z-index: 30;
   min-width: 11rem;
   padding: 0.3rem;
-  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border: 1px solid var(--docs-viewer-border);
   border-radius: 0.85rem;
-  background: var(--docs-viewer-panel, var(--panel, #fff));
-  box-shadow: 0 10px 25px color-mix(in srgb, var(--docs-viewer-text, var(--text, #111)) 12%, transparent);
+  background: var(--docs-viewer-panel);
+  box-shadow: var(--docs-viewer-shadow-pop);
 }
 
 .docsViewer__contextMenu[hidden]{
@@ -200,7 +155,7 @@ html[data-theme="dark"] body.docs-viewer-service{
 .docsViewer__contextDivider{
   height: 1px;
   margin: 0.22rem 0.2rem;
-  background: var(--docs-viewer-border, var(--border, #d8d8d8));
+  background: var(--docs-viewer-border);
 }
 
 .docsViewer__contextAction{
@@ -210,7 +165,7 @@ html[data-theme="dark"] body.docs-viewer-service{
   border-radius: 0.6rem;
   padding: 0.48rem 0.65rem;
   background: transparent;
-  color: var(--docs-viewer-text, var(--text, #111));
+  color: var(--docs-viewer-text);
   font: inherit;
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
   line-height: var(--docs-viewer-line-snug, var(--line-snug, 1.25));
@@ -218,10 +173,14 @@ html[data-theme="dark"] body.docs-viewer-service{
   cursor: pointer;
 }
 
-.docsViewer__contextAction:hover,
+.docsViewer__contextAction:hover{
+  background: var(--docs-viewer-panel-2);
+}
+
 .docsViewer__contextAction:focus-visible{
-  background: var(--docs-viewer-panel-2, var(--panel-2, #f6f6f6));
-  outline: none;
+  background: var(--docs-viewer-panel-2);
+  outline: 2px solid var(--docs-viewer-focus-ring);
+  outline-offset: -2px;
 }
 
 .docsViewer[data-management-busy="true"],
@@ -230,6 +189,10 @@ html[data-theme="dark"] body.docs-viewer-service{
 .docsViewer[data-management-busy="true"] select,
 .docsViewer[data-management-busy="true"] textarea{
   cursor: progress;
+}
+
+.docsViewer[data-management-busy="true"] .docsViewer__status{
+  color: var(--docs-viewer-busy);
 }
 
 .docsViewer__modal{
@@ -242,22 +205,21 @@ html[data-theme="dark"] body.docs-viewer-service{
 .docsViewer__modalBackdrop{
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.24);
+  background: var(--docs-viewer-overlay);
 }
 
 .docsViewer__modalCard{
   box-sizing: border-box;
   position: relative;
   z-index: 1;
-  color-scheme: light;
   width: min(var(--docs-viewer-modal-width), calc(100vw - 2rem));
   max-height: calc(100vh - 2rem);
   overflow: auto;
   margin: 8vh auto 0;
-  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
-  border-radius: var(--docs-viewer-radius, var(--radius, 0.625rem));
-  background: var(--docs-viewer-panel, var(--panel, #fff));
-  box-shadow: 0 1.25rem 3rem rgba(0, 0, 0, 0.14);
+  border: 1px solid var(--docs-viewer-border);
+  border-radius: var(--docs-viewer-radius);
+  background: var(--docs-viewer-panel);
+  box-shadow: var(--docs-viewer-shadow-pop);
   padding: 0.95rem;
 }
 
@@ -328,25 +290,24 @@ html[data-theme="dark"] body.docs-viewer-service{
   min-width: 0;
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
   line-height: var(--docs-viewer-line-snug, var(--line-snug, 1.25));
-  color: var(--docs-viewer-text, var(--text, #111));
+  color: var(--docs-viewer-text);
 }
 
 .docsViewer__checkboxInput{
   width: 1rem;
   height: 1rem;
   margin: 0;
-  accent-color: var(--docs-viewer-text, var(--text, #111));
+  accent-color: var(--docs-viewer-focus-ring);
 }
 
 .docsViewer__fieldInput{
   box-sizing: border-box;
-  color-scheme: light;
   width: 100%;
   min-height: 2rem;
-  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border: 1px solid var(--docs-viewer-border);
   border-radius: 0.45rem;
-  background: var(--docs-viewer-panel, var(--panel, #fff));
-  color: var(--docs-viewer-text, var(--text, #111));
+  background: var(--docs-viewer-panel);
+  color: var(--docs-viewer-text);
   padding: 0.48rem 0.55rem;
   font: inherit;
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
@@ -357,24 +318,10 @@ html[data-theme="dark"] body.docs-viewer-service{
 .docsViewer__fieldInput,
 .docsViewer__fieldInput:-webkit-autofill,
 .docsViewer__fieldInput option{
-  background-color: var(--docs-viewer-panel, var(--panel, #fff));
-  color: var(--docs-viewer-text, var(--text, #111));
-  -webkit-text-fill-color: var(--docs-viewer-text, var(--text, #111));
-  caret-color: var(--docs-viewer-text, var(--text, #111));
-}
-
-html[data-theme="dark"] .docsViewer__modalCard,
-html[data-theme="dark"] .docsViewer__fieldInput{
-  color-scheme: dark;
-}
-
-@media (prefers-color-scheme: dark){
-  html:not([data-theme]) .docsViewer__modalCard,
-  html:not([data-theme]) .docsViewer__fieldInput,
-  html[data-theme="auto"] .docsViewer__modalCard,
-  html[data-theme="auto"] .docsViewer__fieldInput{
-    color-scheme: dark;
-  }
+  background-color: var(--docs-viewer-panel);
+  color: var(--docs-viewer-text);
+  -webkit-text-fill-color: var(--docs-viewer-text);
+  caret-color: var(--docs-viewer-text);
 }
 
 select.docsViewer__fieldInput{
@@ -397,7 +344,7 @@ select.docsViewer__fieldInput--listbox{
 }
 
 .docsViewer__fieldInput:focus-visible{
-  outline: 2px solid var(--docs-viewer-border-strong, var(--border-strong, #aaa));
+  outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: 2px;
 }
 
@@ -414,10 +361,10 @@ select.docsViewer__fieldInput--listbox{
   width: 100%;
   max-height: min(16rem, 42vh);
   overflow: auto;
-  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border: 1px solid var(--docs-viewer-border);
   border-radius: 0.55rem;
-  background: var(--docs-viewer-panel, var(--panel, #fff));
-  box-shadow: 0 10px 25px color-mix(in srgb, var(--docs-viewer-text, var(--text, #111)) 12%, transparent);
+  background: var(--docs-viewer-panel);
+  box-shadow: var(--docs-viewer-shadow-pop);
   padding: 0.35rem;
 }
 
@@ -433,7 +380,7 @@ select.docsViewer__fieldInput--listbox{
   border: 1px solid transparent;
   border-radius: 0.45rem;
   background: transparent;
-  color: var(--docs-viewer-text, var(--text, #111));
+  color: var(--docs-viewer-text);
   font: inherit;
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
   line-height: var(--docs-viewer-line-snug, var(--line-snug, 1.25));
@@ -442,16 +389,26 @@ select.docsViewer__fieldInput--listbox{
   cursor: pointer;
 }
 
-.docsViewer__parentOption:hover,
-.docsViewer__parentOption:focus-visible,
+.docsViewer__parentOption:hover{
+  border-color: var(--docs-viewer-border);
+  background: var(--docs-viewer-panel-2);
+}
+
+.docsViewer__parentOption:focus-visible{
+  border-color: var(--docs-viewer-border);
+  background: var(--docs-viewer-panel-2);
+  outline: 2px solid var(--docs-viewer-focus-ring);
+  outline-offset: -2px;
+}
+
 .docsViewer__parentOption.is-active{
-  border-color: var(--docs-viewer-border, var(--border, #d8d8d8));
-  background: var(--docs-viewer-panel-2, var(--panel-2, #f6f6f6));
-  outline: none;
+  border-color: var(--docs-viewer-border-strong);
+  background: var(--docs-viewer-selection-bg);
+  color: var(--docs-viewer-selection-text);
 }
 
 .docsViewer__parentPopupEmpty{
-  color: var(--docs-viewer-muted, var(--muted, #555));
+  color: var(--docs-viewer-muted);
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
   margin: 0;
   padding: 0.42rem 0.5rem;
@@ -461,16 +418,19 @@ select.docsViewer__fieldInput--listbox{
   margin: -0.2rem 0 0;
 }
 
-.docsViewer__modalNote[data-state="error"],
+.docsViewer__modalNote[data-state="error"]{
+  color: var(--docs-viewer-danger);
+}
+
 .docsViewer__settingsWarnings{
-  color: var(--docs-viewer-link-hover, var(--link-hover, #111));
+  color: var(--docs-viewer-warning);
 }
 
 .docsViewerPackagePrepare__selectionSummary{
   display: grid;
   gap: 0.35rem;
   border-radius: 0.45rem;
-  background: var(--docs-viewer-panel-2, var(--panel-2, #f6f6f6));
+  background: var(--docs-viewer-panel-2);
   padding: 0.65rem 0.75rem;
 }
 
@@ -488,7 +448,7 @@ select.docsViewer__fieldInput--listbox{
 }
 
 .docsViewerPackagePrepare__context{
-  border-top: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border-top: 1px solid var(--docs-viewer-border);
   padding-top: 0.75rem;
 }
 
@@ -534,7 +494,7 @@ select.docsViewer__fieldInput--listbox{
 }
 
 .docsViewerPackagePrepare__counts dt{
-  color: var(--docs-viewer-muted, var(--muted, #555));
+  color: var(--docs-viewer-muted);
 }
 
 .docsViewerPackagePrepare__counts dd{
@@ -560,14 +520,14 @@ select.docsViewer__fieldInput--listbox{
 
 .docsViewerReviewPackage__table th,
 .docsViewerReviewPackage__table td{
-  border-bottom: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border-bottom: 1px solid var(--docs-viewer-border);
   padding: 0.55rem 0.45rem;
   text-align: left;
   vertical-align: middle;
 }
 
 .docsViewerReviewPackage__table th{
-  color: var(--docs-viewer-muted, var(--muted, #555));
+  color: var(--docs-viewer-muted);
   font-weight: 600;
 }
 
@@ -591,7 +551,7 @@ select.docsViewer__fieldInput--listbox{
 }
 
 .docsViewerReviewPackage__empty{
-  color: var(--docs-viewer-muted, var(--muted, #555));
+  color: var(--docs-viewer-muted);
 }
 
 .docsViewerReviewPackage__issues{
@@ -628,7 +588,7 @@ select.docsViewer__fieldInput--listbox{
 .docsViewerScopeLifecycle__summaryGrid dt,
 .docsViewerScopeLifecycle__section > h3{
   margin: 0;
-  color: var(--docs-viewer-muted, var(--muted, #555));
+  color: var(--docs-viewer-muted);
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
   font-weight: 600;
   line-height: var(--docs-viewer-line-snug, var(--line-snug, 1.25));
@@ -652,7 +612,7 @@ select.docsViewer__fieldInput--listbox{
 
 .docsViewerScopeLifecycle__detailGrid dt{
   margin: 0;
-  color: var(--docs-viewer-muted, var(--muted, #555));
+  color: var(--docs-viewer-muted);
   font-weight: 600;
 }
 
@@ -699,10 +659,10 @@ select.docsViewer__fieldInput--listbox{
   box-sizing: border-box;
   height: 2.3rem;
   min-height: 2.3rem;
-  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border: 1px solid var(--docs-viewer-border);
   border-radius: 999px;
-  background: var(--docs-viewer-panel, var(--panel, #fff));
-  color: var(--docs-viewer-text, var(--text, #111));
+  background: var(--docs-viewer-panel);
+  color: var(--docs-viewer-text);
   padding: 0.45rem 0.85rem;
   font: inherit;
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
@@ -711,7 +671,7 @@ select.docsViewer__fieldInput--listbox{
 
 .docsViewer__modal .docsViewer__actionButton:hover,
 .docsViewer__modal .docsViewerImport__button:hover{
-  background: var(--docs-viewer-panel-2, var(--panel-2, #f6f6f6));
+  background: var(--docs-viewer-panel-2);
 }
 
 .docsViewer__modal :is(
@@ -730,11 +690,17 @@ select.docsViewer__fieldInput--listbox{
   a[href],
   [tabindex]:not([tabindex="-1"])
 ):focus{
-  outline: 2px solid var(--docs-viewer-text, var(--text, #111));
+  outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: 2px;
 }
 
 @media (max-width: 34rem){
+  .docsViewer__modalCard{
+    margin: 1rem auto 0;
+    max-height: calc(100vh - 2rem);
+    max-height: calc(100dvh - 2rem);
+  }
+
   .docsViewer__field:not(.docsViewer__field--checkbox){
     grid-template-columns: 1fr;
     gap: 0.28rem;
@@ -815,7 +781,7 @@ select.docsViewer__fieldInput--listbox{
 }
 
 .docsViewer__scopeSelectButton:focus-visible{
-  outline: 2px solid var(--docs-viewer-border-strong);
+  outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: 2px;
 }
 
@@ -836,7 +802,7 @@ select.docsViewer__fieldInput--listbox{
   border-radius: 0.85rem;
   padding: 0.28rem;
   background: var(--docs-viewer-panel);
-  box-shadow: 0 10px 25px color-mix(in srgb, var(--docs-viewer-text) 12%, transparent);
+  box-shadow: var(--docs-viewer-shadow-pop);
 }
 
 .docsViewer__scopeSelectSurface[hidden]{
@@ -863,13 +829,19 @@ select.docsViewer__fieldInput--listbox{
   cursor: pointer;
 }
 
-.docsViewer__scopeSelectOption:hover,
+.docsViewer__scopeSelectOption:hover{
+  background: var(--docs-viewer-panel-2);
+}
+
 .docsViewer__scopeSelectOption:focus-visible{
   background: var(--docs-viewer-panel-2);
-  outline: none;
+  outline: 2px solid var(--docs-viewer-focus-ring);
+  outline-offset: -2px;
 }
 
 .docsViewer__scopeSelectOption[aria-selected="true"]{
+  background: var(--docs-viewer-selection-bg);
+  color: var(--docs-viewer-selection-text);
   font-weight: 700;
 }
 
@@ -912,17 +884,17 @@ select.docsViewer__fieldInput--listbox{
   padding: 0;
   border: 0;
   border-radius: 999px;
-  color: var(--docs-viewer-text, var(--text, #111));
+  color: var(--docs-viewer-text);
   background: transparent;
   cursor: pointer;
 }
 
 .docsViewer__themeToggle:hover{
-  background: var(--docs-viewer-panel-2, var(--panel-2, #f6f6f6));
+  background: var(--docs-viewer-panel-2);
 }
 
 .docsViewer__themeToggle:focus-visible{
-  outline: 2px solid var(--docs-viewer-border-strong, var(--border-strong, #aaa));
+  outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: 2px;
 }
 
@@ -949,10 +921,10 @@ select.docsViewer__fieldInput--listbox{
   min-width: 11rem;
   max-width: min(22rem, calc(100vw - 1rem));
   padding: 0.3rem;
-  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border: 1px solid var(--docs-viewer-border);
   border-radius: 0.85rem;
-  background: var(--docs-viewer-panel, var(--panel, #fff));
-  box-shadow: 0 10px 25px color-mix(in srgb, var(--docs-viewer-text, var(--text, #111)) 12%, transparent);
+  background: var(--docs-viewer-panel);
+  box-shadow: var(--docs-viewer-shadow-pop);
 }
 
 .docsViewer__actionsMenu[hidden]{
@@ -969,7 +941,7 @@ select.docsViewer__fieldInput--listbox{
   border-radius: 0.6rem;
   padding: 0.48rem 0.65rem;
   background: transparent;
-  color: var(--docs-viewer-text, var(--text, #111));
+  color: var(--docs-viewer-text);
   font: inherit;
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
   line-height: var(--docs-viewer-line-snug, var(--line-snug, 1.25));
@@ -990,14 +962,18 @@ select.docsViewer__fieldInput--listbox{
   min-width: 0;
 }
 
-.docsViewer__actionMenuItem:hover,
+.docsViewer__actionMenuItem:hover{
+  background: var(--docs-viewer-panel-2);
+}
+
 .docsViewer__actionMenuItem:focus-visible{
-  background: var(--docs-viewer-panel-2, var(--panel-2, #f6f6f6));
-  outline: none;
+  background: var(--docs-viewer-panel-2);
+  outline: 2px solid var(--docs-viewer-focus-ring);
+  outline-offset: -2px;
 }
 
 .docsViewer__actionMenuItem:disabled{
-  color: var(--docs-viewer-muted, var(--muted, #555));
+  color: var(--docs-viewer-disabled);
   cursor: not-allowed;
 }
 

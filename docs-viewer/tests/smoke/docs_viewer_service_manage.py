@@ -21,6 +21,11 @@ sys.path.insert(0, str(REPO_ROOT))
 sys.path.insert(0, str(REPO_ROOT / "docs-viewer" / "services"))
 
 from docs_viewer_service import DocsViewerServer, DocsViewerServiceConfig  # noqa: E402
+from docs_viewer_theme_smoke_helpers import (  # noqa: E402
+    assert_docs_viewer_theme_pair,
+    assert_docs_viewer_theme_state,
+    read_docs_viewer_theme_state,
+)
 from tests.smoke.route_ready_helpers import wait_for_route_ready  # noqa: E402
 
 
@@ -326,6 +331,133 @@ def assert_manage_route_contract(state: dict[str, object], base_url: str) -> Non
         raise AssertionError(f"manage route config missing recent_url: {state!r}")
     if docs_paths.get("search_index_url") != "/docs-viewer/scopes/studio/published/search/index.json":
         raise AssertionError(f"manage route config missing search_index_url: {state!r}")
+
+
+def set_manage_theme(page: Page, theme: str, timeout_ms: int) -> None:
+    toggle = page.locator("[data-docs-viewer-theme-toggle]")
+    if toggle.count() != 1 or toggle.is_hidden():
+        raise AssertionError("manage route did not render one visible theme toggle")
+    current = page.locator("html").get_attribute("data-theme")
+    if current != theme:
+        toggle.click()
+    page.wait_for_function(
+        """expected => {
+            const toggle = document.querySelector('[data-docs-viewer-theme-toggle]');
+            const isDark = expected === 'dark';
+            const visibleIcons = Array.from(
+                toggle?.querySelectorAll('[data-docs-viewer-theme-icon]') || []
+            ).filter(icon => !icon.hasAttribute('hidden'));
+            return document.documentElement.getAttribute('data-theme') === expected &&
+                toggle?.getAttribute('aria-pressed') === (isDark ? 'true' : 'false') &&
+                toggle?.getAttribute('aria-label') === (
+                    isDark ? 'Switch to light mode' : 'Switch to dark mode'
+                ) &&
+                visibleIcons.length === 1 &&
+                visibleIcons[0].dataset.docsViewerThemeIcon === expected;
+        }""",
+        arg=theme,
+        timeout=timeout_ms,
+    )
+
+
+def assert_manage_modal_theme(
+    page: Page,
+    theme_state: dict[str, object],
+    timeout_ms: int,
+) -> None:
+    page.locator("#docsViewerManageSettingsButton").evaluate("button => button.click()")
+    page.wait_for_function(
+        """() => {
+            const modal = document.querySelector('#docsViewerSettingsModal');
+            const card = modal?.querySelector('.docsViewer__modalCard');
+            const action = document.querySelector('#docsViewerSettingsSaveButton');
+            return modal && !modal.hidden && card && action && !action.disabled;
+        }""",
+        timeout=timeout_ms,
+    )
+    modal_state = page.locator("#docsViewerSettingsModal").evaluate(
+        """modal => {
+            const card = modal.querySelector('.docsViewer__modalCard');
+            const backdrop = modal.querySelector('.docsViewer__modalBackdrop');
+            const field = modal.querySelector('.docsViewer__fieldInput');
+            const action = modal.querySelector('#docsViewerSettingsSaveButton');
+            return {
+                backdrop: getComputedStyle(backdrop).backgroundColor,
+                cardBackground: getComputedStyle(card).backgroundColor,
+                cardColor: getComputedStyle(card).color,
+                fieldBackground: getComputedStyle(field).backgroundColor,
+                fieldColor: getComputedStyle(field).color,
+                fieldBorder: getComputedStyle(field).borderColor,
+                fieldColorScheme: getComputedStyle(field).colorScheme,
+                actionBackground: getComputedStyle(action).backgroundColor,
+                actionColor: getComputedStyle(action).color,
+                actionBorder: getComputedStyle(action).borderColor
+            };
+        }"""
+    )
+    resolved = (
+        theme_state.get("resolved")
+        if isinstance(theme_state.get("resolved"), dict)
+        else {}
+    )
+    expected = {
+        "backdrop": resolved.get("overlay"),
+        "cardBackground": resolved.get("surface"),
+        "cardColor": resolved.get("text"),
+        "fieldBackground": resolved.get("surface"),
+        "fieldColor": resolved.get("text"),
+        "fieldBorder": resolved.get("border"),
+        "fieldColorScheme": theme_state.get("theme"),
+        "actionBackground": resolved.get("surface"),
+        "actionColor": resolved.get("text"),
+        "actionBorder": resolved.get("border"),
+    }
+    if modal_state != expected:
+        raise AssertionError(
+            f"{theme_state.get('theme')} modal did not consume semantic theme roles: "
+            f"{modal_state!r}"
+        )
+    page.locator("#docsViewerSettingsCancelButton").click()
+    page.wait_for_selector("#docsViewerSettingsModal", state="hidden", timeout=timeout_ms)
+
+
+def assert_manage_theme_contract(page: Page, timeout_ms: int) -> None:
+    set_manage_theme(page, "light", timeout_ms)
+    light = read_docs_viewer_theme_state(page)
+    assert_docs_viewer_theme_state(
+        light,
+        theme="light",
+        management_ui=True,
+        body_uses_viewer_palette=True,
+    )
+    assert_manage_modal_theme(page, light, timeout_ms)
+
+    set_manage_theme(page, "dark", timeout_ms)
+    dark = read_docs_viewer_theme_state(page)
+    assert_docs_viewer_theme_state(
+        dark,
+        theme="dark",
+        management_ui=True,
+        body_uses_viewer_palette=True,
+    )
+    assert_manage_modal_theme(page, dark, timeout_ms)
+    assert_docs_viewer_theme_pair(light, dark)
+
+    page.reload(wait_until="domcontentloaded")
+    wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
+    persisted_dark = read_docs_viewer_theme_state(page)
+    assert_docs_viewer_theme_state(
+        persisted_dark,
+        theme="dark",
+        management_ui=True,
+        body_uses_viewer_palette=True,
+    )
+    if persisted_dark.get("tokens") != dark.get("tokens"):
+        raise AssertionError(
+            f"reloaded dark theme did not retain the shared palette: {persisted_dark!r}"
+        )
+
+    set_manage_theme(page, "light", timeout_ms)
 
 
 def assert_generated_requests(paths: set[str]) -> None:
@@ -794,6 +926,7 @@ def exercise_manage_route(
     assert_open_source_target_handoff(page)
     assert_delete_uses_first_remaining_root(page)
     assert_manage_route_contract(manage_route_state(page), base_url)
+    assert_manage_theme_contract(page, timeout_ms)
     if inline_mermaid_requests:
         raise AssertionError(f"diagram-free local document loaded Mermaid: {inline_mermaid_requests!r}")
     if import_module_requests:

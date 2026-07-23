@@ -29,14 +29,21 @@ def assert_shared_focus_trap(page: Page) -> None:
     result = page.evaluate(
         """async () => {
           const modalModule = await import('/docs-viewer/runtime/js/management/docs-viewer-management-modal-shell.js');
-          await new Promise((resolve, reject) => {
-            const stylesheet = document.createElement('link');
-            stylesheet.rel = 'stylesheet';
-            stylesheet.href = '/docs-viewer/static/css/docs-viewer-manage.css';
-            stylesheet.addEventListener('load', resolve, { once: true });
-            stylesheet.addEventListener('error', reject, { once: true });
-            document.head.appendChild(stylesheet);
-          });
+          document.documentElement.setAttribute('data-theme', 'dark');
+          for (const href of [
+            '/site/docs-viewer/static/css/docs-viewer-theme.css',
+            '/site/docs-viewer/static/css/docs-viewer.css',
+            '/docs-viewer/static/css/docs-viewer-manage.css'
+          ]) {
+            await new Promise((resolve, reject) => {
+              const stylesheet = document.createElement('link');
+              stylesheet.rel = 'stylesheet';
+              stylesheet.href = href;
+              stylesheet.addEventListener('load', resolve, { once: true });
+              stylesheet.addEventListener('error', reject, { once: true });
+              document.head.appendChild(stylesheet);
+            });
+          }
           document.body.innerHTML = `
             <button id="outside">Outside</button>
             <div class="docsViewer__modal" id="modal">
@@ -102,10 +109,15 @@ def assert_choice_modal_radio_navigation(page: Page) -> None:
     page.evaluate(
         """async () => {
           const modalModule = await import('/docs-viewer/runtime/js/management/docs-viewer-management-modal-shell.js');
-          document.body.innerHTML = '<button id="open">Open</button><div style="height: 2000px"></div>';
+          document.body.innerHTML = `
+            <main class="docsViewer" id="root">
+              <button id="open">Open</button>
+              <div style="height: 2000px"></div>
+            </main>`;
           window.scrollTo(0, 400);
           document.querySelector('#open').addEventListener('click', () => {
             window.choiceModalResult = modalModule.openDocsViewerChoiceModal({
+              root: document.querySelector('#root'),
               title: 'Choose scope',
               value: 'analysis',
               choices: [
@@ -221,7 +233,11 @@ def assert_review_sessions_modal(page: Page) -> None:
     result = page.evaluate(
         """async () => {
           const sessionsModule = await import('/docs-viewer/runtime/js/management/docs-viewer-review-sessions-modal.js');
-          document.body.innerHTML = '<button id="outside">Outside</button><div id="mount"></div>';
+          document.body.innerHTML = `
+            <main class="docsViewer">
+              <button id="outside">Outside</button>
+              <div id="mount"></div>
+            </main>`;
           const outside = document.querySelector('#outside');
           const mount = document.querySelector('#mount');
           let closeCount = 0;

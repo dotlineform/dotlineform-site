@@ -905,6 +905,40 @@
               ]
             },
             {
+              "doc_id": "d-20260723-101224-e62173",
+              "title": "Docs Viewer Manage Theme Restoration",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-101224-e62173.json",
+              "ui_status": "done",
+              "children": [
+                {
+                  "doc_id": "d-20260723-101224-74d214",
+                  "title": "Docs Viewer Manage Theme Restoration Delivery",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-101224-74d214.json",
+                  "ui_status": "done"
+                }
+              ]
+            },
+            {
+              "doc_id": "d-20260723-091111-aaa2d6",
+              "title": "Docs Viewer Modal Consistency",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-091111-aaa2d6.json",
+              "ui_status": "proposed",
+              "children": [
+                {
+                  "doc_id": "d-20260723-091112-5e1b62",
+                  "title": "Docs Viewer Modal Consistency Delivery",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-091112-5e1b62.json",
+                  "ui_status": "proposed"
+                },
+                {
+                  "doc_id": "d-20260723-093229-dd63ab",
+                  "title": "UI Workbench Concept",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-093229-dd63ab.json",
+                  "ui_status": "proposed"
+                }
+              ]
+            },
+            {
               "doc_id": "d-20260720-230623-c7e921",
               "title": "Document Sharing UI Redesign",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-230623-c7e921.json",
@@ -1562,5 +1596,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-22T21:45:31Z"
+  "generated_at": "2026-07-23T10:30:53Z"
 }

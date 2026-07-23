@@ -547,7 +547,7 @@ def assert_selection_projection_and_interaction(page: Page) -> None:
             const hostedViews = await import('/docs-viewer/runtime/js/management/docs-viewer-management-hosted-views.js');
             const sidebarModule = await import('/docs-viewer/runtime/js/shared/docs-viewer-sidebar.js');
             document.body.innerHTML = `
-              <div class="docsViewer" data-allow-management="true">
+              <div class="docsViewer">
                 <nav class="docsViewer__nav"></nav>
               </div>`;
             const nav = document.querySelector('.docsViewer__nav');

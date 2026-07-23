@@ -75,6 +75,9 @@ RUNTIME_STATIC_ROUTES = (
     ("/docs-viewer/runtime/js/local/", Path("docs-viewer/runtime/js/local")),
 )
 SHARED_STATIC_ROUTES = {
+    "/docs-viewer/static/css/docs-viewer-theme.css": Path(
+        "site/docs-viewer/static/css/docs-viewer-theme.css"
+    ),
     "/docs-viewer/static/css/docs-viewer.css": Path("site/docs-viewer/static/css/docs-viewer.css"),
     "/docs-viewer/static/css/docs-viewer-reports.css": Path(
         "site/docs-viewer/static/css/docs-viewer-reports.css"
@@ -235,6 +238,7 @@ def asset_version(repo_root: Path) -> str:
     candidates = [
         repo_root / "docs-viewer" / "shell" / "docs-viewer-manage.html",
         repo_root / "docs-viewer" / "shell" / "docs-viewer-review.html",
+        repo_root / "site" / "docs-viewer" / "static" / "css" / "docs-viewer-theme.css",
         repo_root / "site" / "docs-viewer" / "static" / "css" / "docs-viewer.css",
         repo_root / "site" / "docs-viewer" / "static" / "css" / "docs-viewer-moments.css",
         repo_root / "site" / "docs-viewer" / "static" / "css" / "docs-viewer-reports.css",
