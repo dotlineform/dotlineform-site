@@ -747,12 +747,26 @@ select.docsViewer__fieldInput--listbox{
   background: var(--docs-viewer-panel-2);
 }
 
+.docsViewer__modal .docsViewer__actionButton[data-tone="danger"]{
+  border-color: var(--docs-viewer-danger);
+  color: var(--docs-viewer-danger);
+  font-weight: 600;
+}
+
 .docsViewer__modal .docsViewer__actionButton:disabled,
 .docsViewer__modal .docsViewerImport__button:disabled{
   border-color: var(--docs-viewer-border);
   background: var(--docs-viewer-panel-2);
   color: var(--docs-viewer-disabled);
   cursor: not-allowed;
+}
+
+.docsViewer__modalActions :is(
+  .docsViewer__actionButton,
+  .docsViewerImport__button
+):focus{
+  outline: 2px solid var(--docs-viewer-focus-ring);
+  outline-offset: 2px;
 }
 
 .docsViewer__modal :is(

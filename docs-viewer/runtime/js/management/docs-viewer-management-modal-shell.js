@@ -50,8 +50,9 @@ function renderActions(actions) {
   });
   return '<div class="docsViewer__modalActions">' + orderedActions.map(function (action) {
     var roleAttr = action.role ? ' data-role="' + escapeHtml(action.role) + '"' : "";
+    var toneAttr = action.tone ? ' data-tone="' + escapeHtml(action.tone) + '"' : "";
     var disabledAttr = action.disabled ? " disabled" : "";
-    return '<button class="docsViewer__actionButton docsViewer__actionButton--defaultWidth" type="button"' + roleAttr + disabledAttr + '>' + escapeHtml(action.label) + '</button>';
+    return '<button class="docsViewer__actionButton docsViewer__actionButton--defaultWidth" type="button"' + roleAttr + toneAttr + disabledAttr + '>' + escapeHtml(action.label) + '</button>';
   }).join("") + '</div>';
 }
 
@@ -168,9 +169,16 @@ export function openDocsViewerConfirmModal(options = {}) {
     closeLabel: options.closeLabel || options.cancelLabel,
     size: options.size || "compact",
     bodyHtml: bodyHtmlFromText(options.body),
-    focusSelector: options.primaryDisabled ? 'button[data-role="modal-cancel"]' : "",
+    focusSelector: options.primaryDisabled || options.initialFocus === "cancel"
+      ? 'button[data-role="modal-cancel"]'
+      : "",
     actions: [
-      { role: "modal-primary", label: options.primaryLabel || "OK", disabled: options.primaryDisabled },
+      {
+        role: "modal-primary",
+        label: options.primaryLabel || "OK",
+        disabled: options.primaryDisabled,
+        tone: options.primaryTone
+      },
       { role: "modal-cancel", label: options.cancelLabel || "Cancel" }
     ]
   }).then(function (result) {

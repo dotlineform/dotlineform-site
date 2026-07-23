@@ -4,6 +4,54 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260716-193410-6d4efe",
+      "title": "Copy And Move Documents Between Scopes",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260716-193410-6d4efe.json",
+      "timestamp": "2026-07-23 22:55:07",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap"
+    },
+    {
+      "doc_id": "d-20260723-223400-c7a1e4",
+      "title": "Copy And Move Documents Between Scopes Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-223400-c7a1e4.json",
+      "timestamp": "2026-07-23 22:55:07",
+      "parent_id": "d-20260716-193410-6d4efe",
+      "parent_title": "Copy And Move Documents Between Scopes"
+    },
+    {
+      "doc_id": "d-20260714-234030-1e0af6",
+      "title": "Docs Viewer Roadmap",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-1e0af6.json",
+      "timestamp": "2026-07-23 22:34:00",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260722-000158-9c0f3e",
+      "title": "Index Multiple Selection Consumer Assessment",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260722-000158-9c0f3e.json",
+      "timestamp": "2026-07-23 22:34:00",
+      "parent_id": "d-20260714-151900-6fa23e",
+      "parent_title": "Index Multiple Selection"
+    },
+    {
+      "doc_id": "d-20260607-222033-ce5515",
+      "title": "Source Mutation Endpoints",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-ce5515.json",
+      "timestamp": "2026-07-23 22:07:16",
+      "parent_id": "d-20260607-222033-647b52",
+      "parent_title": "Endpoint Overview"
+    },
+    {
+      "doc_id": "d-20260723-212313-90dc78",
+      "title": "Research",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-212313-90dc78.json",
+      "timestamp": "2026-07-23 21:23:13",
+      "parent_id": "d-20260715-092247-f3fd52",
+      "parent_title": "Repository Roadmap"
+    },
+    {
       "doc_id": "d-20260718-125756-a41c70",
       "title": "Docs Viewer Source Documentation And Linting Pilot Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-125756-a41c70.json",
@@ -32,57 +80,9 @@
       "title": "Improving Repository Context for Coding Agents",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-203331-9a8708.json",
       "timestamp": "2026-07-23 20:55:45",
-      "parent_id": "d-20260713-000000-d9bad2",
-      "parent_title": "Source Documentation and Linting"
-    },
-    {
-      "doc_id": "d-20260723-203332-eaca11",
-      "title": "Introducing JavaScript Configuration to the Repository",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-203332-eaca11.json",
-      "timestamp": "2026-07-23 20:55:33",
-      "parent_id": "d-20260713-000000-d9bad2",
-      "parent_title": "Source Documentation and Linting"
-    },
-    {
-      "doc_id": "d-20260723-203332-3aba41",
-      "title": "Recommended JSDoc Approach for the Repository",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-203332-3aba41.json",
-      "timestamp": "2026-07-23 20:35:05",
-      "parent_id": "d-20260713-000000-d9bad2",
-      "parent_title": "Source Documentation and Linting"
-    },
-    {
-      "doc_id": "d-20260723-091111-aaa2d6",
-      "title": "Docs Viewer Modal Consistency",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-091111-aaa2d6.json",
-      "timestamp": "2026-07-23 20:29:50",
-      "parent_id": "d-20260714-234030-1e0af6",
-      "parent_title": "Docs Viewer Roadmap"
-    },
-    {
-      "doc_id": "d-20260723-091112-5e1b62",
-      "title": "Docs Viewer Modal Consistency Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-091112-5e1b62.json",
-      "timestamp": "2026-07-23 20:29:50",
-      "parent_id": "d-20260723-091111-aaa2d6",
-      "parent_title": "Docs Viewer Modal Consistency"
-    },
-    {
-      "doc_id": "d-20260714-234030-1e0af6",
-      "title": "Docs Viewer Roadmap",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-1e0af6.json",
-      "timestamp": "2026-07-23 20:29:50",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260723-155929-ef9c14",
-      "title": "UI Workbench Guide",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-155929-ef9c14.json",
-      "timestamp": "2026-07-23 19:50:23",
-      "parent_id": "d-20260723-093229-dd63ab",
-      "parent_title": "UI Workbench Concept"
+      "parent_id": "d-20260723-212313-90dc78",
+      "parent_title": "Research"
     }
   ],
-  "generated_at": "2026-07-23T20:19:07Z"
+  "generated_at": "2026-07-23T21:56:56Z"
 }

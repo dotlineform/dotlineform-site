@@ -73,13 +73,100 @@ def test_update_metadata_can_change_viewability_in_dry_run() -> None:
     assert result["changes"]["viewable_changed"] is True
     assert result["changes"]["status_changed"] is False
 
-def test_hidden_parent_delete_is_blocked_only_by_children() -> None:
+def test_hidden_parent_delete_includes_children() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
-        result = docs_management_mutations.plan_delete_preview(repo_root, "studio", "non-viewable-doc")
+        result = docs_management_mutations.plan_delete_preview(repo_root, "studio", ["non-viewable-doc"])
 
-    assert result["allowed"] is False
-    assert result["blockers"] == ["1 child docs still depend on this parent"]
+    assert result["allowed"] is True
+    assert result["blockers"] == []
+    assert result["delete_doc_ids"] == ["non-viewable-doc", "child"]
+    assert result["delete_count"] == 2
+    assert result["additional_descendant_count"] == 1
+
+
+def test_parent_delete_removes_subtree_and_rebuilds_every_deleted_id(monkeypatch) -> None:
+    rebuild_calls = []
+
+    def rebuild_scope_outputs(_repo_root, scope, **kwargs):
+        rebuild_calls.append({"scope": scope, **kwargs})
+        return {"ok": True}
+
+    monkeypatch.setattr(
+        docs_management_service.write_rebuild,
+        "rebuild_scope_outputs",
+        rebuild_scope_outputs,
+    )
+
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        source_root = repo_root / "docs-viewer/scopes/studio/source/documents"
+        result = docs_management_service.handle_delete_apply(
+            repo_root,
+            {
+                "scope": "studio",
+                "doc_ids": ["non-viewable-doc"],
+                "confirm": True,
+            },
+            dry_run=False,
+        )
+
+        assert not (source_root / "non-viewable-doc.md").exists()
+        assert not (source_root / "child.md").exists()
+        assert (source_root / "other.md").exists()
+
+    assert result["deleted_doc_ids"] == ["non-viewable-doc", "child"]
+    assert rebuild_calls == [
+        {
+            "scope": "studio",
+            "include_search": True,
+            "search_doc_ids": ["non-viewable-doc", "child"],
+            "docs_doc_ids": ["non-viewable-doc", "child"],
+        }
+    ]
+
+
+def test_multi_selection_delete_applies_union_once(monkeypatch) -> None:
+    rebuild_calls = []
+
+    def rebuild_scope_outputs(_repo_root, scope, **kwargs):
+        rebuild_calls.append({"scope": scope, **kwargs})
+        return {"ok": True}
+
+    monkeypatch.setattr(
+        docs_management_service.write_rebuild,
+        "rebuild_scope_outputs",
+        rebuild_scope_outputs,
+    )
+
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        source_root = repo_root / "docs-viewer/scopes/studio/source/documents"
+        result = docs_management_service.handle_delete_apply(
+            repo_root,
+            {
+                "scope": "studio",
+                "doc_ids": ["child", "non-viewable-doc", "other"],
+                "confirm": True,
+            },
+            dry_run=False,
+        )
+
+        assert not (source_root / "non-viewable-doc.md").exists()
+        assert not (source_root / "child.md").exists()
+        assert not (source_root / "other.md").exists()
+
+    assert result["requested_doc_ids"] == ["child", "non-viewable-doc", "other"]
+    assert result["effective_root_doc_ids"] == ["non-viewable-doc", "other"]
+    assert result["deleted_doc_ids"] == ["non-viewable-doc", "child", "other"]
+    assert rebuild_calls == [
+        {
+            "scope": "studio",
+            "include_search": True,
+            "search_doc_ids": ["non-viewable-doc", "child", "other"],
+            "docs_doc_ids": ["non-viewable-doc", "child", "other"],
+        }
+    ]
 
 
 def test_external_scope_default_doc_delete_uses_workspace_relative_path(tmp_path: Path, monkeypatch) -> None:
@@ -141,12 +228,12 @@ def test_external_scope_default_doc_delete_uses_workspace_relative_path(tmp_path
     docs_management_service.refresh_source_model_scope_configs(repo_root)
     docs_management_service.write_rebuild.rebuild_scope_outputs = lambda *_args, **_kwargs: {"ok": True}
     try:
-        preview = docs_management_mutations.plan_delete_preview(repo_root, "dlf", "dlf")
+        preview = docs_management_mutations.plan_delete_preview(repo_root, "dlf", ["dlf"])
         result = docs_management_service.handle_delete_apply(
             repo_root,
             {
                 "scope": "dlf",
-                "doc_id": "dlf",
+                "doc_ids": ["dlf"],
                 "confirm": True,
             },
             dry_run=False,
@@ -158,9 +245,9 @@ def test_external_scope_default_doc_delete_uses_workspace_relative_path(tmp_path
         source_model.DOCUMENT_SOURCE_ROOTS.update(original_roots)
         docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild
 
-    assert preview["path"] == "scopes/dlf/source/documents/dlf.md"
+    assert preview["delete_documents"][0]["path"] == "scopes/dlf/source/documents/dlf.md"
     assert preview["default_doc_id_changed"] is True
-    assert result["path"] == "scopes/dlf/source/documents/dlf.md"
+    assert result["paths"] == ["scopes/dlf/source/documents/dlf.md"]
     assert result["default_doc_id_changed"] is True
     assert result["default_doc_id"] == ""
     assert result["rebuild"] == {"ok": True}

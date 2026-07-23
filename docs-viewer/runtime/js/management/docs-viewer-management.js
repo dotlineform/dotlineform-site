@@ -396,6 +396,7 @@ export function initDocsViewerManagement(context) {
       disabled: !available || management.managementBusy
     });
     projectPreparePackageAction();
+    projectDeleteAction();
     return snapshot;
   }
 
@@ -414,6 +415,42 @@ export function initDocsViewerManagement(context) {
       managePreparePackageButton,
       preparePackageActionControlState()
     );
+  }
+
+  function deleteActionControlState() {
+    var resolution = resolveAction(DOCS_VIEWER_ACTION_IDS.DELETE);
+    var disabledReason = "";
+    if (!management.managementChecked) {
+      disabledReason = "Checking Delete availability.";
+    } else if (!management.managementAvailable) {
+      disabledReason = "Delete is unavailable.";
+    } else if (management.managementBusy) {
+      disabledReason = "Docs management is busy.";
+    } else if (searchRecent.searchRouteActive) {
+      disabledReason = "Clear search to delete documents.";
+    } else if (!resolution.enabled) {
+      disabledReason = resolution.disabledReason;
+    }
+    return {
+      disabled: Boolean(disabledReason),
+      disabledReason: disabledReason
+    };
+  }
+
+  function projectDeleteAction() {
+    if (!manageDeleteButton) return null;
+    var controlState = deleteActionControlState();
+    var label = "Delete";
+    var accessibleLabel = controlState.disabledReason ? label + ". " + controlState.disabledReason : label;
+    manageDeleteButton.disabled = controlState.disabled;
+    manageDeleteButton.title = accessibleLabel;
+    manageDeleteButton.setAttribute("aria-label", accessibleLabel);
+    if (controlState.disabledReason) {
+      manageDeleteButton.dataset.docsViewerDisabledReason = controlState.disabledReason;
+    } else {
+      delete manageDeleteButton.dataset.docsViewerDisabledReason;
+    }
+    return controlState;
   }
 
   function reviewPackageActionControlState() {
@@ -569,15 +606,9 @@ export function initDocsViewerManagement(context) {
     if (!manageRebuildButton || !manageNewButton || !manageDeleteButton) return;
 
     var editAction = resolveAction(DOCS_VIEWER_ACTION_IDS.EDIT_METADATA);
-    var deleteAction = resolveAction(DOCS_VIEWER_ACTION_IDS.DELETE);
     var editDisabled = (
       management.managementBusy ||
       !editAction.enabled ||
-      searchRecent.searchRouteActive
-    );
-    var deleteDisabled = (
-      management.managementBusy ||
-      !deleteAction.enabled ||
       searchRecent.searchRouteActive
     );
     var publishAvailable = management.managementAvailable && scopePublishSupported(management.managementCapabilities, viewerScope());
@@ -627,7 +658,7 @@ export function initDocsViewerManagement(context) {
     }
     manageNewButton.disabled = management.managementBusy || !management.managementAvailable;
     projectDocumentActionButtons(!management.managementChecked || !management.managementAvailable, !management.managementAvailable || editDisabled);
-    manageDeleteButton.disabled = !management.managementAvailable || deleteDisabled;
+    projectDeleteAction();
     if (metadataWorkflow) metadataWorkflow.render();
     if (settingsWorkflow) settingsWorkflow.render();
   }

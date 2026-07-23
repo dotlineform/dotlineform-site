@@ -28,8 +28,6 @@ var ACTION_TEXT = {
   createDocLabel: "title",
   createDocDefaultTitle: "New Doc",
   createDocButton: "Create",
-  deleteConfirmTitle: "Confirm delete",
-  deleteConfirmButton: "Delete",
   settingsSaving: "Saving settings...",
   settingsSaved: "Settings saved.",
   settingsSaveFailed: "Settings save failed.",
@@ -47,10 +45,15 @@ var ACTION_TEXT = {
   copyLinkFailed: "Copy link failed."
 };
 
-export function firstRemainingRootDocId(docs, deletedDocId, resolveLoadableDocId) {
+export function firstRemainingRootDocId(docs, deletedDocIds, resolveLoadableDocId) {
   var records = Array.isArray(docs) ? docs : [];
+  var deletedIds = new Set(
+    (Array.isArray(deletedDocIds) ? deletedDocIds : [deletedDocIds]).map(function (docId) {
+      return String(docId || "").trim();
+    }).filter(Boolean)
+  );
   var remaining = records.filter(function (doc) {
-    return doc && doc.doc_id !== deletedDocId;
+    return doc && !deletedIds.has(String(doc.doc_id || "").trim());
   });
   var roots = remaining.filter(function (doc) {
     return !String(doc.parent_id || "").trim();
@@ -492,26 +495,37 @@ export function createDocsViewerManagementActionController(options) {
   }
 
   function handleDeleteDoc() {
-    var doc = actionTargetDoc(DOCS_VIEWER_ACTION_IDS.DELETE);
-    if (!doc) return;
+    var resolution = resolveAction(DOCS_VIEWER_ACTION_IDS.DELETE);
+    var checkedDocIds = resolution && resolution.enabled
+      ? resolution.targetDocIds.slice()
+      : [];
+    if (!checkedDocIds.length) return;
+    var checkedCount = checkedDocIds.length;
+    var checkedLabel = checkedCount === 1
+      ? "the selected document"
+      : checkedCount + " checked documents";
 
     setManagementBusy(true);
-    setManagementMessage("Checking delete impact for " + doc.title + "...", false);
+    setManagementMessage("Checking delete impact for " + checkedLabel + "...", false);
 
-    previewManagedDocDelete(doc.doc_id, managementClientOptions())
+    previewManagedDocDelete(checkedDocIds, managementClientOptions())
       .then(function (preview) {
         if (!preview.allowed) {
           var blockerText = (preview.blockers || []).join("; ") || "Delete is blocked.";
           setManagementMessage(blockerText, true);
           return null;
         }
+        var deleteCount = Number(preview.delete_count) || 1;
+        var deleteLabel = deleteCount + " document" + (deleteCount === 1 ? "" : "s");
         setManagementBusy(false);
         setManagementMessage("", false);
         return openDocsViewerConfirmModal({
           root: root,
-          title: ACTION_TEXT.deleteConfirmTitle,
+          title: "Delete " + deleteLabel + "?",
           body: buildDocsViewerDeletePreviewBody(preview),
-          primaryLabel: ACTION_TEXT.deleteConfirmButton,
+          primaryLabel: "Delete " + deleteLabel,
+          primaryTone: "danger",
+          initialFocus: "cancel",
           cancelLabel: ACTION_TEXT.cancelButton
         }).then(function (confirmed) {
           if (!confirmed) {
@@ -519,15 +533,15 @@ export function createDocsViewerManagementActionController(options) {
             return null;
           }
           setManagementBusy(true);
-          setManagementMessage("Deleting " + doc.title + "...", false);
-          return applyManagedDocDelete(doc.doc_id, managementClientOptions());
+          setManagementMessage("Deleting " + deleteLabel + "...", false);
+          return applyManagedDocDelete(checkedDocIds, managementClientOptions());
         });
       })
       .then(function (payload) {
         if (!payload) return;
         var fallbackDocId = firstRemainingRootDocId(
           documentIndex.allDocs,
-          doc.doc_id,
+          payload.deleted_doc_ids || checkedDocIds,
           context.resolveLoadableDocId
         );
         setManagementMessage("", false);

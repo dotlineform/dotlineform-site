@@ -44,6 +44,69 @@ def ordered_doc_ids(doc_ids: list[str]) -> list[str]:
     return ordered
 
 
+def require_delete_doc_ids(value: Any) -> list[str]:
+    if not isinstance(value, list):
+        raise ValueError("doc_ids is required")
+    doc_ids = ordered_doc_ids(value)
+    if not doc_ids:
+        raise ValueError("doc_ids is required")
+    return doc_ids
+
+
+def delete_selection_docs(
+    docs: list[source_model.ScopeDoc],
+    requested_doc_ids: list[str],
+) -> tuple[list[str], list[source_model.ScopeDoc]]:
+    docs_by_id = {doc.doc_id: doc for doc in docs}
+    missing_doc_ids = [doc_id for doc_id in requested_doc_ids if doc_id not in docs_by_id]
+    if missing_doc_ids:
+        raise FileNotFoundError(f"docs not found: {', '.join(missing_doc_ids)}")
+
+    selected = set(requested_doc_ids)
+    effective_root_doc_ids: list[str] = []
+    for doc_id in requested_doc_ids:
+        parent_id = docs_by_id[doc_id].parent_id
+        seen = {doc_id}
+        covered_by_selected_ancestor = False
+        while parent_id:
+            if parent_id in selected:
+                covered_by_selected_ancestor = True
+                break
+            if parent_id in seen:
+                raise ValueError(f"doc hierarchy contains a cycle at {parent_id!r}")
+            seen.add(parent_id)
+            parent = docs_by_id.get(parent_id)
+            if parent is None:
+                break
+            parent_id = parent.parent_id
+        if not covered_by_selected_ancestor:
+            effective_root_doc_ids.append(doc_id)
+
+    delete_docs: list[source_model.ScopeDoc] = []
+    seen_delete_ids: set[str] = set()
+    for root_doc_id in effective_root_doc_ids:
+        for doc in source_model.subtree_docs_in_tree_order(docs, root_doc_id):
+            if doc.doc_id in seen_delete_ids:
+                continue
+            seen_delete_ids.add(doc.doc_id)
+            delete_docs.append(doc)
+    return effective_root_doc_ids, delete_docs
+
+
+def delete_selection_warning(requested_count: int, additional_descendant_count: int) -> str:
+    if requested_count == 1:
+        selected_text = "the selected document"
+    else:
+        selected_text = f"{requested_count} checked documents"
+    if additional_descendant_count:
+        descendant_text = (
+            f"{additional_descendant_count} additional descendant document"
+            f"{'s' if additional_descendant_count != 1 else ''}"
+        )
+        return f"This permanently deletes {selected_text} and {descendant_text}."
+    return f"This permanently deletes {selected_text}."
+
+
 def metadata_search_doc_ids(
     docs: list[source_model.ScopeDoc],
     doc_id: str,
@@ -371,40 +434,40 @@ def configured_default_doc_id(repo_root: Path, scope: str) -> str:
     return str(getattr(config, "default_doc_id", "") or "").strip()
 
 
-def plan_delete_preview(repo_root: Path, scope: str, doc_id: str) -> Dict[str, Any]:
+def plan_delete_preview(repo_root: Path, scope: str, doc_ids: list[str]) -> Dict[str, Any]:
     scope = source_model.normalize_scope(scope)
+    requested_doc_ids = require_delete_doc_ids(doc_ids)
     docs = source_model.load_scope_docs(repo_root, scope)
-    docs_by_id = {doc.doc_id: doc for doc in docs}
-    target = docs_by_id.get(doc_id)
-    if target is None:
-        raise FileNotFoundError(f"doc {doc_id!r} not found in scope {scope}")
-
-    children = [
+    effective_root_doc_ids, delete_docs = delete_selection_docs(docs, requested_doc_ids)
+    delete_documents = [
         {
             "doc_id": doc.doc_id,
             "title": doc.title,
             "path": relative_path(repo_root, doc.path),
         }
-        for doc in docs
-        if doc.parent_id == target.doc_id
+        for doc in delete_docs
     ]
-    blockers = []
-    warnings = []
-    if children:
-        blockers.append(f"{len(children)} child docs still depend on this parent")
+    delete_doc_ids = [doc.doc_id for doc in delete_docs]
+    requested_count = len(requested_doc_ids)
+    additional_descendant_count = len(set(delete_doc_ids) - set(requested_doc_ids))
+    warnings = [delete_selection_warning(requested_count, additional_descendant_count)]
     configured_default = configured_default_doc_id(repo_root, scope)
-    default_doc_id_changed = configured_default == target.doc_id
+    default_doc_id_changed = configured_default in set(delete_doc_ids)
 
     return {
         "ok": True,
         "scope": scope,
-        "doc_id": target.doc_id,
-        "title": target.title,
-        "path": relative_path(repo_root, target.path),
-        "allowed": not blockers,
-        "blockers": blockers,
+        "allowed": True,
+        "blockers": [],
         "warnings": warnings,
-        "children": children,
+        "requested_doc_count": requested_count,
+        "requested_doc_ids": requested_doc_ids,
+        "effective_root_count": len(effective_root_doc_ids),
+        "effective_root_doc_ids": effective_root_doc_ids,
+        "delete_count": len(delete_docs),
+        "additional_descendant_count": additional_descendant_count,
+        "delete_doc_ids": delete_doc_ids,
+        "delete_documents": delete_documents,
         "default_doc_id_changed": default_doc_id_changed,
         "default_doc_id": "" if default_doc_id_changed else configured_default,
     }
@@ -412,39 +475,52 @@ def plan_delete_preview(repo_root: Path, scope: str, doc_id: str) -> Dict[str, A
 
 def plan_delete_apply(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
     scope = source_model.normalize_scope(body.get("scope"))
-    doc_id = str(body.get("doc_id") or "").strip()
-    if not doc_id:
-        raise ValueError("doc_id is required")
+    requested_doc_ids = require_delete_doc_ids(body.get("doc_ids"))
     if not body.get("confirm"):
         raise ValueError("delete apply requires confirm=true")
 
-    preview = plan_delete_preview(repo_root, scope, doc_id)
+    preview = plan_delete_preview(repo_root, scope, requested_doc_ids)
     if not preview["allowed"]:
         raise ValueError("; ".join(preview["blockers"]))
 
     docs = source_model.load_scope_docs(repo_root, scope)
-    target = next(doc for doc in docs if doc.doc_id == doc_id)
+    effective_root_doc_ids, delete_docs = delete_selection_docs(docs, requested_doc_ids)
+    delete_doc_ids = [doc.doc_id for doc in delete_docs]
+    delete_paths = [relative_path(repo_root, doc.path) for doc in delete_docs]
+    delete_count = len(delete_docs)
+    additional_descendant_count = len(set(delete_doc_ids) - set(requested_doc_ids))
+    summary_text = f"Deleted {delete_count} document{'s' if delete_count != 1 else ''}."
     return ManagementMutationPlan(
         scope=scope,
         response={
             "ok": True,
             "scope": scope,
-            "doc_id": target.doc_id,
-            "path": relative_path(repo_root, target.path),
+            "paths": delete_paths,
+            "requested_doc_count": len(requested_doc_ids),
+            "requested_doc_ids": requested_doc_ids,
+            "effective_root_count": len(effective_root_doc_ids),
+            "effective_root_doc_ids": effective_root_doc_ids,
+            "delete_count": delete_count,
+            "additional_descendant_count": additional_descendant_count,
+            "deleted_doc_ids": delete_doc_ids,
             "warnings": preview["warnings"],
             "default_doc_id_changed": preview["default_doc_id_changed"],
             "default_doc_id": preview["default_doc_id"],
-            "summary_text": f"Deleted {target.doc_id}.",
+            "summary_text": summary_text,
         },
-        source_deletes=(SourceDelete(target.path),),
+        source_deletes=tuple(SourceDelete(doc.path) for doc in delete_docs),
         suppression_reason="docs-delete",
-        build_doc_ids=[target.doc_id],
-        search_doc_ids=[target.doc_id],
+        build_doc_ids=delete_doc_ids,
+        search_doc_ids=delete_doc_ids,
         log_event_name="docs-delete",
         log_details={
             "scope": scope,
-            "doc_id": target.doc_id,
-            "path": relative_path(repo_root, target.path),
+            "paths": delete_paths,
+            "requested_doc_ids": requested_doc_ids,
+            "effective_root_doc_ids": effective_root_doc_ids,
+            "deleted_doc_ids": delete_doc_ids,
+            "delete_count": delete_count,
+            "additional_descendant_count": additional_descendant_count,
             "default_doc_id_changed": preview["default_doc_id_changed"],
         },
         include_write_result_keys=True,

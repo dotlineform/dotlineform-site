@@ -271,32 +271,76 @@ def test_move_plan_supports_moving_parent_subtree() -> None:
     assert plan.search_doc_ids == ["target", "target-child"]
 
 
-def test_delete_preview_preserves_child_blocker_without_link_warning() -> None:
+def test_delete_preview_includes_ordered_subtree_and_warning() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
-        parent_preview = mutations.plan_delete_preview(repo_root, "studio", "target")
-        target_preview = mutations.plan_delete_preview(repo_root, "studio", "target-child")
+        parent_preview = mutations.plan_delete_preview(repo_root, "studio", ["target"])
+        target_preview = mutations.plan_delete_preview(repo_root, "studio", ["target-child"])
 
-    assert parent_preview["allowed"] is False
-    assert parent_preview["blockers"] == ["1 child docs still depend on this parent"]
+    assert parent_preview["allowed"] is True
+    assert parent_preview["blockers"] == []
+    assert parent_preview["requested_doc_ids"] == ["target"]
+    assert parent_preview["effective_root_doc_ids"] == ["target"]
+    assert parent_preview["delete_doc_ids"] == ["target", "target-child"]
+    assert parent_preview["delete_count"] == 2
+    assert parent_preview["additional_descendant_count"] == 1
+    assert parent_preview["warnings"] == [
+        "This permanently deletes the selected document and 1 additional descendant document."
+    ]
     assert target_preview["allowed"] is True
-    assert target_preview["warnings"] == []
+    assert target_preview["delete_doc_ids"] == ["target-child"]
+    assert target_preview["warnings"] == ["This permanently deletes the selected document."]
 
 
-def test_delete_apply_plan_selects_doc_delete_path_and_search_target() -> None:
+def test_delete_preview_unions_checked_subtrees_without_duplicate_descendant_roots() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        preview = mutations.plan_delete_preview(
+            repo_root,
+            "studio",
+            ["target-child", "target", "sibling"],
+        )
+
+    assert preview["requested_doc_ids"] == ["target-child", "target", "sibling"]
+    assert preview["effective_root_doc_ids"] == ["target", "sibling"]
+    assert preview["delete_doc_ids"] == ["target", "target-child", "sibling"]
+    assert preview["requested_doc_count"] == 3
+    assert preview["effective_root_count"] == 2
+    assert preview["additional_descendant_count"] == 0
+    assert preview["warnings"] == ["This permanently deletes 3 checked documents."]
+
+
+def test_delete_apply_plan_selects_subtree_delete_paths_and_rebuild_targets() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         plan = mutations.plan_delete_apply(
             repo_root,
             {
                 "scope": "studio",
-                "doc_id": "target-child",
+                "doc_ids": ["target"],
                 "confirm": True,
             },
         )
 
-    assert plan.source_deletes[0].path.name == "target-child.md"
-    assert plan.search_doc_ids == ["target-child"]
+    assert [item.path.name for item in plan.source_deletes] == ["target.md", "target-child.md"]
+    assert plan.build_doc_ids == ["target", "target-child"]
+    assert plan.search_doc_ids == ["target", "target-child"]
+    assert plan.response["deleted_doc_ids"] == ["target", "target-child"]
+    assert plan.response["summary_text"] == "Deleted 2 documents."
+
+
+def test_delete_preview_clears_default_when_descendant_is_configured_default() -> None:
+    original_configured_default_doc_id = mutations.configured_default_doc_id
+    mutations.configured_default_doc_id = lambda _repo_root, _scope: "target-child"
+    try:
+        with make_repo() as temp_path:
+            repo_root = Path(temp_path)
+            preview = mutations.plan_delete_preview(repo_root, "studio", ["target"])
+    finally:
+        mutations.configured_default_doc_id = original_configured_default_doc_id
+
+    assert preview["default_doc_id_changed"] is True
+    assert preview["default_doc_id"] == ""
 
 
 def main() -> None:
@@ -309,8 +353,10 @@ def main() -> None:
         test_move_plan_noops_when_parent_is_unchanged,
         test_move_plan_keeps_search_target_for_reparent,
         test_move_plan_supports_moving_parent_subtree,
-        test_delete_preview_preserves_child_blocker_without_link_warning,
-        test_delete_apply_plan_selects_doc_delete_path_and_search_target,
+        test_delete_preview_includes_ordered_subtree_and_warning,
+        test_delete_preview_unions_checked_subtrees_without_duplicate_descendant_roots,
+        test_delete_apply_plan_selects_subtree_delete_paths_and_rebuild_targets,
+        test_delete_preview_clears_default_when_descendant_is_configured_default,
     ]
     for test in tests:
         test()

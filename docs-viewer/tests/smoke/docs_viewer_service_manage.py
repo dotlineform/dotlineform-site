@@ -94,7 +94,7 @@ def assert_service_basics(base_url: str) -> None:
 
 
 def assert_origin_rejection(base_url: str) -> None:
-    payload = json.dumps({"scope": "studio", "doc_id": DOCS_VIEWER_DOC_ID}).encode("utf-8")
+    payload = json.dumps({"scope": "studio", "doc_ids": [DOCS_VIEWER_DOC_ID]}).encode("utf-8")
     request = urllib.request.Request(
         f"{base_url}/docs/delete-preview",
         data=payload,
@@ -470,6 +470,8 @@ def assert_delete_uses_first_remaining_root(page: Page) -> None:
     result = page.evaluate(
         """async () => {
             const module = await import('/docs-viewer/runtime/js/management/docs-viewer-management-actions.js');
+            const client = await import('/docs-viewer/runtime/js/management/docs-viewer-management-client.js');
+            const modals = await import('/docs-viewer/runtime/js/management/docs-viewer-management-modals.js');
             const docs = [
                 { doc_id: 'analytics', parent_id: '' },
                 { doc_id: 'dlf', parent_id: '' },
@@ -477,14 +479,68 @@ def assert_delete_uses_first_remaining_root(page: Page) -> None:
                 { doc_id: 'section-child', parent_id: 'section' }
             ];
             const resolveLoadableDocId = docId => docId === 'section' ? 'section-child' : docId;
+            const requests = [];
+            const fetch = (url, options) => {
+                requests.push({ url, body: JSON.parse(options.body) });
+                return Promise.resolve({
+                    ok: true,
+                    status: 200,
+                    json: () => Promise.resolve({ ok: true })
+                });
+            };
+            const clientOptions = {
+                baseUrl: 'http://manage.test',
+                scope: 'studio',
+                fetch
+            };
+            await client.previewManagedDocDelete(['first', 'second'], clientOptions);
+            await client.applyManagedDocDelete(['first', 'second'], clientOptions);
             return {
                 afterDlf: module.firstRemainingRootDocId(docs, 'dlf', resolveLoadableDocId),
                 afterAnalytics: module.firstRemainingRootDocId(docs, 'analytics', resolveLoadableDocId),
-                afterOnly: module.firstRemainingRootDocId([{ doc_id: 'only', parent_id: '' }], 'only')
+                afterOnly: module.firstRemainingRootDocId([{ doc_id: 'only', parent_id: '' }], 'only'),
+                afterSubtree: module.firstRemainingRootDocId(
+                    docs,
+                    ['section', 'section-child'],
+                    resolveLoadableDocId
+                ),
+                warningBody: modals.buildDocsViewerDeletePreviewBody({
+                    warnings: [
+                        'This permanently deletes 2 checked documents and 1 additional descendant document.'
+                    ],
+                    delete_documents: [
+                        { doc_id: 'research', title: 'Research' },
+                        { doc_id: 'one', title: 'One' },
+                        { doc_id: 'two', title: 'Two' }
+                    ]
+                }),
+                requests
             };
         }"""
     )
-    if result != {"afterDlf": "analytics", "afterAnalytics": "dlf", "afterOnly": ""}:
+    if result != {
+        "afterDlf": "analytics",
+        "afterAnalytics": "dlf",
+        "afterOnly": "",
+        "afterSubtree": "analytics",
+        "warningBody": [
+            "This permanently deletes 2 checked documents and 1 additional descendant document.",
+        ],
+        "requests": [
+            {
+                "url": "http://manage.test/docs/delete-preview",
+                "body": {"scope": "studio", "doc_ids": ["first", "second"]},
+            },
+            {
+                "url": "http://manage.test/docs/delete-apply",
+                "body": {
+                    "scope": "studio",
+                    "doc_ids": ["first", "second"],
+                    "confirm": True,
+                },
+            },
+        ],
+    }:
         raise AssertionError(f"unexpected post-delete root fallback: {result!r}")
 
 
@@ -538,7 +594,7 @@ def assert_action_target_definitions(page: Page) -> None:
                     active: module.resolveDocsViewerAction('bookmark', multiContext),
                     copySubtree: module.resolveDocsViewerAction('copy-subtree', multiContext),
                     all: module.resolveDocsViewerAction('prepare-document-package', multiContext),
-                    exactlyOne: module.resolveDocsViewerAction('delete', multiContext),
+                    deleteSelection: module.resolveDocsViewerAction('delete', multiContext),
                     primary: module.resolveDocsViewerAction('info', multiContext),
                     scope: module.resolveDocsViewerAction('export-docs', multiContext),
                     emptyDelete: module.resolveDocsViewerAction('delete', emptySelectionContext),
@@ -559,7 +615,6 @@ def assert_action_target_definitions(page: Page) -> None:
         "active": [
             "bookmark",
             "copy-subtree",
-            "delete",
             "edit-metadata",
             "info",
             "markdown-save",
@@ -567,7 +622,7 @@ def assert_action_target_definitions(page: Page) -> None:
             "source-add-file",
             "source-add-image",
         ],
-        "all": ["prepare-document-package"],
+        "all": ["delete", "prepare-document-package"],
         "document": [
             "copy-link",
             "move",
@@ -635,13 +690,13 @@ def assert_action_target_definitions(page: Page) -> None:
                 "target": "selection",
                 "targetDocIds": ["first", "second"],
             },
-            "exactlyOne": {
+            "deleteSelection": {
                 "actionId": "delete",
                 "disabledReason": "",
                 "enabled": True,
-                "selectionPolicy": "",
-                "target": "active-document",
-                "targetDocIds": ["active"],
+                "selectionPolicy": "all",
+                "target": "selection",
+                "targetDocIds": ["first", "second"],
             },
             "primary": {
                 "actionId": "info",
@@ -661,11 +716,11 @@ def assert_action_target_definitions(page: Page) -> None:
             },
             "emptyDelete": {
                 "actionId": "delete",
-                "disabledReason": "",
-                "enabled": True,
-                "selectionPolicy": "",
-                "target": "active-document",
-                "targetDocIds": ["active"],
+                "disabledReason": "Select one or more documents.",
+                "enabled": False,
+                "selectionPolicy": "all",
+                "target": "selection",
+                "targetDocIds": [],
             },
             "emptyPrepare": {
                 "actionId": "prepare-document-package",

@@ -257,7 +257,7 @@ def assert_action_target_isolation(page: Page) -> None:
                 .filter(definition => definition.target === definitions.DOCS_VIEWER_ACTION_TARGETS.SELECTION)
                 .map(definition => definition.id)
                 .sort();
-            const activeActionIds = ['delete'];
+            const selectionDeleteActionIds = ['delete'];
             const documentActionIds = ['copy-link', 'move', 'new-child', 'new-sibling', 'open', 'open-vscode'];
             const resolveTargets = (actionIds, invocation) => Object.fromEntries(actionIds.map(actionId => {
                 const resolution = invocation
@@ -315,7 +315,7 @@ def assert_action_target_isolation(page: Page) -> None:
                         resolution: resolver('prepare-document-package')
                     })
                 },
-                activeTargets: resolveTargets(activeActionIds),
+                selectionDeleteTargets: resolveTargets(selectionDeleteActionIds),
                 documentActiveTargets: resolveTargets(documentActionIds),
                 documentInvocationTargets: resolveTargets(documentActionIds, 'context')
             };
@@ -328,7 +328,7 @@ def assert_action_target_isolation(page: Page) -> None:
             "primaryDocId": "context",
             "selectedDocIds": ["checked-a", "checked-b"],
         },
-        "selectionActionIds": ["prepare-document-package"],
+        "selectionActionIds": ["delete", "prepare-document-package"],
         "prepareControlStates": {
             "empty": {
                 "disabled": True,
@@ -354,7 +354,7 @@ def assert_action_target_isolation(page: Page) -> None:
                 "prepareActive": [],
                 "prepareContext": [],
                 "prepareDisabledReason": "Select one or more documents.",
-                "delete": ["active"],
+                "delete": [],
                 "copyActive": ["active"],
                 "copyContext": ["context"],
                 "moveActive": ["active"],
@@ -365,7 +365,7 @@ def assert_action_target_isolation(page: Page) -> None:
                 "prepareActive": ["checked-a"],
                 "prepareContext": ["checked-a"],
                 "prepareDisabledReason": "",
-                "delete": ["active"],
+                "delete": ["checked-a"],
                 "copyActive": ["active"],
                 "copyContext": ["context"],
                 "moveActive": ["active"],
@@ -376,15 +376,15 @@ def assert_action_target_isolation(page: Page) -> None:
                 "prepareActive": ["checked-a", "checked-b"],
                 "prepareContext": ["checked-a", "checked-b"],
                 "prepareDisabledReason": "",
-                "delete": ["active"],
+                "delete": ["checked-a", "checked-b"],
                 "copyActive": ["active"],
                 "copyContext": ["context"],
                 "moveActive": ["active"],
                 "moveContext": ["context"],
             },
         ],
-        "activeTargets": {
-            "delete": ["active"],
+        "selectionDeleteTargets": {
+            "delete": ["checked-a", "checked-b"],
         },
         "documentActiveTargets": {
             "copy-link": ["active"],
@@ -404,7 +404,7 @@ def assert_action_target_isolation(page: Page) -> None:
         },
     }
     if result != expected:
-        raise AssertionError(f"checked ids changed current action targets: {result!r}")
+        raise AssertionError(f"unexpected checked-action target contract: {result!r}")
 
 
 def assert_manage_index_visibility_contract(page: Page) -> None:

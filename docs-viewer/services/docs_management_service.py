@@ -202,10 +202,8 @@ def docs_management_post_response(
         )
     if path == routes.DELETE_PREVIEW_PATH:
         scope = source_model.normalize_scope(body.get("scope"))
-        doc_id = str(body.get("doc_id") or "").strip()
-        if not doc_id:
-            raise ValueError("doc_id is required")
-        return HTTPStatus.OK, mutations.plan_delete_preview(repo_root, scope, doc_id)
+        doc_ids = mutations.require_delete_doc_ids(body.get("doc_ids"))
+        return HTTPStatus.OK, mutations.plan_delete_preview(repo_root, scope, doc_ids)
     if path == routes.DELETE_APPLY_PATH:
         return HTTPStatus.OK, handle_delete_apply(repo_root, body, dry_run)
     if path == routes.SCOPE_CREATE_PREVIEW_PATH:

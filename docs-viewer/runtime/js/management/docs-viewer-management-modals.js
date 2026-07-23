@@ -31,14 +31,9 @@ var MODAL_TEXT = {
 };
 
 export function buildDocsViewerDeletePreviewBody(preview) {
-  var lines = ["Delete " + normalizeText(preview && preview.title) + "?"];
-  if (Array.isArray(preview && preview.warnings) && preview.warnings.length) {
-    lines.push("Warnings:");
-    preview.warnings.forEach(function (item) {
-      lines.push("- " + item);
-    });
-  }
-  return lines;
+  return (Array.isArray(preview && preview.warnings) ? preview.warnings : [])
+    .map(normalizeText)
+    .filter(Boolean);
 }
 
 export function createDocsViewerManagementModalController(options = {}) {

@@ -84,6 +84,22 @@ def click_checkbox(page: Page, doc_id: str, *, shift: bool = False) -> None:
         page.locator(selector).click()
 
 
+def assert_delete_action_state(page: Page, *, disabled: bool, reason: str = "") -> None:
+    button = page.locator("#docsViewerManageDeleteButton")
+    if button.count() != 1:
+        raise AssertionError("Delete Action is missing from the manage route")
+    if button.is_disabled() != disabled:
+        raise AssertionError(
+            f"Delete Action disabled state was {button.is_disabled()!r}, expected {disabled!r}"
+        )
+    expected_label = f"Delete. {reason}" if reason else "Delete"
+    actual_label = button.get_attribute("aria-label")
+    if actual_label != expected_label:
+        raise AssertionError(
+            f"Delete Action label was {actual_label!r}, expected {expected_label!r}"
+        )
+
+
 def assert_selection_lifecycle(page: Page, base_url: str, timeout_ms: int) -> None:
     index_request_count = 0
     initial_index_docs: list[dict[str, object]] = []
@@ -134,8 +150,14 @@ def assert_selection_lifecycle(page: Page, base_url: str, timeout_ms: int) -> No
         raise AssertionError("manage route retained the Show action button")
     if not initial_index_docs:
         raise AssertionError("manage route did not load the canonical index population")
+    assert_delete_action_state(
+        page,
+        disabled=True,
+        reason="Select one or more documents.",
+    )
     click_selection_command(page, "enter")
     click_selection_command(page, "select-all")
+    assert_delete_action_state(page, disabled=False)
     selection_projection = page.evaluate(
         """() => ({
             count: document.querySelector('.docsViewer__indexSelectionCount')?.textContent.trim(),
@@ -157,6 +179,11 @@ def assert_selection_lifecycle(page: Page, base_url: str, timeout_ms: int) -> No
     if page.locator("[data-docs-viewer-selection-checkbox]:not(:checked)").count():
         raise AssertionError("Select all left a rendered manage-index row unchecked")
     click_selection_command(page, "clear")
+    assert_delete_action_state(
+        page,
+        disabled=True,
+        reason="Select one or more documents.",
+    )
     selection_docs = choose_selection_docs(page)
     prune_doc_id = selection_docs["prunedDocId"]
     click_checkbox(page, selection_docs["preservedDocId"])
@@ -164,6 +191,7 @@ def assert_selection_lifecycle(page: Page, base_url: str, timeout_ms: int) -> No
     selected_before_navigation = [selection_docs["preservedDocId"], prune_doc_id]
     if sorted(checked_doc_ids(page)) != sorted(selected_before_navigation):
         raise AssertionError("route smoke did not establish the checked set before reload")
+    assert_delete_action_state(page, disabled=False)
 
     page.locator("#docsViewerRecentButton").click()
     page.wait_for_function(
@@ -181,11 +209,17 @@ def assert_selection_lifecycle(page: Page, base_url: str, timeout_ms: int) -> No
     )
     if sorted(checked_doc_ids(page)) != sorted(selected_before_navigation):
         raise AssertionError("Search mode changed the checked set")
+    assert_delete_action_state(
+        page,
+        disabled=True,
+        reason="Clear search to delete documents.",
+    )
     search_input.fill("")
     page.wait_for_function(
         "!new URLSearchParams(window.location.search).has('q')",
         timeout=timeout_ms,
     )
+    assert_delete_action_state(page, disabled=False)
 
     requests_before_reload = index_request_count
     page.locator("#docsViewerManageRebuildButton").evaluate("button => button.click()")
@@ -208,6 +242,7 @@ def assert_selection_lifecycle(page: Page, base_url: str, timeout_ms: int) -> No
         raise AssertionError(f"rebuild did not perform one index replacement: {index_request_count}")
     if page.locator(f'[data-docs-viewer-selection-checkbox="{prune_doc_id}"]').count():
         raise AssertionError("missing document remained in the refreshed manage index")
+    assert_delete_action_state(page, disabled=False)
 
     click_checkbox(page, selection_docs["shiftTargetDocId"], shift=True)
     expected_after_missing_anchor = [
@@ -233,6 +268,11 @@ def assert_selection_lifecycle(page: Page, base_url: str, timeout_ms: int) -> No
     )
     if checked_doc_ids(page):
         raise AssertionError("leaving the owning index view did not clear selection")
+    assert_delete_action_state(
+        page,
+        disabled=True,
+        reason="Select one or more documents.",
+    )
 
     click_selection_command(page, "enter")
     click_checkbox(page, selection_docs["preservedDocId"])
@@ -247,6 +287,11 @@ def assert_selection_lifecycle(page: Page, base_url: str, timeout_ms: int) -> No
     ).count()
     if visible_gutters:
         raise AssertionError("full browser reload persisted the selection gutter state")
+    assert_delete_action_state(
+        page,
+        disabled=True,
+        reason="Select one or more documents.",
+    )
     if page_errors:
         raise AssertionError(f"page errors during selection lifecycle route smoke: {page_errors!r}")
 

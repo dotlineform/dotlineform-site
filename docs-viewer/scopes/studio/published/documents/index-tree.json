@@ -848,10 +848,16 @@
             },
             {
               "doc_id": "d-20260716-193410-6d4efe",
-              "title": "Copy Subtree To Scope",
+              "title": "Copy And Move Documents Between Scopes",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260716-193410-6d4efe.json",
-              "ui_status": "done",
+              "ui_status": "in-progress",
               "children": [
+                {
+                  "doc_id": "d-20260723-223400-c7a1e4",
+                  "title": "Copy And Move Documents Between Scopes Delivery",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-223400-c7a1e4.json",
+                  "ui_status": "proposed"
+                },
                 {
                   "doc_id": "d-20260716-193410-bd64e3",
                   "title": "Copy Subtree To Scope Delivery",
@@ -1206,17 +1212,10 @@
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-7c7c8d.json"
             },
             {
-              "doc_id": "d-20260713-000000-d9bad2",
-              "title": "Source Documentation and Linting",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260713-000000-d9bad2.json",
-              "ui_status": "draft",
+              "doc_id": "d-20260723-212313-90dc78",
+              "title": "Research",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-212313-90dc78.json",
               "children": [
-                {
-                  "doc_id": "d-20260718-125756-a41c70",
-                  "title": "Docs Viewer Source Documentation And Linting Pilot Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-125756-a41c70.json",
-                  "ui_status": "proposed"
-                },
                 {
                   "doc_id": "d-20260723-203331-9a8708",
                   "title": "Improving Repository Context for Coding Agents",
@@ -1234,6 +1233,20 @@
                   "title": "Recommended JSDoc Approach for the Repository",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-203332-3aba41.json",
                   "ui_status": "research"
+                }
+              ]
+            },
+            {
+              "doc_id": "d-20260713-000000-d9bad2",
+              "title": "Source Documentation and Linting",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260713-000000-d9bad2.json",
+              "ui_status": "draft",
+              "children": [
+                {
+                  "doc_id": "d-20260718-125756-a41c70",
+                  "title": "Docs Viewer Source Documentation And Linting Pilot Delivery",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-125756-a41c70.json",
+                  "ui_status": "proposed"
                 },
                 {
                   "doc_id": "d-20260713-133928-c786c7",
@@ -1628,5 +1641,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-23T19:56:03Z"
+  "generated_at": "2026-07-23T21:37:18Z"
 }

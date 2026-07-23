@@ -133,13 +133,13 @@ export function updateSourceConfigSettings(changes, options) {
   }, options), options);
 }
 
-export function previewManagedDocDelete(docId, options) {
-  return fetchManagementJson("/docs/delete-preview", "POST", scopedPayload({ doc_id: docId }, options), options);
+export function previewManagedDocDelete(docIds, options) {
+  return fetchManagementJson("/docs/delete-preview", "POST", scopedPayload({ doc_ids: docIds }, options), options);
 }
 
-export function applyManagedDocDelete(docId, options) {
+export function applyManagedDocDelete(docIds, options) {
   return fetchManagementJson("/docs/delete-apply", "POST", scopedPayload({
-    doc_id: docId,
+    doc_ids: docIds,
     confirm: true
   }, options), options);
 }
