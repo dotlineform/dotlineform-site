@@ -13,7 +13,8 @@ import {
 import {
   renderDocsHtmlImportInteractiveOverwriteWarning,
   renderDocsHtmlImportResult,
-  renderDocsHtmlImportWarnings
+  renderDocsHtmlImportWarnings,
+  resetDocsHtmlImportWarning
 } from "/docs-viewer/runtime/js/import/docs-html-import-render.js";
 import {
   renderDocsImportCollectionView
@@ -157,8 +158,7 @@ function createPersistentFixture(context) {
   });
   const management = {
     managementBusy: false,
-    metadataEditingDocId: "",
-    metadataRestoreFocusId: ""
+    metadataEditingDocId: ""
   };
   const documentIndex = {
     docsById: new Map(METADATA_DOCS.map((doc) => [doc.doc_id, doc]))
@@ -355,10 +355,16 @@ async function mountImport(context, state) {
   } else if (state === "selected") {
     statusNode.textContent = importText("selectedCount", { count: 1 });
   } else if (state === "collision") {
-    renderDocsHtmlImportInteractiveOverwriteWarning(importRenderState(documentRef), {
+    const renderState = importRenderState(documentRef);
+    renderDocsHtmlImportInteractiveOverwriteWarning(renderState, {
       import_preview: {
         interactive_html_plans: [{ target_path: "media/interactive/modal-demo.html" }]
       }
+    });
+    renderState.cancelButton.addEventListener("click", () => {
+      resetDocsHtmlImportWarning(renderState);
+      statusNode.textContent = importText("overwriteCancelled");
+      delete statusNode.dataset.state;
     });
     statusNode.textContent = "Review the interactive asset collision.";
     statusNode.dataset.state = "warn";
@@ -399,27 +405,34 @@ async function mountImport(context, state) {
       warnings: [],
       errors: []
     }));
-    renderDocsImportCollectionView(
-      importNode(documentRef, "docsImportCollectionView"),
-      {
-        active: true,
-        phase: "confirmation",
-        plan: {
-          counts: {
-            records: records.length,
-            creates: 12,
-            collisions: 6,
-            record_errors: 0,
-            media_plans: 5
-          },
-          records,
-          blockers: [],
-          warnings: [{ message: "Five media assets will be copied on a best-effort basis." }]
+    const collectionHost = importNode(documentRef, "docsImportCollectionView");
+    const collectionState = {
+      active: true,
+      phase: "confirmation",
+      plan: {
+        counts: {
+          records: records.length,
+          creates: 12,
+          collisions: 6,
+          record_errors: 0,
+          media_plans: 5
         },
-        result: null
+        records,
+        blockers: [],
+        warnings: [{ message: "Five media assets will be copied on a best-effort basis." }]
       },
-      () => {}
-    );
+      result: null
+    };
+    const renderCollection = () => {
+      renderDocsImportCollectionView(collectionHost, collectionState, (command) => {
+        if (command?.type !== "cancel") return;
+        collectionState.phase = "cancelled";
+        statusNode.textContent = importText("collectionCancelledStatus");
+        delete statusNode.dataset.state;
+        renderCollection();
+      });
+    };
+    renderCollection();
     statusNode.textContent = importText("collectionReadyStatus");
     statusNode.dataset.state = "success";
   }

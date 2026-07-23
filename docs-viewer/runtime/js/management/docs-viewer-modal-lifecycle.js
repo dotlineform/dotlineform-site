@@ -178,6 +178,12 @@ export function createDocsViewerModalLifecycle(options = {}) {
     scrollRoots = [];
   }
 
+  function focusInitial() {
+    if (!active) return false;
+    focusNode(resolveNode(options.initialFocus), options.selectInitialFocus === true);
+    return true;
+  }
+
   function open(openOptions = {}) {
     if (active || destroyed) return false;
     if (restoreFocusTimer !== null) {
@@ -193,8 +199,7 @@ export function createDocsViewerModalLifecycle(options = {}) {
     addListeners();
     initialFocusTimer = windowRef.setTimeout(function () {
       initialFocusTimer = null;
-      if (!active) return;
-      focusNode(resolveNode(options.initialFocus), options.selectInitialFocus === true);
+      focusInitial();
     }, 0);
     return true;
   }
@@ -205,6 +210,9 @@ export function createDocsViewerModalLifecycle(options = {}) {
     if (initialFocusTimer !== null) {
       windowRef.clearTimeout(initialFocusTimer);
       initialFocusTimer = null;
+    }
+    if (documentRef.activeElement && modal.contains(documentRef.activeElement)) {
+      documentRef.activeElement.blur();
     }
     removeListeners();
     restoreScroll();
@@ -229,6 +237,7 @@ export function createDocsViewerModalLifecycle(options = {}) {
   return {
     close: close,
     destroy: destroy,
+    focusInitial: focusInitial,
     isActive: function () { return active; },
     open: open
   };

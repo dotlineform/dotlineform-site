@@ -56,8 +56,7 @@ export function createDocsViewerManagementEventRouter(options = {}) {
       hideManageActionsMenu();
       return true;
     }
-    var modal = modalController();
-    return modal ? modal.handleDocumentKeydown(event) : false;
+    return false;
   }
 
   function handleAppManagementControl(detail) {

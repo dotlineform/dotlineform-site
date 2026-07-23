@@ -102,7 +102,6 @@ function createStateDefaults(settings) {
     reloadExpectedDocId: "",
     pendingBusyCount: 0,
     metadataEditingDocId: "",
-    metadataRestoreFocusId: "",
     nonLoadableDocIds: new Set(),
     manageOnlyTreeRootIds: new Set(),
     indexPanelState: panelLayout && typeof panelLayout.indexPanelState === "function"
@@ -209,8 +208,7 @@ function createStateDomains(state, settings) {
       "managementMessage",
       "managementMessageIsError",
       "managementStatusOwnsViewerStatus",
-      "metadataEditingDocId",
-      "metadataRestoreFocusId"
+      "metadataEditingDocId"
     ]),
     generatedData: stateDomain("generatedData", "local generated-read service capability", state, [
       "generatedDataReadChecked",

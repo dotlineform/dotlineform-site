@@ -6,7 +6,7 @@ import {
   normalizeText
 } from "./docs-viewer-management-modal-shell.js";
 import {
-  trapDocsViewerModalFocus
+  createDocsViewerModalLifecycle
 } from "./docs-viewer-modal-lifecycle.js";
 import {
   createDocsViewerMetadataParentPicker
@@ -54,10 +54,37 @@ export function createDocsViewerManagementModalController(options = {}) {
   var metadataModalResolve = null;
   var settingsFieldState = null;
   var importModalCancelButton = null;
+  var importLifecycle = null;
   var metadataParentPicker = createDocsViewerMetadataParentPicker({
     refs: refs,
     callbacks: callbacks
   });
+  var metadataLifecycle = refs.metadataModal ? createDocsViewerModalLifecycle({
+    cancelElements: Array.from(refs.metadataModal.querySelectorAll("[data-metadata-close]"))
+      .concat(refs.metadataCancelButton || [])
+      .filter(Boolean),
+    document: document,
+    initialFocus: function () { return refs.metadataTitleInput; },
+    modal: refs.metadataModal,
+    onRequestClose: function () { closeMetadataModal(); },
+    consumeEscape: function (event) {
+      if (event.defaultPrevented) return true;
+      if (!refs.metadataParentPopup || refs.metadataParentPopup.hidden) return false;
+      event.preventDefault();
+      metadataParentPicker.hidePopup();
+      return true;
+    },
+    selectInitialFocus: true
+  }) : null;
+  var settingsLifecycle = refs.settingsModal ? createDocsViewerModalLifecycle({
+    cancelElements: Array.from(refs.settingsModal.querySelectorAll("[data-settings-close]"))
+      .concat(refs.settingsCancelButton || [])
+      .filter(Boolean),
+    document: document,
+    initialFocus: function () { return refs.settingsCancelButton || refs.settingsModal; },
+    modal: refs.settingsModal,
+    onRequestClose: function () { closeSettingsModal(); }
+  }) : null;
 
   function viewerScope() {
     return typeof callbacks.viewerScope === "function" ? callbacks.viewerScope() : "";
@@ -69,10 +96,6 @@ export function createDocsViewerManagementModalController(options = {}) {
 
   function metadataModalOpen() {
     return Boolean(refs.metadataModal && !refs.metadataModal.hidden);
-  }
-
-  function importModalOpen() {
-    return Boolean(refs.importModal && !refs.importModal.hidden);
   }
 
   function settingsModalOpen() {
@@ -143,32 +166,27 @@ export function createDocsViewerManagementModalController(options = {}) {
     );
   }
 
-  function focusModalReturnTarget(preferredTarget) {
-    var target = isFocusableNow(preferredTarget) ? preferredTarget : refs.manageActionsButton;
-    window.setTimeout(function () {
-      focusWithoutScroll(target);
-    }, 0);
+  function metadataReturnTarget(docId) {
+    if (!docId || !nav) return null;
+    var escapeCss = typeof context.cssEscape === "function"
+      ? context.cssEscape
+      : function (value) { return String(value || ""); };
+    return nav.querySelector(
+      '[data-doc-row-id="' + escapeCss(docId) + '"] .docsViewer__navLink'
+    );
   }
 
   function closeMetadataModal(result) {
     if (!refs.metadataModal) return;
-    if (document.activeElement && refs.metadataModal.contains(document.activeElement)) {
-      document.activeElement.blur();
-    }
     dismissMetadataParentSuggestions();
+    if (metadataLifecycle) metadataLifecycle.close();
     refs.metadataModal.hidden = true;
     management.metadataEditingDocId = "";
-    var restoreDocId = management.metadataRestoreFocusId;
-    management.metadataRestoreFocusId = "";
     if (metadataModalResolve) {
       var resolve = metadataModalResolve;
       metadataModalResolve = null;
       resolve(result || null);
     }
-    if (!restoreDocId || !nav) return;
-    var escapeCss = typeof context.cssEscape === "function" ? context.cssEscape : function (value) { return String(value || ""); };
-    var target = nav.querySelector('[data-doc-row-id="' + escapeCss(restoreDocId) + '"] .docsViewer__navLink');
-    focusWithoutScroll(target);
   }
 
   function openMetadataModal(doc) {
@@ -177,7 +195,6 @@ export function createDocsViewerManagementModalController(options = {}) {
     }
     if (typeof callbacks.hideContextMenu === "function") callbacks.hideContextMenu();
     management.metadataEditingDocId = doc.doc_id;
-    management.metadataRestoreFocusId = doc.doc_id;
     if (refs.metadataDocId) {
       refs.metadataDocId.textContent = doc.doc_id;
     }
@@ -191,10 +208,11 @@ export function createDocsViewerManagementModalController(options = {}) {
     renderMetadataParentOptions(doc);
 
     refs.metadataModal.hidden = false;
-    window.requestAnimationFrame(function () {
-      refs.metadataTitleInput.focus();
-      refs.metadataTitleInput.select();
-    });
+    if (metadataLifecycle) {
+      metadataLifecycle.open({
+        restoreFocus: metadataReturnTarget(doc.doc_id)
+      });
+    }
     return new Promise(function (resolve) {
       metadataModalResolve = resolve;
     });
@@ -211,20 +229,56 @@ export function createDocsViewerManagementModalController(options = {}) {
     importModalCancelButton.className = "docsViewerImport__button docsViewerImport__button--defaultWidth docsViewerImport__modalCancel";
     importModalCancelButton.id = "docsViewerImportCancelButton";
     importModalCancelButton.textContent = MODAL_TEXT.importCancelButton;
-    importModalCancelButton.addEventListener("click", closeImportModal);
     actions.insertBefore(importModalCancelButton, runButton);
     return importModalCancelButton;
   }
 
-  function focusImportModalEntry() {
+  function importModalBusy() {
     var cancelButton = ensureImportModalCancelButton();
-    if (cancelButton) {
-      focusWithoutScroll(cancelButton);
-      return;
+    return Boolean(
+      refs.importRoot
+      && refs.importRoot.dataset.studioBusy === "true"
+    ) || Boolean(cancelButton && cancelButton.disabled);
+  }
+
+  function importNestedCancelControl() {
+    if (!refs.importModal) return null;
+    return Array.from(refs.importModal.querySelectorAll([
+      "#docsHtmlImportCancel",
+      '[data-collection-command="cancel"]'
+    ].join(","))).find(isFocusableNow) || null;
+  }
+
+  function consumeImportEscape(event) {
+    var nestedCancel = importNestedCancelControl();
+    if (nestedCancel) {
+      event.preventDefault();
+      nestedCancel.click();
+      return true;
     }
-    if (refs.importRoot) {
-      focusWithoutScroll(refs.importRoot);
-    }
+    if (!importModalBusy()) return false;
+    event.preventDefault();
+    return true;
+  }
+
+  function ensureImportModalLifecycle() {
+    if (importLifecycle || !refs.importModal) return importLifecycle;
+    var cancelButton = ensureImportModalCancelButton();
+    importLifecycle = createDocsViewerModalLifecycle({
+      cancelElements: Array.from(refs.importModal.querySelectorAll("[data-import-close]"))
+        .concat(cancelButton || [])
+        .filter(Boolean),
+      consumeEscape: consumeImportEscape,
+      document: document,
+      initialFocus: function () { return cancelButton || refs.importRoot; },
+      modal: refs.importModal,
+      onRequestClose: function () { return closeImportModal(); }
+    });
+    return importLifecycle;
+  }
+
+  function focusImportModalEntry() {
+    if (importLifecycle) importLifecycle.focusInitial();
   }
 
   function projectImportTerminalResult() {
@@ -233,12 +287,15 @@ export function createDocsViewerManagementModalController(options = {}) {
     if (runButton) runButton.hidden = true;
     if (!cancelButton) return;
     cancelButton.textContent = MODAL_TEXT.importCloseButton;
-    focusWithoutScroll(cancelButton);
+    focusImportModalEntry();
   }
 
   function projectImportBusy(busy) {
     var cancelButton = ensureImportModalCancelButton();
     if (cancelButton) cancelButton.disabled = Boolean(busy);
+    if (!busy && cancelButton && cancelButton.textContent === MODAL_TEXT.importCloseButton) {
+      focusImportModalEntry();
+    }
   }
 
   function resetImportModalActions() {
@@ -254,8 +311,16 @@ export function createDocsViewerManagementModalController(options = {}) {
   function openImportModal() {
     if (!refs.importModal || !refs.importRoot) return;
     var scope = viewerScope();
+    var lifecycle = ensureImportModalLifecycle();
     refs.importModal.hidden = false;
     resetImportModalActions();
+    if (lifecycle) {
+      lifecycle.open({
+        restoreFocus: isFocusableNow(refs.manageImportButton)
+          ? refs.manageImportButton
+          : refs.manageActionsButton
+      });
+    }
     var initResult = typeof callbacks.onImportOpen === "function" ? callbacks.onImportOpen(scope) : null;
     if (initResult && typeof initResult.then === "function") {
       initResult.then(focusImportModalEntry).catch(focusImportModalEntry);
@@ -265,12 +330,10 @@ export function createDocsViewerManagementModalController(options = {}) {
   }
 
   function closeImportModal() {
-    if (!refs.importModal) return;
-    if (document.activeElement && refs.importModal.contains(document.activeElement)) {
-      document.activeElement.blur();
-    }
+    if (!refs.importModal || importModalBusy()) return false;
+    if (importLifecycle) importLifecycle.close();
     refs.importModal.hidden = true;
-    focusModalReturnTarget(refs.manageImportButton);
+    return true;
   }
 
   function setSettingsStatus(message, stateName) {
@@ -351,10 +414,18 @@ export function createDocsViewerManagementModalController(options = {}) {
     setSettingsStatus(MODAL_TEXT.settingsLoading, "");
     renderSettingsWarnings([]);
     refs.settingsModal.hidden = false;
+    if (settingsLifecycle) {
+      settingsLifecycle.open({
+        restoreFocus: isFocusableNow(refs.manageSettingsButton)
+          ? refs.manageSettingsButton
+          : refs.manageActionsButton
+      });
+    }
     return true;
   }
 
   function setSettingsField(field) {
+    if (!settingsModalOpen()) return;
     settingsFieldState = field || null;
     if (!settingsFieldState) {
       if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = true;
@@ -394,6 +465,7 @@ export function createDocsViewerManagementModalController(options = {}) {
   }
 
   function setSettingsLoadError(message) {
+    if (!settingsModalOpen()) return;
     if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = true;
     renderSettingsWarnings([]);
     setSettingsStatus(message || MODAL_TEXT.settingsLoadFailed, "error");
@@ -411,12 +483,9 @@ export function createDocsViewerManagementModalController(options = {}) {
 
   function closeSettingsModal() {
     if (!refs.settingsModal) return;
-    if (document.activeElement && refs.settingsModal.contains(document.activeElement)) {
-      document.activeElement.blur();
-    }
+    if (settingsLifecycle) settingsLifecycle.close();
     refs.settingsModal.hidden = true;
     settingsFieldState = null;
-    focusModalReturnTarget(refs.manageSettingsButton);
   }
 
   function handleRootClick(event) {
@@ -424,74 +493,11 @@ export function createDocsViewerManagementModalController(options = {}) {
       if (refs.metadataParentPopup && !refs.metadataParentPopup.hidden && !event.target.closest(".docsViewer__parentPicker")) {
         metadataParentPicker.hidePopup();
       }
-      var closeTrigger = event.target.closest("[data-metadata-close]");
-      if (closeTrigger) {
-        event.preventDefault();
-        closeMetadataModal();
-        return true;
-      }
-    }
-    if (importModalOpen()) {
-      var importCloseTrigger = event.target.closest("[data-import-close]");
-      if (importCloseTrigger) {
-        event.preventDefault();
-        closeImportModal();
-        return true;
-      }
-    }
-    if (settingsModalOpen()) {
-      var settingsCloseTrigger = event.target.closest("[data-settings-close]");
-      if (settingsCloseTrigger) {
-        event.preventDefault();
-        closeSettingsModal();
-        return true;
-      }
-    }
-    return false;
-  }
-
-  function handleDocumentKeydown(event) {
-    if (event.key === "Tab" && metadataModalOpen()) {
-      return trapDocsViewerModalFocus(event, refs.metadataModal);
-    }
-    if (event.key === "Tab" && importModalOpen()) {
-      return trapDocsViewerModalFocus(event, refs.importModal);
-    }
-    if (event.key === "Tab" && settingsModalOpen()) {
-      return trapDocsViewerModalFocus(event, refs.settingsModal);
-    }
-    if (event.key === "Escape" && refs.metadataParentPopup && !refs.metadataParentPopup.hidden) {
-      event.preventDefault();
-      metadataParentPicker.hidePopup();
-      return true;
-    }
-    if (event.key === "Escape" && metadataModalOpen()) {
-      event.preventDefault();
-      closeMetadataModal();
-      return true;
-    }
-    if (event.key === "Escape" && importModalOpen()) {
-      event.preventDefault();
-      closeImportModal();
-      return true;
-    }
-    if (event.key === "Escape" && settingsModalOpen()) {
-      event.preventDefault();
-      closeSettingsModal();
-      return true;
     }
     return false;
   }
 
   function wireEvents() {
-    if (refs.metadataCancelButton) {
-      refs.metadataCancelButton.addEventListener("click", function () {
-        closeMetadataModal();
-      });
-    }
-    if (refs.settingsCancelButton) {
-      refs.settingsCancelButton.addEventListener("click", closeSettingsModal);
-    }
     if (refs.metadataForm) {
       refs.metadataForm.addEventListener("submit", function (event) {
         event.preventDefault();
@@ -544,7 +550,6 @@ export function createDocsViewerManagementModalController(options = {}) {
       return settingsFieldState;
     },
     getSettingsChanges: getSettingsChanges,
-    handleDocumentKeydown: handleDocumentKeydown,
     handleRootClick: handleRootClick,
     metadataModalOpen: metadataModalOpen,
     openImportModal: openImportModal,
