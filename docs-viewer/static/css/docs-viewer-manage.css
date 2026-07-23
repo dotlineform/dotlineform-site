@@ -197,6 +197,7 @@
 
 .docsViewer__modal{
   --docs-viewer-modal-width: 38rem;
+  --docs-viewer-modal-offset: min(8vh, 4rem);
   position: fixed;
   inset: 0;
   z-index: 150;
@@ -213,9 +214,11 @@
   position: relative;
   z-index: 1;
   width: min(var(--docs-viewer-modal-width), calc(100vw - 2rem));
-  max-height: calc(100vh - 2rem);
+  max-height: calc(100vh - var(--docs-viewer-modal-offset) - 1rem);
+  max-height: calc(100dvh - var(--docs-viewer-modal-offset) - 1rem);
   overflow: auto;
-  margin: 8vh auto 0;
+  overscroll-behavior: contain;
+  margin: var(--docs-viewer-modal-offset) auto 0;
   border: 1px solid var(--docs-viewer-border);
   border-radius: var(--docs-viewer-radius);
   background: var(--docs-viewer-panel);
@@ -223,17 +226,24 @@
   padding: 0.95rem;
 }
 
+.docsViewer__modalCard--compact{
+  --docs-viewer-modal-width: 30rem;
+}
+
+.docsViewer__modalCard--standard{
+  --docs-viewer-modal-width: 38rem;
+}
+
 .docsViewer__modalCard--wide{
   --docs-viewer-modal-width: 64rem;
-  margin-top: 2vh;
-  max-height: calc(100vh - 2rem - 2vh);
+  --docs-viewer-modal-offset: min(2vh, 1rem);
 }
 
 .docsViewer__modalCard--document{
+  --docs-viewer-modal-width: 56rem;
+  --docs-viewer-modal-offset: 1rem;
   display: flex;
   flex-direction: column;
-  margin: 1rem auto 0;
-  max-height: calc(100vh - 2rem);
   overflow: hidden;
 }
 
@@ -243,6 +253,7 @@
 }
 
 .docsViewer__modalHeader{
+  flex: 0 0 auto;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -267,6 +278,7 @@
 .docsViewer__modalForm{
   display: grid;
   gap: 0.9rem;
+  min-width: 0;
 }
 
 .docsViewer__field{
@@ -348,6 +360,14 @@ select.docsViewer__fieldInput--listbox{
   outline-offset: 2px;
 }
 
+.docsViewer__fieldInput:disabled{
+  border-color: var(--docs-viewer-border);
+  background: var(--docs-viewer-panel-2);
+  color: var(--docs-viewer-disabled);
+  -webkit-text-fill-color: var(--docs-viewer-disabled);
+  cursor: not-allowed;
+}
+
 .docsViewer__parentPicker{
   position: relative;
 }
@@ -420,6 +440,18 @@ select.docsViewer__fieldInput--listbox{
 
 .docsViewer__modalNote[data-state="error"]{
   color: var(--docs-viewer-danger);
+}
+
+.docsViewer__modalNote[data-state="busy"]{
+  color: var(--docs-viewer-busy);
+}
+
+.docsViewer__modalNote[data-state="success"]{
+  color: var(--docs-viewer-success);
+}
+
+.docsViewer__modalNote[data-state="warn"]{
+  color: var(--docs-viewer-warning);
 }
 
 .docsViewer__settingsWarnings{
@@ -654,6 +686,10 @@ select.docsViewer__fieldInput--listbox{
   gap: 0.6rem;
 }
 
+.docsViewer__actionButton--defaultWidth{
+  min-inline-size: 5.75rem;
+}
+
 .docsViewer__modal .docsViewer__actionButton,
 .docsViewer__modal .docsViewerImport__button{
   box-sizing: border-box;
@@ -667,11 +703,24 @@ select.docsViewer__fieldInput--listbox{
   font: inherit;
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
   line-height: var(--docs-viewer-line-snug, var(--line-snug, 1.25));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  cursor: pointer;
 }
 
-.docsViewer__modal .docsViewer__actionButton:hover,
-.docsViewer__modal .docsViewerImport__button:hover{
+.docsViewer__modal .docsViewer__actionButton:not(:disabled):hover,
+.docsViewer__modal .docsViewerImport__button:not(:disabled):hover{
   background: var(--docs-viewer-panel-2);
+}
+
+.docsViewer__modal .docsViewer__actionButton:disabled,
+.docsViewer__modal .docsViewerImport__button:disabled{
+  border-color: var(--docs-viewer-border);
+  background: var(--docs-viewer-panel-2);
+  color: var(--docs-viewer-disabled);
+  cursor: not-allowed;
 }
 
 .docsViewer__modal :is(
@@ -695,8 +744,11 @@ select.docsViewer__fieldInput--listbox{
 }
 
 @media (max-width: 34rem){
+  .docsViewer__modal{
+    --docs-viewer-modal-offset: 1rem;
+  }
+
   .docsViewer__modalCard{
-    margin: 1rem auto 0;
     max-height: calc(100vh - 2rem);
     max-height: calc(100dvh - 2rem);
   }

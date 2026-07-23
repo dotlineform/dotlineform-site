@@ -37,6 +37,7 @@ export function createDocsViewerManagementModalComposition(options = {}) {
     metadataParentInput: shellRef(shellRefs, "metadataParentInput", "docsViewerMetadataParentInput"),
     metadataParentPopup: shellRef(shellRefs, "metadataParentPopup", "docsViewerMetadataParentPopup"),
     metadataSaveButton: shellRef(shellRefs, "metadataSaveButton", "docsViewerMetadataSaveButton"),
+    metadataStatus: shellRef(shellRefs, "metadataStatus", "docsViewerMetadataStatus"),
     metadataStatusInput: shellRef(shellRefs, "metadataStatusInput", "docsViewerMetadataStatusInput"),
     metadataSummaryInput: shellRef(shellRefs, "metadataSummaryInput", "docsViewerMetadataSummaryInput"),
     metadataTitleInput: shellRef(shellRefs, "metadataTitleInput", "docsViewerMetadataTitleInput"),
@@ -75,8 +76,7 @@ export function createDocsViewerManagementModalComposition(options = {}) {
       getModalController: function () {
         return modalController;
       },
-      onSave: callbacks.onMetadataSave,
-      setManagementMessage: callbacks.setManagementMessage
+      onSave: callbacks.onMetadataSave
     }
   });
   var settingsWorkflow = createDocsViewerManagementSettingsWorkflow({

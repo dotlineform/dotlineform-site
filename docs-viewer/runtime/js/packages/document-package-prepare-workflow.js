@@ -253,7 +253,7 @@ function openPrepareOptions(options) {
     root: options.root,
     restoreFocus: options.restoreFocus,
     title: "Prepare package",
-    size: "compact",
+    size: "standard",
     bodyHtml: optionsBodyHtml(),
     focusSelector: "[data-package-profile]",
     actions: [

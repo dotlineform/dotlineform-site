@@ -152,7 +152,7 @@ def assert_choice_modal_radio_navigation(page: Page) -> None:
 
     opened = state()
     page.keyboard.press("Tab")
-    tab_to_primary = state()
+    tab_to_cancel = state()
     page.keyboard.press("Shift+Tab")
     shift_tab_to_group = state()
     page.keyboard.press("ArrowDown")
@@ -180,7 +180,7 @@ def assert_choice_modal_radio_navigation(page: Page) -> None:
 
     result = {
         "opened": opened,
-        "tabToPrimary": tab_to_primary,
+        "tabToCancel": tab_to_cancel,
         "shiftTabToGroup": shift_tab_to_group,
         "downToLibrary": down_to_library,
         "downToMoments": down_to_moments,
@@ -196,8 +196,8 @@ def assert_choice_modal_radio_navigation(page: Page) -> None:
             "outlineStyle": "none",
             "outlineWidth": "0px",
         },
-        "tabToPrimary": {
-            "active": "modal-primary",
+        "tabToCancel": {
+            "active": "modal-cancel",
             "checked": "analysis",
             "scrollY": 400,
             "outlineStyle": "solid",

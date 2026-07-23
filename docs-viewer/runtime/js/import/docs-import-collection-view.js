@@ -69,8 +69,8 @@ function confirmationPanel(phase) {
     '<section class="docsViewerImport__collectionDecision">',
     `<p>${escapeHtml(importText("collectionConfirmationMessage"))}</p>`,
     '<div class="docsViewerImport__collectionDecisionActions">',
-    `<button type="button" class="docsViewerImport__button" data-collection-command="confirm">${escapeHtml(importText("collectionConfirmButton"))}</button>`,
     `<button type="button" class="docsViewerImport__button" data-collection-command="cancel">${escapeHtml(importText("cancelOverwriteButton"))}</button>`,
+    `<button type="button" class="docsViewerImport__button" data-collection-command="confirm">${escapeHtml(importText("collectionConfirmButton"))}</button>`,
     "</div>",
     "</section>"
   ].join("");

@@ -85,7 +85,7 @@ function showReviewPackageList(options) {
     root: options.root,
     restoreFocus: options.restoreFocus,
     title: "Review package",
-    size: "compact",
+    size: "standard",
     bodyHtml: documentPackageReviewTableHtml(options.files),
     focusSelector: options.files.length ? 'input[name="docsViewerReviewPackage"]' : "",
     actions: [

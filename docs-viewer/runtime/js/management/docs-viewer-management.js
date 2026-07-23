@@ -1041,7 +1041,6 @@ export function initDocsViewerManagement(context) {
       onMetadataSave: actionController.handleEditMetadataSave,
       onSettingsSubmit: actionController.handleSettingsSubmit,
       managementClientOptions: managementClientOptions,
-      setManagementMessage: setManagementMessage,
       viewerScope: viewerScope
     }
   });

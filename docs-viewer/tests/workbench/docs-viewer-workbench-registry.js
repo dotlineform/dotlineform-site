@@ -207,6 +207,19 @@ async function mountMetadataParentSuggestions(context) {
   await afterPaint(context.document);
 }
 
+async function mountMetadataValidation(context) {
+  const fixture = createPersistentFixture(context);
+  void fixture.controller.openMetadataModal(METADATA_DOCS[0]);
+  await afterPaint(context.document);
+  fixture.refs.metadataParentInput.value = "Unknown parent";
+  fixture.controller.setMetadataStatus(
+    "Select a parent from the search field suggestions or enter Root.",
+    "error"
+  );
+  fixture.refs.metadataParentInput.focus();
+  await afterPaint(context.document);
+}
+
 async function mountMetadataLong(context) {
   const fixture = createPersistentFixture(context);
   void fixture.controller.openMetadataModal({
@@ -373,6 +386,7 @@ async function mountImport(context, state) {
     runButton.disabled = true;
     fileSelect.disabled = true;
     statusNode.textContent = importText("runningStatus");
+    statusNode.dataset.state = "busy";
   } else if (state === "success") {
     renderDocsHtmlImportResult(importRenderState(documentRef), importPayload());
     statusNode.textContent = importText("importAllSuccess", { count: 1 });
@@ -528,6 +542,13 @@ const REGISTRY = [
     family: "metadata",
     state: "selected",
     mount: mountMetadataParentSuggestions
+  },
+  {
+    id: "metadata-parent-validation",
+    label: "Parent validation",
+    family: "metadata",
+    state: "validation",
+    mount: mountMetadataValidation
   },
   {
     id: "metadata-long",

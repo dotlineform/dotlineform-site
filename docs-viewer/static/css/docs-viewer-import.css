@@ -165,6 +165,10 @@
   color: var(--docs-viewer-danger);
 }
 
+.docsViewerImport__status[data-state="busy"]{
+  color: var(--docs-viewer-busy);
+}
+
 .docsViewerImport__intro,
 .docsViewerImport__warning > p,
 .docsViewerImport__warnings ul{
@@ -373,10 +377,6 @@
 }
 
 
-.docsViewer__actionButton--defaultWidth{
-  min-inline-size: 5.75rem;
-}
-
 .docsViewer__importBody{
   display: flex;
   flex-direction: column;
@@ -412,6 +412,7 @@
   gap: 0.8rem;
   min-height: 0;
   overflow: auto;
+  overscroll-behavior: contain;
   padding: 0.3rem 0.35rem 0.3rem 0.3rem;
   scrollbar-gutter: stable;
 }
@@ -487,6 +488,7 @@
   flex: 0 0 auto;
   display: grid;
   gap: 0.55rem;
+  border-top: 1px solid var(--docs-viewer-border);
   padding: 0.75rem 0.3rem 0.3rem;
   background: var(--docs-viewer-panel);
 }

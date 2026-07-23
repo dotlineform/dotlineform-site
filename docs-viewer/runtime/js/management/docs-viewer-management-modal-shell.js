@@ -36,7 +36,19 @@ function bodyHtmlFromText(body) {
 }
 
 function renderActions(actions) {
-  return '<div class="docsViewer__modalActions">' + actions.map(function (action) {
+  var orderedActions = Array.from(actions || []).map(function (action, index) {
+    var role = normalizeText(action && action.role);
+    return {
+      action: action,
+      index: index,
+      order: role === "modal-primary" ? 2 : role === "modal-cancel" ? 1 : 0
+    };
+  }).sort(function (left, right) {
+    return left.order - right.order || left.index - right.index;
+  }).map(function (record) {
+    return record.action;
+  });
+  return '<div class="docsViewer__modalActions">' + orderedActions.map(function (action) {
     var roleAttr = action.role ? ' data-role="' + escapeHtml(action.role) + '"' : "";
     var disabledAttr = action.disabled ? " disabled" : "";
     return '<button class="docsViewer__actionButton docsViewer__actionButton--defaultWidth" type="button"' + roleAttr + disabledAttr + '>' + escapeHtml(action.label) + '</button>';
@@ -110,6 +122,7 @@ export function openDocsViewerManagementModal(options = {}) {
 
     function submit() {
       if (primary && primary.disabled) return;
+      setStatus("");
       var result = typeof options.onSubmit === "function"
         ? options.onSubmit(api)
         : { confirmed: true };
@@ -133,6 +146,12 @@ export function openDocsViewerManagementModal(options = {}) {
       form.addEventListener("submit", function (event) {
         event.preventDefault();
         submit();
+      });
+      ["input", "change"].forEach(function (eventName) {
+        form.addEventListener(eventName, function () {
+          if (!statusNode || statusNode.hidden) return;
+          setStatus("");
+        });
       });
     }
     if (typeof options.onOpen === "function") {

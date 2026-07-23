@@ -7,7 +7,8 @@ import {
 
 var METADATA_TEXT = {
   parentRootOption: "Root",
-  parentInvalid: "Select a parent from the search field suggestions or enter Root."
+  parentInvalid: "Select a parent from the search field suggestions or enter Root.",
+  titleRequired: "Enter a title."
 };
 
 export function createDocsViewerManagementMetadataWorkflow(options = {}) {
@@ -50,15 +51,14 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
 
     var title = String(refs.titleInput.value || "").trim();
     if (!title) {
+      modal.setMetadataStatus(METADATA_TEXT.titleRequired, "error");
       refs.titleInput.focus();
       return null;
     }
 
     var parentId = modal.resolveMetadataParentId(doc);
     if (parentId === null) {
-      if (typeof callbacks.setManagementMessage === "function") {
-        callbacks.setManagementMessage(METADATA_TEXT.parentInvalid, true);
-      }
+      modal.setMetadataStatus(METADATA_TEXT.parentInvalid, "error");
       refs.parentInput.focus();
       return null;
     }

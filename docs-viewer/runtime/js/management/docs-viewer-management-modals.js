@@ -140,6 +140,21 @@ export function createDocsViewerManagementModalController(options = {}) {
     refs.metadataStatusInput.size = Math.max(1, refs.metadataStatusInput.options.length);
   }
 
+  function setModalStatus(node, message, stateName) {
+    if (!node) return;
+    node.textContent = String(message || "");
+    node.hidden = !message;
+    if (stateName) {
+      node.dataset.state = stateName;
+    } else {
+      delete node.dataset.state;
+    }
+  }
+
+  function setMetadataStatus(message, stateName) {
+    setModalStatus(refs.metadataStatus, message, stateName);
+  }
+
   function dismissMetadataParentSuggestions() {
     metadataParentPicker.dismissSuggestions();
   }
@@ -206,6 +221,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     renderMetadataStatusOptions(doc);
     refs.metadataNonViewableInput.checked = typeof callbacks.isDocNonViewable === "function" ? callbacks.isDocNonViewable(doc) : doc.viewable === false;
     renderMetadataParentOptions(doc);
+    setMetadataStatus("", "");
 
     refs.metadataModal.hidden = false;
     if (metadataLifecycle) {
@@ -337,10 +353,7 @@ export function createDocsViewerManagementModalController(options = {}) {
   }
 
   function setSettingsStatus(message, stateName) {
-    if (!refs.settingsStatus) return;
-    refs.settingsStatus.textContent = String(message || "");
-    refs.settingsStatus.dataset.state = stateName || "";
-    refs.settingsStatus.hidden = !message;
+    setModalStatus(refs.settingsStatus, message, stateName);
   }
 
   function settingsFieldLabel(field) {
@@ -411,7 +424,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = true;
     if (refs.settingsScope) refs.settingsScope.textContent = "scope: " + viewerScope();
     renderSettingsField(null);
-    setSettingsStatus(MODAL_TEXT.settingsLoading, "");
+    setSettingsStatus(MODAL_TEXT.settingsLoading, "busy");
     renderSettingsWarnings([]);
     refs.settingsModal.hidden = false;
     if (settingsLifecycle) {
@@ -472,7 +485,7 @@ export function createDocsViewerManagementModalController(options = {}) {
   }
 
   function setSettingsSaving() {
-    setSettingsStatus(MODAL_TEXT.settingsSaving, "");
+    setSettingsStatus(MODAL_TEXT.settingsSaving, "busy");
     if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = true;
   }
 
@@ -503,10 +516,24 @@ export function createDocsViewerManagementModalController(options = {}) {
         event.preventDefault();
         if (typeof callbacks.onMetadataSubmit === "function") callbacks.onMetadataSubmit();
       });
+      ["input", "change"].forEach(function (eventName) {
+        refs.metadataForm.addEventListener(eventName, function () {
+          if (refs.metadataStatus && refs.metadataStatus.dataset.state === "error") {
+            setMetadataStatus("", "");
+          }
+        });
+      });
     }
     if (refs.settingsForm) {
       refs.settingsForm.addEventListener("submit", function (event) {
         if (typeof callbacks.onSettingsSubmit === "function") callbacks.onSettingsSubmit(event);
+      });
+      ["input", "change"].forEach(function (eventName) {
+        refs.settingsForm.addEventListener(eventName, function () {
+          if (refs.settingsStatus && refs.settingsStatus.dataset.state === "error") {
+            setSettingsStatus("", "");
+          }
+        });
       });
     }
     if (refs.metadataStatusInput) {
@@ -563,6 +590,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     projectImportTerminalResult: projectImportTerminalResult,
     setSettingsField: setSettingsField,
     setSettingsLoadError: setSettingsLoadError,
+    setMetadataStatus: setMetadataStatus,
     setSettingsSaveError: setSettingsSaveError,
     setSettingsSaving: setSettingsSaving,
     setSettingsStatus: setSettingsStatus,

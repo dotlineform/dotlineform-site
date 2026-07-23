@@ -124,7 +124,7 @@ async function importFileWithPrompts(state, file, context = {}) {
     if (total > 1) {
       setStatus(
         state.statusNode,
-        "",
+        "busy",
         importText("runningStatusAll", {
           index: Number(context.index || 0) + 1,
           total,
@@ -173,10 +173,8 @@ export async function runDocsHtmlImportWorkflow(
   state.runButton.disabled = true;
   state.confirmButton.disabled = true;
   state.cancelButton.disabled = true;
-  resetImportView(
-    state,
-    importText("runningStatus")
-  );
+  resetImportView(state, "");
+  setStatus(state.statusNode, "busy", importText("runningStatus"));
   state.isRunning = true;
   onRunningChange(true);
 

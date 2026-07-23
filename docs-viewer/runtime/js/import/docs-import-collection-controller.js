@@ -117,7 +117,7 @@ export function createDocsImportCollectionController(options = {}) {
     state.plan = null;
     state.result = null;
     setBusy(true);
-    setStatus(statusNode, "", importText("collectionPlanningStatus", { filename: stagedFilename }));
+    setStatus(statusNode, "busy", importText("collectionPlanningStatus", { filename: stagedFilename }));
     render();
     try {
       const payload = await fetchManagementJson("/docs/import-source", "POST", {
@@ -156,7 +156,7 @@ export function createDocsImportCollectionController(options = {}) {
       : {};
     state.phase = "applying";
     setBusy(true);
-    setStatus(statusNode, "", importText("collectionApplyingStatus"));
+    setStatus(statusNode, "busy", importText("collectionApplyingStatus"));
     render();
     try {
       const payload = await fetchManagementJson("/docs/import-source", "POST", {
