@@ -4,6 +4,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260718-121833-9fa2d4",
+      "title": "Docs Viewer Core Definition Analysis Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-121833-9fa2d4.json",
+      "timestamp": "2026-07-23 12:23:51",
+      "parent_id": "d-20260718-114645-7b9d24",
+      "parent_title": "Docs Viewer Core Refactor"
+    },
+    {
       "doc_id": "d-20260723-101224-e62173",
       "title": "Docs Viewer Manage Theme Restoration",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-101224-e62173.json",
@@ -74,15 +82,7 @@
       "timestamp": "2026-07-22 22:40:23",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260514-164722-3de65e",
-      "title": "Docs Import Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260514-164722-3de65e.json",
-      "timestamp": "2026-07-22 22:40:23",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-07-23T10:30:53Z"
+  "generated_at": "2026-07-23T11:24:15Z"
 }

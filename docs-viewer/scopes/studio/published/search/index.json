@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c601f07286feadf3932822a9fdabe285",
-    "generated_at_utc": "2026-07-23T10:30:53Z",
+    "version": "blake2b-ff3b704d396836c695aca5eb7d57a3b1",
+    "generated_at_utc": "2026-07-23T11:24:15Z",
     "count": 275
   },
   "entries": [
@@ -2798,10 +2798,10 @@
       "kind": "doc",
       "title": "Docs Viewer Core Definition Analysis Delivery",
       "href": "/docs/?scope=studio&doc=d-20260718-121833-9fa2d4",
-      "last_updated": "2026-07-18 12:37:34",
+      "last_updated": "2026-07-23 12:23:51",
       "parent_id": "d-20260718-114645-7b9d24",
       "parent_title": "Docs Viewer Core Refactor",
-      "display_meta": "2026-07-18 12:37:34 • Docs Viewer Core Refactor",
+      "display_meta": "2026-07-23 12:23:51 • Docs Viewer Core Refactor",
       "search_terms": [
         "docs viewer core definition analysis delivery",
         "docs",
@@ -2812,16 +2812,15 @@
         "delivery",
         "docs viewer core refactor",
         "refactor",
-        "2026-07-18 12:37:34",
+        "2026-07-23 12:23:51",
         "2026",
         "07",
-        "18",
+        "23",
         "12",
-        "37",
-        "34",
+        "51",
         "d-20260718-121833-9fa2d4"
       ],
-      "search_text": "docs viewer core definition analysis delivery docs viewer core definition analysis delivery docs viewer core refactor refactor 2026-07-18 12:37:34 2026 07 18 12 37 34 d-20260718-121833-9fa2d4"
+      "search_text": "docs viewer core definition analysis delivery docs viewer core definition analysis delivery docs viewer core refactor refactor 2026-07-23 12:23:51 2026 07 23 12 51 d-20260718-121833-9fa2d4"
     },
     {
       "id": "d-20260718-120304-2c6f81",
