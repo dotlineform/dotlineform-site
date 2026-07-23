@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ff3b704d396836c695aca5eb7d57a3b1",
-    "generated_at_utc": "2026-07-23T11:24:15Z",
+    "version": "blake2b-3b61304d2bbaa8a21687cc520cec0069",
+    "generated_at_utc": "2026-07-23T13:11:54Z",
     "count": 275
   },
   "entries": [
@@ -4135,10 +4135,10 @@
       "kind": "doc",
       "title": "Docs Viewer Modal Consistency Delivery",
       "href": "/docs/?scope=studio&doc=d-20260723-091112-5e1b62",
-      "last_updated": "2026-07-23 10:12:24",
+      "last_updated": "2026-07-23 14:10:48",
       "parent_id": "d-20260723-091111-aaa2d6",
       "parent_title": "Docs Viewer Modal Consistency",
-      "display_meta": "2026-07-23 10:12:24 • Docs Viewer Modal Consistency",
+      "display_meta": "2026-07-23 14:10:48 • Docs Viewer Modal Consistency",
       "search_terms": [
         "docs viewer modal consistency delivery",
         "docs",
@@ -4147,16 +4147,16 @@
         "consistency",
         "delivery",
         "docs viewer modal consistency",
-        "2026-07-23 10:12:24",
+        "2026-07-23 14:10:48",
         "2026",
         "07",
         "23",
+        "14",
         "10",
-        "12",
-        "24",
+        "48",
         "d-20260723-091112-5e1b62"
       ],
-      "search_text": "docs viewer modal consistency delivery docs viewer modal consistency delivery docs viewer modal consistency 2026-07-23 10:12:24 2026 07 23 10 12 24 d-20260723-091112-5e1b62"
+      "search_text": "docs viewer modal consistency delivery docs viewer modal consistency delivery docs viewer modal consistency 2026-07-23 14:10:48 2026 07 23 14 10 48 d-20260723-091112-5e1b62"
     },
     {
       "id": "d-20260723-093229-dd63ab",

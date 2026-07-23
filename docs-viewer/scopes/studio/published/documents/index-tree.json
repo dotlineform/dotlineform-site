@@ -928,7 +928,7 @@
                   "doc_id": "d-20260723-091112-5e1b62",
                   "title": "Docs Viewer Modal Consistency Delivery",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-091112-5e1b62.json",
-                  "ui_status": "proposed"
+                  "ui_status": "in-progress"
                 },
                 {
                   "doc_id": "d-20260723-093229-dd63ab",
@@ -1596,5 +1596,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-23T10:30:53Z"
+  "generated_at": "2026-07-23T13:11:54Z"
 }
