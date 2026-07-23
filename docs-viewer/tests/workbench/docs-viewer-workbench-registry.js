@@ -236,22 +236,20 @@ async function mountSettings(context, state) {
   const fixture = createPersistentFixture(context);
   fixture.controller.openSettingsModalShell();
   const field = {
-    field: "public_base_url",
+    field: "default_doc_id",
     type: "string",
-    current_value: "https://example.test/docs/",
-    description: "Base URL used by exported document links.",
-    warnings: state === "warning"
-      ? ["This value differs from the current route base.", "Existing exports are unchanged."]
-      : []
+    current_value: "d-workbench-guide",
+    editable: true,
+    source_path: "docs-viewer/config/scopes/docs_scopes.json scopes[].default_doc_id",
+    generated_path: "docs-viewer/config/defaults/docs-viewer-config.json scopes[].default_doc_id",
+    requires_rebuild: true,
+    description: "Default document id opened for this scope when no document is requested. Leave blank to use the first loadable document.",
+    warnings: []
   };
-  if (state === "empty") fixture.controller.setSettingsField(null);
-  if (state === "normal" || state === "warning") fixture.controller.setSettingsField(field);
-  if (state === "busy") {
-    fixture.management.managementBusy = true;
+  if (state === "normal") {
     fixture.controller.setSettingsField(field);
-    fixture.controller.setSettingsSaving();
   }
-  if (state === "failure") {
+  if (state === "load-failure") {
     fixture.controller.setSettingsLoadError("Settings could not be loaded from the scope configuration.");
   }
   await afterPaint(context.document);
@@ -472,24 +470,6 @@ const REVIEW_RECIPES = [
     mode: "side-by-side"
   },
   {
-    id: "settings-import-busy",
-    label: "Busy actions — Settings / Import",
-    question: "Do busy states distinguish disabled actions and each workflow's valid cancellation policy?",
-    primarySpecimenId: "settings-busy",
-    comparisonSpecimenId: "import-busy",
-    dimensions: ["busy feedback", "disabled actions", "cancellation", "status"],
-    mode: "side-by-side"
-  },
-  {
-    id: "settings-import-failure",
-    label: "Failure feedback — Settings / Import",
-    question: "Do failure states present status and terminal actions consistently?",
-    primarySpecimenId: "settings-failure",
-    comparisonSpecimenId: "import-failure",
-    dimensions: ["error status", "terminal actions", "hierarchy", "contrast"],
-    mode: "side-by-side"
-  },
-  {
     id: "metadata-parent-lifecycle",
     label: "Nested control — Metadata parent picker",
     question: "Does the parent picker retain its nested keyboard contract without changing the enclosing Metadata modal?",
@@ -565,13 +545,6 @@ const REGISTRY = [
     mount: (context) => mountSettings(context, "loading")
   },
   {
-    id: "settings-empty",
-    label: "Settings empty",
-    family: "settings",
-    state: "empty",
-    mount: (context) => mountSettings(context, "empty")
-  },
-  {
     id: "settings-normal",
     label: "Settings field",
     family: "settings",
@@ -579,25 +552,11 @@ const REGISTRY = [
     mount: (context) => mountSettings(context, "normal")
   },
   {
-    id: "settings-warning",
-    label: "Settings warnings",
-    family: "settings",
-    state: "validation",
-    mount: (context) => mountSettings(context, "warning")
-  },
-  {
-    id: "settings-busy",
-    label: "Settings saving",
-    family: "settings",
-    state: "busy",
-    mount: (context) => mountSettings(context, "busy")
-  },
-  {
     id: "settings-failure",
     label: "Settings load failure",
     family: "settings",
     state: "failure",
-    mount: (context) => mountSettings(context, "failure")
+    mount: (context) => mountSettings(context, "load-failure")
   },
   {
     id: "import-empty",

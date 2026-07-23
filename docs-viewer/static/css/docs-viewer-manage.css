@@ -252,6 +252,12 @@
   width: min(var(--docs-viewer-modal-width), calc(100vw - 1rem));
 }
 
+.docsViewer__modalCard--dynamic{
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
 .docsViewer__modalHeader{
   flex: 0 0 auto;
   display: flex;
@@ -279,6 +285,32 @@
   display: grid;
   gap: 0.9rem;
   min-width: 0;
+}
+
+.docsViewer__modalForm--dynamic{
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.docsViewer__modalBody{
+  display: grid;
+  gap: 0.9rem;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 0.2rem 0.25rem 0.25rem 0;
+}
+
+.docsViewer__modalForm--dynamic > [data-role="modal-status"],
+.docsViewer__modalForm--dynamic > .docsViewer__modalActions{
+  flex: 0 0 auto;
+}
+
+.docsViewer__modalForm--dynamic > .docsViewer__modalActions{
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--docs-viewer-border);
 }
 
 .docsViewer__field{

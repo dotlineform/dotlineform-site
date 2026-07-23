@@ -112,18 +112,12 @@ def wait_for_mount(
     page.wait_for_timeout(50)
 
 
-def exact_specimen_label(record: dict[str, object]) -> str:
-    return (
-        f"{record['label']} — {record['family']} / {record['state']}"
-    )
-
-
 def select_exact_specimen(
     page: Page,
     record: dict[str, object],
     timeout_ms: int,
 ) -> None:
-    page.locator("#adminUiWorkbenchSpecimen").fill(exact_specimen_label(record))
+    page.locator("#adminUiWorkbenchSpecimen").select_option(str(record["id"]))
     wait_for_mount(page, str(record["id"]), "", timeout_ms)
 
 
@@ -166,7 +160,7 @@ def assert_recipe(
         if not page.locator("#adminUiWorkbenchComparisonStage").is_hidden():
             raise AssertionError(f"Sequential recipe rendered simultaneous panels: {recipe_id}")
         if page.locator("#adminUiWorkbenchRecipeStepField").is_hidden():
-            raise AssertionError(f"Sequential recipe did not expose A/B steps: {recipe_id}")
+            raise AssertionError(f"Sequential recipe did not expose its named specimens: {recipe_id}")
         page.locator("#adminUiWorkbenchRecipeStep").select_option("comparison")
         wait_for_mount(page, comparison_id, "", timeout_ms)
 
@@ -220,8 +214,8 @@ def run_browser_smoke(admin_url: str, timeout_ms: int) -> None:
         pack = workbench_pack(page)
         records = pack.get("specimens", [])
         recipes = pack.get("recipes", [])
-        if not isinstance(records, list) or len(records) < 20:
-            raise AssertionError(f"Docs Viewer Workbench registry is unexpectedly small: {records!r}")
+        if not isinstance(records, list) or not records:
+            raise AssertionError(f"Docs Viewer Workbench registry is empty: {records!r}")
         if not isinstance(recipes, list) or not recipes:
             raise AssertionError(f"Docs Viewer Workbench recipes are missing: {recipes!r}")
         if len({str(record["id"]) for record in records}) != len(records):
@@ -240,20 +234,24 @@ def run_browser_smoke(admin_url: str, timeout_ms: int) -> None:
             recipe for recipe in recipes if recipe["mode"] == "side-by-side"
         )
         page.locator("#adminUiWorkbenchRecipe").select_option(str(side_by_side["id"]))
-        page.locator("#adminUiWorkbenchTheme").select_option("dark")
+        page.locator("#adminUiWorkbenchTheme").click()
         wait_for_mount(
             page,
             str(side_by_side["primarySpecimenId"]),
             str(side_by_side["comparisonSpecimenId"]),
             timeout_ms,
         )
-        page.locator("#adminUiWorkbenchViewport").select_option("narrow")
+        if page.locator("#adminUiWorkbenchTheme").get_attribute("data-value") != "dark":
+            raise AssertionError("Theme toggle did not project dark")
+        page.locator("#adminUiWorkbenchViewport").click()
         wait_for_mount(
             page,
             str(side_by_side["primarySpecimenId"]),
             str(side_by_side["comparisonSpecimenId"]),
             timeout_ms,
         )
+        if page.locator("#adminUiWorkbenchViewport").get_attribute("data-value") != "narrow":
+            raise AssertionError("Viewport toggle did not project narrow")
         if page.locator(
             '.adminWorkbench__frameShell[data-workbench-viewport="narrow"]'
         ).count() != 2:

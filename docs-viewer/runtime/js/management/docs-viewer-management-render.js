@@ -18,7 +18,7 @@ export function renderMetadataParentPopupMarkup(matches, options) {
     return (
       '<button type="button" class="docsViewer__parentOption' + (isActive ? " is-active" : "") + '" ' +
         'id="' + optionId + '" role="option" aria-selected="' + (isActive ? "true" : "false") + '" ' +
-        'data-parent-index="' + index + '">' +
+        'tabindex="-1" data-parent-index="' + index + '">' +
         '<span class="docsViewer__parentOptionTitle">' + escapeHtml(title) + "</span>" +
       "</button>"
     );

@@ -14,15 +14,7 @@
         </label>
         <label class="adminWorkbench__field">
           <span>specimen</span>
-          <input
-            class="tagStudio__input"
-            id="adminUiWorkbenchSpecimen"
-            type="search"
-            list="adminUiWorkbenchSpecimenOptions"
-            autocomplete="off"
-            disabled
-          >
-          <datalist id="adminUiWorkbenchSpecimenOptions"></datalist>
+          <select class="tagStudio__input" id="adminUiWorkbenchSpecimen" disabled></select>
         </label>
         <label class="adminWorkbench__field">
           <span>review recipe</span>
@@ -31,28 +23,39 @@
           </select>
         </label>
         <label class="adminWorkbench__field" id="adminUiWorkbenchRecipeStepField" hidden>
-          <span>review step</span>
-          <select class="tagStudio__input" id="adminUiWorkbenchRecipeStep">
-            <option value="primary">A</option>
-            <option value="comparison">B</option>
-          </select>
+          <span>review specimen</span>
+          <select class="tagStudio__input" id="adminUiWorkbenchRecipeStep"></select>
         </label>
       </div>
       <div class="adminWorkbench__controlColumn">
-        <label class="adminWorkbench__field">
+        <div class="adminWorkbench__field">
           <span>theme</span>
-          <select class="tagStudio__input" id="adminUiWorkbenchTheme">
-            <option value="light">light</option>
-            <option value="dark">dark</option>
-          </select>
-        </label>
-        <label class="adminWorkbench__field">
+          <button
+            class="tagStudio__button adminWorkbench__toggle"
+            id="adminUiWorkbenchTheme"
+            type="button"
+            data-value="light"
+            aria-label="Theme: light. Switch to dark."
+            aria-pressed="false"
+          >
+            <span data-workbench-toggle-value>light</span>
+            <span class="adminWorkbench__toggleIcon" aria-hidden="true">↔</span>
+          </button>
+        </div>
+        <div class="adminWorkbench__field">
           <span>viewport</span>
-          <select class="tagStudio__input" id="adminUiWorkbenchViewport">
-            <option value="desktop">desktop</option>
-            <option value="narrow">390 × 844</option>
-          </select>
-        </label>
+          <button
+            class="tagStudio__button adminWorkbench__toggle"
+            id="adminUiWorkbenchViewport"
+            type="button"
+            data-value="desktop"
+            aria-label="Viewport: desktop. Switch to 390 by 844."
+            aria-pressed="false"
+          >
+            <span data-workbench-toggle-value>desktop</span>
+            <span class="adminWorkbench__toggleIcon" aria-hidden="true">↔</span>
+          </button>
+        </div>
       </div>
     </div>
     <section class="adminWorkbench__recipeDetail" id="adminUiWorkbenchRecipeDetail" hidden>
@@ -64,7 +67,22 @@
   <section class="tagStudio__panel adminWorkbench__stagePanel">
     <div class="adminWorkbench__stages" id="adminUiWorkbenchStages">
       <section class="adminWorkbench__stage">
-        <h2 id="adminUiWorkbenchPrimaryHeading">primary</h2>
+        <div class="adminWorkbench__stageHeader">
+          <h2 id="adminUiWorkbenchPrimaryHeading">primary</h2>
+          <button
+            class="adminWorkbench__remountButton"
+            id="adminUiWorkbenchPrimaryRemount"
+            type="button"
+            aria-label="Redisplay primary specimen"
+            title="Redisplay specimen"
+            disabled
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20 11a8 8 0 1 0-2.34 5.66"></path>
+              <path d="M20 4v7h-7"></path>
+            </svg>
+          </button>
+        </div>
         <div class="adminWorkbench__frameShell" data-workbench-viewport="desktop">
           <iframe
             class="adminWorkbench__specimenFrame"
@@ -74,7 +92,22 @@
         </div>
       </section>
       <section class="adminWorkbench__stage" id="adminUiWorkbenchComparisonStage" hidden>
-        <h2 id="adminUiWorkbenchComparisonHeading">comparison</h2>
+        <div class="adminWorkbench__stageHeader">
+          <h2 id="adminUiWorkbenchComparisonHeading">comparison</h2>
+          <button
+            class="adminWorkbench__remountButton"
+            id="adminUiWorkbenchComparisonRemount"
+            type="button"
+            aria-label="Redisplay comparison specimen"
+            title="Redisplay specimen"
+            disabled
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20 11a8 8 0 1 0-2.34 5.66"></path>
+              <path d="M20 4v7h-7"></path>
+            </svg>
+          </button>
+        </div>
         <div class="adminWorkbench__frameShell" data-workbench-viewport="desktop">
           <iframe
             class="adminWorkbench__specimenFrame"

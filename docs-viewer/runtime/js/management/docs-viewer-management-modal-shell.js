@@ -62,14 +62,14 @@ function renderModalFrame(options) {
   return "" +
     '<div class="docsViewer__modal" data-role="docs-viewer-management-modal">' +
       '<div class="docsViewer__modalBackdrop" data-role="modal-cancel"></div>' +
-      '<div class="docsViewer__modalCard' + sizeClass + '" role="dialog" aria-modal="true" aria-labelledby="' + escapeHtml(titleId) + '">' +
+      '<div class="docsViewer__modalCard docsViewer__modalCard--dynamic' + sizeClass + '" role="dialog" aria-modal="true" aria-labelledby="' + escapeHtml(titleId) + '">' +
         '<div class="docsViewer__modalHeader">' +
           '<div class="docsViewer__modalHeaderCopy">' +
             '<h2 class="docsViewer__modalTitle" id="' + escapeHtml(titleId) + '">' + escapeHtml(options.title) + '</h2>' +
           '</div>' +
         '</div>' +
-        '<form class="docsViewer__modalForm" data-role="modal-form">' +
-          (options.bodyHtml || "") +
+        '<form class="docsViewer__modalForm docsViewer__modalForm--dynamic" data-role="modal-form">' +
+          '<div class="docsViewer__modalBody">' + (options.bodyHtml || "") + '</div>' +
           '<p class="docsViewer__modalNote muted small" data-role="modal-status" hidden></p>' +
           renderActions(options.actions || []) +
         '</form>' +

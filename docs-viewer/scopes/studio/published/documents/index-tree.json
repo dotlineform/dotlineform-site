@@ -922,13 +922,13 @@
               "doc_id": "d-20260723-091111-aaa2d6",
               "title": "Docs Viewer Modal Consistency",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-091111-aaa2d6.json",
-              "ui_status": "proposed",
+              "ui_status": "done",
               "children": [
                 {
                   "doc_id": "d-20260723-091112-5e1b62",
                   "title": "Docs Viewer Modal Consistency Delivery",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-091112-5e1b62.json",
-                  "ui_status": "in-progress"
+                  "ui_status": "done"
                 },
                 {
                   "doc_id": "d-20260723-093229-dd63ab",
@@ -1048,6 +1048,12 @@
                   "ui_status": "proposed"
                 }
               ]
+            },
+            {
+              "doc_id": "d-20260723-191039-f8cb88",
+              "title": "Public Docs Viewer Mobile Experience",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-191039-f8cb88.json",
+              "ui_status": "proposed"
             },
             {
               "doc_id": "d-20260715-222129-8253ee",
@@ -1604,5 +1610,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-23T16:12:02Z"
+  "generated_at": "2026-07-23T19:30:36Z"
 }

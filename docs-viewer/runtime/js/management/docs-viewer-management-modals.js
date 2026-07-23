@@ -27,9 +27,7 @@ var MODAL_TEXT = {
   importCloseButton: "Close",
   settingsLoading: "Loading settings...",
   settingsEmpty: "No editable settings are available for this scope.",
-  settingsLoadFailed: "Settings unavailable.",
-  settingsSaving: "Saving settings...",
-  settingsSaveFailed: "Settings save failed."
+  settingsLoadFailed: "Settings unavailable."
 };
 
 export function buildDocsViewerDeletePreviewBody(preview) {
@@ -484,16 +482,6 @@ export function createDocsViewerManagementModalController(options = {}) {
     setSettingsStatus(message || MODAL_TEXT.settingsLoadFailed, "error");
   }
 
-  function setSettingsSaving() {
-    setSettingsStatus(MODAL_TEXT.settingsSaving, "busy");
-    if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = true;
-  }
-
-  function setSettingsSaveError(message) {
-    setSettingsStatus(message || MODAL_TEXT.settingsSaveFailed, "error");
-    if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = false;
-  }
-
   function closeSettingsModal() {
     if (!refs.settingsModal) return;
     if (settingsLifecycle) settingsLifecycle.close();
@@ -546,9 +534,8 @@ export function createDocsViewerManagementModalController(options = {}) {
         var doc = management.metadataEditingDocId ? documentIndex.docsById.get(management.metadataEditingDocId) : currentActiveDoc();
         if (doc) metadataParentPicker.renderPopup(doc);
       });
-      refs.metadataParentInput.addEventListener("focus", function () {
-        var doc = management.metadataEditingDocId ? documentIndex.docsById.get(management.metadataEditingDocId) : currentActiveDoc();
-        if (doc) metadataParentPicker.renderPopup(doc);
+      refs.metadataParentInput.addEventListener("blur", function () {
+        metadataParentPicker.hidePopup();
       });
       refs.metadataParentInput.addEventListener("keydown", function (event) {
         var doc = management.metadataEditingDocId ? documentIndex.docsById.get(management.metadataEditingDocId) : currentActiveDoc();
@@ -591,8 +578,6 @@ export function createDocsViewerManagementModalController(options = {}) {
     setSettingsField: setSettingsField,
     setSettingsLoadError: setSettingsLoadError,
     setMetadataStatus: setMetadataStatus,
-    setSettingsSaveError: setSettingsSaveError,
-    setSettingsSaving: setSettingsSaving,
     setSettingsStatus: setSettingsStatus,
     settingsModalOpen: settingsModalOpen,
     wireEvents: wireEvents

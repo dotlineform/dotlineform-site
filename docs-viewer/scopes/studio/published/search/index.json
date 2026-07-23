@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-863203c751e96511c6747ea2dad9c9c1",
-    "generated_at_utc": "2026-07-23T17:44:17Z",
-    "count": 276
+    "version": "blake2b-6c395d5f41738f3b1f8dba33b466a732",
+    "generated_at_utc": "2026-07-23T19:30:36Z",
+    "count": 277
   },
   "entries": [
     {
@@ -3751,25 +3751,25 @@
       "kind": "doc",
       "title": "Docs Viewer Roadmap",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-1e0af6",
-      "last_updated": "2026-07-23 11:29:27",
+      "last_updated": "2026-07-23 20:29:50",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-23 11:29:27 • Roadmap",
+      "display_meta": "2026-07-23 20:29:50 • Roadmap",
       "search_terms": [
         "docs viewer roadmap",
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-23 11:29:27",
+        "2026-07-23 20:29:50",
         "2026",
         "07",
         "23",
-        "11",
+        "20",
         "29",
-        "27",
+        "50",
         "d-20260714-234030-1e0af6"
       ],
-      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-23 11:29:27 2026 07 23 11 29 27 d-20260714-234030-1e0af6"
+      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-23 20:29:50 2026 07 23 20 29 50 d-20260714-234030-1e0af6"
     },
     {
       "id": "d-20260716-204013-3be4e1",
@@ -4107,10 +4107,10 @@
       "kind": "doc",
       "title": "Docs Viewer Modal Consistency",
       "href": "/docs/?scope=studio&doc=d-20260723-091111-aaa2d6",
-      "last_updated": "2026-07-23 18:03:12",
+      "last_updated": "2026-07-23 20:29:50",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-23 18:03:12 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-23 20:29:50 • Docs Viewer Roadmap",
       "search_terms": [
         "docs viewer modal consistency",
         "docs",
@@ -4119,26 +4119,26 @@
         "consistency",
         "docs viewer roadmap",
         "roadmap",
-        "2026-07-23 18:03:12",
+        "2026-07-23 20:29:50",
         "2026",
         "07",
         "23",
-        "18",
-        "03",
-        "12",
+        "20",
+        "29",
+        "50",
         "d-20260723-091111-aaa2d6"
       ],
-      "search_text": "docs viewer modal consistency docs viewer modal consistency docs viewer roadmap roadmap 2026-07-23 18:03:12 2026 07 23 18 03 12 d-20260723-091111-aaa2d6"
+      "search_text": "docs viewer modal consistency docs viewer modal consistency docs viewer roadmap roadmap 2026-07-23 20:29:50 2026 07 23 20 29 50 d-20260723-091111-aaa2d6"
     },
     {
       "id": "d-20260723-091112-5e1b62",
       "kind": "doc",
       "title": "Docs Viewer Modal Consistency Delivery",
       "href": "/docs/?scope=studio&doc=d-20260723-091112-5e1b62",
-      "last_updated": "2026-07-23 18:43:50",
+      "last_updated": "2026-07-23 20:29:50",
       "parent_id": "d-20260723-091111-aaa2d6",
       "parent_title": "Docs Viewer Modal Consistency",
-      "display_meta": "2026-07-23 18:43:50 • Docs Viewer Modal Consistency",
+      "display_meta": "2026-07-23 20:29:50 • Docs Viewer Modal Consistency",
       "search_terms": [
         "docs viewer modal consistency delivery",
         "docs",
@@ -4147,16 +4147,16 @@
         "consistency",
         "delivery",
         "docs viewer modal consistency",
-        "2026-07-23 18:43:50",
+        "2026-07-23 20:29:50",
         "2026",
         "07",
         "23",
-        "18",
-        "43",
+        "20",
+        "29",
         "50",
         "d-20260723-091112-5e1b62"
       ],
-      "search_text": "docs viewer modal consistency delivery docs viewer modal consistency delivery docs viewer modal consistency 2026-07-23 18:43:50 2026 07 23 18 43 50 d-20260723-091112-5e1b62"
+      "search_text": "docs viewer modal consistency delivery docs viewer modal consistency delivery docs viewer modal consistency 2026-07-23 20:29:50 2026 07 23 20 29 50 d-20260723-091112-5e1b62"
     },
     {
       "id": "d-20260723-093229-dd63ab",
@@ -4193,10 +4193,10 @@
       "kind": "doc",
       "title": "UI Workbench Guide",
       "href": "/docs/?scope=studio&doc=d-20260723-155929-ef9c14",
-      "last_updated": "2026-07-23 18:03:12",
+      "last_updated": "2026-07-23 19:50:23",
       "parent_id": "d-20260723-093229-dd63ab",
       "parent_title": "UI Workbench Concept",
-      "display_meta": "2026-07-23 18:03:12 • UI Workbench Concept",
+      "display_meta": "2026-07-23 19:50:23 • UI Workbench Concept",
       "search_terms": [
         "ui workbench guide",
         "ui",
@@ -4204,16 +4204,15 @@
         "guide",
         "ui workbench concept",
         "concept",
-        "2026-07-23 18:03:12",
+        "2026-07-23 19:50:23",
         "2026",
         "07",
         "23",
-        "18",
-        "03",
-        "12",
+        "19",
+        "50",
         "d-20260723-155929-ef9c14"
       ],
-      "search_text": "ui workbench guide ui workbench guide ui workbench concept concept 2026-07-23 18:03:12 2026 07 23 18 03 12 d-20260723-155929-ef9c14"
+      "search_text": "ui workbench guide ui workbench guide ui workbench concept concept 2026-07-23 19:50:23 2026 07 23 19 50 d-20260723-155929-ef9c14"
     },
     {
       "id": "d-20260720-230623-c7e921",
@@ -4670,6 +4669,35 @@
         "d-20260711-012238-8a04a6"
       ],
       "search_text": "full document export delivery full document export delivery portable document packages portable packages 2026-07-22 21:45:00 2026 07 22 21 45 00 d-20260711-012238-8a04a6"
+    },
+    {
+      "id": "d-20260723-191039-f8cb88",
+      "kind": "doc",
+      "title": "Public Docs Viewer Mobile Experience",
+      "href": "/docs/?scope=studio&doc=d-20260723-191039-f8cb88",
+      "last_updated": "2026-07-23 19:10:39",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap",
+      "display_meta": "2026-07-23 19:10:39 • Docs Viewer Roadmap",
+      "search_terms": [
+        "public docs viewer mobile experience",
+        "public",
+        "docs",
+        "viewer",
+        "mobile",
+        "experience",
+        "docs viewer roadmap",
+        "roadmap",
+        "2026-07-23 19:10:39",
+        "2026",
+        "07",
+        "23",
+        "19",
+        "10",
+        "39",
+        "d-20260723-191039-f8cb88"
+      ],
+      "search_text": "public docs viewer mobile experience public docs viewer mobile experience docs viewer roadmap roadmap 2026-07-23 19:10:39 2026 07 23 19 10 39 d-20260723-191039-f8cb88"
     },
     {
       "id": "d-20260715-222129-8253ee",

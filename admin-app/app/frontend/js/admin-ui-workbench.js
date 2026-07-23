@@ -9,12 +9,11 @@ const root = document.querySelector("#adminUiWorkbenchRoot");
 const appField = document.querySelector("#adminUiWorkbenchAppField");
 const appSelect = document.querySelector("#adminUiWorkbenchApp");
 const specimenInput = document.querySelector("#adminUiWorkbenchSpecimen");
-const specimenOptions = document.querySelector("#adminUiWorkbenchSpecimenOptions");
 const recipeSelect = document.querySelector("#adminUiWorkbenchRecipe");
 const recipeStepField = document.querySelector("#adminUiWorkbenchRecipeStepField");
 const recipeStepSelect = document.querySelector("#adminUiWorkbenchRecipeStep");
-const themeSelect = document.querySelector("#adminUiWorkbenchTheme");
-const viewportSelect = document.querySelector("#adminUiWorkbenchViewport");
+const themeButton = document.querySelector("#adminUiWorkbenchTheme");
+const viewportButton = document.querySelector("#adminUiWorkbenchViewport");
 const recipeDetail = document.querySelector("#adminUiWorkbenchRecipeDetail");
 const recipeQuestion = document.querySelector("#adminUiWorkbenchRecipeQuestion");
 const recipeDimensions = document.querySelector("#adminUiWorkbenchRecipeDimensions");
@@ -23,6 +22,8 @@ const stages = document.querySelector("#adminUiWorkbenchStages");
 const primaryHeading = document.querySelector("#adminUiWorkbenchPrimaryHeading");
 const comparisonStage = document.querySelector("#adminUiWorkbenchComparisonStage");
 const comparisonHeading = document.querySelector("#adminUiWorkbenchComparisonHeading");
+const primaryRemountButton = document.querySelector("#adminUiWorkbenchPrimaryRemount");
+const comparisonRemountButton = document.querySelector("#adminUiWorkbenchComparisonRemount");
 const primaryFrame = document.querySelector("#adminUiWorkbenchPrimaryFrame");
 const comparisonFrame = document.querySelector("#adminUiWorkbenchComparisonFrame");
 
@@ -35,9 +36,54 @@ let expectedPrimaryId = "";
 let expectedComparisonId = "";
 let mountedPrimaryId = "";
 let mountedComparisonId = "";
+let remountSequence = 0;
 
 function text(value) {
   return String(value == null ? "" : value).trim();
+}
+
+function themeValue() {
+  return themeButton?.dataset.value === "dark" ? "dark" : "light";
+}
+
+function viewportValue() {
+  return viewportButton?.dataset.value === "narrow" ? "narrow" : "desktop";
+}
+
+function projectConditionButton(button, value, currentLabel, label, nextLabel, pressed) {
+  if (!button) return;
+  button.dataset.value = value;
+  button.setAttribute("aria-label", `${label}: ${currentLabel}. Switch to ${nextLabel}.`);
+  button.setAttribute("aria-pressed", pressed ? "true" : "false");
+  const valueNode = button.querySelector("[data-workbench-toggle-value]");
+  if (valueNode) valueNode.textContent = currentLabel;
+}
+
+function projectThemeButton(value) {
+  const dark = value === "dark";
+  const currentLabel = dark ? "dark" : "light";
+  projectConditionButton(
+    themeButton,
+    currentLabel,
+    currentLabel,
+    "Theme",
+    dark ? "light" : "dark",
+    dark
+  );
+}
+
+function projectViewportButton(value) {
+  const narrow = value === "narrow";
+  const currentLabel = narrow ? "390 × 844" : "desktop";
+  const nextLabel = narrow ? "desktop" : "390 by 844";
+  projectConditionButton(
+    viewportButton,
+    narrow ? "narrow" : "desktop",
+    currentLabel,
+    "Viewport",
+    nextLabel,
+    narrow
+  );
 }
 
 function setStatus(message, state = "") {
@@ -132,25 +178,40 @@ function specimenById(specimenId) {
 }
 
 function specimenFromInput() {
-  const value = text(specimenInput?.value);
-  return specimens.find((record) => record.id === value || specimenLabel(record) === value) || null;
+  return specimenById(specimenInput?.value);
 }
 
 function activeRecipe() {
   return recipes.find((record) => record.id === text(recipeSelect?.value)) || null;
 }
 
+function populateRecipeSteps(recipe) {
+  if (!recipeStepSelect) return;
+  if (recipe?.mode !== "sequential") {
+    recipeStepSelect.replaceChildren();
+    return;
+  }
+  const selectedValue = recipeStepSelect.value === "comparison" ? "comparison" : "primary";
+  const primary = specimenById(recipe.primarySpecimenId);
+  const comparison = specimenById(recipe.comparisonSpecimenId);
+  setOptions(recipeStepSelect, [
+    { value: "primary", label: specimenLabel(primary) },
+    { value: "comparison", label: specimenLabel(comparison) }
+  ], selectedValue);
+}
+
 function populateSpecimens(preferredId = "") {
-  if (!specimenOptions || !specimenInput) return;
-  specimenOptions.replaceChildren();
+  if (!specimenInput) return;
+  specimenInput.replaceChildren();
   specimens.forEach((specimen) => {
     const option = document.createElement("option");
-    option.value = specimenLabel(specimen);
-    specimenOptions.append(option);
+    option.value = specimen.id;
+    option.textContent = specimenLabel(specimen);
+    specimenInput.append(option);
   });
   const preferred = specimenById(preferredId) || specimenById(selectedSpecimenId) || specimens[0] || null;
   selectedSpecimenId = preferred?.id || "";
-  specimenInput.value = preferred ? specimenLabel(preferred) : "";
+  specimenInput.value = selectedSpecimenId;
   specimenInput.disabled = !preferred;
 }
 
@@ -199,13 +260,19 @@ function currentFrameState() {
   };
 }
 
-function frameUrl(specimenId) {
+function frameUrl(specimenId, remountToken = "") {
   const url = new URL("/admin/app/frontend/routes/admin-ui-workbench-frame.html", window.location.origin);
   url.searchParams.set("app", activePack.appId);
   url.searchParams.set("entrypoint", activePack.entrypoint);
   url.searchParams.set("specimen", specimenId);
-  url.searchParams.set("theme", themeSelect?.value === "dark" ? "dark" : "light");
+  url.searchParams.set("theme", themeValue());
+  if (remountToken) url.searchParams.set("remount", remountToken);
   return url.href;
+}
+
+function projectRemountButtons(disabled) {
+  if (primaryRemountButton) primaryRemountButton.disabled = disabled;
+  if (comparisonRemountButton) comparisonRemountButton.disabled = disabled;
 }
 
 function projectFrameShellViewport(viewport) {
@@ -216,6 +283,7 @@ function projectFrameShellViewport(viewport) {
 
 function renderFrames() {
   if (!activePack || !primaryFrame) return;
+  populateRecipeSteps(activeRecipe());
   const state = currentFrameState();
   const primary = specimenById(state.primaryId);
   const comparison = specimenById(state.comparisonId);
@@ -224,13 +292,13 @@ function renderFrames() {
     return;
   }
 
-  const viewport = viewportSelect?.value === "narrow" ? "narrow" : "desktop";
+  const viewport = viewportValue();
   projectFrameShellViewport(viewport);
   renderRecipeDetail(state.recipe);
   if (recipeStepField) recipeStepField.hidden = state.recipe?.mode !== "sequential";
   if (specimenInput) {
-    specimenInput.disabled = Boolean(state.recipe);
-    specimenInput.value = specimenLabel(primary);
+    specimenInput.disabled = false;
+    specimenInput.value = primary.id;
   }
 
   expectedPrimaryId = primary.id;
@@ -240,12 +308,11 @@ function renderFrames() {
   delete root.dataset.adminSpecimenMounted;
   delete root.dataset.adminCompareSpecimenMounted;
   root.dataset.adminWorkbenchBusy = "true";
+  projectRemountButtons(true);
   setAdminRouteBusy(root, true, { mode: "loading", recordLoaded: true });
   setStatus("");
 
-  if (primaryHeading) primaryHeading.textContent = state.recipe?.mode === "sequential"
-    ? `${recipeStepSelect?.value === "comparison" ? "B" : "A"} · ${specimenLabel(primary)}`
-    : specimenLabel(primary);
+  if (primaryHeading) primaryHeading.textContent = specimenLabel(primary);
   primaryFrame.src = frameUrl(primary.id);
 
   const comparing = Boolean(comparison);
@@ -267,6 +334,7 @@ function announceMountedIfReady() {
   root.dataset.adminWorkbenchBusy = "false";
   root.dataset.adminSpecimenMounted = mountedPrimaryId;
   root.dataset.adminCompareSpecimenMounted = mountedComparisonId;
+  projectRemountButtons(false);
   setAdminRouteBusy(root, false, { mode: "ready", service: "available", recordLoaded: true });
   setAdminRouteReady(root, true, { mode: "ready", service: "available", recordLoaded: true });
   setStatus("");
@@ -296,22 +364,45 @@ function handleFrameMessage(event) {
     ) return;
     const message = text(payload.message) || "UI Workbench specimen failed.";
     root.dataset.adminWorkbenchBusy = "false";
+    projectRemountButtons(false);
     setAdminRouteBusy(root, false, { mode: "error", service: "unavailable", recordLoaded: true });
     setAdminRouteReady(root, true, { mode: "error", service: "unavailable", recordLoaded: true });
     setStatus(message, "error");
   }
 }
 
+function remountSpecimen(frameRole) {
+  const primary = frameRole === "primary";
+  const frame = primary ? primaryFrame : comparisonFrame;
+  const specimenId = primary ? expectedPrimaryId : expectedComparisonId;
+  if (!frame || !specimenId || root.dataset.adminWorkbenchBusy === "true") return;
+
+  if (primary) {
+    mountedPrimaryId = "";
+    delete root.dataset.adminSpecimenMounted;
+  } else {
+    mountedComparisonId = "";
+    delete root.dataset.adminCompareSpecimenMounted;
+  }
+  root.dataset.adminWorkbenchBusy = "true";
+  projectRemountButtons(true);
+  setAdminRouteBusy(root, true, { mode: "loading", recordLoaded: true });
+  setStatus("");
+  remountSequence += 1;
+  frame.src = frameUrl(specimenId, String(remountSequence));
+}
+
 function selectExactSpecimen() {
-  if (activeRecipe()) return;
+  const recipeWasActive = Boolean(activeRecipe());
+  if (recipeWasActive && recipeSelect) recipeSelect.value = "";
   const specimen = specimenFromInput();
   if (!specimen) {
     setStatus("Choose an exact specimen name from the list.", "error");
     return;
   }
-  if (specimen.id === selectedSpecimenId && mountedPrimaryId === specimen.id) return;
+  if (!recipeWasActive && specimen.id === selectedSpecimenId && mountedPrimaryId === specimen.id) return;
   selectedSpecimenId = specimen.id;
-  specimenInput.value = specimenLabel(specimen);
+  specimenInput.value = specimen.id;
   renderFrames();
 }
 
@@ -320,28 +411,28 @@ function bindControls() {
     activePack = packs.find((pack) => pack.appId === text(appSelect.value)) || packs[0] || null;
     void loadSelectedPack();
   });
-  specimenInput?.addEventListener("input", () => {
-    if (specimenFromInput()) selectExactSpecimen();
-  });
   specimenInput?.addEventListener("change", selectExactSpecimen);
-  specimenInput?.addEventListener("keydown", (event) => {
-    if (event.key !== "Enter") return;
-    event.preventDefault();
-    selectExactSpecimen();
-  });
   recipeSelect?.addEventListener("change", () => {
     const recipe = activeRecipe();
     if (recipeStepSelect) recipeStepSelect.value = "primary";
     if (!recipe && specimenInput) {
       const specimen = specimenById(selectedSpecimenId) || specimens[0] || null;
-      specimenInput.value = specimen ? specimenLabel(specimen) : "";
+      specimenInput.value = specimen?.id || "";
       specimenInput.disabled = !specimen;
     }
     renderFrames();
   });
   recipeStepSelect?.addEventListener("change", renderFrames);
-  themeSelect?.addEventListener("change", renderFrames);
-  viewportSelect?.addEventListener("change", renderFrames);
+  primaryRemountButton?.addEventListener("click", () => remountSpecimen("primary"));
+  comparisonRemountButton?.addEventListener("click", () => remountSpecimen("comparison"));
+  themeButton?.addEventListener("click", () => {
+    projectThemeButton(themeValue() === "dark" ? "light" : "dark");
+    renderFrames();
+  });
+  viewportButton?.addEventListener("click", () => {
+    projectViewportButton(viewportValue() === "narrow" ? "desktop" : "narrow");
+    renderFrames();
+  });
   window.addEventListener("message", handleFrameMessage);
 }
 
@@ -375,6 +466,8 @@ async function boot() {
     recordLoaded: false
   });
   setAdminRouteBusy(root, true);
+  projectThemeButton(themeValue());
+  projectViewportButton(viewportValue());
   bindControls();
   try {
     packs = packRecords(await loadAdminConfig());
