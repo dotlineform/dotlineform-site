@@ -295,6 +295,11 @@
           "ui_status": "report",
           "label": "Report",
           "emoji": "📊"
+        },
+        {
+          "ui_status": "research",
+          "label": "Research",
+          "emoji": "🔬"
         }
       ],
       "library": [

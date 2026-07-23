@@ -4,6 +4,54 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260718-125756-a41c70",
+      "title": "Docs Viewer Source Documentation And Linting Pilot Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-125756-a41c70.json",
+      "timestamp": "2026-07-23 21:16:19",
+      "parent_id": "d-20260713-000000-d9bad2",
+      "parent_title": "Source Documentation and Linting"
+    },
+    {
+      "doc_id": "d-20260713-000000-d9bad2",
+      "title": "Source Documentation and Linting",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260713-000000-d9bad2.json",
+      "timestamp": "2026-07-23 21:16:19",
+      "parent_id": "d-20260715-092247-f3fd52",
+      "parent_title": "Repository Roadmap"
+    },
+    {
+      "doc_id": "d-20260713-133928-c786c7",
+      "title": "Source Documentation and Linting Concept",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260713-133928-c786c7.json",
+      "timestamp": "2026-07-23 21:16:19",
+      "parent_id": "d-20260713-000000-d9bad2",
+      "parent_title": "Source Documentation and Linting"
+    },
+    {
+      "doc_id": "d-20260723-203331-9a8708",
+      "title": "Improving Repository Context for Coding Agents",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-203331-9a8708.json",
+      "timestamp": "2026-07-23 20:55:45",
+      "parent_id": "d-20260713-000000-d9bad2",
+      "parent_title": "Source Documentation and Linting"
+    },
+    {
+      "doc_id": "d-20260723-203332-eaca11",
+      "title": "Introducing JavaScript Configuration to the Repository",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-203332-eaca11.json",
+      "timestamp": "2026-07-23 20:55:33",
+      "parent_id": "d-20260713-000000-d9bad2",
+      "parent_title": "Source Documentation and Linting"
+    },
+    {
+      "doc_id": "d-20260723-203332-3aba41",
+      "title": "Recommended JSDoc Approach for the Repository",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-203332-3aba41.json",
+      "timestamp": "2026-07-23 20:35:05",
+      "parent_id": "d-20260713-000000-d9bad2",
+      "parent_title": "Source Documentation and Linting"
+    },
+    {
       "doc_id": "d-20260723-091111-aaa2d6",
       "title": "Docs Viewer Modal Consistency",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-091111-aaa2d6.json",
@@ -34,55 +82,7 @@
       "timestamp": "2026-07-23 19:50:23",
       "parent_id": "d-20260723-093229-dd63ab",
       "parent_title": "UI Workbench Concept"
-    },
-    {
-      "doc_id": "d-20260723-191039-f8cb88",
-      "title": "Public Docs Viewer Mobile Experience",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-191039-f8cb88.json",
-      "timestamp": "2026-07-23 19:10:39",
-      "parent_id": "d-20260714-234030-1e0af6",
-      "parent_title": "Docs Viewer Roadmap"
-    },
-    {
-      "doc_id": "d-20260723-101224-e62173",
-      "title": "Docs Viewer Manage Theme Restoration",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-101224-e62173.json",
-      "timestamp": "2026-07-23 18:03:12",
-      "parent_id": "d-20260714-234030-1e0af6",
-      "parent_title": "Docs Viewer Roadmap"
-    },
-    {
-      "doc_id": "d-20260718-105957-c72b2a",
-      "title": "Standalone Docs Viewer Concept",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-105957-c72b2a.json",
-      "timestamp": "2026-07-23 18:03:12",
-      "parent_id": "d-20260511-120352-90ffa6",
-      "parent_title": "Standalone Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260723-093229-dd63ab",
-      "title": "UI Workbench Concept",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-093229-dd63ab.json",
-      "timestamp": "2026-07-23 18:03:12",
-      "parent_id": "d-20260723-091111-aaa2d6",
-      "parent_title": "Docs Viewer Modal Consistency"
-    },
-    {
-      "doc_id": "d-20260718-121833-9fa2d4",
-      "title": "Docs Viewer Core Definition Analysis Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-121833-9fa2d4.json",
-      "timestamp": "2026-07-23 12:23:51",
-      "parent_id": "d-20260718-114645-7b9d24",
-      "parent_title": "Docs Viewer Core Refactor"
-    },
-    {
-      "doc_id": "d-20260723-101224-74d214",
-      "title": "Docs Viewer Manage Theme Restoration Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-101224-74d214.json",
-      "timestamp": "2026-07-23 11:29:27",
-      "parent_id": "d-20260723-101224-e62173",
-      "parent_title": "Docs Viewer Manage Theme Restoration"
     }
   ],
-  "generated_at": "2026-07-23T19:30:36Z"
+  "generated_at": "2026-07-23T20:19:07Z"
 }

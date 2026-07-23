@@ -1218,6 +1218,24 @@
                   "ui_status": "proposed"
                 },
                 {
+                  "doc_id": "d-20260723-203331-9a8708",
+                  "title": "Improving Repository Context for Coding Agents",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-203331-9a8708.json",
+                  "ui_status": "research"
+                },
+                {
+                  "doc_id": "d-20260723-203332-eaca11",
+                  "title": "Introducing JavaScript Configuration to the Repository",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-203332-eaca11.json",
+                  "ui_status": "research"
+                },
+                {
+                  "doc_id": "d-20260723-203332-3aba41",
+                  "title": "Recommended JSDoc Approach for the Repository",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-203332-3aba41.json",
+                  "ui_status": "research"
+                },
+                {
                   "doc_id": "d-20260713-133928-c786c7",
                   "title": "Source Documentation and Linting Concept",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260713-133928-c786c7.json",
@@ -1610,5 +1628,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-23T19:30:36Z"
+  "generated_at": "2026-07-23T19:56:03Z"
 }
