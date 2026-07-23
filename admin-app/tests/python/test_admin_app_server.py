@@ -45,6 +45,17 @@ def test_runtime_config_exposes_admin_home_and_planned_routes() -> None:
     assert payload["app"]["routes"]["admin_testing"]["path"] == "/admin/testing/"
     assert payload["app"]["routes"]["admin_testing"]["template"] == "/admin/app/frontend/routes/admin-testing.html"
     assert payload["app"]["routes"]["admin_testing"]["script"] == "/admin/app/frontend/js/admin-testing.js"
+    assert payload["app"]["routes"]["admin_ui_workbench"]["path"] == "/admin/ui-workbench/"
+    assert payload["app"]["routes"]["admin_ui_workbench"]["template"] == "/admin/app/frontend/routes/admin-ui-workbench.html"
+    assert payload["app"]["routes"]["admin_ui_workbench"]["script"] == "/admin/app/frontend/js/admin-ui-workbench.js"
+    assert payload["app"]["workbench"]["packs"] == [
+        {
+            "app_id": "docs-viewer",
+            "entrypoint": "/docs-viewer/tests/workbench/docs-viewer-workbench-registry.js",
+            "label": "Docs Viewer",
+            "route_owner": "admin",
+        }
+    ]
     assert any(view["id"] == "admin_home" and view["path"] == "/admin/" for view in runtime["views"])
     assert "ui_text" not in runtime["data_paths"]
     assert runtime["services"]["audits"]["run"] == "/admin/api/audits/audits/run"
@@ -80,6 +91,7 @@ def test_admin_shell_route_paths_are_config_driven() -> None:
     assert paths["/admin/checks/"] == "admin_checks"
     assert paths["/admin/activity/"] == "admin_activity"
     assert paths["/admin/testing/"] == "admin_testing"
+    assert paths["/admin/ui-workbench/"] == "admin_ui_workbench"
 
 
 def test_static_path_policy_serves_only_admin_app_assets() -> None:
@@ -95,10 +107,24 @@ def test_static_path_policy_serves_only_admin_app_assets() -> None:
     assert allowed("/admin/app/frontend/js/admin-testing.js") is True
     assert allowed("/admin/app/frontend/routes/admin-home.html") is True
     assert allowed("/admin/app/frontend/routes/admin-checks.html") is True
+    assert allowed("/admin/app/frontend/routes/admin-ui-workbench.html") is True
+    assert allowed("/admin/app/frontend/routes/admin-ui-workbench-frame.html") is True
+    assert allowed("/admin/app/frontend/js/admin-ui-workbench-frame.js") is True
     assert allowed("/admin/app/frontend/config/admin-config.json") is True
     assert allowed("/admin/app/frontend/js/admin-ui-text.js") is True
+    assert allowed("/docs-viewer/tests/workbench/docs-viewer-workbench-registry.js") is True
+    assert allowed("/docs-viewer/runtime/js/shared/docs-viewer-render.js") is True
+    assert allowed("/docs-viewer/runtime/js/management/docs-viewer-management-modals.js") is True
+    assert allowed("/docs-viewer/runtime/js/import/docs-html-import-render.js") is True
+    assert allowed("/docs-viewer/static/css/docs-viewer-theme.css") is True
+    assert allowed("/docs-viewer/static/css/docs-viewer.css") is True
+    assert allowed("/docs-viewer/static/css/docs-viewer-manage.css") is True
+    assert allowed("/docs-viewer/static/css/docs-viewer-source-editor.css") is True
+    assert allowed("/docs-viewer/static/css/docs-viewer-import.css") is True
     assert allowed("/apple-touch-icon-precomposed.png") is True
 
+    assert allowed("/shared/ui-workbench/workbench-channel.js") is False
+    assert allowed("/docs/ui-workbench/") is False
     assert allowed("/studio/app/assets/css/studio.css") is False
     assert allowed("/analytics/app/assets/css/analytics.css") is False
     assert allowed("/docs-viewer/generated/docs/studio/index.json") is False

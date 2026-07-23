@@ -182,10 +182,21 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-testing.js",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-transport.js",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-ui-text.js",
+        repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-ui-workbench.js",
+        repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-ui-workbench-frame.js",
+        repo_root / "docs-viewer" / "tests" / "workbench" / "docs-viewer-workbench-registry.js",
+        repo_root / "site" / "docs-viewer" / "static" / "css" / "docs-viewer-theme.css",
+        repo_root / "site" / "docs-viewer" / "static" / "css" / "docs-viewer.css",
+        repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-manage.css",
+        repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-source-editor.css",
+        repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-import.css",
     ]
     routes_dir = repo_root / "admin-app" / "app" / "frontend" / "routes"
     if routes_dir.exists():
         candidates.extend(sorted(routes_dir.glob("*.html")))
+    candidates.extend(
+        sorted((repo_root / "site" / "docs-viewer" / "runtime" / "js" / "shared").glob("*.js"))
+    )
     mtimes = [path.stat().st_mtime for path in candidates if path.exists()]
     return str(int(max(mtimes))) if mtimes else "1"
 

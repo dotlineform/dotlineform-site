@@ -934,7 +934,15 @@
                   "doc_id": "d-20260723-093229-dd63ab",
                   "title": "UI Workbench Concept",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-093229-dd63ab.json",
-                  "ui_status": "proposed"
+                  "ui_status": "proposed",
+                  "children": [
+                    {
+                      "doc_id": "d-20260723-155929-ef9c14",
+                      "title": "UI Workbench Guide",
+                      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-155929-ef9c14.json",
+                      "ui_status": "done"
+                    }
+                  ]
                 }
               ]
             },
@@ -1596,5 +1604,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-23T13:11:54Z"
+  "generated_at": "2026-07-23T16:12:02Z"
 }

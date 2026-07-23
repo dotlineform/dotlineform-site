@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UI Workbench specimen</title>
+  <style>
+    html,
+    body,
+    #adminUiWorkbenchFrameRoot,
+    #adminUiWorkbenchFixture {
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+    }
+  </style>
+</head>
+<body class="docs-viewer-service">
+  <main
+    id="adminUiWorkbenchFrameRoot"
+    data-workbench-frame-ready="false"
+    data-workbench-frame-busy="true"
+  >
+    <section id="adminUiWorkbenchFixture"></section>
+  </main>
+  <script type="module" src="/admin/app/frontend/js/admin-ui-workbench-frame.js"></script>
+</body>
+</html>

@@ -7,9 +7,25 @@
       "doc_id": "d-20260723-091112-5e1b62",
       "title": "Docs Viewer Modal Consistency Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-091112-5e1b62.json",
-      "timestamp": "2026-07-23 14:10:48",
+      "timestamp": "2026-07-23 17:16:03",
       "parent_id": "d-20260723-091111-aaa2d6",
       "parent_title": "Docs Viewer Modal Consistency"
+    },
+    {
+      "doc_id": "d-20260723-093229-dd63ab",
+      "title": "UI Workbench Concept",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-093229-dd63ab.json",
+      "timestamp": "2026-07-23 17:11:05",
+      "parent_id": "d-20260723-091111-aaa2d6",
+      "parent_title": "Docs Viewer Modal Consistency"
+    },
+    {
+      "doc_id": "d-20260723-155929-ef9c14",
+      "title": "UI Workbench Guide",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-155929-ef9c14.json",
+      "timestamp": "2026-07-23 17:11:05",
+      "parent_id": "d-20260723-093229-dd63ab",
+      "parent_title": "UI Workbench Concept"
     },
     {
       "doc_id": "d-20260718-121833-9fa2d4",
@@ -52,14 +68,6 @@
       "parent_title": "Docs Viewer Roadmap"
     },
     {
-      "doc_id": "d-20260723-093229-dd63ab",
-      "title": "UI Workbench Concept",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-093229-dd63ab.json",
-      "timestamp": "2026-07-23 09:56:51",
-      "parent_id": "d-20260723-091111-aaa2d6",
-      "parent_title": "Docs Viewer Modal Consistency"
-    },
-    {
       "doc_id": "d-20260722-204025-15ea54",
       "title": "Review Package UI Redesign Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260722-204025-15ea54.json",
@@ -74,15 +82,7 @@
       "timestamp": "2026-07-22 22:40:23",
       "parent_id": "d-20260419-000000-d2e47b",
       "parent_title": "Dev Home"
-    },
-    {
-      "doc_id": "d-20260424-000000-fc8b5d",
-      "title": "Docs Import",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260424-000000-fc8b5d.json",
-      "timestamp": "2026-07-22 22:40:23",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-07-23T13:11:54Z"
+  "generated_at": "2026-07-23T16:16:15Z"
 }

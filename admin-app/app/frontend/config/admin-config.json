@@ -1,7 +1,17 @@
 {
   "admin_config_version": "admin_config_v1",
-  "updated_at_utc": "2026-06-06T00:00:00Z",
+  "updated_at_utc": "2026-07-23T16:55:00Z",
   "app": {
+    "workbench": {
+      "packs": [
+        {
+          "app_id": "docs-viewer",
+          "entrypoint": "/docs-viewer/tests/workbench/docs-viewer-workbench-registry.js",
+          "label": "Docs Viewer",
+          "route_owner": "admin"
+        }
+      ]
+    },
     "routes": {
       "admin_home": {
         "label": "home",
@@ -45,6 +55,15 @@
         "path": "/admin/testing/",
         "template": "/admin/app/frontend/routes/admin-testing.html",
         "script": "/admin/app/frontend/js/admin-testing.js",
+        "shell_type": "html-template",
+        "nav": true
+      },
+      "admin_ui_workbench": {
+        "label": "UI workbench",
+        "title": "UI Workbench",
+        "path": "/admin/ui-workbench/",
+        "template": "/admin/app/frontend/routes/admin-ui-workbench.html",
+        "script": "/admin/app/frontend/js/admin-ui-workbench.js",
         "shell_type": "html-template",
         "nav": true
       }

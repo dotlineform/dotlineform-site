@@ -333,6 +333,131 @@ body.adminApp [hidden] {
   font: inherit;
 }
 
+.adminWorkbench {
+  display: grid;
+  gap: 1rem;
+}
+
+.adminWorkbench__controlsPanel,
+.adminWorkbench__stagePanel {
+  min-width: 0;
+}
+
+.adminWorkbench__controlsPanel {
+  position: sticky;
+  z-index: 10;
+  top: 0;
+}
+
+.adminWorkbench__controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.5rem;
+  align-items: start;
+}
+
+.adminWorkbench__controlColumn {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.adminWorkbench__field {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: center;
+  min-width: 0;
+  color: var(--admin-muted);
+  font-size: 0.86rem;
+}
+
+.adminWorkbench__field > span {
+  text-align: left;
+}
+
+.adminWorkbench__field > .tagStudio__input {
+  box-sizing: border-box;
+  height: 2.25rem;
+  min-height: 2.25rem;
+}
+
+.adminWorkbench__recipeDetail {
+  display: grid;
+  gap: 0.3rem;
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--admin-border);
+}
+
+.adminWorkbench__recipeDetail[hidden] {
+  display: none;
+}
+
+.adminWorkbench__recipeDetail h2,
+.adminWorkbench__recipeDetail p,
+.adminWorkbench__stage h2 {
+  margin: 0;
+}
+
+.adminWorkbench__recipeDetail h2 {
+  font-size: 0.98rem;
+  line-height: 1.4;
+}
+
+.adminWorkbench__recipeDetail p,
+.adminWorkbench__stage h2 {
+  color: var(--admin-muted);
+  font-size: 0.82rem;
+}
+
+.adminWorkbench__stages {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.adminWorkbench__stages[data-workbench-comparing="true"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.adminWorkbench__stage {
+  display: grid;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.adminWorkbench__stage h2 {
+  font-weight: 600;
+}
+
+.adminWorkbench__frameShell {
+  width: 100%;
+  min-width: 0;
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid var(--admin-border);
+  border-radius: 6px;
+  background: var(--admin-background);
+}
+
+.adminWorkbench__frameShell[data-workbench-viewport="narrow"] {
+  width: min(390px, 100%);
+}
+
+.adminWorkbench__specimenFrame {
+  display: block;
+  width: 100%;
+  height: 46rem;
+  border: 0;
+  background: var(--admin-background);
+}
+
+.adminWorkbench__frameShell[data-workbench-viewport="narrow"] .adminWorkbench__specimenFrame {
+  height: 844px;
+}
+
 .studioAuditsPage__list,
 .adminTestingRuns,
 .activityReport__rows,
@@ -592,6 +717,10 @@ body.adminApp [hidden] {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.4rem 1.75rem;
   }
+
+  .adminWorkbench__stages[data-workbench-comparing="true"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 @media (max-width: 640px) {
@@ -613,6 +742,11 @@ body.adminApp [hidden] {
   .studioChecksTop {
     grid-template-columns: minmax(0, 1fr);
   }
+
+  .adminWorkbench__controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
 }
 
 @media (max-width: 480px) {

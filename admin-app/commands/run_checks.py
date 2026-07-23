@@ -406,6 +406,14 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Smoke-check theme normalization, synchronized toggle projection, and persisted-selection ownership.",
         ),
         CheckCommand(
+            "docs-viewer-ui-workbench-route-smoke",
+            (
+                sys.executable,
+                "docs-viewer/tests/smoke/docs_viewer_ui_workbench_route.py",
+            ),
+            "Smoke-check the Admin-hosted Docs Viewer workbench registry, production specimen mounts, and write-free browser boundary.",
+        ),
+        CheckCommand(
             "docs-viewer-diagram-detail-module-smoke",
             (
                 sys.executable,

@@ -53,6 +53,29 @@ STATIC_PREFIXES = (
     "/admin/app/frontend/js/",
     "/admin/app/frontend/routes/",
 )
+WORKBENCH_STATIC_PREFIXES = (
+    ("/docs-viewer/runtime/js/shared/", Path("site/docs-viewer/runtime/js/shared")),
+    ("/docs-viewer/runtime/js/management/", Path("docs-viewer/runtime/js/management")),
+    ("/docs-viewer/runtime/js/import/", Path("docs-viewer/runtime/js/import")),
+    ("/docs-viewer/tests/workbench/", Path("docs-viewer/tests/workbench")),
+)
+WORKBENCH_STATIC_FILES = {
+    "/docs-viewer/static/css/docs-viewer-theme.css": Path(
+        "site/docs-viewer/static/css/docs-viewer-theme.css"
+    ),
+    "/docs-viewer/static/css/docs-viewer.css": Path(
+        "site/docs-viewer/static/css/docs-viewer.css"
+    ),
+    "/docs-viewer/static/css/docs-viewer-manage.css": Path(
+        "docs-viewer/static/css/docs-viewer-manage.css"
+    ),
+    "/docs-viewer/static/css/docs-viewer-source-editor.css": Path(
+        "docs-viewer/static/css/docs-viewer-source-editor.css"
+    ),
+    "/docs-viewer/static/css/docs-viewer-import.css": Path(
+        "docs-viewer/static/css/docs-viewer-import.css"
+    ),
+}
 STATIC_FILES = set(LOCAL_BROWSER_ASSET_PATHS)
 ENABLED_VALUES = {"1", "on", "true", "yes"}
 MAX_BODY_BYTES = 1024 * 1024
@@ -152,7 +175,12 @@ class AdminAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         self.end_headers()
 
     def is_allowed_static_path(self, path: str) -> bool:
-        return path in STATIC_FILES or any(path.startswith(prefix) for prefix in STATIC_PREFIXES)
+        return (
+            path in STATIC_FILES
+            or path in WORKBENCH_STATIC_FILES
+            or any(path.startswith(prefix) for prefix in STATIC_PREFIXES)
+            or any(path.startswith(prefix) for prefix, _root in WORKBENCH_STATIC_PREFIXES)
+        )
 
     def allowed_origin(self) -> str:
         origin = self.headers.get("Origin", "")
@@ -320,10 +348,19 @@ class AdminAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         self.end_headers()
 
     def send_static(self, request_path: str) -> None:
-        if request_path.startswith("/admin/app/"):
+        if request_path in WORKBENCH_STATIC_FILES:
+            relative = str(WORKBENCH_STATIC_FILES[request_path])
+        elif request_path.startswith("/admin/app/"):
             relative = f"admin-app/app/{request_path.removeprefix('/admin/app/')}"
         else:
-            relative = request_path.lstrip("/")
+            relative = ""
+            for prefix, root in WORKBENCH_STATIC_PREFIXES:
+                if request_path.startswith(prefix):
+                    suffix = request_path.removeprefix(prefix)
+                    relative = str(root / suffix)
+                    break
+            if not relative:
+                relative = request_path.lstrip("/")
         if not relative or ".." in Path(relative).parts:
             self.send_error(HTTPStatus.NOT_FOUND, "Not found")
             return

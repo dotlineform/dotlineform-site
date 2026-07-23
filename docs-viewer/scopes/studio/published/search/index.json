@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3b61304d2bbaa8a21687cc520cec0069",
-    "generated_at_utc": "2026-07-23T13:11:54Z",
-    "count": 275
+    "version": "blake2b-09a53ccd48325d91d66653817905cf18",
+    "generated_at_utc": "2026-07-23T16:16:15Z",
+    "count": 276
   },
   "entries": [
     {
@@ -4135,10 +4135,10 @@
       "kind": "doc",
       "title": "Docs Viewer Modal Consistency Delivery",
       "href": "/docs/?scope=studio&doc=d-20260723-091112-5e1b62",
-      "last_updated": "2026-07-23 14:10:48",
+      "last_updated": "2026-07-23 17:16:03",
       "parent_id": "d-20260723-091111-aaa2d6",
       "parent_title": "Docs Viewer Modal Consistency",
-      "display_meta": "2026-07-23 14:10:48 • Docs Viewer Modal Consistency",
+      "display_meta": "2026-07-23 17:16:03 • Docs Viewer Modal Consistency",
       "search_terms": [
         "docs viewer modal consistency delivery",
         "docs",
@@ -4147,26 +4147,26 @@
         "consistency",
         "delivery",
         "docs viewer modal consistency",
-        "2026-07-23 14:10:48",
+        "2026-07-23 17:16:03",
         "2026",
         "07",
         "23",
-        "14",
-        "10",
-        "48",
+        "17",
+        "16",
+        "03",
         "d-20260723-091112-5e1b62"
       ],
-      "search_text": "docs viewer modal consistency delivery docs viewer modal consistency delivery docs viewer modal consistency 2026-07-23 14:10:48 2026 07 23 14 10 48 d-20260723-091112-5e1b62"
+      "search_text": "docs viewer modal consistency delivery docs viewer modal consistency delivery docs viewer modal consistency 2026-07-23 17:16:03 2026 07 23 17 16 03 d-20260723-091112-5e1b62"
     },
     {
       "id": "d-20260723-093229-dd63ab",
       "kind": "doc",
       "title": "UI Workbench Concept",
       "href": "/docs/?scope=studio&doc=d-20260723-093229-dd63ab",
-      "last_updated": "2026-07-23 09:56:51",
+      "last_updated": "2026-07-23 17:11:05",
       "parent_id": "d-20260723-091111-aaa2d6",
       "parent_title": "Docs Viewer Modal Consistency",
-      "display_meta": "2026-07-23 09:56:51 • Docs Viewer Modal Consistency",
+      "display_meta": "2026-07-23 17:11:05 • Docs Viewer Modal Consistency",
       "search_terms": [
         "ui workbench concept",
         "ui",
@@ -4177,16 +4177,43 @@
         "viewer",
         "modal",
         "consistency",
-        "2026-07-23 09:56:51",
+        "2026-07-23 17:11:05",
         "2026",
         "07",
         "23",
-        "09",
-        "56",
-        "51",
+        "17",
+        "11",
+        "05",
         "d-20260723-093229-dd63ab"
       ],
-      "search_text": "ui workbench concept ui workbench concept docs viewer modal consistency docs viewer modal consistency 2026-07-23 09:56:51 2026 07 23 09 56 51 d-20260723-093229-dd63ab"
+      "search_text": "ui workbench concept ui workbench concept docs viewer modal consistency docs viewer modal consistency 2026-07-23 17:11:05 2026 07 23 17 11 05 d-20260723-093229-dd63ab"
+    },
+    {
+      "id": "d-20260723-155929-ef9c14",
+      "kind": "doc",
+      "title": "UI Workbench Guide",
+      "href": "/docs/?scope=studio&doc=d-20260723-155929-ef9c14",
+      "last_updated": "2026-07-23 17:11:05",
+      "parent_id": "d-20260723-093229-dd63ab",
+      "parent_title": "UI Workbench Concept",
+      "display_meta": "2026-07-23 17:11:05 • UI Workbench Concept",
+      "search_terms": [
+        "ui workbench guide",
+        "ui",
+        "workbench",
+        "guide",
+        "ui workbench concept",
+        "concept",
+        "2026-07-23 17:11:05",
+        "2026",
+        "07",
+        "23",
+        "17",
+        "11",
+        "05",
+        "d-20260723-155929-ef9c14"
+      ],
+      "search_text": "ui workbench guide ui workbench guide ui workbench concept concept 2026-07-23 17:11:05 2026 07 23 17 11 05 d-20260723-155929-ef9c14"
     },
     {
       "id": "d-20260720-230623-c7e921",
