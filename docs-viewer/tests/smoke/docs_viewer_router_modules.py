@@ -723,6 +723,62 @@ def assert_route_feature_projection_and_startup(page: Page) -> None:
         raise AssertionError(f"feature toolbar construction changed: {result!r}")
 
 
+def assert_rejected_startup_cleanup(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const { appComposition } = window.__docsViewerRouterModuleSmoke;
+            const calls = [];
+            const content = { textContent: 'stale content' };
+            const results = { hidden: false };
+            const more = { hidden: false };
+
+            await appComposition.startDocsViewerStartupPhases({
+                composition: {
+                    featurePolicy: {},
+                    shouldInitializeManagement: () => false,
+                    shouldOpenImportOnLoad: () => false
+                },
+                bindEvents: () => calls.push('bind-events'),
+                startBusy: () => {
+                    calls.push('start-busy');
+                    return () => calls.push('stop-busy');
+                },
+                loadViewerSettings: () => {
+                    calls.push('viewer-settings');
+                    return Promise.reject(new Error('settings failed'));
+                },
+                loadIndex: () => calls.push('index'),
+                setStatus: (message, isError) => calls.push(['set-status', message, isError]),
+                hideDocPane: () => calls.push('hide-doc-pane'),
+                content,
+                results,
+                more
+            });
+
+            return {
+                calls,
+                contentText: content.textContent,
+                resultsHidden: results.hidden,
+                moreHidden: more.hidden
+            };
+        }"""
+    )
+    if result != {
+        "calls": [
+            "bind-events",
+            "start-busy",
+            "viewer-settings",
+            ["set-status", "settings failed", True],
+            "hide-doc-pane",
+            "stop-busy",
+        ],
+        "contentText": "",
+        "resultsHidden": True,
+        "moreHidden": True,
+    }:
+        raise AssertionError(f"rejected startup cleanup changed: {result!r}")
+
+
 def assert_explicit_app_and_service_context(page: Page) -> None:
     result = page.evaluate(
         """() => {
@@ -1303,6 +1359,7 @@ def run_smoke(page: Page, base_url: str) -> None:
     assert_missing_doc_history(page)
     assert_route_config_scope_default(page)
     assert_route_feature_projection_and_startup(page)
+    assert_rejected_startup_cleanup(page)
     assert_explicit_app_and_service_context(page)
     assert_view_mode_control_registry(page)
     assert_control_surface_host(page)

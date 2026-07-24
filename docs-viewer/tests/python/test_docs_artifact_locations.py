@@ -15,6 +15,7 @@ from docs_artifact_locations import (
     REPOSITORY_PROVIDER,
     ArtifactLocation,
     artifact_location_adapter,
+    authenticated_remote_client_for_locations,
     normalize_artifact_identity,
     require_location_capabilities,
 )
@@ -128,4 +129,60 @@ def test_r2_adapter_requires_an_authenticated_client(tmp_path: Path) -> None:
         artifact_location_adapter(
             tmp_path,
             ArtifactLocation(provider=R2_PROVIDER, path=Path("docs/example/img")),
+        )
+
+
+def test_r2_authentication_uses_integrated_studio_credentials_and_client(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from studio.services.media import publish_media_to_r2
+
+    credentials = object()
+    client = FakeRemoteClient()
+    environ = {"R2_ACCOUNT_ID": "test-account"}
+    calls: dict[str, object] = {}
+
+    def load_credentials(*, env_files, environ):
+        calls["env_files"] = env_files
+        calls["environ"] = environ
+        return credentials
+
+    def create_client(selected_credentials):
+        calls["credentials"] = selected_credentials
+        return client
+
+    monkeypatch.setattr(publish_media_to_r2, "load_r2_credentials", load_credentials)
+    monkeypatch.setattr(publish_media_to_r2, "R2Client", create_client)
+
+    selected = authenticated_remote_client_for_locations(
+        tmp_path,
+        [ArtifactLocation(provider=R2_PROVIDER, path=Path("docs/example/img"))],
+        environ=environ,
+    )
+
+    assert selected is client
+    assert calls == {
+        "env_files": [tmp_path / path for path in publish_media_to_r2.DEFAULT_ENV_FILES],
+        "environ": environ,
+        "credentials": credentials,
+    }
+
+
+def test_r2_authentication_translates_integrated_credential_exit(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from studio.services.media import publish_media_to_r2
+
+    def reject_credentials(*, env_files, environ):
+        raise SystemExit("Error: missing R2 configuration")
+
+    monkeypatch.setattr(publish_media_to_r2, "load_r2_credentials", reject_credentials)
+
+    with pytest.raises(RuntimeError, match="^missing R2 configuration$"):
+        authenticated_remote_client_for_locations(
+            tmp_path,
+            [ArtifactLocation(provider=R2_PROVIDER, path=Path("docs/example/img"))],
+            environ={},
         )

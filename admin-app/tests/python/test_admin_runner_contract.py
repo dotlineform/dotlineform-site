@@ -49,13 +49,15 @@ def test_admin_runner_docs_profile_isolates_only_full_registry_pytest() -> None:
     commands = runner.expand_profiles(["docs"])
 
     assert [command.name for command in commands] == [
+        "docs-python-lint",
+        "docs-js-lint",
         "docs-python-pytest",
         "studio-docs-build",
         "studio-search-build",
     ]
-    assert commands[0].isolated_projects_base is True
-    assert commands[0].projects_base_argument is False
-    assert all(command.isolated_projects_base is False for command in commands[1:])
+    assert commands[2].isolated_projects_base is True
+    assert commands[2].projects_base_argument is False
+    assert all(command.isolated_projects_base is False for command in (*commands[:2], *commands[3:]))
     assert all(command.projects_base_argument is False for command in commands)
     assert all(
         (REPO_ROOT / argument).is_file()

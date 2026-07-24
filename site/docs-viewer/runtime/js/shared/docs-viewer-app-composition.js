@@ -62,6 +62,21 @@ import {
  * @returns {DocsViewerCollectionProvider}
  */
 
+/**
+ * Inputs used to create the route's collection provider.
+ *
+ * @typedef {Object} DocsViewerCollectionProviderOptions
+ * @property {CreateDocsViewerCollectionProvider} [createCollectionProvider]
+ * @property {Object} [generatedData] Generated-data read runtime.
+ * @property {Object} [routeContext] Resolved route and application policy.
+ * @property {Object} [routeSession] Route navigation state.
+ * @property {Object} [scopeConfig] Configured-scope state.
+ * @property {Object} [serviceContext] Available route services.
+ * @property {Object|null} [source] Optional source-service adapter.
+ * @property {Function} [viewerScope] Current scope accessor.
+ * @property {Object} [window] Browser window used by the provider.
+ */
+
 export var DOCS_VIEWER_RUNTIME_DEFAULTS = {
   searchBatchSize: 50,
   searchDebounceMs: 140,
@@ -199,8 +214,7 @@ function requireCollectionProviderMethod(provider, methodName) {
  * The injected factory, when present, receives the same route/service context
  * as the configured-scope fallback. Additional provider methods are preserved.
  *
- * @param {Object} [options]
- * @param {CreateDocsViewerCollectionProvider} [options.createCollectionProvider]
+ * @param {DocsViewerCollectionProviderOptions} [options]
  * @returns {DocsViewerCollectionProvider}
  * @throws {Error} If the selected provider lacks `readIndex` or `readDocument`.
  */

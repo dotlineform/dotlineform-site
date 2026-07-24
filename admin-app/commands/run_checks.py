@@ -329,11 +329,22 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
     ),
     "docs": (
         CheckCommand(
+            "docs-python-lint",
+            ("docs-viewer/bin/lint-python",),
+            "Lint the representative Docs Viewer Python contracts.",
+        ),
+        CheckCommand(
+            "docs-js-lint",
+            ("docs-viewer/bin/lint-js",),
+            "Lint the representative Docs Viewer browser-module contract.",
+        ),
+        CheckCommand(
             "docs-python-pytest",
             pytest_argv(
                 "docs-viewer/tests/python/test_docs_export.py",
                 "docs-viewer/tests/python/test_docs_document_package_service.py",
                 "docs-viewer/tests/python/test_docs_import.py",
+                "docs-viewer/tests/python/test_docs_import_content.py",
                 "docs-viewer/tests/python/test_docs_import_source_listing.py",
                 "docs-viewer/tests/python/test_docs_import_source_html.py",
                 "docs-viewer/tests/python/test_docs_import_source_formats.py",
@@ -364,6 +375,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/python/test_docs_document_move_apply.py",
                 "docs-viewer/tests/python/test_docs_document_transfer_routes.py",
                 "docs-viewer/tests/python/test_docs_document_identity_migration.py",
+                "docs-viewer/tests/python/test_docs_artifact_locations.py",
                 "docs-viewer/tests/python/test_docs_broken_links.py",
                 "docs-viewer/tests/python/test_docs_review_packages.py",
                 "docs-viewer/tests/python/test_docs_viewer_public_runtime_boundaries.py",
