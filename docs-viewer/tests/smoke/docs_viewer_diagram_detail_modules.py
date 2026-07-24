@@ -512,16 +512,20 @@ def assert_document_controller_mount_contract(page: Page) -> None:
 
             return {
                 local: exercise('studio', 'local', true),
-                external: exercise('notes', 'local_external', false),
+                external: exercise('notes', 'local_external', true),
                 publicScope: exercise('library', 'public', false)
             };
         }"""
     )
 
-    if result["local"]["order"] != ["release", "detail", "inline", "extras", "release"]:
-        raise AssertionError(f"local post-mount adapter order changed: {result!r}")
-    if result["local"]["inlineReceivedDetail"] is not True:
-        raise AssertionError(f"document controller did not hand detail ownership to inline Mermaid: {result!r}")
+    managed_order = ["release", "detail", "inline", "extras", "release"]
+    for key in ("local", "external"):
+        if result[key]["order"] != managed_order:
+            raise AssertionError(f"managed-local post-mount adapter order changed: {result!r}")
+        if result[key]["inlineReceivedDetail"] is not True:
+            raise AssertionError(
+                f"document controller did not hand detail ownership to inline Mermaid: {result!r}"
+            )
     for key, scope_type, scope_id in (
         ("local", "local", "studio"),
         ("external", "local_external", "notes"),
@@ -532,11 +536,8 @@ def assert_document_controller_mount_contract(page: Page) -> None:
             raise AssertionError(f"diagram detail scope context changed: {result!r}")
         if 'data-docs-viewer-diagram-kind="persistent-svg"' not in record["htmlAtMount"]:
             raise AssertionError(f"detail adapter ran before generated HTML mounted: {result!r}")
-    if (
-        result["external"]["order"] != ["release", "detail", "extras", "release"]
-        or result["publicScope"]["order"] != ["release", "detail", "extras", "release"]
-    ):
-        raise AssertionError(f"persistent detail did not run on every ordinary reader scope: {result!r}")
+    if result["publicScope"]["order"] != ["release", "detail", "extras", "release"]:
+        raise AssertionError(f"public reader acquired inline Mermaid: {result!r}")
 
 
 def run_smoke(page: Page, base_url: str) -> None:

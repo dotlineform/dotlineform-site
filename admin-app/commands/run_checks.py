@@ -153,6 +153,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/smoke/docs_viewer_route_smoke_helpers.py",
                 "docs-viewer/tests/smoke/docs_viewer_routes.py",
                 "docs-viewer/tests/smoke/docs_viewer_service_manage.py",
+                "docs-viewer/tests/smoke/docs_viewer_external_inline_mermaid_route.py",
                 "docs-viewer/tests/python/test_docs_viewer_v2_custom_token_fixtures.py",
                 "docs-viewer/tests/python/test_generated_output_contract_fixtures.py",
                 "studio/tests/smoke/local_studio_app_docs_viewer.py",
@@ -511,6 +512,15 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 str(PUBLIC_SITE_ROOT),
             ),
             "Smoke-check inline Mermaid session loading, sequential rendering, fallback, and mount-generation contracts.",
+        ),
+        CheckCommand(
+            "docs-viewer-external-inline-mermaid-route-smoke",
+            (
+                sys.executable,
+                "docs-viewer/tests/smoke/docs_viewer_external_inline_mermaid_route.py",
+            ),
+            "Smoke-check external-local inline Mermaid parity, lazy loading, and diagram-detail registration.",
+            isolated_projects_base=True,
         ),
         CheckCommand(
             "docs-viewer-service-manage-smoke",

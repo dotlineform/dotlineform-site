@@ -584,17 +584,27 @@ def assert_exact_scope_gate(page: Page) -> None:
                 arbitraryLocal: await exercise('another-local-scope', 'local', fence),
                 diagramFreeLocal: await exercise('diagram-free-local', 'local', '<p>No diagram</p>'),
                 external: await exercise('notes', 'local_external', fence),
+                diagramFreeExternal: await exercise(
+                    'diagram-free-notes',
+                    'local_external',
+                    '<p>No diagram</p>'
+                ),
                 publicScope: await exercise('library', 'public', fence)
             };
         }"""
     )
-    if result["arbitraryLocal"] != {"mountCalls": 1, "loadCalls": 1, "diagramCount": 1, "fenceCount": 0}:
-        raise AssertionError(f"an arbitrary configured local scope was not eligible: {result!r}")
-    if result["diagramFreeLocal"] != {"mountCalls": 1, "loadCalls": 0, "diagramCount": 0, "fenceCount": 0}:
-        raise AssertionError(f"a diagram-free local mount loaded Mermaid: {result!r}")
+    rendered = {"mountCalls": 1, "loadCalls": 1, "diagramCount": 1, "fenceCount": 0}
+    if result["arbitraryLocal"] != rendered or result["external"] != rendered:
+        raise AssertionError(f"a managed-local scope was not eligible: {result!r}")
+    diagram_free = {"mountCalls": 1, "loadCalls": 0, "diagramCount": 0, "fenceCount": 0}
+    if (
+        result["diagramFreeLocal"] != diagram_free
+        or result["diagramFreeExternal"] != diagram_free
+    ):
+        raise AssertionError(f"a diagram-free managed-local mount loaded Mermaid: {result!r}")
     unsupported = {"mountCalls": 0, "loadCalls": 0, "diagramCount": 0, "fenceCount": 1}
-    if result["external"] != unsupported or result["publicScope"] != unsupported:
-        raise AssertionError(f"an unsupported scope did not retain its Mermaid fence without loading: {result!r}")
+    if result["publicScope"] != unsupported:
+        raise AssertionError(f"public scope did not retain its Mermaid fence without loading: {result!r}")
 
 
 def run_smoke(page: Page, base_url: str) -> None:

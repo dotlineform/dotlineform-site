@@ -94,7 +94,8 @@ export function initDocsViewerDocumentController(context) {
   function mountInlineMermaid(doc, payload, mountGeneration) {
     var adapter = context.inlineMermaidAdapter;
     var scopeType = currentScopeType();
-    if (scopeType !== "local" || !adapter || typeof adapter.mountDocument !== "function") return;
+    var managedLocalScope = scopeType === "local" || scopeType === "local_external";
+    if (!managedLocalScope || !adapter || typeof adapter.mountDocument !== "function") return;
     Promise.resolve(adapter.mountDocument({
       content: content,
       diagramDetailAdapter: context.diagramDetailAdapter,

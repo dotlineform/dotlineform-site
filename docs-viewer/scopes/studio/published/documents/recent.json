@@ -7,9 +7,57 @@
       "doc_id": "d-20260723-223400-c7a1e4",
       "title": "Copy And Move Documents Between Scopes Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-223400-c7a1e4.json",
-      "timestamp": "2026-07-24 13:18:12",
+      "timestamp": "2026-07-24 13:33:14",
       "parent_id": "d-20260716-193410-6d4efe",
       "parent_title": "Copy And Move Documents Between Scopes"
+    },
+    {
+      "doc_id": "d-20260720-120201-343f33",
+      "title": "Diagram Detail View Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-120201-343f33.json",
+      "timestamp": "2026-07-24 13:33:14",
+      "parent_id": "d-20260715-181845-0158f9",
+      "parent_title": "Diagrams"
+    },
+    {
+      "doc_id": "d-20260715-181845-0158f9",
+      "title": "Diagrams",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-181845-0158f9.json",
+      "timestamp": "2026-07-24 13:33:14",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap"
+    },
+    {
+      "doc_id": "d-20260714-234030-1e0af6",
+      "title": "Docs Viewer Roadmap",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-1e0af6.json",
+      "timestamp": "2026-07-24 13:33:14",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260719-123719-fb7565",
+      "title": "Document Diagrams",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260719-123719-fb7565.json",
+      "timestamp": "2026-07-24 13:33:14",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260720-102658-b55348",
+      "title": "Inline Mermaid Rendering Concept",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-102658-b55348.json",
+      "timestamp": "2026-07-24 13:33:14",
+      "parent_id": "d-20260715-181845-0158f9",
+      "parent_title": "Diagrams"
+    },
+    {
+      "doc_id": "d-20260720-102658-7de33d",
+      "title": "Inline Mermaid Rendering Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-102658-7de33d.json",
+      "timestamp": "2026-07-24 13:33:14",
+      "parent_id": "d-20260715-181845-0158f9",
+      "parent_title": "Diagrams"
     },
     {
       "doc_id": "d-20260716-193410-6d4efe",
@@ -18,54 +66,6 @@
       "timestamp": "2026-07-24 12:37:25",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap"
-    },
-    {
-      "doc_id": "d-20260720-120201-343f33",
-      "title": "Diagram Detail View Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-120201-343f33.json",
-      "timestamp": "2026-07-24 12:37:25",
-      "parent_id": "d-20260715-181845-0158f9",
-      "parent_title": "Diagrams"
-    },
-    {
-      "doc_id": "d-20260715-181845-0158f9",
-      "title": "Diagrams",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-181845-0158f9.json",
-      "timestamp": "2026-07-24 12:37:25",
-      "parent_id": "d-20260714-234030-1e0af6",
-      "parent_title": "Docs Viewer Roadmap"
-    },
-    {
-      "doc_id": "d-20260714-234030-1e0af6",
-      "title": "Docs Viewer Roadmap",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-1e0af6.json",
-      "timestamp": "2026-07-24 12:37:25",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260719-123719-fb7565",
-      "title": "Document Diagrams",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260719-123719-fb7565.json",
-      "timestamp": "2026-07-24 12:37:25",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260720-102658-b55348",
-      "title": "Inline Mermaid Rendering Concept",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-102658-b55348.json",
-      "timestamp": "2026-07-24 12:37:25",
-      "parent_id": "d-20260715-181845-0158f9",
-      "parent_title": "Diagrams"
-    },
-    {
-      "doc_id": "d-20260720-102658-7de33d",
-      "title": "Inline Mermaid Rendering Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-102658-7de33d.json",
-      "timestamp": "2026-07-24 12:37:25",
-      "parent_id": "d-20260715-181845-0158f9",
-      "parent_title": "Diagrams"
     },
     {
       "doc_id": "d-20260718-114645-7b9d24",
@@ -82,5 +82,5 @@
       "parent_title": "Index Multiple Selection"
     }
   ],
-  "generated_at": "2026-07-24T12:16:56Z"
+  "generated_at": "2026-07-24T12:34:53Z"
 }
