@@ -155,6 +155,10 @@ def blocker_codes(plan: transfer.DocumentTransferPlan) -> set[str]:
     return {blocker.code for blocker in plan.blockers}
 
 
+def warning_codes(plan: transfer.DocumentTransferPlan) -> set[str]:
+    return {warning.code for warning in plan.warnings}
+
+
 def test_copy_selection_is_deterministic_deduplicated_and_write_free(tmp_path: Path) -> None:
     repo_root = make_repo(tmp_path)
     before = snapshot(repo_root)
@@ -479,16 +483,10 @@ def test_external_and_other_scope_media_are_retained_dependencies(tmp_path: Path
     }
 
 
-def test_move_document_collision_and_known_inbound_viewer_link_block_apply(
+def test_move_document_collision_blocks_apply(
     tmp_path: Path,
 ) -> None:
     repo_root = make_repo(tmp_path)
-    write_doc(
-        local_documents_root(repo_root, "source"),
-        doc_id="other",
-        title="Other",
-        body="# Other\n\n[Root](/docs/?scope=source&doc=root)\n",
-    )
     write_doc(
         local_documents_root(repo_root, "target"),
         doc_id="root",
@@ -504,10 +502,47 @@ def test_move_document_collision_and_known_inbound_viewer_link_block_apply(
         operation_timestamp="2026-07-24 09:10:11",
     )
 
-    assert {"target_document_collision", "inbound_viewer_link"}.issubset(
-        blocker_codes(plan)
-    )
+    assert blocker_codes(plan) == {"target_document_collision"}
     assert plan.preview_payload()["apply_plan"] is None
+
+
+def test_move_inbound_viewer_link_warns_with_titles_without_blocking(
+    tmp_path: Path,
+) -> None:
+    repo_root = make_repo(tmp_path)
+    write_doc(
+        local_documents_root(repo_root, "source"),
+        doc_id="other",
+        title="Outside Document",
+        body="# Other\n\n[Root](/docs/?scope=source&doc=root)\n",
+    )
+
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        requested_doc_ids=["root"],
+        target_scope="target",
+        transfer_mode="move",
+        operation_timestamp="2026-07-24 09:10:11",
+    )
+
+    assert plan.ok
+    assert blocker_codes(plan) == set()
+    assert warning_codes(plan) == {"inbound_viewer_link"}
+    assert plan.warnings[0].message == (
+        "“Outside Document” links to “Root”. That link will remain pointed at "
+        "the “source” scope after the move; change it to “target” if it should "
+        "follow the document."
+    )
+    preview = plan.preview_payload()
+    assert preview["warnings"] == [
+        {
+            "code": "inbound_viewer_link",
+            "message": plan.warnings[0].message,
+            "document_ids": ("other", "root"),
+        }
+    ]
+    assert preview["apply_plan"] is not None
 
 
 @dataclass(frozen=True)

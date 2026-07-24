@@ -87,6 +87,13 @@ class TransferBlocker:
 
 
 @dataclass(frozen=True)
+class TransferWarning:
+    code: str
+    message: str
+    document_ids: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
 class RetainedExternalDependency:
     kind: str
     reference: str
@@ -147,6 +154,7 @@ class DocumentTransferPlan:
     media: tuple[TransferMediaPlan, ...]
     retained_external_dependencies: tuple[RetainedExternalDependency, ...]
     blockers: tuple[TransferBlocker, ...]
+    warnings: tuple[TransferWarning, ...]
 
     @property
     def ok(self) -> bool:
@@ -199,6 +207,7 @@ class DocumentTransferPlan:
                 for dependency in self.retained_external_dependencies
             ],
             "blockers": [asdict(blocker) for blocker in self.blockers],
+            "warnings": [asdict(warning) for warning in self.warnings],
             "apply_plan": self.apply_plan_payload() if self.ok else None,
         }
 
@@ -958,13 +967,15 @@ def _viewer_link_target(source: str, config: DocsScopeConfig) -> set[str]:
     return targets
 
 
-def _move_inbound_link_blockers(
+def _move_inbound_link_warnings(
     source_config: DocsScopeConfig,
+    target_config: DocsScopeConfig,
     all_source_docs: list[source_model.ScopeDoc],
     effective_docs: list[source_model.ScopeDoc],
-) -> list[TransferBlocker]:
+) -> list[TransferWarning]:
     effective_ids = {doc.doc_id for doc in effective_docs}
-    blockers: list[TransferBlocker] = []
+    effective_by_id = {doc.doc_id: doc for doc in effective_docs}
+    warnings: list[TransferWarning] = []
     for outside_doc in all_source_docs:
         if outside_doc.doc_id in effective_ids:
             continue
@@ -972,17 +983,21 @@ def _move_inbound_link_blockers(
             _viewer_link_target(outside_doc.source_text, source_config) & effective_ids
         )
         for target_doc_id in inbound_targets:
-            blockers.append(
-                TransferBlocker(
+            target_doc = effective_by_id[target_doc_id]
+            warnings.append(
+                TransferWarning(
                     code="inbound_viewer_link",
                     message=(
-                        f"source document {outside_doc.doc_id!r} links to moved "
-                        f"document {target_doc_id!r}"
+                        f"“{outside_doc.title}” links to “{target_doc.title}”. "
+                        f"That link will remain pointed at the "
+                        f"“{source_config.scope_id}” scope after the move; "
+                        f"change it to “{target_config.scope_id}” if it should "
+                        f"follow the document."
                     ),
                     document_ids=(outside_doc.doc_id, target_doc_id),
                 )
             )
-    return blockers
+    return warnings
 
 
 def plan_document_transfer(
@@ -1055,6 +1070,7 @@ def plan_document_transfer(
         raise ValueError("operation_timestamp must use YYYY-MM-DD HH:MM:SS")
 
     blockers: list[TransferBlocker] = []
+    warnings: list[TransferWarning] = []
     documents = _planned_documents(
         effective_docs,
         ordered_requested_ids,
@@ -1066,9 +1082,10 @@ def plan_document_transfer(
         blockers=blockers,
     )
     if mode == MOVE_MODE:
-        blockers.extend(
-            _move_inbound_link_blockers(
+        warnings.extend(
+            _move_inbound_link_warnings(
                 source_config,
+                target_config,
                 source_docs,
                 effective_docs,
             )
@@ -1102,6 +1119,16 @@ def plan_document_transfer(
             ),
         )
     )
+    unique_warnings = tuple(
+        sorted(
+            set(warnings),
+            key=lambda warning: (
+                warning.code,
+                warning.document_ids,
+                warning.message,
+            ),
+        )
+    )
     return DocumentTransferPlan(
         mode=mode,
         source_scope=normalized_source_scope,
@@ -1116,6 +1143,7 @@ def plan_document_transfer(
         media=media,
         retained_external_dependencies=retained_dependencies,
         blockers=unique_blockers,
+        warnings=unique_warnings,
     )
 
 
@@ -1235,6 +1263,7 @@ __all__ = [
     "TransferBuildSourcePlan",
     "TransferDocumentPlan",
     "TransferMediaPlan",
+    "TransferWarning",
     "document_transfer_scope_capabilities",
     "plan_document_transfer",
     "published_transfer_adapters",

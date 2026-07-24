@@ -243,6 +243,23 @@ def assert_transfer_workflow(page: Page) -> None:
                     }
                 }
             };
+            const warningPreview = {
+                ok: true,
+                mode: 'move',
+                target: { scope: 'notes', placement: 'scope_root' },
+                document_count: 1,
+                effective_root_count: 1,
+                descendant_count: 0,
+                unique_media_count: 0,
+                retained_external_dependencies: [],
+                media: [],
+                blockers: [],
+                warnings: [{
+                    code: 'inbound_viewer_link',
+                    message: '“Docs Viewer Roadmap” links to “Local Tree Move Projection”.'
+                }],
+                apply_plan: { schema_version: 'docs_document_transfer_apply_plan_v1' }
+            };
             return {
                 optionsState,
                 confirmation,
@@ -256,6 +273,10 @@ def assert_transfer_workflow(page: Page) -> None:
                 blockedConfirmation,
                 blockedRequests,
                 blockedResult,
+                warningConfirmation: workflow.buildDocumentTransferConfirmationBody(
+                    warningPreview
+                ),
+                warningCanApply: workflow.documentTransferPreviewCanApply(warningPreview),
                 stateContract: {
                     empty: management.docsViewerDocumentTransferActionControlState({
                         mode: 'copy',
@@ -364,6 +385,19 @@ def assert_transfer_workflow(page: Page) -> None:
         raise AssertionError("Move client request unexpectedly invented a descendant choice")
     if result["blockedResult"] is not None or not result["focusRestored"]:
         raise AssertionError("cancelled blocked transfer did not restore focus")
+    if not result["warningCanApply"]:
+        raise AssertionError("warning-only transfer was incorrectly blocked")
+    if not any(
+        line == (
+            "Warning: “Docs Viewer Roadmap” links to "
+            "“Local Tree Move Projection”."
+        )
+        for line in result["warningConfirmation"]
+    ):
+        raise AssertionError(
+            f"transfer confirmation omitted its warning: "
+            f"{result['warningConfirmation']!r}"
+        )
     if result["stateContract"] != {
         "empty": {
             "disabled": True,
