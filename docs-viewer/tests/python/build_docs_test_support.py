@@ -136,10 +136,6 @@ def write_scope_config(root: Path) -> None:
         [studio],
         {
             "recent_limit": 10,
-            "ui_statuses_by_scope": {
-                "studio": [{"ui_status": "done", "label": "Done"}],
-                "library": [{"ui_status": "draft", "label": "Draft"}],
-            },
         },
     )
 

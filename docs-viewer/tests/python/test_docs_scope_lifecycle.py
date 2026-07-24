@@ -597,11 +597,6 @@ def test_scope_rename_apply_moves_external_roots_and_preserves_links_and_doc_ids
             write_json(external_root / "scopes/research/published/documents/index-tree.json", {"docs": []})
             write_json(external_root / "scopes/research/published/search/index.json", {"entries": []})
             config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
-            created_config = json.loads(config_path.read_text(encoding="utf-8"))
-            created_config["docs_viewer"]["ui_statuses_by_scope"]["research"] = [
-                {"ui_status": "draft", "label": "Draft", "emoji": "D"},
-            ]
-            write_json(config_path, created_config)
 
             try:
                 docs_management_service.handle_scope_rename_apply(
@@ -670,8 +665,7 @@ def test_scope_rename_apply_moves_external_roots_and_preserves_links_and_doc_ids
     assert "location" not in renamed_scope["published"]["media"]["img"]
     assert "source" not in renamed_scope["sub_scopes"][0]
     assert "published" not in renamed_scope["sub_scopes"][0]
-    assert "research" not in final_config["docs_viewer"]["ui_statuses_by_scope"]
-    assert "field-notes" in final_config["docs_viewer"]["ui_statuses_by_scope"]
+    assert "ui_statuses_by_scope" not in final_config["docs_viewer"]
     assert "research" not in {scope["scope_id"] for scope in final_manifest["scopes"]}
     assert any(
         record["path"] == (external_root / f"scopes/field-notes/source/documents/{default_doc_id}.md").as_posix()
@@ -1015,11 +1009,6 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
                 dry_run=False,
             )
             config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
-            created_source_payload = json.loads(config_path.read_text(encoding="utf-8"))
-            created_source_payload["docs_viewer"]["ui_statuses_by_scope"]["research"] = [
-                {"ui_status": "draft", "label": "Draft", "emoji": "D"},
-            ]
-            write_json(config_path, created_source_payload)
             search_index_path = repo_root / "docs-viewer/scopes/research/published/search/index.json"
             search_index_path.unlink()
             payload = docs_management_service.handle_scope_delete_apply(
@@ -1047,8 +1036,7 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
     assert delete_calls == [repo_root]
     assert create_calls == [(repo_root, "research", {"include_search": True})]
     assert [scope["scope_id"] for scope in source_payload["scopes"]] == ["studio"]
-    assert "research" not in source_payload["docs_viewer"]["ui_statuses_by_scope"]
-    assert "studio" in source_payload["docs_viewer"]["ui_statuses_by_scope"]
+    assert "ui_statuses_by_scope" not in source_payload["docs_viewer"]
     assert "research" not in {record["scope_id"] for record in manifest_payload["scopes"]}
     assert source_root_exists is False
     assert route_exists is False

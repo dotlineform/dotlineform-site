@@ -7,6 +7,9 @@ import {
 import {
   createDocsViewerScopeSelectMenu
 } from "./docs-viewer-scope-select-menu.js";
+import {
+  DOCS_VIEWER_CODE_CONFIG
+} from "./docs-viewer-code-config.js";
 
 export function positiveInteger(value, fallback) {
   var parsed = parseInt(value, 10);
@@ -186,7 +189,7 @@ export function initDocsViewerConfigController(context) {
   }
 
   function scopeTypeBadge(config) {
-    var badges = getConfigValue(scopeConfig.docsViewerConfig, "docsViewerSettings.scope_type_badges");
+    var badges = DOCS_VIEWER_CODE_CONFIG.scopeTypeBadges;
     return badges && typeof badges === "object" && badges[config.scopeType] && typeof badges[config.scopeType] === "object"
       ? badges[config.scopeType]
       : null;
@@ -308,9 +311,8 @@ export function initDocsViewerConfigController(context) {
     window.location.assign(url.pathname + url.search);
   }
 
-  function normalizeUiStatuses(config, scope) {
-    var statusesByScope = getConfigValue(config, "docs_viewer.ui_statuses_by_scope");
-    var rawStatuses = statusesByScope && typeof statusesByScope === "object" ? statusesByScope[scope] : null;
+  function normalizeUiStatuses() {
+    var rawStatuses = DOCS_VIEWER_CODE_CONFIG.uiStatuses;
     if (!Array.isArray(rawStatuses)) return [];
 
     var seen = new Set();
@@ -337,7 +339,7 @@ export function initDocsViewerConfigController(context) {
     scopeConfig.viewerConfigLoaded = true;
     scopeConfig.recentLimit = positiveInteger(getConfigValue(config, "docs_viewer.recent_limit"), context.defaultRecentLimit);
     searchRecent.recentLimit = scopeConfig.recentLimit;
-    scopeConfig.uiStatuses = normalizeUiStatuses(config, context.viewerScope());
+    scopeConfig.uiStatuses = normalizeUiStatuses();
     scopeConfig.uiStatusByValue = new Map(scopeConfig.uiStatuses.map(function (status) {
       return [status.ui_status, status];
     }));

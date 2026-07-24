@@ -168,12 +168,6 @@ def plan_rename_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         blockers.append(f"scope_id {new_scope_id!r} already exists")
     if new_scope_id in manifest_records:
         blockers.append(f"scope_id {new_scope_id!r} already exists in the docs scope manifest")
-    raw_config = load_json_object(repo_root / CONFIG_REL_PATH, "docs scope config")
-    settings = raw_config.get("docs_viewer")
-    statuses = settings.get("ui_statuses_by_scope") if isinstance(settings, dict) else None
-    if isinstance(statuses, dict) and new_scope_id in statuses and old_scope_id != new_scope_id:
-        blockers.append(f"ui statuses already exist for scope {new_scope_id!r}")
-
     old_roots: dict[str, Path] = {}
     new_roots: dict[str, Path] = {}
     if config is not None and config.scope_type == LOCAL_EXTERNAL_SCOPE_TYPE:
@@ -249,13 +243,6 @@ def _renamed_scope_config_payload(
                 continue
             _rename_scope_role_paths(sub_scope, old_paths, new_paths)
 
-    settings = payload.get("docs_viewer")
-    if isinstance(settings, dict):
-        statuses = settings.get("ui_statuses_by_scope")
-        if isinstance(statuses, dict) and old_scope_id in statuses:
-            if new_scope_id in statuses:
-                raise ValueError(f"ui statuses already exist for scope {new_scope_id!r}")
-            statuses[new_scope_id] = statuses.pop(old_scope_id)
     return payload
 
 

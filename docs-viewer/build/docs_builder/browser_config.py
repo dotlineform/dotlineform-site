@@ -93,7 +93,7 @@ def browser_sub_scope_records(config: DocsScopeConfig) -> list[dict[str, Any]]:
     return records
 
 
-def docs_viewer_settings_payload(repo_root: Path, scope_ids: list[str]) -> dict[str, Any] | None:
+def docs_viewer_settings_payload(repo_root: Path) -> dict[str, Any] | None:
     try:
         payload = json.loads((repo_root / CONFIG_REL_PATH).read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
@@ -101,13 +101,7 @@ def docs_viewer_settings_payload(repo_root: Path, scope_ids: list[str]) -> dict[
     settings = payload.get("docs_viewer") if isinstance(payload, dict) else None
     if not isinstance(settings, dict):
         return None
-    settings = json.loads(json.dumps(settings))
-    statuses = settings.get("ui_statuses_by_scope")
-    if isinstance(statuses, dict):
-        settings["ui_statuses_by_scope"] = {
-            scope_id: value for scope_id, value in statuses.items() if scope_id in scope_ids
-        }
-    return settings
+    return json.loads(json.dumps(settings))
 
 
 def browser_scope_record(
@@ -149,7 +143,6 @@ def browser_scope_config_payload(
     published: bool = False,
 ) -> dict[str, Any]:
     raw_by_scope = raw_scope_items(repo_root)
-    scope_ids = [config.scope_id for config in configs]
     payload = {
         "schema_version": DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION,
         "default_scope_id": configs[0].scope_id if configs else "",
@@ -158,7 +151,7 @@ def browser_scope_config_payload(
             for config in configs
         ],
     }
-    settings = docs_viewer_settings_payload(repo_root, scope_ids)
+    settings = docs_viewer_settings_payload(repo_root)
     if settings:
         payload["docs_viewer"] = settings
     return payload
@@ -221,7 +214,7 @@ def patched_browser_scope_config_payload(
         "default_scope_id": default_scope_id,
         "scopes": scopes,
     }
-    settings = docs_viewer_settings_payload(repo_root, ordered_scope_ids)
+    settings = docs_viewer_settings_payload(repo_root)
     if settings:
         payload["docs_viewer"] = settings
     elif isinstance(existing, dict) and isinstance(existing.get("docs_viewer"), dict):

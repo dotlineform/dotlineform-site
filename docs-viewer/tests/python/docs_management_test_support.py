@@ -152,11 +152,6 @@ def write_docs_scope_config(root: Path) -> None:
             ],
             "docs_viewer": {
                 "recent_limit": 10,
-                "ui_statuses_by_scope": {
-                    "studio": [
-                        {"ui_status": "draft", "label": "Draft", "emoji": "D"},
-                    ],
-                },
             },
         },
     )

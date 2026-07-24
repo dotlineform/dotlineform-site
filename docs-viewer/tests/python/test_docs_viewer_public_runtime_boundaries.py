@@ -185,4 +185,5 @@ def test_public_browser_config_projects_public_readonly_scope_routes() -> None:
     assert [scope["viewer_base_url"] for scope in public_payload["scopes"]] == [
         scope["viewer_base_url"] for scope in public_source_scopes
     ]
-    assert "studio" not in public_payload["docs_viewer"]["ui_statuses_by_scope"]
+    assert "ui_statuses_by_scope" not in public_payload["docs_viewer"]
+    assert "scope_type_badges" not in public_payload["docs_viewer"]

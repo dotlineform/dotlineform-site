@@ -598,6 +598,7 @@ def assert_route_feature_projection_and_startup(page: Page) -> None:
                 searchRecent: {},
                 documentIndex: { docs: [] }
             };
+            const projectedScopeSelect = document.createElement('select');
             const projectedScopeController = configController.initDocsViewerConfigController({
                 allowScopeQuery: false,
                 configService: {
@@ -619,6 +620,7 @@ def assert_route_feature_projection_and_startup(page: Page) -> None:
                 root: document.createElement('div'),
                 routeCommands: { applyRouteGlobals: () => {} },
                 routeSession: {},
+                scopeSelect: projectedScopeSelect,
                 scopeConfig: projectedScopeState.scopeConfig,
                 searchRecent: projectedScopeState.searchRecent,
                 uiStatusEmojiMaxLength: 8,
@@ -639,8 +641,15 @@ def assert_route_feature_projection_and_startup(page: Page) -> None:
                 selected,
                 settingsOnly: {
                     recentLimit: viewerSettingsState.searchRecent.recentLimit,
-                    scopeDiscoveryRejectedMissingScopes
+                    scopeDiscoveryRejectedMissingScopes,
+                    uiStatuses: viewerSettingsState.scopeConfig.uiStatuses.map(status => [
+                        status.ui_status,
+                        status.emoji
+                    ])
                 },
+                projectedScopeOptions: Array.from(projectedScopeSelect.options).map(
+                    option => option.textContent
+                ),
                 projectedScopeTypes: Object.fromEntries(
                     Array.from(projectedScopeState.scopeConfig.scopeConfigsById.entries()).map(([scopeId, config]) => [scopeId, config.scopeType])
                 ),
@@ -677,8 +686,26 @@ def assert_route_feature_projection_and_startup(page: Page) -> None:
     if result["settingsOnly"] != {
         "recentLimit": 7,
         "scopeDiscoveryRejectedMissingScopes": True,
+        "uiStatuses": [
+            ["draft", "📝"],
+            ["done", "✅"],
+            ["urgent", "❗"],
+            ["review", "👀"],
+            ["in-progress", "🔄"],
+            ["planned", "🧭"],
+            ["paused", "⏸️"],
+            ["deferred", "😴"],
+            ["report", "📊"],
+            ["research", "🔬"],
+        ],
     }:
         raise AssertionError(f"viewer settings still depend on configured-scope discovery: {result!r}")
+    if result["projectedScopeOptions"] != [
+        "🌐 library",
+        "🧪 notes",
+        "💻 studio",
+    ]:
+        raise AssertionError(f"scope type icons are not code-projected: {result!r}")
     if result["projectedScopeTypes"] != {
         "library": "public",
         "notes": "local_external",

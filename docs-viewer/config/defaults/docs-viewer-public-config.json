@@ -126,36 +126,6 @@
   "docs_viewer": {
     "recent_limit": 10,
     "non_viewable_nav_color": "var(--muted)",
-    "doc_non_viewable_emoji": "🚫",
-    "scope_type_badges": {
-      "public": {
-        "label": "Public",
-        "emoji": "🌐"
-      },
-      "local": {
-        "label": "Local",
-        "emoji": "💻"
-      },
-      "local_external": {
-        "label": "External local",
-        "emoji": "🧪"
-      }
-    },
-    "ui_statuses_by_scope": {
-      "library": [
-        {
-          "ui_status": "draft",
-          "label": "Draft",
-          "emoji": "📝"
-        }
-      ],
-      "analysis": [
-        {
-          "ui_status": "draft",
-          "label": "Draft",
-          "emoji": "📝"
-        }
-      ]
-    }
+    "doc_non_viewable_emoji": "🚫"
   }
 }
