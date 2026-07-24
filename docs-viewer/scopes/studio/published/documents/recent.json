@@ -4,6 +4,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260723-223400-c7a1e4",
+      "title": "Copy And Move Documents Between Scopes Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-223400-c7a1e4.json",
+      "timestamp": "2026-07-24 17:02:08",
+      "parent_id": "d-20260716-193410-6d4efe",
+      "parent_title": "Copy And Move Documents Between Scopes"
+    },
+    {
       "doc_id": "d-20260605-125108-1d1ef3",
       "title": "Runtime Module Ownership",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260605-125108-1d1ef3.json",
@@ -34,14 +42,6 @@
       "timestamp": "2026-07-24 16:08:31",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260723-223400-c7a1e4",
-      "title": "Copy And Move Documents Between Scopes Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-223400-c7a1e4.json",
-      "timestamp": "2026-07-24 15:48:00",
-      "parent_id": "d-20260716-193410-6d4efe",
-      "parent_title": "Copy And Move Documents Between Scopes"
     },
     {
       "doc_id": "d-20260607-222033-78a47c",
@@ -84,5 +84,5 @@
       "parent_title": "Roadmap"
     }
   ],
-  "generated_at": "2026-07-24T15:30:44Z"
+  "generated_at": "2026-07-24T16:02:15Z"
 }

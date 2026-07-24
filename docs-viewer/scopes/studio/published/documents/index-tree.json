@@ -873,44 +873,6 @@
               "ui_status": "paused"
             },
             {
-              "doc_id": "d-20260715-181845-0158f9",
-              "title": "Diagrams",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-181845-0158f9.json",
-              "ui_status": "done",
-              "children": [
-                {
-                  "doc_id": "d-20260720-120201-343f33",
-                  "title": "Diagram Detail View Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-120201-343f33.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260715-181845-524859",
-                  "title": "Document Diagrams Concept",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-181845-524859.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260720-102658-b55348",
-                  "title": "Inline Mermaid Rendering Concept",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-102658-b55348.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260720-102658-7de33d",
-                  "title": "Inline Mermaid Rendering Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-102658-7de33d.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260718-214206-27df44",
-                  "title": "Mermaid Document Diagrams Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-214206-27df44.json",
-                  "ui_status": "done"
-                }
-              ]
-            },
-            {
               "doc_id": "d-20260723-101224-e62173",
               "title": "Docs Viewer Manage Theme Restoration",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-101224-e62173.json",
@@ -1034,28 +996,6 @@
               "title": "Public Docs Viewer Mobile Experience",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-191039-f8cb88.json",
               "ui_status": "proposed"
-            },
-            {
-              "doc_id": "d-20260715-222129-8253ee",
-              "title": "Recent Documents",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-222129-8253ee.json",
-              "ui_status": "done",
-              "children": [
-                {
-                  "doc_id": "d-20260715-225512-80198b",
-                  "title": "Recent Documents Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-225512-80198b.json",
-                  "ui_status": "done",
-                  "children": [
-                    {
-                      "doc_id": "d-20260716-164217-a3c7e1",
-                      "title": "Recent Documents Working Notes",
-                      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260716-164217-a3c7e1.json",
-                      "ui_status": "done"
-                    }
-                  ]
-                }
-              ]
             },
             {
               "doc_id": "d-20260720-100017-9855dd",
@@ -1615,5 +1555,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-24T14:55:43Z"
+  "generated_at": "2026-07-24T15:42:56Z"
 }

@@ -246,6 +246,7 @@ def assert_transfer_workflow(page: Page) -> None:
             const warningPreview = {
                 ok: true,
                 mode: 'move',
+                source: { scope: 'studio' },
                 target: { scope: 'notes', placement: 'scope_root' },
                 document_count: 1,
                 effective_root_count: 1,
@@ -257,6 +258,12 @@ def assert_transfer_workflow(page: Page) -> None:
                 warnings: [{
                     code: 'inbound_viewer_link',
                     message: '“Docs Viewer Roadmap” links to “Local Tree Move Projection”.'
+                }, {
+                    code: 'inbound_viewer_link',
+                    message: '“Button Placement” links to “Local Tree Move Projection”.'
+                }, {
+                    code: 'retained_dependency',
+                    message: 'An unrelated dependency will remain unchanged.'
                 }],
                 apply_plan: { schema_version: 'docs_document_transfer_apply_plan_v1' }
             };
@@ -276,6 +283,10 @@ def assert_transfer_workflow(page: Page) -> None:
                 warningConfirmation: workflow.buildDocumentTransferConfirmationBody(
                     warningPreview
                 ),
+                singleWarningConfirmation: workflow.buildDocumentTransferConfirmationBody({
+                    ...warningPreview,
+                    warnings: [warningPreview.warnings[0]]
+                }),
                 warningCanApply: workflow.documentTransferPreviewCanApply(warningPreview),
                 stateContract: {
                     empty: indexManagement.docsViewerDocumentTransferActionControlState({
@@ -387,16 +398,51 @@ def assert_transfer_workflow(page: Page) -> None:
         raise AssertionError("cancelled blocked transfer did not restore focus")
     if not result["warningCanApply"]:
         raise AssertionError("warning-only transfer was incorrectly blocked")
-    if not any(
-        line == (
-            "Warning: “Docs Viewer Roadmap” links to "
-            "“Local Tree Move Projection”."
+    aggregated_warning_lines = [
+        line
+        for line in result["warningConfirmation"]
+        if "Docs Broken Links" in line
+    ]
+    if (
+        len(aggregated_warning_lines) != 1
+        or "2 broken links" not in aggregated_warning_lines[0]
+        or "“studio”" not in aggregated_warning_lines[0]
+        or "(doc archived)" not in aggregated_warning_lines[0]
+    ):
+        raise AssertionError(
+            f"transfer confirmation omitted its inbound-link guidance: "
+            f"{result['warningConfirmation']!r}"
         )
+    if any(
+        "Docs Viewer Roadmap" in line or "Button Placement" in line
         for line in result["warningConfirmation"]
     ):
         raise AssertionError(
-            f"transfer confirmation omitted its warning: "
+            f"transfer confirmation did not aggregate inbound-link details: "
             f"{result['warningConfirmation']!r}"
+        )
+    if not any(
+        "unrelated dependency" in line
+        for line in result["warningConfirmation"]
+    ):
+        raise AssertionError(
+            f"transfer confirmation omitted its unrelated warning: "
+            f"{result['warningConfirmation']!r}"
+        )
+    singular_warning_lines = [
+        line
+        for line in result["singleWarningConfirmation"]
+        if "Docs Broken Links" in line
+    ]
+    if (
+        len(singular_warning_lines) != 1
+        or "1 broken link" not in singular_warning_lines[0]
+        or "that reference" not in singular_warning_lines[0]
+        or "replace it" not in singular_warning_lines[0]
+    ):
+        raise AssertionError(
+            f"transfer confirmation omitted its singular inbound-link guidance: "
+            f"{result['singleWarningConfirmation']!r}"
         )
     if result["stateContract"] != {
         "empty": {

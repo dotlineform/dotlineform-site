@@ -113,7 +113,25 @@ export function buildDocumentTransferConfirmationBody(preview) {
   blockers.forEach(function (blocker) {
     lines.push("Blocked: " + String(blocker && blocker.message || blocker || "").trim());
   });
-  warnings.forEach(function (warning) {
+  var inboundLinkWarnings = warnings.filter(function (warning) {
+    return warning && warning.code === "inbound_viewer_link";
+  });
+  if (inboundLinkWarnings.length) {
+    var sourceScope = String(preview && preview.source && preview.source.scope || "").trim();
+    var singularInboundLink = inboundLinkWarnings.length === 1;
+    lines.push(
+      "Warning: This move will leave " +
+      countLabel(inboundLinkWarnings.length, "broken link", "broken links") +
+      " in “" + sourceScope + "”. After the move, review “" + sourceScope +
+      "” in Docs Broken Links and either remove " +
+      (singularInboundLink ? "that reference" : "those references") +
+      " or replace " + (singularInboundLink ? "it" : "them") +
+      " with plain text such as “Document title (doc archived)”."
+    );
+  }
+  warnings.filter(function (warning) {
+    return !warning || warning.code !== "inbound_viewer_link";
+  }).forEach(function (warning) {
     lines.push("Warning: " + String(warning && warning.message || warning || "").trim());
   });
   return lines.filter(Boolean);
