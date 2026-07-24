@@ -11,6 +11,7 @@ from urllib.parse import unquote, urlsplit
 from docs_artifact_locations import local_artifact_path
 from docs_import_common import (
     APPLE_NOTES_CAPTION_SPAN_PATTERN,
+    DOCS_VIEWER_CAPTION_FONT_STYLE,
     FILE_MEDIA_STAGED_SUFFIXES,
     MARKDOWN_IMAGE_REWRITE_PATTERN,
     MARKDOWN_LINK_REWRITE_PATTERN,
@@ -121,7 +122,7 @@ def normalize_apple_notes_caption_spans(markdown: str) -> str:
             for part in style.split(";")
             if part.strip() and not part.strip().lower().startswith("font-size:")
         ]
-        style_parts.insert(0, "font-size: var(--font-caption)")
+        style_parts.insert(0, DOCS_VIEWER_CAPTION_FONT_STYLE)
         body = str(match.group("body") or "").strip()
         normalized_attrs = normalize_space(attrs)
         attr_text = f" {normalized_attrs}" if normalized_attrs else ""

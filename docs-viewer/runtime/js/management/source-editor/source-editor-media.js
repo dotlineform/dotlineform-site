@@ -20,6 +20,12 @@ function chooseStagedMedia(root, kind, files) {
   var optionsHtml = records.map(function (file) {
     return '<option value="' + escapeHtml(file.filename) + '">' + escapeHtml(file.filename) + "</option>";
   }).join("");
+  var captionHtml = kind === "image"
+    ? '<label class="docsViewer__field docsViewer__field--checkbox">' +
+        '<input class="docsViewer__checkboxInput" data-role="staged-media-caption" type="checkbox" checked>' +
+        '<span class="docsViewer__fieldLabel">Add caption</span>' +
+      "</label>"
+    : "";
   return openDocsViewerManagementModal({
     root: root,
     title: copy.title,
@@ -33,7 +39,8 @@ function chooseStagedMedia(root, kind, files) {
       '<div class="docsViewer__field">' +
         '<label class="docsViewer__fieldLabel" for="docsViewerStagedMediaLabel">' + escapeHtml(copy.fieldLabel) + "</label>" +
         '<input class="docsViewer__fieldInput" id="docsViewerStagedMediaLabel" data-role="staged-media-label" type="text" required>' +
-      "</div>",
+      "</div>" +
+      captionHtml,
     actions: [
       { role: "modal-primary", label: copy.primary },
       { role: "modal-cancel", label: "Cancel" }
@@ -51,13 +58,19 @@ function chooseStagedMedia(root, kind, files) {
     onSubmit: function (api) {
       var select = api.host.querySelector('[data-role="staged-media-file"]');
       var label = api.host.querySelector('[data-role="staged-media-label"]');
+      var caption = api.host.querySelector('[data-role="staged-media-caption"]');
       var filename = cleanString(select && select.value);
       var labelValue = cleanString(label && label.value);
       if (!filename || !labelValue) {
         api.setStatus("Choose a staged file and enter " + copy.fieldLabel.toLowerCase() + ".");
         return false;
       }
-      return { confirmed: true, stagedFilename: filename, label: labelValue };
+      return {
+        confirmed: true,
+        stagedFilename: filename,
+        label: labelValue,
+        addCaption: Boolean(caption && caption.checked)
+      };
     }
   }).then(function (result) {
     return result && result.confirmed ? result : null;
@@ -121,6 +134,7 @@ export async function publishAndInsertStagedMedia(options = {}) {
     staged_filename: choice.stagedFilename,
     label: choice.label
   };
+  if (kind === "image") request.add_caption = Boolean(choice.addCaption);
   var preview = await provider.previewStagedMedia(request);
   var confirmed = await confirmStagedMedia(options.root || document.body, kind, preview);
   if (!confirmed) return null;

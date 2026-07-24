@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 from dataclasses import replace
 import json
+import re
 import sys
 from pathlib import Path
 from threading import Thread
@@ -29,9 +30,126 @@ from docs_viewer_theme_smoke_helpers import (  # noqa: E402
 from tests.smoke.route_ready_helpers import wait_for_route_ready  # noqa: E402
 
 
-DOCS_VIEWER_DOC_ID = "d-20260424-000000-50b63f"
-INLINE_MERMAID_DOC_ID = "d-20260724-184427-31888d"
-INLINE_MERMAID_LINKED_DOC_ID = "d-20260724-190603-860f64"
+DOCS_VIEWER_DOC_ID = "d-20000101-000000-000001"
+DOCS_VIEWER_DOC_TITLE = "Docs Viewer Manage Smoke Fixture"
+INLINE_MERMAID_DOC_ID = "d-20000101-000000-000002"
+INLINE_MERMAID_DOC_TITLE = "Inline Mermaid Smoke Fixture"
+INLINE_MERMAID_LINKED_DOC_ID = "d-20000101-000000-000003"
+INLINE_MERMAID_LINKED_DOC_TITLE = "Diagram-free Smoke Fixture"
+
+
+def smoke_document_payloads() -> dict[str, dict[str, object]]:
+    return {
+        DOCS_VIEWER_DOC_ID: {
+            "doc_id": DOCS_VIEWER_DOC_ID,
+            "title": DOCS_VIEWER_DOC_TITLE,
+            "added_date": "2000-01-01 00:00:00",
+            "last_updated": "2000-01-01 00:00:00",
+            "viewer_url": f"/docs/?scope=studio&doc={DOCS_VIEWER_DOC_ID}",
+            "summary": "Synthetic diagram-free document for the manage-route smoke.",
+            "content_html": (
+                f"<h1>{DOCS_VIEWER_DOC_TITLE}</h1>"
+                "<p>Test-owned content exercises the managed document route.</p>"
+            ),
+        },
+        INLINE_MERMAID_DOC_ID: {
+            "doc_id": INLINE_MERMAID_DOC_ID,
+            "title": INLINE_MERMAID_DOC_TITLE,
+            "added_date": "2000-01-01 00:00:01",
+            "last_updated": "2000-01-01 00:00:01",
+            "viewer_url": f"/docs/?scope=studio&doc={INLINE_MERMAID_DOC_ID}",
+            "summary": "Synthetic inline Mermaid document for the manage-route smoke.",
+            "content_html": (
+                f"<h1>{INLINE_MERMAID_DOC_TITLE}</h1>"
+                "<p>Before the inline diagram.</p>"
+                '<pre><code class="language-mermaid">flowchart LR\n'
+                "    accTitle: Inline Mermaid diagram lifecycle\n"
+                "    accDescr: A document mount registers a diagram and releases it on navigation.\n"
+                '    Mount["Mount document"] --&gt; Release["Release document"]\n'
+                "</code></pre>"
+                "<p>After the inline diagram.</p>"
+                f'<p><a href="/docs/?scope=studio&amp;doc={INLINE_MERMAID_LINKED_DOC_ID}">'
+                f"{INLINE_MERMAID_LINKED_DOC_TITLE}</a></p>"
+            ),
+        },
+        INLINE_MERMAID_LINKED_DOC_ID: {
+            "doc_id": INLINE_MERMAID_LINKED_DOC_ID,
+            "title": INLINE_MERMAID_LINKED_DOC_TITLE,
+            "added_date": "2000-01-01 00:00:02",
+            "last_updated": "2000-01-01 00:00:02",
+            "viewer_url": f"/docs/?scope=studio&doc={INLINE_MERMAID_LINKED_DOC_ID}",
+            "summary": "Synthetic diagram-free navigation target for the manage-route smoke.",
+            "content_html": (
+                f"<h1>{INLINE_MERMAID_LINKED_DOC_TITLE}</h1>"
+                "<p>This linked fixture deliberately contains no diagram.</p>"
+            ),
+        },
+    }
+
+
+def install_smoke_document_routes(page: Page) -> None:
+    payloads = smoke_document_payloads()
+    index_payload = {
+        "schema": "docs_index_tree_v1",
+        "viewer_options": {
+            "non_loadable_doc_ids": [],
+            "manage_only_tree_root_ids": [],
+        },
+        "docs": [
+            {
+                "doc_id": doc_id,
+                "title": str(payload["title"]),
+                "content_url": f"/docs/doc?scope=studio&doc_id={doc_id}",
+            }
+            for doc_id, payload in payloads.items()
+        ],
+    }
+
+    def fulfill_json(route, payload: dict[str, object]) -> None:
+        route.fulfill(
+            status=200,
+            content_type="application/json",
+            body=json.dumps(payload),
+        )
+
+    def fulfill_document(route) -> None:
+        doc_id = query_value(route.request.url, "doc_id") or query_value(
+            route.request.url,
+            "doc",
+        )
+        payload = payloads.get(doc_id)
+        if payload is None:
+            route.fulfill(status=404, content_type="application/json", body='{"error":"Not found"}')
+            return
+        fulfill_json(route, payload)
+
+    def fulfill_source(route) -> None:
+        doc_id = query_value(route.request.url, "doc_id") or query_value(
+            route.request.url,
+            "doc",
+        )
+        payload = payloads.get(doc_id)
+        if payload is None:
+            route.fulfill(status=404, content_type="application/json", body='{"error":"Not found"}')
+            return
+        fulfill_json(
+            route,
+            {
+                "ok": True,
+                "scope": "studio",
+                "doc_id": doc_id,
+                "source_body": f"# {payload['title']}\n\nTest-owned source body.\n",
+                "source_revision": f"sha256:smoke-{doc_id}",
+                "path": f"tests/smoke/fixtures/{doc_id}.md",
+            },
+        )
+
+    page.route(
+        re.compile(r".*/docs/index-tree(?:\?.*)?$"),
+        lambda route: fulfill_json(route, index_payload),
+    )
+    page.route(re.compile(r".*/docs/doc(?:\?.*)?$"), fulfill_document)
+    page.route(re.compile(r".*/docs/source(?:\?.*)?$"), fulfill_source)
 
 
 def start_server() -> tuple[DocsViewerServer, str]:
@@ -89,8 +207,9 @@ def assert_service_basics(base_url: str) -> None:
         raise AssertionError(f"unexpected document-package config: {package_config!r}")
 
     documents = read_json_url(f"{base_url}/docs/packages/documents?scope=studio")
-    if documents.get("ok") is not True or not documents.get("records"):
-        raise AssertionError(f"expected direct Studio package source records: {documents!r}")
+    records = documents.get("records")
+    if documents.get("ok") is not True or not isinstance(records, list):
+        raise AssertionError(f"expected the Studio package-source response shape: {documents!r}")
 
 
 def assert_origin_rejection(base_url: str) -> None:
@@ -485,7 +604,7 @@ def assert_manage_theme_contract(page: Page, timeout_ms: int) -> None:
     assert_docs_viewer_theme_pair(light, dark)
 
     page.reload(wait_until="domcontentloaded")
-    wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
+    wait_for_manage_doc(page, DOCS_VIEWER_DOC_TITLE, timeout_ms)
     persisted_dark = read_docs_viewer_theme_state(page)
     assert_docs_viewer_theme_state(
         persisted_dark,
@@ -911,6 +1030,120 @@ def assert_open_source_target_handoff(page: Page) -> None:
         raise AssertionError(f"unexpected source-open target handoff: {result!r}")
 
 
+def assert_source_editor_media_caption_option(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const sourceEditorMedia = await import(
+                '/docs-viewer/runtime/js/management/source-editor/source-editor-media.js'
+            );
+
+            async function runCase(kind, uncheckCaption) {
+                const root = document.createElement('div');
+                root.className = 'docsViewer';
+                document.body.appendChild(root);
+                let applyRequest = null;
+                let inserted = '';
+                let previewRequest = null;
+                const filename = kind === 'image' ? 'photo.png' : 'notes.pdf';
+                const label = kind === 'image' ? 'Photo' : 'Notes';
+                const provider = {
+                    listStagedMedia: () => Promise.resolve({
+                        files: [{ filename, suggested_label: label }]
+                    }),
+                    previewStagedMedia: request => {
+                        previewRequest = Object.assign({}, request);
+                        return Promise.resolve({
+                            collision: 'new',
+                            requires_replace_confirmation: false
+                        });
+                    },
+                    applyStagedMedia: request => {
+                        applyRequest = Object.assign({}, request);
+                        const base = kind === 'image'
+                            ? '![Photo]([[media:docs/studio/img/photo.png]])'
+                            : '[Notes]([[media:docs/studio/files/notes.pdf]])';
+                        const caption = request.add_caption
+                            ? '\\n\\n<span style="font-size: var(--docs-viewer-font-caption);">Photo</span>'
+                            : '';
+                        return Promise.resolve({ markdown: base + caption });
+                    }
+                };
+                const adapter = {
+                    replaceSelection: value => {
+                        inserted = value;
+                        return true;
+                    }
+                };
+                const publishing = sourceEditorMedia.publishAndInsertStagedMedia({
+                    adapter,
+                    mediaKind: kind,
+                    provider,
+                    root
+                });
+                await new Promise(resolve => setTimeout(resolve, 0));
+                const host = root.querySelector('[data-docs-viewer-management-modal-host="true"]');
+                const checkbox = host?.querySelector('[data-role="staged-media-caption"]') || null;
+                const initialChecked = checkbox ? checkbox.checked : null;
+                if (checkbox && uncheckCaption) checkbox.checked = false;
+                const submittedChecked = checkbox ? checkbox.checked : null;
+                host?.querySelector('button[data-role="modal-primary"]')?.click();
+                await publishing;
+                const state = {
+                    applyCaption: Object.prototype.hasOwnProperty.call(applyRequest, 'add_caption')
+                        ? applyRequest.add_caption
+                        : null,
+                    captionPresent: Boolean(checkbox),
+                    initialChecked,
+                    inserted,
+                    previewCaption: Object.prototype.hasOwnProperty.call(previewRequest, 'add_caption')
+                        ? previewRequest.add_caption
+                        : null,
+                    submittedChecked
+                };
+                root.remove();
+                return state;
+            }
+
+            return {
+                file: await runCase('file', false),
+                imageDefault: await runCase('image', false),
+                imageUnchecked: await runCase('image', true)
+            };
+        }"""
+    )
+    expected = {
+        "file": {
+            "applyCaption": None,
+            "captionPresent": False,
+            "initialChecked": None,
+            "inserted": "[Notes]([[media:docs/studio/files/notes.pdf]])",
+            "previewCaption": None,
+            "submittedChecked": None,
+        },
+        "imageDefault": {
+            "applyCaption": True,
+            "captionPresent": True,
+            "initialChecked": True,
+            "inserted": (
+                "![Photo]([[media:docs/studio/img/photo.png]])\n\n"
+                '<span style="font-size: var(--docs-viewer-font-caption);">Photo</span>'
+            ),
+            "previewCaption": True,
+            "submittedChecked": True,
+        },
+        "imageUnchecked": {
+            "applyCaption": False,
+            "captionPresent": True,
+            "initialChecked": True,
+            "inserted": "![Photo]([[media:docs/studio/img/photo.png]])",
+            "previewCaption": False,
+            "submittedChecked": False,
+        },
+    }
+    if result != expected:
+        raise AssertionError(f"source-editor media caption option changed: {result!r}")
+
+
 def assert_document_transfer_module_contract(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -1019,6 +1252,7 @@ def exercise_manage_route(
     base_url: str,
     timeout_ms: int,
 ) -> tuple[set[str], set[str], set[str], set[str], set[str], str]:
+    install_smoke_document_routes(page)
     generated_requests: list[str] = []
     import_module_requests: list[str] = []
     scope_lifecycle_requests: list[str] = []
@@ -1056,8 +1290,9 @@ def exercise_manage_route(
     )
 
     page.goto(f"{base_url}/docs/?scope=studio&doc={DOCS_VIEWER_DOC_ID}", wait_until="domcontentloaded")
-    wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
+    wait_for_manage_doc(page, DOCS_VIEWER_DOC_TITLE, timeout_ms)
     assert_action_target_definitions(page)
+    assert_source_editor_media_caption_option(page)
     assert_open_source_target_handoff(page)
     assert_delete_uses_first_remaining_root(page)
     assert_manage_route_contract(manage_route_state(page), base_url)
@@ -1153,7 +1388,7 @@ def exercise_manage_route(
     ):
         page.locator("#docsViewerIndexCopyButton").click()
     page.goto(f"{base_url}/docs/?scope=studio&doc={DOCS_VIEWER_DOC_ID}", wait_until="domcontentloaded")
-    wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
+    wait_for_manage_doc(page, DOCS_VIEWER_DOC_TITLE, timeout_ms)
     assert_document_transfer_module_contract(page)
 
     page.locator("#docsViewerManageActionsButton").click()
@@ -1277,7 +1512,7 @@ def exercise_manage_route(
     delete_host.locator('button[data-role="modal-cancel"]').evaluate("button => button.click()")
 
     page.goto(f"{base_url}/docs/?scope=studio&doc={INLINE_MERMAID_DOC_ID}", wait_until="domcontentloaded")
-    wait_for_manage_doc(page, "Inline Mermaid Theme Synchronisation Delivery", timeout_ms)
+    wait_for_manage_doc(page, INLINE_MERMAID_DOC_TITLE, timeout_ms)
     page.wait_for_function(
         """() => {
             const host = document.querySelector(
@@ -1310,11 +1545,11 @@ def exercise_manage_route(
     if delivery_link.count() != 1:
         raise AssertionError("Inline Mermaid theme delivery should link to its Mermaid feature")
     delivery_link.click()
-    wait_for_manage_doc(page, "Mermaid Authoring And Publication", timeout_ms)
+    wait_for_manage_doc(page, INLINE_MERMAID_LINKED_DOC_TITLE, timeout_ms)
     if page.locator("#docsViewerContent .docsViewer__diagram").count() != 0:
         raise AssertionError("diagram-free Mermaid feature document should not acquire an inline diagram")
     page.go_back()
-    wait_for_manage_doc(page, "Inline Mermaid Theme Synchronisation Delivery", timeout_ms)
+    wait_for_manage_doc(page, INLINE_MERMAID_DOC_TITLE, timeout_ms)
     page.wait_for_selector(
         '.docsViewer__diagram[data-docs-viewer-diagram-kind="inline-mermaid"]',
         state="visible",

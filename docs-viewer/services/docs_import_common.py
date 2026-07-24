@@ -54,6 +54,7 @@ INLINE_RASTER_EXTENSIONS = {
 DOCS_IMPORT_ROLE_META_NAME = "dlf:docs-import-role"
 INTERACTIVE_HTML_ROLE = "interactive-html"
 IMPORT_RESULTS_DIR_NAME = "results"
+DOCS_VIEWER_CAPTION_FONT_STYLE = "font-size: var(--docs-viewer-font-caption)"
 
 
 SOURCE_FORMAT_BY_SUFFIX = {

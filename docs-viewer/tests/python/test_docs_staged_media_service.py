@@ -110,10 +110,39 @@ def test_add_image_publishes_then_returns_markdown_without_creating_a_doc() -> N
         published_bytes = published.read_bytes()
 
     assert preview["collision"] == "new"
+    assert preview["add_caption"] is False
     assert payload["publish"]["status"] == "uploaded"
+    assert payload["add_caption"] is False
     assert published_bytes == b"png bytes"
     assert payload["markdown"] == "![A quiet field]([[media:docs/library/img/photo.png]])"
     assert before == after
+
+
+def test_add_image_caption_uses_raw_alt_text_with_current_docs_viewer_token() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_staged_bytes(root, "photo.png", b"png bytes")
+        request = {
+            "scope": "library",
+            "media_kind": "image",
+            "staged_filename": "photo.png",
+            "label": "A [quiet] field & <stream>",
+            "add_caption": True,
+        }
+
+        preview = staged_media.preview_staged_media(root, request)
+        payload = staged_media.apply_staged_media(root, request)
+
+    expected = (
+        r"![A \[quiet\] field & <stream>]([[media:docs/library/img/photo.png]])"
+        "\n\n"
+        '<span style="font-size: var(--docs-viewer-font-caption);">'
+        "A [quiet] field &amp; &lt;stream&gt;</span>"
+    )
+    assert preview["add_caption"] is True
+    assert preview["markdown"] == expected
+    assert payload["add_caption"] is True
+    assert payload["markdown"] == expected
 
 
 def test_add_file_publishes_to_file_media_role() -> None:
@@ -126,11 +155,13 @@ def test_add_file_publishes_to_file_media_role() -> None:
             "media_kind": "file",
             "staged_filename": "notes.pdf",
             "label": "Research notes",
+            "add_caption": True,
         })
         published = root / "site/assets/data/docs/scopes/library/media/files/notes.pdf"
 
         assert published.read_bytes() == b"%PDF"
 
+    assert payload["add_caption"] is False
     assert payload["markdown"] == "[Research notes]([[media:docs/library/files/notes.pdf]])"
 
 

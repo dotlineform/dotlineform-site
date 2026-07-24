@@ -322,7 +322,7 @@ Some text.
     assert attachment_bytes == b"%PDF-1.4 fake\n"
     assert f'![my note image 01]([[media:docs/library/img/{image_filename}]] "my note image 01")' in source_text
     assert f"[Research PDF]([[media:docs/library/files/{attachment_filename}]])" in source_text
-    assert "font-size: var(--font-caption)" in source_text
+    assert "font-size: var(--docs-viewer-font-caption)" in source_text
 
 def test_markdown_package_image_conversion_does_not_upscale() -> None:
     with make_repo() as temp:

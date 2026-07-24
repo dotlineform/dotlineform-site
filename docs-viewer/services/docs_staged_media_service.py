@@ -9,6 +9,7 @@ import shutil
 import tempfile
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass
+from html import escape
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Iterator
@@ -20,6 +21,7 @@ from docs_artifact_locations import (
     authenticated_remote_client_for_locations,
 )
 from docs_import_common import (
+    DOCS_VIEWER_CAPTION_FONT_STYLE,
     FILE_MEDIA_STAGED_SUFFIXES,
     RASTER_IMAGE_STAGED_SUFFIXES,
     SVG_STAGED_SUFFIXES,
@@ -87,8 +89,12 @@ def published_media_filename(source_path: Path) -> str:
 
 
 def normalize_label(value: Any, *, fallback: str) -> str:
-    label = " ".join(str(value or "").split()) or fallback
+    label = normalize_label_text(value, fallback=fallback)
     return label.replace("\\", r"\\").replace("[", r"\[").replace("]", r"\]")
+
+
+def normalize_label_text(value: Any, *, fallback: str) -> str:
+    return " ".join(str(value or "").split()) or fallback
 
 
 def _resolve_staged_media(staging_root: Path, filename: str, kind: str) -> Path:
@@ -203,8 +209,32 @@ def _staged_media_contract(repo_root: Path, body: dict[str, Any]) -> tuple[str, 
     return scope, kind, source_path, label, media_class, media_filename
 
 
-def _markdown_token(kind: str, label: str, media_token: str) -> str:
-    return f"![{label}]({media_token})" if kind == STAGED_MEDIA_IMAGE else f"[{label}]({media_token})"
+def _markdown_token(
+    kind: str,
+    label: str,
+    media_token: str,
+    *,
+    caption: str = "",
+) -> str:
+    markdown = (
+        f"![{label}]({media_token})"
+        if kind == STAGED_MEDIA_IMAGE
+        else f"[{label}]({media_token})"
+    )
+    if kind != STAGED_MEDIA_IMAGE or not caption:
+        return markdown
+    caption_html = escape(caption, quote=False)
+    return (
+        f"{markdown}\n\n"
+        f'<span style="{DOCS_VIEWER_CAPTION_FONT_STYLE};">{caption_html}</span>'
+    )
+
+
+def _requested_caption_text(kind: str, body: dict[str, Any], source_path: Path) -> str:
+    if kind != STAGED_MEDIA_IMAGE or body.get("add_caption") is not True:
+        return ""
+    fallback = humanize(source_path.stem) or "Image"
+    return normalize_label_text(body.get("label"), fallback=fallback)
 
 
 def _artifact_status(adapter: ArtifactLocationAdapter, identity: str, data: bytes) -> str:
@@ -297,6 +327,8 @@ def _mermaid_preview_payload(
     source_path: Path,
     label: str,
     prepared: PreparedMermaidMedia,
+    *,
+    caption: str = "",
 ) -> dict[str, Any]:
     plan = build_media_plan(
         scope,
@@ -314,9 +346,10 @@ def _mermaid_preview_payload(
         "source_identity": prepared.source_identity,
         "published_filename": Path(prepared.published_identity).name,
         "label": label,
+        "add_caption": bool(caption),
         "media_identity": plan["media_path"],
         "media_token": plan["media_token"],
-        "markdown": _markdown_token(kind, label, plan["media_token"]),
+        "markdown": _markdown_token(kind, label, plan["media_token"], caption=caption),
         "collision": prepared.collision,
         "requires_replace_confirmation": prepared.collision == "replace",
         "size_bytes": len(prepared.published_bytes),
@@ -329,9 +362,18 @@ def _mermaid_preview_payload(
 
 def preview_staged_media(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     scope, kind, source_path, label, media_class, media_filename = _staged_media_contract(repo_root, body)
+    caption = _requested_caption_text(kind, body, source_path)
     if media_class == "mermaid":
         prepared = _prepared_mermaid_media(repo_root, scope, source_path, media_filename)
-        return _mermaid_preview_payload(repo_root, scope, kind, source_path, label, prepared)
+        return _mermaid_preview_payload(
+            repo_root,
+            scope,
+            kind,
+            source_path,
+            label,
+            prepared,
+            caption=caption,
+        )
     config = load_docs_scope_configs(repo_root)[scope]
     with _prepared_media_source(source_path, kind, media_filename) as (prepared_path, source_root, sanitized):
         item = docs_media_file(
@@ -351,9 +393,10 @@ def preview_staged_media(repo_root: Path, body: dict[str, Any]) -> dict[str, Any
             "staged_filename": source_path.name,
             "published_filename": media_filename,
             "label": label,
+            "add_caption": bool(caption),
             "media_identity": plan["media_path"],
             "media_token": plan["media_token"],
-            "markdown": _markdown_token(kind, label, plan["media_token"]),
+            "markdown": _markdown_token(kind, label, plan["media_token"], caption=caption),
             "collision": collision,
             "requires_replace_confirmation": collision == "replace",
             "size_bytes": item.size,
@@ -368,7 +411,15 @@ def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = T
     scope, kind, source_path, label, media_class, media_filename = _staged_media_contract(repo_root, body)
     if media_class == "mermaid":
         prepared = _prepared_mermaid_media(repo_root, scope, source_path, media_filename)
-        preview = _mermaid_preview_payload(repo_root, scope, kind, source_path, label, prepared)
+        preview = _mermaid_preview_payload(
+            repo_root,
+            scope,
+            kind,
+            source_path,
+            label,
+            prepared,
+            caption=_requested_caption_text(kind, body, source_path),
+        )
         confirm_replace = bool(body.get("confirm_replace"))
         if preview["requires_replace_confirmation"] and not confirm_replace:
             raise ValueError("canonical Mermaid source or published SVG bytes differ; confirm replacement or cancel")
