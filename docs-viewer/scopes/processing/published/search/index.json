@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_processing_v1",
     "scope": "processing",
-    "version": "blake2b-aae3d3994a0a918b11ffc6ab9c9d3ecc",
-    "generated_at_utc": "2026-07-20T09:19:33Z",
-    "count": 134
+    "version": "blake2b-6cc2989d8c6c6793ef6c08102be753ec",
+    "generated_at_utc": "2026-07-24T09:46:07Z",
+    "count": 138
   },
   "entries": [
     {
@@ -849,6 +849,29 @@
       "search_text": "redesigning i ching symbols redesigning i ching symbols i ching 2026-07-14 17:43 2026 07 14 17 43 d-20260714-174300-ce68ff"
     },
     {
+      "id": "d-20260724-103700-7b37ea",
+      "kind": "doc",
+      "title": "Impossibility And Incompleteness",
+      "href": "/docs/?scope=processing&doc=d-20260724-103700-7b37ea",
+      "last_updated": "2026-07-24 10:37:00",
+      "display_meta": "2026-07-24 10:37:00",
+      "search_terms": [
+        "impossibility and incompleteness",
+        "impossibility",
+        "and",
+        "incompleteness",
+        "2026-07-24 10:37:00",
+        "2026",
+        "07",
+        "24",
+        "10",
+        "37",
+        "00",
+        "d-20260724-103700-7b37ea"
+      ],
+      "search_text": "impossibility and incompleteness impossibility and incompleteness 2026-07-24 10:37:00 2026 07 24 10 37 00 d-20260724-103700-7b37ea"
+    },
+    {
       "id": "d-20260714-172300-a188f2",
       "kind": "doc",
       "title": "ink engine",
@@ -922,25 +945,26 @@
       "kind": "doc",
       "title": "Ink Engine Quantum",
       "href": "/docs/?scope=processing&doc=d-20260714-172700-c5909c",
-      "last_updated": "2026-07-14 17:27",
+      "last_updated": "2026-07-24 10:41:31",
       "parent_id": "d-20260714-172300-a188f2",
       "parent_title": "ink engine",
-      "display_meta": "2026-07-14 17:27 • ink engine",
+      "display_meta": "2026-07-24 10:41:31 • ink engine",
       "search_terms": [
         "ink engine quantum",
         "ink",
         "engine",
         "quantum",
         "ink engine",
-        "2026-07-14 17:27",
+        "2026-07-24 10:41:31",
         "2026",
         "07",
-        "14",
-        "17",
-        "27",
+        "24",
+        "10",
+        "41",
+        "31",
         "d-20260714-172700-c5909c"
       ],
-      "search_text": "ink engine quantum ink engine quantum ink engine 2026-07-14 17:27 2026 07 14 17 27 d-20260714-172700-c5909c"
+      "search_text": "ink engine quantum ink engine quantum ink engine 2026-07-24 10:41:31 2026 07 24 10 41 31 d-20260714-172700-c5909c"
     },
     {
       "id": "d-20260714-172700-036f91",
@@ -994,6 +1018,30 @@
         "d-20260714-172700-c6213a"
       ],
       "search_text": "practical implementation methodology practical implementation methodology ink engine ink engine 2026-07-14 17:27 2026 07 14 17 27 d-20260714-172700-c6213a"
+    },
+    {
+      "id": "d-20260724-103701-5ca570",
+      "kind": "doc",
+      "title": "Ink Engine Quantum Implementation",
+      "href": "/docs/?scope=processing&doc=d-20260724-103701-5ca570",
+      "last_updated": "2026-07-24 10:37:01",
+      "display_meta": "2026-07-24 10:37:01",
+      "search_terms": [
+        "ink engine quantum implementation",
+        "ink",
+        "engine",
+        "quantum",
+        "implementation",
+        "2026-07-24 10:37:01",
+        "2026",
+        "07",
+        "24",
+        "10",
+        "37",
+        "01",
+        "d-20260724-103701-5ca570"
+      ],
+      "search_text": "ink engine quantum implementation ink engine quantum implementation 2026-07-24 10:37:01 2026 07 24 10 37 01 d-20260724-103701-5ca570"
     },
     {
       "id": "d-20260714-174600-cedc85",
@@ -1720,6 +1768,32 @@
       "search_text": "processing 2026-07-20 10:18:26 2026 07 20 10 18 26 d-20260714-092047-06a5db"
     },
     {
+      "id": "d-20260724-104607-ecadde",
+      "kind": "doc",
+      "title": "Processing Blob Studio for Web Gallery Shapes",
+      "href": "/docs/?scope=processing&doc=d-20260724-104607-ecadde",
+      "last_updated": "2026-07-24 10:46:07",
+      "display_meta": "2026-07-24 10:46:07",
+      "search_terms": [
+        "processing blob studio for web gallery shapes",
+        "processing",
+        "blob",
+        "studio",
+        "for",
+        "web",
+        "gallery",
+        "shapes",
+        "2026-07-24 10:46:07",
+        "2026",
+        "07",
+        "24",
+        "10",
+        "46",
+        "d-20260724-104607-ecadde"
+      ],
+      "search_text": "processing blob studio for web gallery shapes processing blob studio for web gallery shapes 2026-07-24 10:46:07 2026 07 24 10 46 d-20260724-104607-ecadde"
+    },
+    {
       "id": "d-20260714-173500-48f96d",
       "kind": "doc",
       "title": "unsorted",
@@ -2138,6 +2212,31 @@
       "search_text": "de bruijn b8 3 linear de bruijn b8 3 linear unsorted 2026-07-14 18:21:12 2026 07 14 18 21 12 d-20260714-181200-ca6556"
     },
     {
+      "id": "d-20260724-103847-47c7ce",
+      "kind": "doc",
+      "title": "Decay factors",
+      "href": "/docs/?scope=processing&doc=d-20260724-103847-47c7ce",
+      "last_updated": "2026-07-24 10:39:13",
+      "parent_id": "d-20260714-173500-48f96d",
+      "parent_title": "unsorted",
+      "display_meta": "2026-07-24 10:39:13 • unsorted",
+      "search_terms": [
+        "decay factors",
+        "decay",
+        "factors",
+        "unsorted",
+        "2026-07-24 10:39:13",
+        "2026",
+        "07",
+        "24",
+        "10",
+        "39",
+        "13",
+        "d-20260724-103847-47c7ce"
+      ],
+      "search_text": "decay factors decay factors unsorted 2026-07-24 10:39:13 2026 07 24 10 39 13 d-20260724-103847-47c7ce"
+    },
+    {
       "id": "d-20260714-175700-5946e7",
       "kind": "doc",
       "title": "Design Notes — Structured Variation in Repetitive Pipelines (Processing × FFmpeg)",
@@ -2527,10 +2626,10 @@
       "kind": "doc",
       "title": "Hybrid Generative System Architecture",
       "href": "/docs/?scope=processing&doc=d-20260714-172700-e3445b",
-      "last_updated": "2026-07-14 17:27",
+      "last_updated": "2026-07-24 10:40:22",
       "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
-      "display_meta": "2026-07-14 17:27 • unsorted",
+      "display_meta": "2026-07-24 10:40:22 • unsorted",
       "search_terms": [
         "hybrid generative system architecture",
         "hybrid",
@@ -2538,15 +2637,16 @@
         "system",
         "architecture",
         "unsorted",
-        "2026-07-14 17:27",
+        "2026-07-24 10:40:22",
         "2026",
         "07",
-        "14",
-        "17",
-        "27",
+        "24",
+        "10",
+        "40",
+        "22",
         "d-20260714-172700-e3445b"
       ],
-      "search_text": "hybrid generative system architecture hybrid generative system architecture unsorted 2026-07-14 17:27 2026 07 14 17 27 d-20260714-172700-e3445b"
+      "search_text": "hybrid generative system architecture hybrid generative system architecture unsorted 2026-07-24 10:40:22 2026 07 24 10 40 22 d-20260714-172700-e3445b"
     },
     {
       "id": "d-20260714-175700-00e655",

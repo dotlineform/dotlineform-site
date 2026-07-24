@@ -4,6 +4,48 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260724-104607-ecadde",
+      "title": "Processing Blob Studio for Web Gallery Shapes",
+      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260724-104607-ecadde.json",
+      "timestamp": "2026-07-24 10:46:07"
+    },
+    {
+      "doc_id": "d-20260714-172700-c5909c",
+      "title": "Ink Engine Quantum",
+      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-172700-c5909c.json",
+      "timestamp": "2026-07-24 10:41:31",
+      "parent_id": "d-20260714-172300-a188f2",
+      "parent_title": "ink engine"
+    },
+    {
+      "doc_id": "d-20260714-172700-e3445b",
+      "title": "Hybrid Generative System Architecture",
+      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-172700-e3445b.json",
+      "timestamp": "2026-07-24 10:40:22",
+      "parent_id": "d-20260714-173500-48f96d",
+      "parent_title": "unsorted"
+    },
+    {
+      "doc_id": "d-20260724-103847-47c7ce",
+      "title": "Decay factors",
+      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260724-103847-47c7ce.json",
+      "timestamp": "2026-07-24 10:39:13",
+      "parent_id": "d-20260714-173500-48f96d",
+      "parent_title": "unsorted"
+    },
+    {
+      "doc_id": "d-20260724-103701-5ca570",
+      "title": "Ink Engine Quantum Implementation",
+      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260724-103701-5ca570.json",
+      "timestamp": "2026-07-24 10:37:01"
+    },
+    {
+      "doc_id": "d-20260724-103700-7b37ea",
+      "title": "Impossibility And Incompleteness",
+      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260724-103700-7b37ea.json",
+      "timestamp": "2026-07-24 10:37:00"
+    },
+    {
       "doc_id": "d-20260714-092047-06a5db",
       "title": "Processing",
       "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-092047-06a5db.json",
@@ -28,55 +70,7 @@
       "title": "files",
       "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-180800-4dcaca.json",
       "timestamp": "2026-07-14 18:21:12"
-    },
-    {
-      "doc_id": "d-20260714-180700-4bb3af",
-      "title": "N7 Subset Selection Strategies",
-      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-180700-4bb3af.json",
-      "timestamp": "2026-07-14 18:21:12",
-      "parent_id": "d-20260714-180800-4dcaca",
-      "parent_title": "files"
-    },
-    {
-      "doc_id": "d-20260714-180700-5d809c",
-      "title": "N9 Sjt 1min All Fps",
-      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-180700-5d809c.json",
-      "timestamp": "2026-07-14 18:21:12",
-      "parent_id": "d-20260714-180800-4dcaca",
-      "parent_title": "files"
-    },
-    {
-      "doc_id": "d-20260714-180700-b5896f",
-      "title": "Permutation Subsets Fps 24 25 30 60",
-      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-180700-b5896f.json",
-      "timestamp": "2026-07-14 18:21:12",
-      "parent_id": "d-20260714-180800-4dcaca",
-      "parent_title": "files"
-    },
-    {
-      "doc_id": "d-20260714-180700-5ba007",
-      "title": "Permutation Subsets N7 N8 With Durations",
-      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-180700-5ba007.json",
-      "timestamp": "2026-07-14 18:21:12",
-      "parent_id": "d-20260714-180800-4dcaca",
-      "parent_title": "files"
-    },
-    {
-      "doc_id": "d-20260714-180700-c98a19",
-      "title": "Permutations 3to6 Indexed",
-      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-180700-c98a19.json",
-      "timestamp": "2026-07-14 18:21:12",
-      "parent_id": "d-20260714-180800-4dcaca",
-      "parent_title": "files"
-    },
-    {
-      "doc_id": "d-20260714-180700-a15d97",
-      "title": "Permutations 3to6 With Counts",
-      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-180700-a15d97.json",
-      "timestamp": "2026-07-14 18:21:12",
-      "parent_id": "d-20260714-180800-4dcaca",
-      "parent_title": "files"
     }
   ],
-  "generated_at": "2026-07-20T09:19:33Z"
+  "generated_at": "2026-07-24T09:46:07Z"
 }

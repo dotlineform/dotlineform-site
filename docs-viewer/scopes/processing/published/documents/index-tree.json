@@ -172,6 +172,11 @@
       ]
     },
     {
+      "doc_id": "d-20260724-103700-7b37ea",
+      "title": "Impossibility And Incompleteness",
+      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260724-103700-7b37ea.json"
+    },
+    {
       "doc_id": "d-20260714-172300-a188f2",
       "title": "ink engine",
       "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-172300-a188f2.json",
@@ -202,6 +207,11 @@
           "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-172700-c6213a.json"
         }
       ]
+    },
+    {
+      "doc_id": "d-20260724-103701-5ca570",
+      "title": "Ink Engine Quantum Implementation",
+      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260724-103701-5ca570.json"
     },
     {
       "doc_id": "d-20260714-174600-cedc85",
@@ -359,6 +369,11 @@
       "ui_status": "draft"
     },
     {
+      "doc_id": "d-20260724-104607-ecadde",
+      "title": "Processing Blob Studio for Web Gallery Shapes",
+      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260724-104607-ecadde.json"
+    },
+    {
       "doc_id": "d-20260714-173500-48f96d",
       "title": "unsorted",
       "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-173500-48f96d.json",
@@ -432,6 +447,11 @@
           "doc_id": "d-20260714-181200-ca6556",
           "title": "De Bruijn B8 3 Linear",
           "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-181200-ca6556.json"
+        },
+        {
+          "doc_id": "d-20260724-103847-47c7ce",
+          "title": "Decay factors",
+          "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260724-103847-47c7ce.json"
         },
         {
           "doc_id": "d-20260714-175700-5946e7",
@@ -691,5 +711,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-20T09:19:33Z"
+  "generated_at": "2026-07-24T09:46:07Z"
 }
