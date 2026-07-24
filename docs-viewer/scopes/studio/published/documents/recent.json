@@ -4,20 +4,12 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "d-20260723-101224-e62173",
-      "title": "Docs Viewer Manage Theme Restoration",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-101224-e62173.json",
-      "timestamp": "2026-07-24 20:02:27",
+      "doc_id": "d-20260717-231652-d6d49e",
+      "title": "Source Editor Add Image And Add File",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260717-231652-d6d49e.json",
+      "timestamp": "2026-07-24 20:33:51",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap"
-    },
-    {
-      "doc_id": "d-20260724-184427-31888d",
-      "title": "Inline Mermaid Theme Synchronisation Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260724-184427-31888d.json",
-      "timestamp": "2026-07-24 20:02:27",
-      "parent_id": "d-20260723-101224-e62173",
-      "parent_title": "Docs Viewer Manage Theme Restoration"
     },
     {
       "doc_id": "d-20260724-190603-860f64",
@@ -82,7 +74,15 @@
       "timestamp": "2026-07-24 16:08:31",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260513-214100-0a7f44",
+      "title": "UI Status",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260513-214100-0a7f44.json",
+      "timestamp": "2026-07-24 16:08:31",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-07-24T19:03:09Z"
+  "generated_at": "2026-07-24T19:33:51Z"
 }

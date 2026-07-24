@@ -1192,6 +1192,7 @@ def assert_phase_five_runtime_owners(page: Page) -> None:
             const featurePolicy = modules.routeFeatures.normalizeDocsViewerRouteFeatures([
                 'bookmarks', 'source-editing', 'management'
             ]);
+            let mountedModeRoot = null;
             const registry = modules.viewRegistry.createDocsViewerViewRegistry({
                 definitionSets: [
                     modules.viewRegistry.createDocsViewerSharedViewDefinitions(),
@@ -1200,7 +1201,10 @@ def assert_phase_five_runtime_owners(page: Page) -> None:
                             id: 'markdown-source',
                             ownerViewId: 'rendered-document',
                             appKinds: ['manage'],
-                            features: ['source-editing']
+                            features: ['source-editing'],
+                            load: () => Promise.resolve({
+                                mount: context => { mountedModeRoot = context.root; }
+                            })
                         }],
                         controls: [{
                             id: 'save-markdown-source',
@@ -1217,6 +1221,7 @@ def assert_phase_five_runtime_owners(page: Page) -> None:
             });
             const viewState = { panels: { main: { activeViewId: 'rendered-document' } } };
             let controlProjectionCount = 0;
+            const viewerRoot = document.createElement('div');
             const coordinator = modules.documentViewCoordinator.createDocsViewerDocumentViewCoordinator({
                 appContext: { kind: 'manage', featurePolicy },
                 buildTrail: () => [],
@@ -1232,7 +1237,7 @@ def assert_phase_five_runtime_owners(page: Page) -> None:
                 panelView: { viewState },
                 projectMainView: () => {},
                 projectControlStates: () => { controlProjectionCount += 1; },
-                root: document.createElement('div'),
+                root: viewerRoot,
                 scopeConfig: { uiStatusByValue: new Map() },
                 selectedDocument: { payloadCache: new Map(), selectedDocId: '' },
                 showWarning: () => {},
@@ -1243,6 +1248,7 @@ def assert_phase_five_runtime_owners(page: Page) -> None:
                 viewerUrl: () => ''
             });
             coordinator.requestDocumentMode('markdown-source', { warn: false });
+            await new Promise(resolve => setTimeout(resolve, 0));
 
             return {
                 activeMode: coordinator.activeViewState().activeModeId,
@@ -1254,6 +1260,7 @@ def assert_phase_five_runtime_owners(page: Page) -> None:
                     session.domains.generatedData.generatedDataCapabilities
                     && session.domains.management.managementCapabilities === null
                 ),
+                modeOwnsViewerRoot: mountedModeRoot === viewerRoot,
                 nestedBusyCount,
                 removedFacadeFields,
                 saveControlActive: coordinator.controlActive('save-markdown-source'),
@@ -1269,6 +1276,7 @@ def assert_phase_five_runtime_owners(page: Page) -> None:
         "controlProjectionCount": 3,
         "generatedReadAvailable": True,
         "generatedStateSeparated": True,
+        "modeOwnsViewerRoot": True,
         "nestedBusyCount": 1,
         "removedFacadeFields": {
             "panelExpanded": False,

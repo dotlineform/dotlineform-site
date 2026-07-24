@@ -112,6 +112,7 @@ export function createDocsViewerDocumentDisplayModeContext(options = {}) {
 
   const context = Object.assign({}, base, {
     mount: options.mount || null,
+    root: options.root || null,
     documentView: {
       activeModeId: cleanString(documentView.activeModeId),
       projectToolbar: typeof documentView.projectToolbar === "function" ? documentView.projectToolbar : noop,

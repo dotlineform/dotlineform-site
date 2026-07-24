@@ -852,26 +852,6 @@
               "ui_status": "paused"
             },
             {
-              "doc_id": "d-20260723-101224-e62173",
-              "title": "Docs Viewer Manage Theme Restoration",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-101224-e62173.json",
-              "ui_status": "done",
-              "children": [
-                {
-                  "doc_id": "d-20260723-101224-74d214",
-                  "title": "Docs Viewer Manage Theme Restoration Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-101224-74d214.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260724-184427-31888d",
-                  "title": "Inline Mermaid Theme Synchronisation Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260724-184427-31888d.json",
-                  "ui_status": "done"
-                }
-              ]
-            },
-            {
               "doc_id": "d-20260724-190603-860f64",
               "title": "Mermaid Authoring And Publication",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260724-190603-860f64.json",
@@ -1420,5 +1400,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-24T19:03:09Z"
+  "generated_at": "2026-07-24T19:07:22Z"
 }

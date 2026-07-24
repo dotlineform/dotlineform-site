@@ -45,6 +45,7 @@ export function createDocsViewerDocumentViewCoordinator(options) {
   function documentModeContextOptions() {
     return Object.assign({}, sharedContextOptions(), {
       collectionProvider: settings.collectionProvider,
+      root: settings.root,
       sourceEditorServices: typeof settings.sourceEditorServices === "function"
         ? settings.sourceEditorServices()
         : settings.sourceEditorServices
