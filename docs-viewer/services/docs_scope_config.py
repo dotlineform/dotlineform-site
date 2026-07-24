@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 import re
 import sys
-from typing import Any, Mapping
+from typing import Any, Callable, Iterable, Mapping
 
 
 _BOOTSTRAP_START = Path(__file__).resolve()
@@ -734,7 +734,11 @@ def normalize_sub_scope_configs(
     return tuple(configs)
 
 
-def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScopeConfig]:
+def load_docs_scope_configs(
+    repo_root: Path | None = None,
+    *,
+    scope_ids: Iterable[str] | None = None,
+) -> dict[str, DocsScopeConfig]:
     root = repo_root or default_repo_root()
     config_path = root / CONFIG_REL_PATH
     try:
@@ -749,8 +753,17 @@ def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScop
     if not isinstance(raw_scopes, list):
         raise ValueError("docs scope config scopes must be an array")
 
-    configs: dict[str, DocsScopeConfig] = {}
-    scope_roots: set[tuple[str, Path]] = set()
+    requested_scope_ids = (
+        None
+        if scope_ids is None
+        else {
+            str(scope_id or "").strip().lower()
+            for scope_id in scope_ids
+            if str(scope_id or "").strip()
+        }
+    )
+    records: list[tuple[int, dict[str, Any], str]] = []
+    seen_scope_ids: set[str] = set()
     for index, item in enumerate(raw_scopes):
         field = f"scopes[{index}]"
         if not isinstance(item, dict):
@@ -758,8 +771,17 @@ def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScop
         scope_id = str(item.get("scope_id") or "").strip().lower()
         if not scope_id:
             raise ValueError(f"docs scope config {field}.scope_id is required")
-        if scope_id in configs:
+        if scope_id in seen_scope_ids:
             raise ValueError(f"docs scope config scope_id {scope_id!r} is duplicated")
+        seen_scope_ids.add(scope_id)
+        records.append((index, item, scope_id))
+
+    configs: dict[str, DocsScopeConfig] = {}
+    scope_roots: set[tuple[str, Path]] = set()
+    for index, item, scope_id in records:
+        if requested_scope_ids is not None and scope_id not in requested_scope_ids:
+            continue
+        field = f"scopes[{index}]"
         scope_type = str(item.get("scope_type") or "").strip().lower()
         if scope_type not in SUPPORTED_SCOPE_TYPES:
             supported = ", ".join(sorted(SUPPORTED_SCOPE_TYPES))
@@ -818,11 +840,104 @@ def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScop
     return configs
 
 
-DOCS_SCOPE_CONFIGS = load_docs_scope_configs()
-DOCUMENT_SOURCE_ROOTS = {
-    scope: document_source_path(config)
-    for scope, config in DOCS_SCOPE_CONFIGS.items()
-}
+_MISSING = object()
+
+
+class _LazyLoadedDict(dict[str, Any]):
+    """Preserve legacy mutable maps without resolving every scope during import."""
+
+    def __init__(self, loader: Callable[[], Mapping[str, Any]]) -> None:
+        super().__init__()
+        self._loader = loader
+        self._loaded = False
+
+    def _ensure_loaded(self) -> None:
+        if self._loaded:
+            return
+        values = self._loader()
+        dict.update(self, values)
+        self._loaded = True
+
+    def __getitem__(self, key: str) -> Any:
+        self._ensure_loaded()
+        return dict.__getitem__(self, key)
+
+    def __setitem__(self, key: str, value: Any) -> None:
+        self._ensure_loaded()
+        dict.__setitem__(self, key, value)
+
+    def __delitem__(self, key: str) -> None:
+        self._ensure_loaded()
+        dict.__delitem__(self, key)
+
+    def __iter__(self):
+        self._ensure_loaded()
+        return dict.__iter__(self)
+
+    def __len__(self) -> int:
+        self._ensure_loaded()
+        return dict.__len__(self)
+
+    def __contains__(self, key: object) -> bool:
+        self._ensure_loaded()
+        return dict.__contains__(self, key)
+
+    def __repr__(self) -> str:
+        self._ensure_loaded()
+        return dict.__repr__(self)
+
+    def __eq__(self, other: object) -> bool:
+        self._ensure_loaded()
+        return dict.__eq__(self, other)
+
+    def clear(self) -> None:
+        self._ensure_loaded()
+        dict.clear(self)
+
+    def copy(self) -> dict[str, Any]:
+        self._ensure_loaded()
+        return dict.copy(self)
+
+    def get(self, key: str, default: Any = None) -> Any:
+        self._ensure_loaded()
+        return dict.get(self, key, default)
+
+    def items(self):
+        self._ensure_loaded()
+        return dict.items(self)
+
+    def keys(self):
+        self._ensure_loaded()
+        return dict.keys(self)
+
+    def pop(self, key: str, default: Any = _MISSING) -> Any:
+        self._ensure_loaded()
+        return dict.pop(self, key) if default is _MISSING else dict.pop(self, key, default)
+
+    def popitem(self) -> tuple[str, Any]:
+        self._ensure_loaded()
+        return dict.popitem(self)
+
+    def setdefault(self, key: str, default: Any = None) -> Any:
+        self._ensure_loaded()
+        return dict.setdefault(self, key, default)
+
+    def update(self, *args: Any, **kwargs: Any) -> None:
+        self._ensure_loaded()
+        dict.update(self, *args, **kwargs)
+
+    def values(self):
+        self._ensure_loaded()
+        return dict.values(self)
+
+
+DOCS_SCOPE_CONFIGS: dict[str, DocsScopeConfig] = _LazyLoadedDict(load_docs_scope_configs)
+DOCUMENT_SOURCE_ROOTS: dict[str, Path] = _LazyLoadedDict(
+    lambda: {
+        scope: document_source_path(config)
+        for scope, config in DOCS_SCOPE_CONFIGS.items()
+    }
+)
 
 
 __all__ = [

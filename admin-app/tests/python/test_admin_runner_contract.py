@@ -43,7 +43,7 @@ def test_admin_runner_expands_admin_smoke_profile_without_studio_risk_route() ->
     assert "studio/tests/smoke/local_studio_app_risk_route.py" not in argv_text
 
 
-def test_admin_runner_docs_profile_uses_one_isolated_projects_base_contract() -> None:
+def test_admin_runner_docs_profile_isolates_only_full_registry_pytest() -> None:
     runner = load_runner_module()
 
     commands = runner.expand_profiles(["docs"])
@@ -53,9 +53,16 @@ def test_admin_runner_docs_profile_uses_one_isolated_projects_base_contract() ->
         "studio-docs-build",
         "studio-search-build",
     ]
-    assert all(command.isolated_projects_base for command in commands)
+    assert commands[0].isolated_projects_base is True
     assert commands[0].projects_base_argument is False
-    assert all(command.projects_base_argument for command in commands[1:])
+    assert all(command.isolated_projects_base is False for command in commands[1:])
+    assert all(command.projects_base_argument is False for command in commands)
+    assert all(
+        (REPO_ROOT / argument).is_file()
+        for command in commands
+        for argument in command.argv
+        if argument.endswith(".py")
+    )
 
 
 def test_admin_runner_writes_summary_paths_under_admin_root(tmp_path, monkeypatch) -> None:

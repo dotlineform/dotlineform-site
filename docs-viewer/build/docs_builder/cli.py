@@ -42,12 +42,12 @@ def main(argv: list[str] | None = None) -> int:
     if args.projects_base_dir:
         apply_projects_base_dir_override(args.projects_base_dir)
     repo_root = Path.cwd().resolve()
-    configs_by_scope = load_docs_scope_configs(repo_root)
     requested_scopes = [scope.strip().lower() for scope in args.scope if scope.strip()]
-    selected = [
-        config for scope_id, config in configs_by_scope.items()
-        if not requested_scopes or scope_id in requested_scopes
-    ]
+    configs_by_scope = load_docs_scope_configs(
+        repo_root,
+        scope_ids=requested_scopes or None,
+    )
+    selected = list(configs_by_scope.values())
     if not selected:
         raise RuntimeError(f"Unknown docs scope(s): {', '.join(requested_scopes)}")
     if (args.source or args.output or args.viewer_base_url) and len(selected) != 1:
@@ -59,27 +59,30 @@ def main(argv: list[str] | None = None) -> int:
     if args.sub_scope and (args.source or args.output or args.viewer_base_url or args.only_doc_ids):
         raise RuntimeError("--sub-scope cannot be combined with --source, --output, --viewer-base-url, or --only-doc-ids")
 
-    all_configs = list(configs_by_scope.values())
+    replace_scope_ids = requested_scopes or None
     if args.write:
         write_browser_config(
             repo_root,
-            all_configs,
+            selected,
             path=DOCS_VIEWER_BROWSER_CONFIG_PATH,
             label="Docs Viewer browser config",
+            replace_scope_ids=replace_scope_ids,
         )
         write_browser_config(
             repo_root,
-            public_readonly_configs(all_configs),
+            public_readonly_configs(selected),
             path=DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH,
             label="Docs Viewer public browser config",
             published=True,
+            replace_scope_ids=replace_scope_ids,
         )
         write_browser_config(
             repo_root,
-            public_readonly_configs(all_configs),
+            public_readonly_configs(selected),
             path=SITE_DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH,
             label="Docs Viewer site public browser config",
             published=True,
+            replace_scope_ids=replace_scope_ids,
         )
     only_doc_ids = None if args.only_doc_ids is None else [item.strip() for item in args.only_doc_ids.split(",") if item.strip()]
     try:

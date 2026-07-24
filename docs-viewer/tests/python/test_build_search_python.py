@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
 import sys
 import tempfile
 from contextlib import redirect_stderr, redirect_stdout
@@ -146,6 +147,50 @@ def test_python_docs_search_builder_writes_current_schema_and_hash() -> None:
         "02",
     ]
     assert child["search_text"] == " ".join(child["search_terms"])
+
+
+def test_targeted_local_search_build_does_not_resolve_unselected_external_scope() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        write_json(
+            root / "docs-viewer/config/scopes/docs_scopes.json",
+            {
+                "schema_version": "docs_scopes_v3",
+                "scopes": [
+                    docs_scope_record(
+                        "studio",
+                        default_doc_id="parent",
+                        manage_only_tree_root_ids=["manage-root"],
+                    ),
+                    docs_scope_record(
+                        "private",
+                        scope_type="local_external",
+                        default_doc_id="private",
+                    ),
+                ],
+            },
+        )
+        write_source_docs(root)
+        unavailable_projects = root / "unavailable-projects"
+        env = dict(os.environ)
+        env["DOTLINEFORM_PROJECTS_BASE_DIR"] = str(unavailable_projects)
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(BUILD_DIR / "build_search.py"),
+                "--scope",
+                "studio",
+            ],
+            cwd=root,
+            env=env,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+
+    assert result.returncode == 0
+    assert result.stderr == ""
+    assert "Would write: docs-viewer/scopes/studio/published/search/index.json" in result.stdout
 
 
 def test_doc_search_keeps_exact_opaque_id_without_fragment_tokens() -> None:

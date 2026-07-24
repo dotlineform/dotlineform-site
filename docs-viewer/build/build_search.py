@@ -191,7 +191,10 @@ class DocsViewerSearchDataBuilder:
 
     def docs_scope_config(self, scope: str) -> DocsScopeConfig:
         try:
-            configs = load_docs_scope_configs(self.repo_root)
+            configs = load_docs_scope_configs(
+                self.repo_root,
+                scope_ids=(scope,),
+            )
         except ValueError as exc:
             raise SystemExit(f"Invalid Docs Viewer scope config: {exc}") from exc
         config = configs.get(scope)

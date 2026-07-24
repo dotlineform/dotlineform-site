@@ -4,10 +4,16 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260718-114645-7b9d24",
+      "title": "Docs Viewer Core Refactor",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-114645-7b9d24.json",
+      "timestamp": "2026-07-24 11:24:41"
+    },
+    {
       "doc_id": "d-20260716-193410-6d4efe",
       "title": "Copy And Move Documents Between Scopes",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260716-193410-6d4efe.json",
-      "timestamp": "2026-07-23 22:55:07",
+      "timestamp": "2026-07-24 11:09:17",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap"
     },
@@ -15,7 +21,7 @@
       "doc_id": "d-20260723-223400-c7a1e4",
       "title": "Copy And Move Documents Between Scopes Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-223400-c7a1e4.json",
-      "timestamp": "2026-07-23 22:55:07",
+      "timestamp": "2026-07-24 11:09:17",
       "parent_id": "d-20260716-193410-6d4efe",
       "parent_title": "Copy And Move Documents Between Scopes"
     },
@@ -74,15 +80,7 @@
       "timestamp": "2026-07-23 21:16:19",
       "parent_id": "d-20260713-000000-d9bad2",
       "parent_title": "Source Documentation and Linting"
-    },
-    {
-      "doc_id": "d-20260723-203331-9a8708",
-      "title": "Improving Repository Context for Coding Agents",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-203331-9a8708.json",
-      "timestamp": "2026-07-23 20:55:45",
-      "parent_id": "d-20260723-212313-90dc78",
-      "parent_title": "Research"
     }
   ],
-  "generated_at": "2026-07-23T21:56:56Z"
+  "generated_at": "2026-07-24T10:25:33Z"
 }

@@ -22,8 +22,10 @@ from build_docs_test_support import (
     write_site_tools_config,
     write_source_docs,
     write_text,
+    write_json,
     write_external_scope_config,
 )
+from repo_factory import docs_scope_record
 
 
 def test_python_docs_builder_scripts_load_repo_local_env_before_scope_config() -> None:
@@ -83,6 +85,60 @@ def test_python_docs_builders_accept_explicit_projects_base_after_repo_local_env
 
     assert all(result.returncode == 0 for result in results)
     assert all("external_data_root" not in result.stderr for result in results)
+
+
+def test_targeted_local_docs_build_does_not_resolve_unselected_external_scope() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        config_path = root / "docs-viewer/config/scopes/docs_scopes.json"
+        scope_payload = read_json(config_path)
+        scope_payload["scopes"].append(  # type: ignore[union-attr]
+            docs_scope_record(
+                "private",
+                scope_type="local_external",
+                default_doc_id="private",
+            )
+        )
+        write_json(config_path, scope_payload)
+        retained_private_record = {
+            "scope_id": "private",
+            "scope_type": "local_external",
+            "meta": "retained external browser record",
+        }
+        write_json(
+            root / "docs-viewer/config/defaults/docs-viewer-config.json",
+            {
+                "schema_version": "docs_viewer_config_v1",
+                "default_scope_id": "private",
+                "scopes": [retained_private_record],
+            },
+        )
+        unavailable_projects = root / "unavailable-projects"
+        env = dict(os.environ)
+        env["DOTLINEFORM_PROJECTS_BASE_DIR"] = str(unavailable_projects)
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(BUILD_DIR / "build_docs.py"),
+                "--scope",
+                "studio",
+                "--write",
+            ],
+            cwd=root,
+            env=env,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        browser_config = read_json(root / "docs-viewer/config/defaults/docs-viewer-config.json")
+
+    assert result.returncode == 0
+    assert result.stderr == ""
+    assert "Docs build (write) scope=studio" in result.stdout
+    assert [record["scope_id"] for record in browser_config["scopes"]] == ["studio", "private"]
+    assert browser_config["scopes"][1] == retained_private_record
+
 
 def test_python_docs_builder_writes_browser_configs_on_cli_write() -> None:
     with tempfile.TemporaryDirectory() as temp_path:

@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 from dataclasses import replace
 from pathlib import Path
+from unittest.mock import patch
 
 from docs_management_test_support import docs_scope_config, make_repo, write_docs_scope_config, write_json
 from repo_factory import docs_scope_record, docs_sub_scope_record
@@ -16,6 +17,46 @@ def write_scope_record(repo_root: Path, record: dict[str, object]) -> None:
         repo_root / "docs-viewer/config/scopes/docs_scopes.json",
         {"schema_version": "docs_scopes_v3", "scopes": [record]},
     )
+
+
+def test_docs_scope_config_selected_local_scope_does_not_resolve_external_workspace() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_json(
+            repo_root / "docs-viewer/config/scopes/docs_scopes.json",
+            {
+                "schema_version": "docs_scopes_v3",
+                "scopes": [
+                    docs_scope_record("studio", default_doc_id="studio"),
+                    docs_scope_record(
+                        "private",
+                        scope_type="local_external",
+                        default_doc_id="private",
+                    ),
+                ],
+            },
+        )
+        unavailable_projects = repo_root / "unavailable-projects"
+        with patch.dict(
+            "os.environ",
+            {"DOTLINEFORM_PROJECTS_BASE_DIR": str(unavailable_projects)},
+        ):
+            configs = docs_scope_config.load_docs_scope_configs(
+                repo_root,
+                scope_ids=("studio",),
+            )
+            try:
+                docs_scope_config.load_docs_scope_configs(
+                    repo_root,
+                    scope_ids=("private",),
+                )
+            except ValueError as exc:
+                external_error = str(exc)
+            else:
+                raise AssertionError("Expected a selected external scope to require its configured workspace")
+
+    assert list(configs) == ["studio"]
+    assert "external_data_root does not exist" in external_error
 
 
 def sub_scope_record(

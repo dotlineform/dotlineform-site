@@ -164,6 +164,71 @@ def browser_scope_config_payload(
     return payload
 
 
+def patched_browser_scope_config_payload(
+    repo_root: Path,
+    configs: list[DocsScopeConfig],
+    *,
+    existing: dict[str, Any] | None,
+    published: bool,
+    replace_scope_ids: list[str],
+) -> dict[str, Any]:
+    replacement_payload = browser_scope_config_payload(repo_root, configs, published=published)
+    replacement_by_scope = {
+        str(record.get("scope_id") or "").strip().lower(): record
+        for record in replacement_payload["scopes"]
+        if isinstance(record, dict) and str(record.get("scope_id") or "").strip()
+    }
+    replaced = {
+        str(scope_id or "").strip().lower()
+        for scope_id in replace_scope_ids
+    }
+    existing_scopes = existing.get("scopes") if isinstance(existing, dict) else None
+    retained_by_scope = (
+        {
+            str(record.get("scope_id") or "").strip().lower(): record
+            for record in existing_scopes
+            if isinstance(record, dict) and str(record.get("scope_id") or "").strip()
+        }
+        if isinstance(existing_scopes, list)
+        else {}
+    )
+    for scope_id in replaced:
+        retained_by_scope.pop(scope_id, None)
+    retained_by_scope.update(replacement_by_scope)
+
+    raw_scope_order = list(raw_scope_items(repo_root))
+    ordered_scope_ids = [
+        scope_id for scope_id in raw_scope_order
+        if scope_id in retained_by_scope
+    ]
+    ordered_scope_ids.extend(
+        scope_id for scope_id in retained_by_scope
+        if scope_id not in ordered_scope_ids
+    )
+    scopes = [retained_by_scope[scope_id] for scope_id in ordered_scope_ids]
+    existing_default = (
+        str(existing.get("default_scope_id") or "").strip().lower()
+        if isinstance(existing, dict)
+        else ""
+    )
+    default_scope_id = (
+        existing_default
+        if existing_default in retained_by_scope
+        else ordered_scope_ids[0] if ordered_scope_ids else ""
+    )
+    payload: dict[str, Any] = {
+        "schema_version": DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION,
+        "default_scope_id": default_scope_id,
+        "scopes": scopes,
+    }
+    settings = docs_viewer_settings_payload(repo_root, ordered_scope_ids)
+    if settings:
+        payload["docs_viewer"] = settings
+    elif isinstance(existing, dict) and isinstance(existing.get("docs_viewer"), dict):
+        payload["docs_viewer"] = existing["docs_viewer"]
+    return payload
+
+
 def write_browser_config(
     repo_root: Path,
     configs: list[DocsScopeConfig],
@@ -171,9 +236,28 @@ def write_browser_config(
     path: Path,
     label: str,
     published: bool = False,
+    replace_scope_ids: list[str] | None = None,
 ) -> None:
-    text = json_text(browser_scope_config_payload(repo_root, configs, published=published))
     target = repo_root / path
+    existing: dict[str, Any] | None = None
+    if replace_scope_ids is not None and target.exists():
+        try:
+            parsed = json.loads(target.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            parsed = None
+        existing = parsed if isinstance(parsed, dict) else None
+    payload = (
+        patched_browser_scope_config_payload(
+            repo_root,
+            configs,
+            existing=existing,
+            published=published,
+            replace_scope_ids=replace_scope_ids,
+        )
+        if replace_scope_ids is not None
+        else browser_scope_config_payload(repo_root, configs, published=published)
+    )
+    text = json_text(payload)
     target.parent.mkdir(parents=True, exist_ok=True)
     if target.exists() and target.read_text(encoding="utf-8") == text:
         print(f"{label}: unchanged")
