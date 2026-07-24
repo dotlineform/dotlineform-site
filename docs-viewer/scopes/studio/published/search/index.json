@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-242ade9f587bfdb8c4b8d92a4657d5fa",
-    "generated_at_utc": "2026-07-24T18:07:45Z",
+    "version": "blake2b-5de18cb0d2759ccd1732918190685dc0",
+    "generated_at_utc": "2026-07-24T18:37:10Z",
     "count": 249
   },
   "entries": [
@@ -3890,10 +3890,10 @@
       "kind": "doc",
       "title": "Inline Mermaid Theme Synchronisation Delivery",
       "href": "/docs/?scope=studio&doc=d-20260724-184427-31888d",
-      "last_updated": "2026-07-24 19:06:03",
+      "last_updated": "2026-07-24 19:36:52",
       "parent_id": "d-20260723-101224-e62173",
       "parent_title": "Docs Viewer Manage Theme Restoration",
-      "display_meta": "2026-07-24 19:06:03 • Docs Viewer Manage Theme Restoration",
+      "display_meta": "2026-07-24 19:36:52 • Docs Viewer Manage Theme Restoration",
       "search_terms": [
         "inline mermaid theme synchronisation delivery",
         "inline",
@@ -3906,16 +3906,16 @@
         "viewer",
         "manage",
         "restoration",
-        "2026-07-24 19:06:03",
+        "2026-07-24 19:36:52",
         "2026",
         "07",
         "24",
         "19",
-        "06",
-        "03",
+        "36",
+        "52",
         "d-20260724-184427-31888d"
       ],
-      "search_text": "inline mermaid theme synchronisation delivery inline mermaid theme synchronisation delivery docs viewer manage theme restoration docs viewer manage restoration 2026-07-24 19:06:03 2026 07 24 19 06 03 d-20260724-184427-31888d"
+      "search_text": "inline mermaid theme synchronisation delivery inline mermaid theme synchronisation delivery docs viewer manage theme restoration docs viewer manage restoration 2026-07-24 19:36:52 2026 07 24 19 36 52 d-20260724-184427-31888d"
     },
     {
       "id": "d-20260724-190603-860f64",

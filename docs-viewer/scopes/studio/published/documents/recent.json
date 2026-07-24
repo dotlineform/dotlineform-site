@@ -4,20 +4,20 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260724-184427-31888d",
+      "title": "Inline Mermaid Theme Synchronisation Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260724-184427-31888d.json",
+      "timestamp": "2026-07-24 19:36:52",
+      "parent_id": "d-20260723-101224-e62173",
+      "parent_title": "Docs Viewer Manage Theme Restoration"
+    },
+    {
       "doc_id": "d-20260714-234030-1e0af6",
       "title": "Docs Viewer Roadmap",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-1e0af6.json",
       "timestamp": "2026-07-24 19:06:03",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260724-184427-31888d",
-      "title": "Inline Mermaid Theme Synchronisation Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260724-184427-31888d.json",
-      "timestamp": "2026-07-24 19:06:03",
-      "parent_id": "d-20260723-101224-e62173",
-      "parent_title": "Docs Viewer Manage Theme Restoration"
     },
     {
       "doc_id": "d-20260724-190603-860f64",
@@ -84,5 +84,5 @@
       "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-07-24T18:07:45Z"
+  "generated_at": "2026-07-24T18:37:10Z"
 }

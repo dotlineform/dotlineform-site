@@ -214,6 +214,12 @@ export function initDocsViewerBootThemeToggle(bootContext) {
   var context = bootContext || {};
   var routeContext = context.routeContext || {};
   var appContext = routeContext.appContext || {};
+  var inlineMermaidAdapter = context.inlineMermaidAdapter;
+  var onThemeChange = inlineMermaidAdapter && typeof inlineMermaidAdapter.handleThemeChange === "function"
+    ? function (theme) {
+        return inlineMermaidAdapter.handleThemeChange(theme);
+      }
+    : null;
   if (
     !appContext.routeAccess
     || !appContext.routeAccess.managementUi
@@ -229,6 +235,7 @@ export function initDocsViewerBootThemeToggle(bootContext) {
         return module.initDocsViewerThemeToggle({
           root: context.root,
           document: context.document,
+          onThemeChange: onThemeChange,
           storage: context.window ? context.window.localStorage : null
         });
       }

@@ -30,8 +30,8 @@ from tests.smoke.route_ready_helpers import wait_for_route_ready  # noqa: E402
 
 
 DOCS_VIEWER_DOC_ID = "d-20260424-000000-50b63f"
-INLINE_MERMAID_DOC_ID = "d-20260720-102658-b55348"
-INLINE_MERMAID_DELIVERY_DOC_ID = "d-20260720-102658-7de33d"
+INLINE_MERMAID_DOC_ID = "d-20260724-184427-31888d"
+INLINE_MERMAID_LINKED_DOC_ID = "d-20260724-190603-860f64"
 
 
 def start_server() -> tuple[DocsViewerServer, str]:
@@ -180,12 +180,18 @@ def assert_inline_mermaid_browser_review(page: Page, timeout_ms: int) -> None:
                 const svg = host?.querySelector(':scope > svg');
                 const viewport = host?.parentElement;
                 const frame = viewport?.parentElement;
+                const panelProbe = document.createElement('span');
+                panelProbe.style.backgroundColor = 'var(--docs-viewer-panel)';
+                content.appendChild(panelProbe);
+                const panelBackground = getComputedStyle(panelProbe).backgroundColor;
+                panelProbe.remove();
                 const children = Array.from(content.children);
                 const frameIndex = children.indexOf(frame);
                 const focusableSelector = 'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
                 return {
                     theme: document.documentElement.getAttribute('data-theme') || '',
                     hostBackground: host ? getComputedStyle(host).backgroundColor : '',
+                    panelBackground,
                     hostOverflowX: host ? getComputedStyle(host).overflowX : '',
                     viewportOverflowX: viewport ? getComputedStyle(viewport).overflowX : '',
                     svgDisplay: svg ? getComputedStyle(svg).display : '',
@@ -223,12 +229,12 @@ def assert_inline_mermaid_browser_review(page: Page, timeout_ms: int) -> None:
     if set(states) != {"light", "dark"}:
         raise AssertionError(f"diagram review did not exercise both themes: {states!r}")
     for theme, state in states.items():
-        if state["hostBackground"] != "rgb(255, 255, 255)" or state["svgDisplay"] != "block":
-            raise AssertionError(f"inline diagram lost its neutral readable surface in {theme}: {state!r}")
+        if state["hostBackground"] != state["panelBackground"] or state["svgDisplay"] != "block":
+            raise AssertionError(f"inline diagram lost its themed readable surface in {theme}: {state!r}")
         if state["hostOverflowX"] != "visible" or state["viewportOverflowX"] != "auto":
             raise AssertionError(f"inline diagram responsive overflow changed in {theme}: {state!r}")
-        if state["svgTitle"] != "Inline Mermaid reader lifecycle" or not str(state["svgDescription"]).startswith(
-            "Canonical Markdown becomes"
+        if state["svgTitle"] != "Inline Mermaid diagram lifecycle" or not str(state["svgDescription"]).startswith(
+            "A document mount registers"
         ):
             raise AssertionError(f"inline diagram accessible text changed in {theme}: {state!r}")
 
@@ -1236,7 +1242,7 @@ def exercise_manage_route(
     delete_host.locator('button[data-role="modal-cancel"]').evaluate("button => button.click()")
 
     page.goto(f"{base_url}/docs/?scope=studio&doc={INLINE_MERMAID_DOC_ID}", wait_until="domcontentloaded")
-    wait_for_manage_doc(page, "Inline Mermaid Rendering Concept", timeout_ms)
+    wait_for_manage_doc(page, "Inline Mermaid Theme Synchronisation Delivery", timeout_ms)
     page.wait_for_function(
         """() => {
             const host = document.querySelector(
@@ -1245,8 +1251,8 @@ def exercise_manage_route(
             return host &&
                 host.children.length === 1 &&
                 host.firstElementChild?.localName === 'svg' &&
-                host.querySelector('title')?.textContent.trim() === 'Inline Mermaid reader lifecycle' &&
-                host.querySelector('desc')?.textContent.trim().startsWith('Canonical Markdown becomes');
+                host.querySelector('title')?.textContent.trim() === 'Inline Mermaid diagram lifecycle' &&
+                host.querySelector('desc')?.textContent.trim().startsWith('A document mount registers');
         }""",
         timeout=timeout_ms,
     )
@@ -1264,16 +1270,16 @@ def exercise_manage_route(
     assert_inline_mermaid_browser_review(page, timeout_ms)
 
     delivery_link = page.locator(
-        f'#docsViewerContent a[href*="doc={INLINE_MERMAID_DELIVERY_DOC_ID}"]'
+        f'#docsViewerContent a[href*="doc={INLINE_MERMAID_LINKED_DOC_ID}"]'
     ).first
     if delivery_link.count() != 1:
-        raise AssertionError("Inline Mermaid Concept should link to its delivery tracker")
+        raise AssertionError("Inline Mermaid theme delivery should link to its Mermaid feature")
     delivery_link.click()
-    wait_for_manage_doc(page, "Inline Mermaid Rendering Delivery", timeout_ms)
+    wait_for_manage_doc(page, "Mermaid Authoring And Publication", timeout_ms)
     if page.locator("#docsViewerContent .docsViewer__diagram").count() != 0:
-        raise AssertionError("diagram-free delivery document should not acquire an inline diagram")
+        raise AssertionError("diagram-free Mermaid feature document should not acquire an inline diagram")
     page.go_back()
-    wait_for_manage_doc(page, "Inline Mermaid Rendering Concept", timeout_ms)
+    wait_for_manage_doc(page, "Inline Mermaid Theme Synchronisation Delivery", timeout_ms)
     page.wait_for_selector(
         '.docsViewer__diagram[data-docs-viewer-diagram-kind="inline-mermaid"]',
         state="visible",

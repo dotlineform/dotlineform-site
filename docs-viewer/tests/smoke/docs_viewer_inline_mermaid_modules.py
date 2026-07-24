@@ -73,15 +73,84 @@ def install_fixture(page: Page) -> None:
             document.body.classList.add('docsViewer');
             const inlineMermaid = await import('/docs-viewer/runtime/js/management/docs-viewer-inline-mermaid.js');
             const documentController = await import('/docs-viewer/runtime/js/shared/docs-viewer-document-controller.js');
-            window.__docsViewerInlineMermaidSmoke = { inlineMermaid, documentController };
+            const appBoot = await import('/docs-viewer/runtime/js/shared/docs-viewer-app-boot.js');
+            window.__docsViewerInlineMermaidSmoke = { inlineMermaid, documentController, appBoot };
         }"""
     )
+
+
+def assert_theme_composition_callback(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const { appBoot } = window.__docsViewerInlineMermaidSmoke;
+            const root = document.createElement('div');
+            root.className = 'docsViewer';
+            root.innerHTML = `
+                <button data-docs-viewer-theme-toggle>
+                    <span data-docs-viewer-theme-icon="light"></span>
+                    <span data-docs-viewer-theme-icon="dark"></span>
+                </button>
+            `;
+            document.body.appendChild(root);
+            document.documentElement.removeAttribute('data-theme');
+            window.localStorage.setItem('theme', 'invented');
+            const calls = [];
+            const owner = await appBoot.initDocsViewerBootThemeToggle({
+                root,
+                document,
+                window,
+                appShellReady: Promise.resolve(),
+                inlineMermaidAdapter: {
+                    handleThemeChange(theme) {
+                        calls.push({
+                            theme,
+                            attribute: document.documentElement.getAttribute('data-theme')
+                        });
+                    }
+                },
+                routeContext: {
+                    appContext: {
+                        routeAccess: { managementUi: true },
+                        featurePolicy: { management: true }
+                    }
+                }
+            });
+            root.querySelector('[data-docs-viewer-theme-toggle]').click();
+            owner.setTheme('invented');
+            root.remove();
+            return { owner: Boolean(owner), calls };
+        }"""
+    )
+    expected = {
+        "owner": True,
+        "calls": [
+            {"theme": "light", "attribute": "light"},
+            {"theme": "dark", "attribute": "dark"},
+            {"theme": "light", "attribute": "light"},
+        ],
+    }
+    if result != expected:
+        raise AssertionError(f"theme owner did not notify the inline Mermaid adapter: {result!r}")
 
 
 def assert_session_renderer_and_failure_containment(page: Page) -> None:
     result = page.evaluate(
         """async () => {
             const { inlineMermaid } = window.__docsViewerInlineMermaidSmoke;
+            const semanticTheme = () => {
+                const style = getComputedStyle(document.body);
+                return {
+                    panel: style.getPropertyValue('--docs-viewer-panel').trim(),
+                    subtlePanel: style.getPropertyValue('--docs-viewer-panel-2').trim(),
+                    primaryText: style.getPropertyValue('--docs-viewer-text').trim(),
+                    strongBorder: style.getPropertyValue('--docs-viewer-border-strong').trim(),
+                    mutedText: style.getPropertyValue('--docs-viewer-muted').trim(),
+                    selectionSurface: style.getPropertyValue('--docs-viewer-selection-bg').trim(),
+                    selectionText: style.getPropertyValue('--docs-viewer-selection-text').trim(),
+                    canvas: style.getPropertyValue('--docs-viewer-bg').trim(),
+                    fontFamily: style.getPropertyValue('--docs-viewer-font-sans').trim()
+                };
+            };
             let loadCalls = 0;
             let activeRenders = 0;
             let maxActiveRenders = 0;
@@ -116,6 +185,9 @@ def assert_session_renderer_and_failure_containment(page: Page) -> None:
                 warn: (message, error) => warnings.push({ message, detail: error.message })
             });
 
+            document.documentElement.setAttribute('data-theme', 'light');
+            adapter.handleThemeChange('light');
+            const lightTheme = semanticTheme();
             const first = document.createElement('article');
             first.innerHTML = [
                 '<pre><code class="language-mermaid">first</code></pre>',
@@ -126,6 +198,9 @@ def assert_session_renderer_and_failure_containment(page: Page) -> None:
             const firstResult = await adapter.mountDocument({ content: first });
             const duplicateResult = await adapter.mountDocument({ content: first });
 
+            document.documentElement.setAttribute('data-theme', 'dark');
+            adapter.handleThemeChange('dark');
+            const darkTheme = semanticTheme();
             const second = document.createElement('article');
             second.innerHTML = '<pre><code class="language-mermaid">fourth</code></pre>';
             document.body.appendChild(second);
@@ -174,6 +249,8 @@ def assert_session_renderer_and_failure_containment(page: Page) -> None:
             return {
                 loadCalls,
                 initializationConfigs,
+                lightTheme,
+                darkTheme,
                 renderCalls,
                 maxActiveRenders,
                 warnings,
@@ -205,18 +282,54 @@ def assert_session_renderer_and_failure_containment(page: Page) -> None:
         }"""
     )
 
-    if result["loadCalls"] != 1 or len(result["initializationConfigs"]) != 1:
-        raise AssertionError(f"Mermaid did not load and initialize once per adapter session: {result!r}")
-    expected_config = {
-        "startOnLoad": False,
-        "suppressErrorRendering": True,
-        "theme": "neutral",
-        "securityLevel": "strict",
-        "htmlLabels": False,
-        "flowchart": {"htmlLabels": False},
-    }
-    if result["initializationConfigs"] != [expected_config]:
-        raise AssertionError(f"Mermaid strict initialization changed: {result!r}")
+    if result["loadCalls"] != 1 or len(result["initializationConfigs"]) != 4:
+        raise AssertionError(f"Mermaid did not load once and initialize per queued render: {result!r}")
+
+    def expected_config(theme: dict[str, str], dark_mode: bool) -> dict[str, object]:
+        return {
+            "startOnLoad": False,
+            "suppressErrorRendering": True,
+            "theme": "base",
+            "themeVariables": {
+                "background": theme["panel"],
+                "primaryColor": theme["subtlePanel"],
+                "mainBkg": theme["subtlePanel"],
+                "primaryTextColor": theme["primaryText"],
+                "textColor": theme["primaryText"],
+                "nodeTextColor": theme["primaryText"],
+                "titleColor": theme["primaryText"],
+                "actorTextColor": theme["primaryText"],
+                "primaryBorderColor": theme["strongBorder"],
+                "nodeBorder": theme["strongBorder"],
+                "actorBorder": theme["strongBorder"],
+                "noteBorderColor": theme["strongBorder"],
+                "lineColor": theme["mutedText"],
+                "arrowheadColor": theme["mutedText"],
+                "secondaryColor": theme["selectionSurface"],
+                "activationBkgColor": theme["selectionSurface"],
+                "noteBkgColor": theme["selectionSurface"],
+                "secondaryTextColor": theme["selectionText"],
+                "noteTextColor": theme["selectionText"],
+                "tertiaryColor": theme["canvas"],
+                "clusterBkg": theme["canvas"],
+                "fontFamily": theme["fontFamily"],
+                "darkMode": dark_mode,
+            },
+            "securityLevel": "strict",
+            "htmlLabels": False,
+            "flowchart": {"htmlLabels": False},
+        }
+
+    expected_light = expected_config(result["lightTheme"], False)
+    expected_dark = expected_config(result["darkTheme"], True)
+    if result["initializationConfigs"] != [expected_light, expected_light, expected_light, expected_dark]:
+        raise AssertionError(f"Mermaid did not receive the resolved light and dark semantic seeds: {result!r}")
+    if any(
+        "var(" in str(value)
+        for config in result["initializationConfigs"]
+        for value in config["themeVariables"].values()
+    ):
+        raise AssertionError(f"Mermaid received an unresolved CSS variable: {result!r}")
     if result["maxActiveRenders"] != 1:
         raise AssertionError(f"multiple Mermaid fences rendered concurrently: {result!r}")
     if result["maxConcurrentActive"] != 1:
@@ -610,6 +723,7 @@ def assert_exact_scope_gate(page: Page) -> None:
 def run_smoke(page: Page, base_url: str) -> None:
     page.goto(f"{base_url}/404.html", wait_until="domcontentloaded")
     install_fixture(page)
+    assert_theme_composition_callback(page)
     assert_session_renderer_and_failure_containment(page)
     assert_stale_mount_cannot_replace_content(page)
     assert_accessible_svg_contract(page)

@@ -77,9 +77,20 @@ def assert_theme_module_contract(page: Page) -> None:
             document.documentElement.removeAttribute('data-theme');
             const normalizedRoot = createRoot();
             const normalizedStorage = createStorage('sepia');
+            const callbackStates = [];
             const normalizedOwner = module.initDocsViewerThemeToggle({
                 root: normalizedRoot,
                 document,
+                onThemeChange(theme) {
+                    callbackStates.push({
+                        theme,
+                        attribute: document.documentElement.getAttribute('data-theme'),
+                        stored: normalizedStorage.value,
+                        pressed: normalizedRoot.querySelector(
+                            '[data-docs-viewer-theme-toggle]'
+                        ).getAttribute('aria-pressed')
+                    });
+                },
                 storage: normalizedStorage
             });
             const normalized = {
@@ -148,6 +159,7 @@ def assert_theme_module_contract(page: Page) -> None:
                 normalized,
                 toggled,
                 programmaticFallback,
+                callbackStates,
                 attributePrecedence,
                 blockedStorageFallback,
                 emptyOwner
@@ -186,6 +198,26 @@ def assert_theme_module_contract(page: Page) -> None:
             "stored": "light",
             "toggles": [light_toggle, light_toggle],
         },
+        "callbackStates": [
+            {
+                "theme": "light",
+                "attribute": "light",
+                "stored": "light",
+                "pressed": "false",
+            },
+            {
+                "theme": "dark",
+                "attribute": "dark",
+                "stored": "dark",
+                "pressed": "true",
+            },
+            {
+                "theme": "light",
+                "attribute": "light",
+                "stored": "light",
+                "pressed": "false",
+            },
+        ],
         "attributePrecedence": {
             "theme": "dark",
             "stored": "dark",

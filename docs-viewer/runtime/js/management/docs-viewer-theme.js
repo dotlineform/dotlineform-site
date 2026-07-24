@@ -51,11 +51,30 @@ function renderToggle(button, theme) {
   });
 }
 
+function reportThemeCallbackFailure(error) {
+  if (typeof console !== "undefined" && typeof console.warn === "function") {
+    console.warn("docs_viewer: theme change callback unavailable", error);
+  }
+}
+
+function notifyThemeChange(callback, theme) {
+  if (typeof callback !== "function") return;
+  try {
+    var result = callback(theme);
+    if (result && typeof result.catch === "function") {
+      result.catch(reportThemeCallbackFailure);
+    }
+  } catch (error) {
+    reportThemeCallbackFailure(error);
+  }
+}
+
 export function initDocsViewerThemeToggle(options) {
   var settings = options || {};
   var root = settings.root;
   var documentRef = settings.document || document;
   var storage = settings.storage || window.localStorage;
+  var onThemeChange = typeof settings.onThemeChange === "function" ? settings.onThemeChange : null;
   var documentElement = documentRef.documentElement;
   if (!root || !documentElement) return null;
 
@@ -69,6 +88,7 @@ export function initDocsViewerThemeToggle(options) {
     buttons.forEach(function (button) {
       renderToggle(button, nextTheme);
     });
+    notifyThemeChange(onThemeChange, nextTheme);
   }
 
   buttons.forEach(function (button) {

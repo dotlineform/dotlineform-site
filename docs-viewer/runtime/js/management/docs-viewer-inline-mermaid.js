@@ -1,13 +1,91 @@
 const INLINE_MERMAID_ASSET_URL = "/docs-viewer/runtime/vendor/mermaid/11.16.0/mermaid.min.js";
 const INLINE_MERMAID_ASSET_VERSION = "11.16.0";
+const LIGHT_THEME = "light";
+const DARK_THEME = "dark";
 
 export const INLINE_MERMAID_ERROR_MESSAGE = "Diagram could not be rendered. Mermaid source is shown below.";
 
-function mermaidInitializationConfig() {
+function normalizeTheme(value) {
+  return value === DARK_THEME ? DARK_THEME : LIGHT_THEME;
+}
+
+function currentTheme(context, selectedTheme) {
+  var documentRef = context.document;
+  var documentElement = documentRef ? documentRef.documentElement : null;
+  var attributeTheme = documentElement ? documentElement.getAttribute("data-theme") : "";
+  if (attributeTheme === LIGHT_THEME || attributeTheme === DARK_THEME) {
+    return attributeTheme;
+  }
+  return normalizeTheme(selectedTheme);
+}
+
+function viewerStyleRoot(context) {
+  if (context.viewerRoot) return context.viewerRoot;
+  var content = context.content;
+  if (content && typeof content.closest === "function") {
+    var viewerRoot = content.closest(".docsViewer");
+    if (viewerRoot) return viewerRoot;
+  }
+  return content || (context.document ? context.document.documentElement : null);
+}
+
+function resolvedSemanticValue(style, propertyName) {
+  var value = style ? String(style.getPropertyValue(propertyName) || "").trim() : "";
+  if (!value || value.indexOf("var(") !== -1) {
+    throw new Error("Inline Mermaid requires a resolved Docs Viewer semantic token: " + propertyName);
+  }
+  return value;
+}
+
+function resolveThemeVariables(context, selectedTheme) {
+  var windowRef = context.window;
+  var styleRoot = viewerStyleRoot(context);
+  if (!windowRef || typeof windowRef.getComputedStyle !== "function" || !styleRoot) {
+    throw new Error("Inline Mermaid requires the mounted Docs Viewer style context.");
+  }
+  var style = windowRef.getComputedStyle(styleRoot);
+  var panel = resolvedSemanticValue(style, "--docs-viewer-panel");
+  var subtlePanel = resolvedSemanticValue(style, "--docs-viewer-panel-2");
+  var primaryText = resolvedSemanticValue(style, "--docs-viewer-text");
+  var strongBorder = resolvedSemanticValue(style, "--docs-viewer-border-strong");
+  var mutedText = resolvedSemanticValue(style, "--docs-viewer-muted");
+  var selectionSurface = resolvedSemanticValue(style, "--docs-viewer-selection-bg");
+  var selectionText = resolvedSemanticValue(style, "--docs-viewer-selection-text");
+  var canvas = resolvedSemanticValue(style, "--docs-viewer-bg");
+  var fontFamily = resolvedSemanticValue(style, "--docs-viewer-font-sans");
+  return {
+    background: panel,
+    primaryColor: subtlePanel,
+    mainBkg: subtlePanel,
+    primaryTextColor: primaryText,
+    textColor: primaryText,
+    nodeTextColor: primaryText,
+    titleColor: primaryText,
+    actorTextColor: primaryText,
+    primaryBorderColor: strongBorder,
+    nodeBorder: strongBorder,
+    actorBorder: strongBorder,
+    noteBorderColor: strongBorder,
+    lineColor: mutedText,
+    arrowheadColor: mutedText,
+    secondaryColor: selectionSurface,
+    activationBkgColor: selectionSurface,
+    noteBkgColor: selectionSurface,
+    secondaryTextColor: selectionText,
+    noteTextColor: selectionText,
+    tertiaryColor: canvas,
+    clusterBkg: canvas,
+    fontFamily: fontFamily,
+    darkMode: currentTheme(context, selectedTheme) === DARK_THEME
+  };
+}
+
+function mermaidInitializationConfig(context, selectedTheme) {
   return {
     startOnLoad: false,
     suppressErrorRendering: true,
-    theme: "neutral",
+    theme: "base",
+    themeVariables: resolveThemeVariables(context, selectedTheme),
     securityLevel: "strict",
     htmlLabels: false,
     flowchart: {
@@ -125,6 +203,11 @@ export function createDocsViewerInlineMermaidAdapter(options) {
   var rendererPromise = null;
   var renderQueue = Promise.resolve();
   var renderSequence = 0;
+  var selectedTheme = LIGHT_THEME;
+
+  function handleThemeChange(theme) {
+    selectedTheme = normalizeTheme(theme);
+  }
 
   function rendererForMount(mountContext) {
     if (!rendererPromise) {
@@ -138,15 +221,15 @@ export function createDocsViewerInlineMermaidAdapter(options) {
         if (!renderer || typeof renderer.initialize !== "function" || typeof renderer.render !== "function") {
           throw new Error("The Mermaid browser runtime does not expose the required API.");
         }
-        renderer.initialize(mermaidInitializationConfig());
         return renderer;
       });
     }
     return rendererPromise;
   }
 
-  function renderSequentially(renderer, renderId, source) {
+  function renderSequentially(renderer, renderId, source, mountContext) {
     var renderTask = renderQueue.then(function () {
+      renderer.initialize(mermaidInitializationConfig(mountContext, selectedTheme));
       return renderer.render(renderId, source);
     });
     renderQueue = renderTask.then(function () {}, function () {});
@@ -190,7 +273,12 @@ export function createDocsViewerInlineMermaidAdapter(options) {
           break;
         }
 
-        var rendered = await renderSequentially(renderer, renderId, code.textContent || "");
+        var rendered = await renderSequentially(renderer, renderId, code.textContent || "", {
+          content: root,
+          document: documentRef,
+          viewerRoot: context.viewerRoot,
+          window: windowRef
+        });
         if (!isCurrentMount() || !root.contains(pre)) {
           releaseStaleFence(root, pre);
           result.stale = true;
@@ -239,6 +327,7 @@ export function createDocsViewerInlineMermaidAdapter(options) {
   }
 
   return {
+    handleThemeChange: handleThemeChange,
     mountDocument: mountDocument
   };
 }
