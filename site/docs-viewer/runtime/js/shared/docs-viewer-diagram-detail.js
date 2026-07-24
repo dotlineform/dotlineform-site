@@ -111,9 +111,14 @@ export function createDocsViewerDiagramDetailAdapter(options) {
   var warn = typeof settings.warn === "function" ? settings.warn : defaultWarning;
   var resourcesByRoot = new WeakMap();
 
-  function trackResource(root, target, windowRef) {
-    var resources = resourcesByRoot.get(root) || [];
-    resources.push({ target: target, window: windowRef });
+  function trackResource(root, host, control, target, windowRef) {
+    var resources = resourcesByRoot.get(root) || new Map();
+    resources.set(host, {
+      control: control,
+      host: host,
+      target: target,
+      window: windowRef
+    });
     resourcesByRoot.set(root, resources);
   }
 
@@ -129,10 +134,10 @@ export function createDocsViewerDiagramDetailAdapter(options) {
     var context = releaseContext || {};
     var root = context.content;
     if (!root || typeof root !== "object") return { released: 0 };
-    var resources = resourcesByRoot.get(root) || [];
+    var resources = resourcesByRoot.get(root) || new Map();
     resourcesByRoot.delete(root);
     resources.forEach(revokeResource);
-    return { released: resources.length };
+    return { released: resources.size };
   }
 
   function mountDocument(mountContext) {
@@ -188,7 +193,7 @@ export function createDocsViewerDiagramDetailAdapter(options) {
         revokeResource({ target: target, window: windowRef });
         return { decorated: false, reason: "already-decorated" };
       }
-      trackResource(root, target, windowRef);
+      trackResource(root, host, decoration.control, target, windowRef);
       return { decorated: true, reason: "", target: target };
     } catch (error) {
       if (target) revokeResource({ target: target, window: windowRef });
@@ -197,8 +202,45 @@ export function createDocsViewerDiagramDetailAdapter(options) {
     }
   }
 
+  function refreshInlineDiagram(refreshContext) {
+    var context = refreshContext || {};
+    var root = context.content;
+    var host = context.host;
+    if (!root || !host) return { refreshed: false, reason: "missing-context" };
+    var resources = resourcesByRoot.get(root);
+    var current = resources ? resources.get(host) : null;
+    if (!current || !current.control) {
+      return { refreshed: false, reason: "not-registered" };
+    }
+
+    var svg = directInlineSvg(host);
+    if (!svg) return { refreshed: false, reason: "unsupported-host" };
+    var documentRef = context.document || root.ownerDocument;
+    var windowRef = context.window || (documentRef ? documentRef.defaultView : null);
+    var target = "";
+    try {
+      var markup = standaloneSvgMarkup(windowRef, svg);
+      target = String(createObjectUrl(markup, {
+        document: documentRef,
+        host: host,
+        svg: svg,
+        window: windowRef
+      }) || "").trim();
+      if (!target) throw new Error("Inline diagram detail did not create a browser resource.");
+      current.control.setAttribute("href", target);
+      trackResource(root, host, current.control, target, windowRef);
+      revokeResource(current);
+      return { refreshed: true, reason: "", target: target };
+    } catch (error) {
+      if (target) revokeResource({ target: target, window: windowRef });
+      warn("docs_viewer: inline diagram detail refresh unavailable", error);
+      return { refreshed: false, reason: "target-unavailable" };
+    }
+  }
+
   return {
     mountDocument: mountDocument,
+    refreshInlineDiagram: refreshInlineDiagram,
     registerInlineDiagram: registerInlineDiagram,
     releaseDocument: releaseDocument
   };

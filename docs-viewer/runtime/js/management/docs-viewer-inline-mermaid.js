@@ -76,7 +76,7 @@ function resolveThemeVariables(context, selectedTheme) {
     tertiaryColor: canvas,
     clusterBkg: canvas,
     fontFamily: fontFamily,
-    darkMode: currentTheme(context, selectedTheme) === DARK_THEME
+    darkMode: normalizeTheme(selectedTheme) === DARK_THEME
   };
 }
 
@@ -155,7 +155,7 @@ function appendDescribedBy(element, id) {
   element.setAttribute("aria-describedby", describedBy.join(" "));
 }
 
-function createDiagramHost(documentRef, svgMarkup) {
+function createDiagramSvg(documentRef, svgMarkup, background) {
   var template = documentRef.createElement("template");
   template.innerHTML = String(svgMarkup || "").trim();
   var svg = template.content.querySelector("svg");
@@ -168,7 +168,11 @@ function createDiagramHost(documentRef, svgMarkup) {
   if (!title || !title.textContent.trim() || !description || !description.textContent.trim()) {
     throw new Error("Inline Mermaid SVG requires a non-empty title and description.");
   }
+  svg.style.backgroundColor = background;
+  return svg;
+}
 
+function createDiagramHost(documentRef, svg) {
   var host = documentRef.createElement("div");
   host.className = "docsViewer__diagram";
   host.dataset.docsViewerDiagramKind = "inline-mermaid";
@@ -204,9 +208,32 @@ export function createDocsViewerInlineMermaidAdapter(options) {
   var renderQueue = Promise.resolve();
   var renderSequence = 0;
   var selectedTheme = LIGHT_THEME;
+  var recordsByRoot = new Map();
 
-  function handleThemeChange(theme) {
-    selectedTheme = normalizeTheme(theme);
+  function recordsForRoot(root) {
+    var records = recordsByRoot.get(root);
+    if (!records) {
+      records = [];
+      recordsByRoot.set(root, records);
+    }
+    return records;
+  }
+
+  function registeredRecords() {
+    var records = [];
+    recordsByRoot.forEach(function (rootRecords) {
+      records.push.apply(records, rootRecords);
+    });
+    return records;
+  }
+
+  function releaseDocument(releaseContext) {
+    var context = releaseContext || {};
+    var root = context.content;
+    if (!root || !recordsByRoot.has(root)) return { released: 0 };
+    var records = recordsByRoot.get(root) || [];
+    recordsByRoot.delete(root);
+    return { released: records.length };
   }
 
   function rendererForMount(mountContext) {
@@ -227,13 +254,112 @@ export function createDocsViewerInlineMermaidAdapter(options) {
     return rendererPromise;
   }
 
-  function renderSequentially(renderer, renderId, source, mountContext) {
+  function renderSequentially(renderer, renderId, source, mountContext, theme) {
     var renderTask = renderQueue.then(function () {
-      renderer.initialize(mermaidInitializationConfig(mountContext, selectedTheme));
-      return renderer.render(renderId, source);
+      var config = mermaidInitializationConfig(mountContext, theme);
+      renderer.initialize(config);
+      return Promise.resolve(renderer.render(renderId, source)).then(function (rendered) {
+        return {
+          rendered: rendered,
+          themeVariables: config.themeVariables
+        };
+      });
     });
     renderQueue = renderTask.then(function () {}, function () {});
     return renderTask;
+  }
+
+  function applyBindings(rendered, host) {
+    if (!rendered || typeof rendered.bindFunctions !== "function") return;
+    try {
+      rendered.bindFunctions(host);
+    } catch (bindingError) {
+      warn("docs_viewer: inline Mermaid bindings unavailable", bindingError);
+    }
+  }
+
+  function commitThemedDiagram(record, svg) {
+    var host = record.host;
+    var previousSvg = host ? host.firstElementChild : null;
+    if (
+      !previousSvg
+      || host.children.length !== 1
+      || previousSvg.namespaceURI !== "http://www.w3.org/2000/svg"
+      || previousSvg.localName !== "svg"
+    ) {
+      throw new Error("Inline Mermaid registered host no longer owns one direct SVG.");
+    }
+    var detailAdapter = record.diagramDetailAdapter;
+    if (!detailAdapter || typeof detailAdapter.refreshInlineDiagram !== "function") {
+      throw new Error("Inline Mermaid registered host has no refreshable detail resource.");
+    }
+
+    previousSvg.replaceWith(svg);
+    try {
+      var detailResult = detailAdapter.refreshInlineDiagram({
+        content: record.content,
+        doc: record.doc,
+        document: record.document,
+        host: host,
+        mountGeneration: record.mountGeneration,
+        viewerScope: record.viewerScope,
+        window: record.window
+      });
+      if (!detailResult || !detailResult.refreshed) {
+        throw new Error(
+          "Inline Mermaid detail refresh did not commit: "
+          + String(detailResult && detailResult.reason ? detailResult.reason : "unknown")
+        );
+      }
+    } catch (error) {
+      svg.replaceWith(previousSvg);
+      throw error;
+    }
+  }
+
+  async function handleThemeChange(theme) {
+    selectedTheme = normalizeTheme(theme);
+    var refreshTheme = selectedTheme;
+    var records = registeredRecords();
+    var result = { found: records.length, rendered: 0, failed: 0 };
+    if (!records.length) return result;
+
+    var renderer;
+    try {
+      renderer = await rendererForMount({
+        document: records[0].document,
+        window: records[0].window
+      });
+    } catch (error) {
+      result.failed = records.length;
+      warn("docs_viewer: inline Mermaid theme refresh unavailable", error);
+      return result;
+    }
+
+    for (var index = 0; index < records.length; index += 1) {
+      var record = records[index];
+      var renderId = "docs-viewer-inline-mermaid-" + String(++renderSequence);
+      try {
+        var themed = await renderSequentially(renderer, renderId, record.source, {
+          content: record.content,
+          document: record.document,
+          viewerRoot: record.viewerRoot,
+          window: record.window
+        }, refreshTheme);
+        var svg = createDiagramSvg(
+          record.document,
+          themed.rendered && themed.rendered.svg,
+          themed.themeVariables.background
+        );
+        commitThemedDiagram(record, svg);
+        applyBindings(themed.rendered, record.host);
+        result.rendered += 1;
+      } catch (error) {
+        result.failed += 1;
+        warn("docs_viewer: inline Mermaid theme refresh unavailable", error);
+      }
+    }
+    return result;
   }
 
   async function mountDocument(mountContext) {
@@ -273,28 +399,30 @@ export function createDocsViewerInlineMermaidAdapter(options) {
           break;
         }
 
-        var rendered = await renderSequentially(renderer, renderId, code.textContent || "", {
+        var source = code.textContent || "";
+        var themed = await renderSequentially(renderer, renderId, source, {
           content: root,
           document: documentRef,
           viewerRoot: context.viewerRoot,
           window: windowRef
-        });
+        }, currentTheme({
+          document: documentRef
+        }, selectedTheme));
         if (!isCurrentMount() || !root.contains(pre)) {
           releaseStaleFence(root, pre);
           result.stale = true;
           break;
         }
 
-        var host = createDiagramHost(documentRef, rendered && rendered.svg);
+        var svg = createDiagramSvg(
+          documentRef,
+          themed.rendered && themed.rendered.svg,
+          themed.themeVariables.background
+        );
+        var host = createDiagramHost(documentRef, svg);
         pre.replaceWith(host);
         result.rendered += 1;
-        if (rendered && typeof rendered.bindFunctions === "function") {
-          try {
-            rendered.bindFunctions(host);
-          } catch (bindingError) {
-            warn("docs_viewer: inline Mermaid bindings unavailable", bindingError);
-          }
-        }
+        applyBindings(themed.rendered, host);
         var detailAdapter = context.diagramDetailAdapter;
         if (detailAdapter && typeof detailAdapter.registerInlineDiagram === "function") {
           try {
@@ -311,6 +439,18 @@ export function createDocsViewerInlineMermaidAdapter(options) {
             warn("docs_viewer: inline Mermaid detail registration unavailable", detailError);
           }
         }
+        recordsForRoot(root).push({
+          content: root,
+          diagramDetailAdapter: detailAdapter,
+          doc: context.doc,
+          document: documentRef,
+          host: host,
+          mountGeneration: context.mountGeneration,
+          source: source,
+          viewerRoot: context.viewerRoot,
+          viewerScope: context.viewerScope,
+          window: windowRef
+        });
       } catch (error) {
         if (!isCurrentMount() || !root.contains(pre)) {
           releaseStaleFence(root, pre);
@@ -328,7 +468,8 @@ export function createDocsViewerInlineMermaidAdapter(options) {
 
   return {
     handleThemeChange: handleThemeChange,
-    mountDocument: mountDocument
+    mountDocument: mountDocument,
+    releaseDocument: releaseDocument
   };
 }
 

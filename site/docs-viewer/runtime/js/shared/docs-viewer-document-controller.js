@@ -78,6 +78,18 @@ export function initDocsViewerDocumentController(context) {
   }
 
   function releaseDiagramDetails() {
+    var inlineAdapter = context.inlineMermaidAdapter;
+    if (inlineAdapter && typeof inlineAdapter.releaseDocument === "function") {
+      try {
+        inlineAdapter.releaseDocument({
+          content: content,
+          document: content ? content.ownerDocument : null,
+          window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+        });
+      } catch (error) {
+        console.warn("docs_viewer: inline Mermaid registry cleanup unavailable", error);
+      }
+    }
     var adapter = context.diagramDetailAdapter;
     if (!adapter || typeof adapter.releaseDocument !== "function") return;
     try {

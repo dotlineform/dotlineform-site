@@ -61,6 +61,7 @@ def install_fixture(page: Page) -> None:
                     document.head.appendChild(link);
                 });
             }
+            document.body.classList.add('docsViewer');
             const diagramDetail = await import('/docs-viewer/runtime/js/shared/docs-viewer-diagram-detail.js');
             const documentController = await import('/docs-viewer/runtime/js/shared/docs-viewer-document-controller.js');
             const inlineMermaid = await import('/docs-viewer/runtime/js/management/docs-viewer-inline-mermaid.js');
@@ -249,6 +250,21 @@ def assert_inline_blob_contract(page: Page) -> None:
                 };
             }));
             const frames = Array.from(content.querySelectorAll('.docsViewer__diagramFrame'));
+            const firstHost = content.querySelector('#inline-one');
+            firstHost.innerHTML = '<svg viewBox="0 0 80 40" role="img" style="background-color: rgb(22, 22, 24)"><title>Refreshed system map</title><desc>The themed replacement diagram.</desc><rect width="36" height="20"></rect></svg>';
+            const refresh = adapter.refreshInlineDiagram({
+                content,
+                document,
+                host: firstHost,
+                window
+            });
+            const refreshedTarget = controls[0].href;
+            const refreshedResponse = await fetch(refreshedTarget);
+            const refreshedResource = {
+                contentType: refreshedResponse.headers.get('content-type'),
+                markup: await refreshedResponse.text()
+            };
+            const revokedAfterRefresh = revoked.slice();
             const release = adapter.releaseDocument({ content });
             const releaseAgain = adapter.releaseDocument({ content });
 
@@ -272,6 +288,49 @@ def assert_inline_blob_contract(page: Page) -> None:
                 window
             });
 
+            const refreshWarnings = [];
+            const refreshRevoked = [];
+            let refreshCreates = 0;
+            const refreshFailureContent = document.createElement('article');
+            refreshFailureContent.innerHTML = '<div class="docsViewer__diagram" data-docs-viewer-diagram-kind="inline-mermaid"><svg viewBox="0 0 8 4"><title>Current diagram</title><desc>The current detail target remains usable.</desc><rect width="8" height="4"></rect></svg></div>';
+            document.body.appendChild(refreshFailureContent);
+            const refreshFailureHost = refreshFailureContent.firstElementChild;
+            const refreshFailureAdapter = diagramDetail.createDocsViewerDiagramDetailAdapter({
+                createObjectUrl(markup, context) {
+                    refreshCreates += 1;
+                    if (refreshCreates > 1) throw new Error('fixture refresh failure');
+                    return context.window.URL.createObjectURL(
+                        new context.window.Blob([markup], { type: 'image/svg+xml' })
+                    );
+                },
+                revokeObjectUrl(target, context) {
+                    refreshRevoked.push(target);
+                    context.window.URL.revokeObjectURL(target);
+                },
+                warn(message) {
+                    refreshWarnings.push(message);
+                }
+            });
+            const refreshRegistered = refreshFailureAdapter.registerInlineDiagram({
+                content: refreshFailureContent,
+                document,
+                host: refreshFailureHost,
+                window
+            });
+            const refreshControl = refreshFailureContent.querySelector('.docsViewer__diagramDetailControl');
+            const refreshOriginalTarget = refreshControl.href;
+            refreshFailureHost.innerHTML = '<svg viewBox="0 0 8 4"><title>Candidate diagram</title><desc>The candidate detail target fails.</desc><rect width="6" height="3"></rect></svg>';
+            const refreshFailed = refreshFailureAdapter.refreshInlineDiagram({
+                content: refreshFailureContent,
+                document,
+                host: refreshFailureHost,
+                window
+            });
+            const refreshTargetAfterFailure = refreshControl.href;
+            const refreshFailureRelease = refreshFailureAdapter.releaseDocument({
+                content: refreshFailureContent
+            });
+
             return {
                 first,
                 second,
@@ -289,6 +348,10 @@ def assert_inline_blob_contract(page: Page) -> None:
                 })),
                 targetCount: new Set(targets).size,
                 resources,
+                refresh,
+                refreshedTarget,
+                refreshedResource,
+                revokedAfterRefresh,
                 exactShape: frames.every(frame =>
                     frame.tagName === 'DIV'
                     && frame.dataset.docsViewerDiagramFrame === 'inline-mermaid'
@@ -304,7 +367,14 @@ def assert_inline_blob_contract(page: Page) -> None:
                 failedHostPreserved: failedContent.firstElementChild === failedHost
                     && failedHost.firstElementChild?.localName === 'svg'
                     && !failedHost.closest('.docsViewer__diagramFrame'),
-                warnings
+                warnings,
+                refreshRegistered,
+                refreshFailed,
+                refreshOriginalTarget,
+                refreshTargetAfterFailure,
+                refreshFailureRelease,
+                refreshRevoked,
+                refreshWarnings
             };
         }"""
     )
@@ -342,9 +412,19 @@ def assert_inline_blob_contract(page: Page) -> None:
             raise AssertionError(f"inline detail target serialized viewer chrome: {result!r}")
     if ".node{fill:#123456}" not in result["resources"][0]["markup"]:
         raise AssertionError(f"inline detail target lost SVG presentation content: {result!r}")
+    if (
+        not result["refresh"]["refreshed"]
+        or result["refreshedTarget"] == result["first"]["target"]
+        or result["revokedAfterRefresh"] != [result["first"]["target"]]
+        or "Refreshed system map" not in result["refreshedResource"]["markup"]
+        or "background-color" not in result["refreshedResource"]["markup"]
+    ):
+        raise AssertionError(f"inline detail refresh did not replace one current target: {result!r}")
     if result["release"] != {"released": 2} or result["releaseAgain"] != {"released": 0}:
         raise AssertionError(f"inline detail resource cleanup changed: {result!r}")
-    if sorted(result["revoked"]) != sorted([result["first"]["target"], result["second"]["target"]]):
+    if sorted(result["revoked"]) != sorted(
+        [result["first"]["target"], result["second"]["target"], result["refreshedTarget"]]
+    ):
         raise AssertionError(f"inline detail resources were not revoked exactly once: {result!r}")
     if (
         result["failed"] != {"decorated": False, "reason": "target-unavailable"}
@@ -352,6 +432,15 @@ def assert_inline_blob_contract(page: Page) -> None:
         or result["warnings"] != ["docs_viewer: inline diagram detail target unavailable"]
     ):
         raise AssertionError(f"detail-target failure displaced a usable inline diagram: {result!r}")
+    if (
+        not result["refreshRegistered"]["decorated"]
+        or result["refreshFailed"] != {"refreshed": False, "reason": "target-unavailable"}
+        or result["refreshTargetAfterFailure"] != result["refreshOriginalTarget"]
+        or result["refreshFailureRelease"] != {"released": 1}
+        or result["refreshRevoked"] != [result["refreshOriginalTarget"]]
+        or result["refreshWarnings"] != ["docs_viewer: inline diagram detail refresh unavailable"]
+    ):
+        raise AssertionError(f"failed detail refresh displaced the current target: {result!r}")
 
 
 def assert_inline_mermaid_registration_contract(page: Page) -> None:
@@ -474,6 +563,9 @@ def assert_document_controller_mount_contract(page: Page) -> None:
                     more: document.createElement('div'),
                     diagramDetailAdapter: detailAdapter,
                     inlineMermaidAdapter: includeInlineAdapter ? {
+                        releaseDocument() {
+                            order.push('inline-release');
+                        },
                         mountDocument(context) {
                             order.push('inline');
                             inlineReceivedDetail = context.diagramDetailAdapter === detailAdapter;
@@ -518,7 +610,15 @@ def assert_document_controller_mount_contract(page: Page) -> None:
         }"""
     )
 
-    managed_order = ["release", "detail", "inline", "extras", "release"]
+    managed_order = [
+        "inline-release",
+        "release",
+        "detail",
+        "inline",
+        "extras",
+        "inline-release",
+        "release",
+    ]
     for key in ("local", "external"):
         if result[key]["order"] != managed_order:
             raise AssertionError(f"managed-local post-mount adapter order changed: {result!r}")

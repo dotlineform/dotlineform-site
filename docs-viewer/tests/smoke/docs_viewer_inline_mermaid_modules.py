@@ -73,8 +73,14 @@ def install_fixture(page: Page) -> None:
             document.body.classList.add('docsViewer');
             const inlineMermaid = await import('/docs-viewer/runtime/js/management/docs-viewer-inline-mermaid.js');
             const documentController = await import('/docs-viewer/runtime/js/shared/docs-viewer-document-controller.js');
+            const diagramDetail = await import('/docs-viewer/runtime/js/shared/docs-viewer-diagram-detail.js');
             const appBoot = await import('/docs-viewer/runtime/js/shared/docs-viewer-app-boot.js');
-            window.__docsViewerInlineMermaidSmoke = { inlineMermaid, documentController, appBoot };
+            window.__docsViewerInlineMermaidSmoke = {
+                inlineMermaid,
+                documentController,
+                diagramDetail,
+                appBoot
+            };
         }"""
     )
 
@@ -186,7 +192,6 @@ def assert_session_renderer_and_failure_containment(page: Page) -> None:
             });
 
             document.documentElement.setAttribute('data-theme', 'light');
-            adapter.handleThemeChange('light');
             const lightTheme = semanticTheme();
             const first = document.createElement('article');
             first.innerHTML = [
@@ -199,7 +204,6 @@ def assert_session_renderer_and_failure_containment(page: Page) -> None:
             const duplicateResult = await adapter.mountDocument({ content: first });
 
             document.documentElement.setAttribute('data-theme', 'dark');
-            adapter.handleThemeChange('dark');
             const darkTheme = semanticTheme();
             const second = document.createElement('article');
             second.innerHTML = '<pre><code class="language-mermaid">fourth</code></pre>';
@@ -365,6 +369,335 @@ def assert_session_renderer_and_failure_containment(page: Page) -> None:
         raise AssertionError(f"Mermaid failure and retained source were not visibly ordered: {result!r}")
     if result["warnings"] != [{"message": "docs_viewer: inline Mermaid diagram unavailable", "detail": "synthetic parser detail"}]:
         raise AssertionError(f"Mermaid detailed failure did not stay in diagnostics: {result!r}")
+
+
+def assert_registered_theme_refresh_contract(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const { inlineMermaid, diagramDetail } = window.__docsViewerInlineMermaidSmoke;
+            let emptyLoadCalls = 0;
+            const emptyAdapter = inlineMermaid.createDocsViewerInlineMermaidAdapter({
+                loadMermaid: async () => {
+                    emptyLoadCalls += 1;
+                    throw new Error('diagram-free theme change loaded Mermaid');
+                }
+            });
+            const emptyRefresh = await emptyAdapter.handleThemeChange('dark');
+
+            document.documentElement.setAttribute('data-theme', 'light');
+            const initializationConfigs = [];
+            const renderCalls = [];
+            const bindings = [];
+            const warnings = [];
+            let renderDark = false;
+            const renderer = {
+                initialize(config) {
+                    initializationConfigs.push(config);
+                    renderDark = config.themeVariables.darkMode;
+                },
+                async render(id, source) {
+                    const theme = renderDark ? 'dark' : 'light';
+                    renderCalls.push({ id, source, theme });
+                    return {
+                        svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 20"><title>${source} ${theme}</title><desc>${source} rendered in ${theme} mode.</desc><rect width="40" height="20"></rect></svg>`,
+                        bindFunctions(host) {
+                            bindings.push({ host, theme });
+                        }
+                    };
+                }
+            };
+            const created = [];
+            const revoked = [];
+            const detailAdapter = diagramDetail.createDocsViewerDiagramDetailAdapter({
+                createObjectUrl(markup) {
+                    const target = `blob:theme-${created.length + 1}`;
+                    created.push({ target, markup });
+                    return target;
+                },
+                revokeObjectUrl(target) {
+                    revoked.push(target);
+                }
+            });
+            const adapter = inlineMermaid.createDocsViewerInlineMermaidAdapter({
+                loadMermaid: async () => renderer,
+                warn(message, error) {
+                    warnings.push({ message, detail: error.message });
+                }
+            });
+            const content = document.createElement('article');
+            content.innerHTML = [
+                '<pre><code class="language-mermaid">first source</code></pre>',
+                '<pre><code class="language-mermaid">second source</code></pre>'
+            ].join('');
+            document.body.appendChild(content);
+            const mounted = await adapter.mountDocument({
+                content,
+                diagramDetailAdapter: detailAdapter,
+                document,
+                window
+            });
+            const frames = Array.from(content.querySelectorAll('.docsViewer__diagramFrame'));
+            const viewports = Array.from(content.querySelectorAll('.docsViewer__diagramViewport'));
+            const hosts = Array.from(content.querySelectorAll(
+                '[data-docs-viewer-diagram-kind="inline-mermaid"]'
+            ));
+            const controls = Array.from(content.querySelectorAll('.docsViewer__diagramDetailControl'));
+            const initialSvgs = hosts.map(host => host.firstElementChild);
+            const initialTargets = controls.map(control => control.getAttribute('href'));
+
+            const undiscovered = document.createElement('pre');
+            undiscovered.innerHTML = '<code class="language-mermaid">not registered</code>';
+            content.appendChild(undiscovered);
+
+            document.documentElement.setAttribute('data-theme', 'dark');
+            const refreshed = await adapter.handleThemeChange('dark');
+            const currentSvgs = hosts.map(host => host.firstElementChild);
+            const currentTargets = controls.map(control => control.getAttribute('href'));
+            const panelBackground = getComputedStyle(hosts[0]).backgroundColor;
+            const inlineRelease = adapter.releaseDocument({ content });
+            const detailRelease = detailAdapter.releaseDocument({ content });
+            const releasedAgain = adapter.releaseDocument({ content });
+
+            return {
+                emptyRefresh,
+                emptyLoadCalls,
+                mounted,
+                refreshed,
+                renderCalls,
+                darkModes: initializationConfigs.map(config => config.themeVariables.darkMode),
+                bindings: bindings.map(binding => ({
+                    hostIndex: hosts.indexOf(binding.host),
+                    theme: binding.theme
+                })),
+                stableFrames: frames.every((frame, index) =>
+                    frame === hosts[index].closest('.docsViewer__diagramFrame')
+                ),
+                stableViewports: viewports.every((viewport, index) =>
+                    viewport === hosts[index].parentElement
+                ),
+                stableHosts: hosts.every((host, index) =>
+                    host === currentSvgs[index].parentElement
+                ),
+                replacedSvgs: initialSvgs.every((svg, index) => svg !== currentSvgs[index]),
+                titles: currentSvgs.map(svg => svg.querySelector('title')?.textContent || ''),
+                svgBackgrounds: currentSvgs.map(svg => svg.style.backgroundColor),
+                panelBackground,
+                initialTargets,
+                currentTargets,
+                refreshedMarkupHasBackground: created.slice(2).every(
+                    resource => resource.markup.includes('background-color')
+                ),
+                revoked,
+                undiscoveredSource: undiscovered.textContent,
+                undiscoveredState: undiscovered.dataset.docsViewerInlineMermaidState || '',
+                inlineRelease,
+                detailRelease,
+                releasedAgain,
+                warnings
+            };
+        }"""
+    )
+    if result["emptyRefresh"] != {"found": 0, "rendered": 0, "failed": 0} or result["emptyLoadCalls"] != 0:
+        raise AssertionError(f"diagram-free theme change performed Mermaid work: {result!r}")
+    if result["mounted"] != {"found": 2, "rendered": 2, "failed": 0, "stale": False}:
+        raise AssertionError(f"theme-refresh fixture did not mount two diagrams: {result!r}")
+    if result["refreshed"] != {"found": 2, "rendered": 2, "failed": 0}:
+        raise AssertionError(f"registered diagrams did not refresh in place: {result!r}")
+    if [(call["source"], call["theme"]) for call in result["renderCalls"]] != [
+        ("first source", "light"),
+        ("second source", "light"),
+        ("first source", "dark"),
+        ("second source", "dark"),
+    ]:
+        raise AssertionError(f"retained Mermaid sources did not render sequentially: {result!r}")
+    if result["darkModes"] != [False, False, True, True]:
+        raise AssertionError(f"theme refresh did not reconfigure every queued render: {result!r}")
+    if result["bindings"] != [
+        {"hostIndex": 0, "theme": "light"},
+        {"hostIndex": 1, "theme": "light"},
+        {"hostIndex": 0, "theme": "dark"},
+        {"hostIndex": 1, "theme": "dark"},
+    ]:
+        raise AssertionError(f"Mermaid bindings did not follow successful host updates: {result!r}")
+    if (
+        not result["stableFrames"]
+        or not result["stableViewports"]
+        or not result["stableHosts"]
+        or not result["replacedSvgs"]
+    ):
+        raise AssertionError(f"theme refresh rebuilt stable diagram chrome: {result!r}")
+    if result["titles"] != ["first source dark", "second source dark"]:
+        raise AssertionError(f"theme refresh did not commit the dark candidate SVGs: {result!r}")
+    if any(background != result["panelBackground"] for background in result["svgBackgrounds"]):
+        raise AssertionError(f"themed SVG did not carry its standalone canvas background: {result!r}")
+    if (
+        result["initialTargets"] != ["blob:theme-1", "blob:theme-2"]
+        or result["currentTargets"] != ["blob:theme-3", "blob:theme-4"]
+        or result["revoked"] != [
+            "blob:theme-1",
+            "blob:theme-2",
+            "blob:theme-3",
+            "blob:theme-4",
+        ]
+        or not result["refreshedMarkupHasBackground"]
+    ):
+        raise AssertionError(f"theme refresh did not replace and clean detail resources: {result!r}")
+    if result["undiscoveredSource"] != "not registered" or result["undiscoveredState"]:
+        raise AssertionError(f"theme refresh rescanned document fences: {result!r}")
+    if (
+        result["inlineRelease"] != {"released": 2}
+        or result["detailRelease"] != {"released": 2}
+        or result["releasedAgain"] != {"released": 0}
+        or result["warnings"]
+    ):
+        raise AssertionError(f"theme refresh registry cleanup or diagnostics changed: {result!r}")
+
+
+def assert_theme_refresh_failure_retention(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const { inlineMermaid, diagramDetail } = window.__docsViewerInlineMermaidSmoke;
+            document.documentElement.setAttribute('data-theme', 'light');
+
+            function svg(title) {
+                return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 10"><title>${title}</title><desc>${title} description.</desc><rect width="20" height="10"></rect></svg>`;
+            }
+
+            let renderShouldFail = false;
+            const renderWarnings = [];
+            const renderDetail = diagramDetail.createDocsViewerDiagramDetailAdapter({
+                createObjectUrl() {
+                    return 'blob:render-current';
+                },
+                revokeObjectUrl() {}
+            });
+            const renderAdapter = inlineMermaid.createDocsViewerInlineMermaidAdapter({
+                loadMermaid: async () => ({
+                    initialize() {},
+                    async render() {
+                        if (renderShouldFail) throw new Error('fixture themed render failure');
+                        return { svg: svg('render current') };
+                    }
+                }),
+                warn(message, error) {
+                    renderWarnings.push({ message, detail: error.message });
+                }
+            });
+            const renderContent = document.createElement('article');
+            renderContent.innerHTML = '<pre><code class="language-mermaid">render failure source</code></pre>';
+            document.body.appendChild(renderContent);
+            await renderAdapter.mountDocument({
+                content: renderContent,
+                diagramDetailAdapter: renderDetail,
+                document,
+                window
+            });
+            const renderHost = renderContent.querySelector(
+                '[data-docs-viewer-diagram-kind="inline-mermaid"]'
+            );
+            const renderSvg = renderHost.firstElementChild;
+            const renderControl = renderContent.querySelector('.docsViewer__diagramDetailControl');
+            const renderTarget = renderControl.getAttribute('href');
+            renderShouldFail = true;
+            document.documentElement.setAttribute('data-theme', 'dark');
+            const renderFailure = await renderAdapter.handleThemeChange('dark');
+
+            let detailCreates = 0;
+            const detailWarnings = [];
+            const detailRevoked = [];
+            const failingDetail = diagramDetail.createDocsViewerDiagramDetailAdapter({
+                createObjectUrl() {
+                    detailCreates += 1;
+                    if (detailCreates > 1) throw new Error('fixture themed detail failure');
+                    return 'blob:detail-current';
+                },
+                revokeObjectUrl(target) {
+                    detailRevoked.push(target);
+                },
+                warn(message, error) {
+                    detailWarnings.push({ message, detail: error.message });
+                }
+            });
+            const detailWarningsFromInline = [];
+            const detailAdapter = inlineMermaid.createDocsViewerInlineMermaidAdapter({
+                loadMermaid: async () => ({
+                    initialize() {},
+                    async render() {
+                        return {
+                            svg: detailCreates
+                                ? svg('detail candidate')
+                                : svg('detail current')
+                        };
+                    }
+                }),
+                warn(message, error) {
+                    detailWarningsFromInline.push({ message, detail: error.message });
+                }
+            });
+            document.documentElement.setAttribute('data-theme', 'light');
+            const detailContent = document.createElement('article');
+            detailContent.innerHTML = '<pre><code class="language-mermaid">detail failure source</code></pre>';
+            document.body.appendChild(detailContent);
+            await detailAdapter.mountDocument({
+                content: detailContent,
+                diagramDetailAdapter: failingDetail,
+                document,
+                window
+            });
+            const detailHost = detailContent.querySelector(
+                '[data-docs-viewer-diagram-kind="inline-mermaid"]'
+            );
+            const detailSvg = detailHost.firstElementChild;
+            const detailControl = detailContent.querySelector('.docsViewer__diagramDetailControl');
+            const detailTarget = detailControl.getAttribute('href');
+            document.documentElement.setAttribute('data-theme', 'dark');
+            const detailFailure = await detailAdapter.handleThemeChange('dark');
+            const detailRevokedBeforeRelease = detailRevoked.slice();
+            const detailRelease = failingDetail.releaseDocument({ content: detailContent });
+
+            return {
+                renderFailure,
+                renderSvgRetained: renderHost.firstElementChild === renderSvg,
+                renderTargetRetained: renderControl.getAttribute('href') === renderTarget,
+                renderWarnings,
+                detailFailure,
+                detailSvgRetained: detailHost.firstElementChild === detailSvg,
+                detailTargetRetained: detailControl.getAttribute('href') === detailTarget,
+                detailWarnings,
+                detailWarningsFromInline,
+                detailRevokedBeforeRelease,
+                detailRevoked,
+                detailRelease
+            };
+        }"""
+    )
+    if (
+        result["renderFailure"] != {"found": 1, "rendered": 0, "failed": 1}
+        or not result["renderSvgRetained"]
+        or not result["renderTargetRetained"]
+        or result["renderWarnings"] != [{
+            "message": "docs_viewer: inline Mermaid theme refresh unavailable",
+            "detail": "fixture themed render failure",
+        }]
+    ):
+        raise AssertionError(f"failed themed render displaced the usable diagram pair: {result!r}")
+    if (
+        result["detailFailure"] != {"found": 1, "rendered": 0, "failed": 1}
+        or not result["detailSvgRetained"]
+        or not result["detailTargetRetained"]
+        or result["detailWarnings"] != [{
+            "message": "docs_viewer: inline diagram detail refresh unavailable",
+            "detail": "fixture themed detail failure",
+        }]
+        or result["detailWarningsFromInline"] != [{
+            "message": "docs_viewer: inline Mermaid theme refresh unavailable",
+            "detail": "Inline Mermaid detail refresh did not commit: target-unavailable",
+        }]
+        or result["detailRevokedBeforeRelease"]
+        or result["detailRevoked"] != ["blob:detail-current"]
+        or result["detailRelease"] != {"released": 1}
+    ):
+        raise AssertionError(f"failed themed detail refresh displaced the usable pair: {result!r}")
 
 
 def assert_stale_mount_cannot_replace_content(page: Page) -> None:
@@ -725,6 +1058,8 @@ def run_smoke(page: Page, base_url: str) -> None:
     install_fixture(page)
     assert_theme_composition_callback(page)
     assert_session_renderer_and_failure_containment(page)
+    assert_registered_theme_refresh_contract(page)
+    assert_theme_refresh_failure_retention(page)
     assert_stale_mount_cannot_replace_content(page)
     assert_accessible_svg_contract(page)
     assert_checked_browser_runtime_renders(page)
