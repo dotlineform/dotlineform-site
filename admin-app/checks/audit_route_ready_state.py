@@ -21,6 +21,7 @@ class AppConfig:
     path_patterns: tuple[str, ...]
     ready_attr: str
     busy_attr: str
+    excluded_paths: frozenset[str] = frozenset()
     allow_initial_ready_true: frozenset[str] = frozenset()
 
 
@@ -78,6 +79,9 @@ APP_CONFIGS = (
         path_patterns=("admin-app/app/frontend/routes/*.html",),
         ready_attr="data-admin-ready",
         busy_attr="data-admin-busy",
+        excluded_paths=frozenset(
+            {"admin-app/app/frontend/routes/admin-ui-workbench-frame.html"}
+        ),
     ),
     AppConfig(
         app_id="analytics",
@@ -112,10 +116,14 @@ def configured_paths(config: AppConfig) -> list[Path]:
     for pattern in config.path_patterns:
         matches = sorted(REPO_ROOT.glob(pattern))
         if matches:
-            paths.extend(path for path in matches if path.is_file())
+            paths.extend(
+                path
+                for path in matches
+                if path.is_file() and rel_path(path) not in config.excluded_paths
+            )
             continue
         direct_path = REPO_ROOT / pattern
-        if direct_path.is_file():
+        if direct_path.is_file() and rel_path(direct_path) not in config.excluded_paths:
             paths.append(direct_path)
     return sorted(dict.fromkeys(paths))
 

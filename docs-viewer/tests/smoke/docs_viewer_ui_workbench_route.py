@@ -72,6 +72,11 @@ def assert_route_contracts(admin_url: str) -> None:
         raise AssertionError("Admin UI Workbench did not use the registered Admin shell")
     if "admin-ui-workbench-frame.js" not in frame_html:
         raise AssertionError("Admin did not serve its Workbench specimen frame")
+    if (
+        'data-workbench-frame-ready="false"' not in frame_html
+        or 'data-workbench-frame-busy="true"' not in frame_html
+    ):
+        raise AssertionError("Workbench specimen frame is missing its own lifecycle state")
     if "docsViewerWorkbenchPackRecord" not in registry_module:
         raise AssertionError("Admin did not serve the Docs Viewer-owned specimen pack")
     if read_status(f"{admin_url}/docs/ui-workbench/") != 404:
