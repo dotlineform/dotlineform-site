@@ -264,6 +264,11 @@
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260423-165116-c83a81.json"
         },
         {
+          "doc_id": "d-20260716-204013-3be4e1",
+          "title": "Button Placement",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260716-204013-3be4e1.json"
+        },
+        {
           "doc_id": "d-20260512-142027-54b354",
           "title": "Configuration And Extension Points",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260512-142027-54b354.json"
@@ -841,32 +846,6 @@
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-1e0af6.json",
           "children": [
             {
-              "doc_id": "d-20260716-204013-3be4e1",
-              "title": "Button Placement",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260716-204013-3be4e1.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "d-20260716-193410-6d4efe",
-              "title": "Copy And Move Documents Between Scopes",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260716-193410-6d4efe.json",
-              "ui_status": "done",
-              "children": [
-                {
-                  "doc_id": "d-20260723-223400-c7a1e4",
-                  "title": "Copy And Move Documents Between Scopes Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-223400-c7a1e4.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260716-193410-bd64e3",
-                  "title": "Copy Subtree To Scope Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260716-193410-bd64e3.json",
-                  "ui_status": "done"
-                }
-              ]
-            },
-            {
               "doc_id": "d-20260716-193410-98d1a8",
               "title": "Dated Export Snapshots",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260716-193410-98d1a8.json",
@@ -883,98 +862,26 @@
                   "title": "Docs Viewer Manage Theme Restoration Delivery",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-101224-74d214.json",
                   "ui_status": "done"
-                }
-              ]
-            },
-            {
-              "doc_id": "d-20260723-091111-aaa2d6",
-              "title": "Docs Viewer Modal Consistency",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-091111-aaa2d6.json",
-              "ui_status": "done",
-              "children": [
-                {
-                  "doc_id": "d-20260723-091112-5e1b62",
-                  "title": "Docs Viewer Modal Consistency Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-091112-5e1b62.json",
-                  "ui_status": "done"
                 },
                 {
-                  "doc_id": "d-20260723-093229-dd63ab",
-                  "title": "UI Workbench Concept",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-093229-dd63ab.json",
-                  "ui_status": "proposed",
-                  "children": [
-                    {
-                      "doc_id": "d-20260723-155929-ef9c14",
-                      "title": "UI Workbench Guide",
-                      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-155929-ef9c14.json",
-                      "ui_status": "done"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "doc_id": "d-20260720-230623-c7e921",
-              "title": "Document Sharing UI Redesign",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-230623-c7e921.json",
-              "ui_status": "done",
-              "children": [
-                {
-                  "doc_id": "d-20260722-165733-88d9ff",
-                  "title": "Missing-Summary Package Preparation Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260722-165733-88d9ff.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260722-133457-e90e21",
-                  "title": "Prepare Package UI Redesign Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260722-133457-e90e21.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260722-204025-15ea54",
-                  "title": "Review Package UI Redesign Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260722-204025-15ea54.json",
-                  "ui_status": "done"
-                }
-              ]
-            },
-            {
-              "doc_id": "d-20260716-235630-055f0c",
-              "title": "External-Local Scope Media Layout",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260716-235630-055f0c.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "d-20260714-151900-6fa23e",
-              "title": "Index Multiple Selection",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-151900-6fa23e.json",
-              "ui_status": "in-progress",
-              "children": [
-                {
-                  "doc_id": "d-20260714-234030-f30d01",
-                  "title": "Index Multiple Selection Architecture",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-f30d01.json",
+                  "doc_id": "d-20260724-184427-31888d",
+                  "title": "Inline Mermaid Theme Synchronisation Delivery",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260724-184427-31888d.json",
                   "ui_status": "proposed"
-                },
+                }
+              ]
+            },
+            {
+              "doc_id": "d-20260724-190603-860f64",
+              "title": "Mermaid Authoring And Publication",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260724-190603-860f64.json",
+              "ui_status": "proposed",
+              "children": [
                 {
-                  "doc_id": "d-20260714-234030-876066",
-                  "title": "Index Multiple Selection Concept",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-876066.json",
+                  "doc_id": "d-20260724-190603-0d87a0",
+                  "title": "Public Mermaid Projection Delivery",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260724-190603-0d87a0.json",
                   "ui_status": "proposed"
-                },
-                {
-                  "doc_id": "d-20260722-000158-9c0f3e",
-                  "title": "Index Multiple Selection Consumer Assessment",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260722-000158-9c0f3e.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260721-074902-838446",
-                  "title": "Index Multiple Selection Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260721-074902-838446.json",
-                  "ui_status": "complete"
                 }
               ]
             },
@@ -1018,20 +925,6 @@
               ]
             },
             {
-              "doc_id": "d-20260719-144956-cb5cb4",
-              "title": "Scope-First Storage Layout",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260719-144956-cb5cb4.json",
-              "ui_status": "done",
-              "children": [
-                {
-                  "doc_id": "d-20260719-202836-1769ad",
-                  "title": "Scope-First Storage Cutover Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260719-202836-1769ad.json",
-                  "ui_status": "done"
-                }
-              ]
-            },
-            {
               "doc_id": "d-20260527-105208-c1a4d0",
               "title": "Semantic Reference Authoring",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260527-105208-c1a4d0.json",
@@ -1048,20 +941,6 @@
                   "title": "Semantic Reference Authoring Concept",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-cb2789.json",
                   "ui_status": "proposed"
-                }
-              ]
-            },
-            {
-              "doc_id": "d-20260718-155350-c84e62",
-              "title": "Share Document Packages",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-155350-c84e62.json",
-              "ui_status": "done",
-              "children": [
-                {
-                  "doc_id": "d-20260720-172819-93d6b2",
-                  "title": "Document Sharing Ownership Cutover Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-172819-93d6b2.json",
-                  "ui_status": "done"
                 }
               ]
             },
@@ -1096,20 +975,6 @@
                   "title": "Standalone Docs Viewer Concept",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-105957-c72b2a.json",
                   "ui_status": "proposed"
-                }
-              ]
-            },
-            {
-              "doc_id": "d-20260718-233015-a1836e",
-              "title": "Word Document Import",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-233015-a1836e.json",
-              "ui_status": "done",
-              "children": [
-                {
-                  "doc_id": "d-20260719-174421-aa4ff0",
-                  "title": "Word Document Import Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260719-174421-aa4ff0.json",
-                  "ui_status": "done"
                 }
               ]
             }
@@ -1555,5 +1420,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-24T15:42:56Z"
+  "generated_at": "2026-07-24T18:07:45Z"
 }
