@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-5d0eddfbbcc004fe1e95f94720e9c35d",
-    "generated_at_utc": "2026-07-24T21:37:11Z",
+    "version": "blake2b-4cc4c2030be0757b5328660abb996524",
+    "generated_at_utc": "2026-07-24T21:38:18Z",
     "count": 241
   },
   "entries": [
@@ -4367,10 +4367,10 @@
       "kind": "doc",
       "title": "Source Documentation and Linting Concept",
       "href": "/docs/?scope=studio&doc=d-20260713-133928-c786c7",
-      "last_updated": "2026-07-23 21:16:19",
+      "last_updated": "2026-07-24 22:38:18",
       "parent_id": "d-20260713-000000-d9bad2",
       "parent_title": "Source Documentation and Linting",
-      "display_meta": "2026-07-23 21:16:19 • Source Documentation and Linting",
+      "display_meta": "2026-07-24 22:38:18 • Source Documentation and Linting",
       "search_terms": [
         "source documentation and linting concept",
         "source",
@@ -4379,16 +4379,16 @@
         "linting",
         "concept",
         "source documentation and linting",
-        "2026-07-23 21:16:19",
+        "2026-07-24 22:38:18",
         "2026",
         "07",
-        "23",
-        "21",
-        "16",
-        "19",
+        "24",
+        "22",
+        "38",
+        "18",
         "d-20260713-133928-c786c7"
       ],
-      "search_text": "source documentation and linting concept source documentation and linting concept source documentation and linting 2026-07-23 21:16:19 2026 07 23 21 16 19 d-20260713-133928-c786c7"
+      "search_text": "source documentation and linting concept source documentation and linting concept source documentation and linting 2026-07-24 22:38:18 2026 07 24 22 38 18 d-20260713-133928-c786c7"
     },
     {
       "id": "d-20260718-130206-81e5b0",
