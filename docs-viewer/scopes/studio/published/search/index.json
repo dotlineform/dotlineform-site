@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d902f0524f193b9c95a8997afaf9ad00",
-    "generated_at_utc": "2026-07-24T22:09:42Z",
+    "version": "blake2b-85843ff84c83c5a8cdcfc39ec9a6c31c",
+    "generated_at_utc": "2026-07-24T22:25:19Z",
     "count": 241
   },
   "entries": [
@@ -4336,10 +4336,10 @@
       "kind": "doc",
       "title": "Docs Viewer Source Documentation And Linting Pilot Delivery",
       "href": "/docs/?scope=studio&doc=d-20260718-125756-a41c70",
-      "last_updated": "2026-07-24 23:09:36",
+      "last_updated": "2026-07-24 23:24:43",
       "parent_id": "d-20260713-000000-d9bad2",
       "parent_title": "Source Documentation and Linting",
-      "display_meta": "2026-07-24 23:09:36 • Source Documentation and Linting",
+      "display_meta": "2026-07-24 23:24:43 • Source Documentation and Linting",
       "search_terms": [
         "docs viewer source documentation and linting pilot delivery",
         "docs",
@@ -4351,16 +4351,15 @@
         "pilot",
         "delivery",
         "source documentation and linting",
-        "2026-07-24 23:09:36",
+        "2026-07-24 23:24:43",
         "2026",
         "07",
         "24",
         "23",
-        "09",
-        "36",
+        "43",
         "d-20260718-125756-a41c70"
       ],
-      "search_text": "docs viewer source documentation and linting pilot delivery docs viewer source documentation and linting pilot delivery source documentation and linting 2026-07-24 23:09:36 2026 07 24 23 09 36 d-20260718-125756-a41c70"
+      "search_text": "docs viewer source documentation and linting pilot delivery docs viewer source documentation and linting pilot delivery source documentation and linting 2026-07-24 23:24:43 2026 07 24 23 43 d-20260718-125756-a41c70"
     },
     {
       "id": "d-20260713-133928-c786c7",
