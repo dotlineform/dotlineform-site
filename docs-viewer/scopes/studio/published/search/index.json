@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b487588aaa280d5520cd22c7a3c927a3",
-    "generated_at_utc": "2026-07-24T20:43:17Z",
-    "count": 245
+    "version": "blake2b-5d0eddfbbcc004fe1e95f94720e9c35d",
+    "generated_at_utc": "2026-07-24T21:37:11Z",
+    "count": 241
   },
   "entries": [
     {
@@ -4301,117 +4301,6 @@
         "d-20260715-084611-7c7c8d"
       ],
       "search_text": "repository maintenance repository maintenance repository roadmap roadmap 2026-07-20 21:46:37 2026 07 20 21 46 37 d-20260715-084611-7c7c8d"
-    },
-    {
-      "id": "d-20260723-212313-90dc78",
-      "kind": "doc",
-      "title": "Research",
-      "href": "/docs/?scope=studio&doc=d-20260723-212313-90dc78",
-      "last_updated": "2026-07-23 21:23:13",
-      "parent_id": "d-20260715-092247-f3fd52",
-      "parent_title": "Repository Roadmap",
-      "display_meta": "2026-07-23 21:23:13 • Repository Roadmap",
-      "search_terms": [
-        "research",
-        "repository roadmap",
-        "repository",
-        "roadmap",
-        "2026-07-23 21:23:13",
-        "2026",
-        "07",
-        "23",
-        "21",
-        "13",
-        "d-20260723-212313-90dc78"
-      ],
-      "search_text": "research repository roadmap repository roadmap 2026-07-23 21:23:13 2026 07 23 21 13 d-20260723-212313-90dc78"
-    },
-    {
-      "id": "d-20260723-203331-9a8708",
-      "kind": "doc",
-      "title": "Improving Repository Context for Coding Agents",
-      "href": "/docs/?scope=studio&doc=d-20260723-203331-9a8708",
-      "last_updated": "2026-07-23 20:55:45",
-      "parent_id": "d-20260723-212313-90dc78",
-      "parent_title": "Research",
-      "display_meta": "2026-07-23 20:55:45 • Research",
-      "search_terms": [
-        "improving repository context for coding agents",
-        "improving",
-        "repository",
-        "context",
-        "for",
-        "coding",
-        "agents",
-        "research",
-        "2026-07-23 20:55:45",
-        "2026",
-        "07",
-        "23",
-        "20",
-        "55",
-        "45",
-        "d-20260723-203331-9a8708"
-      ],
-      "search_text": "improving repository context for coding agents improving repository context for coding agents research 2026-07-23 20:55:45 2026 07 23 20 55 45 d-20260723-203331-9a8708"
-    },
-    {
-      "id": "d-20260723-203332-eaca11",
-      "kind": "doc",
-      "title": "Introducing JavaScript Configuration to the Repository",
-      "href": "/docs/?scope=studio&doc=d-20260723-203332-eaca11",
-      "last_updated": "2026-07-23 20:55:33",
-      "parent_id": "d-20260723-212313-90dc78",
-      "parent_title": "Research",
-      "display_meta": "2026-07-23 20:55:33 • Research",
-      "search_terms": [
-        "introducing javascript configuration to the repository",
-        "introducing",
-        "javascript",
-        "configuration",
-        "to",
-        "the",
-        "repository",
-        "research",
-        "2026-07-23 20:55:33",
-        "2026",
-        "07",
-        "23",
-        "20",
-        "55",
-        "33",
-        "d-20260723-203332-eaca11"
-      ],
-      "search_text": "introducing javascript configuration to the repository introducing javascript configuration to the repository research 2026-07-23 20:55:33 2026 07 23 20 55 33 d-20260723-203332-eaca11"
-    },
-    {
-      "id": "d-20260723-203332-3aba41",
-      "kind": "doc",
-      "title": "Recommended JSDoc Approach for the Repository",
-      "href": "/docs/?scope=studio&doc=d-20260723-203332-3aba41",
-      "last_updated": "2026-07-23 20:35:05",
-      "parent_id": "d-20260723-212313-90dc78",
-      "parent_title": "Research",
-      "display_meta": "2026-07-23 20:35:05 • Research",
-      "search_terms": [
-        "recommended jsdoc approach for the repository",
-        "recommended",
-        "jsdoc",
-        "approach",
-        "for",
-        "the",
-        "repository",
-        "research",
-        "2026-07-23 20:35:05",
-        "2026",
-        "07",
-        "23",
-        "20",
-        "35",
-        "05",
-        "d-20260723-203332-3aba41"
-      ],
-      "search_text": "recommended jsdoc approach for the repository recommended jsdoc approach for the repository research 2026-07-23 20:35:05 2026 07 23 20 35 05 d-20260723-203332-3aba41"
     },
     {
       "id": "d-20260713-000000-d9bad2",
