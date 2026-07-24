@@ -58,6 +58,49 @@ class DocsMediaInventory:
         }
 
 
+def source_media_references(
+    config: DocsScopeConfig,
+    source: str,
+    *,
+    doc_id: str,
+) -> tuple[DocsMediaReference, ...]:
+    """Return configured, source-scope-owned media references from one document."""
+
+    found: set[tuple[str, str, str]] = set()
+    for match in MEDIA_REFERENCE_PATTERN.finditer(source):
+        logical_path = match.group("path").lstrip("/")
+        parts = Path(logical_path).parts
+        if len(parts) < 4 or parts[:2] != ("docs", config.scope_id):
+            continue
+        media_type = parts[2]
+        if media_type not in config.published.media:
+            continue
+        found.add((media_type, Path(*parts[3:]).as_posix(), logical_path))
+    for media_type, media in config.published.media.items():
+        for prefix in (media.reference_prefix.as_posix(), media.served_path_prefix):
+            normalized_prefix = prefix.rstrip("/")
+            pattern = re.compile(rf"{re.escape(normalized_prefix)}/(?P<identity>[^\s)\]\"'<>]+)")
+            for match in pattern.finditer(source):
+                identity = match.group("identity").rstrip(".,;:")
+                if identity:
+                    found.add(
+                        (
+                            media_type,
+                            identity,
+                            f"{media.reference_prefix.as_posix()}/{identity}",
+                        )
+                    )
+    return tuple(
+        DocsMediaReference(
+            doc_id=doc_id,
+            media_type=media_type,
+            identity=identity,
+            logical_path=logical_path,
+        )
+        for media_type, identity, logical_path in sorted(found)
+    )
+
+
 def document_media_references(repo_root: Path, config: DocsScopeConfig) -> tuple[DocsMediaReference, ...]:
     source_root = resolve_location_path(repo_root, config.source.location)
     documents_root = source_root / config.source.documents_path
@@ -66,39 +109,7 @@ def document_media_references(repo_root: Path, config: DocsScopeConfig) -> tuple
         source = path.read_text(encoding="utf-8")
         doc_match = DOC_ID_PATTERN.search(source)
         doc_id = doc_match.group("doc_id") if doc_match else path.stem
-        found: set[tuple[str, str, str]] = set()
-        for match in MEDIA_REFERENCE_PATTERN.finditer(source):
-            logical_path = match.group("path").lstrip("/")
-            parts = Path(logical_path).parts
-            if len(parts) < 4 or parts[:2] != ("docs", config.scope_id):
-                continue
-            media_type = parts[2]
-            if media_type not in config.published.media:
-                continue
-            found.add((media_type, Path(*parts[3:]).as_posix(), logical_path))
-        for media_type, media in config.published.media.items():
-            for prefix in (media.reference_prefix.as_posix(), media.served_path_prefix):
-                normalized_prefix = prefix.rstrip("/")
-                pattern = re.compile(rf"{re.escape(normalized_prefix)}/(?P<identity>[^\s)\]\"'<>]+)")
-                for match in pattern.finditer(source):
-                    identity = match.group("identity").rstrip(".,;:")
-                    if identity:
-                        found.add(
-                            (
-                                media_type,
-                                identity,
-                                f"{media.reference_prefix.as_posix()}/{identity}",
-                            )
-                        )
-        references.extend(
-            DocsMediaReference(
-                doc_id=doc_id,
-                media_type=media_type,
-                identity=identity,
-                logical_path=logical_path,
-            )
-            for media_type, identity, logical_path in sorted(found)
-        )
+        references.extend(source_media_references(config, source, doc_id=doc_id))
     return tuple(references)
 
 
@@ -222,4 +233,5 @@ __all__ = [
     "DocsMediaReference",
     "document_media_references",
     "inventory_scope_media",
+    "source_media_references",
 ]

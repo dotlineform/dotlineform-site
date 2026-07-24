@@ -1,0 +1,1090 @@
+#!/usr/bin/env python3
+"""Write-free planning for multi-document Copy and Move transfers."""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+import re
+from dataclasses import asdict, dataclass, is_dataclass
+from pathlib import Path
+from typing import Any, Callable, Iterable, Mapping
+from urllib.parse import parse_qs, urlsplit
+
+import docs_source_model as source_model
+from docs_artifact_locations import (
+    DELETE_CAPABILITY,
+    READ_CAPABILITY,
+    STAT_CAPABILITY,
+    VERIFY_BYTES_CAPABILITY,
+    WRITE_CAPABILITY,
+    ArtifactLocation,
+    ArtifactLocationAdapter,
+    artifact_location_adapter,
+    authenticated_remote_client_for_locations,
+)
+from docs_media_inventory import (
+    MEDIA_REFERENCE_PATTERN,
+    DocsMediaReference,
+    document_media_references,
+    source_media_references,
+)
+from docs_scope_config import (
+    PUBLIC_SCOPE_TYPE,
+    DocsScopeConfig,
+    document_source_path,
+    load_docs_scope_configs,
+    resolve_scope_path,
+)
+
+
+TRANSFER_PREVIEW_SCHEMA_VERSION = "docs_document_transfer_preview_v1"
+TRANSFER_APPLY_PLAN_SCHEMA_VERSION = "docs_document_transfer_apply_plan_v1"
+COPY_MODE = "copy"
+MOVE_MODE = "move"
+SUPPORTED_TRANSFER_MODES = frozenset({COPY_MODE, MOVE_MODE})
+IdentityTokenFactory = Callable[[int], str]
+BuildSourceIdentityResolver = Callable[[str], str]
+
+ROOT_RELATIVE_VIEWER_URL_PATTERN = re.compile(
+    r"(?<![A-Za-z0-9:/])/(?:[A-Za-z0-9._~%-]+/)*\?[^\s)>'\"<]+"
+)
+MARKDOWN_EXTERNAL_MEDIA_PATTERN = re.compile(
+    r"!\[[^\]]*\]\(\s*(?P<url>https?://[^\s)]+)",
+    re.IGNORECASE,
+)
+HTML_EXTERNAL_MEDIA_PATTERN = re.compile(
+    r"<(?:img|source|video|audio)\b[^>]*\b(?:src|poster)\s*=\s*[\"']"
+    r"(?P<url>https?://[^\"']+)",
+    re.IGNORECASE,
+)
+
+
+def _mermaid_source_identity(published_identity: str) -> str:
+    if Path(published_identity).suffix.lower() != ".svg":
+        raise ValueError(
+            f"Mermaid build output {published_identity!r} must use the .svg suffix"
+        )
+    return Path(published_identity).with_suffix(".mmd").as_posix()
+
+
+REGISTERED_BUILD_SOURCE_IDENTITY_RESOLVERS: dict[
+    str,
+    BuildSourceIdentityResolver,
+] = {
+    "mermaid": _mermaid_source_identity,
+}
+
+
+@dataclass(frozen=True)
+class TransferBlocker:
+    code: str
+    message: str
+    media_type: str = ""
+    identity: str = ""
+    document_ids: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
+class RetainedExternalDependency:
+    kind: str
+    reference: str
+    document_ids: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class TransferBuildSourcePlan:
+    build_type: str
+    producer: str
+    publishes_to: str
+    source_identity: str
+    source_provider: str
+    target_provider: str
+    source_size: int
+    source_sha256: str
+    target_status: str
+
+
+@dataclass(frozen=True)
+class TransferMediaPlan:
+    media_type: str
+    identity: str
+    source_provider: str
+    target_provider: str
+    source_reference: str
+    target_reference: str
+    source_size: int
+    source_sha256: str
+    target_status: str
+    document_ids: tuple[str, ...]
+    shared_outside_document_ids: tuple[str, ...]
+    build_sources: tuple[TransferBuildSourcePlan, ...]
+
+
+@dataclass(frozen=True)
+class TransferDocumentPlan:
+    source_doc: source_model.ScopeDoc
+    target_doc_id: str
+    target_parent_id: str
+    target_path: Path
+    requested: bool
+    effective_root: bool
+
+
+@dataclass(frozen=True)
+class DocumentTransferPlan:
+    mode: str
+    source_scope: str
+    target_scope: str
+    source_config: DocsScopeConfig
+    target_config: DocsScopeConfig
+    operation_timestamp: str
+    include_descendants: bool
+    descendants_forced: bool
+    requested_doc_ids: tuple[str, ...]
+    documents: tuple[TransferDocumentPlan, ...]
+    media: tuple[TransferMediaPlan, ...]
+    retained_external_dependencies: tuple[RetainedExternalDependency, ...]
+    blockers: tuple[TransferBlocker, ...]
+
+    @property
+    def ok(self) -> bool:
+        return not self.blockers
+
+    @property
+    def descendant_count(self) -> int:
+        return len(self.documents) - len(self.requested_doc_ids)
+
+    @property
+    def effective_root_count(self) -> int:
+        return sum(document.effective_root for document in self.documents)
+
+    def preview_payload(self) -> dict[str, Any]:
+        return {
+            "schema_version": TRANSFER_PREVIEW_SCHEMA_VERSION,
+            "ok": self.ok,
+            "mode": self.mode,
+            "include_descendants": self.include_descendants,
+            "descendants_forced": self.descendants_forced,
+            "source": {"scope": self.source_scope},
+            "target": {"scope": self.target_scope, "placement": "scope_root"},
+            "requested_count": len(self.requested_doc_ids),
+            "effective_root_count": self.effective_root_count,
+            "descendant_count": self.descendant_count,
+            "document_count": len(self.documents),
+            "unique_media_count": len(self.media),
+            "retained_external_count": len(self.retained_external_dependencies),
+            "documents": [
+                {
+                    "source_doc_id": document.source_doc.doc_id,
+                    "title": document.source_doc.title,
+                    "target_doc_id": document.target_doc_id,
+                    "target_parent_id": document.target_parent_id,
+                    "requested": document.requested,
+                    "effective_root": document.effective_root,
+                }
+                for document in self.documents
+            ],
+            "media": [_media_payload(item) for item in self.media],
+            "retained_external_dependencies": [
+                asdict(dependency)
+                for dependency in self.retained_external_dependencies
+            ],
+            "blockers": [asdict(blocker) for blocker in self.blockers],
+            "apply_plan": self.apply_plan_payload() if self.ok else None,
+        }
+
+    def apply_plan_payload(self) -> dict[str, Any]:
+        if not self.ok:
+            raise ValueError("blocked document transfer has no apply plan")
+        return {
+            "schema_version": TRANSFER_APPLY_PLAN_SCHEMA_VERSION,
+            "mode": self.mode,
+            "source_scope": self.source_scope,
+            "target_scope": self.target_scope,
+            "operation_timestamp": self.operation_timestamp,
+            "include_descendants": self.include_descendants,
+            "requested_doc_ids": list(self.requested_doc_ids),
+            "source_config_sha256": _scope_config_sha256(self.source_config),
+            "target_config_sha256": _scope_config_sha256(self.target_config),
+            "documents": [
+                {
+                    "source_doc_id": document.source_doc.doc_id,
+                    "source_sha256": _source_sha256(document.source_doc.source_text),
+                    "target_doc_id": document.target_doc_id,
+                    "target_parent_id": document.target_parent_id,
+                }
+                for document in self.documents
+            ],
+            "media": [
+                {
+                    "media_type": item.media_type,
+                    "identity": item.identity,
+                    "source_sha256": item.source_sha256,
+                    "target_status": item.target_status,
+                    "shared_outside_document_ids": list(item.shared_outside_document_ids),
+                    "build_sources": [
+                        {
+                            "build_type": build.build_type,
+                            "source_identity": build.source_identity,
+                            "source_sha256": build.source_sha256,
+                            "target_status": build.target_status,
+                        }
+                        for build in item.build_sources
+                    ],
+                }
+                for item in self.media
+            ],
+        }
+
+
+def _media_payload(item: TransferMediaPlan) -> dict[str, Any]:
+    payload = asdict(item)
+    payload["build_sources"] = [asdict(build) for build in item.build_sources]
+    return payload
+
+
+def _jsonable_receipt_value(value: Any) -> Any:
+    if is_dataclass(value):
+        return _jsonable_receipt_value(asdict(value))
+    if isinstance(value, Path):
+        return value.as_posix()
+    if isinstance(value, dict):
+        return {
+            str(key): _jsonable_receipt_value(item)
+            for key, item in value.items()
+        }
+    if isinstance(value, (list, tuple)):
+        return [_jsonable_receipt_value(item) for item in value]
+    return value
+
+
+def _scope_config_sha256(config: DocsScopeConfig) -> str:
+    serialized = json.dumps(
+        _jsonable_receipt_value(config),
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+    )
+    return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
+
+
+def _source_sha256(source: str) -> str:
+    return hashlib.sha256(source.encode("utf-8")).hexdigest()
+
+
+def _bytes_sha256(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def _normalize_scope(value: Any, *, field: str) -> str:
+    scope = str(value or "").strip().lower()
+    if not scope:
+        raise ValueError(f"{field} is required")
+    return scope
+
+
+def _normalize_mode(value: Any) -> str:
+    mode = str(value or "").strip().lower()
+    if mode not in SUPPORTED_TRANSFER_MODES:
+        raise ValueError("transfer_mode must be copy or move")
+    return mode
+
+
+def _normalize_requested_doc_ids(value: Any) -> tuple[str, ...]:
+    if not isinstance(value, (list, tuple)):
+        raise ValueError("requested_doc_ids must be an array")
+    requested: list[str] = []
+    seen: set[str] = set()
+    for item in value:
+        doc_id = str(item or "").strip()
+        if not doc_id:
+            raise ValueError("requested_doc_ids must not contain empty values")
+        if doc_id in seen:
+            continue
+        seen.add(doc_id)
+        requested.append(doc_id)
+    if not requested:
+        raise ValueError("requested_doc_ids must contain at least one document")
+    return tuple(requested)
+
+
+def _require_document_root(
+    repo_root: Path,
+    config: DocsScopeConfig,
+    *,
+    role: str,
+    writable: bool,
+) -> Path:
+    if writable and config.scope_type == PUBLIC_SCOPE_TYPE:
+        raise ValueError(f"public {role} scope {config.scope_id!r} is not writable")
+    root = resolve_scope_path(repo_root, document_source_path(config))
+    if not root.exists() or not root.is_dir():
+        raise ValueError(f"{role} document root for scope {config.scope_id!r} is unavailable")
+    if not os.access(root, os.R_OK | os.X_OK):
+        raise ValueError(f"{role} document root for scope {config.scope_id!r} is unavailable")
+    if writable and not os.access(root, os.W_OK | os.X_OK):
+        raise ValueError(f"{role} scope {config.scope_id!r} cannot accept canonical writes")
+    return root
+
+
+def _effective_documents(
+    docs: list[source_model.ScopeDoc],
+    requested_doc_ids: tuple[str, ...],
+    *,
+    include_descendants: bool,
+) -> tuple[list[source_model.ScopeDoc], tuple[str, ...]]:
+    docs_by_id = {doc.doc_id: doc for doc in docs}
+    missing = sorted(set(requested_doc_ids) - set(docs_by_id))
+    if missing:
+        raise FileNotFoundError(f"documents not found in source scope: {', '.join(missing)}")
+
+    effective_ids = set(requested_doc_ids)
+    if include_descendants:
+        for doc_id in requested_doc_ids:
+            effective_ids.update(source_model.descendant_doc_ids(docs, doc_id))
+
+    children_by_parent: dict[str, list[source_model.ScopeDoc]] = {}
+    for doc in docs:
+        children_by_parent.setdefault(doc.parent_id, []).append(doc)
+    for children in children_by_parent.values():
+        children.sort(key=source_model.scope_doc_sort_key)
+
+    roots = sorted(
+        (
+            docs_by_id[doc_id]
+            for doc_id in effective_ids
+            if docs_by_id[doc_id].parent_id not in effective_ids
+        ),
+        key=source_model.scope_doc_sort_key,
+    )
+    ordered: list[source_model.ScopeDoc] = []
+
+    def append_selected(doc: source_model.ScopeDoc) -> None:
+        ordered.append(doc)
+        for child in children_by_parent.get(doc.doc_id, ()):
+            if child.doc_id in effective_ids:
+                append_selected(child)
+
+    for root in roots:
+        append_selected(root)
+
+    requested_ids = set(requested_doc_ids)
+    ordered_requested = tuple(doc.doc_id for doc in ordered if doc.doc_id in requested_ids)
+    return ordered, ordered_requested
+
+
+def _allocate_copy_ids(
+    source_docs: list[source_model.ScopeDoc],
+    target_docs: list[source_model.ScopeDoc],
+    *,
+    timestamp: str,
+    target_root: Path,
+    token_factory: IdentityTokenFactory | None,
+) -> dict[str, str]:
+    unavailable = {
+        identity.lower()
+        for doc in [*source_docs, *target_docs]
+        for identity in (doc.doc_id, doc.path.stem)
+        if identity
+    }
+    id_map: dict[str, str] = {}
+    for source_doc in source_docs:
+        allocation_kwargs = {"token_factory": token_factory} if token_factory is not None else {}
+        target_doc_id = source_model.allocate_doc_id(
+            timestamp,
+            unavailable,
+            **allocation_kwargs,
+        )
+        if (target_root / f"{target_doc_id}.md").exists():
+            raise ValueError(f"planned target path already exists for {target_doc_id!r}")
+        unavailable.add(target_doc_id.lower())
+        id_map[source_doc.doc_id] = target_doc_id
+    return id_map
+
+
+def _planned_documents(
+    source_docs: list[source_model.ScopeDoc],
+    requested_doc_ids: tuple[str, ...],
+    target_docs: list[source_model.ScopeDoc],
+    *,
+    mode: str,
+    timestamp: str,
+    target_root: Path,
+    token_factory: IdentityTokenFactory | None,
+    blockers: list[TransferBlocker],
+) -> tuple[TransferDocumentPlan, ...]:
+    source_ids = {doc.doc_id for doc in source_docs}
+    requested_ids = set(requested_doc_ids)
+    if mode == COPY_MODE:
+        id_map = _allocate_copy_ids(
+            source_docs,
+            target_docs,
+            timestamp=timestamp,
+            target_root=target_root,
+            token_factory=token_factory,
+        )
+    else:
+        id_map = {doc.doc_id: doc.doc_id for doc in source_docs}
+        target_ids = {doc.doc_id for doc in target_docs}
+        for source_doc in source_docs:
+            if source_doc.doc_id in target_ids or (target_root / f"{source_doc.doc_id}.md").exists():
+                blockers.append(
+                    TransferBlocker(
+                        code="target_document_collision",
+                        message=(
+                            f"target scope already contains document identity "
+                            f"{source_doc.doc_id!r}"
+                        ),
+                        document_ids=(source_doc.doc_id,),
+                    )
+                )
+
+    return tuple(
+        TransferDocumentPlan(
+            source_doc=source_doc,
+            target_doc_id=id_map[source_doc.doc_id],
+            target_parent_id=(
+                id_map[source_doc.parent_id]
+                if source_doc.parent_id in source_ids
+                else ""
+            ),
+            target_path=target_root / f"{id_map[source_doc.doc_id]}.md",
+            requested=source_doc.doc_id in requested_ids,
+            effective_root=source_doc.parent_id not in source_ids,
+        )
+        for source_doc in source_docs
+    )
+
+
+def _published_adapters(
+    repo_root: Path,
+    config: DocsScopeConfig,
+    media_types: Iterable[str],
+    *,
+    client: object | None,
+    env_files: Iterable[Path] | None,
+    environ: Mapping[str, str] | None,
+) -> dict[str, ArtifactLocationAdapter]:
+    selected = {
+        media_type: config.published.media[media_type]
+        for media_type in sorted(set(media_types))
+        if media_type in config.published.media
+    }
+    remote_client = authenticated_remote_client_for_locations(
+        repo_root,
+        [media.location for media in selected.values()],
+        client=client,  # type: ignore[arg-type]
+        env_files=env_files,
+        environ=environ,
+    )
+    return {
+        media_type: artifact_location_adapter(
+            repo_root,
+            media.location,
+            served_path_prefix=media.served_path_prefix,
+            remote_client=remote_client,
+        )
+        for media_type, media in selected.items()
+    }
+
+
+def _build_source_adapter(
+    repo_root: Path,
+    config: DocsScopeConfig,
+    build_type: str,
+) -> ArtifactLocationAdapter:
+    build = config.source.build_media[build_type]
+    return artifact_location_adapter(
+        repo_root,
+        ArtifactLocation(
+            provider=config.source.location.provider,
+            path=config.source.location.path / build.path,
+        ),
+    )
+
+
+def _build_source_identity(
+    *,
+    build_type: str,
+    producer: str,
+    published_identity: str,
+) -> str:
+    resolver = REGISTERED_BUILD_SOURCE_IDENTITY_RESOLVERS.get(producer)
+    if resolver is None:
+        raise ValueError(
+            f"build media {build_type!r} uses unsupported producer {producer!r}"
+        )
+    return resolver(published_identity)
+
+
+def _target_artifact_status(
+    adapter: ArtifactLocationAdapter,
+    identity: str,
+    source_bytes: bytes,
+) -> str:
+    if adapter.stat(identity) is None:
+        return "create"
+    return "reuse" if adapter.read(identity) == source_bytes else "collision"
+
+
+def _retained_dependencies(
+    config: DocsScopeConfig,
+    documents: Iterable[source_model.ScopeDoc],
+    blockers: list[TransferBlocker],
+) -> tuple[RetainedExternalDependency, ...]:
+    references: dict[tuple[str, str], set[str]] = {}
+    for doc in documents:
+        for match in MEDIA_REFERENCE_PATTERN.finditer(doc.source_text):
+            reference = match.group("path").lstrip("/")
+            if reference.lower().startswith(("http://", "https://")):
+                references.setdefault(("external_url", reference), set()).add(doc.doc_id)
+                continue
+            parts = Path(reference).parts
+            if len(parts) < 4 or parts[0] != "docs":
+                continue
+            if parts[1] != config.scope_id:
+                references.setdefault(("other_scope_media", reference), set()).add(doc.doc_id)
+                continue
+            if parts[2] not in config.published.media:
+                blockers.append(
+                    TransferBlocker(
+                        code="unsupported_source_media_role",
+                        message=(
+                            f"source media role {parts[2]!r} is not configured "
+                            f"for scope {config.scope_id!r}"
+                        ),
+                        media_type=parts[2],
+                        identity=Path(*parts[3:]).as_posix(),
+                        document_ids=(doc.doc_id,),
+                    )
+                )
+        for pattern in (MARKDOWN_EXTERNAL_MEDIA_PATTERN, HTML_EXTERNAL_MEDIA_PATTERN):
+            for match in pattern.finditer(doc.source_text):
+                reference = match.group("url").rstrip(".,;:")
+                references.setdefault(("external_url", reference), set()).add(doc.doc_id)
+    return tuple(
+        RetainedExternalDependency(
+            kind=kind,
+            reference=reference,
+            document_ids=tuple(sorted(doc_ids)),
+        )
+        for (kind, reference), doc_ids in sorted(references.items())
+    )
+
+
+def _build_source_plan(
+    repo_root: Path,
+    source_config: DocsScopeConfig,
+    target_config: DocsScopeConfig,
+    *,
+    media_type: str,
+    published_identity: str,
+    build_type: str,
+    mode: str,
+    blockers: list[TransferBlocker],
+) -> TransferBuildSourcePlan | None:
+    source_build = source_config.source.build_media[build_type]
+    target_build = target_config.source.build_media.get(build_type)
+    source_identity = ""
+    try:
+        source_identity = _build_source_identity(
+            build_type=build_type,
+            producer=source_build.producer,
+            published_identity=published_identity,
+        )
+    except ValueError as exc:
+        blockers.append(
+            TransferBlocker(
+                code="unsupported_source_media_build",
+                message=str(exc),
+                media_type=media_type,
+                identity=published_identity,
+            )
+        )
+        return None
+
+    if (
+        target_build is None
+        or target_build.producer != source_build.producer
+        or target_build.publishes_to != media_type
+    ):
+        blockers.append(
+            TransferBlocker(
+                code="unsupported_target_media_build",
+                message=(
+                    f"target scope does not support {build_type!r} "
+                    f"{source_build.producer!r} sources for {media_type!r}"
+                ),
+                media_type=media_type,
+                identity=published_identity,
+            )
+        )
+        return None
+
+    source_adapter = _build_source_adapter(repo_root, source_config, build_type)
+    target_adapter = _build_source_adapter(repo_root, target_config, build_type)
+    try:
+        source_adapter.require(
+            READ_CAPABILITY,
+            STAT_CAPABILITY,
+            *([DELETE_CAPABILITY] if mode == MOVE_MODE else []),
+            role=f"{source_config.scope_id}/{build_type} build source",
+        )
+        target_adapter.require(
+            READ_CAPABILITY,
+            STAT_CAPABILITY,
+            WRITE_CAPABILITY,
+            VERIFY_BYTES_CAPABILITY,
+            role=f"{target_config.scope_id}/{build_type} build source",
+        )
+        if source_adapter.stat(source_identity) is None:
+            raise FileNotFoundError(f"build source does not exist: {source_identity}")
+        source_bytes = source_adapter.read(source_identity)
+        target_status = _target_artifact_status(
+            target_adapter,
+            source_identity,
+            source_bytes,
+        )
+    except Exception as exc:
+        blockers.append(
+            TransferBlocker(
+                code="build_source_unavailable",
+                message=(
+                    f"build source {build_type}/{source_identity or published_identity} "
+                    f"could not be planned: {exc}"
+                ),
+                media_type=media_type,
+                identity=published_identity,
+            )
+        )
+        return None
+
+    if target_status == "collision":
+        blockers.append(
+            TransferBlocker(
+                code="target_build_source_collision",
+                message=(
+                    f"target build source {build_type}/{source_identity} "
+                    "has different bytes"
+                ),
+                media_type=media_type,
+                identity=published_identity,
+            )
+        )
+    return TransferBuildSourcePlan(
+        build_type=build_type,
+        producer=source_build.producer,
+        publishes_to=source_build.publishes_to,
+        source_identity=source_identity,
+        source_provider=source_adapter.location.provider,
+        target_provider=target_adapter.location.provider,
+        source_size=len(source_bytes),
+        source_sha256=_bytes_sha256(source_bytes),
+        target_status=target_status,
+    )
+
+
+def _media_plans(
+    repo_root: Path,
+    source_config: DocsScopeConfig,
+    target_config: DocsScopeConfig,
+    documents: list[source_model.ScopeDoc],
+    *,
+    mode: str,
+    blockers: list[TransferBlocker],
+    source_media_client: object | None,
+    target_media_client: object | None,
+    env_files: Iterable[Path] | None,
+    environ: Mapping[str, str] | None,
+) -> tuple[TransferMediaPlan, ...]:
+    references_by_identity: dict[tuple[str, str], list[DocsMediaReference]] = {}
+    for doc in documents:
+        for reference in source_media_references(
+            source_config,
+            doc.source_text,
+            doc_id=doc.doc_id,
+        ):
+            references_by_identity.setdefault(
+                (reference.media_type, reference.identity),
+                [],
+            ).append(reference)
+    if not references_by_identity:
+        return ()
+
+    media_types = {media_type for media_type, _identity in references_by_identity}
+    try:
+        source_adapters = _published_adapters(
+            repo_root,
+            source_config,
+            media_types,
+            client=source_media_client,
+            env_files=env_files,
+            environ=environ,
+        )
+    except Exception as exc:
+        blockers.append(
+            TransferBlocker(
+                code="source_media_provider_unavailable",
+                message=f"source media provider could not be opened: {exc}",
+            )
+        )
+        source_adapters = {}
+    try:
+        target_adapters = _published_adapters(
+            repo_root,
+            target_config,
+            media_types,
+            client=target_media_client,
+            env_files=env_files,
+            environ=environ,
+        )
+    except Exception as exc:
+        blockers.append(
+            TransferBlocker(
+                code="target_media_provider_unavailable",
+                message=f"target media provider could not be opened: {exc}",
+            )
+        )
+        target_adapters = {}
+
+    outside_references: dict[tuple[str, str], set[str]] = {}
+    if mode == MOVE_MODE:
+        effective_ids = {doc.doc_id for doc in documents}
+        for reference in document_media_references(repo_root, source_config):
+            if reference.doc_id not in effective_ids:
+                outside_references.setdefault(
+                    (reference.media_type, reference.identity),
+                    set(),
+                ).add(reference.doc_id)
+
+    plans: list[TransferMediaPlan] = []
+    for (media_type, identity), references in sorted(references_by_identity.items()):
+        document_ids = tuple(sorted({reference.doc_id for reference in references}))
+        source_media = source_config.published.media[media_type]
+        target_media = target_config.published.media.get(media_type)
+        source_adapter = source_adapters.get(media_type)
+        target_adapter = target_adapters.get(media_type)
+        source_bytes = b""
+        source_available = False
+        target_status = "blocked"
+
+        if target_media is None:
+            blockers.append(
+                TransferBlocker(
+                    code="unsupported_target_media_role",
+                    message=f"target scope has no {media_type!r} media role",
+                    media_type=media_type,
+                    identity=identity,
+                    document_ids=document_ids,
+                )
+            )
+        if source_adapter is None:
+            blockers.append(
+                TransferBlocker(
+                    code="source_media_unavailable",
+                    message=f"source media adapter is unavailable for {media_type}/{identity}",
+                    media_type=media_type,
+                    identity=identity,
+                    document_ids=document_ids,
+                )
+            )
+        else:
+            try:
+                source_adapter.require(
+                    READ_CAPABILITY,
+                    STAT_CAPABILITY,
+                    *([DELETE_CAPABILITY] if mode == MOVE_MODE else []),
+                    role=f"{source_config.scope_id}/{media_type} published media",
+                )
+                if source_adapter.stat(identity) is None:
+                    raise FileNotFoundError(f"media does not exist: {identity}")
+                source_bytes = source_adapter.read(identity)
+                source_available = True
+            except Exception as exc:
+                blockers.append(
+                    TransferBlocker(
+                        code="source_media_unavailable",
+                        message=f"source media {media_type}/{identity} could not be read: {exc}",
+                        media_type=media_type,
+                        identity=identity,
+                        document_ids=document_ids,
+                    )
+                )
+
+        if source_available and target_media is not None and target_adapter is not None:
+            try:
+                target_adapter.require(
+                    READ_CAPABILITY,
+                    STAT_CAPABILITY,
+                    WRITE_CAPABILITY,
+                    VERIFY_BYTES_CAPABILITY,
+                    role=f"{target_config.scope_id}/{media_type} published media",
+                )
+                target_status = _target_artifact_status(
+                    target_adapter,
+                    identity,
+                    source_bytes,
+                )
+            except Exception as exc:
+                blockers.append(
+                    TransferBlocker(
+                        code="target_media_unavailable",
+                        message=f"target media {media_type}/{identity} could not be planned: {exc}",
+                        media_type=media_type,
+                        identity=identity,
+                        document_ids=document_ids,
+                    )
+                )
+            if target_status == "collision":
+                blockers.append(
+                    TransferBlocker(
+                        code="target_media_collision",
+                        message=f"target media {media_type}/{identity} has different bytes",
+                        media_type=media_type,
+                        identity=identity,
+                        document_ids=document_ids,
+                    )
+                )
+
+        build_sources: list[TransferBuildSourcePlan] = []
+        for build_type in source_media.build_inputs:
+            build_plan = _build_source_plan(
+                repo_root,
+                source_config,
+                target_config,
+                media_type=media_type,
+                published_identity=identity,
+                build_type=build_type,
+                mode=mode,
+                blockers=blockers,
+            )
+            if build_plan is not None:
+                build_sources.append(build_plan)
+
+        if build_sources and target_status == "create":
+            target_status = "produce"
+
+        plans.append(
+            TransferMediaPlan(
+                media_type=media_type,
+                identity=identity,
+                source_provider=source_media.location.provider,
+                target_provider=target_media.location.provider if target_media else "",
+                source_reference=f"{source_media.reference_prefix.as_posix()}/{identity}",
+                target_reference=(
+                    f"{target_media.reference_prefix.as_posix()}/{identity}"
+                    if target_media
+                    else ""
+                ),
+                source_size=len(source_bytes),
+                source_sha256=_bytes_sha256(source_bytes) if source_available else "",
+                target_status=target_status,
+                document_ids=document_ids,
+                shared_outside_document_ids=tuple(
+                    sorted(outside_references.get((media_type, identity), set()))
+                ),
+                build_sources=tuple(build_sources),
+            )
+        )
+    return tuple(plans)
+
+
+def _viewer_link_target(source: str, config: DocsScopeConfig) -> set[str]:
+    targets: set[str] = set()
+    for match in ROOT_RELATIVE_VIEWER_URL_PATTERN.finditer(source):
+        parsed = urlsplit(match.group(0))
+        if parsed.path != config.viewer_base_url:
+            continue
+        query = parse_qs(parsed.query, keep_blank_values=True)
+        doc_values = query.get("doc", ())
+        scope_values = query.get("scope", ())
+        if len(doc_values) != 1 or len(scope_values) > 1:
+            continue
+        scope = scope_values[0] if scope_values else (
+            config.scope_id if not config.include_scope_param else ""
+        )
+        if scope == config.scope_id:
+            targets.add(doc_values[0])
+    return targets
+
+
+def _move_inbound_link_blockers(
+    source_config: DocsScopeConfig,
+    all_source_docs: list[source_model.ScopeDoc],
+    effective_docs: list[source_model.ScopeDoc],
+) -> list[TransferBlocker]:
+    effective_ids = {doc.doc_id for doc in effective_docs}
+    blockers: list[TransferBlocker] = []
+    for outside_doc in all_source_docs:
+        if outside_doc.doc_id in effective_ids:
+            continue
+        inbound_targets = sorted(
+            _viewer_link_target(outside_doc.source_text, source_config) & effective_ids
+        )
+        for target_doc_id in inbound_targets:
+            blockers.append(
+                TransferBlocker(
+                    code="inbound_viewer_link",
+                    message=(
+                        f"source document {outside_doc.doc_id!r} links to moved "
+                        f"document {target_doc_id!r}"
+                    ),
+                    document_ids=(outside_doc.doc_id, target_doc_id),
+                )
+            )
+    return blockers
+
+
+def plan_document_transfer(
+    repo_root: Path,
+    *,
+    source_scope: Any,
+    requested_doc_ids: Any,
+    target_scope: Any,
+    transfer_mode: Any,
+    include_descendants: Any = False,
+    operation_timestamp: str | None = None,
+    token_factory: IdentityTokenFactory | None = None,
+    source_media_client: object | None = None,
+    target_media_client: object | None = None,
+    env_files: Iterable[Path] | None = None,
+    environ: Mapping[str, str] | None = None,
+) -> DocumentTransferPlan:
+    """Return a deterministic document/media transfer preview without writes."""
+
+    mode = _normalize_mode(transfer_mode)
+    normalized_source_scope = _normalize_scope(source_scope, field="source_scope")
+    normalized_target_scope = _normalize_scope(target_scope, field="target_scope")
+    if normalized_source_scope == normalized_target_scope:
+        raise ValueError("target_scope must differ from source_scope")
+    normalized_requested_ids = _normalize_requested_doc_ids(requested_doc_ids)
+    if not isinstance(include_descendants, bool):
+        raise ValueError("include_descendants must be a boolean")
+    descendants_forced = mode == MOVE_MODE
+    effective_include_descendants = include_descendants or descendants_forced
+
+    configs = load_docs_scope_configs(
+        repo_root,
+        scope_ids=(normalized_source_scope, normalized_target_scope),
+    )
+    if normalized_source_scope not in configs:
+        raise ValueError(
+            f"source_scope {normalized_source_scope!r} is not a configured Docs Viewer scope"
+        )
+    if normalized_target_scope not in configs:
+        raise ValueError(
+            f"target_scope {normalized_target_scope!r} is not a configured Docs Viewer scope"
+        )
+    source_config = configs[normalized_source_scope]
+    target_config = configs[normalized_target_scope]
+    if mode == MOVE_MODE and source_config.scope_type == PUBLIC_SCOPE_TYPE:
+        raise ValueError("public source scopes cannot be moved")
+
+    _require_document_root(
+        repo_root,
+        source_config,
+        role="source",
+        writable=mode == MOVE_MODE,
+    )
+    target_root = _require_document_root(
+        repo_root,
+        target_config,
+        role="target",
+        writable=True,
+    )
+    source_docs = source_model.load_scope_docs_for_config(repo_root, source_config)
+    target_docs = source_model.load_scope_docs_for_config(repo_root, target_config)
+    effective_docs, ordered_requested_ids = _effective_documents(
+        source_docs,
+        normalized_requested_ids,
+        include_descendants=effective_include_descendants,
+    )
+
+    timestamp = str(operation_timestamp or source_model.current_doc_timestamp()).strip()
+    if not source_model.is_doc_timestamp(timestamp):
+        raise ValueError("operation_timestamp must use YYYY-MM-DD HH:MM:SS")
+
+    blockers: list[TransferBlocker] = []
+    documents = _planned_documents(
+        effective_docs,
+        ordered_requested_ids,
+        target_docs,
+        mode=mode,
+        timestamp=timestamp,
+        target_root=target_root,
+        token_factory=token_factory,
+        blockers=blockers,
+    )
+    if mode == MOVE_MODE:
+        blockers.extend(
+            _move_inbound_link_blockers(
+                source_config,
+                source_docs,
+                effective_docs,
+            )
+        )
+    retained_dependencies = _retained_dependencies(
+        source_config,
+        effective_docs,
+        blockers,
+    )
+    media = _media_plans(
+        repo_root,
+        source_config,
+        target_config,
+        effective_docs,
+        mode=mode,
+        blockers=blockers,
+        source_media_client=source_media_client,
+        target_media_client=target_media_client,
+        env_files=env_files,
+        environ=environ,
+    )
+    unique_blockers = tuple(
+        sorted(
+            set(blockers),
+            key=lambda blocker: (
+                blocker.code,
+                blocker.media_type,
+                blocker.identity,
+                blocker.document_ids,
+                blocker.message,
+            ),
+        )
+    )
+    return DocumentTransferPlan(
+        mode=mode,
+        source_scope=normalized_source_scope,
+        target_scope=normalized_target_scope,
+        source_config=source_config,
+        target_config=target_config,
+        operation_timestamp=timestamp,
+        include_descendants=effective_include_descendants,
+        descendants_forced=descendants_forced,
+        requested_doc_ids=ordered_requested_ids,
+        documents=documents,
+        media=media,
+        retained_external_dependencies=retained_dependencies,
+        blockers=unique_blockers,
+    )
+
+
+__all__ = [
+    "COPY_MODE",
+    "MOVE_MODE",
+    "REGISTERED_BUILD_SOURCE_IDENTITY_RESOLVERS",
+    "SUPPORTED_TRANSFER_MODES",
+    "TRANSFER_APPLY_PLAN_SCHEMA_VERSION",
+    "TRANSFER_PREVIEW_SCHEMA_VERSION",
+    "DocumentTransferPlan",
+    "BuildSourceIdentityResolver",
+    "IdentityTokenFactory",
+    "RetainedExternalDependency",
+    "TransferBlocker",
+    "TransferBuildSourcePlan",
+    "TransferDocumentPlan",
+    "TransferMediaPlan",
+    "plan_document_transfer",
+]

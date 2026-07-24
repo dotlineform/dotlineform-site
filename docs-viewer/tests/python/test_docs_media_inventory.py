@@ -227,5 +227,9 @@ def test_full_and_targeted_builds_invoke_media_stage_with_expected_selection(
 
     assert calls == [
         ("studio", True, None),
-        ("studio", True, {"mermaid": ("referenced.svg",)}),
+        (
+            "studio",
+            True,
+            {"mermaid": ("persistent-diagram.svg", "referenced.svg")},
+        ),
     ]

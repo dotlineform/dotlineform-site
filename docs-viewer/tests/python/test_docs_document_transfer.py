@@ -1,0 +1,686 @@
+#!/usr/bin/env python3
+"""Focused checks for generalized, write-free document transfer planning."""
+
+from __future__ import annotations
+
+import json
+import sys
+from collections.abc import Iterator
+from dataclasses import dataclass
+from pathlib import Path
+
+import pytest
+
+from repo_factory import docs_scope_record
+
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+DOCS_SERVICES_DIR = REPO_ROOT / "docs-viewer" / "services"
+if str(DOCS_SERVICES_DIR) not in sys.path:
+    sys.path.insert(0, str(DOCS_SERVICES_DIR))
+
+import docs_document_transfer as transfer  # noqa: E402
+import docs_source_model as source_model  # noqa: E402
+
+
+def write_json(path: Path, payload: object) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+
+
+def write_doc(
+    documents_root: Path,
+    *,
+    doc_id: str,
+    title: str,
+    parent_id: str = "",
+    body: str = "",
+) -> None:
+    documents_root.mkdir(parents=True, exist_ok=True)
+    front_matter = {
+        "doc_id": doc_id,
+        "title": title,
+        "added_date": "2026-07-01 10:00:00",
+        "last_updated": "2026-07-02 11:00:00",
+        "parent_id": parent_id,
+        "viewable": True,
+    }
+    (documents_root / f"{doc_id}.md").write_text(
+        source_model.format_source(front_matter, body or f"# {title}\n"),
+        encoding="utf-8",
+    )
+
+
+def local_documents_root(repo_root: Path, scope: str) -> Path:
+    return repo_root / "docs-viewer/scopes" / scope / "source/documents"
+
+
+def media_path(repo_root: Path, scope: str, media_type: str, identity: str) -> Path:
+    return (
+        repo_root
+        / "docs-viewer/scopes"
+        / scope
+        / "published/media"
+        / media_type
+        / identity
+    )
+
+
+def build_source_path(repo_root: Path, scope: str, build_type: str, identity: str) -> Path:
+    return (
+        repo_root
+        / "docs-viewer/scopes"
+        / scope
+        / "source/media"
+        / build_type
+        / identity
+    )
+
+
+def write_bytes(path: Path, data: bytes) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(data)
+
+
+def base_scope(scope: str, **kwargs: object) -> dict[str, object]:
+    return docs_scope_record(
+        scope,
+        viewer_base_url="/docs/",
+        include_scope_param=True,
+        **kwargs,
+    )
+
+
+def add_mermaid_build(scope: dict[str, object]) -> None:
+    source = scope["source"]
+    published = scope["published"]
+    assert isinstance(source, dict)
+    assert isinstance(published, dict)
+    media = published["media"]
+    assert isinstance(media, dict)
+    svg = media["svg"]
+    assert isinstance(svg, dict)
+    source["build_media"] = {
+        "mermaid": {
+            "path": "media/mermaid",
+            "producer": "mermaid",
+            "publishes_to": "svg",
+        }
+    }
+    svg["build_inputs"] = ["mermaid"]
+
+
+def make_repo(
+    tmp_path: Path,
+    *,
+    source_scope: dict[str, object] | None = None,
+    target_scope: dict[str, object] | None = None,
+) -> Path:
+    repo_root = tmp_path / "repo"
+    write_json(
+        repo_root / "docs-viewer/config/scopes/docs_scopes.json",
+        {
+            "schema_version": "docs_scopes_v3",
+            "scopes": [
+                source_scope or base_scope("source"),
+                target_scope or base_scope("target"),
+            ],
+        },
+    )
+    source_root = local_documents_root(repo_root, "source")
+    target_root = local_documents_root(repo_root, "target")
+    write_doc(source_root, doc_id="root", title="Root")
+    write_doc(source_root, doc_id="alpha", title="Alpha", parent_id="root")
+    write_doc(source_root, doc_id="grand", title="Grand", parent_id="alpha")
+    write_doc(source_root, doc_id="beta", title="Beta", parent_id="root")
+    write_doc(source_root, doc_id="other", title="Other")
+    target_root.mkdir(parents=True, exist_ok=True)
+    return repo_root
+
+
+def sequential_tokens(*values: str) -> transfer.IdentityTokenFactory:
+    iterator: Iterator[str] = iter(values)
+    return lambda _size: next(iterator)
+
+
+def snapshot(root: Path) -> dict[str, bytes]:
+    return {
+        path.relative_to(root).as_posix(): path.read_bytes()
+        for path in sorted(root.rglob("*"))
+        if path.is_file()
+    }
+
+
+def blocker_codes(plan: transfer.DocumentTransferPlan) -> set[str]:
+    return {blocker.code for blocker in plan.blockers}
+
+
+def test_copy_selection_is_deterministic_deduplicated_and_write_free(tmp_path: Path) -> None:
+    repo_root = make_repo(tmp_path)
+    before = snapshot(repo_root)
+
+    exact = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        requested_doc_ids=["beta", "alpha", "alpha"],
+        target_scope="target",
+        transfer_mode="copy",
+        include_descendants=False,
+        operation_timestamp="2026-07-24 09:10:11",
+        token_factory=sequential_tokens("aaaaaa", "bbbbbb"),
+    )
+    repeated = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        requested_doc_ids=["beta", "alpha", "alpha"],
+        target_scope="target",
+        transfer_mode="copy",
+        include_descendants=False,
+        operation_timestamp="2026-07-24 09:10:11",
+        token_factory=sequential_tokens("aaaaaa", "bbbbbb"),
+    )
+
+    assert snapshot(repo_root) == before
+    assert exact == repeated
+    assert exact.ok
+    assert exact.requested_doc_ids == ("alpha", "beta")
+    assert [item.source_doc.doc_id for item in exact.documents] == ["alpha", "beta"]
+    assert [item.target_parent_id for item in exact.documents] == ["", ""]
+    assert exact.preview_payload()["requested_count"] == 2
+    assert exact.preview_payload()["effective_root_count"] == 2
+    assert exact.preview_payload()["descendant_count"] == 0
+    assert exact.preview_payload()["apply_plan"]["schema_version"] == (
+        "docs_document_transfer_apply_plan_v1"
+    )
+    serialized = json.dumps(exact.preview_payload()["apply_plan"])
+    assert str(repo_root) not in serialized
+    assert "# Alpha" not in serialized
+
+
+def test_copy_optional_descendants_unions_overlapping_checked_subtrees(tmp_path: Path) -> None:
+    repo_root = make_repo(tmp_path)
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        requested_doc_ids=["alpha", "root"],
+        target_scope="target",
+        transfer_mode="copy",
+        include_descendants=True,
+        operation_timestamp="2026-07-24 09:10:11",
+        token_factory=sequential_tokens("aaaaaa", "bbbbbb", "cccccc", "dddddd"),
+    )
+
+    assert plan.requested_doc_ids == ("root", "alpha")
+    assert [item.source_doc.doc_id for item in plan.documents] == [
+        "root",
+        "alpha",
+        "grand",
+        "beta",
+    ]
+    assert plan.descendant_count == 2
+    assert plan.effective_root_count == 1
+    assert [item.target_parent_id for item in plan.documents] == [
+        "",
+        plan.documents[0].target_doc_id,
+        plan.documents[1].target_doc_id,
+        plan.documents[0].target_doc_id,
+    ]
+
+
+def test_move_forces_descendants_preserves_identity_and_reports_shared_media(
+    tmp_path: Path,
+) -> None:
+    repo_root = make_repo(tmp_path)
+    source_root = local_documents_root(repo_root, "source")
+    media_reference = "[[media:docs/source/img/shared.png Shared]]\n"
+    write_doc(
+        source_root,
+        doc_id="root",
+        title="Root",
+        body=f"# Root\n\n{media_reference}",
+    )
+    write_doc(
+        source_root,
+        doc_id="other",
+        title="Other",
+        body=f"# Other\n\n{media_reference}",
+    )
+    write_bytes(media_path(repo_root, "source", "img", "shared.png"), b"shared")
+
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        requested_doc_ids=["root"],
+        target_scope="target",
+        transfer_mode="move",
+        include_descendants=False,
+        operation_timestamp="2026-07-24 09:10:11",
+    )
+
+    assert plan.ok
+    assert plan.include_descendants is True
+    assert plan.descendants_forced is True
+    assert [item.source_doc.doc_id for item in plan.documents] == [
+        "root",
+        "alpha",
+        "grand",
+        "beta",
+    ]
+    assert [item.target_doc_id for item in plan.documents] == [
+        "root",
+        "alpha",
+        "grand",
+        "beta",
+    ]
+    assert plan.documents[0].source_doc.front_matter["added_date"] == "2026-07-01 10:00:00"
+    assert plan.media[0].shared_outside_document_ids == ("other",)
+    assert plan.media[0].target_status == "create"
+
+
+def test_media_is_deduplicated_and_exact_target_bytes_are_reused(tmp_path: Path) -> None:
+    repo_root = make_repo(tmp_path)
+    reference = "[[media:docs/source/files/guide.pdf Guide]]\n"
+    write_doc(
+        local_documents_root(repo_root, "source"),
+        doc_id="root",
+        title="Root",
+        body=f"# Root\n\n{reference}",
+    )
+    write_doc(
+        local_documents_root(repo_root, "source"),
+        doc_id="alpha",
+        title="Alpha",
+        parent_id="root",
+        body=f"# Alpha\n\n{reference}",
+    )
+    write_bytes(media_path(repo_root, "source", "files", "guide.pdf"), b"same")
+    write_bytes(media_path(repo_root, "target", "files", "guide.pdf"), b"same")
+
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        requested_doc_ids=["root"],
+        target_scope="target",
+        transfer_mode="copy",
+        include_descendants=True,
+        operation_timestamp="2026-07-24 09:10:11",
+        token_factory=sequential_tokens("aaaaaa", "bbbbbb", "cccccc", "dddddd"),
+    )
+
+    assert plan.ok
+    assert len(plan.media) == 1
+    assert plan.media[0].document_ids == ("alpha", "root")
+    assert plan.media[0].source_reference == "docs/source/files/guide.pdf"
+    assert plan.media[0].target_reference == "docs/target/files/guide.pdf"
+    assert plan.media[0].target_status == "reuse"
+
+
+@pytest.mark.parametrize(
+    ("source_bytes", "target_bytes", "expected_code"),
+    [
+        (None, None, "source_media_unavailable"),
+        (b"source", b"different", "target_media_collision"),
+    ],
+)
+def test_missing_media_and_differing_target_bytes_block_apply(
+    tmp_path: Path,
+    source_bytes: bytes | None,
+    target_bytes: bytes | None,
+    expected_code: str,
+) -> None:
+    repo_root = make_repo(tmp_path)
+    write_doc(
+        local_documents_root(repo_root, "source"),
+        doc_id="root",
+        title="Root",
+        body="# Root\n\n[[media:docs/source/img/photo.png Photo]]\n",
+    )
+    if source_bytes is not None:
+        write_bytes(media_path(repo_root, "source", "img", "photo.png"), source_bytes)
+    if target_bytes is not None:
+        write_bytes(media_path(repo_root, "target", "img", "photo.png"), target_bytes)
+
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        requested_doc_ids=["root"],
+        target_scope="target",
+        transfer_mode="copy",
+        operation_timestamp="2026-07-24 09:10:11",
+        token_factory=sequential_tokens("aaaaaa"),
+    )
+
+    assert not plan.ok
+    assert expected_code in blocker_codes(plan)
+    assert plan.preview_payload()["apply_plan"] is None
+    with pytest.raises(ValueError, match="blocked document transfer"):
+        plan.apply_plan_payload()
+
+
+def test_mermaid_svg_includes_canonical_build_source_but_inline_mermaid_does_not(
+    tmp_path: Path,
+) -> None:
+    source_scope = base_scope("source")
+    target_scope = base_scope("target")
+    add_mermaid_build(source_scope)
+    add_mermaid_build(target_scope)
+    repo_root = make_repo(
+        tmp_path,
+        source_scope=source_scope,
+        target_scope=target_scope,
+    )
+    write_doc(
+        local_documents_root(repo_root, "source"),
+        doc_id="root",
+        title="Root",
+        body=(
+            "# Root\n\n"
+            "[[media:docs/source/svg/diagram.svg Diagram]]\n\n"
+            "```mermaid\nflowchart LR\n  A --> B\n```\n"
+        ),
+    )
+    write_bytes(media_path(repo_root, "source", "svg", "diagram.svg"), b"<svg/>")
+    write_bytes(
+        build_source_path(repo_root, "source", "mermaid", "diagram.mmd"),
+        b"flowchart LR\n  A --> B\n",
+    )
+    before = snapshot(repo_root)
+
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        requested_doc_ids=["root"],
+        target_scope="target",
+        transfer_mode="copy",
+        operation_timestamp="2026-07-24 09:10:11",
+        token_factory=sequential_tokens("aaaaaa"),
+    )
+
+    assert snapshot(repo_root) == before
+    assert plan.ok
+    assert len(plan.media) == 1
+    assert plan.media[0].identity == "diagram.svg"
+    assert len(plan.media[0].build_sources) == 1
+    build = plan.media[0].build_sources[0]
+    assert build.source_identity == "diagram.mmd"
+    assert build.producer == "mermaid"
+    assert build.target_status == "create"
+    assert plan.media[0].target_status == "produce"
+    assert "```mermaid" in plan.documents[0].source_doc.source_text
+
+
+def test_unsupported_target_role_and_build_are_blockers(tmp_path: Path) -> None:
+    source_scope = base_scope("source")
+    add_mermaid_build(source_scope)
+    target_scope = base_scope("target", media_types=("img", "files"))
+    repo_root = make_repo(
+        tmp_path,
+        source_scope=source_scope,
+        target_scope=target_scope,
+    )
+    write_doc(
+        local_documents_root(repo_root, "source"),
+        doc_id="root",
+        title="Root",
+        body="# Root\n\n[[media:docs/source/svg/diagram.svg Diagram]]\n",
+    )
+    write_bytes(media_path(repo_root, "source", "svg", "diagram.svg"), b"<svg/>")
+    write_bytes(
+        build_source_path(repo_root, "source", "mermaid", "diagram.mmd"),
+        b"flowchart LR\n  A --> B\n",
+    )
+
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        requested_doc_ids=["root"],
+        target_scope="target",
+        transfer_mode="copy",
+        operation_timestamp="2026-07-24 09:10:11",
+        token_factory=sequential_tokens("aaaaaa"),
+    )
+
+    assert {
+        "unsupported_target_media_role",
+        "unsupported_target_media_build",
+    }.issubset(blocker_codes(plan))
+
+
+def test_external_and_other_scope_media_are_retained_dependencies(tmp_path: Path) -> None:
+    repo_root = make_repo(tmp_path)
+    write_doc(
+        local_documents_root(repo_root, "source"),
+        doc_id="root",
+        title="Root",
+        body=(
+            "# Root\n\n"
+            "[[media:docs/archive/img/old.png Old]]\n\n"
+            "![Hosted](https://cdn.example.test/hosted.png)\n"
+        ),
+    )
+
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        requested_doc_ids=["root"],
+        target_scope="target",
+        transfer_mode="copy",
+        operation_timestamp="2026-07-24 09:10:11",
+        token_factory=sequential_tokens("aaaaaa"),
+    )
+
+    assert plan.ok
+    assert {
+        (item.kind, item.reference)
+        for item in plan.retained_external_dependencies
+    } == {
+        ("external_url", "https://cdn.example.test/hosted.png"),
+        ("other_scope_media", "docs/archive/img/old.png"),
+    }
+
+
+def test_move_document_collision_and_known_inbound_viewer_link_block_apply(
+    tmp_path: Path,
+) -> None:
+    repo_root = make_repo(tmp_path)
+    write_doc(
+        local_documents_root(repo_root, "source"),
+        doc_id="other",
+        title="Other",
+        body="# Other\n\n[Root](/docs/?scope=source&doc=root)\n",
+    )
+    write_doc(
+        local_documents_root(repo_root, "target"),
+        doc_id="root",
+        title="Existing root",
+    )
+
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        requested_doc_ids=["root"],
+        target_scope="target",
+        transfer_mode="move",
+        operation_timestamp="2026-07-24 09:10:11",
+    )
+
+    assert {"target_document_collision", "inbound_viewer_link"}.issubset(
+        blocker_codes(plan)
+    )
+    assert plan.preview_payload()["apply_plan"] is None
+
+
+@dataclass(frozen=True)
+class RemoteStat:
+    key: str
+    size: int
+    etag: str = ""
+
+
+class FakeR2Client:
+    def __init__(self, objects: dict[str, bytes]) -> None:
+        self.objects = dict(objects)
+
+    def list_objects(self, prefix: str) -> list[RemoteStat]:
+        return [
+            RemoteStat(key=key, size=len(value))
+            for key, value in sorted(self.objects.items())
+            if key.startswith(prefix)
+        ]
+
+    def get_object(self, key: str) -> bytes:
+        return self.objects[key]
+
+    def head_object(self, key: str) -> RemoteStat | None:
+        value = self.objects.get(key)
+        return None if value is None else RemoteStat(key=key, size=len(value))
+
+    def put_object(self, key: str, path: Path, content_type: str) -> None:
+        del content_type
+        self.objects[key] = path.read_bytes()
+
+    def delete_object(self, key: str) -> None:
+        del self.objects[key]
+
+
+def test_public_r2_source_to_external_local_target_is_provider_neutral(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    projects_base = tmp_path / "Projects"
+    monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
+    source_scope = docs_scope_record(
+        "source",
+        scope_type="public",
+        viewer_base_url="/source/",
+        include_scope_param=False,
+        media_types=("img",),
+    )
+    target_scope = docs_scope_record(
+        "target",
+        scope_type="local_external",
+        viewer_base_url="/docs/",
+        include_scope_param=True,
+        media_types=("img",),
+    )
+    repo_root = tmp_path / "repo"
+    write_json(
+        repo_root / "docs-viewer/config/scopes/docs_scopes.json",
+        {
+            "schema_version": "docs_scopes_v3",
+            "scopes": [source_scope, target_scope],
+        },
+    )
+    write_doc(
+        local_documents_root(repo_root, "source"),
+        doc_id="root",
+        title="Root",
+        body="# Root\n\n[[media:docs/source/img/photo.png Photo]]\n",
+    )
+    external_documents = (
+        projects_base / "docs-viewer/scopes/target/source/documents"
+    )
+    external_documents.mkdir(parents=True, exist_ok=True)
+    source_client = FakeR2Client({"docs/source/img/photo.png": b"remote"})
+    before = dict(source_client.objects)
+
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        requested_doc_ids=["root"],
+        target_scope="target",
+        transfer_mode="copy",
+        operation_timestamp="2026-07-24 09:10:11",
+        token_factory=sequential_tokens("aaaaaa"),
+        source_media_client=source_client,
+    )
+
+    assert plan.ok
+    assert source_client.objects == before
+    assert plan.media[0].source_provider == "r2"
+    assert plan.media[0].target_provider == "external_local"
+    assert plan.media[0].target_status == "create"
+
+
+def test_external_local_source_can_plan_move_to_repository_target(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    projects_base = tmp_path / "Projects"
+    monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
+    source_scope = docs_scope_record(
+        "source",
+        scope_type="local_external",
+        viewer_base_url="/docs/",
+        include_scope_param=True,
+        media_types=("img",),
+    )
+    target_scope = base_scope("target", media_types=("img",))
+    repo_root = tmp_path / "repo"
+    write_json(
+        repo_root / "docs-viewer/config/scopes/docs_scopes.json",
+        {
+            "schema_version": "docs_scopes_v3",
+            "scopes": [source_scope, target_scope],
+        },
+    )
+    external_scope_root = projects_base / "docs-viewer/scopes/source"
+    write_doc(
+        external_scope_root / "source/documents",
+        doc_id="root",
+        title="Root",
+        body="# Root\n\n[[media:docs/source/img/photo.png Photo]]\n",
+    )
+    write_bytes(
+        external_scope_root / "published/media/img/photo.png",
+        b"external",
+    )
+    local_documents_root(repo_root, "target").mkdir(parents=True, exist_ok=True)
+
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        requested_doc_ids=["root"],
+        target_scope="target",
+        transfer_mode="move",
+        operation_timestamp="2026-07-24 09:10:11",
+    )
+
+    assert plan.ok
+    assert plan.media[0].source_provider == "external_local"
+    assert plan.media[0].target_provider == "repository"
+    assert plan.media[0].target_status == "create"
+
+
+def test_public_target_and_public_move_are_rejected(tmp_path: Path) -> None:
+    public_target = docs_scope_record(
+        "target",
+        scope_type="public",
+        viewer_base_url="/target/",
+        include_scope_param=False,
+    )
+    repo_root = make_repo(tmp_path, target_scope=public_target)
+    with pytest.raises(ValueError, match="public target scope"):
+        transfer.plan_document_transfer(
+            repo_root,
+            source_scope="source",
+            requested_doc_ids=["root"],
+            target_scope="target",
+            transfer_mode="copy",
+        )
+
+    public_source = docs_scope_record(
+        "source",
+        scope_type="public",
+        viewer_base_url="/source/",
+        include_scope_param=False,
+    )
+    repo_root = make_repo(tmp_path / "second", source_scope=public_source)
+    with pytest.raises(ValueError, match="public source scopes cannot be moved"):
+        transfer.plan_document_transfer(
+            repo_root,
+            source_scope="source",
+            requested_doc_ids=["root"],
+            target_scope="target",
+            transfer_mode="move",
+        )
