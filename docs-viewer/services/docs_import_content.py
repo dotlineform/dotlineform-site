@@ -33,7 +33,13 @@ def normalized_text(value: Any) -> str:
 
 @dataclass(frozen=True)
 class ImportContent:
-    """Wrapper-neutral input for one planned Docs Import document."""
+    """Wrapper-neutral input for one planned Docs Import document.
+
+    Construction rejects empty identities, unsupported intents or formats,
+    content that conflicts with its intent, and malformed metadata collections.
+    The frozen record retains caller-owned nested values; ``as_dict()`` returns
+    detached copies for downstream planning and serialization.
+    """
 
     source_kind: str
     source_identity: str
@@ -81,6 +87,8 @@ class ImportContent:
             raise ValueError("ImportContent provenance must be an object")
 
     def as_dict(self) -> dict[str, Any]:
+        """Return a JSON-ready mapping with detached mutable metadata."""
+
         return {
             "source_kind": self.source_kind,
             "source_identity": self.source_identity,

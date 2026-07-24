@@ -1,3 +1,11 @@
+/**
+ * Assemble route-bound Docs Viewer services and run their shared startup order.
+ *
+ * Route entrypoints provide policy, DOM references, and optional adapters. This
+ * module connects them without owning feature-controller behavior or generated
+ * payload authority.
+ */
+
 import {
   createDocsViewerPanelLayout
 } from "./docs-viewer-panel-layout.js";
@@ -22,6 +30,37 @@ import {
 import {
   docsViewerRouteFeatureEnabled
 } from "./docs-viewer-route-features.js";
+
+/**
+ * Document collection selected by the route composition.
+ *
+ * Providers may expose additional capabilities, but every route must be able
+ * to read its index and one selected document.
+ *
+ * @typedef {Object} DocsViewerCollectionProvider
+ * @property {Function} readIndex Read the current collection index.
+ * @property {Function} readDocument Read one document from the collection.
+ */
+
+/**
+ * Context supplied to an injected collection-provider factory.
+ *
+ * @typedef {Object} DocsViewerCollectionProviderContext
+ * @property {Object} generatedData Generated-data read runtime.
+ * @property {Object} routeContext Resolved route and application policy.
+ * @property {Object} routeSession Route navigation state.
+ * @property {Object} scopeConfig Configured-scope state.
+ * @property {Object} serviceContext Available route services.
+ * @property {Object|null} [source] Optional source-service adapter.
+ * @property {Function} viewerScope Current scope accessor.
+ * @property {Object} window Browser window used by the provider.
+ */
+
+/**
+ * @callback CreateDocsViewerCollectionProvider
+ * @param {DocsViewerCollectionProviderContext} context
+ * @returns {DocsViewerCollectionProvider}
+ */
 
 export var DOCS_VIEWER_RUNTIME_DEFAULTS = {
   searchBatchSize: 50,
@@ -154,6 +193,17 @@ function requireCollectionProviderMethod(provider, methodName) {
   }
 }
 
+/**
+ * Create and validate the collection provider for the resolved route.
+ *
+ * The injected factory, when present, receives the same route/service context
+ * as the configured-scope fallback. Additional provider methods are preserved.
+ *
+ * @param {Object} [options]
+ * @param {CreateDocsViewerCollectionProvider} [options.createCollectionProvider]
+ * @returns {DocsViewerCollectionProvider}
+ * @throws {Error} If the selected provider lacks `readIndex` or `readDocument`.
+ */
 export function createDocsViewerCollectionProvider(options) {
   var settings = options || {};
   var providerContext = {
@@ -174,6 +224,16 @@ export function createDocsViewerCollectionProvider(options) {
   return provider;
 }
 
+/**
+ * Assemble the route's services, state domains, panel layout, and providers.
+ *
+ * This is composition only: asynchronous configuration and index reads remain
+ * in `startDocsViewerStartupPhases`.
+ *
+ * @param {Object} options Route context, DOM references, and injected adapters.
+ * @returns {Object} Route-bound dependencies and startup policy.
+ * @throws {Error} If the view registry or collection-provider contract is absent.
+ */
 export function createDocsViewerAppComposition(options) {
   var settings = options || {};
   var root = settings.root;
@@ -290,6 +350,18 @@ export function createDocsViewerAppComposition(options) {
   };
 }
 
+/**
+ * Run feature-gated startup phases in their shared browser order.
+ *
+ * Events and busy state start before configured-scope and viewer-settings
+ * reads. Bookmark/management setup precedes the initial index read; an
+ * import-on-load request runs last. Rejected phase work is rendered as a
+ * startup failure and absorbed, and busy cleanup runs when the chain settles.
+ * A supplied `startBusy` callback must return its cleanup function.
+ *
+ * @param {Object} [options] Composition policy, phase hooks, and failure UI.
+ * @returns {Promise<*>} Completion after final busy-state cleanup.
+ */
 export function startDocsViewerStartupPhases(options) {
   var settings = options || {};
   var composition = settings.composition || {};

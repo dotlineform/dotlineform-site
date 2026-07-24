@@ -1,5 +1,8 @@
+"""Plan generated Docs Viewer payload changes before applying filesystem writes."""
+
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
 from .common import json, json_text, read_text, write_text
@@ -7,10 +10,13 @@ from .source import DocRecord
 
 
 class WritePlanMixin:
+    """Separate generated-output comparison from filesystem mutation."""
+
     def existing_doc_payload_ids(self, directory: Path) -> list[str]:
         if not directory.exists():
             return []
         return sorted(path.stem for path in directory.glob("*.json"))
+
     def build_write_plan(
         self,
         index_tree_payload: dict[str, Any],
@@ -21,6 +27,12 @@ class WritePlanMixin:
         *,
         target_doc_ids: list[str] | None = None,
     ) -> dict[str, Any]:
+        """Return exact writes and removals without mutating generated output.
+
+        A targeted build may remove stale document and reference payloads only
+        when their identities are in ``target_doc_ids``.
+        """
+
         index_tree_text = json_text(index_tree_payload)
         recent_text = json_text(recent_payload)
         publication_recent_text = json_text(publication_recent_payload) if publication_recent_payload else ""
@@ -53,6 +65,7 @@ class WritePlanMixin:
             "item_text_by_id": item_text_by_id,
             **self.build_reference_write_plan(reference_payloads, target_doc_ids=target_doc_ids),
         }
+
     def write_outputs(
         self,
         write_plan: dict[str, Any],
@@ -62,6 +75,12 @@ class WritePlanMixin:
         recent_total: int,
         reference_total: int,
     ) -> None:
+        """Apply one write plan and report the resulting output counts.
+
+        Only entries selected by the plan are written or removed. Reference
+        writes remain delegated to the builder's reference-artifact boundary.
+        """
+
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.items_dir.mkdir(parents=True, exist_ok=True)
         if write_plan["index_tree_write"]:
@@ -85,6 +104,7 @@ class WritePlanMixin:
             recent_total=recent_total,
             reference_total=reference_total,
         )
+
     def print_dry_run(
         self,
         index_payload: dict[str, Any],

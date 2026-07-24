@@ -72,6 +72,8 @@ class ArtifactStat:
 
 
 class RemoteArtifactClient(Protocol):
+    """Remote object operations required by the provider-neutral adapter."""
+
     def list_objects(self, prefix: str) -> Iterable[object]:
         ...
 
@@ -89,6 +91,8 @@ class RemoteArtifactClient(Protocol):
 
 
 def normalize_artifact_identity(value: str | Path, *, allow_empty: bool = False) -> str:
+    """Return a confined POSIX identity, rejecting absolute and parent paths."""
+
     raw = str(value).strip()
     if raw in {"", "."}:
         if allow_empty:
@@ -130,7 +134,13 @@ def authenticated_remote_client_for_locations(
     env_files: Iterable[Path] | None = None,
     environ: Mapping[str, str] | None = None,
 ) -> RemoteArtifactClient | None:
-    """Resolve provider authentication inside the common location boundary."""
+    """Return the remote client required by the selected locations.
+
+    A supplied client is preserved and no client is created for locations that
+    need no authentication. Automatic authentication currently supports only
+    R2 and obtains its credentials and client from the integrated Studio media
+    service; credential exits are exposed to callers as ``RuntimeError``.
+    """
 
     if client is not None:
         return client
@@ -163,7 +173,12 @@ def authenticated_remote_client_for_locations(
 
 
 class ArtifactLocationAdapter:
-    """Common artifact operations exposed to Docs Viewer workflows."""
+    """Provider-neutral artifact operations for Docs Viewer workflows.
+
+    Identities are confined relative paths. ``write`` is create-only while
+    ``replace`` is explicit; reads, mutations, and staging may perform local or
+    remote I/O according to the selected provider.
+    """
 
     def __init__(self, location: ArtifactLocation, *, served_path_prefix: str = "") -> None:
         self.location = location
@@ -183,6 +198,8 @@ class ArtifactLocationAdapter:
         raise NotImplementedError
 
     def write(self, identity: str | Path, data: bytes, *, content_type: str = "") -> ArtifactStat:
+        """Create an artifact, refusing to overwrite an existing identity."""
+
         if self.stat(identity) is not None:
             raise FileExistsError(f"artifact already exists: {normalize_artifact_identity(identity)}")
         return self.replace(identity, data, content_type=content_type)
@@ -208,6 +225,8 @@ class ArtifactLocationAdapter:
 
     @contextlib.contextmanager
     def stage_local(self, identity: str | Path) -> Iterator[Path]:
+        """Yield a readable local path valid only for the context lifetime."""
+
         normalized = normalize_artifact_identity(identity)
         suffix = Path(normalized).suffix
         with tempfile.TemporaryDirectory(prefix="docs-artifact-stage-") as temp_dir:
@@ -388,6 +407,12 @@ def artifact_location_adapter(
     served_path_prefix: str = "",
     remote_client: RemoteArtifactClient | None = None,
 ) -> ArtifactLocationAdapter:
+    """Create the adapter for one validated filesystem or R2 location.
+
+    R2 locations require an already authenticated remote client; filesystem
+    locations are confined by ``filesystem_location_root()``.
+    """
+
     if location.provider in {REPOSITORY_PROVIDER, EXTERNAL_LOCAL_PROVIDER}:
         return FilesystemArtifactLocationAdapter(
             location,
