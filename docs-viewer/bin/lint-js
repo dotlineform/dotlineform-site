@@ -6,14 +6,16 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 TOOL_DIR="$ROOT_DIR/docs-viewer/tooling/lint"
 ESLINT_BIN="$TOOL_DIR/node_modules/.bin/eslint"
 
+if [ "$#" -eq 0 ]; then
+  echo "Usage: docs-viewer/bin/lint-js <path> [path ...]" >&2
+  echo "Pass the exact new or materially changed JavaScript paths to lint." >&2
+  exit 2
+fi
+
 if [ ! -x "$ESLINT_BIN" ]; then
   echo "Docs Viewer ESLint is not installed. Run npm ci in $TOOL_DIR." >&2
   exit 2
 fi
 
 cd "$ROOT_DIR"
-if [ "$#" -eq 0 ]; then
-  set -- "site/docs-viewer/runtime/js/shared/docs-viewer-app-composition.js"
-fi
-
 exec "$ESLINT_BIN" --config "$TOOL_DIR/eslint.config.mjs" "$@"

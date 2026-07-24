@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-cc744f585fb11781a2fb980eee71a674",
-    "generated_at_utc": "2026-07-24T22:49:31Z",
+    "version": "blake2b-410261f47350e70d61807ff61821ca3e",
+    "generated_at_utc": "2026-07-24T23:20:29Z",
     "count": 241
   },
   "entries": [
@@ -770,10 +770,10 @@
       "kind": "doc",
       "title": "Development Checklist",
       "href": "/docs/?scope=studio&doc=d-20260523-190651-7157ec",
-      "last_updated": "2026-07-24 23:48:11",
+      "last_updated": "2026-07-25 00:12:43",
       "parent_id": "d-20260419-000000-d2e47b",
       "parent_title": "Dev Home",
-      "display_meta": "2026-07-24 23:48:11 • Dev Home",
+      "display_meta": "2026-07-25 00:12:43 • Dev Home",
       "search_terms": [
         "development checklist",
         "development",
@@ -781,16 +781,16 @@
         "dev home",
         "dev",
         "home",
-        "2026-07-24 23:48:11",
+        "2026-07-25 00:12:43",
         "2026",
         "07",
-        "24",
-        "23",
-        "48",
-        "11",
+        "25",
+        "00",
+        "12",
+        "43",
         "d-20260523-190651-7157ec"
       ],
-      "search_text": "development checklist development checklist dev home dev home 2026-07-24 23:48:11 2026 07 24 23 48 11 d-20260523-190651-7157ec"
+      "search_text": "development checklist development checklist dev home dev home 2026-07-25 00:12:43 2026 07 25 00 12 43 d-20260523-190651-7157ec"
     },
     {
       "id": "d-20260523-000000-bf7161",
@@ -873,10 +873,10 @@
       "kind": "doc",
       "title": "Run Checks",
       "href": "/docs/?scope=studio&doc=d-20260501-174746-f92667",
-      "last_updated": "2026-07-24 23:48:11",
+      "last_updated": "2026-07-25 00:02:40",
       "parent_id": "d-20260419-000000-d2e47b",
       "parent_title": "Dev Home",
-      "display_meta": "2026-07-24 23:48:11 • Dev Home",
+      "display_meta": "2026-07-25 00:02:40 • Dev Home",
       "search_terms": [
         "run checks",
         "run",
@@ -884,16 +884,16 @@
         "dev home",
         "dev",
         "home",
-        "2026-07-24 23:48:11",
+        "2026-07-25 00:02:40",
         "2026",
         "07",
-        "24",
-        "23",
-        "48",
-        "11",
+        "25",
+        "00",
+        "02",
+        "40",
         "d-20260501-174746-f92667"
       ],
-      "search_text": "run checks run checks dev home dev home 2026-07-24 23:48:11 2026 07 24 23 48 11 d-20260501-174746-f92667"
+      "search_text": "run checks run checks dev home dev home 2026-07-25 00:02:40 2026 07 25 00 02 40 d-20260501-174746-f92667"
     },
     {
       "id": "d-20260423-204839-111501",
@@ -2890,10 +2890,10 @@
       "kind": "doc",
       "title": "Docs Viewer Core Refactor Delivery Overview",
       "href": "/docs/?scope=studio&doc=d-20260718-120304-2c6f81",
-      "last_updated": "2026-07-24 21:34:57",
+      "last_updated": "2026-07-25 00:20:29",
       "parent_id": "d-20260718-114645-7b9d24",
       "parent_title": "Docs Viewer Core Refactor",
-      "display_meta": "2026-07-24 21:34:57 • Docs Viewer Core Refactor",
+      "display_meta": "2026-07-25 00:20:29 • Docs Viewer Core Refactor",
       "search_terms": [
         "docs viewer core refactor delivery overview",
         "docs",
@@ -2903,16 +2903,16 @@
         "delivery",
         "overview",
         "docs viewer core refactor",
-        "2026-07-24 21:34:57",
+        "2026-07-25 00:20:29",
         "2026",
         "07",
-        "24",
-        "21",
-        "34",
-        "57",
+        "25",
+        "00",
+        "20",
+        "29",
         "d-20260718-120304-2c6f81"
       ],
-      "search_text": "docs viewer core refactor delivery overview docs viewer core refactor delivery overview docs viewer core refactor 2026-07-24 21:34:57 2026 07 24 21 34 57 d-20260718-120304-2c6f81"
+      "search_text": "docs viewer core refactor delivery overview docs viewer core refactor delivery overview docs viewer core refactor 2026-07-25 00:20:29 2026 07 25 00 20 29 d-20260718-120304-2c6f81"
     },
     {
       "id": "d-20260718-114201-4e7a93",
@@ -4340,10 +4340,10 @@
       "kind": "doc",
       "title": "Docs Viewer Source Documentation And Linting Pilot Delivery",
       "href": "/docs/?scope=studio&doc=d-20260718-125756-a41c70",
-      "last_updated": "2026-07-24 23:49:10",
+      "last_updated": "2026-07-25 00:12:43",
       "parent_id": "d-20260713-000000-d9bad2",
       "parent_title": "Source Documentation and Linting",
-      "display_meta": "2026-07-24 23:49:10 • Source Documentation and Linting",
+      "display_meta": "2026-07-25 00:12:43 • Source Documentation and Linting",
       "search_terms": [
         "docs viewer source documentation and linting pilot delivery",
         "docs",
@@ -4355,16 +4355,16 @@
         "pilot",
         "delivery",
         "source documentation and linting",
-        "2026-07-24 23:49:10",
+        "2026-07-25 00:12:43",
         "2026",
         "07",
-        "24",
-        "23",
-        "49",
-        "10",
+        "25",
+        "00",
+        "12",
+        "43",
         "d-20260718-125756-a41c70"
       ],
-      "search_text": "docs viewer source documentation and linting pilot delivery docs viewer source documentation and linting pilot delivery source documentation and linting 2026-07-24 23:49:10 2026 07 24 23 49 10 d-20260718-125756-a41c70"
+      "search_text": "docs viewer source documentation and linting pilot delivery docs viewer source documentation and linting pilot delivery source documentation and linting 2026-07-25 00:12:43 2026 07 25 00 12 43 d-20260718-125756-a41c70"
     },
     {
       "id": "d-20260713-133928-c786c7",

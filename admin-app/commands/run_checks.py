@@ -329,16 +329,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
     ),
     "docs": (
         CheckCommand(
-            "docs-python-lint",
-            ("docs-viewer/bin/lint-python",),
-            "Lint the representative Docs Viewer Python contracts.",
-        ),
-        CheckCommand(
-            "docs-js-lint",
-            ("docs-viewer/bin/lint-js",),
-            "Lint the representative Docs Viewer browser-module contract.",
-        ),
-        CheckCommand(
             "docs-python-pytest",
             pytest_argv(
                 "docs-viewer/tests/python/test_docs_export.py",
