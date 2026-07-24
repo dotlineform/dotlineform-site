@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+TOOL_DIR="$ROOT_DIR/docs-viewer/tooling/lint"
+RUFF_BIN="$TOOL_DIR/.venv/bin/ruff"
+
+if [ ! -x "$RUFF_BIN" ]; then
+  echo "Docs Viewer Ruff is not installed. Install docs-viewer/tooling/lint/python-requirements.txt into $TOOL_DIR/.venv." >&2
+  exit 2
+fi
+
+cd "$ROOT_DIR"
+if [ "$#" -eq 0 ]; then
+  set -- \
+    "docs-viewer/services/docs_import_content.py" \
+    "docs-viewer/build/docs_builder/write_plan.py" \
+    "docs-viewer/services/docs_artifact_locations.py"
+fi
+
+exec "$RUFF_BIN" check --config "$TOOL_DIR/ruff.toml" "$@"

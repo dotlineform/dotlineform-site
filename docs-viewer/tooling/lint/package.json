@@ -1,0 +1,15 @@
+{
+  "name": "@dotlineform/docs-viewer-lint",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Pinned lint tooling for selected Docs Viewer source boundaries.",
+  "type": "module",
+  "engines": {
+    "node": "^22.13.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint": "10.8.0",
+    "globals": "17.7.0"
+  }
+}
