@@ -22,6 +22,9 @@ SCRIPTS_DIR = REPO_ROOT / "scripts"
 
 import docs_activity  # noqa: E402
 import docs_diagram_source_service  # noqa: E402
+import docs_document_move_apply  # noqa: E402
+import docs_document_transfer  # noqa: E402
+import docs_document_transfer_apply  # noqa: E402
 import docs_import_source_service as import_source_service  # noqa: E402
 import docs_management_mutations as mutations  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
@@ -35,8 +38,6 @@ import docs_source_config_settings  # noqa: E402
 import docs_static_html_export  # noqa: E402
 import docs_staged_media_service  # noqa: E402
 import docs_sub_scope_lifecycle  # noqa: E402
-import docs_subtree_copy  # noqa: E402
-import docs_subtree_copy_apply  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
 from docs_management_broken_links_service import handle_broken_links  # noqa: E402
@@ -174,32 +175,52 @@ def docs_management_post_response(
         return HTTPStatus.OK, payload
     if path == routes.MOVE_PATH:
         return HTTPStatus.OK, handle_move(repo_root, body, dry_run)
-    if path == routes.COPY_SUBTREE_PREVIEW_PATH:
+    if path == routes.DOCUMENT_TRANSFER_PREVIEW_PATH:
         source_scope = source_model.normalize_scope(body.get("scope"))
-        plan = docs_subtree_copy.plan_copy_subtree(
+        plan = docs_document_transfer.plan_document_transfer(
             repo_root,
             source_scope=source_scope,
-            source_doc_id=body.get("source_doc_id"),
+            requested_doc_ids=body.get("doc_ids"),
             target_scope=body.get("target_scope"),
+            transfer_mode=body.get("transfer_mode"),
+            include_descendants=body.get("include_descendants", False),
         )
         payload = plan.preview_payload()
         payload["dry_run"] = True
         return HTTPStatus.OK, payload
-    if path == routes.COPY_SUBTREE_APPLY_PATH:
+    if path == routes.DOCUMENT_TRANSFER_APPLY_PATH:
         if dry_run:
-            raise ValueError("copy subtree apply does not support dry_run")
+            raise ValueError("document transfer apply does not support dry_run")
         source_scope = source_model.normalize_scope(body.get("scope"))
-        plan = docs_subtree_copy.restore_copy_subtree_apply_plan(
+        plan = docs_document_transfer.restore_document_transfer_apply_plan(
             repo_root,
             body.get("apply_plan"),
         )
         if plan.source_scope != source_scope:
-            raise ValueError("copy subtree apply_plan source scope does not match request scope")
-        return HTTPStatus.OK, docs_subtree_copy_apply.apply_copy_subtree(
-            repo_root,
-            plan,
-            confirm=body.get("confirm") is True,
-        )
+            raise ValueError(
+                "document transfer apply_plan source scope does not match request scope"
+            )
+        try:
+            if plan.mode == docs_document_transfer.COPY_MODE:
+                payload = docs_document_transfer_apply.apply_document_copy(
+                    repo_root,
+                    plan,
+                    confirm=body.get("confirm") is True,
+                )
+            else:
+                payload = docs_document_move_apply.apply_document_move(
+                    repo_root,
+                    plan,
+                    confirm=body.get("confirm") is True,
+                )
+        except (
+            docs_document_transfer_apply.DocumentTransferApplyError,
+            docs_document_move_apply.DocumentMoveApplyError,
+        ) as exc:
+            failure = dict(exc.result)
+            failure["error"] = str(exc)
+            return HTTPStatus.CONFLICT, failure
+        return HTTPStatus.OK, payload
     if path == routes.DELETE_PREVIEW_PATH:
         scope = source_model.normalize_scope(body.get("scope"))
         doc_ids = mutations.require_delete_doc_ids(body.get("doc_ids"))

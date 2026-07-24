@@ -102,16 +102,14 @@ export function createDocsViewerManagementViewDefinitions() {
         renderer: "manage-index-selection"
       },
       {
-        id: "copy-subtree",
-        actionId: DOCS_VIEWER_ACTION_IDS.COPY_SUBTREE,
-        label: "Copy subtree to scope…",
+        id: "index-actions",
+        label: "Index actions",
         ownerType: "view",
         ownerViewId: "index-tree",
         surfaceId: "index-view",
         appKinds: ["manage"],
         features: ["management"],
-        requiredCapabilities: ["copy_subtree.preview", "copy_subtree.apply"],
-        renderer: "manage-copy-subtree"
+        renderer: "manage-index-actions"
       },
       {
         id: "edit",

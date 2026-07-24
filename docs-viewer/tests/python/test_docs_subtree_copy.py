@@ -418,26 +418,30 @@ def test_restore_copy_subtree_apply_plan_rejects_changed_source_and_config(tmp_p
         subtree_copy.restore_copy_subtree_apply_plan(repo_root, apply_plan)
 
 
-def test_management_copy_subtree_preview_and_apply_routes_share_apply_plan(
+def test_management_document_transfer_preview_and_apply_routes_share_apply_plan(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     repo_root = make_repo(tmp_path)
     status, preview = docs_management_service.docs_management_post_response(
         repo_root,
-        docs_management_service.routes.COPY_SUBTREE_PREVIEW_PATH,
+        docs_management_service.routes.DOCUMENT_TRANSFER_PREVIEW_PATH,
         {
             "scope": "source",
-            "source_doc_id": "root",
+            "doc_ids": ["root"],
             "target_scope": "target",
+            "transfer_mode": "copy",
+            "include_descendants": True,
         },
     )
 
     assert status == HTTPStatus.OK
     assert preview["ok"] is True
     assert preview["dry_run"] is True
-    assert preview["source"] == {"scope": "source", "doc_id": "root", "title": "Root"}
+    assert preview["source"] == {"scope": "source"}
     assert preview["target"] == {"scope": "target", "placement": "scope_root"}
+    assert preview["mode"] == "copy"
+    assert preview["requested_count"] == 1
     assert preview["document_count"] == 4
     assert preview["descendant_count"] == 3
     apply_plan = preview["apply_plan"]
@@ -445,7 +449,7 @@ def test_management_copy_subtree_preview_and_apply_routes_share_apply_plan(
 
     def fake_apply(
         actual_repo_root: Path,
-        plan: subtree_copy.CopySubtreePlan,
+        plan,
         *,
         confirm: bool,
     ) -> dict[str, object]:
@@ -460,13 +464,13 @@ def test_management_copy_subtree_preview_and_apply_routes_share_apply_plan(
         return {"ok": True, "target_viewer_url": "/docs/?scope=target&doc=copied"}
 
     monkeypatch.setattr(
-        docs_management_service.docs_subtree_copy_apply,
-        "apply_copy_subtree",
+        docs_management_service.docs_document_transfer_apply,
+        "apply_document_copy",
         fake_apply,
     )
     status, applied = docs_management_service.docs_management_post_response(
         repo_root,
-        docs_management_service.routes.COPY_SUBTREE_APPLY_PATH,
+        docs_management_service.routes.DOCUMENT_TRANSFER_APPLY_PATH,
         {
             "scope": "source",
             "apply_plan": apply_plan,
@@ -488,13 +492,136 @@ def test_management_copy_subtree_preview_and_apply_routes_share_apply_plan(
     with pytest.raises(ValueError, match="source scope does not match request scope"):
         docs_management_service.docs_management_post_response(
             repo_root,
-            docs_management_service.routes.COPY_SUBTREE_APPLY_PATH,
+            docs_management_service.routes.DOCUMENT_TRANSFER_APPLY_PATH,
             {
                 "scope": "target",
                 "apply_plan": apply_plan,
                 "confirm": True,
             },
         )
+
+
+def test_management_document_move_forces_descendants_and_dispatches_move(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo_root = make_repo(tmp_path)
+    status, preview = docs_management_service.docs_management_post_response(
+        repo_root,
+        docs_management_service.routes.DOCUMENT_TRANSFER_PREVIEW_PATH,
+        {
+            "scope": "source",
+            "doc_ids": ["alpha"],
+            "target_scope": "target",
+            "transfer_mode": "move",
+            "include_descendants": False,
+        },
+    )
+
+    assert status == HTTPStatus.OK
+    assert preview["mode"] == "move"
+    assert preview["include_descendants"] is True
+    assert preview["descendants_forced"] is True
+    assert [item["source_doc_id"] for item in preview["documents"]] == [
+        "alpha",
+        "grand",
+    ]
+    captured: dict[str, object] = {}
+
+    def fake_move(actual_repo_root: Path, plan, *, confirm: bool) -> dict[str, object]:
+        captured.update(
+            {
+                "repo_root": actual_repo_root,
+                "mode": plan.mode,
+                "doc_ids": [
+                    document.source_doc.doc_id
+                    for document in plan.documents
+                ],
+                "confirm": confirm,
+            }
+        )
+        return {
+            "ok": True,
+            "effective_roots": [
+                {
+                    "target_viewer_url": "/docs/?scope=target&doc=alpha",
+                }
+            ],
+        }
+
+    monkeypatch.setattr(
+        docs_management_service.docs_document_move_apply,
+        "apply_document_move",
+        fake_move,
+    )
+    status, applied = docs_management_service.docs_management_post_response(
+        repo_root,
+        docs_management_service.routes.DOCUMENT_TRANSFER_APPLY_PATH,
+        {
+            "scope": "source",
+            "apply_plan": preview["apply_plan"],
+            "confirm": True,
+        },
+    )
+
+    assert status == HTTPStatus.OK
+    assert applied["effective_roots"][0]["target_viewer_url"].endswith("doc=alpha")
+    assert captured == {
+        "repo_root": repo_root,
+        "mode": "move",
+        "doc_ids": ["alpha", "grand"],
+        "confirm": True,
+    }
+
+
+def test_management_document_transfer_apply_preserves_failure_evidence(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo_root = make_repo(tmp_path)
+    _status, preview = docs_management_service.docs_management_post_response(
+        repo_root,
+        docs_management_service.routes.DOCUMENT_TRANSFER_PREVIEW_PATH,
+        {
+            "scope": "source",
+            "doc_ids": ["root"],
+            "target_scope": "target",
+            "transfer_mode": "copy",
+            "include_descendants": False,
+        },
+    )
+    evidence = {
+        "ok": False,
+        "phase": "target_rebuild",
+        "target": {"state": "present"},
+    }
+
+    def fail_apply(*_args, **_kwargs):
+        raise docs_management_service.docs_document_transfer_apply.DocumentTransferApplyError(
+            "target rebuild failed",
+            evidence,
+        )
+
+    monkeypatch.setattr(
+        docs_management_service.docs_document_transfer_apply,
+        "apply_document_copy",
+        fail_apply,
+    )
+    status, payload = docs_management_service.docs_management_post_response(
+        repo_root,
+        docs_management_service.routes.DOCUMENT_TRANSFER_APPLY_PATH,
+        {
+            "scope": "source",
+            "apply_plan": preview["apply_plan"],
+            "confirm": True,
+        },
+    )
+
+    assert status == HTTPStatus.CONFLICT
+    assert payload == {
+        **evidence,
+        "error": "target rebuild failed",
+    }
 
 
 def test_transform_copy_subtree_adds_scope_for_local_target_and_uses_create_viewability(

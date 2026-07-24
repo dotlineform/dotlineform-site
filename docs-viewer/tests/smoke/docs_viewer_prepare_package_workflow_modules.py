@@ -235,7 +235,7 @@ def assert_prepare_model(page: Page) -> None:
         raise AssertionError(f"unexpected Prepare package model contract: {result!r}")
 
 
-def assert_prepare_action_router(page: Page) -> None:
+def assert_prepare_is_not_an_app_action(page: Page) -> None:
     result = page.evaluate(
         """async () => {
             const { createDocsViewerManagementEventRouter } = await import(
@@ -271,13 +271,13 @@ def assert_prepare_action_router(page: Page) -> None:
         }"""
     )
     expected = {
-        "handled": True,
-        "calls": ["hideContextMenu", "preparePackage"],
-        "menuHidden": True,
-        "expanded": "false",
+        "handled": False,
+        "calls": [],
+        "menuHidden": False,
+        "expanded": "true",
     }
     if result != expected:
-        raise AssertionError(f"unexpected Prepare package Action routing: {result!r}")
+        raise AssertionError(f"unexpected retired app Prepare routing: {result!r}")
 
 
 def install_workflow_fixture(page: Page, prepare_outcome: str = "success") -> None:
@@ -397,8 +397,8 @@ def install_workflow_fixture(page: Page, prepare_outcome: str = "success") -> No
                     page_id: 'docs-manage',
                     action_id: 'prepare-document-package',
                     route: '/docs/',
-                    control_id: 'docsViewerManagePreparePackageButton',
-                    control_selector: '#docsViewerManagePreparePackageButton',
+                    control_id: 'docsViewerIndexPreparePackageButton',
+                    control_selector: '#docsViewerIndexPreparePackageButton',
                     correlation_id: 'prepare:test'
                 },
                 client,
@@ -513,7 +513,7 @@ def exercise_success(page: Page, timeout_ms: int) -> None:
         or request["missing_summary_only"] is not True
         or request["include_non_viewable"] is not False
         or request["activity_context"]["page_id"] != "docs-manage"
-        or request["activity_context"]["control_id"] != "docsViewerManagePreparePackageButton"
+        or request["activity_context"]["control_id"] != "docsViewerIndexPreparePackageButton"
     ):
         raise AssertionError(f"unexpected package request context: {request!r}")
     if context_calls[0]["payload"]["external_context"]["task"] != "Review selected docs":
@@ -603,7 +603,7 @@ def main(argv: list[str] | None = None) -> int:
             page.on("pageerror", lambda exc: errors.append(str(exc)))
             setup_page(page, base_url, args.timeout_ms)
             assert_prepare_model(page)
-            assert_prepare_action_router(page)
+            assert_prepare_is_not_an_app_action(page)
             exercise_success(page, args.timeout_ms)
             exercise_failure(page, args.timeout_ms)
             exercise_zero_target(page, args.timeout_ms)

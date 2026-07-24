@@ -149,6 +149,18 @@ export function normalizeDocsViewerControlState(record) {
     var value = Number(source[key]);
     state[key] = Number.isFinite(value) ? value : 0;
   });
+  if (source.items && typeof source.items === "object" && !Array.isArray(source.items)) {
+    state.items = Object.keys(source.items).reduce(function (items, itemId) {
+      var id = cleanString(itemId);
+      var item = source.items[itemId];
+      if (!id || !item || typeof item !== "object" || Array.isArray(item)) return items;
+      items[id] = {
+        disabled: Boolean(item.disabled),
+        disabledReason: cleanString(item.disabledReason)
+      };
+      return items;
+    }, {});
+  }
   return state;
 }
 

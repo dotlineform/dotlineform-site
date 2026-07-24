@@ -53,6 +53,42 @@
   font-size: var(--docs-viewer-font-caption, 0.75rem);
 }
 
+.docsViewer__indexActionsHost{
+  position: relative;
+  display: inline-flex;
+}
+
+.docsViewer__indexActionsButton{
+  appearance: none;
+  display: inline-flex;
+  width: 1.8rem;
+  height: 1.8rem;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 0.45rem;
+  padding: 0;
+  background: transparent;
+  color: var(--docs-viewer-text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.docsViewer__indexActionsButton:hover,
+.docsViewer__indexActionsButton:focus-visible{
+  background: var(--docs-viewer-panel-2);
+}
+
+.docsViewer__indexActionsButton:focus-visible{
+  outline: 2px solid var(--docs-viewer-focus-ring);
+  outline-offset: 1px;
+}
+
+.docsViewer__indexActionsMenu{
+  right: 0;
+  left: auto;
+}
+
 .docsViewer__navItem{
   position: relative;
 }

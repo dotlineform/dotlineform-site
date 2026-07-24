@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-9fba6671bd66320c2ecf67058be844b9",
-    "generated_at_utc": "2026-07-24T13:49:30Z",
+    "version": "blake2b-1452fe0d4624bea01003e6e3693b20e9",
+    "generated_at_utc": "2026-07-24T14:18:12Z",
     "count": 282
   },
   "entries": [
@@ -1667,10 +1667,10 @@
       "kind": "doc",
       "title": "Create And Import Endpoints",
       "href": "/docs/?scope=studio&doc=d-20260607-222033-78a47c",
-      "last_updated": "2026-07-22 21:45:00",
+      "last_updated": "2026-07-24 15:20:00",
       "parent_id": "d-20260607-222033-647b52",
       "parent_title": "Endpoint Overview",
-      "display_meta": "2026-07-22 21:45:00 • Endpoint Overview",
+      "display_meta": "2026-07-24 15:20:00 • Endpoint Overview",
       "search_terms": [
         "create and import endpoints",
         "create",
@@ -1680,16 +1680,16 @@
         "endpoint overview",
         "endpoint",
         "overview",
-        "2026-07-22 21:45:00",
+        "2026-07-24 15:20:00",
         "2026",
         "07",
-        "22",
-        "21",
-        "45",
+        "24",
+        "15",
+        "20",
         "00",
         "d-20260607-222033-78a47c"
       ],
-      "search_text": "create and import endpoints create and import endpoints endpoint overview endpoint overview 2026-07-22 21:45:00 2026 07 22 21 45 00 d-20260607-222033-78a47c"
+      "search_text": "create and import endpoints create and import endpoints endpoint overview endpoint overview 2026-07-24 15:20:00 2026 07 24 15 20 00 d-20260607-222033-78a47c"
     },
     {
       "id": "d-20260711-214307-6d6d46",
@@ -3750,25 +3750,25 @@
       "kind": "doc",
       "title": "Docs Viewer Roadmap",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-1e0af6",
-      "last_updated": "2026-07-24 14:48:50",
+      "last_updated": "2026-07-24 15:20:00",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-24 14:48:50 • Roadmap",
+      "display_meta": "2026-07-24 15:20:00 • Roadmap",
       "search_terms": [
         "docs viewer roadmap",
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-24 14:48:50",
+        "2026-07-24 15:20:00",
         "2026",
         "07",
         "24",
-        "14",
-        "48",
-        "50",
+        "15",
+        "20",
+        "00",
         "d-20260714-234030-1e0af6"
       ],
-      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-24 14:48:50 2026 07 24 14 48 50 d-20260714-234030-1e0af6"
+      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-24 15:20:00 2026 07 24 15 20 00 d-20260714-234030-1e0af6"
     },
     {
       "id": "d-20260716-204013-3be4e1",
@@ -3803,10 +3803,10 @@
       "kind": "doc",
       "title": "Copy And Move Documents Between Scopes",
       "href": "/docs/?scope=studio&doc=d-20260716-193410-6d4efe",
-      "last_updated": "2026-07-24 14:48:50",
+      "last_updated": "2026-07-24 15:20:00",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-24 14:48:50 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-24 15:20:00 • Docs Viewer Roadmap",
       "search_terms": [
         "copy and move documents between scopes",
         "copy",
@@ -3819,16 +3819,16 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-24 14:48:50",
+        "2026-07-24 15:20:00",
         "2026",
         "07",
         "24",
-        "14",
-        "48",
-        "50",
+        "15",
+        "20",
+        "00",
         "d-20260716-193410-6d4efe"
       ],
-      "search_text": "copy and move documents between scopes copy and move documents between scopes docs viewer roadmap docs viewer roadmap 2026-07-24 14:48:50 2026 07 24 14 48 50 d-20260716-193410-6d4efe"
+      "search_text": "copy and move documents between scopes copy and move documents between scopes docs viewer roadmap docs viewer roadmap 2026-07-24 15:20:00 2026 07 24 15 20 00 d-20260716-193410-6d4efe"
     },
     {
       "id": "d-20260723-223400-c7a1e4",

@@ -80,9 +80,11 @@ def test_static_html_export_routes_are_management_owned() -> None:
     assert routes.STATIC_HTML_EXPORT_DELETE_PATH in routes.POST_PATHS
 
 
-def test_copy_subtree_routes_are_management_owned() -> None:
-    assert routes.COPY_SUBTREE_PREVIEW_PATH in routes.POST_PATHS
-    assert routes.COPY_SUBTREE_APPLY_PATH in routes.POST_PATHS
+def test_document_transfer_routes_are_management_owned_and_singular_copy_is_retired() -> None:
+    assert routes.DOCUMENT_TRANSFER_PREVIEW_PATH in routes.POST_PATHS
+    assert routes.DOCUMENT_TRANSFER_APPLY_PATH in routes.POST_PATHS
+    assert "/docs/copy-subtree-preview" not in routes.POST_PATHS
+    assert "/docs/copy-subtree-apply" not in routes.POST_PATHS
 
 
 def test_staged_media_routes_are_management_owned() -> None:
@@ -103,9 +105,9 @@ def main() -> None:
     test_docs_management_routes_do_not_publish_data_sharing_endpoints()
     test_dedicated_viewability_routes_are_retired()
     test_dedicated_viewability_config_entries_are_retired()
-    test_review_session_routes_are_management_owned()
+    test_abandoned_review_session_routes_remain_retired()
     test_static_html_export_routes_are_management_owned()
-    test_copy_subtree_routes_are_management_owned()
+    test_document_transfer_routes_are_management_owned_and_singular_copy_is_retired()
     test_staged_media_routes_are_management_owned()
     test_diagram_source_routes_are_management_owned()
     print("Docs Management route tests OK")

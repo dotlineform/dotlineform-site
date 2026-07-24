@@ -34,7 +34,11 @@ export function fetchManagementJson(path, method, payload, options) {
       error.status = response.status;
       throw error;
     }).then(function (responsePayload) {
-      if (!response.ok || !responsePayload || !responsePayload.ok) {
+      if (
+        !response.ok
+        || !responsePayload
+        || (responsePayload.ok === false && settings.acceptNotOk !== true)
+      ) {
         var error = new Error(responsePayload && responsePayload.error ? responsePayload.error : "HTTP " + response.status);
         error.status = response.status;
         error.payload = responsePayload;
@@ -214,15 +218,18 @@ export function moveManagedDoc(docId, parentId, options) {
   }, options), options);
 }
 
-export function previewManagedDocSubtreeCopy(sourceDocId, targetScope, options) {
-  return fetchManagementJson("/docs/copy-subtree-preview", "POST", scopedPayload({
-    source_doc_id: sourceDocId,
-    target_scope: targetScope
-  }, options), options);
+export function previewManagedDocumentTransfer(docIds, targetScope, transferMode, includeDescendants, options) {
+  var settings = Object.assign({}, options || {}, { acceptNotOk: true });
+  return fetchManagementJson("/docs/document-transfer-preview", "POST", scopedPayload({
+    doc_ids: docIds,
+    target_scope: targetScope,
+    transfer_mode: transferMode,
+    include_descendants: includeDescendants === true
+  }, settings), settings);
 }
 
-export function applyManagedDocSubtreeCopy(applyPlan, options) {
-  return fetchManagementJson("/docs/copy-subtree-apply", "POST", scopedPayload({
+export function applyManagedDocumentTransfer(applyPlan, options) {
+  return fetchManagementJson("/docs/document-transfer-apply", "POST", scopedPayload({
     apply_plan: applyPlan,
     confirm: true
   }, options), options);

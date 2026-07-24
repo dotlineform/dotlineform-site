@@ -344,6 +344,31 @@ def _require_document_root(
     return root
 
 
+def document_transfer_scope_capabilities(
+    repo_root: Path,
+    config: DocsScopeConfig,
+) -> dict[str, bool]:
+    """Report mode-aware source and target eligibility through planner rules."""
+
+    def available(*, role: str, writable: bool) -> bool:
+        try:
+            _require_document_root(
+                repo_root,
+                config,
+                role=role,
+                writable=writable,
+            )
+        except (OSError, ValueError):
+            return False
+        return True
+
+    return {
+        "copy_source": available(role="source", writable=False),
+        "move_source": available(role="source", writable=True),
+        "target": available(role="target", writable=True),
+    }
+
+
 def _effective_documents(
     docs: list[source_model.ScopeDoc],
     requested_doc_ids: tuple[str, ...],
@@ -1210,6 +1235,7 @@ __all__ = [
     "TransferBuildSourcePlan",
     "TransferDocumentPlan",
     "TransferMediaPlan",
+    "document_transfer_scope_capabilities",
     "plan_document_transfer",
     "published_transfer_adapters",
     "restore_document_transfer_apply_plan",

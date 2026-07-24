@@ -28,8 +28,8 @@ UPDATE_METADATA_PATH = "/docs/update-metadata"
 CREATE_PATH = "/docs/create"
 REBUILD_PATH = "/docs/rebuild"
 MOVE_PATH = "/docs/move"
-COPY_SUBTREE_PREVIEW_PATH = "/docs/copy-subtree-preview"
-COPY_SUBTREE_APPLY_PATH = "/docs/copy-subtree-apply"
+DOCUMENT_TRANSFER_PREVIEW_PATH = "/docs/document-transfer-preview"
+DOCUMENT_TRANSFER_APPLY_PATH = "/docs/document-transfer-apply"
 DELETE_PREVIEW_PATH = "/docs/delete-preview"
 DELETE_APPLY_PATH = "/docs/delete-apply"
 SCOPE_CREATE_PREVIEW_PATH = "/docs/scopes/create-preview"
@@ -79,8 +79,8 @@ POST_PATHS = (
     CREATE_PATH,
     REBUILD_PATH,
     MOVE_PATH,
-    COPY_SUBTREE_PREVIEW_PATH,
-    COPY_SUBTREE_APPLY_PATH,
+    DOCUMENT_TRANSFER_PREVIEW_PATH,
+    DOCUMENT_TRANSFER_APPLY_PATH,
     DELETE_PREVIEW_PATH,
     DELETE_APPLY_PATH,
     SCOPE_CREATE_PREVIEW_PATH,

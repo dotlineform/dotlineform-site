@@ -5,6 +5,9 @@ import {
   createDocsViewerManagementCapabilityController,
   documentPackagePrepareCapability,
   documentPackageReviewCapability,
+  documentTransferSourceSupported,
+  documentTransferSupported,
+  documentTransferTargetScopes,
   scopePublishSupported,
   scopeStaticHtmlExportSupported
 } from "./docs-viewer-management-capabilities.js";
@@ -26,9 +29,6 @@ import {
 import {
   createDocsViewerManagementScopeLifecycleController
 } from "./docs-viewer-management-scope-lifecycle-controller.js";
-import {
-  createDocsViewerCopySubtreeController
-} from "./docs-viewer-copy-subtree-controller.js";
 import {
   createDocsViewerManagementActionController
 } from "./docs-viewer-management-actions.js";
@@ -100,6 +100,36 @@ export function docsViewerPreparePackageActionControlState(options = {}) {
   return {
     disabled: Boolean(disabledReason),
     disabledReason: disabledReason
+  };
+}
+
+export function docsViewerDocumentTransferActionControlState(options = {}) {
+  var mode = String(options.mode || "").trim().toLowerCase();
+  var label = mode === "move" ? "Move" : "Copy";
+  var resolution = options.resolution || null;
+  var targets = Array.isArray(options.targets) ? options.targets : [];
+  var disabledReason = "";
+  if (!options.managementChecked) {
+    disabledReason = "Checking " + label + " availability.";
+  } else if (!options.managementAvailable) {
+    disabledReason = label + " is unavailable.";
+  } else if (options.managementBusy || options.workflowActive) {
+    disabledReason = "Docs management is busy.";
+  } else if (!resolution || !resolution.enabled) {
+    disabledReason = resolution && resolution.disabledReason
+      ? resolution.disabledReason
+      : "Select one or more documents.";
+  } else if (!documentTransferSupported(options.capabilities)) {
+    disabledReason = label + " is unavailable.";
+  } else if (!documentTransferSourceSupported(options.capabilities, options.scope, mode)) {
+    disabledReason = label + " is not supported from this scope.";
+  } else if (!targets.length) {
+    disabledReason = "No other writable Docs Viewer scope is available.";
+  }
+  return {
+    disabled: Boolean(disabledReason),
+    disabledReason: disabledReason,
+    targets: targets
   };
 }
 
@@ -191,19 +221,18 @@ export function initDocsViewerManagement(context) {
   var manageImportButton = document.getElementById("docsViewerManageImportButton");
   var manageToolbarImportButton = document.getElementById("docsViewerManageToolbarImportButton");
   var manageImportButtons = [manageImportButton, manageToolbarImportButton].filter(Boolean);
-  var managePreparePackageButton = document.getElementById("docsViewerManagePreparePackageButton");
   var manageReviewPackageButton = document.getElementById("docsViewerManageReviewPackageButton");
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
-  var manageDeleteButton = document.getElementById("docsViewerManageDeleteButton");
   var importRoot = shellRef("importRoot", "docsHtmlImportRoot");
   var importBootStatus = shellRef("importBootStatus", "docsHtmlImportBootStatus");
   var capabilityController = null;
-  var copySubtreeController = null;
   var eventRouter = null;
   var importController = null;
   var interactionController = null;
   var metadataWorkflow = null;
   var modalController = null;
+  var documentTransferWorkflowActive = false;
+  var documentTransferWorkflowRequest = null;
   var preparePackageWorkflowRequest = null;
   var reviewPackageWorkflowRequest = null;
   var scopeLifecycleController = null;
@@ -221,6 +250,14 @@ export function initDocsViewerManagement(context) {
     return typeof context.activeIndexViewId === "function"
       ? String(context.activeIndexViewId() || "").trim()
       : "index-tree";
+  }
+
+  function indexActionsButton() {
+    return document.getElementById("docsViewerIndexActionsButton");
+  }
+
+  function indexActionsMenu() {
+    return document.getElementById("docsViewerIndexActionsMenu");
   }
 
   function indexSelectionLifecycleContext(indexViewId) {
@@ -395,8 +432,7 @@ export function initDocsViewerManagement(context) {
       state: snapshot,
       disabled: !available || management.managementBusy
     });
-    projectPreparePackageAction();
-    projectDeleteAction();
+    projectIndexActions();
     return snapshot;
   }
 
@@ -408,13 +444,6 @@ export function initDocsViewerManagement(context) {
       managementChecked: management.managementChecked,
       resolution: resolveAction(DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE)
     });
-  }
-
-  function projectPreparePackageAction() {
-    return projectDocsViewerPreparePackageActionControl(
-      managePreparePackageButton,
-      preparePackageActionControlState()
-    );
   }
 
   function deleteActionControlState() {
@@ -437,20 +466,59 @@ export function initDocsViewerManagement(context) {
     };
   }
 
-  function projectDeleteAction() {
-    if (!manageDeleteButton) return null;
-    var controlState = deleteActionControlState();
-    var label = "Delete";
-    var accessibleLabel = controlState.disabledReason ? label + ". " + controlState.disabledReason : label;
-    manageDeleteButton.disabled = controlState.disabled;
-    manageDeleteButton.title = accessibleLabel;
-    manageDeleteButton.setAttribute("aria-label", accessibleLabel);
-    if (controlState.disabledReason) {
-      manageDeleteButton.dataset.docsViewerDisabledReason = controlState.disabledReason;
-    } else {
-      delete manageDeleteButton.dataset.docsViewerDisabledReason;
-    }
-    return controlState;
+  function documentTransferActionControlState(mode) {
+    var actionId = mode === "move" ? DOCS_VIEWER_ACTION_IDS.MOVE : DOCS_VIEWER_ACTION_IDS.COPY;
+    var targets = documentTransferTargetScopes(
+      management.managementCapabilities,
+      viewerScope()
+    );
+    return docsViewerDocumentTransferActionControlState({
+      capabilities: management.managementCapabilities,
+      managementAvailable: management.managementAvailable,
+      managementBusy: management.managementBusy,
+      managementChecked: management.managementChecked,
+      mode: mode,
+      resolution: resolveAction(actionId),
+      scope: viewerScope(),
+      targets: targets,
+      workflowActive: documentTransferWorkflowActive
+    });
+  }
+
+  function projectIndexActions() {
+    if (typeof context.projectIndexViewControlState !== "function") return null;
+    var visible = Boolean(
+      routeSession.managementContext
+      && activeIndexViewId() === "index-tree"
+    );
+    var state = {
+      hidden: !visible,
+      disabled: false,
+      items: {
+        [DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE]: preparePackageActionControlState(),
+        [DOCS_VIEWER_ACTION_IDS.COPY]: documentTransferActionControlState("copy"),
+        [DOCS_VIEWER_ACTION_IDS.MOVE]: documentTransferActionControlState("move"),
+        [DOCS_VIEWER_ACTION_IDS.DELETE]: deleteActionControlState()
+      }
+    };
+    context.projectIndexViewControlState("index-actions", state);
+    if (!visible && eventRouter) eventRouter.hideIndexActionsMenu();
+    return state;
+  }
+
+  function checkedSelectionHasDescendants(checkedDocIds) {
+    var selected = new Set(checkedDocIds || []);
+    return documentIndex.docs.some(function (doc) {
+      var parentId = String(doc && doc.parent_id || "").trim();
+      var seen = new Set();
+      while (parentId && !seen.has(parentId)) {
+        if (selected.has(parentId)) return true;
+        seen.add(parentId);
+        var parent = documentIndex.docsById.get(parentId);
+        parentId = String(parent && parent.parent_id || "").trim();
+      }
+      return false;
+    });
   }
 
   function reviewPackageActionControlState() {
@@ -542,21 +610,34 @@ export function initDocsViewerManagement(context) {
       projectIndexSelection();
       return true;
     }
-    if (controlId !== "copy-subtree" || actionId !== DOCS_VIEWER_ACTION_IDS.COPY_SUBTREE) return false;
-    var resolution = resolveAction(actionId);
-    var sourceDoc = actionTargetDoc(resolution);
-    if (!sourceDoc || !copySubtreeController) return false;
-    copySubtreeController.copy(sourceDoc);
+    if (controlId !== "index-actions" || String(detail && detail.eventType || "") !== "click") {
+      return false;
+    }
+    if (!actionId) {
+      eventRouter.toggleIndexActionsMenu();
+      return true;
+    }
+    var controlState = projectIndexActions();
+    var itemState = controlState && controlState.items[actionId];
+    if (!itemState || itemState.disabled) return false;
+    eventRouter.hideIndexActionsMenu({ focusButton: true });
+    if (actionId === DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE) {
+      handlePreparePackage();
+    } else if (actionId === DOCS_VIEWER_ACTION_IDS.COPY) {
+      handleDocumentTransfer("copy");
+    } else if (actionId === DOCS_VIEWER_ACTION_IDS.MOVE) {
+      handleDocumentTransfer("move");
+    } else if (actionId === DOCS_VIEWER_ACTION_IDS.DELETE) {
+      actionController.handleDeleteDoc();
+    } else {
+      return false;
+    }
     return true;
   }
 
   function handleAppManagementControl(detail) {
     var actionId = String(detail && detail.actionId || "").trim();
     if (actionId && !resolveAction(actionId).enabled) return false;
-    if (
-      actionId === DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE
-      && preparePackageActionControlState().disabled
-    ) return false;
     if (
       actionId === DOCS_VIEWER_ACTION_IDS.REVIEW_DOCUMENT_PACKAGE
       && reviewPackageActionControlState().disabled
@@ -575,7 +656,6 @@ export function initDocsViewerManagement(context) {
       syncManagementStatus("", false);
       hideAppManagementControls();
       projectDocumentActionButtons(true, true);
-      if (copySubtreeController) copySubtreeController.render();
       eventRouter.hideManageActionsMenu();
       return;
     }
@@ -601,9 +681,8 @@ export function initDocsViewerManagement(context) {
       noteIsError = management.managementMessageIsError;
     }
     syncManagementStatus(noteText, noteIsError);
-    if (copySubtreeController) copySubtreeController.render();
 
-    if (!manageRebuildButton || !manageNewButton || !manageDeleteButton) return;
+    if (!manageRebuildButton || !manageNewButton) return;
 
     var editAction = resolveAction(DOCS_VIEWER_ACTION_IDS.EDIT_METADATA);
     var editDisabled = (
@@ -658,7 +737,6 @@ export function initDocsViewerManagement(context) {
     }
     manageNewButton.disabled = management.managementBusy || !management.managementAvailable;
     projectDocumentActionButtons(!management.managementChecked || !management.managementAvailable, !management.managementAvailable || editDisabled);
-    projectDeleteAction();
     if (metadataWorkflow) metadataWorkflow.render();
     if (settingsWorkflow) settingsWorkflow.render();
   }
@@ -774,23 +852,24 @@ export function initDocsViewerManagement(context) {
     var resolution = resolveAction(DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE);
     if (!resolution.enabled || preparePackageActionControlState().disabled) return Promise.resolve(null);
     var checkedDocIds = resolution.targetDocIds.slice();
+    var restoreFocus = indexActionsButton();
     return loadPreparePackageWorkflow()
       .then(function (module) {
         return module.openDocumentPackagePrepareWorkflow({
           root: root,
           scope: viewerScope(),
           checkedDocIds: checkedDocIds,
-          restoreFocus: managePreparePackageButton,
+          restoreFocus: restoreFocus,
           activityContext: {
             page_id: "docs-manage",
             action_id: "prepare-document-package",
             route: "/docs/",
-            control_id: "docsViewerManagePreparePackageButton",
-            control_selector: "#docsViewerManagePreparePackageButton",
+            control_id: "docsViewerIndexPreparePackageButton",
+            control_selector: "#docsViewerIndexPreparePackageButton",
             correlation_id: "prepare-document-package:" + String(Date.now())
           },
           callbacks: {
-            hideManageActionsMenu: eventRouter.hideManageActionsMenu,
+            hideManageActionsMenu: eventRouter.hideIndexActionsMenu,
             setBusy: function (busy) {
               setManagementBusy(busy);
               renderManagementUi();
@@ -806,6 +885,78 @@ export function initDocsViewerManagement(context) {
           true
         );
         return null;
+      });
+  }
+
+  function loadDocumentTransferWorkflow() {
+    if (documentTransferWorkflowRequest) return documentTransferWorkflowRequest;
+    documentTransferWorkflowRequest = import("./docs-viewer-document-transfer-workflow.js")
+      .then(function (module) {
+        if (!module || typeof module.openDocumentTransferWorkflow !== "function") {
+          throw new Error("Document transfer workflow is unavailable.");
+        }
+        return module;
+      })
+      .catch(function (error) {
+        documentTransferWorkflowRequest = null;
+        throw error;
+      });
+    return documentTransferWorkflowRequest;
+  }
+
+  function handleDocumentTransfer(mode) {
+    var normalizedMode = mode === "move" ? "move" : "copy";
+    var actionId = normalizedMode === "move"
+      ? DOCS_VIEWER_ACTION_IDS.MOVE
+      : DOCS_VIEWER_ACTION_IDS.COPY;
+    var resolution = resolveAction(actionId);
+    var controlState = documentTransferActionControlState(normalizedMode);
+    if (!resolution.enabled || controlState.disabled || documentTransferWorkflowActive) {
+      return Promise.resolve(null);
+    }
+    var checkedDocIds = resolution.targetDocIds.slice();
+    documentTransferWorkflowActive = true;
+    renderManagementUi();
+    return loadDocumentTransferWorkflow()
+      .then(function (module) {
+        return module.openDocumentTransferWorkflow({
+          root: root,
+          restoreFocus: indexActionsButton(),
+          mode: normalizedMode,
+          checkedDocIds: checkedDocIds,
+          targets: controlState.targets,
+          copyDescendantsAvailable: checkedSelectionHasDescendants(checkedDocIds),
+          clientOptions: managementClientOptions(),
+          callbacks: {
+            setBusy: setManagementBusy,
+            setMessage: setManagementMessage,
+            render: renderManagementUi,
+            onApplied: function (payload) {
+              var effectiveRoots = Array.isArray(payload && payload.effective_roots)
+                ? payload.effective_roots
+                : [];
+              var targetUrl = String(
+                effectiveRoots[0] && effectiveRoots[0].target_viewer_url || ""
+              ).trim();
+              if (!targetUrl) {
+                throw new Error("Document transfer result did not include a target URL.");
+              }
+              window.location.assign(new URL(targetUrl, window.location.href).toString());
+            }
+          }
+        });
+      })
+      .catch(function (error) {
+        setManagementBusy(false);
+        setManagementMessage(
+          error && error.message ? error.message : "Document transfer workflow is unavailable.",
+          true
+        );
+        return null;
+      })
+      .finally(function () {
+        documentTransferWorkflowActive = false;
+        renderManagementUi();
       });
   }
 
@@ -870,26 +1021,6 @@ export function initDocsViewerManagement(context) {
       managementClientOptions: managementClientOptions,
       renderManagementUi: renderManagementUi,
       renderSidebar: context.renderSidebar,
-      viewerScope: viewerScope
-    }
-  });
-
-  copySubtreeController = createDocsViewerCopySubtreeController({
-    root: root,
-    management: management,
-    callbacks: {
-      currentActiveDoc: currentActiveDoc,
-      managementClientOptions: managementClientOptions,
-      managementContext: function () { return routeSession.managementContext; },
-      onApplied: function (payload) {
-        var targetUrl = String(payload && payload.target_viewer_url || "").trim();
-        if (!targetUrl) throw new Error("Copy subtree result did not include a target URL.");
-        window.location.assign(new URL(targetUrl, window.location.href).toString());
-      },
-      projectControlState: context.projectIndexViewControlState,
-      render: renderManagementUi,
-      setBusy: setManagementBusy,
-      setMessage: setManagementMessage,
       viewerScope: viewerScope
     }
   });
@@ -981,6 +1112,8 @@ export function initDocsViewerManagement(context) {
 
   eventRouter = createDocsViewerManagementEventRouter({
     refs: {
+      indexActionsButton: indexActionsButton,
+      indexActionsMenu: indexActionsMenu,
       manageActionsButton: manageActionsButton,
       manageActionsMenu: manageActionsMenu
     },
@@ -993,7 +1126,6 @@ export function initDocsViewerManagement(context) {
       deleteSubScope: function () { scopeLifecycleController.deleteSubScope(); },
       exportDocs: function () { actionController.handleExportDocs(); },
       openImport: function () { importController.open(); },
-      preparePackage: handlePreparePackage,
       reviewPackage: handleReviewPackage,
       openSettings: function () { settingsWorkflow.open(); },
       publish: function () { actionController.handlePublishDocs(); },

@@ -9,7 +9,7 @@ import docs_scope_manifest
 import docs_scope_rename
 import docs_source_config_settings
 import docs_static_html_export
-import docs_subtree_copy
+import docs_document_transfer
 import docs_source_model as source_model
 from docs_scope_config import (
     DOCS_SCOPE_CONFIGS,
@@ -63,18 +63,6 @@ def capability_scope_root_label(repo_root: Path, scope: str, config: Any) -> str
     return path_label(repo_root, config.scope_root.path)
 
 
-def copy_subtree_target_available(repo_root: Path, config: Any) -> bool:
-    try:
-        docs_subtree_copy.require_copy_source_root(
-            repo_root,
-            config,
-            require_writable=True,
-        )
-    except (OSError, ValueError):
-        return False
-    return True
-
-
 def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
     data_sharing_workspace = workspace_status(repo_root)
     docs_import_workspace = workspace_status(repo_root, required_paths=("import_staging",))
@@ -98,6 +86,12 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             viewer_base_url=config.viewer_base_url,
             include_scope_param=config.include_scope_param,
         )
+        transfer_capabilities = (
+            docs_document_transfer.document_transfer_scope_capabilities(
+                repo_root,
+                config,
+            )
+        )
         scopes[scope] = {
             "available": root.exists(),
             "scope_type": config.scope_type,
@@ -105,7 +99,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             "generated_data_reads": generated_data_path.exists(),
             "generated_search_reads": resolve_scope_path(repo_root, published_search_path(config)).exists(),
             "publishable": publishable,
-            "copy_subtree_target": copy_subtree_target_available(repo_root, config),
+            "document_transfer": transfer_capabilities,
             "count": len(scope_docs),
             "scope_lifecycle": {
                 "manifest_recorded": manifest_record is not None,
@@ -156,7 +150,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 "review_returned": data_sharing_workspace["available"],
                 "atomic_return": True,
             },
-            "copy_subtree": {
+            "document_transfer": {
                 "preview": True,
                 "apply": True,
             },

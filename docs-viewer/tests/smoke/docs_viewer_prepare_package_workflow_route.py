@@ -40,7 +40,7 @@ def select_one_document(page: Page, timeout_ms: int) -> str:
     page.locator(f'[data-docs-viewer-selection-checkbox="{doc_id}"]').click()
     page.wait_for_function(
         """expectedId => {
-            const prepare = document.querySelector('#docsViewerManagePreparePackageButton');
+            const prepare = document.querySelector('#docsViewerIndexPreparePackageButton');
             const checkbox = document.querySelector(
                 `[data-docs-viewer-selection-checkbox="${CSS.escape(expectedId)}"]`
             );
@@ -107,8 +107,8 @@ def exercise_prepare_action(page: Page, base_url: str, timeout_ms: int) -> None:
     wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
     selected_doc_id = select_one_document(page, timeout_ms)
 
-    page.locator("#docsViewerManageActionsButton").click()
-    prepare_button = page.locator("#docsViewerManagePreparePackageButton")
+    page.locator("#docsViewerIndexActionsButton").click()
+    prepare_button = page.locator("#docsViewerIndexPreparePackageButton")
     prepare_button.wait_for(state="visible", timeout=timeout_ms)
     if prepare_button.get_attribute("href") is not None:
         raise AssertionError("Prepare package remained route navigation instead of an Action")
@@ -166,7 +166,7 @@ def exercise_prepare_action(page: Page, base_url: str, timeout_ms: int) -> None:
     if (
         activity.get("page_id") != "docs-manage"
         or activity.get("action_id") != "prepare-document-package"
-        or activity.get("control_id") != "docsViewerManagePreparePackageButton"
+        or activity.get("control_id") != "docsViewerIndexPreparePackageButton"
     ):
         raise AssertionError(f"Prepare Action activity attribution is incorrect: {activity!r}")
     for expected_path in ("/docs/packages/config", "/docs/packages/documents", "/docs/packages/prepare"):

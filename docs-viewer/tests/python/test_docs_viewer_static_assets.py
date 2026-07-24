@@ -175,8 +175,9 @@ def test_document_package_actions_own_the_surviving_browser_assets() -> None:
     assert not (runtime_root / "document-package-modal.js").exists()
     assert not (runtime_root / "document-package-returned.js").exists()
     assert not (REPO_ROOT / "docs-viewer/static/css/docs-viewer-packages.css").exists()
-    assert "docsViewerManagePreparePackageButton" in management_runtime
+    assert "docsViewerIndexPreparePackageButton" in management_runtime
     assert "docsViewerManageReviewPackageButton" in management_runtime
+    assert "docsViewerManagePreparePackageButton" not in management_runtime
     assert "docsViewerManageReturnedPackagesLink" not in management_runtime
     assert 'page_id: "docs-manage"' in management_runtime
     assert "record_indices" not in runtime

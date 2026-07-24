@@ -592,7 +592,7 @@ def assert_action_target_definitions(page: Page) -> None:
                 invocationContext,
                 resolutions: {
                     active: module.resolveDocsViewerAction('bookmark', multiContext),
-                    copySubtree: module.resolveDocsViewerAction('copy-subtree', multiContext),
+                    copy: module.resolveDocsViewerAction('copy', multiContext),
                     all: module.resolveDocsViewerAction('prepare-document-package', multiContext),
                     deleteSelection: module.resolveDocsViewerAction('delete', multiContext),
                     primary: module.resolveDocsViewerAction('info', multiContext),
@@ -614,7 +614,6 @@ def assert_action_target_definitions(page: Page) -> None:
     expected = {
         "active": [
             "bookmark",
-            "copy-subtree",
             "edit-metadata",
             "info",
             "markdown-save",
@@ -622,10 +621,9 @@ def assert_action_target_definitions(page: Page) -> None:
             "source-add-file",
             "source-add-image",
         ],
-        "all": ["delete", "prepare-document-package"],
+        "all": ["copy", "delete", "move", "prepare-document-package"],
         "document": [
             "copy-link",
-            "move",
             "new-child",
             "new-sibling",
             "open",
@@ -674,13 +672,13 @@ def assert_action_target_definitions(page: Page) -> None:
                 "target": "active-document",
                 "targetDocIds": ["active"],
             },
-            "copySubtree": {
-                "actionId": "copy-subtree",
+            "copy": {
+                "actionId": "copy",
                 "disabledReason": "",
                 "enabled": True,
-                "selectionPolicy": "",
-                "target": "active-document",
-                "targetDocIds": ["active"],
+                "selectionPolicy": "all",
+                "target": "selection",
+                "targetDocIds": ["first", "second"],
             },
             "all": {
                 "actionId": "prepare-document-package",
@@ -742,9 +740,9 @@ def assert_action_target_definitions(page: Page) -> None:
                 "actionId": "move",
                 "disabledReason": "",
                 "enabled": True,
-                "selectionPolicy": "",
-                "target": "document",
-                "targetDocIds": ["active"],
+                "selectionPolicy": "all",
+                "target": "selection",
+                "targetDocIds": ["first", "second"],
             },
             "contextCopy": {
                 "actionId": "copy-link",
@@ -773,8 +771,8 @@ def assert_action_target_definitions(page: Page) -> None:
         },
         "surfaceActionIds": [
             "bookmark",
+            "copy",
             "copy-link",
-            "copy-subtree",
             "delete",
             "delete-scope",
             "delete-sub-scope",
@@ -783,6 +781,7 @@ def assert_action_target_definitions(page: Page) -> None:
             "import",
             "info",
             "markdown-source",
+            "move",
             "new",
             "new-child",
             "new-scope",
@@ -871,20 +870,50 @@ def assert_open_source_target_handoff(page: Page) -> None:
         raise AssertionError(f"unexpected source-open target handoff: {result!r}")
 
 
-def assert_copy_subtree_module_contract(page: Page) -> None:
+def assert_document_transfer_module_contract(page: Page) -> None:
     result = page.evaluate(
         """async () => {
             const capabilities = await import('/docs-viewer/runtime/js/management/docs-viewer-management-capabilities.js');
             const client = await import('/docs-viewer/runtime/js/management/docs-viewer-management-client.js');
             const payload = {
-                copy_subtree: { preview: true, apply: true },
+                document_transfer: { preview: true, apply: true },
                 scopes: {
-                    studio: { scope_type: 'local', available: true, copy_subtree_target: true, root: 'scopes/studio' },
-                    public: { scope_type: 'public', available: true, copy_subtree_target: true, root: 'scopes/public' },
-                    notes: { scope_type: 'local_external', available: true, copy_subtree_target: true, root: 'scopes/notes' },
-                    processing: { scope_type: 'local', available: true, copy_subtree_target: true, root: 'scopes/processing' },
-                    missing: { scope_type: 'local', available: false, copy_subtree_target: true, root: 'scopes/missing' },
-                    readonly: { scope_type: 'local', available: true, copy_subtree_target: false, root: 'scopes/readonly' }
+                    studio: {
+                        scope_type: 'local',
+                        available: true,
+                        document_transfer: { copy_source: true, move_source: true, target: true },
+                        root: 'scopes/studio'
+                    },
+                    public: {
+                        scope_type: 'public',
+                        available: true,
+                        document_transfer: { copy_source: true, move_source: false, target: false },
+                        root: 'scopes/public'
+                    },
+                    notes: {
+                        scope_type: 'local_external',
+                        available: true,
+                        document_transfer: { copy_source: true, move_source: true, target: true },
+                        root: 'scopes/notes'
+                    },
+                    processing: {
+                        scope_type: 'local',
+                        available: true,
+                        document_transfer: { copy_source: true, move_source: true, target: true },
+                        root: 'scopes/processing'
+                    },
+                    missing: {
+                        scope_type: 'local',
+                        available: false,
+                        document_transfer: { copy_source: false, move_source: false, target: false },
+                        root: 'scopes/missing'
+                    },
+                    readonly: {
+                        scope_type: 'local',
+                        available: true,
+                        document_transfer: { copy_source: true, move_source: false, target: false },
+                        root: 'scopes/readonly'
+                    }
                 }
             };
             const requests = [];
@@ -896,32 +925,42 @@ def assert_copy_subtree_module_contract(page: Page) -> None:
                     json: () => Promise.resolve({ ok: true })
                 });
             };
-            await client.previewManagedDocSubtreeCopy('source-doc', 'notes', {
+            await client.previewManagedDocumentTransfer(['source-a', 'source-b'], 'notes', 'copy', true, {
                 baseUrl: 'http://manage.test', scope: 'studio', fetch
             });
-            await client.applyManagedDocSubtreeCopy({ schema_version: 'receipt' }, {
+            await client.applyManagedDocumentTransfer({ schema_version: 'receipt' }, {
                 baseUrl: 'http://manage.test', scope: 'studio', fetch
             });
             return {
-                supported: capabilities.copySubtreeSupported(payload),
-                targets: capabilities.copySubtreeTargetScopes(payload, 'studio'),
+                supported: capabilities.documentTransferSupported(payload),
+                copySource: capabilities.documentTransferSourceSupported(payload, 'studio', 'copy'),
+                moveSource: capabilities.documentTransferSourceSupported(payload, 'public', 'move'),
+                targets: capabilities.documentTransferTargetScopes(payload, 'studio'),
                 requests
             };
         }"""
     )
     expected = {
         "supported": True,
+        "copySource": True,
+        "moveSource": False,
         "targets": [
             {"scopeId": "notes", "label": "notes", "root": "scopes/notes"},
             {"scopeId": "processing", "label": "processing", "root": "scopes/processing"},
         ],
         "requests": [
             {
-                "url": "http://manage.test/docs/copy-subtree-preview",
-                "body": {"scope": "studio", "source_doc_id": "source-doc", "target_scope": "notes"},
+                "url": "http://manage.test/docs/document-transfer-preview",
+                "body": {
+                    "scope": "studio",
+                    "doc_ids": ["source-a", "source-b"],
+                    "target_scope": "notes",
+                    "transfer_mode": "copy",
+                    "include_descendants": True,
+                },
             },
             {
-                "url": "http://manage.test/docs/copy-subtree-apply",
+                "url": "http://manage.test/docs/document-transfer-apply",
                 "body": {
                     "scope": "studio",
                     "apply_plan": {"schema_version": "receipt"},
@@ -931,7 +970,7 @@ def assert_copy_subtree_module_contract(page: Page) -> None:
         ],
     }
     if result != expected:
-        raise AssertionError(f"unexpected Copy Subtree module contract: {result!r}")
+        raise AssertionError(f"unexpected document transfer module contract: {result!r}")
 
 
 def exercise_manage_route(
@@ -942,7 +981,7 @@ def exercise_manage_route(
     generated_requests: list[str] = []
     import_module_requests: list[str] = []
     scope_lifecycle_requests: list[str] = []
-    copy_subtree_requests: list[str] = []
+    document_transfer_requests: list[str] = []
     inline_mermaid_requests: list[str] = []
     page.on(
         "request",
@@ -964,8 +1003,8 @@ def exercise_manage_route(
     )
     page.on(
         "request",
-        lambda request: copy_subtree_requests.append(request.url)
-        if "/docs-viewer/runtime/js/management/docs-viewer-copy-subtree-workflow.js" in request.url
+        lambda request: document_transfer_requests.append(request.url)
+        if "/docs-viewer/runtime/js/management/docs-viewer-document-transfer-workflow.js" in request.url
         else None,
     )
     page.on(
@@ -988,8 +1027,10 @@ def exercise_manage_route(
         raise AssertionError(f"Docs Import modules loaded before the import action: {import_module_requests!r}")
     if scope_lifecycle_requests:
         raise AssertionError(f"scope lifecycle flow loaded before a lifecycle action: {scope_lifecycle_requests!r}")
-    if copy_subtree_requests:
-        raise AssertionError(f"copy subtree flow loaded before the copy action: {copy_subtree_requests!r}")
+    if document_transfer_requests:
+        raise AssertionError(
+            f"document transfer flow loaded before the Copy action: {document_transfer_requests!r}"
+        )
 
     vscode_button = page.locator("#docsViewerManageOpenVsCodeButton")
     if vscode_button.count() != 1 or vscode_button.is_hidden() or vscode_button.is_disabled():
@@ -1013,11 +1054,17 @@ def exercise_manage_route(
     if vscode_icon.get_attribute("alt") != "" or vscode_icon.get_attribute("aria-hidden") != "true":
         raise AssertionError("Decorative VS Code icon should defer its accessible name to the button")
 
-    copy_button = page.locator("#docsViewerManageCopySubtreeButton")
-    if copy_button.count() != 1 or copy_button.is_hidden() or copy_button.is_disabled():
-        raise AssertionError("Copy subtree should be an enabled index-toolbar action for the active document")
-    if copy_button.get_attribute("data-docs-viewer-control-surface") != "index-view":
-        raise AssertionError("Copy subtree action should be owned by the index-view control surface")
+    index_actions_button = page.locator("#docsViewerIndexActionsButton")
+    if (
+        index_actions_button.count() != 1
+        or index_actions_button.is_hidden()
+        or index_actions_button.is_disabled()
+    ):
+        raise AssertionError("Index actions should remain an enabled index-toolbar icon button")
+    if index_actions_button.get_attribute("aria-label") != "Index actions":
+        raise AssertionError("Index actions icon button should expose its explicit accessible name")
+    if page.locator("#docsViewerManageCopySubtreeButton").count():
+        raise AssertionError("singular Copy subtree control should be retired")
     index_toolbar = page.locator('[data-docs-viewer-control-surface-mount="index-view"]')
     index_panel_toggle = page.locator("#docsViewerSidebarToggle")
     index_panel_toggle.click()
@@ -1032,7 +1079,7 @@ def exercise_manage_route(
         }""",
         timeout=timeout_ms,
     )
-    if not copy_button.is_hidden():
+    if not index_actions_button.is_hidden():
         raise AssertionError("Collapsed index panel should hide the complete index-view toolbar")
     index_panel_toggle.click()
     page.wait_for_function(
@@ -1044,16 +1091,29 @@ def exercise_manage_route(
         }""",
         timeout=timeout_ms,
     )
-    if index_toolbar.is_hidden() or copy_button.is_hidden():
+    if index_toolbar.is_hidden() or index_actions_button.is_hidden():
         raise AssertionError("Restored index panel should show its index-view toolbar")
+
+    page.locator('[data-docs-viewer-selection-command="enter"]').click()
+    selection_checkbox = page.locator(
+        "[data-docs-viewer-selection-checkbox]:not([disabled])"
+    ).first
+    selection_checkbox.click()
+    page.wait_for_function(
+        "() => document.querySelector('#docsViewerIndexCopyButton')?.disabled === false",
+        timeout=timeout_ms,
+    )
+    index_actions_button.click()
     with page.expect_request(
-        lambda request: urlparse(request.url).path.endswith("/docs-viewer-copy-subtree-workflow.js"),
+        lambda request: urlparse(request.url).path.endswith(
+            "/docs-viewer-document-transfer-workflow.js"
+        ),
         timeout=timeout_ms,
     ):
-        copy_button.click()
+        page.locator("#docsViewerIndexCopyButton").click()
     page.goto(f"{base_url}/docs/?scope=studio&doc={DOCS_VIEWER_DOC_ID}", wait_until="domcontentloaded")
     wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
-    assert_copy_subtree_module_contract(page)
+    assert_document_transfer_module_contract(page)
 
     page.locator("#docsViewerManageActionsButton").click()
     page.wait_for_function(
@@ -1227,7 +1287,7 @@ def exercise_manage_route(
         request_paths(generated_requests),
         request_paths(import_module_requests),
         request_paths(scope_lifecycle_requests),
-        request_paths(copy_subtree_requests),
+        request_paths(document_transfer_requests),
         request_paths(inline_mermaid_requests),
         page.url,
     )
@@ -1254,7 +1314,7 @@ def main(argv: list[str] | None = None) -> int:
                     generated_paths,
                     import_module_paths,
                     scope_lifecycle_paths,
-                    copy_subtree_paths,
+                    document_transfer_paths,
                     inline_mermaid_paths,
                     final_url,
                 ) = exercise_manage_route(
@@ -1270,8 +1330,14 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"expected lazy Docs Import module request; saw {sorted(import_module_paths)!r}")
         if "/docs-viewer/runtime/js/management/docs-viewer-scope-lifecycle.js" not in scope_lifecycle_paths:
             raise AssertionError(f"expected lazy scope lifecycle module request; saw {sorted(scope_lifecycle_paths)!r}")
-        if "/docs-viewer/runtime/js/management/docs-viewer-copy-subtree-workflow.js" not in copy_subtree_paths:
-            raise AssertionError(f"expected lazy copy subtree module request; saw {sorted(copy_subtree_paths)!r}")
+        if (
+            "/docs-viewer/runtime/js/management/docs-viewer-document-transfer-workflow.js"
+            not in document_transfer_paths
+        ):
+            raise AssertionError(
+                "expected lazy document transfer module request; "
+                f"saw {sorted(document_transfer_paths)!r}"
+            )
         expected_mermaid_path = "/docs-viewer/runtime/vendor/mermaid/11.16.0/mermaid.min.js"
         if inline_mermaid_paths != {expected_mermaid_path}:
             raise AssertionError(f"Studio proof did not load the one checked Mermaid asset: {sorted(inline_mermaid_paths)!r}")

@@ -154,14 +154,26 @@ export function scopeStaticHtmlExportSupported(capabilities, scope) {
   );
 }
 
-export function copySubtreeSupported(capabilities) {
-  var copySubtree = capabilities && capabilities.copy_subtree && typeof capabilities.copy_subtree === "object"
-    ? capabilities.copy_subtree
+export function documentTransferSupported(capabilities) {
+  var documentTransfer = capabilities && capabilities.document_transfer && typeof capabilities.document_transfer === "object"
+    ? capabilities.document_transfer
     : null;
-  return Boolean(copySubtree && copySubtree.preview && copySubtree.apply);
+  return Boolean(documentTransfer && documentTransfer.preview && documentTransfer.apply);
 }
 
-export function copySubtreeTargetScopes(capabilities, activeScope) {
+export function documentTransferSourceSupported(capabilities, activeScope, mode) {
+  var scopeCaps = scopeManagementCapabilities(capabilities, activeScope);
+  var transfer = scopeCaps && scopeCaps.document_transfer && typeof scopeCaps.document_transfer === "object"
+    ? scopeCaps.document_transfer
+    : null;
+  var normalizedMode = String(mode || "").trim().toLowerCase();
+  if (!transfer || !documentTransferSupported(capabilities)) return false;
+  if (normalizedMode === "copy") return transfer.copy_source === true;
+  if (normalizedMode === "move") return transfer.move_source === true;
+  return false;
+}
+
+export function documentTransferTargetScopes(capabilities, activeScope) {
   var currentScope = normalizeScopeId(activeScope);
   var scopes = capabilities && capabilities.scopes && typeof capabilities.scopes === "object"
     ? capabilities.scopes
@@ -175,12 +187,14 @@ export function copySubtreeTargetScopes(capabilities, activeScope) {
     };
   }).filter(function (record) {
     var scopeCaps = scopes[record.scopeId] || {};
-    var scopeType = String(scopeCaps.scope_type || "").trim();
+    var transfer = scopeCaps.document_transfer && typeof scopeCaps.document_transfer === "object"
+      ? scopeCaps.document_transfer
+      : null;
     return (
       record.scopeId !== currentScope &&
-      (scopeType === "local" || scopeType === "local_external") &&
       scopeCaps.available === true &&
-      scopeCaps.copy_subtree_target === true
+      transfer &&
+      transfer.target === true
     );
   });
 }

@@ -166,6 +166,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/tests/smoke/local_studio_app_docs_viewer.py",
                 "docs-viewer/tests/smoke/docs_viewer_index_panel_modules.py",
                 "docs-viewer/tests/smoke/docs_viewer_index_selection_modules.py",
+                "docs-viewer/tests/smoke/docs_viewer_document_transfer_workflow_modules.py",
                 "docs-viewer/tests/smoke/docs_viewer_prepare_package_workflow_modules.py",
                 "docs-viewer/tests/smoke/docs_viewer_review_package_workflow_modules.py",
                 "docs-viewer/tests/smoke/docs_viewer_prepare_package_workflow_route.py",
@@ -446,7 +447,17 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "--site-root",
                 str(REPO_ROOT),
             ),
-            "Smoke-check manage-index selection state, lifecycle, projection, Shift range, and singular action-target isolation.",
+            "Smoke-check manage-index selection state, lifecycle, projection, Shift range, and checked-action target isolation.",
+        ),
+        CheckCommand(
+            "docs-viewer-document-transfer-workflow-module-smoke",
+            (
+                sys.executable,
+                "docs-viewer/tests/smoke/docs_viewer_document_transfer_workflow_modules.py",
+                "--site-root",
+                str(REPO_ROOT),
+            ),
+            "Smoke-check checked-id Copy/Move requests, media impact confirmation, blocked plans, cancellation, and focus restoration.",
         ),
         CheckCommand(
             "docs-viewer-prepare-package-workflow-module-smoke",

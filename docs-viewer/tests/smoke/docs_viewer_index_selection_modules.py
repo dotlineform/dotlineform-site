@@ -246,8 +246,8 @@ def assert_action_target_isolation(page: Page) -> None:
                     prepareContext: caseResolver('prepare-document-package', 'context').targetDocIds,
                     prepareDisabledReason: caseResolver('prepare-document-package').disabledReason,
                     delete: caseResolver('delete').targetDocIds,
-                    copyActive: caseResolver('copy-link').targetDocIds,
-                    copyContext: caseResolver('copy-link', 'context').targetDocIds,
+                    copyActive: caseResolver('copy').targetDocIds,
+                    copyContext: caseResolver('copy', 'context').targetDocIds,
                     moveActive: caseResolver('move').targetDocIds,
                     moveContext: caseResolver('move', 'context').targetDocIds
                 };
@@ -257,8 +257,8 @@ def assert_action_target_isolation(page: Page) -> None:
                 .filter(definition => definition.target === definitions.DOCS_VIEWER_ACTION_TARGETS.SELECTION)
                 .map(definition => definition.id)
                 .sort();
-            const selectionDeleteActionIds = ['delete'];
-            const documentActionIds = ['copy-link', 'move', 'new-child', 'new-sibling', 'open', 'open-vscode'];
+            const selectionDeleteActionIds = ['copy', 'delete', 'move'];
+            const documentActionIds = ['copy-link', 'new-child', 'new-sibling', 'open', 'open-vscode'];
             const resolveTargets = (actionIds, invocation) => Object.fromEntries(actionIds.map(actionId => {
                 const resolution = invocation
                     ? resolver(actionId, invocation)
@@ -328,7 +328,7 @@ def assert_action_target_isolation(page: Page) -> None:
             "primaryDocId": "context",
             "selectedDocIds": ["checked-a", "checked-b"],
         },
-        "selectionActionIds": ["delete", "prepare-document-package"],
+        "selectionActionIds": ["copy", "delete", "move", "prepare-document-package"],
         "prepareControlStates": {
             "empty": {
                 "disabled": True,
@@ -355,10 +355,10 @@ def assert_action_target_isolation(page: Page) -> None:
                 "prepareContext": [],
                 "prepareDisabledReason": "Select one or more documents.",
                 "delete": [],
-                "copyActive": ["active"],
-                "copyContext": ["context"],
-                "moveActive": ["active"],
-                "moveContext": ["context"],
+                "copyActive": [],
+                "copyContext": [],
+                "moveActive": [],
+                "moveContext": [],
             },
             {
                 "selectedDocIds": ["checked-a"],
@@ -366,10 +366,10 @@ def assert_action_target_isolation(page: Page) -> None:
                 "prepareContext": ["checked-a"],
                 "prepareDisabledReason": "",
                 "delete": ["checked-a"],
-                "copyActive": ["active"],
-                "copyContext": ["context"],
-                "moveActive": ["active"],
-                "moveContext": ["context"],
+                "copyActive": ["checked-a"],
+                "copyContext": ["checked-a"],
+                "moveActive": ["checked-a"],
+                "moveContext": ["checked-a"],
             },
             {
                 "selectedDocIds": ["checked-a", "checked-b"],
@@ -377,18 +377,19 @@ def assert_action_target_isolation(page: Page) -> None:
                 "prepareContext": ["checked-a", "checked-b"],
                 "prepareDisabledReason": "",
                 "delete": ["checked-a", "checked-b"],
-                "copyActive": ["active"],
-                "copyContext": ["context"],
-                "moveActive": ["active"],
-                "moveContext": ["context"],
+                "copyActive": ["checked-a", "checked-b"],
+                "copyContext": ["checked-a", "checked-b"],
+                "moveActive": ["checked-a", "checked-b"],
+                "moveContext": ["checked-a", "checked-b"],
             },
         ],
         "selectionDeleteTargets": {
+            "copy": ["checked-a", "checked-b"],
             "delete": ["checked-a", "checked-b"],
+            "move": ["checked-a", "checked-b"],
         },
         "documentActiveTargets": {
             "copy-link": ["active"],
-            "move": ["active"],
             "new-child": ["active"],
             "new-sibling": ["active"],
             "open": ["active"],
@@ -396,7 +397,6 @@ def assert_action_target_isolation(page: Page) -> None:
         },
         "documentInvocationTargets": {
             "copy-link": ["context"],
-            "move": ["context"],
             "new-child": ["context"],
             "new-sibling": ["context"],
             "open": ["context"],
@@ -466,75 +466,146 @@ def assert_manage_index_visibility_contract(page: Page) -> None:
         raise AssertionError(f"unexpected manage/public index visibility contract: {result!r}")
 
 
-def assert_prepare_action_menu_projection(page: Page) -> None:
+def assert_index_actions_menu_projection(page: Page) -> None:
     result = page.evaluate(
         """async () => {
-            const management = await import('/docs-viewer/runtime/js/management/docs-viewer-management.js');
-            const renderers = await import('/docs-viewer/runtime/js/management/docs-viewer-management-actions-renderer.js');
-            const render = renderers.createDocsViewerManagementAppControlRenderers()['manage-actions-menu'];
-            const rendered = render({
+            const appRenderers = await import('/docs-viewer/runtime/js/management/docs-viewer-management-actions-renderer.js');
+            const controlRenderers = await import('/docs-viewer/runtime/js/management/docs-viewer-management-control-renderers.js');
+            const hostedViews = await import('/docs-viewer/runtime/js/management/docs-viewer-management-hosted-views.js');
+            const appRender = appRenderers.createDocsViewerManagementAppControlRenderers()['manage-actions-menu'];
+            const app = appRender({
                 control: { id: 'manage-actions', label: 'Actions', state: {} },
                 document,
                 existingRoot: null
             });
-            document.body.replaceChildren(rendered.root);
-            const prepare = document.querySelector('#docsViewerManagePreparePackageButton');
-            const review = document.querySelector('#docsViewerManageReviewPackageButton');
-            const registered = {
-                prepareTag: prepare?.tagName || '',
-                prepareActionId: prepare?.dataset.docsViewerAction || '',
-                prepareHref: prepare?.getAttribute('href'),
-                reviewTag: review?.tagName || '',
-                reviewActionId: review?.dataset.docsViewerAction || '',
-                reviewHref: review?.getAttribute('href')
-            };
-            management.projectDocsViewerPreparePackageActionControl(prepare, {
-                disabled: true,
-                disabledReason: 'Select one or more documents.'
+            const render = controlRenderers.createDocsViewerManagementControlRenderers()['manage-index-actions'];
+            const itemStates = Object.fromEntries(
+                ['prepare-document-package', 'copy', 'move', 'delete'].map(actionId => [
+                    actionId,
+                    { disabled: true, disabledReason: 'Select one or more documents.' }
+                ])
+            );
+            const rendered = render({
+                control: { id: 'index-actions', label: 'Index actions', state: { items: itemStates } },
+                document,
+                existingRoot: null
             });
-            const disabled = {
-                disabled: prepare.disabled,
-                reason: prepare.dataset.docsViewerDisabledReason,
-                ariaLabel: prepare.getAttribute('aria-label'),
-                title: prepare.title
-            };
-            management.projectDocsViewerPreparePackageActionControl(prepare, {
-                disabled: false,
-                disabledReason: ''
+            document.body.replaceChildren(app.root, rendered.root);
+            const button = rendered.root.querySelector('#docsViewerIndexActionsButton');
+            const menu = rendered.root.querySelector('#docsViewerIndexActionsMenu');
+            const disabledItems = Array.from(
+                menu.querySelectorAll('[data-docs-viewer-action]')
+            ).map(item => ({
+                actionId: item.dataset.docsViewerAction,
+                label: item.querySelector('.docsViewer__actionMenuLabel')?.textContent || '',
+                disabled: item.disabled,
+                reason: item.dataset.docsViewerDisabledReason,
+                ariaLabel: item.getAttribute('aria-label')
+            }));
+            menu.hidden = false;
+            const rerendered = render({
+                control: {
+                    id: 'index-actions',
+                    label: 'Index actions',
+                    state: {
+                        disabled: false,
+                        items: Object.fromEntries(
+                            ['prepare-document-package', 'copy', 'move', 'delete'].map(
+                                actionId => [actionId, { disabled: false, disabledReason: '' }]
+                            )
+                        )
+                    }
+                },
+                document,
+                existingRoot: rendered.root
             });
-            const enabled = {
-                disabled: prepare.disabled,
-                hasReason: Object.prototype.hasOwnProperty.call(prepare.dataset, 'docsViewerDisabledReason'),
-                ariaLabel: prepare.getAttribute('aria-label'),
-                title: prepare.title
+            const definition = hostedViews.createDocsViewerManagementViewDefinitions().controls
+                .find(control => control.id === 'index-actions');
+            return {
+                appMenu: {
+                    hasPrepare: Boolean(app.root.querySelector('#docsViewerManagePreparePackageButton')),
+                    hasDelete: Boolean(app.root.querySelector('#docsViewerManageDeleteButton')),
+                    reviewActionId: app.root.querySelector('#docsViewerManageReviewPackageButton')
+                        ?.dataset.docsViewerAction || ''
+                },
+                button: {
+                    text: button.textContent,
+                    ariaLabel: button.getAttribute('aria-label'),
+                    disabled: button.disabled,
+                    hasVisibleCount: /\\d/.test(button.textContent)
+                },
+                disabledItems,
+                definition: {
+                    ownerViewId: definition?.ownerViewId || '',
+                    renderer: definition?.renderer || '',
+                    surfaceId: definition?.surfaceId || ''
+                },
+                rerender: {
+                    sameRoot: rerendered.root === rendered.root,
+                    menuStayedOpen: !menu.hidden,
+                    enabledItems: Array.from(menu.querySelectorAll('[data-docs-viewer-action]'))
+                        .every(item => !item.disabled),
+                    buttonStillEnabled: !button.disabled
+                }
             };
-            return { registered, disabled, enabled };
         }"""
     )
     expected = {
-        "registered": {
-            "prepareTag": "BUTTON",
-            "prepareActionId": "prepare-document-package",
-            "prepareHref": None,
-            "reviewTag": "BUTTON",
+        "appMenu": {
+            "hasPrepare": False,
+            "hasDelete": False,
             "reviewActionId": "review-document-package",
-            "reviewHref": None,
         },
-        "disabled": {
-            "disabled": True,
-            "reason": "Select one or more documents.",
-            "ariaLabel": "Prepare package. Select one or more documents.",
-            "title": "Prepare package. Select one or more documents.",
-        },
-        "enabled": {
+        "button": {
+            "text": "🛠️",
+            "ariaLabel": "Index actions",
             "disabled": False,
-            "hasReason": False,
-            "ariaLabel": "Prepare package",
-            "title": "Prepare package",
+            "hasVisibleCount": False,
+        },
+        "disabledItems": [
+            {
+                "actionId": "prepare-document-package",
+                "label": "Prepare package…",
+                "disabled": True,
+                "reason": "Select one or more documents.",
+                "ariaLabel": "Prepare package… Select one or more documents.",
+            },
+            {
+                "actionId": "copy",
+                "label": "Copy to scope…",
+                "disabled": True,
+                "reason": "Select one or more documents.",
+                "ariaLabel": "Copy to scope… Select one or more documents.",
+            },
+            {
+                "actionId": "move",
+                "label": "Move to scope…",
+                "disabled": True,
+                "reason": "Select one or more documents.",
+                "ariaLabel": "Move to scope… Select one or more documents.",
+            },
+            {
+                "actionId": "delete",
+                "label": "Delete…",
+                "disabled": True,
+                "reason": "Select one or more documents.",
+                "ariaLabel": "Delete… Select one or more documents.",
+            },
+        ],
+        "definition": {
+            "ownerViewId": "index-tree",
+            "renderer": "manage-index-actions",
+            "surfaceId": "index-view",
+        },
+        "rerender": {
+            "sameRoot": True,
+            "menuStayedOpen": True,
+            "enabledItems": True,
+            "buttonStillEnabled": True,
         },
     }
     if result != expected:
-        raise AssertionError(f"unexpected Prepare package Action menu projection: {result!r}")
+        raise AssertionError(f"unexpected Index actions menu projection: {result!r}")
 
 
 def assert_selection_projection_and_interaction(page: Page) -> None:
@@ -731,7 +802,7 @@ def main(argv: list[str] | None = None) -> int:
             assert_selection_state(page)
             assert_manage_index_visibility_contract(page)
             assert_action_target_isolation(page)
-            assert_prepare_action_menu_projection(page)
+            assert_index_actions_menu_projection(page)
             assert_selection_projection_and_interaction(page)
             browser.close()
         print("Docs Viewer index selection module contracts OK")

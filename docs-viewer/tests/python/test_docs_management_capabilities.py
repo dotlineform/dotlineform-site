@@ -17,7 +17,6 @@ from docs_management_test_support import (
 )
 from docs_management_capabilities_service import (
     capability_scope_root_label,
-    copy_subtree_target_available,
 )
 
 def test_capabilities_advertise_generated_data_reads() -> None:
@@ -40,7 +39,7 @@ def test_capabilities_advertise_source_config_reads() -> None:
     assert payload["capabilities"]["source_config_reads"] is True
     assert payload["capabilities"]["source_config_settings_reads"] is True
     assert payload["capabilities"]["source_config_settings_writes"] is True
-    assert payload["capabilities"]["copy_subtree"] == {
+    assert payload["capabilities"]["document_transfer"] == {
         "preview": True,
         "apply": True,
     }
@@ -65,19 +64,31 @@ def test_capabilities_advertise_source_config_reads() -> None:
     assert payload["capabilities"]["scopes"]["studio"]["sub_scope_lifecycle"]["sub_scopes"] == []
     assert payload["capabilities"]["scopes"]["studio"]["scope_lifecycle"]["rename_eligible"] is False
     assert payload["capabilities"]["scopes"]["studio"]["scope_type"] == "local"
-    assert payload["capabilities"]["scopes"]["studio"]["copy_subtree_target"] is True
+    assert payload["capabilities"]["scopes"]["studio"]["document_transfer"] == {
+        "copy_source": True,
+        "move_source": True,
+        "target": True,
+    }
 
 
-def test_public_scope_is_not_a_copy_subtree_target(tmp_path: Path) -> None:
-    source_root = tmp_path / "docs-viewer/scopes/public/source"
-    source_root.mkdir(parents=True)
-    config = SimpleNamespace(
-        scope_id="public",
-        scope_type="public",
-        source=Path("docs-viewer/scopes/public/source"),
-    )
+def test_public_scope_is_copy_source_but_not_move_source_or_transfer_target() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
+        config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
+        config = config_path.read_text(encoding="utf-8").replace(
+            '"scope_type": "local"',
+            '"scope_type": "public"',
+            1,
+        )
+        config_path.write_text(config, encoding="utf-8")
+        payload = docs_management_service.capabilities_payload(repo_root)
 
-    assert copy_subtree_target_available(tmp_path, config) is False
+    assert payload["capabilities"]["scopes"]["studio"]["document_transfer"] == {
+        "copy_source": True,
+        "move_source": False,
+        "target": False,
+    }
 
 
 def test_external_scope_capability_uses_portable_root_label() -> None:

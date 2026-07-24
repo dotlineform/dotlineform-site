@@ -85,14 +85,14 @@ def click_checkbox(page: Page, doc_id: str, *, shift: bool = False) -> None:
 
 
 def assert_delete_action_state(page: Page, *, disabled: bool, reason: str = "") -> None:
-    button = page.locator("#docsViewerManageDeleteButton")
+    button = page.locator("#docsViewerIndexDeleteButton")
     if button.count() != 1:
         raise AssertionError("Delete Action is missing from the manage route")
     if button.is_disabled() != disabled:
         raise AssertionError(
             f"Delete Action disabled state was {button.is_disabled()!r}, expected {disabled!r}"
         )
-    expected_label = f"Delete. {reason}" if reason else "Delete"
+    expected_label = f"Delete… {reason}" if reason else "Delete…"
     actual_label = button.get_attribute("aria-label")
     if actual_label != expected_label:
         raise AssertionError(
