@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-9959e61ab4d9e3e74451bc3abdd4dc1f",
-    "generated_at_utc": "2026-07-24T12:34:53Z",
+    "version": "blake2b-5209b57ea99d07ed7f93bb53c09ea361",
+    "generated_at_utc": "2026-07-24T12:58:17Z",
     "count": 282
   },
   "entries": [
@@ -3750,25 +3750,25 @@
       "kind": "doc",
       "title": "Docs Viewer Roadmap",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-1e0af6",
-      "last_updated": "2026-07-24 13:33:14",
+      "last_updated": "2026-07-24 13:57:12",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-24 13:33:14 • Roadmap",
+      "display_meta": "2026-07-24 13:57:12 • Roadmap",
       "search_terms": [
         "docs viewer roadmap",
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-24 13:33:14",
+        "2026-07-24 13:57:12",
         "2026",
         "07",
         "24",
         "13",
-        "33",
-        "14",
+        "57",
+        "12",
         "d-20260714-234030-1e0af6"
       ],
-      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-24 13:33:14 2026 07 24 13 33 14 d-20260714-234030-1e0af6"
+      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-24 13:57:12 2026 07 24 13 57 12 d-20260714-234030-1e0af6"
     },
     {
       "id": "d-20260716-204013-3be4e1",
@@ -3803,10 +3803,10 @@
       "kind": "doc",
       "title": "Copy And Move Documents Between Scopes",
       "href": "/docs/?scope=studio&doc=d-20260716-193410-6d4efe",
-      "last_updated": "2026-07-24 12:37:25",
+      "last_updated": "2026-07-24 13:57:12",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-24 12:37:25 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-24 13:57:12 • Docs Viewer Roadmap",
       "search_terms": [
         "copy and move documents between scopes",
         "copy",
@@ -3819,26 +3819,26 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-24 12:37:25",
+        "2026-07-24 13:57:12",
         "2026",
         "07",
         "24",
+        "13",
+        "57",
         "12",
-        "37",
-        "25",
         "d-20260716-193410-6d4efe"
       ],
-      "search_text": "copy and move documents between scopes copy and move documents between scopes docs viewer roadmap docs viewer roadmap 2026-07-24 12:37:25 2026 07 24 12 37 25 d-20260716-193410-6d4efe"
+      "search_text": "copy and move documents between scopes copy and move documents between scopes docs viewer roadmap docs viewer roadmap 2026-07-24 13:57:12 2026 07 24 13 57 12 d-20260716-193410-6d4efe"
     },
     {
       "id": "d-20260723-223400-c7a1e4",
       "kind": "doc",
       "title": "Copy And Move Documents Between Scopes Delivery",
       "href": "/docs/?scope=studio&doc=d-20260723-223400-c7a1e4",
-      "last_updated": "2026-07-24 13:33:14",
+      "last_updated": "2026-07-24 13:57:12",
       "parent_id": "d-20260716-193410-6d4efe",
       "parent_title": "Copy And Move Documents Between Scopes",
-      "display_meta": "2026-07-24 13:33:14 • Copy And Move Documents Between Scopes",
+      "display_meta": "2026-07-24 13:57:12 • Copy And Move Documents Between Scopes",
       "search_terms": [
         "copy and move documents between scopes delivery",
         "copy",
@@ -3849,16 +3849,16 @@
         "scopes",
         "delivery",
         "copy and move documents between scopes",
-        "2026-07-24 13:33:14",
+        "2026-07-24 13:57:12",
         "2026",
         "07",
         "24",
         "13",
-        "33",
-        "14",
+        "57",
+        "12",
         "d-20260723-223400-c7a1e4"
       ],
-      "search_text": "copy and move documents between scopes delivery copy and move documents between scopes delivery copy and move documents between scopes 2026-07-24 13:33:14 2026 07 24 13 33 14 d-20260723-223400-c7a1e4"
+      "search_text": "copy and move documents between scopes delivery copy and move documents between scopes delivery copy and move documents between scopes 2026-07-24 13:57:12 2026 07 24 13 57 12 d-20260723-223400-c7a1e4"
     },
     {
       "id": "d-20260716-193410-bd64e3",

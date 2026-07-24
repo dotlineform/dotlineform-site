@@ -32,6 +32,7 @@ class MermaidBuildContext(Protocol):
     published: ArtifactLocationAdapter
     write: bool
     requested_published_identities: tuple[str, ...] | None
+    replace_existing: bool
 
 
 CommandRunner = Callable[..., subprocess.CompletedProcess[str]]
@@ -177,10 +178,22 @@ def _publish_outputs(
     rendered: Sequence[tuple[MermaidMediaPlan, bytes]],
     *,
     published: ArtifactLocationAdapter,
+    replace_existing: bool,
 ) -> None:
     for plan, data in rendered:
         try:
-            published.replace(plan.published_identity, data, content_type="image/svg+xml")
+            if replace_existing:
+                published.replace(
+                    plan.published_identity,
+                    data,
+                    content_type="image/svg+xml",
+                )
+            else:
+                published.write(
+                    plan.published_identity,
+                    data,
+                    content_type="image/svg+xml",
+                )
             verified = published.verify_bytes(plan.published_identity, data)
         except Exception as exc:
             raise RuntimeError(
@@ -228,7 +241,11 @@ def produce_mermaid_svg(
             )
             for index, plan in enumerate(plans)
         ]
-        _publish_outputs(rendered, published=context.published)
+        _publish_outputs(
+            rendered,
+            published=context.published,
+            replace_existing=getattr(context, "replace_existing", True),
+        )
     return output_identities
 
 

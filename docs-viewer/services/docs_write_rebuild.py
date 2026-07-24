@@ -202,6 +202,7 @@ def rebuild_scope_outputs(
     include_search: bool = True,
     search_doc_ids: Optional[list[str]] = None,
     docs_doc_ids: Optional[list[str]] = None,
+    skip_media_builds: bool = False,
 ) -> Dict[str, Any]:
     docs_mode = "full"
     docs_target_doc_ids: list[str] = []
@@ -219,6 +220,8 @@ def rebuild_scope_outputs(
                 docs_command.extend(["--only-doc-ids", ",".join(docs_target_doc_ids)])
         else:
             docs_reason = "full-scope fallback: targeted docs payload ids normalized empty"
+    if skip_media_builds:
+        docs_command.append("--skip-media-builds")
     commands = [("docs", docs_command)]
     search = {"mode": "none", "doc_ids": []}
     if include_search:
@@ -281,6 +284,7 @@ def perform_source_write_and_rebuild(
     search_doc_ids: Optional[list[str]] = None,
     docs_doc_ids: Optional[list[str]] = None,
     written_paths: Optional[list[Path]] = None,
+    skip_media_builds: bool = False,
 ) -> Dict[str, Any]:
     root = current_scope_source_root(repo_root, scope)
     filenames = sorted(
@@ -307,6 +311,7 @@ def perform_source_write_and_rebuild(
             include_search=include_search,
             search_doc_ids=search_doc_ids,
             docs_doc_ids=docs_doc_ids,
+            skip_media_builds=skip_media_builds,
         )
     except Exception:
         if filenames:

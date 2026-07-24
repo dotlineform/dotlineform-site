@@ -32,6 +32,11 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--viewer-base-url", help="Override viewer page URL base for a single selected scope.")
     parser.add_argument("--sub-scope", help="Build a configured sub-scope for a single selected parent scope.")
     parser.add_argument("--only-doc-ids", help="Comma-separated doc ids for a targeted docs payload rebuild.")
+    parser.add_argument(
+        "--skip-media-builds",
+        action="store_true",
+        help="Skip registered media producers during a controlled targeted rebuild.",
+    )
     parser.add_argument("--diagnostics", action="store_true", help="Print machine-readable diagnostics for automation.")
     parser.add_argument("--write", action="store_true", help="Write generated files.")
     return parser.parse_args(argv)
@@ -54,10 +59,21 @@ def main(argv: list[str] | None = None) -> int:
         raise RuntimeError("--source, --output, and --viewer-base-url can only be used when exactly one scope is selected")
     if args.only_doc_ids and len(selected) != 1:
         raise RuntimeError("--only-doc-ids can only be used when exactly one scope is selected")
+    if args.skip_media_builds and len(selected) != 1:
+        raise RuntimeError("--skip-media-builds can only be used when exactly one scope is selected")
     if args.sub_scope and len(selected) != 1:
         raise RuntimeError("--sub-scope can only be used when exactly one scope is selected")
-    if args.sub_scope and (args.source or args.output or args.viewer_base_url or args.only_doc_ids):
-        raise RuntimeError("--sub-scope cannot be combined with --source, --output, --viewer-base-url, or --only-doc-ids")
+    if args.sub_scope and (
+        args.source
+        or args.output
+        or args.viewer_base_url
+        or args.only_doc_ids
+        or args.skip_media_builds
+    ):
+        raise RuntimeError(
+            "--sub-scope cannot be combined with --source, --output, "
+            "--viewer-base-url, --only-doc-ids, or --skip-media-builds"
+        )
 
     replace_scope_ids = requested_scopes or None
     if args.write:
@@ -104,6 +120,7 @@ def main(argv: list[str] | None = None) -> int:
                 output_dir=Path(args.output) if args.output else None,
                 viewer_base_url=args.viewer_base_url,
                 only_doc_ids=only_doc_ids,
+                skip_media_builds=args.skip_media_builds,
             )
             builder.run(write=args.write, emit_diagnostics=args.diagnostics)
     except (FrontMatterSyntaxError, InvalidDocIdError, MissingDocIdError) as exc:

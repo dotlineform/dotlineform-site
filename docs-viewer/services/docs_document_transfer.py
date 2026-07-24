@@ -160,6 +160,13 @@ class DocumentTransferPlan:
     def effective_root_count(self) -> int:
         return sum(document.effective_root for document in self.documents)
 
+    @property
+    def id_map(self) -> dict[str, str]:
+        return {
+            document.source_doc.doc_id: document.target_doc_id
+            for document in self.documents
+        }
+
     def preview_payload(self) -> dict[str, Any]:
         return {
             "schema_version": TRANSFER_PREVIEW_SCHEMA_VERSION,
@@ -310,6 +317,14 @@ def _normalize_requested_doc_ids(value: Any) -> tuple[str, ...]:
     return tuple(requested)
 
 
+def _receipt_text(payload: Mapping[str, Any], key: str) -> str:
+    return str(payload.get(key) or "").strip()
+
+
+def _stale_receipt(message: str) -> ValueError:
+    return ValueError(f"document transfer preview is stale: {message}")
+
+
 def _require_document_root(
     repo_root: Path,
     config: DocsScopeConfig,
@@ -458,7 +473,7 @@ def _planned_documents(
     )
 
 
-def _published_adapters(
+def published_transfer_adapters(
     repo_root: Path,
     config: DocsScopeConfig,
     media_types: Iterable[str],
@@ -490,7 +505,7 @@ def _published_adapters(
     }
 
 
-def _build_source_adapter(
+def transfer_build_source_adapter(
     repo_root: Path,
     config: DocsScopeConfig,
     build_type: str,
@@ -623,8 +638,16 @@ def _build_source_plan(
         )
         return None
 
-    source_adapter = _build_source_adapter(repo_root, source_config, build_type)
-    target_adapter = _build_source_adapter(repo_root, target_config, build_type)
+    source_adapter = transfer_build_source_adapter(
+        repo_root,
+        source_config,
+        build_type,
+    )
+    target_adapter = transfer_build_source_adapter(
+        repo_root,
+        target_config,
+        build_type,
+    )
     try:
         source_adapter.require(
             READ_CAPABILITY,
@@ -715,7 +738,7 @@ def _media_plans(
 
     media_types = {media_type for media_type, _identity in references_by_identity}
     try:
-        source_adapters = _published_adapters(
+        source_adapters = published_transfer_adapters(
             repo_root,
             source_config,
             media_types,
@@ -732,7 +755,7 @@ def _media_plans(
         )
         source_adapters = {}
     try:
-        target_adapters = _published_adapters(
+        target_adapters = published_transfer_adapters(
             repo_root,
             target_config,
             media_types,
@@ -1071,6 +1094,107 @@ def plan_document_transfer(
     )
 
 
+def restore_document_transfer_apply_plan(
+    repo_root: Path,
+    payload: Any,
+    *,
+    source_media_client: object | None = None,
+    target_media_client: object | None = None,
+    env_files: Iterable[Path] | None = None,
+    environ: Mapping[str, str] | None = None,
+) -> DocumentTransferPlan:
+    """Restore and revalidate one bounded transfer apply receipt."""
+
+    if not isinstance(payload, dict):
+        raise ValueError("document transfer apply_plan is required")
+    if _receipt_text(payload, "schema_version") != TRANSFER_APPLY_PLAN_SCHEMA_VERSION:
+        raise ValueError("document transfer apply_plan schema_version is invalid")
+
+    mode = _normalize_mode(payload.get("mode"))
+    source_scope = _normalize_scope(payload.get("source_scope"), field="source_scope")
+    target_scope = _normalize_scope(payload.get("target_scope"), field="target_scope")
+    if source_scope == target_scope:
+        raise _stale_receipt("target scope matches source scope")
+    operation_timestamp = _receipt_text(payload, "operation_timestamp")
+    if not source_model.is_doc_timestamp(operation_timestamp):
+        raise ValueError("document transfer apply_plan operation_timestamp is invalid")
+    include_descendants = payload.get("include_descendants")
+    if not isinstance(include_descendants, bool):
+        raise ValueError("document transfer apply_plan include_descendants must be a boolean")
+    requested_doc_ids = payload.get("requested_doc_ids")
+    if not isinstance(requested_doc_ids, list):
+        raise ValueError("document transfer apply_plan requested_doc_ids must be an array")
+
+    receipt_documents = payload.get("documents")
+    if not isinstance(receipt_documents, list) or not receipt_documents:
+        raise ValueError("document transfer apply_plan documents are required")
+
+    token_factory: IdentityTokenFactory | None = None
+    if mode == COPY_MODE:
+        tokens: list[str] = []
+        planned_target_ids: set[str] = set()
+        for record in receipt_documents:
+            if not isinstance(record, dict):
+                raise ValueError(
+                    "document transfer apply_plan document records must be objects"
+                )
+            target_doc_id = _receipt_text(record, "target_doc_id")
+            if not source_model.is_immutable_doc_id(target_doc_id):
+                raise ValueError(
+                    f"document transfer apply_plan target identity "
+                    f"{target_doc_id!r} is invalid"
+                )
+            if not source_model.doc_id_matches_added_date(
+                target_doc_id,
+                operation_timestamp,
+            ):
+                raise ValueError(
+                    f"document transfer apply_plan target identity "
+                    f"{target_doc_id!r} does not match the operation timestamp"
+                )
+            if target_doc_id in planned_target_ids:
+                raise ValueError(
+                    f"document transfer apply_plan target identity "
+                    f"{target_doc_id!r} is duplicated"
+                )
+            planned_target_ids.add(target_doc_id)
+            tokens.append(target_doc_id.rsplit("-", 1)[-1])
+
+        token_index = 0
+
+        def receipt_token_factory(_size: int) -> str:
+            nonlocal token_index
+            if token_index >= len(tokens):
+                return tokens[-1]
+            token = tokens[token_index]
+            token_index += 1
+            return token
+
+        token_factory = receipt_token_factory
+
+    try:
+        restored = plan_document_transfer(
+            repo_root,
+            source_scope=source_scope,
+            requested_doc_ids=requested_doc_ids,
+            target_scope=target_scope,
+            transfer_mode=mode,
+            include_descendants=include_descendants,
+            operation_timestamp=operation_timestamp,
+            token_factory=token_factory,
+            source_media_client=source_media_client,
+            target_media_client=target_media_client,
+            env_files=env_files,
+            environ=environ,
+        )
+        restored_payload = restored.apply_plan_payload()
+    except (FileNotFoundError, OSError, RuntimeError, ValueError) as exc:
+        raise _stale_receipt(str(exc)) from exc
+    if restored_payload != payload:
+        raise _stale_receipt("source, target, configuration, or transfer plan changed")
+    return restored
+
+
 __all__ = [
     "COPY_MODE",
     "MOVE_MODE",
@@ -1087,4 +1211,7 @@ __all__ = [
     "TransferDocumentPlan",
     "TransferMediaPlan",
     "plan_document_transfer",
+    "published_transfer_adapters",
+    "restore_document_transfer_apply_plan",
+    "transfer_build_source_adapter",
 ]

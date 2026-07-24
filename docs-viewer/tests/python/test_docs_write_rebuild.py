@@ -203,6 +203,48 @@ def test_rebuild_scope_outputs_passes_targeted_docs_command() -> None:
     ]
 
 
+def test_rebuild_scope_outputs_can_skip_media_after_controlled_transfer() -> None:
+    calls: list[list[str]] = []
+    original_python = with_fake_python()
+    original_run = write_rebuild.subprocess.run
+    original_fallback = write_rebuild.targeted_docs_build_fallback_reason
+
+    def fake_run(command, **_kwargs):
+        calls.append(list(command))
+        return Completed()
+
+    write_rebuild.subprocess.run = fake_run
+    write_rebuild.targeted_docs_build_fallback_reason = lambda *_args, **_kwargs: ""
+    try:
+        with tempfile.TemporaryDirectory() as temp_path:
+            result = write_rebuild.rebuild_scope_outputs(
+                Path(temp_path),
+                "studio",
+                include_search=False,
+                docs_doc_ids=["copied-doc"],
+                skip_media_builds=True,
+            )
+    finally:
+        write_rebuild.subprocess.run = original_run
+        write_rebuild.targeted_docs_build_fallback_reason = original_fallback
+        write_rebuild.PYTHON_EXECUTABLE = original_python
+
+    assert result["docs"]["mode"] == "targeted"
+    assert calls == [
+        [
+            "/tmp/python",
+            "docs-viewer/build/build_docs.py",
+            "--scope",
+            "studio",
+            "--write",
+            "--diagnostics",
+            "--only-doc-ids",
+            "copied-doc",
+            "--skip-media-builds",
+        ]
+    ]
+
+
 def test_rebuild_scope_outputs_falls_back_when_targeted_docs_outputs_are_missing() -> None:
     calls: list[list[str]] = []
     original_python = with_fake_python()

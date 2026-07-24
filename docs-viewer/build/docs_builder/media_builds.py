@@ -26,6 +26,7 @@ class MediaBuildContext:
     published: ArtifactLocationAdapter
     write: bool
     requested_published_identities: tuple[str, ...] | None = None
+    replace_existing: bool = True
 
 
 MediaProducer = Callable[[MediaBuildContext], Iterable[str]]
@@ -66,6 +67,7 @@ def run_registered_media_builds(
     producers: Mapping[str, MediaProducer] | None = None,
     client: object | None = None,
     requested_published_identities: Mapping[str, Iterable[str]] | None = None,
+    replace_existing: bool = True,
 ) -> list[dict[str, object]]:
     """Run explicitly configured media producers directly into published locations."""
 
@@ -135,6 +137,7 @@ def run_registered_media_builds(
                     published=published,
                     write=write,
                     requested_published_identities=requested,
+                    replace_existing=replace_existing,
                 )
             )
         )

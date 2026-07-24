@@ -43,6 +43,7 @@ class DocsDataBuilder(
         output_dir: Path | None = None,
         viewer_base_url: str | None = None,
         only_doc_ids: list[str] | None = None,
+        skip_media_builds: bool = False,
     ) -> None:
         self.repo_root = repo_root.resolve()
         self.config = config
@@ -56,6 +57,7 @@ class DocsDataBuilder(
         self.manage_only_tree_root_ids = normalize_doc_ids(list(config.manage_only_tree_root_ids))
         self.allow_unresolved_parent_ids = config.allow_unresolved_parent_ids is True
         self.only_doc_ids = None if only_doc_ids is None else normalize_doc_ids(only_doc_ids)
+        self.skip_media_builds = skip_media_builds is True
         self.output_url_base = self.output_url_base_for(self.output_url_dir())
         self.site_config = load_site_tools_config(self.repo_root)
         self.semantic_reference_registry = load_semantic_reference_registry(self.repo_root)
@@ -67,7 +69,7 @@ class DocsDataBuilder(
         started_at = monotonic_time()
         media_builds = (
             []
-            if self.targeted_build
+            if self.targeted_build or self.skip_media_builds
             else run_registered_media_builds(self.repo_root, self.config, write=write)
         )
         docs = self.load_docs()
@@ -81,7 +83,7 @@ class DocsDataBuilder(
             semantic_references_by_doc: dict[str, list[dict[str, Any]]] = {}
 
         docs_for_item_build = [doc for doc in docs if doc.doc_id in target_doc_ids]
-        if self.targeted_build:
+        if self.targeted_build and not self.skip_media_builds:
             requested_media = referenced_build_media_identities(
                 self.config,
                 (doc.body_markdown for doc in docs_for_item_build),

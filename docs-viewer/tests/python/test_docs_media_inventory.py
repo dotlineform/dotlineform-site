@@ -169,6 +169,38 @@ def test_registered_producer_writes_only_to_configured_published_adapter(tmp_pat
     assert not (source.parent / "diagram.svg").exists()
 
 
+def test_registered_producer_receives_create_only_publication_policy(
+    tmp_path: Path,
+) -> None:
+    write_site_tools_config(tmp_path)
+    record = docs_scope_record("studio", default_doc_id="studio")
+    record["source"]["build_media"] = {  # type: ignore[index]
+        "mermaid": {
+            "path": "media/mermaid",
+            "producer": "fixture-mermaid",
+            "publishes_to": "svg",
+        }
+    }
+    record["published"]["media"]["svg"]["build_inputs"] = ["mermaid"]  # type: ignore[index]
+    write_config(tmp_path, record)
+    config = load_docs_scope_configs(tmp_path)["studio"]
+    policies: list[bool] = []
+
+    def producer(context):
+        policies.append(context.replace_existing)
+        return []
+
+    run_registered_media_builds(
+        tmp_path,
+        config,
+        write=False,
+        producers={"fixture-mermaid": producer},
+        replace_existing=False,
+    )
+
+    assert policies == [False]
+
+
 def test_referenced_build_media_identities_select_only_configured_same_scope_outputs(tmp_path: Path) -> None:
     write_site_tools_config(tmp_path)
     record = docs_scope_record("studio", default_doc_id="studio")
@@ -224,6 +256,12 @@ def test_full_and_targeted_builds_invoke_media_stage_with_expected_selection(
 
     run_builder(tmp_path, write=True)
     run_builder(tmp_path, only_doc_ids=[CHILD_DOC_ID], write=True)
+    config = load_docs_scope_configs(tmp_path)["studio"]
+    pipeline.DocsDataBuilder(
+        repo_root=tmp_path,
+        config=config,
+        skip_media_builds=True,
+    ).run(write=True)
 
     assert calls == [
         ("studio", True, None),

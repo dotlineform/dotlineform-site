@@ -4,12 +4,28 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260716-193410-6d4efe",
+      "title": "Copy And Move Documents Between Scopes",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260716-193410-6d4efe.json",
+      "timestamp": "2026-07-24 13:57:12",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap"
+    },
+    {
       "doc_id": "d-20260723-223400-c7a1e4",
       "title": "Copy And Move Documents Between Scopes Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-223400-c7a1e4.json",
-      "timestamp": "2026-07-24 13:33:14",
+      "timestamp": "2026-07-24 13:57:12",
       "parent_id": "d-20260716-193410-6d4efe",
       "parent_title": "Copy And Move Documents Between Scopes"
+    },
+    {
+      "doc_id": "d-20260714-234030-1e0af6",
+      "title": "Docs Viewer Roadmap",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-1e0af6.json",
+      "timestamp": "2026-07-24 13:57:12",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
     },
     {
       "doc_id": "d-20260720-120201-343f33",
@@ -26,14 +42,6 @@
       "timestamp": "2026-07-24 13:33:14",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap"
-    },
-    {
-      "doc_id": "d-20260714-234030-1e0af6",
-      "title": "Docs Viewer Roadmap",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-1e0af6.json",
-      "timestamp": "2026-07-24 13:33:14",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
     },
     {
       "doc_id": "d-20260719-123719-fb7565",
@@ -60,14 +68,6 @@
       "parent_title": "Diagrams"
     },
     {
-      "doc_id": "d-20260716-193410-6d4efe",
-      "title": "Copy And Move Documents Between Scopes",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260716-193410-6d4efe.json",
-      "timestamp": "2026-07-24 12:37:25",
-      "parent_id": "d-20260714-234030-1e0af6",
-      "parent_title": "Docs Viewer Roadmap"
-    },
-    {
       "doc_id": "d-20260718-114645-7b9d24",
       "title": "Docs Viewer Core Refactor",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-114645-7b9d24.json",
@@ -82,5 +82,5 @@
       "parent_title": "Index Multiple Selection"
     }
   ],
-  "generated_at": "2026-07-24T12:34:53Z"
+  "generated_at": "2026-07-24T12:58:17Z"
 }

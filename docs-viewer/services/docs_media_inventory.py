@@ -79,7 +79,10 @@ def source_media_references(
     for media_type, media in config.published.media.items():
         for prefix in (media.reference_prefix.as_posix(), media.served_path_prefix):
             normalized_prefix = prefix.rstrip("/")
-            pattern = re.compile(rf"{re.escape(normalized_prefix)}/(?P<identity>[^\s)\]\"'<>]+)")
+            pattern = re.compile(
+                rf"{re.escape(normalized_prefix)}/"
+                rf"(?P<identity>[^\s)\]\"'<>?#]+)"
+            )
             for match in pattern.finditer(source):
                 identity = match.group("identity").rstrip(".,;:")
                 if identity:

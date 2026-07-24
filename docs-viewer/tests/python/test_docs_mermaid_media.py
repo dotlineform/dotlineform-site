@@ -312,3 +312,35 @@ def test_write_reports_failed_publication_verification(tmp_path: Path, monkeypat
             toolchain_root=_write_toolchain(tmp_path),
             run_command=render,
         )
+
+
+def test_create_only_write_refuses_existing_output_without_overwrite(
+    tmp_path: Path,
+) -> None:
+    _write_source(tmp_path)
+    context = _context(tmp_path, write=True)
+    existing = tmp_path / "published/architecture.svg"
+    existing.parent.mkdir(parents=True)
+    existing.write_bytes(b"existing")
+    create_only = MediaBuildContext(
+        scope=context.scope,
+        build_type=context.build_type,
+        publishes_to=context.publishes_to,
+        source=context.source,
+        published=context.published,
+        write=True,
+        replace_existing=False,
+    )
+
+    def render(command: list[str], **_options) -> subprocess.CompletedProcess[str]:
+        output = Path(command[command.index("--output") + 1])
+        output.write_text(_valid_svg(), encoding="utf-8")
+        return subprocess.CompletedProcess(command, 0, "", "")
+
+    with pytest.raises(RuntimeError, match="publication failed"):
+        produce_mermaid_svg(
+            create_only,
+            toolchain_root=_write_toolchain(tmp_path),
+            run_command=render,
+        )
+    assert existing.read_bytes() == b"existing"
