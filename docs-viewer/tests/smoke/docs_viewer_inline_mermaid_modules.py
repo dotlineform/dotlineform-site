@@ -786,21 +786,91 @@ def assert_accessible_svg_contract(page: Page) -> None:
 def assert_checked_browser_runtime_renders(page: Page) -> None:
     result = page.evaluate(
         """async () => {
-            const { inlineMermaid } = window.__docsViewerInlineMermaidSmoke;
+            const { inlineMermaid, diagramDetail } = window.__docsViewerInlineMermaidSmoke;
             const content = document.createElement('article');
-            const pre = document.createElement('pre');
-            const code = document.createElement('code');
-            code.className = 'language-mermaid';
-            code.textContent = [
-                'flowchart LR',
-                '  accTitle: Inline renderer proof',
-                '  accDescr: A short path from source to rendered SVG',
-                '  Source --> SVG'
-            ].join('\\n');
-            pre.appendChild(code);
-            content.appendChild(pre);
+            content.className = 'docsViewer__content';
+            const representativeSources = [
+                [
+                    'flowchart LR',
+                    '  accTitle: Flowchart theme proof',
+                    '  accDescr: Authored source flows through the themed renderer',
+                    '  Source --> Renderer --> SVG',
+                    '  classDef authored fill:#f4b400,stroke:#6b4f00,color:#101010',
+                    '  class Source authored'
+                ].join('\\n'),
+                [
+                    'sequenceDiagram',
+                    '  accTitle: Sequence theme proof',
+                    '  accDescr: An author asks the viewer to render a diagram',
+                    '  participant Author',
+                    '  participant Viewer',
+                    '  Author->>Viewer: Render source',
+                    '  Viewer-->>Author: Display SVG'
+                ].join('\\n'),
+                [
+                    'stateDiagram-v2',
+                    '  accTitle: State theme proof',
+                    '  accDescr: A diagram moves from source to displayed state',
+                    '  [*] --> Source',
+                    '  Source --> Displayed',
+                    '  Displayed --> [*]'
+                ].join('\\n')
+            ];
+            representativeSources.forEach(source => {
+                const pre = document.createElement('pre');
+                const code = document.createElement('code');
+                code.className = 'language-mermaid';
+                code.textContent = source;
+                pre.appendChild(code);
+                content.appendChild(pre);
+            });
             document.body.appendChild(content);
-            const mountResult = await inlineMermaid.docsViewerInlineMermaidAdapter.mountDocument({ content });
+            const detailAdapter = diagramDetail.createDocsViewerDiagramDetailAdapter();
+            document.documentElement.setAttribute('data-theme', 'light');
+            const mountResult = await inlineMermaid.docsViewerInlineMermaidAdapter.mountDocument({
+                content,
+                diagramDetailAdapter: detailAdapter,
+                document,
+                window
+            });
+            const frames = Array.from(content.querySelectorAll('.docsViewer__diagramFrame'));
+            const viewports = Array.from(content.querySelectorAll('.docsViewer__diagramViewport'));
+            const hosts = Array.from(content.querySelectorAll(
+                '.docsViewer__diagram[data-docs-viewer-diagram-kind="inline-mermaid"]'
+            ));
+            const controls = Array.from(content.querySelectorAll('.docsViewer__diagramDetailControl'));
+
+            function themedState() {
+                const svgs = hosts.map(host => host.querySelector(':scope > svg'));
+                return {
+                    theme: document.documentElement.getAttribute('data-theme') || '',
+                    titles: svgs.map(svg => svg?.querySelector('title')?.textContent || ''),
+                    descriptions: svgs.map(svg => svg?.querySelector('desc')?.textContent || ''),
+                    backgrounds: svgs.map(svg => svg?.style.backgroundColor || ''),
+                    viewBoxes: svgs.map(svg => svg?.getAttribute('viewBox') || ''),
+                    targets: controls.map(control => control.getAttribute('href') || ''),
+                    authoredStylePresent: (svgs[0]?.outerHTML || '').toLowerCase().includes('#f4b400'),
+                    viewportOverflow: viewports.map(viewport => getComputedStyle(viewport).overflowX),
+                    hostOverflow: hosts.map(host => getComputedStyle(host).overflowX)
+                };
+            }
+
+            const initialSvgs = hosts.map(host => host.firstElementChild);
+            const lightState = themedState();
+            document.documentElement.setAttribute('data-theme', 'dark');
+            const themeResult = await inlineMermaid.docsViewerInlineMermaidAdapter.handleThemeChange('dark');
+            const darkState = themedState();
+            const detailMarkup = await Promise.all(
+                darkState.targets.map(target => fetch(target).then(response => response.text()))
+            );
+            const stableChrome = frames.every((frame, index) =>
+                frame === hosts[index].closest('.docsViewer__diagramFrame')
+                && viewports[index] === hosts[index].parentElement
+                && controls[index] === frame.querySelector('.docsViewer__diagramDetailControl')
+            );
+            const replacedSvgs = initialSvgs.every((svg, index) => svg !== hosts[index].firstElementChild);
+            const inlineRelease = inlineMermaid.docsViewerInlineMermaidAdapter.releaseDocument({ content });
+            const detailRelease = detailAdapter.releaseDocument({ content });
 
             const mixed = document.createElement('article');
             mixed.innerHTML = [
@@ -823,17 +893,22 @@ def assert_checked_browser_runtime_renders(page: Page) -> None:
                 console.warn = originalWarn;
             }
             const script = document.querySelector('script[data-docs-viewer-inline-mermaid-runtime]');
-            const host = content.querySelector('.docsViewer__diagram');
             const mixedError = mixed.querySelector('.docsViewer__diagramError');
             const mixedSource = mixed.querySelector('pre > code.language-mermaid');
             return {
                 mountResult,
+                themeResult,
+                lightState,
+                darkState,
+                detailMarkup,
+                stableChrome,
+                replacedSvgs,
+                inlineRelease,
+                detailRelease,
                 mixedResult,
                 assetVersion: script?.dataset.docsViewerInlineMermaidRuntime || '',
                 assetPath: script?.getAttribute('src') || '',
-                hostKind: host?.dataset.docsViewerDiagramKind || '',
-                title: host?.querySelector('svg title')?.textContent || '',
-                description: host?.querySelector('svg desc')?.textContent || '',
+                hostKinds: hosts.map(host => host.dataset.docsViewerDiagramKind || ''),
                 sourceCount: content.querySelectorAll('pre > code.language-mermaid').length,
                 mixedHostCount: mixed.querySelectorAll('.docsViewer__diagram').length,
                 mixedSourceCount: mixed.querySelectorAll('pre > code.language-mermaid').length,
@@ -847,14 +922,50 @@ def assert_checked_browser_runtime_renders(page: Page) -> None:
             };
         }"""
     )
-    if result["mountResult"] != {"found": 1, "rendered": 1, "failed": 0, "stale": False}:
-        raise AssertionError(f"checked Mermaid browser runtime did not render: {result!r}")
+    if result["mountResult"] != {"found": 3, "rendered": 3, "failed": 0, "stale": False}:
+        raise AssertionError(f"representative Mermaid diagrams did not render: {result!r}")
+    if result["themeResult"] != {"found": 3, "rendered": 3, "failed": 0}:
+        raise AssertionError(f"representative Mermaid diagrams did not re-render: {result!r}")
     if result["assetVersion"] != "11.16.0" or result["assetPath"] != "/docs-viewer/runtime/vendor/mermaid/11.16.0/mermaid.min.js":
         raise AssertionError(f"inline renderer did not load the checked Mermaid asset: {result!r}")
-    if result["hostKind"] != "inline-mermaid" or result["sourceCount"] != 0:
-        raise AssertionError(f"checked Mermaid render did not use the settled host: {result!r}")
-    if result["title"] != "Inline renderer proof" or result["description"] != "A short path from source to rendered SVG":
-        raise AssertionError(f"checked Mermaid render did not preserve accessible text: {result!r}")
+    if result["hostKinds"] != ["inline-mermaid"] * 3 or result["sourceCount"] != 0:
+        raise AssertionError(f"representative Mermaid renders did not use the settled hosts: {result!r}")
+    expected_titles = [
+        "Flowchart theme proof",
+        "Sequence theme proof",
+        "State theme proof",
+    ]
+    expected_descriptions = [
+        "Authored source flows through the themed renderer",
+        "An author asks the viewer to render a diagram",
+        "A diagram moves from source to displayed state",
+    ]
+    states = [result["lightState"], result["darkState"]]
+    if [state["theme"] for state in states] != ["light", "dark"]:
+        raise AssertionError(f"representative Mermaid review did not exercise both themes: {result!r}")
+    for state in states:
+        if state["titles"] != expected_titles or state["descriptions"] != expected_descriptions:
+            raise AssertionError(f"representative Mermaid render lost accessible text: {result!r}")
+        if (
+            any(not background for background in state["backgrounds"])
+            or any(not view_box for view_box in state["viewBoxes"])
+            or any(not target.startswith("blob:") for target in state["targets"])
+            or not state["authoredStylePresent"]
+            or state["viewportOverflow"] != ["auto"] * 3
+            or state["hostOverflow"] != ["visible"] * 3
+        ):
+            raise AssertionError(f"representative Mermaid presentation contract changed: {result!r}")
+    if result["lightState"]["targets"] == result["darkState"]["targets"]:
+        raise AssertionError(f"representative detail targets did not follow the active theme: {result!r}")
+    if not result["stableChrome"] or not result["replacedSvgs"]:
+        raise AssertionError(f"representative theme refresh rebuilt stable diagram chrome: {result!r}")
+    if (
+        any("viewBox=" not in markup or "<title" not in markup or "<desc" not in markup
+            or "background-color" not in markup for markup in result["detailMarkup"])
+        or result["inlineRelease"] != {"released": 3}
+        or result["detailRelease"] != {"released": 3}
+    ):
+        raise AssertionError(f"representative standalone detail contract changed: {result!r}")
     if result["mixedResult"] != {"found": 3, "rendered": 2, "failed": 1, "stale": False}:
         raise AssertionError(f"checked Mermaid runtime did not contain an invalid middle diagram: {result!r}")
     if result["mixedHostCount"] != 2 or result["mixedSourceCount"] != 1 or result["mixedSource"] != "not a Mermaid diagram":

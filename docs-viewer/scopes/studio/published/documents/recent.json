@@ -4,12 +4,28 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260723-101224-e62173",
+      "title": "Docs Viewer Manage Theme Restoration",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-101224-e62173.json",
+      "timestamp": "2026-07-24 20:02:27",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap"
+    },
+    {
       "doc_id": "d-20260724-184427-31888d",
       "title": "Inline Mermaid Theme Synchronisation Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260724-184427-31888d.json",
-      "timestamp": "2026-07-24 19:51:34",
+      "timestamp": "2026-07-24 20:02:27",
       "parent_id": "d-20260723-101224-e62173",
       "parent_title": "Docs Viewer Manage Theme Restoration"
+    },
+    {
+      "doc_id": "d-20260724-190603-860f64",
+      "title": "Mermaid Authoring And Publication",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260724-190603-860f64.json",
+      "timestamp": "2026-07-24 20:02:27",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap"
     },
     {
       "doc_id": "d-20260714-234030-1e0af6",
@@ -20,28 +36,12 @@
       "parent_title": "Roadmap"
     },
     {
-      "doc_id": "d-20260724-190603-860f64",
-      "title": "Mermaid Authoring And Publication",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260724-190603-860f64.json",
-      "timestamp": "2026-07-24 19:06:03",
-      "parent_id": "d-20260714-234030-1e0af6",
-      "parent_title": "Docs Viewer Roadmap"
-    },
-    {
       "doc_id": "d-20260724-190603-0d87a0",
       "title": "Public Mermaid Projection Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260724-190603-0d87a0.json",
       "timestamp": "2026-07-24 19:06:03",
       "parent_id": "d-20260724-190603-860f64",
       "parent_title": "Mermaid Authoring And Publication"
-    },
-    {
-      "doc_id": "d-20260723-101224-e62173",
-      "title": "Docs Viewer Manage Theme Restoration",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-101224-e62173.json",
-      "timestamp": "2026-07-24 18:44:27",
-      "parent_id": "d-20260714-234030-1e0af6",
-      "parent_title": "Docs Viewer Roadmap"
     },
     {
       "doc_id": "d-20260716-204013-3be4e1",
@@ -84,5 +84,5 @@
       "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-07-24T18:51:53Z"
+  "generated_at": "2026-07-24T19:03:09Z"
 }

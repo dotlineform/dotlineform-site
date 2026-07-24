@@ -266,9 +266,12 @@ def assert_inline_mermaid_browser_review(page: Page, timeout_ms: int) -> None:
     )
     if (
         "Inline Mermaid diagram lifecycle" not in detail_markup
+        or "viewBox=" not in detail_markup
         or "background-color" not in detail_markup
     ):
-        raise AssertionError("refreshed inline detail target lost accessible or themed SVG content")
+        raise AssertionError(
+            "refreshed inline detail target lost accessible, responsive, or themed SVG content"
+        )
 
     reading_state = toggled
     if (
