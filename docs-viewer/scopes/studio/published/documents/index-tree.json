@@ -972,7 +972,7 @@
                   "doc_id": "d-20260718-125756-a41c70",
                   "title": "Docs Viewer Source Documentation And Linting Pilot Delivery",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-125756-a41c70.json",
-                  "ui_status": "in-progress"
+                  "ui_status": "done"
                 },
                 {
                   "doc_id": "d-20260713-133928-c786c7",
@@ -1366,5 +1366,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-24T21:45:09Z"
+  "generated_at": "2026-07-24T22:49:30Z"
 }

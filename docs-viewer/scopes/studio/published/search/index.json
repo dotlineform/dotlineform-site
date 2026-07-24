@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-1780bf7f44592e292f403604d6eb3037",
-    "generated_at_utc": "2026-07-24T22:36:05Z",
+    "version": "blake2b-cc744f585fb11781a2fb980eee71a674",
+    "generated_at_utc": "2026-07-24T22:49:31Z",
     "count": 241
   },
   "entries": [
@@ -770,10 +770,10 @@
       "kind": "doc",
       "title": "Development Checklist",
       "href": "/docs/?scope=studio&doc=d-20260523-190651-7157ec",
-      "last_updated": "2026-07-22 22:40:23",
+      "last_updated": "2026-07-24 23:48:11",
       "parent_id": "d-20260419-000000-d2e47b",
       "parent_title": "Dev Home",
-      "display_meta": "2026-07-22 22:40:23 • Dev Home",
+      "display_meta": "2026-07-24 23:48:11 • Dev Home",
       "search_terms": [
         "development checklist",
         "development",
@@ -781,15 +781,16 @@
         "dev home",
         "dev",
         "home",
-        "2026-07-22 22:40:23",
+        "2026-07-24 23:48:11",
         "2026",
         "07",
-        "22",
-        "40",
+        "24",
         "23",
+        "48",
+        "11",
         "d-20260523-190651-7157ec"
       ],
-      "search_text": "development checklist development checklist dev home dev home 2026-07-22 22:40:23 2026 07 22 40 23 d-20260523-190651-7157ec"
+      "search_text": "development checklist development checklist dev home dev home 2026-07-24 23:48:11 2026 07 24 23 48 11 d-20260523-190651-7157ec"
     },
     {
       "id": "d-20260523-000000-bf7161",
@@ -872,10 +873,10 @@
       "kind": "doc",
       "title": "Run Checks",
       "href": "/docs/?scope=studio&doc=d-20260501-174746-f92667",
-      "last_updated": "2026-07-15",
+      "last_updated": "2026-07-24 23:48:11",
       "parent_id": "d-20260419-000000-d2e47b",
       "parent_title": "Dev Home",
-      "display_meta": "2026-07-15 • Dev Home",
+      "display_meta": "2026-07-24 23:48:11 • Dev Home",
       "search_terms": [
         "run checks",
         "run",
@@ -883,13 +884,16 @@
         "dev home",
         "dev",
         "home",
-        "2026-07-15",
+        "2026-07-24 23:48:11",
         "2026",
         "07",
-        "15",
+        "24",
+        "23",
+        "48",
+        "11",
         "d-20260501-174746-f92667"
       ],
-      "search_text": "run checks run checks dev home dev home 2026-07-15 2026 07 15 d-20260501-174746-f92667"
+      "search_text": "run checks run checks dev home dev home 2026-07-24 23:48:11 2026 07 24 23 48 11 d-20260501-174746-f92667"
     },
     {
       "id": "d-20260423-204839-111501",
@@ -4336,10 +4340,10 @@
       "kind": "doc",
       "title": "Docs Viewer Source Documentation And Linting Pilot Delivery",
       "href": "/docs/?scope=studio&doc=d-20260718-125756-a41c70",
-      "last_updated": "2026-07-24 23:35:43",
+      "last_updated": "2026-07-24 23:49:10",
       "parent_id": "d-20260713-000000-d9bad2",
       "parent_title": "Source Documentation and Linting",
-      "display_meta": "2026-07-24 23:35:43 • Source Documentation and Linting",
+      "display_meta": "2026-07-24 23:49:10 • Source Documentation and Linting",
       "search_terms": [
         "docs viewer source documentation and linting pilot delivery",
         "docs",
@@ -4351,16 +4355,16 @@
         "pilot",
         "delivery",
         "source documentation and linting",
-        "2026-07-24 23:35:43",
+        "2026-07-24 23:49:10",
         "2026",
         "07",
         "24",
         "23",
-        "35",
-        "43",
+        "49",
+        "10",
         "d-20260718-125756-a41c70"
       ],
-      "search_text": "docs viewer source documentation and linting pilot delivery docs viewer source documentation and linting pilot delivery source documentation and linting 2026-07-24 23:35:43 2026 07 24 23 35 43 d-20260718-125756-a41c70"
+      "search_text": "docs viewer source documentation and linting pilot delivery docs viewer source documentation and linting pilot delivery source documentation and linting 2026-07-24 23:49:10 2026 07 24 23 49 10 d-20260718-125756-a41c70"
     },
     {
       "id": "d-20260713-133928-c786c7",
