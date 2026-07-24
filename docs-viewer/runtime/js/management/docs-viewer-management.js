@@ -3,11 +3,7 @@ import {
 } from "../shared/docs-viewer-tree.js";
 import {
   createDocsViewerManagementCapabilityController,
-  documentPackagePrepareCapability,
   documentPackageReviewCapability,
-  documentTransferSourceSupported,
-  documentTransferSupported,
-  documentTransferTargetScopes,
   scopePublishSupported,
   scopeStaticHtmlExportSupported
 } from "./docs-viewer-management-capabilities.js";
@@ -24,6 +20,9 @@ import {
   createDocsViewerManagementImportController
 } from "./docs-viewer-management-import-controller.js";
 import {
+  createDocsViewerManagementIndexController
+} from "./docs-viewer-management-index-controller.js";
+import {
   createDocsViewerManagementModalComposition
 } from "./docs-viewer-management-modal-composition.js";
 import {
@@ -38,9 +37,7 @@ import {
   resolveDocsViewerAction
 } from "./docs-viewer-action-definitions.js";
 import {
-  createDocsViewerIndexSelectionGutter,
-  createDocsViewerIndexSelectionOwner,
-  projectDocsViewerIndexSelectionRows
+  createDocsViewerIndexSelectionOwner
 } from "./docs-viewer-index-selection.js";
 
 var MANAGEMENT_TEXT = {
@@ -77,76 +74,6 @@ export function createDocsViewerManagementActionResolver(options = {}) {
       createDocsViewerManagementActionContext(contextOptions)
     );
   };
-}
-
-export function docsViewerPreparePackageActionControlState(options = {}) {
-  var resolution = options.resolution || null;
-  var disabledReason = "";
-  if (!options.managementChecked) {
-    disabledReason = "Checking Prepare package availability.";
-  } else if (!options.managementAvailable) {
-    disabledReason = "Prepare package is unavailable.";
-  } else if (options.managementBusy) {
-    disabledReason = "Docs management is busy.";
-  } else {
-    var capability = documentPackagePrepareCapability(options.capabilities);
-    if (!capability.available) disabledReason = capability.reason;
-    else if (!resolution || !resolution.enabled) {
-      disabledReason = resolution && resolution.disabledReason
-        ? resolution.disabledReason
-        : "Select one or more documents.";
-    }
-  }
-  return {
-    disabled: Boolean(disabledReason),
-    disabledReason: disabledReason
-  };
-}
-
-export function docsViewerDocumentTransferActionControlState(options = {}) {
-  var mode = String(options.mode || "").trim().toLowerCase();
-  var label = mode === "move" ? "Move" : "Copy";
-  var resolution = options.resolution || null;
-  var targets = Array.isArray(options.targets) ? options.targets : [];
-  var disabledReason = "";
-  if (!options.managementChecked) {
-    disabledReason = "Checking " + label + " availability.";
-  } else if (!options.managementAvailable) {
-    disabledReason = label + " is unavailable.";
-  } else if (options.managementBusy || options.workflowActive) {
-    disabledReason = "Docs management is busy.";
-  } else if (!resolution || !resolution.enabled) {
-    disabledReason = resolution && resolution.disabledReason
-      ? resolution.disabledReason
-      : "Select one or more documents.";
-  } else if (!documentTransferSupported(options.capabilities)) {
-    disabledReason = label + " is unavailable.";
-  } else if (!documentTransferSourceSupported(options.capabilities, options.scope, mode)) {
-    disabledReason = label + " is not supported from this scope.";
-  } else if (!targets.length) {
-    disabledReason = "No other writable Docs Viewer scope is available.";
-  }
-  return {
-    disabled: Boolean(disabledReason),
-    disabledReason: disabledReason,
-    targets: targets
-  };
-}
-
-export function projectDocsViewerPreparePackageActionControl(button, state) {
-  if (!button) return null;
-  var controlState = state || { disabled: true, disabledReason: "Prepare package is unavailable." };
-  var label = "Prepare package";
-  var accessibleLabel = controlState.disabledReason ? label + ". " + controlState.disabledReason : label;
-  button.disabled = Boolean(controlState.disabled);
-  button.title = accessibleLabel;
-  button.setAttribute("aria-label", accessibleLabel);
-  if (controlState.disabledReason) {
-    button.dataset.docsViewerDisabledReason = controlState.disabledReason;
-  } else {
-    delete button.dataset.docsViewerDisabledReason;
-  }
-  return controlState;
 }
 
 export function docsViewerReviewPackageActionControlState(options = {}) {
@@ -231,41 +158,63 @@ export function initDocsViewerManagement(context) {
   var interactionController = null;
   var metadataWorkflow = null;
   var modalController = null;
-  var documentTransferWorkflowActive = false;
-  var documentTransferWorkflowRequest = null;
-  var preparePackageWorkflowRequest = null;
   var reviewPackageWorkflowRequest = null;
   var scopeLifecycleController = null;
   var settingsWorkflow = null;
   var actionController = null;
-  var indexSelection = createDocsViewerIndexSelectionOwner({
-    initialScopeId: viewerScope()
+  var resolveAction = null;
+  var indexController = createDocsViewerManagementIndexController({
+    root: root,
+    nav: nav,
+    documentIndex: documentIndex,
+    management: management,
+    routeSession: routeSession,
+    searchRecent: searchRecent,
+    callbacks: {
+      activeIndexViewId: function () {
+        return typeof context.activeIndexViewId === "function"
+          ? context.activeIndexViewId()
+          : "index-tree";
+      },
+      handleDeleteDoc: function () {
+        if (actionController) actionController.handleDeleteDoc();
+      },
+      hideIndexActionsMenu: function (options) {
+        if (eventRouter) eventRouter.hideIndexActionsMenu(options);
+      },
+      isManagementContext: function () {
+        return typeof context.isManagementContext === "function" && context.isManagementContext();
+      },
+      managementClientOptions: managementClientOptions,
+      projectIndexViewControlState: function (controlId, controlState) {
+        if (typeof context.projectIndexViewControlState === "function") {
+          return context.projectIndexViewControlState(controlId, controlState);
+        }
+        return null;
+      },
+      renderManagementUi: renderManagementUi,
+      renderSidebar: function () {
+        if (typeof context.renderSidebar === "function") context.renderSidebar();
+      },
+      resolveAction: function (actionId) {
+        return resolveAction ? resolveAction(actionId) : null;
+      },
+      setManagementBusy: setManagementBusy,
+      setManagementMessage: setManagementMessage,
+      toggleIndexActionsMenu: function () {
+        if (eventRouter) eventRouter.toggleIndexActionsMenu();
+      },
+      viewerScope: viewerScope
+    }
+  });
+  var indexSelection = indexController.indexSelection;
+  resolveAction = createDocsViewerManagementActionResolver({
+    indexSelection: indexSelection,
+    selectedDocument: selectedDocument
   });
 
   function viewerScope() {
     return context.viewerScope();
-  }
-
-  function activeIndexViewId() {
-    return typeof context.activeIndexViewId === "function"
-      ? String(context.activeIndexViewId() || "").trim()
-      : "index-tree";
-  }
-
-  function indexActionsButton() {
-    return document.getElementById("docsViewerIndexActionsButton");
-  }
-
-  function indexActionsMenu() {
-    return document.getElementById("docsViewerIndexActionsMenu");
-  }
-
-  function indexSelectionLifecycleContext(indexViewId) {
-    return {
-      scopeId: viewerScope(),
-      managementContext: routeSession.managementContext,
-      indexViewId: arguments.length ? String(indexViewId || "").trim() : activeIndexViewId()
-    };
   }
 
   function managementClientOptions() {
@@ -281,11 +230,6 @@ export function initDocsViewerManagement(context) {
   function currentActiveDoc() {
     return documentIndex.docsById.get(selectedDocument.selectedDocId) || null;
   }
-
-  var resolveAction = createDocsViewerManagementActionResolver({
-    indexSelection: indexSelection,
-    selectedDocument: selectedDocument
-  });
 
   function actionTargetDoc(resolution) {
     if (!resolution || !resolution.enabled || resolution.targetDocIds.length !== 1) return null;
@@ -389,138 +333,6 @@ export function initDocsViewerManagement(context) {
     });
   }
 
-  function indexSelectionAvailable() {
-    return Boolean(
-      routeSession.managementContext
-      && activeIndexViewId() === "index-tree"
-      && management.managementChecked
-      && management.managementAvailable
-    );
-  }
-
-  function eligibleIndexSelectionDocIds() {
-    return documentIndex.docs.map(function (doc) {
-      return String(doc && doc.doc_id || "").trim();
-    }).filter(Boolean);
-  }
-
-  function renderIndexSelectionGutter(doc) {
-    return createDocsViewerIndexSelectionGutter({
-      document: document,
-      doc: doc,
-      state: indexSelection.snapshot(),
-      disabled: !indexSelectionAvailable() || management.managementBusy
-    });
-  }
-
-  function projectIndexSelection() {
-    var snapshot = indexSelection.snapshot();
-    var available = indexSelectionAvailable();
-    var eligibleDocIds = eligibleIndexSelectionDocIds();
-    if (typeof context.projectIndexViewControlState === "function") {
-      context.projectIndexViewControlState("index-selection", {
-        hidden: !available,
-        disabled: !available || management.managementBusy,
-        active: snapshot.selectionModeActive,
-        count: snapshot.selectedDocIds.length,
-        total: eligibleDocIds.length,
-        label: snapshot.selectionModeActive ? "Done selecting documents" : "Select documents"
-      });
-    }
-    projectDocsViewerIndexSelectionRows({
-      nav: nav,
-      state: snapshot,
-      disabled: !available || management.managementBusy
-    });
-    projectIndexActions();
-    return snapshot;
-  }
-
-  function preparePackageActionControlState() {
-    return docsViewerPreparePackageActionControlState({
-      capabilities: management.managementCapabilities,
-      managementAvailable: management.managementAvailable,
-      managementBusy: management.managementBusy,
-      managementChecked: management.managementChecked,
-      resolution: resolveAction(DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE)
-    });
-  }
-
-  function deleteActionControlState() {
-    var resolution = resolveAction(DOCS_VIEWER_ACTION_IDS.DELETE);
-    var disabledReason = "";
-    if (!management.managementChecked) {
-      disabledReason = "Checking Delete availability.";
-    } else if (!management.managementAvailable) {
-      disabledReason = "Delete is unavailable.";
-    } else if (management.managementBusy) {
-      disabledReason = "Docs management is busy.";
-    } else if (searchRecent.searchRouteActive) {
-      disabledReason = "Clear search to delete documents.";
-    } else if (!resolution.enabled) {
-      disabledReason = resolution.disabledReason;
-    }
-    return {
-      disabled: Boolean(disabledReason),
-      disabledReason: disabledReason
-    };
-  }
-
-  function documentTransferActionControlState(mode) {
-    var actionId = mode === "move" ? DOCS_VIEWER_ACTION_IDS.MOVE : DOCS_VIEWER_ACTION_IDS.COPY;
-    var targets = documentTransferTargetScopes(
-      management.managementCapabilities,
-      viewerScope()
-    );
-    return docsViewerDocumentTransferActionControlState({
-      capabilities: management.managementCapabilities,
-      managementAvailable: management.managementAvailable,
-      managementBusy: management.managementBusy,
-      managementChecked: management.managementChecked,
-      mode: mode,
-      resolution: resolveAction(actionId),
-      scope: viewerScope(),
-      targets: targets,
-      workflowActive: documentTransferWorkflowActive
-    });
-  }
-
-  function projectIndexActions() {
-    if (typeof context.projectIndexViewControlState !== "function") return null;
-    var visible = Boolean(
-      routeSession.managementContext
-      && activeIndexViewId() === "index-tree"
-    );
-    var state = {
-      hidden: !visible,
-      disabled: false,
-      items: {
-        [DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE]: preparePackageActionControlState(),
-        [DOCS_VIEWER_ACTION_IDS.COPY]: documentTransferActionControlState("copy"),
-        [DOCS_VIEWER_ACTION_IDS.MOVE]: documentTransferActionControlState("move"),
-        [DOCS_VIEWER_ACTION_IDS.DELETE]: deleteActionControlState()
-      }
-    };
-    context.projectIndexViewControlState("index-actions", state);
-    if (!visible && eventRouter) eventRouter.hideIndexActionsMenu();
-    return state;
-  }
-
-  function checkedSelectionHasDescendants(checkedDocIds) {
-    var selected = new Set(checkedDocIds || []);
-    return documentIndex.docs.some(function (doc) {
-      var parentId = String(doc && doc.parent_id || "").trim();
-      var seen = new Set();
-      while (parentId && !seen.has(parentId)) {
-        if (selected.has(parentId)) return true;
-        seen.add(parentId);
-        var parent = documentIndex.docsById.get(parentId);
-        parentId = String(parent && parent.parent_id || "").trim();
-      }
-      return false;
-    });
-  }
-
   function reviewPackageActionControlState() {
     return docsViewerReviewPackageActionControlState({
       capabilities: management.managementCapabilities,
@@ -536,22 +348,6 @@ export function initDocsViewerManagement(context) {
       manageReviewPackageButton,
       reviewPackageActionControlState()
     );
-  }
-
-  function reconcileIndexSelectionReload(eligibleDocIds) {
-    routeSession.managementContext = typeof context.isManagementContext === "function" && context.isManagementContext();
-    var snapshot = indexSelection.reconcileReload(
-      eligibleDocIds,
-      indexSelectionLifecycleContext()
-    );
-    projectIndexSelection();
-    return snapshot;
-  }
-
-  function handleIndexViewChange(indexViewId) {
-    var snapshot = indexSelection.syncContext(indexSelectionLifecycleContext(indexViewId));
-    projectIndexSelection();
-    return snapshot;
   }
 
   function handleMainViewControl(detail) {
@@ -584,57 +380,6 @@ export function initDocsViewerManagement(context) {
     return true;
   }
 
-  function handleIndexViewControl(detail) {
-    var controlId = String(detail && detail.controlId || "").trim();
-    var actionId = String(detail && detail.actionId || "").trim();
-    if (controlId === "index-selection") {
-      if (String(detail && detail.eventType || "") !== "click") return false;
-      var eventTarget = detail && detail.event && detail.event.target;
-      var commandTarget = eventTarget && typeof eventTarget.closest === "function"
-        ? eventTarget.closest("[data-docs-viewer-selection-command]")
-        : null;
-      var command = commandTarget ? String(commandTarget.dataset.docsViewerSelectionCommand || "") : "";
-      if (!command || !indexSelectionAvailable() || management.managementBusy) return false;
-      if (command === "enter") {
-        indexSelection.enter();
-        if (typeof context.renderSidebar === "function") context.renderSidebar();
-      } else if (command === "select-all") {
-        indexSelection.selectAll(eligibleIndexSelectionDocIds());
-      } else if (command === "clear") {
-        indexSelection.clear();
-      } else if (command === "done") {
-        indexSelection.exit();
-      } else {
-        return false;
-      }
-      projectIndexSelection();
-      return true;
-    }
-    if (controlId !== "index-actions" || String(detail && detail.eventType || "") !== "click") {
-      return false;
-    }
-    if (!actionId) {
-      eventRouter.toggleIndexActionsMenu();
-      return true;
-    }
-    var controlState = projectIndexActions();
-    var itemState = controlState && controlState.items[actionId];
-    if (!itemState || itemState.disabled) return false;
-    eventRouter.hideIndexActionsMenu({ focusButton: true });
-    if (actionId === DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE) {
-      handlePreparePackage();
-    } else if (actionId === DOCS_VIEWER_ACTION_IDS.COPY) {
-      handleDocumentTransfer("copy");
-    } else if (actionId === DOCS_VIEWER_ACTION_IDS.MOVE) {
-      handleDocumentTransfer("move");
-    } else if (actionId === DOCS_VIEWER_ACTION_IDS.DELETE) {
-      actionController.handleDeleteDoc();
-    } else {
-      return false;
-    }
-    return true;
-  }
-
   function handleAppManagementControl(detail) {
     var actionId = String(detail && detail.actionId || "").trim();
     if (actionId && !resolveAction(actionId).enabled) return false;
@@ -649,8 +394,7 @@ export function initDocsViewerManagement(context) {
     if (!manageRow) return;
 
     routeSession.managementContext = typeof context.isManagementContext === "function" && context.isManagementContext();
-    indexSelection.syncContext(indexSelectionLifecycleContext());
-    projectIndexSelection();
+    indexController.render();
     projectReviewPackageAction();
     if (!routeSession.managementContext) {
       syncManagementStatus("", false);
@@ -832,134 +576,6 @@ export function initDocsViewerManagement(context) {
     renderManagementUi();
   }
 
-  function loadPreparePackageWorkflow() {
-    if (preparePackageWorkflowRequest) return preparePackageWorkflowRequest;
-    preparePackageWorkflowRequest = import("../packages/document-package-prepare-workflow.js")
-      .then(function (module) {
-        if (!module || typeof module.openDocumentPackagePrepareWorkflow !== "function") {
-          throw new Error("Prepare package workflow is unavailable.");
-        }
-        return module;
-      })
-      .catch(function (error) {
-        preparePackageWorkflowRequest = null;
-        throw error;
-      });
-    return preparePackageWorkflowRequest;
-  }
-
-  function handlePreparePackage() {
-    var resolution = resolveAction(DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE);
-    if (!resolution.enabled || preparePackageActionControlState().disabled) return Promise.resolve(null);
-    var checkedDocIds = resolution.targetDocIds.slice();
-    var restoreFocus = indexActionsButton();
-    return loadPreparePackageWorkflow()
-      .then(function (module) {
-        return module.openDocumentPackagePrepareWorkflow({
-          root: root,
-          scope: viewerScope(),
-          checkedDocIds: checkedDocIds,
-          restoreFocus: restoreFocus,
-          activityContext: {
-            page_id: "docs-manage",
-            action_id: "prepare-document-package",
-            route: "/docs/",
-            control_id: "docsViewerIndexPreparePackageButton",
-            control_selector: "#docsViewerIndexPreparePackageButton",
-            correlation_id: "prepare-document-package:" + String(Date.now())
-          },
-          callbacks: {
-            hideManageActionsMenu: eventRouter.hideIndexActionsMenu,
-            setBusy: function (busy) {
-              setManagementBusy(busy);
-              renderManagementUi();
-            },
-            setMessage: setManagementMessage
-          }
-        });
-      })
-      .catch(function (error) {
-        setManagementBusy(false);
-        setManagementMessage(
-          error && error.message ? error.message : "Prepare package workflow is unavailable.",
-          true
-        );
-        return null;
-      });
-  }
-
-  function loadDocumentTransferWorkflow() {
-    if (documentTransferWorkflowRequest) return documentTransferWorkflowRequest;
-    documentTransferWorkflowRequest = import("./docs-viewer-document-transfer-workflow.js")
-      .then(function (module) {
-        if (!module || typeof module.openDocumentTransferWorkflow !== "function") {
-          throw new Error("Document transfer workflow is unavailable.");
-        }
-        return module;
-      })
-      .catch(function (error) {
-        documentTransferWorkflowRequest = null;
-        throw error;
-      });
-    return documentTransferWorkflowRequest;
-  }
-
-  function handleDocumentTransfer(mode) {
-    var normalizedMode = mode === "move" ? "move" : "copy";
-    var actionId = normalizedMode === "move"
-      ? DOCS_VIEWER_ACTION_IDS.MOVE
-      : DOCS_VIEWER_ACTION_IDS.COPY;
-    var resolution = resolveAction(actionId);
-    var controlState = documentTransferActionControlState(normalizedMode);
-    if (!resolution.enabled || controlState.disabled || documentTransferWorkflowActive) {
-      return Promise.resolve(null);
-    }
-    var checkedDocIds = resolution.targetDocIds.slice();
-    documentTransferWorkflowActive = true;
-    renderManagementUi();
-    return loadDocumentTransferWorkflow()
-      .then(function (module) {
-        return module.openDocumentTransferWorkflow({
-          root: root,
-          restoreFocus: indexActionsButton(),
-          mode: normalizedMode,
-          checkedDocIds: checkedDocIds,
-          targets: controlState.targets,
-          copyDescendantsAvailable: checkedSelectionHasDescendants(checkedDocIds),
-          clientOptions: managementClientOptions(),
-          callbacks: {
-            setBusy: setManagementBusy,
-            setMessage: setManagementMessage,
-            render: renderManagementUi,
-            onApplied: function (payload) {
-              var effectiveRoots = Array.isArray(payload && payload.effective_roots)
-                ? payload.effective_roots
-                : [];
-              var targetUrl = String(
-                effectiveRoots[0] && effectiveRoots[0].target_viewer_url || ""
-              ).trim();
-              if (!targetUrl) {
-                throw new Error("Document transfer result did not include a target URL.");
-              }
-              window.location.assign(new URL(targetUrl, window.location.href).toString());
-            }
-          }
-        });
-      })
-      .catch(function (error) {
-        setManagementBusy(false);
-        setManagementMessage(
-          error && error.message ? error.message : "Document transfer workflow is unavailable.",
-          true
-        );
-        return null;
-      })
-      .finally(function () {
-        documentTransferWorkflowActive = false;
-        renderManagementUi();
-      });
-  }
-
   function loadReviewPackageWorkflow() {
     if (reviewPackageWorkflowRequest) return reviewPackageWorkflowRequest;
     reviewPackageWorkflowRequest = import("../packages/document-package-review-workflow.js")
@@ -1068,7 +684,7 @@ export function initDocsViewerManagement(context) {
         metadataWorkflow.openForDocId(docId);
       },
       onIndexSelectionChange: function () {
-        projectIndexSelection();
+        indexController.projectSelection();
       },
       onMoveDoc: function (movingDocId, parentId) {
         if (actionController) actionController.handleMoveDoc(movingDocId, parentId);
@@ -1112,8 +728,8 @@ export function initDocsViewerManagement(context) {
 
   eventRouter = createDocsViewerManagementEventRouter({
     refs: {
-      indexActionsButton: indexActionsButton,
-      indexActionsMenu: indexActionsMenu,
+      indexActionsButton: indexController.actionsButton,
+      indexActionsMenu: indexController.actionsMenu,
       manageActionsButton: manageActionsButton,
       manageActionsMenu: manageActionsMenu
     },
@@ -1219,17 +835,17 @@ export function initDocsViewerManagement(context) {
     canDragCurrentDoc: canDragCurrentDoc,
     handleDocumentKeydown: eventRouter.handleDocumentKeydown,
     handleAppManagementControl: handleAppManagementControl,
-    handleIndexViewChange: handleIndexViewChange,
-    handleIndexViewControl: handleIndexViewControl,
+    handleIndexViewChange: indexController.handleViewChange,
+    handleIndexViewControl: indexController.handleControl,
     handleMainViewControl: handleMainViewControl,
     handleRootClick: eventRouter.handleRootClick,
     hideContextMenu: hideContextMenu,
     indexSelection: indexSelection,
     initialize: initializeManagement,
     openImportModal: importController.open,
-    reconcileIndexSelectionReload: reconcileIndexSelectionReload,
+    reconcileIndexSelectionReload: indexController.reconcileReload,
     render: renderManagementUi,
-    renderIndexSelectionGutter: renderIndexSelectionGutter,
+    renderIndexSelectionGutter: indexController.renderSelectionGutter,
     updateNavDragState: updateNavDragState
   };
 }

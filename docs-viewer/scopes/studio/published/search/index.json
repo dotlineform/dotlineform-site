@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-1adf89785e63123dbe27d66dc57229c4",
-    "generated_at_utc": "2026-07-24T15:09:30Z",
+    "version": "blake2b-5f938df1e18823030eef2c08cd716a04",
+    "generated_at_utc": "2026-07-24T15:30:45Z",
     "count": 278
   },
   "entries": [
@@ -2511,25 +2511,25 @@
       "kind": "doc",
       "title": "Runtime Module Ownership",
       "href": "/docs/?scope=studio&doc=d-20260605-125108-1d1ef3",
-      "last_updated": "2026-07-22 15:14:46",
+      "last_updated": "2026-07-24 16:30:31",
       "parent_id": "d-20260331-000000-c313fd",
       "parent_title": "Runtime",
-      "display_meta": "2026-07-22 15:14:46 • Runtime",
+      "display_meta": "2026-07-24 16:30:31 • Runtime",
       "search_terms": [
         "runtime module ownership",
         "runtime",
         "module",
         "ownership",
-        "2026-07-22 15:14:46",
+        "2026-07-24 16:30:31",
         "2026",
         "07",
-        "22",
-        "15",
-        "14",
-        "46",
+        "24",
+        "16",
+        "30",
+        "31",
         "d-20260605-125108-1d1ef3"
       ],
-      "search_text": "runtime module ownership runtime module ownership 2026-07-22 15:14:46 2026 07 22 15 14 46 d-20260605-125108-1d1ef3"
+      "search_text": "runtime module ownership runtime module ownership 2026-07-24 16:30:31 2026 07 24 16 30 31 d-20260605-125108-1d1ef3"
     },
     {
       "id": "d-20260515-000000-f43740",

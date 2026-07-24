@@ -161,6 +161,7 @@ def test_document_package_actions_own_the_surviving_browser_assets() -> None:
         ).read_text(encoding="utf-8")
         for filename in (
             "docs-viewer-management-actions-renderer.js",
+            "docs-viewer-management-index-controller.js",
             "docs-viewer-management.js",
         )
     )

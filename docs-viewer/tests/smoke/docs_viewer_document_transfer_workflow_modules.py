@@ -38,8 +38,8 @@ def assert_transfer_workflow(page: Page) -> None:
             const workflow = await import(
                 '/docs-viewer/runtime/js/management/docs-viewer-document-transfer-workflow.js'
             );
-            const management = await import(
-                '/docs-viewer/runtime/js/management/docs-viewer-management.js'
+            const indexManagement = await import(
+                '/docs-viewer/runtime/js/management/docs-viewer-management-index-controller.js'
             );
             const definitions = await import(
                 '/docs-viewer/runtime/js/management/docs-viewer-action-definitions.js'
@@ -278,7 +278,7 @@ def assert_transfer_workflow(page: Page) -> None:
                 ),
                 warningCanApply: workflow.documentTransferPreviewCanApply(warningPreview),
                 stateContract: {
-                    empty: management.docsViewerDocumentTransferActionControlState({
+                    empty: indexManagement.docsViewerDocumentTransferActionControlState({
                         mode: 'copy',
                         capabilities: transferCapabilities,
                         managementAvailable: true,
@@ -291,7 +291,7 @@ def assert_transfer_workflow(page: Page) -> None:
                         scope: 'studio',
                         targets: [{ scopeId: 'notes' }]
                     }),
-                    ready: management.docsViewerDocumentTransferActionControlState({
+                    ready: indexManagement.docsViewerDocumentTransferActionControlState({
                         mode: 'move',
                         capabilities: transferCapabilities,
                         managementAvailable: true,

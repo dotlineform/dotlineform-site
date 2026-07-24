@@ -214,6 +214,9 @@ def assert_action_target_isolation(page: Page) -> None:
         """async () => {
             const definitions = await import('/docs-viewer/runtime/js/management/docs-viewer-action-definitions.js');
             const management = await import('/docs-viewer/runtime/js/management/docs-viewer-management.js');
+            const indexManagement = await import(
+                '/docs-viewer/runtime/js/management/docs-viewer-management-index-controller.js'
+            );
             const selection = await import('/docs-viewer/runtime/js/management/docs-viewer-index-selection.js');
             const owner = selection.createDocsViewerIndexSelectionOwner({
                 initialState: {
@@ -270,7 +273,7 @@ def assert_action_target_isolation(page: Page) -> None:
                 isolationCases,
                 selectionActionIds,
                 prepareControlStates: {
-                    empty: management.docsViewerPreparePackageActionControlState({
+                    empty: indexManagement.docsViewerPreparePackageActionControlState({
                         capabilities: { document_packages: { available: true, prepare: true } },
                         managementAvailable: true,
                         managementBusy: false,
@@ -280,21 +283,21 @@ def assert_action_target_isolation(page: Page) -> None:
                             definitions.createDocsViewerActionContext({ activeDocId: 'active' })
                         )
                     }),
-                    capabilityUnavailable: management.docsViewerPreparePackageActionControlState({
+                    capabilityUnavailable: indexManagement.docsViewerPreparePackageActionControlState({
                         capabilities: {},
                         managementAvailable: true,
                         managementBusy: false,
                         managementChecked: true,
                         resolution: resolver('prepare-document-package')
                     }),
-                    busy: management.docsViewerPreparePackageActionControlState({
+                    busy: indexManagement.docsViewerPreparePackageActionControlState({
                         capabilities: { document_packages: { available: true, prepare: true } },
                         managementAvailable: true,
                         managementBusy: true,
                         managementChecked: true,
                         resolution: resolver('prepare-document-package')
                     }),
-                    workspaceUnavailable: management.docsViewerPreparePackageActionControlState({
+                    workspaceUnavailable: indexManagement.docsViewerPreparePackageActionControlState({
                         capabilities: {
                             document_packages: {
                                 available: false,
@@ -307,7 +310,7 @@ def assert_action_target_isolation(page: Page) -> None:
                         managementChecked: true,
                         resolution: resolver('prepare-document-package')
                     }),
-                    ready: management.docsViewerPreparePackageActionControlState({
+                    ready: indexManagement.docsViewerPreparePackageActionControlState({
                         capabilities: { document_packages: { available: true, prepare: true } },
                         managementAvailable: true,
                         managementBusy: false,
