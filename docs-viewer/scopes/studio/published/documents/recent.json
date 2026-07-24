@@ -4,36 +4,68 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "d-20260716-193410-6d4efe",
-      "title": "Copy And Move Documents Between Scopes",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260716-193410-6d4efe.json",
-      "timestamp": "2026-07-24 15:20:00",
-      "parent_id": "d-20260714-234030-1e0af6",
-      "parent_title": "Docs Viewer Roadmap"
+      "doc_id": "d-20260723-223400-c7a1e4",
+      "title": "Copy And Move Documents Between Scopes Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-223400-c7a1e4.json",
+      "timestamp": "2026-07-24 15:34:00",
+      "parent_id": "d-20260716-193410-6d4efe",
+      "parent_title": "Copy And Move Documents Between Scopes"
     },
     {
       "doc_id": "d-20260607-222033-78a47c",
       "title": "Create And Import Endpoints",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-78a47c.json",
-      "timestamp": "2026-07-24 15:20:00",
+      "timestamp": "2026-07-24 15:34:00",
       "parent_id": "d-20260607-222033-647b52",
       "parent_title": "Endpoint Overview"
+    },
+    {
+      "doc_id": "d-20260716-204013-3be4e1",
+      "title": "Button Placement",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260716-204013-3be4e1.json",
+      "timestamp": "2026-07-24 15:29:36",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap"
+    },
+    {
+      "doc_id": "d-20260716-193410-6d4efe",
+      "title": "Copy And Move Documents Between Scopes",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260716-193410-6d4efe.json",
+      "timestamp": "2026-07-24 15:29:36",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap"
+    },
+    {
+      "doc_id": "d-20260716-193410-bd64e3",
+      "title": "Copy Subtree To Scope Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260716-193410-bd64e3.json",
+      "timestamp": "2026-07-24 15:29:36",
+      "parent_id": "d-20260716-193410-6d4efe",
+      "parent_title": "Copy And Move Documents Between Scopes"
     },
     {
       "doc_id": "d-20260714-234030-1e0af6",
       "title": "Docs Viewer Roadmap",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-1e0af6.json",
-      "timestamp": "2026-07-24 15:20:00",
+      "timestamp": "2026-07-24 15:29:36",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
     },
     {
-      "doc_id": "d-20260723-223400-c7a1e4",
-      "title": "Copy And Move Documents Between Scopes Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-223400-c7a1e4.json",
-      "timestamp": "2026-07-24 14:48:50",
-      "parent_id": "d-20260716-193410-6d4efe",
-      "parent_title": "Copy And Move Documents Between Scopes"
+      "doc_id": "d-20260714-151900-6fa23e",
+      "title": "Index Multiple Selection",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-151900-6fa23e.json",
+      "timestamp": "2026-07-24 15:29:36",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap"
+    },
+    {
+      "doc_id": "d-20260722-000158-9c0f3e",
+      "title": "Index Multiple Selection Consumer Assessment",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260722-000158-9c0f3e.json",
+      "timestamp": "2026-07-24 15:29:36",
+      "parent_id": "d-20260714-151900-6fa23e",
+      "parent_title": "Index Multiple Selection"
     },
     {
       "doc_id": "d-20260720-120201-343f33",
@@ -50,37 +82,7 @@
       "timestamp": "2026-07-24 13:33:14",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap"
-    },
-    {
-      "doc_id": "d-20260719-123719-fb7565",
-      "title": "Document Diagrams",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260719-123719-fb7565.json",
-      "timestamp": "2026-07-24 13:33:14",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260720-102658-b55348",
-      "title": "Inline Mermaid Rendering Concept",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-102658-b55348.json",
-      "timestamp": "2026-07-24 13:33:14",
-      "parent_id": "d-20260715-181845-0158f9",
-      "parent_title": "Diagrams"
-    },
-    {
-      "doc_id": "d-20260720-102658-7de33d",
-      "title": "Inline Mermaid Rendering Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-102658-7de33d.json",
-      "timestamp": "2026-07-24 13:33:14",
-      "parent_id": "d-20260715-181845-0158f9",
-      "parent_title": "Diagrams"
-    },
-    {
-      "doc_id": "d-20260718-114645-7b9d24",
-      "title": "Docs Viewer Core Refactor",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-114645-7b9d24.json",
-      "timestamp": "2026-07-24 11:24:41"
     }
   ],
-  "generated_at": "2026-07-24T14:18:12Z"
+  "generated_at": "2026-07-24T14:33:49Z"
 }

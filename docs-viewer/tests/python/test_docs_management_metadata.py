@@ -122,6 +122,7 @@ def test_parent_delete_removes_subtree_and_rebuilds_every_deleted_id(monkeypatch
             "include_search": True,
             "search_doc_ids": ["non-viewable-doc", "child"],
             "docs_doc_ids": ["non-viewable-doc", "child"],
+            "skip_media_builds": False,
         }
     ]
 
@@ -165,6 +166,7 @@ def test_multi_selection_delete_applies_union_once(monkeypatch) -> None:
             "include_search": True,
             "search_doc_ids": ["non-viewable-doc", "child", "other"],
             "docs_doc_ids": ["non-viewable-doc", "child", "other"],
+            "skip_media_builds": False,
         }
     ]
 

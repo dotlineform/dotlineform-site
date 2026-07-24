@@ -362,6 +362,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/python/test_docs_document_transfer.py",
                 "docs-viewer/tests/python/test_docs_document_transfer_apply.py",
                 "docs-viewer/tests/python/test_docs_document_move_apply.py",
+                "docs-viewer/tests/python/test_docs_document_transfer_routes.py",
                 "docs-viewer/tests/python/test_docs_document_identity_migration.py",
                 "docs-viewer/tests/python/test_docs_broken_links.py",
                 "docs-viewer/tests/python/test_docs_review_packages.py",
