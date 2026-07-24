@@ -22,6 +22,7 @@ for _path in (DOCS_SERVICES_DIR, DOCS_BUILD_DIR):
 
 import docs_document_transfer as transfer  # noqa: E402
 import docs_document_transfer_apply as transfer_apply  # noqa: E402
+import docs_artifact_locations as artifact_locations  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 import build_docs  # noqa: E402
 import build_search  # noqa: E402
@@ -693,6 +694,67 @@ def test_apply_copy_reports_exact_partial_target_after_document_write_failure(
         item["state"] for item in failure["target_state"]["documents"]
     ] == ["exact", "missing"]
     assert activity_calls == []
+
+
+def test_apply_copy_reports_exact_partial_target_after_media_write_failure(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo_root = make_repo(tmp_path)
+    write_doc(
+        local_documents_root(repo_root, "source"),
+        doc_id="alpha",
+        title="Alpha",
+        parent_id="root",
+        body=(
+            "# Alpha\n\n"
+            "[[media:docs/source/img/one.png One]]\n"
+            "[[media:docs/source/img/two.png Two]]\n"
+        ),
+    )
+    write_bytes(media_path(repo_root, "source", "img", "one.png"), b"one")
+    write_bytes(media_path(repo_root, "source", "img", "two.png"), b"two")
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        requested_doc_ids=["alpha"],
+        target_scope="target",
+        transfer_mode="copy",
+        operation_timestamp=COPY_TIMESTAMP,
+        token_factory=sequential_tokens("aaaaaa"),
+    )
+    original_write = artifact_locations.FilesystemArtifactLocationAdapter.write
+
+    def fail_second_media(self, identity, data, *, content_type=""):
+        if str(identity) == "two.png":
+            raise RuntimeError("simulated media write failure")
+        return original_write(self, identity, data, content_type=content_type)
+
+    monkeypatch.setattr(
+        artifact_locations.FilesystemArtifactLocationAdapter,
+        "write",
+        fail_second_media,
+    )
+
+    with pytest.raises(
+        transfer_apply.DocumentTransferApplyError,
+        match="during media",
+    ) as captured:
+        transfer_apply.apply_document_copy(
+            repo_root,
+            plan,
+            confirm=True,
+            perform_source_write_and_rebuild=fake_rebuild([]),
+            activity_logger=lambda *_args, **_kwargs: None,
+        )
+
+    failure = captured.value.result
+    assert failure["media_complete"] is False
+    assert [
+        (item["identity"], item["state"])
+        for item in failure["target_state"]["media"]
+    ] == [("one.png", "exact"), ("two.png", "missing")]
+    assert failure["target_state"]["documents"][0]["state"] == "missing"
 
 
 def test_apply_copy_writes_external_local_target_documents_and_media(

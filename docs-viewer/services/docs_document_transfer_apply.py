@@ -62,6 +62,13 @@ class DocumentCopyTransformation:
         return sum(document.media_link_rewrites for document in self.documents)
 
 
+@dataclass(frozen=True)
+class TargetMediaTransferResult:
+    target_media_adapters: Mapping[str, ArtifactLocationAdapter]
+    media_actions: tuple[dict[str, str], ...]
+    build_source_actions: tuple[dict[str, str], ...]
+
+
 def _sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
@@ -129,7 +136,7 @@ def _target_viewer_url(
     )
 
 
-def rewrite_copied_viewer_links(
+def rewrite_transferred_viewer_links(
     body: str,
     plan: transfer.DocumentTransferPlan,
 ) -> tuple[str, int]:
@@ -183,7 +190,7 @@ def _media_reference_replacements(
     return tuple(sorted(replacements, key=lambda item: (-len(item[0]), item[0])))
 
 
-def rewrite_copied_media_links(
+def rewrite_transferred_media_links(
     body: str,
     plan: transfer.DocumentTransferPlan,
 ) -> tuple[str, int]:
@@ -216,11 +223,11 @@ def transform_document_copy(
         front_matter["last_updated"] = plan.operation_timestamp
         front_matter["parent_id"] = planned_document.target_parent_id
         front_matter.pop("viewable", None)
-        body, viewer_link_rewrites = rewrite_copied_viewer_links(
+        body, viewer_link_rewrites = rewrite_transferred_viewer_links(
             planned_document.source_doc.body,
             plan,
         )
-        body, media_link_rewrites = rewrite_copied_media_links(body, plan)
+        body, media_link_rewrites = rewrite_transferred_media_links(body, plan)
         transformed.append(
             DocumentCopySourceTransform(
                 planned_document=planned_document,
@@ -268,8 +275,14 @@ def _validate_transformation(transformation: DocumentCopyTransformation) -> None
                 f"document transfer plan is stale: candidate viewability changed "
                 f"for {planned.target_doc_id!r}"
             )
-        _remaining_body, remaining_viewer_links = rewrite_copied_viewer_links(body, plan)
-        _remaining_body, remaining_media_links = rewrite_copied_media_links(body, plan)
+        _remaining_body, remaining_viewer_links = rewrite_transferred_viewer_links(
+            body,
+            plan,
+        )
+        _remaining_body, remaining_media_links = rewrite_transferred_media_links(
+            body,
+            plan,
+        )
         if remaining_viewer_links or remaining_media_links:
             raise DocumentTransferPlanStaleError(
                 f"document transfer plan is stale: candidate links remain stale "
@@ -348,6 +361,162 @@ def _copy_or_reuse_artifact(
     raise DocumentTransferPlanStaleError(
         f"document transfer plan is stale: {role} target status "
         f"{target_status!r} is invalid for {identity!r}"
+    )
+
+
+def apply_target_media_transfer(
+    repo_root: Path,
+    plan: transfer.DocumentTransferPlan,
+    *,
+    source_media_client: object | None = None,
+    target_media_client: object | None = None,
+    env_files: Iterable[Path] | None = None,
+    environ: Mapping[str, str] | None = None,
+    media_builder: MediaBuilder | None = None,
+    target_media_adapters: Mapping[str, ArtifactLocationAdapter] | None = None,
+) -> TargetMediaTransferResult:
+    """Create or verify all planned target media without mutating the source."""
+
+    media_types = {item.media_type for item in plan.media}
+    source_media_adapters = transfer.published_transfer_adapters(
+        repo_root,
+        plan.source_config,
+        media_types,
+        client=source_media_client,
+        env_files=env_files,
+        environ=environ,
+    )
+    if target_media_adapters is None:
+        target_media_adapters = transfer.published_transfer_adapters(
+            repo_root,
+            plan.target_config,
+            media_types,
+            client=target_media_client,
+            env_files=env_files,
+            environ=environ,
+        )
+    media_actions: list[dict[str, str]] = []
+    build_source_actions: list[dict[str, str]] = []
+
+    seen_build_sources: set[tuple[str, str]] = set()
+    for item in plan.media:
+        for build in item.build_sources:
+            key = (build.build_type, build.source_identity)
+            if key in seen_build_sources:
+                continue
+            seen_build_sources.add(key)
+            status = _copy_or_reuse_artifact(
+                source=transfer.transfer_build_source_adapter(
+                    repo_root,
+                    plan.source_config,
+                    build.build_type,
+                ),
+                target=transfer.transfer_build_source_adapter(
+                    repo_root,
+                    plan.target_config,
+                    build.build_type,
+                ),
+                identity=build.source_identity,
+                expected_sha256=build.source_sha256,
+                target_status=build.target_status,
+                role=f"{build.build_type} build source",
+            )
+            build_source_actions.append(
+                {
+                    "build_type": build.build_type,
+                    "identity": build.source_identity,
+                    "status": status,
+                }
+            )
+
+    for item in plan.media:
+        if item.build_sources:
+            if item.target_status == "reuse":
+                status = _copy_or_reuse_artifact(
+                    source=source_media_adapters[item.media_type],
+                    target=target_media_adapters[item.media_type],
+                    identity=item.identity,
+                    expected_sha256=item.source_sha256,
+                    target_status="reuse",
+                    role=f"{item.media_type} published media",
+                )
+                media_actions.append(
+                    {
+                        "media_type": item.media_type,
+                        "identity": item.identity,
+                        "status": status,
+                    }
+                )
+            elif item.target_status != "produce":
+                raise DocumentTransferPlanStaleError(
+                    f"document transfer plan is stale: built media target status "
+                    f"{item.target_status!r} is invalid for {item.identity!r}"
+                )
+            continue
+        status = _copy_or_reuse_artifact(
+            source=source_media_adapters[item.media_type],
+            target=target_media_adapters[item.media_type],
+            identity=item.identity,
+            expected_sha256=item.source_sha256,
+            target_status=item.target_status,
+            role=f"{item.media_type} published media",
+        )
+        media_actions.append(
+            {
+                "media_type": item.media_type,
+                "identity": item.identity,
+                "status": status,
+            }
+        )
+
+    requested_build_outputs: dict[str, set[str]] = {}
+    for item in plan.media:
+        if item.target_status != "produce":
+            continue
+        if target_media_adapters[item.media_type].stat(item.identity) is not None:
+            raise DocumentTransferPlanStaleError(
+                f"document transfer plan is stale: target media "
+                f"{item.media_type}/{item.identity} is no longer absent"
+            )
+        for build in item.build_sources:
+            requested_build_outputs.setdefault(build.build_type, set()).add(
+                item.identity
+            )
+    if requested_build_outputs:
+        if media_builder is None:
+            from docs_builder.media_builds import (
+                run_registered_media_builds as registered_media_builder,
+            )
+
+            media_builder = registered_media_builder
+        media_builder(
+            repo_root,
+            plan.target_config,
+            write=True,
+            client=target_media_client,
+            requested_published_identities=requested_build_outputs,
+            replace_existing=False,
+        )
+        for item in plan.media:
+            if item.target_status != "produce":
+                continue
+            if target_media_adapters[item.media_type].stat(item.identity) is None:
+                raise RuntimeError(
+                    f"target media producer did not create "
+                    f"{item.media_type}/{item.identity}"
+                )
+            media_actions.append(
+                {
+                    "media_type": item.media_type,
+                    "identity": item.identity,
+                    "status": "produced",
+                }
+            )
+
+    return TargetMediaTransferResult(
+        target_media_adapters=target_media_adapters,
+        media_actions=tuple(media_actions),
+        build_source_actions=tuple(build_source_actions),
     )
 
 
@@ -521,7 +690,6 @@ def apply_document_copy(
         environ=environ,
     )
     current_plan = transformation.plan
-    media_types = {item.media_type for item in current_plan.media}
     target_media_adapters: dict[str, ArtifactLocationAdapter] = {}
     media_actions: list[dict[str, str]] = []
     build_source_actions: list[dict[str, str]] = []
@@ -530,137 +698,27 @@ def apply_document_copy(
     rebuild_complete = False
 
     try:
-        source_media_adapters = transfer.published_transfer_adapters(
-            repo_root,
-            current_plan.source_config,
-            media_types,
-            client=source_media_client,
-            env_files=env_files,
-            environ=environ,
-        )
         target_media_adapters = transfer.published_transfer_adapters(
             repo_root,
             current_plan.target_config,
-            media_types,
+            {item.media_type for item in current_plan.media},
             client=target_media_client,
             env_files=env_files,
             environ=environ,
         )
-
-        seen_build_sources: set[tuple[str, str]] = set()
-        for item in current_plan.media:
-            for build in item.build_sources:
-                key = (build.build_type, build.source_identity)
-                if key in seen_build_sources:
-                    continue
-                seen_build_sources.add(key)
-                status = _copy_or_reuse_artifact(
-                    source=transfer.transfer_build_source_adapter(
-                        repo_root,
-                        current_plan.source_config,
-                        build.build_type,
-                    ),
-                    target=transfer.transfer_build_source_adapter(
-                        repo_root,
-                        current_plan.target_config,
-                        build.build_type,
-                    ),
-                    identity=build.source_identity,
-                    expected_sha256=build.source_sha256,
-                    target_status=build.target_status,
-                    role=f"{build.build_type} build source",
-                )
-                build_source_actions.append(
-                    {
-                        "build_type": build.build_type,
-                        "identity": build.source_identity,
-                        "status": status,
-                    }
-                )
-
-        for item in current_plan.media:
-            if item.build_sources:
-                if item.target_status == "reuse":
-                    status = _copy_or_reuse_artifact(
-                        source=source_media_adapters[item.media_type],
-                        target=target_media_adapters[item.media_type],
-                        identity=item.identity,
-                        expected_sha256=item.source_sha256,
-                        target_status="reuse",
-                        role=f"{item.media_type} published media",
-                    )
-                    media_actions.append(
-                        {
-                            "media_type": item.media_type,
-                            "identity": item.identity,
-                            "status": status,
-                        }
-                    )
-                elif item.target_status != "produce":
-                    raise DocumentTransferPlanStaleError(
-                        f"document transfer plan is stale: built media target status "
-                        f"{item.target_status!r} is invalid for {item.identity!r}"
-                    )
-                continue
-            status = _copy_or_reuse_artifact(
-                source=source_media_adapters[item.media_type],
-                target=target_media_adapters[item.media_type],
-                identity=item.identity,
-                expected_sha256=item.source_sha256,
-                target_status=item.target_status,
-                role=f"{item.media_type} published media",
-            )
-            media_actions.append(
-                {
-                    "media_type": item.media_type,
-                    "identity": item.identity,
-                    "status": status,
-                }
-            )
-
-        requested_build_outputs: dict[str, set[str]] = {}
-        for item in current_plan.media:
-            if item.target_status != "produce":
-                continue
-            if target_media_adapters[item.media_type].stat(item.identity) is not None:
-                raise DocumentTransferPlanStaleError(
-                    f"document transfer plan is stale: target media "
-                    f"{item.media_type}/{item.identity} is no longer absent"
-                )
-            for build in item.build_sources:
-                requested_build_outputs.setdefault(build.build_type, set()).add(
-                    item.identity
-                )
-        if requested_build_outputs:
-            if media_builder is None:
-                from docs_builder.media_builds import (
-                    run_registered_media_builds as registered_media_builder,
-                )
-
-                media_builder = registered_media_builder
-            media_builder(
-                repo_root,
-                current_plan.target_config,
-                write=True,
-                client=target_media_client,
-                requested_published_identities=requested_build_outputs,
-                replace_existing=False,
-            )
-            for item in current_plan.media:
-                if item.target_status != "produce":
-                    continue
-                if target_media_adapters[item.media_type].stat(item.identity) is None:
-                    raise RuntimeError(
-                        f"target media producer did not create "
-                        f"{item.media_type}/{item.identity}"
-                    )
-                media_actions.append(
-                    {
-                        "media_type": item.media_type,
-                        "identity": item.identity,
-                        "status": "produced",
-                    }
-                )
+        target_media = apply_target_media_transfer(
+            repo_root,
+            current_plan,
+            source_media_client=source_media_client,
+            target_media_client=target_media_client,
+            env_files=env_files,
+            environ=environ,
+            media_builder=media_builder,
+            target_media_adapters=target_media_adapters,
+        )
+        target_media_adapters = dict(target_media.target_media_adapters)
+        media_actions = list(target_media.media_actions)
+        build_source_actions = list(target_media.build_source_actions)
         media_complete = True
 
         phase = "documents_and_rebuild"
@@ -787,10 +845,12 @@ __all__ = [
     "DocumentCopyTransformation",
     "DocumentTransferApplyError",
     "DocumentTransferPlanStaleError",
+    "TargetMediaTransferResult",
     "apply_document_copy",
+    "apply_target_media_transfer",
     "management_viewer_url",
     "revalidate_document_copy_plan",
-    "rewrite_copied_media_links",
-    "rewrite_copied_viewer_links",
+    "rewrite_transferred_media_links",
+    "rewrite_transferred_viewer_links",
     "transform_document_copy",
 ]
