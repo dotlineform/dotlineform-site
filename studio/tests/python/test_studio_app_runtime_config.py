@@ -63,7 +63,11 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert not any(view["id"] == "docs" for view in runtime["views"])
     assert not any("doc_href" in view for view in runtime["views"])
     assert not any(view["id"] in {"studio_catalogue", "studio_analytics", "data_sharing"} for view in runtime["views"])
-    assert not any(view["id"] in {"tag_registry", "tag_aliases", "series_tags", "series_tag_editor"} for view in runtime["views"])
+    assert any(view["id"] == "tag_groups" and view["path"] == "/studio/tag-groups/" for view in runtime["views"])
+    assert any(view["id"] == "tag_registry" and view["path"] == "/studio/tag-registry/" for view in runtime["views"])
+    assert any(view["id"] == "tag_aliases" and view["path"] == "/studio/tag-aliases/" for view in runtime["views"])
+    assert any(view["id"] == "series_tags" and view["path"] == "/studio/series-tags/" for view in runtime["views"])
+    assert any(view["id"] == "series_tag_editor" and view["path"] == "/studio/series-tag-editor/" for view in runtime["views"])
     assert not any(view["id"] in {"data_sharing_prepare", "data_sharing_review"} for view in runtime["views"])
     assert not any(view["id"] in {"studio_audits", "studio_risk", "activity"} for view in runtime["views"])
     assert any(view["id"] == "project_state" and view["path"] == "/studio/project-state/" for view in runtime["views"])
@@ -86,7 +90,11 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert "risk" not in runtime["services"]
     assert "external_links" not in payload
     assert "catalogue" not in payload
-    assert set(runtime["data_paths"]) == {"studio"}
+    assert set(runtime["data_paths"]) == {"site", "studio"}
+    assert runtime["data_paths"]["site"] == {
+        "series_index": "/assets/data/series_index.json",
+        "works_index": "/assets/data/works_index.json",
+    }
     assert set(runtime["data_paths"]["studio"]) == {
         "catalogue_works",
         "catalogue_series",
@@ -127,6 +135,10 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["tags"]["import_tag_assignments"] == "/studio/api/tags/import-tag-assignments"
     assert runtime["services"]["tags"]["import_tag_registry"] == "/studio/api/tags/import-tag-registry"
     assert runtime["services"]["tags"]["import_tag_aliases"] == "/studio/api/tags/import-tag-aliases"
+    assert runtime["series_tag_editor"]["series_index_url"] == "/assets/data/series_index.json"
+    assert runtime["series_tag_editor"]["tag_editor_module_url"] == "/studio/app/frontend/js/analytics-tag-editor.js"
+    assert payload["analysis"]["groups"]["ordered"] == ["subject", "domain", "form", "theme"]
+    assert payload["analysis"]["groups"]["coverage_groups"] == ["subject", "domain", "form", "theme"]
     assert "thumbnail_quality_preview" not in runtime["services"]["catalogue"]
     assert "tag_groups" not in runtime["data_paths"]["studio"]
     assert "tag_registry" not in runtime["data_paths"]["studio"]

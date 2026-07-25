@@ -1,7 +1,3 @@
-import {
-  DEFAULT_ANALYTICS_UI_TEXT
-} from "./analytics-ui-text.js";
-
 const DEFAULT_ANALYTICS_CONFIG = {
   "analytics_config_version": "analytics_config_v1",
   "updated_at_utc": "2026-05-30T00:00:00Z",
@@ -15,59 +11,6 @@ const DEFAULT_ANALYTICS_CONFIG = {
         "script": "",
         "shell_type": "html-template",
         "nav": false
-      },
-      "tag_groups": {
-        "label": "tag groups",
-        "title": "Tag Groups",
-        "path": "/analytics/tag-groups/",
-        "template": "/analytics/app/frontend/routes/tag-groups.html",
-        "script": "/analytics/app/frontend/js/tag-groups.js",
-        "shell_type": "html-template",
-        "nav": false
-      },
-      "tag_registry": {
-        "label": "registry",
-        "title": "Tag Registry",
-        "path": "/analytics/tag-registry/",
-        "template": "/analytics/app/frontend/routes/tag-registry.html",
-        "script": "/analytics/app/frontend/js/tag-registry.js",
-        "shell_type": "html-template",
-        "nav": false
-      },
-      "tag_aliases": {
-        "label": "aliases",
-        "title": "Tag Aliases",
-        "path": "/analytics/tag-aliases/",
-        "template": "/analytics/app/frontend/routes/tag-aliases.html",
-        "script": "/analytics/app/frontend/js/tag-aliases.js",
-        "shell_type": "html-template",
-        "nav": false
-      },
-      "series_tags": {
-        "label": "series tags",
-        "title": "Series Tags",
-        "path": "/analytics/series-tags/",
-        "template": "/analytics/app/frontend/routes/series-tags.html",
-        "script": "/analytics/app/frontend/js/series-tags.js",
-        "shell_type": "html-template",
-        "nav": false
-      },
-      "series_tag_editor": {
-        "label": "tag editor",
-        "title": "Series Tag Editor",
-        "path": "/analytics/series-tag-editor/",
-        "template": "/analytics/app/frontend/routes/series-tag-editor.html",
-        "script": "/analytics/app/frontend/js/series-tag-editor-page.js",
-        "shell_type": "html-template",
-        "nav": false
-      }
-    }
-  },
-  "paths": {
-    "data": {
-      "site": {
-        "series_index": "/assets/data/series_index.json",
-        "works_index": "/assets/data/works_index.json"
       }
     }
   }
@@ -104,38 +47,6 @@ function readConfiguredAnalyticsConfigUrl() {
   if (typeof document === "undefined") return "";
   const meta = document.querySelector('meta[name="dlf-analytics-config-url"]');
   return meta ? String(meta.getAttribute("content") || "").trim() : "";
-}
-
-export function getAnalyticsGroups(config) {
-  return sanitizeStringArray(pathValue(config, ["analysis", "groups", "ordered"]), []);
-}
-
-export function getAnalyticsCoverageGroups(config) {
-  const fallback = getAnalyticsGroups(config);
-  return sanitizeStringArray(pathValue(config, ["analysis", "groups", "coverage_groups"]), fallback);
-}
-
-export function getSiteDataPath(config, key) {
-  const path = pathValue(config, ["paths", "data", "site", key]);
-  return resolveSiteAssetPath(typeof path === "string" ? path : "");
-}
-
-export function getAnalyticsRoute(config, key) {
-  const path = pathValue(config, ["app", "routes", key, "path"]);
-  return resolveSitePath(typeof path === "string" ? path : "");
-}
-
-export function buildAnalyticsRouteUrl(config, key, params = {}) {
-  const route = getAnalyticsRoute(config, key);
-  if (!route) return "";
-  return appendRouteParams(route, params);
-}
-
-export function getAnalyticsText(config, key, fallback = "", tokens = null) {
-  const pathKeys = String(key || "").split(".").filter(Boolean);
-  const value = pathValue(DEFAULT_ANALYTICS_UI_TEXT, pathKeys);
-  const source = typeof value === "string" ? value : fallback;
-  return applyTextTokens(source, tokens);
 }
 
 function deriveSiteBasePath(importUrl) {

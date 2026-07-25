@@ -588,7 +588,7 @@
     },
     "series-tags": {
       "label": "series tags",
-      "route": "/analytics/series-tags/",
+      "route": "/studio/series-tags/",
       "actions": {
         "import-series-tag-assignments": {
           "label": "import series tag assignments",
@@ -614,7 +614,7 @@
     },
     "series-tag-editor": {
       "label": "series tag editor",
-      "route": "/analytics/series-tag-editor/",
+      "route": "/studio/series-tag-editor/",
       "actions": {
         "save-series-tags": {
           "label": "save series tags",
@@ -640,7 +640,7 @@
     },
     "tag-registry": {
       "label": "tag registry",
-      "route": "/analytics/tag-registry/",
+      "route": "/studio/tag-registry/",
       "actions": {
         "import-tag-registry": {
           "label": "import tag registry",
@@ -746,7 +746,7 @@
     },
     "tag-aliases": {
       "label": "tag aliases",
-      "route": "/analytics/tag-aliases/",
+      "route": "/studio/tag-aliases/",
       "actions": {
         "import-tag-aliases": {
           "label": "import tag aliases",

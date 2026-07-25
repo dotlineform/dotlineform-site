@@ -7,9 +7,6 @@ import os
 from pathlib import Path
 from urllib.parse import urlsplit
 
-from tags.tag_management_config import tag_analysis_policy
-
-
 ANALYTICS_ROUTE_REQUIRED_FIELDS: tuple[str, ...] = (
     "label",
     "title",
@@ -49,29 +46,6 @@ ANALYTICS_MEDIA: dict[str, object] = {
         "work_details_images": "/work_details/img",
         "moments_images": "/moments/img",
     },
-}
-
-TAG_SERVICE_PATHS: dict[str, str] = {
-    "base": "",
-    "health": "/health",
-    "delete_tag_alias": "/delete-tag-alias",
-    "demote_tag": "/demote-tag",
-    "demote_tag_preview": "/demote-tag-preview",
-    "import_tag_assignments": "/import-tag-assignments",
-    "import_tag_assignments_preview": "/import-tag-assignments-preview",
-    "import_tag_aliases": "/import-tag-aliases",
-    "import_tag_registry": "/import-tag-registry",
-    "mutate_tag_alias": "/mutate-tag-alias",
-    "mutate_tag_alias_preview": "/mutate-tag-alias-preview",
-    "mutate_tag": "/mutate-tag",
-    "mutate_tag_preview": "/mutate-tag-preview",
-    "promote_tag_alias": "/promote-tag-alias",
-    "promote_tag_alias_preview": "/promote-tag-alias-preview",
-    "tag_aliases": "/tag-aliases",
-    "tag_assignments": "/tag-assignments",
-    "tag_groups": "/tag-groups",
-    "tag_registry": "/tag-registry",
-    "save_tags": "/save-tags",
 }
 
 ANALYTICS_MODAL_EVENT = "analytics:open-modal"
@@ -196,18 +170,6 @@ def analytics_shell_route_paths(repo_root: Path, payload: dict[str, object] | No
     }
 
 
-def analytics_service_endpoints(_repo_root: Path) -> dict[str, object]:
-    studio_host = os.environ.get("STUDIO_APP_HOST", "127.0.0.1").strip() or "127.0.0.1"
-    studio_port = os.environ.get("STUDIO_APP_PORT", "8765").strip() or "8765"
-    base = f"http://{studio_host}:{studio_port}/studio/api/tags"
-    return {
-        "tags": {
-            key: f"{base}{suffix}"
-            for key, suffix in TAG_SERVICE_PATHS.items()
-        },
-    }
-
-
 def asset_version(repo_root: Path) -> str:
     candidates = [
         repo_root / "analytics-app" / "app" / "frontend" / "analytics-shell.html",
@@ -216,14 +178,6 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "analytics-app" / "app" / "frontend" / "js" / "analytics-route-templates.js",
         repo_root / "analytics-app" / "app" / "frontend" / "js" / "analytics-theme.js",
         repo_root / "analytics-app" / "app" / "frontend" / "js" / "analytics-navigation.js",
-        repo_root / "analytics-app" / "app" / "frontend" / "js" / "tag-groups.js",
-        repo_root / "analytics-app" / "app" / "frontend" / "js" / "tag-registry.js",
-        repo_root / "analytics-app" / "app" / "frontend" / "js" / "tag-aliases.js",
-        repo_root / "analytics-app" / "app" / "frontend" / "js" / "series-tags.js",
-        repo_root / "analytics-app" / "app" / "frontend" / "js" / "series-tag-editor-page.js",
-        repo_root / "analytics-app" / "app" / "frontend" / "js" / "catalogue-public-links.js",
-        repo_root / "analytics-app" / "app" / "frontend" / "js" / "analytics-tag-editor.js",
-        repo_root / "analytics-app" / "app" / "frontend" / "js" / "analytics-ui-text.js",
         repo_root / "analytics-app" / "app" / "assets" / "css" / "analytics.css",
         repo_root / "analytics-app" / "app" / "frontend" / "config" / "analytics-config.json",
         repo_root / "shared" / "frontend" / "js" / "selectable-list.js",
@@ -239,7 +193,6 @@ def asset_version(repo_root: Path) -> str:
 def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
     pipeline_path = repo_root / "_data" / "pipeline.json"
     payload = load_analytics_config(repo_root)
-    payload["analysis"] = tag_analysis_policy(repo_root)
     try:
         pipeline_payload = json.loads(pipeline_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
@@ -262,14 +215,13 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
             "health": "/health",
             "runtime_config": "/analytics/runtime-config.json",
         },
-        "services": analytics_service_endpoints(repo_root),
+        "services": {},
         "sites": runtime_site_bases(),
         "data_paths": data_paths,
         "media": ANALYTICS_MEDIA,
         "pipeline": {
             "variants": pipeline_variants,
         },
-        "series_tag_editor": series_tag_editor_runtime_settings(repo_root, payload, pipeline_payload),
         "views": [
             {"id": view_id, **view}
             for view_id, view in analytics_views(repo_root, payload).items()
@@ -306,43 +258,3 @@ def runtime_site_bases() -> dict[str, object]:
 def normalize_base_url(value: str) -> str:
     normalized = value.strip().rstrip("/")
     return normalized or "/"
-
-
-def series_tag_editor_runtime_settings(
-    _repo_root: Path,
-    payload: dict[str, object],
-    pipeline_payload: dict[str, object],
-) -> dict[str, object]:
-    variants = pipeline_payload.get("variants") if isinstance(pipeline_payload.get("variants"), dict) else {}
-    primary_variants = variants.get("primary") if isinstance(variants.get("primary"), dict) else {}
-    compatibility_variants = variants.get("compatibility") if isinstance(variants.get("compatibility"), dict) else {}
-    encoding = pipeline_payload.get("encoding") if isinstance(pipeline_payload.get("encoding"), dict) else {}
-    render_widths = compatibility_variants.get("render_widths") or primary_variants.get("widths") or [800, 1200, 1600]
-    if not isinstance(render_widths, list):
-        render_widths = [800, 1200, 1600]
-    render_widths = [
-        int(value)
-        for value in render_widths
-        if isinstance(value, int) or (isinstance(value, float) and value > 0 and value.is_integer())
-    ] or [800, 1200, 1600]
-    display_width = render_widths[-1]
-    preferred_width = primary_variants.get("preferred_width")
-    full_width = preferred_width if isinstance(preferred_width, int) and preferred_width > 0 else display_width
-    media_config = ANALYTICS_MEDIA.get("media") if isinstance(ANALYTICS_MEDIA.get("media"), dict) else {}
-    media_base = str(media_config.get("base") or "")
-    media_works = str(media_config.get("works_images") or "/works/img")
-    data_paths = payload.get("paths") if isinstance(payload.get("paths"), dict) else {}
-    data_paths = data_paths.get("data") if isinstance(data_paths.get("data"), dict) else {}
-    site_paths = data_paths.get("site") if isinstance(data_paths.get("site"), dict) else {}
-
-    return {
-        "baseurl": "",
-        "media_image_works_base": f"{media_base}{media_works}/",
-        "primary_render_widths": render_widths,
-        "primary_display_width": display_width,
-        "primary_full_width": full_width,
-        "primary_suffix": str(primary_variants.get("suffix") or "primary"),
-        "asset_format": str(encoding.get("format") or "webp"),
-        "series_index_url": str(site_paths.get("series_index") or "/assets/data/series_index.json"),
-        "analytics_tag_editor_module_url": "/analytics/app/frontend/js/analytics-tag-editor.js",
-    }

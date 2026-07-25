@@ -82,11 +82,65 @@
         "nav": false,
         "shell_type": "html-template",
         "ready_state_route_id": "catalogue-work"
+      },
+      "tag_groups": {
+        "label": "tag groups",
+        "title": "Tag Groups",
+        "path": "/studio/tag-groups/",
+        "template": "/studio/app/frontend/routes/tag-groups.html",
+        "script": "/studio/app/frontend/js/tag-groups.js",
+        "nav": false,
+        "shell_type": "html-template",
+        "ready_state_route_id": "tag-groups"
+      },
+      "tag_registry": {
+        "label": "registry",
+        "title": "Tag Registry",
+        "path": "/studio/tag-registry/",
+        "template": "/studio/app/frontend/routes/tag-registry.html",
+        "script": "/studio/app/frontend/js/tag-registry.js",
+        "nav": false,
+        "shell_type": "html-template",
+        "ready_state_route_id": "tag-registry"
+      },
+      "tag_aliases": {
+        "label": "aliases",
+        "title": "Tag Aliases",
+        "path": "/studio/tag-aliases/",
+        "template": "/studio/app/frontend/routes/tag-aliases.html",
+        "script": "/studio/app/frontend/js/tag-aliases.js",
+        "nav": false,
+        "shell_type": "html-template",
+        "ready_state_route_id": "tag-aliases"
+      },
+      "series_tags": {
+        "label": "series tags",
+        "title": "Series Tags",
+        "path": "/studio/series-tags/",
+        "template": "/studio/app/frontend/routes/series-tags.html",
+        "script": "/studio/app/frontend/js/series-tags.js",
+        "nav": false,
+        "shell_type": "html-template",
+        "ready_state_route_id": "series-tags"
+      },
+      "series_tag_editor": {
+        "label": "tag editor",
+        "title": "Series Tag Editor",
+        "path": "/studio/series-tag-editor/",
+        "template": "/studio/app/frontend/routes/series-tag-editor.html",
+        "script": "/studio/app/frontend/js/series-tag-editor-page.js",
+        "nav": false,
+        "shell_type": "html-template",
+        "ready_state_route_id": "series-tag-editor"
       }
     }
   },
   "paths": {
     "data": {
+      "site": {
+        "series_index": "/assets/data/series_index.json",
+        "works_index": "/assets/data/works_index.json"
+      },
       "studio": {
         "catalogue_works": "/studio/data/canonical/catalogue/works.json",
         "catalogue_series": "/studio/data/canonical/catalogue/series.json",

@@ -11,59 +11,6 @@
         "script": "",
         "shell_type": "html-template",
         "nav": false
-      },
-      "tag_groups": {
-        "label": "tag groups",
-        "title": "Tag Groups",
-        "path": "/analytics/tag-groups/",
-        "template": "/analytics/app/frontend/routes/tag-groups.html",
-        "script": "/analytics/app/frontend/js/tag-groups.js",
-        "shell_type": "html-template",
-        "nav": false
-      },
-      "tag_registry": {
-        "label": "registry",
-        "title": "Tag Registry",
-        "path": "/analytics/tag-registry/",
-        "template": "/analytics/app/frontend/routes/tag-registry.html",
-        "script": "/analytics/app/frontend/js/tag-registry.js",
-        "shell_type": "html-template",
-        "nav": false
-      },
-      "tag_aliases": {
-        "label": "aliases",
-        "title": "Tag Aliases",
-        "path": "/analytics/tag-aliases/",
-        "template": "/analytics/app/frontend/routes/tag-aliases.html",
-        "script": "/analytics/app/frontend/js/tag-aliases.js",
-        "shell_type": "html-template",
-        "nav": false
-      },
-      "series_tags": {
-        "label": "series tags",
-        "title": "Series Tags",
-        "path": "/analytics/series-tags/",
-        "template": "/analytics/app/frontend/routes/series-tags.html",
-        "script": "/analytics/app/frontend/js/series-tags.js",
-        "shell_type": "html-template",
-        "nav": false
-      },
-      "series_tag_editor": {
-        "label": "tag editor",
-        "title": "Series Tag Editor",
-        "path": "/analytics/series-tag-editor/",
-        "template": "/analytics/app/frontend/routes/series-tag-editor.html",
-        "script": "/analytics/app/frontend/js/series-tag-editor-page.js",
-        "shell_type": "html-template",
-        "nav": false
-      }
-    }
-  },
-  "paths": {
-    "data": {
-      "site": {
-        "series_index": "/assets/data/series_index.json",
-        "works_index": "/assets/data/works_index.json"
       }
     }
   }
