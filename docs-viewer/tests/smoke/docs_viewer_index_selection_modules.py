@@ -611,6 +611,112 @@ def assert_index_actions_menu_projection(page: Page) -> None:
         raise AssertionError(f"unexpected Index actions menu projection: {result!r}")
 
 
+def assert_index_actions_selection_entry(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const controllerModule = await import(
+                '/docs-viewer/runtime/js/management/docs-viewer-management-index-controller.js'
+            );
+            document.body.innerHTML = `
+              <button id="docsViewerIndexActionsButton" type="button"></button>
+              <div id="docsViewerIndexActionsMenu" hidden></div>`;
+            const docs = [
+                { doc_id: 'a', parent_id: '', title: 'A' },
+                { doc_id: 'b', parent_id: '', title: 'B' }
+            ];
+            let selectionState = null;
+            let sidebarRenderCount = 0;
+            const controller = controllerModule.createDocsViewerManagementIndexController({
+                document,
+                documentIndex: {
+                    docs,
+                    docsById: new Map(docs.map(doc => [doc.doc_id, doc]))
+                },
+                management: {
+                    managementAvailable: true,
+                    managementBusy: false,
+                    managementCapabilities: {},
+                    managementChecked: true
+                },
+                routeSession: { managementContext: true },
+                searchRecent: { searchRouteActive: false },
+                callbacks: {
+                    activeDocId: () => 'b',
+                    activeIndexViewId: () => 'index-tree',
+                    projectIndexViewControlState: (controlId, state) => {
+                        if (controlId === 'index-selection') selectionState = { ...state };
+                    },
+                    renderSidebar: () => { sidebarRenderCount += 1; },
+                    resolveAction: actionId => ({
+                        actionId,
+                        disabledReason: 'Select one or more documents.',
+                        enabled: false,
+                        targetDocIds: []
+                    }),
+                    toggleIndexActionsMenu: () => {
+                        const menu = document.querySelector('#docsViewerIndexActionsMenu');
+                        menu.hidden = !menu.hidden;
+                    },
+                    viewerScope: () => 'studio'
+                }
+            });
+            const handledOpen = controller.handleControl({
+                actionId: '',
+                controlId: 'index-actions',
+                eventType: 'click'
+            });
+            const afterOpen = {
+                menuOpen: !document.querySelector('#docsViewerIndexActionsMenu').hidden,
+                selectedDocIds: controller.indexSelection.selectedDocIds(),
+                selectionModeActive: controller.indexSelection.snapshot().selectionModeActive,
+                selectionState,
+                sidebarRenderCount
+            };
+            const handledClose = controller.handleControl({
+                actionId: '',
+                controlId: 'index-actions',
+                eventType: 'click'
+            });
+            return {
+                afterOpen,
+                afterClose: {
+                    menuOpen: !document.querySelector('#docsViewerIndexActionsMenu').hidden,
+                    selectedDocIds: controller.indexSelection.selectedDocIds(),
+                    sidebarRenderCount
+                },
+                handledClose,
+                handledOpen
+            };
+        }"""
+    )
+    expected = {
+        "afterOpen": {
+            "menuOpen": True,
+            "selectedDocIds": ["b"],
+            "selectionModeActive": True,
+            "selectionState": {
+                "active": True,
+                "allSelected": False,
+                "disabled": False,
+                "hasSelection": True,
+                "hidden": False,
+                "label": "Done selecting documents",
+                "total": 2,
+            },
+            "sidebarRenderCount": 1,
+        },
+        "afterClose": {
+            "menuOpen": False,
+            "selectedDocIds": ["b"],
+            "sidebarRenderCount": 1,
+        },
+        "handledClose": True,
+        "handledOpen": True,
+    }
+    if result != expected:
+        raise AssertionError(f"unexpected Index actions selection entry: {result!r}")
+
+
 def assert_selection_projection_and_interaction(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -692,7 +798,15 @@ def assert_selection_projection_and_interaction(page: Page) -> None:
 
             const controlRenderer = renderers.createDocsViewerManagementControlRenderers()['manage-index-selection'];
             const inactiveControl = controlRenderer({
-                control: { state: { active: false, count: 0, disabled: false } },
+                control: {
+                    state: {
+                        active: false,
+                        allSelected: false,
+                        disabled: false,
+                        hasSelection: false,
+                        total: docs.length
+                    }
+                },
                 document,
                 existingRoot: null
             });
@@ -700,8 +814,9 @@ def assert_selection_projection_and_interaction(page: Page) -> None:
                 control: {
                     state: {
                         active: true,
-                        count: owner.selectedDocIds().length,
+                        allSelected: false,
                         disabled: false,
+                        hasSelection: true,
                         total: docs.length
                     }
                 },
@@ -712,8 +827,9 @@ def assert_selection_projection_and_interaction(page: Page) -> None:
                 control: {
                     state: {
                         active: true,
-                        count: docs.length,
+                        allSelected: true,
                         disabled: false,
+                        hasSelection: true,
                         total: docs.length
                     }
                 },
@@ -730,7 +846,12 @@ def assert_selection_projection_and_interaction(page: Page) -> None:
                     .map(checkbox => checkbox.dataset.docsViewerSelectionCheckbox),
                 controlCommands: Array.from(activeControl.root.querySelectorAll('[data-docs-viewer-selection-command]'))
                     .map(button => button.dataset.docsViewerSelectionCommand),
-                controlCount: activeControl.root.querySelector('output').textContent,
+                hasSelectButton: Boolean(
+                    activeControl.root.querySelector('[data-docs-viewer-selection-command="enter"]')
+                ),
+                hasSelectedCount: Boolean(
+                    activeControl.root.querySelector('.docsViewer__indexSelectionCount')
+                ),
                 selectAllDisabled: activeControl.root.querySelector(
                     '[data-docs-viewer-selection-command="select-all"]'
                 ).disabled,
@@ -767,7 +888,8 @@ def assert_selection_projection_and_interaction(page: Page) -> None:
         "activeLinkStillActive": True,
         "checkedDocIds": ["b", "c", "d"],
         "controlCommands": ["select-all", "clear", "done"],
-        "controlCount": "3 selected",
+        "hasSelectButton": False,
+        "hasSelectedCount": False,
         "selectAllDisabled": False,
         "completedSelectAllDisabled": True,
         "controlDefinition": {
@@ -806,6 +928,7 @@ def main(argv: list[str] | None = None) -> int:
             assert_manage_index_visibility_contract(page)
             assert_action_target_isolation(page)
             assert_index_actions_menu_projection(page)
+            assert_index_actions_selection_entry(page)
             assert_selection_projection_and_interaction(page)
             browser.close()
         print("Docs Viewer index selection module contracts OK")

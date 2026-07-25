@@ -25,13 +25,12 @@ export function renderMetadataParentPopupMarkup(matches, options) {
   }).join("");
 }
 
-export function renderMetadataStatusOptionsMarkup(options, selectedValue, selectedSuffix) {
+export function renderMetadataStatusOptionsMarkup(options, selectedValue) {
   var selected = String(selectedValue || "");
   return (options || []).map(function (option) {
     var isSelected = option.value === selected;
     var selectedAttr = isSelected ? " selected" : "";
-    var label = option.label + (isSelected ? String(selectedSuffix || "") : "");
-    return '<option value="' + escapeHtml(option.value) + '"' + selectedAttr + ">" + escapeHtml(label) + "</option>";
+    return '<option value="' + escapeHtml(option.value) + '"' + selectedAttr + ">" + escapeHtml(option.label) + "</option>";
   }).join("");
 }
 

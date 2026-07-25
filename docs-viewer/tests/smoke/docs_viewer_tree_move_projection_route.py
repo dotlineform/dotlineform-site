@@ -95,7 +95,8 @@ def dispatch_route_move(page: Page, move: dict[str, str]) -> None:
 
 def establish_move_selection(page: Page, move: dict[str, str]) -> list[str]:
     selected_doc_ids = [move["movingDocId"], move["unrelatedDocId"]]
-    page.locator('[data-docs-viewer-selection-command="enter"]').click()
+    page.locator("#docsViewerIndexActionsButton").click()
+    page.locator('[data-docs-viewer-selection-command="clear"]').click()
     for doc_id in selected_doc_ids:
         page.locator(f'[data-docs-viewer-selection-checkbox="{doc_id}"]').click()
     page.evaluate(
@@ -150,9 +151,9 @@ def projected_route_state(page: Page, move: dict[str, str]) -> dict[str, object]
                 checkedDocIds: Array.from(nav.querySelectorAll(
                     '[data-docs-viewer-selection-checkbox]:checked'
                 )).map(checkbox => checkbox.dataset.docsViewerSelectionCheckbox),
-                selectionCount: document.querySelector(
-                    '.docsViewer__indexSelectionCount'
-                )?.textContent.trim() || '',
+                selectionControlsVisible: !document.querySelector(
+                    '[data-docs-viewer-control="index-selection"]'
+                )?.hidden,
                 url: window.location.href,
                 beforeDisplayedDocId: before.displayedDocId,
                 beforeDisplayedHeading: before.displayedHeading,
@@ -252,8 +253,8 @@ def assert_real_manage_route_projection(page: Page, base_url: str, timeout_ms: i
         raise AssertionError(f"real route move changed the displayed document: {state!r}")
     if sorted(state["checkedDocIds"]) != sorted(selected_doc_ids):
         raise AssertionError(f"successful local move changed the checked set: {state!r}")
-    if state["selectionCount"] != "2 selected":
-        raise AssertionError(f"successful local move changed selection mode or count: {state!r}")
+    if not state["selectionControlsVisible"]:
+        raise AssertionError(f"successful local move exited selection mode: {state!r}")
     if state["marker"] != "mounted-before-move":
         raise AssertionError(f"real route move reloaded the browser: {state!r}")
     if page_errors:

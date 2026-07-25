@@ -171,6 +171,9 @@ export function initDocsViewerManagement(context) {
     routeSession: routeSession,
     searchRecent: searchRecent,
     callbacks: {
+      activeDocId: function () {
+        return selectedDocument.selectedDocId;
+      },
       activeIndexViewId: function () {
         return typeof context.activeIndexViewId === "function"
           ? context.activeIndexViewId()

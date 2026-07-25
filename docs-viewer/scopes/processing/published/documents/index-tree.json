@@ -374,6 +374,11 @@
       "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260724-104607-ecadde.json"
     },
     {
+      "doc_id": "d-20260714-173700-a002de",
+      "title": "Random numbers",
+      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-173700-a002de.json"
+    },
+    {
       "doc_id": "d-20260714-173500-48f96d",
       "title": "unsorted",
       "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-173500-48f96d.json",
@@ -389,11 +394,6 @@
           "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-175700-d5cfa5.json"
         },
         {
-          "doc_id": "d-20260714-173800-90454d",
-          "title": "A guide to better looking Processing sketches",
-          "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-173800-90454d.json"
-        },
-        {
           "doc_id": "d-20260714-175700-3c1e40",
           "title": "Advanced Subsets for n=7: Derangements & Hamming-Balanced Sample",
           "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-175700-3c1e40.json"
@@ -402,11 +402,6 @@
           "doc_id": "d-20260714-175700-166062",
           "title": "Aliveness as Participation — Processing Modes Update (ICON / AGENCY / RITUAL)",
           "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-175700-166062.json"
-        },
-        {
-          "doc_id": "d-20260714-173700-a002de",
-          "title": "ANU QRNG – Quantum random numbers",
-          "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-173700-a002de.json"
         },
         {
           "doc_id": "d-20260714-172700-94d2d9",
@@ -711,5 +706,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-24T09:46:07Z"
+  "generated_at": "2026-07-25T12:10:24Z"
 }

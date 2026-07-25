@@ -12,6 +12,9 @@ from threading import Thread
 from playwright.sync_api import Page, sync_playwright
 
 
+REPO_ROOT = Path(__file__).resolve().parents[3]
+
+
 class QuietStaticHandler(SimpleHTTPRequestHandler):
     def log_message(self, format, *args):  # noqa: A003
         return
@@ -250,6 +253,105 @@ def assert_choice_modal_radio_navigation(page: Page) -> None:
         raise AssertionError(f"unexpected choice modal radio navigation: {result!r}")
 
 
+def assert_metadata_status_list_selection(page: Page) -> None:
+    page.route(
+        "**/docs-viewer/runtime/js/shared/docs-viewer-render.js",
+        lambda route: route.fulfill(
+            path=str(REPO_ROOT / "site/docs-viewer/runtime/js/shared/docs-viewer-render.js"),
+            content_type="text/javascript",
+        ),
+    )
+    page.evaluate(
+        """async () => {
+          const modalModule = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-modals.js'
+          );
+          const shellModule = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-shell-renderer.js'
+          );
+          document.body.innerHTML = `
+            <main class="docsViewer" id="root">
+              <button id="open">Open</button>
+              <div data-docs-viewer-management-shell-mount></div>
+            </main>`;
+          const root = document.querySelector('#root');
+          const refs = shellModule.renderDocsViewerManagementShell({
+            document,
+            root,
+            mount: root.querySelector('[data-docs-viewer-management-shell-mount]')
+          });
+          const doc = {
+            doc_id: 'status-doc',
+            title: 'Status document',
+            summary: '',
+            date: '',
+            date_display: '',
+            ui_status: 'done',
+            parent_id: '',
+            viewable: true
+          };
+          const management = {
+            managementBusy: false,
+            metadataEditingDocId: ''
+          };
+          const controller = modalModule.createDocsViewerManagementModalController({
+            refs,
+            documentIndex: {
+              docsById: new Map([[doc.doc_id, doc]])
+            },
+            management,
+            scopeConfig: {
+              uiStatuses: [
+                { ui_status: 'draft', label: 'Draft', emoji: '📝' },
+                { ui_status: 'done', label: 'Done', emoji: '✅' }
+              ]
+            },
+            callbacks: {
+              currentActiveDoc: () => doc,
+              hideContextMenu: () => {},
+              isDocNonViewable: () => false,
+              metadataParentOptions: () => [{ value: '', label: 'Root' }],
+              onMetadataSubmit: () => {},
+              onSettingsSubmit: event => event.preventDefault(),
+              viewerScope: () => 'studio'
+            }
+          });
+          controller.wireEvents();
+          void controller.openMetadataModal(doc);
+        }"""
+    )
+    status_input = page.locator("#docsViewerMetadataStatusInput")
+    initial = status_input.evaluate(
+        """select => ({
+          labels: Array.from(select.options).map(option => option.textContent),
+          selectedIndex: select.selectedIndex,
+          value: select.value
+        })"""
+    )
+    if initial != {
+        "labels": ["📝 Draft", "✅ Done"],
+        "selectedIndex": 1,
+        "value": "done",
+    }:
+        raise AssertionError(f"unexpected metadata status options: {initial!r}")
+
+    status_input.locator('option[value="done"]').click()
+    cleared_by_click = status_input.evaluate(
+        "select => ({ selectedIndex: select.selectedIndex, value: select.value })"
+    )
+    if cleared_by_click != {"selectedIndex": -1, "value": ""}:
+        raise AssertionError(f"clicking selected status did not clear it: {cleared_by_click!r}")
+
+    status_input.select_option("draft")
+    status_input.focus()
+    page.keyboard.press("Delete")
+    cleared_by_keyboard = status_input.evaluate(
+        "select => ({ selectedIndex: select.selectedIndex, value: select.value })"
+    )
+    if cleared_by_keyboard != {"selectedIndex": -1, "value": ""}:
+        raise AssertionError(f"Delete did not clear metadata status: {cleared_by_keyboard!r}")
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--site-root", default=".", help="Repository root to serve.")
@@ -265,6 +367,7 @@ def main(argv: list[str] | None = None) -> int:
                 page.goto(base_url, wait_until="domcontentloaded")
                 assert_shared_focus_trap(page)
                 assert_choice_modal_radio_navigation(page)
+                assert_metadata_status_list_selection(page)
             finally:
                 browser.close()
             if errors:

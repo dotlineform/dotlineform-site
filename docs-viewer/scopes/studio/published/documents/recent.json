@@ -4,6 +4,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260724-190603-0d87a0",
+      "title": "Public Mermaid Projection Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260724-190603-0d87a0.json",
+      "timestamp": "2026-07-25 13:36:08",
+      "parent_id": "d-20260724-190603-860f64",
+      "parent_title": "Mermaid Authoring And Publication"
+    },
+    {
       "doc_id": "d-20260718-120304-2c6f81",
       "title": "Docs Viewer Core Refactor Delivery Overview",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-120304-2c6f81.json",
@@ -72,15 +80,7 @@
       "timestamp": "2026-07-24 21:34:57",
       "parent_id": "d-20260718-114645-7b9d24",
       "parent_title": "Docs Viewer Core Refactor"
-    },
-    {
-      "doc_id": "d-20260718-105957-c72b2a",
-      "title": "Standalone Docs Viewer Concept",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-105957-c72b2a.json",
-      "timestamp": "2026-07-24 21:34:57",
-      "parent_id": "d-20260511-120352-90ffa6",
-      "parent_title": "Standalone Docs Viewer"
     }
   ],
-  "generated_at": "2026-07-24T23:20:29Z"
+  "generated_at": "2026-07-25T12:36:22Z"
 }

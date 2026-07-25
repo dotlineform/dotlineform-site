@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_processing_v1",
     "scope": "processing",
-    "version": "blake2b-6cc2989d8c6c6793ef6c08102be753ec",
-    "generated_at_utc": "2026-07-24T09:46:07Z",
-    "count": 138
+    "version": "blake2b-6e7e9bab04772bd2f7a21e12edbc4566",
+    "generated_at_utc": "2026-07-25T12:10:24Z",
+    "count": 137
   },
   "entries": [
     {
@@ -1794,6 +1794,28 @@
       "search_text": "processing blob studio for web gallery shapes processing blob studio for web gallery shapes 2026-07-24 10:46:07 2026 07 24 10 46 d-20260724-104607-ecadde"
     },
     {
+      "id": "d-20260714-173700-a002de",
+      "kind": "doc",
+      "title": "Random numbers",
+      "href": "/docs/?scope=processing&doc=d-20260714-173700-a002de",
+      "last_updated": "2026-07-25 13:10:09",
+      "display_meta": "2026-07-25 13:10:09",
+      "search_terms": [
+        "random numbers",
+        "random",
+        "numbers",
+        "2026-07-25 13:10:09",
+        "2026",
+        "07",
+        "25",
+        "13",
+        "10",
+        "09",
+        "d-20260714-173700-a002de"
+      ],
+      "search_text": "random numbers random numbers 2026-07-25 13:10:09 2026 07 25 13 10 09 d-20260714-173700-a002de"
+    },
+    {
       "id": "d-20260714-173500-48f96d",
       "kind": "doc",
       "title": "unsorted",
@@ -1873,35 +1895,6 @@
       "search_text": "1‑in‑n sampling (stride) — processing permutation composites 1 in n sampling stride processing permutation composites unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-d5cfa5"
     },
     {
-      "id": "d-20260714-173800-90454d",
-      "kind": "doc",
-      "title": "A guide to better looking Processing sketches",
-      "href": "/docs/?scope=processing&doc=d-20260714-173800-90454d",
-      "last_updated": "2026-07-14 17:38",
-      "parent_id": "d-20260714-173500-48f96d",
-      "parent_title": "unsorted",
-      "display_meta": "2026-07-14 17:38 • unsorted",
-      "search_terms": [
-        "a guide to better looking processing sketches",
-        "a",
-        "guide",
-        "to",
-        "better",
-        "looking",
-        "processing",
-        "sketches",
-        "unsorted",
-        "2026-07-14 17:38",
-        "2026",
-        "07",
-        "14",
-        "17",
-        "38",
-        "d-20260714-173800-90454d"
-      ],
-      "search_text": "a guide to better looking processing sketches a guide to better looking processing sketches unsorted 2026-07-14 17:38 2026 07 14 17 38 d-20260714-173800-90454d"
-    },
-    {
       "id": "d-20260714-175700-3c1e40",
       "kind": "doc",
       "title": "Advanced Subsets for n=7: Derangements & Hamming-Balanced Sample",
@@ -1962,33 +1955,6 @@
         "d-20260714-175700-166062"
       ],
       "search_text": "aliveness as participation — processing modes update (icon / agency / ritual) aliveness as participation processing modes update icon agency ritual unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-166062"
-    },
-    {
-      "id": "d-20260714-173700-a002de",
-      "kind": "doc",
-      "title": "ANU QRNG – Quantum random numbers",
-      "href": "/docs/?scope=processing&doc=d-20260714-173700-a002de",
-      "last_updated": "2026-07-14 17:38",
-      "parent_id": "d-20260714-173500-48f96d",
-      "parent_title": "unsorted",
-      "display_meta": "2026-07-14 17:38 • unsorted",
-      "search_terms": [
-        "anu qrng – quantum random numbers",
-        "anu",
-        "qrng",
-        "quantum",
-        "random",
-        "numbers",
-        "unsorted",
-        "2026-07-14 17:38",
-        "2026",
-        "07",
-        "14",
-        "17",
-        "38",
-        "d-20260714-173700-a002de"
-      ],
-      "search_text": "anu qrng – quantum random numbers anu qrng quantum random numbers unsorted 2026-07-14 17:38 2026 07 14 17 38 d-20260714-173700-a002de"
     },
     {
       "id": "d-20260714-172700-94d2d9",

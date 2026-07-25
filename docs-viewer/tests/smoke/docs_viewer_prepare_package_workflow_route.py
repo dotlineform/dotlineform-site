@@ -23,21 +23,20 @@ from docs_viewer_service_manage import DOCS_VIEWER_DOC_ID, start_server, wait_fo
 
 
 def select_one_document(page: Page, timeout_ms: int) -> str:
-    page.locator('[data-docs-viewer-selection-command="enter"]').click()
+    page.locator("#docsViewerIndexActionsButton").click()
     doc_id = page.evaluate(
         """() => {
-            const checkbox = Array.from(document.querySelectorAll(
-                '[data-docs-viewer-selection-checkbox]'
-            )).find(node => {
-                const gutter = node.closest('[data-docs-viewer-selection-gutter]');
-                return gutter && !gutter.hidden && !node.disabled;
-            });
-            return checkbox?.dataset.docsViewerSelectionCheckbox || '';
+            const activeDocId = document.querySelector(
+                '#docsViewerNav .docsViewer__navLink.is-active'
+            )?.dataset.docId || '';
+            const checkbox = document.querySelector(
+                `[data-docs-viewer-selection-checkbox="${CSS.escape(activeDocId)}"]`
+            );
+            return checkbox?.checked ? activeDocId : '';
         }"""
     )
     if not doc_id:
-        raise AssertionError("Prepare route smoke could not find an eligible index document")
-    page.locator(f'[data-docs-viewer-selection-checkbox="{doc_id}"]').click()
+        raise AssertionError("Index Actions did not check the active displayed document")
     page.wait_for_function(
         """expectedId => {
             const prepare = document.querySelector('#docsViewerIndexPreparePackageButton');
@@ -107,7 +106,6 @@ def exercise_prepare_action(page: Page, base_url: str, timeout_ms: int) -> None:
     wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
     selected_doc_id = select_one_document(page, timeout_ms)
 
-    page.locator("#docsViewerIndexActionsButton").click()
     prepare_button = page.locator("#docsViewerIndexPreparePackageButton")
     prepare_button.wait_for(state="visible", timeout=timeout_ms)
     if prepare_button.get_attribute("href") is not None:

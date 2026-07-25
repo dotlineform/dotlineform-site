@@ -21,8 +21,6 @@ export {
 } from "./docs-viewer-management-modal-shell.js";
 
 var MODAL_TEXT = {
-  metadataStatusNoneOption: "<none>",
-  metadataStatusSelectedSuffix: " (selected)",
   importCancelButton: "Cancel",
   importCloseButton: "Close",
   settingsLoading: "Loading settings...",
@@ -45,6 +43,7 @@ export function createDocsViewerManagementModalController(options = {}) {
   var nav = options.nav || null;
   var callbacks = options.callbacks || {};
   var metadataModalResolve = null;
+  var metadataStatusPointerValue = null;
   var settingsFieldState = null;
   var importModalCancelButton = null;
   var importLifecycle = null;
@@ -104,10 +103,7 @@ export function createDocsViewerManagementModalController(options = {}) {
   }
 
   function metadataStatusOptions() {
-    var optionRecords = [{
-      value: "",
-      label: MODAL_TEXT.metadataStatusNoneOption
-    }];
+    var optionRecords = [];
     (scopeConfig.uiStatuses || []).forEach(function (status) {
       optionRecords.push({
         value: status.ui_status,
@@ -127,10 +123,22 @@ export function createDocsViewerManagementModalController(options = {}) {
     if (!refs.metadataStatusInput) return;
     refs.metadataStatusInput.innerHTML = renderMetadataStatusOptionsMarkup(
       metadataStatusOptions(),
-      selectedValue,
-      MODAL_TEXT.metadataStatusSelectedSuffix
+      selectedValue
     );
+    var selectedOption = Array.from(refs.metadataStatusInput.options).find(function (option) {
+      return option.value === selectedValue;
+    });
+    refs.metadataStatusInput.selectedIndex = selectedOption ? selectedOption.index : -1;
     refs.metadataStatusInput.size = Math.max(1, refs.metadataStatusInput.options.length);
+  }
+
+  function clearMetadataStatusSelection() {
+    if (!refs.metadataStatusInput || refs.metadataStatusInput.selectedIndex < 0) return false;
+    refs.metadataStatusInput.selectedIndex = -1;
+    ["input", "change"].forEach(function (eventName) {
+      refs.metadataStatusInput.dispatchEvent(new window.Event(eventName, { bubbles: true }));
+    });
+    return true;
   }
 
   function setModalStatus(node, message, stateName) {
@@ -520,8 +528,29 @@ export function createDocsViewerManagementModalController(options = {}) {
       });
     }
     if (refs.metadataStatusInput) {
-      refs.metadataStatusInput.addEventListener("change", function () {
-        renderMetadataStatusSelection(String(refs.metadataStatusInput.value || "").trim());
+      refs.metadataStatusInput.addEventListener("pointerdown", function (event) {
+        var option = event.target && event.target.closest
+          ? event.target.closest("option")
+          : null;
+        metadataStatusPointerValue = option
+          ? String(refs.metadataStatusInput.value || "").trim()
+          : null;
+      });
+      refs.metadataStatusInput.addEventListener("click", function (event) {
+        var option = event.target && event.target.closest
+          ? event.target.closest("option")
+          : null;
+        var repeatedValue = option
+          && metadataStatusPointerValue !== null
+          && option.value === metadataStatusPointerValue;
+        metadataStatusPointerValue = null;
+        if (repeatedValue) clearMetadataStatusSelection();
+      });
+      refs.metadataStatusInput.addEventListener("keydown", function (event) {
+        if (event.key !== "Backspace" && event.key !== "Delete") return;
+        if (refs.metadataStatusInput.selectedIndex < 0) return;
+        event.preventDefault();
+        clearMetadataStatusSelection();
       });
     }
     if (refs.metadataParentInput) {

@@ -88,6 +88,12 @@ export function createDocsViewerManagementIndexController(options = {}) {
     return typeof callbacks.viewerScope === "function" ? callbacks.viewerScope() : "";
   }
 
+  function activeDocId() {
+    return typeof callbacks.activeDocId === "function"
+      ? String(callbacks.activeDocId() || "").trim()
+      : "";
+  }
+
   function activeIndexViewId() {
     return typeof callbacks.activeIndexViewId === "function"
       ? String(callbacks.activeIndexViewId() || "").trim()
@@ -246,14 +252,16 @@ export function createDocsViewerManagementIndexController(options = {}) {
     var snapshot = indexSelection.snapshot();
     var available = indexSelectionAvailable();
     var eligibleDocIds = eligibleIndexSelectionDocIds();
+    var selectedCount = snapshot.selectedDocIds.length;
     if (typeof callbacks.projectIndexViewControlState === "function") {
       callbacks.projectIndexViewControlState("index-selection", {
-        hidden: !available,
+        hidden: !available || !snapshot.selectionModeActive,
         disabled: !available || management.managementBusy,
         active: snapshot.selectionModeActive,
-        count: snapshot.selectedDocIds.length,
+        hasSelection: selectedCount > 0,
+        allSelected: eligibleDocIds.length > 0 && selectedCount === eligibleDocIds.length,
         total: eligibleDocIds.length,
-        label: snapshot.selectionModeActive ? "Done selecting documents" : "Select documents"
+        label: "Done selecting documents"
       });
     }
     projectDocsViewerIndexSelectionRows({
@@ -449,10 +457,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
         : null;
       var command = commandTarget ? String(commandTarget.dataset.docsViewerSelectionCommand || "") : "";
       if (!command || !indexSelectionAvailable() || management.managementBusy) return false;
-      if (command === "enter") {
-        indexSelection.enter();
-        if (typeof callbacks.renderSidebar === "function") callbacks.renderSidebar();
-      } else if (command === "select-all") {
+      if (command === "select-all") {
         indexSelection.selectAll(eligibleIndexSelectionDocIds());
       } else if (command === "clear") {
         indexSelection.clear();
@@ -468,6 +473,24 @@ export function createDocsViewerManagementIndexController(options = {}) {
       return false;
     }
     if (!actionId) {
+      var menu = indexActionsMenu();
+      if (!menu || menu.hidden) {
+        var snapshot = indexSelection.snapshot();
+        var enteredSelection = !snapshot.selectionModeActive;
+        if (enteredSelection) indexSelection.enter();
+        var displayedDocId = activeDocId();
+        if (
+          displayedDocId
+          && eligibleIndexSelectionDocIds().indexOf(displayedDocId) !== -1
+          && indexSelection.selectedDocIds().indexOf(displayedDocId) === -1
+        ) {
+          indexSelection.toggle(displayedDocId, true);
+        }
+        if (enteredSelection && typeof callbacks.renderSidebar === "function") {
+          callbacks.renderSidebar();
+        }
+        projectSelection();
+      }
       toggleIndexActionsMenu();
       return true;
     }

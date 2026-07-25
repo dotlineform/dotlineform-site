@@ -4,6 +4,12 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260714-173700-a002de",
+      "title": "Random numbers",
+      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-173700-a002de.json",
+      "timestamp": "2026-07-25 13:10:09"
+    },
+    {
       "doc_id": "d-20260724-104607-ecadde",
       "title": "Processing Blob Studio for Web Gallery Shapes",
       "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260724-104607-ecadde.json",
@@ -64,13 +70,7 @@
       "timestamp": "2026-07-14 18:21:12",
       "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted"
-    },
-    {
-      "doc_id": "d-20260714-180800-4dcaca",
-      "title": "files",
-      "content_url": "/docs-viewer/scopes/processing/published/documents/by-id/d-20260714-180800-4dcaca.json",
-      "timestamp": "2026-07-14 18:21:12"
     }
   ],
-  "generated_at": "2026-07-24T09:46:07Z"
+  "generated_at": "2026-07-25T12:10:24Z"
 }

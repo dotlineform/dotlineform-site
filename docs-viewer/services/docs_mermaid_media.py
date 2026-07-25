@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import re
 import subprocess
 import tempfile
 from dataclasses import dataclass
@@ -10,6 +9,7 @@ from typing import Callable, Iterable, Protocol, Sequence
 from lxml import etree
 
 from docs_artifact_locations import ArtifactLocationAdapter, ArtifactStat, normalize_artifact_identity
+from docs_mermaid_accessibility import mermaid_accessibility_metadata
 from docs_svg_sanitizer import SanitizedSvg, sanitize_svg_bytes
 
 
@@ -19,9 +19,6 @@ MERMAID_CONFIG_FILENAME = "mermaid-config.json"
 MERMAID_BACKGROUND = "white"
 MERMAID_VIEWPORT_WIDTH = 1200
 MERMAID_VIEWPORT_HEIGHT = 800
-ACC_TITLE_PATTERN = re.compile(r"^\s*accTitle\s*:\s*(\S.*)\s*$", re.MULTILINE)
-ACC_DESCR_INLINE_PATTERN = re.compile(r"^\s*accDescr\s*:\s*(\S.*)\s*$", re.MULTILINE)
-ACC_DESCR_BLOCK_PATTERN = re.compile(r"^\s*accDescr\s*\{\s*(.*?)\s*\}", re.MULTILINE | re.DOTALL)
 VISIBLE_SVG_ELEMENTS = frozenset(
     {"circle", "ellipse", "image", "line", "path", "polygon", "polyline", "rect", "text", "use"}
 )
@@ -64,15 +61,6 @@ def plan_mermaid_media(source_inventory: Iterable[ArtifactStat]) -> tuple[Mermai
 
 def _local_name(value: str) -> str:
     return etree.QName(value).localname.lower()
-
-
-def _require_accessible_source(identity: str, source: str) -> None:
-    title = ACC_TITLE_PATTERN.search(source)
-    description = ACC_DESCR_INLINE_PATTERN.search(source) or ACC_DESCR_BLOCK_PATTERN.search(source)
-    if title is None or not title.group(1).strip():
-        raise ValueError(f"Mermaid source {identity!r} requires a non-empty accTitle")
-    if description is None or not description.group(1).strip():
-        raise ValueError(f"Mermaid source {identity!r} requires a non-empty accDescr")
 
 
 def _validate_sanitized_svg(identity: str, sanitized: SanitizedSvg) -> None:
@@ -147,7 +135,7 @@ def _render_one(
             source_text = source_path.read_text(encoding="utf-8")
         except UnicodeDecodeError as exc:
             raise ValueError(f"Mermaid source {plan.source_identity!r} must be UTF-8 text") from exc
-        _require_accessible_source(plan.source_identity, source_text)
+        mermaid_accessibility_metadata(plan.source_identity, source_text)
         try:
             completed = run_command(
                 _render_command(executable, config, source_path, output_path),

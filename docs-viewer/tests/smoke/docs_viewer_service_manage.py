@@ -1370,16 +1370,25 @@ def exercise_manage_route(
     if index_toolbar.is_hidden() or index_actions_button.is_hidden():
         raise AssertionError("Restored index panel should show its index-view toolbar")
 
-    page.locator('[data-docs-viewer-selection-command="enter"]').click()
-    selection_checkbox = page.locator(
-        "[data-docs-viewer-selection-checkbox]:not([disabled])"
-    ).first
-    selection_checkbox.click()
+    index_actions_button.click()
     page.wait_for_function(
-        "() => document.querySelector('#docsViewerIndexCopyButton')?.disabled === false",
+        """() => {
+            const activeDocId = document.querySelector(
+                '#docsViewerNav .docsViewer__navLink.is-active'
+            )?.dataset.docId || '';
+            const checkbox = document.querySelector(
+                `[data-docs-viewer-selection-checkbox="${CSS.escape(activeDocId)}"]`
+            );
+            const controls = document.querySelector(
+                '[data-docs-viewer-control="index-selection"]'
+            );
+            return checkbox?.checked
+                && controls
+                && !controls.hidden
+                && document.querySelector('#docsViewerIndexCopyButton')?.disabled === false;
+        }""",
         timeout=timeout_ms,
     )
-    index_actions_button.click()
     with page.expect_request(
         lambda request: urlparse(request.url).path.endswith(
             "/docs-viewer-document-transfer-workflow.js"

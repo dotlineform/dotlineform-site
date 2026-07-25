@@ -26,20 +26,6 @@ def checked_doc_ids(page: Page) -> list[str]:
     )
 
 
-def nested_index_doc_ids(records: list[dict[str, object]]) -> list[str]:
-    doc_ids: list[str] = []
-    for record in records:
-        doc_id = str(record.get("doc_id") or "").strip()
-        if doc_id:
-            doc_ids.append(doc_id)
-        children = record.get("children")
-        if isinstance(children, list):
-            doc_ids.extend(
-                nested_index_doc_ids([child for child in children if isinstance(child, dict)])
-            )
-    return doc_ids
-
-
 def choose_selection_docs(page: Page) -> dict[str, str]:
     result = page.evaluate(
         """() => {
@@ -155,26 +141,31 @@ def assert_selection_lifecycle(page: Page, base_url: str, timeout_ms: int) -> No
         disabled=True,
         reason="Select one or more documents.",
     )
-    click_selection_command(page, "enter")
+    if page.locator('[data-docs-viewer-selection-command="enter"]').count():
+        raise AssertionError("manage route retained the separate Select button")
+    page.locator("#docsViewerIndexActionsButton").click()
+    active_doc_id = page.locator(
+        "#docsViewerNav .docsViewer__navLink.is-active"
+    ).get_attribute("data-doc-id")
+    if not active_doc_id or active_doc_id not in checked_doc_ids(page):
+        raise AssertionError("Index Actions did not check the active displayed document")
     click_selection_command(page, "select-all")
     assert_delete_action_state(page, disabled=False)
     selection_projection = page.evaluate(
         """() => ({
-            count: document.querySelector('.docsViewer__indexSelectionCount')?.textContent.trim(),
+            countLabelPresent: Boolean(document.querySelector('.docsViewer__indexSelectionCount')),
             selectAllDisabled: document.querySelector(
                 '[data-docs-viewer-selection-command="select-all"]'
             )?.disabled
         })"""
     )
-    canonical_doc_ids = nested_index_doc_ids(initial_index_docs)
-    expected_selection_count = f"{len(set(canonical_doc_ids))} selected"
     if selection_projection != {
-        "count": expected_selection_count,
+        "countLabelPresent": False,
         "selectAllDisabled": True,
     }:
         raise AssertionError(
             "Select all did not project the complete manage-index population: "
-            f"expected {expected_selection_count!r}, got {selection_projection!r}"
+            f"{selection_projection!r}"
         )
     if page.locator("[data-docs-viewer-selection-checkbox]:not(:checked)").count():
         raise AssertionError("Select all left a rendered manage-index row unchecked")
@@ -226,12 +217,10 @@ def assert_selection_lifecycle(page: Page, base_url: str, timeout_ms: int) -> No
     page.wait_for_function(
         """expectedId => {
             const root = document.querySelector('#docsViewerRoot');
-            const output = document.querySelector('.docsViewer__indexSelectionCount');
             const checked = Array.from(document.querySelectorAll(
                 '[data-docs-viewer-selection-checkbox]:checked'
             )).map(checkbox => checkbox.dataset.docsViewerSelectionCheckbox);
             return root?.dataset.managementBusy !== 'true'
-                && output?.textContent.trim() === '1 selected'
                 && checked.length === 1
                 && checked[0] === expectedId;
         }""",
@@ -263,7 +252,7 @@ def assert_selection_lifecycle(page: Page, base_url: str, timeout_ms: int) -> No
     page.locator("#docsViewerIndexViewToggle").click()
     page.wait_for_function(
         """() => document.querySelector('#docsViewerRoot')?.dataset.indexPanelView === 'index-tree'
-            && Boolean(document.querySelector('[data-docs-viewer-selection-command="enter"]'))""",
+            && document.querySelector('[data-docs-viewer-control="index-selection"]')?.hidden === true""",
         timeout=timeout_ms,
     )
     if checked_doc_ids(page):
@@ -274,11 +263,11 @@ def assert_selection_lifecycle(page: Page, base_url: str, timeout_ms: int) -> No
         reason="Select one or more documents.",
     )
 
-    click_selection_command(page, "enter")
+    page.locator("#docsViewerIndexActionsButton").click()
     click_checkbox(page, selection_docs["preservedDocId"])
     page.reload(wait_until="domcontentloaded")
     wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
-    if page.locator('[data-docs-viewer-selection-command="enter"]').count() != 1:
+    if not page.locator('[data-docs-viewer-control="index-selection"]').is_hidden():
         raise AssertionError("full browser reload did not return with selection mode off")
     if checked_doc_ids(page):
         raise AssertionError("full browser reload persisted checked ids")

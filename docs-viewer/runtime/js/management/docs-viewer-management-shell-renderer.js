@@ -40,7 +40,7 @@ var MANAGEMENT_SHELL_MARKUP = [
   '        <span class="docsViewer__fieldLabel">date display</span>',
   '        <input class="docsViewer__fieldInput" id="docsViewerMetadataDateDisplayInput" name="date_display" type="text" autocomplete="off" spellcheck="false">',
   '      </label>',
-  '      <label class="docsViewer__field">',
+  '      <label class="docsViewer__field docsViewer__field--listbox">',
   '        <span class="docsViewer__fieldLabel" id="docsViewerMetadataStatusLabel">status</span>',
   '        <select class="docsViewer__fieldInput docsViewer__fieldInput--listbox" id="docsViewerMetadataStatusInput" name="ui_status"></select>',
   '      </label>',

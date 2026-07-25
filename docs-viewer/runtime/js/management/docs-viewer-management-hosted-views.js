@@ -93,7 +93,7 @@ export function createDocsViewerManagementViewDefinitions() {
       },
       {
         id: "index-selection",
-        label: "Select documents",
+        label: "Index selection",
         ownerType: "view",
         ownerViewId: "index-tree",
         surfaceId: "index-view",

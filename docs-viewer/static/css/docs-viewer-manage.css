@@ -48,11 +48,6 @@
   cursor: default;
 }
 
-.docsViewer__indexSelectionCount{
-  color: var(--docs-viewer-muted);
-  font-size: var(--docs-viewer-font-caption, 0.75rem);
-}
-
 .docsViewer__indexActionsHost{
   position: relative;
   display: inline-flex;
@@ -358,6 +353,14 @@
   grid-template-columns: minmax(7.5rem, 0.42fr) minmax(0, 1fr);
   align-items: center;
   gap: 0.75rem;
+}
+
+.docsViewer__field.docsViewer__field--listbox{
+  align-items: start;
+}
+
+.docsViewer__field--listbox > .docsViewer__fieldLabel{
+  padding-top: 0.35rem;
 }
 
 .docsViewer__field--checkbox{
