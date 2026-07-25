@@ -275,8 +275,12 @@ def load_generated_route_contracts(site_root: Path) -> Tuple[
     return works, series, details, moments
 
 
-def load_source_series_statuses(site_root: Path) -> Dict[str, str]:
-    path = site_root / "studio/data/canonical/catalogue/series.json"
+def resolve_repo_source_path(rel_path: Path, repo_root: Path = REPO_ROOT) -> Path:
+    return (repo_root / rel_path).resolve()
+
+
+def load_source_series_statuses(repo_root: Path = REPO_ROOT) -> Dict[str, str]:
+    path = resolve_repo_source_path(Path("studio/data/canonical/catalogue/series.json"), repo_root)
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
     except Exception:
@@ -426,7 +430,7 @@ def check_cross_refs(
             add_sample(samples, {"check": "cross_refs", "id": detail_uid_norm, "path": ref.get("path", ""), "message": "work JSON references missing work detail contract"}, max_samples)
 
     # tag_assignments -> series_index / works_index references
-    assignments_path = site_root / tag_source_paths.TAG_ASSIGNMENTS_REL_PATH
+    assignments_path = resolve_repo_source_path(tag_source_paths.TAG_ASSIGNMENTS_REL_PATH)
     if not assignments_path.exists():
         warnings += 1
         add_sample(samples, {"check": "cross_refs", "id": "tag_assignments", "path": str(assignments_path), "message": "missing tag assignments JSON"}, max_samples)
@@ -444,7 +448,7 @@ def check_cross_refs(
             add_sample(samples, {"check": "cross_refs", "id": "tag_assignments", "path": str(assignments_path), "message": "missing/invalid series map"}, max_samples)
         else:
             known_series_index_ids = set(series_map.keys()) if isinstance(series_map, dict) else set()
-            source_series_status_by_id = load_source_series_statuses(site_root)
+            source_series_status_by_id = load_source_series_statuses()
             known_work_ids = {normalize_text(wid) for wid in works.keys()}
             known_work_ids.update(normalize_text(wid) for wid in works_index_map.keys())
             series_membership: Dict[str, Set[str]] = {}
@@ -775,7 +779,7 @@ def check_json_schema(
                         errors += 1
                         add_sample(samples, {"check": "json_schema", "id": wid_norm, "path": str(works_index_path), "message": "works index entry series_ids must not contain empty values"}, max_samples)
 
-    tag_assignments_path = site_root / tag_source_paths.TAG_ASSIGNMENTS_REL_PATH
+    tag_assignments_path = resolve_repo_source_path(tag_source_paths.TAG_ASSIGNMENTS_REL_PATH)
     try:
         tag_assignments_obj = json.loads(tag_assignments_path.read_text(encoding="utf-8"))
     except Exception as e:

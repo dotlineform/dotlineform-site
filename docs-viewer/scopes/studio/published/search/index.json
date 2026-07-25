@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-701fb5a098e2d83cca9d65afcaa782f1",
-    "generated_at_utc": "2026-07-25T17:54:06Z",
+    "version": "blake2b-6bae7448b72f2e7d28e6211c5f314de6",
+    "generated_at_utc": "2026-07-25T18:10:36Z",
     "count": 243
   },
   "entries": [
@@ -4544,24 +4544,24 @@
       "kind": "doc",
       "title": "Studio Roadmap",
       "href": "/docs/?scope=studio&doc=d-20260715-092247-81d19a",
-      "last_updated": "2026-07-25 18:53:35",
+      "last_updated": "2026-07-25 19:09:40",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-25 18:53:35 • Roadmap",
+      "display_meta": "2026-07-25 19:09:40 • Roadmap",
       "search_terms": [
         "studio roadmap",
         "studio",
         "roadmap",
-        "2026-07-25 18:53:35",
+        "2026-07-25 19:09:40",
         "2026",
         "07",
         "25",
-        "18",
-        "53",
-        "35",
+        "19",
+        "09",
+        "40",
         "d-20260715-092247-81d19a"
       ],
-      "search_text": "studio roadmap studio roadmap 2026-07-25 18:53:35 2026 07 25 18 53 35 d-20260715-092247-81d19a"
+      "search_text": "studio roadmap studio roadmap 2026-07-25 19:09:40 2026 07 25 19 09 40 d-20260715-092247-81d19a"
     },
     {
       "id": "d-20260718-155350-b73f1a",
@@ -4697,10 +4697,10 @@
       "kind": "doc",
       "title": "Tag Management In Studio",
       "href": "/docs/?scope=studio&doc=d-20260718-155350-a2d49c",
-      "last_updated": "2026-07-25 18:53:35",
+      "last_updated": "2026-07-25 19:09:40",
       "parent_id": "d-20260715-092247-81d19a",
       "parent_title": "Studio Roadmap",
-      "display_meta": "2026-07-25 18:53:35 • Studio Roadmap",
+      "display_meta": "2026-07-25 19:09:40 • Studio Roadmap",
       "search_terms": [
         "tag management in studio",
         "tag",
@@ -4709,26 +4709,26 @@
         "studio",
         "studio roadmap",
         "roadmap",
-        "2026-07-25 18:53:35",
+        "2026-07-25 19:09:40",
         "2026",
         "07",
         "25",
-        "18",
-        "53",
-        "35",
+        "19",
+        "09",
+        "40",
         "d-20260718-155350-a2d49c"
       ],
-      "search_text": "tag management in studio tag management in studio studio roadmap roadmap 2026-07-25 18:53:35 2026 07 25 18 53 35 d-20260718-155350-a2d49c"
+      "search_text": "tag management in studio tag management in studio studio roadmap roadmap 2026-07-25 19:09:40 2026 07 25 19 09 40 d-20260718-155350-a2d49c"
     },
     {
       "id": "d-20260725-173929-913ddc",
       "kind": "doc",
       "title": "Tag Management Studio Cutover And Analytics Retirement Delivery",
       "href": "/docs/?scope=studio&doc=d-20260725-173929-913ddc",
-      "last_updated": "2026-07-25 18:53:35",
+      "last_updated": "2026-07-25 19:09:40",
       "parent_id": "d-20260718-155350-a2d49c",
       "parent_title": "Tag Management In Studio",
-      "display_meta": "2026-07-25 18:53:35 • Tag Management In Studio",
+      "display_meta": "2026-07-25 19:09:40 • Tag Management In Studio",
       "search_terms": [
         "tag management studio cutover and analytics retirement delivery",
         "tag",
@@ -4741,16 +4741,16 @@
         "delivery",
         "tag management in studio",
         "in",
-        "2026-07-25 18:53:35",
+        "2026-07-25 19:09:40",
         "2026",
         "07",
         "25",
-        "18",
-        "53",
-        "35",
+        "19",
+        "09",
+        "40",
         "d-20260725-173929-913ddc"
       ],
-      "search_text": "tag management studio cutover and analytics retirement delivery tag management studio cutover and analytics retirement delivery tag management in studio in 2026-07-25 18:53:35 2026 07 25 18 53 35 d-20260725-173929-913ddc"
+      "search_text": "tag management studio cutover and analytics retirement delivery tag management studio cutover and analytics retirement delivery tag management in studio in 2026-07-25 19:09:40 2026 07 25 19 09 40 d-20260725-173929-913ddc"
     },
     {
       "id": "d-20260725-175753-c41e8a",

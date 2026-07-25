@@ -311,6 +311,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
         CheckCommand(
             "admin-checks-python-pytest",
             pytest_argv(
+                "admin-app/tests/python/test_audit_site_consistency.py",
                 "admin-app/tests/python/test_target_map_resolver.py",
                 "admin-app/tests/python/test_admin_checks_config.py",
                 "admin-app/tests/python/test_run_reports.py",
