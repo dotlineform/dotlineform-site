@@ -93,53 +93,18 @@
     },
     {
       "doc_id": "d-20260506-181900-d08dbe",
-      "title": "Analytics",
+      "title": "Analytics (Retired)",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260506-181900-d08dbe.json",
       "children": [
         {
-          "doc_id": "d-20260602-234732-9e91da",
-          "title": "Analytics Config JSON",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-234732-9e91da.json"
-        },
-        {
           "doc_id": "d-20260715-084611-19cda2",
-          "title": "Analytics Overview",
+          "title": "Analytics Retirement Overview",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-19cda2.json"
         },
         {
-          "doc_id": "d-20260331-000000-974bf0",
-          "title": "Series Tags",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-974bf0.json"
-        },
-        {
-          "doc_id": "d-20260331-000000-519b1e",
-          "title": "Tag Aliases",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-519b1e.json"
-        },
-        {
-          "doc_id": "d-20260331-000000-643429",
-          "title": "Tag Editor",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-643429.json"
-        },
-        {
-          "doc_id": "d-20260331-000000-3b6fa8",
-          "title": "Tag Groups",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-3b6fa8.json"
-        },
-        {
-          "doc_id": "d-20260331-000000-4519a5",
-          "title": "Tag Registry",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-4519a5.json"
-        },
-        {
-          "doc_id": "d-20260602-000000-9ffb5c",
-          "title": "Tag Services",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-000000-9ffb5c.json"
-        },
-        {
-          "doc_id": "d-20260419-000000-86255c",
-          "title": "Tag Source Data",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260419-000000-86255c.json"
+          "doc_id": "d-20260602-234732-9e91da",
+          "title": "Retired Analytics Config",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-234732-9e91da.json"
         }
       ]
     },
@@ -776,71 +741,21 @@
               "doc_id": "d-20260718-155350-d95b37",
               "title": "Analytics App Retirement",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-155350-d95b37.json",
-              "ui_status": "proposed"
-            },
-            {
-              "doc_id": "d-20260416-000000-1744c6",
-              "title": "LLM Integration",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260416-000000-1744c6.json",
-              "ui_status": "paused",
-              "children": [
-                {
-                  "doc_id": "d-20260715-092247-1c5d85",
-                  "title": "LLM Integration Architecture",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-1c5d85.json",
-                  "ui_status": "proposed"
-                },
-                {
-                  "doc_id": "d-20260416-000000-7b5d77",
-                  "title": "LLM Integration Concept",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260416-000000-7b5d77.json",
-                  "ui_status": "paused"
-                },
-                {
-                  "doc_id": "d-20260715-092247-81535b",
-                  "title": "LLM Library Summary Proposals Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-81535b.json",
-                  "ui_status": "paused"
-                }
-              ]
+              "ui_status": "done"
             },
             {
               "doc_id": "d-20260623-000000-8b3359",
-              "title": "Shareable Content Blocks",
+              "title": "Shareable Content Blocks (Retired)",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260623-000000-8b3359.json",
-              "ui_status": "draft",
+              "viewable": false,
+              "ui_status": "done",
               "children": [
                 {
                   "doc_id": "d-20260623-190947-78e88b",
-                  "title": "Shareable Content Blocks Concept",
+                  "title": "Shareable Content Blocks Concept (Retired)",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260623-190947-78e88b.json",
-                  "ui_status": "draft"
-                }
-              ]
-            },
-            {
-              "doc_id": "d-20260715-092247-659e29",
-              "title": "Tag Dimensions",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-659e29.json",
-              "ui_status": "paused",
-              "children": [
-                {
-                  "doc_id": "d-20260715-092247-5e1795",
-                  "title": "Small Tag Dimension Set Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-5e1795.json",
-                  "ui_status": "paused"
-                },
-                {
-                  "doc_id": "d-20260715-092247-053d06",
-                  "title": "Tag Dimensions Architecture",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-053d06.json",
-                  "ui_status": "proposed"
-                },
-                {
-                  "doc_id": "d-20260715-092247-ab3eff",
-                  "title": "Tag Dimensions Concept",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-ab3eff.json",
-                  "ui_status": "paused"
+                  "viewable": false,
+                  "ui_status": "done"
                 }
               ]
             }
@@ -1031,6 +946,32 @@
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-81d19a.json",
           "children": [
             {
+              "doc_id": "d-20260416-000000-1744c6",
+              "title": "LLM Integration",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260416-000000-1744c6.json",
+              "ui_status": "paused",
+              "children": [
+                {
+                  "doc_id": "d-20260715-092247-1c5d85",
+                  "title": "LLM Integration Architecture",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-1c5d85.json",
+                  "ui_status": "proposed"
+                },
+                {
+                  "doc_id": "d-20260416-000000-7b5d77",
+                  "title": "LLM Integration Concept",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260416-000000-7b5d77.json",
+                  "ui_status": "paused"
+                },
+                {
+                  "doc_id": "d-20260715-092247-81535b",
+                  "title": "LLM Library Summary Proposals Delivery",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-81535b.json",
+                  "ui_status": "paused"
+                }
+              ]
+            },
+            {
               "doc_id": "d-20260718-155350-b73f1a",
               "title": "LLM-Assisted Tag Development",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-155350-b73f1a.json",
@@ -1063,22 +1004,42 @@
               ]
             },
             {
+              "doc_id": "d-20260715-092247-659e29",
+              "title": "Tag Dimensions",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-659e29.json",
+              "ui_status": "paused",
+              "children": [
+                {
+                  "doc_id": "d-20260715-092247-5e1795",
+                  "title": "Small Tag Dimension Set Delivery",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-5e1795.json",
+                  "ui_status": "paused"
+                },
+                {
+                  "doc_id": "d-20260715-092247-053d06",
+                  "title": "Tag Dimensions Architecture",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-053d06.json",
+                  "ui_status": "proposed"
+                },
+                {
+                  "doc_id": "d-20260715-092247-ab3eff",
+                  "title": "Tag Dimensions Concept",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-ab3eff.json",
+                  "ui_status": "paused"
+                }
+              ]
+            },
+            {
               "doc_id": "d-20260718-155350-a2d49c",
               "title": "Tag Management In Studio",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-155350-a2d49c.json",
-              "ui_status": "in-progress",
+              "ui_status": "done",
               "children": [
                 {
                   "doc_id": "d-20260725-173929-913ddc",
                   "title": "Tag Management Studio Cutover And Analytics Retirement Delivery",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-173929-913ddc.json",
-                  "ui_status": "in-progress"
-                },
-                {
-                  "doc_id": "d-20260725-175753-c41e8a",
-                  "title": "Tag Management Studio Cutover P0 Freeze",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-175753-c41e8a.json",
-                  "ui_status": "in-progress"
+                  "ui_status": "done"
                 }
               ]
             }
@@ -1341,6 +1302,43 @@
           "doc_id": "d-20260424-000000-15b6f2",
           "title": "Studio Runtime",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260424-000000-15b6f2.json"
+        },
+        {
+          "doc_id": "d-20260419-000000-86255c",
+          "title": "Tag Source Data",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260419-000000-86255c.json",
+          "children": [
+            {
+              "doc_id": "d-20260331-000000-643429",
+              "title": "Series Tag Editor",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-643429.json"
+            },
+            {
+              "doc_id": "d-20260331-000000-974bf0",
+              "title": "Series Tags",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-974bf0.json"
+            },
+            {
+              "doc_id": "d-20260331-000000-519b1e",
+              "title": "Tag Aliases",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-519b1e.json"
+            },
+            {
+              "doc_id": "d-20260331-000000-3b6fa8",
+              "title": "Tag Groups",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-3b6fa8.json"
+            },
+            {
+              "doc_id": "d-20260331-000000-4519a5",
+              "title": "Tag Registry",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-4519a5.json"
+            },
+            {
+              "doc_id": "d-20260602-000000-9ffb5c",
+              "title": "Tag Services",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-000000-9ffb5c.json"
+            }
+          ]
         }
       ]
     },
@@ -1380,5 +1378,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-25T17:01:54Z"
+  "generated_at": "2026-07-25T18:43:45Z"
 }

@@ -4,85 +4,83 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "d-20260715-092247-81d19a",
-      "title": "Studio Roadmap",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-81d19a.json",
-      "timestamp": "2026-07-25 19:22:42",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260718-155350-a2d49c",
-      "title": "Tag Management In Studio",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-155350-a2d49c.json",
-      "timestamp": "2026-07-25 19:22:42",
-      "parent_id": "d-20260715-092247-81d19a",
-      "parent_title": "Studio Roadmap"
-    },
-    {
       "doc_id": "d-20260725-173929-913ddc",
       "title": "Tag Management Studio Cutover And Analytics Retirement Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-173929-913ddc.json",
-      "timestamp": "2026-07-25 19:22:42",
+      "timestamp": "2026-07-25 19:42:49",
       "parent_id": "d-20260718-155350-a2d49c",
       "parent_title": "Tag Management In Studio"
     },
     {
-      "doc_id": "d-20260725-175753-c41e8a",
-      "title": "Tag Management Studio Cutover P0 Freeze",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-175753-c41e8a.json",
-      "timestamp": "2026-07-25 18:00:23",
-      "parent_id": "d-20260718-155350-a2d49c",
-      "parent_title": "Tag Management In Studio"
+      "doc_id": "d-20260506-181900-d08dbe",
+      "title": "Analytics (Retired)",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260506-181900-d08dbe.json",
+      "timestamp": "2026-07-25 19:30:43"
     },
     {
       "doc_id": "d-20260718-155350-d95b37",
       "title": "Analytics App Retirement",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-155350-d95b37.json",
-      "timestamp": "2026-07-25 17:39:29",
+      "timestamp": "2026-07-25 19:30:43",
       "parent_id": "d-20260715-092247-c67bbf",
       "parent_title": "Analytics Roadmap"
     },
     {
-      "doc_id": "d-20260725-153656-516b61",
-      "title": "Semantic Tokens",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-153656-516b61.json",
-      "timestamp": "2026-07-25 17:39:29",
-      "parent_id": "d-20260527-105208-c1a4d0",
-      "parent_title": "Semantic Reference Authoring"
+      "doc_id": "d-20260715-084611-19cda2",
+      "title": "Analytics Retirement Overview",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-19cda2.json",
+      "timestamp": "2026-07-25 19:30:43",
+      "parent_id": "d-20260506-181900-d08dbe",
+      "parent_title": "Analytics (Retired)"
     },
     {
-      "doc_id": "d-20260527-105208-c1a4d0",
-      "title": "Semantic Reference Authoring",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260527-105208-c1a4d0.json",
-      "timestamp": "2026-07-25 15:36:56",
-      "parent_id": "d-20260714-234030-1e0af6",
-      "parent_title": "Docs Viewer Roadmap"
-    },
-    {
-      "doc_id": "d-20260714-234030-1e0af6",
-      "title": "Docs Viewer Roadmap",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-1e0af6.json",
-      "timestamp": "2026-07-25 14:40:27",
+      "doc_id": "d-20260715-092247-c67bbf",
+      "title": "Analytics Roadmap",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-c67bbf.json",
+      "timestamp": "2026-07-25 19:30:43",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
     },
     {
-      "doc_id": "d-20260719-123719-fb7565",
-      "title": "Document Diagrams",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260719-123719-fb7565.json",
-      "timestamp": "2026-07-25 14:34:23",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
+      "doc_id": "d-20260501-000000-49b626",
+      "title": "Browser Smoke Testing",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260501-000000-49b626.json",
+      "timestamp": "2026-07-25 19:30:43",
+      "parent_id": "d-20260501-174746-efd581",
+      "parent_title": "Testing"
+    },
+    {
+      "doc_id": "d-20260602-234732-ea94b3",
+      "title": "Configuration Map",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-234732-ea94b3.json",
+      "timestamp": "2026-07-25 19:30:43",
+      "parent_id": "d-20260423-000000-d015e6",
+      "parent_title": "Studio"
     },
     {
       "doc_id": "d-20260718-120304-2c6f81",
       "title": "Docs Viewer Core Refactor Delivery Overview",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-120304-2c6f81.json",
-      "timestamp": "2026-07-25 00:20:29",
+      "timestamp": "2026-07-25 19:30:43",
       "parent_id": "d-20260718-114645-7b9d24",
       "parent_title": "Docs Viewer Core Refactor"
+    },
+    {
+      "doc_id": "d-20260416-000000-1744c6",
+      "title": "LLM Integration",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260416-000000-1744c6.json",
+      "timestamp": "2026-07-25 19:30:43",
+      "parent_id": "d-20260715-092247-81d19a",
+      "parent_title": "Studio Roadmap"
+    },
+    {
+      "doc_id": "d-20260715-092247-1c5d85",
+      "title": "LLM Integration Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-1c5d85.json",
+      "timestamp": "2026-07-25 19:30:43",
+      "parent_id": "d-20260416-000000-1744c6",
+      "parent_title": "LLM Integration"
     }
   ],
-  "generated_at": "2026-07-25T18:23:22Z"
+  "generated_at": "2026-07-25T18:43:45Z"
 }

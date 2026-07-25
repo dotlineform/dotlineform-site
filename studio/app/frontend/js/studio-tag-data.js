@@ -10,22 +10,22 @@ export async function fetchJson(url, options = {}) {
 }
 
 export async function loadAnalyticsRegistryJson(config, options) {
-  return fetchJson(requiredAnalyticsServicePath(config, "tags", "tag_registry"), options);
+  return fetchJson(requiredStudioTagServicePath(config, "tags", "tag_registry"), options);
 }
 
 export async function loadAnalyticsAliasesJson(config, options) {
-  return fetchJson(requiredAnalyticsServicePath(config, "tags", "tag_aliases"), options);
+  return fetchJson(requiredStudioTagServicePath(config, "tags", "tag_aliases"), options);
 }
 
 export async function loadAnalyticsAssignmentsJson(config, options) {
   return fetchJson(
-    requiredAnalyticsServicePath(config, "tags", "tag_assignments"),
+    requiredStudioTagServicePath(config, "tags", "tag_assignments"),
     { cache: "no-store", ...(options || {}) }
   );
 }
 
 export async function loadAnalyticsGroupsJson(config, options) {
-  return fetchJson(requiredAnalyticsServicePath(config, "tags", "tag_groups"), options);
+  return fetchJson(requiredStudioTagServicePath(config, "tags", "tag_groups"), options);
 }
 
 export async function loadSiteSeriesIndexJson(config, options) {
@@ -38,7 +38,7 @@ export async function loadSiteWorksIndexJson(config, options) {
   return fetchJson(getSiteDataPath(config, "works_index"), options);
 }
 
-function analyticsServicePath(config, serviceName, key) {
+function studioTagServicePath(config, serviceName, key) {
   const runtime = config && config.app && config.app.runtime;
   const services = runtime && runtime.services;
   const service = services && services[serviceName];
@@ -46,10 +46,10 @@ function analyticsServicePath(config, serviceName, key) {
   return typeof value === "string" && value.trim() ? value : "";
 }
 
-function requiredAnalyticsServicePath(config, serviceName, key) {
-  const path = analyticsServicePath(config, serviceName, key);
+function requiredStudioTagServicePath(config, serviceName, key) {
+  const path = studioTagServicePath(config, serviceName, key);
   if (!path) {
-    throw new Error(`Missing Analytics ${serviceName} service endpoint: ${key}`);
+    throw new Error(`Missing Studio ${serviceName} service endpoint: ${key}`);
   }
   return path;
 }
