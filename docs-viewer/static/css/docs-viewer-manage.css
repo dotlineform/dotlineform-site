@@ -355,12 +355,17 @@
   gap: 0.75rem;
 }
 
-.docsViewer__field.docsViewer__field--listbox{
+.docsViewer__field.docsViewer__field--listbox,
+.docsViewer__field.docsViewer__field--textarea{
   align-items: start;
 }
 
 .docsViewer__field--listbox > .docsViewer__fieldLabel{
   padding-top: 0.35rem;
+}
+
+.docsViewer__field--textarea > .docsViewer__fieldLabel{
+  padding-top: 0.48rem;
 }
 
 .docsViewer__field--checkbox{

@@ -92,23 +92,6 @@
       ]
     },
     {
-      "doc_id": "d-20260506-181900-d08dbe",
-      "title": "Analytics (Retired)",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260506-181900-d08dbe.json",
-      "children": [
-        {
-          "doc_id": "d-20260715-084611-19cda2",
-          "title": "Analytics Retirement Overview",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-19cda2.json"
-        },
-        {
-          "doc_id": "d-20260602-234732-9e91da",
-          "title": "Retired Analytics Config",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-234732-9e91da.json"
-        }
-      ]
-    },
-    {
       "doc_id": "d-20260331-000000-4a16b0",
       "title": "Architecture",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-4a16b0.json",
@@ -567,7 +550,6 @@
       "doc_id": "d-20260718-114645-7b9d24",
       "title": "Docs Viewer Core Refactor",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-114645-7b9d24.json",
-      "ui_status": "proposed",
       "children": [
         {
           "doc_id": "d-20260718-121833-9fa2d4",
@@ -662,386 +644,226 @@
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260428-000000-f5ff18.json",
       "children": [
         {
-          "doc_id": "d-20260715-092247-85515f",
-          "title": "Admin Roadmap",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-85515f.json",
+          "doc_id": "d-20260610-225919-188d54",
+          "title": "Admin Checks Operational Reports",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260610-225919-188d54.json",
+          "ui_status": "deferred",
           "children": [
             {
-              "doc_id": "d-20260610-225919-188d54",
-              "title": "Admin Checks Operational Reports",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260610-225919-188d54.json",
-              "ui_status": "deferred",
-              "children": [
-                {
-                  "doc_id": "d-20260610-114020-8e5197",
-                  "title": "Generated Payloads Report",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260610-114020-8e5197.json",
-                  "ui_status": "draft"
-                },
-                {
-                  "doc_id": "d-20260610-114020-b56fed",
-                  "title": "Runtime Checks Report",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260610-114020-b56fed.json",
-                  "ui_status": "draft"
-                }
-              ]
+              "doc_id": "d-20260610-114020-8e5197",
+              "title": "Generated Payloads Report",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260610-114020-8e5197.json",
+              "ui_status": "draft"
             },
             {
-              "doc_id": "d-20260531-000000-6679ea",
-              "title": "Admin Checks Responsibility Reports",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260531-000000-6679ea.json",
-              "ui_status": "in-progress",
+              "doc_id": "d-20260610-114020-b56fed",
+              "title": "Runtime Checks Report",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260610-114020-b56fed.json",
+              "ui_status": "draft"
+            }
+          ]
+        },
+        {
+          "doc_id": "d-20260531-000000-6679ea",
+          "title": "Admin Checks Responsibility Reports",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260531-000000-6679ea.json",
+          "ui_status": "in-progress",
+          "children": [
+            {
+              "doc_id": "d-20260610-225919-78b56a",
+              "title": "Code Surface Report",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260610-225919-78b56a.json",
+              "ui_status": "draft"
+            },
+            {
+              "doc_id": "d-20260609-212515-e7f0ac",
+              "title": "Git History Report",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260609-212515-e7f0ac.json",
+              "ui_status": "draft"
+            },
+            {
+              "doc_id": "d-20260609-212515-520398",
+              "title": "Imports Report",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260609-212515-520398.json",
+              "ui_status": "draft"
+            },
+            {
+              "doc_id": "d-20260609-212515-238344",
+              "title": "Report Dependencies",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260609-212515-238344.json",
+              "ui_status": "draft"
+            },
+            {
+              "doc_id": "d-20260610-114020-544e51",
+              "title": "Static Searches Report",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260610-114020-544e51.json",
+              "ui_status": "draft"
+            },
+            {
+              "doc_id": "d-20260609-212515-6d8aa2",
+              "title": "Tests Report",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260609-212515-6d8aa2.json",
+              "ui_status": "draft"
+            }
+          ]
+        },
+        {
+          "doc_id": "d-20260716-193410-98d1a8",
+          "title": "Dated Export Snapshots",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260716-193410-98d1a8.json",
+          "ui_status": "paused"
+        },
+        {
+          "doc_id": "d-20260715-092247-4b7382",
+          "title": "Portable Document Packages",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-4b7382.json",
+          "children": [
+            {
+              "doc_id": "d-20260711-012238-8a04a6",
+              "title": "Full Document Export Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260711-012238-8a04a6.json",
+              "ui_status": "proposed"
+            }
+          ]
+        },
+        {
+          "doc_id": "d-20260723-191039-f8cb88",
+          "title": "Public Docs Viewer Mobile Experience",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-191039-f8cb88.json"
+        },
+        {
+          "doc_id": "d-20260715-084611-7c7c8d",
+          "title": "Repository Maintenance",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-7c7c8d.json"
+        },
+        {
+          "doc_id": "d-20260720-100017-9855dd",
+          "title": "Scope Media Management",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-100017-9855dd.json",
+          "children": [
+            {
+              "doc_id": "d-20260720-100017-7e52de",
+              "title": "Scope Media Inventory Surface Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-100017-7e52de.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "d-20260720-100017-e094d8",
+              "title": "Scope Media Management Concept",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-100017-e094d8.json",
+              "ui_status": "proposed"
+            }
+          ]
+        },
+        {
+          "doc_id": "d-20260715-092247-6bbb5e",
+          "title": "Search Mechanics",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-6bbb5e.json",
+          "ui_status": "paused",
+          "children": [
+            {
+              "doc_id": "d-20260715-084611-c2fa6f",
+              "title": "Search Mechanics Review Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-c2fa6f.json",
+              "ui_status": "paused"
+            }
+          ]
+        },
+        {
+          "doc_id": "d-20260527-105208-c1a4d0",
+          "title": "Semantic Reference Authoring",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260527-105208-c1a4d0.json",
+          "ui_status": "paused",
+          "children": [
+            {
+              "doc_id": "d-20260714-234030-434069",
+              "title": "Semantic Reference Authoring Architecture",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-434069.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "d-20260714-234030-cb2789",
+              "title": "Semantic Reference Authoring Concept",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-cb2789.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "d-20260725-153656-516b61",
+              "title": "Semantic Tokens",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-153656-516b61.json",
+              "ui_status": "proposed",
               "children": [
                 {
-                  "doc_id": "d-20260610-225919-78b56a",
-                  "title": "Code Surface Report",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260610-225919-78b56a.json",
-                  "ui_status": "draft"
-                },
-                {
-                  "doc_id": "d-20260609-212515-e7f0ac",
-                  "title": "Git History Report",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260609-212515-e7f0ac.json",
-                  "ui_status": "draft"
-                },
-                {
-                  "doc_id": "d-20260609-212515-520398",
-                  "title": "Imports Report",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260609-212515-520398.json",
-                  "ui_status": "draft"
-                },
-                {
-                  "doc_id": "d-20260609-212515-238344",
-                  "title": "Report Dependencies",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260609-212515-238344.json",
-                  "ui_status": "draft"
-                },
-                {
-                  "doc_id": "d-20260610-114020-544e51",
-                  "title": "Static Searches Report",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260610-114020-544e51.json",
-                  "ui_status": "draft"
-                },
-                {
-                  "doc_id": "d-20260609-212515-6d8aa2",
-                  "title": "Tests Report",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260609-212515-6d8aa2.json",
-                  "ui_status": "draft"
+                  "doc_id": "d-20260725-165142-793cb3",
+                  "title": "Semantic Tokens File And Data Structure",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-165142-793cb3.json",
+                  "ui_status": "proposed"
                 }
               ]
             }
           ]
         },
         {
-          "doc_id": "d-20260715-092247-c67bbf",
-          "title": "Analytics Roadmap",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-c67bbf.json",
+          "doc_id": "d-20260720-173806-5f2c9a",
+          "title": "Share Sub-Scope Documents",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-173806-5f2c9a.json",
+          "ui_status": "paused"
+        },
+        {
+          "doc_id": "d-20260720-170418-a7c93d",
+          "title": "Site Review And Cleanup",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-170418-a7c93d.json",
           "children": [
             {
-              "doc_id": "d-20260718-155350-d95b37",
-              "title": "Analytics App Retirement",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-155350-d95b37.json",
+              "doc_id": "d-20260720-170419-c4b8f1",
+              "title": "Current Site Baseline Review Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-170419-c4b8f1.json",
+              "ui_status": "proposed"
+            }
+          ]
+        },
+        {
+          "doc_id": "d-20260713-000000-d9bad2",
+          "title": "Source Documentation and Linting",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260713-000000-d9bad2.json",
+          "ui_status": "draft",
+          "children": [
+            {
+              "doc_id": "d-20260718-125756-a41c70",
+              "title": "Docs Viewer Source Documentation And Linting Pilot Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-125756-a41c70.json",
               "ui_status": "done"
             },
             {
-              "doc_id": "d-20260623-000000-8b3359",
-              "title": "Shareable Content Blocks (Retired)",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260623-000000-8b3359.json",
-              "viewable": false,
-              "ui_status": "done",
-              "children": [
-                {
-                  "doc_id": "d-20260623-190947-78e88b",
-                  "title": "Shareable Content Blocks Concept (Retired)",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260623-190947-78e88b.json",
-                  "viewable": false,
-                  "ui_status": "done"
-                }
-              ]
+              "doc_id": "d-20260713-133928-c786c7",
+              "title": "Source Documentation and Linting Concept",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260713-133928-c786c7.json"
             }
           ]
         },
         {
-          "doc_id": "d-20260714-234030-1e0af6",
-          "title": "Docs Viewer Roadmap",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-1e0af6.json",
+          "doc_id": "d-20260511-120352-90ffa6",
+          "title": "Standalone Docs Viewer",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260511-120352-90ffa6.json",
           "children": [
             {
-              "doc_id": "d-20260716-193410-98d1a8",
-              "title": "Dated Export Snapshots",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260716-193410-98d1a8.json",
-              "ui_status": "paused"
-            },
-            {
-              "doc_id": "d-20260715-092247-4b7382",
-              "title": "Portable Document Packages",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-4b7382.json",
-              "children": [
-                {
-                  "doc_id": "d-20260711-012238-8a04a6",
-                  "title": "Full Document Export Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260711-012238-8a04a6.json",
-                  "ui_status": "proposed"
-                }
-              ]
-            },
-            {
-              "doc_id": "d-20260723-191039-f8cb88",
-              "title": "Public Docs Viewer Mobile Experience",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-191039-f8cb88.json",
+              "doc_id": "d-20260718-105957-c72b2a",
+              "title": "Standalone Docs Viewer Concept",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-105957-c72b2a.json",
               "ui_status": "proposed"
-            },
-            {
-              "doc_id": "d-20260720-100017-9855dd",
-              "title": "Scope Media Management",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-100017-9855dd.json",
-              "ui_status": "proposed",
-              "children": [
-                {
-                  "doc_id": "d-20260720-100017-7e52de",
-                  "title": "Scope Media Inventory Surface Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-100017-7e52de.json",
-                  "ui_status": "proposed"
-                },
-                {
-                  "doc_id": "d-20260720-100017-e094d8",
-                  "title": "Scope Media Management Concept",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-100017-e094d8.json",
-                  "ui_status": "proposed"
-                }
-              ]
-            },
-            {
-              "doc_id": "d-20260527-105208-c1a4d0",
-              "title": "Semantic Reference Authoring",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260527-105208-c1a4d0.json",
-              "ui_status": "paused",
-              "children": [
-                {
-                  "doc_id": "d-20260714-234030-434069",
-                  "title": "Semantic Reference Authoring Architecture",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-434069.json",
-                  "ui_status": "proposed"
-                },
-                {
-                  "doc_id": "d-20260714-234030-cb2789",
-                  "title": "Semantic Reference Authoring Concept",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-cb2789.json",
-                  "ui_status": "proposed"
-                },
-                {
-                  "doc_id": "d-20260725-153656-516b61",
-                  "title": "Semantic Tokens",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-153656-516b61.json",
-                  "ui_status": "proposed",
-                  "children": [
-                    {
-                      "doc_id": "d-20260725-165142-793cb3",
-                      "title": "Semantic Tokens File And Data Structure",
-                      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-165142-793cb3.json",
-                      "ui_status": "proposed"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "doc_id": "d-20260720-173806-5f2c9a",
-              "title": "Share Sub-Scope Documents",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-173806-5f2c9a.json",
-              "ui_status": "paused"
-            },
-            {
-              "doc_id": "d-20260511-120352-90ffa6",
-              "title": "Standalone Docs Viewer",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260511-120352-90ffa6.json",
-              "ui_status": "proposed",
-              "children": [
-                {
-                  "doc_id": "d-20260718-105957-c72b2a",
-                  "title": "Standalone Docs Viewer Concept",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-105957-c72b2a.json",
-                  "ui_status": "proposed"
-                }
-              ]
             }
           ]
         },
         {
-          "doc_id": "d-20260715-092247-f3fd52",
-          "title": "Repository Roadmap",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-f3fd52.json",
+          "doc_id": "d-20260712-213026-ee0f22",
+          "title": "Workspaces",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260712-213026-ee0f22.json",
           "children": [
             {
-              "doc_id": "d-20260715-084611-7c7c8d",
-              "title": "Repository Maintenance",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-7c7c8d.json"
-            },
-            {
-              "doc_id": "d-20260713-000000-d9bad2",
-              "title": "Source Documentation and Linting",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260713-000000-d9bad2.json",
-              "ui_status": "draft",
-              "children": [
-                {
-                  "doc_id": "d-20260718-125756-a41c70",
-                  "title": "Docs Viewer Source Documentation And Linting Pilot Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-125756-a41c70.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260713-133928-c786c7",
-                  "title": "Source Documentation and Linting Concept",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260713-133928-c786c7.json"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "doc_id": "d-20260718-130206-81e5b0",
-          "title": "Search Roadmap",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-130206-81e5b0.json",
-          "children": [
-            {
-              "doc_id": "d-20260715-092247-6bbb5e",
-              "title": "Search Mechanics",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-6bbb5e.json",
-              "ui_status": "paused",
-              "children": [
-                {
-                  "doc_id": "d-20260715-084611-c2fa6f",
-                  "title": "Search Mechanics Review Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-c2fa6f.json",
-                  "ui_status": "paused"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "doc_id": "d-20260720-170417-8e2a4c",
-          "title": "Site Roadmap",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-170417-8e2a4c.json",
-          "children": [
-            {
-              "doc_id": "d-20260720-170418-a7c93d",
-              "title": "Site Review And Cleanup",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-170418-a7c93d.json",
-              "ui_status": "proposed",
-              "children": [
-                {
-                  "doc_id": "d-20260720-170419-c4b8f1",
-                  "title": "Current Site Baseline Review Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-170419-c4b8f1.json",
-                  "ui_status": "proposed"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "doc_id": "d-20260715-092247-81d19a",
-          "title": "Studio Roadmap",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-81d19a.json",
-          "children": [
-            {
-              "doc_id": "d-20260416-000000-1744c6",
-              "title": "LLM Integration",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260416-000000-1744c6.json",
-              "ui_status": "paused",
-              "children": [
-                {
-                  "doc_id": "d-20260715-092247-1c5d85",
-                  "title": "LLM Integration Architecture",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-1c5d85.json",
-                  "ui_status": "proposed"
-                },
-                {
-                  "doc_id": "d-20260416-000000-7b5d77",
-                  "title": "LLM Integration Concept",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260416-000000-7b5d77.json",
-                  "ui_status": "paused"
-                },
-                {
-                  "doc_id": "d-20260715-092247-81535b",
-                  "title": "LLM Library Summary Proposals Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-81535b.json",
-                  "ui_status": "paused"
-                }
-              ]
-            },
-            {
-              "doc_id": "d-20260718-155350-b73f1a",
-              "title": "LLM-Assisted Tag Development",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-155350-b73f1a.json",
+              "doc_id": "d-20260712-221626-5d13e6",
+              "title": "Workspace Scope Eligibility",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260712-221626-5d13e6.json",
               "ui_status": "proposed"
-            },
-            {
-              "doc_id": "d-20260712-000000-45286c",
-              "title": "Moments Composition Workspace",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260712-000000-45286c.json",
-              "ui_status": "proposed",
-              "children": [
-                {
-                  "doc_id": "d-20260715-092247-595d47",
-                  "title": "Moments Basic Axis Editor Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-595d47.json",
-                  "ui_status": "proposed"
-                },
-                {
-                  "doc_id": "d-20260715-092247-da73da",
-                  "title": "Moments Composition Workspace Architecture",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-da73da.json",
-                  "ui_status": "proposed"
-                },
-                {
-                  "doc_id": "d-20260712-000000-f49032",
-                  "title": "Moments Composition Workspace Concept",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260712-000000-f49032.json",
-                  "ui_status": "proposed"
-                }
-              ]
-            },
-            {
-              "doc_id": "d-20260715-092247-659e29",
-              "title": "Tag Dimensions",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-659e29.json",
-              "ui_status": "paused",
-              "children": [
-                {
-                  "doc_id": "d-20260715-092247-5e1795",
-                  "title": "Small Tag Dimension Set Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-5e1795.json",
-                  "ui_status": "paused"
-                },
-                {
-                  "doc_id": "d-20260715-092247-053d06",
-                  "title": "Tag Dimensions Architecture",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-053d06.json",
-                  "ui_status": "proposed"
-                },
-                {
-                  "doc_id": "d-20260715-092247-ab3eff",
-                  "title": "Tag Dimensions Concept",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-ab3eff.json",
-                  "ui_status": "paused"
-                }
-              ]
-            },
-            {
-              "doc_id": "d-20260718-155350-a2d49c",
-              "title": "Tag Management In Studio",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-155350-a2d49c.json",
-              "ui_status": "done",
-              "children": [
-                {
-                  "doc_id": "d-20260725-173929-913ddc",
-                  "title": "Tag Management Studio Cutover And Analytics Retirement Delivery",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-173929-913ddc.json",
-                  "ui_status": "done"
-                }
-              ]
             }
           ]
         }
@@ -1363,20 +1185,7 @@
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260627-212121-7cf7de.json"
         }
       ]
-    },
-    {
-      "doc_id": "d-20260712-213026-ee0f22",
-      "title": "Workspaces",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260712-213026-ee0f22.json",
-      "children": [
-        {
-          "doc_id": "d-20260712-221626-5d13e6",
-          "title": "Workspace Scope Eligibility",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260712-221626-5d13e6.json",
-          "ui_status": "proposed"
-        }
-      ]
     }
   ],
-  "generated_at": "2026-07-25T18:43:45Z"
+  "generated_at": "2026-07-25T19:42:49Z"
 }

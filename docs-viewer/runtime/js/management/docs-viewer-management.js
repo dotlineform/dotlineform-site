@@ -820,6 +820,14 @@ export function initDocsViewerManagement(context) {
       hideManageActionsMenu: eventRouter.hideManageActionsMenu,
       isDocNonViewable: isDocNonViewable,
       onImportOpen: importController.initialize,
+      loadMetadataDoc: context.loadManagedDocumentRecord,
+      onMetadataLoadError: function (error) {
+        setManagementMessage(
+          error && error.message ? error.message : "Document metadata could not be loaded.",
+          true
+        );
+        renderManagementUi();
+      },
       onMetadataSave: actionController.handleEditMetadataSave,
       onSettingsSubmit: actionController.handleSettingsSubmit,
       managementClientOptions: managementClientOptions,

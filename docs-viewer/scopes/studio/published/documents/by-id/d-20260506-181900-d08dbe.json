@@ -1,9 +1,0 @@
-{
-  "doc_id": "d-20260506-181900-d08dbe",
-  "title": "Analytics (Retired)",
-  "added_date": "2026-05-06 18:19:00",
-  "last_updated": "2026-07-25 19:30:43",
-  "viewer_url": "/docs/?scope=studio&doc=d-20260506-181900-d08dbe",
-  "summary": "Retirement record for the former local Analytics app and routes.",
-  "content_html": "<h1>Analytics (Retired)</h1>\n<p>The standalone Analytics application, source tree, runner, routes, APIs,\nconfiguration, checks, and tests are retired.</p>\n<p>Current owners:</p>\n<ul>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260423-000000-d015e6\">Studio</a> owns\ncanonical tags, tag services, and all five retained tag workflows.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260424-000000-50b63f\">Docs Viewer</a> owns\nintegrated document packages.</li>\n<li>The public <code>/analysis/</code> route remains a Docs Viewer scope and is unrelated to\nthe retired application.</li>\n</ul>\n<p>Do not recreate an Analytics shell, runner, compatibility route, proxy, source\ncopy, or generic Data Sharing framework.</p>\n<h2>Durable Records</h2>\n<ul>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260715-084611-19cda2\">Analytics Overview</a>\nrecords the final ownership outcome.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260715-092247-c67bbf\">Analytics Roadmap</a>\nrecords the completed retirement.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260419-000000-86255c\">Tag Source Data</a>\nroutes to current Studio code and data.</li>\n</ul>\n"
-}

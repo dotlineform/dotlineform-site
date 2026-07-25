@@ -76,6 +76,8 @@ export function createDocsViewerManagementModalComposition(options = {}) {
       getModalController: function () {
         return modalController;
       },
+      loadMetadataDoc: callbacks.loadMetadataDoc,
+      onLoadError: callbacks.onMetadataLoadError,
       onSave: callbacks.onMetadataSave
     }
   });

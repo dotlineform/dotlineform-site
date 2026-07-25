@@ -28,7 +28,7 @@ var MANAGEMENT_SHELL_MARKUP = [
   '        <span class="docsViewer__fieldLabel">title</span>',
   '        <input class="docsViewer__fieldInput" id="docsViewerMetadataTitleInput" name="title" type="text" autocomplete="off" spellcheck="false" required>',
   '      </label>',
-  '      <label class="docsViewer__field">',
+  '      <label class="docsViewer__field docsViewer__field--textarea">',
   '        <span class="docsViewer__fieldLabel">summary</span>',
   '        <textarea class="docsViewer__fieldInput docsViewer__fieldInput--textarea" id="docsViewerMetadataSummaryInput" name="summary" rows="4"></textarea>',
   '      </label>',

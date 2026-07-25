@@ -81,12 +81,27 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
   }
 
   function openForDoc(doc) {
-    var modal = modalController();
-    var result = modal ? modal.openMetadataModal(doc) : Promise.resolve(null);
-    return Promise.resolve(result).then(function (payload) {
-      if (payload && typeof callbacks.onSave === "function") callbacks.onSave(payload);
-      return payload;
-    });
+    if (!doc) return Promise.resolve(null);
+    var request = Promise.resolve(doc);
+    if (typeof callbacks.loadMetadataDoc === "function") {
+      request = Promise.resolve().then(function () {
+        return callbacks.loadMetadataDoc(doc);
+      });
+    }
+    return request
+      .then(function (metadataDoc) {
+        if (!metadataDoc) throw new Error("Document metadata could not be loaded.");
+        var modal = modalController();
+        return modal ? modal.openMetadataModal(metadataDoc) : null;
+      })
+      .then(function (payload) {
+        if (payload && typeof callbacks.onSave === "function") callbacks.onSave(payload);
+        return payload;
+      })
+      .catch(function (error) {
+        if (typeof callbacks.onLoadError === "function") callbacks.onLoadError(error);
+        return null;
+      });
   }
 
   function openForDocId(docId) {

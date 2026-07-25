@@ -13,6 +13,16 @@ const HOME_COLUMNS = Object.freeze([
       Object.freeze({ routeId: "studio_works", params: Object.freeze({ sort: "cat", dir: "asc" }) }),
       Object.freeze({ routeId: "project_state" })
     ])
+  }),
+  Object.freeze({
+    label: "tags",
+    links: Object.freeze([
+      Object.freeze({ routeId: "tag_groups" }),
+      Object.freeze({ routeId: "tag_registry" }),
+      Object.freeze({ routeId: "tag_aliases" }),
+      Object.freeze({ routeId: "series_tags" }),
+      Object.freeze({ routeId: "series_tag_editor" })
+    ])
   })
 ]);
 

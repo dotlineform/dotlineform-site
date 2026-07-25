@@ -1,9 +1,0 @@
-{
-  "doc_id": "d-20260602-234732-9e91da",
-  "title": "Retired Analytics Config",
-  "added_date": "2026-06-02 23:47:32",
-  "last_updated": "2026-07-25 19:30:43",
-  "viewer_url": "/docs/?scope=studio&doc=d-20260602-234732-9e91da",
-  "parent_id": "d-20260506-181900-d08dbe",
-  "content_html": "<h1>Retired Analytics Config</h1>\n<p>The former Analytics source and runtime configuration were removed with the\napplication. This page is a retirement record, not an editable configuration\ncontract.</p>\n<p>Current owners:</p>\n<ul>\n<li>Studio routes and browser-safe data paths:\n<code>studio/app/frontend/config/studio-config.json</code>;</li>\n<li>tag group order and coverage/RAG policy:\n<code>studio/data/config/tags/tag-management.json</code>;</li>\n<li>tag API projection and editor settings:\n<code>studio/app/server/studio/studio_app_config.py</code>;</li>\n<li>exact current configuration map:\n<a href=\"/docs/?scope=studio&amp;doc=d-20260602-234732-ea94b3\">Configuration Map</a>.</li>\n</ul>\n<p>Do not recreate the former config file, runtime payload, environment family, or\nroute registry as a compatibility layer.</p>\n"
-}

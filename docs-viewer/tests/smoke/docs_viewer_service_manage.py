@@ -704,6 +704,53 @@ def assert_delete_uses_first_remaining_root(page: Page) -> None:
         raise AssertionError(f"unexpected post-delete root fallback: {result!r}")
 
 
+def assert_metadata_hydration_failure_is_safe(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const module = await import(
+                '/docs-viewer/runtime/js/management/docs-viewer-management-metadata-workflow.js'
+            );
+            const doc = {
+                doc_id: 'metadata-doc',
+                title: 'Index-only metadata record'
+            };
+            let modalOpened = false;
+            let loadError = '';
+            const workflow = module.createDocsViewerManagementMetadataWorkflow({
+                documentIndex: {
+                    allDocs: [doc],
+                    docsById: new Map([[doc.doc_id, doc]])
+                },
+                management: {
+                    metadataEditingDocId: ''
+                },
+                callbacks: {
+                    getModalController: () => ({
+                        openMetadataModal: () => {
+                            modalOpened = true;
+                            return Promise.resolve(null);
+                        }
+                    }),
+                    loadMetadataDoc: () => Promise.reject(
+                        new Error('Full metadata unavailable')
+                    ),
+                    onLoadError: error => {
+                        loadError = error.message;
+                    }
+                }
+            });
+            const payload = await workflow.openForDocId(doc.doc_id);
+            return { loadError, modalOpened, payload };
+        }"""
+    )
+    if result != {
+        "loadError": "Full metadata unavailable",
+        "modalOpened": False,
+        "payload": None,
+    }:
+        raise AssertionError(f"metadata hydration failure opened an unsafe form: {result!r}")
+
+
 def assert_action_target_definitions(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -1292,6 +1339,7 @@ def exercise_manage_route(
     page.goto(f"{base_url}/docs/?scope=studio&doc={DOCS_VIEWER_DOC_ID}", wait_until="domcontentloaded")
     wait_for_manage_doc(page, DOCS_VIEWER_DOC_TITLE, timeout_ms)
     assert_action_target_definitions(page)
+    assert_metadata_hydration_failure_is_safe(page)
     assert_source_editor_media_caption_option(page)
     assert_open_source_target_handoff(page)
     assert_delete_uses_first_remaining_root(page)
@@ -1437,6 +1485,12 @@ def exercise_manage_route(
         }""",
         timeout=timeout_ms,
     )
+    metadata_summary = page.locator("#docsViewerMetadataSummaryInput").input_value()
+    if metadata_summary != smoke_document_payloads()[DOCS_VIEWER_DOC_ID]["summary"]:
+        raise AssertionError(
+            "Edit metadata did not hydrate summary from the full document payload: "
+            f"{metadata_summary!r}"
+        )
     metadata_viewability = page.locator("#docsViewerMetadataNonViewableInput")
     metadata_viewability_description = page.locator("#docsViewerMetadataNonViewableDescription")
     if metadata_viewability.get_attribute("aria-describedby") != "docsViewerMetadataNonViewableDescription":

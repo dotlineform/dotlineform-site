@@ -73,6 +73,14 @@ ROUTES = [
     },
 ]
 
+HOME_TAG_ROUTE_IDS = (
+    "tag_groups",
+    "tag_registry",
+    "tag_aliases",
+    "series_tags",
+    "series_tag_editor",
+)
+
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -112,6 +120,18 @@ def main(argv: list[str] | None = None) -> int:
                 if "/studio/api/tags/" in request.url and not request.url.startswith(base_url)
                 else None,
             )
+
+            page.goto(f"{base_url}/studio/", wait_until="domcontentloaded")
+            wait_for_route_ready(page, "#studioHomeRoot", "data-studio-ready", "data-studio-busy")
+            tag_heading = page.locator(".studioHomeLinks__column h3", has_text="tags")
+            if tag_heading.count() != 1:
+                raise AssertionError("Studio home did not render one tags column")
+            tag_column = tag_heading.locator("..")
+            for route_id in HOME_TAG_ROUTE_IDS:
+                runtime_view = runtime_by_id.get(route_id)
+                path = str(runtime_view.get("path") if runtime_view else "")
+                if not path or tag_column.locator(f'a.studioHomeLinks__pill[href="{path}"]').count() != 1:
+                    raise AssertionError(f"Studio home tags column did not link {route_id}: {path!r}")
 
             for route in ROUTES:
                 page.goto(f"{base_url}{route['path']}", wait_until="domcontentloaded")
