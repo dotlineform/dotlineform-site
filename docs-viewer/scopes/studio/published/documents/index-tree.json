@@ -1066,13 +1066,19 @@
               "doc_id": "d-20260718-155350-a2d49c",
               "title": "Tag Management In Studio",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-155350-a2d49c.json",
-              "ui_status": "proposed",
+              "ui_status": "in-progress",
               "children": [
                 {
                   "doc_id": "d-20260725-173929-913ddc",
                   "title": "Tag Management Studio Cutover And Analytics Retirement Delivery",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-173929-913ddc.json",
-                  "ui_status": "proposed"
+                  "ui_status": "in-progress"
+                },
+                {
+                  "doc_id": "d-20260725-175753-c41e8a",
+                  "title": "Tag Management Studio Cutover P0 Freeze",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-175753-c41e8a.json",
+                  "ui_status": "in-progress"
                 }
               ]
             }
@@ -1374,5 +1380,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-25T16:42:10Z"
+  "generated_at": "2026-07-25T17:01:54Z"
 }

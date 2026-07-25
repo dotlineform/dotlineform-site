@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-30be903a1f0b08fe461cd2c67e09a665",
-    "generated_at_utc": "2026-07-25T16:42:22Z",
-    "count": 242
+    "version": "blake2b-0b0022c6946d612de6ae27f3e001d855",
+    "generated_at_utc": "2026-07-25T17:01:54Z",
+    "count": 243
   },
   "entries": [
     {
@@ -4544,24 +4544,24 @@
       "kind": "doc",
       "title": "Studio Roadmap",
       "href": "/docs/?scope=studio&doc=d-20260715-092247-81d19a",
-      "last_updated": "2026-07-25 17:39:29",
+      "last_updated": "2026-07-25 18:00:23",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-25 17:39:29 • Roadmap",
+      "display_meta": "2026-07-25 18:00:23 • Roadmap",
       "search_terms": [
         "studio roadmap",
         "studio",
         "roadmap",
-        "2026-07-25 17:39:29",
+        "2026-07-25 18:00:23",
         "2026",
         "07",
         "25",
-        "17",
-        "39",
-        "29",
+        "18",
+        "00",
+        "23",
         "d-20260715-092247-81d19a"
       ],
-      "search_text": "studio roadmap studio roadmap 2026-07-25 17:39:29 2026 07 25 17 39 29 d-20260715-092247-81d19a"
+      "search_text": "studio roadmap studio roadmap 2026-07-25 18:00:23 2026 07 25 18 00 23 d-20260715-092247-81d19a"
     },
     {
       "id": "d-20260718-155350-b73f1a",
@@ -4697,10 +4697,10 @@
       "kind": "doc",
       "title": "Tag Management In Studio",
       "href": "/docs/?scope=studio&doc=d-20260718-155350-a2d49c",
-      "last_updated": "2026-07-25 17:39:29",
+      "last_updated": "2026-07-25 18:00:23",
       "parent_id": "d-20260715-092247-81d19a",
       "parent_title": "Studio Roadmap",
-      "display_meta": "2026-07-25 17:39:29 • Studio Roadmap",
+      "display_meta": "2026-07-25 18:00:23 • Studio Roadmap",
       "search_terms": [
         "tag management in studio",
         "tag",
@@ -4709,26 +4709,26 @@
         "studio",
         "studio roadmap",
         "roadmap",
-        "2026-07-25 17:39:29",
+        "2026-07-25 18:00:23",
         "2026",
         "07",
         "25",
-        "17",
-        "39",
-        "29",
+        "18",
+        "00",
+        "23",
         "d-20260718-155350-a2d49c"
       ],
-      "search_text": "tag management in studio tag management in studio studio roadmap roadmap 2026-07-25 17:39:29 2026 07 25 17 39 29 d-20260718-155350-a2d49c"
+      "search_text": "tag management in studio tag management in studio studio roadmap roadmap 2026-07-25 18:00:23 2026 07 25 18 00 23 d-20260718-155350-a2d49c"
     },
     {
       "id": "d-20260725-173929-913ddc",
       "kind": "doc",
       "title": "Tag Management Studio Cutover And Analytics Retirement Delivery",
       "href": "/docs/?scope=studio&doc=d-20260725-173929-913ddc",
-      "last_updated": "2026-07-25 17:39:29",
+      "last_updated": "2026-07-25 18:00:23",
       "parent_id": "d-20260718-155350-a2d49c",
       "parent_title": "Tag Management In Studio",
-      "display_meta": "2026-07-25 17:39:29 • Tag Management In Studio",
+      "display_meta": "2026-07-25 18:00:23 • Tag Management In Studio",
       "search_terms": [
         "tag management studio cutover and analytics retirement delivery",
         "tag",
@@ -4741,16 +4741,46 @@
         "delivery",
         "tag management in studio",
         "in",
-        "2026-07-25 17:39:29",
+        "2026-07-25 18:00:23",
         "2026",
         "07",
         "25",
-        "17",
-        "39",
-        "29",
+        "18",
+        "00",
+        "23",
         "d-20260725-173929-913ddc"
       ],
-      "search_text": "tag management studio cutover and analytics retirement delivery tag management studio cutover and analytics retirement delivery tag management in studio in 2026-07-25 17:39:29 2026 07 25 17 39 29 d-20260725-173929-913ddc"
+      "search_text": "tag management studio cutover and analytics retirement delivery tag management studio cutover and analytics retirement delivery tag management in studio in 2026-07-25 18:00:23 2026 07 25 18 00 23 d-20260725-173929-913ddc"
+    },
+    {
+      "id": "d-20260725-175753-c41e8a",
+      "kind": "doc",
+      "title": "Tag Management Studio Cutover P0 Freeze",
+      "href": "/docs/?scope=studio&doc=d-20260725-175753-c41e8a",
+      "last_updated": "2026-07-25 18:00:23",
+      "parent_id": "d-20260718-155350-a2d49c",
+      "parent_title": "Tag Management In Studio",
+      "display_meta": "2026-07-25 18:00:23 • Tag Management In Studio",
+      "search_terms": [
+        "tag management studio cutover p0 freeze",
+        "tag",
+        "management",
+        "studio",
+        "cutover",
+        "p0",
+        "freeze",
+        "tag management in studio",
+        "in",
+        "2026-07-25 18:00:23",
+        "2026",
+        "07",
+        "25",
+        "18",
+        "00",
+        "23",
+        "d-20260725-175753-c41e8a"
+      ],
+      "search_text": "tag management studio cutover p0 freeze tag management studio cutover p0 freeze tag management in studio in 2026-07-25 18:00:23 2026 07 25 18 00 23 d-20260725-175753-c41e8a"
     },
     {
       "id": "d-20260331-000000-5dcf32",

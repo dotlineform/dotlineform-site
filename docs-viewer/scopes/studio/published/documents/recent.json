@@ -4,6 +4,38 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260715-092247-81d19a",
+      "title": "Studio Roadmap",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-81d19a.json",
+      "timestamp": "2026-07-25 18:00:23",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260718-155350-a2d49c",
+      "title": "Tag Management In Studio",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-155350-a2d49c.json",
+      "timestamp": "2026-07-25 18:00:23",
+      "parent_id": "d-20260715-092247-81d19a",
+      "parent_title": "Studio Roadmap"
+    },
+    {
+      "doc_id": "d-20260725-173929-913ddc",
+      "title": "Tag Management Studio Cutover And Analytics Retirement Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-173929-913ddc.json",
+      "timestamp": "2026-07-25 18:00:23",
+      "parent_id": "d-20260718-155350-a2d49c",
+      "parent_title": "Tag Management In Studio"
+    },
+    {
+      "doc_id": "d-20260725-175753-c41e8a",
+      "title": "Tag Management Studio Cutover P0 Freeze",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-175753-c41e8a.json",
+      "timestamp": "2026-07-25 18:00:23",
+      "parent_id": "d-20260718-155350-a2d49c",
+      "parent_title": "Tag Management In Studio"
+    },
+    {
       "doc_id": "d-20260718-155350-d95b37",
       "title": "Analytics App Retirement",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-155350-d95b37.json",
@@ -18,30 +50,6 @@
       "timestamp": "2026-07-25 17:39:29",
       "parent_id": "d-20260527-105208-c1a4d0",
       "parent_title": "Semantic Reference Authoring"
-    },
-    {
-      "doc_id": "d-20260715-092247-81d19a",
-      "title": "Studio Roadmap",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-81d19a.json",
-      "timestamp": "2026-07-25 17:39:29",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260718-155350-a2d49c",
-      "title": "Tag Management In Studio",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-155350-a2d49c.json",
-      "timestamp": "2026-07-25 17:39:29",
-      "parent_id": "d-20260715-092247-81d19a",
-      "parent_title": "Studio Roadmap"
-    },
-    {
-      "doc_id": "d-20260725-173929-913ddc",
-      "title": "Tag Management Studio Cutover And Analytics Retirement Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-173929-913ddc.json",
-      "timestamp": "2026-07-25 17:39:29",
-      "parent_id": "d-20260718-155350-a2d49c",
-      "parent_title": "Tag Management In Studio"
     },
     {
       "doc_id": "d-20260527-105208-c1a4d0",
@@ -74,15 +82,7 @@
       "timestamp": "2026-07-25 00:20:29",
       "parent_id": "d-20260718-114645-7b9d24",
       "parent_title": "Docs Viewer Core Refactor"
-    },
-    {
-      "doc_id": "d-20260523-190651-7157ec",
-      "title": "Development Checklist",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260523-190651-7157ec.json",
-      "timestamp": "2026-07-25 00:12:43",
-      "parent_id": "d-20260419-000000-d2e47b",
-      "parent_title": "Dev Home"
     }
   ],
-  "generated_at": "2026-07-25T16:42:22Z"
+  "generated_at": "2026-07-25T17:01:54Z"
 }
