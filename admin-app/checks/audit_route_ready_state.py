@@ -84,14 +84,6 @@ APP_CONFIGS = (
         ),
     ),
     AppConfig(
-        app_id="analytics",
-        label="Analytics",
-        path_patterns=("analytics-app/app/frontend/routes/*.html",),
-        ready_attr="data-analytics-ready",
-        busy_attr="data-analytics-busy",
-        allow_initial_ready_true=frozenset({"analytics-app/app/frontend/routes/analytics-home.html"}),
-    ),
-    AppConfig(
         app_id="docs-viewer",
         label="Docs Viewer",
         path_patterns=(

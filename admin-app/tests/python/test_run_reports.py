@@ -71,7 +71,6 @@ def make_fake_repo(tmp_path: Path) -> Path:
         "source": {"owner": "tests"},
         "scopes": {
             "admin": {"label": "Admin", "include": ["admin-app/"], "exclude": []},
-            "analytics": {"label": "Analytics", "include": ["analytics-app/"], "exclude": []},
             "docs-viewer": {"label": "Docs Viewer", "include": ["docs-viewer/", "site/docs-viewer/"], "exclude": []},
             "public-site": {"label": "Public Site", "include": ["works/"], "exclude": []},
             "studio": {"label": "Studio", "include": ["studio/"], "exclude": []},

@@ -93,15 +93,15 @@ def test_resolve_run_files_intersects_selected_targets_and_keeps_shared_dependen
 def test_resolve_target_map_reports_unclassified_and_stale_patterns() -> None:
     config = checks_config.load_checks_config(repo_root=REPO_ROOT)
     source_files = [
-        "analytics-app/unmapped.txt",
+        "admin-app/unmapped.txt",
         "docs-viewer/unmapped.txt",
     ]
 
     target_map = resolver.resolve_target_map(config, source_files=source_files, repo_root=REPO_ROOT)
-    analytics = next(scope for scope in target_map["scopes"] if scope["scope_id"] == "analytics")
+    admin = next(scope for scope in target_map["scopes"] if scope["scope_id"] == "admin")
     docs_viewer = next(scope for scope in target_map["scopes"] if scope["scope_id"] == "docs-viewer")
 
-    assert analytics["totals"]["unclassified_files"] == 1
+    assert admin["totals"]["unclassified_files"] == 1
     assert docs_viewer["totals"]["unclassified_files"] == 1
     assert any(pattern["status"] == "stale" for pattern in docs_viewer["patterns"])
 

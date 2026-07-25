@@ -16,7 +16,6 @@ SURFACE_ROUTE_PREFIXES = {
     "admin": "/admin/",
     "studio": "/studio/",
     "docs": "/docs/",
-    "analytics": "/analytics/",
 }
 EXPECTED_BATCH_A_ACTIONS = {
     "catalogue-work": {

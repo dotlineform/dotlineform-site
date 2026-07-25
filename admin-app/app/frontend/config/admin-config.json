@@ -72,7 +72,6 @@
   "links": {
     "siblings": {
       "studio": "/studio/",
-      "analytics": "/analytics/",
       "docs_viewer": "/docs/"
     }
   }

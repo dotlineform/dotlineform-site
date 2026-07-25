@@ -345,20 +345,6 @@
       "owner_doc": "local-studio-app-public-surface"
     },
     {
-      "id": "analytics_app_assets",
-      "classification": "analytics_app_asset",
-      "repo_paths": [
-        "analytics-app/**"
-      ],
-      "public_output": {
-        "policy": "forbidden",
-        "paths": [
-          "analytics-app"
-        ]
-      },
-      "owner_doc": "local-studio-app"
-    },
-    {
       "id": "local_working_output",
       "classification": "local_working_output",
       "repo_paths": [

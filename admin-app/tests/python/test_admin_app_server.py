@@ -126,7 +126,6 @@ def test_static_path_policy_serves_only_admin_app_assets() -> None:
     assert allowed("/shared/ui-workbench/workbench-channel.js") is False
     assert allowed("/docs/ui-workbench/") is False
     assert allowed("/studio/app/assets/css/studio.css") is False
-    assert allowed("/analytics/app/assets/css/analytics.css") is False
     assert allowed("/docs-viewer/generated/docs/studio/index.json") is False
 
 

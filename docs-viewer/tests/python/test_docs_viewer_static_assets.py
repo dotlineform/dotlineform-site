@@ -182,7 +182,6 @@ def test_document_package_actions_own_the_surviving_browser_assets() -> None:
     assert "docsViewerManageReturnedPackagesLink" not in management_runtime
     assert 'page_id: "docs-manage"' in management_runtime
     assert "record_indices" not in runtime
-    assert "/analytics/" not in runtime
     assert "data-sharing" not in runtime.lower()
     assert "review_action" not in runtime
     assert "/docs/packages/returned/apply" not in runtime

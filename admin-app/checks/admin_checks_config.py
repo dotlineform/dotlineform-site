@@ -12,7 +12,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_CONFIG_PATH = Path("admin-app/checks/config/admin-checks.json")
 DEFAULT_REPORTS_CONFIG_PATH = Path("admin-app/checks/config/admin-checks-reports.json")
 REPORTS_ROOT = Path("admin-app/checks/reports")
-REQUIRED_SCOPES = {"admin", "analytics", "docs-viewer", "public-site", "studio", "all"}
+REQUIRED_SCOPES = {"admin", "docs-viewer", "public-site", "studio", "all"}
 VALID_ROUTE_STATUSES = {"mapped", "inventory-only"}
 VALID_RUN_REQUEST_KEYS = {"scope", "families", "areas", "routes", "reports", "options", "write"}
 

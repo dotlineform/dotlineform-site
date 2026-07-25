@@ -62,7 +62,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert any(view["id"] == "studio_home" and view["path"] == "/studio/" for view in runtime["views"])
     assert not any(view["id"] == "docs" for view in runtime["views"])
     assert not any("doc_href" in view for view in runtime["views"])
-    assert not any(view["id"] in {"studio_catalogue", "studio_analytics", "data_sharing"} for view in runtime["views"])
+    assert not any(view["id"] in {"studio_catalogue", "data_sharing"} for view in runtime["views"])
     assert any(view["id"] == "tag_groups" and view["path"] == "/studio/tag-groups/" for view in runtime["views"])
     assert any(view["id"] == "tag_registry" and view["path"] == "/studio/tag-registry/" for view in runtime["views"])
     assert any(view["id"] == "tag_aliases" and view["path"] == "/studio/tag-aliases/" for view in runtime["views"])
@@ -83,7 +83,6 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert not any(view["id"] == "catalogue_moment_editor" or view["path"] == "/studio/catalogue-moment/" for view in runtime["views"])
     assert runtime["navigation"]["primary"] == []
     assert "series_tag_editor" not in runtime["navigation"]["primary"]
-    assert "analytics" not in runtime["services"]
     assert "data_sharing" not in runtime["services"]
     assert "docs" not in runtime["services"]
     assert "audits" not in runtime["services"]

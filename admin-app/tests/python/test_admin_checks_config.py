@@ -30,7 +30,7 @@ def test_load_checks_config_accepts_v1_config() -> None:
     assert config["config_id"] == "admin-checks"
     assert "reports" not in raw_config
     assert set(report_config) == {"files", "target-map"}
-    assert set(config["scopes"]) == {"admin", "analytics", "docs-viewer", "public-site", "studio", "all"}
+    assert set(config["scopes"]) == {"admin", "docs-viewer", "public-site", "studio", "all"}
     assert "runtime-assets" in config["families"]
     assert "source-docs" not in config["families"]
     assert config["routes"]["/library/"]["status"] == "mapped"

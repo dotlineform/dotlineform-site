@@ -29,9 +29,6 @@ STUDIO_APP_PORT="${STUDIO_APP_PORT:-8765}"
 ADMIN_APP_ENABLED="${ADMIN_APP_ENABLED:-1}"
 ADMIN_APP_HOST="${ADMIN_APP_HOST:-127.0.0.1}"
 ADMIN_APP_PORT="${ADMIN_APP_PORT:-8768}"
-ANALYTICS_APP_ENABLED="${ANALYTICS_APP_ENABLED:-1}"
-ANALYTICS_APP_HOST="${ANALYTICS_APP_HOST:-127.0.0.1}"
-ANALYTICS_APP_PORT="${ANALYTICS_APP_PORT:-8766}"
 DOCS_VIEWER_HOST="${DOCS_VIEWER_HOST:-127.0.0.1}"
 DOCS_VIEWER_PORT="${DOCS_VIEWER_PORT:-8776}"
 DOCS_VIEWER_BASE_URL="${DOCS_VIEWER_BASE_URL:-http://$DOCS_VIEWER_HOST:$DOCS_VIEWER_PORT}"
@@ -228,11 +225,6 @@ if [ "$ADMIN_APP_ENABLED" != "0" ]; then
 else
   echo "Local Admin app: disabled by ADMIN_APP_ENABLED=0"
 fi
-if [ "$ANALYTICS_APP_ENABLED" != "0" ]; then
-  echo "Local Analytics app: http://$ANALYTICS_APP_HOST:$ANALYTICS_APP_PORT/analytics/"
-else
-  echo "Local Analytics app: disabled by ANALYTICS_APP_ENABLED=0"
-fi
 echo "Docs Viewer: $DOCS_VIEWER_BASE_URL/docs/"
 if [ "$DOCS_VIEWER_REVIEW_ENABLED" != "0" ]; then
   echo "Docs Review: $DOCS_VIEWER_BASE_URL/docs-review/"
@@ -250,9 +242,6 @@ fi
 if [ "$ADMIN_APP_ENABLED" != "0" ]; then
   remember_binding "Local Admin" "$ADMIN_APP_HOST" "$ADMIN_APP_PORT"
 fi
-if [ "$ANALYTICS_APP_ENABLED" != "0" ]; then
-  remember_binding "Local Analytics" "$ANALYTICS_APP_HOST" "$ANALYTICS_APP_PORT"
-fi
 remember_binding "Docs Viewer" "$DOCS_VIEWER_HOST" "$DOCS_VIEWER_PORT"
 
 if [ "$SITE_ENABLED" != "0" ]; then
@@ -263,9 +252,6 @@ if [ "$STUDIO_APP_ENABLED" != "0" ]; then
 fi
 if [ "$ADMIN_APP_ENABLED" != "0" ]; then
   require_open_port "Local Admin" "$ADMIN_APP_HOST" "$ADMIN_APP_PORT" "ADMIN_APP_PORT"
-fi
-if [ "$ANALYTICS_APP_ENABLED" != "0" ]; then
-  require_open_port "Local Analytics" "$ANALYTICS_APP_HOST" "$ANALYTICS_APP_PORT" "ANALYTICS_APP_PORT"
 fi
 require_open_port "Docs Viewer" "$DOCS_VIEWER_HOST" "$DOCS_VIEWER_PORT" "DOCS_VIEWER_PORT"
 
@@ -278,9 +264,6 @@ fi
 start_child "Local Studio runner" "$ROOT_DIR/bin/local-studio"
 if [ "$ADMIN_APP_ENABLED" != "0" ]; then
   start_child "Local Admin runner" "$ROOT_DIR/bin/local-admin"
-fi
-if [ "$ANALYTICS_APP_ENABLED" != "0" ]; then
-  start_child "Local Analytics runner" "$ROOT_DIR/bin/local-analytics"
 fi
 start_child "Docs Viewer" "$ROOT_DIR/docs-viewer/bin/docs-viewer"
 

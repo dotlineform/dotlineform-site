@@ -16,15 +16,6 @@
         "admin-app/**/__pycache__/**"
       ]
     },
-    "analytics": {
-      "label": "Analytics",
-      "include": [
-        "analytics-app/"
-      ],
-      "exclude": [
-        "analytics-app/**/__pycache__/**"
-      ]
-    },
     "docs-viewer": {
       "label": "Docs Viewer",
       "include": [
@@ -73,7 +64,6 @@
       "include": [
         "_data/",
         "admin-app/",
-        "analytics-app/",
         "site/assets/css/",
         "site/assets/data/",
         "site/assets/docs/",
@@ -89,7 +79,6 @@
       "exclude": [
         "_site/",
         "admin-app/**/__pycache__/**",
-        "analytics-app/**/__pycache__/**",
         "site/assets/data/",
         "docs-viewer/**/__pycache__/**",
         "docs-viewer/generated/",
@@ -105,7 +94,6 @@
       "label": "Runtime JavaScript",
       "include": [
         "admin-app/app/frontend/js/",
-        "analytics-app/app/frontend/js/",
         "site/assets/js/",
         "site/docs-viewer/runtime/js/",
         "docs-viewer/runtime/js/",
@@ -116,7 +104,6 @@
       "label": "Runtime assets",
       "include": [
         "admin-app/app/assets/",
-        "analytics-app/app/assets/",
         "site/assets/docs/",
         "site/assets/css/",
         "site/docs-viewer/static/",
@@ -129,7 +116,6 @@
       "label": "Services",
       "include": [
         "admin-app/app/server/",
-        "analytics-app/app/server/",
         "docs-viewer/services/",
         "studio/app/server/",
         "studio/services/",
@@ -153,7 +139,6 @@
       "include": [
         "_data/",
         "admin-app/app/frontend/config/",
-        "analytics-app/app/frontend/config/",
         "docs-viewer/config/",
         "studio/data/config/",
         "**/*.yml",
@@ -165,7 +150,6 @@
       "label": "Tests and smokes",
       "include": [
         "admin-app/tests/",
-        "analytics-app/tests/",
         "docs-viewer/tests/",
         "studio/tests/",
         "**/tests/"
@@ -373,95 +357,109 @@
       ],
       "areas": []
     },
-    "/analytics/": {
-      "label": "Analytics Home",
-      "path": "/analytics/",
+    "/studio/tag-groups/": {
+      "label": "Studio Tag Groups",
+      "path": "/studio/tag-groups/",
       "status": "inventory-only",
       "include": [
-        "analytics-app/app/frontend/analytics-shell.html",
-        "analytics-app/app/frontend/js/analytics-app.js",
-        "analytics-app/app/frontend/routes/analytics-home.html",
-        "analytics-app/app/frontend/config/analytics-config.json"
+        "studio/app/frontend/routes/tag-groups.html",
+        "studio/app/frontend/js/tag-groups.js",
+        "studio/app/frontend/js/tag-ui-text.js",
+        "studio/data/config/tags/tag-management.json"
       ],
       "shared": [
-        "analytics-app/app/server/analytics_app/analytics_app_server.py"
+        "studio/app/frontend/studio-shell.html",
+        "studio/app/frontend/js/studio-app.js",
+        "studio/app/server/studio/studio_app_server.py"
       ],
-      "areas": []
+      "areas": [
+        "catalogue",
+        "config"
+      ]
     },
-    "/analytics/tag-groups/": {
-      "label": "Analytics Tag Groups",
-      "path": "/analytics/tag-groups/",
+    "/studio/tag-registry/": {
+      "label": "Studio Tag Registry",
+      "path": "/studio/tag-registry/",
       "status": "inventory-only",
       "include": [
-        "analytics-app/app/frontend/routes/tag-groups.html",
-        "analytics-app/app/frontend/js/tag-groups.js",
-        "analytics-app/app/frontend/js/analytics-ui-text.js"
+        "studio/app/frontend/routes/tag-registry.html",
+        "studio/app/frontend/js/tag-registry*",
+        "studio/app/frontend/js/tag-ui-text.js",
+        "studio/services/tags/tag_registry_mutations.py"
       ],
       "shared": [
-        "analytics-app/app/frontend/analytics-shell.html",
-        "analytics-app/app/frontend/js/analytics-app.js"
+        "studio/app/frontend/studio-shell.html",
+        "studio/app/frontend/js/studio-app.js",
+        "studio/app/server/studio/studio_app_server.py",
+        "studio/app/server/studio/studio_tags_api.py"
       ],
-      "areas": []
+      "areas": [
+        "catalogue"
+      ]
     },
-    "/analytics/tag-registry/": {
-      "label": "Analytics Tag Registry",
-      "path": "/analytics/tag-registry/",
+    "/studio/tag-aliases/": {
+      "label": "Studio Tag Aliases",
+      "path": "/studio/tag-aliases/",
       "status": "inventory-only",
       "include": [
-        "analytics-app/app/frontend/routes/tag-registry.html",
-        "analytics-app/app/frontend/js/tag-registry.js",
-        "analytics-app/app/frontend/js/analytics-ui-text.js"
+        "studio/app/frontend/routes/tag-aliases.html",
+        "studio/app/frontend/js/tag-aliases*",
+        "studio/app/frontend/js/tag-ui-text.js",
+        "studio/services/tags/tag_alias_mutations.py",
+        "studio/services/tags/tag_promotion_mutations.py"
       ],
       "shared": [
-        "analytics-app/app/frontend/analytics-shell.html",
-        "analytics-app/app/frontend/js/analytics-app.js"
+        "studio/app/frontend/studio-shell.html",
+        "studio/app/frontend/js/studio-app.js",
+        "studio/app/server/studio/studio_app_server.py",
+        "studio/app/server/studio/studio_tags_api.py"
       ],
-      "areas": []
+      "areas": [
+        "catalogue"
+      ]
     },
-    "/analytics/tag-aliases/": {
-      "label": "Analytics Tag Aliases",
-      "path": "/analytics/tag-aliases/",
+    "/studio/series-tags/": {
+      "label": "Studio Series Tags",
+      "path": "/studio/series-tags/",
       "status": "inventory-only",
       "include": [
-        "analytics-app/app/frontend/routes/tag-aliases.html",
-        "analytics-app/app/frontend/js/tag-aliases.js",
-        "analytics-app/app/frontend/js/analytics-ui-text.js"
+        "studio/app/frontend/routes/series-tags.html",
+        "studio/app/frontend/js/series-tags*",
+        "studio/app/frontend/js/tag-assignments-offline*",
+        "studio/app/frontend/js/tag-ui-text.js"
       ],
       "shared": [
-        "analytics-app/app/frontend/analytics-shell.html",
-        "analytics-app/app/frontend/js/analytics-app.js"
+        "studio/app/frontend/studio-shell.html",
+        "studio/app/frontend/js/studio-app.js",
+        "studio/app/server/studio/studio_app_server.py",
+        "studio/app/server/studio/studio_tags_api.py",
+        "studio/services/tags/tag_assignment_service.py"
       ],
-      "areas": []
+      "areas": [
+        "catalogue",
+        "import-export"
+      ]
     },
-    "/analytics/series-tags/": {
-      "label": "Analytics Series Tags",
-      "path": "/analytics/series-tags/",
+    "/studio/series-tag-editor/": {
+      "label": "Studio Series Tag Editor",
+      "path": "/studio/series-tag-editor/",
       "status": "inventory-only",
       "include": [
-        "analytics-app/app/frontend/routes/series-tags.html",
-        "analytics-app/app/frontend/js/series-tags.js",
-        "analytics-app/app/frontend/js/analytics-ui-text.js"
+        "studio/app/frontend/routes/series-tag-editor.html",
+        "studio/app/frontend/js/series-tag-editor-page.js",
+        "studio/app/frontend/js/analytics-tag-editor*",
+        "studio/app/frontend/js/tag-ui-text.js"
       ],
       "shared": [
-        "analytics-app/app/frontend/analytics-shell.html",
-        "analytics-app/app/frontend/js/analytics-app.js"
+        "studio/app/frontend/studio-shell.html",
+        "studio/app/frontend/js/studio-app.js",
+        "studio/app/server/studio/studio_app_server.py",
+        "studio/app/server/studio/studio_tags_api.py",
+        "studio/services/tags/tag_assignment_service.py"
       ],
-      "areas": []
-    },
-    "/analytics/series-tag-editor/": {
-      "label": "Analytics Series Tag Editor",
-      "path": "/analytics/series-tag-editor/",
-      "status": "inventory-only",
-      "include": [
-        "analytics-app/app/frontend/routes/series-tag-editor.html",
-        "analytics-app/app/frontend/js/series-tag-editor-page.js",
-        "analytics-app/app/frontend/js/analytics-ui-text.js"
-      ],
-      "shared": [
-        "analytics-app/app/frontend/analytics-shell.html",
-        "analytics-app/app/frontend/js/analytics-app.js"
-      ],
-      "areas": []
+      "areas": [
+        "catalogue"
+      ]
     },
     "/studio/": {
       "label": "Studio Home",
