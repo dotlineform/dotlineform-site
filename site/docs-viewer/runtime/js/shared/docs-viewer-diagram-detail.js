@@ -1,4 +1,7 @@
-const PERSISTENT_DIAGRAM_SELECTOR = 'img[data-docs-viewer-diagram-kind="persistent-svg"]';
+const PERSISTENT_DIAGRAM_SELECTOR = [
+  'img[data-docs-viewer-diagram-kind="persistent-svg"]',
+  'img[data-docs-viewer-diagram-kind="themed-mermaid"]'
+].join(", ");
 const INLINE_DIAGRAM_SELECTOR = '.docsViewer__diagram[data-docs-viewer-diagram-kind="inline-mermaid"]';
 const DIAGRAM_FRAME_SELECTOR = ".docsViewer__diagramFrame";
 const DETAIL_CONTROL_LABEL = "Open diagram in new tab";
@@ -51,7 +54,8 @@ function decorateDiagramSurface(documentRef, surface, target, kind) {
 
 function decoratePersistentDiagram(documentRef, diagram) {
   var target = persistentDiagramTarget(diagram);
-  return Boolean(target && decorateDiagramSurface(documentRef, diagram, target, "persistent-svg"));
+  var kind = String(diagram.dataset ? diagram.dataset.docsViewerDiagramKind || "" : "").trim();
+  return target ? decorateDiagramSurface(documentRef, diagram, target, kind) : null;
 }
 
 function directInlineSvg(host) {
@@ -110,6 +114,7 @@ export function createDocsViewerDiagramDetailAdapter(options) {
     : defaultRevokeObjectUrl;
   var warn = typeof settings.warn === "function" ? settings.warn : defaultWarning;
   var resourcesByRoot = new WeakMap();
+  var persistentByRoot = new WeakMap();
 
   function trackResource(root, host, control, target, windowRef) {
     var resources = resourcesByRoot.get(root) || new Map();
@@ -130,12 +135,22 @@ export function createDocsViewerDiagramDetailAdapter(options) {
     }
   }
 
+  function trackPersistent(root, diagram, control) {
+    var records = persistentByRoot.get(root) || new Map();
+    records.set(diagram, {
+      control: control,
+      diagram: diagram
+    });
+    persistentByRoot.set(root, records);
+  }
+
   function releaseDocument(releaseContext) {
     var context = releaseContext || {};
     var root = context.content;
     if (!root || typeof root !== "object") return { released: 0 };
     var resources = resourcesByRoot.get(root) || new Map();
     resourcesByRoot.delete(root);
+    persistentByRoot.delete(root);
     resources.forEach(revokeResource);
     return { released: resources.size };
   }
@@ -154,13 +169,32 @@ export function createDocsViewerDiagramDetailAdapter(options) {
 
     var diagrams = Array.from(root.querySelectorAll(PERSISTENT_DIAGRAM_SELECTOR));
     var decorated = diagrams.reduce(function (count, diagram) {
-      return count + (decoratePersistentDiagram(documentRef, diagram) ? 1 : 0);
+      var decoration = decoratePersistentDiagram(documentRef, diagram);
+      if (!decoration) return count;
+      trackPersistent(root, diagram, decoration.control);
+      return count + 1;
     }, 0);
     return {
       found: diagrams.length,
       decorated: decorated,
       skipped: diagrams.length - decorated
     };
+  }
+
+  function refreshPersistentDiagram(refreshContext) {
+    var context = refreshContext || {};
+    var root = context.content;
+    var diagram = context.diagram;
+    if (!root || !diagram) return { refreshed: false, reason: "missing-context" };
+    var records = persistentByRoot.get(root);
+    var current = records ? records.get(diagram) : null;
+    if (!current || !current.control) {
+      return { refreshed: false, reason: "not-registered" };
+    }
+    var target = persistentDiagramTarget(diagram);
+    if (!target) return { refreshed: false, reason: "missing-target" };
+    current.control.setAttribute("href", target);
+    return { refreshed: true, reason: "", target: target };
   }
 
   function registerInlineDiagram(registrationContext) {
@@ -241,6 +275,7 @@ export function createDocsViewerDiagramDetailAdapter(options) {
   return {
     mountDocument: mountDocument,
     refreshInlineDiagram: refreshInlineDiagram,
+    refreshPersistentDiagram: refreshPersistentDiagram,
     registerInlineDiagram: registerInlineDiagram,
     releaseDocument: releaseDocument
   };

@@ -106,6 +106,7 @@
       "root": "docs-viewer/runtime/js",
       "manifest": [
         "public/docs-viewer-public-document-reports.js",
+        "public/docs-viewer-public-themed-diagrams.js",
         "public/docs-viewer-public.js",
         "reports/docs-viewer-public-reports.js",
         "shared/docs-viewer-access.js",

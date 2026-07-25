@@ -14,6 +14,7 @@ from playwright.sync_api import Page, sync_playwright
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DOCS_VIEWER_SHARED_RUNTIME_PREFIX = "/docs-viewer/runtime/js/shared/"
+DOCS_VIEWER_PUBLIC_RUNTIME_PREFIX = "/docs-viewer/runtime/js/public/"
 DOCS_VIEWER_REPO_RUNTIME_PREFIX = "/docs-viewer/runtime/js/"
 
 
@@ -26,6 +27,9 @@ class QuietStaticHandler(SimpleHTTPRequestHandler):
         if clean_path.startswith(DOCS_VIEWER_SHARED_RUNTIME_PREFIX):
             relative_path = clean_path.removeprefix(DOCS_VIEWER_SHARED_RUNTIME_PREFIX)
             return str(REPO_ROOT / "site/docs-viewer/runtime/js/shared" / relative_path)
+        if clean_path.startswith(DOCS_VIEWER_PUBLIC_RUNTIME_PREFIX):
+            relative_path = clean_path.removeprefix(DOCS_VIEWER_PUBLIC_RUNTIME_PREFIX)
+            return str(REPO_ROOT / "site/docs-viewer/runtime/js/public" / relative_path)
         if clean_path.startswith(DOCS_VIEWER_REPO_RUNTIME_PREFIX):
             relative_path = clean_path.removeprefix(DOCS_VIEWER_REPO_RUNTIME_PREFIX)
             return str(REPO_ROOT / "docs-viewer/runtime/js" / relative_path)
@@ -65,7 +69,13 @@ def install_fixture(page: Page) -> None:
             const diagramDetail = await import('/docs-viewer/runtime/js/shared/docs-viewer-diagram-detail.js');
             const documentController = await import('/docs-viewer/runtime/js/shared/docs-viewer-document-controller.js');
             const inlineMermaid = await import('/docs-viewer/runtime/js/management/docs-viewer-inline-mermaid.js');
-            window.__docsViewerDiagramDetailSmoke = { diagramDetail, documentController, inlineMermaid };
+            const publicThemedDiagrams = await import('/docs-viewer/runtime/js/public/docs-viewer-public-themed-diagrams.js');
+            window.__docsViewerDiagramDetailSmoke = {
+                diagramDetail,
+                documentController,
+                inlineMermaid,
+                publicThemedDiagrams
+            };
         }"""
     )
 
@@ -443,6 +453,129 @@ def assert_inline_blob_contract(page: Page) -> None:
         raise AssertionError(f"failed detail refresh displaced the current target: {result!r}")
 
 
+def assert_public_themed_diagram_contract(page: Page) -> None:
+    result = page.evaluate(
+        """() => {
+            const {
+                diagramDetail,
+                publicThemedDiagrams
+            } = window.__docsViewerDiagramDetailSmoke;
+            const content = document.createElement('article');
+            content.className = 'docsViewer__content';
+            content.innerHTML = [
+                '<img id="themed" hidden data-docs-viewer-diagram-kind="themed-mermaid" data-docs-viewer-diagram-light-src="/projection/light.svg" data-docs-viewer-diagram-dark-src="/projection/dark.svg" alt="Theme flow" title="Theme flow" aria-describedby="theme-description">',
+                '<span class="visually-hidden" id="theme-description">The active public theme selects one diagram.</span>',
+                '<img id="fixed" data-docs-viewer-diagram-kind="persistent-svg" src="/projection/fixed.svg" alt="Fixed diagram">',
+                '<img id="incomplete" hidden data-docs-viewer-diagram-kind="themed-mermaid" data-docs-viewer-diagram-light-src="/projection/incomplete-light.svg" alt="Incomplete diagram">'
+            ].join('');
+            document.body.appendChild(content);
+
+            const detailAdapter = diagramDetail.createDocsViewerDiagramDetailAdapter();
+            const themedAdapter = publicThemedDiagrams.createDocsViewerPublicThemedDiagramAdapter({
+                diagramDetailAdapter: detailAdapter
+            });
+            document.documentElement.setAttribute('data-theme', 'light');
+            const mounted = themedAdapter.mountDocument({ content, document, window });
+            const initialThemed = content.querySelector('#themed');
+            const initialFixed = content.querySelector('#fixed');
+            const incomplete = content.querySelector('#incomplete');
+            const srcBeforeDetail = initialThemed.getAttribute('src');
+            const detailMounted = detailAdapter.mountDocument({ content, document, window });
+            const controls = Array.from(content.querySelectorAll('.docsViewer__diagramDetailControl'));
+            const themedControl = controls.find(control =>
+                control.dataset.docsViewerDiagramDetailKind === 'themed-mermaid'
+            );
+            const fixedControl = controls.find(control =>
+                control.dataset.docsViewerDiagramDetailKind === 'persistent-svg'
+            );
+            const lightState = {
+                imageSrc: initialThemed.getAttribute('src'),
+                imageHidden: initialThemed.hasAttribute('hidden'),
+                detailHref: themedControl?.getAttribute('href'),
+                fixedSrc: initialFixed.getAttribute('src'),
+                fixedHref: fixedControl?.getAttribute('href')
+            };
+            const connection = publicThemedDiagrams.connectDocsViewerPublicThemeOwner({
+                adapter: themedAdapter,
+                document
+            });
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.dispatchEvent(new CustomEvent('dlf:theme-applied', {
+                detail: { theme: 'dark' }
+            }));
+            const darkState = {
+                imageSrc: initialThemed.getAttribute('src'),
+                imageCount: content.querySelectorAll('img[data-docs-viewer-diagram-kind="themed-mermaid"]').length,
+                frameCount: content.querySelectorAll('.docsViewer__diagramFrame').length,
+                viewportCount: content.querySelectorAll('.docsViewer__diagramViewport').length,
+                controlCount: controls.length,
+                detailHref: themedControl?.getAttribute('href'),
+                fixedSrc: initialFixed.getAttribute('src'),
+                fixedHref: fixedControl?.getAttribute('href'),
+                description: document.getElementById('theme-description')?.textContent
+            };
+            connection.release();
+            const released = themedAdapter.releaseDocument({ content });
+            const afterRelease = themedAdapter.handleThemeChange('light');
+            return {
+                mounted,
+                srcBeforeDetail,
+                detailMounted,
+                lightState,
+                themeOwnerConnected: connection.connected,
+                darkState,
+                incompleteHidden: incomplete.hasAttribute('hidden'),
+                incompleteSrc: incomplete.getAttribute('src'),
+                released,
+                afterRelease,
+                themedSrcAfterRelease: initialThemed.getAttribute('src')
+            };
+        }"""
+    )
+
+    if result["mounted"] != {
+        "found": 2,
+        "registered": 1,
+        "skipped": 1,
+        "theme": "light",
+    }:
+        raise AssertionError(f"public themed diagram registration changed: {result!r}")
+    if result["srcBeforeDetail"] != "/projection/light.svg":
+        raise AssertionError(f"initial theme was not selected before detail mount: {result!r}")
+    if result["detailMounted"] != {"found": 3, "decorated": 2, "skipped": 1}:
+        raise AssertionError(f"themed and fixed diagram detail eligibility changed: {result!r}")
+    if result["lightState"] != {
+        "imageSrc": "/projection/light.svg",
+        "imageHidden": False,
+        "detailHref": "/projection/light.svg",
+        "fixedSrc": "/projection/fixed.svg",
+        "fixedHref": "/projection/fixed.svg",
+    }:
+        raise AssertionError(f"initial image and detail target disagree: {result!r}")
+    if result["themeOwnerConnected"] is not True:
+        raise AssertionError(f"public theme owner did not connect to the adapter: {result!r}")
+    if result["darkState"] != {
+        "imageSrc": "/projection/dark.svg",
+        "imageCount": 2,
+        "frameCount": 2,
+        "viewportCount": 2,
+        "controlCount": 2,
+        "detailHref": "/projection/dark.svg",
+        "fixedSrc": "/projection/fixed.svg",
+        "fixedHref": "/projection/fixed.svg",
+        "description": "The active public theme selects one diagram.",
+    }:
+        raise AssertionError(f"theme switch changed diagram shape or fixed SVG behavior: {result!r}")
+    if not result["incompleteHidden"] or result["incompleteSrc"] is not None:
+        raise AssertionError(f"incomplete public pair was exposed: {result!r}")
+    if (
+        result["released"] != {"released": 1}
+        or result["afterRelease"] != {"theme": "light", "updated": 0}
+        or result["themedSrcAfterRelease"] != "/projection/dark.svg"
+    ):
+        raise AssertionError(f"released themed diagram remained registered: {result!r}")
+
+
 def assert_inline_mermaid_registration_contract(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -538,7 +671,7 @@ def assert_document_controller_mount_contract(page: Page) -> None:
         """() => {
             const { documentController } = window.__docsViewerDiagramDetailSmoke;
 
-            function exercise(scopeId, scopeType, includeInlineAdapter) {
+            function exercise(scopeId, scopeType, includeInlineAdapter, includeThemedAdapter) {
                 const content = document.createElement('article');
                 const order = [];
                 let detailMount = null;
@@ -571,6 +704,19 @@ def assert_document_controller_mount_contract(page: Page) -> None:
                             inlineReceivedDetail = context.diagramDetailAdapter === detailAdapter;
                         }
                     } : null,
+                    themedDiagramAdapter: includeThemedAdapter ? {
+                        releaseDocument() {
+                            order.push('themed-release');
+                        },
+                        mountDocument(context) {
+                            order.push('themed');
+                            const diagram = context.content.querySelector(
+                                '[data-docs-viewer-diagram-kind="themed-mermaid"]'
+                            );
+                            diagram.setAttribute('src', diagram.dataset.docsViewerDiagramLightSrc);
+                            diagram.removeAttribute('hidden');
+                        }
+                    } : null,
                     mountDocumentExtras: () => order.push('extras'),
                     viewerScope: () => scopeId,
                     scopeConfig: {
@@ -590,7 +736,9 @@ def assert_document_controller_mount_contract(page: Page) -> None:
                     renderSidebar: () => {},
                     statusCommands: { setStatus: () => {} }
                 });
-                const html = '<p><img data-docs-viewer-diagram-kind="persistent-svg" src="/diagram.svg" alt="Diagram"></p>';
+                const html = includeThemedAdapter
+                    ? '<img hidden data-docs-viewer-diagram-kind="themed-mermaid" data-docs-viewer-diagram-light-src="/diagram-light.svg" data-docs-viewer-diagram-dark-src="/diagram-dark.svg" alt="Diagram">'
+                    : '<p><img data-docs-viewer-diagram-kind="persistent-svg" src="/diagram.svg" alt="Diagram"></p>';
                 controller.renderPayload({ doc_id: scopeId, title: scopeId }, { content_html: html }, '');
                 controller.renderDocLoadingState({ doc_id: scopeId, title: scopeId });
                 return {
@@ -603,9 +751,9 @@ def assert_document_controller_mount_contract(page: Page) -> None:
             }
 
             return {
-                local: exercise('studio', 'local', true),
-                external: exercise('notes', 'local_external', true),
-                publicScope: exercise('library', 'public', false)
+                local: exercise('studio', 'local', true, false),
+                external: exercise('notes', 'local_external', true, false),
+                publicScope: exercise('library', 'public', false, true)
             };
         }"""
     )
@@ -634,10 +782,18 @@ def assert_document_controller_mount_contract(page: Page) -> None:
         record = result[key]
         if record["scopeType"] != scope_type or record["viewerScope"] != scope_id:
             raise AssertionError(f"diagram detail scope context changed: {result!r}")
-        if 'data-docs-viewer-diagram-kind="persistent-svg"' not in record["htmlAtMount"]:
+        if 'data-docs-viewer-diagram-kind="' not in record["htmlAtMount"]:
             raise AssertionError(f"detail adapter ran before generated HTML mounted: {result!r}")
-    if result["publicScope"]["order"] != ["release", "detail", "extras", "release"]:
-        raise AssertionError(f"public reader acquired inline Mermaid: {result!r}")
+    if result["publicScope"]["order"] != [
+        "themed-release",
+        "release",
+        "themed",
+        "detail",
+        "extras",
+        "themed-release",
+        "release",
+    ]:
+        raise AssertionError(f"public themed diagram lifecycle order changed: {result!r}")
 
 
 def run_smoke(page: Page, base_url: str) -> None:
@@ -645,6 +801,7 @@ def run_smoke(page: Page, base_url: str) -> None:
     install_fixture(page)
     assert_persistent_adapter_contract(page)
     assert_inline_blob_contract(page)
+    assert_public_themed_diagram_contract(page)
     assert_inline_mermaid_registration_contract(page)
     assert_document_controller_mount_contract(page)
 

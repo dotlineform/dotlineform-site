@@ -90,6 +90,18 @@ export function initDocsViewerDocumentController(context) {
         console.warn("docs_viewer: inline Mermaid registry cleanup unavailable", error);
       }
     }
+    var themedAdapter = context.themedDiagramAdapter;
+    if (themedAdapter && typeof themedAdapter.releaseDocument === "function") {
+      try {
+        themedAdapter.releaseDocument({
+          content: content,
+          document: content ? content.ownerDocument : null,
+          window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+        });
+      } catch (error) {
+        console.warn("docs_viewer: themed diagram registry cleanup unavailable", error);
+      }
+    }
     var adapter = context.diagramDetailAdapter;
     if (!adapter || typeof adapter.releaseDocument !== "function") return;
     try {
@@ -100,6 +112,24 @@ export function initDocsViewerDocumentController(context) {
       });
     } catch (error) {
       console.warn("docs_viewer: diagram detail resource cleanup unavailable", error);
+    }
+  }
+
+  function mountThemedDiagrams(doc, payload) {
+    var adapter = context.themedDiagramAdapter;
+    if (!adapter || typeof adapter.mountDocument !== "function") return;
+    try {
+      adapter.mountDocument({
+        content: content,
+        doc: doc,
+        document: content ? content.ownerDocument : null,
+        payload: payload,
+        scopeType: currentScopeType(),
+        viewerScope: currentViewerScope(),
+        window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+      });
+    } catch (error) {
+      console.warn("docs_viewer: themed diagram adapter unavailable", error);
     }
   }
 
@@ -206,6 +236,7 @@ export function initDocsViewerDocumentController(context) {
     context.renderMeta(doc);
     releaseDiagramDetails();
     content.innerHTML = payload.content_html || "";
+    mountThemedDiagrams(doc, payload);
     mountDiagramDetails(doc, payload);
     mountInlineMermaid(doc, payload, mountGeneration);
     mountDocumentExtras(doc, payload);

@@ -199,6 +199,7 @@ export function resolveDocsViewerAppBootContext(options) {
         infoPanelDefaultViewByDocumentMode: settings.infoPanelDefaultViewByDocumentMode,
         inlineMermaidAdapter: settings.inlineMermaidAdapter,
         mountDocumentExtras: settings.mountDocumentExtras,
+        themedDiagramAdapter: settings.themedDiagramAdapter,
         appShellReady: Promise.resolve(appShellResult),
         appShellResult: appShellResult,
         appShellRefs: getDocsViewerAppShellRefs({

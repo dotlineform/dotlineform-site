@@ -330,6 +330,7 @@ export function startDocsViewerRuntime(options) {
     statusCommands: {
       setStatus: statusController.setStatus
     },
+    themedDiagramAdapter: settings.themedDiagramAdapter,
     toolbar: mainViewToolbar,
     viewerScope: function () { return viewerScope; },
     viewerUrlForScope: viewerUrlForScope

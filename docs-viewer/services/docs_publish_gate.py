@@ -21,6 +21,12 @@ from docs_scope_config import (
     resolve_location_path,
     resolve_scope_path,
 )
+from docs_public_mermaid_payload import (
+    load_prepared_public_mermaid_projection,
+    project_public_mermaid_payload,
+    public_mermaid_payload_requires_projection,
+    public_mermaid_variant_files,
+)
 
 
 PUBLISH_SCHEMA_VERSION = "docs_publish_gate_v1"
@@ -256,6 +262,7 @@ def publishable_docs_files(
     working_root: Path,
     published_root: Path,
     *,
+    projection_scope: str = "",
     require_publication_recent: bool = False,
 ) -> dict[Path, bytes]:
     index_tree_path = working_root / "index-tree.json"
@@ -265,6 +272,11 @@ def publishable_docs_files(
     publication_recent_path = working_root / ".publish/recent.json"
     if require_publication_recent and not publication_recent_path.is_file():
         raise FileNotFoundError(f"working publication Recent projection not found: {publication_recent_path}")
+    mermaid_projection = load_prepared_public_mermaid_projection(
+        working_root,
+        scope=projection_scope,
+    )
+    used_mermaid_projection_ids: set[str] = set()
 
     files: dict[Path, bytes] = {}
     reference_target_payloads: dict[Path, dict[str, Any]] = {}
@@ -302,8 +314,33 @@ def publishable_docs_files(
             files[relative_path] = json_bytes(payload)
             reference_target_payloads[relative_path] = payload
             continue
+        if by_id_doc_id:
+            payload = read_json(source_path)
+            records = mermaid_projection.records_by_doc_id.get(by_id_doc_id, ())
+            if records or public_mermaid_payload_requires_projection(payload):
+                payload, used_projection_ids = project_public_mermaid_payload(
+                    payload,
+                    doc_id=by_id_doc_id,
+                    records=records,
+                )
+                used_mermaid_projection_ids.update(used_projection_ids)
+                files[relative_path] = json_bytes(payload)
+            else:
+                files[relative_path] = source_path.read_bytes()
+            continue
         files[relative_path] = source_path.read_bytes()
 
+    mermaid_variant_files = public_mermaid_variant_files(
+        mermaid_projection,
+        used_projection_ids=frozenset(used_mermaid_projection_ids),
+    )
+    collisions = sorted(set(files) & set(mermaid_variant_files))
+    if collisions:
+        raise RuntimeError(
+            "public Mermaid projection refuses existing public file identities: "
+            + ", ".join(path.as_posix() for path in collisions)
+        )
+    files.update(mermaid_variant_files)
     if references_index_payload is not None:
         payload = public_references_index_payload(
             references_index_payload,
@@ -352,7 +389,12 @@ def publishable_parent_docs_files(
     working_root: Path,
     published_root: Path,
 ) -> dict[Path, bytes]:
-    files = publishable_docs_files(working_root, published_root, require_publication_recent=True)
+    files = publishable_docs_files(
+        working_root,
+        published_root,
+        projection_scope=config.scope_id,
+        require_publication_recent=True,
+    )
     excluded_prefixes = sub_scope_relative_prefixes(repo_root, config, working_root) + media_relative_prefixes(
         repo_root,
         config,
@@ -421,10 +463,20 @@ def parent_docs_diff(repo_root: Path, config: DocsScopeConfig, working_root: Pat
 
 def sub_scope_docs_diff(
     repo_root: Path,
+    scope: str,
     sub_scope: DocsSubScopeConfig,
     paths: dict[str, Path],
 ) -> dict[str, Any]:
-    diff = docs_diff(repo_root, paths["working_docs_root"], paths["published_docs_root"])
+    diff = docs_diff(
+        repo_root,
+        paths["working_docs_root"],
+        paths["published_docs_root"],
+        publishable_files=publishable_docs_files(
+            paths["working_docs_root"],
+            paths["published_docs_root"].relative_to(repo_root.resolve()),
+            projection_scope=f"{scope}/{sub_scope.sub_scope}",
+        ),
+    )
     return {
         "sub_scope": sub_scope.sub_scope,
         "changed": diff["changed"],
@@ -446,7 +498,7 @@ def publish_status(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     sub_scope_paths = validate_sub_scope_publish_paths(repo_root, config)
     docs = parent_docs_diff(repo_root, config, paths["working_docs_root"], paths["published_docs_root"])
     sub_scopes = [
-        sub_scope_docs_diff(repo_root, sub_scope, sub_scope_paths[sub_scope.sub_scope])
+        sub_scope_docs_diff(repo_root, scope, sub_scope, sub_scope_paths[sub_scope.sub_scope])
         for sub_scope in config.sub_scopes
     ]
     search = search_diff(repo_root, paths["working_search_index"], paths["published_search_index"])
@@ -545,7 +597,16 @@ def publish_apply(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     )
     for sub_scope in config.sub_scopes:
         sub_paths = sub_scope_paths[sub_scope.sub_scope]
-        copy_tree(repo_root, sub_paths["working_docs_root"], sub_paths["published_docs_root"])
+        copy_tree(
+            repo_root,
+            sub_paths["working_docs_root"],
+            sub_paths["published_docs_root"],
+            publishable_files=publishable_docs_files(
+                sub_paths["working_docs_root"],
+                sub_paths["published_docs_root"].relative_to(repo_root.resolve()),
+                projection_scope=f"{config.scope_id}/{sub_scope.sub_scope}",
+            ),
+        )
     copy_file_atomic(paths["working_search_index"], paths["published_search_index"])
     payload["operation"] = "apply"
     payload["applied"] = True

@@ -7,7 +7,7 @@
       "doc_id": "d-20260724-190603-0d87a0",
       "title": "Public Mermaid Projection Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260724-190603-0d87a0.json",
-      "timestamp": "2026-07-25 13:51:16",
+      "timestamp": "2026-07-25 14:14:31",
       "parent_id": "d-20260724-190603-860f64",
       "parent_title": "Mermaid Authoring And Publication"
     },
@@ -82,5 +82,5 @@
       "parent_title": "Docs Viewer Core Refactor"
     }
   ],
-  "generated_at": "2026-07-25T12:51:33Z"
+  "generated_at": "2026-07-25T13:14:56Z"
 }

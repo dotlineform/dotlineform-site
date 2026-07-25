@@ -43,6 +43,10 @@ def assert_theme_toggle(page: Page, base_url: str, viewport: dict[str, int]) -> 
             const footerToggle = document.querySelector(".site-footer #themeToggle");
             const lightIcon = button?.querySelector('[data-theme-icon="light"]');
             const darkIcon = button?.querySelector('[data-theme-icon="dark"]');
+            window.__publicThemeApplied = [];
+            document.addEventListener("dlf:theme-applied", event => {
+                window.__publicThemeApplied.push(event.detail?.theme || "");
+            });
             return {
                 buttonCount: document.querySelectorAll("#themeToggle").length,
                 footerToggle: Boolean(footerToggle),
@@ -83,7 +87,8 @@ def assert_theme_toggle(page: Page, base_url: str, viewport: dict[str, int]) -> 
                 pressed: button?.getAttribute("aria-pressed") || "",
                 label: button?.getAttribute("aria-label") || "",
                 lightHidden: lightIcon ? lightIcon.hasAttribute("hidden") : null,
-                darkHidden: darkIcon ? darkIcon.hasAttribute("hidden") : null
+                darkHidden: darkIcon ? darkIcon.hasAttribute("hidden") : null,
+                appliedThemes: window.__publicThemeApplied.slice()
             };
         }"""
     )
@@ -94,6 +99,7 @@ def assert_theme_toggle(page: Page, base_url: str, viewport: dict[str, int]) -> 
         "label": "Switch to light mode",
         "lightHidden": True,
         "darkHidden": False,
+        "appliedThemes": ["dark"],
     }:
         raise AssertionError(f"unexpected public theme toggle dark state: {dark_state!r}")
 
@@ -101,10 +107,15 @@ def assert_theme_toggle(page: Page, base_url: str, viewport: dict[str, int]) -> 
     final_state = page.evaluate(
         """() => ({
             theme: document.documentElement.getAttribute("data-theme"),
-            storedTheme: window.localStorage.getItem("theme")
+            storedTheme: window.localStorage.getItem("theme"),
+            appliedThemes: window.__publicThemeApplied.slice()
         })"""
     )
-    if final_state != {"theme": "light", "storedTheme": "light"}:
+    if final_state != {
+        "theme": "light",
+        "storedTheme": "light",
+        "appliedThemes": ["dark", "light"],
+    }:
         raise AssertionError(f"public theme toggle did not return to light state: {final_state!r}")
     return {"width": viewport["width"], "height": viewport["height"]}
 

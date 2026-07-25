@@ -4,6 +4,7 @@
 
   var LIGHT_THEME = 'light';
   var DARK_THEME = 'dark';
+  var THEME_APPLIED_EVENT = 'dlf:theme-applied';
 
   function normalizeTheme(theme) {
     return theme === DARK_THEME ? DARK_THEME : LIGHT_THEME;
@@ -31,6 +32,11 @@
         icon.setAttribute('hidden', '');
       }
     });
+    if (typeof CustomEvent === 'function') {
+      document.dispatchEvent(new CustomEvent(THEME_APPLIED_EVENT, {
+        detail: { theme: activeTheme }
+      }));
+    }
   }
 
   function nextTheme(theme) {

@@ -250,6 +250,19 @@ def _validated_previous_records(
     return tuple(sorted(records, key=lambda item: item["projection_id"]))
 
 
+def validate_public_mermaid_manifest(
+    manifest: Mapping[str, Any],
+    *,
+    scope: str,
+) -> tuple[dict[str, Any], ...]:
+    """Validate and normalize one prepared public projection manifest."""
+
+    normalized_scope = str(scope or "").strip().lower()
+    if not normalized_scope:
+        raise ValueError("public Mermaid projection manifest scope is required")
+    return _validated_previous_records(manifest, scope=normalized_scope)
+
+
 def plan_public_mermaid_projection(
     *,
     scope: str,
@@ -384,4 +397,5 @@ __all__ = [
     "public_mermaid_projection_id",
     "public_mermaid_projection_report",
     "public_mermaid_variant_identity",
+    "validate_public_mermaid_manifest",
 ]
