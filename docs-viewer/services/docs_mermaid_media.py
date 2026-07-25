@@ -4,24 +4,22 @@ import subprocess
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable, Iterable, Protocol, Sequence
-
-from lxml import etree
+from typing import Iterable, Protocol, Sequence
 
 from docs_artifact_locations import ArtifactLocationAdapter, ArtifactStat, normalize_artifact_identity
-from docs_mermaid_accessibility import mermaid_accessibility_metadata
-from docs_svg_sanitizer import SanitizedSvg, sanitize_svg_bytes
-
-
-MERMAID_TOOLCHAIN_ROOT = Path(__file__).resolve().parents[1] / "build" / "mermaid"
-MERMAID_EXECUTABLE_RELATIVE_PATH = Path("node_modules/.bin/mmdc")
-MERMAID_CONFIG_FILENAME = "mermaid-config.json"
-MERMAID_BACKGROUND = "white"
-MERMAID_VIEWPORT_WIDTH = 1200
-MERMAID_VIEWPORT_HEIGHT = 800
-VISIBLE_SVG_ELEMENTS = frozenset(
-    {"circle", "ellipse", "image", "line", "path", "polygon", "polyline", "rect", "text", "use"}
+from docs_mermaid_renderer import (
+    MERMAID_CONFIG_FILENAME,
+    MERMAID_EXECUTABLE_RELATIVE_PATH,
+    MERMAID_TOOLCHAIN_ROOT,
+    MERMAID_VIEWPORT_HEIGHT,
+    MERMAID_VIEWPORT_WIDTH,
+    CommandRunner,
+    mermaid_toolchain_paths,
+    render_mermaid_path,
 )
+
+
+MERMAID_BACKGROUND = "white"
 
 
 class MermaidBuildContext(Protocol):
@@ -30,9 +28,6 @@ class MermaidBuildContext(Protocol):
     write: bool
     requested_published_identities: tuple[str, ...] | None
     replace_existing: bool
-
-
-CommandRunner = Callable[..., subprocess.CompletedProcess[str]]
 
 
 @dataclass(frozen=True)
@@ -59,68 +54,6 @@ def plan_mermaid_media(source_inventory: Iterable[ArtifactStat]) -> tuple[Mermai
     return tuple(plans)
 
 
-def _local_name(value: str) -> str:
-    return etree.QName(value).localname.lower()
-
-
-def _validate_sanitized_svg(identity: str, sanitized: SanitizedSvg) -> None:
-    try:
-        root = etree.fromstring(sanitized.bytes)
-    except etree.XMLSyntaxError as exc:  # pragma: no cover - shared sanitizer already parses this
-        raise RuntimeError(f"Sanitized Mermaid SVG for {identity!r} is not well-formed") from exc
-
-    view_box = str(root.get("viewBox") or "").split()
-    try:
-        view_box_values = [float(value) for value in view_box]
-    except ValueError as exc:
-        raise RuntimeError(f"Sanitized Mermaid SVG for {identity!r} has an invalid viewBox") from exc
-    if len(view_box_values) != 4 or view_box_values[2] <= 0 or view_box_values[3] <= 0:
-        raise RuntimeError(f"Sanitized Mermaid SVG for {identity!r} requires a responsive viewBox")
-
-    descriptions = [
-        " ".join("".join(element.itertext()).split())
-        for element in root.iter()
-        if isinstance(element.tag, str) and _local_name(element.tag) == "desc"
-    ]
-    if not sanitized.title or not any(descriptions):
-        raise RuntimeError(f"Sanitized Mermaid SVG for {identity!r} lost required accessibility metadata")
-    if not any(
-        isinstance(element.tag, str) and _local_name(element.tag) in VISIBLE_SVG_ELEMENTS
-        for element in root.iter()
-    ):
-        raise RuntimeError(f"Sanitized Mermaid SVG for {identity!r} contains no visible diagram content")
-
-
-def _toolchain_paths(toolchain_root: Path) -> tuple[Path, Path]:
-    executable = toolchain_root / MERMAID_EXECUTABLE_RELATIVE_PATH
-    config = toolchain_root / MERMAID_CONFIG_FILENAME
-    if not executable.is_file():
-        raise RuntimeError(
-            "Mermaid CLI is not installed; run npm install in docs-viewer/build/mermaid"
-        )
-    if not config.is_file():
-        raise RuntimeError(f"Mermaid render config is missing: {config}")
-    return executable, config
-
-
-def _render_command(executable: Path, config: Path, source: Path, output: Path) -> list[str]:
-    return [
-        str(executable),
-        "--input",
-        str(source),
-        "--output",
-        str(output),
-        "--configFile",
-        str(config),
-        "--backgroundColor",
-        MERMAID_BACKGROUND,
-        "--width",
-        str(MERMAID_VIEWPORT_WIDTH),
-        "--height",
-        str(MERMAID_VIEWPORT_HEIGHT),
-    ]
-
-
 def _render_one(
     plan: MermaidMediaPlan,
     *,
@@ -131,35 +64,15 @@ def _render_one(
     run_command: CommandRunner,
 ) -> bytes:
     with source.stage_local(plan.source_identity) as source_path:
-        try:
-            source_text = source_path.read_text(encoding="utf-8")
-        except UnicodeDecodeError as exc:
-            raise ValueError(f"Mermaid source {plan.source_identity!r} must be UTF-8 text") from exc
-        mermaid_accessibility_metadata(plan.source_identity, source_text)
-        try:
-            completed = run_command(
-                _render_command(executable, config, source_path, output_path),
-                capture_output=True,
-                text=True,
-                check=False,
-            )
-        except OSError as exc:
-            raise RuntimeError(
-                f"Mermaid renderer could not start for {plan.source_identity!r}: {exc}"
-            ) from exc
-    if completed.returncode != 0:
-        detail = " ".join((completed.stderr or completed.stdout or "").split())
-        suffix = f": {detail}" if detail else ""
-        raise RuntimeError(f"Mermaid renderer failed for {plan.source_identity!r}{suffix}")
-    if not output_path.is_file():
-        raise RuntimeError(f"Mermaid renderer produced no SVG for {plan.source_identity!r}")
-
-    try:
-        sanitized = sanitize_svg_bytes(output_path.read_bytes())
-    except ValueError as exc:
-        raise RuntimeError(f"Mermaid renderer produced invalid SVG for {plan.source_identity!r}: {exc}") from exc
-    _validate_sanitized_svg(plan.source_identity, sanitized)
-    return sanitized.bytes
+        return render_mermaid_path(
+            plan.source_identity,
+            source_path,
+            executable=executable,
+            config=config,
+            background=MERMAID_BACKGROUND,
+            output_path=output_path,
+            run_command=run_command,
+        ).bytes
 
 
 def _publish_outputs(
@@ -212,7 +125,7 @@ def produce_mermaid_svg(
     if not context.write or not plans:
         return output_identities
 
-    executable, config = _toolchain_paths(toolchain_root)
+    executable, config = mermaid_toolchain_paths(toolchain_root)
     with tempfile.TemporaryDirectory(prefix="docs-mermaid-render-") as temporary_directory:
         temporary_root = Path(temporary_directory)
         rendered = [

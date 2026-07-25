@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from dataclasses import dataclass
 import json
 from pathlib import Path
 import sys
@@ -17,13 +18,23 @@ if __name__ == "__main__":
 from docs_builder.common import is_public_readonly_scope, load_docs_scope_configs
 from docs_builder.pipeline import DocsDataBuilder
 from docs_builder.sub_scope import SubScopeDocsBuilder, selected_sub_scope
+from docs_artifact_locations import ArtifactLocation
 from docs_public_mermaid_projection import (
     plan_public_mermaid_projection,
     public_mermaid_projection_report,
 )
 
 
-MANIFEST_FILENAME = "public-mermaid-projection-manifest.json"
+MANIFEST_FILENAME = "manifest.json"
+PREPARED_PROJECTION_RELATIVE_PATH = Path(".publish/public-mermaid-projection")
+
+
+@dataclass(frozen=True)
+class ProjectionPlanningContext:
+    plan: dict[str, Any]
+    manifest_path: Path
+    prepared_location: ArtifactLocation
+    previous_manifest: dict[str, Any] | None
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
@@ -53,12 +64,12 @@ def _read_previous_manifest(path: Path) -> dict[str, Any] | None:
     return payload
 
 
-def build_projection_plan(
+def load_projection_planning_context(
     repo_root: Path,
     *,
     scope_id: str,
     sub_scope_id: str = "",
-) -> tuple[dict[str, Any], Path]:
+) -> ProjectionPlanningContext:
     normalized_scope = str(scope_id or "").strip().lower()
     configs = load_docs_scope_configs(repo_root, scope_ids=[normalized_scope])
     config = configs.get(normalized_scope)
@@ -83,6 +94,7 @@ def build_projection_plan(
             sub_scope=sub_scope,
         )
         manifest_scope = f"{normalized_scope}/{normalized_sub_scope}"
+        published_documents_location = sub_scope.published.documents.location
     else:
         if config.public_projection is None:
             raise ValueError(f"scope {normalized_scope!r} has no public projection")
@@ -92,19 +104,48 @@ def build_projection_plan(
             skip_media_builds=True,
         )
         manifest_scope = normalized_scope
+        published_documents_location = config.published.documents.location
 
     docs = builder.load_docs()
     builder.validate_canonical_doc_ids(docs)
     builder.validate_docs(docs)
     eligible_docs = docs if normalized_sub_scope else builder.public_recent_docs(docs)
-    manifest_path = builder.output_dir / ".publish" / MANIFEST_FILENAME
+    prepared_location = ArtifactLocation(
+        provider=published_documents_location.provider,
+        path=published_documents_location.path / PREPARED_PROJECTION_RELATIVE_PATH,
+    )
+    manifest_path = (
+        builder.output_dir
+        / PREPARED_PROJECTION_RELATIVE_PATH
+        / MANIFEST_FILENAME
+    )
+    previous_manifest = _read_previous_manifest(manifest_path)
     plan = plan_public_mermaid_projection(
         scope=manifest_scope,
         documents=((doc.doc_id, doc.body_markdown) for doc in eligible_docs),
         public_url_prefix=builder.output_url_base,
-        previous_manifest=_read_previous_manifest(manifest_path),
+        previous_manifest=previous_manifest,
     )
-    return plan, manifest_path
+    return ProjectionPlanningContext(
+        plan=plan,
+        manifest_path=manifest_path,
+        prepared_location=prepared_location,
+        previous_manifest=previous_manifest,
+    )
+
+
+def build_projection_plan(
+    repo_root: Path,
+    *,
+    scope_id: str,
+    sub_scope_id: str = "",
+) -> tuple[dict[str, Any], Path]:
+    context = load_projection_planning_context(
+        repo_root,
+        scope_id=scope_id,
+        sub_scope_id=sub_scope_id,
+    )
+    return context.plan, context.manifest_path
 
 
 def print_human_report(plan: dict[str, Any], manifest_path: Path, repo_root: Path) -> None:

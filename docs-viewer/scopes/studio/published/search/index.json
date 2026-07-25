@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c62f7b20ecf5edc902641826b3476317",
-    "generated_at_utc": "2026-07-25T12:36:23Z",
+    "version": "blake2b-1ce609495a6b480e7a0b0f14fc853c19",
+    "generated_at_utc": "2026-07-25T12:51:34Z",
     "count": 241
   },
   "entries": [
@@ -3898,10 +3898,10 @@
       "kind": "doc",
       "title": "Public Mermaid Projection Delivery",
       "href": "/docs/?scope=studio&doc=d-20260724-190603-0d87a0",
-      "last_updated": "2026-07-25 13:36:08",
+      "last_updated": "2026-07-25 13:51:16",
       "parent_id": "d-20260724-190603-860f64",
       "parent_title": "Mermaid Authoring And Publication",
-      "display_meta": "2026-07-25 13:36:08 • Mermaid Authoring And Publication",
+      "display_meta": "2026-07-25 13:51:16 • Mermaid Authoring And Publication",
       "search_terms": [
         "public mermaid projection delivery",
         "public",
@@ -3912,16 +3912,16 @@
         "authoring",
         "and",
         "publication",
-        "2026-07-25 13:36:08",
+        "2026-07-25 13:51:16",
         "2026",
         "07",
         "25",
         "13",
-        "36",
-        "08",
+        "51",
+        "16",
         "d-20260724-190603-0d87a0"
       ],
-      "search_text": "public mermaid projection delivery public mermaid projection delivery mermaid authoring and publication authoring and publication 2026-07-25 13:36:08 2026 07 25 13 36 08 d-20260724-190603-0d87a0"
+      "search_text": "public mermaid projection delivery public mermaid projection delivery mermaid authoring and publication authoring and publication 2026-07-25 13:51:16 2026 07 25 13 51 16 d-20260724-190603-0d87a0"
     },
     {
       "id": "d-20260715-092247-4b7382",
