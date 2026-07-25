@@ -84,24 +84,26 @@
       "owner_doc": "data-models-catalogue"
     },
     {
-      "id": "analytics_tag_source_data",
+      "id": "studio_tag_management_source",
       "classification": "canonical_source",
       "repo_paths": [
-        "analytics-app/data/canonical/tag-registry.json",
-        "analytics-app/data/canonical/tag-aliases.json",
-        "analytics-app/data/canonical/tag-assignments.json",
-        "analytics-app/data/canonical/tag-groups.json"
+        "studio/data/canonical/tags/tag-registry.json",
+        "studio/data/canonical/tags/tag-aliases.json",
+        "studio/data/canonical/tags/tag-assignments.json",
+        "studio/data/canonical/tags/tag-groups.json",
+        "studio/data/config/tags/tag-management.json"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
-          "analytics-app/data/canonical/tag-registry.json",
-          "analytics-app/data/canonical/tag-aliases.json",
-          "analytics-app/data/canonical/tag-assignments.json",
-          "analytics-app/data/canonical/tag-groups.json"
+          "studio/data/canonical/tags/tag-registry.json",
+          "studio/data/canonical/tags/tag-aliases.json",
+          "studio/data/canonical/tags/tag-assignments.json",
+          "studio/data/canonical/tags/tag-groups.json",
+          "studio/data/config/tags/tag-management.json"
         ]
       },
-      "owner_doc": "analytics"
+      "owner_doc": "tag-source-data"
     },
     {
       "id": "studio_config_and_route_ui",

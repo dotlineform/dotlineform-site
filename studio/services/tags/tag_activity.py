@@ -7,12 +7,12 @@ import datetime as dt
 from pathlib import Path
 from typing import Any, Callable, Dict, Mapping, Optional
 
-from tag_services import tag_routes as routes
+from tags import tag_routes as routes
 from studio_activity import normalize_activity_context_from_contract, studio_activity_entry
 
 
 SCRIPT_PURPOSE_SAVE_TAG_DATA = "save-tag-data"
-STUDIO_ANALYTICS_LOG_REL_PATH = Path("var/studio/logs/studio_analytics_api.log")
+STUDIO_TAGS_LOG_REL_PATH = Path("var/studio/logs/studio_tags_api.log")
 
 ACTIVITY_WRITE_ENDPOINTS = (
     routes.SAVE_TAGS_PATH,
@@ -115,7 +115,7 @@ def attach_tag_activity(
                 status=status,
                 record_groups=tag_activity_record_groups(activity_context, record_groups),
                 detail_items=detail_items or [str(response_payload.get("summary_text") or "Updated tag data.")],
-                source_refs=[{"kind": "log", "path": str(STUDIO_ANALYTICS_LOG_REL_PATH)}],
+                source_refs=[{"kind": "log", "path": str(STUDIO_TAGS_LOG_REL_PATH)}],
                 activity_id_suffix=activity_id_suffix,
             )
         )

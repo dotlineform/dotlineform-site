@@ -10,9 +10,6 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-ANALYTICS_PACKAGE_DIR = REPO_ROOT / "analytics-app" / "app" / "server" / "analytics_app"
-if str(ANALYTICS_PACKAGE_DIR) not in sys.path:
-    sys.path.insert(0, str(ANALYTICS_PACKAGE_DIR))
 
 from catalogue import catalogue_activity as activity
 from catalogue.catalogue_build_media import PIPELINE_CONFIG, detect_projects_base_dir
@@ -25,7 +22,7 @@ from catalogue_media_paths import (
 )
 from external_workspace_paths import ExternalWorkspaceRoot
 from local_env import runtime_env
-from tag_services import tag_source_paths
+from tags import tag_source_paths
 
 
 def canonicalize_for_hash(value: Any) -> Any:

@@ -1,11 +1,11 @@
-"""Analytics-owned tag source path contract."""
+"""Studio-owned tag source path contract."""
 
 from __future__ import annotations
 
 from pathlib import Path
 
 
-TAG_SOURCE_ROOT_REL_PATH = Path("analytics-app/data/canonical")
+TAG_SOURCE_ROOT_REL_PATH = Path("studio/data/canonical/tags")
 TAG_ASSIGNMENTS_REL_PATH = TAG_SOURCE_ROOT_REL_PATH / "tag-assignments.json"
 TAG_REGISTRY_REL_PATH = TAG_SOURCE_ROOT_REL_PATH / "tag-registry.json"
 TAG_ALIASES_REL_PATH = TAG_SOURCE_ROOT_REL_PATH / "tag-aliases.json"

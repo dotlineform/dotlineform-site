@@ -25,7 +25,6 @@ for path in (
     REPO_ROOT,
     REPO_ROOT / "studio" / "shared" / "python",
     REPO_ROOT / "studio" / "services",
-    REPO_ROOT / "analytics-app" / "app" / "server" / "analytics_app",
     REPO_ROOT / "scripts",
 ):
     if str(path) not in sys.path:
@@ -41,7 +40,7 @@ try:
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from catalogue.series_ids import normalize_series_id
 
-from tag_services import tag_source_paths
+from tags import tag_source_paths
 
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))

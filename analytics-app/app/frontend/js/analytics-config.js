@@ -70,47 +70,6 @@ const DEFAULT_ANALYTICS_CONFIG = {
         "works_index": "/assets/data/works_index.json"
       }
     }
-  },
-  "analysis": {
-    "groups": {
-      "ordered": [
-        "subject",
-        "domain",
-        "form",
-        "theme"
-      ],
-      "coverage_groups": [
-        "subject",
-        "domain",
-        "form",
-        "theme"
-      ]
-    },
-    "rag": {
-      "completeness": {
-        "group_coverage_denominator": 4,
-        "tag_bonus_max": 0.25,
-        "tag_bonus_cap_at_total_tags": 6,
-        "score_cap": 1.0
-      },
-      "rules": {
-        "red": {
-          "if_total_tags_eq": 0,
-          "if_unknown_tags_gt": 0
-        },
-        "amber": {
-          "if_groups_present_lte": 1,
-          "if_total_tags_lt": 3,
-          "if_missing_all_groups": [
-            "form",
-            "theme"
-          ]
-        },
-        "green": {
-          "fallback": true
-        }
-      }
-    }
   }
 };
 
@@ -148,8 +107,7 @@ function readConfiguredAnalyticsConfigUrl() {
 }
 
 export function getAnalyticsGroups(config) {
-  const fallback = DEFAULT_ANALYTICS_CONFIG.analysis.groups.ordered;
-  return sanitizeStringArray(pathValue(config, ["analysis", "groups", "ordered"]), fallback);
+  return sanitizeStringArray(pathValue(config, ["analysis", "groups", "ordered"]), []);
 }
 
 export function getAnalyticsCoverageGroups(config) {

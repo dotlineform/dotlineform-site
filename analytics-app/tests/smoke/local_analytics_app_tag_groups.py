@@ -8,7 +8,6 @@ import json
 import sys
 import urllib.request
 from pathlib import Path
-from threading import Thread
 
 from playwright.sync_api import sync_playwright
 
@@ -23,22 +22,15 @@ for path in (ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
     if text not in sys.path:
         sys.path.insert(0, text)
 
-from analytics_app_server import AnalyticsAppServer  # noqa: E402
 from tests.smoke.route_ready_helpers import wait_for_route_ready  # noqa: E402
-
-
-def start_server() -> tuple[AnalyticsAppServer, str]:
-    server = AnalyticsAppServer(("127.0.0.1", 0), REPO_ROOT)
-    thread = Thread(target=server.serve_forever, daemon=True)
-    thread.start()
-    return server, f"http://127.0.0.1:{server.server_address[1]}"
+from transitional_tag_servers import start_transitional_tag_servers, stop_transitional_tag_servers  # noqa: E402
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.parse_args(argv)
 
-    server, base_url = start_server()
+    studio_server, server, base_url, previous_studio_env = start_transitional_tag_servers(REPO_ROOT)
     try:
         with urllib.request.urlopen(f"{base_url}/analytics/runtime-config.json", timeout=10) as response:
             runtime_config = json.loads(response.read().decode("utf-8"))
@@ -75,7 +67,7 @@ def main(argv: list[str] | None = None) -> int:
             page.on(
                 "request",
                 lambda request: analytics_requests.append(request.url)
-                if "/analytics/api/tag-groups" in request.url
+                if "/studio/api/tags/tag-groups" in request.url
                 else None,
             )
             page.on(
@@ -112,16 +104,15 @@ def main(argv: list[str] | None = None) -> int:
         if not config_requests:
             raise AssertionError("Tag Groups did not request the local runtime config endpoint")
         if not analytics_requests:
-            raise AssertionError("Tag Groups did not request the local analytics API")
+            raise AssertionError("Tag Groups did not request the local Studio tag API")
         if static_group_requests:
-            raise AssertionError(f"Tag Groups should use the local analytics API instead of static data: {static_group_requests!r}")
+            raise AssertionError(f"Tag Groups should use the Studio tag API instead of static data: {static_group_requests!r}")
         if console_errors:
             raise AssertionError(f"console errors: {console_errors}")
         print(f"local Analytics Tag Groups OK: {base_url}/analytics/tag-groups/")
         return 0
     finally:
-        server.shutdown()
-        server.server_close()
+        stop_transitional_tag_servers(studio_server, server, previous_studio_env)
 
 
 if __name__ == "__main__":

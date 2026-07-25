@@ -22,8 +22,7 @@
         "analytics-app/"
       ],
       "exclude": [
-        "analytics-app/**/__pycache__/**",
-        "analytics-app/data/canonical/"
+        "analytics-app/**/__pycache__/**"
       ]
     },
     "docs-viewer": {
@@ -91,7 +90,6 @@
         "_site/",
         "admin-app/**/__pycache__/**",
         "analytics-app/**/__pycache__/**",
-        "analytics-app/data/canonical/",
         "site/assets/data/",
         "docs-viewer/**/__pycache__/**",
         "docs-viewer/generated/",

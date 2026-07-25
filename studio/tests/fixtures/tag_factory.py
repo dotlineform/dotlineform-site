@@ -1,4 +1,4 @@
-"""Data-oriented fixtures for Analytics tag tests."""
+"""Data-oriented fixtures for Studio tag tests."""
 
 from __future__ import annotations
 

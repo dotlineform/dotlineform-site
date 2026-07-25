@@ -10,10 +10,9 @@ from typing import Any, Callable
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-FIXTURES_DIR = REPO_ROOT / "analytics-app" / "tests" / "fixtures"
-SCRIPTS_DIR = REPO_ROOT / "scripts"
-ANALYTICS_PACKAGE_DIR = REPO_ROOT / "analytics-app" / "app" / "server" / "analytics_app"
-for path in (FIXTURES_DIR, SCRIPTS_DIR, ANALYTICS_PACKAGE_DIR):
+FIXTURES_DIR = REPO_ROOT / "studio" / "tests" / "fixtures"
+STUDIO_SERVICES_DIR = REPO_ROOT / "studio" / "services"
+for path in (FIXTURES_DIR, STUDIO_SERVICES_DIR):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
@@ -23,7 +22,7 @@ from tag_factory import (  # noqa: E402
     promotion_registry_payload as registry_payload,
     tag_row as row,
 )
-from tag_services import tag_promotion_mutations as promotions  # noqa: E402
+from tags import tag_promotion_mutations as promotions  # noqa: E402
 
 
 NOW = "2026-05-09T12:00:00Z"

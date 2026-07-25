@@ -34,7 +34,6 @@ ANALYTICS_SERVER_DIR = Path(__file__).resolve().parent
 if str(ANALYTICS_SERVER_DIR) not in sys.path:
     sys.path.insert(0, str(ANALYTICS_SERVER_DIR))
 
-from analytics_api import analytics_get_payload, analytics_post_response  # noqa: E402
 from analytics_app_config import (  # noqa: E402
     analytics_shell_route_paths,
     analytics_views,
@@ -89,9 +88,6 @@ class AnalyticsAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler)
         if path == "/analytics/runtime-config.json":
             self.send_json(runtime_config(self.repo_root, self.version))
             return
-        if path.startswith("/analytics/api/"):
-            self.send_analytics_api_json(path.removeprefix("/analytics/api"))
-            return
         if normalize_route_path(path) in analytics_shell_route_paths(self.repo_root):
             self.send_html(self.analytics_shell_html(path))
             return
@@ -104,28 +100,10 @@ class AnalyticsAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler)
     def do_POST(self) -> None:
         request = urlsplit(self.path)
         path = unquote(request.path)
-        if path.startswith("/analytics/api/"):
-            if not self.origin_allowed_for_local_api():
-                self.send_json({"ok": False, "error": "Origin not allowed"}, HTTPStatus.FORBIDDEN)
-                return
-            self.send_analytics_api_post_json(path.removeprefix("/analytics/api"))
-            return
-
         self.send_error(HTTPStatus.NOT_FOUND, "Not found")
 
     def do_OPTIONS(self) -> None:
-        request = urlsplit(self.path)
-        path = unquote(request.path)
-        if not path.startswith("/analytics/api/"):
-            self.send_error(HTTPStatus.NOT_FOUND, "Not found")
-            return
-        if not self.origin_allowed_for_local_api():
-            self.send_response(HTTPStatus.FORBIDDEN)
-            self.end_headers()
-            return
-        self.send_response(HTTPStatus.NO_CONTENT)
-        self.send_cors_headers()
-        self.end_headers()
+        self.send_error(HTTPStatus.NOT_FOUND, "Not found")
 
     def is_allowed_static_path(self, path: str) -> bool:
         return path in STATIC_FILES or any(path.startswith(prefix) for prefix in STATIC_PREFIXES)
@@ -172,26 +150,6 @@ class AnalyticsAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler)
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
-
-    def send_analytics_api_json(self, api_path: str) -> None:
-        try:
-            self.send_json(analytics_get_payload(self.repo_root, api_path))
-        except FileNotFoundError as error:
-            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
-        except RuntimeError as error:
-            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
-
-    def send_analytics_api_post_json(self, api_path: str) -> None:
-        try:
-            body = self.read_json_body()
-            status, payload = analytics_post_response(self.repo_root, api_path, body)
-            self.send_json(payload, status)
-        except FileNotFoundError as error:
-            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
-        except ValueError as error:
-            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
-        except RuntimeError as error:
-            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
 
     def read_json_body(self) -> dict[str, object]:
         content_length = self.headers.get("Content-Length", "").strip()

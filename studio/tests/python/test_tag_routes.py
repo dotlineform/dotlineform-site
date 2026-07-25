@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify tag local-service route ownership and handler dispatch."""
+"""Verify Studio tag service route ownership and handler dispatch."""
 
 from __future__ import annotations
 
@@ -8,21 +8,18 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-SCRIPTS_DIR = REPO_ROOT / "scripts"
-STUDIO_SCRIPTS_DIR = SCRIPTS_DIR / "studio"
-ANALYTICS_SCRIPTS_DIR = SCRIPTS_DIR / "analytics"
-ANALYTICS_SERVER_DIR = REPO_ROOT / "analytics-app" / "app" / "server"
-ANALYTICS_PACKAGE_DIR = ANALYTICS_SERVER_DIR / "analytics_app"
-for path in (SCRIPTS_DIR, ANALYTICS_SCRIPTS_DIR, STUDIO_SCRIPTS_DIR, ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
+STUDIO_SERVICES_DIR = REPO_ROOT / "studio" / "services"
+STUDIO_SERVER_DIR = REPO_ROOT / "studio" / "app" / "server" / "studio"
+for path in (STUDIO_SERVICES_DIR, STUDIO_SERVER_DIR):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-from tag_services import tag_routes as routes  # noqa: E402
-from tag_write_api import aliases  # noqa: E402
-from tag_write_api import assignments  # noqa: E402
-from tag_write_api import promotions  # noqa: E402
-from tag_write_api import registry  # noqa: E402
-import analytics_api  # noqa: E402
+from tags import tag_routes as routes  # noqa: E402
+from studio_tag_api import aliases  # noqa: E402
+from studio_tag_api import assignments  # noqa: E402
+from studio_tag_api import promotions  # noqa: E402
+from studio_tag_api import registry  # noqa: E402
+import studio_tags_api  # noqa: E402
 
 
 def assert_equal(actual, expected, label: str) -> None:
@@ -47,9 +44,9 @@ def test_options_routes_cover_each_post_route() -> None:
         raise AssertionError("health route should not gain CORS preflight handling implicitly")
 
 
-def test_local_analytics_adapter_covers_each_post_route() -> None:
-    assert_equal(set(analytics_api.ANALYTICS_POST_PATHS), set(routes.POST_PATHS), "local analytics route keys")
-    assert_equal(set(analytics_api.POST_HANDLERS), set(routes.POST_PATHS), "local analytics handler keys")
+def test_studio_adapter_covers_each_post_route() -> None:
+    assert_equal(set(studio_tags_api.TAG_POST_PATHS), set(routes.POST_PATHS), "Studio tag route keys")
+    assert_equal(set(studio_tags_api.POST_HANDLERS), set(routes.POST_PATHS), "Studio tag handler keys")
 
 
 def test_tag_write_handlers_live_in_functional_modules() -> None:
@@ -71,7 +68,7 @@ def test_tag_write_handlers_live_in_functional_modules() -> None:
 def main() -> None:
     test_post_routes_are_unique()
     test_options_routes_cover_each_post_route()
-    test_local_analytics_adapter_covers_each_post_route()
+    test_studio_adapter_covers_each_post_route()
     test_tag_write_handlers_live_in_functional_modules()
     print("Tag route tests OK")
 

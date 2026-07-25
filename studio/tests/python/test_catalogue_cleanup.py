@@ -15,13 +15,13 @@ from catalogue_factory import write_json
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SCRIPTS_DIR = REPO_ROOT / "scripts"
-ANALYTICS_PACKAGE_DIR = REPO_ROOT / "analytics-app" / "app" / "server" / "analytics_app"
-for path in (SCRIPTS_DIR, ANALYTICS_PACKAGE_DIR):
+STUDIO_SERVICES_DIR = REPO_ROOT / "studio" / "services"
+for path in (SCRIPTS_DIR, STUDIO_SERVICES_DIR):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
 from catalogue import catalogue_cleanup  # noqa: E402
-from tag_services import tag_source_paths  # noqa: E402
+from tags import tag_source_paths  # noqa: E402
 
 
 TAG_ASSIGNMENTS_PATH = tag_source_paths.TAG_ASSIGNMENTS_REL_PATH
@@ -135,11 +135,11 @@ def test_work_delete_generated_payloads_remove_generated_records() -> None:
         )
 
     assert rel_paths(root, payloads.keys()) == [
-        TAG_ASSIGNMENTS_PATH.as_posix(),
         "site/assets/data/recent_index.json",
         "site/assets/data/series_index.json",
         "site/assets/data/works_index.json",
         "site/assets/series/index/009.json",
+        TAG_ASSIGNMENTS_PATH.as_posix(),
         "studio/data/generated/activity/work-storage-index.json",
     ]
     assert "00001" not in payloads[(root / "site/assets/data/works_index.json").resolve()]["works"]

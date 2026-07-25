@@ -62,6 +62,7 @@ def main() -> int:
                 """async () => {
                     document.body.innerHTML = '<main><div id="mount"></div></main>';
                     const render = await import('/analytics/app/frontend/js/series-tags-render.js');
+                    const tagPolicy = await fetch('/studio/data/config/tags/tag-management.json').then(response => response.json());
                     const registry = new Map([
                         ['subject:trees', { group: 'subject', label: 'trees', status: 'active' }],
                         ['domain:studio', { group: 'domain', label: 'studio', status: 'active' }],
@@ -71,7 +72,12 @@ def main() -> int:
                     ]);
                     const reportInput = {
                         mount: document.querySelector('#mount'),
-                        config: {},
+                        config: {
+                            analysis: {
+                                groups: tagPolicy.groups,
+                                rag: tagPolicy.rag
+                            }
+                        },
                         studioGroups: ['subject', 'domain', 'form', 'theme'],
                         groupInfoPagePath: '/analytics/tag-groups/',
                         groupDescriptions: new Map([

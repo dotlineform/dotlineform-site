@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Common helpers for Analytics tag write API handlers."""
+"""Common helpers for Studio tag API handlers."""
 
 from __future__ import annotations
 
@@ -22,11 +22,11 @@ REPO_ROOT = ensure_studio_python_paths(__file__)
 
 import script_logging  # noqa: E402
 import studio_activity as admin_activity_log  # noqa: E402
-from tag_services import tag_activity  # noqa: E402
+from tags import tag_activity  # noqa: E402
 
 
 LOGS_REL_DIR = Path("var/studio/logs")
-ANALYTICS_API_LOG_SOURCE = Path(__file__).resolve().parents[1] / "analytics_api.py"
+STUDIO_TAGS_API_LOG_SOURCE = Path(__file__).resolve().parents[1] / "studio_tags_api.py"
 
 
 def utc_now() -> str:
@@ -36,7 +36,7 @@ def utc_now() -> str:
 def log_event(repo_root: Path, event: str, details: dict[str, Any]) -> None:
     try:
         script_logging.append_script_log(
-            ANALYTICS_API_LOG_SOURCE,
+            STUDIO_TAGS_API_LOG_SOURCE,
             event=event,
             details=details,
             repo_root=repo_root,

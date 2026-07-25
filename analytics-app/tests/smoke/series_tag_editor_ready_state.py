@@ -6,7 +6,6 @@ from __future__ import annotations
 import argparse
 import sys
 from pathlib import Path
-from threading import Thread
 
 from playwright.sync_api import expect, sync_playwright
 
@@ -21,15 +20,8 @@ for path in (ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
     if text not in sys.path:
         sys.path.insert(0, text)
 
-from analytics_app_server import AnalyticsAppServer  # noqa: E402
 from tests.smoke.route_ready_helpers import wait_for_route_ready  # noqa: E402
-
-
-def start_server() -> tuple[AnalyticsAppServer, str]:
-    server = AnalyticsAppServer(("127.0.0.1", 0), REPO_ROOT)
-    thread = Thread(target=server.serve_forever, daemon=True)
-    thread.start()
-    return server, f"http://127.0.0.1:{server.server_address[1]}"
+from transitional_tag_servers import start_transitional_tag_servers, stop_transitional_tag_servers  # noqa: E402
 
 
 def run(base_url: str, series_id: str) -> None:
@@ -58,16 +50,17 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
+    studio_server = None
     server = None
+    previous_studio_env = (None, None)
     base_url = args.base_url
     if not base_url:
-        server, base_url = start_server()
+        studio_server, server, base_url, previous_studio_env = start_transitional_tag_servers(REPO_ROOT)
     try:
         run(base_url, args.series)
     finally:
-        if server is not None:
-            server.shutdown()
-            server.server_close()
+        if studio_server is not None and server is not None:
+            stop_transitional_tag_servers(studio_server, server, previous_studio_env)
 
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tag write-server atomic JSON write helpers."""
+"""Studio tag API atomic JSON write helpers."""
 
 from __future__ import annotations
 

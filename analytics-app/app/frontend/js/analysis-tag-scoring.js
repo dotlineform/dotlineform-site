@@ -1,5 +1,4 @@
 import {
-  DEFAULT_ANALYTICS_CONFIG,
   getAnalyticsCoverageGroups,
   getAnalyticsGroups
 } from "./analytics-config.js";
@@ -27,7 +26,7 @@ export function computeStudioTagMetrics(assignedTags, registry, config) {
   const groups = getAnalyticsGroups(config);
   const coverageGroups = getAnalyticsCoverageGroups(config);
   const completenessCfg = mergeConfig(
-    DEFAULT_ANALYTICS_CONFIG.analysis.rag.completeness,
+    {},
     pathValue(config, ["analysis", "rag", "completeness"])
   );
   const counts = Object.fromEntries(groups.map((group) => [group, 0]));
@@ -76,7 +75,7 @@ export function computeStudioTagMetrics(assignedTags, registry, config) {
 
 export function computeStudioRag(metrics, config) {
   const rules = mergeConfig(
-    DEFAULT_ANALYTICS_CONFIG.analysis.rag.rules,
+    {},
     pathValue(config, ["analysis", "rag", "rules"])
   );
   const redRule = rules.red || {};

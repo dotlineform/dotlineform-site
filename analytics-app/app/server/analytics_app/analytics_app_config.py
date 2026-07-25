@@ -7,6 +7,8 @@ import os
 from pathlib import Path
 from urllib.parse import urlsplit
 
+from tags.tag_management_config import tag_analysis_policy
+
 
 ANALYTICS_ROUTE_REQUIRED_FIELDS: tuple[str, ...] = (
     "label",
@@ -49,29 +51,27 @@ ANALYTICS_MEDIA: dict[str, object] = {
     },
 }
 
-ANALYTICS_SERVICE_ENDPOINTS: dict[str, object] = {
-    "analytics": {
-        "base": "/analytics/api",
-        "health": "/analytics/api/health",
-        "delete_tag_alias": "/analytics/api/delete-tag-alias",
-        "demote_tag": "/analytics/api/demote-tag",
-        "demote_tag_preview": "/analytics/api/demote-tag-preview",
-        "import_tag_assignments": "/analytics/api/import-tag-assignments",
-        "import_tag_assignments_preview": "/analytics/api/import-tag-assignments-preview",
-        "import_tag_aliases": "/analytics/api/import-tag-aliases",
-        "import_tag_registry": "/analytics/api/import-tag-registry",
-        "mutate_tag_alias": "/analytics/api/mutate-tag-alias",
-        "mutate_tag_alias_preview": "/analytics/api/mutate-tag-alias-preview",
-        "mutate_tag": "/analytics/api/mutate-tag",
-        "mutate_tag_preview": "/analytics/api/mutate-tag-preview",
-        "promote_tag_alias": "/analytics/api/promote-tag-alias",
-        "promote_tag_alias_preview": "/analytics/api/promote-tag-alias-preview",
-        "tag_aliases": "/analytics/api/tag-aliases",
-        "tag_assignments": "/analytics/api/tag-assignments",
-        "tag_groups": "/analytics/api/tag-groups",
-        "tag_registry": "/analytics/api/tag-registry",
-        "save_tags": "/analytics/api/save-tags",
-    },
+TAG_SERVICE_PATHS: dict[str, str] = {
+    "base": "",
+    "health": "/health",
+    "delete_tag_alias": "/delete-tag-alias",
+    "demote_tag": "/demote-tag",
+    "demote_tag_preview": "/demote-tag-preview",
+    "import_tag_assignments": "/import-tag-assignments",
+    "import_tag_assignments_preview": "/import-tag-assignments-preview",
+    "import_tag_aliases": "/import-tag-aliases",
+    "import_tag_registry": "/import-tag-registry",
+    "mutate_tag_alias": "/mutate-tag-alias",
+    "mutate_tag_alias_preview": "/mutate-tag-alias-preview",
+    "mutate_tag": "/mutate-tag",
+    "mutate_tag_preview": "/mutate-tag-preview",
+    "promote_tag_alias": "/promote-tag-alias",
+    "promote_tag_alias_preview": "/promote-tag-alias-preview",
+    "tag_aliases": "/tag-aliases",
+    "tag_assignments": "/tag-assignments",
+    "tag_groups": "/tag-groups",
+    "tag_registry": "/tag-registry",
+    "save_tags": "/save-tags",
 }
 
 ANALYTICS_MODAL_EVENT = "analytics:open-modal"
@@ -197,7 +197,15 @@ def analytics_shell_route_paths(repo_root: Path, payload: dict[str, object] | No
 
 
 def analytics_service_endpoints(_repo_root: Path) -> dict[str, object]:
-    return {service: dict(values) for service, values in ANALYTICS_SERVICE_ENDPOINTS.items()}
+    studio_host = os.environ.get("STUDIO_APP_HOST", "127.0.0.1").strip() or "127.0.0.1"
+    studio_port = os.environ.get("STUDIO_APP_PORT", "8765").strip() or "8765"
+    base = f"http://{studio_host}:{studio_port}/studio/api/tags"
+    return {
+        "tags": {
+            key: f"{base}{suffix}"
+            for key, suffix in TAG_SERVICE_PATHS.items()
+        },
+    }
 
 
 def asset_version(repo_root: Path) -> str:
@@ -231,6 +239,7 @@ def asset_version(repo_root: Path) -> str:
 def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
     pipeline_path = repo_root / "_data" / "pipeline.json"
     payload = load_analytics_config(repo_root)
+    payload["analysis"] = tag_analysis_policy(repo_root)
     try:
         pipeline_payload = json.loads(pipeline_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):

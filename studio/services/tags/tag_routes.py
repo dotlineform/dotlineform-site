@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tag local-service endpoint path constants."""
+"""Studio tag service endpoint path constants."""
 
 HEALTH_PATH = "/health"
 SAVE_TAGS_PATH = "/save-tags"

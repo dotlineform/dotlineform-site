@@ -76,6 +76,28 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
         "project_state_report": "/studio/api/catalogue/project-state-report",
         "project_state_open_report": "/studio/api/catalogue/project-state-open-report",
     },
+    "tags": {
+        "base": "/studio/api/tags",
+        "health": "/studio/api/tags/health",
+        "delete_tag_alias": "/studio/api/tags/delete-tag-alias",
+        "demote_tag": "/studio/api/tags/demote-tag",
+        "demote_tag_preview": "/studio/api/tags/demote-tag-preview",
+        "import_tag_assignments": "/studio/api/tags/import-tag-assignments",
+        "import_tag_assignments_preview": "/studio/api/tags/import-tag-assignments-preview",
+        "import_tag_aliases": "/studio/api/tags/import-tag-aliases",
+        "import_tag_registry": "/studio/api/tags/import-tag-registry",
+        "mutate_tag_alias": "/studio/api/tags/mutate-tag-alias",
+        "mutate_tag_alias_preview": "/studio/api/tags/mutate-tag-alias-preview",
+        "mutate_tag": "/studio/api/tags/mutate-tag",
+        "mutate_tag_preview": "/studio/api/tags/mutate-tag-preview",
+        "promote_tag_alias": "/studio/api/tags/promote-tag-alias",
+        "promote_tag_alias_preview": "/studio/api/tags/promote-tag-alias-preview",
+        "tag_aliases": "/studio/api/tags/tag-aliases",
+        "tag_assignments": "/studio/api/tags/tag-assignments",
+        "tag_groups": "/studio/api/tags/tag-groups",
+        "tag_registry": "/studio/api/tags/tag-registry",
+        "save_tags": "/studio/api/tags/save-tags",
+    },
 }
 
 STUDIO_MODAL_EVENT = "studio:open-modal"

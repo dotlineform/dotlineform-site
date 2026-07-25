@@ -5,8 +5,8 @@ from __future__ import annotations
 
 from typing import Any, Dict
 
-from tag_services import tag_alias_mutations as tag_aliases
-from tag_services import tag_source_model as tag_source
+from tags import tag_alias_mutations as tag_aliases
+from tags import tag_source_model as tag_source
 
 
 def rewrite_assignment_tag_list_for_targets(

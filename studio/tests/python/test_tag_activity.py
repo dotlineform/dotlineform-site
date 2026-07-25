@@ -9,15 +9,15 @@ from typing import Any, Dict
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-SCRIPTS_DIR = REPO_ROOT / "scripts"
-ANALYTICS_PACKAGE_DIR = REPO_ROOT / "analytics-app" / "app" / "server" / "analytics_app"
-for path in (SCRIPTS_DIR, ANALYTICS_PACKAGE_DIR):
+STUDIO_SERVICES_DIR = REPO_ROOT / "studio" / "services"
+STUDIO_SERVER_DIR = REPO_ROOT / "studio" / "app" / "server" / "studio"
+for path in (STUDIO_SERVICES_DIR, STUDIO_SERVER_DIR):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-from tag_services import tag_activity as activity  # noqa: E402
-from tag_services import tag_routes as routes  # noqa: E402
-from tag_write_api import common as write_common  # noqa: E402
+from tags import tag_activity as activity  # noqa: E402
+from tags import tag_routes as routes  # noqa: E402
+from studio_tag_api import common as write_common  # noqa: E402
 
 
 def assert_equal(actual: Any, expected: Any, label: str) -> None:
@@ -122,7 +122,7 @@ def test_tag_record_group_is_resolved_from_context() -> None:
     )
     assert_equal(len(calls), 1, "tag append calls")
     assert_equal(calls[0]["record_groups"]["tags"], ["subject:trees"], "tag record group")
-    assert_equal(calls[0]["source_refs"], [{"kind": "log", "path": "var/studio/logs/studio_analytics_api.log"}], "source refs")
+    assert_equal(calls[0]["source_refs"], [{"kind": "log", "path": "var/studio/logs/studio_tags_api.log"}], "source refs")
     assert_equal(response["activity_log"], {"written_count": 1}, "activity log")
 
 

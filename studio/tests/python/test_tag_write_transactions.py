@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify tag write-server atomic JSON write helpers."""
+"""Verify Studio tag API atomic JSON write helpers."""
 
 from __future__ import annotations
 
@@ -9,13 +9,12 @@ import tempfile
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-SCRIPTS_DIR = REPO_ROOT / "scripts"
-ANALYTICS_PACKAGE_DIR = REPO_ROOT / "analytics-app" / "app" / "server" / "analytics_app"
-for path in (SCRIPTS_DIR, ANALYTICS_PACKAGE_DIR):
+STUDIO_SERVICES_DIR = REPO_ROOT / "studio" / "services"
+for path in (STUDIO_SERVICES_DIR,):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-from tag_services import tag_write_transactions as transactions  # noqa: E402
+from tags import tag_write_transactions as transactions  # noqa: E402
 
 
 def write_json(path: Path, payload: dict) -> None:

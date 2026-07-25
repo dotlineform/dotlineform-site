@@ -1,4 +1,4 @@
-"""Analytics API adapters for the local Analytics app server."""
+"""Tag API coordinator for the local Studio app server."""
 
 from __future__ import annotations
 
@@ -20,47 +20,47 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 REPO_ROOT = ensure_studio_python_paths(__file__)
 
-from tag_services import tag_routes  # noqa: E402
-from tag_services import tag_source_model as tag_source  # noqa: E402
-from tag_write_api.aliases import delete_tag_alias_response  # noqa: E402
-from tag_write_api.aliases import import_tag_aliases_response  # noqa: E402
-from tag_write_api.aliases import mutate_tag_alias_response  # noqa: E402
-from tag_write_api.assignments import import_tag_assignments_response  # noqa: E402
-from tag_write_api.assignments import save_tags_response  # noqa: E402
-from tag_write_api.promotions import demote_tag_response  # noqa: E402
-from tag_write_api.promotions import promote_tag_alias_response  # noqa: E402
-from tag_write_api.registry import import_tag_registry_response  # noqa: E402
-from tag_write_api.registry import mutate_tag_response  # noqa: E402
+from tags import tag_routes  # noqa: E402
+from tags import tag_source_model as tag_source  # noqa: E402
+from studio_tag_api.aliases import delete_tag_alias_response  # noqa: E402
+from studio_tag_api.aliases import import_tag_aliases_response  # noqa: E402
+from studio_tag_api.aliases import mutate_tag_alias_response  # noqa: E402
+from studio_tag_api.assignments import import_tag_assignments_response  # noqa: E402
+from studio_tag_api.assignments import save_tags_response  # noqa: E402
+from studio_tag_api.promotions import demote_tag_response  # noqa: E402
+from studio_tag_api.promotions import promote_tag_alias_response  # noqa: E402
+from studio_tag_api.registry import import_tag_registry_response  # noqa: E402
+from studio_tag_api.registry import mutate_tag_response  # noqa: E402
 
 
-ANALYTICS_DATA_DIR = tag_source.TAG_SOURCE_ROOT_REL_PATH
+TAGS_DATA_DIR = tag_source.TAG_SOURCE_ROOT_REL_PATH
 READ_ENDPOINTS = {
     "/tag-aliases": {
-        "path": ANALYTICS_DATA_DIR / "tag-aliases.json",
+        "path": TAGS_DATA_DIR / "tag-aliases.json",
         "label": "Tag Aliases",
         "required_key": "aliases",
         "required_type": dict,
     },
     "/tag-assignments": {
-        "path": ANALYTICS_DATA_DIR / "tag-assignments.json",
+        "path": TAGS_DATA_DIR / "tag-assignments.json",
         "label": "Tag Assignments",
         "required_key": "series",
         "required_type": dict,
     },
     "/tag-groups": {
-        "path": ANALYTICS_DATA_DIR / "tag-groups.json",
+        "path": TAGS_DATA_DIR / "tag-groups.json",
         "label": "Tag Groups",
         "required_key": "groups",
         "required_type": list,
     },
     "/tag-registry": {
-        "path": ANALYTICS_DATA_DIR / "tag-registry.json",
+        "path": TAGS_DATA_DIR / "tag-registry.json",
         "label": "Tag Registry",
         "required_key": "tags",
         "required_type": list,
     },
 }
-ANALYTICS_POST_PATHS = tag_routes.POST_PATHS
+TAG_POST_PATHS = tag_routes.POST_PATHS
 
 
 PostHandler = Callable[[Path, dict[str, Any], bool], dict[str, object]]
@@ -145,10 +145,10 @@ POST_HANDLERS: dict[str, PostHandler] = {
 }
 
 
-def analytics_health_payload() -> dict[str, object]:
+def tags_health_payload() -> dict[str, object]:
     return {
         "ok": True,
-        "service": "analytics",
+        "service": "studio_tags",
         "writes": {
             "import_tag_assignments": True,
             "import_tag_assignments_preview": True,
@@ -191,13 +191,13 @@ def data_payload(repo_root: Path, endpoint: str) -> dict[str, object]:
     }
 
 
-def analytics_get_payload(repo_root: Path, path: str) -> dict[str, object]:
+def tags_get_payload(repo_root: Path, path: str) -> dict[str, object]:
     if path == "/health":
-        return analytics_health_payload()
+        return tags_health_payload()
     return data_payload(repo_root, path)
 
 
-def analytics_post_response(
+def tags_post_response(
     repo_root: Path,
     path: str,
     body: dict[str, Any],

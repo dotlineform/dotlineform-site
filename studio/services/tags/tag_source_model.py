@@ -8,7 +8,7 @@ import re
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from tag_services import tag_source_paths
+from tags import tag_source_paths
 
 
 SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")

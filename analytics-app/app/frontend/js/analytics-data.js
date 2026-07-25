@@ -10,22 +10,22 @@ export async function fetchJson(url, options = {}) {
 }
 
 export async function loadAnalyticsRegistryJson(config, options) {
-  return fetchJson(requiredAnalyticsServicePath(config, "analytics", "tag_registry"), options);
+  return fetchJson(requiredAnalyticsServicePath(config, "tags", "tag_registry"), options);
 }
 
 export async function loadAnalyticsAliasesJson(config, options) {
-  return fetchJson(requiredAnalyticsServicePath(config, "analytics", "tag_aliases"), options);
+  return fetchJson(requiredAnalyticsServicePath(config, "tags", "tag_aliases"), options);
 }
 
 export async function loadAnalyticsAssignmentsJson(config, options) {
   return fetchJson(
-    requiredAnalyticsServicePath(config, "analytics", "tag_assignments"),
+    requiredAnalyticsServicePath(config, "tags", "tag_assignments"),
     { cache: "no-store", ...(options || {}) }
   );
 }
 
 export async function loadAnalyticsGroupsJson(config, options) {
-  return fetchJson(requiredAnalyticsServicePath(config, "analytics", "tag_groups"), options);
+  return fetchJson(requiredAnalyticsServicePath(config, "tags", "tag_groups"), options);
 }
 
 export async function loadSiteSeriesIndexJson(config, options) {

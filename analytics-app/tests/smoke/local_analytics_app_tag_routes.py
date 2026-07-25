@@ -8,7 +8,6 @@ import json
 import sys
 import urllib.request
 from pathlib import Path
-from threading import Thread
 
 from playwright.sync_api import sync_playwright
 
@@ -23,8 +22,8 @@ for path in (ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
     if text not in sys.path:
         sys.path.insert(0, text)
 
-from analytics_app_server import AnalyticsAppServer  # noqa: E402
 from tests.smoke.route_ready_helpers import wait_for_route_ready  # noqa: E402
+from transitional_tag_servers import start_transitional_tag_servers, stop_transitional_tag_servers  # noqa: E402
 
 
 ROUTES = [
@@ -35,10 +34,10 @@ ROUTES = [
         "root": "#tag-registry",
         "mode": "list",
         "expected_requests": [
-            "/analytics/api/tag-registry",
-            "/analytics/api/tag-aliases",
-            "/analytics/api/tag-assignments",
-            "/analytics/api/tag-groups",
+            "/studio/api/tags/tag-registry",
+            "/studio/api/tags/tag-aliases",
+            "/studio/api/tags/tag-assignments",
+            "/studio/api/tags/tag-groups",
         ],
     },
     {
@@ -48,9 +47,9 @@ ROUTES = [
         "root": "#tag-aliases",
         "mode": "list",
         "expected_requests": [
-            "/analytics/api/tag-aliases",
-            "/analytics/api/tag-registry",
-            "/analytics/api/tag-groups",
+            "/studio/api/tags/tag-aliases",
+            "/studio/api/tags/tag-registry",
+            "/studio/api/tags/tag-groups",
         ],
     },
     {
@@ -60,10 +59,10 @@ ROUTES = [
         "root": "#series-tags",
         "mode": "list",
         "expected_requests": [
-            "/analytics/api/tag-assignments",
-            "/analytics/api/tag-registry",
-            "/analytics/api/tag-groups",
-            "/analytics/api/health",
+            "/studio/api/tags/tag-assignments",
+            "/studio/api/tags/tag-registry",
+            "/studio/api/tags/tag-groups",
+            "/studio/api/tags/health",
         ],
     },
     {
@@ -73,27 +72,20 @@ ROUTES = [
         "root": "#seriesTagEditorRoot",
         "mode": "edit",
         "expected_requests": [
-            "/analytics/api/tag-registry",
-            "/analytics/api/tag-aliases",
-            "/analytics/api/tag-assignments",
-            "/analytics/api/health",
+            "/studio/api/tags/tag-registry",
+            "/studio/api/tags/tag-aliases",
+            "/studio/api/tags/tag-assignments",
+            "/studio/api/tags/health",
         ],
     },
 ]
-
-
-def start_server() -> tuple[AnalyticsAppServer, str]:
-    server = AnalyticsAppServer(("127.0.0.1", 0), REPO_ROOT)
-    thread = Thread(target=server.serve_forever, daemon=True)
-    thread.start()
-    return server, f"http://127.0.0.1:{server.server_address[1]}"
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.parse_args(argv)
 
-    server, base_url = start_server()
+    studio_server, server, base_url, previous_studio_env = start_transitional_tag_servers(REPO_ROOT)
     try:
         with urllib.request.urlopen(f"{base_url}/analytics/runtime-config.json", timeout=10) as response:
             runtime_config = json.loads(response.read().decode("utf-8"))
@@ -190,8 +182,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"local Analytics tag routes OK: {base_url}/analytics/tag-registry/")
         return 0
     finally:
-        server.shutdown()
-        server.server_close()
+        stop_transitional_tag_servers(studio_server, server, previous_studio_env)
 
 
 if __name__ == "__main__":

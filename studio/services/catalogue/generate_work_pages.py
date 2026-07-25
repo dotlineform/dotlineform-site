@@ -70,9 +70,6 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
-ANALYTICS_PACKAGE_DIR = REPO_ROOT / "analytics-app" / "app" / "server" / "analytics_app"
-if str(ANALYTICS_PACKAGE_DIR) not in sys.path:
-    sys.path.insert(0, str(ANALYTICS_PACKAGE_DIR))
 
 from markdown_renderer import render_markdown_to_html  # noqa: E402
 
@@ -81,7 +78,7 @@ try:
     from catalogue import catalogue_generation_recent as recent
     from catalogue import catalogue_generation_records as records
     from catalogue import catalogue_generation_source_updates as source_updates
-    from tag_services import tag_source_paths
+    from tags import tag_source_paths
     from catalogue import catalogue_generation_writes as writes
     from catalogue.catalogue_generation_common import (
         coerce_int,
@@ -99,7 +96,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from catalogue import catalogue_generation_recent as recent
     from catalogue import catalogue_generation_records as records
     from catalogue import catalogue_generation_source_updates as source_updates
-    from tag_services import tag_source_paths
+    from tags import tag_source_paths
     from catalogue import catalogue_generation_writes as writes
     from catalogue.catalogue_generation_common import (
         coerce_int,

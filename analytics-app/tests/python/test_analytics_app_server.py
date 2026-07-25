@@ -15,12 +15,13 @@ import pytest
 REPO_ROOT = Path(__file__).resolve().parents[3]
 ANALYTICS_SERVER_DIR = REPO_ROOT / "analytics-app" / "app" / "server"
 ANALYTICS_PACKAGE_DIR = ANALYTICS_SERVER_DIR / "analytics_app"
-for path in (REPO_ROOT, ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
+STUDIO_SERVER_DIR = REPO_ROOT / "studio" / "app" / "server" / "studio"
+for path in (REPO_ROOT, ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR, STUDIO_SERVER_DIR):
     text = str(path)
     if text not in sys.path:
         sys.path.insert(0, text)
 
-from analytics_api import analytics_get_payload, analytics_post_response  # noqa: E402
+from studio_tags_api import tags_get_payload, tags_post_response  # noqa: E402
 from analytics_app_config import analytics_shell_route_paths, load_analytics_config, runtime_config, validate_analytics_route_registry  # noqa: E402
 from analytics_app_server import AnalyticsAppRequestHandler  # noqa: E402
 
@@ -52,21 +53,21 @@ def test_runtime_config_exposes_analytics_routes_and_services() -> None:
     assert not any(view["id"].startswith("data_sharing") for view in runtime["views"])
     assert "external_links" not in payload
 
-    analytics = runtime["services"]["analytics"]
-    assert analytics["base"] == "/analytics/api"
-    assert analytics["health"] == "/analytics/api/health"
-    assert analytics["tag_groups"] == "/analytics/api/tag-groups"
-    assert analytics["tag_registry"] == "/analytics/api/tag-registry"
-    assert analytics["tag_aliases"] == "/analytics/api/tag-aliases"
-    assert analytics["tag_assignments"] == "/analytics/api/tag-assignments"
-    assert analytics["save_tags"] == "/analytics/api/save-tags"
-    assert analytics["import_tag_assignments"] == "/analytics/api/import-tag-assignments"
-    assert analytics["import_tag_registry"] == "/analytics/api/import-tag-registry"
-    assert analytics["import_tag_aliases"] == "/analytics/api/import-tag-aliases"
-    assert analytics["mutate_tag"] == "/analytics/api/mutate-tag"
-    assert analytics["promote_tag_alias"] == "/analytics/api/promote-tag-alias"
+    tags = runtime["services"]["tags"]
+    assert tags["base"] == "http://127.0.0.1:8765/studio/api/tags"
+    assert tags["health"] == "http://127.0.0.1:8765/studio/api/tags/health"
+    assert tags["tag_groups"] == "http://127.0.0.1:8765/studio/api/tags/tag-groups"
+    assert tags["tag_registry"] == "http://127.0.0.1:8765/studio/api/tags/tag-registry"
+    assert tags["tag_aliases"] == "http://127.0.0.1:8765/studio/api/tags/tag-aliases"
+    assert tags["tag_assignments"] == "http://127.0.0.1:8765/studio/api/tags/tag-assignments"
+    assert tags["save_tags"] == "http://127.0.0.1:8765/studio/api/tags/save-tags"
+    assert tags["import_tag_assignments"] == "http://127.0.0.1:8765/studio/api/tags/import-tag-assignments"
+    assert tags["import_tag_registry"] == "http://127.0.0.1:8765/studio/api/tags/import-tag-registry"
+    assert tags["import_tag_aliases"] == "http://127.0.0.1:8765/studio/api/tags/import-tag-aliases"
+    assert tags["mutate_tag"] == "http://127.0.0.1:8765/studio/api/tags/mutate-tag"
+    assert tags["promote_tag_alias"] == "http://127.0.0.1:8765/studio/api/tags/promote-tag-alias"
 
-    assert set(runtime["services"]) == {"analytics"}
+    assert set(runtime["services"]) == {"tags"}
 
     assert "analytics" not in runtime["data_paths"]
     assert runtime["data_paths"]["site"]["series_index"] == "/assets/data/series_index.json"
@@ -106,10 +107,10 @@ def test_analytics_shell_route_paths_are_config_driven() -> None:
 
 
 def test_analytics_tag_groups_route_returns_existing_payload() -> None:
-    groups_payload = analytics_get_payload(REPO_ROOT, "/tag-groups")
-    registry_payload = analytics_get_payload(REPO_ROOT, "/tag-registry")
-    aliases_payload = analytics_get_payload(REPO_ROOT, "/tag-aliases")
-    assignments_payload = analytics_get_payload(REPO_ROOT, "/tag-assignments")
+    groups_payload = tags_get_payload(REPO_ROOT, "/tag-groups")
+    registry_payload = tags_get_payload(REPO_ROOT, "/tag-registry")
+    aliases_payload = tags_get_payload(REPO_ROOT, "/tag-aliases")
+    assignments_payload = tags_get_payload(REPO_ROOT, "/tag-assignments")
 
     assert groups_payload["ok"] is True
     assert groups_payload["tag_groups_version"] == "tag_groups_v1"
@@ -161,7 +162,7 @@ def test_analytics_server_does_not_compose_retired_data_sharing_api() -> None:
 def test_analytics_save_tags_dry_run_route_uses_assignment_contract() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir)
-        assignments_path = repo_root / "analytics-app" / "data" / "canonical" / "tag-assignments.json"
+        assignments_path = repo_root / "studio" / "data" / "canonical" / "tags" / "tag-assignments.json"
         assignments_path.parent.mkdir(parents=True)
         assignments_path.write_text(
             """{
@@ -173,7 +174,7 @@ def test_analytics_save_tags_dry_run_route_uses_assignment_contract() -> None:
             encoding="utf-8",
         )
 
-        status, payload = analytics_post_response(
+        status, payload = tags_post_response(
             repo_root,
             "/save-tags",
             {
@@ -197,7 +198,7 @@ def test_analytics_save_tags_dry_run_route_uses_assignment_contract() -> None:
 def test_analytics_import_tag_assignments_dry_run_routes_use_assignment_contract() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir)
-        assignments_path = repo_root / "analytics-app" / "data" / "canonical" / "tag-assignments.json"
+        assignments_path = repo_root / "studio" / "data" / "canonical" / "tags" / "tag-assignments.json"
         series_index_path = repo_root / "site" / "assets" / "data" / "series_index.json"
         assignments_path.parent.mkdir(parents=True)
         series_index_path.parent.mkdir(parents=True)
@@ -235,7 +236,7 @@ def test_analytics_import_tag_assignments_dry_run_routes_use_assignment_contract
             },
         }
 
-        preview_status, preview_payload = analytics_post_response(
+        preview_status, preview_payload = tags_post_response(
             repo_root,
             "/import-tag-assignments-preview",
             {
@@ -245,7 +246,7 @@ def test_analytics_import_tag_assignments_dry_run_routes_use_assignment_contract
             },
             dry_run=True,
         )
-        apply_status, apply_payload = analytics_post_response(
+        apply_status, apply_payload = tags_post_response(
             repo_root,
             "/import-tag-assignments",
             {
@@ -272,9 +273,9 @@ def test_analytics_import_tag_assignments_dry_run_routes_use_assignment_contract
 def test_analytics_tag_registry_dry_run_routes_use_registry_contract() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir)
-        registry_path = repo_root / "analytics-app" / "data" / "canonical" / "tag-registry.json"
-        aliases_path = repo_root / "analytics-app" / "data" / "canonical" / "tag-aliases.json"
-        assignments_path = repo_root / "analytics-app" / "data" / "canonical" / "tag-assignments.json"
+        registry_path = repo_root / "studio" / "data" / "canonical" / "tags" / "tag-registry.json"
+        aliases_path = repo_root / "studio" / "data" / "canonical" / "tags" / "tag-aliases.json"
+        assignments_path = repo_root / "studio" / "data" / "canonical" / "tags" / "tag-assignments.json"
         registry_path.parent.mkdir(parents=True)
         registry_path.write_text(
             """{
@@ -305,7 +306,7 @@ def test_analytics_tag_registry_dry_run_routes_use_registry_contract() -> None:
             encoding="utf-8",
         )
 
-        import_status, import_payload = analytics_post_response(
+        import_status, import_payload = tags_post_response(
             repo_root,
             "/import-tag-registry",
             {
@@ -320,7 +321,7 @@ def test_analytics_tag_registry_dry_run_routes_use_registry_contract() -> None:
             },
             dry_run=True,
         )
-        preview_status, preview_payload = analytics_post_response(
+        preview_status, preview_payload = tags_post_response(
             repo_root,
             "/mutate-tag-preview",
             {"action": "delete", "tag_id": "subject:trees", "client_time_utc": "2026-05-22T00:00:00Z"},
@@ -343,8 +344,8 @@ def test_analytics_tag_registry_dry_run_routes_use_registry_contract() -> None:
 def test_analytics_tag_alias_dry_run_routes_use_alias_contract() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir)
-        aliases_path = repo_root / "analytics-app" / "data" / "canonical" / "tag-aliases.json"
-        registry_path = repo_root / "analytics-app" / "data" / "canonical" / "tag-registry.json"
+        aliases_path = repo_root / "studio" / "data" / "canonical" / "tags" / "tag-aliases.json"
+        registry_path = repo_root / "studio" / "data" / "canonical" / "tags" / "tag-registry.json"
         aliases_path.parent.mkdir(parents=True)
         aliases_path.write_text(
             """{
@@ -369,7 +370,7 @@ def test_analytics_tag_alias_dry_run_routes_use_alias_contract() -> None:
             encoding="utf-8",
         )
 
-        import_status, import_payload = analytics_post_response(
+        import_status, import_payload = tags_post_response(
             repo_root,
             "/import-tag-aliases",
             {
@@ -380,13 +381,13 @@ def test_analytics_tag_alias_dry_run_routes_use_alias_contract() -> None:
             },
             dry_run=True,
         )
-        delete_status, delete_payload = analytics_post_response(
+        delete_status, delete_payload = tags_post_response(
             repo_root,
             "/delete-tag-alias",
             {"alias": "foliage", "client_time_utc": "2026-05-22T00:00:00Z"},
             dry_run=True,
         )
-        preview_status, preview_payload = analytics_post_response(
+        preview_status, preview_payload = tags_post_response(
             repo_root,
             "/mutate-tag-alias-preview",
             {
@@ -418,9 +419,9 @@ def test_analytics_tag_alias_dry_run_routes_use_alias_contract() -> None:
 def test_analytics_promotion_demotion_dry_run_routes_use_promotion_contract() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir)
-        registry_path = repo_root / "analytics-app" / "data" / "canonical" / "tag-registry.json"
-        aliases_path = repo_root / "analytics-app" / "data" / "canonical" / "tag-aliases.json"
-        assignments_path = repo_root / "analytics-app" / "data" / "canonical" / "tag-assignments.json"
+        registry_path = repo_root / "studio" / "data" / "canonical" / "tags" / "tag-registry.json"
+        aliases_path = repo_root / "studio" / "data" / "canonical" / "tags" / "tag-aliases.json"
+        assignments_path = repo_root / "studio" / "data" / "canonical" / "tags" / "tag-assignments.json"
         registry_path.parent.mkdir(parents=True)
         registry_path.write_text(
             """{
@@ -454,13 +455,13 @@ def test_analytics_promotion_demotion_dry_run_routes_use_promotion_contract() ->
             encoding="utf-8",
         )
 
-        promote_status, promote_payload = analytics_post_response(
+        promote_status, promote_payload = tags_post_response(
             repo_root,
             "/promote-tag-alias-preview",
             {"alias": "foliage", "group": "theme", "client_time_utc": "2026-05-22T00:00:00Z"},
             dry_run=True,
         )
-        demote_status, demote_payload = analytics_post_response(
+        demote_status, demote_payload = tags_post_response(
             repo_root,
             "/demote-tag-preview",
             {"tag_id": "subject:trees", "alias_targets": ["theme:growth"], "client_time_utc": "2026-05-22T00:00:00Z"},

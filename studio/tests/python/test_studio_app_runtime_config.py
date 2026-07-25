@@ -117,6 +117,16 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["catalogue"]["build_apply"] == "/studio/api/catalogue/build-apply"
     assert runtime["services"]["catalogue"]["project_state_report"] == "/studio/api/catalogue/project-state-report"
     assert runtime["services"]["catalogue"]["project_state_open_report"] == "/studio/api/catalogue/project-state-open-report"
+    assert runtime["services"]["tags"]["base"] == "/studio/api/tags"
+    assert runtime["services"]["tags"]["health"] == "/studio/api/tags/health"
+    assert runtime["services"]["tags"]["tag_groups"] == "/studio/api/tags/tag-groups"
+    assert runtime["services"]["tags"]["tag_registry"] == "/studio/api/tags/tag-registry"
+    assert runtime["services"]["tags"]["tag_aliases"] == "/studio/api/tags/tag-aliases"
+    assert runtime["services"]["tags"]["tag_assignments"] == "/studio/api/tags/tag-assignments"
+    assert runtime["services"]["tags"]["save_tags"] == "/studio/api/tags/save-tags"
+    assert runtime["services"]["tags"]["import_tag_assignments"] == "/studio/api/tags/import-tag-assignments"
+    assert runtime["services"]["tags"]["import_tag_registry"] == "/studio/api/tags/import-tag-registry"
+    assert runtime["services"]["tags"]["import_tag_aliases"] == "/studio/api/tags/import-tag-aliases"
     assert "thumbnail_quality_preview" not in runtime["services"]["catalogue"]
     assert "tag_groups" not in runtime["data_paths"]["studio"]
     assert "tag_registry" not in runtime["data_paths"]["studio"]

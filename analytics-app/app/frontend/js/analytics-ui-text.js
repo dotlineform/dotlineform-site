@@ -210,11 +210,11 @@ export const DEFAULT_ANALYTICS_UI_TEXT = {
     choose_import_file_error: "Choose an import file first.",
     server_import_failed: "Server import failed; switched to patch mode. {message}",
     patch_import_none_message: "Patch mode ({import_mode}): {imported_count} imported; 0 new aliases to add.",
-    patch_import_message: "Patch mode ({import_mode}): {imported_count} imported; {new_count} alias rows prepared for analytics-app/data/canonical/tag-aliases.json aliases object.",
+    patch_import_message: "Patch mode ({import_mode}): {imported_count} imported; {new_count} alias rows prepared for studio/data/canonical/tags/tag-aliases.json aliases object.",
     patch_promote_message: "Patch mode: section snippets prepared for promoting \"{alias_key}\".",
-    patch_delete_message: "Patch mode: remove this alias key from analytics-app/data/canonical/tag-aliases.json aliases object.",
+    patch_delete_message: "Patch mode: remove this alias key from studio/data/canonical/tags/tag-aliases.json aliases object.",
     patch_create_message: "Patch mode: alias fragment prepared for new alias \"{alias_key}\". Paste inside aliases object.",
-    patch_edit_rename_note: " Also remove old alias key \"{alias_key}\" from analytics-app/data/canonical/tag-aliases.json.",
+    patch_edit_rename_note: " Also remove old alias key \"{alias_key}\" from studio/data/canonical/tags/tag-aliases.json.",
     patch_edit_message: "Patch mode: alias fragment prepared for \"{alias_key}\". Paste inside aliases object.{rename_note}",
     patch_demote_message: "Patch mode: section snippets prepared for demoting \"{tag_id}\"."
   },
@@ -316,8 +316,8 @@ export const DEFAULT_ANALYTICS_UI_TEXT = {
     choose_import_file_error: "Choose an import file first.",
     server_import_failed: "Server import failed; switched to patch mode. {message}",
     patch_demote_message: "Patch mode: section snippets prepared for demoting \"{tag_id}\".",
-    patch_create_message: "Patch mode: new tag row prepared for analytics-app/data/canonical/tag-registry.json tags[].",
+    patch_create_message: "Patch mode: new tag row prepared for studio/data/canonical/tags/tag-registry.json tags[].",
     patch_import_none_message: "Patch mode ({import_mode}): {imported_count} imported; 0 new tags to add.",
-    patch_import_message: "Patch mode ({import_mode}): {imported_count} imported; {new_count} new tag rows prepared for analytics-app/data/canonical/tag-registry.json tags[]."
+    patch_import_message: "Patch mode ({import_mode}): {imported_count} imported; {new_count} new tag rows prepared for studio/data/canonical/tags/tag-registry.json tags[]."
   }
 };

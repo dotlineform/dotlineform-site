@@ -19,8 +19,8 @@ const ANALYTICS_WRITE_RUNTIME_KEYS = Object.freeze({
 export function getAnalyticsWriteEndpoint(key, config = null) {
   const runtimeKey = ANALYTICS_WRITE_RUNTIME_KEYS[key] || "";
   const runtime = config && config.app && config.app.runtime;
-  const analytics = runtime && runtime.services && runtime.services.analytics;
-  const configured = runtimeKey && analytics && analytics[runtimeKey];
+  const tags = runtime && runtime.services && runtime.services.tags;
+  const configured = runtimeKey && tags && tags[runtimeKey];
   if (typeof configured === "string" && configured.trim()) return configured;
   return "";
 }

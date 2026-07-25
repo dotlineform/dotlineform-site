@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
-"""Tag assignment write handlers for the Analytics app API."""
+"""Tag assignment write handlers for the Studio tag API."""
 
 from __future__ import annotations
 
 from pathlib import Path
 from typing import Any
 
-from tag_services import tag_activity
-from tag_services import tag_assignment_service as tag_assignments
-from tag_services import tag_routes
-from tag_services import tag_source_model as tag_source
-from tag_services import tag_write_transactions as tag_transactions
-from tag_write_api import common
+from tags import tag_activity
+from tags import tag_assignment_service as tag_assignments
+from tags import tag_routes
+from tags import tag_source_model as tag_source
+from tags import tag_write_transactions as tag_transactions
+from studio_tag_api import common
 
 
 def save_tags_response(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -> dict[str, object]:
