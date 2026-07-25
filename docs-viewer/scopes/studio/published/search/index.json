@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8cfa20048298e04e8b14df1497d6a058",
-    "generated_at_utc": "2026-07-25T13:14:56Z",
+    "version": "blake2b-035997f95226dca07109d46b11455040",
+    "generated_at_utc": "2026-07-25T13:35:40Z",
     "count": 241
   },
   "entries": [
@@ -1459,10 +1459,10 @@
       "kind": "doc",
       "title": "Document Diagrams",
       "href": "/docs/?scope=studio&doc=d-20260719-123719-fb7565",
-      "last_updated": "2026-07-24 13:33:14",
+      "last_updated": "2026-07-25 14:34:23",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-24 13:33:14 • Docs Viewer",
+      "display_meta": "2026-07-25 14:34:23 • Docs Viewer",
       "search_terms": [
         "document diagrams",
         "document",
@@ -1470,16 +1470,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-24 13:33:14",
+        "2026-07-25 14:34:23",
         "2026",
         "07",
-        "24",
-        "13",
-        "33",
+        "25",
         "14",
+        "34",
+        "23",
         "d-20260719-123719-fb7565"
       ],
-      "search_text": "document diagrams document diagrams docs viewer docs viewer 2026-07-24 13:33:14 2026 07 24 13 33 14 d-20260719-123719-fb7565"
+      "search_text": "document diagrams document diagrams docs viewer docs viewer 2026-07-25 14:34:23 2026 07 25 14 34 23 d-20260719-123719-fb7565"
     },
     {
       "id": "d-20260715-094411-2b6e65",
@@ -3868,10 +3868,10 @@
       "kind": "doc",
       "title": "Mermaid Authoring And Publication",
       "href": "/docs/?scope=studio&doc=d-20260724-190603-860f64",
-      "last_updated": "2026-07-24 20:02:27",
+      "last_updated": "2026-07-25 14:34:23",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-24 20:02:27 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-25 14:34:23 • Docs Viewer Roadmap",
       "search_terms": [
         "mermaid authoring and publication",
         "mermaid",
@@ -3882,26 +3882,26 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-24 20:02:27",
+        "2026-07-25 14:34:23",
         "2026",
         "07",
-        "24",
-        "20",
-        "02",
-        "27",
+        "25",
+        "14",
+        "34",
+        "23",
         "d-20260724-190603-860f64"
       ],
-      "search_text": "mermaid authoring and publication mermaid authoring and publication docs viewer roadmap docs viewer roadmap 2026-07-24 20:02:27 2026 07 24 20 02 27 d-20260724-190603-860f64"
+      "search_text": "mermaid authoring and publication mermaid authoring and publication docs viewer roadmap docs viewer roadmap 2026-07-25 14:34:23 2026 07 25 14 34 23 d-20260724-190603-860f64"
     },
     {
       "id": "d-20260724-190603-0d87a0",
       "kind": "doc",
       "title": "Public Mermaid Projection Delivery",
       "href": "/docs/?scope=studio&doc=d-20260724-190603-0d87a0",
-      "last_updated": "2026-07-25 14:14:31",
+      "last_updated": "2026-07-25 14:34:23",
       "parent_id": "d-20260724-190603-860f64",
       "parent_title": "Mermaid Authoring And Publication",
-      "display_meta": "2026-07-25 14:14:31 • Mermaid Authoring And Publication",
+      "display_meta": "2026-07-25 14:34:23 • Mermaid Authoring And Publication",
       "search_terms": [
         "public mermaid projection delivery",
         "public",
@@ -3912,15 +3912,16 @@
         "authoring",
         "and",
         "publication",
-        "2026-07-25 14:14:31",
+        "2026-07-25 14:34:23",
         "2026",
         "07",
         "25",
         "14",
-        "31",
+        "34",
+        "23",
         "d-20260724-190603-0d87a0"
       ],
-      "search_text": "public mermaid projection delivery public mermaid projection delivery mermaid authoring and publication authoring and publication 2026-07-25 14:14:31 2026 07 25 14 31 d-20260724-190603-0d87a0"
+      "search_text": "public mermaid projection delivery public mermaid projection delivery mermaid authoring and publication authoring and publication 2026-07-25 14:34:23 2026 07 25 14 34 23 d-20260724-190603-0d87a0"
     },
     {
       "id": "d-20260715-092247-4b7382",

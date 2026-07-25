@@ -4,10 +4,26 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260719-123719-fb7565",
+      "title": "Document Diagrams",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260719-123719-fb7565.json",
+      "timestamp": "2026-07-25 14:34:23",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260724-190603-860f64",
+      "title": "Mermaid Authoring And Publication",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260724-190603-860f64.json",
+      "timestamp": "2026-07-25 14:34:23",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap"
+    },
+    {
       "doc_id": "d-20260724-190603-0d87a0",
       "title": "Public Mermaid Projection Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260724-190603-0d87a0.json",
-      "timestamp": "2026-07-25 14:14:31",
+      "timestamp": "2026-07-25 14:34:23",
       "parent_id": "d-20260724-190603-860f64",
       "parent_title": "Mermaid Authoring And Publication"
     },
@@ -66,21 +82,7 @@
       "timestamp": "2026-07-24 21:34:57",
       "parent_id": "d-20260718-114645-7b9d24",
       "parent_title": "Docs Viewer Core Refactor"
-    },
-    {
-      "doc_id": "d-20260718-114645-7b9d24",
-      "title": "Docs Viewer Core Refactor",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-114645-7b9d24.json",
-      "timestamp": "2026-07-24 21:34:57"
-    },
-    {
-      "doc_id": "d-20260718-114201-4e7a93",
-      "title": "Docs Viewer Core Refactor Working Method",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-114201-4e7a93.json",
-      "timestamp": "2026-07-24 21:34:57",
-      "parent_id": "d-20260718-114645-7b9d24",
-      "parent_title": "Docs Viewer Core Refactor"
     }
   ],
-  "generated_at": "2026-07-25T13:14:56Z"
+  "generated_at": "2026-07-25T13:35:39Z"
 }

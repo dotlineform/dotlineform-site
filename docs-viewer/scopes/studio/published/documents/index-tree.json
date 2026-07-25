@@ -861,13 +861,13 @@
               "doc_id": "d-20260724-190603-860f64",
               "title": "Mermaid Authoring And Publication",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260724-190603-860f64.json",
-              "ui_status": "proposed",
+              "ui_status": "done",
               "children": [
                 {
                   "doc_id": "d-20260724-190603-0d87a0",
                   "title": "Public Mermaid Projection Delivery",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260724-190603-0d87a0.json",
-                  "ui_status": "in-progress"
+                  "ui_status": "done"
                 }
               ]
             },
@@ -1366,5 +1366,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-25T12:36:22Z"
+  "generated_at": "2026-07-25T13:35:39Z"
 }
