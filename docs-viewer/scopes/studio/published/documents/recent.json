@@ -4,6 +4,22 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260725-153656-516b61",
+      "title": "Semantic Tokens",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-153656-516b61.json",
+      "timestamp": "2026-07-25 15:54:31",
+      "parent_id": "d-20260527-105208-c1a4d0",
+      "parent_title": "Semantic Reference Authoring"
+    },
+    {
+      "doc_id": "d-20260527-105208-c1a4d0",
+      "title": "Semantic Reference Authoring",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260527-105208-c1a4d0.json",
+      "timestamp": "2026-07-25 15:36:56",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap"
+    },
+    {
       "doc_id": "d-20260714-234030-1e0af6",
       "title": "Docs Viewer Roadmap",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-1e0af6.json",
@@ -66,21 +82,7 @@
       "timestamp": "2026-07-24 21:34:57",
       "parent_id": "d-20260718-114645-7b9d24",
       "parent_title": "Docs Viewer Core Refactor"
-    },
-    {
-      "doc_id": "d-20260724-213457-6e1cf7",
-      "title": "Docs Viewer Core Definition Baseline v1",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260724-213457-6e1cf7.json",
-      "timestamp": "2026-07-24 21:34:57",
-      "parent_id": "d-20260718-114645-7b9d24",
-      "parent_title": "Docs Viewer Core Refactor"
-    },
-    {
-      "doc_id": "d-20260718-114645-7b9d24",
-      "title": "Docs Viewer Core Refactor",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-114645-7b9d24.json",
-      "timestamp": "2026-07-24 21:34:57"
     }
   ],
-  "generated_at": "2026-07-25T13:40:27Z"
+  "generated_at": "2026-07-25T15:36:40Z"
 }
