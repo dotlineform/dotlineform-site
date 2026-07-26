@@ -6,19 +6,20 @@ import re
 import sys
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 from .common import load_docs_scope_configs, published_documents_path, read_text, write_text
-from .semantic_registry import (
-    SemanticReferenceKind,
-    load_semantic_reference_registry,
-    normalize_semantic_reference_id,
-    semantic_reference_href,
+from .semantic_token_registry import (
+    SemanticTokenFamily,
+    SemanticTokenTargetType,
+    load_semantic_token_registry,
+    normalize_semantic_token_id,
 )
 
 
-SEMANTIC_TARGET_LOOKUP_SCHEMA_VERSION = "docs_semantic_reference_target_lookup_v1"
+SEMANTIC_TARGET_LOOKUP_SCHEMA_VERSION = "docs_semantic_token_target_lookup_v1"
 DEFAULT_SEMANTIC_TARGET_LOOKUP_PATH = Path(
-    "docs-viewer/data/generated/semantic-references/target-lookup.json"
+    "docs-viewer/data/generated/semantic-tokens/target-lookup.json"
 )
 
 CATALOGUE_KIND_SOURCES = {
@@ -38,6 +39,12 @@ DOCS_SCOPE_KIND_SOURCES = {
     "moment": {
         "scope_id": "moments",
     },
+}
+
+CATALOGUE_TARGET_DESTINATIONS = {
+    "catalogue-work-target-lookup": ("/works/", "work"),
+    "catalogue-series-target-lookup": ("/series/", "series"),
+    "catalogue-moment-target-lookup": ("/moments/", "doc"),
 }
 
 
@@ -146,7 +153,8 @@ def docs_scope_target_meta(payload: dict[str, Any]) -> list[str]:
 
 
 def target_row(
-    kind: SemanticReferenceKind,
+    family: SemanticTokenFamily,
+    target_type: SemanticTokenTargetType,
     record: dict[str, Any],
     source: dict[str, Any],
     *,
@@ -155,21 +163,24 @@ def target_row(
     if not is_published(record):
         return None
     id_field = str(source["id_field"])
-    normalized_id = normalize_semantic_reference_id(str(record.get(id_field) or ""), kind.id)
+    normalized_id = normalize_semantic_token_id(str(record.get(id_field) or ""), target_type.id_policy)
     title = str(record.get("title") or "").strip()
-    if not normalized_id or not title:
+    href = semantic_token_target_href(target_type, normalized_id or "")
+    if not normalized_id or not title or not href:
         return None
     return {
-        "kind": kind.kind,
-        "id": normalized_id,
+        "family": family.key,
+        "target_type": target_type.key,
+        "target_id": normalized_id,
         "title": title,
-        "href": semantic_reference_href(kind, normalized_id),
-        "meta": target_meta(kind.kind, record, series_titles=series_titles),
+        "href": href,
+        "meta": target_meta(target_type.key, record, series_titles=series_titles),
     }
 
 
 def docs_scope_target_row(
-    kind: SemanticReferenceKind,
+    family: SemanticTokenFamily,
+    target_type: SemanticTokenTargetType,
     index_row: dict[str, Any],
     source: dict[str, Any],
     *,
@@ -179,18 +190,28 @@ def docs_scope_target_row(
     if isinstance(non_loadable, set) and index_row.get("doc_id") in non_loadable:
         return None
     doc_id = str(index_row.get("doc_id") or "").strip()
-    normalized_id = normalize_semantic_reference_id(doc_id, kind.id)
+    normalized_id = normalize_semantic_token_id(doc_id, target_type.id_policy)
     title = str(index_row.get("title") or "").strip()
-    if not normalized_id or not title:
+    href = semantic_token_target_href(target_type, normalized_id or "")
+    if not normalized_id or not title or not href:
         return None
     payload = load_json(repo_root / str(source["by_id"]) / f"{normalized_id}.json")
     return {
-        "kind": kind.kind,
-        "id": normalized_id,
+        "family": family.key,
+        "target_type": target_type.key,
+        "target_id": normalized_id,
         "title": title,
-        "href": semantic_reference_href(kind, normalized_id),
+        "href": href,
         "meta": docs_scope_target_meta(payload if isinstance(payload, dict) else {}),
     }
+
+
+def semantic_token_target_href(target_type: SemanticTokenTargetType, target_id: str) -> str:
+    destination = CATALOGUE_TARGET_DESTINATIONS.get(target_type.lookup_adapter)
+    if destination is None or not target_id:
+        return ""
+    path, parameter = destination
+    return f"{path}?{quote(parameter)}={quote(target_id)}"
 
 
 class SemanticTargetLookupBuilder:
@@ -213,9 +234,15 @@ class SemanticTargetLookupBuilder:
         return {"payload": payload, "diagnostics": diagnostics}
 
     def payload(self) -> dict[str, Any]:
-        registry = load_semantic_reference_registry(self.repo_root)
+        registry = load_semantic_token_registry(self.repo_root)
         targets: list[dict[str, Any]] = []
         if registry is None:
+            return {
+                "schema_version": SEMANTIC_TARGET_LOOKUP_SCHEMA_VERSION,
+                "targets": [],
+            }
+        family = registry.family("catalogue")
+        if family is None:
             return {
                 "schema_version": SEMANTIC_TARGET_LOOKUP_SCHEMA_VERSION,
                 "targets": [],
@@ -224,16 +251,16 @@ class SemanticTargetLookupBuilder:
         series_source = CATALOGUE_KIND_SOURCES["series"]
         series_payload = load_json(source_root / str(series_source["filename"]))
         series_titles = series_titles_by_id(json_rows(series_payload, str(series_source["root_key"])))
-        for kind in registry.kinds:
-            source = CATALOGUE_KIND_SOURCES.get(kind.kind)
+        for target_type in family.target_types:
+            source = CATALOGUE_KIND_SOURCES.get(target_type.key)
             if source is not None:
                 payload = load_json(source_root / str(source["filename"]))
                 for record in json_rows(payload, str(source["root_key"])):
-                    row = target_row(kind, record, source, series_titles=series_titles)
+                    row = target_row(family, target_type, record, source, series_titles=series_titles)
                     if row is not None:
                         targets.append(row)
                 continue
-            docs_source = DOCS_SCOPE_KIND_SOURCES.get(kind.kind)
+            docs_source = DOCS_SCOPE_KIND_SOURCES.get(target_type.key)
             if docs_source is None:
                 continue
             scope_config = load_docs_scope_configs(self.repo_root)[str(docs_source["scope_id"])]
@@ -247,14 +274,22 @@ class SemanticTargetLookupBuilder:
             non_loadable_doc_ids = viewer_options.get("non_loadable_doc_ids") if isinstance(viewer_options, dict) else []
             source_with_options["non_loadable_doc_ids"] = set(non_loadable_doc_ids or [])
             for record in docs_index_rows(payload):
-                row = docs_scope_target_row(kind, record, source_with_options, repo_root=self.repo_root)
+                row = docs_scope_target_row(
+                    family,
+                    target_type,
+                    record,
+                    source_with_options,
+                    repo_root=self.repo_root,
+                )
                 if row is not None:
                     targets.append(row)
         targets.sort(
             key=lambda row: (
-                registry.kind(row["kind"]).order if registry.kind(row["kind"]) else 999,
+                family.target_type(row["target_type"]).order
+                if family.target_type(row["target_type"])
+                else 999,
                 normalize_lookup_text(row["title"]),
-                row["id"],
+                row["target_id"],
             )
         )
         return {
@@ -264,7 +299,7 @@ class SemanticTargetLookupBuilder:
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Build Docs Viewer semantic-reference target lookup data.")
+    parser = argparse.ArgumentParser(description="Build Docs Viewer semantic-token target lookup data.")
     parser.add_argument("--output", help="Override semantic target lookup output path.")
     parser.add_argument("--write", action="store_true", help="Write generated lookup data.")
     return parser.parse_args(argv)

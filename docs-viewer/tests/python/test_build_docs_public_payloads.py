@@ -16,9 +16,11 @@ from build_docs_test_support import (
     MANAGE_CHILD_DOC_ID,
     MANAGE_ROOT_DOC_ID,
     PARENT_DOC_ID,
+    REPO_ROOT,
     read_json,
     write_public_scope_config,
     write_public_source_docs,
+    write_json,
     write_site_tools_config,
     write_text,
 )
@@ -32,6 +34,39 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
         write_site_tools_config(root, media_base="")
         write_public_scope_config(root)
         write_public_source_docs(root)
+        write_text(
+            root / "docs-viewer/config/semantic-tokens/registry.json",
+            (
+                REPO_ROOT / "docs-viewer/config/semantic-tokens/registry.json"
+            ).read_text(encoding="utf-8"),
+        )
+        write_json(
+            root / "docs-viewer/data/generated/semantic-tokens/target-lookup.json",
+            {
+                "schema_version": "docs_semantic_token_target_lookup_v1",
+                "targets": [
+                    {
+                        "family": "catalogue",
+                        "target_type": "work",
+                        "target_id": "00638",
+                        "title": "3 symbols",
+                        "href": "/works/?work=00638",
+                        "meta": [],
+                    }
+                ],
+            },
+        )
+        child_source_path = (
+            root
+            / f"docs-viewer/scopes/library/source/documents/{CHILD_DOC_ID}.md"
+        )
+        write_text(
+            child_source_path,
+            (
+                child_source_path.read_text(encoding="utf-8")
+                + "\n[[catalogue:work:00638|3 symbols]]\n"
+            ),
+        )
         config = load_docs_scope_configs(root)["library"]
         result = build_docs.DocsDataBuilder(repo_root=root, config=config).run(write=True)
         index_tree = read_json(root / "docs-viewer/scopes/library/published/documents/index-tree.json")
@@ -39,10 +74,14 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
         publication_recent = read_json(root / "docs-viewer/scopes/library/published/documents/.publish/recent.json")
         child_payload = read_json(root / f"docs-viewer/scopes/library/published/documents/by-id/{CHILD_DOC_ID}.json")
         hidden_payload = read_json(root / f"docs-viewer/scopes/library/published/documents/by-id/{HIDDEN_DOC_ID}.json")
+        semantic_tokens_generated = (
+            root / "docs-viewer/scopes/library/published/documents/semantic-tokens"
+        ).exists()
         manage_browser_config = build_docs.browser_scope_config_payload(root, [config])
         public_browser_config = build_docs.browser_scope_config_payload(root, [config], published=True)
 
     assert result["diagnostics"]["docs_emitted"] == 6
+    assert not semantic_tokens_generated
     public_tree_forbidden_keys = {
         "summary",
         "date",
@@ -120,6 +159,8 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
     assert child_payload["summary"] == "Child summary"
     assert child_payload["last_updated"] == "2026-06-03 10:00:00"
     assert "content_html" in child_payload
+    assert "[[catalogue:work:00638|3 symbols]]" in child_payload["content_html"]
+    assert "data-semantic-token-family" not in child_payload["content_html"]
     assert public_by_id_forbidden_keys.isdisjoint(child_payload)
     assert hidden_payload["title"] == "Hidden"
     assert manage_browser_config["scopes"][0]["index_tree_url"] == "/docs-viewer/scopes/library/published/documents/index-tree.json"

@@ -134,6 +134,7 @@ class DocsViewerServiceConfig:
     generated_reads_enabled: bool
     watch_enabled: bool
     review_enabled: bool = False
+    public_preview_base: str = "http://127.0.0.1:4000"
 
 
 def parse_site_env(path: Path) -> dict[str, str]:
@@ -200,6 +201,11 @@ def load_service_config(
     except (TypeError, ValueError) as error:
         raise ValueError("DOCS_VIEWER_PORT must be an integer") from error
     base_url = str(base_url_override or env.get("DOCS_VIEWER_BASE_URL") or f"http://{host}:{port}").strip().rstrip("/")
+    public_site_host = str(env.get("SITE_HOST") or "127.0.0.1").strip() or "127.0.0.1"
+    public_site_port = str(env.get("SITE_PORT") or "4000").strip() or "4000"
+    public_preview_base = str(
+        env.get("SITE_PREVIEW_BASE") or f"http://{public_site_host}:{public_site_port}"
+    ).strip().rstrip("/")
     config = DocsViewerServiceConfig(
         host=host,
         port=port,
@@ -208,6 +214,7 @@ def load_service_config(
         generated_reads_enabled=env_bool(env, "DOCS_VIEWER_GENERATED_READS_ENABLED", defaults["generated_reads_enabled"]),
         watch_enabled=env_bool(env, "DOCS_VIEWER_WATCH_ENABLED", defaults["watch_enabled"]),
         review_enabled=env_bool(env, "DOCS_VIEWER_REVIEW_ENABLED", defaults["review_enabled"]),
+        public_preview_base=public_preview_base,
     )
     validate_service_config(config)
     return config
@@ -225,6 +232,17 @@ def validate_service_config(config: DocsViewerServiceConfig) -> None:
         raise ValueError("DOCS_VIEWER_BASE_URL must use DOCS_VIEWER_PORT")
     if parsed.path not in {"", "/"} or parsed.params or parsed.query or parsed.fragment:
         raise ValueError("DOCS_VIEWER_BASE_URL must not include a path, query, or fragment")
+    preview = urlparse(config.public_preview_base)
+    if (
+        preview.scheme not in {"http", "https"}
+        or not preview.hostname
+        or preview.username
+        or preview.password
+        or preview.params
+        or preview.query
+        or preview.fragment
+    ):
+        raise ValueError("SITE_PREVIEW_BASE must be an absolute http(s) URL without credentials, query, or fragment")
 
 
 def asset_version(repo_root: Path) -> str:
@@ -282,6 +300,12 @@ def render_route_config_registry(repo_root: Path, config: DocsViewerServiceConfi
             access = {}
             route["access"] = access
         access["management_ui"] = bool(config.management_enabled) if route_id == "docs-manage" else False
+        if route_id == "docs-manage":
+            route["sites"] = {
+                "public_preview": {
+                    "base": config.public_preview_base,
+                },
+            }
     return payload
 
 

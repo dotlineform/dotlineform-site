@@ -18,6 +18,19 @@ export function createDocsViewerManagementViewDefinitions() {
         capabilities: {
           layoutStates: ["normal", "collapsed", "expanded"]
         }
+      },
+      {
+        id: "catalogue-token-info",
+        label: "Catalogue token",
+        panel: "info",
+        appKinds: ["manage"],
+        features: ["source-editing"],
+        load: function () {
+          return import("./source-editor/catalogue-token-info-view.js")
+            .then(function (module) {
+              return module.createCatalogueTokenInfoView();
+            });
+        }
       }
     ],
     modes: [{

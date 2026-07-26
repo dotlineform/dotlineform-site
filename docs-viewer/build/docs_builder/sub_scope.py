@@ -99,8 +99,15 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         self.validate_canonical_doc_ids(docs)
         self.validate_docs(docs)
         semantic_references_by_doc: dict[str, list[dict[str, Any]]] = {}
+        semantic_tokens_by_doc: dict[str, list[dict[str, Any]]] = {}
         item_payloads = {
-            doc.doc_id: self.item_entry(doc, docs, semantic_references_by_doc) for doc in docs
+            doc.doc_id: self.item_entry(
+                doc,
+                docs,
+                semantic_references_by_doc,
+                semantic_tokens_by_doc,
+            )
+            for doc in docs
         }
         manifest_payload = self.manifest_payload(docs)
         write_plan = self.build_sub_scope_write_plan(manifest_payload, item_payloads)

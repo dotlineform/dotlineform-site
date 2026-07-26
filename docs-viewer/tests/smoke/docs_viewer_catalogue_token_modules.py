@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke-check the CT-P1 Catalogue token browser-module contracts."""
+"""Smoke-check the CT-P1/P2 Catalogue token browser-module contracts."""
 
 from __future__ import annotations
 
@@ -59,10 +59,16 @@ def install_modules(page: Page) -> None:
                 '/docs-viewer/runtime/js/management/source-editor/catalogue-token-contribution.js'
             );
             const registry = await import(
-                '/docs-viewer/runtime/js/management/source-editor/semantic-reference-registry.js'
+                '/docs-viewer/runtime/js/management/source-editor/semantic-token-registry.js'
             );
-            const pilotTargets = await import(
-                '/docs-viewer/runtime/js/management/source-editor/semantic-targets.js'
+            const semanticTargets = await import(
+                '/docs-viewer/runtime/js/management/source-editor/semantic-token-targets.js'
+            );
+            const parser = await import(
+                '/docs-viewer/runtime/js/management/source-editor/catalogue-token-parser.js'
+            );
+            const infoView = await import(
+                '/docs-viewer/runtime/js/management/source-editor/catalogue-token-info-view.js'
             );
             const sourceEditor = await import(
                 '/docs-viewer/runtime/js/management/source-editor/source-editor.js'
@@ -70,9 +76,11 @@ def install_modules(page: Page) -> None:
             window.__catalogueTokenSmoke = {
                 contract,
                 contribution,
+                infoView,
                 modal,
-                pilotTargets,
+                parser,
                 registry,
+                semanticTargets,
                 sourceEditor,
                 targets
             };
@@ -107,35 +115,104 @@ def assert_contract_fixture_and_mixed_search(page: Page) -> None:
                     expected: token.serialized
                 }))
             ));
-            const registry = smoke.registry.normalizeSemanticReferenceRegistry({
-                schema_version: 'docs_semantic_reference_registry_v1',
-                target_lookup_url: '/docs-viewer/data/generated/semantic-references/target-lookup.json',
-                kinds: [
-                    { kind: 'work' },
-                    { kind: 'series' },
-                    { kind: 'moment' }
-                ]
+            const registry = smoke.registry.normalizeSemanticTokenRegistry({
+                schema_version: 'docs_semantic_token_registry_v1',
+                target_lookup_url: '/docs-viewer/data/generated/semantic-tokens/target-lookup.json',
+                families: [fixture.catalogue_definition]
             });
-            const pilotTargets = smoke.pilotTargets.normalizeSemanticTargets({
-                targets: fixture.target_lookup_example.targets.map(row => ({
-                    kind: row.target_type,
-                    id: row.target_id,
-                    title: row.title,
-                    href: row.href,
-                    meta: row.meta
-                }))
-            }, registry);
-            const support = smoke.targets.createCatalogueTargetSupport(registry, pilotTargets);
+            const semanticTargets = smoke.semanticTargets.normalizeSemanticTokenTargets(
+                fixture.target_lookup_example,
+                registry
+            );
+            const support = smoke.targets.createCatalogueTargetSupport(registry, semanticTargets);
             const matches = smoke.targets.collectCatalogueTargetMatches(support, 'nerve', 10);
+            const idMatches = smoke.targets.collectCatalogueTargetMatches(support, '00008', 10);
+            const qualifiedIdMatches = smoke.targets.collectCatalogueTargetMatches(
+                support,
+                'work:00008',
+                10
+            );
+            const exactTarget = smoke.targets.findCatalogueTargetByIdentity(support, {
+                family: 'catalogue',
+                targetType: 'work',
+                targetId: '00008'
+            });
+            const parsed = fixture.cases.map(testCase => ({
+                id: testCase.id,
+                actual: smoke.parser.parseCatalogueTokens(testCase.source, { registry }).map(token => ({
+                    raw: token.raw,
+                    source_range: { start: token.start, end: token.end },
+                    family: token.family,
+                    target_type: token.targetType,
+                    target_id: token.targetId,
+                    title: token.title,
+                    supported: token.supported,
+                    activatable: token.activatable
+                })),
+                expected: testCase.tokens.map(token => ({
+                    raw: token.raw,
+                    source_range: token.source_range,
+                    family: token.family,
+                    target_type: token.target_type,
+                    target_id: token.target_id,
+                    title: token.title,
+                    supported: token.supported,
+                    activatable: token.activatable
+                })),
+                caret: (testCase.caret_expectations || []).map(expectation => {
+                    const tokens = smoke.parser.parseCatalogueTokens(testCase.source, { registry });
+                    const active = smoke.parser.catalogueTokenAtSelection(tokens, {
+                        start: expectation.offset,
+                        end: expectation.offset
+                    });
+                    return {
+                        actual: active ? tokens.indexOf(active) : null,
+                        expected: expectation.active_token_index
+                    };
+                })
+            }));
             const definition = smoke.contribution.catalogueTokenControlDefinition();
             const handlers = smoke.contribution.createCatalogueTokenMainViewControlHandlers();
+            const infoResolver = smoke.contribution.createCatalogueTokenInfoViewResolver({
+                fetch: async () => ({
+                    ok: true,
+                    json: async () => ({
+                        schema_version: 'docs_semantic_token_registry_v1',
+                        target_lookup_url: '/docs-viewer/data/generated/semantic-tokens/target-lookup.json',
+                        families: [fixture.catalogue_definition]
+                    })
+                })
+            });
+            const resolvedInfoViews = [
+                await infoResolver({
+                    getBufferSnapshot() {
+                        return {
+                            revision: 0,
+                            value: 'Before [[catalogue:work:00638|3 symbols]] after'
+                        };
+                    },
+                    getSelection() {
+                        return { start: 18, end: 18 };
+                    }
+                }),
+                await infoResolver({
+                    getBufferSnapshot() {
+                        return { revision: 0, value: 'Before ordinary text after' };
+                    },
+                    getSelection() {
+                        return { start: 10, end: 10 };
+                    }
+                })
+            ];
             const renderedButton = smoke.contribution.catalogueTokenControlRenderer({
                 document
             });
             return {
                 definition,
+                exactTarget,
                 fixtureUiContributions: fixture.catalogue_definition.ui_contributions,
                 handlerIds: Object.keys(handlers),
+                idMatches,
                 matches: matches.map(target => ({
                     family: target.family,
                     targetType: target.targetType,
@@ -145,7 +222,10 @@ def assert_contract_fixture_and_mixed_search(page: Page) -> None:
                     meta: target.meta
                 })),
                 modalId: smoke.modal.CATALOGUE_TOKEN_MODAL_ID,
+                parsed,
+                qualifiedIdMatches,
                 rendererIcon: renderedButton.textContent,
+                resolvedInfoViews,
                 serialized
             };
         }"""
@@ -156,6 +236,13 @@ def assert_contract_fixture_and_mixed_search(page: Page) -> None:
     ]
     if mismatches:
         raise AssertionError(f"browser serializer drifted from the P0 fixture: {mismatches!r}")
+    parser_mismatches = [
+        row for row in result["parsed"]
+        if row["actual"] != row["expected"]
+        or any(item["actual"] != item["expected"] for item in row["caret"])
+    ]
+    if parser_mismatches:
+        raise AssertionError(f"browser parser drifted from the P0 fixture: {parser_mismatches!r}")
     if result["matches"] != [
         {
             "family": "catalogue",
@@ -175,6 +262,20 @@ def assert_contract_fixture_and_mixed_search(page: Page) -> None:
         },
     ]:
         raise AssertionError(f"ambiguous Catalogue search changed: {result!r}")
+    expected_id_target = {
+        "family": "catalogue",
+        "targetType": "work",
+        "targetId": "00008",
+        "title": "nerve",
+        "href": "/works/?work=00008",
+        "meta": ["July 1990 – January 1995", "nerve"],
+    }
+    if (
+        result["idMatches"] != [expected_id_target]
+        or result["qualifiedIdMatches"] != [expected_id_target]
+        or result["exactTarget"] != expected_id_target
+    ):
+        raise AssertionError(f"Catalogue ID search or exact identity lookup changed: {result!r}")
     if result["definition"] != {
         "id": "source-add-catalogue-token",
         "actionId": "source-add-catalogue-token",
@@ -192,6 +293,8 @@ def assert_contract_fixture_and_mixed_search(page: Page) -> None:
         raise AssertionError(f"Catalogue control handler contribution changed: {result!r}")
     if result["rendererIcon"] != "📍":
         raise AssertionError(f"Catalogue control icon changed: {result!r}")
+    if result["resolvedInfoViews"] != ["catalogue-token-info", "metadata-info"]:
+        raise AssertionError(f"Catalogue source Info routing changed: {result!r}")
     if result["fixtureUiContributions"] != {
         "source_action": result["definition"]["id"],
         "modal": result["modalId"],
@@ -279,27 +382,32 @@ def assert_modal_insertion_cancellation_and_stale_guard(page: Page) -> None:
         """async () => {
             const smoke = window.__catalogueTokenSmoke;
             const registryPayload = {
-                schema_version: 'docs_semantic_reference_registry_v1',
-                target_lookup_url: '/docs-viewer/data/generated/semantic-references/target-lookup.json',
-                kinds: [
-                    { kind: 'work' },
-                    { kind: 'series' },
-                    { kind: 'moment' }
-                ]
+                schema_version: 'docs_semantic_token_registry_v1',
+                target_lookup_url: '/docs-viewer/data/generated/semantic-tokens/target-lookup.json',
+                families: [{
+                    key: 'catalogue',
+                    target_types: [
+                        { key: 'work' },
+                        { key: 'series' },
+                        { key: 'moment' }
+                    ]
+                }]
             };
             const targetPayload = {
-                schema_version: 'docs_semantic_reference_target_lookup_v1',
+                schema_version: 'docs_semantic_token_target_lookup_v1',
                 targets: [
                     {
-                        kind: 'work',
-                        id: '00008',
+                        family: 'catalogue',
+                        target_type: 'work',
+                        target_id: '00008',
                         title: 'nerve',
                         href: '/works/?work=00008',
                         meta: ['July 1990 – January 1995', 'nerve']
                     },
                     {
-                        kind: 'series',
-                        id: '105',
+                        family: 'catalogue',
+                        target_type: 'series',
+                        target_id: '105',
                         title: 'nerve series',
                         href: '/series/?series=105',
                         meta: ['1990-95']
@@ -398,6 +506,100 @@ def assert_modal_insertion_cancellation_and_stale_guard(page: Page) -> None:
                     titleAfterClick,
                     titleAfterKeyboard
                 };
+            }
+
+            async function exactTokenCase() {
+                const root = document.createElement('div');
+                document.body.appendChild(root);
+                const raw = '[[catalogue:work:00008|display nerve]]';
+                const state = {
+                    value: 'Before ' + raw + ' after',
+                    replaceCount: 0
+                };
+                const capture = {
+                    start: 7,
+                    end: 7 + raw.length,
+                    text: raw,
+                    revision: 0
+                };
+                const modalPromise = smoke.modal.openCatalogueTokenModal({
+                    adapter: {
+                        focus() {},
+                        replaceCapturedSelection(candidate, token) {
+                            if (JSON.stringify(candidate) !== JSON.stringify(capture)) return false;
+                            state.replaceCount += 1;
+                            state.value = state.value.slice(0, candidate.start)
+                                + token
+                                + state.value.slice(candidate.end);
+                            return true;
+                        },
+                        setStatus() {}
+                    },
+                    capture,
+                    fetch: fakeFetch,
+                    root
+                });
+                await waitForLoaded(root);
+                const search = root.querySelector('#docsViewerCatalogueTokenSearch');
+                const title = root.querySelector('#docsViewerCatalogueTokenTitle');
+                const row = root.querySelector('[data-target-index="0"]');
+                const restored = {
+                    query: search.value,
+                    rowCount: root.querySelectorAll('[data-target-index]').length,
+                    selected: row && row.getAttribute('aria-selected') === 'true',
+                    targetId: row && row.querySelector(
+                        '.docsViewerSemanticPicker__rowId'
+                    ).textContent,
+                    targetType: row && row.querySelector(
+                        '.docsViewerSemanticPicker__rowKind'
+                    ).textContent,
+                    title: title.value
+                };
+                root.querySelector('[data-role="modal-primary"]').click();
+                const modalResult = await modalPromise;
+                root.remove();
+                return { modalResult, restored, state };
+            }
+
+            async function unavailableTokenCase() {
+                const root = document.createElement('div');
+                document.body.appendChild(root);
+                const raw = '[[catalogue:work:99999|lost nerve]]';
+                let replaceCount = 0;
+                const modalPromise = smoke.modal.openCatalogueTokenModal({
+                    adapter: {
+                        focus() {},
+                        replaceCapturedSelection() {
+                            replaceCount += 1;
+                            return true;
+                        }
+                    },
+                    capture: {
+                        start: 0,
+                        end: raw.length,
+                        text: raw,
+                        revision: 0
+                    },
+                    fetch: fakeFetch,
+                    root
+                });
+                await waitForLoaded(root);
+                const initial = {
+                    query: root.querySelector('#docsViewerCatalogueTokenSearch').value,
+                    rowCount: root.querySelectorAll('[data-target-index]').length,
+                    status: root.querySelector(
+                        '[data-role="catalogue-search-status"]'
+                    ).textContent,
+                    title: root.querySelector('#docsViewerCatalogueTokenTitle').value
+                };
+                root.querySelector('[data-role="modal-primary"]').click();
+                const remainedOpen = Boolean(
+                    root.querySelector('[data-role="docs-viewer-management-modal"]')
+                );
+                root.querySelector('[data-role="modal-cancel"]').click();
+                await modalPromise;
+                root.remove();
+                return { initial, remainedOpen, replaceCount };
             }
 
             async function cancelledCase() {
@@ -529,8 +731,10 @@ def assert_modal_insertion_cancellation_and_stale_guard(page: Page) -> None:
             return {
                 cancelled: await cancelledCase(),
                 caret: await caretCase(),
+                exactToken: await exactTokenCase(),
                 inserted: await insertedCase(),
                 stale: await staleCase(),
+                unavailableToken: await unavailableTokenCase(),
                 validation: await validationCase()
             };
         }"""
@@ -589,6 +793,26 @@ def assert_modal_insertion_cancellation_and_stale_guard(page: Page) -> None:
         "value": "Before [[catalogue:work:00008|nerve]] after",
     }:
         raise AssertionError(f"caret insertion or canonical-title prefilling changed: {result!r}")
+    exact_token = result["exactToken"]
+    if exact_token["restored"] != {
+        "query": "work:00008",
+        "rowCount": 1,
+        "selected": True,
+        "targetId": "00008",
+        "targetType": "work",
+        "title": "display nerve",
+    }:
+        raise AssertionError(f"complete Catalogue token identity was not restored: {result!r}")
+    if (
+        exact_token["state"] != {
+            "value": "Before [[catalogue:work:00008|display nerve]] after",
+            "replaceCount": 1,
+        }
+        or exact_token["modalResult"]["title"] != "display nerve"
+        or exact_token["modalResult"]["target"]["targetId"] != "00008"
+        or exact_token["modalResult"]["target"]["targetType"] != "work"
+    ):
+        raise AssertionError(f"restored Catalogue token confirmation changed: {result!r}")
     if result["stale"] != {
         "remainedOpen": True,
         "replaceCount": 1,
@@ -600,6 +824,238 @@ def assert_modal_insertion_cancellation_and_stale_guard(page: Page) -> None:
         "titleRequired": True,
     }:
         raise AssertionError(f"Catalogue modal validation gate changed: {result!r}")
+    if result["unavailableToken"] != {
+        "initial": {
+            "query": "work:99999",
+            "rowCount": 0,
+            "status": "Catalogue target work:99999 is unavailable.",
+            "title": "lost nerve",
+        },
+        "remainedOpen": True,
+        "replaceCount": 0,
+    }:
+        raise AssertionError(f"unavailable token identity fell back to fuzzy search: {result!r}")
+
+
+def assert_catalogue_info_exact_range_update_remove_and_stale_guard(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const smoke = window.__catalogueTokenSmoke;
+            const registryPayload = {
+                schema_version: 'docs_semantic_token_registry_v1',
+                target_lookup_url: '/docs-viewer/data/generated/semantic-tokens/target-lookup.json',
+                families: [{
+                    key: 'catalogue',
+                    labels: { info_view: 'Catalogue token' },
+                    target_types: [{
+                        key: 'work',
+                        label: 'Work',
+                        id_policy: {
+                            canonical_pattern: '^\\\\d{5}$',
+                            input_pattern: '^\\\\d{1,5}$',
+                            normalizer: 'digits_left_pad',
+                            width: 5
+                        }
+                    }]
+                }]
+            };
+            const targetPayload = {
+                schema_version: 'docs_semantic_token_target_lookup_v1',
+                targets: [{
+                    family: 'catalogue',
+                    target_type: 'work',
+                    target_id: '00638',
+                    title: '3 symbols',
+                    href: '/works/?work=00638',
+                    meta: ['2007']
+                }]
+            };
+            const fakeFetch = async url => ({
+                ok: true,
+                json: async () => String(url).includes('target-lookup')
+                    ? targetPayload
+                    : registryPayload
+            });
+
+            function createState() {
+                const state = {
+                    value: 'Before [[catalogue:work:00638|3 symbols]] after',
+                    revision: 0,
+                    selection: { start: 18, end: 18 },
+                    listeners: new Set(),
+                    status: ''
+                };
+                state.adapter = {
+                    getBufferSnapshot() {
+                        return { revision: state.revision, value: state.value };
+                    },
+                    getSelection() {
+                        return {
+                            start: state.selection.start,
+                            end: state.selection.end,
+                            text: state.value.slice(state.selection.start, state.selection.end)
+                        };
+                    },
+                    onSelectionChange(listener) {
+                        state.listeners.add(listener);
+                        return () => state.listeners.delete(listener);
+                    },
+                    selectCapturedRange(capture) {
+                        if (
+                            capture.revision !== state.revision
+                            || state.value.slice(capture.start, capture.end) !== capture.text
+                        ) return false;
+                        state.selection = { start: capture.start, end: capture.end };
+                        state.listeners.forEach(listener => listener());
+                        return true;
+                    },
+                    replaceCapturedRange(capture, replacement, mode) {
+                        if (
+                            capture.revision !== state.revision
+                            || state.value.slice(capture.start, capture.end) !== capture.text
+                        ) return false;
+                        state.value = state.value.slice(0, capture.start)
+                            + replacement
+                            + state.value.slice(capture.end);
+                        state.revision += 1;
+                        state.selection = mode === 'select'
+                            ? { start: capture.start, end: capture.start + replacement.length }
+                            : { start: capture.start + replacement.length, end: capture.start + replacement.length };
+                        state.listeners.forEach(listener => listener());
+                        return true;
+                    },
+                    setStatus(message) {
+                        state.status = message;
+                    }
+                };
+                return state;
+            }
+
+            async function mountView(state) {
+                const mount = document.createElement('div');
+                document.body.appendChild(mount);
+                const view = smoke.infoView.createCatalogueTokenInfoView({ fetch: fakeFetch });
+                const context = {
+                    mount,
+                    sourceEditorServices: {
+                        getActiveSourceEditorContextAdapter() {
+                            return state.adapter;
+                        },
+                        publicPreviewBase: 'http://127.0.0.1:4000'
+                    }
+                };
+                await view.mount(context);
+                return { context, mount, view };
+            }
+
+            const state = createState();
+            const mounted = await mountView(state);
+            const initial = {
+                selection: Object.assign({}, state.selection),
+                rows: Array.from(mounted.mount.querySelectorAll('.docsViewer__metadataInfoRow'))
+                    .map(row => row.textContent),
+                destinationHref: mounted.mount.querySelector(
+                    '.docsViewer__metadataInfoRow a'
+                ).href,
+                title: mounted.mount.querySelector('input').value
+            };
+            const titleInput = mounted.mount.querySelector('input');
+            titleInput.value = 'three signs';
+            Array.from(mounted.mount.querySelectorAll('button'))
+                .find(button => button.textContent === 'Update token')
+                .click();
+            const afterUpdate = {
+                selection: Object.assign({}, state.selection),
+                status: state.status,
+                title: mounted.mount.querySelector('input').value,
+                value: state.value
+            };
+            Array.from(mounted.mount.querySelectorAll('button'))
+                .find(button => button.textContent === 'Remove token')
+                .click();
+            const afterRemove = {
+                empty: mounted.mount.textContent.includes('Place the caret inside a Catalogue token'),
+                status: state.status,
+                value: state.value
+            };
+            mounted.view.unmount(mounted.context);
+            mounted.mount.remove();
+
+            const staleState = createState();
+            const staleMounted = await mountView(staleState);
+            staleState.revision += 1;
+            staleMounted.mount.querySelector('input').value = 'stale title';
+            Array.from(staleMounted.mount.querySelectorAll('button'))
+                .find(button => button.textContent === 'Update token')
+                .click();
+            const stale = {
+                error: staleMounted.mount.textContent.includes(
+                    'Markdown source changed. Select the token again.'
+                ),
+                value: staleState.value
+            };
+            staleMounted.view.unmount(staleMounted.context);
+            staleMounted.mount.remove();
+            const rendered = document.createElement('div');
+            rendered.innerHTML = [
+                '<a href="/works/?work=00638"',
+                ' data-semantic-token-family="catalogue"',
+                ' data-semantic-token-target-type="work"',
+                ' data-semantic-token-target-id="00638">3 symbols</a>'
+            ].join('');
+            const mountedLinkCount = smoke.semanticTargets.mountSemanticTokenTargetLinks(
+                rendered,
+                'http://127.0.0.1:4000'
+            );
+            return {
+                afterRemove,
+                afterUpdate,
+                initial,
+                rendered: {
+                    href: rendered.querySelector('a').href,
+                    mountedLinkCount
+                },
+                stale
+            };
+        }"""
+    )
+    expected_raw = "[[catalogue:work:00638|3 symbols]]"
+    if result["initial"] != {
+        "selection": {"start": 7, "end": 41},
+        "rows": [
+            "FamilyCatalogue",
+            "Target typework",
+            "Target ID00638",
+            "Catalogue title3 symbols",
+            "Destination/works/?work=00638",
+        ],
+        "destinationHref": "http://127.0.0.1:4000/works/?work=00638",
+        "title": "3 symbols",
+    }:
+        raise AssertionError(f"Catalogue Info recognition/context changed: {result!r}")
+    if result["afterUpdate"] != {
+        "selection": {"start": 7, "end": 43},
+        "status": "",
+        "title": "three signs",
+        "value": "Before [[catalogue:work:00638|three signs]] after",
+    }:
+        raise AssertionError(f"Catalogue Info update changed: {result!r}")
+    if result["afterRemove"] != {
+        "empty": True,
+        "status": "",
+        "value": "Before  after",
+    }:
+        raise AssertionError(f"Catalogue Info removal changed: {result!r}")
+    if result["stale"] != {
+        "error": True,
+        "value": f"Before {expected_raw} after",
+    }:
+        raise AssertionError(f"Catalogue Info stale-range guard changed: {result!r}")
+    if result["rendered"] != {
+        "href": "http://127.0.0.1:4000/works/?work=00638",
+        "mountedLinkCount": 1,
+    }:
+        raise AssertionError(f"rendered Catalogue destination changed: {result!r}")
 
 
 def assert_real_keyboard_tab_and_scroll_flow(page: Page) -> None:
@@ -609,21 +1065,25 @@ def assert_real_keyboard_tab_and_scroll_flow(page: Page) -> None:
             const root = document.createElement('div');
             document.body.appendChild(root);
             const registryPayload = {
-                schema_version: 'docs_semantic_reference_registry_v1',
-                target_lookup_url: '/docs-viewer/data/generated/semantic-references/target-lookup.json',
-                kinds: [
-                    { kind: 'work' },
-                    { kind: 'series' },
-                    { kind: 'moment' }
-                ]
+                schema_version: 'docs_semantic_token_registry_v1',
+                target_lookup_url: '/docs-viewer/data/generated/semantic-tokens/target-lookup.json',
+                families: [{
+                    key: 'catalogue',
+                    target_types: [
+                        { key: 'work' },
+                        { key: 'series' },
+                        { key: 'moment' }
+                    ]
+                }]
             };
             const targetPayload = {
-                schema_version: 'docs_semantic_reference_target_lookup_v1',
+                schema_version: 'docs_semantic_token_target_lookup_v1',
                 targets: Array.from({ length: 25 }, (_value, index) => {
                     const id = String(index + 1).padStart(5, '0');
                     return {
-                        kind: 'work',
-                        id,
+                        family: 'catalogue',
+                        target_type: 'work',
+                        target_id: id,
                         title: 'nerve ' + id,
                         href: '/works/?work=' + id,
                         meta: []
@@ -771,6 +1231,7 @@ def run_smoke(page: Page, base_url: str) -> None:
     assert_contract_fixture_and_mixed_search(page)
     assert_source_adapter_captures_and_guards_range(page)
     assert_modal_insertion_cancellation_and_stale_guard(page)
+    assert_catalogue_info_exact_range_update_remove_and_stale_guard(page)
     assert_real_keyboard_tab_and_scroll_flow(page)
 
 

@@ -24,6 +24,7 @@ class WritePlanMixin:
         publication_recent_payload: dict[str, Any] | None,
         item_payloads: dict[str, dict[str, Any]],
         reference_payloads: dict[str, Any],
+        semantic_token_payloads: dict[str, Any],
         *,
         target_doc_ids: list[str] | None = None,
     ) -> dict[str, Any]:
@@ -64,6 +65,10 @@ class WritePlanMixin:
             "stale_item_ids": stale_item_ids,
             "item_text_by_id": item_text_by_id,
             **self.build_reference_write_plan(reference_payloads, target_doc_ids=target_doc_ids),
+            **self.build_semantic_token_write_plan(
+                semantic_token_payloads,
+                target_doc_ids=target_doc_ids,
+            ),
         }
 
     def write_outputs(
@@ -74,6 +79,7 @@ class WritePlanMixin:
         tree_total: int,
         recent_total: int,
         reference_total: int,
+        semantic_token_total: int,
     ) -> None:
         """Apply one write plan and report the resulting output counts.
 
@@ -96,6 +102,7 @@ class WritePlanMixin:
         for doc_id in write_plan["stale_item_ids"]:
             (self.items_dir / f"{doc_id}.json").unlink(missing_ok=True)
         self.write_reference_outputs(write_plan)
+        self.write_semantic_token_outputs(write_plan)
         self.print_human_summary(
             write_plan,
             mode="write",
@@ -103,6 +110,7 @@ class WritePlanMixin:
             tree_total=tree_total,
             recent_total=recent_total,
             reference_total=reference_total,
+            semantic_token_total=semantic_token_total,
         )
 
     def print_dry_run(
@@ -111,6 +119,7 @@ class WritePlanMixin:
         index_tree_payload: dict[str, Any],
         recent_payload: dict[str, Any],
         reference_payloads: dict[str, Any],
+        semantic_token_payloads: dict[str, Any],
         write_plan: dict[str, Any],
     ) -> None:
         self.print_human_summary(
@@ -120,6 +129,7 @@ class WritePlanMixin:
             tree_total=len(index_tree_payload["docs"]),
             recent_total=len(recent_payload["docs"]),
             reference_total=reference_payloads["index"]["header"]["count"],
+            semantic_token_total=len(semantic_token_payloads["index"]["occurrences"]),
         )
 
     def print_human_summary(
@@ -131,6 +141,7 @@ class WritePlanMixin:
         tree_total: int,
         recent_total: int,
         reference_total: int,
+        semantic_token_total: int,
     ) -> None:
         doc_write_count = len(write_plan["changed_item_ids"])
         doc_remove_count = len(write_plan["stale_item_ids"])
@@ -143,11 +154,21 @@ class WritePlanMixin:
             len(write_plan["stale_reference_doc_ids"])
             + len(write_plan["stale_reference_target_keys"])
         )
+        semantic_token_write_count = (
+            (1 if write_plan["semantic_token_index_write"] else 0)
+            + len(write_plan["changed_semantic_token_document_ids"])
+            + len(write_plan["changed_semantic_token_target_keys"])
+        )
+        semantic_token_remove_count = (
+            len(write_plan["stale_semantic_token_document_ids"])
+            + len(write_plan["stale_semantic_token_target_keys"])
+        )
         index_write_count = (
             (1 if write_plan["index_tree_write"] else 0)
             + (1 if write_plan["recent_write"] else 0)
             + (1 if write_plan["publication_recent_write"] else 0)
             + (1 if write_plan["reference_index_write"] else 0)
+            + (1 if write_plan["semantic_token_index_write"] else 0)
         )
         verb = "would write" if mode == "dry-run" else "wrote"
         remove_verb = "would remove" if mode == "dry-run" else "removed"
@@ -161,6 +182,9 @@ class WritePlanMixin:
         print(f"  references total: {reference_total}")
         print(f"  references {verb}: {reference_write_count}")
         print(f"  references {remove_verb}: {reference_remove_count}")
+        print(f"  semantic tokens total: {semantic_token_total}")
+        print(f"  semantic tokens {verb}: {semantic_token_write_count}")
+        print(f"  semantic tokens {remove_verb}: {semantic_token_remove_count}")
         print(f"  indexes {verb}: {index_write_count}")
         print(f"  warnings: {len(self.warnings)}")
 
@@ -188,6 +212,19 @@ class WritePlanMixin:
             "reference_by_doc_payloads_removed": len(write_plan["stale_reference_doc_ids"]),
             "reference_by_target_payloads_changed": len(write_plan["changed_reference_target_keys"]),
             "reference_by_target_payloads_removed": len(write_plan["stale_reference_target_keys"]),
+            "semantic_token_index_changed": 1 if write_plan["semantic_token_index_write"] else 0,
+            "semantic_token_by_document_payloads_changed": len(
+                write_plan["changed_semantic_token_document_ids"]
+            ),
+            "semantic_token_by_document_payloads_removed": len(
+                write_plan["stale_semantic_token_document_ids"]
+            ),
+            "semantic_token_by_target_payloads_changed": len(
+                write_plan["changed_semantic_token_target_keys"]
+            ),
+            "semantic_token_by_target_payloads_removed": len(
+                write_plan["stale_semantic_token_target_keys"]
+            ),
             "warning_count": len(self.warnings),
             "warnings": self.warnings,
             "elapsed_seconds": elapsed_seconds,

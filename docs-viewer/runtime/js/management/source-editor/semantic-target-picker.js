@@ -157,6 +157,12 @@ export function createSemanticTargetPickerList(root, options = {}) {
     selectedTarget: function () { return records[selectedIndex] || null; },
     setActiveIndex: setActiveIndex,
     setTargets: setTargets,
+    selectTarget: function (target) {
+      var key = targetKey(target, settings);
+      return selectIndex(records.findIndex(function (record) {
+        return targetKey(record, settings) === key;
+      }));
+    },
     targetKey: function (target) { return targetKey(target, settings); }
   };
 }

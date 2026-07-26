@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build Docs Viewer semantic-reference target lookup data."""
+"""Build Docs Viewer semantic-token target lookup data."""
 
 from __future__ import annotations
 

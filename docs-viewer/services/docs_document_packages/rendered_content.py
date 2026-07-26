@@ -60,7 +60,7 @@ def render_doc_html(context: Any, doc_id: str) -> str:
     normalized_doc_id = str(doc_id or "").strip()
     if normalized_doc_id not in context.render_cache:
         doc = source_doc_for_id(context, normalized_doc_id)
-        payload = context.builder.item_entry(doc, context.source_docs, {})
+        payload = context.builder.item_entry(doc, context.source_docs, {}, {})
         context.render_cache[normalized_doc_id] = str(payload.get("content_html") or "")
     return context.render_cache[normalized_doc_id]
 

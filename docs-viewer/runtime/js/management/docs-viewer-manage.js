@@ -28,8 +28,22 @@ import {
 import {
   CATALOGUE_TOKEN_CONTROL_ID,
   catalogueTokenControlRenderer,
+  createCatalogueTokenInfoViewResolver,
   createCatalogueTokenMainViewControlHandlers
 } from "./source-editor/catalogue-token-contribution.js";
+import {
+  mountSemanticTokenTargetLinks
+} from "./source-editor/semantic-token-targets.js";
+
+function mountDocsViewerManageExtras(context) {
+  var settings = context || {};
+  var routeContext = settings.routeContext || {};
+  mountSemanticTokenTargetLinks(
+    settings.content,
+    routeContext.publicPreviewBase
+  );
+  return mountDocsViewerManageDocumentExtras(settings);
+}
 
 startDocsViewerManageApp({
   controlRendererContributions: Object.assign(
@@ -41,6 +55,7 @@ startDocsViewerManageApp({
   createSourceAdapter: createDocsViewerManagementSourceAdapter,
   diagramDetailAdapter: docsViewerDiagramDetailAdapter,
   viewRegistryContributions: createDocsViewerManagementViewDefinitions(),
+  infoPanelAutoOpenDocumentModes: ["markdown-source"],
   infoPanelDefaultViewByDocumentMode: {
     "markdown-source": "metadata-info",
     "rendered-document": "metadata-info"
@@ -48,6 +63,7 @@ startDocsViewerManageApp({
   inlineMermaidAdapter: docsViewerInlineMermaidAdapter,
   mainViewControlHandlerContributions: createCatalogueTokenMainViewControlHandlers(),
   managementShellRenderers: createDocsViewerManagementShellRenderers(),
-  mountDocumentExtras: mountDocsViewerManageDocumentExtras,
-  sourceEditorActionControlIds: [CATALOGUE_TOKEN_CONTROL_ID]
+  mountDocumentExtras: mountDocsViewerManageExtras,
+  sourceEditorActionControlIds: [CATALOGUE_TOKEN_CONTROL_ID],
+  sourceEditorInfoViewResolver: createCatalogueTokenInfoViewResolver()
 });

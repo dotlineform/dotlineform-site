@@ -1,28 +1,33 @@
 import {
-  loadSemanticReferenceRegistry
-} from "./semantic-reference-registry.js";
+  loadSemanticTokenRegistry
+} from "./semantic-token-registry.js";
 import {
-  collectSemanticTargetMatches,
-  loadSemanticTargets
-} from "./semantic-targets.js";
+  collectSemanticTokenTargetMatches,
+  loadSemanticTokenTargets
+} from "./semantic-token-targets.js";
 
 var CATALOGUE_TARGET_TYPES = new Set(["work", "series", "moment"]);
 
-function catalogueTargetFromPilot(row) {
-  if (!row || !CATALOGUE_TARGET_TYPES.has(row.kind) || !row.href) return null;
+function catalogueTarget(row) {
+  if (
+    !row
+    || row.family !== "catalogue"
+    || !CATALOGUE_TARGET_TYPES.has(row.targetType)
+    || !row.href
+  ) return null;
   return {
-    family: "catalogue",
-    targetType: row.kind,
-    targetId: row.id,
+    family: row.family,
+    targetType: row.targetType,
+    targetId: row.targetId,
     title: row.title,
     href: row.href,
     meta: row.meta.slice()
   };
 }
 
-export function createCatalogueTargetSupport(registry, pilotTargets) {
-  var searchableTargets = (Array.isArray(pilotTargets) ? pilotTargets : []).filter(function (row) {
-    return Boolean(catalogueTargetFromPilot(row));
+export function createCatalogueTargetSupport(registry, targets) {
+  var searchableTargets = (Array.isArray(targets) ? targets : []).filter(function (row) {
+    return Boolean(catalogueTarget(row));
   });
   return {
     registry: registry,
@@ -32,18 +37,36 @@ export function createCatalogueTargetSupport(registry, pilotTargets) {
 
 export function collectCatalogueTargetMatches(support, query, limit) {
   var source = support || {};
-  return collectSemanticTargetMatches(
+  return collectSemanticTokenTargetMatches(
     source.searchableTargets || [],
     query,
     source.registry,
     limit
-  ).map(catalogueTargetFromPilot).filter(Boolean);
+  ).map(catalogueTarget).filter(Boolean);
+}
+
+export function findCatalogueTargetByIdentity(support, identity) {
+  var source = support || {};
+  var targetIdentity = identity || {};
+  var family = String(targetIdentity.family || "").trim();
+  var targetType = String(targetIdentity.targetType || "").trim();
+  var targetId = String(targetIdentity.targetId || "").trim();
+  if (family !== "catalogue" || !targetType || !targetId) return null;
+  var matched = (source.searchableTargets || []).find(function (target) {
+    return (
+      target
+      && target.family === family
+      && target.targetType === targetType
+      && target.targetId === targetId
+    );
+  });
+  return catalogueTarget(matched);
 }
 
 export function loadCatalogueTargetSupport(options = {}) {
-  return loadSemanticReferenceRegistry({ fetch: options.fetch })
+  return loadSemanticTokenRegistry({ fetch: options.fetch })
     .then(function (registry) {
-      return loadSemanticTargets(registry, { fetch: options.fetch })
+      return loadSemanticTokenTargets(registry, { fetch: options.fetch })
         .then(function (targets) {
           return createCatalogueTargetSupport(registry, targets);
         });

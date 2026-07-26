@@ -8,8 +8,12 @@ import {
 } from "./catalogue-token-contract.js";
 import {
   collectCatalogueTargetMatches,
+  findCatalogueTargetByIdentity,
   loadCatalogueTargetSupport
 } from "./catalogue-token-targets.js";
+import {
+  parseCatalogueToken
+} from "./catalogue-token-parser.js";
 import {
   createSemanticTargetPickerList
 } from "./semantic-target-picker.js";
@@ -20,12 +24,12 @@ var TITLE_INPUT_ID = "docsViewerCatalogueTokenTitle";
 
 export const CATALOGUE_TOKEN_MODAL_ID = "catalogue-token-add-modal";
 
-function modalBody(selectionTitle) {
+function modalBody(searchQuery, selectionTitle) {
   return (
     '<div class="docsViewerCatalogueTokenModal">' +
       '<label class="docsViewer__field" for="' + SEARCH_INPUT_ID + '">' +
         '<span class="docsViewer__fieldLabel">Search Catalogue</span>' +
-        '<input class="docsViewer__fieldInput" id="' + SEARCH_INPUT_ID + '" type="search" role="combobox" aria-autocomplete="list" aria-controls="' + RESULTS_ID + '" aria-expanded="true" autocomplete="off" spellcheck="false" value="' + escapeHtml(selectionTitle) + '" disabled>' +
+        '<input class="docsViewer__fieldInput" id="' + SEARCH_INPUT_ID + '" type="search" role="combobox" aria-autocomplete="list" aria-controls="' + RESULTS_ID + '" aria-expanded="true" autocomplete="off" spellcheck="false" value="' + escapeHtml(searchQuery) + '" disabled>' +
       "</label>" +
       '<p class="docsViewerCatalogueTokenModal__searchStatus muted small" data-role="catalogue-search-status">Loading Catalogue…</p>' +
       '<div class="docsViewerSemanticPicker__results docsViewerCatalogueTokenModal__results" id="' + RESULTS_ID + '" role="listbox" aria-label="Catalogue targets" data-role="catalogue-results" tabindex="0"></div>' +
@@ -46,9 +50,16 @@ function targetSummary(target) {
 export function openCatalogueTokenModal(options = {}) {
   var adapter = options.adapter || null;
   var capture = options.capture || null;
-  var selectionTitle = selectedTextForCatalogueTitle(capture && capture.text);
+  var selectedToken = parseCatalogueToken(capture && capture.text);
+  var selectionTitle = selectedToken
+    ? selectedToken.title
+    : selectedTextForCatalogueTitle(capture && capture.text);
+  var searchQuery = selectedToken
+    ? selectedToken.targetType + ":" + selectedToken.targetId
+    : selectionTitle;
   var state = {
     disposed: false,
+    initialToken: selectedToken,
     list: null,
     selectedTarget: null,
     support: null
@@ -58,7 +69,7 @@ export function openCatalogueTokenModal(options = {}) {
     root: options.root,
     title: "Add catalogue token",
     size: "document",
-    bodyHtml: modalBody(selectionTitle),
+    bodyHtml: modalBody(searchQuery, selectionTitle),
     focusSelector: "#" + SEARCH_INPUT_ID,
     actions: [
       { role: "modal-primary", label: "Add", disabled: true },
@@ -91,6 +102,31 @@ export function openCatalogueTokenModal(options = {}) {
             ? "No matching Catalogue targets."
             : "";
           searchStatus.hidden = !searchStatus.textContent;
+        }
+      }
+
+      function restoreInitialToken() {
+        var target = findCatalogueTargetByIdentity(state.support, state.initialToken);
+        state.list.setTargets(target ? [target] : []);
+        renderSelectedTarget(null);
+        if (!target) {
+          if (searchStatus) {
+            searchStatus.textContent = (
+              "Catalogue target "
+              + state.initialToken.targetType
+              + ":"
+              + state.initialToken.targetId
+              + " is unavailable."
+            );
+            searchStatus.hidden = false;
+          }
+          return;
+        }
+        state.list.selectTarget(target);
+        if (titleInput) titleInput.value = state.initialToken.title;
+        if (searchStatus) {
+          searchStatus.textContent = "";
+          searchStatus.hidden = true;
         }
       }
 
@@ -127,7 +163,8 @@ export function openCatalogueTokenModal(options = {}) {
           state.support = support;
           if (searchInput) searchInput.disabled = false;
           if (primary) primary.disabled = false;
-          updateMatches();
+          if (state.initialToken) restoreInitialToken();
+          else updateMatches();
           if (searchInput) searchInput.focus();
         })
         .catch(function (error) {
@@ -169,12 +206,6 @@ export function openCatalogueTokenModal(options = {}) {
       ) {
         api.setStatus("Markdown source changed while this modal was open. Cancel and try again.");
         return false;
-      }
-      if (typeof adapter.setStatus === "function") {
-        adapter.setStatus(
-          "Inserted Catalogue " + state.selectedTarget.targetType + ":" + state.selectedTarget.targetId + ".",
-          false
-        );
       }
       return {
         confirmed: true,

@@ -18,6 +18,16 @@ function infoPanelDefaultViewId(settings, modeId) {
   return cleanString(map[cleanString(modeId)]);
 }
 
+function infoPanelAutoOpensForMode(settings, modeId) {
+  var configuredModes = Array.isArray(settings.infoPanelAutoOpenDocumentModes)
+    ? settings.infoPanelAutoOpenDocumentModes
+    : [];
+  var targetModeId = cleanString(modeId);
+  return configuredModes.some(function (configuredModeId) {
+    return cleanString(configuredModeId) === targetModeId;
+  });
+}
+
 export function createDocsViewerDocumentViewCoordinator(options) {
   var settings = options || {};
   var viewRegistry = settings.viewRegistry;
@@ -119,8 +129,13 @@ export function createDocsViewerDocumentViewCoordinator(options) {
   projectControlState();
 
   function syncInfoPanelDefault(modeId) {
-    if (!infoPanelController.isOpen()) return;
     var defaultViewId = infoPanelDefaultViewId(settings, modeId) || "metadata-info";
+    if (!infoPanelController.isOpen()) {
+      if (infoPanelAutoOpensForMode(settings, modeId)) {
+        infoPanelController.openView(defaultViewId);
+      }
+      return;
+    }
     if (infoPanelController.activeViewId() === defaultViewId) {
       infoPanelController.update();
       return;
@@ -171,6 +186,7 @@ export function createDocsViewerDocumentViewCoordinator(options) {
         return configuredViewId && configuredViewId !== "metadata-info" && configuredViewId === cleanString(viewId);
       });
     },
+    isInfoOpen: function () { return infoPanelController.isOpen(); },
     handleInfoControl: function () { return infoPanelController.handleControl(); },
     openInfoView: function (viewId) { return infoPanelController.openView(viewId); },
     renderInfoToggle: function () { return infoPanelController.renderToggleState(); },

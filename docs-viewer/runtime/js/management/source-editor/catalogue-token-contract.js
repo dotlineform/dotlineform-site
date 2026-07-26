@@ -8,10 +8,6 @@ function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
 
-function escapeTitle(value) {
-  return value.replace(/\\/g, "\\\\").replace(/\|/g, "\\|").replace(/\]/g, "\\]");
-}
-
 export function selectedTextForCatalogueTitle(value) {
   return cleanString(value).replace(/\s+/g, " ");
 }
@@ -22,5 +18,12 @@ export function buildCatalogueToken(options = {}) {
   var title = cleanString(options.title);
   var idPattern = CATALOGUE_TARGET_ID_PATTERNS[targetType];
   if (!idPattern || !idPattern.test(targetId) || !title || /[\r\n]/.test(title)) return "";
-  return "[[catalogue:" + targetType + ":" + targetId + "|" + escapeTitle(title) + "]]";
+  return serializeCatalogueToken({
+    targetType: targetType,
+    targetId: targetId,
+    title: title
+  });
 }
+import {
+  serializeCatalogueToken
+} from "./catalogue-token-parser.js";

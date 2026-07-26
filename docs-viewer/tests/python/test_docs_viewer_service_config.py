@@ -78,6 +78,7 @@ def test_load_service_config_reads_env_local() -> None:
                     'export DOCS_VIEWER_REVIEW_ENABLED="1"',
                     'export DOCS_VIEWER_GENERATED_READS_ENABLED="0"',
                     'export DOCS_VIEWER_WATCH_ENABLED="0"',
+                    'export SITE_PREVIEW_BASE="http://127.0.0.1:4011"',
                 ]
             ),
             encoding="utf-8",
@@ -92,6 +93,7 @@ def test_load_service_config_reads_env_local() -> None:
     assert config.review_enabled is True
     assert config.generated_reads_enabled is False
     assert config.watch_enabled is False
+    assert config.public_preview_base == "http://127.0.0.1:4011"
 
 @pytest.mark.parametrize(
     ("host", "base_url", "message"),
@@ -124,6 +126,7 @@ def test_management_service_api_base_lives_in_route_config() -> None:
         management_enabled=True,
         generated_reads_enabled=True,
         watch_enabled=True,
+        public_preview_base="http://127.0.0.1:4011",
     )
 
     route_registry = docs_viewer_service.render_route_config_registry(REPO_ROOT, config)
@@ -139,6 +142,36 @@ def test_management_service_api_base_lives_in_route_config() -> None:
     assert manage_route["services"]["generated_data"]["base_url"] == "http://127.0.0.1:8776"
     assert manage_route["services"]["source"]["base_url"] == "http://127.0.0.1:8776"
     assert manage_route["services"]["management"]["base_url"] == "http://127.0.0.1:8776"
+    assert manage_route["sites"]["public_preview"]["base"] == "http://127.0.0.1:4011"
+
+
+def test_load_service_config_rejects_invalid_public_preview_base() -> None:
+    with pytest.raises(ValueError, match="SITE_PREVIEW_BASE"):
+        docs_viewer_service.load_service_config(
+            REPO_ROOT,
+            environ={
+                "DOCS_VIEWER_HOST": "127.0.0.1",
+                "DOCS_VIEWER_PORT": "8776",
+                "DOCS_VIEWER_BASE_URL": "http://127.0.0.1:8776",
+                "SITE_PREVIEW_BASE": "javascript:alert(1)",
+            },
+        )
+
+
+def test_load_service_config_defaults_public_preview_to_site_binding() -> None:
+    config = docs_viewer_service.load_service_config(
+        REPO_ROOT,
+        environ={
+            "DOCS_VIEWER_HOST": "127.0.0.1",
+            "DOCS_VIEWER_PORT": "8776",
+            "DOCS_VIEWER_BASE_URL": "http://127.0.0.1:8776",
+            "SITE_HOST": "localhost",
+            "SITE_PORT": "4444",
+        },
+    )
+
+    assert config.public_preview_base == "http://localhost:4444"
+
 
 def test_manage_route_config_separates_generated_reads_from_management_services() -> None:
     config = docs_viewer_service.DocsViewerServiceConfig(

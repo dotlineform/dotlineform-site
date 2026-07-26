@@ -405,6 +405,11 @@ def assert_route_config_scope_default(page: Page) -> None:
                 config_urls: {
                     docs_viewer: '/docs-viewer/config/defaults/docs-viewer-public-config.json',
                     report_registry: '/assets/data/docs/public-reports.json'
+                },
+                sites: {
+                    public_preview: {
+                        base: 'http://127.0.0.1:4000/'
+                    }
                 }
             };
             const resolved = routeConfig.resolveDocsViewerRouteConfig({
@@ -433,6 +438,7 @@ def assert_route_config_scope_default(page: Page) -> None:
                 appKind: resolved.appKind,
                 mismatchRejected,
                 defaultScopeId: resolved.defaultScopeId,
+                publicPreviewBase: resolved.publicPreviewBase,
                 viewerBaseUrl: resolved.viewerBaseUrl,
                 defaultRouteDocId: projection.defaultRouteDocId
             };
@@ -442,6 +448,7 @@ def assert_route_config_scope_default(page: Page) -> None:
         "appKind": "public",
         "mismatchRejected": True,
         "defaultScopeId": "library",
+        "publicPreviewBase": "http://127.0.0.1:4000",
         "viewerBaseUrl": "/library/",
         "defaultRouteDocId": "library-root",
     }:
@@ -1278,11 +1285,20 @@ def assert_phase_five_runtime_owners(page: Page) -> None:
             const viewState = { panels: { main: { activeViewId: 'rendered-document' } } };
             let controlProjectionCount = 0;
             const viewerRoot = document.createElement('div');
+            const selectedDoc = { doc_id: 'doc-1', title: 'Document one' };
             const coordinator = modules.documentViewCoordinator.createDocsViewerDocumentViewCoordinator({
                 appContext: { kind: 'manage', featurePolicy },
                 buildTrail: () => [],
                 collectionProvider: {},
-                documentIndex: { allDocsById: new Map(), docsById: new Map() },
+                documentIndex: {
+                    allDocsById: new Map([[selectedDoc.doc_id, selectedDoc]]),
+                    docsById: new Map([[selectedDoc.doc_id, selectedDoc]])
+                },
+                infoPanelAutoOpenDocumentModes: ['markdown-source'],
+                infoPanelDefaultViewByDocumentMode: {
+                    'markdown-source': 'metadata-info',
+                    'rendered-document': 'metadata-info'
+                },
                 infoPanelRefs: { body: document.createElement('div') },
                 mount: document.createElement('div'),
                 panelLayout: {
@@ -1295,7 +1311,10 @@ def assert_phase_five_runtime_owners(page: Page) -> None:
                 projectControlStates: () => { controlProjectionCount += 1; },
                 root: viewerRoot,
                 scopeConfig: { uiStatusByValue: new Map() },
-                selectedDocument: { payloadCache: new Map(), selectedDocId: '' },
+                selectedDocument: {
+                    payloadCache: new Map([[selectedDoc.doc_id, selectedDoc]]),
+                    selectedDocId: selectedDoc.doc_id
+                },
                 showWarning: () => {},
                 sourceEditorServices: null,
                 viewRegistry: registry,
@@ -1305,6 +1324,18 @@ def assert_phase_five_runtime_owners(page: Page) -> None:
             });
             coordinator.requestDocumentMode('markdown-source', { warn: false });
             await new Promise(resolve => setTimeout(resolve, 0));
+            const sourceEntryOpenedInfo = coordinator.isInfoOpen();
+            const sourceEntryInfoView = coordinator.activeInfoViewId();
+            coordinator.closeInfoIfOpen();
+            await new Promise(resolve => setTimeout(resolve, 0));
+            await coordinator.updateInfoPanel();
+            const manualCloseRespected = !coordinator.isInfoOpen();
+            coordinator.requestDocumentMode('rendered-document', { warn: false });
+            await new Promise(resolve => setTimeout(resolve, 0));
+            const renderedEntryKeepsInfoClosed = !coordinator.isInfoOpen();
+            coordinator.requestDocumentMode('markdown-source', { warn: false });
+            await new Promise(resolve => setTimeout(resolve, 0));
+            const nextSourceEntryReopensInfo = coordinator.isInfoOpen();
 
             return {
                 activeMode: coordinator.activeViewState().activeModeId,
@@ -1316,10 +1347,15 @@ def assert_phase_five_runtime_owners(page: Page) -> None:
                     session.domains.generatedData.generatedDataCapabilities
                     && session.domains.management.managementCapabilities === null
                 ),
+                manualCloseRespected,
                 modeOwnsViewerRoot: mountedModeRoot === viewerRoot,
                 nestedBusyCount,
+                nextSourceEntryReopensInfo,
                 removedFacadeFields,
+                renderedEntryKeepsInfoClosed,
                 saveControlActive: coordinator.controlActive('save-markdown-source'),
+                sourceEntryInfoView,
+                sourceEntryOpenedInfo,
                 statusError: status.classList.contains('is-error'),
                 statusText: status.textContent
             };
@@ -1329,11 +1365,13 @@ def assert_phase_five_runtime_owners(page: Page) -> None:
         "activeMode": "markdown-source",
         "busyAfterStop": 0,
         "busyDataset": "false",
-        "controlProjectionCount": 3,
+        "controlProjectionCount": 5,
         "generatedReadAvailable": True,
         "generatedStateSeparated": True,
+        "manualCloseRespected": True,
         "modeOwnsViewerRoot": True,
         "nestedBusyCount": 1,
+        "nextSourceEntryReopensInfo": True,
         "removedFacadeFields": {
             "panelExpanded": False,
             "panelRegistry": False,
@@ -1345,7 +1383,10 @@ def assert_phase_five_runtime_owners(page: Page) -> None:
             "generatedReload": False,
             "busyMessage": False,
         },
+        "renderedEntryKeepsInfoClosed": True,
         "saveControlActive": True,
+        "sourceEntryInfoView": "metadata-info",
+        "sourceEntryOpenedInfo": True,
         "statusError": True,
         "statusText": "Working",
     }

@@ -252,6 +252,16 @@ function normalizeRecentBasis(value, enabled) {
   return basis;
 }
 
+function normalizePublicPreviewBase(value) {
+  var sites = value && typeof value === "object" && !Array.isArray(value) ? value : {};
+  var publicPreview = sites.public_preview
+    && typeof sites.public_preview === "object"
+    && !Array.isArray(sites.public_preview)
+    ? sites.public_preview
+    : {};
+  return cleanString(publicPreview.base).replace(/\/+$/, "");
+}
+
 export function resolveDocsViewerRouteConfig(options) {
   var settings = options || {};
   var resolvedSource = routeConfigSource(settings);
@@ -297,6 +307,7 @@ export function resolveDocsViewerRouteConfig(options) {
     reportRegistryUrl: reportsEnabled
       ? requireRouteConfigField(configUrls.report_registry, "config_urls.report_registry")
       : cleanString(configUrls.report_registry),
+    publicPreviewBase: normalizePublicPreviewBase(rawConfig.sites),
     indexTreeUrl: normalizePath(requireRouteConfigField(docsPaths.index_tree_url, "docs_paths.index_tree_url")),
     recentUrl: normalizePath(recentEnabled
       ? requireRouteConfigField(docsPaths.recent_url, "docs_paths.recent_url")

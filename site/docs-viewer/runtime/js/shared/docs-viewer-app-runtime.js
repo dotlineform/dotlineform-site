@@ -151,6 +151,9 @@ export function startDocsViewerRuntime(options) {
   var documentIndex = null;
   var documentViewCoordinator = null;
   var activeSourceEditorContextAdapter = null;
+  var activeSourceEditorInfoUnsubscribe = null;
+  var sourceEditorInfoRequest = 0;
+  var sourceEditorInfoViewId = "metadata-info";
   var recentControlLabel = "Recent";
   var appViewerControlOwners = new Map();
   var appViewerControlHost = null;
@@ -234,7 +237,16 @@ export function startDocsViewerRuntime(options) {
     if (bookmarkController) bookmarkController.handleControl();
   });
   mainViewControlOwners.set("info", function () {
-    if (documentViewCoordinator) documentViewCoordinator.handleInfoControl();
+    if (!documentViewCoordinator) return;
+    if (
+      activeSourceEditorContextAdapter
+      && !documentViewCoordinator.isInfoOpen()
+      && sourceEditorInfoViewId
+    ) {
+      documentViewCoordinator.openInfoView(sourceEditorInfoViewId);
+      return;
+    }
+    documentViewCoordinator.handleInfoControl();
   });
   renderAppViewerControls();
   renderAppManagementControls();
@@ -276,6 +288,7 @@ export function startDocsViewerRuntime(options) {
     buildTrail: buildTrail,
     collectionProvider: collectionProvider,
     documentIndex: appSession.domains.documentIndex,
+    infoPanelAutoOpenDocumentModes: settings.infoPanelAutoOpenDocumentModes,
     infoPanelDefaultViewByDocumentMode: settings.infoPanelDefaultViewByDocumentMode,
     infoPanelRefs: infoPanelRefs,
     mount: content,
@@ -769,12 +782,39 @@ export function startDocsViewerRuntime(options) {
   }
 
   function sourceEditorServices() {
+    function clearInfoSubscription() {
+      sourceEditorInfoRequest += 1;
+      if (typeof activeSourceEditorInfoUnsubscribe === "function") {
+        activeSourceEditorInfoUnsubscribe();
+      }
+      activeSourceEditorInfoUnsubscribe = null;
+      sourceEditorInfoViewId = "metadata-info";
+    }
+
+    function routeInfoView(adapter) {
+      var resolver = settings.sourceEditorInfoViewResolver;
+      if (typeof resolver !== "function" || !adapter) return;
+      var requestId = ++sourceEditorInfoRequest;
+      Promise.resolve(resolver(adapter)).then(function (viewId) {
+        var resolvedViewId = String(viewId || "").trim() || "metadata-info";
+        if (requestId !== sourceEditorInfoRequest || adapter !== activeSourceEditorContextAdapter) return;
+        sourceEditorInfoViewId = resolvedViewId;
+        if (!documentViewCoordinator || !documentViewCoordinator.isInfoOpen()) return;
+        if (documentViewCoordinator.activeInfoViewId() === resolvedViewId) {
+          documentViewCoordinator.updateInfoPanel();
+        } else {
+          documentViewCoordinator.openInfoView(resolvedViewId);
+        }
+      });
+    }
+
     return {
       reloadRenderedDoc: function (docId) {
         return reloadGeneratedDoc(docId);
       },
       clearActiveSourceEditorContextAdapter: function (adapter) {
         if (!adapter || activeSourceEditorContextAdapter === adapter) {
+          clearInfoSubscription();
           activeSourceEditorContextAdapter = null;
         }
         var activeViewId = documentViewCoordinator ? documentViewCoordinator.activeInfoViewId() : "";
@@ -790,11 +830,24 @@ export function startDocsViewerRuntime(options) {
       projectMainViewControlState: function (controlId, controlState) {
         projectMainViewControlState("source-editor", controlId, controlState);
       },
+      publicPreviewBase: routeContext.publicPreviewBase || "",
       sourceEditorActionControlIds: Array.isArray(settings.sourceEditorActionControlIds)
         ? settings.sourceEditorActionControlIds.slice()
         : [],
       setActiveSourceEditorContextAdapter: function (adapter) {
+        clearInfoSubscription();
         activeSourceEditorContextAdapter = adapter || null;
+        if (
+          activeSourceEditorContextAdapter
+          && typeof activeSourceEditorContextAdapter.onSelectionChange === "function"
+        ) {
+          activeSourceEditorInfoUnsubscribe = activeSourceEditorContextAdapter.onSelectionChange(
+            function () {
+              routeInfoView(activeSourceEditorContextAdapter);
+            }
+          );
+        }
+        routeInfoView(activeSourceEditorContextAdapter);
         if (documentViewCoordinator) documentViewCoordinator.renderInfoToggle();
       },
       setStatus: statusController.setStatus,

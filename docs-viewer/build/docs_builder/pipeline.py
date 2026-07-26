@@ -22,6 +22,9 @@ from .recent_policy import recent_basis_for_route
 from .rendering import ContentRenderingMixin
 from .semantic_registry import load_semantic_reference_registry
 from .semantic_references import SemanticReferencesMixin
+from .semantic_token_artifacts import SemanticTokenArtifactsMixin
+from .semantic_token_registry import load_semantic_token_registry
+from .semantic_tokens import SemanticTokensMixin, load_semantic_token_targets
 from .source import SourceLoadingMixin
 from .write_plan import WritePlanMixin
 
@@ -31,7 +34,9 @@ class DocsDataBuilder(
     PayloadBuilderMixin,
     ContentRenderingMixin,
     SemanticReferencesMixin,
+    SemanticTokensMixin,
     ReferenceArtifactsMixin,
+    SemanticTokenArtifactsMixin,
     WritePlanMixin,
 ):
     def __init__(
@@ -61,6 +66,8 @@ class DocsDataBuilder(
         self.output_url_base = self.output_url_base_for(self.output_url_dir())
         self.site_config = load_site_tools_config(self.repo_root)
         self.semantic_reference_registry = load_semantic_reference_registry(self.repo_root)
+        self.semantic_token_registry = load_semantic_token_registry(self.repo_root)
+        self.semantic_token_targets_by_key = load_semantic_token_targets(self.repo_root)
         self.source_files_scanned = 0
         self.warnings: list[str] = []
         self._viewer_scope_for_path: dict[str, str] | None = None
@@ -79,8 +86,13 @@ class DocsDataBuilder(
         if self.targeted_build:
             self.validate_targeted_build_prerequisites(docs, target_doc_ids)
             semantic_references_by_doc = self.existing_reference_records_by_doc(docs, target_doc_ids)
+            semantic_tokens_by_doc = self.existing_semantic_token_occurrences_by_doc(
+                docs,
+                target_doc_ids,
+            )
         else:
             semantic_references_by_doc: dict[str, list[dict[str, Any]]] = {}
+            semantic_tokens_by_doc: dict[str, list[dict[str, Any]]] = {}
 
         docs_for_item_build = [doc for doc in docs if doc.doc_id in target_doc_ids]
         if self.targeted_build and not self.skip_media_builds:
@@ -95,10 +107,17 @@ class DocsDataBuilder(
                 requested_published_identities=requested_media,
             )
         item_payloads = {
-            doc.doc_id: self.item_entry(doc, docs, semantic_references_by_doc) for doc in docs_for_item_build
+            doc.doc_id: self.item_entry(
+                doc,
+                docs,
+                semantic_references_by_doc,
+                semantic_tokens_by_doc,
+            )
+            for doc in docs_for_item_build
         }
         for doc in docs_for_item_build:
             semantic_references_by_doc.setdefault(doc.doc_id, [])
+            semantic_tokens_by_doc.setdefault(doc.doc_id, [])
 
         flat_doc_rows = [
             self.index_entry(doc, docs, item_payloads.get(doc.doc_id)) for doc in self.ordered_docs_for_index(docs)
@@ -131,12 +150,14 @@ class DocsDataBuilder(
             else None
         )
         reference_payloads = self.build_reference_payloads(docs, semantic_references_by_doc)
+        semantic_token_payloads = self.build_semantic_token_payloads(docs, semantic_tokens_by_doc)
         write_plan = self.build_write_plan(
             index_tree_payload,
             recent_payload,
             publication_recent_payload,
             item_payloads,
             reference_payloads,
+            semantic_token_payloads,
             target_doc_ids=target_doc_ids if self.targeted_build else None,
         )
         diagnostics = self.diagnostics_payload(
@@ -152,9 +173,17 @@ class DocsDataBuilder(
                 tree_total=len(index_tree_payload["docs"]),
                 recent_total=len(recent_payload["docs"]),
                 reference_total=reference_payloads["index"]["header"]["count"],
+                semantic_token_total=len(semantic_token_payloads["index"]["occurrences"]),
             )
         else:
-            self.print_dry_run(index_payload, index_tree_payload, recent_payload, reference_payloads, write_plan)
+            self.print_dry_run(
+                index_payload,
+                index_tree_payload,
+                recent_payload,
+                reference_payloads,
+                semantic_token_payloads,
+                write_plan,
+            )
         if emit_diagnostics:
             self.print_diagnostics(diagnostics)
         return {
@@ -164,6 +193,7 @@ class DocsDataBuilder(
             "publication_recent_payload": publication_recent_payload,
             "item_payloads": item_payloads,
             "reference_payloads": reference_payloads,
+            "semantic_token_payloads": semantic_token_payloads,
             "write_plan": write_plan,
             "diagnostics": diagnostics,
             "media_builds": media_builds,

@@ -132,7 +132,7 @@ function sourceSelection(state) {
   };
 }
 
-function replaceCapturedSelection(state, capture, value) {
+function capturedRangeIsCurrent(state, capture) {
   if (!state.textarea || !capture || typeof capture !== "object") return false;
   var start = Number(capture.start);
   var end = Number(capture.end);
@@ -147,7 +147,16 @@ function replaceCapturedSelection(state, capture, value) {
   ) {
     return false;
   }
-  state.textarea.setRangeText(String(value || ""), start, end, "end");
+  return { start: start, end: end };
+}
+
+function replaceCapturedRange(state, capture, value, selectionMode) {
+  var range = capturedRangeIsCurrent(state, capture);
+  if (!range) return false;
+  var mode = ["select", "start", "end", "preserve"].includes(selectionMode)
+    ? selectionMode
+    : "end";
+  state.textarea.setRangeText(String(value || ""), range.start, range.end, mode);
   state.textarea.dispatchEvent(new Event("input", { bubbles: true }));
   state.textarea.focus();
   return true;
@@ -186,7 +195,18 @@ function createSourceEditorContextAdapter(state) {
       return true;
     },
     replaceCapturedSelection: function (capture, value) {
-      return replaceCapturedSelection(state, capture, value);
+      return replaceCapturedRange(state, capture, value, "end");
+    },
+    replaceCapturedRange: function (capture, value, selectionMode) {
+      return replaceCapturedRange(state, capture, value, selectionMode);
+    },
+    selectCapturedRange: function (capture) {
+      var range = capturedRangeIsCurrent(state, capture);
+      if (!range) return false;
+      state.textarea.setSelectionRange(range.start, range.end);
+      state.textarea.focus();
+      emitSelectionChange(state);
+      return true;
     },
     setStatus: function (message, isError) {
       setStatus(state, message, isError);

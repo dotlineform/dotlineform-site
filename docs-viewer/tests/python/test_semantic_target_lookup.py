@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Focused checks for semantic-reference target lookup generation."""
+"""Focused checks for semantic-token target lookup generation."""
 
 from __future__ import annotations
 
@@ -32,31 +32,13 @@ def read_json(path: Path) -> dict[str, object]:
 
 
 def write_registry(root: Path) -> None:
+    fixture = read_json(REPO_ROOT / "docs-viewer/tests/fixtures/semantic_tokens_catalogue_v1.json")
     write_json(
-        root / "docs-viewer/config/semantic-references/registry.json",
+        root / "docs-viewer/config/semantic-tokens/registry.json",
         {
-            "schema_version": "docs_semantic_reference_registry_v1",
-            "target_lookup_url": "/docs-viewer/data/generated/semantic-references/target-lookup.json",
-            "kinds": [
-                {
-                    "kind": "series",
-                    "id": {"normalizer": "series_id_or_slug", "input_pattern": "^[a-z0-9][a-z0-9-]*$", "example": "005"},
-                    "route": {"type": "query", "path": "/series/", "param": "series"},
-                    "source_editor": {"selection_search": True, "picker": True},
-                },
-                {
-                    "kind": "work",
-                    "id": {"normalizer": "digits_left_pad", "width": 5, "input_pattern": "^\\d{1,5}$", "canonical_pattern": "^\\d{5}$", "example": "00638"},
-                    "route": {"type": "query", "path": "/works/", "param": "work"},
-                    "source_editor": {"selection_search": True, "picker": True},
-                },
-                {
-                    "kind": "moment",
-                    "id": {"normalizer": "slug", "input_pattern": "^[a-z0-9][a-z0-9-]*$", "example": "lotus-pond"},
-                    "route": {"type": "query", "path": "/moments/", "param": "doc"},
-                    "source_editor": {"selection_search": True, "picker": True},
-                },
-            ],
+            "schema_version": "docs_semantic_token_registry_v1",
+            "target_lookup_url": "/docs-viewer/data/generated/semantic-tokens/target-lookup.json",
+            "families": [fixture["catalogue_definition"]],
         },
     )
 
@@ -125,45 +107,55 @@ def test_semantic_target_lookup_builder_writes_compact_published_rows() -> None:
         write_registry(root)
         write_catalogue(root)
         result = SemanticTargetLookupBuilder(repo_root=root).run(write=True)
-        output_path = root / "docs-viewer/data/generated/semantic-references/target-lookup.json"
+        output_path = root / "docs-viewer/data/generated/semantic-tokens/target-lookup.json"
         output_text = output_path.read_text(encoding="utf-8")
         payload = read_json(output_path)
 
     assert result["diagnostics"]["target_count"] == 3
-    assert payload["schema_version"] == "docs_semantic_reference_target_lookup_v1"
-    assert [(row["kind"], row["id"]) for row in payload["targets"]] == [("series", "005"), ("work", "00638"), ("moment", "lotus-pond")]
+    assert payload["schema_version"] == "docs_semantic_token_target_lookup_v1"
+    assert [
+        (row["family"], row["target_type"], row["target_id"])
+        for row in payload["targets"]
+    ] == [
+        ("catalogue", "work", "00638"),
+        ("catalogue", "series", "005"),
+        ("catalogue", "moment", "lotus-pond"),
+    ]
     assert payload["targets"][0] == {
-        "kind": "series",
-        "id": "005",
-        "title": "3 symbols",
-        "href": "/series/?series=005",
-        "meta": ["2007"],
-    }
-    assert payload["targets"][1] == {
-        "kind": "work",
-        "id": "00638",
+        "family": "catalogue",
+        "target_type": "work",
+        "target_id": "00638",
         "title": "3 symbols",
         "href": "/works/?work=00638",
         "meta": ["2007", "3 symbols"],
     }
+    assert payload["targets"][1] == {
+        "family": "catalogue",
+        "target_type": "series",
+        "target_id": "005",
+        "title": "3 symbols",
+        "href": "/series/?series=005",
+        "meta": ["2007"],
+    }
     assert payload["targets"][2] == {
-        "kind": "moment",
-        "id": "lotus-pond",
+        "family": "catalogue",
+        "target_type": "moment",
+        "target_id": "lotus-pond",
         "title": "lotus pond",
         "href": "/moments/?doc=lotus-pond",
         "meta": ["c. 2024"],
     }
     assert output_text.endswith("\n")
     assert (
-        '    {"kind":"series","id":"005","title":"3 symbols",'
-        '"href":"/series/?series=005","meta":["2007"]},\n'
+        '    {"family":"catalogue","target_type":"work","target_id":"00638",'
+        '"title":"3 symbols","href":"/works/?work=00638","meta":["2007","3 symbols"]},\n'
     ) in output_text
     assert (
-        '    {"kind":"work","id":"00638","title":"3 symbols",'
-        '"href":"/works/?work=00638","meta":["2007","3 symbols"]},\n'
+        '    {"family":"catalogue","target_type":"series","target_id":"005",'
+        '"title":"3 symbols","href":"/series/?series=005","meta":["2007"]},\n'
     ) in output_text
     assert (
-        '    {"kind":"moment","id":"lotus-pond","title":"lotus pond",'
+        '    {"family":"catalogue","target_type":"moment","target_id":"lotus-pond","title":"lotus pond",'
         '"href":"/moments/?doc=lotus-pond","meta":["c. 2024"]}\n'
     ) in output_text
 
@@ -182,7 +174,7 @@ def test_semantic_target_lookup_cli_writes_payload() -> None:
         finally:
             os.chdir(cwd)
 
-        payload = read_json(root / "docs-viewer/data/generated/semantic-references/target-lookup.json")
+        payload = read_json(root / "docs-viewer/data/generated/semantic-tokens/target-lookup.json")
 
     assert exit_code == 0
     assert "Semantic target lookup (write)" in stdout.getvalue()

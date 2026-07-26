@@ -1,0 +1,77 @@
+{
+  "schema_version": "docs_semantic_token_registry_v1",
+  "target_lookup_url": "/docs-viewer/data/generated/semantic-tokens/target-lookup.json",
+  "families": [
+    {
+      "schema_version": "docs_semantic_token_family_definition_v1",
+      "key": "catalogue",
+      "labels": {
+        "family": "Catalogue",
+        "source_action": "Add catalogue token",
+        "info_view": "Catalogue token"
+      },
+      "occurrence_fields": [
+        {
+          "key": "title",
+          "label": "Title",
+          "required": true,
+          "editable": true,
+          "control": "text"
+        }
+      ],
+      "ui_contributions": {
+        "source_action": "source-add-catalogue-token",
+        "modal": "catalogue-token-add-modal",
+        "info_view": "catalogue-token-info"
+      },
+      "target_types": [
+        {
+          "key": "work",
+          "label": "Work",
+          "id_policy": {
+            "normalizer": "digits_left_pad",
+            "width": 5,
+            "input_pattern": "^\\d{1,5}$",
+            "canonical_pattern": "^\\d{5}$"
+          },
+          "lookup_adapter": "catalogue-work-target-lookup",
+          "lookup_fields": [
+            "title",
+            "href",
+            "meta"
+          ]
+        },
+        {
+          "key": "series",
+          "label": "Series",
+          "id_policy": {
+            "normalizer": "series_id_or_slug",
+            "input_pattern": "^[a-z0-9][a-z0-9-]*$",
+            "canonical_pattern": "^[a-z0-9][a-z0-9-]*$"
+          },
+          "lookup_adapter": "catalogue-series-target-lookup",
+          "lookup_fields": [
+            "title",
+            "href",
+            "meta"
+          ]
+        },
+        {
+          "key": "moment",
+          "label": "Moment",
+          "id_policy": {
+            "normalizer": "slug",
+            "input_pattern": "^[a-z0-9][a-z0-9-]*$",
+            "canonical_pattern": "^[a-z0-9][a-z0-9-]*$"
+          },
+          "lookup_adapter": "catalogue-moment-target-lookup",
+          "lookup_fields": [
+            "title",
+            "href",
+            "meta"
+          ]
+        }
+      ]
+    }
+  ]
+}
