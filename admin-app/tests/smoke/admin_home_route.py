@@ -76,7 +76,6 @@ def main() -> int:
             page.goto(f"{base_url}/admin/", wait_until="domcontentloaded")
             if page.locator("[data-admin-route-outlet]").count() != 1:
                 raise AssertionError("Admin home did not render the static Admin shell outlet")
-            root = page.locator("[data-admin-home]")
             wait_for_route_ready(page, "[data-admin-home]", "data-admin-ready", "data-admin-busy")
             for href in ["/admin/audits/", "/admin/checks/", "/admin/activity/", "/admin/testing/"]:
                 expect(page.locator(f'a.studioHomeLinks__pill[href="{href}"]')).to_be_visible(timeout=10_000)

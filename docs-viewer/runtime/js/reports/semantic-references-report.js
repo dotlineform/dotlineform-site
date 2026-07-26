@@ -206,14 +206,6 @@ function renderRows(state) {
   });
 }
 
-function loadBuckets(context, sourceScope, targets) {
-  return Promise.all(targets.map((target) => {
-    return context.fetchDocsReferenceTarget(sourceScope, target)
-      .then((payload) => [cleanString(target.target_key), payload])
-      .catch(() => [cleanString(target.target_key), { references: [] }]);
-  })).then((pairs) => new Map(pairs));
-}
-
 function mergeIndexes(scopePayloads) {
   const targetsByKey = new Map();
   scopePayloads.forEach(([scope, payload]) => {

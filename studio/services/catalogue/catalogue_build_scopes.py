@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Iterable, Mapping, Sequence
 
 from catalogue import catalogue_build_media as build_media
-from catalogue.catalogue_source import CatalogueSourceRecords, DEFAULT_SOURCE_DIR, normalize_status, records_from_json_source, slug_id
+from catalogue.catalogue_source import CatalogueSourceRecords, normalize_status, records_from_json_source, slug_id
 from catalogue.series_ids import normalize_series_id
 
 

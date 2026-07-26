@@ -10,7 +10,6 @@ from typing import Any
 from docs_scope_config import (
     CONFIG_REL_PATH,
     DocsScopeConfig,
-    document_source_path,
     load_docs_scope_configs,
     published_documents_path,
     published_search_path,

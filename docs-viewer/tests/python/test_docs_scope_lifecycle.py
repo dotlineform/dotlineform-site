@@ -1008,7 +1008,6 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
                 },
                 dry_run=False,
             )
-            config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
             search_index_path = repo_root / "docs-viewer/scopes/research/published/search/index.json"
             search_index_path.unlink()
             payload = docs_management_service.handle_scope_delete_apply(

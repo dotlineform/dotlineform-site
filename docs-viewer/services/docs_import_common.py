@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Any
 
 from bs4 import BeautifulSoup
 

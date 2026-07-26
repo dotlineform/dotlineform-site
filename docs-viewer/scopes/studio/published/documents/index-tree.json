@@ -834,6 +834,12 @@
               "ui_status": "done"
             },
             {
+              "doc_id": "d-20260726-095013-073d1f",
+              "title": "Repository Source Documentation And Linting Adoption Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-095013-073d1f.json",
+              "ui_status": "done"
+            },
+            {
               "doc_id": "d-20260713-133928-c786c7",
               "title": "Source Documentation and Linting Concept",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260713-133928-c786c7.json"
@@ -1186,5 +1192,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-25T21:01:53Z"
+  "generated_at": "2026-07-26T09:37:55Z"
 }

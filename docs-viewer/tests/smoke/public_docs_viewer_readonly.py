@@ -118,7 +118,6 @@ def public_route_state(page: Page) -> dict[str, object]:
 def assert_public_route_contract(route: str, state: dict[str, object]) -> None:
     route_id = route.strip("/").split("/", 1)[0] or route.strip("/?")
     docs_paths = state.get("docsPaths") if isinstance(state.get("docsPaths"), dict) else {}
-    scope_config = state.get("scopeConfig") if isinstance(state.get("scopeConfig"), dict) else {}
     services = state.get("services") if isinstance(state.get("services"), dict) else {}
     if state["appKind"] != "public" or state["managementUi"] != "false" or state["sourceService"] != "false":
         raise AssertionError(f"{route} exposed the wrong app/service context: {state!r}")

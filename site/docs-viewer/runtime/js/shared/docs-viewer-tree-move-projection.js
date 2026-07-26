@@ -101,9 +101,9 @@ function syncParentChrome(options, parentId) {
 function destinationList(options, parentId, movedItem) {
   var targetParentId = cleanId(parentId);
   if (!targetParentId) {
-    var list = rootList(options.nav);
-    if (!list) throw new Error("Move projection root list is not mounted.");
-    return list;
+    var rootDestinationList = rootList(options.nav);
+    if (!rootDestinationList) throw new Error("Move projection root list is not mounted.");
+    return rootDestinationList;
   }
 
   var parentRow = rowForDoc(options.nav, targetParentId, options.cssEscape);

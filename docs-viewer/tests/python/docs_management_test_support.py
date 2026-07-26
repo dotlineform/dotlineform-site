@@ -51,7 +51,11 @@ def write_doc(root: Path, filename: str, front_matter: dict[str, object], body: 
 def make_repo() -> tempfile.TemporaryDirectory[str]:
     temp_dir = tempfile.TemporaryDirectory()
     repo_root = Path(temp_dir.name)
-    (repo_root / "site-tools/config").mkdir(parents=True, exist_ok=True); (repo_root / "site-tools/config/site-tools.json").write_text("{\"schema_version\":\"site_tools_config_v1\"}\n", encoding="utf-8")
+    (repo_root / "site-tools/config").mkdir(parents=True, exist_ok=True)
+    (repo_root / "site-tools/config/site-tools.json").write_text(
+        "{\"schema_version\":\"site_tools_config_v1\"}\n",
+        encoding="utf-8",
+    )
     write_docs_route_configs(repo_root)
     write_doc(
         repo_root,

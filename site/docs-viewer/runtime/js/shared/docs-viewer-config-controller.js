@@ -45,7 +45,6 @@ export function initDocsViewerConfigController(context) {
   var scopeConfig = context.scopeConfig || {};
   var documentIndex = context.documentIndex || {};
   var searchRecent = context.searchRecent || {};
-  var routeSession = context.routeSession || {};
   var configService = context.configService || {};
   var routeCommands = context.routeCommands || {};
   var root = context.root;

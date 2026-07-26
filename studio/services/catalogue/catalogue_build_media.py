@@ -9,7 +9,7 @@ import subprocess
 from pathlib import Path
 from typing import Any, Callable, Dict, Mapping, Sequence
 
-from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source, slug_id
+from catalogue.catalogue_source import records_from_json_source, slug_id
 from catalogue import catalogue_public_paths as public_paths
 from catalogue_media_paths import (
     catalogue_media_display_path,
@@ -1054,7 +1054,6 @@ def build_work_readiness(records: Any, work_id: str, *, env: Dict[str, str] | No
 
 
 def build_series_readiness(records: Any, series_id: str, *, env: Dict[str, str] | None = None) -> Dict[str, Any]:
-    repo_root = detect_repo_root()
     series_record = records.series.get(series_id)
     if not isinstance(series_record, dict):
         raise ValueError(f"series_id not found: {series_id}")

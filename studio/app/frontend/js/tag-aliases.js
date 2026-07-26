@@ -135,7 +135,7 @@ async function initTagAliasesPage() {
   if (!mount) return;
   initializeStudioRouteState(mount, { route: "tag-aliases", mode: "list" });
 
-  let config = null;
+  let config;
   try {
     config = await loadStudioConfig();
   } catch (error) {
@@ -356,7 +356,7 @@ async function loadData(state) {
     loadAnalyticsRegistryJson(state.config),
     loadAnalyticsAliasesJson(state.config)
   ]);
-  let groupsData = null;
+  let groupsData;
   try {
     groupsData = await loadAnalyticsGroupsJson(state.config);
   } catch (error) {
@@ -393,7 +393,7 @@ async function handleImport(state) {
     return;
   }
 
-  let importAliases = null;
+  let importAliases;
   try {
     importAliases = await readTagAliasesImportFromFile(state.selectedFile);
   } catch (error) {

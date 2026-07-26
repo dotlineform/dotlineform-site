@@ -22,7 +22,7 @@ export function renderAnalyticsTagEditorSaveMode(state) {
   state.refs.saveMode.textContent = buildAnalyticsTagEditorSaveModeText(state.config, state.saveMode, analyticsTagEditorText);
 }
 
-export function syncAnalyticsTagEditorOfflineAutosave(state, callbacks = {}) {
+export function syncAnalyticsTagEditorOfflineAutosave(state, _callbacks = {}) {
   clearAnalyticsTagEditorOfflineAutosave(state);
 }
 

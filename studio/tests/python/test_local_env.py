@@ -88,8 +88,8 @@ def test_invalid_line_is_rejected() -> None:
 
 def main() -> None:
     test_load_env_file_accepts_export_quotes_and_blank_values()
-    test_runtime_env_site_file_wins_over_inherited_shell()
-    test_missing_default_site_env_falls_back_to_process_env()
+    test_runtime_env_local_file_wins_over_inherited_shell()
+    test_missing_default_local_env_falls_back_to_process_env()
     test_invalid_line_is_rejected()
     print("Local env tests OK")
 

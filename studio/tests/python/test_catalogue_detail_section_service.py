@@ -7,7 +7,7 @@ import json
 import sys
 from pathlib import Path
 
-from catalogue_factory import read_json, write_json
+from catalogue_factory import write_json
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]

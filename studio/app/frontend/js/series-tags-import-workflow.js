@@ -21,7 +21,7 @@ export async function previewSeriesTagsImport(options = {}) {
     };
   }
 
-  let importPayload = null;
+  let importPayload;
   try {
     importPayload = JSON.parse(await file.text());
   } catch (error) {

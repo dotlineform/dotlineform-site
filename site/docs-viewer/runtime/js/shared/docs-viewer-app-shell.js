@@ -68,7 +68,7 @@ function managementShellMount(root) {
   return root.querySelector("[data-docs-viewer-management-shell-mount]");
 }
 
-function emptyManagementShell(documentRef) {
+function emptyManagementShell(_documentRef) {
   return {};
 }
 

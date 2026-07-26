@@ -17,9 +17,7 @@ from .common import (
     public_search_path,
     published_documents_path,
     published_search_path,
-    read_text,
     scope_uses_external_data,
-    write_text,
 )
 
 

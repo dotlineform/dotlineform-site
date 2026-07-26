@@ -9,7 +9,6 @@ import pytest
 
 import docs_import_media
 import docs_import_preview
-import docs_import_source_service as import_source_service
 import docs_write_rebuild as write_rebuild
 from docs_media_storage import DocsMediaPublishResult
 

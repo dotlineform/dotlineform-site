@@ -81,11 +81,11 @@ export async function deleteJson(url, options = {}) {
 }
 
 async function responseJsonOrThrow(response, options = {}) {
-  let payload = null;
+  let payload;
   try {
     payload = await response.json();
-  } catch (_error) {
-    throw new Error(`HTTP ${response.status}`);
+  } catch (error) {
+    throw new Error(`HTTP ${response.status}`, { cause: error });
   }
   if (response.ok && options.allowApiFailure) {
     return payload;

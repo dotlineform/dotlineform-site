@@ -365,16 +365,12 @@ async function init() {
     loadingNode,
     fieldsNode,
     searchNode,
-    popupNode,
-    popupListNode,
     openButton,
     newButton,
     saveButton,
     publicationButton,
     deleteButton,
-    membersHeadingNode,
-    membersMetaNode,
-    membersResultsNode
+    membersHeadingNode
   } = elements;
 
   const state = createSeriesEditorState(elements);

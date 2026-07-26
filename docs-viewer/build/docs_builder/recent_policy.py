@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
 
 
 ROUTE_CONFIG_PATH = Path("docs-viewer/config/routes/docs-viewer-routes.json")

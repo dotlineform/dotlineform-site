@@ -400,15 +400,6 @@ function applyPerformanceText({ policy, performanceSummary }) {
   performanceSummary.textContent = searchText(policy, "performance_summary", "Search performance");
 }
 
-function showMissingScopeState({ root, backLink, scopeLabel, input, status, results, more, policy }) {
-  applyScopeText({ backLink, scopeLabel, input, scopePolicy: null, inputEnabled: false });
-  status.textContent = searchMessage(policy, "missing_scope_error", "Search is unavailable without a valid search scope.");
-  status.dataset.state = "error";
-  results.innerHTML = "";
-  more.innerHTML = "";
-  root.hidden = false;
-}
-
 function showUnsupportedScopeState({ root, status, results, more, policy }) {
   status.textContent = searchMessage(policy, "unsupported_scope_error", "Search is not yet available for this scope.");
   status.dataset.state = "error";

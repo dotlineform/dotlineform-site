@@ -80,7 +80,7 @@ async function initSeriesTagsPage() {
   if (!mount) return;
   initializeStudioRouteState(mount, { route: "series-tags" });
 
-  let config = null;
+  let config;
   try {
     config = await loadStudioConfig();
     STUDIO_GROUPS = getStudioGroups(config);
@@ -112,7 +112,7 @@ async function initSeriesTagsPage() {
     importModalHost
   };
 
-  let seriesData = [];
+  let seriesData;
   try {
     seriesData = await getSeriesData(config);
   } catch (error) {

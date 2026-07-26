@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "exclude": [
+    ".git/**",
+    ".pytest_cache/**",
+    ".ruff_cache/**",
+    ".venv/**",
+    "**/__pycache__/**",
+    "**/node_modules/**",
+    "**/vendor/**",
+    "docs-viewer/build/mermaid/**",
+    "docs-viewer/data/generated/**",
+    "docs-viewer/scopes/*/published/**",
+    "logs/**",
+    "processing/**",
+    "site/assets/data/**",
+    "studio/data/canonical/**",
+    "studio/data/generated/**",
+    "studio/retired/**",
+    "var/**"
+  ],
+  "scopes": {
+    "shared": {
+      "python": [],
+      "javascript": [
+        "shared/frontend/js"
+      ]
+    },
+    "site-tools": {
+      "python": [
+        "site-tools/site_tools",
+        "site-tools/site_validate.py"
+      ],
+      "javascript": []
+    },
+    "studio": {
+      "python": [
+        "studio/app/server",
+        "studio/checks",
+        "studio/commands",
+        "studio/services",
+        "studio/shared/python"
+      ],
+      "javascript": [
+        "studio/app/frontend/js"
+      ]
+    },
+    "admin": {
+      "python": [
+        "admin-app/app/server",
+        "admin-app/checks",
+        "admin-app/commands"
+      ],
+      "javascript": [
+        "admin-app/app/frontend/js"
+      ]
+    },
+    "public-site": {
+      "python": [],
+      "javascript": [
+        "site/assets/js"
+      ]
+    },
+    "docs-viewer": {
+      "python": [
+        "docs-viewer/build",
+        "docs-viewer/migrations",
+        "docs-viewer/services"
+      ],
+      "javascript": [
+        "docs-viewer/runtime/js",
+        "site/docs-viewer/runtime/js"
+      ]
+    },
+    "tests": {
+      "python": [
+        "admin-app/tests",
+        "docs-viewer/tests",
+        "site-tools/tests",
+        "studio/tests",
+        "tests"
+      ],
+      "javascript": []
+    }
+  }
+}

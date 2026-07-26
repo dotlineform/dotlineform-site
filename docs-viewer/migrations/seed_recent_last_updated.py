@@ -529,7 +529,6 @@ def build_seed_plan(
         }
         for doc_id in sorted(selected_ids | repair_ids):
             candidate = candidates[doc_id]
-            current = str(candidate.doc.front_matter.get("last_updated") or "").strip()
             if not candidate.requires_write:
                 continue
             next_source = _replace_last_updated(candidate.doc.source_text, candidate.timestamp)

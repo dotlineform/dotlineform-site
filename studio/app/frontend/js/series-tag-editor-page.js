@@ -137,7 +137,6 @@ async function initSeriesTagEditorPage() {
       return;
     }
 
-    const imgBase = worksImgBasePath();
     const displayWidth = primaryDisplayWidth > 0 ? primaryDisplayWidth : primaryRenderWidths[primaryRenderWidths.length - 1];
     const fullWidth = primaryFullWidth > 0 ? primaryFullWidth : displayWidth;
     const displaySrc = buildPrimaryVariantUrl(primaryWorkId, displayWidth);

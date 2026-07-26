@@ -131,7 +131,6 @@ def assert_index_panel_toggle(page: Page, timeout_ms: int) -> None:
         timeout=timeout_ms,
     )
     step_toggle = page.locator("#docsViewerSidebarToggle")
-    expand_toggle = page.locator("#docsViewerSidebarExpand")
     page.wait_for_function(
         """() => {
             const step = document.querySelector('#docsViewerSidebarToggle');

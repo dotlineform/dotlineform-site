@@ -197,7 +197,7 @@ function createCatalogueSorter() {
 }
 
 function loadThumbSizes(root) {
-  var raw = [];
+  var raw;
   try {
     raw = JSON.parse(root.getAttribute('data-thumb-sizes') || '[]');
   } catch (err) {

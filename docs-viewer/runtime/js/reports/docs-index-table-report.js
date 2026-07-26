@@ -80,8 +80,8 @@ function docMatchesFilters(state, doc) {
 }
 
 function compareDocs(state, a, b) {
-  let av = "";
-  let bv = "";
+  let av;
+  let bv;
   if (state.sortKey === "tree") {
     return docTreeOrder(a) - docTreeOrder(b);
   } else if (state.sortKey === "added_date") {

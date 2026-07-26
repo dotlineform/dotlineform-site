@@ -12,9 +12,14 @@ from catalogue.catalogue_lookup import (
     build_and_write_catalogue_lookup,
     build_series_lookup_payload,
     build_series_search_payload,
+    build_work_detail_lookup_payload,
+    build_work_lookup_payload,
     build_work_search_payload,
+    normalize_text,
+    write_detail_lookup_payload,
     write_lookup_root_payload,
     write_series_lookup_payload,
+    write_work_lookup_payload,
 )
 from catalogue.catalogue_source import (
     normalize_series_ids_value,

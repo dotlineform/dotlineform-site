@@ -607,10 +607,6 @@ export function startDocsViewerRuntime(options) {
     configController.handleScopeChange();
   }
 
-  function getCurrentHash() {
-    return routeWorkflow.currentHash();
-  }
-
   function hasActiveQuery(query) {
     if (!searchEnabled) return false;
     var searchRecent = appSession.domains.searchRecent;
@@ -918,10 +914,6 @@ export function startDocsViewerRuntime(options) {
     documentViewCoordinator.updateInfoPanel();
   }
 
-  function showDocPane() {
-    documentViewCoordinator.showRenderedDocument(documentController.showDocPane);
-  }
-
   function showSearchPane() {
     documentViewCoordinator.showView("search-results", documentController.showSearchPane);
     documentViewCoordinator.updateInfoPanel();
@@ -998,10 +990,6 @@ export function startDocsViewerRuntime(options) {
 
   function renderRecentMode() {
     if (searchController) searchController.renderRecentMode();
-  }
-
-  function renderSearchPendingState() {
-    if (searchController) searchController.renderSearchPendingState();
   }
 
   function renderSearchMode() {

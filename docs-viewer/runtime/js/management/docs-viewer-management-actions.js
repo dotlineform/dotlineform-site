@@ -77,7 +77,6 @@ export function createDocsViewerManagementActionController(options) {
   var searchRecent = options.searchRecent || {};
   var selectedDocument = options.selectedDocument || {};
   var context = options.context;
-  var refs = options.refs || {};
   var callbacks = options.callbacks || {};
   var resolveAction = options.resolveAction;
   if (typeof resolveAction !== "function") {

@@ -246,7 +246,7 @@ export async function submitTagDemote(options) {
 }
 
 export async function submitRegistryImport(options) {
-  const { saveMode, importMode, importRegistry, filename, config, state } = options || {};
+  const { saveMode, importMode, importRegistry, filename, config } = options || {};
   if (saveMode === "post") {
     try {
       const response = await postJson(getStudioTagWriteEndpoint("importTagRegistry", config), {
@@ -285,11 +285,11 @@ export async function submitRegistryImport(options) {
 
 export async function readImportRegistryFromFile(file, groups) {
   const rawText = await file.text();
-  let payload = null;
+  let payload;
   try {
     payload = JSON.parse(rawText);
   } catch (error) {
-    throw new Error(registryText(null, "import_invalid_json", "Import file is not valid JSON."));
+    throw new Error(registryText(null, "import_invalid_json", "Import file is not valid JSON."), { cause: error });
   }
   return readImportRegistryPayload(payload, groups);
 }

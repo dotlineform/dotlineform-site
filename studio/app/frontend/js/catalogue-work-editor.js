@@ -87,7 +87,6 @@ import {
 import {
   applyPublicationChange,
   bulkPublishedBuildTargets,
-  bulkSelectionHasPublishedRecords,
   catalogueDeleteRemoteCleanupWarning,
   catalogueRemoteMediaWarning,
   currentWorkIsDraft,

@@ -7,7 +7,6 @@ from typing import Any
 from urllib.parse import parse_qs, urlparse
 
 from .common import (
-    HTML_ATTR_PATTERN_TEMPLATE,
     HTML_MEDIA_HEIGHT_PATTERN,
     HTML_MEDIA_TOKEN_PATTERN,
     IMG_PATTERN,

@@ -18,7 +18,6 @@ from catalogue.catalogue_source import (
     normalize_series_ids_value,
     payload_for_map,
     records_from_json_source,
-    slug_id,
 )
 
 

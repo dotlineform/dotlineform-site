@@ -27,7 +27,7 @@ CHECKS_DIR = REPO_ROOT / "admin-app" / "checks"
 if str(CHECKS_DIR) not in sys.path:
     sys.path.insert(0, str(CHECKS_DIR))
 
-from admin_checks_config import DEFAULT_CONFIG_PATH, ChecksConfigError, load_checks_config  # noqa: E402
+from admin_checks_config import ChecksConfigError, DEFAULT_CONFIG_PATH, load_checks_config  # noqa: E402
 from run_reports import DEFAULT_RUNS_ROOT, run_request  # noqa: E402
 
 

@@ -22,7 +22,7 @@ export function getAdminRouteEntries(config) {
 }
 
 export function normalizeRoutePath(path) {
-  let pathname = "/";
+  let pathname;
   try {
     pathname = new URL(String(path || "/"), currentOrigin()).pathname;
   } catch (_error) {

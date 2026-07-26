@@ -10,6 +10,8 @@ trap 'die "Command failed at line ${LINENO}: ${BASH_COMMAND}"' ERR
 VENV_DIR=".venv"
 VENV_PYTHON="${VENV_DIR}/bin/python"
 VENV_PIP="${VENV_DIR}/bin/pip"
+LINT_VENV_DIR="tooling/lint/.venv"
+LINT_VENV_PYTHON="${LINT_VENV_DIR}/bin/python"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
@@ -124,6 +126,24 @@ ensure_python_venv() {
   fi
 }
 
+ensure_lint_tools() {
+  [[ -x "$VENV_PYTHON" ]] || die "Repository virtualenv is required before lint setup."
+
+  if [[ -d "$LINT_VENV_DIR" ]]; then
+    log "Reusing existing lint virtualenv at ${LINT_VENV_DIR}."
+  else
+    log "Creating lint virtualenv at ${LINT_VENV_DIR}."
+    "$VENV_PYTHON" -m venv "$LINT_VENV_DIR"
+  fi
+
+  [[ -x "$LINT_VENV_PYTHON" ]] || die "Lint virtualenv python not found at ${LINT_VENV_PYTHON}."
+  "$LINT_VENV_PYTHON" -m pip install -r tooling/lint/python-requirements.txt
+
+  command -v node >/dev/null 2>&1 || die "Node is required for repository JavaScript linting."
+  command -v npm >/dev/null 2>&1 || die "npm is required for repository JavaScript linting."
+  npm ci --prefix tooling/lint
+}
+
 persist_agent_environment() {
   if [[ "${SETUP_PERSIST_AGENT_ENV:-1}" != "1" ]]; then
     log "SETUP_PERSIST_AGENT_ENV is not 1; skipping shell environment persistence."
@@ -176,6 +196,7 @@ main() {
   log "Repo root: $REPO_ROOT"
   run_phase "apt" install_apt_packages
   run_phase "python" ensure_python_venv
+  run_phase "lint" ensure_lint_tools
   run_phase "agent-env" persist_agent_environment
   run_phase "verify" verify_environment
   log "Setup complete"

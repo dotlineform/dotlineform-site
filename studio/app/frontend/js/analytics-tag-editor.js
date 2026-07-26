@@ -20,7 +20,6 @@ import {
 } from "./analytics-tag-editor-save.js";
 import {
   collectAnalyticsTagEditorSaveModalRefs,
-  openAnalyticsTagEditorSaveModal,
   renderAnalyticsTagEditorSaveModal,
   wireAnalyticsTagEditorSaveModalEvents
 } from "./analytics-tag-editor-modals.js";
@@ -37,7 +36,6 @@ import {
   renderWorkPopup
 } from "./analytics-tag-editor-suggestions.js";
 import {
-  buildStateDiff,
   buildAnalyticsTagEditorState,
   restoreSelectionFromQuery
 } from "./analytics-tag-editor-state.js";
@@ -99,7 +97,7 @@ async function initAnalyticsTagEditor() {
   if (!mount) return;
   const routeRoot = document.getElementById("seriesTagEditorRoot");
 
-  let config = null;
+  let config;
   try {
     config = await loadStudioConfig();
   } catch (error) {
@@ -390,17 +388,6 @@ function renderAll(state) {
   syncRouteBusyState(state);
 }
 
-function openSaveModal(state) {
-  const diff = buildStateDiff(state);
-  if (!diff.seriesChanged && !diff.changedWorkIds.length) {
-    setStatus(state, "warn", analyticsTagEditorText(state.config, "save_status_no_changes", "No changes to save."));
-    renderStatus(state);
-    return;
-  }
-
-  openAnalyticsTagEditorSaveModal(state, diff);
-}
-
 function setStatus(state, kind, text) {
   state.statusKind = kind || "";
   state.statusText = text || "";
@@ -446,11 +433,6 @@ function saveControllerCallbacks() {
     setSaveResult,
     syncRouteBusyState
   };
-}
-
-function hasPendingSaveChanges(state) {
-  const diff = buildStateDiff(state);
-  return diff.seriesChanged || diff.changedWorkIds.length > 0;
 }
 
 function broadcastSelectedWorkChange(state) {

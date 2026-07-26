@@ -205,7 +205,7 @@ export function renderWorkCurrentPreview(state, options = {}) {
   bindPreviewImages(state.previewNode);
 }
 
-export function renderWorkReadiness(state, options = {}) {
+export function renderWorkReadiness(state, _options = {}) {
   if (!state.readinessNode) return;
   if (state.mode === "bulk" || !state.currentRecord) {
     state.readinessNode.innerHTML = "";

@@ -67,8 +67,6 @@ export function initDocsViewerRouteWorkflow(context) {
   var window = context.window;
   var root = context.root;
   var content = context.content;
-  var results = context.results;
-  var more = context.more;
   var searchInput = context.searchInput;
   var scopeConfig = context.scopeConfig || {};
   var statusCommands = context.statusCommands || {};

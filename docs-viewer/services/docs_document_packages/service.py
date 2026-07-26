@@ -98,7 +98,6 @@ def optional_boolean_value(body: dict[str, Any], key: str) -> bool | None:
 
 def profile_contract(config: dict[str, Any]) -> dict[str, Any]:
     target = config.get("target") if isinstance(config.get("target"), dict) else {}
-    content = config.get("content_format") if isinstance(config.get("content_format"), dict) else {}
     selection = config.get("selection") if isinstance(config.get("selection"), dict) else {}
     limits = config.get("limits") if isinstance(config.get("limits"), dict) else {}
     external_context = (

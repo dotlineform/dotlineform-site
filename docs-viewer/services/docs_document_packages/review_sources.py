@@ -22,7 +22,6 @@ from docs_review_materialization import match_existing_review_package, publish_r
 from docs_document_packages.returned_common import (
     SUPPORTED_EXTENSIONS,
     issue,
-    normalize_text,
     relative_path,
     resolve_staged_path,
 )

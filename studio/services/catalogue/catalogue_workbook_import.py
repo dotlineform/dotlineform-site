@@ -356,10 +356,10 @@ def _build_work_import_plan(source_records: CatalogueSourceRecords, workbook, wo
             "published_date": None,
             "series_ids": [normalize_series_id(series_id) for series_id in series_ids],
         }
-        for field in WORK_FIELDS:
-            if field in record or field in {"status", "published_date"}:
+        for field_name in WORK_FIELDS:
+            if field_name in record or field_name in {"status", "published_date"}:
                 continue
-            record[field] = normalize_json_value(cell(row, headers, field))
+            record[field_name] = normalize_json_value(cell(row, headers, field_name))
         if normalize_text(record.get("project_filename")) and not normalize_text(record.get("media_version")):
             record["media_version"] = 1
         normalized_record = normalize_source_record(record, WORK_FIELDS, text_fields=WORK_TEXT_FIELDS)
@@ -488,10 +488,10 @@ def _build_work_detail_import_plan(source_records: CatalogueSourceRecords, workb
                 DETAIL_SECTION_FIELDS,
                 text_fields=DETAIL_TEXT_FIELDS,
             )
-        for field in DETAIL_FIELDS:
-            if field in record:
+        for field_name in DETAIL_FIELDS:
+            if field_name in record:
                 continue
-            record[field] = normalize_json_value(cell(row, headers, field))
+            record[field_name] = normalize_json_value(cell(row, headers, field_name))
         if normalize_text(record.get("project_filename")) and not normalize_text(record.get("media_version")):
             record["media_version"] = 1
         normalized_record = normalize_source_record(record, DETAIL_FIELDS, text_fields=DETAIL_TEXT_FIELDS)

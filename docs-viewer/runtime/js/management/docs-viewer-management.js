@@ -416,7 +416,7 @@ export function initDocsViewerManagement(context) {
       }
     }
 
-    var noteText = "";
+    var noteText;
     var noteIsError = false;
     if (!management.managementChecked) {
       noteText = MANAGEMENT_TEXT.checkingNote;
@@ -521,12 +521,7 @@ export function initDocsViewerManagement(context) {
     return command ? command() : Promise.resolve(null);
   }
 
-  function loadRouteDoc(docId, options) {
-    var command = routeCommand("loadDoc");
-    return command ? command(docId, options) : Promise.resolve(null);
-  }
-
-  function reloadDocsIndex(targetDocId, summaryText) {
+  function reloadDocsIndex(targetDocId, _summaryText) {
     selectedDocument.payloadCache.clear();
     searchRecent.searchEntries = [];
     searchRecent.searchLoaded = false;

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -15,7 +16,6 @@ from .common import (
     plain_text_from_html,
     publication_documents_path,
     read_json,
-    resolve_scope_path,
     scope_uses_external_data,
 )
 from docs_document_identity import is_immutable_doc_id

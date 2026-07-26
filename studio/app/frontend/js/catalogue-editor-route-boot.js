@@ -98,7 +98,6 @@ export function markCatalogueEditorRouteReady(state, ready, options) {
 }
 
 export async function configureCatalogueEditorRouteRuntime(state, options) {
-  const namespace = options.namespace;
   const configLoader = options.configLoader || loadStudioConfig;
   const healthProbe = options.healthProbe || probeCatalogueHealth;
   const config = await configLoader();

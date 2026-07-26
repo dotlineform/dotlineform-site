@@ -1,8 +1,8 @@
 {
-  "name": "@dotlineform/docs-viewer-lint",
+  "name": "@dotlineform/repository-lint",
   "version": "0.0.0",
   "private": true,
-  "description": "Pinned lint tooling for selected Docs Viewer source boundaries.",
+  "description": "Pinned lint tooling for maintained repository source boundaries.",
   "type": "module",
   "engines": {
     "node": "^22.13.0"

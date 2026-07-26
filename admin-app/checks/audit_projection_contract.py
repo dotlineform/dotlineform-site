@@ -7,7 +7,7 @@ import argparse
 import json
 import sys
 from pathlib import Path, PurePosixPath
-from typing import Any, Mapping
+from typing import Any, Iterable, Mapping
 
 
 DEFAULT_CONTRACT_PATH = Path("admin-app/checks/projection_contract.json")

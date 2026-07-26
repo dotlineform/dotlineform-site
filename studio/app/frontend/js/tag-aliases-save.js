@@ -208,11 +208,11 @@ export function buildManualPatchForDemote(tagId, aliasTargets) {
 
 export async function readImportAliasesFromFile(file) {
   const rawText = await file.text();
-  let payload = null;
+  let payload;
   try {
     payload = JSON.parse(rawText);
   } catch (error) {
-    throw new Error(aliasesText(null, "import_invalid_json", "Import file is not valid JSON."));
+    throw new Error(aliasesText(null, "import_invalid_json", "Import file is not valid JSON."), { cause: error });
   }
 
   if (!payload || typeof payload !== "object") {

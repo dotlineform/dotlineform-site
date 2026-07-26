@@ -15,15 +15,12 @@ from docs_scope_config import (
     EXTERNAL_DATA_ROOT_MARKER,
     LOCAL_EXTERNAL_SCOPE_TYPE,
     PUBLISHED_DOCUMENTS_PATH,
-    PUBLISHED_MEDIA_PATH,
     PUBLISHED_SEARCH_PATH,
     PUBLIC_DOCS_OUTPUT_ROOT,
     PUBLIC_SEARCH_OUTPUT_ROOT,
     SCHEMA_VERSION as SCOPE_CONFIG_SCHEMA_VERSION,
     SCOPE_ROOTS_PATH,
     SCOPE_SOURCE_PATH,
-    SOURCE_DOCUMENTS_PATH,
-    SOURCE_SUB_SCOPES_PATH,
     DocsScopeConfig,
     document_source_path,
     load_docs_scope_configs,
@@ -367,9 +364,6 @@ def path_is_relative_to(path: Path, parent: Path) -> bool:
 
 def validate_planned_storage_paths(scope_id: str, publishing_mode: str, config: dict[str, Any]) -> None:
     scope_root = planned_scope_root_path(config)
-    source_root = scope_root / SCOPE_SOURCE_PATH
-    docs_output = scope_root / PUBLISHED_DOCUMENTS_PATH
-    search_output = scope_root / PUBLISHED_SEARCH_PATH
     if publishing_mode == PUBLIC_MODE:
         publish_output = _planned_location_path(
             _planned_role_location(config, "public_projection", "documents", "location"),

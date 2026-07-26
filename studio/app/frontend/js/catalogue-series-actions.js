@@ -94,7 +94,6 @@ function applySaveBuildOutcome(state, response) {
 
 function projectSeriesSavePresentation(state, context, response, outcome) {
   const savedAt = { saved_at: outcome.stamp };
-  const loadedSeries = { series_id: state.currentSeriesId };
   const statusFailed = `${t(state, context, "build_status_failed", "Site update failed.")} ${normalizeText(outcome.error)}`.trim();
   return projectCatalogueSaveOutcomePresentation({
     outcome,
@@ -193,7 +192,7 @@ function projectSeriesPublicationPresentation(state, context, action, response) 
   });
 }
 
-export async function refreshBuildPreview(state, context) {
+export async function refreshBuildPreview(state, _context) {
   if (!state.currentSeriesId || !state.serverAvailable || !currentSeriesIsPublished(state)) {
     state.buildPreview = null;
     return;

@@ -162,7 +162,11 @@ def write_doc(
 def make_repo(config: dict | None = None) -> tempfile.TemporaryDirectory:
     temp_dir = tempfile.TemporaryDirectory()
     root = Path(temp_dir.name)
-    (root / "site-tools/config").mkdir(parents=True, exist_ok=True); (root / "site-tools/config/site-tools.json").write_text("{\"schema_version\":\"site_tools_config_v1\"}\n", encoding="utf-8")
+    (root / "site-tools/config").mkdir(parents=True, exist_ok=True)
+    (root / "site-tools/config/site-tools.json").write_text(
+        "{\"schema_version\":\"site_tools_config_v1\"}\n",
+        encoding="utf-8",
+    )
     write_json(root / "docs-viewer/config/document-packages/profiles.json", config or BASE_CONFIG)
     write_scope_config(root)
     write_doc(root, "library.md", doc_id="library", title="Library", body="# Library\n\nBody text.")

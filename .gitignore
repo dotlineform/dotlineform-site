@@ -51,8 +51,8 @@ docs-viewer/logs/
 docs-viewer/run/
 docs-viewer/var/
 docs-viewer/build/mermaid/node_modules/
-docs-viewer/tooling/lint/node_modules/
-docs-viewer/tooling/lint/.ruff_cache/
+tooling/lint/node_modules/
+tooling/lint/.ruff_cache/
 
 # all of var
 var/

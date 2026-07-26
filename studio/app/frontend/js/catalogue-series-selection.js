@@ -148,7 +148,7 @@ export function bindSeriesSelectionControls(state, context) {
     classNames: {
       option: "catalogueSeriesSearch__option"
     },
-    onTransientInput: ({ value }) => {
+    onTransientInput: () => {
       if (state.mode !== "new") return;
       state.draft.series_id = normalizeSeriesId(state.searchNode.value);
       context.updateEditorState();

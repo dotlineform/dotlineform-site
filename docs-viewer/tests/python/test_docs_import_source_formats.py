@@ -8,7 +8,6 @@ from pathlib import Path
 import pytest
 
 import docs_import_preview
-import docs_import_source_service as import_source_service
 import docs_management_service
 import docs_write_rebuild as write_rebuild
 from repo_factory import docs_scope_record, write_docs_scope_config

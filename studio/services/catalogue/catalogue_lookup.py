@@ -3,29 +3,23 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
-from typing import Any, Dict, Iterable, Mapping
+from typing import Any, Dict, Mapping
 
 try:
     from catalogue.catalogue_source import (
-        DEFAULT_SOURCE_DIR,
         CatalogueSourceRecords,
         build_detail_section_resolution_by_uid,
-        detail_sort_key_for_section,
         normalize_text,
         ordered_work_detail_sections,
         records_from_json_source,
-        section_sort_key,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from catalogue.catalogue_source import (  # type: ignore
-        DEFAULT_SOURCE_DIR,
         CatalogueSourceRecords,
         build_detail_section_resolution_by_uid,
-        detail_sort_key_for_section,
         normalize_text,
         ordered_work_detail_sections,
         records_from_json_source,
-        section_sort_key,
     )
 
 

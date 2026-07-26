@@ -1,0 +1,57 @@
+target-version = "py312"
+force-exclude = true
+cache-dir = "tooling/lint/.ruff_cache"
+extend-exclude = [
+    "docs-viewer/build/mermaid/**",
+    "docs-viewer/data/generated/**",
+    "docs-viewer/runtime/vendor/**",
+    "docs-viewer/scopes/**/published/**",
+    "logs/**",
+    "node_modules/**",
+    "processing/**",
+    "site/assets/data/**",
+    "site/docs-viewer/runtime/vendor/**",
+    "studio/data/canonical/**",
+    "studio/data/generated/**",
+    "studio/retired/**",
+    "var/**",
+]
+
+[lint]
+select = ["E4", "E7", "E9", "F"]
+fixable = []
+
+[lint.per-file-ignores]
+"admin-app/app/server/admin_app/admin_app_server.py" = ["E402"]
+"admin-app/app/server/admin_app/admin_audit_api.py" = ["E402"]
+# The checks adapter also intentionally re-exports its configuration error to the server route handler.
+"admin-app/app/server/admin_app/admin_checks_api.py" = ["E402", "F401"]
+"admin-app/app/server/admin_app/audit_runner.py" = ["E402"]
+"admin-app/checks/audit_site_consistency.py" = ["E402"]
+# These active facade entrypoints intentionally expose imported public names
+# used by sibling builders, route dispatch, and focused contract tests.
+"docs-viewer/build/build_docs.py" = ["E402", "F401"]
+"docs-viewer/build/docs_builder/common.py" = ["F401"]
+"docs-viewer/services/docs_management_service.py" = ["E402", "F401"]
+"docs-viewer/services/docs_source_model.py" = ["F401"]
+"docs-viewer/services/docs_live_rebuild_watcher.py" = ["E402"]
+"docs-viewer/services/docs_viewer_service.py" = ["E402"]
+"docs-viewer/tests/python/test_docs_media_inventory.py" = ["E402"]
+"docs-viewer/tests/smoke/docs_viewer_prepare_package_workflow_route.py" = ["E402"]
+"docs-viewer/tests/smoke/docs_viewer_review_package_workflow_route.py" = ["E402"]
+"docs-viewer/tests/smoke/public_docs_viewer_readonly.py" = ["E402"]
+"docs-viewer/tests/python/*_test_support.py" = ["E402", "F401"]
+"site-tools/tests/test_site_validate.py" = ["E402"]
+"studio/app/server/studio/studio_app_server.py" = ["E402"]
+"studio/app/server/studio/studio_catalogue_api.py" = ["E402"]
+"studio/app/server/studio/studio_tag_api/common.py" = ["E402"]
+"studio/app/server/studio/studio_tags_api.py" = ["E402"]
+"studio/services/catalogue/catalogue_cleanup.py" = ["E402"]
+"studio/services/catalogue/catalogue_json_build.py" = ["E402"]
+"studio/services/catalogue/export_catalogue_lookup.py" = ["E402"]
+"studio/services/catalogue/generate_work_pages.py" = ["E402"]
+"studio/services/catalogue/project_state_report.py" = ["E402"]
+"studio/services/catalogue/validate_catalogue_source.py" = ["E402"]
+"studio/services/media/make_srcset_images.py" = ["E402"]
+"studio/services/media/publish_media_to_r2.py" = ["E402"]
+"studio/tests/python/*_test_support.py" = ["E402", "F401"]

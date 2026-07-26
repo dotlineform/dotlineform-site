@@ -9,7 +9,6 @@ from .common import (
     DEFAULT_RECENT_LIMIT,
     DOCS_INDEX_TREE_SCHEMA_VERSION,
     DOCS_RECENT_SCHEMA_VERSION,
-    plain_text_from_html,
     read_json,
     render_markdown_to_html,
     utc_timestamp,

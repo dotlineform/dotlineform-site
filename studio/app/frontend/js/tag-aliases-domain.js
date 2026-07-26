@@ -49,7 +49,7 @@ export function normalizeAliases(data, fallbackUpdatedAt, registryById, text) {
   for (const [rawAlias, rawValue] of Object.entries(aliasesObj)) {
     const alias = normalize(rawAlias);
     if (!alias) continue;
-    let normalizedValue = null;
+    let normalizedValue;
     try {
       normalizedValue = normalizeAliasValue(rawValue, text);
     } catch (error) {
@@ -371,7 +371,7 @@ export function normalizeImportAliasRows(rawAliases, text) {
   for (const [rawAlias, rawValue] of Object.entries(rawAliases)) {
     const alias = normalize(rawAlias);
     if (!alias) continue;
-    let normalizedValue = null;
+    let normalizedValue;
     try {
       normalizedValue = normalizeAliasValue(rawValue, text);
     } catch (error) {

@@ -81,10 +81,6 @@ import {
   applyTagRegistryDemotePatchResult,
   applyTagRegistryDemotePostResult,
   applyTagRegistryEditResult,
-  closeTagRegistryDeleteWorkflow,
-  closeTagRegistryDemoteWorkflow,
-  closeTagRegistryEditWorkflow,
-  closeTagRegistryNewWorkflow,
   getTagRegistryDemoteValidation,
   getTagRegistryNewValidation,
   openTagRegistryDeleteWorkflow,
@@ -95,7 +91,6 @@ import {
   setTagRegistryDeleteStatus,
   setTagRegistryDemoteStatus,
   setTagRegistryEditStatus,
-  setTagRegistryNewStatus,
   updateTagRegistryDemoteWorkflow,
   updateTagRegistryNewWorkflow
 } from "./tag-registry-modal-workflow.js";
@@ -106,7 +101,7 @@ const DEMOTE_TAG_MATCH_CAP = 12;
 const TAG_SLUG_RE = /^[a-z0-9][a-z0-9-]*$/;
 let GROUP_INFO_PAGE_PATH = "/studio/tag-groups/";
 const UI = tagRegistryUi;
-const { className: UI_CLASS, selector: UI_SELECTOR, state: UI_STATE } = UI;
+const { className: UI_CLASS, selector: UI_SELECTOR } = UI;
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initTagRegistryPage);
@@ -140,7 +135,7 @@ async function initTagRegistryPage() {
   if (!mount) return;
   initializeStudioRouteState(mount, { route: "tag-registry", mode: "list" });
 
-  let config = null;
+  let config;
   try {
     config = await loadStudioConfig();
   } catch (error) {
@@ -325,7 +320,7 @@ function wireEvents(state) {
     onEditSave: () => {
       void withRouteBusy(state, () => handleTagEdit(state));
     },
-    onEditDescriptionInput: () => setEditStatus(state, "", ""),
+    onEditDescriptionInput: () => setTagRegistryEditStatus(state, "", ""),
     onNewTagInput: () => updateNewTagUi(state),
     onCreateTag: () => {
       void withRouteBusy(state, () => handleCreateTag(state));
@@ -373,7 +368,7 @@ async function loadRegistry(state, options = {}) {
     loadAnalyticsAssignmentsJson(state.config, options),
     loadSiteSeriesIndexJson(state.config, options)
   ]);
-  let groupsData = null;
+  let groupsData;
   try {
     groupsData = await loadAnalyticsGroupsJson(state.config, options);
   } catch (error) {
@@ -428,16 +423,8 @@ function openEditModal(state, tagId) {
   openTagRegistryEditWorkflow(state, tagId, modalWorkflowOptions(state));
 }
 
-function closeEditModal(state) {
-  closeTagRegistryEditWorkflow(state, modalWorkflowOptions(state));
-}
-
 function openNewTagModal(state) {
   openTagRegistryNewWorkflow(state, modalWorkflowOptions(state));
-}
-
-function closeNewTagModal(state) {
-  closeTagRegistryNewWorkflow(state, modalWorkflowOptions(state));
 }
 
 function getNewTagValidation(state) {
@@ -452,7 +439,7 @@ async function refreshDeleteImpactPreview(state) {
   const seq = ++state.deletePreviewSeq;
   state.isBusy = true;
   syncRouteBusyState(state);
-  let result = null;
+  let result;
   try {
     result = await previewTagRegistryDeleteImpact({
       saveMode: state.saveMode,
@@ -535,10 +522,6 @@ function openDeleteModal(state, tagId) {
   openTagRegistryDeleteWorkflow(state, tagId, modalWorkflowOptions(state));
 }
 
-function closeDeleteModal(state) {
-  closeTagRegistryDeleteWorkflow(state, modalWorkflowOptions(state));
-}
-
 async function handleDeleteFromModal(state) {
   if (!state.deleteTagId) return;
   const deletedTagId = state.deleteTagId;
@@ -560,10 +543,6 @@ async function handleDeleteFromModal(state) {
 
 function openDemoteModal(state, tagId) {
   openTagRegistryDemoteWorkflow(state, tagId, modalWorkflowOptions(state));
-}
-
-function closeDemoteModal(state) {
-  closeTagRegistryDemoteWorkflow(state, modalWorkflowOptions(state));
 }
 
 function getDemoteValidation(state) {
@@ -692,7 +671,7 @@ async function handleImport(state) {
     return;
   }
 
-  let importRegistry = null;
+  let importRegistry;
   try {
     importRegistry = await readImportRegistryFromFile(state.selectedFile);
   } catch (error) {
@@ -761,10 +740,4 @@ function registryText(config, key, fallback, tokens) {
 
 function renderError(state, message) {
   renderTagRegistryError(state, message);
-}
-
-function setSelectOptionLabel(select, value, label) {
-  if (!select) return;
-  const option = select.querySelector(`option[value="${value}"]`);
-  if (option) option.textContent = label;
 }

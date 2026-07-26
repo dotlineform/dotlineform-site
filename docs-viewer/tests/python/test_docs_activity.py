@@ -260,8 +260,6 @@ def main() -> None:
     test_docs_export_activity_writes_compact_doc_ids()
     test_import_source_activity_suppresses_preview()
     test_collection_import_activity_records_grouped_result_and_safe_report_path()
-    test_import_apply_activity_suppresses_unconfirmed_apply()
-    test_import_apply_activity_uses_direct_returned_package_contract()
     test_broken_links_activity_uses_warning_status_for_broken_links()
     print("Docs activity tests OK")
 

@@ -132,11 +132,11 @@ export async function postJson(url, payload, options = {}) {
     signal: options.signal
   });
 
-  let responsePayload = null;
+  let responsePayload;
   try {
     responsePayload = await response.json();
   } catch (error) {
-    throw new Error(`HTTP ${response.status}`);
+    throw new Error(`HTTP ${response.status}`, { cause: error });
   }
 
   if (!response.ok || !responsePayload || !responsePayload.ok) {
@@ -160,11 +160,11 @@ export async function getJson(url, options = {}) {
     signal: options.signal
   });
 
-  let responsePayload = null;
+  let responsePayload;
   try {
     responsePayload = await response.json();
   } catch (error) {
-    throw new Error(`HTTP ${response.status}`);
+    throw new Error(`HTTP ${response.status}`, { cause: error });
   }
 
   if (!response.ok || !responsePayload || !responsePayload.ok) {
@@ -189,11 +189,11 @@ export async function deleteJson(url, options = {}) {
     signal: options.signal
   });
 
-  let responsePayload = null;
+  let responsePayload;
   try {
     responsePayload = await response.json();
   } catch (error) {
-    throw new Error(`HTTP ${response.status}`);
+    throw new Error(`HTTP ${response.status}`, { cause: error });
   }
 
   if (!response.ok || !responsePayload || !responsePayload.ok) {

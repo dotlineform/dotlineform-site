@@ -54,7 +54,7 @@ def work_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
     target_path = context.works_path.resolve()
     if target_path not in context.allowed_write_paths:
         raise ValueError("write target not allowlisted")
-    write_result = transactions.execute_source_json_write(
+    transactions.execute_source_json_write(
         {target_path: mutation_plan.payload},
         dry_run=context.dry_run,
         repo_root=context.repo_root,

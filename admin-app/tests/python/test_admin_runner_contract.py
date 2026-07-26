@@ -49,13 +49,14 @@ def test_admin_runner_docs_profile_isolates_only_full_registry_pytest() -> None:
     commands = runner.expand_profiles(["docs"])
 
     assert [command.name for command in commands] == [
+        "docs-viewer-source-lint",
         "docs-python-pytest",
         "studio-docs-build",
         "studio-search-build",
     ]
-    assert commands[0].isolated_projects_base is True
-    assert commands[0].projects_base_argument is False
-    assert all(command.isolated_projects_base is False for command in commands[1:])
+    assert commands[1].isolated_projects_base is True
+    assert commands[1].projects_base_argument is False
+    assert all(command.isolated_projects_base is False for command in (commands[0], *commands[2:]))
     assert all(command.projects_base_argument is False for command in commands)
     assert all(
         (REPO_ROOT / argument).is_file()
@@ -77,6 +78,7 @@ def test_admin_runner_writes_summary_paths_under_admin_root(tmp_path, monkeypatc
         result = {
             "name": "sample",
             "description": "sample command",
+            "coverage": "",
             "command": [sys.executable, "-c", "pass"],
             "exit_code": 0,
             "duration_seconds": 0.0,
@@ -91,6 +93,30 @@ def test_admin_runner_writes_summary_paths_under_admin_root(tmp_path, monkeypatc
     finally:
         if runs_dir.exists():
             shutil.rmtree(runs_dir)
+
+
+def test_admin_runner_source_lint_profile_covers_every_maintained_scope() -> None:
+    runner = load_runner_module()
+
+    commands = runner.expand_profiles(["source-lint"])
+
+    assert [command.name for command in commands] == [
+        f"{scope_id}-source-lint"
+        for scope_id in runner.LINT_SCOPE_ORDER
+    ]
+    assert all("tooling/lint/targets.json" in command.coverage for command in commands)
+    assert all("tooling/lint/ruff.toml" in command.coverage for command in commands)
+    assert all("tooling/lint/eslint.config.mjs" in command.coverage for command in commands)
+
+
+def test_admin_runner_full_profile_includes_source_lint_once() -> None:
+    runner = load_runner_module()
+
+    commands = runner.expand_profiles(["full"])
+    names = [command.name for command in commands]
+
+    for scope_id in runner.LINT_SCOPE_ORDER:
+        assert names.count(f"{scope_id}-source-lint") == 1
 
 
 def test_admin_runner_executes_representative_app_local_pytest(tmp_path) -> None:

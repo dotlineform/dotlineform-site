@@ -28,6 +28,7 @@ class CheckCommand:
     name: str
     argv: tuple[str, ...]
     description: str
+    coverage: str = ""
     isolated_projects_base: bool = False
     projects_base_argument: bool = False
 
@@ -43,8 +44,40 @@ def pytest_argv(*paths: str) -> tuple[str, ...]:
     return (sys.executable, "-m", "pytest", "-q", *paths)
 
 
+def lint_scope_command(scope_id: str) -> CheckCommand:
+    """Describe one maintained lint boundary and its checked configuration owners."""
+    return CheckCommand(
+        f"{scope_id}-source-lint",
+        (sys.executable, "tooling/lint/run_lint.py", "--scope", scope_id),
+        f"Lint the complete maintained {scope_id} source boundary.",
+        coverage=(
+            f"scope={scope_id}; targets=tooling/lint/targets.json; "
+            "rules=tooling/lint/ruff.toml,tooling/lint/eslint.config.mjs"
+        ),
+    )
+
+
+LINT_SCOPE_ORDER = (
+    "shared",
+    "site-tools",
+    "studio",
+    "admin",
+    "public-site",
+    "docs-viewer",
+    "tests",
+)
+LINT_SCOPE_COMMANDS = {
+    scope_id: lint_scope_command(scope_id)
+    for scope_id in LINT_SCOPE_ORDER
+}
+
+
 PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
+    "source-lint": tuple(LINT_SCOPE_COMMANDS.values()),
     "quick": (
+        LINT_SCOPE_COMMANDS["shared"],
+        LINT_SCOPE_COMMANDS["site-tools"],
+        LINT_SCOPE_COMMANDS["tests"],
         CheckCommand("git-diff-check", ("git", "diff", "--check"), "Check staged and unstaged diff whitespace."),
         CheckCommand(
             "python-syntax",
@@ -307,6 +340,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
         ),
     ),
     "admin-checks": (
+        LINT_SCOPE_COMMANDS["admin"],
         CheckCommand(
             "admin-checks-python-pytest",
             pytest_argv(
@@ -322,6 +356,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
         ),
     ),
     "catalogue": (
+        LINT_SCOPE_COMMANDS["studio"],
         CheckCommand(
             "catalogue-python-pytest",
             pytest_argv(
@@ -337,6 +372,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
         ),
     ),
     "docs": (
+        LINT_SCOPE_COMMANDS["docs-viewer"],
         CheckCommand(
             "docs-python-pytest",
             pytest_argv(
@@ -398,6 +434,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
         ),
     ),
     "docs-viewer-smoke": (
+        LINT_SCOPE_COMMANDS["docs-viewer"],
         CheckCommand(
             "site-validate",
             site_validate_argv(),
@@ -584,6 +621,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
         ),
     ),
     "admin-smoke": (
+        LINT_SCOPE_COMMANDS["admin"],
         CheckCommand(
             "admin-home-route-smoke",
             (
@@ -610,6 +648,8 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
         ),
     ),
     "studio-smoke": (
+        LINT_SCOPE_COMMANDS["studio"],
+        LINT_SCOPE_COMMANDS["public-site"],
         CheckCommand(
             "site-validate",
             site_validate_argv(),
@@ -647,6 +687,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
         ),
     ),
     "studio-tag-smoke": (
+        LINT_SCOPE_COMMANDS["studio"],
         CheckCommand(
             "studio-tag-registry-api-smoke",
             (
@@ -734,7 +775,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
     ),
 }
 
-FULL_PROFILE_ORDER = ("quick", "catalogue", "docs", "admin-smoke", "studio-smoke")
+FULL_PROFILE_ORDER = ("source-lint", "quick", "catalogue", "docs", "admin-smoke", "studio-smoke")
 
 
 def slugify(value: str) -> str:
@@ -807,6 +848,8 @@ def run_command(command: CheckCommand, log_path: Path) -> dict[str, object]:
         f"started_at_utc: {started_at}",
         "",
     ]
+    if command.coverage:
+        header.insert(2, f"coverage: {command.coverage}")
     if projects_base is not None:
         header.insert(4, f"projects_base: {projects_base}")
 
@@ -837,6 +880,7 @@ def run_command(command: CheckCommand, log_path: Path) -> dict[str, object]:
     return {
         "name": command.name,
         "description": command.description,
+        "coverage": command.coverage,
         "command": list(argv),
         "exit_code": exit_code,
         "duration_seconds": round(duration, 2),
@@ -866,7 +910,11 @@ def write_summaries(run_dir: Path, profiles: list[str], results: list[dict[str, 
     ]
     for result in results:
         status = "pass" if result["exit_code"] == 0 else "fail"
-        lines.append(f"- {status}: `{result['name']}` ({result['duration_seconds']}s) - `{result['log']}`")
+        coverage = f" — {result['coverage']}" if result.get("coverage") else ""
+        lines.append(
+            f"- {status}: `{result['name']}` ({result['duration_seconds']}s){coverage} "
+            f"- `{result['log']}`"
+        )
     lines.append("")
     (run_dir / "summary.md").write_text("\n".join(lines), encoding="utf-8")
 

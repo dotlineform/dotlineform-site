@@ -110,7 +110,7 @@ function removeSeriesDraftId(state, seriesId, options) {
   setSeriesDraftIds(state, parseSeriesIds(state.draft.series_ids).filter((item) => item !== normalizedId), options);
 }
 
-function renderSeriesPickerMatches(state, options) {
+function renderSeriesPickerMatches(state, _options) {
   if (!state.seriesPicker) return;
   const matches = seriesSearchMatches(state, state.seriesPicker.searchInput.value);
   if (!matches.length) {

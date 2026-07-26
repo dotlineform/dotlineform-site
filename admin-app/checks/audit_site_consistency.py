@@ -620,7 +620,6 @@ def check_schema(
 
     # Work-detail route contracts
     for duid, row in work_details.items():
-        fm = row["fm"]
         wid = work_id_for_detail(duid, row)
         if work_ids_scope is not None and wid not in work_ids_scope:
             continue
@@ -1022,7 +1021,6 @@ def check_media(
         sid = normalize_series_ref(row["fm"].get("series_id"))
         if series_ids_scope is not None and sid not in series_ids_scope:
             continue
-        fm = row["fm"]
         expected = expected_thumb_names(wid)
         for name in expected:
             p = works_img_dir / name
@@ -1033,7 +1031,6 @@ def check_media(
         # Do not assert local primary-* presence in this project.
 
     for duid, row in work_details.items():
-        fm = row["fm"]
         wid = work_id_for_detail(duid, row)
         if work_ids_scope is not None and wid not in work_ids_scope:
             continue
@@ -1069,7 +1066,6 @@ def check_orphans(
     samples: List[Dict[str, Any]] = []
 
     work_ids = set(works.keys())
-    series_ids = set(series.keys())
     detail_ids = set(work_details.keys())
     canonical_detail_refs = load_detail_refs_from_work_json(site_root=site_root, work_ids_scope=work_ids_scope)
     canonical_detail_ids = set(canonical_detail_refs.keys())

@@ -611,8 +611,6 @@ def main() -> None:
     def resolve_series_prose_source_path(series_id: str) -> Path:
         return catalogue_prose_source_root / "series" / f"{series_id}.md"
 
-    written = 0
-    skipped = 0
     run_work_processing = run_work_pages
     run_work_selection_scope = run_work_processing or run_work_json
     run_work_dimension_refresh = run_work_json and not args.skip_source_dimension_refresh
@@ -756,10 +754,8 @@ def main() -> None:
             if source_updates.is_actionable_status(status, refresh_published=refresh_published):
                 total += 1
 
-    processed = 0
     status_updated = 0
     published_date_updated = 0
-    today = dt.date.today()
     work_publish_transitions: List[Dict[str, Any]] = []
 
     if requested_work_pages and selected_artifacts is not None:
@@ -848,8 +844,6 @@ def main() -> None:
                     continue
 
                 s_processed += 1
-                prefix_s = f"[series {s_processed}/{s_total}] "
-
                 title_raw = series_record.get("title")
                 series_title = coerce_string(title_raw) or series_id
 
