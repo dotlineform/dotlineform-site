@@ -506,31 +506,21 @@
           "doc_id": "d-20260725-153656-516b61",
           "title": "Semantic Tokens",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-153656-516b61.json",
-          "ui_status": "in-progress",
           "children": [
-            {
-              "doc_id": "d-20260725-165142-793cb3",
-              "title": "Catalogue Token Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-165142-793cb3.json",
-              "ui_status": "in-progress"
-            },
             {
               "doc_id": "d-20260714-234030-434069",
               "title": "Semantic Tokens Architecture",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-434069.json",
-              "ui_status": "proposed"
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-434069.json"
             },
             {
               "doc_id": "d-20260714-234030-cb2789",
               "title": "Semantic Tokens Concept",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-cb2789.json",
-              "ui_status": "proposed"
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-cb2789.json"
             },
             {
               "doc_id": "d-20260623-180405-631ef4",
               "title": "Semantic Tokens Source Editor UI",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260623-180405-631ef4.json",
-              "ui_status": "proposed"
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260623-180405-631ef4.json"
             },
             {
               "doc_id": "d-20260726-185814-c5e581",
@@ -1197,5 +1187,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-26T18:13:46Z"
+  "generated_at": "2026-07-26T19:39:44Z"
 }

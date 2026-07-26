@@ -4,10 +4,34 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "d-20260725-165142-793cb3",
-      "title": "Catalogue Token Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-165142-793cb3.json",
-      "timestamp": "2026-07-26 19:55:15",
+      "doc_id": "d-20260725-153656-516b61",
+      "title": "Semantic Tokens",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-153656-516b61.json",
+      "timestamp": "2026-07-26 20:38:29",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260714-234030-434069",
+      "title": "Semantic Tokens Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-434069.json",
+      "timestamp": "2026-07-26 20:38:29",
+      "parent_id": "d-20260725-153656-516b61",
+      "parent_title": "Semantic Tokens"
+    },
+    {
+      "doc_id": "d-20260714-234030-cb2789",
+      "title": "Semantic Tokens Concept",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-cb2789.json",
+      "timestamp": "2026-07-26 20:38:29",
+      "parent_id": "d-20260725-153656-516b61",
+      "parent_title": "Semantic Tokens"
+    },
+    {
+      "doc_id": "d-20260623-180405-631ef4",
+      "title": "Semantic Tokens Source Editor UI",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260623-180405-631ef4.json",
+      "timestamp": "2026-07-26 20:38:29",
       "parent_id": "d-20260725-153656-516b61",
       "parent_title": "Semantic Tokens"
     },
@@ -16,22 +40,6 @@
       "title": "Target Lookup",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-185814-c5e581.json",
       "timestamp": "2026-07-26 19:53:26",
-      "parent_id": "d-20260725-153656-516b61",
-      "parent_title": "Semantic Tokens"
-    },
-    {
-      "doc_id": "d-20260725-153656-516b61",
-      "title": "Semantic Tokens",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-153656-516b61.json",
-      "timestamp": "2026-07-26 19:35:41",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260714-234030-434069",
-      "title": "Semantic Tokens Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-434069.json",
-      "timestamp": "2026-07-26 19:35:41",
       "parent_id": "d-20260725-153656-516b61",
       "parent_title": "Semantic Tokens"
     },
@@ -74,15 +82,7 @@
       "timestamp": "2026-07-26 17:54:41",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260423-000000-c9f3ea",
-      "title": "Docs Viewer Builder",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260423-000000-c9f3ea.json",
-      "timestamp": "2026-07-26 17:54:41",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-07-26T18:55:27Z"
+  "generated_at": "2026-07-26T19:41:18Z"
 }
