@@ -4,12 +4,68 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260726-224323-eb0a65",
+      "title": "Manage Sub-Scope Documents",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-224323-eb0a65.json",
+      "timestamp": "2026-07-26 22:57:46",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
       "doc_id": "d-20260726-211842-cc8f6c",
       "title": "Tag-document linking",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-211842-cc8f6c.json",
-      "timestamp": "2026-07-26 21:19:01",
+      "timestamp": "2026-07-26 22:57:46",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260726-214250-9d3fe6",
+      "title": "Bulk Tag Vocabulary Import Removal Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-214250-9d3fe6.json",
+      "timestamp": "2026-07-26 21:58:05",
+      "parent_id": "d-20260726-214250-28ae69",
+      "parent_title": "Tag Vocabulary Import Retirement"
+    },
+    {
+      "doc_id": "d-20260726-215805-861b6b",
+      "title": "Offline Tag Assignment Session Removal Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-215805-861b6b.json",
+      "timestamp": "2026-07-26 21:58:05",
+      "parent_id": "d-20260726-215805-ecf8a4",
+      "parent_title": "Offline Tag Assignment Session Retirement"
+    },
+    {
+      "doc_id": "d-20260726-215805-ecf8a4",
+      "title": "Offline Tag Assignment Session Retirement",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-215805-ecf8a4.json",
+      "timestamp": "2026-07-26 21:58:05",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260726-214250-28ae69",
+      "title": "Tag Vocabulary Import Retirement",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-214250-28ae69.json",
+      "timestamp": "2026-07-26 21:58:05",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260726-214935-063d1d",
+      "title": "First-class Alias Creation Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-214935-063d1d.json",
+      "timestamp": "2026-07-26 21:49:35",
+      "parent_id": "d-20260726-214250-28ae69",
+      "parent_title": "Tag Vocabulary Import Retirement"
+    },
+    {
+      "doc_id": "d-20260726-214250-55bc9d",
+      "title": "First-class Tag Creation Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-214250-55bc9d.json",
+      "timestamp": "2026-07-26 21:42:50",
+      "parent_id": "d-20260726-214250-28ae69",
+      "parent_title": "Tag Vocabulary Import Retirement"
     },
     {
       "doc_id": "d-20260725-153656-516b61",
@@ -26,63 +82,7 @@
       "timestamp": "2026-07-26 20:38:29",
       "parent_id": "d-20260725-153656-516b61",
       "parent_title": "Semantic Tokens"
-    },
-    {
-      "doc_id": "d-20260714-234030-cb2789",
-      "title": "Semantic Tokens Concept",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-cb2789.json",
-      "timestamp": "2026-07-26 20:38:29",
-      "parent_id": "d-20260725-153656-516b61",
-      "parent_title": "Semantic Tokens"
-    },
-    {
-      "doc_id": "d-20260623-180405-631ef4",
-      "title": "Semantic Tokens Source Editor UI",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260623-180405-631ef4.json",
-      "timestamp": "2026-07-26 20:38:29",
-      "parent_id": "d-20260725-153656-516b61",
-      "parent_title": "Semantic Tokens"
-    },
-    {
-      "doc_id": "d-20260726-185814-c5e581",
-      "title": "Target Lookup",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-185814-c5e581.json",
-      "timestamp": "2026-07-26 19:53:26",
-      "parent_id": "d-20260725-153656-516b61",
-      "parent_title": "Semantic Tokens"
-    },
-    {
-      "doc_id": "d-20260726-191340-d00c52",
-      "title": "Usage Index",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-191340-d00c52.json",
-      "timestamp": "2026-07-26 19:35:41",
-      "parent_id": "d-20260725-153656-516b61",
-      "parent_title": "Semantic Tokens"
-    },
-    {
-      "doc_id": "d-20260513-105343-6de36b",
-      "title": "Reports",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260513-105343-6de36b.json",
-      "timestamp": "2026-07-26 18:31:57",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260726-181045-a7c2e1",
-      "title": "Semantic Tokens Report",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-181045-a7c2e1.json",
-      "timestamp": "2026-07-26 18:31:57",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260423-165116-e7f7e9",
-      "title": "Broken Links",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260423-165116-e7f7e9.json",
-      "timestamp": "2026-07-26 18:03:28",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-07-26T20:19:01Z"
+  "generated_at": "2026-07-26T21:58:00Z"
 }
