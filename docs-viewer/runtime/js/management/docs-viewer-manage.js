@@ -25,21 +25,29 @@ import {
 import {
   createDocsViewerManagementSourceAdapter
 } from "./docs-viewer-management-source-adapter.js";
+import {
+  CATALOGUE_TOKEN_CONTROL_ID,
+  catalogueTokenControlRenderer,
+  createCatalogueTokenMainViewControlHandlers
+} from "./source-editor/catalogue-token-contribution.js";
 
 startDocsViewerManageApp({
   controlRendererContributions: Object.assign(
     {},
     createDocsViewerManagementAppControlRenderers(),
-    createDocsViewerManagementControlRenderers()
+    createDocsViewerManagementControlRenderers(),
+    { [CATALOGUE_TOKEN_CONTROL_ID]: catalogueTokenControlRenderer }
   ),
   createSourceAdapter: createDocsViewerManagementSourceAdapter,
   diagramDetailAdapter: docsViewerDiagramDetailAdapter,
   viewRegistryContributions: createDocsViewerManagementViewDefinitions(),
   infoPanelDefaultViewByDocumentMode: {
-    "markdown-source": "semantic-token-picker",
+    "markdown-source": "metadata-info",
     "rendered-document": "metadata-info"
   },
   inlineMermaidAdapter: docsViewerInlineMermaidAdapter,
+  mainViewControlHandlerContributions: createCatalogueTokenMainViewControlHandlers(),
   managementShellRenderers: createDocsViewerManagementShellRenderers(),
-  mountDocumentExtras: mountDocsViewerManageDocumentExtras
+  mountDocumentExtras: mountDocsViewerManageDocumentExtras,
+  sourceEditorActionControlIds: [CATALOGUE_TOKEN_CONTROL_ID]
 });

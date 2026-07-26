@@ -545,6 +545,8 @@ export function startDocsViewerRuntime(options) {
         }
       },
       managementShellRefs: appShellRefs.managementShell || {},
+      mainViewControlHandlerContributions: settings.mainViewControlHandlerContributions || {},
+      sourceEditorServices: sourceEditorServices,
       viewRegistry: viewRegistry,
       activeViewState: documentViewCoordinator.activeViewState,
       projectAppManagementControlState: projectAppManagementControlState,
@@ -788,6 +790,9 @@ export function startDocsViewerRuntime(options) {
       projectMainViewControlState: function (controlId, controlState) {
         projectMainViewControlState("source-editor", controlId, controlState);
       },
+      sourceEditorActionControlIds: Array.isArray(settings.sourceEditorActionControlIds)
+        ? settings.sourceEditorActionControlIds.slice()
+        : [],
       setActiveSourceEditorContextAdapter: function (adapter) {
         activeSourceEditorContextAdapter = adapter || null;
         if (documentViewCoordinator) documentViewCoordinator.renderInfoToggle();

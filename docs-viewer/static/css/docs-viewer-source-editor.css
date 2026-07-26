@@ -222,6 +222,52 @@
   color: var(--docs-viewer-muted);
 }
 
+.docsViewerCatalogueTokenModal{
+  display: grid;
+  gap: 0.75rem;
+  min-height: 0;
+}
+
+.docsViewerCatalogueTokenModal__searchStatus{
+  min-height: 1.2rem;
+  margin: 0;
+}
+
+.docsViewerCatalogueTokenModal__searchStatus.is-error{
+  color: var(--docs-viewer-danger);
+}
+
+.docsViewerCatalogueTokenModal__results{
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-height: min(18rem, 42vh);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0.25rem;
+  scroll-padding: 0.25rem;
+}
+
+.docsViewer__modal
+.docsViewerCatalogueTokenModal__results[role="listbox"][tabindex]:focus{
+  outline: none;
+  box-shadow: none;
+}
+
+.docsViewerCatalogueTokenModal__results .docsViewerSemanticPicker__row{
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.docsViewerCatalogueTokenModal__selected{
+  border-left: 3px solid var(--docs-viewer-border-strong);
+  padding: 0.35rem 0.55rem;
+  color: var(--docs-viewer-muted);
+  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
+  overflow-wrap: anywhere;
+}
+
 @media (max-width: 720px){
   .docsViewerSourceEditor__header{
     display: grid;

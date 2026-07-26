@@ -7,7 +7,7 @@
       "doc_id": "d-20260725-165142-793cb3",
       "title": "Catalogue Token Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-165142-793cb3.json",
-      "timestamp": "2026-07-26 13:24:54",
+      "timestamp": "2026-07-26 15:16:28",
       "parent_id": "d-20260725-153656-516b61",
       "parent_title": "Semantic Tokens"
     },
@@ -15,7 +15,7 @@
       "doc_id": "d-20260725-153656-516b61",
       "title": "Semantic Tokens",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-153656-516b61.json",
-      "timestamp": "2026-07-26 13:24:54",
+      "timestamp": "2026-07-26 13:58:00",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
     },
@@ -23,7 +23,15 @@
       "doc_id": "d-20260714-234030-434069",
       "title": "Semantic Tokens Architecture",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-434069.json",
-      "timestamp": "2026-07-26 13:24:54",
+      "timestamp": "2026-07-26 13:58:00",
+      "parent_id": "d-20260725-153656-516b61",
+      "parent_title": "Semantic Tokens"
+    },
+    {
+      "doc_id": "d-20260623-180405-631ef4",
+      "title": "Semantic Tokens Source Editor UI",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260623-180405-631ef4.json",
+      "timestamp": "2026-07-26 13:58:00",
       "parent_id": "d-20260725-153656-516b61",
       "parent_title": "Semantic Tokens"
     },
@@ -74,15 +82,7 @@
       "timestamp": "2026-07-26 10:18:45",
       "parent_id": "d-20260419-000000-d2e47b",
       "parent_title": "Dev Home"
-    },
-    {
-      "doc_id": "d-20260524-214228-7247ef",
-      "title": "Source Tree Ownership",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260524-214228-7247ef.json",
-      "timestamp": "2026-07-26 10:18:45",
-      "parent_id": "d-20260331-000000-4a16b0",
-      "parent_title": "Architecture"
     }
   ],
-  "generated_at": "2026-07-26T12:30:31Z"
+  "generated_at": "2026-07-26T14:16:37Z"
 }

@@ -100,7 +100,7 @@ function projectDirty(state) {
       busy: state.busy,
       disabled: state.busy || !state.loaded
     });
-    ["source-add-image", "source-add-file"].forEach(function (controlId) {
+    ["source-add-image", "source-add-file"].concat(state.sourceActionControlIds || []).forEach(function (controlId) {
       state.projectMainViewControlState(controlId, {
         busy: state.busy,
         disabled: state.busy || !state.loaded
@@ -132,10 +132,40 @@ function sourceSelection(state) {
   };
 }
 
-function createSemanticTokenAdapter(state) {
+function replaceCapturedSelection(state, capture, value) {
+  if (!state.textarea || !capture || typeof capture !== "object") return false;
+  var start = Number(capture.start);
+  var end = Number(capture.end);
+  if (
+    !Number.isInteger(start)
+    || !Number.isInteger(end)
+    || start < 0
+    || end < start
+    || end > state.textarea.value.length
+    || Number(capture.revision) !== state.bufferRevision
+    || state.textarea.value.slice(start, end) !== String(capture.text || "")
+  ) {
+    return false;
+  }
+  state.textarea.setRangeText(String(value || ""), start, end, "end");
+  state.textarea.dispatchEvent(new Event("input", { bubbles: true }));
+  state.textarea.focus();
+  return true;
+}
+
+function createSourceEditorContextAdapter(state) {
   return {
+    captureSelection: function () {
+      return Object.assign(sourceSelection(state), { revision: state.bufferRevision });
+    },
     focus: function () {
       if (state.textarea) state.textarea.focus();
+    },
+    getBufferSnapshot: function () {
+      return {
+        revision: state.bufferRevision,
+        value: state.textarea ? state.textarea.value : ""
+      };
     },
     getSelection: function () {
       return sourceSelection(state);
@@ -154,6 +184,9 @@ function createSemanticTokenAdapter(state) {
       state.textarea.dispatchEvent(new Event("input", { bubbles: true }));
       state.textarea.focus();
       return true;
+    },
+    replaceCapturedSelection: function (capture, value) {
+      return replaceCapturedSelection(state, capture, value);
     },
     setStatus: function (message, isError) {
       setStatus(state, message, isError);
@@ -186,6 +219,7 @@ function loadSource(context, state) {
         state.textarea.setSelectionRange(0, 0);
         state.textarea.focus();
       }
+      state.bufferRevision = 0;
       setStatus(state, "", false);
       projectDirty(state);
       return payload;
@@ -284,7 +318,7 @@ function addStagedMedia(context, state, mediaKind) {
   return import("./source-editor-media.js")
     .then(function (module) {
       return module.publishAndInsertStagedMedia({
-        adapter: state.semanticTokenAdapter,
+        adapter: state.sourceEditorAdapter,
         mediaKind: mediaKind,
         provider: provider,
         root: context.root || document.body
@@ -307,7 +341,11 @@ function bindEvents(context, state) {
   var root = context.root || document;
   var services = context.sourceEditorServices || {};
   state.projectMainViewControlState = services.projectMainViewControlState;
+  state.sourceActionControlIds = Array.isArray(services.sourceEditorActionControlIds)
+    ? services.sourceEditorActionControlIds.map(cleanString).filter(Boolean)
+    : [];
   state.onInput = function () {
+    state.bufferRevision += 1;
     projectDirty(state);
     emitSelectionChange(state);
   };
@@ -364,11 +402,13 @@ function unbindEvents(context, state) {
   if (root && state.onToolbarAddFile) root.removeEventListener("docs-viewer-source-editor-add-file", state.onToolbarAddFile);
   if (state.onBeforeUnload) window.removeEventListener("beforeunload", state.onBeforeUnload);
   state.projectMainViewControlState = null;
+  state.sourceActionControlIds = [];
 }
 
 export function createDocsViewerSourceEditorMode() {
   var state = {
     busy: false,
+    bufferRevision: 0,
     dirtyValue: false,
     docId: "",
     lastCleanBody: "",
@@ -376,6 +416,7 @@ export function createDocsViewerSourceEditorMode() {
     revision: "",
     root: null,
     selectionListeners: new Set(),
+    sourceActionControlIds: [],
     status: null,
     textarea: null,
     projectMainViewControlState: null
@@ -393,10 +434,10 @@ export function createDocsViewerSourceEditorMode() {
       });
       renderEditorShell(context, state);
       bindEvents(context, state);
-      state.semanticTokenAdapter = createSemanticTokenAdapter(state);
+      state.sourceEditorAdapter = createSourceEditorContextAdapter(state);
       var services = context.sourceEditorServices || {};
       if (typeof services.setActiveSourceEditorContextAdapter === "function") {
-        services.setActiveSourceEditorContextAdapter(state.semanticTokenAdapter);
+        services.setActiveSourceEditorContextAdapter(state.sourceEditorAdapter);
       }
       return loadSource(context, state);
     },
@@ -412,7 +453,7 @@ export function createDocsViewerSourceEditorMode() {
     unmount: function (context) {
       var services = context.sourceEditorServices || {};
       if (typeof services.clearActiveSourceEditorContextAdapter === "function") {
-        services.clearActiveSourceEditorContextAdapter(state.semanticTokenAdapter);
+        services.clearActiveSourceEditorContextAdapter(state.sourceEditorAdapter);
       }
       state.selectionListeners.clear();
       unbindEvents(context, state);
@@ -421,7 +462,7 @@ export function createDocsViewerSourceEditorMode() {
     dispose: function (context) {
       var services = context.sourceEditorServices || {};
       if (typeof services.clearActiveSourceEditorContextAdapter === "function") {
-        services.clearActiveSourceEditorContextAdapter(state.semanticTokenAdapter);
+        services.clearActiveSourceEditorContextAdapter(state.sourceEditorAdapter);
       }
       state.selectionListeners.clear();
       unbindEvents(context, state);

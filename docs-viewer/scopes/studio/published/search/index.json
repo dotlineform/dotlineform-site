@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ec11b505cd3142e0a5465bf0505a2bb2",
-    "generated_at_utc": "2026-07-26T12:30:31Z",
+    "version": "blake2b-8807298743d6ae621e361e28d123d1ae",
+    "generated_at_utc": "2026-07-26T14:16:37Z",
     "count": 215
   },
   "entries": [
@@ -1346,10 +1346,10 @@
       "kind": "doc",
       "title": "Info Panel",
       "href": "/docs/?scope=studio&doc=d-20260623-000000-c99cef",
-      "last_updated": "2026-07-11",
+      "last_updated": "2026-07-26",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-11 • Docs Viewer",
+      "display_meta": "2026-07-26 • Docs Viewer",
       "search_terms": [
         "info panel",
         "info",
@@ -1357,13 +1357,13 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-11",
+        "2026-07-26",
         "2026",
         "07",
-        "11",
+        "26",
         "d-20260623-000000-c99cef"
       ],
-      "search_text": "info panel info panel docs viewer docs viewer 2026-07-11 2026 07 11 d-20260623-000000-c99cef"
+      "search_text": "info panel info panel docs viewer docs viewer 2026-07-26 2026 07 26 d-20260623-000000-c99cef"
     },
     {
       "id": "d-20260507-123607-fd7cff",
@@ -2398,10 +2398,10 @@
       "kind": "doc",
       "title": "Semantic References Implementation",
       "href": "/docs/?scope=studio&doc=d-20260602-210246-394018",
-      "last_updated": "2026-07-25",
+      "last_updated": "2026-07-26",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-25 • Docs Viewer",
+      "display_meta": "2026-07-26 • Docs Viewer",
       "search_terms": [
         "semantic references implementation",
         "semantic",
@@ -2410,13 +2410,13 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-25",
+        "2026-07-26",
         "2026",
         "07",
-        "25",
+        "26",
         "d-20260602-210246-394018"
       ],
-      "search_text": "semantic references implementation semantic references implementation docs viewer docs viewer 2026-07-25 2026 07 25 d-20260602-210246-394018"
+      "search_text": "semantic references implementation semantic references implementation docs viewer docs viewer 2026-07-26 2026 07 26 d-20260602-210246-394018"
     },
     {
       "id": "d-20260514-123140-83239c",
@@ -3545,35 +3545,35 @@
       "kind": "doc",
       "title": "Semantic Tokens",
       "href": "/docs/?scope=studio&doc=d-20260725-153656-516b61",
-      "last_updated": "2026-07-26 13:24:54",
+      "last_updated": "2026-07-26 13:58:00",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-26 13:24:54 • Roadmap",
+      "display_meta": "2026-07-26 13:58:00 • Roadmap",
       "search_terms": [
         "semantic tokens",
         "semantic",
         "tokens",
         "roadmap",
-        "2026-07-26 13:24:54",
+        "2026-07-26 13:58:00",
         "2026",
         "07",
         "26",
         "13",
-        "24",
-        "54",
+        "58",
+        "00",
         "d-20260725-153656-516b61"
       ],
-      "search_text": "semantic tokens semantic tokens roadmap 2026-07-26 13:24:54 2026 07 26 13 24 54 d-20260725-153656-516b61"
+      "search_text": "semantic tokens semantic tokens roadmap 2026-07-26 13:58:00 2026 07 26 13 58 00 d-20260725-153656-516b61"
     },
     {
       "id": "d-20260725-165142-793cb3",
       "kind": "doc",
       "title": "Catalogue Token Delivery",
       "href": "/docs/?scope=studio&doc=d-20260725-165142-793cb3",
-      "last_updated": "2026-07-26 13:24:54",
+      "last_updated": "2026-07-26 15:16:28",
       "parent_id": "d-20260725-153656-516b61",
       "parent_title": "Semantic Tokens",
-      "display_meta": "2026-07-26 13:24:54 • Semantic Tokens",
+      "display_meta": "2026-07-26 15:16:28 • Semantic Tokens",
       "search_terms": [
         "catalogue token delivery",
         "catalogue",
@@ -3582,42 +3582,42 @@
         "semantic tokens",
         "semantic",
         "tokens",
-        "2026-07-26 13:24:54",
+        "2026-07-26 15:16:28",
         "2026",
         "07",
         "26",
-        "13",
-        "24",
-        "54",
+        "15",
+        "16",
+        "28",
         "d-20260725-165142-793cb3"
       ],
-      "search_text": "catalogue token delivery catalogue token delivery semantic tokens semantic tokens 2026-07-26 13:24:54 2026 07 26 13 24 54 d-20260725-165142-793cb3"
+      "search_text": "catalogue token delivery catalogue token delivery semantic tokens semantic tokens 2026-07-26 15:16:28 2026 07 26 15 16 28 d-20260725-165142-793cb3"
     },
     {
       "id": "d-20260714-234030-434069",
       "kind": "doc",
       "title": "Semantic Tokens Architecture",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-434069",
-      "last_updated": "2026-07-26 13:24:54",
+      "last_updated": "2026-07-26 13:58:00",
       "parent_id": "d-20260725-153656-516b61",
       "parent_title": "Semantic Tokens",
-      "display_meta": "2026-07-26 13:24:54 • Semantic Tokens",
+      "display_meta": "2026-07-26 13:58:00 • Semantic Tokens",
       "search_terms": [
         "semantic tokens architecture",
         "semantic",
         "tokens",
         "architecture",
         "semantic tokens",
-        "2026-07-26 13:24:54",
+        "2026-07-26 13:58:00",
         "2026",
         "07",
         "26",
         "13",
-        "24",
-        "54",
+        "58",
+        "00",
         "d-20260714-234030-434069"
       ],
-      "search_text": "semantic tokens architecture semantic tokens architecture semantic tokens 2026-07-26 13:24:54 2026 07 26 13 24 54 d-20260714-234030-434069"
+      "search_text": "semantic tokens architecture semantic tokens architecture semantic tokens 2026-07-26 13:58:00 2026 07 26 13 58 00 d-20260714-234030-434069"
     },
     {
       "id": "d-20260714-234030-cb2789",
@@ -3650,10 +3650,10 @@
       "kind": "doc",
       "title": "Semantic Tokens Source Editor UI",
       "href": "/docs/?scope=studio&doc=d-20260623-180405-631ef4",
-      "last_updated": "2026-07-25 22:51:54",
+      "last_updated": "2026-07-26 13:58:00",
       "parent_id": "d-20260725-153656-516b61",
       "parent_title": "Semantic Tokens",
-      "display_meta": "2026-07-25 22:51:54 • Semantic Tokens",
+      "display_meta": "2026-07-26 13:58:00 • Semantic Tokens",
       "search_terms": [
         "semantic tokens source editor ui",
         "semantic",
@@ -3662,16 +3662,16 @@
         "editor",
         "ui",
         "semantic tokens",
-        "2026-07-25 22:51:54",
+        "2026-07-26 13:58:00",
         "2026",
         "07",
-        "25",
-        "22",
-        "51",
-        "54",
+        "26",
+        "13",
+        "58",
+        "00",
         "d-20260623-180405-631ef4"
       ],
-      "search_text": "semantic tokens source editor ui semantic tokens source editor ui semantic tokens 2026-07-25 22:51:54 2026 07 25 22 51 54 d-20260623-180405-631ef4"
+      "search_text": "semantic tokens source editor ui semantic tokens source editor ui semantic tokens 2026-07-26 13:58:00 2026 07 26 13 58 00 d-20260623-180405-631ef4"
     },
     {
       "id": "d-20260720-173806-5f2c9a",
@@ -3948,23 +3948,23 @@
       "kind": "doc",
       "title": "Workspace Scope Eligibility",
       "href": "/docs/?scope=studio&doc=d-20260712-221626-5d13e6",
-      "last_updated": "2026-07-12",
+      "last_updated": "2026-07-26",
       "parent_id": "d-20260712-213026-ee0f22",
       "parent_title": "Workspaces",
-      "display_meta": "2026-07-12 • Workspaces",
+      "display_meta": "2026-07-26 • Workspaces",
       "search_terms": [
         "workspace scope eligibility",
         "workspace",
         "scope",
         "eligibility",
         "workspaces",
-        "2026-07-12",
+        "2026-07-26",
         "2026",
         "07",
-        "12",
+        "26",
         "d-20260712-221626-5d13e6"
       ],
-      "search_text": "workspace scope eligibility workspace scope eligibility workspaces 2026-07-12 2026 07 12 d-20260712-221626-5d13e6"
+      "search_text": "workspace scope eligibility workspace scope eligibility workspaces 2026-07-26 2026 07 26 d-20260712-221626-5d13e6"
     },
     {
       "id": "d-20260331-000000-5dcf32",

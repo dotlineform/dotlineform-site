@@ -378,8 +378,23 @@ export function initDocsViewerManagement(context) {
       }]
     ]);
     var owner = owners.get(controlId);
-    if (!owner) return false;
-    owner();
+    if (owner) {
+      owner();
+      return true;
+    }
+    var contributions = context.mainViewControlHandlerContributions || {};
+    var contribution = typeof contributions[controlId] === "function"
+      ? contributions[controlId]
+      : null;
+    if (!contribution) return false;
+    contribution({
+      detail: detail,
+      resolution: resolution,
+      root: root,
+      sourceEditorServices: typeof context.sourceEditorServices === "function"
+        ? context.sourceEditorServices()
+        : context.sourceEditorServices
+    });
     return true;
   }
 

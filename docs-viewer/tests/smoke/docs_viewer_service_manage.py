@@ -825,6 +825,7 @@ def assert_action_target_definitions(page: Page) -> None:
             "info",
             "markdown-save",
             "markdown-source",
+            "source-add-catalogue-token",
             "source-add-file",
             "source-add-image",
         ],
@@ -1508,11 +1509,22 @@ def exercise_manage_route(
             const actions = document.querySelector('[data-docs-viewer-control-surface-mount="main-view"]');
             return root?.dataset.documentDisplayMode === 'markdown-source'
                 && actions
-                && Array.from(actions.children).map(node => node.dataset.docsViewerControl).join(',') === 'open-vscode,source-add-image,source-add-file,save-markdown-source,markdown-source,info'
+                && Array.from(actions.children).map(node => node.dataset.docsViewerControl).join(',') === 'open-vscode,source-add-image,source-add-file,source-add-catalogue-token,save-markdown-source,markdown-source,info'
                 && !document.querySelector('#docsViewerManageSourceSaveButton')?.disabled;
         }""",
         timeout=timeout_ms,
     )
+    page.locator("#docsViewerManageSourceAddCatalogueTokenButton").evaluate(
+        "button => button.click()"
+    )
+    page.wait_for_selector(
+        "#catalogue-token-add-modal",
+        state="visible",
+        timeout=timeout_ms,
+    )
+    page.locator(
+        "#catalogue-token-add-modal button[data-role='modal-cancel']"
+    ).evaluate("button => button.click()")
     page.locator("#docsViewerManageSourceButton").evaluate("button => button.click()")
     page.wait_for_function(
         "() => document.querySelector('#docsViewerRoot')?.dataset.documentDisplayMode === 'rendered-document'",

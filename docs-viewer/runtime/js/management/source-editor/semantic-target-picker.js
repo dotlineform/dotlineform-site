@@ -6,29 +6,48 @@ function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
 
-function renderMeta(target) {
-  var meta = Array.isArray(target.meta) ? target.meta.map(cleanString).filter(Boolean) : [];
+function valueFrom(settings, key, target) {
+  var accessor = settings && typeof settings[key] === "function" ? settings[key] : null;
+  return accessor ? accessor(target) : target && target[key];
+}
+
+function presentationFor(target, settings) {
+  return {
+    id: cleanString(valueFrom(settings, "id", target)),
+    kind: cleanString(valueFrom(settings, "kind", target)),
+    meta: Array.isArray(valueFrom(settings, "meta", target))
+      ? valueFrom(settings, "meta", target).map(cleanString).filter(Boolean)
+      : [],
+    title: cleanString(valueFrom(settings, "title", target))
+  };
+}
+
+function renderMeta(presentation) {
+  var meta = presentation.meta;
   if (!meta.length) return "";
   return '<span class="docsViewerSemanticPicker__rowMeta">' + meta.map(escapeHtml).join(" · ") + "</span>";
 }
 
-function targetKey(target) {
-  return cleanString(target.kind) + ":" + cleanString(target.id);
+function targetKey(target, settings) {
+  var presentation = presentationFor(target, settings);
+  return presentation.kind + ":" + presentation.id;
 }
 
-function rowMarkup(target, index, activeIndex) {
+function rowMarkup(target, index, activeIndex, selectedIndex, settings) {
   var id = "docsViewerSemanticTargetOption-" + index;
   var active = index === activeIndex;
+  var selected = index === selectedIndex;
+  var presentation = presentationFor(target, settings);
   return (
-    '<button type="button" class="docsViewerSemanticPicker__row' + (active ? " is-active" : "") + '" ' +
-      'id="' + id + '" role="option" aria-selected="' + (active ? "true" : "false") + '" data-target-index="' + index + '">' +
+    '<div class="docsViewerSemanticPicker__row' + (active ? " is-active" : "") + (selected ? " is-selected" : "") + '" ' +
+      'id="' + id + '" role="option" aria-selected="' + (selected ? "true" : "false") + '" data-target-index="' + index + '">' +
       '<span class="docsViewerSemanticPicker__rowMain">' +
-        '<span class="docsViewerSemanticPicker__rowTitle">' + escapeHtml(target.title) + "</span>" +
-        '<span class="docsViewerSemanticPicker__rowKind">' + escapeHtml(target.kind) + "</span>" +
-        '<span class="docsViewerSemanticPicker__rowId">' + escapeHtml(target.id) + "</span>" +
+        '<span class="docsViewerSemanticPicker__rowTitle">' + escapeHtml(presentation.title) + "</span>" +
+        '<span class="docsViewerSemanticPicker__rowKind">' + escapeHtml(presentation.kind) + "</span>" +
+        '<span class="docsViewerSemanticPicker__rowId">' + escapeHtml(presentation.id) + "</span>" +
       "</span>" +
-      renderMeta(target) +
-    "</button>"
+      renderMeta(presentation) +
+    "</div>"
   );
 }
 
@@ -36,13 +55,33 @@ export function createSemanticTargetPickerList(root, options = {}) {
   var settings = options || {};
   var records = [];
   var activeIndex = -1;
+  var selectedIndex = -1;
   var onSelect = typeof settings.onSelect === "function" ? settings.onSelect : function () {};
+  var onActiveChange = typeof settings.onActiveChange === "function"
+    ? settings.onActiveChange
+    : function () {};
 
   function render() {
     if (!root) return;
     root.innerHTML = records.map(function (target, index) {
-      return rowMarkup(target, index, activeIndex);
+      return rowMarkup(target, index, activeIndex, selectedIndex, settings);
     }).join("");
+  }
+
+  function activeOptionId() {
+    return activeIndex >= 0 ? "docsViewerSemanticTargetOption-" + activeIndex : "";
+  }
+
+  function notifyActiveChange() {
+    onActiveChange(records[activeIndex] || null, activeOptionId());
+  }
+
+  function revealActive() {
+    if (!root || activeIndex < 0) return;
+    var active = root.querySelector('[data-target-index="' + activeIndex + '"]');
+    if (active && typeof active.scrollIntoView === "function") {
+      active.scrollIntoView({ block: "nearest", inline: "nearest" });
+    }
   }
 
   function setActiveIndex(index) {
@@ -52,17 +91,27 @@ export function createSemanticTargetPickerList(root, options = {}) {
       activeIndex = Math.max(0, Math.min(index, records.length - 1));
     }
     render();
+    notifyActiveChange();
+    revealActive();
   }
 
   function setTargets(nextRecords) {
     records = Array.isArray(nextRecords) ? nextRecords.slice() : [];
     activeIndex = records.length ? 0 : -1;
+    selectedIndex = -1;
     render();
+    if (root) root.scrollTop = 0;
+    notifyActiveChange();
   }
 
   function selectIndex(index) {
     var record = records[index];
     if (!record) return false;
+    activeIndex = index;
+    selectedIndex = index;
+    render();
+    notifyActiveChange();
+    revealActive();
     onSelect(record);
     return true;
   }
@@ -98,12 +147,16 @@ export function createSemanticTargetPickerList(root, options = {}) {
     destroy: function () {
       if (root) root.removeEventListener("click", handleClick);
       records = [];
+      activeIndex = -1;
+      selectedIndex = -1;
       if (root) root.replaceChildren();
+      notifyActiveChange();
     },
+    activeOptionId: activeOptionId,
     handleKeydown: handleKeydown,
-    selectedTarget: function () { return records[activeIndex] || null; },
+    selectedTarget: function () { return records[selectedIndex] || null; },
     setActiveIndex: setActiveIndex,
     setTargets: setTargets,
-    targetKey: targetKey
+    targetKey: function (target) { return targetKey(target, settings); }
   };
 }

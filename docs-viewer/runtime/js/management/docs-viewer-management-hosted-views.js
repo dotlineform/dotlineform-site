@@ -1,6 +1,9 @@
 import {
   DOCS_VIEWER_ACTION_IDS
 } from "./docs-viewer-action-definitions.js";
+import {
+  catalogueTokenControlDefinition
+} from "./source-editor/catalogue-token-contribution.js";
 
 export function createDocsViewerManagementViewDefinitions() {
   return {
@@ -14,19 +17,6 @@ export function createDocsViewerManagementViewDefinitions() {
         placeholderText: "Graph index placeholder",
         capabilities: {
           layoutStates: ["normal", "collapsed", "expanded"]
-        }
-      },
-      {
-        id: "semantic-token-picker",
-        features: ["source-editing"],
-        label: "Semantic ref",
-        panel: "info",
-        appKinds: ["manage"],
-        load: function () {
-          return import("./source-editor/semantic-token-picker-view.js")
-            .then(function (module) {
-              return module.createSemanticTokenPickerView();
-            });
         }
       }
     ],
@@ -159,6 +149,7 @@ export function createDocsViewerManagementViewDefinitions() {
         features: ["source-editing"],
         renderer: "source-add-file"
       },
+      catalogueTokenControlDefinition(),
       {
         id: "save-markdown-source",
         actionId: "markdown-save",

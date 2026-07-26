@@ -25,6 +25,7 @@ function normalizeTarget(record, registry) {
     kind: kind,
     id: id,
     title: title,
+    href: cleanString(row.href),
     meta: Array.isArray(row.meta) ? row.meta.map(cleanString).filter(Boolean) : [],
     titleNorm: titleNorm,
     titleTokens: titleNorm.split(" ").filter(Boolean)

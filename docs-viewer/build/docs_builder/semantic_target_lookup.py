@@ -12,6 +12,7 @@ from .semantic_registry import (
     SemanticReferenceKind,
     load_semantic_reference_registry,
     normalize_semantic_reference_id,
+    semantic_reference_href,
 )
 
 
@@ -162,6 +163,7 @@ def target_row(
         "kind": kind.kind,
         "id": normalized_id,
         "title": title,
+        "href": semantic_reference_href(kind, normalized_id),
         "meta": target_meta(kind.kind, record, series_titles=series_titles),
     }
 
@@ -186,6 +188,7 @@ def docs_scope_target_row(
         "kind": kind.kind,
         "id": normalized_id,
         "title": title,
+        "href": semantic_reference_href(kind, normalized_id),
         "meta": docs_scope_target_meta(payload if isinstance(payload, dict) else {}),
     }
 

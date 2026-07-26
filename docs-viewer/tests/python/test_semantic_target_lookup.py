@@ -132,13 +132,40 @@ def test_semantic_target_lookup_builder_writes_compact_published_rows() -> None:
     assert result["diagnostics"]["target_count"] == 3
     assert payload["schema_version"] == "docs_semantic_reference_target_lookup_v1"
     assert [(row["kind"], row["id"]) for row in payload["targets"]] == [("series", "005"), ("work", "00638"), ("moment", "lotus-pond")]
-    assert payload["targets"][0] == {"kind": "series", "id": "005", "title": "3 symbols", "meta": ["2007"]}
-    assert payload["targets"][1] == {"kind": "work", "id": "00638", "title": "3 symbols", "meta": ["2007", "3 symbols"]}
-    assert payload["targets"][2] == {"kind": "moment", "id": "lotus-pond", "title": "lotus pond", "meta": ["c. 2024"]}
+    assert payload["targets"][0] == {
+        "kind": "series",
+        "id": "005",
+        "title": "3 symbols",
+        "href": "/series/?series=005",
+        "meta": ["2007"],
+    }
+    assert payload["targets"][1] == {
+        "kind": "work",
+        "id": "00638",
+        "title": "3 symbols",
+        "href": "/works/?work=00638",
+        "meta": ["2007", "3 symbols"],
+    }
+    assert payload["targets"][2] == {
+        "kind": "moment",
+        "id": "lotus-pond",
+        "title": "lotus pond",
+        "href": "/moments/?doc=lotus-pond",
+        "meta": ["c. 2024"],
+    }
     assert output_text.endswith("\n")
-    assert '    {"kind":"series","id":"005","title":"3 symbols","meta":["2007"]},\n' in output_text
-    assert '    {"kind":"work","id":"00638","title":"3 symbols","meta":["2007","3 symbols"]},\n' in output_text
-    assert '    {"kind":"moment","id":"lotus-pond","title":"lotus pond","meta":["c. 2024"]}\n' in output_text
+    assert (
+        '    {"kind":"series","id":"005","title":"3 symbols",'
+        '"href":"/series/?series=005","meta":["2007"]},\n'
+    ) in output_text
+    assert (
+        '    {"kind":"work","id":"00638","title":"3 symbols",'
+        '"href":"/works/?work=00638","meta":["2007","3 symbols"]},\n'
+    ) in output_text
+    assert (
+        '    {"kind":"moment","id":"lotus-pond","title":"lotus pond",'
+        '"href":"/moments/?doc=lotus-pond","meta":["c. 2024"]}\n'
+    ) in output_text
 
 
 def test_semantic_target_lookup_cli_writes_payload() -> None:
