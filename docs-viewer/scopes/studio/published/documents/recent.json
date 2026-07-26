@@ -7,7 +7,15 @@
       "doc_id": "d-20260725-165142-793cb3",
       "title": "Catalogue Token Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-165142-793cb3.json",
-      "timestamp": "2026-07-26 19:35:41",
+      "timestamp": "2026-07-26 19:55:15",
+      "parent_id": "d-20260725-153656-516b61",
+      "parent_title": "Semantic Tokens"
+    },
+    {
+      "doc_id": "d-20260726-185814-c5e581",
+      "title": "Target Lookup",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-185814-c5e581.json",
+      "timestamp": "2026-07-26 19:53:26",
       "parent_id": "d-20260725-153656-516b61",
       "parent_title": "Semantic Tokens"
     },
@@ -32,14 +40,6 @@
       "title": "Usage Index",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-191340-d00c52.json",
       "timestamp": "2026-07-26 19:35:41",
-      "parent_id": "d-20260725-153656-516b61",
-      "parent_title": "Semantic Tokens"
-    },
-    {
-      "doc_id": "d-20260726-185814-c5e581",
-      "title": "Target Lookup",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-185814-c5e581.json",
-      "timestamp": "2026-07-26 19:06:49",
       "parent_id": "d-20260725-153656-516b61",
       "parent_title": "Semantic Tokens"
     },
@@ -84,5 +84,5 @@
       "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-07-26T18:38:00Z"
+  "generated_at": "2026-07-26T18:55:27Z"
 }

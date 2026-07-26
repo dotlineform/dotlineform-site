@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-fe2fb7ac0bff689ab9bd17a6ab2534f4",
-    "generated_at_utc": "2026-07-26T18:38:00Z",
+    "version": "blake2b-672c2df296668b2cbb14a3b2a2311dba",
+    "generated_at_utc": "2026-07-26T18:55:27Z",
     "count": 216
   },
   "entries": [
@@ -2408,10 +2408,10 @@
       "kind": "doc",
       "title": "Catalogue Token Delivery",
       "href": "/docs/?scope=studio&doc=d-20260725-165142-793cb3",
-      "last_updated": "2026-07-26 19:35:41",
+      "last_updated": "2026-07-26 19:55:15",
       "parent_id": "d-20260725-153656-516b61",
       "parent_title": "Semantic Tokens",
-      "display_meta": "2026-07-26 19:35:41 • Semantic Tokens",
+      "display_meta": "2026-07-26 19:55:15 • Semantic Tokens",
       "search_terms": [
         "catalogue token delivery",
         "catalogue",
@@ -2420,16 +2420,16 @@
         "semantic tokens",
         "semantic",
         "tokens",
-        "2026-07-26 19:35:41",
+        "2026-07-26 19:55:15",
         "2026",
         "07",
         "26",
         "19",
-        "35",
-        "41",
+        "55",
+        "15",
         "d-20260725-165142-793cb3"
       ],
-      "search_text": "catalogue token delivery catalogue token delivery semantic tokens semantic tokens 2026-07-26 19:35:41 2026 07 26 19 35 41 d-20260725-165142-793cb3"
+      "search_text": "catalogue token delivery catalogue token delivery semantic tokens semantic tokens 2026-07-26 19:55:15 2026 07 26 19 55 15 d-20260725-165142-793cb3"
     },
     {
       "id": "d-20260714-234030-434069",
@@ -2516,10 +2516,10 @@
       "kind": "doc",
       "title": "Target Lookup",
       "href": "/docs/?scope=studio&doc=d-20260726-185814-c5e581",
-      "last_updated": "2026-07-26 19:06:49",
+      "last_updated": "2026-07-26 19:53:26",
       "parent_id": "d-20260725-153656-516b61",
       "parent_title": "Semantic Tokens",
-      "display_meta": "2026-07-26 19:06:49 • Semantic Tokens",
+      "display_meta": "2026-07-26 19:53:26 • Semantic Tokens",
       "search_terms": [
         "target lookup",
         "target",
@@ -2527,16 +2527,15 @@
         "semantic tokens",
         "semantic",
         "tokens",
-        "2026-07-26 19:06:49",
+        "2026-07-26 19:53:26",
         "2026",
         "07",
         "26",
         "19",
-        "06",
-        "49",
+        "53",
         "d-20260726-185814-c5e581"
       ],
-      "search_text": "target lookup target lookup semantic tokens semantic tokens 2026-07-26 19:06:49 2026 07 26 19 06 49 d-20260726-185814-c5e581"
+      "search_text": "target lookup target lookup semantic tokens semantic tokens 2026-07-26 19:53:26 2026 07 26 19 53 d-20260726-185814-c5e581"
     },
     {
       "id": "d-20260726-191340-d00c52",

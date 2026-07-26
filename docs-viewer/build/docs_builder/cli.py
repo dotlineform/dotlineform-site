@@ -16,6 +16,7 @@ from .common import (
 )
 from .runtime_bootstrap import apply_projects_base_dir_override
 from .pipeline import DocsDataBuilder
+from .semantic_target_lookup import SemanticTargetLookupBuilder
 from .source import FrontMatterSyntaxError, InvalidDocIdError, MissingDocIdError
 from .sub_scope import SubScopeDocsBuilder, selected_sub_scope
 
@@ -40,6 +41,24 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--diagnostics", action="store_true", help="Print machine-readable diagnostics for automation.")
     parser.add_argument("--write", action="store_true", help="Write generated files.")
     return parser.parse_args(argv)
+
+
+def refresh_semantic_target_lookup_after_moments_build(
+    repo_root: Path,
+    *,
+    scope_id: str,
+    write: bool,
+    output_overridden: bool,
+) -> None:
+    if scope_id != "moments" or not write or output_overridden:
+        return
+    result = SemanticTargetLookupBuilder(repo_root=repo_root).run(write=True)
+    diagnostics = result["diagnostics"]
+    status = "wrote" if diagnostics["wrote"] else "unchanged"
+    print(
+        "Semantic target lookup follow-through: "
+        f"{status} ({diagnostics['target_count']} targets)"
+    )
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -123,6 +142,12 @@ def main(argv: list[str] | None = None) -> int:
                 skip_media_builds=args.skip_media_builds,
             )
             builder.run(write=args.write, emit_diagnostics=args.diagnostics)
+            refresh_semantic_target_lookup_after_moments_build(
+                repo_root,
+                scope_id=config.scope_id,
+                write=args.write,
+                output_overridden=bool(args.output),
+            )
     except (FrontMatterSyntaxError, InvalidDocIdError, MissingDocIdError) as exc:
         print(exc, file=sys.stderr)
         return 1

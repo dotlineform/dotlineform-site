@@ -263,7 +263,11 @@ class SemanticTargetLookupBuilder:
             docs_source = DOCS_SCOPE_KIND_SOURCES.get(target_type.key)
             if docs_source is None:
                 continue
-            scope_config = load_docs_scope_configs(self.repo_root)[str(docs_source["scope_id"])]
+            scope_id = str(docs_source["scope_id"])
+            scope_config = load_docs_scope_configs(
+                self.repo_root,
+                scope_ids=[scope_id],
+            )[scope_id]
             docs_root = published_documents_path(scope_config)
             payload = load_json(self.repo_root / docs_root / "index-tree.json")
             source_with_options = {
