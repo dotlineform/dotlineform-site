@@ -855,6 +855,11 @@
           ]
         },
         {
+          "doc_id": "d-20260726-211842-cc8f6c",
+          "title": "Tag-document linking",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-211842-cc8f6c.json"
+        },
+        {
           "doc_id": "d-20260712-213026-ee0f22",
           "title": "Workspaces",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260712-213026-ee0f22.json",
@@ -1187,5 +1192,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-26T19:39:44Z"
+  "generated_at": "2026-07-26T20:18:48Z"
 }

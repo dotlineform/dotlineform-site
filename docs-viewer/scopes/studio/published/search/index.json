@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-2fba8e3a89fb7c9fd3a824e8e546a6a6",
-    "generated_at_utc": "2026-07-26T19:41:18Z",
-    "count": 215
+    "version": "blake2b-36a1e7feda3518a3ae77c4519481f46e",
+    "generated_at_utc": "2026-07-26T20:19:02Z",
+    "count": 216
   },
   "entries": [
     {
@@ -3935,6 +3935,32 @@
         "d-20260718-105957-c72b2a"
       ],
       "search_text": "standalone docs viewer concept standalone docs viewer concept standalone docs viewer 2026-07-26 17:54:41 2026 07 26 17 54 41 d-20260718-105957-c72b2a"
+    },
+    {
+      "id": "d-20260726-211842-cc8f6c",
+      "kind": "doc",
+      "title": "Tag-document linking",
+      "href": "/docs/?scope=studio&doc=d-20260726-211842-cc8f6c",
+      "last_updated": "2026-07-26 21:19:01",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap",
+      "display_meta": "2026-07-26 21:19:01 • Roadmap",
+      "search_terms": [
+        "tag-document linking",
+        "tag",
+        "document",
+        "linking",
+        "roadmap",
+        "2026-07-26 21:19:01",
+        "2026",
+        "07",
+        "26",
+        "21",
+        "19",
+        "01",
+        "d-20260726-211842-cc8f6c"
+      ],
+      "search_text": "tag-document linking tag document linking roadmap 2026-07-26 21:19:01 2026 07 26 21 19 01 d-20260726-211842-cc8f6c"
     },
     {
       "id": "d-20260712-213026-ee0f22",
