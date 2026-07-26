@@ -1,0 +1,464 @@
+{
+  "schema_version": "docs_semantic_tokens_catalogue_contract_fixtures_v1",
+  "grammar": {
+    "opening_delimiter": "[[",
+    "closing_delimiter": "]]",
+    "identity_separator": ":",
+    "title_separator": "|",
+    "escape_character": "\\",
+    "lexical_key_pattern": "^[a-z][a-z0-9-]*$",
+    "lexical_id_pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+    "title": {
+      "required": true,
+      "single_line": true,
+      "trim_before_serialization": true,
+      "escaped_characters": {
+        "\\": "\\\\",
+        "|": "\\|",
+        "]": "\\]"
+      },
+      "unknown_escape_is_malformed": true
+    },
+    "source_range": "zero-based half-open [start, end)",
+    "collapsed_caret_activation": "start < caret < end",
+    "inactive_contexts": [
+      "inline_code",
+      "fenced_code",
+      "html_comment"
+    ]
+  },
+  "catalogue_definition": {
+    "schema_version": "docs_semantic_token_family_definition_v1",
+    "key": "catalogue",
+    "labels": {
+      "family": "Catalogue",
+      "source_action": "Add catalogue token",
+      "info_view": "Catalogue token"
+    },
+    "occurrence_fields": [
+      {
+        "key": "title",
+        "label": "Title",
+        "required": true,
+        "editable": true,
+        "control": "text"
+      }
+    ],
+    "ui_contributions": {
+      "source_action": "source-add-catalogue-token",
+      "modal": "catalogue-token-add-modal",
+      "info_view": "catalogue-token-info"
+    },
+    "target_types": [
+      {
+        "key": "work",
+        "label": "Work",
+        "id_policy": {
+          "normalizer": "digits_left_pad",
+          "width": 5,
+          "input_pattern": "^\\d{1,5}$",
+          "canonical_pattern": "^\\d{5}$"
+        },
+        "lookup_adapter": "catalogue-work-target-lookup",
+        "lookup_fields": [
+          "title",
+          "href",
+          "meta"
+        ]
+      },
+      {
+        "key": "series",
+        "label": "Series",
+        "id_policy": {
+          "normalizer": "series_id_or_slug",
+          "input_pattern": "^[a-z0-9][a-z0-9-]*$",
+          "canonical_pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "lookup_adapter": "catalogue-series-target-lookup",
+        "lookup_fields": [
+          "title",
+          "href",
+          "meta"
+        ]
+      },
+      {
+        "key": "moment",
+        "label": "Moment",
+        "id_policy": {
+          "normalizer": "slug",
+          "input_pattern": "^[a-z0-9][a-z0-9-]*$",
+          "canonical_pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "lookup_adapter": "catalogue-moment-target-lookup",
+        "lookup_fields": [
+          "title",
+          "href",
+          "meta"
+        ]
+      }
+    ]
+  },
+  "json_shapes": {
+    "target_lookup": {
+      "schema_version": "docs_semantic_token_target_lookup_v1",
+      "required_envelope_fields": [
+        "schema_version",
+        "targets"
+      ],
+      "required_row_fields": [
+        "family",
+        "target_type",
+        "target_id",
+        "title",
+        "href"
+      ],
+      "optional_row_fields": [
+        "meta"
+      ]
+    },
+    "usage_index": {
+      "schema_version": "docs_semantic_token_usage_index_v1",
+      "required_envelope_fields": [
+        "schema_version",
+        "scope",
+        "occurrences"
+      ],
+      "required_row_fields": [
+        "source_scope",
+        "source_doc_id",
+        "source_range",
+        "raw",
+        "title",
+        "family",
+        "target_type",
+        "target_id",
+        "href"
+      ]
+    },
+    "broken_link": {
+      "schema_version": "docs_semantic_token_broken_link_row_v1",
+      "required_row_fields": [
+        "issue_type",
+        "source_scope",
+        "source_doc_id",
+        "source_range",
+        "raw",
+        "family",
+        "target_type",
+        "target_id",
+        "reason"
+      ],
+      "reason_values": [
+        "unsupported_kind",
+        "missing_target",
+        "missing_destination"
+      ]
+    }
+  },
+  "target_lookup_example": {
+    "schema_version": "docs_semantic_token_target_lookup_v1",
+    "targets": [
+      {
+        "family": "catalogue",
+        "target_type": "work",
+        "target_id": "00638",
+        "title": "3 symbols",
+        "href": "/works/?work=00638",
+        "meta": [
+          "2007",
+          "3 symbols"
+        ]
+      },
+      {
+        "family": "catalogue",
+        "target_type": "work",
+        "target_id": "00008",
+        "title": "nerve",
+        "href": "/works/?work=00008",
+        "meta": [
+          "July 1990 – January 1995",
+          "nerve"
+        ]
+      },
+      {
+        "family": "catalogue",
+        "target_type": "series",
+        "target_id": "105",
+        "title": "nerve",
+        "href": "/series/?series=105",
+        "meta": [
+          "1990-95"
+        ]
+      },
+      {
+        "family": "catalogue",
+        "target_type": "moment",
+        "target_id": "d-20260215-000000-02a1a4",
+        "title": "13 moments in october",
+        "href": "/moments/?doc=d-20260215-000000-02a1a4",
+        "meta": [
+          "23 Oct 2024"
+        ]
+      }
+    ]
+  },
+  "usage_index_example": {
+    "schema_version": "docs_semantic_token_usage_index_v1",
+    "scope": "analysis",
+    "occurrences": [
+      {
+        "source_scope": "analysis",
+        "source_doc_id": "d-20260518-180700-214487",
+        "source_range": {
+          "start": 13,
+          "end": 47
+        },
+        "raw": "[[catalogue:work:00638|3 symbols]]",
+        "title": "3 symbols",
+        "family": "catalogue",
+        "target_type": "work",
+        "target_id": "00638",
+        "href": "/works/?work=00638"
+      }
+    ]
+  },
+  "broken_link_example": {
+    "issue_type": "semantic_token",
+    "source_scope": "studio",
+    "source_doc_id": "d-20260726-000000-000001",
+    "source_range": {
+      "start": 18,
+      "end": 55
+    },
+    "raw": "[[catalogue:work:99999|missing work]]",
+    "family": "catalogue",
+    "target_type": "work",
+    "target_id": "99999",
+    "reason": "missing_target"
+  },
+  "cases": [
+    {
+      "id": "resolved_work_00638",
+      "categories": [
+        "valid",
+        "resolved",
+        "migration",
+        "caret-boundary"
+      ],
+      "source_scope": "analysis",
+      "source_doc_id": "d-20260518-180700-214487",
+      "source": "# 3 symbols\n\n[[catalogue:work:00638|3 symbols]]<br>\n",
+      "tokens": [
+        {
+          "source_range": {
+            "start": 13,
+            "end": 47
+          },
+          "raw": "[[catalogue:work:00638|3 symbols]]",
+          "family": "catalogue",
+          "target_type": "work",
+          "target_id": "00638",
+          "title": "3 symbols",
+          "serialized": "[[catalogue:work:00638|3 symbols]]",
+          "supported": true,
+          "activatable": true,
+          "projection": {
+            "resolved": true,
+            "href": "/works/?work=00638",
+            "emits_usage": true
+          }
+        }
+      ],
+      "caret_expectations": [
+        {
+          "offset": 13,
+          "active_token_index": null
+        },
+        {
+          "offset": 14,
+          "active_token_index": 0
+        },
+        {
+          "offset": 46,
+          "active_token_index": 0
+        },
+        {
+          "offset": 47,
+          "active_token_index": null
+        }
+      ]
+    },
+    {
+      "id": "escaped_title",
+      "categories": [
+        "valid",
+        "escaped"
+      ],
+      "source": "[[catalogue:work:00638|three \\| signs, \\\\ study, \\] note]]",
+      "tokens": [
+        {
+          "source_range": {
+            "start": 0,
+            "end": 58
+          },
+          "raw": "[[catalogue:work:00638|three \\| signs, \\\\ study, \\] note]]",
+          "family": "catalogue",
+          "target_type": "work",
+          "target_id": "00638",
+          "input_title": "  three | signs, \\ study, ] note  ",
+          "title": "three | signs, \\ study, ] note",
+          "serialized": "[[catalogue:work:00638|three \\| signs, \\\\ study, \\] note]]",
+          "supported": true,
+          "activatable": true
+        }
+      ]
+    },
+    {
+      "id": "malformed_forms",
+      "categories": [
+        "malformed"
+      ],
+      "source": "[[catalogue:work:638|3 symbols]]\n[[catalogue:work:00638|]]\n[[catalogue:work:00638|bad\\q title]]\n[[catalogue:work:00638|line one\nline two]]",
+      "tokens": []
+    },
+    {
+      "id": "inactive_code_and_comment",
+      "categories": [
+        "valid",
+        "code-context"
+      ],
+      "source": "Inline `[[catalogue:work:00638|3 symbols]]` stays literal.\n\n```markdown\n[[catalogue:series:105|nerve]]\n```\n\n<!-- [[catalogue:work:00638|commented]] -->\n\nOutside [[catalogue:moment:d-20260215-000000-02a1a4|13 moments in october]].",
+      "tokens": [
+        {
+          "source_range": {
+            "start": 161,
+            "end": 228
+          },
+          "raw": "[[catalogue:moment:d-20260215-000000-02a1a4|13 moments in october]]",
+          "family": "catalogue",
+          "target_type": "moment",
+          "target_id": "d-20260215-000000-02a1a4",
+          "title": "13 moments in october",
+          "serialized": "[[catalogue:moment:d-20260215-000000-02a1a4|13 moments in october]]",
+          "supported": true,
+          "activatable": true
+        }
+      ]
+    },
+    {
+      "id": "adjacent_tokens",
+      "categories": [
+        "valid",
+        "adjacent-token",
+        "caret-boundary"
+      ],
+      "source": "[[catalogue:work:00638|3 symbols]][[catalogue:series:105|nerve]]",
+      "tokens": [
+        {
+          "source_range": {
+            "start": 0,
+            "end": 34
+          },
+          "raw": "[[catalogue:work:00638|3 symbols]]",
+          "family": "catalogue",
+          "target_type": "work",
+          "target_id": "00638",
+          "title": "3 symbols",
+          "serialized": "[[catalogue:work:00638|3 symbols]]",
+          "supported": true,
+          "activatable": true
+        },
+        {
+          "source_range": {
+            "start": 34,
+            "end": 64
+          },
+          "raw": "[[catalogue:series:105|nerve]]",
+          "family": "catalogue",
+          "target_type": "series",
+          "target_id": "105",
+          "title": "nerve",
+          "serialized": "[[catalogue:series:105|nerve]]",
+          "supported": true,
+          "activatable": true
+        }
+      ],
+      "caret_expectations": [
+        {
+          "offset": 1,
+          "active_token_index": 0
+        },
+        {
+          "offset": 34,
+          "active_token_index": null
+        },
+        {
+          "offset": 35,
+          "active_token_index": 1
+        }
+      ]
+    },
+    {
+      "id": "broken_missing_work",
+      "categories": [
+        "valid",
+        "broken"
+      ],
+      "source_scope": "studio",
+      "source_doc_id": "d-20260726-000000-000001",
+      "source": "# Broken fixture\n\n[[catalogue:work:99999|missing work]] remains unchanged.\n",
+      "tokens": [
+        {
+          "source_range": {
+            "start": 18,
+            "end": 55
+          },
+          "raw": "[[catalogue:work:99999|missing work]]",
+          "family": "catalogue",
+          "target_type": "work",
+          "target_id": "99999",
+          "title": "missing work",
+          "serialized": "[[catalogue:work:99999|missing work]]",
+          "supported": true,
+          "activatable": true,
+          "projection": {
+            "resolved": false,
+            "rendered_source": "[[catalogue:work:99999|missing work]]",
+            "emits_usage": false,
+            "reason": "missing_target"
+          }
+        }
+      ]
+    },
+    {
+      "id": "unsupported_kind",
+      "categories": [
+        "valid",
+        "broken",
+        "unsupported"
+      ],
+      "source": "[[catalogue:asset:abc|unsupported target]]",
+      "tokens": [
+        {
+          "source_range": {
+            "start": 0,
+            "end": 42
+          },
+          "raw": "[[catalogue:asset:abc|unsupported target]]",
+          "family": "catalogue",
+          "target_type": "asset",
+          "target_id": "abc",
+          "title": "unsupported target",
+          "supported": false,
+          "activatable": false,
+          "projection": {
+            "resolved": false,
+            "rendered_source": "[[catalogue:asset:abc|unsupported target]]",
+            "emits_usage": false,
+            "reason": "unsupported_kind"
+          }
+        }
+      ]
+    }
+  ]
+}
