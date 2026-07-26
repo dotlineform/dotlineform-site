@@ -13,6 +13,7 @@ from build_docs_test_support import (
     read_json,
     run_builder,
     write_source_docs,
+    write_text,
 )
 
 def test_python_docs_builder_writes_docs_payloads_and_semantic_token_usage() -> None:
@@ -24,15 +25,12 @@ def test_python_docs_builder_writes_docs_payloads_and_semantic_token_usage() -> 
         index_tree = read_json(root / "docs-viewer/scopes/studio/published/documents/index-tree.json")
         recent = read_json(root / "docs-viewer/scopes/studio/published/documents/recent.json")
         child = read_json(root / f"docs-viewer/scopes/studio/published/documents/by-id/{CHILD_DOC_ID}.json")
-        usage_index = read_json(root / "docs-viewer/scopes/studio/published/documents/semantic-tokens/index.json")
-        target_payload = read_json(
-            root
-            / "docs-viewer/scopes/studio/published/documents/semantic-tokens/by-target/catalogue/work/00638.json"
+        semantic_tokens_dir = (
+            root / "docs-viewer/scopes/studio/published/documents/semantic-tokens"
         )
-        by_doc = read_json(
-            root
-            / f"docs-viewer/scopes/studio/published/documents/semantic-tokens/by-document/{CHILD_DOC_ID}.json"
-        )
+        usage_index = read_json(semantic_tokens_dir / "index.json")
+        by_document_exists = (semantic_tokens_dir / "by-document").exists()
+        by_target_exists = (semantic_tokens_dir / "by-target").exists()
 
     docs = result["index_payload"]["docs"]
     assert [doc["doc_id"] for doc in docs] == [PARENT_DOC_ID, CHILD_DOC_ID]
@@ -94,10 +92,8 @@ def test_python_docs_builder_writes_docs_payloads_and_semantic_token_usage() -> 
     assert len(usage_index["occurrences"]) == 1
     assert usage_index["occurrences"][0]["source_doc_id"] == CHILD_DOC_ID
     assert usage_index["occurrences"][0]["title"] == "three signs"
-    assert target_payload["target"]["target_type"] == "work"
-    assert target_payload["target"]["target_id"] == "00638"
-    assert target_payload["occurrences"][0]["source_doc_id"] == CHILD_DOC_ID
-    assert by_doc["occurrences"][0]["raw"] == "[[catalogue:work:00638|three signs]]"
+    assert not by_document_exists
+    assert not by_target_exists
     assert result["diagnostics"]["docs_emitted"] == 2
     assert result["diagnostics"]["index_tree_changed"] == 1
     assert result["diagnostics"]["recent_changed"] == 1
@@ -118,6 +114,55 @@ def test_python_docs_builder_preserves_existing_payloads_for_targeted_builds() -
     assert result["diagnostics"]["build_mode"] == "targeted"
     assert result["diagnostics"]["only_doc_ids"] == [CHILD_DOC_ID]
     assert PARENT_DOC_ID not in result["write_plan"]["changed_item_ids"]
+
+def test_python_docs_builder_targeted_build_preserves_usage_from_scope_index() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        run_builder(root)
+        child_before = read_json(
+            root / f"docs-viewer/scopes/studio/published/documents/by-id/{CHILD_DOC_ID}.json"
+        )
+        write_source_docs(root, parent_body_suffix="Updated targeted parent.")
+        result = run_builder(root, only_doc_ids=[PARENT_DOC_ID])
+        child_after = read_json(
+            root / f"docs-viewer/scopes/studio/published/documents/by-id/{CHILD_DOC_ID}.json"
+        )
+        usage_index = read_json(
+            root / "docs-viewer/scopes/studio/published/documents/semantic-tokens/index.json"
+        )
+
+    assert child_after == child_before
+    assert result["diagnostics"]["build_mode"] == "targeted"
+    assert result["diagnostics"]["only_doc_ids"] == [PARENT_DOC_ID]
+    assert [row["source_doc_id"] for row in usage_index["occurrences"]] == [CHILD_DOC_ID]
+
+
+def test_python_docs_builder_targeted_build_removes_selected_doc_usage_from_scope_index() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        run_builder(root)
+        child_source = (
+            root / f"docs-viewer/scopes/studio/source/documents/{CHILD_DOC_ID}.md"
+        )
+        write_text(
+            child_source,
+            child_source.read_text(encoding="utf-8").replace(
+                "[[catalogue:work:00638|three signs]]",
+                "three signs",
+            ),
+        )
+        result = run_builder(root, only_doc_ids=[CHILD_DOC_ID])
+        usage_index = read_json(
+            root / "docs-viewer/scopes/studio/published/documents/semantic-tokens/index.json"
+        )
+
+    assert result["diagnostics"]["build_mode"] == "targeted"
+    assert result["diagnostics"]["only_doc_ids"] == [CHILD_DOC_ID]
+    assert result["diagnostics"]["semantic_token_index_changed"] == 1
+    assert usage_index["occurrences"] == []
+
 
 def test_python_docs_builder_leaves_unresolved_catalogue_tokens_literal() -> None:
     with tempfile.TemporaryDirectory() as temp_path:

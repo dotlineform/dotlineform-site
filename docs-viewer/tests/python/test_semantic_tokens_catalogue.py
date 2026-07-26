@@ -195,39 +195,15 @@ def test_builder_projects_only_resolved_lookup_rows_and_writes_usage() -> None:
                 / "docs-viewer/scopes/analysis/published/documents/semantic-tokens/index.json"
             ).read_text(encoding="utf-8")
         )
-        by_document = json.loads(
-            (
-                root
-                / (
-                    "docs-viewer/scopes/analysis/published/documents/"
-                    f"semantic-tokens/by-document/{resolved_doc_id}.json"
-                )
-            ).read_text(encoding="utf-8")
+        semantic_tokens_dir = (
+            root / "docs-viewer/scopes/analysis/published/documents/semantic-tokens"
         )
-        by_target = json.loads(
-            (
-                root
-                / (
-                    "docs-viewer/scopes/analysis/published/documents/"
-                    "semantic-tokens/by-target/catalogue/work/00638.json"
-                )
-            ).read_text(encoding="utf-8")
-        )
-        broken_usage_path_exists = (
-            root
-            / f"docs-viewer/scopes/analysis/published/documents/semantic-tokens/by-document/{broken_doc_id}.json"
-        ).exists()
+        by_document_exists = (semantic_tokens_dir / "by-document").exists()
+        by_target_exists = (semantic_tokens_dir / "by-target").exists()
 
     assert '<a href="/works/?work=00638"' in resolved_payload["content_html"]
     assert "[[catalogue:work:99999|missing work]]" in broken_payload["content_html"]
     assert result["diagnostics"]["warning_count"] == 0
     assert usage_index == load_fixture()["usage_index_example"]
-    assert by_document["occurrences"] == usage_index["occurrences"]
-    assert by_target["target"] == {
-        "family": "catalogue",
-        "target_type": "work",
-        "target_id": "00638",
-        "href": "/works/?work=00638",
-    }
-    assert by_target["occurrences"] == usage_index["occurrences"]
-    assert not broken_usage_path_exists
+    assert not by_document_exists
+    assert not by_target_exists

@@ -63,10 +63,7 @@ class WritePlanMixin:
             "changed_item_ids": sorted(changed_item_ids),
             "stale_item_ids": stale_item_ids,
             "item_text_by_id": item_text_by_id,
-            **self.build_semantic_token_write_plan(
-                semantic_token_payloads,
-                target_doc_ids=target_doc_ids,
-            ),
+            **self.build_semantic_token_write_plan(semantic_token_payloads),
         }
 
     def write_outputs(
@@ -136,15 +133,7 @@ class WritePlanMixin:
     ) -> None:
         doc_write_count = len(write_plan["changed_item_ids"])
         doc_remove_count = len(write_plan["stale_item_ids"])
-        semantic_token_write_count = (
-            (1 if write_plan["semantic_token_index_write"] else 0)
-            + len(write_plan["changed_semantic_token_document_ids"])
-            + len(write_plan["changed_semantic_token_target_keys"])
-        )
-        semantic_token_remove_count = (
-            len(write_plan["stale_semantic_token_document_ids"])
-            + len(write_plan["stale_semantic_token_target_keys"])
-        )
+        semantic_token_write_count = 1 if write_plan["semantic_token_index_write"] else 0
         index_write_count = (
             (1 if write_plan["index_tree_write"] else 0)
             + (1 if write_plan["recent_write"] else 0)
@@ -162,7 +151,6 @@ class WritePlanMixin:
         print(f"  recent total: {recent_total}")
         print(f"  semantic tokens total: {semantic_token_total}")
         print(f"  semantic tokens {verb}: {semantic_token_write_count}")
-        print(f"  semantic tokens {remove_verb}: {semantic_token_remove_count}")
         print(f"  indexes {verb}: {index_write_count}")
         print(f"  warnings: {len(self.warnings)}")
 
@@ -186,18 +174,6 @@ class WritePlanMixin:
             "recent_changed": 1 if write_plan["recent_write"] else 0,
             "publication_recent_changed": 1 if write_plan["publication_recent_write"] else 0,
             "semantic_token_index_changed": 1 if write_plan["semantic_token_index_write"] else 0,
-            "semantic_token_by_document_payloads_changed": len(
-                write_plan["changed_semantic_token_document_ids"]
-            ),
-            "semantic_token_by_document_payloads_removed": len(
-                write_plan["stale_semantic_token_document_ids"]
-            ),
-            "semantic_token_by_target_payloads_changed": len(
-                write_plan["changed_semantic_token_target_keys"]
-            ),
-            "semantic_token_by_target_payloads_removed": len(
-                write_plan["stale_semantic_token_target_keys"]
-            ),
             "warning_count": len(self.warnings),
             "warnings": self.warnings,
             "elapsed_seconds": elapsed_seconds,

@@ -225,8 +225,7 @@ def test_python_docs_builder_cli_reports_unchanged_second_write() -> None:
     assert "semantic tokens wrote: 0" in stdout
     assert diagnostics["doc_payloads_changed"] == 0
     assert diagnostics["semantic_token_index_changed"] == 0
-    assert diagnostics["semantic_token_by_document_payloads_changed"] == 0
-    assert diagnostics["semantic_token_by_target_payloads_changed"] == 0
+    assert all("semantic_token_by_" not in key for key in diagnostics)
 
 def test_python_docs_builder_cli_targeted_write_updates_selected_doc_only() -> None:
     with tempfile.TemporaryDirectory() as temp_path:

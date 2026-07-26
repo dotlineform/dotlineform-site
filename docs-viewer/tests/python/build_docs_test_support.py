@@ -196,7 +196,12 @@ def write_catalogue_records(root: Path) -> None:
     )
 
 
-def write_source_docs(root: Path, *, child_body_suffix: str = "") -> None:
+def write_source_docs(
+    root: Path,
+    *,
+    parent_body_suffix: str = "",
+    child_body_suffix: str = "",
+) -> None:
     write_text(
         root / f"docs-viewer/scopes/studio/source/documents/{PARENT_DOC_ID}.md",
         f"""---
@@ -209,6 +214,8 @@ parent_id: ""
 # Parent
 
 Parent body.
+
+{parent_body_suffix}
 """,
     )
     write_text(

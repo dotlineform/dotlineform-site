@@ -503,6 +503,48 @@
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260515-000000-f43740.json"
         },
         {
+          "doc_id": "d-20260725-153656-516b61",
+          "title": "Semantic Tokens",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-153656-516b61.json",
+          "ui_status": "in-progress",
+          "children": [
+            {
+              "doc_id": "d-20260725-165142-793cb3",
+              "title": "Catalogue Token Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-165142-793cb3.json",
+              "ui_status": "in-progress"
+            },
+            {
+              "doc_id": "d-20260714-234030-434069",
+              "title": "Semantic Tokens Architecture",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-434069.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "d-20260714-234030-cb2789",
+              "title": "Semantic Tokens Concept",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-cb2789.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "d-20260623-180405-631ef4",
+              "title": "Semantic Tokens Source Editor UI",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260623-180405-631ef4.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "d-20260726-185814-c5e581",
+              "title": "Target Lookup",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-185814-c5e581.json"
+            },
+            {
+              "doc_id": "d-20260726-191340-d00c52",
+              "title": "Usage Index",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-191340-d00c52.json"
+            }
+          ]
+        },
+        {
           "doc_id": "d-20260726-181045-a7c2e1",
           "title": "Semantic Tokens Report",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-181045-a7c2e1.json",
@@ -764,38 +806,6 @@
           "title": "Semantic Reference Authoring",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260527-105208-c1a4d0.json",
           "ui_status": "paused"
-        },
-        {
-          "doc_id": "d-20260725-153656-516b61",
-          "title": "Semantic Tokens",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-153656-516b61.json",
-          "ui_status": "in-progress",
-          "children": [
-            {
-              "doc_id": "d-20260725-165142-793cb3",
-              "title": "Catalogue Token Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-165142-793cb3.json",
-              "ui_status": "in-progress"
-            },
-            {
-              "doc_id": "d-20260714-234030-434069",
-              "title": "Semantic Tokens Architecture",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-434069.json",
-              "ui_status": "proposed"
-            },
-            {
-              "doc_id": "d-20260714-234030-cb2789",
-              "title": "Semantic Tokens Concept",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-cb2789.json",
-              "ui_status": "proposed"
-            },
-            {
-              "doc_id": "d-20260623-180405-631ef4",
-              "title": "Semantic Tokens Source Editor UI",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260623-180405-631ef4.json",
-              "ui_status": "proposed"
-            }
-          ]
         },
         {
           "doc_id": "d-20260720-173806-5f2c9a",
@@ -1187,5 +1197,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-26T17:15:16Z"
+  "generated_at": "2026-07-26T18:13:46Z"
 }

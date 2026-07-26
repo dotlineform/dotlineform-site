@@ -136,29 +136,6 @@ def prepare_publish_repo(root: Path) -> None:
             "occurrences": [],
         },
     )
-    write_json(
-        root / "docs-viewer/scopes/library/published/documents/semantic-tokens/by-document/hidden.json",
-        {
-            "schema_version": "docs_semantic_token_usage_index_v1",
-            "scope": "library",
-            "source_doc_id": "hidden",
-            "occurrences": [],
-        },
-    )
-    write_json(
-        root / "docs-viewer/scopes/library/published/documents/semantic-tokens/by-target/catalogue/work/00638.json",
-        {
-            "schema_version": "docs_semantic_token_usage_index_v1",
-            "scope": "library",
-            "target": {
-                "family": "catalogue",
-                "target_type": "work",
-                "target_id": "00638",
-                "href": "/works/?work=00638",
-            },
-            "occurrences": [],
-        },
-    )
     write_json(root / "docs-viewer/scopes/library/published/search/index.json", {"entries": [{"id": "library"}]})
     write_json(root / "site/assets/data/docs/scopes/library/index-tree.json", {"docs": []})
     write_json(root / "site/assets/data/docs/scopes/library/by-id/stale.json", {"title": "Stale"})
