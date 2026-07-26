@@ -73,7 +73,7 @@ FULL_SOURCE_MAPPED_FIELDS = {
     "content_intent",
     "assets",
     "links",
-    "semantic_references",
+    "semantic_tokens",
     "embedded_content",
     "dependencies",
     "_record_index",

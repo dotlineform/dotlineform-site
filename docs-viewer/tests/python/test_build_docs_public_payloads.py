@@ -77,11 +77,28 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
         semantic_tokens_generated = (
             root / "docs-viewer/scopes/library/published/documents/semantic-tokens"
         ).exists()
+        semantic_tokens_index = read_json(
+            root
+            / "docs-viewer/scopes/library/published/documents/semantic-tokens/index.json"
+        )
         manage_browser_config = build_docs.browser_scope_config_payload(root, [config])
         public_browser_config = build_docs.browser_scope_config_payload(root, [config], published=True)
 
     assert result["diagnostics"]["docs_emitted"] == 6
-    assert not semantic_tokens_generated
+    assert semantic_tokens_generated
+    assert semantic_tokens_index["occurrences"] == [
+        {
+            "source_scope": "library",
+            "source_doc_id": CHILD_DOC_ID,
+            "source_range": {"start": 22, "end": 56},
+            "raw": "[[catalogue:work:00638|3 symbols]]",
+            "title": "3 symbols",
+            "family": "catalogue",
+            "target_type": "work",
+            "target_id": "00638",
+            "href": "/works/?work=00638",
+        }
+    ]
     public_tree_forbidden_keys = {
         "summary",
         "date",
@@ -159,8 +176,8 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
     assert child_payload["summary"] == "Child summary"
     assert child_payload["last_updated"] == "2026-06-03 10:00:00"
     assert "content_html" in child_payload
-    assert "[[catalogue:work:00638|3 symbols]]" in child_payload["content_html"]
-    assert "data-semantic-token-family" not in child_payload["content_html"]
+    assert 'href="/works/?work=00638"' in child_payload["content_html"]
+    assert 'data-semantic-token-family="catalogue"' in child_payload["content_html"]
     assert public_by_id_forbidden_keys.isdisjoint(child_payload)
     assert hidden_payload["title"] == "Hidden"
     assert manage_browser_config["scopes"][0]["index_tree_url"] == "/docs-viewer/scopes/library/published/documents/index-tree.json"

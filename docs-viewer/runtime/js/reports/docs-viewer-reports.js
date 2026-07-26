@@ -31,17 +31,17 @@ const REPORT_LOADERS = {
       });
     }
   },
-  semantic_references: {
-    load: function () {
-      return import("./semantic-references-report.js").then(function (module) {
-        return module.mountSemanticReferencesReport;
-      });
-    }
-  },
   docs_broken_links: {
     load: function () {
       return import("./docs-broken-links-report.js").then(function (module) {
         return module.mountDocsBrokenLinksReport;
+      });
+    }
+  },
+  semantic_tokens: {
+    load: function () {
+      return import("./semantic-tokens-report.js").then(function (module) {
+        return module.mountSemanticTokensReport;
       });
     }
   }

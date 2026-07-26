@@ -41,45 +41,50 @@ MANAGE_CHILD_DOC_ID = "d-20260601-000000-000006"
 PRIVATE_DOC_ID = "d-20260601-000000-000007"
 
 
-def write_semantic_reference_registry(root: Path) -> None:
+def write_semantic_token_contract(root: Path) -> None:
     write_json(
-        root / "docs-viewer/config/semantic-references/registry.json",
+        root / "docs-viewer/config/semantic-tokens/registry.json",
         {
-            "schema_version": "docs_semantic_reference_registry_v1",
-            "target_lookup_url": "/docs-viewer/data/generated/semantic-references/target-lookup.json",
-            "kinds": [
+            "schema_version": "docs_semantic_token_registry_v1",
+            "target_lookup_url": "/docs-viewer/data/generated/semantic-tokens/target-lookup.json",
+            "families": [
                 {
-                    "kind": "work",
-                    "id": {
-                        "normalizer": "digits_left_pad",
-                        "width": 5,
-                        "input_pattern": "^\\d{1,5}$",
-                        "canonical_pattern": "^\\d{5}$",
-                        "example": "00638",
-                    },
-                    "route": {"type": "query", "path": "/works/", "param": "work"},
-                    "source_editor": {"selection_search": True, "picker": True},
+                    "schema_version": "docs_semantic_token_family_definition_v1",
+                    "key": "catalogue",
+                    "labels": {},
+                    "occurrence_fields": [],
+                    "ui_contributions": {},
+                    "target_types": [
+                        {
+                            "key": "work",
+                            "label": "Work",
+                            "id_policy": {
+                                "normalizer": "digits_left_pad",
+                                "width": 5,
+                                "input_pattern": "^\\d{1,5}$",
+                                "canonical_pattern": "^\\d{5}$",
+                            },
+                            "lookup_adapter": "catalogue-work-target-lookup",
+                            "lookup_fields": ["title", "href"],
+                        }
+                    ],
                 },
+            ],
+        },
+    )
+    write_json(
+        root / "docs-viewer/data/generated/semantic-tokens/target-lookup.json",
+        {
+            "schema_version": "docs_semantic_token_target_lookup_v1",
+            "targets": [
                 {
-                    "kind": "series",
-                    "id": {
-                        "normalizer": "series_id_or_slug",
-                        "input_pattern": "^[a-z0-9][a-z0-9-]*$",
-                        "example": "009",
-                    },
-                    "route": {"type": "query", "path": "/series/", "param": "series"},
-                    "source_editor": {"selection_search": True, "picker": True},
-                },
-                {
-                    "kind": "moment",
-                    "id": {
-                        "normalizer": "slug",
-                        "input_pattern": "^[a-z0-9][a-z0-9-]*$",
-                        "example": "lotus-pond",
-                    },
-                    "route": {"type": "query", "path": "/moments/", "param": "doc"},
-                    "source_editor": {"selection_search": True, "picker": True},
-                },
+                    "family": "catalogue",
+                    "target_type": "work",
+                    "target_id": "00638",
+                    "title": "3 symbols",
+                    "href": "/works/?work=00638",
+                    "meta": [],
+                }
             ],
         },
     )
@@ -218,27 +223,25 @@ last_updated: 2026-06-02 10:00:00
 summary: Child summary
 ui_status: done
 parent_id: {PARENT_DOC_ID}
-viewer_report: semantic_references
-viewer_report_subscope: tags
 ---
 # Child
 
-Intro with [parent](/docs/?scope=studio&doc={PARENT_DOC_ID}), ![Diagram]([[media:docs/studio/img/diagram.png]]), and [[ref:work:638|three signs]].
+Intro with [parent](/docs/?scope=studio&doc={PARENT_DOC_ID}), ![Diagram]([[media:docs/studio/img/diagram.png]]), and [[catalogue:work:00638|three signs]].
 
 ![Measured diagram]([[media:docs/studio/img/measured-diagram.png width=800 height=600]])
 
 ![Persistent SVG diagram]([[media:docs/studio/svg/persistent-diagram.svg]])
 
-<!-- [[ref:work:638999|commented missing work]] -->
+<!-- [[catalogue:work:63899|commented missing work]] -->
 
 <!--
-[[ref:work:638998|commented missing work multiline]]
+[[catalogue:work:63898|commented missing work multiline]]
 -->
 
-`[[ref:series:26]]`
+`[[catalogue:work:00638|inline code]]`
 
 ```text
-[[ref:moment:dark-sky]]
+[[catalogue:work:00638|fenced code]]
 ```
 
 [[html-media:docs/studio/html/chart.html height=420]]
@@ -283,7 +286,7 @@ ui_status: done
 def prepare_repo(root: Path) -> None:
     write_site_tools_config(root)
     write_scope_config(root)
-    write_semantic_reference_registry(root)
+    write_semantic_token_contract(root)
     write_catalogue_records(root)
     write_text(
         root / "site/assets/data/docs/scopes/studio/media/html/chart.html",

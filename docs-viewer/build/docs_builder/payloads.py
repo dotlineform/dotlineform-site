@@ -23,13 +23,11 @@ class PayloadBuilderMixin:
         self,
         doc: DocRecord,
         docs: list[DocRecord],
-        semantic_references_by_doc: dict[str, list[dict[str, Any]]],
         semantic_tokens_by_doc: dict[str, list[dict[str, Any]]],
     ) -> dict[str, Any]:
         resolved = self.resolve_content_tokens(
             doc.body_markdown,
             doc=doc,
-            references_by_doc=semantic_references_by_doc,
             semantic_tokens_by_doc=semantic_tokens_by_doc,
         )
         content_html = add_missing_image_titles(

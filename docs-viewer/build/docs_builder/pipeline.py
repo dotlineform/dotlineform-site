@@ -17,11 +17,8 @@ from .common import (
 )
 from .media_builds import referenced_build_media_identities, run_registered_media_builds
 from .payloads import PayloadBuilderMixin
-from .reference_artifacts import ReferenceArtifactsMixin
 from .recent_policy import recent_basis_for_route
 from .rendering import ContentRenderingMixin
-from .semantic_registry import load_semantic_reference_registry
-from .semantic_references import SemanticReferencesMixin
 from .semantic_token_artifacts import SemanticTokenArtifactsMixin
 from .semantic_token_registry import load_semantic_token_registry
 from .semantic_tokens import SemanticTokensMixin, load_semantic_token_targets
@@ -33,9 +30,7 @@ class DocsDataBuilder(
     SourceLoadingMixin,
     PayloadBuilderMixin,
     ContentRenderingMixin,
-    SemanticReferencesMixin,
     SemanticTokensMixin,
-    ReferenceArtifactsMixin,
     SemanticTokenArtifactsMixin,
     WritePlanMixin,
 ):
@@ -65,7 +60,6 @@ class DocsDataBuilder(
         self.skip_media_builds = skip_media_builds is True
         self.output_url_base = self.output_url_base_for(self.output_url_dir())
         self.site_config = load_site_tools_config(self.repo_root)
-        self.semantic_reference_registry = load_semantic_reference_registry(self.repo_root)
         self.semantic_token_registry = load_semantic_token_registry(self.repo_root)
         self.semantic_token_targets_by_key = load_semantic_token_targets(self.repo_root)
         self.source_files_scanned = 0
@@ -85,13 +79,11 @@ class DocsDataBuilder(
         target_doc_ids = self.only_doc_ids if self.only_doc_ids is not None else [doc.doc_id for doc in docs]
         if self.targeted_build:
             self.validate_targeted_build_prerequisites(docs, target_doc_ids)
-            semantic_references_by_doc = self.existing_reference_records_by_doc(docs, target_doc_ids)
             semantic_tokens_by_doc = self.existing_semantic_token_occurrences_by_doc(
                 docs,
                 target_doc_ids,
             )
         else:
-            semantic_references_by_doc: dict[str, list[dict[str, Any]]] = {}
             semantic_tokens_by_doc: dict[str, list[dict[str, Any]]] = {}
 
         docs_for_item_build = [doc for doc in docs if doc.doc_id in target_doc_ids]
@@ -110,13 +102,11 @@ class DocsDataBuilder(
             doc.doc_id: self.item_entry(
                 doc,
                 docs,
-                semantic_references_by_doc,
                 semantic_tokens_by_doc,
             )
             for doc in docs_for_item_build
         }
         for doc in docs_for_item_build:
-            semantic_references_by_doc.setdefault(doc.doc_id, [])
             semantic_tokens_by_doc.setdefault(doc.doc_id, [])
 
         flat_doc_rows = [
@@ -149,14 +139,12 @@ class DocsDataBuilder(
             if public_recent_basis
             else None
         )
-        reference_payloads = self.build_reference_payloads(docs, semantic_references_by_doc)
         semantic_token_payloads = self.build_semantic_token_payloads(docs, semantic_tokens_by_doc)
         write_plan = self.build_write_plan(
             index_tree_payload,
             recent_payload,
             publication_recent_payload,
             item_payloads,
-            reference_payloads,
             semantic_token_payloads,
             target_doc_ids=target_doc_ids if self.targeted_build else None,
         )
@@ -172,7 +160,6 @@ class DocsDataBuilder(
                 docs_total=len(index_payload["docs"]),
                 tree_total=len(index_tree_payload["docs"]),
                 recent_total=len(recent_payload["docs"]),
-                reference_total=reference_payloads["index"]["header"]["count"],
                 semantic_token_total=len(semantic_token_payloads["index"]["occurrences"]),
             )
         else:
@@ -180,7 +167,6 @@ class DocsDataBuilder(
                 index_payload,
                 index_tree_payload,
                 recent_payload,
-                reference_payloads,
                 semantic_token_payloads,
                 write_plan,
             )
@@ -192,7 +178,6 @@ class DocsDataBuilder(
             "recent_payload": recent_payload,
             "publication_recent_payload": publication_recent_payload,
             "item_payloads": item_payloads,
-            "reference_payloads": reference_payloads,
             "semantic_token_payloads": semantic_token_payloads,
             "write_plan": write_plan,
             "diagnostics": diagnostics,

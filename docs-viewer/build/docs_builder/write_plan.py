@@ -23,15 +23,14 @@ class WritePlanMixin:
         recent_payload: dict[str, Any],
         publication_recent_payload: dict[str, Any] | None,
         item_payloads: dict[str, dict[str, Any]],
-        reference_payloads: dict[str, Any],
         semantic_token_payloads: dict[str, Any],
         *,
         target_doc_ids: list[str] | None = None,
     ) -> dict[str, Any]:
         """Return exact writes and removals without mutating generated output.
 
-        A targeted build may remove stale document and reference payloads only
-        when their identities are in ``target_doc_ids``.
+        A targeted build may remove stale document and semantic-token payloads
+        only when their identities are in ``target_doc_ids``.
         """
 
         index_tree_text = json_text(index_tree_payload)
@@ -64,7 +63,6 @@ class WritePlanMixin:
             "changed_item_ids": sorted(changed_item_ids),
             "stale_item_ids": stale_item_ids,
             "item_text_by_id": item_text_by_id,
-            **self.build_reference_write_plan(reference_payloads, target_doc_ids=target_doc_ids),
             **self.build_semantic_token_write_plan(
                 semantic_token_payloads,
                 target_doc_ids=target_doc_ids,
@@ -78,13 +76,11 @@ class WritePlanMixin:
         docs_total: int,
         tree_total: int,
         recent_total: int,
-        reference_total: int,
         semantic_token_total: int,
     ) -> None:
         """Apply one write plan and report the resulting output counts.
 
-        Only entries selected by the plan are written or removed. Reference
-        writes remain delegated to the builder's reference-artifact boundary.
+        Only entries selected by the plan are written or removed.
         """
 
         self.output_dir.mkdir(parents=True, exist_ok=True)
@@ -101,7 +97,6 @@ class WritePlanMixin:
             write_text(self.items_dir / f"{doc_id}.json", write_plan["item_text_by_id"][doc_id])
         for doc_id in write_plan["stale_item_ids"]:
             (self.items_dir / f"{doc_id}.json").unlink(missing_ok=True)
-        self.write_reference_outputs(write_plan)
         self.write_semantic_token_outputs(write_plan)
         self.print_human_summary(
             write_plan,
@@ -109,7 +104,6 @@ class WritePlanMixin:
             docs_total=docs_total,
             tree_total=tree_total,
             recent_total=recent_total,
-            reference_total=reference_total,
             semantic_token_total=semantic_token_total,
         )
 
@@ -118,7 +112,6 @@ class WritePlanMixin:
         index_payload: dict[str, Any],
         index_tree_payload: dict[str, Any],
         recent_payload: dict[str, Any],
-        reference_payloads: dict[str, Any],
         semantic_token_payloads: dict[str, Any],
         write_plan: dict[str, Any],
     ) -> None:
@@ -128,7 +121,6 @@ class WritePlanMixin:
             docs_total=len(index_payload["docs"]),
             tree_total=len(index_tree_payload["docs"]),
             recent_total=len(recent_payload["docs"]),
-            reference_total=reference_payloads["index"]["header"]["count"],
             semantic_token_total=len(semantic_token_payloads["index"]["occurrences"]),
         )
 
@@ -140,20 +132,10 @@ class WritePlanMixin:
         docs_total: int,
         tree_total: int,
         recent_total: int,
-        reference_total: int,
         semantic_token_total: int,
     ) -> None:
         doc_write_count = len(write_plan["changed_item_ids"])
         doc_remove_count = len(write_plan["stale_item_ids"])
-        reference_write_count = (
-            (1 if write_plan["reference_index_write"] else 0)
-            + len(write_plan["changed_reference_doc_ids"])
-            + len(write_plan["changed_reference_target_keys"])
-        )
-        reference_remove_count = (
-            len(write_plan["stale_reference_doc_ids"])
-            + len(write_plan["stale_reference_target_keys"])
-        )
         semantic_token_write_count = (
             (1 if write_plan["semantic_token_index_write"] else 0)
             + len(write_plan["changed_semantic_token_document_ids"])
@@ -167,7 +149,6 @@ class WritePlanMixin:
             (1 if write_plan["index_tree_write"] else 0)
             + (1 if write_plan["recent_write"] else 0)
             + (1 if write_plan["publication_recent_write"] else 0)
-            + (1 if write_plan["reference_index_write"] else 0)
             + (1 if write_plan["semantic_token_index_write"] else 0)
         )
         verb = "would write" if mode == "dry-run" else "wrote"
@@ -179,9 +160,6 @@ class WritePlanMixin:
         print(f"  docs {remove_verb}: {doc_remove_count}")
         print(f"  tree docs total: {tree_total}")
         print(f"  recent total: {recent_total}")
-        print(f"  references total: {reference_total}")
-        print(f"  references {verb}: {reference_write_count}")
-        print(f"  references {remove_verb}: {reference_remove_count}")
         print(f"  semantic tokens total: {semantic_token_total}")
         print(f"  semantic tokens {verb}: {semantic_token_write_count}")
         print(f"  semantic tokens {remove_verb}: {semantic_token_remove_count}")
@@ -207,11 +185,6 @@ class WritePlanMixin:
             "index_tree_changed": 1 if write_plan["index_tree_write"] else 0,
             "recent_changed": 1 if write_plan["recent_write"] else 0,
             "publication_recent_changed": 1 if write_plan["publication_recent_write"] else 0,
-            "reference_index_changed": 1 if write_plan["reference_index_write"] else 0,
-            "reference_by_doc_payloads_changed": len(write_plan["changed_reference_doc_ids"]),
-            "reference_by_doc_payloads_removed": len(write_plan["stale_reference_doc_ids"]),
-            "reference_by_target_payloads_changed": len(write_plan["changed_reference_target_keys"]),
-            "reference_by_target_payloads_removed": len(write_plan["stale_reference_target_keys"]),
             "semantic_token_index_changed": 1 if write_plan["semantic_token_index_write"] else 0,
             "semantic_token_by_document_payloads_changed": len(
                 write_plan["changed_semantic_token_document_ids"]

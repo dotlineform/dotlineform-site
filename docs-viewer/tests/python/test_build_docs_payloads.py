@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-import json
 import tempfile
 from pathlib import Path
 
@@ -16,7 +15,7 @@ from build_docs_test_support import (
     write_source_docs,
 )
 
-def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
+def test_python_docs_builder_writes_docs_payloads_and_semantic_token_usage() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         prepare_repo(root)
@@ -25,9 +24,15 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
         index_tree = read_json(root / "docs-viewer/scopes/studio/published/documents/index-tree.json")
         recent = read_json(root / "docs-viewer/scopes/studio/published/documents/recent.json")
         child = read_json(root / f"docs-viewer/scopes/studio/published/documents/by-id/{CHILD_DOC_ID}.json")
-        references_index = read_json(root / "docs-viewer/scopes/studio/published/documents/references/index.json")
-        target_payload = read_json(root / "docs-viewer/scopes/studio/published/documents/references/by-target/work/00638.json")
-        by_doc = read_json(root / f"docs-viewer/scopes/studio/published/documents/references/by-doc/{CHILD_DOC_ID}.json")
+        usage_index = read_json(root / "docs-viewer/scopes/studio/published/documents/semantic-tokens/index.json")
+        target_payload = read_json(
+            root
+            / "docs-viewer/scopes/studio/published/documents/semantic-tokens/by-target/catalogue/work/00638.json"
+        )
+        by_doc = read_json(
+            root
+            / f"docs-viewer/scopes/studio/published/documents/semantic-tokens/by-document/{CHILD_DOC_ID}.json"
+        )
 
     docs = result["index_payload"]["docs"]
     assert [doc["doc_id"] for doc in docs] == [PARENT_DOC_ID, CHILD_DOC_ID]
@@ -77,25 +82,22 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
     assert content_html.count('data-docs-viewer-diagram-kind="persistent-svg"') == 1
     assert 'title="Alt text"' in content_html
     assert 'href="/works/?work=00638"' in content_html
-    assert "[[ref:work:638999|commented missing work]]" in content_html
-    assert "[[ref:work:638998|commented missing work multiline]]" in content_html
-    assert "[[ref:series:26]]" in content_html
-    assert "[[ref:moment:dark-sky]]" in content_html
-    assert child["viewer_report"] == "semantic_references"
-    assert child["viewer_report_subscope"] == "tags"
+    assert 'data-semantic-token-family="catalogue"' in content_html
+    assert "[[catalogue:work:63899|commented missing work]]" in content_html
+    assert "[[catalogue:work:63898|commented missing work multiline]]" in content_html
+    assert "[[catalogue:work:00638|inline code]]" in content_html
+    assert "[[catalogue:work:00638|fenced code]]" in content_html
     assert child["date"] == "2026-06-02"
     assert child["date_display"] == "June 2026"
 
-    assert references_index["header"]["schema"] == "docs_semantic_references_index_v1"
-    assert references_index["header"]["count"] == 1
-    assert "638999" not in json.dumps(references_index)
-    assert "638998" not in json.dumps(references_index)
-    assert references_index["targets"][0]["target_key"] == "work:00638"
-    assert references_index["targets"][0]["bucket_url"] == "/docs-viewer/scopes/studio/published/documents/references/by-target/work/00638.json"
-    assert target_payload["header"]["schema"] == "docs_semantic_references_by_target_v1"
-    assert target_payload["target_kind"] == "work"
-    assert target_payload["references"][0]["source_doc_id"] == CHILD_DOC_ID
-    assert by_doc["references"][0]["label"] == "three signs"
+    assert usage_index["schema_version"] == "docs_semantic_token_usage_index_v1"
+    assert len(usage_index["occurrences"]) == 1
+    assert usage_index["occurrences"][0]["source_doc_id"] == CHILD_DOC_ID
+    assert usage_index["occurrences"][0]["title"] == "three signs"
+    assert target_payload["target"]["target_type"] == "work"
+    assert target_payload["target"]["target_id"] == "00638"
+    assert target_payload["occurrences"][0]["source_doc_id"] == CHILD_DOC_ID
+    assert by_doc["occurrences"][0]["raw"] == "[[catalogue:work:00638|three signs]]"
     assert result["diagnostics"]["docs_emitted"] == 2
     assert result["diagnostics"]["index_tree_changed"] == 1
     assert result["diagnostics"]["recent_changed"] == 1
@@ -117,18 +119,23 @@ def test_python_docs_builder_preserves_existing_payloads_for_targeted_builds() -
     assert result["diagnostics"]["only_doc_ids"] == [CHILD_DOC_ID]
     assert PARENT_DOC_ID not in result["write_plan"]["changed_item_ids"]
 
-def test_python_docs_builder_registry_backed_references_do_not_validate_target_existence() -> None:
+def test_python_docs_builder_leaves_unresolved_catalogue_tokens_literal() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         prepare_repo(root)
-        write_source_docs(root, child_body_suffix="Missing target [[ref:work:99999|still links]].")
+        write_source_docs(
+            root,
+            child_body_suffix="Missing target [[catalogue:work:99999|still literal]].",
+        )
         result = run_builder(root)
         child = read_json(root / f"docs-viewer/scopes/studio/published/documents/by-id/{CHILD_DOC_ID}.json")
-        missing_target = read_json(root / "docs-viewer/scopes/studio/published/documents/references/by-target/work/99999.json")
+        usage_index = read_json(
+            root / "docs-viewer/scopes/studio/published/documents/semantic-tokens/index.json"
+        )
 
     assert result["diagnostics"]["warning_count"] == 0
-    assert 'href="/works/?work=99999"' in child["content_html"]
-    assert missing_target["target_kind"] == "work"
-    assert missing_target["target_id"] == "99999"
-    assert missing_target["target_status"] == "rendered"
-    assert missing_target["references"][0]["label"] == "still links"
+    assert "[[catalogue:work:99999|still literal]]" in child["content_html"]
+    assert all(
+        occurrence["target_id"] != "99999"
+        for occurrence in usage_index["occurrences"]
+    )

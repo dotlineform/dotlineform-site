@@ -18,6 +18,8 @@ if str(DOCS_SERVICES_DIR) not in sys.path:
     sys.path.insert(0, str(DOCS_SERVICES_DIR))
 
 import docs_generated_reads as generated_reads  # noqa: E402
+import docs_management_read_service as management_reads  # noqa: E402
+import docs_management_routes as routes  # noqa: E402
 from docs_scope_config import load_docs_scope_configs  # noqa: E402
 
 NON_VIEWABLE_DOC_ID = "d-20260101-000000-000001"
@@ -104,12 +106,22 @@ def write_generated_docs(root: Path) -> None:
     write_json(root / f"docs-viewer/scopes/studio/published/documents/by-id/{NON_VIEWABLE_DOC_ID}.json", {"doc_id": NON_VIEWABLE_DOC_ID})
     write_json(root / f"docs-viewer/scopes/studio/published/documents/by-id/{CHILD_DOC_ID}.json", {"doc_id": CHILD_DOC_ID})
     write_json(
-        root / "docs-viewer/scopes/studio/published/documents/references/index.json",
-        {"targets": [{"target_kind": "work", "target_id": "00638"}]},
-    )
-    write_json(
-        root / "docs-viewer/scopes/studio/published/documents/references/by-target/work/00638.json",
-        {"target_kind": "work", "target_id": "00638", "references": []},
+        root / "docs-viewer/scopes/studio/published/documents/semantic-tokens/index.json",
+        {
+            "schema_version": "docs_semantic_token_usage_index_v1",
+            "scope": "studio",
+            "occurrences": [
+                {
+                    "source_scope": "studio",
+                    "source_doc_id": CHILD_DOC_ID,
+                    "family": "catalogue",
+                    "target_type": "work",
+                    "target_id": "00638",
+                    "title": "3 symbols",
+                    "href": "/works/?work=00638",
+                }
+            ],
+        },
     )
     write_json(root / "docs-viewer/scopes/studio/published/search/index.json", {"entries": [{"doc_id": CHILD_DOC_ID}]})
 
@@ -265,18 +277,6 @@ def test_generated_doc_payload_allows_external_content_url_with_expected_path() 
     assert payload["doc_id"] == CHILD_DOC_ID
 
 
-def test_generated_references_reads_scope_index_and_target() -> None:
-    with tempfile.TemporaryDirectory() as temp_path:
-        repo_root = Path(temp_path)
-        write_generated_docs(repo_root)
-
-        index_payload = generated_reads.read_generated_references_index(repo_root, "studio")
-        target_payload = generated_reads.read_generated_reference_target(repo_root, "studio", "work", "00638")
-
-    assert index_payload["targets"][0]["target_id"] == "00638"
-    assert target_payload["target_kind"] == "work"
-
-
 def test_generated_tree_and_recent_reads_scope_payloads() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
@@ -292,6 +292,33 @@ def test_generated_tree_and_recent_reads_scope_payloads() -> None:
     assert recent["docs"][0]["doc_id"] == CHILD_DOC_ID
 
 
+def test_generated_semantic_token_usage_read_uses_scope_output() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        write_generated_docs(repo_root)
+
+        expected_path = (
+            repo_root
+            / "docs-viewer/scopes/studio/published/documents/semantic-tokens/index.json"
+        )
+        assert (
+            generated_reads.generated_semantic_tokens_index_path(repo_root, "studio")
+            == expected_path
+        )
+        payload = generated_reads.read_generated_semantic_tokens_index(
+            repo_root,
+            "studio",
+        )
+        routed = management_reads.docs_generated_read_payload(
+            repo_root,
+            routes.GENERATED_SEMANTIC_TOKENS_PATH,
+            {"scope": ["studio"]},
+        )
+
+    assert payload["occurrences"][0]["target_id"] == "00638"
+    assert routed == payload
+
+
 def test_public_generated_doc_payload_uses_tree_without_flat_index() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
@@ -302,18 +329,6 @@ def test_public_generated_doc_payload_uses_tree_without_flat_index() -> None:
         assert payload["title"] == "Library"
         assert child_payload["title"] == "Child"
         assert generated_reads.generated_scope_data_available(repo_root, "library") is True
-
-
-def test_generated_reference_target_rejects_unsafe_path_parts() -> None:
-    with tempfile.TemporaryDirectory() as temp_path:
-        repo_root = Path(temp_path)
-        write_generated_docs(repo_root)
-        try:
-            generated_reads.read_generated_reference_target(repo_root, "studio", "../work", "00638")
-        except ValueError as exc:
-            assert "unsupported characters" in str(exc)
-        else:
-            raise AssertionError("Expected unsafe reference target kind to be rejected")
 
 
 def test_generated_doc_paths_use_derived_scope_output() -> None:
@@ -441,10 +456,9 @@ def main() -> None:
     test_generated_doc_payload_requires_tree_record()
     test_generated_doc_payload_rejects_unexpected_content_url()
     test_generated_doc_payload_allows_external_content_url_with_expected_path()
-    test_generated_references_reads_scope_index_and_target()
     test_generated_tree_and_recent_reads_scope_payloads()
+    test_generated_semantic_token_usage_read_uses_scope_output()
     test_public_generated_doc_payload_uses_tree_without_flat_index()
-    test_generated_reference_target_rejects_unsafe_path_parts()
     test_generated_doc_paths_use_derived_scope_output()
     test_generated_search_path_uses_derived_scope_output()
     test_generated_reads_support_external_local_scope_payloads()

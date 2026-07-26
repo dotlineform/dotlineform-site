@@ -56,6 +56,13 @@ export function createDocsViewerReportService(options) {
         requireOkEnvelope: true
       }));
     },
+    readSemanticTokens: function (request) {
+      var scope = cleanString(request && request.scope).toLowerCase();
+      return fetchReportJson(
+        "/docs/semantic-tokens?scope=" + encodeURIComponent(scope),
+        serviceOptions
+      );
+    },
     runBrokenLinksAudit: function (request) {
       var payload = {
         scope: cleanString(request && request.scope).toLowerCase()

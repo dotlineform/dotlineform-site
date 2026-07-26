@@ -49,13 +49,6 @@ class SemanticTokenArtifactsMixin:
         docs: list[DocRecord],
         occurrences_by_doc: dict[str, list[dict[str, Any]]],
     ) -> dict[str, Any]:
-        if self.public_readonly_scope:
-            return {
-                "enabled": False,
-                "index": self.semantic_token_usage_envelope([]),
-                "by_document": {},
-                "by_target": {},
-            }
         occurrences = [
             occurrence
             for doc in docs
@@ -101,8 +94,6 @@ class SemanticTokenArtifactsMixin:
         docs: list[DocRecord],
         target_doc_ids: list[str],
     ) -> dict[str, list[dict[str, Any]]]:
-        if self.public_readonly_scope:
-            return {}
         selected = set(target_doc_ids)
         out: dict[str, list[dict[str, Any]]] = {}
         for doc in docs:

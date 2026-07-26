@@ -175,54 +175,12 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     ).then(normalizeRecentPayload);
   }
 
-  function readReferencesIndex(options) {
-    var requestSettings = options || {};
-    var targetScope = String(requestSettings.viewerScope || currentViewerScope() || "").trim().toLowerCase();
-    var baseUrl = String(requestSettings.baseUrl || "").trim();
-    if (!baseUrl) {
-      return Promise.reject(new Error("Docs scope is not configured: " + targetScope));
-    }
-    return fetchPreferredGeneratedJson(
-      appendAssetVersion(baseUrl + "/references/index.json"),
-      "Failed to load docs references",
-      managementReloadPath("/docs/references", { scope: targetScope }),
-      dataRequestOptions({
-        viewerScope: targetScope,
-        reloadNonce: "",
-        reloadExpectedDocId: ""
-      })
-    );
-  }
-
-  function readReferenceTarget(options) {
-    var requestSettings = options || {};
-    var targetScope = String(requestSettings.viewerScope || currentViewerScope() || "").trim().toLowerCase();
-    var targetKind = String(requestSettings.targetKind || "").trim();
-    var targetSlug = String(requestSettings.targetSlug || "").trim();
-    return fetchPreferredGeneratedJson(
-      appendAssetVersion(requestSettings.staticUrl),
-      "Failed to load docs reference target",
-      managementReloadPath("/docs/reference-target", {
-        scope: targetScope,
-        target_kind: targetKind,
-        target_slug: targetSlug
-      }),
-      dataRequestOptions({
-        viewerScope: targetScope,
-        reloadNonce: "",
-        reloadExpectedDocId: ""
-      })
-    );
-  }
-
   return {
     checkGeneratedDataReadCapability: checkGeneratedDataReadCapability,
     dataRequestOptions: dataRequestOptions,
     readDocsIndexTree: readDocsIndexTree,
     readDocumentPayload: readDocumentPayload,
     readRecent: readRecent,
-    readReferenceTarget: readReferenceTarget,
-    readReferencesIndex: readReferencesIndex,
     readSearchIndex: readSearchIndex,
     scopeGeneratedCapability: scopeGeneratedCapability
   };

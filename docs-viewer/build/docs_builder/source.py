@@ -195,8 +195,11 @@ class SourceLoadingMixin:
     def validate_targeted_build_prerequisites(self, docs: list[DocRecord], target_doc_ids: list[str]) -> None:
         if not (self.output_dir / "index-tree.json").exists():
             raise RuntimeError("Targeted docs build requires existing scope index tree; run a full-scope build first")
-        if not (self.references_dir / "index.json").exists():
-            raise RuntimeError("Targeted docs build requires existing references index; run a full-scope build first")
+        if not (self.semantic_tokens_dir / "index.json").exists():
+            raise RuntimeError(
+                "Targeted docs build requires existing semantic-token index; "
+                "run a full-scope build first"
+            )
         missing = [
             doc.doc_id for doc in docs
             if doc.doc_id not in target_doc_ids and not (self.items_dir / f"{doc.doc_id}.json").exists()

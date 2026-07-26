@@ -88,11 +88,11 @@ def targeted_docs_build_fallback_reason(repo_root: Path, scope: str, target_doc_
 
     output_dir = resolve_scope_path(repo_root, published_documents_path(config))
     index_tree_path = output_dir / "index-tree.json"
-    references_index_path = output_dir / "references" / "index.json"
+    semantic_token_index_path = output_dir / "semantic-tokens" / "index.json"
     if not index_tree_path.exists():
         return "full-scope fallback: existing docs index tree missing"
-    if not references_index_path.exists():
-        return "full-scope fallback: existing references index missing"
+    if not semantic_token_index_path.exists():
+        return "full-scope fallback: existing semantic-token index missing"
 
     try:
         index_payload = json.loads(index_tree_path.read_text(encoding="utf-8"))

@@ -47,12 +47,10 @@ FRONT_MATTER_PATTERN = re.compile(r"\A---\s*\n(.*?)\n---\s*\n?", re.DOTALL)
 MEDIA_TOKEN_PATTERN = re.compile(r"\[\[media:(.+?)\]\]")
 MEDIA_IMAGE_TOKEN_PATTERN = re.compile(r"!\[(?P<alt>(?:\\.|[^\]\\])*)\]\(\s*\[\[media:(?P<body>.+?)\]\]\s*\)")
 HTML_MEDIA_TOKEN_PATTERN = re.compile(r"\[\[html-media:(.+?)\]\]")
-SEMANTIC_REF_TOKEN_PATTERN = re.compile(r"\[\[ref:(.*?)\]\](\{[^}\n]*\})?", re.DOTALL)
 HTML_MEDIA_HEIGHT_PATTERN = re.compile(r"\A[1-9][0-9]{0,3}\Z")
 IMG_PATTERN = re.compile(r"<img\b([^>]*)>", re.IGNORECASE)
 HTML_ATTR_PATTERN_TEMPLATE = r"\b{}\s*=\s*([\"'])(.*?)\1"
 INTEGER_PATTERN = re.compile(r"^-?\d+$")
-SAFE_REF_KIND_PATTERN = re.compile(r"\A[a-z0-9_-]+\Z")
 MEDIA_TOKEN_ALLOWED_ATTRS = {"width", "height"}
 MEDIA_TOKEN_DIMENSION_PATTERN = re.compile(r"\A[1-9][0-9]{0,5}\Z")
 

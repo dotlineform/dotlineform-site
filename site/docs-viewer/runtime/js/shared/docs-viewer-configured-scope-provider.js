@@ -10,24 +10,6 @@ function scopeId(value) {
   return cleanString(value).toLowerCase();
 }
 
-function trimDataFilename(url) {
-  return cleanString(url).replace(/\/(?:index|index-tree)\.json(?:[?#].*)?$/, "");
-}
-
-function targetSlug(target, origin) {
-  var bucketUrl = cleanString(target && target.bucket_url);
-  if (bucketUrl) {
-    try {
-      var url = new URL(bucketUrl, origin || "http://localhost");
-      var filename = url.pathname.split("/").pop() || "";
-      if (filename.slice(-5) === ".json") return filename.slice(0, -5);
-    } catch (error) {
-      // Fall through to the target id.
-    }
-  }
-  return encodeURIComponent(cleanString(target && target.target_id));
-}
-
 export function createDocsViewerConfiguredScopeProvider(options) {
   var settings = options || {};
   var generatedData = settings.generatedData || {};
@@ -107,41 +89,10 @@ export function createDocsViewerConfiguredScopeProvider(options) {
     });
   }
 
-  function readReferences(optionsForRead) {
-    var requestSettings = optionsForRead || {};
-    var request = collectionRequest(requestSettings);
-    if (!request.config) return Promise.reject(new Error("Docs scope is not configured: " + request.scope));
-    var target = requestSettings.target || null;
-    var baseUrl = trimDataFilename(request.config.indexTreeUrl);
-    if (!baseUrl) {
-      return Promise.reject(new Error("Docs scope is not configured: " + request.scope));
-    }
-    if (!target) {
-      return generatedData.readReferencesIndex({
-        baseUrl: baseUrl,
-        viewerScope: request.scope
-      });
-    }
-
-    var targetKind = cleanString(target.target_kind);
-    var slug = targetSlug(target, settings.window && settings.window.location && settings.window.location.origin);
-    var staticUrl = cleanString(target.bucket_url);
-    if (!staticUrl) {
-      staticUrl = baseUrl + "/references/by-target/" + encodeURIComponent(targetKind) + "/" + slug + ".json";
-    }
-    return generatedData.readReferenceTarget({
-      staticUrl: staticUrl,
-      targetKind: targetKind,
-      targetSlug: slug,
-      viewerScope: request.scope
-    });
-  }
-
   var provider = {
     readDocument: readDocument,
     readIndex: readIndex,
     readRecent: readRecent,
-    readReferences: readReferences,
     readSearch: readSearch
   };
 

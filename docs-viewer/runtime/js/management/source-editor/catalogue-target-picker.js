@@ -25,7 +25,7 @@ function presentationFor(target, settings) {
 function renderMeta(presentation) {
   var meta = presentation.meta;
   if (!meta.length) return "";
-  return '<span class="docsViewerSemanticPicker__rowMeta">' + meta.map(escapeHtml).join(" · ") + "</span>";
+  return '<span class="docsViewerCatalogueTargetPicker__rowMeta">' + meta.map(escapeHtml).join(" · ") + "</span>";
 }
 
 function targetKey(target, settings) {
@@ -34,24 +34,24 @@ function targetKey(target, settings) {
 }
 
 function rowMarkup(target, index, activeIndex, selectedIndex, settings) {
-  var id = "docsViewerSemanticTargetOption-" + index;
+  var id = "docsViewerCatalogueTargetOption-" + index;
   var active = index === activeIndex;
   var selected = index === selectedIndex;
   var presentation = presentationFor(target, settings);
   return (
-    '<div class="docsViewerSemanticPicker__row' + (active ? " is-active" : "") + (selected ? " is-selected" : "") + '" ' +
+    '<div class="docsViewerCatalogueTargetPicker__row' + (active ? " is-active" : "") + (selected ? " is-selected" : "") + '" ' +
       'id="' + id + '" role="option" aria-selected="' + (selected ? "true" : "false") + '" data-target-index="' + index + '">' +
-      '<span class="docsViewerSemanticPicker__rowMain">' +
-        '<span class="docsViewerSemanticPicker__rowTitle">' + escapeHtml(presentation.title) + "</span>" +
-        '<span class="docsViewerSemanticPicker__rowKind">' + escapeHtml(presentation.kind) + "</span>" +
-        '<span class="docsViewerSemanticPicker__rowId">' + escapeHtml(presentation.id) + "</span>" +
+      '<span class="docsViewerCatalogueTargetPicker__rowMain">' +
+        '<span class="docsViewerCatalogueTargetPicker__rowTitle">' + escapeHtml(presentation.title) + "</span>" +
+        '<span class="docsViewerCatalogueTargetPicker__rowKind">' + escapeHtml(presentation.kind) + "</span>" +
+        '<span class="docsViewerCatalogueTargetPicker__rowId">' + escapeHtml(presentation.id) + "</span>" +
       "</span>" +
       renderMeta(presentation) +
     "</div>"
   );
 }
 
-export function createSemanticTargetPickerList(root, options = {}) {
+export function createCatalogueTargetPickerList(root, options = {}) {
   var settings = options || {};
   var records = [];
   var activeIndex = -1;
@@ -69,7 +69,7 @@ export function createSemanticTargetPickerList(root, options = {}) {
   }
 
   function activeOptionId() {
-    return activeIndex >= 0 ? "docsViewerSemanticTargetOption-" + activeIndex : "";
+    return activeIndex >= 0 ? "docsViewerCatalogueTargetOption-" + activeIndex : "";
   }
 
   function notifyActiveChange() {

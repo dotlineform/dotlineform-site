@@ -34,7 +34,7 @@ from test_docs_document_transfer_apply import (  # noqa: E402
     write_bytes,
     write_doc,
     write_route_config,
-    write_semantic_reference_registry,
+    write_semantic_token_contract,
     write_site_tools_config,
 )
 
@@ -565,7 +565,7 @@ def test_apply_move_rebuilds_loadable_target_and_removes_source_outputs(
 ) -> None:
     repo_root = make_repo(tmp_path)
     write_site_tools_config(repo_root)
-    write_semantic_reference_registry(repo_root)
+    write_semantic_token_contract(repo_root)
     write_route_config(repo_root)
     source_root = local_documents_root(repo_root, "source")
     for path in source_root.glob("*.md"):

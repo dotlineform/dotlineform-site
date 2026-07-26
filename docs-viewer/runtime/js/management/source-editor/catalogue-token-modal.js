@@ -15,8 +15,8 @@ import {
   parseCatalogueToken
 } from "./catalogue-token-parser.js";
 import {
-  createSemanticTargetPickerList
-} from "./semantic-target-picker.js";
+  createCatalogueTargetPickerList
+} from "./catalogue-target-picker.js";
 
 var SEARCH_INPUT_ID = "docsViewerCatalogueTokenSearch";
 var RESULTS_ID = "docsViewerCatalogueTokenResults";
@@ -32,7 +32,7 @@ function modalBody(searchQuery, selectionTitle) {
         '<input class="docsViewer__fieldInput" id="' + SEARCH_INPUT_ID + '" type="search" role="combobox" aria-autocomplete="list" aria-controls="' + RESULTS_ID + '" aria-expanded="true" autocomplete="off" spellcheck="false" value="' + escapeHtml(searchQuery) + '" disabled>' +
       "</label>" +
       '<p class="docsViewerCatalogueTokenModal__searchStatus muted small" data-role="catalogue-search-status">Loading Catalogue…</p>' +
-      '<div class="docsViewerSemanticPicker__results docsViewerCatalogueTokenModal__results" id="' + RESULTS_ID + '" role="listbox" aria-label="Catalogue targets" data-role="catalogue-results" tabindex="0"></div>' +
+      '<div class="docsViewerCatalogueTargetPicker__results docsViewerCatalogueTokenModal__results" id="' + RESULTS_ID + '" role="listbox" aria-label="Catalogue targets" data-role="catalogue-results" tabindex="0"></div>' +
       '<div class="docsViewerCatalogueTokenModal__selected" data-role="catalogue-selected" hidden></div>' +
       '<label class="docsViewer__field" for="' + TITLE_INPUT_ID + '">' +
         '<span class="docsViewer__fieldLabel">Title</span>' +
@@ -130,7 +130,7 @@ export function openCatalogueTokenModal(options = {}) {
         }
       }
 
-      state.list = createSemanticTargetPickerList(results, {
+      state.list = createCatalogueTargetPickerList(results, {
         onActiveChange: function (_target, optionId) {
           [searchInput, results].filter(Boolean).forEach(function (owner) {
             if (optionId) owner.setAttribute("aria-activedescendant", optionId);

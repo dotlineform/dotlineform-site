@@ -503,15 +503,10 @@
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260515-000000-f43740.json"
         },
         {
-          "doc_id": "d-20260518-214029-eb6598",
-          "title": "Semantic References",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260518-214029-eb6598.json",
+          "doc_id": "d-20260726-181045-a7c2e1",
+          "title": "Semantic Tokens Report",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-181045-a7c2e1.json",
           "ui_status": "report"
-        },
-        {
-          "doc_id": "d-20260602-210246-394018",
-          "title": "Semantic References Implementation",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-210246-394018.json"
         },
         {
           "doc_id": "d-20260514-123140-83239c",
@@ -1192,5 +1187,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-26T12:30:31Z"
+  "generated_at": "2026-07-26T17:15:16Z"
 }

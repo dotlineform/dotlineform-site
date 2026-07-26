@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import json
-import re
 from pathlib import Path
 from typing import Any, Dict
 from urllib.parse import urlparse
@@ -19,10 +18,6 @@ from docs_scope_config import (
     resolve_scope_path,
     scope_uses_external_data,
 )
-
-
-SAFE_REF_KIND_PATTERN = re.compile(r"^[A-Za-z0-9_-]+$")
-SAFE_REF_TARGET_SLUG_PATTERN = re.compile(r"^[A-Za-z0-9_.%+-]+$")
 
 
 def browser_path_for_repo_relative(path: Path) -> str:
@@ -52,6 +47,10 @@ def generated_recent_path(repo_root: Path, scope: str) -> Path:
     return generated_docs_output_root(repo_root, scope) / "recent.json"
 
 
+def generated_semantic_tokens_index_path(repo_root: Path, scope: str) -> Path:
+    return generated_docs_output_root(repo_root, scope) / "semantic-tokens" / "index.json"
+
+
 def generated_doc_payload_path(repo_root: Path, scope: str, doc_id: str) -> Path:
     if not is_immutable_doc_id(doc_id):
         raise ValueError("doc_id must use the immutable document ID format")
@@ -61,18 +60,6 @@ def generated_doc_payload_path(repo_root: Path, scope: str, doc_id: str) -> Path
 def generated_search_index_path(repo_root: Path, scope: str) -> Path:
     config = generated_scope_config(repo_root, scope)
     return resolve_scope_path(repo_root, published_search_path(config))
-
-
-def generated_references_index_path(repo_root: Path, scope: str) -> Path:
-    return generated_docs_output_root(repo_root, scope) / "references" / "index.json"
-
-
-def generated_reference_target_path(repo_root: Path, scope: str, target_kind: str, target_slug: str) -> Path:
-    if not SAFE_REF_KIND_PATTERN.match(target_kind):
-        raise ValueError("target_kind contains unsupported characters")
-    if not SAFE_REF_TARGET_SLUG_PATTERN.match(target_slug):
-        raise ValueError("target_slug contains unsupported characters")
-    return generated_docs_output_root(repo_root, scope) / "references" / "by-target" / target_kind / f"{target_slug}.json"
 
 
 def read_generated_json(path: Path, label: str) -> Dict[str, Any]:
@@ -106,24 +93,17 @@ def read_generated_recent(repo_root: Path, scope: str) -> Dict[str, Any]:
     )
 
 
+def read_generated_semantic_tokens_index(repo_root: Path, scope: str) -> Dict[str, Any]:
+    return read_generated_json(
+        generated_semantic_tokens_index_path(repo_root, scope),
+        f"generated semantic-token usage index for {scope}",
+    )
+
+
 def read_generated_search_index(repo_root: Path, scope: str) -> Dict[str, Any]:
     return read_generated_json(
         generated_search_index_path(repo_root, scope),
         f"generated search index for {scope}",
-    )
-
-
-def read_generated_references_index(repo_root: Path, scope: str) -> Dict[str, Any]:
-    return read_generated_json(
-        generated_references_index_path(repo_root, scope),
-        f"generated references index for {scope}",
-    )
-
-
-def read_generated_reference_target(repo_root: Path, scope: str, target_kind: str, target_slug: str) -> Dict[str, Any]:
-    return read_generated_json(
-        generated_reference_target_path(repo_root, scope, target_kind, target_slug),
-        f"generated reference target for {scope}",
     )
 
 

@@ -168,38 +168,6 @@ def test_docs_viewer_public_by_id_contract_fixture() -> None:
     assert_contains(payload["content_html"], "<h1 id=\"public-contract-fixture\">", "public by-id HTML semantics")
 
 
-def test_docs_viewer_reference_payload_contract_fixtures() -> None:
-    references = load_fixture()["docs_viewer"]["references"]
-    index_fixture = references["index_json"]
-    target_fixture = references["by_target_json"]
-
-    assert_required_keys(index_fixture, index_fixture["required_top_level_keys"], "references index")
-    assert_equal(index_fixture["header"]["schema"], "docs_semantic_references_index_v1", "references index schema")
-    assert_equal(index_fixture["header"]["target_count"], len(index_fixture["targets"]), "references target count")
-    target = index_fixture["targets"][0]
-    for key in ("target_kind", "target_id", "target_key", "target_title", "target_status", "target_href", "count"):
-        assert_true(target.get(key) not in (None, ""), f"references index target {key}")
-    assert_contains(target["bucket_url"], "/references/by-target/work/00638.json", "target bucket URL")
-
-    assert_required_keys(target_fixture, target_fixture["required_top_level_keys"], "references by-target")
-    assert_equal(target_fixture["header"]["schema"], "docs_semantic_references_by_target_v1", "target schema")
-    assert_equal(target_fixture["header"]["count"], len(target_fixture["references"]), "target reference count")
-    for key in ("target_kind", "target_id", "target_key", "target_status", "target_href", "target_title", "count"):
-        assert_true(target_fixture.get(key) not in (None, ""), f"target payload {key}")
-    sample_reference = target_fixture["references"][0]
-    for key in (
-        "source_scope",
-        "source_doc_id",
-        "source_title",
-        "source_viewer_url",
-        "label",
-        "action",
-        "ordinal",
-    ):
-        assert_true(sample_reference.get(key) not in (None, ""), f"reference sample {key}")
-    assert_equal(sample_reference["ordinal"], 1, "reference ordinal")
-
-
 def test_docs_search_payload_contract_fixture() -> None:
     fixture = load_fixture()["docs_search"]["index_json"]
     header = fixture["header"]
@@ -256,7 +224,6 @@ def main() -> None:
     test_docs_viewer_recent_contract_fixture()
     test_docs_viewer_by_id_contract_fixture()
     test_docs_viewer_public_by_id_contract_fixture()
-    test_docs_viewer_reference_payload_contract_fixtures()
     test_docs_search_payload_contract_fixture()
     test_catalogue_search_payload_contract_fixture()
     test_catalogue_prose_content_html_contract_fixtures()

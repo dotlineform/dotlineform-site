@@ -28,7 +28,7 @@ import build_docs  # noqa: E402
 import build_search  # noqa: E402
 from build_docs_test_support import (  # noqa: E402
     write_route_config,
-    write_semantic_reference_registry,
+    write_semantic_token_contract,
     write_site_tools_config,
 )
 
@@ -413,7 +413,7 @@ def test_apply_copy_builds_loadable_target_documents_and_search_once(
 ) -> None:
     repo_root = make_repo(tmp_path)
     write_site_tools_config(repo_root)
-    write_semantic_reference_registry(repo_root)
+    write_semantic_token_contract(repo_root)
     write_route_config(repo_root)
     write_doc(
         local_documents_root(repo_root, "source"),

@@ -473,10 +473,10 @@ def assert_modal_insertion_cancellation_and_stale_guard(page: Page) -> None:
                         .map(node => ({
                             tabIndex: node.tabIndex,
                             tagName: node.tagName,
-                            targetType: node.querySelector('.docsViewerSemanticPicker__rowKind').textContent,
-                            targetId: node.querySelector('.docsViewerSemanticPicker__rowId').textContent,
-                            title: node.querySelector('.docsViewerSemanticPicker__rowTitle').textContent,
-                            meta: node.querySelector('.docsViewerSemanticPicker__rowMeta')?.textContent || ''
+                            targetType: node.querySelector('.docsViewerCatalogueTargetPicker__rowKind').textContent,
+                            targetId: node.querySelector('.docsViewerCatalogueTargetPicker__rowId').textContent,
+                            title: node.querySelector('.docsViewerCatalogueTargetPicker__rowTitle').textContent,
+                            meta: node.querySelector('.docsViewerCatalogueTargetPicker__rowMeta')?.textContent || ''
                         }))
                 };
                 search.dispatchEvent(new KeyboardEvent('keydown', {
@@ -548,10 +548,10 @@ def assert_modal_insertion_cancellation_and_stale_guard(page: Page) -> None:
                     rowCount: root.querySelectorAll('[data-target-index]').length,
                     selected: row && row.getAttribute('aria-selected') === 'true',
                     targetId: row && row.querySelector(
-                        '.docsViewerSemanticPicker__rowId'
+                        '.docsViewerCatalogueTargetPicker__rowId'
                     ).textContent,
                     targetType: row && row.querySelector(
-                        '.docsViewerSemanticPicker__rowKind'
+                        '.docsViewerCatalogueTargetPicker__rowKind'
                     ).textContent,
                     title: title.value
                 };
@@ -1191,7 +1191,7 @@ def assert_real_keyboard_tab_and_scroll_flow(page: Page) -> None:
             };
         }"""
     )
-    if keyboard_state["activeDescendant"] != "docsViewerSemanticTargetOption-12":
+    if keyboard_state["activeDescendant"] != "docsViewerCatalogueTargetOption-12":
         raise AssertionError(f"Arrow keys did not move the active Catalogue result: {keyboard_state!r}")
     if keyboard_state["scrollTop"] <= 0:
         raise AssertionError(f"Arrow-key navigation did not reveal the active result: {keyboard_state!r}")

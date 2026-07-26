@@ -178,19 +178,24 @@
   grid-template-columns: minmax(0, 1fr);
 }
 
+.docsViewerReport[data-report-columns="2"] .docsViewerReport__head,
+.docsViewerReport[data-report-columns="2"] .docsViewerReport__row{
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .docsViewerReport[data-report-id="reports_list"] .docsViewerReport__head,
 .docsViewerReport[data-report-id="reports_list"] .docsViewerReport__row{
   grid-template-columns: minmax(12rem, 1fr) 7rem minmax(12rem, 1fr);
 }
 
-.docsViewerReport[data-report-id="semantic_references"] .docsViewerReport__head,
-.docsViewerReport[data-report-id="semantic_references"] .docsViewerReport__row{
-  grid-template-columns: minmax(12rem, 1fr) 5rem minmax(14rem, 1.4fr);
-}
-
 .docsViewerReport[data-report-id="docs_broken_links"] .docsViewerReport__head,
 .docsViewerReport[data-report-id="docs_broken_links"] .docsViewerReport__row{
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.docsViewerReport[data-report-id="semantic_tokens"] .docsViewerReport__head,
+.docsViewerReport[data-report-id="semantic_tokens"] .docsViewerReport__row{
+  grid-template-columns: minmax(10rem, 1fr) minmax(13rem, 1fr) minmax(10rem, 1fr);
 }
 
 .docsViewerReport__head{

@@ -53,9 +53,200 @@ def install_fixture(page: Page) -> None:
             const controlSurfaceHost = await import('/docs-viewer/runtime/js/shared/docs-viewer-control-surface-host.js');
             const appControlRenderers = await import('/docs-viewer/runtime/js/shared/docs-viewer-app-control-renderers.js');
             const appShell = await import('/docs-viewer/runtime/js/shared/docs-viewer-app-shell.js');
-            window.__docsViewerRouterModuleSmoke = { router, routeConfig, appContext, serviceContext, configuredScopeProvider, routeFeatures, appComposition, toolbarRenderer, configController, viewRegistry, mainViewRenderer, appSession, documentViewCoordinator, generatedDataRuntime, statusController, controlSurfaceHost, appControlRenderers, appShell };
+            const brokenLinksReport = await import('/docs-viewer/runtime/js/reports/docs-broken-links-report.js');
+            const semanticTokensReport = await import('/docs-viewer/runtime/js/reports/semantic-tokens-report.js');
+            const reportService = await import('/docs-viewer/runtime/js/reports/docs-viewer-report-service.js');
+            window.__docsViewerRouterModuleSmoke = { router, routeConfig, appContext, serviceContext, configuredScopeProvider, routeFeatures, appComposition, toolbarRenderer, configController, viewRegistry, mainViewRenderer, appSession, documentViewCoordinator, generatedDataRuntime, statusController, controlSurfaceHost, appControlRenderers, appShell, brokenLinksReport, semanticTokensReport, reportService };
         }"""
     )
+
+
+def assert_broken_links_report_source_handoff(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const { brokenLinksReport } = window.__docsViewerRouterModuleSmoke;
+            const root = document.createElement('div');
+            document.body.appendChild(root);
+            await brokenLinksReport.mountDocsBrokenLinksReport({
+                reportRoot: root,
+                reportMeta: { scope: 'studio' },
+                scopeConfigs: [
+                    { scope_id: 'studio', title: 'Studio', viewer_base_url: '/docs/' }
+                ],
+                viewerScope: 'studio',
+                viewerUrlForScope: (scope, docId, options) => {
+                    return '/docs/?scope=' + scope + '&doc=' + docId + (options && options.manage ? '' : '&public=1');
+                },
+                reportService: {
+                    runBrokenLinksAudit: () => Promise.resolve({
+                        ok: true,
+                        entries: [
+                            {
+                                issue_type: 'semantic_token',
+                                reason: 'missing_target',
+                                raw: '[[catalogue:work:99999|missing work]]',
+                                link_text: 'missing work',
+                                link_url: '',
+                                from_page_text: 'Semantic source',
+                                from_page_url: '/docs/?scope=studio&doc=semantic-source',
+                                from_page_scope: 'studio',
+                                from_page_doc_id: 'semantic-source'
+                            },
+                            {
+                                link_text: 'Missing document',
+                                link_url: '/docs/?scope=studio&doc=missing-document',
+                                from_page_text: 'Link source',
+                                from_page_url: '/docs/?scope=studio&doc=link-source',
+                                from_page_scope: 'studio',
+                                from_page_doc_id: 'link-source'
+                            }
+                        ]
+                    })
+                }
+            });
+            const rows = Array.from(root.querySelectorAll('.docsViewerReport__row'));
+            return {
+                status: root.querySelector('.docsViewerReport__status').textContent,
+                rows: rows.map(row => ({
+                    sourceHref: row.querySelector('.docsViewerReport__title').getAttribute('href'),
+                    issueHref: row.querySelectorAll('a')[1]
+                        ? row.querySelectorAll('a')[1].getAttribute('href')
+                        : '',
+                    text: row.textContent
+                }))
+            };
+        }"""
+    )
+    if result != {
+        "status": "2 broken links",
+        "rows": [
+            {
+                "sourceHref": "/docs/?scope=studio&doc=link-source&source=markdown",
+                "issueHref": "/docs/?scope=studio&doc=missing-document",
+                "text": "Link sourceMissing document",
+            },
+            {
+                "sourceHref": "/docs/?scope=studio&doc=semantic-source&source=markdown",
+                "issueHref": "",
+                "text": "Semantic source[[catalogue:work:99999|missing work]] — missing target",
+            },
+        ],
+    }:
+        raise AssertionError(f"broken-links report source handoff changed: {result!r}")
+
+
+def assert_semantic_tokens_report_scope_and_document_link(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const { semanticTokensReport } = window.__docsViewerRouterModuleSmoke;
+            const root = document.createElement('div');
+            document.body.appendChild(root);
+            const requestedScopes = [];
+            await semanticTokensReport.mountSemanticTokensReport({
+                reportRoot: root,
+                reportMeta: { scope: 'analysis' },
+                scopeConfigs: [
+                    { scope_id: 'studio', title: 'Studio' },
+                    { scope_id: 'analysis', title: 'Analysis' }
+                ],
+                viewerScope: 'studio',
+                viewerUrlForScope: (scope, docId) => {
+                    return '/docs/?scope=' + scope + '&doc=' + docId;
+                },
+                fetchDocsIndexTree: (scope) => {
+                    requestedScopes.push('index:' + scope);
+                    return Promise.resolve({
+                        docs: [
+                            {
+                                doc_id: 'd-20260518-180700-214487',
+                                title: '3 symbols'
+                            }
+                        ]
+                    });
+                },
+                reportService: {
+                    readSemanticTokens: ({ scope }) => {
+                        requestedScopes.push('tokens:' + scope);
+                        return Promise.resolve({
+                            scope,
+                            occurrences: [
+                                {
+                                    source_scope: scope,
+                                    source_doc_id: 'd-20260518-180700-214487',
+                                    family: 'catalogue',
+                                    target_type: 'work',
+                                    target_id: '00638',
+                                    title: '3 symbols',
+                                    raw: '[[catalogue:work:00638|3 symbols]]'
+                                }
+                            ]
+                        });
+                    }
+                }
+            });
+            const row = root.querySelector('.docsViewerReport__row');
+            const headers = () => Array.from(
+                root.querySelectorAll('.docsViewerReport__sortButton')
+            ).map((button) => button.textContent);
+            const ascendingHeaders = headers();
+            root.querySelector('[data-report-sort="title"]').click();
+            const descendingHeaders = headers();
+            window.history.replaceState({}, '', window.location.pathname);
+            return {
+                requestedScopes,
+                selectedScope: root.querySelector('select').value,
+                status: root.querySelector('.docsViewerReport__status').textContent,
+                columns: root.dataset.reportColumns,
+                ascendingHeaders,
+                descendingHeaders,
+                cells: Array.from(row.children).map((cell) => cell.textContent),
+                documentHref: row.querySelector('a').getAttribute('href')
+            };
+        }"""
+    )
+    expected = {
+        "requestedScopes": ["tokens:analysis", "index:analysis"],
+        "selectedScope": "analysis",
+        "status": "1 semantic token",
+        "columns": "3",
+        "ascendingHeaders": ["title▲", "identity", "document"],
+        "descendingHeaders": ["title▼", "identity", "document"],
+        "cells": ["3 symbols", "catalogue:work:00638", "3 symbols"],
+        "documentHref": "/docs/?scope=analysis&doc=d-20260518-180700-214487",
+    }
+    if result != expected:
+        raise AssertionError(f"semantic-tokens report contract changed: {result!r}")
+
+
+def assert_semantic_tokens_report_service_path(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const { reportService } = window.__docsViewerRouterModuleSmoke;
+            const requests = [];
+            const service = reportService.createDocsViewerReportService({
+                baseUrl: 'http://127.0.0.1:8795/',
+                fetch: (url, options) => {
+                    requests.push({ url, method: options.method });
+                    return Promise.resolve({
+                        ok: true,
+                        status: 200,
+                        json: () => Promise.resolve({ scope: 'analysis', occurrences: [] })
+                    });
+                }
+            });
+            const payload = await service.readSemanticTokens({ scope: 'Analysis' });
+            return { requests, payload };
+        }"""
+    )
+    expected = {
+        "requests": [{
+            "url": "http://127.0.0.1:8795/docs/semantic-tokens?scope=analysis",
+            "method": "GET",
+        }],
+        "payload": {"scope": "analysis", "occurrences": []},
+    }
+    if result != expected:
+        raise AssertionError(f"semantic-tokens report service path changed: {result!r}")
 
 
 def assert_control_surface_host(page: Page) -> None:
@@ -803,6 +994,22 @@ def assert_explicit_app_and_service_context(page: Page) -> None:
                 appKind: 'review',
                 routeConfig
             });
+            const sourceRoute = appContext.createDocsViewerRouteContext({
+                appKind: 'manage',
+                resolvedRouteConfig: {
+                    appKind: 'manage',
+                    defaultScopeId: 'studio',
+                    includeScopeParam: true,
+                    viewerBaseUrl: '/docs/'
+                },
+                window: {
+                    location: {
+                        origin: 'http://localhost',
+                        pathname: '/docs/',
+                        search: '?scope=studio&doc=source-doc&source=markdown'
+                    }
+                }
+            });
             const services = serviceContext.createDocsViewerServiceContext({
                 routeContext: {
                     appContext: projected,
@@ -815,6 +1022,7 @@ def assert_explicit_app_and_service_context(page: Page) -> None:
                 allowScopeQuery: projected.routeAccess.allowScopeQuery,
                 managementUi: projected.routeAccess.managementUi,
                 backendCapabilities: projected.backendCapabilities,
+                openSourceDocIdOnLoad: sourceRoute.openSourceDocIdOnLoad,
                 availability: projected.serviceAvailability,
                 generatedAuthority: services.generatedData.authority,
                 generatedBaseUrl: services.generatedData.baseUrl,
@@ -828,6 +1036,7 @@ def assert_explicit_app_and_service_context(page: Page) -> None:
         "allowScopeQuery": False,
         "managementUi": False,
         "backendCapabilities": None,
+        "openSourceDocIdOnLoad": "source-doc",
         "availability": {
             "generatedData": {"available": True, "local": True},
             "source": {"available": True},
@@ -1025,9 +1234,7 @@ def assert_configured_scope_provider(page: Page) -> None:
                 readDocsIndexTree: (options) => { calls.push(['index', options]); return Promise.resolve({ docs: [] }); },
                 readDocumentPayload: (doc, options) => { calls.push(['document', doc.doc_id, options]); return Promise.resolve({ doc_id: doc.doc_id }); },
                 readSearchIndex: (options) => { calls.push(['search', options]); return Promise.resolve({ entries: [] }); },
-                readRecent: (options) => { calls.push(['recent', options]); return Promise.resolve({ docs: [] }); },
-                readReferencesIndex: (options) => { calls.push(['references-index', options]); return Promise.resolve({ targets: [] }); },
-                readReferenceTarget: (options) => { calls.push(['reference-target', options]); return Promise.resolve({ docs: [] }); }
+                readRecent: (options) => { calls.push(['recent', options]); return Promise.resolve({ docs: [] }); }
             };
             let viewerScope = 'alpha';
             const scopeConfig = {
@@ -1056,11 +1263,6 @@ def assert_configured_scope_provider(page: Page) -> None:
             await readOnly.readDocument({ doc_id: 'doc-a', content_url: '/data/alpha/by-id/doc-a.json' });
             await readOnly.readSearch();
             await readOnly.readRecent();
-            await readOnly.readReferences({ scope: 'beta' });
-            await readOnly.readReferences({
-                scope: 'beta',
-                target: { target_kind: 'work', target_id: 'a b' }
-            });
             viewerScope = 'beta';
             await readOnly.readIndex();
 
@@ -1134,7 +1336,6 @@ def assert_configured_scope_provider(page: Page) -> None:
         "readDocument",
         "readIndex",
         "readRecent",
-        "readReferences",
         "readSearch",
     ]
     if result["readOnlyKeys"] != expected_read_only_keys:
@@ -1165,13 +1366,6 @@ def assert_configured_scope_provider(page: Page) -> None:
         ["document", "doc-a", {"docId": "doc-a", "viewerScope": "alpha"}],
         ["search", {"searchIndexUrl": "/search/alpha/index.json", "viewerScope": "alpha"}],
         ["recent", {"recentUrl": "/data/alpha/recent.json", "viewerScope": "alpha"}],
-        ["references-index", {"baseUrl": "/data/beta", "viewerScope": "beta"}],
-        ["reference-target", {
-            "staticUrl": "/data/beta/references/by-target/work/a%20b.json",
-            "targetKind": "work",
-            "targetSlug": "a%20b",
-            "viewerScope": "beta",
-        }],
         ["index", {"indexTreeUrl": "/data/beta/index-tree.json", "viewerScope": "beta"}],
     ]:
         raise AssertionError(f"configured-scope provider transport delegation changed: {result!r}")
@@ -1405,6 +1599,9 @@ def run_smoke(page: Page, base_url: str) -> None:
     assert_view_mode_control_registry(page)
     assert_control_surface_host(page)
     assert_app_shell_control_surface_mounts(page)
+    assert_broken_links_report_source_handoff(page)
+    assert_semantic_tokens_report_scope_and_document_link(page)
+    assert_semantic_tokens_report_service_path(page)
     assert_configured_scope_provider(page)
     assert_phase_five_runtime_owners(page)
 

@@ -196,8 +196,7 @@ def exercise_review_route(page: Page, base_url: str, timeout_ms: int) -> None:
         "/docs/recent",
         "/docs/doc",
         "/docs/search",
-        "/docs/references",
-        "/docs/reference-target",
+        "/docs/semantic-tokens",
         "/docs/source",
     )
     if any(any(path in url for path in configured_scope_paths) for url in requests):

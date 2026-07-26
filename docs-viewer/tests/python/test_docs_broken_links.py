@@ -65,8 +65,78 @@ def write_public_reader_doc_payload(repo_root: Path, scope: str, doc_id: str, ti
     )
 
 
+def write_semantic_token_contract(repo_root: Path) -> None:
+    write_json(
+        repo_root / "docs-viewer/config/semantic-tokens/registry.json",
+        {
+            "schema_version": "docs_semantic_token_registry_v1",
+            "target_lookup_url": "/docs-viewer/data/generated/semantic-tokens/target-lookup.json",
+            "families": [
+                {
+                    "schema_version": "docs_semantic_token_family_definition_v1",
+                    "key": "catalogue",
+                    "labels": {},
+                    "occurrence_fields": [],
+                    "ui_contributions": {},
+                    "target_types": [
+                        {
+                            "key": "work",
+                            "label": "Work",
+                            "id_policy": {
+                                "normalizer": "digits_left_pad",
+                                "width": 5,
+                                "input_pattern": "^\\d{1,5}$",
+                                "canonical_pattern": "^\\d{5}$",
+                            },
+                            "lookup_adapter": "catalogue-work-target-lookup",
+                            "lookup_fields": ["title", "href"],
+                        }
+                    ],
+                }
+            ],
+        },
+    )
+    write_json(
+        repo_root / "docs-viewer/data/generated/semantic-tokens/target-lookup.json",
+        {
+            "schema_version": "docs_semantic_token_target_lookup_v1",
+            "targets": [
+                {
+                    "family": "catalogue",
+                    "target_type": "work",
+                    "target_id": "00638",
+                    "title": "3 symbols",
+                    "href": "/works/?work=00638",
+                },
+                {
+                    "family": "catalogue",
+                    "target_type": "work",
+                    "target_id": "00008",
+                    "title": "nerve",
+                    "href": "",
+                },
+            ],
+        },
+    )
+
+
+def write_source_doc(repo_root: Path, scope: str, body: str) -> None:
+    path = repo_root / "docs-viewer/scopes" / scope / "source/documents/source.md"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        "---\n"
+        "doc_id: source\n"
+        "title: Source\n"
+        "added_date: 2026-07-26 00:00:00\n"
+        "last_updated: 2026-07-26 00:00:00\n"
+        "---\n"
+        f"{body}",
+        encoding="utf-8",
+    )
+
+
 @contextmanager
-def make_repo(content_html: str) -> Iterator[str]:
+def make_repo(content_html: str, *, source_body: str = "") -> Iterator[str]:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
         with patch.object(docs_broken_links, "SCOPE_OUTPUT_DIRS", FIXTURE_SCOPE_OUTPUT_DIRS):
@@ -75,6 +145,7 @@ def make_repo(content_html: str) -> Iterator[str]:
                 '{"schema_version":"site_tools_config_v1"}\n',
                 encoding="utf-8",
             )
+            write_semantic_token_contract(repo_root)
             write_json(
                 repo_root / "docs-viewer/scopes/studio/published/documents/index-tree.json",
                 {
@@ -96,6 +167,7 @@ def make_repo(content_html: str) -> Iterator[str]:
                     {"schema": "docs_index_tree_v1", "docs": []},
                 )
             write_doc_payload(repo_root, "studio", "source", content_html)
+            write_source_doc(repo_root, "studio", source_body)
             yield temp_path
 
 
@@ -109,6 +181,7 @@ def make_public_repo(scope: str, content_html: str) -> Iterator[str]:
                 '{"schema_version":"site_tools_config_v1"}\n',
                 encoding="utf-8",
             )
+            write_semantic_token_contract(repo_root)
             for known_scope, output_dir in FIXTURE_SCOPE_OUTPUT_DIRS.items():
                 docs = []
                 if known_scope == scope:
@@ -124,6 +197,7 @@ def make_public_repo(scope: str, content_html: str) -> Iterator[str]:
                     {"schema": "docs_index_tree_v1", "docs": docs},
                 )
             write_public_reader_doc_payload(repo_root, scope, "source", "Source", content_html)
+            write_source_doc(repo_root, scope, "")
             yield temp_path
 
 
@@ -162,10 +236,58 @@ def test_public_reader_payloads_do_not_need_viewer_url_metadata() -> None:
     assert result["entries"][0]["from_page_url"] == "/analysis/?doc=source"
 
 
+def test_semantic_token_audit_reads_source_independently_of_rendered_usage() -> None:
+    source_body = (
+        "Resolved [[catalogue:work:00638|3 symbols]].\n"
+        "Missing [[catalogue:work:99999|missing work]].\n"
+        "No destination [[catalogue:work:00008|nerve]].\n"
+        "Unsupported [[catalogue:asset:abc|asset]].\n"
+        "`Ignored [[catalogue:work:99998|inline code]]`.\n"
+    )
+    with make_repo("<p>No semantic-token anchors here.</p>", source_body=source_body) as temp_path:
+        result = docs_broken_links.audit_docs_broken_links(Path(temp_path), "studio")
+
+    semantic_entries = [
+        entry for entry in result["entries"]
+        if entry.get("issue_type") == "semantic_token"
+    ]
+    assert [entry["reason"] for entry in semantic_entries] == [
+        "unsupported_kind",
+        "missing_target",
+        "missing_destination",
+    ]
+    assert all(entry["source_scope"] == "studio" for entry in semantic_entries)
+    assert all(entry["source_doc_id"] == "source" for entry in semantic_entries)
+    assert all(entry["source_range"]["end"] > entry["source_range"]["start"] for entry in semantic_entries)
+    assert not any("00638" in entry["raw"] for entry in semantic_entries)
+    assert not any("99998" in entry["raw"] for entry in semantic_entries)
+
+
+def test_semantic_token_source_repair_clears_the_audit() -> None:
+    with make_repo(
+        "<p>The unresolved source remains ordinary text.</p>",
+        source_body="Missing [[catalogue:work:99999|missing work]].\n",
+    ) as temp_path:
+        repo_root = Path(temp_path)
+        broken = docs_broken_links.audit_docs_broken_links(repo_root, "studio")
+        write_source_doc(
+            repo_root,
+            "studio",
+            "Resolved [[catalogue:work:00638|3 symbols]].\n",
+        )
+        repaired = docs_broken_links.audit_docs_broken_links(repo_root, "studio")
+
+    assert broken["summary"] == {"total": 1}
+    assert broken["entries"][0]["reason"] == "missing_target"
+    assert repaired["summary"] == {"total": 0}
+
+
 def main() -> None:
     tests = [
         test_missing_docs_links_inside_code_blocks_are_ignored,
         test_public_reader_payloads_do_not_need_viewer_url_metadata,
+        test_semantic_token_audit_reads_source_independently_of_rendered_usage,
+        test_semantic_token_source_repair_clears_the_audit,
     ]
     for test in tests:
         test()

@@ -200,60 +200,8 @@ def public_index_tree_payload(payload: Any, hidden_doc_ids: set[str]) -> dict[st
     return {**payload, "docs": rows}
 
 
-def public_reference_target_payload(payload: Any, hidden_doc_ids: set[str]) -> dict[str, Any] | None:
-    if not isinstance(payload, dict):
-        return payload
-    references = [
-        row
-        for row in payload.get("references", [])
-        if isinstance(row, dict) and clean_doc_id(row.get("source_doc_id")) not in hidden_doc_ids
-    ]
-    if not references:
-        return None
-    header = dict(payload.get("header") or {})
-    header["count"] = len(references)
-    return {**payload, "header": header, "count": len(references), "references": references}
-
-
-def public_references_index_payload(
-    source_payload: Any,
-    *,
-    target_payloads: dict[Path, dict[str, Any]],
-    published_root: Path,
-) -> dict[str, Any] | None:
-    if not isinstance(source_payload, dict):
-        return source_payload
-    targets: list[dict[str, Any]] = []
-    reference_count = 0
-    for relative_path, payload in sorted(target_payloads.items(), key=lambda item: item[0].as_posix()):
-        count = int(payload.get("count") or len(payload.get("references") or []))
-        reference_count += count
-        targets.append(
-            {
-                "target_key": payload.get("target_key", ""),
-                "target_kind": payload.get("target_kind", ""),
-                "target_id": payload.get("target_id", ""),
-                "target_href": payload.get("target_href", ""),
-                "target_title": payload.get("target_title", ""),
-                "target_status": payload.get("target_status", ""),
-                "count": count,
-                "bucket_url": f"/{(published_root / relative_path).as_posix()}",
-            }
-        )
-    header = dict(source_payload.get("header") or {})
-    header["count"] = reference_count
-    header["target_count"] = len(targets)
-    return {**source_payload, "header": header, "targets": targets}
-
-
 def doc_id_for_by_id_path(relative_path: Path) -> str:
     if len(relative_path.parts) == 2 and relative_path.parts[0] == "by-id" and relative_path.suffix == ".json":
-        return relative_path.stem
-    return ""
-
-
-def doc_id_for_reference_by_doc_path(relative_path: Path) -> str:
-    if len(relative_path.parts) == 3 and relative_path.parts[:2] == ("references", "by-doc") and relative_path.suffix == ".json":
         return relative_path.stem
     return ""
 
@@ -279,17 +227,14 @@ def publishable_docs_files(
     used_mermaid_projection_ids: set[str] = set()
 
     files: dict[Path, bytes] = {}
-    reference_target_payloads: dict[Path, dict[str, Any]] = {}
-    references_index_payload: Any = None
     for source_path in iter_files(working_root):
         relative_path = source_path.relative_to(working_root)
         if relative_path.parts and relative_path.parts[0] == ".publish":
             continue
+        if relative_path.parts and relative_path.parts[0] in {"references", "semantic-tokens"}:
+            continue
         by_id_doc_id = doc_id_for_by_id_path(relative_path)
         if by_id_doc_id and by_id_doc_id in hidden_doc_ids:
-            continue
-        by_doc_doc_id = doc_id_for_reference_by_doc_path(relative_path)
-        if by_doc_doc_id and by_doc_doc_id in hidden_doc_ids:
             continue
         if relative_path == Path("index-tree.json"):
             files[relative_path] = json_bytes(public_index_tree_payload(read_json(source_path), hidden_doc_ids))
@@ -299,20 +244,6 @@ def publishable_docs_files(
                 files[relative_path] = publication_recent_path.read_bytes()
             else:
                 files[relative_path] = source_path.read_bytes()
-            continue
-        if relative_path == Path("references/index.json"):
-            references_index_payload = read_json(source_path)
-            continue
-        if (
-            len(relative_path.parts) == 4
-            and relative_path.parts[:2] == ("references", "by-target")
-            and relative_path.suffix == ".json"
-        ):
-            payload = public_reference_target_payload(read_json(source_path), hidden_doc_ids)
-            if payload is None:
-                continue
-            files[relative_path] = json_bytes(payload)
-            reference_target_payloads[relative_path] = payload
             continue
         if by_id_doc_id:
             payload = read_json(source_path)
@@ -341,14 +272,6 @@ def publishable_docs_files(
             + ", ".join(path.as_posix() for path in collisions)
         )
     files.update(mermaid_variant_files)
-    if references_index_payload is not None:
-        payload = public_references_index_payload(
-            references_index_payload,
-            target_payloads=reference_target_payloads,
-            published_root=published_root,
-        )
-        if payload is not None:
-            files[Path("references/index.json")] = json_bytes(payload)
     return files
 
 

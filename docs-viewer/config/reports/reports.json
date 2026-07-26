@@ -52,19 +52,19 @@
       "presets": []
     },
     {
-      "report_id": "semantic_references",
-      "title": "Semantic References",
-      "description": "Displays generated semantic-reference targets and source docs.",
-      "default_access": "local",
-      "loader_id": "semantic_references",
-      "presets": []
-    },
-    {
       "report_id": "docs_broken_links",
       "title": "Docs Broken Links",
       "description": "Runs the Docs Viewer broken-links audit for a selected scope.",
       "default_access": "local",
       "loader_id": "docs_broken_links",
+      "presets": []
+    },
+    {
+      "report_id": "semantic_tokens",
+      "title": "Semantic Tokens",
+      "description": "Lists resolved semantic-token occurrences for a selected docs scope.",
+      "default_access": "local",
+      "loader_id": "semantic_tokens",
       "presets": []
     }
   ]

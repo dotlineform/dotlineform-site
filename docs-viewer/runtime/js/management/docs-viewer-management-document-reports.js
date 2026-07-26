@@ -25,21 +25,6 @@ function fetchDocsIndexTreeForScope(context, scope) {
   });
 }
 
-function fetchDocsReferencesIndexForScope(context, scope) {
-  var targetScope = cleanString(scope || currentViewerScope(context)).toLowerCase();
-  return context.collectionProvider.readReferences({
-    scope: targetScope
-  });
-}
-
-function fetchDocsReferenceTargetForScope(context, scope, target) {
-  var targetScope = cleanString(scope || currentViewerScope(context)).toLowerCase();
-  return context.collectionProvider.readReferences({
-    scope: targetScope,
-    target: target
-  });
-}
-
 function payloadHasReport(payload) {
   return Boolean(payload && cleanString(payload.viewer_report));
 }
@@ -57,12 +42,6 @@ export function mountDocsViewerManageDocumentExtras(context) {
     checkGeneratedDataReadCapability: settings.checkGeneratedDataReadCapability,
     content: settings.content,
     doc: settings.doc,
-    fetchDocsReferenceTarget: function (scope, target) {
-      return fetchDocsReferenceTargetForScope(settings, scope, target);
-    },
-    fetchDocsReferencesIndex: function (scope) {
-      return fetchDocsReferencesIndexForScope(settings, scope);
-    },
     fetchDocsIndexTree: function (scope) {
       return fetchDocsIndexTreeForScope(settings, scope);
     },

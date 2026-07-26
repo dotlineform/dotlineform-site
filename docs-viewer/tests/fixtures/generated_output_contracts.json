@@ -112,14 +112,14 @@
         "last_updated": "2026-06-01",
         "parent_id": "sample-roadmap-feature",
         "viewer_url": "/docs/?scope=studio&doc=contract-fixture",
-        "content_html": "<h1 id=\"contract-fixture\">Contract Fixture</h1>\n<p>Intro with <a href=\"/docs/?scope=studio&doc=sample-roadmap-feature\">feature link</a> and <code>inline code</code>.</p>\n<ul>\n<li>First item</li>\n</ul>\n<pre><code>literal token [[ref:work:00638]]</code></pre>\n<table><thead><tr><th>Name</th><th>Value</th></tr></thead><tbody><tr><td>Alpha</td><td>1</td></tr></tbody></table>\n<details><summary>Raw summary</summary><p>Trusted raw body</p></details>\n"
+        "content_html": "<h1 id=\"contract-fixture\">Contract Fixture</h1>\n<p>Intro with <a href=\"/docs/?scope=studio&doc=sample-roadmap-feature\">feature link</a> and <code>inline code</code>.</p>\n<ul>\n<li>First item</li>\n</ul>\n<pre><code>literal token [[catalogue:work:00638|3 symbols]]</code></pre>\n<table><thead><tr><th>Name</th><th>Value</th></tr></thead><tbody><tr><td>Alpha</td><td>1</td></tr></tbody></table>\n<details><summary>Raw summary</summary><p>Trusted raw body</p></details>\n"
       },
       "html_semantics_contains": [
         "<h1 id=\"contract-fixture\">Contract Fixture</h1>",
         "<a href=\"/docs/?scope=studio&doc=sample-roadmap-feature\">feature link</a>",
         "<code>inline code</code>",
         "<ul>",
-        "<pre><code>literal token [[ref:work:00638]]</code></pre>",
+        "<pre><code>literal token [[catalogue:work:00638|3 symbols]]</code></pre>",
         "<table>",
         "<details><summary>Raw summary</summary><p>Trusted raw body</p></details>"
       ],
@@ -153,77 +153,6 @@
         "date_display": "June 2026",
         "last_updated": "2026-06-01",
         "content_html": "<h1 id=\"public-contract-fixture\">Public Contract Fixture</h1>\n<p>Reader body.</p>\n"
-      }
-    },
-    "references": {
-      "index_json": {
-        "path_pattern": "<docs_scope.output>/references/index.json",
-        "required_top_level_keys": ["header", "targets"],
-        "header": {
-          "schema": "docs_semantic_references_index_v1",
-          "scope": "studio",
-          "count": 2,
-          "target_count": 1,
-          "generated_at": "timestamp"
-        },
-        "targets": [
-          {
-            "target_kind": "work",
-            "target_id": "00638",
-            "target_key": "work:00638",
-            "target_title": "3 symbols",
-            "target_status": "published",
-            "target_href": "/works/?work=00638",
-            "count": 2,
-            "bucket_url": "/docs-viewer/scopes/studio/published/documents/references/by-target/work/00638.json"
-          }
-        ]
-      },
-      "by_target_json": {
-        "path_pattern": "<docs_scope.output>/references/by-target/<target_kind>/<target_id>.json",
-        "required_top_level_keys": [
-          "header",
-          "target_key",
-          "target_kind",
-          "target_id",
-          "target_href",
-          "target_title",
-          "target_status",
-          "count",
-          "references"
-        ],
-        "header": {
-          "schema": "docs_semantic_references_by_target_v1",
-          "scope": "studio",
-          "count": 2
-        },
-        "target_key": "work:00638",
-        "target_kind": "work",
-        "target_id": "00638",
-        "target_href": "/works/?work=00638",
-        "target_title": "3 symbols",
-        "target_status": "published",
-        "count": 2,
-        "references": [
-          {
-            "source_scope": "studio",
-            "source_doc_id": "contract-fixture",
-            "source_title": "Contract Fixture",
-            "source_viewer_url": "/docs/?scope=studio&doc=contract-fixture",
-            "label": "three signs",
-            "action": "link",
-            "ordinal": 1
-          },
-          {
-            "source_scope": "studio",
-            "source_doc_id": "other-contract-fixture",
-            "source_title": "Other Contract Fixture",
-            "source_viewer_url": "/docs/?scope=studio&doc=other-contract-fixture",
-            "label": "3 symbols",
-            "action": "link",
-            "ordinal": 2
-          }
-        ]
       }
     }
   },

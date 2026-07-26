@@ -277,7 +277,9 @@ def render_catalogue_token(token: SemanticTokenOccurrence, target: dict[str, Any
     )
 
 
-def load_semantic_token_targets(repo_root: Path) -> dict[tuple[str, str, str], dict[str, Any]]:
+def load_semantic_token_target_records(
+    repo_root: Path,
+) -> dict[tuple[str, str, str], dict[str, Any]]:
     payload = read_json(repo_root / SEMANTIC_TOKEN_TARGET_LOOKUP_PATH)
     if (
         not isinstance(payload, dict)
@@ -294,7 +296,7 @@ def load_semantic_token_targets(repo_root: Path) -> dict[tuple[str, str, str], d
         target_id = str(raw_target.get("target_id") or "").strip()
         title = str(raw_target.get("title") or "").strip()
         href = str(raw_target.get("href") or "").strip()
-        if not family or not target_type or not target_id or not title or not href.startswith("/"):
+        if not family or not target_type or not target_id or not title:
             continue
         targets[(family, target_type, target_id)] = {
             "family": family,
@@ -313,6 +315,14 @@ def load_semantic_token_targets(repo_root: Path) -> dict[tuple[str, str, str], d
     return targets
 
 
+def load_semantic_token_targets(repo_root: Path) -> dict[tuple[str, str, str], dict[str, Any]]:
+    return {
+        key: target
+        for key, target in load_semantic_token_target_records(repo_root).items()
+        if str(target.get("href") or "").startswith("/")
+    }
+
+
 class SemanticTokensMixin:
     def resolve_semantic_tokens(
         self,
@@ -321,9 +331,6 @@ class SemanticTokensMixin:
         doc: DocRecord,
         occurrences_by_doc: dict[str, list[dict[str, Any]]],
     ) -> str:
-        if self.public_readonly_scope:
-            occurrences_by_doc[doc.doc_id] = []
-            return markdown
         occurrences: list[dict[str, Any]] = []
 
         def replace(token: SemanticTokenOccurrence) -> str:

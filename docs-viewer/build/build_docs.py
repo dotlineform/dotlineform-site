@@ -42,8 +42,6 @@ from docs_builder.common import (
     MEDIA_TOKEN_PATTERN,
     MEDIA_TOKEN_ALLOWED_ATTRS,
     MEDIA_TOKEN_DIMENSION_PATTERN,
-    SAFE_REF_KIND_PATTERN,
-    SEMANTIC_REF_TOKEN_PATTERN,
     SITE_DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH,
     browser_path_for_repo_relative,
     html_attr,
@@ -67,7 +65,6 @@ from docs_builder.common import (
 )
 from docs_builder.pipeline import DocsDataBuilder
 from docs_builder.rendering import add_missing_image_titles
-from docs_builder.semantic_references import SemanticRefToken
 from docs_builder.source import (
     DocRecord,
     FrontMatterSyntaxError,

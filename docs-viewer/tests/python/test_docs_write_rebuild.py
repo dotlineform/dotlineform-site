@@ -304,9 +304,12 @@ def test_targeted_docs_build_uses_index_tree_without_flat_index() -> None:
             """{"docs":[{"doc_id":"library","children":[{"doc_id":"child"}]}]}""",
             encoding="utf-8",
         )
-        (repo_root / "docs-viewer/scopes/library/published/documents/references").mkdir(parents=True)
-        (repo_root / "docs-viewer/scopes/library/published/documents/references/index.json").write_text("{}", encoding="utf-8")
-
+        semantic_token_index = (
+            repo_root
+            / "docs-viewer/scopes/library/published/documents/semantic-tokens/index.json"
+        )
+        semantic_token_index.parent.mkdir(parents=True)
+        semantic_token_index.write_text('{"occurrences":[]}', encoding="utf-8")
         reason = write_rebuild.targeted_docs_build_fallback_reason(repo_root, "library", ["child"])
 
     assert reason == ""
@@ -339,9 +342,12 @@ def test_targeted_docs_build_falls_back_for_unindexed_source_without_payload() -
             """{"docs":[{"doc_id":"library","children":[{"doc_id":"child"}]}]}""",
             encoding="utf-8",
         )
-        (repo_root / "docs-viewer/scopes/library/published/documents/references").mkdir(parents=True)
-        (repo_root / "docs-viewer/scopes/library/published/documents/references/index.json").write_text("{}", encoding="utf-8")
-
+        semantic_token_index = (
+            repo_root
+            / "docs-viewer/scopes/library/published/documents/semantic-tokens/index.json"
+        )
+        semantic_token_index.parent.mkdir(parents=True)
+        semantic_token_index.write_text('{"occurrences":[]}', encoding="utf-8")
         reason = write_rebuild.targeted_docs_build_fallback_reason(repo_root, "library", ["child"])
 
     assert reason == "full-scope fallback: existing payloads missing for unselected docs"

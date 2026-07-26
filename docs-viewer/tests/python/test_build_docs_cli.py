@@ -188,7 +188,10 @@ def test_python_docs_builder_cli_dry_run_does_not_write_outputs() -> None:
         assert "docs would write: 2" in stdout
         assert "warnings: 0" in stdout
         assert diagnostics_from_stdout(stdout)["doc_payloads_changed"] == 2
-        assert not (root / "docs-viewer/scopes/studio/published/documents/references/index.json").exists()
+        assert not (
+            root
+            / "docs-viewer/scopes/studio/published/documents/semantic-tokens/index.json"
+        ).exists()
         assert not (root / "docs-viewer/config/defaults/docs-viewer-config.json").exists()
         assert not (root / "docs-viewer/config/defaults/docs-viewer-public-config.json").exists()
 
@@ -219,11 +222,11 @@ def test_python_docs_builder_cli_reports_unchanged_second_write() -> None:
     assert "Docs Viewer public browser config: unchanged" in stdout
     assert "Docs build (write) scope=studio" in stdout
     assert "docs wrote: 0" in stdout
-    assert "references wrote: 0" in stdout
+    assert "semantic tokens wrote: 0" in stdout
     assert diagnostics["doc_payloads_changed"] == 0
-    assert diagnostics["reference_index_changed"] == 0
-    assert diagnostics["reference_by_doc_payloads_changed"] == 0
-    assert diagnostics["reference_by_target_payloads_changed"] == 0
+    assert diagnostics["semantic_token_index_changed"] == 0
+    assert diagnostics["semantic_token_by_document_payloads_changed"] == 0
+    assert diagnostics["semantic_token_by_target_payloads_changed"] == 0
 
 def test_python_docs_builder_cli_targeted_write_updates_selected_doc_only() -> None:
     with tempfile.TemporaryDirectory() as temp_path:

@@ -21,6 +21,18 @@ from urllib.parse import parse_qs, quote, urljoin, urlparse
 from docs_scope_config import DOCS_SCOPE_CONFIGS, published_documents_path
 
 
+BUILD_DIR = Path(__file__).resolve().parents[1] / "build"
+if str(BUILD_DIR) not in sys.path:
+    sys.path.insert(0, str(BUILD_DIR))
+
+from docs_builder.semantic_token_registry import load_semantic_token_registry
+from docs_builder.semantic_tokens import (
+    load_semantic_token_target_records,
+    parse_catalogue_tokens,
+)
+from docs_source_model import load_scope_docs_for_config
+
+
 SCOPE_OUTPUT_DIRS = {scope: published_documents_path(config) for scope, config in DOCS_SCOPE_CONFIGS.items()}
 TEMP_BASE_URL = "https://dotlineform.local"
 WHITESPACE_PATTERN = re.compile(r"\s+")
@@ -250,6 +262,46 @@ def is_same_doc_fragment_link(current_doc: DocMeta, target: dict[str, str]) -> b
     return False
 
 
+def semantic_token_broken_entries(repo_root: Path, scope: str) -> list[dict[str, Any]]:
+    registry = load_semantic_token_registry(repo_root)
+    if registry is None:
+        raise ValueError("Semantic-token registry is unavailable.")
+    targets_by_key = load_semantic_token_target_records(repo_root)
+    entries: list[dict[str, Any]] = []
+    for doc in load_scope_docs_for_config(repo_root, DOCS_SCOPE_CONFIGS[scope]):
+        for token in parse_catalogue_tokens(doc.body, registry=registry):
+            target = targets_by_key.get((token.family, token.target_type, token.target_id))
+            reason = ""
+            if not token.supported:
+                reason = "unsupported_kind"
+            elif target is None:
+                reason = "missing_target"
+            elif not str(target.get("href") or "").strip().startswith("/"):
+                reason = "missing_destination"
+            if not reason:
+                continue
+            entries.append(
+                {
+                    "issue_type": "semantic_token",
+                    "source_scope": scope,
+                    "source_doc_id": doc.doc_id,
+                    "source_range": token.source_range,
+                    "raw": token.raw,
+                    "family": token.family,
+                    "target_type": token.target_type,
+                    "target_id": token.target_id,
+                    "reason": reason,
+                    "link_text": token.title,
+                    "link_url": str((target or {}).get("href") or "").strip(),
+                    "from_page_text": doc.title,
+                    "from_page_url": viewer_url_for(scope, doc.doc_id),
+                    "from_page_scope": scope,
+                    "from_page_doc_id": doc.doc_id,
+                }
+            )
+    return entries
+
+
 def audit_docs_broken_links(repo_root: Path, scope: str) -> dict[str, Any]:
     normalized_scope = normalize_scope(scope)
     docs_by_key: dict[tuple[str, str], DocMeta] = {}
@@ -258,7 +310,10 @@ def audit_docs_broken_links(repo_root: Path, scope: str) -> dict[str, Any]:
             docs_by_key[(meta.scope, meta.doc_id)] = meta
 
     audited_docs = [load_doc_payload(repo_root, meta) for meta in load_index_tree(repo_root, normalized_scope)]
-    entries: list[dict[str, str]] = []
+    entries: list[dict[str, Any]] = semantic_token_broken_entries(
+        repo_root,
+        normalized_scope,
+    )
 
     for doc in audited_docs:
         for anchor in collect_anchors(doc.content_html):
@@ -308,9 +363,9 @@ def audit_docs_broken_links(repo_root: Path, scope: str) -> dict[str, Any]:
 
     entries.sort(
         key=lambda item: (
-            item["from_page_text"].lower(),
-            item["link_text"].lower(),
-            item["link_url"].lower(),
+            str(item.get("from_page_text") or "").lower(),
+            str(item.get("link_text") or item.get("raw") or "").lower(),
+            str(item.get("link_url") or item.get("reason") or "").lower(),
         )
     )
 
@@ -331,6 +386,13 @@ def print_human_summary(payload: dict[str, Any]) -> None:
     print(f"Docs broken links for {scope}: {total} issue(s)")
     for entry in payload.get("entries") or []:
         if not isinstance(entry, dict):
+            continue
+        if entry.get("issue_type") == "semantic_token":
+            print(
+                f"- {normalize_text(entry.get('raw'))} "
+                f"({normalize_text(entry.get('reason'))}, from "
+                f"{normalize_text(entry.get('from_page_text'))})"
+            )
             continue
         print(
             f"- {normalize_text(entry.get('link_text'))} -> {normalize_text(entry.get('link_url'))} "

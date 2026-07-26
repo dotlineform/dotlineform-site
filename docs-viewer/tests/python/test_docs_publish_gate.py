@@ -129,37 +129,48 @@ def prepare_publish_repo(root: Path) -> None:
     write_json(root / "docs-viewer/scopes/library/published/documents/by-id/hidden-child.json", {"title": "Hidden Child"})
     write_json(root / "docs-viewer/scopes/library/published/documents/by-id/manage-root.json", {"title": "Manage Root"})
     write_json(
-        root / "docs-viewer/scopes/library/published/documents/references/index.json",
+        root / "docs-viewer/scopes/library/published/documents/semantic-tokens/index.json",
         {
-            "header": {"schema": "docs_semantic_references_index_v1", "scope": "library", "count": 1, "target_count": 1},
-            "targets": [],
+            "schema_version": "docs_semantic_token_usage_index_v1",
+            "scope": "library",
+            "occurrences": [],
         },
     )
     write_json(
-        root / "docs-viewer/scopes/library/published/documents/references/by-doc/hidden.json",
+        root / "docs-viewer/scopes/library/published/documents/semantic-tokens/by-document/hidden.json",
         {
-            "header": {"schema": "docs_semantic_references_by_doc_v1", "scope": "library", "doc_id": "hidden", "count": 1},
-            "references": [{"source_doc_id": "hidden", "target_kind": "work", "target_id": "00638"}],
+            "schema_version": "docs_semantic_token_usage_index_v1",
+            "scope": "library",
+            "source_doc_id": "hidden",
+            "occurrences": [],
         },
     )
     write_json(
-        root / "docs-viewer/scopes/library/published/documents/references/by-target/work/00638.json",
+        root / "docs-viewer/scopes/library/published/documents/semantic-tokens/by-target/catalogue/work/00638.json",
         {
-            "header": {"schema": "docs_semantic_references_by_target_v1", "scope": "library", "count": 1},
-            "target_key": "work:00638",
-            "target_kind": "work",
-            "target_id": "00638",
-            "target_href": "/works/?work=00638",
-            "target_title": "3 symbols",
-            "target_status": "published",
-            "count": 1,
-            "references": [{"source_doc_id": "hidden", "source_title": "Hidden"}],
+            "schema_version": "docs_semantic_token_usage_index_v1",
+            "scope": "library",
+            "target": {
+                "family": "catalogue",
+                "target_type": "work",
+                "target_id": "00638",
+                "href": "/works/?work=00638",
+            },
+            "occurrences": [],
         },
     )
     write_json(root / "docs-viewer/scopes/library/published/search/index.json", {"entries": [{"id": "library"}]})
     write_json(root / "site/assets/data/docs/scopes/library/index-tree.json", {"docs": []})
     write_json(root / "site/assets/data/docs/scopes/library/by-id/stale.json", {"title": "Stale"})
     write_json(root / "site/assets/data/docs/scopes/library/by-id/hidden.json", {"title": "Old Hidden"})
+    write_json(
+        root / "site/assets/data/docs/scopes/library/semantic-tokens/index.json",
+        {"schema_version": "stale"},
+    )
+    write_json(
+        root / "site/assets/data/docs/scopes/library/references/index.json",
+        {"schema_version": "stale-pilot"},
+    )
     write_text(
         root / "site/assets/data/docs/scopes/library/media/html/widget.html",
         "<!doctype html><title>Widget</title>",
@@ -185,18 +196,16 @@ def test_publish_confirm_reports_changes_and_apply_syncs_stale_files() -> None:
         assert applied["operation"] == "apply"
         public_tree = json.loads((repo_root / "site/assets/data/docs/scopes/library/index-tree.json").read_text(encoding="utf-8"))
         recent = json.loads((repo_root / "site/assets/data/docs/scopes/library/recent.json").read_text(encoding="utf-8"))
-        references = json.loads((repo_root / "site/assets/data/docs/scopes/library/references/index.json").read_text(encoding="utf-8"))
 
         assert public_tree["docs"][0]["doc_id"] == "library"
         assert "children" not in public_tree["docs"][0]
         assert recent["docs"][0]["doc_id"] == "library"
-        assert references["header"]["count"] == 0
         assert (repo_root / "site/assets/data/docs/scopes/library/by-id/library.json").exists()
         assert not (repo_root / "site/assets/data/docs/scopes/library/by-id/hidden.json").exists()
         assert not (repo_root / "site/assets/data/docs/scopes/library/by-id/hidden-child.json").exists()
         assert not (repo_root / "site/assets/data/docs/scopes/library/by-id/manage-root.json").exists()
-        assert not (repo_root / "site/assets/data/docs/scopes/library/references/by-doc/hidden.json").exists()
-        assert not (repo_root / "site/assets/data/docs/scopes/library/references/by-target/work/00638.json").exists()
+        assert not (repo_root / "site/assets/data/docs/scopes/library/references").exists()
+        assert not (repo_root / "site/assets/data/docs/scopes/library/semantic-tokens").exists()
         assert not (repo_root / "site/assets/data/docs/scopes/library/by-id/stale.json").exists()
         assert (repo_root / "site/assets/data/docs/scopes/library/media/html/widget.html").is_file()
         assert (repo_root / "site/assets/data/docs/scopes/library/media/img/diagram.png").is_file()

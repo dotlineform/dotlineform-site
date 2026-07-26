@@ -986,6 +986,15 @@ export function startDocsViewerRuntime(options) {
     documentViewCoordinator.showRenderedDocument(function () {
       documentController.renderPayload(doc, payload, hash);
       documentViewCoordinator.updateInfoPanel();
+      if (
+        routeContext.openSourceDocIdOnLoad
+        && routeContext.openSourceDocIdOnLoad === String(doc && doc.doc_id || "").trim()
+      ) {
+        routeContext.openSourceDocIdOnLoad = "";
+        documentViewCoordinator.requestDocumentMode("markdown-source", {
+          warn: false
+        });
+      }
     });
   }
 

@@ -126,17 +126,17 @@
   tab-size: 2;
 }
 
-.docsViewerSemanticPicker{
+.docsViewerCatalogueTargetPicker{
   display: grid;
   gap: 0.75rem;
 }
 
-.docsViewerSemanticPicker__search{
+.docsViewerCatalogueTargetPicker__search{
   display: grid;
   gap: 0.35rem;
 }
 
-.docsViewerSemanticPicker__input{
+.docsViewerCatalogueTargetPicker__input{
   box-sizing: border-box;
   width: 100%;
   min-height: 2rem;
@@ -149,26 +149,26 @@
   background: var(--docs-viewer-panel);
 }
 
-.docsViewerSemanticPicker__input:focus-visible{
+.docsViewerCatalogueTargetPicker__input:focus-visible{
   outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: 1px;
 }
 
-.docsViewerSemanticPicker__status{
+.docsViewerCatalogueTargetPicker__status{
   min-height: 1.2rem;
   margin: 0;
 }
 
-.docsViewerSemanticPicker__status.is-error{
+.docsViewerCatalogueTargetPicker__status.is-error{
   color: var(--docs-viewer-danger);
 }
 
-.docsViewerSemanticPicker__results{
+.docsViewerCatalogueTargetPicker__results{
   display: grid;
   gap: 0.35rem;
 }
 
-.docsViewerSemanticPicker__row{
+.docsViewerCatalogueTargetPicker__row{
   display: grid;
   gap: 0.18rem;
   width: 100%;
@@ -183,42 +183,42 @@
   cursor: pointer;
 }
 
-.docsViewerSemanticPicker__row:hover{
+.docsViewerCatalogueTargetPicker__row:hover{
   border-color: var(--docs-viewer-border-strong);
   background: var(--docs-viewer-panel-2);
 }
 
-.docsViewerSemanticPicker__row.is-active{
+.docsViewerCatalogueTargetPicker__row.is-active{
   border-color: var(--docs-viewer-border-strong);
   background: var(--docs-viewer-selection-bg);
   color: var(--docs-viewer-selection-text);
 }
 
-.docsViewerSemanticPicker__row:focus-visible{
+.docsViewerCatalogueTargetPicker__row:focus-visible{
   outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: 1px;
 }
 
-.docsViewerSemanticPicker__rowMain{
+.docsViewerCatalogueTargetPicker__rowMain{
   display: flex;
   align-items: baseline;
   gap: 0.35rem;
   min-width: 0;
 }
 
-.docsViewerSemanticPicker__rowTitle{
+.docsViewerCatalogueTargetPicker__rowTitle{
   flex: 1 1 auto;
   min-width: 0;
   overflow-wrap: anywhere;
 }
 
-.docsViewerSemanticPicker__rowKind,
-.docsViewerSemanticPicker__rowId{
+.docsViewerCatalogueTargetPicker__rowKind,
+.docsViewerCatalogueTargetPicker__rowId{
   flex: 0 0 auto;
   color: var(--docs-viewer-muted);
 }
 
-.docsViewerSemanticPicker__rowMeta{
+.docsViewerCatalogueTargetPicker__rowMeta{
   color: var(--docs-viewer-muted);
 }
 
@@ -255,7 +255,7 @@
   box-shadow: none;
 }
 
-.docsViewerCatalogueTokenModal__results .docsViewerSemanticPicker__row{
+.docsViewerCatalogueTokenModal__results .docsViewerCatalogueTargetPicker__row{
   box-sizing: border-box;
   min-width: 0;
 }

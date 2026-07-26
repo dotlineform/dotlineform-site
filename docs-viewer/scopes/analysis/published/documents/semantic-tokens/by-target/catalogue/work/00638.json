@@ -1,0 +1,26 @@
+{
+  "schema_version": "docs_semantic_token_usage_index_v1",
+  "scope": "analysis",
+  "target": {
+    "family": "catalogue",
+    "target_type": "work",
+    "target_id": "00638",
+    "href": "/works/?work=00638"
+  },
+  "occurrences": [
+    {
+      "source_scope": "analysis",
+      "source_doc_id": "d-20260518-180700-214487",
+      "source_range": {
+        "start": 13,
+        "end": 47
+      },
+      "raw": "[[catalogue:work:00638|3 symbols]]",
+      "title": "3 symbols",
+      "family": "catalogue",
+      "target_type": "work",
+      "target_id": "00638",
+      "href": "/works/?work=00638"
+    }
+  ]
+}
