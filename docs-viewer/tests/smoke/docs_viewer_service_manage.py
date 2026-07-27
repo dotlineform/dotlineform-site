@@ -1355,11 +1355,12 @@ def assert_open_source_target_handoff(page: Page) -> None:
                 sub_scope: 'tags',
                 doc_id: 'invoked'
             });
+            controller.handleReturnToDoc();
             return { hiddenCount, requests, sourceModes };
         }"""
     )
     expected = {
-        "hiddenCount": 3,
+        "hiddenCount": 4,
         "requests": [
             {
                 "url": "http://docs.test/docs/open-source",
@@ -1383,7 +1384,11 @@ def assert_open_source_target_handoff(page: Page) -> None:
                     "sub_scope": "tags",
                     "doc_id": "invoked",
                 },
-            }
+            },
+            {
+                "modeId": "rendered-document",
+                "sourceTarget": None,
+            },
         ],
     }
     if result != expected:
@@ -1823,8 +1828,10 @@ def exercise_manage_route(
             const actions = document.querySelector('[data-docs-viewer-control-surface-mount="main-view"]');
             return root?.dataset.documentDisplayMode === 'markdown-source'
                 && actions
-                && Array.from(actions.children).map(node => node.dataset.docsViewerControl).join(',') === 'open-vscode,source-add-image,source-add-file,source-add-catalogue-token,save-markdown-source,markdown-source,info'
-                && !document.querySelector('#docsViewerManageSourceSaveButton')?.disabled;
+                && Array.from(actions.children).map(node => node.dataset.docsViewerControl).join(',') === 'open-vscode,source-add-image,source-add-file,source-add-catalogue-token,save-markdown-source,markdown-source,subdoc-source,return-to-doc,info'
+                && !document.querySelector('#docsViewerManageSourceSaveButton')?.disabled
+                && document.querySelector('#docsViewerManageSourceButton')?.disabled
+                && !document.querySelector('#docsViewerManageReturnToDocButton')?.disabled;
         }""",
         timeout=timeout_ms,
     )
@@ -1839,7 +1846,7 @@ def exercise_manage_route(
     page.locator(
         "#catalogue-token-add-modal button[data-role='modal-cancel']"
     ).evaluate("button => button.click()")
-    page.locator("#docsViewerManageSourceButton").evaluate("button => button.click()")
+    page.locator("#docsViewerManageReturnToDocButton").evaluate("button => button.click()")
     page.wait_for_function(
         "() => document.querySelector('#docsViewerRoot')?.dataset.documentDisplayMode === 'rendered-document'",
         timeout=timeout_ms,

@@ -448,16 +448,17 @@ export function createDocsViewerManagementActionController(options) {
     if (typeof context.requestDocumentMode !== "function") return;
     var sourceTarget = normalizeManagedDocumentTarget(target);
     hideContextMenu();
-    var activeMode = root && root.dataset ? String(root.dataset.documentDisplayMode || "") : "";
-    if (activeMode === "markdown-source") {
-      context.requestDocumentMode("rendered-document");
-      return;
-    }
     context.requestDocumentMode("markdown-source", {
       context: {
         sourceTarget: sourceTarget
       }
     });
+  }
+
+  function handleReturnToDoc() {
+    if (typeof context.requestDocumentMode !== "function") return;
+    hideContextMenu();
+    context.requestDocumentMode("rendered-document");
   }
 
   function handleMarkdownSave() {
@@ -663,6 +664,7 @@ export function createDocsViewerManagementActionController(options) {
     handleEditMetadataSave: handleEditMetadataSave,
     handleMarkdownSave: handleMarkdownSave,
     handleMarkdownSource: handleMarkdownSource,
+    handleReturnToDoc: handleReturnToDoc,
     handleMoveDoc: handleMoveDoc,
     handleOpenSource: handleOpenSource,
     handleExportDocs: handleExportDocs,

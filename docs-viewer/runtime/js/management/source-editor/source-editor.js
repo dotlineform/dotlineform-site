@@ -104,6 +104,10 @@ function projectDirty(state) {
       busy: state.busy,
       disabled: state.busy || !state.loaded
     });
+    state.projectMainViewControlState("return-to-doc", {
+      busy: state.busy,
+      disabled: state.busy
+    });
     ["source-add-image", "source-add-file"].concat(state.sourceActionControlIds || []).forEach(function (controlId) {
       state.projectMainViewControlState(controlId, {
         busy: state.busy,

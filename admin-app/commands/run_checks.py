@@ -600,6 +600,16 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             isolated_projects_base=True,
         ),
         CheckCommand(
+            "docs-viewer-subscope-report-module-smoke",
+            (
+                sys.executable,
+                "docs-viewer/tests/smoke/docs_viewer_subscope_report_modules.py",
+                "--site-root",
+                str(REPO_ROOT),
+            ),
+            "Smoke-check managed sub-scope inventory, validated report targets, public separation, and toolbar state projection.",
+        ),
+        CheckCommand(
             "docs-viewer-service-manage-smoke",
             (
                 sys.executable,

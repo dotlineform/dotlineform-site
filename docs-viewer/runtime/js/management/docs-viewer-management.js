@@ -35,6 +35,9 @@ import {
   normalizeManagedDocumentTarget
 } from "./docs-viewer-management-document-target.js";
 import {
+  projectDocsViewerReportControlState
+} from "./docs-viewer-management-report-controls.js";
+import {
   readManagedDocMetadata
 } from "./docs-viewer-management-client.js";
 import {
@@ -169,6 +172,9 @@ export function initDocsViewerManagement(context) {
   var settingsWorkflow = null;
   var actionController = null;
   var resolveAction = null;
+  var projectedReportControls = null;
+  var sourceSessionReportActive = false;
+  var subscopeReportState = null;
   var indexController = createDocsViewerManagementIndexController({
     root: root,
     nav: nav,
@@ -253,6 +259,46 @@ export function initDocsViewerManagement(context) {
     });
   }
 
+  function publishSubscopeReportState(value) {
+    var state = value && typeof value === "object" ? value : {};
+    var stateName = String(state.state || "").trim().toLowerCase();
+    var activeStateNames = ["list", "loading", "detail", "invalid", "error"];
+    var parentTarget = null;
+    var subdocTarget = null;
+    try {
+      if (activeStateNames.indexOf(stateName) !== -1) {
+        parentTarget = normalizeManagedDocumentTarget(state.parentTarget);
+        if (stateName === "detail") {
+          subdocTarget = normalizeManagedDocumentTarget(state.subdocTarget);
+          if (
+            !subdocTarget.sub_scope
+            || subdocTarget.scope !== parentTarget.scope
+          ) {
+            throw new Error("Validated sub-scope report target does not match its parent report.");
+          }
+        }
+      }
+    } catch (_error) {
+      stateName = "inactive";
+      parentTarget = null;
+      subdocTarget = null;
+    }
+    subscopeReportState = parentTarget
+      ? {
+          state: stateName,
+          parentTarget: parentTarget,
+          subdocTarget: subdocTarget
+        }
+      : null;
+    var documentMode = root && root.dataset
+      ? String(root.dataset.documentDisplayMode || "")
+      : "";
+    if (documentMode !== "markdown-source") {
+      sourceSessionReportActive = false;
+    }
+    renderManagementUi();
+  }
+
   function activeSourceTarget() {
     var services = typeof context.sourceEditorServices === "function"
       ? context.sourceEditorServices()
@@ -314,21 +360,26 @@ export function initDocsViewerManagement(context) {
     var actionsDisabled = Boolean(disabled);
     var documentMode = root && root.dataset ? String(root.dataset.documentDisplayMode || "") : "";
     var markdownMode = documentMode === "markdown-source";
+    var reportActive = Boolean(subscopeReportState) || (markdownMode && sourceSessionReportActive);
+    projectedReportControls = projectDocsViewerReportControlState({
+      disabled: actionsDisabled,
+      documentMode: documentMode,
+      hidden: actionsHidden,
+      ordinaryTarget: sourceTargetForDoc(currentActiveDoc()),
+      parentTarget: subscopeReportState ? subscopeReportState.parentTarget : null,
+      reportActive: reportActive,
+      reportState: subscopeReportState ? subscopeReportState.state : "",
+      subdocTarget: subscopeReportState ? subscopeReportState.subdocTarget : null
+    });
     if (typeof context.projectMainViewControlState === "function") {
-      context.projectMainViewControlState("edit", {
-        hidden: actionsHidden,
-        disabled: actionsDisabled
-      });
+      context.projectMainViewControlState("edit", projectedReportControls.editMetadata.state);
       context.projectMainViewControlState("open-vscode", {
         hidden: actionsHidden,
         disabled: actionsDisabled
       });
-      context.projectMainViewControlState("markdown-source", {
-        hidden: actionsHidden,
-        disabled: actionsDisabled,
-        pressed: markdownMode,
-        label: markdownMode ? "Show rendered document" : "Show Markdown source"
-      });
+      context.projectMainViewControlState("markdown-source", projectedReportControls.parentSource.state);
+      context.projectMainViewControlState("subdoc-source", projectedReportControls.subdocSource.state);
+      context.projectMainViewControlState("return-to-doc", projectedReportControls.returnToDoc.state);
       context.projectMainViewControlState("save-markdown-source", {
         hidden: actionsHidden,
         disabled: actionsDisabled
@@ -382,14 +433,57 @@ export function initDocsViewerManagement(context) {
   function handleMainViewControl(detail) {
     var controlId = String(detail && detail.controlId || "").trim();
     var actionId = String(detail && detail.actionId || "").trim();
+    var reportControlOwners = new Map([
+      ["edit", {
+        projection: "editMetadata",
+        run: function (target) {
+          metadataWorkflow.openForTarget(target);
+        }
+      }],
+      ["markdown-source", {
+        projection: "parentSource",
+        run: function (target) {
+          sourceSessionReportActive = Boolean(subscopeReportState);
+          actionController.handleMarkdownSource(target);
+        }
+      }],
+      ["subdoc-source", {
+        projection: "subdocSource",
+        run: function (target) {
+          sourceSessionReportActive = Boolean(subscopeReportState);
+          actionController.handleMarkdownSource(target);
+        }
+      }],
+      ["return-to-doc", {
+        projection: "returnToDoc",
+        run: function () {
+          actionController.handleReturnToDoc();
+        }
+      }]
+    ]);
+    var reportOwner = reportControlOwners.get(controlId);
+    if (reportOwner) {
+      var projected = projectedReportControls
+        ? projectedReportControls[reportOwner.projection]
+        : null;
+      if (
+        !projected
+        || projected.state.hidden
+        || projected.state.disabled
+        || (
+          reportOwner.projection !== "returnToDoc"
+          && !projected.target
+        )
+      ) {
+        return false;
+      }
+      reportOwner.run(projected.target);
+      return true;
+    }
+
     var resolution = actionId ? resolveAction(actionId) : null;
     if (actionId && (!resolution || !resolution.enabled)) return false;
     var owners = new Map([
-      ["edit", function () {
-        var doc = actionTargetDoc(resolution);
-        var target = sourceTargetForDoc(doc);
-        if (target) metadataWorkflow.openForTarget(target);
-      }],
       ["open-vscode", function () {
         var doc = actionTargetDoc(resolution);
         var mountedTarget = activeSourceTarget();
@@ -401,11 +495,6 @@ export function initDocsViewerManagement(context) {
             mountedTarget ? mountedTarget.doc_id : doc && doc.title
           );
         }
-      }],
-      ["markdown-source", function () {
-        var doc = actionTargetDoc(resolution);
-        var target = sourceTargetForDoc(doc);
-        if (target) actionController.handleMarkdownSource(target);
       }],
       ["save-markdown-source", function () { actionController.handleMarkdownSave(); }],
       ["source-add-image", function () {
@@ -921,6 +1010,7 @@ export function initDocsViewerManagement(context) {
     indexSelection: indexSelection,
     initialize: initializeManagement,
     openImportModal: importController.open,
+    publishSubscopeReportState: publishSubscopeReportState,
     reconcileIndexSelectionReload: indexController.reconcileReload,
     render: renderManagementUi,
     renderIndexSelectionGutter: indexController.renderSelectionGutter,

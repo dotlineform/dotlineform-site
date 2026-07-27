@@ -54,6 +54,37 @@ function manifestDocs(payload) {
   });
 }
 
+function managementSettings(context) {
+  var settings = context && context.subscopeManagement;
+  return settings && typeof settings === "object" ? settings : null;
+}
+
+function managementDocs(settings) {
+  if (!settings || !Array.isArray(settings.documents)) return null;
+  return settings.documents.map(function (record) {
+    return {
+      docId: cleanString(record && record.doc_id),
+      title: cleanString(record && record.title),
+      uiStatus: cleanString(record && record.ui_status),
+      viewable: !record || record.viewable !== false
+    };
+  }).filter(function (record) {
+    return record.docId;
+  });
+}
+
+function statusRecord(settings, statusValue) {
+  var statuses = settings && settings.uiStatusByValue;
+  if (!statusValue || !(statuses instanceof Map)) return null;
+  return statuses.get(statusValue) || null;
+}
+
+function reportStateCallback(context) {
+  return context && typeof context.onSubscopeStateChange === "function"
+    ? context.onSubscopeStateChange
+    : null;
+}
+
 function subScopesFromRoute(context) {
   var routeContext = context && context.routeContext ? context.routeContext : {};
   return Array.isArray(routeContext.subScopes) ? routeContext.subScopes : [];
@@ -150,7 +181,28 @@ function appendDocRow(state, doc) {
   titleText.className = "docsViewerReport__title";
   titleText.textContent = doc.title || humanize(docId) || docId;
 
+  var accessibleParts = [titleText.textContent];
+  var uiStatus = statusRecord(state.management, doc.uiStatus);
+  if (uiStatus) {
+    var statusIcon = document.createElement("span");
+    statusIcon.className = "docsViewer__navStatus";
+    statusIcon.setAttribute("aria-hidden", "true");
+    statusIcon.textContent = cleanString(uiStatus.emoji);
+    title.appendChild(statusIcon);
+    accessibleParts.push(cleanString(uiStatus.label) || doc.uiStatus);
+  }
+  if (state.management && doc.viewable === false) {
+    var nonViewableIcon = document.createElement("span");
+    nonViewableIcon.className = "docsViewer__draftPrefix";
+    nonViewableIcon.setAttribute("aria-hidden", "true");
+    nonViewableIcon.textContent = cleanString(state.management.nonViewableEmoji) || "\uD83D\uDEAB";
+    title.appendChild(nonViewableIcon);
+    accessibleParts.push("non-viewable");
+  }
   title.appendChild(titleText);
+  if (state.management) {
+    title.setAttribute("aria-label", accessibleParts.filter(Boolean).join(", "));
+  }
   title.addEventListener("click", function () {
     writeSubdocUrl(state, docId, "push");
     renderDetailById(state, docId);
@@ -201,12 +253,28 @@ function renderRows(state, docs) {
   });
 }
 
+function publishState(state, reportState, target, reason) {
+  if (!state.onStateChange) return;
+  state.onStateChange({
+    state: cleanString(reportState),
+    reason: cleanString(reason),
+    target: target || null
+  });
+}
+
+function invalidateDetailRequest(state) {
+  state.detailRequestVersion += 1;
+  return state.detailRequestVersion;
+}
+
 function renderListView(state) {
+  invalidateDetailRequest(state);
   state.root.dataset.reportState = "list";
   state.tableNode.hidden = false;
   state.statusNode.hidden = false;
   if (state.detailNode) state.detailNode.hidden = true;
   renderRows(state, state.docs);
+  publishState(state, "list", null, "list-view");
 }
 
 function detailTitle(payload, fallback) {
@@ -252,15 +320,26 @@ function renderDetailShell(state, docId) {
 }
 
 function renderDetailPayload(state, docId, payload) {
+  var payloadDocId = cleanString(payload && payload.doc_id);
+  if (payloadDocId !== docId) {
+    throw new Error("Docs sub-scope detail payload did not match the requested document.");
+  }
   state.detailPayloads[docId] = payload;
   state.detailNode.dataset.reportSubdocId = docId;
   state.detailNode.dataset.reportSubdocTitle = detailTitle(payload, docId);
   state.detailNode.dataset.reportSubdocUpdated = cleanString(payload && payload.last_updated);
   state.detailTitleNode.textContent = detailTitle(payload, docId);
   state.detailBodyNode.innerHTML = payload && payload.content_html ? payload.content_html : "";
+  publishState(state, "detail", {
+    scope: state.viewerScope,
+    sub_scope: state.subScopeId,
+    doc_id: docId
+  }, "detail-loaded");
 }
 
 function renderDetailById(state, docId) {
+  var requestVersion = invalidateDetailRequest(state);
+  publishState(state, "loading", null, "detail-navigation");
   state.root.dataset.reportState = "detail";
   state.tableNode.hidden = true;
   state.statusNode.hidden = true;
@@ -268,16 +347,20 @@ function renderDetailById(state, docId) {
 
   var url = byIdPayloadUrl(state, docId);
   if (!url) {
+    publishState(state, "error", null, "missing-detail-path");
     renderError(state.root, "Docs sub-scope by-id payload path is not configured: " + state.subScopeId);
     return Promise.resolve(true);
   }
 
   return fetchJson(url, "Failed to load docs sub-scope detail payload")
     .then(function (payload) {
+      if (requestVersion !== state.detailRequestVersion) return true;
       renderDetailPayload(state, docId, payload);
       return true;
     })
     .catch(function (error) {
+      if (requestVersion !== state.detailRequestVersion) return true;
+      publishState(state, "error", null, "detail-load-failed");
       renderError(state.root, error && error.message ? error.message : "Failed to render docs sub-scope detail.");
       return true;
     });
@@ -296,20 +379,26 @@ export function mountDocsSubscopeReport(context) {
   var root = context && context.reportRoot;
   var reportMeta = context && context.reportMeta ? context.reportMeta : {};
   var subScopeIdValue = cleanId(reportMeta.subScope);
+  var onStateChange = reportStateCallback(context);
   if (!root) return Promise.resolve(false);
   if (!subScopeIdValue) {
+    if (onStateChange) onStateChange({ state: "error", reason: "missing-sub-scope", target: null });
     renderError(root, "This report is missing viewer_report_subscope.");
     return Promise.resolve(true);
   }
 
   var subScope = findSubScope(context, subScopeIdValue);
   if (!subScope) {
+    if (onStateChange) onStateChange({ state: "error", reason: "unconfigured-sub-scope", target: null });
     renderError(root, "Docs sub-scope is not configured: " + subScopeIdValue);
     return Promise.resolve(true);
   }
 
-  var url = manifestUrl(subScope);
-  if (!url) {
+  var management = managementSettings(context);
+  var managedDocs = managementDocs(management);
+  var url = managedDocs ? "" : manifestUrl(subScope);
+  if (managedDocs === null && !url) {
+    if (onStateChange) onStateChange({ state: "error", reason: "missing-manifest", target: null });
     renderError(root, "Docs sub-scope manifest is not configured: " + subScopeIdValue);
     return Promise.resolve(true);
   }
@@ -324,19 +413,47 @@ export function mountDocsSubscopeReport(context) {
     byIdUrlBase: byIdUrlBase(subScope),
     docs: [],
     docIds: [],
+    detailRequestVersion: 0,
     detailPayloads: {},
+    management: management,
+    onStateChange: onStateChange,
     statusNode: refs.statusNode,
     tableNode: refs.tableNode,
-    rowsNode: refs.rowsNode
+    rowsNode: refs.rowsNode,
+    viewerScope: cleanId(context && context.viewerScope)
   };
 
-  return fetchJson(url, "Failed to load docs sub-scope manifest")
-    .then(function (payload) {
-      state.docs = manifestDocs(payload);
+  if (management && cleanString(management.error)) {
+    publishState(state, "error", null, "management-inventory-failed");
+    renderError(root, cleanString(management.error));
+    return Promise.resolve(true);
+  }
+
+  var parent = root.parentNode;
+  var windowRef = root.ownerDocument && root.ownerDocument.defaultView;
+  if (onStateChange && parent && windowRef && typeof windowRef.MutationObserver === "function") {
+    state.unmountObserver = new windowRef.MutationObserver(function () {
+      if (root.parentNode === parent) return;
+      state.unmountObserver.disconnect();
+      state.unmountObserver = null;
+      invalidateDetailRequest(state);
+      publishState(state, "unmounted", null, "report-unmount");
+    });
+    state.unmountObserver.observe(parent, { childList: true });
+  }
+
+  publishState(state, "loading", null, "report-loading");
+  var docsRequest = managedDocs
+    ? Promise.resolve(managedDocs)
+    : fetchJson(url, "Failed to load docs sub-scope manifest").then(manifestDocs);
+  return docsRequest
+    .then(function (documents) {
+      state.docs = documents;
       state.docIds = state.docs.map(function (doc) { return doc.docId; });
       var selectedDetailId = currentSubdocId();
       if (selectedDetailId) {
         if (state.docIds.indexOf(selectedDetailId) === -1) {
+          publishState(state, "invalid", null, "unlisted-detail");
           renderError(root, "Docs sub-scope detail is not listed: " + selectedDetailId);
           return true;
         }
@@ -346,6 +463,7 @@ export function mountDocsSubscopeReport(context) {
       return true;
     })
     .catch(function (error) {
+      publishState(state, "error", null, "report-load-failed");
       renderError(root, error && error.message ? error.message : "Failed to render docs sub-scope report.");
       return true;
     });

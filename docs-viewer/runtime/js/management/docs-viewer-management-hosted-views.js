@@ -178,14 +178,37 @@ export function createDocsViewerManagementViewDefinitions() {
       {
         id: "markdown-source",
         actionId: "markdown-source",
-        label: "Markdown source",
+        label: "Source",
         ownerType: "view",
         ownerViewId: "rendered-document",
         modeIds: ["rendered-document", "markdown-source"],
         surfaceId: "main-view",
         appKinds: ["manage"],
         features: ["source-editing"],
-        renderer: "markdown-source-toggle"
+        renderer: "markdown-source-entry"
+      },
+      {
+        id: "subdoc-source",
+        actionId: "markdown-source",
+        label: "Subdoc Source",
+        ownerType: "view",
+        ownerViewId: "rendered-document",
+        modeIds: ["rendered-document", "markdown-source"],
+        surfaceId: "main-view",
+        appKinds: ["manage"],
+        features: ["source-editing"],
+        renderer: "subdoc-source-entry"
+      },
+      {
+        id: "return-to-doc",
+        label: "Return to doc",
+        ownerType: "view",
+        ownerViewId: "rendered-document",
+        modeIds: ["markdown-source"],
+        surfaceId: "main-view",
+        appKinds: ["manage"],
+        features: ["source-editing"],
+        renderer: "return-to-doc"
       }
     ]
   };

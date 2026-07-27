@@ -155,6 +155,13 @@ export function startDocsViewerRuntime(options) {
   var sourceEditorInfoRequest = 0;
   var sourceEditorInfoViewId = "metadata-info";
   var recentControlLabel = "Recent";
+  var latestSubscopeReportGeneration = 0;
+  var latestSubscopeReportState = {
+    state: "inactive",
+    reason: "startup",
+    parentTarget: null,
+    subdocTarget: null
+  };
   var appViewerControlOwners = new Map();
   var appViewerControlHost = null;
   var appManagementControlStates = new Map();
@@ -164,6 +171,26 @@ export function startDocsViewerRuntime(options) {
   var mainViewControlOwners = new Map();
   var mainViewControlStates = new Map();
   var mainViewControlHost = null;
+
+  function publishSubscopeReportState(value) {
+    var generation = Number(value && value.documentMountGeneration);
+    if (Number.isInteger(generation) && generation > 0) {
+      if (generation < latestSubscopeReportGeneration) return;
+      latestSubscopeReportGeneration = generation;
+    }
+    latestSubscopeReportState = value && typeof value === "object"
+      ? Object.assign({}, value)
+      : {
+          state: "inactive",
+          reason: "invalid-report-state",
+          parentTarget: null,
+          subdocTarget: null
+        };
+    var controller = managementRuntime ? managementRuntime.controller() : null;
+    if (controller && typeof controller.publishSubscopeReportState === "function") {
+      controller.publishSubscopeReportState(latestSubscopeReportState);
+    }
+  }
 
   var appSession = composition.appSession;
   var state = appSession.state;
@@ -335,6 +362,7 @@ export function startDocsViewerRuntime(options) {
     renderSearchMode: renderSearchMode,
     renderSidebar: renderSidebar,
     results: results,
+    publishSubscopeReportState: publishSubscopeReportState,
     routeContext: function () { return routeContext; },
     routeSession: appSession.domains.routeSession,
     scopeConfig: appSession.domains.scopeConfig,
@@ -560,6 +588,10 @@ export function startDocsViewerRuntime(options) {
     },
     logger: window.console || console,
     onLoaded: function () {
+      var controller = managementRuntime ? managementRuntime.controller() : null;
+      if (controller && typeof controller.publishSubscopeReportState === "function") {
+        controller.publishSubscopeReportState(latestSubscopeReportState);
+      }
       renderSidebar();
     }
   }) : null;

@@ -22,6 +22,17 @@ export function initDocsViewerDocumentController(context) {
     return documentMountGeneration;
   }
 
+  function clearSubscopeReportState(reason, mountGeneration) {
+    if (typeof context.publishSubscopeReportState !== "function") return;
+    context.publishSubscopeReportState({
+      state: "inactive",
+      reason: String(reason || "document-navigation"),
+      documentMountGeneration: mountGeneration,
+      parentTarget: null,
+      subdocTarget: null
+    });
+  }
+
   function currentScopeType() {
     var configsById = scopeConfigState && scopeConfigState.scopeConfigsById;
     var scopeConfig = configsById && typeof configsById.get === "function"
@@ -38,7 +49,7 @@ export function initDocsViewerDocumentController(context) {
     }
   }
 
-  function mountDocumentExtras(doc, payload) {
+  function mountDocumentExtras(doc, payload, mountGeneration) {
     if (typeof context.mountDocumentExtras !== "function") return;
     Promise.resolve(context.mountDocumentExtras({
       appContext: context.appContext || {},
@@ -49,6 +60,8 @@ export function initDocsViewerDocumentController(context) {
       managementService: context.managementService || null,
       managementContext: managementContextActive(),
       payload: payload,
+      documentMountGeneration: mountGeneration,
+      publishSubscopeReportState: context.publishSubscopeReportState,
       routeContext: typeof context.routeContext === "function" ? context.routeContext() : context.routeContext,
       scopeConfigState: scopeConfigState,
       setStatus: setStatus,
@@ -169,7 +182,8 @@ export function initDocsViewerDocumentController(context) {
   }
 
   function hideDocPane() {
-    nextDocumentMountGeneration();
+    var mountGeneration = nextDocumentMountGeneration();
+    clearSubscopeReportState("document-pane-hidden", mountGeneration);
     projectDocumentShell({
       toolbarHidden: true,
       contentHidden: true
@@ -191,7 +205,8 @@ export function initDocsViewerDocumentController(context) {
 
   function renderDocumentStatus(message, isError, options) {
     var settings = options || {};
-    nextDocumentMountGeneration();
+    var mountGeneration = nextDocumentMountGeneration();
+    clearSubscopeReportState("document-status", mountGeneration);
     showDocPane();
     if (settings.hideMeta) {
       projectDocumentShell({
@@ -221,6 +236,7 @@ export function initDocsViewerDocumentController(context) {
 
   function renderPayload(doc, payload, hash) {
     var mountGeneration = nextDocumentMountGeneration();
+    clearSubscopeReportState("document-mount", mountGeneration);
     selectedDocument.selectedDocId = doc.doc_id;
     context.renderSidebar();
     context.renderBookmarkUi();
@@ -239,7 +255,7 @@ export function initDocsViewerDocumentController(context) {
     mountThemedDiagrams(doc, payload);
     mountDiagramDetails(doc, payload);
     mountInlineMermaid(doc, payload, mountGeneration);
-    mountDocumentExtras(doc, payload);
+    mountDocumentExtras(doc, payload, mountGeneration);
     document.title = doc.title + " | dotlineform";
     setStatus("", false);
     context.renderManagementUi();
@@ -258,7 +274,8 @@ export function initDocsViewerDocumentController(context) {
   }
 
   function renderDocLoadingState(doc) {
-    nextDocumentMountGeneration();
+    var mountGeneration = nextDocumentMountGeneration();
+    clearSubscopeReportState("navigation-start", mountGeneration);
     context.renderSidebar();
     showDocPane();
     context.renderMeta(doc);

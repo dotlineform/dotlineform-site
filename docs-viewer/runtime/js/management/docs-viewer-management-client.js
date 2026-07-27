@@ -112,6 +112,19 @@ export function readManagedDocMetadata(target, options) {
   return fetchManagementJson("/docs/metadata?" + targetQuery(target), "GET", undefined, options);
 }
 
+export function readManagedSubScopeDocuments(scope, subScope, options) {
+  var normalizedScope = String(scope || "").trim().toLowerCase();
+  var normalizedSubScope = String(subScope || "").trim().toLowerCase();
+  if (!normalizedScope || !normalizedSubScope) {
+    return Promise.reject(new Error("Managed sub-scope inventory requires scope and sub_scope."));
+  }
+  var query = [
+    "scope=" + encodeURIComponent(normalizedScope),
+    "sub_scope=" + encodeURIComponent(normalizedSubScope)
+  ].join("&");
+  return fetchManagementJson("/docs/sub-scope-documents?" + query, "GET", undefined, options);
+}
+
 export function updateManagedDocMetadata(target, payload, options) {
   return fetchManagementJson(
     "/docs/update-metadata",
