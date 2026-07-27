@@ -1,432 +1,426 @@
 {
-  "tag_aliases_version": "tag_aliases_v1",
-  "updated_at_utc": "2026-07-27T15:02:10Z",
+  "tag_aliases_version": "tag_aliases_v2",
+  "updated_at_utc": "2026-07-27T15:39:06Z",
   "aliases": {
     "floral": {
       "description": "",
       "tags": [
-        "subject:flower"
+        "flower"
       ]
     },
     "branches": {
       "description": "",
       "tags": [
-        "subject:branch"
+        "branch"
       ]
     },
     "curves": {
       "description": "",
       "tags": [
-        "form:curvilinear"
+        "curvilinear"
       ]
     },
     "radial-form": {
       "description": "",
       "tags": [
-        "form:radial"
+        "radial"
       ]
     },
     "natural": {
       "description": "",
       "tags": [
-        "domain:nature"
+        "nature"
       ]
     },
     "organic": {
       "description": "",
       "tags": [
-        "domain:nature"
+        "nature"
       ]
     },
     "outdoors": {
       "description": "",
       "tags": [
-        "domain:nature"
+        "nature"
       ]
     },
     "wild": {
       "description": "",
       "tags": [
-        "domain:nature"
+        "nature"
       ]
     },
     "wildness": {
       "description": "",
       "tags": [
-        "domain:nature"
+        "nature"
       ]
     },
     "environment": {
       "description": "",
       "tags": [
-        "domain:ecology"
+        "ecology"
       ]
     },
     "ecological": {
       "description": "",
       "tags": [
-        "domain:ecology"
+        "ecology"
       ]
     },
     "land": {
       "description": "",
       "tags": [
-        "domain:landscape"
+        "landscape"
       ]
     },
     "weathered": {
       "description": "",
       "tags": [
-        "theme:decay"
+        "decay"
       ]
     },
     "bloom": {
       "description": "",
       "tags": [
-        "subject:flower"
+        "flower"
       ]
     },
     "blooms": {
       "description": "",
       "tags": [
-        "subject:flower"
+        "flower"
       ]
     },
     "petal": {
       "description": "",
       "tags": [
-        "subject:flower"
+        "flower"
       ]
     },
     "petals": {
       "description": "",
       "tags": [
-        "subject:flower"
+        "flower"
       ]
     },
     "leafy": {
       "description": "",
       "tags": [
-        "subject:leaf"
+        "leaf"
       ]
     },
     "leaves": {
       "description": "",
       "tags": [
-        "subject:leaf"
+        "leaf"
       ]
     },
     "trees": {
       "description": "",
       "tags": [
-        "subject:tree"
+        "tree"
       ]
     },
     "roots": {
       "description": "",
       "tags": [
-        "subject:root"
+        "root"
       ]
     },
     "seedling": {
       "description": "",
       "tags": [
-        "subject:seed"
+        "seed"
       ]
     },
     "strokes": {
       "description": "",
       "tags": [
-        "subject:stroke"
+        "stroke"
       ]
     },
     "markmaking": {
       "description": "",
       "tags": [
-        "subject:mark"
+        "mark"
       ]
     },
     "marks": {
       "description": "",
       "tags": [
-        "subject:mark"
+        "mark"
       ]
     },
     "layer": {
       "description": "",
       "tags": [
-        "form:layered"
+        "layered"
       ]
     },
     "layers": {
       "description": "",
       "tags": [
-        "form:layered"
+        "layered"
       ]
     },
     "overlayed": {
       "description": "",
       "tags": [
-        "form:overlay"
+        "overlay"
       ]
     },
     "overlaid": {
       "description": "",
       "tags": [
-        "form:overlay"
+        "overlay"
       ]
     },
     "tangle": {
       "description": "",
       "tags": [
-        "form:tangled"
+        "tangled"
       ]
     },
     "knotty": {
       "description": "",
       "tags": [
-        "form:knotted"
+        "knotted"
       ]
     },
     "loops": {
       "description": "",
       "tags": [
-        "subject:loop"
+        "loop"
       ]
     },
     "enclosure": {
       "description": "",
       "tags": [
-        "theme:containment"
+        "containment"
       ]
     },
     "contained": {
       "description": "",
       "tags": [
-        "theme:containment"
+        "containment"
       ]
     },
     "closed": {
       "description": "",
       "tags": [
-        "form:enclosed"
+        "enclosed"
       ]
     },
     "symbols": {
       "description": "",
       "tags": [
-        "subject:symbol"
+        "symbol"
       ]
     },
     "remembering": {
       "description": "",
       "tags": [
-        "domain:memory"
+        "memory"
       ]
     },
     "recall": {
       "description": "",
       "tags": [
-        "domain:memory"
+        "memory"
       ]
     },
     "traces": {
       "description": "",
       "tags": [
-        "subject:trace"
+        "trace"
       ]
     },
     "photo": {
       "description": "",
       "tags": [
-        "domain:photography"
+        "photography"
       ]
     },
     "photograph": {
       "description": "",
       "tags": [
-        "domain:photography"
+        "photography"
       ]
     },
     "minimalism": {
       "description": "",
       "tags": [
-        "form:minimal"
+        "minimal"
       ]
     },
     "maximalism": {
       "description": "",
       "tags": [
-        "form:maximal"
+        "maximal"
       ]
     },
     "blackandwhite": {
       "description": "",
       "tags": [
-        "form:monochrome",
-        "subject:shadow"
+        "monochrome",
+        "shadow"
       ]
     },
     "b-w": {
       "description": "",
       "tags": [
-        "form:monochrome"
-      ]
-    },
-    "tangled": {
-      "description": "",
-      "tags": [
-        "form:tangled"
+        "monochrome"
       ]
     },
     "digital": {
       "description": "",
       "tags": [
-        "domain:technology"
+        "technology"
       ]
     },
     "calmness": {
       "description": "",
       "tags": [
-        "theme:calm"
+        "calm"
       ]
     },
     "anxiousness": {
       "description": "",
       "tags": [
-        "theme:anxiety"
+        "anxiety"
       ]
     },
     "worried": {
       "description": "",
       "tags": [
-        "theme:anxiety"
+        "anxiety"
       ]
     },
     "sad": {
       "description": "",
       "tags": [
-        "theme:sorrow"
+        "sorrow"
       ]
     },
     "sadness": {
       "description": "",
       "tags": [
-        "theme:sorrow"
+        "sorrow"
       ]
     },
     "melancholic": {
       "description": "",
       "tags": [
-        "theme:melancholy"
+        "melancholy"
       ]
     },
     "joyful": {
       "description": "",
       "tags": [
-        "theme:joy"
+        "joy"
       ]
     },
     "angry": {
       "description": "",
       "tags": [
-        "theme:tension"
+        "tension"
       ]
     },
     "fearful": {
       "description": "",
       "tags": [
-        "theme:fear"
+        "fear"
       ]
     },
     "scared": {
       "description": "",
       "tags": [
-        "theme:fear"
+        "fear"
       ]
     },
     "overwhelmed": {
       "description": "",
       "tags": [
-        "theme:overwhelm"
+        "overwhelm"
       ]
     },
     "overwhelming": {
       "description": "",
       "tags": [
-        "theme:overwhelm"
+        "overwhelm"
       ]
     },
     "clear": {
       "description": "",
       "tags": [
-        "theme:clarity"
+        "clarity"
       ]
     },
     "confused": {
       "description": "",
       "tags": [
-        "theme:confusion"
+        "confusion"
       ]
     },
     "confusing": {
       "description": "",
       "tags": [
-        "theme:confusion"
+        "confusion"
       ]
     },
     "intimate": {
       "description": "",
       "tags": [
-        "theme:intimacy"
+        "intimacy"
       ]
     },
     "isolated": {
       "description": "",
       "tags": [
-        "theme:alienation"
+        "alienation"
       ]
     },
     "lonely": {
       "description": "",
       "tags": [
-        "theme:alienation"
+        "alienation"
       ]
     },
     "hopeful": {
       "description": "",
       "tags": [
-        "theme:hope"
+        "hope"
       ]
     },
     "grieving": {
       "description": "",
       "tags": [
-        "theme:grief"
+        "grief"
       ]
     },
     "meditative": {
       "description": "",
       "tags": [
-        "theme:contemplation"
+        "contemplation"
       ]
     },
     "contemplative": {
       "description": "",
       "tags": [
-        "theme:contemplation"
+        "contemplation"
       ]
     },
     "playful": {
       "description": "",
       "tags": [
-        "theme:play"
+        "play"
       ]
     },
     "anger": {
       "description": "",
       "tags": [
-        "theme:tension"
+        "tension"
       ]
     }
   }

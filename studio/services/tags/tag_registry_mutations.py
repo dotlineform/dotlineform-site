@@ -15,16 +15,15 @@ def create_registry_tag(
     registry_payload: Dict[str, Any],
     *,
     group: Any,
-    slug: Any,
+    tag_id: Any,
     description: Any,
     now_utc: str,
 ) -> tuple[Dict[str, Any], Dict[str, Any]]:
     """Plan one canonical tag addition without changing existing rows."""
     allowed_groups = tag_source.extract_allowed_groups(registry_payload)
     normalized_group = tag_source.sanitize_group(group, allowed_groups)
-    normalized_slug = tag_source.sanitize_slug(slug)
+    normalized_tag_id = tag_source.sanitize_tag_id(tag_id)
     normalized_description = tag_source.sanitize_alias_description(description, "description")
-    tag_id = f"{normalized_group}:{normalized_slug}"
 
     raw_tags = registry_payload.get("tags")
     if not isinstance(raw_tags, list):
@@ -33,18 +32,18 @@ def create_registry_tag(
         if not isinstance(raw_tag, dict):
             continue
         existing_tag_id = str(raw_tag.get("tag_id") or "").strip().lower()
-        if existing_tag_id == tag_id:
-            raise ValueError(f"tag_id already exists: {tag_id}")
+        if existing_tag_id == normalized_tag_id:
+            raise ValueError(f"tag_id already exists: {normalized_tag_id}")
 
     created_row = {
-        "tag_id": tag_id,
+        "tag_id": normalized_tag_id,
         "group": normalized_group,
-        "label": normalized_slug,
+        "label": normalized_tag_id,
         "description": normalized_description,
         "updated_at_utc": now_utc,
     }
     updated_payload = dict(registry_payload)
-    updated_payload.setdefault("tag_registry_version", "tag_registry_v1")
+    updated_payload.setdefault("tag_registry_version", tag_source.TAG_REGISTRY_VERSION)
     if not isinstance(updated_payload.get("policy"), dict):
         updated_payload["policy"] = {"allowed_groups": allowed_groups}
     updated_payload["tags"] = [*raw_tags, created_row]
@@ -52,9 +51,9 @@ def create_registry_tag(
 
     return updated_payload, {
         "action": "create",
-        "tag_id": tag_id,
+        "tag_id": normalized_tag_id,
         "group": normalized_group,
-        "label": normalized_slug,
+        "label": normalized_tag_id,
         "added": 1,
         "final_total": len(updated_payload["tags"]),
     }
@@ -65,7 +64,8 @@ def mutate_registry_tag(
     action: str,
     old_tag_id: str,
     now_utc: str,
-    new_slug: Optional[str] = None,
+    new_tag_id: Optional[str] = None,
+    new_group: Optional[str] = None,
     new_description: Optional[str] = None,
     allow_canonical_rename: bool = False,
 ) -> tuple[Dict[str, Any], Dict[str, Any]]:
@@ -92,19 +92,15 @@ def mutate_registry_tag(
     if target_idx < 0 or target_row is None:
         raise ValueError(f"tag not found in registry: {old_tag_id}")
 
-    group = str(target_row.get("group") or "").strip().lower()
-    if not group or ":" not in old_tag_id:
-        raise ValueError(f"invalid target registry row for: {old_tag_id}")
-    old_group = old_tag_id.split(":", 1)[0]
-    if group != old_group:
-        raise ValueError(f"registry group mismatch for tag: {old_tag_id}")
+    allowed_groups = tag_source.extract_allowed_groups(registry_payload)
+    group = tag_source.sanitize_group(target_row.get("group"), allowed_groups, "group")
 
     if action == "delete":
         final_tags = [row for idx, row in enumerate(tags) if idx != target_idx]
         registry_payload["tags"] = final_tags
         registry_payload["updated_at_utc"] = now_utc
         if "tag_registry_version" not in registry_payload:
-            registry_payload["tag_registry_version"] = "tag_registry_v1"
+            registry_payload["tag_registry_version"] = tag_source.TAG_REGISTRY_VERSION
         return registry_payload, {
             "action": "delete",
             "old_tag_id": old_tag_id,
@@ -113,22 +109,31 @@ def mutate_registry_tag(
             "label": str(target_row.get("label") or "").strip(),
         }
 
-    old_slug = old_tag_id.split(":", 1)[1]
-    slug = old_slug if new_slug is None else tag_source.sanitize_slug(new_slug, "new_slug")
-    label = slug
-    new_tag_id = f"{group}:{slug}"
-    canonical_changed = new_tag_id != old_tag_id
+    normalized_new_tag_id = (
+        old_tag_id
+        if new_tag_id is None
+        else tag_source.sanitize_tag_id(new_tag_id, "new_tag_id")
+    )
+    normalized_new_group = (
+        group
+        if new_group is None
+        else tag_source.sanitize_group(new_group, allowed_groups, "new_group")
+    )
+    label = normalized_new_tag_id
+    canonical_changed = normalized_new_tag_id != old_tag_id
+    group_changed = normalized_new_group != group
     if canonical_changed and not allow_canonical_rename:
         raise ValueError("canonical rename is disabled for this request")
-    if canonical_changed and new_tag_id in existing_ids:
-        raise ValueError(f"target tag_id already exists: {new_tag_id}")
+    if canonical_changed and normalized_new_tag_id in existing_ids:
+        raise ValueError(f"target tag_id already exists: {normalized_new_tag_id}")
     old_description = str(target_row.get("description") or "").strip()
     description = old_description if new_description is None else tag_source.sanitize_alias_description(new_description, "description")
     description_changed = description != old_description
 
     updated_row = dict(target_row)
     updated_row["label"] = label
-    updated_row["tag_id"] = new_tag_id
+    updated_row["tag_id"] = normalized_new_tag_id
+    updated_row["group"] = normalized_new_group
     updated_row["description"] = description
     updated_row["updated_at_utc"] = now_utc
     final_tags = list(tags)
@@ -137,15 +142,16 @@ def mutate_registry_tag(
     registry_payload["tags"] = final_tags
     registry_payload["updated_at_utc"] = now_utc
     if "tag_registry_version" not in registry_payload:
-        registry_payload["tag_registry_version"] = "tag_registry_v1"
+        registry_payload["tag_registry_version"] = tag_source.TAG_REGISTRY_VERSION
 
     return registry_payload, {
         "action": "edit",
         "old_tag_id": old_tag_id,
-        "new_tag_id": new_tag_id,
-        "group": group,
+        "new_tag_id": normalized_new_tag_id,
+        "group": normalized_new_group,
         "label": label,
         "canonical_changed": canonical_changed,
+        "group_changed": group_changed,
         "description_changed": description_changed,
     }
 
@@ -179,7 +185,13 @@ def rewrite_assignment_tag_list_for_tag(
             changed = True
             continue
         seen.add(tag_value)
-        out.append(tag_source.build_assignment_tag(tag_value, normalized_tag["w_manual"]))
+        out.append(
+            tag_source.build_assignment_tag(
+                tag_value,
+                normalized_tag["w_manual"],
+                normalized_tag.get("alias", ""),
+            )
+        )
 
     return out, changed, refs_rewritten
 
@@ -195,7 +207,7 @@ def rewrite_assignments_for_tag(
         series_obj = {}
         assignments_payload["series"] = series_obj
     if "tag_assignments_version" not in assignments_payload:
-        assignments_payload["tag_assignments_version"] = "tag_assignments_v1"
+        assignments_payload["tag_assignments_version"] = tag_source.TAG_ASSIGNMENTS_VERSION
 
     series_rows_touched = 0
     series_refs_rewritten = 0
@@ -267,11 +279,13 @@ def build_mutation_summary_text(stats: Dict[str, Any]) -> str:
     alias_rw = int(stats.get("aliases_rewritten") or 0)
     alias_empty = int(stats.get("aliases_removed_empty") or 0)
     alias_redundant = int(stats.get("aliases_removed_redundant") or 0)
+    group_changed = 1 if bool(stats.get("group_changed")) else 0
     description_changed = 1 if bool(stats.get("description_changed")) else 0
 
     id_part = f"{old_tag_id} -> {new_tag_id}" if new_tag_id else old_tag_id
     return (
         f"mode {action}; tag {id_part}; "
+        f"group_changed {group_changed}; "
         f"description_changed {description_changed}; "
         f"series rows {series_rows}; series refs {series_refs}; "
         f"work rows {work_rows}; work refs {work_refs}; "

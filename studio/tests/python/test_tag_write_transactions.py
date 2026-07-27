@@ -35,11 +35,11 @@ def test_single_file_write_replaces_existing_file() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         target = root / "tag_registry.json"
-        write_json(target, {"tags": [{"tag_id": "subject:trees"}]})
+        write_json(target, {"tags": [{"tag_id": "trees"}]})
 
-        transactions.atomic_write(target, {"tags": [{"tag_id": "subject:canopy"}]})
+        transactions.atomic_write(target, {"tags": [{"tag_id": "canopy"}]})
 
-        assert_equal(read_json(target), {"tags": [{"tag_id": "subject:canopy"}]}, "updated target")
+        assert_equal(read_json(target), {"tags": [{"tag_id": "canopy"}]}, "updated target")
 
 
 def test_single_file_write_creates_new_file() -> None:

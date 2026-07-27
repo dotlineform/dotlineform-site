@@ -32,12 +32,12 @@ def write_fixture_data(repo_root: Path) -> tuple[Path, Path]:
     registry_path = data_root / "tag-registry.json"
     aliases_path.write_text(
         """{
-  "tag_aliases_version": "tag_aliases_v1",
+  "tag_aliases_version": "tag_aliases_v2",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "aliases": {
     "foliage": {
       "description": "Foliage",
-      "tags": ["subject:trees"]
+      "tags": ["trees"]
     }
   }
 }
@@ -46,20 +46,20 @@ def write_fixture_data(repo_root: Path) -> tuple[Path, Path]:
     )
     registry_path.write_text(
         """{
-  "tag_registry_version": "tag_registry_v1",
+  "tag_registry_version": "tag_registry_v2",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {
     "allowed_groups": ["subject", "theme"]
   },
   "tags": [
     {
-      "tag_id": "subject:trees",
+      "tag_id": "trees",
       "group": "subject",
       "label": "trees",
       "description": "Trees"
     },
     {
-      "tag_id": "theme:growth",
+      "tag_id": "growth",
       "group": "theme",
       "label": "growth",
       "description": "Growth"
@@ -103,7 +103,7 @@ def run() -> None:
                 {
                     "alias": "growth",
                     "description": " Growth ",
-                    "tags": ["theme:growth"],
+                    "tags": ["growth"],
                     "client_time_utc": "2026-05-22T00:00:00Z",
                     "activity_context": {
                         "correlation_id": "tag-alias-api-smoke",
@@ -122,7 +122,7 @@ def run() -> None:
                     "alias": "foliage",
                     "new_alias": "canopy",
                     "description": "Canopy",
-                    "tags": ["subject:trees", "theme:growth"],
+                    "tags": ["trees", "growth"],
                     "client_time_utc": "2026-05-22T00:00:00Z",
                 },
             )
@@ -132,7 +132,7 @@ def run() -> None:
                     "alias": "foliage",
                     "new_alias": "canopy",
                     "description": "Canopy",
-                    "tags": ["subject:trees", "theme:growth"],
+                    "tags": ["trees", "growth"],
                     "client_time_utc": "2026-05-22T00:00:00Z",
                 },
             )
@@ -171,7 +171,7 @@ def run() -> None:
             raise AssertionError(f"alias delete failed: {deleted!r}")
         if list(aliases["aliases"].keys()) != ["canopy"]:
             raise AssertionError(f"final alias keys were unexpected: {aliases!r}")
-        if aliases["aliases"]["canopy"]["tags"] != ["subject:trees", "theme:growth"]:
+        if aliases["aliases"]["canopy"]["tags"] != ["trees", "growth"]:
             raise AssertionError(f"final alias tags were unexpected: {aliases!r}")
 
     print("Studio tag alias APIs OK")

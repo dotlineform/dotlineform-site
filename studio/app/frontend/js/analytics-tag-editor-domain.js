@@ -32,14 +32,11 @@ export function sanitizeTag(rawTag) {
   if (!tagId || !group || !label) return null;
   if (!GROUP_INDEX.has(group)) return null;
 
-  const splitIndex = tagId.indexOf(":");
-  const slug = splitIndex >= 0 ? tagId.slice(splitIndex + 1) : tagId;
-
   return {
     tag_id: tagId,
     group,
     label,
-    slug
+    slug: tagId
   };
 }
 
@@ -375,16 +372,8 @@ export function nextWeight(value) {
   return WEIGHT_VALUES[(index + 1) % WEIGHT_VALUES.length];
 }
 
-export function groupFromTagId(tagId) {
-  const normalized = normalize(tagId);
-  const splitIndex = normalized.indexOf(":");
-  return splitIndex >= 0 ? normalized.slice(0, splitIndex) : normalized;
-}
-
 export function slugFromTagId(tagId) {
-  const normalized = normalize(tagId);
-  const splitIndex = normalized.indexOf(":");
-  return splitIndex >= 0 ? normalized.slice(splitIndex + 1) : normalized;
+  return normalize(tagId);
 }
 
 export function compareEntries(a, b) {
@@ -400,11 +389,12 @@ export function compareTagDisplay(a, b) {
 }
 
 export function compareAssignmentRows(a, b) {
-  const ga = groupFromTagId(a.tag_id);
-  const gb = groupFromTagId(b.tag_id);
-  const ia = GROUP_INDEX.has(ga) ? GROUP_INDEX.get(ga) : Number.MAX_SAFE_INTEGER;
-  const ib = GROUP_INDEX.has(gb) ? GROUP_INDEX.get(gb) : Number.MAX_SAFE_INTEGER;
-  if (ia !== ib) return ia - ib;
+  const byTagId = normalize(a.tag_id).localeCompare(
+    normalize(b.tag_id),
+    undefined,
+    { sensitivity: "base" }
+  );
+  if (byTagId !== 0) return byTagId;
   if (b.w_manual !== a.w_manual) return b.w_manual - a.w_manual;
-  return slugFromTagId(a.tag_id).localeCompare(slugFromTagId(b.tag_id), undefined, { sensitivity: "base" });
+  return 0;
 }

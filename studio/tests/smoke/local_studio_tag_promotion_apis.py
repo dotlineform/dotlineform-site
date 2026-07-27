@@ -32,20 +32,20 @@ def write_fixture_data(repo_root: Path) -> tuple[Path, Path, Path]:
     assignments_path = data_root / "tag-assignments.json"
     registry_path.write_text(
         """{
-  "tag_registry_version": "tag_registry_v1",
+  "tag_registry_version": "tag_registry_v2",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {
     "allowed_groups": ["subject", "theme"]
   },
   "tags": [
     {
-      "tag_id": "subject:trees",
+      "tag_id": "trees",
       "group": "subject",
       "label": "trees",
       "description": "Trees"
     },
     {
-      "tag_id": "theme:growth",
+      "tag_id": "growth",
       "group": "theme",
       "label": "growth",
       "description": "Growth"
@@ -57,16 +57,16 @@ def write_fixture_data(repo_root: Path) -> tuple[Path, Path, Path]:
     )
     aliases_path.write_text(
         """{
-  "tag_aliases_version": "tag_aliases_v1",
+  "tag_aliases_version": "tag_aliases_v2",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "aliases": {
     "foliage": {
       "description": "Foliage",
-      "tags": ["subject:trees"]
+      "tags": ["trees"]
     },
     "growth-alias": {
       "description": "Growth alias",
-      "tags": ["theme:growth"]
+      "tags": ["growth"]
     }
   }
 }
@@ -75,14 +75,14 @@ def write_fixture_data(repo_root: Path) -> tuple[Path, Path, Path]:
     )
     assignments_path.write_text(
         """{
-  "tag_assignments_version": "tag_assignments_v1",
+  "tag_assignments_version": "tag_assignments_v2",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "series": {
     "series-a": {
-      "tags": [{"tag_id": "subject:trees", "w_manual": 0.6}],
+      "tags": [{"tag_id": "trees", "w_manual": 0.6}],
       "works": {
         "00001": {
-          "tags": [{"tag_id": "subject:trees", "w_manual": 0.9}]
+          "tags": [{"tag_id": "trees", "w_manual": 0.9}]
         }
       }
     }
@@ -133,16 +133,16 @@ def run() -> None:
             demoted_preview = post_json(
                 f"{base_url}/demote-tag-preview",
                 {
-                    "tag_id": "subject:trees",
-                    "alias_targets": ["theme:growth"],
+                    "tag_id": "trees",
+                    "alias_targets": ["growth"],
                     "client_time_utc": "2026-05-22T00:00:00Z",
                 },
             )
             demoted = post_json(
                 f"{base_url}/demote-tag",
                 {
-                    "tag_id": "subject:trees",
-                    "alias_targets": ["theme:growth"],
+                    "tag_id": "trees",
+                    "alias_targets": ["growth"],
                     "client_time_utc": "2026-05-22T00:00:00Z",
                 },
             )
@@ -155,7 +155,7 @@ def run() -> None:
         aliases = json.loads(aliases_path.read_text(encoding="utf-8"))
         assignments = json.loads(assignments_path.read_text(encoding="utf-8"))
 
-        if promoted_preview.get("new_tag_id") != "theme:foliage":
+        if promoted_preview.get("new_tag_id") != "foliage":
             raise AssertionError(f"promotion preview failed: {promoted_preview!r}")
         if promoted.get("canonical_added") != 1 or promoted.get("alias_deleted") != 1:
             raise AssertionError(f"promotion failed: {promoted!r}")
@@ -164,15 +164,15 @@ def run() -> None:
         if demoted.get("series_tag_refs_rewritten") != 1 or demoted.get("work_tag_refs_rewritten") != 1:
             raise AssertionError(f"demotion failed: {demoted!r}")
         registry_ids = [row["tag_id"] for row in registry["tags"]]
-        if registry_ids != ["theme:growth", "theme:foliage"]:
+        if registry_ids != ["growth", "foliage"]:
             raise AssertionError(f"final registry was unexpected: {registry!r}")
         if "foliage" in aliases["aliases"]:
             raise AssertionError(f"promoted alias was not removed: {aliases!r}")
-        if aliases["aliases"]["trees"]["tags"] != ["theme:growth"]:
+        if aliases["aliases"]["trees"]["tags"] != ["growth"]:
             raise AssertionError(f"demoted alias was not created: {aliases!r}")
-        if assignments["series"]["series-a"]["tags"] != [{"tag_id": "theme:growth", "w_manual": 0.6}]:
+        if assignments["series"]["series-a"]["tags"] != [{"tag_id": "growth", "w_manual": 0.6}]:
             raise AssertionError(f"series assignment was not rewritten: {assignments!r}")
-        if assignments["series"]["series-a"]["works"]["00001"]["tags"] != [{"tag_id": "theme:growth", "w_manual": 0.9}]:
+        if assignments["series"]["series-a"]["works"]["00001"]["tags"] != [{"tag_id": "growth", "w_manual": 0.9}]:
             raise AssertionError(f"work assignment was not rewritten: {assignments!r}")
 
     print("Studio tag promote/demote APIs OK")

@@ -142,14 +142,14 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
                 {
                     "ok": True,
                     "action": "create",
-                    "tag_id": "theme:renewal",
+                    "tag_id": "renewal",
                     "group": "theme",
                     "label": "renewal",
                     "description": "Renewal",
                     "added": 1,
                     "final_total": 2,
                     "updated_at_utc": "2026-07-27T12:00:00Z",
-                    "summary_text": "created tag theme:renewal; final 2",
+                    "summary_text": "created tag renewal; final 2",
                 }
             ),
         )
@@ -161,7 +161,7 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
             return service.submitCreateTag({
                 saveMode: 'post',
                 newTagRow: {
-                    tag_id: 'theme:renewal',
+                    tag_id: 'renewal',
                     group: 'theme',
                     label: 'renewal',
                     description: 'Renewal'
@@ -185,24 +185,24 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
 
     assert result["ok"] is True
     assert result["mode"] == "post"
-    assert result["summary"] == "created tag theme:renewal; final 2"
+    assert result["summary"] == "created tag renewal; final 2"
     assert captured["method"] == "POST"
     payload = captured["payload"]
     assert isinstance(payload, dict)
     assert payload["group"] == "theme"
-    assert payload["slug"] == "renewal"
+    assert payload["tag_id"] == "renewal"
     assert payload["description"] == "Renewal"
-    assert set(payload) == {"group", "slug", "description", "client_time_utc", "activity_context"}
+    assert set(payload) == {"group", "tag_id", "description", "client_time_utc", "activity_context"}
     context = payload["activity_context"]
     assert isinstance(context, dict)
     assert context["action_id"] == "create-tag"
-    assert context["tag_id"] == "theme:renewal"
+    assert context["tag_id"] == "renewal"
 
     def reject_create(route) -> None:
         route.fulfill(
             status=400,
             content_type="application/json",
-            body=json.dumps({"ok": False, "error": "tag_id already exists: theme:renewal"}),
+            body=json.dumps({"ok": False, "error": "tag_id already exists: renewal"}),
         )
 
     page.route(endpoint, reject_create)
@@ -212,7 +212,7 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
             return service.submitCreateTag({
                 saveMode: 'post',
                 newTagRow: {
-                    tag_id: 'theme:renewal',
+                    tag_id: 'renewal',
                     group: 'theme',
                     label: 'renewal',
                     description: 'Renewal'
@@ -237,7 +237,7 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
         "ok": False,
         "mode": "post",
         "switchToPatch": False,
-        "message": "tag_id already exists: theme:renewal",
+        "message": "tag_id already exists: renewal",
     }
 
     unavailable = page.evaluate(
@@ -246,7 +246,7 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
             return service.submitCreateTag({
                 saveMode: 'post',
                 newTagRow: {
-                    tag_id: 'theme:renewal',
+                    tag_id: 'renewal',
                     group: 'theme',
                     label: 'renewal',
                     description: 'Renewal'
@@ -276,7 +276,7 @@ def assert_tag_alias_create_request(page: Page, base_url: str) -> None:
                     "ok": True,
                     "action": "create_alias",
                     "alias": "leaf-growth",
-                    "tags": ["subject:trees", "theme:growth"],
+                    "tags": ["trees", "growth"],
                     "target_count": 2,
                     "added": 1,
                     "final_total": 2,
@@ -297,7 +297,7 @@ def assert_tag_alias_create_request(page: Page, base_url: str) -> None:
                 validation: {
                     alias: 'leaf-growth',
                     description: 'Leaf growth',
-                    tags: ['subject:trees', 'theme:growth']
+                    tags: ['trees', 'growth']
                 },
                 config: {
                     app: {
@@ -324,7 +324,7 @@ def assert_tag_alias_create_request(page: Page, base_url: str) -> None:
     assert isinstance(payload, dict)
     assert payload["alias"] == "leaf-growth"
     assert payload["description"] == "Leaf growth"
-    assert payload["tags"] == ["subject:trees", "theme:growth"]
+    assert payload["tags"] == ["trees", "growth"]
     assert set(payload) == {"alias", "description", "tags", "client_time_utc", "activity_context"}
     context = payload["activity_context"]
     assert isinstance(context, dict)
@@ -349,7 +349,7 @@ def assert_tag_alias_create_request(page: Page, base_url: str) -> None:
                 validation: {
                     alias: 'leaf-growth',
                     description: 'Leaf growth',
-                    tags: ['subject:trees']
+                    tags: ['trees']
                 },
                 config: {
                     app: {
@@ -384,7 +384,7 @@ def assert_tag_alias_create_request(page: Page, base_url: str) -> None:
                 validation: {
                     alias: 'leaf-growth',
                     description: 'Leaf growth',
-                    tags: ['subject:trees']
+                    tags: ['trees']
                 },
                 config: {}
             });
@@ -410,16 +410,16 @@ def assert_studio_tag_editor_interactions(page: Page) -> None:
               <p id="saveResult"></p>
             `;
             const module = await import('/studio/app/frontend/js/analytics-tag-editor-interactions.js');
-            const alpha = { tag_id: 'subject:alpha', group: 'subject', label: 'Alpha', slug: 'alpha' };
-            const beta = { tag_id: 'domain:beta', group: 'domain', label: 'Beta', slug: 'beta' };
-            const gamma = { tag_id: 'theme:gamma', group: 'theme', label: 'Gamma', slug: 'gamma' };
+            const alpha = { tag_id: 'alpha', group: 'subject', label: 'Alpha', slug: 'alpha' };
+            const beta = { tag_id: 'beta', group: 'domain', label: 'Beta', slug: 'beta' };
+            const gamma = { tag_id: 'gamma', group: 'theme', label: 'Gamma', slug: 'gamma' };
             const state = {
                 config: {},
                 seriesId: 'demo',
                 tagsById: new Map([
-                    ['subject:alpha', alpha],
-                    ['domain:beta', beta],
-                    ['theme:gamma', gamma]
+                    ['alpha', alpha],
+                    ['beta', beta],
+                    ['gamma', gamma]
                 ]),
                 slugMap: new Map([
                     ['alpha', [alpha]],
@@ -427,17 +427,17 @@ def assert_studio_tag_editor_interactions(page: Page) -> None:
                     ['gamma', [gamma]]
                 ]),
                 labelMap: new Map(),
-                aliases: new Map([['alias-beta', ['domain:beta']]]),
+                aliases: new Map([['alias-beta', ['beta']]]),
                 seriesEntries: [{
                     entryId: 1,
-                    rawInput: 'subject:alpha',
-                    canonicalId: 'subject:alpha',
+                    rawInput: 'alpha',
+                    canonicalId: 'alpha',
                     group: 'subject',
                     label: 'Alpha',
                     wManual: 0.6,
                     alias: ''
                 }],
-                baselineSeriesRows: [{ tag_id: 'subject:alpha', w_manual: 0.6 }],
+                baselineSeriesRows: [{ tag_id: 'alpha', w_manual: 0.6 }],
                 workEntriesById: new Map(),
                 baselineWorkStateById: new Map(),
                 seriesWorkOptions: [
@@ -523,7 +523,7 @@ def assert_studio_tag_editor_interactions(page: Page) -> None:
             };
         }"""
     )
-    assert result["workEntryAfterAdd"]["canonicalId"] == "domain:beta"
+    assert result["workEntryAfterAdd"]["canonicalId"] == "beta"
     assert result["workEntryAfterAdd"]["alias"] == "alias-beta"
     assert result["workProjection"] == {
         "isDirty": True,
@@ -535,7 +535,7 @@ def assert_studio_tag_editor_interactions(page: Page) -> None:
     assert result["workEntriesAfterRemove"] == 0
     assert result["selectedAfterClear"] == ""
     assert result["selectedIdsAfterClear"] == []
-    assert result["seriesEntries"] == ["subject:alpha", "domain:beta"]
+    assert result["seriesEntries"] == ["alpha", "beta"]
     assert result["seriesProjection"] == {
         "isDirty": True,
         "saveButtonDisabled": False,
@@ -554,8 +554,8 @@ def assert_studio_tag_editor_direct_save_failure(page: Page) -> None:
             const stateModule = await import('/studio/app/frontend/js/analytics-tag-editor-state.js');
             const interactions = await import('/studio/app/frontend/js/analytics-tag-editor-interactions.js');
             const saveController = await import('/studio/app/frontend/js/analytics-tag-editor-save-controller.js');
-            const alpha = { tag_id: 'subject:alpha', group: 'subject', label: 'Alpha', slug: 'alpha' };
-            const beta = { tag_id: 'domain:beta', group: 'domain', label: 'Beta', slug: 'beta' };
+            const alpha = { tag_id: 'alpha', group: 'subject', label: 'Alpha', slug: 'alpha' };
+            const beta = { tag_id: 'beta', group: 'domain', label: 'Beta', slug: 'beta' };
             const state = stateModule.buildAnalyticsTagEditorState({
                 mount: document.createElement('div'),
                 seriesId: 'demo',
@@ -564,7 +564,7 @@ def assert_studio_tag_editor_direct_save_failure(page: Page) -> None:
                 assignmentsJson: {
                     series: {
                         demo: {
-                            tags: [{ tag_id: 'subject:alpha', w_manual: 0.6 }]
+                            tags: [{ tag_id: 'alpha', w_manual: 0.6 }]
                         }
                     }
                 },
@@ -605,7 +605,7 @@ def assert_studio_tag_editor_direct_save_failure(page: Page) -> None:
         }"""
     )
     assert result["baselineAfter"] == result["baselineBefore"]
-    assert result["seriesTags"] == ["subject:alpha", "domain:beta"]
+    assert result["seriesTags"] == ["alpha", "beta"]
     assert result["statusKind"] == "error"
     assert result["statusText"] == "Local save failed."
     assert result["saveResult"] == {

@@ -34,9 +34,9 @@ def assert_raises_contains(fn: Callable[[], Any], expected: str, label: str) -> 
 
 
 def test_tag_id_and_alias_key_validation() -> None:
-    assert_equal(source.sanitize_tag_id(" Subject:Trees "), "subject:trees", "tag id normalized")
-    assert_raises_contains(lambda: source.sanitize_tag_id("trees"), "must match <group>:<slug>", "tag id missing group")
-    assert_raises_contains(lambda: source.sanitize_tag_id("subject:bad_slug"), "must match <group>:<slug>", "tag id unsafe slug")
+    assert_equal(source.sanitize_tag_id(" Trees "), "trees", "tag id normalized")
+    assert_raises_contains(lambda: source.sanitize_tag_id("subject:trees"), "must be slug-safe", "tag id includes group")
+    assert_raises_contains(lambda: source.sanitize_tag_id("bad_slug"), "must be slug-safe", "tag id unsafe slug")
 
     assert_equal(source.sanitize_alias_key(" Foliage ", 0), "foliage", "alias key normalized")
     assert_raises_contains(lambda: source.sanitize_alias_key("", 1), "must not be empty", "empty alias")
@@ -58,22 +58,22 @@ def test_group_and_manual_weight_validation() -> None:
 
 def test_assignment_tag_normalization() -> None:
     raw = [
-        {"tag_id": "Subject:Trees", "w_manual": "0.9", "alias": "Foliage"},
-        {"tag_id": "subject:trees", "w_manual": "0.3"},
-        {"tag_id": "theme:growth", "w_manual": 0.6},
+        {"tag_id": " Trees ", "w_manual": "0.9", "alias": "Foliage"},
+        {"tag_id": "trees", "w_manual": "0.3"},
+        {"tag_id": "growth", "w_manual": 0.6},
     ]
     assert_equal(
         source.sanitize_assignment_tags(raw, "tags"),
         [
-            {"tag_id": "subject:trees", "w_manual": 0.9, "alias": "foliage"},
-            {"tag_id": "theme:growth", "w_manual": 0.6},
+            {"tag_id": "trees", "w_manual": 0.9, "alias": "foliage"},
+            {"tag_id": "growth", "w_manual": 0.6},
         ],
         "assignment tags normalize and de-duplicate",
     )
-    assert_raises_contains(lambda: source.sanitize_assignment_tags(["subject:trees"], "tags"), "must be an object", "strict strings")
+    assert_raises_contains(lambda: source.sanitize_assignment_tags(["trees"], "tags"), "must be an object", "strict strings")
     assert_equal(
-        source.sanitize_assignment_tags(["subject:trees", "bad"], "tags", strict=False),
-        [{"tag_id": "subject:trees", "w_manual": source.DEFAULT_TAG_WEIGHT}],
+        source.sanitize_assignment_tags(["trees", "bad_value"], "tags", strict=False),
+        [{"tag_id": "trees", "w_manual": source.DEFAULT_TAG_WEIGHT}],
         "non-strict assignment rows skip invalid entries",
     )
 
@@ -85,7 +85,9 @@ def test_default_payload_loading() -> None:
         registry = source.load_registry(root / "missing-registry.json")
         aliases = source.load_aliases(root / "missing-aliases.json")
 
-    assert_equal(assignments["tag_assignments_version"], "tag_assignments_v1", "assignment default version")
+    assert_equal(assignments["tag_assignments_version"], "tag_assignments_v2", "assignment default version")
+    assert_equal(registry["tag_registry_version"], "tag_registry_v2", "registry default version")
+    assert_equal(aliases["tag_aliases_version"], "tag_aliases_v2", "aliases default version")
     assert_equal(assignments["series"], {}, "assignment default series")
     assert_equal(registry["policy"]["allowed_groups"], source.DEFAULT_ALLOWED_GROUPS, "registry default groups")
     assert_equal(aliases["aliases"], {}, "aliases default")

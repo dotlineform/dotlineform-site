@@ -16,9 +16,9 @@ from tags.tag_source_paths import TAG_ASSIGNMENTS_REL_PATH
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
 EXPECTED_CANONICAL_FILES = {
-    "tag-registry.json": ("c52fa354bf41570c0a1e29ce78e298b945a1cc8f5a81bad1dd4986881698ec20", 99743),
-    "tag-aliases.json": ("579757259edf6c53c363b8ba35f098eb63a2e2325e40f03a64da8f562cb60393", 8165),
-    "tag-assignments.json": ("5b337ce9c09b7c31bf6582f9c3b4a1269db74b1739573368805e75a92d43504d", 13317),
+    "tag-registry.json": ("4d3e7e56e9e2eb50a1ae645562790522929439bdd1c67a7d783ea5fb89a887b4", 87197),
+    "tag-aliases.json": ("9bdcd5ac7df75719ba791480ff45612137ce1832e5c0595eaf8e23a376701158", 6519),
+    "tag-assignments.json": ("08c0dba8bf923be376f1b8186290a00b1a2bdb7c74ad811f896eb1f430b72d5d", 13067),
     "tag-groups.json": ("9883b239143045684e05d2888f4ce73ea0d0a865e20c0a238206de972e90f529", 2866),
 }
 
@@ -49,8 +49,11 @@ def test_studio_tag_api_reads_each_canonical_payload() -> None:
     assignments = tags_get_payload(REPO_ROOT, "/tag-assignments")
 
     assert groups["ok"] is True and len(groups["groups"]) == 4
-    assert registry["ok"] is True and len(registry["tags"]) == 275
-    assert aliases["ok"] is True and len(aliases["aliases"]) == 82
+    assert registry["tag_registry_version"] == "tag_registry_v2"
+    assert registry["ok"] is True and len(registry["tags"]) == 245
+    assert aliases["tag_aliases_version"] == "tag_aliases_v2"
+    assert aliases["ok"] is True and len(aliases["aliases"]) == 70
+    assert assignments["tag_assignments_version"] == "tag_assignments_v2"
     assert assignments["ok"] is True and len(assignments["series"]) == 140
     health = tags_health_payload()
     assert health["service"] == "studio_tags"
@@ -69,7 +72,7 @@ def test_studio_tag_api_dry_run_preserves_assignment_source() -> None:
         path.parent.mkdir(parents=True)
         path.write_text(
             """{
-  "tag_assignments_version": "tag_assignments_v1",
+  "tag_assignments_version": "tag_assignments_v2",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "series": {}
 }
@@ -82,7 +85,7 @@ def test_studio_tag_api_dry_run_preserves_assignment_source() -> None:
             "/save-tags",
             {
                 "series_id": "series-a",
-                "tags": [{"tag_id": "subject:trees", "w_manual": 0.9}],
+                "tags": [{"tag_id": "trees", "w_manual": 0.9}],
                 "client_time_utc": "2026-05-22T00:00:00Z",
             },
             dry_run=True,

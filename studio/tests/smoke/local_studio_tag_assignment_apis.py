@@ -30,7 +30,7 @@ def write_fixture_assignments(repo_root: Path) -> Path:
     assignments_path.parent.mkdir(parents=True)
     assignments_path.write_text(
         """{
-  "tag_assignments_version": "tag_assignments_v1",
+  "tag_assignments_version": "tag_assignments_v2",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "series": {}
 }
@@ -73,7 +73,7 @@ def run() -> None:
                 f"http://127.0.0.1:{port}/studio/api/tags/save-tags",
                 {
                     "series_id": "series-a",
-                    "tags": [{"tag_id": "subject:trees", "w_manual": 0.9}],
+                    "tags": [{"tag_id": "trees", "w_manual": 0.9}],
                     "client_time_utc": "2026-05-22T00:00:00Z",
                 },
             )
@@ -93,7 +93,7 @@ def run() -> None:
             raise AssertionError(f"save-tags response failed: {response!r}")
         if response.get("series_id") != "series-a":
             raise AssertionError(f"unexpected series id: {response!r}")
-        if persisted["series"]["series-a"]["tags"] != [{"tag_id": "subject:trees", "w_manual": 0.9}]:
+        if persisted["series"]["series-a"]["tags"] != [{"tag_id": "trees", "w_manual": 0.9}]:
             raise AssertionError(f"fixture assignments were not updated by save-tags: {persisted!r}")
 
     print("Studio direct tag assignment API OK")

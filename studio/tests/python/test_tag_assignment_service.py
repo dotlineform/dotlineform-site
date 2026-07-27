@@ -36,23 +36,23 @@ def test_series_assignment_save_plan() -> None:
         "series-a",
         None,
         None,
-        [tag("subject:trees", 0.9)],
+        [tag("trees", 0.9)],
         NOW,
     )
 
-    assert_equal(updated["series"]["series-a"]["tags"], [tag("subject:trees", 0.9)], "series tags persisted")
+    assert_equal(updated["series"]["series-a"]["tags"], [tag("trees", 0.9)], "series tags persisted")
     assert_equal(updated["series"]["series-a"]["updated_at_utc"], NOW, "series updated timestamp")
     assert_equal(response["tag_count"], 1, "series response tag count")
     assert_equal(response["work_id"], None, "series response work id")
     assert_equal("deleted" in response, False, "series response omits deleted")
-    assert_equal(would_write["tags"], [tag("subject:trees", 0.9)], "series dry-run write payload")
+    assert_equal(would_write["tags"], [tag("trees", 0.9)], "series dry-run write payload")
 
 
 def test_work_assignment_save_strips_inherited_tags() -> None:
     payload = {
         "series": {
             "series-a": {
-                "tags": [tag("subject:trees")],
+                "tags": [tag("trees")],
             }
         }
     }
@@ -61,11 +61,11 @@ def test_work_assignment_save_strips_inherited_tags() -> None:
         "series-a",
         "00001",
         False,
-        [tag("subject:trees"), tag("theme:growth", 0.3)],
+        [tag("trees"), tag("growth", 0.3)],
         NOW,
     )
 
-    assert_equal(updated["series"]["series-a"]["works"]["00001"]["tags"], [tag("theme:growth", 0.3)], "work override strips inherited")
+    assert_equal(updated["series"]["series-a"]["works"]["00001"]["tags"], [tag("growth", 0.3)], "work override strips inherited")
     assert_equal(response["tag_count"], 1, "work response counts persisted override tags")
     assert_equal(response["deleted"], False, "work row retained")
     assert_equal(would_write["deleted"], False, "work dry-run delete flag")
@@ -75,8 +75,8 @@ def test_work_assignment_delete_plan() -> None:
     payload = {
         "series": {
             "series-a": {
-                "tags": [tag("subject:trees")],
-                "works": {"00001": {"tags": [tag("theme:growth")], "updated_at_utc": "old"}},
+                "tags": [tag("trees")],
+                "works": {"00001": {"tags": [tag("growth")], "updated_at_utc": "old"}},
             }
         }
     }
@@ -85,7 +85,7 @@ def test_work_assignment_delete_plan() -> None:
         "series-a",
         "00001",
         False,
-        [tag("subject:trees")],
+        [tag("trees")],
         NOW,
     )
 
@@ -96,13 +96,13 @@ def test_work_assignment_delete_plan() -> None:
 
 
 def test_empty_explicit_work_row_plan() -> None:
-    payload = {"series": {"series-a": {"tags": [tag("subject:trees")]}}}
+    payload = {"series": {"series-a": {"tags": [tag("trees")]}}}
     updated, response, _would_write = assignments.plan_assignment_save(
         payload,
         "series-a",
         "00001",
         True,
-        [tag("subject:trees")],
+        [tag("trees")],
         NOW,
     )
 

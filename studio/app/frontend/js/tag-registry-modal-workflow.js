@@ -65,6 +65,7 @@ export function setTagRegistryEditStatus(state, kind, message) {
 
 export function applyTagRegistryEditResult(state, {
   tagId,
+  group,
   description,
   result
 } = {}, options = {}) {
@@ -72,6 +73,7 @@ export function applyTagRegistryEditResult(state, {
   callback(options, "setRouteResult", "success", result && result.summary);
   applyTagRegistryEditProjection(state, {
     tagId,
+    group,
     description,
     response: result && result.response
   });
@@ -196,7 +198,7 @@ export function openTagRegistryDemoteWorkflow(state, tagId, options = {}) {
     callback(options, "setRouteResult", "error", text(options, "selected_tag_missing", "Selected tag is no longer available."));
     return;
   }
-  const aliasKey = tag.tagId.split(":")[1] || tag.tagId;
+  const aliasKey = tag.tagId;
   if (state.aliasKeys.has(aliasKey)) {
     callback(
       options,

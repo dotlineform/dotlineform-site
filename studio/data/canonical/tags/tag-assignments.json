@@ -1,6 +1,6 @@
 {
-  "tag_assignments_version": "tag_assignments_v1",
-  "updated_at_utc": "2026-07-27T15:02:10Z",
+  "tag_assignments_version": "tag_assignments_v2",
+  "updated_at_utc": "2026-07-27T15:39:06Z",
   "series": {
     "001": {
       "tags": [],
@@ -137,15 +137,15 @@
     "036": {
       "tags": [
         {
-          "tag_id": "form:curvilinear",
+          "tag_id": "curvilinear",
           "w_manual": 0.6
         },
         {
-          "tag_id": "form:line",
+          "tag_id": "line",
           "w_manual": 0.6
         },
         {
-          "tag_id": "theme:emergence",
+          "tag_id": "emergence",
           "w_manual": 0.6
         }
       ],
@@ -153,32 +153,32 @@
         "00293": {
           "tags": [
             {
-              "tag_id": "subject:grid",
+              "tag_id": "grid",
               "w_manual": 0.6
             }
           ],
-          "updated_at_utc": "2026-07-27T15:00:49Z"
+          "updated_at_utc": "2026-07-27T15:39:06Z"
         },
         "00294": {
           "tags": [
             {
-              "tag_id": "subject:grid",
+              "tag_id": "grid",
               "w_manual": 0.6
             }
           ],
-          "updated_at_utc": "2026-03-07T17:09:10Z"
+          "updated_at_utc": "2026-07-27T15:39:06Z"
         },
         "00296": {
           "tags": [
             {
-              "tag_id": "subject:grid",
+              "tag_id": "grid",
               "w_manual": 0.6
             }
           ],
-          "updated_at_utc": "2026-07-27T15:00:49Z"
+          "updated_at_utc": "2026-07-27T15:39:06Z"
         }
       },
-      "updated_at_utc": "2026-07-27T15:00:49Z"
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     "037": {
       "tags": [],
@@ -203,11 +203,11 @@
     "042": {
       "tags": [
         {
-          "tag_id": "domain:memory",
+          "tag_id": "memory",
           "w_manual": 0.6
         }
       ],
-      "updated_at_utc": "2026-02-28T23:19:30Z"
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     "043": {
       "tags": [],
@@ -216,11 +216,11 @@
     "044": {
       "tags": [
         {
-          "tag_id": "form:curvilinear",
+          "tag_id": "curvilinear",
           "w_manual": 0.6
         }
       ],
-      "updated_at_utc": "2026-02-28T21:56:56Z"
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     "045": {
       "tags": [],

@@ -537,7 +537,7 @@ def remove_work_overrides_from_tag_assignments(payload: Dict[str, Any], work_id:
     if changed:
         payload["updated_at_utc"] = now_utc
     if "tag_assignments_version" not in payload:
-        payload["tag_assignments_version"] = "tag_assignments_v1"
+        payload["tag_assignments_version"] = "tag_assignments_v2"
     return changed
 
 
@@ -550,7 +550,7 @@ def remove_series_from_tag_assignments(payload: Dict[str, Any], series_id: str) 
     del series_map[series_id]
     payload["updated_at_utc"] = activity.utc_now()
     if "tag_assignments_version" not in payload:
-        payload["tag_assignments_version"] = "tag_assignments_v1"
+        payload["tag_assignments_version"] = "tag_assignments_v2"
     return True
 
 

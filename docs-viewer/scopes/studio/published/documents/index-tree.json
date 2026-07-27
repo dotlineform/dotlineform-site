@@ -739,7 +739,7 @@
           "doc_id": "d-20260727-110004-ab0433",
           "title": "Flat Tag Identity",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260727-110004-ab0433.json",
-          "ui_status": "draft",
+          "ui_status": "done",
           "children": [
             {
               "doc_id": "d-20260727-110045-a48cc4",
@@ -750,7 +750,7 @@
               "doc_id": "d-20260727-110045-b02868",
               "title": "Flat Tag Identity Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260727-110045-b02868.json",
-              "ui_status": "proposed"
+              "ui_status": "done"
             }
           ]
         },
@@ -1266,5 +1266,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-27T14:21:10Z"
+  "generated_at": "2026-07-27T15:47:19Z"
 }

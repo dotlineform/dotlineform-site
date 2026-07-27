@@ -147,10 +147,7 @@ export function normalize(value) {
 }
 
 export function labelFromTagId(tagId) {
-  const normalized = normalize(tagId);
-  if (!normalized || !normalized.includes(":")) return "";
-  const [, slug = ""] = normalized.split(":", 2);
-  return labelFromSlug(slug);
+  return labelFromSlug(tagId);
 }
 
 export function labelFromSlug(slug) {
@@ -184,7 +181,7 @@ export function getNewTagValidation(options) {
   } else if (!(tagSlugRe instanceof RegExp) || !tagSlugRe.test(slug)) {
     warning = text("tag_slug_invalid", "Tag slug must be lowercase letters, numbers, or hyphens.");
   } else {
-    const tagId = `${group}:${slug}`;
+    const tagId = slug;
     const exists = Array.isArray(tags) && tags.some((tag) => tag && tag.tagId === tagId);
     if (exists) warning = text("tag_exists_warning", "Tag already exists.");
   }
@@ -195,7 +192,7 @@ export function getNewTagValidation(options) {
     group,
     slug,
     description,
-    tagId: group && slug ? `${group}:${slug}` : ""
+    tagId: group && slug ? slug : ""
   };
 }
 
@@ -262,10 +259,9 @@ export function getDemoteTagMatches(options) {
   const allMatches = (Array.isArray(registryOptions) ? registryOptions : []).filter((item) => {
     if (selected.has(item.tagId)) return false;
     if (item.tagId === demoteState.tagId) return false;
-    const slug = item.tagId.split(":", 2)[1] || "";
     return (
       normalize(item.label).startsWith(normalizedQuery) ||
-      normalize(slug).startsWith(normalizedQuery)
+      normalize(item.tagId).startsWith(normalizedQuery)
     );
   });
 

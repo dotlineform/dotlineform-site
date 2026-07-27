@@ -29,7 +29,7 @@ export function applyTagAliasesPromoteProjection(state, options = {}) {
   state.aliasesUpdatedAt = aliasesUpdatedAtFromResponse(options.response, state.aliasesUpdatedAt) || state.aliasesUpdatedAt;
   state.aliases = state.aliases.filter((entry) => entry && entry.alias !== aliasKey);
   if (group && aliasKey) {
-    state.registryById.set(`${group}:${aliasKey}`, { group, label: aliasKey });
+    state.registryById.set(aliasKey, { group, label: aliasKey });
   }
   syncTagAliasesDerivedState(state);
 }
@@ -45,7 +45,7 @@ export function applyTagAliasesDemoteProjection(state, options = {}) {
     state.registryById.delete(canonicalTagId);
     replaceTagAliasEntry(
       state,
-      makeTagAliasEntry(state, canonicalTagId.split(":")[1] || canonicalTagId, "", aliasTargets, updatedAtUtc)
+      makeTagAliasEntry(state, canonicalTagId, "", aliasTargets, updatedAtUtc)
     );
   }
   syncTagAliasesDerivedState(state);

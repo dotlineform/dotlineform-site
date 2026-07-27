@@ -12,6 +12,7 @@ import {
 
 export function applyTagRegistryEditProjection(state, options = {}) {
   const tagId = normalize(options.tagId);
+  const group = normalize(options.group);
   const description = String(options.description || "").trim();
   const updatedAtUtc = registryUpdatedAtFromResponse(options.response, state.registryUpdatedAt);
   const updatedAtMs = timestampMs(updatedAtUtc);
@@ -21,6 +22,7 @@ export function applyTagRegistryEditProjection(state, options = {}) {
     if (!tag || tag.tagId !== tagId) return tag;
     return {
       ...tag,
+      group,
       description,
       updatedAtUtc,
       updatedAtMs: Number.isFinite(updatedAtMs) ? updatedAtMs : tag.updatedAtMs
@@ -40,7 +42,7 @@ export function applyTagRegistryCreateProjection(state, options = {}) {
     .concat([{
       group: validation.group,
       tagId: validation.tagId,
-      label: validation.slug,
+      label: validation.tagId,
       description: validation.description,
       updatedAtUtc,
       updatedAtMs: Number.isFinite(updatedAtMs) ? updatedAtMs : null

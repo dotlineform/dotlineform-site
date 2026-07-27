@@ -10,7 +10,7 @@ function aliasesText(config, key, fallback, tokens) {
 }
 
 export function buildManualPatchForAliasPromote(state, aliasKey, group) {
-  const newTagId = `${group}:${aliasKey}`;
+  const newTagId = normalize(aliasKey);
   const canonicalExists = state.registryById.has(newTagId);
   const sectionSnippet = {
     tag_registry: {},
@@ -109,8 +109,7 @@ export function buildManualPatchForAliasEdit(aliasKey, newAliasKey, description,
 }
 
 export function buildManualPatchForDemote(tagId, aliasTargets) {
-  const parts = String(tagId || "").split(":", 2);
-  const aliasKey = parts.length === 2 ? parts[1] : "";
+  const aliasKey = normalize(tagId);
   return {
     kind: "warn",
     message: aliasesText(

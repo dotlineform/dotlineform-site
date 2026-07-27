@@ -25,7 +25,7 @@ def create_tag_response(repo_root: Path, body: dict[str, Any], *, dry_run: bool 
     updated_payload, stats = tag_registry.create_registry_tag(
         existing_payload,
         group=body.get("group"),
-        slug=body.get("slug"),
+        tag_id=body.get("tag_id"),
         description=body.get("description"),
         now_utc=now_utc,
     )
@@ -97,12 +97,16 @@ def mutate_tag_response(
     if action not in tag_registry.MUTATE_ACTIONS:
         raise ValueError(f"action must be one of: {sorted(tag_registry.MUTATE_ACTIONS)}")
 
-    new_slug = None
+    new_tag_id = None
+    new_group = None
     new_description = None
     if action == "edit":
-        raw_new_slug = body.get("new_slug")
-        if raw_new_slug is not None and str(raw_new_slug).strip():
-            new_slug = tag_source.sanitize_slug(raw_new_slug, "new_slug")
+        raw_new_tag_id = body.get("new_tag_id")
+        if raw_new_tag_id is not None and str(raw_new_tag_id).strip():
+            new_tag_id = tag_source.sanitize_tag_id(raw_new_tag_id, "new_tag_id")
+        raw_new_group = body.get("new_group")
+        if raw_new_group is not None and str(raw_new_group).strip():
+            new_group = str(raw_new_group)
         if "description" in body:
             new_description = tag_source.sanitize_alias_description(body.get("description"), "description")
 
@@ -116,7 +120,8 @@ def mutate_tag_response(
         action=action,
         old_tag_id=old_tag_id,
         now_utc=now_utc,
-        new_slug=new_slug,
+        new_tag_id=new_tag_id,
+        new_group=new_group,
         new_description=new_description,
         allow_canonical_rename=allow_canonical_rename,
     )
@@ -129,6 +134,7 @@ def mutate_tag_response(
             old_tag_id=old_tag_id,
             new_tag_id=rewrite_to,
             now_utc=now_utc,
+            registry_payload=registry_updated,
         )
         assignments_updated, assignment_stats = tag_registry.rewrite_assignments_for_tag(
             assignments_payload,
@@ -151,12 +157,14 @@ def mutate_tag_response(
             "work_rows_touched": 0,
             "work_tag_refs_rewritten": 0,
         }
+        tag_aliases.validate_alias_entries(aliases_payload, registry_updated)
 
     stats: dict[str, Any] = {
         "action": action,
         "old_tag_id": old_tag_id,
         "new_tag_id": rewrite_to,
         "canonical_changed": bool(mutate_meta.get("canonical_changed")),
+        "group_changed": bool(mutate_meta.get("group_changed")),
         "description_changed": bool(mutate_meta.get("description_changed")),
         **alias_stats,
         **assignment_stats,

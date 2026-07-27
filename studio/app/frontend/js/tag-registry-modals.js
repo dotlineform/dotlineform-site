@@ -39,6 +39,7 @@ export function collectTagRegistryModalRefs(root) {
     copyPatch: root.querySelector(UI_SELECTOR.copyPatch),
     editModal: root.querySelector(UI_SELECTOR.editModal),
     editTagId: root.querySelector(UI_SELECTOR.editTagId),
+    editGroupKey: root.querySelector(UI_SELECTOR.editGroupKey),
     editTagName: root.querySelector(UI_SELECTOR.editTagName),
     editDescription: root.querySelector(UI_SELECTOR.editDescription),
     editStatus: root.querySelector(UI_SELECTOR.editStatus),
@@ -78,9 +79,18 @@ export function wireTagRegistryModalEvents(state, callbacks = {}) {
   });
 
   state.refs.editModal.addEventListener("click", (event) => {
-    if (!event.target.closest(UI_SELECTOR.editModalClose)) return;
-    closeTagRegistryEditModal(state);
-    callbacks.onModalStateChange?.();
+    if (event.target.closest(UI_SELECTOR.editModalClose)) {
+      closeTagRegistryEditModal(state);
+      callbacks.onModalStateChange?.();
+      return;
+    }
+    const groupButton = event.target.closest("button[data-edit-group]");
+    if (!groupButton || !state.editTagId) return;
+    const group = normalizeModalValue(groupButton.getAttribute("data-edit-group"));
+    if (!getStudioGroups(state).includes(group)) return;
+    state.editTagGroup = group;
+    renderTagRegistryEditGroupKey(state);
+    callbacks.onEditGroupInput?.();
   });
 
   state.refs.saveEdit.addEventListener("click", () => {
@@ -215,15 +225,16 @@ export function hideTagRegistryPatchModal(state) {
 
 export function openTagRegistryEditModal(state, tag) {
   captureTagModalRestoreFocus(state, "edit", modalConfigs());
-  const [, slug = ""] = String(tag.tagId || "").split(":", 2);
   state.editTagId = tag.tagId;
+  state.editTagGroup = tag.group;
   state.refs.editTagId.innerHTML = `
     <span class="${classNames(UI_CLASS.chip, chipGroupClass(tag.group))}" title="${escapeHtml(String(state.groupDescriptions.get(tag.group) || tag.tagId))}">
       ${escapeHtml(tag.group)}
     </span>
   `;
-  state.refs.editTagName.value = slug;
+  state.refs.editTagName.value = tag.tagId;
   state.refs.editDescription.value = String(tag.description || "");
+  renderTagRegistryEditGroupKey(state);
   setStatusText(
     state.refs.editStatus,
     "",
@@ -242,6 +253,8 @@ export function closeTagRegistryEditModal(state) {
   state.editModalFocusReady = false;
   state.editModalRestoreFocus = null;
   state.editTagId = "";
+  state.editTagGroup = "";
+  state.refs.editGroupKey.innerHTML = "";
   state.refs.editTagName.value = "";
   state.refs.editDescription.value = "";
   restoreTagModalFocus(restoreTarget);
@@ -447,6 +460,7 @@ function renderEditModal(state) {
     title: registryText(state.config, "edit_modal_title", "Edit Tag"),
     bodyHtml: `
       <p class="${UI_CLASS.formMeta}" data-role="${UI.role.editTagId}"></p>
+      <div class="studioUi__key ${UI_CLASS.newGroupKey}" data-role="${UI.role.editGroupKey}"></div>
       <div class="${UI_CLASS.formFields}">
         <label class="${UI_CLASS.formField}">
           <input type="text" class="studioUi__input ${UI_CLASS.formReadonly}" data-role="${UI.role.editTagName}" autocomplete="off" readonly>
@@ -612,6 +626,27 @@ function renderTagRegistryNewTagGroupKey(state) {
         class="${classNames(UI_CLASS.keyPill, chipGroupClass(group))}"
         data-new-group="${escapeHtml(group)}"
         ${stateAttr(state.newTagState.group === group ? UI.state.active : "")}
+        ${titleAttr}
+      >
+        ${escapeHtml(group)}
+      </button>
+    `;
+  }).join("");
+}
+
+function renderTagRegistryEditGroupKey(state) {
+  if (!state.editTagId) {
+    state.refs.editGroupKey.innerHTML = "";
+    return;
+  }
+  state.refs.editGroupKey.innerHTML = getStudioGroups(state).map((group) => {
+    const titleAttr = groupTitleAttr(state, group);
+    return `
+      <button
+        type="button"
+        class="${classNames(UI_CLASS.keyPill, chipGroupClass(group))}"
+        data-edit-group="${escapeHtml(group)}"
+        ${stateAttr(state.editTagGroup === group ? UI.state.active : "")}
         ${titleAttr}
       >
         ${escapeHtml(group)}

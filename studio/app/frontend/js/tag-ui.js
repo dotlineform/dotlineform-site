@@ -137,6 +137,7 @@ export const tagRegistryUi = createUiContract({
     editModal: "edit-modal",
     editModalClose: "close-edit-modal",
     editTagId: "edit-tag-id",
+    editGroupKey: "edit-group-key",
     editTagName: "edit-tag-name",
     editDescription: "edit-description",
     editStatus: "edit-status",

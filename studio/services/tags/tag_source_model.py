@@ -14,7 +14,7 @@ from tags import tag_source_paths
 SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 WORK_ID_RE = re.compile(r"^\d{5}$")
 ALIAS_KEY_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
-TAG_ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$")
+TAG_ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 
 MAX_TAGS = 50
 MAX_ALIAS_TARGETS = 50
@@ -22,6 +22,9 @@ MAX_ALIAS_TAGS_PER_ALIAS = 4
 DEFAULT_ALLOWED_GROUPS = ["subject", "domain", "form", "theme"]
 MANUAL_WEIGHT_VALUES = [0.3, 0.6, 0.9]
 DEFAULT_TAG_WEIGHT = 0.6
+TAG_REGISTRY_VERSION = "tag_registry_v2"
+TAG_ALIASES_VERSION = "tag_aliases_v2"
+TAG_ASSIGNMENTS_VERSION = "tag_assignments_v2"
 
 TAG_SOURCE_ROOT_REL_PATH = tag_source_paths.TAG_SOURCE_ROOT_REL_PATH
 ASSIGNMENTS_REL_PATH = tag_source_paths.TAG_ASSIGNMENTS_REL_PATH
@@ -157,15 +160,43 @@ def sanitize_alias_key(raw_key: Any, idx: int) -> str:
     return sanitize_alias(raw_key, f"tag_aliases.aliases key at index {idx}")
 
 
-def enforce_alias_group_constraints(tags: list[str], field_name: str) -> None:
+def extract_registry_tag_groups(
+    registry_payload: Dict[str, Any],
+    field_name: str = "tag_registry.tags",
+) -> Dict[str, str]:
+    raw_tags = registry_payload.get("tags")
+    if not isinstance(raw_tags, list):
+        raise ValueError(f"{field_name} must be an array")
+
+    allowed_groups = extract_allowed_groups(registry_payload)
+    groups_by_tag_id: Dict[str, str] = {}
+    for idx, raw_tag in enumerate(raw_tags):
+        if not isinstance(raw_tag, dict):
+            raise ValueError(f"{field_name}[{idx}] must be an object")
+        tag_id = sanitize_tag_id(raw_tag.get("tag_id"), f"{field_name}[{idx}].tag_id")
+        group = sanitize_group(raw_tag.get("group"), allowed_groups, f"{field_name}[{idx}].group")
+        if tag_id in groups_by_tag_id:
+            raise ValueError(f"{field_name}[{idx}] duplicates tag_id '{tag_id}'")
+        groups_by_tag_id[tag_id] = group
+    return groups_by_tag_id
+
+
+def enforce_alias_group_constraints(
+    tags: list[str],
+    registry_payload: Dict[str, Any],
+    field_name: str,
+) -> None:
     if not tags:
         raise ValueError(f"{field_name} must include at least one tag id")
     if len(tags) > MAX_ALIAS_TAGS_PER_ALIAS:
         raise ValueError(f"{field_name} may include at most {MAX_ALIAS_TAGS_PER_ALIAS} tag ids")
 
+    groups_by_tag_id = extract_registry_tag_groups(registry_payload)
     seen_groups: set[str] = set()
     for idx, tag_id in enumerate(tags):
-        group = tag_id.split(":", 1)[0]
+        group = groups_by_tag_id.get(tag_id)
+        if group is None:
+            raise ValueError(f"{field_name}[{idx}] is not present in registry: {tag_id}")
         if group in seen_groups:
             raise ValueError(f"{field_name}[{idx}] duplicates group '{group}'")
         seen_groups.add(group)
@@ -182,19 +213,17 @@ def sanitize_alias_description(raw_description: Any, field_name: str) -> str:
 def sanitize_alias_entry(raw_value: Any, alias_key: str, field_prefix: str) -> Dict[str, Any]:
     if isinstance(raw_value, dict):
         tags = sanitize_tag_id_list(raw_value.get("tags"), f"{field_prefix}['{alias_key}'].tags")
-        enforce_alias_group_constraints(tags, f"{field_prefix}['{alias_key}'].tags")
         description = sanitize_alias_description(raw_value.get("description", ""), f"{field_prefix}['{alias_key}'].description")
         return {"description": description, "tags": tags}
 
     tags = sanitize_tag_id_list(raw_value, f"{field_prefix}['{alias_key}']")
-    enforce_alias_group_constraints(tags, f"{field_prefix}['{alias_key}']")
     return {"description": "", "tags": tags}
 
 
 def sanitize_tag_id(raw_tag_id: Any, field_name: str = "tag_id") -> str:
     tag_id = str(raw_tag_id or "").strip().lower()
     if not TAG_ID_RE.fullmatch(tag_id):
-        raise ValueError(f"{field_name} must match <group>:<slug>")
+        raise ValueError(f"{field_name} must be slug-safe")
     return tag_id
 
 
@@ -258,7 +287,7 @@ def load_assignments(path: Path) -> Dict[str, Any]:
     return load_json_object(
         path,
         {
-            "tag_assignments_version": "tag_assignments_v1",
+            "tag_assignments_version": TAG_ASSIGNMENTS_VERSION,
             "updated_at_utc": utc_now(),
             "series": {},
         },
@@ -270,7 +299,7 @@ def load_registry(path: Path) -> Dict[str, Any]:
     return load_json_object(
         path,
         {
-            "tag_registry_version": "tag_registry_v1",
+            "tag_registry_version": TAG_REGISTRY_VERSION,
             "updated_at_utc": utc_now(),
             "policy": {"allowed_groups": list(DEFAULT_ALLOWED_GROUPS)},
             "tags": [],
@@ -283,7 +312,7 @@ def load_aliases(path: Path) -> Dict[str, Any]:
     return load_json_object(
         path,
         {
-            "tag_aliases_version": "tag_aliases_v1",
+            "tag_aliases_version": TAG_ALIASES_VERSION,
             "updated_at_utc": utc_now(),
             "aliases": {},
         },

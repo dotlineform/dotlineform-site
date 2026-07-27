@@ -39,10 +39,10 @@ def assert_raises_contains(fn: Callable[[], Any], expected: str, label: str) -> 
 
 def test_alias_create_adds_one_normalized_entry() -> None:
     payload = {
-        "tag_aliases_version": "tag_aliases_v1",
+        "tag_aliases_version": "tag_aliases_v2",
         "updated_at_utc": "2026-05-01T00:00:00Z",
         "aliases": {
-            "foliage": {"description": "Old", "tags": ["subject:trees"]},
+            "foliage": {"description": "Old", "tags": ["trees"]},
         },
     }
     existing_entry = payload["aliases"]["foliage"]
@@ -52,7 +52,7 @@ def test_alias_create_adds_one_normalized_entry() -> None:
         registry_payload(),
         alias=" Leaf-Growth ",
         description="  Leaf growth  ",
-        tags=["subject:canopy", "theme:growth"],
+        tags=["canopy", "growth"],
         now_utc=NOW,
     )
 
@@ -60,7 +60,7 @@ def test_alias_create_adds_one_normalized_entry() -> None:
     assert_equal(created["aliases"]["foliage"], existing_entry, "create preserves existing entry")
     assert_equal(
         created["aliases"]["leaf-growth"],
-        {"description": "Leaf growth", "tags": ["subject:canopy", "theme:growth"]},
+        {"description": "Leaf growth", "tags": ["canopy", "growth"]},
         "create normalizes new entry",
     )
     assert_equal(list(payload["aliases"]), ["foliage"], "planner does not mutate input aliases")
@@ -75,15 +75,15 @@ def test_alias_create_adds_one_normalized_entry() -> None:
 
 
 def test_alias_create_guards() -> None:
-    payload = {"aliases": {"foliage": {"description": "", "tags": ["subject:trees"]}}}
+    payload = {"aliases": {"foliage": {"description": "", "tags": ["trees"]}}}
     cases = (
         (
-            {"alias": "Bad Alias", "description": "", "tags": ["subject:trees"]},
+            {"alias": "Bad Alias", "description": "", "tags": ["trees"]},
             "alias must be slug-safe",
             "invalid alias key",
         ),
         (
-            {"alias": " Foliage ", "description": "", "tags": ["subject:trees"]},
+            {"alias": " Foliage ", "description": "", "tags": ["trees"]},
             "alias already exists",
             "duplicate alias key",
         ),
@@ -93,22 +93,22 @@ def test_alias_create_guards() -> None:
             "missing target",
         ),
         (
-            {"alias": "canopy", "description": "", "tags": ["subject:missing"]},
+            {"alias": "canopy", "description": "", "tags": ["missing"]},
             "is not present in registry",
             "unknown target",
         ),
         (
-            {"alias": "canopy", "description": "", "tags": ["subject:trees", "subject:trees"]},
+            {"alias": "canopy", "description": "", "tags": ["trees", "trees"]},
             "duplicates target",
             "duplicate target",
         ),
         (
-            {"alias": "canopy", "description": "", "tags": ["subject:trees", "subject:canopy"]},
+            {"alias": "canopy", "description": "", "tags": ["trees", "canopy"]},
             "duplicates group",
             "repeated target group",
         ),
         (
-            {"alias": "canopy", "description": {"bad": True}, "tags": ["subject:trees"]},
+            {"alias": "canopy", "description": {"bad": True}, "tags": ["trees"]},
             "description must be a string",
             "invalid description",
         ),
@@ -129,8 +129,8 @@ def test_alias_create_guards() -> None:
 def test_alias_edit_delete_and_summary() -> None:
     payload = {
         "aliases": {
-            "foliage": {"description": "old", "tags": ["subject:trees"]},
-            "growth": {"description": "keep", "tags": ["theme:growth"]},
+            "foliage": {"description": "old", "tags": ["trees"]},
+            "growth": {"description": "keep", "tags": ["growth"]},
         }
     }
     edited, edit_stats = aliases.mutate_alias_entry(
@@ -139,11 +139,11 @@ def test_alias_edit_delete_and_summary() -> None:
         alias_key="foliage",
         new_alias_key="canopy",
         description="new",
-        tags=["subject:canopy", "theme:growth"],
+        tags=["canopy", "growth"],
         now_utc=NOW,
     )
     assert_equal(list(edited["aliases"].keys()), ["canopy", "growth"], "alias rename keeps position")
-    assert_equal(edited["aliases"]["canopy"]["tags"], ["subject:canopy", "theme:growth"], "alias edit updates tags")
+    assert_equal(edited["aliases"]["canopy"]["tags"], ["canopy", "growth"], "alias edit updates tags")
     assert_equal(edit_stats["renamed"], True, "alias edit tracks rename")
     assert_equal(
         aliases.build_alias_mutation_summary_text(edit_stats),
@@ -157,14 +157,14 @@ def test_alias_edit_delete_and_summary() -> None:
 
 
 def test_alias_mutation_guards() -> None:
-    payload = {"aliases": {"foliage": {"tags": ["subject:trees"]}, "growth": {"tags": ["theme:growth"]}}}
+    payload = {"aliases": {"foliage": {"tags": ["trees"]}, "growth": {"tags": ["growth"]}}}
     assert_raises_contains(
-        lambda: aliases.mutate_alias_entry(payload, registry_payload(), "foliage", "growth", "", ["subject:trees"], NOW),
+        lambda: aliases.mutate_alias_entry(payload, registry_payload(), "foliage", "growth", "", ["trees"], NOW),
         "alias already exists",
         "duplicate alias rename target",
     )
     assert_raises_contains(
-        lambda: aliases.mutate_alias_entry(payload, registry_payload(), "foliage", "foliage", "", ["subject:trees", "subject:canopy"], NOW),
+        lambda: aliases.mutate_alias_entry(payload, registry_payload(), "foliage", "foliage", "", ["trees", "canopy"], NOW),
         "duplicates group",
         "one target per group",
     )
@@ -175,14 +175,14 @@ def test_alias_mutation_guards() -> None:
             "foliage",
             "foliage",
             "",
-            ["subject:trees", "theme:growth", "domain:studio", "mood:quiet", "material:paper"],
+            ["trees", "growth", "studio", "quiet", "paper"],
             NOW,
         ),
         "may include at most",
         "max alias targets",
     )
     assert_raises_contains(
-        lambda: aliases.mutate_alias_entry(payload, registry_payload(), "foliage", "foliage", "", ["subject:missing"], NOW),
+        lambda: aliases.mutate_alias_entry(payload, registry_payload(), "foliage", "foliage", "", ["missing"], NOW),
         "is not present in registry",
         "unknown registry target",
     )
@@ -191,47 +191,55 @@ def test_alias_mutation_guards() -> None:
 def test_alias_rewrite_for_tag_removes_empty_and_redundant_aliases() -> None:
     payload = {
         "aliases": {
-            "old": {"description": "", "tags": ["subject:trees"]},
-            "canopy": {"description": "", "tags": ["subject:trees"]},
-            "combo": {"description": "", "tags": ["subject:trees", "theme:growth"]},
-            "untouched": {"description": "", "tags": ["domain:studio"]},
+            "old": {"description": "", "tags": ["trees"]},
+            "canopy": {"description": "", "tags": ["trees"]},
+            "combo": {"description": "", "tags": ["trees", "growth"]},
+            "untouched": {"description": "", "tags": ["studio"]},
         }
     }
 
-    renamed, rename_stats = aliases.rewrite_aliases_for_tag(payload, "subject:trees", "subject:canopy", NOW)
+    renamed, rename_stats = aliases.rewrite_aliases_for_tag(
+        payload,
+        "trees",
+        "canopy",
+        NOW,
+        registry_payload(),
+    )
     assert_equal("old" in renamed["aliases"], True, "non-redundant renamed alias remains")
     assert_equal("canopy" in renamed["aliases"], False, "redundant self-map is removed")
-    assert_equal(renamed["aliases"]["combo"]["tags"], ["subject:canopy", "theme:growth"], "combo alias target rewritten")
+    assert_equal(renamed["aliases"]["combo"]["tags"], ["canopy", "growth"], "combo alias target rewritten")
     assert_equal(rename_stats["aliases_removed_redundant"], 1, "redundant removal count")
 
     deleted, delete_stats = aliases.rewrite_aliases_for_tag(
-        {"aliases": {"foliage": {"tags": ["subject:trees"]}, "combo": {"tags": ["subject:trees", "theme:growth"]}}},
-        "subject:trees",
+        {"aliases": {"foliage": {"tags": ["trees"]}, "combo": {"tags": ["trees", "growth"]}}},
+        "trees",
         None,
         NOW,
+        registry_payload(),
     )
     assert_equal("foliage" in deleted["aliases"], False, "empty alias removed")
-    assert_equal(deleted["aliases"]["combo"]["tags"], ["theme:growth"], "delete removes target ref from combo")
+    assert_equal(deleted["aliases"]["combo"]["tags"], ["growth"], "delete removes target ref from combo")
     assert_equal(delete_stats["aliases_removed_empty"], 1, "empty removal count")
 
 
 def test_alias_rewrite_for_demote_targets() -> None:
     payload = {
         "aliases": {
-            "foliage": {"description": "overwrite", "tags": ["subject:trees"]},
-            "combo": {"description": "", "tags": ["subject:trees", "theme:growth"]},
+            "foliage": {"description": "overwrite", "tags": ["trees"]},
+            "combo": {"description": "", "tags": ["trees", "growth"]},
         }
     }
     updated, stats = aliases.rewrite_aliases_for_targets(
         payload,
-        old_tag_id="subject:trees",
-        replacement_tag_ids=["subject:canopy", "theme:growth"],
+        old_tag_id="trees",
+        replacement_tag_ids=["canopy", "growth"],
         demoted_alias_key="foliage",
         now_utc=NOW,
+        registry_payload=registry_payload(),
     )
 
-    assert_equal(updated["aliases"]["foliage"]["tags"], ["subject:canopy", "theme:growth"], "demoted alias points to targets")
-    assert_equal(updated["aliases"]["combo"]["tags"], ["subject:canopy", "theme:growth"], "alias refs rewritten without duplicate targets")
+    assert_equal(updated["aliases"]["foliage"]["tags"], ["canopy", "growth"], "demoted alias points to targets")
+    assert_equal(updated["aliases"]["combo"]["tags"], ["canopy", "growth"], "alias refs rewritten without duplicate targets")
     assert_equal(stats["demoted_alias_overwritten"], 1, "demoted alias overwrite count")
     assert_equal(stats["alias_tag_refs_rewritten"], 1, "alias ref rewrite count")
 

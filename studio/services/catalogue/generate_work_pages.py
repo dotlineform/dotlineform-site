@@ -329,7 +329,7 @@ def load_tag_assignments_payload(path: Path) -> Dict[str, Any]:
     """
     if not path.exists():
         return {
-            "tag_assignments_version": "tag_assignments_v1",
+            "tag_assignments_version": "tag_assignments_v2",
             "updated_at_utc": utc_timestamp_now(),
             "series": {},
         }
@@ -345,7 +345,7 @@ def load_tag_assignments_payload(path: Path) -> Dict[str, Any]:
     if not isinstance(payload.get("series"), dict):
         payload["series"] = {}
     if not coerce_string(payload.get("tag_assignments_version")):
-        payload["tag_assignments_version"] = "tag_assignments_v1"
+        payload["tag_assignments_version"] = "tag_assignments_v2"
     if not coerce_string(payload.get("updated_at_utc")):
         payload["updated_at_utc"] = utc_timestamp_now()
     for series_id, row in list(payload["series"].items()):

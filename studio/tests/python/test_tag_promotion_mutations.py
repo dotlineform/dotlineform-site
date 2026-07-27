@@ -54,8 +54,18 @@ def assert_raises_contains(fn: Callable[[], Any], expected: str, label: str) -> 
 
 
 def test_promote_alias_creates_canonical_tag_and_removes_alias() -> None:
-    registry = {"tags": [row("subject:trees")]}
-    aliases = {"aliases": {"foliage": {"description": "", "tags": ["subject:trees"]}, "growth": {"tags": ["theme:growth"]}}}
+    registry = {
+        "tags": [
+            row("trees", "subject"),
+            row("growth", "theme"),
+        ]
+    }
+    aliases = {
+        "aliases": {
+            "foliage": {"description": "", "tags": ["trees"]},
+            "renewal": {"tags": ["growth"]},
+        }
+    }
 
     registry_updated, aliases_updated, stats, registry_changed, aliases_changed = promotions.promote_alias_to_canonical_tag(
         registry,
@@ -67,19 +77,24 @@ def test_promote_alias_creates_canonical_tag_and_removes_alias() -> None:
 
     assert_true(registry_changed, "promotion creates registry row")
     assert_true(aliases_changed, "promotion removes alias")
-    assert_equal([item["tag_id"] for item in registry_updated["tags"]], ["subject:trees", "theme:foliage"], "promoted tag order")
-    assert_equal(list(aliases_updated["aliases"].keys()), ["growth"], "promoted alias removed")
+    assert_equal([item["tag_id"] for item in registry_updated["tags"]], ["trees", "growth", "foliage"], "promoted tag order")
+    assert_equal(list(aliases_updated["aliases"].keys()), ["renewal"], "promoted alias removed")
     assert_equal(stats["canonical_added"], 1, "canonical added count")
     assert_equal(
         promotions.build_promote_summary_text(stats),
-        "mode promote_alias; foliage -> theme:foliage; canonical_added 1; alias_deleted 1; registry final 2; aliases final 1",
+        "mode promote_alias; foliage -> foliage; canonical_added 1; alias_deleted 1; registry final 3; aliases final 1",
         "promote summary",
     )
 
 
 def test_promote_alias_existing_canonical_removes_alias_only() -> None:
-    registry = {"tags": [row("subject:foliage"), row("theme:growth")]}
-    aliases = {"aliases": {"foliage": {"description": "", "tags": ["theme:growth"]}}}
+    registry = {
+        "tags": [
+            row("foliage", "subject"),
+            row("growth", "theme"),
+        ]
+    }
+    aliases = {"aliases": {"foliage": {"description": "", "tags": ["growth"]}}}
 
     registry_updated, aliases_updated, stats, registry_changed, aliases_changed = promotions.promote_alias_to_canonical_tag(
         registry,
@@ -91,10 +106,32 @@ def test_promote_alias_existing_canonical_removes_alias_only() -> None:
 
     assert_false(registry_changed, "existing canonical avoids registry write")
     assert_true(aliases_changed, "existing canonical still removes alias")
-    assert_equal([item["tag_id"] for item in registry_updated["tags"]], ["subject:foliage", "theme:growth"], "registry unchanged")
+    assert_equal([item["tag_id"] for item in registry_updated["tags"]], ["foliage", "growth"], "registry unchanged")
     assert_equal(aliases_updated["aliases"], {}, "alias removed")
     assert_equal(stats["canonical_exists"], True, "canonical exists stat")
     assert_equal(stats["canonical_added"], 0, "no canonical added")
+
+
+def test_promote_alias_existing_canonical_requires_matching_group() -> None:
+    registry = {
+        "tags": [
+            row("foliage", "subject"),
+            row("growth", "theme"),
+        ]
+    }
+    aliases = {"aliases": {"foliage": {"description": "", "tags": ["growth"]}}}
+
+    assert_raises_contains(
+        lambda: promotions.promote_alias_to_canonical_tag(
+            registry,
+            aliases,
+            alias_key="foliage",
+            group="theme",
+            now_utc=NOW,
+        ),
+        "must match the existing canonical tag group",
+        "existing canonical group mismatch",
+    )
 
 
 def test_demote_tag_rewrites_alias_refs_and_assignments() -> None:
@@ -102,29 +139,29 @@ def test_demote_tag_rewrites_alias_refs_and_assignments() -> None:
         registry_payload=copy.deepcopy(registry_payload()),
         aliases_payload=copy.deepcopy(aliases_payload()),
         assignments_payload=copy.deepcopy(assignments_payload()),
-        old_tag_id="subject:trees",
-        alias_targets=["subject:canopy", "theme:growth"],
+        old_tag_id="trees",
+        alias_targets=["canopy", "growth"],
         now_utc=NOW,
     )
 
-    assert_equal([item["tag_id"] for item in registry_updated["tags"]], ["subject:canopy", "theme:growth", "domain:studio"], "demoted tag removed")
-    assert_equal(aliases_updated["aliases"]["foliage"]["tags"], ["subject:canopy", "theme:growth"], "demoted alias points to targets")
-    assert_equal(aliases_updated["aliases"]["combo"]["tags"], ["subject:canopy", "theme:growth"], "other alias refs rewritten")
+    assert_equal([item["tag_id"] for item in registry_updated["tags"]], ["canopy", "growth", "studio"], "demoted tag removed")
+    assert_equal(aliases_updated["aliases"]["foliage"]["tags"], ["canopy", "growth"], "demoted alias points to targets")
+    assert_equal(aliases_updated["aliases"]["combo"]["tags"], ["canopy", "growth"], "other alias refs rewritten")
     assert_true(assignments_changed, "assignments changed")
     assert_equal(
         assignments_updated["series"]["001"]["tags"],
         [
-            {"tag_id": "subject:canopy", "w_manual": 0.9},
-            {"tag_id": "theme:growth", "w_manual": 0.9},
-            {"tag_id": "domain:studio", "w_manual": 0.3},
+            {"tag_id": "canopy", "w_manual": 0.9},
+            {"tag_id": "growth", "w_manual": 0.9},
+            {"tag_id": "studio", "w_manual": 0.3},
         ],
         "series assignment rewritten",
     )
     assert_equal(
         assignments_updated["series"]["001"]["works"]["00001"]["tags"],
         [
-            {"tag_id": "subject:canopy", "w_manual": 0.6},
-            {"tag_id": "theme:growth", "w_manual": 0.6},
+            {"tag_id": "canopy", "w_manual": 0.6},
+            {"tag_id": "growth", "w_manual": 0.6},
         ],
         "work assignment rewritten without duplicate target",
     )
@@ -133,7 +170,7 @@ def test_demote_tag_rewrites_alias_refs_and_assignments() -> None:
     assert_equal(stats["work_tag_refs_rewritten"], 1, "work refs rewritten count")
     assert_equal(
         promotions.build_demote_summary_text(stats),
-        "mode demote_tag; subject:trees -> alias trees; targets 2; series rows 1; series refs 1; work rows 1; work refs 1; alias refs 2; aliases rewritten 2",
+        "mode demote_tag; trees -> alias trees; targets 2; series rows 1; series refs 1; work rows 1; work refs 1; alias refs 2; aliases rewritten 2",
         "demote summary",
     )
 
@@ -144,8 +181,8 @@ def test_demote_tag_validation_guards() -> None:
             registry_payload(),
             aliases_payload(),
             assignments_payload(),
-            old_tag_id="subject:missing",
-            alias_targets=["subject:canopy"],
+            old_tag_id="missing",
+            alias_targets=["canopy"],
             now_utc=NOW,
         ),
         "tag not found",
@@ -156,8 +193,8 @@ def test_demote_tag_validation_guards() -> None:
             registry_payload(),
             aliases_payload(),
             assignments_payload(),
-            old_tag_id="subject:trees",
-            alias_targets=["subject:trees"],
+            old_tag_id="trees",
+            alias_targets=["trees"],
             now_utc=NOW,
         ),
         "must not include the demoted tag_id",
@@ -168,8 +205,8 @@ def test_demote_tag_validation_guards() -> None:
             registry_payload(),
             aliases_payload(),
             assignments_payload(),
-            old_tag_id="subject:trees",
-            alias_targets=["subject:missing"],
+            old_tag_id="trees",
+            alias_targets=["missing"],
             now_utc=NOW,
         ),
         "is not present in registry",
@@ -178,17 +215,18 @@ def test_demote_tag_validation_guards() -> None:
 
 
 def test_rewrite_assignments_no_refs_reports_no_change() -> None:
-    payload = {"series": {"001": {"tags": [{"tag_id": "domain:studio", "w_manual": 0.3}]}}}
-    updated, stats, changed = promotions.rewrite_assignments_for_targets(payload, "subject:trees", ["subject:canopy"], NOW)
+    payload = {"series": {"001": {"tags": [{"tag_id": "studio", "w_manual": 0.3}]}}}
+    updated, stats, changed = promotions.rewrite_assignments_for_targets(payload, "trees", ["canopy"], NOW)
 
     assert_false(changed, "no assignment refs changed")
-    assert_equal(updated["series"]["001"]["tags"], [{"tag_id": "domain:studio", "w_manual": 0.3}], "assignments preserved")
+    assert_equal(updated["series"]["001"]["tags"], [{"tag_id": "studio", "w_manual": 0.3}], "assignments preserved")
     assert_equal(stats["series_rows_touched"], 0, "no series rows touched")
 
 
 def main() -> None:
     test_promote_alias_creates_canonical_tag_and_removes_alias()
     test_promote_alias_existing_canonical_removes_alias_only()
+    test_promote_alias_existing_canonical_requires_matching_group()
     test_demote_tag_rewrites_alias_refs_and_assignments()
     test_demote_tag_validation_guards()
     test_rewrite_assignments_no_refs_reports_no_change()

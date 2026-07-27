@@ -33,20 +33,20 @@ def write_fixture_data(repo_root: Path) -> tuple[Path, Path, Path]:
     assignments_path = data_root / "tag-assignments.json"
     registry_path.write_text(
         """{
-  "tag_registry_version": "tag_registry_v1",
+  "tag_registry_version": "tag_registry_v2",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {
-    "allowed_groups": ["subject", "theme"]
+    "allowed_groups": ["subject", "form", "theme"]
   },
   "tags": [
     {
-      "tag_id": "subject:trees",
+      "tag_id": "trees",
       "group": "subject",
       "label": "trees",
       "description": "Trees"
     },
     {
-      "tag_id": "theme:growth",
+      "tag_id": "growth",
       "group": "theme",
       "label": "growth",
       "description": "Growth"
@@ -58,12 +58,12 @@ def write_fixture_data(repo_root: Path) -> tuple[Path, Path, Path]:
     )
     aliases_path.write_text(
         """{
-  "tag_aliases_version": "tag_aliases_v1",
+  "tag_aliases_version": "tag_aliases_v2",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "aliases": {
     "woodland": {
       "description": "Woodland",
-      "tags": ["subject:trees", "theme:growth"]
+      "tags": ["trees", "growth"]
     }
   }
 }
@@ -72,14 +72,14 @@ def write_fixture_data(repo_root: Path) -> tuple[Path, Path, Path]:
     )
     assignments_path.write_text(
         """{
-  "tag_assignments_version": "tag_assignments_v1",
+  "tag_assignments_version": "tag_assignments_v2",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "series": {
     "series-a": {
-      "tags": [{"tag_id": "subject:trees", "w_manual": 0.6}],
+      "tags": [{"tag_id": "trees", "w_manual": 0.6}],
       "works": {
         "00001": {
-          "tags": [{"tag_id": "subject:trees", "w_manual": 0.9}]
+          "tags": [{"tag_id": "trees", "w_manual": 0.9}]
         }
       }
     }
@@ -121,7 +121,7 @@ def run() -> None:
                 f"{base_url}/create-tag",
                 {
                     "group": "theme",
-                    "slug": "renewal",
+                    "tag_id": "renewal",
                     "description": " Renewal ",
                     "client_time_utc": "2026-05-22T00:00:00Z",
                     "activity_context": {
@@ -131,7 +131,7 @@ def run() -> None:
                         "route": "/studio/tag-registry/",
                         "control_id": "create-tag",
                         "control_selector": "[data-role=\"create-tag\"]",
-                        "tag_id": "theme:renewal",
+                        "tag_id": "renewal",
                     },
                 },
             )
@@ -139,7 +139,8 @@ def run() -> None:
                 f"{base_url}/mutate-tag",
                 {
                     "action": "edit",
-                    "tag_id": "subject:trees",
+                    "tag_id": "trees",
+                    "new_group": "form",
                     "description": "Canopy",
                     "allow_canonical_rename": False,
                     "client_time_utc": "2026-05-22T00:00:00Z",
@@ -149,7 +150,7 @@ def run() -> None:
                 f"{base_url}/mutate-tag-preview",
                 {
                     "action": "delete",
-                    "tag_id": "subject:trees",
+                    "tag_id": "trees",
                     "client_time_utc": "2026-05-22T00:00:00Z",
                 },
             )
@@ -157,7 +158,7 @@ def run() -> None:
                 f"{base_url}/mutate-tag",
                 {
                     "action": "delete",
-                    "tag_id": "subject:trees",
+                    "tag_id": "trees",
                     "client_time_utc": "2026-05-22T00:00:00Z",
                 },
             )
@@ -175,21 +176,21 @@ def run() -> None:
             if line.strip()
         ]
 
-        if created.get("tag_id") != "theme:renewal" or created.get("activity_log") != {"written_count": 1}:
+        if created.get("tag_id") != "renewal" or created.get("activity_log") != {"written_count": 1}:
             raise AssertionError(f"registry create failed: {created!r}")
         if len(activity_rows) != 1 or activity_rows[0].get("user_action_id") != "create-tag":
             raise AssertionError(f"registry create activity failed: {activity_rows!r}")
-        if activity_rows[0].get("record_groups", {}).get("tags", {}).get("sample_ids") != ["theme:renewal"]:
+        if activity_rows[0].get("record_groups", {}).get("tags", {}).get("sample_ids") != ["renewal"]:
             raise AssertionError(f"registry create activity tag identity failed: {activity_rows!r}")
-        if not edited.get("description_changed"):
+        if not edited.get("description_changed") or not edited.get("group_changed"):
             raise AssertionError(f"registry edit failed: {edited!r}")
         if preview.get("series_tag_refs_rewritten") != 1 or preview.get("work_tag_refs_rewritten") != 1:
             raise AssertionError(f"registry delete preview did not report assignment rewrites: {preview!r}")
         if deleted.get("series_tag_refs_rewritten") != 1 or deleted.get("work_tag_refs_rewritten") != 1:
             raise AssertionError(f"registry delete did not rewrite assignments: {deleted!r}")
-        if [row["tag_id"] for row in registry["tags"]] != ["theme:growth", "theme:renewal"]:
+        if [row["tag_id"] for row in registry["tags"]] != ["growth", "renewal"]:
             raise AssertionError(f"registry delete did not leave expected tags: {registry!r}")
-        if aliases["aliases"]["woodland"]["tags"] != ["theme:growth"]:
+        if aliases["aliases"]["woodland"]["tags"] != ["growth"]:
             raise AssertionError(f"alias references were not rewritten: {aliases!r}")
         if assignments["series"]["series-a"].get("tags") != []:
             raise AssertionError(f"series tag references were not removed: {assignments!r}")

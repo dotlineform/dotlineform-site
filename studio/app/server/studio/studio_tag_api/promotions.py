@@ -115,7 +115,6 @@ def demote_tag_response(
 
     old_tag_id = tag_source.sanitize_tag_id(body.get("tag_id"), "tag_id")
     alias_targets = tag_source.sanitize_tag_id_list(body.get("alias_targets"), "alias_targets")
-    tag_source.enforce_alias_group_constraints(alias_targets, "alias_targets")
 
     now_utc = common.utc_now()
     registry_payload = tag_source.load_registry(registry_path)

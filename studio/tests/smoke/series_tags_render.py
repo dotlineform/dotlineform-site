@@ -64,11 +64,11 @@ def main() -> int:
                     const render = await import('/studio/app/frontend/js/series-tags-render.js');
                     const tagPolicy = await fetch('/studio/data/config/tags/tag-management.json').then(response => response.json());
                     const registry = new Map([
-                        ['subject:trees', { group: 'subject', label: 'trees', status: 'active' }],
-                        ['domain:studio', { group: 'domain', label: 'studio', status: 'active' }],
-                        ['form:line', { group: 'form', label: 'line', status: 'active' }],
-                        ['theme:memory', { group: 'theme', label: 'memory', status: 'active' }],
-                        ['theme:old', { group: 'theme', label: 'old' }]
+                        ['trees', { group: 'subject', label: 'trees', status: 'active' }],
+                        ['studio', { group: 'domain', label: 'studio', status: 'active' }],
+                        ['line', { group: 'form', label: 'line', status: 'active' }],
+                        ['memory', { group: 'theme', label: 'memory', status: 'active' }],
+                        ['old', { group: 'theme', label: 'old' }]
                     ]);
                     const reportInput = {
                         mount: document.querySelector('#mount'),
@@ -91,13 +91,13 @@ def main() -> int:
                         ],
                         assignmentsSeries: {
                             red: { tags: [] },
-                            amber: { tags: [{ tag_id: 'subject:trees', w_manual: 1 }] },
+                            amber: { tags: [{ tag_id: 'trees', w_manual: 1 }] },
                             green: {
                                 tags: [
-                                    { tag_id: 'subject:trees', w_manual: 1 },
-                                    { tag_id: 'domain:studio', w_manual: 1 },
-                                    { tag_id: 'form:line', w_manual: 1 },
-                                    { tag_id: 'theme:memory', w_manual: 1 }
+                                    { tag_id: 'trees', w_manual: 1 },
+                                    { tag_id: 'studio', w_manual: 1 },
+                                    { tag_id: 'line', w_manual: 1 },
+                                    { tag_id: 'memory', w_manual: 1 }
                                 ]
                             }
                         },

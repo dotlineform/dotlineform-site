@@ -36,7 +36,13 @@ def rewrite_assignment_tag_list_for_targets(
                 if replacement in seen:
                     continue
                 seen.add(replacement)
-                out.append(tag_source.build_assignment_tag(replacement, normalized_tag["w_manual"]))
+                out.append(
+                    tag_source.build_assignment_tag(
+                        replacement,
+                        normalized_tag["w_manual"],
+                        normalized_tag.get("alias", ""),
+                    )
+                )
                 targets_inserted += 1
             continue
         if tag_value in seen:
@@ -59,7 +65,7 @@ def rewrite_assignments_for_targets(
         series_obj = {}
         assignments_payload["series"] = series_obj
     if "tag_assignments_version" not in assignments_payload:
-        assignments_payload["tag_assignments_version"] = "tag_assignments_v1"
+        assignments_payload["tag_assignments_version"] = tag_source.TAG_ASSIGNMENTS_VERSION
 
     series_rows_touched = 0
     series_refs_rewritten = 0
@@ -132,14 +138,10 @@ def promote_alias_to_canonical_tag(
 ) -> tuple[Dict[str, Any], Dict[str, Any], Dict[str, Any], bool, bool]:
     raw_tags = registry_payload.get("tags")
     tags = raw_tags if isinstance(raw_tags, list) else []
-
-    existing_tag_ids: set[str] = set()
-    for raw in tags:
-        if not isinstance(raw, dict):
-            continue
-        tag_id = str(raw.get("tag_id") or "").strip().lower()
-        if tag_id:
-            existing_tag_ids.add(tag_id)
+    allowed_groups = tag_source.extract_allowed_groups(registry_payload)
+    normalized_group = tag_source.sanitize_group(group, allowed_groups, "group")
+    groups_by_tag_id = tag_source.extract_registry_tag_groups(registry_payload)
+    existing_tag_ids = set(groups_by_tag_id)
 
     raw_aliases = aliases_payload.get("aliases")
     aliases = raw_aliases if isinstance(raw_aliases, dict) else {}
@@ -156,20 +158,25 @@ def promote_alias_to_canonical_tag(
     if not alias_found:
         raise ValueError(f"alias not found: {alias_key}")
 
-    new_tag_id = f"{group}:{alias_key}"
+    new_tag_id = alias_key
     canonical_exists = new_tag_id in existing_tag_ids
+    if canonical_exists and groups_by_tag_id[new_tag_id] != normalized_group:
+        raise ValueError(
+            "group must match the existing canonical tag group: "
+            f"{groups_by_tag_id[new_tag_id]}"
+        )
     canonical_added = 0
     registry_changed = False
     if not canonical_exists:
         if "tag_registry_version" not in registry_payload:
-            registry_payload["tag_registry_version"] = "tag_registry_v1"
+            registry_payload["tag_registry_version"] = tag_source.TAG_REGISTRY_VERSION
         if not isinstance(registry_payload.get("policy"), dict):
             registry_payload["policy"] = {"allowed_groups": list(tag_source.DEFAULT_ALLOWED_GROUPS)}
         appended_tags = list(tags)
         appended_tags.append(
             {
                 "tag_id": new_tag_id,
-                "group": group,
+                "group": normalized_group,
                 "label": alias_key,
                 "description": "",
                 "updated_at_utc": now_utc,
@@ -181,15 +188,16 @@ def promote_alias_to_canonical_tag(
         registry_changed = True
 
     if "tag_aliases_version" not in aliases_payload:
-        aliases_payload["tag_aliases_version"] = "tag_aliases_v1"
+        aliases_payload["tag_aliases_version"] = tag_source.TAG_ALIASES_VERSION
     aliases_payload["aliases"] = final_aliases
     aliases_payload["updated_at_utc"] = now_utc
     aliases_changed = True
+    tag_aliases.validate_alias_entries(aliases_payload, registry_payload)
 
     stats: Dict[str, Any] = {
         "action": "promote_alias",
         "alias": alias_key,
-        "group": group,
+        "group": normalized_group,
         "new_tag_id": new_tag_id,
         "canonical_exists": canonical_exists,
         "canonical_added": canonical_added,
@@ -231,12 +239,17 @@ def demote_tag_to_alias(
             raise ValueError("alias_targets must not include the demoted tag_id")
         if target not in existing_tag_ids:
             raise ValueError(f"alias_targets[{idx}] is not present in registry: {target}")
+    tag_source.enforce_alias_group_constraints(
+        alias_targets,
+        registry_payload,
+        "alias_targets",
+    )
 
-    demoted_alias_key = old_tag_id.split(":", 1)[1]
+    demoted_alias_key = old_tag_id
 
     final_tags = [row for idx, row in enumerate(tags) if idx != target_idx]
     if "tag_registry_version" not in registry_payload:
-        registry_payload["tag_registry_version"] = "tag_registry_v1"
+        registry_payload["tag_registry_version"] = tag_source.TAG_REGISTRY_VERSION
     if not isinstance(registry_payload.get("policy"), dict):
         registry_payload["policy"] = {"allowed_groups": list(tag_source.DEFAULT_ALLOWED_GROUPS)}
     registry_payload["tags"] = final_tags
@@ -248,6 +261,7 @@ def demote_tag_to_alias(
         replacement_tag_ids=alias_targets,
         demoted_alias_key=demoted_alias_key,
         now_utc=now_utc,
+        registry_payload=registry_payload,
     )
 
     assignments_updated, assignment_stats, assignments_changed = rewrite_assignments_for_targets(

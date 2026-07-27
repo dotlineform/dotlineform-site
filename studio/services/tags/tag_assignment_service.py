@@ -11,7 +11,7 @@ def ensure_assignment_series_row(payload: Dict[str, Any], series_id: str) -> Dic
     if not isinstance(payload.get("series"), dict):
         payload["series"] = {}
     if "tag_assignments_version" not in payload:
-        payload["tag_assignments_version"] = "tag_assignments_v1"
+        payload["tag_assignments_version"] = tag_source.TAG_ASSIGNMENTS_VERSION
 
     series_obj = payload["series"]
     row = series_obj.get(series_id)

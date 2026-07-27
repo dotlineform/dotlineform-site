@@ -21,8 +21,7 @@ export function buildDeletePreviewPayload(tagId, utcTimestampFn = utcTimestamp) 
 }
 
 export function buildManualPatchForDemote(tagId, aliasTargets) {
-  const parts = String(tagId || "").split(":", 2);
-  const aliasKey = parts.length === 2 ? parts[1] : "";
+  const aliasKey = normalize(tagId);
   const aliasValue = {
     description: "",
     tags: aliasTargets.slice()

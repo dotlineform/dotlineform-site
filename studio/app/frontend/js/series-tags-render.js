@@ -160,7 +160,7 @@ function compareText(left, right) {
 
 function toTagDisplay(tagId, registry) {
   const record = registry.get(tagId);
-  const group = record && record.group ? record.group : tagId.split(":", 1)[0];
+  const group = record && record.group ? record.group : "warning";
   const label = record && record.label ? record.label : tagId;
   return {
     tagId,

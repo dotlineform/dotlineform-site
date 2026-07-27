@@ -3,25 +3,34 @@
 from __future__ import annotations
 
 
-def tag_row(tag_id: str, description: str = "") -> dict[str, str]:
-    group, slug = tag_id.split(":", 1)
+def tag_row(tag_id: str, group: str, description: str = "") -> dict[str, str]:
     return {
         "tag_id": tag_id,
         "group": group,
-        "label": slug,
+        "label": tag_id,
         "description": description,
     }
 
 
 def alias_mutation_registry_payload() -> dict[str, object]:
     return {
+        "policy": {
+            "allowed_groups": [
+                "subject",
+                "domain",
+                "form",
+                "theme",
+                "mood",
+                "material",
+            ]
+        },
         "tags": [
-            {"tag_id": "subject:trees", "group": "subject"},
-            {"tag_id": "subject:canopy", "group": "subject"},
-            {"tag_id": "theme:growth", "group": "theme"},
-            {"tag_id": "domain:studio", "group": "domain"},
-            {"tag_id": "mood:quiet", "group": "mood"},
-            {"tag_id": "material:paper", "group": "material"},
+            {"tag_id": "trees", "group": "subject"},
+            {"tag_id": "canopy", "group": "subject"},
+            {"tag_id": "growth", "group": "theme"},
+            {"tag_id": "studio", "group": "domain"},
+            {"tag_id": "quiet", "group": "mood"},
+            {"tag_id": "paper", "group": "material"},
         ]
     }
 
@@ -30,10 +39,10 @@ def promotion_registry_payload() -> dict[str, object]:
     return {
         "policy": {"allowed_groups": ["subject", "theme", "domain"]},
         "tags": [
-            tag_row("subject:trees"),
-            tag_row("subject:canopy"),
-            tag_row("theme:growth"),
-            tag_row("domain:studio"),
+            tag_row("trees", "subject"),
+            tag_row("canopy", "subject"),
+            tag_row("growth", "theme"),
+            tag_row("studio", "domain"),
         ],
     }
 
@@ -41,9 +50,9 @@ def promotion_registry_payload() -> dict[str, object]:
 def promotion_aliases_payload() -> dict[str, object]:
     return {
         "aliases": {
-            "foliage": {"description": "Leaf forms", "tags": ["subject:trees"]},
-            "combo": {"description": "", "tags": ["subject:trees", "theme:growth"]},
-            "studio": {"description": "", "tags": ["domain:studio"]},
+            "foliage": {"description": "Leaf forms", "tags": ["trees"]},
+            "combo": {"description": "", "tags": ["trees", "growth"]},
+            "workspace": {"description": "", "tags": ["studio"]},
         }
     }
 
@@ -53,14 +62,14 @@ def promotion_assignments_payload() -> dict[str, object]:
         "series": {
             "001": {
                 "tags": [
-                    {"tag_id": "subject:trees", "w_manual": 0.9},
-                    {"tag_id": "domain:studio", "w_manual": 0.3},
+                    {"tag_id": "trees", "w_manual": 0.9},
+                    {"tag_id": "studio", "w_manual": 0.3},
                 ],
                 "works": {
                     "00001": {
                         "tags": [
-                            {"tag_id": "subject:trees", "w_manual": 0.6},
-                            {"tag_id": "theme:growth", "w_manual": 0.3},
+                            {"tag_id": "trees", "w_manual": 0.6},
+                            {"tag_id": "growth", "w_manual": 0.3},
                         ]
                     }
                 },

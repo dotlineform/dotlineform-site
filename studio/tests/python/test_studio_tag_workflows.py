@@ -29,13 +29,13 @@ def test_studio_tag_reads_return_existing_payloads() -> None:
     assert groups_payload["tag_groups_version"] == "tag_groups_v1"
     assert {group["group_id"] for group in groups_payload["groups"]} >= {"subject", "domain", "form", "theme"}
     assert registry_payload["ok"] is True
-    assert registry_payload["tag_registry_version"] == "tag_registry_v1"
-    assert any(tag["tag_id"] == "subject:flower" for tag in registry_payload["tags"])
+    assert registry_payload["tag_registry_version"] == "tag_registry_v2"
+    assert any(tag["tag_id"] == "flower" for tag in registry_payload["tags"])
     assert aliases_payload["ok"] is True
-    assert aliases_payload["tag_aliases_version"] == "tag_aliases_v1"
+    assert aliases_payload["tag_aliases_version"] == "tag_aliases_v2"
     assert "floral" in aliases_payload["aliases"]
     assert assignments_payload["ok"] is True
-    assert assignments_payload["tag_assignments_version"] == "tag_assignments_v1"
+    assert assignments_payload["tag_assignments_version"] == "tag_assignments_v2"
     assert "001" in assignments_payload["series"]
 
 
@@ -46,7 +46,7 @@ def test_studio_save_tags_dry_run_uses_assignment_contract() -> None:
         assignments_path.parent.mkdir(parents=True)
         assignments_path.write_text(
             """{
-  "tag_assignments_version": "tag_assignments_v1",
+  "tag_assignments_version": "tag_assignments_v2",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "series": {}
 }
@@ -59,7 +59,7 @@ def test_studio_save_tags_dry_run_uses_assignment_contract() -> None:
             "/save-tags",
             {
                 "series_id": "series-a",
-                "tags": [{"tag_id": "subject:trees", "w_manual": 0.9}],
+                "tags": [{"tag_id": "trees", "w_manual": 0.9}],
                 "client_time_utc": "2026-05-22T00:00:00Z",
             },
             dry_run=True,
@@ -71,8 +71,8 @@ def test_studio_save_tags_dry_run_uses_assignment_contract() -> None:
         assert payload["series_id"] == "series-a"
         assert payload["tag_count"] == 1
         assert payload["dry_run"] is True
-        assert payload["would_write"]["tags"] == [{"tag_id": "subject:trees", "w_manual": 0.9}]
-        assert "subject:trees" not in persisted
+        assert payload["would_write"]["tags"] == [{"tag_id": "trees", "w_manual": 0.9}]
+        assert "trees" not in persisted
 
 
 def test_studio_tag_registry_dry_run_uses_registry_contract() -> None:
@@ -84,28 +84,28 @@ def test_studio_tag_registry_dry_run_uses_registry_contract() -> None:
         registry_path.parent.mkdir(parents=True)
         registry_path.write_text(
             """{
-  "tag_registry_version": "tag_registry_v1",
+  "tag_registry_version": "tag_registry_v2",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {"allowed_groups": ["subject", "theme"]},
-  "tags": [{"tag_id": "subject:trees", "group": "subject", "label": "trees", "description": "Old trees"}]
+  "tags": [{"tag_id": "trees", "group": "subject", "label": "trees", "description": "Old trees"}]
 }
 """,
             encoding="utf-8",
         )
         aliases_path.write_text(
             """{
-  "tag_aliases_version": "tag_aliases_v1",
+  "tag_aliases_version": "tag_aliases_v2",
   "updated_at_utc": "2026-05-01T00:00:00Z",
-  "aliases": {"woodland": {"description": "Woodland", "tags": ["subject:trees"]}}
+  "aliases": {"woodland": {"description": "Woodland", "tags": ["trees"]}}
 }
 """,
             encoding="utf-8",
         )
         assignments_path.write_text(
             """{
-  "tag_assignments_version": "tag_assignments_v1",
+  "tag_assignments_version": "tag_assignments_v2",
   "updated_at_utc": "2026-05-01T00:00:00Z",
-  "series": {"series-a": {"tags": [{"tag_id": "subject:trees", "w_manual": 0.6}]}}
+  "series": {"series-a": {"tags": [{"tag_id": "trees", "w_manual": 0.6}]}}
 }
 """,
             encoding="utf-8",
@@ -114,7 +114,7 @@ def test_studio_tag_registry_dry_run_uses_registry_contract() -> None:
         preview_status, preview_payload = tags_post_response(
             repo_root,
             "/mutate-tag-preview",
-            {"action": "delete", "tag_id": "subject:trees", "client_time_utc": "2026-05-22T00:00:00Z"},
+            {"action": "delete", "tag_id": "trees", "client_time_utc": "2026-05-22T00:00:00Z"},
             dry_run=True,
         )
 
@@ -133,10 +133,10 @@ def test_studio_create_tag_dry_run_validates_before_write() -> None:
         registry_path.parent.mkdir(parents=True)
         registry_path.write_text(
             """{
-  "tag_registry_version": "tag_registry_v1",
+  "tag_registry_version": "tag_registry_v2",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {"allowed_groups": ["subject", "theme"]},
-  "tags": [{"tag_id": "subject:trees", "group": "subject", "label": "trees", "description": "Trees"}]
+  "tags": [{"tag_id": "trees", "group": "subject", "label": "trees", "description": "Trees"}]
 }
 """,
             encoding="utf-8",
@@ -148,7 +148,7 @@ def test_studio_create_tag_dry_run_validates_before_write() -> None:
             "/create-tag",
             {
                 "group": "theme",
-                "slug": "renewal",
+                "tag_id": "renewal",
                 "description": " Renewal ",
                 "client_time_utc": "2026-05-22T00:00:00Z",
             },
@@ -158,18 +158,18 @@ def test_studio_create_tag_dry_run_validates_before_write() -> None:
         assert status == HTTPStatus.OK
         assert payload["ok"] is True
         assert payload["action"] == "create"
-        assert payload["tag_id"] == "theme:renewal"
+        assert payload["tag_id"] == "renewal"
         assert payload["added"] == 1
         assert payload["final_total"] == 2
         assert payload["dry_run"] is True
-        assert payload["would_write"]["tag_id"] == "theme:renewal"
+        assert payload["would_write"]["tag_id"] == "renewal"
         assert registry_path.read_bytes() == before
 
         invalid_requests = (
-            {"group": "domain", "slug": "studio", "description": ""},
-            {"group": "theme", "slug": "Bad Slug", "description": ""},
-            {"group": "subject", "slug": "trees", "description": ""},
-            {"group": "theme", "slug": "renewal", "description": {"bad": True}},
+            {"group": "domain", "tag_id": "studio", "description": ""},
+            {"group": "theme", "tag_id": "Bad Slug", "description": ""},
+            {"group": "subject", "tag_id": "trees", "description": ""},
+            {"group": "theme", "tag_id": "renewal", "description": {"bad": True}},
         )
         for invalid_body in invalid_requests:
             try:
@@ -189,21 +189,21 @@ def test_studio_tag_alias_dry_run_uses_alias_contract() -> None:
         aliases_path.parent.mkdir(parents=True)
         aliases_path.write_text(
             """{
-  "tag_aliases_version": "tag_aliases_v1",
+  "tag_aliases_version": "tag_aliases_v2",
   "updated_at_utc": "2026-05-01T00:00:00Z",
-  "aliases": {"foliage": {"description": "Old foliage", "tags": ["subject:trees"]}}
+  "aliases": {"foliage": {"description": "Old foliage", "tags": ["trees"]}}
 }
 """,
             encoding="utf-8",
         )
         registry_path.write_text(
             """{
-  "tag_registry_version": "tag_registry_v1",
+  "tag_registry_version": "tag_registry_v2",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {"allowed_groups": ["subject", "theme"]},
   "tags": [
-    {"tag_id": "subject:trees", "group": "subject", "label": "trees", "description": "Trees"},
-    {"tag_id": "theme:growth", "group": "theme", "label": "growth", "description": "Growth"}
+    {"tag_id": "trees", "group": "subject", "label": "trees", "description": "Trees"},
+    {"tag_id": "growth", "group": "theme", "label": "growth", "description": "Growth"}
   ]
 }
 """,
@@ -217,7 +217,7 @@ def test_studio_tag_alias_dry_run_uses_alias_contract() -> None:
             {
                 "alias": "canopy",
                 "description": " Canopy ",
-                "tags": ["subject:trees", "theme:growth"],
+                "tags": ["trees", "growth"],
                 "client_time_utc": "2026-05-22T00:00:00Z",
             },
             dry_run=True,
@@ -236,7 +236,7 @@ def test_studio_tag_alias_dry_run_uses_alias_contract() -> None:
                 "alias": "foliage",
                 "new_alias": "canopy",
                 "description": "Canopy",
-                "tags": ["subject:trees", "theme:growth"],
+                "tags": ["trees", "growth"],
                 "client_time_utc": "2026-05-22T00:00:00Z",
             },
             dry_run=True,
@@ -247,7 +247,7 @@ def test_studio_tag_alias_dry_run_uses_alias_contract() -> None:
         assert create_payload["ok"] is True
         assert create_payload["action"] == "create_alias"
         assert create_payload["alias"] == "canopy"
-        assert create_payload["tags"] == ["subject:trees", "theme:growth"]
+        assert create_payload["tags"] == ["trees", "growth"]
         assert create_payload["added"] == 1
         assert create_payload["dry_run"] is True
         assert create_payload["would_write"]["alias"] == "canopy"
@@ -263,12 +263,12 @@ def test_studio_tag_alias_dry_run_uses_alias_contract() -> None:
         assert aliases_path.read_bytes() == before
 
         invalid_requests = (
-            {"alias": "Bad Alias", "description": "", "tags": ["subject:trees"]},
-            {"alias": "foliage", "description": "", "tags": ["subject:trees"]},
+            {"alias": "Bad Alias", "description": "", "tags": ["trees"]},
+            {"alias": "foliage", "description": "", "tags": ["trees"]},
             {"alias": "canopy", "description": "", "tags": []},
-            {"alias": "canopy", "description": "", "tags": ["subject:missing"]},
-            {"alias": "canopy", "description": "", "tags": ["subject:trees", "subject:trees"]},
-            {"alias": "canopy", "description": "", "tags": ["subject:trees", "subject:other"]},
+            {"alias": "canopy", "description": "", "tags": ["missing"]},
+            {"alias": "canopy", "description": "", "tags": ["trees", "trees"]},
+            {"alias": "canopy", "description": "", "tags": ["trees", "other"]},
         )
         for invalid_body in invalid_requests:
             try:
@@ -289,12 +289,12 @@ def test_studio_promotion_demotion_dry_run_uses_promotion_contract() -> None:
         registry_path.parent.mkdir(parents=True)
         registry_path.write_text(
             """{
-  "tag_registry_version": "tag_registry_v1",
+  "tag_registry_version": "tag_registry_v2",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {"allowed_groups": ["subject", "theme"]},
   "tags": [
-    {"tag_id": "subject:trees", "group": "subject", "label": "trees", "description": "Trees"},
-    {"tag_id": "theme:growth", "group": "theme", "label": "growth", "description": "Growth"}
+    {"tag_id": "trees", "group": "subject", "label": "trees", "description": "Trees"},
+    {"tag_id": "growth", "group": "theme", "label": "growth", "description": "Growth"}
   ]
 }
 """,
@@ -302,18 +302,18 @@ def test_studio_promotion_demotion_dry_run_uses_promotion_contract() -> None:
         )
         aliases_path.write_text(
             """{
-  "tag_aliases_version": "tag_aliases_v1",
+  "tag_aliases_version": "tag_aliases_v2",
   "updated_at_utc": "2026-05-01T00:00:00Z",
-  "aliases": {"foliage": {"description": "Foliage", "tags": ["subject:trees"]}}
+  "aliases": {"foliage": {"description": "Foliage", "tags": ["trees"]}}
 }
 """,
             encoding="utf-8",
         )
         assignments_path.write_text(
             """{
-  "tag_assignments_version": "tag_assignments_v1",
+  "tag_assignments_version": "tag_assignments_v2",
   "updated_at_utc": "2026-05-01T00:00:00Z",
-  "series": {"series-a": {"tags": [{"tag_id": "subject:trees", "w_manual": 0.6}]}}
+  "series": {"series-a": {"tags": [{"tag_id": "trees", "w_manual": 0.6}]}}
 }
 """,
             encoding="utf-8",
@@ -328,7 +328,7 @@ def test_studio_promotion_demotion_dry_run_uses_promotion_contract() -> None:
         demote_status, demote_payload = tags_post_response(
             repo_root,
             "/demote-tag-preview",
-            {"tag_id": "subject:trees", "alias_targets": ["theme:growth"], "client_time_utc": "2026-05-22T00:00:00Z"},
+            {"tag_id": "trees", "alias_targets": ["growth"], "client_time_utc": "2026-05-22T00:00:00Z"},
             dry_run=True,
         )
 
@@ -337,11 +337,11 @@ def test_studio_promotion_demotion_dry_run_uses_promotion_contract() -> None:
         assert promote_status == HTTPStatus.OK
         assert promote_payload["ok"] is True
         assert promote_payload["preview"] is True
-        assert promote_payload["new_tag_id"] == "theme:foliage"
+        assert promote_payload["new_tag_id"] == "foliage"
         assert demote_status == HTTPStatus.OK
         assert demote_payload["ok"] is True
         assert demote_payload["preview"] is True
         assert demote_payload["alias_key"] == "trees"
         assert demote_payload["series_tag_refs_rewritten"] == 1
-        assert "theme:foliage" not in registry_persisted
+        assert '"foliage"' not in registry_persisted
         assert "trees" not in aliases_persisted["aliases"]

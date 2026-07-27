@@ -60,7 +60,7 @@ export function openAliasDemoteModal(state, tagId, options = {}) {
 
   openTagAliasesDemoteModal(state, {
     canonicalTagId,
-    aliasKey: canonicalTagId.split(":", 2)[1] || canonicalTagId
+    aliasKey: canonicalTagId
   });
   syncRouteBusyState(options, state);
 }
@@ -136,10 +136,9 @@ export function getAliasDemoteTagMatches(state, query, options = {}) {
   const allMatches = state.registryOptions.filter((item) => {
     if (selected.has(item.tagId)) return false;
     if (item.tagId === state.demoteState.tagId) return false;
-    const slug = item.tagId.split(":", 2)[1] || "";
     return (
       normalize(item.label).startsWith(normalizedQuery) ||
-      normalize(slug).startsWith(normalizedQuery)
+      normalize(item.tagId).startsWith(normalizedQuery)
     );
   });
   const cap = demoteTagMatchCap(options);
@@ -169,8 +168,11 @@ export function addAliasDemoteTag(state, tagId, options = {}) {
     return;
   }
 
-  const nextGroup = normalizedTagId.split(":", 1)[0];
-  const groupConflict = state.demoteState.tags.some((item) => item.split(":", 1)[0] === nextGroup);
+  const nextGroup = state.registryById.get(normalizedTagId).group;
+  const groupConflict = state.demoteState.tags.some((item) => {
+    const info = state.registryById.get(item);
+    return Boolean(info && info.group === nextGroup);
+  });
   if (groupConflict) {
     setAliasDemoteStatus(state, "error", text(options, "target_tags_one_per_group", "Only one target tag per group is allowed ({group}).", { group: nextGroup }));
     return;
@@ -280,8 +282,11 @@ export function addAliasEditTag(state, tagId, options = {}) {
     return;
   }
 
-  const nextGroup = normalizedTagId.split(":", 1)[0];
-  const groupConflict = state.editState.tags.some((item) => item.split(":", 1)[0] === nextGroup);
+  const nextGroup = state.registryById.get(normalizedTagId).group;
+  const groupConflict = state.editState.tags.some((item) => {
+    const info = state.registryById.get(item);
+    return Boolean(info && info.group === nextGroup);
+  });
   if (groupConflict) {
     setAliasEditStatus(state, "error", text(options, "one_tag_per_group_warning", "Only one tag per group is allowed ({group}).", { group: nextGroup }));
     return;

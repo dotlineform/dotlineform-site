@@ -66,7 +66,7 @@ export async function previewDeleteImpact(options) {
 }
 
 export async function submitTagEdit(options) {
-  const { saveMode, tag, description, config } = options || {};
+  const { saveMode, tag, group, description, config } = options || {};
   if (saveMode !== "post") {
     return {
       ok: false,
@@ -81,7 +81,10 @@ export async function submitTagEdit(options) {
       message: registryText(config, "selected_tag_missing", "Selected tag is no longer available.")
     };
   }
-  if (description === String(tag.description || "").trim()) {
+  if (
+    group === String(tag.group || "").trim() &&
+    description === String(tag.description || "").trim()
+  ) {
     return {
       ok: false,
       code: "no_changes",
@@ -93,6 +96,7 @@ export async function submitTagEdit(options) {
     const response = await postJson(getStudioTagWriteEndpoint("mutateTag", config), {
       action: "edit",
       tag_id: tag.tagId,
+      new_group: group,
       description,
       allow_canonical_rename: false,
       client_time_utc: utcTimestamp(),
@@ -119,7 +123,7 @@ export async function submitCreateTag(options) {
     try {
       const response = await postJson(getStudioTagWriteEndpoint("createTag", config), {
         group: newTagRow && newTagRow.group,
-        slug: newTagRow && newTagRow.label,
+        tag_id: newTagRow && newTagRow.tag_id,
         description: newTagRow && newTagRow.description,
         client_time_utc: utcTimestamp(),
         activity_context: registryActivityContext("create-tag", "create-tag", "[data-role=\"create-tag\"]", "tag_id", newTagRow && newTagRow.tag_id)

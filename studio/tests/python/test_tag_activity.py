@@ -35,7 +35,7 @@ def assert_false(value: Any, label: str) -> None:
         raise AssertionError(f"{label}: expected falsey value")
 
 
-def tag_context(tag_id: str = "subject:trees") -> Dict[str, str]:
+def tag_context(tag_id: str = "trees") -> Dict[str, str]:
     return {
         "correlation_id": "tag-activity-test",
         "page_id": "tag-registry",
@@ -77,6 +77,7 @@ def test_activity_changed_suppresses_no_ops() -> None:
     assert_true(activity.tag_activity_changed({"added": 1}), "added stats")
     assert_true(activity.tag_activity_changed({"changed": True}), "changed flag")
     assert_true(activity.tag_activity_changed({"canonical_changed": True}), "canonical changed")
+    assert_true(activity.tag_activity_changed({"group_changed": True}), "group changed")
     assert_true(activity.tag_activity_changed({"description_changed": True}), "description changed")
 
 
@@ -90,7 +91,7 @@ def test_activity_append_is_write_only() -> None:
         append_activity=calls.append,
         body={"activity_context": tag_context()},
         response_payload=response,
-        record_id="subject:trees",
+        record_id="trees",
     )
     assert_equal(calls, [], "dry-run append calls")
     assert_false("activity_log" in response, "dry-run activity log")
@@ -102,7 +103,7 @@ def test_activity_append_is_write_only() -> None:
         append_activity=calls.append,
         body={},
         response_payload=response,
-        record_id="subject:trees",
+        record_id="trees",
     )
     assert_equal(calls, [], "missing context append calls")
 
@@ -117,11 +118,11 @@ def test_tag_record_group_is_resolved_from_context() -> None:
         append_activity=calls.append,
         body={"activity_context": tag_context()},
         response_payload=response,
-        record_id="subject:trees",
+        record_id="trees",
         status="completed",
     )
     assert_equal(len(calls), 1, "tag append calls")
-    assert_equal(calls[0]["record_groups"]["tags"], ["subject:trees"], "tag record group")
+    assert_equal(calls[0]["record_groups"]["tags"], ["trees"], "tag record group")
     assert_equal(calls[0]["source_refs"], [{"kind": "log", "path": "var/studio/logs/studio_tags_api.log"}], "source refs")
     assert_equal(response["activity_log"], {"written_count": 1}, "activity log")
 
@@ -156,7 +157,7 @@ def test_activity_append_failure_is_non_fatal() -> None:
         append_activity=fail_append,
         body={"activity_context": tag_context()},
         response_payload=response,
-        record_id="subject:trees",
+        record_id="trees",
     )
     assert_equal(response["activity_log"]["written_count"], 0, "failed append count")
     assert_true("append failed" in response["activity_log"].get("error", ""), "failed append error")
@@ -178,7 +179,7 @@ def test_common_activity_helper_uses_admin_activity_log() -> None:
             dry_run=False,
             body={"activity_context": tag_context()},
             response_payload=response,
-            record_id="subject:trees",
+            record_id="trees",
             status="completed",
         )
     finally:
@@ -186,7 +187,7 @@ def test_common_activity_helper_uses_admin_activity_log() -> None:
 
     assert_equal(len(calls), 1, "common helper append calls")
     assert_equal(calls[0]["repo_root"], REPO_ROOT, "common helper repo root")
-    assert_equal(calls[0]["entry"]["record_groups"]["tags"], ["subject:trees"], "common helper tag record group")
+    assert_equal(calls[0]["entry"]["record_groups"]["tags"], ["trees"], "common helper tag record group")
     assert_equal(response["activity_log"], {"written_count": 1}, "common helper activity log")
 
 

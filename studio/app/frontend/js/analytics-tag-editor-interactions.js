@@ -209,11 +209,8 @@ export function resolveAnalyticsTagEditorInput(rawInput, state) {
   if (!raw) return { type: "empty" };
 
   const normalized = normalize(raw);
-  if (normalized.includes(":")) {
-    const canonical = state.tagsById.get(normalized);
-    if (canonical) return { type: "resolved", tag: canonical };
-    return { type: "unresolved" };
-  }
+  const canonical = state.tagsById.get(normalized);
+  if (canonical) return { type: "resolved", tag: canonical };
 
   const aliasTagIds = state.aliases.get(normalized);
   if (Array.isArray(aliasTagIds) && aliasTagIds.length) {

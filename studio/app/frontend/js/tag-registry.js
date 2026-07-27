@@ -160,6 +160,7 @@ async function initTagRegistryPage() {
     saveMode: "patch",
     patchSnippet: "",
     editTagId: "",
+    editTagGroup: "",
     newTagState: null,
     demoteState: null,
     aliasKeys: new Set(),
@@ -303,6 +304,7 @@ function wireEvents(state) {
     onEditSave: () => {
       void withRouteBusy(state, () => handleTagEdit(state));
     },
+    onEditGroupInput: () => setTagRegistryEditStatus(state, "", ""),
     onEditDescriptionInput: () => setTagRegistryEditStatus(state, "", ""),
     onNewTagInput: () => updateNewTagUi(state),
     onCreateTag: () => {
@@ -440,10 +442,12 @@ async function refreshDeleteImpactPreview(state) {
 async function handleTagEdit(state) {
   if (!state.editTagId) return;
   const tagId = state.editTagId;
+  const group = normalize(state.editTagGroup);
   const description = String(state.refs.editDescription.value || "").trim();
   const result = await saveTagRegistryEdit({
     saveMode: state.saveMode,
     tag: findTagById(state, tagId),
+    group,
     description,
     config: state.config
   });
@@ -454,6 +458,7 @@ async function handleTagEdit(state) {
 
   applyTagRegistryEditResult(state, {
     tagId,
+    group,
     description,
     result
   }, modalWorkflowOptions(state));
@@ -470,7 +475,7 @@ async function handleCreateTag(state) {
   const newTagRow = {
     tag_id: validation.tagId,
     group: validation.group,
-    label: validation.slug,
+    label: validation.tagId,
     description: validation.description
   };
 
@@ -551,7 +556,7 @@ async function handleTagDemote(state) {
     return;
   }
 
-  const aliasKey = tag.tagId.split(":")[1] || tag.tagId;
+  const aliasKey = tag.tagId;
   if (state.aliasKeys.has(aliasKey)) {
     const message = registryText(
       state.config,

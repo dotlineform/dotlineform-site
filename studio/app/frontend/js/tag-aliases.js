@@ -539,7 +539,7 @@ async function handleTagDemoteFromAliases(state) {
       return;
     }
     const previewSummary = preview.summary;
-    const aliasKey = canonicalTagId.split(":")[1] || canonicalTagId;
+    const aliasKey = canonicalTagId;
     const confirmResult = await openConfirmDetailModal({
       root: state.mount,
       title: aliasesText(state.config, "demotion_confirm_title", "Confirm Tag Demotion"),

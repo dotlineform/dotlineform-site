@@ -665,7 +665,10 @@ function renderEditTagList(state) {
 }
 
 function renderSelectedGroupKey(state, tagIds) {
-  const selected = new Set((Array.isArray(tagIds) ? tagIds : []).map((tagId) => String(tagId || "").split(":", 1)[0]));
+  const selected = new Set((Array.isArray(tagIds) ? tagIds : [])
+    .map((tagId) => state.registryById.get(tagId))
+    .filter(Boolean)
+    .map((info) => info.group));
   return getStudioGroups(state).map((group) => {
     const titleAttr = groupTitleAttr(state, group);
     return `<span class="${classNames(UI_CLASS.keyPill, chipGroupClass(group))}"${stateAttr(selected.has(group) ? UI.state.active : "")} ${titleAttr}>${escapeHtml(group)}</span>`;

@@ -198,7 +198,7 @@ export async function previewAliasPromote(options) {
     return {
       ok: true,
       response,
-      summary: String(response.summary_text || "").trim() || `alias ${aliasKey} -> ${group}:${aliasKey}`
+      summary: String(response.summary_text || "").trim() || `alias ${aliasKey} -> ${aliasKey} (${group})`
     };
   } catch (error) {
     return {

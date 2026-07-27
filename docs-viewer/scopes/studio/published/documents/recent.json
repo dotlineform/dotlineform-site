@@ -7,7 +7,7 @@
       "doc_id": "d-20260727-110045-b02868",
       "title": "Flat Tag Identity Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260727-110045-b02868.json",
-      "timestamp": "2026-07-27 16:17:38",
+      "timestamp": "2026-07-27 16:51:30",
       "parent_id": "d-20260727-110004-ab0433",
       "parent_title": "Flat Tag Identity"
     },
@@ -15,9 +15,57 @@
       "doc_id": "d-20260727-110004-ab0433",
       "title": "Flat Tag Identity",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260727-110004-ab0433.json",
-      "timestamp": "2026-07-27 16:10:54",
+      "timestamp": "2026-07-27 16:46:13",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260331-000000-643429",
+      "title": "Series Tag Editor",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-643429.json",
+      "timestamp": "2026-07-27 16:46:13",
+      "parent_id": "d-20260419-000000-86255c",
+      "parent_title": "Tag Source Data"
+    },
+    {
+      "doc_id": "d-20260331-000000-974bf0",
+      "title": "Series Tags",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-974bf0.json",
+      "timestamp": "2026-07-27 16:46:13",
+      "parent_id": "d-20260419-000000-86255c",
+      "parent_title": "Tag Source Data"
+    },
+    {
+      "doc_id": "d-20260331-000000-519b1e",
+      "title": "Tag Aliases",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-519b1e.json",
+      "timestamp": "2026-07-27 16:46:13",
+      "parent_id": "d-20260419-000000-86255c",
+      "parent_title": "Tag Source Data"
+    },
+    {
+      "doc_id": "d-20260331-000000-4519a5",
+      "title": "Tag Registry",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-4519a5.json",
+      "timestamp": "2026-07-27 16:46:13",
+      "parent_id": "d-20260419-000000-86255c",
+      "parent_title": "Tag Source Data"
+    },
+    {
+      "doc_id": "d-20260602-000000-9ffb5c",
+      "title": "Tag Services",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-000000-9ffb5c.json",
+      "timestamp": "2026-07-27 16:46:13",
+      "parent_id": "d-20260419-000000-86255c",
+      "parent_title": "Tag Source Data"
+    },
+    {
+      "doc_id": "d-20260419-000000-86255c",
+      "title": "Tag Source Data",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260419-000000-86255c.json",
+      "timestamp": "2026-07-27 16:46:13",
+      "parent_id": "d-20260423-000000-d015e6",
+      "parent_title": "Studio"
     },
     {
       "doc_id": "d-20260727-110045-a48cc4",
@@ -34,55 +82,7 @@
       "timestamp": "2026-07-27 16:10:54",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260726-215805-861b6b",
-      "title": "Offline Tag Assignment Session Removal Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-215805-861b6b.json",
-      "timestamp": "2026-07-27 15:20:54",
-      "parent_id": "d-20260726-215805-ecf8a4",
-      "parent_title": "Offline Tag Assignment Session Retirement"
-    },
-    {
-      "doc_id": "d-20260726-215805-ecf8a4",
-      "title": "Offline Tag Assignment Session Retirement",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-215805-ecf8a4.json",
-      "timestamp": "2026-07-27 15:20:54",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260602-111803-019594",
-      "title": "Local Studio APIs",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-111803-019594.json",
-      "timestamp": "2026-07-27 15:18:21",
-      "parent_id": "d-20260423-000000-d015e6",
-      "parent_title": "Studio"
-    },
-    {
-      "doc_id": "d-20260331-000000-643429",
-      "title": "Series Tag Editor",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-643429.json",
-      "timestamp": "2026-07-27 15:18:21",
-      "parent_id": "d-20260419-000000-86255c",
-      "parent_title": "Tag Source Data"
-    },
-    {
-      "doc_id": "d-20260331-000000-974bf0",
-      "title": "Series Tags",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-974bf0.json",
-      "timestamp": "2026-07-27 15:18:21",
-      "parent_id": "d-20260419-000000-86255c",
-      "parent_title": "Tag Source Data"
-    },
-    {
-      "doc_id": "d-20260524-214228-7247ef",
-      "title": "Source Tree Ownership",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260524-214228-7247ef.json",
-      "timestamp": "2026-07-27 15:18:21",
-      "parent_id": "d-20260331-000000-4a16b0",
-      "parent_title": "Architecture"
     }
   ],
-  "generated_at": "2026-07-27T15:18:11Z"
+  "generated_at": "2026-07-27T15:51:38Z"
 }

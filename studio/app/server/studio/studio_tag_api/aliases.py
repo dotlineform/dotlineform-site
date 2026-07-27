@@ -143,7 +143,6 @@ def mutate_tag_alias_response(
     new_alias_key = tag_source.sanitize_alias_key(body.get("new_alias", alias_key), 1)
     description = tag_source.sanitize_alias_description(body.get("description", ""), "description")
     tags = tag_source.sanitize_tag_id_list(body.get("tags"), "tags")
-    tag_source.enforce_alias_group_constraints(tags, "tags")
 
     now_utc = common.utc_now()
     aliases_payload = tag_source.load_aliases(aliases_path)

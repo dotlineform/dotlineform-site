@@ -1,7 +1,7 @@
 // Studio-owned tag alias domain.
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 let MAX_ALIAS_TAGS = 4;
-const TAG_ID_RE = /^[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$/;
+const TAG_ID_RE = /^[a-z0-9][a-z0-9-]*$/;
 
 export function configureTagAliasesDomain(options = {}) {
   const groups = Array.isArray(options.groups) && options.groups.length
@@ -51,7 +51,7 @@ export function normalizeAliases(data, fallbackUpdatedAt, registryById, text) {
     if (!alias) continue;
     let normalizedValue;
     try {
-      normalizedValue = normalizeAliasValue(rawValue, text);
+      normalizedValue = normalizeAliasValue(rawValue, text, registryById);
     } catch (error) {
       continue;
     }
@@ -86,10 +86,10 @@ export function normalizeAliases(data, fallbackUpdatedAt, registryById, text) {
   return entries;
 }
 
-export function normalizeAliasValue(rawValue, text) {
+export function normalizeAliasValue(rawValue, text, registryById) {
   if (rawValue && typeof rawValue === "object" && !Array.isArray(rawValue)) {
     const description = String(rawValue.description || "").trim();
-    const tags = normalizeAliasTagsArray(rawValue.tags, text);
+    const tags = normalizeAliasTagsArray(rawValue.tags, text, registryById);
     return {
       description,
       value: { description, tags },
@@ -109,7 +109,7 @@ export function normalizeAliasValue(rawValue, text) {
     };
   }
 
-  const out = normalizeAliasTagsArray(rawValue, text);
+  const out = normalizeAliasTagsArray(rawValue, text, registryById);
   return {
     description: "",
     value: { description: "", tags: out },
@@ -117,7 +117,7 @@ export function normalizeAliasValue(rawValue, text) {
   };
 }
 
-export function normalizeAliasTagsArray(rawValue, text) {
+export function normalizeAliasTagsArray(rawValue, text, registryById) {
   if (!Array.isArray(rawValue)) {
     throw new Error(textValue(text, "alias_tags_array_required", "Alias tags must be an array."));
   }
@@ -137,12 +137,13 @@ export function normalizeAliasTagsArray(rawValue, text) {
       throw new Error(textValue(text, "alias_tag_array_invalid_value", "Invalid alias tag_id array value."));
     }
     if (seen.has(value)) continue;
-    const group = value.split(":", 1)[0];
-    if (seenGroups.has(group)) {
+    const info = registryById instanceof Map ? registryById.get(value) : null;
+    const group = info ? normalize(info.group) : "";
+    if (group && seenGroups.has(group)) {
       throw new Error(textValue(text, "alias_tags_one_per_group", "Alias tags may include only one tag per group: {group}", { group }));
     }
     seen.add(value);
-    seenGroups.add(group);
+    if (group) seenGroups.add(group);
     out.push(value);
   }
   if (!out.length) {
@@ -158,7 +159,7 @@ export function buildRegistryOptions(registryById) {
     out.push({
       tagId,
       group: info.group,
-      label: normalize(info.label) || tagId.split(":", 2)[1] || tagId
+      label: normalize(info.label) || tagId
     });
   }
   out.sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: "base" }));
@@ -277,7 +278,7 @@ export function getAliasEditValidation(options) {
         tagsWarning = textValue(text, "unknown_tag_selected", "Unknown tag selected: {tag_id}", { tag_id: tagId });
         break;
       }
-      const group = tagId.split(":", 1)[0];
+      const group = normalize(registryById.get(tagId).group);
       if (seenGroups.has(group)) {
         tagsWarning = textValue(text, "one_tag_per_group_warning", "Only one tag per group is allowed ({group}).", { group });
         break;
@@ -318,10 +319,9 @@ export function getEditTagMatches(options) {
   const allMatches = (Array.isArray(registryOptions) ? registryOptions : [])
     .filter((item) => {
       if (selected.has(item.tagId)) return false;
-      const slug = item.tagId.split(":", 2)[1] || "";
       return (
         normalize(item.label).startsWith(normalizedQuery) ||
-        normalize(slug).startsWith(normalizedQuery)
+        normalize(item.tagId).startsWith(normalizedQuery)
       );
     });
 
@@ -332,7 +332,7 @@ export function getEditTagMatches(options) {
   };
 }
 
-export function parseTagIdCsv(input, text) {
+export function parseTagIdCsv(input, text, registryById) {
   const values = String(input || "")
     .split(",")
     .map((item) => normalize(item))
@@ -355,7 +355,9 @@ export function parseTagIdCsv(input, text) {
   }
   const seenGroups = new Set();
   for (const value of out) {
-    const group = value.split(":", 1)[0];
+    const info = registryById instanceof Map ? registryById.get(value) : null;
+    const group = info ? normalize(info.group) : "";
+    if (!group) continue;
     if (seenGroups.has(group)) {
       throw new Error(textValue(text, "target_tags_one_per_group", "Only one target tag per group is allowed ({group}).", { group }));
     }
