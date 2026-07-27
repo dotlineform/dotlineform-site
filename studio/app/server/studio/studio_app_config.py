@@ -81,6 +81,7 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
     "tags": {
         "base": "/studio/api/tags",
         "health": "/studio/api/tags/health",
+        "create_tag": "/studio/api/tags/create-tag",
         "delete_tag_alias": "/studio/api/tags/delete-tag-alias",
         "demote_tag": "/studio/api/tags/demote-tag",
         "demote_tag_preview": "/studio/api/tags/demote-tag-preview",

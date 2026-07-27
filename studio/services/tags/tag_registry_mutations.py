@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Plan tag registry imports and canonical tag mutations."""
+"""Plan tag registry imports and focused canonical tag mutations."""
 
 from __future__ import annotations
 
@@ -9,6 +9,55 @@ from tags import tag_source_model as tag_source
 
 
 MUTATE_ACTIONS = {"edit", "delete"}
+
+
+def create_registry_tag(
+    registry_payload: Dict[str, Any],
+    *,
+    group: Any,
+    slug: Any,
+    description: Any,
+    now_utc: str,
+) -> tuple[Dict[str, Any], Dict[str, Any]]:
+    """Plan one canonical tag addition without changing existing rows."""
+    allowed_groups = tag_source.extract_allowed_groups(registry_payload)
+    normalized_group = tag_source.sanitize_group(group, allowed_groups)
+    normalized_slug = tag_source.sanitize_slug(slug)
+    normalized_description = tag_source.sanitize_alias_description(description, "description")
+    tag_id = f"{normalized_group}:{normalized_slug}"
+
+    raw_tags = registry_payload.get("tags")
+    if not isinstance(raw_tags, list):
+        raise ValueError("registry tags must be an array")
+    for raw_tag in raw_tags:
+        if not isinstance(raw_tag, dict):
+            continue
+        existing_tag_id = str(raw_tag.get("tag_id") or "").strip().lower()
+        if existing_tag_id == tag_id:
+            raise ValueError(f"tag_id already exists: {tag_id}")
+
+    created_row = {
+        "tag_id": tag_id,
+        "group": normalized_group,
+        "label": normalized_slug,
+        "description": normalized_description,
+        "updated_at_utc": now_utc,
+    }
+    updated_payload = dict(registry_payload)
+    updated_payload.setdefault("tag_registry_version", "tag_registry_v1")
+    if not isinstance(updated_payload.get("policy"), dict):
+        updated_payload["policy"] = {"allowed_groups": allowed_groups}
+    updated_payload["tags"] = [*raw_tags, created_row]
+    updated_payload["updated_at_utc"] = now_utc
+
+    return updated_payload, {
+        "action": "create",
+        "tag_id": tag_id,
+        "group": normalized_group,
+        "label": normalized_slug,
+        "added": 1,
+        "final_total": len(updated_payload["tags"]),
+    }
 
 
 def apply_registry_import(
@@ -315,6 +364,12 @@ def build_import_summary_text(stats: Dict[str, Any], noun: str = "tags") -> str:
         f"added {added}; overwritten {overwritten}; "
         f"unchanged {unchanged}; removed {removed}; final {final_total}"
     )
+
+
+def build_create_summary_text(stats: Dict[str, Any]) -> str:
+    tag_id = str(stats.get("tag_id") or "")
+    final_total = int(stats.get("final_total") or 0)
+    return f"created tag {tag_id}; final {final_total}"
 
 
 def build_mutation_summary_text(stats: Dict[str, Any]) -> str:

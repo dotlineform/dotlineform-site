@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import sys
 import tempfile
 import urllib.request
@@ -81,6 +82,12 @@ def write_fixture_data(repo_root: Path) -> tuple[Path, Path, Path]:
 """,
         encoding="utf-8",
     )
+    activity_contract_path = repo_root / "studio" / "data" / "config" / "runtime" / "activity-contract.json"
+    activity_contract_path.parent.mkdir(parents=True)
+    shutil.copyfile(
+        REPO_ROOT / "studio" / "data" / "config" / "runtime" / "activity-contract.json",
+        activity_contract_path,
+    )
     return registry_path, aliases_path, assignments_path
 
 
@@ -122,6 +129,24 @@ def run() -> None:
                     "client_time_utc": "2026-05-22T00:00:00Z",
                 },
             )
+            created = post_json(
+                f"{base_url}/create-tag",
+                {
+                    "group": "theme",
+                    "slug": "renewal",
+                    "description": " Renewal ",
+                    "client_time_utc": "2026-05-22T00:00:00Z",
+                    "activity_context": {
+                        "correlation_id": "tag-registry-api-smoke",
+                        "page_id": "tag-registry",
+                        "action_id": "create-tag",
+                        "route": "/studio/tag-registry/",
+                        "control_id": "create-tag",
+                        "control_selector": "[data-role=\"create-tag\"]",
+                        "tag_id": "theme:renewal",
+                    },
+                },
+            )
             edited = post_json(
                 f"{base_url}/mutate-tag",
                 {
@@ -156,16 +181,27 @@ def run() -> None:
         registry = json.loads(registry_path.read_text(encoding="utf-8"))
         aliases = json.loads(aliases_path.read_text(encoding="utf-8"))
         assignments = json.loads(assignments_path.read_text(encoding="utf-8"))
+        activity_rows = [
+            json.loads(line)
+            for line in (fixture_root / "var" / "admin" / "activity" / "activity_log.jsonl").read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
 
         if imported.get("added") != 1:
             raise AssertionError(f"registry import failed: {imported!r}")
+        if created.get("tag_id") != "theme:renewal" or created.get("activity_log") != {"written_count": 1}:
+            raise AssertionError(f"registry create failed: {created!r}")
+        if len(activity_rows) != 1 or activity_rows[0].get("user_action_id") != "create-tag":
+            raise AssertionError(f"registry create activity failed: {activity_rows!r}")
+        if activity_rows[0].get("record_groups", {}).get("tags", {}).get("sample_ids") != ["theme:renewal"]:
+            raise AssertionError(f"registry create activity tag identity failed: {activity_rows!r}")
         if not edited.get("description_changed"):
             raise AssertionError(f"registry edit failed: {edited!r}")
         if preview.get("series_tag_refs_rewritten") != 1 or preview.get("work_tag_refs_rewritten") != 1:
             raise AssertionError(f"registry delete preview did not report assignment rewrites: {preview!r}")
         if deleted.get("series_tag_refs_rewritten") != 1 or deleted.get("work_tag_refs_rewritten") != 1:
             raise AssertionError(f"registry delete did not rewrite assignments: {deleted!r}")
-        if [row["tag_id"] for row in registry["tags"]] != ["theme:growth"]:
+        if [row["tag_id"] for row in registry["tags"]] != ["theme:growth", "theme:renewal"]:
             raise AssertionError(f"registry delete did not leave expected tags: {registry!r}")
         if aliases["aliases"]["woodland"]["tags"] != ["theme:growth"]:
             raise AssertionError(f"alias references were not rewritten: {aliases!r}")

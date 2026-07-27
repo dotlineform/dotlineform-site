@@ -191,6 +191,12 @@ export function buildImportSummary(response) {
   ].join("; ");
 }
 
+export function buildCreateSummary(response) {
+  const summaryText = String(response.summary_text || "").trim();
+  if (summaryText) return summaryText;
+  return `created tag ${normalize(response.tag_id || "")}; final ${Number(response.final_total || 0)}`;
+}
+
 export function buildMutationSummary(response) {
   const summaryText = String(response.summary_text || "").trim();
   if (summaryText) return summaryText;

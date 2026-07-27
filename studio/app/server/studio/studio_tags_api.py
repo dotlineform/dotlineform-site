@@ -29,6 +29,7 @@ from studio_tag_api.assignments import import_tag_assignments_response  # noqa: 
 from studio_tag_api.assignments import save_tags_response  # noqa: E402
 from studio_tag_api.promotions import demote_tag_response  # noqa: E402
 from studio_tag_api.promotions import promote_tag_alias_response  # noqa: E402
+from studio_tag_api.registry import create_tag_response  # noqa: E402
 from studio_tag_api.registry import import_tag_registry_response  # noqa: E402
 from studio_tag_api.registry import mutate_tag_response  # noqa: E402
 
@@ -77,6 +78,11 @@ POST_HANDLERS: dict[str, PostHandler] = {
         repo_root,
         body,
         preview=False,
+        dry_run=dry_run,
+    ),
+    tag_routes.CREATE_TAG_PATH: lambda repo_root, body, dry_run: create_tag_response(
+        repo_root,
+        body,
         dry_run=dry_run,
     ),
     tag_routes.IMPORT_REGISTRY_PATH: lambda repo_root, body, dry_run: import_tag_registry_response(
@@ -152,6 +158,7 @@ def tags_health_payload() -> dict[str, object]:
         "writes": {
             "import_tag_assignments": True,
             "import_tag_assignments_preview": True,
+            "create_tag": True,
             "import_tag_aliases": True,
             "import_tag_registry": True,
             "delete_tag_alias": True,

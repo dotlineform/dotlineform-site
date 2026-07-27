@@ -921,7 +921,7 @@
               "doc_id": "d-20260726-214250-55bc9d",
               "title": "First-class Tag Creation Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-214250-55bc9d.json",
-              "ui_status": "proposed"
+              "ui_status": "done"
             }
           ]
         },
@@ -1264,5 +1264,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-27T10:35:32Z"
+  "generated_at": "2026-07-27T12:45:14Z"
 }

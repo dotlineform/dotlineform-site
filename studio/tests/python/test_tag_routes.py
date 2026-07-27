@@ -53,6 +53,7 @@ def test_tag_write_handlers_live_in_functional_modules() -> None:
     expected_handlers = (
         assignments.save_tags_response,
         assignments.import_tag_assignments_response,
+        registry.create_tag_response,
         registry.import_tag_registry_response,
         registry.mutate_tag_response,
         aliases.import_tag_aliases_response,

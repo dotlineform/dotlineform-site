@@ -33,10 +33,7 @@ export async function saveTagRegistryEdit(options) {
 export async function createTagRegistryTag(options) {
   const { newTagRow } = options || {};
   return ensurePatchResult(
-    await submitCreateTag({
-      ...options,
-      importMode: "add"
-    }),
+    await submitCreateTag(options),
     () => buildManualPatchForCreateTag(newTagRow)
   );
 }

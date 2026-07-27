@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+import json
 from pathlib import Path
 from threading import Thread
 from urllib.parse import unquote, urlsplit
@@ -131,6 +132,140 @@ def assert_tag_save_session_helpers(page: Page) -> None:
         "snippet": "diff --git a/file b/file",
     }
     assert result["routeImports"] is True
+
+
+def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
+    captured: dict[str, object] = {}
+    endpoint = f"{base_url}/studio/api/tags/create-tag"
+
+    def handle_create(route) -> None:
+        captured["method"] = route.request.method
+        captured["payload"] = route.request.post_data_json
+        route.fulfill(
+            status=200,
+            content_type="application/json",
+            body=json.dumps(
+                {
+                    "ok": True,
+                    "action": "create",
+                    "tag_id": "theme:renewal",
+                    "group": "theme",
+                    "label": "renewal",
+                    "description": "Renewal",
+                    "added": 1,
+                    "final_total": 2,
+                    "updated_at_utc": "2026-07-27T12:00:00Z",
+                    "summary_text": "created tag theme:renewal; final 2",
+                }
+            ),
+        )
+
+    page.route(endpoint, handle_create)
+    result = page.evaluate(
+        """async (createEndpoint) => {
+            const service = await import('/studio/app/frontend/js/tag-registry-service.js');
+            return service.submitCreateTag({
+                saveMode: 'post',
+                newTagRow: {
+                    tag_id: 'theme:renewal',
+                    group: 'theme',
+                    label: 'renewal',
+                    description: 'Renewal'
+                },
+                config: {
+                    app: {
+                        runtime: {
+                            services: {
+                                tags: {
+                                    create_tag: createEndpoint
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }""",
+        endpoint,
+    )
+    page.unroute(endpoint, handle_create)
+
+    assert result["ok"] is True
+    assert result["mode"] == "post"
+    assert result["summary"] == "created tag theme:renewal; final 2"
+    assert captured["method"] == "POST"
+    payload = captured["payload"]
+    assert isinstance(payload, dict)
+    assert payload["group"] == "theme"
+    assert payload["slug"] == "renewal"
+    assert payload["description"] == "Renewal"
+    assert "mode" not in payload
+    assert "import_registry" not in payload
+    context = payload["activity_context"]
+    assert isinstance(context, dict)
+    assert context["action_id"] == "create-tag"
+    assert context["tag_id"] == "theme:renewal"
+
+    def reject_create(route) -> None:
+        route.fulfill(
+            status=400,
+            content_type="application/json",
+            body=json.dumps({"ok": False, "error": "tag_id already exists: theme:renewal"}),
+        )
+
+    page.route(endpoint, reject_create)
+    rejected = page.evaluate(
+        """async (createEndpoint) => {
+            const service = await import('/studio/app/frontend/js/tag-registry-service.js');
+            return service.submitCreateTag({
+                saveMode: 'post',
+                newTagRow: {
+                    tag_id: 'theme:renewal',
+                    group: 'theme',
+                    label: 'renewal',
+                    description: 'Renewal'
+                },
+                config: {
+                    app: {
+                        runtime: {
+                            services: {
+                                tags: {
+                                    create_tag: createEndpoint
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }""",
+        endpoint,
+    )
+    page.unroute(endpoint, reject_create)
+    assert rejected == {
+        "ok": False,
+        "mode": "post",
+        "switchToPatch": False,
+        "message": "tag_id already exists: theme:renewal",
+    }
+
+    unavailable = page.evaluate(
+        """async () => {
+            const service = await import('/studio/app/frontend/js/tag-registry-service.js');
+            return service.submitCreateTag({
+                saveMode: 'post',
+                newTagRow: {
+                    tag_id: 'theme:renewal',
+                    group: 'theme',
+                    label: 'renewal',
+                    description: 'Renewal'
+                },
+                config: {}
+            });
+        }"""
+    )
+    assert unavailable["ok"] is False
+    assert unavailable["mode"] == "patch"
+    assert unavailable["switchToPatch"] is True
+    assert "Missing service endpoint" in unavailable["message"]
 
 
 def assert_studio_tag_editor_interactions(page: Page) -> None:
@@ -306,6 +441,7 @@ def run(site_root: Path) -> None:
             errors: list[str] = []
             page.on("pageerror", lambda error: errors.append(str(error)))
             assert_tag_save_session_helpers(page)
+            assert_tag_registry_create_request(page, base_url)
             assert_studio_tag_editor_interactions(page)
             browser.close()
             if errors:

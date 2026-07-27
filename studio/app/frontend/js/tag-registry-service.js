@@ -7,6 +7,7 @@ import {
 } from "./studio-transport.js";
 import { buildStudioActivityContext } from "./studio-activity-context.js";
 import {
+  buildCreateSummary,
   buildDeletePreviewPayload,
   buildImportSummary,
   buildMutationSummary,
@@ -115,15 +116,13 @@ export async function submitTagEdit(options) {
 }
 
 export async function submitCreateTag(options) {
-  const { saveMode, newTagRow, config, importMode = "add", state } = options || {};
+  const { saveMode, newTagRow, config, state } = options || {};
   if (saveMode === "post") {
     try {
-      const response = await postJson(getStudioTagWriteEndpoint("importTagRegistry", config), {
-        mode: importMode,
-        import_registry: {
-          tags: [newTagRow]
-        },
-        import_filename: "",
+      const response = await postJson(getStudioTagWriteEndpoint("createTag", config), {
+        group: newTagRow && newTagRow.group,
+        slug: newTagRow && newTagRow.label,
+        description: newTagRow && newTagRow.description,
         client_time_utc: utcTimestamp(),
         activity_context: registryActivityContext("create-tag", "create-tag", "[data-role=\"create-tag\"]", "tag_id", newTagRow && newTagRow.tag_id)
       });
@@ -131,9 +130,17 @@ export async function submitCreateTag(options) {
         ok: true,
         mode: "post",
         response,
-        summary: buildImportSummary(response)
+        summary: buildCreateSummary(response)
       };
     } catch (error) {
+      if (Number.isFinite(Number(error && error.status))) {
+        return {
+          ok: false,
+          mode: "post",
+          switchToPatch: false,
+          message: String(error && error.message ? error.message : registryText(config, "create_failed", "Create failed."))
+        };
+      }
       return {
         ok: false,
         mode: "patch",

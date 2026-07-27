@@ -41,6 +41,7 @@ const BULK_ADD_WORK_ENDPOINTS = Object.freeze({
 });
 
 const TAG_WRITE_RUNTIME_KEYS = Object.freeze({
+  createTag: "create_tag",
   deleteTagAlias: "delete_tag_alias",
   demoteTag: "demote_tag",
   demoteTagPreview: "demote_tag_preview",

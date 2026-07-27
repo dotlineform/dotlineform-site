@@ -5,6 +5,7 @@ HEALTH_PATH = "/health"
 SAVE_TAGS_PATH = "/save-tags"
 IMPORT_ASSIGNMENTS_PREVIEW_PATH = "/import-tag-assignments-preview"
 IMPORT_ASSIGNMENTS_APPLY_PATH = "/import-tag-assignments"
+CREATE_TAG_PATH = "/create-tag"
 IMPORT_REGISTRY_PATH = "/import-tag-registry"
 IMPORT_ALIASES_PATH = "/import-tag-aliases"
 DELETE_ALIAS_PATH = "/delete-tag-alias"
@@ -21,6 +22,7 @@ POST_PATHS = (
     SAVE_TAGS_PATH,
     IMPORT_ASSIGNMENTS_PREVIEW_PATH,
     IMPORT_ASSIGNMENTS_APPLY_PATH,
+    CREATE_TAG_PATH,
     IMPORT_REGISTRY_PATH,
     IMPORT_ALIASES_PATH,
     DELETE_ALIAS_PATH,

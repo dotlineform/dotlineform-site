@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-79eaadc666c8befdcb6db79e2cd93d60",
-    "generated_at_utc": "2026-07-27T10:50:41Z",
+    "version": "blake2b-7191248dc0bd50f72b50749e3d3a51da",
+    "generated_at_utc": "2026-07-27T12:45:14Z",
     "count": 227
   },
   "entries": [
@@ -4136,10 +4136,10 @@
       "kind": "doc",
       "title": "Tag Vocabulary Import Retirement",
       "href": "/docs/?scope=studio&doc=d-20260726-214250-28ae69",
-      "last_updated": "2026-07-27 11:00:45",
+      "last_updated": "2026-07-27 13:44:57",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-27 11:00:45 • Roadmap",
+      "display_meta": "2026-07-27 13:44:57 • Roadmap",
       "search_terms": [
         "tag vocabulary import retirement",
         "tag",
@@ -4147,16 +4147,16 @@
         "import",
         "retirement",
         "roadmap",
-        "2026-07-27 11:00:45",
+        "2026-07-27 13:44:57",
         "2026",
         "07",
         "27",
-        "11",
-        "00",
-        "45",
+        "13",
+        "44",
+        "57",
         "d-20260726-214250-28ae69"
       ],
-      "search_text": "tag vocabulary import retirement tag vocabulary import retirement roadmap 2026-07-27 11:00:45 2026 07 27 11 00 45 d-20260726-214250-28ae69"
+      "search_text": "tag vocabulary import retirement tag vocabulary import retirement roadmap 2026-07-27 13:44:57 2026 07 27 13 44 57 d-20260726-214250-28ae69"
     },
     {
       "id": "d-20260726-214250-9d3fe6",
@@ -4225,10 +4225,10 @@
       "kind": "doc",
       "title": "First-class Tag Creation Delivery",
       "href": "/docs/?scope=studio&doc=d-20260726-214250-55bc9d",
-      "last_updated": "2026-07-26 21:42:50",
+      "last_updated": "2026-07-27 13:44:57",
       "parent_id": "d-20260726-214250-28ae69",
       "parent_title": "Tag Vocabulary Import Retirement",
-      "display_meta": "2026-07-26 21:42:50 • Tag Vocabulary Import Retirement",
+      "display_meta": "2026-07-27 13:44:57 • Tag Vocabulary Import Retirement",
       "search_terms": [
         "first-class tag creation delivery",
         "first",
@@ -4240,16 +4240,16 @@
         "vocabulary",
         "import",
         "retirement",
-        "2026-07-26 21:42:50",
+        "2026-07-27 13:44:57",
         "2026",
         "07",
-        "26",
-        "21",
-        "42",
-        "50",
+        "27",
+        "13",
+        "44",
+        "57",
         "d-20260726-214250-55bc9d"
       ],
-      "search_text": "first-class tag creation delivery first class tag creation delivery tag vocabulary import retirement vocabulary import retirement 2026-07-26 21:42:50 2026 07 26 21 42 50 d-20260726-214250-55bc9d"
+      "search_text": "first-class tag creation delivery first class tag creation delivery tag vocabulary import retirement vocabulary import retirement 2026-07-27 13:44:57 2026 07 27 13 44 57 d-20260726-214250-55bc9d"
     },
     {
       "id": "d-20260726-211842-cc8f6c",
@@ -5596,10 +5596,10 @@
       "kind": "doc",
       "title": "Tag Registry",
       "href": "/docs/?scope=studio&doc=d-20260331-000000-4519a5",
-      "last_updated": "2026-07-25 19:30:43",
+      "last_updated": "2026-07-27 13:43:41",
       "parent_id": "d-20260419-000000-86255c",
       "parent_title": "Tag Source Data",
-      "display_meta": "2026-07-25 19:30:43 • Tag Source Data",
+      "display_meta": "2026-07-27 13:43:41 • Tag Source Data",
       "search_terms": [
         "tag registry",
         "tag",
@@ -5607,16 +5607,16 @@
         "tag source data",
         "source",
         "data",
-        "2026-07-25 19:30:43",
+        "2026-07-27 13:43:41",
         "2026",
         "07",
-        "25",
-        "19",
-        "30",
+        "27",
+        "13",
         "43",
+        "41",
         "d-20260331-000000-4519a5"
       ],
-      "search_text": "tag registry tag registry tag source data source data 2026-07-25 19:30:43 2026 07 25 19 30 43 d-20260331-000000-4519a5"
+      "search_text": "tag registry tag registry tag source data source data 2026-07-27 13:43:41 2026 07 27 13 43 41 d-20260331-000000-4519a5"
     },
     {
       "id": "d-20260602-000000-9ffb5c",

@@ -1,7 +1,7 @@
 {
   "schema": "activity_contract_v1",
   "status": "v1_initial_contract",
-  "last_updated": "2026-05-31",
+  "last_updated": "2026-07-27",
   "source_doc": "/docs/?scope=studio&doc=config-studio-data-configs",
   "inventory_doc": "/docs/?scope=studio&doc=activity",
   "description": "Registry for Studio user actions and the script-purpose rows that may appear in the unified activity log.",
@@ -668,12 +668,12 @@
           "control_id": "create-tag",
           "control_selector": "[data-role=\"create-tag\"]",
           "control_label": "Create",
-          "endpoint": "/import-tag-registry",
+          "endpoint": "/create-tag",
           "record_family": "tag_registry",
           "record_id_field": "tag_id",
           "no_change_activity": "skip",
           "report_forced_rewrites": false,
-          "notes": "Covers creating one canonical tag through the registry import service.",
+          "notes": "Covers creating one canonical tag through the focused registry create service.",
           "script_purposes": [
             {
               "id": "save-tag-data",

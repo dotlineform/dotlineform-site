@@ -91,6 +91,7 @@ import {
   setTagRegistryDeleteStatus,
   setTagRegistryDemoteStatus,
   setTagRegistryEditStatus,
+  setTagRegistryNewStatus,
   updateTagRegistryDemoteWorkflow,
   updateTagRegistryNewWorkflow
 } from "./tag-registry-modal-workflow.js";
@@ -505,10 +506,15 @@ async function handleCreateTag(state) {
     config: state.config
   });
   if (result.ok && result.mode === "post") {
+    await loadRegistry(state, { cache: "no-store" });
     applyTagRegistryCreatePostResult(state, {
       validation,
       result
     }, modalWorkflowOptions(state));
+    return;
+  }
+  if (!result.ok && !result.switchToPatch) {
+    setTagRegistryNewStatus(state, "error", result.message);
     return;
   }
 

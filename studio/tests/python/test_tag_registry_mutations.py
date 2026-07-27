@@ -101,6 +101,69 @@ def test_registry_import_duplicate_handling() -> None:
     assert_equal(stats["imported_total"], 1, "stats count normalized imports")
 
 
+def test_create_registry_tag_adds_one_normalized_row() -> None:
+    existing_rows = [row("subject:trees", "Trees"), row("theme:growth", "Growth")]
+    payload = {
+        "tag_registry_version": "tag_registry_v1",
+        "updated_at_utc": "2026-05-01T00:00:00Z",
+        "policy": {"allowed_groups": ["subject", "theme"]},
+        "tags": existing_rows,
+    }
+
+    updated, stats = registry.create_registry_tag(
+        payload,
+        group=" Theme ",
+        slug="Renewal",
+        description="  Renewal cycle  ",
+        now_utc=NOW,
+    )
+
+    assert_equal(payload["tags"], existing_rows, "planner preserves input rows")
+    assert_equal(updated["tags"][:2], existing_rows, "create preserves unrelated rows")
+    assert_equal(
+        updated["tags"][2],
+        {
+            "tag_id": "theme:renewal",
+            "group": "theme",
+            "label": "renewal",
+            "description": "Renewal cycle",
+            "updated_at_utc": NOW,
+        },
+        "created row",
+    )
+    assert_equal(updated["updated_at_utc"], NOW, "registry timestamp")
+    assert_equal(stats["tag_id"], "theme:renewal", "created tag id")
+    assert_equal(stats["added"], 1, "created row count")
+    assert_equal(stats["final_total"], 3, "final row count")
+
+
+def test_create_registry_tag_guards() -> None:
+    payload = {
+        "policy": {"allowed_groups": ["subject", "theme"]},
+        "tags": [row("subject:trees")],
+    }
+    assert_raises_contains(
+        lambda: registry.create_registry_tag(payload, group="domain", slug="studio", description="", now_utc=NOW),
+        "group must be one of",
+        "invalid group",
+    )
+    assert_raises_contains(
+        lambda: registry.create_registry_tag(payload, group="subject", slug="Bad Slug", description="", now_utc=NOW),
+        "slug must be slug-safe",
+        "malformed slug",
+    )
+    assert_raises_contains(
+        lambda: registry.create_registry_tag(payload, group="subject", slug="trees", description="", now_utc=NOW),
+        "tag_id already exists",
+        "duplicate tag id",
+    )
+    assert_raises_contains(
+        lambda: registry.create_registry_tag(payload, group="subject", slug="canopy", description={"bad": True}, now_utc=NOW),
+        "description must be a string",
+        "malformed description",
+    )
+
+
 def test_canonical_edit_and_delete_plans() -> None:
     payload = {"tags": [row("subject:trees", "old"), row("theme:growth", "keep")]}
     edited, edit_meta = registry.mutate_registry_tag(
@@ -216,6 +279,8 @@ def test_rewrite_assignments_for_canonical_delete_removes_empty_work_rows() -> N
 def main() -> None:
     test_registry_import_modes()
     test_registry_import_duplicate_handling()
+    test_create_registry_tag_adds_one_normalized_row()
+    test_create_registry_tag_guards()
     test_canonical_edit_and_delete_plans()
     test_canonical_mutation_guards()
     test_registry_summary_text()

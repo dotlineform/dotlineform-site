@@ -221,6 +221,61 @@ def test_studio_tag_registry_dry_run_uses_registry_contract() -> None:
         assert "theme:growth" not in persisted
 
 
+def test_studio_create_tag_dry_run_validates_before_write() -> None:
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        repo_root = Path(tmp_dir)
+        registry_path = repo_root / "studio" / "data" / "canonical" / "tags" / "tag-registry.json"
+        registry_path.parent.mkdir(parents=True)
+        registry_path.write_text(
+            """{
+  "tag_registry_version": "tag_registry_v1",
+  "updated_at_utc": "2026-05-01T00:00:00Z",
+  "policy": {"allowed_groups": ["subject", "theme"]},
+  "tags": [{"tag_id": "subject:trees", "group": "subject", "label": "trees", "description": "Trees"}]
+}
+""",
+            encoding="utf-8",
+        )
+        before = registry_path.read_bytes()
+
+        status, payload = tags_post_response(
+            repo_root,
+            "/create-tag",
+            {
+                "group": "theme",
+                "slug": "renewal",
+                "description": " Renewal ",
+                "client_time_utc": "2026-05-22T00:00:00Z",
+            },
+            dry_run=True,
+        )
+
+        assert status == HTTPStatus.OK
+        assert payload["ok"] is True
+        assert payload["action"] == "create"
+        assert payload["tag_id"] == "theme:renewal"
+        assert payload["added"] == 1
+        assert payload["final_total"] == 2
+        assert payload["dry_run"] is True
+        assert payload["would_write"]["tag_id"] == "theme:renewal"
+        assert registry_path.read_bytes() == before
+
+        invalid_requests = (
+            {"group": "domain", "slug": "studio", "description": ""},
+            {"group": "theme", "slug": "Bad Slug", "description": ""},
+            {"group": "subject", "slug": "trees", "description": ""},
+            {"group": "theme", "slug": "renewal", "description": {"bad": True}},
+        )
+        for invalid_body in invalid_requests:
+            try:
+                tags_post_response(repo_root, "/create-tag", invalid_body, dry_run=False)
+            except ValueError:
+                pass
+            else:
+                raise AssertionError(f"invalid create request was accepted: {invalid_body!r}")
+            assert registry_path.read_bytes() == before
+
+
 def test_studio_tag_alias_dry_run_uses_alias_contract() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir)

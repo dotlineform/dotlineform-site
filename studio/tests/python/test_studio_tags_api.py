@@ -16,9 +16,9 @@ from tags.tag_source_paths import TAG_ASSIGNMENTS_REL_PATH
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
 EXPECTED_CANONICAL_FILES = {
-    "tag-registry.json": ("6bf96b5c0d2cb95b4d5b4fbd3c9b0a56d0cf47cefb6defcfc0a7d13c49d2689d", 99743),
-    "tag-aliases.json": ("a2598aca874f1b5065ec00a7197ceb66715cb4034a8c7f76b2ec18f45033d84c", 8165),
-    "tag-assignments.json": ("0c8918e6ff48e5a51e038ea0163ab6c026c821d73e940329eba833ca153944c4", 15958),
+    "tag-registry.json": ("c52fa354bf41570c0a1e29ce78e298b945a1cc8f5a81bad1dd4986881698ec20", 99743),
+    "tag-aliases.json": ("579757259edf6c53c363b8ba35f098eb63a2e2325e40f03a64da8f562cb60393", 8165),
+    "tag-assignments.json": ("5b337ce9c09b7c31bf6582f9c3b4a1269db74b1739573368805e75a92d43504d", 13317),
     "tag-groups.json": ("9883b239143045684e05d2888f4ce73ea0d0a865e20c0a238206de972e90f529", 2866),
 }
 
@@ -52,7 +52,9 @@ def test_studio_tag_api_reads_each_canonical_payload() -> None:
     assert registry["ok"] is True and len(registry["tags"]) == 275
     assert aliases["ok"] is True and len(aliases["aliases"]) == 82
     assert assignments["ok"] is True and len(assignments["series"]) == 140
-    assert tags_health_payload()["service"] == "studio_tags"
+    health = tags_health_payload()
+    assert health["service"] == "studio_tags"
+    assert health["writes"]["create_tag"] is True
 
 
 def test_studio_tag_api_dry_run_preserves_assignment_source() -> None:
