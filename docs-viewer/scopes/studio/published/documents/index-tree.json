@@ -937,7 +937,15 @@
           "doc_id": "d-20260726-211842-cc8f6c",
           "title": "Tag-document linking",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-211842-cc8f6c.json",
-          "ui_status": "draft"
+          "ui_status": "draft",
+          "children": [
+            {
+              "doc_id": "d-20260727-224141-d28e4c",
+              "title": "Tag Document Bootstrap Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260727-224141-d28e4c.json",
+              "ui_status": "proposed"
+            }
+          ]
         },
         {
           "doc_id": "d-20260712-213026-ee0f22",
@@ -1272,5 +1280,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-27T21:11:30Z"
+  "generated_at": "2026-07-27T21:43:18Z"
 }

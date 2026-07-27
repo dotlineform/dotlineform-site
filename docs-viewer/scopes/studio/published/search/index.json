@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-04a6e2490ff5d06d997d1223a33fdebc",
-    "generated_at_utc": "2026-07-27T21:11:30Z",
-    "count": 228
+    "version": "blake2b-479d6e011bdc622f33f9f8b063260ed8",
+    "generated_at_utc": "2026-07-27T21:43:18Z",
+    "count": 229
   },
   "entries": [
     {
@@ -4281,26 +4281,52 @@
       "kind": "doc",
       "title": "Tag-document linking",
       "href": "/docs/?scope=studio&doc=d-20260726-211842-cc8f6c",
-      "last_updated": "2026-07-27 17:41:32",
+      "last_updated": "2026-07-27 22:41:41",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-27 17:41:32 • Roadmap",
+      "display_meta": "2026-07-27 22:41:41 • Roadmap",
       "search_terms": [
         "tag-document linking",
         "tag",
         "document",
         "linking",
         "roadmap",
-        "2026-07-27 17:41:32",
+        "2026-07-27 22:41:41",
         "2026",
         "07",
         "27",
-        "17",
+        "22",
         "41",
-        "32",
         "d-20260726-211842-cc8f6c"
       ],
-      "search_text": "tag-document linking tag document linking roadmap 2026-07-27 17:41:32 2026 07 27 17 41 32 d-20260726-211842-cc8f6c"
+      "search_text": "tag-document linking tag document linking roadmap 2026-07-27 22:41:41 2026 07 27 22 41 d-20260726-211842-cc8f6c"
+    },
+    {
+      "id": "d-20260727-224141-d28e4c",
+      "kind": "doc",
+      "title": "Tag Document Bootstrap Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260727-224141-d28e4c",
+      "last_updated": "2026-07-27 22:41:41",
+      "parent_id": "d-20260726-211842-cc8f6c",
+      "parent_title": "Tag-document linking",
+      "display_meta": "2026-07-27 22:41:41 • Tag-document linking",
+      "search_terms": [
+        "tag document bootstrap delivery",
+        "tag",
+        "document",
+        "bootstrap",
+        "delivery",
+        "tag-document linking",
+        "linking",
+        "2026-07-27 22:41:41",
+        "2026",
+        "07",
+        "27",
+        "22",
+        "41",
+        "d-20260727-224141-d28e4c"
+      ],
+      "search_text": "tag document bootstrap delivery tag document bootstrap delivery tag-document linking linking 2026-07-27 22:41:41 2026 07 27 22 41 d-20260727-224141-d28e4c"
     },
     {
       "id": "d-20260712-213026-ee0f22",
