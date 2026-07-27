@@ -78,56 +78,23 @@ def test_assignment_tag_normalization() -> None:
     )
 
 
-def test_import_assignment_rows_and_filename_sanitization() -> None:
-    session = source.sanitize_import_assignments_session(
-        {
-            "version": "tag_assignments_export_v1",
-            "series": {
-                " Series-1 ": {
-                    "base_row_snapshot": None,
-                    "staged_row": {
-                        "tags": [{"tag_id": "subject:trees", "w_manual": 0.6}],
-                        "works": {"00002": {"tags": [{"tag_id": "theme:growth", "w_manual": 0.3}]}},
-                    },
-                }
-            },
-        }
-    )
-    assert_equal(sorted(session["series"].keys()), ["series-1"], "series id normalized")
-    assert_equal(session["series"]["series-1"]["base_row_snapshot"], {"tags": []}, "missing base snapshot default")
-    assert_equal(
-        source.sanitize_import_filename("/private/tmp/tag import.json"),
-        "tag import.json",
-        "import filename basename",
-    )
-    assert_raises_contains(
-        lambda: source.sanitize_import_assignments_session({"series": {"series": {"staged_row": {"works": {"2": {}}}}}}),
-        "works keys must be 5-digit work ids",
-        "invalid import work id",
-    )
-    assert_raises_contains(lambda: source.sanitize_import_filename("bad\nname.json"), "control characters", "unsafe filename")
-
-
 def test_default_payload_loading() -> None:
     with tempfile.TemporaryDirectory() as tmpdir:
         root = Path(tmpdir)
         assignments = source.load_assignments(root / "missing-assignments.json")
         registry = source.load_registry(root / "missing-registry.json")
         aliases = source.load_aliases(root / "missing-aliases.json")
-        series_index = source.load_series_index(root / "missing-series-index.json")
 
     assert_equal(assignments["tag_assignments_version"], "tag_assignments_v1", "assignment default version")
     assert_equal(assignments["series"], {}, "assignment default series")
     assert_equal(registry["policy"]["allowed_groups"], source.DEFAULT_ALLOWED_GROUPS, "registry default groups")
     assert_equal(aliases["aliases"], {}, "aliases default")
-    assert_equal(series_index["series"], {}, "series index default")
 
 
 def main() -> None:
     test_tag_id_and_alias_key_validation()
     test_group_and_manual_weight_validation()
     test_assignment_tag_normalization()
-    test_import_assignment_rows_and_filename_sanitization()
     test_default_payload_loading()
     print("Tag source model tests OK")
 

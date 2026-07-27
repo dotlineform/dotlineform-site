@@ -16,7 +16,6 @@ STUDIO_TAGS_LOG_REL_PATH = Path("var/studio/logs/studio_tags_api.log")
 
 ACTIVITY_WRITE_ENDPOINTS = (
     routes.SAVE_TAGS_PATH,
-    routes.IMPORT_ASSIGNMENTS_APPLY_PATH,
     routes.CREATE_TAG_PATH,
     routes.CREATE_ALIAS_PATH,
     routes.DELETE_ALIAS_PATH,
@@ -30,7 +29,6 @@ TAG_ACTIVITY_CHANGED_KEYS = (
     "added",
     "overwritten",
     "removed",
-    "applied_series",
     "canonical_added",
     "alias_deleted",
     "aliases_rewritten",

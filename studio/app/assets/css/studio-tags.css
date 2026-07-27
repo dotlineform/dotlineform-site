@@ -212,7 +212,6 @@
 
 .analyticsSuggest__workTitle,
 .analyticsSuggest__aliasTarget,
-.analytics__chipCaption,
 .analytics__groupInfoText {
   color: var(--analytics-muted-body);
   font-size: var(--font-caption);
@@ -274,22 +273,12 @@
   cursor: pointer;
 }
 
-.analytics__saveMode,
 .analytics__empty,
 .analytics__groupInfoText,
 .tagRegistry__descCol,
 .tagRegistry__updatedCol {
   color: var(--analytics-muted);
   font-size: var(--font-small);
-}
-
-.analytics__chipTag--local,
-.analytics__chipTag--delete {
-  font-weight: 700;
-}
-
-.analytics__chipTag--delete {
-  text-decoration: line-through;
 }
 
 .tagGroups__sections,
@@ -339,12 +328,6 @@
   border-radius: var(--analytics-radius-md);
 }
 
-.analyticsToolbar--modalImport {
-  margin-top: var(--analytics-shell-gap-sm);
-  padding: 0;
-  border: 0;
-}
-
 .analyticsToolbar__row {
   display: flex;
   flex-wrap: wrap;
@@ -352,8 +335,7 @@
   gap: var(--analytics-shell-gap-sm) var(--analytics-shell-gap-md);
 }
 
-.analyticsToolbar__select,
-.seriesTagsSession__reviewSelect {
+.analyticsToolbar__select {
   box-sizing: border-box;
   min-height: var(--analytics-control-height);
   border: 1px solid var(--analytics-line-strong);
@@ -434,8 +416,7 @@
 }
 
 .tagRegistry__tagActions,
-.seriesTagsActions,
-.seriesTagsSession__row {
+.seriesTagsActions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -448,16 +429,12 @@
 }
 
 .analyticsForm__fields,
-.analyticsForm__field,
-.seriesTagsSession,
-.seriesTagsSession__review,
-.seriesTagsSession__reviewList {
+.analyticsForm__field {
   display: grid;
   gap: 0.55rem;
 }
 
-.analyticsForm__label,
-.seriesTagsSession__label {
+.analyticsForm__label {
   color: var(--analytics-muted);
   font-size: var(--font-small);
 }
@@ -546,21 +523,6 @@
   list-style: none;
   margin: 0;
   padding: 0;
-}
-
-.seriesTagsSession__reviewItem {
-  display: grid;
-  gap: 0.25rem;
-  padding: 0.45rem 0.6rem;
-  border: 1px solid var(--analytics-line);
-}
-
-.seriesTagsSession__reviewMeta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem 0.75rem;
-  align-items: center;
-  font-size: var(--font-small);
 }
 
 .analyticsTagIndex__statusWrap {

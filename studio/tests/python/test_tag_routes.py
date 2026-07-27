@@ -55,10 +55,15 @@ def test_retired_vocabulary_import_routes_are_absent() -> None:
     assert_equal(retired_paths.isdisjoint(studio_tags_api.POST_HANDLERS), True, "retired routes in POST_HANDLERS")
 
 
+def test_retired_assignment_import_routes_are_absent() -> None:
+    retired_paths = {"/import-tag-assignments-preview", "/import-tag-assignments"}
+    assert_equal(retired_paths.isdisjoint(routes.POST_PATHS), True, "retired assignment routes in POST_PATHS")
+    assert_equal(retired_paths.isdisjoint(studio_tags_api.POST_HANDLERS), True, "retired assignment routes in POST_HANDLERS")
+
+
 def test_tag_write_handlers_live_in_functional_modules() -> None:
     expected_handlers = (
         assignments.save_tags_response,
-        assignments.import_tag_assignments_response,
         registry.create_tag_response,
         registry.mutate_tag_response,
         aliases.create_tag_alias_response,
@@ -76,6 +81,7 @@ def main() -> None:
     test_options_routes_cover_each_post_route()
     test_studio_adapter_covers_each_post_route()
     test_retired_vocabulary_import_routes_are_absent()
+    test_retired_assignment_import_routes_are_absent()
     test_tag_write_handlers_live_in_functional_modules()
     print("Tag route tests OK")
 

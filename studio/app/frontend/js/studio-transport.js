@@ -47,8 +47,6 @@ const TAG_WRITE_RUNTIME_KEYS = Object.freeze({
   demoteTag: "demote_tag",
   demoteTagPreview: "demote_tag_preview",
   health: "health",
-  importTagAssignments: "import_tag_assignments",
-  importTagAssignmentsPreview: "import_tag_assignments_preview",
   mutateTagAlias: "mutate_tag_alias",
   mutateTagAliasPreview: "mutate_tag_alias_preview",
   mutateTag: "mutate_tag",

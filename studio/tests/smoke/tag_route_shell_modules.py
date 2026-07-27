@@ -447,14 +447,6 @@ def assert_studio_tag_editor_interactions(page: Page) -> None:
                 seriesWorkIds: new Set(['00001', '00002']),
                 selectedWorkIds: [],
                 selectedWorkId: '',
-                offlineBaseSeriesRow: {
-                    tags: [{ tag_id: 'subject:alpha', w_manual: 0.6 }],
-                    works: {
-                        '00001': {
-                            tags: [{ tag_id: 'theme:gamma', w_manual: 0.9 }]
-                        }
-                    }
-                },
                 refs: {
                     workInput: document.getElementById('workInput'),
                     input: document.getElementById('tagInput'),
@@ -502,8 +494,6 @@ def assert_studio_tag_editor_interactions(page: Page) -> None:
             const cycledWeight = state.workEntriesById.get('00001')[0].wManual;
             module.removeAnalyticsTagEditorEditableEntry(state, workEntryAfterAdd.entryId, callbacks);
             const workEntriesAfterRemove = state.workEntriesById.get('00001').length;
-            module.restoreAnalyticsTagEditorDeletedEntry(state, 'theme:gamma', 'work', callbacks);
-            const restoredWorkEntry = state.workEntriesById.get('00001')[0];
             module.clearAnalyticsTagEditorSelectedWork(state, '00001', callbacks);
             module.addAnalyticsTagEditorResolvedTag(state, beta, { rawInput: 'beta' }, callbacks);
             const seriesProjection = module.applyAnalyticsTagEditorSaveState(state, { text });
@@ -519,7 +509,6 @@ def assert_studio_tag_editor_interactions(page: Page) -> None:
                 },
                 cycledWeight,
                 workEntriesAfterRemove,
-                restoredWorkEntry,
                 seriesEntries: state.seriesEntries.map((entry) => entry.canonicalId),
                 seriesProjection: {
                     isDirty: seriesProjection.isDirty,
@@ -544,8 +533,6 @@ def assert_studio_tag_editor_interactions(page: Page) -> None:
     }
     assert result["cycledWeight"] == 0.9
     assert result["workEntriesAfterRemove"] == 0
-    assert result["restoredWorkEntry"]["canonicalId"] == "theme:gamma"
-    assert result["restoredWorkEntry"]["wManual"] == 0.9
     assert result["selectedAfterClear"] == ""
     assert result["selectedIdsAfterClear"] == []
     assert result["seriesEntries"] == ["subject:alpha", "domain:beta"]
@@ -558,6 +545,76 @@ def assert_studio_tag_editor_interactions(page: Page) -> None:
     assert result["saveDisabled"] is False
     assert result["warningText"] == "Save to persist the current tag assignment diff."
     assert result["statusKind"] == "success"
+
+
+def assert_studio_tag_editor_direct_save_failure(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            document.body.innerHTML = '<main><div id="seriesTagEditorRoot"></div></main>';
+            const stateModule = await import('/studio/app/frontend/js/analytics-tag-editor-state.js');
+            const interactions = await import('/studio/app/frontend/js/analytics-tag-editor-interactions.js');
+            const saveController = await import('/studio/app/frontend/js/analytics-tag-editor-save-controller.js');
+            const alpha = { tag_id: 'subject:alpha', group: 'subject', label: 'Alpha', slug: 'alpha' };
+            const beta = { tag_id: 'domain:beta', group: 'domain', label: 'Beta', slug: 'beta' };
+            const state = stateModule.buildAnalyticsTagEditorState({
+                mount: document.createElement('div'),
+                seriesId: 'demo',
+                registryJson: { tags: [alpha, beta] },
+                aliasesJson: { aliases: {} },
+                assignmentsJson: {
+                    series: {
+                        demo: {
+                            tags: [{ tag_id: 'subject:alpha', w_manual: 0.6 }]
+                        }
+                    }
+                },
+                seriesIndexJson: { series: { demo: { works: [] } } },
+                worksIndexJson: { works: {} },
+                config: {},
+                studioGroups: ['subject', 'domain'],
+                defaultWeight: 0.6
+            });
+            interactions.addAnalyticsTagEditorResolvedTag(state, beta, { rawInput: 'beta' });
+            const baselineBefore = JSON.stringify(state.baselineSeriesRows);
+            let saveResult = null;
+            let renderCount = 0;
+            await saveController.handleAnalyticsTagEditorSave(state, {
+                postTags: async () => {
+                    throw new Error('service unavailable');
+                },
+                renderAll: () => {
+                    renderCount += 1;
+                },
+                renderStatus: () => {},
+                setSaveResult: (_state, kind, text) => {
+                    saveResult = { kind, text };
+                },
+                syncRouteBusyState: () => {}
+            });
+            return {
+                baselineBefore,
+                baselineAfter: JSON.stringify(state.baselineSeriesRows),
+                seriesTags: state.seriesEntries.map((entry) => entry.canonicalId),
+                statusKind: state.statusKind,
+                statusText: state.statusText,
+                saveResult,
+                serviceAvailable: state.serviceAvailable,
+                isBusy: state.isBusy,
+                renderCount
+            };
+        }"""
+    )
+    assert result["baselineAfter"] == result["baselineBefore"]
+    assert result["seriesTags"] == ["subject:alpha", "domain:beta"]
+    assert result["statusKind"] == "error"
+    assert result["statusText"] == "Local save failed."
+    assert result["saveResult"] == {
+        "kind": "warn",
+        "text": "Changes remain unsaved in this editor.",
+    }
+    assert result["serviceAvailable"] is False
+    assert result["isBusy"] is False
+    assert result["renderCount"] == 1
 
 
 def run(site_root: Path) -> None:
@@ -573,6 +630,7 @@ def run(site_root: Path) -> None:
             assert_tag_registry_create_request(page, base_url)
             assert_tag_alias_create_request(page, base_url)
             assert_studio_tag_editor_interactions(page)
+            assert_studio_tag_editor_direct_save_failure(page)
             browser.close()
             if errors:
                 raise AssertionError(f"page errors during Tag route shell module smoke: {errors!r}")

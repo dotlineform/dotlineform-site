@@ -16,14 +16,6 @@ import {
   normalizeWorkId
 } from "./analytics-tag-editor-domain.js";
 import {
-  buildSaveModeText as buildAnalyticsTagEditorSaveModeText
-} from "./analytics-tag-editor-save.js";
-import {
-  collectAnalyticsTagEditorSaveModalRefs,
-  renderAnalyticsTagEditorSaveModal,
-  wireAnalyticsTagEditorSaveModalEvents
-} from "./analytics-tag-editor-modals.js";
-import {
   renderContextHint,
   renderGroups,
   renderSelectedWork
@@ -48,23 +40,17 @@ import {
   clearAnalyticsTagEditorSelectedWork,
   cycleAnalyticsTagEditorEntryWeight,
   removeAnalyticsTagEditorEditableEntry,
-  restoreAnalyticsTagEditorDeletedEntry,
   selectAnalyticsTagEditorWorkFromInput
 } from "./analytics-tag-editor-interactions.js";
 import {
   handleAnalyticsTagEditorSave,
-  probeAnalyticsTagEditorSaveMode,
-  renderAnalyticsTagEditorSaveMode,
-  syncAnalyticsTagEditorOfflineAutosave
+  probeAnalyticsTagEditorService
 } from "./analytics-tag-editor-save-controller.js";
 import {
   buildAnalyticsTagEditorRouteStateDetail,
   markAnalyticsTagEditorRouteReady,
   syncAnalyticsTagEditorRouteBusyState
 } from "./analytics-tag-editor-route-state.js";
-import {
-  bindTagSaveModeReprobe
-} from "./tag-route-save-session.js";
 import {
   setStudioRouteReady
 } from "./studio-route-state.js";
@@ -138,7 +124,6 @@ async function initAnalyticsTagEditor() {
       seriesIndexJson,
       worksIndexJson,
       config,
-      offlineSession: null,
       studioGroups: ANALYTICS_GROUPS,
       defaultWeight: DEFAULT_WEIGHT
     });
@@ -148,7 +133,7 @@ async function initAnalyticsTagEditor() {
     wireEvents(state);
     renderAll(state);
     markRouteReady(state, true);
-    void probeAnalyticsTagEditorSaveMode(state, saveControllerCallbacks());
+    void probeAnalyticsTagEditorService(state, saveControllerCallbacks());
   } catch (error) {
     renderFatalError(
       mount,
@@ -170,7 +155,6 @@ function renderShell(state) {
   const tagInputPlaceholder = analyticsTagEditorText(state.config, "tag_input_placeholder", "tag slug or alias");
   const addButtonLabel = analyticsTagEditorText(state.config, "add_button", "Add");
   const saveButtonLabel = analyticsTagEditorText(state.config, "save_button", "Save Tags");
-  const saveModeLabel = buildAnalyticsTagEditorSaveModeText(state.config, "offline", analyticsTagEditorText);
   const refs = {
     workInput: state.mount.querySelector(UI_SELECTOR.workInput),
     selectedWork: state.mount.querySelector(UI_SELECTOR.workSelection),
@@ -184,10 +168,8 @@ function renderShell(state) {
     status: state.mount.querySelector(UI_SELECTOR.status),
     groups: state.mount.querySelector(UI_SELECTOR.groups),
     saveButton: state.mount.querySelector(UI_SELECTOR.save),
-    saveMode: state.mount.querySelector(UI_SELECTOR.saveMode),
     saveWarning: state.mount.querySelector(UI_SELECTOR.saveWarning),
-    saveResult: state.mount.querySelector(UI_SELECTOR.saveResult),
-    modalHost: state.mount.querySelector(UI_SELECTOR.modalHost)
+    saveResult: state.mount.querySelector(UI_SELECTOR.saveResult)
   };
 
   const missingRef = Object.entries(refs).find(([, value]) => !value);
@@ -203,20 +185,10 @@ function renderShell(state) {
   refs.input.setAttribute("placeholder", tagInputPlaceholder);
   refs.addButton.textContent = addButtonLabel;
   refs.saveButton.textContent = saveButtonLabel;
-  refs.saveMode.textContent = saveModeLabel;
-  refs.modalHost.innerHTML = renderAnalyticsTagEditorSaveModal(state);
-
-  state.refs = {
-    ...refs,
-    ...collectAnalyticsTagEditorSaveModalRefs(state.mount)
-  };
+  state.refs = refs;
 }
 
 function wireEvents(state) {
-  bindTagSaveModeReprobe(() => {
-    void probeAnalyticsTagEditorSaveMode(state, saveControllerCallbacks());
-  });
-
   state.refs.workInput.addEventListener("input", () => {
     setStatus(state, "", "");
     renderStatus(state);
@@ -338,40 +310,12 @@ function wireEvents(state) {
       const entryId = Number(button.getAttribute("data-remove-entry-id"));
       removeAnalyticsTagEditorEditableEntry(state, entryId, interactionCallbacks(state));
       renderAll(state);
-      return;
     }
-
-    const restoreButton = event.target.closest("button[data-restore-tag-id]");
-    if (!restoreButton) return;
-    restoreAnalyticsTagEditorDeletedEntry(
-      state,
-      restoreButton.getAttribute("data-restore-tag-id"),
-      restoreButton.getAttribute("data-restore-scope"),
-      interactionCallbacks(state)
-    );
-    renderAll(state);
   });
 
   state.refs.saveButton.addEventListener("click", () => {
     void handleAnalyticsTagEditorSave(state, saveControllerCallbacks());
   });
-
-  wireAnalyticsTagEditorSaveModalEvents(state, {
-    onCopySnippet: () => {
-      void copySaveModalSnippet(state);
-    }
-  });
-}
-
-async function copySaveModalSnippet(state) {
-  if (!state.modalSnippet) return;
-  try {
-    await navigator.clipboard.writeText(state.modalSnippet);
-    setStatus(state, "success", analyticsTagEditorText(state.config, "save_status_copy", "Patch guidance copied to clipboard."));
-  } catch (error) {
-    setStatus(state, "error", analyticsTagEditorText(state.config, "save_status_copy_failed", "Copy failed. Select and copy the patch guidance manually."));
-  }
-  renderStatus(state);
 }
 
 function renderAll(state) {
@@ -381,10 +325,8 @@ function renderAll(state) {
   renderGroups(state);
   renderWorkPopup(state);
   renderPopup(state);
-  renderAnalyticsTagEditorSaveMode(state);
   applyAnalyticsTagEditorSaveState(state, interactionCallbacks(state));
   broadcastSelectedWorkChange(state);
-  syncAnalyticsTagEditorOfflineAutosave(state, saveControllerCallbacks());
   syncRouteBusyState(state);
 }
 

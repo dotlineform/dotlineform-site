@@ -86,8 +86,6 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
         "delete_tag_alias": "/studio/api/tags/delete-tag-alias",
         "demote_tag": "/studio/api/tags/demote-tag",
         "demote_tag_preview": "/studio/api/tags/demote-tag-preview",
-        "import_tag_assignments": "/studio/api/tags/import-tag-assignments",
-        "import_tag_assignments_preview": "/studio/api/tags/import-tag-assignments-preview",
         "mutate_tag_alias": "/studio/api/tags/mutate-tag-alias",
         "mutate_tag_alias_preview": "/studio/api/tags/mutate-tag-alias-preview",
         "mutate_tag": "/studio/api/tags/mutate-tag",

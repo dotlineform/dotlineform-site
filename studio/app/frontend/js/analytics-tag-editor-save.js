@@ -19,46 +19,8 @@ export async function postTags(seriesId, workId, tags, keepWork, utcTimestampFn 
   return postJson(getStudioTagWriteEndpoint("saveTags", config), payload, { signal });
 }
 
-export function buildPatchSnippet(seriesId, diff, timestamp) {
-  if (!diff || (!diff.seriesChanged && !diff.changedWorkIds.length)) return "";
-  const seriesBlock = diff.seriesChanged
-    ? `Set series[${JSON.stringify(seriesId)}].tags to:\n${JSON.stringify(diff.nextSeriesRows || [], null, 2)}`
-    : "";
-  const setBlocks = diff.changedWorkIds
-    .filter((workId) => diff.nextWorkStateById.has(workId))
-    .map((workId) => {
-      const tagsText = JSON.stringify(diff.nextWorkStateById.get(workId) || [], null, 2).replace(/\n/g, "\n      ");
-      return [
-        `${JSON.stringify(workId)}: {`,
-        `  "tags": ${tagsText},`,
-        `  "updated_at_utc": ${JSON.stringify(timestamp)}`,
-        "}"
-      ].join("\n");
-    });
-  const deleteWorkIds = diff.changedWorkIds.filter((workId) => !diff.nextWorkStateById.has(workId));
-  return [
-    seriesBlock,
-    setBlocks.length ? `Under series[${JSON.stringify(seriesId)}].works, set:\n${setBlocks.join("\n")}` : "",
-    deleteWorkIds.length ? `Under series[${JSON.stringify(seriesId)}].works, delete: ${deleteWorkIds.map((workId) => JSON.stringify(workId)).join(", ")}` : "",
-    (setBlocks.length || deleteWorkIds.length) ? "If the works object becomes empty, delete the works object too." : "",
-    `Update series[${JSON.stringify(seriesId)}].updated_at_utc to ${JSON.stringify(timestamp)}.`,
-    `Update the top-level updated_at_utc to ${JSON.stringify(timestamp)}.`
-  ].filter(Boolean).join("\n\n");
-}
-
 export function utcTimestamp() {
   return new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
-}
-
-export function buildSaveModeText(config, mode, analyticsTagEditorText) {
-  const label = mode === "post"
-    ? analyticsTagEditorText(config, "save_mode_local_server", "Local server")
-    : analyticsTagEditorText(config, "save_mode_offline", "Offline session");
-  return analyticsTagEditorText(config, "save_mode_template", "Save mode: {mode}", { mode: label });
-}
-
-export function buildSaveSuccessMessage(config, savedCount, removedCount, savedAt, analyticsTagEditorText) {
-  return buildTagSaveSuccessMessage(config, { seriesSaved: false, savedCount, removedCount, savedAt }, analyticsTagEditorText);
 }
 
 export function buildTagSaveSuccessMessage(config, summary, analyticsTagEditorText) {

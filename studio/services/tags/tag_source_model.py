@@ -28,7 +28,6 @@ ASSIGNMENTS_REL_PATH = tag_source_paths.TAG_ASSIGNMENTS_REL_PATH
 REGISTRY_REL_PATH = tag_source_paths.TAG_REGISTRY_REL_PATH
 ALIASES_REL_PATH = tag_source_paths.TAG_ALIASES_REL_PATH
 GROUPS_REL_PATH = tag_source_paths.TAG_GROUPS_REL_PATH
-SERIES_INDEX_REL_PATH = tag_source_paths.SERIES_INDEX_REL_PATH
 
 
 def utc_now() -> str:
@@ -192,26 +191,6 @@ def sanitize_alias_entry(raw_value: Any, alias_key: str, field_prefix: str) -> D
     return {"description": "", "tags": tags}
 
 
-def sanitize_import_filename(raw_filename: Any) -> str:
-    if raw_filename is None:
-        return ""
-    if not isinstance(raw_filename, str):
-        raise ValueError("import_filename must be a string")
-
-    # Keep basename only to avoid logging local path details.
-    normalized = raw_filename.replace("\\", "/").strip()
-    if not normalized:
-        return ""
-    basename = normalized.split("/")[-1]
-    if not basename:
-        return ""
-    if len(basename) > 255:
-        raise ValueError("import_filename is too long")
-    if any(ord(ch) < 32 or ord(ch) == 127 for ch in basename):
-        raise ValueError("import_filename contains control characters")
-    return basename
-
-
 def sanitize_tag_id(raw_tag_id: Any, field_name: str = "tag_id") -> str:
     tag_id = str(raw_tag_id or "").strip().lower()
     if not TAG_ID_RE.fullmatch(tag_id):
@@ -310,138 +289,3 @@ def load_aliases(path: Path) -> Dict[str, Any]:
         },
         "tag aliases",
     )
-
-
-def load_series_index(path: Path) -> Dict[str, Any]:
-    return load_json_object(
-        path,
-        {
-            "header": {},
-            "series": {},
-        },
-        "series index",
-    )
-
-
-def normalize_assignment_rows_for_compare(rows: Any) -> list[Dict[str, Any]]:
-    return sanitize_assignment_tags(rows if rows is not None else [], "tags", strict=False)
-
-
-def normalize_assignment_series_row_for_compare(row: Any) -> Dict[str, Any]:
-    raw_row = row if isinstance(row, dict) else {}
-    works_obj = raw_row.get("works") if isinstance(raw_row.get("works"), dict) else {}
-    works: Dict[str, Dict[str, Any]] = {}
-
-    for raw_work_id, raw_work_row in works_obj.items():
-        work_id = str(raw_work_id or "").strip()
-        if not WORK_ID_RE.fullmatch(work_id):
-            continue
-        if not isinstance(raw_work_row, dict):
-            continue
-        works[work_id] = {
-            "tags": normalize_assignment_rows_for_compare(raw_work_row.get("tags", []))
-        }
-
-    normalized: Dict[str, Any] = {
-        "tags": normalize_assignment_rows_for_compare(raw_row.get("tags", []))
-    }
-    if works:
-        normalized["works"] = dict(sorted(works.items()))
-    return normalized
-
-
-def assignment_series_rows_equal(left: Any, right: Any) -> bool:
-    a = normalize_assignment_series_row_for_compare(left)
-    b = normalize_assignment_series_row_for_compare(right)
-    return a == b
-
-
-def sanitize_import_assignments_session(payload: Any) -> Dict[str, Any]:
-    if not isinstance(payload, dict):
-        raise ValueError("import_assignments must be a JSON object")
-
-    raw_series = payload.get("series")
-    if not isinstance(raw_series, dict):
-        raise ValueError("import_assignments.series must be an object")
-
-    out_series: Dict[str, Dict[str, Any]] = {}
-    for raw_series_id, raw_entry in raw_series.items():
-        series_id = str(raw_series_id or "").strip().lower()
-        if not series_id or not SLUG_RE.fullmatch(series_id):
-            raise ValueError(f"import_assignments.series[{raw_series_id!r}] must use a slug-safe series id")
-        out_series[series_id] = sanitize_import_assignments_series_entry(raw_entry, series_id)
-
-    return {
-        "version": str(payload.get("version") or "").strip(),
-        "updated_at_utc": str(payload.get("updated_at_utc") or "").strip(),
-        "series": out_series,
-    }
-
-
-def sanitize_import_assignments_series_entry(raw_entry: Any, series_id: str) -> Dict[str, Any]:
-    if not isinstance(raw_entry, dict):
-        raise ValueError(f"import_assignments.series[{series_id}] must be an object")
-
-    staged_row = sanitize_import_assignment_series_row(raw_entry.get("staged_row"), f"import_assignments.series[{series_id}].staged_row")
-    base_snapshot = sanitize_import_assignment_series_row(
-        raw_entry.get("base_row_snapshot"),
-        f"import_assignments.series[{series_id}].base_row_snapshot",
-        allow_missing=True,
-    )
-    base_updated = str(raw_entry.get("base_series_updated_at_utc") or "").strip()
-    staged_at = str(raw_entry.get("staged_at_utc") or "").strip()
-    return {
-        "base_series_updated_at_utc": base_updated,
-        "base_row_snapshot": base_snapshot,
-        "staged_row": staged_row,
-        "staged_at_utc": staged_at,
-    }
-
-
-def sanitize_import_assignment_series_row(raw_row: Any, field_name: str, allow_missing: bool = False) -> Dict[str, Any]:
-    if raw_row is None and allow_missing:
-        return {"tags": []}
-    if not isinstance(raw_row, dict):
-        raise ValueError(f"{field_name} must be an object")
-
-    tags = sanitize_assignment_tags(raw_row.get("tags", []), f"{field_name}.tags", strict=True)
-    works_out: Dict[str, Dict[str, Any]] = {}
-    raw_works = raw_row.get("works")
-    if raw_works is not None:
-        if not isinstance(raw_works, dict):
-            raise ValueError(f"{field_name}.works must be an object")
-        for raw_work_id, raw_work_row in raw_works.items():
-            work_id = str(raw_work_id or "").strip()
-            if not WORK_ID_RE.fullmatch(work_id):
-                raise ValueError(f"{field_name}.works keys must be 5-digit work ids")
-            if not isinstance(raw_work_row, dict):
-                raise ValueError(f"{field_name}.works[{work_id}] must be an object")
-            works_out[work_id] = {
-                "tags": sanitize_assignment_tags(raw_work_row.get("tags", []), f"{field_name}.works[{work_id}].tags", strict=True)
-            }
-
-    out: Dict[str, Any] = {"tags": tags}
-    if works_out:
-        out["works"] = dict(sorted(works_out.items()))
-    return out
-
-
-def build_series_work_membership(series_index_payload: Dict[str, Any]) -> Dict[str, set[str]]:
-    raw_series = series_index_payload.get("series")
-    if not isinstance(raw_series, dict):
-        return {}
-
-    membership: Dict[str, set[str]] = {}
-    for raw_series_id, raw_row in raw_series.items():
-        series_id = str(raw_series_id or "").strip().lower()
-        if not series_id or not isinstance(raw_row, dict):
-            continue
-        works = raw_row.get("works")
-        members: set[str] = set()
-        if isinstance(works, list):
-            for raw_work_id in works:
-                work_id = str(raw_work_id or "").strip()
-                if WORK_ID_RE.fullmatch(work_id):
-                    members.add(work_id)
-        membership[series_id] = members
-    return membership

@@ -131,7 +131,8 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["tags"]["tag_aliases"] == "/studio/api/tags/tag-aliases"
     assert runtime["services"]["tags"]["tag_assignments"] == "/studio/api/tags/tag-assignments"
     assert runtime["services"]["tags"]["save_tags"] == "/studio/api/tags/save-tags"
-    assert runtime["services"]["tags"]["import_tag_assignments"] == "/studio/api/tags/import-tag-assignments"
+    assert "import_tag_assignments" not in runtime["services"]["tags"]
+    assert "import_tag_assignments_preview" not in runtime["services"]["tags"]
     assert runtime["services"]["tags"]["create_tag"] == "/studio/api/tags/create-tag"
     assert runtime["services"]["tags"]["create_tag_alias"] == "/studio/api/tags/create-tag-alias"
     assert "import_tag_registry" not in runtime["services"]["tags"]

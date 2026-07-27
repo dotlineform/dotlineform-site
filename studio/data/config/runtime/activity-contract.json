@@ -586,32 +586,6 @@
         }
       }
     },
-    "series-tags": {
-      "label": "series tags",
-      "route": "/studio/series-tags/",
-      "actions": {
-        "import-series-tag-assignments": {
-          "label": "import series tag assignments",
-          "status": "v1-target",
-          "control_id": "apply-import",
-          "control_selector": "[data-import-action=\"apply-import\"]",
-          "control_label": "Import",
-          "endpoint": "/import-tag-assignments",
-          "record_family": "tag_assignments",
-          "record_id_field": "import_filename",
-          "no_change_activity": "skip",
-          "report_forced_rewrites": true,
-          "notes": "Covers applying staged series-tag assignment imports. Preview remains excluded.",
-          "script_purposes": [
-            {
-              "id": "save-tag-data",
-              "optional": false,
-              "when": "tag assignment import writes assignment data"
-            }
-          ]
-        }
-      }
-    },
     "series-tag-editor": {
       "label": "series tag editor",
       "route": "/studio/series-tag-editor/",

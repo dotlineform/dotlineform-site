@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Smoke the Studio tag assignment APIs against a fixture repo."""
+"""Smoke the direct Studio tag assignment API against a fixture repo."""
 
 from __future__ import annotations
 
 import json
 import sys
 import tempfile
+import urllib.error
 import urllib.request
 from pathlib import Path
 from threading import Thread
@@ -39,23 +40,6 @@ def write_fixture_assignments(repo_root: Path) -> Path:
     return assignments_path
 
 
-def write_fixture_series_index(repo_root: Path) -> Path:
-    series_index_path = repo_root / "site" / "assets" / "data" / "series_index.json"
-    series_index_path.parent.mkdir(parents=True)
-    series_index_path.write_text(
-        """{
-  "series": {
-    "series-a": {
-      "works": []
-    }
-  }
-}
-""",
-        encoding="utf-8",
-    )
-    return series_index_path
-
-
 def post_json(url: str, payload: dict[str, object]) -> dict[str, object]:
     request = urllib.request.Request(
         url,
@@ -66,11 +50,20 @@ def post_json(url: str, payload: dict[str, object]) -> dict[str, object]:
         return json.loads(response.read().decode("utf-8"))
 
 
+def assert_post_not_found(url: str) -> None:
+    try:
+        post_json(url, {})
+    except urllib.error.HTTPError as error:
+        if error.code == 404:
+            return
+        raise AssertionError(f"retired assignment route returned {error.code}: {url}") from error
+    raise AssertionError(f"retired assignment route still accepts POST: {url}")
+
+
 def run() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         fixture_root = Path(tmp_dir)
         assignments_path = write_fixture_assignments(fixture_root)
-        write_fixture_series_index(fixture_root)
         server = StudioAppServer(("127.0.0.1", 0), fixture_root)
         thread = Thread(target=server.serve_forever, daemon=True)
         thread.start()
@@ -84,32 +77,11 @@ def run() -> None:
                     "client_time_utc": "2026-05-22T00:00:00Z",
                 },
             )
-            saved_payload = json.loads(assignments_path.read_text(encoding="utf-8"))
-            import_assignments = {
-                "version": "tag_assignments_export_v1",
-                "series": {
-                    "series-a": {
-                        "base_row_snapshot": {"tags": [{"tag_id": "subject:trees", "w_manual": 0.9}]},
-                        "staged_row": {"tags": [{"tag_id": "theme:growth", "w_manual": 0.6}]},
-                    }
-                },
-            }
-            preview = post_json(
-                f"http://127.0.0.1:{port}/studio/api/tags/import-tag-assignments-preview",
-                {
-                    "import_assignments": import_assignments,
-                    "import_filename": "import.json",
-                    "client_time_utc": "2026-05-22T00:00:00Z",
-                },
+            assert_post_not_found(
+                f"http://127.0.0.1:{port}/studio/api/tags/import-tag-assignments-preview"
             )
-            apply = post_json(
-                f"http://127.0.0.1:{port}/studio/api/tags/import-tag-assignments",
-                {
-                    "import_assignments": import_assignments,
-                    "import_filename": "import.json",
-                    "resolutions": {},
-                    "client_time_utc": "2026-05-22T00:00:00Z",
-                },
+            assert_post_not_found(
+                f"http://127.0.0.1:{port}/studio/api/tags/import-tag-assignments"
             )
         finally:
             server.shutdown()
@@ -121,16 +93,10 @@ def run() -> None:
             raise AssertionError(f"save-tags response failed: {response!r}")
         if response.get("series_id") != "series-a":
             raise AssertionError(f"unexpected series id: {response!r}")
-        if saved_payload["series"]["series-a"]["tags"] != [{"tag_id": "subject:trees", "w_manual": 0.9}]:
-            raise AssertionError(f"fixture assignments were not updated by save-tags: {saved_payload!r}")
-        if preview.get("applicable_count") != 1:
-            raise AssertionError(f"assignment import preview failed: {preview!r}")
-        if not apply.get("ok") or apply.get("applied_series") != 1:
-            raise AssertionError(f"assignment import apply failed: {apply!r}")
-        if persisted["series"]["series-a"]["tags"] != [{"tag_id": "theme:growth", "w_manual": 0.6}]:
-            raise AssertionError(f"fixture assignments import was not applied: {persisted!r}")
+        if persisted["series"]["series-a"]["tags"] != [{"tag_id": "subject:trees", "w_manual": 0.9}]:
+            raise AssertionError(f"fixture assignments were not updated by save-tags: {persisted!r}")
 
-    print("Studio tag assignment APIs OK")
+    print("Studio direct tag assignment API OK")
 
 
 if __name__ == "__main__":

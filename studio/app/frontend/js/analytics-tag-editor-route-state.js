@@ -11,7 +11,7 @@ export function buildAnalyticsTagEditorRouteStateDetail(state) {
   return {
     route: "series-tag-editor",
     mode: state && state.selectedWorkId ? "single" : "edit",
-    service: state && state.saveMode === "post" ? "available" : "unavailable",
+    service: state && state.serviceAvailable ? "available" : "unavailable",
     recordLoaded: Boolean(state && state.seriesId)
   };
 }

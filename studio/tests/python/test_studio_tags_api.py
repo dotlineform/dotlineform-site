@@ -56,7 +56,8 @@ def test_studio_tag_api_reads_each_canonical_payload() -> None:
     assert health["service"] == "studio_tags"
     assert health["writes"]["create_tag"] is True
     assert health["writes"]["create_tag_alias"] is True
-    assert health["writes"]["import_tag_assignments"] is True
+    assert "import_tag_assignments" not in health["writes"]
+    assert "import_tag_assignments_preview" not in health["writes"]
     assert "import_tag_registry" not in health["writes"]
     assert "import_tag_aliases" not in health["writes"]
 

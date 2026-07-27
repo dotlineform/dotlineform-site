@@ -425,7 +425,6 @@
       "include": [
         "studio/app/frontend/routes/series-tags.html",
         "studio/app/frontend/js/series-tags*",
-        "studio/app/frontend/js/tag-assignments-offline*",
         "studio/app/frontend/js/tag-ui-text.js"
       ],
       "shared": [

@@ -28,7 +28,6 @@ export function buildAnalyticsTagEditorState(options) {
   const seriesIndexJson = options.seriesIndexJson;
   const worksIndexJson = options.worksIndexJson;
   const config = options.config;
-  const offlineSession = options.offlineSession;
   const studioGroups = Array.isArray(options.studioGroups) && options.studioGroups.length
     ? options.studioGroups
     : DEFAULT_ANALYTICS_GROUPS;
@@ -77,8 +76,7 @@ export function buildAnalyticsTagEditorState(options) {
 
   const assignmentsSeries = assignmentsJson && typeof assignmentsJson.series === "object" ? assignmentsJson.series : {};
   const repoSeriesAssignment = getSeriesAssignment(assignmentsSeries, seriesId);
-  const offlineSeriesEntry = null;
-  const seriesAssignment = offlineSeriesEntry ? offlineSeriesEntry.staged_row : repoSeriesAssignment;
+  const seriesAssignment = repoSeriesAssignment;
   const seriesEntries = createResolvedEntries(
     normalizeAssignmentTags(seriesAssignment && seriesAssignment.tags),
     tagsById
@@ -130,66 +128,14 @@ export function buildAnalyticsTagEditorState(options) {
     statusText: "",
     statusKind: "",
     refs: null,
-    offlineSession,
-    hasOfflineStagedSeries: Boolean(offlineSeriesEntry),
-    offlineBaseSeriesRow: offlineSeriesEntry && offlineSeriesEntry.base_row_snapshot
-      ? normalizeSeriesAssignmentRow(offlineSeriesEntry.base_row_snapshot)
-      : normalizeSeriesAssignmentRow(repoSeriesAssignment),
-    offlineBaseSeriesUpdatedAt: offlineSeriesEntry
-      ? String(offlineSeriesEntry.base_series_updated_at_utc || "")
-      : String(repoSeriesAssignment && repoSeriesAssignment.updated_at_utc || ""),
-    offlineAutosaveTimer: 0,
-    saveModeProbePending: false,
-    lastSaveModeHealthOk: false,
-    serverAvailableWhileOfflineNotified: false,
-    modalSnippet: "",
-    saveMode: "offline",
-    saveModeResolved: false,
+    serviceProbePending: false,
+    serviceAvailable: false,
     isBusy: false
   };
 }
 
-function normalizeSeriesAssignmentRow(row) {
-  const raw = row && typeof row === "object" ? row : {};
-  const works = {};
-
-  if (raw.works && typeof raw.works === "object") {
-    Object.keys(raw.works).forEach((rawWorkId) => {
-      const workId = normalizeWorkId(rawWorkId);
-      if (!workId) return;
-      const workRow = raw.works[rawWorkId];
-      works[workId] = {
-        tags: normalizeAssignmentRows(workRow && workRow.tags)
-      };
-    });
-  }
-
-  const out = {
-    tags: normalizeAssignmentRows(raw.tags)
-  };
-  if (Object.keys(works).length) out.works = works;
-  return out;
-}
-
 export function buildStateDiff(state) {
   return buildEditorStateDiff(state, getOrderedSelectedWorkIds(state));
-}
-
-export function buildPersistedSeriesRow(diff) {
-  const row = {
-    tags: normalizeAssignmentRows(diff && diff.nextSeriesRows)
-  };
-  const works = {};
-  const nextWorkStateById = diff && diff.nextWorkStateById instanceof Map ? diff.nextWorkStateById : new Map();
-
-  for (const [workId, tags] of Array.from(nextWorkStateById.entries()).sort((a, b) => a[0].localeCompare(b[0]))) {
-    works[workId] = {
-      tags: normalizeAssignmentRows(tags)
-    };
-  }
-
-  if (Object.keys(works).length) row.works = works;
-  return row;
 }
 
 export function applyPersistedBaseline(state, diff) {

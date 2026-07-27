@@ -61,19 +61,10 @@ export function buildSeriesTagsRows(input) {
   return input.seriesData
     .map((series) => {
       const repoRow = normalizeRepoSeriesRow(input.assignmentsSeries, series.seriesId);
-      const offlineSession = input.offlineSession && typeof input.offlineSession === "object"
-        ? input.offlineSession
-        : {};
-      const offlineSeries = offlineSession.series && typeof offlineSession.series === "object"
-        ? offlineSession.series
-        : {};
-      const offlineEntry = offlineSeries[series.seriesId]
-        ? offlineSeries[series.seriesId]
-        : null;
-      const effectiveRow = offlineEntry ? normalizeSeriesAssignmentRow(offlineEntry.staged_row) : repoRow;
-      const assigned = effectiveRow.tags.map((row) => row.tag_id);
+      const assigned = repoRow.tags.map((row) => row.tag_id);
       const score = buildStudioTagScore(assigned, input.registry, input.config);
-      const tags = buildSeriesDisplayTags(input, repoRow, effectiveRow)
+      const tags = repoRow.tags
+        .map((row) => toTagDisplay(row.tag_id, input.registry))
         .sort((a, b) => compareText(a.sortLabel, b.sortLabel));
       const visibleTags = input.filterGroup === "all"
         ? tags
@@ -85,55 +76,17 @@ export function buildSeriesTagsRows(input) {
         tooltip: score.tooltip,
         ragLabel: score.ragLabel,
         visibleTags,
-        tagsSortKey: visibleTags.map((tag) => `${tag.sortLabel}:${tag.marker || ""}`).join(" | ")
+        tagsSortKey: visibleTags.map((tag) => tag.sortLabel).join(" | ")
       };
     })
     .sort((left, right) => compareSeriesRows(input, left, right));
 }
 
-function buildSeriesDisplayTags(input, repoRow, effectiveRow) {
-  const repoTags = new Map(repoRow.tags.map((row) => [row.tag_id, row]));
-  const effectiveTags = new Map(effectiveRow.tags.map((row) => [row.tag_id, row]));
-  const tagIds = Array.from(new Set([...repoTags.keys(), ...effectiveTags.keys()]));
-  const display = [];
-
-  for (const tagId of tagIds) {
-    const repoTag = repoTags.get(tagId) || null;
-    const effectiveTag = effectiveTags.get(tagId) || null;
-    if (!repoTag && effectiveTag) {
-      display.push(toTagDisplay(tagId, input.registry, "local"));
-      continue;
-    }
-    if (repoTag && !effectiveTag) {
-      display.push(toTagDisplay(tagId, input.registry, "delete"));
-      continue;
-    }
-    if (repoTag && effectiveTag) {
-      const marker = equalNormalizedAssignmentTag(repoTag, effectiveTag) ? "" : "local";
-      display.push(toTagDisplay(tagId, input.registry, marker));
-    }
-  }
-
-  return display;
-}
-
 function renderTagChip(input, tag) {
-  const caption = tag.marker
-    ? `<span class="${classNames(UI_CLASS.chipCaption, tag.marker === "delete" ? UI_CLASS.chipCaptionDelete : UI_CLASS.chipCaptionLocal)}">${escapeHtml(seriesTagsText(
-      input.config,
-      tag.marker === "delete" ? "chip_caption_delete" : "chip_caption_local",
-      tag.marker
-    ))}</span>`
-    : "";
   return `
     <li class="${classNames(UI_CLASS.chip, tag.className)}" title="${escapeHtml(tag.tagId)}">
       <span class="${UI_CLASS.chipText}">
-        <span class="${classNames(
-          UI_CLASS.chipTag,
-          tag.marker === "local" ? UI_CLASS.chipTagLocal : "",
-          tag.marker === "delete" ? UI_CLASS.chipTagDelete : ""
-        )}">${escapeHtml(tag.label)}</span>
-        ${caption}
+        <span class="${UI_CLASS.chipTag}">${escapeHtml(tag.label)}</span>
       </span>
     </li>
   `;
@@ -205,7 +158,7 @@ function compareText(left, right) {
   return String(left || "").localeCompare(String(right || ""), undefined, { sensitivity: "base" });
 }
 
-function toTagDisplay(tagId, registry, marker = "") {
+function toTagDisplay(tagId, registry) {
   const record = registry.get(tagId);
   const group = record && record.group ? record.group : tagId.split(":", 1)[0];
   const label = record && record.label ? record.label : tagId;
@@ -213,7 +166,6 @@ function toTagDisplay(tagId, registry, marker = "") {
     tagId,
     group,
     label,
-    marker,
     className: chipGroupClass(group),
     sortLabel: `${label} ${tagId}`
   };
@@ -229,15 +181,6 @@ function normalizeSeriesAssignmentRow(row) {
   return {
     tags: normalizeAssignmentRows(raw.tags)
   };
-}
-
-function equalNormalizedAssignmentTag(left, right) {
-  if (!left || !right) return false;
-  return (
-    left.tag_id === right.tag_id &&
-    left.w_manual === right.w_manual &&
-    String(left.alias || "") === String(right.alias || "")
-  );
 }
 
 function chipGroupClass(group) {

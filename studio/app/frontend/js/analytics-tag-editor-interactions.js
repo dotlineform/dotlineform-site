@@ -3,7 +3,6 @@ import {
   makeResolvedEntry,
   nextWeight,
   normalize,
-  normalizeAssignmentRows,
   normalizeWorkId,
   splitWorkInputTokens
 } from "./analytics-tag-editor-domain.js";
@@ -351,61 +350,6 @@ export function removeAnalyticsTagEditorEditableEntry(state, entryId, options = 
   }
 }
 
-export function restoreAnalyticsTagEditorDeletedEntry(state, rawTagId, rawScope, options = {}) {
-  const tagId = normalize(rawTagId);
-  const scope = String(rawScope || "").trim().toLowerCase();
-  if (!tagId) return;
-
-  const tag = state.tagsById.get(tagId);
-  if (!tag) return;
-
-  if (scope === "work") {
-    if (!state.selectedWorkId) return;
-    if (getAnalyticsTagEditorSeriesTagIdSet(state).has(tagId)) {
-      setInteractionStatus(
-        state,
-        options,
-        "warn",
-        text(
-          options,
-          "work_tag_restore_inherited_warning",
-          "Cannot restore {tag_id} while it is inherited from the series.",
-          { tag_id: tagId }
-        )
-      );
-      setSaveResult(options, state, "", "");
-      return;
-    }
-
-    const entries = getSelectedAnalyticsTagEditorWorkEntries(state);
-    if (entries.some((entry) => entry.canonicalId === tagId)) return;
-    const baseRow = getOfflineBaseWorkRows(state, state.selectedWorkId).find((row) => row.tag_id === tagId);
-    if (!baseRow) return;
-    entries.push(makeResolvedEntry(nextAnalyticsTagEditorEntryId(state), tagId, tag, baseRow.w_manual, baseRow.alias));
-    setInteractionStatus(
-      state,
-      options,
-      "success",
-      text(options, "work_tag_restored", "Work tag restored.")
-    );
-    setSaveResult(options, state, "", "");
-    return;
-  }
-
-  if (state.seriesEntries.some((entry) => entry.canonicalId === tagId)) return;
-  const baseRow = normalizeAssignmentRows(state.offlineBaseSeriesRow && state.offlineBaseSeriesRow.tags)
-    .find((row) => row.tag_id === tagId);
-  if (!baseRow) return;
-  state.seriesEntries.push(makeResolvedEntry(nextAnalyticsTagEditorEntryId(state), tagId, tag, baseRow.w_manual, baseRow.alias));
-  setInteractionStatus(
-    state,
-    options,
-    "success",
-    text(options, "series_tag_restored", "Series tag restored.")
-  );
-  setSaveResult(options, state, "", "");
-}
-
 export function applyAnalyticsTagEditorSaveState(state, options = {}) {
   const projection = projectAnalyticsTagEditorSaveState(state, options);
   state.refs.input.disabled = projection.inputDisabled;
@@ -489,17 +433,6 @@ function projectSaveWarningText(state, projection, options) {
 function stateDefaultWeight(state) {
   const value = Number(state && state.defaultWeight);
   return Number.isFinite(value) ? value : DEFAULT_WEIGHT;
-}
-
-function getOfflineBaseWorkRows(state, workId) {
-  const normalizedWorkId = normalizeWorkId(workId);
-  const works = state.offlineBaseSeriesRow && state.offlineBaseSeriesRow.works && typeof state.offlineBaseSeriesRow.works === "object"
-    ? state.offlineBaseSeriesRow.works
-    : {};
-  const row = normalizedWorkId && works[normalizedWorkId] && typeof works[normalizedWorkId] === "object"
-    ? works[normalizedWorkId]
-    : null;
-  return normalizeAssignmentRows(row && row.tags);
 }
 
 function buildWorkSelectionSummary(state, added, unknown, invalid, options) {

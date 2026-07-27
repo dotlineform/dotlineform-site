@@ -55,7 +55,6 @@ ROUTES = [
             "/studio/api/tags/tag-assignments",
             "/studio/api/tags/tag-registry",
             "/studio/api/tags/tag-groups",
-            "/studio/api/tags/health",
         ],
     },
     {
@@ -171,6 +170,15 @@ def main(argv: list[str] | None = None) -> int:
                     theme_toggle.click()
                     if page.evaluate("document.documentElement.getAttribute('data-theme')") != "light":
                         raise AssertionError("series tag editor theme toggle did not switch back to light")
+                if route["view_id"] == "series_tags":
+                    retired_controls = page.locator(
+                        '[data-role="open-session-modal"], '
+                        '[data-role="open-import-modal"], '
+                        '[data-role="series-tags-session-modal-host"], '
+                        '[data-role="series-tags-import-modal-host"]'
+                    )
+                    if retired_controls.count():
+                        raise AssertionError("Series Tags still renders offline session or import controls")
 
             browser.close()
 

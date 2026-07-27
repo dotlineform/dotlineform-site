@@ -25,7 +25,6 @@ from tags import tag_source_model as tag_source  # noqa: E402
 from studio_tag_api.aliases import create_tag_alias_response  # noqa: E402
 from studio_tag_api.aliases import delete_tag_alias_response  # noqa: E402
 from studio_tag_api.aliases import mutate_tag_alias_response  # noqa: E402
-from studio_tag_api.assignments import import_tag_assignments_response  # noqa: E402
 from studio_tag_api.assignments import save_tags_response  # noqa: E402
 from studio_tag_api.promotions import demote_tag_response  # noqa: E402
 from studio_tag_api.promotions import promote_tag_alias_response  # noqa: E402
@@ -67,18 +66,6 @@ PostHandler = Callable[[Path, dict[str, Any], bool], dict[str, object]]
 
 POST_HANDLERS: dict[str, PostHandler] = {
     tag_routes.SAVE_TAGS_PATH: lambda repo_root, body, dry_run: save_tags_response(repo_root, body, dry_run=dry_run),
-    tag_routes.IMPORT_ASSIGNMENTS_PREVIEW_PATH: lambda repo_root, body, dry_run: import_tag_assignments_response(
-        repo_root,
-        body,
-        preview=True,
-        dry_run=dry_run,
-    ),
-    tag_routes.IMPORT_ASSIGNMENTS_APPLY_PATH: lambda repo_root, body, dry_run: import_tag_assignments_response(
-        repo_root,
-        body,
-        preview=False,
-        dry_run=dry_run,
-    ),
     tag_routes.CREATE_TAG_PATH: lambda repo_root, body, dry_run: create_tag_response(
         repo_root,
         body,
@@ -150,8 +137,6 @@ def tags_health_payload() -> dict[str, object]:
         "ok": True,
         "service": "studio_tags",
         "writes": {
-            "import_tag_assignments": True,
-            "import_tag_assignments_preview": True,
             "create_tag": True,
             "create_tag_alias": True,
             "delete_tag_alias": True,

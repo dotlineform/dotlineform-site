@@ -101,18 +101,6 @@ def main() -> int:
                                 ]
                             }
                         },
-                        offlineSession: {
-                            series: {
-                                amber: {
-                                    staged_row: {
-                                        tags: [
-                                            { tag_id: 'subject:trees', w_manual: 2 },
-                                            { tag_id: 'theme:old', w_manual: 1 }
-                                        ]
-                                    }
-                                }
-                            }
-                        },
                         registry,
                         filterGroup: 'all',
                         sortKey: 'status',
@@ -124,7 +112,8 @@ def main() -> int:
                         ragClass: row.querySelector('.rag')?.className || '',
                         ragTitle: row.querySelector('.rag')?.getAttribute('title') || '',
                         ragLabel: row.querySelector('.rag')?.getAttribute('aria-label') || '',
-                        chips: Array.from(row.querySelectorAll('.analytics__chip')).map(chip => chip.textContent.replace(/\\s+/g, ' ').trim())
+                        chips: Array.from(row.querySelectorAll('.analytics__chip')).map(chip => chip.textContent.replace(/\\s+/g, ' ').trim()),
+                        offlineMarkerCount: row.querySelectorAll('.analytics__chipTag--local, .analytics__chipTag--delete, .analytics__chipCaption').length
                     }));
                     reportInput.filterGroup = 'theme';
                     render.renderSeriesTagsReport(reportInput);
@@ -155,9 +144,11 @@ def main() -> int:
         raise AssertionError(f"red RAG output mismatch: {result!r}")
     if "rag--amber" not in result["allRows"][1]["ragClass"] or "deprecated:" in result["allRows"][1]["ragTitle"]:
         raise AssertionError(f"amber RAG output mismatch: {result!r}")
-    if "old" not in result["allRows"][1]["chips"]:
-        raise AssertionError(f"local chip output mismatch: {result!r}")
-    if result["themeRows"][1]["chips"] != ["old"] or result["themeRows"][0]["chips"] != []:
+    if result["allRows"][1]["chips"] != ["trees"]:
+        raise AssertionError(f"canonical amber chips mismatch: {result!r}")
+    if any(row["offlineMarkerCount"] for row in result["allRows"]):
+        raise AssertionError(f"offline marker output remains: {result!r}")
+    if result["themeRows"][1]["chips"] != [] or result["themeRows"][0]["chips"] != []:
         raise AssertionError(f"theme filter output mismatch: {result!r}")
     if result["activeFilter"] != "active" or result["groupInfoCount"]:
         raise AssertionError(f"filter controls mismatch: {result!r}")

@@ -41,19 +41,10 @@ export const seriesTagEditorUi = createUiContract({
     tagInput: "tag-input",
     addTag: "add-tag",
     save: "save",
-    saveMode: "save-mode",
     popup: "popup",
-    popupList: "popup-list",
-    modalHost: "modal-host",
-    modal: "analytics-modal",
-    modalClose: "modal-cancel",
-    modalTags: "modal-tags",
-    modalSnippet: "modal-snippet",
-    copySnippet: "copy-snippet"
+    popupList: "popup-list"
   },
   className: {
-    modalLabel: "studioModal__label",
-    modalPre: "studioModal__pre",
     error: "studioForm__status",
     selectedWorkPill: "analytics__selectedWorkPill",
     selectedWorkButton: "analytics__selectedWorkBtn",
@@ -82,11 +73,6 @@ export const seriesTagEditorUi = createUiContract({
     chipText: "studioUi__chipText",
     chipInherited: "analytics__chip--inherited",
     chipTag: "analytics__chipTag",
-    chipTagLocal: "analytics__chipTag--local",
-    chipTagDelete: "analytics__chipTag--delete",
-    chipCaption: "analytics__chipCaption",
-    chipCaptionLocal: "analytics__chipCaption--local",
-    chipCaptionDelete: "analytics__chipCaption--delete",
     chipGroupPrefix: "analytics__chip--",
     weightDot: "analytics__weightDot",
     weightDotLow: "analytics__weightDot--low",
@@ -103,23 +89,7 @@ export const seriesTagEditorUi = createUiContract({
 
 export const seriesTagsUi = createUiContract({
   role: {
-    pageRoot: "series-tags",
-    actions: "series-tags-actions",
-    openSessionModal: "open-session-modal",
-    openImportModal: "open-import-modal",
-    sessionModalHost: "series-tags-session-modal-host",
-    importModalHost: "series-tags-import-modal-host",
-    sessionModal: "series-tags-session-modal",
-    importModal: "series-tags-import-modal",
-    closeSessionModal: "close-session-modal",
-    closeImportModal: "close-import-modal",
-    applyImport: "apply-import",
-    sessionSummary: "series-tags-session-summary",
-    sessionActions: "series-tags-session-actions",
-    sessionImport: "series-tags-session-import",
-    sessionReview: "series-tags-session-review",
-    sessionResult: "series-tags-session-result",
-    importResult: "series-tags-import-result"
+    pageRoot: "series-tags"
   },
   className: {
     error: "studioForm__status",
@@ -127,24 +97,12 @@ export const seriesTagsUi = createUiContract({
     chip: "analytics__chip",
     chipText: "studioUi__chipText",
     chipTag: "analytics__chipTag",
-    chipTagLocal: "analytics__chipTag--local",
-    chipCaption: "analytics__chipCaption",
-    chipCaptionLocal: "analytics__chipCaption--local",
-    chipCaptionDelete: "analytics__chipCaption--delete",
-    chipTagDelete: "analytics__chipTag--delete",
     chipGroupPrefix: "analytics__chip--",
     keyPill: "studioUi__keyPill",
     allFilterButton: "analyticsFilters__allBtn",
     groupFilterButton: "analyticsFilters__groupBtn",
     sortButton: "analyticsList__sortBtn",
-    filters: "analyticsFilters seriesTags__filters",
-    actions: "seriesTagsActions",
-    sessionLabel: "seriesTagsSession__label",
-    sessionValue: "seriesTagsSession__value",
-    sessionAction: "seriesTagsSession__action",
-    sessionReviewItem: "seriesTagsSession__reviewItem",
-    sessionReviewMeta: "seriesTagsSession__reviewMeta",
-    sessionReviewSelect: "seriesTagsSession__reviewSelect"
+    filters: "analyticsFilters seriesTags__filters"
   },
   state: {
     active: "active",

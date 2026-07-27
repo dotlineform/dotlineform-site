@@ -772,12 +772,13 @@
           "doc_id": "d-20260726-215805-ecf8a4",
           "title": "Offline Tag Assignment Session Retirement",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-215805-ecf8a4.json",
+          "ui_status": "done",
           "children": [
             {
               "doc_id": "d-20260726-215805-861b6b",
               "title": "Offline Tag Assignment Session Removal Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-215805-861b6b.json",
-              "ui_status": "proposed"
+              "ui_status": "done"
             }
           ]
         },
@@ -1265,5 +1266,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-27T13:27:39Z"
+  "generated_at": "2026-07-27T14:21:10Z"
 }
