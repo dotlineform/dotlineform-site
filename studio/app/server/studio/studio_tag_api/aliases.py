@@ -15,6 +15,70 @@ from tags import tag_write_transactions as tag_transactions
 from studio_tag_api import common
 
 
+def create_tag_alias_response(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -> dict[str, object]:
+    """Validate and atomically create one canonical alias."""
+    aliases_path = (repo_root / tag_source.ALIASES_REL_PATH).resolve()
+    registry_path = (repo_root / tag_source.REGISTRY_REL_PATH).resolve()
+    allowed_write_paths = {aliases_path}
+
+    now_utc = common.utc_now()
+    aliases_payload = tag_source.load_aliases(aliases_path)
+    registry_payload = tag_source.load_registry(registry_path)
+    updated_payload, stats = tag_aliases.create_alias(
+        aliases_payload,
+        registry_payload,
+        alias=body.get("alias"),
+        description=body.get("description"),
+        tags=body.get("tags"),
+        now_utc=now_utc,
+    )
+    summary_text = tag_aliases.build_alias_create_summary_text(stats)
+
+    response_payload: dict[str, object] = {
+        "ok": True,
+        "updated_at_utc": now_utc,
+        "summary_text": summary_text,
+        **stats,
+    }
+    if dry_run:
+        response_payload["dry_run"] = True
+        response_payload["would_write"] = {
+            "updated_at_utc": now_utc,
+            "alias": stats["alias"],
+            "tags": stats["tags"],
+            "added": stats["added"],
+            "final_total": stats["final_total"],
+        }
+    else:
+        if aliases_path not in allowed_write_paths:
+            raise ValueError("write target not allowlisted")
+        tag_transactions.atomic_write(aliases_path, updated_payload)
+
+    common.log_event(
+        repo_root,
+        "create_tag_alias",
+        {
+            "summary_text": summary_text,
+            "dry_run": dry_run,
+            **stats,
+        },
+    )
+    common.attach_tag_activity(
+        repo_root=repo_root,
+        endpoint=tag_routes.CREATE_ALIAS_PATH,
+        dry_run=dry_run,
+        body=body,
+        response_payload=response_payload,
+        record_id=str(stats["alias"]),
+        detail_items=[
+            summary_text,
+            f"Created alias: {stats['alias']}.",
+        ],
+        status=tag_activity.tag_activity_status(stats),
+    )
+    return response_payload
+
+
 def import_tag_aliases_response(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -> dict[str, object]:
     aliases_path = (repo_root / tag_source.ALIASES_REL_PATH).resolve()
     allowed_write_paths = {aliases_path}

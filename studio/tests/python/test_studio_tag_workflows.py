@@ -185,7 +185,6 @@ def test_studio_tag_registry_dry_run_uses_registry_contract() -> None:
 """,
             encoding="utf-8",
         )
-
         import_status, import_payload = tags_post_response(
             repo_root,
             "/import-tag-registry",
@@ -304,6 +303,19 @@ def test_studio_tag_alias_dry_run_uses_alias_contract() -> None:
 """,
             encoding="utf-8",
         )
+        before = aliases_path.read_bytes()
+
+        create_status, create_payload = tags_post_response(
+            repo_root,
+            "/create-tag-alias",
+            {
+                "alias": "canopy",
+                "description": " Canopy ",
+                "tags": ["subject:trees", "theme:growth"],
+                "client_time_utc": "2026-05-22T00:00:00Z",
+            },
+            dry_run=True,
+        )
 
         import_status, import_payload = tags_post_response(
             repo_root,
@@ -336,6 +348,14 @@ def test_studio_tag_alias_dry_run_uses_alias_contract() -> None:
         )
 
         persisted = aliases_path.read_text(encoding="utf-8")
+        assert create_status == HTTPStatus.OK
+        assert create_payload["ok"] is True
+        assert create_payload["action"] == "create_alias"
+        assert create_payload["alias"] == "canopy"
+        assert create_payload["tags"] == ["subject:trees", "theme:growth"]
+        assert create_payload["added"] == 1
+        assert create_payload["dry_run"] is True
+        assert create_payload["would_write"]["alias"] == "canopy"
         assert import_status == HTTPStatus.OK
         assert import_payload["ok"] is True
         assert import_payload["added"] == 1
@@ -349,6 +369,24 @@ def test_studio_tag_alias_dry_run_uses_alias_contract() -> None:
         assert preview_payload["preview"] is True
         assert preview_payload["renamed"] is True
         assert "canopy" not in persisted
+        assert aliases_path.read_bytes() == before
+
+        invalid_requests = (
+            {"alias": "Bad Alias", "description": "", "tags": ["subject:trees"]},
+            {"alias": "foliage", "description": "", "tags": ["subject:trees"]},
+            {"alias": "canopy", "description": "", "tags": []},
+            {"alias": "canopy", "description": "", "tags": ["subject:missing"]},
+            {"alias": "canopy", "description": "", "tags": ["subject:trees", "subject:trees"]},
+            {"alias": "canopy", "description": "", "tags": ["subject:trees", "subject:other"]},
+        )
+        for invalid_body in invalid_requests:
+            try:
+                tags_post_response(repo_root, "/create-tag-alias", invalid_body, dry_run=False)
+            except ValueError:
+                pass
+            else:
+                raise AssertionError(f"invalid alias create request was accepted: {invalid_body!r}")
+            assert aliases_path.read_bytes() == before
 
 
 def test_studio_promotion_demotion_dry_run_uses_promotion_contract() -> None:

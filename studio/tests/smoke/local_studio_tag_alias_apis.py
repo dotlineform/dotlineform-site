@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import sys
 import tempfile
 import urllib.request
@@ -85,20 +86,44 @@ def run() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         fixture_root = Path(tmp_dir)
         aliases_path, _registry_path = write_fixture_data(fixture_root)
+        activity_contract_path = fixture_root / "studio" / "data" / "config" / "runtime" / "activity-contract.json"
+        activity_contract_path.parent.mkdir(parents=True)
+        shutil.copyfile(
+            REPO_ROOT / "studio" / "data" / "config" / "runtime" / "activity-contract.json",
+            activity_contract_path,
+        )
         server = StudioAppServer(("127.0.0.1", 0), fixture_root)
         thread = Thread(target=server.serve_forever, daemon=True)
         thread.start()
         try:
             port = server.server_address[1]
             base_url = f"http://127.0.0.1:{port}/studio/api/tags"
+            created = post_json(
+                f"{base_url}/create-tag-alias",
+                {
+                    "alias": "growth",
+                    "description": " Growth ",
+                    "tags": ["theme:growth"],
+                    "client_time_utc": "2026-05-22T00:00:00Z",
+                    "activity_context": {
+                        "correlation_id": "tag-alias-api-smoke",
+                        "page_id": "tag-aliases",
+                        "action_id": "create-tag-alias",
+                        "route": "/studio/tag-aliases/",
+                        "control_id": "save-edit-alias",
+                        "control_selector": "[data-role=\"save-edit-alias\"]",
+                        "alias": "growth",
+                    },
+                },
+            )
             imported = post_json(
                 f"{base_url}/import-tag-aliases",
                 {
                     "mode": "add",
                     "import_aliases": {
                         "aliases": {
-                            "growth": {
-                                "description": "Growth",
+                            "studio": {
+                                "description": "Studio",
                                 "tags": ["theme:growth"],
                             }
                         }
@@ -130,7 +155,7 @@ def run() -> None:
             deleted = post_json(
                 f"{base_url}/delete-tag-alias",
                 {
-                    "alias": "growth",
+                    "alias": "studio",
                     "client_time_utc": "2026-05-22T00:00:00Z",
                 },
             )
@@ -140,19 +165,34 @@ def run() -> None:
             thread.join(timeout=5)
 
         aliases = json.loads(aliases_path.read_text(encoding="utf-8"))
+        activity_rows = [
+            json.loads(line)
+            for line in (fixture_root / "var" / "admin" / "activity" / "activity_log.jsonl").read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
 
+        if created.get("alias") != "growth" or created.get("activity_log") != {"written_count": 1}:
+            raise AssertionError(f"alias create failed: {created!r}")
+        if created.get("summary_text") != "created alias growth; targets 1; final 2":
+            raise AssertionError(f"alias create summary failed: {created!r}")
+        if len(activity_rows) != 1 or activity_rows[0].get("user_action_id") != "create-tag-alias":
+            raise AssertionError(f"alias create activity failed: {activity_rows!r}")
+        if activity_rows[0].get("record_groups", {}).get("aliases", {}).get("sample_ids") != ["growth"]:
+            raise AssertionError(f"alias create activity identity failed: {activity_rows!r}")
         if imported.get("added") != 1:
             raise AssertionError(f"alias import failed: {imported!r}")
         if not preview.get("preview") or not preview.get("renamed"):
             raise AssertionError(f"alias edit preview failed: {preview!r}")
         if not edited.get("renamed") or not edited.get("tags_changed"):
             raise AssertionError(f"alias edit failed: {edited!r}")
-        if deleted.get("alias") != "growth":
+        if deleted.get("alias") != "studio":
             raise AssertionError(f"alias delete failed: {deleted!r}")
-        if list(aliases["aliases"].keys()) != ["canopy"]:
+        if list(aliases["aliases"].keys()) != ["canopy", "growth"]:
             raise AssertionError(f"final alias keys were unexpected: {aliases!r}")
         if aliases["aliases"]["canopy"]["tags"] != ["subject:trees", "theme:growth"]:
             raise AssertionError(f"final alias tags were unexpected: {aliases!r}")
+        if aliases["aliases"]["growth"]["description"] != "Growth":
+            raise AssertionError(f"created alias normalization was unexpected: {aliases!r}")
 
     print("Studio tag alias APIs OK")
 

@@ -268,6 +268,143 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
     assert "Missing service endpoint" in unavailable["message"]
 
 
+def assert_tag_alias_create_request(page: Page, base_url: str) -> None:
+    captured: dict[str, object] = {}
+    endpoint = f"{base_url}/studio/api/tags/create-tag-alias"
+
+    def handle_create(route) -> None:
+        captured["method"] = route.request.method
+        captured["payload"] = route.request.post_data_json
+        route.fulfill(
+            status=200,
+            content_type="application/json",
+            body=json.dumps(
+                {
+                    "ok": True,
+                    "action": "create_alias",
+                    "alias": "leaf-growth",
+                    "tags": ["subject:trees", "theme:growth"],
+                    "target_count": 2,
+                    "added": 1,
+                    "final_total": 2,
+                    "updated_at_utc": "2026-07-27T12:00:00Z",
+                    "summary_text": "created alias leaf-growth; targets 2; final 2",
+                }
+            ),
+        )
+
+    page.route(endpoint, handle_create)
+    result = page.evaluate(
+        """async (createEndpoint) => {
+            const service = await import('/studio/app/frontend/js/tag-aliases-service.js');
+            return service.submitAliasEdit({
+                saveMode: 'post',
+                isCreate: true,
+                originalAlias: '',
+                validation: {
+                    alias: 'leaf-growth',
+                    description: 'Leaf growth',
+                    tags: ['subject:trees', 'theme:growth']
+                },
+                config: {
+                    app: {
+                        runtime: {
+                            services: {
+                                tags: {
+                                    create_tag_alias: createEndpoint
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }""",
+        endpoint,
+    )
+    page.unroute(endpoint, handle_create)
+
+    assert result["ok"] is True
+    assert result["mode"] == "post"
+    assert result["summary"] == "created alias leaf-growth; targets 2; final 2"
+    assert captured["method"] == "POST"
+    payload = captured["payload"]
+    assert isinstance(payload, dict)
+    assert payload["alias"] == "leaf-growth"
+    assert payload["description"] == "Leaf growth"
+    assert payload["tags"] == ["subject:trees", "theme:growth"]
+    assert "mode" not in payload
+    assert "import_aliases" not in payload
+    context = payload["activity_context"]
+    assert isinstance(context, dict)
+    assert context["action_id"] == "create-tag-alias"
+    assert context["alias"] == "leaf-growth"
+
+    def reject_create(route) -> None:
+        route.fulfill(
+            status=400,
+            content_type="application/json",
+            body=json.dumps({"ok": False, "error": "alias already exists: leaf-growth"}),
+        )
+
+    page.route(endpoint, reject_create)
+    rejected = page.evaluate(
+        """async (createEndpoint) => {
+            const service = await import('/studio/app/frontend/js/tag-aliases-service.js');
+            return service.submitAliasEdit({
+                saveMode: 'post',
+                isCreate: true,
+                originalAlias: '',
+                validation: {
+                    alias: 'leaf-growth',
+                    description: 'Leaf growth',
+                    tags: ['subject:trees']
+                },
+                config: {
+                    app: {
+                        runtime: {
+                            services: {
+                                tags: {
+                                    create_tag_alias: createEndpoint
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }""",
+        endpoint,
+    )
+    page.unroute(endpoint, reject_create)
+    assert rejected == {
+        "ok": False,
+        "mode": "post",
+        "switchToPatch": False,
+        "message": "alias already exists: leaf-growth",
+    }
+
+    unavailable = page.evaluate(
+        """async () => {
+            const service = await import('/studio/app/frontend/js/tag-aliases-service.js');
+            return service.submitAliasEdit({
+                saveMode: 'post',
+                isCreate: true,
+                originalAlias: '',
+                validation: {
+                    alias: 'leaf-growth',
+                    description: 'Leaf growth',
+                    tags: ['subject:trees']
+                },
+                config: {}
+            });
+        }"""
+    )
+    assert unavailable["ok"] is False
+    assert unavailable["mode"] == "patch"
+    assert unavailable["switchToPatch"] is True
+    assert "Missing service endpoint" in unavailable["message"]
+    assert unavailable["patchResult"]["snippet"]
+
+
 def assert_studio_tag_editor_interactions(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -442,6 +579,7 @@ def run(site_root: Path) -> None:
             page.on("pageerror", lambda error: errors.append(str(error)))
             assert_tag_save_session_helpers(page)
             assert_tag_registry_create_request(page, base_url)
+            assert_tag_alias_create_request(page, base_url)
             assert_studio_tag_editor_interactions(page)
             browser.close()
             if errors:

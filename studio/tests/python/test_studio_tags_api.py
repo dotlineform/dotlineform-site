@@ -55,6 +55,7 @@ def test_studio_tag_api_reads_each_canonical_payload() -> None:
     health = tags_health_payload()
     assert health["service"] == "studio_tags"
     assert health["writes"]["create_tag"] is True
+    assert health["writes"]["create_tag_alias"] is True
 
 
 def test_studio_tag_api_dry_run_preserves_assignment_source() -> None:

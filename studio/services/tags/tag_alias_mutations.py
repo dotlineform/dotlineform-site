@@ -8,6 +8,71 @@ from typing import Any, Dict, Optional
 from tags import tag_source_model as tag_source
 
 
+def create_alias(
+    aliases_payload: Dict[str, Any],
+    registry_payload: Dict[str, Any],
+    *,
+    alias: Any,
+    description: Any,
+    tags: Any,
+    now_utc: str,
+) -> tuple[Dict[str, Any], Dict[str, Any]]:
+    """Plan one canonical alias addition without changing existing entries."""
+    alias_key = tag_source.sanitize_alias(alias)
+    normalized_description = tag_source.sanitize_alias_description(description, "description")
+    if not isinstance(tags, list):
+        raise ValueError("tags must be an array of tag ids")
+    if not tags:
+        raise ValueError("tags must include at least one tag id")
+
+    normalized_tags: list[str] = []
+    seen_targets: set[str] = set()
+    for idx, raw_tag_id in enumerate(tags):
+        tag_id = tag_source.sanitize_tag_id(raw_tag_id, f"tags[{idx}]")
+        if tag_id in seen_targets:
+            raise ValueError(f"tags[{idx}] duplicates target '{tag_id}'")
+        seen_targets.add(tag_id)
+        normalized_tags.append(tag_id)
+    tag_source.enforce_alias_group_constraints(normalized_tags, "tags")
+
+    registry_tag_ids = extract_registry_tag_ids(registry_payload)
+    for idx, tag_id in enumerate(normalized_tags):
+        if tag_id not in registry_tag_ids:
+            raise ValueError(f"tags[{idx}] is not present in registry: {tag_id}")
+
+    raw_aliases = aliases_payload.get("aliases")
+    if not isinstance(raw_aliases, dict):
+        raise ValueError("tag_aliases.aliases must be an object")
+    for idx, raw_key in enumerate(raw_aliases):
+        existing_key = tag_source.sanitize_alias_key(raw_key, idx)
+        if existing_key == alias_key:
+            raise ValueError(f"alias already exists: {alias_key}")
+
+    updated_aliases = dict(raw_aliases)
+    updated_aliases[alias_key] = build_alias_entry(normalized_description, normalized_tags)
+    updated_payload = dict(aliases_payload)
+    updated_payload.setdefault("tag_aliases_version", "tag_aliases_v1")
+    updated_payload["aliases"] = updated_aliases
+    updated_payload["updated_at_utc"] = now_utc
+
+    return updated_payload, {
+        "action": "create_alias",
+        "alias": alias_key,
+        "tags": normalized_tags,
+        "target_count": len(normalized_tags),
+        "added": 1,
+        "final_total": len(updated_aliases),
+    }
+
+
+def build_alias_create_summary_text(stats: Dict[str, Any]) -> str:
+    return (
+        f"created alias {stats.get('alias')}; "
+        f"targets {int(stats.get('target_count') or 0)}; "
+        f"final {int(stats.get('final_total') or 0)}"
+    )
+
+
 def apply_aliases_import(
     existing_payload: Dict[str, Any],
     import_aliases_payload: Any,

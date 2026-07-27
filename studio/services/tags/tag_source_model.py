@@ -196,13 +196,17 @@ def sanitize_import_registry(raw_registry: Any, allowed_groups: list[str]) -> li
     return [out_by_id[tag_id] for tag_id in out_order]
 
 
+def sanitize_alias(raw_alias: Any, field_name: str = "alias") -> str:
+    alias = str(raw_alias or "").strip().lower()
+    if not alias:
+        raise ValueError(f"{field_name} must not be empty")
+    if not ALIAS_KEY_RE.fullmatch(alias):
+        raise ValueError(f"{field_name} must be slug-safe")
+    return alias
+
+
 def sanitize_alias_key(raw_key: Any, idx: int) -> str:
-    key = str(raw_key or "").strip().lower()
-    if not key:
-        raise ValueError(f"import_aliases.aliases key at index {idx} must not be empty")
-    if not ALIAS_KEY_RE.fullmatch(key):
-        raise ValueError(f"import_aliases.aliases key at index {idx} must be slug-safe")
-    return key
+    return sanitize_alias(raw_key, f"import_aliases.aliases key at index {idx}")
 
 
 def enforce_alias_group_constraints(tags: list[str], field_name: str) -> None:

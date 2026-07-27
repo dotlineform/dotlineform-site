@@ -129,17 +129,10 @@ export async function submitAliasEdit(options) {
   if (isCreate) {
     if (saveMode === "post") {
       try {
-        const response = await postJson(getStudioTagWriteEndpoint("importTagAliases", config), {
-          mode: "add",
-          import_aliases: {
-            aliases: {
-              [validation.alias]: {
-                description: validation.description,
-                tags: validation.tags
-              }
-            }
-          },
-          import_filename: "",
+        const response = await postJson(getStudioTagWriteEndpoint("createTagAlias", config), {
+          alias: validation.alias,
+          description: validation.description,
+          tags: validation.tags,
           client_time_utc: utcTimestamp(),
           activity_context: aliasesActivityContext("create-tag-alias", "save-edit-alias", "[data-role=\"save-edit-alias\"]", "alias", validation.alias)
         });
@@ -147,9 +140,17 @@ export async function submitAliasEdit(options) {
           ok: true,
           mode: "post",
           response,
-          summary: buildImportSummary(response)
+          summary: String(response.summary_text || "").trim()
         };
       } catch (error) {
+        if (Number.isFinite(Number(error && error.status))) {
+          return {
+            ok: false,
+            mode: "post",
+            switchToPatch: false,
+            message: String(error && error.message ? error.message : aliasesText(config, "create_failed", "Create failed."))
+          };
+        }
         return {
           ok: false,
           mode: "patch",

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-7191248dc0bd50f72b50749e3d3a51da",
-    "generated_at_utc": "2026-07-27T12:45:14Z",
+    "version": "blake2b-3b5594bc6e081b296b6e12d02382f997",
+    "generated_at_utc": "2026-07-27T13:01:28Z",
     "count": 227
   },
   "entries": [
@@ -4136,10 +4136,10 @@
       "kind": "doc",
       "title": "Tag Vocabulary Import Retirement",
       "href": "/docs/?scope=studio&doc=d-20260726-214250-28ae69",
-      "last_updated": "2026-07-27 13:44:57",
+      "last_updated": "2026-07-27 14:01:06",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-27 13:44:57 • Roadmap",
+      "display_meta": "2026-07-27 14:01:06 • Roadmap",
       "search_terms": [
         "tag vocabulary import retirement",
         "tag",
@@ -4147,16 +4147,16 @@
         "import",
         "retirement",
         "roadmap",
-        "2026-07-27 13:44:57",
+        "2026-07-27 14:01:06",
         "2026",
         "07",
         "27",
-        "13",
-        "44",
-        "57",
+        "14",
+        "01",
+        "06",
         "d-20260726-214250-28ae69"
       ],
-      "search_text": "tag vocabulary import retirement tag vocabulary import retirement roadmap 2026-07-27 13:44:57 2026 07 27 13 44 57 d-20260726-214250-28ae69"
+      "search_text": "tag vocabulary import retirement tag vocabulary import retirement roadmap 2026-07-27 14:01:06 2026 07 27 14 01 06 d-20260726-214250-28ae69"
     },
     {
       "id": "d-20260726-214250-9d3fe6",
@@ -4193,10 +4193,10 @@
       "kind": "doc",
       "title": "First-class Alias Creation Delivery",
       "href": "/docs/?scope=studio&doc=d-20260726-214935-063d1d",
-      "last_updated": "2026-07-26 21:49:35",
+      "last_updated": "2026-07-27 14:01:06",
       "parent_id": "d-20260726-214250-28ae69",
       "parent_title": "Tag Vocabulary Import Retirement",
-      "display_meta": "2026-07-26 21:49:35 • Tag Vocabulary Import Retirement",
+      "display_meta": "2026-07-27 14:01:06 • Tag Vocabulary Import Retirement",
       "search_terms": [
         "first-class alias creation delivery",
         "first",
@@ -4209,16 +4209,16 @@
         "vocabulary",
         "import",
         "retirement",
-        "2026-07-26 21:49:35",
+        "2026-07-27 14:01:06",
         "2026",
         "07",
-        "26",
-        "21",
-        "49",
-        "35",
+        "27",
+        "14",
+        "01",
+        "06",
         "d-20260726-214935-063d1d"
       ],
-      "search_text": "first-class alias creation delivery first class alias creation delivery tag vocabulary import retirement tag vocabulary import retirement 2026-07-26 21:49:35 2026 07 26 21 49 35 d-20260726-214935-063d1d"
+      "search_text": "first-class alias creation delivery first class alias creation delivery tag vocabulary import retirement tag vocabulary import retirement 2026-07-27 14:01:06 2026 07 27 14 01 06 d-20260726-214935-063d1d"
     },
     {
       "id": "d-20260726-214250-55bc9d",
@@ -5542,10 +5542,10 @@
       "kind": "doc",
       "title": "Tag Aliases",
       "href": "/docs/?scope=studio&doc=d-20260331-000000-519b1e",
-      "last_updated": "2026-07-25 19:30:43",
+      "last_updated": "2026-07-27 14:01:06",
       "parent_id": "d-20260419-000000-86255c",
       "parent_title": "Tag Source Data",
-      "display_meta": "2026-07-25 19:30:43 • Tag Source Data",
+      "display_meta": "2026-07-27 14:01:06 • Tag Source Data",
       "search_terms": [
         "tag aliases",
         "tag",
@@ -5553,16 +5553,16 @@
         "tag source data",
         "source",
         "data",
-        "2026-07-25 19:30:43",
+        "2026-07-27 14:01:06",
         "2026",
         "07",
-        "25",
-        "19",
-        "30",
-        "43",
+        "27",
+        "14",
+        "01",
+        "06",
         "d-20260331-000000-519b1e"
       ],
-      "search_text": "tag aliases tag aliases tag source data source data 2026-07-25 19:30:43 2026 07 25 19 30 43 d-20260331-000000-519b1e"
+      "search_text": "tag aliases tag aliases tag source data source data 2026-07-27 14:01:06 2026 07 27 14 01 06 d-20260331-000000-519b1e"
     },
     {
       "id": "d-20260331-000000-3b6fa8",

@@ -351,10 +351,10 @@ function wireEvents(state) {
   });
 }
 
-async function loadData(state) {
+async function loadData(state, options = {}) {
   const [registryData, aliasesData] = await Promise.all([
-    loadAnalyticsRegistryJson(state.config),
-    loadAnalyticsAliasesJson(state.config)
+    loadAnalyticsRegistryJson(state.config, options),
+    loadAnalyticsAliasesJson(state.config, options)
   ]);
   let groupsData;
   try {
@@ -486,14 +486,23 @@ async function saveAliasEdit(state) {
     if (result.summary) {
       setImportResult(state, "success", result.summary);
     }
-    applyTagAliasesEditProjection(state, {
-      validation,
-      originalAlias: state.editState.originalAlias,
-      response: result.response
-    });
+    if (isCreate) {
+      await loadData(state, { cache: "no-store" });
+    } else {
+      applyTagAliasesEditProjection(state, {
+        validation,
+        originalAlias: state.editState.originalAlias,
+        response: result.response
+      });
+    }
     renderControls(state);
     renderList(state);
     closeAliasEditWorkflowModal(state, modalWorkflowCallbacks());
+    return;
+  }
+
+  if (!result.ok && !result.switchToPatch) {
+    setAliasEditStatus(state, "error", result.message);
     return;
   }
 

@@ -7,6 +7,7 @@ IMPORT_ASSIGNMENTS_PREVIEW_PATH = "/import-tag-assignments-preview"
 IMPORT_ASSIGNMENTS_APPLY_PATH = "/import-tag-assignments"
 CREATE_TAG_PATH = "/create-tag"
 IMPORT_REGISTRY_PATH = "/import-tag-registry"
+CREATE_ALIAS_PATH = "/create-tag-alias"
 IMPORT_ALIASES_PATH = "/import-tag-aliases"
 DELETE_ALIAS_PATH = "/delete-tag-alias"
 MUTATE_ALIAS_PREVIEW_PATH = "/mutate-tag-alias-preview"
@@ -24,6 +25,7 @@ POST_PATHS = (
     IMPORT_ASSIGNMENTS_APPLY_PATH,
     CREATE_TAG_PATH,
     IMPORT_REGISTRY_PATH,
+    CREATE_ALIAS_PATH,
     IMPORT_ALIASES_PATH,
     DELETE_ALIAS_PATH,
     MUTATE_ALIAS_PREVIEW_PATH,

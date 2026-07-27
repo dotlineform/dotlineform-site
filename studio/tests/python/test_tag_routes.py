@@ -56,6 +56,7 @@ def test_tag_write_handlers_live_in_functional_modules() -> None:
         registry.create_tag_response,
         registry.import_tag_registry_response,
         registry.mutate_tag_response,
+        aliases.create_tag_alias_response,
         aliases.import_tag_aliases_response,
         aliases.delete_tag_alias_response,
         aliases.mutate_tag_alias_response,

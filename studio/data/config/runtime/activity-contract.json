@@ -774,12 +774,12 @@
           "control_id": "save-edit-alias",
           "control_selector": "[data-role=\"save-edit-alias\"]",
           "control_label": "Save",
-          "endpoint": "/import-tag-aliases",
+          "endpoint": "/create-tag-alias",
           "record_family": "tag_aliases",
           "record_id_field": "alias",
           "no_change_activity": "skip",
           "report_forced_rewrites": false,
-          "notes": "Covers creating one alias through the alias import service.",
+          "notes": "Covers creating one alias through the focused alias create service.",
           "script_purposes": [
             {
               "id": "save-tag-data",

@@ -84,6 +84,95 @@ def test_alias_import_duplicate_handling() -> None:
     assert_equal(stats["imported_total"], 1, "stats count normalized alias imports")
 
 
+def test_alias_create_adds_one_normalized_entry() -> None:
+    payload = {
+        "tag_aliases_version": "tag_aliases_v1",
+        "updated_at_utc": "2026-05-01T00:00:00Z",
+        "aliases": {
+            "foliage": {"description": "Old", "tags": ["subject:trees"]},
+        },
+    }
+    existing_entry = payload["aliases"]["foliage"]
+
+    created, stats = aliases.create_alias(
+        payload,
+        registry_payload(),
+        alias=" Leaf-Growth ",
+        description="  Leaf growth  ",
+        tags=["subject:canopy", "theme:growth"],
+        now_utc=NOW,
+    )
+
+    assert_equal(list(created["aliases"]), ["foliage", "leaf-growth"], "create appends one alias")
+    assert_equal(created["aliases"]["foliage"], existing_entry, "create preserves existing entry")
+    assert_equal(
+        created["aliases"]["leaf-growth"],
+        {"description": "Leaf growth", "tags": ["subject:canopy", "theme:growth"]},
+        "create normalizes new entry",
+    )
+    assert_equal(list(payload["aliases"]), ["foliage"], "planner does not mutate input aliases")
+    assert_equal(stats["action"], "create_alias", "create action")
+    assert_equal(stats["added"], 1, "create added count")
+    assert_equal(stats["final_total"], 2, "create final count")
+    assert_equal(
+        aliases.build_alias_create_summary_text(stats),
+        "created alias leaf-growth; targets 2; final 2",
+        "create summary",
+    )
+
+
+def test_alias_create_guards() -> None:
+    payload = {"aliases": {"foliage": {"description": "", "tags": ["subject:trees"]}}}
+    cases = (
+        (
+            {"alias": "Bad Alias", "description": "", "tags": ["subject:trees"]},
+            "alias must be slug-safe",
+            "invalid alias key",
+        ),
+        (
+            {"alias": " Foliage ", "description": "", "tags": ["subject:trees"]},
+            "alias already exists",
+            "duplicate alias key",
+        ),
+        (
+            {"alias": "canopy", "description": "", "tags": []},
+            "must include at least one",
+            "missing target",
+        ),
+        (
+            {"alias": "canopy", "description": "", "tags": ["subject:missing"]},
+            "is not present in registry",
+            "unknown target",
+        ),
+        (
+            {"alias": "canopy", "description": "", "tags": ["subject:trees", "subject:trees"]},
+            "duplicates target",
+            "duplicate target",
+        ),
+        (
+            {"alias": "canopy", "description": "", "tags": ["subject:trees", "subject:canopy"]},
+            "duplicates group",
+            "repeated target group",
+        ),
+        (
+            {"alias": "canopy", "description": {"bad": True}, "tags": ["subject:trees"]},
+            "description must be a string",
+            "invalid description",
+        ),
+    )
+    for request, expected, label in cases:
+        assert_raises_contains(
+            lambda request=request: aliases.create_alias(
+                payload,
+                registry_payload(),
+                now_utc=NOW,
+                **request,
+            ),
+            expected,
+            label,
+        )
+
+
 def test_alias_edit_delete_and_summary() -> None:
     payload = {
         "aliases": {
@@ -197,6 +286,8 @@ def test_alias_rewrite_for_demote_targets() -> None:
 def main() -> None:
     test_alias_import_modes()
     test_alias_import_duplicate_handling()
+    test_alias_create_adds_one_normalized_entry()
+    test_alias_create_guards()
     test_alias_edit_delete_and_summary()
     test_alias_mutation_guards()
     test_alias_rewrite_for_tag_removes_empty_and_redundant_aliases()
