@@ -373,10 +373,7 @@ export function initDocsViewerManagement(context) {
     });
     if (typeof context.projectMainViewControlState === "function") {
       context.projectMainViewControlState("edit", projectedReportControls.editMetadata.state);
-      context.projectMainViewControlState("open-vscode", {
-        hidden: actionsHidden,
-        disabled: actionsDisabled
-      });
+      context.projectMainViewControlState("open-vscode", projectedReportControls.openVsCode.state);
       context.projectMainViewControlState("markdown-source", projectedReportControls.parentSource.state);
       context.projectMainViewControlState("subdoc-source", projectedReportControls.subdocSource.state);
       context.projectMainViewControlState("return-to-doc", projectedReportControls.returnToDoc.state);
@@ -487,12 +484,20 @@ export function initDocsViewerManagement(context) {
       ["open-vscode", function () {
         var doc = actionTargetDoc(resolution);
         var mountedTarget = activeSourceTarget();
-        var target = mountedTarget || sourceTargetForDoc(doc);
+        var projectedOpen = projectedReportControls
+          ? projectedReportControls.openVsCode
+          : null;
+        var projectedTarget = (
+          projectedOpen
+          && !projectedOpen.state.hidden
+          && !projectedOpen.state.disabled
+        ) ? projectedOpen.target : null;
+        var target = mountedTarget || projectedTarget;
         if (target) {
           actionController.handleOpenSource(
             "vscode",
             target,
-            mountedTarget ? mountedTarget.doc_id : doc && doc.title
+            doc && target.doc_id === doc.doc_id ? doc.title : target.doc_id
           );
         }
       }],

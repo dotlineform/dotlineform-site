@@ -140,7 +140,16 @@ function normalizeControl(record) {
 export function normalizeDocsViewerControlState(record) {
   var source = record && typeof record === "object" && !Array.isArray(record) ? record : {};
   var state = {};
-  ["hidden", "disabled", "pressed", "busy", "expanded", "active"].forEach(function (key) {
+  [
+    "hidden",
+    "disabled",
+    "pressed",
+    "busy",
+    "expanded",
+    "active",
+    "hasSelection",
+    "allSelected"
+  ].forEach(function (key) {
     if (Object.prototype.hasOwnProperty.call(source, key)) state[key] = Boolean(source[key]);
   });
   if (Object.prototype.hasOwnProperty.call(source, "label")) state.label = cleanString(source.label);

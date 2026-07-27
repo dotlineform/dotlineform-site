@@ -181,10 +181,12 @@ def assert_control_projection(page: Page) -> None:
     }
     cases = result["cases"]
     assert cases["ordinary"]["editMetadata"]["target"] == parent
+    assert cases["ordinary"]["openVsCode"]["target"] == parent
     assert cases["ordinary"]["parentSource"]["target"] == parent
     assert cases["ordinary"]["subdocSource"]["state"]["hidden"] is True
 
     assert cases["list"]["editMetadata"]["target"] == parent
+    assert cases["list"]["openVsCode"]["target"] == parent
     assert cases["list"]["parentSource"]["target"] == parent
     assert cases["list"]["parentSource"]["state"]["label"] == "Parent Source"
     assert cases["list"]["subdocSource"]["state"] == {
@@ -194,12 +196,15 @@ def assert_control_projection(page: Page) -> None:
     }
     assert cases["list"]["returnToDoc"]["state"]["hidden"] is True
     assert cases["detail"]["editMetadata"]["target"] == subdoc
+    assert cases["detail"]["openVsCode"]["target"] == subdoc
     assert cases["detail"]["subdocSource"]["target"] == subdoc
     assert cases["detail"]["parentSource"]["target"] == parent
 
     for state_name in ("loading", "invalid", "error"):
         assert cases[state_name]["editMetadata"]["state"]["disabled"] is True
         assert cases[state_name]["editMetadata"]["target"] is None
+        assert cases[state_name]["openVsCode"]["state"]["disabled"] is True
+        assert cases[state_name]["openVsCode"]["target"] is None
         assert cases[state_name]["subdocSource"]["state"]["disabled"] is True
         assert cases[state_name]["subdocSource"]["target"] is None
         assert cases[state_name]["parentSource"]["state"]["disabled"] is False
@@ -207,6 +212,9 @@ def assert_control_projection(page: Page) -> None:
 
     source = cases["source"]
     assert source["editMetadata"]["state"]["hidden"] is True
+    assert source["openVsCode"]["state"]["hidden"] is False
+    assert source["openVsCode"]["state"]["disabled"] is False
+    assert source["openVsCode"]["target"] is None
     assert source["parentSource"]["state"]["hidden"] is False
     assert source["parentSource"]["state"]["disabled"] is True
     assert source["subdocSource"]["state"]["hidden"] is False

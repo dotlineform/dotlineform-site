@@ -25,12 +25,12 @@ BUILD_DIR = Path(__file__).resolve().parents[1] / "build"
 if str(BUILD_DIR) not in sys.path:
     sys.path.insert(0, str(BUILD_DIR))
 
-from docs_builder.semantic_token_registry import load_semantic_token_registry
-from docs_builder.semantic_tokens import (
+from docs_builder.semantic_token_registry import load_semantic_token_registry  # noqa: E402
+from docs_builder.semantic_tokens import (  # noqa: E402
     load_semantic_token_target_records,
     parse_catalogue_tokens,
 )
-from docs_source_model import load_scope_docs_for_config
+from docs_source_model import load_scope_docs_for_config  # noqa: E402
 
 
 SCOPE_OUTPUT_DIRS = {scope: published_documents_path(config) for scope, config in DOCS_SCOPE_CONFIGS.items()}

@@ -207,7 +207,7 @@ viewable: false
     assert hidden_payload_exists
 
 
-def test_python_docs_builder_public_sub_scope_uses_publish_url_base() -> None:
+def test_python_docs_builder_public_sub_scope_separates_manage_and_public_url_bases() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         write_site_tools_config(root, media_base="")
@@ -233,12 +233,26 @@ last_updated: 2026-06-21
 
         exit_code, _stdout, stderr = run_cli(root, ["--scope", "library", "--sub-scope", "tags", "--write"])
         detail = read_json(root / f"docs-viewer/scopes/library/published/documents/sub-scopes/tags/by-id/{DETAIL_DOC_ID}.json")
-        browser_config = build_docs.browser_scope_config_payload(root, [load_docs_scope_configs(root)["library"]])
+        config = load_docs_scope_configs(root)["library"]
+        browser_config = build_docs.browser_scope_config_payload(root, [config])
+        public_browser_config = build_docs.browser_scope_config_payload(
+            root,
+            [config],
+            published=True,
+        )
 
     assert exit_code == 0
     assert stderr == ""
     assert detail["doc_id"] == DETAIL_DOC_ID
     assert browser_config["scopes"][0]["sub_scopes"] == [
+        {
+            "sub_scope": "tags",
+            "title": "Tags",
+            "manifest_url": "/docs-viewer/scopes/library/published/documents/sub-scopes/tags/manifest.json",
+            "by_id_url_base": "/docs-viewer/scopes/library/published/documents/sub-scopes/tags/by-id",
+        }
+    ]
+    assert public_browser_config["scopes"][0]["sub_scopes"] == [
         {
             "sub_scope": "tags",
             "title": "Tags",

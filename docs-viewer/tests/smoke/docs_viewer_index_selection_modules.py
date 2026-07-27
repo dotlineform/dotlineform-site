@@ -725,6 +725,7 @@ def assert_selection_projection_and_interaction(page: Page) -> None:
             const renderers = await import('/docs-viewer/runtime/js/management/docs-viewer-management-control-renderers.js');
             const appRenderers = await import('/docs-viewer/runtime/js/management/docs-viewer-management-actions-renderer.js');
             const hostedViews = await import('/docs-viewer/runtime/js/management/docs-viewer-management-hosted-views.js');
+            const viewRegistry = await import('/docs-viewer/runtime/js/shared/docs-viewer-view-registry.js');
             const sidebarModule = await import('/docs-viewer/runtime/js/shared/docs-viewer-sidebar.js');
             document.body.innerHTML = `
               <div class="docsViewer">
@@ -858,6 +859,12 @@ def assert_selection_projection_and_interaction(page: Page) -> None:
                 completedSelectAllDisabled: completedControl.root.querySelector(
                     '[data-docs-viewer-selection-command="select-all"]'
                 ).disabled,
+                normalizedSelectionState: viewRegistry.normalizeDocsViewerControlState({
+                    active: true,
+                    allSelected: true,
+                    hasSelection: true,
+                    total: docs.length
+                }),
                 controlDefinition: controlDefinition && {
                     appKinds: controlDefinition.appKinds,
                     ownerViewId: controlDefinition.ownerViewId,
@@ -892,6 +899,12 @@ def assert_selection_projection_and_interaction(page: Page) -> None:
         "hasSelectedCount": False,
         "selectAllDisabled": False,
         "completedSelectAllDisabled": True,
+        "normalizedSelectionState": {
+            "active": True,
+            "allSelected": True,
+            "hasSelection": True,
+            "total": 4,
+        },
         "controlDefinition": {
             "appKinds": ["manage"],
             "ownerViewId": "index-tree",

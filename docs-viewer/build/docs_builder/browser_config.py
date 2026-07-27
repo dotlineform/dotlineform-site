@@ -69,17 +69,31 @@ def browser_search_policy_payload(config: DocsScopeConfig, *, published: bool = 
     }
 
 
-def browser_sub_scope_output_url_base(config: DocsScopeConfig, sub_scope: Any) -> str:
+def browser_sub_scope_output_url_base(
+    config: DocsScopeConfig,
+    sub_scope: Any,
+    *,
+    published: bool = False,
+) -> str:
     if scope_uses_external_data(config):
         return f"/docs/published/external/{quote(config.scope_id)}/{quote(sub_scope.sub_scope)}"
-    output = public_documents_path(sub_scope) or published_documents_path(sub_scope)
+    output = public_documents_path(sub_scope) if published else published_documents_path(sub_scope)
+    output = output or published_documents_path(sub_scope)
     return browser_path_for_repo_relative(output)
 
 
-def browser_sub_scope_records(config: DocsScopeConfig) -> list[dict[str, Any]]:
+def browser_sub_scope_records(
+    config: DocsScopeConfig,
+    *,
+    published: bool = False,
+) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     for sub_scope in config.sub_scopes:
-        output_base = browser_sub_scope_output_url_base(config, sub_scope)
+        output_base = browser_sub_scope_output_url_base(
+            config,
+            sub_scope,
+            published=published,
+        )
         records.append(
             {
                 "sub_scope": sub_scope.sub_scope,
@@ -128,7 +142,7 @@ def browser_scope_record(
         "search_index_url": browser_search_index_url(config, published=published),
         "search": browser_search_policy_payload(config, published=published),
     }
-    sub_scopes = browser_sub_scope_records(config)
+    sub_scopes = browser_sub_scope_records(config, published=published)
     if sub_scopes:
         record["sub_scopes"] = sub_scopes
     return record

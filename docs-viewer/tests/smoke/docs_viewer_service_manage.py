@@ -375,6 +375,19 @@ def install_smoke_document_routes(
             target["sub_scope"] = sub_scope
         fulfill_json(route, target)
 
+    def fulfill_open_source(route) -> None:
+        payload = request_json(route)
+        fulfill_json(
+            route,
+            {
+                "ok": True,
+                "scope": payload.get("scope"),
+                "sub_scope": payload.get("sub_scope"),
+                "doc_id": payload.get("doc_id"),
+                "editor": payload.get("editor"),
+            },
+        )
+
     def fulfill_viewer_config(route) -> None:
         response = route.fetch()
         payload = response.json()
@@ -425,6 +438,10 @@ def install_smoke_document_routes(
         page.route(
             re.compile(r".*/docs/diagram-sources(?:\?.*)?$"),
             fulfill_diagram_sources,
+        )
+        page.route(
+            re.compile(r".*/docs/open-source(?:\?.*)?$"),
+            fulfill_open_source,
         )
     page.route(
         re.compile(r".*/docs/index-tree(?:\?.*)?$"),
@@ -2045,6 +2062,7 @@ def normalized_subscope_request(request) -> dict[str, object] | None:
         "/docs/sub-scope-documents",
         "/docs/source",
         "/docs/source/rebuild",
+        "/docs/open-source",
         "/docs/metadata",
         "/docs/update-metadata",
         f"/__smoke/subscope/by-id/{SUBSCOPE_DOC_ID}.json",
@@ -2099,6 +2117,13 @@ def exercise_subscope_editing_route(
         raise AssertionError("detail view did not retain the explicit Parent Source action")
     if subdoc_source.is_disabled():
         raise AssertionError("valid detail did not enable Subdoc Source")
+    vscode_source = page.locator("#docsViewerManageOpenVsCodeButton")
+    if vscode_source.is_disabled():
+        raise AssertionError("valid detail did not enable Open in VS Code")
+    with page.expect_request(
+        re.compile(r".*/docs/open-source$")
+    ):
+        vscode_source.click()
 
     parent_source.click()
     page.wait_for_function(
@@ -2142,6 +2167,30 @@ def exercise_subscope_editing_route(
     prompt.wait_for(state="visible", timeout=timeout_ms)
     if prompt.locator(".docsViewer__modalTitle").inner_text().strip() != "Return to doc?":
         raise AssertionError("dirty Return did not use the dedicated confirmation")
+    prompt_style = prompt.evaluate(
+        """modal => {
+            const card = modal.querySelector('.docsViewer__modalCard');
+            const backdrop = modal.querySelector('.docsViewer__modalBackdrop');
+            return {
+                viewerOwned: Boolean(modal.closest('#docsViewerRoot')),
+                cardBackground: card ? getComputedStyle(card).backgroundColor : '',
+                backdropBackground: backdrop ? getComputedStyle(backdrop).backgroundColor : ''
+            };
+        }"""
+    )
+    if not prompt_style["viewerOwned"]:
+        raise AssertionError(
+            f"dirty Return modal escaped the themed viewer root: {prompt_style!r}"
+        )
+    transparent_backgrounds = {"", "transparent", "rgba(0, 0, 0, 0)"}
+    if prompt_style["cardBackground"] in transparent_backgrounds:
+        raise AssertionError(
+            f"dirty Return modal card is transparent: {prompt_style!r}"
+        )
+    if prompt_style["backdropBackground"] in transparent_backgrounds:
+        raise AssertionError(
+            f"dirty Return modal backdrop is transparent: {prompt_style!r}"
+        )
     if prompt.locator('[data-role="modal-primary"]').inner_text().strip() != "Return to doc":
         raise AssertionError("dirty Return confirmation did not expose its exact action")
     if prompt.locator('button[data-role="modal-cancel"]').inner_text().strip() != "Cancel":
@@ -2252,6 +2301,8 @@ def exercise_subscope_editing_route(
         raise AssertionError("invalid detail did not disable Edit metadata")
     if not page.locator("#docsViewerManageSubdocSourceButton").is_disabled():
         raise AssertionError("invalid detail did not disable Subdoc Source")
+    if not page.locator("#docsViewerManageOpenVsCodeButton").is_disabled():
+        raise AssertionError("invalid detail did not disable Open in VS Code")
 
     return request_log
 
@@ -2297,6 +2348,22 @@ def assert_subscope_request_log(request_log: list[dict[str, object]]) -> None:
         }
     ]:
         raise AssertionError(f"source rebuild request log changed: {request_log!r}")
+
+    open_sources = get_requests("/docs/open-source", "POST")
+    if open_sources != [
+        {
+            "method": "POST",
+            "path": "/docs/open-source",
+            "query": {},
+            "body": {
+                "scope": "studio",
+                "sub_scope": SUBSCOPE_ID,
+                "doc_id": SUBSCOPE_DOC_ID,
+                "editor": "vscode",
+            },
+        }
+    ]:
+        raise AssertionError(f"Open in VS Code target log changed: {request_log!r}")
 
     metadata_reads = get_requests("/docs/metadata")
     if [record["query"] for record in metadata_reads] != [

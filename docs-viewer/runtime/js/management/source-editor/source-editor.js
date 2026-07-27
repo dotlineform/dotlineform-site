@@ -332,7 +332,7 @@ function leaveSource(context, state) {
   if (!dirtyNow(state)) {
     return returnToRendered(context, state);
   }
-  return openLeavePrompt(context.mount ? context.mount.ownerDocument.body : document.body).then(function (confirmedReturn) {
+  return openLeavePrompt(context.root || (context.mount ? context.mount.ownerDocument.body : document.body)).then(function (confirmedReturn) {
     if (!confirmedReturn) return false;
     state.lastCleanBody = normalizeBody(state.textarea ? state.textarea.value : "");
     projectDirty(state);

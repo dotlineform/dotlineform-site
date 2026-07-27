@@ -19,7 +19,13 @@ os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = PROJECTS_DIR.name
 (Path(PROJECTS_DIR.name) / "docs-viewer").mkdir()
 (Path(PROJECTS_DIR.name) / "data-sharing").mkdir()
 
-from docs_viewer_service_manage import DOCS_VIEWER_DOC_ID, start_server, wait_for_manage_doc
+from docs_viewer_service_manage import (
+    DOCS_VIEWER_DOC_ID,
+    DOCS_VIEWER_DOC_TITLE,
+    install_smoke_document_routes,
+    start_server,
+    wait_for_manage_doc,
+)
 
 
 def select_one_document(page: Page, timeout_ms: int) -> str:
@@ -69,6 +75,7 @@ def install_busy_observer(page: Page) -> None:
 
 
 def exercise_prepare_action(page: Page, base_url: str, timeout_ms: int) -> None:
+    install_smoke_document_routes(page)
     prepare_requests: list[dict[str, object]] = []
     requested_paths: list[str] = []
     page.on("request", lambda request: requested_paths.append(urlparse(request.url).path))
@@ -98,12 +105,35 @@ def exercise_prepare_action(page: Page, base_url: str, timeout_ms: int) -> None:
             ),
         )
 
+    def fulfill_documents(route: Route) -> None:
+        route.fulfill(
+            status=200,
+            content_type="application/json",
+            body=json.dumps(
+                {
+                    "ok": True,
+                    "scope": "studio",
+                    "records": [
+                        {
+                            "doc_id": DOCS_VIEWER_DOC_ID,
+                            "parent_id": "",
+                            "title": DOCS_VIEWER_DOC_TITLE,
+                            "selectable": True,
+                            "viewable": True,
+                            "summary": "Synthetic package source document.",
+                        }
+                    ],
+                }
+            ),
+        )
+
+    page.route("**/docs/packages/documents*", fulfill_documents)
     page.route("**/docs/packages/prepare", fulfill_prepare)
     page.goto(
         f"{base_url}/docs/?scope=studio&doc={DOCS_VIEWER_DOC_ID}",
         wait_until="domcontentloaded",
     )
-    wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
+    wait_for_manage_doc(page, DOCS_VIEWER_DOC_TITLE, timeout_ms)
     selected_doc_id = select_one_document(page, timeout_ms)
 
     prepare_button = page.locator("#docsViewerIndexPreparePackageButton")

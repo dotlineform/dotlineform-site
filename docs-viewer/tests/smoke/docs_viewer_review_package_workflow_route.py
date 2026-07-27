@@ -20,7 +20,13 @@ os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = PROJECTS_DIR.name
 (Path(PROJECTS_DIR.name) / "docs-viewer").mkdir()
 (Path(PROJECTS_DIR.name) / "data-sharing").mkdir()
 
-from docs_viewer_service_manage import DOCS_VIEWER_DOC_ID, start_server, wait_for_manage_doc
+from docs_viewer_service_manage import (
+    DOCS_VIEWER_DOC_ID,
+    DOCS_VIEWER_DOC_TITLE,
+    install_smoke_document_routes,
+    start_server,
+    wait_for_manage_doc,
+)
 
 
 REVIEW_WORKFLOW_PATH = "/docs-viewer/runtime/js/packages/document-package-review-workflow.js"
@@ -45,6 +51,7 @@ def install_busy_observer(page: Page) -> None:
 
 
 def exercise_review_action(page: Page, base_url: str, timeout_ms: int) -> None:
+    install_smoke_document_routes(page)
     review_requests: list[dict[str, object]] = []
     requested_paths: list[str] = []
     page.on("request", lambda request: requested_paths.append(urlparse(request.url).path))
@@ -126,7 +133,7 @@ def exercise_review_action(page: Page, base_url: str, timeout_ms: int) -> None:
         f"{base_url}/docs/?scope=studio&doc={DOCS_VIEWER_DOC_ID}",
         wait_until="domcontentloaded",
     )
-    wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
+    wait_for_manage_doc(page, DOCS_VIEWER_DOC_TITLE, timeout_ms)
 
     if REVIEW_WORKFLOW_PATH in requested_paths:
         raise AssertionError("Review package workflow loaded before its Action was invoked")

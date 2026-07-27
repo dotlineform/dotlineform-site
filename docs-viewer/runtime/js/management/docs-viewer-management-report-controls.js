@@ -41,6 +41,11 @@ export function projectDocsViewerReportControlState(options = {}) {
       disabled: disabled || sourceMode || !editTarget,
       label: "Edit metadata"
     }, editTarget),
+    openVsCode: control({
+      hidden: hidden,
+      disabled: disabled || (!sourceMode && !editTarget),
+      label: "Open in VS Code"
+    }, sourceMode ? null : editTarget),
     parentSource: control({
       hidden: hidden,
       disabled: disabled || sourceMode || !sourceTarget,

@@ -9,7 +9,13 @@ from urllib.parse import urlparse
 
 from playwright.sync_api import Page, Route, sync_playwright
 
-from docs_viewer_service_manage import DOCS_VIEWER_DOC_ID, start_server, wait_for_manage_doc
+from docs_viewer_service_manage import (
+    DOCS_VIEWER_DOC_ID,
+    DOCS_VIEWER_DOC_TITLE,
+    install_smoke_document_routes,
+    start_server,
+    wait_for_manage_doc,
+)
 
 
 def request_path(url: str) -> str:
@@ -165,6 +171,7 @@ def projected_route_state(page: Page, move: dict[str, str]) -> dict[str, object]
 
 
 def assert_real_manage_route_projection(page: Page, base_url: str, timeout_ms: int) -> None:
+    install_smoke_document_routes(page)
     index_requests: list[str] = []
     move_requests: list[dict[str, object]] = []
     page_errors: list[str] = []
@@ -202,7 +209,7 @@ def assert_real_manage_route_projection(page: Page, base_url: str, timeout_ms: i
 
     page.route("**/docs/move", fulfill_move)
     page.goto(f"{base_url}/docs/?scope=studio&doc={DOCS_VIEWER_DOC_ID}", wait_until="domcontentloaded")
-    wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
+    wait_for_manage_doc(page, DOCS_VIEWER_DOC_TITLE, timeout_ms)
     move = choose_route_move(page)
     selected_doc_ids = establish_move_selection(page, move)
     index_count_before = len(index_requests)

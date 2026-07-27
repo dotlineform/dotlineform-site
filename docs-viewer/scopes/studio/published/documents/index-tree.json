@@ -764,13 +764,13 @@
           "doc_id": "d-20260726-224323-eb0a65",
           "title": "Manage Sub-Scope Documents",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-224323-eb0a65.json",
-          "ui_status": "draft",
+          "ui_status": "done",
           "children": [
             {
               "doc_id": "d-20260727-111354-3ac5f0",
               "title": "Sub-Scope Document Editing Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260727-111354-3ac5f0.json",
-              "ui_status": "in-progress"
+              "ui_status": "done"
             }
           ]
         },
@@ -1272,5 +1272,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-27T17:05:16Z"
+  "generated_at": "2026-07-27T21:11:30Z"
 }

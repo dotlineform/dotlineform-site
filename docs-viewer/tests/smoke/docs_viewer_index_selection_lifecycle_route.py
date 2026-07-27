@@ -9,7 +9,14 @@ from urllib.parse import urlparse
 
 from playwright.sync_api import Page, Route, sync_playwright
 
-from docs_viewer_service_manage import DOCS_VIEWER_DOC_ID, start_server, wait_for_manage_doc
+from docs_viewer_service_manage import (
+    DOCS_VIEWER_DOC_ID,
+    DOCS_VIEWER_DOC_TITLE,
+    install_smoke_document_routes,
+    smoke_document_payloads,
+    start_server,
+    wait_for_manage_doc,
+)
 
 
 def request_path(url: str) -> str:
@@ -87,6 +94,17 @@ def assert_delete_action_state(page: Page, *, disabled: bool, reason: str = "") 
 
 
 def assert_selection_lifecycle(page: Page, base_url: str, timeout_ms: int) -> None:
+    install_smoke_document_routes(page, include_subscope_report=True)
+    fixture_index_docs = [
+        {
+            "doc_id": doc_id,
+            "title": str(payload["title"]),
+            "content_url": f"/docs/doc?scope=studio&doc_id={doc_id}",
+        }
+        for doc_id, payload in smoke_document_payloads(
+            include_subscope_report=True,
+        ).items()
+    ]
     index_request_count = 0
     initial_index_docs: list[dict[str, object]] = []
     prune_doc_id = ""
@@ -97,8 +115,14 @@ def assert_selection_lifecycle(page: Page, base_url: str, timeout_ms: int) -> No
     def fulfill_index(route: Route) -> None:
         nonlocal index_request_count, initial_index_docs
         index_request_count += 1
-        response = route.fetch()
-        payload = response.json()
+        payload = {
+            "schema": "docs_index_tree_v1",
+            "viewer_options": {
+                "non_loadable_doc_ids": [],
+                "manage_only_tree_root_ids": [],
+            },
+            "docs": [dict(record) for record in fixture_index_docs],
+        }
         if not initial_index_docs:
             initial_index_docs = [
                 dict(record) for record in payload.get("docs", []) if isinstance(record, dict)
@@ -109,7 +133,11 @@ def assert_selection_lifecycle(page: Page, base_url: str, timeout_ms: int) -> No
                 for record in payload.get("docs", [])
                 if record.get("doc_id") != prune_doc_id
             ]
-        route.fulfill(response=response, json=payload)
+        route.fulfill(
+            status=200,
+            content_type="application/json",
+            body=json.dumps(payload),
+        )
 
     def fulfill_rebuild(route: Route) -> None:
         nonlocal prune_reloads
@@ -124,7 +152,7 @@ def assert_selection_lifecycle(page: Page, base_url: str, timeout_ms: int) -> No
     page.route("**/docs/index-tree*", fulfill_index)
     page.route("**/docs/rebuild", fulfill_rebuild)
     page.goto(f"{base_url}/docs/?scope=studio&doc={DOCS_VIEWER_DOC_ID}", wait_until="domcontentloaded")
-    wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
+    wait_for_manage_doc(page, DOCS_VIEWER_DOC_TITLE, timeout_ms)
 
     if page.locator('[data-docs-viewer-control="manage-show-non-viewable"]').count():
         raise AssertionError("manage route retained the Show non-viewable control")
@@ -156,12 +184,20 @@ def assert_selection_lifecycle(page: Page, base_url: str, timeout_ms: int) -> No
             countLabelPresent: Boolean(document.querySelector('.docsViewer__indexSelectionCount')),
             selectAllDisabled: document.querySelector(
                 '[data-docs-viewer-selection-command="select-all"]'
-            )?.disabled
+            )?.disabled,
+            checkboxCount: document.querySelectorAll(
+                '[data-docs-viewer-selection-checkbox]'
+            ).length,
+            checkedCount: document.querySelectorAll(
+                '[data-docs-viewer-selection-checkbox]:checked'
+            ).length
         })"""
     )
     if selection_projection != {
         "countLabelPresent": False,
         "selectAllDisabled": True,
+        "checkboxCount": len(initial_index_docs),
+        "checkedCount": len(initial_index_docs),
     }:
         raise AssertionError(
             "Select all did not project the complete manage-index population: "
@@ -266,7 +302,7 @@ def assert_selection_lifecycle(page: Page, base_url: str, timeout_ms: int) -> No
     page.locator("#docsViewerIndexActionsButton").click()
     click_checkbox(page, selection_docs["preservedDocId"])
     page.reload(wait_until="domcontentloaded")
-    wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
+    wait_for_manage_doc(page, DOCS_VIEWER_DOC_TITLE, timeout_ms)
     if not page.locator('[data-docs-viewer-control="index-selection"]').is_hidden():
         raise AssertionError("full browser reload did not return with selection mode off")
     if checked_doc_ids(page):
