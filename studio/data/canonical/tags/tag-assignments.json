@@ -1,6 +1,6 @@
 {
   "tag_assignments_version": "tag_assignments_v1",
-  "updated_at_utc": "2026-07-26T21:04:35Z",
+  "updated_at_utc": "2026-07-27T15:02:10Z",
   "series": {
     "001": {
       "tags": [],
@@ -155,13 +155,9 @@
             {
               "tag_id": "subject:grid",
               "w_manual": 0.6
-            },
-            {
-              "tag_id": "theme:symbol",
-              "w_manual": 0.6
             }
           ],
-          "updated_at_utc": "2026-03-11T20:50:55Z"
+          "updated_at_utc": "2026-07-27T15:00:49Z"
         },
         "00294": {
           "tags": [
@@ -177,16 +173,12 @@
             {
               "tag_id": "subject:grid",
               "w_manual": 0.6
-            },
-            {
-              "tag_id": "theme:symbol",
-              "w_manual": 0.6
             }
           ],
-          "updated_at_utc": "2026-03-07T18:04:27Z"
+          "updated_at_utc": "2026-07-27T15:00:49Z"
         }
       },
-      "updated_at_utc": "2026-03-11T20:51:05Z"
+      "updated_at_utc": "2026-07-27T15:00:49Z"
     },
     "037": {
       "tags": [],

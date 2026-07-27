@@ -1,6 +1,6 @@
 {
   "tag_aliases_version": "tag_aliases_v1",
-  "updated_at_utc": "2026-07-26T21:04:35Z",
+  "updated_at_utc": "2026-07-27T15:02:10Z",
   "aliases": {
     "floral": {
       "description": "",
@@ -24,12 +24,6 @@
       "description": "",
       "tags": [
         "form:radial"
-      ]
-    },
-    "signal-noise": {
-      "description": "",
-      "tags": [
-        "domain:signal"
       ]
     },
     "natural": {
@@ -140,18 +134,6 @@
         "subject:seed"
       ]
     },
-    "lines": {
-      "description": "",
-      "tags": [
-        "subject:line"
-      ]
-    },
-    "linework": {
-      "description": "",
-      "tags": [
-        "subject:line"
-      ]
-    },
     "strokes": {
       "description": "",
       "tags": [
@@ -168,12 +150,6 @@
       "description": "",
       "tags": [
         "subject:mark"
-      ]
-    },
-    "gestural": {
-      "description": "",
-      "tags": [
-        "theme:gesture"
       ]
     },
     "layer": {
@@ -212,18 +188,6 @@
         "form:knotted"
       ]
     },
-    "knots": {
-      "description": "",
-      "tags": [
-        "subject:knot"
-      ]
-    },
-    "spirals": {
-      "description": "",
-      "tags": [
-        "subject:spiral"
-      ]
-    },
     "loops": {
       "description": "",
       "tags": [
@@ -248,30 +212,6 @@
         "form:enclosed"
       ]
     },
-    "messenger": {
-      "description": "",
-      "tags": [
-        "theme:communication"
-      ]
-    },
-    "message": {
-      "description": "",
-      "tags": [
-        "theme:communication"
-      ]
-    },
-    "messages": {
-      "description": "",
-      "tags": [
-        "theme:communication"
-      ]
-    },
-    "symbolic": {
-      "description": "",
-      "tags": [
-        "theme:symbol"
-      ]
-    },
     "symbols": {
       "description": "",
       "tags": [
@@ -294,12 +234,6 @@
       "description": "",
       "tags": [
         "subject:trace"
-      ]
-    },
-    "temporal": {
-      "description": "",
-      "tags": [
-        "domain:time"
       ]
     },
     "photo": {
