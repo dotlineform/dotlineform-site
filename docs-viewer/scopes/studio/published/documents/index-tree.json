@@ -751,6 +751,12 @@
               "title": "Flat Tag Identity Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260727-110045-b02868.json",
               "ui_status": "done"
+            },
+            {
+              "doc_id": "d-20260727-172206-0cadb4",
+              "title": "Tag Registry Label Retirement Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260727-172206-0cadb4.json",
+              "ui_status": "proposed"
             }
           ]
         },
@@ -1266,5 +1272,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-27T15:47:19Z"
+  "generated_at": "2026-07-27T16:23:23Z"
 }

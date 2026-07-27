@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-6990bb6399419cac7703a47466643932",
-    "generated_at_utc": "2026-07-27T15:51:39Z",
-    "count": 227
+    "version": "blake2b-4fe73328dad2d434fa8c19e995c710c1",
+    "generated_at_utc": "2026-07-27T16:23:23Z",
+    "count": 228
   },
   "entries": [
     {
@@ -3427,36 +3427,36 @@
       "kind": "doc",
       "title": "Flat Tag Identity",
       "href": "/docs/?scope=studio&doc=d-20260727-110004-ab0433",
-      "last_updated": "2026-07-27 16:46:13",
+      "last_updated": "2026-07-27 17:22:06",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-27 16:46:13 • Roadmap",
+      "display_meta": "2026-07-27 17:22:06 • Roadmap",
       "search_terms": [
         "flat tag identity",
         "flat",
         "tag",
         "identity",
         "roadmap",
-        "2026-07-27 16:46:13",
+        "2026-07-27 17:22:06",
         "2026",
         "07",
         "27",
-        "16",
-        "46",
-        "13",
+        "17",
+        "22",
+        "06",
         "d-20260727-110004-ab0433"
       ],
-      "search_text": "flat tag identity flat tag identity roadmap 2026-07-27 16:46:13 2026 07 27 16 46 13 d-20260727-110004-ab0433"
+      "search_text": "flat tag identity flat tag identity roadmap 2026-07-27 17:22:06 2026 07 27 17 22 06 d-20260727-110004-ab0433"
     },
     {
       "id": "d-20260727-110045-a48cc4",
       "kind": "doc",
       "title": "Flat Tag Identity Concept",
       "href": "/docs/?scope=studio&doc=d-20260727-110045-a48cc4",
-      "last_updated": "2026-07-27 16:10:54",
+      "last_updated": "2026-07-27 17:22:06",
       "parent_id": "d-20260727-110004-ab0433",
       "parent_title": "Flat Tag Identity",
-      "display_meta": "2026-07-27 16:10:54 • Flat Tag Identity",
+      "display_meta": "2026-07-27 17:22:06 • Flat Tag Identity",
       "search_terms": [
         "flat tag identity concept",
         "flat",
@@ -3464,16 +3464,16 @@
         "identity",
         "concept",
         "flat tag identity",
-        "2026-07-27 16:10:54",
+        "2026-07-27 17:22:06",
         "2026",
         "07",
         "27",
-        "16",
-        "10",
-        "54",
+        "17",
+        "22",
+        "06",
         "d-20260727-110045-a48cc4"
       ],
-      "search_text": "flat tag identity concept flat tag identity concept flat tag identity 2026-07-27 16:10:54 2026 07 27 16 10 54 d-20260727-110045-a48cc4"
+      "search_text": "flat tag identity concept flat tag identity concept flat tag identity 2026-07-27 17:22:06 2026 07 27 17 22 06 d-20260727-110045-a48cc4"
     },
     {
       "id": "d-20260727-110045-b02868",
@@ -3501,6 +3501,36 @@
         "d-20260727-110045-b02868"
       ],
       "search_text": "flat tag identity delivery flat tag identity delivery flat tag identity 2026-07-27 16:51:30 2026 07 27 16 51 30 d-20260727-110045-b02868"
+    },
+    {
+      "id": "d-20260727-172206-0cadb4",
+      "kind": "doc",
+      "title": "Tag Registry Label Retirement Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260727-172206-0cadb4",
+      "last_updated": "2026-07-27 17:22:06",
+      "parent_id": "d-20260727-110004-ab0433",
+      "parent_title": "Flat Tag Identity",
+      "display_meta": "2026-07-27 17:22:06 • Flat Tag Identity",
+      "search_terms": [
+        "tag registry label retirement delivery",
+        "tag",
+        "registry",
+        "label",
+        "retirement",
+        "delivery",
+        "flat tag identity",
+        "flat",
+        "identity",
+        "2026-07-27 17:22:06",
+        "2026",
+        "07",
+        "27",
+        "17",
+        "22",
+        "06",
+        "d-20260727-172206-0cadb4"
+      ],
+      "search_text": "tag registry label retirement delivery tag registry label retirement delivery flat tag identity flat identity 2026-07-27 17:22:06 2026 07 27 17 22 06 d-20260727-172206-0cadb4"
     },
     {
       "id": "d-20260726-224323-eb0a65",

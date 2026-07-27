@@ -458,6 +458,19 @@
   margin-top: 0.45rem;
 }
 
+.tagRegistryEdit__groupField .tagRegistryNew__key {
+  margin-top: 0;
+}
+
+.tagRegistryNew__key .studioUi__keyPill {
+  cursor: pointer;
+}
+
+.tagRegistryNew__key .studioUi__keyPill[data-state="active"] {
+  border-color: currentColor;
+  box-shadow: 0 0 0 1px currentColor;
+}
+
 .analyticsForm__descriptionInput,
 .tagAliasesEdit__description {
   min-height: 5rem;

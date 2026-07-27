@@ -38,9 +38,8 @@ export function collectTagRegistryModalRefs(root) {
     patchSnippet: root.querySelector(UI_SELECTOR.patchSnippet),
     copyPatch: root.querySelector(UI_SELECTOR.copyPatch),
     editModal: root.querySelector(UI_SELECTOR.editModal),
-    editTagId: root.querySelector(UI_SELECTOR.editTagId),
+    editTitle: root.querySelector(UI_SELECTOR.editTitle),
     editGroupKey: root.querySelector(UI_SELECTOR.editGroupKey),
-    editTagName: root.querySelector(UI_SELECTOR.editTagName),
     editDescription: root.querySelector(UI_SELECTOR.editDescription),
     editStatus: root.querySelector(UI_SELECTOR.editStatus),
     saveEdit: root.querySelector(UI_SELECTOR.saveEdit),
@@ -227,12 +226,7 @@ export function openTagRegistryEditModal(state, tag) {
   captureTagModalRestoreFocus(state, "edit", modalConfigs());
   state.editTagId = tag.tagId;
   state.editTagGroup = tag.group;
-  state.refs.editTagId.innerHTML = `
-    <span class="${classNames(UI_CLASS.chip, chipGroupClass(tag.group))}" title="${escapeHtml(String(state.groupDescriptions.get(tag.group) || tag.tagId))}">
-      ${escapeHtml(tag.group)}
-    </span>
-  `;
-  state.refs.editTagName.value = tag.tagId;
+  state.refs.editTitle.textContent = tag.tagId;
   state.refs.editDescription.value = String(tag.description || "");
   renderTagRegistryEditGroupKey(state);
   setStatusText(
@@ -254,8 +248,12 @@ export function closeTagRegistryEditModal(state) {
   state.editModalRestoreFocus = null;
   state.editTagId = "";
   state.editTagGroup = "";
+  state.refs.editTitle.textContent = registryText(
+    state.config,
+    "edit_modal_title",
+    "Edit Tag"
+  );
   state.refs.editGroupKey.innerHTML = "";
-  state.refs.editTagName.value = "";
   state.refs.editDescription.value = "";
   restoreTagModalFocus(restoreTarget);
 }
@@ -457,14 +455,14 @@ function renderEditModal(state) {
     modalRole: UI.role.editModal,
     backdropRole: UI.role.editModalClose,
     titleId: "tagRegistryEditTitle",
+    titleRole: UI.role.editTitle,
     title: registryText(state.config, "edit_modal_title", "Edit Tag"),
     bodyHtml: `
-      <p class="${UI_CLASS.formMeta}" data-role="${UI.role.editTagId}"></p>
-      <div class="studioUi__key ${UI_CLASS.newGroupKey}" data-role="${UI.role.editGroupKey}"></div>
       <div class="${UI_CLASS.formFields}">
-        <label class="${UI_CLASS.formField}">
-          <input type="text" class="studioUi__input ${UI_CLASS.formReadonly}" data-role="${UI.role.editTagName}" autocomplete="off" readonly>
-        </label>
+        <div class="${UI_CLASS.formField} tagRegistryEdit__groupField">
+          <span class="${UI_CLASS.formLabel}">${escapeHtml(registryText(state.config, "edit_group_label", "group"))}</span>
+          <div class="studioUi__key ${UI_CLASS.newGroupKey}" data-role="${UI.role.editGroupKey}"></div>
+        </div>
         <label class="${UI_CLASS.formField}">
           <span class="${UI_CLASS.formLabel}">${escapeHtml(registryText(state.config, "edit_description_label", "description"))}</span>
           <textarea class="studioUi__input ${UI_CLASS.formDescriptionInput}" data-role="${UI.role.editDescription}" rows="3" autocomplete="off"></textarea>
@@ -625,6 +623,7 @@ function renderTagRegistryNewTagGroupKey(state) {
         type="button"
         class="${classNames(UI_CLASS.keyPill, chipGroupClass(group))}"
         data-new-group="${escapeHtml(group)}"
+        aria-pressed="${state.newTagState.group === group ? "true" : "false"}"
         ${stateAttr(state.newTagState.group === group ? UI.state.active : "")}
         ${titleAttr}
       >
@@ -646,6 +645,7 @@ function renderTagRegistryEditGroupKey(state) {
         type="button"
         class="${classNames(UI_CLASS.keyPill, chipGroupClass(group))}"
         data-edit-group="${escapeHtml(group)}"
+        aria-pressed="${state.editTagGroup === group ? "true" : "false"}"
         ${stateAttr(state.editTagGroup === group ? UI.state.active : "")}
         ${titleAttr}
       >
