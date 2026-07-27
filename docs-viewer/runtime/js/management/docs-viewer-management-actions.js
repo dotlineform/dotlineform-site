@@ -284,19 +284,25 @@ export function createDocsViewerManagementActionController(options) {
       });
   }
 
-  function handleEditMetadataSave(payload) {
-    if (!payload) return;
-    var doc = documentIndex.docsById.get(payload.doc_id);
+  function handleEditMetadataSave(target, payload) {
+    if (!target || !payload) return Promise.resolve(null);
+    var normalizedTarget = normalizeManagedDocumentTarget(target);
+    var doc = documentIndex.docsById.get(normalizedTarget.doc_id);
     var title = doc && doc.title ? doc.title : payload.title;
 
     setManagementBusy(true);
     renderManagementUi();
     setManagementMessage("Saving metadata for " + title + "...", false);
 
-    updateManagedDocMetadata(payload, managementClientOptions())
-      .then(function () {
+    return updateManagedDocMetadata(normalizedTarget, payload, managementClientOptions())
+      .then(function (response) {
         setManagementMessage("", false);
-        return reloadDocsIndex(payload.doc_id, "");
+        if (normalizedTarget.sub_scope) {
+          return callbacks.reloadMetadataTarget
+            ? callbacks.reloadMetadataTarget(normalizedTarget, response)
+            : response;
+        }
+        return reloadDocsIndex(normalizedTarget.doc_id, "");
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Metadata update failed.", true);

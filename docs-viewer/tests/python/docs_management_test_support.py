@@ -57,6 +57,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         encoding="utf-8",
     )
     write_docs_route_configs(repo_root)
+    write_docs_scope_config(repo_root)
     write_doc(
         repo_root,
         "non-viewable-doc.md",

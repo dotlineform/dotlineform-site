@@ -15,7 +15,10 @@ import docs_source_config_report
 import docs_source_config_settings
 import docs_staged_media_service
 from docs_management_capabilities_service import capabilities_payload
-from docs_management_document_target import managed_sub_scope_inventory
+from docs_management_document_target import (
+    managed_document_metadata,
+    managed_sub_scope_inventory,
+)
 from docs_management_source_service import read_source_body
 
 
@@ -72,6 +75,14 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         )
     if path == routes.SOURCE_BODY_PATH:
         return read_source_body(repo_root, params)
+    if path == routes.METADATA_PATH:
+        target = {
+            "scope": docs_api_query_value(params, "scope"),
+            "doc_id": docs_api_query_value(params, "doc_id"),
+        }
+        if "sub_scope" in params:
+            target["sub_scope"] = docs_api_query_value(params, "sub_scope")
+        return managed_document_metadata(repo_root, target)
     if path == routes.SUB_SCOPE_DOCUMENTS_PATH:
         return managed_sub_scope_inventory(
             repo_root,

@@ -16,6 +16,7 @@ STAGED_MEDIA_FILES_PATH = "/docs/staged-media-files"
 DIAGRAM_SOURCES_PATH = "/docs/diagram-sources"
 
 SOURCE_BODY_PATH = "/docs/source"
+METADATA_PATH = "/docs/metadata"
 SUB_SCOPE_DOCUMENTS_PATH = "/docs/sub-scope-documents"
 SOURCE_REBUILD_PATH = "/docs/source/rebuild"
 OPEN_SOURCE_PATH = "/docs/open-source"
@@ -59,6 +60,7 @@ GET_PATHS = (
     SOURCE_CONFIG_PATH,
     SOURCE_CONFIG_SETTINGS_PATH,
     SOURCE_BODY_PATH,
+    METADATA_PATH,
     SUB_SCOPE_DOCUMENTS_PATH,
     IMPORT_SOURCE_FILES_PATH,
     STAGED_MEDIA_FILES_PATH,

@@ -5,15 +5,33 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import sys
 
-from repo_factory import docs_scope_record
+import pytest
 
-from docs_management_test_support import (
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+DOCS_BUILD_DIR = REPO_ROOT / "docs-viewer" / "build"
+if str(DOCS_BUILD_DIR) not in sys.path:
+    sys.path.insert(0, str(DOCS_BUILD_DIR))
+
+from repo_factory import (  # noqa: E402
+    docs_scope_record,
+    docs_sub_scope_record,
+    read_json,
+    write_docs_scope_config as write_scope_registry,
+)
+from docs_builder.sub_scope import SubScopeDocsBuilder, selected_sub_scope  # noqa: E402
+from docs_scope_config import load_docs_scope_configs  # noqa: E402
+
+from docs_management_test_support import (  # noqa: E402
     docs_management_mutations,
     docs_management_service,
     make_repo,
     write_docs_scope_config,
 )
+
+SUB_SCOPE_DOC_ID = "d-20260727-211500-a1b2c3"
 
 
 def test_management_request_refreshes_scope_model_from_config() -> None:
@@ -51,6 +69,17 @@ def test_hidden_doc_is_editable_in_dry_run() -> None:
     assert result["ok"] is True
     assert result["doc_id"] == "non-viewable-doc"
     assert result["record"]["parent_id"] == ""
+    assert "sub_scope" not in result
+    assert set(result["record"]) == {
+        "doc_id",
+        "title",
+        "parent_id",
+        "summary",
+        "date",
+        "date_display",
+        "ui_status",
+        "viewable",
+    }
 
 def test_update_metadata_can_change_viewability_in_dry_run() -> None:
     with make_repo() as temp_path:
@@ -72,6 +101,231 @@ def test_update_metadata_can_change_viewability_in_dry_run() -> None:
     assert result["record"]["viewable"] is False
     assert result["changes"]["viewable_changed"] is True
     assert result["changes"]["status_changed"] is False
+
+
+def test_sub_scope_metadata_write_rebuilds_detail_manifest_and_inventory(
+    monkeypatch,
+) -> None:
+    rebuild_calls: list[dict[str, object]] = []
+
+    def fake_sub_scope_rebuild(
+        repo_root,
+        scope,
+        sub_scope,
+        changed_paths,
+        write_operation,
+        **kwargs,
+    ):
+        write_operation()
+        config = load_docs_scope_configs(repo_root, scope_ids=[scope])[scope]
+        builder = SubScopeDocsBuilder(
+            repo_root=repo_root,
+            config=config,
+            sub_scope=selected_sub_scope(config, sub_scope),
+        )
+        builder._parent_report_doc_id = ""
+        build_result = builder.run(write=True)
+        rebuild_calls.append(
+            {
+                "scope": scope,
+                "sub_scope": sub_scope,
+                "changed_paths": [path.name for path in changed_paths],
+                "suppression_reason": kwargs.get("suppression_reason"),
+                "changed_item_ids": build_result["write_plan"]["changed_item_ids"],
+                "manifest_write": build_result["write_plan"]["manifest_write"],
+            }
+        )
+        return {
+            "ok": True,
+            "docs": {"mode": "sub_scope", "sub_scope": sub_scope},
+            "search": {"mode": "full", "doc_ids": []},
+        }
+
+    monkeypatch.setattr(
+        docs_management_service.write_rebuild,
+        "perform_sub_scope_source_write_and_rebuild",
+        fake_sub_scope_rebuild,
+    )
+    monkeypatch.setattr(
+        docs_management_mutations.source_model,
+        "current_doc_timestamp",
+        lambda: "2026-07-27 21:15:00",
+    )
+
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_scope_registry(
+            repo_root,
+            [
+                docs_scope_record(
+                    "studio",
+                    allow_unresolved_parent_ids=True,
+                    sub_scopes=[docs_sub_scope_record("studio", "tags")],
+                )
+            ],
+        )
+        source_path = (
+            repo_root
+            / f"docs-viewer/scopes/studio/source/sub-scopes/tags/documents/{SUB_SCOPE_DOC_ID}.md"
+        )
+        source_path.parent.mkdir(parents=True, exist_ok=True)
+        source_path.write_text(
+            docs_management_mutations.source_model.format_source(
+                {
+                    "doc_id": SUB_SCOPE_DOC_ID,
+                    "title": "Detail",
+                    "summary": "Old summary",
+                    "date": "2026-07-26",
+                    "date_display": "July 2026",
+                    "added_date": "2026-07-26 10:00",
+                    "last_updated": "2026-07-26 11:00",
+                    "ui_status": "draft",
+                    "viewable": True,
+                    "parent_id": "retained-parent",
+                },
+                "# Detail\n",
+            ),
+            encoding="utf-8",
+        )
+        config = load_docs_scope_configs(repo_root, scope_ids=["studio"])["studio"]
+        initial_builder = SubScopeDocsBuilder(
+            repo_root=repo_root,
+            config=config,
+            sub_scope=selected_sub_scope(config, "tags"),
+        )
+        initial_builder._parent_report_doc_id = ""
+        initial_builder.run(write=True)
+        manifest_before = read_json(
+            repo_root
+            / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/manifest.json"
+        )
+        result = docs_management_service.handle_update_metadata(
+            repo_root,
+            {
+                "scope": "studio",
+                "sub_scope": "tags",
+                "doc_id": SUB_SCOPE_DOC_ID,
+                "title": "Renamed Detail",
+                "summary": "New summary",
+                "date": "2026-07-27",
+                "date_display": "late July 2026",
+                "ui_status": "done",
+                "viewable": False,
+            },
+            dry_run=False,
+        )
+        inventory = docs_management_service.docs_management_get_payload(
+            repo_root,
+            docs_management_service.routes.SUB_SCOPE_DOCUMENTS_PATH,
+            {"scope": ["studio"], "sub_scope": ["tags"]},
+        )
+        manifest = read_json(
+            repo_root
+            / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/manifest.json"
+        )
+        detail_payload = read_json(
+            repo_root
+            / f"docs-viewer/scopes/studio/published/documents/sub-scopes/tags/by-id/{SUB_SCOPE_DOC_ID}.json"
+        )
+        source_after = source_path.read_text(encoding="utf-8")
+
+    assert result["record"] == {
+        "doc_id": SUB_SCOPE_DOC_ID,
+        "title": "Renamed Detail",
+        "summary": "New summary",
+        "date": "2026-07-27",
+        "date_display": "late July 2026",
+        "ui_status": "done",
+        "viewable": False,
+    }
+    assert result["sub_scope"] == "tags"
+    assert manifest_before == {
+        "docs": [{"doc_id": SUB_SCOPE_DOC_ID, "title": "Detail"}]
+    }
+    assert result["rebuild"]["docs"] == {"mode": "sub_scope", "sub_scope": "tags"}
+    assert rebuild_calls == [
+        {
+            "scope": "studio",
+            "sub_scope": "tags",
+            "changed_paths": [f"{SUB_SCOPE_DOC_ID}.md"],
+            "suppression_reason": "docs-update-metadata",
+            "changed_item_ids": [SUB_SCOPE_DOC_ID],
+            "manifest_write": True,
+        }
+    ]
+    assert inventory["documents"] == [
+        {
+            "doc_id": SUB_SCOPE_DOC_ID,
+            "title": "Renamed Detail",
+            "ui_status": "done",
+            "viewable": False,
+        }
+    ]
+    assert manifest == {"docs": []}
+    assert set(detail_payload) >= {"doc_id", "title", "content_html"}
+    assert "viewable" not in manifest
+    assert all(set(record) == {"doc_id", "title"} for record in manifest["docs"])
+    assert "parent_id: retained-parent" in source_after
+    assert 'last_updated: "2026-07-27 21:15:00"' in source_after
+
+
+def test_sub_scope_metadata_service_rejects_parent_without_writing(
+    monkeypatch,
+) -> None:
+    def fail_rebuild(*_args, **_kwargs):
+        raise AssertionError("rebuild must not run for a rejected sub-scope parent")
+
+    monkeypatch.setattr(
+        docs_management_service.write_rebuild,
+        "perform_sub_scope_source_write_and_rebuild",
+        fail_rebuild,
+    )
+
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_scope_registry(
+            repo_root,
+            [
+                docs_scope_record(
+                    "studio",
+                    sub_scopes=[docs_sub_scope_record("studio", "tags")],
+                )
+            ],
+        )
+        source_path = (
+            repo_root
+            / f"docs-viewer/scopes/studio/source/sub-scopes/tags/documents/{SUB_SCOPE_DOC_ID}.md"
+        )
+        source_path.parent.mkdir(parents=True, exist_ok=True)
+        source_path.write_text(
+            docs_management_mutations.source_model.format_source(
+                {
+                    "doc_id": SUB_SCOPE_DOC_ID,
+                    "title": "Detail",
+                    "parent_id": "retained-parent",
+                },
+                "# Detail\n",
+            ),
+            encoding="utf-8",
+        )
+        before = source_path.read_bytes()
+        with pytest.raises(
+            ValueError,
+            match="parent_id is not editable for a sub-scope document",
+        ):
+            docs_management_service.handle_update_metadata(
+                repo_root,
+                {
+                    "scope": "studio",
+                    "sub_scope": "tags",
+                    "doc_id": SUB_SCOPE_DOC_ID,
+                    "title": "Detail",
+                    "parent_id": "",
+                },
+                dry_run=False,
+            )
+        assert source_path.read_bytes() == before
+
 
 def test_hidden_parent_delete_includes_children() -> None:
     with make_repo() as temp_path:

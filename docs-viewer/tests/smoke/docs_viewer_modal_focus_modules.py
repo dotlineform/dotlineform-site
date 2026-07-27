@@ -317,7 +317,10 @@ def assert_metadata_status_list_selection(page: Page) -> None:
             }
           });
           controller.wireEvents();
-          void controller.openMetadataModal(doc);
+          void controller.openMetadataModal(doc, {
+            target: { scope: 'studio', doc_id: doc.doc_id },
+            showParent: true
+          });
         }"""
     )
     status_input = page.locator("#docsViewerMetadataStatusInput")
@@ -352,6 +355,110 @@ def assert_metadata_status_list_selection(page: Page) -> None:
         raise AssertionError(f"Delete did not clear metadata status: {cleared_by_keyboard!r}")
 
 
+def assert_sub_scope_metadata_omits_parent_field(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+          const modalModule = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-modals.js'
+          );
+          const shellModule = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-shell-renderer.js'
+          );
+          document.body.innerHTML = `
+            <main class="docsViewer" id="root">
+              <div data-docs-viewer-management-shell-mount></div>
+            </main>`;
+          const root = document.querySelector('#root');
+          const refs = shellModule.renderDocsViewerManagementShell({
+            document,
+            root,
+            mount: root.querySelector('[data-docs-viewer-management-shell-mount]')
+          });
+          const doc = {
+            doc_id: 'detail-doc',
+            title: 'Detail',
+            summary: 'Full local summary',
+            date: '2026-07-27',
+            date_display: 'July 2026',
+            ui_status: 'draft',
+            viewable: false
+          };
+          const controller = modalModule.createDocsViewerManagementModalController({
+            refs,
+            documentIndex: {
+              docsById: new Map([['selected-fallback', {
+                doc_id: 'selected-fallback',
+                title: 'Must not be used'
+              }]])
+            },
+            management: {
+              managementBusy: false,
+              metadataEditingDocId: 'selected-fallback'
+            },
+            scopeConfig: {
+              uiStatuses: [
+                { ui_status: 'draft', label: 'Draft', emoji: '📝' },
+                { ui_status: 'done', label: 'Done', emoji: '✅' }
+              ]
+            },
+            callbacks: {
+              hideContextMenu: () => {},
+              isDocNonViewable: record => record.viewable === false,
+              metadataParentOptions: () => {
+                throw new Error('Sub-scope modal must not build Parent options.');
+              },
+              onMetadataSubmit: () => {},
+              onSettingsSubmit: event => event.preventDefault(),
+              viewerScope: () => 'studio'
+            }
+          });
+          controller.wireEvents();
+          void controller.openMetadataModal(doc, {
+            target: {
+              scope: 'studio',
+              sub_scope: 'tags',
+              doc_id: 'detail-doc'
+            },
+            showParent: false
+          });
+          return {
+            visibleNames: Array.from(
+              refs.metadataForm.querySelectorAll('input:not([disabled]), textarea:not([disabled]), select:not([disabled])')
+            ).map(node => node.name).filter(Boolean),
+            parentHidden: refs.metadataParentField.hidden,
+            parentDisabled: refs.metadataParentInput.disabled,
+            title: refs.metadataTitleInput.value,
+            summary: refs.metadataSummaryInput.value,
+            date: refs.metadataDateInput.value,
+            dateDisplay: refs.metadataDateDisplayInput.value,
+            status: refs.metadataStatusInput.value,
+            nonViewable: refs.metadataNonViewableInput.checked,
+            editingDocId: refs.metadataDocId.textContent
+          };
+        }"""
+    )
+    if result != {
+        "visibleNames": [
+            "title",
+            "summary",
+            "date",
+            "date_display",
+            "ui_status",
+            "non_viewable",
+        ],
+        "parentHidden": True,
+        "parentDisabled": True,
+        "title": "Detail",
+        "summary": "Full local summary",
+        "date": "2026-07-27",
+        "dateDisplay": "July 2026",
+        "status": "draft",
+        "nonViewable": True,
+        "editingDocId": "detail-doc",
+    }:
+        raise AssertionError(f"unexpected sub-scope metadata field shape: {result!r}")
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--site-root", default=".", help="Repository root to serve.")
@@ -368,6 +475,7 @@ def main(argv: list[str] | None = None) -> int:
                 assert_shared_focus_trap(page)
                 assert_choice_modal_radio_navigation(page)
                 assert_metadata_status_list_selection(page)
+                assert_sub_scope_metadata_omits_parent_field(page)
             finally:
                 browser.close()
             if errors:

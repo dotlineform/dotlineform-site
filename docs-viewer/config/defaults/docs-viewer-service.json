@@ -39,6 +39,7 @@
     "source_config": "/docs/source-config",
     "source_config_settings": "/docs/source-config-settings",
     "source_body": "/docs/source",
+    "metadata": "/docs/metadata",
     "sub_scope_documents": "/docs/sub-scope-documents",
     "source_rebuild": "/docs/source/rebuild",
     "import_source_files": "/docs/import-source-files",

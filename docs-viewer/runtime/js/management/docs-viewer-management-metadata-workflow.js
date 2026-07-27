@@ -4,6 +4,10 @@ import {
 import {
   collectDescendantDocIds
 } from "./docs-viewer-management-action-workflow.js";
+import {
+  managedDocumentTargetsEqual,
+  normalizeManagedDocumentTarget
+} from "./docs-viewer-management-document-target.js";
 
 var METADATA_TEXT = {
   parentRootOption: "Root",
@@ -16,13 +20,11 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
   var management = options.management || {};
   var refs = options.refs || {};
   var callbacks = options.callbacks || {};
+  var editingTarget = null;
+  var editingDoc = null;
 
   function modalController() {
     return typeof callbacks.getModalController === "function" ? callbacks.getModalController() : null;
-  }
-
-  function currentActiveDoc() {
-    return typeof callbacks.currentActiveDoc === "function" ? callbacks.currentActiveDoc() : null;
   }
 
   function parentOptions(doc) {
@@ -46,8 +48,7 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
 
   function payloadFromModal() {
     var modal = modalController();
-    var doc = management.metadataEditingDocId ? documentIndex.docsById.get(management.metadataEditingDocId) : currentActiveDoc();
-    if (!modal || !doc || !refs.titleInput || !refs.summaryInput || !refs.dateInput || !refs.dateDisplayInput || !refs.statusInput || !refs.nonViewableInput || !refs.parentInput) return null;
+    if (!modal || !editingTarget || !editingDoc || !refs.titleInput || !refs.summaryInput || !refs.dateInput || !refs.dateDisplayInput || !refs.statusInput || !refs.nonViewableInput) return null;
 
     var title = String(refs.titleInput.value || "").trim();
     if (!title) {
@@ -56,22 +57,25 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
       return null;
     }
 
-    var parentId = modal.resolveMetadataParentId(doc);
-    if (parentId === null) {
-      modal.setMetadataStatus(METADATA_TEXT.parentInvalid, "error");
-      refs.parentInput.focus();
-      return null;
-    }
-    return {
-      doc_id: doc.doc_id,
+    var payload = {
       title: title,
       summary: String(refs.summaryInput.value || "").replace(/\s+/g, " ").trim(),
       date: String(refs.dateInput.value || "").trim(),
       date_display: String(refs.dateDisplayInput.value || "").trim(),
       ui_status: String(refs.statusInput.value || "").trim(),
-      viewable: !refs.nonViewableInput.checked,
-      parent_id: parentId
+      viewable: !refs.nonViewableInput.checked
     };
+    if (!editingTarget.sub_scope) {
+      if (!refs.parentInput) return null;
+      var parentId = modal.resolveMetadataParentId(editingDoc);
+      if (parentId === null) {
+        modal.setMetadataStatus(METADATA_TEXT.parentInvalid, "error");
+        refs.parentInput.focus();
+        return null;
+      }
+      payload.parent_id = parentId;
+    }
+    return payload;
   }
 
   function confirm() {
@@ -80,40 +84,80 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
     if (modal && payload) modal.closeMetadataModal(payload);
   }
 
-  function openForDoc(doc) {
-    if (!doc) return Promise.resolve(null);
-    var request = Promise.resolve(doc);
-    if (typeof callbacks.loadMetadataDoc === "function") {
-      request = Promise.resolve().then(function () {
-        return callbacks.loadMetadataDoc(doc);
-      });
+  function metadataDocFromResponse(response, target) {
+    if (!response || typeof response !== "object") {
+      throw new Error("Document metadata could not be loaded.");
     }
-    return request
-      .then(function (metadataDoc) {
-        if (!metadataDoc) throw new Error("Document metadata could not be loaded.");
+    var responseTarget = {
+      scope: response.scope,
+      doc_id: response.doc_id
+    };
+    if (Object.prototype.hasOwnProperty.call(response, "sub_scope")) {
+      responseTarget.sub_scope = response.sub_scope;
+    }
+    if (!managedDocumentTargetsEqual(responseTarget, target)) {
+      throw new Error("Loaded document metadata did not match the requested target.");
+    }
+    var record = response.record;
+    if (!record || typeof record !== "object" || String(record.doc_id || "").trim() !== target.doc_id) {
+      throw new Error("Loaded document metadata did not match the requested document.");
+    }
+    return record;
+  }
+
+  function clearEditingState() {
+    editingTarget = null;
+    editingDoc = null;
+  }
+
+  function openForTarget(target) {
+    var normalizedTarget;
+    try {
+      normalizedTarget = normalizeManagedDocumentTarget(target);
+    } catch (error) {
+      if (typeof callbacks.onLoadError === "function") callbacks.onLoadError(error);
+      return Promise.resolve(null);
+    }
+    if (typeof callbacks.loadMetadataDoc !== "function") {
+      var missingLoader = new Error("Local document metadata loader is unavailable.");
+      if (typeof callbacks.onLoadError === "function") callbacks.onLoadError(missingLoader);
+      return Promise.resolve(null);
+    }
+    return Promise.resolve()
+      .then(function () {
+        return callbacks.loadMetadataDoc(normalizedTarget);
+      })
+      .then(function (response) {
+        var metadataDoc = metadataDocFromResponse(response, normalizedTarget);
+        editingTarget = normalizedTarget;
+        editingDoc = metadataDoc;
         var modal = modalController();
-        return modal ? modal.openMetadataModal(metadataDoc) : null;
+        return modal ? modal.openMetadataModal(metadataDoc, {
+          target: normalizedTarget,
+          showParent: !normalizedTarget.sub_scope
+        }) : null;
       })
       .then(function (payload) {
-        if (payload && typeof callbacks.onSave === "function") callbacks.onSave(payload);
+        if (payload && editingTarget && typeof callbacks.onSave === "function") {
+          callbacks.onSave(editingTarget, payload);
+        }
+        clearEditingState();
         return payload;
       })
       .catch(function (error) {
+        clearEditingState();
         if (typeof callbacks.onLoadError === "function") callbacks.onLoadError(error);
         return null;
       });
   }
 
-  function openForDocId(docId) {
-    return openForDoc(documentIndex.docsById.get(docId) || null);
-  }
-
   function refreshEditingOptions() {
     var modal = modalController();
-    if (!modal || !management.metadataEditingDocId) return;
-    var doc = documentIndex.docsById.get(management.metadataEditingDocId);
-    modal.renderMetadataStatusOptions(doc);
-    modal.renderMetadataParentOptions(doc);
+    if (!modal || !editingTarget || !editingDoc) return;
+    modal.renderMetadataStatusOptions(editingDoc);
+    if (!editingTarget.sub_scope) {
+      modal.renderMetadataParentOptions(editingDoc);
+    }
   }
 
   function render() {
@@ -122,7 +166,7 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
 
   return {
     confirm: confirm,
-    openForDocId: openForDocId,
+    openForTarget: openForTarget,
     parentOptions: parentOptions,
     refreshEditingOptions: refreshEditingOptions,
     render: render

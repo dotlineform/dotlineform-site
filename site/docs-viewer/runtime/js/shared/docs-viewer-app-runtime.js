@@ -489,33 +489,6 @@ export function startDocsViewerRuntime(options) {
     updateInfoPanel: documentViewCoordinator.updateInfoPanel
   }) : null;
 
-  function loadManagedDocumentRecord(doc) {
-    var docId = String(doc && doc.doc_id || "").trim();
-    if (!docId) return Promise.reject(new Error("A document is required to edit metadata."));
-
-    var payloadCache = appSession.domains.selectedDocument.payloadCache;
-    if (payloadCache && payloadCache.has(docId)) {
-      return Promise.resolve(Object.assign({}, doc, payloadCache.get(docId), {
-        doc_id: docId
-      }));
-    }
-
-    return Promise.resolve(collectionProvider.readDocument(doc, { docId: docId }))
-      .then(function (payload) {
-        if (!payload || typeof payload !== "object") {
-          throw new Error("The full document metadata could not be loaded.");
-        }
-        var payloadDocId = String(payload.doc_id || "").trim();
-        if (payloadDocId && payloadDocId !== docId) {
-          throw new Error("The loaded document metadata did not match the requested document.");
-        }
-        if (payloadCache && typeof payloadCache.set === "function") {
-          payloadCache.set(docId, payload);
-        }
-        return Object.assign({}, doc, payload, { doc_id: docId });
-      });
-  }
-
   managementRuntime = managementEnabled ? createDocsViewerManagementRuntimeAdapter({
     managementUi: managementUiEnabled,
     appShellReady: appShellReady,
@@ -583,7 +556,6 @@ export function startDocsViewerRuntime(options) {
       requestMainView: documentViewCoordinator.requestMainView,
       requestDocumentMode: documentViewCoordinator.requestDocumentMode,
       markdownDocLink: markdownDocLink,
-      loadManagedDocumentRecord: loadManagedDocumentRecord,
       viewerScope: function () { return viewerScope; }
     },
     logger: window.console || console,

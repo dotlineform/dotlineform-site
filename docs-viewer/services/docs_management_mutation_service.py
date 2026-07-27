@@ -45,6 +45,15 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
                 write_operation,
                 suppression_reason=plan.suppression_reason or "docs-management",
             )
+        elif plan.sub_scope:
+            rebuild = write_rebuild.perform_sub_scope_source_write_and_rebuild(
+                repo_root,
+                plan.scope,
+                plan.sub_scope,
+                plan.changed_paths,
+                write_operation,
+                suppression_reason=plan.suppression_reason or "docs-management",
+            )
         else:
             rebuild = write_rebuild.perform_source_write_and_rebuild(
                 repo_root,

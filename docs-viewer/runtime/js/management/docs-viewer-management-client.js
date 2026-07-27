@@ -61,10 +61,6 @@ export function createManagedDoc(payload, options) {
   return fetchManagementJson("/docs/create", "POST", scopedPayload(payload, options), options);
 }
 
-export function updateManagedDocMetadata(payload, options) {
-  return fetchManagementJson("/docs/update-metadata", "POST", scopedPayload(payload, options), options);
-}
-
 export function rebuildManagedDocs(options) {
   return fetchManagementJson("/docs/rebuild", "POST", scopedPayload({}, options), options);
 }
@@ -110,6 +106,19 @@ function targetPayload(target, payload) {
 
 export function readManagedDocSource(target, options) {
   return fetchManagementJson("/docs/source?" + targetQuery(target), "GET", undefined, options);
+}
+
+export function readManagedDocMetadata(target, options) {
+  return fetchManagementJson("/docs/metadata?" + targetQuery(target), "GET", undefined, options);
+}
+
+export function updateManagedDocMetadata(target, payload, options) {
+  return fetchManagementJson(
+    "/docs/update-metadata",
+    "POST",
+    targetPayload(target, payload),
+    options
+  );
 }
 
 export function rebuildManagedDocSource(target, payload, options) {

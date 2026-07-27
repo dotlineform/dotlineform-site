@@ -247,6 +247,36 @@ def resolve_managed_document_target(
     )
 
 
+def managed_document_metadata(
+    repo_root: Path,
+    target: Mapping[str, Any],
+) -> dict[str, object]:
+    resolved = resolve_managed_document_target(repo_root, target)
+    document = resolved.document
+    front_matter = document.front_matter
+    record: dict[str, object] = {
+        "doc_id": document.doc_id,
+        "title": document.title,
+        "summary": " ".join(str(front_matter.get("summary") or "").split()),
+        "date": str(front_matter.get("date") or "").strip(),
+        "date_display": str(front_matter.get("date_display") or "").strip(),
+        "ui_status": document.ui_status,
+        "viewable": document.viewable,
+    }
+    if not resolved.sub_scope:
+        record["parent_id"] = document.parent_id
+
+    payload: dict[str, object] = {
+        "ok": True,
+        "scope": resolved.scope,
+        "doc_id": document.doc_id,
+        "record": record,
+    }
+    if resolved.sub_scope:
+        payload["sub_scope"] = resolved.sub_scope
+    return payload
+
+
 def managed_sub_scope_inventory(
     repo_root: Path,
     *,

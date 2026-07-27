@@ -8,6 +8,8 @@ import tempfile
 import re
 from pathlib import Path
 
+import pytest
+
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DOCS_SERVICES_DIR = REPO_ROOT / "docs-viewer" / "services"
@@ -16,6 +18,11 @@ if str(DOCS_SERVICES_DIR) not in sys.path:
 
 import docs_management_mutations as mutations  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
+from repo_factory import (  # noqa: E402
+    docs_scope_record,
+    docs_sub_scope_record,
+    write_docs_scope_config,
+)
 
 
 def write_doc(
@@ -40,6 +47,16 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
     (repo_root / "site-tools/config/site-tools.json").write_text(
         "{\"schema_version\":\"site_tools_config_v1\"}\n",
         encoding="utf-8",
+    )
+    write_docs_scope_config(
+        repo_root,
+        [
+            docs_scope_record(
+                "studio",
+                sub_scopes=[docs_sub_scope_record("studio", "tags")],
+            ),
+            docs_scope_record("scratch"),
+        ],
     )
     write_doc(
         repo_root,
@@ -113,6 +130,30 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
             "last_updated": "2026-05-02 11:00",
             "viewable": False,
         },
+    )
+    sub_scope_path = (
+        repo_root
+        / "docs-viewer/scopes/studio/source/sub-scopes/tags/documents/detail.md"
+    )
+    sub_scope_path.parent.mkdir(parents=True, exist_ok=True)
+    sub_scope_path.write_text(
+        source_model.format_source(
+            {
+                "doc_id": "detail",
+                "title": "Detail",
+                "summary": "old detail summary",
+                "date": "2026-05-03",
+                "date_display": "May 2026",
+                "added_date": "2026-05-01 09:00",
+                "last_updated": "2026-05-01 10:00",
+                "ui_status": "draft",
+                "viewable": True,
+                "parent_id": "retained-parent",
+                "sort_order": 4,
+            },
+            "# Detail\n",
+        ),
+        encoding="utf-8",
     )
     return temp_dir
 
@@ -222,6 +263,105 @@ def test_metadata_viewable_plan_writes_current_viewability() -> None:
     assert "viewable: false" in plan.source_writes[0].text
     assert "hidden:" not in plan.source_writes[0].text
     assert 'last_updated: "2026-05-01 10:00"' in plan.source_writes[0].text
+
+
+def test_sub_scope_metadata_plan_updates_every_editable_field_without_parentage() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        plan = mutations.plan_update_metadata(
+            repo_root,
+            {
+                "scope": "studio",
+                "sub_scope": "tags",
+                "doc_id": "detail",
+                "title": "Renamed Detail",
+                "summary": "new detail summary",
+                "date": "2026-05-04",
+                "date_display": "early May 2026",
+                "ui_status": "done",
+                "viewable": False,
+            },
+        )
+
+    assert plan.sub_scope == "tags"
+    assert plan.response["sub_scope"] == "tags"
+    assert plan.response["record"] == {
+        "doc_id": "detail",
+        "title": "Renamed Detail",
+        "summary": "new detail summary",
+        "date": "2026-05-04",
+        "date_display": "early May 2026",
+        "ui_status": "done",
+        "viewable": False,
+    }
+    assert plan.response["changes"] == {
+        "title_changed": True,
+        "parent_changed": False,
+        "summary_changed": True,
+        "date_changed": True,
+        "date_display_changed": True,
+        "status_changed": True,
+        "viewable_changed": True,
+    }
+    assert plan.build_doc_ids == []
+    assert plan.search_doc_ids == []
+    assert "parent_id: retained-parent" in plan.source_writes[0].text
+    assert "sort_order: 4" in plan.source_writes[0].text
+    assert 'added_date: "2026-05-01 09:00"' in plan.source_writes[0].text
+    assert 'last_updated: "2026-05-01 10:00"' not in plan.source_writes[0].text
+    assert re.search(
+        r'last_updated: "\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}"',
+        plan.source_writes[0].text,
+    )
+
+
+def test_sub_scope_metadata_plan_noops_without_advancing_timestamp() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        plan = mutations.plan_update_metadata(
+            repo_root,
+            {
+                "scope": "studio",
+                "sub_scope": "tags",
+                "doc_id": "detail",
+                "title": "Detail",
+                "summary": "old detail summary",
+                "date": "2026-05-03",
+                "date_display": "May 2026",
+                "ui_status": "draft",
+                "viewable": True,
+            },
+        )
+
+    assert plan.source_writes == ()
+    assert plan.response["record"]["viewable"] is True
+    assert "parent_id" not in plan.response["record"]
+    assert all(changed is False for changed in plan.response["changes"].values())
+
+
+def test_sub_scope_metadata_plan_rejects_any_parent_field_without_a_write() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        target_path = (
+            repo_root
+            / "docs-viewer/scopes/studio/source/sub-scopes/tags/documents/detail.md"
+        )
+        before = target_path.read_bytes()
+        with pytest.raises(
+            ValueError,
+            match="parent_id is not editable for a sub-scope document",
+        ):
+            mutations.plan_update_metadata(
+                repo_root,
+                {
+                    "scope": "studio",
+                    "sub_scope": "tags",
+                    "doc_id": "detail",
+                    "title": "Detail",
+                    "parent_id": "",
+                },
+            )
+        assert target_path.read_bytes() == before
 
 
 def test_move_plan_noops_when_parent_is_unchanged() -> None:

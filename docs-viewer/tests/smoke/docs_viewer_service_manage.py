@@ -144,11 +144,37 @@ def install_smoke_document_routes(page: Page) -> None:
             },
         )
 
+    def fulfill_metadata(route) -> None:
+        doc_id = query_value(route.request.url, "doc_id")
+        payload = payloads.get(doc_id)
+        if payload is None:
+            route.fulfill(status=404, content_type="application/json", body='{"error":"Not found"}')
+            return
+        fulfill_json(
+            route,
+            {
+                "ok": True,
+                "scope": "studio",
+                "doc_id": doc_id,
+                "record": {
+                    "doc_id": doc_id,
+                    "title": payload["title"],
+                    "summary": payload["summary"],
+                    "date": "",
+                    "date_display": "",
+                    "ui_status": "",
+                    "viewable": True,
+                    "parent_id": "",
+                },
+            },
+        )
+
     page.route(
         re.compile(r".*/docs/index-tree(?:\?.*)?$"),
         lambda route: fulfill_json(route, index_payload),
     )
     page.route(re.compile(r".*/docs/doc(?:\?.*)?$"), fulfill_document)
+    page.route(re.compile(r".*/docs/metadata(?:\?.*)?$"), fulfill_metadata)
     page.route(re.compile(r".*/docs/source(?:\?.*)?$"), fulfill_source)
 
 
@@ -244,6 +270,23 @@ def assert_origin_rejection(base_url: str) -> None:
             ) from error
     else:
         raise AssertionError("document-package API should reject a disallowed Origin")
+
+    metadata_request = urllib.request.Request(
+        (
+            f"{base_url}/docs/metadata"
+            f"?scope=studio&doc_id={DOCS_VIEWER_DOC_ID}"
+        ),
+        headers={"Origin": "https://example.com"},
+    )
+    try:
+        urllib.request.urlopen(metadata_request, timeout=10)
+    except urllib.error.HTTPError as error:
+        if error.code != 403:
+            raise AssertionError(
+                f"expected metadata read to reject disallowed Origin with 403, got {error.code}"
+            ) from error
+    else:
+        raise AssertionError("metadata read should reject a disallowed Origin")
 
 
 def assert_dedicated_viewability_endpoints_retired(base_url: str) -> None:
@@ -710,20 +753,23 @@ def assert_metadata_hydration_failure_is_safe(page: Page) -> None:
             const module = await import(
                 '/docs-viewer/runtime/js/management/docs-viewer-management-metadata-workflow.js'
             );
-            const doc = {
-                doc_id: 'metadata-doc',
-                title: 'Index-only metadata record'
-            };
             let modalOpened = false;
             let loadError = '';
             const workflow = module.createDocsViewerManagementMetadataWorkflow({
                 documentIndex: {
-                    allDocs: [doc],
-                    docsById: new Map([[doc.doc_id, doc]])
+                    allDocs: [{
+                        doc_id: 'selected-fallback',
+                        title: 'Must not be used'
+                    }],
+                    docsById: new Map([[
+                        'selected-fallback',
+                        {
+                            doc_id: 'selected-fallback',
+                            title: 'Must not be used'
+                        }
+                    ]])
                 },
-                management: {
-                    metadataEditingDocId: ''
-                },
+                management: {},
                 callbacks: {
                     getModalController: () => ({
                         openMetadataModal: () => {
@@ -739,7 +785,11 @@ def assert_metadata_hydration_failure_is_safe(page: Page) -> None:
                     }
                 }
             });
-            const payload = await workflow.openForDocId(doc.doc_id);
+            const payload = await workflow.openForTarget({
+                scope: 'studio',
+                sub_scope: 'tags',
+                doc_id: 'metadata-doc'
+            });
             return { loadError, modalOpened, payload };
         }"""
     )
@@ -749,6 +799,230 @@ def assert_metadata_hydration_failure_is_safe(page: Page) -> None:
         "payload": None,
     }:
         raise AssertionError(f"metadata hydration failure opened an unsafe form: {result!r}")
+
+
+def assert_metadata_workflow_uses_exact_sub_scope_target(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const workflowModule = await import(
+                '/docs-viewer/runtime/js/management/docs-viewer-management-metadata-workflow.js'
+            );
+            const target = {
+                scope: 'analysis',
+                sub_scope: 'tags',
+                doc_id: 'detail-doc'
+            };
+            const refs = {
+                titleInput: { value: 'Renamed detail', focus: () => {} },
+                summaryInput: { value: '  Full   summary  ' },
+                dateInput: { value: '2026-07-27' },
+                dateDisplayInput: { value: 'July 2026' },
+                statusInput: { value: 'done' },
+                nonViewableInput: { checked: true },
+                parentInput: {
+                    value: 'selected-fallback',
+                    focus: () => {}
+                }
+            };
+            let modalResolve = null;
+            let opened = null;
+            let saved = null;
+            let loadedTarget = null;
+            const modal = {
+                closeMetadataModal: payload => modalResolve(payload),
+                openMetadataModal: (doc, options) => {
+                    opened = { doc, options };
+                    return new Promise(resolve => {
+                        modalResolve = resolve;
+                    });
+                },
+                resolveMetadataParentId: () => {
+                    throw new Error('Sub-scope metadata must not resolve Parent.');
+                },
+                setMetadataStatus: () => {}
+            };
+            const workflow = workflowModule.createDocsViewerManagementMetadataWorkflow({
+                documentIndex: {
+                    allDocs: [{
+                        doc_id: 'selected-fallback',
+                        title: 'Must not be used'
+                    }],
+                    docsById: new Map([[
+                        'selected-fallback',
+                        {
+                            doc_id: 'selected-fallback',
+                            title: 'Must not be used'
+                        }
+                    ]])
+                },
+                management: {},
+                refs,
+                callbacks: {
+                    getModalController: () => modal,
+                    loadMetadataDoc: requestedTarget => {
+                        loadedTarget = requestedTarget;
+                        return {
+                            ok: true,
+                            scope: 'analysis',
+                            sub_scope: 'tags',
+                            doc_id: 'detail-doc',
+                            record: {
+                                doc_id: 'detail-doc',
+                                title: 'Detail',
+                                summary: 'Full local summary',
+                                date: '2026-07-26',
+                                date_display: 'July 2026',
+                                ui_status: 'draft',
+                                viewable: true
+                            }
+                        };
+                    },
+                    onSave: (savedTarget, payload) => {
+                        saved = { target: savedTarget, payload };
+                    }
+                }
+            });
+            const pending = workflow.openForTarget(target);
+            await new Promise(resolve => setTimeout(resolve, 0));
+            workflow.confirm();
+            const payload = await pending;
+            return {
+                loadedTarget,
+                opened,
+                saved,
+                payload
+            };
+        }"""
+    )
+    expected_target = {
+        "scope": "analysis",
+        "sub_scope": "tags",
+        "doc_id": "detail-doc",
+    }
+    expected_payload = {
+        "title": "Renamed detail",
+        "summary": "Full summary",
+        "date": "2026-07-27",
+        "date_display": "July 2026",
+        "ui_status": "done",
+        "viewable": False,
+    }
+    if result["loadedTarget"] != expected_target:
+        raise AssertionError(f"metadata hydration did not use the exact target: {result!r}")
+    if result["opened"] != {
+        "doc": {
+            "doc_id": "detail-doc",
+            "title": "Detail",
+            "summary": "Full local summary",
+            "date": "2026-07-26",
+            "date_display": "July 2026",
+            "ui_status": "draft",
+            "viewable": True,
+        },
+        "options": {
+            "target": expected_target,
+            "showParent": False,
+        },
+    }:
+        raise AssertionError(f"sub-scope metadata modal received the wrong contract: {result!r}")
+    if result["saved"] != {
+        "target": expected_target,
+        "payload": expected_payload,
+    }:
+        raise AssertionError(f"sub-scope metadata save used the wrong target or fields: {result!r}")
+    if result["payload"] != expected_payload:
+        raise AssertionError(f"sub-scope metadata workflow returned the wrong payload: {result!r}")
+    if "parent_id" in result["payload"]:
+        raise AssertionError(f"sub-scope metadata payload included Parent: {result!r}")
+
+
+def assert_metadata_client_uses_exact_target_requests(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const client = await import(
+                '/docs-viewer/runtime/js/management/docs-viewer-management-client.js'
+            );
+            const requests = [];
+            const fetch = async (url, options) => {
+                requests.push({
+                    url,
+                    method: options.method,
+                    body: options.body ? JSON.parse(options.body) : null
+                });
+                return {
+                    ok: true,
+                    status: 200,
+                    json: async () => ({ ok: true })
+                };
+            };
+            const options = {
+                baseUrl: 'http://manage.test',
+                scope: 'selected-fallback',
+                fetch
+            };
+            await client.readManagedDocMetadata({
+                scope: 'studio',
+                doc_id: 'parent-report'
+            }, options);
+            await client.updateManagedDocMetadata({
+                scope: 'analysis',
+                sub_scope: 'tags',
+                doc_id: 'detail-doc'
+            }, {
+                title: 'Detail',
+                summary: 'Summary',
+                date: '2026-07-27',
+                date_display: 'July 2026',
+                ui_status: 'done',
+                viewable: false
+            }, options);
+            let overrideError = '';
+            try {
+                await client.updateManagedDocMetadata({
+                    scope: 'analysis',
+                    sub_scope: 'tags',
+                    doc_id: 'detail-doc'
+                }, {
+                    doc_id: 'selected-fallback',
+                    title: 'Invalid'
+                }, options);
+            } catch (error) {
+                overrideError = error.message;
+            }
+            return { requests, overrideError };
+        }"""
+    )
+    if result != {
+        "requests": [
+            {
+                "url": (
+                    "http://manage.test/docs/metadata"
+                    "?scope=studio&doc_id=parent-report"
+                ),
+                "method": "GET",
+                "body": None,
+            },
+            {
+                "url": "http://manage.test/docs/update-metadata",
+                "method": "POST",
+                "body": {
+                    "scope": "analysis",
+                    "doc_id": "detail-doc",
+                    "sub_scope": "tags",
+                    "title": "Detail",
+                    "summary": "Summary",
+                    "date": "2026-07-27",
+                    "date_display": "July 2026",
+                    "ui_status": "done",
+                    "viewable": False,
+                },
+            },
+        ],
+        "overrideError": (
+            "Managed document request payload must not replace target field doc_id."
+        ),
+    }:
+        raise AssertionError(f"metadata client target contract changed: {result!r}")
 
 
 def assert_action_target_definitions(page: Page) -> None:
@@ -1379,6 +1653,8 @@ def exercise_manage_route(
     wait_for_manage_doc(page, DOCS_VIEWER_DOC_TITLE, timeout_ms)
     assert_action_target_definitions(page)
     assert_metadata_hydration_failure_is_safe(page)
+    assert_metadata_workflow_uses_exact_sub_scope_target(page)
+    assert_metadata_client_uses_exact_target_requests(page)
     assert_source_editor_media_caption_option(page)
     assert_open_source_target_handoff(page)
     assert_delete_uses_first_remaining_root(page)
@@ -1527,7 +1803,7 @@ def exercise_manage_route(
     metadata_summary = page.locator("#docsViewerMetadataSummaryInput").input_value()
     if metadata_summary != smoke_document_payloads()[DOCS_VIEWER_DOC_ID]["summary"]:
         raise AssertionError(
-            "Edit metadata did not hydrate summary from the full document payload: "
+            "Edit metadata did not hydrate summary from the local source record: "
             f"{metadata_summary!r}"
         )
     metadata_viewability = page.locator("#docsViewerMetadataNonViewableInput")

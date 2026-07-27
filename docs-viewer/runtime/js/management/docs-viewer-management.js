@@ -35,6 +35,9 @@ import {
   normalizeManagedDocumentTarget
 } from "./docs-viewer-management-document-target.js";
 import {
+  readManagedDocMetadata
+} from "./docs-viewer-management-client.js";
+import {
   DOCS_VIEWER_ACTION_IDS,
   createDocsViewerActionContext,
   resolveDocsViewerAction
@@ -384,7 +387,8 @@ export function initDocsViewerManagement(context) {
     var owners = new Map([
       ["edit", function () {
         var doc = actionTargetDoc(resolution);
-        if (doc) metadataWorkflow.openForDocId(doc.doc_id);
+        var target = sourceTargetForDoc(doc);
+        if (target) metadataWorkflow.openForTarget(target);
       }],
       ["open-vscode", function () {
         var doc = actionTargetDoc(resolution);
@@ -744,7 +748,9 @@ export function initDocsViewerManagement(context) {
       onEditDoc: function (docId) {
         if (!actionController) return;
         eventRouter.hideManageActionsMenu();
-        metadataWorkflow.openForDocId(docId);
+        var doc = documentIndex.docsById.get(docId) || null;
+        var target = sourceTargetForDoc(doc);
+        if (target) metadataWorkflow.openForTarget(target);
       },
       onIndexSelectionChange: function () {
         indexController.projectSelection();
@@ -875,12 +881,13 @@ export function initDocsViewerManagement(context) {
     manageImportButton: manageToolbarImportButton || manageImportButton,
     manageSettingsButton: manageSettingsButton,
     callbacks: {
-      currentActiveDoc: currentActiveDoc,
       hideContextMenu: hideContextMenu,
       hideManageActionsMenu: eventRouter.hideManageActionsMenu,
       isDocNonViewable: isDocNonViewable,
       onImportOpen: importController.initialize,
-      loadMetadataDoc: context.loadManagedDocumentRecord,
+      loadMetadataDoc: function (target) {
+        return readManagedDocMetadata(target, managementClientOptions());
+      },
       onMetadataLoadError: function (error) {
         setManagementMessage(
           error && error.message ? error.message : "Document metadata could not be loaded.",

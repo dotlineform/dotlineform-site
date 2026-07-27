@@ -9,6 +9,10 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 import docs_source_model as source_model
+from docs_management_document_target import (
+    managed_document_target_request,
+    resolve_managed_document_target,
+)
 from docs_scope_config import load_docs_scope_configs, resolve_external_data_root
 
 
@@ -143,6 +147,7 @@ class ScopeRebuild:
 class ManagementMutationPlan:
     scope: str
     response: Dict[str, Any]
+    sub_scope: str = ""
     source_writes: tuple[SourceWrite, ...] = ()
     source_deletes: tuple[SourceDelete, ...] = ()
     suppression_reason: Optional[str] = None
@@ -217,30 +222,34 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
 
 
 def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
-    scope = source_model.normalize_scope(body.get("scope"))
-    doc_id = str(body.get("doc_id") or "").strip()
-    if not doc_id:
-        raise ValueError("doc_id is required")
-
-    docs = source_model.load_scope_docs(repo_root, scope)
-    docs_by_id = {doc.doc_id: doc for doc in docs}
-    target = docs_by_id.get(doc_id)
-    if target is None:
-        raise FileNotFoundError(f"doc {doc_id!r} not found in scope {scope}")
+    resolved = resolve_managed_document_target(
+        repo_root,
+        managed_document_target_request(body),
+    )
+    scope = resolved.scope
+    target = resolved.document
     title = str(body.get("title") or "").strip()
     if not title:
         raise ValueError("title is required")
 
-    parent_id = str(body.get("parent_id") or "").strip()
-    if parent_id == target.doc_id:
-        raise ValueError("parent_id cannot be the current doc")
-    if parent_id and parent_id not in docs_by_id:
-        raise ValueError(f"Unknown parent_id {parent_id!r} for scope {scope}")
-    if parent_id and parent_id in source_model.descendant_doc_ids(docs, target.doc_id):
-        raise ValueError("parent_id cannot be a child or descendant of the current doc")
+    docs: list[source_model.ScopeDoc] = []
+    parent_id = target.parent_id
+    if resolved.sub_scope:
+        if "parent_id" in body:
+            raise ValueError("parent_id is not editable for a sub-scope document")
+    else:
+        docs = source_model.load_scope_docs(repo_root, scope)
+        docs_by_id = {doc.doc_id: doc for doc in docs}
+        parent_id = str(body.get("parent_id") or "").strip()
+        if parent_id == target.doc_id:
+            raise ValueError("parent_id cannot be the current doc")
+        if parent_id and parent_id not in docs_by_id:
+            raise ValueError(f"Unknown parent_id {parent_id!r} for scope {scope}")
+        if parent_id and parent_id in source_model.descendant_doc_ids(docs, target.doc_id):
+            raise ValueError("parent_id cannot be a child or descendant of the current doc")
 
     title_changed = title != target.title
-    parent_changed = parent_id != target.parent_id
+    parent_changed = not resolved.sub_scope and parent_id != target.parent_id
     summary_was_provided = "summary" in body
     current_summary = normalize_summary(target.front_matter.get("summary"))
     summary = normalize_summary(body.get("summary")) if summary_was_provided else current_summary
@@ -271,26 +280,32 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         "viewable_changed": viewable_changed,
     }
     if not any(changes.values()):
+        record: dict[str, object] = {
+            "doc_id": target.doc_id,
+            "title": target.title,
+            "summary": current_summary,
+            "date": current_date,
+            "date_display": current_date_display,
+            "ui_status": current_ui_status,
+            "viewable": current_viewable,
+        }
+        if not resolved.sub_scope:
+            record["parent_id"] = target.parent_id
+        response: dict[str, Any] = {
+            "ok": True,
+            "scope": scope,
+            "doc_id": target.doc_id,
+            "path": relative_path(repo_root, target.path),
+            "record": record,
+            "changes": dict.fromkeys(changes.keys(), False),
+            "summary_text": f"No metadata changes for {target.doc_id}.",
+        }
+        if resolved.sub_scope:
+            response["sub_scope"] = resolved.sub_scope
         return ManagementMutationPlan(
             scope=scope,
-            response={
-                "ok": True,
-                "scope": scope,
-                "doc_id": target.doc_id,
-                "path": relative_path(repo_root, target.path),
-                "record": {
-                    "doc_id": target.doc_id,
-                    "title": target.title,
-                    "parent_id": target.parent_id,
-                    "summary": current_summary,
-                    "date": current_date,
-                    "date_display": current_date_display,
-                    "ui_status": current_ui_status,
-                    "viewable": current_viewable,
-                },
-                "changes": dict.fromkeys(changes.keys(), False),
-                "summary_text": f"No metadata changes for {target.doc_id}.",
-            },
+            sub_scope=resolved.sub_scope,
+            response=response,
         )
 
     updated_front_matter = dict(target.front_matter)
@@ -320,8 +335,9 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
             updated_front_matter.pop("viewable", None)
         else:
             updated_front_matter["viewable"] = False
-    updated_front_matter["parent_id"] = parent_id
-    updated_front_matter.pop("sort_order", None)
+    if not resolved.sub_scope:
+        updated_front_matter["parent_id"] = parent_id
+        updated_front_matter.pop("sort_order", None)
     updated_front_matter = source_model.advance_front_matter_for_recent_edit(
         target.front_matter,
         target.body,
@@ -329,46 +345,64 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         target.body,
     )
 
-    search_doc_ids = metadata_search_doc_ids(docs, target.doc_id, title_changed=title_changed)
-    if status_changed and not (title_changed or parent_changed or summary_changed or viewable_changed):
-        search_doc_ids = []
+    search_doc_ids: list[str] = []
+    if not resolved.sub_scope:
+        search_doc_ids = metadata_search_doc_ids(
+            docs,
+            target.doc_id,
+            title_changed=title_changed,
+        )
+        if status_changed and not (
+            title_changed or parent_changed or summary_changed or viewable_changed
+        ):
+            search_doc_ids = []
+
+    record = {
+        "doc_id": target.doc_id,
+        "title": title,
+        "summary": summary,
+        "date": date,
+        "date_display": date_display,
+        "ui_status": ui_status,
+        "viewable": viewable,
+    }
+    if not resolved.sub_scope:
+        record["parent_id"] = parent_id
+    response = {
+        "ok": True,
+        "scope": scope,
+        "doc_id": target.doc_id,
+        "path": relative_path(repo_root, target.path),
+        "record": record,
+        "changes": changes,
+        "summary_text": f"Updated metadata for {target.doc_id}.",
+    }
+    if resolved.sub_scope:
+        response["sub_scope"] = resolved.sub_scope
+    log_details = {
+        "scope": scope,
+        "doc_id": target.doc_id,
+        "title_changed": title_changed,
+        "parent_changed": parent_changed,
+        "summary_changed": summary_changed,
+        "date_changed": date_changed,
+        "date_display_changed": date_display_changed,
+        "status_changed": status_changed,
+        "viewable_changed": viewable_changed,
+    }
+    if resolved.sub_scope:
+        log_details["sub_scope"] = resolved.sub_scope
 
     return ManagementMutationPlan(
         scope=scope,
-        response={
-            "ok": True,
-            "scope": scope,
-            "doc_id": target.doc_id,
-            "path": relative_path(repo_root, target.path),
-            "record": {
-                "doc_id": target.doc_id,
-                "title": title,
-                "parent_id": parent_id,
-                "summary": summary,
-                "date": date,
-                "date_display": date_display,
-                "ui_status": ui_status,
-                "viewable": viewable,
-            },
-            "changes": changes,
-            "summary_text": f"Updated metadata for {target.doc_id}.",
-        },
+        sub_scope=resolved.sub_scope,
+        response=response,
         source_writes=(SourceWrite(target.path, source_model.format_source(updated_front_matter, target.body)),),
         suppression_reason="docs-update-metadata",
-        build_doc_ids=[target.doc_id],
+        build_doc_ids=[] if resolved.sub_scope else [target.doc_id],
         search_doc_ids=search_doc_ids,
         log_event_name="docs-update-metadata",
-        log_details={
-            "scope": scope,
-            "doc_id": target.doc_id,
-            "title_changed": title_changed,
-            "parent_changed": parent_changed,
-            "summary_changed": summary_changed,
-            "date_changed": date_changed,
-            "date_display_changed": date_display_changed,
-            "status_changed": status_changed,
-            "viewable_changed": viewable_changed,
-        },
+        log_details=log_details,
         include_write_result_keys=True,
     )
 

@@ -36,7 +36,6 @@ export function buildDocsViewerDeletePreviewBody(preview) {
 
 export function createDocsViewerManagementModalController(options = {}) {
   var refs = options.refs || {};
-  var documentIndex = options.documentIndex || {};
   var management = options.management || {};
   var scopeConfig = options.scopeConfig || {};
   var context = options.context || {};
@@ -44,6 +43,7 @@ export function createDocsViewerManagementModalController(options = {}) {
   var callbacks = options.callbacks || {};
   var metadataModalResolve = null;
   var metadataStatusPointerValue = null;
+  var metadataEditingDoc = null;
   var settingsFieldState = null;
   var importModalCancelButton = null;
   var importLifecycle = null;
@@ -80,10 +80,6 @@ export function createDocsViewerManagementModalController(options = {}) {
 
   function viewerScope() {
     return typeof callbacks.viewerScope === "function" ? callbacks.viewerScope() : "";
-  }
-
-  function currentActiveDoc() {
-    return typeof callbacks.currentActiveDoc === "function" ? callbacks.currentActiveDoc() : null;
   }
 
   function metadataModalOpen() {
@@ -198,6 +194,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     if (metadataLifecycle) metadataLifecycle.close();
     refs.metadataModal.hidden = true;
     management.metadataEditingDocId = "";
+    metadataEditingDoc = null;
     if (metadataModalResolve) {
       var resolve = metadataModalResolve;
       metadataModalResolve = null;
@@ -205,11 +202,14 @@ export function createDocsViewerManagementModalController(options = {}) {
     }
   }
 
-  function openMetadataModal(doc) {
-    if (!doc || !refs.metadataModal || !refs.metadataForm || !refs.metadataTitleInput || !refs.metadataSummaryInput || !refs.metadataDateInput || !refs.metadataDateDisplayInput || !refs.metadataStatusInput || !refs.metadataNonViewableInput || !refs.metadataParentInput) {
+  function openMetadataModal(doc, options) {
+    var settings = options || {};
+    var target = settings.target || null;
+    if (!doc || !target || !refs.metadataModal || !refs.metadataForm || !refs.metadataTitleInput || !refs.metadataSummaryInput || !refs.metadataDateInput || !refs.metadataDateDisplayInput || !refs.metadataStatusInput || !refs.metadataNonViewableInput || !refs.metadataParentField || !refs.metadataParentInput) {
       return Promise.resolve(null);
     }
     if (typeof callbacks.hideContextMenu === "function") callbacks.hideContextMenu();
+    metadataEditingDoc = doc;
     management.metadataEditingDocId = doc.doc_id;
     if (refs.metadataDocId) {
       refs.metadataDocId.textContent = doc.doc_id;
@@ -221,7 +221,15 @@ export function createDocsViewerManagementModalController(options = {}) {
     refs.metadataDateDisplayInput.value = doc.date_display || "";
     renderMetadataStatusOptions(doc);
     refs.metadataNonViewableInput.checked = typeof callbacks.isDocNonViewable === "function" ? callbacks.isDocNonViewable(doc) : doc.viewable === false;
-    renderMetadataParentOptions(doc);
+    var showParent = settings.showParent === true;
+    refs.metadataParentField.hidden = !showParent;
+    refs.metadataParentInput.disabled = !showParent;
+    if (showParent) {
+      renderMetadataParentOptions(doc);
+    } else {
+      refs.metadataParentInput.value = "";
+      metadataParentPicker.hidePopup();
+    }
     setMetadataStatus("", "");
 
     refs.metadataModal.hidden = false;
@@ -555,15 +563,13 @@ export function createDocsViewerManagementModalController(options = {}) {
     }
     if (refs.metadataParentInput) {
       refs.metadataParentInput.addEventListener("input", function () {
-        var doc = management.metadataEditingDocId ? documentIndex.docsById.get(management.metadataEditingDocId) : currentActiveDoc();
-        if (doc) metadataParentPicker.renderPopup(doc);
+        if (metadataEditingDoc) metadataParentPicker.renderPopup(metadataEditingDoc);
       });
       refs.metadataParentInput.addEventListener("blur", function () {
         metadataParentPicker.hidePopup();
       });
       refs.metadataParentInput.addEventListener("keydown", function (event) {
-        var doc = management.metadataEditingDocId ? documentIndex.docsById.get(management.metadataEditingDocId) : currentActiveDoc();
-        metadataParentPicker.handleInputKeydown(event, doc);
+        metadataParentPicker.handleInputKeydown(event, metadataEditingDoc);
       });
     }
     if (refs.metadataParentPopup) {

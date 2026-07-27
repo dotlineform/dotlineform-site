@@ -34,6 +34,7 @@ export function createDocsViewerManagementModalComposition(options = {}) {
     metadataDateInput: shellRef(shellRefs, "metadataDateInput", "docsViewerMetadataDateInput"),
     metadataNonViewableInput: shellRef(shellRefs, "metadataNonViewableInput", "docsViewerMetadataNonViewableInput"),
     metadataModal: shellRef(shellRefs, "metadataModal", "docsViewerMetadataModal"),
+    metadataParentField: shellRef(shellRefs, "metadataParentField", "docsViewerMetadataParentField"),
     metadataParentInput: shellRef(shellRefs, "metadataParentInput", "docsViewerMetadataParentInput"),
     metadataParentPopup: shellRef(shellRefs, "metadataParentPopup", "docsViewerMetadataParentPopup"),
     metadataSaveButton: shellRef(shellRefs, "metadataSaveButton", "docsViewerMetadataSaveButton"),
@@ -72,7 +73,6 @@ export function createDocsViewerManagementModalComposition(options = {}) {
       titleInput: refs.metadataTitleInput
     },
     callbacks: {
-      currentActiveDoc: callbacks.currentActiveDoc,
       getModalController: function () {
         return modalController;
       },
@@ -104,7 +104,6 @@ export function createDocsViewerManagementModalComposition(options = {}) {
     context: context,
     refs: refs,
     callbacks: {
-      currentActiveDoc: callbacks.currentActiveDoc,
       hideContextMenu: callbacks.hideContextMenu,
       hideManageActionsMenu: callbacks.hideManageActionsMenu,
       isDocNonViewable: callbacks.isDocNonViewable,

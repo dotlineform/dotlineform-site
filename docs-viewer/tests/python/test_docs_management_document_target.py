@@ -257,6 +257,77 @@ def test_inventory_route_includes_non_viewable_docs_without_mutating_public_payl
     assert {path: path.read_bytes() for path in before} == before
 
 
+def test_metadata_route_hydrates_parent_and_sub_scope_records_from_source(
+    tmp_path: Path,
+) -> None:
+    scope_root = prepare_repo(tmp_path)
+    detail_path = (
+        scope_root
+        / "source/sub-scopes/tags/documents/detail-doc.md"
+    )
+    detail_path.write_text(
+        """---
+doc_id: detail-doc
+title: Detail
+summary: Full local summary
+date: 2026-07-27
+date_display: July 2026
+ui_status: draft
+viewable: false
+parent_id: retained-sub-scope-parent
+---
+# Detail
+""",
+        encoding="utf-8",
+    )
+
+    parent = management_service.docs_management_get_payload(
+        tmp_path,
+        routes.METADATA_PATH,
+        {"scope": ["analysis"], "doc_id": ["parent-report"]},
+    )
+    detail = management_service.docs_management_get_payload(
+        tmp_path,
+        routes.METADATA_PATH,
+        {
+            "scope": ["analysis"],
+            "sub_scope": ["tags"],
+            "doc_id": ["detail-doc"],
+        },
+    )
+
+    assert parent == {
+        "ok": True,
+        "scope": "analysis",
+        "doc_id": "parent-report",
+        "record": {
+            "doc_id": "parent-report",
+            "title": "Parent Report",
+            "summary": "",
+            "date": "",
+            "date_display": "",
+            "ui_status": "",
+            "viewable": True,
+            "parent_id": "",
+        },
+    }
+    assert detail == {
+        "ok": True,
+        "scope": "analysis",
+        "sub_scope": "tags",
+        "doc_id": "detail-doc",
+        "record": {
+            "doc_id": "detail-doc",
+            "title": "Detail",
+            "summary": "Full local summary",
+            "date": "2026-07-27",
+            "date_display": "July 2026",
+            "ui_status": "draft",
+            "viewable": False,
+        },
+    }
+
+
 def test_source_read_uses_exact_target_and_retires_doc_alias(tmp_path: Path) -> None:
     prepare_repo(tmp_path)
 
