@@ -407,6 +407,23 @@ def exercise_public_subscope_report(page: Page, base_url: str, timeout_ms: int) 
         }}""",
         timeout=timeout_ms,
     )
+    management_projection = page.locator(".docsViewerReport").evaluate(
+        """report => ({
+            managementIcons: report.querySelectorAll(
+                '.docsViewer__navStatus, .docsViewer__draftPrefix'
+            ).length,
+            sourceControls: document.querySelectorAll(
+                '[data-docs-viewer-control="markdown-source"], '
+                + '[data-docs-viewer-control="subdoc-source"], '
+                + '[data-docs-viewer-control="return-to-doc"]'
+            ).length
+        })"""
+    )
+    if management_projection != {"managementIcons": 0, "sourceControls": 0}:
+        raise AssertionError(
+            "public sub-scope report exposed manage-only icons or source controls: "
+            f"{management_projection!r}"
+        )
     if query_value(page.url, "doc") != TAGS_DOC_ID:
         raise AssertionError(f"public report parent doc should remain selected, got {page.url}")
     paths = request_paths(request_urls)
@@ -415,6 +432,8 @@ def exercise_public_subscope_report(page: Page, base_url: str, timeout_ms: int) 
         raise AssertionError(f"public report did not read public report registry; saw {sorted(paths)!r}")
     if "/assets/data/docs/scopes/analysis/tags/manifest.json" not in paths:
         raise AssertionError(f"public report did not read sub-scope manifest; saw {sorted(paths)!r}")
+    if "/docs/sub-scope-documents" in paths:
+        raise AssertionError(f"public report requested management inventory; saw {sorted(paths)!r}")
     page.locator(
         f".docsViewerReport__row[data-report-subdoc-id='{ORDERED_SUBDOC_ID}'] .docsViewerReport__subscopeButton"
     ).click()
@@ -434,6 +453,23 @@ def exercise_public_subscope_report(page: Page, base_url: str, timeout_ms: int) 
         }}""",
         timeout=timeout_ms,
     )
+    detail_management_projection = page.locator(".docsViewerReport").evaluate(
+        """report => ({
+            managementIcons: report.querySelectorAll(
+                '.docsViewer__navStatus, .docsViewer__draftPrefix'
+            ).length,
+            sourceControls: document.querySelectorAll(
+                '[data-docs-viewer-control="markdown-source"], '
+                + '[data-docs-viewer-control="subdoc-source"], '
+                + '[data-docs-viewer-control="return-to-doc"]'
+            ).length
+        })"""
+    )
+    if detail_management_projection != {"managementIcons": 0, "sourceControls": 0}:
+        raise AssertionError(
+            "public sub-scope detail exposed manage-only icons or source controls: "
+            f"{detail_management_projection!r}"
+        )
     page.go_back(wait_until="domcontentloaded")
     page.wait_for_function(
         """() => {

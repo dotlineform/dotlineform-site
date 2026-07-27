@@ -875,6 +875,11 @@ export function initDocsViewerManagement(context) {
         return context.projectCommittedMove(record);
       },
       reloadDocsIndex: reloadDocsIndex,
+      reloadMetadataTarget: function (target, response) {
+        return typeof context.reloadMetadataTarget === "function"
+          ? context.reloadMetadataTarget(target, response)
+          : response;
+      },
       reloadViewerConfiguration: reloadViewerConfiguration,
       refreshManagementCapabilities: refreshManagementCapabilities,
       renderManagementUi: renderManagementUi,

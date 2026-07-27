@@ -36,10 +36,19 @@ INLINE_MERMAID_DOC_ID = "d-20000101-000000-000002"
 INLINE_MERMAID_DOC_TITLE = "Inline Mermaid Smoke Fixture"
 INLINE_MERMAID_LINKED_DOC_ID = "d-20000101-000000-000003"
 INLINE_MERMAID_LINKED_DOC_TITLE = "Diagram-free Smoke Fixture"
+SUBSCOPE_REPORT_DOC_ID = "d-20000101-000000-000004"
+SUBSCOPE_REPORT_DOC_TITLE = "Sub-Scope Editing Smoke Fixture"
+SUBSCOPE_ID = "smoke-documents"
+SUBSCOPE_DOC_ID = "d-20000101-000000-000005"
+SUBSCOPE_DOC_TITLE = "Smoke Detail"
+INVALID_SUBSCOPE_DOC_ID = "d-20000101-000000-invalid"
 
 
-def smoke_document_payloads() -> dict[str, dict[str, object]]:
-    return {
+def smoke_document_payloads(
+    *,
+    include_subscope_report: bool = False,
+) -> dict[str, dict[str, object]]:
+    payloads: dict[str, dict[str, object]] = {
         DOCS_VIEWER_DOC_ID: {
             "doc_id": DOCS_VIEWER_DOC_ID,
             "title": DOCS_VIEWER_DOC_TITLE,
@@ -85,10 +94,43 @@ def smoke_document_payloads() -> dict[str, dict[str, object]]:
             ),
         },
     }
+    if include_subscope_report:
+        payloads[SUBSCOPE_REPORT_DOC_ID] = {
+            "doc_id": SUBSCOPE_REPORT_DOC_ID,
+            "title": SUBSCOPE_REPORT_DOC_TITLE,
+            "added_date": "2000-01-01 00:00:03",
+            "last_updated": "2000-01-01 00:00:03",
+            "viewer_url": f"/docs/?scope=studio&doc={SUBSCOPE_REPORT_DOC_ID}",
+            "summary": "Synthetic report for sub-scope editing integration.",
+            "viewer_report": "docs_subscope",
+            "viewer_report_subscope": SUBSCOPE_ID,
+            "content_html": (
+                f"<h1>{SUBSCOPE_REPORT_DOC_TITLE}</h1>"
+                "<p>Test-owned report content exercises managed sub-scope editing.</p>"
+            ),
+        }
+    return payloads
 
 
-def install_smoke_document_routes(page: Page) -> None:
-    payloads = smoke_document_payloads()
+def install_smoke_document_routes(
+    page: Page,
+    *,
+    include_subscope_report: bool = False,
+) -> None:
+    payloads = smoke_document_payloads(
+        include_subscope_report=include_subscope_report,
+    )
+    subscope_state: dict[str, object] = {
+        "title": SUBSCOPE_DOC_TITLE,
+        "summary": "Test-owned sub-scope metadata.",
+        "date": "2000-01-01",
+        "date_display": "January 2000",
+        "ui_status": "draft",
+        "viewable": True,
+        "source_body": "# Smoke Detail\n\nTest-owned sub-scope source.\n",
+        "source_revision": "sha256:smoke-subdoc-r1",
+        "detail_version": 1,
+    }
     index_payload = {
         "schema": "docs_index_tree_v1",
         "viewer_options": {
@@ -128,6 +170,21 @@ def install_smoke_document_routes(page: Page) -> None:
             route.request.url,
             "doc",
         )
+        sub_scope = query_value(route.request.url, "sub_scope")
+        if include_subscope_report and sub_scope == SUBSCOPE_ID and doc_id == SUBSCOPE_DOC_ID:
+            fulfill_json(
+                route,
+                {
+                    "ok": True,
+                    "scope": "studio",
+                    "sub_scope": SUBSCOPE_ID,
+                    "doc_id": SUBSCOPE_DOC_ID,
+                    "source_body": subscope_state["source_body"],
+                    "source_revision": subscope_state["source_revision"],
+                    "path": f"tests/smoke/fixtures/{SUBSCOPE_ID}/{SUBSCOPE_DOC_ID}.md",
+                },
+            )
+            return
         payload = payloads.get(doc_id)
         if payload is None:
             route.fulfill(status=404, content_type="application/json", body='{"error":"Not found"}')
@@ -146,6 +203,27 @@ def install_smoke_document_routes(page: Page) -> None:
 
     def fulfill_metadata(route) -> None:
         doc_id = query_value(route.request.url, "doc_id")
+        sub_scope = query_value(route.request.url, "sub_scope")
+        if include_subscope_report and sub_scope == SUBSCOPE_ID and doc_id == SUBSCOPE_DOC_ID:
+            fulfill_json(
+                route,
+                {
+                    "ok": True,
+                    "scope": "studio",
+                    "sub_scope": SUBSCOPE_ID,
+                    "doc_id": SUBSCOPE_DOC_ID,
+                    "record": {
+                        "doc_id": SUBSCOPE_DOC_ID,
+                        "title": subscope_state["title"],
+                        "summary": subscope_state["summary"],
+                        "date": subscope_state["date"],
+                        "date_display": subscope_state["date_display"],
+                        "ui_status": subscope_state["ui_status"],
+                        "viewable": subscope_state["viewable"],
+                    },
+                },
+            )
+            return
         payload = payloads.get(doc_id)
         if payload is None:
             route.fulfill(status=404, content_type="application/json", body='{"error":"Not found"}')
@@ -169,6 +247,185 @@ def install_smoke_document_routes(page: Page) -> None:
             },
         )
 
+    def request_json(route) -> dict[str, object]:
+        return json.loads(route.request.post_data or "{}")
+
+    def fulfill_source_rebuild(route) -> None:
+        payload = request_json(route)
+        if (
+            not include_subscope_report
+            or payload.get("scope") != "studio"
+            or payload.get("sub_scope") != SUBSCOPE_ID
+            or payload.get("doc_id") != SUBSCOPE_DOC_ID
+        ):
+            route.fulfill(status=404, content_type="application/json", body='{"error":"Not found"}')
+            return
+        subscope_state["source_body"] = payload.get("source_body", "")
+        subscope_state["source_revision"] = "sha256:smoke-subdoc-r2"
+        subscope_state["detail_version"] = int(subscope_state["detail_version"]) + 1
+        fulfill_json(
+            route,
+            {
+                "ok": True,
+                "scope": "studio",
+                "sub_scope": SUBSCOPE_ID,
+                "doc_id": SUBSCOPE_DOC_ID,
+                "source_revision": subscope_state["source_revision"],
+                "summary_text": "Synthetic sub-scope source rebuilt.",
+                "rebuild": {
+                    "docs": {"mode": "sub_scope", "sub_scope": SUBSCOPE_ID},
+                    "search": {"mode": "full", "doc_ids": []},
+                },
+            },
+        )
+
+    def fulfill_metadata_update(route) -> None:
+        payload = request_json(route)
+        if (
+            not include_subscope_report
+            or payload.get("scope") != "studio"
+            or payload.get("sub_scope") != SUBSCOPE_ID
+            or payload.get("doc_id") != SUBSCOPE_DOC_ID
+        ):
+            route.fulfill(status=404, content_type="application/json", body='{"error":"Not found"}')
+            return
+        for field in (
+            "title",
+            "summary",
+            "date",
+            "date_display",
+            "ui_status",
+            "viewable",
+        ):
+            subscope_state[field] = payload.get(field)
+        subscope_state["detail_version"] = int(subscope_state["detail_version"]) + 1
+        fulfill_json(
+            route,
+            {
+                "ok": True,
+                "scope": "studio",
+                "sub_scope": SUBSCOPE_ID,
+                "doc_id": SUBSCOPE_DOC_ID,
+                "record": {
+                    "doc_id": SUBSCOPE_DOC_ID,
+                    "title": subscope_state["title"],
+                    "summary": subscope_state["summary"],
+                    "date": subscope_state["date"],
+                    "date_display": subscope_state["date_display"],
+                    "ui_status": subscope_state["ui_status"],
+                    "viewable": subscope_state["viewable"],
+                },
+            },
+        )
+
+    def fulfill_subscope_inventory(route) -> None:
+        if (
+            not include_subscope_report
+            or query_value(route.request.url, "scope") != "studio"
+            or query_value(route.request.url, "sub_scope") != SUBSCOPE_ID
+        ):
+            route.fulfill(status=404, content_type="application/json", body='{"error":"Not found"}')
+            return
+        fulfill_json(
+            route,
+            {
+                "ok": True,
+                "scope": "studio",
+                "sub_scope": SUBSCOPE_ID,
+                "documents": [
+                    {
+                        "doc_id": SUBSCOPE_DOC_ID,
+                        "title": subscope_state["title"],
+                        "ui_status": subscope_state["ui_status"],
+                        "viewable": subscope_state["viewable"],
+                    }
+                ],
+            },
+        )
+
+    def fulfill_subscope_detail(route) -> None:
+        detail_id = Path(urlparse(route.request.url).path).stem
+        if not include_subscope_report or detail_id != SUBSCOPE_DOC_ID:
+            route.fulfill(status=404, content_type="application/json", body='{"error":"Not found"}')
+            return
+        version = int(subscope_state["detail_version"])
+        fulfill_json(
+            route,
+            {
+                "doc_id": SUBSCOPE_DOC_ID,
+                "title": subscope_state["title"],
+                "last_updated": f"2000-01-01 00:00:0{version}",
+                "content_html": (
+                    f"<h1>{subscope_state['title']}</h1>"
+                    f'<p data-smoke-detail-version="{version}">'
+                    f"Synthetic detail version {version}.</p>"
+                ),
+            },
+        )
+
+    def fulfill_diagram_sources(route) -> None:
+        target: dict[str, object] = {
+            "ok": True,
+            "scope": query_value(route.request.url, "scope"),
+            "doc_id": query_value(route.request.url, "doc_id"),
+            "sources": [],
+        }
+        sub_scope = query_value(route.request.url, "sub_scope")
+        if sub_scope:
+            target["sub_scope"] = sub_scope
+        fulfill_json(route, target)
+
+    def fulfill_viewer_config(route) -> None:
+        response = route.fetch()
+        payload = response.json()
+        scopes = payload.get("scopes")
+        if not isinstance(scopes, list):
+            raise AssertionError("Docs Viewer config did not contain scopes")
+        studio = next(
+            (record for record in scopes if record.get("scope_id") == "studio"),
+            None,
+        )
+        if not isinstance(studio, dict):
+            raise AssertionError("Docs Viewer config did not contain Studio")
+        studio["sub_scopes"] = [
+            {
+                "sub_scope": SUBSCOPE_ID,
+                "title": "Smoke Documents",
+                "manifest_url": "/__smoke/subscope/manifest.json",
+                "by_id_url_base": "/__smoke/subscope/by-id",
+            }
+        ]
+        route.fulfill(
+            status=response.status,
+            content_type="application/json",
+            body=json.dumps(payload),
+        )
+
+    if include_subscope_report:
+        page.route(
+            re.compile(r".*/docs-viewer/config/defaults/docs-viewer-config\.json(?:\?.*)?$"),
+            fulfill_viewer_config,
+        )
+        page.route(
+            re.compile(r".*/docs/sub-scope-documents(?:\?.*)?$"),
+            fulfill_subscope_inventory,
+        )
+        page.route(
+            re.compile(r".*/__smoke/subscope/by-id/[^/?]+\.json(?:\?.*)?$"),
+            fulfill_subscope_detail,
+        )
+        page.route(
+            re.compile(r".*/docs/source/rebuild(?:\?.*)?$"),
+            fulfill_source_rebuild,
+        )
+        page.route(
+            re.compile(r".*/docs/update-metadata(?:\?.*)?$"),
+            fulfill_metadata_update,
+        )
+        page.route(
+            re.compile(r".*/docs/diagram-sources(?:\?.*)?$"),
+            fulfill_diagram_sources,
+        )
     page.route(
         re.compile(r".*/docs/index-tree(?:\?.*)?$"),
         lambda route: fulfill_json(route, index_payload),
@@ -1025,6 +1282,105 @@ def assert_metadata_client_uses_exact_target_requests(page: Page) -> None:
         raise AssertionError(f"metadata client target contract changed: {result!r}")
 
 
+def assert_metadata_response_refreshes_exact_target(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const actions = await import(
+                '/docs-viewer/runtime/js/management/docs-viewer-management-actions.js'
+            );
+            const requests = [];
+            const reloads = [];
+            const target = {
+                scope: 'studio',
+                sub_scope: 'smoke-documents',
+                doc_id: 'detail-doc'
+            };
+            const responsePayload = {
+                ok: true,
+                scope: 'studio',
+                sub_scope: 'smoke-documents',
+                doc_id: 'detail-doc'
+            };
+            const controller = actions.createDocsViewerManagementActionController({
+                root: null,
+                documentIndex: { docsById: new Map() },
+                management: {},
+                context: {},
+                resolveAction: () => ({
+                    enabled: true,
+                    targetDocIds: ['selected-fallback']
+                }),
+                callbacks: {
+                    managementClientOptions: () => ({
+                        baseUrl: 'http://manage.test',
+                        scope: 'selected-fallback',
+                        fetch: async (url, options) => {
+                            requests.push({
+                                url,
+                                method: options.method,
+                                body: JSON.parse(options.body)
+                            });
+                            return {
+                                ok: true,
+                                status: 200,
+                                json: async () => responsePayload
+                            };
+                        }
+                    }),
+                    reloadMetadataTarget: (reloadedTarget, response) => {
+                        reloads.push({
+                            target: Object.assign({}, reloadedTarget),
+                            response: Object.assign({}, response)
+                        });
+                        return Promise.resolve('refreshed');
+                    },
+                    renderManagementUi: () => {},
+                    setManagementBusy: () => {},
+                    setManagementMessage: () => {}
+                }
+            });
+            const result = await controller.handleEditMetadataSave(target, {
+                title: 'Renamed detail',
+                summary: 'Summary',
+                date: '2026-07-27',
+                date_display: 'July 2026',
+                ui_status: 'done',
+                viewable: false
+            });
+            return { reloads, requests, result };
+        }"""
+    )
+    target = {
+        "scope": "studio",
+        "sub_scope": SUBSCOPE_ID,
+        "doc_id": "detail-doc",
+    }
+    response = {"ok": True, **target}
+    if result != {
+        "reloads": [{"target": target, "response": response}],
+        "requests": [
+            {
+                "url": "http://manage.test/docs/update-metadata",
+                "method": "POST",
+                "body": {
+                    **target,
+                    "title": "Renamed detail",
+                    "summary": "Summary",
+                    "date": "2026-07-27",
+                    "date_display": "July 2026",
+                    "ui_status": "done",
+                    "viewable": False,
+                },
+            }
+        ],
+        "result": "refreshed",
+    }:
+        raise AssertionError(
+            "sub-scope metadata response did not refresh its exact target: "
+            f"{result!r}"
+        )
+
+
 def assert_action_target_definitions(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -1612,6 +1968,387 @@ def assert_document_transfer_module_contract(page: Page) -> None:
         raise AssertionError(f"unexpected document transfer module contract: {result!r}")
 
 
+def assert_subscope_route_state(
+    page: Page,
+    *,
+    subdoc_id: str,
+    display_mode: str,
+) -> None:
+    state = page.evaluate(
+        """() => {
+            const params = new URL(location.href).searchParams;
+            return {
+                scope: params.get('scope') || '',
+                doc: params.get('doc') || '',
+                subdoc: params.get('subdoc') || '',
+                mode: params.get('mode') || '',
+                displayMode: document.querySelector('#docsViewerRoot')
+                    ?.dataset.documentDisplayMode || '',
+                activeDocId: document.querySelector(
+                    '#docsViewerNav .docsViewer__navLink.is-active'
+                )?.dataset.docId || '',
+                subdocIndexEntries: document.querySelectorAll(
+                    `#docsViewerNav [data-doc-id="${CSS.escape(params.get('subdoc') || '')}"]`
+                ).length
+            };
+        }"""
+    )
+    expected = {
+        "scope": "studio",
+        "doc": SUBSCOPE_REPORT_DOC_ID,
+        "subdoc": subdoc_id,
+        "mode": "",
+        "displayMode": display_mode,
+        "activeDocId": SUBSCOPE_REPORT_DOC_ID,
+        "subdocIndexEntries": 0,
+    }
+    if state != expected:
+        raise AssertionError(f"sub-scope edit route drifted: {state!r}")
+
+
+def wait_for_subscope_detail(
+    page: Page,
+    *,
+    title: str,
+    version: int,
+    timeout_ms: int,
+) -> None:
+    wait_for_manage_doc(page, SUBSCOPE_REPORT_DOC_TITLE, timeout_ms)
+    page.wait_for_function(
+        """([expectedTitle, expectedVersion]) => {
+            const report = document.querySelector('.docsViewerReport');
+            const detailTitle = document.querySelector('.docsReportDetail__title');
+            const versionNode = document.querySelector('[data-smoke-detail-version]');
+            const parentSource = document.querySelector('#docsViewerManageSourceButton');
+            const subdocSource = document.querySelector('#docsViewerManageSubdocSourceButton');
+            return report?.dataset.reportState === 'detail'
+                && detailTitle?.textContent.trim() === expectedTitle
+                && versionNode?.dataset.smokeDetailVersion === String(expectedVersion)
+                && parentSource?.getAttribute('aria-label') === 'Parent Source'
+                && subdocSource?.disabled === false;
+        }""",
+        arg=[title, version],
+        timeout=timeout_ms,
+    )
+    assert_subscope_route_state(
+        page,
+        subdoc_id=SUBSCOPE_DOC_ID,
+        display_mode="rendered-document",
+    )
+
+
+def normalized_subscope_request(request) -> dict[str, object] | None:
+    parsed = urlparse(request.url)
+    tracked_paths = {
+        "/docs/index-tree",
+        "/docs/doc",
+        "/docs/sub-scope-documents",
+        "/docs/source",
+        "/docs/source/rebuild",
+        "/docs/metadata",
+        "/docs/update-metadata",
+        f"/__smoke/subscope/by-id/{SUBSCOPE_DOC_ID}.json",
+    }
+    if parsed.path not in tracked_paths:
+        return None
+    query = parse_qs(parsed.query)
+    target_query = {
+        key: values[0]
+        for key in ("scope", "sub_scope", "doc_id")
+        if (values := query.get(key))
+    }
+    body = json.loads(request.post_data) if request.post_data else None
+    return {
+        "method": request.method,
+        "path": parsed.path,
+        "query": target_query,
+        "body": body,
+    }
+
+
+def exercise_subscope_editing_route(
+    page: Page,
+    base_url: str,
+    timeout_ms: int,
+) -> list[dict[str, object]]:
+    install_smoke_document_routes(page, include_subscope_report=True)
+    request_log: list[dict[str, object]] = []
+
+    def record_request(request) -> None:
+        record = normalized_subscope_request(request)
+        if record is not None:
+            request_log.append(record)
+
+    page.on("request", record_request)
+    detail_url = (
+        f"{base_url}/docs/?scope=studio"
+        f"&doc={SUBSCOPE_REPORT_DOC_ID}"
+        f"&subdoc={SUBSCOPE_DOC_ID}"
+    )
+    page.goto(detail_url, wait_until="domcontentloaded")
+    wait_for_subscope_detail(
+        page,
+        title=SUBSCOPE_DOC_TITLE,
+        version=1,
+        timeout_ms=timeout_ms,
+    )
+
+    parent_source = page.locator("#docsViewerManageSourceButton")
+    subdoc_source = page.locator("#docsViewerManageSubdocSourceButton")
+    if parent_source.get_attribute("aria-label") != "Parent Source":
+        raise AssertionError("detail view did not retain the explicit Parent Source action")
+    if subdoc_source.is_disabled():
+        raise AssertionError("valid detail did not enable Subdoc Source")
+
+    parent_source.click()
+    page.wait_for_function(
+        f"""() => document.querySelector('#docsViewerRoot')?.dataset.documentDisplayMode === 'markdown-source'
+            && document.querySelector('.docsViewerSourceEditor__textarea')?.value.includes(
+                '{SUBSCOPE_REPORT_DOC_TITLE}'
+            )""",
+        timeout=timeout_ms,
+    )
+    assert_subscope_route_state(
+        page,
+        subdoc_id=SUBSCOPE_DOC_ID,
+        display_mode="markdown-source",
+    )
+    page.locator("#docsViewerManageReturnToDocButton").click()
+    wait_for_subscope_detail(
+        page,
+        title=SUBSCOPE_DOC_TITLE,
+        version=1,
+        timeout_ms=timeout_ms,
+    )
+
+    page.locator("#docsViewerManageSubdocSourceButton").click()
+    page.wait_for_function(
+        """() => document.querySelector('#docsViewerRoot')?.dataset.documentDisplayMode === 'markdown-source'
+            && document.querySelector('.docsViewerSourceEditor__textarea')?.value.includes(
+                'Test-owned sub-scope source.'
+            )""",
+        timeout=timeout_ms,
+    )
+    assert_subscope_route_state(
+        page,
+        subdoc_id=SUBSCOPE_DOC_ID,
+        display_mode="markdown-source",
+    )
+    source_textarea = page.locator(".docsViewerSourceEditor__textarea")
+    source_textarea.fill("# Dirty source must remain fixed.\n")
+    requests_before_cancel = len(request_log)
+    page.locator("#docsViewerManageReturnToDocButton").click()
+    prompt = page.locator('[data-role="docs-viewer-management-modal"]')
+    prompt.wait_for(state="visible", timeout=timeout_ms)
+    if prompt.locator(".docsViewer__modalTitle").inner_text().strip() != "Return to doc?":
+        raise AssertionError("dirty Return did not use the dedicated confirmation")
+    if prompt.locator('[data-role="modal-primary"]').inner_text().strip() != "Return to doc":
+        raise AssertionError("dirty Return confirmation did not expose its exact action")
+    if prompt.locator('button[data-role="modal-cancel"]').inner_text().strip() != "Cancel":
+        raise AssertionError("dirty Return confirmation did not expose Cancel")
+    prompt.locator('button[data-role="modal-cancel"]').click()
+    prompt.wait_for(state="detached", timeout=timeout_ms)
+    if len(request_log) != requests_before_cancel:
+        raise AssertionError("cancelling dirty Return issued a refresh request")
+    if source_textarea.input_value() != "# Dirty source must remain fixed.\n":
+        raise AssertionError("cancelling dirty Return replaced the fixed source buffer")
+    assert_subscope_route_state(
+        page,
+        subdoc_id=SUBSCOPE_DOC_ID,
+        display_mode="markdown-source",
+    )
+
+    page.locator("#docsViewerManageReturnToDocButton").click()
+    prompt = page.locator('[data-role="docs-viewer-management-modal"]')
+    prompt.wait_for(state="visible", timeout=timeout_ms)
+    prompt.locator('[data-role="modal-primary"]').click()
+    wait_for_subscope_detail(
+        page,
+        title=SUBSCOPE_DOC_TITLE,
+        version=1,
+        timeout_ms=timeout_ms,
+    )
+    if any(record["path"] == "/docs/source/rebuild" for record in request_log):
+        raise AssertionError("confirmed dirty Return rebuilt instead of discarding")
+
+    page.locator("#docsViewerManageSubdocSourceButton").click()
+    page.wait_for_selector(".docsViewerSourceEditor__textarea", state="visible", timeout=timeout_ms)
+    page.locator(".docsViewerSourceEditor__textarea").fill("# Saved smoke detail.\n")
+    page.locator("#docsViewerManageSourceSaveButton").click()
+    wait_for_subscope_detail(
+        page,
+        title=SUBSCOPE_DOC_TITLE,
+        version=2,
+        timeout_ms=timeout_ms,
+    )
+
+    page.locator("#docsViewerManageEditButton").click()
+    page.wait_for_selector("#docsViewerMetadataModal", state="visible", timeout=timeout_ms)
+    assert_subscope_route_state(
+        page,
+        subdoc_id=SUBSCOPE_DOC_ID,
+        display_mode="rendered-document",
+    )
+    if not page.locator("#docsViewerMetadataParentField").is_hidden():
+        raise AssertionError("sub-scope metadata form exposed Parent")
+    page.locator("#docsViewerMetadataTitleInput").fill("Renamed Smoke Detail")
+    page.locator("#docsViewerMetadataSummaryInput").fill("Refreshed synthetic metadata")
+    page.locator("#docsViewerMetadataDateInput").fill("2026-07-27")
+    page.locator("#docsViewerMetadataDateDisplayInput").fill("July 2026")
+    page.locator("#docsViewerMetadataStatusInput").select_option("done")
+    page.locator("#docsViewerMetadataNonViewableInput").check()
+    page.locator("#docsViewerMetadataSaveButton").click()
+    wait_for_subscope_detail(
+        page,
+        title="Renamed Smoke Detail",
+        version=3,
+        timeout_ms=timeout_ms,
+    )
+    page.locator(".docsReportDetail__back").click()
+    page.wait_for_function(
+        """() => document.querySelector('.docsViewerReport')?.dataset.reportState === 'list'
+            && !new URL(location.href).searchParams.has('subdoc')""",
+        timeout=timeout_ms,
+    )
+    refreshed_inventory = page.locator(
+        f'.docsViewerReport__row[data-report-subdoc-id="{SUBSCOPE_DOC_ID}"]'
+    )
+    if "Renamed Smoke Detail" not in refreshed_inventory.inner_text():
+        raise AssertionError("metadata rebuild did not refresh the manage inventory")
+    if refreshed_inventory.locator(".docsViewer__navStatus").count() != 1:
+        raise AssertionError("metadata rebuild did not refresh the inventory status icon")
+    if refreshed_inventory.locator(".docsViewer__draftPrefix").count() != 1:
+        raise AssertionError("metadata rebuild did not refresh the inventory viewability icon")
+    page.go_back(wait_until="domcontentloaded")
+    wait_for_subscope_detail(
+        page,
+        title="Renamed Smoke Detail",
+        version=3,
+        timeout_ms=timeout_ms,
+    )
+
+    page.goto(
+        (
+            f"{base_url}/docs/?scope=studio"
+            f"&doc={SUBSCOPE_REPORT_DOC_ID}"
+            f"&subdoc={INVALID_SUBSCOPE_DOC_ID}"
+        ),
+        wait_until="domcontentloaded",
+    )
+    wait_for_manage_doc(page, SUBSCOPE_REPORT_DOC_TITLE, timeout_ms)
+    page.wait_for_function(
+        f"""() => document.querySelector('.docsViewerReport')?.dataset.reportState === 'error'
+            && document.querySelector('.docsViewerReport')?.textContent.includes(
+                '{INVALID_SUBSCOPE_DOC_ID}'
+            )""",
+        timeout=timeout_ms,
+    )
+    assert_subscope_route_state(
+        page,
+        subdoc_id=INVALID_SUBSCOPE_DOC_ID,
+        display_mode="rendered-document",
+    )
+    if not page.locator("#docsViewerManageEditButton").is_disabled():
+        raise AssertionError("invalid detail did not disable Edit metadata")
+    if not page.locator("#docsViewerManageSubdocSourceButton").is_disabled():
+        raise AssertionError("invalid detail did not disable Subdoc Source")
+
+    return request_log
+
+
+def assert_subscope_request_log(request_log: list[dict[str, object]]) -> None:
+    def get_requests(path: str, method: str = "GET") -> list[dict[str, object]]:
+        return [
+            record
+            for record in request_log
+            if record["path"] == path and record["method"] == method
+        ]
+
+    source_reads = get_requests("/docs/source")
+    expected_source_queries = [
+        {"scope": "studio", "doc_id": SUBSCOPE_REPORT_DOC_ID},
+        {
+            "scope": "studio",
+            "sub_scope": SUBSCOPE_ID,
+            "doc_id": SUBSCOPE_DOC_ID,
+        },
+        {
+            "scope": "studio",
+            "sub_scope": SUBSCOPE_ID,
+            "doc_id": SUBSCOPE_DOC_ID,
+        },
+    ]
+    if [record["query"] for record in source_reads] != expected_source_queries:
+        raise AssertionError(f"source target request log changed: {request_log!r}")
+
+    rebuilds = get_requests("/docs/source/rebuild", "POST")
+    if rebuilds != [
+        {
+            "method": "POST",
+            "path": "/docs/source/rebuild",
+            "query": {},
+            "body": {
+                "scope": "studio",
+                "sub_scope": SUBSCOPE_ID,
+                "doc_id": SUBSCOPE_DOC_ID,
+                "source_revision": "sha256:smoke-subdoc-r1",
+                "source_body": "# Saved smoke detail.\n",
+            },
+        }
+    ]:
+        raise AssertionError(f"source rebuild request log changed: {request_log!r}")
+
+    metadata_reads = get_requests("/docs/metadata")
+    if [record["query"] for record in metadata_reads] != [
+        {
+            "scope": "studio",
+            "sub_scope": SUBSCOPE_ID,
+            "doc_id": SUBSCOPE_DOC_ID,
+        }
+    ]:
+        raise AssertionError(f"metadata read target log changed: {request_log!r}")
+    metadata_updates = get_requests("/docs/update-metadata", "POST")
+    if metadata_updates != [
+        {
+            "method": "POST",
+            "path": "/docs/update-metadata",
+            "query": {},
+            "body": {
+                "scope": "studio",
+                "sub_scope": SUBSCOPE_ID,
+                "doc_id": SUBSCOPE_DOC_ID,
+                "title": "Renamed Smoke Detail",
+                "summary": "Refreshed synthetic metadata",
+                "date": "2026-07-27",
+                "date_display": "July 2026",
+                "ui_status": "done",
+                "viewable": False,
+            },
+        }
+    ]:
+        raise AssertionError(f"metadata update request log changed: {request_log!r}")
+
+    inventories = get_requests("/docs/sub-scope-documents")
+    if len(inventories) != 7 or any(
+        record["query"] != {"scope": "studio", "sub_scope": SUBSCOPE_ID}
+        for record in inventories
+    ):
+        raise AssertionError(f"manage inventory refresh log changed: {request_log!r}")
+    details = get_requests(f"/__smoke/subscope/by-id/{SUBSCOPE_DOC_ID}.json")
+    if len(details) != 6:
+        raise AssertionError(f"targeted detail refresh log changed: {request_log!r}")
+    indexes = get_requests("/docs/index-tree")
+    parent_docs = get_requests("/docs/doc")
+    if len(indexes) != 6 or len(parent_docs) != 6 or any(
+        record["query"] != {
+            "scope": "studio",
+            "doc_id": SUBSCOPE_REPORT_DOC_ID,
+        }
+        for record in parent_docs
+    ):
+        raise AssertionError(f"parent remount request log changed: {request_log!r}")
+
+
 def exercise_manage_route(
     page: Page,
     base_url: str,
@@ -1660,6 +2397,7 @@ def exercise_manage_route(
     assert_metadata_hydration_failure_is_safe(page)
     assert_metadata_workflow_uses_exact_sub_scope_target(page)
     assert_metadata_client_uses_exact_target_requests(page)
+    assert_metadata_response_refreshes_exact_target(page)
     assert_source_editor_media_caption_option(page)
     assert_open_source_target_handoff(page)
     assert_delete_uses_first_remaining_root(page)
@@ -1994,10 +2732,22 @@ def main(argv: list[str] | None = None) -> int:
                     base_url,
                     args.timeout_ms,
                 )
+                subscope_page = browser.new_page()
+                subscope_page.on(
+                    "pageerror",
+                    lambda exc: errors.append(exc.stack or str(exc)),
+                )
+                subscope_request_log = exercise_subscope_editing_route(
+                    subscope_page,
+                    base_url,
+                    args.timeout_ms,
+                )
+                subscope_page.close()
             finally:
                 browser.close()
 
         assert_generated_requests(generated_paths)
+        assert_subscope_request_log(subscope_request_log)
         if "/docs-viewer/runtime/js/import/docs-html-import.js" not in import_module_paths:
             raise AssertionError(f"expected lazy Docs Import module request; saw {sorted(import_module_paths)!r}")
         if "/docs-viewer/runtime/js/management/docs-viewer-scope-lifecycle.js" not in scope_lifecycle_paths:

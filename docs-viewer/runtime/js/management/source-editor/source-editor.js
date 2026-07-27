@@ -36,12 +36,12 @@ function diagnosticsText(payload) {
 function openLeavePrompt(root) {
   return openDocsViewerManagementModal({
     root: root,
-    title: "Do you want to save changes?",
+    title: "Return to doc?",
     size: "compact",
     bodyHtml: '<p class="docsViewer__modalNote muted small">Unsaved Markdown source changes will be discarded if you leave without rebuilding.</p>',
     actions: [
-      { role: "modal-primary", label: "Yes" },
-      { role: "modal-cancel", label: "No" }
+      { role: "modal-primary", label: "Return to doc" },
+      { role: "modal-cancel", label: "Cancel" }
     ]
   }).then(function (result) {
     return Boolean(result && result.confirmed);
@@ -330,17 +330,13 @@ function returnToRendered(context, state) {
 
 function leaveSource(context, state) {
   if (!dirtyNow(state)) {
-    returnToRendered(context, state);
-    return;
+    return returnToRendered(context, state);
   }
-  openLeavePrompt(context.mount ? context.mount.ownerDocument.body : document.body).then(function (saveFirst) {
-    if (saveFirst) {
-      rebuildSource(context, state);
-      return;
-    }
+  return openLeavePrompt(context.mount ? context.mount.ownerDocument.body : document.body).then(function (confirmedReturn) {
+    if (!confirmedReturn) return false;
     state.lastCleanBody = normalizeBody(state.textarea ? state.textarea.value : "");
     projectDirty(state);
-    returnToRendered(context, state);
+    return returnToRendered(context, state);
   });
 }
 

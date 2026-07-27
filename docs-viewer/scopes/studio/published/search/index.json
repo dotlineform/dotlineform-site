@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-aaba73b34a2e165d7b77b0e3adf3a8a3",
-    "generated_at_utc": "2026-07-27T19:02:58Z",
+    "version": "blake2b-ecdf4cc832af415635e6ae8b614320b8",
+    "generated_at_utc": "2026-07-27T19:28:17Z",
     "count": 228
   },
   "entries": [
@@ -3564,10 +3564,10 @@
       "kind": "doc",
       "title": "Sub-Scope Document Editing Delivery",
       "href": "/docs/?scope=studio&doc=d-20260727-111354-3ac5f0",
-      "last_updated": "2026-07-27 20:02:30",
+      "last_updated": "2026-07-27 20:28:07",
       "parent_id": "d-20260726-224323-eb0a65",
       "parent_title": "Manage Sub-Scope Documents",
-      "display_meta": "2026-07-27 20:02:30 • Manage Sub-Scope Documents",
+      "display_meta": "2026-07-27 20:28:07 • Manage Sub-Scope Documents",
       "search_terms": [
         "sub-scope document editing delivery",
         "sub",
@@ -3578,16 +3578,15 @@
         "manage sub-scope documents",
         "manage",
         "documents",
-        "2026-07-27 20:02:30",
+        "2026-07-27 20:28:07",
         "2026",
         "07",
         "27",
         "20",
-        "02",
-        "30",
+        "28",
         "d-20260727-111354-3ac5f0"
       ],
-      "search_text": "sub-scope document editing delivery sub scope document editing delivery manage sub-scope documents manage documents 2026-07-27 20:02:30 2026 07 27 20 02 30 d-20260727-111354-3ac5f0"
+      "search_text": "sub-scope document editing delivery sub scope document editing delivery manage sub-scope documents manage documents 2026-07-27 20:28:07 2026 07 27 20 28 d-20260727-111354-3ac5f0"
     },
     {
       "id": "d-20260726-215805-ecf8a4",

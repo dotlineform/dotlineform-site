@@ -574,6 +574,7 @@ export function startDocsViewerRuntime(options) {
       renderRecentMode: renderRecentMode,
       renderSearchMode: renderSearchMode,
       renderSidebar: renderSidebar,
+      reloadMetadataTarget: reloadManagedDocumentTarget,
       root: root,
       routeReload: {
         reloadViewerConfiguration: function () { return configController.reloadViewerConfiguration(); },
@@ -785,6 +786,15 @@ export function startDocsViewerRuntime(options) {
     return Promise.resolve(null);
   }
 
+  function reloadManagedDocumentTarget(target) {
+    var managedTarget = target && typeof target === "object" ? target : {};
+    var docId = String(managedTarget.doc_id || "").trim();
+    if (String(managedTarget.sub_scope || "").trim()) {
+      docId = String(appSession.domains.selectedDocument.selectedDocId || "").trim();
+    }
+    return reloadGeneratedDoc(docId);
+  }
+
   function sourceEditorServices() {
     function clearInfoSubscription() {
       sourceEditorInfoRequest += 1;
@@ -813,14 +823,7 @@ export function startDocsViewerRuntime(options) {
     }
 
     return {
-      reloadRenderedDoc: function (target) {
-        var sourceTarget = target && typeof target === "object" ? target : {};
-        var docId = String(sourceTarget.doc_id || "").trim();
-        if (String(sourceTarget.sub_scope || "").trim()) {
-          docId = String(appSession.domains.selectedDocument.selectedDocId || "").trim();
-        }
-        return reloadGeneratedDoc(docId);
-      },
+      reloadRenderedDoc: reloadManagedDocumentTarget,
       clearActiveSourceEditorContextAdapter: function (adapter) {
         if (!adapter || activeSourceEditorContextAdapter === adapter) {
           clearInfoSubscription();
