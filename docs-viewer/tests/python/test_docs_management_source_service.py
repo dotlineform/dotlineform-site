@@ -7,6 +7,10 @@ import sys
 import tempfile
 from pathlib import Path
 
+import pytest
+
+from repo_factory import docs_scope_record, write_docs_scope_config
+
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DOCS_SERVICES_DIR = REPO_ROOT / "docs-viewer" / "services"
@@ -31,6 +35,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         "{\"schema_version\":\"site_tools_config_v1\"}\n",
         encoding="utf-8",
     )
+    write_docs_scope_config(repo_root, [docs_scope_record("studio")])
     write_source(
         repo_root,
         "target.md",
@@ -53,6 +58,14 @@ def test_read_source_body_returns_body_and_revision() -> None:
     assert payload["doc_id"] == "target"
     assert payload["source_body"] == "# Target\n\nOriginal body.\n"
     assert str(payload["source_revision"]).startswith("sha256:")
+    assert set(payload) == {
+        "ok",
+        "scope",
+        "doc_id",
+        "source_body",
+        "source_revision",
+        "path",
+    }
 
 
 def test_rebuild_source_body_rejects_stale_revision() -> None:
@@ -85,6 +98,15 @@ def test_read_source_body_rejects_invalid_existing_front_matter() -> None:
             assert "front matter" in str(error)
         else:
             raise AssertionError("expected invalid front matter to be rejected")
+
+
+def test_read_source_body_rejects_retired_doc_alias() -> None:
+    with make_repo() as temp_path:
+        with pytest.raises(ValueError, match="doc_id is required"):
+            source_service.read_source_body(
+                Path(temp_path),
+                {"scope": ["studio"], "doc": ["target"]},
+            )
 
 
 def test_rebuild_source_body_preserves_front_matter_exactly_and_targets_selected_doc(monkeypatch) -> None:

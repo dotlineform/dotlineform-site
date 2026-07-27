@@ -28,6 +28,7 @@ from repo_factory import docs_sub_scope_record
 TAGS_REPORT_DOC_ID = "d-20260620-000000-000011"
 DETAIL_DOC_ID = "d-20260620-000000-000012"
 RELATED_DOC_ID = "d-20260622-000000-000013"
+HIDDEN_DOC_ID = "d-20260622-000000-000014"
 
 def test_python_docs_builder_excludes_configured_sub_scope_sources() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
@@ -150,6 +151,61 @@ Related body.
     assert not (root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/by-id/stale.json").exists()
     assert not (root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/index-tree.json").exists()
     assert not (root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/recent.json").exists()
+
+
+def test_python_docs_builder_keeps_non_viewable_docs_out_of_public_manifest() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        config_path = root / "docs-viewer/config/scopes/docs_scopes.json"
+        payload = read_json(config_path)
+        payload["scopes"][0]["sub_scopes"] = [
+            docs_sub_scope_record("studio", "tags")
+        ]
+        write_json(config_path, payload)
+        write_text(
+            root / f"docs-viewer/scopes/studio/source/sub-scopes/tags/documents/{DETAIL_DOC_ID}.md",
+            f"""---
+doc_id: {DETAIL_DOC_ID}
+title: Detail
+---
+# Detail
+""",
+        )
+        write_text(
+            root / f"docs-viewer/scopes/studio/source/sub-scopes/tags/documents/{HIDDEN_DOC_ID}.md",
+            f"""---
+doc_id: {HIDDEN_DOC_ID}
+title: Hidden
+viewable: false
+---
+# Hidden
+""",
+        )
+
+        exit_code, _stdout, stderr = run_cli(
+            root,
+            ["--scope", "studio", "--sub-scope", "tags", "--write"],
+        )
+        manifest = read_json(
+            root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/manifest.json"
+        )
+        visible_payload = read_json(
+            root
+            / f"docs-viewer/scopes/studio/published/documents/sub-scopes/tags/by-id/{DETAIL_DOC_ID}.json"
+        )
+        hidden_payload_path = (
+            root
+            / f"docs-viewer/scopes/studio/published/documents/sub-scopes/tags/by-id/{HIDDEN_DOC_ID}.json"
+        )
+        hidden_payload_exists = hidden_payload_path.is_file()
+
+    assert exit_code == 0
+    assert stderr == ""
+    assert manifest == {"docs": [{"doc_id": DETAIL_DOC_ID, "title": "Detail"}]}
+    assert set(visible_payload) >= {"doc_id", "title", "content_html"}
+    assert hidden_payload_exists
+
 
 def test_python_docs_builder_public_sub_scope_uses_publish_url_base() -> None:
     with tempfile.TemporaryDirectory() as temp_path:

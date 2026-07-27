@@ -206,6 +206,22 @@ def doc_id_for_by_id_path(relative_path: Path) -> str:
     return ""
 
 
+def manifest_doc_ids(working_root: Path) -> set[str] | None:
+    manifest_path = working_root / "manifest.json"
+    if not manifest_path.is_file():
+        return None
+    rows = read_json(manifest_path).get("docs")
+    if not isinstance(rows, list):
+        return None
+    return {
+        doc_id
+        for row in rows
+        if isinstance(row, dict)
+        for doc_id in [clean_doc_id(row.get("doc_id"))]
+        if doc_id
+    }
+
+
 def publishable_docs_files(
     working_root: Path,
     published_root: Path,
@@ -217,6 +233,11 @@ def publishable_docs_files(
     hidden_doc_ids: set[str] = set()
     if index_tree_path.exists():
         hidden_doc_ids = hidden_doc_ids_from_tree(read_json(index_tree_path))
+    listed_manifest_doc_ids = (
+        None
+        if index_tree_path.exists()
+        else manifest_doc_ids(working_root)
+    )
     publication_recent_path = working_root / ".publish/recent.json"
     if require_publication_recent and not publication_recent_path.is_file():
         raise FileNotFoundError(f"working publication Recent projection not found: {publication_recent_path}")
@@ -235,6 +256,12 @@ def publishable_docs_files(
             continue
         by_id_doc_id = doc_id_for_by_id_path(relative_path)
         if by_id_doc_id and by_id_doc_id in hidden_doc_ids:
+            continue
+        if (
+            by_id_doc_id
+            and listed_manifest_doc_ids is not None
+            and by_id_doc_id not in listed_manifest_doc_ids
+        ):
             continue
         if relative_path == Path("index-tree.json"):
             files[relative_path] = json_bytes(public_index_tree_payload(read_json(source_path), hidden_doc_ids))

@@ -11,6 +11,7 @@ from typing import Any, Dict, Optional
 import docs_source_model as source_model
 import docs_write_rebuild as write_rebuild
 from docs_management_context import DEFAULT_MARKDOWN_APP_ENV, log_event
+from docs_management_document_target import resolve_managed_document_target
 from docs_scope_config import path_label
 from local_env import runtime_env
 
@@ -65,26 +66,32 @@ def resolve_scope_doc(repo_root: Path, scope: str, doc_id: str) -> source_model.
 
 
 def read_source_body(repo_root: Path, params: Dict[str, list[str]]) -> Dict[str, Any]:
-    scope = source_model.normalize_scope((params.get("scope") or [""])[0])
-    doc_id = str((params.get("doc_id") or params.get("doc") or [""])[0] or "").strip()
-    if not doc_id:
-        raise ValueError("doc_id is required")
-    target = resolve_scope_doc(repo_root, scope, doc_id)
-    source_text = target.path.read_text(encoding="utf-8")
+    request_target = {
+        "scope": (params.get("scope") or [""])[0],
+        "doc_id": (params.get("doc_id") or [""])[0],
+    }
+    if "sub_scope" in params:
+        request_target["sub_scope"] = (params.get("sub_scope") or [""])[0]
+    resolved = resolve_managed_document_target(repo_root, request_target)
+    target = resolved.document
+    source_text = target.source_text
     _front_matter_source, front_matter, source_body = split_source_exact(source_text)
     existing_doc_id = str(front_matter.get("doc_id") or "").strip()
     if not existing_doc_id:
         raise ValueError("existing source front matter is missing doc_id")
     if existing_doc_id != target.doc_id:
         raise ValueError(f"existing source doc_id {existing_doc_id!r} does not match requested doc {target.doc_id!r}")
-    return {
+    payload = {
         "ok": True,
-        "scope": scope,
+        "scope": resolved.scope,
         "doc_id": target.doc_id,
         "source_body": normalize_source_body(source_body),
         "source_revision": source_revision_for_text(source_text),
         "path": path_label(repo_root, target.path),
     }
+    if resolved.sub_scope:
+        payload["sub_scope"] = resolved.sub_scope
+    return payload
 
 
 def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:

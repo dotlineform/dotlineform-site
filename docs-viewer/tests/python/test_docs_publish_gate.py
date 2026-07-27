@@ -199,10 +199,19 @@ def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> No
             docs_sub_scope_record("library", "tags", title="Tags", scope_type="public")
         ]
         write_json(config_path, config)
-        write_json(repo_root / "docs-viewer/scopes/library/published/documents/sub-scopes/tags/manifest.json", {"doc_ids": "scale"})
+        write_json(
+            repo_root / "docs-viewer/scopes/library/published/documents/sub-scopes/tags/manifest.json",
+            {"docs": [{"doc_id": "scale", "title": "Scale"}]},
+        )
         write_json(repo_root / "docs-viewer/scopes/library/published/documents/sub-scopes/tags/by-id/scale.json", {"doc_id": "scale", "title": "Scale"})
+        write_json(repo_root / "docs-viewer/scopes/library/published/documents/sub-scopes/tags/by-id/hidden.json", {"doc_id": "hidden", "title": "Hidden"})
         write_json(repo_root / "site/assets/data/docs/scopes/library/tags/manifest.json", {"doc_ids": "old"})
         write_json(repo_root / "site/assets/data/docs/scopes/library/tags/by-id/old.json", {"doc_id": "old"})
+        write_json(repo_root / "site/assets/data/docs/scopes/library/tags/by-id/hidden.json", {"doc_id": "hidden", "title": "Old Hidden"})
+        working_scale_bytes = (
+            repo_root
+            / "docs-viewer/scopes/library/published/documents/sub-scopes/tags/by-id/scale.json"
+        ).read_bytes()
 
         preview = docs_publish_gate.publish_confirm(repo_root, {"scope": "library"})
         applied = docs_publish_gate.publish_apply(repo_root, {"scope": "library", "confirm": True})
@@ -215,9 +224,12 @@ def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> No
                     "site/assets/data/docs/scopes/library/tags/by-id/scale.json",
                     "site/assets/data/docs/scopes/library/tags/manifest.json",
                 ],
-                "removed": ["site/assets/data/docs/scopes/library/tags/by-id/old.json"],
+                "removed": [
+                    "site/assets/data/docs/scopes/library/tags/by-id/hidden.json",
+                    "site/assets/data/docs/scopes/library/tags/by-id/old.json",
+                ],
                 "changed_count": 2,
-                "removed_count": 1,
+                "removed_count": 2,
             }
         ]
         assert "site/assets/data/docs/scopes/library/tags/by-id/old.json" not in preview["docs"]["removed"]
@@ -226,8 +238,12 @@ def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> No
         public_manifest = json.loads((repo_root / "site/assets/data/docs/scopes/library/tags/manifest.json").read_text(encoding="utf-8"))
         public_scale = json.loads((repo_root / "site/assets/data/docs/scopes/library/tags/by-id/scale.json").read_text(encoding="utf-8"))
 
-        assert public_manifest == {"doc_ids": "scale"}
+        assert public_manifest == {"docs": [{"doc_id": "scale", "title": "Scale"}]}
         assert public_scale["title"] == "Scale"
+        assert (
+            repo_root / "site/assets/data/docs/scopes/library/tags/by-id/scale.json"
+        ).read_bytes() == working_scale_bytes
+        assert not (repo_root / "site/assets/data/docs/scopes/library/tags/by-id/hidden.json").exists()
         assert not (repo_root / "site/assets/data/docs/scopes/library/tags/by-id/old.json").exists()
         assert not (repo_root / "site/assets/data/docs/scopes/library/sub-scopes/tags").exists()
 

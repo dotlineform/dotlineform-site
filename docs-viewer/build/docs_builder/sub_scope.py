@@ -90,6 +90,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
                     "title": doc.title,
                 }
                 for doc in sorted(docs, key=self.doc_sort_key)
+                if doc.viewable
             ],
         }
 

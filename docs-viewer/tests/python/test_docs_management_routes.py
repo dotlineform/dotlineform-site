@@ -102,6 +102,13 @@ def test_semantic_token_usage_route_is_management_owned() -> None:
     assert routes.GENERATED_SEMANTIC_TOKENS_PATH in routes.GET_PATHS
 
 
+def test_sub_scope_document_inventory_route_is_management_owned() -> None:
+    assert routes.SUB_SCOPE_DOCUMENTS_PATH in routes.GET_PATHS
+    config_path = REPO_ROOT / "docs-viewer/config/defaults/docs-viewer-service.json"
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    assert config["routes"]["sub_scope_documents"] == routes.SUB_SCOPE_DOCUMENTS_PATH
+
+
 def main() -> None:
     test_get_routes_are_unique()
     test_post_routes_are_unique()
@@ -115,6 +122,7 @@ def main() -> None:
     test_staged_media_routes_are_management_owned()
     test_diagram_source_routes_are_management_owned()
     test_semantic_token_usage_route_is_management_owned()
+    test_sub_scope_document_inventory_route_is_management_owned()
     print("Docs Management route tests OK")
 
 
