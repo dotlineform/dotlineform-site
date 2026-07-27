@@ -19,6 +19,7 @@ SUPPRESSION_PENDING = "pending"
 SUPPRESSION_COMPLETE = "complete"
 DEFAULT_PENDING_TTL_SECONDS = 300
 DEFAULT_COMPLETE_TTL_SECONDS = 30
+SUB_SCOPE_OWNER_SEPARATOR = "__sub_scope__"
 
 
 def utc_now() -> dt.datetime:
@@ -41,6 +42,16 @@ def parse_utc(value: str) -> dt.datetime | None:
 
 def suppressions_dir(repo_root: Path) -> Path:
     return repo_root / SUPPRESSIONS_REL_DIR
+
+
+def watch_suppression_owner(scope: str, sub_scope: str = "") -> str:
+    normalized_scope = str(scope or "").strip()
+    normalized_sub_scope = str(sub_scope or "").strip()
+    return (
+        f"{normalized_scope}{SUB_SCOPE_OWNER_SEPARATOR}{normalized_sub_scope}"
+        if normalized_sub_scope
+        else normalized_scope
+    )
 
 
 def suppression_path(repo_root: Path, scope: str, filename: str) -> Path:

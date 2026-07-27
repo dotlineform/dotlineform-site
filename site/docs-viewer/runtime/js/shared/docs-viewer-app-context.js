@@ -86,10 +86,6 @@ export function createDocsViewerRouteContext(options) {
   context.bookmarkScope = context.viewerScope || context.viewerPathname || "docs";
   var routeParams = new URLSearchParams(locationSearch(windowRef));
   context.openImportOnLoad = context.isDocsManagementRoute && routeParams.get("import") === "1";
-  context.openSourceDocIdOnLoad = (
-    context.isDocsManagementRoute
-    && routeParams.get("source") === "markdown"
-  ) ? cleanString(routeParams.get("doc")) : "";
   return context;
 }
 

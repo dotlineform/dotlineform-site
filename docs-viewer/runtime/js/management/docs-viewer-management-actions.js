@@ -15,6 +15,9 @@ import {
   DOCS_VIEWER_ACTION_IDS
 } from "./docs-viewer-action-definitions.js";
 import {
+  normalizeManagedDocumentTarget
+} from "./docs-viewer-management-document-target.js";
+import {
   buildDocsViewerDeletePreviewBody,
   openDocsViewerConfirmModal,
   openDocsViewerTextInputModal
@@ -435,12 +438,20 @@ export function createDocsViewerManagementActionController(options) {
       });
   }
 
-  function handleMarkdownSource() {
-    var doc = actionTargetDoc(DOCS_VIEWER_ACTION_IDS.MARKDOWN_SOURCE);
-    if (!doc || typeof context.requestDocumentMode !== "function") return;
+  function handleMarkdownSource(target) {
+    if (typeof context.requestDocumentMode !== "function") return;
+    var sourceTarget = normalizeManagedDocumentTarget(target);
     hideContextMenu();
     var activeMode = root && root.dataset ? String(root.dataset.documentDisplayMode || "") : "";
-    context.requestDocumentMode(activeMode === "markdown-source" ? "rendered-document" : "markdown-source");
+    if (activeMode === "markdown-source") {
+      context.requestDocumentMode("rendered-document");
+      return;
+    }
+    context.requestDocumentMode("markdown-source", {
+      context: {
+        sourceTarget: sourceTarget
+      }
+    });
   }
 
   function handleMarkdownSave() {
@@ -598,18 +609,15 @@ export function createDocsViewerManagementActionController(options) {
       });
   }
 
-  function handleOpenSource(editor, targetDocId) {
-    var actionId = editor === "vscode" ? DOCS_VIEWER_ACTION_IDS.OPEN_VSCODE : DOCS_VIEWER_ACTION_IDS.OPEN;
-    var doc = arguments.length > 1
-      ? actionTargetDoc(actionId, targetDocId)
-      : actionTargetDoc(actionId);
-    if (!doc) return;
+  function handleOpenSource(editor, target, title) {
+    var sourceTarget = normalizeManagedDocumentTarget(target);
+    var targetTitle = String(title || sourceTarget.doc_id).trim() || sourceTarget.doc_id;
 
     setManagementBusy(true);
     hideContextMenu();
-    setManagementMessage("Opening source for " + doc.title + "...", false);
+    setManagementMessage("Opening source for " + targetTitle + "...", false);
 
-    return openManagedDocSource(doc.doc_id, editor, managementClientOptions())
+    return openManagedDocSource(sourceTarget, editor, managementClientOptions())
       .then(function () {
         setManagementMessage("", false);
       })

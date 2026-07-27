@@ -83,9 +83,13 @@ export function createDocsViewerDocumentDisplayModeHost(options) {
       });
   }
 
-  function mountLifecycle(lifecycle) {
+  function mountLifecycle(lifecycle, contextOverrides) {
     activeLifecycle = lifecycle;
-    return callLifecycle(lifecycle, "mount", modeContext({ mount: mount }));
+    return callLifecycle(lifecycle, "mount", modeContext(Object.assign(
+      {},
+      contextOverrides || {},
+      { mount: mount }
+    )));
   }
 
   function requestMode(modeId, optionsForRequest) {
@@ -121,7 +125,9 @@ export function createDocsViewerDocumentDisplayModeHost(options) {
       .then(function () {
         return loadLifecycle(resolved.mode);
       })
-      .then(mountLifecycle)
+      .then(function (lifecycle) {
+        return mountLifecycle(lifecycle, requestSettings.context);
+      })
       .then(function () {
         if (typeof requestSettings.onAccepted === "function") requestSettings.onAccepted(resolved.mode);
       })

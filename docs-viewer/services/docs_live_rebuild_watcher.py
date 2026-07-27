@@ -51,7 +51,12 @@ from docs_scope_config import (
     resolve_scope_path,
 )
 from docs_write_rebuild import targeted_docs_build_fallback_reason
-from docs_watch_suppression import SUPPRESSION_COMPLETE, clear_watch_suppressions, load_active_watch_suppressions
+from docs_watch_suppression import (
+    SUPPRESSION_COMPLETE,
+    clear_watch_suppressions,
+    load_active_watch_suppressions,
+    watch_suppression_owner,
+)
 from local_env import runtime_env
 
 DOCS_BUILDER_DIAGNOSTICS_PREFIX = "Docs builder diagnostics: "
@@ -727,25 +732,36 @@ def main() -> int:
                 ready_scope = state["scope"]
                 ready_label = state["label"]
                 changed_files = list(state["changed_files"])
-                active_suppressions = load_active_watch_suppressions(repo_root, ready_scope)
+                suppression_owner = watch_suppression_owner(
+                    ready_scope,
+                    str(state.get("sub_scope") or ""),
+                )
+                active_suppressions = load_active_watch_suppressions(
+                    repo_root,
+                    suppression_owner,
+                )
                 if changed_files:
                     matching = [active_suppressions.get(filename) for filename in changed_files]
                     if (
                         state.get("watch_kind") == "documents"
-                        and not state.get("sub_scope")
                         and all(record is not None for record in matching)
                     ):
                         if all(str(record.get("status") or "").strip() == SUPPRESSION_COMPLETE for record in matching):
-                            clear_watch_suppressions(repo_root, ready_scope, changed_files)
-                            current_doc_snapshot, snapshot_error = try_parsed_doc_snapshot(repo_root, ready_scope)
-                            if snapshot_error:
-                                log(f"{ready_scope} parsed docs snapshot not refreshed after suppressed write: {snapshot_error}")
-                            else:
-                                state["doc_snapshot"] = current_doc_snapshot
+                            clear_watch_suppressions(
+                                repo_root,
+                                suppression_owner,
+                                changed_files,
+                            )
+                            if not state.get("sub_scope"):
+                                current_doc_snapshot, snapshot_error = try_parsed_doc_snapshot(repo_root, ready_scope)
+                                if snapshot_error:
+                                    log(f"{ready_scope} parsed docs snapshot not refreshed after suppressed write: {snapshot_error}")
+                                else:
+                                    state["doc_snapshot"] = current_doc_snapshot
                             state["dirty_at"] = None
                             state["changed_files"] = []
                             log(
-                                f"Skipped duplicate {ready_scope} rebuild for docs-management write: "
+                                f"Skipped duplicate {ready_label} rebuild for docs-management write: "
                                 f"{', '.join(changed_files)}."
                             )
                             continue

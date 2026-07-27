@@ -26,6 +26,7 @@ from docs_watch_suppression import (
     SUPPRESSION_PENDING,
     clear_watch_suppressions,
     set_watch_suppressions,
+    watch_suppression_owner,
 )
 
 DOCS_BUILDER_DIAGNOSTICS_PREFIX = "Docs builder diagnostics: "
@@ -44,6 +45,22 @@ def current_scope_source_root(repo_root: Path, scope: str) -> Path:
     if config is None:
         raise ValueError(f"scope {scope!r} is not configured")
     return resolve_scope_path(repo_root, document_source_path(config))
+
+
+def current_sub_scope_source_root(repo_root: Path, scope: str, sub_scope: str) -> Path:
+    configs = load_docs_scope_configs(repo_root, scope_ids=[scope])
+    try:
+        config = configs[scope]
+    except KeyError as exc:
+        raise ValueError(f"scope {scope!r} is not configured") from exc
+    matching = [
+        candidate
+        for candidate in config.sub_scopes
+        if candidate.sub_scope == sub_scope
+    ]
+    if not matching:
+        raise ValueError(f"sub-scope {scope}/{sub_scope} is not configured")
+    return resolve_scope_path(repo_root, document_source_path(matching[0]))
 
 
 def python_builder_command(script: str, *args: str) -> list[str]:
@@ -273,6 +290,64 @@ def rebuild_scope_outputs(
     }
 
 
+def rebuild_sub_scope_outputs(
+    repo_root: Path,
+    scope: str,
+    sub_scope: str,
+) -> Dict[str, Any]:
+    docs_command = python_builder_command(
+        DOCS_BUILDER_SCRIPT,
+        "--scope",
+        scope,
+        "--sub-scope",
+        sub_scope,
+        "--write",
+        "--diagnostics",
+    )
+    search_command = python_builder_command(
+        SEARCH_BUILDER_SCRIPT,
+        "--scope",
+        scope,
+        "--write",
+    )
+    steps = []
+    docs_diagnostics: Optional[Dict[str, Any]] = None
+    search = {"mode": "full", "doc_ids": []}
+    search_diagnostics = extract_search_step_diagnostics("", search)
+    for label, command in (("docs", docs_command), ("search", search_command)):
+        step = run_rebuild_command(command, repo_root)
+        steps.append(step)
+        if label == "docs":
+            docs_payloads = extract_docs_builder_diagnostics(step["stdout"])
+            docs_diagnostics = docs_payloads[-1] if docs_payloads else None
+        else:
+            search_diagnostics = extract_search_step_diagnostics(step["stdout"], search)
+            search_diagnostics["elapsed_seconds"] = step["elapsed_seconds"]
+        if step["returncode"] != 0:
+            detail = step["stderr"] or step["stdout"] or f"exit {step['returncode']}"
+            raise RuntimeError(
+                rebuild_failure_message(
+                    f"rebuild failed for {scope}/{sub_scope}",
+                    detail,
+                )
+            )
+    return {
+        "ok": True,
+        "steps": steps,
+        "search": search,
+        "docs": {
+            "mode": "sub_scope",
+            "doc_ids": [],
+            "sub_scope": sub_scope,
+            "reason": "configured sub-scope rebuild",
+        },
+        "diagnostics": {
+            "docs": docs_diagnostics,
+            "search": search_diagnostics,
+        },
+    }
+
+
 def perform_source_write_and_rebuild(
     repo_root: Path,
     scope: str,
@@ -333,6 +408,52 @@ def perform_source_write_and_rebuild(
             repo_root,
             scope,
             completion_filenames,
+            status=SUPPRESSION_COMPLETE,
+            reason=suppression_reason,
+            ttl_seconds=DEFAULT_COMPLETE_TTL_SECONDS,
+        )
+    return rebuild
+
+
+def perform_sub_scope_source_write_and_rebuild(
+    repo_root: Path,
+    scope: str,
+    sub_scope: str,
+    changed_paths: list[Path],
+    write_operation: Callable[[], Any],
+    *,
+    suppression_reason: str,
+) -> Dict[str, Any]:
+    root = current_sub_scope_source_root(repo_root, scope, sub_scope)
+    filenames = sorted(
+        {
+            path.resolve().relative_to(root.resolve()).as_posix()
+            for path in changed_paths
+            if isinstance(path, Path)
+        }
+    )
+    suppression_owner = watch_suppression_owner(scope, sub_scope)
+    if filenames:
+        set_watch_suppressions(
+            repo_root,
+            suppression_owner,
+            filenames,
+            status=SUPPRESSION_PENDING,
+            reason=suppression_reason,
+            ttl_seconds=DEFAULT_PENDING_TTL_SECONDS,
+        )
+    try:
+        write_operation()
+        rebuild = rebuild_sub_scope_outputs(repo_root, scope, sub_scope)
+    except Exception:
+        if filenames:
+            clear_watch_suppressions(repo_root, suppression_owner, filenames)
+        raise
+    if filenames:
+        set_watch_suppressions(
+            repo_root,
+            suppression_owner,
+            filenames,
             status=SUPPRESSION_COMPLETE,
             reason=suppression_reason,
             ttl_seconds=DEFAULT_COMPLETE_TTL_SECONDS,

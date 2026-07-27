@@ -7,7 +7,6 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
-import docs_source_model as source_model
 from docs_artifact_locations import (
     ArtifactLocation,
     artifact_location_adapter,
@@ -17,20 +16,18 @@ from docs_artifact_locations import (
 )
 from docs_import_common import humanize
 from docs_management_context import log_event
-from docs_management_source_service import resolve_scope_doc
+from docs_management_document_target import (
+    ManagedDocumentTarget,
+    managed_document_target_request,
+    resolve_managed_document_target,
+)
 from docs_media_inventory import MEDIA_REFERENCE_PATTERN
-from docs_scope_config import load_docs_scope_configs
 
-
-def _request_doc_id(value: Any) -> str:
-    doc_id = str(value or "").strip()
-    if not doc_id:
-        raise ValueError("doc_id is required")
-    return doc_id
-
-
-def _verified_diagram_sources(repo_root: Path, scope: str, doc_id: str) -> list[dict[str, str]]:
-    config = load_docs_scope_configs(repo_root)[scope]
+def _verified_diagram_sources(
+    repo_root: Path,
+    target: ManagedDocumentTarget,
+) -> list[dict[str, str]]:
+    config = target.parent_config
     build = config.source.build_media.get("mermaid")
     published_media = config.published.media.get("svg")
     if (
@@ -42,8 +39,7 @@ def _verified_diagram_sources(repo_root: Path, scope: str, doc_id: str) -> list[
     ):
         return []
 
-    target = resolve_scope_doc(repo_root, scope, doc_id)
-    source_text = target.path.read_text(encoding="utf-8")
+    source_text = target.document.path.read_text(encoding="utf-8")
     reference_prefix = published_media.reference_prefix.as_posix().rstrip("/")
     published_identities: set[str] = set()
     for match in MEDIA_REFERENCE_PATTERN.finditer(source_text):
@@ -92,15 +88,22 @@ def _verified_diagram_sources(repo_root: Path, scope: str, doc_id: str) -> list[
 
 
 def list_diagram_sources(repo_root: Path, params: dict[str, list[str]]) -> dict[str, object]:
-    scope = source_model.normalize_scope((params.get("scope") or [""])[0])
-    doc_id = _request_doc_id((params.get("doc_id") or params.get("doc") or [""])[0])
-    target = resolve_scope_doc(repo_root, scope, doc_id)
-    return {
-        "ok": True,
-        "scope": scope,
-        "doc_id": target.doc_id,
-        "sources": _verified_diagram_sources(repo_root, scope, target.doc_id),
+    request: dict[str, Any] = {
+        "scope": (params.get("scope") or [""])[0],
+        "doc_id": (params.get("doc_id") or [""])[0],
     }
+    if "sub_scope" in params:
+        request["sub_scope"] = (params.get("sub_scope") or [""])[0]
+    target = resolve_managed_document_target(repo_root, request)
+    payload: dict[str, object] = {
+        "ok": True,
+        "scope": target.scope,
+        "doc_id": target.doc_id,
+        "sources": _verified_diagram_sources(repo_root, target),
+    }
+    if target.sub_scope:
+        payload["sub_scope"] = target.sub_scope
+    return payload
 
 
 def open_diagram_source(
@@ -108,14 +111,16 @@ def open_diagram_source(
     body: dict[str, Any],
     dry_run: bool,
 ) -> dict[str, object]:
-    scope = source_model.normalize_scope(body.get("scope"))
-    doc_id = _request_doc_id(body.get("doc_id"))
+    target = resolve_managed_document_target(
+        repo_root,
+        managed_document_target_request(body),
+    )
     media_identity = normalize_artifact_identity(str(body.get("media_identity") or "").strip())
     editor = str(body.get("editor") or "vscode").strip().lower()
     if editor != "vscode":
         raise ValueError("editor must be `vscode`")
 
-    records = _verified_diagram_sources(repo_root, scope, doc_id)
+    records = _verified_diagram_sources(repo_root, target)
     target_record = next(
         (record for record in records if record["media_identity"] == media_identity),
         None,
@@ -123,7 +128,7 @@ def open_diagram_source(
     if target_record is None:
         raise FileNotFoundError("verified Mermaid source is not registered by this document")
 
-    config = load_docs_scope_configs(repo_root)[scope]
+    config = target.parent_config
     build = config.source.build_media["mermaid"]
     source_location = ArtifactLocation(
         provider=config.source.location.provider,
@@ -144,28 +149,30 @@ def open_diagram_source(
         )
         if completed.returncode != 0:
             raise RuntimeError("VS Code could not open the verified Mermaid source")
-        log_event(
-            repo_root,
-            "docs-open-diagram-source",
-            {
-                "scope": scope,
-                "doc_id": doc_id,
-                "media_identity": target_record["media_identity"],
-                "source_identity": target_record["source_identity"],
-                "editor": editor,
-            },
-        )
+        event = {
+            "scope": target.scope,
+            "doc_id": target.doc_id,
+            "media_identity": target_record["media_identity"],
+            "source_identity": target_record["source_identity"],
+            "editor": editor,
+        }
+        if target.sub_scope:
+            event["sub_scope"] = target.sub_scope
+        log_event(repo_root, "docs-open-diagram-source", event)
 
-    return {
+    payload: dict[str, object] = {
         "ok": True,
-        "scope": scope,
-        "doc_id": doc_id,
+        "scope": target.scope,
+        "doc_id": target.doc_id,
         "media_identity": target_record["media_identity"],
         "source_identity": target_record["source_identity"],
         "editor": editor,
         "summary_text": f"Opened {target_record['source_identity']} in VS Code.",
         "dry_run": dry_run,
     }
+    if target.sub_scope:
+        payload["sub_scope"] = target.sub_scope
+    return payload
 
 
 __all__ = ["list_diagram_sources", "open_diagram_source"]

@@ -79,6 +79,7 @@ export function createDocsViewerHostedViewContext(options = {}) {
     payload: payload,
     selectedDoc: selectedDoc,
     selectedMetadata: selectedMetadata,
+    sourceTarget: options.sourceTarget || null,
     sourceEditorServices: appContext.serviceAvailability && appContext.serviceAvailability.source && appContext.serviceAvailability.source.available
       ? options.sourceEditorServices || null
       : null,

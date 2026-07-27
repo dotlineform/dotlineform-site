@@ -79,6 +79,16 @@ def normalize_managed_document_target(target: Mapping[str, Any]) -> dict[str, st
     return normalized
 
 
+def managed_document_target_request(request: Mapping[str, Any]) -> dict[str, Any]:
+    target = {
+        "scope": request.get("scope"),
+        "doc_id": request.get("doc_id"),
+    }
+    if "sub_scope" in request:
+        target["sub_scope"] = request.get("sub_scope")
+    return target
+
+
 def resolve_managed_document_collection(
     repo_root: Path,
     *,

@@ -11,7 +11,10 @@ from typing import Any, Dict, Optional
 import docs_source_model as source_model
 import docs_write_rebuild as write_rebuild
 from docs_management_context import DEFAULT_MARKDOWN_APP_ENV, log_event
-from docs_management_document_target import resolve_managed_document_target
+from docs_management_document_target import (
+    managed_document_target_request,
+    resolve_managed_document_target,
+)
 from docs_scope_config import path_label
 from local_env import runtime_env
 
@@ -51,20 +54,6 @@ def split_source_exact(source_text: str) -> tuple[str, Dict[str, Any], str]:
     return source_text[: match.end()], front_matter, source_text[match.end() :]
 
 
-def resolve_scope_doc(repo_root: Path, scope: str, doc_id: str) -> source_model.ScopeDoc:
-    docs = source_model.load_scope_docs(repo_root, scope)
-    target = next((doc for doc in docs if doc.doc_id == doc_id), None)
-    if target is None:
-        raise FileNotFoundError(f"doc {doc_id!r} not found in scope {scope}")
-    root = source_model.scope_root(repo_root, scope).resolve()
-    target_path = target.path.resolve()
-    try:
-        target_path.relative_to(root)
-    except ValueError as error:
-        raise ValueError("source path escapes configured scope root") from error
-    return target
-
-
 def read_source_body(repo_root: Path, params: Dict[str, list[str]]) -> Dict[str, Any]:
     request_target = {
         "scope": (params.get("scope") or [""])[0],
@@ -95,17 +84,17 @@ def read_source_body(repo_root: Path, params: Dict[str, list[str]]) -> Dict[str,
 
 
 def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    scope = source_model.normalize_scope(body.get("scope"))
-    doc_id = str(body.get("doc_id") or "").strip()
     source_revision = str(body.get("source_revision") or "").strip()
-    if not doc_id:
-        raise ValueError("doc_id is required")
     if not source_revision:
         raise ValueError("source_revision is required")
     if "source_body" not in body:
         raise ValueError("source_body is required")
 
-    target = resolve_scope_doc(repo_root, scope, doc_id)
+    resolved = resolve_managed_document_target(
+        repo_root,
+        managed_document_target_request(body),
+    )
+    target = resolved.document
     current_source_text = target.path.read_text(encoding="utf-8")
     current_revision = source_revision_for_text(current_source_text)
     if source_revision != current_revision:
@@ -133,30 +122,39 @@ def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
         def write_operation() -> None:
             source_model.write_text_atomic(target.path, next_source_text)
 
-        rebuild = write_rebuild.perform_source_write_and_rebuild(
-            repo_root,
-            scope,
-            [target.path],
-            write_operation,
-            suppression_reason="docs-source-editor",
-            docs_doc_ids=[target.doc_id],
-            search_doc_ids=[target.doc_id],
-        )
-        log_event(
-            repo_root,
-            "docs-source-editor-rebuild",
-            {
-                "scope": scope,
-                "doc_id": target.doc_id,
-                "path": path_label(repo_root, target.path),
-            },
-        )
+        if resolved.sub_scope:
+            rebuild = write_rebuild.perform_sub_scope_source_write_and_rebuild(
+                repo_root,
+                resolved.scope,
+                resolved.sub_scope,
+                [target.path],
+                write_operation,
+                suppression_reason="docs-source-editor",
+            )
+        else:
+            rebuild = write_rebuild.perform_source_write_and_rebuild(
+                repo_root,
+                resolved.scope,
+                [target.path],
+                write_operation,
+                suppression_reason="docs-source-editor",
+                docs_doc_ids=[target.doc_id],
+                search_doc_ids=[target.doc_id],
+            )
+        activity = {
+            "scope": resolved.scope,
+            "doc_id": target.doc_id,
+            "path": path_label(repo_root, target.path),
+        }
+        if resolved.sub_scope:
+            activity["sub_scope"] = resolved.sub_scope
+        log_event(repo_root, "docs-source-editor-rebuild", activity)
 
     next_revision = source_revision_for_text(next_source_text)
 
-    return {
+    payload = {
         "ok": True,
-        "scope": scope,
+        "scope": resolved.scope,
         "doc_id": target.doc_id,
         "source_revision": next_revision,
         "path": path_label(repo_root, target.path),
@@ -169,6 +167,9 @@ def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
         "source_changed": source_changed,
         "dry_run": dry_run,
     }
+    if resolved.sub_scope:
+        payload["sub_scope"] = resolved.sub_scope
+    return payload
 
 
 def detect_preferred_markdown_app() -> Optional[str]:
@@ -183,18 +184,15 @@ def detect_preferred_markdown_app() -> Optional[str]:
 
 
 def open_source_doc(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    scope = source_model.normalize_scope(body.get("scope"))
-    doc_id = str(body.get("doc_id") or "").strip()
     editor = str(body.get("editor") or "default").strip().lower()
-    if not doc_id:
-        raise ValueError("doc_id is required")
     if editor not in {"default", "vscode"}:
         raise ValueError("editor must be `default` or `vscode`")
 
-    docs = source_model.load_scope_docs(repo_root, scope)
-    target = next((doc for doc in docs if doc.doc_id == doc_id), None)
-    if target is None:
-        raise FileNotFoundError(f"doc {doc_id!r} not found in scope {scope}")
+    resolved = resolve_managed_document_target(
+        repo_root,
+        managed_document_target_request(body),
+    )
+    target = resolved.document
 
     preferred_app = detect_preferred_markdown_app()
 
@@ -217,21 +215,20 @@ def open_source_doc(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dic
         if completed.returncode != 0:
             detail = completed.stderr.strip() or completed.stdout.strip() or f"exit {completed.returncode}"
             raise RuntimeError(f"open source failed: {detail}")
-        log_event(
-            repo_root,
-            "docs-open-source",
-            {
-                "scope": scope,
-                "doc_id": target.doc_id,
-                "editor": editor,
-                "preferred_app": preferred_app if editor == "default" else "",
-                "path": path_label(repo_root, target.path),
-            },
-        )
+        activity = {
+            "scope": resolved.scope,
+            "doc_id": target.doc_id,
+            "editor": editor,
+            "preferred_app": preferred_app if editor == "default" else "",
+            "path": path_label(repo_root, target.path),
+        }
+        if resolved.sub_scope:
+            activity["sub_scope"] = resolved.sub_scope
+        log_event(repo_root, "docs-open-source", activity)
 
-    return {
+    payload = {
         "ok": True,
-        "scope": scope,
+        "scope": resolved.scope,
         "doc_id": target.doc_id,
         "editor": editor,
         "preferred_app": preferred_app if editor == "default" else "",
@@ -239,3 +236,6 @@ def open_source_doc(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dic
         "summary_text": f"Opened {target.doc_id} source.",
         "dry_run": dry_run,
     }
+    if resolved.sub_scope:
+        payload["sub_scope"] = resolved.sub_scope
+    return payload

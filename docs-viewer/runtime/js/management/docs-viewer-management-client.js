@@ -1,3 +1,7 @@
+import {
+  normalizeManagedDocumentTarget
+} from "./docs-viewer-management-document-target.js";
+
 function defaultFetch(url, options) {
   return window.fetch(url, options);
 }
@@ -81,34 +85,45 @@ export function applyManagedDocsStaticHtmlExport(options) {
   }, options), options);
 }
 
-export function readManagedDocSource(docId, options) {
-  var settings = options || {};
-  var scope = encodeURIComponent(String(settings.scope || "").trim());
-  var targetDocId = encodeURIComponent(String(docId || "").trim());
-  var query = [];
-  if (scope) query.push("scope=" + scope);
-  if (targetDocId) query.push("doc_id=" + targetDocId);
-  return fetchManagementJson("/docs/source" + (query.length ? "?" + query.join("&") : ""), "GET", undefined, options);
+function targetQuery(target) {
+  var normalized = normalizeManagedDocumentTarget(target);
+  var query = ["scope=" + encodeURIComponent(normalized.scope)];
+  if (normalized.sub_scope) {
+    query.push("sub_scope=" + encodeURIComponent(normalized.sub_scope));
+  }
+  query.push("doc_id=" + encodeURIComponent(normalized.doc_id));
+  return query.join("&");
 }
 
-export function rebuildManagedDocSource(payload, options) {
-  return fetchManagementJson("/docs/source/rebuild", "POST", scopedPayload(payload, options), options);
+function targetPayload(target, payload) {
+  var fields = payload || {};
+  if (typeof fields !== "object" || Array.isArray(fields)) {
+    throw new Error("Managed document request payload must be an object.");
+  }
+  ["scope", "sub_scope", "doc_id"].forEach(function (key) {
+    if (Object.prototype.hasOwnProperty.call(fields, key)) {
+      throw new Error("Managed document request payload must not replace target field " + key + ".");
+    }
+  });
+  return Object.assign({}, normalizeManagedDocumentTarget(target), fields);
 }
 
-export function readManagedDiagramSources(docId, options) {
-  var settings = options || {};
-  var scope = encodeURIComponent(String(settings.scope || "").trim());
-  var targetDocId = encodeURIComponent(String(docId || "").trim());
-  var query = [];
-  if (scope) query.push("scope=" + scope);
-  if (targetDocId) query.push("doc_id=" + targetDocId);
-  return fetchManagementJson("/docs/diagram-sources" + (query.length ? "?" + query.join("&") : ""), "GET", undefined, options);
+export function readManagedDocSource(target, options) {
+  return fetchManagementJson("/docs/source?" + targetQuery(target), "GET", undefined, options);
 }
 
-export function openManagedDiagramSource(payload, options) {
-  return fetchManagementJson("/docs/open-diagram-source", "POST", scopedPayload(Object.assign({
+export function rebuildManagedDocSource(target, payload, options) {
+  return fetchManagementJson("/docs/source/rebuild", "POST", targetPayload(target, payload), options);
+}
+
+export function readManagedDiagramSources(target, options) {
+  return fetchManagementJson("/docs/diagram-sources?" + targetQuery(target), "GET", undefined, options);
+}
+
+export function openManagedDiagramSource(target, payload, options) {
+  return fetchManagementJson("/docs/open-diagram-source", "POST", targetPayload(target, Object.assign({
     editor: "vscode"
-  }, payload || {}), options), options);
+  }, payload || {})), options);
 }
 
 export function listStagedMedia(mediaKind, options) {
@@ -235,9 +250,8 @@ export function applyManagedDocumentTransfer(applyPlan, options) {
   }, options), options);
 }
 
-export function openManagedDocSource(docId, editor, options) {
-  return fetchManagementJson("/docs/open-source", "POST", scopedPayload({
-    doc_id: docId,
+export function openManagedDocSource(target, editor, options) {
+  return fetchManagementJson("/docs/open-source", "POST", targetPayload(target, {
     editor: editor === "vscode" ? "vscode" : "default"
-  }, options), options);
+  }), options);
 }

@@ -9,7 +9,11 @@ from pathlib import Path
 
 import pytest
 
-from repo_factory import docs_scope_record, write_docs_scope_config
+from repo_factory import (
+    docs_scope_record,
+    docs_sub_scope_record,
+    write_docs_scope_config,
+)
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -20,8 +24,17 @@ if str(DOCS_SERVICES_DIR) not in sys.path:
 import docs_management_source_service as source_service  # noqa: E402
 
 
-def write_source(repo_root: Path, filename: str, text: str, scope: str = "studio") -> Path:
-    path = repo_root / "docs-viewer" / "scopes" / scope / "source" / "documents" / filename
+def write_source(
+    repo_root: Path,
+    filename: str,
+    text: str,
+    scope: str = "studio",
+    sub_scope: str = "",
+) -> Path:
+    source_root = repo_root / "docs-viewer" / "scopes" / scope / "source"
+    if sub_scope:
+        source_root = source_root / "sub-scopes" / sub_scope
+    path = source_root / "documents" / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
     return path
@@ -35,7 +48,15 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         "{\"schema_version\":\"site_tools_config_v1\"}\n",
         encoding="utf-8",
     )
-    write_docs_scope_config(repo_root, [docs_scope_record("studio")])
+    write_docs_scope_config(
+        repo_root,
+        [
+            docs_scope_record(
+                "studio",
+                sub_scopes=[docs_sub_scope_record("studio", "tags")],
+            )
+        ],
+    )
     write_source(
         repo_root,
         "target.md",
@@ -45,6 +66,17 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         "viewable: true\n"
         "---\n"
         "# Target\n\nOriginal body.\n",
+    )
+    write_source(
+        repo_root,
+        "detail.md",
+        "---\n"
+        "doc_id: detail\n"
+        "title: Detail\n"
+        "viewable: true\n"
+        "---\n"
+        "# Detail\n\nSub-scope body.\n",
+        sub_scope="tags",
     )
     return temp_dir
 
@@ -86,6 +118,32 @@ def test_rebuild_source_body_rejects_stale_revision() -> None:
             assert "stale" in str(error)
         else:
             raise AssertionError("expected stale source revision to be rejected")
+
+
+def test_read_source_body_returns_exact_sub_scope_target() -> None:
+    with make_repo() as temp_path:
+        payload = source_service.read_source_body(
+            Path(temp_path),
+            {
+                "scope": ["studio"],
+                "sub_scope": ["tags"],
+                "doc_id": ["detail"],
+            },
+        )
+
+    assert payload["scope"] == "studio"
+    assert payload["sub_scope"] == "tags"
+    assert payload["doc_id"] == "detail"
+    assert payload["source_body"] == "# Detail\n\nSub-scope body.\n"
+    assert set(payload) == {
+        "ok",
+        "scope",
+        "sub_scope",
+        "doc_id",
+        "source_body",
+        "source_revision",
+        "path",
+    }
 
 
 def test_read_source_body_rejects_invalid_existing_front_matter() -> None:
@@ -210,6 +268,126 @@ def test_rebuild_source_body_noops_without_timestamp_or_rebuild(monkeypatch) -> 
     assert before == after
     assert payload["source_changed"] is False
     assert payload["rebuild"] is None
+
+
+def test_rebuild_sub_scope_source_uses_configured_build_and_preserves_target(
+    monkeypatch,
+) -> None:
+    calls: list[dict[str, object]] = []
+
+    def fake_rebuild(
+        repo_root,
+        scope,
+        sub_scope,
+        changed_paths,
+        write_operation,
+        **kwargs,
+    ):
+        calls.append(
+            {
+                "scope": scope,
+                "sub_scope": sub_scope,
+                "changed_paths": [path.name for path in changed_paths],
+                "suppression_reason": kwargs.get("suppression_reason"),
+            }
+        )
+        write_operation()
+        return {
+            "ok": True,
+            "docs": {"mode": "sub_scope", "sub_scope": sub_scope},
+            "search": {"mode": "full", "doc_ids": []},
+        }
+
+    monkeypatch.setattr(
+        source_service.write_rebuild,
+        "perform_sub_scope_source_write_and_rebuild",
+        fake_rebuild,
+    )
+    monkeypatch.setattr(
+        source_service.source_model,
+        "current_doc_timestamp",
+        lambda: "2026-07-27 20:15:00",
+    )
+
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        source_path = (
+            repo_root
+            / "docs-viewer/scopes/studio/source/sub-scopes/tags/documents/detail.md"
+        )
+        read_payload = source_service.read_source_body(
+            repo_root,
+            {
+                "scope": ["studio"],
+                "sub_scope": ["tags"],
+                "doc_id": ["detail"],
+            },
+        )
+        payload = source_service.rebuild_source_body(
+            repo_root,
+            {
+                "scope": "studio",
+                "sub_scope": "tags",
+                "doc_id": "detail",
+                "source_revision": read_payload["source_revision"],
+                "source_body": "# Detail\n\nChanged body.\n",
+            },
+            dry_run=False,
+        )
+        written = source_path.read_text(encoding="utf-8")
+
+    assert calls == [
+        {
+            "scope": "studio",
+            "sub_scope": "tags",
+            "changed_paths": ["detail.md"],
+            "suppression_reason": "docs-source-editor",
+        }
+    ]
+    assert payload["scope"] == "studio"
+    assert payload["sub_scope"] == "tags"
+    assert payload["doc_id"] == "detail"
+    assert payload["rebuild"]["docs"]["mode"] == "sub_scope"
+    assert 'last_updated: "2026-07-27 20:15:00"' in written
+    assert written.endswith("# Detail\n\nChanged body.\n")
+
+
+def test_open_source_doc_resolves_parent_and_sub_scope_targets() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        parent = source_service.open_source_doc(
+            repo_root,
+            {
+                "scope": "studio",
+                "doc_id": "target",
+                "editor": "vscode",
+            },
+            dry_run=True,
+        )
+        detail = source_service.open_source_doc(
+            repo_root,
+            {
+                "scope": "studio",
+                "sub_scope": "tags",
+                "doc_id": "detail",
+                "editor": "vscode",
+            },
+            dry_run=True,
+        )
+
+    assert set(parent) == {
+        "ok",
+        "scope",
+        "doc_id",
+        "editor",
+        "preferred_app",
+        "path",
+        "summary_text",
+        "dry_run",
+    }
+    assert detail["sub_scope"] == "tags"
+    assert detail["doc_id"] == "detail"
+    assert "source/sub-scopes/tags/documents/detail.md" in str(detail["path"])
 
 
 def main() -> None:

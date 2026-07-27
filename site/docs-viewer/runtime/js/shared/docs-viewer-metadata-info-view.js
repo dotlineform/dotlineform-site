@@ -106,8 +106,20 @@ function renderMetadataDetails(context, metadata) {
 function renderDiagramSources(context, article, state, requestId) {
   var provider = context.collectionProvider || null;
   var doc = context.selectedDoc || null;
+  var services = context.sourceEditorServices || {};
+  var adapter = typeof services.getActiveSourceEditorContextAdapter === "function"
+    ? services.getActiveSourceEditorContextAdapter()
+    : null;
+  var sourceTarget = adapter && typeof adapter.getDocumentTarget === "function"
+    ? adapter.getDocumentTarget()
+    : null;
+  var documentTarget = sourceTarget || (
+    doc && context.viewerScope
+      ? { scope: context.viewerScope, doc_id: doc.doc_id }
+      : null
+  );
   if (
-    !doc
+    !documentTarget
     || !context.appContext
     || context.appContext.kind !== "manage"
     || !provider
@@ -115,7 +127,7 @@ function renderDiagramSources(context, article, state, requestId) {
     || typeof provider.openDiagramSource !== "function"
   ) return;
 
-  provider.readDiagramSources(doc.doc_id).then(function (payload) {
+  provider.readDiagramSources(documentTarget).then(function (payload) {
     if (state.requestId !== requestId || !article.parentNode) return;
     var sources = payload && Array.isArray(payload.sources) ? payload.sources : [];
     if (!sources.length) return;
@@ -138,8 +150,7 @@ function renderDiagramSources(context, article, state, requestId) {
       link.textContent = cleanString(source.label) || cleanString(source.source_identity) || "Diagram";
       link.addEventListener("click", function (event) {
         event.preventDefault();
-        provider.openDiagramSource({
-          doc_id: doc.doc_id,
+        provider.openDiagramSource(documentTarget, {
           media_identity: cleanString(source.media_identity),
           editor: "vscode"
         }).catch(function (error) {

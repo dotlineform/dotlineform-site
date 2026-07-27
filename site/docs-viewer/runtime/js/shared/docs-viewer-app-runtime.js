@@ -809,7 +809,12 @@ export function startDocsViewerRuntime(options) {
     }
 
     return {
-      reloadRenderedDoc: function (docId) {
+      reloadRenderedDoc: function (target) {
+        var sourceTarget = target && typeof target === "object" ? target : {};
+        var docId = String(sourceTarget.doc_id || "").trim();
+        if (String(sourceTarget.sub_scope || "").trim()) {
+          docId = String(appSession.domains.selectedDocument.selectedDocId || "").trim();
+        }
         return reloadGeneratedDoc(docId);
       },
       clearActiveSourceEditorContextAdapter: function (adapter) {
@@ -986,15 +991,6 @@ export function startDocsViewerRuntime(options) {
     documentViewCoordinator.showRenderedDocument(function () {
       documentController.renderPayload(doc, payload, hash);
       documentViewCoordinator.updateInfoPanel();
-      if (
-        routeContext.openSourceDocIdOnLoad
-        && routeContext.openSourceDocIdOnLoad === String(doc && doc.doc_id || "").trim()
-      ) {
-        routeContext.openSourceDocIdOnLoad = "";
-        documentViewCoordinator.requestDocumentMode("markdown-source", {
-          warn: false
-        });
-      }
     });
   }
 

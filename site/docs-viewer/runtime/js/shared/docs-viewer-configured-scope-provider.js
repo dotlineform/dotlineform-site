@@ -97,35 +97,23 @@ export function createDocsViewerConfiguredScopeProvider(options) {
   };
 
   if (source && typeof source.readSource === "function") {
-    provider.readSource = function (docId, optionsForRead) {
-      var requestSettings = optionsForRead || {};
-      return source.readSource(docId, Object.assign({}, requestSettings, {
-        scope: scopeId(requestSettings.scope || activeScope())
-      }));
+    provider.readSource = function (target, optionsForRead) {
+      return source.readSource(target, optionsForRead || {});
     };
   }
   if (source && typeof source.writeSource === "function") {
-    provider.writeSource = function (payload, optionsForWrite) {
-      var requestSettings = optionsForWrite || {};
-      return source.writeSource(payload, Object.assign({}, requestSettings, {
-        scope: scopeId(requestSettings.scope || activeScope())
-      }));
+    provider.writeSource = function (target, payload, optionsForWrite) {
+      return source.writeSource(target, payload, optionsForWrite || {});
     };
   }
   if (source && typeof source.readDiagramSources === "function") {
-    provider.readDiagramSources = function (docId, optionsForRead) {
-      var requestSettings = optionsForRead || {};
-      return source.readDiagramSources(docId, Object.assign({}, requestSettings, {
-        scope: scopeId(requestSettings.scope || activeScope())
-      }));
+    provider.readDiagramSources = function (target, optionsForRead) {
+      return source.readDiagramSources(target, optionsForRead || {});
     };
   }
   if (source && typeof source.openDiagramSource === "function") {
-    provider.openDiagramSource = function (payload, optionsForOpen) {
-      var requestSettings = optionsForOpen || {};
-      return source.openDiagramSource(payload, Object.assign({}, requestSettings, {
-        scope: scopeId(requestSettings.scope || activeScope())
-      }));
+    provider.openDiagramSource = function (target, payload, optionsForOpen) {
+      return source.openDiagramSource(target, payload, optionsForOpen || {});
     };
   }
   if (source && typeof source.listStagedMedia === "function") {

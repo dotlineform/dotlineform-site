@@ -32,6 +32,9 @@ import {
   createDocsViewerManagementActionController
 } from "./docs-viewer-management-actions.js";
 import {
+  normalizeManagedDocumentTarget
+} from "./docs-viewer-management-document-target.js";
+import {
   DOCS_VIEWER_ACTION_IDS,
   createDocsViewerActionContext,
   resolveDocsViewerAction
@@ -239,6 +242,26 @@ export function initDocsViewerManagement(context) {
     return documentIndex.docsById.get(resolution.targetDocIds[0]) || null;
   }
 
+  function sourceTargetForDoc(doc) {
+    if (!doc || !doc.doc_id) return null;
+    return normalizeManagedDocumentTarget({
+      scope: viewerScope(),
+      doc_id: doc.doc_id
+    });
+  }
+
+  function activeSourceTarget() {
+    var services = typeof context.sourceEditorServices === "function"
+      ? context.sourceEditorServices()
+      : context.sourceEditorServices;
+    var adapter = services && typeof services.getActiveSourceEditorContextAdapter === "function"
+      ? services.getActiveSourceEditorContextAdapter()
+      : null;
+    return adapter && typeof adapter.getDocumentTarget === "function"
+      ? adapter.getDocumentTarget()
+      : null;
+  }
+
   function currentContextMenuDoc() {
     return interactionController ? interactionController.currentContextMenuDoc() : null;
   }
@@ -363,8 +386,23 @@ export function initDocsViewerManagement(context) {
         var doc = actionTargetDoc(resolution);
         if (doc) metadataWorkflow.openForDocId(doc.doc_id);
       }],
-      ["open-vscode", function () { actionController.handleOpenSource("vscode"); }],
-      ["markdown-source", function () { actionController.handleMarkdownSource(); }],
+      ["open-vscode", function () {
+        var doc = actionTargetDoc(resolution);
+        var mountedTarget = activeSourceTarget();
+        var target = mountedTarget || sourceTargetForDoc(doc);
+        if (target) {
+          actionController.handleOpenSource(
+            "vscode",
+            target,
+            mountedTarget ? mountedTarget.doc_id : doc && doc.title
+          );
+        }
+      }],
+      ["markdown-source", function () {
+        var doc = actionTargetDoc(resolution);
+        var target = sourceTargetForDoc(doc);
+        if (target) actionController.handleMarkdownSource(target);
+      }],
       ["save-markdown-source", function () { actionController.handleMarkdownSave(); }],
       ["source-add-image", function () {
         if (root && typeof root.dispatchEvent === "function") {
@@ -683,12 +721,24 @@ export function initDocsViewerManagement(context) {
         }
         if (actionId === DOCS_VIEWER_ACTION_IDS.OPEN_VSCODE) {
           var vscodeDoc = currentContextMenuDoc();
-          if (vscodeDoc) actionController.handleOpenSource("vscode", vscodeDoc.doc_id);
+          if (vscodeDoc) {
+            actionController.handleOpenSource(
+              "vscode",
+              sourceTargetForDoc(vscodeDoc),
+              vscodeDoc.title
+            );
+          }
           return;
         }
         if (actionId === DOCS_VIEWER_ACTION_IDS.OPEN) {
           var defaultDoc = currentContextMenuDoc();
-          if (defaultDoc) actionController.handleOpenSource("default", defaultDoc.doc_id);
+          if (defaultDoc) {
+            actionController.handleOpenSource(
+              "default",
+              sourceTargetForDoc(defaultDoc),
+              defaultDoc.title
+            );
+          }
         }
       },
       onEditDoc: function (docId) {

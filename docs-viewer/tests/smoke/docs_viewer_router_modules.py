@@ -12,9 +12,24 @@ from threading import Thread
 from playwright.sync_api import Page, sync_playwright
 
 
+REPO_ROOT = Path(__file__).resolve().parents[3]
+DOCS_VIEWER_SHARED_RUNTIME_PREFIX = "/docs-viewer/runtime/js/shared/"
+DOCS_VIEWER_REPO_RUNTIME_PREFIX = "/docs-viewer/runtime/js/"
+
+
 class QuietStaticHandler(SimpleHTTPRequestHandler):
     def log_message(self, format, *args):  # noqa: A003
         return
+
+    def translate_path(self, path: str) -> str:
+        clean_path = path.split("?", 1)[0].split("#", 1)[0]
+        if clean_path.startswith(DOCS_VIEWER_SHARED_RUNTIME_PREFIX):
+            relative_path = clean_path.removeprefix(DOCS_VIEWER_SHARED_RUNTIME_PREFIX)
+            return str(REPO_ROOT / "site/docs-viewer/runtime/js/shared" / relative_path)
+        if clean_path.startswith(DOCS_VIEWER_REPO_RUNTIME_PREFIX):
+            relative_path = clean_path.removeprefix(DOCS_VIEWER_REPO_RUNTIME_PREFIX)
+            return str(REPO_ROOT / "docs-viewer/runtime/js" / relative_path)
+        return super().translate_path(path)
 
 
 def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
@@ -121,12 +136,12 @@ def assert_broken_links_report_source_handoff(page: Page) -> None:
         "status": "2 broken links",
         "rows": [
             {
-                "sourceHref": "/docs/?scope=studio&doc=link-source&source=markdown",
+                "sourceHref": "/docs/?scope=studio&doc=link-source",
                 "issueHref": "/docs/?scope=studio&doc=missing-document",
                 "text": "Link sourceMissing document",
             },
             {
-                "sourceHref": "/docs/?scope=studio&doc=semantic-source&source=markdown",
+                "sourceHref": "/docs/?scope=studio&doc=semantic-source",
                 "issueHref": "",
                 "text": "Semantic source[[catalogue:work:99999|missing work]] — missing target",
             },
@@ -226,15 +241,31 @@ def assert_semantic_tokens_report_service_path(page: Page) -> None:
             const service = reportService.createDocsViewerReportService({
                 baseUrl: 'http://127.0.0.1:8795/',
                 fetch: (url, options) => {
-                    requests.push({ url, method: options.method });
+                    requests.push({
+                        url,
+                        method: options.method,
+                        body: options.body ? JSON.parse(options.body) : null
+                    });
                     return Promise.resolve({
                         ok: true,
                         status: 200,
-                        json: () => Promise.resolve({ scope: 'analysis', occurrences: [] })
+                        json: () => Promise.resolve(
+                            String(url).includes('/docs/open-source')
+                                ? { ok: true }
+                                : { scope: 'analysis', occurrences: [] }
+                        )
                     });
                 }
             });
             const payload = await service.readSemanticTokens({ scope: 'Analysis' });
+            await service.openSourceDoc({
+                target: {
+                    scope: 'Analysis',
+                    sub_scope: 'Tags',
+                    doc_id: 'detail-doc'
+                },
+                editor: 'vscode'
+            });
             return { requests, payload };
         }"""
     )
@@ -242,6 +273,16 @@ def assert_semantic_tokens_report_service_path(page: Page) -> None:
         "requests": [{
             "url": "http://127.0.0.1:8795/docs/semantic-tokens?scope=analysis",
             "method": "GET",
+            "body": None,
+        }, {
+            "url": "http://127.0.0.1:8795/docs/open-source",
+            "method": "POST",
+            "body": {
+                "scope": "analysis",
+                "sub_scope": "tags",
+                "doc_id": "detail-doc",
+                "editor": "vscode",
+            },
         }],
         "payload": {"scope": "analysis", "occurrences": []},
     }
@@ -1022,7 +1063,10 @@ def assert_explicit_app_and_service_context(page: Page) -> None:
                 allowScopeQuery: projected.routeAccess.allowScopeQuery,
                 managementUi: projected.routeAccess.managementUi,
                 backendCapabilities: projected.backendCapabilities,
-                openSourceDocIdOnLoad: sourceRoute.openSourceDocIdOnLoad,
+                sourceRouteHasUrlTargetFallback: Object.prototype.hasOwnProperty.call(
+                    sourceRoute,
+                    'openSourceDocIdOnLoad'
+                ),
                 availability: projected.serviceAvailability,
                 generatedAuthority: services.generatedData.authority,
                 generatedBaseUrl: services.generatedData.baseUrl,
@@ -1036,7 +1080,7 @@ def assert_explicit_app_and_service_context(page: Page) -> None:
         "allowScopeQuery": False,
         "managementUi": False,
         "backendCapabilities": None,
-        "openSourceDocIdOnLoad": "source-doc",
+        "sourceRouteHasUrlTargetFallback": False,
         "availability": {
             "generatedData": {"available": True, "local": True},
             "source": {"available": True},
@@ -1273,19 +1317,22 @@ def assert_configured_scope_provider(page: Page) -> None:
                 viewerScope: () => viewerScope,
                 window,
                 source: {
-                    readSource: (docId, options) => { sourceCalls.push(['read', docId, options]); return Promise.resolve({ doc_id: docId }); },
-                    writeSource: (payload, options) => { sourceCalls.push(['write', payload.doc_id, options]); return Promise.resolve({ doc_id: payload.doc_id }); },
-                    readDiagramSources: (docId, options) => { sourceCalls.push(['read-diagrams', docId, options]); return Promise.resolve({ sources: [] }); },
-                    openDiagramSource: (payload, options) => { sourceCalls.push(['open-diagram', payload.media_identity, options]); return Promise.resolve({ ok: true }); },
+                    readSource: (target, options) => { sourceCalls.push(['read', target, options]); return Promise.resolve(target); },
+                    writeSource: (target, payload, options) => { sourceCalls.push(['write', target, payload.source_body, options]); return Promise.resolve(target); },
+                    readDiagramSources: (target, options) => { sourceCalls.push(['read-diagrams', target, options]); return Promise.resolve({ sources: [] }); },
+                    openDiagramSource: (target, payload, options) => { sourceCalls.push(['open-diagram', target, payload.media_identity, options]); return Promise.resolve({ ok: true }); },
                     listStagedMedia: (kind, options) => { sourceCalls.push(['list-media', kind, options]); return Promise.resolve({ files: [] }); },
                     previewStagedMedia: (payload, options) => { sourceCalls.push(['preview-media', payload.staged_filename, options]); return Promise.resolve(payload); },
                     applyStagedMedia: (payload, options) => { sourceCalls.push(['apply-media', payload.staged_filename, options]); return Promise.resolve(payload); }
                 }
             });
-            await withSource.readSource('doc-b');
-            await withSource.writeSource({ doc_id: 'doc-b', source_body: '# B' });
-            await withSource.readDiagramSources('doc-b');
-            await withSource.openDiagramSource({ doc_id: 'doc-b', media_identity: 'docs/beta/svg/diagram.svg' });
+            const sourceTarget = { scope: 'beta', sub_scope: 'tags', doc_id: 'doc-b' };
+            await withSource.readSource(sourceTarget);
+            await withSource.writeSource(sourceTarget, { source_body: '# B' });
+            await withSource.readDiagramSources(sourceTarget);
+            await withSource.openDiagramSource(sourceTarget, {
+                media_identity: 'docs/beta/svg/diagram.svg'
+            });
             await withSource.listStagedMedia('image');
             await withSource.previewStagedMedia({ staged_filename: 'diagram.svg' });
             await withSource.applyStagedMedia({ staged_filename: 'diagram.svg' });
@@ -1370,10 +1417,15 @@ def assert_configured_scope_provider(page: Page) -> None:
     ]:
         raise AssertionError(f"configured-scope provider transport delegation changed: {result!r}")
     if result["sourceCalls"] != [
-        ["read", "doc-b", {"scope": "beta"}],
-        ["write", "doc-b", {"scope": "beta"}],
-        ["read-diagrams", "doc-b", {"scope": "beta"}],
-        ["open-diagram", "docs/beta/svg/diagram.svg", {"scope": "beta"}],
+        ["read", {"scope": "beta", "sub_scope": "tags", "doc_id": "doc-b"}, {}],
+        ["write", {"scope": "beta", "sub_scope": "tags", "doc_id": "doc-b"}, "# B", {}],
+        ["read-diagrams", {"scope": "beta", "sub_scope": "tags", "doc_id": "doc-b"}, {}],
+        [
+            "open-diagram",
+            {"scope": "beta", "sub_scope": "tags", "doc_id": "doc-b"},
+            "docs/beta/svg/diagram.svg",
+            {},
+        ],
         ["list-media", "image", {"scope": "beta"}],
         ["preview-media", "diagram.svg", {"scope": "beta"}],
         ["apply-media", "diagram.svg", {"scope": "beta"}],

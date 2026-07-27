@@ -1017,6 +1017,7 @@ def assert_open_source_target_handoff(page: Page) -> None:
             const definitions = await import('/docs-viewer/runtime/js/management/docs-viewer-action-definitions.js');
             const actions = await import('/docs-viewer/runtime/js/management/docs-viewer-management-actions.js');
             const requests = [];
+            const sourceModes = [];
             let hiddenCount = 0;
             const controller = actions.createDocsViewerManagementActionController({
                 root: null,
@@ -1028,7 +1029,16 @@ def assert_open_source_target_handoff(page: Page) -> None:
                 },
                 management: {},
                 selectedDocument: {},
-                context: {},
+                context: {
+                    requestDocumentMode: (modeId, options) => {
+                        sourceModes.push({
+                            modeId,
+                            sourceTarget: options && options.context
+                                ? options.context.sourceTarget
+                                : null
+                        });
+                    }
+                },
                 resolveAction: function (actionId, targetDocId) {
                     const options = { activeDocId: 'active', selectedDocIds: [] };
                     if (arguments.length > 1) options.invocationDocId = targetDocId;
@@ -1056,13 +1066,26 @@ def assert_open_source_target_handoff(page: Page) -> None:
                     setManagementMessage: () => {}
                 }
             });
-            await controller.handleOpenSource('vscode');
-            await controller.handleOpenSource('vscode', 'invoked');
-            return { hiddenCount, requests };
+            await controller.handleOpenSource(
+                'vscode',
+                { scope: 'studio', doc_id: 'active' },
+                'Active'
+            );
+            await controller.handleOpenSource(
+                'vscode',
+                { scope: 'studio', sub_scope: 'tags', doc_id: 'invoked' },
+                'Invoked'
+            );
+            controller.handleMarkdownSource({
+                scope: 'studio',
+                sub_scope: 'tags',
+                doc_id: 'invoked'
+            });
+            return { hiddenCount, requests, sourceModes };
         }"""
     )
     expected = {
-        "hiddenCount": 2,
+        "hiddenCount": 3,
         "requests": [
             {
                 "url": "http://docs.test/docs/open-source",
@@ -1070,8 +1093,23 @@ def assert_open_source_target_handoff(page: Page) -> None:
             },
             {
                 "url": "http://docs.test/docs/open-source",
-                "body": {"scope": "studio", "doc_id": "invoked", "editor": "vscode"},
+                "body": {
+                    "scope": "studio",
+                    "sub_scope": "tags",
+                    "doc_id": "invoked",
+                    "editor": "vscode",
+                },
             },
+        ],
+        "sourceModes": [
+            {
+                "modeId": "markdown-source",
+                "sourceTarget": {
+                    "scope": "studio",
+                    "sub_scope": "tags",
+                    "doc_id": "invoked",
+                },
+            }
         ],
     }
     if result != expected:

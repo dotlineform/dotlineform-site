@@ -1,6 +1,10 @@
 import {
   openDocsViewerManagementModal
 } from "../docs-viewer-management-modal-shell.js";
+import {
+  managedDocumentTargetsEqual,
+  normalizeManagedDocumentTarget
+} from "../docs-viewer-management-document-target.js";
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -176,6 +180,9 @@ function createSourceEditorContextAdapter(state) {
         value: state.textarea ? state.textarea.value : ""
       };
     },
+    getDocumentTarget: function () {
+      return state.target ? Object.assign({}, state.target) : null;
+    },
     getSelection: function () {
       return sourceSelection(state);
     },
@@ -216,11 +223,6 @@ function createSourceEditorContextAdapter(state) {
 
 function loadSource(context, state) {
   var provider = context.collectionProvider || {};
-  var doc = context.selectedDoc || null;
-  if (!doc || !doc.doc_id) {
-    setStatus(state, "Select a document before opening Markdown source.", true);
-    return Promise.resolve(null);
-  }
   if (typeof provider.readSource !== "function") {
     setStatus(state, "Markdown source editing is unavailable on this route.", true);
     return Promise.resolve(null);
@@ -228,9 +230,18 @@ function loadSource(context, state) {
 
   setBusy(state, true);
   setStatus(state, "Loading source...", false);
-  return provider.readSource(doc.doc_id)
+  return provider.readSource(state.target)
     .then(function (payload) {
-      state.docId = cleanString(payload.doc_id || doc.doc_id);
+      var responseTarget = {
+        scope: cleanString(payload && payload.scope),
+        doc_id: cleanString(payload && payload.doc_id)
+      };
+      if (payload && Object.prototype.hasOwnProperty.call(payload, "sub_scope")) {
+        responseTarget.sub_scope = cleanString(payload.sub_scope);
+      }
+      if (!managedDocumentTargetsEqual(responseTarget, state.target)) {
+        throw new Error("Source service returned a different managed document target.");
+      }
       state.revision = cleanString(payload.source_revision);
       state.lastCleanBody = normalizeBody(payload.source_body);
       state.loaded = true;
@@ -261,8 +272,7 @@ function rebuildSource(context, state) {
   setStatus(state, "Rebuilding doc...", false);
   var nextBody = normalizeBody(state.textarea ? state.textarea.value : "");
   var switchedToRendered = false;
-  return provider.writeSource({
-    doc_id: state.docId,
+  return provider.writeSource(state.target, {
     source_revision: state.revision,
     source_body: nextBody
   })
@@ -274,7 +284,7 @@ function rebuildSource(context, state) {
       context.documentView.requestMode("rendered-document", { force: true, warn: false });
       switchedToRendered = true;
       if (typeof services.reloadRenderedDoc === "function") {
-        return services.reloadRenderedDoc(state.docId).then(function () { return true; });
+        return services.reloadRenderedDoc(state.target).then(function () { return true; });
       }
       return true;
     })
@@ -300,7 +310,7 @@ function returnToRendered(context, state) {
   }
 
   setBusy(state, true);
-  return services.reloadRenderedDoc(state.docId)
+  return services.reloadRenderedDoc(state.target)
     .then(function () {
       return true;
     })
@@ -430,7 +440,6 @@ export function createDocsViewerSourceEditorMode() {
     busy: false,
     bufferRevision: 0,
     dirtyValue: false,
-    docId: "",
     lastCleanBody: "",
     loaded: false,
     revision: "",
@@ -438,12 +447,20 @@ export function createDocsViewerSourceEditorMode() {
     selectionListeners: new Set(),
     sourceActionControlIds: [],
     status: null,
+    target: null,
     textarea: null,
     projectMainViewControlState: null
   };
 
   return {
     mount: function (context) {
+      state.target = normalizeManagedDocumentTarget(context.sourceTarget);
+      state.busy = false;
+      state.bufferRevision = 0;
+      state.dirtyValue = false;
+      state.lastCleanBody = "";
+      state.loaded = false;
+      state.revision = "";
       context.documentView.projectToolbar({
         toolbarHidden: false,
         metaHidden: true,
@@ -466,9 +483,8 @@ export function createDocsViewerSourceEditorMode() {
       leaveSource(context, state);
       return false;
     },
-    update: function (context) {
-      if (state.docId === cleanString(context.selectedDoc && context.selectedDoc.doc_id)) return Promise.resolve(null);
-      return loadSource(context, state);
+    update: function (_context) {
+      return Promise.resolve(null);
     },
     unmount: function (context) {
       var services = context.sourceEditorServices || {};

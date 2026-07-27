@@ -73,14 +73,30 @@ def install_modules(page: Page) -> None:
             const sourceEditor = await import(
                 '/docs-viewer/runtime/js/management/source-editor/source-editor.js'
             );
+            const sourceAdapter = await import(
+                '/docs-viewer/runtime/js/management/docs-viewer-management-source-adapter.js'
+            );
+            const sourceClient = await import(
+                '/docs-viewer/runtime/js/management/docs-viewer-management-client.js'
+            );
+            const documentTarget = await import(
+                '/docs-viewer/runtime/js/management/docs-viewer-management-document-target.js'
+            );
+            const managementActions = await import(
+                '/docs-viewer/runtime/js/management/docs-viewer-management-actions.js'
+            );
             window.__catalogueTokenSmoke = {
                 contract,
                 contribution,
+                documentTarget,
                 infoView,
+                managementActions,
                 modal,
                 parser,
                 registry,
                 semanticTargets,
+                sourceAdapter,
+                sourceClient,
                 sourceEditor,
                 targets
             };
@@ -312,15 +328,24 @@ def assert_source_adapter_captures_and_guards_range(page: Page) -> None:
             root.appendChild(mount);
             document.body.appendChild(root);
             let adapter = null;
+            let readTarget = null;
             const controlStates = {};
             const mode = smoke.sourceEditor.createDocsViewerSourceEditorMode();
             await mode.mount({
                 root,
                 mount,
-                selectedDoc: { doc_id: 'fixture' },
+                selectedDoc: { doc_id: 'selected-parent' },
+                sourceTarget: {
+                    scope: 'studio',
+                    sub_scope: 'tags',
+                    doc_id: 'fixture'
+                },
                 collectionProvider: {
-                    readSource() {
+                    readSource(target) {
+                        readTarget = Object.assign({}, target);
                         return Promise.resolve({
+                            scope: 'studio',
+                            sub_scope: 'tags',
                             doc_id: 'fixture',
                             source_revision: 'r1',
                             source_body: 'Before nerve after'
@@ -358,6 +383,8 @@ def assert_source_adapter_captures_and_guards_range(page: Page) -> None:
             return {
                 capture,
                 controlState: controlStates['source-add-catalogue-token'],
+                mountedTarget: adapter.getDocumentTarget(),
+                readTarget,
                 replaced,
                 snapshot,
                 staleRejected
@@ -367,6 +394,16 @@ def assert_source_adapter_captures_and_guards_range(page: Page) -> None:
     if result != {
         "capture": {"start": 7, "end": 12, "text": "nerve", "revision": 0},
         "controlState": {"busy": False, "disabled": False},
+        "mountedTarget": {
+            "scope": "studio",
+            "sub_scope": "tags",
+            "doc_id": "fixture",
+        },
+        "readTarget": {
+            "scope": "studio",
+            "sub_scope": "tags",
+            "doc_id": "fixture",
+        },
         "replaced": True,
         "snapshot": {
             "revision": 2,
@@ -375,6 +412,382 @@ def assert_source_adapter_captures_and_guards_range(page: Page) -> None:
         "staleRejected": True,
     }:
         raise AssertionError(f"captured source-range adapter changed: {result!r}")
+
+
+def assert_source_target_transport_and_fixed_session(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const smoke = window.__catalogueTokenSmoke;
+            const parent = { scope: 'Studio', doc_id: 'parent-doc' };
+            const detail = {
+                scope: 'Studio',
+                sub_scope: 'Tags',
+                doc_id: 'detail-doc'
+            };
+            const requests = [];
+            const options = {
+                baseUrl: 'http://manage.test',
+                scope: 'ambient-must-not-win',
+                fetch: async (url, requestOptions) => {
+                    requests.push({
+                        url,
+                        method: requestOptions.method,
+                        body: requestOptions.body ? JSON.parse(requestOptions.body) : null
+                    });
+                    return {
+                        ok: true,
+                        status: 200,
+                        json: async () => ({ ok: true })
+                    };
+                }
+            };
+            await smoke.sourceClient.readManagedDocSource(parent, options);
+            await smoke.sourceClient.readManagedDocSource(detail, options);
+            await smoke.sourceClient.rebuildManagedDocSource(detail, {
+                source_revision: 'r1',
+                source_body: '# Detail'
+            }, options);
+            await smoke.sourceClient.openManagedDocSource(parent, 'vscode', options);
+            await smoke.sourceClient.openManagedDocSource(detail, 'vscode', options);
+            await smoke.sourceClient.readManagedDiagramSources(detail, options);
+            await smoke.sourceClient.openManagedDiagramSource(detail, {
+                media_identity: 'docs/studio/svg/diagram.svg'
+            }, options);
+
+            const adapterRequests = [];
+            const adapter = smoke.sourceAdapter.createDocsViewerManagementSourceAdapter({
+                sourceService: { baseUrl: 'http://adapter.test' },
+                viewerScope: () => 'ambient-must-not-win',
+                window: {
+                    fetch: async (url, requestOptions) => {
+                        adapterRequests.push({
+                            url,
+                            body: requestOptions.body ? JSON.parse(requestOptions.body) : null
+                        });
+                        return {
+                            ok: true,
+                            status: 200,
+                            json: async () => ({ ok: true })
+                        };
+                    }
+                }
+            });
+            await adapter.readSource(detail);
+            await adapter.writeSource(detail, {
+                source_revision: 'r2',
+                source_body: '# Adapter'
+            });
+
+            const sourceModeRequests = [];
+            const actionController = smoke.managementActions.createDocsViewerManagementActionController({
+                root: null,
+                context: {
+                    requestDocumentMode(modeId, requestOptions) {
+                        sourceModeRequests.push({
+                            modeId,
+                            sourceTarget: requestOptions.context.sourceTarget
+                        });
+                    }
+                },
+                resolveAction() {
+                    return {
+                        enabled: true,
+                        targetDocIds: ['fallback-must-not-be-read']
+                    };
+                },
+                callbacks: {
+                    hideContextMenu() {}
+                }
+            });
+            actionController.handleMarkdownSource(detail);
+
+            const root = document.createElement('div');
+            const mount = document.createElement('div');
+            root.appendChild(mount);
+            document.body.appendChild(root);
+            const reads = [];
+            const writes = [];
+            const reloads = [];
+            const modes = [];
+            let mountedAdapter = null;
+            const mode = smoke.sourceEditor.createDocsViewerSourceEditorMode();
+            await mode.mount({
+                root,
+                mount,
+                selectedDoc: { doc_id: 'selected-parent' },
+                sourceTarget: detail,
+                collectionProvider: {
+                    readSource(target) {
+                        reads.push(Object.assign({}, target));
+                        return Promise.resolve({
+                            scope: 'studio',
+                            sub_scope: 'tags',
+                            doc_id: 'detail-doc',
+                            source_revision: 'r1',
+                            source_body: '# Detail'
+                        });
+                    },
+                    writeSource(target, payload) {
+                        writes.push({
+                            target: Object.assign({}, target),
+                            payload: Object.assign({}, payload)
+                        });
+                        return Promise.resolve({
+                            scope: 'studio',
+                            sub_scope: 'tags',
+                            doc_id: 'detail-doc',
+                            source_revision: 'r2'
+                        });
+                    }
+                },
+                documentView: {
+                    projectToolbar() {},
+                    requestMode(modeId) {
+                        modes.push(modeId);
+                    }
+                },
+                sourceEditorServices: {
+                    projectMainViewControlState() {},
+                    reloadRenderedDoc(target) {
+                        reloads.push(Object.assign({}, target));
+                        return Promise.resolve();
+                    },
+                    setActiveSourceEditorContextAdapter(value) {
+                        mountedAdapter = value;
+                    }
+                }
+            });
+            await mode.update({
+                selectedDoc: { doc_id: 'different-selected-doc' }
+            });
+            const textarea = mount.querySelector('textarea');
+            textarea.value = '# Changed';
+            textarea.dispatchEvent(new Event('input', { bubbles: true }));
+            root.dispatchEvent(new CustomEvent('docs-viewer-source-editor-save', {
+                bubbles: true
+            }));
+            for (let index = 0; index < 20 && reloads.length === 0; index += 1) {
+                await new Promise(resolve => setTimeout(resolve, 0));
+            }
+            const mountedTarget = mountedAdapter.getDocumentTarget();
+            mode.unmount({ root, mount, sourceEditorServices: {} });
+            root.remove();
+
+            const failureRoot = document.createElement('div');
+            const failureMount = document.createElement('div');
+            failureRoot.appendChild(failureMount);
+            document.body.appendChild(failureRoot);
+            const failureModes = [];
+            let failureAdapter = null;
+            let failureReads = 0;
+            const failureMode = smoke.sourceEditor.createDocsViewerSourceEditorMode();
+            await failureMode.mount({
+                root: failureRoot,
+                mount: failureMount,
+                sourceTarget: parent,
+                collectionProvider: {
+                    readSource() {
+                        failureReads += 1;
+                        return Promise.resolve({
+                            scope: 'studio',
+                            doc_id: 'parent-doc',
+                            source_revision: 'parent-r1',
+                            source_body: '# Parent'
+                        });
+                    },
+                    writeSource() {
+                        return Promise.reject(new Error('builder failed'));
+                    }
+                },
+                documentView: {
+                    projectToolbar() {},
+                    requestMode(modeId) {
+                        failureModes.push(modeId);
+                    }
+                },
+                sourceEditorServices: {
+                    projectMainViewControlState() {},
+                    setActiveSourceEditorContextAdapter(value) {
+                        failureAdapter = value;
+                    }
+                }
+            });
+            const failureTextarea = failureMount.querySelector('textarea');
+            failureTextarea.value = '# Parent changed';
+            failureTextarea.dispatchEvent(new Event('input', { bubbles: true }));
+            failureRoot.dispatchEvent(new CustomEvent('docs-viewer-source-editor-save', {
+                bubbles: true
+            }));
+            let failureStatus = '';
+            for (let index = 0; index < 20; index += 1) {
+                await new Promise(resolve => setTimeout(resolve, 0));
+                failureStatus = failureMount.querySelector(
+                    '.docsViewerSourceEditor__status'
+                ).textContent;
+                if (failureStatus) break;
+            }
+            await failureMode.update({
+                selectedDoc: { doc_id: 'fallback-must-not-load' }
+            });
+            const failureTarget = failureAdapter.getDocumentTarget();
+            failureMode.unmount({
+                root: failureRoot,
+                mount: failureMount,
+                sourceEditorServices: {}
+            });
+            failureRoot.remove();
+
+            let extraFieldRejected = false;
+            let payloadTargetOverrideRejected = false;
+            try {
+                smoke.documentTarget.normalizeManagedDocumentTarget({
+                    scope: 'studio',
+                    doc_id: 'parent-doc',
+                    selected_doc_id: 'fallback'
+                });
+            } catch (error) {
+                extraFieldRejected = /exactly scope and doc_id/.test(
+                    String(error && error.message || '')
+                );
+            }
+            try {
+                smoke.sourceClient.rebuildManagedDocSource(parent, {
+                    scope: 'other',
+                    source_revision: 'r1',
+                    source_body: '# Bad'
+                }, options);
+            } catch (error) {
+                payloadTargetOverrideRejected = /must not replace target field scope/.test(
+                    String(error && error.message || '')
+                );
+            }
+            return {
+                adapterRequests,
+                extraFieldRejected,
+                fixedSession: {
+                    mountedTarget,
+                    modes,
+                    reads,
+                    reloads,
+                    writes
+                },
+                failureSession: {
+                    failureModes,
+                    failureReads,
+                    failureStatus,
+                    failureTarget
+                },
+                payloadTargetOverrideRejected,
+                requests,
+                sourceModeRequests
+            };
+        }"""
+    )
+    expected_target = {
+        "scope": "studio",
+        "sub_scope": "tags",
+        "doc_id": "detail-doc",
+    }
+    if result["extraFieldRejected"] is not True or result["payloadTargetOverrideRejected"] is not True:
+        raise AssertionError(f"managed target allowlist changed: {result!r}")
+    if result["requests"] != [
+        {
+            "url": "http://manage.test/docs/source?scope=studio&doc_id=parent-doc",
+            "method": "GET",
+            "body": None,
+        },
+        {
+            "url": "http://manage.test/docs/source?scope=studio&sub_scope=tags&doc_id=detail-doc",
+            "method": "GET",
+            "body": None,
+        },
+        {
+            "url": "http://manage.test/docs/source/rebuild",
+            "method": "POST",
+            "body": {
+                **expected_target,
+                "source_revision": "r1",
+                "source_body": "# Detail",
+            },
+        },
+        {
+            "url": "http://manage.test/docs/open-source",
+            "method": "POST",
+            "body": {
+                "scope": "studio",
+                "doc_id": "parent-doc",
+                "editor": "vscode",
+            },
+        },
+        {
+            "url": "http://manage.test/docs/open-source",
+            "method": "POST",
+            "body": {**expected_target, "editor": "vscode"},
+        },
+        {
+            "url": "http://manage.test/docs/diagram-sources?scope=studio&sub_scope=tags&doc_id=detail-doc",
+            "method": "GET",
+            "body": None,
+        },
+        {
+            "url": "http://manage.test/docs/open-diagram-source",
+            "method": "POST",
+            "body": {
+                **expected_target,
+                "editor": "vscode",
+                "media_identity": "docs/studio/svg/diagram.svg",
+            },
+        },
+    ]:
+        raise AssertionError(f"source target transport changed: {result!r}")
+    if result["adapterRequests"] != [
+        {
+            "url": "http://adapter.test/docs/source?scope=studio&sub_scope=tags&doc_id=detail-doc",
+            "body": None,
+        },
+        {
+            "url": "http://adapter.test/docs/source/rebuild",
+            "body": {
+                **expected_target,
+                "source_revision": "r2",
+                "source_body": "# Adapter",
+            },
+        },
+    ]:
+        raise AssertionError(f"source adapter target handoff changed: {result!r}")
+    if result["sourceModeRequests"] != [
+        {
+            "modeId": "markdown-source",
+            "sourceTarget": expected_target,
+        }
+    ]:
+        raise AssertionError(f"source entry did not mount its explicit target: {result!r}")
+    if result["fixedSession"] != {
+        "mountedTarget": expected_target,
+        "modes": ["rendered-document"],
+        "reads": [expected_target],
+        "reloads": [expected_target],
+        "writes": [
+            {
+                "target": expected_target,
+                "payload": {
+                    "source_revision": "r1",
+                    "source_body": "# Changed",
+                },
+            }
+        ],
+    }:
+        raise AssertionError(f"mounted source target was not retained: {result!r}")
+    if result["failureSession"] != {
+        "failureModes": [],
+        "failureReads": 1,
+        "failureStatus": "builder failed",
+        "failureTarget": {
+            "scope": "studio",
+            "doc_id": "parent-doc",
+        },
+    }:
+        raise AssertionError(f"source rebuild failure recovery changed: {result!r}")
 
 
 def assert_modal_insertion_cancellation_and_stale_guard(page: Page) -> None:
@@ -1230,6 +1643,7 @@ def run_smoke(page: Page, base_url: str) -> None:
     install_modules(page)
     assert_contract_fixture_and_mixed_search(page)
     assert_source_adapter_captures_and_guards_range(page)
+    assert_source_target_transport_and_fixed_session(page)
     assert_modal_insertion_cancellation_and_stale_guard(page)
     assert_catalogue_info_exact_range_update_remove_and_stale_guard(page)
     assert_real_keyboard_tab_and_scroll_flow(page)

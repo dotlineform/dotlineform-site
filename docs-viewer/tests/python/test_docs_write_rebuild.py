@@ -8,7 +8,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from repo_factory import docs_scope_record
+from repo_factory import docs_scope_record, docs_sub_scope_record
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -122,6 +122,56 @@ def test_rebuild_scope_outputs_extracts_docs_and_search_diagnostics() -> None:
         "wrote": 1,
         "elapsed_seconds": result["diagnostics"]["search"]["elapsed_seconds"],
     }
+
+
+def test_rebuild_sub_scope_outputs_runs_configured_docs_and_parent_search() -> None:
+    calls: list[list[str]] = []
+    original_python = with_fake_python()
+    original_run = write_rebuild.subprocess.run
+
+    def fake_run(command, **_kwargs):
+        calls.append(list(command))
+        return Completed(stdout=DOCS_DIAGNOSTICS_STDOUT)
+
+    write_rebuild.subprocess.run = fake_run
+    try:
+        with tempfile.TemporaryDirectory() as temp_path:
+            result = write_rebuild.rebuild_sub_scope_outputs(
+                Path(temp_path),
+                "studio",
+                "tags",
+            )
+    finally:
+        write_rebuild.subprocess.run = original_run
+        write_rebuild.PYTHON_EXECUTABLE = original_python
+
+    assert calls == [
+        [
+            "/tmp/python",
+            "docs-viewer/build/build_docs.py",
+            "--scope",
+            "studio",
+            "--sub-scope",
+            "tags",
+            "--write",
+            "--diagnostics",
+        ],
+        [
+            "/tmp/python",
+            "docs-viewer/build/build_search.py",
+            "--scope",
+            "studio",
+            "--write",
+        ],
+    ]
+    assert result["docs"] == {
+        "mode": "sub_scope",
+        "doc_ids": [],
+        "sub_scope": "tags",
+        "reason": "configured sub-scope rebuild",
+    }
+    assert result["search"] == {"mode": "full", "doc_ids": []}
+    assert result["diagnostics"]["docs"]["scope"] == "studio"
 
 
 def test_rebuild_scope_outputs_preserves_targeted_search_command() -> None:
@@ -440,6 +490,68 @@ def test_perform_source_write_and_rebuild_marks_pending_then_complete() -> None:
         ("write", "studio", []),
         ("rebuild", "studio", []),
         ("set", write_rebuild.SUPPRESSION_COMPLETE, ["child.md"]),
+    ]
+
+
+def test_perform_sub_scope_source_write_marks_owned_suppression() -> None:
+    events: list[tuple[str, str, list[str]]] = []
+    original_set = write_rebuild.set_watch_suppressions
+    original_clear = write_rebuild.clear_watch_suppressions
+    original_rebuild = write_rebuild.rebuild_sub_scope_outputs
+
+    def fake_set(_repo_root, owner, filenames, *, status, **_kwargs):
+        events.append(("set:" + owner, status, list(filenames)))
+
+    write_rebuild.set_watch_suppressions = fake_set
+    write_rebuild.clear_watch_suppressions = (
+        lambda _repo_root, owner, filenames: events.append(
+            ("clear:" + owner, "", list(filenames))
+        )
+    )
+    write_rebuild.rebuild_sub_scope_outputs = (
+        lambda _repo_root, scope, sub_scope: {
+            "ok": True,
+            "scope": scope,
+            "sub_scope": sub_scope,
+        }
+    )
+    try:
+        with tempfile.TemporaryDirectory() as temp_path:
+            repo_root = Path(temp_path)
+            write_scope_config(
+                repo_root / "docs-viewer/config/scopes/docs_scopes.json",
+                [
+                    docs_scope_record(
+                        "studio",
+                        sub_scopes=[docs_sub_scope_record("studio", "tags")],
+                    )
+                ],
+            )
+            source_path = (
+                repo_root
+                / "docs-viewer/scopes/studio/source/sub-scopes/tags/documents/detail.md"
+            )
+            source_path.parent.mkdir(parents=True)
+            source_path.write_text("# Detail\n", encoding="utf-8")
+            result = write_rebuild.perform_sub_scope_source_write_and_rebuild(
+                repo_root,
+                "studio",
+                "tags",
+                [source_path],
+                lambda: events.append(("write", "studio/tags", [])),
+                suppression_reason="test",
+            )
+    finally:
+        write_rebuild.set_watch_suppressions = original_set
+        write_rebuild.clear_watch_suppressions = original_clear
+        write_rebuild.rebuild_sub_scope_outputs = original_rebuild
+
+    assert result == {"ok": True, "scope": "studio", "sub_scope": "tags"}
+    owner = "studio__sub_scope__tags"
+    assert events == [
+        ("set:" + owner, write_rebuild.SUPPRESSION_PENDING, ["detail.md"]),
+        ("write", "studio/tags", []),
+        ("set:" + owner, write_rebuild.SUPPRESSION_COMPLETE, ["detail.md"]),
     ]
 
 

@@ -29,17 +29,17 @@ export function createDocsViewerManagementSourceAdapter(options) {
   }
 
   return {
-    readSource: function (docId, optionsForRead) {
-      return readManagedDocSource(docId, clientOptions(optionsForRead));
+    readSource: function (target, optionsForRead) {
+      return readManagedDocSource(target, clientOptions(optionsForRead));
     },
-    writeSource: function (payload, optionsForWrite) {
-      return rebuildManagedDocSource(payload, clientOptions(optionsForWrite));
+    writeSource: function (target, payload, optionsForWrite) {
+      return rebuildManagedDocSource(target, payload, clientOptions(optionsForWrite));
     },
-    readDiagramSources: function (docId, optionsForRead) {
-      return readManagedDiagramSources(docId, clientOptions(optionsForRead));
+    readDiagramSources: function (target, optionsForRead) {
+      return readManagedDiagramSources(target, clientOptions(optionsForRead));
     },
-    openDiagramSource: function (payload, optionsForOpen) {
-      return openManagedDiagramSource(payload, clientOptions(optionsForOpen));
+    openDiagramSource: function (target, payload, optionsForOpen) {
+      return openManagedDiagramSource(target, payload, clientOptions(optionsForOpen));
     },
     listStagedMedia: function (mediaKind, optionsForList) {
       return listStagedMedia(mediaKind, clientOptions(optionsForList));

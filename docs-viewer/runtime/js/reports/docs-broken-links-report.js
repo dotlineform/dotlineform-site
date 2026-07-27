@@ -111,9 +111,7 @@ function appendSourceCell(row, state, entry) {
   const owningDocumentUrl = typeof state.context.viewerUrlForScope === "function"
     ? state.context.viewerUrlForScope(scope, docId, { manage: true })
     : manageModeHref(entry.from_page_url, state.scopes);
-  const sourceUrl = new URL(owningDocumentUrl, window.location.href);
-  sourceUrl.searchParams.set("source", "markdown");
-  link.href = sourceUrl.pathname + sourceUrl.search + sourceUrl.hash;
+  link.href = owningDocumentUrl;
   link.target = "_blank";
   link.rel = "noopener noreferrer";
   link.textContent = cleanString(entry.from_page_text) || cleanString(entry.from_page_url);

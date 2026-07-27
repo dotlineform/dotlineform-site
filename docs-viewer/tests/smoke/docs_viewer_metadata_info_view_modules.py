@@ -279,17 +279,32 @@ def assert_manage_diagram_sources_are_logical_vscode_links(page: Page) -> None:
                 },
                 selectedDoc: { doc_id: 'diagram-doc', title: 'Diagram doc' },
                 selectedMetadata: { doc_id: 'diagram-doc', title: 'Diagram doc' },
+                sourceEditorServices: {
+                    getActiveSourceEditorContextAdapter: () => ({
+                        getDocumentTarget: () => ({
+                            scope: 'studio',
+                            sub_scope: 'tags',
+                            doc_id: 'detail-doc'
+                        })
+                    })
+                },
+                viewerScope: 'studio',
                 collectionProvider: {
-                    readDiagramSources: async (docId) => ({
+                    readDiagramSources: async (target) => ({
                         ok: true,
-                        doc_id: docId,
+                        scope: target.scope,
+                        sub_scope: target.sub_scope,
+                        doc_id: target.doc_id,
                         sources: [{
                             label: 'Architecture',
                             media_identity: 'docs/studio/svg/architecture.svg',
                             source_identity: 'architecture.mmd'
                         }]
                     }),
-                    openDiagramSource: async (payload) => { opened.push(payload); return { ok: true }; }
+                    openDiagramSource: async (target, payload) => {
+                        opened.push({ target, payload });
+                        return { ok: true };
+                    }
                 }
             };
             view.mount(context);
@@ -313,11 +328,19 @@ def assert_manage_diagram_sources_are_logical_vscode_links(page: Page) -> None:
         raise AssertionError(f"diagram source link content changed: {result!r}")
     if result["href"] != "#":
         raise AssertionError(f"diagram source exposed a direct source URL: {result!r}")
-    expected_open = [{
-        "doc_id": "diagram-doc",
-        "media_identity": "docs/studio/svg/architecture.svg",
-        "editor": "vscode",
-    }]
+    expected_open = [
+        {
+            "target": {
+                "scope": "studio",
+                "sub_scope": "tags",
+                "doc_id": "detail-doc",
+            },
+            "payload": {
+                "media_identity": "docs/studio/svg/architecture.svg",
+                "editor": "vscode",
+            },
+        }
+    ]
     if result["opened"] != expected_open:
         raise AssertionError(f"diagram source link did not use the logical open contract: {result!r}")
     if "/Users/" in result["text"] or "media/mermaid/" in result["text"]:

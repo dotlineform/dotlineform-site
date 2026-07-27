@@ -1,6 +1,7 @@
 import {
   DOCS_MANAGEMENT_UNAVAILABLE_MESSAGE,
-  fetchManagementJson
+  fetchManagementJson,
+  openManagedDocSource
 } from "../management/docs-viewer-management-client.js";
 import {
   clearDocsHtmlImportResult,
@@ -450,11 +451,10 @@ async function openResultSource(state, link) {
   const docId = normalizeText(link && link.dataset ? link.dataset.docId : "");
   if (!scope || !docId) return;
   try {
-    await fetchManagementJson("/docs/open-source", "POST", {
+    await openManagedDocSource({
       scope,
-      doc_id: docId,
-      editor: "vscode"
-    }, managementOptionsForState(state));
+      doc_id: docId
+    }, "vscode", managementOptionsForState(state));
   } catch (error) {
     console.warn("docs_import_source: open source failed", error);
     setStatus(

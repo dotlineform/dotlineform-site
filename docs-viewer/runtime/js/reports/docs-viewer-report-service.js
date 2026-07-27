@@ -1,3 +1,7 @@
+import {
+  normalizeManagedDocumentTarget
+} from "../management/docs-viewer-management-document-target.js";
+
 function defaultFetch(url, options) {
   return window.fetch(url, options);
 }
@@ -77,13 +81,12 @@ export function createDocsViewerReportService(options) {
       }));
     },
     openSourceDoc: function (request) {
+      var target = normalizeManagedDocumentTarget(request && request.target);
       return fetchReportJson("/docs/open-source", Object.assign({}, serviceOptions, {
         method: "POST",
-        payload: {
-          scope: cleanString(request && request.scope).toLowerCase(),
-          doc_id: cleanString(request && request.docId),
+        payload: Object.assign({}, target, {
           editor: cleanString(request && request.editor) === "vscode" ? "vscode" : "default"
-        },
+        }),
         requireOkEnvelope: true
       }));
     }
