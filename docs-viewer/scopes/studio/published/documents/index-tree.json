@@ -736,10 +736,37 @@
           "ui_status": "paused"
         },
         {
+          "doc_id": "d-20260727-110004-ab0433",
+          "title": "Flat Tag Identity",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260727-110004-ab0433.json",
+          "ui_status": "draft",
+          "children": [
+            {
+              "doc_id": "d-20260727-110045-a48cc4",
+              "title": "Flat Tag Identity Concept",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260727-110045-a48cc4.json"
+            },
+            {
+              "doc_id": "d-20260727-110045-b02868",
+              "title": "Flat Tag Identity Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260727-110045-b02868.json",
+              "ui_status": "proposed"
+            }
+          ]
+        },
+        {
           "doc_id": "d-20260726-224323-eb0a65",
           "title": "Manage Sub-Scope Documents",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-224323-eb0a65.json",
-          "ui_status": "draft"
+          "ui_status": "draft",
+          "children": [
+            {
+              "doc_id": "d-20260727-111354-3ac5f0",
+              "title": "Sub-Scope Document Editing Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260727-111354-3ac5f0.json",
+              "ui_status": "proposed"
+            }
+          ]
         },
         {
           "doc_id": "d-20260726-215805-ecf8a4",
@@ -901,7 +928,8 @@
         {
           "doc_id": "d-20260726-211842-cc8f6c",
           "title": "Tag-document linking",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-211842-cc8f6c.json"
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-211842-cc8f6c.json",
+          "ui_status": "draft"
         },
         {
           "doc_id": "d-20260712-213026-ee0f22",
@@ -1236,5 +1264,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-26T21:45:24Z"
+  "generated_at": "2026-07-27T10:35:32Z"
 }
