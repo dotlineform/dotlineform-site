@@ -7,7 +7,7 @@
       "doc_id": "d-20260727-110004-ab0433",
       "title": "Flat Tag Identity",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260727-110004-ab0433.json",
-      "timestamp": "2026-07-27 17:22:06",
+      "timestamp": "2026-07-27 17:33:57",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
     },
@@ -15,17 +15,49 @@
       "doc_id": "d-20260727-110045-a48cc4",
       "title": "Flat Tag Identity Concept",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260727-110045-a48cc4.json",
-      "timestamp": "2026-07-27 17:22:06",
+      "timestamp": "2026-07-27 17:33:57",
       "parent_id": "d-20260727-110004-ab0433",
       "parent_title": "Flat Tag Identity"
+    },
+    {
+      "doc_id": "d-20260331-000000-643429",
+      "title": "Series Tag Editor",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-643429.json",
+      "timestamp": "2026-07-27 17:33:57",
+      "parent_id": "d-20260419-000000-86255c",
+      "parent_title": "Tag Source Data"
+    },
+    {
+      "doc_id": "d-20260331-000000-974bf0",
+      "title": "Series Tags",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-974bf0.json",
+      "timestamp": "2026-07-27 17:33:57",
+      "parent_id": "d-20260419-000000-86255c",
+      "parent_title": "Tag Source Data"
+    },
+    {
+      "doc_id": "d-20260331-000000-4519a5",
+      "title": "Tag Registry",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-4519a5.json",
+      "timestamp": "2026-07-27 17:33:57",
+      "parent_id": "d-20260419-000000-86255c",
+      "parent_title": "Tag Source Data"
     },
     {
       "doc_id": "d-20260727-172206-0cadb4",
       "title": "Tag Registry Label Retirement Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260727-172206-0cadb4.json",
-      "timestamp": "2026-07-27 17:22:06",
+      "timestamp": "2026-07-27 17:33:57",
       "parent_id": "d-20260727-110004-ab0433",
       "parent_title": "Flat Tag Identity"
+    },
+    {
+      "doc_id": "d-20260419-000000-86255c",
+      "title": "Tag Source Data",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260419-000000-86255c.json",
+      "timestamp": "2026-07-27 17:33:57",
+      "parent_id": "d-20260423-000000-d015e6",
+      "parent_title": "Studio"
     },
     {
       "doc_id": "d-20260727-110045-b02868",
@@ -36,33 +68,9 @@
       "parent_title": "Flat Tag Identity"
     },
     {
-      "doc_id": "d-20260331-000000-643429",
-      "title": "Series Tag Editor",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-643429.json",
-      "timestamp": "2026-07-27 16:46:13",
-      "parent_id": "d-20260419-000000-86255c",
-      "parent_title": "Tag Source Data"
-    },
-    {
-      "doc_id": "d-20260331-000000-974bf0",
-      "title": "Series Tags",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-974bf0.json",
-      "timestamp": "2026-07-27 16:46:13",
-      "parent_id": "d-20260419-000000-86255c",
-      "parent_title": "Tag Source Data"
-    },
-    {
       "doc_id": "d-20260331-000000-519b1e",
       "title": "Tag Aliases",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-519b1e.json",
-      "timestamp": "2026-07-27 16:46:13",
-      "parent_id": "d-20260419-000000-86255c",
-      "parent_title": "Tag Source Data"
-    },
-    {
-      "doc_id": "d-20260331-000000-4519a5",
-      "title": "Tag Registry",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-4519a5.json",
       "timestamp": "2026-07-27 16:46:13",
       "parent_id": "d-20260419-000000-86255c",
       "parent_title": "Tag Source Data"
@@ -74,15 +82,7 @@
       "timestamp": "2026-07-27 16:46:13",
       "parent_id": "d-20260419-000000-86255c",
       "parent_title": "Tag Source Data"
-    },
-    {
-      "doc_id": "d-20260419-000000-86255c",
-      "title": "Tag Source Data",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260419-000000-86255c.json",
-      "timestamp": "2026-07-27 16:46:13",
-      "parent_id": "d-20260423-000000-d015e6",
-      "parent_title": "Studio"
     }
   ],
-  "generated_at": "2026-07-27T16:23:23Z"
+  "generated_at": "2026-07-27T16:34:52Z"
 }

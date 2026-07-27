@@ -38,7 +38,6 @@ def create_registry_tag(
     created_row = {
         "tag_id": normalized_tag_id,
         "group": normalized_group,
-        "label": normalized_tag_id,
         "description": normalized_description,
         "updated_at_utc": now_utc,
     }
@@ -53,7 +52,6 @@ def create_registry_tag(
         "action": "create",
         "tag_id": normalized_tag_id,
         "group": normalized_group,
-        "label": normalized_tag_id,
         "added": 1,
         "final_total": len(updated_payload["tags"]),
     }
@@ -106,7 +104,6 @@ def mutate_registry_tag(
             "old_tag_id": old_tag_id,
             "new_tag_id": None,
             "group": group,
-            "label": str(target_row.get("label") or "").strip(),
         }
 
     normalized_new_tag_id = (
@@ -119,7 +116,6 @@ def mutate_registry_tag(
         if new_group is None
         else tag_source.sanitize_group(new_group, allowed_groups, "new_group")
     )
-    label = normalized_new_tag_id
     canonical_changed = normalized_new_tag_id != old_tag_id
     group_changed = normalized_new_group != group
     if canonical_changed and not allow_canonical_rename:
@@ -131,7 +127,7 @@ def mutate_registry_tag(
     description_changed = description != old_description
 
     updated_row = dict(target_row)
-    updated_row["label"] = label
+    updated_row.pop("label", None)
     updated_row["tag_id"] = normalized_new_tag_id
     updated_row["group"] = normalized_new_group
     updated_row["description"] = description
@@ -149,7 +145,6 @@ def mutate_registry_tag(
         "old_tag_id": old_tag_id,
         "new_tag_id": normalized_new_tag_id,
         "group": normalized_new_group,
-        "label": label,
         "canonical_changed": canonical_changed,
         "group_changed": group_changed,
         "description_changed": description_changed,

@@ -709,7 +709,7 @@ function renderPopupTagOptions(state, matches, options = {}) {
 function renderDeleteTagMeta(state, tag) {
   return `
     <span class="${classNames(UI_CLASS.chip, chipGroupClass(tag.group), UI_CLASS.deleteMetaTag)}" title="${escapeHtml(tag.tagId)}">
-      ${escapeHtml(tag.label)}
+      ${escapeHtml(tag.tagId)}
     </span>
   `;
 }

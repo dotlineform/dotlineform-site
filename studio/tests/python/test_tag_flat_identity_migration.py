@@ -97,7 +97,7 @@ def test_project_flat_identity_sources_preserves_group_and_assignments() -> None
         )
     )
 
-    assert projected_registry["tag_registry_version"] == "tag_registry_v2"
+    assert projected_registry["tag_registry_version"] == "tag_registry_v3"
     assert [row["tag_id"] for row in projected_registry["tags"]] == [
         "trees",
         "growth",
@@ -106,6 +106,7 @@ def test_project_flat_identity_sources_preserves_group_and_assignments() -> None
         "subject",
         "theme",
     ]
+    assert all("label" not in row for row in projected_registry["tags"])
     assert projected_aliases["tag_aliases_version"] == "tag_aliases_v2"
     assert projected_aliases["aliases"]["foliage"]["tags"] == ["trees", "growth"]
     assert projected_assignments["tag_assignments_version"] == "tag_assignments_v2"

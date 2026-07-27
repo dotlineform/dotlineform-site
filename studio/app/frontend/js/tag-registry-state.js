@@ -42,7 +42,6 @@ export function applyTagRegistryCreateProjection(state, options = {}) {
     .concat([{
       group: validation.group,
       tagId: validation.tagId,
-      label: validation.tagId,
       description: validation.description,
       updatedAtUtc,
       updatedAtMs: Number.isFinite(updatedAtMs) ? updatedAtMs : null

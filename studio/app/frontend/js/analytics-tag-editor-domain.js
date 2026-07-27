@@ -27,15 +27,14 @@ export function sanitizeTag(rawTag) {
 
   const tagId = normalize(rawTag.tag_id);
   const group = normalize(rawTag.group);
-  const label = String(rawTag.label || "").trim();
 
-  if (!tagId || !group || !label) return null;
+  if (!tagId || !group) return null;
   if (!GROUP_INDEX.has(group)) return null;
 
   return {
     tag_id: tagId,
     group,
-    label,
+    label: tagId,
     slug: tagId
   };
 }

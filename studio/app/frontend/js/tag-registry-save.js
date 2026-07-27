@@ -2,7 +2,6 @@ import {
   getStudioText
 } from "./studio-config.js";
 import {
-  labelFromTagId,
   normalize
 } from "./tag-registry-domain.js";
 
@@ -71,7 +70,6 @@ export function buildManualPatchForCreateTag(tagRow) {
       {
         tag_id: normalizedTagId,
         group: normalize(tagRow && tagRow.group),
-        label: labelFromTagId(normalizedTagId),
         description: String((tagRow && tagRow.description) || "").trim(),
         updated_at_utc: utcTimestamp()
       }

@@ -155,7 +155,7 @@ async function initTagRegistryPage() {
     tags: [],
     filterGroup: "all",
     searchQuery: "",
-    sortKey: "label",
+    sortKey: "tag",
     sortDir: "asc",
     saveMode: "patch",
     patchSnippet: "",
@@ -286,7 +286,7 @@ function wireEvents(state) {
     const sortButton = event.target.closest("button[data-sort-key]");
     if (!sortButton) return;
     const nextSortKey = normalize(sortButton.getAttribute("data-sort-key"));
-    if (!["label", "description", "updated"].includes(nextSortKey)) return;
+    if (!["tag", "description", "updated"].includes(nextSortKey)) return;
     if (state.sortKey === nextSortKey) {
       state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
     } else {
@@ -475,7 +475,6 @@ async function handleCreateTag(state) {
   const newTagRow = {
     tag_id: validation.tagId,
     group: validation.group,
-    label: validation.tagId,
     description: validation.description
   };
 

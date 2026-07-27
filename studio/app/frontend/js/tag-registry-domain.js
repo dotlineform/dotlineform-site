@@ -16,15 +16,13 @@ export function normalizeRegistryTags(data, fallbackUpdatedAt) {
     if (!raw || typeof raw !== "object") continue;
     const group = normalize(raw.group);
     const tagId = normalize(raw.tag_id);
-    const label = normalize(raw.label) || labelFromTagId(tagId);
     const description = String(raw.description || "").trim();
     const updatedAtUtc = normalizeTimestamp(raw.updated_at_utc) || fallbackUpdatedAt;
 
-    if (!STUDIO_GROUPS.includes(group) || !tagId || !label) continue;
+    if (!STUDIO_GROUPS.includes(group) || !tagId) continue;
     tags.push({
       group,
       tagId,
-      label,
       description,
       updatedAtUtc,
       updatedAtMs: toTimestampMs(updatedAtUtc)
@@ -41,7 +39,7 @@ export function buildRegistryOptions(tags) {
     options.push({
       tagId: tag.tagId,
       group: tag.group,
-      label: normalize(tag.label) || labelFromTagId(tag.tagId) || tag.tagId
+      label: tag.tagId
     });
   }
   options.sort((a, b) => {
@@ -86,7 +84,7 @@ export function getVisibleSortedTags(state) {
     const groupMatch = state.filterGroup === "all" ? true : tag.group === state.filterGroup;
     if (!groupMatch) return false;
     if (!state.searchQuery) return true;
-    return normalize(tag.label).startsWith(state.searchQuery);
+    return tag.tagId.startsWith(state.searchQuery);
   });
 
   const direction = state.sortDir === "desc" ? -1 : 1;
@@ -100,7 +98,7 @@ export function compareTags(a, b, sortKey) {
     const bm = Number.isFinite(b.updatedAtMs) ? b.updatedAtMs : -Infinity;
     const byUpdated = am - bm;
     if (byUpdated !== 0) return byUpdated;
-    return compareTags(a, b, "label");
+    return compareTags(a, b, "tag");
   }
 
   if (sortKey === "description") {
@@ -108,12 +106,10 @@ export function compareTags(a, b, sortKey) {
     const bd = normalize(b.description);
     const byDescription = ad.localeCompare(bd, undefined, { sensitivity: "base" });
     if (byDescription !== 0) return byDescription;
-    return compareTags(a, b, "label");
+    return compareTags(a, b, "tag");
   }
 
-  const byLabel = a.label.localeCompare(b.label, undefined, { sensitivity: "base" });
-  if (byLabel !== 0) return byLabel;
-  return a.tagId.localeCompare(b.tagId);
+  return a.tagId.localeCompare(b.tagId, undefined, { sensitivity: "base" });
 }
 
 export function toTimestampMs(value) {
@@ -144,14 +140,6 @@ export function formatTimestampMinute(value) {
 
 export function normalize(value) {
   return String(value || "").trim().toLowerCase();
-}
-
-export function labelFromTagId(tagId) {
-  return labelFromSlug(tagId);
-}
-
-export function labelFromSlug(slug) {
-  return normalize(slug);
 }
 
 export function getNewTagValidation(options) {

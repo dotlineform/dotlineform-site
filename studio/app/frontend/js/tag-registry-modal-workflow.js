@@ -247,7 +247,7 @@ export function updateTagRegistryDemoteWorkflow(state, options = {}) {
     return {
       tagId,
       group: info && (options.studioGroups || []).includes(info.group) ? info.group : "warning",
-      label: info ? info.label : tagId
+      label: tagId
     };
   });
   renderTagRegistryDemoteSelectionState(state, {

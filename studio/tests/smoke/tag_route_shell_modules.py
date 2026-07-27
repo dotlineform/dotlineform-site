@@ -144,7 +144,6 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
                     "action": "create",
                     "tag_id": "renewal",
                     "group": "theme",
-                    "label": "renewal",
                     "description": "Renewal",
                     "added": 1,
                     "final_total": 2,
@@ -163,7 +162,6 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
                 newTagRow: {
                     tag_id: 'renewal',
                     group: 'theme',
-                    label: 'renewal',
                     description: 'Renewal'
                 },
                 config: {
@@ -214,7 +212,6 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
                 newTagRow: {
                     tag_id: 'renewal',
                     group: 'theme',
-                    label: 'renewal',
                     description: 'Renewal'
                 },
                 config: {
@@ -248,7 +245,6 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
                 newTagRow: {
                     tag_id: 'renewal',
                     group: 'theme',
-                    label: 'renewal',
                     description: 'Renewal'
                 },
                 config: {}
@@ -410,9 +406,9 @@ def assert_studio_tag_editor_interactions(page: Page) -> None:
               <p id="saveResult"></p>
             `;
             const module = await import('/studio/app/frontend/js/analytics-tag-editor-interactions.js');
-            const alpha = { tag_id: 'alpha', group: 'subject', label: 'Alpha', slug: 'alpha' };
-            const beta = { tag_id: 'beta', group: 'domain', label: 'Beta', slug: 'beta' };
-            const gamma = { tag_id: 'gamma', group: 'theme', label: 'Gamma', slug: 'gamma' };
+            const alpha = { tag_id: 'alpha', group: 'subject', slug: 'alpha' };
+            const beta = { tag_id: 'beta', group: 'domain', slug: 'beta' };
+            const gamma = { tag_id: 'gamma', group: 'theme', slug: 'gamma' };
             const state = {
                 config: {},
                 seriesId: 'demo',
@@ -554,8 +550,8 @@ def assert_studio_tag_editor_direct_save_failure(page: Page) -> None:
             const stateModule = await import('/studio/app/frontend/js/analytics-tag-editor-state.js');
             const interactions = await import('/studio/app/frontend/js/analytics-tag-editor-interactions.js');
             const saveController = await import('/studio/app/frontend/js/analytics-tag-editor-save-controller.js');
-            const alpha = { tag_id: 'alpha', group: 'subject', label: 'Alpha', slug: 'alpha' };
-            const beta = { tag_id: 'beta', group: 'domain', label: 'Beta', slug: 'beta' };
+            const alpha = { tag_id: 'alpha', group: 'subject', slug: 'alpha' };
+            const beta = { tag_id: 'beta', group: 'domain', slug: 'beta' };
             const state = stateModule.buildAnalyticsTagEditorState({
                 mount: document.createElement('div'),
                 seriesId: 'demo',

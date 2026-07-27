@@ -48,8 +48,8 @@ export function renderTagRegistryList(state) {
   const updatedHeading = registryText(state.config, "table_heading_updated", "updated");
   const headerHtml = `
     <div class="${UI_CLASS.listHead}">
-      <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="label"${stateAttr(state.sortKey === "label" ? UI_STATE.active : "")}>
-        ${escapeHtml(tagHeading)}${sortIndicator(state, "label")}
+      <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="tag"${stateAttr(state.sortKey === "tag" ? UI_STATE.active : "")}>
+        ${escapeHtml(tagHeading)}${sortIndicator(state, "tag")}
       </button>
       <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="description"${stateAttr(state.sortKey === "description" ? UI_STATE.active : "")}>
         ${escapeHtml(descriptionHeading)}${sortIndicator(state, "description")}
@@ -84,7 +84,7 @@ function renderTagRow(state, tag) {
         <div class="${UI_CLASS.tagActions}">
           <span class="${classNames(UI_CLASS.chip, chipGroupClass(tag.group), UI_CLASS.tagChip)}" title="${escapeHtml(tag.tagId)}">
             <button type="button" class="${UI_CLASS.tagInlineButton}" data-tag-id="${escapeHtml(tag.tagId)}" aria-label="${escapeHtml(registryText(state.config, "tag_edit_aria_label", "Edit {tag_id}", { tag_id: tag.tagId }))}">
-              ${escapeHtml(tag.label)}
+              ${escapeHtml(tag.tagId)}
             </button>
             <button
               type="button"

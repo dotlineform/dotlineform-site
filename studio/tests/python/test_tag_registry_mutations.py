@@ -28,7 +28,6 @@ def row(
     return {
         "tag_id": tag_id,
         "group": group,
-        "label": tag_id,
         "description": description,
     }
 
@@ -58,7 +57,7 @@ def test_create_registry_tag_adds_one_normalized_row() -> None:
         row("growth", "Growth", group="theme"),
     ]
     payload = {
-        "tag_registry_version": "tag_registry_v2",
+        "tag_registry_version": "tag_registry_v3",
         "updated_at_utc": "2026-05-01T00:00:00Z",
         "policy": {"allowed_groups": ["subject", "theme"]},
         "tags": existing_rows,
@@ -79,7 +78,6 @@ def test_create_registry_tag_adds_one_normalized_row() -> None:
         {
             "tag_id": "renewal",
             "group": "theme",
-            "label": "renewal",
             "description": "Renewal cycle",
             "updated_at_utc": NOW,
         },

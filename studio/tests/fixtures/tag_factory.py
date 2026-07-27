@@ -7,7 +7,6 @@ def tag_row(tag_id: str, group: str, description: str = "") -> dict[str, str]:
     return {
         "tag_id": tag_id,
         "group": group,
-        "label": tag_id,
         "description": description,
     }
 

@@ -22,7 +22,7 @@ MAX_ALIAS_TAGS_PER_ALIAS = 4
 DEFAULT_ALLOWED_GROUPS = ["subject", "domain", "form", "theme"]
 MANUAL_WEIGHT_VALUES = [0.3, 0.6, 0.9]
 DEFAULT_TAG_WEIGHT = 0.6
-TAG_REGISTRY_VERSION = "tag_registry_v2"
+TAG_REGISTRY_VERSION = "tag_registry_v3"
 TAG_ALIASES_VERSION = "tag_aliases_v2"
 TAG_ASSIGNMENTS_VERSION = "tag_assignments_v2"
 

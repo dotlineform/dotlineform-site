@@ -111,7 +111,7 @@ async function initSeriesTagsPage() {
       groupInfoPagePath: GROUP_INFO_PAGE_PATH,
       seriesData,
       assignmentsSeries: getAnalyticsAssignmentsSeries(assignmentsJson),
-      registry: buildAnalyticsRegistryLookup(registryJson, STUDIO_GROUPS, { requireLabel: true }),
+      registry: buildAnalyticsRegistryLookup(registryJson, STUDIO_GROUPS),
       groupDescriptions: new Map(),
       dataAvailable: true,
       isBusy: false,

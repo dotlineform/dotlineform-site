@@ -22,9 +22,8 @@ export function buildRegistryLookup(data) {
     if (!raw || typeof raw !== "object") continue;
     const tagId = normalize(raw.tag_id);
     const group = normalize(raw.group);
-    const label = normalize(raw.label);
-    if (!tagId || !STUDIO_GROUPS.includes(group) || !label) continue;
-    map.set(tagId, { group, label });
+    if (!tagId || !STUDIO_GROUPS.includes(group)) continue;
+    map.set(tagId, { group, label: tagId });
   }
   return map;
 }

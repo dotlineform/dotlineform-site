@@ -83,7 +83,6 @@ def project_flat_identity_sources(
     id_map: Dict[str, str] = {}
     projected_tags: list[Dict[str, Any]] = []
     preserved_group_count = 0
-    preserved_label_count = 0
     preserved_description_count = 0
     for idx, raw_tag in enumerate(raw_tags):
         if not isinstance(raw_tag, dict):
@@ -118,12 +117,11 @@ def project_flat_identity_sources(
         projected_row = dict(raw_tag)
         projected_row["tag_id"] = old_slug
         projected_row["group"] = group
-        projected_row["label"] = old_slug
+        projected_row.pop("label", None)
         projected_row["updated_at_utc"] = now_utc
         projected_row.pop("groups", None)
         projected_tags.append(projected_row)
         preserved_group_count += 1
-        preserved_label_count += 1
         if projected_row.get("description") == raw_tag.get("description"):
             preserved_description_count += 1
 
@@ -266,7 +264,6 @@ def project_flat_identity_sources(
         "unresolved_alias_target_count": 0,
         "unresolved_assignment_reference_count": 0,
         "preserved_group_count": preserved_group_count,
-        "preserved_label_count": preserved_label_count,
         "preserved_description_count": preserved_description_count,
         "input_alias_count": len(raw_aliases),
         "output_alias_count": len(projected_aliases_by_key),
@@ -311,12 +308,12 @@ def validate_flat_identity_sources(
     groups_by_tag_id = tag_source.extract_registry_tag_groups(registry_payload)
     raw_tags = registry_payload.get("tags", [])
     for idx, raw_tag in enumerate(raw_tags):
-        tag_id = tag_source.sanitize_tag_id(
+        tag_source.sanitize_tag_id(
             raw_tag.get("tag_id"),
             f"tag_registry.tags[{idx}].tag_id",
         )
-        if str(raw_tag.get("label") or "").strip().lower() != tag_id:
-            raise ValueError(f"tag_registry.tags[{idx}].label must match tag_id")
+        if "label" in raw_tag:
+            raise ValueError(f"tag_registry.tags[{idx}] must not include label")
         if "groups" in raw_tag or isinstance(raw_tag.get("group"), list):
             raise ValueError(f"tag_registry.tags[{idx}] must have one scalar group")
 

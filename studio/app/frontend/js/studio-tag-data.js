@@ -54,23 +54,20 @@ function requiredStudioTagServicePath(config, serviceName, key) {
   return path;
 }
 
-export function buildAnalyticsRegistryLookup(registryJson, studioGroups = [], options = {}) {
+export function buildAnalyticsRegistryLookup(registryJson, studioGroups = []) {
   const tags = Array.isArray(registryJson && registryJson.tags) ? registryJson.tags : [];
   const allowedGroups = sanitizeGroupSet(studioGroups);
-  const requireLabel = Boolean(options && options.requireLabel);
   const map = new Map();
 
   for (const rawTag of tags) {
     if (!rawTag || typeof rawTag !== "object") continue;
     const tagId = normalizeAnalyticsValue(rawTag.tag_id);
     const group = normalizeAnalyticsValue(rawTag.group);
-    const label = String(rawTag.label || "").trim();
     if (!tagId || !group) continue;
     if (allowedGroups && !allowedGroups.has(group)) continue;
-    if (requireLabel && !label) continue;
     map.set(tagId, {
       group,
-      label
+      label: tagId
     });
   }
 
