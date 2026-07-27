@@ -86,7 +86,7 @@ def test_default_payload_loading() -> None:
         aliases = source.load_aliases(root / "missing-aliases.json")
 
     assert_equal(assignments["tag_assignments_version"], "tag_assignments_v2", "assignment default version")
-    assert_equal(registry["tag_registry_version"], "tag_registry_v3", "registry default version")
+    assert_equal(registry["tag_registry_version"], "tag_registry_v4", "registry default version")
     assert_equal(aliases["tag_aliases_version"], "tag_aliases_v2", "aliases default version")
     assert_equal(assignments["series"], {}, "assignment default series")
     assert_equal(registry["policy"]["allowed_groups"], source.DEFAULT_ALLOWED_GROUPS, "registry default groups")

@@ -57,7 +57,7 @@ def test_create_registry_tag_adds_one_normalized_row() -> None:
         row("growth", "Growth", group="theme"),
     ]
     payload = {
-        "tag_registry_version": "tag_registry_v3",
+        "tag_registry_version": "tag_registry_v4",
         "updated_at_utc": "2026-05-01T00:00:00Z",
         "policy": {"allowed_groups": ["subject", "theme"]},
         "tags": existing_rows,

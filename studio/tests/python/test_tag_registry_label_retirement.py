@@ -102,7 +102,7 @@ def test_projection_removes_only_labels_and_updates_source_metadata() -> None:
     )
 
     assert_equal(registry, original, "input registry unchanged")
-    assert_equal(projected["tag_registry_version"], "tag_registry_v3", "version")
+    assert_equal(projected["tag_registry_version"], "tag_registry_v4", "version")
     assert_equal(projected["updated_at_utc"], NOW, "source timestamp")
     assert_equal(
         projected["tags"],

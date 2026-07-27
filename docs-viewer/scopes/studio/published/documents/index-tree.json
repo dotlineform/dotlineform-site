@@ -736,31 +736,6 @@
           "ui_status": "paused"
         },
         {
-          "doc_id": "d-20260727-110004-ab0433",
-          "title": "Flat Tag Identity",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260727-110004-ab0433.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "d-20260727-110045-a48cc4",
-              "title": "Flat Tag Identity Concept",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260727-110045-a48cc4.json"
-            },
-            {
-              "doc_id": "d-20260727-110045-b02868",
-              "title": "Flat Tag Identity Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260727-110045-b02868.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "d-20260727-172206-0cadb4",
-              "title": "Tag Registry Label Retirement Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260727-172206-0cadb4.json",
-              "ui_status": "done"
-            }
-          ]
-        },
-        {
           "doc_id": "d-20260726-224323-eb0a65",
           "title": "Manage Sub-Scope Documents",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-224323-eb0a65.json",
@@ -770,20 +745,6 @@
               "doc_id": "d-20260727-111354-3ac5f0",
               "title": "Sub-Scope Document Editing Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260727-111354-3ac5f0.json",
-              "ui_status": "done"
-            }
-          ]
-        },
-        {
-          "doc_id": "d-20260726-215805-ecf8a4",
-          "title": "Offline Tag Assignment Session Retirement",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-215805-ecf8a4.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "d-20260726-215805-861b6b",
-              "title": "Offline Tag Assignment Session Removal Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-215805-861b6b.json",
               "ui_status": "done"
             }
           ]
@@ -908,32 +869,6 @@
           ]
         },
         {
-          "doc_id": "d-20260726-214250-28ae69",
-          "title": "Tag Vocabulary Import Retirement",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-214250-28ae69.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "d-20260726-214250-9d3fe6",
-              "title": "Bulk Tag Vocabulary Import Removal Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-214250-9d3fe6.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "d-20260726-214935-063d1d",
-              "title": "First-class Alias Creation Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-214935-063d1d.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "d-20260726-214250-55bc9d",
-              "title": "First-class Tag Creation Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-214250-55bc9d.json",
-              "ui_status": "done"
-            }
-          ]
-        },
-        {
           "doc_id": "d-20260726-211842-cc8f6c",
           "title": "Tag-document linking",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-211842-cc8f6c.json",
@@ -943,7 +878,7 @@
               "doc_id": "d-20260727-224141-d28e4c",
               "title": "Tag Document Bootstrap Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260727-224141-d28e4c.json",
-              "ui_status": "proposed"
+              "ui_status": "done"
             }
           ]
         },
@@ -1280,5 +1215,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-27T21:43:18Z"
+  "generated_at": "2026-07-27T22:17:52Z"
 }

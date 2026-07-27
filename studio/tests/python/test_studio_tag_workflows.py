@@ -29,7 +29,7 @@ def test_studio_tag_reads_return_existing_payloads() -> None:
     assert groups_payload["tag_groups_version"] == "tag_groups_v1"
     assert {group["group_id"] for group in groups_payload["groups"]} >= {"subject", "domain", "form", "theme"}
     assert registry_payload["ok"] is True
-    assert registry_payload["tag_registry_version"] == "tag_registry_v3"
+    assert registry_payload["tag_registry_version"] == "tag_registry_v4"
     assert any(tag["tag_id"] == "flower" for tag in registry_payload["tags"])
     assert aliases_payload["ok"] is True
     assert aliases_payload["tag_aliases_version"] == "tag_aliases_v2"
@@ -84,7 +84,7 @@ def test_studio_tag_registry_dry_run_uses_registry_contract() -> None:
         registry_path.parent.mkdir(parents=True)
         registry_path.write_text(
             """{
-  "tag_registry_version": "tag_registry_v3",
+  "tag_registry_version": "tag_registry_v4",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {"allowed_groups": ["subject", "theme"]},
   "tags": [{"tag_id": "trees", "group": "subject", "description": "Old trees"}]
@@ -133,7 +133,7 @@ def test_studio_create_tag_dry_run_validates_before_write() -> None:
         registry_path.parent.mkdir(parents=True)
         registry_path.write_text(
             """{
-  "tag_registry_version": "tag_registry_v3",
+  "tag_registry_version": "tag_registry_v4",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {"allowed_groups": ["subject", "theme"]},
   "tags": [{"tag_id": "trees", "group": "subject", "description": "Trees"}]
@@ -198,7 +198,7 @@ def test_studio_tag_alias_dry_run_uses_alias_contract() -> None:
         )
         registry_path.write_text(
             """{
-  "tag_registry_version": "tag_registry_v3",
+  "tag_registry_version": "tag_registry_v4",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {"allowed_groups": ["subject", "theme"]},
   "tags": [
@@ -289,7 +289,7 @@ def test_studio_promotion_demotion_dry_run_uses_promotion_contract() -> None:
         registry_path.parent.mkdir(parents=True)
         registry_path.write_text(
             """{
-  "tag_registry_version": "tag_registry_v3",
+  "tag_registry_version": "tag_registry_v4",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {"allowed_groups": ["subject", "theme"]},
   "tags": [

@@ -32,7 +32,7 @@ def write_fixture_data(repo_root: Path) -> tuple[Path, Path, Path]:
     assignments_path = data_root / "tag-assignments.json"
     registry_path.write_text(
         """{
-  "tag_registry_version": "tag_registry_v3",
+  "tag_registry_version": "tag_registry_v4",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {
     "allowed_groups": ["subject", "theme"]

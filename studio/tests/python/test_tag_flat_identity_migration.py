@@ -97,7 +97,7 @@ def test_project_flat_identity_sources_preserves_group_and_assignments() -> None
         )
     )
 
-    assert projected_registry["tag_registry_version"] == "tag_registry_v3"
+    assert projected_registry["tag_registry_version"] == "tag_registry_v4"
     assert [row["tag_id"] for row in projected_registry["tags"]] == [
         "trees",
         "growth",

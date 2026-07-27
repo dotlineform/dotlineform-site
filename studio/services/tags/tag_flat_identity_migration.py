@@ -291,6 +291,8 @@ def validate_flat_identity_sources(
     registry_payload: Dict[str, Any],
     aliases_payload: Dict[str, Any],
     assignments_payload: Dict[str, Any],
+    *,
+    expected_registry_version: str | None = None,
 ) -> Dict[str, int]:
     versions = {
         "registry": registry_payload.get("tag_registry_version"),
@@ -298,7 +300,7 @@ def validate_flat_identity_sources(
         "assignments": assignments_payload.get("tag_assignments_version"),
     }
     expected_versions = {
-        "registry": tag_source.TAG_REGISTRY_VERSION,
+        "registry": expected_registry_version or tag_source.TAG_REGISTRY_VERSION,
         "aliases": tag_source.TAG_ALIASES_VERSION,
         "assignments": tag_source.TAG_ASSIGNMENTS_VERSION,
     }
