@@ -1,0 +1,284 @@
+{
+  "schema": "docs_managed_document_targets_v1",
+  "target_shapes": {
+    "parent": {
+      "scope": "analysis",
+      "doc_id": "parent-report"
+    },
+    "sub_scope": {
+      "scope": "analysis",
+      "sub_scope": "tags",
+      "doc_id": "detail-doc"
+    }
+  },
+  "cases": [
+    {
+      "id": "parent",
+      "route": {
+        "parent_doc_id": "parent-report",
+        "subdoc": ""
+      },
+      "detail_state": "list",
+      "configured_sub_scopes": [
+        "tags"
+      ],
+      "management_inventory_doc_ids": [
+        "detail-doc"
+      ],
+      "source_front_matter_doc_id": "parent-report",
+      "request_target": {
+        "scope": "analysis",
+        "doc_id": "parent-report"
+      },
+      "expected": {
+        "normalized_target": {
+          "scope": "analysis",
+          "doc_id": "parent-report"
+        },
+        "server_resolution": "valid",
+        "validated_subdoc_target": null,
+        "edit_target": {
+          "scope": "analysis",
+          "doc_id": "parent-report"
+        },
+        "parent_source_target": {
+          "scope": "analysis",
+          "doc_id": "parent-report"
+        },
+        "subdoc_source_target": null
+      }
+    },
+    {
+      "id": "valid_sub_scope",
+      "route": {
+        "parent_doc_id": "parent-report",
+        "subdoc": "detail-doc"
+      },
+      "detail_state": "loaded",
+      "configured_sub_scopes": [
+        "tags"
+      ],
+      "management_inventory_doc_ids": [
+        "detail-doc"
+      ],
+      "source_front_matter_doc_id": "detail-doc",
+      "request_target": {
+        "scope": "analysis",
+        "sub_scope": "tags",
+        "doc_id": "detail-doc"
+      },
+      "expected": {
+        "normalized_target": {
+          "scope": "analysis",
+          "sub_scope": "tags",
+          "doc_id": "detail-doc"
+        },
+        "server_resolution": "valid",
+        "validated_subdoc_target": {
+          "scope": "analysis",
+          "sub_scope": "tags",
+          "doc_id": "detail-doc"
+        },
+        "edit_target": {
+          "scope": "analysis",
+          "sub_scope": "tags",
+          "doc_id": "detail-doc"
+        },
+        "parent_source_target": {
+          "scope": "analysis",
+          "doc_id": "parent-report"
+        },
+        "subdoc_source_target": {
+          "scope": "analysis",
+          "sub_scope": "tags",
+          "doc_id": "detail-doc"
+        }
+      }
+    },
+    {
+      "id": "unlisted_subdoc",
+      "route": {
+        "parent_doc_id": "parent-report",
+        "subdoc": "missing-doc"
+      },
+      "detail_state": "unlisted",
+      "configured_sub_scopes": [
+        "tags"
+      ],
+      "management_inventory_doc_ids": [
+        "detail-doc"
+      ],
+      "source_front_matter_doc_id": null,
+      "request_target": {
+        "scope": "analysis",
+        "sub_scope": "tags",
+        "doc_id": "missing-doc"
+      },
+      "expected": {
+        "normalized_target": {
+          "scope": "analysis",
+          "sub_scope": "tags",
+          "doc_id": "missing-doc"
+        },
+        "server_resolution": "unlisted_doc",
+        "validated_subdoc_target": null,
+        "edit_target": null,
+        "parent_source_target": {
+          "scope": "analysis",
+          "doc_id": "parent-report"
+        },
+        "subdoc_source_target": null
+      }
+    },
+    {
+      "id": "unknown_sub_scope",
+      "route": {
+        "parent_doc_id": "parent-report",
+        "subdoc": "detail-doc"
+      },
+      "detail_state": "unknown_sub_scope",
+      "configured_sub_scopes": [
+        "notes"
+      ],
+      "management_inventory_doc_ids": [],
+      "source_front_matter_doc_id": null,
+      "request_target": {
+        "scope": "analysis",
+        "sub_scope": "tags",
+        "doc_id": "detail-doc"
+      },
+      "expected": {
+        "normalized_target": {
+          "scope": "analysis",
+          "sub_scope": "tags",
+          "doc_id": "detail-doc"
+        },
+        "server_resolution": "unknown_sub_scope",
+        "validated_subdoc_target": null,
+        "edit_target": null,
+        "parent_source_target": {
+          "scope": "analysis",
+          "doc_id": "parent-report"
+        },
+        "subdoc_source_target": null
+      }
+    },
+    {
+      "id": "mismatched_front_matter_identity",
+      "route": {
+        "parent_doc_id": "parent-report",
+        "subdoc": "detail-doc"
+      },
+      "detail_state": "loaded",
+      "configured_sub_scopes": [
+        "tags"
+      ],
+      "management_inventory_doc_ids": [
+        "detail-doc"
+      ],
+      "source_front_matter_doc_id": "different-doc",
+      "request_target": {
+        "scope": "analysis",
+        "sub_scope": "tags",
+        "doc_id": "detail-doc"
+      },
+      "expected": {
+        "normalized_target": {
+          "scope": "analysis",
+          "sub_scope": "tags",
+          "doc_id": "detail-doc"
+        },
+        "server_resolution": "mismatched_front_matter_identity",
+        "validated_subdoc_target": {
+          "scope": "analysis",
+          "sub_scope": "tags",
+          "doc_id": "detail-doc"
+        },
+        "edit_target": {
+          "scope": "analysis",
+          "sub_scope": "tags",
+          "doc_id": "detail-doc"
+        },
+        "parent_source_target": {
+          "scope": "analysis",
+          "doc_id": "parent-report"
+        },
+        "subdoc_source_target": {
+          "scope": "analysis",
+          "sub_scope": "tags",
+          "doc_id": "detail-doc"
+        }
+      }
+    },
+    {
+      "id": "loading_detail",
+      "route": {
+        "parent_doc_id": "parent-report",
+        "subdoc": "detail-doc"
+      },
+      "detail_state": "loading",
+      "configured_sub_scopes": [
+        "tags"
+      ],
+      "management_inventory_doc_ids": [
+        "detail-doc"
+      ],
+      "source_front_matter_doc_id": "detail-doc",
+      "request_target": {
+        "scope": "analysis",
+        "sub_scope": "tags",
+        "doc_id": "detail-doc"
+      },
+      "expected": {
+        "normalized_target": {
+          "scope": "analysis",
+          "sub_scope": "tags",
+          "doc_id": "detail-doc"
+        },
+        "server_resolution": "valid",
+        "validated_subdoc_target": null,
+        "edit_target": null,
+        "parent_source_target": {
+          "scope": "analysis",
+          "doc_id": "parent-report"
+        },
+        "subdoc_source_target": null
+      }
+    },
+    {
+      "id": "failed_detail",
+      "route": {
+        "parent_doc_id": "parent-report",
+        "subdoc": "detail-doc"
+      },
+      "detail_state": "failed",
+      "configured_sub_scopes": [
+        "tags"
+      ],
+      "management_inventory_doc_ids": [
+        "detail-doc"
+      ],
+      "source_front_matter_doc_id": "detail-doc",
+      "request_target": {
+        "scope": "analysis",
+        "sub_scope": "tags",
+        "doc_id": "detail-doc"
+      },
+      "expected": {
+        "normalized_target": {
+          "scope": "analysis",
+          "sub_scope": "tags",
+          "doc_id": "detail-doc"
+        },
+        "server_resolution": "valid",
+        "validated_subdoc_target": null,
+        "edit_target": null,
+        "parent_source_target": {
+          "scope": "analysis",
+          "doc_id": "parent-report"
+        },
+        "subdoc_source_target": null
+      }
+    }
+  ]
+}
