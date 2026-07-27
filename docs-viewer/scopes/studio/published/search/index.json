@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3b5594bc6e081b296b6e12d02382f997",
-    "generated_at_utc": "2026-07-27T13:01:28Z",
+    "version": "blake2b-b42a8e450b3ae1a5e32c7529790d94c1",
+    "generated_at_utc": "2026-07-27T13:27:39Z",
     "count": 227
   },
   "entries": [
@@ -4136,10 +4136,10 @@
       "kind": "doc",
       "title": "Tag Vocabulary Import Retirement",
       "href": "/docs/?scope=studio&doc=d-20260726-214250-28ae69",
-      "last_updated": "2026-07-27 14:01:06",
+      "last_updated": "2026-07-27 14:27:27",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-27 14:01:06 • Roadmap",
+      "display_meta": "2026-07-27 14:27:27 • Roadmap",
       "search_terms": [
         "tag vocabulary import retirement",
         "tag",
@@ -4147,26 +4147,24 @@
         "import",
         "retirement",
         "roadmap",
-        "2026-07-27 14:01:06",
+        "2026-07-27 14:27:27",
         "2026",
         "07",
         "27",
         "14",
-        "01",
-        "06",
         "d-20260726-214250-28ae69"
       ],
-      "search_text": "tag vocabulary import retirement tag vocabulary import retirement roadmap 2026-07-27 14:01:06 2026 07 27 14 01 06 d-20260726-214250-28ae69"
+      "search_text": "tag vocabulary import retirement tag vocabulary import retirement roadmap 2026-07-27 14:27:27 2026 07 27 14 d-20260726-214250-28ae69"
     },
     {
       "id": "d-20260726-214250-9d3fe6",
       "kind": "doc",
       "title": "Bulk Tag Vocabulary Import Removal Delivery",
       "href": "/docs/?scope=studio&doc=d-20260726-214250-9d3fe6",
-      "last_updated": "2026-07-26 21:58:05",
+      "last_updated": "2026-07-27 14:27:27",
       "parent_id": "d-20260726-214250-28ae69",
       "parent_title": "Tag Vocabulary Import Retirement",
-      "display_meta": "2026-07-26 21:58:05 • Tag Vocabulary Import Retirement",
+      "display_meta": "2026-07-27 14:27:27 • Tag Vocabulary Import Retirement",
       "search_terms": [
         "bulk tag vocabulary import removal delivery",
         "bulk",
@@ -4177,16 +4175,14 @@
         "delivery",
         "tag vocabulary import retirement",
         "retirement",
-        "2026-07-26 21:58:05",
+        "2026-07-27 14:27:27",
         "2026",
         "07",
-        "26",
-        "21",
-        "58",
-        "05",
+        "27",
+        "14",
         "d-20260726-214250-9d3fe6"
       ],
-      "search_text": "bulk tag vocabulary import removal delivery bulk tag vocabulary import removal delivery tag vocabulary import retirement retirement 2026-07-26 21:58:05 2026 07 26 21 58 05 d-20260726-214250-9d3fe6"
+      "search_text": "bulk tag vocabulary import removal delivery bulk tag vocabulary import removal delivery tag vocabulary import retirement retirement 2026-07-27 14:27:27 2026 07 27 14 d-20260726-214250-9d3fe6"
     },
     {
       "id": "d-20260726-214935-063d1d",
@@ -5132,25 +5128,25 @@
       "kind": "doc",
       "title": "Local Studio APIs",
       "href": "/docs/?scope=studio&doc=d-20260602-111803-019594",
-      "last_updated": "2026-07-25 19:30:43",
+      "last_updated": "2026-07-27 14:21:01",
       "parent_id": "d-20260423-000000-d015e6",
       "parent_title": "Studio",
-      "display_meta": "2026-07-25 19:30:43 • Studio",
+      "display_meta": "2026-07-27 14:21:01 • Studio",
       "search_terms": [
         "local studio apis",
         "local",
         "studio",
         "apis",
-        "2026-07-25 19:30:43",
+        "2026-07-27 14:21:01",
         "2026",
         "07",
-        "25",
-        "19",
-        "30",
-        "43",
+        "27",
+        "14",
+        "21",
+        "01",
         "d-20260602-111803-019594"
       ],
-      "search_text": "local studio apis local studio apis 2026-07-25 19:30:43 2026 07 25 19 30 43 d-20260602-111803-019594"
+      "search_text": "local studio apis local studio apis 2026-07-27 14:21:01 2026 07 27 14 21 01 d-20260602-111803-019594"
     },
     {
       "id": "d-20260522-080600-a2b102",
@@ -5460,26 +5456,26 @@
       "kind": "doc",
       "title": "Tag Source Data",
       "href": "/docs/?scope=studio&doc=d-20260419-000000-86255c",
-      "last_updated": "2026-07-25 19:30:43",
+      "last_updated": "2026-07-27 14:21:01",
       "parent_id": "d-20260423-000000-d015e6",
       "parent_title": "Studio",
-      "display_meta": "2026-07-25 19:30:43 • Studio",
+      "display_meta": "2026-07-27 14:21:01 • Studio",
       "search_terms": [
         "tag source data",
         "tag",
         "source",
         "data",
         "studio",
-        "2026-07-25 19:30:43",
+        "2026-07-27 14:21:01",
         "2026",
         "07",
-        "25",
-        "19",
-        "30",
-        "43",
+        "27",
+        "14",
+        "21",
+        "01",
         "d-20260419-000000-86255c"
       ],
-      "search_text": "tag source data tag source data studio 2026-07-25 19:30:43 2026 07 25 19 30 43 d-20260419-000000-86255c"
+      "search_text": "tag source data tag source data studio 2026-07-27 14:21:01 2026 07 27 14 21 01 d-20260419-000000-86255c"
     },
     {
       "id": "d-20260331-000000-643429",
@@ -5542,10 +5538,10 @@
       "kind": "doc",
       "title": "Tag Aliases",
       "href": "/docs/?scope=studio&doc=d-20260331-000000-519b1e",
-      "last_updated": "2026-07-27 14:01:06",
+      "last_updated": "2026-07-27 14:21:01",
       "parent_id": "d-20260419-000000-86255c",
       "parent_title": "Tag Source Data",
-      "display_meta": "2026-07-27 14:01:06 • Tag Source Data",
+      "display_meta": "2026-07-27 14:21:01 • Tag Source Data",
       "search_terms": [
         "tag aliases",
         "tag",
@@ -5553,16 +5549,16 @@
         "tag source data",
         "source",
         "data",
-        "2026-07-27 14:01:06",
+        "2026-07-27 14:21:01",
         "2026",
         "07",
         "27",
         "14",
+        "21",
         "01",
-        "06",
         "d-20260331-000000-519b1e"
       ],
-      "search_text": "tag aliases tag aliases tag source data source data 2026-07-27 14:01:06 2026 07 27 14 01 06 d-20260331-000000-519b1e"
+      "search_text": "tag aliases tag aliases tag source data source data 2026-07-27 14:21:01 2026 07 27 14 21 01 d-20260331-000000-519b1e"
     },
     {
       "id": "d-20260331-000000-3b6fa8",
@@ -5596,10 +5592,10 @@
       "kind": "doc",
       "title": "Tag Registry",
       "href": "/docs/?scope=studio&doc=d-20260331-000000-4519a5",
-      "last_updated": "2026-07-27 13:43:41",
+      "last_updated": "2026-07-27 14:21:01",
       "parent_id": "d-20260419-000000-86255c",
       "parent_title": "Tag Source Data",
-      "display_meta": "2026-07-27 13:43:41 • Tag Source Data",
+      "display_meta": "2026-07-27 14:21:01 • Tag Source Data",
       "search_terms": [
         "tag registry",
         "tag",
@@ -5607,26 +5603,26 @@
         "tag source data",
         "source",
         "data",
-        "2026-07-27 13:43:41",
+        "2026-07-27 14:21:01",
         "2026",
         "07",
         "27",
-        "13",
-        "43",
-        "41",
+        "14",
+        "21",
+        "01",
         "d-20260331-000000-4519a5"
       ],
-      "search_text": "tag registry tag registry tag source data source data 2026-07-27 13:43:41 2026 07 27 13 43 41 d-20260331-000000-4519a5"
+      "search_text": "tag registry tag registry tag source data source data 2026-07-27 14:21:01 2026 07 27 14 21 01 d-20260331-000000-4519a5"
     },
     {
       "id": "d-20260602-000000-9ffb5c",
       "kind": "doc",
       "title": "Tag Services",
       "href": "/docs/?scope=studio&doc=d-20260602-000000-9ffb5c",
-      "last_updated": "2026-07-25 19:30:43",
+      "last_updated": "2026-07-27 14:21:01",
       "parent_id": "d-20260419-000000-86255c",
       "parent_title": "Tag Source Data",
-      "display_meta": "2026-07-25 19:30:43 • Tag Source Data",
+      "display_meta": "2026-07-27 14:21:01 • Tag Source Data",
       "search_terms": [
         "tag services",
         "tag",
@@ -5634,16 +5630,16 @@
         "tag source data",
         "source",
         "data",
-        "2026-07-25 19:30:43",
+        "2026-07-27 14:21:01",
         "2026",
         "07",
-        "25",
-        "19",
-        "30",
-        "43",
+        "27",
+        "14",
+        "21",
+        "01",
         "d-20260602-000000-9ffb5c"
       ],
-      "search_text": "tag services tag services tag source data source data 2026-07-25 19:30:43 2026 07 25 19 30 43 d-20260602-000000-9ffb5c"
+      "search_text": "tag services tag services tag source data source data 2026-07-27 14:21:01 2026 07 27 14 21 01 d-20260602-000000-9ffb5c"
     },
     {
       "id": "d-20260501-174746-efd581",

@@ -14,13 +14,9 @@ export async function probeTagRouteSaveMode(state, options = {}) {
   const fallbackMode = options.fallbackMode || "patch";
   const ok = await healthProbe(timeoutMs, { config: state.config });
   state.saveMode = ok ? availableMode : fallbackMode;
-  if ("importAvailable" in state || options.syncImportAvailable) {
-    state.importAvailable = ok;
-  }
   const result = {
     ok,
     saveMode: state.saveMode,
-    importAvailable: Boolean(state.importAvailable),
     service: tagRouteServiceState(state, { availableMode })
   };
   if (typeof options.onSaveModeChange === "function") {
@@ -35,12 +31,8 @@ export async function probeTagRouteSaveMode(state, options = {}) {
 export function applyTagRoutePatchFallback(state, options = {}) {
   const fallbackMode = options.fallbackMode || "patch";
   state.saveMode = fallbackMode;
-  if ("importAvailable" in state || options.syncImportAvailable) {
-    state.importAvailable = false;
-  }
   return {
     saveMode: state.saveMode,
-    importAvailable: Boolean(state.importAvailable),
     service: tagRouteServiceState(state)
   };
 }

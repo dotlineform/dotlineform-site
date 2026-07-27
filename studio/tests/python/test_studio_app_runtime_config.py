@@ -134,8 +134,8 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["tags"]["import_tag_assignments"] == "/studio/api/tags/import-tag-assignments"
     assert runtime["services"]["tags"]["create_tag"] == "/studio/api/tags/create-tag"
     assert runtime["services"]["tags"]["create_tag_alias"] == "/studio/api/tags/create-tag-alias"
-    assert runtime["services"]["tags"]["import_tag_registry"] == "/studio/api/tags/import-tag-registry"
-    assert runtime["services"]["tags"]["import_tag_aliases"] == "/studio/api/tags/import-tag-aliases"
+    assert "import_tag_registry" not in runtime["services"]["tags"]
+    assert "import_tag_aliases" not in runtime["services"]["tags"]
     assert runtime["series_tag_editor"]["series_index_url"] == "/assets/data/series_index.json"
     assert runtime["series_tag_editor"]["tag_editor_module_url"] == "/studio/app/frontend/js/analytics-tag-editor.js"
     assert payload["analysis"]["groups"]["ordered"] == ["subject", "domain", "form", "theme"]

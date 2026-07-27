@@ -185,21 +185,7 @@ def test_studio_tag_registry_dry_run_uses_registry_contract() -> None:
 """,
             encoding="utf-8",
         )
-        import_status, import_payload = tags_post_response(
-            repo_root,
-            "/import-tag-registry",
-            {
-                "mode": "add",
-                "import_registry": {
-                    "tags": [
-                        {"tag_id": "theme:growth", "group": "theme", "label": "growth", "description": "Growth"}
-                    ]
-                },
-                "import_filename": "registry.json",
-                "client_time_utc": "2026-05-22T00:00:00Z",
-            },
-            dry_run=True,
-        )
+        before = registry_path.read_bytes()
         preview_status, preview_payload = tags_post_response(
             repo_root,
             "/mutate-tag-preview",
@@ -207,17 +193,12 @@ def test_studio_tag_registry_dry_run_uses_registry_contract() -> None:
             dry_run=True,
         )
 
-        persisted = registry_path.read_text(encoding="utf-8")
-        assert import_status == HTTPStatus.OK
-        assert import_payload["ok"] is True
-        assert import_payload["added"] == 1
-        assert import_payload["dry_run"] is True
         assert preview_status == HTTPStatus.OK
         assert preview_payload["ok"] is True
         assert preview_payload["preview"] is True
         assert preview_payload["action"] == "delete"
         assert preview_payload["series_tag_refs_rewritten"] == 1
-        assert "theme:growth" not in persisted
+        assert registry_path.read_bytes() == before
 
 
 def test_studio_create_tag_dry_run_validates_before_write() -> None:
@@ -317,17 +298,6 @@ def test_studio_tag_alias_dry_run_uses_alias_contract() -> None:
             dry_run=True,
         )
 
-        import_status, import_payload = tags_post_response(
-            repo_root,
-            "/import-tag-aliases",
-            {
-                "mode": "add",
-                "import_aliases": {"aliases": {"growth": {"description": "Growth", "tags": ["theme:growth"]}}},
-                "import_filename": "aliases.json",
-                "client_time_utc": "2026-05-22T00:00:00Z",
-            },
-            dry_run=True,
-        )
         delete_status, delete_payload = tags_post_response(
             repo_root,
             "/delete-tag-alias",
@@ -356,10 +326,6 @@ def test_studio_tag_alias_dry_run_uses_alias_contract() -> None:
         assert create_payload["added"] == 1
         assert create_payload["dry_run"] is True
         assert create_payload["would_write"]["alias"] == "canopy"
-        assert import_status == HTTPStatus.OK
-        assert import_payload["ok"] is True
-        assert import_payload["added"] == 1
-        assert import_payload["dry_run"] is True
         assert delete_status == HTTPStatus.OK
         assert delete_payload["ok"] is True
         assert delete_payload["alias"] == "foliage"

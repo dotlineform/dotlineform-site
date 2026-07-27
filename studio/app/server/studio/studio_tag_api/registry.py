@@ -75,65 +75,6 @@ def create_tag_response(repo_root: Path, body: dict[str, Any], *, dry_run: bool 
     return response_payload
 
 
-def import_tag_registry_response(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -> dict[str, object]:
-    registry_path = (repo_root / tag_source.REGISTRY_REL_PATH).resolve()
-    allowed_write_paths = {registry_path}
-
-    mode = str(body.get("mode") or "").strip().lower()
-    import_registry = body.get("import_registry")
-    import_filename = tag_source.sanitize_import_filename(body.get("import_filename"))
-
-    now_utc = common.utc_now()
-    existing_payload = tag_source.load_registry(registry_path)
-    updated_payload, stats = tag_registry.apply_registry_import(existing_payload, import_registry, mode, now_utc)
-    summary_text = tag_registry.build_import_summary_text(stats)
-
-    response_payload: dict[str, object] = {
-        "ok": True,
-        "updated_at_utc": now_utc,
-        "summary_text": summary_text,
-        "import_filename": import_filename,
-        **stats,
-    }
-
-    if dry_run:
-        response_payload["dry_run"] = True
-        response_payload["would_write"] = {
-            "updated_at_utc": now_utc,
-            **stats,
-        }
-    else:
-        if registry_path not in allowed_write_paths:
-            raise ValueError("write target not allowlisted")
-        tag_transactions.atomic_write(registry_path, updated_payload)
-
-    common.log_event(
-        repo_root,
-        "import_tag_registry",
-        {
-            "summary_text": summary_text,
-            "import_filename": import_filename,
-            "mode": mode,
-            "dry_run": dry_run,
-            **stats,
-        },
-    )
-    if tag_activity.tag_activity_changed(stats):
-        common.attach_tag_activity(
-            repo_root=repo_root,
-            endpoint=tag_routes.IMPORT_REGISTRY_PATH,
-            dry_run=dry_run,
-            body=body,
-            response_payload=response_payload,
-            detail_items=[
-                summary_text,
-                f"Mode: {mode}; imported: {stats.get('imported_total')}; final tags: {stats.get('final_total')}.",
-            ],
-            status=tag_activity.tag_activity_status(stats),
-        )
-    return response_payload
-
-
 def mutate_tag_response(
     repo_root: Path,
     body: dict[str, Any],

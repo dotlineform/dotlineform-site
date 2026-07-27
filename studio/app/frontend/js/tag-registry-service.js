@@ -9,9 +9,7 @@ import { buildStudioActivityContext } from "./studio-activity-context.js";
 import {
   buildCreateSummary,
   buildDeletePreviewPayload,
-  buildImportSummary,
   buildMutationSummary,
-  readImportRegistryPayload,
   utcTimestamp
 } from "./tag-registry-save.js";
 
@@ -250,53 +248,4 @@ export async function submitTagDemote(options) {
     ok: true,
     mode: "patch"
   };
-}
-
-export async function submitRegistryImport(options) {
-  const { saveMode, importMode, importRegistry, filename, config } = options || {};
-  if (saveMode === "post") {
-    try {
-      const response = await postJson(getStudioTagWriteEndpoint("importTagRegistry", config), {
-        mode: importMode,
-        import_registry: importRegistry,
-        import_filename: filename || "",
-        client_time_utc: utcTimestamp(),
-        activity_context: registryActivityContext("import-tag-registry", "import-btn", "[data-role=\"import-btn\"]", "import_filename", filename || "tag-registry-import")
-      });
-      return {
-        ok: true,
-        mode: "post",
-        response,
-        summary: buildImportSummary(response)
-      };
-    } catch (error) {
-      return {
-        ok: false,
-        mode: "patch",
-        switchToPatch: true,
-        message: registryText(
-          config,
-          "server_import_failed",
-          "Server import failed; switched to patch mode. {message}",
-          { message: String(error && error.message ? error.message : "").trim() }
-        ).trim()
-      };
-    }
-  }
-
-  return {
-    ok: true,
-    mode: "patch"
-  };
-}
-
-export async function readImportRegistryFromFile(file, groups) {
-  const rawText = await file.text();
-  let payload;
-  try {
-    payload = JSON.parse(rawText);
-  } catch (error) {
-    throw new Error(registryText(null, "import_invalid_json", "Import file is not valid JSON."), { cause: error });
-  }
-  return readImportRegistryPayload(payload, groups);
 }

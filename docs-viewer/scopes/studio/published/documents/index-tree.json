@@ -904,12 +904,13 @@
           "doc_id": "d-20260726-214250-28ae69",
           "title": "Tag Vocabulary Import Retirement",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-214250-28ae69.json",
+          "ui_status": "done",
           "children": [
             {
               "doc_id": "d-20260726-214250-9d3fe6",
               "title": "Bulk Tag Vocabulary Import Removal Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-214250-9d3fe6.json",
-              "ui_status": "proposed"
+              "ui_status": "done"
             },
             {
               "doc_id": "d-20260726-214935-063d1d",
@@ -1264,5 +1265,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-27T13:01:28Z"
+  "generated_at": "2026-07-27T13:27:39Z"
 }

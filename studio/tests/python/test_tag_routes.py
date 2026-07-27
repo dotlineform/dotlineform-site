@@ -49,15 +49,19 @@ def test_studio_adapter_covers_each_post_route() -> None:
     assert_equal(set(studio_tags_api.POST_HANDLERS), set(routes.POST_PATHS), "Studio tag handler keys")
 
 
+def test_retired_vocabulary_import_routes_are_absent() -> None:
+    retired_paths = {"/import-tag-registry", "/import-tag-aliases"}
+    assert_equal(retired_paths.isdisjoint(routes.POST_PATHS), True, "retired routes in POST_PATHS")
+    assert_equal(retired_paths.isdisjoint(studio_tags_api.POST_HANDLERS), True, "retired routes in POST_HANDLERS")
+
+
 def test_tag_write_handlers_live_in_functional_modules() -> None:
     expected_handlers = (
         assignments.save_tags_response,
         assignments.import_tag_assignments_response,
         registry.create_tag_response,
-        registry.import_tag_registry_response,
         registry.mutate_tag_response,
         aliases.create_tag_alias_response,
-        aliases.import_tag_aliases_response,
         aliases.delete_tag_alias_response,
         aliases.mutate_tag_alias_response,
         promotions.promote_tag_alias_response,
@@ -71,6 +75,7 @@ def main() -> None:
     test_post_routes_are_unique()
     test_options_routes_cover_each_post_route()
     test_studio_adapter_covers_each_post_route()
+    test_retired_vocabulary_import_routes_are_absent()
     test_tag_write_handlers_live_in_functional_modules()
     print("Tag route tests OK")
 

@@ -7,13 +7,11 @@ import {
 } from "./studio-transport.js";
 import { buildStudioActivityContext } from "./studio-activity-context.js";
 import {
-  buildImportSummary,
   buildManualPatchForAliasCreate,
   buildManualPatchForAliasDelete,
   buildManualPatchForAliasEdit,
   buildManualPatchForAliasPromote,
   buildManualPatchForDemote,
-  buildManualPatchForNewAliases,
   utcTimestamp
 } from "./tag-aliases-save.js";
 
@@ -31,46 +29,6 @@ function aliasesActivityContext(actionId, controlId, controlSelector, recordIdFi
     recordIdField,
     recordId
   });
-}
-
-export async function submitAliasesImport(options) {
-  const { saveMode, importMode, importAliases, filename, config, state } = options || {};
-  if (saveMode === "post") {
-    try {
-      const response = await postJson(getStudioTagWriteEndpoint("importTagAliases", config), {
-        mode: importMode,
-        import_aliases: importAliases,
-        import_filename: filename || "",
-        client_time_utc: utcTimestamp(),
-        activity_context: aliasesActivityContext("import-tag-aliases", "import-btn", "[data-role=\"import-btn\"]", "import_filename", filename || "tag-aliases-import")
-      });
-      return {
-        ok: true,
-        mode: "post",
-        response,
-        summary: buildImportSummary(response)
-      };
-    } catch (error) {
-      return {
-        ok: false,
-        mode: "patch",
-        switchToPatch: true,
-        message: aliasesText(
-          config,
-          "server_import_failed",
-          "Server import failed; switched to patch mode. {message}",
-          { message: String(error && error.message ? error.message : "").trim() }
-        ).trim(),
-        patchResult: buildManualPatchForNewAliases(state, importAliases)
-      };
-    }
-  }
-
-  return {
-    ok: true,
-    mode: "patch",
-    patchResult: buildManualPatchForNewAliases(state, importAliases)
-  };
 }
 
 export async function submitAliasDelete(options) {

@@ -116,22 +116,6 @@ def run() -> None:
                     },
                 },
             )
-            imported = post_json(
-                f"{base_url}/import-tag-aliases",
-                {
-                    "mode": "add",
-                    "import_aliases": {
-                        "aliases": {
-                            "studio": {
-                                "description": "Studio",
-                                "tags": ["theme:growth"],
-                            }
-                        }
-                    },
-                    "import_filename": "aliases.json",
-                    "client_time_utc": "2026-05-22T00:00:00Z",
-                },
-            )
             preview = post_json(
                 f"{base_url}/mutate-tag-alias-preview",
                 {
@@ -155,7 +139,7 @@ def run() -> None:
             deleted = post_json(
                 f"{base_url}/delete-tag-alias",
                 {
-                    "alias": "studio",
+                    "alias": "growth",
                     "client_time_utc": "2026-05-22T00:00:00Z",
                 },
             )
@@ -179,20 +163,16 @@ def run() -> None:
             raise AssertionError(f"alias create activity failed: {activity_rows!r}")
         if activity_rows[0].get("record_groups", {}).get("aliases", {}).get("sample_ids") != ["growth"]:
             raise AssertionError(f"alias create activity identity failed: {activity_rows!r}")
-        if imported.get("added") != 1:
-            raise AssertionError(f"alias import failed: {imported!r}")
         if not preview.get("preview") or not preview.get("renamed"):
             raise AssertionError(f"alias edit preview failed: {preview!r}")
         if not edited.get("renamed") or not edited.get("tags_changed"):
             raise AssertionError(f"alias edit failed: {edited!r}")
-        if deleted.get("alias") != "studio":
+        if deleted.get("alias") != "growth":
             raise AssertionError(f"alias delete failed: {deleted!r}")
-        if list(aliases["aliases"].keys()) != ["canopy", "growth"]:
+        if list(aliases["aliases"].keys()) != ["canopy"]:
             raise AssertionError(f"final alias keys were unexpected: {aliases!r}")
         if aliases["aliases"]["canopy"]["tags"] != ["subject:trees", "theme:growth"]:
             raise AssertionError(f"final alias tags were unexpected: {aliases!r}")
-        if aliases["aliases"]["growth"]["description"] != "Growth":
-            raise AssertionError(f"created alias normalization was unexpected: {aliases!r}")
 
     print("Studio tag alias APIs OK")
 

@@ -43,18 +43,16 @@ def assert_tag_save_session_helpers(page: Page) -> None:
             const module = await import('/studio/app/frontend/js/tag-route-save-session.js');
             const state = {
                 saveMode: 'patch',
-                importAvailable: false,
                 isBusy: false
             };
             const routeChanges = [];
             const availableProbe = await module.probeTagRouteSaveMode(state, {
-                syncImportAvailable: true,
                 healthProbe: async () => true,
                 onSaveModeChange: (detail) => routeChanges.push(['save', detail.service]),
                 onRouteStateChange: (detail) => routeChanges.push(['route', detail.saveMode])
             });
             const serviceAfterProbe = module.tagRouteServiceState(state);
-            const fallback = module.applyTagRoutePatchFallback(state, { syncImportAvailable: true });
+            const fallback = module.applyTagRoutePatchFallback(state);
             const busyStates = [];
             await module.withTagRouteBusy(state, async () => {
                 busyStates.push(`inside:${state.isBusy}`);
@@ -92,8 +90,6 @@ def assert_tag_save_session_helpers(page: Page) -> None:
                 import('/studio/app/frontend/js/analytics-tag-editor.js'),
                 import('/studio/app/frontend/js/tag-registry.js'),
                 import('/studio/app/frontend/js/tag-aliases.js'),
-                import('/studio/app/frontend/js/tag-registry-import-mode.js'),
-                import('/studio/app/frontend/js/tag-aliases-import-mode.js'),
                 import('/studio/app/frontend/js/tag-registry-workflow.js'),
                 import('/studio/app/frontend/js/tag-aliases-workflow.js')
             ]);
@@ -112,13 +108,11 @@ def assert_tag_save_session_helpers(page: Page) -> None:
     assert result["availableProbe"] == {
         "ok": True,
         "saveMode": "post",
-        "importAvailable": True,
         "service": "available",
     }
     assert result["serviceAfterProbe"] == "available"
     assert result["fallback"] == {
         "saveMode": "patch",
-        "importAvailable": False,
         "service": "unavailable",
     }
     assert result["routeChanges"] == [["save", "available"], ["route", "post"]]
@@ -198,8 +192,7 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
     assert payload["group"] == "theme"
     assert payload["slug"] == "renewal"
     assert payload["description"] == "Renewal"
-    assert "mode" not in payload
-    assert "import_registry" not in payload
+    assert set(payload) == {"group", "slug", "description", "client_time_utc", "activity_context"}
     context = payload["activity_context"]
     assert isinstance(context, dict)
     assert context["action_id"] == "create-tag"
@@ -332,8 +325,7 @@ def assert_tag_alias_create_request(page: Page, base_url: str) -> None:
     assert payload["alias"] == "leaf-growth"
     assert payload["description"] == "Leaf growth"
     assert payload["tags"] == ["subject:trees", "theme:growth"]
-    assert "mode" not in payload
-    assert "import_aliases" not in payload
+    assert set(payload) == {"alias", "description", "tags", "client_time_utc", "activity_context"}
     context = payload["activity_context"]
     assert isinstance(context, dict)
     assert context["action_id"] == "create-tag-alias"

@@ -2,10 +2,8 @@ import {
   getStudioText
 } from "./studio-config.js";
 import {
-  labelFromSlug,
   labelFromTagId,
-  normalize,
-  normalizeTimestamp
+  normalize
 } from "./tag-registry-domain.js";
 
 function registryText(config, key, fallback, tokens) {
@@ -67,36 +65,6 @@ export function buildManualPatchForDemote(tagId, aliasTargets) {
   };
 }
 
-export function normalizeImportTag(raw, idx, groups) {
-  if (!raw || typeof raw !== "object") {
-    throw new Error(registryText(null, "import_tag_object_invalid", "Import tag at index {index} must be an object.", { index: idx }));
-  }
-
-  const tagId = normalize(raw.tag_id);
-  const group = normalize(raw.group);
-  const description = String(raw.description || "").trim();
-
-  if (!tagId || tagId.indexOf(":") <= 0) {
-    throw new Error(registryText(null, "import_tag_invalid_tag_id", "Import tag {index} has invalid tag_id.", { index: idx }));
-  }
-  if (!Array.isArray(groups) || !groups.includes(group)) {
-    throw new Error(registryText(null, "import_tag_invalid_group", "Import tag {index} has invalid group.", { index: idx }));
-  }
-  const tagGroup = tagId.split(":", 1)[0];
-  if (tagGroup !== group) {
-    throw new Error(registryText(null, "import_tag_group_prefix_mismatch", "Import tag {index} group must match tag_id prefix.", { index: idx }));
-  }
-
-  const [, slug = ""] = tagId.split(":", 2);
-
-  return {
-    tag_id: tagId,
-    group,
-    label: labelFromSlug(slug),
-    description
-  };
-}
-
 export function buildManualPatchForCreateTag(tagRow) {
   const normalizedTagId = normalize(tagRow && tagRow.tag_id);
   const snippet = JSON.stringify(
@@ -121,74 +89,6 @@ export function buildManualPatchForCreateTag(tagRow) {
     ),
     snippet
   };
-}
-
-export function buildManualPatchForNewTags(state, importRegistry) {
-  const importTags = Array.isArray(importRegistry && importRegistry.tags) ? importRegistry.tags : [];
-  const existingIds = new Set(state.tags.map((tag) => tag.tagId));
-  const nowUtc = utcTimestamp();
-
-  const newTags = importTags
-    .filter((tag) => tag && typeof tag === "object" && !existingIds.has(normalize(tag.tag_id)))
-    .map((tag) => ({
-      tag_id: normalize(tag.tag_id),
-      group: normalize(tag.group),
-      label: labelFromTagId(normalize(tag.tag_id)),
-      description: String(tag.description || "").trim(),
-      updated_at_utc: nowUtc
-    }));
-
-  if (!newTags.length) {
-    return {
-      kind: "warn",
-      message: registryText(
-        state.config,
-        "patch_import_none_message",
-        "Patch mode ({import_mode}): {imported_count} imported; 0 new tags to add.",
-        {
-          import_mode: state.importMode,
-          imported_count: importTags.length
-        }
-      ),
-      snippet: ""
-    };
-  }
-
-  const snippet = JSON.stringify(
-    newTags,
-    null,
-    2
-  );
-
-  return {
-    kind: "warn",
-    message: registryText(
-      state.config,
-      "patch_import_message",
-      "Patch mode ({import_mode}): {imported_count} imported; {new_count} new tag rows prepared for studio/data/canonical/tags/tag-registry.json tags[].",
-      {
-        import_mode: state.importMode,
-        imported_count: importTags.length,
-        new_count: newTags.length
-      }
-    ),
-    snippet
-  };
-}
-
-export function buildImportSummary(response) {
-  const summaryText = String(response.summary_text || "").trim();
-  if (summaryText) return summaryText;
-  const mode = normalize(response.mode || "");
-  return [
-    `mode ${mode || "unknown"}`,
-    `Imported ${Number(response.imported_total || 0)} tags`,
-    `added ${Number(response.added || 0)}`,
-    `overwritten ${Number(response.overwritten || 0)}`,
-    `unchanged ${Number(response.unchanged || 0)}`,
-    `removed ${Number(response.removed || 0)}`,
-    `final ${Number(response.final_total || 0)}`
-  ].join("; ");
 }
 
 export function buildCreateSummary(response) {
@@ -218,45 +118,6 @@ export function buildMutationSummary(response) {
     `aliases removed-empty ${aliasesRemovedEmpty}`,
     `aliases removed-redundant ${aliasesRemovedRedundant}`
   ].join("; ");
-}
-
-export function buildRegistryImportModeText(state, mode) {
-  const label = mode === "post"
-    ? registryText(state.config, "import_mode_local_server", "Local server")
-    : registryText(state.config, "import_mode_patch", "Patch");
-  return registryText(state.config, "import_mode_template", "Import mode: {mode}", { mode: label });
-}
-
-export function readImportRegistryPayload(payload, groups) {
-  if (!payload || typeof payload !== "object") {
-    throw new Error(registryText(null, "import_invalid_object", "Import file must be a JSON object."));
-  }
-
-  const rawTags = Array.isArray(payload.tags) ? payload.tags : null;
-  if (!rawTags) {
-    throw new Error(registryText(null, "import_missing_tags_array", "Import file must include a tags array."));
-  }
-
-  const normalizedTags = [];
-  const seen = new Set();
-  for (let idx = 0; idx < rawTags.length; idx += 1) {
-    const normalizedTag = normalizeImportTag(rawTags[idx], idx, groups);
-    if (!normalizedTag) continue;
-    if (seen.has(normalizedTag.tag_id)) {
-      const replaceIndex = normalizedTags.findIndex((item) => item.tag_id === normalizedTag.tag_id);
-      if (replaceIndex >= 0) normalizedTags[replaceIndex] = normalizedTag;
-      continue;
-    }
-    seen.add(normalizedTag.tag_id);
-    normalizedTags.push(normalizedTag);
-  }
-
-  return {
-    tag_registry_version: String(payload.tag_registry_version || "tag_registry_v1"),
-    updated_at_utc: normalizeTimestamp(payload.updated_at_utc) || "",
-    policy: payload.policy && typeof payload.policy === "object" ? payload.policy : undefined,
-    tags: normalizedTags
-  };
 }
 
 export function utcTimestamp() {

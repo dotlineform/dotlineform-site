@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke-check the Tag Aliases route reaches the Studio ready state."""
+"""Smoke-check vocabulary routes are ready without bulk-import controls."""
 
 from __future__ import annotations
 
@@ -18,19 +18,27 @@ from local_studio_tag_server import start_studio_tag_server, stop_studio_tag_ser
 
 
 def run(base_url: str) -> None:
-    target = f"{base_url.rstrip('/')}/studio/tag-aliases/"
+    base = base_url.rstrip("/")
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(headless=True)
         page = browser.new_page()
         errors: list[str] = []
         page.on("pageerror", lambda error: errors.append(str(error)))
-        page.goto(target, wait_until="domcontentloaded")
+        page.goto(f"{base}/studio/tag-aliases/", wait_until="domcontentloaded")
         root = page.locator("#tag-aliases")
         wait_for_route_ready(page, "#tag-aliases", "data-studio-ready", "data-studio-busy")
         expect(root).to_have_attribute("data-studio-mode", "list", timeout=10_000)
         expect(root).to_have_attribute("data-studio-record-loaded", "true", timeout=10_000)
+        expect(root.locator('[data-role="open-import-modal"]')).to_have_count(0)
+
+        page.goto(f"{base}/studio/tag-registry/", wait_until="domcontentloaded")
+        root = page.locator("#tag-registry")
+        wait_for_route_ready(page, "#tag-registry", "data-studio-ready", "data-studio-busy")
+        expect(root).to_have_attribute("data-studio-mode", "list", timeout=10_000)
+        expect(root).to_have_attribute("data-studio-record-loaded", "true", timeout=10_000)
+        expect(root.locator('[data-role="open-import-modal"]')).to_have_count(0)
         if errors:
-            raise AssertionError(f"page errors during Tag Aliases route smoke: {errors!r}")
+            raise AssertionError(f"page errors during vocabulary route smoke: {errors!r}")
         browser.close()
 
 

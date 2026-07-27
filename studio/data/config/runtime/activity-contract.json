@@ -642,26 +642,6 @@
       "label": "tag registry",
       "route": "/studio/tag-registry/",
       "actions": {
-        "import-tag-registry": {
-          "label": "import tag registry",
-          "status": "v1-target",
-          "control_id": "import-btn",
-          "control_selector": "[data-role=\"import-btn\"]",
-          "control_label": "Import",
-          "endpoint": "/import-tag-registry",
-          "record_family": "tag_registry",
-          "record_id_field": "import_filename",
-          "no_change_activity": "skip",
-          "report_forced_rewrites": true,
-          "notes": "Covers registry import writes. Preview and patch-mode output remain excluded.",
-          "script_purposes": [
-            {
-              "id": "save-tag-data",
-              "optional": false,
-              "when": "tag registry import writes registry data"
-            }
-          ]
-        },
         "create-tag": {
           "label": "create tag",
           "status": "v1-target",
@@ -748,26 +728,6 @@
       "label": "tag aliases",
       "route": "/studio/tag-aliases/",
       "actions": {
-        "import-tag-aliases": {
-          "label": "import tag aliases",
-          "status": "v1-target",
-          "control_id": "import-btn",
-          "control_selector": "[data-role=\"import-btn\"]",
-          "control_label": "Import",
-          "endpoint": "/import-tag-aliases",
-          "record_family": "tag_aliases",
-          "record_id_field": "import_filename",
-          "no_change_activity": "skip",
-          "report_forced_rewrites": true,
-          "notes": "Covers alias import writes. Patch-mode output remains excluded.",
-          "script_purposes": [
-            {
-              "id": "save-tag-data",
-              "optional": false,
-              "when": "tag alias import writes alias data"
-            }
-          ]
-        },
         "create-tag-alias": {
           "label": "create tag alias",
           "status": "v1-target",

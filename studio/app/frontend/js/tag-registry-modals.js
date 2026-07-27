@@ -24,7 +24,6 @@ const { className: UI_CLASS, selector: UI_SELECTOR } = UI;
 
 export function renderTagRegistryModals(state) {
   return [
-    renderImportModal(state),
     renderPatchModal(state),
     renderEditModal(state),
     renderNewModal(state),
@@ -35,15 +34,6 @@ export function renderTagRegistryModals(state) {
 
 export function collectTagRegistryModalRefs(root) {
   return {
-    importModal: root.querySelector(UI_SELECTOR.importModal),
-    importFileLabel: root.querySelector(UI_SELECTOR.importFileLabel),
-    chooseFile: root.querySelector(UI_SELECTOR.chooseFile),
-    importFile: root.querySelector(UI_SELECTOR.importFile),
-    importModeLabel: root.querySelector(UI_SELECTOR.importModeLabel),
-    importMode: root.querySelector(UI_SELECTOR.importMode),
-    importButton: root.querySelector(UI_SELECTOR.importButton),
-    selectedFile: root.querySelector(UI_SELECTOR.selectedFile),
-    importResult: root.querySelector(UI_SELECTOR.importResult),
     patchModal: root.querySelector(UI_SELECTOR.patchModal),
     patchSnippet: root.querySelector(UI_SELECTOR.patchSnippet),
     copyPatch: root.querySelector(UI_SELECTOR.copyPatch),
@@ -78,36 +68,6 @@ export function collectTagRegistryModalRefs(root) {
 }
 
 export function wireTagRegistryModalEvents(state, callbacks = {}) {
-  state.refs.openImportModal.addEventListener("click", () => {
-    if (!state.importAvailable) return;
-    clearTagRegistryImportResult(state);
-    showTagRegistryImportModal(state);
-    callbacks.onModalStateChange?.();
-  });
-
-  state.refs.chooseFile.addEventListener("click", () => {
-    state.refs.importFile.click();
-  });
-
-  state.refs.importFile.addEventListener("change", () => {
-    const files = state.refs.importFile.files;
-    setTagRegistrySelectedImportFile(state, files && files.length ? files[0] : null);
-  });
-
-  state.refs.importMode.addEventListener("change", () => {
-    callbacks.onImportModeChange?.();
-  });
-
-  state.refs.importButton.addEventListener("click", () => {
-    callbacks.onImportSubmit?.();
-  });
-
-  state.refs.importModal.addEventListener("click", (event) => {
-    if (!event.target.closest(UI_SELECTOR.importModalClose)) return;
-    hideTagRegistryImportModal(state);
-    callbacks.onModalStateChange?.();
-  });
-
   state.refs.patchModal.addEventListener("click", (event) => {
     if (!event.target.closest(UI_SELECTOR.patchModalClose)) return;
     hideTagRegistryPatchModal(state);
@@ -228,44 +188,12 @@ export function wireTagRegistryModalEvents(state, callbacks = {}) {
   });
 }
 
-export function showTagRegistryImportModal(state) {
-  captureTagModalRestoreFocus(state, "import", modalConfigs());
-  state.importModalOpen = true;
-  state.importModalFocusReady = false;
-  state.refs.importModal.hidden = false;
-  syncTagModalFocusAfterOpen(state, "import", modalConfigs());
+export function setTagRegistryRouteResult(state, kind, message) {
+  setStatusText(state.refs.routeResult, kind, message, UI_CLASS.toolbarResult);
 }
 
-export function hideTagRegistryImportModal(state) {
-  const restoreTarget = state.importModalRestoreFocus;
-  state.importModalOpen = false;
-  state.importModalFocusReady = false;
-  state.importModalRestoreFocus = null;
-  state.refs.importModal.hidden = true;
-  restoreTagModalFocus(restoreTarget);
-}
-
-export function setTagRegistrySelectedImportFile(state, file) {
-  state.selectedFile = file || null;
-  if (state.selectedFile) {
-    state.refs.selectedFile.textContent = registryText(
-      state.config,
-      "selected_file_template",
-      "Selected: {filename}",
-      { filename: state.selectedFile.name }
-    );
-    clearTagRegistryImportResult(state);
-    return;
-  }
-  state.refs.selectedFile.textContent = "";
-}
-
-export function setTagRegistryImportResult(state, kind, message) {
-  setStatusText(state.refs.importResult, kind, message, UI_CLASS.toolbarResult);
-}
-
-export function clearTagRegistryImportResult(state) {
-  setTagRegistryImportResult(state, "", "");
+export function clearTagRegistryRouteResult(state) {
+  setTagRegistryRouteResult(state, "", "");
 }
 
 export function showTagRegistryPatchModal(state, snippet) {
@@ -511,36 +439,6 @@ function renderPatchModal(state) {
   });
 }
 
-function renderImportModal(state) {
-  return renderStudioModalFrame({
-    modalRole: UI.role.importModal,
-    backdropRole: UI.role.importModalClose,
-    titleId: "tagRegistryImportTitle",
-    title: registryText(state.config, "import_modal_title", "Import Registry"),
-    size: "wide",
-    hidden: !state.importModalOpen,
-    bodyHtml: `
-      <div class="analyticsToolbar analyticsToolbar--modalImport">
-        <div class="analyticsToolbar__row">
-          <button type="button" class="studioUi__button" data-role="${UI.role.chooseFile}">${escapeHtml(registryText(state.config, "choose_file_button", "Choose file"))}</button>
-          <input type="file" data-role="${UI.role.importFile}" accept=".json,application/json" hidden>
-          <select class="analyticsToolbar__select" data-role="${UI.role.importMode}">
-            <option value="add">${escapeHtml(registryText(state.config, "import_mode_option_add", "add (no overwrite)"))}</option>
-            <option value="merge">${escapeHtml(registryText(state.config, "import_mode_option_merge", "add + overwrite"))}</option>
-            <option value="replace">${escapeHtml(registryText(state.config, "import_mode_option_replace", "replace entire registry"))}</option>
-          </select>
-          <button type="button" class="studioUi__button" data-role="${UI.role.importButton}">${escapeHtml(registryText(state.config, "import_button", "Import"))}</button>
-        </div>
-        <p class="analyticsToolbar__selected" data-role="${UI.role.selectedFile}"></p>
-        <p class="analyticsToolbar__result" data-role="${UI.role.importResult}"></p>
-      </div>
-    `,
-    actionsHtml: renderStudioModalActions([
-      { role: UI.role.importModalClose, label: registryText(state.config, "import_modal_close_button", "Close") }
-    ])
-  });
-}
-
 function renderEditModal(state) {
   return renderStudioModalFrame({
     modalRole: UI.role.editModal,
@@ -649,7 +547,6 @@ function renderDeleteModal(state) {
 }
 
 const tagRegistryModalCloseHandlers = {
-  import: hideTagRegistryImportModal,
   patch: hideTagRegistryPatchModal,
   edit: closeTagRegistryEditModal,
   new: closeTagRegistryNewModal,
@@ -659,14 +556,6 @@ const tagRegistryModalCloseHandlers = {
 
 function modalConfigs() {
   return [
-    {
-      kind: "import",
-      modalRef: "importModal",
-      closeRole: UI.role.importModalClose,
-      focusProp: "importModalFocusReady",
-      restoreProp: "importModalRestoreFocus",
-      focusSelector: `[data-role="${UI.role.chooseFile}"]:not([disabled])`
-    },
     {
       kind: "patch",
       modalRef: "patchModal",

@@ -44,12 +44,12 @@ export function setAliasPromotionStatus(state, kind, message) {
 }
 
 export function openAliasDemoteModal(state, tagId, options = {}) {
-  clearImportResult(options, state);
+  clearRouteResult(options, state);
   const canonicalTagId = normalize(tagId);
   if (!canonicalTagId) return;
   const tagInfo = state.registryById.get(canonicalTagId);
   if (!tagInfo) {
-    setImportResult(
+    setRouteResult(
       options,
       state,
       "error",
@@ -195,10 +195,10 @@ export function isAliasCreateFlow(state) {
 }
 
 export function openAliasEditWorkflowModal(state, aliasKey, options = {}) {
-  clearImportResult(options, state);
+  clearRouteResult(options, state);
   const entry = findTagAliasEntry(state, aliasKey);
   if (!entry) {
-    setImportResult(options, state, "error", text(options, "alias_not_found", "Alias not found: {alias_key}", { alias_key: aliasKey }));
+    setRouteResult(options, state, "error", text(options, "alias_not_found", "Alias not found: {alias_key}", { alias_key: aliasKey }));
     return;
   }
 
@@ -208,7 +208,7 @@ export function openAliasEditWorkflowModal(state, aliasKey, options = {}) {
 }
 
 export function openAliasCreateWorkflowModal(state, options = {}) {
-  clearImportResult(options, state);
+  clearRouteResult(options, state);
   openTagAliasesCreateModal(state);
   updateAliasEditUi(state, options);
   syncRouteBusyState(options, state);
@@ -301,12 +301,12 @@ function syncRouteBusyState(options, state) {
   if (typeof options.syncRouteBusyState === "function") options.syncRouteBusyState(state);
 }
 
-function setImportResult(options, state, kind, message) {
-  if (typeof options.setImportResult === "function") options.setImportResult(state, kind, message);
+function setRouteResult(options, state, kind, message) {
+  if (typeof options.setRouteResult === "function") options.setRouteResult(state, kind, message);
 }
 
-function clearImportResult(options, state) {
-  if (typeof options.clearImportResult === "function") options.clearImportResult(state);
+function clearRouteResult(options, state) {
+  if (typeof options.clearRouteResult === "function") options.clearRouteResult(state);
 }
 
 function text(options, key, fallback, tokens) {

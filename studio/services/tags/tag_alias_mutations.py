@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Plan tag alias imports, edits, deletes, and target rewrites."""
+"""Plan focused tag alias mutations and target rewrites."""
 
 from __future__ import annotations
 
@@ -71,84 +71,6 @@ def build_alias_create_summary_text(stats: Dict[str, Any]) -> str:
         f"targets {int(stats.get('target_count') or 0)}; "
         f"final {int(stats.get('final_total') or 0)}"
     )
-
-
-def apply_aliases_import(
-    existing_payload: Dict[str, Any],
-    import_aliases_payload: Any,
-    mode: str,
-    now_utc: str,
-) -> tuple[Dict[str, Any], Dict[str, Any]]:
-    if mode not in {"replace", "merge", "add"}:
-        raise ValueError("mode must be one of: replace, merge, add")
-
-    import_order, import_by_key = tag_source.sanitize_import_aliases(import_aliases_payload)
-    raw_existing_aliases = existing_payload.get("aliases")
-    existing_aliases = raw_existing_aliases if isinstance(raw_existing_aliases, dict) else {}
-
-    existing_order: list[str] = []
-    existing_by_key: Dict[str, Dict[str, Any]] = {}
-    for idx, (raw_key, raw_value) in enumerate(existing_aliases.items()):
-        alias_key = tag_source.sanitize_alias_key(raw_key, idx)
-        alias_value = tag_source.sanitize_alias_entry(raw_value, alias_key, "tag_aliases.aliases")
-        if alias_key not in existing_by_key:
-            existing_order.append(alias_key)
-        existing_by_key[alias_key] = alias_value
-
-    overwritten = 0
-    added = 0
-    unchanged = 0
-    removed = 0
-    final_aliases: Dict[str, Dict[str, Any]] = {}
-
-    if mode == "replace":
-        existing_keys = set(existing_by_key.keys())
-        import_keys = set(import_by_key.keys())
-        overwritten = len(existing_keys & import_keys)
-        added = len(import_keys - existing_keys)
-        removed = len(existing_keys - import_keys)
-        for key in import_order:
-            final_aliases[key] = import_by_key[key]
-    elif mode == "merge":
-        remaining_import = dict(import_by_key)
-        for key in existing_order:
-            if key in remaining_import:
-                overwritten += 1
-                final_aliases[key] = remaining_import.pop(key)
-            else:
-                unchanged += 1
-                final_aliases[key] = existing_by_key[key]
-        for key in import_order:
-            if key not in remaining_import:
-                continue
-            added += 1
-            final_aliases[key] = remaining_import.pop(key)
-    else:  # mode == "add"
-        for key in existing_order:
-            final_aliases[key] = existing_by_key[key]
-        existing_keys = set(existing_by_key.keys())
-        for key in import_order:
-            if key in existing_keys:
-                unchanged += 1
-                continue
-            added += 1
-            final_aliases[key] = import_by_key[key]
-
-    if "tag_aliases_version" not in existing_payload:
-        existing_payload["tag_aliases_version"] = "tag_aliases_v1"
-    existing_payload["aliases"] = final_aliases
-    existing_payload["updated_at_utc"] = now_utc
-
-    stats = {
-        "mode": mode,
-        "imported_total": len(import_order),
-        "overwritten": overwritten,
-        "added": added,
-        "unchanged": unchanged,
-        "removed": removed,
-        "final_total": len(final_aliases),
-    }
-    return existing_payload, stats
 
 
 def delete_alias_key(

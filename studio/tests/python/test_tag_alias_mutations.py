@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify tag alias import, edit, delete, and rewrite planners."""
+"""Verify focused tag alias create, edit, delete, and rewrite planners."""
 
 from __future__ import annotations
 
@@ -35,53 +35,6 @@ def assert_raises_contains(fn: Callable[[], Any], expected: str, label: str) -> 
             raise AssertionError(f"{label}: expected error containing {expected!r}, got {str(exc)!r}") from exc
         return
     raise AssertionError(f"{label}: expected ValueError")
-
-
-def test_alias_import_modes() -> None:
-    existing = {
-        "aliases": {
-            "foliage": {"description": "old", "tags": ["subject:trees"]},
-            "growth": {"description": "keep", "tags": ["theme:growth"]},
-        }
-    }
-    incoming = {
-        "aliases": {
-            "foliage": {"description": "new", "tags": ["subject:canopy"]},
-            "studio": {"description": "added", "tags": ["domain:studio"]},
-        }
-    }
-
-    replaced, replace_stats = aliases.apply_aliases_import({"aliases": dict(existing["aliases"])}, incoming, "replace", NOW)
-    assert_equal(list(replaced["aliases"].keys()), ["foliage", "studio"], "replace alias order")
-    assert_equal(replace_stats["removed"], 1, "replace removed count")
-
-    merged, merge_stats = aliases.apply_aliases_import({"aliases": dict(existing["aliases"])}, incoming, "merge", NOW)
-    assert_equal(list(merged["aliases"].keys()), ["foliage", "growth", "studio"], "merge alias order")
-    assert_equal(merged["aliases"]["foliage"]["description"], "new", "merge overwrites existing alias")
-    assert_equal(merge_stats["unchanged"], 1, "merge unchanged count")
-
-    added, add_stats = aliases.apply_aliases_import({"aliases": dict(existing["aliases"])}, incoming, "add", NOW)
-    assert_equal(added["aliases"]["foliage"]["description"], "old", "add preserves existing alias")
-    assert_equal(list(added["aliases"].keys()), ["foliage", "growth", "studio"], "add alias order")
-    assert_equal(add_stats["unchanged"], 1, "add unchanged count")
-
-
-def test_alias_import_duplicate_handling() -> None:
-    imported, stats = aliases.apply_aliases_import(
-        {"aliases": {}},
-        {
-            "aliases": {
-                " Foliage ": {"description": "first", "tags": ["subject:trees"]},
-                "foliage": {"description": "second", "tags": ["subject:canopy"]},
-            }
-        },
-        "add",
-        NOW,
-    )
-
-    assert_equal(list(imported["aliases"].keys()), ["foliage"], "duplicate alias keys compact")
-    assert_equal(imported["aliases"]["foliage"]["description"], "second", "last duplicate alias wins")
-    assert_equal(stats["imported_total"], 1, "stats count normalized alias imports")
 
 
 def test_alias_create_adds_one_normalized_entry() -> None:
@@ -284,8 +237,6 @@ def test_alias_rewrite_for_demote_targets() -> None:
 
 
 def main() -> None:
-    test_alias_import_modes()
-    test_alias_import_duplicate_handling()
     test_alias_create_adds_one_normalized_entry()
     test_alias_create_guards()
     test_alias_edit_delete_and_summary()

@@ -24,7 +24,6 @@ const { className: UI_CLASS, selector: UI_SELECTOR } = UI;
 
 export function renderTagAliasesModals(state) {
   return [
-    renderImportModal(state),
     renderPatchModal(state),
     renderPromotionModal(state),
     renderDemoteModal(state),
@@ -34,15 +33,6 @@ export function renderTagAliasesModals(state) {
 
 export function collectTagAliasesModalRefs(root) {
   return {
-    importModal: root.querySelector(UI_SELECTOR.importModal),
-    importFileLabel: root.querySelector(UI_SELECTOR.importFileLabel),
-    chooseFile: root.querySelector(UI_SELECTOR.chooseFile),
-    importFile: root.querySelector(UI_SELECTOR.importFile),
-    importModeLabel: root.querySelector(UI_SELECTOR.importModeLabel),
-    importMode: root.querySelector(UI_SELECTOR.importMode),
-    importButton: root.querySelector(UI_SELECTOR.importButton),
-    selectedFile: root.querySelector(UI_SELECTOR.selectedFile),
-    importResult: root.querySelector(UI_SELECTOR.importResult),
     patchModal: root.querySelector(UI_SELECTOR.patchModal),
     patchSnippet: root.querySelector(UI_SELECTOR.patchSnippet),
     copyPatch: root.querySelector(UI_SELECTOR.copyPatch),
@@ -76,36 +66,6 @@ export function collectTagAliasesModalRefs(root) {
 }
 
 export function wireTagAliasesModalEvents(state, callbacks = {}) {
-  state.refs.openImportModal.addEventListener("click", () => {
-    if (!state.importAvailable) return;
-    clearTagAliasesImportResult(state);
-    showTagAliasesImportModal(state);
-    callbacks.onModalStateChange?.();
-  });
-
-  state.refs.chooseFile.addEventListener("click", () => {
-    state.refs.importFile.click();
-  });
-
-  state.refs.importFile.addEventListener("change", () => {
-    const files = state.refs.importFile.files;
-    setTagAliasesSelectedImportFile(state, files && files.length ? files[0] : null);
-  });
-
-  state.refs.importMode.addEventListener("change", () => {
-    callbacks.onImportModeChange?.();
-  });
-
-  state.refs.importButton.addEventListener("click", () => {
-    callbacks.onImportSubmit?.();
-  });
-
-  state.refs.importModal.addEventListener("click", (event) => {
-    if (!event.target.closest(UI_SELECTOR.importModalClose)) return;
-    hideTagAliasesImportModal(state);
-    callbacks.onModalStateChange?.();
-  });
-
   state.refs.patchModal.addEventListener("click", (event) => {
     if (!event.target.closest(UI_SELECTOR.patchModalClose)) return;
     hideTagAliasesPatchModal(state);
@@ -247,44 +207,12 @@ export function wireTagAliasesModalEvents(state, callbacks = {}) {
   });
 }
 
-export function showTagAliasesImportModal(state) {
-  captureTagModalRestoreFocus(state, "import", modalConfigs());
-  state.importModalOpen = true;
-  state.importModalFocusReady = false;
-  state.refs.importModal.hidden = false;
-  syncTagModalFocusAfterOpen(state, "import", modalConfigs());
+export function setTagAliasesRouteResult(state, kind, message) {
+  setStatusText(state.refs.routeResult, kind, message, UI_CLASS.toolbarResult);
 }
 
-export function hideTagAliasesImportModal(state) {
-  const restoreTarget = state.importModalRestoreFocus;
-  state.importModalOpen = false;
-  state.importModalFocusReady = false;
-  state.importModalRestoreFocus = null;
-  state.refs.importModal.hidden = true;
-  restoreTagModalFocus(restoreTarget);
-}
-
-export function setTagAliasesSelectedImportFile(state, file) {
-  state.selectedFile = file || null;
-  if (state.selectedFile) {
-    state.refs.selectedFile.textContent = aliasesText(
-      state.config,
-      "selected_file_template",
-      "Selected: {filename}",
-      { filename: state.selectedFile.name }
-    );
-    clearTagAliasesImportResult(state);
-    return;
-  }
-  state.refs.selectedFile.textContent = "";
-}
-
-export function setTagAliasesImportResult(state, kind, message) {
-  setStatusText(state.refs.importResult, kind, message, UI_CLASS.toolbarResult);
-}
-
-export function clearTagAliasesImportResult(state) {
-  setTagAliasesImportResult(state, "", "");
+export function clearTagAliasesRouteResult(state) {
+  setTagAliasesRouteResult(state, "", "");
 }
 
 export function showTagAliasesPatchModal(state, snippet) {
@@ -527,36 +455,6 @@ export function hideTagAliasesEditTagPopup(state) {
   state.refs.editTagPopup.innerHTML = "";
 }
 
-function renderImportModal(state) {
-  return renderStudioModalFrame({
-    modalRole: UI.role.importModal,
-    backdropRole: UI.role.importModalClose,
-    titleId: "tagAliasesImportTitle",
-    title: aliasesText(state.config, "import_modal_title", "Import Aliases"),
-    size: "wide",
-    hidden: !state.importModalOpen,
-    bodyHtml: `
-      <div class="analyticsToolbar analyticsToolbar--modalImport">
-        <div class="analyticsToolbar__row">
-          <button type="button" class="studioUi__button" data-role="${UI.role.chooseFile}">${escapeHtml(aliasesText(state.config, "choose_file_button", "Choose file"))}</button>
-          <input type="file" data-role="${UI.role.importFile}" accept=".json,application/json" hidden>
-          <select class="analyticsToolbar__select" data-role="${UI.role.importMode}">
-            <option value="add">${escapeHtml(aliasesText(state.config, "import_mode_option_add", "add (no overwrite)"))}</option>
-            <option value="merge">${escapeHtml(aliasesText(state.config, "import_mode_option_merge", "add + overwrite"))}</option>
-            <option value="replace">${escapeHtml(aliasesText(state.config, "import_mode_option_replace", "replace entire aliases"))}</option>
-          </select>
-          <button type="button" class="studioUi__button" data-role="${UI.role.importButton}">${escapeHtml(aliasesText(state.config, "import_button", "Import"))}</button>
-        </div>
-        <p class="analyticsToolbar__selected" data-role="${UI.role.selectedFile}"></p>
-        <p class="analyticsToolbar__result" data-role="${UI.role.importResult}"></p>
-      </div>
-    `,
-    actionsHtml: renderStudioModalActions([
-      { role: UI.role.importModalClose, label: aliasesText(state.config, "import_modal_close_button", "Close") }
-    ])
-  });
-}
-
 function renderPatchModal(state) {
   return renderStudioModalFrame({
     modalRole: UI.role.patchModal,
@@ -659,7 +557,6 @@ function renderEditModal(state) {
 }
 
 const tagAliasesModalCloseHandlers = {
-  import: hideTagAliasesImportModal,
   patch: hideTagAliasesPatchModal,
   promotion: closeTagAliasesPromotionModal,
   demote: closeTagAliasesDemoteModal,
@@ -668,14 +565,6 @@ const tagAliasesModalCloseHandlers = {
 
 function modalConfigs() {
   return [
-    {
-      kind: "import",
-      modalRef: "importModal",
-      closeRole: UI.role.importModalClose,
-      focusProp: "importModalFocusReady",
-      restoreProp: "importModalRestoreFocus",
-      focusSelector: `[data-role="${UI.role.chooseFile}"]:not([disabled])`
-    },
     {
       kind: "patch",
       modalRef: "patchModal",

@@ -17,8 +17,6 @@ ALIAS_KEY_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 TAG_ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$")
 
 MAX_TAGS = 50
-MAX_IMPORT_TAGS = 10000
-MAX_IMPORT_ALIASES = 10000
 MAX_ALIAS_TARGETS = 50
 MAX_ALIAS_TAGS_PER_ALIAS = 4
 DEFAULT_ALLOWED_GROUPS = ["subject", "domain", "form", "theme"]
@@ -147,55 +145,6 @@ def extract_allowed_groups(registry_payload: Dict[str, Any]) -> list[str]:
     return list(DEFAULT_ALLOWED_GROUPS)
 
 
-def normalize_import_tag(raw_tag: Any, idx: int, allowed_groups: set[str]) -> Dict[str, str]:
-    if not isinstance(raw_tag, dict):
-        raise ValueError(f"import_registry.tags[{idx}] must be an object")
-
-    tag_id = str(raw_tag.get("tag_id") or "").strip().lower()
-    group = str(raw_tag.get("group") or "").strip().lower()
-    description = str(raw_tag.get("description") or "").strip()
-
-    if not TAG_ID_RE.fullmatch(tag_id):
-        raise ValueError(f"import_registry.tags[{idx}].tag_id must match <group>:<slug>")
-    if ":" not in tag_id:
-        raise ValueError(f"import_registry.tags[{idx}].tag_id must include ':'")
-    tag_group = tag_id.split(":", 1)[0]
-    slug = tag_id.split(":", 1)[1]
-    if group != tag_group:
-        raise ValueError(f"import_registry.tags[{idx}] group must match tag_id prefix")
-    if group not in allowed_groups:
-        raise ValueError(f"import_registry.tags[{idx}].group is not allowed")
-    return {
-        "tag_id": tag_id,
-        "group": group,
-        "label": slug,
-        "description": description,
-    }
-
-
-def sanitize_import_registry(raw_registry: Any, allowed_groups: list[str]) -> list[Dict[str, str]]:
-    if not isinstance(raw_registry, dict):
-        raise ValueError("import_registry must be an object")
-
-    raw_tags = raw_registry.get("tags")
-    if not isinstance(raw_tags, list):
-        raise ValueError("import_registry.tags must be an array")
-    if len(raw_tags) > MAX_IMPORT_TAGS:
-        raise ValueError(f"import_registry.tags may include at most {MAX_IMPORT_TAGS} entries")
-
-    out_order: list[str] = []
-    out_by_id: dict[str, Dict[str, str]] = {}
-    allowed_set = set(allowed_groups)
-    for idx, raw_tag in enumerate(raw_tags):
-        normalized = normalize_import_tag(raw_tag, idx, allowed_set)
-        tag_id = normalized["tag_id"]
-        if tag_id not in out_by_id:
-            out_order.append(tag_id)
-        out_by_id[tag_id] = normalized
-
-    return [out_by_id[tag_id] for tag_id in out_order]
-
-
 def sanitize_alias(raw_alias: Any, field_name: str = "alias") -> str:
     alias = str(raw_alias or "").strip().lower()
     if not alias:
@@ -206,7 +155,7 @@ def sanitize_alias(raw_alias: Any, field_name: str = "alias") -> str:
 
 
 def sanitize_alias_key(raw_key: Any, idx: int) -> str:
-    return sanitize_alias(raw_key, f"import_aliases.aliases key at index {idx}")
+    return sanitize_alias(raw_key, f"tag_aliases.aliases key at index {idx}")
 
 
 def enforce_alias_group_constraints(tags: list[str], field_name: str) -> None:
@@ -241,27 +190,6 @@ def sanitize_alias_entry(raw_value: Any, alias_key: str, field_prefix: str) -> D
     tags = sanitize_tag_id_list(raw_value, f"{field_prefix}['{alias_key}']")
     enforce_alias_group_constraints(tags, f"{field_prefix}['{alias_key}']")
     return {"description": "", "tags": tags}
-
-
-def sanitize_import_aliases(raw_aliases_payload: Any) -> tuple[list[str], Dict[str, Dict[str, Any]]]:
-    if not isinstance(raw_aliases_payload, dict):
-        raise ValueError("import_aliases must be an object")
-
-    raw_aliases = raw_aliases_payload.get("aliases")
-    if not isinstance(raw_aliases, dict):
-        raise ValueError("import_aliases.aliases must be an object")
-    if len(raw_aliases) > MAX_IMPORT_ALIASES:
-        raise ValueError(f"import_aliases.aliases may include at most {MAX_IMPORT_ALIASES} entries")
-
-    order: list[str] = []
-    by_key: Dict[str, Dict[str, Any]] = {}
-    for idx, (raw_key, raw_value) in enumerate(raw_aliases.items()):
-        alias_key = sanitize_alias_key(raw_key, idx)
-        alias_value = sanitize_alias_entry(raw_value, alias_key, "import_aliases.aliases")
-        if alias_key not in by_key:
-            order.append(alias_key)
-        by_key[alias_key] = alias_value
-    return order, by_key
 
 
 def sanitize_import_filename(raw_filename: Any) -> str:

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify tag registry import and canonical tag mutation planners."""
+"""Verify focused tag registry creation and canonical mutation planners."""
 
 from __future__ import annotations
 
@@ -47,58 +47,6 @@ def assert_raises_contains(fn: Callable[[], Any], expected: str, label: str) -> 
             raise AssertionError(f"{label}: expected error containing {expected!r}, got {str(exc)!r}") from exc
         return
     raise AssertionError(f"{label}: expected ValueError")
-
-
-def test_registry_import_modes() -> None:
-    existing = {
-        "policy": {"allowed_groups": ["subject", "theme", "domain"]},
-        "tags": [row("subject:trees", "old"), row("theme:growth", "keep")],
-    }
-    incoming = {"tags": [row("subject:trees", "new"), row("domain:studio", "added")]}
-
-    replaced, replace_stats = registry.apply_registry_import(
-        {"policy": existing["policy"], "tags": list(existing["tags"])},
-        incoming,
-        "replace",
-        NOW,
-    )
-    assert_equal([item["tag_id"] for item in replaced["tags"]], ["subject:trees", "domain:studio"], "replace tag order")
-    assert_equal(replace_stats["removed"], 1, "replace removed count")
-    assert_equal(replace_stats["overwritten"], 1, "replace overwritten count")
-
-    merged, merge_stats = registry.apply_registry_import(
-        {"policy": existing["policy"], "tags": list(existing["tags"])},
-        incoming,
-        "merge",
-        NOW,
-    )
-    assert_equal([item["tag_id"] for item in merged["tags"]], ["subject:trees", "theme:growth", "domain:studio"], "merge tag order")
-    assert_equal(merged["tags"][0]["description"], "new", "merge overwrites existing row")
-    assert_equal(merge_stats["unchanged"], 1, "merge unchanged count")
-
-    added, add_stats = registry.apply_registry_import(
-        {"policy": existing["policy"], "tags": list(existing["tags"])},
-        incoming,
-        "add",
-        NOW,
-    )
-    assert_equal(added["tags"][0]["description"], "old", "add preserves existing row")
-    assert_equal([item["tag_id"] for item in added["tags"]], ["subject:trees", "theme:growth", "domain:studio"], "add tag order")
-    assert_equal(add_stats["unchanged"], 1, "add unchanged count")
-
-
-def test_registry_import_duplicate_handling() -> None:
-    payload = {"policy": {"allowed_groups": ["subject"]}, "tags": []}
-    imported, stats = registry.apply_registry_import(
-        payload,
-        {"tags": [row("subject:trees", "first"), row("subject:trees", "second")]},
-        "add",
-        NOW,
-    )
-
-    assert_equal(len(imported["tags"]), 1, "duplicate import compacts to one row")
-    assert_equal(imported["tags"][0]["description"], "second", "last duplicate wins")
-    assert_equal(stats["imported_total"], 1, "stats count normalized imports")
 
 
 def test_create_registry_tag_adds_one_normalized_row() -> None:
@@ -217,17 +165,6 @@ def test_canonical_mutation_guards() -> None:
     )
 
 
-def test_registry_summary_text() -> None:
-    text = registry.build_import_summary_text(
-        {"mode": "merge", "imported_total": 2, "added": 1, "overwritten": 1, "unchanged": 3, "removed": 0, "final_total": 5}
-    )
-    assert_equal(
-        text,
-        "mode merge; Imported 2 tags; added 1; overwritten 1; unchanged 3; removed 0; final 5",
-        "import summary text",
-    )
-
-
 def test_rewrite_assignments_for_canonical_rename() -> None:
     payload = {
         "series": {
@@ -277,13 +214,10 @@ def test_rewrite_assignments_for_canonical_delete_removes_empty_work_rows() -> N
 
 
 def main() -> None:
-    test_registry_import_modes()
-    test_registry_import_duplicate_handling()
     test_create_registry_tag_adds_one_normalized_row()
     test_create_registry_tag_guards()
     test_canonical_edit_and_delete_plans()
     test_canonical_mutation_guards()
-    test_registry_summary_text()
     test_rewrite_assignments_for_canonical_rename()
     test_rewrite_assignments_for_canonical_delete_removes_empty_work_rows()
     print("Tag registry mutation tests OK")

@@ -1,16 +1,13 @@
 // Studio-owned tag registry workflow.
 import {
   buildManualPatchForCreateTag,
-  buildManualPatchForDemote,
-  buildManualPatchForNewTags
+  buildManualPatchForDemote
 } from "./tag-registry-save.js";
 import {
   previewDeleteImpact,
   previewTagDemote,
-  readImportRegistryFromFile,
   submitCreateTag,
   submitDeleteTag,
-  submitRegistryImport,
   submitTagDemote,
   submitTagEdit
 } from "./tag-registry-service.js";
@@ -19,7 +16,7 @@ import {
 } from "./tag-route-save-session.js";
 
 export function applyTagRegistryPatchFallback(state) {
-  applyTagRoutePatchFallback(state, { syncImportAvailable: true });
+  applyTagRoutePatchFallback(state);
 }
 
 export async function previewTagRegistryDeleteImpact(options) {
@@ -52,21 +49,6 @@ export async function demoteTagRegistryTag(options) {
     await submitTagDemote(options),
     () => buildManualPatchForDemote(tagId, aliasTargets)
   );
-}
-
-export async function importTagRegistryTags(options) {
-  const { patchContext, importRegistry } = options || {};
-  return ensurePatchResult(
-    await submitRegistryImport({
-      ...options,
-      state: patchContext
-    }),
-    () => buildManualPatchForNewTags(patchContext, importRegistry)
-  );
-}
-
-export async function readTagRegistryImportFromFile(file, groups) {
-  return readImportRegistryFromFile(file, groups);
 }
 
 function ensurePatchResult(result, buildPatchResult) {

@@ -28,11 +28,9 @@ import {
   applyTagAliasesPatchFallback,
   deleteTagAlias,
   demoteTagAliasFromAliases,
-  importTagAliases,
   previewTagAliasPromote,
   previewTagAliasesTagDemote,
   promoteTagAlias,
-  readTagAliasesImportFromFile,
   saveTagAliasEdit
 } from "./tag-aliases-workflow.js";
 import {
@@ -40,10 +38,10 @@ import {
   openConfirmModal
 } from "./studio-modal.js";
 import {
-  clearTagAliasesImportResult,
+  clearTagAliasesRouteResult,
   collectTagAliasesModalRefs,
   renderTagAliasesModals,
-  setTagAliasesImportResult,
+  setTagAliasesRouteResult,
   showTagAliasesPatchModal,
   wireTagAliasesModalEvents
 } from "./tag-aliases-modals.js";
@@ -73,11 +71,6 @@ import {
   updateAliasEditUi
 } from "./tag-aliases-modal-workflow.js";
 import {
-  probeTagAliasesImportMode,
-  renderTagAliasesImportAvailability,
-  syncTagAliasesImportModeFromControl as syncImportModeFromControl
-} from "./tag-aliases-import-mode.js";
-import {
   renderTagAliasesControls as renderControls,
   renderTagAliasesError as renderError,
   renderTagAliasesList as renderList
@@ -89,6 +82,7 @@ import {
 } from "./studio-route-state.js";
 import {
   bindTagSaveModeReprobe,
+  probeTagRouteSaveMode,
   tagRouteServiceState,
   withTagRouteBusy
 } from "./tag-route-save-session.js";
@@ -112,7 +106,7 @@ if (document.readyState === "loading") {
 function routeStateDetail(state) {
   return {
     route: "tag-aliases",
-    mode: state.importModalOpen ? "import" : state.editState || state.promotionState || state.demoteState ? "edit" : "list",
+    mode: state.editState || state.promotionState || state.demoteState ? "edit" : "list",
     service: tagRouteServiceState(state),
     recordLoaded: Boolean(state.aliases && state.aliases.length)
   };
@@ -167,11 +161,7 @@ async function initTagAliasesPage() {
     sortDir: "asc",
     studioGroups: STUDIO_GROUPS,
     groupInfoPagePath,
-    importMode: "add",
     saveMode: "patch",
-    importAvailable: false,
-    selectedFile: null,
-    importModalOpen: false,
     patchSnippet: "",
     registryOptions: [],
     groupDescriptions: new Map(),
@@ -184,7 +174,6 @@ async function initTagAliasesPage() {
 
   renderShell(state);
   wireEvents(state);
-  syncImportModeFromControl(state);
 
   try {
     await loadData(state);
@@ -201,19 +190,18 @@ async function initTagAliasesPage() {
   }
 
   bindTagSaveModeReprobe(() => {
-    void probeImportMode(state);
+    void probeSaveMode(state);
   });
-  void probeImportMode(state);
+  void probeSaveMode(state);
 }
 
 function renderShell(state) {
-  const importButtonLabel = aliasesText(state.config, "import_button", "Import");
   const newAliasButtonLabel = aliasesText(state.config, "new_alias_button", "New alias");
   const searchLabel = aliasesText(state.config, "search_label", "Search aliases");
   const searchPlaceholder = aliasesText(state.config, "search_placeholder", "search");
   const refs = {
-    openImportModal: state.mount.querySelector(UI_SELECTOR.openImportModal),
     openNewAlias: state.mount.querySelector(UI_SELECTOR.openNewAlias),
+    routeResult: state.mount.querySelector(UI_SELECTOR.routeResult),
     key: state.mount.querySelector(UI_SELECTOR.key),
     searchLabel: state.mount.querySelector(UI_SELECTOR.searchLabel),
     search: state.mount.querySelector(UI_SELECTOR.search),
@@ -230,7 +218,6 @@ function renderShell(state) {
     return;
   }
 
-  refs.openImportModal.textContent = importButtonLabel;
   refs.openNewAlias.textContent = newAliasButtonLabel;
   refs.searchLabel.textContent = searchLabel;
   refs.search.setAttribute("placeholder", searchPlaceholder);
@@ -240,7 +227,6 @@ function renderShell(state) {
     ...refs,
     ...collectTagAliasesModalRefs(state.mount)
   };
-  renderImportAvailability(state);
 }
 
 function wireEvents(state) {
@@ -313,10 +299,6 @@ function wireEvents(state) {
 
   wireTagAliasesModalEvents(state, {
     onModalStateChange: () => syncRouteBusyState(state),
-    onImportModeChange: () => syncImportModeFromControl(state),
-    onImportSubmit: () => {
-      void withRouteBusy(state, () => handleImport(state));
-    },
     onPatchCopy: () => {
       void copyPatchSnippet(state);
     },
@@ -374,60 +356,10 @@ async function loadData(state, options = {}) {
   );
 }
 
-function renderImportAvailability(state) {
-  renderTagAliasesImportAvailability(state, {
-    onModalStateChange: () => syncRouteBusyState(state)
-  });
-}
-
-async function probeImportMode(state) {
-  await probeTagAliasesImportMode(state, {
-    onImportAvailabilityChange: () => renderImportAvailability(state),
+async function probeSaveMode(state) {
+  await probeTagRouteSaveMode(state, {
     onRouteStateChange: () => syncRouteBusyState(state)
   });
-}
-
-async function handleImport(state) {
-  if (!state.selectedFile) {
-    setImportResult(state, "error", aliasesText(state.config, "choose_import_file_error", "Choose an import file first."));
-    return;
-  }
-
-  let importAliases;
-  try {
-    importAliases = await readTagAliasesImportFromFile(state.selectedFile);
-  } catch (error) {
-    setImportResult(state, "error", String(error.message || aliasesText(state.config, "invalid_import_file", "Invalid import file.")));
-    return;
-  }
-
-  const result = await importTagAliases({
-    saveMode: state.saveMode,
-    importMode: state.importMode,
-    importAliases,
-    filename: state.selectedFile ? String(state.selectedFile.name || "") : "",
-    config: state.config,
-    patchContext: state
-  });
-  if (result.ok && result.mode === "post") {
-    setImportResult(state, "success", result.summary);
-    await loadData(state);
-    renderControls(state);
-    renderList(state);
-    return;
-  }
-
-  if (result.switchToPatch) {
-    applyTagAliasesPatchFallback(state);
-    renderImportAvailability(state);
-    setImportResult(state, "error", result.message);
-  }
-
-  const patchResult = result.patchResult;
-  setImportResult(state, patchResult.kind, patchResult.message);
-  if (patchResult.snippet) {
-    openPatchModal(state, patchResult.snippet);
-  }
 }
 
 async function handleAliasDelete(state, alias) {
@@ -442,7 +374,7 @@ async function handleAliasDelete(state, alias) {
     cancelLabel: aliasesText(state.config, "delete_cancel_button", "Cancel")
   });
   if (!modalResult.confirmed) {
-    clearImportResult(state);
+    clearRouteResult(state);
     return;
   }
 
@@ -452,7 +384,7 @@ async function handleAliasDelete(state, alias) {
     config: state.config
   });
   if (result.ok && result.mode === "post") {
-    setImportResult(state, "success", result.summary);
+    setRouteResult(state, "success", result.summary);
     applyTagAliasesDeleteProjection(state, { aliasKey, response: result.response });
     renderControls(state);
     renderList(state);
@@ -461,12 +393,11 @@ async function handleAliasDelete(state, alias) {
 
   if (result.switchToPatch) {
     applyTagAliasesPatchFallback(state);
-    renderImportAvailability(state);
-    setImportResult(state, "error", result.message);
+    setRouteResult(state, "error", result.message);
   }
 
   const patchResult = result.patchResult;
-  setImportResult(state, patchResult.kind, patchResult.message);
+  setRouteResult(state, patchResult.kind, patchResult.message);
   openPatchModal(state, patchResult.snippet);
 }
 
@@ -484,7 +415,7 @@ async function saveAliasEdit(state) {
   });
   if (result.ok && result.mode === "post") {
     if (result.summary) {
-      setImportResult(state, "success", result.summary);
+      setRouteResult(state, "success", result.summary);
     }
     if (isCreate) {
       await loadData(state, { cache: "no-store" });
@@ -508,7 +439,6 @@ async function saveAliasEdit(state) {
 
   if (result.switchToPatch) {
     applyTagAliasesPatchFallback(state);
-    renderImportAvailability(state);
     setAliasEditStatus(state, "error", result.message);
   }
 
@@ -520,11 +450,11 @@ async function saveAliasEdit(state) {
 async function handleAliasPromote(state, alias) {
   const aliasKey = normalize(alias);
   if (!aliasKey) return;
-  clearImportResult(state);
+  clearRouteResult(state);
 
   const entry = findTagAliasEntry(state, aliasKey);
   if (!entry) {
-    setImportResult(state, "error", aliasesText(state.config, "alias_not_found", "Alias not found: {alias_key}", { alias_key: aliasKey }));
+    setRouteResult(state, "error", aliasesText(state.config, "alias_not_found", "Alias not found: {alias_key}", { alias_key: aliasKey }));
     return;
   }
 
@@ -558,7 +488,7 @@ async function submitAliasPromotion(state) {
       config: state.config
     });
     if (!preview.ok) {
-      setImportResult(state, "error", preview.message);
+      setRouteResult(state, "error", preview.message);
       return;
     }
   }
@@ -570,11 +500,11 @@ async function submitAliasPromotion(state) {
     group
   });
   if (!result.ok) {
-    setImportResult(state, "error", result.message);
+    setRouteResult(state, "error", result.message);
     return;
   }
   if (result.mode === "post") {
-    setImportResult(state, "success", result.summary);
+    setRouteResult(state, "success", result.summary);
     applyTagAliasesPromoteProjection(state, { aliasKey, group, response: result.response });
     renderControls(state);
     renderList(state);
@@ -582,7 +512,7 @@ async function submitAliasPromotion(state) {
   }
 
   const patchResult = result.patchResult;
-  setImportResult(state, patchResult.kind, patchResult.message);
+  setRouteResult(state, patchResult.kind, patchResult.message);
   openPatchModal(state, patchResult.snippet);
 }
 
@@ -605,7 +535,7 @@ async function handleTagDemoteFromAliases(state) {
     });
     if (!preview.ok) {
       setAliasDemoteStatus(state, "error", preview.message);
-      setImportResult(state, "error", preview.message);
+      setRouteResult(state, "error", preview.message);
       return;
     }
     const previewSummary = preview.summary;
@@ -641,12 +571,12 @@ async function handleTagDemoteFromAliases(state) {
   if (!result.ok) {
     const message = result.message || aliasesText(state.config, "demotion_failed", "Demotion failed.");
     setAliasDemoteStatus(state, "error", message);
-    setImportResult(state, "error", message);
+    setRouteResult(state, "error", message);
     return;
   }
   if (result.mode === "post") {
     closeAliasDemoteModal(state, modalWorkflowCallbacks());
-    setImportResult(state, "success", String(result.response.summary_text || aliasesText(state.config, "demoted_success", "Demoted.")));
+    setRouteResult(state, "success", String(result.response.summary_text || aliasesText(state.config, "demoted_success", "Demoted.")));
     applyTagAliasesDemoteProjection(state, {
       canonicalTagId,
       aliasTargets,
@@ -659,7 +589,7 @@ async function handleTagDemoteFromAliases(state) {
 
   const patchResult = result.patchResult;
   closeAliasDemoteModal(state, modalWorkflowCallbacks());
-  setImportResult(state, patchResult.kind, patchResult.message);
+  setRouteResult(state, patchResult.kind, patchResult.message);
   openPatchModal(state, patchResult.snippet);
 }
 
@@ -667,21 +597,21 @@ function openPatchModal(state, snippet) {
   showTagAliasesPatchModal(state, snippet);
 }
 
-function setImportResult(state, kind, message) {
-  setTagAliasesImportResult(state, kind, message);
+function setRouteResult(state, kind, message) {
+  setTagAliasesRouteResult(state, kind, message);
 }
 
-function clearImportResult(state) {
-  clearTagAliasesImportResult(state);
+function clearRouteResult(state) {
+  clearTagAliasesRouteResult(state);
 }
 
 function modalWorkflowCallbacks() {
   return {
-    clearImportResult,
+    clearRouteResult,
     demoteTagMatchCap: DEMOTE_TAG_MATCH_CAP,
     editTagMatchCap: EDIT_TAG_MATCH_CAP,
     maxAliasTags: MAX_ALIAS_TAGS,
-    setImportResult,
+    setRouteResult,
     syncRouteBusyState,
     text: (key, fallback, tokens) => aliasesText(null, key, fallback, tokens)
   };
@@ -691,9 +621,9 @@ async function copyPatchSnippet(state) {
   if (!state.patchSnippet) return;
   try {
     await navigator.clipboard.writeText(state.patchSnippet);
-    setImportResult(state, "success", aliasesText(state.config, "patch_copy_success", "Patch snippet copied to clipboard."));
+    setRouteResult(state, "success", aliasesText(state.config, "patch_copy_success", "Patch snippet copied to clipboard."));
   } catch (error) {
-    setImportResult(state, "error", aliasesText(state.config, "patch_copy_failed", "Copy failed. Select and copy the snippet manually."));
+    setRouteResult(state, "error", aliasesText(state.config, "patch_copy_failed", "Copy failed. Select and copy the snippet manually."));
   }
 }
 

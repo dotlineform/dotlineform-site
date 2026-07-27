@@ -4,9 +4,7 @@ import {
   buildManualPatchForAliasDelete,
   buildManualPatchForAliasEdit,
   buildManualPatchForAliasPromote,
-  buildManualPatchForDemote,
-  buildManualPatchForNewAliases,
-  readImportAliasesFromFile
+  buildManualPatchForDemote
 } from "./tag-aliases-save.js";
 import {
   previewAliasPromote,
@@ -14,7 +12,6 @@ import {
   submitAliasDelete,
   submitAliasEdit,
   submitAliasPromote,
-  submitAliasesImport,
   submitTagDemoteFromAliases
 } from "./tag-aliases-service.js";
 import {
@@ -22,18 +19,7 @@ import {
 } from "./tag-route-save-session.js";
 
 export function applyTagAliasesPatchFallback(state) {
-  applyTagRoutePatchFallback(state, { syncImportAvailable: true });
-}
-
-export async function importTagAliases(options) {
-  const { patchContext, importAliases } = options || {};
-  return ensurePatchResult(
-    await submitAliasesImport({
-      ...options,
-      state: patchContext
-    }),
-    () => buildManualPatchForNewAliases(patchContext, importAliases)
-  );
+  applyTagRoutePatchFallback(state);
 }
 
 export async function deleteTagAlias(options) {
@@ -89,10 +75,6 @@ export async function demoteTagAliasFromAliases(options) {
     await submitTagDemoteFromAliases(options),
     () => buildManualPatchForDemote(canonicalTagId, aliasTargets)
   );
-}
-
-export async function readTagAliasesImportFromFile(file) {
-  return readImportAliasesFromFile(file);
 }
 
 function ensurePatchResult(result, buildPatchResult) {

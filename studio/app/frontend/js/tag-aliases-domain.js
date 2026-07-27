@@ -364,30 +364,6 @@ export function parseTagIdCsv(input, text) {
   return out;
 }
 
-export function normalizeImportAliasRows(rawAliases, text) {
-  if (!rawAliases || typeof rawAliases !== "object") return [];
-  const out = [];
-  const seen = new Set();
-  for (const [rawAlias, rawValue] of Object.entries(rawAliases)) {
-    const alias = normalize(rawAlias);
-    if (!alias) continue;
-    let normalizedValue;
-    try {
-      normalizedValue = normalizeAliasValue(rawValue, text);
-    } catch (error) {
-      continue;
-    }
-    if (seen.has(alias)) {
-      const idx = out.findIndex((item) => item.alias === alias);
-      if (idx >= 0) out[idx] = { alias, value: normalizedValue.value, targets: normalizedValue.targets };
-      continue;
-    }
-    seen.add(alias);
-    out.push({ alias, value: normalizedValue.value, targets: normalizedValue.targets });
-  }
-  return out;
-}
-
 export function toTimestampMs(value) {
   if (!value) return null;
   const ms = Date.parse(value);

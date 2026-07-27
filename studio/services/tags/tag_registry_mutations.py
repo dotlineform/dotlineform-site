@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Plan tag registry imports and focused canonical tag mutations."""
+"""Plan focused canonical tag mutations."""
 
 from __future__ import annotations
 
@@ -58,107 +58,6 @@ def create_registry_tag(
         "added": 1,
         "final_total": len(updated_payload["tags"]),
     }
-
-
-def apply_registry_import(
-    existing_payload: Dict[str, Any],
-    import_registry: Any,
-    mode: str,
-    now_utc: str,
-) -> tuple[Dict[str, Any], Dict[str, Any]]:
-    if mode not in {"replace", "merge", "add"}:
-        raise ValueError("mode must be one of: replace, merge, add")
-
-    allowed_groups = tag_source.extract_allowed_groups(existing_payload)
-    imported_tags = tag_source.sanitize_import_registry(import_registry, allowed_groups)
-
-    raw_existing_tags = existing_payload.get("tags")
-    existing_tags = raw_existing_tags if isinstance(raw_existing_tags, list) else []
-
-    existing_by_id: dict[str, Dict[str, Any]] = {}
-    for raw in existing_tags:
-        if not isinstance(raw, dict):
-            continue
-        tag_id = str(raw.get("tag_id") or "").strip().lower()
-        if not tag_id:
-            continue
-        existing_by_id[tag_id] = raw
-
-    import_order = [tag["tag_id"] for tag in imported_tags]
-    import_by_id = {tag["tag_id"]: tag for tag in imported_tags}
-
-    overwritten = 0
-    added = 0
-    unchanged = 0
-    removed = 0
-
-    if mode == "replace":
-        existing_ids = set(existing_by_id.keys())
-        imported_ids = set(import_by_id.keys())
-        overwritten = len(existing_ids & imported_ids)
-        added = len(imported_ids - existing_ids)
-        removed = len(existing_ids - imported_ids)
-        final_tags: list[Any] = []
-        for tag_id in import_order:
-            tag = dict(import_by_id[tag_id])
-            tag["updated_at_utc"] = now_utc
-            final_tags.append(tag)
-    elif mode == "merge":
-        final_tags = []
-        remaining_import = dict(import_by_id)
-        for existing_tag in existing_tags:
-            if not isinstance(existing_tag, dict):
-                unchanged += 1
-                final_tags.append(existing_tag)
-                continue
-
-            existing_tag_id = str(existing_tag.get("tag_id") or "").strip().lower()
-            if existing_tag_id and existing_tag_id in remaining_import:
-                overwritten += 1
-                incoming = dict(remaining_import.pop(existing_tag_id))
-                incoming["updated_at_utc"] = now_utc
-                final_tags.append(incoming)
-            else:
-                unchanged += 1
-                final_tags.append(existing_tag)
-
-        for tag_id in import_order:
-            if tag_id not in remaining_import:
-                continue
-            added += 1
-            incoming = dict(remaining_import.pop(tag_id))
-            incoming["updated_at_utc"] = now_utc
-            final_tags.append(incoming)
-    else:  # mode == "add"
-        final_tags = list(existing_tags)
-        existing_ids = set(existing_by_id.keys())
-        for tag_id in import_order:
-            if tag_id in existing_ids:
-                unchanged += 1
-                continue
-            incoming = dict(import_by_id[tag_id])
-            incoming["updated_at_utc"] = now_utc
-            final_tags.append(incoming)
-            added += 1
-
-    if "tag_registry_version" not in existing_payload:
-        existing_payload["tag_registry_version"] = "tag_registry_v1"
-    if not isinstance(existing_payload.get("policy"), dict):
-        existing_payload["policy"] = {"allowed_groups": allowed_groups}
-
-    existing_payload["tags"] = final_tags
-    existing_payload["updated_at_utc"] = now_utc
-
-    stats = {
-        "mode": mode,
-        "imported_total": len(imported_tags),
-        "overwritten": overwritten,
-        "added": added,
-        "unchanged": unchanged,
-        "removed": removed,
-        "final_total": len(final_tags),
-    }
-    return existing_payload, stats
 
 
 def mutate_registry_tag(
@@ -349,21 +248,6 @@ def rewrite_assignments_for_tag(
         "work_rows_touched": work_rows_touched,
         "work_tag_refs_rewritten": work_refs_rewritten,
     }
-
-
-def build_import_summary_text(stats: Dict[str, Any], noun: str = "tags") -> str:
-    mode = str(stats.get("mode") or "unknown")
-    imported_total = int(stats.get("imported_total") or 0)
-    added = int(stats.get("added") or 0)
-    overwritten = int(stats.get("overwritten") or 0)
-    unchanged = int(stats.get("unchanged") or 0)
-    removed = int(stats.get("removed") or 0)
-    final_total = int(stats.get("final_total") or 0)
-    return (
-        f"mode {mode}; Imported {imported_total} {noun}; "
-        f"added {added}; overwritten {overwritten}; "
-        f"unchanged {unchanged}; removed {removed}; final {final_total}"
-    )
 
 
 def build_create_summary_text(stats: Dict[str, Any]) -> str:

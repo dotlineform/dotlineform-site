@@ -44,6 +44,12 @@ def write_fixture_data(repo_root: Path) -> tuple[Path, Path, Path]:
       "group": "subject",
       "label": "trees",
       "description": "Trees"
+    },
+    {
+      "tag_id": "theme:growth",
+      "group": "theme",
+      "label": "growth",
+      "description": "Growth"
     }
   ]
 }
@@ -111,24 +117,6 @@ def run() -> None:
         try:
             port = server.server_address[1]
             base_url = f"http://127.0.0.1:{port}/studio/api/tags"
-            imported = post_json(
-                f"{base_url}/import-tag-registry",
-                {
-                    "mode": "add",
-                    "import_registry": {
-                        "tags": [
-                            {
-                                "tag_id": "theme:growth",
-                                "group": "theme",
-                                "label": "growth",
-                                "description": "Growth",
-                            }
-                        ]
-                    },
-                    "import_filename": "registry.json",
-                    "client_time_utc": "2026-05-22T00:00:00Z",
-                },
-            )
             created = post_json(
                 f"{base_url}/create-tag",
                 {
@@ -187,8 +175,6 @@ def run() -> None:
             if line.strip()
         ]
 
-        if imported.get("added") != 1:
-            raise AssertionError(f"registry import failed: {imported!r}")
         if created.get("tag_id") != "theme:renewal" or created.get("activity_log") != {"written_count": 1}:
             raise AssertionError(f"registry create failed: {created!r}")
         if len(activity_rows) != 1 or activity_rows[0].get("user_action_id") != "create-tag":

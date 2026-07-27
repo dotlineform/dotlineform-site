@@ -49,7 +49,7 @@ function text(options, key, fallback, tokens = null) {
 export function openTagRegistryEditWorkflow(state, tagId, options = {}) {
   const tag = callback(options, "findTagById", tagId);
   if (!tag) return;
-  callback(options, "clearImportResult");
+  callback(options, "clearRouteResult");
   openTagRegistryEditModal(state, tag);
   callback(options, "syncRouteBusyState");
 }
@@ -69,7 +69,7 @@ export function applyTagRegistryEditResult(state, {
   result
 } = {}, options = {}) {
   setTagRegistryEditStatus(state, "success", result && result.message);
-  callback(options, "setImportResult", "success", result && result.summary);
+  callback(options, "setRouteResult", "success", result && result.summary);
   applyTagRegistryEditProjection(state, {
     tagId,
     description,
@@ -81,7 +81,7 @@ export function applyTagRegistryEditResult(state, {
 }
 
 export function openTagRegistryNewWorkflow(state, options = {}) {
-  callback(options, "clearImportResult");
+  callback(options, "clearRouteResult");
   openTagRegistryNewModal(state);
   callback(options, "syncRouteBusyState");
 }
@@ -125,7 +125,7 @@ export function applyTagRegistryCreatePostResult(state, {
   result
 } = {}, options = {}) {
   closeTagRegistryNewWorkflow(state, options);
-  callback(options, "setImportResult", "success", result && result.summary);
+  callback(options, "setRouteResult", "success", result && result.summary);
   applyTagRegistryCreateProjection(state, {
     validation,
     response: result && result.response
@@ -140,19 +140,18 @@ export function applyTagRegistryCreatePatchResult(state, {
 } = {}, options = {}) {
   if (result && result.switchToPatch) {
     callback(options, "applyPatchFallback");
-    callback(options, "renderImportAvailability");
     setTagRegistryNewStatus(state, "error", result.message);
   }
   closeTagRegistryNewWorkflow(state, options);
-  callback(options, "setImportResult", patchResult && patchResult.kind, patchResult && patchResult.message);
+  callback(options, "setRouteResult", patchResult && patchResult.kind, patchResult && patchResult.message);
   callback(options, "openPatchModal", patchResult && patchResult.snippet);
 }
 
 export function openTagRegistryDeleteWorkflow(state, tagId, options = {}) {
-  callback(options, "clearImportResult");
+  callback(options, "clearRouteResult");
   const tag = callback(options, "findTagById", tagId);
   if (!tag) {
-    callback(options, "setImportResult", "error", text(options, "selected_tag_missing", "Selected tag is no longer available."));
+    callback(options, "setRouteResult", "error", text(options, "selected_tag_missing", "Selected tag is no longer available."));
     return;
   }
   openTagRegistryDeleteModal(state, tag);
@@ -181,7 +180,7 @@ export function applyTagRegistryDeleteResult(state, {
   result
 } = {}, options = {}) {
   closeTagRegistryDeleteWorkflow(state, options);
-  callback(options, "setImportResult", "success", result && result.summary);
+  callback(options, "setRouteResult", "success", result && result.summary);
   applyTagRegistryDeleteProjection(state, {
     tagId,
     response: result && result.response
@@ -191,17 +190,17 @@ export function applyTagRegistryDeleteResult(state, {
 }
 
 export function openTagRegistryDemoteWorkflow(state, tagId, options = {}) {
-  callback(options, "clearImportResult");
+  callback(options, "clearRouteResult");
   const tag = callback(options, "findTagById", tagId);
   if (!tag) {
-    callback(options, "setImportResult", "error", text(options, "selected_tag_missing", "Selected tag is no longer available."));
+    callback(options, "setRouteResult", "error", text(options, "selected_tag_missing", "Selected tag is no longer available."));
     return;
   }
   const aliasKey = tag.tagId.split(":")[1] || tag.tagId;
   if (state.aliasKeys.has(aliasKey)) {
     callback(
       options,
-      "setImportResult",
+      "setRouteResult",
       "error",
       text(options, "alias_exists_demote_error", "Alias already exists: {alias_key}. Demotion overwrite is not permitted.", { alias_key: aliasKey })
     );
@@ -310,7 +309,7 @@ export function applyTagRegistryDemotePostResult(state, {
   result
 } = {}, options = {}) {
   closeTagRegistryDemoteWorkflow(state, options);
-  callback(options, "setImportResult", "success", result && result.summary);
+  callback(options, "setRouteResult", "success", result && result.summary);
   applyTagRegistryDemoteProjection(state, {
     tagId,
     aliasKey,
@@ -324,6 +323,6 @@ export function applyTagRegistryDemotePatchResult(state, {
   patchResult
 } = {}, options = {}) {
   closeTagRegistryDemoteWorkflow(state, options);
-  callback(options, "setImportResult", patchResult && patchResult.kind, patchResult && patchResult.message);
+  callback(options, "setRouteResult", patchResult && patchResult.kind, patchResult && patchResult.message);
   callback(options, "openPatchModal", patchResult && patchResult.snippet);
 }

@@ -36,30 +36,23 @@ import {
   createTagRegistryTag,
   deleteTagRegistryTag,
   demoteTagRegistryTag,
-  importTagRegistryTags,
   previewTagRegistryDeleteImpact,
   previewTagRegistryDemote,
-  readTagRegistryImportFromFile,
   saveTagRegistryEdit
 } from "./tag-registry-workflow.js";
 import {
   openConfirmDetailModal
 } from "./studio-modal.js";
 import {
-  clearTagRegistryImportResult,
+  clearTagRegistryRouteResult,
   collectTagRegistryModalRefs,
   renderTagRegistryDeleteImpactPreview,
   renderTagRegistryModals,
-  setTagRegistryImportResult,
+  setTagRegistryRouteResult,
   setTagRegistryDeleteImpactStatus,
   showTagRegistryPatchModal,
   wireTagRegistryModalEvents
 } from "./tag-registry-modals.js";
-import {
-  probeTagRegistryImportMode,
-  renderTagRegistryImportAvailability,
-  syncTagRegistryImportModeFromControl as syncImportModeFromControl
-} from "./tag-registry-import-mode.js";
 import {
   initializeStudioRouteState,
   setStudioRouteBusy,
@@ -67,6 +60,7 @@ import {
 } from "./studio-route-state.js";
 import {
   bindTagSaveModeReprobe,
+  probeTagRouteSaveMode,
   tagRouteServiceState,
   withTagRouteBusy
 } from "./tag-route-save-session.js";
@@ -113,7 +107,7 @@ if (document.readyState === "loading") {
 function routeStateDetail(state) {
   return {
     route: "tag-registry",
-    mode: state.importModalOpen ? "import" : state.editTagId || state.newTagState || state.demoteState || state.deleteTagId ? "edit" : "list",
+    mode: state.editTagId || state.newTagState || state.demoteState || state.deleteTagId ? "edit" : "list",
     service: tagRouteServiceState(state),
     recordLoaded: Boolean(state.tags && state.tags.length)
   };
@@ -163,11 +157,7 @@ async function initTagRegistryPage() {
     searchQuery: "",
     sortKey: "label",
     sortDir: "asc",
-    importMode: "add",
     saveMode: "patch",
-    importAvailable: false,
-    selectedFile: null,
-    importModalOpen: false,
     patchSnippet: "",
     editTagId: "",
     newTagState: null,
@@ -187,7 +177,6 @@ async function initTagRegistryPage() {
 
   renderShell(state);
   wireEvents(state);
-  syncImportModeFromControl(state);
 
   try {
     await loadRegistry(state);
@@ -208,19 +197,18 @@ async function initTagRegistryPage() {
   }
 
   bindTagSaveModeReprobe(() => {
-    void probeImportMode(state);
+    void probeSaveMode(state);
   });
-  void probeImportMode(state);
+  void probeSaveMode(state);
 }
 
 function renderShell(state) {
-  const importButtonLabel = registryText(state.config, "import_button", "Import");
   const newTagButtonLabel = registryText(state.config, "new_tag_button", "New tag");
   const searchLabel = registryText(state.config, "search_label", "Search tags");
   const searchPlaceholder = registryText(state.config, "search_placeholder", "search");
   const refs = {
-    openImportModal: state.mount.querySelector(UI_SELECTOR.openImportModal),
     openNewTag: state.mount.querySelector(UI_SELECTOR.openNewTag),
+    routeResult: state.mount.querySelector(UI_SELECTOR.routeResult),
     key: state.mount.querySelector(UI_SELECTOR.key),
     searchLabel: state.mount.querySelector(UI_SELECTOR.searchLabel),
     search: state.mount.querySelector(UI_SELECTOR.search),
@@ -237,7 +225,6 @@ function renderShell(state) {
     return;
   }
 
-  refs.openImportModal.textContent = importButtonLabel;
   refs.openNewTag.textContent = newTagButtonLabel;
   refs.searchLabel.textContent = searchLabel;
   refs.search.setAttribute("placeholder", searchPlaceholder);
@@ -247,7 +234,6 @@ function renderShell(state) {
     ...refs,
     ...collectTagRegistryModalRefs(state.mount)
   };
-  renderImportAvailability(state);
 }
 
 function wireEvents(state) {
@@ -311,10 +297,6 @@ function wireEvents(state) {
 
   wireTagRegistryModalEvents(state, {
     onModalStateChange: () => syncRouteBusyState(state),
-    onImportModeChange: () => syncImportModeFromControl(state),
-    onImportSubmit: () => {
-      void withRouteBusy(state, () => handleImport(state));
-    },
     onPatchCopy: () => {
       void copyPatchSnippet(state);
     },
@@ -347,16 +329,9 @@ function wireEvents(state) {
   });
 }
 
-async function probeImportMode(state) {
-  await probeTagRegistryImportMode(state, {
-    onImportAvailabilityChange: () => renderImportAvailability(state),
+async function probeSaveMode(state) {
+  await probeTagRouteSaveMode(state, {
     onRouteStateChange: () => syncRouteBusyState(state)
-  });
-}
-
-function renderImportAvailability(state) {
-  renderTagRegistryImportAvailability(state, {
-    onModalStateChange: () => syncRouteBusyState(state)
   });
 }
 
@@ -408,14 +383,13 @@ function modalWorkflowOptions(state) {
     maxAliasTags: MAX_ALIAS_TAGS,
     cap: DEMOTE_TAG_MATCH_CAP,
     findTagById: (tagId) => findTagById(state, tagId),
-    clearImportResult: () => clearImportResult(state),
-    setImportResult: (kind, message) => setImportResult(state, kind, message),
+    clearRouteResult: () => clearRouteResult(state),
+    setRouteResult: (kind, message) => setRouteResult(state, kind, message),
     syncRouteBusyState: () => syncRouteBusyState(state),
     refreshDeleteImpactPreview: () => refreshDeleteImpactPreview(state),
     renderControls: () => renderControls(state),
     renderList: () => renderList(state),
     applyPatchFallback: () => applyTagRegistryPatchFallback(state),
-    renderImportAvailability: () => renderImportAvailability(state),
     openPatchModal: (snippet) => openPatchModal(state, snippet)
   };
 }
@@ -573,7 +547,7 @@ async function handleTagDemote(state) {
   if (!tag) {
     const message = registryText(state.config, "selected_tag_missing", "Selected tag is no longer available.");
     setTagRegistryDemoteStatus(state, "error", message);
-    setImportResult(state, "error", message);
+    setRouteResult(state, "error", message);
     return;
   }
 
@@ -586,7 +560,7 @@ async function handleTagDemote(state) {
       { alias_key: aliasKey }
     );
     setTagRegistryDemoteStatus(state, "error", message);
-    setImportResult(state, "error", message);
+    setRouteResult(state, "error", message);
     return;
   }
 
@@ -607,7 +581,7 @@ async function handleTagDemote(state) {
     if (!preview.ok) {
       const message = preview.message;
       setTagRegistryDemoteStatus(state, "error", message);
-      setImportResult(state, "error", message);
+      setRouteResult(state, "error", message);
       return;
     }
 
@@ -620,7 +594,7 @@ async function handleTagDemote(state) {
         { alias_key: aliasKey }
       );
       setTagRegistryDemoteStatus(state, "error", message);
-      setImportResult(state, "error", message);
+      setRouteResult(state, "error", message);
       return;
     }
     const confirmResult = await openConfirmDetailModal({
@@ -641,7 +615,7 @@ async function handleTagDemote(state) {
       cancelLabel: registryText(state.config, "demote_cancel_button", "Cancel")
     });
     if (!confirmResult.confirmed) {
-      clearImportResult(state);
+      clearRouteResult(state);
       return;
     }
   }
@@ -654,7 +628,7 @@ async function handleTagDemote(state) {
   });
   if (!result.ok) {
     setTagRegistryDemoteStatus(state, "error", result.message);
-    setImportResult(state, "error", result.message);
+    setRouteResult(state, "error", result.message);
     return;
   }
   if (result.mode === "post") {
@@ -671,72 +645,25 @@ async function handleTagDemote(state) {
   }, modalWorkflowOptions(state));
 }
 
-async function handleImport(state) {
-  if (!state.selectedFile) {
-    setImportResult(state, "error", registryText(state.config, "choose_import_file_error", "Choose an import file first."));
-    return;
-  }
-
-  let importRegistry;
-  try {
-    importRegistry = await readImportRegistryFromFile(state.selectedFile);
-  } catch (error) {
-    setImportResult(state, "error", String(error.message || registryText(state.config, "invalid_import_file", "Invalid import file.")));
-    return;
-  }
-
-  const result = await importTagRegistryTags({
-    saveMode: state.saveMode,
-    importMode: state.importMode,
-    importRegistry,
-    filename: state.selectedFile ? String(state.selectedFile.name || "") : "",
-    config: state.config,
-    patchContext: state
-  });
-  if (result.ok && result.mode === "post") {
-    setImportResult(state, "success", result.summary);
-    await loadRegistry(state, { cache: "no-store" });
-    renderControls(state);
-    renderList(state);
-    return;
-  }
-
-  if (result.switchToPatch) {
-    applyTagRegistryPatchFallback(state);
-    renderImportAvailability(state);
-    setImportResult(state, "error", result.message);
-  }
-
-  const patchResult = result.patchResult;
-  setImportResult(state, patchResult.kind, patchResult.message);
-  if (patchResult.snippet) {
-    openPatchModal(state, patchResult.snippet);
-  }
-}
-
-async function readImportRegistryFromFile(file) {
-  return readTagRegistryImportFromFile(file, STUDIO_GROUPS);
-}
-
 function openPatchModal(state, snippet) {
   showTagRegistryPatchModal(state, snippet);
 }
 
-function setImportResult(state, kind, message) {
-  setTagRegistryImportResult(state, kind, message);
+function setRouteResult(state, kind, message) {
+  setTagRegistryRouteResult(state, kind, message);
 }
 
-function clearImportResult(state) {
-  clearTagRegistryImportResult(state);
+function clearRouteResult(state) {
+  clearTagRegistryRouteResult(state);
 }
 
 async function copyPatchSnippet(state) {
   if (!state.patchSnippet) return;
   try {
     await navigator.clipboard.writeText(state.patchSnippet);
-    setImportResult(state, "success", registryText(state.config, "patch_copy_success", "Patch snippet copied to clipboard."));
+    setRouteResult(state, "success", registryText(state.config, "patch_copy_success", "Patch snippet copied to clipboard."));
   } catch (error) {
-    setImportResult(state, "error", registryText(state.config, "patch_copy_failed", "Copy failed. Select and copy the snippet manually."));
+    setRouteResult(state, "error", registryText(state.config, "patch_copy_failed", "Copy failed. Select and copy the snippet manually."));
   }
 }
 
