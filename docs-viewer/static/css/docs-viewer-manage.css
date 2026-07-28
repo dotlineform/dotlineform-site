@@ -124,6 +124,31 @@
   line-height: 1;
 }
 
+.docsViewerReport__rowContribution--titlePrefix,
+.docsViewerReport__contributionToolbar{
+  display: inline-flex;
+  align-items: center;
+}
+
+.docsViewerReport__rowContribution--leading{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.docsViewerReport[data-report-leading-column="true"] .docsViewerReport__head,
+.docsViewerReport[data-report-leading-column="true"] .docsViewerReport__row{
+  grid-template-columns: max-content minmax(0, 1fr);
+}
+
+.docsViewerReport__contributionToolbar{
+  gap: 0.45rem;
+}
+
+.docsViewerReport__contributionToolbar--list{
+  justify-content: flex-end;
+}
+
 .docsViewer__navRow.is-draft .docsViewer__navLink{
   color: var(--docs-viewer-draft-color);
 }

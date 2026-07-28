@@ -2,6 +2,20 @@ import {
   appendAssetVersion
 } from "./docs-viewer-asset-url.js";
 
+/**
+ * Optional caller-owned composition for one shared sub-scope report.
+ *
+ * Render callbacks receive detached hosts that enter the document only when
+ * populated. `notify` receives explicit collection-scoped mount, state,
+ * refresh, and unmount events.
+ *
+ * @typedef {Object} DocsSubscopeReportContribution
+ * @property {function(Object): void} [notify]
+ * @property {function(Object): (Object|void)} [renderRow]
+ * @property {function(Object): void} [renderListToolbar]
+ * @property {function(Object): void} [renderDetailToolbar]
+ */
+
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
@@ -40,48 +54,49 @@ function normalizeDocIds(value) {
 function manifestDocs(payload) {
   if (!payload || typeof payload !== "object") return [];
   if (Array.isArray(payload.docs)) {
-    return payload.docs.map(function (record) {
-      return {
-        docId: cleanString(record && record.doc_id),
-        title: cleanString(record && record.title)
-      };
-    }).filter(function (record) {
-      return record.docId;
-    });
+    return normalizeDocuments(payload.docs);
   }
   return normalizeDocIds(payload.doc_ids).map(function (docId) {
-    return { docId: docId, title: "" };
+    return normalizeDocument({ doc_id: docId, title: "" });
   });
 }
 
-function managementSettings(context) {
-  var settings = context && context.subscopeManagement;
-  return settings && typeof settings === "object" ? settings : null;
+function normalizeDocument(record) {
+  var docId = cleanString(record && record.doc_id);
+  var title = cleanString(record && record.title);
+  return {
+    docId: docId,
+    title: title,
+    record: Object.assign({}, record || {}, {
+      doc_id: docId,
+      title: title
+    })
+  };
 }
 
-function managementDocs(settings) {
-  if (!settings || !Array.isArray(settings.documents)) return null;
-  return settings.documents.map(function (record) {
-    return {
-      docId: cleanString(record && record.doc_id),
-      title: cleanString(record && record.title),
-      uiStatus: cleanString(record && record.ui_status),
-      viewable: !record || record.viewable !== false
-    };
-  }).filter(function (record) {
+function normalizeDocuments(records) {
+  return (Array.isArray(records) ? records : []).map(normalizeDocument).filter(function (record) {
     return record.docId;
   });
 }
 
-function statusRecord(settings, statusValue) {
-  var statuses = settings && settings.uiStatusByValue;
-  if (!statusValue || !(statuses instanceof Map)) return null;
-  return statuses.get(statusValue) || null;
+function suppliedDocumentSource(context) {
+  var source = context && context.subscopeDocumentSource;
+  if (!source || typeof source !== "object" || !Array.isArray(source.documents)) return null;
+  return {
+    documents: normalizeDocuments(source.documents),
+    error: cleanString(source.error)
+  };
 }
 
-function reportStateCallback(context) {
-  return context && typeof context.onSubscopeStateChange === "function"
-    ? context.onSubscopeStateChange
+function reportContribution(context) {
+  var contribution = context && context.subscopeReportContribution;
+  return contribution && typeof contribution === "object" ? contribution : null;
+}
+
+function contributionCallback(contribution, name) {
+  return contribution && typeof contribution[name] === "function"
+    ? contribution[name]
     : null;
 }
 
@@ -134,6 +149,42 @@ function byIdPayloadUrl(state, docId) {
   return state.byIdUrlBase + "/" + encodeURIComponent(docId) + ".json";
 }
 
+function collectionTarget(scope, subScope) {
+  return {
+    scope: cleanId(scope),
+    sub_scope: cleanId(subScope)
+  };
+}
+
+function detailTarget(state, docId) {
+  return {
+    scope: state.viewerScope,
+    sub_scope: state.subScopeId,
+    doc_id: cleanString(docId)
+  };
+}
+
+function documentRecord(doc) {
+  return Object.assign({}, doc && doc.record || {});
+}
+
+function contributionEvent(context, subScopeIdValue, detail) {
+  var contribution = reportContribution(context);
+  var notify = contributionCallback(contribution, "notify");
+  if (!notify) return;
+  notify(Object.assign({
+    collection: collectionTarget(context && context.viewerScope, subScopeIdValue)
+  }, detail || {}));
+}
+
+function notifyContribution(state, detail) {
+  var notify = contributionCallback(state.contribution, "notify");
+  if (!notify) return;
+  notify(Object.assign({
+    collection: collectionTarget(state.viewerScope, state.subScopeId)
+  }, detail || {}));
+}
+
 function writeSubdocUrl(state, docId, mode) {
   if (typeof window === "undefined" || !window.history || !window.location) return;
   var url = new URL(window.location.href);
@@ -173,42 +224,49 @@ function appendDocRow(state, doc) {
   row.className = "docsViewerReport__row";
   row.dataset.reportSubdocId = docId;
 
+  var leadingHost = document.createElement("span");
+  leadingHost.className = "docsViewerReport__rowContribution docsViewerReport__rowContribution--leading";
+  leadingHost.dataset.reportContributionHost = "row-leading";
+
   var title = document.createElement("button");
   title.className = "docsViewerReport__cellLink docsViewerReport__subscopeButton";
   title.type = "button";
+
+  var titlePrefixHost = document.createElement("span");
+  titlePrefixHost.className = "docsViewerReport__rowContribution docsViewerReport__rowContribution--titlePrefix";
+  titlePrefixHost.dataset.reportContributionHost = "title-prefix";
 
   var titleText = document.createElement("span");
   titleText.className = "docsViewerReport__title";
   titleText.textContent = doc.title || humanize(docId) || docId;
 
-  var accessibleParts = [titleText.textContent];
-  var uiStatus = statusRecord(state.management, doc.uiStatus);
-  if (uiStatus) {
-    var statusIcon = document.createElement("span");
-    statusIcon.className = "docsViewer__navStatus";
-    statusIcon.setAttribute("aria-hidden", "true");
-    statusIcon.textContent = cleanString(uiStatus.emoji);
-    title.appendChild(statusIcon);
-    accessibleParts.push(cleanString(uiStatus.label) || doc.uiStatus);
-  }
-  if (state.management && doc.viewable === false) {
-    var nonViewableIcon = document.createElement("span");
-    nonViewableIcon.className = "docsViewer__draftPrefix";
-    nonViewableIcon.setAttribute("aria-hidden", "true");
-    nonViewableIcon.textContent = cleanString(state.management.nonViewableEmoji) || "\uD83D\uDEAB";
-    title.appendChild(nonViewableIcon);
-    accessibleParts.push("non-viewable");
-  }
+  var renderRow = contributionCallback(state.contribution, "renderRow");
+  var rowResult = renderRow ? renderRow({
+    collection: collectionTarget(state.viewerScope, state.subScopeId),
+    document: documentRecord(doc),
+    leadingHost: leadingHost,
+    titlePrefixHost: titlePrefixHost
+  }) : null;
+  if (titlePrefixHost.childNodes.length) title.appendChild(titlePrefixHost);
   title.appendChild(titleText);
-  if (state.management) {
-    title.setAttribute("aria-label", accessibleParts.filter(Boolean).join(", "));
+  var accessibleLabels = rowResult && Array.isArray(rowResult.accessibleLabels)
+    ? rowResult.accessibleLabels.map(cleanString).filter(Boolean)
+    : [];
+  if (accessibleLabels.length) {
+    title.setAttribute("aria-label", [titleText.textContent].concat(accessibleLabels).join(", "));
   }
   title.addEventListener("click", function () {
     writeSubdocUrl(state, docId, "push");
     renderDetailById(state, docId);
   });
+  if (leadingHost.childNodes.length) row.appendChild(leadingHost);
   row.appendChild(title);
   state.rowsNode.appendChild(row);
+  return {
+    hasLeadingContent: leadingHost.childNodes.length > 0,
+    leadingHost: leadingHost,
+    row: row
+  };
 }
 
 function renderShell(context, subScope) {
@@ -235,11 +293,39 @@ function renderShell(context, subScope) {
   root.appendChild(status);
   root.appendChild(table);
 
-  return { statusNode: status, tableNode: table, rowsNode: rows };
+  return {
+    headNode: head,
+    rowsNode: rows,
+    statusNode: status,
+    tableNode: table
+  };
+}
+
+function renderListToolbar(state) {
+  if (state.listToolbarNode) {
+    state.listToolbarNode.remove();
+    state.listToolbarNode = null;
+  }
+  var renderToolbar = contributionCallback(state.contribution, "renderListToolbar");
+  if (!renderToolbar) return;
+  var host = document.createElement("div");
+  host.className = "docsViewerReport__contributionToolbar docsViewerReport__contributionToolbar--list";
+  host.dataset.reportContributionHost = "list-toolbar";
+  renderToolbar({
+    collection: collectionTarget(state.viewerScope, state.subScopeId),
+    documents: state.docs.map(documentRecord),
+    host: host
+  });
+  if (!host.childNodes.length) return;
+  state.root.insertBefore(host, state.tableNode);
+  state.listToolbarNode = host;
 }
 
 function renderRows(state, docs) {
   clearNode(state.rowsNode);
+  state.root.removeAttribute("data-report-leading-column");
+  var priorHeadCell = state.headNode.querySelector("[data-report-contribution-head]");
+  if (priorHeadCell) priorHeadCell.remove();
   renderStatus(state, docs.length);
   if (!docs.length) {
     var empty = document.createElement("li");
@@ -248,14 +334,26 @@ function renderRows(state, docs) {
     state.rowsNode.appendChild(empty);
     return;
   }
-  docs.forEach(function (doc) {
-    appendDocRow(state, doc);
+  var rows = docs.map(function (doc) {
+    return appendDocRow(state, doc);
+  });
+  if (!rows.some(function (record) { return record.hasLeadingContent; })) return;
+  state.root.dataset.reportLeadingColumn = "true";
+  var headCell = document.createElement("span");
+  headCell.className = "docsViewerReport__rowContribution docsViewerReport__rowContribution--head";
+  headCell.dataset.reportContributionHead = "true";
+  headCell.setAttribute("aria-hidden", "true");
+  state.headNode.insertBefore(headCell, state.headNode.firstChild);
+  rows.forEach(function (record) {
+    if (!record.leadingHost.parentNode) {
+      record.row.insertBefore(record.leadingHost, record.row.firstChild);
+    }
   });
 }
 
 function publishState(state, reportState, target, reason) {
-  if (!state.onStateChange) return;
-  state.onStateChange({
+  notifyContribution(state, {
+    type: "state",
     state: cleanString(reportState),
     reason: cleanString(reason),
     target: target || null
@@ -273,6 +371,8 @@ function renderListView(state) {
   state.tableNode.hidden = false;
   state.statusNode.hidden = false;
   if (state.detailNode) state.detailNode.hidden = true;
+  renderListToolbar(state);
+  if (state.listToolbarNode) state.listToolbarNode.hidden = false;
   renderRows(state, state.docs);
   publishState(state, "list", null, "list-view");
 }
@@ -315,8 +415,26 @@ function renderDetailShell(state, docId) {
   section.appendChild(body);
   state.root.appendChild(section);
   state.detailNode = section;
+  state.detailHeaderNode = header;
   state.detailTitleNode = title;
   state.detailBodyNode = body;
+}
+
+function renderDetailToolbar(state, docId) {
+  var renderToolbar = contributionCallback(state.contribution, "renderDetailToolbar");
+  if (!renderToolbar || !state.detailHeaderNode || !state.detailTitleNode) return;
+  var host = document.createElement("div");
+  host.className = "docsViewerReport__contributionToolbar docsViewerReport__contributionToolbar--detail";
+  host.dataset.reportContributionHost = "detail-toolbar";
+  var doc = state.docs.find(function (record) { return record.docId === docId; });
+  renderToolbar({
+    document: documentRecord(doc),
+    host: host,
+    target: detailTarget(state, docId)
+  });
+  if (host.childNodes.length) {
+    state.detailHeaderNode.insertBefore(host, state.detailTitleNode);
+  }
 }
 
 function renderDetailPayload(state, docId, payload) {
@@ -330,6 +448,7 @@ function renderDetailPayload(state, docId, payload) {
   state.detailNode.dataset.reportSubdocUpdated = cleanString(payload && payload.last_updated);
   state.detailTitleNode.textContent = detailTitle(payload, docId);
   state.detailBodyNode.innerHTML = payload && payload.content_html ? payload.content_html : "";
+  renderDetailToolbar(state, docId);
   publishState(state, "detail", {
     scope: state.viewerScope,
     sub_scope: state.subScopeId,
@@ -343,6 +462,7 @@ function renderDetailById(state, docId) {
   state.root.dataset.reportState = "detail";
   state.tableNode.hidden = true;
   state.statusNode.hidden = true;
+  if (state.listToolbarNode) state.listToolbarNode.hidden = true;
   renderDetailShell(state, docId);
 
   var url = byIdPayloadUrl(state, docId);
@@ -375,30 +495,51 @@ function renderError(root, message) {
   root.appendChild(note);
 }
 
+/**
+ * Mounts the public-safe sub-scope reader with an optional document source and
+ * optional caller-owned contribution. The report retains collection identity,
+ * membership, navigation, and detail validation.
+ *
+ * @param {Object} context
+ * @returns {Promise<boolean>}
+ */
 export function mountDocsSubscopeReport(context) {
   var root = context && context.reportRoot;
   var reportMeta = context && context.reportMeta ? context.reportMeta : {};
   var subScopeIdValue = cleanId(reportMeta.subScope);
-  var onStateChange = reportStateCallback(context);
   if (!root) return Promise.resolve(false);
   if (!subScopeIdValue) {
-    if (onStateChange) onStateChange({ state: "error", reason: "missing-sub-scope", target: null });
+    contributionEvent(context, subScopeIdValue, {
+      type: "state",
+      state: "error",
+      reason: "missing-sub-scope",
+      target: null
+    });
     renderError(root, "This report is missing viewer_report_subscope.");
     return Promise.resolve(true);
   }
 
   var subScope = findSubScope(context, subScopeIdValue);
   if (!subScope) {
-    if (onStateChange) onStateChange({ state: "error", reason: "unconfigured-sub-scope", target: null });
+    contributionEvent(context, subScopeIdValue, {
+      type: "state",
+      state: "error",
+      reason: "unconfigured-sub-scope",
+      target: null
+    });
     renderError(root, "Docs sub-scope is not configured: " + subScopeIdValue);
     return Promise.resolve(true);
   }
 
-  var management = managementSettings(context);
-  var managedDocs = managementDocs(management);
-  var url = managedDocs ? "" : manifestUrl(subScope);
-  if (managedDocs === null && !url) {
-    if (onStateChange) onStateChange({ state: "error", reason: "missing-manifest", target: null });
+  var documentSource = suppliedDocumentSource(context);
+  var url = documentSource ? "" : manifestUrl(subScope);
+  if (!documentSource && !url) {
+    contributionEvent(context, subScopeIdValue, {
+      type: "state",
+      state: "error",
+      reason: "missing-manifest",
+      target: null
+    });
     renderError(root, "Docs sub-scope manifest is not configured: " + subScopeIdValue);
     return Promise.resolve(true);
   }
@@ -415,41 +556,55 @@ export function mountDocsSubscopeReport(context) {
     docIds: [],
     detailRequestVersion: 0,
     detailPayloads: {},
-    management: management,
-    onStateChange: onStateChange,
+    contribution: reportContribution(context),
+    headNode: refs.headNode,
+    listToolbarNode: null,
     statusNode: refs.statusNode,
     tableNode: refs.tableNode,
     rowsNode: refs.rowsNode,
     viewerScope: cleanId(context && context.viewerScope)
   };
 
-  if (management && cleanString(management.error)) {
-    publishState(state, "error", null, "management-inventory-failed");
-    renderError(root, cleanString(management.error));
-    return Promise.resolve(true);
-  }
-
   var parent = root.parentNode;
   var windowRef = root.ownerDocument && root.ownerDocument.defaultView;
-  if (onStateChange && parent && windowRef && typeof windowRef.MutationObserver === "function") {
+  if (state.contribution && parent && windowRef && typeof windowRef.MutationObserver === "function") {
     state.unmountObserver = new windowRef.MutationObserver(function () {
       if (root.parentNode === parent) return;
       state.unmountObserver.disconnect();
       state.unmountObserver = null;
       invalidateDetailRequest(state);
       publishState(state, "unmounted", null, "report-unmount");
+      notifyContribution(state, {
+        type: "unmount",
+        reason: "report-unmount"
+      });
     });
     state.unmountObserver.observe(parent, { childList: true });
   }
 
+  notifyContribution(state, {
+    type: "mount",
+    root: root
+  });
+  if (documentSource && documentSource.error) {
+    publishState(state, "error", null, "document-source-failed");
+    renderError(root, documentSource.error);
+    return Promise.resolve(true);
+  }
+
   publishState(state, "loading", null, "report-loading");
-  var docsRequest = managedDocs
-    ? Promise.resolve(managedDocs)
+  var docsRequest = documentSource
+    ? Promise.resolve(documentSource.documents)
     : fetchJson(url, "Failed to load docs sub-scope manifest").then(manifestDocs);
   return docsRequest
     .then(function (documents) {
       state.docs = documents;
       state.docIds = state.docs.map(function (doc) { return doc.docId; });
+      notifyContribution(state, {
+        type: "refresh",
+        documents: state.docs.map(documentRecord),
+        reason: "documents-loaded"
+      });
       var selectedDetailId = currentSubdocId();
       if (selectedDetailId) {
         if (state.docIds.indexOf(selectedDetailId) === -1) {

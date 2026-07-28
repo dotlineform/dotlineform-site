@@ -10,6 +10,9 @@ import {
 import {
   normalizeManagedDocumentTarget
 } from "./docs-viewer-management-document-target.js";
+import {
+  createDocsViewerManagementSubscopeContribution
+} from "./docs-viewer-management-subscope-contribution.js";
 
 function cleanString(value) {
   return String(value || "").trim();
@@ -89,22 +92,15 @@ function managementInventory(settings, parent, subScope) {
     ) {
       throw new Error("Managed sub-scope inventory did not match the mounted report.");
     }
-    var scopeConfig = settings.scopeConfigState || {};
     return {
-      documents: payload.documents.slice(),
-      nonViewableEmoji: cleanString(scopeConfig.docNonViewableEmoji),
-      uiStatusByValue: scopeConfig.uiStatusByValue instanceof Map
-        ? scopeConfig.uiStatusByValue
-        : new Map()
+      documents: payload.documents.slice()
     };
   }).catch(function (error) {
     return {
       documents: [],
       error: error && error.message
         ? error.message
-        : "Managed sub-scope inventory could not be loaded.",
-      nonViewableEmoji: "",
-      uiStatusByValue: new Map()
+        : "Managed sub-scope inventory could not be loaded."
     };
   });
 }
@@ -160,6 +156,18 @@ export function mountDocsViewerManageDocumentExtras(context) {
     state: "loading",
     reason: "report-mount"
   });
+  var scopeConfig = settings.scopeConfigState || {};
+  var contribution = createDocsViewerManagementSubscopeContribution({
+    nonViewableEmoji: cleanString(scopeConfig.docNonViewableEmoji),
+    onLifecycleEvent: function (event) {
+      if (event && event.type === "state") {
+        publishReportState(settings, parent, subScope, event);
+      }
+    },
+    uiStatusByValue: scopeConfig.uiStatusByValue instanceof Map
+      ? scopeConfig.uiStatusByValue
+      : new Map()
+  });
   return managementInventory(settings, parent, subScope).then(function (inventory) {
     return mountDocsViewerReport({
       appContext: settings.appContext,
@@ -171,9 +179,6 @@ export function mountDocsViewerManageDocumentExtras(context) {
       },
       managementContext: Boolean(settings.managementContext),
       managementService: managementService,
-      onSubscopeStateChange: function (state) {
-        publishReportState(settings, parent, subScope, state);
-      },
       payload: payload,
       reportRegistryUrl: cleanString(routeContext.reportRegistryUrl),
       reportService: reportManagementBaseUrl
@@ -181,7 +186,8 @@ export function mountDocsViewerManageDocumentExtras(context) {
         : null,
       setStatus: settings.setStatus,
       scopeConfigs: scopeConfigs(settings).slice(),
-      subscopeManagement: inventory,
+      subscopeDocumentSource: inventory,
+      subscopeReportContribution: contribution,
       viewerScope: currentViewerScope(settings),
       viewerUrlForScope: settings.viewerUrlForScope
     });

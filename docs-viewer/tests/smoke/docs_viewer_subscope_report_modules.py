@@ -299,9 +299,59 @@ def assert_report_module(page: Page) -> None:
           document.body.innerHTML = '<main id="content"><section id="report"></section></main>';
           const root = document.querySelector('#report');
           window.syntheticReportStates = [];
+          window.syntheticContributionEvents = [];
+          const contribution = {
+            notify: event => {
+              window.syntheticContributionEvents.push({
+                type: event.type,
+                collection: event.collection,
+                state: event.state || '',
+                reason: event.reason || '',
+                target: event.target || null,
+                documentIds: Array.isArray(event.documents)
+                  ? event.documents.map(doc => doc.doc_id)
+                  : []
+              });
+              if (event.type === 'state') {
+                window.syntheticReportStates.push({
+                  state: event.state,
+                  reason: event.reason,
+                  target: event.target || null
+                });
+              }
+            },
+            renderRow: ({ document, leadingHost, titlePrefixHost }) => {
+              const prefix = titlePrefixHost.ownerDocument.createElement('span');
+              prefix.className = 'synthetic-title-prefix';
+              prefix.textContent = '•';
+              titlePrefixHost.appendChild(prefix);
+              if (document.doc_id === 'hidden-doc') {
+                const leading = leadingHost.ownerDocument.createElement('span');
+                leading.className = 'synthetic-leading-control';
+                leading.textContent = 'leading';
+                leadingHost.appendChild(leading);
+              }
+              return {
+                accessibleLabels: document.ui_status ? [document.ui_status] : []
+              };
+            },
+            renderListToolbar: ({ host }) => {
+              const button = host.ownerDocument.createElement('button');
+              button.type = 'button';
+              button.textContent = 'List contribution';
+              host.appendChild(button);
+            },
+            renderDetailToolbar: ({ host, target }) => {
+              const button = host.ownerDocument.createElement('button');
+              button.type = 'button';
+              button.dataset.targetDocId = target.doc_id;
+              button.textContent = 'Detail contribution';
+              host.appendChild(button);
+            }
+          };
+          window.syntheticReportContribution = contribution;
           await report.mountDocsSubscopeReport({
             doc: { doc_id: 'parent-doc' },
-            onSubscopeStateChange: state => window.syntheticReportStates.push(state),
             reportMeta: { subScope: 'tags' },
             reportRoot: root,
             routeContext: {
@@ -312,7 +362,7 @@ def assert_report_module(page: Page) -> None:
                 byIdUrlBase: '/synthetic/by-id'
               }]
             },
-            subscopeManagement: {
+            subscopeDocumentSource: {
               documents: [
                 {
                   doc_id: 'visible-doc',
@@ -326,13 +376,9 @@ def assert_report_module(page: Page) -> None:
                   ui_status: 'draft',
                   viewable: false
                 }
-              ],
-              nonViewableEmoji: '🚫',
-              uiStatusByValue: new Map([
-                ['done', { label: 'Complete', emoji: '✅' }],
-                ['draft', { label: 'Draft', emoji: '📝' }]
-              ])
+              ]
             },
+            subscopeReportContribution: contribution,
             viewerScope: 'studio'
           });
           return {
@@ -340,23 +386,68 @@ def assert_report_module(page: Page) -> None:
               .map(node => node.dataset.reportSubdocId),
             labels: Array.from(root.querySelectorAll('.docsViewerReport__subscopeButton'))
               .map(node => node.getAttribute('aria-label')),
-            statusIcons: root.querySelectorAll('.docsViewer__navStatus').length,
-            nonViewableIcons: root.querySelectorAll('.docsViewer__draftPrefix').length,
-            states: window.syntheticReportStates
+            titlePrefixes: root.querySelectorAll('.synthetic-title-prefix').length,
+            leadingControls: root.querySelectorAll('.synthetic-leading-control').length,
+            leadingHosts: root.querySelectorAll(
+              '[data-report-contribution-host="row-leading"]'
+            ).length,
+            listToolbar: root.querySelector(
+              '[data-report-contribution-host="list-toolbar"]'
+            )?.textContent || '',
+            leadingColumn: root.dataset.reportLeadingColumn || '',
+            states: window.syntheticReportStates,
+            contributionEvents: window.syntheticContributionEvents
           };
         }"""
     )
     expected_managed = {
         "rowIds": ["visible-doc", "hidden-doc"],
         "labels": [
-            "Visible document, Complete",
-            "Hidden document, Draft, non-viewable",
+            "Visible document, done",
+            "Hidden document, draft",
         ],
-        "statusIcons": 2,
-        "nonViewableIcons": 1,
+        "titlePrefixes": 2,
+        "leadingControls": 1,
+        "leadingHosts": 2,
+        "listToolbar": "List contribution",
+        "leadingColumn": "true",
         "states": [
             {"state": "loading", "reason": "report-loading", "target": None},
             {"state": "list", "reason": "list-view", "target": None},
+        ],
+        "contributionEvents": [
+            {
+                "type": "mount",
+                "collection": {"scope": "studio", "sub_scope": "tags"},
+                "state": "",
+                "reason": "",
+                "target": None,
+                "documentIds": [],
+            },
+            {
+                "type": "state",
+                "collection": {"scope": "studio", "sub_scope": "tags"},
+                "state": "loading",
+                "reason": "report-loading",
+                "target": None,
+                "documentIds": [],
+            },
+            {
+                "type": "refresh",
+                "collection": {"scope": "studio", "sub_scope": "tags"},
+                "state": "",
+                "reason": "documents-loaded",
+                "target": None,
+                "documentIds": ["visible-doc", "hidden-doc"],
+            },
+            {
+                "type": "state",
+                "collection": {"scope": "studio", "sub_scope": "tags"},
+                "state": "list",
+                "reason": "list-view",
+                "target": None,
+                "documentIds": [],
+            },
         ],
     }
     if managed != expected_managed:
@@ -372,12 +463,24 @@ def assert_report_module(page: Page) -> None:
         """() => ({
           reportState: document.querySelector('#report').dataset.reportState,
           title: document.querySelector('.docsReportDetail__title').textContent,
+          detailToolbar: document.querySelector(
+            '[data-report-contribution-host="detail-toolbar"]'
+          )?.textContent || '',
+          toolbarTarget: document.querySelector(
+            '[data-report-contribution-host="detail-toolbar"] button'
+          )?.dataset.targetDocId || '',
+          toolbarAfterBack: document.querySelector(
+            '[data-report-contribution-host="detail-toolbar"]'
+          )?.previousElementSibling?.classList.contains('docsReportDetail__back') || false,
           latest: window.syntheticReportStates.at(-1)
         })"""
     )
     assert detail == {
         "reportState": "detail",
         "title": "Hidden document",
+        "detailToolbar": "Detail contribution",
+        "toolbarTarget": "hidden-doc",
+        "toolbarAfterBack": True,
         "latest": {
             "state": "detail",
             "reason": "detail-loaded",
@@ -393,6 +496,13 @@ def assert_report_module(page: Page) -> None:
     page.evaluate("window.syntheticDetailMode = 'deferred'")
     page.locator('[data-report-subdoc-id="visible-doc"] button').click()
     page.wait_for_function("() => typeof window.syntheticDetailResolve === 'function'")
+    loading_detail_toolbar_count = page.locator(
+        '[data-report-contribution-host="detail-toolbar"]'
+    ).count()
+    if loading_detail_toolbar_count != 0:
+        raise AssertionError(
+            "detail contribution mounted before the by-id payload was validated"
+        )
     page.locator(".docsReportDetail__back").click()
     page.evaluate("window.syntheticDetailResolve()")
     page.wait_for_timeout(25)
@@ -420,6 +530,74 @@ def assert_report_module(page: Page) -> None:
     page.wait_for_function(
         "() => window.syntheticReportStates.at(-1)?.state === 'unmounted'"
     )
+    unmount_events = page.evaluate(
+        """() => window.syntheticContributionEvents.slice(-2).map(event => ({
+          type: event.type,
+          state: event.state,
+          reason: event.reason,
+          collection: event.collection
+        }))"""
+    )
+    assert unmount_events == [
+        {
+            "type": "state",
+            "state": "unmounted",
+            "reason": "report-unmount",
+            "collection": {"scope": "studio", "sub_scope": "tags"},
+        },
+        {
+            "type": "unmount",
+            "state": "",
+            "reason": "report-unmount",
+            "collection": {"scope": "studio", "sub_scope": "tags"},
+        },
+    ]
+
+    remounted = page.evaluate(
+        """async () => {
+          const report = await import(
+            '/site/docs-viewer/runtime/js/shared/docs-subscope-report.js'
+          );
+          const root = document.createElement('section');
+          root.id = 'remounted-report';
+          document.querySelector('#content').appendChild(root);
+          await report.mountDocsSubscopeReport({
+            doc: { doc_id: 'parent-doc' },
+            reportMeta: { subScope: 'tags' },
+            reportRoot: root,
+            routeContext: {
+              subScopes: [{
+                subScope: 'tags',
+                title: 'Tags',
+                manifestUrl: '/synthetic/manifest.json',
+                byIdUrlBase: '/synthetic/by-id'
+              }]
+            },
+            subscopeDocumentSource: {
+              documents: [{ doc_id: 'visible-doc', title: 'Visible document' }]
+            },
+            subscopeReportContribution: window.syntheticReportContribution,
+            viewerScope: 'studio'
+          });
+          return {
+            mountEvents: window.syntheticContributionEvents
+              .filter(event => event.type === 'mount').length,
+            refreshEvents: window.syntheticContributionEvents
+              .filter(event => event.type === 'refresh').length,
+            rowIds: Array.from(root.querySelectorAll('[data-report-subdoc-id]'))
+              .map(row => row.dataset.reportSubdocId),
+            listToolbar: root.querySelector(
+              '[data-report-contribution-host="list-toolbar"]'
+            )?.textContent || ''
+          };
+        }"""
+    )
+    assert remounted == {
+        "mountEvents": 2,
+        "refreshEvents": 2,
+        "rowIds": ["visible-doc"],
+        "listToolbar": "List contribution",
+    }
 
     invalid = page.evaluate(
         """async () => {
@@ -431,7 +609,6 @@ def assert_report_module(page: Page) -> None:
           const states = [];
           const root = document.querySelector('#invalid-report');
           await report.mountDocsSubscopeReport({
-            onSubscopeStateChange: state => states.push(state),
             reportMeta: { subScope: 'tags' },
             reportRoot: root,
             routeContext: {
@@ -442,9 +619,17 @@ def assert_report_module(page: Page) -> None:
                 byIdUrlBase: '/synthetic/by-id'
               }]
             },
-            subscopeManagement: {
-              documents: [{ doc_id: 'visible-doc', title: 'Visible document' }],
-              uiStatusByValue: new Map()
+            subscopeDocumentSource: {
+              documents: [{ doc_id: 'visible-doc', title: 'Visible document' }]
+            },
+            subscopeReportContribution: {
+              notify: event => {
+                if (event.type === 'state') states.push({
+                  state: event.state,
+                  reason: event.reason,
+                  target: event.target || null
+                });
+              }
             },
             viewerScope: 'studio'
           });
@@ -473,7 +658,6 @@ def assert_report_module(page: Page) -> None:
           const states = [];
           const root = document.querySelector('#mismatched-report');
           await report.mountDocsSubscopeReport({
-            onSubscopeStateChange: state => states.push(state),
             reportMeta: { subScope: 'tags' },
             reportRoot: root,
             routeContext: {
@@ -484,9 +668,17 @@ def assert_report_module(page: Page) -> None:
                 byIdUrlBase: '/synthetic/by-id'
               }]
             },
-            subscopeManagement: {
-              documents: [{ doc_id: 'visible-doc', title: 'Visible document' }],
-              uiStatusByValue: new Map()
+            subscopeDocumentSource: {
+              documents: [{ doc_id: 'visible-doc', title: 'Visible document' }]
+            },
+            subscopeReportContribution: {
+              notify: event => {
+                if (event.type === 'state') states.push({
+                  state: event.state,
+                  reason: event.reason,
+                  target: event.target || null
+                });
+              }
             },
             viewerScope: 'studio'
           });
@@ -505,6 +697,130 @@ def assert_report_module(page: Page) -> None:
         },
         "publishedDetail": False,
         "text": "Docs sub-scope detail payload did not match the requested document.",
+    }
+
+    source_boundaries = page.evaluate(
+        """async () => {
+          const report = await import(
+            '/site/docs-viewer/runtime/js/shared/docs-subscope-report.js'
+          );
+          history.replaceState({}, '', '/?scope=studio&doc=parent-doc');
+          document.body.innerHTML = `
+            <main>
+              <section id="empty-report"></section>
+              <section id="failed-report"></section>
+            </main>`;
+          const subScope = {
+            subScope: 'tags',
+            title: 'Tags',
+            manifestUrl: '/synthetic/manifest.json',
+            byIdUrlBase: '/synthetic/by-id'
+          };
+          const emptyEvents = [];
+          const emptyRoot = document.querySelector('#empty-report');
+          await report.mountDocsSubscopeReport({
+            reportMeta: { subScope: 'tags' },
+            reportRoot: emptyRoot,
+            routeContext: { subScopes: [subScope] },
+            subscopeDocumentSource: { documents: [] },
+            subscopeReportContribution: {
+              notify: event => emptyEvents.push({
+                type: event.type,
+                state: event.state || '',
+                reason: event.reason || '',
+                documentIds: Array.isArray(event.documents)
+                  ? event.documents.map(doc => doc.doc_id)
+                  : []
+              }),
+              renderListToolbar: () => {}
+            },
+            viewerScope: 'studio'
+          });
+
+          const failedEvents = [];
+          const failedRoot = document.querySelector('#failed-report');
+          await report.mountDocsSubscopeReport({
+            reportMeta: { subScope: 'tags' },
+            reportRoot: failedRoot,
+            routeContext: { subScopes: [subScope] },
+            subscopeDocumentSource: {
+              documents: [],
+              error: 'Managed inventory unavailable.'
+            },
+            subscopeReportContribution: {
+              notify: event => failedEvents.push({
+                type: event.type,
+                state: event.state || '',
+                reason: event.reason || ''
+              })
+            },
+            viewerScope: 'studio'
+          });
+          return {
+            empty: {
+              contributionHosts: emptyRoot.querySelectorAll(
+                '[data-report-contribution-host]'
+              ).length,
+              events: emptyEvents,
+              state: emptyRoot.dataset.reportState,
+              text: emptyRoot.textContent
+            },
+            failed: {
+              contributionHosts: failedRoot.querySelectorAll(
+                '[data-report-contribution-host]'
+              ).length,
+              events: failedEvents,
+              state: failedRoot.dataset.reportState,
+              text: failedRoot.textContent
+            }
+          };
+        }"""
+    )
+    assert source_boundaries == {
+        "empty": {
+            "contributionHosts": 0,
+            "events": [
+                {
+                    "type": "mount",
+                    "state": "",
+                    "reason": "",
+                    "documentIds": [],
+                },
+                {
+                    "type": "state",
+                    "state": "loading",
+                    "reason": "report-loading",
+                    "documentIds": [],
+                },
+                {
+                    "type": "refresh",
+                    "state": "",
+                    "reason": "documents-loaded",
+                    "documentIds": [],
+                },
+                {
+                    "type": "state",
+                    "state": "list",
+                    "reason": "list-view",
+                    "documentIds": [],
+                },
+            ],
+            "state": "list",
+            "text": "0 Tags documentsTagsNo documents in this sub-scope.",
+        },
+        "failed": {
+            "contributionHosts": 0,
+            "events": [
+                {"type": "mount", "state": "", "reason": ""},
+                {
+                    "type": "state",
+                    "state": "error",
+                    "reason": "document-source-failed",
+                },
+            ],
+            "state": "error",
+            "text": "Managed inventory unavailable.",
+        },
     }
 
     public = page.evaluate(
@@ -535,6 +851,9 @@ def assert_report_module(page: Page) -> None:
               .map(node => node.dataset.reportSubdocId),
             statusIcons: root.querySelectorAll('.docsViewer__navStatus').length,
             nonViewableIcons: root.querySelectorAll('.docsViewer__draftPrefix').length,
+            contributionHosts: root.querySelectorAll(
+              '[data-report-contribution-host]'
+            ).length,
             ariaLabel: button ? button.getAttribute('aria-label') : null
           };
         }"""
@@ -543,6 +862,7 @@ def assert_report_module(page: Page) -> None:
         "rowIds": ["visible-doc"],
         "statusIcons": 0,
         "nonViewableIcons": 0,
+        "contributionHosts": 0,
         "ariaLabel": None,
     }
 
@@ -561,6 +881,7 @@ def assert_manage_report_bridge(page: Page) -> None:
           history.replaceState({}, '', '/?scope=studio&doc=parent-doc');
           document.body.innerHTML = '<main id="bridge-content"></main>';
           const requests = [];
+          window.syntheticInventoryFailure = false;
           window.fetch = async input => {
             const url = new URL(String(input), window.location.href);
             requests.push(url.pathname + url.search);
@@ -580,16 +901,30 @@ def assert_manage_report_bridge(page: Page) -> None:
               });
             }
             if (url.pathname === '/docs/sub-scope-documents') {
+              if (window.syntheticInventoryFailure) {
+                return {
+                  ok: false,
+                  status: 503,
+                  json: async () => ({ ok: false, error: 'Synthetic inventory failed.' })
+                };
+              }
               return response({
                 ok: true,
                 scope: 'studio',
                 sub_scope: 'tags',
-                documents: [{
-                  doc_id: 'detail-doc',
-                  title: 'Detail',
-                  ui_status: 'draft',
-                  viewable: false
-                }]
+                documents: [
+                  {
+                    doc_id: 'detail-doc',
+                    title: 'Detail',
+                    ui_status: 'draft',
+                    viewable: false
+                  },
+                  {
+                    doc_id: 'no-status-doc',
+                    title: 'No status',
+                    viewable: true
+                  }
+                ]
               });
             }
             if (url.pathname.endsWith('/detail-doc.json')) {
@@ -651,9 +986,38 @@ def assert_manage_report_bridge(page: Page) -> None:
           const beforeClear = {
             requests,
             states: states.slice(),
-            rowLabel: content.querySelector(
-              '[data-report-subdoc-id="detail-doc"] button'
-            )?.getAttribute('aria-label') || ''
+            rows: Array.from(content.querySelectorAll(
+              '.docsViewerReport__row[data-report-subdoc-id]'
+            ))
+              .map(row => ({
+                docId: row.dataset.reportSubdocId,
+                label: row.querySelector('button')?.getAttribute('aria-label')
+              })),
+            statusIcons: content.querySelectorAll('.docsViewer__navStatus').length,
+            nonViewableIcons: content.querySelectorAll('.docsViewer__draftPrefix').length,
+            listToolbarHosts: content.querySelectorAll(
+              '[data-report-contribution-host="list-toolbar"]'
+            ).length,
+            detailToolbarHosts: content.querySelectorAll(
+              '[data-report-contribution-host="detail-toolbar"]'
+            ).length
+          };
+          window.syntheticInventoryFailure = true;
+          const failureStates = [];
+          const failureContent = document.createElement('main');
+          document.body.appendChild(failureContent);
+          await bridge.mountDocsViewerManageDocumentExtras({
+            ...context,
+            content: failureContent,
+            publishSubscopeReportState: state => failureStates.push(state)
+          });
+          window.syntheticInventoryFailure = false;
+          const failedInventory = {
+            states: failureStates,
+            text: failureContent.textContent,
+            contributionHosts: failureContent.querySelectorAll(
+              '[data-report-contribution-host]'
+            ).length
           };
           await bridge.mountDocsViewerManageDocumentExtras({
             publishSubscopeReportState: context.publishSubscopeReportState,
@@ -661,6 +1025,7 @@ def assert_manage_report_bridge(page: Page) -> None:
           });
           return {
             beforeClear,
+            failedInventory,
             latestAfterNonReport: states.at(-1)
           };
         }"""
@@ -675,9 +1040,27 @@ def assert_manage_report_bridge(page: Page) -> None:
         if request.startswith("/docs/sub-scope-documents?")
     ]
     assert inventory_requests == [
+        "/docs/sub-scope-documents?scope=studio&sub_scope=tags",
         "/docs/sub-scope-documents?scope=studio&sub_scope=tags"
     ]
-    assert mounted["beforeClear"]["rowLabel"] == "Detail, Draft, non-viewable"
+    expected_rows = [
+        {
+            "docId": "detail-doc",
+            "label": "Detail, Draft, non-viewable",
+        },
+        {
+            "docId": "no-status-doc",
+            "label": None,
+        },
+    ]
+    if mounted["beforeClear"]["rows"] != expected_rows:
+        raise AssertionError(
+            f"unexpected managed contribution rows: {mounted['beforeClear']['rows']!r}"
+        )
+    assert mounted["beforeClear"]["statusIcons"] == 1
+    assert mounted["beforeClear"]["nonViewableIcons"] == 1
+    assert mounted["beforeClear"]["listToolbarHosts"] == 0
+    assert mounted["beforeClear"]["detailToolbarHosts"] == 0
     assert mounted["beforeClear"]["states"][-1] == {
         "state": "detail",
         "reason": "detail-loaded",
@@ -687,6 +1070,24 @@ def assert_manage_report_bridge(page: Page) -> None:
             "sub_scope": "tags",
             "doc_id": "detail-doc",
         },
+    }
+    assert mounted["failedInventory"] == {
+        "states": [
+            {
+                "state": "loading",
+                "reason": "report-mount",
+                "parentTarget": {"scope": "studio", "doc_id": "parent-doc"},
+                "subdocTarget": None,
+            },
+            {
+                "state": "error",
+                "reason": "document-source-failed",
+                "parentTarget": {"scope": "studio", "doc_id": "parent-doc"},
+                "subdocTarget": None,
+            },
+        ],
+        "text": "Synthetic inventory failed.",
+        "contributionHosts": 0,
     }
     assert mounted["latestAfterNonReport"] == {
         "state": "inactive",

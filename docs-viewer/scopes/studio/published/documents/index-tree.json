@@ -902,7 +902,7 @@
               "doc_id": "d-20260728-115825-41e819",
               "title": "Sub-Scope Report Contribution Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-115825-41e819.json",
-              "ui_status": "proposed"
+              "ui_status": "done"
             }
           ]
         },
@@ -1253,5 +1253,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-28T11:02:20Z"
+  "generated_at": "2026-07-28T11:58:21Z"
 }

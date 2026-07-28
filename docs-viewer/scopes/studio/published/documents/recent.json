@@ -4,10 +4,34 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260513-105343-6de36b",
+      "title": "Reports",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260513-105343-6de36b.json",
+      "timestamp": "2026-07-28 12:57:29",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260728-113139-285eae",
+      "title": "Sub-Scope Index",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-113139-285eae.json",
+      "timestamp": "2026-07-28 12:57:29",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
       "doc_id": "d-20260728-113139-763354",
       "title": "Sub-Scope Index Architecture",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-113139-763354.json",
-      "timestamp": "2026-07-28 12:33:24",
+      "timestamp": "2026-07-28 12:57:29",
+      "parent_id": "d-20260728-113139-285eae",
+      "parent_title": "Sub-Scope Index"
+    },
+    {
+      "doc_id": "d-20260728-115825-41e819",
+      "title": "Sub-Scope Report Contribution Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-115825-41e819.json",
+      "timestamp": "2026-07-28 12:57:29",
       "parent_id": "d-20260728-113139-285eae",
       "parent_title": "Sub-Scope Index"
     },
@@ -20,25 +44,9 @@
       "parent_title": "Sub-Scope Index"
     },
     {
-      "doc_id": "d-20260728-113139-285eae",
-      "title": "Sub-Scope Index",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-113139-285eae.json",
-      "timestamp": "2026-07-28 12:08:21",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
       "doc_id": "d-20260728-115825-ae1461",
       "title": "Sub-Scope Package Preparation Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-115825-ae1461.json",
-      "timestamp": "2026-07-28 12:08:21",
-      "parent_id": "d-20260728-113139-285eae",
-      "parent_title": "Sub-Scope Index"
-    },
-    {
-      "doc_id": "d-20260728-115825-41e819",
-      "title": "Sub-Scope Report Contribution Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-115825-41e819.json",
       "timestamp": "2026-07-28 12:08:21",
       "parent_id": "d-20260728-113139-285eae",
       "parent_title": "Sub-Scope Index"
@@ -74,15 +82,7 @@
       "timestamp": "2026-07-27 23:14:26",
       "parent_id": "d-20260419-000000-86255c",
       "parent_title": "Tag Source Data"
-    },
-    {
-      "doc_id": "d-20260419-000000-86255c",
-      "title": "Tag Source Data",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260419-000000-86255c.json",
-      "timestamp": "2026-07-27 23:14:26",
-      "parent_id": "d-20260423-000000-d015e6",
-      "parent_title": "Studio"
     }
   ],
-  "generated_at": "2026-07-28T11:33:42Z"
+  "generated_at": "2026-07-28T11:58:21Z"
 }
