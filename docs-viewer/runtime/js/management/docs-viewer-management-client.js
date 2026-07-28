@@ -185,6 +185,39 @@ export function applyManagedDocDelete(docIds, options) {
   }, options), options);
 }
 
+function subScopeDeleteTargetPayload(target, payload) {
+  var normalized = normalizeManagedDocumentTarget(target);
+  if (!normalized.sub_scope) {
+    throw new Error("Sub-scope document delete requires a sub-scope target.");
+  }
+  return targetPayload(normalized, payload);
+}
+
+export function previewManagedSubScopeDocDelete(target, options) {
+  return fetchManagementJson(
+    "/docs/delete-preview",
+    "POST",
+    subScopeDeleteTargetPayload(target, {}),
+    options
+  );
+}
+
+export function applyManagedSubScopeDocDelete(target, sourceRevision, options) {
+  var revision = String(sourceRevision || "").trim();
+  if (!/^sha256:[0-9a-f]{64}$/.test(revision)) {
+    throw new Error("Sub-scope document delete requires a sha256 source revision.");
+  }
+  return fetchManagementJson(
+    "/docs/delete-apply",
+    "POST",
+    subScopeDeleteTargetPayload(target, {
+      source_revision: revision,
+      confirm: true
+    }),
+    options
+  );
+}
+
 export function previewScopeCreate(payload, options) {
   return fetchManagementJson("/docs/scopes/create-preview", "POST", payload || {}, options);
 }

@@ -18,6 +18,83 @@ from docs_scope_config import normalize_sub_scope_id
 from docs_management_context import log_event
 
 
+class SubScopeDocumentDeleteApplyError(RuntimeError):
+    """A child delete was compensated after its generated rebuild failed."""
+
+    def __init__(self, payload: Dict[str, Any]) -> None:
+        super().__init__(str(payload.get("error") or "sub-scope document delete failed"))
+        self.payload = payload
+
+
+def recover_sub_scope_document_delete(
+    repo_root: Path,
+    plan: mutations.ManagementMutationPlan,
+    initial_error: Exception,
+) -> None:
+    restorable = [
+        source_delete
+        for source_delete in plan.source_deletes
+        if source_delete.original_bytes is not None
+    ]
+    if len(restorable) != 1:
+        raise initial_error
+
+    source_delete = restorable[0]
+    original_bytes = source_delete.original_bytes
+    if original_bytes is None:
+        raise initial_error
+
+    def restore_operation() -> None:
+        source_model.write_bytes_atomic(
+            source_delete.path,
+            original_bytes,
+        )
+
+    def source_matches_original() -> bool:
+        try:
+            return source_delete.path.read_bytes() == original_bytes
+        except OSError:
+            return False
+
+    try:
+        recovery_rebuild = write_rebuild.perform_sub_scope_source_write_and_rebuild(
+            repo_root,
+            plan.scope,
+            plan.sub_scope,
+            [source_delete.path],
+            restore_operation,
+            suppression_reason="docs-sub-scope-document-delete-recovery",
+        )
+    except Exception as recovery_error:
+        source_restored = source_matches_original()
+        recovery_rebuild = {
+            "ok": False,
+            "error": str(recovery_error),
+        }
+    else:
+        source_restored = source_matches_original()
+
+    target = dict(plan.response.get("target") or {})
+    retry_safe = source_restored and recovery_rebuild.get("ok") is True
+    raise SubScopeDocumentDeleteApplyError(
+        {
+            "ok": False,
+            "operation": "apply",
+            "target": target,
+            "scope": plan.scope,
+            "sub_scope": plan.sub_scope,
+            "doc_id": plan.response.get("doc_id", ""),
+            "source_revision": plan.response.get("source_revision", ""),
+            "deleted_doc_ids": [],
+            "delete_count": 0,
+            "source_restored": source_restored,
+            "recovery_rebuild": recovery_rebuild,
+            "retry_safe": retry_safe,
+            "error": f"sub-scope document delete rebuild failed: {initial_error}",
+        }
+    ) from initial_error
+
+
 def execute_management_mutation_plan(repo_root: Path, plan: mutations.ManagementMutationPlan, dry_run: bool) -> Dict[str, Any]:
     payload = dict(plan.response)
     rebuild = None
@@ -27,43 +104,70 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
             for source_write in plan.source_writes:
                 source_model.write_text_atomic(source_write.path, source_write.text)
             for source_delete in plan.source_deletes:
+                if source_delete.original_bytes is not None:
+                    try:
+                        current_bytes = source_delete.path.read_bytes()
+                    except FileNotFoundError:
+                        current_bytes = b""
+                    if current_bytes != source_delete.original_bytes:
+                        target = dict(plan.response.get("target") or {})
+                        raise mutations.ManagedDocumentRevisionConflict(
+                            mutations.revision_conflict_payload(
+                                target=target,
+                                requested_revision=str(
+                                    plan.response.get("source_revision") or ""
+                                ),
+                                current_revision=(
+                                    mutations.source_revision(current_bytes)
+                                    if current_bytes
+                                    else ""
+                                ),
+                            )
+                        )
                 source_delete.path.unlink()
 
-        if plan.rebuilds:
-            rebuild = write_rebuild.perform_multi_scope_source_write_and_rebuild(
-                repo_root,
-                [
-                    {
-                        "scope": rebuild_plan.scope,
-                        "changed_paths": list(rebuild_plan.changed_paths),
-                        "docs_doc_ids": rebuild_plan.build_doc_ids,
-                        "search_doc_ids": rebuild_plan.search_doc_ids,
-                        "include_search": rebuild_plan.include_search,
-                    }
-                    for rebuild_plan in plan.rebuilds
-                ],
-                write_operation,
-                suppression_reason=plan.suppression_reason or "docs-management",
-            )
-        elif plan.sub_scope:
-            rebuild = write_rebuild.perform_sub_scope_source_write_and_rebuild(
-                repo_root,
-                plan.scope,
-                plan.sub_scope,
-                plan.changed_paths,
-                write_operation,
-                suppression_reason=plan.suppression_reason or "docs-management",
-            )
-        else:
-            rebuild = write_rebuild.perform_source_write_and_rebuild(
-                repo_root,
-                plan.scope,
-                plan.changed_paths,
-                write_operation,
-                suppression_reason=plan.suppression_reason or "docs-management",
-                docs_doc_ids=plan.build_doc_ids,
-                search_doc_ids=plan.search_doc_ids,
-            )
+        try:
+            if plan.rebuilds:
+                rebuild = write_rebuild.perform_multi_scope_source_write_and_rebuild(
+                    repo_root,
+                    [
+                        {
+                            "scope": rebuild_plan.scope,
+                            "changed_paths": list(rebuild_plan.changed_paths),
+                            "docs_doc_ids": rebuild_plan.build_doc_ids,
+                            "search_doc_ids": rebuild_plan.search_doc_ids,
+                            "include_search": rebuild_plan.include_search,
+                        }
+                        for rebuild_plan in plan.rebuilds
+                    ],
+                    write_operation,
+                    suppression_reason=plan.suppression_reason or "docs-management",
+                )
+            elif plan.sub_scope:
+                rebuild = write_rebuild.perform_sub_scope_source_write_and_rebuild(
+                    repo_root,
+                    plan.scope,
+                    plan.sub_scope,
+                    plan.changed_paths,
+                    write_operation,
+                    suppression_reason=plan.suppression_reason or "docs-management",
+                )
+            else:
+                rebuild = write_rebuild.perform_source_write_and_rebuild(
+                    repo_root,
+                    plan.scope,
+                    plan.changed_paths,
+                    write_operation,
+                    suppression_reason=plan.suppression_reason or "docs-management",
+                    docs_doc_ids=plan.build_doc_ids,
+                    search_doc_ids=plan.search_doc_ids,
+                )
+        except mutations.ManagedDocumentRevisionConflict:
+            raise
+        except Exception as error:
+            if plan.restore_deletes_on_rebuild_failure:
+                recover_sub_scope_document_delete(repo_root, plan, error)
+            raise
         if plan.log_event_name:
             log_event(repo_root, plan.log_event_name, plan.log_details)
 
@@ -86,6 +190,12 @@ def handle_move(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[st
 
 
 def handle_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    if "sub_scope" in body:
+        return execute_management_mutation_plan(
+            repo_root,
+            mutations.plan_sub_scope_delete_apply(repo_root, body),
+            dry_run,
+        )
     plan = mutations.plan_delete_apply(repo_root, body)
     if plan.response.get("default_doc_id_changed") and not dry_run:
         docs_source_config_settings.apply_scope_settings_change(

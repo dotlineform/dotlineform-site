@@ -234,6 +234,11 @@ def test_apply_capability_flags_respects_local_service_flags() -> None:
                 "review_returned": True,
                 "atomic_return": True,
             },
+            "document_delete": {
+                "preview": True,
+                "apply": True,
+                "sub_scope_detail": True,
+            },
             "scope_lifecycle": {
                 "create_apply": True,
                 "rename_apply": True,
@@ -271,6 +276,11 @@ def test_apply_capability_flags_respects_local_service_flags() -> None:
         "context": False,
         "review_returned": False,
         "atomic_return": True,
+    }
+    assert capabilities["document_delete"] == {
+        "preview": False,
+        "apply": False,
+        "sub_scope_detail": False,
     }
     assert capabilities["scope_lifecycle"]["create_apply"] is False
     assert capabilities["scope_lifecycle"]["rename_apply"] is False

@@ -120,6 +120,36 @@ def test_rebuild_source_body_rejects_stale_revision() -> None:
             raise AssertionError("expected stale source revision to be rejected")
 
 
+def test_rebuild_source_body_accepts_exact_crlf_revision() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        source_path = (
+            repo_root
+            / "docs-viewer/scopes/studio/source/documents/target.md"
+        )
+        source_path.write_bytes(
+            source_path.read_bytes().replace(b"\n", b"\r\n")
+        )
+        read_payload = source_service.read_source_body(
+            repo_root,
+            {"scope": ["studio"], "doc_id": ["target"]},
+        )
+
+        payload = source_service.rebuild_source_body(
+            repo_root,
+            {
+                "scope": "studio",
+                "doc_id": "target",
+                "source_revision": read_payload["source_revision"],
+                "source_body": read_payload["source_body"],
+            },
+            dry_run=True,
+        )
+
+    assert payload["ok"] is True
+    assert payload["source_changed"] is False
+
+
 def test_read_source_body_returns_exact_sub_scope_target() -> None:
     with make_repo() as temp_path:
         payload = source_service.read_source_body(

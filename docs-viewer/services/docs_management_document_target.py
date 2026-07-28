@@ -164,7 +164,7 @@ def source_doc_from_path(
     scope: str,
     requested_doc_id: str | None = None,
 ) -> source_model.ScopeDoc:
-    source_text = path.read_text(encoding="utf-8")
+    source_text = path.read_bytes().decode("utf-8")
     front_matter, body = source_model.parse_source_text(source_text, source_name=path.name)
     existing_doc_id = str(front_matter.get("doc_id") or "").strip()
     if not existing_doc_id:

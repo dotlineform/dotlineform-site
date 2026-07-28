@@ -303,38 +303,26 @@ def rebuild_sub_scope_outputs(
         sub_scope,
         "--write",
         "--diagnostics",
-    )
-    search_command = python_builder_command(
-        SEARCH_BUILDER_SCRIPT,
-        "--scope",
-        scope,
-        "--write",
+        "--skip-browser-config",
     )
     steps = []
     docs_diagnostics: Optional[Dict[str, Any]] = None
-    search = {"mode": "full", "doc_ids": []}
-    search_diagnostics = extract_search_step_diagnostics("", search)
-    for label, command in (("docs", docs_command), ("search", search_command)):
-        step = run_rebuild_command(command, repo_root)
-        steps.append(step)
-        if label == "docs":
-            docs_payloads = extract_docs_builder_diagnostics(step["stdout"])
-            docs_diagnostics = docs_payloads[-1] if docs_payloads else None
-        else:
-            search_diagnostics = extract_search_step_diagnostics(step["stdout"], search)
-            search_diagnostics["elapsed_seconds"] = step["elapsed_seconds"]
-        if step["returncode"] != 0:
-            detail = step["stderr"] or step["stdout"] or f"exit {step['returncode']}"
-            raise RuntimeError(
-                rebuild_failure_message(
-                    f"rebuild failed for {scope}/{sub_scope}",
-                    detail,
-                )
+    step = run_rebuild_command(docs_command, repo_root)
+    steps.append(step)
+    docs_payloads = extract_docs_builder_diagnostics(step["stdout"])
+    docs_diagnostics = docs_payloads[-1] if docs_payloads else None
+    if step["returncode"] != 0:
+        detail = step["stderr"] or step["stdout"] or f"exit {step['returncode']}"
+        raise RuntimeError(
+            rebuild_failure_message(
+                f"rebuild failed for {scope}/{sub_scope}",
+                detail,
             )
+        )
     return {
         "ok": True,
         "steps": steps,
-        "search": search,
+        "search": {"mode": "none", "doc_ids": []},
         "docs": {
             "mode": "sub_scope",
             "doc_ids": [],
@@ -343,7 +331,7 @@ def rebuild_sub_scope_outputs(
         },
         "diagnostics": {
             "docs": docs_diagnostics,
-            "search": search_diagnostics,
+            "search": {"mode": "none", "doc_ids": []},
         },
     }
 

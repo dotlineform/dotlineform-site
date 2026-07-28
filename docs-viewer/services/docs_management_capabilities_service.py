@@ -154,6 +154,11 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 "preview": True,
                 "apply": True,
             },
+            "document_delete": {
+                "preview": True,
+                "apply": True,
+                "sub_scope_detail": True,
+            },
             "library_import": docs_import_workspace["available"],
             "docs_import": {
                 "available": docs_import_workspace["available"],

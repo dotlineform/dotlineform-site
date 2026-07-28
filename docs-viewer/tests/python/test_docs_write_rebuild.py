@@ -124,7 +124,7 @@ def test_rebuild_scope_outputs_extracts_docs_and_search_diagnostics() -> None:
     }
 
 
-def test_rebuild_sub_scope_outputs_runs_configured_docs_and_parent_search() -> None:
+def test_rebuild_sub_scope_outputs_runs_only_confined_docs_builder() -> None:
     calls: list[list[str]] = []
     original_python = with_fake_python()
     original_run = write_rebuild.subprocess.run
@@ -155,13 +155,7 @@ def test_rebuild_sub_scope_outputs_runs_configured_docs_and_parent_search() -> N
             "tags",
             "--write",
             "--diagnostics",
-        ],
-        [
-            "/tmp/python",
-            "docs-viewer/build/build_search.py",
-            "--scope",
-            "studio",
-            "--write",
+            "--skip-browser-config",
         ],
     ]
     assert result["docs"] == {
@@ -170,8 +164,9 @@ def test_rebuild_sub_scope_outputs_runs_configured_docs_and_parent_search() -> N
         "sub_scope": "tags",
         "reason": "configured sub-scope rebuild",
     }
-    assert result["search"] == {"mode": "full", "doc_ids": []}
+    assert result["search"] == {"mode": "none", "doc_ids": []}
     assert result["diagnostics"]["docs"]["scope"] == "studio"
+    assert result["diagnostics"]["search"] == {"mode": "none", "doc_ids": []}
 
 
 def test_rebuild_scope_outputs_preserves_targeted_search_command() -> None:

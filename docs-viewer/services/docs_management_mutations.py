@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -10,10 +11,31 @@ from typing import Any, Dict, Optional
 
 import docs_source_model as source_model
 from docs_management_document_target import (
+    ManagedDocumentTarget,
     managed_document_target_request,
     resolve_managed_document_target,
 )
-from docs_scope_config import load_docs_scope_configs, resolve_external_data_root
+from docs_scope_config import (
+    load_docs_scope_configs,
+    published_documents_path,
+    resolve_external_data_root,
+    resolve_scope_path,
+)
+
+
+SUB_SCOPE_DELETE_PREVIEW_KEYS = frozenset({"scope", "sub_scope", "doc_id"})
+SUB_SCOPE_DELETE_APPLY_KEYS = frozenset(
+    {"scope", "sub_scope", "doc_id", "source_revision", "confirm"}
+)
+SOURCE_REVISION_PATTERN = re.compile(r"^sha256:[0-9a-f]{64}$")
+
+
+class ManagedDocumentRevisionConflict(ValueError):
+    """The confirmed source bytes no longer match the preview receipt."""
+
+    def __init__(self, payload: Dict[str, Any]) -> None:
+        super().__init__(str(payload.get("error") or "managed document source changed after preview"))
+        self.payload = payload
 
 
 def relative_path(repo_root: Path, path: Path) -> str:
@@ -132,6 +154,7 @@ class SourceWrite:
 @dataclass(frozen=True)
 class SourceDelete:
     path: Path
+    original_bytes: Optional[bytes] = None
 
 
 @dataclass(frozen=True)
@@ -157,6 +180,7 @@ class ManagementMutationPlan:
     log_event_name: Optional[str] = None
     log_details: Dict[str, Any] = field(default_factory=dict)
     include_write_result_keys: bool = False
+    restore_deletes_on_rebuild_failure: bool = False
 
     @property
     def changed_paths(self) -> list[Path]:
@@ -558,4 +582,178 @@ def plan_delete_apply(repo_root: Path, body: Dict[str, Any]) -> ManagementMutati
             "default_doc_id_changed": preview["default_doc_id_changed"],
         },
         include_write_result_keys=True,
+    )
+
+
+def require_exact_sub_scope_delete_request(
+    body: Dict[str, Any],
+    *,
+    apply: bool,
+) -> None:
+    expected = SUB_SCOPE_DELETE_APPLY_KEYS if apply else SUB_SCOPE_DELETE_PREVIEW_KEYS
+    actual = frozenset(body)
+    if actual != expected:
+        required = ", ".join(sorted(expected))
+        raise ValueError(
+            "sub-scope document delete "
+            f"{'apply' if apply else 'preview'} must contain exactly {required}"
+        )
+
+
+def source_revision(source_bytes: bytes) -> str:
+    return f"sha256:{hashlib.sha256(source_bytes).hexdigest()}"
+
+
+def sub_scope_delete_generated_outputs(
+    repo_root: Path,
+    resolved: ManagedDocumentTarget,
+) -> list[dict[str, str]]:
+    output_root = resolve_scope_path(
+        repo_root,
+        published_documents_path(resolved.document_config),
+    )
+    return [
+        {
+            "kind": "sub_scope_manifest",
+            "action": "rebuild",
+            "path": relative_path(repo_root, output_root / "manifest.json"),
+        },
+        {
+            "kind": "sub_scope_document",
+            "action": "remove",
+            "path": relative_path(
+                repo_root,
+                output_root / "by-id" / f"{resolved.doc_id}.json",
+            ),
+        },
+    ]
+
+
+def plan_sub_scope_delete_preview(
+    repo_root: Path,
+    body: Dict[str, Any],
+) -> Dict[str, Any]:
+    """Plan a write-free delete of one exact configured child document."""
+
+    require_exact_sub_scope_delete_request(body, apply=False)
+    resolved = resolve_managed_document_target(
+        repo_root,
+        managed_document_target_request(body),
+    )
+    if not resolved.sub_scope:
+        raise ValueError("sub_scope is required for sub-scope document delete")
+
+    document = resolved.document
+    source_bytes = document.source_text.encode("utf-8")
+    target = resolved.request_target()
+    path = relative_path(repo_root, document.path)
+    return {
+        "ok": True,
+        "operation": "preview",
+        "target": target,
+        "scope": resolved.scope,
+        "sub_scope": resolved.sub_scope,
+        "doc_id": document.doc_id,
+        "title": document.title,
+        "source_revision": source_revision(source_bytes),
+        "allowed": True,
+        "blockers": [],
+        "warnings": ["This permanently deletes the displayed sub-scope document."],
+        "delete_count": 1,
+        "delete_documents": [
+            {
+                "doc_id": document.doc_id,
+                "title": document.title,
+                "path": path,
+            }
+        ],
+        "generated_outputs": sub_scope_delete_generated_outputs(repo_root, resolved),
+    }
+
+
+def revision_conflict_payload(
+    *,
+    target: dict[str, str],
+    requested_revision: str,
+    current_revision: str,
+) -> Dict[str, Any]:
+    return {
+        "ok": False,
+        "operation": "apply",
+        "target": target,
+        "scope": target["scope"],
+        "sub_scope": target["sub_scope"],
+        "doc_id": target["doc_id"],
+        "source_revision": requested_revision,
+        "current_source_revision": current_revision,
+        "error": "sub-scope document source changed after delete preview",
+        "retry_safe": False,
+    }
+
+
+def plan_sub_scope_delete_apply(
+    repo_root: Path,
+    body: Dict[str, Any],
+) -> ManagementMutationPlan:
+    """Plan one confirmed child-source deletion against its preview revision."""
+
+    require_exact_sub_scope_delete_request(body, apply=True)
+    if body.get("confirm") is not True:
+        raise ValueError("sub-scope document delete apply requires confirm=true")
+    requested_revision = str(body.get("source_revision") or "").strip()
+    if not SOURCE_REVISION_PATTERN.fullmatch(requested_revision):
+        raise ValueError("source_revision must be a sha256 revision receipt")
+
+    resolved = resolve_managed_document_target(
+        repo_root,
+        managed_document_target_request(body),
+    )
+    if not resolved.sub_scope:
+        raise ValueError("sub_scope is required for sub-scope document delete")
+
+    document = resolved.document
+    source_bytes = document.source_text.encode("utf-8")
+    current_revision = source_revision(source_bytes)
+    target = resolved.request_target()
+    if current_revision != requested_revision:
+        raise ManagedDocumentRevisionConflict(
+            revision_conflict_payload(
+                target=target,
+                requested_revision=requested_revision,
+                current_revision=current_revision,
+            )
+        )
+
+    path = relative_path(repo_root, document.path)
+    return ManagementMutationPlan(
+        scope=resolved.scope,
+        sub_scope=resolved.sub_scope,
+        response={
+            "ok": True,
+            "operation": "apply",
+            "target": target,
+            "scope": resolved.scope,
+            "sub_scope": resolved.sub_scope,
+            "doc_id": document.doc_id,
+            "title": document.title,
+            "source_revision": requested_revision,
+            "path": path,
+            "deleted_doc_ids": [document.doc_id],
+            "delete_count": 1,
+            "generated_outputs": sub_scope_delete_generated_outputs(repo_root, resolved),
+            "summary_text": f"Deleted {document.doc_id}.",
+        },
+        source_deletes=(SourceDelete(document.path, original_bytes=source_bytes),),
+        suppression_reason="docs-sub-scope-document-delete",
+        log_event_name="docs-delete",
+        log_details={
+            "scope": resolved.scope,
+            "sub_scope": resolved.sub_scope,
+            "doc_id": document.doc_id,
+            "deleted_doc_ids": [document.doc_id],
+            "delete_count": 1,
+            "path": path,
+        },
+        include_write_result_keys=True,
+        restore_deletes_on_rebuild_failure=True,
     )

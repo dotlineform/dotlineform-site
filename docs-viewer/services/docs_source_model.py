@@ -161,6 +161,24 @@ def write_text_atomic(path: Path, text: str) -> None:
                 pass
 
 
+def write_bytes_atomic(path: Path, content: bytes) -> None:
+    """Atomically replace one source file with exact bytes."""
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, temp_name = tempfile.mkstemp(prefix=f"{path.name}.", suffix=".tmp", dir=str(path.parent))
+    temp_path = Path(temp_name)
+    try:
+        with os.fdopen(fd, "wb") as fh:
+            fh.write(content)
+        os.replace(temp_path, path)
+    finally:
+        if temp_path.exists():
+            try:
+                temp_path.unlink()
+            except OSError:
+                pass
+
+
 def write_text_atomic_new(path: Path, text: str) -> None:
     """Atomically create one text file while refusing an existing destination."""
 

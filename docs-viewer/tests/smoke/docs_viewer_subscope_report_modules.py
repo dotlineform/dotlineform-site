@@ -112,22 +112,38 @@ def assert_control_projection(page: Page) -> None:
           };
 
           const requests = [];
+          const managementFetch = async (url, options) => {
+            requests.push({
+              url,
+              method: options.method,
+              body: options.body ? JSON.parse(options.body) : null
+            });
+            return {
+              ok: true,
+              status: 200,
+              json: async () => ({
+                ok: true,
+                scope: 'studio',
+                sub_scope: 'tags',
+                documents: []
+              })
+            };
+          };
           const inventory = await client.readManagedSubScopeDocuments('Studio', 'Tags', {
             baseUrl: 'http://127.0.0.1:8789',
-            fetch: async (url, options) => {
-              requests.push({ url, method: options.method });
-              return {
-                ok: true,
-                status: 200,
-                json: async () => ({
-                  ok: true,
-                  scope: 'studio',
-                  sub_scope: 'tags',
-                  documents: []
-                })
-              };
-            }
+            fetch: managementFetch
           });
+          const deleteOptions = {
+            baseUrl: 'http://127.0.0.1:8789',
+            fetch: managementFetch
+          };
+          const sourceRevision = 'sha256:' + 'a'.repeat(64);
+          await client.previewManagedSubScopeDocDelete(subdoc, deleteOptions);
+          await client.applyManagedSubScopeDocDelete(
+            subdoc,
+            sourceRevision,
+            deleteOptions
+          );
           let missingTargetError = '';
           try {
             await client.readManagedSubScopeDocuments('studio', '', {
@@ -135,6 +151,22 @@ def assert_control_projection(page: Page) -> None:
             });
           } catch (error) {
             missingTargetError = error.message;
+          }
+          let parentDeleteError = '';
+          try {
+            await client.previewManagedSubScopeDocDelete(parent, deleteOptions);
+          } catch (error) {
+            parentDeleteError = error.message;
+          }
+          let revisionError = '';
+          try {
+            await client.applyManagedSubScopeDocDelete(
+              subdoc,
+              'not-a-revision',
+              deleteOptions
+            );
+          } catch (error) {
+            revisionError = error.message;
           }
 
           const navigationStates = [];
@@ -168,6 +200,8 @@ def assert_control_projection(page: Page) -> None:
             requests,
             inventory,
             missingTargetError,
+            parentDeleteError,
+            revisionError,
             navigationStates
           };
         }"""
@@ -232,12 +266,41 @@ def assert_control_projection(page: Page) -> None:
                 "?scope=studio&sub_scope=tags"
             ),
             "method": "GET",
+            "body": None,
+        },
+        {
+            "url": "http://127.0.0.1:8789/docs/delete-preview",
+            "method": "POST",
+            "body": {
+                "scope": "studio",
+                "sub_scope": "tags",
+                "doc_id": "detail-doc",
+            },
+        },
+        {
+            "url": "http://127.0.0.1:8789/docs/delete-apply",
+            "method": "POST",
+            "body": {
+                "scope": "studio",
+                "sub_scope": "tags",
+                "doc_id": "detail-doc",
+                "source_revision": "sha256:" + ("a" * 64),
+                "confirm": True,
+            },
         }
     ]
     assert result["inventory"]["documents"] == []
     assert (
         result["missingTargetError"]
         == "Managed sub-scope inventory requires scope and sub_scope."
+    )
+    assert (
+        result["parentDeleteError"]
+        == "Sub-scope document delete requires a sub-scope target."
+    )
+    assert (
+        result["revisionError"]
+        == "Sub-scope document delete requires a sha256 source revision."
     )
     assert result["navigationStates"] == [
         {

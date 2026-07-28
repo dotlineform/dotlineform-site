@@ -7,6 +7,7 @@ import tempfile
 from pathlib import Path
 
 import build_docs
+import pytest
 from docs_scope_config import load_docs_scope_configs
 
 from build_docs_test_support import (
@@ -151,6 +152,81 @@ Related body.
     assert not (root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/by-id/stale.json").exists()
     assert not (root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/index-tree.json").exists()
     assert not (root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/recent.json").exists()
+
+
+def test_python_docs_builder_can_confine_sub_scope_write_from_browser_configs() -> None:
+    browser_config_paths = (
+        Path("docs-viewer/config/defaults/docs-viewer-config.json"),
+        Path("docs-viewer/config/defaults/docs-viewer-public-config.json"),
+        Path("site/docs-viewer/config/defaults/docs-viewer-public-config.json"),
+    )
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        config_path = root / "docs-viewer/config/scopes/docs_scopes.json"
+        payload = read_json(config_path)
+        payload["scopes"][0]["sub_scopes"] = [
+            docs_sub_scope_record("studio", "tags")
+        ]
+        write_json(config_path, payload)
+        write_text(
+            root
+            / f"docs-viewer/scopes/studio/source/sub-scopes/tags/documents/{DETAIL_DOC_ID}.md",
+            f"""---
+doc_id: {DETAIL_DOC_ID}
+title: Detail
+---
+# Detail
+""",
+        )
+        for path in browser_config_paths:
+            write_text(root / path, f"sentinel:{path.as_posix()}\n")
+        before = {
+            path: (root / path).read_bytes()
+            for path in browser_config_paths
+        }
+
+        exit_code, stdout, stderr = run_cli(
+            root,
+            [
+                "--scope",
+                "studio",
+                "--sub-scope",
+                "tags",
+                "--write",
+                "--skip-browser-config",
+            ],
+        )
+
+        after = {
+            path: (root / path).read_bytes()
+            for path in browser_config_paths
+        }
+        manifest_exists = (
+            root
+            / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/manifest.json"
+        ).is_file()
+
+    assert exit_code == 0
+    assert stderr == ""
+    assert "Docs sub-scope build (write)" in stdout
+    assert manifest_exists is True
+    assert after == before
+
+
+def test_python_docs_builder_rejects_browser_config_suppression_outside_sub_scope() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+
+        with pytest.raises(
+            RuntimeError,
+            match="--skip-browser-config requires --sub-scope",
+        ):
+            run_cli(
+                root,
+                ["--scope", "studio", "--write", "--skip-browser-config"],
+            )
 
 
 def test_python_docs_builder_keeps_non_viewable_docs_out_of_public_manifest() -> None:

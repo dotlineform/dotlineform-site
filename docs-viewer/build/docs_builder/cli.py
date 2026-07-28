@@ -38,6 +38,11 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         action="store_true",
         help="Skip registered media producers during a controlled targeted rebuild.",
     )
+    parser.add_argument(
+        "--skip-browser-config",
+        action="store_true",
+        help="Skip browser-config writes during a controlled sub-scope rebuild.",
+    )
     parser.add_argument("--diagnostics", action="store_true", help="Print machine-readable diagnostics for automation.")
     parser.add_argument("--write", action="store_true", help="Write generated files.")
     return parser.parse_args(argv)
@@ -82,6 +87,8 @@ def main(argv: list[str] | None = None) -> int:
         raise RuntimeError("--skip-media-builds can only be used when exactly one scope is selected")
     if args.sub_scope and len(selected) != 1:
         raise RuntimeError("--sub-scope can only be used when exactly one scope is selected")
+    if args.skip_browser_config and not args.sub_scope:
+        raise RuntimeError("--skip-browser-config requires --sub-scope")
     if args.sub_scope and (
         args.source
         or args.output
@@ -95,7 +102,7 @@ def main(argv: list[str] | None = None) -> int:
         )
 
     replace_scope_ids = requested_scopes or None
-    if args.write:
+    if args.write and not args.skip_browser_config:
         write_browser_config(
             repo_root,
             selected,

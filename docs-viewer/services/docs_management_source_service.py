@@ -95,7 +95,7 @@ def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
         managed_document_target_request(body),
     )
     target = resolved.document
-    current_source_text = target.path.read_text(encoding="utf-8")
+    current_source_text = target.path.read_bytes().decode("utf-8")
     current_revision = source_revision_for_text(current_source_text)
     if source_revision != current_revision:
         raise ValueError("source revision is stale; reload source before rebuilding")

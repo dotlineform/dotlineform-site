@@ -56,6 +56,7 @@ from docs_management_context import (  # noqa: E402
 )
 from docs_management_import_service import handle_import_source, import_source_dependencies  # noqa: E402
 from docs_management_mutation_service import (  # noqa: E402
+    SubScopeDocumentDeleteApplyError,
     execute_management_mutation_plan,
     handle_create,
     handle_delete_apply,
@@ -222,11 +223,21 @@ def docs_management_post_response(
             return HTTPStatus.CONFLICT, failure
         return HTTPStatus.OK, payload
     if path == routes.DELETE_PREVIEW_PATH:
+        if "sub_scope" in body:
+            return (
+                HTTPStatus.OK,
+                mutations.plan_sub_scope_delete_preview(repo_root, body),
+            )
         scope = source_model.normalize_scope(body.get("scope"))
         doc_ids = mutations.require_delete_doc_ids(body.get("doc_ids"))
         return HTTPStatus.OK, mutations.plan_delete_preview(repo_root, scope, doc_ids)
     if path == routes.DELETE_APPLY_PATH:
-        return HTTPStatus.OK, handle_delete_apply(repo_root, body, dry_run)
+        try:
+            return HTTPStatus.OK, handle_delete_apply(repo_root, body, dry_run)
+        except mutations.ManagedDocumentRevisionConflict as error:
+            return HTTPStatus.CONFLICT, error.payload
+        except SubScopeDocumentDeleteApplyError as error:
+            return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
     if path == routes.SCOPE_CREATE_PREVIEW_PATH:
         payload = docs_scope_create.plan_create_scope_preview(repo_root, body)
         payload["dry_run"] = True

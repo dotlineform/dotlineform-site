@@ -336,6 +336,11 @@ def apply_capability_flags(payload: dict[str, object], config: DocsViewerService
             document_packages["prepare"] = False
             document_packages["context"] = False
             document_packages["review_returned"] = False
+        document_delete = capabilities.get("document_delete")
+        if isinstance(document_delete, dict):
+            document_delete["preview"] = False
+            document_delete["apply"] = False
+            document_delete["sub_scope_detail"] = False
         lifecycle = capabilities.get("scope_lifecycle")
         if isinstance(lifecycle, dict):
             for key in (
