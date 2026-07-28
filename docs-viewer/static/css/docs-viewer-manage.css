@@ -147,6 +147,94 @@
 
 .docsViewerReport__contributionToolbar--list{
   justify-content: flex-end;
+  width: 100%;
+}
+
+.docsViewerReport__subscopeSelectionToolbar{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem 0.6rem;
+  width: 100%;
+}
+
+.docsViewerReport__subscopeActionsHost{
+  position: relative;
+  display: inline-flex;
+}
+
+.docsViewerReport__subscopeActionsMenu{
+  right: 0;
+  left: auto;
+}
+
+.docsViewerReport__subscopeSelectionControl{
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.docsViewerReport__subscopeSelectionControl[hidden]{
+  display: none;
+}
+
+.docsViewerReport__subscopeSelectionButton{
+  appearance: none;
+  border: 0;
+  border-radius: 0.45rem;
+  padding: 0.18rem 0.3rem;
+  background: transparent;
+  color: var(--docs-viewer-text);
+  font: inherit;
+  font-size: var(--docs-viewer-font-caption, 0.75rem);
+  line-height: var(--docs-viewer-line-snug);
+  cursor: pointer;
+}
+
+.docsViewerReport__subscopeSelectionButton:hover,
+.docsViewerReport__subscopeSelectionButton:focus-visible{
+  background: var(--docs-viewer-panel-2);
+}
+
+.docsViewerReport__subscopeSelectionButton:focus-visible{
+  outline: 2px solid var(--docs-viewer-focus-ring);
+  outline-offset: 1px;
+}
+
+.docsViewerReport__subscopeSelectionButton[disabled]{
+  color: var(--docs-viewer-disabled);
+  opacity: 1;
+  cursor: default;
+}
+
+.docsViewerReport__subscopeSelectionGutter[hidden]{
+  display: none;
+}
+
+.docsViewerReport__subscopeSelectionCheckbox{
+  box-sizing: border-box;
+  width: 0.82rem;
+  height: 0.82rem;
+  margin: 0;
+  accent-color: currentColor;
+  cursor: pointer;
+}
+
+.docsViewerReport__subscopeSelectionCheckbox:focus-visible{
+  outline: 2px solid var(--docs-viewer-focus-ring);
+  outline-offset: 2px;
+}
+
+.docsViewerReport[data-report-subscope-selection="inactive"] .docsViewerReport__head,
+.docsViewerReport[data-report-subscope-selection="inactive"] .docsViewerReport__row{
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.docsViewerReport[data-report-subscope-selection="inactive"] [data-report-contribution-head]{
+  display: none;
 }
 
 .docsViewer__navRow.is-draft .docsViewer__navLink{
@@ -882,6 +970,16 @@ select.docsViewer__fieldInput--listbox{
   .docsViewer__field:not(.docsViewer__field--checkbox){
     grid-template-columns: 1fr;
     gap: 0.28rem;
+  }
+
+  .docsViewerReport__contributionToolbar--list,
+  .docsViewerReport__subscopeSelectionToolbar{
+    justify-content: flex-start;
+  }
+
+  .docsViewerReport__subscopeActionsMenu{
+    right: auto;
+    left: 0;
   }
 }
 

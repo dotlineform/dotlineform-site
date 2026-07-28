@@ -930,6 +930,275 @@ def assert_report_module(page: Page) -> None:
     }
 
 
+def assert_subscope_selection_contribution(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+          const report = await import(
+            '/site/docs-viewer/runtime/js/shared/docs-subscope-report.js'
+          );
+          const contributionModule = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-subscope-contribution.js'
+          );
+          history.replaceState({}, '', '/?scope=studio&doc=parent-doc');
+          document.body.innerHTML = (
+            '<section class="docsViewer"><main><section id="selection-report"></section></main></section>'
+          );
+          window.fetch = async input => {
+            const url = new URL(String(input), window.location.href);
+            const response = payload => ({
+              ok: true,
+              status: 200,
+              json: async () => payload
+            });
+            if (url.pathname === '/capabilities') {
+              return response({ ok: true, capabilities: {} });
+            }
+            if (url.pathname.includes('/by-id/')) {
+              const docId = decodeURIComponent(
+                url.pathname.split('/').pop().replace(/\\.json$/, '')
+              );
+              return response({
+                doc_id: docId,
+                title: docId.toUpperCase(),
+                content_html: `<h2>${docId}</h2>`
+              });
+            }
+            return { ok: false, status: 404, json: async () => ({}) };
+          };
+          const prepared = [];
+          const root = document.querySelector('#selection-report');
+          const contribution = contributionModule.createDocsViewerManagementSubscopeContribution({
+            clientOptions: { baseUrl: window.location.origin },
+            managementContext: true,
+            nonViewableEmoji: '🚫',
+            onPreparePackage: payload => prepared.push(payload),
+            root: document.querySelector('.docsViewer'),
+            uiStatusByValue: new Map([
+              ['draft', { label: 'Draft', emoji: '📝' }]
+            ])
+          });
+          await report.mountDocsSubscopeReport({
+            doc: { doc_id: 'parent-doc' },
+            reportMeta: { subScope: 'tags' },
+            reportRoot: root,
+            routeContext: {
+              subScopes: [{
+                subScope: 'tags',
+                title: 'Tags',
+                byIdUrlBase: '/synthetic/by-id'
+              }]
+            },
+            subscopeDocumentSource: {
+              documents: [
+                { doc_id: 'a', title: 'A', viewable: true },
+                { doc_id: 'b', title: 'B', ui_status: 'draft', viewable: false },
+                { doc_id: 'c', title: 'C', viewable: true }
+              ]
+            },
+            subscopeReportContribution: contribution,
+            viewerScope: 'studio'
+          });
+          const selectionSnapshot = () => {
+            const checkboxes = Array.from(
+              root.querySelectorAll('[data-docs-subscope-selection-checkbox]')
+            );
+            const actions = root.querySelector('[data-docs-subscope-actions]');
+            const menu = root.querySelector('.docsViewerReport__subscopeActionsMenu');
+            const selectionControl = root.querySelector(
+              '.docsViewerReport__subscopeSelectionControl'
+            );
+            const prepare = root.querySelector(
+              '[data-docs-viewer-action="prepare-document-package"]'
+            );
+            return {
+              actionsExpanded: actions?.getAttribute('aria-expanded') || '',
+              checkedIds: checkboxes.filter(checkbox => checkbox.checked)
+                .map(checkbox => checkbox.dataset.docsSubscopeSelectionCheckbox),
+              menuHidden: menu?.hidden ?? true,
+              prepareDisabled: prepare?.disabled ?? true,
+              prepareReason: prepare?.dataset.docsViewerDisabledReason || '',
+              selectionControlHidden: selectionControl?.hidden ?? true,
+              selectionState: root.dataset.reportSubscopeSelection || '',
+              visibleCheckboxes: checkboxes.filter(checkbox => (
+                !checkbox.closest('[data-report-contribution-host="row-leading"]')?.hidden
+              )).length
+            };
+          };
+          const initial = {
+            ...selectionSnapshot(),
+            actionIds: Array.from(root.querySelectorAll('[data-docs-viewer-action]'))
+              .map(button => button.dataset.docsViewerAction),
+            nonViewableIcons: root.querySelectorAll('.docsViewer__draftPrefix').length,
+            rowIds: Array.from(root.querySelectorAll('[data-report-subdoc-id]'))
+              .map(row => row.dataset.reportSubdocId),
+            statusIcons: root.querySelectorAll('.docsViewer__navStatus').length
+          };
+
+          root.querySelector('[data-docs-subscope-actions]').click();
+          const opened = selectionSnapshot();
+          const first = root.querySelector('[data-docs-subscope-selection-checkbox="a"]');
+          const last = root.querySelector('[data-docs-subscope-selection-checkbox="c"]');
+          first.click();
+          last.checked = true;
+          last.dispatchEvent(new MouseEvent('click', { bubbles: true, shiftKey: true }));
+          const ranged = {
+            ...selectionSnapshot(),
+            reportState: root.dataset.reportState,
+            subdoc: new URLSearchParams(location.search).get('subdoc')
+          };
+          root.querySelector(
+            '[data-docs-viewer-action="prepare-document-package"]'
+          ).click();
+          const preparedState = {
+            ...selectionSnapshot(),
+            prepared
+          };
+
+          root.querySelector('[data-docs-subscope-actions]').click();
+          root.querySelector('[data-docs-subscope-selection-command="clear"]').click();
+          const cleared = selectionSnapshot();
+          root.querySelector('[data-docs-subscope-selection-command="select-all"]').click();
+          const selectedAll = {
+            ...selectionSnapshot(),
+            selectAllDisabled: root.querySelector(
+              '[data-docs-subscope-selection-command="select-all"]'
+            ).disabled
+          };
+
+          root.querySelector(
+            '[data-report-subdoc-id="b"] .docsViewerReport__subscopeButton'
+          ).click();
+          await new Promise(resolve => {
+            const poll = () => {
+              if (root.dataset.reportState === 'detail') {
+                resolve();
+                return;
+              }
+              setTimeout(poll, 0);
+            };
+            poll();
+          });
+          const detail = {
+            selectedIds: Array.from(
+              root.querySelectorAll('[data-docs-subscope-selection-checkbox]:checked')
+            ).map(checkbox => checkbox.dataset.docsSubscopeSelectionCheckbox),
+            toolbarHidden: root.querySelector(
+              '[data-report-contribution-host="list-toolbar"]'
+            ).hidden
+          };
+          root.querySelector('.docsReportDetail__back').click();
+          const afterBack = selectionSnapshot();
+          root.querySelector('[data-docs-subscope-selection-command="done"]').click();
+          const done = selectionSnapshot();
+
+          const actions = root.querySelector('[data-docs-subscope-actions]');
+          actions.click();
+          const reentered = selectionSnapshot();
+          document.dispatchEvent(new KeyboardEvent('keydown', {
+            bubbles: true,
+            key: 'Escape'
+          }));
+          const escaped = {
+            ...selectionSnapshot(),
+            actionsFocused: document.activeElement === actions
+          };
+          actions.click();
+          document.querySelector('.docsViewer').click();
+          const outsideClosed = selectionSnapshot();
+          return {
+            afterBack,
+            cleared,
+            detail,
+            done,
+            escaped,
+            initial,
+            opened,
+            outsideClosed,
+            preparedState,
+            ranged,
+            reentered,
+            selectedAll
+          };
+        }"""
+    )
+    expected_initial = {
+        "actionsExpanded": "false",
+        "checkedIds": [],
+        "menuHidden": True,
+        "prepareDisabled": True,
+        "prepareReason": "Select one or more documents.",
+        "selectionControlHidden": True,
+        "selectionState": "inactive",
+        "visibleCheckboxes": 0,
+        "actionIds": ["prepare-document-package"],
+        "nonViewableIcons": 1,
+        "rowIds": ["a", "b", "c"],
+        "statusIcons": 1,
+    }
+    if result["initial"] != expected_initial:
+        raise AssertionError(
+            f"unexpected initial sub-scope selection state: {result['initial']!r}"
+        )
+    assert result["opened"] == {
+        "actionsExpanded": "true",
+        "checkedIds": [],
+        "menuHidden": False,
+        "prepareDisabled": True,
+        "prepareReason": "Select one or more documents.",
+        "selectionControlHidden": False,
+        "selectionState": "active",
+        "visibleCheckboxes": 3,
+    }
+    assert result["ranged"] == {
+        "actionsExpanded": "true",
+        "checkedIds": ["a", "b", "c"],
+        "menuHidden": False,
+        "prepareDisabled": False,
+        "prepareReason": "",
+        "selectionControlHidden": False,
+        "selectionState": "active",
+        "visibleCheckboxes": 3,
+        "reportState": "list",
+        "subdoc": None,
+    }
+    assert result["preparedState"] == {
+        "actionsExpanded": "false",
+        "checkedIds": ["a", "b", "c"],
+        "menuHidden": True,
+        "prepareDisabled": False,
+        "prepareReason": "",
+        "selectionControlHidden": False,
+        "selectionState": "active",
+        "visibleCheckboxes": 3,
+        "prepared": [
+            {
+                "scope": "studio",
+                "sub_scope": "tags",
+                "doc_ids": ["a", "b", "c"],
+            }
+        ],
+    }
+    assert result["cleared"]["checkedIds"] == []
+    assert result["cleared"]["prepareDisabled"] is True
+    assert result["cleared"]["prepareReason"] == "Select one or more documents."
+    assert result["selectedAll"]["checkedIds"] == ["a", "b", "c"]
+    assert result["selectedAll"]["selectAllDisabled"] is True
+    assert result["detail"] == {
+        "selectedIds": ["a", "b", "c"],
+        "toolbarHidden": True,
+    }
+    assert result["afterBack"]["checkedIds"] == ["a", "b", "c"]
+    assert result["afterBack"]["menuHidden"] is True
+    assert result["done"]["checkedIds"] == []
+    assert result["done"]["selectionControlHidden"] is True
+    assert result["done"]["selectionState"] == "inactive"
+    assert result["reentered"]["checkedIds"] == []
+    assert result["reentered"]["menuHidden"] is False
+    assert result["escaped"]["menuHidden"] is True
+    assert result["escaped"]["actionsFocused"] is True
+    assert result["outsideClosed"]["menuHidden"] is True
+
+
 def assert_manage_report_bridge(page: Page) -> None:
     mounted = page.evaluate(
         """async () => {
@@ -1267,7 +1536,7 @@ def assert_manage_report_bridge(page: Page) -> None:
         )
     assert mounted["beforeClear"]["statusIcons"] == 1
     assert mounted["beforeClear"]["nonViewableIcons"] == 1
-    assert mounted["beforeClear"]["listToolbarHosts"] == 0
+    assert mounted["beforeClear"]["listToolbarHosts"] == 1
     assert mounted["beforeClear"]["detailToolbarHosts"] == 1
     assert mounted["beforeClear"]["states"][-1] == {
         "state": "detail",
@@ -1968,6 +2237,7 @@ def main(argv: list[str] | None = None) -> int:
                 page.goto(base_url, wait_until="domcontentloaded")
                 assert_control_projection(page)
                 assert_report_module(page)
+                assert_subscope_selection_contribution(page)
                 assert_report_delete_reconciliation(page)
                 assert_delete_workflow(page)
                 assert_manage_report_bridge(page)

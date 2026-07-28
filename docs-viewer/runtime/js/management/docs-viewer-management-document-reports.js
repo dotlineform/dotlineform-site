@@ -180,6 +180,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
   var scopeConfig = settings.scopeConfigState || {};
   var contribution = createDocsViewerManagementSubscopeContribution({
     clientOptions: managementClientOptions(settings),
+    managementContext: Boolean(settings.managementContext),
     nonViewableEmoji: cleanString(scopeConfig.docNonViewableEmoji),
     onLifecycleEvent: function (event) {
       if (event && event.type === "state") {

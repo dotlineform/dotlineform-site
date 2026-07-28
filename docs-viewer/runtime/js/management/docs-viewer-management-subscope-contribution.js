@@ -1,5 +1,27 @@
+import {
+  DOCS_VIEWER_ACTION_IDS,
+  createDocsViewerActionContext,
+  resolveDocsViewerAction
+} from "./docs-viewer-action-definitions.js";
+import {
+  createDocsViewerSubscopeSelectionOwner
+} from "./docs-viewer-subscope-selection.js";
+
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
+}
+
+function documentId(documentRecord) {
+  return cleanString(documentRecord && documentRecord.doc_id);
+}
+
+function documentIds(documents) {
+  var seen = new Set();
+  return (Array.isArray(documents) ? documents : []).map(documentId).filter(function (docId) {
+    if (!docId || seen.has(docId)) return false;
+    seen.add(docId);
+    return true;
+  });
 }
 
 function statusRecord(statuses, value) {
@@ -37,8 +59,97 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
   var onLifecycleEvent = typeof options.onLifecycleEvent === "function"
     ? options.onLifecycleEvent
     : null;
+  var onPreparePackage = typeof options.onPreparePackage === "function"
+    ? options.onPreparePackage
+    : null;
+  var managementContext = Boolean(options.managementContext);
+  var selectionOwner = options.selectionOwner || createDocsViewerSubscopeSelectionOwner();
+  var currentDocuments = [];
+  var listToolbar = null;
+  var rowSelections = new Map();
   var activeDeleteWorkflow = null;
   var deleteWorkflowRequest = 0;
+
+  function prepareResolution() {
+    return resolveDocsViewerAction(
+      DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE,
+      createDocsViewerActionContext({
+        selectedDocIds: selectionOwner.selectedDocIds()
+      })
+    );
+  }
+
+  function eligibleDocIds() {
+    return documentIds(currentDocuments);
+  }
+
+  function reportRoot() {
+    if (listToolbar && listToolbar.root) {
+      return listToolbar.root.closest(".docsViewerReport, [data-report-subscope]");
+    }
+    for (var record of rowSelections.values()) {
+      var root = record.host.closest(".docsViewerReport, [data-report-subscope]");
+      if (root) return root;
+    }
+    return null;
+  }
+
+  function hideActionsMenu(focusButton) {
+    if (!listToolbar) return;
+    listToolbar.menu.hidden = true;
+    listToolbar.actionsButton.setAttribute("aria-expanded", "false");
+    if (focusButton && typeof listToolbar.actionsButton.focus === "function") {
+      listToolbar.actionsButton.focus();
+    }
+  }
+
+  function projectSelection() {
+    var snapshot = selectionOwner.snapshot();
+    var available = selectionOwner.available();
+    var active = available && snapshot.selectionModeActive;
+    var eligible = eligibleDocIds();
+    var selected = new Set(snapshot.selectedDocIds);
+    var allSelected = eligible.length > 0 && eligible.every(function (docId) {
+      return selected.has(docId);
+    });
+    rowSelections.forEach(function (record, docId) {
+      record.host.hidden = !active;
+      record.checkbox.checked = selected.has(docId);
+      record.checkbox.disabled = !active;
+    });
+    var root = reportRoot();
+    if (root) root.dataset.reportSubscopeSelection = active ? "active" : "inactive";
+    if (!listToolbar) return snapshot;
+
+    listToolbar.actionsButton.disabled = !available || eligible.length === 0;
+    listToolbar.selectionControl.hidden = !active;
+    listToolbar.selectAllButton.disabled = !active || allSelected || eligible.length === 0;
+    listToolbar.clearButton.disabled = !active || selected.size === 0;
+    listToolbar.doneButton.disabled = !active;
+
+    var resolution = prepareResolution();
+    var disabledReason = resolution.enabled
+      ? (onPreparePackage ? "" : "Sub-scope package preparation is unavailable.")
+      : resolution.disabledReason;
+    var label = "Prepare package…";
+    var accessibleLabel = disabledReason ? label + " " + disabledReason : label;
+    listToolbar.prepareButton.disabled = Boolean(disabledReason);
+    listToolbar.prepareButton.title = accessibleLabel;
+    listToolbar.prepareButton.setAttribute("aria-label", accessibleLabel);
+    if (disabledReason) {
+      listToolbar.prepareButton.dataset.docsViewerDisabledReason = disabledReason;
+    } else {
+      delete listToolbar.prepareButton.dataset.docsViewerDisabledReason;
+    }
+    return snapshot;
+  }
+
+  function clearListToolbar() {
+    if (!listToolbar) return;
+    listToolbar.document.removeEventListener("click", listToolbar.handleDocumentClick);
+    listToolbar.document.removeEventListener("keydown", listToolbar.handleDocumentKeydown);
+    listToolbar = null;
+  }
 
   function clearDeleteWorkflow() {
     deleteWorkflowRequest += 1;
@@ -49,6 +160,12 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
   }
 
   function notify(event) {
+    selectionOwner.notify(event, {
+      managementContext: managementContext
+    });
+    if (event && event.type === "refresh") {
+      currentDocuments = Array.isArray(event.documents) ? event.documents.slice() : [];
+    }
     if (
       event
       && (
@@ -58,6 +175,14 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
     ) {
       clearDeleteWorkflow();
     }
+    if (event && event.type === "state" && cleanString(event.state) !== "list") {
+      hideActionsMenu(false);
+    }
+    if (event && event.type === "unmount") {
+      clearListToolbar();
+      rowSelections.clear();
+    }
+    projectSelection();
     if (onLifecycleEvent) onLifecycleEvent(event);
   }
 
@@ -65,7 +190,33 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
     var settings = context || {};
     var doc = settings.document || {};
     var host = settings.titlePrefixHost;
+    var leadingHost = settings.leadingHost;
     var accessibleLabels = [];
+    var docId = documentId(doc);
+    if (leadingHost && docId) {
+      var checkbox = leadingHost.ownerDocument.createElement("input");
+      checkbox.className = "docsViewerReport__subscopeSelectionCheckbox";
+      checkbox.type = "checkbox";
+      checkbox.dataset.docsSubscopeSelectionCheckbox = docId;
+      checkbox.setAttribute("aria-label", "Select " + (cleanString(doc.title) || docId));
+      checkbox.addEventListener("click", function (event) {
+        event.stopPropagation();
+        if (!selectionOwner.available() || !selectionOwner.snapshot().selectionModeActive) return;
+        if (event.shiftKey) {
+          selectionOwner.selectRange(docId, eligibleDocIds());
+        } else {
+          selectionOwner.toggle(docId, checkbox.checked);
+        }
+        projectSelection();
+      });
+      leadingHost.classList.add("docsViewerReport__subscopeSelectionGutter");
+      leadingHost.hidden = true;
+      leadingHost.appendChild(checkbox);
+      rowSelections.set(docId, {
+        checkbox: checkbox,
+        host: leadingHost
+      });
+    }
     var uiStatus = statusRecord(statuses, doc.ui_status);
     if (uiStatus && appendIcon(host, "docsViewer__navStatus", uiStatus.emoji)) {
       accessibleLabels.push(cleanString(uiStatus.label) || cleanString(doc.ui_status));
@@ -74,6 +225,138 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
       accessibleLabels.push("non-viewable");
     }
     return { accessibleLabels: accessibleLabels };
+  }
+
+  function selectionCommandButton(documentRef, command, label) {
+    var button = documentRef.createElement("button");
+    button.className = "docsViewerReport__subscopeSelectionButton";
+    button.type = "button";
+    button.dataset.docsSubscopeSelectionCommand = command;
+    button.textContent = label;
+    return button;
+  }
+
+  function renderListToolbar(context) {
+    var settings = context || {};
+    var host = settings.host;
+    if (!host) return;
+    clearListToolbar();
+    rowSelections.clear();
+    currentDocuments = Array.isArray(settings.documents) ? settings.documents.slice() : [];
+    selectionOwner.syncContext({
+      collection: settings.collection,
+      managementContext: managementContext,
+      mounted: true
+    });
+
+    var documentRef = host.ownerDocument;
+    var root = documentRef.createElement("div");
+    root.className = "docsViewerReport__subscopeSelectionToolbar";
+
+    var actionsHost = documentRef.createElement("div");
+    actionsHost.className = "docsViewer__actionsMenuHost docsViewerReport__subscopeActionsHost";
+    var actionsButton = documentRef.createElement("button");
+    actionsButton.className = "docsViewerReport__button";
+    actionsButton.type = "button";
+    actionsButton.dataset.docsSubscopeActions = "true";
+    actionsButton.setAttribute("aria-haspopup", "menu");
+    actionsButton.setAttribute("aria-expanded", "false");
+    actionsButton.textContent = "Actions";
+    var menu = documentRef.createElement("div");
+    menu.className = "docsViewer__actionsMenu docsViewerReport__subscopeActionsMenu";
+    menu.setAttribute("role", "menu");
+    menu.hidden = true;
+    var prepareButton = documentRef.createElement("button");
+    prepareButton.className = "docsViewer__actionMenuItem";
+    prepareButton.type = "button";
+    prepareButton.setAttribute("role", "menuitem");
+    prepareButton.dataset.docsViewerAction = DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE;
+    var prepareEmoji = documentRef.createElement("span");
+    prepareEmoji.className = "docsViewer__actionMenuEmoji";
+    prepareEmoji.setAttribute("aria-hidden", "true");
+    prepareEmoji.textContent = "📦";
+    var prepareLabel = documentRef.createElement("span");
+    prepareLabel.className = "docsViewer__actionMenuLabel";
+    prepareLabel.textContent = "Prepare package…";
+    prepareButton.replaceChildren(prepareEmoji, prepareLabel);
+    menu.appendChild(prepareButton);
+    actionsHost.replaceChildren(actionsButton, menu);
+
+    var selectionControl = documentRef.createElement("div");
+    selectionControl.className = "docsViewerReport__subscopeSelectionControl";
+    selectionControl.setAttribute("role", "group");
+    selectionControl.setAttribute("aria-label", "Sub-scope selection");
+    var selectAllButton = selectionCommandButton(documentRef, "select-all", "Select all");
+    var clearButton = selectionCommandButton(documentRef, "clear", "Clear");
+    var doneButton = selectionCommandButton(documentRef, "done", "Done");
+    selectionControl.replaceChildren(selectAllButton, clearButton, doneButton);
+    root.replaceChildren(actionsHost, selectionControl);
+    host.appendChild(root);
+
+    function handleDocumentClick(event) {
+      if (!root.contains(event.target)) hideActionsMenu(false);
+    }
+
+    function handleDocumentKeydown(event) {
+      if (event.key !== "Escape" || menu.hidden) return;
+      event.preventDefault();
+      hideActionsMenu(true);
+    }
+
+    listToolbar = {
+      actionsButton: actionsButton,
+      clearButton: clearButton,
+      document: documentRef,
+      doneButton: doneButton,
+      handleDocumentClick: handleDocumentClick,
+      handleDocumentKeydown: handleDocumentKeydown,
+      menu: menu,
+      prepareButton: prepareButton,
+      root: root,
+      selectAllButton: selectAllButton,
+      selectionControl: selectionControl
+    };
+    documentRef.addEventListener("click", handleDocumentClick);
+    documentRef.addEventListener("keydown", handleDocumentKeydown);
+
+    actionsButton.addEventListener("click", function (event) {
+      event.stopPropagation();
+      if (actionsButton.disabled) return;
+      if (!menu.hidden) {
+        hideActionsMenu(false);
+        return;
+      }
+      if (!selectionOwner.snapshot().selectionModeActive) selectionOwner.enter();
+      projectSelection();
+      menu.hidden = false;
+      actionsButton.setAttribute("aria-expanded", "true");
+    });
+    prepareButton.addEventListener("click", function () {
+      if (prepareButton.disabled || !onPreparePackage) return;
+      var resolution = prepareResolution();
+      if (!resolution.enabled) return;
+      hideActionsMenu(true);
+      var collection = selectionOwner.collection();
+      onPreparePackage({
+        scope: collection.scope,
+        sub_scope: collection.sub_scope,
+        doc_ids: resolution.targetDocIds.slice()
+      });
+    });
+    selectAllButton.addEventListener("click", function () {
+      selectionOwner.selectAll(eligibleDocIds());
+      projectSelection();
+    });
+    clearButton.addEventListener("click", function () {
+      selectionOwner.clear();
+      projectSelection();
+    });
+    doneButton.addEventListener("click", function () {
+      selectionOwner.done();
+      hideActionsMenu(true);
+      projectSelection();
+    });
+    projectSelection();
   }
 
   function renderDetailToolbar(context) {
@@ -123,6 +406,7 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
   return {
     notify: notify,
     renderDetailToolbar: renderDetailToolbar,
+    renderListToolbar: renderListToolbar,
     renderRow: renderRow
   };
 }
