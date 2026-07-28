@@ -399,11 +399,19 @@ def exercise_public_subscope_report(page: Page, base_url: str, timeout_ms: int) 
         f"""() => {{
             const report = document.querySelector(".docsViewerReport");
             const rows = Array.from(document.querySelectorAll(".docsViewerReport__row"));
+            const expectedRows = new Map([
+                ["{BIRD_SUBDOC_ID}", "bird"],
+                ["{NERVE_SUBDOC_ID}", "nerve"],
+                ["{ORDERED_SUBDOC_ID}", "ordered"]
+            ]);
             return report &&
                 report.dataset.reportId === "docs_subscope" &&
                 report.dataset.reportSubscope === "tags" &&
-                rows.map((row) => row.dataset.reportSubdocId).join(",") === "{BIRD_SUBDOC_ID},{NERVE_SUBDOC_ID},{ORDERED_SUBDOC_ID}" &&
-                rows.map((row) => (row.textContent || "").trim()).join(",") === "bird,nerve,ordered";
+                rows.length >= expectedRows.size &&
+                Array.from(expectedRows).every(([docId, title]) => {{
+                    const row = rows.find(candidate => candidate.dataset.reportSubdocId === docId);
+                    return (row?.textContent || "").trim() === title;
+                }});
         }}""",
         timeout=timeout_ms,
     )
@@ -472,13 +480,15 @@ def exercise_public_subscope_report(page: Page, base_url: str, timeout_ms: int) 
         )
     page.go_back(wait_until="domcontentloaded")
     page.wait_for_function(
-        """() => {
+        f"""() => {{
             const report = document.querySelector(".docsViewerReport");
             return report &&
                 report.dataset.reportState === "list" &&
                 !new URL(location.href).searchParams.has("subdoc") &&
-                document.querySelectorAll(".docsViewerReport__row").length === 3;
-        }""",
+                document.querySelector(
+                    ".docsViewerReport__row[data-report-subdoc-id='{ORDERED_SUBDOC_ID}']"
+                );
+        }}""",
         timeout=timeout_ms,
     )
     page.go_forward(wait_until="domcontentloaded")

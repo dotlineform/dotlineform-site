@@ -614,6 +614,15 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Smoke-check managed sub-scope inventory, validated report targets, public separation, and toolbar state projection.",
         ),
         CheckCommand(
+            "docs-viewer-subscope-delete-workflow-route-smoke",
+            (
+                sys.executable,
+                "docs-viewer/tests/smoke/docs_viewer_subscope_delete_workflow_route.py",
+            ),
+            "Smoke-check real manage-route exact sub-scope Delete against temporary configured sources and isolated parent/external sentinels.",
+            isolated_projects_base=True,
+        ),
+        CheckCommand(
             "docs-viewer-service-manage-smoke",
             (
                 sys.executable,

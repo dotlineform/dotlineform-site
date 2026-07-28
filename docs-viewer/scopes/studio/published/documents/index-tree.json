@@ -884,7 +884,7 @@
               "doc_id": "d-20260728-115825-e2561b",
               "title": "Sub-Scope Detail Delete Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-115825-e2561b.json",
-              "ui_status": "draft"
+              "ui_status": "done"
             },
             {
               "doc_id": "d-20260728-113139-763354",
@@ -1259,5 +1259,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-28T13:16:08Z"
+  "generated_at": "2026-07-28T14:35:26Z"
 }

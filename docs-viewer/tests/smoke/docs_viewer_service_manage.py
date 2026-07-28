@@ -41,6 +41,8 @@ SUBSCOPE_REPORT_DOC_TITLE = "Sub-Scope Editing Smoke Fixture"
 SUBSCOPE_ID = "smoke-documents"
 SUBSCOPE_DOC_ID = "d-20000101-000000-000005"
 SUBSCOPE_DOC_TITLE = "Smoke Detail"
+SUBSCOPE_SIBLING_DOC_ID = "d-20000101-000000-000006"
+SUBSCOPE_SIBLING_DOC_TITLE = "Retained Smoke Sibling"
 INVALID_SUBSCOPE_DOC_ID = "d-20000101-000000-invalid"
 
 
@@ -116,6 +118,7 @@ def install_smoke_document_routes(
     page: Page,
     *,
     include_subscope_report: bool = False,
+    include_subscope_sibling: bool = False,
 ) -> None:
     payloads = smoke_document_payloads(
         include_subscope_report=include_subscope_report,
@@ -326,20 +329,30 @@ def install_smoke_document_routes(
         ):
             route.fulfill(status=404, content_type="application/json", body='{"error":"Not found"}')
             return
+        documents = [
+            {
+                "doc_id": SUBSCOPE_DOC_ID,
+                "title": subscope_state["title"],
+                "ui_status": subscope_state["ui_status"],
+                "viewable": subscope_state["viewable"],
+            }
+        ]
+        if include_subscope_sibling:
+            documents.append(
+                {
+                    "doc_id": SUBSCOPE_SIBLING_DOC_ID,
+                    "title": SUBSCOPE_SIBLING_DOC_TITLE,
+                    "ui_status": "done",
+                    "viewable": True,
+                }
+            )
         fulfill_json(
             route,
             {
                 "ok": True,
                 "scope": "studio",
                 "sub_scope": SUBSCOPE_ID,
-                "documents": [
-                    {
-                        "doc_id": SUBSCOPE_DOC_ID,
-                        "title": subscope_state["title"],
-                        "ui_status": subscope_state["ui_status"],
-                        "viewable": subscope_state["viewable"],
-                    }
-                ],
+                "documents": documents,
             },
         )
 
