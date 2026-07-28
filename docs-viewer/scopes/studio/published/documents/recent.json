@@ -4,6 +4,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260728-113139-763354",
+      "title": "Sub-Scope Index Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-113139-763354.json",
+      "timestamp": "2026-07-28 12:33:24",
+      "parent_id": "d-20260728-113139-285eae",
+      "parent_title": "Sub-Scope Index"
+    },
+    {
       "doc_id": "d-20260728-115825-e2561b",
       "title": "Sub-Scope Detail Delete Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-115825-e2561b.json",
@@ -18,14 +26,6 @@
       "timestamp": "2026-07-28 12:08:21",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260728-113139-763354",
-      "title": "Sub-Scope Index Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-113139-763354.json",
-      "timestamp": "2026-07-28 12:08:21",
-      "parent_id": "d-20260728-113139-285eae",
-      "parent_title": "Sub-Scope Index"
     },
     {
       "doc_id": "d-20260728-115825-ae1461",
@@ -84,5 +84,5 @@
       "parent_title": "Studio"
     }
   ],
-  "generated_at": "2026-07-28T11:09:10Z"
+  "generated_at": "2026-07-28T11:33:42Z"
 }

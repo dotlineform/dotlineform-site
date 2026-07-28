@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-6220fbbc897e851390836a47933ef776",
-    "generated_at_utc": "2026-07-28T11:09:10Z",
+    "version": "blake2b-fa96dcec75240651e3bea82227c69603",
+    "generated_at_utc": "2026-07-28T11:33:42Z",
     "count": 225
   },
   "entries": [
@@ -4081,10 +4081,10 @@
       "kind": "doc",
       "title": "Sub-Scope Index Architecture",
       "href": "/docs/?scope=studio&doc=d-20260728-113139-763354",
-      "last_updated": "2026-07-28 12:08:21",
+      "last_updated": "2026-07-28 12:33:24",
       "parent_id": "d-20260728-113139-285eae",
       "parent_title": "Sub-Scope Index",
-      "display_meta": "2026-07-28 12:08:21 • Sub-Scope Index",
+      "display_meta": "2026-07-28 12:33:24 • Sub-Scope Index",
       "search_terms": [
         "sub-scope index architecture",
         "sub",
@@ -4092,16 +4092,16 @@
         "index",
         "architecture",
         "sub-scope index",
-        "2026-07-28 12:08:21",
+        "2026-07-28 12:33:24",
         "2026",
         "07",
         "28",
         "12",
-        "08",
-        "21",
+        "33",
+        "24",
         "d-20260728-113139-763354"
       ],
-      "search_text": "sub-scope index architecture sub scope index architecture sub-scope index 2026-07-28 12:08:21 2026 07 28 12 08 21 d-20260728-113139-763354"
+      "search_text": "sub-scope index architecture sub scope index architecture sub-scope index 2026-07-28 12:33:24 2026 07 28 12 33 24 d-20260728-113139-763354"
     },
     {
       "id": "d-20260728-115825-ae1461",
