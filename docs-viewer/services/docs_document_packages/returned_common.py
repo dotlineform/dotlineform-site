@@ -29,6 +29,7 @@ EXPORT_METADATA_FIELDS = {
     "adapter_id",
     "data_domain",
     "scope",
+    "sub_scope",
     "target_format",
     "record_shape",
     "generated_at",

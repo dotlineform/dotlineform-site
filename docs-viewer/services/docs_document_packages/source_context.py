@@ -13,7 +13,14 @@ if str(DOCS_BUILD_DIR) not in sys.path:
     sys.path.insert(0, str(DOCS_BUILD_DIR))
 
 from build_docs import DocsDataBuilder, DocRecord  # noqa: E402
-from docs_scope_config import DocsScopeConfig, document_source_path, load_docs_scope_configs, resolve_scope_path  # noqa: E402
+from docs_builder.sub_scope import SubScopeDocsBuilder  # noqa: E402
+from docs_management_document_target import resolve_managed_document_collection  # noqa: E402
+from docs_scope_config import (  # noqa: E402
+    DocsScopeConfig,
+    document_source_path,
+    load_docs_scope_configs,
+    resolve_scope_path,
+)
 from docs_document_packages.rendered_content import doc_content_text  # noqa: E402
 from docs_document_packages.source_records import (  # noqa: E402
     DocumentPackageSourceRecord,
@@ -25,9 +32,10 @@ from docs_document_packages.source_records import (  # noqa: E402
 class DocumentPackageSourceContext:
     repo_root: Path
     scope: str
+    sub_scope: str
     scope_config: DocsScopeConfig
     source_root: Path
-    builder: DocsDataBuilder
+    builder: DocsDataBuilder | SubScopeDocsBuilder
     source_docs: list[DocRecord]
     records: list[DocumentPackageSourceRecord]
     records_by_id: dict[str, DocumentPackageSourceRecord]
@@ -45,21 +53,40 @@ def source_file_path(context: DocumentPackageSourceContext, doc: DocRecord) -> P
     return path
 
 
-def load_document_package_source_context(repo_root: Path, scope: str) -> DocumentPackageSourceContext:
+def load_document_package_source_context(
+    repo_root: Path,
+    scope: str,
+    sub_scope: str = "",
+) -> DocumentPackageSourceContext:
     root = repo_root.resolve()
-    configs = load_docs_scope_configs(root)
-    normalized_scope = str(scope or "").strip().lower()
-    config = configs.get(normalized_scope)
-    if config is None:
-        raise ValueError(f"unknown docs scope for document package source context: {scope}")
-
-    source_root = resolve_scope_path(root, document_source_path(config))
-    if not source_root.exists() or not source_root.is_dir():
-        raise RuntimeError(
-            f"missing source root for scope {normalized_scope}: {document_source_path(config).as_posix()}"
+    normalized_sub_scope = str(sub_scope or "").strip().lower()
+    if normalized_sub_scope:
+        collection = resolve_managed_document_collection(
+            root,
+            scope=scope,
+            sub_scope=normalized_sub_scope,
         )
-
-    builder = DocsDataBuilder(repo_root=root, config=config)
+        normalized_scope = collection.scope
+        config = collection.parent_config
+        source_root = collection.source_root
+        builder: DocsDataBuilder | SubScopeDocsBuilder = SubScopeDocsBuilder(
+            repo_root=root,
+            config=config,
+            sub_scope=collection.document_config,
+        )
+    else:
+        configs = load_docs_scope_configs(root)
+        normalized_scope = str(scope or "").strip().lower()
+        config = configs.get(normalized_scope)
+        if config is None:
+            raise ValueError(f"unknown docs scope for document package source context: {scope}")
+        source_root = resolve_scope_path(root, document_source_path(config))
+        if not source_root.exists() or not source_root.is_dir():
+            raise RuntimeError(
+                f"missing source root for scope {normalized_scope}: "
+                f"{document_source_path(config).as_posix()}"
+            )
+        builder = DocsDataBuilder(repo_root=root, config=config)
     source_docs = builder.load_docs()
     builder.validate_docs(source_docs)
 
@@ -68,6 +95,7 @@ def load_document_package_source_context(repo_root: Path, scope: str) -> Documen
     context = DocumentPackageSourceContext(
         repo_root=root,
         scope=normalized_scope,
+        sub_scope=normalized_sub_scope,
         scope_config=config,
         source_root=source_root,
         builder=builder,
@@ -102,5 +130,9 @@ def load_document_package_source_context(repo_root: Path, scope: str) -> Documen
     return context
 
 
-def load_document_package_source_records(repo_root: Path, scope: str) -> list[DocumentPackageSourceRecord]:
-    return load_document_package_source_context(repo_root, scope).records
+def load_document_package_source_records(
+    repo_root: Path,
+    scope: str,
+    sub_scope: str = "",
+) -> list[DocumentPackageSourceRecord]:
+    return load_document_package_source_context(repo_root, scope, sub_scope).records

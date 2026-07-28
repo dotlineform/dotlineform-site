@@ -76,7 +76,19 @@ def validate_whole_returned_package(
                 "trusted package metadata target_format must be 'json' or 'jsonl'",
             )
         )
-    if trusted_metadata.get("supports_return_import") is not True:
+    metadata_sub_scope = normalize_text(trusted_metadata.get("sub_scope")).lower()
+    if metadata_sub_scope:
+        issues.append(
+            issue(
+                "error",
+                "export_only_sub_scope",
+                (
+                    "returned-package review and import are unsupported for "
+                    f"sub-scope {metadata_scope}/{metadata_sub_scope}"
+                ),
+            )
+        )
+    elif trusted_metadata.get("supports_return_import") is not True:
         issues.append(
             issue(
                 "error",

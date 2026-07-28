@@ -112,6 +112,18 @@ def maybe_attach_docs_export_activity(repo_root: Path, body: Dict[str, Any], pay
     exported = int(counts.get("exported") or 0)
     failed = int(counts.get("failed") or 0)
     warnings = int(issue_counts.get("warnings") or 0)
+    sub_scope = str(payload.get("sub_scope") or body.get("sub_scope") or "").strip().lower()
+    scope = (
+        normalize_scope(payload.get("scope") or body.get("scope"))
+        if sub_scope
+        else ""
+    )
+    profile_id = str(payload.get("profile_id") or body.get("profile_id") or "").strip()
+    effective_doc_ids = (
+        payload.get("selected_doc_ids")
+        if isinstance(payload.get("selected_doc_ids"), list)
+        else body.get("doc_ids")
+    )
     activity_body = dict(body)
     raw_context = body.get("activity_context")
     if isinstance(raw_context, dict):
@@ -123,9 +135,20 @@ def maybe_attach_docs_export_activity(repo_root: Path, body: Dict[str, Any], pay
         endpoint=DOCUMENT_PACKAGE_PREPARE_PATH,
         script_purpose_id="prepare-share-package",
         record_id=export_id,
-        record_groups={"docs": compact_ids(body.get("doc_ids"))},
+        record_groups={"docs": compact_ids(effective_doc_ids)},
         detail_items=[
             str(payload.get("summary_text") or f"Exported {exported} document(s).").strip(),
+            (
+                f"Collection: {scope}/{sub_scope}."
+                if sub_scope
+                else ""
+            ),
+            f"Profile: {profile_id}." if sub_scope and profile_id else "",
+            (
+                "Prepared document IDs: " + ", ".join(compact_ids(effective_doc_ids)) + "."
+                if sub_scope and compact_ids(effective_doc_ids)
+                else ""
+            ),
             f"Output file: {output_file}" if output_file else "",
         ],
         status=docs_activity_status(ok=bool(payload.get("ok")), errors=failed, warnings=warnings),

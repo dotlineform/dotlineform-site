@@ -27,6 +27,7 @@ from docs_document_packages.review_sources import create_review_source_folder
 from docs_document_packages.workspace import configured_workspace_paths, workspace_status
 from docs_import_document_package_content import normalize_documents_import_content
 from docs_management_context import log_event
+from docs_management_document_target import resolve_managed_document_collection
 from docs_scope_config import load_docs_scope_configs
 import docs_source_model as source_model
 
@@ -40,6 +41,9 @@ FORBIDDEN_REQUEST_FIELDS = {
     "record_indices",
     "selection",
 }
+PACKAGE_COLLECTION_ALIAS_FIELDS = {"collection", "parent_scope", "subscope"}
+
+
 def refresh_source_model_scope_configs(repo_root: Path) -> dict[str, Any]:
     configs = load_docs_scope_configs(repo_root)
     source_model.DOCS_SCOPE_CONFIGS.clear()
@@ -96,7 +100,12 @@ def optional_boolean_value(body: dict[str, Any], key: str) -> bool | None:
     return value
 
 
-def profile_contract(config: dict[str, Any]) -> dict[str, Any]:
+def profile_contract(
+    config: dict[str, Any],
+    *,
+    export_only: bool = False,
+    flat_collection: bool = False,
+) -> dict[str, Any]:
     target = config.get("target") if isinstance(config.get("target"), dict) else {}
     selection = config.get("selection") if isinstance(config.get("selection"), dict) else {}
     limits = config.get("limits") if isinstance(config.get("limits"), dict) else {}
@@ -113,7 +122,7 @@ def profile_contract(config: dict[str, Any]) -> dict[str, Any]:
         for field in config.get("document_fields", [])
         if isinstance(field, dict) and str(field.get("output_path") or "").strip()
     ]
-    return {
+    contract = {
         "profile_id": str(config.get("id") or "").strip(),
         "label": str(config.get("label") or "").strip(),
         "description": str(config.get("description") or "").strip(),
@@ -122,7 +131,9 @@ def profile_contract(config: dict[str, Any]) -> dict[str, Any]:
         "record_shape": str(target.get("record_shape") or "").strip(),
         "content_format": default_content_format(config),
         "supported_content_formats": supported_content_formats(config),
-        "supports_return_import": supports_return_import(config),
+        "supports_return_import": (
+            False if export_only else supports_return_import(config)
+        ),
         "selection": {
             "mode": str(selection.get("mode") or "").strip(),
             "include_descendants": selection.get("include_descendants") is not False,
@@ -137,19 +148,37 @@ def profile_contract(config: dict[str, Any]) -> dict[str, Any]:
         "external_context": external_context,
         "document_fields": document_fields,
     }
+    if flat_collection:
+        contract["selection"]["include_descendants"] = False
+    return contract
 
 
-def config_payload(repo_root: Path) -> dict[str, Any]:
+def config_payload(
+    repo_root: Path,
+    params: dict[str, list[str]] | None = None,
+) -> dict[str, Any]:
     configs = refresh_source_model_scope_configs(repo_root)
+    collection = None
+    request_params = params or {}
+    if "sub_scope" in request_params:
+        collection = resolve_managed_document_collection(
+            repo_root,
+            scope=query_value(request_params, "scope"),
+            sub_scope=query_value(request_params, "sub_scope"),
+        )
     profile_payload = load_config_file(repo_root)
     errors, warnings = validate_config_payload(profile_payload)
     if errors:
         raise ValueError("document package profiles are invalid: " + "; ".join(errors))
     status = workspace_status(repo_root)
-    return {
+    payload = {
         "ok": True,
         "profiles": [
-            profile_contract(config)
+            profile_contract(
+                config,
+                export_only=collection is not None,
+                flat_collection=collection is not None,
+            )
             for config in profile_payload.get("configs", [])
             if isinstance(config, dict) and config.get("enabled") is not False
         ],
@@ -163,11 +192,31 @@ def config_payload(repo_root: Path) -> dict[str, Any]:
         },
         "warnings": warnings,
     }
+    if collection is not None:
+        payload.update({
+            "scope": collection.scope,
+            "sub_scope": collection.sub_scope,
+            "flat_collection": True,
+        })
+    return payload
 
 
 def documents_payload(repo_root: Path, params: dict[str, list[str]]) -> dict[str, Any]:
     scope = require_scope(repo_root, query_value(params, "scope"))
-    return selectable_document_records(repo_root, scope=scope, selection_model="documents")
+    sub_scope = ""
+    if "sub_scope" in params:
+        collection = resolve_managed_document_collection(
+            repo_root,
+            scope=scope,
+            sub_scope=query_value(params, "sub_scope"),
+        )
+        sub_scope = collection.sub_scope
+    return selectable_document_records(
+        repo_root,
+        scope=scope,
+        sub_scope=sub_scope,
+        selection_model="sub_scope_documents" if sub_scope else "documents",
+    )
 
 
 def returned_payload(repo_root: Path, params: dict[str, list[str]]) -> dict[str, Any]:
@@ -198,7 +247,7 @@ def get_payload(
     params: dict[str, list[str]],
 ) -> dict[str, Any]:
     if path == routes.CONFIG_PATH:
-        return config_payload(repo_root)
+        return config_payload(repo_root, params)
     if path == routes.DOCUMENTS_PATH:
         return documents_payload(repo_root, params)
     if path == routes.RETURNED_PATH:
@@ -207,7 +256,24 @@ def get_payload(
 
 
 def prepare_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
+    collection_aliases = sorted(
+        field for field in PACKAGE_COLLECTION_ALIAS_FIELDS if field in body
+    )
+    if collection_aliases:
+        raise ValueError(
+            "document package prepare accepts only scope and optional sub_scope "
+            "for collection identity: "
+            + ", ".join(collection_aliases)
+        )
     scope = require_scope(repo_root, body.get("scope"))
+    sub_scope = ""
+    if "sub_scope" in body:
+        collection = resolve_managed_document_collection(
+            repo_root,
+            scope=scope,
+            sub_scope=body.get("sub_scope"),
+        )
+        sub_scope = collection.sub_scope
     profile_id = str(body.get("profile_id") or "").strip()
     if not profile_id:
         raise ValueError("profile_id is required")
@@ -217,6 +283,8 @@ def prepare_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     select_all = body.get("select_all", False)
     if not isinstance(select_all, bool):
         raise ValueError("select_all must be true or false")
+    if sub_scope and select_all:
+        raise ValueError("sub-scope package preparation requires select_all false")
     dry_run = dry_run_value(body)
     missing_summary_only = optional_boolean_value(body, "missing_summary_only")
     include_non_viewable = optional_boolean_value(body, "include_non_viewable")
@@ -224,6 +292,7 @@ def prepare_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     payload = build_document_package(
         repo_root,
         scope=scope,
+        sub_scope=sub_scope,
         data_domain=DOCUMENTS_DATA_DOMAIN,
         config_id=profile_id,
         raw_doc_ids=doc_ids,
@@ -252,6 +321,14 @@ def prepare_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
             "dry_run": dry_run,
             "output_written": bool(payload.get("output_written")),
             "exported": int(payload.get("counts", {}).get("exported") or 0),
+            **(
+                {
+                    "sub_scope": sub_scope,
+                    "doc_ids": list(payload.get("selected_doc_ids") or []),
+                }
+                if sub_scope
+                else {}
+            ),
         },
     )
     docs_activity.maybe_attach_docs_export_activity(repo_root, body, payload, dry_run)

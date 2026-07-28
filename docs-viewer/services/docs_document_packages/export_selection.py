@@ -24,6 +24,7 @@ SKIPPED_REASON_LABELS = {
 class ExportContext:
     repo_root: Path
     scope: str
+    sub_scope: str
     data_domain: str
     content_format: str
     config: dict[str, Any]
@@ -51,8 +52,16 @@ def source_record_to_export_doc(record: source_records.DocumentPackageSourceReco
     }
 
 
-def load_source_export_context(repo_root: Path, scope: str) -> tuple[docs_source_context.DocumentPackageSourceContext, list[dict[str, Any]]]:
-    context = docs_source_context.load_document_package_source_context(repo_root, scope)
+def load_source_export_context(
+    repo_root: Path,
+    scope: str,
+    sub_scope: str = "",
+) -> tuple[docs_source_context.DocumentPackageSourceContext, list[dict[str, Any]]]:
+    context = docs_source_context.load_document_package_source_context(
+        repo_root,
+        scope,
+        sub_scope,
+    )
     return context, [source_record_to_export_doc(record) for record in context.records]
 
 

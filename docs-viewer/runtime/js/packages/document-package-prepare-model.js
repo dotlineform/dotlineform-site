@@ -112,9 +112,11 @@ export function projectDocumentPackageSelection(options = {}) {
   const documentsById = new Map(
     documents.map((record) => [documentId(record), record]).filter(([docId]) => Boolean(docId))
   );
-  const includeDescendants = documentPackageProfileRequiresDescendants(profile)
-    ? true
-    : options.includeDescendants === true;
+  const includeDescendants = options.flatCollection === true
+    ? false
+    : documentPackageProfileRequiresDescendants(profile)
+      ? true
+      : options.includeDescendants === true;
   const supportsMissingSummaryOnly = selection.supports_missing_summary_only === true;
   const missingSummaryOnly = supportsMissingSummaryOnly
     ? Object.prototype.hasOwnProperty.call(options, "missingSummaryOnly")
@@ -215,6 +217,7 @@ export function documentPackageProfileLabel(profile) {
 
 export function createDocumentPackagePrepareRequest(options = {}) {
   const scope = packageText(options.scope).toLowerCase();
+  const subScope = packageText(options.subScope).toLowerCase();
   const profile = options.profile || null;
   const effectiveDocIds = normalizeIds(options.effectiveDocIds);
   if (!scope) throw new Error("A Docs Viewer scope is required.");
@@ -240,7 +243,7 @@ export function createDocumentPackagePrepareRequest(options = {}) {
     throw new Error("The selected content format is not supported by this profile.");
   }
 
-  return {
+  const request = {
     scope,
     profile_id: packageText(profile.profile_id),
     doc_ids: effectiveDocIds,
@@ -254,4 +257,6 @@ export function createDocumentPackagePrepareRequest(options = {}) {
       ? { ...options.activityContext }
       : {}
   };
+  if (subScope) request.sub_scope = subScope;
+  return request;
 }

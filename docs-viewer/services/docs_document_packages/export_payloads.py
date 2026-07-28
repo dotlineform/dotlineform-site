@@ -45,8 +45,12 @@ def export_metadata(
         "target_format": target_format,
         "record_shape": record_shape,
         "generated_at": generated_at,
-        "supports_return_import": supports_return_import(context.config),
+        "supports_return_import": (
+            False if context.sub_scope else supports_return_import(context.config)
+        ),
     }
+    if context.sub_scope:
+        metadata["sub_scope"] = context.sub_scope
     if context.content_format:
         metadata["content_format"] = context.content_format
     optional_values = {
@@ -55,7 +59,11 @@ def export_metadata(
         "source_last_updated": source_last_updated,
         "counts": counts,
     }
-    metadata.update({key: value for key, value in optional_values.items() if key in include})
+    metadata.update({
+        key: value
+        for key, value in optional_values.items()
+        if key in include or (context.sub_scope and key == "selected_doc_ids")
+    })
     return metadata
 
 
@@ -115,7 +123,14 @@ def external_field_type(field: dict[str, Any]) -> str:
     return "string"
 
 
-def build_external_context(config: dict[str, Any], target_format: str, content_format: str = "") -> dict[str, Any]:
+def build_external_context(
+    config: dict[str, Any],
+    target_format: str,
+    content_format: str = "",
+    *,
+    scope: str = "",
+    sub_scope: str = "",
+) -> dict[str, Any]:
     target = config.get("target") if isinstance(config.get("target"), dict) else {}
     record_shape = normalize_text(target.get("record_shape"))
     external_context = config.get("external_context") if isinstance(config.get("external_context"), dict) else {}
@@ -169,6 +184,16 @@ def build_external_context(config: dict[str, Any], target_format: str, content_f
     }
     if content_format:
         payload["content_format"] = content_format
+    if sub_scope:
+        payload.update({
+            "scope": normalize_text(scope).lower(),
+            "sub_scope": normalize_text(sub_scope).lower(),
+            "supports_return_import": False,
+            "return_import_notice": (
+                "This sub-scope package is export-only. Returned-package review "
+                "and Docs Import are not supported."
+            ),
+        })
     payload.update({
         "record_format": target_format,
         "record_container": record_container,

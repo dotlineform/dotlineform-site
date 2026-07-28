@@ -102,6 +102,7 @@ def staged_file_record(path: Path, *, metadata_root: Path, workspace_root: Path)
         )
         return record
 
+    sub_scope = normalize_text(metadata.get("sub_scope")).lower()
     record.update(
         {
             "metadata_ok": True,
@@ -113,9 +114,12 @@ def staged_file_record(path: Path, *, metadata_root: Path, workspace_root: Path)
             "config_id": normalize_text(metadata.get("config_id")),
             "profile_id": normalize_text(metadata.get("profile_id")),
             "scope": normalize_text(metadata.get("scope")),
+            "sub_scope": sub_scope,
             "target_format": normalize_text(metadata.get("target_format")),
             "record_shape": normalize_text(metadata.get("record_shape")),
-            "supports_return_import": supports_return_import(metadata),
+            "supports_return_import": (
+                False if sub_scope else supports_return_import(metadata)
+            ),
         }
     )
     return record
@@ -144,7 +148,11 @@ def list_staged_files_with_metadata(
             )
             if record.get("metadata_ok") and record.get("supports_return_import") is False:
                 record["return_import_supported"] = False
-                record["blocked_reason"] = "export_only_profile"
+                record["blocked_reason"] = (
+                    "export_only_sub_scope"
+                    if record.get("sub_scope")
+                    else "export_only_profile"
+                )
                 blocked_files.append(record)
                 continue
             files.append(record)

@@ -66,6 +66,7 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
   var selectionOwner = options.selectionOwner || createDocsViewerSubscopeSelectionOwner();
   var currentDocuments = [];
   var listToolbar = null;
+  var prepareInFlight = false;
   var rowSelections = new Map();
   var activeDeleteWorkflow = null;
   var deleteWorkflowRequest = 0;
@@ -129,7 +130,13 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
 
     var resolution = prepareResolution();
     var disabledReason = resolution.enabled
-      ? (onPreparePackage ? "" : "Sub-scope package preparation is unavailable.")
+      ? (
+          prepareInFlight
+            ? "Sub-scope package preparation is in progress."
+            : onPreparePackage
+              ? ""
+              : "Sub-scope package preparation is unavailable."
+        )
       : resolution.disabledReason;
     var label = "Prepare package…";
     var accessibleLabel = disabledReason ? label + " " + disabledReason : label;
@@ -269,6 +276,7 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
     var prepareButton = documentRef.createElement("button");
     prepareButton.className = "docsViewer__actionMenuItem";
     prepareButton.type = "button";
+    prepareButton.id = "docsViewerSubscopePreparePackageButton";
     prepareButton.setAttribute("role", "menuitem");
     prepareButton.dataset.docsViewerAction = DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE;
     var prepareEmoji = documentRef.createElement("span");
@@ -337,10 +345,29 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
       if (!resolution.enabled) return;
       hideActionsMenu(true);
       var collection = selectionOwner.collection();
-      onPreparePackage({
-        scope: collection.scope,
-        sub_scope: collection.sub_scope,
-        doc_ids: resolution.targetDocIds.slice()
+      prepareInFlight = true;
+      projectSelection();
+      Promise.resolve(onPreparePackage(
+        {
+          scope: collection.scope,
+          sub_scope: collection.sub_scope,
+          doc_ids: resolution.targetDocIds.slice()
+        },
+        {
+          restoreFocus: actionsButton
+        }
+      )).catch(function (error) {
+        if (typeof options.setStatus === "function") {
+          options.setStatus(
+            error && error.message
+              ? error.message
+              : "Sub-scope package preparation failed.",
+            true
+          );
+        }
+      }).finally(function () {
+        prepareInFlight = false;
+        projectSelection();
       });
     });
     selectAllButton.addEventListener("click", function () {

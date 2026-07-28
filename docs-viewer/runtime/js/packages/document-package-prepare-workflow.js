@@ -114,7 +114,7 @@ function optionsBodyHtml() {
     '  <span class="docsViewer__fieldLabel">Content format</span>',
     '  <select class="docsViewer__fieldInput" id="docsViewerPackageContentFormat" data-package-content-format></select>',
     '</label>',
-    '<label class="docsViewer__field docsViewer__field--checkbox">',
+    '<label class="docsViewer__field docsViewer__field--checkbox" data-package-include-descendants-field>',
     '  <input class="docsViewer__checkboxInput" type="checkbox" data-package-include-descendants>',
     '  <span class="docsViewer__fieldLabel">Include descendants</span>',
     '</label>',
@@ -265,6 +265,7 @@ function openPrepareOptions(options) {
       const targetFormatSelect = api.host.querySelector("[data-package-target-format]");
       const contentFormatField = api.host.querySelector("[data-package-content-format-field]");
       const contentFormatSelect = api.host.querySelector("[data-package-content-format]");
+      const descendantsField = api.host.querySelector("[data-package-include-descendants-field]");
       const descendantsInput = api.host.querySelector("[data-package-include-descendants]");
       const missingSummaryField = api.host.querySelector("[data-package-missing-summary-field]");
       const missingSummaryInput = api.host.querySelector("[data-package-missing-summary-only]");
@@ -293,6 +294,7 @@ function openPrepareOptions(options) {
           profile,
           documents: options.documents,
           checkedDocIds: options.checkedDocIds,
+          flatCollection: options.flatCollection === true,
           includeDescendants: Boolean(descendantsInput && descendantsInput.checked),
           missingSummaryOnly: Boolean(missingSummaryInput && missingSummaryInput.checked),
           includeNonViewable: Boolean(includeNonViewableInput && includeNonViewableInput.checked)
@@ -318,12 +320,18 @@ function openPrepareOptions(options) {
           choice.contentFormat || packageText(profile.content_format) || contentFormats[0]
         );
         contentFormatField.hidden = !contentFormats.length;
-        descendantsInput.checked = documentPackageProfileRequiresDescendants(profile)
-          ? true
-          : Object.prototype.hasOwnProperty.call(choice, "includeDescendants")
-            ? choice.includeDescendants
-            : documentPackageProfileIncludesDescendants(profile);
-        descendantsInput.disabled = documentPackageProfileRequiresDescendants(profile);
+        descendantsField.hidden = options.flatCollection === true;
+        descendantsInput.checked = options.flatCollection === true
+          ? false
+          : documentPackageProfileRequiresDescendants(profile)
+            ? true
+            : Object.prototype.hasOwnProperty.call(choice, "includeDescendants")
+              ? choice.includeDescendants
+              : documentPackageProfileIncludesDescendants(profile);
+        descendantsInput.disabled = (
+          options.flatCollection === true
+          || documentPackageProfileRequiresDescendants(profile)
+        );
         const selection = profile.selection && typeof profile.selection === "object"
           ? profile.selection
           : {};
@@ -396,6 +404,7 @@ function openPrepareOptions(options) {
       try {
         const request = createDocumentPackagePrepareRequest({
           scope: options.scope,
+          subScope: options.subScope,
           profile,
           documents: options.documents,
           effectiveDocIds: state.projection.docIds,
@@ -442,6 +451,7 @@ function showPrepareResult(options) {
 export async function openDocumentPackagePrepareWorkflow(options = {}) {
   const root = options.root || document.body;
   const scope = packageText(options.scope).toLowerCase();
+  const subScope = packageText(options.subScope).toLowerCase();
   const checkedDocIds = normalizeCheckedDocIds(options.checkedDocIds);
   const callbacks = options.callbacks || {};
   const client = {
@@ -472,8 +482,8 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
     setBusy(true);
     setMessage("Loading package options...", false);
     [configPayload, documentsPayload] = await Promise.all([
-      client.getConfig(),
-      client.getDocuments(scope)
+      subScope ? client.getConfig(scope, subScope) : client.getConfig(),
+      client.getDocuments(scope, subScope)
     ]);
   } catch (error) {
     loadError = error;
@@ -496,6 +506,21 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
     if (!scopes.some((record) => packageText(record && record.scope) === scope)) {
       throw new Error("The active Docs Viewer scope is unavailable for package preparation.");
     }
+    if (subScope) {
+      if (
+        packageText(configPayload && configPayload.scope).toLowerCase() !== scope
+        || packageText(configPayload && configPayload.sub_scope).toLowerCase() !== subScope
+      ) {
+        throw new Error("Package configuration did not match the active sub-scope collection.");
+      }
+      if (
+        packageText(documentsPayload && documentsPayload.scope).toLowerCase() !== scope
+        || packageText(documentsPayload && documentsPayload.sub_scope).toLowerCase() !== subScope
+        || documentsPayload.flat_collection !== true
+      ) {
+        throw new Error("Package documents did not match the active flat sub-scope collection.");
+      }
+    }
     const profiles = Array.isArray(configPayload.profiles) ? configPayload.profiles : [];
     if (!profiles.length) throw new Error("No document-package profiles are available.");
     const documents = Array.isArray(documentsPayload && documentsPayload.records)
@@ -513,9 +538,11 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
       root,
       restoreFocus: options.restoreFocus,
       scope,
+      subScope,
       checkedDocIds,
       profiles,
       documents,
+      flatCollection: Boolean(subScope),
       activityContext: options.activityContext
     });
     if (!result || !result.confirmed) return { confirmed: false };

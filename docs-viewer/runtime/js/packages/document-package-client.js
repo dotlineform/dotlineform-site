@@ -48,12 +48,22 @@ export async function requestDocumentPackageJson(path, options = {}) {
   return payload;
 }
 
-export function getDocumentPackageConfig() {
-  return requestDocumentPackageJson(DOCUMENT_PACKAGE_ENDPOINTS.config);
+export function getDocumentPackageConfig(scope = "", subScope = "") {
+  const normalizedSubScope = String(subScope == null ? "" : subScope).trim();
+  if (!normalizedSubScope) {
+    return requestDocumentPackageJson(DOCUMENT_PACKAGE_ENDPOINTS.config);
+  }
+  return requestDocumentPackageJson(endpointUrl(DOCUMENT_PACKAGE_ENDPOINTS.config, {
+    scope,
+    sub_scope: normalizedSubScope
+  }));
 }
 
-export function getPackageDocuments(scope) {
-  return requestDocumentPackageJson(endpointUrl(DOCUMENT_PACKAGE_ENDPOINTS.documents, { scope }));
+export function getPackageDocuments(scope, subScope = "") {
+  return requestDocumentPackageJson(endpointUrl(DOCUMENT_PACKAGE_ENDPOINTS.documents, {
+    scope,
+    sub_scope: subScope
+  }));
 }
 
 export function getReturnedDocumentPackages(scope) {

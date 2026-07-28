@@ -324,7 +324,8 @@ def assert_report_module(page: Page) -> None:
             const response = payload => ({
               ok: true,
               status: 200,
-              json: async () => payload
+              json: async () => payload,
+              text: async () => JSON.stringify(payload)
             });
             if (url.pathname.endsWith('/manifest.json')) {
               return response({
@@ -1049,6 +1050,8 @@ def assert_subscope_selection_contribution(page: Page) -> None:
           root.querySelector(
             '[data-docs-viewer-action="prepare-document-package"]'
           ).click();
+          await Promise.resolve();
+          await Promise.resolve();
           const preparedState = {
             ...selectionSnapshot(),
             prepared
@@ -1228,7 +1231,8 @@ def assert_manage_report_bridge(page: Page) -> None:
             const response = payload => ({
               ok: true,
               status: 200,
-              json: async () => payload
+              json: async () => payload,
+              text: async () => JSON.stringify(payload)
             });
             if (url.pathname === '/reports-registry.json') {
               return response({
@@ -1274,6 +1278,66 @@ def assert_manage_report_bridge(page: Page) -> None:
                   {
                     doc_id: 'no-status-doc',
                     title: 'No status',
+                    viewable: true
+                  }
+                ]
+              });
+            }
+            if (url.pathname === '/docs/packages/config') {
+              return response({
+                ok: true,
+                scope: 'studio',
+                sub_scope: 'tags',
+                workspace: { available: true, message: '' },
+                scopes: [{ scope: 'studio', label: 'Studio' }],
+                profiles: [{
+                  profile_id: 'document-content',
+                  label: 'Document content',
+                  supports_return_import: false,
+                  description: 'Flat child collection export.',
+                  target_format: 'jsonl',
+                  supported_target_formats: ['jsonl'],
+                  content_format: 'markdown',
+                  supported_content_formats: ['markdown'],
+                  record_shape: 'document_rows',
+                  selection: {
+                    include_descendants: false,
+                    include_non_viewable: true,
+                    supports_include_non_viewable: true,
+                    supports_missing_summary_only: true,
+                    default_missing_summary_only: false
+                  },
+                  limits: { max_documents: null },
+                  external_context: {
+                    task: 'Review selected child records',
+                    response_guidance: 'Return observations',
+                    field_descriptions: { doc_id: 'Stable document id' }
+                  },
+                  document_fields: [{ output_path: 'doc_id' }]
+                }]
+              });
+            }
+            if (url.pathname === '/docs/packages/documents') {
+              return response({
+                ok: true,
+                scope: 'studio',
+                sub_scope: 'tags',
+                flat_collection: true,
+                records: [
+                  {
+                    doc_id: 'detail-doc',
+                    parent_id: '',
+                    title: 'Detail',
+                    summary: '',
+                    selectable: true,
+                    viewable: false
+                  },
+                  {
+                    doc_id: 'no-status-doc',
+                    parent_id: '',
+                    title: 'No status',
+                    summary: '',
+                    selectable: true,
                     viewable: true
                   }
                 ]
@@ -1361,20 +1425,6 @@ def assert_manage_report_bridge(page: Page) -> None:
             viewerScope: 'studio'
           };
           await bridge.mountDocsViewerManageDocumentExtras(context);
-          content.querySelector('[data-report-subdoc-id="detail-doc"] button').click();
-          await new Promise(resolve => {
-            const poll = () => {
-              if (states.some(state => (
-                state.state === 'detail'
-                && state.subdocTarget?.doc_id === 'detail-doc'
-              ))) {
-                resolve();
-                return;
-              }
-              setTimeout(poll, 0);
-            };
-            poll();
-          });
           const waitFor = predicate => new Promise(resolve => {
             const poll = () => {
               if (predicate()) {
@@ -1385,6 +1435,43 @@ def assert_manage_report_bridge(page: Page) -> None:
             };
             poll();
           });
+          content.querySelector('[data-docs-subscope-actions]').click();
+          content.querySelector(
+            '[data-docs-subscope-selection-checkbox="detail-doc"]'
+          ).click();
+          const prepareButton = content.querySelector(
+            '[data-docs-viewer-action="prepare-document-package"]'
+          );
+          prepareButton.click();
+          await waitFor(() => document.querySelector(
+            '[data-role="docs-viewer-management-modal"]'
+          ));
+          const prepareModal = document.querySelector(
+            '[data-role="docs-viewer-management-modal"]'
+          );
+          const packageState = {
+            checkedIds: Array.from(content.querySelectorAll(
+              '[data-docs-subscope-selection-checkbox]:checked'
+            )).map(checkbox => checkbox.dataset.docsSubscopeSelectionCheckbox),
+            descendantsHidden: prepareModal.querySelector(
+              '[data-package-include-descendants-field]'
+            )?.hidden ?? null,
+            requests: requests.filter(path => path.startsWith('/docs/packages/'))
+          };
+          prepareModal.querySelector('[data-role="modal-cancel"]').click();
+          await waitFor(() => !document.querySelector(
+            '[data-role="docs-viewer-management-modal"]'
+          ));
+          await waitFor(() => !prepareButton.disabled);
+          packageState.checkedIdsAfterCancel = Array.from(content.querySelectorAll(
+            '[data-docs-subscope-selection-checkbox]:checked'
+          )).map(checkbox => checkbox.dataset.docsSubscopeSelectionCheckbox);
+
+          content.querySelector('[data-report-subdoc-id="detail-doc"] button').click();
+          await waitFor(() => states.some(state => (
+            state.state === 'detail'
+            && state.subdocTarget?.doc_id === 'detail-doc'
+          )));
           await waitFor(() => {
             const button = content.querySelector('[data-docs-subscope-delete="true"]');
             return button && !button.disabled;
@@ -1504,7 +1591,8 @@ def assert_manage_report_bridge(page: Page) -> None:
             failedInventory,
             historyNavigation: { backSubdoc, forwardSubdoc },
             historyLengthBeforeDelete,
-            latestAfterNonReport: states.at(-1)
+            latestAfterNonReport: states.at(-1),
+            packageState
           };
         }"""
     )
@@ -1512,6 +1600,19 @@ def assert_manage_report_bridge(page: Page) -> None:
     if mounted.get("importError"):
         raise AssertionError(f"manage report bridge import failed: {mounted['importError']}")
 
+    expected_package_state = {
+        "checkedIds": ["detail-doc"],
+        "checkedIdsAfterCancel": ["detail-doc"],
+        "descendantsHidden": True,
+        "requests": [
+            "/docs/packages/config?scope=studio&sub_scope=tags",
+            "/docs/packages/documents?scope=studio&sub_scope=tags",
+        ],
+    }
+    if mounted["packageState"] != expected_package_state:
+        raise AssertionError(
+            f"unexpected sub-scope package bridge state: {mounted['packageState']!r}"
+        )
     inventory_requests = [
         request
         for request in mounted["beforeClear"]["requests"]

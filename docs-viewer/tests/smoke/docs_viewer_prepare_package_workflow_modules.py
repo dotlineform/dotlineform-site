@@ -105,6 +105,15 @@ def assert_prepare_model(page: Page) -> None:
                 missingSummaryOnly: true,
                 includeNonViewable: false
             });
+            const childTreeProjection = model.projectDocumentPackageSelection({
+                profile: treeProfile,
+                documents,
+                checkedDocIds: ['root'],
+                flatCollection: true,
+                includeDescendants: true,
+                missingSummaryOnly: true,
+                includeNonViewable: false
+            });
             let ineligibleMessage = '';
             try {
                 model.createDocumentPackagePrepareRequest({
@@ -125,6 +134,7 @@ def assert_prepare_model(page: Page) -> None:
                 filteredProjection,
                 limitedProjection,
                 treeProjection,
+                childTreeProjection,
                 exactRequest: model.createDocumentPackagePrepareRequest({
                     scope: 'STUDIO',
                     profile: contentProfile,
@@ -142,6 +152,15 @@ def assert_prepare_model(page: Page) -> None:
                     effectiveDocIds: treeProjection.docIds,
                     missingSummaryOnly: treeProjection.missingSummaryOnly,
                     includeNonViewable: treeProjection.includeNonViewable
+                }),
+                childTreeRequest: model.createDocumentPackagePrepareRequest({
+                    scope: 'STUDIO',
+                    subScope: 'TAGS',
+                    profile: treeProfile,
+                    documents,
+                    effectiveDocIds: childTreeProjection.docIds,
+                    missingSummaryOnly: childTreeProjection.missingSummaryOnly,
+                    includeNonViewable: childTreeProjection.includeNonViewable
                 }),
                 context: model.documentPackageExternalContext(contentProfile),
                 missingContext: model.documentPackageExternalContextMissingValues(contentProfile, {
@@ -199,6 +218,19 @@ def assert_prepare_model(page: Page) -> None:
             "excludedByLimitCount": 0,
             "includedNonViewableCount": 1,
         },
+        "childTreeProjection": {
+            "docIds": ["root"],
+            "includeDescendants": False,
+            "missingSummaryOnly": False,
+            "includeNonViewable": True,
+            "supportsMissingSummaryOnly": False,
+            "supportsIncludeNonViewable": False,
+            "total": 1,
+            "excludedNonViewableCount": 0,
+            "excludedWithSummaryCount": 0,
+            "excludedByLimitCount": 0,
+            "includedNonViewableCount": 0,
+        },
         "exactRequest": {
             "scope": "studio",
             "profile_id": "document-content",
@@ -223,6 +255,19 @@ def assert_prepare_model(page: Page) -> None:
             "dry_run": False,
             "activity_context": {},
         },
+        "childTreeRequest": {
+            "scope": "studio",
+            "sub_scope": "tags",
+            "profile_id": "document-tree",
+            "doc_ids": ["root"],
+            "select_all": False,
+            "missing_summary_only": False,
+            "include_non_viewable": True,
+            "target_format": "json",
+            "content_format": "",
+            "dry_run": False,
+            "activity_context": {},
+        },
         "context": {
             "task": "Review",
             "response_guidance": "Return changes",
@@ -233,6 +278,42 @@ def assert_prepare_model(page: Page) -> None:
     }
     if result != expected:
         raise AssertionError(f"unexpected Prepare package model contract: {result!r}")
+
+
+def assert_package_client_collection_queries(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const client = await import(
+                '/docs-viewer/runtime/js/packages/document-package-client.js'
+            );
+            const requests = [];
+            const originalFetch = window.fetch;
+            window.fetch = async input => {
+                requests.push(String(input));
+                return {
+                    ok: true,
+                    status: 200,
+                    text: async () => JSON.stringify({ ok: true })
+                };
+            };
+            try {
+                await client.getDocumentPackageConfig();
+                await client.getDocumentPackageConfig('studio', 'tags');
+                await client.getPackageDocuments('studio', 'tags');
+            } finally {
+                window.fetch = originalFetch;
+            }
+            return requests.map(value => {
+                const url = new URL(value, window.location.href);
+                return url.pathname + url.search;
+            });
+        }"""
+    )
+    assert result == [
+        "/docs/packages/config",
+        "/docs/packages/config?scope=studio&sub_scope=tags",
+        "/docs/packages/documents?scope=studio&sub_scope=tags",
+    ]
 
 
 def assert_prepare_is_not_an_app_action(page: Page) -> None:
@@ -588,6 +669,147 @@ def exercise_cancel(page: Page, timeout_ms: int) -> None:
         raise AssertionError(f"cancelled workflow changed state: {result!r}")
 
 
+def exercise_subscope_success(page: Page, timeout_ms: int) -> None:
+    page.evaluate(
+        """async () => {
+            const workflow = await import(
+                '/docs-viewer/runtime/js/packages/document-package-prepare-workflow.js'
+            );
+            document.body.innerHTML = (
+                '<main class="docsViewer" id="docsViewerRoot">'
+                + '<button id="restoreFocus">Prepare package</button></main>'
+            );
+            const profile = {
+                profile_id: 'document-tree',
+                label: 'Document tree',
+                supports_return_import: false,
+                description: 'Flat child collection export.',
+                target_format: 'json',
+                supported_target_formats: ['json'],
+                content_format: '',
+                supported_content_formats: [],
+                record_shape: 'document_tree',
+                selection: {
+                    include_descendants: false,
+                    include_non_viewable: true,
+                    supports_include_non_viewable: false,
+                    supports_missing_summary_only: false,
+                    default_missing_summary_only: false
+                },
+                limits: { max_documents: null },
+                external_context: {
+                    task: 'Review child records',
+                    response_guidance: 'Return observations',
+                    field_descriptions: {}
+                },
+                document_fields: []
+            };
+            const documents = [
+                { doc_id: 'root', parent_id: '', title: 'Root', selectable: true, viewable: true },
+                { doc_id: 'child', parent_id: 'root', title: 'Child', selectable: true, viewable: true },
+                { doc_id: 'sibling', parent_id: '', title: 'Sibling', selectable: true, viewable: false }
+            ];
+            window.subscopePrepareFixture = {
+                calls: [],
+                selection: ['root', 'sibling']
+            };
+            const client = {
+                getConfig: async (scope, subScope) => {
+                    window.subscopePrepareFixture.calls.push({
+                        method: 'config',
+                        scope,
+                        subScope
+                    });
+                    return {
+                        ok: true,
+                        scope: 'studio',
+                        sub_scope: 'tags',
+                        workspace: { available: true, message: '' },
+                        scopes: [{ scope: 'studio', label: 'Studio' }],
+                        profiles: [profile]
+                    };
+                },
+                getDocuments: async (scope, subScope) => {
+                    window.subscopePrepareFixture.calls.push({
+                        method: 'documents',
+                        scope,
+                        subScope
+                    });
+                    return {
+                        ok: true,
+                        scope: 'studio',
+                        sub_scope: 'tags',
+                        flat_collection: true,
+                        records: documents
+                    };
+                },
+                saveContext: async () => {
+                    throw new Error('unchanged context must not be saved');
+                },
+                prepare: async payload => {
+                    window.subscopePrepareFixture.calls.push({
+                        method: 'prepare',
+                        payload
+                    });
+                    return {
+                        ok: true,
+                        summary_text: 'Prepared child collection.',
+                        counts: {
+                            selected: payload.doc_ids.length,
+                            exported: payload.doc_ids.length,
+                            failed: 0,
+                            skipped: 0,
+                            truncated: 0
+                        }
+                    };
+                }
+            };
+            window.subscopePreparePromise = workflow.openDocumentPackagePrepareWorkflow({
+                root: document.querySelector('#docsViewerRoot'),
+                scope: 'studio',
+                subScope: 'tags',
+                checkedDocIds: window.subscopePrepareFixture.selection.slice(),
+                restoreFocus: document.querySelector('#restoreFocus'),
+                client
+            }).then(result => {
+                window.subscopePrepareFixture.result = result;
+                return result;
+            });
+        }"""
+    )
+    page.wait_for_selector('[data-role="docs-viewer-management-modal"]', timeout=timeout_ms)
+    descendants = page.locator("[data-package-include-descendants]")
+    descendants_field = page.locator("[data-package-include-descendants-field]")
+    if not descendants_field.is_hidden() or not descendants.is_disabled() or descendants.is_checked():
+        raise AssertionError("child package workflow exposed descendant expansion")
+    modal_text = page.locator('[data-role="docs-viewer-management-modal"]').inner_text()
+    if "Total documents to be prepared: 2" not in modal_text:
+        raise AssertionError(f"child workflow expanded or dropped the exact selection: {modal_text!r}")
+    page.locator('[data-role="modal-primary"]').click()
+    page.wait_for_selector(
+        '[data-role="docs-viewer-management-modal"] h2:text("Document package prepared")',
+        timeout=timeout_ms,
+    )
+    page.locator('[data-role="modal-primary"]').click()
+    result = page.evaluate(
+        """async () => {
+            await window.subscopePreparePromise;
+            return window.subscopePrepareFixture;
+        }"""
+    )
+    assert result["calls"][:2] == [
+        {"method": "config", "scope": "studio", "subScope": "tags"},
+        {"method": "documents", "scope": "studio", "subScope": "tags"},
+    ]
+    request = result["calls"][2]["payload"]
+    assert request["scope"] == "studio"
+    assert request["sub_scope"] == "tags"
+    assert request["doc_ids"] == ["root", "sibling"]
+    assert request["select_all"] is False
+    assert result["selection"] == ["root", "sibling"]
+    assert result["result"]["ok"] is True
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--site-root", type=Path, default=Path.cwd())
@@ -603,11 +825,13 @@ def main(argv: list[str] | None = None) -> int:
             page.on("pageerror", lambda exc: errors.append(str(exc)))
             setup_page(page, base_url, args.timeout_ms)
             assert_prepare_model(page)
+            assert_package_client_collection_queries(page)
             assert_prepare_is_not_an_app_action(page)
             exercise_success(page, args.timeout_ms)
             exercise_failure(page, args.timeout_ms)
             exercise_zero_target(page, args.timeout_ms)
             exercise_cancel(page, args.timeout_ms)
+            exercise_subscope_success(page, args.timeout_ms)
             browser.close()
             if errors:
                 raise AssertionError(f"page errors: {errors!r}")

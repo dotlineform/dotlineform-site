@@ -28,6 +28,7 @@ from docs_source_model import slugify
 
 COLLECTION_SUFFIXES = {".json", ".jsonl"}
 COLLECTION_SOURCE_FORMAT = "data_sharing_documents"
+EXPORT_ONLY_COLLECTION_SOURCE_FORMAT = "data_sharing_documents_export_only"
 SUPPORTED_COLLECTION_PROFILE_IDS = {COMPACT_PROFILE_ID, FULL_SOURCE_PROFILE_ID}
 BLOCKING_PACKAGE_ERRORS = (
     "must not supply both canonical_markdown and content",
@@ -116,12 +117,14 @@ def document_package_source_format(
     profile_id = _clean_text(
         trusted_metadata.get("profile_id") or trusted_metadata.get("config_id")
     )
-    if (
-        _clean_text(trusted_metadata.get("adapter_id")) != "documents"
-        or trusted_metadata.get("supports_return_import") is False
-        or profile_id not in SUPPORTED_COLLECTION_PROFILE_IDS
-    ):
+    if _clean_text(trusted_metadata.get("adapter_id")) != "documents":
         return ""
+    if _clean_text(trusted_metadata.get("sub_scope")):
+        return EXPORT_ONLY_COLLECTION_SOURCE_FORMAT
+    if profile_id not in SUPPORTED_COLLECTION_PROFILE_IDS:
+        return ""
+    if trusted_metadata.get("supports_return_import") is False:
+        return EXPORT_ONLY_COLLECTION_SOURCE_FORMAT
     return COLLECTION_SOURCE_FORMAT
 
 

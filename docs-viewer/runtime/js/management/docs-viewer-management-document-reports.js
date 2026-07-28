@@ -126,6 +126,50 @@ function managementModalRoot(settings) {
     : null;
 }
 
+var preparePackageWorkflowRequest = null;
+
+function loadPreparePackageWorkflow() {
+  if (preparePackageWorkflowRequest) return preparePackageWorkflowRequest;
+  preparePackageWorkflowRequest = import("../packages/document-package-prepare-workflow.js")
+    .then(function (module) {
+      if (!module || typeof module.openDocumentPackagePrepareWorkflow !== "function") {
+        throw new Error("Prepare package workflow is unavailable.");
+      }
+      return module;
+    })
+    .catch(function (error) {
+      preparePackageWorkflowRequest = null;
+      throw error;
+    });
+  return preparePackageWorkflowRequest;
+}
+
+function openSubScopePreparePackage(settings, request, context) {
+  var actionContext = context || {};
+  return loadPreparePackageWorkflow().then(function (module) {
+    return module.openDocumentPackagePrepareWorkflow({
+      root: managementModalRoot(settings),
+      scope: cleanString(request && request.scope).toLowerCase(),
+      subScope: cleanString(request && request.sub_scope).toLowerCase(),
+      checkedDocIds: Array.isArray(request && request.doc_ids)
+        ? request.doc_ids.slice()
+        : [],
+      restoreFocus: actionContext.restoreFocus,
+      activityContext: {
+        page_id: "docs-manage",
+        action_id: "prepare-document-package",
+        route: "/docs/",
+        control_id: "docsViewerSubscopePreparePackageButton",
+        control_selector: "#docsViewerSubscopePreparePackageButton",
+        correlation_id: "prepare-document-package:" + String(Date.now())
+      },
+      callbacks: {
+        setMessage: settings.setStatus
+      }
+    });
+  });
+}
+
 export function mountDocsViewerManageDocumentExtras(context) {
   var settings = context || {};
   var payload = settings.payload || {};
@@ -187,6 +231,11 @@ export function mountDocsViewerManageDocumentExtras(context) {
         publishReportState(settings, parent, subScope, event);
       }
     },
+    onPreparePackage: reportManagementBaseUrl
+      ? function (request, context) {
+          return openSubScopePreparePackage(settings, request, context);
+        }
+      : null,
     root: managementModalRoot(settings),
     setStatus: settings.setStatus,
     uiStatusByValue: scopeConfig.uiStatusByValue instanceof Map

@@ -24,6 +24,7 @@ from docs_import_document_package_collection import (
 )
 from docs_import_document_package import (
     COLLECTION_SOURCE_FORMAT,
+    EXPORT_ONLY_COLLECTION_SOURCE_FORMAT,
     document_package_source_format,
 )
 from docs_import_markdown_package import retarget_markdown_package_media_plans
@@ -81,17 +82,18 @@ def handle_import_source_files(repo_root: Path) -> Dict[str, Any]:
             "files": [],
         }
     workspace_paths = configured_workspace_paths(repo_root)
-    registered_source_formats = {
-        path.name: source_format
-        for path in workspace_paths.import_staging.iterdir()
-        if (
-            source_format := document_package_source_format(
-                repo_root,
-                path,
-                metadata_root=workspace_paths.meta,
-            )
+    registered_source_formats: dict[str, str] = {}
+    blocked_package_filenames: set[str] = set()
+    for path in workspace_paths.import_staging.iterdir():
+        source_format = document_package_source_format(
+            repo_root,
+            path,
+            metadata_root=workspace_paths.meta,
         )
-    }
+        if source_format == EXPORT_ONLY_COLLECTION_SOURCE_FORMAT:
+            blocked_package_filenames.add(path.name)
+        elif source_format:
+            registered_source_formats[path.name] = source_format
     files = list_staged_import_source_files(
         workspace_paths.import_staging,
         workspace_paths.root,
@@ -102,7 +104,11 @@ def handle_import_source_files(repo_root: Path) -> Dict[str, Any]:
         "available": True,
         "staging_root": marker_path(workspace_paths.import_staging, workspace_root=workspace_paths.root),
         "message": "",
-        "files": files,
+        "files": [
+            record
+            for record in files
+            if str(record.get("filename") or "") not in blocked_package_filenames
+        ],
     }
 
 
@@ -127,6 +133,10 @@ def handle_import_source(
         source_path,
         metadata_root=metadata_root,
     )
+    if source_format == EXPORT_ONLY_COLLECTION_SOURCE_FORMAT:
+        raise ValueError(
+            "Export-only document packages cannot enter Docs Import."
+        )
     if source_format == COLLECTION_SOURCE_FORMAT:
         if not (dry_run or preview_only):
             return apply_document_package_collection(

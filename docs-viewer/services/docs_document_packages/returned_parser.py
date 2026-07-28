@@ -157,7 +157,10 @@ def parse_staged_import(
         if isinstance(item, dict)
     }
     if raw_rows and not supports_return_import:
-        if "export_only_profile" not in issue_codes:
+        if (
+            not normalize_text(package_metadata.get("sub_scope"))
+            and "export_only_profile" not in issue_codes
+        ):
             report["issues"].append(
                 issue(
                     "error",

@@ -43,9 +43,20 @@ def document_selectable_record(doc: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
-def selectable_document_records(repo_root: Path, *, scope: str, selection_model: str) -> Dict[str, Any]:
+def selectable_document_records(
+    repo_root: Path,
+    *,
+    scope: str,
+    selection_model: str,
+    sub_scope: str = "",
+) -> Dict[str, Any]:
     normalized_scope = source_model.normalize_scope(scope)
-    docs = source_context.load_document_package_source_records(repo_root, normalized_scope)
+    normalized_sub_scope = str(sub_scope or "").strip().lower()
+    docs = source_context.load_document_package_source_records(
+        repo_root,
+        normalized_scope,
+        normalized_sub_scope,
+    )
     records = [
         document_selectable_record(
             {
@@ -59,7 +70,7 @@ def selectable_document_records(repo_root: Path, *, scope: str, selection_model:
         )
         for item in docs
     ]
-    return {
+    payload: Dict[str, Any] = {
         "ok": True,
         "scope": normalized_scope,
         "selection_model": selection_model,
@@ -70,6 +81,14 @@ def selectable_document_records(repo_root: Path, *, scope: str, selection_model:
             "scope": normalized_scope,
         },
     }
+    if normalized_sub_scope:
+        payload.update({
+            "sub_scope": normalized_sub_scope,
+            "flat_collection": True,
+        })
+        payload["source"]["kind"] = "docs_sub_scope_source"
+        payload["source"]["sub_scope"] = normalized_sub_scope
+    return payload
 
 
 def build_document_package(
@@ -88,8 +107,10 @@ def build_document_package(
     content_format: str,
     output_root: Path,
     metadata_root: Path,
+    sub_scope: str = "",
 ) -> Dict[str, Any]:
     normalized_scope = source_model.normalize_scope(scope)
+    normalized_sub_scope = str(sub_scope or "").strip().lower()
     if not config_id:
         raise ValueError("config_id is required")
     if raw_doc_ids is None:
@@ -106,6 +127,7 @@ def build_document_package(
         repo_root=repo_root,
         config_id=config_id,
         scope=normalized_scope,
+        sub_scope=normalized_sub_scope,
         data_domain=data_domain,
         selected_doc_ids=doc_ids,
         select_all=select_all,

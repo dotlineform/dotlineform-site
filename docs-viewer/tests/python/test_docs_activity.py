@@ -160,6 +160,38 @@ def test_docs_export_activity_writes_compact_doc_ids() -> None:
         assert payload["activity_context"]["control_id"] == "docsViewerManagePreparePackageButton"
 
 
+def test_sub_scope_export_activity_uses_effective_package_ids_and_collection_details() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        repo_root = Path(tmp)
+        write_activity_contract(repo_root)
+        body = {
+            **export_body(),
+            "scope": "analysis",
+            "sub_scope": "tags",
+            "doc_ids": ["requested-a", "filtered-b"],
+        }
+        payload = {
+            "ok": True,
+            "output_written": True,
+            "export_id": "ds_20260728T120000Z",
+            "scope": "analysis",
+            "sub_scope": "tags",
+            "profile_id": "document-tree",
+            "selected_doc_ids": ["requested-a"],
+            "output_file": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/export.jsonl",
+            "counts": {"exported": 1, "failed": 0},
+            "issue_counts": {"warnings": 0},
+        }
+
+        docs_activity.maybe_attach_docs_export_activity(repo_root, body, payload, dry_run=False)
+
+        entry = activity_entries(repo_root)[0]
+        assert entry["record_groups"]["docs"]["sample_ids"] == ["requested-a"]
+        assert "Collection: analysis/tags." in entry["detail_items"]
+        assert "Profile: document-tree." in entry["detail_items"]
+        assert "Prepared document IDs: requested-a." in entry["detail_items"]
+
+
 def import_source_body() -> dict[str, object]:
     return {
         "staged_filename": "import-me.html",
