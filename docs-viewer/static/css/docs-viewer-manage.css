@@ -53,7 +53,8 @@
   display: inline-flex;
 }
 
-.docsViewer__indexActionsButton{
+.docsViewer__indexActionsButton,
+.docsViewerReport__subscopeActionsButton{
   appearance: none;
   display: inline-flex;
   width: 1.8rem;
@@ -70,13 +71,22 @@
 }
 
 .docsViewer__indexActionsButton:hover,
-.docsViewer__indexActionsButton:focus-visible{
+.docsViewer__indexActionsButton:focus-visible,
+.docsViewerReport__subscopeActionsButton:hover:not(:disabled),
+.docsViewerReport__subscopeActionsButton:focus-visible{
   background: var(--docs-viewer-panel-2);
 }
 
-.docsViewer__indexActionsButton:focus-visible{
+.docsViewer__indexActionsButton:focus-visible,
+.docsViewerReport__subscopeActionsButton:focus-visible{
   outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: 1px;
+}
+
+.docsViewerReport__subscopeActionsButton:disabled{
+  color: var(--docs-viewer-disabled);
+  cursor: default;
+  opacity: 1;
 }
 
 .docsViewer__indexActionsMenu{

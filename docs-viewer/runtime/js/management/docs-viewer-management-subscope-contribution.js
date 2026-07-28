@@ -263,12 +263,14 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
     var actionsHost = documentRef.createElement("div");
     actionsHost.className = "docsViewer__actionsMenuHost docsViewerReport__subscopeActionsHost";
     var actionsButton = documentRef.createElement("button");
-    actionsButton.className = "docsViewerReport__button";
+    actionsButton.className = "docsViewerReport__subscopeActionsButton";
     actionsButton.type = "button";
     actionsButton.dataset.docsSubscopeActions = "true";
     actionsButton.setAttribute("aria-haspopup", "menu");
     actionsButton.setAttribute("aria-expanded", "false");
-    actionsButton.textContent = "Actions";
+    actionsButton.setAttribute("aria-label", "Actions");
+    actionsButton.title = "Actions";
+    actionsButton.textContent = "🔧";
     var menu = documentRef.createElement("div");
     menu.className = "docsViewer__actionsMenu docsViewerReport__subscopeActionsMenu";
     menu.setAttribute("role", "menu");
