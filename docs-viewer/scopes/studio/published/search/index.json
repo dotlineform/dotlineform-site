@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f87ee58de1d8a1427631528318cb76e4",
-    "generated_at_utc": "2026-07-28T14:35:26Z",
-    "count": 226
+    "version": "blake2b-b7175357208b1e7a99413f9174bb8166",
+    "generated_at_utc": "2026-07-28T16:47:00Z",
+    "count": 227
   },
   "entries": [
     {
@@ -3997,26 +3997,26 @@
       "kind": "doc",
       "title": "Sub-Scope Index",
       "href": "/docs/?scope=studio&doc=d-20260728-113139-285eae",
-      "last_updated": "2026-07-28 15:34:19",
+      "last_updated": "2026-07-28 17:32:27",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-28 15:34:19 • Roadmap",
+      "display_meta": "2026-07-28 17:32:27 • Roadmap",
       "search_terms": [
         "sub-scope index",
         "sub",
         "scope",
         "index",
         "roadmap",
-        "2026-07-28 15:34:19",
+        "2026-07-28 17:32:27",
         "2026",
         "07",
         "28",
-        "15",
-        "34",
-        "19",
+        "17",
+        "32",
+        "27",
         "d-20260728-113139-285eae"
       ],
-      "search_text": "sub-scope index sub scope index roadmap 2026-07-28 15:34:19 2026 07 28 15 34 19 d-20260728-113139-285eae"
+      "search_text": "sub-scope index sub scope index roadmap 2026-07-28 17:32:27 2026 07 28 17 32 27 d-20260728-113139-285eae"
     },
     {
       "id": "d-20260728-113139-95a885",
@@ -4052,10 +4052,10 @@
       "kind": "doc",
       "title": "Sub-Scope Detail Delete Delivery",
       "href": "/docs/?scope=studio&doc=d-20260728-115825-e2561b",
-      "last_updated": "2026-07-28 15:34:19",
+      "last_updated": "2026-07-28 17:24:58",
       "parent_id": "d-20260728-113139-285eae",
       "parent_title": "Sub-Scope Index",
-      "display_meta": "2026-07-28 15:34:19 • Sub-Scope Index",
+      "display_meta": "2026-07-28 17:24:58 • Sub-Scope Index",
       "search_terms": [
         "sub-scope detail delete delivery",
         "sub",
@@ -4065,16 +4065,16 @@
         "delivery",
         "sub-scope index",
         "index",
-        "2026-07-28 15:34:19",
+        "2026-07-28 17:24:58",
         "2026",
         "07",
         "28",
-        "15",
-        "34",
-        "19",
+        "17",
+        "24",
+        "58",
         "d-20260728-115825-e2561b"
       ],
-      "search_text": "sub-scope detail delete delivery sub scope detail delete delivery sub-scope index index 2026-07-28 15:34:19 2026 07 28 15 34 19 d-20260728-115825-e2561b"
+      "search_text": "sub-scope detail delete delivery sub scope detail delete delivery sub-scope index index 2026-07-28 17:24:58 2026 07 28 17 24 58 d-20260728-115825-e2561b"
     },
     {
       "id": "d-20260728-113139-763354",
@@ -4108,10 +4108,10 @@
       "kind": "doc",
       "title": "Sub-Scope Package Preparation Delivery",
       "href": "/docs/?scope=studio&doc=d-20260728-115825-ae1461",
-      "last_updated": "2026-07-28 14:19:51",
+      "last_updated": "2026-07-28 17:32:27",
       "parent_id": "d-20260728-113139-285eae",
       "parent_title": "Sub-Scope Index",
-      "display_meta": "2026-07-28 14:19:51 • Sub-Scope Index",
+      "display_meta": "2026-07-28 17:32:27 • Sub-Scope Index",
       "search_terms": [
         "sub-scope package preparation delivery",
         "sub",
@@ -4121,16 +4121,16 @@
         "delivery",
         "sub-scope index",
         "index",
-        "2026-07-28 14:19:51",
+        "2026-07-28 17:32:27",
         "2026",
         "07",
         "28",
-        "14",
-        "19",
-        "51",
+        "17",
+        "32",
+        "27",
         "d-20260728-115825-ae1461"
       ],
-      "search_text": "sub-scope package preparation delivery sub scope package preparation delivery sub-scope index index 2026-07-28 14:19:51 2026 07 28 14 19 51 d-20260728-115825-ae1461"
+      "search_text": "sub-scope package preparation delivery sub scope package preparation delivery sub-scope index index 2026-07-28 17:32:27 2026 07 28 17 32 27 d-20260728-115825-ae1461"
     },
     {
       "id": "d-20260728-115825-41e819",
@@ -4190,6 +4190,35 @@
         "d-20260728-141505-277932"
       ],
       "search_text": "sub-scope report list filter delivery sub scope report list filter delivery sub-scope index index 2026-07-28 14:19:51 2026 07 28 14 19 51 d-20260728-141505-277932"
+    },
+    {
+      "id": "d-20260728-173227-bb7426",
+      "kind": "doc",
+      "title": "Sub-Scope Returned Package Review Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260728-173227-bb7426",
+      "last_updated": "2026-07-28 17:46:46",
+      "parent_id": "d-20260728-113139-285eae",
+      "parent_title": "Sub-Scope Index",
+      "display_meta": "2026-07-28 17:46:46 • Sub-Scope Index",
+      "search_terms": [
+        "sub-scope returned package review delivery",
+        "sub",
+        "scope",
+        "returned",
+        "package",
+        "review",
+        "delivery",
+        "sub-scope index",
+        "index",
+        "2026-07-28 17:46:46",
+        "2026",
+        "07",
+        "28",
+        "17",
+        "46",
+        "d-20260728-173227-bb7426"
+      ],
+      "search_text": "sub-scope returned package review delivery sub scope returned package review delivery sub-scope index index 2026-07-28 17:46:46 2026 07 28 17 46 d-20260728-173227-bb7426"
     },
     {
       "id": "d-20260726-211842-cc8f6c",
