@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b7175357208b1e7a99413f9174bb8166",
-    "generated_at_utc": "2026-07-28T16:47:00Z",
+    "version": "blake2b-2aa12c85b65845006ca21e86cb71b6cd",
+    "generated_at_utc": "2026-07-28T16:58:35Z",
     "count": 227
   },
   "entries": [
@@ -4108,10 +4108,10 @@
       "kind": "doc",
       "title": "Sub-Scope Package Preparation Delivery",
       "href": "/docs/?scope=studio&doc=d-20260728-115825-ae1461",
-      "last_updated": "2026-07-28 17:32:27",
+      "last_updated": "2026-07-28 17:58:09",
       "parent_id": "d-20260728-113139-285eae",
       "parent_title": "Sub-Scope Index",
-      "display_meta": "2026-07-28 17:32:27 • Sub-Scope Index",
+      "display_meta": "2026-07-28 17:58:09 • Sub-Scope Index",
       "search_terms": [
         "sub-scope package preparation delivery",
         "sub",
@@ -4121,16 +4121,16 @@
         "delivery",
         "sub-scope index",
         "index",
-        "2026-07-28 17:32:27",
+        "2026-07-28 17:58:09",
         "2026",
         "07",
         "28",
         "17",
-        "32",
-        "27",
+        "58",
+        "09",
         "d-20260728-115825-ae1461"
       ],
-      "search_text": "sub-scope package preparation delivery sub scope package preparation delivery sub-scope index index 2026-07-28 17:32:27 2026 07 28 17 32 27 d-20260728-115825-ae1461"
+      "search_text": "sub-scope package preparation delivery sub scope package preparation delivery sub-scope index index 2026-07-28 17:58:09 2026 07 28 17 58 09 d-20260728-115825-ae1461"
     },
     {
       "id": "d-20260728-115825-41e819",

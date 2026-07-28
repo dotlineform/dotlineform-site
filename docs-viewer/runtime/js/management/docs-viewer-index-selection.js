@@ -1,99 +1,49 @@
+import {
+  clearDocsViewerSelection,
+  createDocsViewerSelectionState,
+  enterDocsViewerSelection,
+  exitDocsViewerSelection,
+  normalizeDocsViewerSelectionDocIds,
+  reconcileDocsViewerSelection,
+  selectAllDocsViewerSelection,
+  selectDocsViewerSelectionRange,
+  toggleDocsViewerSelection
+} from "./docs-viewer-selection-rules.js";
+
 function normalizeDocId(value) {
   return String(value == null ? "" : value).trim();
 }
 
-function normalizeDocIds(values) {
-  var seen = new Set();
-  return (Array.isArray(values) ? values : []).map(normalizeDocId).filter(function (docId) {
-    if (!docId || seen.has(docId)) return false;
-    seen.add(docId);
-    return true;
-  });
-}
-
-function selectionState(selectionModeActive, selectedDocIds, rangeAnchorDocId) {
-  var active = Boolean(selectionModeActive);
-  return Object.freeze({
-    selectionModeActive: active,
-    selectedDocIds: Object.freeze(active ? normalizeDocIds(selectedDocIds) : []),
-    rangeAnchorDocId: active ? normalizeDocId(rangeAnchorDocId) : ""
-  });
-}
-
 export function createDocsViewerIndexSelectionState(options = {}) {
-  return selectionState(
-    options.selectionModeActive,
-    options.selectedDocIds,
-    options.rangeAnchorDocId
-  );
+  return createDocsViewerSelectionState(options);
 }
 
 export function enterDocsViewerIndexSelection(state) {
-  var current = createDocsViewerIndexSelectionState(state);
-  return selectionState(true, current.selectedDocIds, current.rangeAnchorDocId);
+  return enterDocsViewerSelection(state);
 }
 
 export function toggleDocsViewerIndexSelection(state, docId, checked) {
-  var current = createDocsViewerIndexSelectionState(state);
-  var normalizedDocId = normalizeDocId(docId);
-  if (!current.selectionModeActive || !normalizedDocId) return current;
-
-  var nextIds = current.selectedDocIds.slice();
-  var currentIndex = nextIds.indexOf(normalizedDocId);
-  var shouldCheck = typeof checked === "boolean" ? checked : currentIndex === -1;
-  if (shouldCheck && currentIndex === -1) nextIds.push(normalizedDocId);
-  if (!shouldCheck && currentIndex !== -1) nextIds.splice(currentIndex, 1);
-  return selectionState(true, nextIds, normalizedDocId);
+  return toggleDocsViewerSelection(state, docId, checked);
 }
 
 export function selectDocsViewerIndexSelectionRange(state, docId, visibleDocIds) {
-  var current = createDocsViewerIndexSelectionState(state);
-  var normalizedDocId = normalizeDocId(docId);
-  var visibleIds = normalizeDocIds(visibleDocIds);
-  if (!current.selectionModeActive || !normalizedDocId || visibleIds.indexOf(normalizedDocId) === -1) {
-    return current;
-  }
-
-  var anchorIndex = visibleIds.indexOf(current.rangeAnchorDocId);
-  if (anchorIndex === -1) {
-    return toggleDocsViewerIndexSelection(current, normalizedDocId);
-  }
-
-  var docIndex = visibleIds.indexOf(normalizedDocId);
-  var rangeStart = Math.min(anchorIndex, docIndex);
-  var rangeEnd = Math.max(anchorIndex, docIndex);
-  var nextIds = current.selectedDocIds.slice();
-  visibleIds.slice(rangeStart, rangeEnd + 1).forEach(function (visibleDocId) {
-    if (nextIds.indexOf(visibleDocId) === -1) nextIds.push(visibleDocId);
-  });
-  return selectionState(true, nextIds, current.rangeAnchorDocId);
+  return selectDocsViewerSelectionRange(state, docId, visibleDocIds);
 }
 
 export function clearDocsViewerIndexSelection(state) {
-  var current = createDocsViewerIndexSelectionState(state);
-  return selectionState(current.selectionModeActive, [], "");
+  return clearDocsViewerSelection(state);
 }
 
 export function selectAllDocsViewerIndexSelection(state, eligibleDocIds) {
-  var current = createDocsViewerIndexSelectionState(state);
-  if (!current.selectionModeActive) return current;
-  return selectionState(true, eligibleDocIds, "");
+  return selectAllDocsViewerSelection(state, eligibleDocIds);
 }
 
 export function exitDocsViewerIndexSelection() {
-  return selectionState(false, [], "");
+  return exitDocsViewerSelection();
 }
 
 export function reconcileDocsViewerIndexSelection(state, eligibleDocIds) {
-  var current = createDocsViewerIndexSelectionState(state);
-  if (!current.selectionModeActive) return current;
-
-  var eligible = new Set(normalizeDocIds(eligibleDocIds));
-  return selectionState(
-    true,
-    current.selectedDocIds.filter(function (docId) { return eligible.has(docId); }),
-    eligible.has(current.rangeAnchorDocId) ? current.rangeAnchorDocId : ""
-  );
+  return reconcileDocsViewerSelection(state, eligibleDocIds);
 }
 
 export function createDocsViewerIndexSelectionOwner(options = {}) {
@@ -202,7 +152,7 @@ export function projectDocsViewerIndexSelectionRows(options = {}) {
 
 export function visibleDocsViewerIndexSelectionDocIds(nav) {
   if (!nav) return [];
-  return normalizeDocIds(Array.from(nav.querySelectorAll("[data-docs-viewer-selection-checkbox]"))
+  return normalizeDocsViewerSelectionDocIds(Array.from(nav.querySelectorAll("[data-docs-viewer-selection-checkbox]"))
     .filter(function (checkbox) {
       var gutter = checkbox.closest("[data-docs-viewer-selection-gutter]");
       return gutter && !gutter.hidden && !checkbox.hidden;

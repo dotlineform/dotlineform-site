@@ -209,6 +209,192 @@ def assert_selection_state(page: Page) -> None:
         raise AssertionError(f"unexpected index selection state contract: {result!r}")
 
 
+def assert_subscope_selection_owner(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const definitions = await import(
+                '/docs-viewer/runtime/js/management/docs-viewer-action-definitions.js'
+            );
+            const indexSelection = await import(
+                '/docs-viewer/runtime/js/management/docs-viewer-index-selection.js'
+            );
+            const subscopeSelection = await import(
+                '/docs-viewer/runtime/js/management/docs-viewer-subscope-selection.js'
+            );
+            const prepareTargets = owner => definitions.resolveDocsViewerAction(
+                'prepare-document-package',
+                definitions.createDocsViewerActionContext({
+                    activeDocId: 'parent-report',
+                    selectedDocIds: owner.selectedDocIds()
+                })
+            ).targetDocIds;
+
+            const unavailable = subscopeSelection.createDocsViewerSubscopeSelectionOwner({
+                initialState: {
+                    selectionModeActive: true,
+                    selectedDocIds: ['unowned'],
+                    rangeAnchorDocId: 'unowned'
+                }
+            });
+            const unavailableEnter = unavailable.enter();
+
+            const tags = subscopeSelection.createDocsViewerSubscopeSelectionOwner();
+            tags.notify({
+                type: 'mount',
+                collection: { scope: ' Studio ', sub_scope: ' Tags ' }
+            }, { managementContext: true });
+            const mounted = {
+                available: tags.available(),
+                collection: tags.collection()
+            };
+            const entered = tags.enter();
+            tags.toggle('b');
+            const range = tags.selectRange('d', ['a', 'b', 'c', 'd']);
+            const detailPreserved = tags.notify({
+                type: 'state',
+                state: 'detail',
+                collection: { scope: 'studio', sub_scope: 'tags' }
+            });
+            const refreshed = tags.notify({
+                type: 'refresh',
+                collection: { scope: 'studio', sub_scope: 'tags' },
+                documents: [
+                    { doc_id: 'b' },
+                    { doc_id: 'd' },
+                    { doc_id: 'other' }
+                ]
+            });
+            const selectedAll = tags.selectAll(['d', 'b', 'd']);
+            const cleared = tags.clear();
+            const done = tags.done();
+
+            const index = indexSelection.createDocsViewerIndexSelectionOwner();
+            index.enter();
+            index.toggle('index-only');
+            tags.enter();
+            tags.toggle('tag-only');
+            const notes = subscopeSelection.createDocsViewerSubscopeSelectionOwner();
+            notes.notify({
+                type: 'mount',
+                collection: { scope: 'studio', sub_scope: 'notes' }
+            }, { managementContext: true });
+            notes.enter();
+            notes.toggle('note-only');
+            const isolatedTargets = {
+                index: prepareTargets(index),
+                notes: prepareTargets(notes),
+                tags: prepareTargets(tags)
+            };
+
+            const changedCollection = tags.notify({
+                type: 'mount',
+                collection: { scope: 'studio', sub_scope: 'notes' }
+            });
+            tags.enter();
+            tags.toggle('notes-after-change');
+            const leftManagement = tags.syncContext({ managementContext: false });
+            const unavailableAfterManagementExit = tags.enter();
+            tags.syncContext({ managementContext: true });
+            tags.enter();
+            tags.toggle('before-unmount');
+            const unmounted = tags.notify({
+                type: 'unmount',
+                collection: { scope: 'studio', sub_scope: 'notes' }
+            });
+            const unavailableAfterUnmount = tags.enter();
+
+            return {
+                unavailableEnter,
+                mounted,
+                entered,
+                range,
+                detailPreserved,
+                refreshed,
+                selectedAll,
+                cleared,
+                done,
+                isolatedTargets,
+                changedCollection,
+                changedCollectionIdentity: tags.collection(),
+                leftManagement,
+                unavailableAfterManagementExit,
+                unmounted,
+                unavailableAfterUnmount,
+                indexPreserved: index.snapshot(),
+                notesPreserved: notes.snapshot(),
+                frozen: Object.isFrozen(range) && Object.isFrozen(range.selectedDocIds)
+            };
+        }"""
+    )
+    inactive = {
+        "selectionModeActive": False,
+        "selectedDocIds": [],
+        "rangeAnchorDocId": "",
+    }
+    expected = {
+        "unavailableEnter": inactive,
+        "mounted": {
+            "available": True,
+            "collection": {"scope": "studio", "sub_scope": "tags"},
+        },
+        "entered": {
+            "selectionModeActive": True,
+            "selectedDocIds": [],
+            "rangeAnchorDocId": "",
+        },
+        "range": {
+            "selectionModeActive": True,
+            "selectedDocIds": ["b", "c", "d"],
+            "rangeAnchorDocId": "b",
+        },
+        "detailPreserved": {
+            "selectionModeActive": True,
+            "selectedDocIds": ["b", "c", "d"],
+            "rangeAnchorDocId": "b",
+        },
+        "refreshed": {
+            "selectionModeActive": True,
+            "selectedDocIds": ["b", "d"],
+            "rangeAnchorDocId": "b",
+        },
+        "selectedAll": {
+            "selectionModeActive": True,
+            "selectedDocIds": ["d", "b"],
+            "rangeAnchorDocId": "",
+        },
+        "cleared": {
+            "selectionModeActive": True,
+            "selectedDocIds": [],
+            "rangeAnchorDocId": "",
+        },
+        "done": inactive,
+        "isolatedTargets": {
+            "index": ["index-only"],
+            "notes": ["note-only"],
+            "tags": ["tag-only"],
+        },
+        "changedCollection": inactive,
+        "changedCollectionIdentity": {"scope": "studio", "sub_scope": "notes"},
+        "leftManagement": inactive,
+        "unavailableAfterManagementExit": inactive,
+        "unmounted": inactive,
+        "unavailableAfterUnmount": inactive,
+        "indexPreserved": {
+            "selectionModeActive": True,
+            "selectedDocIds": ["index-only"],
+            "rangeAnchorDocId": "index-only",
+        },
+        "notesPreserved": {
+            "selectionModeActive": True,
+            "selectedDocIds": ["note-only"],
+            "rangeAnchorDocId": "note-only",
+        },
+        "frozen": True,
+    }
+    if result != expected:
+        raise AssertionError(f"unexpected sub-scope selection owner contract: {result!r}")
+
+
 def assert_action_target_isolation(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -938,6 +1124,7 @@ def main(argv: list[str] | None = None) -> int:
             page.add_style_tag(url=f"{base_url}/site/docs-viewer/static/css/docs-viewer.css")
             page.add_style_tag(url=f"{base_url}/docs-viewer/static/css/docs-viewer-manage.css")
             assert_selection_state(page)
+            assert_subscope_selection_owner(page)
             assert_manage_index_visibility_contract(page)
             assert_action_target_isolation(page)
             assert_index_actions_menu_projection(page)
