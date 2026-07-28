@@ -38,6 +38,22 @@ export function createDocsViewerMetadataParentPicker(options = {}) {
   var callbacks = options.callbacks || {};
   var optionRecords = [];
   var activeIndex = -1;
+  var selectedParentId = null;
+  var selectedParentDisplay = "";
+
+  function clearSelectedParent() {
+    selectedParentId = null;
+    selectedParentDisplay = "";
+  }
+
+  function setSelectedParent(option) {
+    if (!option) {
+      clearSelectedParent();
+      return;
+    }
+    selectedParentId = String(option.value || "");
+    selectedParentDisplay = parentOptionDisplay(option);
+  }
 
   function hidePopup() {
     optionRecords = [];
@@ -108,6 +124,9 @@ export function createDocsViewerMetadataParentPicker(options = {}) {
     refs.metadataParentPopup.innerHTML = renderMetadataParentPopupMarkup(records, {
       optionTitle: function (option) {
         return parentOptionTitle(option);
+      },
+      optionMeta: function (option) {
+        return String(option && option.value || "");
       }
     });
     refs.metadataParentPopup.hidden = false;
@@ -118,7 +137,8 @@ export function createDocsViewerMetadataParentPicker(options = {}) {
   function selectOption(index) {
     var option = optionRecords[index];
     if (!option || !refs.metadataParentInput) return;
-    refs.metadataParentInput.value = parentOptionDisplay(option);
+    setSelectedParent(option);
+    refs.metadataParentInput.value = selectedParentDisplay;
     hidePopup();
     refs.metadataParentInput.focus();
   }
@@ -130,7 +150,8 @@ export function createDocsViewerMetadataParentPicker(options = {}) {
     var currentOption = records.find(function (option) {
       return option.value === currentParentId;
     }) || records[0];
-    refs.metadataParentInput.value = parentOptionDisplay(currentOption);
+    setSelectedParent(currentOption);
+    refs.metadataParentInput.value = selectedParentDisplay;
     hidePopup();
   }
 
@@ -138,8 +159,17 @@ export function createDocsViewerMetadataParentPicker(options = {}) {
     if (!refs.metadataParentInput) return "";
     var inputValue = String(refs.metadataParentInput.value || "").trim();
     var rootLabel = PARENT_PICKER_TEXT.rootOption;
-    if (!inputValue || inputValue.toLowerCase() === rootLabel.toLowerCase()) return "";
     var records = parentOptions(callbacks, doc);
+    if (
+      selectedParentId !== null
+      && inputValue === selectedParentDisplay
+      && records.some(function (option) {
+        return String(option && option.value || "") === selectedParentId;
+      })
+    ) {
+      return selectedParentId;
+    }
+    if (!inputValue || inputValue.toLowerCase() === rootLabel.toLowerCase()) return "";
     var exactDocId = records.find(function (option) {
       return option.value && option.value === inputValue;
     });
@@ -155,7 +185,13 @@ export function createDocsViewerMetadataParentPicker(options = {}) {
     if (!refs.metadataParentInput) return;
     refs.metadataParentInput.blur();
     refs.metadataParentInput.value = "";
+    clearSelectedParent();
     hidePopup();
+  }
+
+  function handleInput(doc) {
+    clearSelectedParent();
+    renderPopup(doc);
   }
 
   function moveActive(delta) {
@@ -194,6 +230,7 @@ export function createDocsViewerMetadataParentPicker(options = {}) {
 
   return {
     dismissSuggestions: dismissSuggestions,
+    handleInput: handleInput,
     handleInputKeydown: handleInputKeydown,
     hidePopup: hidePopup,
     renderOptions: renderOptions,

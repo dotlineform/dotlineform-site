@@ -563,7 +563,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     }
     if (refs.metadataParentInput) {
       refs.metadataParentInput.addEventListener("input", function () {
-        if (metadataEditingDoc) metadataParentPicker.renderPopup(metadataEditingDoc);
+        if (metadataEditingDoc) metadataParentPicker.handleInput(metadataEditingDoc);
       });
       refs.metadataParentInput.addEventListener("blur", function () {
         metadataParentPicker.hidePopup();

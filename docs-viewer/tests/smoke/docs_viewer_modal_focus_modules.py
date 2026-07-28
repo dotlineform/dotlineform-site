@@ -355,6 +355,158 @@ def assert_metadata_status_list_selection(page: Page) -> None:
         raise AssertionError(f"Delete did not clear metadata status: {cleared_by_keyboard!r}")
 
 
+def assert_metadata_parent_duplicate_title_selection(page: Page) -> None:
+    page.evaluate(
+        """async () => {
+          const modalModule = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-modals.js'
+          );
+          const shellModule = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-shell-renderer.js'
+          );
+          document.body.innerHTML = `
+            <main class="docsViewer" id="root">
+              <div data-docs-viewer-management-shell-mount></div>
+            </main>`;
+          const root = document.querySelector('#root');
+          const refs = shellModule.renderDocsViewerManagementShell({
+            document,
+            root,
+            mount: root.querySelector('[data-docs-viewer-management-shell-mount]')
+          });
+          const doc = {
+            doc_id: 'editing-doc',
+            title: 'Editing document',
+            summary: '',
+            date: '',
+            date_display: '',
+            ui_status: 'draft',
+            parent_id: 'd-semantic-b',
+            viewable: true
+          };
+          const controller = modalModule.createDocsViewerManagementModalController({
+            refs,
+            documentIndex: {
+              docsById: new Map([[doc.doc_id, doc]])
+            },
+            management: {
+              managementBusy: false,
+              metadataEditingDocId: ''
+            },
+            scopeConfig: {
+              uiStatuses: [
+                { ui_status: 'draft', label: 'Draft', emoji: '📝' }
+              ]
+            },
+            callbacks: {
+              hideContextMenu: () => {},
+              isDocNonViewable: () => false,
+              metadataParentOptions: () => [
+                { value: '', label: 'Root' },
+                { value: 'd-semantic-a', label: 'Semantic Tokens' },
+                { value: 'd-semantic-b', label: 'Semantic Tokens' },
+                { value: 'd-other', label: 'Other parent' }
+              ],
+              onMetadataSubmit: () => {},
+              onSettingsSubmit: event => event.preventDefault(),
+              viewerScope: () => 'studio'
+            }
+          });
+          controller.wireEvents();
+          void controller.openMetadataModal(doc, {
+            target: { scope: 'studio', doc_id: doc.doc_id },
+            showParent: true
+          });
+          window.metadataParentDuplicateTitleFixture = { controller, doc, refs };
+        }"""
+    )
+    parent_input = page.locator("#docsViewerMetadataParentInput")
+    initial = page.evaluate(
+        """() => {
+          const fixture = window.metadataParentDuplicateTitleFixture;
+          return {
+            display: fixture.refs.metadataParentInput.value,
+            resolved: fixture.controller.resolveMetadataParentId(fixture.doc)
+          };
+        }"""
+    )
+    if initial != {"display": "Semantic Tokens", "resolved": "d-semantic-b"}:
+        raise AssertionError(f"current duplicate-title parent identity was lost: {initial!r}")
+
+    parent_input.fill("Semantic")
+    suggestions = page.locator("#docsViewerMetadataParentPopup [data-parent-index]")
+    suggestion_details = suggestions.evaluate_all(
+        """buttons => buttons.map(button => ({
+          title: button.querySelector('.docsViewer__parentOptionTitle')?.textContent || '',
+          meta: button.querySelector('.docsViewer__parentOptionMeta')?.textContent || ''
+        }))"""
+    )
+    expected_suggestions = [
+        {"title": "Semantic Tokens", "meta": "d-semantic-a"},
+        {"title": "Semantic Tokens", "meta": "d-semantic-b"},
+    ]
+    if suggestion_details != expected_suggestions:
+        raise AssertionError(f"duplicate-title suggestions are not distinguishable: {suggestion_details!r}")
+
+    suggestions.nth(0).click()
+    mouse_selection = page.evaluate(
+        """() => {
+          const fixture = window.metadataParentDuplicateTitleFixture;
+          return {
+            display: fixture.refs.metadataParentInput.value,
+            popupHidden: fixture.refs.metadataParentPopup.hidden,
+            resolved: fixture.controller.resolveMetadataParentId(fixture.doc)
+          };
+        }"""
+    )
+    if mouse_selection != {
+        "display": "Semantic Tokens",
+        "popupHidden": True,
+        "resolved": "d-semantic-a",
+    }:
+        raise AssertionError(f"mouse selection lost duplicate-title identity: {mouse_selection!r}")
+
+    parent_input.fill("Semantic Tokens")
+    ambiguous_manual_entry = page.evaluate(
+        """() => {
+          const fixture = window.metadataParentDuplicateTitleFixture;
+          return fixture.controller.resolveMetadataParentId(fixture.doc);
+        }"""
+    )
+    if ambiguous_manual_entry is not None:
+        raise AssertionError(
+            f"manual duplicate-title entry should remain ambiguous: {ambiguous_manual_entry!r}"
+        )
+
+    parent_input.fill("d-semantic-a")
+    exact_id_entry = page.evaluate(
+        """() => {
+          const fixture = window.metadataParentDuplicateTitleFixture;
+          return fixture.controller.resolveMetadataParentId(fixture.doc);
+        }"""
+    )
+    if exact_id_entry != "d-semantic-a":
+        raise AssertionError(f"exact parent id entry no longer resolves: {exact_id_entry!r}")
+
+    parent_input.fill("Semantic")
+    parent_input.press("ArrowDown")
+    parent_input.press("Enter")
+    keyboard_selection = page.evaluate(
+        """() => {
+          const fixture = window.metadataParentDuplicateTitleFixture;
+          return {
+            display: fixture.refs.metadataParentInput.value,
+            resolved: fixture.controller.resolveMetadataParentId(fixture.doc)
+          };
+        }"""
+    )
+    if keyboard_selection != {
+        "display": "Semantic Tokens",
+        "resolved": "d-semantic-b",
+    }:
+        raise AssertionError(f"keyboard selection lost duplicate-title identity: {keyboard_selection!r}")
+
+
 def assert_sub_scope_metadata_omits_parent_field(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -475,6 +627,7 @@ def main(argv: list[str] | None = None) -> int:
                 assert_shared_focus_trap(page)
                 assert_choice_modal_radio_navigation(page)
                 assert_metadata_status_list_selection(page)
+                assert_metadata_parent_duplicate_title_selection(page)
                 assert_sub_scope_metadata_omits_parent_field(page)
             finally:
                 browser.close()

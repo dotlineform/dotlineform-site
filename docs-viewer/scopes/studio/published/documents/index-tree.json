@@ -881,9 +881,27 @@
               "ui_status": "proposed"
             },
             {
+              "doc_id": "d-20260728-115825-e2561b",
+              "title": "Sub-Scope Detail Delete Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-115825-e2561b.json",
+              "ui_status": "proposed"
+            },
+            {
               "doc_id": "d-20260728-113139-763354",
               "title": "Sub-Scope Index Architecture",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-113139-763354.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "d-20260728-115825-ae1461",
+              "title": "Sub-Scope Package Preparation Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-115825-ae1461.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "d-20260728-115825-41e819",
+              "title": "Sub-Scope Report Contribution Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-115825-41e819.json",
               "ui_status": "proposed"
             }
           ]
@@ -1235,5 +1253,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-28T10:34:58Z"
+  "generated_at": "2026-07-28T11:02:20Z"
 }

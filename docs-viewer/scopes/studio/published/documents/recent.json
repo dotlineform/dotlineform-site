@@ -4,10 +4,10 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "d-20260728-113139-95a885",
-      "title": "Independent Canonical Documents",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-113139-95a885.json",
-      "timestamp": "2026-07-28 11:31:39",
+      "doc_id": "d-20260728-115825-e2561b",
+      "title": "Sub-Scope Detail Delete Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-115825-e2561b.json",
+      "timestamp": "2026-07-28 12:08:21",
       "parent_id": "d-20260728-113139-285eae",
       "parent_title": "Sub-Scope Index"
     },
@@ -15,7 +15,7 @@
       "doc_id": "d-20260728-113139-285eae",
       "title": "Sub-Scope Index",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-113139-285eae.json",
-      "timestamp": "2026-07-28 11:31:39",
+      "timestamp": "2026-07-28 12:08:21",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
     },
@@ -23,6 +23,30 @@
       "doc_id": "d-20260728-113139-763354",
       "title": "Sub-Scope Index Architecture",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-113139-763354.json",
+      "timestamp": "2026-07-28 12:08:21",
+      "parent_id": "d-20260728-113139-285eae",
+      "parent_title": "Sub-Scope Index"
+    },
+    {
+      "doc_id": "d-20260728-115825-ae1461",
+      "title": "Sub-Scope Package Preparation Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-115825-ae1461.json",
+      "timestamp": "2026-07-28 12:08:21",
+      "parent_id": "d-20260728-113139-285eae",
+      "parent_title": "Sub-Scope Index"
+    },
+    {
+      "doc_id": "d-20260728-115825-41e819",
+      "title": "Sub-Scope Report Contribution Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-115825-41e819.json",
+      "timestamp": "2026-07-28 12:08:21",
+      "parent_id": "d-20260728-113139-285eae",
+      "parent_title": "Sub-Scope Index"
+    },
+    {
+      "doc_id": "d-20260728-113139-95a885",
+      "title": "Independent Canonical Documents",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-113139-95a885.json",
       "timestamp": "2026-07-28 11:31:39",
       "parent_id": "d-20260728-113139-285eae",
       "parent_title": "Sub-Scope Index"
@@ -58,31 +82,7 @@
       "timestamp": "2026-07-27 23:14:26",
       "parent_id": "d-20260423-000000-d015e6",
       "parent_title": "Studio"
-    },
-    {
-      "doc_id": "d-20260726-224323-eb0a65",
-      "title": "Manage Sub-Scope Documents",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-224323-eb0a65.json",
-      "timestamp": "2026-07-27 22:11:11",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260727-111354-3ac5f0",
-      "title": "Sub-Scope Document Editing Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260727-111354-3ac5f0.json",
-      "timestamp": "2026-07-27 22:11:11",
-      "parent_id": "d-20260726-224323-eb0a65",
-      "parent_title": "Manage Sub-Scope Documents"
-    },
-    {
-      "doc_id": "d-20260607-222033-4b1d77",
-      "title": "Source Editor Endpoints",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-4b1d77.json",
-      "timestamp": "2026-07-27 22:05:53",
-      "parent_id": "d-20260607-222033-647b52",
-      "parent_title": "Endpoint Overview"
     }
   ],
-  "generated_at": "2026-07-28T10:34:58Z"
+  "generated_at": "2026-07-28T11:09:10Z"
 }

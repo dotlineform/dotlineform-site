@@ -11,15 +11,22 @@ export function renderMetadataParentPopupMarkup(matches, options) {
   var optionTitle = typeof settings.optionTitle === "function"
     ? settings.optionTitle
     : function (option) { return String(option && option.label || ""); };
+  var optionMeta = typeof settings.optionMeta === "function"
+    ? settings.optionMeta
+    : function () { return ""; };
   return records.map(function (option, index) {
     var optionId = "docsViewerMetadataParentOption-" + index;
     var title = optionTitle(option);
+    var meta = optionMeta(option);
     var isActive = index === 0;
     return (
       '<button type="button" class="docsViewer__parentOption' + (isActive ? " is-active" : "") + '" ' +
         'id="' + optionId + '" role="option" aria-selected="' + (isActive ? "true" : "false") + '" ' +
         'tabindex="-1" data-parent-index="' + index + '">' +
         '<span class="docsViewer__parentOptionTitle">' + escapeHtml(title) + "</span>" +
+        (meta
+          ? '<span class="docsViewer__parentOptionMeta">' + escapeHtml(meta) + "</span>"
+          : "") +
       "</button>"
     );
   }).join("");

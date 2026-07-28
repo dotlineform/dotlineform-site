@@ -503,6 +503,17 @@ select.docsViewer__fieldInput--listbox{
   color: var(--docs-viewer-selection-text);
 }
 
+.docsViewer__parentOptionMeta{
+  color: var(--docs-viewer-muted);
+  font-family: var(--docs-viewer-font-mono);
+  font-size: var(--docs-viewer-font-caption, 0.75rem);
+}
+
+.docsViewer__parentOption.is-active .docsViewer__parentOptionMeta{
+  color: inherit;
+  opacity: 0.78;
+}
+
 .docsViewer__parentPopupEmpty{
   color: var(--docs-viewer-muted);
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
