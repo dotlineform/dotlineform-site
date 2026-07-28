@@ -81,28 +81,49 @@ function managementInventory(settings, parent, subScope) {
   var managementService = settings.managementService || null;
   var baseUrl = cleanString(managementService && managementService.baseUrl);
   if (!settings.managementContext || !baseUrl) return Promise.resolve(null);
-  return readManagedSubScopeDocuments(parent.scope, subScope, {
-    baseUrl: baseUrl
-  }).then(function (payload) {
-    if (
-      !payload
-      || cleanString(payload.scope).toLowerCase() !== parent.scope
-      || cleanString(payload.sub_scope).toLowerCase() !== subScope
-      || !Array.isArray(payload.documents)
-    ) {
-      throw new Error("Managed sub-scope inventory did not match the mounted report.");
-    }
+  function load() {
+    return readManagedSubScopeDocuments(parent.scope, subScope, {
+      baseUrl: baseUrl
+    }).then(function (payload) {
+      if (
+        !payload
+        || cleanString(payload.scope).toLowerCase() !== parent.scope
+        || cleanString(payload.sub_scope).toLowerCase() !== subScope
+        || !Array.isArray(payload.documents)
+      ) {
+        throw new Error("Managed sub-scope inventory did not match the mounted report.");
+      }
+      return payload.documents.slice();
+    });
+  }
+  return load().then(function (documents) {
     return {
-      documents: payload.documents.slice()
+      documents: documents,
+      refresh: load
     };
   }).catch(function (error) {
     return {
       documents: [],
       error: error && error.message
         ? error.message
-        : "Managed sub-scope inventory could not be loaded."
+        : "Managed sub-scope inventory could not be loaded.",
+      refresh: load
     };
   });
+}
+
+function managementClientOptions(settings) {
+  var managementService = settings.managementService || null;
+  return {
+    baseUrl: cleanString(managementService && managementService.baseUrl)
+  };
+}
+
+function managementModalRoot(settings) {
+  var content = settings && settings.content;
+  return content && typeof content.closest === "function"
+    ? content.closest(".docsViewer")
+    : null;
 }
 
 export function mountDocsViewerManageDocumentExtras(context) {
@@ -158,12 +179,15 @@ export function mountDocsViewerManageDocumentExtras(context) {
   });
   var scopeConfig = settings.scopeConfigState || {};
   var contribution = createDocsViewerManagementSubscopeContribution({
+    clientOptions: managementClientOptions(settings),
     nonViewableEmoji: cleanString(scopeConfig.docNonViewableEmoji),
     onLifecycleEvent: function (event) {
       if (event && event.type === "state") {
         publishReportState(settings, parent, subScope, event);
       }
     },
+    root: managementModalRoot(settings),
+    setStatus: settings.setStatus,
     uiStatusByValue: scopeConfig.uiStatusByValue instanceof Map
       ? scopeConfig.uiStatusByValue
       : new Map()

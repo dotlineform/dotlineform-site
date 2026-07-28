@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-30ea9c0433bd256e6ffff2e8cefae026",
-    "generated_at_utc": "2026-07-28T13:40:38Z",
+    "version": "blake2b-69d7fac13e94ebc0cd69c5f0cf4100a1",
+    "generated_at_utc": "2026-07-28T14:16:26Z",
     "count": 226
   },
   "entries": [
@@ -3997,26 +3997,26 @@
       "kind": "doc",
       "title": "Sub-Scope Index",
       "href": "/docs/?scope=studio&doc=d-20260728-113139-285eae",
-      "last_updated": "2026-07-28 14:39:16",
+      "last_updated": "2026-07-28 15:16:11",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-28 14:39:16 • Roadmap",
+      "display_meta": "2026-07-28 15:16:11 • Roadmap",
       "search_terms": [
         "sub-scope index",
         "sub",
         "scope",
         "index",
         "roadmap",
-        "2026-07-28 14:39:16",
+        "2026-07-28 15:16:11",
         "2026",
         "07",
         "28",
-        "14",
-        "39",
+        "15",
         "16",
+        "11",
         "d-20260728-113139-285eae"
       ],
-      "search_text": "sub-scope index sub scope index roadmap 2026-07-28 14:39:16 2026 07 28 14 39 16 d-20260728-113139-285eae"
+      "search_text": "sub-scope index sub scope index roadmap 2026-07-28 15:16:11 2026 07 28 15 16 11 d-20260728-113139-285eae"
     },
     {
       "id": "d-20260728-113139-95a885",
@@ -4052,10 +4052,10 @@
       "kind": "doc",
       "title": "Sub-Scope Detail Delete Delivery",
       "href": "/docs/?scope=studio&doc=d-20260728-115825-e2561b",
-      "last_updated": "2026-07-28 14:39:16",
+      "last_updated": "2026-07-28 15:16:11",
       "parent_id": "d-20260728-113139-285eae",
       "parent_title": "Sub-Scope Index",
-      "display_meta": "2026-07-28 14:39:16 • Sub-Scope Index",
+      "display_meta": "2026-07-28 15:16:11 • Sub-Scope Index",
       "search_terms": [
         "sub-scope detail delete delivery",
         "sub",
@@ -4065,26 +4065,26 @@
         "delivery",
         "sub-scope index",
         "index",
-        "2026-07-28 14:39:16",
+        "2026-07-28 15:16:11",
         "2026",
         "07",
         "28",
-        "14",
-        "39",
+        "15",
         "16",
+        "11",
         "d-20260728-115825-e2561b"
       ],
-      "search_text": "sub-scope detail delete delivery sub scope detail delete delivery sub-scope index index 2026-07-28 14:39:16 2026 07 28 14 39 16 d-20260728-115825-e2561b"
+      "search_text": "sub-scope detail delete delivery sub scope detail delete delivery sub-scope index index 2026-07-28 15:16:11 2026 07 28 15 16 11 d-20260728-115825-e2561b"
     },
     {
       "id": "d-20260728-113139-763354",
       "kind": "doc",
       "title": "Sub-Scope Index Architecture",
       "href": "/docs/?scope=studio&doc=d-20260728-113139-763354",
-      "last_updated": "2026-07-28 14:39:16",
+      "last_updated": "2026-07-28 15:16:11",
       "parent_id": "d-20260728-113139-285eae",
       "parent_title": "Sub-Scope Index",
-      "display_meta": "2026-07-28 14:39:16 • Sub-Scope Index",
+      "display_meta": "2026-07-28 15:16:11 • Sub-Scope Index",
       "search_terms": [
         "sub-scope index architecture",
         "sub",
@@ -4092,16 +4092,16 @@
         "index",
         "architecture",
         "sub-scope index",
-        "2026-07-28 14:39:16",
+        "2026-07-28 15:16:11",
         "2026",
         "07",
         "28",
-        "14",
-        "39",
+        "15",
         "16",
+        "11",
         "d-20260728-113139-763354"
       ],
-      "search_text": "sub-scope index architecture sub scope index architecture sub-scope index 2026-07-28 14:39:16 2026 07 28 14 39 16 d-20260728-113139-763354"
+      "search_text": "sub-scope index architecture sub scope index architecture sub-scope index 2026-07-28 15:16:11 2026 07 28 15 16 11 d-20260728-113139-763354"
     },
     {
       "id": "d-20260728-115825-ae1461",

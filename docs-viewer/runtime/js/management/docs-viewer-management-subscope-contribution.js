@@ -37,8 +37,27 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
   var onLifecycleEvent = typeof options.onLifecycleEvent === "function"
     ? options.onLifecycleEvent
     : null;
+  var activeDeleteWorkflow = null;
+  var deleteWorkflowRequest = 0;
+
+  function clearDeleteWorkflow() {
+    deleteWorkflowRequest += 1;
+    if (activeDeleteWorkflow && typeof activeDeleteWorkflow.destroy === "function") {
+      activeDeleteWorkflow.destroy();
+    }
+    activeDeleteWorkflow = null;
+  }
 
   function notify(event) {
+    if (
+      event
+      && (
+        event.type === "unmount"
+        || (event.type === "state" && cleanString(event.state) !== "detail")
+      )
+    ) {
+      clearDeleteWorkflow();
+    }
     if (onLifecycleEvent) onLifecycleEvent(event);
   }
 
@@ -57,8 +76,53 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
     return { accessibleLabels: accessibleLabels };
   }
 
+  function renderDetailToolbar(context) {
+    var settings = context || {};
+    var host = settings.host;
+    var target = settings.target;
+    if (!host || !target || typeof settings.commitDeletedDocument !== "function") return;
+
+    clearDeleteWorkflow();
+    var request = deleteWorkflowRequest;
+    var button = host.ownerDocument.createElement("button");
+    button.className = "docsViewerReport__button";
+    button.type = "button";
+    button.disabled = true;
+    button.dataset.docsSubscopeDelete = "true";
+    button.textContent = "Delete";
+    button.title = "Checking Delete availability.";
+    host.appendChild(button);
+
+    import("./docs-viewer-management-subscope-delete-workflow.js")
+      .then(function (module) {
+        if (request !== deleteWorkflowRequest || !button.isConnected) return;
+        activeDeleteWorkflow = module.createDocsViewerManagementSubscopeDeleteWorkflow({
+          button: button,
+          clientOptions: options.clientOptions || {},
+          commitDeletedDocument: settings.commitDeletedDocument,
+          root: options.root,
+          setStatus: options.setStatus,
+          target: target,
+          title: cleanString(settings.document && settings.document.title) || cleanString(target.doc_id)
+        });
+        return activeDeleteWorkflow.initialize();
+      })
+      .catch(function (error) {
+        if (request !== deleteWorkflowRequest || !button.isConnected) return;
+        button.disabled = true;
+        button.title = "Sub-scope detail Delete is unavailable.";
+        if (typeof options.setStatus === "function") {
+          options.setStatus(
+            error && error.message ? error.message : "Sub-scope detail Delete is unavailable.",
+            true
+          );
+        }
+      });
+  }
+
   return {
     notify: notify,
+    renderDetailToolbar: renderDetailToolbar,
     renderRow: renderRow
   };
 }

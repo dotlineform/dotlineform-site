@@ -81,6 +81,10 @@ function renderModalFrame(options) {
 export function openDocsViewerManagementModal(options = {}) {
   var host = createModalHost({ root: options.root });
   var restoreFocus = options.restoreFocus || document.activeElement;
+  var abortSignal = options.signal || null;
+  if (abortSignal && abortSignal.aborted) {
+    return Promise.resolve({ confirmed: false });
+  }
   host.innerHTML = renderModalFrame(options);
 
   var modal = host.querySelector('[data-role="docs-viewer-management-modal"]');
@@ -107,6 +111,7 @@ export function openDocsViewerManagementModal(options = {}) {
     function close(value) {
       if (settled) return;
       settled = true;
+      if (abortSignal) abortSignal.removeEventListener("abort", cancel);
       lifecycle.close();
       host.innerHTML = "";
       resolve(value);
@@ -158,6 +163,7 @@ export function openDocsViewerManagementModal(options = {}) {
     if (typeof options.onOpen === "function") {
       options.onOpen(api);
     }
+    if (abortSignal) abortSignal.addEventListener("abort", cancel, { once: true });
     lifecycle.open();
   });
 }
@@ -170,6 +176,7 @@ export function openDocsViewerConfirmModal(options = {}) {
     closeLabel: options.closeLabel || options.cancelLabel,
     size: options.size || "compact",
     bodyHtml: bodyHtmlFromText(options.body),
+    signal: options.signal,
     focusSelector: options.primaryDisabled || options.initialFocus === "cancel"
       ? 'button[data-role="modal-cancel"]'
       : "",

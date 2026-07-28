@@ -942,12 +942,20 @@ def assert_manage_report_bridge(page: Page) -> None:
             return { importError: String(error && (error.stack || error.message) || error) };
           }
           history.replaceState({}, '', '/?scope=studio&doc=parent-doc');
-          document.body.innerHTML = '<main id="bridge-content"></main>';
+          document.body.innerHTML = (
+            '<section class="docsViewer"><main id="bridge-content"></main></section>'
+          );
           const requests = [];
+          const requestBodies = [];
+          const managementStatuses = [];
           window.syntheticInventoryFailure = false;
-          window.fetch = async input => {
+          window.fetch = async (input, options = {}) => {
             const url = new URL(String(input), window.location.href);
             requests.push(url.pathname + url.search);
+            requestBodies.push({
+              path: url.pathname,
+              body: options.body ? JSON.parse(options.body) : null
+            });
             const response = payload => ({
               ok: true,
               status: 200,
@@ -961,6 +969,18 @@ def assert_manage_report_bridge(page: Page) -> None:
                   default_access: 'local',
                   loader_id: 'docs_subscope'
                 }]
+              });
+            }
+            if (url.pathname === '/capabilities') {
+              return response({
+                ok: true,
+                capabilities: {
+                  document_delete: {
+                    preview: true,
+                    apply: true,
+                    sub_scope_detail: true
+                  }
+                }
               });
             }
             if (url.pathname === '/docs/sub-scope-documents') {
@@ -997,6 +1017,43 @@ def assert_manage_report_bridge(page: Page) -> None:
                 content_html: '<h2>Detail</h2>'
               });
             }
+            if (url.pathname === '/docs/delete-preview') {
+              return response({
+                ok: true,
+                operation: 'preview',
+                target: {
+                  scope: 'studio',
+                  sub_scope: 'tags',
+                  doc_id: 'detail-doc'
+                },
+                scope: 'studio',
+                sub_scope: 'tags',
+                doc_id: 'detail-doc',
+                title: 'Detail',
+                source_revision: 'sha256:' + 'c'.repeat(64),
+                allowed: true,
+                blockers: [],
+                warnings: [],
+                delete_count: 1
+              });
+            }
+            if (url.pathname === '/docs/delete-apply') {
+              return response({
+                ok: true,
+                operation: 'apply',
+                target: {
+                  scope: 'studio',
+                  sub_scope: 'tags',
+                  doc_id: 'detail-doc'
+                },
+                scope: 'studio',
+                sub_scope: 'tags',
+                doc_id: 'detail-doc',
+                source_revision: 'sha256:' + 'c'.repeat(64),
+                deleted_doc_ids: ['detail-doc'],
+                delete_count: 1
+              });
+            }
             return { ok: false, status: 404, json: async () => ({}) };
           };
           const states = [];
@@ -1014,6 +1071,9 @@ def assert_manage_report_bridge(page: Page) -> None:
             },
             publishSubscopeReportState: state => states.push(state),
             routeContext: { reportRegistryUrl: '/reports-registry.json' },
+            setStatus: (message, isError) => {
+              managementStatuses.push({ message, isError });
+            },
             scopeConfigState: {
               docNonViewableEmoji: '🚫',
               scopeConfigs: [{
@@ -1046,8 +1106,22 @@ def assert_manage_report_bridge(page: Page) -> None:
             };
             poll();
           });
+          const waitFor = predicate => new Promise(resolve => {
+            const poll = () => {
+              if (predicate()) {
+                resolve();
+                return;
+              }
+              setTimeout(poll, 0);
+            };
+            poll();
+          });
+          await waitFor(() => {
+            const button = content.querySelector('[data-docs-subscope-delete="true"]');
+            return button && !button.disabled;
+          });
           const beforeClear = {
-            requests,
+            requests: requests.slice(),
             states: states.slice(),
             rows: Array.from(content.querySelectorAll(
               '.docsViewerReport__row[data-report-subdoc-id]'
@@ -1065,6 +1139,74 @@ def assert_manage_report_bridge(page: Page) -> None:
               '[data-report-contribution-host="detail-toolbar"]'
             ).length
           };
+          const deleteButton = content.querySelector(
+            '[data-docs-subscope-delete="true"]'
+          );
+          const historyLengthBeforeDelete = history.length;
+          deleteButton.click();
+          await waitFor(() => document.querySelector(
+            '[data-role="docs-viewer-management-modal"]'
+          ));
+          const cancelButton = document.querySelector(
+            'button[data-role="modal-cancel"]'
+          );
+          await waitFor(() => document.activeElement === cancelButton);
+          const cancelFocused = document.activeElement === cancelButton;
+          const modalHostWithinViewer = Boolean(
+            document.querySelector(
+              '.docsViewer > [data-docs-viewer-management-modal-host="true"]'
+            )
+          );
+          const cancelModalText = document.querySelector(
+            '[data-role="docs-viewer-management-modal"]'
+          ).textContent;
+          cancelButton.click();
+          await waitFor(() => !document.querySelector(
+            '[data-role="docs-viewer-management-modal"]'
+          ));
+          await waitFor(() => document.activeElement === deleteButton);
+          const cancelState = {
+            applyRequests: requests.filter(path => path === '/docs/delete-apply').length,
+            deleteFocused: document.activeElement === deleteButton,
+            focusedCancel: cancelFocused,
+            modalHostWithinViewer,
+            modalText: cancelModalText,
+            subdoc: new URLSearchParams(location.search).get('subdoc')
+          };
+
+          deleteButton.click();
+          await waitFor(() => document.querySelector(
+            '[data-role="docs-viewer-management-modal"]'
+          ));
+          document.querySelector('button[data-role="modal-primary"]').click();
+          await waitFor(() => (
+            content.querySelector('.docsViewerReport')?.dataset.reportState === 'list'
+            && !content.querySelector('[data-report-subdoc-id="detail-doc"]')
+          ));
+          const deleteState = {
+            historyLength: history.length,
+            inventoryRequests: requests.filter(path => (
+              path.startsWith('/docs/sub-scope-documents?')
+            )).length,
+            requestBodies: requestBodies.filter(record => (
+              record.path === '/docs/delete-preview'
+              || record.path === '/docs/delete-apply'
+            )),
+            rowIds: Array.from(content.querySelectorAll(
+              '[data-report-subdoc-id]'
+            )).map(row => row.dataset.reportSubdocId),
+            state: states.at(-1),
+            status: managementStatuses.at(-1),
+            subdoc: new URLSearchParams(location.search).get('subdoc')
+          };
+          const navigateHistory = direction => new Promise(resolve => {
+            window.addEventListener('popstate', () => resolve(), { once: true });
+            history[direction]();
+          });
+          await navigateHistory('back');
+          const backSubdoc = new URLSearchParams(location.search).get('subdoc');
+          await navigateHistory('forward');
+          const forwardSubdoc = new URLSearchParams(location.search).get('subdoc');
           window.syntheticInventoryFailure = true;
           const failureStates = [];
           const failureContent = document.createElement('main');
@@ -1088,7 +1230,11 @@ def assert_manage_report_bridge(page: Page) -> None:
           });
           return {
             beforeClear,
+            cancelState,
+            deleteState,
             failedInventory,
+            historyNavigation: { backSubdoc, forwardSubdoc },
+            historyLengthBeforeDelete,
             latestAfterNonReport: states.at(-1)
           };
         }"""
@@ -1103,7 +1249,6 @@ def assert_manage_report_bridge(page: Page) -> None:
         if request.startswith("/docs/sub-scope-documents?")
     ]
     assert inventory_requests == [
-        "/docs/sub-scope-documents?scope=studio&sub_scope=tags",
         "/docs/sub-scope-documents?scope=studio&sub_scope=tags"
     ]
     expected_rows = [
@@ -1123,7 +1268,7 @@ def assert_manage_report_bridge(page: Page) -> None:
     assert mounted["beforeClear"]["statusIcons"] == 1
     assert mounted["beforeClear"]["nonViewableIcons"] == 1
     assert mounted["beforeClear"]["listToolbarHosts"] == 0
-    assert mounted["beforeClear"]["detailToolbarHosts"] == 0
+    assert mounted["beforeClear"]["detailToolbarHosts"] == 1
     assert mounted["beforeClear"]["states"][-1] == {
         "state": "detail",
         "reason": "detail-loaded",
@@ -1133,6 +1278,58 @@ def assert_manage_report_bridge(page: Page) -> None:
             "sub_scope": "tags",
             "doc_id": "detail-doc",
         },
+    }
+    assert mounted["cancelState"]["applyRequests"] == 0
+    assert mounted["cancelState"]["deleteFocused"] is True
+    assert mounted["cancelState"]["focusedCancel"] is True
+    assert mounted["cancelState"]["modalHostWithinViewer"] is True
+    assert "Document ID: detail-doc" in mounted["cancelState"]["modalText"]
+    assert "Sub-scope: studio/tags" in mounted["cancelState"]["modalText"]
+    assert mounted["cancelState"]["subdoc"] == "detail-doc"
+    assert mounted["deleteState"] == {
+        "historyLength": mounted["historyLengthBeforeDelete"],
+        "inventoryRequests": 1,
+        "requestBodies": [
+            {
+                "path": "/docs/delete-preview",
+                "body": {
+                    "scope": "studio",
+                    "sub_scope": "tags",
+                    "doc_id": "detail-doc",
+                },
+            },
+            {
+                "path": "/docs/delete-preview",
+                "body": {
+                    "scope": "studio",
+                    "sub_scope": "tags",
+                    "doc_id": "detail-doc",
+                },
+            },
+            {
+                "path": "/docs/delete-apply",
+                "body": {
+                    "scope": "studio",
+                    "sub_scope": "tags",
+                    "doc_id": "detail-doc",
+                    "source_revision": "sha256:" + ("c" * 64),
+                    "confirm": True,
+                },
+            },
+        ],
+        "rowIds": ["no-status-doc"],
+        "state": {
+            "state": "list",
+            "reason": "list-view",
+            "parentTarget": {"scope": "studio", "doc_id": "parent-doc"},
+            "subdocTarget": None,
+        },
+        "status": {"message": "", "isError": False},
+        "subdoc": None,
+    }
+    assert mounted["historyNavigation"] == {
+        "backSubdoc": None,
+        "forwardSubdoc": None,
     }
     assert mounted["failedInventory"] == {
         "states": [
@@ -1157,6 +1354,586 @@ def assert_manage_report_bridge(page: Page) -> None:
         "reason": "non-report-document",
         "parentTarget": None,
         "subdocTarget": None,
+    }
+
+
+def assert_report_delete_reconciliation(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+          const report = await import(
+            '/site/docs-viewer/runtime/js/shared/docs-subscope-report.js'
+          );
+          const target = {
+            scope: 'studio',
+            sub_scope: 'tags',
+            doc_id: 'detail-doc'
+          };
+          const subScope = {
+            subScope: 'tags',
+            title: 'Tags',
+            manifestUrl: '/synthetic/manifest.json',
+            byIdUrlBase: '/synthetic/by-id'
+          };
+          window.fetch = async input => {
+            const url = new URL(String(input), window.location.href);
+            if (url.pathname.endsWith('/detail-doc.json')) {
+              return {
+                ok: true,
+                status: 200,
+                json: async () => ({
+                  doc_id: 'detail-doc',
+                  title: 'Detail',
+                  content_html: '<h2>Detail</h2>'
+                })
+              };
+            }
+            return { ok: false, status: 404, json: async () => ({}) };
+          };
+
+          history.replaceState(
+            {},
+            '',
+            '/?scope=studio&doc=parent-doc&subdoc=detail-doc'
+          );
+          document.body.innerHTML = '<main><section id="reconcile-report"></section></main>';
+          const root = document.querySelector('#reconcile-report');
+          let commitDeletedDocument = null;
+          let refreshCalls = 0;
+          const events = [];
+          await report.mountDocsSubscopeReport({
+            doc: { doc_id: 'parent-doc' },
+            reportMeta: { subScope: 'tags' },
+            reportRoot: root,
+            routeContext: { subScopes: [subScope] },
+            subscopeDocumentSource: {
+              documents: [
+                { doc_id: 'detail-doc', title: 'Detail' },
+                { doc_id: 'sibling-doc', title: 'Sibling' }
+              ],
+              refresh: async () => {
+                refreshCalls += 1;
+                return [{ doc_id: 'sibling-doc', title: 'Sibling' }];
+              }
+            },
+            subscopeReportContribution: {
+              notify: event => events.push({
+                type: event.type,
+                state: event.state || '',
+                reason: event.reason || '',
+                documentIds: Array.isArray(event.documents)
+                  ? event.documents.map(doc => doc.doc_id)
+                  : []
+              }),
+              renderDetailToolbar: context => {
+                commitDeletedDocument = context.commitDeletedDocument;
+              }
+            },
+            viewerScope: 'studio'
+          });
+          const historyLength = history.length;
+          const local = await commitDeletedDocument(target);
+          const localState = {
+            historyLength: history.length,
+            refreshCalls,
+            reportState: root.dataset.reportState,
+            rowIds: Array.from(root.querySelectorAll('[data-report-subdoc-id]'))
+              .map(row => row.dataset.reportSubdocId),
+            subdoc: new URLSearchParams(location.search).get('subdoc')
+          };
+          const recovered = await commitDeletedDocument(target);
+          const recoveredState = {
+            refreshCalls,
+            rowIds: Array.from(root.querySelectorAll('[data-report-subdoc-id]'))
+              .map(row => row.dataset.reportSubdocId)
+          };
+
+          history.replaceState(
+            {},
+            '',
+            '/?scope=studio&doc=parent-doc&subdoc=detail-doc'
+          );
+          const unmountParent = document.createElement('main');
+          const unmountRoot = document.createElement('section');
+          unmountParent.appendChild(unmountRoot);
+          document.body.appendChild(unmountParent);
+          let unmountedCommit = null;
+          let unmountedRefreshCalls = 0;
+          await report.mountDocsSubscopeReport({
+            doc: { doc_id: 'parent-doc' },
+            reportMeta: { subScope: 'tags' },
+            reportRoot: unmountRoot,
+            routeContext: { subScopes: [subScope] },
+            subscopeDocumentSource: {
+              documents: [{ doc_id: 'detail-doc', title: 'Detail' }],
+              refresh: async () => {
+                unmountedRefreshCalls += 1;
+                return [];
+              }
+            },
+            subscopeReportContribution: {
+              renderDetailToolbar: context => {
+                unmountedCommit = context.commitDeletedDocument;
+              }
+            },
+            viewerScope: 'studio'
+          });
+          unmountRoot.remove();
+          await new Promise(resolve => setTimeout(resolve, 0));
+          const unmounted = await unmountedCommit(target);
+
+          return {
+            events,
+            historyLength,
+            local,
+            localState,
+            recovered,
+            recoveredState,
+            unmounted,
+            unmountedRefreshCalls
+          };
+        }"""
+    )
+
+    assert result["local"] == {"reconciled": True, "mode": "local"}
+    expected_local_state = {
+        "historyLength": result["historyLength"],
+        "refreshCalls": 0,
+        "reportState": "list",
+        "rowIds": ["sibling-doc"],
+        "subdoc": None,
+    }
+    if result["localState"] != expected_local_state:
+        raise AssertionError(
+            f"unexpected local delete reconciliation: {result['localState']!r}"
+        )
+    assert result["recovered"] == {"reconciled": True, "mode": "refetch"}
+    assert result["recoveredState"] == {
+        "refreshCalls": 1,
+        "rowIds": ["sibling-doc"],
+    }
+    assert {
+        "type": "refresh",
+        "state": "",
+        "reason": "document-deleted-local",
+        "documentIds": ["sibling-doc"],
+    } in result["events"]
+    assert {
+        "type": "refresh",
+        "state": "",
+        "reason": "document-deleted-recovery",
+        "documentIds": ["sibling-doc"],
+    } in result["events"]
+    assert result["unmounted"] == {
+        "reconciled": False,
+        "mode": "unmounted",
+    }
+    assert result["unmountedRefreshCalls"] == 0
+
+
+def assert_delete_workflow(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+          const module = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-subscope-delete-workflow.js'
+          );
+          document.body.innerHTML = '<main id="workflow-root"></main>';
+          const root = document.querySelector('#workflow-root');
+          const target = {
+            scope: 'studio',
+            sub_scope: 'tags',
+            doc_id: 'detail-doc'
+          };
+          const revision = 'sha256:' + 'b'.repeat(64);
+          const capabilities = {
+            capabilities: {
+              document_delete: {
+                preview: true,
+                apply: true,
+                sub_scope_detail: true
+              }
+            }
+          };
+          const preview = {
+            operation: 'preview',
+            target,
+            scope: target.scope,
+            sub_scope: target.sub_scope,
+            doc_id: target.doc_id,
+            title: 'Detail',
+            source_revision: revision,
+            allowed: true,
+            blockers: [],
+            warnings: ['Synthetic warning.'],
+            delete_count: 1
+          };
+          const applied = {
+            operation: 'apply',
+            target,
+            scope: target.scope,
+            sub_scope: target.sub_scope,
+            doc_id: target.doc_id,
+            source_revision: revision,
+            deleted_doc_ids: [target.doc_id],
+            delete_count: 1
+          };
+
+          function button() {
+            const value = document.createElement('button');
+            root.appendChild(value);
+            return value;
+          }
+
+          const successStatuses = [];
+          const successCalls = [];
+          let confirmOptions = null;
+          const successButton = button();
+          const success = module.createDocsViewerManagementSubscopeDeleteWorkflow({
+            button: successButton,
+            target,
+            title: 'Detail',
+            readCapabilities: async () => capabilities,
+            previewDelete: async value => {
+              successCalls.push(['preview', value]);
+              return preview;
+            },
+            confirmDelete: async options => {
+              confirmOptions = options;
+              return true;
+            },
+            applyDelete: async (value, valueRevision) => {
+              successCalls.push(['apply', value, valueRevision]);
+              return applied;
+            },
+            commitDeletedDocument: async value => {
+              successCalls.push(['commit', value]);
+              return { reconciled: true, mode: 'local' };
+            },
+            setStatus: (message, isError) => {
+              successStatuses.push({ message, isError });
+            }
+          });
+          const successAvailable = await success.initialize();
+          const successResult = await success.run();
+
+          let cancelApplyCount = 0;
+          const cancelButton = button();
+          const cancel = module.createDocsViewerManagementSubscopeDeleteWorkflow({
+            button: cancelButton,
+            target,
+            readCapabilities: async () => capabilities,
+            previewDelete: async () => preview,
+            confirmDelete: async () => false,
+            applyDelete: async () => {
+              cancelApplyCount += 1;
+              return applied;
+            },
+            commitDeletedDocument: async () => ({ reconciled: true })
+          });
+          await cancel.initialize();
+          await cancel.run();
+
+          let blockerConfirmCount = 0;
+          const blockerStatuses = [];
+          const blockerButton = button();
+          const blocker = module.createDocsViewerManagementSubscopeDeleteWorkflow({
+            button: blockerButton,
+            target,
+            readCapabilities: async () => capabilities,
+            previewDelete: async () => ({
+              allowed: false,
+              blockers: ['Synthetic blocker.']
+            }),
+            confirmDelete: async () => {
+              blockerConfirmCount += 1;
+              return true;
+            },
+            commitDeletedDocument: async () => ({ reconciled: true }),
+            setStatus: (message, isError) => blockerStatuses.push({ message, isError })
+          });
+          await blocker.initialize();
+          await blocker.run();
+
+          const staleStatuses = [];
+          const staleButton = button();
+          const stale = module.createDocsViewerManagementSubscopeDeleteWorkflow({
+            button: staleButton,
+            target,
+            readCapabilities: async () => capabilities,
+            previewDelete: async () => preview,
+            confirmDelete: async () => true,
+            applyDelete: async () => {
+              const error = new Error('Synthetic source revision conflict.');
+              error.status = 409;
+              throw error;
+            },
+            commitDeletedDocument: async () => {
+              throw new Error('stale apply must not reconcile');
+            },
+            setStatus: (message, isError) => staleStatuses.push({ message, isError })
+          });
+          await stale.initialize();
+          await stale.run();
+
+          const recoveryStatuses = [];
+          const recoveryButton = button();
+          const recovery = module.createDocsViewerManagementSubscopeDeleteWorkflow({
+            button: recoveryButton,
+            target,
+            readCapabilities: async () => capabilities,
+            previewDelete: async () => preview,
+            confirmDelete: async () => true,
+            applyDelete: async () => {
+              const error = new Error('Synthetic rebuild failure.');
+              error.payload = {
+                source_restored: true,
+                retry_safe: true
+              };
+              throw error;
+            },
+            commitDeletedDocument: async () => {
+              throw new Error('failed apply must not reconcile');
+            },
+            setStatus: (message, isError) => recoveryStatuses.push({ message, isError })
+          });
+          await recovery.initialize();
+          await recovery.run();
+
+          const unavailableStatuses = [];
+          const unavailableButton = button();
+          const unavailable = module.createDocsViewerManagementSubscopeDeleteWorkflow({
+            button: unavailableButton,
+            target,
+            readCapabilities: async () => {
+              throw new Error('Synthetic management service unavailable.');
+            },
+            commitDeletedDocument: async () => ({ reconciled: true }),
+            setStatus: (message, isError) => unavailableStatuses.push({ message, isError })
+          });
+          const unavailableResult = await unavailable.initialize();
+
+          let resolvePreview;
+          let unmountedConfirmCount = 0;
+          const unmountedButton = button();
+          const unmounted = module.createDocsViewerManagementSubscopeDeleteWorkflow({
+            button: unmountedButton,
+            target,
+            readCapabilities: async () => capabilities,
+            previewDelete: () => new Promise(resolve => {
+              resolvePreview = resolve;
+            }),
+            confirmDelete: async () => {
+              unmountedConfirmCount += 1;
+              return true;
+            },
+            commitDeletedDocument: async () => ({ reconciled: false, mode: 'unmounted' })
+          });
+          await unmounted.initialize();
+          const unmountedRun = unmounted.run();
+          unmounted.destroy();
+          resolvePreview(preview);
+          await unmountedRun;
+
+          let modalAbortApplyCount = 0;
+          const modalAbortButton = button();
+          const modalAbort = module.createDocsViewerManagementSubscopeDeleteWorkflow({
+            button: modalAbortButton,
+            target,
+            readCapabilities: async () => capabilities,
+            previewDelete: async () => preview,
+            applyDelete: async () => {
+              modalAbortApplyCount += 1;
+              return applied;
+            },
+            commitDeletedDocument: async () => ({ reconciled: false })
+          });
+          await modalAbort.initialize();
+          const modalAbortRun = modalAbort.run();
+          await new Promise(resolve => {
+            const poll = () => {
+              if (document.querySelector('[data-role="docs-viewer-management-modal"]')) {
+                resolve();
+                return;
+              }
+              setTimeout(poll, 0);
+            };
+            poll();
+          });
+          const modalOpenedBeforeDestroy = true;
+          modalAbort.destroy();
+          await modalAbortRun;
+          const modalPresentAfterDestroy = Boolean(document.querySelector(
+            '[data-role="docs-viewer-management-modal"]'
+          ));
+
+          let resolveApply;
+          let applyEnteredResolve;
+          let committedAfterDestroy = 0;
+          const applyEntered = new Promise(resolve => {
+            applyEnteredResolve = resolve;
+          });
+          const applyingButton = button();
+          const applying = module.createDocsViewerManagementSubscopeDeleteWorkflow({
+            button: applyingButton,
+            target,
+            readCapabilities: async () => capabilities,
+            previewDelete: async () => preview,
+            confirmDelete: async () => true,
+            applyDelete: () => {
+              applyEnteredResolve();
+              return new Promise(resolve => {
+                resolveApply = resolve;
+              });
+            },
+            commitDeletedDocument: async () => {
+              committedAfterDestroy += 1;
+              return { reconciled: false, mode: 'unmounted' };
+            }
+          });
+          await applying.initialize();
+          const applyingRun = applying.run();
+          await applyEntered;
+          applying.destroy();
+          resolveApply(applied);
+          await applyingRun;
+
+          return {
+            capability: {
+              direct: module.subScopeDetailDeleteCapability(capabilities),
+              missing: module.subScopeDetailDeleteCapability({ capabilities: {} })
+            },
+            success: {
+              available: successAvailable,
+              calls: successCalls,
+              confirm: {
+                body: confirmOptions.body,
+                cancelLabel: confirmOptions.cancelLabel,
+                initialFocus: confirmOptions.initialFocus,
+                primaryLabel: confirmOptions.primaryLabel,
+                primaryTone: confirmOptions.primaryTone,
+                restoreFocusMatches: confirmOptions.restoreFocus === successButton,
+                signalProvided: Boolean(confirmOptions.signal),
+                title: confirmOptions.title
+              },
+              enabled: !successButton.disabled,
+              result: successResult,
+              statuses: successStatuses
+            },
+            cancel: {
+              applyCount: cancelApplyCount,
+              enabled: !cancelButton.disabled
+            },
+            blocker: {
+              confirmCount: blockerConfirmCount,
+              enabled: !blockerButton.disabled,
+              status: blockerStatuses.at(-1)
+            },
+            stale: {
+              enabled: !staleButton.disabled,
+              status: staleStatuses.at(-1)
+            },
+            recovery: {
+              enabled: !recoveryButton.disabled,
+              status: recoveryStatuses.at(-1)
+            },
+            unavailable: {
+              enabled: !unavailableButton.disabled,
+              result: unavailableResult,
+              status: unavailableStatuses.at(-1),
+              title: unavailableButton.title
+            },
+            unmounted: {
+              confirmCount: unmountedConfirmCount,
+              disabled: unmountedButton.disabled
+            },
+            modalAbort: {
+              applyCount: modalAbortApplyCount,
+              disabled: modalAbortButton.disabled,
+              modalOpenedBeforeDestroy,
+              modalPresentAfterDestroy
+            },
+            applying: {
+              committedAfterDestroy,
+              disabled: applyingButton.disabled
+            }
+          };
+        }"""
+    )
+
+    target = {
+        "scope": "studio",
+        "sub_scope": "tags",
+        "doc_id": "detail-doc",
+    }
+    assert result["capability"] == {"direct": True, "missing": False}
+    assert result["success"]["available"] is True
+    assert result["success"]["enabled"] is True
+    assert result["success"]["calls"] == [
+        ["preview", target],
+        ["apply", target, "sha256:" + ("b" * 64)],
+        ["commit", target],
+    ]
+    assert result["success"]["confirm"] == {
+        "body": [
+            "Document: Detail",
+            "Document ID: detail-doc",
+            "Sub-scope: studio/tags",
+            "Synthetic warning.",
+        ],
+        "cancelLabel": "Cancel",
+        "initialFocus": "cancel",
+        "primaryLabel": "Delete document",
+        "primaryTone": "danger",
+        "restoreFocusMatches": True,
+        "signalProvided": True,
+        "title": "Delete Detail?",
+    }
+    assert result["success"]["result"]["deleted_doc_ids"] == ["detail-doc"]
+    assert result["success"]["statuses"][-1] == {
+        "message": "",
+        "isError": False,
+    }
+    assert result["cancel"] == {"applyCount": 0, "enabled": True}
+    assert result["blocker"] == {
+        "confirmCount": 0,
+        "enabled": True,
+        "status": {"message": "Synthetic blocker.", "isError": True},
+    }
+    assert result["stale"] == {
+        "enabled": True,
+        "status": {
+            "message": "Synthetic source revision conflict.",
+            "isError": True,
+        },
+    }
+    assert result["recovery"] == {
+        "enabled": True,
+        "status": {
+            "message": (
+                "Synthetic rebuild failure. "
+                "The source was restored and it is safe to retry."
+            ),
+            "isError": True,
+        },
+    }
+    assert result["unavailable"] == {
+        "enabled": False,
+        "result": False,
+        "status": {
+            "message": "Synthetic management service unavailable.",
+            "isError": True,
+        },
+        "title": "Sub-scope detail Delete is unavailable.",
+    }
+    assert result["unmounted"] == {"confirmCount": 0, "disabled": True}
+    assert result["modalAbort"] == {
+        "applyCount": 0,
+        "disabled": True,
+        "modalOpenedBeforeDestroy": True,
+        "modalPresentAfterDestroy": False,
+    }
+    assert result["applying"] == {
+        "committedAfterDestroy": 1,
+        "disabled": True,
     }
 
 
@@ -1191,6 +1968,8 @@ def main(argv: list[str] | None = None) -> int:
                 page.goto(base_url, wait_until="domcontentloaded")
                 assert_control_projection(page)
                 assert_report_module(page)
+                assert_report_delete_reconciliation(page)
+                assert_delete_workflow(page)
                 assert_manage_report_bridge(page)
             finally:
                 browser.close()

@@ -85,7 +85,8 @@ function suppliedDocumentSource(context) {
   if (!source || typeof source !== "object" || !Array.isArray(source.documents)) return null;
   return {
     documents: normalizeDocuments(source.documents),
-    error: cleanString(source.error)
+    error: cleanString(source.error),
+    refresh: typeof source.refresh === "function" ? source.refresh : null
   };
 }
 
@@ -367,6 +368,7 @@ function invalidateDetailRequest(state) {
 
 function renderListView(state) {
   invalidateDetailRequest(state);
+  state.validDetailId = "";
   state.root.dataset.reportState = "list";
   state.tableNode.hidden = false;
   state.statusNode.hidden = false;
@@ -383,6 +385,7 @@ function detailTitle(payload, fallback) {
 
 function renderDetailShell(state, docId) {
   if (state.detailNode) state.detailNode.remove();
+  state.validDetailId = "";
 
   var titleId = "docs-report-detail-title-" + cleanId(state.subScopeId || "subscope");
   var section = document.createElement("section");
@@ -428,6 +431,9 @@ function renderDetailToolbar(state, docId) {
   host.dataset.reportContributionHost = "detail-toolbar";
   var doc = state.docs.find(function (record) { return record.docId === docId; });
   renderToolbar({
+    commitDeletedDocument: function (target) {
+      return reconcileCommittedDeletion(state, target);
+    },
     document: documentRecord(doc),
     host: host,
     target: detailTarget(state, docId)
@@ -448,6 +454,7 @@ function renderDetailPayload(state, docId, payload) {
   state.detailNode.dataset.reportSubdocUpdated = cleanString(payload && payload.last_updated);
   state.detailTitleNode.textContent = detailTitle(payload, docId);
   state.detailBodyNode.innerHTML = payload && payload.content_html ? payload.content_html : "";
+  state.validDetailId = docId;
   renderDetailToolbar(state, docId);
   publishState(state, "detail", {
     scope: state.viewerScope,
@@ -493,6 +500,111 @@ function renderError(root, message) {
   note.className = "docsViewerReport__status is-error";
   note.textContent = message;
   root.appendChild(note);
+}
+
+function assertCollectionTarget(state, target) {
+  var targetScope = cleanId(target && target.scope);
+  var targetSubScope = cleanId(target && target.sub_scope);
+  var targetDocId = cleanString(target && target.doc_id);
+  if (
+    !targetDocId
+    || targetScope !== state.viewerScope
+    || targetSubScope !== state.subScopeId
+  ) {
+    throw new Error("Deleted sub-scope document target did not match the mounted collection.");
+  }
+  return targetDocId;
+}
+
+function focusFirstListRow(state) {
+  var first = state.rowsNode && state.rowsNode.querySelector(".docsViewerReport__subscopeButton");
+  if (!first || typeof first.focus !== "function") return;
+  try {
+    first.focus({ preventScroll: true });
+  } catch (_error) {
+    first.focus();
+  }
+}
+
+function publishDocumentsRefresh(state, reason) {
+  notifyContribution(state, {
+    type: "refresh",
+    documents: state.docs.map(documentRecord),
+    reason: cleanString(reason)
+  });
+}
+
+function returnFromDeletedDetail(state, docId) {
+  if (state.validDetailId === docId) {
+    if (state.detailNode) state.detailNode.remove();
+    state.detailNode = null;
+    state.detailHeaderNode = null;
+    state.detailTitleNode = null;
+    state.detailBodyNode = null;
+    writeSubdocUrl(state, "", "replace");
+    renderListView(state);
+    focusFirstListRow(state);
+    return;
+  }
+  if (state.root.dataset.reportState === "list") {
+    renderListView(state);
+  }
+}
+
+function refreshedDocuments(payload) {
+  if (Array.isArray(payload)) return normalizeDocuments(payload);
+  if (payload && typeof payload === "object" && Array.isArray(payload.documents)) {
+    return normalizeDocuments(payload.documents);
+  }
+  throw new Error("Managed sub-scope inventory refresh returned an invalid document collection.");
+}
+
+function recoverCommittedDeletion(state, docId) {
+  if (typeof state.documentSourceRefresh !== "function") {
+    return Promise.reject(new Error(
+      "Document was deleted, but the report inventory could not be reconciled."
+    ));
+  }
+  return Promise.resolve(state.documentSourceRefresh()).then(function (payload) {
+    if (!state.mounted) {
+      return { reconciled: false, mode: "unmounted" };
+    }
+    var documents = refreshedDocuments(payload);
+    if (documents.some(function (doc) { return doc.docId === docId; })) {
+      throw new Error("Document was deleted, but the refreshed report inventory still lists it.");
+    }
+    state.docs = documents;
+    state.docIds = documents.map(function (doc) { return doc.docId; });
+    delete state.detailPayloads[docId];
+    publishDocumentsRefresh(state, "document-deleted-recovery");
+    returnFromDeletedDetail(state, docId);
+    return { reconciled: true, mode: "refetch" };
+  });
+}
+
+function reconcileCommittedDeletion(state, target) {
+  var docId = assertCollectionTarget(state, target);
+  if (!state.mounted) {
+    return Promise.resolve({ reconciled: false, mode: "unmounted" });
+  }
+  if (!Array.isArray(state.docs)) {
+    return recoverCommittedDeletion(state, docId);
+  }
+  var matchingIndexes = [];
+  state.docs.forEach(function (doc, index) {
+    if (doc.docId === docId) matchingIndexes.push(index);
+  });
+  if (matchingIndexes.length !== 1) {
+    return recoverCommittedDeletion(state, docId);
+  }
+  state.docs = state.docs.filter(function (_doc, index) {
+    return index !== matchingIndexes[0];
+  });
+  state.docIds = state.docs.map(function (doc) { return doc.docId; });
+  delete state.detailPayloads[docId];
+  publishDocumentsRefresh(state, "document-deleted-local");
+  returnFromDeletedDetail(state, docId);
+  return Promise.resolve({ reconciled: true, mode: "local" });
 }
 
 /**
@@ -556,13 +668,16 @@ export function mountDocsSubscopeReport(context) {
     docIds: [],
     detailRequestVersion: 0,
     detailPayloads: {},
+    documentSourceRefresh: documentSource && documentSource.refresh,
     contribution: reportContribution(context),
     headNode: refs.headNode,
     listToolbarNode: null,
     statusNode: refs.statusNode,
     tableNode: refs.tableNode,
     rowsNode: refs.rowsNode,
-    viewerScope: cleanId(context && context.viewerScope)
+    validDetailId: "",
+    viewerScope: cleanId(context && context.viewerScope),
+    mounted: true
   };
 
   var parent = root.parentNode;
@@ -572,6 +687,7 @@ export function mountDocsSubscopeReport(context) {
       if (root.parentNode === parent) return;
       state.unmountObserver.disconnect();
       state.unmountObserver = null;
+      state.mounted = false;
       invalidateDetailRequest(state);
       publishState(state, "unmounted", null, "report-unmount");
       notifyContribution(state, {
