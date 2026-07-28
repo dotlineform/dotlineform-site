@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-0482937341be8f1cdc668db4ecce7bf2",
-    "generated_at_utc": "2026-07-28T19:11:53Z",
-    "count": 227
+    "version": "blake2b-725fbb198b9a6cfaa878cf807525be7c",
+    "generated_at_utc": "2026-07-28T21:42:03Z",
+    "count": 228
   },
   "entries": [
     {
@@ -824,22 +824,21 @@
       "kind": "doc",
       "title": "Docs Viewer",
       "href": "/docs/?scope=studio&doc=d-20260424-000000-50b63f",
-      "last_updated": "2026-07-20 21:34:28",
-      "display_meta": "2026-07-20 21:34:28",
+      "last_updated": "2026-07-28 21:58:58",
+      "display_meta": "2026-07-28 21:58:58",
       "search_terms": [
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-20 21:34:28",
+        "2026-07-28 21:58:58",
         "2026",
         "07",
-        "20",
-        "21",
-        "34",
         "28",
+        "21",
+        "58",
         "d-20260424-000000-50b63f"
       ],
-      "search_text": "docs viewer docs viewer 2026-07-20 21:34:28 2026 07 20 21 34 28 d-20260424-000000-50b63f"
+      "search_text": "docs viewer docs viewer 2026-07-28 21:58:58 2026 07 28 21 58 d-20260424-000000-50b63f"
     },
     {
       "id": "d-20260423-165116-e7f7e9",
@@ -2617,6 +2616,37 @@
       "search_text": "source organisation source organisation docs viewer docs viewer 2026-07-20 10:00:17 2026 07 20 10 00 17 d-20260423-000000-8fd731"
     },
     {
+      "id": "d-20260728-205013-41deb8",
+      "kind": "doc",
+      "title": "Sub-Scope Public And Manage Manifests",
+      "href": "/docs/?scope=studio&doc=d-20260728-205013-41deb8",
+      "last_updated": "2026-07-28 22:41:36",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-07-28 22:41:36 • Docs Viewer",
+      "search_terms": [
+        "sub-scope public and manage manifests",
+        "sub",
+        "scope",
+        "public",
+        "and",
+        "manage",
+        "manifests",
+        "docs viewer",
+        "docs",
+        "viewer",
+        "2026-07-28 22:41:36",
+        "2026",
+        "07",
+        "28",
+        "22",
+        "41",
+        "36",
+        "d-20260728-205013-41deb8"
+      ],
+      "search_text": "sub-scope public and manage manifests sub scope public and manage manifests docs viewer docs viewer 2026-07-28 22:41:36 2026 07 28 22 41 36 d-20260728-205013-41deb8"
+    },
+    {
       "id": "d-20260531-152622-ed2451",
       "kind": "doc",
       "title": "Toolbar Model",
@@ -4166,10 +4196,10 @@
       "kind": "doc",
       "title": "Sub-Scope Report List Filter Delivery",
       "href": "/docs/?scope=studio&doc=d-20260728-141505-277932",
-      "last_updated": "2026-07-28 14:19:51",
+      "last_updated": "2026-07-28 22:41:36",
       "parent_id": "d-20260728-113139-285eae",
       "parent_title": "Sub-Scope Index",
-      "display_meta": "2026-07-28 14:19:51 • Sub-Scope Index",
+      "display_meta": "2026-07-28 22:41:36 • Sub-Scope Index",
       "search_terms": [
         "sub-scope report list filter delivery",
         "sub",
@@ -4180,16 +4210,16 @@
         "delivery",
         "sub-scope index",
         "index",
-        "2026-07-28 14:19:51",
+        "2026-07-28 22:41:36",
         "2026",
         "07",
         "28",
-        "14",
-        "19",
-        "51",
+        "22",
+        "41",
+        "36",
         "d-20260728-141505-277932"
       ],
-      "search_text": "sub-scope report list filter delivery sub scope report list filter delivery sub-scope index index 2026-07-28 14:19:51 2026 07 28 14 19 51 d-20260728-141505-277932"
+      "search_text": "sub-scope report list filter delivery sub scope report list filter delivery sub-scope index index 2026-07-28 22:41:36 2026 07 28 22 41 36 d-20260728-141505-277932"
     },
     {
       "id": "d-20260728-173227-bb7426",
