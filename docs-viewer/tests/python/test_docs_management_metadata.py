@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+from http import HTTPStatus
 import json
 from pathlib import Path
 import sys
@@ -160,7 +161,13 @@ def test_sub_scope_metadata_write_rebuilds_detail_manifest_and_inventory(
                 docs_scope_record(
                     "studio",
                     allow_unresolved_parent_ids=True,
-                    sub_scopes=[docs_sub_scope_record("studio", "tags")],
+                    sub_scopes=[
+                        docs_sub_scope_record(
+                            "studio",
+                            "tags",
+                            document_groups=["subject", "domain", "form", "theme"],
+                        )
+                    ],
                 )
             ],
         )
@@ -180,6 +187,7 @@ def test_sub_scope_metadata_write_rebuilds_detail_manifest_and_inventory(
                     "added_date": "2026-07-26 10:00",
                     "last_updated": "2026-07-26 11:00",
                     "ui_status": "draft",
+                    "group": "subject",
                     "viewable": True,
                     "parent_id": "retained-parent",
                 },
@@ -205,11 +213,17 @@ def test_sub_scope_metadata_write_rebuilds_detail_manifest_and_inventory(
                 "scope": "studio",
                 "sub_scope": "tags",
                 "doc_id": SUB_SCOPE_DOC_ID,
+                "source_revision": (
+                    docs_management_mutations.source_model.source_revision(
+                        source_path.read_bytes()
+                    )
+                ),
                 "title": "Renamed Detail",
                 "summary": "New summary",
                 "date": "2026-07-27",
                 "date_display": "late July 2026",
                 "ui_status": "done",
+                "group": "theme",
                 "viewable": False,
             },
             dry_run=False,
@@ -236,6 +250,7 @@ def test_sub_scope_metadata_write_rebuilds_detail_manifest_and_inventory(
         "date": "2026-07-27",
         "date_display": "late July 2026",
         "ui_status": "done",
+        "group": "theme",
         "viewable": False,
     }
     assert result["sub_scope"] == "tags"
@@ -325,6 +340,92 @@ def test_sub_scope_metadata_service_rejects_parent_without_writing(
                 dry_run=False,
             )
         assert source_path.read_bytes() == before
+
+
+def test_sub_scope_metadata_service_returns_conflict_for_write_race(
+    monkeypatch,
+) -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_scope_registry(
+            repo_root,
+            [
+                docs_scope_record(
+                    "studio",
+                    sub_scopes=[
+                        docs_sub_scope_record(
+                            "studio",
+                            "tags",
+                            document_groups=["subject", "domain", "form", "theme"],
+                        )
+                    ],
+                )
+            ],
+        )
+        source_path = (
+            repo_root
+            / f"docs-viewer/scopes/studio/source/sub-scopes/tags/documents/{SUB_SCOPE_DOC_ID}.md"
+        )
+        source_path.parent.mkdir(parents=True, exist_ok=True)
+        source_path.write_text(
+            docs_management_mutations.source_model.format_source(
+                {
+                    "doc_id": SUB_SCOPE_DOC_ID,
+                    "title": "Detail",
+                    "ui_status": "draft",
+                    "group": "subject",
+                },
+                "# Detail\n",
+            ),
+            encoding="utf-8",
+        )
+        original_bytes = source_path.read_bytes()
+        concurrent_text = source_path.read_text(encoding="utf-8") + "\nConcurrent edit.\n"
+
+        def race_before_write(
+            _repo_root,
+            _scope,
+            _sub_scope,
+            _changed_paths,
+            write_operation,
+            **_kwargs,
+        ):
+            source_path.write_text(concurrent_text, encoding="utf-8")
+            write_operation()
+            raise AssertionError("revision conflict must stop the rebuild")
+
+        monkeypatch.setattr(
+            docs_management_service.write_rebuild,
+            "perform_sub_scope_source_write_and_rebuild",
+            race_before_write,
+        )
+        status, payload = docs_management_service.docs_management_post_response(
+            repo_root,
+            docs_management_service.routes.UPDATE_METADATA_PATH,
+            {
+                "scope": "studio",
+                "sub_scope": "tags",
+                "doc_id": SUB_SCOPE_DOC_ID,
+                "source_revision": (
+                    docs_management_mutations.source_model.source_revision(
+                        original_bytes
+                    )
+                ),
+                "title": "Renamed Detail",
+                "group": "theme",
+            },
+        )
+
+        assert status is HTTPStatus.CONFLICT
+        assert payload["operation"] == "update_metadata"
+        assert payload["error"] == "managed document source changed before metadata save"
+        assert payload["target"] == {
+            "scope": "studio",
+            "sub_scope": "tags",
+            "doc_id": SUB_SCOPE_DOC_ID,
+        }
+        assert source_path.read_text(encoding="utf-8") == concurrent_text
+        assert "Renamed Detail" not in concurrent_text
 
 
 def test_hidden_parent_delete_includes_children() -> None:

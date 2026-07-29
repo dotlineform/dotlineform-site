@@ -44,6 +44,7 @@ export function createDocsViewerManagementModalController(options = {}) {
   var metadataModalResolve = null;
   var metadataStatusPointerValue = null;
   var metadataEditingDoc = null;
+  var metadataEditingChoices = null;
   var settingsFieldState = null;
   var importModalCancelButton = null;
   var importLifecycle = null;
@@ -98,27 +99,37 @@ export function createDocsViewerManagementModalController(options = {}) {
     return metadataParentPicker.resolveParentId(doc);
   }
 
-  function metadataStatusOptions() {
+  function metadataStatusOptions(choices) {
+    var allowedValues = Array.isArray(choices && choices.ui_status)
+      ? new Set(choices.ui_status)
+      : null;
     var optionRecords = [];
     (scopeConfig.uiStatuses || []).forEach(function (status) {
+      if (allowedValues && !allowedValues.has(status.ui_status)) return;
       optionRecords.push({
         value: status.ui_status,
         label: status.emoji + " " + status.label
       });
     });
+    if (allowedValues) {
+      allowedValues.forEach(function (value) {
+        if (optionRecords.some(function (option) { return option.value === value; })) return;
+        optionRecords.push({ value: value, label: value });
+      });
+    }
     return optionRecords;
   }
 
-  function renderMetadataStatusOptions(doc) {
+  function renderMetadataStatusOptions(doc, choices) {
     if (!refs.metadataStatusInput) return;
     var selectedValue = String(doc && doc.ui_status || "").trim();
-    renderMetadataStatusSelection(selectedValue);
+    renderMetadataStatusSelection(selectedValue, choices);
   }
 
-  function renderMetadataStatusSelection(selectedValue) {
+  function renderMetadataStatusSelection(selectedValue, choices) {
     if (!refs.metadataStatusInput) return;
     refs.metadataStatusInput.innerHTML = renderMetadataStatusOptionsMarkup(
-      metadataStatusOptions(),
+      metadataStatusOptions(choices),
       selectedValue
     );
     var selectedOption = Array.from(refs.metadataStatusInput.options).find(function (option) {
@@ -126,6 +137,28 @@ export function createDocsViewerManagementModalController(options = {}) {
     });
     refs.metadataStatusInput.selectedIndex = selectedOption ? selectedOption.index : -1;
     refs.metadataStatusInput.size = Math.max(1, refs.metadataStatusInput.options.length);
+  }
+
+  function renderMetadataGroupOptions(doc, choices) {
+    if (!refs.metadataGroupField || !refs.metadataGroupInput) return;
+    var values = Array.isArray(choices && choices.group) ? choices.group : [];
+    var showGroup = values.length > 0;
+    refs.metadataGroupField.hidden = !showGroup;
+    refs.metadataGroupInput.disabled = !showGroup;
+    refs.metadataGroupInput.replaceChildren();
+    if (!showGroup) return;
+
+    var emptyOption = document.createElement("option");
+    emptyOption.value = "";
+    emptyOption.textContent = "No group";
+    refs.metadataGroupInput.appendChild(emptyOption);
+    values.forEach(function (value) {
+      var option = document.createElement("option");
+      option.value = value;
+      option.textContent = value;
+      refs.metadataGroupInput.appendChild(option);
+    });
+    refs.metadataGroupInput.value = String(doc && doc.group || "").trim();
   }
 
   function clearMetadataStatusSelection() {
@@ -195,6 +228,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     refs.metadataModal.hidden = true;
     management.metadataEditingDocId = "";
     metadataEditingDoc = null;
+    metadataEditingChoices = null;
     if (metadataModalResolve) {
       var resolve = metadataModalResolve;
       metadataModalResolve = null;
@@ -205,11 +239,12 @@ export function createDocsViewerManagementModalController(options = {}) {
   function openMetadataModal(doc, options) {
     var settings = options || {};
     var target = settings.target || null;
-    if (!doc || !target || !refs.metadataModal || !refs.metadataForm || !refs.metadataTitleInput || !refs.metadataSummaryInput || !refs.metadataDateInput || !refs.metadataDateDisplayInput || !refs.metadataStatusInput || !refs.metadataNonViewableInput || !refs.metadataParentField || !refs.metadataParentInput) {
+    if (!doc || !target || !refs.metadataModal || !refs.metadataForm || !refs.metadataTitleInput || !refs.metadataSummaryInput || !refs.metadataDateInput || !refs.metadataDateDisplayInput || !refs.metadataStatusInput || !refs.metadataGroupField || !refs.metadataGroupInput || !refs.metadataNonViewableInput || !refs.metadataParentField || !refs.metadataParentInput) {
       return Promise.resolve(null);
     }
     if (typeof callbacks.hideContextMenu === "function") callbacks.hideContextMenu();
     metadataEditingDoc = doc;
+    metadataEditingChoices = settings.choices || null;
     management.metadataEditingDocId = doc.doc_id;
     if (refs.metadataDocId) {
       refs.metadataDocId.textContent = doc.doc_id;
@@ -219,7 +254,8 @@ export function createDocsViewerManagementModalController(options = {}) {
     refs.metadataSummaryInput.value = doc.summary || "";
     refs.metadataDateInput.value = doc.date || "";
     refs.metadataDateDisplayInput.value = doc.date_display || "";
-    renderMetadataStatusOptions(doc);
+    renderMetadataStatusOptions(doc, metadataEditingChoices);
+    renderMetadataGroupOptions(doc, metadataEditingChoices);
     refs.metadataNonViewableInput.checked = typeof callbacks.isDocNonViewable === "function" ? callbacks.isDocNonViewable(doc) : doc.viewable === false;
     var showParent = settings.showParent === true;
     refs.metadataParentField.hidden = !showParent;

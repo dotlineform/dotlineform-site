@@ -158,6 +158,8 @@ class DocsScopeConfig:
 class DocsSubScopeConfig:
     sub_scope: str
     title: str
+    ui_statuses: tuple[str, ...]
+    document_groups: tuple[str, ...]
     source: DocsSourceConfig
     published: DocsPublishedConfig
     public_projection: DocsPublicProjectionConfig | None
@@ -657,6 +659,38 @@ def validate_scope_policy(config: DocsScopeConfig, *, field: str) -> None:
                 )
 
 
+def normalize_ordered_sub_scope_values(
+    raw: Any,
+    *,
+    field: str,
+) -> tuple[str, ...]:
+    """Normalize one ordered, duplicate-free sub-scope metadata vocabulary."""
+
+    if raw is None:
+        return ()
+    if not isinstance(raw, list):
+        raise ValueError(f"docs scope config field {field} must be an array")
+    values: list[str] = []
+    seen: set[str] = set()
+    for index, raw_value in enumerate(raw):
+        if not isinstance(raw_value, str):
+            raise ValueError(
+                f"docs scope config field {field}[{index}] must be a string"
+            )
+        value = raw_value.strip().lower()
+        if not SUB_SCOPE_ID_PATTERN.fullmatch(value):
+            raise ValueError(
+                f"docs scope config field {field}[{index}] is invalid"
+            )
+        if value in seen:
+            raise ValueError(
+                f"docs scope config field {field} must not contain duplicates"
+            )
+        seen.add(value)
+        values.append(value)
+    return tuple(values)
+
+
 def normalize_sub_scope_configs(
     raw: Any,
     *,
@@ -721,10 +755,20 @@ def normalize_sub_scope_configs(
                     f"docs scope config sub-scope {parent.scope_id}/{sub_scope} public documents must be "
                     f"{expected_public_documents.as_posix()}"
                 )
+        ui_statuses = normalize_ordered_sub_scope_values(
+            item.get("ui_statuses"),
+            field=f"{item_field}.ui_statuses",
+        )
+        document_groups = normalize_ordered_sub_scope_values(
+            item.get("document_groups"),
+            field=f"{item_field}.document_groups",
+        )
         configs.append(
             DocsSubScopeConfig(
                 sub_scope=sub_scope,
                 title=str(item.get("title") or "").strip(),
+                ui_statuses=ui_statuses,
+                document_groups=document_groups,
                 source=source,
                 published=published,
                 public_projection=projection,

@@ -914,7 +914,7 @@
               "doc_id": "d-20260728-141505-277932",
               "title": "Sub-Scope Report List Filter Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-141505-277932.json",
-              "ui_status": "proposed"
+              "ui_status": "in-progress"
             },
             {
               "doc_id": "d-20260728-173227-bb7426",
@@ -1271,5 +1271,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-28T21:00:17Z"
+  "generated_at": "2026-07-29T08:29:44Z"
 }

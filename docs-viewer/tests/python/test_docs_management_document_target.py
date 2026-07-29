@@ -35,6 +35,7 @@ def write_source_doc(
     source_doc_id: str | None = None,
     title: str = "",
     ui_status: str = "",
+    group: str = "",
     viewable: bool = True,
     sub_scope: str = "",
 ) -> Path:
@@ -50,6 +51,8 @@ def write_source_doc(
     ]
     if ui_status:
         front_matter.append(f"ui_status: {ui_status}")
+    if group:
+        front_matter.append(f"group: {group}")
     if not viewable:
         front_matter.append("viewable: false")
     front_matter.extend(["---", "", f"# {title or doc_id.title()}", "", "Body.", ""])
@@ -72,7 +75,12 @@ def prepare_repo(
                 "analysis",
                 scope_type=scope_type,
                 sub_scopes=[
-                    docs_sub_scope_record("analysis", "tags", title="Tags")
+                    docs_sub_scope_record(
+                        "analysis",
+                        "tags",
+                        title="Tags",
+                        document_groups=["subject", "domain", "form", "theme"],
+                    )
                 ],
             )
         ],
@@ -273,6 +281,7 @@ summary: Full local summary
 date: 2026-07-27
 date_display: July 2026
 ui_status: draft
+group: theme
 viewable: false
 parent_id: retained-sub-scope-parent
 ---
@@ -316,6 +325,13 @@ parent_id: retained-sub-scope-parent
         "scope": "analysis",
         "sub_scope": "tags",
         "doc_id": "detail-doc",
+        "source_revision": target_service.source_model.source_revision(
+            detail_path.read_bytes()
+        ),
+        "choices": {
+            "ui_status": ["draft", "done"],
+            "group": ["subject", "domain", "form", "theme"],
+        },
         "record": {
             "doc_id": "detail-doc",
             "title": "Detail",
@@ -324,6 +340,7 @@ parent_id: retained-sub-scope-parent
             "date_display": "July 2026",
             "ui_status": "draft",
             "viewable": False,
+            "group": "theme",
         },
     }
 

@@ -94,6 +94,27 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             ],
         }
 
+    def validate_docs(self, docs: list[DocRecord]) -> None:
+        super().validate_docs(docs)
+        allowed_statuses = set(self.sub_scope_config.ui_statuses)
+        allowed_groups = set(self.sub_scope_config.document_groups)
+        for doc in docs:
+            if doc.ui_status and doc.ui_status not in allowed_statuses:
+                raise RuntimeError(
+                    f"Unknown ui_status {doc.ui_status!r} for "
+                    f"{self.scope_id}/{self.sub_scope_id} doc {doc.doc_id!r}"
+                )
+            if doc.group and not allowed_groups:
+                raise RuntimeError(
+                    f"group is not configured for "
+                    f"{self.scope_id}/{self.sub_scope_id} doc {doc.doc_id!r}"
+                )
+            if doc.group and doc.group not in allowed_groups:
+                raise RuntimeError(
+                    f"Unknown group {doc.group!r} for "
+                    f"{self.scope_id}/{self.sub_scope_id} doc {doc.doc_id!r}"
+                )
+
     def run(self, *, write: bool, emit_diagnostics: bool = False) -> dict[str, Any]:
         started_at = monotonic_time()
         docs = self.load_docs()

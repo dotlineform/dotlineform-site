@@ -77,7 +77,12 @@ def test_python_docs_builder_writes_sub_scope_payloads_and_minimal_manifest() ->
         config_path = root / "docs-viewer/config/scopes/docs_scopes.json"
         payload = read_json(config_path)
         payload["scopes"][0]["sub_scopes"] = [
-            docs_sub_scope_record("studio", "tags", title="Tags")
+            docs_sub_scope_record(
+                "studio",
+                "tags",
+                title="Tags",
+                document_groups=["subject", "domain", "form", "theme"],
+            )
         ]
         write_json(config_path, payload)
         write_text(
@@ -88,6 +93,7 @@ title: Tags
 added_date: 2026-06-20
 last_updated: 2026-06-21
 parent_id: ""
+group: subject
 viewer_report: docs_subscope
 viewer_report_subscope: tags
 ---
@@ -146,12 +152,56 @@ Related body.
     assert detail["title"] == "Detail"
     assert detail["last_updated"] == "2026-06-21"
     assert "source_path" not in detail
+    assert "group" not in detail
     assert detail["viewer_url"] == f"/docs/?scope=studio&doc={TAGS_REPORT_DOC_ID}&subdoc={DETAIL_DOC_ID}"
     assert 'href="related.md"' in detail["content_html"]
     assert related["parent_id"] == DETAIL_DOC_ID
     assert not (root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/by-id/stale.json").exists()
     assert not (root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/index-tree.json").exists()
     assert not (root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/recent.json").exists()
+
+
+@pytest.mark.parametrize(
+    ("group", "error"),
+    [
+        ("unknown", "Unknown group"),
+        ("[subject, theme]", "Unknown group"),
+    ],
+)
+def test_python_docs_builder_rejects_invalid_sub_scope_group(
+    group: str,
+    error: str,
+) -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        config_path = root / "docs-viewer/config/scopes/docs_scopes.json"
+        payload = read_json(config_path)
+        payload["scopes"][0]["sub_scopes"] = [
+            docs_sub_scope_record(
+                "studio",
+                "tags",
+                document_groups=["subject", "domain", "form", "theme"],
+            )
+        ]
+        write_json(config_path, payload)
+        write_text(
+            root
+            / f"docs-viewer/scopes/studio/source/sub-scopes/tags/documents/{DETAIL_DOC_ID}.md",
+            f"""---
+doc_id: {DETAIL_DOC_ID}
+title: Detail
+group: {group}
+---
+# Detail
+""",
+        )
+
+        with pytest.raises(RuntimeError, match=error):
+            run_cli(
+                root,
+                ["--scope", "studio", "--sub-scope", "tags"],
+            )
 
 
 def test_python_docs_builder_can_confine_sub_scope_write_from_browser_configs() -> None:

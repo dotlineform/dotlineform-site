@@ -53,7 +53,13 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         [
             docs_scope_record(
                 "studio",
-                sub_scopes=[docs_sub_scope_record("studio", "tags")],
+                sub_scopes=[
+                    docs_sub_scope_record(
+                        "studio",
+                        "tags",
+                        document_groups=["subject", "domain", "form", "theme"],
+                    )
+                ],
             ),
             docs_scope_record("scratch"),
         ],
@@ -147,6 +153,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
                 "added_date": "2026-05-01 09:00",
                 "last_updated": "2026-05-01 10:00",
                 "ui_status": "draft",
+                "group": "subject",
                 "viewable": True,
                 "parent_id": "retained-parent",
                 "sort_order": 4,
@@ -268,17 +275,25 @@ def test_metadata_viewable_plan_writes_current_viewability() -> None:
 def test_sub_scope_metadata_plan_updates_every_editable_field_without_parentage() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
+        source_path = (
+            repo_root
+            / "docs-viewer/scopes/studio/source/sub-scopes/tags/documents/detail.md"
+        )
         plan = mutations.plan_update_metadata(
             repo_root,
             {
                 "scope": "studio",
                 "sub_scope": "tags",
                 "doc_id": "detail",
+                "source_revision": source_model.source_revision(
+                    source_path.read_bytes()
+                ),
                 "title": "Renamed Detail",
                 "summary": "new detail summary",
                 "date": "2026-05-04",
                 "date_display": "early May 2026",
                 "ui_status": "done",
+                "group": "theme",
                 "viewable": False,
             },
         )
@@ -292,6 +307,7 @@ def test_sub_scope_metadata_plan_updates_every_editable_field_without_parentage(
         "date": "2026-05-04",
         "date_display": "early May 2026",
         "ui_status": "done",
+        "group": "theme",
         "viewable": False,
     }
     assert plan.response["changes"] == {
@@ -302,6 +318,7 @@ def test_sub_scope_metadata_plan_updates_every_editable_field_without_parentage(
         "date_display_changed": True,
         "status_changed": True,
         "viewable_changed": True,
+        "group_changed": True,
     }
     assert plan.build_doc_ids == []
     assert plan.search_doc_ids == []
@@ -318,25 +335,183 @@ def test_sub_scope_metadata_plan_updates_every_editable_field_without_parentage(
 def test_sub_scope_metadata_plan_noops_without_advancing_timestamp() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
+        source_path = (
+            repo_root
+            / "docs-viewer/scopes/studio/source/sub-scopes/tags/documents/detail.md"
+        )
         plan = mutations.plan_update_metadata(
             repo_root,
             {
                 "scope": "studio",
                 "sub_scope": "tags",
                 "doc_id": "detail",
+                "source_revision": source_model.source_revision(
+                    source_path.read_bytes()
+                ),
                 "title": "Detail",
                 "summary": "old detail summary",
                 "date": "2026-05-03",
                 "date_display": "May 2026",
                 "ui_status": "draft",
+                "group": "subject",
                 "viewable": True,
             },
         )
 
     assert plan.source_writes == ()
     assert plan.response["record"]["viewable"] is True
+    assert plan.response["record"]["group"] == "subject"
     assert "parent_id" not in plan.response["record"]
     assert all(changed is False for changed in plan.response["changes"].values())
+
+
+def test_sub_scope_group_only_metadata_change_preserves_last_updated() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        source_path = (
+            repo_root
+            / "docs-viewer/scopes/studio/source/sub-scopes/tags/documents/detail.md"
+        )
+        before_revision = source_model.source_revision(source_path.read_bytes())
+        plan = mutations.plan_update_metadata(
+            repo_root,
+            {
+                "scope": "studio",
+                "sub_scope": "tags",
+                "doc_id": "detail",
+                "source_revision": before_revision,
+                "title": "Detail",
+                "group": "domain",
+            },
+        )
+
+    assert plan.response["changes"] == {
+        "title_changed": False,
+        "parent_changed": False,
+        "summary_changed": False,
+        "date_changed": False,
+        "date_display_changed": False,
+        "status_changed": False,
+        "viewable_changed": False,
+        "group_changed": True,
+    }
+    assert plan.response["record"]["group"] == "domain"
+    assert plan.response["source_revision"] != before_revision
+    assert 'last_updated: "2026-05-01 10:00"' in plan.source_writes[0].text
+    assert "group: domain" in plan.source_writes[0].text
+
+
+@pytest.mark.parametrize(
+    ("changes", "error"),
+    [
+        ({"group": ["subject"]}, "group must be a scalar string"),
+        ({"group": "unknown"}, "Unknown group"),
+        ({"ui_status": ["draft"]}, "ui_status must be a scalar string"),
+        ({"ui_status": "unknown"}, "Unknown ui_status"),
+    ],
+)
+def test_sub_scope_metadata_plan_rejects_invalid_configured_choices(
+    changes: dict[str, object],
+    error: str,
+) -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        source_path = (
+            repo_root
+            / "docs-viewer/scopes/studio/source/sub-scopes/tags/documents/detail.md"
+        )
+        before = source_path.read_bytes()
+        with pytest.raises(ValueError, match=error):
+            mutations.plan_update_metadata(
+                repo_root,
+                {
+                    "scope": "studio",
+                    "sub_scope": "tags",
+                    "doc_id": "detail",
+                    "source_revision": source_model.source_revision(before),
+                    "title": "Detail",
+                    **changes,
+                },
+            )
+        assert source_path.read_bytes() == before
+
+
+def test_sub_scope_metadata_plan_rejects_missing_or_stale_revision() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        source_path = (
+            repo_root
+            / "docs-viewer/scopes/studio/source/sub-scopes/tags/documents/detail.md"
+        )
+        before = source_path.read_bytes()
+        with pytest.raises(ValueError, match="source_revision is required"):
+            mutations.plan_update_metadata(
+                repo_root,
+                {
+                    "scope": "studio",
+                    "sub_scope": "tags",
+                    "doc_id": "detail",
+                    "title": "Detail",
+                },
+            )
+        with pytest.raises(mutations.ManagedDocumentRevisionConflict):
+            mutations.plan_update_metadata(
+                repo_root,
+                {
+                    "scope": "studio",
+                    "sub_scope": "tags",
+                    "doc_id": "detail",
+                    "source_revision": "sha256:" + ("0" * 64),
+                    "title": "Detail",
+                },
+            )
+        assert source_path.read_bytes() == before
+
+
+def test_sub_scope_metadata_plan_rejects_group_for_unconfigured_collection() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_docs_scope_config(
+            repo_root,
+            [
+                docs_scope_record(
+                    "studio",
+                    sub_scopes=[
+                        docs_sub_scope_record(
+                            "studio",
+                            "tags",
+                            document_groups=[],
+                        )
+                    ],
+                ),
+                docs_scope_record("scratch"),
+            ],
+        )
+        source_path = (
+            repo_root
+            / "docs-viewer/scopes/studio/source/sub-scopes/tags/documents/detail.md"
+        )
+        source_path.write_text(
+            source_path.read_text(encoding="utf-8").replace(
+                "group: subject\n",
+                "",
+            ),
+            encoding="utf-8",
+        )
+        before = source_path.read_bytes()
+        with pytest.raises(ValueError, match="group is not configured"):
+            mutations.plan_update_metadata(
+                repo_root,
+                {
+                    "scope": "studio",
+                    "sub_scope": "tags",
+                    "doc_id": "detail",
+                    "source_revision": source_model.source_revision(before),
+                    "title": "Detail",
+                    "group": "",
+                },
+            )
+        assert source_path.read_bytes() == before
 
 
 def test_sub_scope_metadata_plan_rejects_any_parent_field_without_a_write() -> None:

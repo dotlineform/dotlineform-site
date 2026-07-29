@@ -166,7 +166,10 @@ def docs_management_post_response(
             )
         return HTTPStatus.OK, payload
     if path == routes.UPDATE_METADATA_PATH:
-        return HTTPStatus.OK, handle_update_metadata(repo_root, body, dry_run)
+        try:
+            return HTTPStatus.OK, handle_update_metadata(repo_root, body, dry_run)
+        except mutations.ManagedDocumentRevisionConflict as error:
+            return HTTPStatus.CONFLICT, error.payload
     if path == routes.CREATE_PATH:
         return HTTPStatus.OK, handle_create(repo_root, body, dry_run)
     if path == routes.REBUILD_PATH:

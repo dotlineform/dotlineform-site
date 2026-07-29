@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-725fbb198b9a6cfaa878cf807525be7c",
-    "generated_at_utc": "2026-07-28T21:42:03Z",
+    "version": "blake2b-f181c5c033e646f8bdb6ce207e60fe05",
+    "generated_at_utc": "2026-07-29T08:29:44Z",
     "count": 228
   },
   "entries": [
@@ -4196,10 +4196,10 @@
       "kind": "doc",
       "title": "Sub-Scope Report List Filter Delivery",
       "href": "/docs/?scope=studio&doc=d-20260728-141505-277932",
-      "last_updated": "2026-07-28 22:41:36",
+      "last_updated": "2026-07-29 09:25:22",
       "parent_id": "d-20260728-113139-285eae",
       "parent_title": "Sub-Scope Index",
-      "display_meta": "2026-07-28 22:41:36 • Sub-Scope Index",
+      "display_meta": "2026-07-29 09:25:22 • Sub-Scope Index",
       "search_terms": [
         "sub-scope report list filter delivery",
         "sub",
@@ -4210,16 +4210,16 @@
         "delivery",
         "sub-scope index",
         "index",
-        "2026-07-28 22:41:36",
+        "2026-07-29 09:25:22",
         "2026",
         "07",
-        "28",
+        "29",
+        "09",
+        "25",
         "22",
-        "41",
-        "36",
         "d-20260728-141505-277932"
       ],
-      "search_text": "sub-scope report list filter delivery sub scope report list filter delivery sub-scope index index 2026-07-28 22:41:36 2026 07 28 22 41 36 d-20260728-141505-277932"
+      "search_text": "sub-scope report list filter delivery sub scope report list filter delivery sub-scope index index 2026-07-29 09:25:22 2026 07 29 09 25 22 d-20260728-141505-277932"
     },
     {
       "id": "d-20260728-173227-bb7426",

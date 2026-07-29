@@ -58,6 +58,27 @@ def normalize_metadata_text(value: Any) -> str:
     return str(value or "").strip()
 
 
+def normalize_configured_metadata_choice(
+    value: Any,
+    *,
+    field: str,
+    allowed_values: tuple[str, ...],
+) -> str:
+    if value is None:
+        return ""
+    if not isinstance(value, str):
+        raise ValueError(f"{field} must be a scalar string")
+    normalized = value.strip().lower()
+    if normalized and not allowed_values:
+        raise ValueError(f"{field} is not configured for this sub-scope")
+    if normalized and normalized not in allowed_values:
+        raise ValueError(
+            f"Unknown {field} {normalized!r}; expected one of: "
+            + ", ".join(allowed_values)
+        )
+    return normalized
+
+
 def ordered_doc_ids(doc_ids: list[str]) -> list[str]:
     seen: set[str] = set()
     ordered: list[str] = []
@@ -149,6 +170,7 @@ def metadata_search_doc_ids(
 class SourceWrite:
     path: Path
     text: str
+    original_bytes: Optional[bytes] = None
 
 
 @dataclass(frozen=True)
@@ -252,16 +274,38 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
     )
     scope = resolved.scope
     target = resolved.document
+    if resolved.sub_scope and "parent_id" in body:
+        raise ValueError("parent_id is not editable for a sub-scope document")
+    requested_revision = str(body.get("source_revision") or "").strip()
+    if resolved.sub_scope and not SOURCE_REVISION_PATTERN.fullmatch(
+        requested_revision
+    ):
+        raise ValueError(
+            "source_revision is required for sub-scope metadata updates"
+        )
+    if requested_revision and not SOURCE_REVISION_PATTERN.fullmatch(
+        requested_revision
+    ):
+        raise ValueError("source_revision must be a sha256 revision receipt")
+    source_bytes = target.source_text.encode("utf-8")
+    current_revision = source_revision(source_bytes)
+    if requested_revision and requested_revision != current_revision:
+        raise ManagedDocumentRevisionConflict(
+            revision_conflict_payload(
+                target=resolved.request_target(),
+                requested_revision=requested_revision,
+                current_revision=current_revision,
+                operation="update_metadata",
+                error="managed document source changed before metadata save",
+            )
+        )
     title = str(body.get("title") or "").strip()
     if not title:
         raise ValueError("title is required")
 
     docs: list[source_model.ScopeDoc] = []
     parent_id = target.parent_id
-    if resolved.sub_scope:
-        if "parent_id" in body:
-            raise ValueError("parent_id is not editable for a sub-scope document")
-    else:
+    if not resolved.sub_scope:
         docs = source_model.load_scope_docs(repo_root, scope)
         docs_by_id = {doc.doc_id: doc for doc in docs}
         parent_id = str(body.get("parent_id") or "").strip()
@@ -288,8 +332,29 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
     date_display_changed = date_display_was_provided and date_display != current_date_display
     status_was_provided = "ui_status" in body
     current_ui_status = source_model.normalize_ui_status(target.front_matter.get("ui_status"))
-    ui_status = source_model.normalize_ui_status(body.get("ui_status")) if status_was_provided else current_ui_status
+    if resolved.sub_scope and status_was_provided:
+        ui_status = normalize_configured_metadata_choice(
+            body.get("ui_status"),
+            field="ui_status",
+            allowed_values=resolved.document_config.ui_statuses,
+        )
+    else:
+        ui_status = source_model.normalize_ui_status(body.get("ui_status")) if status_was_provided else current_ui_status
     status_changed = status_was_provided and ui_status != current_ui_status
+    group_was_provided = resolved.sub_scope and "group" in body
+    current_group = target.group
+    if group_was_provided and not resolved.document_config.document_groups:
+        raise ValueError("group is not configured for this sub-scope")
+    group = (
+        normalize_configured_metadata_choice(
+            body.get("group"),
+            field="group",
+            allowed_values=resolved.document_config.document_groups,
+        )
+        if group_was_provided
+        else current_group
+    )
+    group_changed = group_was_provided and group != current_group
     viewable_was_provided = "viewable" in body
     current_viewable = target.viewable
     viewable = source_model.front_matter_boolean(body, "viewable", True) if viewable_was_provided else current_viewable
@@ -303,6 +368,8 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         "status_changed": status_changed,
         "viewable_changed": viewable_changed,
     }
+    if resolved.sub_scope:
+        changes["group_changed"] = group_changed
     if not any(changes.values()):
         record: dict[str, object] = {
             "doc_id": target.doc_id,
@@ -315,11 +382,14 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         }
         if not resolved.sub_scope:
             record["parent_id"] = target.parent_id
+        else:
+            record["group"] = current_group
         response: dict[str, Any] = {
             "ok": True,
             "scope": scope,
             "doc_id": target.doc_id,
             "path": relative_path(repo_root, target.path),
+            "source_revision": current_revision,
             "record": record,
             "changes": dict.fromkeys(changes.keys(), False),
             "summary_text": f"No metadata changes for {target.doc_id}.",
@@ -359,6 +429,11 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
             updated_front_matter.pop("viewable", None)
         else:
             updated_front_matter["viewable"] = False
+    if group_was_provided:
+        if group:
+            updated_front_matter["group"] = group
+        else:
+            updated_front_matter.pop("group", None)
     if not resolved.sub_scope:
         updated_front_matter["parent_id"] = parent_id
         updated_front_matter.pop("sort_order", None)
@@ -392,11 +467,18 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
     }
     if not resolved.sub_scope:
         record["parent_id"] = parent_id
+    else:
+        record["group"] = group
+    updated_source_text = source_model.format_source(
+        updated_front_matter,
+        target.body,
+    )
     response = {
         "ok": True,
         "scope": scope,
         "doc_id": target.doc_id,
         "path": relative_path(repo_root, target.path),
+        "source_revision": source_revision(updated_source_text.encode("utf-8")),
         "record": record,
         "changes": changes,
         "summary_text": f"Updated metadata for {target.doc_id}.",
@@ -416,12 +498,19 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
     }
     if resolved.sub_scope:
         log_details["sub_scope"] = resolved.sub_scope
+        log_details["group_changed"] = group_changed
 
     return ManagementMutationPlan(
         scope=scope,
         sub_scope=resolved.sub_scope,
         response=response,
-        source_writes=(SourceWrite(target.path, source_model.format_source(updated_front_matter, target.body)),),
+        source_writes=(
+            SourceWrite(
+                target.path,
+                updated_source_text,
+                original_bytes=source_bytes if requested_revision else None,
+            ),
+        ),
         suppression_reason="docs-update-metadata",
         build_doc_ids=[] if resolved.sub_scope else [target.doc_id],
         search_doc_ids=search_doc_ids,
@@ -676,19 +765,23 @@ def revision_conflict_payload(
     target: dict[str, str],
     requested_revision: str,
     current_revision: str,
+    operation: str = "apply",
+    error: str = "sub-scope document source changed after delete preview",
 ) -> Dict[str, Any]:
-    return {
+    payload: Dict[str, Any] = {
         "ok": False,
-        "operation": "apply",
+        "operation": operation,
         "target": target,
         "scope": target["scope"],
-        "sub_scope": target["sub_scope"],
         "doc_id": target["doc_id"],
         "source_revision": requested_revision,
         "current_source_revision": current_revision,
-        "error": "sub-scope document source changed after delete preview",
+        "error": error,
         "retry_safe": False,
     }
+    if target.get("sub_scope"):
+        payload["sub_scope"] = target["sub_scope"]
+    return payload
 
 
 def plan_sub_scope_delete_apply(

@@ -4,20 +4,20 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260728-141505-277932",
+      "title": "Sub-Scope Report List Filter Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-141505-277932.json",
+      "timestamp": "2026-07-29 09:25:22",
+      "parent_id": "d-20260728-113139-285eae",
+      "parent_title": "Sub-Scope Index"
+    },
+    {
       "doc_id": "d-20260728-205013-41deb8",
       "title": "Sub-Scope Public And Manage Manifests",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-205013-41deb8.json",
       "timestamp": "2026-07-28 22:41:36",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260728-141505-277932",
-      "title": "Sub-Scope Report List Filter Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-141505-277932.json",
-      "timestamp": "2026-07-28 22:41:36",
-      "parent_id": "d-20260728-113139-285eae",
-      "parent_title": "Sub-Scope Index"
     },
     {
       "doc_id": "d-20260424-000000-50b63f",
@@ -82,5 +82,5 @@
       "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-07-28T21:42:03Z"
+  "generated_at": "2026-07-29T08:29:44Z"
 }

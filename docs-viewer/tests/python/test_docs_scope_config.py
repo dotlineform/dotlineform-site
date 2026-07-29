@@ -65,6 +65,8 @@ def sub_scope_record(
     *,
     source_path: str | None = None,
     public_docs_path: str | None = None,
+    ui_statuses: list[str] | None = None,
+    document_groups: list[str] | None = None,
 ) -> dict[str, object]:
     record = docs_sub_scope_record(
         scope_id,
@@ -72,6 +74,8 @@ def sub_scope_record(
         title=sub_scope.title(),
         scope_type="public",
         public_docs_path=public_docs_path,
+        ui_statuses=ui_statuses,
+        document_groups=document_groups,
     )
     if source_path is not None:
         record["source"] = {
@@ -160,13 +164,22 @@ def test_docs_scope_config_accepts_nested_sub_scopes() -> None:
             viewer_base_url="/research/",
             include_scope_param=False,
             default_doc_id="research",
-            sub_scopes=[sub_scope_record("research", "tags")],
+            sub_scopes=[
+                sub_scope_record(
+                    "research",
+                    "tags",
+                    ui_statuses=["draft", "done"],
+                    document_groups=["subject", "theme"],
+                )
+            ],
         )
         write_scope_record(repo_root, record)
         config = docs_scope_config.load_docs_scope_configs(repo_root)["research"]
 
     sub_scope = config.sub_scopes[0]
     assert sub_scope.sub_scope == "tags"
+    assert sub_scope.ui_statuses == ("draft", "done")
+    assert sub_scope.document_groups == ("subject", "theme")
     assert docs_scope_config.document_source_path(sub_scope).as_posix() == (
         "docs-viewer/scopes/research/source/sub-scopes/tags/documents"
     )
@@ -174,6 +187,30 @@ def test_docs_scope_config_accepts_nested_sub_scopes() -> None:
         "docs-viewer/scopes/research/published/documents/sub-scopes/tags"
     )
     assert docs_scope_config.public_documents_path(sub_scope).as_posix() == "site/assets/data/docs/scopes/research/tags"
+
+
+def test_docs_scope_config_rejects_invalid_sub_scope_metadata_vocabularies() -> None:
+    invalid_values = (
+        ("ui_statuses", "draft", "must be an array"),
+        ("ui_statuses", ["draft", "draft"], "must not contain duplicates"),
+        ("document_groups", ["subject", 2], "must be a string"),
+        ("document_groups", ["Bad Group"], "is invalid"),
+    )
+    for field, value, error in invalid_values:
+        with make_repo() as temp_path:
+            repo_root = Path(temp_path)
+            sub_scope = docs_sub_scope_record("studio", "tags")
+            sub_scope[field] = value
+            record = docs_scope_record("studio", sub_scopes=[sub_scope])
+            write_scope_record(repo_root, record)
+            try:
+                docs_scope_config.load_docs_scope_configs(repo_root)
+            except ValueError as exc:
+                assert error in str(exc)
+            else:
+                raise AssertionError(
+                    f"Expected invalid sub-scope {field} to be rejected"
+                )
 
 
 def test_docs_scope_config_rejects_duplicate_sub_scopes() -> None:

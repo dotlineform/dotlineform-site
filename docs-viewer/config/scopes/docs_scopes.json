@@ -199,6 +199,24 @@
         {
           "sub_scope": "tags",
           "title": "Tags",
+          "ui_statuses": [
+            "draft",
+            "done",
+            "urgent",
+            "review",
+            "in-progress",
+            "planned",
+            "paused",
+            "deferred",
+            "report",
+            "research"
+          ],
+          "document_groups": [
+            "subject",
+            "domain",
+            "form",
+            "theme"
+          ],
           "public_projection": {
             "documents": {
               "location": {

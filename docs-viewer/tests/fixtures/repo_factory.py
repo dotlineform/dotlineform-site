@@ -159,10 +159,14 @@ def docs_sub_scope_record(
     title: str = "",
     scope_type: str = "local",
     public_docs_path: str | None = None,
+    ui_statuses: list[str] | None = None,
+    document_groups: list[str] | None = None,
 ) -> dict[str, object]:
     return {
         "sub_scope": sub_scope,
         "title": title,
+        "ui_statuses": ["draft", "done"] if ui_statuses is None else ui_statuses,
+        "document_groups": document_groups or [],
         "public_projection": (
             {
                 "documents": {

@@ -533,6 +533,7 @@ def assert_sub_scope_metadata_omits_parent_field(page: Page) -> None:
             date: '2026-07-27',
             date_display: 'July 2026',
             ui_status: 'draft',
+            group: 'subject',
             viewable: false
           };
           const controller = modalModule.createDocsViewerManagementModalController({
@@ -571,7 +572,11 @@ def assert_sub_scope_metadata_omits_parent_field(page: Page) -> None:
               sub_scope: 'tags',
               doc_id: 'detail-doc'
             },
-            showParent: false
+            showParent: false,
+            choices: {
+              ui_status: ['draft'],
+              group: ['subject', 'domain', 'form', 'theme']
+            }
           });
           return {
             visibleNames: Array.from(
@@ -584,6 +589,8 @@ def assert_sub_scope_metadata_omits_parent_field(page: Page) -> None:
             date: refs.metadataDateInput.value,
             dateDisplay: refs.metadataDateDisplayInput.value,
             status: refs.metadataStatusInput.value,
+            group: refs.metadataGroupInput.value,
+            groupOptions: Array.from(refs.metadataGroupInput.options).map(option => option.value),
             nonViewable: refs.metadataNonViewableInput.checked,
             editingDocId: refs.metadataDocId.textContent
           };
@@ -596,6 +603,7 @@ def assert_sub_scope_metadata_omits_parent_field(page: Page) -> None:
             "date",
             "date_display",
             "ui_status",
+            "group",
             "non_viewable",
         ],
         "parentHidden": True,
@@ -605,6 +613,8 @@ def assert_sub_scope_metadata_omits_parent_field(page: Page) -> None:
         "date": "2026-07-27",
         "dateDisplay": "July 2026",
         "status": "draft",
+        "group": "subject",
+        "groupOptions": ["", "subject", "domain", "form", "theme"],
         "nonViewable": True,
         "editingDocId": "detail-doc",
     }:

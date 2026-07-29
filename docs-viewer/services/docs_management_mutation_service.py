@@ -102,6 +102,36 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
     if not dry_run and plan.has_source_changes:
         def write_operation() -> None:
             for source_write in plan.source_writes:
+                if source_write.original_bytes is not None:
+                    try:
+                        current_bytes = source_write.path.read_bytes()
+                    except FileNotFoundError:
+                        current_bytes = b""
+                    if current_bytes != source_write.original_bytes:
+                        target = {
+                            "scope": plan.scope,
+                            "doc_id": str(plan.response.get("doc_id") or ""),
+                        }
+                        if plan.sub_scope:
+                            target["sub_scope"] = plan.sub_scope
+                        raise mutations.ManagedDocumentRevisionConflict(
+                            mutations.revision_conflict_payload(
+                                target=target,
+                                requested_revision=mutations.source_revision(
+                                    source_write.original_bytes
+                                ),
+                                current_revision=(
+                                    mutations.source_revision(current_bytes)
+                                    if current_bytes
+                                    else ""
+                                ),
+                                operation="update_metadata",
+                                error=(
+                                    "managed document source changed before "
+                                    "metadata save"
+                                ),
+                            )
+                        )
                 source_model.write_text_atomic(source_write.path, source_write.text)
             for source_delete in plan.source_deletes:
                 if source_delete.original_bytes is not None:

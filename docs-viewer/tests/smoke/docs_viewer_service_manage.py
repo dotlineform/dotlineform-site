@@ -129,9 +129,10 @@ def install_smoke_document_routes(
         "date": "2000-01-01",
         "date_display": "January 2000",
         "ui_status": "draft",
+        "group": "subject",
         "viewable": True,
         "source_body": "# Smoke Detail\n\nTest-owned sub-scope source.\n",
-        "source_revision": "sha256:smoke-subdoc-r1",
+        "source_revision": "sha256:" + ("1" * 64),
         "detail_version": 1,
     }
     index_payload = {
@@ -215,6 +216,11 @@ def install_smoke_document_routes(
                     "scope": "studio",
                     "sub_scope": SUBSCOPE_ID,
                     "doc_id": SUBSCOPE_DOC_ID,
+                    "source_revision": subscope_state["source_revision"],
+                    "choices": {
+                        "ui_status": ["draft", "done"],
+                        "group": ["subject", "domain", "form", "theme"],
+                    },
                     "record": {
                         "doc_id": SUBSCOPE_DOC_ID,
                         "title": subscope_state["title"],
@@ -222,6 +228,7 @@ def install_smoke_document_routes(
                         "date": subscope_state["date"],
                         "date_display": subscope_state["date_display"],
                         "ui_status": subscope_state["ui_status"],
+                        "group": subscope_state["group"],
                         "viewable": subscope_state["viewable"],
                     },
                 },
@@ -264,7 +271,7 @@ def install_smoke_document_routes(
             route.fulfill(status=404, content_type="application/json", body='{"error":"Not found"}')
             return
         subscope_state["source_body"] = payload.get("source_body", "")
-        subscope_state["source_revision"] = "sha256:smoke-subdoc-r2"
+        subscope_state["source_revision"] = "sha256:" + ("2" * 64)
         subscope_state["detail_version"] = int(subscope_state["detail_version"]) + 1
         fulfill_json(
             route,
@@ -298,9 +305,11 @@ def install_smoke_document_routes(
             "date",
             "date_display",
             "ui_status",
+            "group",
             "viewable",
         ):
             subscope_state[field] = payload.get(field)
+        subscope_state["source_revision"] = "sha256:" + ("3" * 64)
         subscope_state["detail_version"] = int(subscope_state["detail_version"]) + 1
         fulfill_json(
             route,
@@ -309,6 +318,7 @@ def install_smoke_document_routes(
                 "scope": "studio",
                 "sub_scope": SUBSCOPE_ID,
                 "doc_id": SUBSCOPE_DOC_ID,
+                "source_revision": subscope_state["source_revision"],
                 "record": {
                     "doc_id": SUBSCOPE_DOC_ID,
                     "title": subscope_state["title"],
@@ -316,6 +326,7 @@ def install_smoke_document_routes(
                     "date": subscope_state["date"],
                     "date_display": subscope_state["date_display"],
                     "ui_status": subscope_state["ui_status"],
+                    "group": subscope_state["group"],
                     "viewable": subscope_state["viewable"],
                 },
             },
@@ -1105,6 +1116,7 @@ def assert_metadata_workflow_uses_exact_sub_scope_target(page: Page) -> None:
                 dateInput: { value: '2026-07-27' },
                 dateDisplayInput: { value: 'July 2026' },
                 statusInput: { value: 'done' },
+                groupInput: { value: 'theme' },
                 nonViewableInput: { checked: true },
                 parentInput: {
                     value: 'selected-fallback',
@@ -1153,6 +1165,11 @@ def assert_metadata_workflow_uses_exact_sub_scope_target(page: Page) -> None:
                             scope: 'analysis',
                             sub_scope: 'tags',
                             doc_id: 'detail-doc',
+                            source_revision: 'sha256:' + 'a'.repeat(64),
+                            choices: {
+                                ui_status: ['draft', 'done'],
+                                group: ['subject', 'domain', 'form', 'theme']
+                            },
                             record: {
                                 doc_id: 'detail-doc',
                                 title: 'Detail',
@@ -1160,6 +1177,7 @@ def assert_metadata_workflow_uses_exact_sub_scope_target(page: Page) -> None:
                                 date: '2026-07-26',
                                 date_display: 'July 2026',
                                 ui_status: 'draft',
+                                group: 'subject',
                                 viewable: true
                             }
                         };
@@ -1192,7 +1210,9 @@ def assert_metadata_workflow_uses_exact_sub_scope_target(page: Page) -> None:
         "date": "2026-07-27",
         "date_display": "July 2026",
         "ui_status": "done",
+        "group": "theme",
         "viewable": False,
+        "source_revision": "sha256:" + ("a" * 64),
     }
     if result["loadedTarget"] != expected_target:
         raise AssertionError(f"metadata hydration did not use the exact target: {result!r}")
@@ -1204,11 +1224,16 @@ def assert_metadata_workflow_uses_exact_sub_scope_target(page: Page) -> None:
             "date": "2026-07-26",
             "date_display": "July 2026",
             "ui_status": "draft",
+            "group": "subject",
             "viewable": True,
         },
         "options": {
             "target": expected_target,
             "showParent": False,
+            "choices": {
+                "ui_status": ["draft", "done"],
+                "group": ["subject", "domain", "form", "theme"],
+            },
         },
     }:
         raise AssertionError(f"sub-scope metadata modal received the wrong contract: {result!r}")
@@ -2253,11 +2278,14 @@ def exercise_subscope_editing_route(
     )
     if not page.locator("#docsViewerMetadataParentField").is_hidden():
         raise AssertionError("sub-scope metadata form exposed Parent")
+    if page.locator("#docsViewerMetadataGroupField").is_hidden():
+        raise AssertionError("sub-scope metadata form omitted configured group")
     page.locator("#docsViewerMetadataTitleInput").fill("Renamed Smoke Detail")
     page.locator("#docsViewerMetadataSummaryInput").fill("Refreshed synthetic metadata")
     page.locator("#docsViewerMetadataDateInput").fill("2026-07-27")
     page.locator("#docsViewerMetadataDateDisplayInput").fill("July 2026")
     page.locator("#docsViewerMetadataStatusInput").select_option("done")
+    page.locator("#docsViewerMetadataGroupInput").select_option("theme")
     page.locator("#docsViewerMetadataNonViewableInput").check()
     page.locator("#docsViewerMetadataSaveButton").click()
     wait_for_subscope_detail(
@@ -2355,7 +2383,7 @@ def assert_subscope_request_log(request_log: list[dict[str, object]]) -> None:
                 "scope": "studio",
                 "sub_scope": SUBSCOPE_ID,
                 "doc_id": SUBSCOPE_DOC_ID,
-                "source_revision": "sha256:smoke-subdoc-r1",
+                "source_revision": "sha256:" + ("1" * 64),
                 "source_body": "# Saved smoke detail.\n",
             },
         }
@@ -2402,7 +2430,9 @@ def assert_subscope_request_log(request_log: list[dict[str, object]]) -> None:
                 "date": "2026-07-27",
                 "date_display": "July 2026",
                 "ui_status": "done",
+                "group": "theme",
                 "viewable": False,
+                "source_revision": "sha256:" + ("2" * 64),
             },
         }
     ]:

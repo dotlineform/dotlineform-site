@@ -55,6 +55,7 @@ class DocRecord:
     viewer_report_preset: str
     viewer_report_subscope: str
     body_markdown: str
+    group: str = ""
 def parse_front_matter_value(raw_value: str) -> Any:
     value = raw_value.strip()
     if value == '""':
@@ -145,6 +146,12 @@ class SourceLoadingMixin:
             added_date = str(front_matter.get("added_date") or last_updated).strip()
             summary = normalize_text(front_matter.get("summary"))
             ui_status = str(front_matter.get("ui_status") or "").strip()
+            raw_group = front_matter.get("group")
+            if raw_group is not None and not isinstance(raw_group, str):
+                raise FrontMatterSyntaxError(
+                    f"group must be a scalar string in {relative_path}"
+                )
+            group = str(raw_group or "").strip().lower()
             viewable = front_matter_boolean(front_matter, "viewable", True)
             docs.append(
                 DocRecord(
@@ -168,6 +175,7 @@ class SourceLoadingMixin:
                     viewer_report_preset=str(front_matter.get("viewer_report_preset") or "").strip(),
                     viewer_report_subscope=str(front_matter.get("viewer_report_subscope") or "").strip(),
                     body_markdown=body_markdown,
+                    group=group,
                 )
             )
         return docs

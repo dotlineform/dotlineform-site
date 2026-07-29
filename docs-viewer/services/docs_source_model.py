@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import os
 import re
 import tempfile
@@ -49,6 +50,7 @@ class ScopeDoc:
     ui_status: str
     parent_id: str
     viewable: bool
+    group: str = ""
 
 
 def humanize(value: str) -> str:
@@ -132,6 +134,7 @@ def format_source(front_matter: Dict[str, Any], body: str) -> str:
         "last_updated",
         "summary",
         "ui_status",
+        "group",
         "parent_id",
         "viewable",
     ]
@@ -159,6 +162,10 @@ def write_text_atomic(path: Path, text: str) -> None:
                 temp_path.unlink()
             except OSError:
                 pass
+
+
+def source_revision(source_bytes: bytes) -> str:
+    return f"sha256:{hashlib.sha256(source_bytes).hexdigest()}"
 
 
 def write_bytes_atomic(path: Path, content: bytes) -> None:
@@ -314,6 +321,36 @@ def normalize_ui_status(value: Any) -> str:
     return str(value or "").strip()
 
 
+def normalize_document_group(value: Any) -> str:
+    if value is None:
+        return ""
+    if not isinstance(value, str):
+        raise ValueError("group must be a scalar string")
+    return value.strip().lower()
+
+
+def validate_sub_scope_document_metadata(
+    doc: ScopeDoc,
+    *,
+    ui_statuses: tuple[str, ...],
+    document_groups: tuple[str, ...],
+) -> None:
+    """Validate metadata owned by one configured sub-scope."""
+
+    if doc.ui_status and doc.ui_status not in ui_statuses:
+        raise ValueError(
+            f"Unknown ui_status {doc.ui_status!r} for sub-scope doc {doc.doc_id!r}"
+        )
+    if doc.group and not document_groups:
+        raise ValueError(
+            f"group is not configured for sub-scope doc {doc.doc_id!r}"
+        )
+    if doc.group and doc.group not in document_groups:
+        raise ValueError(
+            f"Unknown group {doc.group!r} for sub-scope doc {doc.doc_id!r}"
+        )
+
+
 def default_viewable_for_scope(scope: str) -> bool:
     return default_viewable_for_config(DOCS_SCOPE_CONFIGS[scope])
 
@@ -356,6 +393,7 @@ def load_scope_docs_for_config(repo_root: Path, config: DocsScopeConfig) -> list
             raise ValueError(f"missing required doc_id in {path.relative_to(root).as_posix()}")
         title = str(front_matter.get("title") or humanize(doc_id or path.stem)).strip() or doc_id
         ui_status = normalize_ui_status(front_matter.get("ui_status"))
+        group = normalize_document_group(front_matter.get("group"))
         parent_id = str(front_matter.get("parent_id") or "").strip()
         viewable = doc_is_viewable(front_matter)
         docs.append(
@@ -370,6 +408,7 @@ def load_scope_docs_for_config(repo_root: Path, config: DocsScopeConfig) -> list
                 ui_status=ui_status,
                 parent_id=parent_id,
                 viewable=viewable,
+                group=group,
             )
         )
     validate_scope_docs(
