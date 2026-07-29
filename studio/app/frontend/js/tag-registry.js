@@ -32,6 +32,19 @@ import {
   renderTagRegistryList
 } from "./tag-registry-render.js";
 import {
+  bindDocumentLocationPicker
+} from "/shared/frontend/js/document-location-picker.js";
+import {
+  createDocumentLocationProvider
+} from "/shared/frontend/js/document-location-provider.js";
+import {
+  appendTagRegistryDocumentUrl,
+  attachTagRegistryDocuments,
+  loadTagRegistryDocumentLocations,
+  removeTagRegistryDocumentUrl,
+  setTagRegistryDocumentLocation
+} from "./tag-registry-documents.js";
+import {
   applyTagRegistryPatchFallback,
   createTagRegistryTag,
   deleteTagRegistryTag,
@@ -47,6 +60,7 @@ import {
   clearTagRegistryRouteResult,
   collectTagRegistryModalRefs,
   renderTagRegistryDeleteImpactPreview,
+  renderTagRegistryEditDocuments,
   renderTagRegistryModals,
   setTagRegistryRouteResult,
   setTagRegistryDeleteImpactStatus,
@@ -161,6 +175,8 @@ async function initTagRegistryPage() {
     patchSnippet: "",
     editTagId: "",
     editTagGroup: "",
+    editTagDocUrls: [],
+    editTagPendingDocument: null,
     newTagState: null,
     demoteState: null,
     aliasKeys: new Set(),
@@ -169,6 +185,10 @@ async function initTagRegistryPage() {
     deletePreview: "",
     deletePreviewSeq: 0,
     registryOptions: [],
+    documentLocationProvider: createDocumentLocationProvider(),
+    documentLocationsByUrl: new Map(),
+    documentLocationError: "",
+    documentPicker: null,
     refs: null,
     registryUpdatedAt: "",
     assignmentsSeries: {},
@@ -177,6 +197,7 @@ async function initTagRegistryPage() {
   state.isBusy = false;
 
   renderShell(state);
+  bindRegistryDocumentPicker(state);
   wireEvents(state);
 
   try {
@@ -286,7 +307,7 @@ function wireEvents(state) {
     const sortButton = event.target.closest("button[data-sort-key]");
     if (!sortButton) return;
     const nextSortKey = normalize(sortButton.getAttribute("data-sort-key"));
-    if (!["tag", "description", "updated"].includes(nextSortKey)) return;
+    if (!["tag", "documents", "updated"].includes(nextSortKey)) return;
     if (state.sortKey === nextSortKey) {
       state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
     } else {
@@ -305,7 +326,32 @@ function wireEvents(state) {
       void withRouteBusy(state, () => handleTagEdit(state));
     },
     onEditGroupInput: () => setTagRegistryEditStatus(state, "", ""),
-    onEditDescriptionInput: () => setTagRegistryEditStatus(state, "", ""),
+    onEditDocumentAdd: () => {
+      const record = state.editTagPendingDocument;
+      if (!state.editTagId || !record || state.editTagDocUrls.includes(record.url)) {
+        return;
+      }
+      setTagRegistryDocumentLocation(state, record);
+      state.editTagDocUrls = appendTagRegistryDocumentUrl(
+        state.editTagDocUrls,
+        record
+      );
+      state.editTagPendingDocument = null;
+      state.refs.editDocumentSearch.value = "";
+      renderTagRegistryEditDocuments(state);
+      void state.documentPicker?.refresh?.();
+      setTagRegistryEditStatus(state, "", "");
+    },
+    onEditDocumentDirectRemove: (url) => {
+      if (!state.editTagDocUrls.includes(url)) return;
+      state.editTagDocUrls = removeTagRegistryDocumentUrl(
+        state.editTagDocUrls,
+        url
+      );
+      renderTagRegistryEditDocuments(state);
+      void state.documentPicker?.refresh?.();
+      setTagRegistryEditStatus(state, "", "");
+    },
     onNewTagInput: () => updateNewTagUi(state),
     onCreateTag: () => {
       void withRouteBusy(state, () => handleCreateTag(state));
@@ -331,6 +377,31 @@ function wireEvents(state) {
   });
 }
 
+function bindRegistryDocumentPicker(state) {
+  state.documentPicker = bindDocumentLocationPicker(
+    state.refs.editDocumentSearch,
+    state.refs.editDocumentPopup,
+    {
+      scopeIds: ["analysis"],
+      provider: state.documentLocationProvider,
+      excludedUrls: () => state.editTagDocUrls,
+      maxOptions: 500,
+      persistent: true,
+      showReport: false,
+      onTransientInput: () => {
+        state.editTagPendingDocument = null;
+        renderTagRegistryEditDocuments(state);
+      },
+      onCommit: (record) => {
+        if (!state.editTagId || state.editTagDocUrls.includes(record.url)) return;
+        state.editTagPendingDocument = record;
+        renderTagRegistryEditDocuments(state);
+        setTagRegistryEditStatus(state, "", "");
+      }
+    }
+  );
+}
+
 async function probeSaveMode(state) {
   await probeTagRouteSaveMode(state, {
     onRouteStateChange: () => syncRouteBusyState(state)
@@ -354,6 +425,15 @@ async function loadRegistry(state, options = {}) {
   }
   state.registryUpdatedAt = normalizeTimestamp(registryData && registryData.updated_at_utc);
   state.tags = normalizeRegistryTags(registryData, state.registryUpdatedAt);
+  const documentLocations = await loadTagRegistryDocumentLocations(state.tags, {
+    provider: state.documentLocationProvider
+  });
+  state.documentLocationsByUrl = documentLocations.locationsByUrl;
+  state.documentLocationError = documentLocations.error;
+  state.tags = attachTagRegistryDocuments(
+    state.tags,
+    state.documentLocationsByUrl
+  );
   state.aliasKeys = buildAliasKeySet(aliasesData);
   state.assignmentsSeries = assignmentsResult.status === "fulfilled"
     ? getAnalyticsAssignmentsSeries(assignmentsResult.value)
@@ -443,12 +523,12 @@ async function handleTagEdit(state) {
   if (!state.editTagId) return;
   const tagId = state.editTagId;
   const group = normalize(state.editTagGroup);
-  const description = String(state.refs.editDescription.value || "").trim();
+  const docUrl = state.editTagDocUrls.slice();
   const result = await saveTagRegistryEdit({
     saveMode: state.saveMode,
     tag: findTagById(state, tagId),
     group,
-    description,
+    docUrl,
     config: state.config
   });
   if (!result.ok) {
@@ -459,7 +539,7 @@ async function handleTagEdit(state) {
   applyTagRegistryEditResult(state, {
     tagId,
     group,
-    description,
+    docUrl,
     result
   }, modalWorkflowOptions(state));
 }

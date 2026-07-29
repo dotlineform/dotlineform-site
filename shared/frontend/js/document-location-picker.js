@@ -31,9 +31,12 @@ function currentExcludedUrls(value) {
   return Array.isArray(urls) ? urls : [];
 }
 
-export function documentLocationOptionHtml(record, { showScope = false } = {}) {
+export function documentLocationOptionHtml(
+  record,
+  { showReport = true, showScope = false } = {},
+) {
   const context = [
-    normalizeText(record && record.report_title),
+    showReport ? normalizeText(record && record.report_title) : "",
     showScope ? scopeLabel(record && record.scope_id) : ""
   ].filter(Boolean);
   return `
@@ -55,10 +58,12 @@ export function bindDocumentLocationPicker(inputNode, popupNode, options = {}) {
     throw new Error("document location picker requires a provider");
   }
   const showScope = scopeIds.length > 1;
+  const showReport = options.showReport !== false;
   const controller = bindSearchList(inputNode, popupNode, {
     id: options.id,
     maxOptions: Number.isFinite(options.maxOptions) ? options.maxOptions : 20,
     openOnFocus: options.openOnFocus !== false,
+    persistent: options.persistent === true,
     getOptionValue: (record) => normalizeText(record && record.document_title),
     filterOptions: (records) => records,
     loadOptions: (query) => provider.search({
@@ -66,7 +71,10 @@ export function bindDocumentLocationPicker(inputNode, popupNode, options = {}) {
       query,
       excludedUrls: currentExcludedUrls(options.excludedUrls)
     }),
-    renderOption: (record) => documentLocationOptionHtml(record, { showScope }),
+    renderOption: (record) => documentLocationOptionHtml(record, {
+      showReport,
+      showScope
+    }),
     renderNoResults: () => (
       `<p class="sharedSearchList__empty">${escapeHtml(options.noResultsText || "No matching documents.")}</p>`
     ),

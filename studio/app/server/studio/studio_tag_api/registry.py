@@ -104,6 +104,7 @@ def mutate_tag_response(
 
     new_tag_id = None
     new_group = None
+    new_doc_url = None
     if action == "edit":
         raw_new_tag_id = body.get("new_tag_id")
         if raw_new_tag_id is not None and str(raw_new_tag_id).strip():
@@ -112,12 +113,13 @@ def mutate_tag_response(
         if raw_new_group is not None and str(raw_new_group).strip():
             new_group = str(raw_new_group)
         if "description" in body:
-            description = tag_source.sanitize_alias_description(
-                body.get("description"),
-                "description",
-            )
-            if description:
-                raise ValueError("description is not supported for canonical tags")
+            raise ValueError("description is not supported for canonical tags")
+        if "doc_url" not in body:
+            raise ValueError("doc_url is required for tag edits")
+        new_doc_url = tag_source.sanitize_tag_document_urls(
+            body.get("doc_url"),
+            "doc_url",
+        )
 
     now_utc = common.utc_now()
     registry_payload = tag_source.load_registry(registry_path)
@@ -131,6 +133,7 @@ def mutate_tag_response(
         now_utc=now_utc,
         new_tag_id=new_tag_id,
         new_group=new_group,
+        new_doc_url=new_doc_url,
         allow_canonical_rename=allow_canonical_rename,
     )
     new_tag_id = mutate_meta.get("new_tag_id")
@@ -173,6 +176,12 @@ def mutate_tag_response(
         "new_tag_id": rewrite_to,
         "canonical_changed": bool(mutate_meta.get("canonical_changed")),
         "group_changed": bool(mutate_meta.get("group_changed")),
+        "doc_url": list(mutate_meta.get("doc_url") or []),
+        "doc_url_changed": bool(mutate_meta.get("doc_url_changed")),
+        "document_urls_added": int(mutate_meta.get("document_urls_added") or 0),
+        "document_urls_removed": int(
+            mutate_meta.get("document_urls_removed") or 0
+        ),
         **alias_stats,
         **assignment_stats,
     }

@@ -38,6 +38,10 @@ def analysis_url(doc_id: str) -> str:
     )
 
 
+def public_analysis_url(doc_id: str) -> str:
+    return f"/analysis/?doc={REPORT_DOC_ID}&subdoc={doc_id}"
+
+
 def write_fixture_docs(repo_root: Path) -> Path:
     config_path = (
         repo_root / "docs-viewer/config/scopes/docs_scopes.json"
@@ -281,6 +285,10 @@ def run() -> None:
                     "action": "edit",
                     "tag_id": "trees",
                     "new_group": "form",
+                    "doc_url": [
+                        analysis_url(TREES_DOC_ID),
+                        public_analysis_url(GROWTH_DOC_ID),
+                    ],
                     "allow_canonical_rename": False,
                     "client_time_utc": "2026-05-22T00:00:00Z",
                 },
@@ -349,6 +357,20 @@ def run() -> None:
             raise AssertionError(f"registry create activity tag identity failed: {activity_rows!r}")
         if not edited.get("group_changed"):
             raise AssertionError(f"registry edit failed: {edited!r}")
+        if edited.get("doc_url") != [
+            analysis_url(TREES_DOC_ID),
+            public_analysis_url(GROWTH_DOC_ID),
+        ]:
+            raise AssertionError(
+                f"registry document-link edit failed: {edited!r}"
+            )
+        if (
+            edited.get("document_urls_added") != 1
+            or edited.get("document_urls_removed") != 0
+        ):
+            raise AssertionError(
+                f"registry document-link stats failed: {edited!r}"
+            )
         if preview.get("series_tag_refs_rewritten") != 1 or preview.get("work_tag_refs_rewritten") != 1:
             raise AssertionError(f"registry delete preview did not report assignment rewrites: {preview!r}")
         if deleted.get("series_tag_refs_rewritten") != 1 or deleted.get("work_tag_refs_rewritten") != 1:

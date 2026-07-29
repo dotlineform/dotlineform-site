@@ -164,13 +164,19 @@ function closeSearchList(controller, { reset = false } = {}, options = {}) {
 
 async function commitOption(controller, option, options = {}) {
   if (option == null) return;
+  const selectedIndex = controller.matches.indexOf(option);
   controller.loadRevision += 1;
   const value = optionValue(options, option);
   controller.inputNode.value = value;
   controller.startValue = value;
-  controller.activeIndex = -1;
-  controller.inputNode.removeAttribute("aria-activedescendant");
-  controller.popupNode.hidden = true;
+  if (options.persistent) {
+    controller.activeIndex = selectedIndex;
+    renderOptions(controller, options);
+  } else {
+    controller.activeIndex = -1;
+    controller.inputNode.removeAttribute("aria-activedescendant");
+    controller.popupNode.hidden = true;
+  }
   if (typeof options.onCommit === "function") {
     await options.onCommit(option, { value });
   }
@@ -250,10 +256,13 @@ export function bindSearchList(inputNode, popupNode, options = {}) {
   function onKeyDown(event) {
     const matches = controller.matches || [];
     if (event.key === "Tab") {
-      closeSearchList(controller, { reset: true }, options);
+      if (!options.persistent) {
+        closeSearchList(controller, { reset: true }, options);
+      }
       return;
     }
     if (event.key === "Escape") {
+      if (options.persistent) return;
       event.preventDefault();
       event.stopPropagation();
       closeSearchList(controller, { reset: true }, options);
@@ -299,6 +308,7 @@ export function bindSearchList(inputNode, popupNode, options = {}) {
   }
 
   function onDocumentClick(event) {
+    if (options.persistent) return;
     if (event.target === inputNode || popupNode.contains(event.target)) return;
     closeSearchList(controller, {}, options);
   }

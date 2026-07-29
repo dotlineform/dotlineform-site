@@ -18,6 +18,10 @@ import {
   trapTagModalFocus
 } from "./tag-modal-shell.js";
 import { tagRegistryUi } from "./tag-ui.js";
+import {
+  tagRegistryDocumentHref,
+  unavailableTagRegistryDocument
+} from "./tag-registry-documents.js";
 
 const UI = tagRegistryUi;
 const { className: UI_CLASS, selector: UI_SELECTOR } = UI;
@@ -40,7 +44,11 @@ export function collectTagRegistryModalRefs(root) {
     editModal: root.querySelector(UI_SELECTOR.editModal),
     editTitle: root.querySelector(UI_SELECTOR.editTitle),
     editGroupKey: root.querySelector(UI_SELECTOR.editGroupKey),
-    editDescription: root.querySelector(UI_SELECTOR.editDescription),
+    editDocumentList: root.querySelector(UI_SELECTOR.editDocumentList),
+    addEditDocument: root.querySelector(UI_SELECTOR.addEditDocument),
+    editDocumentPicker: root.querySelector(UI_SELECTOR.editDocumentPicker),
+    editDocumentSearch: root.querySelector(UI_SELECTOR.editDocumentSearch),
+    editDocumentPopup: root.querySelector(UI_SELECTOR.editDocumentPopup),
     editStatus: root.querySelector(UI_SELECTOR.editStatus),
     saveEdit: root.querySelector(UI_SELECTOR.saveEdit),
     newModal: root.querySelector(UI_SELECTOR.newModal),
@@ -82,6 +90,19 @@ export function wireTagRegistryModalEvents(state, callbacks = {}) {
       callbacks.onModalStateChange?.();
       return;
     }
+    const removeDocumentButton = event.target.closest(
+      "button[data-remove-edit-document-url]"
+    );
+    if (removeDocumentButton && state.editTagId) {
+      callbacks.onEditDocumentDirectRemove?.(
+        removeDocumentButton.getAttribute("data-remove-edit-document-url")
+      );
+      return;
+    }
+    if (event.target.closest(UI_SELECTOR.addEditDocument)) {
+      callbacks.onEditDocumentAdd?.();
+      return;
+    }
     const groupButton = event.target.closest("button[data-edit-group]");
     if (!groupButton || !state.editTagId) return;
     const group = normalizeModalValue(groupButton.getAttribute("data-edit-group"));
@@ -93,10 +114,6 @@ export function wireTagRegistryModalEvents(state, callbacks = {}) {
 
   state.refs.saveEdit.addEventListener("click", () => {
     callbacks.onEditSave?.();
-  });
-
-  state.refs.editDescription.addEventListener("input", () => {
-    callbacks.onEditDescriptionInput?.();
   });
 
   state.refs.newModal.addEventListener("click", (event) => {
@@ -221,9 +238,12 @@ export function openTagRegistryEditModal(state, tag) {
   captureTagModalRestoreFocus(state, "edit", modalConfigs());
   state.editTagId = tag.tagId;
   state.editTagGroup = tag.group;
+  state.editTagDocUrls = Array.isArray(tag.docUrl) ? tag.docUrl.slice() : [];
+  state.editTagPendingDocument = null;
   state.refs.editTitle.textContent = tag.tagId;
-  state.refs.editDescription.value = String(tag.description || "");
+  state.refs.editDocumentSearch.value = "";
   renderTagRegistryEditGroupKey(state);
+  renderTagRegistryEditDocuments(state);
   setStatusText(
     state.refs.editStatus,
     "",
@@ -234,6 +254,7 @@ export function openTagRegistryEditModal(state, tag) {
   state.refs.editModal.hidden = false;
   state.editModalFocusReady = false;
   syncTagModalFocusAfterOpen(state, "edit", modalConfigs());
+  void state.documentPicker?.refresh?.();
 }
 
 export function closeTagRegistryEditModal(state) {
@@ -243,14 +264,63 @@ export function closeTagRegistryEditModal(state) {
   state.editModalRestoreFocus = null;
   state.editTagId = "";
   state.editTagGroup = "";
+  state.editTagDocUrls = [];
+  state.editTagPendingDocument = null;
   state.refs.editTitle.textContent = registryText(
     state.config,
     "edit_modal_title",
     "Edit Tag"
   );
   state.refs.editGroupKey.innerHTML = "";
-  state.refs.editDescription.value = "";
+  state.refs.editDocumentList.innerHTML = "";
+  if (state.documentPicker && typeof state.documentPicker.close === "function") {
+    state.documentPicker.close({ reset: true });
+  }
+  state.refs.editDocumentSearch.value = "";
   restoreTagModalFocus(restoreTarget);
+}
+
+export function renderTagRegistryEditDocuments(state) {
+  const urls = Array.isArray(state.editTagDocUrls) ? state.editTagDocUrls : [];
+  const byUrl = state.documentLocationsByUrl instanceof Map
+    ? state.documentLocationsByUrl
+    : new Map();
+  const unavailableText = registryText(
+    state.config,
+    "unavailable_document",
+    "Unavailable document"
+  );
+  state.refs.editDocumentList.innerHTML = urls.length
+    ? urls.map((url) => {
+        const record = byUrl.get(url) || unavailableTagRegistryDocument(url);
+        const title = record.document_title || unavailableText;
+        return `
+          <span
+            class="analytics__chip analytics__chip--inherited tagRegistryEdit__documentPill"
+          >
+            <a
+              class="tagRegistryEdit__documentLabel"
+              href="${escapeHtml(tagRegistryDocumentHref(state.config, url))}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >${escapeHtml(title)}</a>
+            <button
+              type="button"
+              class="${UI_CLASS.chipRemove}"
+              data-remove-edit-document-url="${escapeHtml(url)}"
+              title="${escapeHtml(`Remove ${title}`)}"
+              aria-label="${escapeHtml(`Remove ${title} (${url})`)}"
+            >×</button>
+          </span>
+        `;
+      }).join("")
+    : `<span class="${UI_CLASS.empty}">${escapeHtml(
+        registryText(state.config, "no_linked_documents", "No linked documents.")
+      )}</span>`;
+  const pendingUrl = state.editTagPendingDocument
+    && state.editTagPendingDocument.url;
+  state.refs.addEditDocument.disabled = !pendingUrl
+    || urls.includes(pendingUrl);
 }
 
 export function openTagRegistryNewModal(state) {
@@ -449,16 +519,33 @@ function renderEditModal(state) {
     titleId: "tagRegistryEditTitle",
     titleRole: UI.role.editTitle,
     title: registryText(state.config, "edit_modal_title", "Edit Tag"),
+    dialogClass: "tagRegistryEdit__dialog",
     bodyHtml: `
       <div class="${UI_CLASS.formFields}">
         <div class="${UI_CLASS.formField} tagRegistryEdit__groupField">
           <span class="${UI_CLASS.formLabel}">${escapeHtml(registryText(state.config, "edit_group_label", "group"))}</span>
           <div class="studioUi__key ${UI_CLASS.newGroupKey}" data-role="${UI.role.editGroupKey}"></div>
         </div>
-        <label class="${UI_CLASS.formField}">
-          <span class="${UI_CLASS.formLabel}">${escapeHtml(registryText(state.config, "edit_description_label", "description"))}</span>
-          <textarea class="studioUi__input ${UI_CLASS.formDescriptionInput}" data-role="${UI.role.editDescription}" rows="3" autocomplete="off"></textarea>
-        </label>
+        <div class="${UI_CLASS.formField}">
+          <span class="${UI_CLASS.formLabel}">${escapeHtml(registryText(state.config, "edit_documents_label", "documents"))}</span>
+          <div class="tagRegistryEdit__documents" data-role="${UI.role.editDocumentList}"></div>
+          <div class="tagRegistryEdit__picker" data-role="${UI.role.editDocumentPicker}">
+            <div class="tagRegistryEdit__searchControl">
+              <input id="tagRegistryEditDocumentSearch" type="text" class="studioUi__input" data-role="${UI.role.editDocumentSearch}" autocomplete="off" aria-label="${escapeHtml(registryText(state.config, "find_document_label", "find document"))}" placeholder="${escapeHtml(registryText(state.config, "find_document_placeholder", "search published Analysis documents"))}">
+              <button
+                type="button"
+                class="studioUi__button tagRegistryEdit__documentAction"
+                data-role="${UI.role.addEditDocument}"
+                title="${escapeHtml(registryText(state.config, "add_document_button", "Add selected document"))}"
+                aria-label="${escapeHtml(registryText(state.config, "add_document_button", "Add selected document"))}"
+                disabled
+              ><span class="tagRegistryEdit__documentActionIcon" aria-hidden="true"></span></button>
+            </div>
+            <div class="tagRegistryEdit__resultsFrame">
+              <span data-role="${UI.role.editDocumentPopup}"></span>
+            </div>
+          </div>
+        </div>
       </div>
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.editStatus}"></p>
     `,
@@ -570,7 +657,7 @@ function modalConfigs() {
       closeRole: UI.role.editModalClose,
       focusProp: "editModalFocusReady",
       restoreProp: "editModalRestoreFocus",
-      focusSelector: `[data-role="${UI.role.editDescription}"]`
+      focusSelector: `[data-role="${UI.role.editDocumentSearch}"]`
     },
     {
       kind: "new",

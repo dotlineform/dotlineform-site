@@ -66,15 +66,14 @@ export function setTagRegistryEditStatus(state, kind, message) {
 export function applyTagRegistryEditResult(state, {
   tagId,
   group,
-  description,
+  docUrl,
   result
 } = {}, options = {}) {
   setTagRegistryEditStatus(state, "success", result && result.message);
-  callback(options, "setRouteResult", "success", result && result.summary);
   applyTagRegistryEditProjection(state, {
     tagId,
     group,
-    description,
+    docUrl,
     response: result && result.response
   });
   callback(options, "renderControls");

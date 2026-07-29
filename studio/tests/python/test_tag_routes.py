@@ -7,6 +7,8 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
+
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 STUDIO_SERVICES_DIR = REPO_ROOT / "studio" / "services"
@@ -167,11 +169,16 @@ def test_registry_group_edit_writes_only_registry_and_preserves_linked_document(
             "action": "edit",
             "tag_id": "trees",
             "new_group": "theme",
+            "doc_url": [
+                "/analysis/?doc=d-20260624-213316-478639"
+                "&subdoc=d-20260727-225608-000001"
+            ],
         },
         preview=False,
     )
 
     assert result["group_changed"] is True
+    assert result["doc_url_changed"] is False
     assert set(writes) == {registry_path.resolve()}
     assert writes[registry_path.resolve()]["tags"][0]["group"] == "theme"
     assert (
@@ -182,6 +189,76 @@ def test_registry_group_edit_writes_only_registry_and_preserves_linked_document(
         ]
     )
     assert document_path.read_bytes() == document_before
+
+    with pytest.raises(ValueError, match="doc_url is required"):
+        registry.mutate_tag_response(
+            tmp_path,
+            {
+                "action": "edit",
+                "tag_id": "trees",
+                "new_group": "theme",
+            },
+            preview=False,
+        )
+    with pytest.raises(ValueError, match="description is not supported"):
+        registry.mutate_tag_response(
+            tmp_path,
+            {
+                "action": "edit",
+                "tag_id": "trees",
+                "new_group": "theme",
+                "doc_url": [],
+                "description": "",
+            },
+            preview=False,
+        )
+
+    source_before_retry = registry_path.read_bytes()
+    retry_attempts = 0
+    retry_writes: dict[Path, dict[str, object]] = {}
+
+    def fail_once_then_capture(payloads):
+        nonlocal retry_attempts
+        retry_attempts += 1
+        if retry_attempts == 1:
+            raise OSError("simulated atomic write failure")
+        retry_writes.update(payloads)
+
+    monkeypatch.setattr(
+        registry.tag_transactions,
+        "atomic_write_many",
+        fail_once_then_capture,
+    )
+    retry_body = {
+        "action": "edit",
+        "tag_id": "trees",
+        "new_group": "theme",
+        "doc_url": [
+            "/analysis/?doc=d-20260624-213316-478639"
+            "&subdoc=d-20260727-225608-000001",
+            "/analysis/?doc=d-20260729-111111-abcdef",
+        ],
+    }
+    with pytest.raises(OSError, match="simulated atomic write failure"):
+        registry.mutate_tag_response(
+            tmp_path,
+            retry_body,
+            preview=False,
+        )
+    assert registry_path.read_bytes() == source_before_retry
+
+    retried = registry.mutate_tag_response(
+        tmp_path,
+        retry_body,
+        preview=False,
+    )
+    assert retry_attempts == 2
+    assert retried["doc_url_changed"] is True
+    assert retried["document_urls_added"] == 1
+    assert (
+        retry_writes[registry_path.resolve()]["tags"][0]["doc_url"]
+        == retry_body["doc_url"]
+    )
 
 
 def main() -> None:

@@ -187,6 +187,7 @@ def test_canonical_edit_and_delete_plans() -> None:
         "/analysis/?doc=d-20260624-213316-478639"
         "&subdoc=d-20260727-225608-000001"
     )
+    second_document_url = "/library/?doc=d-20260729-120000-000002"
     payload = registry_payload([
         row("trees", doc_url=[document_url]),
         row("growth", group="theme"),
@@ -196,8 +197,17 @@ def test_canonical_edit_and_delete_plans() -> None:
         action="edit",
         old_tag_id="trees",
         now_utc=NOW,
+        new_doc_url=[document_url, second_document_url],
     )
     assert_equal(edited["tags"][0]["tag_id"], "trees", "edit preserves canonical id by default")
+    assert_equal(
+        edited["tags"][0]["doc_url"],
+        [document_url, second_document_url],
+        "edit stores the complete ordered URL draft",
+    )
+    assert_equal(edit_meta["doc_url_changed"], True, "document URL edit tracked")
+    assert_equal(edit_meta["document_urls_added"], 1, "document URL addition tracked")
+    assert_equal(edit_meta["document_urls_removed"], 0, "document URL removal tracked")
 
     renamed, rename_meta = registry.mutate_registry_tag(
         edited,
@@ -220,7 +230,7 @@ def test_canonical_edit_and_delete_plans() -> None:
     assert_equal(regrouped["tags"][0]["group"], "theme", "group edit is independent")
     assert_equal(
         regrouped["tags"][0]["doc_url"],
-        [document_url],
+        [document_url, second_document_url],
         "group edit preserves linked document URLs",
     )
     assert_equal(regroup_meta["group_changed"], True, "group edit tracked")
@@ -236,7 +246,11 @@ def test_canonical_edit_and_delete_plans() -> None:
 
 
 def test_canonical_mutation_guards() -> None:
-    payload = registry_payload([row("trees"), row("canopy")])
+    document_url = "/library/?doc=d-20260729-120000-000002"
+    payload = registry_payload([
+        row("trees", doc_url=[document_url]),
+        row("canopy", doc_url=[document_url]),
+    ])
     assert_raises_contains(
         lambda: registry.mutate_registry_tag(payload, "edit", "trees", NOW, new_tag_id="forest"),
         "canonical rename is disabled",
@@ -252,6 +266,52 @@ def test_canonical_mutation_guards() -> None:
         "tag not found",
         "missing canonical tag",
     )
+    assert_raises_contains(
+        lambda: registry.mutate_registry_tag(
+            payload,
+            "edit",
+            "trees",
+            NOW,
+            new_doc_url=[document_url, document_url],
+        ),
+        "duplicates URL",
+        "duplicate document URL",
+    )
+    assert_raises_contains(
+        lambda: registry.mutate_registry_tag(
+            payload,
+            "edit",
+            "trees",
+            NOW,
+            new_doc_url=["https://example.test/document"],
+        ),
+        "supported canonical Docs Viewer URL",
+        "external document URL",
+    )
+
+
+def test_canonical_document_edit_preserves_unrelated_rows_and_accepts_unlinked() -> None:
+    first = "/library/?doc=d-20260729-120000-000001"
+    second = "/library/?doc=d-20260729-120000-000002"
+    shared = "/library/?doc=d-20260729-120000-000003"
+    unrelated = row("growth", group="theme", doc_url=[shared])
+    payload = registry_payload([
+        row("trees", doc_url=[first, second]),
+        unrelated,
+    ])
+
+    updated, stats = registry.mutate_registry_tag(
+        payload,
+        "edit",
+        "trees",
+        NOW,
+        new_doc_url=[],
+    )
+
+    assert_equal(updated["tags"][0]["doc_url"], [], "complete draft removes both URLs")
+    assert_equal(updated["tags"][1], unrelated, "unrelated row remains unchanged")
+    assert_equal(stats["document_urls_removed"], 2, "removed URL count")
+    assert_equal(stats["document_urls_added"], 0, "added URL count")
 
 
 def test_rewrite_assignments_for_canonical_rename() -> None:

@@ -26,8 +26,8 @@ export function normalizeRegistryTags(data, fallbackUpdatedAt) {
     tags.push({
       group,
       tagId,
-      description: "",
       docUrl,
+      documents: [],
       updatedAtUtc,
       updatedAtMs: toTimestampMs(updatedAtUtc)
     });
@@ -105,11 +105,11 @@ export function compareTags(a, b, sortKey) {
     return compareTags(a, b, "tag");
   }
 
-  if (sortKey === "description") {
-    const ad = normalize(a.description);
-    const bd = normalize(b.description);
-    const byDescription = ad.localeCompare(bd, undefined, { sensitivity: "base" });
-    if (byDescription !== 0) return byDescription;
+  if (sortKey === "documents") {
+    const ad = documentSortValue(a);
+    const bd = documentSortValue(b);
+    const byDocuments = ad.localeCompare(bd, undefined, { sensitivity: "base" });
+    if (byDocuments !== 0) return byDocuments;
     return compareTags(a, b, "tag");
   }
 
@@ -144,6 +144,12 @@ export function formatTimestampMinute(value) {
 
 export function normalize(value) {
   return String(value || "").trim().toLowerCase();
+}
+
+function documentSortValue(tag) {
+  return (Array.isArray(tag && tag.documents) ? tag.documents : [])
+    .map((record) => normalize(record && record.document_title))
+    .join("\u0000");
 }
 
 export function getNewTagValidation(options) {

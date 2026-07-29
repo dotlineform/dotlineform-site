@@ -647,7 +647,7 @@
           "record_id_field": "tag_id",
           "no_change_activity": "skip",
           "report_forced_rewrites": true,
-          "notes": "Covers canonical tag description edits.",
+          "notes": "Covers canonical tag group and ordered document-link edits.",
           "script_purposes": [
             {
               "id": "save-tag-data",

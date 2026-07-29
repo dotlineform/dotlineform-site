@@ -1,6 +1,6 @@
 {
   "tag_registry_version": "tag_registry_v5",
-  "updated_at_utc": "2026-07-29T19:15:22Z",
+  "updated_at_utc": "2026-07-29T21:48:34Z",
   "policy": {
     "allowed_groups": [
       "subject",
@@ -1973,10 +1973,8 @@
     {
       "tag_id": "aaa",
       "group": "domain",
-      "updated_at_utc": "2026-07-29T09:23:32Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260729-102332-d52473"
-      ]
+      "updated_at_utc": "2026-07-29T21:48:34Z",
+      "doc_url": []
     },
     {
       "tag_id": "bird-nerve",

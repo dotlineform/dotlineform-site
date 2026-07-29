@@ -818,18 +818,6 @@
           ]
         },
         {
-          "doc_id": "d-20260527-105208-c1a4d0",
-          "title": "Semantic Reference Authoring",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260527-105208-c1a4d0.json",
-          "ui_status": "paused"
-        },
-        {
-          "doc_id": "d-20260720-173806-5f2c9a",
-          "title": "Share Sub-Scope Documents",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-173806-5f2c9a.json",
-          "ui_status": "paused"
-        },
-        {
           "doc_id": "d-20260720-170418-a7c93d",
           "title": "Site Review And Cleanup",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-170418-a7c93d.json",
@@ -934,7 +922,7 @@
           "doc_id": "d-20260726-211842-cc8f6c",
           "title": "Tag-document linking",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-211842-cc8f6c.json",
-          "ui_status": "draft",
+          "ui_status": "done",
           "children": [
             {
               "doc_id": "d-20260727-224141-d28e4c",
@@ -946,7 +934,7 @@
               "doc_id": "d-20260729-151446-09489e",
               "title": "Tag Link Management Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260729-151446-09489e.json",
-              "ui_status": "review"
+              "ui_status": "done"
             }
           ]
         },
@@ -1283,5 +1271,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-29T18:43:09Z"
+  "generated_at": "2026-07-29T22:18:41Z"
 }

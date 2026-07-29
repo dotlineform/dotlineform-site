@@ -66,7 +66,7 @@ export async function previewDeleteImpact(options) {
 }
 
 export async function submitTagEdit(options) {
-  const { saveMode, tag, group, description, config } = options || {};
+  const { saveMode, tag, group, docUrl, config } = options || {};
   if (saveMode !== "post") {
     return {
       ok: false,
@@ -83,7 +83,7 @@ export async function submitTagEdit(options) {
   }
   if (
     group === String(tag.group || "").trim() &&
-    description === String(tag.description || "").trim()
+    sameStringArray(docUrl, tag.docUrl)
   ) {
     return {
       ok: false,
@@ -97,7 +97,7 @@ export async function submitTagEdit(options) {
       action: "edit",
       tag_id: tag.tagId,
       new_group: group,
-      description,
+      doc_url: Array.isArray(docUrl) ? docUrl.slice() : [],
       allow_canonical_rename: false,
       client_time_utc: utcTimestamp(),
       activity_context: registryActivityContext("edit-tag", "save-edit", "[data-role=\"save-edit\"]", "tag_id", tag.tagId)
@@ -115,6 +115,15 @@ export async function submitTagEdit(options) {
       message: String(error && error.message ? error.message : registryText(config, "edit_save_failed", "Save failed."))
     };
   }
+}
+
+function sameStringArray(left, right) {
+  const leftValues = Array.isArray(left) ? left : [];
+  const rightValues = Array.isArray(right) ? right : [];
+  return (
+    leftValues.length === rightValues.length
+    && leftValues.every((value, index) => value === rightValues[index])
+  );
 }
 
 export async function submitCreateTag(options) {

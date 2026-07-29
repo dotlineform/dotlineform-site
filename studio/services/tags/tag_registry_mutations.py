@@ -65,6 +65,7 @@ def mutate_registry_tag(
     now_utc: str,
     new_tag_id: Optional[str] = None,
     new_group: Optional[str] = None,
+    new_doc_url: Any = None,
     allow_canonical_rename: bool = False,
 ) -> tuple[Dict[str, Any], Dict[str, Any]]:
     if action not in MUTATE_ACTIONS:
@@ -93,6 +94,10 @@ def mutate_registry_tag(
 
     allowed_groups = tag_source.extract_allowed_groups(registry_payload)
     group = tag_source.sanitize_group(target_row.get("group"), allowed_groups, "group")
+    document_urls = tag_source.sanitize_tag_document_urls(
+        target_row.get("doc_url"),
+        "doc_url",
+    )
 
     if action == "delete":
         final_tags = [row for idx, row in enumerate(tags) if idx != target_idx]
@@ -117,8 +122,14 @@ def mutate_registry_tag(
         if new_group is None
         else tag_source.sanitize_group(new_group, allowed_groups, "new_group")
     )
+    normalized_new_document_urls = (
+        document_urls
+        if new_doc_url is None
+        else tag_source.sanitize_tag_document_urls(new_doc_url, "doc_url")
+    )
     canonical_changed = normalized_new_tag_id != old_tag_id
     group_changed = normalized_new_group != group
+    doc_url_changed = normalized_new_document_urls != document_urls
     if canonical_changed and not allow_canonical_rename:
         raise ValueError("canonical rename is disabled for this request")
     if canonical_changed and normalized_new_tag_id in existing_ids:
@@ -127,6 +138,7 @@ def mutate_registry_tag(
     updated_row.pop("label", None)
     updated_row["tag_id"] = normalized_new_tag_id
     updated_row["group"] = normalized_new_group
+    updated_row["doc_url"] = normalized_new_document_urls
     updated_row["updated_at_utc"] = now_utc
     final_tags = list(tags)
     final_tags[target_idx] = updated_row
@@ -142,8 +154,16 @@ def mutate_registry_tag(
         "old_tag_id": old_tag_id,
         "new_tag_id": normalized_new_tag_id,
         "group": normalized_new_group,
+        "doc_url": normalized_new_document_urls,
         "canonical_changed": canonical_changed,
         "group_changed": group_changed,
+        "doc_url_changed": doc_url_changed,
+        "document_urls_added": len(
+            [url for url in normalized_new_document_urls if url not in document_urls]
+        ),
+        "document_urls_removed": len(
+            [url for url in document_urls if url not in normalized_new_document_urls]
+        ),
     }
 
 
@@ -275,11 +295,17 @@ def build_mutation_summary_text(stats: Dict[str, Any]) -> str:
     alias_empty = int(stats.get("aliases_removed_empty") or 0)
     alias_redundant = int(stats.get("aliases_removed_redundant") or 0)
     group_changed = 1 if bool(stats.get("group_changed")) else 0
+    doc_url_changed = 1 if bool(stats.get("doc_url_changed")) else 0
+    document_urls_added = int(stats.get("document_urls_added") or 0)
+    document_urls_removed = int(stats.get("document_urls_removed") or 0)
 
     id_part = f"{old_tag_id} -> {new_tag_id}" if new_tag_id else old_tag_id
     return (
         f"mode {action}; tag {id_part}; "
         f"group_changed {group_changed}; "
+        f"doc_url_changed {doc_url_changed}; "
+        f"document URLs added {document_urls_added}; "
+        f"document URLs removed {document_urls_removed}; "
         f"series rows {series_rows}; series refs {series_refs}; "
         f"work rows {work_rows}; work refs {work_refs}; "
         f"aliases rewritten {alias_rw}; aliases removed-empty {alias_empty}; "

@@ -7,9 +7,33 @@
       "doc_id": "d-20260729-151446-09489e",
       "title": "Tag Link Management Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260729-151446-09489e.json",
-      "timestamp": "2026-07-29 20:56:21",
+      "timestamp": "2026-07-29 22:04:35",
       "parent_id": "d-20260726-211842-cc8f6c",
       "parent_title": "Tag-document linking"
+    },
+    {
+      "doc_id": "d-20260331-000000-4519a5",
+      "title": "Tag Registry",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-4519a5.json",
+      "timestamp": "2026-07-29 21:57:25",
+      "parent_id": "d-20260419-000000-86255c",
+      "parent_title": "Tag Source Data"
+    },
+    {
+      "doc_id": "d-20260419-000000-86255c",
+      "title": "Tag Source Data",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260419-000000-86255c.json",
+      "timestamp": "2026-07-29 21:57:25",
+      "parent_id": "d-20260423-000000-d015e6",
+      "parent_title": "Studio"
+    },
+    {
+      "doc_id": "d-20260726-211842-cc8f6c",
+      "title": "Tag-document linking",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-211842-cc8f6c.json",
+      "timestamp": "2026-07-29 21:57:25",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
     },
     {
       "doc_id": "d-20260729-180308-c92eed",
@@ -36,14 +60,6 @@
       "parent_title": "Roadmap"
     },
     {
-      "doc_id": "d-20260726-211842-cc8f6c",
-      "title": "Tag-document linking",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-211842-cc8f6c.json",
-      "timestamp": "2026-07-29 15:14:46",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
       "doc_id": "d-20260623-221357-a97b66",
       "title": "Embedded Detail Documents",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260623-221357-a97b66.json",
@@ -66,21 +82,7 @@
       "timestamp": "2026-07-29 13:15:40",
       "parent_id": "d-20260728-113139-285eae",
       "parent_title": "Sub-Scope Index"
-    },
-    {
-      "doc_id": "d-20260728-113139-763354",
-      "title": "Sub-Scope Index Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-113139-763354.json",
-      "timestamp": "2026-07-29 11:11:42",
-      "parent_id": "d-20260728-113139-285eae",
-      "parent_title": "Sub-Scope Index"
-    },
-    {
-      "doc_id": "d-20260424-000000-50b63f",
-      "title": "Docs Viewer",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260424-000000-50b63f.json",
-      "timestamp": "2026-07-28 21:58:58"
     }
   ],
-  "generated_at": "2026-07-29T19:56:33Z"
+  "generated_at": "2026-07-29T22:05:07Z"
 }

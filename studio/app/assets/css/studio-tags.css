@@ -275,7 +275,7 @@
 
 .analytics__empty,
 .analytics__groupInfoText,
-.tagRegistry__descCol,
+.tagRegistry__documentsCol,
 .tagRegistry__updatedCol {
   color: var(--analytics-muted);
   font-size: var(--font-small);
@@ -408,7 +408,7 @@
 }
 
 .tagRegistry__tagCol,
-.tagRegistry__descCol,
+.tagRegistry__documentsCol,
 .tagRegistry__updatedCol,
 .tagAliases__aliasCol,
 .tagAliases__tagsCol {
@@ -460,6 +460,125 @@
 
 .tagRegistryEdit__groupField .tagRegistryNew__key {
   margin-top: 0;
+}
+
+.tagRegistry__documentLinks {
+  overflow-wrap: anywhere;
+}
+
+.tagRegistry__documentLink {
+  color: inherit;
+  text-underline-offset: 0.12em;
+}
+
+.tagRegistryEdit__dialog {
+  width: min(26rem, calc(100vw - 2rem));
+}
+
+.tagRegistryEdit__documents {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.42rem;
+  min-height: var(--analytics-pill-height);
+}
+
+.tagRegistryEdit__documentPill {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.tagRegistryEdit__documentLabel {
+  min-width: 0;
+  color: inherit;
+  font: inherit;
+  overflow-wrap: anywhere;
+  text-underline-offset: 0.12em;
+}
+
+.tagRegistryEdit__searchControl {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.tagRegistryEdit__searchControl .studioUi__input {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.tagRegistryEdit__documentAction.studioUi__button {
+  flex: 0 0 auto;
+  width: 1.8rem;
+  height: 1.8rem;
+  min-height: 1.8rem;
+  padding: 0;
+  border-radius: 999px;
+}
+
+.tagRegistryEdit__documentActionIcon {
+  position: relative;
+  display: block;
+  width: 0.72rem;
+  height: 0.72rem;
+}
+
+.tagRegistryEdit__documentActionIcon::before,
+.tagRegistryEdit__documentActionIcon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 999px;
+  background: currentColor;
+  transform: translate(-50%, -50%);
+}
+
+.tagRegistryEdit__documentActionIcon::before {
+  width: 0.72rem;
+  height: 0.1rem;
+}
+
+.tagRegistryEdit__documentActionIcon::after {
+  width: 0.1rem;
+  height: 0.72rem;
+}
+
+.tagRegistryEdit__picker {
+  display: grid;
+  gap: 0.55rem;
+  padding-top: 0.2rem;
+}
+
+.tagRegistryEdit__resultsFrame {
+  box-sizing: border-box;
+  height: 10.4rem;
+}
+
+.tagRegistryEdit__picker .sharedSearchList__popup {
+  position: static;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  font-size: var(--font-small);
+  line-height: var(--line-snug);
+}
+
+.tagRegistryEdit__picker .sharedSearchList__option {
+  align-content: center;
+}
+
+.tagRegistryEdit__picker
+  .sharedSearchList__popup[data-navigation="pointer"]
+  .sharedSearchList__option:hover {
+  background: rgba(95, 143, 251, 0.08);
+}
+
+.tagRegistryEdit__picker .sharedSearchList__option[aria-selected="true"] {
+  background: var(--studio-focus-ring, rgba(95, 143, 251, 0.18));
 }
 
 .tagRegistryNew__key .studioUi__keyPill {

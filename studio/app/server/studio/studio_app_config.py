@@ -290,6 +290,7 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-work-editor.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "tag-groups.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "tag-registry.js",
+        repo_root / "studio" / "app" / "frontend" / "js" / "tag-registry-documents.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "tag-aliases.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "series-tags.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "series-tag-editor-page.js",

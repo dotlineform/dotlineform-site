@@ -9,6 +9,9 @@ import {
 import {
   tagRegistryUi
 } from "./tag-ui.js";
+import {
+  tagRegistryDocumentHref
+} from "./tag-registry-documents.js";
 
 const DEFAULT_STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 const UI = tagRegistryUi;
@@ -44,15 +47,15 @@ export function renderTagRegistryControls(state) {
 export function renderTagRegistryList(state) {
   const visible = getVisibleSortedTags(state);
   const tagHeading = registryText(state.config, "table_heading_tag", "tag");
-  const descriptionHeading = registryText(state.config, "table_heading_description", "description");
+  const documentsHeading = registryText(state.config, "table_heading_documents", "documents");
   const updatedHeading = registryText(state.config, "table_heading_updated", "updated");
   const headerHtml = `
     <div class="${UI_CLASS.listHead}">
       <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="tag"${stateAttr(state.sortKey === "tag" ? UI_STATE.active : "")}>
         ${escapeHtml(tagHeading)}${sortIndicator(state, "tag")}
       </button>
-      <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="description"${stateAttr(state.sortKey === "description" ? UI_STATE.active : "")}>
-        ${escapeHtml(descriptionHeading)}${sortIndicator(state, "description")}
+      <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="documents"${stateAttr(state.sortKey === "documents" ? UI_STATE.active : "")}>
+        ${escapeHtml(documentsHeading)}${sortIndicator(state, "documents")}
       </button>
       <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="updated"${stateAttr(state.sortKey === "updated" ? UI_STATE.active : "")}>
         ${escapeHtml(updatedHeading)}${sortIndicator(state, "updated")}
@@ -107,14 +110,27 @@ function renderTagRow(state, tag) {
           </span>
         </div>
       </div>
-      <div class="${UI_CLASS.descCol}">
-        ${escapeHtml(tag.description || "—")}
+      <div class="${UI_CLASS.documentsCol}">
+        ${renderDocumentLinks(state, tag)}
       </div>
       <div class="${UI_CLASS.updatedCol}">
         ${escapeHtml(formatTimestampMinute(tag.updatedAtUtc) || "—")}
       </div>
     </li>
   `;
+}
+
+function renderDocumentLinks(state, tag) {
+  const documents = Array.isArray(tag && tag.documents) ? tag.documents : [];
+  if (!documents.length) return "—";
+  return `<span class="${UI_CLASS.documentLinks}">${documents.map((record) => `
+    <a
+      class="${UI_CLASS.documentLink}"
+      href="${escapeHtml(tagRegistryDocumentHref(state.config, record.url))}"
+      target="_blank"
+      rel="noopener noreferrer"
+    >${escapeHtml(record.document_title || registryText(state.config, "unavailable_document", "Unavailable document"))}</a>
+  `).join(", ")}</span>`;
 }
 
 function getStudioGroups(state) {
