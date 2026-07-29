@@ -104,7 +104,7 @@ def test_update_metadata_can_change_viewability_in_dry_run() -> None:
     assert result["changes"]["status_changed"] is False
 
 
-def test_sub_scope_metadata_write_rebuilds_detail_manifest_and_inventory(
+def test_sub_scope_metadata_write_rebuilds_detail_and_both_manifests(
     monkeypatch,
 ) -> None:
     rebuild_calls: list[dict[str, object]] = []
@@ -228,10 +228,9 @@ def test_sub_scope_metadata_write_rebuilds_detail_manifest_and_inventory(
             },
             dry_run=False,
         )
-        inventory = docs_management_service.docs_management_get_payload(
-            repo_root,
-            docs_management_service.routes.SUB_SCOPE_DOCUMENTS_PATH,
-            {"scope": ["studio"], "sub_scope": ["tags"]},
+        manage_manifest = read_json(
+            repo_root
+            / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/manage-manifest.json"
         )
         manifest = read_json(
             repo_root
@@ -268,14 +267,18 @@ def test_sub_scope_metadata_write_rebuilds_detail_manifest_and_inventory(
             "manifest_write": True,
         }
     ]
-    assert inventory["documents"] == [
+    assert manage_manifest == {
+        "groups": ["subject", "domain", "form", "theme"],
+        "docs": [
         {
             "doc_id": SUB_SCOPE_DOC_ID,
             "title": "Renamed Detail",
             "ui_status": "done",
             "viewable": False,
+            "group": "theme",
         }
-    ]
+        ],
+    }
     assert manifest == {"docs": []}
     assert set(detail_payload) >= {"doc_id", "title", "content_html"}
     assert "viewable" not in manifest

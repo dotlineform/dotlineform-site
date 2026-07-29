@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -74,6 +75,106 @@ def test_tag_write_handlers_live_in_functional_modules() -> None:
     )
     if not all(callable(handler) for handler in expected_handlers):
         raise AssertionError("tag write handlers must be callable from functional modules")
+
+
+def test_registry_group_edit_writes_only_registry_and_preserves_linked_document(
+    tmp_path,
+    monkeypatch,
+) -> None:
+    registry_path = tmp_path / registry.tag_source.REGISTRY_REL_PATH
+    aliases_path = tmp_path / registry.tag_source.ALIASES_REL_PATH
+    assignments_path = tmp_path / registry.tag_source.ASSIGNMENTS_REL_PATH
+    document_path = (
+        tmp_path
+        / "docs-viewer/scopes/analysis/source/sub-scopes/tags/documents/"
+        "d-20260727-225608-000001.md"
+    )
+    for path in (registry_path, aliases_path, assignments_path, document_path):
+        path.parent.mkdir(parents=True, exist_ok=True)
+    registry_path.write_text(
+        json.dumps(
+            {
+                "tag_registry_version": "tag_registry_v4",
+                "policy": {"allowed_groups": ["subject", "theme"]},
+                "tags": [
+                    {
+                        "tag_id": "trees",
+                        "group": "subject",
+                        "description": "",
+                        "doc_id": "d-20260727-225608-000001",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    aliases_path.write_text(
+        json.dumps(
+            {
+                "tag_aliases_version": "tag_aliases_v2",
+                "aliases": {},
+            }
+        ),
+        encoding="utf-8",
+    )
+    assignments_path.write_text(
+        json.dumps(
+            {
+                "tag_assignments_version": "tag_assignments_v2",
+                "series": {},
+            }
+        ),
+        encoding="utf-8",
+    )
+    document_path.write_text(
+        "---\n"
+        "doc_id: d-20260727-225608-000001\n"
+        "title: trees\n"
+        "group: subject\n"
+        "---\n"
+        "# trees\n",
+        encoding="utf-8",
+    )
+    document_before = document_path.read_bytes()
+    writes = {}
+    monkeypatch.setattr(
+        registry.tag_transactions,
+        "atomic_write_many",
+        lambda payloads: writes.update(payloads),
+    )
+    monkeypatch.setattr(
+        registry.tag_document_creation,
+        "build_tag_document_create_plan",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(
+            AssertionError("Tag edit must not invoke document creation")
+        ),
+    )
+    monkeypatch.setattr(registry.common, "utc_now", lambda: "2026-07-29T12:00:00Z")
+    monkeypatch.setattr(registry.common, "log_event", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(
+        registry.common,
+        "attach_tag_activity",
+        lambda *_args, **_kwargs: None,
+    )
+
+    result = registry.mutate_tag_response(
+        tmp_path,
+        {
+            "action": "edit",
+            "tag_id": "trees",
+            "new_group": "theme",
+        },
+        preview=False,
+    )
+
+    assert result["group_changed"] is True
+    assert set(writes) == {registry_path.resolve()}
+    assert writes[registry_path.resolve()]["tags"][0]["group"] == "theme"
+    assert (
+        writes[registry_path.resolve()]["tags"][0]["doc_id"]
+        == "d-20260727-225608-000001"
+    )
+    assert document_path.read_bytes() == document_before
 
 
 def main() -> None:

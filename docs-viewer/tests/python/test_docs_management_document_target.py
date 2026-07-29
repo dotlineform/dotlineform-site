@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Focused managed-document target and sub-scope inventory contracts."""
+"""Focused managed-document target contracts."""
 
 from __future__ import annotations
 
@@ -220,51 +220,6 @@ def test_resolver_rejects_unlisted_mismatched_and_escaping_sources(tmp_path: Pat
         )
 
 
-def test_inventory_route_includes_non_viewable_docs_without_mutating_public_payloads(
-    tmp_path: Path,
-) -> None:
-    scope_root = prepare_repo(tmp_path)
-    published_root = scope_root / "published/documents/sub-scopes/tags"
-    manifest_path = published_root / "manifest.json"
-    detail_path = published_root / "by-id/detail-doc.json"
-    write_text(
-        manifest_path,
-        '{\n  "docs": [\n    {"doc_id": "detail-doc", "title": "Detail"}\n  ]\n}\n',
-    )
-    write_text(detail_path, '{"doc_id":"detail-doc","title":"Detail"}\n')
-    before = {
-        manifest_path: manifest_path.read_bytes(),
-        detail_path: detail_path.read_bytes(),
-    }
-
-    payload = management_service.docs_management_get_payload(
-        tmp_path,
-        routes.SUB_SCOPE_DOCUMENTS_PATH,
-        {"scope": ["analysis"], "sub_scope": ["tags"]},
-    )
-
-    assert payload == {
-        "ok": True,
-        "scope": "analysis",
-        "sub_scope": "tags",
-        "documents": [
-            {
-                "doc_id": "detail-doc",
-                "title": "Detail",
-                "ui_status": "draft",
-                "viewable": True,
-            },
-            {
-                "doc_id": "hidden-doc",
-                "title": "Hidden",
-                "ui_status": "",
-                "viewable": False,
-            },
-        ],
-    }
-    assert {path: path.read_bytes() for path in before} == before
-
-
 def test_metadata_route_hydrates_parent_and_sub_scope_records_from_source(
     tmp_path: Path,
 ) -> None:
@@ -369,7 +324,7 @@ def test_source_read_uses_exact_target_and_retires_doc_alias(tmp_path: Path) -> 
         )
 
 
-def test_external_local_target_and_inventory_use_configured_workspace(
+def test_external_local_target_uses_configured_workspace(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -386,16 +341,6 @@ def test_external_local_target_and_inventory_use_configured_workspace(
         repo_root,
         {"scope": "analysis", "sub_scope": "tags", "doc_id": "detail-doc"},
     )
-    inventory = management_service.docs_management_get_payload(
-        repo_root,
-        routes.SUB_SCOPE_DOCUMENTS_PATH,
-        {"scope": ["analysis"], "sub_scope": ["tags"]},
-    )
-
     assert resolved.source_root == (
         scope_root / "source/sub-scopes/tags/documents"
     ).resolve()
-    assert [record["doc_id"] for record in inventory["documents"]] == [
-        "detail-doc",
-        "hidden-doc",
-    ]

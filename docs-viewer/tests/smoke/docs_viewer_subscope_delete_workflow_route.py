@@ -260,7 +260,7 @@ def exercise_exact_delete(
         if path not in {
             "/docs/index-tree",
             "/docs/doc",
-            "/docs/sub-scope-documents",
+            "/__smoke/subscope/manifest.json",
             "/docs/delete-preview",
             "/docs/delete-apply",
         }:
@@ -299,7 +299,7 @@ def exercise_exact_delete(
         for path in (
             "/docs/index-tree",
             "/docs/doc",
-            "/docs/sub-scope-documents",
+            "/__smoke/subscope/manifest.json",
         )
     }
 
@@ -383,7 +383,7 @@ def exercise_exact_delete(
     }
     if final_counts != baseline_counts:
         raise AssertionError(
-            "successful local row removal reloaded parent or child inventory: "
+            "successful local row removal reloaded parent or child manifest: "
             f"before={baseline_counts!r}, after={final_counts!r}"
         )
     if Path(paths["target_path"]).exists() or Path(paths["target_payload_path"]).exists():

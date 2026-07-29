@@ -45,7 +45,7 @@ function appendIcon(host, className, text) {
  * Creates the manage-only contribution for the shared sub-scope report.
  *
  * The shared report owns collection identity and navigation. This contribution
- * only projects compact-inventory row state and receives explicit lifecycle
+ * only projects compact manifest row state and receives explicit lifecycle
  * events; it does not infer targets or load workflows.
  *
  * @param {Object} options

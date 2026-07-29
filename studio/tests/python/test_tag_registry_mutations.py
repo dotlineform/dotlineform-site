@@ -166,7 +166,14 @@ def test_create_registry_tag_guards() -> None:
 def test_canonical_edit_and_delete_plans() -> None:
     payload = {
         "policy": {"allowed_groups": ["subject", "theme"]},
-        "tags": [row("trees", "old"), row("growth", "keep", group="theme")],
+        "tags": [
+            row(
+                "trees",
+                "old",
+                doc_id="d-20260727-225608-000001",
+            ),
+            row("growth", "keep", group="theme"),
+        ],
     }
     edited, edit_meta = registry.mutate_registry_tag(
         payload,
@@ -198,6 +205,11 @@ def test_canonical_edit_and_delete_plans() -> None:
         new_group="theme",
     )
     assert_equal(regrouped["tags"][0]["group"], "theme", "group edit is independent")
+    assert_equal(
+        regrouped["tags"][0]["doc_id"],
+        "d-20260727-225608-000001",
+        "group edit preserves linked document identity",
+    )
     assert_equal(regroup_meta["group_changed"], True, "group edit tracked")
 
     deleted, delete_meta = registry.mutate_registry_tag(

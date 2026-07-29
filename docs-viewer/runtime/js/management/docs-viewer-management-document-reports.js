@@ -5,9 +5,6 @@ import {
   mountDocsViewerReport
 } from "../reports/docs-viewer-reports.js";
 import {
-  readManagedSubScopeDocuments
-} from "./docs-viewer-management-client.js";
-import {
   normalizeManagedDocumentTarget
 } from "./docs-viewer-management-document-target.js";
 import {
@@ -75,41 +72,6 @@ function publishReportState(settings, parent, subScope, state) {
     published.documentMountGeneration = settings.documentMountGeneration;
   }
   settings.publishSubscopeReportState(published);
-}
-
-function managementInventory(settings, parent, subScope) {
-  var managementService = settings.managementService || null;
-  var baseUrl = cleanString(managementService && managementService.baseUrl);
-  if (!settings.managementContext || !baseUrl) return Promise.resolve(null);
-  function load() {
-    return readManagedSubScopeDocuments(parent.scope, subScope, {
-      baseUrl: baseUrl
-    }).then(function (payload) {
-      if (
-        !payload
-        || cleanString(payload.scope).toLowerCase() !== parent.scope
-        || cleanString(payload.sub_scope).toLowerCase() !== subScope
-        || !Array.isArray(payload.documents)
-      ) {
-        throw new Error("Managed sub-scope inventory did not match the mounted report.");
-      }
-      return payload.documents.slice();
-    });
-  }
-  return load().then(function (documents) {
-    return {
-      documents: documents,
-      refresh: load
-    };
-  }).catch(function (error) {
-    return {
-      documents: [],
-      error: error && error.message
-        ? error.message
-        : "Managed sub-scope inventory could not be loaded.",
-      refresh: load
-    };
-  });
 }
 
 function managementClientOptions(settings) {
@@ -242,28 +204,25 @@ export function mountDocsViewerManageDocumentExtras(context) {
       ? scopeConfig.uiStatusByValue
       : new Map()
   });
-  return managementInventory(settings, parent, subScope).then(function (inventory) {
-    return mountDocsViewerReport({
-      appContext: settings.appContext,
-      checkGeneratedDataReadCapability: settings.checkGeneratedDataReadCapability,
-      content: settings.content,
-      doc: settings.doc,
-      fetchDocsIndexTree: function (scope) {
-        return fetchDocsIndexTreeForScope(settings, scope);
-      },
-      managementContext: Boolean(settings.managementContext),
-      managementService: managementService,
-      payload: payload,
-      reportRegistryUrl: cleanString(routeContext.reportRegistryUrl),
-      reportService: reportManagementBaseUrl
-        ? createDocsViewerReportService({ baseUrl: reportManagementBaseUrl })
-        : null,
-      setStatus: settings.setStatus,
-      scopeConfigs: scopeConfigs(settings).slice(),
-      subscopeDocumentSource: inventory,
-      subscopeReportContribution: contribution,
-      viewerScope: currentViewerScope(settings),
-      viewerUrlForScope: settings.viewerUrlForScope
-    });
+  return mountDocsViewerReport({
+    appContext: settings.appContext,
+    checkGeneratedDataReadCapability: settings.checkGeneratedDataReadCapability,
+    content: settings.content,
+    doc: settings.doc,
+    fetchDocsIndexTree: function (scope) {
+      return fetchDocsIndexTreeForScope(settings, scope);
+    },
+    managementContext: Boolean(settings.managementContext),
+    managementService: managementService,
+    payload: payload,
+    reportRegistryUrl: cleanString(routeContext.reportRegistryUrl),
+    reportService: reportManagementBaseUrl
+      ? createDocsViewerReportService({ baseUrl: reportManagementBaseUrl })
+      : null,
+    setStatus: settings.setStatus,
+    scopeConfigs: scopeConfigs(settings).slice(),
+    subscopeReportContribution: contribution,
+    viewerScope: currentViewerScope(settings),
+    viewerUrlForScope: settings.viewerUrlForScope
   });
 }

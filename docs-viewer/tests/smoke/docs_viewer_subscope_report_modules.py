@@ -129,10 +129,6 @@ def assert_control_projection(page: Page) -> None:
               })
             };
           };
-          const inventory = await client.readManagedSubScopeDocuments('Studio', 'Tags', {
-            baseUrl: 'http://127.0.0.1:8789',
-            fetch: managementFetch
-          });
           const deleteOptions = {
             baseUrl: 'http://127.0.0.1:8789',
             fetch: managementFetch
@@ -144,14 +140,6 @@ def assert_control_projection(page: Page) -> None:
             sourceRevision,
             deleteOptions
           );
-          let missingTargetError = '';
-          try {
-            await client.readManagedSubScopeDocuments('studio', '', {
-              baseUrl: 'http://127.0.0.1:8789'
-            });
-          } catch (error) {
-            missingTargetError = error.message;
-          }
           let parentDeleteError = '';
           try {
             await client.previewManagedSubScopeDocDelete(parent, deleteOptions);
@@ -198,8 +186,6 @@ def assert_control_projection(page: Page) -> None:
           return {
             cases,
             requests,
-            inventory,
-            missingTargetError,
             parentDeleteError,
             revisionError,
             navigationStates
@@ -261,14 +247,6 @@ def assert_control_projection(page: Page) -> None:
 
     assert result["requests"] == [
         {
-            "url": (
-                "http://127.0.0.1:8789/docs/sub-scope-documents"
-                "?scope=studio&sub_scope=tags"
-            ),
-            "method": "GET",
-            "body": None,
-        },
-        {
             "url": "http://127.0.0.1:8789/docs/delete-preview",
             "method": "POST",
             "body": {
@@ -289,11 +267,6 @@ def assert_control_projection(page: Page) -> None:
             },
         }
     ]
-    assert result["inventory"]["documents"] == []
-    assert (
-        result["missingTargetError"]
-        == "Managed sub-scope inventory requires scope and sub_scope."
-    )
     assert (
         result["parentDeleteError"]
         == "Sub-scope document delete requires a sub-scope target."
@@ -318,6 +291,21 @@ def assert_report_module(page: Page) -> None:
         """() => {
           window.syntheticDetailMode = 'immediate';
           window.syntheticDetailResolve = null;
+          window.syntheticManifestDocs = [
+            {
+              doc_id: 'visible-doc',
+              title: 'Visible document',
+              ui_status: 'done',
+              viewable: true
+            },
+            {
+              doc_id: 'hidden-doc',
+              title: 'Hidden document',
+              ui_status: 'draft',
+              viewable: false
+            }
+          ];
+          window.syntheticManifestFailure = false;
           window.syntheticPayloadDocId = '';
           window.fetch = async input => {
             const url = new URL(String(input), window.location.href);
@@ -328,8 +316,15 @@ def assert_report_module(page: Page) -> None:
               text: async () => JSON.stringify(payload)
             });
             if (url.pathname.endsWith('/manifest.json')) {
+              if (window.syntheticManifestFailure) {
+                return {
+                  ok: false,
+                  status: 503,
+                  json: async () => ({})
+                };
+              }
               return response({
-                docs: [{ doc_id: 'visible-doc', title: 'Visible document' }]
+                docs: window.syntheticManifestDocs
               });
             }
             if (url.pathname.includes('/by-id/')) {
@@ -425,22 +420,6 @@ def assert_report_module(page: Page) -> None:
                 manifestUrl: '/synthetic/manifest.json',
                 byIdUrlBase: '/synthetic/by-id'
               }]
-            },
-            subscopeDocumentSource: {
-              documents: [
-                {
-                  doc_id: 'visible-doc',
-                  title: 'Visible document',
-                  ui_status: 'done',
-                  viewable: true
-                },
-                {
-                  doc_id: 'hidden-doc',
-                  title: 'Hidden document',
-                  ui_status: 'draft',
-                  viewable: false
-                }
-              ]
             },
             subscopeReportContribution: contribution,
             viewerScope: 'studio'
@@ -625,6 +604,9 @@ def assert_report_module(page: Page) -> None:
           const root = document.createElement('section');
           root.id = 'remounted-report';
           document.querySelector('#content').appendChild(root);
+          window.syntheticManifestDocs = [
+            { doc_id: 'visible-doc', title: 'Visible document' }
+          ];
           await report.mountDocsSubscopeReport({
             doc: { doc_id: 'parent-doc' },
             reportMeta: { subScope: 'tags' },
@@ -636,9 +618,6 @@ def assert_report_module(page: Page) -> None:
                 manifestUrl: '/synthetic/manifest.json',
                 byIdUrlBase: '/synthetic/by-id'
               }]
-            },
-            subscopeDocumentSource: {
-              documents: [{ doc_id: 'visible-doc', title: 'Visible document' }]
             },
             subscopeReportContribution: window.syntheticReportContribution,
             viewerScope: 'studio'
@@ -672,6 +651,9 @@ def assert_report_module(page: Page) -> None:
           document.body.innerHTML = '<main><section id="invalid-report"></section></main>';
           const states = [];
           const root = document.querySelector('#invalid-report');
+          window.syntheticManifestDocs = [
+            { doc_id: 'visible-doc', title: 'Visible document' }
+          ];
           await report.mountDocsSubscopeReport({
             reportMeta: { subScope: 'tags' },
             reportRoot: root,
@@ -682,9 +664,6 @@ def assert_report_module(page: Page) -> None:
                 manifestUrl: '/synthetic/manifest.json',
                 byIdUrlBase: '/synthetic/by-id'
               }]
-            },
-            subscopeDocumentSource: {
-              documents: [{ doc_id: 'visible-doc', title: 'Visible document' }]
             },
             subscopeReportContribution: {
               notify: event => {
@@ -721,6 +700,9 @@ def assert_report_module(page: Page) -> None:
           document.body.innerHTML = '<main><section id="mismatched-report"></section></main>';
           const states = [];
           const root = document.querySelector('#mismatched-report');
+          window.syntheticManifestDocs = [
+            { doc_id: 'visible-doc', title: 'Visible document' }
+          ];
           await report.mountDocsSubscopeReport({
             reportMeta: { subScope: 'tags' },
             reportRoot: root,
@@ -731,9 +713,6 @@ def assert_report_module(page: Page) -> None:
                 manifestUrl: '/synthetic/manifest.json',
                 byIdUrlBase: '/synthetic/by-id'
               }]
-            },
-            subscopeDocumentSource: {
-              documents: [{ doc_id: 'visible-doc', title: 'Visible document' }]
             },
             subscopeReportContribution: {
               notify: event => {
@@ -782,11 +761,11 @@ def assert_report_module(page: Page) -> None:
           };
           const emptyEvents = [];
           const emptyRoot = document.querySelector('#empty-report');
+          window.syntheticManifestDocs = [];
           await report.mountDocsSubscopeReport({
             reportMeta: { subScope: 'tags' },
             reportRoot: emptyRoot,
             routeContext: { subScopes: [subScope] },
-            subscopeDocumentSource: { documents: [] },
             subscopeReportContribution: {
               notify: event => emptyEvents.push({
                 type: event.type,
@@ -803,14 +782,11 @@ def assert_report_module(page: Page) -> None:
 
           const failedEvents = [];
           const failedRoot = document.querySelector('#failed-report');
+          window.syntheticManifestFailure = true;
           await report.mountDocsSubscopeReport({
             reportMeta: { subScope: 'tags' },
             reportRoot: failedRoot,
             routeContext: { subScopes: [subScope] },
-            subscopeDocumentSource: {
-              documents: [],
-              error: 'Managed inventory unavailable.'
-            },
             subscopeReportContribution: {
               notify: event => failedEvents.push({
                 type: event.type,
@@ -820,6 +796,7 @@ def assert_report_module(page: Page) -> None:
             },
             viewerScope: 'studio'
           });
+          window.syntheticManifestFailure = false;
           return {
             empty: {
               contributionHosts: emptyRoot.querySelectorAll(
@@ -878,12 +855,17 @@ def assert_report_module(page: Page) -> None:
                 {"type": "mount", "state": "", "reason": ""},
                 {
                     "type": "state",
+                    "state": "loading",
+                    "reason": "report-loading",
+                },
+                {
+                    "type": "state",
                     "state": "error",
-                    "reason": "document-source-failed",
+                    "reason": "report-load-failed",
                 },
             ],
             "state": "error",
-            "text": "Managed inventory unavailable.",
+            "text": "Failed to load docs sub-scope manifest (503)",
         },
     }
 
@@ -894,6 +876,9 @@ def assert_report_module(page: Page) -> None:
           );
           history.replaceState({}, '', '/?scope=studio&doc=parent-doc');
           window.syntheticPayloadDocId = '';
+          window.syntheticManifestDocs = [
+            { doc_id: 'visible-doc', title: 'Visible document' }
+          ];
           document.body.innerHTML = '<main><section id="public-report"></section></main>';
           const root = document.querySelector('#public-report');
           await report.mountDocsSubscopeReport({
@@ -954,6 +939,15 @@ def assert_subscope_selection_contribution(page: Page) -> None:
             if (url.pathname === '/capabilities') {
               return response({ ok: true, capabilities: {} });
             }
+            if (url.pathname === '/synthetic/manifest.json') {
+              return response({
+                docs: [
+                  { doc_id: 'a', title: 'A', viewable: true },
+                  { doc_id: 'b', title: 'B', ui_status: 'draft', viewable: false },
+                  { doc_id: 'c', title: 'C', viewable: true }
+                ]
+              });
+            }
             if (url.pathname.includes('/by-id/')) {
               const docId = decodeURIComponent(
                 url.pathname.split('/').pop().replace(/\\.json$/, '')
@@ -986,15 +980,9 @@ def assert_subscope_selection_contribution(page: Page) -> None:
               subScopes: [{
                 subScope: 'tags',
                 title: 'Tags',
+                manifestUrl: '/synthetic/manifest.json',
                 byIdUrlBase: '/synthetic/by-id'
               }]
-            },
-            subscopeDocumentSource: {
-              documents: [
-                { doc_id: 'a', title: 'A', viewable: true },
-                { doc_id: 'b', title: 'B', ui_status: 'draft', viewable: false },
-                { doc_id: 'c', title: 'C', viewable: true }
-              ]
             },
             subscopeReportContribution: contribution,
             viewerScope: 'studio'
@@ -1220,7 +1208,7 @@ def assert_manage_report_bridge(page: Page) -> None:
           const requests = [];
           const requestBodies = [];
           const managementStatuses = [];
-          window.syntheticInventoryFailure = false;
+          window.syntheticManifestFailure = false;
           window.fetch = async (input, options = {}) => {
             const url = new URL(String(input), window.location.href);
             requests.push(url.pathname + url.search);
@@ -1256,19 +1244,17 @@ def assert_manage_report_bridge(page: Page) -> None:
                 }
               });
             }
-            if (url.pathname === '/docs/sub-scope-documents') {
-              if (window.syntheticInventoryFailure) {
+            if (url.pathname === '/synthetic/manifest.json') {
+              if (window.syntheticManifestFailure) {
                 return {
                   ok: false,
                   status: 503,
-                  json: async () => ({ ok: false, error: 'Synthetic inventory failed.' })
+                  json: async () => ({})
                 };
               }
               return response({
-                ok: true,
-                scope: 'studio',
-                sub_scope: 'tags',
-                documents: [
+                groups: ['subject', 'domain', 'form', 'theme'],
+                docs: [
                   {
                     doc_id: 'detail-doc',
                     title: 'Detail',
@@ -1541,8 +1527,8 @@ def assert_manage_report_bridge(page: Page) -> None:
           ));
           const deleteState = {
             historyLength: history.length,
-            inventoryRequests: requests.filter(path => (
-              path.startsWith('/docs/sub-scope-documents?')
+            manifestRequests: requests.filter(path => (
+              path.startsWith('/synthetic/manifest.json')
             )).length,
             requestBodies: requestBodies.filter(record => (
               record.path === '/docs/delete-preview'
@@ -1563,7 +1549,7 @@ def assert_manage_report_bridge(page: Page) -> None:
           const backSubdoc = new URLSearchParams(location.search).get('subdoc');
           await navigateHistory('forward');
           const forwardSubdoc = new URLSearchParams(location.search).get('subdoc');
-          window.syntheticInventoryFailure = true;
+          window.syntheticManifestFailure = true;
           const failureStates = [];
           const failureContent = document.createElement('main');
           document.body.appendChild(failureContent);
@@ -1572,8 +1558,8 @@ def assert_manage_report_bridge(page: Page) -> None:
             content: failureContent,
             publishSubscopeReportState: state => failureStates.push(state)
           });
-          window.syntheticInventoryFailure = false;
-          const failedInventory = {
+          window.syntheticManifestFailure = false;
+          const failedManifest = {
             states: failureStates,
             text: failureContent.textContent,
             contributionHosts: failureContent.querySelectorAll(
@@ -1588,7 +1574,7 @@ def assert_manage_report_bridge(page: Page) -> None:
             beforeClear,
             cancelState,
             deleteState,
-            failedInventory,
+            failedManifest,
             historyNavigation: { backSubdoc, forwardSubdoc },
             historyLengthBeforeDelete,
             latestAfterNonReport: states.at(-1),
@@ -1613,14 +1599,12 @@ def assert_manage_report_bridge(page: Page) -> None:
         raise AssertionError(
             f"unexpected sub-scope package bridge state: {mounted['packageState']!r}"
         )
-    inventory_requests = [
+    manifest_requests = [
         request
         for request in mounted["beforeClear"]["requests"]
-        if request.startswith("/docs/sub-scope-documents?")
+        if request.startswith("/synthetic/manifest.json")
     ]
-    assert inventory_requests == [
-        "/docs/sub-scope-documents?scope=studio&sub_scope=tags"
-    ]
+    assert manifest_requests == ["/synthetic/manifest.json"]
     expected_rows = [
         {
             "docId": "detail-doc",
@@ -1658,7 +1642,7 @@ def assert_manage_report_bridge(page: Page) -> None:
     assert mounted["cancelState"]["subdoc"] == "detail-doc"
     assert mounted["deleteState"] == {
         "historyLength": mounted["historyLengthBeforeDelete"],
-        "inventoryRequests": 1,
+        "manifestRequests": 1,
         "requestBodies": [
             {
                 "path": "/docs/delete-preview",
@@ -1701,7 +1685,7 @@ def assert_manage_report_bridge(page: Page) -> None:
         "backSubdoc": None,
         "forwardSubdoc": None,
     }
-    assert mounted["failedInventory"] == {
+    assert mounted["failedManifest"] == {
         "states": [
             {
                 "state": "loading",
@@ -1710,13 +1694,19 @@ def assert_manage_report_bridge(page: Page) -> None:
                 "subdocTarget": None,
             },
             {
+                "state": "loading",
+                "reason": "report-loading",
+                "parentTarget": {"scope": "studio", "doc_id": "parent-doc"},
+                "subdocTarget": None,
+            },
+            {
                 "state": "error",
-                "reason": "document-source-failed",
+                "reason": "report-load-failed",
                 "parentTarget": {"scope": "studio", "doc_id": "parent-doc"},
                 "subdocTarget": None,
             },
         ],
-        "text": "Synthetic inventory failed.",
+        "text": "Failed to load docs sub-scope manifest (503)",
         "contributionHosts": 0,
     }
     assert mounted["latestAfterNonReport"] == {
@@ -1744,8 +1734,19 @@ def assert_report_delete_reconciliation(page: Page) -> None:
             manifestUrl: '/synthetic/manifest.json',
             byIdUrlBase: '/synthetic/by-id'
           };
+          window.syntheticManifestDocs = [
+            { doc_id: 'detail-doc', title: 'Detail' },
+            { doc_id: 'sibling-doc', title: 'Sibling' }
+          ];
           window.fetch = async input => {
             const url = new URL(String(input), window.location.href);
+            if (url.pathname.endsWith('/manifest.json')) {
+              return {
+                ok: true,
+                status: 200,
+                json: async () => ({ docs: window.syntheticManifestDocs })
+              };
+            }
             if (url.pathname.endsWith('/detail-doc.json')) {
               return {
                 ok: true,
@@ -1768,23 +1769,12 @@ def assert_report_delete_reconciliation(page: Page) -> None:
           document.body.innerHTML = '<main><section id="reconcile-report"></section></main>';
           const root = document.querySelector('#reconcile-report');
           let commitDeletedDocument = null;
-          let refreshCalls = 0;
           const events = [];
           await report.mountDocsSubscopeReport({
             doc: { doc_id: 'parent-doc' },
             reportMeta: { subScope: 'tags' },
             reportRoot: root,
             routeContext: { subScopes: [subScope] },
-            subscopeDocumentSource: {
-              documents: [
-                { doc_id: 'detail-doc', title: 'Detail' },
-                { doc_id: 'sibling-doc', title: 'Sibling' }
-              ],
-              refresh: async () => {
-                refreshCalls += 1;
-                return [{ doc_id: 'sibling-doc', title: 'Sibling' }];
-              }
-            },
             subscopeReportContribution: {
               notify: event => events.push({
                 type: event.type,
@@ -1804,18 +1794,17 @@ def assert_report_delete_reconciliation(page: Page) -> None:
           const local = await commitDeletedDocument(target);
           const localState = {
             historyLength: history.length,
-            refreshCalls,
             reportState: root.dataset.reportState,
             rowIds: Array.from(root.querySelectorAll('[data-report-subdoc-id]'))
               .map(row => row.dataset.reportSubdocId),
             subdoc: new URLSearchParams(location.search).get('subdoc')
           };
-          const recovered = await commitDeletedDocument(target);
-          const recoveredState = {
-            refreshCalls,
-            rowIds: Array.from(root.querySelectorAll('[data-report-subdoc-id]'))
-              .map(row => row.dataset.reportSubdocId)
-          };
+          let duplicateCommitError = '';
+          try {
+            await commitDeletedDocument(target);
+          } catch (error) {
+            duplicateCommitError = error.message;
+          }
 
           history.replaceState(
             {},
@@ -1827,19 +1816,14 @@ def assert_report_delete_reconciliation(page: Page) -> None:
           unmountParent.appendChild(unmountRoot);
           document.body.appendChild(unmountParent);
           let unmountedCommit = null;
-          let unmountedRefreshCalls = 0;
+          window.syntheticManifestDocs = [
+            { doc_id: 'detail-doc', title: 'Detail' }
+          ];
           await report.mountDocsSubscopeReport({
             doc: { doc_id: 'parent-doc' },
             reportMeta: { subScope: 'tags' },
             reportRoot: unmountRoot,
             routeContext: { subScopes: [subScope] },
-            subscopeDocumentSource: {
-              documents: [{ doc_id: 'detail-doc', title: 'Detail' }],
-              refresh: async () => {
-                unmountedRefreshCalls += 1;
-                return [];
-              }
-            },
             subscopeReportContribution: {
               renderDetailToolbar: context => {
                 unmountedCommit = context.commitDeletedDocument;
@@ -1856,10 +1840,8 @@ def assert_report_delete_reconciliation(page: Page) -> None:
             historyLength,
             local,
             localState,
-            recovered,
-            recoveredState,
-            unmounted,
-            unmountedRefreshCalls
+            duplicateCommitError,
+            unmounted
           };
         }"""
     )
@@ -1867,7 +1849,6 @@ def assert_report_delete_reconciliation(page: Page) -> None:
     assert result["local"] == {"reconciled": True, "mode": "local"}
     expected_local_state = {
         "historyLength": result["historyLength"],
-        "refreshCalls": 0,
         "reportState": "list",
         "rowIds": ["sibling-doc"],
         "subdoc": None,
@@ -1876,28 +1857,19 @@ def assert_report_delete_reconciliation(page: Page) -> None:
         raise AssertionError(
             f"unexpected local delete reconciliation: {result['localState']!r}"
         )
-    assert result["recovered"] == {"reconciled": True, "mode": "refetch"}
-    assert result["recoveredState"] == {
-        "refreshCalls": 1,
-        "rowIds": ["sibling-doc"],
-    }
+    assert result["duplicateCommitError"] == (
+        "Document was deleted, but the report manifest did not contain one exact target."
+    )
     assert {
         "type": "refresh",
         "state": "",
         "reason": "document-deleted-local",
         "documentIds": ["sibling-doc"],
     } in result["events"]
-    assert {
-        "type": "refresh",
-        "state": "",
-        "reason": "document-deleted-recovery",
-        "documentIds": ["sibling-doc"],
-    } in result["events"]
     assert result["unmounted"] == {
         "reconciled": False,
         "mode": "unmounted",
     }
-    assert result["unmountedRefreshCalls"] == 0
 
 
 def assert_delete_workflow(page: Page) -> None:

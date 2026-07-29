@@ -332,12 +332,8 @@ def install_smoke_document_routes(
             },
         )
 
-    def fulfill_subscope_inventory(route) -> None:
-        if (
-            not include_subscope_report
-            or query_value(route.request.url, "scope") != "studio"
-            or query_value(route.request.url, "sub_scope") != SUBSCOPE_ID
-        ):
+    def fulfill_subscope_manifest(route) -> None:
+        if not include_subscope_report:
             route.fulfill(status=404, content_type="application/json", body='{"error":"Not found"}')
             return
         documents = [
@@ -360,10 +356,8 @@ def install_smoke_document_routes(
         fulfill_json(
             route,
             {
-                "ok": True,
-                "scope": "studio",
-                "sub_scope": SUBSCOPE_ID,
-                "documents": documents,
+                "groups": ["subject", "domain", "form", "theme"],
+                "docs": documents,
             },
         )
 
@@ -444,8 +438,8 @@ def install_smoke_document_routes(
             fulfill_viewer_config,
         )
         page.route(
-            re.compile(r".*/docs/sub-scope-documents(?:\?.*)?$"),
-            fulfill_subscope_inventory,
+            re.compile(r".*/__smoke/subscope/manifest\.json(?:\?.*)?$"),
+            fulfill_subscope_manifest,
         )
         page.route(
             re.compile(r".*/__smoke/subscope/by-id/[^/?]+\.json(?:\?.*)?$"),
@@ -2097,7 +2091,7 @@ def normalized_subscope_request(request) -> dict[str, object] | None:
     tracked_paths = {
         "/docs/index-tree",
         "/docs/doc",
-        "/docs/sub-scope-documents",
+        "/__smoke/subscope/manifest.json",
         "/docs/source",
         "/docs/source/rebuild",
         "/docs/open-source",
@@ -2300,15 +2294,15 @@ def exercise_subscope_editing_route(
             && !new URL(location.href).searchParams.has('subdoc')""",
         timeout=timeout_ms,
     )
-    refreshed_inventory = page.locator(
+    refreshed_manifest_row = page.locator(
         f'.docsViewerReport__row[data-report-subdoc-id="{SUBSCOPE_DOC_ID}"]'
     )
-    if "Renamed Smoke Detail" not in refreshed_inventory.inner_text():
-        raise AssertionError("metadata rebuild did not refresh the manage inventory")
-    if refreshed_inventory.locator(".docsViewer__navStatus").count() != 1:
-        raise AssertionError("metadata rebuild did not refresh the inventory status icon")
-    if refreshed_inventory.locator(".docsViewer__draftPrefix").count() != 1:
-        raise AssertionError("metadata rebuild did not refresh the inventory viewability icon")
+    if "Renamed Smoke Detail" not in refreshed_manifest_row.inner_text():
+        raise AssertionError("metadata rebuild did not refresh the Manage manifest row")
+    if refreshed_manifest_row.locator(".docsViewer__navStatus").count() != 1:
+        raise AssertionError("metadata rebuild did not refresh the manifest status icon")
+    if refreshed_manifest_row.locator(".docsViewer__draftPrefix").count() != 1:
+        raise AssertionError("metadata rebuild did not refresh the manifest viewability icon")
     page.go_back(wait_until="domcontentloaded")
     wait_for_subscope_detail(
         page,
@@ -2438,12 +2432,9 @@ def assert_subscope_request_log(request_log: list[dict[str, object]]) -> None:
     ]:
         raise AssertionError(f"metadata update request log changed: {request_log!r}")
 
-    inventories = get_requests("/docs/sub-scope-documents")
-    if len(inventories) != 7 or any(
-        record["query"] != {"scope": "studio", "sub_scope": SUBSCOPE_ID}
-        for record in inventories
-    ):
-        raise AssertionError(f"manage inventory refresh log changed: {request_log!r}")
+    manifests = get_requests("/__smoke/subscope/manifest.json")
+    if len(manifests) != 7 or any(record["query"] for record in manifests):
+        raise AssertionError(f"Manage manifest refresh log changed: {request_log!r}")
     details = get_requests(f"/__smoke/subscope/by-id/{SUBSCOPE_DOC_ID}.json")
     if len(details) != 6:
         raise AssertionError(f"targeted detail refresh log changed: {request_log!r}")
@@ -2816,6 +2807,11 @@ def exercise_manage_route(
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--timeout-ms", type=int, default=15000)
+    parser.add_argument(
+        "--subscope-only",
+        action="store_true",
+        help="Run only the maintained managed sub-scope editing route.",
+    )
     args = parser.parse_args(argv)
 
     server, base_url = start_server()
@@ -2827,6 +2823,31 @@ def main(argv: list[str] | None = None) -> int:
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
             errors: list[str] = []
+            if args.subscope_only:
+                try:
+                    page = browser.new_page()
+                    page.on(
+                        "pageerror",
+                        lambda exc: errors.append(exc.stack or str(exc)),
+                    )
+                    subscope_request_log = exercise_subscope_editing_route(
+                        page,
+                        base_url,
+                        args.timeout_ms,
+                    )
+                finally:
+                    browser.close()
+                assert_subscope_request_log(subscope_request_log)
+                if errors:
+                    raise AssertionError(
+                        f"page errors during managed sub-scope smoke: {errors!r}"
+                    )
+                print(
+                    "Docs Viewer managed sub-scope route OK: "
+                    f"{base_url}/docs/?scope=studio"
+                    f"&doc={SUBSCOPE_REPORT_DOC_ID}"
+                )
+                return 0
             try:
                 page = browser.new_page()
                 page.on("pageerror", lambda exc: errors.append(exc.stack or str(exc)))

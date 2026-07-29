@@ -80,16 +80,6 @@ function normalizeDocuments(records) {
   });
 }
 
-function suppliedDocumentSource(context) {
-  var source = context && context.subscopeDocumentSource;
-  if (!source || typeof source !== "object" || !Array.isArray(source.documents)) return null;
-  return {
-    documents: normalizeDocuments(source.documents),
-    error: cleanString(source.error),
-    refresh: typeof source.refresh === "function" ? source.refresh : null
-  };
-}
-
 function reportContribution(context) {
   var contribution = context && context.subscopeReportContribution;
   return contribution && typeof contribution === "object" ? contribution : null;
@@ -551,51 +541,24 @@ function returnFromDeletedDetail(state, docId) {
   }
 }
 
-function refreshedDocuments(payload) {
-  if (Array.isArray(payload)) return normalizeDocuments(payload);
-  if (payload && typeof payload === "object" && Array.isArray(payload.documents)) {
-    return normalizeDocuments(payload.documents);
-  }
-  throw new Error("Managed sub-scope inventory refresh returned an invalid document collection.");
-}
-
-function recoverCommittedDeletion(state, docId) {
-  if (typeof state.documentSourceRefresh !== "function") {
-    return Promise.reject(new Error(
-      "Document was deleted, but the report inventory could not be reconciled."
-    ));
-  }
-  return Promise.resolve(state.documentSourceRefresh()).then(function (payload) {
-    if (!state.mounted) {
-      return { reconciled: false, mode: "unmounted" };
-    }
-    var documents = refreshedDocuments(payload);
-    if (documents.some(function (doc) { return doc.docId === docId; })) {
-      throw new Error("Document was deleted, but the refreshed report inventory still lists it.");
-    }
-    state.docs = documents;
-    state.docIds = documents.map(function (doc) { return doc.docId; });
-    delete state.detailPayloads[docId];
-    publishDocumentsRefresh(state, "document-deleted-recovery");
-    returnFromDeletedDetail(state, docId);
-    return { reconciled: true, mode: "refetch" };
-  });
-}
-
 function reconcileCommittedDeletion(state, target) {
   var docId = assertCollectionTarget(state, target);
   if (!state.mounted) {
     return Promise.resolve({ reconciled: false, mode: "unmounted" });
   }
   if (!Array.isArray(state.docs)) {
-    return recoverCommittedDeletion(state, docId);
+    return Promise.reject(new Error(
+      "Document was deleted, but the report manifest could not be reconciled."
+    ));
   }
   var matchingIndexes = [];
   state.docs.forEach(function (doc, index) {
     if (doc.docId === docId) matchingIndexes.push(index);
   });
   if (matchingIndexes.length !== 1) {
-    return recoverCommittedDeletion(state, docId);
+    return Promise.reject(new Error(
+      "Document was deleted, but the report manifest did not contain one exact target."
+    ));
   }
   state.docs = state.docs.filter(function (_doc, index) {
     return index !== matchingIndexes[0];
@@ -608,9 +571,9 @@ function reconcileCommittedDeletion(state, target) {
 }
 
 /**
- * Mounts the public-safe sub-scope reader with an optional document source and
- * optional caller-owned contribution. The report retains collection identity,
- * membership, navigation, and detail validation.
+ * Mounts the manifest-backed sub-scope reader with an optional caller-owned
+ * contribution. The report retains collection identity, membership,
+ * navigation, and detail validation.
  *
  * @param {Object} context
  * @returns {Promise<boolean>}
@@ -643,9 +606,8 @@ export function mountDocsSubscopeReport(context) {
     return Promise.resolve(true);
   }
 
-  var documentSource = suppliedDocumentSource(context);
-  var url = documentSource ? "" : manifestUrl(subScope);
-  if (!documentSource && !url) {
+  var url = manifestUrl(subScope);
+  if (!url) {
     contributionEvent(context, subScopeIdValue, {
       type: "state",
       state: "error",
@@ -668,7 +630,6 @@ export function mountDocsSubscopeReport(context) {
     docIds: [],
     detailRequestVersion: 0,
     detailPayloads: {},
-    documentSourceRefresh: documentSource && documentSource.refresh,
     contribution: reportContribution(context),
     headNode: refs.headNode,
     listToolbarNode: null,
@@ -702,17 +663,8 @@ export function mountDocsSubscopeReport(context) {
     type: "mount",
     root: root
   });
-  if (documentSource && documentSource.error) {
-    publishState(state, "error", null, "document-source-failed");
-    renderError(root, documentSource.error);
-    return Promise.resolve(true);
-  }
-
   publishState(state, "loading", null, "report-loading");
-  var docsRequest = documentSource
-    ? Promise.resolve(documentSource.documents)
-    : fetchJson(url, "Failed to load docs sub-scope manifest").then(manifestDocs);
-  return docsRequest
+  return fetchJson(url, "Failed to load docs sub-scope manifest").then(manifestDocs)
     .then(function (documents) {
       state.docs = documents;
       state.docIds = state.docs.map(function (doc) { return doc.docId; });
