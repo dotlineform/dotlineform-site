@@ -160,6 +160,13 @@
   width: 100%;
 }
 
+.docsViewerReport__subscopeFilterToolbar
+  > .docsViewerReport__contributionToolbar--list{
+  flex: 0 0 auto;
+  width: auto;
+  margin-inline-start: auto;
+}
+
 .docsViewerReport__subscopeSelectionToolbar{
   display: flex;
   flex-wrap: wrap;
@@ -167,6 +174,12 @@
   justify-content: flex-end;
   gap: 0.35rem 0.6rem;
   width: 100%;
+}
+
+.docsViewerReport__subscopeFilterToolbar
+  .docsViewerReport__subscopeSelectionToolbar{
+  flex-wrap: nowrap;
+  width: auto;
 }
 
 .docsViewerReport__subscopeActionsHost{
@@ -193,9 +206,13 @@
 
 .docsViewerReport__subscopeSelectionButton{
   appearance: none;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  height: 1.8rem;
   border: 0;
   border-radius: 0.45rem;
-  padding: 0.18rem 0.3rem;
+  padding: 0 0.3rem;
   background: transparent;
   color: var(--docs-viewer-text);
   font: inherit;
@@ -985,6 +1002,11 @@ select.docsViewer__fieldInput--listbox{
   .docsViewerReport__contributionToolbar--list,
   .docsViewerReport__subscopeSelectionToolbar{
     justify-content: flex-start;
+  }
+
+  .docsViewerReport__subscopeFilterToolbar
+    > .docsViewerReport__contributionToolbar--list{
+    margin-inline-start: 0;
   }
 
   .docsViewerReport__subscopeActionsMenu{

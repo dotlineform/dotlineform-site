@@ -2066,12 +2066,12 @@ def wait_for_subscope_detail(
     page.wait_for_function(
         """([expectedTitle, expectedVersion]) => {
             const report = document.querySelector('.docsViewerReport');
-            const detailTitle = document.querySelector('.docsReportDetail__title');
+            const detail = document.querySelector('.docsReportDetail');
             const versionNode = document.querySelector('[data-smoke-detail-version]');
             const parentSource = document.querySelector('#docsViewerManageSourceButton');
             const subdocSource = document.querySelector('#docsViewerManageSubdocSourceButton');
             return report?.dataset.reportState === 'detail'
-                && detailTitle?.textContent.trim() === expectedTitle
+                && detail?.dataset.reportSubdocTitle === expectedTitle
                 && versionNode?.dataset.smokeDetailVersion === String(expectedVersion)
                 && parentSource?.getAttribute('aria-label') === 'Parent Source'
                 && subdocSource?.disabled === false;

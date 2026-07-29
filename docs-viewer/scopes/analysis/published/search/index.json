@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_analysis_v1",
     "scope": "analysis",
-    "version": "blake2b-c5532624fa97adc6357e4dbf21a48a6b",
-    "generated_at_utc": "2026-07-16T17:02:16Z",
+    "version": "blake2b-bef37128edec85a6323fae0febec6c35",
+    "generated_at_utc": "2026-07-29T10:30:11Z",
     "count": 2
   },
   "entries": [
@@ -30,25 +30,25 @@
     {
       "id": "d-20260624-213316-478639",
       "kind": "doc",
-      "title": "Tags",
+      "title": "Concepts",
       "href": "/analysis/?doc=d-20260624-213316-478639",
-      "last_updated": "2026-06-24 21:33:16",
+      "last_updated": "2026-07-29 11:30:02",
       "parent_id": "d-20260426-164043-e14f49",
       "parent_title": "Analysis",
-      "display_meta": "2026-06-24 21:33:16 • Analysis",
+      "display_meta": "2026-07-29 11:30:02 • Analysis",
       "search_terms": [
-        "tags",
+        "concepts",
         "analysis",
-        "2026-06-24 21:33:16",
+        "2026-07-29 11:30:02",
         "2026",
-        "06",
-        "24",
-        "21",
-        "33",
-        "16",
+        "07",
+        "29",
+        "11",
+        "30",
+        "02",
         "d-20260624-213316-478639"
       ],
-      "search_text": "tags analysis 2026-06-24 21:33:16 2026 06 24 21 33 16 d-20260624-213316-478639"
+      "search_text": "concepts analysis 2026-07-29 11:30:02 2026 07 29 11 30 02 d-20260624-213316-478639"
     }
   ]
 }

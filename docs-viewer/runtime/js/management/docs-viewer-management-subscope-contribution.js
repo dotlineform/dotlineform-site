@@ -170,7 +170,7 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
     selectionOwner.notify(event, {
       managementContext: managementContext
     });
-    if (event && event.type === "refresh") {
+    if (event && (event.type === "refresh" || event.type === "projection")) {
       currentDocuments = Array.isArray(event.documents) ? event.documents.slice() : [];
     }
     if (
@@ -397,11 +397,12 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
     clearDeleteWorkflow();
     var request = deleteWorkflowRequest;
     var button = host.ownerDocument.createElement("button");
-    button.className = "docsViewerReport__button";
+    button.className = "docsViewerReport__button docsReportDetail__iconButton docsReportDetail__delete";
     button.type = "button";
     button.disabled = true;
     button.dataset.docsSubscopeDelete = "true";
-    button.textContent = "Delete";
+    button.textContent = "\uD83D\uDDD1\uFE0F";
+    button.setAttribute("aria-label", "Delete. Checking Delete availability.");
     button.title = "Checking Delete availability.";
     host.appendChild(button);
 

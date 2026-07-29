@@ -286,6 +286,278 @@ def assert_control_projection(page: Page) -> None:
     ]
 
 
+def assert_filter_source_boundaries(site_root: Path) -> None:
+    shared_root = site_root / "site/docs-viewer/runtime/js/shared"
+    filter_source = (shared_root / "docs-subscope-report-filter.js").read_text(
+        encoding="utf-8"
+    )
+    report_source = (shared_root / "docs-subscope-report.js").read_text(
+        encoding="utf-8"
+    )
+    assert "fetch(" not in filter_source
+    assert "import " not in filter_source
+    assert "docs-viewer-management" not in report_source
+    assert "docs-viewer-search" not in report_source
+
+
+def assert_filter_projection(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+          const filter = await import(
+            '/site/docs-viewer/runtime/js/shared/docs-subscope-report-filter.js'
+          );
+          const report = await import(
+            '/site/docs-viewer/runtime/js/shared/docs-subscope-report.js'
+          );
+          const pureDocuments = Object.freeze([
+            Object.freeze({
+              doc_id: 'first',
+              title: 'Alpha beta',
+              group: 'subject',
+              ui_status: 'needle'
+            }),
+            Object.freeze({
+              doc_id: 'needle',
+              title: 'ALPINE',
+              group: 'domain'
+            }),
+            Object.freeze({
+              doc_id: 'third',
+              title: 'Beta',
+              group: 'subject'
+            })
+          ]);
+          const ids = documents => documents.map(documentRecord => documentRecord.doc_id);
+          const pure = {
+            prefix: ids(filter.projectDocsSubscopeDocuments(
+              pureDocuments,
+              { query: 'alp' }
+            )),
+            normalized: ids(filter.projectDocsSubscopeDocuments(
+              pureDocuments,
+              { query: '  ALPHA   B ' }
+            )),
+            intersection: ids(filter.projectDocsSubscopeDocuments(
+              pureDocuments,
+              { query: 'alp', group: 'DOMAIN' }
+            )),
+            ignoresDocId: ids(filter.projectDocsSubscopeDocuments(
+              pureDocuments,
+              { query: 'needle' }
+            ))
+          };
+
+          history.replaceState({}, '', '/?scope=analysis&doc=parent-doc');
+          document.body.innerHTML = '<main><section id="filter-report"></section></main>';
+          const root = document.querySelector('#filter-report');
+          const requests = [];
+          const refreshes = [];
+          const projections = [];
+          const toolbarProjections = [];
+          window.fetch = async input => {
+            const url = new URL(String(input), window.location.href);
+            requests.push(url.pathname);
+            const response = payload => ({
+              ok: true,
+              status: 200,
+              json: async () => payload
+            });
+            if (url.pathname === '/filter/manifest.json') {
+              return response({
+                groups: ['subject', 'domain', 'form', 'theme'],
+                docs: [
+                  { doc_id: 'alpha', title: 'Alpha', group: 'subject' },
+                  { doc_id: 'alpine', title: 'Alpine', group: 'domain' },
+                  { doc_id: 'beta', title: 'Beta', group: 'subject' },
+                  { doc_id: 'gamma', title: 'Gamma', group: 'form' },
+                  { doc_id: 'alps', title: 'Alps' }
+                ]
+              });
+            }
+            if (url.pathname.startsWith('/filter/by-id/')) {
+              const docId = decodeURIComponent(
+                url.pathname.split('/').pop().replace(/\\.json$/, '')
+              );
+              return response({
+                doc_id: docId,
+                title: docId === 'alpha' ? 'Alpha' : docId,
+                content_html: `<h2>${docId}</h2>`
+              });
+            }
+            return { ok: false, status: 404, json: async () => ({}) };
+          };
+          const contribution = {
+            notify: event => {
+              if (event.type === 'refresh') {
+                refreshes.push(ids(event.documents));
+              }
+              if (event.type === 'projection') {
+                projections.push(ids(event.documents));
+              }
+            },
+            renderListToolbar: ({ documents }) => {
+              toolbarProjections.push(ids(documents));
+            }
+          };
+          await report.mountDocsSubscopeReport({
+            doc: { doc_id: 'parent-doc' },
+            reportMeta: { subScope: 'tags' },
+            reportRoot: root,
+            routeContext: {
+              subScopes: [{
+                subScope: 'tags',
+                title: 'Tags',
+                manifestUrl: '/filter/manifest.json',
+                byIdUrlBase: '/filter/by-id'
+              }]
+            },
+            subscopeReportContribution: contribution,
+            viewerScope: 'analysis'
+          });
+
+          const snapshot = () => {
+            const input = root.querySelector('.docsViewerReport__searchInput');
+            const filterLabel = root.querySelector(`label[for="${input.id}"]`);
+            const status = root.querySelector('.docsViewerReport__status');
+            return {
+              activeGroup: root.querySelector(
+                '[data-docs-subscope-group][aria-pressed="true"]'
+              )?.dataset.docsSubscopeGroup ?? null,
+              clearLabel: root.querySelector(
+                '.docsViewerReport__searchClear'
+              )?.getAttribute('aria-label') || '',
+              empty: root.querySelector('.docsViewerReport__empty')?.textContent || '',
+              filterLabel: filterLabel?.textContent || '',
+              filterLabelHidden: filterLabel?.classList.contains('visually-hidden') || false,
+              groupLabels: Array.from(
+                root.querySelectorAll('[data-docs-subscope-group]')
+              ).map(button => button.textContent),
+              placeholder: input.placeholder,
+              query: input.value,
+              rowIds: Array.from(root.querySelectorAll('[data-report-subdoc-id]'))
+                .map(row => row.dataset.reportSubdocId),
+              status: status?.textContent || '',
+              statusHidden: status?.classList.contains('visually-hidden') || false,
+              statusRole: status?.getAttribute('role') || ''
+            };
+          };
+          const initial = snapshot();
+          const input = root.querySelector('.docsViewerReport__searchInput');
+          input.value = '  ALP ';
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+          const prefix = {
+            ...snapshot(),
+            requests: requests.slice()
+          };
+          root.querySelector('[data-docs-subscope-group="subject"]').click();
+          const subject = snapshot();
+          root.querySelector(
+            '[data-report-subdoc-id="alpha"] .docsViewerReport__subscopeButton'
+          ).click();
+          await new Promise(resolve => {
+            const poll = () => {
+              if (root.dataset.reportState === 'detail') return resolve();
+              setTimeout(poll, 0);
+            };
+            poll();
+          });
+          const detail = {
+            filtersHidden: root.querySelector('[data-docs-subscope-filters]').hidden,
+            requests: requests.slice()
+          };
+          root.querySelector('.docsReportDetail__back').click();
+          const afterBack = snapshot();
+          root.querySelector('[data-docs-subscope-group=""]').click();
+          const allWithQuery = snapshot();
+          root.querySelector('[data-docs-subscope-group="subject"]').click();
+          root.querySelector('.docsViewerReport__searchClear').click();
+          const afterClear = snapshot();
+          root.querySelector('[data-docs-subscope-group=""]').click();
+          input.value = 'zzz';
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+          const noMatch = snapshot();
+          return {
+            afterBack,
+            afterClear,
+            allWithQuery,
+            detail,
+            initial,
+            noMatch,
+            prefix,
+            projections,
+            pure,
+            refreshes,
+            subject,
+            toolbarProjections
+          };
+        }"""
+    )
+    assert result["pure"] == {
+        "prefix": ["first", "needle"],
+        "normalized": ["first"],
+        "intersection": ["needle"],
+        "ignoresDocId": [],
+    }
+    assert result["initial"] == {
+        "activeGroup": "",
+        "clearLabel": "Clear Tags title filter",
+        "empty": "",
+        "filterLabel": "Filter Tags by title",
+        "filterLabelHidden": True,
+        "groupLabels": [
+            "all",
+            "subject",
+            "domain",
+            "form",
+            "theme",
+        ],
+        "placeholder": "search",
+        "query": "",
+        "rowIds": ["alpha", "alpine", "beta", "gamma", "alps"],
+        "status": "5 Tags documents",
+        "statusHidden": True,
+        "statusRole": "status",
+    }
+    assert result["prefix"]["rowIds"] == ["alpha", "alpine", "alps"]
+    assert result["prefix"]["status"] == "3 of 5 Tags documents"
+    assert result["prefix"]["requests"] == ["/filter/manifest.json"]
+    assert result["subject"]["rowIds"] == ["alpha"]
+    assert result["subject"]["query"] == "  ALP "
+    assert result["subject"]["activeGroup"] == "subject"
+    assert result["subject"]["status"] == "1 of 5 Tags documents"
+    assert result["detail"] == {
+        "filtersHidden": True,
+        "requests": ["/filter/manifest.json", "/filter/by-id/alpha.json"],
+    }
+    assert result["afterBack"]["query"] == "  ALP "
+    assert result["afterBack"]["activeGroup"] == "subject"
+    assert result["afterBack"]["rowIds"] == ["alpha"]
+    assert result["allWithQuery"]["query"] == "  ALP "
+    assert result["allWithQuery"]["activeGroup"] == ""
+    assert result["allWithQuery"]["rowIds"] == ["alpha", "alpine", "alps"]
+    assert result["afterClear"]["query"] == ""
+    assert result["afterClear"]["activeGroup"] == "subject"
+    assert result["afterClear"]["rowIds"] == ["alpha", "beta"]
+    assert result["noMatch"]["rowIds"] == []
+    assert result["noMatch"]["status"] == "0 of 5 Tags documents"
+    assert result["noMatch"]["empty"] == "No tags match the current filters."
+    assert result["refreshes"] == [
+        ["alpha", "alpine", "beta", "gamma", "alps"],
+    ]
+    assert result["projections"] == result["toolbarProjections"]
+    assert result["projections"] == [
+        ["alpha", "alpine", "beta", "gamma", "alps"],
+        ["alpha", "alpine", "alps"],
+        ["alpha"],
+        ["alpha"],
+        ["alpha", "alpine", "alps"],
+        ["alpha"],
+        ["alpha", "beta"],
+        ["alpha", "alpine", "beta", "gamma", "alps"],
+        [],
+    ]
+
+
 def assert_report_module(page: Page) -> None:
     page.evaluate(
         """() => {
@@ -437,6 +709,10 @@ def assert_report_module(page: Page) -> None:
             listToolbar: root.querySelector(
               '[data-report-contribution-host="list-toolbar"]'
             )?.textContent || '',
+            listToolbarInFilterRow: root.querySelector(
+              '[data-docs-subscope-filters] '
+                + '[data-report-contribution-host="list-toolbar"]'
+            ) !== null,
             leadingColumn: root.dataset.reportLeadingColumn || '',
             states: window.syntheticReportStates,
             contributionEvents: window.syntheticContributionEvents
@@ -453,6 +729,7 @@ def assert_report_module(page: Page) -> None:
         "leadingControls": 1,
         "leadingHosts": 2,
         "listToolbar": "List contribution",
+        "listToolbarInFilterRow": True,
         "leadingColumn": "true",
         "states": [
             {"state": "loading", "reason": "report-loading", "target": None},
@@ -484,6 +761,14 @@ def assert_report_module(page: Page) -> None:
                 "documentIds": ["visible-doc", "hidden-doc"],
             },
             {
+                "type": "projection",
+                "collection": {"scope": "studio", "sub_scope": "tags"},
+                "state": "",
+                "reason": "filters-projected",
+                "target": None,
+                "documentIds": ["visible-doc", "hidden-doc"],
+            },
+            {
                 "type": "state",
                 "collection": {"scope": "studio", "sub_scope": "tags"},
                 "state": "list",
@@ -505,7 +790,10 @@ def assert_report_module(page: Page) -> None:
     detail = page.evaluate(
         """() => ({
           reportState: document.querySelector('#report').dataset.reportState,
-          title: document.querySelector('.docsReportDetail__title').textContent,
+          title: document.querySelector('.docsReportDetail').dataset.reportSubdocTitle,
+          titleNodeCount: document.querySelectorAll('.docsReportDetail__title').length,
+          backLabel: document.querySelector('.docsReportDetail__back')
+            ?.getAttribute('aria-label') || '',
           detailToolbar: document.querySelector(
             '[data-report-contribution-host="detail-toolbar"]'
           )?.textContent || '',
@@ -521,6 +809,8 @@ def assert_report_module(page: Page) -> None:
     assert detail == {
         "reportState": "detail",
         "title": "Hidden document",
+        "titleNodeCount": 0,
+        "backLabel": "Back to all tags",
         "detailToolbar": "Detail contribution",
         "toolbarTarget": "hidden-doc",
         "toolbarAfterBack": True,
@@ -840,6 +1130,12 @@ def assert_report_module(page: Page) -> None:
                     "documentIds": [],
                 },
                 {
+                    "type": "projection",
+                    "state": "",
+                    "reason": "filters-projected",
+                    "documentIds": [],
+                },
+                {
                     "type": "state",
                     "state": "list",
                     "reason": "list-view",
@@ -847,7 +1143,10 @@ def assert_report_module(page: Page) -> None:
                 },
             ],
             "state": "list",
-            "text": "0 Tags documentsTagsNo documents in this sub-scope.",
+            "text": (
+                "Filter Tags by title×0 Tags documents"
+                "No documents are available in Tags."
+            ),
         },
         "failed": {
             "contributionHosts": 0,
@@ -887,7 +1186,7 @@ def assert_report_module(page: Page) -> None:
             routeContext: {
               subScopes: [{
                 subScope: 'tags',
-                title: 'Tags',
+                title: 'Concepts',
                 manifestUrl: '/synthetic/manifest.json',
                 byIdUrlBase: '/synthetic/by-id'
               }]
@@ -895,9 +1194,20 @@ def assert_report_module(page: Page) -> None:
             viewerScope: 'studio'
           });
           const button = root.querySelector('.docsViewerReport__subscopeButton');
+          const input = root.querySelector('.docsViewerReport__searchInput');
+          const filterLabel = root.querySelector(`label[for="${input.id}"]`);
+          const status = root.querySelector('.docsViewerReport__status');
           return {
             rowIds: Array.from(root.querySelectorAll('[data-report-subdoc-id]'))
               .map(node => node.dataset.reportSubdocId),
+            filterLabel: filterLabel?.textContent || '',
+            filterLabelHidden: filterLabel?.classList.contains('visually-hidden') || false,
+            groupControls: root.querySelectorAll('[data-docs-subscope-group]').length,
+            listLabel: root.querySelector('.docsViewerReport__rows')
+              ?.getAttribute('aria-label') || '',
+            placeholder: input.placeholder,
+            status: status?.textContent || '',
+            statusHidden: status?.classList.contains('visually-hidden') || false,
             statusIcons: root.querySelectorAll('.docsViewer__navStatus').length,
             nonViewableIcons: root.querySelectorAll('.docsViewer__draftPrefix').length,
             contributionHosts: root.querySelectorAll(
@@ -909,6 +1219,13 @@ def assert_report_module(page: Page) -> None:
     )
     assert public == {
         "rowIds": ["visible-doc"],
+        "filterLabel": "Filter Concepts by title",
+        "filterLabelHidden": True,
+        "groupControls": 0,
+        "listLabel": "Concepts",
+        "placeholder": "search",
+        "status": "1 Concepts document",
+        "statusHidden": True,
         "statusIcons": 0,
         "nonViewableIcons": 0,
         "contributionHosts": 0,
@@ -1020,7 +1337,11 @@ def assert_subscope_selection_contribution(page: Page) -> None:
             nonViewableIcons: root.querySelectorAll('.docsViewer__draftPrefix').length,
             rowIds: Array.from(root.querySelectorAll('[data-report-subdoc-id]'))
               .map(row => row.dataset.reportSubdocId),
-            statusIcons: root.querySelectorAll('.docsViewer__navStatus').length
+            statusIcons: root.querySelectorAll('.docsViewer__navStatus').length,
+            toolbarInFilterRow: root.querySelector(
+              '[data-docs-subscope-filters] '
+                + '[data-report-contribution-host="list-toolbar"]'
+            ) !== null
           };
 
           root.querySelector('[data-docs-subscope-actions]').click();
@@ -1035,6 +1356,14 @@ def assert_subscope_selection_contribution(page: Page) -> None:
             reportState: root.dataset.reportState,
             subdoc: new URLSearchParams(location.search).get('subdoc')
           };
+          const filterInput = root.querySelector('.docsViewerReport__searchInput');
+          filterInput.value = 'B';
+          filterInput.dispatchEvent(new Event('input', { bubbles: true }));
+          const filtered = {
+            ...selectionSnapshot(),
+            rowIds: Array.from(root.querySelectorAll('[data-report-subdoc-id]'))
+              .map(row => row.dataset.reportSubdocId)
+          };
           root.querySelector(
             '[data-docs-viewer-action="prepare-document-package"]'
           ).click();
@@ -1044,6 +1373,8 @@ def assert_subscope_selection_contribution(page: Page) -> None:
             ...selectionSnapshot(),
             prepared
           };
+          root.querySelector('.docsViewerReport__searchClear').click();
+          const restoredAfterFilter = selectionSnapshot();
 
           root.querySelector('[data-docs-subscope-actions]').click();
           root.querySelector('[data-docs-subscope-selection-command="clear"]').click();
@@ -1102,12 +1433,14 @@ def assert_subscope_selection_contribution(page: Page) -> None:
             detail,
             done,
             escaped,
+            filtered,
             initial,
             opened,
             outsideClosed,
             preparedState,
             ranged,
             reentered,
+            restoredAfterFilter,
             selectedAll
           };
         }"""
@@ -1125,6 +1458,7 @@ def assert_subscope_selection_contribution(page: Page) -> None:
         "nonViewableIcons": 1,
         "rowIds": ["a", "b", "c"],
         "statusIcons": 1,
+        "toolbarInFilterRow": True,
     }
     if result["initial"] != expected_initial:
         raise AssertionError(
@@ -1154,13 +1488,13 @@ def assert_subscope_selection_contribution(page: Page) -> None:
     }
     assert result["preparedState"] == {
         "actionsExpanded": "false",
-        "checkedIds": ["a", "b", "c"],
+        "checkedIds": ["b"],
         "menuHidden": True,
         "prepareDisabled": False,
         "prepareReason": "",
         "selectionControlHidden": False,
         "selectionState": "active",
-        "visibleCheckboxes": 3,
+        "visibleCheckboxes": 1,
         "prepared": [
             {
                 "scope": "studio",
@@ -1169,6 +1503,19 @@ def assert_subscope_selection_contribution(page: Page) -> None:
             }
         ],
     }
+    assert result["filtered"] == {
+        "actionsExpanded": "false",
+        "checkedIds": ["b"],
+        "menuHidden": True,
+        "prepareDisabled": False,
+        "prepareReason": "",
+        "selectionControlHidden": False,
+        "selectionState": "active",
+        "visibleCheckboxes": 1,
+        "rowIds": ["b"],
+    }
+    assert result["restoredAfterFilter"]["checkedIds"] == ["a", "b", "c"]
+    assert result["restoredAfterFilter"]["visibleCheckboxes"] == 3
     assert result["cleared"]["checkedIds"] == []
     assert result["cleared"]["prepareDisabled"] is True
     assert result["cleared"]["prepareReason"] == "Select one or more documents."
@@ -2283,7 +2630,9 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--site-root", default=".", help="Repository root to serve.")
     args = parser.parse_args(argv)
-    server, base_url = start_static_server(Path(args.site_root))
+    site_root = Path(args.site_root).expanduser().resolve()
+    assert_filter_source_boundaries(site_root)
+    server, base_url = start_static_server(site_root)
     try:
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
@@ -2309,6 +2658,7 @@ def main(argv: list[str] | None = None) -> int:
                 )
                 page.goto(base_url, wait_until="domcontentloaded")
                 assert_control_projection(page)
+                assert_filter_projection(page)
                 assert_report_module(page)
                 assert_subscope_selection_contribution(page)
                 assert_report_delete_reconciliation(page)
