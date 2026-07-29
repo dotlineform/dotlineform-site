@@ -29,7 +29,8 @@ import {
   createDocsViewerManagementScopeLifecycleController
 } from "./docs-viewer-management-scope-lifecycle-controller.js";
 import {
-  createDocsViewerManagementActionController
+  createDocsViewerManagementActionController,
+  requestCommittedDocumentSource
 } from "./docs-viewer-management-actions.js";
 import {
   normalizeManagedDocumentTarget
@@ -309,6 +310,13 @@ export function initDocsViewerManagement(context) {
     return adapter && typeof adapter.getDocumentTarget === "function"
       ? adapter.getDocumentTarget()
       : null;
+  }
+
+  function openCreatedDocumentSource(target) {
+    sourceSessionReportActive = false;
+    return requestCommittedDocumentSource(target, function (modeId, options) {
+      return context.requestDocumentMode(modeId, options);
+    });
   }
 
   function currentContextMenuDoc() {
@@ -879,6 +887,7 @@ export function initDocsViewerManagement(context) {
         }
         return context.projectCommittedMove(record);
       },
+      openCreatedDocumentSource: openCreatedDocumentSource,
       reloadDocsIndex: reloadDocsIndex,
       reloadMetadataTarget: function (target, response) {
         return typeof context.reloadMetadataTarget === "function"

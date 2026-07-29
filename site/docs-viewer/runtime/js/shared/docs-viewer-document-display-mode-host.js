@@ -135,6 +135,13 @@ export function createDocsViewerDocumentDisplayModeHost(options) {
         console.warn("docs_viewer: document display mode failed", error);
         activeLifecycle = null;
         showWarning(error && error.message ? error.message : "Document mode failed to load.", true);
+        if (typeof requestSettings.onFailed === "function") {
+          try {
+            requestSettings.onFailed(error, resolved.mode);
+          } catch (callbackError) {
+            console.warn("docs_viewer: document display mode failure callback failed", callbackError);
+          }
+        }
       });
     return true;
   }

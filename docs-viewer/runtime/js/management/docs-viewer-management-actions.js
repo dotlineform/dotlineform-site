@@ -31,6 +31,8 @@ var ACTION_TEXT = {
   createDocLabel: "title",
   createDocDefaultTitle: "New Doc",
   createDocButton: "Create",
+  createFailed: "Create failed.",
+  createCommittedOpenFailed: "Document created, but could not be opened in Source.",
   settingsSaving: "Saving settings...",
   settingsSaved: "Settings saved.",
   settingsSaveFailed: "Settings save failed.",
@@ -47,6 +49,175 @@ var ACTION_TEXT = {
   exportFailed: "Static HTML export failed.",
   copyLinkFailed: "Copy link failed."
 };
+
+export function committedDocumentCreateTarget(payload) {
+  var response = payload && typeof payload === "object" ? payload : {};
+  var target = normalizeManagedDocumentTarget(response.target);
+  var docId = String(response.doc_id || "").trim();
+  var scope = String(response.scope || "").trim().toLowerCase();
+  var subScope = String(response.sub_scope || "").trim().toLowerCase();
+  var recordDocId = String(response.record && response.record.doc_id || "").trim();
+  if (docId !== target.doc_id) {
+    throw new Error("Create service target does not match its committed document.");
+  }
+  if (scope !== target.scope) {
+    throw new Error("Create service target does not match its committed scope.");
+  }
+  if (subScope !== String(target.sub_scope || "")) {
+    throw new Error("Create service target does not match its committed sub-scope.");
+  }
+  if (recordDocId !== target.doc_id) {
+    throw new Error("Create service record does not match its committed target.");
+  }
+  return target;
+}
+
+export function committedDocumentCreatePayload(error) {
+  var payload = error && error.payload && typeof error.payload === "object"
+    ? error.payload
+    : null;
+  return payload && payload.committed === true && payload.retry_create === false
+    ? payload
+    : null;
+}
+
+export function requestCommittedDocumentSource(target, requestDocumentMode) {
+  var sourceTarget = normalizeManagedDocumentTarget(target);
+  if (typeof requestDocumentMode !== "function") {
+    return Promise.reject(new Error("Source mode is unavailable."));
+  }
+  return new Promise(function (resolve, reject) {
+    var settled = false;
+
+    function restoreRenderedMode() {
+      try {
+        requestDocumentMode("rendered-document", {
+          force: true,
+          warn: false
+        });
+      } catch (_error) {
+        // Preserve the committed target error when rendered-mode recovery also fails.
+      }
+    }
+
+    function fail(error) {
+      if (settled) return;
+      settled = true;
+      restoreRenderedMode();
+      reject(error instanceof Error ? error : new Error("Source mode failed to load."));
+    }
+
+    function succeed() {
+      if (settled) return;
+      settled = true;
+      resolve(sourceTarget);
+    }
+
+    var accepted;
+    try {
+      accepted = requestDocumentMode("markdown-source", {
+        context: {
+          sourceTarget: sourceTarget
+        },
+        onAccepted: succeed,
+        onFailed: fail
+      });
+    } catch (error) {
+      fail(error);
+      return;
+    }
+    if (!accepted) {
+      fail(new Error("Source mode did not accept the committed target."));
+    }
+  });
+}
+
+function committedCreatePresentationError(target, error) {
+  var detail = error && error.message ? String(error.message).trim() : "";
+  var message = ACTION_TEXT.createCommittedOpenFailed;
+  if (detail && detail !== message) message += " " + detail;
+  var presentationError = new Error(message);
+  presentationError.committed = true;
+  presentationError.target = target || null;
+  presentationError.cause = error || null;
+  return presentationError;
+}
+
+export function interactiveDocumentCreateErrorMessage(error) {
+  var detail = error && error.message ? String(error.message).trim() : "";
+  if (error && error.committed === true) {
+    return detail || ACTION_TEXT.createCommittedOpenFailed;
+  }
+  if (!detail || detail === ACTION_TEXT.createFailed) return ACTION_TEXT.createFailed;
+  return ACTION_TEXT.createFailed + " " + detail;
+}
+
+export function continueCommittedDocumentCreate(payload, options) {
+  var settings = options || {};
+  var target;
+  try {
+    target = committedDocumentCreateTarget(payload);
+  } catch (error) {
+    return Promise.reject(committedCreatePresentationError(null, error));
+  }
+  if (
+    typeof settings.refreshAndSelect !== "function"
+    || typeof settings.openSource !== "function"
+  ) {
+    return Promise.reject(committedCreatePresentationError(
+      target,
+      new Error("Create presentation callbacks are unavailable.")
+    ));
+  }
+  return Promise.resolve()
+    .then(function () {
+      return settings.refreshAndSelect(target, payload);
+    })
+    .then(function () {
+      return settings.openSource(target, payload);
+    })
+    .then(function (sourceResult) {
+      if (sourceResult === false) {
+        throw new Error("Source mode did not accept the committed target.");
+      }
+      return {
+        payload: payload,
+        target: target
+      };
+    })
+    .catch(function (error) {
+      if (error && error.committed === true) throw error;
+      throw committedCreatePresentationError(target, error);
+    });
+}
+
+export function runInteractiveDocumentCreate(options) {
+  var settings = options || {};
+  if (typeof settings.create !== "function") {
+    return Promise.reject(new Error("Interactive document create requires a create callback."));
+  }
+  var presentationOptions = {
+    refreshAndSelect: settings.refreshAndSelect,
+    openSource: settings.openSource
+  };
+  return Promise.resolve()
+    .then(function () {
+      return settings.create();
+    })
+    .then(
+      function (payload) {
+        return continueCommittedDocumentCreate(payload, presentationOptions);
+      },
+      function (error) {
+        var committedPayload = committedDocumentCreatePayload(error);
+        if (!committedPayload) throw error;
+        return continueCommittedDocumentCreate(
+          committedPayload,
+          presentationOptions
+        );
+      }
+    );
+}
 
 export function firstRemainingRootDocId(docs, deletedDocIds, resolveLoadableDocId) {
   var records = Array.isArray(docs) ? docs : [];
@@ -138,6 +309,39 @@ export function createDocsViewerManagementActionController(options) {
     return callbacks.reloadViewerConfiguration ? callbacks.reloadViewerConfiguration() : Promise.resolve(null);
   }
 
+  function openCreatedDocumentSource(target, payload) {
+    if (callbacks.openCreatedDocumentSource) {
+      return callbacks.openCreatedDocumentSource(target, payload);
+    }
+    return handleMarkdownSource(target) === false
+      ? Promise.reject(new Error("Source mode is unavailable."))
+      : Promise.resolve(target);
+  }
+
+  function createDocumentAndOpenSource(payload) {
+    return runInteractiveDocumentCreate({
+      create: function () {
+        return createManagedDoc(payload, managementClientOptions());
+      },
+      refreshAndSelect: function (target) {
+        return reloadDocsIndex(target.doc_id, "");
+      },
+      openSource: openCreatedDocumentSource
+    })
+      .then(function (result) {
+        setManagementMessage("", false);
+        return result;
+      })
+      .catch(function (error) {
+        setManagementMessage(interactiveDocumentCreateErrorMessage(error), true);
+        return null;
+      })
+      .finally(function () {
+        setManagementBusy(false);
+        renderManagementUi();
+      });
+  }
+
   function committedMoveRecord(response, expectedDocId) {
     var record = response && response.record && typeof response.record === "object" ? response.record : null;
     var docId = String(record && record.doc_id || "").trim();
@@ -222,21 +426,10 @@ export function createDocsViewerManagementActionController(options) {
     setManagementBusy(true);
     setManagementMessage("Creating doc...", false);
 
-    createManagedDoc({
+    return createDocumentAndOpenSource({
       title: title,
       parent_id: currentDoc ? String(currentDoc.parent_id || "").trim() : ""
-    }, managementClientOptions())
-      .then(function (payload) {
-        setManagementMessage("", false);
-        return reloadDocsIndex(payload.doc_id, "");
-      })
-      .catch(function (error) {
-        setManagementMessage(error.message || "Create failed.", true);
-      })
-      .finally(function () {
-        setManagementBusy(false);
-        renderManagementUi();
-      });
+    });
   }
 
   async function handleCreateRelatedDoc(kind) {
@@ -270,18 +463,7 @@ export function createDocsViewerManagementActionController(options) {
     hideContextMenu();
     setManagementMessage("Creating doc...", false);
 
-    createManagedDoc(payload, managementClientOptions())
-      .then(function (response) {
-        setManagementMessage("", false);
-        return reloadDocsIndex(response.doc_id, "");
-      })
-      .catch(function (error) {
-        setManagementMessage(error.message || "Create failed.", true);
-      })
-      .finally(function () {
-        setManagementBusy(false);
-        renderManagementUi();
-      });
+    return createDocumentAndOpenSource(payload);
   }
 
   function handleEditMetadataSave(target, payload) {
@@ -445,10 +627,10 @@ export function createDocsViewerManagementActionController(options) {
   }
 
   function handleMarkdownSource(target) {
-    if (typeof context.requestDocumentMode !== "function") return;
+    if (typeof context.requestDocumentMode !== "function") return false;
     var sourceTarget = normalizeManagedDocumentTarget(target);
     hideContextMenu();
-    context.requestDocumentMode("markdown-source", {
+    return context.requestDocumentMode("markdown-source", {
       context: {
         sourceTarget: sourceTarget
       }

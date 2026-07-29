@@ -56,6 +56,7 @@ from docs_management_context import (  # noqa: E402
 )
 from docs_management_import_service import handle_import_source, import_source_dependencies  # noqa: E402
 from docs_management_mutation_service import (  # noqa: E402
+    DocumentCreateCommittedError,
     SubScopeDocumentDeleteApplyError,
     execute_management_mutation_plan,
     handle_create,
@@ -171,7 +172,10 @@ def docs_management_post_response(
         except mutations.ManagedDocumentRevisionConflict as error:
             return HTTPStatus.CONFLICT, error.payload
     if path == routes.CREATE_PATH:
-        return HTTPStatus.OK, handle_create(repo_root, body, dry_run)
+        try:
+            return HTTPStatus.OK, handle_create(repo_root, body, dry_run)
+        except DocumentCreateCommittedError as error:
+            return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
     if path == routes.REBUILD_PATH:
         scope = source_model.normalize_scope(body.get("scope"))
         payload = write_rebuild.rebuild_scope_outputs(repo_root, scope)

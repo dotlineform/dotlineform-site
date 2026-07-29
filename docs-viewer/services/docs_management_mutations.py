@@ -12,8 +12,11 @@ from typing import Any, Dict, Optional
 import docs_source_model as source_model
 from docs_management_document_target import (
     ManagedDocumentTarget,
+    confined_source_path,
     managed_document_target_request,
+    resolve_managed_document_collection,
     resolve_managed_document_target,
+    source_doc_from_path,
 )
 from docs_scope_config import (
     load_docs_scope_configs,
@@ -171,6 +174,7 @@ class SourceWrite:
     path: Path
     text: str
     original_bytes: Optional[bytes] = None
+    create_only: bool = False
 
 
 @dataclass(frozen=True)
@@ -203,6 +207,7 @@ class ManagementMutationPlan:
     log_details: Dict[str, Any] = field(default_factory=dict)
     include_write_result_keys: bool = False
     restore_deletes_on_rebuild_failure: bool = False
+    report_create_commit_on_rebuild_failure: bool = False
 
     @property
     def changed_paths(self) -> list[Path]:
@@ -214,13 +219,43 @@ class ManagementMutationPlan:
 
 
 def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
-    scope = source_model.normalize_scope(body.get("scope"))
-    docs = source_model.load_scope_docs(repo_root, scope)
+    sub_scope_requested = "sub_scope" in body
+    sub_scope = ""
+    target_root: Path
+    if sub_scope_requested:
+        collection = resolve_managed_document_collection(
+            repo_root,
+            scope=body.get("scope"),
+            sub_scope=body.get("sub_scope"),
+        )
+        scope = collection.scope
+        sub_scope = collection.sub_scope
+        target_root = collection.source_root
+        docs = []
+        for candidate in source_model.scope_markdown_paths(target_root):
+            confined = confined_source_path(target_root, candidate)
+            document = source_doc_from_path(
+                path=confined,
+                scope=scope,
+                requested_doc_id=candidate.stem,
+            )
+            source_model.validate_sub_scope_document_metadata(
+                document,
+                ui_statuses=collection.document_config.ui_statuses,
+                document_groups=collection.document_config.document_groups,
+            )
+            docs.append(document)
+        if "parent_id" in body:
+            raise ValueError("parent_id is not accepted for a sub-scope document")
+    else:
+        scope = source_model.normalize_scope(body.get("scope"))
+        docs = source_model.load_scope_docs(repo_root, scope)
+        target_root = source_model.scope_root(repo_root, scope)
     title = str(body.get("title") or "New Doc").strip() or "New Doc"
     docs_by_id = {doc.doc_id: doc for doc in docs}
     parent_id = str(body.get("parent_id") or "").strip()
 
-    if parent_id and parent_id not in docs_by_id:
+    if not sub_scope and parent_id and parent_id not in docs_by_id:
         raise ValueError(f"Unknown parent_id {parent_id!r} for scope {scope}")
 
     timestamp = source_model.current_doc_timestamp()
@@ -228,42 +263,70 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
         timestamp,
         {identity for doc in docs for identity in (doc.doc_id, doc.path.stem)},
     )
-    target_root = source_model.scope_root(repo_root, scope)
     target_path = target_root / f"{doc_id}.md"
-    front_matter = source_model.advance_doc_front_matter({
+    front_matter_seed: Dict[str, Any] = {
         "doc_id": doc_id,
         "title": title,
         "added_date": timestamp,
-        "parent_id": parent_id,
-    }, timestamp=timestamp)
-    if not source_model.default_viewable_for_scope(scope):
-        front_matter["viewable"] = False
+    }
+    if not sub_scope:
+        front_matter_seed["parent_id"] = parent_id
+    front_matter = source_model.advance_doc_front_matter(
+        front_matter_seed,
+        timestamp=timestamp,
+    )
     viewable = source_model.default_viewable_for_scope(scope)
+    if not viewable:
+        front_matter["viewable"] = False
     source_text = source_model.format_source(front_matter, f"# {title}\n")
     path = relative_path(repo_root, target_path)
+    target = {"scope": scope, "doc_id": doc_id}
+    if sub_scope:
+        target["sub_scope"] = sub_scope
+    record: Dict[str, Any] = {
+        "doc_id": doc_id,
+        "title": title,
+        "viewable": viewable,
+    }
+    if not sub_scope:
+        record["parent_id"] = parent_id
+    response: Dict[str, Any] = {
+        "ok": True,
+        "scope": scope,
+        "doc_id": doc_id,
+        "path": path,
+        "target": target,
+        "record": record,
+        "summary_text": f"Created {doc_id}.",
+    }
+    if sub_scope:
+        response["sub_scope"] = sub_scope
+    log_details = {
+        "scope": scope,
+        "doc_id": doc_id,
+        "path": path,
+    }
+    if sub_scope:
+        log_details["sub_scope"] = sub_scope
 
     return ManagementMutationPlan(
         scope=scope,
-        response={
-            "ok": True,
-            "scope": scope,
-            "doc_id": doc_id,
-            "path": path,
-            "record": {
-                "doc_id": doc_id,
-                "title": title,
-                "parent_id": parent_id,
-                "viewable": viewable,
-            },
-            "summary_text": f"Created {doc_id}.",
-        },
-        source_writes=(SourceWrite(target_path, source_text),),
+        sub_scope=sub_scope,
+        response=response,
+        source_writes=(
+            SourceWrite(
+                target_path,
+                source_text,
+                create_only=True,
+            ),
+        ),
         suppression_reason="docs-create",
-        build_doc_ids=[doc_id],
-        search_doc_ids=[doc_id],
+        build_doc_ids=[] if sub_scope else [doc_id],
+        search_doc_ids=[] if sub_scope else [doc_id],
         log_event_name="docs-create",
-        log_details={"scope": scope, "doc_id": doc_id, "path": path},
+        log_details=log_details,
         include_write_result_keys=True,
+        report_create_commit_on_rebuild_failure=True,
     )
 
 

@@ -26,6 +26,48 @@ class SubScopeDocumentDeleteApplyError(RuntimeError):
         self.payload = payload
 
 
+class DocumentCreateCommittedError(RuntimeError):
+    """A create committed before its generated projection rebuild failed."""
+
+    def __init__(self, payload: Dict[str, Any]) -> None:
+        super().__init__(
+            str(
+                payload.get("error")
+                or "document was created but its projection rebuild failed"
+            )
+        )
+        self.payload = payload
+
+
+def create_committed_error_payload(
+    plan: mutations.ManagementMutationPlan,
+    error: Exception,
+) -> Dict[str, Any]:
+    payload = dict(plan.response)
+    payload.update(
+        {
+            "ok": False,
+            "operation": "create",
+            "committed": True,
+            "retry_create": False,
+            "rebuild": {
+                "ok": False,
+                "error": str(error),
+            },
+            "dry_run": False,
+            "summary_text": (
+                f"Created {plan.response.get('doc_id', 'document')}, "
+                "but its projection rebuild failed."
+            ),
+            "error": (
+                "document was created but its projection rebuild failed: "
+                f"{error}"
+            ),
+        }
+    )
+    return payload
+
+
 def recover_sub_scope_document_delete(
     repo_root: Path,
     plan: mutations.ManagementMutationPlan,
@@ -98,9 +140,11 @@ def recover_sub_scope_document_delete(
 def execute_management_mutation_plan(repo_root: Path, plan: mutations.ManagementMutationPlan, dry_run: bool) -> Dict[str, Any]:
     payload = dict(plan.response)
     rebuild = None
+    source_changes_applied = False
 
     if not dry_run and plan.has_source_changes:
         def write_operation() -> None:
+            nonlocal source_changes_applied
             for source_write in plan.source_writes:
                 if source_write.original_bytes is not None:
                     try:
@@ -132,7 +176,16 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
                                 ),
                             )
                         )
-                source_model.write_text_atomic(source_write.path, source_write.text)
+                if source_write.create_only:
+                    source_model.write_text_atomic_new(
+                        source_write.path,
+                        source_write.text,
+                    )
+                else:
+                    source_model.write_text_atomic(
+                        source_write.path,
+                        source_write.text,
+                    )
             for source_delete in plan.source_deletes:
                 if source_delete.original_bytes is not None:
                     try:
@@ -155,6 +208,7 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
                             )
                         )
                 source_delete.path.unlink()
+            source_changes_applied = True
 
         try:
             if plan.rebuilds:
@@ -197,6 +251,22 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
         except Exception as error:
             if plan.restore_deletes_on_rebuild_failure:
                 recover_sub_scope_document_delete(repo_root, plan, error)
+            if (
+                plan.report_create_commit_on_rebuild_failure
+                and source_changes_applied
+            ):
+                if plan.log_event_name:
+                    log_event(
+                        repo_root,
+                        plan.log_event_name,
+                        {
+                            **plan.log_details,
+                            "rebuild_ok": False,
+                        },
+                    )
+                raise DocumentCreateCommittedError(
+                    create_committed_error_payload(plan, error)
+                ) from error
             raise
         if plan.log_event_name:
             log_event(repo_root, plan.log_event_name, plan.log_details)

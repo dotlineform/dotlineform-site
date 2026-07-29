@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-058f22acdc6a87c30a211ea81b749baa",
-    "generated_at_utc": "2026-07-29T16:11:25Z",
-    "count": 229
+    "version": "blake2b-ada5af81c98b3cd2c95bc7a38af016f4",
+    "generated_at_utc": "2026-07-29T17:35:22Z",
+    "count": 230
   },
   "entries": [
     {
@@ -3458,10 +3458,10 @@
       "kind": "doc",
       "title": "Manage Sub-Scope Documents",
       "href": "/docs/?scope=studio&doc=d-20260726-224323-eb0a65",
-      "last_updated": "2026-07-27 22:11:11",
+      "last_updated": "2026-07-29 18:03:08",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-27 22:11:11 • Roadmap",
+      "display_meta": "2026-07-29 18:03:08 • Roadmap",
       "search_terms": [
         "manage sub-scope documents",
         "manage",
@@ -3469,15 +3469,48 @@
         "scope",
         "documents",
         "roadmap",
-        "2026-07-27 22:11:11",
+        "2026-07-29 18:03:08",
         "2026",
         "07",
-        "27",
-        "22",
-        "11",
+        "29",
+        "18",
+        "03",
+        "08",
         "d-20260726-224323-eb0a65"
       ],
-      "search_text": "manage sub-scope documents manage sub scope documents roadmap 2026-07-27 22:11:11 2026 07 27 22 11 d-20260726-224323-eb0a65"
+      "search_text": "manage sub-scope documents manage sub scope documents roadmap 2026-07-29 18:03:08 2026 07 29 18 03 08 d-20260726-224323-eb0a65"
+    },
+    {
+      "id": "d-20260729-180308-c92eed",
+      "kind": "doc",
+      "title": "New Document Source Entry Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260729-180308-c92eed",
+      "last_updated": "2026-07-29 18:34:57",
+      "parent_id": "d-20260726-224323-eb0a65",
+      "parent_title": "Manage Sub-Scope Documents",
+      "display_meta": "2026-07-29 18:34:57 • Manage Sub-Scope Documents",
+      "search_terms": [
+        "new document source entry delivery",
+        "new",
+        "document",
+        "source",
+        "entry",
+        "delivery",
+        "manage sub-scope documents",
+        "manage",
+        "sub",
+        "scope",
+        "documents",
+        "2026-07-29 18:34:57",
+        "2026",
+        "07",
+        "29",
+        "18",
+        "34",
+        "57",
+        "d-20260729-180308-c92eed"
+      ],
+      "search_text": "new document source entry delivery new document source entry delivery manage sub-scope documents manage sub scope documents 2026-07-29 18:34:57 2026 07 29 18 34 57 d-20260729-180308-c92eed"
     },
     {
       "id": "d-20260727-111354-3ac5f0",
@@ -4027,26 +4060,26 @@
       "kind": "doc",
       "title": "Sub-Scope Index",
       "href": "/docs/?scope=studio&doc=d-20260728-113139-285eae",
-      "last_updated": "2026-07-28 20:01:43",
+      "last_updated": "2026-07-29 18:03:08",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-28 20:01:43 • Roadmap",
+      "display_meta": "2026-07-29 18:03:08 • Roadmap",
       "search_terms": [
         "sub-scope index",
         "sub",
         "scope",
         "index",
         "roadmap",
-        "2026-07-28 20:01:43",
+        "2026-07-29 18:03:08",
         "2026",
         "07",
-        "28",
-        "20",
-        "01",
-        "43",
+        "29",
+        "18",
+        "03",
+        "08",
         "d-20260728-113139-285eae"
       ],
-      "search_text": "sub-scope index sub scope index roadmap 2026-07-28 20:01:43 2026 07 28 20 01 43 d-20260728-113139-285eae"
+      "search_text": "sub-scope index sub scope index roadmap 2026-07-29 18:03:08 2026 07 29 18 03 08 d-20260728-113139-285eae"
     },
     {
       "id": "d-20260728-113139-95a885",
