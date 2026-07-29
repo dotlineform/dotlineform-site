@@ -157,12 +157,13 @@ def docs_sub_scope_record(
     sub_scope: str,
     *,
     title: str = "",
+    public_title: str | None = None,
     scope_type: str = "local",
     public_docs_path: str | None = None,
     ui_statuses: list[str] | None = None,
     document_groups: list[str] | None = None,
 ) -> dict[str, object]:
-    return {
+    record: dict[str, object] = {
         "sub_scope": sub_scope,
         "title": title,
         "ui_statuses": ["draft", "done"] if ui_statuses is None else ui_statuses,
@@ -181,6 +182,9 @@ def docs_sub_scope_record(
             else None
         ),
     }
+    if public_title is not None:
+        record["public_title"] = public_title
+    return record
 
 
 def write_doc(

@@ -117,7 +117,7 @@
         {
           "sub_scope": "tags",
           "title": "Tags",
-          "manifest_url": "/docs-viewer/scopes/analysis/published/documents/sub-scopes/tags/manifest.json",
+          "manifest_url": "/docs-viewer/scopes/analysis/published/documents/sub-scopes/tags/manage-manifest.json",
           "by_id_url_base": "/docs-viewer/scopes/analysis/published/documents/sub-scopes/tags/by-id"
         }
       ]

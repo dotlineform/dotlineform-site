@@ -203,9 +203,27 @@ def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> No
             repo_root / "docs-viewer/scopes/library/published/documents/sub-scopes/tags/manifest.json",
             {"docs": [{"doc_id": "scale", "title": "Scale"}]},
         )
+        write_json(
+            repo_root
+            / "docs-viewer/scopes/library/published/documents/sub-scopes/tags/manage-manifest.json",
+            {
+                "docs": [
+                    {
+                        "doc_id": "scale",
+                        "title": "Scale",
+                        "ui_status": "draft",
+                        "viewable": True,
+                    }
+                ]
+            },
+        )
         write_json(repo_root / "docs-viewer/scopes/library/published/documents/sub-scopes/tags/by-id/scale.json", {"doc_id": "scale", "title": "Scale"})
         write_json(repo_root / "docs-viewer/scopes/library/published/documents/sub-scopes/tags/by-id/hidden.json", {"doc_id": "hidden", "title": "Hidden"})
         write_json(repo_root / "site/assets/data/docs/scopes/library/tags/manifest.json", {"doc_ids": "old"})
+        write_json(
+            repo_root / "site/assets/data/docs/scopes/library/tags/manage-manifest.json",
+            {"docs": [{"doc_id": "leaked"}]},
+        )
         write_json(repo_root / "site/assets/data/docs/scopes/library/tags/by-id/old.json", {"doc_id": "old"})
         write_json(repo_root / "site/assets/data/docs/scopes/library/tags/by-id/hidden.json", {"doc_id": "hidden", "title": "Old Hidden"})
         working_scale_bytes = (
@@ -227,9 +245,10 @@ def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> No
                 "removed": [
                     "site/assets/data/docs/scopes/library/tags/by-id/hidden.json",
                     "site/assets/data/docs/scopes/library/tags/by-id/old.json",
+                    "site/assets/data/docs/scopes/library/tags/manage-manifest.json",
                 ],
                 "changed_count": 2,
-                "removed_count": 2,
+                "removed_count": 3,
             }
         ]
         assert "site/assets/data/docs/scopes/library/tags/by-id/old.json" not in preview["docs"]["removed"]
@@ -245,6 +264,10 @@ def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> No
         ).read_bytes() == working_scale_bytes
         assert not (repo_root / "site/assets/data/docs/scopes/library/tags/by-id/hidden.json").exists()
         assert not (repo_root / "site/assets/data/docs/scopes/library/tags/by-id/old.json").exists()
+        assert not (
+            repo_root
+            / "site/assets/data/docs/scopes/library/tags/manage-manifest.json"
+        ).exists()
         assert not (repo_root / "site/assets/data/docs/scopes/library/sub-scopes/tags").exists()
 
 

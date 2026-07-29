@@ -158,6 +158,7 @@ class DocsScopeConfig:
 class DocsSubScopeConfig:
     sub_scope: str
     title: str
+    public_title: str
     ui_statuses: tuple[str, ...]
     document_groups: tuple[str, ...]
     source: DocsSourceConfig
@@ -763,10 +764,17 @@ def normalize_sub_scope_configs(
             item.get("document_groups"),
             field=f"{item_field}.document_groups",
         )
+        title = str(item.get("title") or "").strip()
+        public_title = (
+            title
+            if "public_title" not in item
+            else str(item.get("public_title") or "").strip()
+        )
         configs.append(
             DocsSubScopeConfig(
                 sub_scope=sub_scope,
-                title=str(item.get("title") or "").strip(),
+                title=title,
+                public_title=public_title,
                 ui_statuses=ui_statuses,
                 document_groups=document_groups,
                 source=source,

@@ -65,7 +65,7 @@ Sub-scope detail body.
         {
             "sub_scope": "tags",
             "title": "",
-            "manifest_url": "/docs-viewer/scopes/studio/published/documents/sub-scopes/tags/manifest.json",
+            "manifest_url": "/docs-viewer/scopes/studio/published/documents/sub-scopes/tags/manage-manifest.json",
             "by_id_url_base": "/docs-viewer/scopes/studio/published/documents/sub-scopes/tags/by-id",
         }
     ]
@@ -108,6 +108,8 @@ title: Detail
 added_date: 2026-06-20
 last_updated: 2026-06-21
 parent_id: ""
+ui_status: draft
+group: subject
 ---
 # Detail
 
@@ -132,6 +134,10 @@ Related body.
 
         exit_code, stdout, stderr = run_cli(root, ["--scope", "studio", "--sub-scope", "tags", "--write", "--diagnostics"])
         manifest = read_json(root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/manifest.json")
+        manage_manifest = read_json(
+            root
+            / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/manage-manifest.json"
+        )
         detail = read_json(root / f"docs-viewer/scopes/studio/published/documents/sub-scopes/tags/by-id/{DETAIL_DOC_ID}.json")
         related = read_json(root / f"docs-viewer/scopes/studio/published/documents/sub-scopes/tags/by-id/{RELATED_DOC_ID}.json")
 
@@ -147,6 +153,24 @@ Related body.
             {"doc_id": DETAIL_DOC_ID, "title": "Detail"},
             {"doc_id": RELATED_DOC_ID, "title": "Related"},
         ]
+    }
+    assert manage_manifest == {
+        "groups": ["subject", "domain", "form", "theme"],
+        "docs": [
+            {
+                "doc_id": DETAIL_DOC_ID,
+                "title": "Detail",
+                "ui_status": "draft",
+                "viewable": True,
+                "group": "subject",
+            },
+            {
+                "doc_id": RELATED_DOC_ID,
+                "title": "Related",
+                "ui_status": "",
+                "viewable": True,
+            },
+        ],
     }
     assert detail["doc_id"] == DETAIL_DOC_ID
     assert detail["title"] == "Detail"
@@ -316,6 +340,10 @@ viewable: false
         manifest = read_json(
             root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/manifest.json"
         )
+        manage_manifest = read_json(
+            root
+            / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/manage-manifest.json"
+        )
         visible_payload = read_json(
             root
             / f"docs-viewer/scopes/studio/published/documents/sub-scopes/tags/by-id/{DETAIL_DOC_ID}.json"
@@ -329,6 +357,22 @@ viewable: false
     assert exit_code == 0
     assert stderr == ""
     assert manifest == {"docs": [{"doc_id": DETAIL_DOC_ID, "title": "Detail"}]}
+    assert manage_manifest == {
+        "docs": [
+            {
+                "doc_id": DETAIL_DOC_ID,
+                "title": "Detail",
+                "ui_status": "",
+                "viewable": True,
+            },
+            {
+                "doc_id": HIDDEN_DOC_ID,
+                "title": "Hidden",
+                "ui_status": "",
+                "viewable": False,
+            },
+        ]
+    }
     assert set(visible_payload) >= {"doc_id", "title", "content_html"}
     assert hidden_payload_exists
 
@@ -342,7 +386,13 @@ def test_python_docs_builder_public_sub_scope_separates_manage_and_public_url_ba
         config_path = root / "docs-viewer/config/scopes/docs_scopes.json"
         payload = read_json(config_path)
         payload["scopes"][0]["sub_scopes"] = [
-            docs_sub_scope_record("library", "tags", title="Tags", scope_type="public")
+            docs_sub_scope_record(
+                "library",
+                "tags",
+                title="Tags",
+                public_title="Concepts",
+                scope_type="public",
+            )
         ]
         write_json(config_path, payload)
         write_text(
@@ -374,14 +424,14 @@ last_updated: 2026-06-21
         {
             "sub_scope": "tags",
             "title": "Tags",
-            "manifest_url": "/docs-viewer/scopes/library/published/documents/sub-scopes/tags/manifest.json",
+            "manifest_url": "/docs-viewer/scopes/library/published/documents/sub-scopes/tags/manage-manifest.json",
             "by_id_url_base": "/docs-viewer/scopes/library/published/documents/sub-scopes/tags/by-id",
         }
     ]
     assert public_browser_config["scopes"][0]["sub_scopes"] == [
         {
             "sub_scope": "tags",
-            "title": "Tags",
+            "title": "Concepts",
             "manifest_url": "/assets/data/docs/scopes/library/tags/manifest.json",
             "by_id_url_base": "/assets/data/docs/scopes/library/tags/by-id",
         }

@@ -97,8 +97,12 @@ def browser_sub_scope_records(
         records.append(
             {
                 "sub_scope": sub_scope.sub_scope,
-                "title": sub_scope.title,
-                "manifest_url": f"{output_base}/manifest.json",
+                "title": sub_scope.public_title if published else sub_scope.title,
+                "manifest_url": (
+                    f"{output_base}/manifest.json"
+                    if published
+                    else f"{output_base}/manage-manifest.json"
+                ),
                 "by_id_url_base": f"{output_base}/by-id",
             }
         )

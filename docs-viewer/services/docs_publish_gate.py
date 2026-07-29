@@ -30,6 +30,7 @@ from docs_public_mermaid_payload import (
 
 
 PUBLISH_SCHEMA_VERSION = "docs_publish_gate_v1"
+MANAGE_MANIFEST_PATH = Path("manage-manifest.json")
 
 
 def repo_relative(repo_root: Path, path: Path) -> str:
@@ -250,6 +251,8 @@ def publishable_docs_files(
     files: dict[Path, bytes] = {}
     for source_path in iter_files(working_root):
         relative_path = source_path.relative_to(working_root)
+        if relative_path == MANAGE_MANIFEST_PATH:
+            continue
         if relative_path.parts and relative_path.parts[0] == ".publish":
             continue
         if relative_path.parts and relative_path.parts[0] in {"references", "semantic-tokens"}:

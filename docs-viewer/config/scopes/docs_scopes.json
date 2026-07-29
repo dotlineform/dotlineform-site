@@ -199,6 +199,7 @@
         {
           "sub_scope": "tags",
           "title": "Tags",
+          "public_title": "Concepts",
           "ui_statuses": [
             "draft",
             "done",

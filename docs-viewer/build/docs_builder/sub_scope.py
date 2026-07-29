@@ -82,17 +82,35 @@ class SubScopeDocsBuilder(DocsDataBuilder):
     def by_id_metadata_entry(self, doc: DocRecord, docs: list[DocRecord]) -> dict[str, Any]:
         return self.metadata_entry(doc, docs)
 
-    def manifest_payload(self, docs: list[DocRecord]) -> dict[str, Any]:
+    def manifest_payload(self, ordered_docs: list[DocRecord]) -> dict[str, Any]:
         return {
             "docs": [
                 {
                     "doc_id": doc.doc_id,
                     "title": doc.title,
                 }
-                for doc in sorted(docs, key=self.doc_sort_key)
+                for doc in ordered_docs
                 if doc.viewable
             ],
         }
+
+    def manage_manifest_payload(self, ordered_docs: list[DocRecord]) -> dict[str, Any]:
+        payload: dict[str, Any] = {}
+        if self.sub_scope_config.document_groups:
+            payload["groups"] = list(self.sub_scope_config.document_groups)
+        payload["docs"] = [
+            {
+                **{
+                    "doc_id": doc.doc_id,
+                    "title": doc.title,
+                    "ui_status": doc.ui_status,
+                    "viewable": doc.viewable,
+                },
+                **({"group": doc.group} if doc.group else {}),
+            }
+            for doc in ordered_docs
+        ]
+        return payload
 
     def validate_docs(self, docs: list[DocRecord]) -> None:
         super().validate_docs(docs)
@@ -120,6 +138,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         docs = self.load_docs()
         self.validate_canonical_doc_ids(docs)
         self.validate_docs(docs)
+        ordered_docs = sorted(docs, key=self.doc_sort_key)
         semantic_tokens_by_doc: dict[str, list[dict[str, Any]]] = {}
         item_payloads = {
             doc.doc_id: self.item_entry(
@@ -127,10 +146,15 @@ class SubScopeDocsBuilder(DocsDataBuilder):
                 docs,
                 semantic_tokens_by_doc,
             )
-            for doc in docs
+            for doc in ordered_docs
         }
-        manifest_payload = self.manifest_payload(docs)
-        write_plan = self.build_sub_scope_write_plan(manifest_payload, item_payloads)
+        manifest_payload = self.manifest_payload(ordered_docs)
+        manage_manifest_payload = self.manage_manifest_payload(ordered_docs)
+        write_plan = self.build_sub_scope_write_plan(
+            manifest_payload,
+            manage_manifest_payload,
+            item_payloads,
+        )
         diagnostics = self.sub_scope_diagnostics_payload(
             docs=docs,
             write_plan=write_plan,
@@ -144,6 +168,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             self.print_diagnostics(diagnostics)
         return {
             "manifest_payload": manifest_payload,
+            "manage_manifest_payload": manage_manifest_payload,
             "item_payloads": item_payloads,
             "write_plan": write_plan,
             "diagnostics": diagnostics,
@@ -152,9 +177,11 @@ class SubScopeDocsBuilder(DocsDataBuilder):
     def build_sub_scope_write_plan(
         self,
         manifest_payload: dict[str, Any],
+        manage_manifest_payload: dict[str, Any],
         item_payloads: dict[str, dict[str, Any]],
     ) -> dict[str, Any]:
         manifest_text = json_text(manifest_payload)
+        manage_manifest_text = json_text(manage_manifest_payload)
         item_text_by_id: dict[str, str] = {}
         changed_item_ids: list[str] = []
         for doc_id, payload in item_payloads.items():
@@ -166,6 +193,11 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         return {
             "manifest_write": read_text(self.output_dir / "manifest.json") != manifest_text,
             "manifest_text": manifest_text,
+            "manage_manifest_write": (
+                read_text(self.output_dir / "manage-manifest.json")
+                != manage_manifest_text
+            ),
+            "manage_manifest_text": manage_manifest_text,
             "changed_item_ids": sorted(changed_item_ids),
             "stale_item_ids": sorted(set(existing_item_ids) - set(item_payloads)),
             "item_text_by_id": item_text_by_id,
@@ -176,6 +208,11 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         self.items_dir.mkdir(parents=True, exist_ok=True)
         if write_plan["manifest_write"]:
             write_text(self.output_dir / "manifest.json", write_plan["manifest_text"])
+        if write_plan["manage_manifest_write"]:
+            write_text(
+                self.output_dir / "manage-manifest.json",
+                write_plan["manage_manifest_text"],
+            )
         for doc_id in write_plan["changed_item_ids"]:
             write_text(self.items_dir / f"{doc_id}.json", write_plan["item_text_by_id"][doc_id])
         for doc_id in write_plan["stale_item_ids"]:
@@ -190,6 +227,10 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         print(f"  docs {verb}: {len(write_plan['changed_item_ids'])}")
         print(f"  docs {remove_verb}: {len(write_plan['stale_item_ids'])}")
         print(f"  manifest {verb}: {1 if write_plan['manifest_write'] else 0}")
+        print(
+            "  manage manifest "
+            f"{verb}: {1 if write_plan['manage_manifest_write'] else 0}"
+        )
         print(f"  warnings: {len(self.warnings)}")
 
     def sub_scope_diagnostics_payload(
@@ -208,6 +249,9 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             "doc_payloads_changed": len(write_plan["changed_item_ids"]),
             "doc_payloads_removed": len(write_plan["stale_item_ids"]),
             "manifest_changed": 1 if write_plan["manifest_write"] else 0,
+            "manage_manifest_changed": (
+                1 if write_plan["manage_manifest_write"] else 0
+            ),
             "warning_count": len(self.warnings),
             "warnings": self.warnings,
             "elapsed_seconds": elapsed_seconds,

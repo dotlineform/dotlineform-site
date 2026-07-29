@@ -178,6 +178,8 @@ def test_docs_scope_config_accepts_nested_sub_scopes() -> None:
 
     sub_scope = config.sub_scopes[0]
     assert sub_scope.sub_scope == "tags"
+    assert sub_scope.title == "Tags"
+    assert sub_scope.public_title == "Tags"
     assert sub_scope.ui_statuses == ("draft", "done")
     assert sub_scope.document_groups == ("subject", "theme")
     assert docs_scope_config.document_source_path(sub_scope).as_posix() == (
@@ -187,6 +189,29 @@ def test_docs_scope_config_accepts_nested_sub_scopes() -> None:
         "docs-viewer/scopes/research/published/documents/sub-scopes/tags"
     )
     assert docs_scope_config.public_documents_path(sub_scope).as_posix() == "site/assets/data/docs/scopes/research/tags"
+
+
+def test_docs_scope_config_accepts_route_specific_sub_scope_public_title() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        sub_scope = sub_scope_record("research", "tags")
+        sub_scope["public_title"] = "Concepts"
+        write_scope_record(
+            repo_root,
+            docs_scope_record(
+                "research",
+                scope_type="public",
+                viewer_base_url="/research/",
+                include_scope_param=False,
+                default_doc_id="research",
+                sub_scopes=[sub_scope],
+            ),
+        )
+
+        config = docs_scope_config.load_docs_scope_configs(repo_root)["research"]
+
+    assert config.sub_scopes[0].title == "Tags"
+    assert config.sub_scopes[0].public_title == "Concepts"
 
 
 def test_docs_scope_config_rejects_invalid_sub_scope_metadata_vocabularies() -> None:
