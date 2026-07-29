@@ -474,8 +474,7 @@ async function handleCreateTag(state) {
 
   const newTagRow = {
     tag_id: validation.tagId,
-    group: validation.group,
-    description: validation.description
+    group: validation.group
   };
 
   const result = await createTagRegistryTag({

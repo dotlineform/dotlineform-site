@@ -23,9 +23,40 @@ from studio_tags_api import tags_get_payload, tags_post_response  # noqa: E402
 from tags import tag_document_creation  # noqa: E402
 
 
+ANALYSIS_TAGS_REPORT_ID = "d-20260430-230000-000099"
+
+
+def analysis_tag_url(doc_id: str) -> str:
+    return (
+        f"/docs/?scope=analysis&doc={ANALYSIS_TAGS_REPORT_ID}"
+        f"&subdoc={doc_id}"
+    )
+
+
 def write_analysis_tags_fixture(repo_root: Path, doc_id: str) -> None:
     config_path = (
         repo_root / "docs-viewer/config/scopes/docs_scopes.json"
+    )
+    report_path = (
+        repo_root
+        / "docs-viewer/scopes/analysis/source/documents"
+        / f"{ANALYSIS_TAGS_REPORT_ID}.md"
+    )
+    report_path.parent.mkdir(parents=True)
+    report_path.write_text(
+        f"""---
+doc_id: {ANALYSIS_TAGS_REPORT_ID}
+title: Tags
+added_date: "2026-04-30 23:00:00"
+last_updated: 2026-04-30
+parent_id: ""
+viewable: true
+viewer_report: docs_subscope
+viewer_report_subscope: tags
+---
+# Tags
+""",
+        encoding="utf-8",
     )
     config_path.parent.mkdir(parents=True)
     config_path.write_text(
@@ -112,7 +143,7 @@ def test_studio_tag_reads_return_existing_payloads() -> None:
     assert groups_payload["tag_groups_version"] == "tag_groups_v1"
     assert {group["group_id"] for group in groups_payload["groups"]} >= {"subject", "domain", "form", "theme"}
     assert registry_payload["ok"] is True
-    assert registry_payload["tag_registry_version"] == "tag_registry_v4"
+    assert registry_payload["tag_registry_version"] == "tag_registry_v5"
     assert any(tag["tag_id"] == "flower" for tag in registry_payload["tags"])
     assert aliases_payload["ok"] is True
     assert aliases_payload["tag_aliases_version"] == "tag_aliases_v2"
@@ -167,10 +198,10 @@ def test_studio_tag_registry_dry_run_uses_registry_contract() -> None:
         registry_path.parent.mkdir(parents=True)
         registry_path.write_text(
             """{
-  "tag_registry_version": "tag_registry_v4",
+  "tag_registry_version": "tag_registry_v5",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {"allowed_groups": ["subject", "theme"]},
-  "tags": [{"tag_id": "trees", "group": "subject", "description": "Old trees"}]
+  "tags": [{"tag_id": "trees", "group": "subject", "doc_url": [], "updated_at_utc": "2026-05-01T00:00:00Z"}]
 }
 """,
             encoding="utf-8",
@@ -218,10 +249,10 @@ def test_studio_create_tag_dry_run_validates_before_write() -> None:
         registry_path.parent.mkdir(parents=True)
         registry_path.write_text(
             """{
-  "tag_registry_version": "tag_registry_v4",
+  "tag_registry_version": "tag_registry_v5",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {"allowed_groups": ["subject", "theme"]},
-  "tags": [{"tag_id": "trees", "group": "subject", "description": "Trees", "doc_id": "d-20260501-000000-000001"}]
+  "tags": [{"tag_id": "trees", "group": "subject", "doc_url": ["/docs/?scope=analysis&doc=d-20260430-230000-000099&subdoc=d-20260501-000000-000001"], "updated_at_utc": "2026-05-01T00:00:00Z"}]
 }
 """,
             encoding="utf-8",
@@ -234,7 +265,6 @@ def test_studio_create_tag_dry_run_validates_before_write() -> None:
             {
                 "group": "theme",
                 "tag_id": "renewal",
-                "description": " Renewal ",
                 "client_time_utc": "2026-05-22T00:00:00Z",
             },
             dry_run=True,
@@ -258,10 +288,10 @@ def test_studio_create_tag_dry_run_validates_before_write() -> None:
         assert registry_path.read_bytes() == before
 
         invalid_requests = (
-            {"group": "domain", "tag_id": "studio", "description": ""},
-            {"group": "theme", "tag_id": "Bad Slug", "description": ""},
-            {"group": "subject", "tag_id": "trees", "description": ""},
-            {"group": "theme", "tag_id": "renewal", "description": {"bad": True}},
+            {"group": "domain", "tag_id": "studio"},
+            {"group": "theme", "tag_id": "Bad Slug"},
+            {"group": "subject", "tag_id": "trees"},
+            {"group": "theme", "tag_id": "renewal", "description": "retired"},
         )
         for invalid_body in invalid_requests:
             try:
@@ -286,10 +316,10 @@ def test_studio_create_tag_returns_compensated_rebuild_failure(
     registry_path.parent.mkdir(parents=True)
     registry_path.write_text(
         """{
-  "tag_registry_version": "tag_registry_v4",
+  "tag_registry_version": "tag_registry_v5",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {"allowed_groups": ["subject", "theme"]},
-  "tags": [{"tag_id": "trees", "group": "subject", "description": "Trees", "doc_id": "d-20260501-000000-000001"}]
+  "tags": [{"tag_id": "trees", "group": "subject", "doc_url": ["/docs/?scope=analysis&doc=d-20260430-230000-000099&subdoc=d-20260501-000000-000001"], "updated_at_utc": "2026-05-01T00:00:00Z"}]
 }
 """,
         encoding="utf-8",
@@ -328,7 +358,6 @@ def test_studio_create_tag_returns_compensated_rebuild_failure(
         {
             "group": "theme",
             "tag_id": "renewal",
-            "description": "Renewal",
         },
     )
 
@@ -363,12 +392,12 @@ def test_studio_tag_alias_dry_run_uses_alias_contract() -> None:
         )
         registry_path.write_text(
             """{
-  "tag_registry_version": "tag_registry_v4",
+  "tag_registry_version": "tag_registry_v5",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {"allowed_groups": ["subject", "theme"]},
   "tags": [
-    {"tag_id": "trees", "group": "subject", "description": "Trees"},
-    {"tag_id": "growth", "group": "theme", "description": "Growth"}
+    {"tag_id": "trees", "group": "subject", "doc_url": [], "updated_at_utc": "2026-05-01T00:00:00Z"},
+    {"tag_id": "growth", "group": "theme", "doc_url": [], "updated_at_utc": "2026-05-01T00:00:00Z"}
   ]
 }
 """,
@@ -454,12 +483,12 @@ def test_studio_promotion_demotion_dry_run_uses_promotion_contract() -> None:
         registry_path.parent.mkdir(parents=True)
         registry_path.write_text(
             """{
-  "tag_registry_version": "tag_registry_v4",
+  "tag_registry_version": "tag_registry_v5",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {"allowed_groups": ["subject", "theme"]},
   "tags": [
-    {"tag_id": "trees", "group": "subject", "description": "Trees"},
-    {"tag_id": "growth", "group": "theme", "description": "Growth"}
+    {"tag_id": "trees", "group": "subject", "doc_url": [], "updated_at_utc": "2026-05-01T00:00:00Z"},
+    {"tag_id": "growth", "group": "theme", "doc_url": [], "updated_at_utc": "2026-05-01T00:00:00Z"}
   ]
 }
 """,

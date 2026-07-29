@@ -28,11 +28,40 @@ from tags import tag_document_creation  # noqa: E402
 
 TREES_DOC_ID = "d-20260501-000000-000001"
 GROWTH_DOC_ID = "d-20260501-000001-000002"
+REPORT_DOC_ID = "d-20260430-230000-000099"
+
+
+def analysis_url(doc_id: str) -> str:
+    return (
+        f"/docs/?scope=analysis&doc={REPORT_DOC_ID}"
+        f"&subdoc={doc_id}"
+    )
 
 
 def write_fixture_docs(repo_root: Path) -> Path:
     config_path = (
         repo_root / "docs-viewer/config/scopes/docs_scopes.json"
+    )
+    report_path = (
+        repo_root
+        / "docs-viewer/scopes/analysis/source/documents"
+        / f"{REPORT_DOC_ID}.md"
+    )
+    report_path.parent.mkdir(parents=True)
+    report_path.write_text(
+        f"""---
+doc_id: {REPORT_DOC_ID}
+title: Tags
+added_date: "2026-04-30 23:00:00"
+last_updated: 2026-04-30
+parent_id: ""
+viewable: true
+viewer_report: docs_subscope
+viewer_report_subscope: tags
+---
+# Tags
+""",
+        encoding="utf-8",
     )
     config_path.parent.mkdir(parents=True)
     config_path.write_text(
@@ -123,7 +152,7 @@ def write_fixture_data(repo_root: Path) -> tuple[Path, Path, Path, Path]:
     assignments_path = data_root / "tag-assignments.json"
     registry_path.write_text(
         """{
-  "tag_registry_version": "tag_registry_v4",
+  "tag_registry_version": "tag_registry_v5",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {
     "allowed_groups": ["subject", "form", "theme"]
@@ -132,14 +161,14 @@ def write_fixture_data(repo_root: Path) -> tuple[Path, Path, Path, Path]:
     {
       "tag_id": "trees",
       "group": "subject",
-      "description": "Trees",
-      "doc_id": "d-20260501-000000-000001"
+      "doc_url": ["/docs/?scope=analysis&doc=d-20260430-230000-000099&subdoc=d-20260501-000000-000001"],
+      "updated_at_utc": "2026-05-01T00:00:00Z"
     },
     {
       "tag_id": "growth",
       "group": "theme",
-      "description": "Growth",
-      "doc_id": "d-20260501-000001-000002"
+      "doc_url": ["/docs/?scope=analysis&doc=d-20260430-230000-000099&subdoc=d-20260501-000001-000002"],
+      "updated_at_utc": "2026-05-01T00:00:00Z"
     }
   ]
 }
@@ -234,7 +263,6 @@ def run() -> None:
                 {
                     "group": "theme",
                     "tag_id": "renewal",
-                    "description": " Renewal ",
                     "client_time_utc": "2026-05-22T00:00:00Z",
                     "activity_context": {
                         "correlation_id": "tag-registry-api-smoke",
@@ -253,7 +281,6 @@ def run() -> None:
                     "action": "edit",
                     "tag_id": "trees",
                     "new_group": "form",
-                    "description": "Canopy",
                     "allow_canonical_rename": False,
                     "client_time_utc": "2026-05-22T00:00:00Z",
                 },
@@ -308,7 +335,7 @@ def run() -> None:
                 f"registry create document missing: {created_source_path}"
             )
         created_source = created_source_path.read_text(encoding="utf-8")
-        if "group: theme" not in created_source or "Renewal" not in created_source:
+        if "group: theme" not in created_source or "# renewal" not in created_source:
             raise AssertionError(
                 f"registry create document content failed: {created_source!r}"
             )
@@ -320,7 +347,7 @@ def run() -> None:
             raise AssertionError(f"registry create activity failed: {activity_rows!r}")
         if activity_rows[0].get("record_groups", {}).get("tags", {}).get("sample_ids") != ["renewal"]:
             raise AssertionError(f"registry create activity tag identity failed: {activity_rows!r}")
-        if not edited.get("description_changed") or not edited.get("group_changed"):
+        if not edited.get("group_changed"):
             raise AssertionError(f"registry edit failed: {edited!r}")
         if preview.get("series_tag_refs_rewritten") != 1 or preview.get("work_tag_refs_rewritten") != 1:
             raise AssertionError(f"registry delete preview did not report assignment rewrites: {preview!r}")
@@ -328,7 +355,7 @@ def run() -> None:
             raise AssertionError(f"registry delete did not rewrite assignments: {deleted!r}")
         if [row["tag_id"] for row in registry["tags"]] != ["growth", "renewal"]:
             raise AssertionError(f"registry delete did not leave expected tags: {registry!r}")
-        if registry["tags"][1].get("doc_id") != created_doc_id:
+        if registry["tags"][1].get("doc_url") != [analysis_url(created_doc_id)]:
             raise AssertionError(
                 f"registry create document identity was not retained: {registry!r}"
             )

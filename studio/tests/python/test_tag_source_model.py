@@ -86,11 +86,74 @@ def test_default_payload_loading() -> None:
         aliases = source.load_aliases(root / "missing-aliases.json")
 
     assert_equal(assignments["tag_assignments_version"], "tag_assignments_v2", "assignment default version")
-    assert_equal(registry["tag_registry_version"], "tag_registry_v4", "registry default version")
+    assert_equal(registry["tag_registry_version"], "tag_registry_v5", "registry default version")
     assert_equal(aliases["tag_aliases_version"], "tag_aliases_v2", "aliases default version")
     assert_equal(assignments["series"], {}, "assignment default series")
     assert_equal(registry["policy"]["allowed_groups"], source.DEFAULT_ALLOWED_GROUPS, "registry default groups")
     assert_equal(aliases["aliases"], {}, "aliases default")
+
+
+def test_registry_v5_document_url_validation() -> None:
+    shared = "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260729-120000-000001"
+    payload = {
+        "tag_registry_version": "tag_registry_v5",
+        "updated_at_utc": "2026-07-29T12:00:00Z",
+        "policy": {"allowed_groups": ["subject", "theme"]},
+        "tags": [
+            {
+                "tag_id": "trees",
+                "group": "subject",
+                "doc_url": [shared, "/library/?doc=d-20260729-120000-000002"],
+                "updated_at_utc": "2026-07-28T12:00:00Z",
+            },
+            {
+                "tag_id": "growth",
+                "group": "theme",
+                "doc_url": [shared],
+                "updated_at_utc": "2026-07-28T12:00:00Z",
+            },
+        ],
+    }
+    assert_equal(
+        source.validate_registry_payload(payload),
+        {"tag_count": 2, "document_url_count": 3},
+        "valid ordered URLs and cross-tag sharing",
+    )
+    for invalid in (
+        "https://example.test/analysis/?doc=d-20260729-120000-000001",
+        "/moments/?doc=d-20260729-120000-000001",
+        "/analysis/?subdoc=d-20260729-120000-000001&doc=d-20260624-213316-478639",
+        "/analysis/?doc=d-20260624-213316-478639#fragment",
+    ):
+        broken = {**payload, "tags": [{**payload["tags"][0], "doc_url": [invalid]}]}
+        assert_raises_contains(
+            lambda broken=broken: source.validate_registry_payload(broken),
+            "supported canonical Docs Viewer URL",
+            f"reject {invalid}",
+        )
+    duplicate = {
+        **payload,
+        "tags": [{**payload["tags"][0], "doc_url": [shared, shared]}],
+    }
+    assert_raises_contains(
+        lambda: source.validate_registry_payload(duplicate),
+        "duplicates URL",
+        "within-tag duplicate",
+    )
+    legacy = {
+        **payload,
+        "tags": [
+            {
+                **payload["tags"][0],
+                "description": "retired",
+            }
+        ],
+    }
+    assert_raises_contains(
+        lambda: source.validate_registry_payload(legacy),
+        "unsupported fields",
+        "retired description",
+    )
 
 
 def main() -> None:
@@ -98,6 +161,7 @@ def main() -> None:
     test_group_and_manual_weight_validation()
     test_assignment_tag_normalization()
     test_default_payload_loading()
+    test_registry_v5_document_url_validation()
     print("Tag source model tests OK")
 
 

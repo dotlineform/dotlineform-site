@@ -80,7 +80,6 @@ function randomDocumentSuffix() {
 export function buildManualPatchForCreateTag(tagRow, options = {}) {
   const normalizedTagId = normalize(tagRow && tagRow.tag_id);
   const group = normalize(tagRow && tagRow.group);
-  const description = String((tagRow && tagRow.description) || "").trim();
   const addedDate = String(options.addedDate || localDocumentTimestamp()).trim();
   const suffix = String(options.suffix || randomDocumentSuffix()).trim();
   const updatedAtUtc = String(options.updatedAtUtc || utcTimestamp()).trim();
@@ -95,9 +94,18 @@ export function buildManualPatchForCreateTag(tagRow, options = {}) {
     suffix
   ].join("-");
   const documentPath = `docs-viewer/scopes/analysis/source/sub-scopes/tags/documents/${docId}.md`;
-  const documentBody = description
-    ? `# ${normalizedTagId}\n\n${description}\n`
-    : `# ${normalizedTagId}\n`;
+  const documentBody = `# ${normalizedTagId}\n`;
+  const runtime = options.config && options.config.app && options.config.app.runtime;
+  const tagService = runtime && runtime.services && runtime.services.tags;
+  const documentUrlTemplate = String(
+    options.documentUrlTemplate
+    || (tagService && tagService.analysis_tags_document_url_template)
+    || ""
+  ).trim();
+  if (!documentUrlTemplate.includes("{doc_id}")) {
+    throw new Error("Missing canonical Analysis tag document URL template.");
+  }
+  const documentUrl = documentUrlTemplate.replace("{doc_id}", docId);
   const documentSource = [
     "---",
     `doc_id: ${docId}`,
@@ -123,8 +131,7 @@ export function buildManualPatchForCreateTag(tagRow, options = {}) {
         append_row: {
           tag_id: normalizedTagId,
           group,
-          description,
-          doc_id: docId,
+          doc_url: [documentUrl],
           updated_at_utc: updatedAtUtc
         }
       },

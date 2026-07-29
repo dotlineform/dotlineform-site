@@ -136,6 +136,7 @@ def promote_alias_to_canonical_tag(
     group: str,
     now_utc: str,
 ) -> tuple[Dict[str, Any], Dict[str, Any], Dict[str, Any], bool, bool]:
+    tag_source.validate_registry_payload(registry_payload)
     raw_tags = registry_payload.get("tags")
     tags = raw_tags if isinstance(raw_tags, list) else []
     allowed_groups = tag_source.extract_allowed_groups(registry_payload)
@@ -177,7 +178,7 @@ def promote_alias_to_canonical_tag(
             {
                 "tag_id": new_tag_id,
                 "group": normalized_group,
-                "description": "",
+                "doc_url": [],
                 "updated_at_utc": now_utc,
             }
         )
@@ -191,6 +192,7 @@ def promote_alias_to_canonical_tag(
     aliases_payload["aliases"] = final_aliases
     aliases_payload["updated_at_utc"] = now_utc
     aliases_changed = True
+    tag_source.validate_registry_payload(registry_payload)
     tag_aliases.validate_alias_entries(aliases_payload, registry_payload)
 
     stats: Dict[str, Any] = {
@@ -215,6 +217,7 @@ def demote_tag_to_alias(
     alias_targets: list[str],
     now_utc: str,
 ) -> tuple[Dict[str, Any], Dict[str, Any], Dict[str, Any], Dict[str, Any], bool]:
+    tag_source.validate_registry_payload(registry_payload)
     raw_tags = registry_payload.get("tags")
     tags = raw_tags if isinstance(raw_tags, list) else []
 
@@ -253,6 +256,7 @@ def demote_tag_to_alias(
         registry_payload["policy"] = {"allowed_groups": list(tag_source.DEFAULT_ALLOWED_GROUPS)}
     registry_payload["tags"] = final_tags
     registry_payload["updated_at_utc"] = now_utc
+    tag_source.validate_registry_payload(registry_payload)
 
     aliases_updated, alias_stats = tag_aliases.rewrite_aliases_for_targets(
         aliases_payload,

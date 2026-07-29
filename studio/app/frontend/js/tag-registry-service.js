@@ -124,7 +124,6 @@ export async function submitCreateTag(options) {
       const response = await postJson(getStudioTagWriteEndpoint("createTag", config), {
         group: newTagRow && newTagRow.group,
         tag_id: newTagRow && newTagRow.tag_id,
-        description: newTagRow && newTagRow.description,
         client_time_utc: utcTimestamp(),
         activity_context: registryActivityContext("create-tag", "create-tag", "[data-role=\"create-tag\"]", "tag_id", newTagRow && newTagRow.tag_id)
       });

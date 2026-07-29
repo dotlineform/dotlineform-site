@@ -55,6 +55,9 @@ def assert_raises_contains(fn: Callable[[], Any], expected: str, label: str) -> 
 
 def test_promote_alias_creates_canonical_tag_and_removes_alias() -> None:
     registry = {
+        "tag_registry_version": "tag_registry_v5",
+        "updated_at_utc": NOW,
+        "policy": {"allowed_groups": ["subject", "theme"]},
         "tags": [
             row("trees", "subject"),
             row("growth", "theme"),
@@ -89,6 +92,9 @@ def test_promote_alias_creates_canonical_tag_and_removes_alias() -> None:
 
 def test_promote_alias_existing_canonical_removes_alias_only() -> None:
     registry = {
+        "tag_registry_version": "tag_registry_v5",
+        "updated_at_utc": NOW,
+        "policy": {"allowed_groups": ["subject", "theme"]},
         "tags": [
             row("foliage", "subject"),
             row("growth", "theme"),
@@ -114,6 +120,9 @@ def test_promote_alias_existing_canonical_removes_alias_only() -> None:
 
 def test_promote_alias_existing_canonical_requires_matching_group() -> None:
     registry = {
+        "tag_registry_version": "tag_registry_v5",
+        "updated_at_utc": NOW,
+        "policy": {"allowed_groups": ["subject", "theme"]},
         "tags": [
             row("foliage", "subject"),
             row("growth", "theme"),

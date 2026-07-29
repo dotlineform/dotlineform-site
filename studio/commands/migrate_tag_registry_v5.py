@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Preview, apply, or validate canonical tag registry label retirement."""
+"""Preview, apply, or validate the tag Registry document-link cutover."""
 
 from __future__ import annotations
 
@@ -7,27 +7,24 @@ import argparse
 import json
 from pathlib import Path
 import sys
-from typing import Any, Dict
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 STUDIO_SERVICES_DIR = REPO_ROOT / "studio" / "services"
-if str(STUDIO_SERVICES_DIR) not in sys.path:
-    sys.path.insert(0, str(STUDIO_SERVICES_DIR))
+DOCS_SERVICES_DIR = REPO_ROOT / "docs-viewer" / "services"
+for services_dir in (STUDIO_SERVICES_DIR, DOCS_SERVICES_DIR):
+    if str(services_dir) not in sys.path:
+        sys.path.insert(0, str(services_dir))
 
-from tags import tag_registry_label_retirement as retirement  # noqa: E402
+from docs_document_location import canonical_sub_scope_document_url  # noqa: E402
+from tags import tag_registry_v5_migration as migration  # noqa: E402
 from tags import tag_source_model as tag_source  # noqa: E402
 from tags import tag_write_transactions as transactions  # noqa: E402
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--repo-root",
-        type=Path,
-        default=REPO_ROOT,
-        help="Repository root containing studio/data/canonical/tags.",
-    )
+    parser.add_argument("--repo-root", type=Path, default=REPO_ROOT)
     parser.add_argument(
         "--write",
         action="store_true",
@@ -46,8 +43,8 @@ def main() -> int:
     aliases_payload = tag_source.load_aliases(aliases_path)
     assignments_payload = tag_source.load_assignments(assignments_path)
 
-    if registry_payload.get("tag_registry_version") == retirement.TARGET_REGISTRY_VERSION:
-        result = retirement.validate_registry_label_retirement(
+    if registry_payload.get("tag_registry_version") == tag_source.TAG_REGISTRY_VERSION:
+        result = migration.validate_tag_registry_v5(
             registry_payload,
             aliases_payload,
             assignments_payload,
@@ -56,21 +53,32 @@ def main() -> int:
         return 0
 
     now_utc = tag_source.utc_now()
-    registry_updated, stats = retirement.project_registry_label_retirement(
+    registry_updated, stats = migration.project_tag_registry_v5(
         registry_payload,
         aliases_payload,
         assignments_payload,
         now_utc=now_utc,
+        document_url_for_id=lambda doc_id: canonical_sub_scope_document_url(
+            repo_root,
+            "analysis",
+            "tags",
+            doc_id,
+        ),
     )
-    result: Dict[str, Any] = {
-        "mode": "write" if args.write else "preview",
-        "ok": True,
-        "updated_at_utc": now_utc,
-        **stats,
-    }
     if args.write:
         transactions.atomic_write_many({registry_path: registry_updated})
-    print(json.dumps(result, indent=2, sort_keys=True))
+    print(
+        json.dumps(
+            {
+                "mode": "write" if args.write else "preview",
+                "ok": True,
+                "updated_at_utc": now_utc,
+                **stats,
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
     return 0
 
 

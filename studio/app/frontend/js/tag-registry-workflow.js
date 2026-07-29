@@ -28,10 +28,10 @@ export async function saveTagRegistryEdit(options) {
 }
 
 export async function createTagRegistryTag(options) {
-  const { newTagRow } = options || {};
+  const { newTagRow, config } = options || {};
   return ensurePatchResult(
     await submitCreateTag(options),
-    () => buildManualPatchForCreateTag(newTagRow)
+    () => buildManualPatchForCreateTag(newTagRow, { config })
   );
 }
 

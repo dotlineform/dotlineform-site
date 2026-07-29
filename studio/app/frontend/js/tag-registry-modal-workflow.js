@@ -101,7 +101,6 @@ export function getTagRegistryNewValidation(state, options = {}) {
   return getRegistryNewTagValidation({
     newTagState: state.newTagState,
     slugInput: state.refs.newTagSlug.value,
-    descriptionInput: state.refs.newTagDescription.value,
     tags: state.tags,
     tagSlugRe: options.tagSlugRe,
     studioGroups: options.studioGroups || [],
@@ -116,7 +115,6 @@ export function updateTagRegistryNewWorkflow(state, options = {}) {
     state.refs.newTagSlug.value = slug;
   }
   state.newTagState.slug = slug;
-  state.newTagState.description = String(state.refs.newTagDescription.value || "").trim();
   const validation = getTagRegistryNewValidation(state, options);
   renderTagRegistryNewTagModalState(state, validation);
   return validation;

@@ -94,14 +94,18 @@ def test_registry_group_edit_writes_only_registry_and_preserves_linked_document(
     registry_path.write_text(
         json.dumps(
             {
-                "tag_registry_version": "tag_registry_v4",
+                "tag_registry_version": "tag_registry_v5",
+                "updated_at_utc": "2026-07-28T12:00:00Z",
                 "policy": {"allowed_groups": ["subject", "theme"]},
                 "tags": [
                     {
                         "tag_id": "trees",
                         "group": "subject",
-                        "description": "",
-                        "doc_id": "d-20260727-225608-000001",
+                        "doc_url": [
+                            "/analysis/?doc=d-20260624-213316-478639"
+                            "&subdoc=d-20260727-225608-000001"
+                        ],
+                        "updated_at_utc": "2026-07-28T12:00:00Z",
                     }
                 ],
             }
@@ -171,8 +175,11 @@ def test_registry_group_edit_writes_only_registry_and_preserves_linked_document(
     assert set(writes) == {registry_path.resolve()}
     assert writes[registry_path.resolve()]["tags"][0]["group"] == "theme"
     assert (
-        writes[registry_path.resolve()]["tags"][0]["doc_id"]
-        == "d-20260727-225608-000001"
+        writes[registry_path.resolve()]["tags"][0]["doc_url"]
+        == [
+            "/analysis/?doc=d-20260624-213316-478639"
+            "&subdoc=d-20260727-225608-000001"
+        ]
     )
     assert document_path.read_bytes() == document_before
 

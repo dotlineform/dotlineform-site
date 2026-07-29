@@ -16,18 +16,14 @@ def create_registry_tag(
     *,
     group: Any,
     tag_id: Any,
-    description: Any,
-    doc_id: Any,
+    doc_url: Any,
     now_utc: str,
 ) -> tuple[Dict[str, Any], Dict[str, Any]]:
     """Plan one canonical tag addition without changing existing rows."""
     allowed_groups = tag_source.extract_allowed_groups(registry_payload)
     normalized_group = tag_source.sanitize_group(group, allowed_groups)
     normalized_tag_id = tag_source.sanitize_tag_id(tag_id)
-    normalized_description = tag_source.sanitize_alias_description(description, "description")
-    normalized_doc_id = str(doc_id or "").strip()
-    if not normalized_doc_id:
-        raise ValueError("doc_id must not be empty")
+    normalized_doc_urls = tag_source.sanitize_tag_document_urls(doc_url)
 
     raw_tags = registry_payload.get("tags")
     if not isinstance(raw_tags, list):
@@ -42,8 +38,7 @@ def create_registry_tag(
     created_row = {
         "tag_id": normalized_tag_id,
         "group": normalized_group,
-        "description": normalized_description,
-        "doc_id": normalized_doc_id,
+        "doc_url": normalized_doc_urls,
         "updated_at_utc": now_utc,
     }
     updated_payload = dict(registry_payload)
@@ -57,8 +52,7 @@ def create_registry_tag(
         "action": "create",
         "tag_id": normalized_tag_id,
         "group": normalized_group,
-        "description": normalized_description,
-        "doc_id": normalized_doc_id,
+        "doc_url": normalized_doc_urls,
         "added": 1,
         "final_total": len(updated_payload["tags"]),
     }
@@ -71,12 +65,12 @@ def mutate_registry_tag(
     now_utc: str,
     new_tag_id: Optional[str] = None,
     new_group: Optional[str] = None,
-    new_description: Optional[str] = None,
     allow_canonical_rename: bool = False,
 ) -> tuple[Dict[str, Any], Dict[str, Any]]:
     if action not in MUTATE_ACTIONS:
         raise ValueError(f"action must be one of: {sorted(MUTATE_ACTIONS)}")
 
+    tag_source.validate_registry_payload(registry_payload)
     raw_tags = registry_payload.get("tags")
     tags = raw_tags if isinstance(raw_tags, list) else []
     target_idx = -1
@@ -129,15 +123,10 @@ def mutate_registry_tag(
         raise ValueError("canonical rename is disabled for this request")
     if canonical_changed and normalized_new_tag_id in existing_ids:
         raise ValueError(f"target tag_id already exists: {normalized_new_tag_id}")
-    old_description = str(target_row.get("description") or "").strip()
-    description = old_description if new_description is None else tag_source.sanitize_alias_description(new_description, "description")
-    description_changed = description != old_description
-
     updated_row = dict(target_row)
     updated_row.pop("label", None)
     updated_row["tag_id"] = normalized_new_tag_id
     updated_row["group"] = normalized_new_group
-    updated_row["description"] = description
     updated_row["updated_at_utc"] = now_utc
     final_tags = list(tags)
     final_tags[target_idx] = updated_row
@@ -147,6 +136,7 @@ def mutate_registry_tag(
     if "tag_registry_version" not in registry_payload:
         registry_payload["tag_registry_version"] = tag_source.TAG_REGISTRY_VERSION
 
+    tag_source.validate_registry_payload(registry_payload)
     return registry_payload, {
         "action": "edit",
         "old_tag_id": old_tag_id,
@@ -154,7 +144,6 @@ def mutate_registry_tag(
         "group": normalized_new_group,
         "canonical_changed": canonical_changed,
         "group_changed": group_changed,
-        "description_changed": description_changed,
     }
 
 
@@ -286,13 +275,11 @@ def build_mutation_summary_text(stats: Dict[str, Any]) -> str:
     alias_empty = int(stats.get("aliases_removed_empty") or 0)
     alias_redundant = int(stats.get("aliases_removed_redundant") or 0)
     group_changed = 1 if bool(stats.get("group_changed")) else 0
-    description_changed = 1 if bool(stats.get("description_changed")) else 0
 
     id_part = f"{old_tag_id} -> {new_tag_id}" if new_tag_id else old_tag_id
     return (
         f"mode {action}; tag {id_part}; "
         f"group_changed {group_changed}; "
-        f"description_changed {description_changed}; "
         f"series rows {series_rows}; series refs {series_refs}; "
         f"work rows {work_rows}; work refs {work_refs}; "
         f"aliases rewritten {alias_rw}; aliases removed-empty {alias_empty}; "

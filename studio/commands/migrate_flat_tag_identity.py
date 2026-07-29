@@ -47,11 +47,11 @@ def main() -> int:
     registry_path = (repo_root / tag_source.REGISTRY_REL_PATH).resolve()
     aliases_path = (repo_root / tag_source.ALIASES_REL_PATH).resolve()
     assignments_path = (repo_root / tag_source.ASSIGNMENTS_REL_PATH).resolve()
-    registry_payload = tag_source.load_registry(registry_path)
+    registry_payload = tag_source.load_json_object(registry_path, {}, "tag registry")
     aliases_payload = tag_source.load_aliases(aliases_path)
     assignments_payload = tag_source.load_assignments(assignments_path)
 
-    if registry_payload.get("tag_registry_version") == tag_source.TAG_REGISTRY_VERSION:
+    if registry_payload.get("tag_registry_version") == migration.TARGET_REGISTRY_VERSION:
         result = migration.validate_flat_identity_sources(
             registry_payload,
             aliases_payload,

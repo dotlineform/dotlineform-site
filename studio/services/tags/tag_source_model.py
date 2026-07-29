@@ -15,6 +15,16 @@ SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 WORK_ID_RE = re.compile(r"^\d{5}$")
 ALIAS_KEY_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 TAG_ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
+IMMUTABLE_DOC_ID = r"d-\d{8}-\d{6}-[a-f0-9]{6}"
+CANONICAL_DOC_URL_PATTERNS = (
+    re.compile(rf"^/analysis/\?doc={IMMUTABLE_DOC_ID}(?:&subdoc={IMMUTABLE_DOC_ID})?$"),
+    re.compile(rf"^/library/\?doc={IMMUTABLE_DOC_ID}(?:&subdoc={IMMUTABLE_DOC_ID})?$"),
+    re.compile(
+        rf"^/docs/\?scope=(?:analysis|studio)&doc={IMMUTABLE_DOC_ID}"
+        rf"(?:&subdoc={IMMUTABLE_DOC_ID})?$"
+    ),
+)
+TAG_REGISTRY_ROW_KEYS = frozenset(("tag_id", "group", "doc_url", "updated_at_utc"))
 
 MAX_TAGS = 50
 MAX_ALIAS_TARGETS = 50
@@ -22,7 +32,7 @@ MAX_ALIAS_TAGS_PER_ALIAS = 4
 DEFAULT_ALLOWED_GROUPS = ["subject", "domain", "form", "theme"]
 MANUAL_WEIGHT_VALUES = [0.3, 0.6, 0.9]
 DEFAULT_TAG_WEIGHT = 0.6
-TAG_REGISTRY_VERSION = "tag_registry_v4"
+TAG_REGISTRY_VERSION = "tag_registry_v5"
 TAG_ALIASES_VERSION = "tag_aliases_v2"
 TAG_ASSIGNMENTS_VERSION = "tag_assignments_v2"
 
@@ -227,6 +237,67 @@ def sanitize_tag_id(raw_tag_id: Any, field_name: str = "tag_id") -> str:
     return tag_id
 
 
+def sanitize_tag_document_url(raw_url: Any, field_name: str = "doc_url") -> str:
+    if not isinstance(raw_url, str):
+        raise ValueError(f"{field_name} must be a string")
+    url = raw_url.strip()
+    if not url:
+        raise ValueError(f"{field_name} must not be empty")
+    if not any(pattern.fullmatch(url) for pattern in CANONICAL_DOC_URL_PATTERNS):
+        raise ValueError(
+            f"{field_name} must be a supported canonical Docs Viewer URL"
+        )
+    return url
+
+
+def sanitize_tag_document_urls(
+    raw_urls: Any,
+    field_name: str = "doc_url",
+) -> list[str]:
+    if not isinstance(raw_urls, list):
+        raise ValueError(f"{field_name} must be an array")
+    urls: list[str] = []
+    seen: set[str] = set()
+    for idx, raw_url in enumerate(raw_urls):
+        url = sanitize_tag_document_url(raw_url, f"{field_name}[{idx}]")
+        if url in seen:
+            raise ValueError(f"{field_name}[{idx}] duplicates URL '{url}'")
+        seen.add(url)
+        urls.append(url)
+    return urls
+
+
+def validate_registry_payload(payload: Dict[str, Any]) -> Dict[str, int]:
+    if payload.get("tag_registry_version") != TAG_REGISTRY_VERSION:
+        raise ValueError(f"tag registry must use {TAG_REGISTRY_VERSION}")
+    raw_tags = payload.get("tags")
+    if not isinstance(raw_tags, list):
+        raise ValueError("tag_registry.tags must be an array")
+    allowed_groups = extract_allowed_groups(payload)
+    seen_tag_ids: set[str] = set()
+    url_count = 0
+    for idx, raw_tag in enumerate(raw_tags):
+        field = f"tag_registry.tags[{idx}]"
+        if not isinstance(raw_tag, dict):
+            raise ValueError(f"{field} must be an object")
+        unexpected = sorted(set(raw_tag) - TAG_REGISTRY_ROW_KEYS)
+        if unexpected:
+            raise ValueError(f"{field} has unsupported fields: {unexpected}")
+        missing = sorted(TAG_REGISTRY_ROW_KEYS - set(raw_tag))
+        if missing:
+            raise ValueError(f"{field} is missing fields: {missing}")
+        tag_id = sanitize_tag_id(raw_tag.get("tag_id"), f"{field}.tag_id")
+        if tag_id in seen_tag_ids:
+            raise ValueError(f"{field} duplicates tag_id '{tag_id}'")
+        seen_tag_ids.add(tag_id)
+        sanitize_group(raw_tag.get("group"), allowed_groups, f"{field}.group")
+        urls = sanitize_tag_document_urls(raw_tag.get("doc_url"), f"{field}.doc_url")
+        url_count += len(urls)
+        if not isinstance(raw_tag.get("updated_at_utc"), str):
+            raise ValueError(f"{field}.updated_at_utc must be a string")
+    return {"tag_count": len(raw_tags), "document_url_count": url_count}
+
+
 def sanitize_slug(raw_slug: Any, field_name: str = "slug") -> str:
     slug = str(raw_slug or "").strip().lower()
     if not SLUG_RE.fullmatch(slug):
@@ -296,7 +367,7 @@ def load_assignments(path: Path) -> Dict[str, Any]:
 
 
 def load_registry(path: Path) -> Dict[str, Any]:
-    return load_json_object(
+    payload = load_json_object(
         path,
         {
             "tag_registry_version": TAG_REGISTRY_VERSION,
@@ -306,6 +377,8 @@ def load_registry(path: Path) -> Dict[str, Any]:
         },
         "tag registry",
     )
+    validate_registry_payload(payload)
+    return payload
 
 
 def load_aliases(path: Path) -> Dict[str, Any]:

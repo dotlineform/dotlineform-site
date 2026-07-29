@@ -164,7 +164,6 @@ export const DEFAULT_TAG_UI_TEXT = {
     edit_close_button: "Close",
     new_modal_title: "New Tag",
     new_slug_label: "tag",
-    new_description_label: "description",
     new_create_button: "Create",
     new_cancel_button: "Cancel",
     demote_modal_title: "Demote Tag to Alias",

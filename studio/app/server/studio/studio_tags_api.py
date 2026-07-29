@@ -180,6 +180,13 @@ def data_payload(repo_root: Path, endpoint: str) -> dict[str, object]:
 def tags_get_payload(repo_root: Path, path: str) -> dict[str, object]:
     if path == "/health":
         return tags_health_payload()
+    if path == "/tag-registry":
+        return {
+            "ok": True,
+            **tag_source.load_registry(
+                (repo_root / tag_source.REGISTRY_REL_PATH).resolve()
+            ),
+        }
     return data_payload(repo_root, path)
 
 

@@ -11,6 +11,7 @@ from tags import tag_source_model as tag_source
 
 
 LEGACY_REGISTRY_VERSION = "tag_registry_v2"
+TARGET_REGISTRY_VERSION = "tag_registry_v4"
 
 
 def project_registry_label_retirement(
@@ -65,7 +66,7 @@ def project_registry_label_retirement(
         projected_tags.append(projected_row)
 
     projected_registry = copy.deepcopy(registry_payload)
-    projected_registry["tag_registry_version"] = tag_source.TAG_REGISTRY_VERSION
+    projected_registry["tag_registry_version"] = TARGET_REGISTRY_VERSION
     projected_registry["updated_at_utc"] = now_utc
     projected_registry["tags"] = projected_tags
 
@@ -95,4 +96,5 @@ def validate_registry_label_retirement(
         registry_payload,
         aliases_payload,
         assignments_payload,
+        expected_registry_version=TARGET_REGISTRY_VERSION,
     )

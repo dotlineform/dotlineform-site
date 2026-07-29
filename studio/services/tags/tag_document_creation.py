@@ -9,6 +9,7 @@ from typing import Any, Callable, Dict
 
 import docs_source_model as docs_source
 import docs_write_rebuild as write_rebuild
+from docs_document_location import canonical_sub_scope_document_url
 from docs_document_identity import (
     allocate_doc_id,
     current_doc_timestamp,
@@ -59,7 +60,6 @@ def render_tag_document_source(
     *,
     tag_id: str,
     group: str,
-    description: str,
     doc_id: str,
     added_date: str,
 ) -> str:
@@ -67,8 +67,6 @@ def render_tag_document_source(
 
     last_updated = added_date.split(" ", 1)[0]
     body = f"# {tag_id}\n"
-    if description:
-        body += f"\n{description}\n"
     return docs_source.format_source(
         {
             "doc_id": doc_id,
@@ -88,7 +86,6 @@ def build_tag_document_create_plan(
     *,
     group: Any,
     tag_id: Any,
-    description: Any,
     now_utc: str,
     added_date: str | None = None,
     token_factory: Callable[[int], str] | None = None,
@@ -97,7 +94,11 @@ def build_tag_document_create_plan(
 
     registry_path = (repo_root / tag_source.REGISTRY_REL_PATH).resolve()
     original_registry_bytes = registry_path.read_bytes()
-    registry_payload = tag_source.load_registry(registry_path)
+    registry_payload = tag_source.load_json_object(
+        registry_path,
+        {},
+        "tag registry",
+    )
     _validate_registry_create_container(registry_payload)
     documents_root = write_rebuild.current_sub_scope_source_root(
         repo_root,
@@ -116,19 +117,24 @@ def build_tag_document_create_plan(
     document_path = (documents_root / f"{doc_id}.md").resolve()
     if document_path.parent != documents_root:
         raise ValueError("document destination escapes configured Analysis/tags root")
+    document_url = canonical_sub_scope_document_url(
+        repo_root,
+        ANALYSIS_SCOPE,
+        TAG_SUB_SCOPE,
+        doc_id,
+    )
 
     updated_registry, stats = tag_registry.create_registry_tag(
         registry_payload,
         group=group,
         tag_id=tag_id,
-        description=description,
-        doc_id=doc_id,
+        doc_url=[document_url],
         now_utc=now_utc,
     )
+    stats["doc_id"] = doc_id
     document_source = render_tag_document_source(
         tag_id=str(stats["tag_id"]),
         group=str(stats["group"]),
-        description=str(stats["description"]),
         doc_id=doc_id,
         added_date=document_timestamp,
     )

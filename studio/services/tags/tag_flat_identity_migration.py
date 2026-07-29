@@ -10,6 +10,7 @@ from tags import tag_source_model as tag_source
 
 
 LEGACY_TAG_ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$")
+TARGET_REGISTRY_VERSION = "tag_registry_v4"
 
 
 def _legacy_tag_id(raw_tag_id: Any, field_name: str) -> str:
@@ -126,7 +127,7 @@ def project_flat_identity_sources(
             preserved_description_count += 1
 
     projected_registry = copy.deepcopy(registry_payload)
-    projected_registry["tag_registry_version"] = tag_source.TAG_REGISTRY_VERSION
+    projected_registry["tag_registry_version"] = TARGET_REGISTRY_VERSION
     projected_registry["updated_at_utc"] = now_utc
     projected_registry["tags"] = projected_tags
 
@@ -300,7 +301,7 @@ def validate_flat_identity_sources(
         "assignments": assignments_payload.get("tag_assignments_version"),
     }
     expected_versions = {
-        "registry": expected_registry_version or tag_source.TAG_REGISTRY_VERSION,
+        "registry": expected_registry_version or TARGET_REGISTRY_VERSION,
         "aliases": tag_source.TAG_ALIASES_VERSION,
         "assignments": tag_source.TAG_ASSIGNMENTS_VERSION,
     }

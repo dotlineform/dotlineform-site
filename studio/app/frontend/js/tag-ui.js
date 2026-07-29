@@ -146,7 +146,6 @@ export const tagRegistryUi = createUiContract({
     newGroupKey: "new-group-key",
     newTagSlug: "new-tag-slug",
     newTagWarning: "new-tag-warning",
-    newTagDescription: "new-tag-description",
     newTagStatus: "new-tag-status",
     createTag: "create-tag",
     demoteModal: "demote-modal",

@@ -42,7 +42,10 @@ export function applyTagRegistryCreateProjection(state, options = {}) {
     .concat([{
       group: validation.group,
       tagId: validation.tagId,
-      description: validation.description,
+      description: "",
+      docUrl: Array.isArray(options.response && options.response.doc_url)
+        ? options.response.doc_url.slice()
+        : [],
       updatedAtUtc,
       updatedAtMs: Number.isFinite(updatedAtMs) ? updatedAtMs : null
     }]);

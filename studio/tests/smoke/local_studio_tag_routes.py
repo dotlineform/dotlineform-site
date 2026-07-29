@@ -147,6 +147,14 @@ def main(argv: list[str] | None = None) -> int:
                     raise AssertionError(f"{route['path']} did not report loaded data")
                 if doc_link_count:
                     raise AssertionError(f"{route['path']} still renders header doc pill")
+                if route["view_id"] == "tag_registry":
+                    page.locator('[data-role="open-new-tag"]').click()
+                    if page.locator('[data-role="new-modal"]').is_hidden():
+                        raise AssertionError("New Tag modal did not open")
+                    if page.locator('[data-role="new-tag-slug"]').count() != 1:
+                        raise AssertionError("New Tag modal did not expose the tag input")
+                    if page.locator('[data-role="new-tag-description"]').count():
+                        raise AssertionError("New Tag modal still exposes retired description input")
                 if route["view_id"] == "series_tag_editor":
                     series_id = page.locator("#analytics-tag-editor").get_attribute("data-series-id")
                     if series_id != "036":

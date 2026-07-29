@@ -47,7 +47,6 @@ export function collectTagRegistryModalRefs(root) {
     newGroupKey: root.querySelector(UI_SELECTOR.newGroupKey),
     newTagSlug: root.querySelector(UI_SELECTOR.newTagSlug),
     newTagWarning: root.querySelector(UI_SELECTOR.newTagWarning),
-    newTagDescription: root.querySelector(UI_SELECTOR.newTagDescription),
     newTagStatus: root.querySelector(UI_SELECTOR.newTagStatus),
     createTag: root.querySelector(UI_SELECTOR.createTag),
     demoteModal: root.querySelector(UI_SELECTOR.demoteModal),
@@ -115,10 +114,6 @@ export function wireTagRegistryModalEvents(state, callbacks = {}) {
   });
 
   state.refs.newTagSlug.addEventListener("input", () => {
-    callbacks.onNewTagInput?.();
-  });
-
-  state.refs.newTagDescription.addEventListener("input", () => {
     callbacks.onNewTagInput?.();
   });
 
@@ -262,11 +257,9 @@ export function openTagRegistryNewModal(state) {
   captureTagModalRestoreFocus(state, "new", modalConfigs());
   state.newTagState = {
     group: "",
-    slug: "",
-    description: ""
+    slug: ""
   };
   state.refs.newTagSlug.value = "";
-  state.refs.newTagDescription.value = "";
   state.refs.newTagWarning.textContent = "";
   setStatusText(state.refs.newTagStatus, "", "");
   renderTagRegistryNewTagGroupKey(state);
@@ -283,7 +276,6 @@ export function closeTagRegistryNewModal(state) {
   state.newModalFocusReady = false;
   state.newModalRestoreFocus = null;
   state.refs.newTagSlug.value = "";
-  state.refs.newTagDescription.value = "";
   state.refs.newTagWarning.textContent = "";
   setStatusText(state.refs.newTagStatus, "", "");
   state.refs.newGroupKey.innerHTML = "";
@@ -491,10 +483,6 @@ function renderNewModal(state) {
           <input type="text" class="studioUi__input" data-role="${UI.role.newTagSlug}" autocomplete="off">
         </label>
         <p class="${UI_CLASS.formWarning}" data-role="${UI.role.newTagWarning}"></p>
-        <label class="${UI_CLASS.formField}">
-          <span class="${UI_CLASS.formLabel}">${escapeHtml(registryText(state.config, "new_description_label", "description"))}</span>
-          <textarea class="studioUi__input ${UI_CLASS.formDescriptionInput}" data-role="${UI.role.newTagDescription}" rows="3" autocomplete="off"></textarea>
-        </label>
       </div>
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.newTagStatus}"></p>
     `,

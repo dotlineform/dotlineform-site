@@ -9,6 +9,9 @@ export function configureTagRegistryDomain(options = {}) {
 }
 
 export function normalizeRegistryTags(data, fallbackUpdatedAt) {
+  if (!data || data.tag_registry_version !== "tag_registry_v5") {
+    throw new Error("Tag Registry must use tag_registry_v5.");
+  }
   const rawTags = Array.isArray(data && data.tags) ? data.tags : [];
   const tags = [];
 
@@ -16,14 +19,15 @@ export function normalizeRegistryTags(data, fallbackUpdatedAt) {
     if (!raw || typeof raw !== "object") continue;
     const group = normalize(raw.group);
     const tagId = normalize(raw.tag_id);
-    const description = String(raw.description || "").trim();
+    const docUrl = Array.isArray(raw.doc_url) ? raw.doc_url.slice() : null;
     const updatedAtUtc = normalizeTimestamp(raw.updated_at_utc) || fallbackUpdatedAt;
 
-    if (!STUDIO_GROUPS.includes(group) || !tagId) continue;
+    if (!STUDIO_GROUPS.includes(group) || !tagId || !docUrl) continue;
     tags.push({
       group,
       tagId,
-      description,
+      description: "",
+      docUrl,
       updatedAtUtc,
       updatedAtMs: toTimestampMs(updatedAtUtc)
     });
@@ -146,7 +150,6 @@ export function getNewTagValidation(options) {
   const {
     newTagState,
     slugInput,
-    descriptionInput,
     tags,
     tagSlugRe,
     text,
@@ -154,12 +157,11 @@ export function getNewTagValidation(options) {
   } = options || {};
 
   if (!newTagState) {
-    return { valid: false, warning: "", group: "", slug: "", description: "", tagId: "" };
+    return { valid: false, warning: "", group: "", slug: "", tagId: "" };
   }
 
   const group = normalize(newTagState.group);
   const slug = normalize(slugInput);
-  const description = String(descriptionInput || "").trim();
   let warning = "";
 
   if (!studioGroups.includes(group)) {
@@ -179,7 +181,6 @@ export function getNewTagValidation(options) {
     warning,
     group,
     slug,
-    description,
     tagId: group && slug ? slug : ""
   };
 }

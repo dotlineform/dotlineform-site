@@ -26,6 +26,11 @@ NOW_UTC = "2026-07-29T12:00:00Z"
 ADDED_DATE = "2026-07-29 13:00:00"
 EXISTING_DOC_ID = "d-20260728-120000-000001"
 NEW_DOC_ID = "d-20260729-130000-abcdef"
+REPORT_DOC_ID = "d-20260728-110000-000099"
+
+
+def analysis_url(doc_id: str) -> str:
+    return f"/docs/?scope=analysis&doc={REPORT_DOC_ID}&subdoc={doc_id}"
 
 
 def write_json(path: Path, payload: object) -> None:
@@ -112,6 +117,27 @@ def prepare_repo(repo_root: Path) -> tuple[Path, Path, bytes, bytes]:
         },
     )
     write_scope_config(repo_root)
+    report_path = (
+        repo_root
+        / "docs-viewer/scopes/analysis/source/documents"
+        / f"{REPORT_DOC_ID}.md"
+    )
+    report_path.parent.mkdir(parents=True)
+    report_path.write_text(
+        f"""---
+doc_id: {REPORT_DOC_ID}
+title: Tags
+added_date: "2026-07-28 11:00:00"
+last_updated: 2026-07-28
+parent_id: ""
+viewable: true
+viewer_report: docs_subscope
+viewer_report_subscope: tags
+---
+# Tags
+""",
+        encoding="utf-8",
+    )
     registry_path = (
         repo_root
         / "studio/data/canonical/tags/tag-registry.json"
@@ -119,7 +145,7 @@ def prepare_repo(repo_root: Path) -> tuple[Path, Path, bytes, bytes]:
     write_json(
         registry_path,
         {
-            "tag_registry_version": "tag_registry_v4",
+            "tag_registry_version": "tag_registry_v5",
             "updated_at_utc": "2026-07-28T12:00:00Z",
             "policy": {
                 "allowed_groups": [
@@ -133,8 +159,8 @@ def prepare_repo(repo_root: Path) -> tuple[Path, Path, bytes, bytes]:
                 {
                     "tag_id": "trees",
                     "group": "subject",
-                    "description": "Trees",
-                    "doc_id": EXISTING_DOC_ID,
+                    "doc_url": [analysis_url(EXISTING_DOC_ID)],
+                    "updated_at_utc": "2026-07-28T12:00:00Z",
                 }
             ],
         },
@@ -159,7 +185,6 @@ def build_plan(repo_root: Path) -> creation.TagDocumentCreatePlan:
         repo_root,
         group=" Theme ",
         tag_id="Renewal",
-        description=" Renewal cycle ",
         now_utc=NOW_UTC,
         added_date=ADDED_DATE,
         token_factory=lambda _size: "abcdef",
@@ -197,13 +222,13 @@ def test_plan_seeds_linked_registry_row_and_grouped_document(
         "action": "create",
         "tag_id": "renewal",
         "group": "theme",
-        "description": "Renewal cycle",
+        "doc_url": [analysis_url(NEW_DOC_ID)],
         "doc_id": NEW_DOC_ID,
         "added": 1,
         "final_total": 2,
     }
     assert plan.updated_registry["tags"][0]["tag_id"] == "trees"
-    assert plan.updated_registry["tags"][1]["doc_id"] == NEW_DOC_ID
+    assert plan.updated_registry["tags"][1]["doc_url"] == [analysis_url(NEW_DOC_ID)]
     front_matter, body = creation.docs_source.parse_source_text(
         plan.document_source
     )
@@ -216,7 +241,7 @@ def test_plan_seeds_linked_registry_row_and_grouped_document(
         "parent_id": "",
         "viewable": True,
     }
-    assert body == "# renewal\n\nRenewal cycle\n"
+    assert body == "# renewal\n"
     assert registry_path.read_bytes() == registry_before
     assert existing_path.read_bytes() == existing_before
     assert not plan.document_path.exists()
@@ -239,7 +264,7 @@ def test_execute_commits_both_sources_and_preserves_existing_bytes(
     result = creation.execute_tag_document_create(tmp_path, plan)
 
     registry = json.loads(registry_path.read_text(encoding="utf-8"))
-    assert registry["tags"][1]["doc_id"] == NEW_DOC_ID
+    assert registry["tags"][1]["doc_url"] == [analysis_url(NEW_DOC_ID)]
     assert plan.document_path.read_text(encoding="utf-8") == plan.document_source
     assert existing_path.read_bytes() == existing_before
     assert result["document_target"] == {
@@ -324,7 +349,7 @@ def test_exclusive_create_refuses_existing_destination_without_planner_preflight
     assert existing_path.read_bytes() == existing_before
 
 
-def test_create_ignores_unrelated_missing_shared_stale_and_malformed_links(
+def test_create_ignores_unrelated_empty_shared_stale_and_malformed_links(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -336,31 +361,32 @@ def test_create_ignores_unrelated_missing_shared_stale_and_malformed_links(
         {
             "tag_id": "unlinked",
             "group": "subject",
-            "description": "No link",
+            "doc_url": [],
+            "updated_at_utc": "2026-07-28T12:00:00Z",
         },
         {
             "tag_id": "shared-one",
             "group": "subject",
-            "description": "Shared link one",
-            "doc_id": EXISTING_DOC_ID,
+            "doc_url": [analysis_url(EXISTING_DOC_ID)],
+            "updated_at_utc": "2026-07-28T12:00:00Z",
         },
         {
             "tag_id": "shared-two",
             "group": "theme",
-            "description": "Shared link two",
-            "doc_id": EXISTING_DOC_ID,
+            "doc_url": [analysis_url(EXISTING_DOC_ID)],
+            "updated_at_utc": "2026-07-28T12:00:00Z",
         },
         {
             "tag_id": "stale",
             "group": "subject",
-            "description": "Stale link",
-            "doc_id": "d-20260728-120000-999999",
+            "doc_url": [analysis_url("d-20260728-120000-999999")],
+            "updated_at_utc": "2026-07-28T12:00:00Z",
         },
         {
             "tag_id": "malformed",
             "group": "subject",
-            "description": "Malformed link",
-            "doc_id": "legacy-document-id",
+            "doc_url": ["legacy-document-id"],
+            "updated_at_utc": "2026-07-28T12:00:00Z",
         },
     ]
     write_json(registry_path, registry_payload)
@@ -377,7 +403,7 @@ def test_create_ignores_unrelated_missing_shared_stale_and_malformed_links(
 
     registry = json.loads(registry_path.read_text(encoding="utf-8"))
     assert registry["tags"][:5] == unrelated_rows
-    assert registry["tags"][5]["doc_id"] == NEW_DOC_ID
+    assert registry["tags"][5]["doc_url"] == [analysis_url(NEW_DOC_ID)]
     assert result["doc_id"] == NEW_DOC_ID
     assert plan.document_path.exists()
     assert existing_path.read_bytes() == existing_before
@@ -387,7 +413,7 @@ def test_create_ignores_unrelated_missing_shared_stale_and_malformed_links(
 @pytest.mark.parametrize(
     ("registry_patch", "expected_error"),
     [
-        ({"tag_registry_version": "tag_registry_v3"}, "tag creation requires"),
+        ({"tag_registry_version": "tag_registry_v4"}, "requires tag_registry_v5"),
         ({"tags": {}}, "registry tags must be an array"),
     ],
 )
@@ -418,28 +444,6 @@ def test_execute_real_sub_scope_builder_projects_linked_document(
     registry_path, existing_path, _registry_before, existing_before = (
         prepare_repo(tmp_path)
     )
-    report_doc_id = "d-20260728-110000-000099"
-    report_path = (
-        tmp_path
-        / "docs-viewer/scopes/analysis/source/documents"
-        / f"{report_doc_id}.md"
-    )
-    report_path.parent.mkdir(parents=True)
-    report_path.write_text(
-        f"""---
-doc_id: {report_doc_id}
-title: Tags
-added_date: "2026-07-28 11:00:00"
-last_updated: 2026-07-28
-parent_id: ""
-viewable: true
-viewer_report: docs_subscope
-viewer_report_subscope: tags
----
-# Tags
-""",
-        encoding="utf-8",
-    )
     plan = build_plan(tmp_path)
     monkeypatch.setattr(
         creation.write_rebuild,
@@ -465,7 +469,7 @@ viewer_report_subscope: tags
     ]
     assert projected["doc_id"] == NEW_DOC_ID
     assert projected["title"] == "renewal"
-    assert "Renewal cycle" in projected["content_html"]
-    assert registry["tags"][1]["doc_id"] == NEW_DOC_ID
+    assert ">renewal<" in projected["content_html"]
+    assert registry["tags"][1]["doc_url"] == [analysis_url(NEW_DOC_ID)]
     assert existing_path.read_bytes() == existing_before
     assert result["rebuild"]["docs"]["mode"] == "sub_scope"

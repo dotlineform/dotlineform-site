@@ -145,7 +145,10 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
                     "action": "create",
                     "tag_id": "renewal",
                     "group": "theme",
-                    "description": "Renewal",
+                    "doc_url": [
+                        "/analysis/?doc=d-20260624-213316-478639"
+                        "&subdoc=d-20260729-120000-abcdef"
+                    ],
                     "doc_id": "d-20260729-120000-abcdef",
                     "added": 1,
                     "final_total": 2,
@@ -166,8 +169,7 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
                 saveMode: 'post',
                 newTagRow: {
                     tag_id: 'renewal',
-                    group: 'theme',
-                    description: 'Renewal'
+                    group: 'theme'
                 },
                 config: {
                     app: {
@@ -197,8 +199,7 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
     assert isinstance(payload, dict)
     assert payload["group"] == "theme"
     assert payload["tag_id"] == "renewal"
-    assert payload["description"] == "Renewal"
-    assert set(payload) == {"group", "tag_id", "description", "client_time_utc", "activity_context"}
+    assert set(payload) == {"group", "tag_id", "client_time_utc", "activity_context"}
     context = payload["activity_context"]
     assert isinstance(context, dict)
     assert context["action_id"] == "create-tag"
@@ -219,8 +220,7 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
                 saveMode: 'post',
                 newTagRow: {
                     tag_id: 'renewal',
-                    group: 'theme',
-                    description: 'Renewal'
+                    group: 'theme'
                 },
                 config: {
                     app: {
@@ -252,8 +252,7 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
                 saveMode: 'post',
                 newTagRow: {
                     tag_id: 'renewal',
-                    group: 'theme',
-                    description: 'Renewal'
+                    group: 'theme'
                 },
                 config: {}
             });
@@ -271,10 +270,20 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
                 saveMode: 'patch',
                 newTagRow: {
                     tag_id: 'renewal',
-                    group: 'theme',
-                    description: 'Renewal'
+                    group: 'theme'
                 },
-                config: {}
+                config: {
+                    app: {
+                        runtime: {
+                            services: {
+                                tags: {
+                                    analysis_tags_document_url_template:
+                                        '/analysis/?doc=d-20260624-213316-478639&subdoc={doc_id}'
+                                }
+                            }
+                        }
+                    }
+                }
             });
         }"""
     )
@@ -287,7 +296,7 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
     )
     patch_payload = json.loads(patch_mode["patchResult"]["snippet"])
     registry_patch = patch_payload["registry"]
-    patch_doc_id = registry_patch["append_row"]["doc_id"]
+    patch_doc_id = patch_payload["document"]["path"].rsplit("/", 1)[-1][:-3]
     assert re.fullmatch(
         r"d-\d{8}-\d{6}-[0-9a-f]{6}",
         patch_doc_id,
@@ -297,11 +306,18 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
     )
     assert registry_patch["append_row"]["tag_id"] == "renewal"
     assert registry_patch["append_row"]["group"] == "theme"
+    assert "description" not in registry_patch["append_row"]
+    assert "doc_id" not in registry_patch["append_row"]
+    assert registry_patch["append_row"]["doc_url"] == [
+        "/analysis/?doc=d-20260624-213316-478639"
+        f"&subdoc={patch_doc_id}"
+    ]
     assert patch_payload["document"]["path"].endswith(
         f"/{patch_doc_id}.md"
     )
     assert f"doc_id: {patch_doc_id}" in patch_payload["document"]["source"]
     assert "group: theme" in patch_payload["document"]["source"]
+    assert "Renewal" not in patch_payload["document"]["source"]
     assert patch_payload["notice"].startswith("Nothing has been written")
     assert patch_payload["rebuild"].endswith(
         "--write --skip-browser-config"

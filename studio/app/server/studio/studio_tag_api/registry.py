@@ -18,12 +18,13 @@ from studio_tag_api import common
 
 def create_tag_response(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -> dict[str, object]:
     """Create one canonical tag and its linked Analysis document."""
+    if "description" in body:
+        raise ValueError("description is not supported for canonical tags")
     now_utc = common.utc_now()
     plan = tag_document_creation.build_tag_document_create_plan(
         repo_root,
         group=body.get("group"),
         tag_id=body.get("tag_id"),
-        description=body.get("description"),
         now_utc=now_utc,
     )
     stats = plan.stats
@@ -103,7 +104,6 @@ def mutate_tag_response(
 
     new_tag_id = None
     new_group = None
-    new_description = None
     if action == "edit":
         raw_new_tag_id = body.get("new_tag_id")
         if raw_new_tag_id is not None and str(raw_new_tag_id).strip():
@@ -112,7 +112,12 @@ def mutate_tag_response(
         if raw_new_group is not None and str(raw_new_group).strip():
             new_group = str(raw_new_group)
         if "description" in body:
-            new_description = tag_source.sanitize_alias_description(body.get("description"), "description")
+            description = tag_source.sanitize_alias_description(
+                body.get("description"),
+                "description",
+            )
+            if description:
+                raise ValueError("description is not supported for canonical tags")
 
     now_utc = common.utc_now()
     registry_payload = tag_source.load_registry(registry_path)
@@ -126,7 +131,6 @@ def mutate_tag_response(
         now_utc=now_utc,
         new_tag_id=new_tag_id,
         new_group=new_group,
-        new_description=new_description,
         allow_canonical_rename=allow_canonical_rename,
     )
     new_tag_id = mutate_meta.get("new_tag_id")
@@ -169,7 +173,6 @@ def mutate_tag_response(
         "new_tag_id": rewrite_to,
         "canonical_changed": bool(mutate_meta.get("canonical_changed")),
         "group_changed": bool(mutate_meta.get("group_changed")),
-        "description_changed": bool(mutate_meta.get("description_changed")),
         **alias_stats,
         **assignment_stats,
     }
