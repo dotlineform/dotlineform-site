@@ -352,6 +352,16 @@ export function startDocsViewerRuntime(options) {
     hasActiveQuery: hasActiveQuery,
     inlineMermaidAdapter: settings.inlineMermaidAdapter,
     managementService: managementService,
+    managementDocumentActions: {
+      createSubscopeDocument: function (collection, options) {
+        return loadManagementController().then(function (controller) {
+          if (!controller || typeof controller.createSubscopeDocument !== "function") {
+            throw new Error("Sub-scope document creation is unavailable.");
+          }
+          return controller.createSubscopeDocument(collection, options);
+        });
+      }
+    },
     mountDocumentExtras: settings.mountDocumentExtras,
     more: more,
     projectDocumentShell: panelLayout.projectMainView,

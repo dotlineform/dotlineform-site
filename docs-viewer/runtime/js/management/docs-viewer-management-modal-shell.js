@@ -208,8 +208,10 @@ export function openDocsViewerNoticeModal(options = {}) {
 
 export function openDocsViewerTextInputModal(options = {}) {
   var inputId = normalizeText(options.inputId) || "docsViewerManagementModalInput";
+  var fieldClass = "docsViewer__field";
+  if (options.compactLabel) fieldClass += " docsViewer__field--compactLabel";
   var bodyHtml = bodyHtmlFromText(options.body) +
-    '<label class="docsViewer__field" for="' + escapeHtml(inputId) + '">' +
+    '<label class="' + fieldClass + '" for="' + escapeHtml(inputId) + '">' +
       '<span class="docsViewer__fieldLabel">' + escapeHtml(options.label || "Title") + '</span>' +
       '<input class="docsViewer__fieldInput" id="' + escapeHtml(inputId) + '" type="text" autocomplete="off" spellcheck="false" value="' + escapeHtml(options.initialValue || "") + '">' +
     '</label>';

@@ -40,10 +40,11 @@ function clearNode(node) {
   while (node.firstChild) node.removeChild(node.firstChild);
 }
 
-function fetchJson(url, failureMessage) {
+function fetchJson(url, failureMessage, options) {
+  var settings = options || {};
   return fetch(appendAssetVersion(url), {
     headers: { Accept: "application/json" },
-    cache: "default"
+    cache: settings.cache || "default"
   }).then(function (response) {
     if (!response.ok) throw new Error(failureMessage + " (" + response.status + ")");
     return response.json();
@@ -456,7 +457,10 @@ function renderListToolbar(state, documents) {
   renderToolbar({
     collection: collectionTarget(state.viewerScope, state.subScopeId),
     documents: documents.map(documentRecord),
-    host: host
+    host: host,
+    refreshAndOpenDocument: function (target) {
+      return refreshAndOpenDocument(state, target);
+    }
   });
   if (!host.childNodes.length) return;
   state.filterToolbarNode.appendChild(host);
@@ -607,7 +611,7 @@ function renderDetailPayload(state, docId, payload) {
   }, "detail-loaded");
 }
 
-function renderDetailById(state, docId) {
+function renderDetailById(state, docId, options) {
   var requestVersion = invalidateDetailRequest(state);
   publishState(state, "loading", null, "detail-navigation");
   state.root.dataset.reportState = "detail";
@@ -624,7 +628,7 @@ function renderDetailById(state, docId) {
     return Promise.resolve(true);
   }
 
-  return fetchJson(url, "Failed to load docs sub-scope detail payload")
+  return fetchJson(url, "Failed to load docs sub-scope detail payload", options)
     .then(function (payload) {
       if (requestVersion !== state.detailRequestVersion) return true;
       renderDetailPayload(state, docId, payload);
@@ -661,6 +665,20 @@ function assertCollectionTarget(state, target) {
   return targetDocId;
 }
 
+function assertCreatedCollectionTarget(state, target) {
+  var targetScope = cleanId(target && target.scope);
+  var targetSubScope = cleanId(target && target.sub_scope);
+  var targetDocId = cleanString(target && target.doc_id);
+  if (
+    !targetDocId
+    || targetScope !== state.viewerScope
+    || targetSubScope !== state.subScopeId
+  ) {
+    throw new Error("Created sub-scope document target did not match the mounted collection.");
+  }
+  return targetDocId;
+}
+
 function focusFirstListRow(state) {
   var first = state.rowsNode && state.rowsNode.querySelector(".docsViewerReport__subscopeButton");
   if (!first || typeof first.focus !== "function") return;
@@ -677,6 +695,53 @@ function publishDocumentsRefresh(state, reason) {
     documents: state.docs.map(documentRecord),
     reason: cleanString(reason)
   });
+}
+
+function applyManifest(state, manifest) {
+  state.docs = manifest.documents;
+  state.groups = manifest.groups;
+  configureGroupControls(state);
+  state.docIds = state.docs.map(function (doc) { return doc.docId; });
+}
+
+function refreshAndOpenDocument(state, target) {
+  var docId = assertCreatedCollectionTarget(state, target);
+  if (!state.mounted) {
+    return Promise.reject(new Error(
+      "Document was created, but the mounted sub-scope report is no longer available."
+    ));
+  }
+  return fetchJson(
+    state.manifestUrl,
+    "Failed to refresh docs sub-scope manifest",
+    { cache: "no-store" }
+  )
+    .then(manifestPayload)
+    .then(function (manifest) {
+      if (!state.mounted) {
+        throw new Error(
+          "Document was created, but the mounted sub-scope report is no longer available."
+        );
+      }
+      applyManifest(state, manifest);
+      var matches = state.docs.filter(function (doc) { return doc.docId === docId; });
+      if (matches.length !== 1) {
+        throw new Error(
+          "Document was created, but the refreshed report did not contain one exact target."
+        );
+      }
+      publishDocumentsRefresh(state, "document-created-refresh");
+      writeSubdocUrl(state, docId, "replace");
+      return renderDetailById(state, docId, { cache: "no-store" });
+    })
+    .then(function () {
+      if (state.validDetailId !== docId) {
+        throw new Error(
+          "Document was created, but its report detail could not be opened."
+        );
+      }
+      return target;
+    });
 }
 
 function returnFromDeletedDetail(state, docId) {
@@ -779,6 +844,7 @@ export function mountDocsSubscopeReport(context) {
     parentDocId: cleanString(context && context.doc && context.doc.doc_id),
     subScope: subScope,
     subScopeId: subScopeIdValue,
+    manifestUrl: url,
     byIdUrlBase: byIdUrlBase(subScope),
     docs: [],
     docIds: [],
@@ -829,10 +895,7 @@ export function mountDocsSubscopeReport(context) {
   publishState(state, "loading", null, "report-loading");
   return fetchJson(url, "Failed to load docs sub-scope manifest").then(manifestPayload)
     .then(function (manifest) {
-      state.docs = manifest.documents;
-      state.groups = manifest.groups;
-      configureGroupControls(state);
-      state.docIds = state.docs.map(function (doc) { return doc.docId; });
+      applyManifest(state, manifest);
       notifyContribution(state, {
         type: "refresh",
         documents: state.docs.map(documentRecord),

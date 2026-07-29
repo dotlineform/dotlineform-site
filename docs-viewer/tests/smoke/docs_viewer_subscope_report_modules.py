@@ -2064,6 +2064,262 @@ def assert_manage_report_bridge(page: Page) -> None:
     }
 
 
+def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+          const bridge = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-document-reports.js'
+          );
+          history.replaceState({}, '', '/?scope=studio&doc=parent-doc');
+          document.body.innerHTML = (
+            '<section class="docsViewer"><main id="create-report"></main></section>'
+          );
+          window.syntheticCreatedDocs = [];
+          const fetches = [];
+          window.fetch = async (input, options = {}) => {
+            const url = new URL(String(input), window.location.href);
+            fetches.push({
+              path: url.pathname,
+              cache: options.cache || 'default'
+            });
+            const response = payload => ({
+              ok: true,
+              status: 200,
+              json: async () => payload
+            });
+            if (url.pathname === '/reports-registry.json') {
+              return response({
+                reports: [{
+                  report_id: 'docs_subscope',
+                  title: 'Sub-scope',
+                  default_access: 'local',
+                  loader_id: 'docs_subscope'
+                }]
+              });
+            }
+            if (url.pathname === '/capabilities') {
+              return response({ ok: true, capabilities: {} });
+            }
+            if (url.pathname === '/synthetic/manifest.json') {
+              return response({ docs: window.syntheticCreatedDocs });
+            }
+            if (url.pathname.startsWith('/synthetic/by-id/')) {
+              const docId = decodeURIComponent(
+                url.pathname.split('/').pop().replace(/\\.json$/, '')
+              );
+              const record = window.syntheticCreatedDocs.find(
+                doc => doc.doc_id === docId
+              );
+              if (!record) {
+                return { ok: false, status: 404, json: async () => ({}) };
+              }
+              return response({
+                doc_id: record.doc_id,
+                title: record.title,
+                content_html: `<h2>${record.title}</h2>`
+              });
+            }
+            return { ok: false, status: 404, json: async () => ({}) };
+          };
+
+          const createCalls = [];
+          const releases = [];
+          const states = [];
+          const statuses = [];
+          const content = document.querySelector('#create-report');
+          await bridge.mountDocsViewerManageDocumentExtras({
+            appContext: { kind: 'manage' },
+            content,
+            doc: { doc_id: 'parent-doc' },
+            managementContext: true,
+            managementDocumentActions: {
+              createSubscopeDocument: (collection, options) => {
+                createCalls.push({
+                  collection,
+                  refreshAndSelectType: typeof options.refreshAndSelect
+                });
+                return new Promise((resolve, reject) => {
+                  releases.push(record => {
+                    window.syntheticCreatedDocs.push(record);
+                    const target = {
+                      scope: collection.scope,
+                      sub_scope: collection.sub_scope,
+                      doc_id: record.doc_id
+                    };
+                    Promise.resolve(options.refreshAndSelect(target))
+                      .then(resolve, reject);
+                  });
+                });
+              }
+            },
+            managementService: { baseUrl: window.location.origin },
+            payload: {
+              viewer_report: 'docs_subscope',
+              viewer_report_access: 'local',
+              viewer_report_subscope: 'tags'
+            },
+            publishSubscopeReportState: state => states.push(state),
+            routeContext: { reportRegistryUrl: '/reports-registry.json' },
+            setStatus: (message, isError) => {
+              statuses.push({ message, isError });
+            },
+            scopeConfigState: {
+              scopeConfigs: [{
+                scope_id: 'studio',
+                subScopes: [{
+                  subScope: 'tags',
+                  title: 'Tags',
+                  manifestUrl: '/synthetic/manifest.json',
+                  byIdUrlBase: '/synthetic/by-id'
+                }]
+              }]
+            },
+            viewerScope: 'studio'
+          });
+
+          const waitFor = predicate => new Promise(resolve => {
+            const poll = () => {
+              if (predicate()) {
+                resolve();
+                return;
+              }
+              setTimeout(poll, 0);
+            };
+            poll();
+          });
+          const newButton = () => content.querySelector(
+            '[data-docs-subscope-new="true"]'
+          );
+          const initial = {
+            actionsDisabled: content.querySelector(
+              '[data-docs-subscope-actions]'
+            ).disabled,
+            contributionHosts: content.querySelectorAll(
+              '[data-report-contribution-host="list-toolbar"]'
+            ).length,
+            emptyText: content.querySelector(
+              '.docsViewerReport__empty'
+            ).textContent,
+            newButtons: content.querySelectorAll(
+              '[data-docs-subscope-new="true"]'
+            ).length,
+            rowIds: Array.from(content.querySelectorAll(
+              '[data-report-subdoc-id]'
+            )).map(row => row.dataset.reportSubdocId)
+          };
+
+          newButton().click();
+          const inFlight = {
+            ariaLabel: newButton().getAttribute('aria-label'),
+            calls: createCalls.length,
+            disabled: newButton().disabled
+          };
+          newButton().click();
+          inFlight.callsAfterSecondClick = createCalls.length;
+          releases[0]({
+            doc_id: 'created-first',
+            title: 'Created first',
+            viewable: false
+          });
+          await waitFor(() => (
+            content.querySelector('.docsReportDetail')
+              ?.dataset.reportSubdocId === 'created-first'
+          ));
+          const first = {
+            calls: createCalls.slice(),
+            detailText: content.querySelector(
+              '.docsReportDetail__body'
+            ).textContent,
+            state: states.at(-1),
+            subdoc: new URLSearchParams(location.search).get('subdoc')
+          };
+
+          content.querySelector('.docsReportDetail__back').click();
+          await waitFor(() => content.querySelector(
+            '.docsViewerReport'
+          )?.dataset.reportState === 'list');
+          newButton().click();
+          releases[1]({
+            doc_id: 'created-second',
+            title: 'Created second',
+            viewable: false
+          });
+          await waitFor(() => (
+            content.querySelector('.docsReportDetail')
+              ?.dataset.reportSubdocId === 'created-second'
+          ));
+          const second = {
+            calls: createCalls.slice(),
+            detailText: content.querySelector(
+              '.docsReportDetail__body'
+            ).textContent,
+            refreshEvents: states.filter(state => (
+              state.reason === 'detail-loaded'
+            )).length,
+            subdoc: new URLSearchParams(location.search).get('subdoc')
+          };
+
+          return {
+            fetches: fetches.filter(record => (
+              record.path.startsWith('/synthetic/')
+            )),
+            first,
+            inFlight,
+            initial,
+            second,
+            statuses
+          };
+        }"""
+    )
+
+    assert result["initial"] == {
+        "actionsDisabled": True,
+        "contributionHosts": 1,
+        "emptyText": "No documents are available in Tags.",
+        "newButtons": 1,
+        "rowIds": [],
+    }
+    assert result["inFlight"] == {
+        "ariaLabel": "New",
+        "calls": 1,
+        "disabled": True,
+        "callsAfterSecondClick": 1,
+    }
+    expected_collection = {"scope": "studio", "sub_scope": "tags"}
+    expected_call = {
+        "collection": expected_collection,
+        "refreshAndSelectType": "function",
+    }
+    assert result["first"] == {
+        "calls": [expected_call],
+        "detailText": "Created first",
+        "state": {
+            "state": "detail",
+            "reason": "detail-loaded",
+            "parentTarget": {"scope": "studio", "doc_id": "parent-doc"},
+            "subdocTarget": {
+                **expected_collection,
+                "doc_id": "created-first",
+            },
+        },
+        "subdoc": "created-first",
+    }
+    assert result["second"] == {
+        "calls": [expected_call, expected_call],
+        "detailText": "Created second",
+        "refreshEvents": 2,
+        "subdoc": "created-second",
+    }
+    assert result["statuses"] == []
+    assert result["fetches"] == [
+        {"path": "/synthetic/manifest.json", "cache": "default"},
+        {"path": "/synthetic/manifest.json", "cache": "no-store"},
+        {"path": "/synthetic/by-id/created-first.json", "cache": "no-store"},
+        {"path": "/synthetic/manifest.json", "cache": "no-store"},
+        {"path": "/synthetic/by-id/created-second.json", "cache": "no-store"},
+    ]
+
+
 def assert_report_delete_reconciliation(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -2661,6 +2917,7 @@ def main(argv: list[str] | None = None) -> int:
                 assert_filter_projection(page)
                 assert_report_module(page)
                 assert_subscope_selection_contribution(page)
+                assert_subscope_create_contribution_and_report_refresh(page)
                 assert_report_delete_reconciliation(page)
                 assert_delete_workflow(page)
                 assert_manage_report_bridge(page)

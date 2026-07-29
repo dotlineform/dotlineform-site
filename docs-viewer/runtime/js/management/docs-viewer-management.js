@@ -313,7 +313,7 @@ export function initDocsViewerManagement(context) {
   }
 
   function openCreatedDocumentSource(target) {
-    sourceSessionReportActive = false;
+    sourceSessionReportActive = Boolean(subscopeReportState);
     return requestCommittedDocumentSource(target, function (modeId, options) {
       return context.requestDocumentMode(modeId, options);
     });
@@ -1019,6 +1019,7 @@ export function initDocsViewerManagement(context) {
   return {
     applyConfig: applyConfig,
     canDragCurrentDoc: canDragCurrentDoc,
+    createSubscopeDocument: actionController.handleCreateSubscopeDocument,
     handleDocumentKeydown: eventRouter.handleDocumentKeydown,
     handleAppManagementControl: handleAppManagementControl,
     handleIndexViewChange: indexController.handleViewChange,

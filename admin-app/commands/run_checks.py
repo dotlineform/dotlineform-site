@@ -621,7 +621,16 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "--site-root",
                 str(REPO_ROOT),
             ),
-            "Smoke-check managed sub-scope inventory, validated report targets, public separation, and toolbar state projection.",
+            "Smoke-check managed sub-scope inventory, validated report targets, report New refresh/navigation, public separation, and toolbar state projection.",
+        ),
+        CheckCommand(
+            "docs-viewer-subscope-create-workflow-route-smoke",
+            (
+                sys.executable,
+                "docs-viewer/tests/smoke/docs_viewer_subscope_create_workflow_route.py",
+            ),
+            "Smoke-check real manage-route report New, exact create and Source targets, Return, Save/Rebuild, and isolated discovery boundaries.",
+            isolated_projects_base=True,
         ),
         CheckCommand(
             "docs-viewer-subscope-delete-workflow-route-smoke",

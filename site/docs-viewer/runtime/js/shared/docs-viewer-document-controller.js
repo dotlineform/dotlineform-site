@@ -57,6 +57,7 @@ export function initDocsViewerDocumentController(context) {
       content: content,
       doc: doc,
       collectionProvider: context.collectionProvider,
+      managementDocumentActions: context.managementDocumentActions || null,
       managementService: context.managementService || null,
       managementContext: managementContextActive(),
       payload: payload,

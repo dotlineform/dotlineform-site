@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ada5af81c98b3cd2c95bc7a38af016f4",
-    "generated_at_utc": "2026-07-29T17:35:22Z",
+    "version": "blake2b-f32db623f1cc724e411ecca1e1bebcd0",
+    "generated_at_utc": "2026-07-29T18:23:28Z",
     "count": 230
   },
   "entries": [
@@ -3485,10 +3485,10 @@
       "kind": "doc",
       "title": "New Document Source Entry Delivery",
       "href": "/docs/?scope=studio&doc=d-20260729-180308-c92eed",
-      "last_updated": "2026-07-29 18:34:57",
+      "last_updated": "2026-07-29 19:23:04",
       "parent_id": "d-20260726-224323-eb0a65",
       "parent_title": "Manage Sub-Scope Documents",
-      "display_meta": "2026-07-29 18:34:57 • Manage Sub-Scope Documents",
+      "display_meta": "2026-07-29 19:23:04 • Manage Sub-Scope Documents",
       "search_terms": [
         "new document source entry delivery",
         "new",
@@ -3501,16 +3501,16 @@
         "sub",
         "scope",
         "documents",
-        "2026-07-29 18:34:57",
+        "2026-07-29 19:23:04",
         "2026",
         "07",
         "29",
-        "18",
-        "34",
-        "57",
+        "19",
+        "23",
+        "04",
         "d-20260729-180308-c92eed"
       ],
-      "search_text": "new document source entry delivery new document source entry delivery manage sub-scope documents manage sub scope documents 2026-07-29 18:34:57 2026 07 29 18 34 57 d-20260729-180308-c92eed"
+      "search_text": "new document source entry delivery new document source entry delivery manage sub-scope documents manage sub scope documents 2026-07-29 19:23:04 2026 07 29 19 23 04 d-20260729-180308-c92eed"
     },
     {
       "id": "d-20260727-111354-3ac5f0",

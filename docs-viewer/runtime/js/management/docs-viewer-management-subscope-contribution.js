@@ -62,10 +62,14 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
   var onPreparePackage = typeof options.onPreparePackage === "function"
     ? options.onPreparePackage
     : null;
+  var onCreateDocument = typeof options.onCreateDocument === "function"
+    ? options.onCreateDocument
+    : null;
   var managementContext = Boolean(options.managementContext);
   var selectionOwner = options.selectionOwner || createDocsViewerSubscopeSelectionOwner();
   var currentDocuments = [];
   var listToolbar = null;
+  var createInFlight = false;
   var prepareInFlight = false;
   var rowSelections = new Map();
   var activeDeleteWorkflow = null;
@@ -122,6 +126,15 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
     if (root) root.dataset.reportSubscopeSelection = active ? "active" : "inactive";
     if (!listToolbar) return snapshot;
 
+    if (listToolbar.createButton) {
+      listToolbar.createButton.disabled = createInFlight;
+      listToolbar.createButton.textContent = "📄";
+      if (createInFlight) {
+        listToolbar.createButton.setAttribute("aria-busy", "true");
+      } else {
+        listToolbar.createButton.removeAttribute("aria-busy");
+      }
+    }
     listToolbar.actionsButton.disabled = !available || eligible.length === 0;
     listToolbar.selectionControl.hidden = !active;
     listToolbar.selectAllButton.disabled = !active || allSelected || eligible.length === 0;
@@ -260,6 +273,20 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
     var root = documentRef.createElement("div");
     root.className = "docsViewerReport__subscopeSelectionToolbar";
 
+    var createButton = null;
+    if (managementContext && onCreateDocument) {
+      createButton = documentRef.createElement("button");
+      createButton.className = (
+        "docsViewerReport__subscopeActionsButton "
+        + "docsViewerReport__subscopeNewButton"
+      );
+      createButton.type = "button";
+      createButton.dataset.docsSubscopeNew = "true";
+      createButton.setAttribute("aria-label", "New");
+      createButton.title = "New";
+      createButton.textContent = "📄";
+    }
+
     var actionsHost = documentRef.createElement("div");
     actionsHost.className = "docsViewer__actionsMenuHost docsViewerReport__subscopeActionsHost";
     var actionsButton = documentRef.createElement("button");
@@ -300,7 +327,10 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
     var clearButton = selectionCommandButton(documentRef, "clear", "Clear");
     var doneButton = selectionCommandButton(documentRef, "done", "Done");
     selectionControl.replaceChildren(selectAllButton, clearButton, doneButton);
-    root.replaceChildren(actionsHost, selectionControl);
+    root.replaceChildren.apply(
+      root,
+      (createButton ? [createButton] : []).concat([actionsHost, selectionControl])
+    );
     host.appendChild(root);
 
     function handleDocumentClick(event) {
@@ -316,6 +346,7 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
     listToolbar = {
       actionsButton: actionsButton,
       clearButton: clearButton,
+      createButton: createButton,
       document: documentRef,
       doneButton: doneButton,
       handleDocumentClick: handleDocumentClick,
@@ -329,6 +360,36 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
     documentRef.addEventListener("click", handleDocumentClick);
     documentRef.addEventListener("keydown", handleDocumentKeydown);
 
+    if (createButton) {
+      createButton.addEventListener("click", function () {
+        if (createButton.disabled || createInFlight) return;
+        var collection = selectionOwner.collection();
+        createInFlight = true;
+        projectSelection();
+        Promise.resolve(onCreateDocument(
+          {
+            scope: collection.scope,
+            sub_scope: collection.sub_scope
+          },
+          {
+            refreshAndOpenDocument: settings.refreshAndOpenDocument,
+            restoreFocus: createButton
+          }
+        )).catch(function (error) {
+          if (typeof options.setStatus === "function") {
+            options.setStatus(
+              error && error.message
+                ? error.message
+                : "Sub-scope document creation failed.",
+              true
+            );
+          }
+        }).finally(function () {
+          createInFlight = false;
+          projectSelection();
+        });
+      });
+    }
     actionsButton.addEventListener("click", function (event) {
       event.stopPropagation();
       if (actionsButton.disabled) return;

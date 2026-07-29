@@ -88,6 +88,51 @@ function managementModalRoot(settings) {
     : null;
 }
 
+function createSubscopeDocumentAction(settings) {
+  var actions = settings && settings.managementDocumentActions;
+  return actions && typeof actions.createSubscopeDocument === "function"
+    ? actions.createSubscopeDocument
+    : null;
+}
+
+function openSubscopeCreate(settings, parent, subScope, request, context) {
+  var collection = request && typeof request === "object" ? request : {};
+  var keys = Object.keys(collection).sort();
+  if (
+    keys.length !== 2
+    || keys[0] !== "scope"
+    || keys[1] !== "sub_scope"
+    || cleanString(collection.scope).toLowerCase() !== parent.scope
+    || cleanString(collection.sub_scope).toLowerCase() !== subScope
+  ) {
+    return Promise.reject(new Error(
+      "Sub-scope create collection did not match the mounted report."
+    ));
+  }
+  var refreshAndOpenDocument = context
+    && typeof context.refreshAndOpenDocument === "function"
+    ? context.refreshAndOpenDocument
+    : null;
+  if (!refreshAndOpenDocument) {
+    return Promise.reject(new Error(
+      "Sub-scope create report refresh is unavailable."
+    ));
+  }
+  var action = createSubscopeDocumentAction(settings);
+  if (!action) {
+    return Promise.reject(new Error("Sub-scope document creation is unavailable."));
+  }
+  return action(
+    {
+      scope: parent.scope,
+      sub_scope: subScope
+    },
+    {
+      refreshAndSelect: refreshAndOpenDocument
+    }
+  );
+}
+
 var preparePackageWorkflowRequest = null;
 
 function loadPreparePackageWorkflow() {
@@ -184,10 +229,26 @@ export function mountDocsViewerManageDocumentExtras(context) {
     reason: "report-mount"
   });
   var scopeConfig = settings.scopeConfigState || {};
+  var createAction = createSubscopeDocumentAction(settings);
   var contribution = createDocsViewerManagementSubscopeContribution({
     clientOptions: managementClientOptions(settings),
     managementContext: Boolean(settings.managementContext),
     nonViewableEmoji: cleanString(scopeConfig.docNonViewableEmoji),
+    onCreateDocument: (
+      settings.managementContext
+      && reportManagementBaseUrl
+      && createAction
+    )
+      ? function (request, context) {
+          return openSubscopeCreate(
+            settings,
+            parent,
+            subScope,
+            request,
+            context
+          );
+        }
+      : null,
     onLifecycleEvent: function (event) {
       if (event && event.type === "state") {
         publishReportState(settings, parent, subScope, event);

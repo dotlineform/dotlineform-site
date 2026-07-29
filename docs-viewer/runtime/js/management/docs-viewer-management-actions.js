@@ -26,6 +26,7 @@ import {
 var ACTION_TEXT = {
   cancelButton: "Cancel",
   createDocTitle: "New doc title",
+  createSubscopeDocTitle: "New",
   createChildDocTitle: "New child title",
   createSiblingDocTitle: "New sibling title",
   createDocLabel: "title",
@@ -79,6 +80,28 @@ export function committedDocumentCreatePayload(error) {
   return payload && payload.committed === true && payload.retry_create === false
     ? payload
     : null;
+}
+
+export function normalizeManagedSubscopeCollection(value) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw new Error("Managed sub-scope collection must be an object.");
+  }
+  var keys = Object.keys(value).sort();
+  if (
+    keys.length !== 2
+    || keys[0] !== "scope"
+    || keys[1] !== "sub_scope"
+  ) {
+    throw new Error("Managed sub-scope collection must contain exactly scope and sub_scope.");
+  }
+  var scope = String(value.scope || "").trim().toLowerCase();
+  var subScope = String(value.sub_scope || "").trim().toLowerCase();
+  if (!scope) throw new Error("Managed sub-scope collection scope is required.");
+  if (!subScope) throw new Error("Managed sub-scope collection sub_scope is required.");
+  return Object.freeze({
+    scope: scope,
+    sub_scope: subScope
+  });
 }
 
 export function requestCommittedDocumentSource(target, requestDocumentMode) {
@@ -318,15 +341,19 @@ export function createDocsViewerManagementActionController(options) {
       : Promise.resolve(target);
   }
 
-  function createDocumentAndOpenSource(payload) {
+  function createDocumentAndOpenSource(payload, optionsForCreate) {
+    var createSettings = optionsForCreate || {};
     return runInteractiveDocumentCreate({
       create: function () {
-        return createManagedDoc(payload, managementClientOptions());
+        return createManagedDoc(
+          payload,
+          createSettings.clientOptions || managementClientOptions()
+        );
       },
-      refreshAndSelect: function (target) {
+      refreshAndSelect: createSettings.refreshAndSelect || function (target) {
         return reloadDocsIndex(target.doc_id, "");
       },
-      openSource: openCreatedDocumentSource
+      openSource: createSettings.openSource || openCreatedDocumentSource
     })
       .then(function (result) {
         setManagementMessage("", false);
@@ -340,6 +367,20 @@ export function createDocsViewerManagementActionController(options) {
         setManagementBusy(false);
         renderManagementUi();
       });
+  }
+
+  function openCreateTitleModal(title, optionsForModal) {
+    var modalSettings = optionsForModal || {};
+    return openDocsViewerTextInputModal({
+      root: root,
+      title: title,
+      label: ACTION_TEXT.createDocLabel,
+      initialValue: ACTION_TEXT.createDocDefaultTitle,
+      defaultValue: ACTION_TEXT.createDocDefaultTitle,
+      compactLabel: Boolean(modalSettings.compactLabel),
+      primaryLabel: ACTION_TEXT.createDocButton,
+      cancelLabel: ACTION_TEXT.cancelButton
+    });
   }
 
   function committedMoveRecord(response, expectedDocId) {
@@ -409,15 +450,7 @@ export function createDocsViewerManagementActionController(options) {
   }
 
   async function handleCreateDoc() {
-    var titleResult = await openDocsViewerTextInputModal({
-      root: root,
-      title: ACTION_TEXT.createDocTitle,
-      label: ACTION_TEXT.createDocLabel,
-      initialValue: ACTION_TEXT.createDocDefaultTitle,
-      defaultValue: ACTION_TEXT.createDocDefaultTitle,
-      primaryLabel: ACTION_TEXT.createDocButton,
-      cancelLabel: ACTION_TEXT.cancelButton
-    });
+    var titleResult = await openCreateTitleModal(ACTION_TEXT.createDocTitle);
     if (!titleResult || !titleResult.confirmed) return;
 
     var title = String(titleResult.value || "").trim() || ACTION_TEXT.createDocDefaultTitle;
@@ -438,15 +471,11 @@ export function createDocsViewerManagementActionController(options) {
     var baseDoc = contextDoc ? actionTargetDoc(actionId, contextDoc.doc_id) : null;
     if (!baseDoc) return;
 
-    var titleResult = await openDocsViewerTextInputModal({
-      root: root,
-      title: kind === "child" ? ACTION_TEXT.createChildDocTitle : ACTION_TEXT.createSiblingDocTitle,
-      label: ACTION_TEXT.createDocLabel,
-      initialValue: ACTION_TEXT.createDocDefaultTitle,
-      defaultValue: ACTION_TEXT.createDocDefaultTitle,
-      primaryLabel: ACTION_TEXT.createDocButton,
-      cancelLabel: ACTION_TEXT.cancelButton
-    });
+    var titleResult = await openCreateTitleModal(
+      kind === "child"
+        ? ACTION_TEXT.createChildDocTitle
+        : ACTION_TEXT.createSiblingDocTitle
+    );
     if (!titleResult || !titleResult.confirmed) return;
 
     var title = String(titleResult.value || "").trim() || ACTION_TEXT.createDocDefaultTitle;
@@ -464,6 +493,45 @@ export function createDocsViewerManagementActionController(options) {
     setManagementMessage("Creating doc...", false);
 
     return createDocumentAndOpenSource(payload);
+  }
+
+  async function handleCreateSubscopeDocument(collection, optionsForCreate) {
+    var targetCollection = normalizeManagedSubscopeCollection(collection);
+    var createSettings = optionsForCreate || {};
+    var currentScope = String(
+      callbacks.viewerScope ? callbacks.viewerScope() : ""
+    ).trim().toLowerCase();
+    if (currentScope !== targetCollection.scope) {
+      throw new Error("Mounted sub-scope collection does not match the active scope.");
+    }
+    if (typeof createSettings.refreshAndSelect !== "function") {
+      throw new Error("Sub-scope document creation requires report refresh ownership.");
+    }
+    if (management.managementBusy) {
+      throw new Error("Docs management is busy.");
+    }
+
+    var titleResult = await openCreateTitleModal(
+      ACTION_TEXT.createSubscopeDocTitle,
+      { compactLabel: true }
+    );
+    if (!titleResult || !titleResult.confirmed) return null;
+
+    var title = String(titleResult.value || "").trim() || ACTION_TEXT.createDocDefaultTitle;
+    setManagementBusy(true);
+    setManagementMessage("Creating doc...", false);
+    return createDocumentAndOpenSource(
+      {
+        title: title,
+        sub_scope: targetCollection.sub_scope
+      },
+      {
+        clientOptions: Object.assign({}, managementClientOptions(), {
+          scope: targetCollection.scope
+        }),
+        refreshAndSelect: createSettings.refreshAndSelect
+      }
+    );
   }
 
   function handleEditMetadataSave(target, payload) {
@@ -842,6 +910,7 @@ export function createDocsViewerManagementActionController(options) {
     handleCopyLink: handleCopyLink,
     handleCreateDoc: handleCreateDoc,
     handleCreateRelatedDoc: handleCreateRelatedDoc,
+    handleCreateSubscopeDocument: handleCreateSubscopeDocument,
     handleDeleteDoc: handleDeleteDoc,
     handleEditMetadataSave: handleEditMetadataSave,
     handleMarkdownSave: handleMarkdownSave,
