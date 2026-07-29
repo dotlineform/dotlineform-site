@@ -23,9 +23,99 @@ for path in (STUDIO_SERVER_DIR,):
         sys.path.insert(0, text)
 
 from studio_app_server import StudioAppServer  # noqa: E402
+from tags import tag_document_creation  # noqa: E402
 
 
-def write_fixture_data(repo_root: Path) -> tuple[Path, Path, Path]:
+TREES_DOC_ID = "d-20260501-000000-000001"
+GROWTH_DOC_ID = "d-20260501-000001-000002"
+
+
+def write_fixture_docs(repo_root: Path) -> Path:
+    config_path = (
+        repo_root / "docs-viewer/config/scopes/docs_scopes.json"
+    )
+    config_path.parent.mkdir(parents=True)
+    config_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "docs_scopes_v3",
+                "scopes": [
+                    {
+                        "scope_id": "analysis",
+                        "scope_type": "local",
+                        "meta": "analysis",
+                        "scope_root": {
+                            "provider": "repository",
+                            "path": "docs-viewer/scopes/analysis",
+                        },
+                        "source": {"build_media": {}},
+                        "published": {
+                            "media": {
+                                "img": {
+                                    "reference_prefix": "docs/analysis/img",
+                                    "served_path_prefix": "/docs/media/analysis/img",
+                                    "build_inputs": [],
+                                }
+                            }
+                        },
+                        "public_projection": None,
+                        "viewer_base_url": "/docs/",
+                        "include_scope_param": True,
+                        "default_doc_id": "",
+                        "non_loadable_doc_ids": [],
+                        "manage_only_tree_root_ids": [],
+                        "allow_unresolved_parent_ids": False,
+                        "sub_scopes": [
+                            {
+                                "sub_scope": "tags",
+                                "title": "Tags",
+                                "ui_statuses": [],
+                                "document_groups": [
+                                    "subject",
+                                    "form",
+                                    "theme",
+                                ],
+                                "public_projection": None,
+                            }
+                        ],
+                    }
+                ],
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    documents_root = (
+        repo_root
+        / "docs-viewer/scopes/analysis/source/sub-scopes/tags/documents"
+    )
+    documents_root.mkdir(parents=True)
+    for doc_id, tag_id, group, description in (
+        (TREES_DOC_ID, "trees", "subject", "Trees"),
+        (GROWTH_DOC_ID, "growth", "theme", "Growth"),
+    ):
+        (documents_root / f"{doc_id}.md").write_text(
+            f"""---
+doc_id: {doc_id}
+title: {tag_id}
+added_date: "2026-05-01 00:00:00"
+last_updated: 2026-05-01
+group: {group}
+parent_id: ""
+viewable: true
+---
+# {tag_id}
+
+{description}
+""",
+            encoding="utf-8",
+        )
+    return documents_root
+
+
+def write_fixture_data(repo_root: Path) -> tuple[Path, Path, Path, Path]:
+    documents_root = write_fixture_docs(repo_root)
     data_root = repo_root / "studio" / "data" / "canonical" / "tags"
     data_root.mkdir(parents=True)
     registry_path = data_root / "tag-registry.json"
@@ -42,12 +132,14 @@ def write_fixture_data(repo_root: Path) -> tuple[Path, Path, Path]:
     {
       "tag_id": "trees",
       "group": "subject",
-      "description": "Trees"
+      "description": "Trees",
+      "doc_id": "d-20260501-000000-000001"
     },
     {
       "tag_id": "growth",
       "group": "theme",
-      "description": "Growth"
+      "description": "Growth",
+      "doc_id": "d-20260501-000001-000002"
     }
   ]
 }
@@ -92,7 +184,7 @@ def write_fixture_data(repo_root: Path) -> tuple[Path, Path, Path]:
         REPO_ROOT / "studio" / "data" / "config" / "runtime" / "activity-contract.json",
         activity_contract_path,
     )
-    return registry_path, aliases_path, assignments_path
+    return registry_path, aliases_path, assignments_path, documents_root
 
 
 def post_json(url: str, payload: dict[str, object]) -> dict[str, object]:
@@ -108,7 +200,29 @@ def post_json(url: str, payload: dict[str, object]) -> dict[str, object]:
 def run() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         fixture_root = Path(tmp_dir)
-        registry_path, aliases_path, assignments_path = write_fixture_data(fixture_root)
+        registry_path, aliases_path, assignments_path, documents_root = (
+            write_fixture_data(fixture_root)
+        )
+        rebuild_calls: list[tuple[str, str]] = []
+        original_rebuild = (
+            tag_document_creation.write_rebuild.rebuild_sub_scope_outputs
+        )
+
+        def fixture_rebuild(
+            _repo_root: Path,
+            scope: str,
+            sub_scope: str,
+        ) -> dict[str, object]:
+            rebuild_calls.append((scope, sub_scope))
+            return {
+                "ok": True,
+                "scope": scope,
+                "sub_scope": sub_scope,
+            }
+
+        tag_document_creation.write_rebuild.rebuild_sub_scope_outputs = (
+            fixture_rebuild
+        )
         server = StudioAppServer(("127.0.0.1", 0), fixture_root)
         thread = Thread(target=server.serve_forever, daemon=True)
         thread.start()
@@ -164,6 +278,9 @@ def run() -> None:
             server.shutdown()
             server.server_close()
             thread.join(timeout=5)
+            tag_document_creation.write_rebuild.rebuild_sub_scope_outputs = (
+                original_rebuild
+            )
 
         registry = json.loads(registry_path.read_text(encoding="utf-8"))
         aliases = json.loads(aliases_path.read_text(encoding="utf-8"))
@@ -176,6 +293,29 @@ def run() -> None:
 
         if created.get("tag_id") != "renewal" or created.get("activity_log") != {"written_count": 1}:
             raise AssertionError(f"registry create failed: {created!r}")
+        created_doc_id = str(created.get("doc_id") or "")
+        created_source_path = documents_root / f"{created_doc_id}.md"
+        if created.get("document_target") != {
+            "scope": "analysis",
+            "sub_scope": "tags",
+            "doc_id": created_doc_id,
+        }:
+            raise AssertionError(
+                f"registry create document target failed: {created!r}"
+            )
+        if not created_source_path.is_file():
+            raise AssertionError(
+                f"registry create document missing: {created_source_path}"
+            )
+        created_source = created_source_path.read_text(encoding="utf-8")
+        if "group: theme" not in created_source or "Renewal" not in created_source:
+            raise AssertionError(
+                f"registry create document content failed: {created_source!r}"
+            )
+        if rebuild_calls != [("analysis", "tags")]:
+            raise AssertionError(
+                f"registry create rebuild failed: {rebuild_calls!r}"
+            )
         if len(activity_rows) != 1 or activity_rows[0].get("user_action_id") != "create-tag":
             raise AssertionError(f"registry create activity failed: {activity_rows!r}")
         if activity_rows[0].get("record_groups", {}).get("tags", {}).get("sample_ids") != ["renewal"]:
@@ -188,6 +328,10 @@ def run() -> None:
             raise AssertionError(f"registry delete did not rewrite assignments: {deleted!r}")
         if [row["tag_id"] for row in registry["tags"]] != ["growth", "renewal"]:
             raise AssertionError(f"registry delete did not leave expected tags: {registry!r}")
+        if registry["tags"][1].get("doc_id") != created_doc_id:
+            raise AssertionError(
+                f"registry create document identity was not retained: {registry!r}"
+            )
         if aliases["aliases"]["woodland"]["tags"] != ["growth"]:
             raise AssertionError(f"alias references were not rewritten: {aliases!r}")
         if assignments["series"]["series-a"].get("tags") != []:

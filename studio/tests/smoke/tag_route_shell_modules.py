@@ -8,6 +8,7 @@ from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
+import re
 from threading import Thread
 from urllib.parse import unquote, urlsplit
 
@@ -145,10 +146,14 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
                     "tag_id": "renewal",
                     "group": "theme",
                     "description": "Renewal",
+                    "doc_id": "d-20260729-120000-abcdef",
                     "added": 1,
                     "final_total": 2,
                     "updated_at_utc": "2026-07-27T12:00:00Z",
-                    "summary_text": "created tag renewal; final 2",
+                    "summary_text": (
+                        "created tag renewal with linked Analysis document "
+                        "d-20260729-120000-abcdef; final 2"
+                    ),
                 }
             ),
         )
@@ -183,7 +188,10 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
 
     assert result["ok"] is True
     assert result["mode"] == "post"
-    assert result["summary"] == "created tag renewal; final 2"
+    assert result["summary"] == (
+        "created tag renewal with linked Analysis document "
+        "d-20260729-120000-abcdef; final 2"
+    )
     assert captured["method"] == "POST"
     payload = captured["payload"]
     assert isinstance(payload, dict)
@@ -255,6 +263,49 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
     assert unavailable["mode"] == "patch"
     assert unavailable["switchToPatch"] is True
     assert "Missing service endpoint" in unavailable["message"]
+
+    patch_mode = page.evaluate(
+        """async () => {
+            const workflow = await import('/studio/app/frontend/js/tag-registry-workflow.js');
+            return workflow.createTagRegistryTag({
+                saveMode: 'patch',
+                newTagRow: {
+                    tag_id: 'renewal',
+                    group: 'theme',
+                    description: 'Renewal'
+                },
+                config: {}
+            });
+        }"""
+    )
+    assert patch_mode["ok"] is True
+    assert patch_mode["mode"] == "patch"
+    assert patch_mode["patchResult"]["kind"] == "warn"
+    assert patch_mode["patchResult"]["message"] == (
+        "Patch mode: linked Registry row and Analysis tag document prepared; "
+        "nothing has been written."
+    )
+    patch_payload = json.loads(patch_mode["patchResult"]["snippet"])
+    registry_patch = patch_payload["registry"]
+    patch_doc_id = registry_patch["append_row"]["doc_id"]
+    assert re.fullmatch(
+        r"d-\d{8}-\d{6}-[0-9a-f]{6}",
+        patch_doc_id,
+    )
+    assert registry_patch["path"] == (
+        "studio/data/canonical/tags/tag-registry.json"
+    )
+    assert registry_patch["append_row"]["tag_id"] == "renewal"
+    assert registry_patch["append_row"]["group"] == "theme"
+    assert patch_payload["document"]["path"].endswith(
+        f"/{patch_doc_id}.md"
+    )
+    assert f"doc_id: {patch_doc_id}" in patch_payload["document"]["source"]
+    assert "group: theme" in patch_payload["document"]["source"]
+    assert patch_payload["notice"].startswith("Nothing has been written")
+    assert patch_payload["rebuild"].endswith(
+        "--write --skip-browser-config"
+    )
 
 
 def assert_tag_alias_create_request(page: Page, base_url: str) -> None:

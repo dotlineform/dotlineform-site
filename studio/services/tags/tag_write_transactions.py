@@ -10,6 +10,18 @@ from pathlib import Path
 from typing import Any, Dict, Mapping
 
 
+def canonical_json_bytes(payload: Mapping[str, Any]) -> bytes:
+    return (
+        json.dumps(
+            payload,
+            ensure_ascii=False,
+            indent=2,
+            sort_keys=False,
+        )
+        + "\n"
+    ).encode("utf-8")
+
+
 def atomic_write(path: Path, payload: Mapping[str, Any]) -> None:
     target_path = path.resolve()
 

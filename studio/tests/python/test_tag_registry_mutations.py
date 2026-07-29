@@ -24,12 +24,16 @@ def row(
     tag_id: str,
     description: str = "",
     group: str = "subject",
+    doc_id: str = "",
 ) -> dict[str, str]:
-    return {
+    value = {
         "tag_id": tag_id,
         "group": group,
         "description": description,
     }
+    if doc_id:
+        value["doc_id"] = doc_id
+    return value
 
 
 def assignment_tag(tag_id: str, weight: float = 0.6) -> dict[str, Any]:
@@ -68,6 +72,7 @@ def test_create_registry_tag_adds_one_normalized_row() -> None:
         group=" Theme ",
         tag_id="Renewal",
         description="  Renewal cycle  ",
+        doc_id="d-20260729-120000-000003",
         now_utc=NOW,
     )
 
@@ -79,12 +84,14 @@ def test_create_registry_tag_adds_one_normalized_row() -> None:
             "tag_id": "renewal",
             "group": "theme",
             "description": "Renewal cycle",
+            "doc_id": "d-20260729-120000-000003",
             "updated_at_utc": NOW,
         },
         "created row",
     )
     assert_equal(updated["updated_at_utc"], NOW, "registry timestamp")
     assert_equal(stats["tag_id"], "renewal", "created tag id")
+    assert_equal(stats["doc_id"], "d-20260729-120000-000003", "created document id")
     assert_equal(stats["added"], 1, "created row count")
     assert_equal(stats["final_total"], 3, "final row count")
 
@@ -95,24 +102,64 @@ def test_create_registry_tag_guards() -> None:
         "tags": [row("trees")],
     }
     assert_raises_contains(
-        lambda: registry.create_registry_tag(payload, group="domain", tag_id="studio", description="", now_utc=NOW),
+        lambda: registry.create_registry_tag(
+            payload,
+            group="domain",
+            tag_id="studio",
+            description="",
+            doc_id="d-20260729-120000-000001",
+            now_utc=NOW,
+        ),
         "group must be one of",
         "invalid group",
     )
     assert_raises_contains(
-        lambda: registry.create_registry_tag(payload, group="subject", tag_id="Bad Slug", description="", now_utc=NOW),
+        lambda: registry.create_registry_tag(
+            payload,
+            group="subject",
+            tag_id="Bad Slug",
+            description="",
+            doc_id="d-20260729-120000-000001",
+            now_utc=NOW,
+        ),
         "tag_id must be slug-safe",
         "malformed tag id",
     )
     assert_raises_contains(
-        lambda: registry.create_registry_tag(payload, group="subject", tag_id="trees", description="", now_utc=NOW),
+        lambda: registry.create_registry_tag(
+            payload,
+            group="subject",
+            tag_id="trees",
+            description="",
+            doc_id="d-20260729-120000-000001",
+            now_utc=NOW,
+        ),
         "tag_id already exists",
         "duplicate tag id",
     )
     assert_raises_contains(
-        lambda: registry.create_registry_tag(payload, group="subject", tag_id="canopy", description={"bad": True}, now_utc=NOW),
+        lambda: registry.create_registry_tag(
+            payload,
+            group="subject",
+            tag_id="canopy",
+            description={"bad": True},
+            doc_id="d-20260729-120000-000001",
+            now_utc=NOW,
+        ),
         "description must be a string",
         "malformed description",
+    )
+    assert_raises_contains(
+        lambda: registry.create_registry_tag(
+            payload,
+            group="subject",
+            tag_id="canopy",
+            description="",
+            doc_id="",
+            now_utc=NOW,
+        ),
+        "doc_id must not be empty",
+        "missing document id",
     )
 
 

@@ -191,7 +191,8 @@ export const DEFAULT_TAG_UI_TEXT = {
     tag_slug_required: "Tag is required.",
     tag_slug_invalid: "Tag must be lowercase letters, numbers, or hyphens.",
     tag_exists_warning: "Tag already exists.",
-    server_create_failed: "Server create failed; switched to patch mode. {message}",
+    server_create_failed: "Server create failed; switched to two-source patch mode. {message}",
+    create_failed: "Create failed.",
     local_delete_required: "Local server is required for delete.",
     delete_impact_unavailable_local: "Delete impact: unavailable (local server required).",
     delete_impact_unavailable: "Delete impact: unavailable.",
@@ -220,6 +221,6 @@ export const DEFAULT_TAG_UI_TEXT = {
     patch_copy_success: "Patch snippet copied to clipboard.",
     patch_copy_failed: "Copy failed. Select and copy the snippet manually.",
     patch_demote_message: "Patch mode: section snippets prepared for demoting \"{tag_id}\".",
-    patch_create_message: "Patch mode: new tag row prepared for studio/data/canonical/tags/tag-registry.json tags[]."
+    patch_create_message: "Patch mode: linked Registry row and Analysis tag document prepared; nothing has been written."
   }
 };

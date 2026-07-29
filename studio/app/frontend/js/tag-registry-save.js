@@ -63,17 +63,80 @@ export function buildManualPatchForDemote(tagId, aliasTargets) {
   };
 }
 
-export function buildManualPatchForCreateTag(tagRow) {
+function localDocumentTimestamp(date = new Date()) {
+  const part = (value) => String(value).padStart(2, "0");
+  return [
+    `${date.getFullYear()}-${part(date.getMonth() + 1)}-${part(date.getDate())}`,
+    `${part(date.getHours())}:${part(date.getMinutes())}:${part(date.getSeconds())}`
+  ].join(" ");
+}
+
+function randomDocumentSuffix() {
+  const bytes = new Uint8Array(3);
+  globalThis.crypto.getRandomValues(bytes);
+  return Array.from(bytes, (value) => value.toString(16).padStart(2, "0")).join("");
+}
+
+export function buildManualPatchForCreateTag(tagRow, options = {}) {
   const normalizedTagId = normalize(tagRow && tagRow.tag_id);
+  const group = normalize(tagRow && tagRow.group);
+  const description = String((tagRow && tagRow.description) || "").trim();
+  const addedDate = String(options.addedDate || localDocumentTimestamp()).trim();
+  const suffix = String(options.suffix || randomDocumentSuffix()).trim();
+  const updatedAtUtc = String(options.updatedAtUtc || utcTimestamp()).trim();
+  const dateParts = addedDate.match(/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/);
+  if (!dateParts || !/^[0-9a-f]{6}$/.test(suffix)) {
+    throw new Error("Could not allocate manual patch document identity.");
+  }
+  const docId = [
+    "d",
+    dateParts.slice(1, 4).join(""),
+    dateParts.slice(4, 7).join(""),
+    suffix
+  ].join("-");
+  const documentPath = `docs-viewer/scopes/analysis/source/sub-scopes/tags/documents/${docId}.md`;
+  const documentBody = description
+    ? `# ${normalizedTagId}\n\n${description}\n`
+    : `# ${normalizedTagId}\n`;
+  const documentSource = [
+    "---",
+    `doc_id: ${docId}`,
+    `title: ${JSON.stringify(normalizedTagId)}`,
+    `added_date: ${JSON.stringify(addedDate)}`,
+    `last_updated: ${dateParts.slice(1, 4).join("-")}`,
+    `group: ${group}`,
+    'parent_id: ""',
+    "viewable: true",
+    "---",
+    documentBody
+  ].join("\n");
   const snippet = JSON.stringify(
-    [
-      {
-        tag_id: normalizedTagId,
-        group: normalize(tagRow && tagRow.group),
-        description: String((tagRow && tagRow.description) || "").trim(),
-        updated_at_utc: utcTimestamp()
-      }
-    ],
+    {
+      notice: "Nothing has been written. Apply the Registry and Markdown changes together.",
+      guards: [
+        `Refuse if tag_id already exists: ${normalizedTagId}`,
+        `Refuse if doc_id or destination already exists: ${docId}`
+      ],
+      registry: {
+        path: "studio/data/canonical/tags/tag-registry.json",
+        root_updated_at_utc: updatedAtUtc,
+        append_row: {
+          tag_id: normalizedTagId,
+          group,
+          description,
+          doc_id: docId,
+          updated_at_utc: updatedAtUtc
+        }
+      },
+      document: {
+        path: documentPath,
+        source: documentSource
+      },
+      rebuild: [
+        "docs-viewer/build/build_docs.py --scope analysis --sub-scope tags",
+        "--write --skip-browser-config"
+      ].join(" ")
+    },
     null,
     2
   );
@@ -82,7 +145,7 @@ export function buildManualPatchForCreateTag(tagRow) {
     message: registryText(
       null,
       "patch_create_message",
-      "Patch mode: new tag row prepared for studio/data/canonical/tags/tag-registry.json tags[]."
+      "Patch mode: linked Registry row and Analysis tag document prepared; nothing has been written."
     ),
     snippet
   };
@@ -91,7 +154,11 @@ export function buildManualPatchForCreateTag(tagRow) {
 export function buildCreateSummary(response) {
   const summaryText = String(response.summary_text || "").trim();
   if (summaryText) return summaryText;
-  return `created tag ${normalize(response.tag_id || "")}; final ${Number(response.final_total || 0)}`;
+  return [
+    `created tag ${normalize(response.tag_id || "")}`,
+    `linked Analysis document ${normalize(response.doc_id || "")}`,
+    `final ${Number(response.final_total || 0)}`
+  ].join("; ");
 }
 
 export function buildMutationSummary(response) {

@@ -17,6 +17,7 @@ def create_registry_tag(
     group: Any,
     tag_id: Any,
     description: Any,
+    doc_id: Any,
     now_utc: str,
 ) -> tuple[Dict[str, Any], Dict[str, Any]]:
     """Plan one canonical tag addition without changing existing rows."""
@@ -24,6 +25,9 @@ def create_registry_tag(
     normalized_group = tag_source.sanitize_group(group, allowed_groups)
     normalized_tag_id = tag_source.sanitize_tag_id(tag_id)
     normalized_description = tag_source.sanitize_alias_description(description, "description")
+    normalized_doc_id = str(doc_id or "").strip()
+    if not normalized_doc_id:
+        raise ValueError("doc_id must not be empty")
 
     raw_tags = registry_payload.get("tags")
     if not isinstance(raw_tags, list):
@@ -34,11 +38,15 @@ def create_registry_tag(
         existing_tag_id = str(raw_tag.get("tag_id") or "").strip().lower()
         if existing_tag_id == normalized_tag_id:
             raise ValueError(f"tag_id already exists: {normalized_tag_id}")
+        existing_doc_id = str(raw_tag.get("doc_id") or "").strip()
+        if existing_doc_id == normalized_doc_id:
+            raise ValueError(f"doc_id already exists: {normalized_doc_id}")
 
     created_row = {
         "tag_id": normalized_tag_id,
         "group": normalized_group,
         "description": normalized_description,
+        "doc_id": normalized_doc_id,
         "updated_at_utc": now_utc,
     }
     updated_payload = dict(registry_payload)
@@ -52,6 +60,8 @@ def create_registry_tag(
         "action": "create",
         "tag_id": normalized_tag_id,
         "group": normalized_group,
+        "description": normalized_description,
+        "doc_id": normalized_doc_id,
         "added": 1,
         "final_total": len(updated_payload["tags"]),
     }
@@ -259,8 +269,12 @@ def rewrite_assignments_for_tag(
 
 def build_create_summary_text(stats: Dict[str, Any]) -> str:
     tag_id = str(stats.get("tag_id") or "")
+    doc_id = str(stats.get("doc_id") or "")
     final_total = int(stats.get("final_total") or 0)
-    return f"created tag {tag_id}; final {final_total}"
+    return (
+        f"created tag {tag_id} with linked Analysis document {doc_id}; "
+        f"final {final_total}"
+    )
 
 
 def build_mutation_summary_text(stats: Dict[str, Any]) -> str:

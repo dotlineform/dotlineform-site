@@ -150,7 +150,7 @@ export async function submitCreateTag(options) {
         message: registryText(
           config,
           "server_create_failed",
-          "Server create failed; switched to patch mode. {message}",
+          "Server create failed; switched to two-source patch mode. {message}",
           { message: String(error && error.message ? error.message : "").trim() }
         ).trim()
       };
