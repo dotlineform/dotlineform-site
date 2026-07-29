@@ -257,6 +257,9 @@ def asset_version(repo_root: Path) -> str:
     candidates = [
         repo_root / "shared" / "frontend" / "js" / "search-list.js",
         repo_root / "shared" / "frontend" / "css" / "search-list.css",
+        repo_root / "shared" / "frontend" / "js" / "document-location-provider.js",
+        repo_root / "shared" / "frontend" / "js" / "document-location-picker.js",
+        repo_root / "shared" / "frontend" / "css" / "document-location-picker.css",
         repo_root / "shared" / "frontend" / "js" / "file-picker.js",
         repo_root / "shared" / "frontend" / "css" / "file-picker.css",
         repo_root / "shared" / "frontend" / "js" / "record-list.js",

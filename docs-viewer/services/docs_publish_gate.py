@@ -27,6 +27,12 @@ from docs_public_mermaid_payload import (
     public_mermaid_payload_requires_projection,
     public_mermaid_variant_files,
 )
+from docs_document_location_projection import (
+    SUPPORTED_DOCUMENT_LOCATION_SCOPE_IDS,
+    build_document_location_payload,
+    document_location_projection_path,
+    json_bytes as document_location_json_bytes,
+)
 
 
 PUBLISH_SCHEMA_VERSION = "docs_publish_gate_v1"
@@ -445,6 +451,85 @@ def search_diff(repo_root: Path, working_index: Path, published_index: Path) -> 
     return {"changed": [], "removed": []}
 
 
+def prospective_document_location_projection(
+    repo_root: Path,
+    config: DocsScopeConfig,
+    paths: dict[str, Path],
+    sub_scope_paths: dict[str, dict[str, Path]],
+) -> tuple[Path, bytes] | None:
+    """Build the location index from the exact files eligible for publication."""
+
+    if config.scope_id not in SUPPORTED_DOCUMENT_LOCATION_SCOPE_IDS:
+        return None
+
+    parent_files = publishable_parent_docs_files(
+        repo_root,
+        config,
+        paths["working_docs_root"],
+        paths["published_docs_root"].relative_to(repo_root.resolve()),
+    )
+    parent_documents = {
+        relative_path.stem: json.loads(source_bytes.decode("utf-8"))
+        for relative_path, source_bytes in parent_files.items()
+        if doc_id_for_by_id_path(relative_path)
+    }
+    configured_sub_scopes = {
+        sub_scope.sub_scope: sub_scope for sub_scope in config.sub_scopes
+    }
+    placed_sub_scope_ids = {
+        str(payload.get("viewer_report_subscope") or "").strip().lower()
+        for payload in parent_documents.values()
+        if isinstance(payload, dict)
+        and str(payload.get("viewer_report") or "").strip() == "docs_subscope"
+        and str(payload.get("viewer_report_access") or "").strip() == "public"
+    }
+    sub_scope_manifests: dict[str, Any] = {}
+    for sub_scope_id in sorted(placed_sub_scope_ids):
+        sub_scope = configured_sub_scopes.get(sub_scope_id)
+        if sub_scope is None:
+            raise ValueError(
+                f"public report references unsupported sub-scope {sub_scope_id!r}"
+            )
+        sub_paths = sub_scope_paths[sub_scope_id]
+        public_files = publishable_docs_files(
+            sub_paths["working_docs_root"],
+            sub_paths["published_docs_root"].relative_to(repo_root.resolve()),
+            projection_scope=f"{config.scope_id}/{sub_scope.sub_scope}",
+        )
+        manifest_bytes = public_files.get(Path("manifest.json"))
+        if manifest_bytes is None:
+            raise FileNotFoundError(
+                f"publishable sub-scope {sub_scope.sub_scope} manifest not found"
+            )
+        sub_scope_manifests[sub_scope_id] = json.loads(
+            manifest_bytes.decode("utf-8")
+        )
+
+    payload = build_document_location_payload(
+        config,
+        search_payload=read_json(paths["working_search_index"]),
+        parent_documents=parent_documents,
+        sub_scope_manifests=sub_scope_manifests,
+    )
+    output_path = resolve_scope_path(
+        repo_root,
+        document_location_projection_path(config),
+    )
+    return output_path, document_location_json_bytes(payload)
+
+
+def document_location_diff(
+    repo_root: Path,
+    projection: tuple[Path, bytes] | None,
+) -> dict[str, list[str]]:
+    if projection is None:
+        return {"changed": [], "removed": []}
+    output_path, output_bytes = projection
+    if not output_path.is_file() or output_path.read_bytes() != output_bytes:
+        return {"changed": [repo_relative(repo_root, output_path)], "removed": []}
+    return {"changed": [], "removed": []}
+
+
 def publish_status(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     scope, config = normalize_scope(repo_root, body.get("scope"))
     paths = validate_publish_paths(repo_root, config)
@@ -455,8 +540,27 @@ def publish_status(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         for sub_scope in config.sub_scopes
     ]
     search = search_diff(repo_root, paths["working_search_index"], paths["published_search_index"])
-    changed = len(docs["changed"]) + len(search["changed"]) + sum(item["changed_count"] for item in sub_scopes)
-    removed = len(docs["removed"]) + len(search["removed"]) + sum(item["removed_count"] for item in sub_scopes)
+    document_locations = document_location_diff(
+        repo_root,
+        prospective_document_location_projection(
+            repo_root,
+            config,
+            paths,
+            sub_scope_paths,
+        ),
+    )
+    changed = (
+        len(docs["changed"])
+        + len(search["changed"])
+        + len(document_locations["changed"])
+        + sum(item["changed_count"] for item in sub_scopes)
+    )
+    removed = (
+        len(docs["removed"])
+        + len(search["removed"])
+        + len(document_locations["removed"])
+        + sum(item["removed_count"] for item in sub_scopes)
+    )
     return {
         "ok": True,
         "schema_version": PUBLISH_SCHEMA_VERSION,
@@ -470,6 +574,7 @@ def publish_status(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         "docs": docs,
         "sub_scopes": sub_scopes,
         "search": search,
+        "document_locations": document_locations,
         "summary_text": f"Publish status for {scope}: {changed} changed, {removed} stale.",
     }
 
@@ -533,6 +638,12 @@ def publish_apply(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     _scope, config = normalize_scope(repo_root, payload["scope"])
     paths = validate_publish_paths(repo_root, config)
     sub_scope_paths = validate_sub_scope_publish_paths(repo_root, config)
+    document_location_projection = prospective_document_location_projection(
+        repo_root,
+        config,
+        paths,
+        sub_scope_paths,
+    )
     copy_tree(
         repo_root,
         paths["working_docs_root"],
@@ -561,6 +672,9 @@ def publish_apply(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
             ),
         )
     copy_file_atomic(paths["working_search_index"], paths["published_search_index"])
+    if document_location_projection is not None:
+        output_path, output_bytes = document_location_projection
+        write_bytes_atomic(output_path, output_bytes)
     payload["operation"] = "apply"
     payload["applied"] = True
     payload["summary_text"] = (

@@ -50,7 +50,12 @@ def test_python_docs_builder_scripts_load_repo_local_env_before_scope_config() -
                 capture_output=True,
                 check=False,
             )
-            for script in ("build_docs.py", "build_search.py", "build_semantic_target_lookup.py")
+            for script in (
+                "build_docs.py",
+                "build_search.py",
+                "build_document_locations.py",
+                "build_semantic_target_lookup.py",
+            )
         ]
 
     assert all(result.returncode == 0 for result in results)
@@ -81,7 +86,11 @@ def test_python_docs_builders_accept_explicit_projects_base_after_repo_local_env
                 capture_output=True,
                 check=False,
             )
-            for script in ("build_docs.py", "build_search.py")
+            for script in (
+                "build_docs.py",
+                "build_search.py",
+                "build_document_locations.py",
+            )
         ]
 
     assert all(result.returncode == 0 for result in results)

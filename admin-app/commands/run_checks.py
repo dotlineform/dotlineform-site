@@ -405,6 +405,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/python/test_build_docs_cli.py",
                 "docs-viewer/tests/python/test_build_docs_external_scopes.py",
                 "docs-viewer/tests/python/test_build_search_python.py",
+                "docs-viewer/tests/python/test_build_document_locations.py",
                 "docs-viewer/tests/python/test_docs_generated_reads.py",
                 "docs-viewer/tests/python/test_docs_activity.py",
                 "docs-viewer/tests/python/test_docs_live_rebuild_watcher.py",

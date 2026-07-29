@@ -19,6 +19,9 @@ if str(DOCS_SERVICES_DIR) not in sys.path:
 import docs_publish_gate  # noqa: E402
 
 
+LIBRARY_DOC_ID = "d-20260330-172255-8399b7"
+
+
 def write_json(path: Path, payload: dict[str, object]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
@@ -35,7 +38,7 @@ def write_scope_config(root: Path) -> None:
         scope_type="public",
         viewer_base_url="/library/",
         include_scope_param=False,
-        default_doc_id="library",
+        default_doc_id=LIBRARY_DOC_ID,
     )
     library["published"]["media"]["img"] = {  # type: ignore[index]
         "reference_prefix": "docs/library/img",
@@ -76,9 +79,9 @@ def prepare_publish_repo(root: Path) -> None:
             "viewer_options": {"manage_only_tree_root_ids": ["manage-root"]},
             "docs": [
                 {
-                    "doc_id": "library",
+                    "doc_id": LIBRARY_DOC_ID,
                     "title": "Library",
-                    "content_url": "/assets/data/docs/scopes/library/by-id/library.json",
+                    "content_url": f"/assets/data/docs/scopes/library/by-id/{LIBRARY_DOC_ID}.json",
                     "children": [
                         {
                             "doc_id": "hidden",
@@ -110,7 +113,7 @@ def prepare_publish_repo(root: Path) -> None:
             "basis": "edited",
             "docs": [
                 {"doc_id": "hidden", "title": "Hidden", "content_url": "/assets/data/docs/scopes/library/by-id/hidden.json", "timestamp": "2026-06-02 10:00:00"},
-                {"doc_id": "library", "title": "Library", "content_url": "/assets/data/docs/scopes/library/by-id/library.json", "timestamp": "2026-06-01 10:00:00"},
+                {"doc_id": LIBRARY_DOC_ID, "title": "Library", "content_url": f"/assets/data/docs/scopes/library/by-id/{LIBRARY_DOC_ID}.json", "timestamp": "2026-06-01 10:00:00"},
             ],
         },
     )
@@ -120,11 +123,14 @@ def prepare_publish_repo(root: Path) -> None:
             "schema": "docs_recent_v1",
             "basis": "edited",
             "docs": [
-                {"doc_id": "library", "title": "Library", "content_url": "/assets/data/docs/scopes/library/by-id/library.json", "timestamp": "2026-06-01 10:00:00"},
+                {"doc_id": LIBRARY_DOC_ID, "title": "Library", "content_url": f"/assets/data/docs/scopes/library/by-id/{LIBRARY_DOC_ID}.json", "timestamp": "2026-06-01 10:00:00"},
             ],
         },
     )
-    write_json(root / "docs-viewer/scopes/library/published/documents/by-id/library.json", {"title": "Library"})
+    write_json(
+        root / f"docs-viewer/scopes/library/published/documents/by-id/{LIBRARY_DOC_ID}.json",
+        {"title": "Library"},
+    )
     write_json(root / "docs-viewer/scopes/library/published/documents/by-id/hidden.json", {"title": "Hidden"})
     write_json(root / "docs-viewer/scopes/library/published/documents/by-id/hidden-child.json", {"title": "Hidden Child"})
     write_json(root / "docs-viewer/scopes/library/published/documents/by-id/manage-root.json", {"title": "Manage Root"})
@@ -136,7 +142,25 @@ def prepare_publish_repo(root: Path) -> None:
             "occurrences": [],
         },
     )
-    write_json(root / "docs-viewer/scopes/library/published/search/index.json", {"entries": [{"id": "library"}]})
+    write_json(
+        root / "docs-viewer/scopes/library/published/search/index.json",
+        {
+            "header": {
+                "schema": "search_index_library_v1",
+                "scope": "library",
+                "version": "fixture",
+                "count": 1,
+            },
+            "entries": [
+                {
+                    "id": LIBRARY_DOC_ID,
+                    "kind": "doc",
+                    "title": "Library",
+                    "href": f"/library/?doc={LIBRARY_DOC_ID}",
+                }
+            ],
+        },
+    )
     write_json(root / "site/assets/data/docs/scopes/library/index-tree.json", {"docs": []})
     write_json(root / "site/assets/data/docs/scopes/library/by-id/stale.json", {"title": "Stale"})
     write_json(root / "site/assets/data/docs/scopes/library/by-id/hidden.json", {"title": "Old Hidden"})
@@ -170,14 +194,23 @@ def test_publish_confirm_reports_changes_and_apply_syncs_stale_files() -> None:
         assert "site/assets/data/docs/scopes/library/by-id/hidden.json" in preview["docs"]["removed"]
         assert "site/assets/data/docs/scopes/library/media/html/widget.html" not in preview["docs"]["removed"]
         assert "site/assets/data/docs/scopes/library/media/img/diagram.png" not in preview["docs"]["removed"]
+        assert preview["document_locations"] == {
+            "changed": [
+                "site/assets/data/search/library/document-locations.json"
+            ],
+            "removed": [],
+        }
         assert applied["operation"] == "apply"
         public_tree = json.loads((repo_root / "site/assets/data/docs/scopes/library/index-tree.json").read_text(encoding="utf-8"))
         recent = json.loads((repo_root / "site/assets/data/docs/scopes/library/recent.json").read_text(encoding="utf-8"))
 
-        assert public_tree["docs"][0]["doc_id"] == "library"
+        assert public_tree["docs"][0]["doc_id"] == LIBRARY_DOC_ID
         assert "children" not in public_tree["docs"][0]
-        assert recent["docs"][0]["doc_id"] == "library"
-        assert (repo_root / "site/assets/data/docs/scopes/library/by-id/library.json").exists()
+        assert recent["docs"][0]["doc_id"] == LIBRARY_DOC_ID
+        assert (
+            repo_root
+            / f"site/assets/data/docs/scopes/library/by-id/{LIBRARY_DOC_ID}.json"
+        ).exists()
         assert not (repo_root / "site/assets/data/docs/scopes/library/by-id/hidden.json").exists()
         assert not (repo_root / "site/assets/data/docs/scopes/library/by-id/hidden-child.json").exists()
         assert not (repo_root / "site/assets/data/docs/scopes/library/by-id/manage-root.json").exists()
@@ -186,7 +219,25 @@ def test_publish_confirm_reports_changes_and_apply_syncs_stale_files() -> None:
         assert not (repo_root / "site/assets/data/docs/scopes/library/by-id/stale.json").exists()
         assert (repo_root / "site/assets/data/docs/scopes/library/media/html/widget.html").is_file()
         assert (repo_root / "site/assets/data/docs/scopes/library/media/img/diagram.png").is_file()
-        assert json.loads((repo_root / "site/assets/data/search/library/index.json").read_text(encoding="utf-8"))["entries"][0]["id"] == "library"
+        assert json.loads((repo_root / "site/assets/data/search/library/index.json").read_text(encoding="utf-8"))["entries"][0]["id"] == LIBRARY_DOC_ID
+        location_payload = json.loads(
+            (
+                repo_root
+                / "site/assets/data/search/library/document-locations.json"
+            ).read_text(encoding="utf-8")
+        )
+        assert location_payload == {
+            "schema_version": "docs_document_locations_v1",
+            "scope_id": "library",
+            "records": [
+                {
+                    "url": f"/library/?doc={LIBRARY_DOC_ID}",
+                    "scope_id": "library",
+                    "document_title": "Library",
+                    "report_title": "",
+                }
+            ],
+        }
 
 
 def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> None:

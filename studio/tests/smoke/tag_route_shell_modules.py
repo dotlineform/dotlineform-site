@@ -21,6 +21,9 @@ class QuietStaticHandler(SimpleHTTPRequestHandler):
 
     def translate_path(self, path: str) -> str:
         request_path = unquote(urlsplit(path).path)
+        if request_path.startswith("/assets/"):
+            relative = f"site/assets/{request_path.removeprefix('/assets/')}"
+            return str(Path(self.directory) / relative)
         if request_path.startswith("/studio/app/"):
             relative = f"studio/app/{request_path.removeprefix('/studio/app/')}"
             return str(Path(self.directory) / relative)
@@ -127,6 +130,349 @@ def assert_tag_save_session_helpers(page: Page) -> None:
         "snippet": "diff --git a/file b/file",
     }
     assert result["routeImports"] is True
+
+
+def assert_document_location_provider_contract(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const module = await import('/shared/frontend/js/document-location-provider.js');
+            const actualProvider = module.createDocumentLocationProvider();
+            const actualAnalysis = await actualProvider.load({ scopeIds: ['analysis'] });
+            const actualLibrary = await actualProvider.load({ scopeIds: ['library'] });
+            const calls = [];
+            const payloads = {
+                analysis: {
+                    schema_version: 'docs_document_locations_v1',
+                    scope_id: 'analysis',
+                    records: [
+                        {
+                            url: '/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-63967a',
+                            scope_id: 'analysis',
+                            document_title: 'bird-nerve',
+                            report_title: 'All Tags'
+                        },
+                        {
+                            url: '/analysis/?doc=d-20260729-111111-abcdef&subdoc=d-20260727-225608-63967a',
+                            scope_id: 'analysis',
+                            document_title: 'bird-nerve',
+                            report_title: 'Made-up Tags'
+                        },
+                        {
+                            url: '/analysis/?doc=d-20260426-164043-e14f49',
+                            scope_id: 'analysis',
+                            document_title: 'Analysis',
+                            report_title: ''
+                        },
+                        {
+                            url: '/analysis/?doc=d-20260729-121212-fedcba',
+                            scope_id: 'analysis',
+                            document_title: 'Small bird study',
+                            report_title: ''
+                        }
+                    ]
+                },
+                library: {
+                    schema_version: 'docs_document_locations_v1',
+                    scope_id: 'library',
+                    records: [
+                        {
+                            url: '/library/?doc=d-20260507-172400-74807b',
+                            scope_id: 'library',
+                            document_title: 'Beauty',
+                            report_title: ''
+                        }
+                    ]
+                }
+            };
+            const provider = module.createDocumentLocationProvider({
+                fetchJson: async (url) => {
+                    calls.push(url);
+                    const scopeId = url.includes('/analysis/') ? 'analysis' : 'library';
+                    return payloads[scopeId];
+                }
+            });
+            const exact = await provider.search({
+                scopeIds: ['analysis'],
+                query: 'bird-nerve'
+            });
+            const excluded = await provider.search({
+                scopeIds: ['analysis'],
+                query: 'bird',
+                excludedUrls: [payloads.analysis.records[0].url]
+            });
+            const multi = await provider.search({
+                scopeIds: ['analysis', 'library'],
+                query: 'beauty'
+            });
+            const resolved = await provider.resolve({
+                scopeIds: ['analysis'],
+                urls: [
+                    payloads.analysis.records[0].url,
+                    '/analysis/?doc=d-20260729-131313-a1b2c3',
+                    '/docs/?scope=studio&doc=d-20260729-141414-b1c2d3'
+                ]
+            });
+            let emptyError = '';
+            let unsupportedError = '';
+            let invalidCommitError = '';
+            try {
+                await provider.load({ scopeIds: [] });
+            } catch (error) {
+                emptyError = error.message;
+            }
+            try {
+                await provider.load({ scopeIds: ['studio'] });
+            } catch (error) {
+                unsupportedError = error.message;
+            }
+            try {
+                module.committedDocumentLocation({
+                    url: 'https://example.test/document',
+                    scope_id: 'analysis',
+                    document_title: 'External',
+                    report_title: ''
+                });
+            } catch (error) {
+                invalidCommitError = error.message;
+            }
+            return {
+                actual: {
+                    analysisCount: actualAnalysis.length,
+                    analysisScopes: [...new Set(actualAnalysis.map((record) => record.scope_id))],
+                    analysisReports: actualAnalysis.filter((record) => record.report_title).length,
+                    libraryCount: actualLibrary.length,
+                    libraryScopes: [...new Set(actualLibrary.map((record) => record.scope_id))]
+                },
+                calls,
+                exact: exact.map((record) => [record.document_title, record.report_title]),
+                excluded: excluded.map((record) => [record.document_title, record.report_title]),
+                multi: multi.map((record) => [record.scope_id, record.document_title]),
+                resolved: resolved.map((record) => ({
+                    url: record.url,
+                    scope: record.scope_id,
+                    title: record.document_title,
+                    available: record.available
+                })),
+                emptyError,
+                unsupportedError,
+                invalidCommitError
+            };
+        }"""
+    )
+    assert result["actual"]["analysisCount"] >= 2
+    assert result["actual"]["analysisScopes"] == ["analysis"]
+    assert result["actual"]["analysisReports"] >= 1
+    assert result["actual"]["libraryCount"] >= 1
+    assert result["actual"]["libraryScopes"] == ["library"]
+    assert result["calls"] == [
+        "/assets/data/search/analysis/document-locations.json",
+        "/assets/data/search/library/document-locations.json",
+    ]
+    assert result["exact"] == [
+        ["bird-nerve", "All Tags"],
+        ["bird-nerve", "Made-up Tags"],
+    ]
+    assert result["excluded"] == [
+        ["bird-nerve", "Made-up Tags"],
+        ["Small bird study", ""],
+    ]
+    assert result["multi"] == [["library", "Beauty"]]
+    assert result["resolved"][0]["available"] is True
+    assert result["resolved"][1] == {
+        "url": "/analysis/?doc=d-20260729-131313-a1b2c3",
+        "scope": "analysis",
+        "title": "Unavailable document",
+        "available": False,
+    }
+    assert result["resolved"][2] == {
+        "url": "/docs/?scope=studio&doc=d-20260729-141414-b1c2d3",
+        "scope": "studio",
+        "title": "Unavailable document",
+        "available": False,
+    }
+    assert "non-empty scopeIds" in result["emptyError"]
+    assert "unsupported document-location scope: studio" in result["unsupportedError"]
+    assert result["invalidCommitError"] == "document location commit record is invalid"
+
+
+def assert_document_location_picker_interactions(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            document.body.innerHTML = `
+              <label>
+                Document
+                <span class="sharedSearchList__control">
+                  <input id="locationInput">
+                  <span id="locationPopup"></span>
+                </span>
+              </label>
+            `;
+            const providerModule = await import('/shared/frontend/js/document-location-provider.js');
+            const pickerModule = await import('/shared/frontend/js/document-location-picker.js');
+            const resetPickerDom = () => {
+                document.body.innerHTML = `
+                  <label>
+                    Document
+                    <span class="sharedSearchList__control">
+                      <input id="locationInput">
+                      <span id="locationPopup"></span>
+                    </span>
+                  </label>
+                `;
+                return {
+                    input: document.getElementById('locationInput'),
+                    popup: document.getElementById('locationPopup')
+                };
+            };
+            let input = document.getElementById('locationInput');
+            let popup = document.getElementById('locationPopup');
+            const commits = [];
+            const records = [
+                {
+                    url: '/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-63967a',
+                    scope_id: 'analysis',
+                    document_title: 'bird-nerve',
+                    report_title: 'All Tags',
+                    available: true
+                },
+                {
+                    url: '/analysis/?doc=d-20260729-111111-abcdef&subdoc=d-20260727-225608-63967a',
+                    scope_id: 'analysis',
+                    document_title: 'bird-nerve',
+                    report_title: 'Made-up Tags',
+                    available: true
+                }
+            ];
+            let picker = pickerModule.bindDocumentLocationPicker(input, popup, {
+                scopeIds: ['analysis'],
+                excludedUrls: () => [records[0].url],
+                provider: {
+                    search: async ({ query, excludedUrls }) => (
+                        providerModule.searchDocumentLocationRecords(records, query, excludedUrls)
+                    )
+                },
+                onCommit: (record) => commits.push(record)
+            });
+            input.value = 'bird';
+            await picker.refresh();
+            const singleScope = {
+                buttonCount: popup.querySelectorAll('button').length,
+                text: popup.textContent
+            };
+            input.dispatchEvent(new KeyboardEvent('keydown', {
+                key: 'Enter',
+                bubbles: true,
+                cancelable: true
+            }));
+            await new Promise((resolve) => setTimeout(resolve, 0));
+            const keyboardCommit = commits[0] || null;
+
+            picker.destroy();
+            ({ input, popup } = resetPickerDom());
+            input.value = 'beauty';
+            const libraryRecord = {
+                url: '/library/?doc=d-20260507-172400-74807b',
+                scope_id: 'library',
+                document_title: 'Beauty',
+                report_title: ''
+            };
+            picker = pickerModule.bindDocumentLocationPicker(input, popup, {
+                scopeIds: ['analysis', 'library'],
+                provider: { search: async () => [libraryRecord] },
+                onCommit: (record) => commits.push(record)
+            });
+            await picker.refresh();
+            const multiScope = {
+                buttonCount: popup.querySelectorAll('button').length,
+                text: popup.textContent
+            };
+            popup.querySelector('button').click();
+            await new Promise((resolve) => setTimeout(resolve, 0));
+            const pointerCommit = commits[1] || null;
+
+            picker.destroy();
+            ({ input, popup } = resetPickerDom());
+            input.value = 'none';
+            picker = pickerModule.bindDocumentLocationPicker(input, popup, {
+                scopeIds: ['analysis'],
+                provider: {
+                    search: async ({ query }) => {
+                        if (query === 'fail') throw new Error('Projection unavailable.');
+                        return [];
+                    }
+                }
+            });
+            await picker.refresh();
+            const emptyText = popup.textContent;
+            input.value = 'fail';
+            await picker.refresh();
+            const failureText = popup.textContent;
+
+            picker.destroy();
+            ({ input, popup } = resetPickerDom());
+            input.value = '';
+            const pendingCommits = [];
+            picker = pickerModule.bindDocumentLocationPicker(input, popup, {
+                scopeIds: ['analysis'],
+                provider: {
+                    search: ({ query }) => new Promise((resolve) => {
+                        const delay = query === 'slow' ? 80 : 0;
+                        setTimeout(() => resolve([{
+                            url: '/analysis/?doc=d-20260426-164043-e14f49',
+                            scope_id: 'analysis',
+                            document_title: query || 'empty',
+                            report_title: ''
+                        }]), delay);
+                    })
+                },
+                onCommit: (record) => pendingCommits.push(record)
+            });
+            input.value = 'prior';
+            await picker.refresh();
+            input.value = 'slow';
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            input.dispatchEvent(new KeyboardEvent('keydown', {
+                key: 'Enter',
+                bubbles: true,
+                cancelable: true
+            }));
+            input.value = 'fast';
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            await new Promise((resolve) => setTimeout(resolve, 120));
+            const asyncText = popup.textContent;
+            picker.destroy();
+            return {
+                singleScope,
+                keyboardCommit,
+                multiScope,
+                pointerCommit,
+                emptyText,
+                failureText,
+                asyncText,
+                pendingCommitCount: pendingCommits.length
+            };
+        }"""
+    )
+    assert result["singleScope"]["buttonCount"] == 1
+    assert "Made-up Tags" in result["singleScope"]["text"]
+    assert "Analysis" not in result["singleScope"]["text"]
+    assert result["keyboardCommit"] == {
+        "url": (
+            "/analysis/?doc=d-20260729-111111-abcdef"
+            "&subdoc=d-20260727-225608-63967a"
+        ),
+        "scope_id": "analysis",
+        "document_title": "bird-nerve",
+        "report_title": "Made-up Tags",
+    }
+    assert result["multiScope"]["buttonCount"] == 1
+    assert "Library" in result["multiScope"]["text"]
+    assert result["pointerCommit"]["scope_id"] == "library"
+    assert "No matching documents." in result["emptyText"]
+    assert "Projection unavailable." in result["failureText"]
+    assert "fast" in result["asyncText"]
+    assert "slow" not in result["asyncText"]
+    assert result["pendingCommitCount"] == 0
 
 
 def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
@@ -694,9 +1040,22 @@ def run(site_root: Path) -> None:
             assert_tag_alias_create_request(page, base_url)
             assert_studio_tag_editor_interactions(page)
             assert_studio_tag_editor_direct_save_failure(page)
+            picker_page = browser.new_page()
+            picker_errors: list[str] = []
+            picker_page.on(
+                "pageerror",
+                lambda error: picker_errors.append(str(error)),
+            )
+            picker_page.goto(f"{base_url}/", wait_until="domcontentloaded")
+            assert_document_location_provider_contract(picker_page)
+            assert_document_location_picker_interactions(picker_page)
+            picker_page.close()
             browser.close()
-            if errors:
-                raise AssertionError(f"page errors during Tag route shell module smoke: {errors!r}")
+            if errors or picker_errors:
+                raise AssertionError(
+                    "page errors during Tag route shell module smoke: "
+                    f"route={errors!r}, picker={picker_errors!r}"
+                )
     finally:
         server.shutdown()
         server.server_close()

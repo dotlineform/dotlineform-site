@@ -258,6 +258,22 @@
       "owner_doc": "search-build-pipeline-analysis"
     },
     {
+      "id": "docs_document_locations",
+      "classification": "docs_viewer_payload",
+      "repo_paths": [
+        "site/assets/data/search/analysis/document-locations.json",
+        "site/assets/data/search/library/document-locations.json"
+      ],
+      "public_output": {
+        "policy": "required",
+        "paths": [
+          "assets/data/search/analysis/document-locations.json",
+          "assets/data/search/library/document-locations.json"
+        ]
+      },
+      "owner_doc": "docs-document-location-projection"
+    },
+    {
       "id": "docs_viewer_runtime",
       "classification": "public_runtime_asset",
       "repo_paths": [

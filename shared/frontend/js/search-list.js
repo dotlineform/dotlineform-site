@@ -128,11 +128,18 @@ async function refreshOptions(controller, options = {}) {
     closeSearchList(controller, {}, options);
     return;
   }
+  const loadRevision = ++controller.loadRevision;
+  controller.activeIndex = -1;
+  controller.matches = [];
+  controller.inputNode.removeAttribute("aria-activedescendant");
+  controller.popupNode.hidden = true;
   try {
     const loaded = typeof options.loadOptions === "function" ? await options.loadOptions(controller.inputNode.value) : [];
+    if (loadRevision !== controller.loadRevision) return;
     controller.loadedOptions = Array.isArray(loaded) ? loaded : [];
     renderOptions(controller, options);
   } catch (error) {
+    if (loadRevision !== controller.loadRevision) return;
     controller.activeIndex = -1;
     controller.inputNode.removeAttribute("aria-activedescendant");
     if (typeof options.renderError === "function") {
@@ -145,6 +152,7 @@ async function refreshOptions(controller, options = {}) {
 }
 
 function closeSearchList(controller, { reset = false } = {}, options = {}) {
+  controller.loadRevision += 1;
   controller.activeIndex = -1;
   if (reset) {
     controller.inputNode.value = controller.startValue || "";
@@ -156,6 +164,7 @@ function closeSearchList(controller, { reset = false } = {}, options = {}) {
 
 async function commitOption(controller, option, options = {}) {
   if (option == null) return;
+  controller.loadRevision += 1;
   const value = optionValue(options, option);
   controller.inputNode.value = value;
   controller.startValue = value;
@@ -186,6 +195,7 @@ export function bindSearchList(inputNode, popupNode, options = {}) {
   const controller = {
     activeIndex: -1,
     inputNode,
+    loadRevision: 0,
     loadedOptions: [],
     matches: [],
     popupNode,
@@ -302,6 +312,7 @@ export function bindSearchList(inputNode, popupNode, options = {}) {
   document.addEventListener("click", onDocumentClick);
 
   controller.destroy = function destroy() {
+    controller.loadRevision += 1;
     inputNode.removeEventListener("focus", onFocus);
     inputNode.removeEventListener("mouseup", onMouseUp);
     inputNode.removeEventListener("input", onInput);

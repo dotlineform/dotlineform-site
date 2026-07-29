@@ -1,0 +1,14 @@
+.sharedDocumentLocationPicker__popup .sharedSearchList__option {
+  gap: 0.1rem;
+}
+
+.sharedDocumentLocationPicker__title,
+.sharedDocumentLocationPicker__context {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.sharedDocumentLocationPicker__context {
+  color: var(--muted, var(--studio-muted-body, #666));
+  font-size: var(--font-caption, 0.9rem);
+}

@@ -246,6 +246,10 @@ def test_static_path_policy_serves_current_studio_allowlists() -> None:
     assert allowed("/apple-touch-icon-precomposed.png") is True
     assert allowed("/shared/frontend/js/search-list.js") is True
     assert allowed("/shared/frontend/css/search-list.css") is True
+    assert allowed("/shared/frontend/js/document-location-provider.js") is True
+    assert allowed("/shared/frontend/js/document-location-picker.js") is True
+    assert allowed("/shared/frontend/css/document-location-picker.css") is True
+    assert allowed("/assets/data/search/analysis/document-locations.json") is True
     assert allowed("/studio/data/generated/activity/index.json") is False
     assert allowed("/studio/data/generated/activity/work-storage-index.json") is True
     assert allowed("/studio/data/generated/catalogue-lookup/work-search.json") is True
