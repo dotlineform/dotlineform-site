@@ -96,6 +96,31 @@ def test_create_registry_tag_adds_one_normalized_row() -> None:
     assert_equal(stats["final_total"], 3, "final row count")
 
 
+def test_create_registry_tag_preserves_shared_existing_document_link() -> None:
+    shared_doc_id = "d-20260729-120000-000003"
+    existing_rows = [
+        row("trees", "Trees", doc_id=shared_doc_id),
+    ]
+    payload = {
+        "tag_registry_version": "tag_registry_v4",
+        "policy": {"allowed_groups": ["subject", "theme"]},
+        "tags": existing_rows,
+    }
+
+    updated, stats = registry.create_registry_tag(
+        payload,
+        group="theme",
+        tag_id="renewal",
+        description="Renewal cycle",
+        doc_id=shared_doc_id,
+        now_utc=NOW,
+    )
+
+    assert_equal(updated["tags"][0], existing_rows[0], "existing row preserved")
+    assert_equal(updated["tags"][1]["doc_id"], shared_doc_id, "shared link accepted")
+    assert_equal(stats["doc_id"], shared_doc_id, "created document id")
+
+
 def test_create_registry_tag_guards() -> None:
     payload = {
         "policy": {"allowed_groups": ["subject", "theme"]},

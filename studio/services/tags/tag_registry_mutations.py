@@ -38,9 +38,6 @@ def create_registry_tag(
         existing_tag_id = str(raw_tag.get("tag_id") or "").strip().lower()
         if existing_tag_id == normalized_tag_id:
             raise ValueError(f"tag_id already exists: {normalized_tag_id}")
-        existing_doc_id = str(raw_tag.get("doc_id") or "").strip()
-        if existing_doc_id == normalized_doc_id:
-            raise ValueError(f"doc_id already exists: {normalized_doc_id}")
 
     created_row = {
         "tag_id": normalized_tag_id,

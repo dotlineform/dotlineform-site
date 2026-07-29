@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-0f0fe6300d4e8170954bf75eaf70d486",
-    "generated_at_utc": "2026-07-29T18:36:25Z",
+    "version": "blake2b-7ca26dfe40be28e304e09b628d3e4d07",
+    "generated_at_utc": "2026-07-29T18:45:25Z",
     "count": 230
   },
   "entries": [
@@ -4341,10 +4341,10 @@
       "kind": "doc",
       "title": "Tag Link Management Delivery",
       "href": "/docs/?scope=studio&doc=d-20260729-151446-09489e",
-      "last_updated": "2026-07-29 19:35:48",
+      "last_updated": "2026-07-29 19:45:17",
       "parent_id": "d-20260726-211842-cc8f6c",
       "parent_title": "Tag-document linking",
-      "display_meta": "2026-07-29 19:35:48 • Tag-document linking",
+      "display_meta": "2026-07-29 19:45:17 • Tag-document linking",
       "search_terms": [
         "tag link management delivery",
         "tag",
@@ -4354,16 +4354,16 @@
         "tag-document linking",
         "document",
         "linking",
-        "2026-07-29 19:35:48",
+        "2026-07-29 19:45:17",
         "2026",
         "07",
         "29",
         "19",
-        "35",
-        "48",
+        "45",
+        "17",
         "d-20260729-151446-09489e"
       ],
-      "search_text": "tag link management delivery tag link management delivery tag-document linking document linking 2026-07-29 19:35:48 2026 07 29 19 35 48 d-20260729-151446-09489e"
+      "search_text": "tag link management delivery tag link management delivery tag-document linking document linking 2026-07-29 19:45:17 2026 07 29 19 45 17 d-20260729-151446-09489e"
     },
     {
       "id": "d-20260712-213026-ee0f22",

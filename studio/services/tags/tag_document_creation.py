@@ -12,7 +12,6 @@ import docs_write_rebuild as write_rebuild
 from docs_document_identity import (
     allocate_doc_id,
     current_doc_timestamp,
-    is_immutable_doc_id,
 )
 from tags import tag_registry_mutations as tag_registry
 from tags import tag_source_model as tag_source
@@ -44,45 +43,8 @@ class TagDocumentCreateApplyError(RuntimeError):
         self.payload = payload
 
 
-def inventory_document_ids(documents_root: Path) -> set[str]:
-    """Return validated direct-child document identities for one tag sub-scope."""
-
-    if not documents_root.is_dir():
-        raise FileNotFoundError(
-            f"Analysis tag document root does not exist: {documents_root}"
-        )
-    paths = sorted(documents_root.glob("**/*.md"))
-    nested = [path for path in paths if path.parent != documents_root]
-    if nested:
-        relative = ", ".join(
-            path.relative_to(documents_root).as_posix() for path in nested
-        )
-        raise ValueError(
-            f"nested Analysis tag documents are not supported: {relative}"
-        )
-
-    document_ids: set[str] = set()
-    for path in paths:
-        front_matter, _body = docs_source.parse_source(path)
-        doc_id = str(front_matter.get("doc_id") or "").strip()
-        if not is_immutable_doc_id(doc_id):
-            raise ValueError(
-                f"Analysis tag document has invalid doc_id: {path.name}"
-            )
-        if path.name != f"{doc_id}.md":
-            raise ValueError(
-                f"Analysis tag document filename does not match doc_id: {path.name}"
-            )
-        if doc_id in document_ids:
-            raise ValueError(
-                f"duplicate Analysis tag document ID: {doc_id}"
-            )
-        document_ids.add(doc_id)
-    return document_ids
-
-
-def registry_document_ids(registry_payload: Dict[str, Any]) -> set[str]:
-    """Return validated document identities already owned by Registry rows."""
+def _validate_registry_create_container(registry_payload: Dict[str, Any]) -> None:
+    """Require the supported Registry container without auditing its links."""
 
     if registry_payload.get("tag_registry_version") != tag_source.TAG_REGISTRY_VERSION:
         raise ValueError(
@@ -91,22 +53,6 @@ def registry_document_ids(registry_payload: Dict[str, Any]) -> set[str]:
     raw_tags = registry_payload.get("tags")
     if not isinstance(raw_tags, list):
         raise ValueError("registry tags must be an array")
-
-    document_ids: set[str] = set()
-    for idx, raw_tag in enumerate(raw_tags):
-        if not isinstance(raw_tag, dict):
-            raise ValueError(f"registry tags[{idx}] must be an object")
-        doc_id = str(raw_tag.get("doc_id") or "").strip()
-        if not is_immutable_doc_id(doc_id):
-            raise ValueError(
-                f"registry tags[{idx}].doc_id must use immutable document identity"
-            )
-        if doc_id in document_ids:
-            raise ValueError(
-                f"registry tags[{idx}].doc_id duplicates document identity '{doc_id}'"
-            )
-        document_ids.add(doc_id)
-    return document_ids
 
 
 def render_tag_document_source(
@@ -152,20 +98,12 @@ def build_tag_document_create_plan(
     registry_path = (repo_root / tag_source.REGISTRY_REL_PATH).resolve()
     original_registry_bytes = registry_path.read_bytes()
     registry_payload = tag_source.load_registry(registry_path)
+    _validate_registry_create_container(registry_payload)
     documents_root = write_rebuild.current_sub_scope_source_root(
         repo_root,
         ANALYSIS_SCOPE,
         TAG_SUB_SCOPE,
     ).resolve()
-    source_document_ids = inventory_document_ids(documents_root)
-    row_document_ids = registry_document_ids(registry_payload)
-    missing_linked_documents = sorted(row_document_ids - source_document_ids)
-    if missing_linked_documents:
-        raise ValueError(
-            "tag Registry references missing Analysis tag documents: "
-            + ", ".join(missing_linked_documents)
-        )
-    unavailable_ids = source_document_ids | row_document_ids
 
     document_timestamp = str(added_date or current_doc_timestamp()).strip()
     allocation_kwargs: Dict[str, Any] = {}
@@ -173,16 +111,11 @@ def build_tag_document_create_plan(
         allocation_kwargs["token_factory"] = token_factory
     doc_id = allocate_doc_id(
         document_timestamp,
-        unavailable_ids,
         **allocation_kwargs,
     )
     document_path = (documents_root / f"{doc_id}.md").resolve()
     if document_path.parent != documents_root:
         raise ValueError("document destination escapes configured Analysis/tags root")
-    if document_path.exists():
-        raise FileExistsError(
-            f"Analysis tag document already exists: {document_path.name}"
-        )
 
     updated_registry, stats = tag_registry.create_registry_tag(
         registry_payload,
@@ -279,10 +212,6 @@ def execute_tag_document_create(
             raise RuntimeError(
                 "tag Registry changed before create; retry from current data"
             )
-        if plan.document_path.exists():
-            raise FileExistsError(
-                f"Analysis tag document already exists: {plan.document_path.name}"
-            )
         docs_source.write_text_atomic_new(
             plan.document_path,
             plan.document_source,
@@ -370,7 +299,5 @@ __all__ = [
     "build_tag_document_create_plan",
     "create_response_payload",
     "execute_tag_document_create",
-    "inventory_document_ids",
-    "registry_document_ids",
     "render_tag_document_source",
 ]

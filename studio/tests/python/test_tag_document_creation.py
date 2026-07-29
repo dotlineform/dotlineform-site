@@ -296,16 +296,18 @@ def test_rebuild_failure_restores_both_sources_and_reconciles_outputs(
     assert existing_path.read_bytes() == existing_before
 
 
-def test_existing_destination_refuses_partial_overwrite(
+def test_exclusive_create_refuses_existing_destination_without_planner_preflight(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     registry_path, existing_path, registry_before, existing_before = (
         prepare_repo(tmp_path)
     )
-    plan = build_plan(tmp_path)
     destination_bytes = b"maintainer-owned collision\n"
-    plan.document_path.write_bytes(destination_bytes)
+    collision_path = existing_path.parent / f"{NEW_DOC_ID}.md"
+    collision_path.write_bytes(destination_bytes)
+    plan = build_plan(tmp_path)
+    assert plan.document_path == collision_path
     monkeypatch.setattr(
         creation.write_rebuild,
         "perform_sub_scope_source_write_and_rebuild",
@@ -318,27 +320,95 @@ def test_existing_destination_refuses_partial_overwrite(
     assert captured.value.payload["source_restored"] is False
     assert captured.value.payload["retry_safe"] is False
     assert registry_path.read_bytes() == registry_before
-    assert plan.document_path.read_bytes() == destination_bytes
+    assert collision_path.read_bytes() == destination_bytes
     assert existing_path.read_bytes() == existing_before
 
 
-def test_plan_refuses_existing_partial_registry_link(
+def test_create_ignores_unrelated_missing_shared_stale_and_malformed_links(
     tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     registry_path, existing_path, registry_before, existing_before = (
         prepare_repo(tmp_path)
     )
-    existing_path.unlink()
+    registry_payload = json.loads(registry_before)
+    registry_payload["tags"] = [
+        {
+            "tag_id": "unlinked",
+            "group": "subject",
+            "description": "No link",
+        },
+        {
+            "tag_id": "shared-one",
+            "group": "subject",
+            "description": "Shared link one",
+            "doc_id": EXISTING_DOC_ID,
+        },
+        {
+            "tag_id": "shared-two",
+            "group": "theme",
+            "description": "Shared link two",
+            "doc_id": EXISTING_DOC_ID,
+        },
+        {
+            "tag_id": "stale",
+            "group": "subject",
+            "description": "Stale link",
+            "doc_id": "d-20260728-120000-999999",
+        },
+        {
+            "tag_id": "malformed",
+            "group": "subject",
+            "description": "Malformed link",
+            "doc_id": "legacy-document-id",
+        },
+    ]
+    write_json(registry_path, registry_payload)
+    unrelated_rows = registry_payload["tags"]
+    unrelated_registry_bytes = registry_path.read_bytes()
+    plan = build_plan(tmp_path)
+    monkeypatch.setattr(
+        creation.write_rebuild,
+        "perform_sub_scope_source_write_and_rebuild",
+        successful_rebuild,
+    )
 
-    with pytest.raises(
-        ValueError,
-        match="references missing Analysis tag documents",
-    ):
+    result = creation.execute_tag_document_create(tmp_path, plan)
+
+    registry = json.loads(registry_path.read_text(encoding="utf-8"))
+    assert registry["tags"][:5] == unrelated_rows
+    assert registry["tags"][5]["doc_id"] == NEW_DOC_ID
+    assert result["doc_id"] == NEW_DOC_ID
+    assert plan.document_path.exists()
+    assert existing_path.read_bytes() == existing_before
+    assert unrelated_registry_bytes != registry_path.read_bytes()
+
+
+@pytest.mark.parametrize(
+    ("registry_patch", "expected_error"),
+    [
+        ({"tag_registry_version": "tag_registry_v3"}, "tag creation requires"),
+        ({"tags": {}}, "registry tags must be an array"),
+    ],
+)
+def test_plan_requires_supported_registry_container(
+    tmp_path: Path,
+    registry_patch: dict[str, object],
+    expected_error: str,
+) -> None:
+    registry_path, existing_path, registry_before, existing_before = (
+        prepare_repo(tmp_path)
+    )
+    registry_payload = json.loads(registry_before)
+    registry_payload.update(registry_patch)
+    write_json(registry_path, registry_payload)
+    invalid_registry_bytes = registry_path.read_bytes()
+
+    with pytest.raises(ValueError, match=expected_error):
         build_plan(tmp_path)
 
-    assert registry_path.read_bytes() == registry_before
-    assert not existing_path.exists()
-    assert existing_before
+    assert registry_path.read_bytes() == invalid_registry_bytes
+    assert existing_path.read_bytes() == existing_before
 
 
 def test_execute_real_sub_scope_builder_projects_linked_document(
