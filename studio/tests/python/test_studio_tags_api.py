@@ -16,7 +16,7 @@ from tags.tag_source_paths import TAG_ASSIGNMENTS_REL_PATH
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
 EXPECTED_CANONICAL_FILES = {
-    "tag-registry.json": ("e7d5bf765e7e1183b02ec47eec6c6fa8ae0aacd2ab28d25685328ba4571e2564", 91640),
+    "tag-registry.json": ("7e2d75ae026102de0968c55fcb0502b6acde6c99363cffc57af2a30d5fc1aad0", 91821),
     "tag-aliases.json": ("9bdcd5ac7df75719ba791480ff45612137ce1832e5c0595eaf8e23a376701158", 6519),
     "tag-assignments.json": ("08c0dba8bf923be376f1b8186290a00b1a2bdb7c74ad811f896eb1f430b72d5d", 13067),
     "tag-groups.json": ("9883b239143045684e05d2888f4ce73ea0d0a865e20c0a238206de972e90f529", 2866),
@@ -50,7 +50,7 @@ def test_studio_tag_api_reads_each_canonical_payload() -> None:
 
     assert groups["ok"] is True and len(groups["groups"]) == 4
     assert registry["tag_registry_version"] == "tag_registry_v4"
-    assert registry["ok"] is True and len(registry["tags"]) == 245
+    assert registry["ok"] is True and len(registry["tags"]) == 246
     assert aliases["tag_aliases_version"] == "tag_aliases_v2"
     assert aliases["ok"] is True and len(aliases["aliases"]) == 70
     assert assignments["tag_assignments_version"] == "tag_assignments_v2"

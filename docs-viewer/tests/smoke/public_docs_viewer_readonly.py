@@ -394,7 +394,7 @@ def exercise_public_subscope_report(page: Page, base_url: str, timeout_ms: int) 
     request_urls: list[str] = []
     page.on("request", lambda request: request_urls.append(request.url))
     page.goto(route_url(base_url, f"/analysis/?doc={TAGS_DOC_ID}"), wait_until="domcontentloaded")
-    wait_for_rendered_doc(page, TAGS_DOC_ID, "Tags", timeout_ms)
+    wait_for_rendered_doc(page, TAGS_DOC_ID, "Concepts", timeout_ms)
     page.wait_for_function(
         f"""() => {{
             const report = document.querySelector(".docsViewerReport");
@@ -431,6 +431,64 @@ def exercise_public_subscope_report(page: Page, base_url: str, timeout_ms: int) 
         raise AssertionError(
             "public sub-scope report exposed manage-only icons or source controls: "
             f"{management_projection!r}"
+        )
+    public_filter_projection = page.locator(".docsViewerReport").evaluate(
+        """report => {
+            const input = report.querySelector(".docsViewerReport__searchInput");
+            const label = input ? report.querySelector(`label[for="${input.id}"]`) : null;
+            return {
+                filterLabel: label?.textContent || "",
+                filterLabelHidden: label?.classList.contains("visually-hidden") || false,
+                groupControls: report.querySelectorAll("[data-docs-subscope-group]").length,
+                listLabel: report.querySelector(".docsViewerReport__rows")
+                    ?.getAttribute("aria-label") || ""
+            };
+        }"""
+    )
+    if public_filter_projection != {
+        "filterLabel": "Filter Concepts by title",
+        "filterLabelHidden": True,
+        "groupControls": 0,
+        "listLabel": "Concepts",
+    }:
+        raise AssertionError(
+            "public sub-scope filter exposed the wrong presentation or group controls: "
+            f"{public_filter_projection!r}"
+        )
+    requests_before_filter = len(request_urls)
+    filter_input = page.locator(".docsViewerReport__searchInput")
+    filter_input.fill("ordere")
+    page.wait_for_function(
+        f"""() => {{
+            const rows = Array.from(document.querySelectorAll(
+                ".docsViewerReport__row[data-report-subdoc-id]"
+            ));
+            return rows.length === 1 &&
+                rows[0].dataset.reportSubdocId === "{ORDERED_SUBDOC_ID}";
+        }}""",
+        timeout=timeout_ms,
+    )
+    filter_input.fill("no-public-concept-matches")
+    page.wait_for_function(
+        """() => document.querySelector(".docsViewerReport__empty")?.textContent ===
+            "No concepts match the current filters." """,
+        timeout=timeout_ms,
+    )
+    page.locator(".docsViewerReport__searchClear").click()
+    page.wait_for_function(
+        f"""() => {{
+            const ids = Array.from(document.querySelectorAll(
+                ".docsViewerReport__row[data-report-subdoc-id]"
+            )).map(row => row.dataset.reportSubdocId);
+            return ["{BIRD_SUBDOC_ID}", "{NERVE_SUBDOC_ID}", "{ORDERED_SUBDOC_ID}"]
+                .every(docId => ids.includes(docId));
+        }}""",
+        timeout=timeout_ms,
+    )
+    if len(request_urls) != requests_before_filter:
+        raise AssertionError(
+            "public title filtering should not issue additional requests; "
+            f"saw {request_urls[requests_before_filter:]!r}"
         )
     if query_value(page.url, "doc") != TAGS_DOC_ID:
         raise AssertionError(f"public report parent doc should remain selected, got {page.url}")
@@ -511,7 +569,7 @@ def exercise_public_subscope_report(page: Page, base_url: str, timeout_ms: int) 
         route_url(base_url, f"/analysis/?doc={TAGS_DOC_ID}&subdoc={BIRD_SUBDOC_ID}"),
         wait_until="domcontentloaded",
     )
-    wait_for_rendered_doc(page, TAGS_DOC_ID, "Tags", timeout_ms)
+    wait_for_rendered_doc(page, TAGS_DOC_ID, "Concepts", timeout_ms)
     page.wait_for_function(
         f"""() => {{
             const active = document.querySelector(".docsViewer__navLink.is-active");
@@ -529,7 +587,7 @@ def exercise_public_subscope_report(page: Page, base_url: str, timeout_ms: int) 
         route_url(base_url, f"/analysis/?doc={TAGS_DOC_ID}&subdoc=missing-detail"),
         wait_until="domcontentloaded",
     )
-    wait_for_rendered_doc(page, TAGS_DOC_ID, "Tags", timeout_ms)
+    wait_for_rendered_doc(page, TAGS_DOC_ID, "Concepts", timeout_ms)
     page.wait_for_function(
         f"""() => document.querySelector(".docsViewerReport")?.dataset.reportState === "error" &&
             /missing-detail/.test(document.querySelector(".docsViewerReport")?.textContent || "") &&
