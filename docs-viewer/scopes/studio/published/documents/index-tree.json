@@ -935,6 +935,12 @@
               "title": "Tag Document Bootstrap Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260727-224141-d28e4c.json",
               "ui_status": "done"
+            },
+            {
+              "doc_id": "d-20260729-151446-09489e",
+              "title": "Tag Link Management Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260729-151446-09489e.json",
+              "ui_status": "planned"
             }
           ]
         },
@@ -1271,5 +1277,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-29T12:16:48Z"
+  "generated_at": "2026-07-29T14:16:03Z"
 }

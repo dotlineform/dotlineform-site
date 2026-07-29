@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-423334ea111a5d671c5741aac0a26a7e",
-    "generated_at_utc": "2026-07-29T12:16:48Z",
-    "count": 228
+    "version": "blake2b-058f22acdc6a87c30a211ea81b749baa",
+    "generated_at_utc": "2026-07-29T16:11:25Z",
+    "count": 229
   },
   "entries": [
     {
@@ -4254,26 +4254,26 @@
       "kind": "doc",
       "title": "Tag-document linking",
       "href": "/docs/?scope=studio&doc=d-20260726-211842-cc8f6c",
-      "last_updated": "2026-07-28 11:31:39",
+      "last_updated": "2026-07-29 15:14:46",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-28 11:31:39 • Roadmap",
+      "display_meta": "2026-07-29 15:14:46 • Roadmap",
       "search_terms": [
         "tag-document linking",
         "tag",
         "document",
         "linking",
         "roadmap",
-        "2026-07-28 11:31:39",
+        "2026-07-29 15:14:46",
         "2026",
         "07",
-        "28",
-        "11",
-        "31",
-        "39",
+        "29",
+        "15",
+        "14",
+        "46",
         "d-20260726-211842-cc8f6c"
       ],
-      "search_text": "tag-document linking tag document linking roadmap 2026-07-28 11:31:39 2026 07 28 11 31 39 d-20260726-211842-cc8f6c"
+      "search_text": "tag-document linking tag document linking roadmap 2026-07-29 15:14:46 2026 07 29 15 14 46 d-20260726-211842-cc8f6c"
     },
     {
       "id": "d-20260727-224141-d28e4c",
@@ -4302,6 +4302,34 @@
         "d-20260727-224141-d28e4c"
       ],
       "search_text": "tag document bootstrap delivery tag document bootstrap delivery tag-document linking linking 2026-07-28 11:31:39 2026 07 28 11 31 39 d-20260727-224141-d28e4c"
+    },
+    {
+      "id": "d-20260729-151446-09489e",
+      "kind": "doc",
+      "title": "Tag Link Management Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260729-151446-09489e",
+      "last_updated": "2026-07-29 17:10:29",
+      "parent_id": "d-20260726-211842-cc8f6c",
+      "parent_title": "Tag-document linking",
+      "display_meta": "2026-07-29 17:10:29 • Tag-document linking",
+      "search_terms": [
+        "tag link management delivery",
+        "tag",
+        "link",
+        "management",
+        "delivery",
+        "tag-document linking",
+        "document",
+        "linking",
+        "2026-07-29 17:10:29",
+        "2026",
+        "07",
+        "29",
+        "17",
+        "10",
+        "d-20260729-151446-09489e"
+      ],
+      "search_text": "tag link management delivery tag link management delivery tag-document linking document linking 2026-07-29 17:10:29 2026 07 29 17 10 d-20260729-151446-09489e"
     },
     {
       "id": "d-20260712-213026-ee0f22",
