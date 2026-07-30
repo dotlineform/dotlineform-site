@@ -762,6 +762,11 @@
           ]
         },
         {
+          "doc_id": "d-20260730-151218-f4968c",
+          "title": "Filesystem Edit Timestamp Capture Delivery",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260730-151218-f4968c.json"
+        },
+        {
           "doc_id": "d-20260726-224323-eb0a65",
           "title": "Manage Sub-Scope Documents",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-224323-eb0a65.json",
@@ -1303,5 +1308,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-30T13:49:36Z"
+  "generated_at": "2026-07-30T14:26:32Z"
 }
