@@ -26,6 +26,7 @@ REPORT_SECTION_ORDER = (
     "timestamp",
     "source_mutation",
     "generation",
+    "rollback",
     "created",
     "overwritten",
     "failed",
@@ -148,11 +149,13 @@ def collection_report_payload(result: dict[str, Any]) -> dict[str, Any]:
             "export_id": (result.get("package") or {}).get("export_id", ""),
             "source_sha256": (result.get("package") or {}).get("source_sha256", ""),
         },
-        "target_scope": result.get("scope", ""),
+        "target_scope": result.get("target") or result.get("scope", ""),
         "timestamp": result.get("timestamp", ""),
         "source_mutation": result.get("source_mutation", {}),
         "generation": result.get("generation", {}),
     }
+    if result.get("rollback"):
+        payload["rollback"] = result["rollback"]
     for status in RESULT_STATUSES:
         records = groups.get(status) if isinstance(groups.get(status), list) else []
         if records:

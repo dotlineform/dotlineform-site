@@ -43,8 +43,6 @@ from docs_import_source_interactive import (
 )
 from docs_management_document_target import (
     ManagedDocumentCollection,
-    confined_source_path,
-    source_doc_from_path,
 )
 import docs_source_model as source_model
 from docs_source_model import (
@@ -66,25 +64,16 @@ class ImportSourceDependencies:
 
 
 def load_ordinary_import_collection_docs(
+    repo_root: Path,
     collection: ManagedDocumentCollection,
 ) -> list[source_model.ScopeDoc]:
     if not collection.sub_scope:
         return []
-    docs: list[source_model.ScopeDoc] = []
-    for candidate in source_model.scope_markdown_paths(collection.source_root):
-        confined = confined_source_path(collection.source_root, candidate)
-        document = source_doc_from_path(
-            path=confined,
-            scope=collection.scope,
-            requested_doc_id=candidate.stem,
-        )
-        source_model.validate_sub_scope_document_metadata(
-            document,
-            ui_statuses=collection.document_config.ui_statuses,
-            document_groups=collection.document_config.document_groups,
-        )
-        docs.append(document)
-    return docs
+    return source_model.load_document_collection_docs_for_config(
+        repo_root,
+        collection.parent_config,
+        collection.document_config,
+    )
 
 
 def allocate_ordinary_import_doc_id(
@@ -177,16 +166,24 @@ def handle_import_source(
         repo_root,
         source_path,
         metadata_root=metadata_root,
+        allow_sub_scope_return_import=bool(
+            sub_scope
+            and getattr(destination.document_config, "supports_return_import", False)
+        ),
     )
     if source_format == EXPORT_ONLY_COLLECTION_SOURCE_FORMAT:
         raise ValueError(
             "Export-only document packages cannot enter Docs Import."
         )
     if source_format == COLLECTION_SOURCE_FORMAT:
-        if sub_scope:
+        if sub_scope and not getattr(
+            destination.document_config,
+            "supports_return_import",
+            False,
+        ):
             raise ValueError(
-                "Returned document packages are not supported for configured "
-                "sub-scope destinations by ordinary Docs Import.",
+                "Returned document packages are not supported for this configured "
+                "sub-scope destination.",
             )
         if not (dry_run or preview_only):
             return apply_document_package_collection(
@@ -199,6 +196,12 @@ def handle_import_source(
                 metadata_root=metadata_root,
                 log_event=dependencies.log_event,
                 perform_source_write_and_rebuild=dependencies.perform_source_write_and_rebuild,
+                collection=destination if sub_scope else None,
+                perform_sub_scope_source_write_and_rebuild=(
+                    dependencies.perform_sub_scope_source_write_and_rebuild
+                    if sub_scope
+                    else None
+                ),
             )
         plan = plan_document_package_collection(
             repo_root,
@@ -207,6 +210,7 @@ def handle_import_source(
             staging_root=staging_root,
             workspace_root=workspace_root,
             metadata_root=metadata_root,
+            collection=destination if sub_scope else None,
         )
         payload = plan.as_dict()
         dependencies.log_event(
@@ -221,13 +225,14 @@ def handle_import_source(
                 "record_errors": payload["counts"]["record_errors"],
                 "blockers": payload["counts"]["blockers"],
                 "ready_for_confirmation": payload["ready_for_confirmation"],
+                **({"sub_scope": sub_scope} if sub_scope else {}),
             },
         )
         payload["dry_run"] = dry_run
         return payload
     if is_interactive_html_import_asset(source_path):
         raise ValueError("interactive HTML script files cannot be selected as the primary import source")
-    docs = load_ordinary_import_collection_docs(destination)
+    docs = load_ordinary_import_collection_docs(repo_root, destination)
     preview = generate_import_preview(
         repo_root,
         staging_root=staging_root,

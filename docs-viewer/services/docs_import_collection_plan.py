@@ -17,6 +17,7 @@ from docs_import_document import (
 )
 from docs_import_preview import generate_normalized_import_content_preview
 from docs_import_source_helpers import relative_path
+from docs_management_document_target import ManagedDocumentCollection
 from docs_source_model import (
     ScopeDoc,
     allocate_doc_id,
@@ -287,11 +288,14 @@ def _plan_document_candidates(
     *,
     staging_root: Path,
     workspace_root: Path,
+    collection: ManagedDocumentCollection | None = None,
+    preserve_collection_metadata: bool = False,
+    allow_media_plans: bool = True,
 ) -> list[dict[str, Any]]:
     blockers: list[dict[str, Any]] = []
     for state in states:
         record = state.normalized
-        if record is None:
+        if record is None or state.blocked or state.errors:
             continue
         collision = state.collision
         if collision is not None and collision.doc_id != record.doc_id:
@@ -340,6 +344,20 @@ def _plan_document_candidates(
                         doc_id=record.doc_id,
                     )
                 )
+            if not allow_media_plans and (
+                preview.get("media_plans")
+                or preview.get("media_plan")
+            ):
+                state.errors.append(
+                    collection_issue(
+                        "error",
+                        "sub_scope_media_not_supported",
+                        "returned sub-scope documents cannot materialize inline media",
+                        record_index=state.record_index,
+                        doc_id=record.doc_id,
+                    )
+                )
+                continue
         state.import_preview = preview
         operation = IMPORT_DOCUMENT_OVERWRITE if collision is not None else IMPORT_DOCUMENT_CREATE
         try:
@@ -353,6 +371,8 @@ def _plan_document_candidates(
                 import_preview=preview if record.content_intent == CONTENT_INTENT_REPLACE else None,
                 create_doc_id=record.doc_id if collision is None else "",
                 create_added_date=state.create_added_date if collision is None else "",
+                collection=collection,
+                preserve_collection_metadata=preserve_collection_metadata,
             )
             state.parent_id = state.document_plan.parent_id
         except ValueError as exc:
@@ -527,6 +547,7 @@ def blocked_collection_plan(
     staged_filename: str,
     blockers: list[dict[str, Any]],
     workspace_root: Path,
+    sub_scope: str = "",
 ) -> DocumentsCollectionPlan:
     safe_blockers = _sanitize_issue_paths(blockers, workspace_root)
     response = {
@@ -555,6 +576,9 @@ def blocked_collection_plan(
             "blockers": len(safe_blockers),
         },
     }
+    if sub_scope:
+        response["sub_scope"] = sub_scope
+        response["target"] = {"scope": scope, "sub_scope": sub_scope}
     return DocumentsCollectionPlan(normalized_records=(), document_plans=(), response=response)
 
 
@@ -571,9 +595,29 @@ def plan_import_content_collection(
     package_projection: dict[str, Any],
     blockers: list[dict[str, Any]],
     planned_identities: list[dict[str, Any]] | None = None,
+    collection: ManagedDocumentCollection | None = None,
+    overwrite_only: bool = False,
 ) -> DocumentsCollectionPlan:
     """Complete a body-free collection plan from wrapper-normalized states."""
 
+    if collection is not None and collection.scope != scope:
+        raise ValueError("managed collection does not match collection plan scope")
+    if overwrite_only:
+        for state in states:
+            record = state.normalized
+            if record is None or state.blocked or state.errors:
+                continue
+            state.collision = _collision_for(record, docs)
+            if state.collision is None:
+                state.blocked = True
+                problem = collection_issue(
+                    "error",
+                    "overwrite_target_missing",
+                    f"returned document {record.doc_id!r} is not an existing collection member",
+                    record_index=state.record_index,
+                    doc_id=record.doc_id,
+                )
+                state.errors.append(problem)
     identity_rows = _prepare_local_create_identities(states, docs, planned_identities)
     blockers.extend(
         _plan_document_candidates(
@@ -583,6 +627,9 @@ def plan_import_content_collection(
             docs,
             staging_root=staging_root,
             workspace_root=workspace_root,
+            collection=collection,
+            preserve_collection_metadata=overwrite_only,
+            allow_media_plans=not overwrite_only,
         )
     )
     hierarchy_blockers, dependencies = _validate_hierarchy(states, docs)
@@ -646,6 +693,9 @@ def plan_import_content_collection(
             "blockers": len(blockers),
         },
     }
+    if collection is not None and collection.sub_scope:
+        response["sub_scope"] = collection.sub_scope
+        response["target"] = collection.request_target()
     return DocumentsCollectionPlan(
         normalized_records=tuple(state.normalized for state in states),
         document_plans=tuple(state.document_plan for state in states),

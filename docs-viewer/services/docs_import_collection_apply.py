@@ -9,17 +9,24 @@ from typing import Any, Callable
 
 from docs_import_collection_plan import DocumentsCollectionPlan, collection_issue
 from docs_import_collection_result import (
+    safe_generation_result,
     shape_collection_result,
     utc_timestamp,
     write_collection_result_report,
 )
 from docs_import_document import (
     IMPORT_DOCUMENT_CREATE,
+    IMPORT_DOCUMENT_OVERWRITE,
     ImportDocumentApplyResult,
     ImportDocumentMediaContext,
     apply_import_document_source,
     import_document_activity,
     materialize_import_document_media,
+)
+from docs_management_document_target import ManagedDocumentCollection
+from docs_write_rebuild import (
+    SubScopeSourceSnapshotChanged,
+    SubScopeWriteRebuildFailure,
 )
 
 
@@ -35,11 +42,13 @@ def _clean_text(value: Any) -> str:
 
 COLLECTION_APPLY_BODY_FIELDS = {
     "scope",
+    "sub_scope",
     "staged_filename",
     "preview_only",
     "confirm",
     "export_id",
     "source_sha256",
+    "trusted_metadata_sha256",
     "planned_identities",
     "planned_actions",
     "activity_context",
@@ -126,6 +135,24 @@ def _resolve_collection_apply_request(
                     "warning",
                     "package_identity_changed",
                     "staged package identity changed; review the refreshed plan",
+                )
+            ],
+        )
+    current_metadata_sha256 = _clean_text(
+        current_package.get("trusted_metadata_sha256")
+    )
+    if (
+        current_metadata_sha256
+        and _clean_text(body.get("trusted_metadata_sha256"))
+        != current_metadata_sha256
+    ):
+        return {}, _refreshed_collection_plan(
+            plan,
+            [
+                collection_issue(
+                    "warning",
+                    "package_identity_changed",
+                    "trusted package metadata changed; review the refreshed plan",
                 )
             ],
         )
@@ -345,6 +372,241 @@ def apply_import_content_collection(
     return result_payload
 
 
+def _atomic_collection_result(
+    repo_root: Path,
+    plan: DocumentsCollectionPlan,
+    records: list[dict[str, Any]],
+    *,
+    staging_root: Path,
+    workspace_root: Path,
+    log_event: LogEvent,
+    collection: ManagedDocumentCollection,
+    generation: dict[str, Any],
+    rollback: dict[str, Any],
+) -> dict[str, Any]:
+    warnings = copy.deepcopy(plan.response.get("warnings") or [])
+    for record in records:
+        warnings.extend(copy.deepcopy(record.get("warnings") or []))
+    result_payload = shape_collection_result(
+        source_format=plan.response["source_format"],
+        scope=plan.response["scope"],
+        staged_filename=plan.response["staged_filename"],
+        package=plan.response.get("package") or {},
+        records=records,
+        generation=generation,
+        warnings=warnings,
+        manual_copy_instructions=[],
+        timestamp=utc_timestamp(),
+    )
+    result_payload["sub_scope"] = collection.sub_scope
+    result_payload["target"] = collection.request_target()
+    result_payload["rollback"] = copy.deepcopy(rollback)
+    try:
+        result_payload["report_path"] = write_collection_result_report(
+            result_payload,
+            staging_root=staging_root,
+            workspace_root=workspace_root,
+        )
+    except Exception as exc:
+        result_payload["warnings"].append(
+            collection_issue(
+                "warning",
+                "result_report_write_failed",
+                _safe_error_message(exc, repo_root, workspace_root),
+            )
+        )
+    log_event(
+        repo_root,
+        "docs-import-sub-scope-collection-apply",
+        {
+            "scope": collection.scope,
+            "sub_scope": collection.sub_scope,
+            "staged_filename": plan.response["staged_filename"],
+            "outcome": result_payload["outcome"],
+            "counts": result_payload["counts"],
+            "generation_status": result_payload["generation"]["status"],
+            "rollback_status": result_payload["rollback"]["status"],
+            "report_path": result_payload["report_path"],
+        },
+    )
+    return result_payload
+
+
+def apply_import_content_collection_atomic(
+    repo_root: Path,
+    plan: DocumentsCollectionPlan,
+    body: dict[str, Any],
+    *,
+    staging_root: Path,
+    workspace_root: Path,
+    log_event: LogEvent,
+    collection: ManagedDocumentCollection,
+    perform_sub_scope_source_write_and_rebuild: PerformSourceWriteAndRebuild,
+) -> dict[str, Any]:
+    """Apply one exact child package or restore every source and its projection."""
+
+    if not collection.sub_scope:
+        raise ValueError("atomic collection apply requires a managed child collection")
+    _actions, refreshed = _resolve_collection_apply_request(plan, body)
+    if refreshed is not None:
+        return refreshed
+
+    response_records = list(plan.response.get("records") or [])
+    results = [_base_record_result(record, "pending") for record in response_records]
+    document_plans = list(plan.document_plans)
+    if (
+        len(document_plans) != len(results)
+        or any(document_plan is None for document_plan in document_plans)
+        or any(
+            document_plan is not None
+            and document_plan.operation != IMPORT_DOCUMENT_OVERWRITE
+            for document_plan in document_plans
+        )
+    ):
+        return _refreshed_collection_plan(
+            plan,
+            [
+                collection_issue(
+                    "error",
+                    "atomic_overwrite_plan_required",
+                    "exact sub-scope package apply requires one overwrite plan per record",
+                )
+            ],
+        )
+
+    snapshots: dict[Path, bytes] = {}
+    for document_plan in document_plans:
+        assert document_plan is not None
+        target_path = document_plan.target_path.resolve()
+        try:
+            target_path.relative_to(collection.source_root.resolve())
+        except ValueError as exc:
+            raise ValueError("planned sub-scope target escapes configured collection") from exc
+        current = target_path.read_bytes()
+        if (
+            document_plan.target is None
+            or current != document_plan.target.source_text.encode("utf-8")
+        ):
+            return _refreshed_collection_plan(
+                plan,
+                [
+                    collection_issue(
+                        "warning",
+                        "target_state_changed",
+                        "canonical sources changed after planning; review a refreshed plan",
+                    )
+                ],
+            )
+        snapshots[target_path] = current
+
+    changed_paths = [
+        document_plan.target_path
+        for document_plan in document_plans
+        if document_plan is not None
+    ]
+
+    def write_atomic_collection() -> None:
+        for index, document_plan in enumerate(document_plans):
+            assert document_plan is not None
+            apply_import_document_source(document_plan)
+            results[index]["status"] = "overwritten"
+
+    try:
+        rebuild = perform_sub_scope_source_write_and_rebuild(
+            repo_root,
+            collection.scope,
+            collection.sub_scope,
+            changed_paths,
+            write_atomic_collection,
+            suppression_reason="docs-import-sub-scope-collection-apply",
+            source_snapshots=snapshots,
+        )
+    except SubScopeSourceSnapshotChanged:
+        return _refreshed_collection_plan(
+            plan,
+            [
+                collection_issue(
+                    "warning",
+                    "target_state_changed",
+                    "canonical sources changed immediately before apply; review a refreshed plan",
+                )
+            ],
+        )
+    except SubScopeWriteRebuildFailure as exc:
+        apply_error = _safe_error_message(exc, repo_root, workspace_root)
+        raw_rollback = exc.rollback
+        rollback_status = str(raw_rollback.get("status") or "failed")
+        failure_message = (
+            f"package apply failed and source snapshot restoration {rollback_status}: "
+            f"{apply_error}"
+        )
+        for result in results:
+            result["status"] = "failed"
+            result["error"] = failure_message
+        rollback = {
+            "status": rollback_status,
+            "sources_restored": bool(raw_rollback.get("sources_restored")),
+            "rebuild": safe_generation_result(
+                {
+                    "status": (
+                        "completed"
+                        if isinstance(raw_rollback.get("rebuild"), dict)
+                        else "not-run"
+                    ),
+                    "rebuild": raw_rollback.get("rebuild"),
+                    "error": raw_rollback.get("error"),
+                }
+            )["rebuild"],
+            "error": (
+                _safe_error_message(
+                    RuntimeError(_clean_text(raw_rollback.get("error"))),
+                    repo_root,
+                    workspace_root,
+                )
+                if _clean_text(raw_rollback.get("error"))
+                else ""
+            ),
+        }
+        return _atomic_collection_result(
+            repo_root,
+            plan,
+            results,
+            staging_root=staging_root,
+            workspace_root=workspace_root,
+            log_event=log_event,
+            collection=collection,
+            generation={"status": "failed", "rebuild": None, "error": apply_error},
+            rollback=rollback,
+        )
+
+    for document_plan in document_plans:
+        assert document_plan is not None
+        event_name, event_details = import_document_activity(
+            repo_root,
+            document_plan,
+            plan.response["staged_filename"],
+            include_prompt_meta=False,
+        )
+        log_event(repo_root, event_name, event_details)
+    return _atomic_collection_result(
+        repo_root,
+        plan,
+        results,
+        staging_root=staging_root,
+        workspace_root=workspace_root,
+        log_event=log_event,
+        collection=collection,
+        generation={"status": "completed", "rebuild": rebuild, "error": ""},
+        rollback={
+            "status": "not-needed",
+            "sources_restored": False,
+            "rebuild": None,
+            "error": "",
+        },
+    )
+
+
 __all__ = [
     "apply_import_content_collection",
+    "apply_import_content_collection_atomic",
 ]

@@ -199,6 +199,8 @@ def _overwrite_source(
     target: ScopeDoc,
     import_preview: dict[str, Any],
     explicit_front_matter: dict[str, Any],
+    *,
+    preserve_collection_metadata: bool = False,
 ) -> tuple[str, str, bool]:
     if record.content_intent == CONTENT_INTENT_EMPTY_NEW:
         raise ValueError("empty-new content cannot overwrite an existing import target")
@@ -206,7 +208,7 @@ def _overwrite_source(
     front_matter["doc_id"] = target.doc_id
     front_matter["title"] = record.title
 
-    if record.content_intent == CONTENT_INTENT_REPLACE:
+    if record.content_intent == CONTENT_INTENT_REPLACE and not preserve_collection_metadata:
         # Retain the ordinary single-source overwrite cleanup contract.
         front_matter["parent_id"] = target.parent_id
         front_matter.pop("sort_order", None)
@@ -246,6 +248,7 @@ def plan_import_document(
     create_doc_id: str = "",
     create_added_date: str = "",
     collection: ManagedDocumentCollection | None = None,
+    preserve_collection_metadata: bool = False,
 ) -> ImportDocumentPlan:
     """Validate and plan one create or overwrite without writing."""
 
@@ -320,12 +323,17 @@ def plan_import_document(
             target,
             preview,
             explicit_front_matter,
+            preserve_collection_metadata=preserve_collection_metadata,
         )
-        search_doc_ids = tuple(
-            metadata_search_doc_ids(
-                docs,
-                target.doc_id,
-                title_changed=title != target.title,
+        search_doc_ids = (
+            ()
+            if sub_scope
+            else tuple(
+                metadata_search_doc_ids(
+                    docs,
+                    target.doc_id,
+                    title_changed=title != target.title,
+                )
             )
         )
 

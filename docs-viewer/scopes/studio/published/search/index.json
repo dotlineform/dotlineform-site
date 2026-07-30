@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-893dbabe074fe12674502d42706cc2bf",
-    "generated_at_utc": "2026-07-30T16:00:42Z",
+    "version": "blake2b-b0addc4c7319aafdb76011e73c8d3e88",
+    "generated_at_utc": "2026-07-30T16:30:07Z",
     "count": 234
   },
   "entries": [
@@ -4359,10 +4359,10 @@
       "kind": "doc",
       "title": "Sub-Scope Returned Package Import Delivery",
       "href": "/docs/?scope=studio&doc=d-20260730-102954-1b363f",
-      "last_updated": "2026-07-30 17:00:41",
+      "last_updated": "2026-07-30 17:29:53",
       "parent_id": "d-20260728-113139-285eae",
       "parent_title": "Sub-Scope Index",
-      "display_meta": "2026-07-30 17:00:41 • Sub-Scope Index",
+      "display_meta": "2026-07-30 17:29:53 • Sub-Scope Index",
       "search_terms": [
         "sub-scope returned package import delivery",
         "sub",
@@ -4373,16 +4373,16 @@
         "delivery",
         "sub-scope index",
         "index",
-        "2026-07-30 17:00:41",
+        "2026-07-30 17:29:53",
         "2026",
         "07",
         "30",
         "17",
-        "00",
-        "41",
+        "29",
+        "53",
         "d-20260730-102954-1b363f"
       ],
-      "search_text": "sub-scope returned package import delivery sub scope returned package import delivery sub-scope index index 2026-07-30 17:00:41 2026 07 30 17 00 41 d-20260730-102954-1b363f"
+      "search_text": "sub-scope returned package import delivery sub scope returned package import delivery sub-scope index index 2026-07-30 17:29:53 2026 07 30 17 29 53 d-20260730-102954-1b363f"
     },
     {
       "id": "d-20260728-173227-bb7426",

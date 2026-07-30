@@ -94,6 +94,7 @@ def document_package_source_format(
     path: Path,
     *,
     metadata_root: Path,
+    allow_sub_scope_return_import: bool = False,
 ) -> str:
     """Classify a trusted supported documents package before generic JSON import."""
 
@@ -129,7 +130,10 @@ def document_package_source_format(
         and trusted_metadata.get("supports_return_import") is True
     ):
         return EXPORT_ONLY_COLLECTION_SOURCE_FORMAT
-    if _clean_text(trusted_metadata.get("sub_scope")):
+    if (
+        _clean_text(trusted_metadata.get("sub_scope"))
+        and not allow_sub_scope_return_import
+    ):
         return EXPORT_ONLY_COLLECTION_SOURCE_FORMAT
     if profile_id not in SUPPORTED_COLLECTION_PROFILE_IDS:
         return ""
@@ -145,6 +149,7 @@ def load_document_package(
     staged_filename: str,
     staging_root: Path,
     metadata_root: Path,
+    sub_scope: str | None = None,
 ) -> tuple[LoadedDocumentPackage | None, list[dict[str, Any]]]:
     """Resolve one safe package and its trusted export metadata."""
 
@@ -204,6 +209,7 @@ def load_document_package(
                     trusted_metadata,
                     repo_root=repo_root,
                     scope=scope,
+                    sub_scope=sub_scope,
                     required_capability=RETURN_IMPORT_CAPABILITY,
                 )
             )
