@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-1d84d0220f48765e2367ec3c22d2556b",
-    "generated_at_utc": "2026-07-30T19:02:02Z",
+    "version": "blake2b-d4e5a1dac56d0f6c5b52de044ae36518",
+    "generated_at_utc": "2026-07-30T19:12:46Z",
     "count": 234
   },
   "entries": [
@@ -3459,10 +3459,10 @@
       "kind": "doc",
       "title": "Edited Docs Review Source Round-Trip",
       "href": "/docs/?scope=studio&doc=d-20260730-121423-78b0f6",
-      "last_updated": "2026-07-30 12:32:13",
+      "last_updated": "2026-07-30 20:10:35",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-30 12:32:13 • Roadmap",
+      "display_meta": "2026-07-30 20:10:35 • Roadmap",
       "search_terms": [
         "edited docs review source round-trip",
         "edited",
@@ -3472,26 +3472,26 @@
         "round",
         "trip",
         "roadmap",
-        "2026-07-30 12:32:13",
+        "2026-07-30 20:10:35",
         "2026",
         "07",
         "30",
-        "12",
-        "32",
-        "13",
+        "20",
+        "10",
+        "35",
         "d-20260730-121423-78b0f6"
       ],
-      "search_text": "edited docs review source round-trip edited docs review source round trip roadmap 2026-07-30 12:32:13 2026 07 30 12 32 13 d-20260730-121423-78b0f6"
+      "search_text": "edited docs review source round-trip edited docs review source round trip roadmap 2026-07-30 20:10:35 2026 07 30 20 10 35 d-20260730-121423-78b0f6"
     },
     {
       "id": "d-20260730-123213-f7d58b",
       "kind": "doc",
       "title": "Docs Import Capability Parity Quick Reference",
       "href": "/docs/?scope=studio&doc=d-20260730-123213-f7d58b",
-      "last_updated": "2026-07-30 12:32:13",
+      "last_updated": "2026-07-30 20:10:35",
       "parent_id": "d-20260730-121423-78b0f6",
       "parent_title": "Edited Docs Review Source Round-Trip",
-      "display_meta": "2026-07-30 12:32:13 • Edited Docs Review Source Round-Trip",
+      "display_meta": "2026-07-30 20:10:35 • Edited Docs Review Source Round-Trip",
       "search_terms": [
         "docs import capability parity quick reference",
         "docs",
@@ -3506,26 +3506,26 @@
         "source",
         "round",
         "trip",
-        "2026-07-30 12:32:13",
+        "2026-07-30 20:10:35",
         "2026",
         "07",
         "30",
-        "12",
-        "32",
-        "13",
+        "20",
+        "10",
+        "35",
         "d-20260730-123213-f7d58b"
       ],
-      "search_text": "docs import capability parity quick reference docs import capability parity quick reference edited docs review source round-trip edited review source round trip 2026-07-30 12:32:13 2026 07 30 12 32 13 d-20260730-123213-f7d58b"
+      "search_text": "docs import capability parity quick reference docs import capability parity quick reference edited docs review source round-trip edited review source round trip 2026-07-30 20:10:35 2026 07 30 20 10 35 d-20260730-123213-f7d58b"
     },
     {
       "id": "d-20260730-112029-799346",
       "kind": "doc",
       "title": "Edited Docs Review Source Round-Trip Delivery",
       "href": "/docs/?scope=studio&doc=d-20260730-112029-799346",
-      "last_updated": "2026-07-30 15:22:15",
+      "last_updated": "2026-07-30 20:10:35",
       "parent_id": "d-20260730-121423-78b0f6",
       "parent_title": "Edited Docs Review Source Round-Trip",
-      "display_meta": "2026-07-30 15:22:15 • Edited Docs Review Source Round-Trip",
+      "display_meta": "2026-07-30 20:10:35 • Edited Docs Review Source Round-Trip",
       "search_terms": [
         "edited docs review source round-trip delivery",
         "edited",
@@ -3536,15 +3536,16 @@
         "trip",
         "delivery",
         "edited docs review source round-trip",
-        "2026-07-30 15:22:15",
+        "2026-07-30 20:10:35",
         "2026",
         "07",
         "30",
-        "15",
-        "22",
+        "20",
+        "10",
+        "35",
         "d-20260730-112029-799346"
       ],
-      "search_text": "edited docs review source round-trip delivery edited docs review source round trip delivery edited docs review source round-trip 2026-07-30 15:22:15 2026 07 30 15 22 d-20260730-112029-799346"
+      "search_text": "edited docs review source round-trip delivery edited docs review source round trip delivery edited docs review source round-trip 2026-07-30 20:10:35 2026 07 30 20 10 35 d-20260730-112029-799346"
     },
     {
       "id": "d-20260730-151218-f4968c",
@@ -4129,26 +4130,26 @@
       "kind": "doc",
       "title": "Sub-Scope Index",
       "href": "/docs/?scope=studio&doc=d-20260728-113139-285eae",
-      "last_updated": "2026-07-30 12:14:23",
+      "last_updated": "2026-07-30 20:10:35",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-30 12:14:23 • Roadmap",
+      "display_meta": "2026-07-30 20:10:35 • Roadmap",
       "search_terms": [
         "sub-scope index",
         "sub",
         "scope",
         "index",
         "roadmap",
-        "2026-07-30 12:14:23",
+        "2026-07-30 20:10:35",
         "2026",
         "07",
         "30",
-        "12",
-        "14",
-        "23",
+        "20",
+        "10",
+        "35",
         "d-20260728-113139-285eae"
       ],
-      "search_text": "sub-scope index sub scope index roadmap 2026-07-30 12:14:23 2026 07 30 12 14 23 d-20260728-113139-285eae"
+      "search_text": "sub-scope index sub scope index roadmap 2026-07-30 20:10:35 2026 07 30 20 10 35 d-20260728-113139-285eae"
     },
     {
       "id": "d-20260728-113139-95a885",
@@ -4240,10 +4241,10 @@
       "kind": "doc",
       "title": "Sub-Scope Ordinary Document Import Delivery",
       "href": "/docs/?scope=studio&doc=d-20260730-121423-469e54",
-      "last_updated": "2026-07-30 14:49:04",
+      "last_updated": "2026-07-30 20:10:35",
       "parent_id": "d-20260728-113139-285eae",
       "parent_title": "Sub-Scope Index",
-      "display_meta": "2026-07-30 14:49:04 • Sub-Scope Index",
+      "display_meta": "2026-07-30 20:10:35 • Sub-Scope Index",
       "search_terms": [
         "sub-scope ordinary document import delivery",
         "sub",
@@ -4254,16 +4255,16 @@
         "delivery",
         "sub-scope index",
         "index",
-        "2026-07-30 14:49:04",
+        "2026-07-30 20:10:35",
         "2026",
         "07",
         "30",
-        "14",
-        "49",
-        "04",
+        "20",
+        "10",
+        "35",
         "d-20260730-121423-469e54"
       ],
-      "search_text": "sub-scope ordinary document import delivery sub scope ordinary document import delivery sub-scope index index 2026-07-30 14:49:04 2026 07 30 14 49 04 d-20260730-121423-469e54"
+      "search_text": "sub-scope ordinary document import delivery sub scope ordinary document import delivery sub-scope index index 2026-07-30 20:10:35 2026 07 30 20 10 35 d-20260730-121423-469e54"
     },
     {
       "id": "d-20260728-115825-ae1461",
@@ -4358,10 +4359,10 @@
       "kind": "doc",
       "title": "Sub-Scope Returned Package Import Delivery",
       "href": "/docs/?scope=studio&doc=d-20260730-102954-1b363f",
-      "last_updated": "2026-07-30 19:57:08",
+      "last_updated": "2026-07-30 20:12:46",
       "parent_id": "d-20260728-113139-285eae",
       "parent_title": "Sub-Scope Index",
-      "display_meta": "2026-07-30 19:57:08 • Sub-Scope Index",
+      "display_meta": "2026-07-30 20:12:46 • Sub-Scope Index",
       "search_terms": [
         "sub-scope returned package import delivery",
         "sub",
@@ -4372,16 +4373,16 @@
         "delivery",
         "sub-scope index",
         "index",
-        "2026-07-30 19:57:08",
+        "2026-07-30 20:12:46",
         "2026",
         "07",
         "30",
-        "19",
-        "57",
-        "08",
+        "20",
+        "12",
+        "46",
         "d-20260730-102954-1b363f"
       ],
-      "search_text": "sub-scope returned package import delivery sub scope returned package import delivery sub-scope index index 2026-07-30 19:57:08 2026 07 30 19 57 08 d-20260730-102954-1b363f"
+      "search_text": "sub-scope returned package import delivery sub scope returned package import delivery sub-scope index index 2026-07-30 20:12:46 2026 07 30 20 12 46 d-20260730-102954-1b363f"
     },
     {
       "id": "d-20260728-173227-bb7426",
