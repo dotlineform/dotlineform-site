@@ -34,6 +34,15 @@ from docs_import_preview import (
     list_staged_import_source_files,
     resolve_staged_import_source,
 )
+from docs_import_review_source_folder import (
+    EDITED_REVIEW_SOURCE_FORMAT,
+    is_review_source_markdown,
+    recognize_edited_review_source_folder,
+)
+from docs_import_review_source_collection import (
+    apply_edited_review_source_collection,
+    plan_edited_review_source_collection,
+)
 from docs_import_source_helpers import (
     interactive_html_overwrite_summary,
 )
@@ -60,6 +69,7 @@ PerformSourceWriteAndRebuild = Callable[..., Dict[str, Any]]
 class ImportSourceDependencies:
     log_event: LogEvent
     perform_source_write_and_rebuild: PerformSourceWriteAndRebuild
+    perform_scope_source_write_and_rebuild_atomic: PerformSourceWriteAndRebuild
     perform_sub_scope_source_write_and_rebuild: PerformSourceWriteAndRebuild
 
 
@@ -116,7 +126,24 @@ def handle_import_source_files(repo_root: Path) -> Dict[str, Any]:
     workspace_paths = configured_workspace_paths(repo_root)
     registered_source_formats: dict[str, str] = {}
     blocked_package_filenames: set[str] = set()
+    edited_review_sources: dict[str, dict[str, Any]] = {}
     for path in workspace_paths.import_staging.iterdir():
+        try:
+            edited_review_source = recognize_edited_review_source_folder(
+                repo_root,
+                candidate=path,
+                staging_root=workspace_paths.import_staging,
+                metadata_root=workspace_paths.meta,
+            )
+        except (FileNotFoundError, OSError, ValueError):
+            blocked_package_filenames.add(path.name)
+            continue
+        if edited_review_source is not None:
+            registered_source_formats[path.name] = EDITED_REVIEW_SOURCE_FORMAT
+            edited_review_sources[path.name] = (
+                edited_review_source.listing_projection()
+            )
+            continue
         source_format = document_package_source_format(
             repo_root,
             path,
@@ -137,7 +164,13 @@ def handle_import_source_files(repo_root: Path) -> Dict[str, Any]:
         "staging_root": marker_path(workspace_paths.import_staging, workspace_root=workspace_paths.root),
         "message": "",
         "files": [
-            record
+            {
+                **record,
+                **edited_review_sources.get(
+                    str(record.get("filename") or ""),
+                    {},
+                ),
+            }
             for record in files
             if str(record.get("filename") or "") not in blocked_package_filenames
         ],
@@ -162,6 +195,65 @@ def handle_import_source(
     confirm_interactive_html_overwrite = bool(body.get("confirm_interactive_html_overwrite"))
     preview_only = bool(body.get("preview_only"))
     source_path = resolve_staged_import_source(staging_root, staged_filename)
+    edited_review_source = recognize_edited_review_source_folder(
+        repo_root,
+        candidate=source_path,
+        staging_root=staging_root,
+        metadata_root=metadata_root,
+    )
+    if edited_review_source is not None:
+        if sub_scope or edited_review_source.source_sub_scope:
+            raise ValueError(
+                "Edited review source folders for configured sub-scopes are not "
+                "available until ERS-1.4.",
+            )
+        if edited_review_source.source_scope != scope:
+            raise ValueError(
+                "Edited review source folder belongs to scope "
+                f"{edited_review_source.source_scope!r}, not {scope!r}.",
+            )
+        if not (dry_run or preview_only):
+            return apply_edited_review_source_collection(
+                repo_root,
+                folder=edited_review_source,
+                collection=destination,
+                body=body,
+                staging_root=staging_root,
+                workspace_root=workspace_root,
+                log_event=dependencies.log_event,
+                perform_scope_source_write_and_rebuild_atomic=(
+                    dependencies.perform_scope_source_write_and_rebuild_atomic
+                ),
+            )
+        plan = plan_edited_review_source_collection(
+            repo_root,
+            folder=edited_review_source,
+            collection=destination,
+            staging_root=staging_root,
+            workspace_root=workspace_root,
+        )
+        payload = plan.as_dict()
+        dependencies.log_event(
+            repo_root,
+            "docs-import-reviewed-scope-collection-preview",
+            {
+                "scope": scope,
+                "staged_filename": staged_filename,
+                "source_format": EDITED_REVIEW_SOURCE_FORMAT,
+                "records": payload["counts"]["records"],
+                "collisions": payload["counts"]["collisions"],
+                "record_errors": payload["counts"]["record_errors"],
+                "blockers": payload["counts"]["blockers"],
+                "ready_for_confirmation": payload["ready_for_confirmation"],
+            },
+        )
+        payload["dry_run"] = dry_run
+        return payload
+    if is_review_source_markdown(source_path):
+        raise ValueError(
+            "A review source cannot be imported by itself. Stage and select the "
+            "complete edited review source folder.",
+        )
     source_format = document_package_source_format(
         repo_root,
         source_path,

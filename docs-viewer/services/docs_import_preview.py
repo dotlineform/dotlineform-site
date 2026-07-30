@@ -192,7 +192,7 @@ def list_staged_import_source_files(
             {
                 "filename": path.name,
                 "path": marker_path(path, workspace_root=workspace_root),
-                "source_format": "markdown_package",
+                "source_format": registered_formats.get(path.name) or "markdown_package",
                 "size_bytes": sum(file.stat().st_size for file in package_files),
                 "modified_utc": dt.datetime.fromtimestamp(modified, tz=dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                 "package_file_count": len(package_files),

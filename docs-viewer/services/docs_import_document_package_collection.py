@@ -66,7 +66,7 @@ def _returned_hierarchy_fields(raw_row: Any) -> list[str]:
     )
 
 
-def _validate_prepared_source_versions(
+def validate_prepared_source_versions(
     package_metadata: dict[str, Any],
     docs: list[ScopeDoc],
 ) -> list[dict[str, Any]]:
@@ -257,7 +257,7 @@ def plan_document_package_collection(
                 )
             )
         blockers.extend(
-            _validate_prepared_source_versions(
+            validate_prepared_source_versions(
                 package.package_metadata,
                 docs,
             )
@@ -380,4 +380,5 @@ __all__ = [
     "DocumentsCollectionPlan",
     "apply_document_package_collection",
     "plan_document_package_collection",
+    "validate_prepared_source_versions",
 ]

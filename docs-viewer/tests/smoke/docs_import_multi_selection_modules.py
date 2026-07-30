@@ -41,6 +41,13 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
             "filename": "reviewed.jsonl",
             "source_format": "data_sharing_documents",
         },
+        {
+            "filename": "edited-review-copy",
+            "display_name": (
+                "20260730-095512-documents-document-content (reviewed)"
+            ),
+            "source_format": "edited_review_sources",
+        },
     ]
 
     def fulfill(route, payload: object) -> None:
@@ -380,6 +387,7 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
             typeLabels: Array.from(typeSelect.options).map(option => option.textContent),
             multiple: fileSelect.multiple,
             filenames: Array.from(fileSelect.options).map(option => option.value),
+            labels: Array.from(fileSelect.options).map(option => option.textContent),
             selected: Array.from(fileSelect.selectedOptions).map(option => option.value),
             selectionCount: selectionCount.textContent,
             promptMetaHidden: promptMetaWrap.hidden,
@@ -394,6 +402,10 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
             promptMetaHidden: promptMetaWrap.hidden
           };
 
+          Array.from(fileSelect.options).forEach(option => {
+            if (option.value === 'edited-review-copy') option.selected = false;
+          });
+          fileSelect.dispatchEvent(new Event('change', { bubbles: true }));
           runButton.click();
           for (let attempt = 0; attempt < 1000 && confirmButton.hidden; attempt += 1) {
             await new Promise(resolve => setTimeout(resolve, 0));
@@ -413,6 +425,7 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
             type: typeSelect.value,
             multiple: fileSelect.multiple,
             filenames: Array.from(fileSelect.options).map(option => option.value),
+            labels: Array.from(fileSelect.options).map(option => option.textContent),
             selected: Array.from(fileSelect.selectedOptions).map(option => option.value),
             selectionBarHidden: selectionBar.hidden,
             runLabel: runButton.textContent
@@ -652,9 +665,20 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
 
     expected_initial = {
         "type": "files",
-        "typeLabels": ["Documents (4)", "Document packages (1)"],
+        "typeLabels": ["Documents (4)", "Document packages (2)"],
         "multiple": True,
-        "filenames": ["alpha.md", "beta.html", "word.docx", "notes.json"],
+        "filenames": [
+            "alpha.md",
+            "beta.html",
+            "word.docx",
+            "notes.json",
+        ],
+        "labels": [
+            "alpha.md (markdown)",
+            "beta.html (html)",
+            "word.docx (docx)",
+            "notes.json (file)",
+        ],
         "selected": ["alpha.md"],
         "selectionCount": "1 selected",
         "promptMetaHidden": True,
@@ -663,7 +687,12 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
     if result["initial"] != expected_initial:
         raise AssertionError(f"unexpected initial ordinary-file mode: {result!r}")
     expected_select_all = {
-        "selected": ["alpha.md", "beta.html", "word.docx", "notes.json"],
+        "selected": [
+            "alpha.md",
+            "beta.html",
+            "word.docx",
+            "notes.json",
+        ],
         "selectionCount": "4 selected",
         "selectAllLabel": "Clear selection",
         "promptMetaHidden": False,
@@ -673,7 +702,11 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
     expected_package_mode = {
         "type": "data_sharing_packages",
         "multiple": False,
-        "filenames": ["reviewed.jsonl"],
+        "filenames": ["reviewed.jsonl", "edited-review-copy"],
+        "labels": [
+            "reviewed.jsonl",
+            "20260730-095512-documents-document-content (reviewed)",
+        ],
         "selected": ["reviewed.jsonl"],
         "selectionBarHidden": True,
         "runLabel": "Preview collection",
@@ -692,7 +725,12 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
         "scopeValue": "studio",
         "typeDisabled": False,
         "typeLabels": ["Documents (4)", "Document packages (1)"],
-        "filenames": ["alpha.md", "beta.html", "word.docx", "notes.json"],
+        "filenames": [
+            "alpha.md",
+            "beta.html",
+            "word.docx",
+            "notes.json",
+        ],
         "selected": ["alpha.md"],
     }
     assert result["childFailure"] == {
@@ -783,7 +821,7 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
         "scopeValue": "library",
         "typeDisabled": False,
         "typeLabels": ["Documents (4)", "Document packages (1)"],
-    }
+    }, result
     if [request["staged_filename"] for request in import_requests] != [
         "alpha.md",
         "beta.html",

@@ -24,6 +24,8 @@ from docs_import_document import (
 )
 from docs_management_document_target import ManagedDocumentCollection
 from docs_write_rebuild import (
+    ScopeSourceSnapshotChanged,
+    ScopeWriteRebuildFailure,
     SubScopeSourceSnapshotChanged,
     SubScopeWriteRebuildFailure,
 )
@@ -344,6 +346,7 @@ def apply_import_content_collection(
         manual_copy_instructions=list(dict.fromkeys(manual_copy)),
         timestamp=timestamp,
     )
+    result_payload["target"] = {"scope": plan.response["scope"]}
     log_event(
         repo_root,
         "docs-import-collection-apply",
@@ -367,6 +370,7 @@ def _atomic_collection_result(
     collection: ManagedDocumentCollection,
     generation: dict[str, Any],
     rollback: dict[str, Any],
+    event_name: str,
 ) -> dict[str, Any]:
     warnings = copy.deepcopy(plan.response.get("warnings") or [])
     for record in records:
@@ -382,26 +386,29 @@ def _atomic_collection_result(
         manual_copy_instructions=[],
         timestamp=utc_timestamp(),
     )
-    result_payload["sub_scope"] = collection.sub_scope
     result_payload["target"] = collection.request_target()
+    if collection.sub_scope:
+        result_payload["sub_scope"] = collection.sub_scope
     result_payload["rollback"] = copy.deepcopy(rollback)
+    event_details = {
+        "scope": collection.scope,
+        "staged_filename": plan.response["staged_filename"],
+        "outcome": result_payload["outcome"],
+        "counts": result_payload["counts"],
+        "generation_status": result_payload["generation"]["status"],
+        "rollback_status": result_payload["rollback"]["status"],
+    }
+    if collection.sub_scope:
+        event_details["sub_scope"] = collection.sub_scope
     log_event(
         repo_root,
-        "docs-import-sub-scope-collection-apply",
-        {
-            "scope": collection.scope,
-            "sub_scope": collection.sub_scope,
-            "staged_filename": plan.response["staged_filename"],
-            "outcome": result_payload["outcome"],
-            "counts": result_payload["counts"],
-            "generation_status": result_payload["generation"]["status"],
-            "rollback_status": result_payload["rollback"]["status"],
-        },
+        event_name,
+        event_details,
     )
     return result_payload
 
 
-def apply_import_content_collection_atomic(
+def _apply_import_content_collection_atomic(
     repo_root: Path,
     plan: DocumentsCollectionPlan,
     body: dict[str, Any],
@@ -409,12 +416,15 @@ def apply_import_content_collection_atomic(
     workspace_root: Path,
     log_event: LogEvent,
     collection: ManagedDocumentCollection,
-    perform_sub_scope_source_write_and_rebuild: PerformSourceWriteAndRebuild,
+    perform_atomic_boundary: Callable[
+        [list[Path], Callable[[], None], dict[Path, bytes]],
+        dict[str, Any],
+    ],
+    snapshot_changed_type: type[Exception],
+    write_rebuild_failure_type: type[Exception],
+    event_name: str,
+    target_label: str,
 ) -> dict[str, Any]:
-    """Apply one exact child package or restore every source and its projection."""
-
-    if not collection.sub_scope:
-        raise ValueError("atomic collection apply requires a managed child collection")
     _actions, refreshed = _resolve_collection_apply_request(plan, body)
     if refreshed is not None:
         return refreshed
@@ -437,7 +447,7 @@ def apply_import_content_collection_atomic(
                 collection_issue(
                     "error",
                     "atomic_overwrite_plan_required",
-                    "exact sub-scope package apply requires one overwrite plan per record",
+                    f"exact {target_label} package apply requires one overwrite plan per record",
                 )
             ],
         )
@@ -449,7 +459,9 @@ def apply_import_content_collection_atomic(
         try:
             target_path.relative_to(collection.source_root.resolve())
         except ValueError as exc:
-            raise ValueError("planned sub-scope target escapes configured collection") from exc
+            raise ValueError(
+                f"planned {target_label} target escapes configured collection",
+            ) from exc
         current = target_path.read_bytes()
         if (
             document_plan.target is None
@@ -480,16 +492,12 @@ def apply_import_content_collection_atomic(
             results[index]["status"] = "overwritten"
 
     try:
-        rebuild = perform_sub_scope_source_write_and_rebuild(
-            repo_root,
-            collection.scope,
-            collection.sub_scope,
+        rebuild = perform_atomic_boundary(
             changed_paths,
             write_atomic_collection,
-            suppression_reason="docs-import-sub-scope-collection-apply",
-            source_snapshots=snapshots,
+            snapshots,
         )
-    except SubScopeSourceSnapshotChanged:
+    except snapshot_changed_type:
         return _refreshed_collection_plan(
             plan,
             [
@@ -500,9 +508,9 @@ def apply_import_content_collection_atomic(
                 )
             ],
         )
-    except SubScopeWriteRebuildFailure as exc:
+    except write_rebuild_failure_type as exc:
         apply_error = _safe_error_message(exc, repo_root, workspace_root)
-        raw_rollback = exc.rollback
+        raw_rollback = getattr(exc, "rollback", {})
         rollback_status = str(raw_rollback.get("status") or "failed")
         failure_message = (
             f"package apply failed and source snapshot restoration {rollback_status}: "
@@ -543,6 +551,7 @@ def apply_import_content_collection_atomic(
             collection=collection,
             generation={"status": "failed", "rebuild": None, "error": apply_error},
             rollback=rollback,
+            event_name=event_name,
         )
 
     for document_plan in document_plans:
@@ -567,10 +576,119 @@ def apply_import_content_collection_atomic(
             "rebuild": None,
             "error": "",
         },
+        event_name=event_name,
+    )
+
+
+def apply_import_content_collection_atomic(
+    repo_root: Path,
+    plan: DocumentsCollectionPlan,
+    body: dict[str, Any],
+    *,
+    workspace_root: Path,
+    log_event: LogEvent,
+    collection: ManagedDocumentCollection,
+    perform_sub_scope_source_write_and_rebuild: PerformSourceWriteAndRebuild,
+) -> dict[str, Any]:
+    """Apply one exact child package or restore every source and its projection."""
+
+    if not collection.sub_scope:
+        raise ValueError("atomic collection apply requires a managed child collection")
+
+    def perform_boundary(
+        changed_paths: list[Path],
+        write_operation: Callable[[], None],
+        snapshots: dict[Path, bytes],
+    ) -> dict[str, Any]:
+        return perform_sub_scope_source_write_and_rebuild(
+            repo_root,
+            collection.scope,
+            collection.sub_scope,
+            changed_paths,
+            write_operation,
+            suppression_reason="docs-import-sub-scope-collection-apply",
+            source_snapshots=snapshots,
+        )
+
+    return _apply_import_content_collection_atomic(
+        repo_root,
+        plan,
+        body,
+        workspace_root=workspace_root,
+        log_event=log_event,
+        collection=collection,
+        perform_atomic_boundary=perform_boundary,
+        snapshot_changed_type=SubScopeSourceSnapshotChanged,
+        write_rebuild_failure_type=SubScopeWriteRebuildFailure,
+        event_name="docs-import-sub-scope-collection-apply",
+        target_label="sub-scope",
+    )
+
+
+def apply_import_content_collection_scope_atomic(
+    repo_root: Path,
+    plan: DocumentsCollectionPlan,
+    body: dict[str, Any],
+    *,
+    workspace_root: Path,
+    log_event: LogEvent,
+    collection: ManagedDocumentCollection,
+    perform_scope_source_write_and_rebuild_atomic: PerformSourceWriteAndRebuild,
+) -> dict[str, Any]:
+    """Apply one exact parent-scope package or restore its complete projection."""
+
+    if collection.sub_scope:
+        raise ValueError("scope collection apply requires a top-level collection")
+    docs_doc_ids = list(
+        dict.fromkeys(
+            doc_id
+            for document_plan in plan.document_plans
+            if document_plan is not None
+            for doc_id in document_plan.docs_doc_ids
+        )
+    )
+    search_doc_ids = list(
+        dict.fromkeys(
+            doc_id
+            for document_plan in plan.document_plans
+            if document_plan is not None
+            for doc_id in document_plan.search_doc_ids
+        )
+    )
+
+    def perform_boundary(
+        changed_paths: list[Path],
+        write_operation: Callable[[], None],
+        snapshots: dict[Path, bytes],
+    ) -> dict[str, Any]:
+        return perform_scope_source_write_and_rebuild_atomic(
+            repo_root,
+            collection.scope,
+            changed_paths,
+            write_operation,
+            suppression_reason="docs-import-reviewed-scope-collection-apply",
+            source_snapshots=snapshots,
+            docs_doc_ids=docs_doc_ids,
+            search_doc_ids=search_doc_ids,
+        )
+
+    return _apply_import_content_collection_atomic(
+        repo_root,
+        plan,
+        body,
+        workspace_root=workspace_root,
+        log_event=log_event,
+        collection=collection,
+        perform_atomic_boundary=perform_boundary,
+        snapshot_changed_type=ScopeSourceSnapshotChanged,
+        write_rebuild_failure_type=ScopeWriteRebuildFailure,
+        event_name="docs-import-reviewed-scope-collection-apply",
+        target_label="scope",
     )
 
 
 __all__ = [
     "apply_import_content_collection",
     "apply_import_content_collection_atomic",
+    "apply_import_content_collection_scope_atomic",
 ]

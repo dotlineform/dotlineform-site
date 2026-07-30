@@ -48,6 +48,18 @@ class SubScopeSourceSnapshotChanged(RuntimeError):
     """Stop one child write boundary before mutation when its snapshot changed."""
 
 
+class ScopeWriteRebuildFailure(RuntimeError):
+    """Report one failed top-level write/rebuild after its owned rollback attempt."""
+
+    def __init__(self, message: str, *, rollback: dict[str, Any]):
+        super().__init__(message)
+        self.rollback = rollback
+
+
+class ScopeSourceSnapshotChanged(RuntimeError):
+    """Stop one top-level write boundary before mutation when its snapshot changed."""
+
+
 def current_scope_source_root(repo_root: Path, scope: str) -> Path:
     try:
         configs = load_docs_scope_configs(repo_root)
@@ -408,6 +420,148 @@ def perform_source_write_and_rebuild(
             repo_root,
             scope,
             completion_filenames,
+            status=SUPPRESSION_COMPLETE,
+            reason=suppression_reason,
+            ttl_seconds=DEFAULT_COMPLETE_TTL_SECONDS,
+        )
+    return rebuild
+
+
+def perform_scope_source_write_and_rebuild_atomic(
+    repo_root: Path,
+    scope: str,
+    changed_paths: list[Path],
+    write_operation: Callable[[], Any],
+    *,
+    suppression_reason: str,
+    source_snapshots: Mapping[Path, bytes],
+    search_doc_ids: Optional[list[str]] = None,
+    docs_doc_ids: Optional[list[str]] = None,
+) -> Dict[str, Any]:
+    """Write/rebuild one parent scope or restore its complete source snapshot."""
+
+    root = current_scope_source_root(repo_root, scope)
+    resolved_changed_paths = {
+        path.resolve()
+        for path in changed_paths
+        if isinstance(path, Path)
+    }
+    normalized_snapshots = {
+        path.resolve(): source_bytes
+        for path, source_bytes in source_snapshots.items()
+    }
+    if set(normalized_snapshots) != resolved_changed_paths:
+        raise ValueError(
+            "scope rollback snapshot must cover every changed source exactly",
+        )
+    if any(
+        not isinstance(source_bytes, bytes)
+        for source_bytes in normalized_snapshots.values()
+    ):
+        raise ValueError("scope rollback snapshot values must be bytes")
+    for path in normalized_snapshots:
+        try:
+            path.relative_to(root.resolve())
+        except ValueError as exc:
+            raise ValueError(
+                "scope rollback snapshot escapes configured source root",
+            ) from exc
+    filenames = sorted(
+        path.relative_to(root.resolve()).as_posix()
+        for path in resolved_changed_paths
+    )
+    if filenames:
+        set_watch_suppressions(
+            repo_root,
+            scope,
+            filenames,
+            status=SUPPRESSION_PENDING,
+            reason=suppression_reason,
+            ttl_seconds=DEFAULT_PENDING_TTL_SECONDS,
+        )
+    try:
+        changed_before_write = [
+            path.name
+            for path, source_bytes in normalized_snapshots.items()
+            if path.read_bytes() != source_bytes
+        ]
+        if changed_before_write:
+            raise ScopeSourceSnapshotChanged(
+                "scope sources changed immediately before apply: "
+                + ", ".join(sorted(changed_before_write)),
+            )
+        write_operation()
+        rebuild = rebuild_scope_outputs(
+            repo_root,
+            scope,
+            include_search=True,
+            search_doc_ids=search_doc_ids,
+            docs_doc_ids=docs_doc_ids,
+            skip_media_builds=True,
+        )
+    except ScopeSourceSnapshotChanged:
+        if filenames:
+            clear_watch_suppressions(repo_root, scope, filenames)
+        raise
+    except Exception as exc:
+        restoration_errors: list[str] = []
+        for path, source_bytes in normalized_snapshots.items():
+            try:
+                write_bytes_atomic(path, source_bytes)
+            except Exception as restore_exc:
+                restoration_errors.append(
+                    str(restore_exc).strip() or restore_exc.__class__.__name__,
+                )
+        recovery_rebuild: dict[str, Any] | None = None
+        recovery_error = ""
+        if not restoration_errors:
+            try:
+                recovery_rebuild = rebuild_scope_outputs(
+                    repo_root,
+                    scope,
+                    include_search=True,
+                    search_doc_ids=search_doc_ids,
+                    docs_doc_ids=docs_doc_ids,
+                    skip_media_builds=True,
+                )
+            except Exception as recovery_exc:
+                recovery_error = (
+                    str(recovery_exc).strip()
+                    or recovery_exc.__class__.__name__
+                )
+        rollback_status = (
+            "failed"
+            if restoration_errors or recovery_error
+            else "completed"
+        )
+        if filenames:
+            if rollback_status == "completed":
+                set_watch_suppressions(
+                    repo_root,
+                    scope,
+                    filenames,
+                    status=SUPPRESSION_COMPLETE,
+                    reason=f"{suppression_reason}-rollback",
+                    ttl_seconds=DEFAULT_COMPLETE_TTL_SECONDS,
+                )
+            else:
+                clear_watch_suppressions(repo_root, scope, filenames)
+        raise ScopeWriteRebuildFailure(
+            str(exc).strip() or exc.__class__.__name__,
+            rollback={
+                "status": rollback_status,
+                "sources_restored": not restoration_errors,
+                "rebuild": recovery_rebuild,
+                "error": "; ".join(
+                    [*restoration_errors, recovery_error],
+                ).strip("; "),
+            },
+        ) from exc
+    if filenames:
+        set_watch_suppressions(
+            repo_root,
+            scope,
+            filenames,
             status=SUPPRESSION_COMPLETE,
             reason=suppression_reason,
             ttl_seconds=DEFAULT_COMPLETE_TTL_SECONDS,

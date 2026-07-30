@@ -576,9 +576,12 @@ def blocked_collection_plan(
             "blockers": len(safe_blockers),
         },
     }
+    response["target"] = {
+        "scope": scope,
+        **({"sub_scope": sub_scope} if sub_scope else {}),
+    }
     if sub_scope:
         response["sub_scope"] = sub_scope
-        response["target"] = {"scope": scope, "sub_scope": sub_scope}
     return DocumentsCollectionPlan(normalized_records=(), document_plans=(), response=response)
 
 
@@ -597,6 +600,7 @@ def plan_import_content_collection(
     planned_identities: list[dict[str, Any]] | None = None,
     collection: ManagedDocumentCollection | None = None,
     overwrite_only: bool = False,
+    warnings: list[dict[str, Any]] | None = None,
 ) -> DocumentsCollectionPlan:
     """Complete a body-free collection plan from wrapper-normalized states."""
 
@@ -647,7 +651,10 @@ def plan_import_content_collection(
             record_response["errors"],
             workspace_root,
         )
-    package_warnings: list[dict[str, Any]] = []
+    package_warnings = _sanitize_issue_paths(
+        list(warnings or []),
+        workspace_root,
+    )
     record_error_count = sum(bool(record["errors"]) for record in record_responses)
     collision_count = sum(bool(record["collision"]["exists"]) for record in record_responses)
     create_count = sum(record["action"] == "create" for record in record_responses)
@@ -693,9 +700,16 @@ def plan_import_content_collection(
             "blockers": len(blockers),
         },
     }
+    response["target"] = {
+        "scope": scope,
+        **(
+            {"sub_scope": collection.sub_scope}
+            if collection is not None and collection.sub_scope
+            else {}
+        ),
+    }
     if collection is not None and collection.sub_scope:
         response["sub_scope"] = collection.sub_scope
-        response["target"] = collection.request_target()
     return DocumentsCollectionPlan(
         normalized_records=tuple(state.normalized for state in states),
         document_plans=tuple(state.document_plan for state in states),

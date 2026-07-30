@@ -790,6 +790,9 @@ def test_sub_scope_written_package_is_reviewable_but_blocked_from_import() -> No
         dependencies = import_source_service.ImportSourceDependencies(
             log_event=lambda *_args, **_kwargs: None,
             perform_source_write_and_rebuild=lambda *_args, **_kwargs: {},
+            perform_scope_source_write_and_rebuild_atomic=(
+                lambda *_args, **_kwargs: {}
+            ),
             perform_sub_scope_source_write_and_rebuild=lambda *_args, **_kwargs: {},
         )
         with pytest.raises(ValueError, match="Export-only document packages"):

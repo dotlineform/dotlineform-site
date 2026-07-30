@@ -12,6 +12,11 @@ import {
 } from "./docs-html-import-workflow.js";
 
 export const DOCS_IMPORT_COLLECTION_SOURCE_FORMAT = "data_sharing_documents";
+export const DOCS_IMPORT_EDITED_REVIEW_SOURCE_FORMAT = "edited_review_sources";
+const DOCS_IMPORT_COLLECTION_SOURCE_FORMATS = new Set([
+  DOCS_IMPORT_COLLECTION_SOURCE_FORMAT,
+  DOCS_IMPORT_EDITED_REVIEW_SOURCE_FORMAT
+]);
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -41,7 +46,9 @@ function viewState(state) {
 }
 
 export function isDocsImportCollectionRecord(record) {
-  return normalizeText(record && record.source_format) === DOCS_IMPORT_COLLECTION_SOURCE_FORMAT;
+  return DOCS_IMPORT_COLLECTION_SOURCE_FORMATS.has(
+    normalizeText(record && record.source_format)
+  );
 }
 
 export function createDocsImportCollectionController(options = {}) {
@@ -57,6 +64,7 @@ export function createDocsImportCollectionController(options = {}) {
     active: false,
     phase: "idle",
     stagedFilename: "",
+    sourceFormat: "",
     scope: "",
     subScope: "",
     plan: null,
@@ -94,6 +102,7 @@ export function createDocsImportCollectionController(options = {}) {
     state.active = Boolean(active);
     state.phase = "idle";
     state.stagedFilename = "";
+    state.sourceFormat = "";
     state.scope = "";
     state.subScope = "";
     state.plan = null;
@@ -186,6 +195,7 @@ export function createDocsImportCollectionController(options = {}) {
     const stagedFilename = normalizeText(file && file.filename);
     const normalizedScope = normalizeText(scope).toLowerCase();
     const normalizedSubScope = normalizeText(subScope).toLowerCase();
+    const sourceFormat = normalizeText(file && file.source_format);
     if (!stagedFilename || !normalizedScope || !isDocsImportCollectionRecord(file)) {
       throw new Error(importText("collectionRequired"));
     }
@@ -202,6 +212,7 @@ export function createDocsImportCollectionController(options = {}) {
     state.active = true;
     state.phase = "preview";
     state.stagedFilename = stagedFilename;
+    state.sourceFormat = sourceFormat;
     state.scope = normalizedScope;
     state.subScope = normalizedSubScope;
     state.managementBaseUrl = normalizeText(managementBaseUrl);
@@ -218,7 +229,11 @@ export function createDocsImportCollectionController(options = {}) {
         staged_filename: stagedFilename,
         preview_only: true
       }, managementOptions(managementBaseUrl));
-      if (!payload || payload.collection !== true || payload.source_format !== DOCS_IMPORT_COLLECTION_SOURCE_FORMAT) {
+      if (
+        !payload
+        || payload.collection !== true
+        || normalizeText(payload.source_format) !== state.sourceFormat
+      ) {
         throw new Error(importText("collectionUnsupportedPreview"));
       }
       exactCollectionTarget(payload, "preview");
@@ -266,7 +281,7 @@ export function createDocsImportCollectionController(options = {}) {
         confirm: true,
         export_id: normalizeText(packageIdentity.export_id),
         source_sha256: normalizeText(packageIdentity.source_sha256),
-        ...(state.subScope ? {
+        ...(normalizeText(packageIdentity.trusted_metadata_sha256) ? {
           trusted_metadata_sha256: normalizeText(packageIdentity.trusted_metadata_sha256)
         } : {}),
         planned_identities: Array.isArray(state.plan.planned_identities)
@@ -286,6 +301,9 @@ export function createDocsImportCollectionController(options = {}) {
         })
       }, managementOptions(state.managementBaseUrl));
       if (payload && payload.preview_only === true) {
+        if (normalizeText(payload.source_format) !== state.sourceFormat) {
+          throw new Error(importText("collectionUnsupportedPreview"));
+        }
         exactCollectionTarget(payload, "refreshed preview");
         state.plan = payload;
         const blocked = Array.isArray(payload.blockers) && payload.blockers.length;
@@ -296,6 +314,9 @@ export function createDocsImportCollectionController(options = {}) {
           blocked ? importText("collectionBlockedStatus") : importText("collectionRefreshedStatus")
         );
       } else if (payload && payload.collection === true) {
+        if (normalizeText(payload.source_format) !== state.sourceFormat) {
+          throw new Error(importText("collectionUnsupportedPreview"));
+        }
         const target = exactCollectionTarget(payload, "result");
         state.result = payload;
         const completed = payload.outcome === "completed";
@@ -351,6 +372,7 @@ export function createDocsImportCollectionController(options = {}) {
       active: state.active,
       phase: state.phase,
       stagedFilename: state.stagedFilename,
+      sourceFormat: state.sourceFormat,
       scope: state.scope,
       subScope: state.subScope,
       busy: state.busy

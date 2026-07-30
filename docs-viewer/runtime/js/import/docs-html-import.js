@@ -400,6 +400,8 @@ function resetImportView(state, statusMessage) {
 }
 
 function collectionFileLabel(state, file) {
+  const displayName = normalizeText(file && file.display_name);
+  if (displayName) return displayName;
   const count = Number(file && file.document_count);
   const collectionLabel = normalizeText(state.importDestinationLabel)
     || [
@@ -419,6 +421,10 @@ function stagedFileOption(state, file) {
   const filename = normalizeText(file && file.filename);
   if (isDocsImportCollectionRecord(file)) {
     return `<option value="${escapeHtml(filename)}">${escapeHtml(collectionFileLabel(state, file))}</option>`;
+  }
+  const displayName = normalizeText(file && file.display_name);
+  if (displayName) {
+    return `<option value="${escapeHtml(filename)}">${escapeHtml(displayName)}</option>`;
   }
   const sourceFormat = docsHtmlImportSourceFormatForRecord(file).replace(/_/g, " ");
   return `<option value="${escapeHtml(filename)}">${escapeHtml(`${filename} (${sourceFormat})`)}</option>`;

@@ -19,6 +19,9 @@ def import_source_dependencies() -> import_source_service.ImportSourceDependenci
     return import_source_service.ImportSourceDependencies(
         log_event=log_event,
         perform_source_write_and_rebuild=write_rebuild.perform_source_write_and_rebuild,
+        perform_scope_source_write_and_rebuild_atomic=(
+            write_rebuild.perform_scope_source_write_and_rebuild_atomic
+        ),
         perform_sub_scope_source_write_and_rebuild=(
             write_rebuild.perform_sub_scope_source_write_and_rebuild
         ),
