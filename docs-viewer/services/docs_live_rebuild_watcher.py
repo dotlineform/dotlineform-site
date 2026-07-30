@@ -38,7 +38,7 @@ for path in (SCRIPTS_DIR, SCRIPTS_DOCS_DIR):
 from docs_source_model import (
     current_doc_timestamp,
     is_doc_timestamp,
-    load_scope_docs,
+    load_document_collection_docs,
     recent_edit_content,
     rewrite_front_matter_source_timestamp,
     scope_doc_sort_key,
@@ -256,8 +256,12 @@ def new_watch_state(repo_root: Path, spec: dict[str, Any], *, baseline: bool) ->
     }
     if not baseline:
         return state
-    if state.get("watch_kind") == "documents" and not state.get("sub_scope"):
-        doc_snapshot, snapshot_error = try_parsed_doc_snapshot(repo_root, state["scope"])
+    if state.get("watch_kind") == "documents":
+        doc_snapshot, snapshot_error = try_parsed_doc_snapshot(
+            repo_root,
+            state["scope"],
+            str(state.get("sub_scope") or ""),
+        )
         state["doc_snapshot"] = doc_snapshot
         state["startup_doc_error"] = snapshot_error
     initial_snapshot, source_error = try_state_snapshot(state)
@@ -355,9 +359,33 @@ def affected_doc_ids_log_text(doc_ids: Optional[list[str]]) -> str:
     return ", ".join(doc_ids)
 
 
-def parsed_doc_snapshot(repo_root: Path, scope: str) -> Dict[str, Dict[str, Any]]:
-    docs = load_scope_docs(repo_root, scope)
-    root = resolve_scope_path(repo_root, DOCUMENT_SOURCE_ROOTS[scope])
+def parsed_doc_snapshot(
+    repo_root: Path,
+    scope: str,
+    sub_scope: str = "",
+) -> Dict[str, Dict[str, Any]]:
+    normalized_sub_scope = str(sub_scope or "").strip().lower()
+    parent_config = DOCS_SCOPE_CONFIGS.get(scope)
+    if parent_config is None:
+        raise ValueError(f"unknown Docs Viewer scope: {scope}")
+    document_config = parent_config
+    if normalized_sub_scope:
+        matching = [
+            candidate
+            for candidate in parent_config.sub_scopes
+            if candidate.sub_scope == normalized_sub_scope
+        ]
+        if len(matching) != 1:
+            raise ValueError(
+                f"unknown sub_scope {normalized_sub_scope!r} for scope {scope!r}"
+            )
+        document_config = matching[0]
+    docs = load_document_collection_docs(
+        repo_root,
+        scope,
+        normalized_sub_scope,
+    )
+    root = resolve_scope_path(repo_root, document_source_path(document_config))
     return {
         doc.path.relative_to(root).as_posix(): {
             "filename": doc.path.relative_to(root).as_posix(),
@@ -375,9 +403,13 @@ def parsed_doc_snapshot(repo_root: Path, scope: str) -> Dict[str, Dict[str, Any]
     }
 
 
-def try_parsed_doc_snapshot(repo_root: Path, scope: str) -> tuple[Optional[Dict[str, Dict[str, Any]]], str]:
+def try_parsed_doc_snapshot(
+    repo_root: Path,
+    scope: str,
+    sub_scope: str = "",
+) -> tuple[Optional[Dict[str, Dict[str, Any]]], str]:
     try:
-        return parsed_doc_snapshot(repo_root, scope), ""
+        return parsed_doc_snapshot(repo_root, scope, sub_scope), ""
     except Exception as exc:  # noqa: BLE001 - watcher must fall back rather than stop on bad source state.
         return None, str(exc)
 
@@ -592,11 +624,11 @@ def direct_edit_timestamp_issues(
     return timestamp_issues_from_plan(plans)
 
 
-def apply_parent_scope_timestamp_rewrites(
+def apply_collection_timestamp_rewrites(
     source_root: Path,
     plans: list[Dict[str, Any]],
 ) -> Dict[str, list[Dict[str, Any]]]:
-    """Apply planned parent-scope timestamp-only writes with revision checks."""
+    """Apply planned collection-confined timestamp-only writes with revision checks."""
 
     resolved_root = source_root.resolve()
     result: Dict[str, list[Dict[str, Any]]] = {
@@ -691,7 +723,7 @@ def apply_parent_scope_timestamp_rewrites(
     return result
 
 
-def adopt_parent_scope_timestamp_rewrites(
+def adopt_collection_timestamp_rewrites(
     state: Dict[str, Any],
     current_docs: Dict[str, Dict[str, Any]],
     rewrite_result: Dict[str, list[Dict[str, Any]]],
@@ -776,39 +808,52 @@ def rebuild_scope(
     return True
 
 
-def process_parent_scope_changes(
+def process_document_collection_changes(
     repo_root: Path,
     state: Dict[str, Any],
     changed_files: list[str],
     *,
     targeted_search_threshold: int,
 ) -> tuple[bool, Optional[Dict[str, Dict[str, Any]]]]:
-    """Capture eligible timestamps, then run one existing parent-scope rebuild."""
+    """Capture eligible timestamps, then run one exact collection rebuild."""
 
     scope = str(state["scope"])
-    current_docs, snapshot_error = try_parsed_doc_snapshot(repo_root, scope)
+    sub_scope = str(state.get("sub_scope") or "")
+    label = f"{scope}/{sub_scope}" if sub_scope else scope
+    current_docs, snapshot_error = try_parsed_doc_snapshot(
+        repo_root,
+        scope,
+        sub_scope,
+    )
     if snapshot_error or current_docs is None:
         log(
-            f"{scope} targeted search fallback; affected ids unavailable: "
+            f"{label} parsed docs snapshot unavailable; timestamp capture skipped: "
             f"{snapshot_error or 'parsed docs snapshot unavailable'}"
         )
+        if sub_scope:
+            return rebuild_sub_scope(repo_root, scope, sub_scope), None
         return rebuild_scope(repo_root, scope), None
 
-    search_doc_ids, fallback_reason = affected_search_doc_ids(
-        state["doc_snapshot"],
-        current_docs,
-        changed_files,
-        targeted_search_threshold,
-    )
+    search_doc_ids: Optional[list[str]] = None
     docs_doc_ids = None
-    if fallback_reason:
-        log(f"{scope} targeted search fallback; affected ids unavailable: {fallback_reason}")
-    else:
-        docs_doc_ids = search_doc_ids
-        log(
-            f"{scope} affected docs for targeted search: "
-            f"{affected_doc_ids_log_text(search_doc_ids)}."
+    if not sub_scope:
+        search_doc_ids, fallback_reason = affected_search_doc_ids(
+            state["doc_snapshot"],
+            current_docs,
+            changed_files,
+            targeted_search_threshold,
         )
+        if fallback_reason:
+            log(
+                f"{scope} targeted search fallback; affected ids unavailable: "
+                f"{fallback_reason}"
+            )
+        else:
+            docs_doc_ids = search_doc_ids
+            log(
+                f"{scope} affected docs for targeted search: "
+                f"{affected_doc_ids_log_text(search_doc_ids)}."
+            )
 
     timestamp_plans = direct_edit_timestamp_plan(
         state["doc_snapshot"],
@@ -816,11 +861,11 @@ def process_parent_scope_changes(
         changed_files,
         captured_timestamp=current_doc_timestamp(),
     )
-    rewrite_result = apply_parent_scope_timestamp_rewrites(
+    rewrite_result = apply_collection_timestamp_rewrites(
         state["root"],
         timestamp_plans,
     )
-    adopted_files = adopt_parent_scope_timestamp_rewrites(
+    adopted_files = adopt_collection_timestamp_rewrites(
         state,
         current_docs,
         rewrite_result,
@@ -833,18 +878,18 @@ def process_parent_scope_changes(
             if record["filename"] in adopted_set
         ]
         log(
-            f"{scope} captured last_updated for direct source edits: "
+            f"{label} captured last_updated for direct source edits: "
             f"{', '.join(captured)}."
         )
     for record in rewrite_result["conflicts"]:
         log(
-            f"{scope} timestamp capture deferred for "
+            f"{label} timestamp capture deferred for "
             f"{record['filename']} ({record['doc_id']}): "
             f"{record['reason']}."
         )
     for record in rewrite_result["failures"]:
         log(
-            f"{scope} timestamp capture failed for "
+            f"{label} timestamp capture failed for "
             f"{record['filename']} ({record['doc_id']}): "
             f"{record['reason']}."
         )
@@ -861,12 +906,17 @@ def process_parent_scope_changes(
         ]
     ):
         log(
-            f"{scope} timestamp evidence warning for "
+            f"{label} timestamp evidence warning for "
             f"{issue['filename']} ({issue['doc_id']}): "
             f"{issue['reason']}; this source is not eligible "
             "for automatic timestamp capture."
         )
 
+    if sub_scope:
+        return (
+            rebuild_sub_scope(repo_root, scope, sub_scope),
+            current_docs,
+        )
     return (
         rebuild_scope(
             repo_root,
@@ -1099,12 +1149,21 @@ def main() -> int:
                                 suppression_owner,
                                 changed_files,
                             )
-                            if not state.get("sub_scope"):
-                                current_doc_snapshot, snapshot_error = try_parsed_doc_snapshot(repo_root, ready_scope)
-                                if snapshot_error:
-                                    log(f"{ready_scope} parsed docs snapshot not refreshed after suppressed write: {snapshot_error}")
-                                else:
-                                    state["doc_snapshot"] = current_doc_snapshot
+                            current_doc_snapshot, snapshot_error = (
+                                try_parsed_doc_snapshot(
+                                    repo_root,
+                                    ready_scope,
+                                    str(state.get("sub_scope") or ""),
+                                )
+                            )
+                            if snapshot_error:
+                                log(
+                                    f"{ready_label} parsed docs snapshot not "
+                                    "refreshed after suppressed write: "
+                                    f"{snapshot_error}"
+                                )
+                            else:
+                                state["doc_snapshot"] = current_doc_snapshot
                             state["dirty_at"] = None
                             state["changed_files"] = []
                             log(
@@ -1117,12 +1176,9 @@ def main() -> int:
                 if state.get("watch_kind") == "build_media":
                     rebuild_succeeded = rebuild_build_media(repo_root, state, changed_files)
                     current_doc_snapshot = None
-                elif state.get("sub_scope"):
-                    rebuild_succeeded = rebuild_sub_scope(repo_root, ready_scope, state["sub_scope"])
-                    current_doc_snapshot = None
                 else:
                     rebuild_succeeded, current_doc_snapshot = (
-                        process_parent_scope_changes(
+                        process_document_collection_changes(
                             repo_root,
                             state,
                             changed_files,

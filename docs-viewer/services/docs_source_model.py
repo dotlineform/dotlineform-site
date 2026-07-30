@@ -27,6 +27,7 @@ from docs_scope_config import (
     DOCS_SCOPE_CONFIGS,
     DOCUMENT_SOURCE_ROOTS,
     DocsScopeConfig,
+    DocsSubScopeConfig,
     document_source_path,
     resolve_scope_path,
 )
@@ -418,11 +419,23 @@ def scope_markdown_paths(root: Path) -> list[Path]:
     return paths
 
 
-def load_scope_docs_for_config(repo_root: Path, config: DocsScopeConfig) -> list[ScopeDoc]:
-    scope = config.scope_id
-    root = resolve_scope_path(repo_root, document_source_path(config))
+def load_document_collection_docs_for_config(
+    repo_root: Path,
+    parent_config: DocsScopeConfig,
+    document_config: DocsScopeConfig | DocsSubScopeConfig,
+) -> list[ScopeDoc]:
+    """Load one exact configured parent or sub-scope document collection."""
+
+    scope = parent_config.scope_id
+    root = resolve_scope_path(repo_root, document_source_path(document_config))
+    sub_scope = str(getattr(document_config, "sub_scope", "") or "").strip()
     if not root.exists():
-        raise ValueError(f"missing source root for scope {scope}: {root}")
+        collection = (
+            f"{scope}/{sub_scope}"
+            if sub_scope
+            else scope
+        )
+        raise ValueError(f"missing source root for scope {collection}: {root}")
 
     docs: list[ScopeDoc] = []
     for path in scope_markdown_paths(root):
@@ -456,13 +469,53 @@ def load_scope_docs_for_config(repo_root: Path, config: DocsScopeConfig) -> list
         )
     validate_scope_docs(
         docs,
-        allow_unknown_parent_ids=config.allow_unresolved_parent_ids,
+        allow_unknown_parent_ids=parent_config.allow_unresolved_parent_ids,
     )
+    if sub_scope:
+        for doc in docs:
+            validate_sub_scope_document_metadata(
+                doc,
+                ui_statuses=document_config.ui_statuses,
+                document_groups=document_config.document_groups,
+            )
     return docs
+
+
+def load_scope_docs_for_config(repo_root: Path, config: DocsScopeConfig) -> list[ScopeDoc]:
+    return load_document_collection_docs_for_config(repo_root, config, config)
 
 
 def load_scope_docs(repo_root: Path, scope: str) -> list[ScopeDoc]:
     return load_scope_docs_for_config(repo_root, DOCS_SCOPE_CONFIGS[scope])
+
+
+def load_document_collection_docs(
+    repo_root: Path,
+    scope: str,
+    sub_scope: str = "",
+) -> list[ScopeDoc]:
+    """Load exactly the configured parent or named sub-scope collection."""
+
+    parent_config = DOCS_SCOPE_CONFIGS.get(scope)
+    if parent_config is None:
+        raise ValueError(f"unknown Docs Viewer scope: {scope}")
+    normalized_sub_scope = str(sub_scope or "").strip().lower()
+    if not normalized_sub_scope:
+        return load_scope_docs_for_config(repo_root, parent_config)
+    matching = [
+        candidate
+        for candidate in parent_config.sub_scopes
+        if candidate.sub_scope == normalized_sub_scope
+    ]
+    if len(matching) != 1:
+        raise ValueError(
+            f"unknown sub_scope {normalized_sub_scope!r} for scope {scope!r}"
+        )
+    return load_document_collection_docs_for_config(
+        repo_root,
+        parent_config,
+        matching[0],
+    )
 
 
 def validate_scope_docs(docs: list[ScopeDoc], *, allow_unknown_parent_ids: bool = False) -> None:

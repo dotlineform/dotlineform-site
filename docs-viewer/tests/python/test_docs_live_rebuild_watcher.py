@@ -59,12 +59,42 @@ def timestamp_snapshot_row(module, source_text: str) -> dict[str, object]:
     }
 
 
+def configured_analysis_tags(
+    *,
+    parent_path: str = "analysis-parent",
+    child_path: str = "analysis-tags",
+):
+    def source(path: str):
+        return SimpleNamespace(
+            location=SimpleNamespace(path=Path(path)),
+            documents_path=Path("documents"),
+            build_media={},
+        )
+
+    tags = SimpleNamespace(
+        sub_scope="tags",
+        title="Tags",
+        public_title="Concepts",
+        ui_statuses=("draft", "done"),
+        document_groups=("subject", "domain"),
+        source=source(child_path),
+    )
+    analysis = SimpleNamespace(
+        scope_id="analysis",
+        scope_type="public",
+        source=source(parent_path),
+        allow_unresolved_parent_ids=False,
+        sub_scopes=(tags,),
+    )
+    return analysis, tags
+
+
 def test_watcher_imports_source_model_helpers_directly() -> None:
     module = load_docs_live_rebuild_watcher_module()
 
-    assert callable(module.load_scope_docs)
+    assert callable(module.load_document_collection_docs)
     assert callable(module.scope_doc_sort_key)
-    assert module.load_scope_docs.__module__ == "docs_source_model"
+    assert module.load_document_collection_docs.__module__ == "docs_source_model"
     assert module.scope_doc_sort_key.__module__ == "docs_source_model"
 
 
@@ -486,7 +516,11 @@ def test_watcher_invalid_parsed_snapshot_fails_closed() -> None:
     module = load_docs_live_rebuild_watcher_module()
     original_snapshot = module.parsed_doc_snapshot
 
-    def fail_snapshot(_repo_root: Path, _scope: str):
+    def fail_snapshot(
+        _repo_root: Path,
+        _scope: str,
+        _sub_scope: str = "",
+    ):
         raise ValueError("simulated invalid source")
 
     module.parsed_doc_snapshot = fail_snapshot
@@ -497,6 +531,77 @@ def test_watcher_invalid_parsed_snapshot_fails_closed() -> None:
 
     assert snapshot is None
     assert error == "simulated invalid source"
+
+
+def test_watcher_sub_scope_snapshot_and_baseline_are_exact() -> None:
+    module = load_docs_live_rebuild_watcher_module()
+    analysis, _tags = configured_analysis_tags()
+    original_configs = dict(module.DOCS_SCOPE_CONFIGS)
+    original_roots = dict(module.DOCUMENT_SOURCE_ROOTS)
+
+    with tempfile.TemporaryDirectory() as temp:
+        repo_root = Path(temp)
+        parent_root = repo_root / "analysis-parent/documents"
+        child_root = repo_root / "analysis-tags/documents"
+        parent_root.mkdir(parents=True)
+        child_root.mkdir(parents=True)
+        parent_root.joinpath("shared.md").write_text(
+            timestamp_source_text(
+                doc_id="shared",
+                title="Parent version",
+                summary="",
+                last_updated="2026-07-16 10:00:00",
+                body="# Parent\n",
+            ),
+            encoding="utf-8",
+        )
+        child_root.joinpath("shared.md").write_text(
+            timestamp_source_text(
+                doc_id="shared",
+                title="Tag version",
+                summary="",
+                last_updated="2026-07-16 10:00:00",
+                body="# Tag\n",
+            ),
+            encoding="utf-8",
+        )
+        try:
+            module.sync_scope_config_globals({"analysis": analysis})
+            parent_snapshot = module.parsed_doc_snapshot(
+                repo_root,
+                "analysis",
+            )
+            child_snapshot = module.parsed_doc_snapshot(
+                repo_root,
+                "analysis",
+                "tags",
+            )
+            missing_snapshot, missing_error = module.try_parsed_doc_snapshot(
+                repo_root,
+                "analysis",
+                "missing",
+            )
+            child_spec = module.desired_watch_state_specs(
+                repo_root,
+                {"analysis": analysis},
+            )["analysis/tags"]
+            child_state = module.new_watch_state(
+                repo_root,
+                child_spec,
+                baseline=True,
+            )
+        finally:
+            module.DOCS_SCOPE_CONFIGS.clear()
+            module.DOCS_SCOPE_CONFIGS.update(original_configs)
+            module.DOCUMENT_SOURCE_ROOTS.clear()
+            module.DOCUMENT_SOURCE_ROOTS.update(original_roots)
+
+    assert parent_snapshot["shared.md"]["title"] == "Parent version"
+    assert child_snapshot["shared.md"]["title"] == "Tag version"
+    assert child_state["doc_snapshot"]["shared.md"]["title"] == "Tag version"
+    assert child_state["root"] == child_root
+    assert missing_snapshot is None
+    assert "unknown sub_scope 'missing' for scope 'analysis'" in missing_error
 
 
 def test_parent_watcher_rewrites_body_title_and_summary_once_then_adopts() -> None:
@@ -568,11 +673,11 @@ def test_parent_watcher_rewrites_body_title_and_summary_once_then_adopts() -> No
             captured_timestamp="2026-07-16 10:00:00",
         )
 
-        result = module.apply_parent_scope_timestamp_rewrites(
+        result = module.apply_collection_timestamp_rewrites(
             source_root,
             plans,
         )
-        adopted = module.adopt_parent_scope_timestamp_rewrites(
+        adopted = module.adopt_collection_timestamp_rewrites(
             state,
             current,
             result,
@@ -647,14 +752,16 @@ def test_parent_watcher_capture_runs_one_existing_rebuild() -> None:
             "snapshot": module.snapshot_markdown_root(source_root),
         }
 
-        module.try_parsed_doc_snapshot = lambda _root, _scope: (current, "")
+        module.try_parsed_doc_snapshot = (
+            lambda _root, _scope, _sub_scope="": (current, "")
+        )
         module.current_doc_timestamp = lambda: "2026-07-16 10:00:01"
         module.rebuild_scope = lambda *args, **kwargs: (
             rebuilds.append((args, kwargs)) or True
         )
         module.log = logs.append
         try:
-            rebuilt, adopted_docs = module.process_parent_scope_changes(
+            rebuilt, adopted_docs = module.process_document_collection_changes(
                 repo_root,
                 state,
                 ["doc.md"],
@@ -684,6 +791,258 @@ def test_parent_watcher_capture_runs_one_existing_rebuild() -> None:
             == (
                 "studio captured last_updated for direct source edits: "
                 "doc.md (doc)."
+            )
+            for message in logs
+        )
+
+
+def test_sub_scope_watcher_captures_preserves_and_rebuilds_exact_collection_once() -> None:
+    module = load_docs_live_rebuild_watcher_module()
+    analysis, _tags = configured_analysis_tags()
+    original_configs = dict(module.DOCS_SCOPE_CONFIGS)
+    original_roots = dict(module.DOCUMENT_SOURCE_ROOTS)
+    original_timestamp = module.current_doc_timestamp
+    original_parent_rebuild = module.rebuild_scope
+    original_sub_scope_rebuild = module.rebuild_sub_scope
+    original_log = module.log
+    rebuilds: list[tuple[Path, str, str]] = []
+    logs: list[str] = []
+    previous_sources = {
+        "body.md": timestamp_source_text(
+            doc_id="body",
+            title="Body",
+            summary="",
+            last_updated="2026-07-16 10:00:00",
+            body="# Old body\n",
+        ),
+        "summary.md": timestamp_source_text(
+            doc_id="summary",
+            title="Summary",
+            summary="Old summary",
+            last_updated="2026-07-16 10:00:00",
+            body="# Body\n",
+        ),
+        "manual.md": timestamp_source_text(
+            doc_id="manual",
+            title="Old title",
+            summary="",
+            last_updated="2026-07-16 10:00:00",
+            body="# Body\n",
+        ),
+    }
+    current_sources = {
+        "body.md": timestamp_source_text(
+            doc_id="body",
+            title="Body",
+            summary="",
+            last_updated="2026-07-16 10:00:00",
+            body="# New body\n",
+        ),
+        "summary.md": timestamp_source_text(
+            doc_id="summary",
+            title="Summary",
+            summary="New summary",
+            last_updated="2026-07-16 10:00:00",
+            body="# Body\n",
+        ),
+        "manual.md": timestamp_source_text(
+            doc_id="manual",
+            title="New title",
+            summary="",
+            last_updated="2026-07-16 10:00:05",
+            body="# Body\n",
+        ),
+    }
+
+    with tempfile.TemporaryDirectory() as temp:
+        repo_root = Path(temp)
+        parent_root = repo_root / "analysis-parent/documents"
+        child_root = repo_root / "analysis-tags/documents"
+        parent_root.mkdir(parents=True)
+        child_root.mkdir(parents=True)
+        parent_source = timestamp_source_text(
+            doc_id="parent-body",
+            title="Parent body",
+            summary="",
+            last_updated="2026-07-16 09:00:00",
+            body="# Parent source remains untouched\n",
+        )
+        parent_root.joinpath("body.md").write_text(
+            parent_source,
+            encoding="utf-8",
+        )
+        for filename, source_text in previous_sources.items():
+            child_root.joinpath(filename).write_text(
+                source_text,
+                encoding="utf-8",
+            )
+        try:
+            module.sync_scope_config_globals({"analysis": analysis})
+            previous_docs = module.parsed_doc_snapshot(
+                repo_root,
+                "analysis",
+                "tags",
+            )
+            for filename, source_text in current_sources.items():
+                child_root.joinpath(filename).write_text(
+                    source_text,
+                    encoding="utf-8",
+                )
+            state = {
+                "scope": "analysis",
+                "sub_scope": "tags",
+                "label": "analysis/tags",
+                "root": child_root,
+                "doc_snapshot": previous_docs,
+                "snapshot": module.snapshot_markdown_root(child_root),
+            }
+            module.current_doc_timestamp = lambda: "2026-07-16 10:00:00"
+            module.rebuild_scope = lambda *_args, **_kwargs: (
+                (_ for _ in ()).throw(
+                    AssertionError("sub-scope processing must not rebuild parent")
+                )
+            )
+            module.rebuild_sub_scope = lambda root, scope, sub_scope: (
+                rebuilds.append((root, scope, sub_scope)) or True
+            )
+            module.log = logs.append
+
+            rebuilt, adopted_docs = (
+                module.process_document_collection_changes(
+                    repo_root,
+                    state,
+                    list(current_sources),
+                    targeted_search_threshold=5,
+                )
+            )
+            fresh_docs = module.parsed_doc_snapshot(
+                repo_root,
+                "analysis",
+                "tags",
+            )
+            no_loop_plans = module.direct_edit_timestamp_plan(
+                adopted_docs,
+                fresh_docs,
+                list(current_sources),
+                captured_timestamp="2026-07-16 10:00:06",
+            )
+        finally:
+            module.current_doc_timestamp = original_timestamp
+            module.rebuild_scope = original_parent_rebuild
+            module.rebuild_sub_scope = original_sub_scope_rebuild
+            module.log = original_log
+            module.DOCS_SCOPE_CONFIGS.clear()
+            module.DOCS_SCOPE_CONFIGS.update(original_configs)
+            module.DOCUMENT_SOURCE_ROOTS.clear()
+            module.DOCUMENT_SOURCE_ROOTS.update(original_roots)
+
+        assert rebuilt is True
+        assert rebuilds == [(repo_root, "analysis", "tags")]
+        assert state["snapshot"] == module.snapshot_markdown_root(child_root)
+        assert parent_root.joinpath("body.md").read_text(
+            encoding="utf-8"
+        ) == parent_source
+        assert fresh_docs["body.md"]["last_updated"] == "2026-07-16 10:00:01"
+        assert fresh_docs["summary.md"]["last_updated"] == "2026-07-16 10:00:01"
+        assert fresh_docs["manual.md"]["last_updated"] == "2026-07-16 10:00:05"
+        assert all(not plan["requires_rewrite"] for plan in no_loop_plans)
+        assert all(
+            not plan["qualifying_content_changed"]
+            for plan in no_loop_plans
+        )
+        assert (
+            "analysis/tags captured last_updated for direct source edits: "
+            "body.md (body), summary.md (summary)."
+        ) in logs
+
+
+def test_sub_scope_watcher_timestamp_failure_keeps_source_and_rebuilds_once() -> None:
+    module = load_docs_live_rebuild_watcher_module()
+    analysis, _tags = configured_analysis_tags()
+    original_configs = dict(module.DOCS_SCOPE_CONFIGS)
+    original_roots = dict(module.DOCUMENT_SOURCE_ROOTS)
+    original_timestamp = module.current_doc_timestamp
+    original_write = module.write_text_atomic
+    original_sub_scope_rebuild = module.rebuild_sub_scope
+    original_log = module.log
+    rebuilds: list[tuple[Path, str, str]] = []
+    logs: list[str] = []
+    previous_source = timestamp_source_text(
+        doc_id="failure",
+        title="Failure",
+        summary="",
+        last_updated="2026-07-16 10:00:00",
+        body="# Old body\n",
+    )
+    current_source = timestamp_source_text(
+        doc_id="failure",
+        title="Failure",
+        summary="",
+        last_updated="2026-07-16 10:00:00",
+        body="# New body\n",
+    )
+
+    with tempfile.TemporaryDirectory() as temp:
+        repo_root = Path(temp)
+        child_root = repo_root / "analysis-tags/documents"
+        child_root.mkdir(parents=True)
+        path = child_root / "failure.md"
+        path.write_text(previous_source, encoding="utf-8")
+        try:
+            module.sync_scope_config_globals({"analysis": analysis})
+            previous_docs = module.parsed_doc_snapshot(
+                repo_root,
+                "analysis",
+                "tags",
+            )
+            path.write_text(current_source, encoding="utf-8")
+            state = {
+                "scope": "analysis",
+                "sub_scope": "tags",
+                "label": "analysis/tags",
+                "root": child_root,
+                "doc_snapshot": previous_docs,
+                "snapshot": module.snapshot_markdown_root(child_root),
+            }
+            module.current_doc_timestamp = lambda: "2026-07-16 10:00:01"
+            module.write_text_atomic = lambda _path, _text: (
+                (_ for _ in ()).throw(
+                    OSError("simulated sub-scope timestamp write failure")
+                )
+            )
+            module.rebuild_sub_scope = lambda root, scope, sub_scope: (
+                rebuilds.append((root, scope, sub_scope)) or True
+            )
+            module.log = logs.append
+
+            rebuilt, current_docs = (
+                module.process_document_collection_changes(
+                    repo_root,
+                    state,
+                    ["failure.md"],
+                    targeted_search_threshold=5,
+                )
+            )
+        finally:
+            module.current_doc_timestamp = original_timestamp
+            module.write_text_atomic = original_write
+            module.rebuild_sub_scope = original_sub_scope_rebuild
+            module.log = original_log
+            module.DOCS_SCOPE_CONFIGS.clear()
+            module.DOCS_SCOPE_CONFIGS.update(original_configs)
+            module.DOCUMENT_SOURCE_ROOTS.clear()
+            module.DOCUMENT_SOURCE_ROOTS.update(original_roots)
+
+        assert rebuilt is True
+        assert current_docs["failure.md"]["last_updated"] == (
+            "2026-07-16 10:00:00"
+        )
+        assert path.read_text(encoding="utf-8") == current_source
+        assert rebuilds == [(repo_root, "analysis", "tags")]
+        assert any(
+            message.startswith(
+                "analysis/tags timestamp capture failed for "
+                "failure.md (failure): simulated sub-scope"
             )
             for message in logs
         )
@@ -725,7 +1084,7 @@ def test_parent_watcher_timestamp_write_refuses_a_stale_source_revision() -> Non
         )
         path.write_text(later_source, encoding="utf-8")
 
-        result = module.apply_parent_scope_timestamp_rewrites(
+        result = module.apply_collection_timestamp_rewrites(
             source_root,
             plans,
         )
@@ -777,7 +1136,7 @@ def test_parent_watcher_timestamp_write_failure_leaves_source_for_retry() -> Non
         )
         module.write_text_atomic = fail_write
         try:
-            result = module.apply_parent_scope_timestamp_rewrites(
+            result = module.apply_collection_timestamp_rewrites(
                 source_root,
                 plans,
             )
@@ -868,7 +1227,7 @@ def test_parent_watcher_leaves_managed_and_nonqualifying_edits_untouched() -> No
     )
 
     assert all(not plan["requires_rewrite"] for plan in plans)
-    assert module.apply_parent_scope_timestamp_rewrites(
+    assert module.apply_collection_timestamp_rewrites(
         Path("/unused"),
         plans,
     ) == {
@@ -1045,8 +1404,11 @@ def main() -> None:
     test_watcher_plans_direct_edit_timestamp_evidence_without_writing()
     test_watcher_timestamp_plan_fails_closed_without_valid_snapshot_or_capture()
     test_watcher_invalid_parsed_snapshot_fails_closed()
+    test_watcher_sub_scope_snapshot_and_baseline_are_exact()
     test_parent_watcher_rewrites_body_title_and_summary_once_then_adopts()
     test_parent_watcher_capture_runs_one_existing_rebuild()
+    test_sub_scope_watcher_captures_preserves_and_rebuilds_exact_collection_once()
+    test_sub_scope_watcher_timestamp_failure_keeps_source_and_rebuilds_once()
     test_parent_watcher_timestamp_write_refuses_a_stale_source_revision()
     test_parent_watcher_timestamp_write_failure_leaves_source_for_retry()
     test_parent_watcher_leaves_managed_and_nonqualifying_edits_untouched()

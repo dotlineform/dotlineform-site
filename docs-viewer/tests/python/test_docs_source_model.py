@@ -6,6 +6,7 @@ from __future__ import annotations
 import sys
 import tempfile
 from pathlib import Path
+from types import SimpleNamespace
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -116,6 +117,74 @@ def test_scope_loader_preserves_exact_source_bytes_and_newlines() -> None:
     assert source_model.source_revision(
         docs[0].source_text.encode("utf-8")
     ) == source_model.source_revision(raw_source)
+
+
+def test_document_collection_loader_selects_exact_configured_sub_scope() -> None:
+    child_config = SimpleNamespace(
+        sub_scope="tags",
+        ui_statuses=("draft",),
+        document_groups=("subject",),
+        source=SimpleNamespace(
+            location=SimpleNamespace(path=Path("analysis-tags")),
+            documents_path=Path("documents"),
+        ),
+    )
+    parent_config = SimpleNamespace(
+        scope_id="analysis",
+        allow_unresolved_parent_ids=False,
+        source=SimpleNamespace(
+            location=SimpleNamespace(path=Path("analysis-parent")),
+            documents_path=Path("documents"),
+        ),
+        sub_scopes=(child_config,),
+    )
+    original_configs = dict(source_model.DOCS_SCOPE_CONFIGS)
+
+    with tempfile.TemporaryDirectory() as temp:
+        root = Path(temp)
+        write_doc(
+            root,
+            "analysis-parent/documents",
+            "shared.md",
+            {"doc_id": FIXTURE_DOC_ID, "title": "Parent version"},
+        )
+        write_doc(
+            root,
+            "analysis-tags/documents",
+            "shared.md",
+            {
+                "doc_id": FIXTURE_DOC_ID,
+                "title": "Tag version",
+                "ui_status": "draft",
+                "group": "subject",
+            },
+        )
+        source_model.DOCS_SCOPE_CONFIGS.clear()
+        source_model.DOCS_SCOPE_CONFIGS["analysis"] = parent_config
+        try:
+            docs = source_model.load_document_collection_docs(
+                root,
+                "analysis",
+                "tags",
+            )
+            try:
+                source_model.load_document_collection_docs(
+                    root,
+                    "analysis",
+                    "missing",
+                )
+            except ValueError as exc:
+                missing_error = str(exc)
+            else:
+                raise AssertionError("unknown sub-scope should not load parent docs")
+        finally:
+            source_model.DOCS_SCOPE_CONFIGS.clear()
+            source_model.DOCS_SCOPE_CONFIGS.update(original_configs)
+
+    assert [(doc.doc_id, doc.title, doc.group) for doc in docs] == [
+        (FIXTURE_DOC_ID, "Tag version", "subject")
+    ]
+    assert "unknown sub_scope 'missing' for scope 'analysis'" in missing_error
 
 
 def test_atomic_new_source_write_refuses_existing_destination() -> None:
@@ -409,6 +478,7 @@ def main() -> None:
     tests = [
         test_front_matter_parses_and_formats_supported_scalar_values,
         test_scope_loader_preserves_exact_source_bytes_and_newlines,
+        test_document_collection_loader_selects_exact_configured_sub_scope,
         test_atomic_new_source_write_refuses_existing_destination,
         test_atomic_source_write_failure_preserves_existing_file,
         test_load_scope_docs_rejects_duplicate_doc_ids,
