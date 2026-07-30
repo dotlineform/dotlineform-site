@@ -11,6 +11,7 @@ import sys
 import tempfile
 from threading import Thread
 import urllib.error
+from urllib.parse import parse_qs, urlparse
 import urllib.request
 
 from playwright.sync_api import Page, sync_playwright
@@ -127,7 +128,13 @@ def assert_source_endpoints_retired(base_url: str) -> None:
 
 def exercise_review_route(page: Page, base_url: str, timeout_ms: int) -> None:
     requests: list[str] = []
+    build_requests: list[dict[str, object]] = []
     open_source_requests: list[dict[str, object]] = []
+
+    def record_request(request) -> None:
+        requests.append(request.url)
+        if urlparse(request.url).path == "/docs-review/packages/build":
+            build_requests.append(json.loads(request.post_data or "{}"))
 
     def handle_open_source(route, request) -> None:
         payload = json.loads(request.post_data or "{}")
@@ -146,8 +153,12 @@ def exercise_review_route(page: Page, base_url: str, timeout_ms: int) -> None:
             ),
         )
 
-    page.on("request", lambda request: requests.append(request.url))
+    page.on("request", record_request)
     page.route("**/docs-review/packages/open-source", handle_open_source)
+    page.add_init_script(
+        """const key = 'docsReviewRouteLoads';
+        sessionStorage.setItem(key, String(Number(sessionStorage.getItem(key) || 0) + 1));"""
+    )
     page.goto(
         f"{base_url}/docs-review/?package=fixture-review&doc=fixture-root",
         wait_until="domcontentloaded",
@@ -301,11 +312,85 @@ def exercise_review_route(page: Page, base_url: str, timeout_ms: int) -> None:
         raise AssertionError("Docs Review loaded management-only CSS")
     if not any("docs-viewer-review.css" in url for url in requests):
         raise AssertionError("Docs Review did not load its focused read-only route CSS")
-    source_text = (
+    source_path = (
         workspace_paths().import_preview / "fixture-review/source/fixture-root.md"
-    ).read_text(encoding="utf-8")
+    )
+    source_text = source_path.read_text(encoding="utf-8")
     if "Original review text." not in source_text or "Edited in Docs Review" in source_text:
         raise AssertionError("read-only Docs Review changed its persistent source projection")
+
+    edited_source_text = source_text.replace(
+        "Original review text.",
+        "Edited externally before explicit Build.",
+    )
+    source_path.write_text(edited_source_text, encoding="utf-8")
+    edited_source_bytes = source_path.read_bytes()
+    canonical_path = (
+        workspace_paths().root.parent
+        / "docs-viewer/scopes/library/source/documents/fixture-root.md"
+    )
+    canonical_path.parent.mkdir(parents=True)
+    canonical_path.write_text(
+        "---\ndoc_id: fixture-root\nlast_updated: 2026-07-10\n---\nCanonical sentinel.\n",
+        encoding="utf-8",
+    )
+    canonical_source_bytes = canonical_path.read_bytes()
+    build_button = page.locator(
+        '[data-docs-viewer-review-action="build"]'
+    )
+    if build_button.inner_text() != "Build" or build_button.is_disabled():
+        raise AssertionError("healthy Docs Review package did not expose enabled Build")
+    route_loads = page.evaluate(
+        "() => Number(sessionStorage.getItem('docsReviewRouteLoads') || 0)"
+    )
+    with page.expect_response(
+        lambda response: urlparse(response.url).path
+        == "/docs-review/packages/build",
+        timeout=timeout_ms,
+    ) as response_info:
+        build_button.click()
+        page.wait_for_function(
+            """() => document.querySelector(
+                '[data-docs-viewer-review-action="build"]'
+            )?.disabled === true""",
+            timeout=timeout_ms,
+        )
+    build_status = response_info.value.status
+    page.wait_for_function(
+        """expected => Number(
+            sessionStorage.getItem('docsReviewRouteLoads') || 0
+        ) > expected""",
+        arg=route_loads,
+        timeout=timeout_ms,
+    )
+    wait_for_route_ready(
+        page,
+        "#docsViewerRoot",
+        "data-docs-viewer-ready",
+        "data-docs-viewer-busy",
+        timeout_ms,
+    )
+    page.wait_for_selector("#docsViewerContent h1", state="visible", timeout=timeout_ms)
+    current_url = urlparse(page.url)
+    current_query = parse_qs(current_url.query)
+    if (
+        current_url.path != "/docs-review/"
+        or current_query.get("package") != ["fixture-review"]
+        or current_query.get("doc") != ["fixture-root"]
+    ):
+        raise AssertionError(f"Build did not preserve the active review route: {page.url}")
+    if "Edited externally before explicit Build." not in page.locator(
+        "#docsViewerContent"
+    ).inner_text():
+        raise AssertionError("explicit Build did not refresh the edited retained preview")
+    if build_requests != [{"package_id": "fixture-review"}]:
+        raise AssertionError(f"Build did not freeze the exact package identity: {build_requests!r}")
+    if build_status != 200:
+        raise AssertionError(f"unexpected explicit Build response status: {build_status}")
+    if source_path.read_bytes() != edited_source_bytes:
+        raise AssertionError("explicit Build rewrote package-local review source")
+    if canonical_path.read_bytes() != canonical_source_bytes:
+        raise AssertionError("explicit Build changed the canonical timestamp sentinel")
 
 
 def main() -> int:

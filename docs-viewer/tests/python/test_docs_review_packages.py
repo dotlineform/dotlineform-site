@@ -60,7 +60,26 @@ def test_fixture_package_lists_builds_and_reads_generated_payload() -> None:
 
     listed = docs_review_packages.list_packages(REPO_ROOT)
     built = docs_review_packages.build_package(REPO_ROOT, {"package_id": package.name})
-    already_built = docs_review_packages.build_package(REPO_ROOT, {"package_id": package.name})
+    source_path = package / "source/fixture-root.md"
+    source_path.write_text(
+        source_path.read_text(encoding="utf-8").replace(
+            "Original review text.",
+            "Edited review text.",
+        ),
+        encoding="utf-8",
+    )
+    edited_source = source_path.read_bytes()
+    canonical_path = (
+        package.parents[2]
+        / "docs-viewer/scopes/library/source/documents/fixture-root.md"
+    )
+    canonical_path.parent.mkdir(parents=True)
+    canonical_path.write_text(
+        "---\ndoc_id: fixture-root\nlast_updated: 2026-07-10\n---\nCanonical sentinel.\n",
+        encoding="utf-8",
+    )
+    canonical_source = canonical_path.read_bytes()
+    rebuilt = docs_review_packages.build_package(REPO_ROOT, {"package_id": package.name})
     tree = docs_review_packages.read_index_tree(REPO_ROOT, package.name)
     document = docs_review_packages.read_payload(REPO_ROOT, package.name, "fixture-root")
     assets = docs_review_packages.read_asset_inventories(REPO_ROOT, package.name)
@@ -68,13 +87,30 @@ def test_fixture_package_lists_builds_and_reads_generated_payload() -> None:
     assert listed["packages"][0]["package_id"] == package.name
     assert listed["packages"][0]["built"] is False
     assert built["document_count"] == 1
-    assert built["repaired"] is True
-    assert already_built["repaired"] is False
+    assert built["built"] is True
+    assert rebuilt["built"] is True
+    assert rebuilt["summary_text"] == f"Built 1 review documents for {package.name}."
     assert built["generated_path"].endswith(f"/import-preview/{package.name}/generated")
     assert tree["index_tree"]["docs"][0]["doc_id"] == "fixture-root"
     assert document["payload"]["doc_id"] == "fixture-root"
+    assert "Edited review text." in document["payload"]["content_html"]
     assert document["payload"]["viewer_url"].startswith(f"/docs-review/?package={package.name}&doc=")
     assert assets["inventories"]["assets"]["assets"] == []
+    assert source_path.read_bytes() == edited_source
+    assert canonical_path.read_bytes() == canonical_source
+
+
+def test_explicit_build_accepts_only_the_exact_package_identity() -> None:
+    package = write_package("exact-build")
+
+    with pytest.raises(ValueError, match="requires exactly package_id"):
+        docs_review_packages.build_package(
+            REPO_ROOT,
+            {
+                "package_id": package.name,
+                "scope": "library",
+            },
+        )
 
 
 def test_missing_or_damaged_generated_output_repairs_once_then_stays_persistent() -> None:

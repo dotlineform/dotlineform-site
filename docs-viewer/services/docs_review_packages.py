@@ -410,26 +410,16 @@ def _rebuild_generated_package(
 
 
 def build_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
+    if not isinstance(body, dict) or set(body) != {"package_id"}:
+        raise ValueError("review package Build requires exactly package_id")
     package_path, manifest, records = _package_context(repo_root, body.get("package_id"))
     generated_path = _package_marker(repo_root, package_path / "generated")
-    if _generated_output_complete(package_path, records):
-        return {
-            "ok": True,
-            "package_id": package_path.name,
-            "generated_path": generated_path,
-            "document_count": len(records),
-            "asset_count": len(_asset_records(package_path)),
-            "warnings": [],
-            "diagnostics": {},
-            "repaired": False,
-            "summary_text": f"Review package {package_path.name} already has complete generated output.",
-        }
     build = _rebuild_generated_package(repo_root, package_path, manifest, records)
     return {
         "ok": True,
         "package_id": package_path.name,
         "generated_path": generated_path,
         **build,
-        "repaired": True,
-        "summary_text": f"Repaired {build['document_count']} review documents for {package_path.name}.",
+        "built": True,
+        "summary_text": f"Built {build['document_count']} review documents for {package_path.name}.",
     }

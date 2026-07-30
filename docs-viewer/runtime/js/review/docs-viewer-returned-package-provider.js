@@ -83,11 +83,13 @@ export function createDocsViewerReturnedPackageProvider(options) {
     });
   }
 
-  function build() {
-    return ensurePackage().then(function (packageId) {
-      return request("/docs-review/packages/build", {
-        body: { package_id: packageId }
-      });
+  function build(packageId) {
+    var requestedPackageId = cleanString(packageId);
+    if (!requestedPackageId || requestedPackageId !== selectedPackageId) {
+      return Promise.reject(new Error("Build requires the active review package."));
+    }
+    return request("/docs-review/packages/build", {
+      body: { package_id: requestedPackageId }
     });
   }
 

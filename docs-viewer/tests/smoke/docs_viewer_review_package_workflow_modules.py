@@ -414,6 +414,152 @@ def exercise_scope_mismatch(page: Page, timeout_ms: int) -> None:
         raise AssertionError(f"unexpected scope-mismatch result: {result!r}")
 
 
+def exercise_review_build_controller(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const review = await import(
+                '/docs-viewer/runtime/js/review/docs-viewer-review-controller.js'
+            );
+            document.body.innerHTML = [
+                '<main id="reviewFixtureRoot"></main>',
+                '<p id="docsViewerStatus" hidden></p>'
+            ].join('');
+            const renderer = review.createDocsViewerReviewControlRenderers()[
+                'review-package-controls'
+            ];
+            const rendered = renderer({
+                document,
+                existingRoot: null
+            });
+            document.querySelector('#reviewFixtureRoot').append(rendered.root);
+            const route = '/docs-review/?package=review-1&doc=doc-1#retained';
+            const fixture = {
+                buildCalls: [],
+                pending: [],
+                reloads: []
+            };
+            const windowRef = {
+                location: {
+                    href: 'http://fixture.test' + route,
+                    search: '?package=review-1&doc=doc-1',
+                    assign: () => {},
+                    reload: () => fixture.reloads.push(route)
+                },
+                history: {
+                    state: null,
+                    replaceState: () => {}
+                }
+            };
+            const provider = {
+                activeCollectionId: () => 'review-1',
+                build: (packageId) => {
+                    fixture.buildCalls.push(packageId);
+                    return new Promise((resolve, reject) => {
+                        fixture.pending.push({ resolve, reject });
+                    });
+                },
+                listCollections: async () => [{
+                    package_id: 'review-1',
+                    title: 'Review one',
+                    built: true
+                }],
+                openSource: async () => ({}),
+                readAssetInventory: async () => ({ inventories: {} }),
+                readManifest: async () => ({
+                    manifest: {
+                        source_scope: 'studio',
+                        source_sub_scope: ''
+                    }
+                })
+            };
+            const controller = review.createDocsViewerReviewController({
+                document,
+                window: windowRef
+            });
+            controller.setProvider(provider);
+            await controller.start();
+            const button = document.querySelector(
+                '[data-docs-viewer-review-action="build"]'
+            );
+            const status = document.querySelector('#docsViewerStatus');
+            const initial = {
+                label: button.textContent,
+                disabled: button.disabled,
+                action: button.getAttribute('data-docs-viewer-review-action')
+            };
+
+            button.click();
+            const pendingFailure = {
+                disabled: button.disabled,
+                status: status.textContent,
+                isError: status.classList.contains('is-error')
+            };
+            fixture.pending[0].reject(new Error('Fixture build failed.'));
+            await new Promise((resolve) => setTimeout(resolve, 0));
+            const failed = {
+                disabled: button.disabled,
+                status: status.textContent,
+                isError: status.classList.contains('is-error'),
+                reloads: fixture.reloads.length
+            };
+
+            button.click();
+            const pendingRetry = {
+                disabled: button.disabled,
+                status: status.textContent
+            };
+            fixture.pending[1].resolve({
+                summary_text: 'Built 1 review documents for review-1.'
+            });
+            await new Promise((resolve) => setTimeout(resolve, 0));
+            return {
+                initial,
+                pendingFailure,
+                failed,
+                pendingRetry,
+                buildCalls: fixture.buildCalls,
+                success: {
+                    status: status.textContent,
+                    isError: status.classList.contains('is-error'),
+                    reloads: fixture.reloads
+                }
+            };
+        }"""
+    )
+    expected = {
+        "initial": {
+            "label": "Build",
+            "disabled": False,
+            "action": "build",
+        },
+        "pendingFailure": {
+            "disabled": True,
+            "status": "Building review package...",
+            "isError": False,
+        },
+        "failed": {
+            "disabled": False,
+            "status": "Fixture build failed.",
+            "isError": True,
+            "reloads": 0,
+        },
+        "pendingRetry": {
+            "disabled": True,
+            "status": "Building review package...",
+        },
+        "buildCalls": ["review-1", "review-1"],
+        "success": {
+            "status": "Built 1 review documents for review-1.",
+            "isError": False,
+            "reloads": [
+                "/docs-review/?package=review-1&doc=doc-1#retained",
+            ],
+        },
+    }
+    if result != expected:
+        raise AssertionError(f"unexpected Docs Review Build lifecycle: {result!r}")
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--site-root", type=Path, default=Path.cwd())
@@ -433,6 +579,7 @@ def main(argv: list[str] | None = None) -> int:
             exercise_existing_review(page, args.timeout_ms)
             exercise_review_failure(page, args.timeout_ms)
             exercise_scope_mismatch(page, args.timeout_ms)
+            exercise_review_build_controller(page)
             browser.close()
             if errors:
                 raise AssertionError(f"page errors: {errors!r}")

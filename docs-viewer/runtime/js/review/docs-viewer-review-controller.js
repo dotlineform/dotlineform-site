@@ -31,8 +31,9 @@ function renderReviewPackageControls(context) {
     var select = context.document.createElement("select");
     select.className = "docsViewer__searchInput docsViewer__reviewPackageSelect";
     select.setAttribute("aria-label", "Review package");
-    var buildButton = createButton(context.document, "Repair");
-    buildButton.setAttribute("data-docs-viewer-review-action", "repair");
+    var buildButton = createButton(context.document, "Build");
+    buildButton.disabled = true;
+    buildButton.setAttribute("data-docs-viewer-review-action", "build");
     var assetsButton = createButton(context.document, "Assets");
     assetsButton.setAttribute("data-docs-viewer-review-action", "assets");
     var openVsCodeButton = context.document.createElement("button");
@@ -84,7 +85,15 @@ export function createDocsViewerReviewController(options) {
   var canonicalLink = null;
   var openVsCodeButton = null;
   var activeDocId = "";
+  var activePackageId = "";
+  var building = false;
   var openingSource = false;
+
+  function projectBuildButton(buildButton) {
+    if (!buildButton) return;
+    buildButton.textContent = "Build";
+    buildButton.disabled = building || !provider || !activePackageId;
+  }
 
   function projectOpenVsCodeButton() {
     if (!openVsCodeButton) return;
@@ -114,13 +123,14 @@ export function createDocsViewerReviewController(options) {
     var mount = documentRef.getElementById("docsViewerReviewControlsMount");
     if (!mount || !provider) return Promise.resolve(null);
     var select = mount.querySelector("select");
-    var buildButton = mount.querySelector('[data-docs-viewer-review-action="repair"]');
+    var buildButton = mount.querySelector('[data-docs-viewer-review-action="build"]');
     var assetsButton = mount.querySelector('[data-docs-viewer-review-action="assets"]');
     canonicalLink = mount.querySelector(".docsViewer__reviewCanonicalLink");
     openVsCodeButton = documentRef.getElementById("docsViewerReviewOpenVsCodeButton");
     if (!select || !buildButton || !assetsButton || !canonicalLink || !openVsCodeButton) {
       return Promise.reject(new Error("Docs Review package controls failed to render."));
     }
+    projectBuildButton(buildButton);
     projectOpenVsCodeButton();
 
     select.addEventListener("change", function () {
@@ -131,14 +141,18 @@ export function createDocsViewerReviewController(options) {
       windowRef.location.assign(url.pathname + url.search);
     });
     buildButton.addEventListener("click", function () {
-      buildButton.disabled = true;
-      setStatus("Repairing review package generated output...", false);
-      provider.build().then(function (payload) {
-        setStatus(payload.summary_text || "Review package built.", false);
+      if (building || !activePackageId) return;
+      var requestedPackageId = activePackageId;
+      building = true;
+      projectBuildButton(buildButton);
+      setStatus("Building review package...", false);
+      provider.build(requestedPackageId).then(function (payload) {
+        setStatus(payload.summary_text || "Built review package.", false);
         windowRef.location.reload();
       }).catch(function (error) {
         setStatus(error.message || "Review build failed.", true);
-        buildButton.disabled = false;
+        building = false;
+        projectBuildButton(buildButton);
       });
     });
     assetsButton.addEventListener("click", function () {
@@ -169,8 +183,8 @@ export function createDocsViewerReviewController(options) {
       var activePackage = packages.find(function (record) {
         return record.package_id === provider.activeCollectionId();
       });
-      buildButton.disabled = Boolean(activePackage && activePackage.built);
-      buildButton.textContent = buildButton.disabled ? "Built" : "Repair";
+      activePackageId = String(activePackage && activePackage.package_id || "").trim();
+      projectBuildButton(buildButton);
       packages.forEach(function (record) {
         var option = documentRef.createElement("option");
         option.value = record.package_id;
