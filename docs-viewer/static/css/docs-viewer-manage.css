@@ -428,6 +428,11 @@
   width: min(var(--docs-viewer-modal-width), calc(100vw - 1rem));
 }
 
+.docsViewer__modalCard--importCollection{
+  --docs-viewer-modal-width: 48rem;
+  width: min(var(--docs-viewer-modal-width), calc(100vw - 1rem));
+}
+
 .docsViewer__modalCard--dynamic{
   display: flex;
   flex-direction: column;

@@ -12,7 +12,6 @@ from docs_import_collection_result import (
     safe_generation_result,
     shape_collection_result,
     utc_timestamp,
-    write_collection_result_report,
 )
 from docs_import_document import (
     IMPORT_DOCUMENT_CREATE,
@@ -345,18 +344,6 @@ def apply_import_content_collection(
         manual_copy_instructions=list(dict.fromkeys(manual_copy)),
         timestamp=timestamp,
     )
-    try:
-        result_payload["report_path"] = write_collection_result_report(
-            result_payload,
-            staging_root=staging_root,
-            workspace_root=workspace_root,
-        )
-    except Exception as exc:
-        result_payload["warnings"].append(collection_issue(
-            "warning",
-            "result_report_write_failed",
-            _safe_error_message(exc, repo_root, workspace_root),
-        ))
     log_event(
         repo_root,
         "docs-import-collection-apply",
@@ -366,7 +353,6 @@ def apply_import_content_collection(
             "outcome": result_payload["outcome"],
             "counts": result_payload["counts"],
             "generation_status": result_payload["generation"]["status"],
-            "report_path": result_payload["report_path"],
         },
     )
     return result_payload
@@ -377,8 +363,6 @@ def _atomic_collection_result(
     plan: DocumentsCollectionPlan,
     records: list[dict[str, Any]],
     *,
-    staging_root: Path,
-    workspace_root: Path,
     log_event: LogEvent,
     collection: ManagedDocumentCollection,
     generation: dict[str, Any],
@@ -401,20 +385,6 @@ def _atomic_collection_result(
     result_payload["sub_scope"] = collection.sub_scope
     result_payload["target"] = collection.request_target()
     result_payload["rollback"] = copy.deepcopy(rollback)
-    try:
-        result_payload["report_path"] = write_collection_result_report(
-            result_payload,
-            staging_root=staging_root,
-            workspace_root=workspace_root,
-        )
-    except Exception as exc:
-        result_payload["warnings"].append(
-            collection_issue(
-                "warning",
-                "result_report_write_failed",
-                _safe_error_message(exc, repo_root, workspace_root),
-            )
-        )
     log_event(
         repo_root,
         "docs-import-sub-scope-collection-apply",
@@ -426,7 +396,6 @@ def _atomic_collection_result(
             "counts": result_payload["counts"],
             "generation_status": result_payload["generation"]["status"],
             "rollback_status": result_payload["rollback"]["status"],
-            "report_path": result_payload["report_path"],
         },
     )
     return result_payload
@@ -437,7 +406,6 @@ def apply_import_content_collection_atomic(
     plan: DocumentsCollectionPlan,
     body: dict[str, Any],
     *,
-    staging_root: Path,
     workspace_root: Path,
     log_event: LogEvent,
     collection: ManagedDocumentCollection,
@@ -571,8 +539,6 @@ def apply_import_content_collection_atomic(
             repo_root,
             plan,
             results,
-            staging_root=staging_root,
-            workspace_root=workspace_root,
             log_event=log_event,
             collection=collection,
             generation={"status": "failed", "rebuild": None, "error": apply_error},
@@ -592,8 +558,6 @@ def apply_import_content_collection_atomic(
         repo_root,
         plan,
         results,
-        staging_root=staging_root,
-        workspace_root=workspace_root,
         log_event=log_event,
         collection=collection,
         generation={"status": "completed", "rebuild": rebuild, "error": ""},

@@ -59,6 +59,13 @@ export function createDocsViewerManagementImportController(options = {}) {
     }
   }
 
+  function projectCollectionState(viewState, onCommand) {
+    var modalController = typeof callbacks.getModalController === "function" ? callbacks.getModalController() : null;
+    if (modalController && typeof modalController.projectImportCollectionState === "function") {
+      modalController.projectImportCollectionState(viewState, onCommand);
+    }
+  }
+
   function initialize(scope) {
     if (!refs.root || !refs.bootStatus) return Promise.resolve();
     if (importRequestPromise) return importRequestPromise;
@@ -89,6 +96,7 @@ export function createDocsViewerManagementImportController(options = {}) {
           managementBaseUrl: context.managementBaseUrl,
           routePath: IMPORT_ROUTE_PATH,
           onBusyChange: projectBusy,
+          onCollectionStateChange: projectCollectionState,
           onTerminalResult: projectTerminalResult
         });
       })

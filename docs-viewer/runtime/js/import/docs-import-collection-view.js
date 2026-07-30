@@ -60,11 +60,11 @@ function recordList(records) {
   ].join("");
 }
 
-function confirmationPanel(phase) {
+function confirmationPanel(phase, renderActions) {
   if (phase === "applying") {
     return `<section class="docsViewerImport__collectionDecision"><p>${escapeHtml(importText("collectionApplyingStatus"))}</p></section>`;
   }
-  if (phase !== "confirmation") return "";
+  if (phase !== "confirmation" || renderActions === false) return "";
   return [
     '<section class="docsViewerImport__collectionDecision">',
     `<p>${escapeHtml(importText("collectionConfirmationMessage"))}</p>`,
@@ -76,7 +76,7 @@ function confirmationPanel(phase) {
   ].join("");
 }
 
-function resultPanel(result) {
+function resultPanel(result, phase, renderActions) {
   if (!result || typeof result !== "object") return "";
   const counts = result.counts || {};
   const summary = [
@@ -90,18 +90,27 @@ function resultPanel(result) {
     '<section class="docsViewerImport__collectionSummary">',
     `<h3>${escapeHtml(importText("collectionResultHeading"))}</h3>`,
     `<p>${escapeHtml(summary)}</p>`,
-    result.report_path ? `<p class="docsViewerImport__meta">${escapeHtml(importText("collectionReportLabel", { path: result.report_path }))}</p>` : "",
     "</section>",
     issueList(importText("collectionWarningsHeading"), warnings),
     recordList(Array.isArray(result.records) ? result.records.map((record) => ({
       ...record,
       action: record.status,
       media_plans: []
-    })) : [])
+    })) : []),
+    phase === "projection_error" && renderActions !== false
+      ? [
+          '<section class="docsViewerImport__collectionDecision">',
+          `<p>${escapeHtml(importText("collectionRefreshFailedStatus"))}</p>`,
+          '<div class="docsViewerImport__collectionDecisionActions">',
+          `<button type="button" class="docsViewerImport__button" data-collection-command="retry-refresh">${escapeHtml(importText("collectionRefreshRetryButton"))}</button>`,
+          "</div>",
+          "</section>"
+        ].join("")
+      : ""
   ].join("");
 }
 
-export function renderDocsImportCollectionView(host, viewState, onCommand) {
+export function renderDocsImportCollectionView(host, viewState, onCommand, options = {}) {
   if (!host) return;
   const state = viewState || {};
   const plan = state.plan && typeof state.plan === "object" ? state.plan : null;
@@ -110,34 +119,34 @@ export function renderDocsImportCollectionView(host, viewState, onCommand) {
     host.replaceChildren();
     return;
   }
-  if (state.phase === "result") {
-    host.innerHTML = resultPanel(state.result);
-    return;
+  if (state.phase === "result" || state.phase === "projection_error") {
+    host.innerHTML = resultPanel(state.result, state.phase, options.renderActions);
+  } else {
+    const counts = plan.counts || {};
+    const summary = [
+      importText("collectionRecordsCount", { count: Number(counts.records || 0) }),
+      importText("collectionCreatesCount", { count: Number(counts.creates || 0) }),
+      importText("collectionCollisionsCount", { count: Number(counts.collisions || 0) }),
+      importText("collectionRecordErrorsCount", { count: Number(counts.record_errors || 0) }),
+      importText("collectionMediaPlansCount", { count: Number(counts.media_plans || 0) })
+    ].join(" · ");
+    const stateMessage = state.phase === "confirmation"
+      ? importText("collectionConfirmationMessage")
+      : state.phase === "cancelled"
+        ? importText("collectionCancelledStatus")
+        : "";
+    host.innerHTML = [
+      '<section class="docsViewerImport__collectionSummary">',
+      `<h3>${escapeHtml(importText("collectionPlanHeading"))}</h3>`,
+      `<p>${escapeHtml(summary)}</p>`,
+      stateMessage ? `<p class="docsViewerImport__meta">${escapeHtml(stateMessage)}</p>` : "",
+      "</section>",
+      issueList(importText("collectionBlockersHeading"), plan.blockers),
+      issueList(importText("collectionWarningsHeading"), plan.warnings),
+      recordList(Array.isArray(plan.records) ? plan.records : []),
+      confirmationPanel(state.phase, options.renderActions),
+    ].join("");
   }
-  const counts = plan.counts || {};
-  const summary = [
-    importText("collectionRecordsCount", { count: Number(counts.records || 0) }),
-    importText("collectionCreatesCount", { count: Number(counts.creates || 0) }),
-    importText("collectionCollisionsCount", { count: Number(counts.collisions || 0) }),
-    importText("collectionRecordErrorsCount", { count: Number(counts.record_errors || 0) }),
-    importText("collectionMediaPlansCount", { count: Number(counts.media_plans || 0) })
-  ].join(" · ");
-  const stateMessage = state.phase === "confirmation"
-    ? importText("collectionConfirmationMessage")
-    : state.phase === "cancelled"
-      ? importText("collectionCancelledStatus")
-      : "";
-  host.innerHTML = [
-    '<section class="docsViewerImport__collectionSummary">',
-    `<h3>${escapeHtml(importText("collectionPlanHeading"))}</h3>`,
-    `<p>${escapeHtml(summary)}</p>`,
-    stateMessage ? `<p class="docsViewerImport__meta">${escapeHtml(stateMessage)}</p>` : "",
-    "</section>",
-    issueList(importText("collectionBlockersHeading"), plan.blockers),
-    issueList(importText("collectionWarningsHeading"), plan.warnings),
-    recordList(Array.isArray(plan.records) ? plan.records : []),
-    confirmationPanel(state.phase),
-  ].join("");
   host.querySelectorAll("[data-collection-command]").forEach((button) => {
     button.addEventListener("click", () => {
       if (typeof onCommand !== "function") return;

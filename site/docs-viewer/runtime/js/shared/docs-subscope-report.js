@@ -460,6 +460,9 @@ function renderListToolbar(state, documents) {
     host: host,
     refreshAndOpenDocument: function (target) {
       return refreshAndOpenDocument(state, target);
+    },
+    refreshCollection: function (target) {
+      return refreshCollection(state, target);
     }
   });
   if (!host.childNodes.length) return;
@@ -679,6 +682,22 @@ function assertCreatedCollectionTarget(state, target) {
   return targetDocId;
 }
 
+function assertExactCollectionTarget(state, target) {
+  var keys = Object.keys(target || {}).sort();
+  var targetScope = cleanId(target && target.scope);
+  var targetSubScope = cleanId(target && target.sub_scope);
+  if (
+    keys.length !== 2
+    || keys[0] !== "scope"
+    || keys[1] !== "sub_scope"
+    || targetScope !== state.viewerScope
+    || targetSubScope !== state.subScopeId
+  ) {
+    throw new Error("Imported package target did not match the mounted collection.");
+  }
+  return collectionTarget(targetScope, targetSubScope);
+}
+
 function focusFirstListRow(state) {
   var first = state.rowsNode && state.rowsNode.querySelector(".docsViewerReport__subscopeButton");
   if (!first || typeof first.focus !== "function") return;
@@ -741,6 +760,54 @@ function refreshAndOpenDocument(state, target) {
         );
       }
       return target;
+    });
+}
+
+function refreshCollection(state, target) {
+  var collection = assertExactCollectionTarget(state, target);
+  var activeDetailId = state.root.dataset.reportState === "detail"
+    ? cleanString(state.validDetailId)
+    : "";
+  if (!state.mounted) {
+    return Promise.reject(new Error(
+      "Package import completed, but the mounted sub-scope report is no longer available."
+    ));
+  }
+  return fetchJson(
+    state.manifestUrl,
+    "Failed to refresh docs sub-scope manifest",
+    { cache: "no-store" }
+  )
+    .then(manifestPayload)
+    .then(function (manifest) {
+      if (!state.mounted) {
+        throw new Error(
+          "Package import completed, but the mounted sub-scope report is no longer available."
+        );
+      }
+      applyManifest(state, manifest);
+      publishDocumentsRefresh(state, "package-import-refresh");
+      if (!activeDetailId) {
+        renderListView(state);
+        return collection;
+      }
+      var matches = state.docs.filter(function (doc) {
+        return doc.docId === activeDetailId;
+      });
+      if (matches.length !== 1) {
+        throw new Error(
+          "Package import completed, but the current report detail is no longer available."
+        );
+      }
+      return renderDetailById(state, activeDetailId, { cache: "no-store" })
+        .then(function () {
+          if (state.validDetailId !== activeDetailId) {
+            throw new Error(
+              "Package import completed, but the current report detail could not be refreshed."
+            );
+          }
+          return collection;
+        });
     });
 }
 

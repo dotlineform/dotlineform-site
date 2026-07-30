@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b0addc4c7319aafdb76011e73c8d3e88",
-    "generated_at_utc": "2026-07-30T16:30:07Z",
+    "version": "blake2b-1d84d0220f48765e2367ec3c22d2556b",
+    "generated_at_utc": "2026-07-30T19:02:02Z",
     "count": 234
   },
   "entries": [
@@ -1057,26 +1057,26 @@
       "kind": "doc",
       "title": "Docs Import",
       "href": "/docs/?scope=studio&doc=d-20260424-000000-fc8b5d",
-      "last_updated": "2026-07-30 14:49:00",
+      "last_updated": "2026-07-30 19:57:08",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-30 14:49:00 • Docs Viewer",
+      "display_meta": "2026-07-30 19:57:08 • Docs Viewer",
       "search_terms": [
         "docs import",
         "docs",
         "import",
         "docs viewer",
         "viewer",
-        "2026-07-30 14:49:00",
+        "2026-07-30 19:57:08",
         "2026",
         "07",
         "30",
-        "14",
-        "49",
-        "00",
+        "19",
+        "57",
+        "08",
         "d-20260424-000000-fc8b5d"
       ],
-      "search_text": "docs import docs import docs viewer viewer 2026-07-30 14:49:00 2026 07 30 14 49 00 d-20260424-000000-fc8b5d"
+      "search_text": "docs import docs import docs viewer viewer 2026-07-30 19:57:08 2026 07 30 19 57 08 d-20260424-000000-fc8b5d"
     },
     {
       "id": "d-20260719-182348-492a48",
@@ -1136,10 +1136,10 @@
       "kind": "doc",
       "title": "Docs Import Architecture",
       "href": "/docs/?scope=studio&doc=d-20260514-164722-3de65e",
-      "last_updated": "2026-07-30 16:53:34",
+      "last_updated": "2026-07-30 20:02:02",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-30 16:53:34 • Docs Viewer",
+      "display_meta": "2026-07-30 20:02:02 • Docs Viewer",
       "search_terms": [
         "docs import architecture",
         "docs",
@@ -1147,16 +1147,15 @@
         "architecture",
         "docs viewer",
         "viewer",
-        "2026-07-30 16:53:34",
+        "2026-07-30 20:02:02",
         "2026",
         "07",
         "30",
-        "16",
-        "53",
-        "34",
+        "20",
+        "02",
         "d-20260514-164722-3de65e"
       ],
-      "search_text": "docs import architecture docs import architecture docs viewer viewer 2026-07-30 16:53:34 2026 07 30 16 53 34 d-20260514-164722-3de65e"
+      "search_text": "docs import architecture docs import architecture docs viewer viewer 2026-07-30 20:02:02 2026 07 30 20 02 d-20260514-164722-3de65e"
     },
     {
       "id": "d-20260711-214307-b4c800",
@@ -1483,10 +1482,10 @@
       "kind": "doc",
       "title": "Create And Import Endpoints",
       "href": "/docs/?scope=studio&doc=d-20260607-222033-78a47c",
-      "last_updated": "2026-07-24 15:48:00",
+      "last_updated": "2026-07-30 19:57:08",
       "parent_id": "d-20260607-222033-647b52",
       "parent_title": "Endpoint Overview",
-      "display_meta": "2026-07-24 15:48:00 • Endpoint Overview",
+      "display_meta": "2026-07-30 19:57:08 • Endpoint Overview",
       "search_terms": [
         "create and import endpoints",
         "create",
@@ -1496,16 +1495,16 @@
         "endpoint overview",
         "endpoint",
         "overview",
-        "2026-07-24 15:48:00",
+        "2026-07-30 19:57:08",
         "2026",
         "07",
-        "24",
-        "15",
-        "48",
-        "00",
+        "30",
+        "19",
+        "57",
+        "08",
         "d-20260607-222033-78a47c"
       ],
-      "search_text": "create and import endpoints create and import endpoints endpoint overview endpoint overview 2026-07-24 15:48:00 2026 07 24 15 48 00 d-20260607-222033-78a47c"
+      "search_text": "create and import endpoints create and import endpoints endpoint overview endpoint overview 2026-07-30 19:57:08 2026 07 30 19 57 08 d-20260607-222033-78a47c"
     },
     {
       "id": "d-20260711-214307-6d6d46",
@@ -1805,26 +1804,26 @@
       "kind": "doc",
       "title": "Import Scripts",
       "href": "/docs/?scope=studio&doc=d-20260607-222033-c902f6",
-      "last_updated": "2026-07-22 21:45:00",
+      "last_updated": "2026-07-30 19:59:38",
       "parent_id": "d-20260607-222033-2a494e",
       "parent_title": "Scripts Overview",
-      "display_meta": "2026-07-22 21:45:00 • Scripts Overview",
+      "display_meta": "2026-07-30 19:59:38 • Scripts Overview",
       "search_terms": [
         "import scripts",
         "import",
         "scripts",
         "scripts overview",
         "overview",
-        "2026-07-22 21:45:00",
+        "2026-07-30 19:59:38",
         "2026",
         "07",
-        "22",
-        "21",
-        "45",
-        "00",
+        "30",
+        "19",
+        "59",
+        "38",
         "d-20260607-222033-c902f6"
       ],
-      "search_text": "import scripts import scripts scripts overview overview 2026-07-22 21:45:00 2026 07 22 21 45 00 d-20260607-222033-c902f6"
+      "search_text": "import scripts import scripts scripts overview overview 2026-07-30 19:59:38 2026 07 30 19 59 38 d-20260607-222033-c902f6"
     },
     {
       "id": "d-20260607-222033-f2a546",
@@ -2758,10 +2757,10 @@
       "kind": "doc",
       "title": "Docs Viewer Core Definition Analysis Delivery",
       "href": "/docs/?scope=studio&doc=d-20260718-121833-9fa2d4",
-      "last_updated": "2026-07-24 21:34:57",
+      "last_updated": "2026-07-30 19:57:08",
       "parent_id": "d-20260718-114645-7b9d24",
       "parent_title": "Docs Viewer Core Refactor",
-      "display_meta": "2026-07-24 21:34:57 • Docs Viewer Core Refactor",
+      "display_meta": "2026-07-30 19:57:08 • Docs Viewer Core Refactor",
       "search_terms": [
         "docs viewer core definition analysis delivery",
         "docs",
@@ -2772,16 +2771,16 @@
         "delivery",
         "docs viewer core refactor",
         "refactor",
-        "2026-07-24 21:34:57",
+        "2026-07-30 19:57:08",
         "2026",
         "07",
-        "24",
-        "21",
-        "34",
+        "30",
+        "19",
         "57",
+        "08",
         "d-20260718-121833-9fa2d4"
       ],
-      "search_text": "docs viewer core definition analysis delivery docs viewer core definition analysis delivery docs viewer core refactor refactor 2026-07-24 21:34:57 2026 07 24 21 34 57 d-20260718-121833-9fa2d4"
+      "search_text": "docs viewer core definition analysis delivery docs viewer core definition analysis delivery docs viewer core refactor refactor 2026-07-30 19:57:08 2026 07 30 19 57 08 d-20260718-121833-9fa2d4"
     },
     {
       "id": "d-20260724-213457-6e1cf7",
@@ -4359,10 +4358,10 @@
       "kind": "doc",
       "title": "Sub-Scope Returned Package Import Delivery",
       "href": "/docs/?scope=studio&doc=d-20260730-102954-1b363f",
-      "last_updated": "2026-07-30 17:29:53",
+      "last_updated": "2026-07-30 19:57:08",
       "parent_id": "d-20260728-113139-285eae",
       "parent_title": "Sub-Scope Index",
-      "display_meta": "2026-07-30 17:29:53 • Sub-Scope Index",
+      "display_meta": "2026-07-30 19:57:08 • Sub-Scope Index",
       "search_terms": [
         "sub-scope returned package import delivery",
         "sub",
@@ -4373,16 +4372,16 @@
         "delivery",
         "sub-scope index",
         "index",
-        "2026-07-30 17:29:53",
+        "2026-07-30 19:57:08",
         "2026",
         "07",
         "30",
-        "17",
-        "29",
-        "53",
+        "19",
+        "57",
+        "08",
         "d-20260730-102954-1b363f"
       ],
-      "search_text": "sub-scope returned package import delivery sub scope returned package import delivery sub-scope index index 2026-07-30 17:29:53 2026 07 30 17 29 53 d-20260730-102954-1b363f"
+      "search_text": "sub-scope returned package import delivery sub scope returned package import delivery sub-scope index index 2026-07-30 19:57:08 2026 07 30 19 57 08 d-20260730-102954-1b363f"
     },
     {
       "id": "d-20260728-173227-bb7426",

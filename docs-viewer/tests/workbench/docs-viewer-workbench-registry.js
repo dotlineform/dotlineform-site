@@ -418,6 +418,7 @@ async function mountImport(context, state) {
       errors: []
     }));
     const collectionHost = importNode(documentRef, "docsImportCollectionView");
+    const collectionStatus = importNode(documentRef, "docsImportCollectionStatus");
     const collectionState = {
       active: true,
       phase: "confirmation",
@@ -436,17 +437,23 @@ async function mountImport(context, state) {
       result: null
     };
     const renderCollection = () => {
-      renderDocsImportCollectionView(collectionHost, collectionState, (command) => {
+      renderDocsImportCollectionView(
+        collectionHost,
+        collectionState,
+        null,
+        { renderActions: false }
+      );
+      fixture.controller.projectImportCollectionState(collectionState, command => {
         if (command?.type !== "cancel") return;
         collectionState.phase = "cancelled";
-        statusNode.textContent = importText("collectionCancelledStatus");
-        delete statusNode.dataset.state;
+        collectionStatus.textContent = importText("collectionCancelledStatus");
+        delete collectionStatus.dataset.state;
         renderCollection();
       });
     };
     renderCollection();
-    statusNode.textContent = importText("collectionReadyStatus");
-    statusNode.dataset.state = "success";
+    collectionStatus.textContent = importText("collectionReadyStatus");
+    collectionStatus.dataset.state = "success";
   }
   await afterPaint(context.document);
 }
@@ -626,7 +633,11 @@ export const docsViewerWorkbenchReviewRecipes = Object.freeze(
 export const docsViewerWorkbenchStyles = Object.freeze([...PACK_STYLES]);
 
 export function docsViewerWorkbenchSpecimenRecords() {
-  return docsViewerWorkbenchRegistry.map(({ mount: _mount, ...record }) => ({ ...record }));
+  return docsViewerWorkbenchRegistry.map((record) => {
+    const specimen = { ...record };
+    delete specimen.mount;
+    return specimen;
+  });
 }
 
 export function validateDocsViewerWorkbenchRegistry(records = docsViewerWorkbenchRegistry) {

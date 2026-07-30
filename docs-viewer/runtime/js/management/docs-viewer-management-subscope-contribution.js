@@ -433,6 +433,7 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
           },
           {
             refreshAndOpenDocument: settings.refreshAndOpenDocument,
+            refreshCollection: settings.refreshCollection,
             restoreFocus: importButton
           }
         )).catch(function (error) {

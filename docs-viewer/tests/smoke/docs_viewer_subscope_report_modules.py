@@ -2336,15 +2336,8 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
                   restoreFocusIsImport: restoreFocus?.dataset.docsSubscopeImport === 'true'
                 });
                 return new Promise((resolve, reject) => {
-                  importReleases.push(record => {
-                    window.syntheticCreatedDocs.push(record);
-                    Promise.resolve(options.onComplete({
-                      target: {
-                        scope: collection.scope,
-                        sub_scope: collection.sub_scope,
-                        doc_id: record.doc_id
-                      }
-                    })).then(resolve, reject);
+                  importReleases.push(detail => {
+                    Promise.resolve(options.onComplete(detail)).then(resolve, reject);
                   });
                 });
               }
@@ -2421,10 +2414,18 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
           };
           importButton().click();
           importInFlight.callsAfterSecondClick = importCalls.length;
-          importReleases[0]({
+          const importedRecord = {
             doc_id: 'imported-first',
             title: 'Imported first',
             viewable: false
+          };
+          window.syntheticCreatedDocs.push(importedRecord);
+          importReleases[0]({
+            target: {
+              scope: 'studio',
+              sub_scope: 'tags',
+              doc_id: importedRecord.doc_id
+            }
           });
           await waitFor(() => (
             content.querySelector('.docsReportDetail')
@@ -2443,6 +2444,45 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
           await waitFor(() => content.querySelector(
             '.docsViewerReport'
           )?.dataset.reportState === 'list');
+          const packageHistoryLength = history.length;
+          importButton().click();
+          window.syntheticCreatedDocs[0] = {
+            ...window.syntheticCreatedDocs[0],
+            title: 'Imported first refreshed'
+          };
+          window.syntheticCreatedDocs.push({
+            doc_id: 'package-imported',
+            title: 'Package imported',
+            viewable: true
+          });
+          importReleases[1]({
+            target: {
+              scope: 'studio',
+              sub_scope: 'tags'
+            },
+            result: {
+              collection: true,
+              outcome: 'completed'
+            }
+          });
+          await waitFor(() => content.querySelector(
+            '[data-report-subdoc-id="package-imported"]'
+          ));
+          const packageImported = {
+            historyLength: history.length,
+            importCalls: importCalls.length,
+            reportState: content.querySelector('.docsViewerReport')
+              ?.dataset.reportState,
+            rowIds: Array.from(content.querySelectorAll(
+              '.docsViewerReport__row[data-report-subdoc-id]'
+            )).map(row => row.dataset.reportSubdocId),
+            rowTitles: Array.from(content.querySelectorAll(
+              '[data-report-subdoc-id] .docsViewerReport__title'
+            )).map(node => node.textContent),
+            selectionState: content.querySelector('.docsViewerReport')
+              ?.dataset.reportSubscopeSelection || '',
+            subdoc: new URLSearchParams(location.search).get('subdoc')
+          };
           newButton().click();
           const inFlight = {
             ariaLabel: newButton().getAttribute('aria-label'),
@@ -2503,6 +2543,8 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
             imported,
             inFlight,
             initial,
+            packageHistoryLength,
+            packageImported,
             second,
             statuses
           };
@@ -2552,6 +2594,19 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
         },
         "subdoc": "imported-first",
     }
+    expected_package_imported = {
+        "historyLength": result["packageHistoryLength"],
+        "importCalls": 2,
+        "reportState": "list",
+        "rowIds": ["imported-first", "package-imported"],
+        "rowTitles": ["Imported first refreshed", "Package imported"],
+        "selectionState": "inactive",
+        "subdoc": None,
+    }
+    if result["packageImported"] != expected_package_imported:
+        raise AssertionError(
+            f"unexpected imported package refresh: {result['packageImported']!r}"
+        )
     expected_call = {
         "collection": expected_collection,
         "refreshAndSelectType": "function",
@@ -2581,6 +2636,7 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
         {"path": "/synthetic/manifest.json", "cache": "default"},
         {"path": "/synthetic/manifest.json", "cache": "no-store"},
         {"path": "/synthetic/by-id/imported-first.json", "cache": "no-store"},
+        {"path": "/synthetic/manifest.json", "cache": "no-store"},
         {"path": "/synthetic/manifest.json", "cache": "no-store"},
         {"path": "/synthetic/by-id/created-first.json", "cache": "no-store"},
         {"path": "/synthetic/manifest.json", "cache": "no-store"},

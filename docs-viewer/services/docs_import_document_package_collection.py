@@ -356,7 +356,6 @@ def apply_document_package_collection(
             repo_root,
             plan,
             body,
-            staging_root=staging_root,
             workspace_root=workspace_root,
             log_event=log_event,
             collection=collection,

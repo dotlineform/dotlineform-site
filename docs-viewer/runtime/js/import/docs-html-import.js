@@ -19,6 +19,7 @@ import {
   importText
 } from "./docs-html-import-text.js";
 import {
+  DOCS_IMPORT_COLLECTION_SOURCE_FORMAT,
   createDocsImportCollectionController,
   isDocsImportCollectionRecord
 } from "./docs-import-collection-controller.js";
@@ -183,6 +184,63 @@ async function fetchImportFiles(state) {
   return Array.isArray(payload.files) ? payload.files : [];
 }
 
+function returnedPackagePath(destination) {
+  return [
+    "/docs/packages/returned?scope=",
+    encodeURIComponent(normalizeText(destination && destination.scope).toLowerCase()),
+    "&sub_scope=",
+    encodeURIComponent(normalizeText(destination && destination.sub_scope).toLowerCase())
+  ].join("");
+}
+
+export function docsReturnedPackageFilesForDestination(payload, destination) {
+  const target = normalizeManagedDocumentCollectionTarget(destination);
+  if (!target.sub_scope) {
+    throw new Error("Returned-package discovery requires an exact child collection.");
+  }
+  if (
+    normalizeText(payload && payload.scope).toLowerCase() !== target.scope
+    || normalizeText(payload && payload.sub_scope).toLowerCase() !== target.sub_scope
+  ) {
+    throw new Error("Returned-package discovery did not match the requested child collection.");
+  }
+  return (Array.isArray(payload && payload.files) ? payload.files : []).filter((record) => (
+    normalizeText(record && record.scope).toLowerCase() === target.scope
+    && normalizeText(record && record.sub_scope).toLowerCase() === target.sub_scope
+    && record.supports_return_import === true
+  )).map((record) => ({
+    ...record,
+    source_format: DOCS_IMPORT_COLLECTION_SOURCE_FORMAT
+  }));
+}
+
+async function fetchReturnedPackageFiles(state) {
+  if (!fixedSubscopeDestination(state)) return [];
+  const destination = state.importDestination;
+  const payload = await fetchManagementJson(
+    returnedPackagePath(destination),
+    "GET",
+    undefined,
+    managementOptionsForState(state)
+  );
+  return docsReturnedPackageFilesForDestination(payload, destination);
+}
+
+async function fetchAvailableImportFiles(state) {
+  if (!fixedSubscopeDestination(state)) return fetchImportFiles(state);
+  const [ordinaryFiles, returnedPackages] = await Promise.all([
+    fetchImportFiles(state),
+    fetchReturnedPackageFiles(state).catch((error) => {
+      state.returnedPackageLoadError = error;
+      console.warn("docs_import_source: returned package refresh failed", error);
+      return [];
+    })
+  ]);
+  return ordinaryFiles
+    .filter((record) => !isDocsImportCollectionRecord(record))
+    .concat(returnedPackages);
+}
+
 export const DOCS_IMPORT_MODE_FILES = "files";
 export const DOCS_IMPORT_MODE_DATA_SHARING = "data_sharing_packages";
 
@@ -249,13 +307,9 @@ function renderImportModeOptions(state) {
   const filesCount = docsImportFilesForMode(state.files, DOCS_IMPORT_MODE_FILES).length;
   const packagesCount = docsImportFilesForMode(state.files, DOCS_IMPORT_MODE_DATA_SHARING).length;
   const options = [
-    `<option value="${DOCS_IMPORT_MODE_FILES}">${escapeHtml(importText("filesOption", { count: filesCount }))}</option>`
+    `<option value="${DOCS_IMPORT_MODE_FILES}">${escapeHtml(importText("filesOption", { count: filesCount }))}</option>`,
+    `<option value="${DOCS_IMPORT_MODE_DATA_SHARING}">${escapeHtml(importText("dataSharingPackagesOption", { count: packagesCount }))}</option>`
   ];
-  if (!fixedSubscopeDestination(state)) {
-    options.push(
-      `<option value="${DOCS_IMPORT_MODE_DATA_SHARING}">${escapeHtml(importText("dataSharingPackagesOption", { count: packagesCount }))}</option>`
-    );
-  }
   state.typeSelect.innerHTML = options.join("");
   state.typeSelect.value = state.importMode;
 }
@@ -288,6 +342,7 @@ function setImportDestination(state, destination, options = {}) {
     : "";
   if (fixedSubscopeDestination(state)) {
     state.importMode = DOCS_IMPORT_MODE_FILES;
+    state.selectedFilenamesByMode[DOCS_IMPORT_MODE_DATA_SHARING] = [];
   }
   renderImportScopeOptions(state, options.fallbackScope);
   if (!state.files.length) {
@@ -328,7 +383,6 @@ function syncImportInputControls(state) {
   state.typeSelect.disabled = (
     state.isRunning
     || !state.serviceAvailable
-    || fixedSubscopeDestination(state)
   );
   state.scopeSelect.disabled = (
     state.isRunning
@@ -345,8 +399,27 @@ function resetImportView(state, statusMessage) {
   setStatus(state.statusNode, "", statusMessage);
 }
 
-function stagedFileOption(file) {
+function collectionFileLabel(state, file) {
+  const count = Number(file && file.document_count);
+  const collectionLabel = normalizeText(state.importDestinationLabel)
+    || [
+      normalizeText(file && file.scope_label),
+      normalizeText(file && file.sub_scope_label)
+    ].filter(Boolean).join(" / ");
+  return [
+    normalizeText(file && file.filename),
+    collectionLabel,
+    Number.isInteger(count) && count >= 0
+      ? importText("packageDocumentCount", { count })
+      : ""
+  ].filter(Boolean).join(" — ");
+}
+
+function stagedFileOption(state, file) {
   const filename = normalizeText(file && file.filename);
+  if (isDocsImportCollectionRecord(file)) {
+    return `<option value="${escapeHtml(filename)}">${escapeHtml(collectionFileLabel(state, file))}</option>`;
+  }
   const sourceFormat = docsHtmlImportSourceFormatForRecord(file).replace(/_/g, " ");
   return `<option value="${escapeHtml(filename)}">${escapeHtml(`${filename} (${sourceFormat})`)}</option>`;
 }
@@ -366,14 +439,14 @@ function renderStagedFileList(state) {
   const packageMode = state.importMode === DOCS_IMPORT_MODE_DATA_SHARING;
   state.fileSelect.multiple = !packageMode;
   setText(state.fileLabelNode, importText(packageMode ? "packageLabel" : "fileLabel"));
-  state.fileSelect.innerHTML = records.map(stagedFileOption).join("");
+  state.fileSelect.innerHTML = records.map((file) => stagedFileOption(state, file)).join("");
 
   if (previousSelection.length) {
     selectFileOptions(state, packageMode ? previousSelection.slice(0, 1) : previousSelection);
-  } else if (records.length) {
+  } else if (records.length && !(packageMode && fixedSubscopeDestination(state))) {
     selectFileOptions(state, [normalizeText(records[0] && records[0].filename)]);
   } else {
-    state.fileSelect.value = "";
+    selectFileOptions(state, []);
   }
 
   state.fileSelect.disabled = !records.length;
@@ -411,7 +484,9 @@ function renderStagedFiles(state, files) {
   renderImportModeOptions(state);
   renderStagedFileList(state);
 
-  if (!files.length) {
+  if (state.returnedPackageLoadError) {
+    setStatus(state.statusNode, "error", importText("loadPackagesFailed"));
+  } else if (!files.length) {
     setStatus(state.statusNode, "warn", importText("noFiles"));
   }
   markRouteReady(state, true);
@@ -425,7 +500,8 @@ function refreshStagedFiles(state) {
   state.typeSelect.disabled = true;
   state.selectAllButton.disabled = true;
   state.runButton.disabled = true;
-  state.refreshPromise = fetchImportFiles(state)
+  state.returnedPackageLoadError = null;
+  state.refreshPromise = fetchAvailableImportFiles(state)
     .then((files) => {
       renderStagedFiles(state, files);
       return files;
@@ -453,10 +529,6 @@ function refreshStagedFiles(state) {
 
 function bindImportEvents(state) {
   state.typeSelect.addEventListener("change", () => {
-    if (fixedSubscopeDestination(state)) {
-      state.typeSelect.value = DOCS_IMPORT_MODE_FILES;
-      return;
-    }
     rememberSelectedFilenames(state);
     state.importMode = normalizeImportMode(state.typeSelect.value);
     resetImportView(state, "");
@@ -577,6 +649,9 @@ async function runImport(state) {
     await state.collectionController.preview({
       file: collectionFile,
       scope,
+      subScope: normalizeText(
+        state.importDestination && state.importDestination.sub_scope
+      ),
       managementBaseUrl: state.managementBaseUrl
     });
     return;
@@ -656,6 +731,7 @@ export async function initDocsHtmlImport(options = {}) {
     warningsHeading: document.getElementById("docsHtmlImportWarningsHeading"),
     warningsList: document.getElementById("docsHtmlImportWarningsList"),
     collectionView: document.getElementById("docsImportCollectionView"),
+    collectionStatusNode: document.getElementById("docsImportCollectionStatus"),
     pendingInteractiveOverwriteResolver: null,
     persistScope: options.persistScope !== false,
     routePath: normalizeText(options.routePath) || "/docs/",
@@ -663,6 +739,7 @@ export async function initDocsHtmlImport(options = {}) {
     serviceAvailable: false,
     isRunning: false,
     refreshPromise: null,
+    returnedPackageLoadError: null,
     files: [],
     importMode: DOCS_IMPORT_MODE_FILES,
     importDestination: null,
@@ -673,13 +750,19 @@ export async function initDocsHtmlImport(options = {}) {
     },
     docsScopeIds: [],
     onBusyChange: typeof options.onBusyChange === "function" ? options.onBusyChange : () => {},
+    onCollectionStateChange: typeof options.onCollectionStateChange === "function"
+      ? options.onCollectionStateChange
+      : () => {},
     onTerminalResult: typeof options.onTerminalResult === "function" ? options.onTerminalResult : () => {}
   };
   state.collectionController = createDocsImportCollectionController({
     host: state.collectionView,
-    statusNode: state.statusNode,
+    statusNode: state.collectionStatusNode,
+    previewStatusNode: state.statusNode,
+    renderActions: false,
     routePath: state.routePath,
     onTerminalResult: state.onTerminalResult,
+    onViewStateChange: state.onCollectionStateChange,
     onBusyChange: (busy) => {
       state.isRunning = busy;
       syncImportInputControls(state);
@@ -717,7 +800,8 @@ export async function initDocsHtmlImport(options = {}) {
     state.warningsWrap,
     state.warningsHeading,
     state.warningsList,
-    state.collectionView
+    state.collectionView,
+    state.collectionStatusNode
   ];
   if (requiredNodes.some((node) => !node)) return;
   const importApp = {

@@ -204,7 +204,7 @@ export function createDocsViewerModalLifecycle(options = {}) {
     return true;
   }
 
-  function close() {
+  function close(closeOptions = {}) {
     if (!active) return false;
     active = false;
     if (initialFocusTimer !== null) {
@@ -217,7 +217,7 @@ export function createDocsViewerModalLifecycle(options = {}) {
     removeListeners();
     restoreScroll();
     delete modal.dataset.keyboardNavigation;
-    var returnTarget = restoreFocus;
+    var returnTarget = closeOptions.restoreFocus === false ? null : restoreFocus;
     restoreFocus = null;
     restoreFocusTimer = windowRef.setTimeout(function () {
       restoreFocusTimer = null;

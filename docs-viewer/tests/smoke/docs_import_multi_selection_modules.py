@@ -28,8 +28,10 @@ def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
 
 def assert_multi_selection(page: Page, base_url: str) -> None:
     import_requests: list[dict[str, object]] = []
+    returned_listing_requests: list[str] = []
     source_requests: list[dict[str, object]] = []
     child_failures_remaining = 1
+    package_apply_failures_remaining = 1
     staged_files = [
         {"filename": "alpha.md", "source_format": "markdown"},
         {"filename": "beta.html", "source_format": "html"},
@@ -54,17 +56,193 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
             },
         ),
     )
+    page.route(
+        "**/docs-viewer/runtime/js/shared/docs-viewer-render.js",
+        lambda route: route.fulfill(
+            path=str(
+                Path(__file__).resolve().parents[3]
+                / "site/docs-viewer/runtime/js/shared/docs-viewer-render.js"
+            ),
+            content_type="text/javascript",
+        ),
+    )
     page.route("**/health", lambda route: fulfill(route, {"ok": True}))
     page.route(
         "**/docs/import-source-files",
         lambda route: fulfill(route, {"ok": True, "available": True, "files": staged_files}),
     )
+    page.route(
+        "**/docs/packages/returned?*",
+        lambda route: (
+            returned_listing_requests.append(route.request.url),
+            fulfill(
+                route,
+                {
+                    "ok": True,
+                    "scope": "studio",
+                    "sub_scope": "tags",
+                    "required_capability": "supports_return_import",
+                    "files": [
+                        {
+                            "filename": "returned-tags.jsonl",
+                            "scope": "studio",
+                            "sub_scope": "tags",
+                            "scope_label": "Studio",
+                            "sub_scope_label": "Tags",
+                            "document_count": 2,
+                            "supports_docs_review": True,
+                            "supports_return_import": True,
+                        },
+                        {
+                            "filename": "returned-notes.jsonl",
+                            "scope": "studio",
+                            "sub_scope": "notes",
+                            "scope_label": "Studio",
+                            "sub_scope_label": "Notes",
+                            "document_count": 1,
+                            "supports_docs_review": True,
+                            "supports_return_import": True,
+                        },
+                        {
+                            "filename": "review-only-tags.jsonl",
+                            "scope": "studio",
+                            "sub_scope": "tags",
+                            "scope_label": "Studio",
+                            "sub_scope_label": "Tags",
+                            "document_count": 2,
+                            "supports_docs_review": True,
+                            "supports_return_import": False,
+                        }
+                    ],
+                },
+            ),
+        )[-1],
+    )
 
     def fulfill_import(route) -> None:
-        nonlocal child_failures_remaining
+        nonlocal child_failures_remaining, package_apply_failures_remaining
         body = route.request.post_data_json
         import_requests.append(body)
         filename = str(body["staged_filename"])
+        if filename == "reviewed.jsonl":
+            fulfill(
+                route,
+                {
+                    "ok": True,
+                    "collection": True,
+                    "preview_only": True,
+                    "source_format": "data_sharing_documents",
+                    "target": {"scope": body["scope"]},
+                    "package": {
+                        "export_id": "ds_20260730T110000Z",
+                        "source_sha256": "c" * 64,
+                    },
+                    "blockers": [],
+                    "warnings": [],
+                    "counts": {
+                        "records": 1,
+                        "creates": 0,
+                        "collisions": 1,
+                        "record_errors": 0,
+                        "media_plans": 0,
+                    },
+                    "planned_identities": [
+                        {"record_index": 0, "doc_id": "global-a"},
+                    ],
+                    "planned_actions": [
+                        {
+                            "record_index": 0,
+                            "doc_id": "global-a",
+                            "action": "overwrite",
+                        },
+                    ],
+                    "records": [
+                        {
+                            "record_index": 0,
+                            "doc_id": "global-a",
+                            "title": "Global A",
+                            "action": "overwrite",
+                        },
+                    ],
+                },
+            )
+            return
+        if filename == "returned-tags.jsonl":
+            package = {
+                "export_id": "ds_20260730T120000Z",
+                "source_sha256": "a" * 64,
+                "trusted_metadata_sha256": "b" * 64,
+            }
+            if body.get("preview_only") is True:
+                fulfill(
+                    route,
+                    {
+                        "ok": True,
+                        "collection": True,
+                        "preview_only": True,
+                        "source_format": "data_sharing_documents",
+                        "target": {"scope": "studio", "sub_scope": "tags"},
+                        "package": package,
+                        "blockers": [],
+                        "warnings": [],
+                        "counts": {
+                            "records": 2,
+                            "creates": 0,
+                            "collisions": 2,
+                            "record_errors": 0,
+                            "media_plans": 0,
+                        },
+                        "planned_identities": [
+                            {"record_index": 0, "doc_id": "tag-a"},
+                            {"record_index": 1, "doc_id": "tag-b"},
+                        ],
+                        "planned_actions": [
+                            {"record_index": 0, "doc_id": "tag-a", "action": "overwrite"},
+                            {"record_index": 1, "doc_id": "tag-b", "action": "overwrite"},
+                        ],
+                        "records": [
+                            {"record_index": 0, "doc_id": "tag-a", "title": "Tag A", "action": "overwrite"},
+                            {"record_index": 1, "doc_id": "tag-b", "title": "Tag B", "action": "overwrite"},
+                        ],
+                    },
+                )
+                return
+            if package_apply_failures_remaining:
+                package_apply_failures_remaining -= 1
+                route.fulfill(
+                    status=503,
+                    content_type="application/json",
+                    body=json.dumps(
+                        {
+                            "ok": False,
+                            "error": "Synthetic returned-package apply failure.",
+                        }
+                    ),
+                )
+                return
+            fulfill(
+                route,
+                {
+                    "ok": True,
+                    "collection": True,
+                    "preview_only": False,
+                    "source_format": "data_sharing_documents",
+                    "target": {"scope": "studio", "sub_scope": "tags"},
+                    "outcome": "completed",
+                    "counts": {
+                        "created": 0,
+                        "overwritten": 2,
+                        "failed": 0,
+                        "not_attempted": 0,
+                    },
+                    "records": [
+                        {"record_index": 0, "doc_id": "tag-a", "status": "overwritten"},
+                        {"record_index": 1, "doc_id": "tag-b", "status": "overwritten"},
+                    ],
+                    "warnings": [],
+                },
+            )
+            return
         if body.get("sub_scope") == "tags" and child_failures_remaining:
             child_failures_remaining -= 1
             route.fulfill(
@@ -142,15 +320,26 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
     )
     result = page.evaluate(
         """async (baseUrl) => {
-          document.body.innerHTML = '<div id="mount"></div>';
+          document.body.innerHTML = '<button id="importTrigger">Import</button><div id="mount"></div>';
           const shellModule = await import('/docs-viewer/runtime/js/management/docs-viewer-management-shell-renderer.js');
+          const modalModule = await import('/docs-viewer/runtime/js/management/docs-viewer-management-modals.js');
           const importModule = await import('/docs-viewer/runtime/js/import/docs-html-import.js');
-          shellModule.renderDocsViewerManagementShell({
+          const shellRefs = shellModule.renderDocsViewerManagementShell({
             document,
             mount: document.getElementById('mount')
           });
+          const modalController = modalModule.createDocsViewerManagementModalController({
+            refs: shellRefs,
+            management: {},
+            scopeConfig: {},
+            callbacks: {
+              viewerScope: () => 'studio'
+            }
+          });
+          modalController.wireEvents();
 
           const terminalDetails = [];
+          let collectionRefreshFailuresRemaining = 1;
           const importApp = await importModule.initDocsHtmlImport({
             root: document.getElementById('docsHtmlImportRoot'),
             bootStatus: document.getElementById('docsHtmlImportBootStatus'),
@@ -158,9 +347,23 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
             docsViewerConfigUrl: '/docs-viewer/config/defaults/docs-viewer-config.json',
             initialScope: 'studio',
             persistScope: false,
+            onBusyChange: busy => modalController.projectImportBusy(busy),
+            onCollectionStateChange: (viewState, onCommand) => {
+              modalController.projectImportCollectionState(viewState, onCommand);
+            },
             onTerminalResult(detail) {
               terminalDetails.push(detail);
+              if (
+                detail.result?.collection === true
+                && collectionRefreshFailuresRemaining
+              ) {
+                collectionRefreshFailuresRemaining -= 1;
+                throw new Error('Synthetic collection report refresh failure.');
+              }
             }
+          });
+          await modalController.openImportModal({
+            restoreFocus: document.getElementById('importTrigger')
           });
 
           const typeSelect = document.getElementById('docsHtmlImportTypeSelect');
@@ -214,12 +417,38 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
             selectionBarHidden: selectionBar.hidden,
             runLabel: runButton.textContent
           };
+          runButton.click();
+          for (
+            let attempt = 0;
+            attempt < 1000
+              && document.getElementById('docsViewerImportCollectionModal').hidden;
+            attempt += 1
+          ) {
+            await new Promise(resolve => setTimeout(resolve, 0));
+          }
+          const globalPackageConfirmation = {
+            modalId: document.querySelector(
+              '#docsViewerImportCollectionModal:not([hidden])'
+            )?.id || '',
+            chooserHidden: document.getElementById('docsViewerImportModal').hidden,
+            footerCommands: Array.from(
+              document.querySelectorAll(
+                '#docsViewerImportCollectionModal [data-collection-command]:not([hidden])'
+              )
+            ).map(button => button.dataset.collectionCommand)
+          };
+          document.getElementById('docsImportCollectionCancel').click();
+          await new Promise(resolve => setTimeout(resolve, 0));
+          await modalController.openImportModal({
+            restoreFocus: document.getElementById('importTrigger')
+          });
 
           const locationBeforeChild = location.href;
           importApp.setDestination(
             { scope: 'studio', sub_scope: 'tags' },
             { label: 'studio / Tags' }
           );
+          await importApp.refreshStagedFiles();
           Array.from(fileSelect.options).forEach(option => {
             option.selected = option.value === 'alpha.md';
           });
@@ -274,6 +503,116 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
           resultLink.click();
           await new Promise(resolve => setTimeout(resolve, 0));
 
+          typeSelect.value = importModule.DOCS_IMPORT_MODE_DATA_SHARING;
+          typeSelect.dispatchEvent(new Event('change', { bubbles: true }));
+          const childPackageInitial = {
+            filenames: Array.from(fileSelect.options).map(option => option.value),
+            labels: Array.from(fileSelect.options).map(option => option.textContent),
+            selected: Array.from(fileSelect.selectedOptions).map(option => option.value),
+            runDisabled: runButton.disabled,
+            selectionBarHidden: selectionBar.hidden
+          };
+          fileSelect.options[0].selected = true;
+          fileSelect.dispatchEvent(new Event('change', { bubbles: true }));
+          const childPackageSelected = {
+            selected: Array.from(fileSelect.selectedOptions).map(option => option.value),
+            runDisabled: runButton.disabled,
+            runLabel: runButton.textContent
+          };
+          runButton.click();
+          for (
+            let attempt = 0;
+            attempt < 1000
+              && document.getElementById('docsViewerImportCollectionModal').hidden;
+            attempt += 1
+          ) {
+            await new Promise(resolve => setTimeout(resolve, 0));
+          }
+          const childPackageConfirmation = {
+            chooserHidden: document.getElementById('docsViewerImportModal').hidden,
+            planHidden: document.getElementById('docsViewerImportCollectionModal').hidden,
+            visibleDialogs: Array.from(
+              document.querySelectorAll('.docsViewer__modal')
+            ).filter(modal => !modal.hidden).length,
+            footerCommands: Array.from(
+              document.querySelectorAll(
+                '#docsViewerImportCollectionModal [data-collection-command]:not([hidden])'
+              )
+            ).map(button => button.dataset.collectionCommand),
+            backButtons: Array.from(
+              document.querySelectorAll('#docsViewerImportCollectionModal button')
+            ).filter(button => button.textContent.trim().toLowerCase() === 'back').length,
+            planInScrollableBody: document.querySelector(
+              '#docsViewerImportCollectionModal .docsViewer__modalBody #docsImportCollectionView'
+            ) !== null,
+            confirmInFixedActions: document.querySelector(
+              '#docsViewerImportCollectionModal .docsViewer__modalActions '
+              + '[data-collection-command="confirm"]'
+            ) !== null
+          };
+          document.getElementById('docsImportCollectionCancel').click();
+          await new Promise(resolve => setTimeout(resolve, 0));
+          const childPackageCancelled = {
+            status: document.getElementById('docsImportCollectionStatus').textContent,
+            chooserHidden: document.getElementById('docsViewerImportModal').hidden,
+            planHidden: document.getElementById('docsViewerImportCollectionModal').hidden
+          };
+          await modalController.openImportModal({
+            restoreFocus: document.getElementById('importTrigger')
+          });
+          runButton.click();
+          for (
+            let attempt = 0;
+            attempt < 1000
+              && document.getElementById('docsViewerImportCollectionModal').hidden;
+            attempt += 1
+          ) {
+            await new Promise(resolve => setTimeout(resolve, 0));
+          }
+          document.getElementById('docsImportCollectionConfirm').click();
+          while (document.getElementById('docsHtmlImportRoot').dataset.studioBusy === 'true') {
+            await new Promise(resolve => setTimeout(resolve, 0));
+          }
+          const childPackageFailure = {
+            status: document.getElementById('docsImportCollectionStatus').textContent,
+            statusState: document.getElementById('docsImportCollectionStatus').dataset.state || '',
+            retryAvailable: !document.getElementById('docsImportCollectionConfirm').hidden,
+            selected: Array.from(fileSelect.selectedOptions).map(option => option.value),
+            terminalCount: terminalDetails.length
+          };
+          document.getElementById('docsImportCollectionConfirm').click();
+          while (terminalDetails.length < 3) {
+            await new Promise(resolve => setTimeout(resolve, 0));
+          }
+          while (document.getElementById('docsHtmlImportRoot').dataset.studioBusy === 'true') {
+            await new Promise(resolve => setTimeout(resolve, 0));
+          }
+          const childPackageRefreshFailure = {
+            retryAvailable: !document.getElementById('docsImportCollectionRetry').hidden,
+            status: document.getElementById('docsImportCollectionStatus').textContent,
+            statusState: document.getElementById('docsImportCollectionStatus').dataset.state || '',
+            terminalCount: terminalDetails.length
+          };
+          document.getElementById('docsImportCollectionRetry').click();
+          while (terminalDetails.length < 4) {
+            await new Promise(resolve => setTimeout(resolve, 0));
+          }
+          while (document.getElementById('docsHtmlImportRoot').dataset.studioBusy === 'true') {
+            await new Promise(resolve => setTimeout(resolve, 0));
+          }
+          const childPackageResult = {
+            status: document.getElementById('docsImportCollectionStatus').textContent,
+            statusState: document.getElementById('docsImportCollectionStatus').dataset.state || '',
+            closeVisible: !document.getElementById('docsImportCollectionClose').hidden,
+            terminal: {
+              scope: terminalDetails[3].scope,
+              subScope: terminalDetails[3].subScope,
+              docId: terminalDetails[3].docId,
+              target: terminalDetails[3].target,
+              outcome: terminalDetails[3].result.outcome
+            }
+          };
+
           importApp.setDestination(null, { fallbackScope: 'library' });
           const restoredGlobal = {
             scopeDisabled: document.getElementById('docsHtmlImportScopeSelect').disabled,
@@ -290,7 +629,15 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
             afterSelectAll,
             childDestination,
             childFailure,
+            childPackageCancelled,
+            childPackageConfirmation,
+            childPackageFailure,
+            childPackageInitial,
+            childPackageRefreshFailure,
+            childPackageResult,
+            childPackageSelected,
             childResult,
+            globalPackageConfirmation,
             packageMode,
             restoredGlobal,
             terminal: {
@@ -333,13 +680,18 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
     }
     if result["packageMode"] != expected_package_mode:
         raise AssertionError(f"reviewed-package mode was not isolated and single-select: {result!r}")
+    assert result["globalPackageConfirmation"] == {
+        "modalId": "docsViewerImportCollectionModal",
+        "chooserHidden": True,
+        "footerCommands": ["cancel", "confirm"],
+    }
     assert result["childDestination"] == {
         "locationUnchanged": True,
         "scopeDisabled": True,
         "scopeLabels": ["studio / Tags"],
         "scopeValue": "studio",
-        "typeDisabled": True,
-        "typeLabels": ["Documents (4)"],
+        "typeDisabled": False,
+        "typeLabels": ["Documents (4)", "Document packages (1)"],
         "filenames": ["alpha.md", "beta.html", "word.docx", "notes.json"],
         "selected": ["alpha.md"],
     }
@@ -371,6 +723,60 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
             "resultCount": 1,
         },
     }
+    assert result["childPackageInitial"] == {
+        "filenames": ["returned-tags.jsonl"],
+        "labels": ["returned-tags.jsonl — studio / Tags — 2 documents"],
+        "selected": [],
+        "runDisabled": True,
+        "selectionBarHidden": True,
+    }
+    assert result["childPackageSelected"] == {
+        "selected": ["returned-tags.jsonl"],
+        "runDisabled": False,
+        "runLabel": "Preview collection",
+    }
+    assert result["childPackageConfirmation"] == {
+        "chooserHidden": True,
+        "planHidden": False,
+        "visibleDialogs": 1,
+        "footerCommands": ["cancel", "confirm"],
+        "backButtons": 0,
+        "planInScrollableBody": True,
+        "confirmInFixedActions": True,
+    }
+    assert result["childPackageCancelled"] == {
+        "status": "Collection import cancelled before apply.",
+        "chooserHidden": True,
+        "planHidden": True,
+    }
+    assert result["childPackageFailure"] == {
+        "status": "Synthetic returned-package apply failure.",
+        "statusState": "error",
+        "retryAvailable": True,
+        "selected": ["returned-tags.jsonl"],
+        "terminalCount": 2,
+    }
+    assert result["childPackageRefreshFailure"] == {
+        "retryAvailable": True,
+        "status": (
+            "Package import completed, but the collection report refresh failed. "
+            "Retry the report refresh without importing again."
+        ),
+        "statusState": "error",
+        "terminalCount": 3,
+    }
+    assert result["childPackageResult"] == {
+        "status": "Collection import finished with outcome: completed.",
+        "statusState": "success",
+        "closeVisible": True,
+        "terminal": {
+            "scope": "studio",
+            "subScope": "tags",
+            "docId": "tag-a",
+            "target": {"scope": "studio", "sub_scope": "tags"},
+            "outcome": "completed",
+        },
+    }
     assert result["restoredGlobal"] == {
         "scopeDisabled": False,
         "scopeLabels": ["studio", "library"],
@@ -384,8 +790,13 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
         "beta.html",
         "word.docx",
         "notes.json",
+        "reviewed.jsonl",
         "alpha.md",
         "alpha.md",
+        "returned-tags.jsonl",
+        "returned-tags.jsonl",
+        "returned-tags.jsonl",
+        "returned-tags.jsonl",
     ]:
         raise AssertionError(f"ordinary multi-import crossed the package boundary: {import_requests!r}")
     beta_requests = [request for request in import_requests if request["staged_filename"] == "beta.html"]
@@ -397,9 +808,35 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
     if result["terminal"] != {"scope": "studio", "docId": "notes", "resultCount": 4}:
         raise AssertionError(f"multi-import did not identify the last imported doc: {result!r}")
     if any(request.get("sub_scope") != "tags" for request in import_requests[-2:]):
+        raise AssertionError(f"returned-package retries did not keep their exact destination: {import_requests!r}")
+    if any(request.get("sub_scope") != "tags" for request in import_requests[-6:]):
         raise AssertionError(f"child Import retries did not keep their exact destination: {import_requests!r}")
-    if any(request.get("sub_scope") for request in import_requests[:-2]):
+    if any(request.get("sub_scope") for request in import_requests[:-6]):
         raise AssertionError(f"parent Import requests unexpectedly gained a child target: {import_requests!r}")
+    package_requests = [
+        request for request in import_requests
+        if request["staged_filename"] == "returned-tags.jsonl"
+    ]
+    if [request.get("preview_only") for request in package_requests] != [
+        True,
+        True,
+        False,
+        False,
+    ]:
+        raise AssertionError(f"package cancel or retry crossed the preview/apply boundary: {package_requests!r}")
+    expected_package_identity = {
+        "export_id": "ds_20260730T120000Z",
+        "source_sha256": "a" * 64,
+        "trusted_metadata_sha256": "b" * 64,
+    }
+    for request in package_requests[2:]:
+        if any(request.get(key) != value for key, value in expected_package_identity.items()):
+            raise AssertionError(f"package apply lost its confirmed identity: {package_requests!r}")
+    if not returned_listing_requests:
+        raise AssertionError("child Import did not discover returned packages")
+    listing_url = returned_listing_requests[-1]
+    if "scope=studio" not in listing_url or "sub_scope=tags" not in listing_url:
+        raise AssertionError(f"returned-package discovery was not exact: {returned_listing_requests!r}")
     if source_requests != [
         {
             "scope": "studio",

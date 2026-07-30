@@ -836,9 +836,6 @@ def test_collection_apply_creates_and_overwrites_complete_records_once(monkeypat
         new_front_matter, new_body = docs_source_model.parse_source(
                 root / "docs-viewer/scopes/library/source/documents" / f"{new_doc_id}.md"
         )
-        report_path = configured_workspace_paths(root).root / str(payload["report_path"]).split("data-sharing/", 1)[1]
-        report_text = report_path.read_text(encoding="utf-8")
-
     assert payload["outcome"] == "completed"
     assert payload["counts"] == {
         "created": 1,
@@ -862,12 +859,7 @@ def test_collection_apply_creates_and_overwrites_complete_records_once(monkeypat
             "search_doc_ids": ["alpha", new_doc_id],
         }
     ]
-    assert payload["report_path"].startswith(
-        "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/results/"
-    )
-    assert "## overwritten" in report_text
-    assert "## created" in report_text
-    assert "## skipped" not in report_text
+    assert "report_path" not in payload
     assert not any(event == "docs-import-collection-record-skipped" for event, _details in logs)
 
 
@@ -1076,12 +1068,10 @@ def test_collection_apply_stops_after_source_failure_and_rebuilds_completed_writ
     assert epsilon_exists is False
     assert zeta_exists is False
     assert rebuild_calls[0]["docs_doc_ids"] == [result_ids[0]]
-    assert payload["report_path"].startswith(
-        "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/results/"
-    )
+    assert "report_path" not in payload
 
 
-def test_collection_apply_keeps_source_success_when_generation_or_report_write_fails(monkeypatch) -> None:
+def test_collection_apply_keeps_source_success_when_generation_fails(monkeypatch) -> None:
     stub_markdown_validation(monkeypatch)
     rebuild_calls: list[dict[str, object]] = []
     with make_repo() as temp:
@@ -1106,26 +1096,7 @@ def test_collection_apply_keeps_source_success_when_generation_or_report_write_f
     assert payload["records"][0]["status"] == "created"
     assert payload["outcome"] == "generation-failed"
     assert payload["generation"]["status"] == "failed"
-    assert payload["report_path"]
-
-    monkeypatch.setattr(
-        collection_apply,
-        "write_collection_result_report",
-        lambda *args, **kwargs: (_ for _ in ()).throw(OSError("report denied")),
-    )
-    with make_repo() as temp:
-        root = Path(temp)
-        write_collection(
-            root,
-            "report-failure.jsonl",
-            [{"doc_id": "delta", "title": "Delta", "content": "Delta."}],
-            "ds_20260712T160004Z",
-        )
-        report_failure = apply_package(root, "report-failure.jsonl", rebuild=fake_rebuild([]))
-
-    assert report_failure["outcome"] == "completed"
-    assert report_failure["report_path"] == ""
-    assert report_failure["warnings"][-1]["code"] == "result_report_write_failed"
+    assert "report_path" not in payload
 
 
 def test_collection_apply_materializes_inline_media_and_blocks_source_when_publication_fails(monkeypatch) -> None:

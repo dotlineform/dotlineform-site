@@ -171,7 +171,6 @@ def maybe_attach_import_source_activity(repo_root: Path, body: Dict[str, Any], p
             if isinstance(record, dict) and record.get("status") == "skipped" and str(record.get("note") or "").strip()
         ]
         counts = payload.get("counts") if isinstance(payload.get("counts"), dict) else {}
-        report_path = str(payload.get("report_path") or "").strip()
         attach_docs_activity(
             repo_root,
             body,
@@ -181,7 +180,6 @@ def maybe_attach_import_source_activity(repo_root: Path, body: Dict[str, Any], p
             record_id=str(body.get("staged_filename") or "").strip(),
             record_groups={
                 "docs": compact_ids(applied_doc_ids),
-                "files": compact_ids([report_path] if report_path else []),
             },
             detail_items=[
                 (
@@ -190,7 +188,6 @@ def maybe_attach_import_source_activity(repo_root: Path, body: Dict[str, Any], p
                     f"{counts.get('skipped', 0)} skipped, {counts.get('failed', 0)} failed, "
                     f"{counts.get('not_attempted', 0)} not attempted."
                 ),
-                f"Result report: {report_path}" if report_path else "",
                 *[f"Skipped-record note: {note}" for note in skipped_notes],
             ],
             status=(

@@ -21,7 +21,6 @@ from docs_scope_config import DOCUMENT_SOURCE_ROOTS  # noqa: E402
 
 from docs_import_common import (  # noqa: E402
     HTML_STAGED_SUFFIXES,
-    IMPORT_RESULTS_DIR_NAME,
     DOCUMENT_STAGED_SUFFIXES,
     MARKDOWN_HEADING_PATTERN,
     MARKDOWN_IMAGE_PATTERN,
@@ -164,7 +163,6 @@ def list_staged_import_source_files(
         for path in staging_root.iterdir()
         if path.is_dir()
         and not path.is_symlink()
-        and path.name != IMPORT_RESULTS_DIR_NAME
         and not any(candidate.is_symlink() for candidate in path.rglob("*"))
     ]
     for path in sorted(candidates, key=lambda candidate: candidate.name.lower()):

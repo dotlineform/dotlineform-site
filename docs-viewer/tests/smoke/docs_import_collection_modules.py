@@ -40,6 +40,7 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
                   "collection": true,
                   "source_format": "data_sharing_documents",
                   "scope": "library",
+                  "target": {"scope": "library"},
                   "staged_filename": "reviewed.jsonl",
                   "preview_only": false,
                   "confirmed": true,
@@ -50,8 +51,7 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
                     {"record_index": 1, "doc_id": "beta", "title": "Beta", "status": "overwritten", "warnings": []},
                     {"record_index": 2, "doc_id": "gamma", "title": "Gamma", "status": "overwritten", "warnings": []}
                   ],
-                  "warnings": [],
-                  "report_path": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/results/result.md"
+                  "warnings": []
                 }''',
             )
             return
@@ -62,6 +62,7 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
               "ok": true,
               "collection": true,
               "source_format": "data_sharing_documents",
+              "target": {"scope": "library"},
               "preview_only": true,
               "ready_for_confirmation": true,
               "package": {"export_id": "ds_20260712T170000Z", "source_sha256": "abc123"},
@@ -111,6 +112,7 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
           const readyStatus = document.getElementById('status').textContent;
           await controller.confirmApply();
           const resultSnapshot = controller.snapshot();
+          const terminalResultVisible = document.getElementById('host').textContent.includes('Collection result');
           const resultReportVisible = document.getElementById('host').textContent.includes('results/result.md');
           controller.reset({ active: true });
           await controller.preview({
@@ -123,6 +125,7 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
             readySnapshot,
             readyStatus,
             resultSnapshot,
+            terminalResultVisible,
             resultReportVisible,
             busyStates,
             terminalResultCount,
@@ -138,7 +141,11 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
         raise AssertionError(f"whole-package plan did not reach confirmation: {result!r}")
     if result["recordCount"] != 3 or "ready for confirmation" not in result["readyStatus"]:
         raise AssertionError(f"collection view projection failed: {result!r}")
-    if result["resultSnapshot"]["phase"] != "result" or not result["resultReportVisible"]:
+    if (
+        result["resultSnapshot"]["phase"] != "result"
+        or not result["terminalResultVisible"]
+        or result["resultReportVisible"]
+    ):
         raise AssertionError(f"confirmed apply result did not remain collection-controller owned: {result!r}")
     if result["terminalResultCount"] != 1:
         raise AssertionError(f"confirmed apply did not signal one terminal result: {result!r}")

@@ -253,6 +253,152 @@ def assert_choice_modal_radio_navigation(page: Page) -> None:
         raise AssertionError(f"unexpected choice modal radio navigation: {result!r}")
 
 
+def assert_sequential_import_collection_modal(page: Page) -> None:
+    page.route(
+        "**/docs-viewer/runtime/js/shared/docs-viewer-render.js",
+        lambda route: route.fulfill(
+            path=str(REPO_ROOT / "site/docs-viewer/runtime/js/shared/docs-viewer-render.js"),
+            content_type="text/javascript",
+        ),
+    )
+    page.evaluate(
+        """async () => {
+          const modalModule = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-modals.js'
+          );
+          const shellModule = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-shell-renderer.js'
+          );
+          document.body.innerHTML = `
+            <main class="docsViewer" id="root">
+              <button id="openImport">Import</button>
+              <div data-docs-viewer-management-shell-mount></div>
+            </main>`;
+          const root = document.querySelector('#root');
+          const refs = shellModule.renderDocsViewerManagementShell({
+            document,
+            root,
+            mount: root.querySelector('[data-docs-viewer-management-shell-mount]')
+          });
+          const commands = [];
+          const controller = modalModule.createDocsViewerManagementModalController({
+            refs,
+            management: {},
+            scopeConfig: {},
+            callbacks: {
+              viewerScope: () => 'analysis'
+            }
+          });
+          controller.wireEvents();
+          function project(viewState) {
+            controller.projectImportCollectionState(viewState, command => {
+              commands.push(command.type);
+              if (command.type === 'cancel') {
+                project({ active: true, phase: 'cancelled' });
+              } else if (command.type === 'close') {
+                project({ active: false, phase: 'idle' });
+              }
+            });
+          }
+          await controller.openImportModal({
+            restoreFocus: document.querySelector('#openImport')
+          });
+          project({ active: true, phase: 'confirmation' });
+          window.sequentialImportModalFixture = { commands, controller, project, refs };
+        }"""
+    )
+    page.wait_for_function(
+        "document.activeElement?.id === 'docsImportCollectionCancel'"
+    )
+    opened = page.evaluate(
+        """() => ({
+          chooserHidden: document.querySelector('#docsViewerImportModal').hidden,
+          collectionHidden: document.querySelector('#docsViewerImportCollectionModal').hidden,
+          visibleDialogs: Array.from(
+            document.querySelectorAll('.docsViewer__modal')
+          ).filter(modal => !modal.hidden).length,
+          activeId: document.activeElement?.id || '',
+          visibleCommands: Array.from(
+            document.querySelectorAll(
+              '#docsViewerImportCollectionModal [data-collection-command]:not([hidden])'
+            )
+          ).map(button => button.dataset.collectionCommand),
+          backButtons: Array.from(
+            document.querySelectorAll('#docsViewerImportCollectionModal button')
+          ).filter(button => button.textContent.trim().toLowerCase() === 'back').length,
+          htmlOverflow: document.documentElement.style.overflow,
+          bodyOverflow: document.body.style.overflow
+        })"""
+    )
+    page.keyboard.press("Tab")
+    tabbed_to = page.evaluate("document.activeElement?.id || ''")
+    page.keyboard.press("Escape")
+    page.wait_for_function("document.activeElement?.id === 'openImport'")
+    closed = page.evaluate(
+        """() => ({
+          chooserHidden: document.querySelector('#docsViewerImportModal').hidden,
+          collectionHidden: document.querySelector('#docsViewerImportCollectionModal').hidden,
+          commands: window.sequentialImportModalFixture.commands,
+          activeId: document.activeElement?.id || '',
+          htmlOverflow: document.documentElement.style.overflow,
+          bodyOverflow: document.body.style.overflow
+        })"""
+    )
+    page.evaluate(
+        """async () => {
+          const fixture = window.sequentialImportModalFixture;
+          await fixture.controller.openImportModal({
+            restoreFocus: document.querySelector('#openImport')
+          });
+          fixture.project({ active: true, phase: 'result' });
+        }"""
+    )
+    page.wait_for_function(
+        "document.activeElement?.id === 'docsImportCollectionClose'"
+    )
+    result_state = page.evaluate(
+        """() => ({
+          activeId: document.activeElement?.id || '',
+          visibleCommands: Array.from(
+            document.querySelectorAll(
+              '#docsViewerImportCollectionModal [data-collection-command]:not([hidden])'
+            )
+          ).map(button => button.dataset.collectionCommand)
+        })"""
+    )
+    page.locator("#docsImportCollectionClose").click()
+    page.wait_for_function("document.activeElement?.id === 'openImport'")
+    if opened != {
+        "chooserHidden": True,
+        "collectionHidden": False,
+        "visibleDialogs": 1,
+        "activeId": "docsImportCollectionCancel",
+        "visibleCommands": ["cancel", "confirm"],
+        "backButtons": 0,
+        "htmlOverflow": "hidden",
+        "bodyOverflow": "hidden",
+    }:
+        raise AssertionError(f"unexpected sequential package modal state: {opened!r}")
+    if tabbed_to != "docsImportCollectionConfirm":
+        raise AssertionError(
+            f"package confirmation footer did not own focus order: {tabbed_to!r}"
+        )
+    if closed != {
+        "chooserHidden": True,
+        "collectionHidden": True,
+        "commands": ["cancel"],
+        "activeId": "openImport",
+        "htmlOverflow": "",
+        "bodyOverflow": "",
+    }:
+        raise AssertionError(f"package modal cancellation did not close the workflow: {closed!r}")
+    if result_state != {
+        "activeId": "docsImportCollectionClose",
+        "visibleCommands": ["close"],
+    }:
+        raise AssertionError(f"package result did not focus its close action: {result_state!r}")
+
+
 def assert_metadata_status_list_selection(page: Page) -> None:
     page.route(
         "**/docs-viewer/runtime/js/shared/docs-viewer-render.js",
@@ -636,6 +782,7 @@ def main(argv: list[str] | None = None) -> int:
                 page.goto(base_url, wait_until="domcontentloaded")
                 assert_shared_focus_trap(page)
                 assert_choice_modal_radio_navigation(page)
+                assert_sequential_import_collection_modal(page)
                 assert_metadata_status_list_selection(page)
                 assert_metadata_parent_duplicate_title_selection(page)
                 assert_sub_scope_metadata_omits_parent_field(page)

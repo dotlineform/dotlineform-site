@@ -5,6 +5,7 @@ import {
   mountDocsViewerReport
 } from "../reports/docs-viewer-reports.js";
 import {
+  normalizeManagedDocumentCollectionTarget,
   normalizeManagedDocumentTarget
 } from "./docs-viewer-management-document-target.js";
 import {
@@ -176,7 +177,10 @@ function openSubscopeImport(settings, parent, subScope, request, context) {
   var refreshAndOpenDocument = typeof actionContext.refreshAndOpenDocument === "function"
     ? actionContext.refreshAndOpenDocument
     : null;
-  if (!refreshAndOpenDocument) {
+  var refreshCollection = typeof actionContext.refreshCollection === "function"
+    ? actionContext.refreshCollection
+    : null;
+  if (!refreshAndOpenDocument || !refreshCollection) {
     return Promise.reject(new Error(
       "Sub-scope Import report refresh is unavailable."
     ));
@@ -198,6 +202,20 @@ function openSubscopeImport(settings, parent, subScope, request, context) {
       ),
       restoreFocus: actionContext.restoreFocus,
       onComplete: function (detail) {
+        if (detail && detail.result && detail.result.collection === true) {
+          var collectionTarget = normalizeManagedDocumentCollectionTarget(
+            detail.target
+          );
+          if (
+            collectionTarget.scope !== parent.scope
+            || collectionTarget.sub_scope !== subScope
+          ) {
+            throw new Error(
+              "Imported package target did not match the mounted sub-scope report."
+            );
+          }
+          return refreshCollection(collectionTarget);
+        }
         var target = normalizeManagedDocumentTarget(detail && detail.target);
         if (
           target.scope !== parent.scope

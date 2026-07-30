@@ -47,21 +47,31 @@ export function isDocsImportCollectionRecord(record) {
 export function createDocsImportCollectionController(options = {}) {
   const host = options.host || null;
   const statusNode = options.statusNode || null;
+  const previewStatusNode = options.previewStatusNode || statusNode;
   const onBusyChange = typeof options.onBusyChange === "function" ? options.onBusyChange : () => {};
   const onTerminalResult = typeof options.onTerminalResult === "function" ? options.onTerminalResult : () => {};
+  const onViewStateChange = typeof options.onViewStateChange === "function"
+    ? options.onViewStateChange
+    : () => {};
   const state = {
     active: false,
     phase: "idle",
     stagedFilename: "",
     scope: "",
+    subScope: "",
     plan: null,
     result: null,
+    terminalDetail: null,
     managementBaseUrl: "",
     busy: false
   };
 
   function render() {
-    renderDocsImportCollectionView(host, viewState(state), handleCommand);
+    const projectedState = viewState(state);
+    renderDocsImportCollectionView(host, projectedState, handleCommand, {
+      renderActions: options.renderActions !== false
+    });
+    onViewStateChange(projectedState, handleCommand);
   }
 
   function setBusy(busy) {
@@ -75,6 +85,7 @@ export function createDocsImportCollectionController(options = {}) {
       state.phase = "idle";
       state.plan = null;
       state.result = null;
+      state.terminalDetail = null;
     }
     render();
   }
@@ -84,8 +95,10 @@ export function createDocsImportCollectionController(options = {}) {
     state.phase = "idle";
     state.stagedFilename = "";
     state.scope = "";
+    state.subScope = "";
     state.plan = null;
     state.result = null;
+    state.terminalDetail = null;
     render();
     if (message) setStatus(statusNode, "", message);
   }
@@ -101,33 +114,114 @@ export function createDocsImportCollectionController(options = {}) {
       render();
       return;
     }
+    if (
+      type === "close"
+      && ["blocked", "result", "projection_error", "cancelled"].includes(state.phase)
+    ) {
+      reset({ active: false });
+      return;
+    }
+    if (type === "retry-refresh" && state.phase === "projection_error") {
+      retryTerminalProjection().catch((error) => (
+        console.warn("docs_import_collection: report refresh retry failed", error)
+      ));
+    }
   }
 
-  async function preview({ file, scope, managementBaseUrl = "" } = {}) {
+  async function projectTerminalDetail(detail, { retry = false } = {}) {
+    state.terminalDetail = detail;
+    if (retry) {
+      setBusy(true);
+      setStatus(statusNode, "busy", importText("collectionRefreshingReportStatus"));
+      render();
+    }
+    try {
+      await onTerminalResult(detail);
+      state.phase = "result";
+      setStatus(statusNode, "success", importText("collectionResultStatus", {
+        outcome: normalizeText(state.result && state.result.outcome) || "unknown"
+      }));
+      render();
+      return true;
+    } catch (error) {
+      state.phase = "projection_error";
+      setStatus(statusNode, "error", importText("collectionRefreshFailedStatus"));
+      render();
+      throw error;
+    } finally {
+      if (retry) setBusy(false);
+    }
+  }
+
+  function retryTerminalProjection() {
+    if (state.phase !== "projection_error" || !state.terminalDetail) {
+      return Promise.resolve(false);
+    }
+    return projectTerminalDetail(state.terminalDetail, { retry: true });
+  }
+
+  function exactCollectionTarget(payload, context) {
+    const target = payload && payload.target;
+    const targetScope = normalizeText(target && target.scope).toLowerCase();
+    const targetSubScope = normalizeText(target && target.sub_scope).toLowerCase();
+    const targetDocId = normalizeText(target && target.doc_id);
+    if (
+      targetScope !== state.scope
+      || targetDocId
+      || (
+        state.subScope
+          ? targetSubScope !== state.subScope
+          : Boolean(targetSubScope)
+      )
+    ) {
+      throw new Error(`Docs Import ${context} did not match the requested collection.`);
+    }
+    return {
+      scope: targetScope,
+      ...(targetSubScope ? { sub_scope: targetSubScope } : {})
+    };
+  }
+
+  async function preview({ file, scope, subScope = "", managementBaseUrl = "" } = {}) {
     const stagedFilename = normalizeText(file && file.filename);
     const normalizedScope = normalizeText(scope).toLowerCase();
+    const normalizedSubScope = normalizeText(subScope).toLowerCase();
     if (!stagedFilename || !normalizedScope || !isDocsImportCollectionRecord(file)) {
+      throw new Error(importText("collectionRequired"));
+    }
+    if (
+      normalizedSubScope
+      && (
+        normalizeText(file && file.scope).toLowerCase() !== normalizedScope
+        || normalizeText(file && file.sub_scope).toLowerCase() !== normalizedSubScope
+        || file.supports_return_import !== true
+      )
+    ) {
       throw new Error(importText("collectionRequired"));
     }
     state.active = true;
     state.phase = "preview";
     state.stagedFilename = stagedFilename;
     state.scope = normalizedScope;
+    state.subScope = normalizedSubScope;
     state.managementBaseUrl = normalizeText(managementBaseUrl);
     state.plan = null;
     state.result = null;
     setBusy(true);
-    setStatus(statusNode, "busy", importText("collectionPlanningStatus", { filename: stagedFilename }));
+    setStatus(previewStatusNode, "busy", importText("collectionPlanningStatus", { filename: stagedFilename }));
+    if (previewStatusNode !== statusNode) setStatus(statusNode, "", "");
     render();
     try {
       const payload = await fetchManagementJson("/docs/import-source", "POST", {
         scope: normalizedScope,
+        ...(normalizedSubScope ? { sub_scope: normalizedSubScope } : {}),
         staged_filename: stagedFilename,
         preview_only: true
       }, managementOptions(managementBaseUrl));
       if (!payload || payload.collection !== true || payload.source_format !== DOCS_IMPORT_COLLECTION_SOURCE_FORMAT) {
         throw new Error(importText("collectionUnsupportedPreview"));
       }
+      exactCollectionTarget(payload, "preview");
       state.plan = payload;
       if (Array.isArray(payload.blockers) && payload.blockers.length) {
         state.phase = "blocked";
@@ -136,13 +230,18 @@ export function createDocsImportCollectionController(options = {}) {
         state.phase = "confirmation";
         setStatus(statusNode, "success", importText("collectionReadyStatus"));
       }
+      if (previewStatusNode !== statusNode) setStatus(previewStatusNode, "", "");
       render();
       return payload;
     } catch (error) {
       state.phase = "error";
       state.plan = null;
       render();
-      setStatus(statusNode, "error", normalizeText(error && error.message) || importText("collectionFailedStatus"));
+      setStatus(
+        previewStatusNode,
+        "error",
+        normalizeText(error && error.message) || importText("collectionFailedStatus")
+      );
       throw error;
     } finally {
       setBusy(false);
@@ -161,11 +260,15 @@ export function createDocsImportCollectionController(options = {}) {
     try {
       const payload = await fetchManagementJson("/docs/import-source", "POST", {
         scope: state.scope,
+        ...(state.subScope ? { sub_scope: state.subScope } : {}),
         staged_filename: state.stagedFilename,
         preview_only: false,
         confirm: true,
         export_id: normalizeText(packageIdentity.export_id),
         source_sha256: normalizeText(packageIdentity.source_sha256),
+        ...(state.subScope ? {
+          trusted_metadata_sha256: normalizeText(packageIdentity.trusted_metadata_sha256)
+        } : {}),
         planned_identities: Array.isArray(state.plan.planned_identities)
           ? state.plan.planned_identities
           : [],
@@ -183,6 +286,7 @@ export function createDocsImportCollectionController(options = {}) {
         })
       }, managementOptions(state.managementBaseUrl));
       if (payload && payload.preview_only === true) {
+        exactCollectionTarget(payload, "refreshed preview");
         state.plan = payload;
         const blocked = Array.isArray(payload.blockers) && payload.blockers.length;
         state.phase = blocked ? "blocked" : "confirmation";
@@ -192,22 +296,33 @@ export function createDocsImportCollectionController(options = {}) {
           blocked ? importText("collectionBlockedStatus") : importText("collectionRefreshedStatus")
         );
       } else if (payload && payload.collection === true) {
+        const target = exactCollectionTarget(payload, "result");
         state.result = payload;
-        state.phase = "result";
-        setStatus(statusNode, payload.outcome === "completed" ? "success" : "warn", importText("collectionResultStatus", {
+        const completed = payload.outcome === "completed";
+        state.phase = state.subScope && !completed ? "confirmation" : "result";
+        setStatus(statusNode, completed ? "success" : "error", importText("collectionResultStatus", {
           outcome: normalizeText(payload.outcome) || "unknown"
         }));
-        const displayedRecord = (Array.isArray(payload.records) ? payload.records : []).find((record) => (
-          record && (record.status === "created" || record.status === "overwritten") && normalizeText(record.doc_id)
-        )) || null;
-        try {
-          await onTerminalResult({
+        if (!state.subScope || completed) {
+          const displayedRecord = (Array.isArray(payload.records) ? payload.records : []).find((record) => (
+            record && (record.status === "created" || record.status === "overwritten") && normalizeText(record.doc_id)
+          )) || null;
+          const terminalDetail = {
             scope: state.scope,
+            subScope: state.subScope,
             docId: normalizeText(displayedRecord && displayedRecord.doc_id),
+            target,
             result: payload
-          });
-        } catch (error) {
-          console.warn("docs_import_collection: terminal result projection failed", error);
+          };
+          try {
+            if (state.subScope) {
+              await projectTerminalDetail(terminalDetail);
+            } else {
+              await onTerminalResult(terminalDetail);
+            }
+          } catch (error) {
+            console.warn("docs_import_collection: terminal result projection failed", error);
+          }
         }
       } else {
         throw new Error(importText("collectionUnsupportedPreview"));
@@ -228,6 +343,8 @@ export function createDocsImportCollectionController(options = {}) {
     mode: () => state.active ? state.phase : "idle",
     preview,
     confirmApply,
+    retryTerminalProjection,
+    handleCommand,
     reset,
     setActive,
     snapshot: () => ({
@@ -235,6 +352,7 @@ export function createDocsImportCollectionController(options = {}) {
       phase: state.phase,
       stagedFilename: state.stagedFilename,
       scope: state.scope,
+      subScope: state.subScope,
       busy: state.busy
     })
   };

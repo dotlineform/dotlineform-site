@@ -220,7 +220,7 @@ def test_import_source_activity_suppresses_preview() -> None:
         assert activity_entries(repo_root) == []
 
 
-def test_collection_import_activity_records_grouped_result_and_safe_report_path() -> None:
+def test_collection_import_activity_records_grouped_result() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         repo_root = Path(tmp)
         write_activity_contract(repo_root)
@@ -247,7 +247,6 @@ def test_collection_import_activity_records_grouped_result_and_safe_report_path(
                 {"doc_id": "beta", "status": "skipped", "note": "Repair metadata."},
                 {"doc_id": "gamma", "status": "failed"},
             ],
-            "report_path": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/results/result.md",
         }
 
         docs_activity.maybe_attach_import_source_activity(repo_root, body, payload, dry_run=False)
@@ -256,7 +255,7 @@ def test_collection_import_activity_records_grouped_result_and_safe_report_path(
         entry = activity_entries(repo_root)[0]
         assert entry["status"] == "warning"
         assert entry["record_groups"]["docs"]["sample_ids"] == ["alpha"]
-        assert entry["record_groups"]["files"]["sample_ids"] == [payload["report_path"]]
+        assert entry["record_groups"]["files"]["sample_ids"] == []
         assert any("Repair metadata." in item for item in entry["detail_items"])
 
 
@@ -291,7 +290,7 @@ def main() -> None:
     test_docs_export_activity_suppresses_dry_run_and_no_write()
     test_docs_export_activity_writes_compact_doc_ids()
     test_import_source_activity_suppresses_preview()
-    test_collection_import_activity_records_grouped_result_and_safe_report_path()
+    test_collection_import_activity_records_grouped_result()
     test_broken_links_activity_uses_warning_status_for_broken_links()
     print("Docs activity tests OK")
 
