@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-1bfca55a796dc06c39ab2cd873520a8a",
-    "generated_at_utc": "2026-07-30T15:06:16Z",
+    "version": "blake2b-b91f9d58c206f70bd819b119ac30408c",
+    "generated_at_utc": "2026-07-30T15:20:07Z",
     "count": 234
   },
   "entries": [
@@ -1271,10 +1271,10 @@
       "kind": "doc",
       "title": "Document Identity",
       "href": "/docs/?scope=studio&doc=d-20260715-094411-2b6e65",
-      "last_updated": "2026-07-26 17:54:41",
+      "last_updated": "2026-07-30 16:16:46",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-26 17:54:41 • Docs Viewer",
+      "display_meta": "2026-07-30 16:16:46 • Docs Viewer",
       "search_terms": [
         "document identity",
         "document",
@@ -1282,16 +1282,15 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-26 17:54:41",
+        "2026-07-30 16:16:46",
         "2026",
         "07",
-        "26",
-        "17",
-        "54",
-        "41",
+        "30",
+        "16",
+        "46",
         "d-20260715-094411-2b6e65"
       ],
-      "search_text": "document identity document identity docs viewer docs viewer 2026-07-26 17:54:41 2026 07 26 17 54 41 d-20260715-094411-2b6e65"
+      "search_text": "document identity document identity docs viewer docs viewer 2026-07-30 16:16:46 2026 07 30 16 46 d-20260715-094411-2b6e65"
     },
     {
       "id": "d-20260623-221357-a97b66",
@@ -1402,10 +1401,10 @@
       "kind": "doc",
       "title": "Live Rebuild Watcher",
       "href": "/docs/?scope=studio&doc=d-20260424-000000-5b64f6",
-      "last_updated": "2026-07-19 22:33:42",
+      "last_updated": "2026-07-30 16:20:06",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-19 22:33:42 • Docs Viewer",
+      "display_meta": "2026-07-30 16:20:06 • Docs Viewer",
       "search_terms": [
         "live rebuild watcher",
         "live",
@@ -1414,16 +1413,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-19 22:33:42",
+        "2026-07-30 16:20:06",
         "2026",
         "07",
-        "19",
-        "22",
-        "33",
-        "42",
+        "30",
+        "16",
+        "20",
+        "06",
         "d-20260424-000000-5b64f6"
       ],
-      "search_text": "live rebuild watcher live rebuild watcher docs viewer docs viewer 2026-07-19 22:33:42 2026 07 19 22 33 42 d-20260424-000000-5b64f6"
+      "search_text": "live rebuild watcher live rebuild watcher docs viewer docs viewer 2026-07-30 16:20:06 2026 07 30 16 20 06 d-20260424-000000-5b64f6"
     },
     {
       "id": "d-20260424-000000-04d75e",
@@ -3553,10 +3552,10 @@
       "kind": "doc",
       "title": "Filesystem Edit Timestamp Capture Delivery",
       "href": "/docs/?scope=studio&doc=d-20260730-151218-f4968c",
-      "last_updated": "2026-07-30 16:06:09",
+      "last_updated": "2026-07-30 16:19:33",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-30 16:06:09 • Roadmap",
+      "display_meta": "2026-07-30 16:19:33 • Roadmap",
       "search_terms": [
         "filesystem edit timestamp capture delivery",
         "filesystem",
@@ -3565,16 +3564,16 @@
         "capture",
         "delivery",
         "roadmap",
-        "2026-07-30 16:06:09",
+        "2026-07-30 16:19:33",
         "2026",
         "07",
         "30",
         "16",
-        "06",
-        "09",
+        "19",
+        "33",
         "d-20260730-151218-f4968c"
       ],
-      "search_text": "filesystem edit timestamp capture delivery filesystem edit timestamp capture delivery roadmap 2026-07-30 16:06:09 2026 07 30 16 06 09 d-20260730-151218-f4968c"
+      "search_text": "filesystem edit timestamp capture delivery filesystem edit timestamp capture delivery roadmap 2026-07-30 16:19:33 2026 07 30 16 19 33 d-20260730-151218-f4968c"
     },
     {
       "id": "d-20260726-224323-eb0a65",

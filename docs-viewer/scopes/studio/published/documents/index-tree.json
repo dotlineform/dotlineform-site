@@ -765,7 +765,7 @@
           "doc_id": "d-20260730-151218-f4968c",
           "title": "Filesystem Edit Timestamp Capture Delivery",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260730-151218-f4968c.json",
-          "ui_status": "in-progress"
+          "ui_status": "done"
         },
         {
           "doc_id": "d-20260726-224323-eb0a65",
@@ -1309,5 +1309,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-30T14:36:03Z"
+  "generated_at": "2026-07-30T15:19:14Z"
 }
