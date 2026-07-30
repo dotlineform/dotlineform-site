@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d4e5a1dac56d0f6c5b52de044ae36518",
-    "generated_at_utc": "2026-07-30T19:12:46Z",
+    "version": "blake2b-6b2dbd6eb7c6e58cd76de3c7ae736cd6",
+    "generated_at_utc": "2026-07-30T19:23:42Z",
     "count": 234
   },
   "entries": [
@@ -3459,10 +3459,10 @@
       "kind": "doc",
       "title": "Edited Docs Review Source Round-Trip",
       "href": "/docs/?scope=studio&doc=d-20260730-121423-78b0f6",
-      "last_updated": "2026-07-30 20:10:35",
+      "last_updated": "2026-07-30 20:22:48",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-30 20:10:35 • Roadmap",
+      "display_meta": "2026-07-30 20:22:48 • Roadmap",
       "search_terms": [
         "edited docs review source round-trip",
         "edited",
@@ -3472,26 +3472,26 @@
         "round",
         "trip",
         "roadmap",
-        "2026-07-30 20:10:35",
+        "2026-07-30 20:22:48",
         "2026",
         "07",
         "30",
         "20",
-        "10",
-        "35",
+        "22",
+        "48",
         "d-20260730-121423-78b0f6"
       ],
-      "search_text": "edited docs review source round-trip edited docs review source round trip roadmap 2026-07-30 20:10:35 2026 07 30 20 10 35 d-20260730-121423-78b0f6"
+      "search_text": "edited docs review source round-trip edited docs review source round trip roadmap 2026-07-30 20:22:48 2026 07 30 20 22 48 d-20260730-121423-78b0f6"
     },
     {
       "id": "d-20260730-123213-f7d58b",
       "kind": "doc",
       "title": "Docs Import Capability Parity Quick Reference",
       "href": "/docs/?scope=studio&doc=d-20260730-123213-f7d58b",
-      "last_updated": "2026-07-30 20:10:35",
+      "last_updated": "2026-07-30 20:22:48",
       "parent_id": "d-20260730-121423-78b0f6",
       "parent_title": "Edited Docs Review Source Round-Trip",
-      "display_meta": "2026-07-30 20:10:35 • Edited Docs Review Source Round-Trip",
+      "display_meta": "2026-07-30 20:22:48 • Edited Docs Review Source Round-Trip",
       "search_terms": [
         "docs import capability parity quick reference",
         "docs",
@@ -3506,26 +3506,26 @@
         "source",
         "round",
         "trip",
-        "2026-07-30 20:10:35",
+        "2026-07-30 20:22:48",
         "2026",
         "07",
         "30",
         "20",
-        "10",
-        "35",
+        "22",
+        "48",
         "d-20260730-123213-f7d58b"
       ],
-      "search_text": "docs import capability parity quick reference docs import capability parity quick reference edited docs review source round-trip edited review source round trip 2026-07-30 20:10:35 2026 07 30 20 10 35 d-20260730-123213-f7d58b"
+      "search_text": "docs import capability parity quick reference docs import capability parity quick reference edited docs review source round-trip edited review source round trip 2026-07-30 20:22:48 2026 07 30 20 22 48 d-20260730-123213-f7d58b"
     },
     {
       "id": "d-20260730-112029-799346",
       "kind": "doc",
       "title": "Edited Docs Review Source Round-Trip Delivery",
       "href": "/docs/?scope=studio&doc=d-20260730-112029-799346",
-      "last_updated": "2026-07-30 20:10:35",
+      "last_updated": "2026-07-30 20:22:48",
       "parent_id": "d-20260730-121423-78b0f6",
       "parent_title": "Edited Docs Review Source Round-Trip",
-      "display_meta": "2026-07-30 20:10:35 • Edited Docs Review Source Round-Trip",
+      "display_meta": "2026-07-30 20:22:48 • Edited Docs Review Source Round-Trip",
       "search_terms": [
         "edited docs review source round-trip delivery",
         "edited",
@@ -3536,16 +3536,16 @@
         "trip",
         "delivery",
         "edited docs review source round-trip",
-        "2026-07-30 20:10:35",
+        "2026-07-30 20:22:48",
         "2026",
         "07",
         "30",
         "20",
-        "10",
-        "35",
+        "22",
+        "48",
         "d-20260730-112029-799346"
       ],
-      "search_text": "edited docs review source round-trip delivery edited docs review source round trip delivery edited docs review source round-trip 2026-07-30 20:10:35 2026 07 30 20 10 35 d-20260730-112029-799346"
+      "search_text": "edited docs review source round-trip delivery edited docs review source round trip delivery edited docs review source round-trip 2026-07-30 20:22:48 2026 07 30 20 22 48 d-20260730-112029-799346"
     },
     {
       "id": "d-20260730-151218-f4968c",

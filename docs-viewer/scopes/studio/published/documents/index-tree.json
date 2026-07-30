@@ -745,7 +745,7 @@
           "doc_id": "d-20260730-121423-78b0f6",
           "title": "Edited Docs Review Source Round-Trip",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260730-121423-78b0f6.json",
-          "ui_status": "proposed",
+          "ui_status": "in-progress",
           "children": [
             {
               "doc_id": "d-20260730-123213-f7d58b",
@@ -757,7 +757,7 @@
               "doc_id": "d-20260730-112029-799346",
               "title": "Edited Docs Review Source Round-Trip Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260730-112029-799346.json",
-              "ui_status": "proposed"
+              "ui_status": "in-progress"
             }
           ]
         },
@@ -1309,5 +1309,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-30T19:12:08Z"
+  "generated_at": "2026-07-30T19:23:42Z"
 }
