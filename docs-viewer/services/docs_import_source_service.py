@@ -202,15 +202,14 @@ def handle_import_source(
         metadata_root=metadata_root,
     )
     if edited_review_source is not None:
-        if sub_scope or edited_review_source.source_sub_scope:
+        if sub_scope and not getattr(
+            destination.document_config,
+            "supports_return_import",
+            False,
+        ):
             raise ValueError(
-                "Edited review source folders for configured sub-scopes are not "
-                "available until ERS-1.4.",
-            )
-        if edited_review_source.source_scope != scope:
-            raise ValueError(
-                "Edited review source folder belongs to scope "
-                f"{edited_review_source.source_scope!r}, not {scope!r}.",
+                "Edited review source folders are not supported for this "
+                "configured sub-scope destination.",
             )
         if not (dry_run or preview_only):
             return apply_edited_review_source_collection(
@@ -224,6 +223,9 @@ def handle_import_source(
                 perform_scope_source_write_and_rebuild_atomic=(
                     dependencies.perform_scope_source_write_and_rebuild_atomic
                 ),
+                perform_sub_scope_source_write_and_rebuild=(
+                    dependencies.perform_sub_scope_source_write_and_rebuild
+                ),
             )
         plan = plan_edited_review_source_collection(
             repo_root,
@@ -235,9 +237,14 @@ def handle_import_source(
         payload = plan.as_dict()
         dependencies.log_event(
             repo_root,
-            "docs-import-reviewed-scope-collection-preview",
+            (
+                "docs-import-reviewed-sub-scope-collection-preview"
+                if sub_scope
+                else "docs-import-reviewed-scope-collection-preview"
+            ),
             {
                 "scope": scope,
+                **({"sub_scope": sub_scope} if sub_scope else {}),
                 "staged_filename": staged_filename,
                 "source_format": EDITED_REVIEW_SOURCE_FORMAT,
                 "records": payload["counts"]["records"],

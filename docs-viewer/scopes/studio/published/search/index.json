@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f41ccb361426ecd9d6f643538298013a",
-    "generated_at_utc": "2026-07-30T20:33:30Z",
+    "version": "blake2b-2ece789db13d6971119510686dd7c1ac",
+    "generated_at_utc": "2026-07-30T20:55:14Z",
     "count": 234
   },
   "entries": [
@@ -3520,10 +3520,10 @@
       "kind": "doc",
       "title": "Edited Docs Review Source Round-Trip Delivery",
       "href": "/docs/?scope=studio&doc=d-20260730-112029-799346",
-      "last_updated": "2026-07-30 21:33:30",
+      "last_updated": "2026-07-30 21:55:13",
       "parent_id": "d-20260730-121423-78b0f6",
       "parent_title": "Edited Docs Review Source Round-Trip",
-      "display_meta": "2026-07-30 21:33:30 • Edited Docs Review Source Round-Trip",
+      "display_meta": "2026-07-30 21:55:13 • Edited Docs Review Source Round-Trip",
       "search_terms": [
         "edited docs review source round-trip delivery",
         "edited",
@@ -3534,15 +3534,16 @@
         "trip",
         "delivery",
         "edited docs review source round-trip",
-        "2026-07-30 21:33:30",
+        "2026-07-30 21:55:13",
         "2026",
         "07",
         "30",
         "21",
-        "33",
+        "55",
+        "13",
         "d-20260730-112029-799346"
       ],
-      "search_text": "edited docs review source round-trip delivery edited docs review source round trip delivery edited docs review source round-trip 2026-07-30 21:33:30 2026 07 30 21 33 d-20260730-112029-799346"
+      "search_text": "edited docs review source round-trip delivery edited docs review source round trip delivery edited docs review source round-trip 2026-07-30 21:55:13 2026 07 30 21 55 13 d-20260730-112029-799346"
     },
     {
       "id": "d-20260730-151218-f4968c",

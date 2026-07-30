@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Plan and atomically apply top-level edited Docs Review source folders."""
+"""Plan and atomically apply exact edited Docs Review source folders."""
 
 from __future__ import annotations
 
@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from docs_import_collection_apply import (
+    apply_import_content_collection_atomic,
     apply_import_content_collection_scope_atomic,
 )
 from docs_import_collection_plan import (
@@ -29,7 +30,11 @@ from docs_import_review_source_folder import (
     EditedReviewSourceFolder,
 )
 from docs_management_document_target import ManagedDocumentCollection
-from docs_source_model import load_scope_docs, normalize_scope
+from docs_source_model import (
+    load_document_collection_docs_for_config,
+    load_scope_docs,
+    normalize_scope,
+)
 from docs_document_packages.workspace import marker_path
 
 
@@ -42,14 +47,16 @@ FIDELITY_WARNING = (
 def _record_state(
     folder: EditedReviewSourceFolder,
     record_index: int,
+    *,
+    sub_scope: str,
 ) -> CollectionRecordState:
     source = folder.records[record_index]
     front_matter: dict[str, Any] = {"title": source.title}
     if source.summary_present:
         front_matter["summary"] = source.summary
-    if source.parent_id_present:
+    if source.parent_id_present and not sub_scope:
         front_matter["parent_id"] = source.parent_id
-    if source.viewable_present:
+    if source.viewable_present and not sub_scope:
         front_matter["viewable"] = source.viewable
     normalized = ImportContent(
         source_kind=EDITED_REVIEW_SOURCE_FORMAT,
@@ -61,13 +68,17 @@ def _record_state(
         content_format=CONTENT_FORMAT_MARKDOWN,
         content=source.body,
         front_matter=front_matter,
-        parent_id=source.parent_id if source.parent_id_present else "",
+        parent_id=(
+            source.parent_id
+            if source.parent_id_present and not sub_scope
+            else ""
+        ),
         provenance={
             "review_folder_id": folder.review_folder_id,
             "source_export_id": folder.source_export_id,
         },
     )
-    return CollectionRecordState(
+    state = CollectionRecordState(
         record_index=record_index,
         raw={"doc_id": source.doc_id, "filename": source.filename},
         doc_id=source.doc_id,
@@ -76,26 +87,43 @@ def _record_state(
         parent_id=normalized.parent_id,
         normalized=normalized,
     )
+    if sub_scope and source.parent_id:
+        state.blocked = True
+        state.errors.append(
+            collection_issue(
+                "error",
+                "sub_scope_hierarchy_not_allowed",
+                "edited review sub-scope source has non-empty parent_id",
+                record_index=record_index,
+                doc_id=source.doc_id,
+            )
+        )
+    return state
 
 
 def _validate_destination(
     folder: EditedReviewSourceFolder,
     collection: ManagedDocumentCollection,
 ) -> None:
-    if collection.sub_scope:
-        raise ValueError(
-            "Edited review source folders for configured sub-scopes are not "
-            "available until ERS-1.4.",
-        )
-    if folder.source_sub_scope:
-        raise ValueError(
-            "This edited review source folder belongs to a configured sub-scope; "
-            "sub-scope apply is not available until ERS-1.4.",
-        )
     if folder.source_scope != collection.scope:
         raise ValueError(
             "Edited review source folder belongs to scope "
             f"{folder.source_scope!r}, not {collection.scope!r}.",
+        )
+    if folder.source_sub_scope != collection.sub_scope:
+        source_target = (
+            f"{folder.source_scope}/{folder.source_sub_scope}"
+            if folder.source_sub_scope
+            else folder.source_scope
+        )
+        destination_target = (
+            f"{collection.scope}/{collection.sub_scope}"
+            if collection.sub_scope
+            else collection.scope
+        )
+        raise ValueError(
+            "Edited review source folder belongs to collection "
+            f"{source_target!r}, not {destination_target!r}.",
         )
 
 
@@ -112,7 +140,15 @@ def plan_edited_review_source_collection(
 
     _validate_destination(folder, collection)
     scope = normalize_scope(collection.scope)
-    docs = load_scope_docs(repo_root, scope)
+    docs = (
+        load_document_collection_docs_for_config(
+            repo_root,
+            collection.parent_config,
+            collection.document_config,
+        )
+        if collection.sub_scope
+        else load_scope_docs(repo_root, scope)
+    )
     source_versions = dict(folder.source_last_updated)
     blockers = validate_prepared_source_versions(
         {
@@ -121,8 +157,23 @@ def plan_edited_review_source_collection(
         },
         docs,
     )
+    if collection.sub_scope:
+        non_flat_targets = sorted(doc.doc_id for doc in docs if doc.parent_id)
+        if non_flat_targets:
+            blockers.append(
+                collection_issue(
+                    "error",
+                    "non_flat_sub_scope_target",
+                    "configured sub-scope contains canonical hierarchy metadata: "
+                    + ", ".join(non_flat_targets),
+                )
+            )
     states = [
-        _record_state(folder, record_index)
+        _record_state(
+            folder,
+            record_index,
+            sub_scope=collection.sub_scope,
+        )
         for record_index in range(len(folder.records))
     ]
     package_projection = {
@@ -172,8 +223,9 @@ def apply_edited_review_source_collection(
     workspace_root: Path,
     log_event: Callable[[Path, str, dict[str, Any]], None],
     perform_scope_source_write_and_rebuild_atomic: Callable[..., dict[str, Any]],
+    perform_sub_scope_source_write_and_rebuild: Callable[..., dict[str, Any]],
 ) -> dict[str, Any]:
-    """Revalidate and atomically apply one confirmed top-level edited folder."""
+    """Revalidate and atomically apply one confirmed exact edited folder."""
 
     if body.get("preview_only") is not False:
         raise ValueError("collection apply requires preview_only false")
@@ -190,6 +242,18 @@ def apply_edited_review_source_collection(
         workspace_root=workspace_root,
         planned_identities=planned_identities,
     )
+    if collection.sub_scope:
+        return apply_import_content_collection_atomic(
+            repo_root,
+            plan,
+            body,
+            workspace_root=workspace_root,
+            log_event=log_event,
+            collection=collection,
+            perform_sub_scope_source_write_and_rebuild=(
+                perform_sub_scope_source_write_and_rebuild
+            ),
+        )
     return apply_import_content_collection_scope_atomic(
         repo_root,
         plan,

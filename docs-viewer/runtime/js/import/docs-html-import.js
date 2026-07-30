@@ -20,6 +20,7 @@ import {
 } from "./docs-html-import-text.js";
 import {
   DOCS_IMPORT_COLLECTION_SOURCE_FORMAT,
+  DOCS_IMPORT_EDITED_REVIEW_SOURCE_FORMAT,
   createDocsImportCollectionController,
   isDocsImportCollectionRecord
 } from "./docs-import-collection-controller.js";
@@ -236,8 +237,18 @@ async function fetchAvailableImportFiles(state) {
       return [];
     })
   ]);
+  const target = normalizeManagedDocumentCollectionTarget(state.importDestination);
   return ordinaryFiles
-    .filter((record) => !isDocsImportCollectionRecord(record))
+    .filter((record) => (
+      !isDocsImportCollectionRecord(record)
+      || (
+        normalizeText(record && record.source_format)
+          === DOCS_IMPORT_EDITED_REVIEW_SOURCE_FORMAT
+        && normalizeText(record && record.scope).toLowerCase() === target.scope
+        && normalizeText(record && record.sub_scope).toLowerCase() === target.sub_scope
+        && record.supports_return_import === true
+      )
+    ))
     .concat(returnedPackages);
 }
 

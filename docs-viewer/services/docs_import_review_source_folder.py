@@ -413,6 +413,9 @@ class EditedReviewSourceFolder:
         return {
             "display_name": f"{self.review_folder_id} (reviewed)",
             "source_format": EDITED_REVIEW_SOURCE_FORMAT,
+            "scope": self.source_scope,
+            "sub_scope": self.source_sub_scope,
+            "supports_return_import": True,
             "review_folder_id": self.review_folder_id,
             "source_export_id": self.source_export_id,
             "source_scope": self.source_scope,

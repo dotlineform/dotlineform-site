@@ -47,6 +47,9 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
                 "20260730-095512-documents-document-content (reviewed)"
             ),
             "source_format": "edited_review_sources",
+            "scope": "studio",
+            "sub_scope": "tags",
+            "supports_return_import": True,
         },
     ]
 
@@ -525,7 +528,9 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
             runDisabled: runButton.disabled,
             selectionBarHidden: selectionBar.hidden
           };
-          fileSelect.options[0].selected = true;
+          Array.from(fileSelect.options).forEach(option => {
+            option.selected = option.value === 'returned-tags.jsonl';
+          });
           fileSelect.dispatchEvent(new Event('change', { bubbles: true }));
           const childPackageSelected = {
             selected: Array.from(fileSelect.selectedOptions).map(option => option.value),
@@ -724,7 +729,7 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
         "scopeLabels": ["studio / Tags"],
         "scopeValue": "studio",
         "typeDisabled": False,
-        "typeLabels": ["Documents (4)", "Document packages (1)"],
+        "typeLabels": ["Documents (4)", "Document packages (2)"],
         "filenames": [
             "alpha.md",
             "beta.html",
@@ -762,8 +767,11 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
         },
     }
     assert result["childPackageInitial"] == {
-        "filenames": ["returned-tags.jsonl"],
-        "labels": ["returned-tags.jsonl — studio / Tags — 2 documents"],
+        "filenames": ["edited-review-copy", "returned-tags.jsonl"],
+        "labels": [
+            "20260730-095512-documents-document-content (reviewed)",
+            "returned-tags.jsonl — studio / Tags — 2 documents",
+        ],
         "selected": [],
         "runDisabled": True,
         "selectionBarHidden": True,
@@ -820,7 +828,7 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
         "scopeLabels": ["studio", "library"],
         "scopeValue": "library",
         "typeDisabled": False,
-        "typeLabels": ["Documents (4)", "Document packages (1)"],
+        "typeLabels": ["Documents (4)", "Document packages (2)"],
     }, result
     if [request["staged_filename"] for request in import_requests] != [
         "alpha.md",

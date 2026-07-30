@@ -20,6 +20,7 @@ from docs_import_common import FILE_MEDIA_STAGED_SUFFIXES
 from docs_import_docx_test_support import semantic_docx_bytes
 from docs_management_document_target import resolve_managed_document_collection
 from docs_document_packages.workspace import configured_workspace_paths
+from repo_factory import docs_sub_scope_record
 
 from docs_import_test_support import (
     make_repo,
@@ -35,18 +36,34 @@ from docs_import_test_support import (
 
 REVIEW_FOLDER_ID = "20260730-095512-documents-document-content"
 REVIEW_EXPORT_ID = "ds_20260730T095512Z"
+SUB_REVIEW_FOLDER_ID = "20260730-180000-tags-document-content"
+SUB_REVIEW_EXPORT_ID = "ds_20260730T180000Z"
 
 
-def review_source_text(doc_id: str, title: str) -> str:
+def review_source_text(
+    doc_id: str,
+    title: str,
+    *,
+    folder_id: str = REVIEW_FOLDER_ID,
+    export_id: str = REVIEW_EXPORT_ID,
+    scope: str = "library",
+    sub_scope: str = "",
+) -> str:
+    sub_scope_line = (
+        f"review_source_sub_scope: {sub_scope}\n"
+        if sub_scope
+        else ""
+    )
     return (
         "---\n"
         f"doc_id: {doc_id}\n"
         f"title: {title}\n"
         "added_date: 2026-07-30\n"
         "last_updated: 2026-07-30\n"
-        f"review_folder_id: {REVIEW_FOLDER_ID}\n"
-        f"review_source_export_id: {REVIEW_EXPORT_ID}\n"
-        "review_source_scope: library\n"
+        f"review_folder_id: {folder_id}\n"
+        f"review_source_export_id: {export_id}\n"
+        f"review_source_scope: {scope}\n"
+        f"{sub_scope_line}"
         "review_profile_id: document-content\n"
         "---\n"
         f"# {title}\n"
@@ -58,18 +75,31 @@ def write_review_source_fixture(
     *,
     staged_folder: str = "edited-review-copy",
     supports_return_import: bool = True,
+    folder_id: str = REVIEW_FOLDER_ID,
+    export_id: str = REVIEW_EXPORT_ID,
+    scope: str = "library",
+    sub_scope: str = "",
+    records: list[tuple[str, str]] | None = None,
+    source_last_updated: dict[str, str] | None = None,
 ) -> Path:
     paths = configured_workspace_paths(root)
-    records = [
+    source_records = records or [
         ("alpha", "Alpha"),
         ("beta", "Beta"),
     ]
-    retained_source = paths.import_preview / REVIEW_FOLDER_ID / "source"
+    retained_source = paths.import_preview / folder_id / "source"
     staged_source = paths.import_staging / staged_folder
     retained_source.mkdir(parents=True, exist_ok=True)
     staged_source.mkdir(parents=True, exist_ok=True)
-    for doc_id, title in records:
-        source_text = review_source_text(doc_id, title)
+    for doc_id, title in source_records:
+        source_text = review_source_text(
+            doc_id,
+            title,
+            folder_id=folder_id,
+            export_id=export_id,
+            scope=scope,
+            sub_scope=sub_scope,
+        )
         (retained_source / f"{doc_id}.md").write_text(
             source_text,
             encoding="utf-8",
@@ -80,22 +110,22 @@ def write_review_source_fixture(
         )
     manifest = {
         "schema_version": "docs_review_validated_package_v1",
-        "package_id": REVIEW_FOLDER_ID,
+        "package_id": folder_id,
         "status": "validated",
-        "source_scope": "library",
-        "source_sub_scope": "",
+        "source_scope": scope,
+        "source_sub_scope": sub_scope,
         "profile_id": "document-content",
         "supports_docs_review": True,
         "supports_return_import": supports_return_import,
-        "selected_doc_ids": [doc_id for doc_id, _title in records],
-        "default_doc_id": "alpha",
-        "source_export_id": REVIEW_EXPORT_ID,
+        "selected_doc_ids": [doc_id for doc_id, _title in source_records],
+        "default_doc_id": source_records[0][0],
+        "source_export_id": export_id,
         "source_files": [
             {
                 "doc_id": doc_id,
                 "path": f"source/{doc_id}.md",
             }
-            for doc_id, _title in records
+            for doc_id, _title in source_records
         ],
     }
     (retained_source.parent / "manifest.json").write_text(
@@ -104,26 +134,30 @@ def write_review_source_fixture(
     )
     metadata = {
         "schema_version": "data_sharing_export_meta_v1",
-        "export_id": REVIEW_EXPORT_ID,
+        "export_id": export_id,
         "app": "docs-viewer",
         "adapter_id": "documents",
         "data_domain": "documents",
         "profile_id": "document-content",
         "config_id": "document-content",
-        "scope": "library",
+        "scope": scope,
+        **({"sub_scope": sub_scope} if sub_scope else {}),
         "target_format": "jsonl",
         "record_shape": "document_rows",
         "supports_docs_review": True,
         "supports_return_import": supports_return_import,
         "generated_at": "2026-07-30T09:55:12Z",
-        "selected_doc_ids": [doc_id for doc_id, _title in records],
-        "source_last_updated": {
+        "selected_doc_ids": [
+            doc_id
+            for doc_id, _title in source_records
+        ],
+        "source_last_updated": source_last_updated or {
             doc_id: "2026-07-29 12:00:00"
-            for doc_id, _title in records
+            for doc_id, _title in source_records
         },
     }
     paths.meta.mkdir(parents=True, exist_ok=True)
-    (paths.meta / f"{REVIEW_EXPORT_ID}.meta.json").write_text(
+    (paths.meta / f"{export_id}.meta.json").write_text(
         json.dumps(metadata) + "\n",
         encoding="utf-8",
     )
@@ -182,6 +216,133 @@ def write_review_scope_targets(root: Path) -> dict[str, Path]:
     return targets
 
 
+def configure_review_sub_scope_targets(root: Path) -> dict[str, Path]:
+    config_path = root / "docs-viewer/config/scopes/docs_scopes.json"
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    config["scopes"][0]["sub_scopes"] = [
+        docs_sub_scope_record(
+            "library",
+            "tags",
+            title="Tags",
+            supports_return_import=True,
+            scope_type="public",
+            public_docs_path="site/assets/data/docs/scopes/library/tags",
+            ui_statuses=["draft", "done"],
+            document_groups=["theme"],
+        ),
+        docs_sub_scope_record(
+            "library",
+            "notes",
+            title="Notes",
+            supports_return_import=True,
+            scope_type="public",
+            public_docs_path="site/assets/data/docs/scopes/library/notes",
+            ui_statuses=["draft", "done"],
+        ),
+    ]
+    config_path.write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
+    tags_root = (
+        root
+        / "docs-viewer/scopes/library/source/sub-scopes/tags/documents"
+    )
+    notes_root = (
+        root
+        / "docs-viewer/scopes/library/source/sub-scopes/notes/documents"
+    )
+    tags_root.mkdir(parents=True, exist_ok=True)
+    notes_root.mkdir(parents=True, exist_ok=True)
+    paths = {
+        "tag-a": tags_root / "tag-a.md",
+        "tag-b": tags_root / "tag-b.md",
+        "tag-other": tags_root / "tag-other.md",
+        "notes-tag-a": notes_root / "tag-a.md",
+        "parent-tag-a": (
+            root
+            / "docs-viewer/scopes/library/source/documents/parent-tag-a.md"
+        ),
+    }
+    records = {
+        "tag-a": (
+            {
+                "doc_id": "tag-a",
+                "title": "Tag A",
+                "added_date": "2026-07-01 10:00:00",
+                "last_updated": "2026-07-29 10:00:00",
+                "summary": "Original Tag A summary.",
+                "ui_status": "draft",
+                "group": "theme",
+                "viewable": False,
+            },
+            "# Tag A\n",
+        ),
+        "tag-b": (
+            {
+                "doc_id": "tag-b",
+                "title": "Tag B",
+                "added_date": "2026-07-02 10:00:00",
+                "last_updated": "2026-07-29 11:00:00",
+                "ui_status": "done",
+                "group": "theme",
+            },
+            "# Tag B\n",
+        ),
+        "tag-other": (
+            {
+                "doc_id": "tag-other",
+                "title": "Other Tag",
+                "added_date": "2026-07-03 10:00:00",
+                "last_updated": "2026-07-29 12:00:00",
+                "ui_status": "draft",
+                "group": "theme",
+            },
+            "# Other Tag\n",
+        ),
+        "notes-tag-a": (
+            {
+                "doc_id": "tag-a",
+                "title": "Notes Tag A",
+                "added_date": "2026-07-04 10:00:00",
+                "last_updated": "2026-07-29 13:00:00",
+                "ui_status": "draft",
+            },
+            "# Notes Tag A\n",
+        ),
+        "parent-tag-a": (
+            {
+                "doc_id": "tag-a",
+                "title": "Parent Tag A",
+                "added_date": "2026-07-05 10:00:00",
+                "last_updated": "2026-07-29 14:00:00",
+                "parent_id": "library",
+            },
+            "# Parent Tag A\n",
+        ),
+    }
+    for key, path in paths.items():
+        front_matter, body = records[key]
+        path.write_text(
+            docs_source_model.format_source(front_matter, body),
+            encoding="utf-8",
+        )
+    return paths
+
+
+def write_review_sub_scope_fixture(root: Path) -> Path:
+    return write_review_source_fixture(
+        root,
+        staged_folder="edited-tags-review",
+        folder_id=SUB_REVIEW_FOLDER_ID,
+        export_id=SUB_REVIEW_EXPORT_ID,
+        scope="library",
+        sub_scope="tags",
+        records=[("tag-a", "Tag A"), ("tag-b", "Tag B")],
+        source_last_updated={
+            "tag-a": "2026-07-29 10:00:00",
+            "tag-b": "2026-07-29 11:00:00",
+        },
+    )
+
+
 def edit_review_alpha(staged_folder: Path) -> None:
     path = staged_folder / "alpha.md"
     path.write_text(
@@ -194,6 +355,24 @@ def edit_review_alpha(staged_folder: Path) -> None:
             "viewable: false\n"
             "---\n"
             "# Edited Alpha\n\nEdited reviewed body.",
+        ),
+        encoding="utf-8",
+    )
+
+
+def edit_review_tag_a(staged_folder: Path, *, parent_id: str = "") -> None:
+    path = staged_folder / "tag-a.md"
+    inserted_parent = f"parent_id: {parent_id}\n" if parent_id else ""
+    path.write_text(
+        path.read_text(encoding="utf-8")
+        .replace("title: Tag A", "title: Edited Tag A")
+        .replace(
+            "---\n# Tag A",
+            "summary: Edited Tag A summary.\n"
+            f"{inserted_parent}"
+            "viewable: true\n"
+            "---\n"
+            "# Edited Tag A\n\nEdited tag body.",
         ),
         encoding="utf-8",
     )
@@ -234,6 +413,49 @@ def reviewed_scope_apply(
         root,
         {
             "scope": "library",
+            "staged_filename": staged_filename,
+            "preview_only": False,
+            "confirm": True,
+            "export_id": package["export_id"],
+            "source_sha256": package["source_sha256"],
+            "trusted_metadata_sha256": package["trusted_metadata_sha256"],
+            "planned_identities": preview["planned_identities"],
+            "planned_actions": preview["planned_actions"],
+        },
+        dry_run=False,
+    )
+
+
+def reviewed_sub_scope_preview(
+    root: Path,
+    staged_filename: str,
+    *,
+    sub_scope: str = "tags",
+) -> dict[str, object]:
+    return docs_management_import_service.handle_import_source(
+        root,
+        {
+            "scope": "library",
+            "sub_scope": sub_scope,
+            "staged_filename": staged_filename,
+            "preview_only": True,
+        },
+        dry_run=False,
+    )
+
+
+def reviewed_sub_scope_apply(
+    root: Path,
+    staged_filename: str,
+    preview: dict[str, object],
+) -> dict[str, object]:
+    package = preview["package"]
+    assert isinstance(package, dict)
+    return docs_management_import_service.handle_import_source(
+        root,
+        {
+            "scope": "library",
+            "sub_scope": "tags",
             "staged_filename": staged_filename,
             "preview_only": False,
             "confirm": True,
@@ -768,6 +990,255 @@ def test_edited_review_scope_failure_restores_every_source_and_projection(
     assert payload["rollback"]["status"] == "completed"
     assert payload["rollback"]["sources_restored"] is True
     assert rebuild_count == (1 if failure_mode == "source-write" else 2)
+
+
+def test_edited_review_sub_scope_preview_apply_and_discovery_are_exact(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    stub_markdown_validation(monkeypatch)
+    boundary_calls: list[dict[str, object]] = []
+
+    def child_boundary(
+        repo_root,
+        scope,
+        sub_scope,
+        changed_paths,
+        write_operation,
+        **kwargs,
+    ):
+        write_operation()
+        boundary_calls.append(
+            {
+                "scope": scope,
+                "sub_scope": sub_scope,
+                "changed_paths": [path.name for path in changed_paths],
+                "reason": kwargs.get("suppression_reason"),
+                "snapshots": sorted(
+                    path.name
+                    for path in kwargs.get("source_snapshots") or {}
+                ),
+            }
+        )
+        return {
+            "ok": True,
+            "docs": {
+                "mode": "sub_scope",
+                "sub_scope": sub_scope,
+                "doc_ids": [],
+            },
+            "search": {"mode": "none", "doc_ids": []},
+        }
+
+    monkeypatch.setattr(
+        docs_write_rebuild,
+        "perform_sub_scope_source_write_and_rebuild",
+        child_boundary,
+    )
+    with make_repo() as temp:
+        root = Path(temp)
+        targets = configure_review_sub_scope_targets(root)
+        staged_folder = write_review_sub_scope_fixture(root)
+        edit_review_tag_a(staged_folder)
+        untouched = {
+            key: path.read_bytes()
+            for key, path in targets.items()
+            if key not in {"tag-a", "tag-b"}
+        }
+        public_projection = (
+            root / "site/assets/data/docs/scopes/library/tags"
+        )
+
+        listing = import_source_service.handle_import_source_files(root)
+        assert public_projection.exists() is False
+        preview = reviewed_sub_scope_preview(root, staged_folder.name)
+        assert public_projection.exists() is False
+        payload = reviewed_sub_scope_apply(root, staged_folder.name, preview)
+        tag_a_front_matter, tag_a_body = docs_source_model.parse_source(
+            targets["tag-a"],
+        )
+        tag_b_front_matter, tag_b_body = docs_source_model.parse_source(
+            targets["tag-b"],
+        )
+        untouched_after = {
+            key: path.read_bytes()
+            for key, path in targets.items()
+            if key not in {"tag-a", "tag-b"}
+        }
+
+    reviewed_listing = next(
+        record
+        for record in listing["files"]
+        if record["filename"] == staged_folder.name
+    )
+    assert reviewed_listing["display_name"] == (
+        f"{SUB_REVIEW_FOLDER_ID} (reviewed)"
+    )
+    assert reviewed_listing["scope"] == "library"
+    assert reviewed_listing["sub_scope"] == "tags"
+    assert reviewed_listing["supports_return_import"] is True
+    assert preview["ready_for_confirmation"] is True
+    assert preview["target"] == {"scope": "library", "sub_scope": "tags"}
+    assert preview["planned_identities"] == []
+    assert [record["action"] for record in preview["records"]] == [
+        "overwrite",
+        "overwrite",
+    ]
+    assert payload["outcome"] == "completed"
+    assert payload["target"] == {"scope": "library", "sub_scope": "tags"}
+    assert payload["rollback"]["status"] == "not-needed"
+    assert boundary_calls == [
+        {
+            "scope": "library",
+            "sub_scope": "tags",
+            "changed_paths": ["tag-a.md", "tag-b.md"],
+            "reason": "docs-import-sub-scope-collection-apply",
+            "snapshots": ["tag-a.md", "tag-b.md"],
+        }
+    ]
+    assert tag_a_front_matter["doc_id"] == "tag-a"
+    assert tag_a_front_matter["added_date"] == "2026-07-01 10:00:00"
+    assert tag_a_front_matter["group"] == "theme"
+    assert tag_a_front_matter["ui_status"] == "draft"
+    assert tag_a_front_matter["viewable"] is False
+    assert tag_a_front_matter["title"] == "Edited Tag A"
+    assert tag_a_front_matter["summary"] == "Edited Tag A summary."
+    assert "parent_id" not in tag_a_front_matter
+    assert tag_a_front_matter["last_updated"] != "2026-07-29 10:00:00"
+    assert "Edited tag body." in tag_a_body
+    assert tag_b_front_matter["last_updated"] == "2026-07-29 11:00:00"
+    assert tag_b_body.strip() == "# Tag B"
+    assert untouched_after == untouched
+
+
+def test_edited_review_sub_scope_rejects_parent_fallback_and_non_flat_data(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    stub_markdown_validation(monkeypatch)
+    with make_repo() as temp:
+        root = Path(temp)
+        targets = configure_review_sub_scope_targets(root)
+        staged_folder = write_review_sub_scope_fixture(root)
+        originals = {
+            key: path.read_bytes()
+            for key, path in targets.items()
+        }
+
+        with pytest.raises(
+            ValueError,
+            match="belongs to collection 'library/tags', not 'library/notes'",
+        ):
+            reviewed_sub_scope_preview(
+                root,
+                staged_folder.name,
+                sub_scope="notes",
+            )
+        with pytest.raises(
+            ValueError,
+            match="belongs to collection 'library/tags', not 'library'",
+        ):
+            reviewed_scope_preview(root, staged_folder.name)
+
+        edit_review_tag_a(staged_folder, parent_id="tag-b")
+        source_hierarchy = reviewed_sub_scope_preview(
+            root,
+            staged_folder.name,
+        )
+
+        staged_folder = write_review_sub_scope_fixture(root)
+        targets["tag-b"].write_text(
+            targets["tag-b"].read_text(encoding="utf-8").replace(
+                "---\n# Tag B",
+                "parent_id: tag-a\n---\n# Tag B",
+            ),
+            encoding="utf-8",
+        )
+        non_flat_target = reviewed_sub_scope_preview(
+            root,
+            staged_folder.name,
+        )
+        after = {
+            key: path.read_bytes()
+            for key, path in targets.items()
+        }
+
+    assert "sub_scope_hierarchy_not_allowed" in {
+        blocker["code"]
+        for blocker in source_hierarchy["blockers"]
+    }
+    assert "non_flat_sub_scope_target" in {
+        blocker["code"]
+        for blocker in non_flat_target["blockers"]
+    }
+    assert {
+        key: value
+        for key, value in after.items()
+        if key != "tag-b"
+    } == {
+        key: value
+        for key, value in originals.items()
+        if key != "tag-b"
+    }
+
+
+def test_edited_review_sub_scope_rebuild_failure_restores_only_exact_collection(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    stub_markdown_validation(monkeypatch)
+    rebuild_count = 0
+
+    def rebuild_sub_scope(repo_root, scope, sub_scope):
+        nonlocal rebuild_count
+        rebuild_count += 1
+        if rebuild_count == 1:
+            raise RuntimeError("simulated confined rebuild failure")
+        return {
+            "ok": True,
+            "docs": {
+                "mode": "sub_scope",
+                "sub_scope": sub_scope,
+                "doc_ids": [],
+            },
+            "search": {"mode": "none", "doc_ids": []},
+        }
+
+    monkeypatch.setattr(
+        docs_write_rebuild,
+        "rebuild_sub_scope_outputs",
+        rebuild_sub_scope,
+    )
+    with make_repo() as temp:
+        root = Path(temp)
+        targets = configure_review_sub_scope_targets(root)
+        staged_folder = write_review_sub_scope_fixture(root)
+        edit_review_tag_a(staged_folder)
+        originals = {
+            key: path.read_bytes()
+            for key, path in targets.items()
+        }
+        preview = reviewed_sub_scope_preview(root, staged_folder.name)
+
+        payload = reviewed_sub_scope_apply(
+            root,
+            staged_folder.name,
+            preview,
+        )
+        after = {
+            key: path.read_bytes()
+            for key, path in targets.items()
+        }
+
+    assert after == originals
+    assert rebuild_count == 2
+    assert payload["outcome"] == "generation-failed"
+    assert payload["target"] == {"scope": "library", "sub_scope": "tags"}
+    assert payload["counts"] == {
+        "created": 0,
+        "overwritten": 0,
+        "failed": 2,
+        "not_attempted": 0,
+    }
+    assert payload["rollback"]["status"] == "completed"
+    assert payload["rollback"]["sources_restored"] is True
 
 
 def test_supported_documents_collection_registers_before_generic_json_fallback() -> None:
