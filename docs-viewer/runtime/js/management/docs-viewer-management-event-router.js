@@ -61,10 +61,10 @@ export function createDocsViewerManagementEventRouter(options = {}) {
     hideIndexActionsMenu();
   }
 
-  function invoke(commandName, options = {}) {
+  function invoke(commandName, options = {}, detail = {}) {
     if (options.hideContextMenu) hideContextMenu();
     if (options.hideManageActionsMenu) hideManageActionsMenu();
-    if (typeof commands[commandName] === "function") commands[commandName]();
+    if (typeof commands[commandName] === "function") commands[commandName](detail);
   }
 
   function handleRootClick(event) {
@@ -121,7 +121,7 @@ export function createDocsViewerManagementEventRouter(options = {}) {
     ]);
     var command = commandsByAction.get(actionId);
     if (!command || detail.eventType !== "click") return false;
-    invoke(command[0], command[1]);
+    invoke(command[0], command[1], detail);
     return true;
   }
 

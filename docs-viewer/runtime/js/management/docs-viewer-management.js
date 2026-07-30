@@ -33,6 +33,7 @@ import {
   requestCommittedDocumentSource
 } from "./docs-viewer-management-actions.js";
 import {
+  normalizeManagedDocumentCollectionTarget,
   normalizeManagedDocumentTarget
 } from "./docs-viewer-management-document-target.js";
 import {
@@ -233,6 +234,33 @@ export function initDocsViewerManagement(context) {
     return context.viewerScope();
   }
 
+  function currentImportDisplayContext() {
+    if (subscopeReportState && subscopeReportState.collectionTarget) {
+      return normalizeManagedDocumentCollectionTarget(
+        subscopeReportState.collectionTarget
+      );
+    }
+    return normalizeManagedDocumentCollectionTarget({
+      scope: viewerScope()
+    });
+  }
+
+  function currentImportDisplayContextLabel() {
+    if (subscopeReportState && subscopeReportState.collectionTarget) {
+      return String(subscopeReportState.collectionLabel || "").trim();
+    }
+    return viewerScope();
+  }
+
+  function openAppImport(detail) {
+    var eventDetail = detail && typeof detail === "object" ? detail : {};
+    return importController.open({
+      destination: currentImportDisplayContext(),
+      destinationLabel: currentImportDisplayContextLabel(),
+      restoreFocus: eventDetail.actionTarget || eventDetail.target || null
+    });
+  }
+
   function managementClientOptions() {
     return {
       baseUrl: serviceClient.managementBaseUrl || context.managementBaseUrl,
@@ -265,15 +293,28 @@ export function initDocsViewerManagement(context) {
     var stateName = String(state.state || "").trim().toLowerCase();
     var activeStateNames = ["list", "loading", "detail", "invalid", "error"];
     var parentTarget = null;
+    var collectionTarget = null;
     var subdocTarget = null;
     try {
       if (activeStateNames.indexOf(stateName) !== -1) {
         parentTarget = normalizeManagedDocumentTarget(state.parentTarget);
+        collectionTarget = normalizeManagedDocumentCollectionTarget(
+          state.collectionTarget
+        );
+        if (
+          !collectionTarget.sub_scope
+          || collectionTarget.scope !== parentTarget.scope
+        ) {
+          throw new Error(
+            "Validated sub-scope report collection does not match its parent."
+          );
+        }
         if (stateName === "detail") {
           subdocTarget = normalizeManagedDocumentTarget(state.subdocTarget);
           if (
             !subdocTarget.sub_scope
             || subdocTarget.scope !== parentTarget.scope
+            || subdocTarget.sub_scope !== collectionTarget.sub_scope
           ) {
             throw new Error("Validated sub-scope report target does not match its parent report.");
           }
@@ -288,6 +329,8 @@ export function initDocsViewerManagement(context) {
       ? {
           state: stateName,
           parentTarget: parentTarget,
+          collectionTarget: collectionTarget,
+          collectionLabel: String(state.collectionLabel || "").trim(),
           subdocTarget: subdocTarget
         }
       : null;
@@ -918,7 +961,7 @@ export function initDocsViewerManagement(context) {
       deleteScope: function () { scopeLifecycleController.deleteScope(); },
       deleteSubScope: function () { scopeLifecycleController.deleteSubScope(); },
       exportDocs: function () { actionController.handleExportDocs(); },
-      openImport: function () { importController.open(); },
+      openImport: openAppImport,
       reviewPackage: handleReviewPackage,
       openSettings: function () { settingsWorkflow.open(); },
       publish: function () { actionController.handlePublishDocs(); },

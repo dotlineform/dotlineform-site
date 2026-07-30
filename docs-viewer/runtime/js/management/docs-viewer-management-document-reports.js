@@ -51,6 +51,10 @@ function parentTarget(settings) {
 function publishReportState(settings, parent, subScope, state) {
   if (typeof settings.publishSubscopeReportState !== "function") return;
   var detail = state && typeof state === "object" ? state : {};
+  var collectionTarget = normalizeManagedDocumentCollectionTarget({
+    scope: parent.scope,
+    sub_scope: subScope
+  });
   var subdocTarget = detail.target
     ? normalizeManagedDocumentTarget(detail.target)
     : null;
@@ -67,6 +71,12 @@ function publishReportState(settings, parent, subScope, state) {
     state: cleanString(detail.state) || "inactive",
     reason: cleanString(detail.reason),
     parentTarget: parent,
+    collectionTarget: collectionTarget,
+    collectionLabel: configuredSubScopeLabel(
+      settings,
+      parent.scope,
+      subScope
+    ),
     subdocTarget: subdocTarget
   };
   if (Number.isInteger(settings.documentMountGeneration)) {
@@ -285,6 +295,8 @@ export function mountDocsViewerManageDocumentExtras(context) {
         state: "inactive",
         reason: "non-report-document",
         parentTarget: null,
+        collectionTarget: null,
+        collectionLabel: "",
         subdocTarget: null
       };
       if (Number.isInteger(settings.documentMountGeneration)) {

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke-check ordinary Docs Import multi-selection and package isolation."""
+"""Smoke-check the consolidated candidate-driven Docs Import modal."""
 
 from __future__ import annotations
 
@@ -26,51 +26,166 @@ def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
     return server, f"http://127.0.0.1:{server.server_address[1]}"
 
 
-def assert_multi_selection(page: Page, base_url: str) -> None:
-    import_requests: list[dict[str, object]] = []
-    returned_listing_requests: list[str] = []
-    source_requests: list[dict[str, object]] = []
-    child_failures_remaining = 1
-    package_apply_failures_remaining = 1
-    staged_files = [
-        {"filename": "alpha.md", "source_format": "markdown"},
-        {"filename": "beta.html", "source_format": "html"},
-        {"filename": "word.docx", "source_format": "docx"},
-        {"filename": "notes.json", "source_format": "file"},
-        {
-            "filename": "reviewed.jsonl",
-            "source_format": "data_sharing_documents",
-        },
-        {
-            "filename": "edited-review-copy",
-            "display_name": (
-                "20260730-095512-documents-document-content (reviewed)"
-            ),
-            "source_format": "edited_review_sources",
-            "scope": "studio",
-            "sub_scope": "tags",
-            "supports_return_import": True,
-        },
-    ]
+def ordinary_candidate(filename: str, source_format: str) -> dict[str, object]:
+    return {
+        "filename": filename,
+        "source_format": source_format,
+        "candidate_kind": "ordinary_document",
+        "validation_state": "ready",
+        "target_mode": "ordinary_context",
+        "target": None,
+        "target_label": "Current Docs display",
+        "supports_docs_review": False,
+        "supports_return_import": False,
+        "docs_review_enabled": False,
+        "docs_review_disabled_reason": "ordinary_source",
+        "import_enabled": True,
+        "import_disabled_reason": "",
+        "disabled_reason": "",
+        "diagnostics": [],
+    }
 
-    def fulfill(route, payload: object) -> None:
-        route.fulfill(status=200, content_type="application/json", body=json.dumps(payload))
 
-    page.route(
-        "**/docs-viewer/config/defaults/docs-viewer-config.json",
-        lambda route: fulfill(
-            route,
+def returned_candidate(
+    filename: str,
+    *,
+    target: dict[str, str],
+    target_label: str,
+    supports_review: bool,
+    supports_import: bool,
+) -> dict[str, object]:
+    return {
+        "filename": filename,
+        "source_format": "data_sharing_documents",
+        "candidate_kind": "returned_package",
+        "validation_state": "ready",
+        "target_mode": "manifest_collection",
+        "target": target,
+        "target_label": target_label,
+        "scope": target["scope"],
+        "sub_scope": target.get("sub_scope", ""),
+        "supports_docs_review": supports_review,
+        "supports_return_import": supports_import,
+        "docs_review_enabled": supports_review,
+        "docs_review_disabled_reason": "" if supports_review else "docs_review_unsupported",
+        "import_enabled": supports_import,
+        "import_disabled_reason": "" if supports_import else "return_import_unsupported",
+        "disabled_reason": "",
+        "diagnostics": [],
+        "document_count": 2,
+    }
+
+
+def edited_candidate() -> dict[str, object]:
+    return {
+        "filename": "edited-tags",
+        "display_name": "20260730-095512-document-content (reviewed)",
+        "source_format": "edited_review_sources",
+        "candidate_kind": "edited_review_source",
+        "validation_state": "ready",
+        "target_mode": "manifest_collection",
+        "target": {"scope": "studio", "sub_scope": "tags"},
+        "target_label": "Studio / Tags",
+        "scope": "studio",
+        "sub_scope": "tags",
+        "supports_docs_review": False,
+        "supports_return_import": True,
+        "docs_review_enabled": False,
+        "docs_review_disabled_reason": "edited_review_source",
+        "import_enabled": True,
+        "import_disabled_reason": "",
+        "disabled_reason": "",
+        "diagnostics": [],
+        "document_count": 2,
+    }
+
+
+def blocked_candidate() -> dict[str, object]:
+    return {
+        "filename": "invalid-returned.jsonl",
+        "source_format": "data_sharing_documents",
+        "candidate_kind": "returned_package",
+        "validation_state": "blocked",
+        "target_mode": "manifest_collection",
+        "target": None,
+        "target_label": "",
+        "supports_docs_review": False,
+        "supports_return_import": False,
+        "docs_review_enabled": False,
+        "docs_review_disabled_reason": "untrusted_package_metadata",
+        "import_enabled": False,
+        "import_disabled_reason": "untrusted_package_metadata",
+        "disabled_reason": "untrusted_package_metadata",
+        "diagnostics": [
             {
-                "schema_version": "docs_viewer_config_v1",
-                "scopes": [{"scope_id": "studio"}, {"scope_id": "library"}],
-            },
-        ),
+                "code": "untrusted_package_metadata",
+                "message": "Trusted export metadata is unavailable.",
+            }
+        ],
+    }
+
+
+def wait_until_idle(page: Page) -> None:
+    page.wait_for_function(
+        "() => document.getElementById('docsHtmlImportRoot').dataset.studioBusy === 'false'",
     )
+
+
+def selected_snapshot(page: Page) -> dict[str, object]:
+    return page.evaluate(
+        """() => ({
+          filename: document.getElementById('docsHtmlImportFileSelect').value,
+          kind: document.getElementById('docsHtmlImportCandidateKind').textContent,
+          destination: document.getElementById('docsHtmlImportCandidateDestination').textContent,
+          note: document.getElementById('docsHtmlImportCandidateNote').textContent,
+          importDisabled: document.getElementById('docsHtmlImportRun').disabled,
+          reviewDisabled: document.getElementById('docsHtmlImportReview').disabled,
+          runLabel: document.getElementById('docsHtmlImportRun').textContent
+        })""",
+    )
+
+
+def select_candidate(page: Page, filename: str) -> None:
+    page.locator("#docsHtmlImportFileSelect").select_option(filename)
+
+
+def assert_consolidated_modal(page: Page, base_url: str, site_root: Path) -> None:
+    candidates = [
+        ordinary_candidate("alpha.md", "markdown"),
+        ordinary_candidate("beta.html", "html"),
+        returned_candidate(
+            "returned-tags.jsonl",
+            target={"scope": "studio", "sub_scope": "tags"},
+            target_label="Studio / Tags",
+            supports_review=True,
+            supports_import=True,
+        ),
+        returned_candidate(
+            "review-only-library.jsonl",
+            target={"scope": "library"},
+            target_label="Library",
+            supports_review=True,
+            supports_import=False,
+        ),
+        edited_candidate(),
+        blocked_candidate(),
+    ]
+    import_requests: list[dict[str, object]] = []
+    review_requests: list[dict[str, object]] = []
+    review_attempt = 0
+
+    def fulfill(route, payload: object, status: int = 200) -> None:
+        route.fulfill(
+            status=status,
+            content_type="application/json",
+            body=json.dumps(payload),
+        )
+
     page.route(
         "**/docs-viewer/runtime/js/shared/docs-viewer-render.js",
         lambda route: route.fulfill(
             path=str(
-                Path(__file__).resolve().parents[3]
+                site_root
                 / "site/docs-viewer/runtime/js/shared/docs-viewer-render.js"
             ),
             content_type="text/javascript",
@@ -79,62 +194,22 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
     page.route("**/health", lambda route: fulfill(route, {"ok": True}))
     page.route(
         "**/docs/import-source-files",
-        lambda route: fulfill(route, {"ok": True, "available": True, "files": staged_files}),
-    )
-    page.route(
-        "**/docs/packages/returned?*",
-        lambda route: (
-            returned_listing_requests.append(route.request.url),
-            fulfill(
-                route,
-                {
-                    "ok": True,
-                    "scope": "studio",
-                    "sub_scope": "tags",
-                    "required_capability": "supports_return_import",
-                    "files": [
-                        {
-                            "filename": "returned-tags.jsonl",
-                            "scope": "studio",
-                            "sub_scope": "tags",
-                            "scope_label": "Studio",
-                            "sub_scope_label": "Tags",
-                            "document_count": 2,
-                            "supports_docs_review": True,
-                            "supports_return_import": True,
-                        },
-                        {
-                            "filename": "returned-notes.jsonl",
-                            "scope": "studio",
-                            "sub_scope": "notes",
-                            "scope_label": "Studio",
-                            "sub_scope_label": "Notes",
-                            "document_count": 1,
-                            "supports_docs_review": True,
-                            "supports_return_import": True,
-                        },
-                        {
-                            "filename": "review-only-tags.jsonl",
-                            "scope": "studio",
-                            "sub_scope": "tags",
-                            "scope_label": "Studio",
-                            "sub_scope_label": "Tags",
-                            "document_count": 2,
-                            "supports_docs_review": True,
-                            "supports_return_import": False,
-                        }
-                    ],
-                },
-            ),
-        )[-1],
+        lambda route: fulfill(
+            route,
+            {
+                "ok": True,
+                "available": True,
+                "files": [{"filename": "legacy-ignored.md"}],
+                "candidates": candidates,
+            },
+        ),
     )
 
     def fulfill_import(route) -> None:
-        nonlocal child_failures_remaining, package_apply_failures_remaining
         body = route.request.post_data_json
         import_requests.append(body)
         filename = str(body["staged_filename"])
-        if filename == "reviewed.jsonl":
+        if body.get("preview_only") is True:
             fulfill(
                 route,
                 {
@@ -142,167 +217,54 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
                     "collection": True,
                     "preview_only": True,
                     "source_format": "data_sharing_documents",
-                    "target": {"scope": body["scope"]},
+                    "target": {"scope": "studio", "sub_scope": "tags"},
                     "package": {
-                        "export_id": "ds_20260730T110000Z",
-                        "source_sha256": "c" * 64,
+                        "export_id": "ds_20260730T120000Z",
+                        "source_sha256": "a" * 64,
+                        "trusted_metadata_sha256": "b" * 64,
                     },
                     "blockers": [],
                     "warnings": [],
                     "counts": {
-                        "records": 1,
+                        "records": 2,
                         "creates": 0,
-                        "collisions": 1,
+                        "collisions": 2,
                         "record_errors": 0,
                         "media_plans": 0,
                     },
                     "planned_identities": [
-                        {"record_index": 0, "doc_id": "global-a"},
+                        {"record_index": 0, "doc_id": "tag-a"},
+                        {"record_index": 1, "doc_id": "tag-b"},
                     ],
                     "planned_actions": [
-                        {
-                            "record_index": 0,
-                            "doc_id": "global-a",
-                            "action": "overwrite",
-                        },
+                        {"record_index": 0, "doc_id": "tag-a", "action": "overwrite"},
+                        {"record_index": 1, "doc_id": "tag-b", "action": "overwrite"},
                     ],
                     "records": [
                         {
                             "record_index": 0,
-                            "doc_id": "global-a",
-                            "title": "Global A",
+                            "doc_id": "tag-a",
+                            "title": "Tag A",
+                            "action": "overwrite",
+                        },
+                        {
+                            "record_index": 1,
+                            "doc_id": "tag-b",
+                            "title": "Tag B",
                             "action": "overwrite",
                         },
                     ],
                 },
             )
             return
-        if filename == "returned-tags.jsonl":
-            package = {
-                "export_id": "ds_20260730T120000Z",
-                "source_sha256": "a" * 64,
-                "trusted_metadata_sha256": "b" * 64,
-            }
-            if body.get("preview_only") is True:
-                fulfill(
-                    route,
-                    {
-                        "ok": True,
-                        "collection": True,
-                        "preview_only": True,
-                        "source_format": "data_sharing_documents",
-                        "target": {"scope": "studio", "sub_scope": "tags"},
-                        "package": package,
-                        "blockers": [],
-                        "warnings": [],
-                        "counts": {
-                            "records": 2,
-                            "creates": 0,
-                            "collisions": 2,
-                            "record_errors": 0,
-                            "media_plans": 0,
-                        },
-                        "planned_identities": [
-                            {"record_index": 0, "doc_id": "tag-a"},
-                            {"record_index": 1, "doc_id": "tag-b"},
-                        ],
-                        "planned_actions": [
-                            {"record_index": 0, "doc_id": "tag-a", "action": "overwrite"},
-                            {"record_index": 1, "doc_id": "tag-b", "action": "overwrite"},
-                        ],
-                        "records": [
-                            {"record_index": 0, "doc_id": "tag-a", "title": "Tag A", "action": "overwrite"},
-                            {"record_index": 1, "doc_id": "tag-b", "title": "Tag B", "action": "overwrite"},
-                        ],
-                    },
-                )
-                return
-            if package_apply_failures_remaining:
-                package_apply_failures_remaining -= 1
-                route.fulfill(
-                    status=503,
-                    content_type="application/json",
-                    body=json.dumps(
-                        {
-                            "ok": False,
-                            "error": "Synthetic returned-package apply failure.",
-                        }
-                    ),
-                )
-                return
-            fulfill(
-                route,
-                {
-                    "ok": True,
-                    "collection": True,
-                    "preview_only": False,
-                    "source_format": "data_sharing_documents",
-                    "target": {"scope": "studio", "sub_scope": "tags"},
-                    "outcome": "completed",
-                    "counts": {
-                        "created": 0,
-                        "overwritten": 2,
-                        "failed": 0,
-                        "not_attempted": 0,
-                    },
-                    "records": [
-                        {"record_index": 0, "doc_id": "tag-a", "status": "overwritten"},
-                        {"record_index": 1, "doc_id": "tag-b", "status": "overwritten"},
-                    ],
-                    "warnings": [],
-                },
-            )
-            return
-        if body.get("sub_scope") == "tags" and child_failures_remaining:
-            child_failures_remaining -= 1
-            route.fulfill(
-                status=422,
-                content_type="application/json",
-                body=json.dumps(
-                    {
-                        "ok": False,
-                        "error": "Synthetic child Import failure.",
-                    }
-                ),
-            )
-            return
-        if filename == "beta.html" and not body.get("confirm_interactive_html_overwrite"):
-            fulfill(
-                route,
-                {
-                    "ok": True,
-                    "preview_only": True,
-                    "scope": body["scope"],
-                    "staged_filename": filename,
-                    "requires_interactive_html_confirmation": True,
-                    "summary_text": "Interactive HTML asset overwrite required.",
-                    "import_preview": {
-                        "source_format": "html",
-                        "warnings": ["Interactive HTML asset target already exists."],
-                        "interactive_html_plans": [
-                            {"target_path": "docs/studio/html/beta-widget.html", "target_exists": True}
-                        ],
-                    },
-                },
-            )
-            return
-        doc_id = Path(filename).stem
-        source_format = next(
-            record["source_format"] for record in staged_files if record["filename"] == filename
-        )
         fulfill(
             route,
             {
                 "ok": True,
+                "collection": False,
                 "preview_only": False,
-                "scope": body["scope"],
-                **(
-                    {"sub_scope": body["sub_scope"]}
-                    if body.get("sub_scope")
-                    else {}
-                ),
                 "staged_filename": filename,
-                "doc_id": doc_id,
+                "doc_id": f"imported-{len(import_requests)}",
                 "target": {
                     "scope": body["scope"],
                     **(
@@ -310,30 +272,63 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
                         if body.get("sub_scope")
                         else {}
                     ),
-                    "doc_id": doc_id,
+                    "doc_id": f"imported-{len(import_requests)}",
                 },
-                "summary_text": f"Imported {filename}",
+                "source_format": "markdown",
+                "summary_text": f"Imported {filename}.",
                 "import_preview": {
-                    "source_format": source_format,
-                    "source_stats": {"chars": 10, "links": 0, "images": 0},
+                    "source_format": "markdown",
+                    "source_stats": {"chars": 12, "links": 0, "images": 0},
+                    "warnings": [],
                 },
             },
         )
 
     page.route("**/docs/import-source", fulfill_import)
-    page.route(
-        "**/docs/open-source",
-        lambda route: (
-            source_requests.append(route.request.post_data_json),
-            fulfill(route, {"ok": True}),
-        )[-1],
-    )
-    result = page.evaluate(
-        """async (baseUrl) => {
-          document.body.innerHTML = '<button id="importTrigger">Import</button><div id="mount"></div>';
-          const shellModule = await import('/docs-viewer/runtime/js/management/docs-viewer-management-shell-renderer.js');
-          const modalModule = await import('/docs-viewer/runtime/js/management/docs-viewer-management-modals.js');
-          const importModule = await import('/docs-viewer/runtime/js/import/docs-html-import.js');
+
+    def fulfill_review(route) -> None:
+        nonlocal review_attempt
+        review_attempt += 1
+        body = route.request.post_data_json
+        review_requests.append(body)
+        if review_attempt == 1:
+            fulfill(
+                route,
+                {"ok": False, "error": "Synthetic review preparation failure."},
+                status=500,
+            )
+            return
+        fulfill(
+            route,
+            {
+                "ok": True,
+                "review_package_id": "20260730-120000-document-content",
+                "review_url": (
+                    "/docs-review/"
+                    "?package=20260730-120000-document-content"
+                ),
+                "review_existing": True,
+                "summary_text": "Docs Review package already exists.",
+            },
+        )
+
+    page.route("**/docs/packages/returned/review", fulfill_review)
+    page.goto(base_url, wait_until="domcontentloaded")
+    page.evaluate(
+        """async (managementBaseUrl) => {
+          document.body.innerHTML = [
+            '<button id="importTrigger">Import</button>',
+            '<div id="mount"></div>'
+          ].join('');
+          const shellModule = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-shell-renderer.js'
+          );
+          const modalModule = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-modals.js'
+          );
+          const importModule = await import(
+            '/docs-viewer/runtime/js/import/docs-html-import.js'
+          );
           const shellRefs = shellModule.renderDocsViewerManagementShell({
             document,
             mount: document.getElementById('mount')
@@ -342,580 +337,239 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
             refs: shellRefs,
             management: {},
             scopeConfig: {},
-            callbacks: {
-              viewerScope: () => 'studio'
-            }
+            callbacks: { viewerScope: () => 'studio' }
           });
           modalController.wireEvents();
-
-          const terminalDetails = [];
-          let collectionRefreshFailuresRemaining = 1;
-          const importApp = await importModule.initDocsHtmlImport({
+          window.__caiBusyEvents = [];
+          window.__caiTerminalDetails = [];
+          window.__caiModalController = modalController;
+          window.__caiImportApp = await importModule.initDocsHtmlImport({
             root: document.getElementById('docsHtmlImportRoot'),
             bootStatus: document.getElementById('docsHtmlImportBootStatus'),
-            managementBaseUrl: baseUrl,
-            docsViewerConfigUrl: '/docs-viewer/config/defaults/docs-viewer-config.json',
-            initialScope: 'studio',
-            persistScope: false,
-            onBusyChange: busy => modalController.projectImportBusy(busy),
+            managementBaseUrl,
+            initialDestination: { scope: 'studio' },
+            initialDestinationLabel: 'Studio',
+            onBusyChange: busy => {
+              window.__caiBusyEvents.push(busy);
+              modalController.projectImportBusy(busy);
+            },
             onCollectionStateChange: (viewState, onCommand) => {
               modalController.projectImportCollectionState(viewState, onCommand);
             },
-            onTerminalResult(detail) {
-              terminalDetails.push(detail);
-              if (
-                detail.result?.collection === true
-                && collectionRefreshFailuresRemaining
-              ) {
-                collectionRefreshFailuresRemaining -= 1;
-                throw new Error('Synthetic collection report refresh failure.');
-              }
+            onTerminalResult: detail => {
+              window.__caiTerminalDetails.push(detail);
             }
           });
           await modalController.openImportModal({
             restoreFocus: document.getElementById('importTrigger')
           });
-
-          const typeSelect = document.getElementById('docsHtmlImportTypeSelect');
-          const fileSelect = document.getElementById('docsHtmlImportFileSelect');
-          const selectAll = document.getElementById('docsHtmlImportSelectAll');
-          const selectionCount = document.getElementById('docsHtmlImportSelectionCount');
-          const promptMetaWrap = document.getElementById('docsHtmlImportIncludePromptMetaWrap');
-          const runButton = document.getElementById('docsHtmlImportRun');
-          const confirmButton = document.getElementById('docsHtmlImportConfirm');
-          const selectionBar = document.getElementById('docsHtmlImportSelectionBar');
-
-          const initial = {
-            type: typeSelect.value,
-            typeLabels: Array.from(typeSelect.options).map(option => option.textContent),
-            multiple: fileSelect.multiple,
-            filenames: Array.from(fileSelect.options).map(option => option.value),
-            labels: Array.from(fileSelect.options).map(option => option.textContent),
-            selected: Array.from(fileSelect.selectedOptions).map(option => option.value),
-            selectionCount: selectionCount.textContent,
-            promptMetaHidden: promptMetaWrap.hidden,
-            runLabel: runButton.textContent
-          };
-
-          selectAll.click();
-          const afterSelectAll = {
-            selected: Array.from(fileSelect.selectedOptions).map(option => option.value),
-            selectionCount: selectionCount.textContent,
-            selectAllLabel: selectAll.textContent,
-            promptMetaHidden: promptMetaWrap.hidden
-          };
-
-          Array.from(fileSelect.options).forEach(option => {
-            if (option.value === 'edited-review-copy') option.selected = false;
-          });
-          fileSelect.dispatchEvent(new Event('change', { bubbles: true }));
-          runButton.click();
-          for (let attempt = 0; attempt < 1000 && confirmButton.hidden; attempt += 1) {
-            await new Promise(resolve => setTimeout(resolve, 0));
-          }
-          if (confirmButton.hidden) throw new Error('interactive HTML replacement confirmation was not shown');
-          confirmButton.click();
-          while (terminalDetails.length < 1) {
-            await new Promise(resolve => setTimeout(resolve, 0));
-          }
-          while (document.getElementById('docsHtmlImportRoot').dataset.studioBusy === 'true') {
-            await new Promise(resolve => setTimeout(resolve, 0));
-          }
-
-          typeSelect.value = importModule.DOCS_IMPORT_MODE_DATA_SHARING;
-          typeSelect.dispatchEvent(new Event('change', { bubbles: true }));
-          const packageMode = {
-            type: typeSelect.value,
-            multiple: fileSelect.multiple,
-            filenames: Array.from(fileSelect.options).map(option => option.value),
-            labels: Array.from(fileSelect.options).map(option => option.textContent),
-            selected: Array.from(fileSelect.selectedOptions).map(option => option.value),
-            selectionBarHidden: selectionBar.hidden,
-            runLabel: runButton.textContent
-          };
-          runButton.click();
-          for (
-            let attempt = 0;
-            attempt < 1000
-              && document.getElementById('docsViewerImportCollectionModal').hidden;
-            attempt += 1
-          ) {
-            await new Promise(resolve => setTimeout(resolve, 0));
-          }
-          const globalPackageConfirmation = {
-            modalId: document.querySelector(
-              '#docsViewerImportCollectionModal:not([hidden])'
-            )?.id || '',
-            chooserHidden: document.getElementById('docsViewerImportModal').hidden,
-            footerCommands: Array.from(
-              document.querySelectorAll(
-                '#docsViewerImportCollectionModal [data-collection-command]:not([hidden])'
-              )
-            ).map(button => button.dataset.collectionCommand)
-          };
-          document.getElementById('docsImportCollectionCancel').click();
-          await new Promise(resolve => setTimeout(resolve, 0));
-          await modalController.openImportModal({
-            restoreFocus: document.getElementById('importTrigger')
-          });
-
-          const locationBeforeChild = location.href;
-          importApp.setDestination(
-            { scope: 'studio', sub_scope: 'tags' },
-            { label: 'studio / Tags' }
-          );
-          await importApp.refreshStagedFiles();
-          Array.from(fileSelect.options).forEach(option => {
-            option.selected = option.value === 'alpha.md';
-          });
-          fileSelect.dispatchEvent(new Event('change', { bubbles: true }));
-          const childDestination = {
-            locationUnchanged: location.href === locationBeforeChild,
-            scopeDisabled: document.getElementById('docsHtmlImportScopeSelect').disabled,
-            scopeLabels: Array.from(
-              document.getElementById('docsHtmlImportScopeSelect').options
-            ).map(option => option.textContent),
-            scopeValue: document.getElementById('docsHtmlImportScopeSelect').value,
-            typeDisabled: typeSelect.disabled,
-            typeLabels: Array.from(typeSelect.options).map(option => option.textContent),
-            filenames: Array.from(fileSelect.options).map(option => option.value),
-            selected: Array.from(fileSelect.selectedOptions).map(option => option.value)
-          };
-          runButton.click();
-          while (document.getElementById('docsHtmlImportRoot').dataset.studioBusy === 'true') {
-            await new Promise(resolve => setTimeout(resolve, 0));
-          }
-          const childFailure = {
-            destination: document.getElementById('docsHtmlImportScopeSelect').value,
-            destinationDisabled: document.getElementById('docsHtmlImportScopeSelect').disabled,
-            runDisabled: runButton.disabled,
-            selected: Array.from(fileSelect.selectedOptions).map(option => option.value),
-            status: document.getElementById('docsHtmlImportStatus').textContent,
-            statusState: document.getElementById('docsHtmlImportStatus').dataset.state || '',
-            terminalCount: terminalDetails.length
-          };
-          runButton.click();
-          while (terminalDetails.length < 2) {
-            await new Promise(resolve => setTimeout(resolve, 0));
-          }
-          while (document.getElementById('docsHtmlImportRoot').dataset.studioBusy === 'true') {
-            await new Promise(resolve => setTimeout(resolve, 0));
-          }
-          const resultLink = document.querySelector('[data-doc-source-link]');
-          const childResult = {
-            link: {
-              scope: resultLink?.dataset.scope || '',
-              subScope: resultLink?.dataset.subScope || '',
-              docId: resultLink?.dataset.docId || ''
-            },
-            terminal: {
-              scope: terminalDetails[1].scope,
-              subScope: terminalDetails[1].subScope,
-              docId: terminalDetails[1].docId,
-              target: terminalDetails[1].target,
-              resultCount: terminalDetails[1].results.length
-            }
-          };
-          resultLink.click();
-          await new Promise(resolve => setTimeout(resolve, 0));
-
-          typeSelect.value = importModule.DOCS_IMPORT_MODE_DATA_SHARING;
-          typeSelect.dispatchEvent(new Event('change', { bubbles: true }));
-          const childPackageInitial = {
-            filenames: Array.from(fileSelect.options).map(option => option.value),
-            labels: Array.from(fileSelect.options).map(option => option.textContent),
-            selected: Array.from(fileSelect.selectedOptions).map(option => option.value),
-            runDisabled: runButton.disabled,
-            selectionBarHidden: selectionBar.hidden
-          };
-          Array.from(fileSelect.options).forEach(option => {
-            option.selected = option.value === 'returned-tags.jsonl';
-          });
-          fileSelect.dispatchEvent(new Event('change', { bubbles: true }));
-          const childPackageSelected = {
-            selected: Array.from(fileSelect.selectedOptions).map(option => option.value),
-            runDisabled: runButton.disabled,
-            runLabel: runButton.textContent
-          };
-          runButton.click();
-          for (
-            let attempt = 0;
-            attempt < 1000
-              && document.getElementById('docsViewerImportCollectionModal').hidden;
-            attempt += 1
-          ) {
-            await new Promise(resolve => setTimeout(resolve, 0));
-          }
-          const childPackageConfirmation = {
-            chooserHidden: document.getElementById('docsViewerImportModal').hidden,
-            planHidden: document.getElementById('docsViewerImportCollectionModal').hidden,
-            visibleDialogs: Array.from(
-              document.querySelectorAll('.docsViewer__modal')
-            ).filter(modal => !modal.hidden).length,
-            footerCommands: Array.from(
-              document.querySelectorAll(
-                '#docsViewerImportCollectionModal [data-collection-command]:not([hidden])'
-              )
-            ).map(button => button.dataset.collectionCommand),
-            backButtons: Array.from(
-              document.querySelectorAll('#docsViewerImportCollectionModal button')
-            ).filter(button => button.textContent.trim().toLowerCase() === 'back').length,
-            planInScrollableBody: document.querySelector(
-              '#docsViewerImportCollectionModal .docsViewer__modalBody #docsImportCollectionView'
-            ) !== null,
-            confirmInFixedActions: document.querySelector(
-              '#docsViewerImportCollectionModal .docsViewer__modalActions '
-              + '[data-collection-command="confirm"]'
-            ) !== null
-          };
-          document.getElementById('docsImportCollectionCancel').click();
-          await new Promise(resolve => setTimeout(resolve, 0));
-          const childPackageCancelled = {
-            status: document.getElementById('docsImportCollectionStatus').textContent,
-            chooserHidden: document.getElementById('docsViewerImportModal').hidden,
-            planHidden: document.getElementById('docsViewerImportCollectionModal').hidden
-          };
-          await modalController.openImportModal({
-            restoreFocus: document.getElementById('importTrigger')
-          });
-          runButton.click();
-          for (
-            let attempt = 0;
-            attempt < 1000
-              && document.getElementById('docsViewerImportCollectionModal').hidden;
-            attempt += 1
-          ) {
-            await new Promise(resolve => setTimeout(resolve, 0));
-          }
-          document.getElementById('docsImportCollectionConfirm').click();
-          while (document.getElementById('docsHtmlImportRoot').dataset.studioBusy === 'true') {
-            await new Promise(resolve => setTimeout(resolve, 0));
-          }
-          const childPackageFailure = {
-            status: document.getElementById('docsImportCollectionStatus').textContent,
-            statusState: document.getElementById('docsImportCollectionStatus').dataset.state || '',
-            retryAvailable: !document.getElementById('docsImportCollectionConfirm').hidden,
-            selected: Array.from(fileSelect.selectedOptions).map(option => option.value),
-            terminalCount: terminalDetails.length
-          };
-          document.getElementById('docsImportCollectionConfirm').click();
-          while (terminalDetails.length < 3) {
-            await new Promise(resolve => setTimeout(resolve, 0));
-          }
-          while (document.getElementById('docsHtmlImportRoot').dataset.studioBusy === 'true') {
-            await new Promise(resolve => setTimeout(resolve, 0));
-          }
-          const childPackageRefreshFailure = {
-            retryAvailable: !document.getElementById('docsImportCollectionRetry').hidden,
-            status: document.getElementById('docsImportCollectionStatus').textContent,
-            statusState: document.getElementById('docsImportCollectionStatus').dataset.state || '',
-            terminalCount: terminalDetails.length
-          };
-          document.getElementById('docsImportCollectionRetry').click();
-          while (terminalDetails.length < 4) {
-            await new Promise(resolve => setTimeout(resolve, 0));
-          }
-          while (document.getElementById('docsHtmlImportRoot').dataset.studioBusy === 'true') {
-            await new Promise(resolve => setTimeout(resolve, 0));
-          }
-          const childPackageResult = {
-            status: document.getElementById('docsImportCollectionStatus').textContent,
-            statusState: document.getElementById('docsImportCollectionStatus').dataset.state || '',
-            closeVisible: !document.getElementById('docsImportCollectionClose').hidden,
-            terminal: {
-              scope: terminalDetails[3].scope,
-              subScope: terminalDetails[3].subScope,
-              docId: terminalDetails[3].docId,
-              target: terminalDetails[3].target,
-              outcome: terminalDetails[3].result.outcome
-            }
-          };
-
-          importApp.setDestination(null, { fallbackScope: 'library' });
-          const restoredGlobal = {
-            scopeDisabled: document.getElementById('docsHtmlImportScopeSelect').disabled,
-            scopeLabels: Array.from(
-              document.getElementById('docsHtmlImportScopeSelect').options
-            ).map(option => option.textContent),
-            scopeValue: document.getElementById('docsHtmlImportScopeSelect').value,
-            typeDisabled: typeSelect.disabled,
-            typeLabels: Array.from(typeSelect.options).map(option => option.textContent)
-          };
-
-          return {
-            initial,
-            afterSelectAll,
-            childDestination,
-            childFailure,
-            childPackageCancelled,
-            childPackageConfirmation,
-            childPackageFailure,
-            childPackageInitial,
-            childPackageRefreshFailure,
-            childPackageResult,
-            childPackageSelected,
-            childResult,
-            globalPackageConfirmation,
-            packageMode,
-            restoredGlobal,
-            terminal: {
-              scope: terminalDetails[0].scope,
-              docId: terminalDetails[0].docId,
-              resultCount: terminalDetails[0].results.length
-            }
-          };
         }""",
         base_url,
     )
 
-    expected_initial = {
-        "type": "files",
-        "typeLabels": ["Documents (4)", "Document packages (2)"],
-        "multiple": True,
-        "filenames": [
-            "alpha.md",
-            "beta.html",
-            "word.docx",
-            "notes.json",
-        ],
-        "labels": [
-            "alpha.md (markdown)",
-            "beta.html (html)",
-            "word.docx (docx)",
-            "notes.json (file)",
-        ],
-        "selected": ["alpha.md"],
-        "selectionCount": "1 selected",
-        "promptMetaHidden": True,
-        "runLabel": "Import selected",
+    option_values = page.locator("#docsHtmlImportFileSelect option").evaluate_all(
+        "(options) => options.map((option) => option.value)",
+    )
+    assert option_values == [str(candidate["filename"]) for candidate in candidates]
+    assert page.locator("#docsHtmlImportTypeSelect").count() == 0
+    assert page.locator("#docsHtmlImportScopeSelect").count() == 0
+    assert selected_snapshot(page) == {
+        "filename": "alpha.md",
+        "kind": "Ordinary document",
+        "destination": "Studio",
+        "note": "",
+        "importDisabled": False,
+        "reviewDisabled": True,
+        "runLabel": "Import",
     }
-    if result["initial"] != expected_initial:
-        raise AssertionError(f"unexpected initial ordinary-file mode: {result!r}")
-    expected_select_all = {
-        "selected": [
-            "alpha.md",
-            "beta.html",
-            "word.docx",
-            "notes.json",
-        ],
-        "selectionCount": "4 selected",
-        "selectAllLabel": "Clear selection",
-        "promptMetaHidden": False,
-    }
-    if result["afterSelectAll"] != expected_select_all:
-        raise AssertionError(f"Select all did not select only ordinary files: {result!r}")
-    expected_package_mode = {
-        "type": "data_sharing_packages",
-        "multiple": False,
-        "filenames": ["reviewed.jsonl", "edited-review-copy"],
-        "labels": [
-            "reviewed.jsonl",
-            "20260730-095512-documents-document-content (reviewed)",
-        ],
-        "selected": ["reviewed.jsonl"],
-        "selectionBarHidden": True,
+
+    page.locator("#docsHtmlImportRun").click()
+    wait_until_idle(page)
+    assert import_requests[0]["scope"] == "studio"
+    assert "sub_scope" not in import_requests[0]
+    assert import_requests[0]["staged_filename"] == "alpha.md"
+
+    page.evaluate(
+        """() => window.__caiImportApp.setDestination(
+          { scope: 'studio', sub_scope: 'tags' },
+          { label: 'Studio / Tags' }
+        )""",
+    )
+    assert page.locator("#docsHtmlImportFileSelect option").count() == len(candidates)
+    select_candidate(page, "beta.html")
+    child_ordinary = selected_snapshot(page)
+    assert child_ordinary["destination"] == "Studio / Tags"
+    assert page.locator("#docsHtmlImportIncludePromptMetaWrap").is_visible()
+    page.locator("#docsHtmlImportRun").click()
+    wait_until_idle(page)
+    assert import_requests[1]["scope"] == "studio"
+    assert import_requests[1]["sub_scope"] == "tags"
+    assert import_requests[1]["staged_filename"] == "beta.html"
+
+    page.evaluate(
+        """() => window.__caiImportApp.setDestination(
+          { scope: 'library' },
+          { label: 'Library' }
+        )""",
+    )
+    select_candidate(page, "returned-tags.jsonl")
+    cross_context = selected_snapshot(page)
+    assert cross_context == {
+        "filename": "returned-tags.jsonl",
+        "kind": "Returned package",
+        "destination": "Studio / Tags",
+        "note": "",
+        "importDisabled": False,
+        "reviewDisabled": False,
         "runLabel": "Preview collection",
     }
-    if result["packageMode"] != expected_package_mode:
-        raise AssertionError(f"reviewed-package mode was not isolated and single-select: {result!r}")
-    assert result["globalPackageConfirmation"] == {
-        "modalId": "docsViewerImportCollectionModal",
-        "chooserHidden": True,
-        "footerCommands": ["cancel", "confirm"],
-    }
-    assert result["childDestination"] == {
-        "locationUnchanged": True,
-        "scopeDisabled": True,
-        "scopeLabels": ["studio / Tags"],
-        "scopeValue": "studio",
-        "typeDisabled": False,
-        "typeLabels": ["Documents (4)", "Document packages (2)"],
-        "filenames": [
-            "alpha.md",
-            "beta.html",
-            "word.docx",
-            "notes.json",
-        ],
-        "selected": ["alpha.md"],
-    }
-    assert result["childFailure"] == {
-        "destination": "studio",
-        "destinationDisabled": True,
-        "runDisabled": False,
-        "selected": ["alpha.md"],
-        "status": "Synthetic child Import failure.",
-        "statusState": "error",
-        "terminalCount": 1,
-    }
-    child_target = {
-        "scope": "studio",
-        "sub_scope": "tags",
-        "doc_id": "alpha",
-    }
-    assert result["childResult"] == {
-        "link": {
-            "scope": "studio",
-            "subScope": "tags",
-            "docId": "alpha",
-        },
-        "terminal": {
-            "scope": "studio",
-            "subScope": "tags",
-            "docId": "alpha",
-            "target": child_target,
-            "resultCount": 1,
-        },
-    }
-    assert result["childPackageInitial"] == {
-        "filenames": ["edited-review-copy", "returned-tags.jsonl"],
-        "labels": [
-            "20260730-095512-documents-document-content (reviewed)",
-            "returned-tags.jsonl — studio / Tags — 2 documents",
-        ],
-        "selected": [],
-        "runDisabled": True,
-        "selectionBarHidden": True,
-    }
-    assert result["childPackageSelected"] == {
-        "selected": ["returned-tags.jsonl"],
-        "runDisabled": False,
-        "runLabel": "Preview collection",
-    }
-    assert result["childPackageConfirmation"] == {
-        "chooserHidden": True,
-        "planHidden": False,
-        "visibleDialogs": 1,
-        "footerCommands": ["cancel", "confirm"],
-        "backButtons": 0,
-        "planInScrollableBody": True,
-        "confirmInFixedActions": True,
-    }
-    assert result["childPackageCancelled"] == {
-        "status": "Collection import cancelled before apply.",
-        "chooserHidden": True,
-        "planHidden": True,
-    }
-    assert result["childPackageFailure"] == {
-        "status": "Synthetic returned-package apply failure.",
-        "statusState": "error",
-        "retryAvailable": True,
-        "selected": ["returned-tags.jsonl"],
-        "terminalCount": 2,
-    }
-    assert result["childPackageRefreshFailure"] == {
-        "retryAvailable": True,
-        "status": (
-            "Package import completed, but the collection report refresh failed. "
-            "Retry the report refresh without importing again."
-        ),
-        "statusState": "error",
-        "terminalCount": 3,
-    }
-    assert result["childPackageResult"] == {
-        "status": "Collection import finished with outcome: completed.",
-        "statusState": "success",
-        "closeVisible": True,
-        "terminal": {
-            "scope": "studio",
-            "subScope": "tags",
-            "docId": "tag-a",
-            "target": {"scope": "studio", "sub_scope": "tags"},
-            "outcome": "completed",
-        },
-    }
-    assert result["restoredGlobal"] == {
-        "scopeDisabled": False,
-        "scopeLabels": ["studio", "library"],
-        "scopeValue": "library",
-        "typeDisabled": False,
-        "typeLabels": ["Documents (4)", "Document packages (2)"],
-    }, result
-    if [request["staged_filename"] for request in import_requests] != [
-        "alpha.md",
-        "beta.html",
-        "beta.html",
-        "word.docx",
-        "notes.json",
-        "reviewed.jsonl",
-        "alpha.md",
-        "alpha.md",
-        "returned-tags.jsonl",
-        "returned-tags.jsonl",
-        "returned-tags.jsonl",
-        "returned-tags.jsonl",
-    ]:
-        raise AssertionError(f"ordinary multi-import crossed the package boundary: {import_requests!r}")
-    beta_requests = [request for request in import_requests if request["staged_filename"] == "beta.html"]
-    if [request.get("confirm_interactive_html_overwrite") for request in beta_requests] != [False, True]:
-        raise AssertionError(f"interactive HTML replacement confirmation contract drifted: {import_requests!r}")
-    removed_fields = {"overwrite_doc_id", "replacement_doc_id"}
-    if any(removed_fields & set(request) for request in import_requests):
-        raise AssertionError(f"ordinary import still sent retired document collision fields: {import_requests!r}")
-    if result["terminal"] != {"scope": "studio", "docId": "notes", "resultCount": 4}:
-        raise AssertionError(f"multi-import did not identify the last imported doc: {result!r}")
-    if any(request.get("sub_scope") != "tags" for request in import_requests[-2:]):
-        raise AssertionError(f"returned-package retries did not keep their exact destination: {import_requests!r}")
-    if any(request.get("sub_scope") != "tags" for request in import_requests[-6:]):
-        raise AssertionError(f"child Import retries did not keep their exact destination: {import_requests!r}")
-    if any(request.get("sub_scope") for request in import_requests[:-6]):
-        raise AssertionError(f"parent Import requests unexpectedly gained a child target: {import_requests!r}")
-    package_requests = [
-        request for request in import_requests
-        if request["staged_filename"] == "returned-tags.jsonl"
-    ]
-    if [request.get("preview_only") for request in package_requests] != [
-        True,
-        True,
-        False,
-        False,
-    ]:
-        raise AssertionError(f"package cancel or retry crossed the preview/apply boundary: {package_requests!r}")
-    expected_package_identity = {
-        "export_id": "ds_20260730T120000Z",
-        "source_sha256": "a" * 64,
-        "trusted_metadata_sha256": "b" * 64,
-    }
-    for request in package_requests[2:]:
-        if any(request.get(key) != value for key, value in expected_package_identity.items()):
-            raise AssertionError(f"package apply lost its confirmed identity: {package_requests!r}")
-    if not returned_listing_requests:
-        raise AssertionError("child Import did not discover returned packages")
-    listing_url = returned_listing_requests[-1]
-    if "scope=studio" not in listing_url or "sub_scope=tags" not in listing_url:
-        raise AssertionError(f"returned-package discovery was not exact: {returned_listing_requests!r}")
-    if source_requests != [
+    page.locator("#docsHtmlImportRun").click()
+    page.locator("#docsViewerImportCollectionModal:not([hidden])").wait_for()
+    assert import_requests[2]["scope"] == "studio"
+    assert import_requests[2]["sub_scope"] == "tags"
+    assert import_requests[2]["staged_filename"] == "returned-tags.jsonl"
+    assert import_requests[2]["preview_only"] is True
+    assert page.locator("#docsViewerImportModal").is_hidden()
+    assert page.locator("#docsImportCollectionCancel").is_visible()
+    page.locator("#docsImportCollectionCancel").click()
+
+    page.evaluate(
+        """() => window.__caiModalController.openImportModal({
+          restoreFocus: document.getElementById('importTrigger')
+        })""",
+    )
+    assert page.locator("#docsHtmlImportFileSelect").input_value() == (
+        "returned-tags.jsonl"
+    )
+
+    select_candidate(page, "review-only-library.jsonl")
+    review_only = selected_snapshot(page)
+    assert review_only["destination"] == "Library"
+    assert review_only["importDisabled"] is True
+    assert review_only["reviewDisabled"] is False
+    assert "Import unavailable" in str(review_only["note"])
+
+    with page.expect_popup() as failed_popup_info:
+        page.locator("#docsHtmlImportReview").click()
+    failed_popup = failed_popup_info.value
+    failed_popup.wait_for_event("close")
+    wait_until_idle(page)
+    assert page.locator("#docsHtmlImportFileSelect").input_value() == (
+        "review-only-library.jsonl"
+    )
+    assert page.locator("#docsHtmlImportReview").is_enabled()
+    assert page.locator("#docsHtmlImportStatus").get_attribute("data-state") == (
+        "error"
+    )
+
+    with page.expect_popup() as review_popup_info:
+        page.locator("#docsHtmlImportReview").click()
+    review_popup = review_popup_info.value
+    review_popup.wait_for_url(
+        "**/docs-review/?package=20260730-120000-document-content",
+    )
+    wait_until_idle(page)
+    assert review_requests == [
         {
-            "scope": "studio",
-            "sub_scope": "tags",
-            "doc_id": "alpha",
-            "editor": "vscode",
-        }
-    ]:
-        raise AssertionError(f"child result Source did not use its exact target: {source_requests!r}")
+            "scope": "library",
+            "staged_filename": "review-only-library.jsonl",
+            "dry_run": False,
+        },
+        {
+            "scope": "library",
+            "staged_filename": "review-only-library.jsonl",
+            "dry_run": False,
+        },
+    ]
+    assert page.locator("#docsHtmlImportStatus").get_attribute("data-state") == (
+        "success"
+    )
+
+    select_candidate(page, "edited-tags")
+    edited = selected_snapshot(page)
+    assert edited["destination"] == "Studio / Tags"
+    assert edited["importDisabled"] is False
+    assert edited["reviewDisabled"] is True
+    assert "review outputs" in str(edited["note"]) or edited["note"] == ""
+
+    select_candidate(page, "invalid-returned.jsonl")
+    blocked = selected_snapshot(page)
+    assert blocked["destination"] == "Unavailable"
+    assert blocked["importDisabled"] is True
+    assert blocked["reviewDisabled"] is True
+    assert blocked["note"] == (
+        "Import unavailable: Trusted export metadata is unavailable."
+    )
+
+    select_candidate(page, "alpha.md")
+    page.locator("#docsViewerImportCancelButton").click()
+    assert page.locator("#docsViewerImportModal").is_hidden()
+    page.wait_for_function("() => document.activeElement.id === 'importTrigger'")
+    assert page.evaluate("() => window.__caiBusyEvents") == [
+        True,
+        False,
+        True,
+        False,
+        True,
+        False,
+        True,
+        False,
+        True,
+        False,
+    ]
+
+    malformed_error = page.evaluate(
+        """async () => {
+          const model = await import(
+            '/docs-viewer/runtime/js/import/docs-import-candidate-model.js'
+          );
+          try {
+            model.docsImportCandidateInventory({
+              candidates: [{
+                filename: 'fabricated.jsonl',
+                source_format: 'data_sharing_documents',
+                candidate_kind: 'returned_package',
+                validation_state: 'ready',
+                target_mode: 'ordinary_context',
+                target: null,
+                supports_docs_review: true,
+                supports_return_import: true,
+                docs_review_enabled: true,
+                import_enabled: true,
+                diagnostics: []
+              }]
+            });
+          } catch (error) {
+            return error.message;
+          }
+          return '';
+        }""",
+    )
+    assert malformed_error == (
+        "Manifest Import candidate fabricated.jsonl cannot use display context."
+    )
 
 
-def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--site-root", default=".", help="Repository root to serve.")
-    args = parser.parse_args(argv)
-    server, base_url = start_static_server(Path(args.site_root))
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--site-root", default=".")
+    return parser.parse_args()
+
+
+def main() -> int:
+    args = parse_args()
+    site_root = Path(args.site_root).expanduser().resolve()
+    server, base_url = start_static_server(site_root)
     try:
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
-            errors: list[str] = []
-            try:
-                page = browser.new_page()
-                page.on("pageerror", lambda exc: errors.append(str(exc)))
-                page.goto(base_url, wait_until="domcontentloaded")
-                assert_multi_selection(page, base_url)
-            finally:
-                browser.close()
-            if errors:
-                raise AssertionError(f"page errors: {errors}")
+            page = browser.new_page()
+            assert_consolidated_modal(page, base_url, site_root)
+            browser.close()
     finally:
         server.shutdown()
         server.server_close()
-    print("Docs Import multi-selection modules OK")
+    print("docs import consolidated modal smoke: ok")
     return 0
 
 

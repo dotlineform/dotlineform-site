@@ -89,6 +89,60 @@ export function documentPackageReviewResult(payload) {
   };
 }
 
+function closeReviewWindow(reviewWindow) {
+  if (!reviewWindow || typeof reviewWindow.close !== "function") return;
+  try {
+    reviewWindow.close();
+  } catch (_error) {
+    // A failed preparation must not leave an owned blank tab behind.
+  }
+}
+
+export async function openReturnedDocumentPackageInDocsReview(options = {}) {
+  const scope = packageText(options.scope).toLowerCase();
+  const stagedFilename = packageText(options.stagedFilename);
+  if (!scope || !stagedFilename) {
+    throw new Error("An exact returned-package identity is required for Docs Review.");
+  }
+  const review = typeof options.review === "function"
+    ? options.review
+    : reviewReturnedDocumentPackage;
+  const openWindow = typeof options.openWindow === "function"
+    ? options.openWindow
+    : (url, target) => window.open(url, target);
+  const reviewWindow = openWindow("about:blank", "_blank");
+  if (!reviewWindow) {
+    throw new Error("The Docs Review tab was blocked. Allow popups and retry.");
+  }
+  try {
+    reviewWindow.opener = null;
+    const payload = await review({
+      scope,
+      staged_filename: stagedFilename,
+      dry_run: false
+    });
+    const result = documentPackageReviewResult(payload);
+    if (reviewWindow.closed) {
+      throw new Error("The Docs Review tab was closed before preparation completed.");
+    }
+    if (
+      reviewWindow.location
+      && typeof reviewWindow.location.replace === "function"
+    ) {
+      reviewWindow.location.replace(result.reviewUrl);
+    } else {
+      reviewWindow.location = result.reviewUrl;
+    }
+    return {
+      ...result,
+      payload
+    };
+  } catch (error) {
+    closeReviewWindow(reviewWindow);
+    throw error;
+  }
+}
+
 function showReviewPackageList(options) {
   return openDocsViewerManagementModal({
     root: options.root,

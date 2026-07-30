@@ -211,7 +211,9 @@ def assert_control_projection(page: Page) -> None:
               doc_id: 'imported-child'
             }
           });
-          await importController.open();
+          await importController.open({
+            destination: { scope: 'studio' }
+          });
           await initializedImportOptions.onTerminalResult({
             target: {
               scope: 'studio',
@@ -338,9 +340,8 @@ def assert_control_projection(page: Page) -> None:
     assert result["importControllerProjection"] == {
         "appDestinations": [
             {
-                "destination": None,
+                "destination": {"scope": "studio"},
                 "options": {
-                    "fallbackScope": "studio",
                     "label": "",
                 },
             }
@@ -2148,6 +2149,8 @@ def assert_manage_report_bridge(page: Page) -> None:
         "state": "detail",
         "reason": "detail-loaded",
         "parentTarget": {"scope": "studio", "doc_id": "parent-doc"},
+        "collectionTarget": {"scope": "studio", "sub_scope": "tags"},
+        "collectionLabel": "studio / Tags",
         "subdocTarget": {
             "scope": "studio",
             "sub_scope": "tags",
@@ -2197,6 +2200,8 @@ def assert_manage_report_bridge(page: Page) -> None:
             "state": "list",
             "reason": "list-view",
             "parentTarget": {"scope": "studio", "doc_id": "parent-doc"},
+            "collectionTarget": {"scope": "studio", "sub_scope": "tags"},
+            "collectionLabel": "studio / Tags",
             "subdocTarget": None,
         },
         "status": {"message": "", "isError": False},
@@ -2212,18 +2217,24 @@ def assert_manage_report_bridge(page: Page) -> None:
                 "state": "loading",
                 "reason": "report-mount",
                 "parentTarget": {"scope": "studio", "doc_id": "parent-doc"},
+                "collectionTarget": {"scope": "studio", "sub_scope": "tags"},
+                "collectionLabel": "studio / Tags",
                 "subdocTarget": None,
             },
             {
                 "state": "loading",
                 "reason": "report-loading",
                 "parentTarget": {"scope": "studio", "doc_id": "parent-doc"},
+                "collectionTarget": {"scope": "studio", "sub_scope": "tags"},
+                "collectionLabel": "studio / Tags",
                 "subdocTarget": None,
             },
             {
                 "state": "error",
                 "reason": "report-load-failed",
                 "parentTarget": {"scope": "studio", "doc_id": "parent-doc"},
+                "collectionTarget": {"scope": "studio", "sub_scope": "tags"},
+                "collectionLabel": "studio / Tags",
                 "subdocTarget": None,
             },
         ],
@@ -2234,6 +2245,8 @@ def assert_manage_report_bridge(page: Page) -> None:
         "state": "inactive",
         "reason": "non-report-document",
         "parentTarget": None,
+        "collectionTarget": None,
+        "collectionLabel": "",
         "subdocTarget": None,
     }
 
@@ -2587,6 +2600,8 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
             "state": "detail",
             "reason": "detail-loaded",
             "parentTarget": {"scope": "studio", "doc_id": "parent-doc"},
+            "collectionTarget": expected_collection,
+            "collectionLabel": "studio / Tags",
             "subdocTarget": {
                 **expected_collection,
                 "doc_id": "imported-first",
@@ -2618,6 +2633,8 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
             "state": "detail",
             "reason": "detail-loaded",
             "parentTarget": {"scope": "studio", "doc_id": "parent-doc"},
+            "collectionTarget": expected_collection,
+            "collectionLabel": "studio / Tags",
             "subdocTarget": {
                 **expected_collection,
                 "doc_id": "created-first",

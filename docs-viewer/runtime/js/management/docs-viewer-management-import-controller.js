@@ -19,10 +19,6 @@ export function createDocsViewerManagementImportController(options = {}) {
     restoreFocus: null
   };
 
-  function viewerScope() {
-    return typeof callbacks.viewerScope === "function" ? callbacks.viewerScope() : "";
-  }
-
   function importModule() {
     if (typeof callbacks.loadImportModule === "function") {
       return callbacks.loadImportModule();
@@ -66,13 +62,12 @@ export function createDocsViewerManagementImportController(options = {}) {
     }
   }
 
-  function initialize(scope) {
+  function initialize() {
     if (!refs.root || !refs.bootStatus) return Promise.resolve();
     if (importRequestPromise) return importRequestPromise;
     if (initialized) {
       if (importApp && typeof importApp.setDestination === "function") {
         importApp.setDestination(activeOpen.destination, {
-          fallbackScope: scope || viewerScope(),
           label: activeOpen.destinationLabel
         });
       }
@@ -89,7 +84,6 @@ export function createDocsViewerManagementImportController(options = {}) {
         return module.initDocsHtmlImport({
           root: refs.root,
           bootStatus: refs.bootStatus,
-          initialScope: scope || viewerScope(),
           initialDestination: activeOpen.destination,
           initialDestinationLabel: activeOpen.destinationLabel,
           docsViewerConfigUrl: context.docsViewerConfigUrl || context.root && context.root.dataset.docsViewerConfigUrl || DEFAULT_CONFIG_URL,
@@ -113,10 +107,11 @@ export function createDocsViewerManagementImportController(options = {}) {
   }
 
   function open(options = {}) {
+    var destination = normalizeManagedDocumentCollectionTarget(
+      options.destination
+    );
     activeOpen = {
-      destination: options.destination
-        ? normalizeManagedDocumentCollectionTarget(options.destination)
-        : null,
+      destination: destination,
       destinationLabel: String(options.destinationLabel || "").trim(),
       onComplete: typeof options.onComplete === "function"
         ? options.onComplete

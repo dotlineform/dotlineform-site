@@ -298,38 +298,40 @@ function configureImportFixture(context, state) {
   fixture.refs.importBootStatus.hidden = true;
   fixture.controller.openImportModal();
 
-  importNode(documentRef, "docsHtmlImportTypeLabel").textContent = importText("typeLabel");
   importNode(documentRef, "docsHtmlImportFileLabel").textContent = importText("fileLabel");
-  importNode(documentRef, "docsHtmlImportScopeLabel").textContent = importText("scopeLabel");
   importNode(documentRef, "docsHtmlImportIncludePromptMetaLabel").textContent = importText("includePromptMetaLabel");
-  importNode(documentRef, "docsHtmlImportSelectAll").textContent = importText("selectAllButton");
   importNode(documentRef, "docsHtmlImportRun").textContent = importText("importButton");
   importNode(documentRef, "docsHtmlImportConfirm").textContent = importText("confirmOverwriteButton");
   importNode(documentRef, "docsHtmlImportCancel").textContent = importText("cancelOverwriteButton");
-  setSelectOptions(documentRef, importNode(documentRef, "docsHtmlImportTypeSelect"), [
-    { value: "files", label: importText("filesOption", { count: 2 }) },
-    { value: "data-sharing", label: importText("dataSharingPackagesOption", { count: 1 }) }
-  ], state === "collection" ? "data-sharing" : "files");
-  setSelectOptions(documentRef, importNode(documentRef, "docsHtmlImportScopeSelect"), [
-    { value: "studio", label: "studio" },
-    { value: "library", label: "library" }
-  ], "studio");
 
   const files = state === "empty"
     ? []
     : [
-        { value: "modal-consistency.md", label: "modal-consistency.md" },
-        { value: "reviewed-package.jsonl", label: "reviewed-package.jsonl" }
+        { value: "modal-consistency.md", label: "modal-consistency.md — staged document" },
+        { value: "reviewed-package.jsonl", label: "reviewed-package.jsonl — returned package" }
       ];
+  const isCollection = state === "collection";
   setSelectOptions(
     documentRef,
     importNode(documentRef, "docsHtmlImportFileSelect"),
     files,
-    state === "collection" ? "reviewed-package.jsonl" : "modal-consistency.md"
+    isCollection ? "reviewed-package.jsonl" : "modal-consistency.md"
   );
-  importNode(documentRef, "docsHtmlImportSelectionCount").textContent = files.length
-    ? importText("selectedCount", { count: 1 })
-    : "";
+  importNode(documentRef, "docsHtmlImportCandidateKind").textContent = files.length
+    ? (isCollection ? "Returned document package" : "Staged document")
+    : "—";
+  importNode(documentRef, "docsHtmlImportCandidateDestination").textContent = files.length
+    ? (isCollection ? "Analysis / Tags" : "Studio")
+    : "—";
+  importNode(documentRef, "docsHtmlImportCandidateNote").textContent = files.length
+    ? (
+        isCollection
+          ? "Destination comes from the validated package manifest."
+          : "Destination is the Docs context active when Import was opened."
+      )
+    : "Select a candidate to inspect its effective destination.";
+  importNode(documentRef, "docsHtmlImportReview").disabled = !isCollection;
+  importNode(documentRef, "docsHtmlImportIncludePromptMetaWrap").hidden = isCollection;
   return fixture;
 }
 

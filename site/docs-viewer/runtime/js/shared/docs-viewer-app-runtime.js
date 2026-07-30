@@ -160,6 +160,8 @@ export function startDocsViewerRuntime(options) {
     state: "inactive",
     reason: "startup",
     parentTarget: null,
+    collectionTarget: null,
+    collectionLabel: "",
     subdocTarget: null
   };
   var appViewerControlOwners = new Map();
@@ -184,6 +186,8 @@ export function startDocsViewerRuntime(options) {
           state: "inactive",
           reason: "invalid-report-state",
           parentTarget: null,
+          collectionTarget: null,
+          collectionLabel: "",
           subdocTarget: null
         };
     var controller = managementRuntime ? managementRuntime.controller() : null;
