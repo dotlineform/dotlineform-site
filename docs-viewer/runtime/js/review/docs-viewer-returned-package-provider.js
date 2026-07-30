@@ -113,10 +113,26 @@ export function createDocsViewerReturnedPackageProvider(options) {
     });
   }
 
+  function openSource(docId) {
+    var selectedDocId = cleanString(docId);
+    if (!selectedDocId) {
+      return Promise.reject(new Error("Select a review document before opening its source."));
+    }
+    return ensurePackage().then(function (packageId) {
+      return request("/docs-review/packages/open-source", {
+        body: {
+          package_id: packageId,
+          doc_id: selectedDocId
+        }
+      });
+    });
+  }
+
   return {
     activeCollectionId: function () { return selectedPackageId; },
     build: build,
     listCollections: listCollections,
+    openSource: openSource,
     readAssetInventory: readAssetInventory,
     readDocument: readDocument,
     readIndex: readIndex,

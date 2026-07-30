@@ -127,7 +127,27 @@ def assert_source_endpoints_retired(base_url: str) -> None:
 
 def exercise_review_route(page: Page, base_url: str, timeout_ms: int) -> None:
     requests: list[str] = []
+    open_source_requests: list[dict[str, object]] = []
+
+    def handle_open_source(route, request) -> None:
+        payload = json.loads(request.post_data or "{}")
+        open_source_requests.append(payload)
+        route.fulfill(
+            status=200,
+            content_type="application/json",
+            body=json.dumps(
+                {
+                    "ok": True,
+                    "package_id": payload.get("package_id"),
+                    "doc_id": payload.get("doc_id"),
+                    "editor": "vscode",
+                    "summary_text": f"Opened {payload.get('doc_id')} source.",
+                }
+            ),
+        )
+
     page.on("request", lambda request: requests.append(request.url))
+    page.route("**/docs-review/packages/open-source", handle_open_source)
     page.goto(
         f"{base_url}/docs-review/?package=fixture-review&doc=fixture-root",
         wait_until="domcontentloaded",
@@ -187,6 +207,47 @@ def exercise_review_route(page: Page, base_url: str, timeout_ms: int) -> None:
         raise AssertionError("Docs Review canonical comparison link is incorrect")
     if page.locator("#docsViewerReviewControlsMount a", has_text="Import").count() != 0:
         raise AssertionError("Docs Review still exposed an Import action")
+    vscode_button = page.locator("#docsViewerReviewOpenVsCodeButton")
+    if vscode_button.count() != 1 or vscode_button.is_hidden() or vscode_button.is_disabled():
+        raise AssertionError(
+            "Docs Review did not expose an enabled Open in VS Code action: "
+            f"count={vscode_button.count()} "
+            f"hidden={vscode_button.is_hidden() if vscode_button.count() else 'missing'} "
+            f"disabled={vscode_button.is_disabled() if vscode_button.count() else 'missing'}"
+        )
+    if vscode_button.get_attribute("data-docs-viewer-action") != "open-vscode":
+        raise AssertionError("Docs Review Open in VS Code lost the shared action identity")
+    if vscode_button.get_attribute("title") != "Open in VS Code":
+        raise AssertionError("Docs Review Open in VS Code action has no explicit label")
+    page.wait_for_function(
+        """() => {
+            const icon = document.querySelector('#docsViewerReviewOpenVsCodeButton img');
+            return icon && icon.complete && icon.naturalWidth === 100 && icon.naturalHeight === 100;
+        }""",
+        timeout=timeout_ms,
+    )
+    vscode_icon = vscode_button.locator("img")
+    if not vscode_icon.get_attribute("src").endswith(
+        "/docs-viewer/runtime/js/management/icons/vscode.svg"
+    ):
+        raise AssertionError("Docs Review Open in VS Code did not reuse the official icon")
+    if vscode_icon.get_attribute("alt") != "" or vscode_icon.get_attribute("aria-hidden") != "true":
+        raise AssertionError("Docs Review VS Code icon did not remain decorative")
+    vscode_button.click()
+    page.wait_for_function(
+        """() => document.querySelector('#docsViewerStatus')?.textContent
+            === 'Opened fixture-root source.'""",
+        timeout=timeout_ms,
+    )
+    if open_source_requests != [
+        {
+            "package_id": "fixture-review",
+            "doc_id": "fixture-root",
+        }
+    ]:
+        raise AssertionError(
+            f"Docs Review did not open the exact selected package document: {open_source_requests!r}"
+        )
     review_payload = read_json(
         f"{base_url}/docs-review/packages/payload?package_id=fixture-review&doc_id=fixture-root"
     )["payload"]
@@ -260,6 +321,7 @@ def main() -> int:
             if (
                 "review_source_read" in capabilities
                 or "review_source_write" in capabilities
+                or capabilities.get("review_source_open") is not True
                 or capabilities.get("canonical_write") is not False
             ):
                 raise AssertionError(f"unexpected Docs Review backend authority: {capabilities!r}")

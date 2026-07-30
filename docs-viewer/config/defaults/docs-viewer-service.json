@@ -32,6 +32,7 @@
     "review_index_tree": "/docs-review/packages/index-tree",
     "review_payload": "/docs-review/packages/payload",
     "review_build": "/docs-review/packages/build",
+    "review_open_source": "/docs-review/packages/open-source",
     "generated_index_tree": "/docs/index-tree",
     "generated_payload": "/docs/doc",
     "generated_search": "/docs/search",

@@ -9,6 +9,7 @@ ASSET_CONTENT_PREFIX = "/docs-review/packages/assets-content/"
 INDEX_TREE_PATH = "/docs-review/packages/index-tree"
 PAYLOAD_PATH = "/docs-review/packages/payload"
 BUILD_PATH = "/docs-review/packages/build"
+OPEN_SOURCE_PATH = "/docs-review/packages/open-source"
 
 GET_PATHS = (
     CAPABILITIES_PATH,
@@ -21,6 +22,7 @@ GET_PATHS = (
 
 POST_PATHS = (
     BUILD_PATH,
+    OPEN_SOURCE_PATH,
 )
 
 OPTIONS_PATHS = tuple(dict.fromkeys((*GET_PATHS, *POST_PATHS)))

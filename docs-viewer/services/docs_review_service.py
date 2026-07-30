@@ -35,6 +35,7 @@ def docs_review_get_payload(
                 "review_asset_inventory_read": available,
                 "review_generated_read": available,
                 "review_build": available,
+                "review_source_open": available,
                 "canonical_write": False,
                 "management": False,
                 "publish": False,
@@ -72,4 +73,6 @@ def docs_review_post_response(
 ) -> tuple[HTTPStatus, dict[str, Any]]:
     if path == routes.BUILD_PATH:
         return HTTPStatus.OK, packages.build_package(repo_root, body)
+    if path == routes.OPEN_SOURCE_PATH:
+        return HTTPStatus.OK, packages.open_source_document(repo_root, body)
     raise FileNotFoundError("Not found")

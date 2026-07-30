@@ -8,7 +8,8 @@ from pathlib import Path
 import re
 from typing import Any
 
-from docs_management_source_service import split_source_exact
+from docs_management_context import log_event
+from docs_management_source_service import open_source_path, split_source_exact
 from docs_review_build import build_review_package
 from docs_document_packages.workspace import configured_workspace_paths, marker_path
 
@@ -361,6 +362,33 @@ def read_payload(repo_root: Path, package_id: Any, doc_id: Any) -> dict[str, Any
         "doc_id": normalized_doc_id,
         "payload": payload,
         "generated_repaired": repaired,
+    }
+
+
+def open_source_document(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
+    package_path, _manifest, records = _package_context(repo_root, body.get("package_id"))
+    doc_id = validate_doc_id(body.get("doc_id"))
+    record = records.get(doc_id)
+    if not record:
+        raise FileNotFoundError(f"review package document not found: {doc_id}")
+    source_path = record["path"]
+    open_source_path(
+        repo_root,
+        source_path,
+        editor="vscode",
+        dry_run=False,
+    )
+    activity = {
+        "package_id": package_path.name,
+        "doc_id": doc_id,
+        "editor": "vscode",
+        "path": _package_marker(repo_root, source_path),
+    }
+    log_event(repo_root, "docs-review-open-source", activity)
+    return {
+        "ok": True,
+        **activity,
+        "summary_text": f"Opened {doc_id} source.",
     }
 
 

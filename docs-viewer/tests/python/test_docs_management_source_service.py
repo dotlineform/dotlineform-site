@@ -6,6 +6,7 @@ from __future__ import annotations
 import sys
 import tempfile
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -418,6 +419,39 @@ def test_open_source_doc_resolves_parent_and_sub_scope_targets() -> None:
     assert detail["sub_scope"] == "tags"
     assert detail["doc_id"] == "detail"
     assert "source/sub-scopes/tags/documents/detail.md" in str(detail["path"])
+
+
+def test_open_source_path_uses_visual_studio_code_without_confirmation(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    calls: list[dict[str, object]] = []
+
+    def fake_run(command, **options):
+        calls.append({"command": command, **options})
+        return SimpleNamespace(returncode=0, stderr="", stdout="")
+
+    source_path = tmp_path / "selected.md"
+    source_path.write_text("# Selected\n", encoding="utf-8")
+    monkeypatch.setattr(source_service.subprocess, "run", fake_run)
+
+    preferred_app = source_service.open_source_path(
+        tmp_path,
+        source_path,
+        editor="vscode",
+        dry_run=False,
+    )
+
+    assert preferred_app is None
+    assert calls == [
+        {
+            "command": ["open", "-a", "Visual Studio Code", str(source_path)],
+            "cwd": str(tmp_path),
+            "capture_output": True,
+            "text": True,
+            "check": False,
+        }
+    ]
 
 
 def main() -> None:

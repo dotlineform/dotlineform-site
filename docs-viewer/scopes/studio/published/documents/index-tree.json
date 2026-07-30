@@ -742,6 +742,26 @@
           "ui_status": "paused"
         },
         {
+          "doc_id": "d-20260730-121423-78b0f6",
+          "title": "Edited Docs Review Source Round-Trip",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260730-121423-78b0f6.json",
+          "ui_status": "proposed",
+          "children": [
+            {
+              "doc_id": "d-20260730-123213-f7d58b",
+              "title": "Docs Import Capability Parity Quick Reference",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260730-123213-f7d58b.json",
+              "ui_status": "urgent"
+            },
+            {
+              "doc_id": "d-20260730-112029-799346",
+              "title": "Edited Docs Review Source Round-Trip Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260730-112029-799346.json",
+              "ui_status": "proposed"
+            }
+          ]
+        },
+        {
           "doc_id": "d-20260726-224323-eb0a65",
           "title": "Manage Sub-Scope Documents",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-224323-eb0a65.json",
@@ -893,6 +913,12 @@
               "ui_status": "proposed"
             },
             {
+              "doc_id": "d-20260730-121423-469e54",
+              "title": "Sub-Scope Ordinary Document Import Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260730-121423-469e54.json",
+              "ui_status": "planned"
+            },
+            {
               "doc_id": "d-20260728-115825-ae1461",
               "title": "Sub-Scope Package Preparation Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-115825-ae1461.json",
@@ -914,7 +940,7 @@
               "doc_id": "d-20260730-102954-1b363f",
               "title": "Sub-Scope Returned Package Import Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260730-102954-1b363f.json",
-              "ui_status": "planned"
+              "ui_status": "proposed"
             },
             {
               "doc_id": "d-20260728-173227-bb7426",
@@ -1277,5 +1303,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-30T09:33:05Z"
+  "generated_at": "2026-07-30T11:39:26Z"
 }

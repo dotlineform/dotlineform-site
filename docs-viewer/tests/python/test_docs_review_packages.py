@@ -203,9 +203,77 @@ def test_review_dispatcher_keeps_routes_outside_management_dispatch() -> None:
     assert listed["packages"][0]["package_id"] == package.name
     assert "review_source_read" not in capabilities["capabilities"]
     assert "review_source_write" not in capabilities["capabilities"]
+    assert capabilities["capabilities"]["review_source_open"] is True
     assert capabilities["capabilities"]["canonical_write"] is False
     assert status.value == 200
     assert built["ok"] is True
+
+
+def test_review_open_source_uses_exact_validated_package_document(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    package = write_package()
+    calls: list[dict[str, object]] = []
+
+    def fake_open_source_path(
+        repo_root: Path,
+        source_path: Path,
+        *,
+        editor: str,
+        dry_run: bool,
+    ) -> None:
+        calls.append(
+            {
+                "repo_root": repo_root,
+                "source_path": source_path,
+                "editor": editor,
+                "dry_run": dry_run,
+            }
+        )
+
+    monkeypatch.setattr(docs_review_packages, "open_source_path", fake_open_source_path)
+    monkeypatch.setattr(docs_review_packages, "log_event", lambda *_args: None)
+
+    status, payload = docs_review_service.docs_review_post_response(
+        REPO_ROOT,
+        docs_review_routes.OPEN_SOURCE_PATH,
+        {
+            "package_id": package.name,
+            "doc_id": "fixture-root",
+        },
+    )
+
+    assert status.value == 200
+    assert calls == [
+        {
+            "repo_root": REPO_ROOT,
+            "source_path": package / "source/fixture-root.md",
+            "editor": "vscode",
+            "dry_run": False,
+        }
+    ]
+    assert payload == {
+        "ok": True,
+        "package_id": package.name,
+        "doc_id": "fixture-root",
+        "editor": "vscode",
+        "path": (
+            "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/"
+            f"{package.name}/source/fixture-root.md"
+        ),
+        "summary_text": "Opened fixture-root source.",
+    }
+
+    with pytest.raises(FileNotFoundError, match="document not found"):
+        docs_review_service.docs_review_post_response(
+            REPO_ROOT,
+            docs_review_routes.OPEN_SOURCE_PATH,
+            {
+                "package_id": package.name,
+                "doc_id": "another-document",
+            },
+        )
+    assert len(calls) == 1
 
 
 def test_review_capabilities_disable_cleanly_when_external_workspace_is_missing(
@@ -222,6 +290,7 @@ def test_review_capabilities_disable_cleanly_when_external_workspace_is_missing(
 
     assert payload["available"] is False
     assert payload["capabilities"]["review_packages_list"] is False
+    assert payload["capabilities"]["review_source_open"] is False
     assert "review_source_read" not in payload["capabilities"]
     assert "review_source_write" not in payload["capabilities"]
     assert "does not exist" in payload["workspace"]["message"]

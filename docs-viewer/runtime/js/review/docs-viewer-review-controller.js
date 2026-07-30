@@ -35,13 +35,29 @@ function renderReviewPackageControls(context) {
     buildButton.setAttribute("data-docs-viewer-review-action", "repair");
     var assetsButton = createButton(context.document, "Assets");
     assetsButton.setAttribute("data-docs-viewer-review-action", "assets");
+    var openVsCodeButton = context.document.createElement("button");
+    openVsCodeButton.id = "docsViewerReviewOpenVsCodeButton";
+    openVsCodeButton.className = "docsViewer__documentActionButton";
+    openVsCodeButton.type = "button";
+    openVsCodeButton.disabled = true;
+    openVsCodeButton.title = "Open in VS Code";
+    openVsCodeButton.setAttribute("aria-label", "Open in VS Code");
+    openVsCodeButton.setAttribute("data-docs-viewer-action", "open-vscode");
+    openVsCodeButton.setAttribute("data-docs-viewer-review-action", "open-vscode");
+    var openVsCodeIcon = context.document.createElement("img");
+    openVsCodeIcon.src = new URL("../management/icons/vscode.svg", import.meta.url).href;
+    openVsCodeIcon.alt = "";
+    openVsCodeIcon.width = 20;
+    openVsCodeIcon.height = 20;
+    openVsCodeIcon.setAttribute("aria-hidden", "true");
+    openVsCodeButton.replaceChildren(openVsCodeIcon);
     var canonicalLink = context.document.createElement("a");
     canonicalLink.className = "docsViewer__actionButton docsViewer__reviewCanonicalLink";
     canonicalLink.textContent = "Open canonical";
     canonicalLink.target = "_blank";
     canonicalLink.rel = "noopener";
     canonicalLink.hidden = true;
-    mount.append(select, buildButton, assetsButton, canonicalLink);
+    mount.append(select, buildButton, assetsButton, openVsCodeButton, canonicalLink);
   }
   return { root: mount, interactive: mount.querySelector("select") };
 }
@@ -66,6 +82,14 @@ export function createDocsViewerReviewController(options) {
   var provider = null;
   var manifest = null;
   var canonicalLink = null;
+  var openVsCodeButton = null;
+  var activeDocId = "";
+  var openingSource = false;
+
+  function projectOpenVsCodeButton() {
+    if (!openVsCodeButton) return;
+    openVsCodeButton.disabled = openingSource || !provider || !activeDocId;
+  }
 
   function projectCanonicalLink(docId) {
     if (!canonicalLink || !manifest) return;
@@ -93,9 +117,11 @@ export function createDocsViewerReviewController(options) {
     var buildButton = mount.querySelector('[data-docs-viewer-review-action="repair"]');
     var assetsButton = mount.querySelector('[data-docs-viewer-review-action="assets"]');
     canonicalLink = mount.querySelector(".docsViewer__reviewCanonicalLink");
-    if (!select || !buildButton || !assetsButton || !canonicalLink) {
+    openVsCodeButton = documentRef.getElementById("docsViewerReviewOpenVsCodeButton");
+    if (!select || !buildButton || !assetsButton || !canonicalLink || !openVsCodeButton) {
       return Promise.reject(new Error("Docs Review package controls failed to render."));
     }
+    projectOpenVsCodeButton();
 
     select.addEventListener("change", function () {
       var url = new URL(windowRef.location.href);
@@ -123,6 +149,20 @@ export function createDocsViewerReviewController(options) {
         setStatus(error.message || "Asset inventory read failed.", true);
       });
     });
+    openVsCodeButton.addEventListener("click", function () {
+      if (!provider || !activeDocId || openingSource) return;
+      var requestedDocId = activeDocId;
+      openingSource = true;
+      projectOpenVsCodeButton();
+      provider.openSource(requestedDocId).then(function (payload) {
+        setStatus(payload.summary_text || "Opened review source.", false);
+      }).catch(function (error) {
+        setStatus(error.message || "Review source could not be opened.", true);
+      }).finally(function () {
+        openingSource = false;
+        projectOpenVsCodeButton();
+      });
+    });
     return Promise.all([provider.listCollections(), provider.readManifest()]).then(function (results) {
       var packages = results[0];
       manifest = results[1].manifest || {};
@@ -148,6 +188,8 @@ export function createDocsViewerReviewController(options) {
 
   function mountDocumentExtras(context) {
     var docId = String(context && context.doc && context.doc.doc_id || "").trim();
+    activeDocId = docId;
+    projectOpenVsCodeButton();
     projectCanonicalLink(docId);
   }
 
