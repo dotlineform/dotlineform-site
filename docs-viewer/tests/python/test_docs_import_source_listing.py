@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import shutil
 
 import pytest
 
@@ -14,13 +15,17 @@ import docs_import_preview
 import docs_import_review_source_folder
 import docs_import_source_service as import_source_service
 import docs_management_import_service
+import docs_review_packages
 import docs_source_model
 import docs_write_rebuild
+from docs_builder.pipeline import DocsDataBuilder
+from docs_builder.sub_scope import SubScopeDocsBuilder, selected_sub_scope
 from docs_import_common import FILE_MEDIA_STAGED_SUFFIXES
 from docs_import_docx_test_support import semantic_docx_bytes
 from docs_management_document_target import resolve_managed_document_collection
 from docs_document_packages.workspace import configured_workspace_paths
-from repo_factory import docs_sub_scope_record
+from docs_scope_config import load_docs_scope_configs
+from repo_factory import docs_scope_record, docs_sub_scope_record
 
 from docs_import_test_support import (
     make_repo,
@@ -38,6 +43,8 @@ REVIEW_FOLDER_ID = "20260730-095512-documents-document-content"
 REVIEW_EXPORT_ID = "ds_20260730T095512Z"
 SUB_REVIEW_FOLDER_ID = "20260730-180000-tags-document-content"
 SUB_REVIEW_EXPORT_ID = "ds_20260730T180000Z"
+ANALYSIS_REVIEW_FOLDER_ID = "20260730-190000-tags-document-content"
+ANALYSIS_REVIEW_EXPORT_ID = "ds_20260730T190000Z"
 
 
 def review_source_text(
@@ -327,6 +334,111 @@ def configure_review_sub_scope_targets(root: Path) -> dict[str, Path]:
     return paths
 
 
+def configure_analysis_tags_round_trip_targets(root: Path) -> dict[str, Path]:
+    config_path = root / "docs-viewer/config/scopes/docs_scopes.json"
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    config["scopes"].append(
+        docs_scope_record(
+            "analysis",
+            default_doc_id="analysis-root",
+            media_provider="repository",
+            sub_scopes=[
+                docs_sub_scope_record(
+                    "analysis",
+                    "tags",
+                    title="Tags",
+                    supports_return_import=True,
+                    document_groups=["theme"],
+                )
+            ],
+        )
+    )
+    config_path.write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
+    parent_root = root / "docs-viewer/scopes/analysis/source/documents"
+    tags_root = (
+        root
+        / "docs-viewer/scopes/analysis/source/sub-scopes/tags/documents"
+    )
+    parent_root.mkdir(parents=True, exist_ok=True)
+    tags_root.mkdir(parents=True, exist_ok=True)
+    (parent_root / "analysis-root.md").write_text(
+        docs_source_model.format_source(
+            {
+                "doc_id": "analysis-root",
+                "title": "Analysis",
+                "added_date": "2026-07-01 09:00:00",
+                "last_updated": "2026-07-29 09:00:00",
+            },
+            "# Analysis\n",
+        ),
+        encoding="utf-8",
+    )
+    (parent_root / "tags-report.md").write_text(
+        docs_source_model.format_source(
+            {
+                "doc_id": "tags-report",
+                "title": "Tags",
+                "added_date": "2026-07-01 09:30:00",
+                "last_updated": "2026-07-29 09:30:00",
+                "parent_id": "analysis-root",
+                "viewer_report": "docs_subscope",
+                "viewer_report_subscope": "tags",
+            },
+            "# Tags\n",
+        ),
+        encoding="utf-8",
+    )
+    targets = {
+        "tag-a": tags_root / "tag-a.md",
+        "tag-b": tags_root / "tag-b.md",
+        "tag-other": tags_root / "tag-other.md",
+    }
+    records = {
+        "tag-a": (
+            {
+                "doc_id": "tag-a",
+                "title": "Tag A",
+                "added_date": "2026-07-01 10:00:00",
+                "last_updated": "2026-07-29 10:00:00",
+                "summary": "Original Tag A summary.",
+                "ui_status": "draft",
+                "group": "theme",
+                "viewable": False,
+            },
+            "# Tag A\n",
+        ),
+        "tag-b": (
+            {
+                "doc_id": "tag-b",
+                "title": "Tag B",
+                "added_date": "2026-07-02 10:00:00",
+                "last_updated": "2026-07-29 11:00:00",
+                "ui_status": "done",
+                "group": "theme",
+            },
+            "# Tag B\n",
+        ),
+        "tag-other": (
+            {
+                "doc_id": "tag-other",
+                "title": "Other Tag",
+                "added_date": "2026-07-03 10:00:00",
+                "last_updated": "2026-07-29 12:00:00",
+                "ui_status": "draft",
+                "group": "theme",
+            },
+            "# Other Tag\n",
+        ),
+    }
+    for doc_id, path in targets.items():
+        front_matter, body = records[doc_id]
+        path.write_text(
+            docs_source_model.format_source(front_matter, body),
+            encoding="utf-8",
+        )
+    return targets
+
+
 def write_review_sub_scope_fixture(root: Path) -> Path:
     return write_review_source_fixture(
         root,
@@ -343,15 +455,20 @@ def write_review_sub_scope_fixture(root: Path) -> Path:
     )
 
 
-def edit_review_alpha(staged_folder: Path) -> None:
+def edit_review_alpha(
+    staged_folder: Path,
+    *,
+    parent_id: str = "library",
+) -> None:
     path = staged_folder / "alpha.md"
+    inserted_parent = f"parent_id: {parent_id}\n" if parent_id else ""
     path.write_text(
         path.read_text(encoding="utf-8")
         .replace("title: Alpha", "title: Edited Alpha")
         .replace(
             "---\n# Alpha",
             "summary: Edited Alpha summary.\n"
-            "parent_id: library\n"
+            f"{inserted_parent}"
             "viewable: false\n"
             "---\n"
             "# Edited Alpha\n\nEdited reviewed body.",
@@ -1239,6 +1356,283 @@ def test_edited_review_sub_scope_rebuild_failure_restores_only_exact_collection(
     }
     assert payload["rollback"]["status"] == "completed"
     assert payload["rollback"]["sources_restored"] is True
+
+
+def test_edited_review_scope_and_analysis_tags_round_trip_render_end_to_end(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    stub_markdown_validation(monkeypatch)
+
+    class FixtureDocsDataBuilder(DocsDataBuilder):
+        def validate_canonical_doc_ids(self, docs):
+            del docs
+
+    class FixtureSubScopeDocsBuilder(SubScopeDocsBuilder):
+        def validate_canonical_doc_ids(self, docs):
+            del docs
+
+        def parent_report_doc_id(self):
+            return ""
+
+    def build_scope_after_write(
+        repo_root,
+        scope,
+        changed_paths,
+        write_operation,
+        **kwargs,
+    ):
+        del changed_paths, kwargs
+        write_operation()
+        config = load_docs_scope_configs(repo_root)[scope]
+        FixtureDocsDataBuilder(
+            repo_root=repo_root,
+            config=config,
+        ).run(write=True)
+        return {
+            "ok": True,
+            "docs": {"mode": "full", "doc_ids": []},
+            "search": {"mode": "none", "doc_ids": []},
+        }
+
+    def build_child_after_write(
+        repo_root,
+        scope,
+        sub_scope,
+        changed_paths,
+        write_operation,
+        **kwargs,
+    ):
+        del changed_paths, kwargs
+        write_operation()
+        config = load_docs_scope_configs(repo_root)[scope]
+        FixtureSubScopeDocsBuilder(
+            repo_root=repo_root,
+            config=config,
+            sub_scope=selected_sub_scope(config, sub_scope),
+        ).run(write=True)
+        return {
+            "ok": True,
+            "docs": {
+                "mode": "sub_scope",
+                "sub_scope": sub_scope,
+                "doc_ids": [],
+            },
+            "search": {"mode": "none", "doc_ids": []},
+        }
+
+    monkeypatch.setattr(
+        docs_write_rebuild,
+        "perform_scope_source_write_and_rebuild_atomic",
+        build_scope_after_write,
+    )
+    monkeypatch.setattr(
+        docs_write_rebuild,
+        "perform_sub_scope_source_write_and_rebuild",
+        build_child_after_write,
+    )
+    with make_repo() as temp:
+        root = Path(temp)
+        scope_targets = write_review_scope_targets(root)
+        child_targets = configure_analysis_tags_round_trip_targets(root)
+        paths = configured_workspace_paths(root)
+        write_staged_markdown(root, "ordinary.md", "# Ordinary staged source\n")
+        write_returned_jsonl(
+            root,
+            "returned-documents.jsonl",
+            [
+                {
+                    "doc_id": "returned-doc",
+                    "title": "Returned document",
+                    "content": "Returned package body.",
+                }
+            ],
+            export_id="ds_20260730T191500Z",
+        )
+        ordinary_source = paths.import_staging / "ordinary.md"
+        returned_source = paths.import_staging / "returned-documents.jsonl"
+        staged_sentinels = {
+            ordinary_source: ordinary_source.read_bytes(),
+            returned_source: returned_source.read_bytes(),
+        }
+
+        scope_staged = write_review_source_fixture(
+            root,
+            staged_folder="scope-reviewed-round-trip",
+        )
+        scope_retained = paths.import_preview / REVIEW_FOLDER_ID / "source"
+        edit_review_alpha(scope_retained, parent_id="")
+        scope_review_source = scope_retained / "alpha.md"
+        scope_review_bytes = scope_review_source.read_bytes()
+        scope_canonical_before_build = {
+            doc_id: path.read_bytes()
+            for doc_id, path in scope_targets.items()
+        }
+        scope_build = docs_review_packages.build_package(
+            root,
+            {"package_id": REVIEW_FOLDER_ID},
+        )
+        assert {
+            doc_id: path.read_bytes()
+            for doc_id, path in scope_targets.items()
+        } == scope_canonical_before_build
+        scope_review_payload = docs_review_packages.read_payload(
+            root,
+            REVIEW_FOLDER_ID,
+            "alpha",
+        )["payload"]
+        shutil.copytree(scope_retained, scope_staged, dirs_exist_ok=True)
+
+        scope_listing = import_source_service.handle_import_source_files(root)
+        scope_preview = reviewed_scope_preview(root, scope_staged.name)
+        scope_apply = reviewed_scope_apply(
+            root,
+            scope_staged.name,
+            scope_preview,
+        )
+        scope_rendered = json.loads(
+            (
+                root
+                / "docs-viewer/scopes/library/published/documents/by-id/alpha.json"
+            ).read_text(encoding="utf-8")
+        )
+
+        child_staged = write_review_source_fixture(
+            root,
+            staged_folder="analysis-tags-reviewed-round-trip",
+            folder_id=ANALYSIS_REVIEW_FOLDER_ID,
+            export_id=ANALYSIS_REVIEW_EXPORT_ID,
+            scope="analysis",
+            sub_scope="tags",
+            records=[("tag-a", "Tag A"), ("tag-b", "Tag B")],
+            source_last_updated={
+                "tag-a": "2026-07-29 10:00:00",
+                "tag-b": "2026-07-29 11:00:00",
+            },
+        )
+        child_retained = (
+            paths.import_preview / ANALYSIS_REVIEW_FOLDER_ID / "source"
+        )
+        edit_review_tag_a(child_retained)
+        child_review_source = child_retained / "tag-a.md"
+        child_review_bytes = child_review_source.read_bytes()
+        child_canonical_before_build = {
+            doc_id: path.read_bytes()
+            for doc_id, path in child_targets.items()
+        }
+        child_build = docs_review_packages.build_package(
+            root,
+            {"package_id": ANALYSIS_REVIEW_FOLDER_ID},
+        )
+        assert {
+            doc_id: path.read_bytes()
+            for doc_id, path in child_targets.items()
+        } == child_canonical_before_build
+        child_review_payload = docs_review_packages.read_payload(
+            root,
+            ANALYSIS_REVIEW_FOLDER_ID,
+            "tag-a",
+        )["payload"]
+        shutil.copytree(child_retained, child_staged, dirs_exist_ok=True)
+
+        child_listing = import_source_service.handle_import_source_files(root)
+        child_preview = docs_management_import_service.handle_import_source(
+            root,
+            {
+                "scope": "analysis",
+                "sub_scope": "tags",
+                "staged_filename": child_staged.name,
+                "preview_only": True,
+            },
+            dry_run=False,
+        )
+        child_package = child_preview["package"]
+        assert isinstance(child_package, dict)
+        child_apply = docs_management_import_service.handle_import_source(
+            root,
+            {
+                "scope": "analysis",
+                "sub_scope": "tags",
+                "staged_filename": child_staged.name,
+                "preview_only": False,
+                "confirm": True,
+                "export_id": child_package["export_id"],
+                "source_sha256": child_package["source_sha256"],
+                "trusted_metadata_sha256": child_package[
+                    "trusted_metadata_sha256"
+                ],
+                "planned_identities": child_preview["planned_identities"],
+                "planned_actions": child_preview["planned_actions"],
+            },
+            dry_run=False,
+        )
+        child_rendered = json.loads(
+            (
+                root
+                / "docs-viewer/scopes/analysis/published/documents/sub-scopes"
+                / "tags/by-id/tag-a.json"
+            ).read_text(encoding="utf-8")
+        )
+        child_front_matter, _child_body = docs_source_model.parse_source(
+            child_targets["tag-a"],
+        )
+        final_listing = import_source_service.handle_import_source_files(root)
+
+        assert scope_build["built"] is True
+        assert "Edited reviewed body." in scope_review_payload["content_html"]
+        assert scope_review_source.read_bytes() == scope_review_bytes
+        assert {
+            doc_id: path.read_bytes()
+            for doc_id, path in scope_targets.items()
+        } != scope_canonical_before_build
+        assert scope_apply["outcome"] == "completed"
+        assert "Edited reviewed body." in scope_rendered["content_html"]
+        assert [warning["code"] for warning in scope_preview["warnings"]] == [
+            "derived_markdown_fidelity"
+        ]
+        assert next(
+            record
+            for record in scope_listing["files"]
+            if record["filename"] == scope_staged.name
+        )["display_name"] == f"{REVIEW_FOLDER_ID} (reviewed)"
+
+        assert child_build["built"] is True
+        assert "Edited tag body." in child_review_payload["content_html"]
+        assert child_review_source.read_bytes() == child_review_bytes
+        assert {
+            doc_id: path.read_bytes()
+            for doc_id, path in child_targets.items()
+        } != child_canonical_before_build
+        assert child_apply["outcome"] == "completed"
+        assert child_apply["target"] == {
+            "scope": "analysis",
+            "sub_scope": "tags",
+        }
+        assert "Edited tag body." in child_rendered["content_html"]
+        assert [warning["code"] for warning in child_preview["warnings"]] == [
+            "derived_markdown_fidelity"
+        ]
+        assert child_front_matter["group"] == "theme"
+        assert child_front_matter["ui_status"] == "draft"
+        assert child_front_matter["viewable"] is False
+        assert next(
+            record
+            for record in child_listing["files"]
+            if record["filename"] == child_staged.name
+        )["display_name"] == (
+            f"{ANALYSIS_REVIEW_FOLDER_ID} (reviewed)"
+        )
+        assert {
+            path: path.read_bytes()
+            for path in staged_sentinels
+        } == staged_sentinels
+        final_formats = {
+            record["filename"]: record["source_format"]
+            for record in final_listing["files"]
+        }
+        assert final_formats["ordinary.md"] == "markdown"
+        assert final_formats["returned-documents.jsonl"] == (
+            "data_sharing_documents"
+        )
 
 
 def test_supported_documents_collection_registers_before_generic_json_fallback() -> None:
