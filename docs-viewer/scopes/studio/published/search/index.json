@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-55f5ecfae4ee8a73e0df77ef14e868ca",
-    "generated_at_utc": "2026-07-30T11:32:54Z",
+    "version": "blake2b-a856b9c80527a13aa628182a5daa33b8",
+    "generated_at_utc": "2026-07-30T12:47:47Z",
     "count": 233
   },
   "entries": [
@@ -4212,10 +4212,10 @@
       "kind": "doc",
       "title": "Sub-Scope Ordinary Document Import Delivery",
       "href": "/docs/?scope=studio&doc=d-20260730-121423-469e54",
-      "last_updated": "2026-07-30 12:26:29",
+      "last_updated": "2026-07-30 13:47:29",
       "parent_id": "d-20260728-113139-285eae",
       "parent_title": "Sub-Scope Index",
-      "display_meta": "2026-07-30 12:26:29 • Sub-Scope Index",
+      "display_meta": "2026-07-30 13:47:29 • Sub-Scope Index",
       "search_terms": [
         "sub-scope ordinary document import delivery",
         "sub",
@@ -4226,16 +4226,16 @@
         "delivery",
         "sub-scope index",
         "index",
-        "2026-07-30 12:26:29",
+        "2026-07-30 13:47:29",
         "2026",
         "07",
         "30",
-        "12",
-        "26",
+        "13",
+        "47",
         "29",
         "d-20260730-121423-469e54"
       ],
-      "search_text": "sub-scope ordinary document import delivery sub scope ordinary document import delivery sub-scope index index 2026-07-30 12:26:29 2026 07 30 12 26 29 d-20260730-121423-469e54"
+      "search_text": "sub-scope ordinary document import delivery sub scope ordinary document import delivery sub-scope index index 2026-07-30 13:47:29 2026 07 30 13 47 29 d-20260730-121423-469e54"
     },
     {
       "id": "d-20260728-115825-ae1461",

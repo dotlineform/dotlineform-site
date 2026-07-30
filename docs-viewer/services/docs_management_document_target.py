@@ -20,6 +20,8 @@ from docs_scope_config import (
 
 PARENT_TARGET_KEYS = frozenset({"scope", "doc_id"})
 SUB_SCOPE_TARGET_KEYS = frozenset({"scope", "sub_scope", "doc_id"})
+PARENT_COLLECTION_TARGET_KEYS = frozenset({"scope"})
+SUB_SCOPE_COLLECTION_TARGET_KEYS = frozenset({"scope", "sub_scope"})
 
 
 @dataclass(frozen=True)
@@ -47,6 +49,12 @@ class ManagedDocumentCollection:
     document_config: DocsScopeConfig | DocsSubScopeConfig
     source_root: Path
 
+    def request_target(self) -> dict[str, str]:
+        target = {"scope": self.scope}
+        if self.sub_scope:
+            target["sub_scope"] = self.sub_scope
+        return target
+
 
 def required_target_text(value: Any, *, field: str, lowercase: bool = False) -> str:
     if not isinstance(value, str):
@@ -69,6 +77,36 @@ def normalize_managed_document_target(target: Mapping[str, Any]) -> dict[str, st
     normalized = {
         "scope": required_target_text(target.get("scope"), field="scope", lowercase=True),
         "doc_id": required_target_text(target.get("doc_id"), field="doc_id"),
+    }
+    if "sub_scope" in target:
+        normalized["sub_scope"] = required_target_text(
+            target.get("sub_scope"),
+            field="sub_scope",
+            lowercase=True,
+        )
+    return normalized
+
+
+def normalize_managed_document_collection_target(
+    target: Mapping[str, Any],
+) -> dict[str, str]:
+    if not isinstance(target, Mapping):
+        raise ValueError("managed document collection target must be an object")
+    keys = frozenset(target)
+    if keys not in {
+        PARENT_COLLECTION_TARGET_KEYS,
+        SUB_SCOPE_COLLECTION_TARGET_KEYS,
+    }:
+        raise ValueError(
+            "managed document collection target must contain exactly scope, "
+            "with sub_scope only for a configured child collection"
+        )
+    normalized = {
+        "scope": required_target_text(
+            target.get("scope"),
+            field="scope",
+            lowercase=True,
+        ),
     }
     if "sub_scope" in target:
         normalized["sub_scope"] = required_target_text(
@@ -136,6 +174,18 @@ def resolve_managed_document_collection(
         parent_config=parent_config,
         document_config=document_config,
         source_root=source_root,
+    )
+
+
+def resolve_managed_document_collection_target(
+    repo_root: Path,
+    target: Mapping[str, Any],
+) -> ManagedDocumentCollection:
+    normalized = normalize_managed_document_collection_target(target)
+    return resolve_managed_document_collection(
+        repo_root,
+        scope=normalized["scope"],
+        sub_scope=normalized.get("sub_scope"),
     )
 
 

@@ -4,6 +4,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260730-121423-469e54",
+      "title": "Sub-Scope Ordinary Document Import Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260730-121423-469e54.json",
+      "timestamp": "2026-07-30 13:47:29",
+      "parent_id": "d-20260728-113139-285eae",
+      "parent_title": "Sub-Scope Index"
+    },
+    {
       "doc_id": "d-20260730-123213-f7d58b",
       "title": "Docs Import Capability Parity Quick Reference",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260730-123213-f7d58b.json",
@@ -26,14 +34,6 @@
       "timestamp": "2026-07-30 12:26:29",
       "parent_id": "d-20260730-121423-78b0f6",
       "parent_title": "Edited Docs Review Source Round-Trip"
-    },
-    {
-      "doc_id": "d-20260730-121423-469e54",
-      "title": "Sub-Scope Ordinary Document Import Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260730-121423-469e54.json",
-      "timestamp": "2026-07-30 12:26:29",
-      "parent_id": "d-20260728-113139-285eae",
-      "parent_title": "Sub-Scope Index"
     },
     {
       "doc_id": "d-20260711-012238-8a04a6",
@@ -84,5 +84,5 @@
       "parent_title": "Runtime"
     }
   ],
-  "generated_at": "2026-07-30T11:32:54Z"
+  "generated_at": "2026-07-30T12:47:47Z"
 }

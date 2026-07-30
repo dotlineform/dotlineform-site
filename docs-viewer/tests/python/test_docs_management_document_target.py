@@ -144,6 +144,84 @@ def test_resolver_accepts_only_exact_parent_and_sub_scope_targets(tmp_path: Path
         )
 
 
+def test_collection_resolver_accepts_exact_parent_and_sub_scope_targets(
+    tmp_path: Path,
+) -> None:
+    scope_root = prepare_repo(tmp_path)
+
+    parent = target_service.resolve_managed_document_collection_target(
+        tmp_path,
+        {"scope": " ANALYSIS "},
+    )
+    child = target_service.resolve_managed_document_collection_target(
+        tmp_path,
+        {"scope": "analysis", "sub_scope": "TAGS"},
+    )
+
+    assert parent.request_target() == {"scope": "analysis"}
+    assert parent.source_root == (scope_root / "source/documents").resolve()
+    assert child.request_target() == {
+        "scope": "analysis",
+        "sub_scope": "tags",
+    }
+    assert child.source_root == (
+        scope_root / "source/sub-scopes/tags/documents"
+    ).resolve()
+
+
+@pytest.mark.parametrize(
+    ("target", "message"),
+    [
+        ({"scope": ""}, "scope is required"),
+        ({"scope": "unknown"}, "unknown Docs Viewer scope"),
+        (
+            {"scope": "analysis", "sub_scope": ""},
+            "sub_scope is required",
+        ),
+        (
+            {"scope": "analysis", "sub_scope": "unknown"},
+            "unknown sub_scope",
+        ),
+        (
+            {"scope": "analysis", "sub_scope": "tags/nested"},
+            "one configured child",
+        ),
+        (
+            {"scope": "studio", "sub_scope": "tags"},
+            "unknown Docs Viewer scope",
+        ),
+        (
+            {
+                "scope": "analysis",
+                "sub_scope": "tags",
+                "doc_id": "selected-parent",
+            },
+            "must contain exactly scope",
+        ),
+        (
+            {
+                "scope": "analysis",
+                "sub_scope": "tags",
+                "displayed_doc": "fallback",
+            },
+            "must contain exactly scope",
+        ),
+    ],
+)
+def test_collection_resolver_rejects_invalid_and_fallback_targets(
+    tmp_path: Path,
+    target: dict[str, str],
+    message: str,
+) -> None:
+    prepare_repo(tmp_path)
+
+    with pytest.raises(ValueError, match=message):
+        target_service.resolve_managed_document_collection_target(
+            tmp_path,
+            target,
+        )
+
+
 @pytest.mark.parametrize(
     ("target", "message"),
     [
