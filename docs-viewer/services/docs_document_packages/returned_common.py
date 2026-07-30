@@ -33,6 +33,7 @@ EXPORT_METADATA_FIELDS = {
     "target_format",
     "record_shape",
     "generated_at",
+    "supports_docs_review",
     "supports_return_import",
     "content_format",
     "selected_doc_ids",
@@ -53,6 +54,8 @@ KNOWN_RECORD_FIELDS = {
     "last_updated",
     "viewable",
 }
+DOCS_REVIEW_CAPABILITY = "supports_docs_review"
+RETURN_IMPORT_CAPABILITY = "supports_return_import"
 
 def normalize_text(value: Any) -> str:
     return TEXT_WHITESPACE_RE.sub(" ", str(value or "")).strip()

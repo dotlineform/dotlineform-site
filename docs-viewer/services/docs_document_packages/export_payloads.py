@@ -7,7 +7,12 @@ from pathlib import Path
 from typing import Any
 
 from docs_document_packages.export_common import RETURNED_PACKAGE_SCHEMA_VERSION, normalize_text
-from docs_document_packages.export_config import EXPORT_META_SCHEMA_VERSION, config_checksum, supports_return_import
+from docs_document_packages.export_config import (
+    EXPORT_META_SCHEMA_VERSION,
+    config_checksum,
+    supports_docs_review,
+    supports_return_import,
+)
 from docs_document_packages.export_selection import ExportContext
 from docs_document_packages.workspace import configured_workspace_paths, path_is_relative_to
 
@@ -45,6 +50,7 @@ def export_metadata(
         "target_format": target_format,
         "record_shape": record_shape,
         "generated_at": generated_at,
+        "supports_docs_review": supports_docs_review(context.config),
         "supports_return_import": (
             False if context.sub_scope else supports_return_import(context.config)
         ),
@@ -184,14 +190,19 @@ def build_external_context(
     }
     if content_format:
         payload["content_format"] = content_format
+    payload.update({
+        "supports_docs_review": supports_docs_review(config),
+        "supports_return_import": (
+            False if sub_scope else supports_return_import(config)
+        ),
+    })
     if sub_scope:
         payload.update({
             "scope": normalize_text(scope).lower(),
             "sub_scope": normalize_text(sub_scope).lower(),
-            "supports_return_import": False,
             "return_import_notice": (
-                "This sub-scope package is export-only. Returned-package review "
-                "and Docs Import are not supported."
+                "This sub-scope package may enter read-only Docs Review after "
+                "trusted return validation. Docs Import is not supported."
             ),
         })
     payload.update({

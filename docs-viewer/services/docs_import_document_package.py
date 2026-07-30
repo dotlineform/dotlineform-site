@@ -14,6 +14,7 @@ from docs_import_document_package_content import COMPACT_PROFILE_ID, FULL_SOURCE
 from docs_import_document_package_content import normalize_documents_import_content
 from docs_import_collection_plan import CollectionRecordState, collection_issue
 from docs_import_preview import resolve_staged_import_source
+from docs_document_packages.returned_common import RETURN_IMPORT_CAPABILITY
 from docs_document_packages.returned_files import (
     export_id_from_json_payload,
     export_id_from_jsonl_header,
@@ -119,11 +120,20 @@ def document_package_source_format(
     )
     if _clean_text(trusted_metadata.get("adapter_id")) != "documents":
         return ""
+    if not isinstance(trusted_metadata.get("supports_docs_review"), bool):
+        return EXPORT_ONLY_COLLECTION_SOURCE_FORMAT
+    if not isinstance(trusted_metadata.get("supports_return_import"), bool):
+        return EXPORT_ONLY_COLLECTION_SOURCE_FORMAT
+    if (
+        trusted_metadata.get("supports_docs_review") is False
+        and trusted_metadata.get("supports_return_import") is True
+    ):
+        return EXPORT_ONLY_COLLECTION_SOURCE_FORMAT
     if _clean_text(trusted_metadata.get("sub_scope")):
         return EXPORT_ONLY_COLLECTION_SOURCE_FORMAT
     if profile_id not in SUPPORTED_COLLECTION_PROFILE_IDS:
         return ""
-    if trusted_metadata.get("supports_return_import") is False:
+    if trusted_metadata.get("supports_return_import") is not True:
         return EXPORT_ONLY_COLLECTION_SOURCE_FORMAT
     return COLLECTION_SOURCE_FORMAT
 
@@ -189,7 +199,13 @@ def load_document_package(
     if not blockers:
         blockers.extend(
             copy.deepcopy(
-                validate_whole_returned_package(raw_rows, trusted_metadata, scope=scope)
+                validate_whole_returned_package(
+                    raw_rows,
+                    trusted_metadata,
+                    repo_root=repo_root,
+                    scope=scope,
+                    required_capability=RETURN_IMPORT_CAPABILITY,
+                )
             )
         )
     if blockers:
@@ -202,7 +218,7 @@ def load_document_package(
                 "trusted export metadata adapter_id must be documents",
             )
         )
-    if trusted_metadata.get("supports_return_import") is False:
+    if trusted_metadata.get("supports_return_import") is not True:
         blockers.append(
             collection_issue(
                 "error",

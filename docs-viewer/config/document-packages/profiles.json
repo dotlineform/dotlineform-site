@@ -29,6 +29,7 @@
         "default_missing_summary_only": false
       },
       "workflow": {
+        "supports_docs_review": true,
         "supports_return_import": true
       },
       "limits": {
@@ -159,6 +160,7 @@
         "default_missing_summary_only": false
       },
       "workflow": {
+        "supports_docs_review": false,
         "supports_return_import": false
       },
       "limits": {

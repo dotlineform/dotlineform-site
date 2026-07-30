@@ -69,8 +69,16 @@ def load_export_metadata(export_id: str, *, metadata_root: Path) -> tuple[dict[s
     return metadata, metadata_path
 
 
-def supports_return_import(metadata: dict[str, Any]) -> bool:
-    return metadata.get("supports_return_import") is not False
+def capability_error(metadata: dict[str, Any]) -> str:
+    for field in ("supports_docs_review", "supports_return_import"):
+        if not isinstance(metadata.get(field), bool):
+            return f"metadata {field} must be true or false"
+    if (
+        metadata.get("supports_docs_review") is False
+        and metadata.get("supports_return_import") is True
+    ):
+        return "metadata supports_return_import true requires supports_docs_review true"
+    return ""
 
 
 def staged_file_record(path: Path, *, metadata_root: Path, workspace_root: Path) -> dict[str, Any]:
@@ -103,6 +111,7 @@ def staged_file_record(path: Path, *, metadata_root: Path, workspace_root: Path)
         return record
 
     sub_scope = normalize_text(metadata.get("sub_scope")).lower()
+    capabilities_error = capability_error(metadata)
     record.update(
         {
             "metadata_ok": True,
@@ -117,11 +126,13 @@ def staged_file_record(path: Path, *, metadata_root: Path, workspace_root: Path)
             "sub_scope": sub_scope,
             "target_format": normalize_text(metadata.get("target_format")),
             "record_shape": normalize_text(metadata.get("record_shape")),
-            "supports_return_import": (
-                False if sub_scope else supports_return_import(metadata)
-            ),
+            "supports_docs_review": metadata.get("supports_docs_review"),
+            "supports_return_import": metadata.get("supports_return_import"),
+            "capabilities_ok": not capabilities_error,
         }
     )
+    if capabilities_error:
+        record["capability_error"] = capabilities_error
     return record
 
 
@@ -146,13 +157,10 @@ def list_staged_files_with_metadata(
                 metadata_root=resolved_metadata_root,
                 workspace_root=defaults.root,
             )
-            if record.get("metadata_ok") and record.get("supports_return_import") is False:
+            if record.get("metadata_ok") and record.get("capabilities_ok") is not True:
+                record["docs_review_supported"] = False
                 record["return_import_supported"] = False
-                record["blocked_reason"] = (
-                    "export_only_sub_scope"
-                    if record.get("sub_scope")
-                    else "export_only_profile"
-                )
+                record["blocked_reason"] = "invalid_capability_metadata"
                 blocked_files.append(record)
                 continue
             files.append(record)
@@ -170,5 +178,5 @@ __all__ = [
     "export_id_from_staged_file",
     "list_staged_files_with_metadata",
     "load_export_metadata",
-    "supports_return_import",
+    "capability_error",
 ]

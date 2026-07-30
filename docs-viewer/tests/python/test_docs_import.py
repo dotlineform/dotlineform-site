@@ -99,6 +99,7 @@ def write_internal_meta(
     export_id: str,
     profile_id: str,
     *,
+    supports_docs_review: bool | None = True,
     supports_return_import: bool = True,
 ) -> None:
     payload = {
@@ -114,6 +115,8 @@ def write_internal_meta(
         "record_shape": "document_rows",
         "selected_doc_ids": ["alpha"],
     }
+    if supports_docs_review is not None:
+        payload["supports_docs_review"] = supports_docs_review
     payload["supports_return_import"] = supports_return_import
     write_text(
         workspace_paths().meta / f"{export_id}.meta.json",
@@ -186,6 +189,7 @@ def test_config_id_is_not_a_profile_id_fallback() -> None:
                     "scope": "library",
                     "target_format": "jsonl",
                     "record_shape": "document_rows",
+                    "supports_docs_review": True,
                     "supports_return_import": True,
                     "selected_doc_ids": ["alpha"],
                 }
@@ -310,6 +314,61 @@ def test_export_only_profile_metadata_fails_before_import_action_matching() -> N
     assert report["detected_import_type"] == "export_only"
     assert report["counts"]["errors"] == 1
     assert [item["code"] for item in report["issues"]] == ["export_only_profile"]
+
+
+def test_legacy_single_capability_metadata_fails_closed() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        export_id = "ds_20260627T120007Z"
+        write_internal_meta(
+            root,
+            export_id,
+            "document-content",
+            supports_docs_review=None,
+        )
+        write_staged(
+            root,
+            "returned.json",
+            {
+                "export_id": export_id,
+                "records": [{"doc_id": "alpha", "title": "Alpha"}],
+            },
+        )
+        report = parse(root, "returned.json")
+
+    assert report["ok"] is False
+    assert report["counts"]["errors"] == 1
+    assert [item["code"] for item in report["issues"]] == [
+        "invalid_supports_docs_review"
+    ]
+
+
+def test_import_only_capability_metadata_is_invalid() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        export_id = "ds_20260627T120008Z"
+        write_internal_meta(
+            root,
+            export_id,
+            "document-content",
+            supports_docs_review=False,
+            supports_return_import=True,
+        )
+        write_staged(
+            root,
+            "returned.json",
+            {
+                "export_id": export_id,
+                "records": [{"doc_id": "alpha", "title": "Alpha"}],
+            },
+        )
+        report = parse(root, "returned.json")
+
+    assert report["ok"] is False
+    assert report["counts"]["errors"] == 1
+    assert [item["code"] for item in report["issues"]] == [
+        "invalid_package_capabilities"
+    ]
 
 
 def test_invalid_jsonl_is_a_file_level_blocker() -> None:

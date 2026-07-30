@@ -298,6 +298,10 @@ def write_documents_prepare_profiles(root: Path) -> None:
                         "supports_missing_summary_only": True,
                         "default_missing_summary_only": False,
                     },
+                    "workflow": {
+                        "supports_docs_review": True,
+                        "supports_return_import": True,
+                    },
                     "limits": {
                         "max_documents": None,
                         "max_chars_per_document": None,

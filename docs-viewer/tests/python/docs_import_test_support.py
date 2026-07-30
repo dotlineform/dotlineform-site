@@ -92,6 +92,7 @@ def write_returned_jsonl(
                 "scope": scope,
                 "target_format": "jsonl",
                 "record_shape": "document_rows",
+                "supports_docs_review": True,
                 "supports_return_import": True,
                 "generated_at": "2026-06-27T12:00:00Z",
                 "selected_doc_ids": [

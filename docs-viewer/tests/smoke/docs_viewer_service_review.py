@@ -40,6 +40,9 @@ def write_fixture_package() -> Path:
             "status": "validated",
             "title": "Fixture review",
             "source_scope": "library",
+            "supports_docs_review": True,
+            "supports_return_import": True,
+            "selected_doc_ids": ["fixture-root", "fixture-child"],
             "default_doc_id": "fixture-root",
             "source_export_id": "ds_20260712T190000Z",
             "staged_filename": "fixture-reviewed.jsonl",
@@ -159,8 +162,26 @@ def exercise_review_route(page: Page, base_url: str, timeout_ms: int) -> None:
         "viewerScope": "review",
     }:
         raise AssertionError(f"unexpected Docs Review app context: {state!r}")
-    if page.locator("#docsViewerReviewControlsMount select").input_value() != "fixture-review":
+    package_select = page.locator("#docsViewerReviewControlsMount select")
+    if package_select.input_value() != "fixture-review":
         raise AssertionError("Docs Review package selector did not retain package identity")
+    package_select_layout = package_select.evaluate(
+        """select => ({
+            flexBasis: getComputedStyle(select).flexBasis,
+            rootFontSize: getComputedStyle(document.documentElement).fontSize
+        })"""
+    )
+    expected_flex_basis = 25 * float(
+        package_select_layout["rootFontSize"].removesuffix("px")
+    )
+    actual_flex_basis = float(
+        package_select_layout["flexBasis"].removesuffix("px")
+    )
+    if abs(actual_flex_basis - expected_flex_basis) > 0.5:
+        raise AssertionError(
+            f"Docs Review package selector did not use its 25rem width: "
+            f"{package_select_layout!r}"
+        )
     canonical = page.locator("#docsViewerReviewControlsMount a", has_text="Open canonical")
     if canonical.get_attribute("href") != "/docs/?scope=library&doc=fixture-root":
         raise AssertionError("Docs Review canonical comparison link is incorrect")

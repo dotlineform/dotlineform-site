@@ -911,10 +911,16 @@
               "ui_status": "done"
             },
             {
+              "doc_id": "d-20260730-102954-1b363f",
+              "title": "Sub-Scope Returned Package Import Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260730-102954-1b363f.json",
+              "ui_status": "planned"
+            },
+            {
               "doc_id": "d-20260728-173227-bb7426",
               "title": "Sub-Scope Returned Package Review Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-173227-bb7426.json",
-              "ui_status": "proposed"
+              "ui_status": "done"
             }
           ]
         },
@@ -1271,5 +1277,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-29T22:18:41Z"
+  "generated_at": "2026-07-30T09:33:05Z"
 }

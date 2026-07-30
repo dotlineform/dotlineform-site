@@ -36,6 +36,7 @@ def write_collection_metadata(
                 "config_id": profile_id,
                 "target_format": "jsonl",
                 "record_shape": "document_rows",
+                "supports_docs_review": True,
                 "supports_return_import": True,
                 "content_format": content_format,
             }

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-cd5672af48f5614d854bae67ea842d95",
-    "generated_at_utc": "2026-07-29T22:18:41Z",
-    "count": 228
+    "version": "blake2b-df924587bb2c7527edb944261e3a98ce",
+    "generated_at_utc": "2026-07-30T09:36:39Z",
+    "count": 229
   },
   "entries": [
     {
@@ -4008,26 +4008,26 @@
       "kind": "doc",
       "title": "Sub-Scope Index",
       "href": "/docs/?scope=studio&doc=d-20260728-113139-285eae",
-      "last_updated": "2026-07-29 18:03:08",
+      "last_updated": "2026-07-30 10:36:16",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-29 18:03:08 • Roadmap",
+      "display_meta": "2026-07-30 10:36:16 • Roadmap",
       "search_terms": [
         "sub-scope index",
         "sub",
         "scope",
         "index",
         "roadmap",
-        "2026-07-29 18:03:08",
+        "2026-07-30 10:36:16",
         "2026",
         "07",
-        "29",
-        "18",
-        "03",
-        "08",
+        "30",
+        "10",
+        "36",
+        "16",
         "d-20260728-113139-285eae"
       ],
-      "search_text": "sub-scope index sub scope index roadmap 2026-07-29 18:03:08 2026 07 29 18 03 08 d-20260728-113139-285eae"
+      "search_text": "sub-scope index sub scope index roadmap 2026-07-30 10:36:16 2026 07 30 10 36 16 d-20260728-113139-285eae"
     },
     {
       "id": "d-20260728-113139-95a885",
@@ -4202,14 +4202,44 @@
       "search_text": "sub-scope report list filter delivery sub scope report list filter delivery sub-scope index index 2026-07-29 13:15:40 2026 07 29 13 15 40 d-20260728-141505-277932"
     },
     {
+      "id": "d-20260730-102954-1b363f",
+      "kind": "doc",
+      "title": "Sub-Scope Returned Package Import Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260730-102954-1b363f",
+      "last_updated": "2026-07-30 10:36:16",
+      "parent_id": "d-20260728-113139-285eae",
+      "parent_title": "Sub-Scope Index",
+      "display_meta": "2026-07-30 10:36:16 • Sub-Scope Index",
+      "search_terms": [
+        "sub-scope returned package import delivery",
+        "sub",
+        "scope",
+        "returned",
+        "package",
+        "import",
+        "delivery",
+        "sub-scope index",
+        "index",
+        "2026-07-30 10:36:16",
+        "2026",
+        "07",
+        "30",
+        "10",
+        "36",
+        "16",
+        "d-20260730-102954-1b363f"
+      ],
+      "search_text": "sub-scope returned package import delivery sub scope returned package import delivery sub-scope index index 2026-07-30 10:36:16 2026 07 30 10 36 16 d-20260730-102954-1b363f"
+    },
+    {
       "id": "d-20260728-173227-bb7426",
       "kind": "doc",
       "title": "Sub-Scope Returned Package Review Delivery",
       "href": "/docs/?scope=studio&doc=d-20260728-173227-bb7426",
-      "last_updated": "2026-07-28 17:46:46",
+      "last_updated": "2026-07-30 10:29:54",
       "parent_id": "d-20260728-113139-285eae",
       "parent_title": "Sub-Scope Index",
-      "display_meta": "2026-07-28 17:46:46 • Sub-Scope Index",
+      "display_meta": "2026-07-30 10:29:54 • Sub-Scope Index",
       "search_terms": [
         "sub-scope returned package review delivery",
         "sub",
@@ -4220,15 +4250,16 @@
         "delivery",
         "sub-scope index",
         "index",
-        "2026-07-28 17:46:46",
+        "2026-07-30 10:29:54",
         "2026",
         "07",
-        "28",
-        "17",
-        "46",
+        "30",
+        "10",
+        "29",
+        "54",
         "d-20260728-173227-bb7426"
       ],
-      "search_text": "sub-scope returned package review delivery sub scope returned package review delivery sub-scope index index 2026-07-28 17:46:46 2026 07 28 17 46 d-20260728-173227-bb7426"
+      "search_text": "sub-scope returned package review delivery sub scope returned package review delivery sub-scope index index 2026-07-30 10:29:54 2026 07 30 10 29 54 d-20260728-173227-bb7426"
     },
     {
       "id": "d-20260726-211842-cc8f6c",

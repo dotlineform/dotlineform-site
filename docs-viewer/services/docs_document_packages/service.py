@@ -14,8 +14,9 @@ from docs_document_packages.export_config import (
     load_config_file,
     supported_content_formats,
     supported_target_formats,
+    supports_docs_review,
     supports_return_import,
-    validate_config_payload,
+    validate_full_config_payload,
 )
 from docs_document_packages.package import (
     build_document_package,
@@ -131,6 +132,7 @@ def profile_contract(
         "record_shape": str(target.get("record_shape") or "").strip(),
         "content_format": default_content_format(config),
         "supported_content_formats": supported_content_formats(config),
+        "supports_docs_review": supports_docs_review(config),
         "supports_return_import": (
             False if export_only else supports_return_import(config)
         ),
@@ -167,7 +169,7 @@ def config_payload(
             sub_scope=query_value(request_params, "sub_scope"),
         )
     profile_payload = load_config_file(repo_root)
-    errors, warnings = validate_config_payload(profile_payload)
+    errors, warnings = validate_full_config_payload(profile_payload)
     if errors:
         raise ValueError("document package profiles are invalid: " + "; ".join(errors))
     status = workspace_status(repo_root)
@@ -400,6 +402,10 @@ def content_review_response(payload: dict[str, Any]) -> dict[str, Any]:
 def review_returned(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     scope = require_scope(repo_root, body.get("scope"))
     staged_filename = str(body.get("staged_filename") or "").strip()
+    if "sub_scope" in body:
+        raise ValueError(
+            "returned-package review derives sub_scope from trusted export metadata"
+        )
     if "review_action" in body:
         raise ValueError("review_action is not supported; returned-package review always prepares full content")
     dry_run = dry_run_value(body)

@@ -8,7 +8,7 @@ from typing import Any
 from docs_document_packages.returned_common import PROFILE_ID_TO_IMPORT_TYPE, normalize_text
 
 def detect_import_type(package_metadata: dict[str, Any]) -> str:
-    if package_metadata.get("supports_return_import") is False:
+    if package_metadata.get("supports_return_import") is not True:
         return "export_only"
     profile_id = normalize_text(package_metadata.get("profile_id"))
     if profile_id in PROFILE_ID_TO_IMPORT_TYPE:
@@ -17,4 +17,8 @@ def detect_import_type(package_metadata: dict[str, Any]) -> str:
 
 
 def supported_return_import_profile_ids() -> set[str]:
+    return set(PROFILE_ID_TO_IMPORT_TYPE)
+
+
+def supported_docs_review_profile_ids() -> set[str]:
     return set(PROFILE_ID_TO_IMPORT_TYPE)

@@ -148,11 +148,45 @@ def install_workflow_fixture(
                             ok: true,
                             scope: returnedScope,
                             files: [
-                                { filename: 'alpha.jsonl', document_count: 2, supports_return_import: true },
-                                { filename: 'tree.json', document_count: 3, supports_return_import: false },
-                                { filename: 'missing-count.jsonl', supports_return_import: true },
-                                { filename: 'empty.jsonl', document_count: 0, supports_return_import: true },
-                                { filename: 'beta.jsonl', document_count: 1, supports_return_import: true }
+                                {
+                                    filename: 'alpha.jsonl',
+                                    document_count: 2,
+                                    supports_docs_review: true,
+                                    supports_return_import: true,
+                                    scope_label: 'Studio',
+                                    sub_scope_label: ''
+                                },
+                                {
+                                    filename: 'tree.json',
+                                    document_count: 3,
+                                    supports_docs_review: false,
+                                    supports_return_import: false,
+                                    scope_label: 'Studio',
+                                    sub_scope_label: ''
+                                },
+                                {
+                                    filename: 'missing-count.jsonl',
+                                    supports_docs_review: true,
+                                    supports_return_import: false,
+                                    scope_label: 'Studio',
+                                    sub_scope_label: 'Tags'
+                                },
+                                {
+                                    filename: 'empty.jsonl',
+                                    document_count: 0,
+                                    supports_docs_review: true,
+                                    supports_return_import: false,
+                                    scope_label: 'Studio',
+                                    sub_scope_label: 'Tags'
+                                },
+                                {
+                                    filename: 'beta.jsonl',
+                                    document_count: 1,
+                                    supports_docs_review: true,
+                                    supports_return_import: false,
+                                    scope_label: 'Studio',
+                                    sub_scope_label: 'Tags'
+                                }
                             ],
                             blocked_files: [{ filename: 'blocked.jsonl' }],
                             unassigned_files: [{ filename: 'orphan.jsonl' }]
@@ -200,16 +234,66 @@ def install_workflow_fixture(
 
 
 def exercise_reviewable_list(page: Page, timeout_ms: int) -> None:
+    canonical_links = page.evaluate(
+        """async () => {
+            const review = await import(
+                '/docs-viewer/runtime/js/review/docs-viewer-review-controller.js'
+            );
+            return {
+                topLevel: review.reviewCanonicalDocumentHref(
+                    { source_scope: 'studio', source_sub_scope: '' },
+                    'doc-1'
+                ),
+                subScope: review.reviewCanonicalDocumentHref(
+                    { source_scope: 'studio', source_sub_scope: 'tags' },
+                    'doc-1'
+                )
+            };
+        }"""
+    )
+    if canonical_links != {
+        "topLevel": "/docs/?scope=studio&doc=doc-1",
+        "subScope": "",
+    }:
+        raise AssertionError(
+            f"unexpected review canonical-link projection: {canonical_links!r}"
+        )
     install_workflow_fixture(page)
     page.wait_for_selector('[data-role="docs-viewer-management-modal"]', timeout=timeout_ms)
+    modal_card = page.locator(".docsViewer__modalCard")
+    if "docsViewer__modalCard--review-package" not in (
+        modal_card.get_attribute("class") or ""
+    ).split():
+        raise AssertionError("Review package chooser did not use its fitted modal variant")
     headings = page.locator(".docsViewerReviewPackage__table th").all_text_contents()
-    if headings != ["File name", "Documents"]:
+    if headings != ["File", "Collection", "Documents"]:
         raise AssertionError(f"unexpected Review package columns: {headings!r}")
+    column_layout = page.evaluate(
+        """() => {
+            const table = document.querySelector('.docsViewerReviewPackage__table');
+            const headings = Array.from(table.querySelectorAll('th'));
+            const tableWidth = table.getBoundingClientRect().width;
+            return {
+                ratios: headings.map((heading) => (
+                    heading.getBoundingClientRect().width / tableWidth
+                )),
+                documentsTextAlign: getComputedStyle(headings[2]).textAlign
+            };
+        }"""
+    )
+    expected_ratios = [0.61, 0.21, 0.18]
+    if any(
+        abs(actual - expected) > 0.01
+        for actual, expected in zip(column_layout["ratios"], expected_ratios)
+    ):
+        raise AssertionError(f"unexpected Review package column widths: {column_layout!r}")
+    if column_layout["documentsTextAlign"] != "left":
+        raise AssertionError("Review package Documents heading was not left aligned")
     rows = page.locator(".docsViewerReviewPackage__table tbody tr")
     if rows.count() != 2:
         raise AssertionError(f"Review package did not fail closed to two reviewable rows: {rows.count()}")
     row_text = [" ".join(text.split()) for text in rows.all_text_contents()]
-    if row_text != ["alpha.jsonl 2", "beta.jsonl 1"]:
+    if row_text != ["alpha.jsonl Studio 2", "beta.jsonl Studio / Tags 1"]:
         raise AssertionError(f"unexpected Review package rows: {row_text!r}")
     radios = page.locator('input[name="docsViewerReviewPackage"]')
     if radios.count() != 2 or not radios.first.is_checked():

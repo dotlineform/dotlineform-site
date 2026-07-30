@@ -22,8 +22,8 @@
 }
 
 .docsViewer__reviewPackageSelect{
-  flex: 0 1 var(--docs-viewer-index-width);
-  width: var(--docs-viewer-index-width);
+  flex: 0 1 25rem;
+  width: 25rem;
   max-width: 100%;
   min-width: 12rem;
 }

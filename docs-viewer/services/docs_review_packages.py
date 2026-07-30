@@ -88,6 +88,18 @@ def _validated_manifest(package_path: Path) -> dict[str, Any]:
     source_scope = str(manifest.get("source_scope") or "").strip()
     if not source_scope:
         raise ValueError("review package manifest source_scope is required")
+    if manifest.get("supports_docs_review") is not True:
+        raise ValueError("review package manifest supports_docs_review must be true")
+    if not isinstance(manifest.get("supports_return_import"), bool):
+        raise ValueError("review package manifest supports_return_import must be true or false")
+    selected_doc_ids = manifest.get("selected_doc_ids")
+    if (
+        not isinstance(selected_doc_ids, list)
+        or not selected_doc_ids
+        or not all(isinstance(doc_id, str) and doc_id.strip() for doc_id in selected_doc_ids)
+        or len(set(selected_doc_ids)) != len(selected_doc_ids)
+    ):
+        raise ValueError("review package manifest selected_doc_ids must contain unique document ids")
     return manifest
 
 
@@ -140,6 +152,10 @@ def _package_context(repo_root: Path, package_id: Any) -> tuple[Path, dict[str, 
         raise FileNotFoundError(f"review package not found: {validate_package_id(package_id)}")
     manifest = _validated_manifest(package_path)
     records = _source_records(package_path)
+    if set(manifest["selected_doc_ids"]) != set(records):
+        raise ValueError(
+            "review package manifest selected_doc_ids does not match its source set"
+        )
     default_doc_id = str(manifest.get("default_doc_id") or "").strip()
     if default_doc_id and default_doc_id not in records:
         raise ValueError("review package default_doc_id does not identify a source document")
@@ -226,6 +242,9 @@ def package_record(repo_root: Path, package_path: Path) -> dict[str, Any]:
         "package_id": package_path.name,
         "title": str(manifest.get("title") or package_path.name),
         "source_scope": str(manifest.get("source_scope") or ""),
+        "source_sub_scope": str(manifest.get("source_sub_scope") or ""),
+        "supports_docs_review": manifest.get("supports_docs_review"),
+        "supports_return_import": manifest.get("supports_return_import"),
         "default_doc_id": str(manifest.get("default_doc_id") or ""),
         "path": _package_marker(repo_root, package_path),
         "document_count": len(records),

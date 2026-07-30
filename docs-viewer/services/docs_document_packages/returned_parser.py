@@ -8,6 +8,8 @@ from pathlib import Path
 from typing import Any
 
 from docs_document_packages.returned_common import (
+    DOCS_REVIEW_CAPABILITY,
+    RETURN_IMPORT_CAPABILITY,
     SUPPORTED_EXTENSIONS,
     empty_report,
     issue,
@@ -35,7 +37,13 @@ def parse_staged_import(
     staged_file: str,
     staging_root: Path | str | None = None,
     metadata_root: Path | None = None,
+    required_capability: str = RETURN_IMPORT_CAPABILITY,
 ) -> dict[str, Any]:
+    if required_capability not in {
+        DOCS_REVIEW_CAPABILITY,
+        RETURN_IMPORT_CAPABILITY,
+    }:
+        raise ValueError(f"unsupported returned-package capability: {required_capability}")
     normalized_scope = normalize_text(scope).lower()
     report = empty_report(repo_root, normalized_scope, staged_file)
     try:
@@ -133,7 +141,13 @@ def parse_staged_import(
 
     package_metadata = copy.deepcopy(file_metadata)
     report["issues"].extend(
-        validate_whole_returned_package(raw_rows, package_metadata, scope=normalized_scope)
+        validate_whole_returned_package(
+            raw_rows,
+            package_metadata,
+            repo_root=repo_root,
+            scope=normalized_scope,
+            required_capability=required_capability,
+        )
     )
     current_context, current_issues = load_current_docs_context(repo_root, normalized_scope)
     report["issues"].extend(current_issues)
@@ -150,13 +164,17 @@ def parse_staged_import(
     report["current_library"] = current_report_context(current_context)
     report["issues"].extend(add_current_library_report(records, current=current_context, scope=normalized_scope))
 
-    supports_return_import = package_metadata.get("supports_return_import") is not False
+    supports_return_import = package_metadata.get("supports_return_import") is True
     issue_codes = {
         normalize_text(item.get("code"))
         for item in report["issues"]
         if isinstance(item, dict)
     }
-    if raw_rows and not supports_return_import:
+    if (
+        required_capability == RETURN_IMPORT_CAPABILITY
+        and raw_rows
+        and not supports_return_import
+    ):
         if (
             not normalize_text(package_metadata.get("sub_scope"))
             and "export_only_profile" not in issue_codes
@@ -168,7 +186,11 @@ def parse_staged_import(
                     f"profile does not support returned-package import: {source_profile_id or '<missing>'}",
                 )
             )
-    elif raw_rows and not source_profile_id:
+    elif (
+        required_capability == RETURN_IMPORT_CAPABILITY
+        and raw_rows
+        and not source_profile_id
+    ):
         if "missing_import_metadata" not in issue_codes:
             if source_export_id:
                 report["issues"].append(
@@ -186,7 +208,11 @@ def parse_staged_import(
                         "missing import profile metadata: profile_id is required",
                     )
                 )
-    elif raw_rows and report["detected_import_type"] == "unknown":
+    elif (
+        required_capability == RETURN_IMPORT_CAPABILITY
+        and raw_rows
+        and report["detected_import_type"] == "unknown"
+    ):
         report["issues"].append(
             issue(
                 "error",

@@ -3,19 +3,37 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
-from docs_document_packages.returned_common import issue, normalize_text
+from docs_management_document_target import (
+    resolve_managed_document_collection,
+    source_doc_from_path,
+)
+from docs_document_packages.returned_common import (
+    DOCS_REVIEW_CAPABILITY,
+    RETURN_IMPORT_CAPABILITY,
+    issue,
+    normalize_text,
+)
+import docs_source_model as source_model
 
 
 def validate_whole_returned_package(
     raw_rows: list[Any] | tuple[Any, ...],
     trusted_metadata: dict[str, Any],
     *,
+    repo_root: Path,
     scope: str,
+    required_capability: str,
 ) -> list[dict[str, Any]]:
     """Require trusted document routing and the complete prepared document set."""
 
+    if required_capability not in {
+        DOCS_REVIEW_CAPABILITY,
+        RETURN_IMPORT_CAPABILITY,
+    }:
+        raise ValueError(f"unsupported returned-package capability: {required_capability}")
     issues: list[dict[str, Any]] = []
     expected_identity = {
         "schema_version": "data_sharing_export_meta_v1",
@@ -76,24 +94,61 @@ def validate_whole_returned_package(
                 "trusted package metadata target_format must be 'json' or 'jsonl'",
             )
         )
-    metadata_sub_scope = normalize_text(trusted_metadata.get("sub_scope")).lower()
-    if metadata_sub_scope:
+
+    capabilities_valid = True
+    for field in (DOCS_REVIEW_CAPABILITY, RETURN_IMPORT_CAPABILITY):
+        if not isinstance(trusted_metadata.get(field), bool):
+            capabilities_valid = False
+            issues.append(
+                issue(
+                    "error",
+                    f"invalid_{field}",
+                    f"trusted package metadata {field} must be true or false",
+                )
+            )
+    if (
+        capabilities_valid
+        and trusted_metadata.get(DOCS_REVIEW_CAPABILITY) is False
+        and trusted_metadata.get(RETURN_IMPORT_CAPABILITY) is True
+    ):
+        capabilities_valid = False
         issues.append(
             issue(
                 "error",
-                "export_only_sub_scope",
-                (
-                    "returned-package review and import are unsupported for "
-                    f"sub-scope {metadata_scope}/{metadata_sub_scope}"
-                ),
+                "invalid_package_capabilities",
+                "trusted package metadata supports_return_import true "
+                "requires supports_docs_review true",
             )
         )
-    elif trusted_metadata.get("supports_return_import") is not True:
+
+    metadata_sub_scope = normalize_text(trusted_metadata.get("sub_scope")).lower()
+    if (
+        capabilities_valid
+        and required_capability == DOCS_REVIEW_CAPABILITY
+        and trusted_metadata.get(DOCS_REVIEW_CAPABILITY) is not True
+    ):
         issues.append(
             issue(
                 "error",
-                "export_only_profile",
-                f"profile does not support returned-package import: {profile_id or '<missing>'}",
+                "docs_review_unsupported_profile",
+                f"profile does not support Docs Review: {profile_id or '<missing>'}",
+            )
+        )
+    elif (
+        capabilities_valid
+        and required_capability == RETURN_IMPORT_CAPABILITY
+        and trusted_metadata.get(RETURN_IMPORT_CAPABILITY) is not True
+    ):
+        issues.append(
+            issue(
+                "error",
+                "export_only_sub_scope" if metadata_sub_scope else "export_only_profile",
+                (
+                    "trusted sub-scope package does not support Docs Import: "
+                    f"{metadata_scope}/{metadata_sub_scope}"
+                    if metadata_sub_scope
+                    else f"profile does not support returned-package import: {profile_id or '<missing>'}"
+                ),
             )
         )
 
@@ -150,6 +205,60 @@ def validate_whole_returned_package(
             continue
         expected_seen.add(doc_id)
         expected.append(doc_id)
+
+    if metadata_sub_scope and metadata_scope == expected_scope and expected_seen:
+        try:
+            collection = resolve_managed_document_collection(
+                repo_root,
+                scope=expected_scope,
+                sub_scope=metadata_sub_scope,
+            )
+            collection_docs = [
+                source_doc_from_path(
+                    path=path,
+                    scope=collection.scope,
+                )
+                for path in source_model.scope_markdown_paths(
+                    collection.source_root
+                )
+            ]
+            for doc in collection_docs:
+                source_model.validate_sub_scope_document_metadata(
+                    doc,
+                    ui_statuses=collection.document_config.ui_statuses,
+                    document_groups=collection.document_config.document_groups,
+                )
+            collection_ids = {
+                doc.doc_id
+                for doc in collection_docs
+            }
+            if len(collection_ids) != len(collection_docs):
+                raise ValueError("configured child collection contains duplicate doc_id")
+        except (FileNotFoundError, OSError, RuntimeError, ValueError) as exc:
+            issues.append(
+                issue(
+                    "error",
+                    "invalid_sub_scope",
+                    (
+                        "trusted package metadata sub_scope must identify one "
+                        f"configured child collection: {exc}"
+                    ),
+                )
+            )
+        else:
+            cross_collection = sorted(expected_seen - collection_ids)
+            if cross_collection:
+                item = issue(
+                    "error",
+                    "cross_collection_selected_documents",
+                    (
+                        "trusted selected_doc_ids contains documents outside "
+                        f"{expected_scope}/{metadata_sub_scope}: "
+                        + ", ".join(cross_collection)
+                    ),
+                )
+                item["cross_collection_doc_ids"] = cross_collection
+                issues.append(item)
 
     returned: list[str] = []
     returned_seen: set[str] = set()

@@ -410,6 +410,11 @@
   --docs-viewer-modal-offset: min(2vh, 1rem);
 }
 
+.docsViewer__modalCard--review-package{
+  --docs-viewer-modal-width: 53rem;
+  --docs-viewer-modal-offset: min(2vh, 1rem);
+}
+
 .docsViewer__modalCard--document{
   --docs-viewer-modal-width: 56rem;
   --docs-viewer-modal-offset: 1rem;
@@ -780,6 +785,19 @@ select.docsViewer__fieldInput--listbox{
   width: 100%;
   border-collapse: collapse;
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
+  table-layout: fixed;
+}
+
+.docsViewerReviewPackage__fileColumn{
+  width: 61%;
+}
+
+.docsViewerReviewPackage__collectionColumn{
+  width: 21%;
+}
+
+.docsViewerReviewPackage__documentsColumn{
+  width: 18%;
 }
 
 .docsViewerReviewPackage__table th,
@@ -795,7 +813,6 @@ select.docsViewer__fieldInput--listbox{
   font-weight: 600;
 }
 
-.docsViewerReviewPackage__table th:last-child,
 .docsViewerReviewPackage__count{
   text-align: right;
   white-space: nowrap;

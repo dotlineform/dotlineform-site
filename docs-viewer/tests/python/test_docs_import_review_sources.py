@@ -43,6 +43,7 @@ def write_content_meta(
                 "target_format": "jsonl",
                 "record_shape": "document_rows",
                 "generated_at": generated_at,
+                "supports_docs_review": True,
                 "supports_return_import": True,
                 "content_format": content_format,
                 "selected_doc_ids": selected_doc_ids or ["alpha"],
@@ -199,6 +200,10 @@ def test_review_source_folder_uses_shared_markdown_content_normalization() -> No
     assert manifest["package_id_source"] == "export_metadata"
     assert manifest["status"] == "validated"
     assert manifest["source_scope"] == "library"
+    assert manifest["source_sub_scope"] == ""
+    assert manifest["supports_docs_review"] is True
+    assert manifest["supports_return_import"] is True
+    assert manifest["selected_doc_ids"] == ["alpha"]
     assert manifest["default_doc_id"] == "alpha"
     assert manifest["source_projection"] == "rendered_derived_text_only"
     assert manifest["source_export_id"] == export_id

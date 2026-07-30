@@ -18,6 +18,7 @@ from docs_document_packages.workspace import workspace_paths
 import docs_document_package_routes as routes
 import docs_import_document_package as import_package
 import docs_import_source_service as import_source_service
+import docs_source_model as source_model
 from docs_viewer_service import DocsViewerServer, DocsViewerServiceConfig
 from repo_factory import (
     docs_sub_scope_record,
@@ -90,6 +91,28 @@ def add_sub_scope_package_fixture(repo_root: Path) -> None:
         ),
     ]
     config_path.write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
+    profiles_path = repo_root / "docs-viewer/config/document-packages/profiles.json"
+    profiles = json.loads(profiles_path.read_text(encoding="utf-8"))
+    content_profile = profiles["configs"][0]
+    content_profile["content_format"] = {
+        "format": "markdown",
+        "supported_formats": ["markdown", "plain_text"],
+    }
+    content_profile["external_context"]["field_descriptions"]["content"] = (
+        "Document body content."
+    )
+    content_profile["document_fields"].append(
+        {
+            "source": "content",
+            "output_path": "content",
+            "required": True,
+            "transforms": [
+                "plain_text_from_rendered_html",
+                "normalize_whitespace",
+            ],
+        }
+    )
+    profiles_path.write_text(json.dumps(profiles, indent=2) + "\n", encoding="utf-8")
     library_path = repo_root / "docs-viewer/scopes/library/source/documents/library.md"
     library_path.write_text(
         library_path.read_text(encoding="utf-8").replace(
@@ -141,10 +164,22 @@ def add_document_tree_profile(repo_root: Path) -> None:
                 "path_pattern": "{timestamp}-{data_domain}-{profile_id}.json",
                 "timestamp_format": "%Y%m%d-%H%M%S",
             },
-            "workflow": {"supports_return_import": True},
+            "workflow": {
+                "supports_docs_review": False,
+                "supports_return_import": False,
+            },
         }
     )
     tree_profile["selection"]["include_descendants"] = True
+    tree_profile.pop("content_format", None)
+    tree_profile["external_context"]["field_descriptions"] = {
+        "doc_id": "Stable document identifier. Preserve exactly in responses.",
+        "title": "Document title.",
+    }
+    tree_profile["document_fields"] = [
+        {"source": "doc_id", "output_path": "doc_id", "required": True},
+        {"source": "title", "output_path": "title", "required": True},
+    ]
     profiles["configs"].append(tree_profile)
     profiles_path.write_text(json.dumps(profiles, indent=2) + "\n", encoding="utf-8")
 
@@ -156,6 +191,9 @@ def write_returned_package(
     rows: list[dict[str, object]],
     filename: str = "returned.jsonl",
     scope: str = "library",
+    sub_scope: str = "",
+    supports_docs_review: bool = True,
+    supports_return_import: bool = True,
 ) -> None:
     paths = workspace_paths()
     paths.import_staging.mkdir(parents=True, exist_ok=True)
@@ -174,25 +212,27 @@ def write_returned_package(
         ),
         encoding="utf-8",
     )
+    metadata = {
+        "schema_version": "data_sharing_export_meta_v1",
+        "export_id": export_id,
+        "app": "docs-viewer",
+        "adapter_id": "documents",
+        "data_domain": "documents",
+        "config_id": "document-content",
+        "profile_id": "document-content",
+        "scope": scope,
+        "target_format": "jsonl",
+        "record_shape": "document_rows",
+        "generated_at": "2026-07-20T12:00:00Z",
+        "supports_docs_review": supports_docs_review,
+        "supports_return_import": supports_return_import,
+        "content_format": "markdown",
+        "selected_doc_ids": selected_doc_ids,
+    }
+    if sub_scope:
+        metadata["sub_scope"] = sub_scope
     (paths.meta / f"{export_id}.meta.json").write_text(
-        json.dumps(
-            {
-                "schema_version": "data_sharing_export_meta_v1",
-                "export_id": export_id,
-                "app": "docs-viewer",
-                "adapter_id": "documents",
-                "data_domain": "documents",
-                "config_id": "document-content",
-                "profile_id": "document-content",
-                "scope": scope,
-                "target_format": "jsonl",
-                "record_shape": "document_rows",
-                "generated_at": "2026-07-20T12:00:00Z",
-                "supports_return_import": True,
-                "content_format": "markdown",
-                "selected_doc_ids": selected_doc_ids,
-            }
-        )
+        json.dumps(metadata)
         + "\n",
         encoding="utf-8",
     )
@@ -351,7 +391,10 @@ def test_direct_prepare_treats_tree_doc_ids_as_the_final_target() -> None:
                     "path_pattern": "{timestamp}-{data_domain}-{profile_id}.json",
                     "timestamp_format": "%Y%m%d-%H%M%S",
                 },
-                "workflow": {"supports_return_import": False},
+                "workflow": {
+                    "supports_docs_review": False,
+                    "supports_return_import": False,
+                },
             }
         )
         tree_profile["selection"] = {
@@ -472,10 +515,12 @@ def test_sub_scope_config_and_documents_are_flat_export_only() -> None:
 
     assert "scope" not in top_level
     assert "sub_scope" not in top_level
+    assert top_level["profiles"][0]["supports_docs_review"] is True
     assert top_level["profiles"][0]["supports_return_import"] is True
     assert child["scope"] == "library"
     assert child["sub_scope"] == "tags"
     assert child["flat_collection"] is True
+    assert child["profiles"][0]["supports_docs_review"] is True
     assert child["profiles"][0]["supports_return_import"] is False
     assert child["profiles"][0]["selection"]["include_descendants"] is False
     assert documents["scope"] == "library"
@@ -537,6 +582,7 @@ def test_sub_scope_filters_only_subtract_from_checked_ids(
     for payload in (missing_summary, viewable_only):
         assert payload["scope"] == "library"
         assert payload["sub_scope"] == "tags"
+        assert payload["supports_docs_review"] is True
         assert payload["supports_return_import"] is False
         assert payload["selected_doc_ids"] == [TAG_A_ID]
         assert payload["exported_doc_ids"] == [TAG_A_ID]
@@ -667,7 +713,7 @@ def test_sub_scope_tree_profile_keeps_exact_checked_records_as_roots() -> None:
     assert source_format == import_package.EXPORT_ONLY_COLLECTION_SOURCE_FORMAT
 
 
-def test_sub_scope_written_package_is_blocked_from_return_and_import() -> None:
+def test_sub_scope_written_package_is_reviewable_but_blocked_from_import() -> None:
     with make_docs_import_repo() as temp:
         repo_root = Path(temp)
         add_sub_scope_package_fixture(repo_root)
@@ -709,6 +755,26 @@ def test_sub_scope_written_package_is_blocked_from_return_and_import() -> None:
                 "dry_run": False,
             },
         )
+        assert review["ok"] is True, review["issues"]
+        reopened_review = service.review_returned(
+            repo_root,
+            {
+                "scope": "library",
+                "staged_filename": staged_filename,
+                "dry_run": False,
+            },
+        )
+        review_manifest = json.loads(
+            resolve_data_sharing_marker(review["manifest_path"]).read_text(
+                encoding="utf-8"
+            )
+        )
+        review_sources = {
+            record["doc_id"]: source_model.parse_source(
+                resolve_data_sharing_marker(record["path"])
+            )[0]
+            for record in review["source_files"]
+        }
         import_files = import_source_service.handle_import_source_files(repo_root)
         source_before = (
             repo_root / "docs-viewer/scopes/library/source/documents/alpha.md"
@@ -738,6 +804,7 @@ def test_sub_scope_written_package_is_blocked_from_return_and_import() -> None:
     assert payload["ok"] is True
     assert payload["scope"] == "library"
     assert payload["sub_scope"] == "tags"
+    assert payload["supports_docs_review"] is True
     assert payload["supports_return_import"] is False
     assert payload["selected_doc_ids"] == [TAG_A_ID, TAG_B_ID]
     assert payload["exported_doc_ids"] == [TAG_A_ID, TAG_B_ID]
@@ -750,20 +817,37 @@ def test_sub_scope_written_package_is_blocked_from_return_and_import() -> None:
     }
     assert metadata["scope"] == "library"
     assert metadata["sub_scope"] == "tags"
+    assert metadata["supports_docs_review"] is True
     assert metadata["supports_return_import"] is False
     assert metadata["selected_doc_ids"] == [TAG_A_ID, TAG_B_ID]
     assert external_context["scope"] == "library"
     assert external_context["sub_scope"] == "tags"
+    assert external_context["supports_docs_review"] is True
     assert external_context["supports_return_import"] is False
-    assert "export-only" in external_context["return_import_notice"]
+    assert "read-only Docs Review" in external_context["return_import_notice"]
+    assert "Docs Import is not supported" in external_context["return_import_notice"]
     assert [row["doc_id"] for row in output_rows[1:]] == [TAG_A_ID, TAG_B_ID]
-    assert returned["files"] == []
-    assert returned["blocked_files"][0]["filename"] == staged_filename
-    assert returned["blocked_files"][0]["sub_scope"] == "tags"
-    assert returned["blocked_files"][0]["blocked_reason"] == "export_only_sub_scope"
-    assert review["ok"] is False
-    assert review["review_source_folder_written"] is False
-    assert "export_only_sub_scope" in {item["code"] for item in review["issues"]}
+    assert len(returned["files"]) == 1
+    assert returned["files"][0]["filename"] == staged_filename
+    assert returned["files"][0]["sub_scope"] == "tags"
+    assert returned["files"][0]["scope_label"] == "Library"
+    assert returned["files"][0]["sub_scope_label"] == "Tags"
+    assert returned["files"][0]["docs_review_supported"] is True
+    assert returned["files"][0]["return_import_supported"] is False
+    assert returned["blocked_files"] == []
+    assert review["ok"] is True
+    assert review["review_source_folder_written"] is True
+    assert review["source_sub_scope"] == "tags"
+    assert reopened_review["ok"] is True
+    assert reopened_review["review_existing"] is True
+    assert reopened_review["review_package_id"] == review["review_package_id"]
+    assert review_manifest["source_scope"] == "library"
+    assert review_manifest["source_sub_scope"] == "tags"
+    assert review_manifest["supports_docs_review"] is True
+    assert review_manifest["supports_return_import"] is False
+    assert review_manifest["selected_doc_ids"] == [TAG_A_ID, TAG_B_ID]
+    assert "parent_id" not in review_sources[TAG_A_ID]
+    assert "parent_id" not in review_sources[TAG_B_ID]
     assert staged_filename not in {
         record["filename"] for record in import_files["files"]
     }
@@ -902,6 +986,83 @@ def test_review_rejects_retired_action_discriminator() -> None:
             )
 
 
+def test_review_rejects_request_supplied_sub_scope() -> None:
+    with make_docs_import_repo() as temp:
+        with pytest.raises(ValueError, match="trusted export metadata"):
+            service.review_returned(
+                Path(temp),
+                {
+                    "scope": "library",
+                    "sub_scope": "tags",
+                    "staged_filename": "returned.jsonl",
+                },
+            )
+
+
+def test_review_rejects_legacy_single_capability_metadata() -> None:
+    with make_docs_import_repo() as temp:
+        repo_root = Path(temp)
+        export_id = "ds_20260720T120009Z"
+        write_returned_package(
+            export_id,
+            selected_doc_ids=["alpha"],
+            rows=[{"doc_id": "alpha", "title": "Alpha"}],
+        )
+        metadata_path = workspace_paths().meta / f"{export_id}.meta.json"
+        metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+        metadata.pop("supports_docs_review")
+        metadata_path.write_text(json.dumps(metadata) + "\n", encoding="utf-8")
+
+        returned = service.returned_payload(repo_root, {"scope": ["library"]})
+        review = service.review_returned(
+            repo_root,
+            {
+                "scope": "library",
+                "staged_filename": "returned.jsonl",
+                "dry_run": False,
+            },
+        )
+
+    assert returned["files"] == []
+    assert returned["blocked_files"][0]["blocked_reason"] == (
+        "invalid_capability_metadata"
+    )
+    assert review["ok"] is False
+    assert review["review_source_folder_written"] is False
+    assert "invalid_supports_docs_review" in {
+        item["code"] for item in review["issues"]
+    }
+
+
+def test_sub_scope_review_rejects_cross_collection_selected_ids() -> None:
+    with make_docs_import_repo() as temp:
+        repo_root = Path(temp)
+        add_sub_scope_package_fixture(repo_root)
+        write_returned_package(
+            "ds_20260720T120010Z",
+            selected_doc_ids=[PARENT_CHILD_ID],
+            rows=[{"doc_id": PARENT_CHILD_ID, "title": "Parent child"}],
+            sub_scope="tags",
+            supports_docs_review=True,
+            supports_return_import=False,
+        )
+
+        review = service.review_returned(
+            repo_root,
+            {
+                "scope": "library",
+                "staged_filename": "returned.jsonl",
+                "dry_run": False,
+            },
+        )
+
+    assert review["ok"] is False
+    assert review["review_source_folder_written"] is False
+    assert "cross_collection_selected_documents" in {
+        item["code"] for item in review["issues"]
+    }
+
+
 def test_returned_listing_projects_document_fields_without_adapter_identity() -> None:
     with make_docs_import_repo() as temp:
         repo_root = Path(temp)
@@ -916,6 +1077,10 @@ def test_returned_listing_projects_document_fields_without_adapter_identity() ->
     assert len(payload["files"]) == 1
     assert payload["files"][0]["profile_id"] == "document-content"
     assert payload["files"][0]["document_count"] == 1
+    assert payload["files"][0]["supports_docs_review"] is True
+    assert payload["files"][0]["supports_return_import"] is True
+    assert payload["files"][0]["scope_label"] == "Library"
+    assert payload["files"][0]["sub_scope_label"] == ""
     assert {"app", "adapter_id", "config_id", "data_domain"}.isdisjoint(
         payload["files"][0]
     )
@@ -951,6 +1116,7 @@ def test_returned_listing_excludes_invalid_and_export_only_packages() -> None:
             {
                 "config_id": "document-tree",
                 "profile_id": "document-tree",
+                "supports_docs_review": False,
                 "supports_return_import": False,
             }
         )
@@ -1163,6 +1329,7 @@ def test_docs_viewer_http_service_retires_package_pages_and_keeps_package_api() 
     assert config_payload["ok"] is True
     assert child_config_payload["scope"] == "library"
     assert child_config_payload["sub_scope"] == "tags"
+    assert child_config_payload["profiles"][0]["supports_docs_review"] is True
     assert child_config_payload["profiles"][0]["supports_return_import"] is False
     assert child_documents_payload["flat_collection"] is True
     assert [record["doc_id"] for record in child_documents_payload["records"]] == [

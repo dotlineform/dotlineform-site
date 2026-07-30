@@ -21,14 +21,17 @@ export function reviewableDocumentPackages(payload) {
   return files.map((file) => ({
     filename: packageText(file && file.filename),
     documentCount: file && file.document_count,
-    supportsReturnImport: file && file.supports_return_import === true
+    supportsDocsReview: file && file.supports_docs_review === true,
+    scopeLabel: packageText(file && file.scope_label),
+    subScopeLabel: packageText(file && file.sub_scope_label)
   })).filter((file) => (
     file.filename
-    && file.supportsReturnImport
+    && file.supportsDocsReview
     && validDocumentCount(file.documentCount)
   )).map((file) => ({
     filename: file.filename,
-    documentCount: file.documentCount
+    documentCount: file.documentCount,
+    collectionLabel: [file.scopeLabel, file.subScopeLabel].filter(Boolean).join(" / ")
   }));
 }
 
@@ -39,19 +42,25 @@ export function documentPackageReviewTableHtml(files) {
     '    <input type="radio" name="docsViewerReviewPackage" value="' + escapeHtml(file.filename) + '"' + (index === 0 ? " checked" : "") + '>',
     '    <span>' + escapeHtml(file.filename) + '</span>',
     '  </label></td>',
+    '  <td>' + escapeHtml(file.collectionLabel) + '</td>',
     '  <td class="docsViewerReviewPackage__count">' + escapeHtml(String(file.documentCount)) + '</td>',
     '</tr>'
   ].join("")).join("");
   const body = rows || [
     '<tr>',
-    '  <td class="docsViewerReviewPackage__empty" colspan="2">No reviewable packages are available for this scope.</td>',
+    '  <td class="docsViewerReviewPackage__empty" colspan="3">No reviewable packages are available for this scope.</td>',
     '</tr>'
   ].join("");
   return [
     '<div class="docsViewerReviewPackage">',
     '  <div class="docsViewerReviewPackage__tableWrap">',
     '    <table class="docsViewerReviewPackage__table" aria-label="Reviewable packages">',
-    '      <thead><tr><th scope="col">File name</th><th scope="col">Documents</th></tr></thead>',
+    '      <colgroup>',
+    '        <col class="docsViewerReviewPackage__fileColumn">',
+    '        <col class="docsViewerReviewPackage__collectionColumn">',
+    '        <col class="docsViewerReviewPackage__documentsColumn">',
+    '      </colgroup>',
+    '      <thead><tr><th scope="col">File</th><th scope="col">Collection</th><th scope="col">Documents</th></tr></thead>',
     '      <tbody>' + body + '</tbody>',
     '    </table>',
     '  </div>',
@@ -85,7 +94,7 @@ function showReviewPackageList(options) {
     root: options.root,
     restoreFocus: options.restoreFocus,
     title: "Review package",
-    size: "standard",
+    size: "review-package",
     bodyHtml: documentPackageReviewTableHtml(options.files),
     focusSelector: options.files.length ? 'input[name="docsViewerReviewPackage"]' : "",
     actions: [

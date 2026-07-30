@@ -50,6 +50,15 @@ export function createDocsViewerReviewControlRenderers() {
   return { "review-package-controls": renderReviewPackageControls };
 }
 
+export function reviewCanonicalDocumentHref(packageManifest, docId) {
+  var sourceScope = String(packageManifest && packageManifest.source_scope || "").trim();
+  var sourceSubScope = String(packageManifest && packageManifest.source_sub_scope || "").trim();
+  var selectedDocId = String(docId || "").trim();
+  return sourceScope && selectedDocId && !sourceSubScope
+    ? "/docs/?scope=" + encodeURIComponent(sourceScope) + "&doc=" + encodeURIComponent(selectedDocId)
+    : "";
+}
+
 export function createDocsViewerReviewController(options) {
   var settings = options || {};
   var documentRef = settings.document || document;
@@ -60,12 +69,9 @@ export function createDocsViewerReviewController(options) {
 
   function projectCanonicalLink(docId) {
     if (!canonicalLink || !manifest) return;
-    var sourceScope = String(manifest.source_scope || "").trim();
-    var selectedDocId = String(docId || "").trim();
-    canonicalLink.hidden = !(sourceScope && selectedDocId);
-    canonicalLink.href = sourceScope && selectedDocId
-      ? "/docs/?scope=" + encodeURIComponent(sourceScope) + "&doc=" + encodeURIComponent(selectedDocId)
-      : "";
+    var href = reviewCanonicalDocumentHref(manifest, docId);
+    canonicalLink.hidden = !href;
+    canonicalLink.href = href;
   }
 
   function setStatus(message, isError) {

@@ -46,6 +46,8 @@ from docs_document_packages.export_config import (  # noqa: E402
     load_config_file,
     supported_content_formats,
     supported_target_formats,
+    supports_docs_review,
+    supports_return_import,
     validate_config_payload,
     validate_export_config,
 )
@@ -155,6 +157,8 @@ def empty_export_report(
         "config_id": config_id,
         "scope": scope,
         "target_format": target_format,
+        "supports_docs_review": False,
+        "supports_return_import": False,
         "output_file": output_paths.output_file,
         "metadata_file": output_paths.metadata_file,
         "context_file": output_paths.context_file,
@@ -169,10 +173,7 @@ def empty_export_report(
         "output_written": False,
     }
     if sub_scope:
-        report.update({
-            "sub_scope": sub_scope,
-            "supports_return_import": False,
-        })
+        report["sub_scope"] = sub_scope
     if supported_formats is not None:
         report["supported_target_formats"] = supported_formats
     return report
@@ -494,6 +495,10 @@ def build_export(
         "supported_target_formats": supported_formats,
         "content_format": resolved_content_format,
         "supported_content_formats": content_formats,
+        "supports_docs_review": supports_docs_review(config),
+        "supports_return_import": (
+            False if normalized_sub_scope else supports_return_import(config)
+        ),
         "output_file": paths.output_file,
         "metadata_file": paths.metadata_file,
         "context_file": paths.context_file,
@@ -507,10 +512,7 @@ def build_export(
         "issue_counts": {"errors": len(errors), "warnings": len(warnings)},
     }
     if normalized_sub_scope:
-        report.update({
-            "sub_scope": normalized_sub_scope,
-            "supports_return_import": False,
-        })
+        report["sub_scope"] = normalized_sub_scope
 
     if errors:
         report["output_written"] = False

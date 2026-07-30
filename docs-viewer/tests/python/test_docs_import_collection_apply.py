@@ -39,6 +39,7 @@ def write_collection_metadata(export_id: str, records: list[dict[str, object]]) 
                 "config_id": "document-content",
                 "target_format": "jsonl",
                 "record_shape": "document_rows",
+                "supports_docs_review": True,
                 "supports_return_import": True,
                 "content_format": "markdown",
                 "selected_doc_ids": list(

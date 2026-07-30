@@ -83,12 +83,18 @@ def exercise_review_action(page: Page, base_url: str, timeout_ms: int) -> None:
                         {
                             "filename": "reviewable.jsonl",
                             "document_count": 2,
+                            "supports_docs_review": True,
                             "supports_return_import": True,
+                            "scope_label": "Studio",
+                            "sub_scope_label": "Tags",
                         },
                         {
                             "filename": "tree.json",
                             "document_count": 3,
+                            "supports_docs_review": False,
                             "supports_return_import": False,
+                            "scope_label": "Studio",
+                            "sub_scope_label": "",
                         },
                     ],
                     "blocked_files": [{"filename": "blocked.jsonl"}],
@@ -153,10 +159,19 @@ def exercise_review_action(page: Page, base_url: str, timeout_ms: int) -> None:
     if REVIEW_WORKFLOW_PATH not in requested_paths:
         raise AssertionError("Review package Action did not lazily load its workflow module")
     modal = page.locator('[data-role="docs-viewer-management-modal"]')
-    if modal.locator("th").all_text_contents() != ["File name", "Documents"]:
+    modal_card = modal.locator(".docsViewer__modalCard")
+    if "docsViewer__modalCard--review-package" not in (
+        modal_card.get_attribute("class") or ""
+    ).split():
+        raise AssertionError("Review package chooser did not use its fitted modal variant")
+    if modal.locator("th").all_text_contents() != ["File", "Collection", "Documents"]:
         raise AssertionError("Review package modal changed its accepted columns")
     rows = modal.locator("tbody tr")
-    if rows.count() != 1 or "reviewable.jsonl" not in rows.first.inner_text():
+    if (
+        rows.count() != 1
+        or "reviewable.jsonl" not in rows.first.inner_text()
+        or "Studio / Tags" not in rows.first.inner_text()
+    ):
         raise AssertionError("Review package modal did not project only the reviewable package")
     selected = modal.locator('input[name="docsViewerReviewPackage"]:checked')
     if selected.count() != 1 or selected.get_attribute("value") != "reviewable.jsonl":

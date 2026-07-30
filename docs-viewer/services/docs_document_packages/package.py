@@ -11,10 +11,12 @@ from docs_document_packages.export import (
     parse_doc_ids as parse_export_doc_ids,
 )
 from docs_document_packages.export_config import update_external_context_config
-from docs_document_packages.returned_profiles import supported_return_import_profile_ids
+from docs_document_packages.returned_common import DOCS_REVIEW_CAPABILITY
+from docs_document_packages.returned_profiles import supported_docs_review_profile_ids
 from docs_document_packages.returned_parser import parse_staged_import
 from docs_document_packages import source_context
 from docs_document_packages.metadata import list_staged_files_with_metadata
+from docs_scope_config import load_docs_scope_configs
 import docs_source_model as source_model
 
 
@@ -172,6 +174,25 @@ def list_returned_document_packages(
     metadata_root: Path,
 ) -> Dict[str, Any]:
     normalized_scope = source_model.normalize_scope(scope)
+    scope_config = load_docs_scope_configs(
+        repo_root,
+        scope_ids=[normalized_scope],
+    )[normalized_scope]
+    sub_scope_labels = {
+        record.sub_scope: record.title
+        for record in scope_config.sub_scopes
+    }
+
+    def add_collection_labels(item: dict[str, Any]) -> dict[str, Any]:
+        sub_scope = str(item.get("sub_scope") or "").strip().lower()
+        item["scope_label"] = source_model.humanize(normalized_scope)
+        item["sub_scope_label"] = (
+            sub_scope_labels.get(sub_scope, source_model.humanize(sub_scope))
+            if sub_scope
+            else ""
+        )
+        return item
+
     report = list_staged_files_with_metadata(
         repo_root,
         staging_root=staging_root,
@@ -191,8 +212,8 @@ def list_returned_document_packages(
             unassigned_files.append(item)
             continue
         if item_scope == normalized_scope:
-            staged_files.append(item)
-    importable_profile_ids = supported_return_import_profile_ids()
+            staged_files.append(add_collection_labels(item))
+    reviewable_profile_ids = supported_docs_review_profile_ids()
     files: list[dict[str, Any]] = []
     blocked_files: list[dict[str, Any]] = []
     for item in report.get("blocked_files", []):
@@ -203,19 +224,21 @@ def list_returned_document_packages(
             unassigned_files.append(item)
             continue
         if item_scope == normalized_scope:
-            blocked_files.append(item)
+            blocked_files.append(add_collection_labels(item))
     for item in staged_files:
         profile_id = str(item.get("profile_id") or "").strip()
-        if item.get("supports_return_import") is False:
+        if item.get("supports_docs_review") is not True:
             blocked = dict(item)
+            blocked["docs_review_supported"] = False
             blocked["return_import_supported"] = False
             blocked["blocked_reason"] = "export_only_profile"
             blocked_files.append(blocked)
             continue
-        if profile_id not in importable_profile_ids:
+        if profile_id not in reviewable_profile_ids:
             blocked = dict(item)
+            blocked["docs_review_supported"] = False
             blocked["return_import_supported"] = False
-            blocked["blocked_reason"] = "unsupported_import_profile"
+            blocked["blocked_reason"] = "unsupported_review_profile"
             blocked_files.append(blocked)
             continue
         validation = parse_staged_import(
@@ -224,10 +247,14 @@ def list_returned_document_packages(
             staged_file=str(item.get("filename") or "").strip(),
             staging_root=staging_root,
             metadata_root=metadata_root,
+            required_capability=DOCS_REVIEW_CAPABILITY,
         )
         if validation.get("ok") is not True:
             blocked = dict(item)
-            blocked["return_import_supported"] = True
+            blocked["docs_review_supported"] = True
+            blocked["return_import_supported"] = (
+                item.get("supports_return_import") is True
+            )
             blocked["blocked_reason"] = "invalid_returned_package"
             blocked_files.append(blocked)
             continue
@@ -235,11 +262,17 @@ def list_returned_document_packages(
         record_count = counts.get("records")
         if not isinstance(record_count, int) or isinstance(record_count, bool) or record_count < 1:
             blocked = dict(item)
-            blocked["return_import_supported"] = True
+            blocked["docs_review_supported"] = True
+            blocked["return_import_supported"] = (
+                item.get("supports_return_import") is True
+            )
             blocked["blocked_reason"] = "invalid_returned_package"
             blocked_files.append(blocked)
             continue
-        item["return_import_supported"] = True
+        item["docs_review_supported"] = True
+        item["return_import_supported"] = (
+            item.get("supports_return_import") is True
+        )
         item["document_count"] = record_count
         files.append(item)
     report["files"] = files

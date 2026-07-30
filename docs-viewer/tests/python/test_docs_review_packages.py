@@ -32,6 +32,9 @@ def write_package(package_id: str = "fixture-review") -> Path:
             "status": "validated",
             "title": "Fixture review",
             "source_scope": "library",
+            "supports_docs_review": True,
+            "supports_return_import": True,
+            "selected_doc_ids": ["fixture-root"],
             "default_doc_id": "fixture-root",
         },
     )

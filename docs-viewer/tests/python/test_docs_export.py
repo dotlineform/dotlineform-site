@@ -67,6 +67,10 @@ BASE_CONFIG = {
                 "supports_missing_summary_only": True,
                 "default_missing_summary_only": False,
             },
+            "workflow": {
+                "supports_docs_review": True,
+                "supports_return_import": True,
+            },
             "limits": {
                 "max_documents": None,
                 "max_chars_per_document": None,
@@ -479,7 +483,10 @@ def test_document_rows_json_format_override_writes_json_array() -> None:
 
 def test_export_only_profile_writes_provenance_metadata_without_import_support() -> None:
     config = copy.deepcopy(BASE_CONFIG)
-    config["configs"][0]["workflow"] = {"supports_return_import": False}
+    config["configs"][0]["workflow"] = {
+        "supports_docs_review": False,
+        "supports_return_import": False,
+    }
     fixed_generated_at = "2026-05-03T15:15:07Z"
     fixed_filename_dt = dt.datetime(2026, 5, 3, 16, 15, 7, tzinfo=dt.timezone(dt.timedelta(hours=1)))
     original_export_run_times = docs_export.export_run_times
@@ -501,7 +508,33 @@ def test_export_only_profile_writes_provenance_metadata_without_import_support()
     assert report["metadata_file"] == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta/ds_20260503T151507Z.meta.json"
     assert metadata["export_id"] == "ds_20260503T151507Z"
     assert metadata["profile_id"] == "document-content"
+    assert metadata["supports_docs_review"] is False
     assert metadata["supports_return_import"] is False
+
+
+def test_profile_capabilities_must_be_explicit_and_cannot_enable_import_only() -> None:
+    missing = copy.deepcopy(BASE_CONFIG["configs"][0])
+    missing["workflow"].pop("supports_docs_review")
+    missing_errors, _ = docs_document_packages.export_config.validate_export_config(
+        missing
+    )
+
+    invalid = copy.deepcopy(BASE_CONFIG["configs"][0])
+    invalid["workflow"] = {
+        "supports_docs_review": False,
+        "supports_return_import": True,
+    }
+    invalid_errors, _ = docs_document_packages.export_config.validate_export_config(
+        invalid
+    )
+
+    assert missing_errors == [
+        "config document-content: workflow.supports_docs_review must be true or false"
+    ]
+    assert invalid_errors == [
+        "config document-content: workflow.supports_return_import true "
+        "requires supports_docs_review true"
+    ]
 
 
 def test_document_tree_profile_exports_selected_subtree() -> None:
@@ -519,7 +552,10 @@ def test_document_tree_profile_exports_selected_subtree() -> None:
                 "path_pattern": "{timestamp}-{data_domain}-{profile_id}.json",
                 "timestamp_format": "%Y%m%d-%H%M%S",
             },
-            "workflow": {"supports_return_import": False},
+            "workflow": {
+                "supports_docs_review": False,
+                "supports_return_import": False,
+            },
             "external_context": {
                 "task": "review_document_tree",
                 "response_guidance": "Use the nested docs tree as read-only hierarchy context.",
@@ -570,6 +606,7 @@ def test_document_tree_profile_exports_selected_subtree() -> None:
         ],
     }
     assert metadata["record_shape"] == "document_tree"
+    assert metadata["supports_docs_review"] is False
     assert metadata["supports_return_import"] is False
     assert context["record_container"] == "JSON object containing a nested docs tree"
     assert context["records_path"] == "docs"
@@ -688,6 +725,7 @@ def test_repo_documents_prepare_profiles_load_and_validate() -> None:
     tree_config = docs_document_packages.export_config.find_export_config(payload, "document-tree")
     assert tree_config["selection"]["supports_include_non_viewable"] is False
     assert tree_config["selection"]["supports_missing_summary_only"] is False
+    assert tree_config["workflow"]["supports_docs_review"] is False
     assert tree_config["workflow"]["supports_return_import"] is False
     assert tree_config["target"]["record_shape"] == "document_tree"
     assert docs_document_packages.export_config.supported_target_formats(tree_config) == ["json"]

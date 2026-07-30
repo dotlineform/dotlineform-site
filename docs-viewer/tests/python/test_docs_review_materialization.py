@@ -41,6 +41,9 @@ def test_failed_generated_build_removes_temporary_package(
                     "package_id": package_path.name,
                     "status": "validated",
                     "source_scope": "library",
+                    "supports_docs_review": True,
+                    "supports_return_import": True,
+                    "selected_doc_ids": ["alpha"],
                 },
             )
 

@@ -45,7 +45,6 @@ SUPPORTED_TARGET_FORMATS = {"json", "jsonl"}
 SUPPORTED_CONTENT_FORMATS = {"markdown", "plain_text"}
 SUPPORTED_RECORD_SHAPES = {"document_rows", "document_tree"}
 SUPPORTED_SELECTION_MODES = {"explicit_doc_ids", "all_matching"}
-DEFAULT_SUPPORTS_RETURN_IMPORT = True
 
 
 def load_config_file(repo_root: Path, config_path: str | None = None) -> dict[str, Any]:
@@ -125,11 +124,14 @@ def default_content_format(config: dict[str, Any]) -> str:
     return formats[0] if formats else ""
 
 
+def supports_docs_review(config: dict[str, Any]) -> bool:
+    workflow = config.get("workflow")
+    return isinstance(workflow, dict) and workflow.get("supports_docs_review") is True
+
+
 def supports_return_import(config: dict[str, Any]) -> bool:
     workflow = config.get("workflow")
-    if not isinstance(workflow, dict):
-        return DEFAULT_SUPPORTS_RETURN_IMPORT
-    return workflow.get("supports_return_import") is not False
+    return isinstance(workflow, dict) and workflow.get("supports_return_import") is True
 
 
 def clean_context_text(value: Any) -> str:
@@ -317,11 +319,20 @@ def validate_export_config(config: dict[str, Any]) -> tuple[list[str], list[str]
         errors.append(f"config {config_id}: document_tree exports require selection.include_descendants true")
 
     workflow = config.get("workflow")
-    if workflow is not None:
-        if not isinstance(workflow, dict):
-            errors.append(f"config {config_id}: workflow must be an object")
-        elif "supports_return_import" in workflow and not isinstance(workflow.get("supports_return_import"), bool):
-            errors.append(f"config {config_id}: workflow.supports_return_import must be true or false")
+    if not isinstance(workflow, dict):
+        errors.append(f"config {config_id}: workflow must be an object")
+    else:
+        for field in ("supports_docs_review", "supports_return_import"):
+            if not isinstance(workflow.get(field), bool):
+                errors.append(f"config {config_id}: workflow.{field} must be true or false")
+        if (
+            workflow.get("supports_docs_review") is False
+            and workflow.get("supports_return_import") is True
+        ):
+            errors.append(
+                f"config {config_id}: workflow.supports_return_import true "
+                "requires supports_docs_review true"
+            )
 
     limits = config.get("limits") if isinstance(config.get("limits"), dict) else {}
     for key in ["max_documents", "max_chars_per_document", "max_total_chars"]:
