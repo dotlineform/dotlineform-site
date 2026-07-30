@@ -47,6 +47,12 @@ def assert_control_projection(page: Page) -> None:
           const controls = await import(
             '/docs-viewer/runtime/js/management/docs-viewer-management-report-controls.js'
           );
+          const targets = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-document-target.js'
+          );
+          const importControllers = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-import-controller.js'
+          );
           const client = await import(
             '/docs-viewer/runtime/js/management/docs-viewer-management-client.js'
           );
@@ -109,6 +115,124 @@ def assert_control_projection(page: Page) -> None:
               parentTarget: parent,
               subdocTarget: subdoc
             }))
+          };
+          let invalidCollectionError = '';
+          try {
+            targets.normalizeManagedDocumentCollectionTarget({
+              scope: 'studio',
+              sub_scope: 'tags',
+              doc_id: 'not-a-collection'
+            });
+          } catch (error) {
+            invalidCollectionError = error.message;
+          }
+          const collectionTargets = {
+            parent: targets.normalizeManagedDocumentCollectionTarget({
+              scope: ' Studio '
+            }),
+            child: targets.normalizeManagedDocumentCollectionTarget({
+              scope: ' Studio ',
+              sub_scope: ' Tags '
+            }),
+            childFrozen: Object.isFrozen(
+              targets.normalizeManagedDocumentCollectionTarget({
+                scope: 'studio',
+                sub_scope: 'tags'
+              })
+            ),
+            invalidCollectionError
+          };
+          const modalOpenRecords = [];
+          const modalTerminalRecords = [];
+          const appDestinations = [];
+          const appRefreshes = [];
+          const completionRecords = [];
+          let initializedImportOptions = null;
+          let importController = null;
+          const restoreFocus = document.createElement('button');
+          restoreFocus.dataset.docsSubscopeImport = 'true';
+          const modalController = {
+            openImportModal: options => {
+              modalOpenRecords.push({
+                restoreFocusMatches: options.restoreFocus === restoreFocus
+              });
+              return importController.initialize('studio');
+            },
+            projectImportTerminalResult: () => {
+              modalTerminalRecords.push('terminal');
+            }
+          };
+          importController = importControllers.createDocsViewerManagementImportController({
+            refs: {
+              root: document.createElement('section'),
+              bootStatus: document.createElement('p')
+            },
+            callbacks: {
+              getModalController: () => modalController,
+              loadImportModule: () => Promise.resolve({
+                initDocsHtmlImport: options => {
+                  initializedImportOptions = options;
+                  return {
+                    refreshStagedFiles: () => {
+                      appRefreshes.push('refresh');
+                    },
+                    setDestination: (destination, options) => {
+                      appDestinations.push({ destination, options });
+                    }
+                  };
+                }
+              }),
+              onImportComplete: detail => {
+                completionRecords.push({
+                  owner: 'default',
+                  target: detail.target
+                });
+              },
+              viewerScope: () => 'studio'
+            }
+          });
+          await importController.openForCollection(
+            { scope: 'studio', sub_scope: 'tags' },
+            {
+              destinationLabel: 'studio / Tags',
+              onComplete: detail => {
+                completionRecords.push({
+                  owner: 'report',
+                  target: detail.target
+                });
+              },
+              restoreFocus
+            }
+          );
+          await initializedImportOptions.onTerminalResult({
+            target: {
+              scope: 'studio',
+              sub_scope: 'tags',
+              doc_id: 'imported-child'
+            }
+          });
+          await importController.open();
+          await initializedImportOptions.onTerminalResult({
+            target: {
+              scope: 'studio',
+              doc_id: 'imported-parent'
+            }
+          });
+          let parentCollectionError = '';
+          try {
+            await importController.openForCollection({ scope: 'studio' });
+          } catch (error) {
+            parentCollectionError = error.message;
+          }
+          const importControllerProjection = {
+            appDestinations,
+            appRefreshes,
+            completionRecords,
+            initialDestination: initializedImportOptions.initialDestination,
+            initialDestinationLabel: initializedImportOptions.initialDestinationLabel,
+            modalOpenRecords,
+            modalTerminalRecords,
+            parentCollectionError
           };
 
           const requests = [];
@@ -185,6 +309,8 @@ def assert_control_projection(page: Page) -> None:
           });
           return {
             cases,
+            collectionTargets,
+            importControllerProjection,
             requests,
             parentDeleteError,
             revisionError,
@@ -200,6 +326,54 @@ def assert_control_projection(page: Page) -> None:
         "doc_id": "detail-doc",
     }
     cases = result["cases"]
+    assert result["collectionTargets"] == {
+        "parent": {"scope": "studio"},
+        "child": {"scope": "studio", "sub_scope": "tags"},
+        "childFrozen": True,
+        "invalidCollectionError": (
+            "Managed document collection target must contain exactly scope, "
+            "with sub_scope only for a configured child collection."
+        ),
+    }
+    assert result["importControllerProjection"] == {
+        "appDestinations": [
+            {
+                "destination": None,
+                "options": {
+                    "fallbackScope": "studio",
+                    "label": "",
+                },
+            }
+        ],
+        "appRefreshes": ["refresh"],
+        "completionRecords": [
+            {
+                "owner": "report",
+                "target": {
+                    "scope": "studio",
+                    "sub_scope": "tags",
+                    "doc_id": "imported-child",
+                },
+            },
+            {
+                "owner": "default",
+                "target": {
+                    "scope": "studio",
+                    "doc_id": "imported-parent",
+                },
+            },
+        ],
+        "initialDestination": {"scope": "studio", "sub_scope": "tags"},
+        "initialDestinationLabel": "studio / Tags",
+        "modalOpenRecords": [
+            {"restoreFocusMatches": True},
+            {"restoreFocusMatches": False},
+        ],
+        "modalTerminalRecords": ["terminal", "terminal"],
+        "parentCollectionError": (
+            "Sub-scope report Import requires a configured child collection."
+        ),
+    }
     assert cases["ordinary"]["editMetadata"]["target"] == parent
     assert cases["ordinary"]["openVsCode"]["target"] == parent
     assert cases["ordinary"]["parentSource"]["target"] == parent
@@ -2124,6 +2298,8 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
 
           const createCalls = [];
           const releases = [];
+          const importCalls = [];
+          const importReleases = [];
           const states = [];
           const statuses = [];
           const content = document.querySelector('#create-report');
@@ -2148,6 +2324,27 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
                     };
                     Promise.resolve(options.refreshAndSelect(target))
                       .then(resolve, reject);
+                  });
+                });
+              },
+              openSubscopeImport: (collection, options) => {
+                const restoreFocus = options.restoreFocus;
+                importCalls.push({
+                  collection,
+                  destinationLabel: options.destinationLabel,
+                  onCompleteType: typeof options.onComplete,
+                  restoreFocusIsImport: restoreFocus?.dataset.docsSubscopeImport === 'true'
+                });
+                return new Promise((resolve, reject) => {
+                  importReleases.push(record => {
+                    window.syntheticCreatedDocs.push(record);
+                    Promise.resolve(options.onComplete({
+                      target: {
+                        scope: collection.scope,
+                        sub_scope: collection.sub_scope,
+                        doc_id: record.doc_id
+                      }
+                    })).then(resolve, reject);
                   });
                 });
               }
@@ -2190,6 +2387,9 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
           const newButton = () => content.querySelector(
             '[data-docs-subscope-new="true"]'
           );
+          const importButton = () => content.querySelector(
+            '[data-docs-subscope-import="true"]'
+          );
           const initial = {
             actionsDisabled: content.querySelector(
               '[data-docs-subscope-actions]'
@@ -2200,6 +2400,9 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
             emptyText: content.querySelector(
               '.docsViewerReport__empty'
             ).textContent,
+            importButtons: content.querySelectorAll(
+              '[data-docs-subscope-import="true"]'
+            ).length,
             newButtons: content.querySelectorAll(
               '[data-docs-subscope-new="true"]'
             ).length,
@@ -2208,6 +2411,38 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
             )).map(row => row.dataset.reportSubdocId)
           };
 
+          importButton().click();
+          const importInFlight = {
+            ariaLabel: importButton().getAttribute('aria-label'),
+            calls: importCalls.length,
+            disabled: importButton().disabled,
+            selectionState: content.querySelector('.docsViewerReport')
+              ?.dataset.reportSubscopeSelection || ''
+          };
+          importButton().click();
+          importInFlight.callsAfterSecondClick = importCalls.length;
+          importReleases[0]({
+            doc_id: 'imported-first',
+            title: 'Imported first',
+            viewable: false
+          });
+          await waitFor(() => (
+            content.querySelector('.docsReportDetail')
+              ?.dataset.reportSubdocId === 'imported-first'
+          ));
+          const imported = {
+            calls: importCalls.slice(),
+            detailText: content.querySelector(
+              '.docsReportDetail__body'
+            ).textContent,
+            state: states.at(-1),
+            subdoc: new URLSearchParams(location.search).get('subdoc')
+          };
+
+          content.querySelector('.docsReportDetail__back').click();
+          await waitFor(() => content.querySelector(
+            '.docsViewerReport'
+          )?.dataset.reportState === 'list');
           newButton().click();
           const inFlight = {
             ariaLabel: newButton().getAttribute('aria-label'),
@@ -2264,6 +2499,8 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
               record.path.startsWith('/synthetic/')
             )),
             first,
+            importInFlight,
+            imported,
             inFlight,
             initial,
             second,
@@ -2276,6 +2513,7 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
         "actionsDisabled": True,
         "contributionHosts": 1,
         "emptyText": "No documents are available in Tags.",
+        "importButtons": 1,
         "newButtons": 1,
         "rowIds": [],
     }
@@ -2286,6 +2524,34 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
         "callsAfterSecondClick": 1,
     }
     expected_collection = {"scope": "studio", "sub_scope": "tags"}
+    assert result["importInFlight"] == {
+        "ariaLabel": "Import",
+        "calls": 1,
+        "disabled": True,
+        "selectionState": "inactive",
+        "callsAfterSecondClick": 1,
+    }
+    assert result["imported"] == {
+        "calls": [
+            {
+                "collection": expected_collection,
+                "destinationLabel": "studio / Tags",
+                "onCompleteType": "function",
+                "restoreFocusIsImport": True,
+            }
+        ],
+        "detailText": "Imported first",
+        "state": {
+            "state": "detail",
+            "reason": "detail-loaded",
+            "parentTarget": {"scope": "studio", "doc_id": "parent-doc"},
+            "subdocTarget": {
+                **expected_collection,
+                "doc_id": "imported-first",
+            },
+        },
+        "subdoc": "imported-first",
+    }
     expected_call = {
         "collection": expected_collection,
         "refreshAndSelectType": "function",
@@ -2307,12 +2573,14 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
     assert result["second"] == {
         "calls": [expected_call, expected_call],
         "detailText": "Created second",
-        "refreshEvents": 2,
+        "refreshEvents": 3,
         "subdoc": "created-second",
     }
     assert result["statuses"] == []
     assert result["fetches"] == [
         {"path": "/synthetic/manifest.json", "cache": "default"},
+        {"path": "/synthetic/manifest.json", "cache": "no-store"},
+        {"path": "/synthetic/by-id/imported-first.json", "cache": "no-store"},
         {"path": "/synthetic/manifest.json", "cache": "no-store"},
         {"path": "/synthetic/by-id/created-first.json", "cache": "no-store"},
         {"path": "/synthetic/manifest.json", "cache": "no-store"},

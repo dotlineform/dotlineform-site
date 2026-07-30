@@ -25,13 +25,24 @@ function setHtml(node, value) {
   node.innerHTML = String(value == null ? "" : value);
 }
 
-function sourceDocLinkHtml(scope, docId) {
-  const normalizedScope = normalizeText(scope);
-  const normalizedDocId = normalizeText(docId);
+function sourceDocLinkHtml(payload) {
+  const returnedTarget = payload
+    && payload.target
+    && typeof payload.target === "object"
+    ? payload.target
+    : {};
+  const normalizedScope = normalizeText(returnedTarget.scope || (payload && payload.scope));
+  const normalizedSubScope = normalizeText(
+    returnedTarget.sub_scope || (payload && payload.sub_scope)
+  );
+  const normalizedDocId = normalizeText(returnedTarget.doc_id || (payload && payload.doc_id));
   if (!normalizedScope || !normalizedDocId) return "";
   return [
     `<a href="#" data-doc-source-link="true"`,
     ` data-scope="${escapeHtml(normalizedScope)}"`,
+    normalizedSubScope
+      ? ` data-sub-scope="${escapeHtml(normalizedSubScope)}"`
+      : "",
     ` data-doc-id="${escapeHtml(normalizedDocId)}">`,
     `${escapeHtml(normalizedDocId)}</a>`
   ].join("");
@@ -73,7 +84,7 @@ function resultRowsForPayload(payload, includeFilename) {
   const mediaPlans = []
     .concat(Array.isArray(preview.media_plans) ? preview.media_plans : [])
     .concat(preview.media_plan && typeof preview.media_plan === "object" ? [preview.media_plan] : []);
-  const sourceLabel = sourceDocLinkHtml(payload.scope, payload.doc_id);
+  const sourceLabel = sourceDocLinkHtml(payload);
   const sourceName = normalizeText(payload && payload.staged_filename);
   const rows = [
     [

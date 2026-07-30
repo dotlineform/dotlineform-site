@@ -95,6 +95,31 @@ function createSubscopeDocumentAction(settings) {
     : null;
 }
 
+function openSubscopeImportAction(settings) {
+  var actions = settings && settings.managementDocumentActions;
+  return actions && typeof actions.openSubscopeImport === "function"
+    ? actions.openSubscopeImport
+    : null;
+}
+
+function configuredSubScopeLabel(settings, scope, subScope) {
+  var normalizedScope = cleanString(scope).toLowerCase();
+  var normalizedSubScope = cleanString(subScope).toLowerCase();
+  var parentConfig = scopeConfigs(settings).find(function (config) {
+    return cleanString(config && (config.scope_id || config.scopeId)).toLowerCase()
+      === normalizedScope;
+  });
+  var children = parentConfig && Array.isArray(parentConfig.subScopes)
+    ? parentConfig.subScopes
+    : [];
+  var child = children.find(function (record) {
+    return cleanString(record && (record.subScope || record.sub_scope)).toLowerCase()
+      === normalizedSubScope;
+  });
+  var childTitle = cleanString(child && child.title) || normalizedSubScope;
+  return normalizedScope + " / " + childTitle;
+}
+
 function openSubscopeCreate(settings, parent, subScope, request, context) {
   var collection = request && typeof request === "object" ? request : {};
   var keys = Object.keys(collection).sort();
@@ -129,6 +154,61 @@ function openSubscopeCreate(settings, parent, subScope, request, context) {
     },
     {
       refreshAndSelect: refreshAndOpenDocument
+    }
+  );
+}
+
+function openSubscopeImport(settings, parent, subScope, request, context) {
+  var collection = request && typeof request === "object" ? request : {};
+  var keys = Object.keys(collection).sort();
+  if (
+    keys.length !== 2
+    || keys[0] !== "scope"
+    || keys[1] !== "sub_scope"
+    || cleanString(collection.scope).toLowerCase() !== parent.scope
+    || cleanString(collection.sub_scope).toLowerCase() !== subScope
+  ) {
+    return Promise.reject(new Error(
+      "Sub-scope Import collection did not match the mounted report."
+    ));
+  }
+  var actionContext = context || {};
+  var refreshAndOpenDocument = typeof actionContext.refreshAndOpenDocument === "function"
+    ? actionContext.refreshAndOpenDocument
+    : null;
+  if (!refreshAndOpenDocument) {
+    return Promise.reject(new Error(
+      "Sub-scope Import report refresh is unavailable."
+    ));
+  }
+  var action = openSubscopeImportAction(settings);
+  if (!action) {
+    return Promise.reject(new Error("Sub-scope document Import is unavailable."));
+  }
+  return action(
+    {
+      scope: parent.scope,
+      sub_scope: subScope
+    },
+    {
+      destinationLabel: configuredSubScopeLabel(
+        settings,
+        parent.scope,
+        subScope
+      ),
+      restoreFocus: actionContext.restoreFocus,
+      onComplete: function (detail) {
+        var target = normalizeManagedDocumentTarget(detail && detail.target);
+        if (
+          target.scope !== parent.scope
+          || target.sub_scope !== subScope
+        ) {
+          throw new Error(
+            "Imported document target did not match the mounted sub-scope report."
+          );
+        }
+        return refreshAndOpenDocument(target);
+      }
     }
   );
 }
@@ -230,6 +310,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
   });
   var scopeConfig = settings.scopeConfigState || {};
   var createAction = createSubscopeDocumentAction(settings);
+  var importAction = openSubscopeImportAction(settings);
   var contribution = createDocsViewerManagementSubscopeContribution({
     clientOptions: managementClientOptions(settings),
     managementContext: Boolean(settings.managementContext),
@@ -254,6 +335,21 @@ export function mountDocsViewerManageDocumentExtras(context) {
         publishReportState(settings, parent, subScope, event);
       }
     },
+    onImportDocument: (
+      settings.managementContext
+      && reportManagementBaseUrl
+      && importAction
+    )
+      ? function (request, context) {
+          return openSubscopeImport(
+            settings,
+            parent,
+            subScope,
+            request,
+            context
+          );
+        }
+      : null,
     onPreparePackage: reportManagementBaseUrl
       ? function (request, context) {
           return openSubScopePreparePackage(settings, request, context);

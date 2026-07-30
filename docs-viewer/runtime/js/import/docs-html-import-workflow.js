@@ -98,7 +98,7 @@ async function requestImport(
   } = {}
 ) {
   const stagedFilename = normalizeText(file && file.filename);
-  return fetchManagementJson("/docs/import-source", "POST", {
+  const requestBody = {
     scope: context.scope,
     staged_filename: stagedFilename,
     include_prompt_meta: docsHtmlImportSourceFormatForRecord(file) === "html" ? Boolean(context.includePromptMeta) : false,
@@ -113,7 +113,14 @@ async function requestImport(
       recordIdField: "staged_filename",
       recordId: stagedFilename
     })
-  }, docsHtmlImportManagementOptions(context));
+  };
+  if (context.subScope) requestBody.sub_scope = context.subScope;
+  return fetchManagementJson(
+    "/docs/import-source",
+    "POST",
+    requestBody,
+    docsHtmlImportManagementOptions(context)
+  );
 }
 
 async function importFileWithPrompts(state, file, context = {}) {
@@ -134,6 +141,7 @@ async function importFileWithPrompts(state, file, context = {}) {
     }
     const payload = await requestImport(file, {
       scope: context.scope,
+      subScope: context.subScope,
       includePromptMeta: context.includePromptMeta,
       routePath: context.routePath,
       managementBaseUrl: context.managementBaseUrl
@@ -157,6 +165,7 @@ export async function runDocsHtmlImportWorkflow(
   {
     files = [],
     scope = "",
+    subScope = "",
     includePromptMeta = false,
     routePath = "/docs/",
     managementBaseUrl = "",
@@ -166,6 +175,7 @@ export async function runDocsHtmlImportWorkflow(
 ) {
   const workflowContext = {
     scope: normalizeText(scope),
+    subScope: normalizeText(subScope).toLowerCase(),
     includePromptMeta: Boolean(includePromptMeta),
     routePath: normalizeText(routePath) || "/docs/",
     managementBaseUrl: normalizeText(managementBaseUrl)
@@ -209,10 +219,21 @@ export async function runDocsHtmlImportWorkflow(
         : normalizeText(results[0] && results[0].summary_text)
     );
     const displayedResult = results.slice().reverse().find((result) => normalizeText(result && result.doc_id)) || null;
+    const displayedTarget = displayedResult
+      && displayedResult.target
+      && typeof displayedResult.target === "object"
+      ? Object.assign({}, displayedResult.target)
+      : {
+          scope: workflowContext.scope,
+          ...(workflowContext.subScope ? { sub_scope: workflowContext.subScope } : {}),
+          doc_id: normalizeText(displayedResult && displayedResult.doc_id)
+        };
     try {
       await onTerminalResult({
         scope: workflowContext.scope,
+        subScope: workflowContext.subScope,
         docId: normalizeText(displayedResult && displayedResult.doc_id),
+        target: displayedTarget,
         results: results.slice()
       });
     } catch (error) {

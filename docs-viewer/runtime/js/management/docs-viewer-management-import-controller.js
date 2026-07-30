@@ -1,3 +1,7 @@
+import {
+  normalizeManagedDocumentCollectionTarget
+} from "./docs-viewer-management-document-target.js";
+
 var IMPORT_ROUTE_PATH = "/docs/";
 var DEFAULT_CONFIG_URL = "/docs-viewer/config/defaults/docs-viewer-config.json";
 
@@ -8,6 +12,12 @@ export function createDocsViewerManagementImportController(options = {}) {
   var importRequestPromise = null;
   var importApp = null;
   var initialized = false;
+  var activeOpen = {
+    destination: null,
+    destinationLabel: "",
+    onComplete: null,
+    restoreFocus: null
+  };
 
   function viewerScope() {
     return typeof callbacks.viewerScope === "function" ? callbacks.viewerScope() : "";
@@ -33,6 +43,9 @@ export function createDocsViewerManagementImportController(options = {}) {
     if (modalController && typeof modalController.projectImportTerminalResult === "function") {
       modalController.projectImportTerminalResult();
     }
+    if (typeof activeOpen.onComplete === "function") {
+      return activeOpen.onComplete(detail || {});
+    }
     if (typeof callbacks.onImportComplete === "function") {
       return callbacks.onImportComplete(detail || {});
     }
@@ -50,6 +63,12 @@ export function createDocsViewerManagementImportController(options = {}) {
     if (!refs.root || !refs.bootStatus) return Promise.resolve();
     if (importRequestPromise) return importRequestPromise;
     if (initialized) {
+      if (importApp && typeof importApp.setDestination === "function") {
+        importApp.setDestination(activeOpen.destination, {
+          fallbackScope: scope || viewerScope(),
+          label: activeOpen.destinationLabel
+        });
+      }
       return importApp && typeof importApp.refreshStagedFiles === "function"
         ? importApp.refreshStagedFiles()
         : Promise.resolve();
@@ -64,6 +83,8 @@ export function createDocsViewerManagementImportController(options = {}) {
           root: refs.root,
           bootStatus: refs.bootStatus,
           initialScope: scope || viewerScope(),
+          initialDestination: activeOpen.destination,
+          initialDestinationLabel: activeOpen.destinationLabel,
           docsViewerConfigUrl: context.docsViewerConfigUrl || context.root && context.root.dataset.docsViewerConfigUrl || DEFAULT_CONFIG_URL,
           managementBaseUrl: context.managementBaseUrl,
           routePath: IMPORT_ROUTE_PATH,
@@ -83,15 +104,44 @@ export function createDocsViewerManagementImportController(options = {}) {
     return importRequestPromise;
   }
 
-  function open() {
+  function open(options = {}) {
+    activeOpen = {
+      destination: options.destination
+        ? normalizeManagedDocumentCollectionTarget(options.destination)
+        : null,
+      destinationLabel: String(options.destinationLabel || "").trim(),
+      onComplete: typeof options.onComplete === "function"
+        ? options.onComplete
+        : null,
+      restoreFocus: options.restoreFocus || null
+    };
     if (typeof callbacks.hideContextMenu === "function") callbacks.hideContextMenu();
     if (typeof callbacks.hideManageActionsMenu === "function") callbacks.hideManageActionsMenu();
     var modalController = typeof callbacks.getModalController === "function" ? callbacks.getModalController() : null;
-    if (modalController) modalController.openImportModal();
+    if (!modalController) return Promise.resolve();
+    return modalController.openImportModal({
+      restoreFocus: activeOpen.restoreFocus
+    });
+  }
+
+  function openForCollection(collection, options = {}) {
+    var destination = normalizeManagedDocumentCollectionTarget(collection);
+    if (!destination.sub_scope) {
+      return Promise.reject(
+        new Error("Sub-scope report Import requires a configured child collection.")
+      );
+    }
+    return open({
+      destination: destination,
+      destinationLabel: options.destinationLabel,
+      onComplete: options.onComplete,
+      restoreFocus: options.restoreFocus
+    });
   }
 
   return {
     initialize: initialize,
-    open: open
+    open: open,
+    openForCollection: openForCollection
   };
 }

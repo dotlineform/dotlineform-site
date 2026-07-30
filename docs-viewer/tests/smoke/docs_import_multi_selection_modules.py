@@ -28,6 +28,7 @@ def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
 
 def assert_multi_selection(page: Page, base_url: str) -> None:
     import_requests: list[dict[str, object]] = []
+    source_requests: list[dict[str, object]] = []
     staged_files = [
         {"filename": "alpha.md", "source_format": "markdown"},
         {"filename": "beta.html", "source_format": "html"},
@@ -92,8 +93,22 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
                 "ok": True,
                 "preview_only": False,
                 "scope": body["scope"],
+                **(
+                    {"sub_scope": body["sub_scope"]}
+                    if body.get("sub_scope")
+                    else {}
+                ),
                 "staged_filename": filename,
                 "doc_id": doc_id,
+                "target": {
+                    "scope": body["scope"],
+                    **(
+                        {"sub_scope": body["sub_scope"]}
+                        if body.get("sub_scope")
+                        else {}
+                    ),
+                    "doc_id": doc_id,
+                },
                 "summary_text": f"Imported {filename}",
                 "import_preview": {
                     "source_format": source_format,
@@ -103,6 +118,13 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
         )
 
     page.route("**/docs/import-source", fulfill_import)
+    page.route(
+        "**/docs/open-source",
+        lambda route: (
+            source_requests.append(route.request.post_data_json),
+            fulfill(route, {"ok": True}),
+        )[-1],
+    )
     result = page.evaluate(
         """async (baseUrl) => {
           document.body.innerHTML = '<div id="mount"></div>';
@@ -113,10 +135,8 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
             mount: document.getElementById('mount')
           });
 
-          let terminalDetail = null;
-          let resolveTerminal;
-          const terminalPromise = new Promise(resolve => { resolveTerminal = resolve; });
-          await importModule.initDocsHtmlImport({
+          const terminalDetails = [];
+          const importApp = await importModule.initDocsHtmlImport({
             root: document.getElementById('docsHtmlImportRoot'),
             bootStatus: document.getElementById('docsHtmlImportBootStatus'),
             managementBaseUrl: baseUrl,
@@ -124,8 +144,7 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
             initialScope: 'studio',
             persistScope: false,
             onTerminalResult(detail) {
-              terminalDetail = detail;
-              resolveTerminal();
+              terminalDetails.push(detail);
             }
           });
 
@@ -163,7 +182,9 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
           }
           if (confirmButton.hidden) throw new Error('interactive HTML replacement confirmation was not shown');
           confirmButton.click();
-          await terminalPromise;
+          while (terminalDetails.length < 1) {
+            await new Promise(resolve => setTimeout(resolve, 0));
+          }
           while (document.getElementById('docsHtmlImportRoot').dataset.studioBusy === 'true') {
             await new Promise(resolve => setTimeout(resolve, 0));
           }
@@ -179,14 +200,74 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
             runLabel: runButton.textContent
           };
 
+          const locationBeforeChild = location.href;
+          importApp.setDestination(
+            { scope: 'studio', sub_scope: 'tags' },
+            { label: 'studio / Tags' }
+          );
+          Array.from(fileSelect.options).forEach(option => {
+            option.selected = option.value === 'alpha.md';
+          });
+          fileSelect.dispatchEvent(new Event('change', { bubbles: true }));
+          const childDestination = {
+            locationUnchanged: location.href === locationBeforeChild,
+            scopeDisabled: document.getElementById('docsHtmlImportScopeSelect').disabled,
+            scopeLabels: Array.from(
+              document.getElementById('docsHtmlImportScopeSelect').options
+            ).map(option => option.textContent),
+            scopeValue: document.getElementById('docsHtmlImportScopeSelect').value,
+            typeDisabled: typeSelect.disabled,
+            typeLabels: Array.from(typeSelect.options).map(option => option.textContent),
+            filenames: Array.from(fileSelect.options).map(option => option.value),
+            selected: Array.from(fileSelect.selectedOptions).map(option => option.value)
+          };
+          runButton.click();
+          while (terminalDetails.length < 2) {
+            await new Promise(resolve => setTimeout(resolve, 0));
+          }
+          while (document.getElementById('docsHtmlImportRoot').dataset.studioBusy === 'true') {
+            await new Promise(resolve => setTimeout(resolve, 0));
+          }
+          const resultLink = document.querySelector('[data-doc-source-link]');
+          const childResult = {
+            link: {
+              scope: resultLink?.dataset.scope || '',
+              subScope: resultLink?.dataset.subScope || '',
+              docId: resultLink?.dataset.docId || ''
+            },
+            terminal: {
+              scope: terminalDetails[1].scope,
+              subScope: terminalDetails[1].subScope,
+              docId: terminalDetails[1].docId,
+              target: terminalDetails[1].target,
+              resultCount: terminalDetails[1].results.length
+            }
+          };
+          resultLink.click();
+          await new Promise(resolve => setTimeout(resolve, 0));
+
+          importApp.setDestination(null, { fallbackScope: 'library' });
+          const restoredGlobal = {
+            scopeDisabled: document.getElementById('docsHtmlImportScopeSelect').disabled,
+            scopeLabels: Array.from(
+              document.getElementById('docsHtmlImportScopeSelect').options
+            ).map(option => option.textContent),
+            scopeValue: document.getElementById('docsHtmlImportScopeSelect').value,
+            typeDisabled: typeSelect.disabled,
+            typeLabels: Array.from(typeSelect.options).map(option => option.textContent)
+          };
+
           return {
             initial,
             afterSelectAll,
+            childDestination,
+            childResult,
             packageMode,
+            restoredGlobal,
             terminal: {
-              scope: terminalDetail.scope,
-              docId: terminalDetail.docId,
-              resultCount: terminalDetail.results.length
+              scope: terminalDetails[0].scope,
+              docId: terminalDetails[0].docId,
+              resultCount: terminalDetails[0].results.length
             }
           };
         }""",
@@ -223,12 +304,49 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
     }
     if result["packageMode"] != expected_package_mode:
         raise AssertionError(f"reviewed-package mode was not isolated and single-select: {result!r}")
+    assert result["childDestination"] == {
+        "locationUnchanged": True,
+        "scopeDisabled": True,
+        "scopeLabels": ["studio / Tags"],
+        "scopeValue": "studio",
+        "typeDisabled": True,
+        "typeLabels": ["Documents (4)"],
+        "filenames": ["alpha.md", "beta.html", "word.docx", "notes.json"],
+        "selected": ["alpha.md"],
+    }
+    child_target = {
+        "scope": "studio",
+        "sub_scope": "tags",
+        "doc_id": "alpha",
+    }
+    assert result["childResult"] == {
+        "link": {
+            "scope": "studio",
+            "subScope": "tags",
+            "docId": "alpha",
+        },
+        "terminal": {
+            "scope": "studio",
+            "subScope": "tags",
+            "docId": "alpha",
+            "target": child_target,
+            "resultCount": 1,
+        },
+    }
+    assert result["restoredGlobal"] == {
+        "scopeDisabled": False,
+        "scopeLabels": ["studio", "library"],
+        "scopeValue": "library",
+        "typeDisabled": False,
+        "typeLabels": ["Documents (4)", "Document packages (1)"],
+    }
     if [request["staged_filename"] for request in import_requests] != [
         "alpha.md",
         "beta.html",
         "beta.html",
         "word.docx",
         "notes.json",
+        "alpha.md",
     ]:
         raise AssertionError(f"ordinary multi-import crossed the package boundary: {import_requests!r}")
     beta_requests = [request for request in import_requests if request["staged_filename"] == "beta.html"]
@@ -239,6 +357,19 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
         raise AssertionError(f"ordinary import still sent retired document collision fields: {import_requests!r}")
     if result["terminal"] != {"scope": "studio", "docId": "notes", "resultCount": 4}:
         raise AssertionError(f"multi-import did not identify the last imported doc: {result!r}")
+    if import_requests[-1].get("sub_scope") != "tags":
+        raise AssertionError(f"child Import did not keep its exact destination: {import_requests!r}")
+    if any(request.get("sub_scope") for request in import_requests[:-1]):
+        raise AssertionError(f"parent Import requests unexpectedly gained a child target: {import_requests!r}")
+    if source_requests != [
+        {
+            "scope": "studio",
+            "sub_scope": "tags",
+            "doc_id": "alpha",
+            "editor": "vscode",
+        }
+    ]:
+        raise AssertionError(f"child result Source did not use its exact target: {source_requests!r}")
 
 
 def main(argv: list[str] | None = None) -> int:

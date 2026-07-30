@@ -4,6 +4,9 @@ import {
   openManagedDocSource
 } from "../management/docs-viewer-management-client.js";
 import {
+  normalizeManagedDocumentCollectionTarget
+} from "../management/docs-viewer-management-document-target.js";
+import {
   clearDocsHtmlImportResult,
   resetDocsHtmlImportWarning
 } from "./docs-html-import-render.js";
@@ -153,7 +156,13 @@ function selectedScopeFromUrl(validScopes, fallbackScope = "") {
 }
 
 function persistSelectedScope(state, scope) {
-  if (state && state.persistScope === false) return;
+  if (
+    state
+    && (
+      state.persistScope === false
+      || state.importDestination && state.importDestination.sub_scope
+    )
+  ) return;
   try {
     const url = new URL(window.location.href);
     url.searchParams.set("scope", scope);
@@ -181,6 +190,22 @@ function normalizeImportMode(value) {
   return normalizeText(value) === DOCS_IMPORT_MODE_DATA_SHARING
     ? DOCS_IMPORT_MODE_DATA_SHARING
     : DOCS_IMPORT_MODE_FILES;
+}
+
+function fixedSubscopeDestination(state) {
+  return Boolean(
+    state
+    && state.importDestination
+    && state.importDestination.sub_scope
+  );
+}
+
+function importDestinationLabel(destination, configuredLabel = "") {
+  const label = normalizeText(configuredLabel);
+  if (label) return label;
+  const scope = normalizeText(destination && destination.scope);
+  const subScope = normalizeText(destination && destination.sub_scope);
+  return subScope ? `${scope} / ${subScope}` : scope;
 }
 
 export function docsImportFilesForMode(files, mode) {
@@ -223,11 +248,55 @@ function selectedCollectionFile(state) {
 function renderImportModeOptions(state) {
   const filesCount = docsImportFilesForMode(state.files, DOCS_IMPORT_MODE_FILES).length;
   const packagesCount = docsImportFilesForMode(state.files, DOCS_IMPORT_MODE_DATA_SHARING).length;
-  state.typeSelect.innerHTML = [
-    `<option value="${DOCS_IMPORT_MODE_FILES}">${escapeHtml(importText("filesOption", { count: filesCount }))}</option>`,
-    `<option value="${DOCS_IMPORT_MODE_DATA_SHARING}">${escapeHtml(importText("dataSharingPackagesOption", { count: packagesCount }))}</option>`
-  ].join("");
+  const options = [
+    `<option value="${DOCS_IMPORT_MODE_FILES}">${escapeHtml(importText("filesOption", { count: filesCount }))}</option>`
+  ];
+  if (!fixedSubscopeDestination(state)) {
+    options.push(
+      `<option value="${DOCS_IMPORT_MODE_DATA_SHARING}">${escapeHtml(importText("dataSharingPackagesOption", { count: packagesCount }))}</option>`
+    );
+  }
+  state.typeSelect.innerHTML = options.join("");
   state.typeSelect.value = state.importMode;
+}
+
+function renderImportScopeOptions(state, fallbackScope = "") {
+  if (fixedSubscopeDestination(state)) {
+    state.scopeSelect.innerHTML = (
+      `<option value="${escapeHtml(state.importDestination.scope)}">`
+      + `${escapeHtml(state.importDestinationLabel)}</option>`
+    );
+    state.scopeSelect.value = state.importDestination.scope;
+    return;
+  }
+  state.scopeSelect.innerHTML = state.docsScopeIds
+    .map((scope) => `<option value="${escapeHtml(scope)}">${escapeHtml(scope)}</option>`)
+    .join("");
+  const normalizedFallback = normalizeText(fallbackScope).toLowerCase();
+  const selectedScope = state.docsScopeIds.includes(normalizedFallback)
+    ? normalizedFallback
+    : selectedScopeFromUrl(state.docsScopeIds, state.docsScopeIds[0] || "");
+  state.scopeSelect.value = selectedScope;
+}
+
+function setImportDestination(state, destination, options = {}) {
+  state.importDestination = destination
+    ? normalizeManagedDocumentCollectionTarget(destination)
+    : null;
+  state.importDestinationLabel = state.importDestination
+    ? importDestinationLabel(state.importDestination, options.label)
+    : "";
+  if (fixedSubscopeDestination(state)) {
+    state.importMode = DOCS_IMPORT_MODE_FILES;
+  }
+  renderImportScopeOptions(state, options.fallbackScope);
+  if (!state.files.length) {
+    renderImportModeOptions(state);
+    syncImportInputControls(state);
+    return;
+  }
+  renderImportModeOptions(state);
+  renderStagedFileList(state);
 }
 
 function syncSourceFormatControls(state) {
@@ -256,8 +325,16 @@ function syncSourceFormatControls(state) {
 
 function syncImportInputControls(state) {
   const records = docsImportFilesForMode(state.files, state.importMode);
-  state.typeSelect.disabled = state.isRunning || !state.serviceAvailable;
-  state.scopeSelect.disabled = state.isRunning || !state.serviceAvailable;
+  state.typeSelect.disabled = (
+    state.isRunning
+    || !state.serviceAvailable
+    || fixedSubscopeDestination(state)
+  );
+  state.scopeSelect.disabled = (
+    state.isRunning
+    || !state.serviceAvailable
+    || fixedSubscopeDestination(state)
+  );
   state.fileSelect.disabled = state.isRunning || !state.serviceAvailable || !records.length;
   syncSourceFormatControls(state);
 }
@@ -324,7 +401,10 @@ function renderStagedFiles(state, files) {
   state.collectionController.reset({ active: false });
 
   if (!docsImportFilesForMode(files, state.importMode).length) {
-    state.importMode = docsImportFilesForMode(files, DOCS_IMPORT_MODE_DATA_SHARING).length
+    state.importMode = (
+      !fixedSubscopeDestination(state)
+      && docsImportFilesForMode(files, DOCS_IMPORT_MODE_DATA_SHARING).length
+    )
       ? DOCS_IMPORT_MODE_DATA_SHARING
       : DOCS_IMPORT_MODE_FILES;
   }
@@ -373,6 +453,10 @@ function refreshStagedFiles(state) {
 
 function bindImportEvents(state) {
   state.typeSelect.addEventListener("change", () => {
+    if (fixedSubscopeDestination(state)) {
+      state.typeSelect.value = DOCS_IMPORT_MODE_FILES;
+      return;
+    }
     rememberSelectedFilenames(state);
     state.importMode = normalizeImportMode(state.typeSelect.value);
     resetImportView(state, "");
@@ -381,6 +465,10 @@ function bindImportEvents(state) {
     markRouteReady(state, true);
   });
   state.scopeSelect.addEventListener("change", () => {
+    if (fixedSubscopeDestination(state)) {
+      state.scopeSelect.value = state.importDestination.scope;
+      return;
+    }
     persistSelectedScope(state, state.scopeSelect.value);
     if (!selectedCollectionFile(state)) return;
     state.collectionController.reset({ active: true });
@@ -448,13 +536,18 @@ function bindImportEvents(state) {
 
 async function openResultSource(state, link) {
   const scope = normalizeText(link && link.dataset ? link.dataset.scope : "");
+  const subScope = normalizeText(
+    link && link.dataset ? link.dataset.subScope : ""
+  );
   const docId = normalizeText(link && link.dataset ? link.dataset.docId : "");
   if (!scope || !docId) return;
   try {
-    await openManagedDocSource({
+    const target = {
       scope,
       doc_id: docId
-    }, "vscode", managementOptionsForState(state));
+    };
+    if (subScope) target.sub_scope = subScope;
+    await openManagedDocSource(target, "vscode", managementOptionsForState(state));
   } catch (error) {
     console.warn("docs_import_source: open source failed", error);
     setStatus(
@@ -467,6 +560,7 @@ async function openResultSource(state, link) {
 }
 
 function importScope(state) {
+  if (state.importDestination) return state.importDestination.scope;
   const selectedScope = normalizeText(state.scopeSelect.value).toLowerCase();
   return state.docsScopeIds.includes(selectedScope) ? selectedScope : state.docsScopeIds[0];
 }
@@ -506,6 +600,9 @@ async function runImport(state) {
   await runDocsHtmlImportWorkflow(state, {
     files,
     scope,
+    subScope: normalizeText(
+      state.importDestination && state.importDestination.sub_scope
+    ),
     includePromptMeta: Boolean(state.includePromptMeta.checked),
     routePath: state.routePath,
     managementBaseUrl: state.managementBaseUrl,
@@ -568,6 +665,8 @@ export async function initDocsHtmlImport(options = {}) {
     refreshPromise: null,
     files: [],
     importMode: DOCS_IMPORT_MODE_FILES,
+    importDestination: null,
+    importDestinationLabel: "",
     selectedFilenamesByMode: {
       [DOCS_IMPORT_MODE_FILES]: [],
       [DOCS_IMPORT_MODE_DATA_SHARING]: []
@@ -622,7 +721,10 @@ export async function initDocsHtmlImport(options = {}) {
   ];
   if (requiredNodes.some((node) => !node)) return;
   const importApp = {
-    refreshStagedFiles: () => refreshStagedFiles(state)
+    refreshStagedFiles: () => refreshStagedFiles(state),
+    setDestination: (destination, destinationOptions = {}) => {
+      setImportDestination(state, destination, destinationOptions);
+    }
   };
 
   try {
@@ -640,14 +742,18 @@ export async function initDocsHtmlImport(options = {}) {
     setText(state.runButton, importText("importButton"));
     setText(state.confirmButton, importText("confirmOverwriteButton"));
     setText(state.cancelButton, importText("cancelOverwriteButton"));
-    state.scopeSelect.innerHTML = state.docsScopeIds
-      .map((scope) => `<option value="${escapeHtml(scope)}">${escapeHtml(scope)}</option>`)
-      .join("");
     const initialScope = normalizeText(options.initialScope).toLowerCase();
     const fallbackScope = state.docsScopeIds[0] || "";
-    state.scopeSelect.value = state.docsScopeIds.includes(initialScope)
-      ? initialScope
-      : selectedScopeFromUrl(state.docsScopeIds, fallbackScope);
+    setImportDestination(
+      state,
+      options.initialDestination || null,
+      {
+        fallbackScope: state.docsScopeIds.includes(initialScope)
+          ? initialScope
+          : selectedScopeFromUrl(state.docsScopeIds, fallbackScope),
+        label: options.initialDestinationLabel
+      }
+    );
     state.includePromptMeta.checked = false;
     bindImportEvents(state);
 

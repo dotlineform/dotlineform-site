@@ -369,25 +369,33 @@ export function createDocsViewerManagementModalController(options = {}) {
     }
   }
 
-  function openImportModal() {
-    if (!refs.importModal || !refs.importRoot) return;
+  function openImportModal(options) {
+    if (!refs.importModal || !refs.importRoot) return Promise.resolve();
+    var settings = options || {};
     var scope = viewerScope();
     var lifecycle = ensureImportModalLifecycle();
     refs.importModal.hidden = false;
     resetImportModalActions();
     if (lifecycle) {
+      var requestedRestoreFocus = settings.restoreFocus;
       lifecycle.open({
-        restoreFocus: isFocusableNow(refs.manageImportButton)
-          ? refs.manageImportButton
-          : refs.manageActionsButton
+        restoreFocus: isFocusableNow(requestedRestoreFocus)
+          ? requestedRestoreFocus
+          : isFocusableNow(refs.manageImportButton)
+            ? refs.manageImportButton
+            : refs.manageActionsButton
       });
     }
     var initResult = typeof callbacks.onImportOpen === "function" ? callbacks.onImportOpen(scope) : null;
     if (initResult && typeof initResult.then === "function") {
-      initResult.then(focusImportModalEntry).catch(focusImportModalEntry);
-    } else {
-      focusImportModalEntry();
+      return initResult.then(function () {
+        focusImportModalEntry();
+      }).catch(function () {
+        focusImportModalEntry();
+      });
     }
+    focusImportModalEntry();
+    return Promise.resolve();
   }
 
   function closeImportModal() {

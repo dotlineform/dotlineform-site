@@ -1030,6 +1030,7 @@ export function initDocsViewerManagement(context) {
     indexSelection: indexSelection,
     initialize: initializeManagement,
     openImportModal: importController.open,
+    openSubscopeImport: importController.openForCollection,
     publishSubscopeReportState: publishSubscopeReportState,
     reconcileIndexSelectionReload: indexController.reconcileReload,
     render: renderManagementUi,

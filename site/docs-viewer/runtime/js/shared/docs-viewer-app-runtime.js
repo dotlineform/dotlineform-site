@@ -360,6 +360,14 @@ export function startDocsViewerRuntime(options) {
           }
           return controller.createSubscopeDocument(collection, options);
         });
+      },
+      openSubscopeImport: function (collection, options) {
+        return loadManagementController().then(function (controller) {
+          if (!controller || typeof controller.openSubscopeImport !== "function") {
+            throw new Error("Sub-scope document Import is unavailable.");
+          }
+          return controller.openSubscopeImport(collection, options);
+        });
       }
     },
     mountDocumentExtras: settings.mountDocumentExtras,

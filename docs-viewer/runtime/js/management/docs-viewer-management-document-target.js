@@ -43,6 +43,34 @@ export function normalizeManagedDocumentTarget(value) {
   return Object.freeze(target);
 }
 
+export function normalizeManagedDocumentCollectionTarget(value) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw new Error("Managed document collection target must be an object.");
+  }
+  var keys = targetKeys(value);
+  var parentKeys = ["scope"];
+  var subScopeKeys = ["scope", "sub_scope"];
+  if (!sameKeys(keys, parentKeys) && !sameKeys(keys, subScopeKeys)) {
+    throw new Error(
+      "Managed document collection target must contain exactly scope, "
+      + "with sub_scope only for a configured child collection."
+    );
+  }
+
+  var scope = cleanString(value.scope).toLowerCase();
+  if (!scope) throw new Error("Managed document collection target scope is required.");
+
+  var target = { scope: scope };
+  if (Object.prototype.hasOwnProperty.call(value, "sub_scope")) {
+    var subScope = cleanString(value.sub_scope).toLowerCase();
+    if (!subScope) {
+      throw new Error("Managed document collection target sub_scope is required.");
+    }
+    target.sub_scope = subScope;
+  }
+  return Object.freeze(target);
+}
+
 export function managedDocumentTargetsEqual(left, right) {
   var normalizedLeft = normalizeManagedDocumentTarget(left);
   var normalizedRight = normalizeManagedDocumentTarget(right);
