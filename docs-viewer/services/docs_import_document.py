@@ -17,6 +17,7 @@ from docs_import_content import (
 from docs_import_media import materialize_import_media
 from docs_import_source_helpers import import_summary_text, relative_path, viewer_url_for
 from docs_import_source_interactive import materialize_interactive_html_assets
+from docs_management_document_target import ManagedDocumentCollection
 from docs_management_mutations import metadata_search_doc_ids
 from docs_source_model import (
     ScopeDoc,
@@ -71,6 +72,7 @@ class ImportDocumentPlan:
     viewable: bool
     search_doc_ids: tuple[str, ...]
     import_preview: dict[str, Any]
+    sub_scope: str = ""
     target: ScopeDoc | None = None
 
     @property
@@ -157,6 +159,7 @@ def _apply_explicit_front_matter(
 def _create_source(
     record: ImportContent,
     scope: str,
+    sub_scope: str,
     import_preview: dict[str, Any],
     explicit_front_matter: dict[str, Any],
     added_date: str,
@@ -165,12 +168,20 @@ def _create_source(
         raise ValueError("preserve-existing content requires an existing import target")
     parent_id = _clean_text(record.parent_id)
     default_viewable = default_viewable_for_scope(scope)
-    front_matter: dict[str, Any] = advance_doc_front_matter({
+    front_matter_seed: dict[str, Any] = {
         "doc_id": record.doc_id,
         "title": record.title,
         "added_date": added_date,
-        "parent_id": parent_id,
-    }, timestamp=added_date)
+    }
+    if sub_scope:
+        if parent_id or "parent_id" in explicit_front_matter:
+            raise ValueError("parent_id is not accepted for a sub-scope import")
+    else:
+        front_matter_seed["parent_id"] = parent_id
+    front_matter = advance_doc_front_matter(
+        front_matter_seed,
+        timestamp=added_date,
+    )
     if not default_viewable:
         front_matter["viewable"] = False
     _apply_explicit_front_matter(front_matter, explicit_front_matter)
@@ -234,10 +245,18 @@ def plan_import_document(
     import_preview: dict[str, Any] | None = None,
     create_doc_id: str = "",
     create_added_date: str = "",
+    collection: ManagedDocumentCollection | None = None,
 ) -> ImportDocumentPlan:
     """Validate and plan one create or overwrite without writing."""
 
     normalized_scope = normalize_scope(scope)
+    sub_scope = ""
+    create_root = scope_root(repo_root, normalized_scope)
+    if collection is not None:
+        if collection.scope != normalized_scope:
+            raise ValueError("import collection target does not match the requested scope")
+        sub_scope = collection.sub_scope
+        create_root = collection.source_root
     if operation == IMPORT_DOCUMENT_OVERWRITE and slugify(record.doc_id) != record.doc_id:
         raise ValueError("ImportContent doc_id must be a safe normalized docs id")
     if operation not in IMPORT_DOCUMENT_OPERATIONS:
@@ -279,7 +298,7 @@ def plan_import_document(
     explicit_front_matter = _explicit_front_matter(record)
     title = _clean_text(record.title)
     if operation == IMPORT_DOCUMENT_CREATE:
-        target_path = scope_root(repo_root, normalized_scope) / f"{record.doc_id}.md"
+        target_path = create_root / f"{record.doc_id}.md"
         if any(doc.doc_id == record.doc_id or doc.path.stem == record.doc_id for doc in docs):
             raise ValueError(f"cannot create existing import target {record.doc_id!r}")
         if target_path.exists():
@@ -287,11 +306,12 @@ def plan_import_document(
         source_text, parent_id, viewable = _create_source(
             record,
             normalized_scope,
+            sub_scope,
             preview,
             explicit_front_matter,
             added_date,
         )
-        search_doc_ids = (record.doc_id,)
+        search_doc_ids = () if sub_scope else (record.doc_id,)
     else:
         assert target is not None
         target_path = target.path
@@ -320,6 +340,7 @@ def plan_import_document(
         viewable=viewable,
         search_doc_ids=search_doc_ids,
         import_preview=preview,
+        sub_scope=sub_scope,
         target=target,
     )
 
@@ -405,6 +426,7 @@ def import_document_activity(
             "doc_id": plan.doc_id,
             "path": relative_path(repo_root, plan.target_path),
             "include_prompt_meta": include_prompt_meta,
+            **({"sub_scope": plan.sub_scope} if plan.sub_scope else {}),
         },
     )
 
@@ -422,18 +444,23 @@ def import_document_result(
 
     inline_media_written = list(apply_result.inline_media_written)
     interactive_html_written = list(apply_result.interactive_html_written)
-    return {
+    target = {"scope": plan.scope, "doc_id": plan.doc_id}
+    if plan.sub_scope:
+        target["sub_scope"] = plan.sub_scope
+    record: dict[str, Any] = {
+        "doc_id": plan.doc_id,
+        "title": plan.title,
+        "viewable": plan.viewable,
+    }
+    if not plan.sub_scope:
+        record["parent_id"] = plan.parent_id
+    result = {
         "operation": plan.operation,
         "doc_id": plan.doc_id,
         "path": relative_path(repo_root, plan.target_path),
-        "viewer_url": viewer_url_for(plan.scope, plan.doc_id),
         "title": plan.title,
-        "record": {
-            "doc_id": plan.doc_id,
-            "title": plan.title,
-            "parent_id": plan.parent_id,
-            "viewable": plan.viewable,
-        },
+        "target": target,
+        "record": record,
         "inline_media_written": inline_media_written,
         "interactive_html_written": interactive_html_written,
         "rebuild": rebuild,
@@ -445,6 +472,11 @@ def import_document_result(
         ),
         "dry_run": dry_run,
     }
+    if plan.sub_scope:
+        result["sub_scope"] = plan.sub_scope
+    else:
+        result["viewer_url"] = viewer_url_for(plan.scope, plan.doc_id)
+    return result
 
 
 __all__ = [

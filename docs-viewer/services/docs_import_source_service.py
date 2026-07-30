@@ -41,11 +41,15 @@ from docs_import_source_interactive import (
     ensure_interactive_html_targets_available,
     interactive_html_asset_plans,
 )
+from docs_management_document_target import (
+    ManagedDocumentCollection,
+    confined_source_path,
+    source_doc_from_path,
+)
+import docs_source_model as source_model
 from docs_source_model import (
     allocate_doc_id,
     current_doc_timestamp,
-    normalize_scope,
-    scope_root,
 )
 from docs_document_packages.workspace import configured_workspace_paths, marker_path, workspace_status
 
@@ -58,15 +62,54 @@ PerformSourceWriteAndRebuild = Callable[..., Dict[str, Any]]
 class ImportSourceDependencies:
     log_event: LogEvent
     perform_source_write_and_rebuild: PerformSourceWriteAndRebuild
+    perform_sub_scope_source_write_and_rebuild: PerformSourceWriteAndRebuild
 
 
-def allocate_ordinary_import_doc_id(repo_root: Path, scope: str, added_date: str) -> str:
-    documents_root = scope_root(repo_root, scope)
+def load_ordinary_import_collection_docs(
+    collection: ManagedDocumentCollection,
+) -> list[source_model.ScopeDoc]:
+    if not collection.sub_scope:
+        return []
+    docs: list[source_model.ScopeDoc] = []
+    for candidate in source_model.scope_markdown_paths(collection.source_root):
+        confined = confined_source_path(collection.source_root, candidate)
+        document = source_doc_from_path(
+            path=confined,
+            scope=collection.scope,
+            requested_doc_id=candidate.stem,
+        )
+        source_model.validate_sub_scope_document_metadata(
+            document,
+            ui_statuses=collection.document_config.ui_statuses,
+            document_groups=collection.document_config.document_groups,
+        )
+        docs.append(document)
+    return docs
+
+
+def allocate_ordinary_import_doc_id(
+    collection: ManagedDocumentCollection,
+    added_date: str,
+    docs: list[source_model.ScopeDoc],
+) -> str:
+    documents_root = collection.source_root
     if not documents_root.is_dir():
-        raise ValueError(f"missing source root for scope {scope}: {documents_root}")
+        raise ValueError(
+            f"missing source root for import target "
+            f"{collection.scope}/{collection.sub_scope or '(parent)'}: "
+            f"{documents_root}",
+        )
+    unavailable = {
+        identity
+        for document in docs
+        for identity in (document.doc_id, document.path.stem)
+    }
     for _attempt in range(100):
         doc_id = allocate_doc_id(added_date)
-        if not (documents_root / f"{doc_id}.md").exists():
+        if (
+            doc_id not in unavailable
+            and not (documents_root / f"{doc_id}.md").exists()
+        ):
             return doc_id
     raise RuntimeError("could not allocate an available ordinary import document identity")
 
@@ -121,8 +164,10 @@ def handle_import_source(
     staging_root: Path,
     workspace_root: Path,
     metadata_root: Path,
+    destination: ManagedDocumentCollection,
 ) -> Dict[str, Any]:
-    scope = normalize_scope(body.get("scope"))
+    scope = destination.scope
+    sub_scope = destination.sub_scope
     staged_filename = str(body.get("staged_filename") or "").strip()
     include_prompt_meta = bool(body.get("include_prompt_meta"))
     confirm_interactive_html_overwrite = bool(body.get("confirm_interactive_html_overwrite"))
@@ -138,6 +183,11 @@ def handle_import_source(
             "Export-only document packages cannot enter Docs Import."
         )
     if source_format == COLLECTION_SOURCE_FORMAT:
+        if sub_scope:
+            raise ValueError(
+                "Returned document packages are not supported for configured "
+                "sub-scope destinations by ordinary Docs Import.",
+            )
         if not (dry_run or preview_only):
             return apply_document_package_collection(
                 repo_root,
@@ -177,6 +227,7 @@ def handle_import_source(
         return payload
     if is_interactive_html_import_asset(source_path):
         raise ValueError("interactive HTML script files cannot be selected as the primary import source")
+    docs = load_ordinary_import_collection_docs(destination)
     preview = generate_import_preview(
         repo_root,
         staging_root=staging_root,
@@ -186,6 +237,9 @@ def handle_import_source(
         include_prompt_meta=include_prompt_meta,
         retain_private_media_source=True,
     )
+    preview["target"] = destination.request_target()
+    if sub_scope:
+        preview["sub_scope"] = sub_scope
     private_media_source_markdown = str(preview.pop("_inline_media_source_markdown", "") or "")
     preview.pop("_inline_svg_source_markup", None)
     interactive_plans = interactive_html_asset_plans(repo_root, staging_root, workspace_root, scope)
@@ -208,21 +262,24 @@ def handle_import_source(
             )
 
     if dry_run or preview_only or requires_interactive_html_confirmation:
+        preview_event = {
+            "scope": scope,
+            "staged_filename": staged_filename,
+            "source_format": preview.get("source_format"),
+            "include_prompt_meta": include_prompt_meta,
+            "proposed_doc_id": preview["proposed_doc_id"],
+            "inline_media_count": len(preview.get("media_plans") or []),
+            "interactive_html_asset_count": len(interactive_plans),
+            "requires_interactive_html_confirmation": requires_interactive_html_confirmation,
+        }
+        if sub_scope:
+            preview_event["sub_scope"] = sub_scope
         dependencies.log_event(
             repo_root,
             "docs-import-source-preview",
-            {
-                "scope": scope,
-                "staged_filename": staged_filename,
-                "source_format": preview.get("source_format"),
-                "include_prompt_meta": include_prompt_meta,
-                "proposed_doc_id": preview["proposed_doc_id"],
-                "inline_media_count": len(preview.get("media_plans") or []),
-                "interactive_html_asset_count": len(interactive_plans),
-                "requires_interactive_html_confirmation": requires_interactive_html_confirmation,
-            },
+            preview_event,
         )
-        return {
+        response = {
             "ok": True,
             "scope": scope,
             "staged_filename": staged_filename,
@@ -237,6 +294,9 @@ def handle_import_source(
             ),
             "dry_run": dry_run,
         }
+        if sub_scope:
+            response["sub_scope"] = sub_scope
+        return response
 
     ensure_interactive_html_targets_available(
         interactive_plans,
@@ -244,7 +304,11 @@ def handle_import_source(
     )
     source_doc_id = str(preview["proposed_doc_id"])
     create_added_date = current_doc_timestamp()
-    create_doc_id = allocate_ordinary_import_doc_id(repo_root, scope, create_added_date)
+    create_doc_id = allocate_ordinary_import_doc_id(
+        destination,
+        create_added_date,
+        docs,
+    )
     preview["proposed_doc_id"] = create_doc_id
     preview["proposed_doc_id_source"] = "allocated-local-identity"
     if source_path.is_dir():
@@ -274,10 +338,11 @@ def handle_import_source(
         scope,
         record,
         operation=IMPORT_DOCUMENT_CREATE,
-        docs=[],
+        docs=docs,
         import_preview=preview,
         create_doc_id=create_doc_id,
         create_added_date=create_added_date,
+        collection=destination,
     )
     media_context = ImportDocumentMediaContext(
         staging_root=staging_root,
@@ -298,15 +363,25 @@ def handle_import_source(
             media_context=media_context,
         )
 
-    rebuild = dependencies.perform_source_write_and_rebuild(
-        repo_root,
-        scope,
-        plan.changed_paths,
-        write_import_document,
-        suppression_reason=plan.suppression_reason,
-        docs_doc_ids=plan.docs_doc_ids,
-        search_doc_ids=list(plan.search_doc_ids),
-    )
+    if sub_scope:
+        rebuild = dependencies.perform_sub_scope_source_write_and_rebuild(
+            repo_root,
+            scope,
+            sub_scope,
+            plan.changed_paths,
+            write_import_document,
+            suppression_reason=plan.suppression_reason,
+        )
+    else:
+        rebuild = dependencies.perform_source_write_and_rebuild(
+            repo_root,
+            scope,
+            plan.changed_paths,
+            write_import_document,
+            suppression_reason=plan.suppression_reason,
+            docs_doc_ids=plan.docs_doc_ids,
+            search_doc_ids=list(plan.search_doc_ids),
+        )
     event_name, event_details = import_document_activity(
         repo_root,
         plan,
@@ -322,7 +397,7 @@ def handle_import_source(
         rebuild=rebuild,
         dry_run=dry_run,
     )
-    return {
+    response = {
         "ok": True,
         "scope": scope,
         "staged_filename": staged_filename,
@@ -332,3 +407,6 @@ def handle_import_source(
         "import_preview": plan.import_preview,
         **result,
     }
+    if sub_scope:
+        response["sub_scope"] = sub_scope
+    return response

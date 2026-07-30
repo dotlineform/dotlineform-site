@@ -9,6 +9,7 @@ import pytest
 
 import docs_import_preview
 import docs_management_service
+import docs_source_model as source_model
 import docs_write_rebuild as write_rebuild
 from repo_factory import docs_scope_record, write_docs_scope_config
 
@@ -62,6 +63,70 @@ def test_markdown_import_create_wraps_body_with_generated_front_matter() -> None
     assert "title: Imported Markdown" in source_text
     assert "# Imported Markdown" in source_text
     assert "Body from staged Markdown" in source_text
+
+
+def test_parent_markdown_front_matter_is_hygiene_not_canonical_identity() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_library_doc(
+            root,
+            "library.md",
+            {"doc_id": "library", "title": "Library", "parent_id": ""},
+        )
+        write_staged_markdown(
+            root,
+            "front-matter-note.md",
+            """---
+title: Front Matter Note
+doc_id: supplied-overwrite-id
+parent_id: supplied-parent
+summary: Supplied summary
+---
+
+Body without a heading.
+""",
+        )
+        original_rebuild = stub_rebuild()
+        original_validation = docs_import_preview.validate_markdown_preview
+        docs_import_preview.validate_markdown_preview = (
+            lambda markdown, *, title="": {
+                "ok": True,
+                "html_chars": len(markdown),
+                "renderer": "stub",
+            }
+        )
+        try:
+            payload = handle_import_source(
+                root,
+                {
+                    "scope": "library",
+                    "staged_filename": "front-matter-note.md",
+                },
+                dry_run=False,
+            )
+        finally:
+            write_rebuild.perform_source_write_and_rebuild = original_rebuild
+            docs_import_preview.validate_markdown_preview = original_validation
+
+        source_path = root / payload["path"]
+        front_matter, body = source_model.parse_source(source_path)
+
+    assert payload["target"] == {
+        "scope": "library",
+        "doc_id": payload["doc_id"],
+    }
+    assert payload["doc_id"] != "supplied-overwrite-id"
+    assert payload["title"] == "Front Matter Note"
+    assert front_matter["doc_id"] == payload["doc_id"]
+    assert front_matter["parent_id"] == ""
+    assert "summary" not in front_matter
+    assert body == "Body without a heading.\n"
+    assert payload["import_preview"]["ordinary_front_matter"] == {
+        "stripped": True,
+        "fields": ["title", "doc_id", "parent_id", "summary"],
+        "ignored_fields": ["doc_id", "parent_id", "summary"],
+        "title_used": True,
+    }
 
 
 def test_markdown_import_create_returns_external_workspace_relative_path(tmp_path: Path) -> None:

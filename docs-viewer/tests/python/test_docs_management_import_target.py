@@ -7,11 +7,13 @@ from pathlib import Path
 
 import pytest
 
+import docs_import_preview
 from repo_factory import (
     docs_scope_record,
     docs_sub_scope_record,
     write_docs_scope_config,
     write_site_tools_config,
+    write_staged_import_file,
 )
 
 import docs_management_import_service as import_service
@@ -67,25 +69,44 @@ def test_import_target_adopts_parent_and_configured_child(
     }
 
 
-def test_import_handler_blocks_child_before_parent_workflow(
+def test_import_handler_preview_freezes_child_destination(
     tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     prepare_repo(tmp_path)
+    write_staged_import_file(
+        tmp_path,
+        "ordinary.md",
+        "# Ordinary\n\nPreview body.\n",
+    )
+    monkeypatch.setattr(
+        docs_import_preview,
+        "validate_markdown_preview",
+        lambda markdown, *, title="": {
+            "ok": True,
+            "html_chars": len(markdown),
+            "renderer": "stub",
+        },
+    )
 
-    with pytest.raises(
-        ValueError,
-        match="not yet available for configured sub-scope destinations",
-    ):
-        import_service.handle_import_source(
-            tmp_path,
-            {
-                "scope": "analysis",
-                "sub_scope": "tags",
-                "staged_filename": "ordinary.md",
-            },
-            dry_run=False,
-        )
+    payload = import_service.handle_import_source(
+        tmp_path,
+        {
+            "scope": "analysis",
+            "sub_scope": "tags",
+            "staged_filename": "ordinary.md",
+            "preview_only": True,
+        },
+        dry_run=False,
+    )
 
+    assert payload["preview_only"] is True
+    assert payload["scope"] == "analysis"
+    assert payload["sub_scope"] == "tags"
+    assert payload["import_preview"]["target"] == {
+        "scope": "analysis",
+        "sub_scope": "tags",
+    }
     assert not list(
         (tmp_path / "docs-viewer/scopes/analysis/source/documents").glob("*.md")
     )

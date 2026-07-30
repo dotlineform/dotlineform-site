@@ -56,7 +56,11 @@ from docs_import_media import (  # noqa: E402
     apply_inline_raster_media_plans,
     apply_inline_svg_media_plans,
 )
+from docs_source_model import parse_front_matter_value  # noqa: E402
 from docs_document_packages.workspace import configured_workspace_paths, marker_path  # noqa: E402
+
+
+ORDINARY_FRONT_MATTER_KEY_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_-]*$")
 
 
 def import_artifact_path(repo_root: Path, path: Path, workspace_root: Path) -> str:
@@ -218,6 +222,7 @@ def generate_import_preview(
             workspace_root=workspace_root,
             package_path=source_path,
             scope=scope,
+            retain_private_media_source=retain_private_media_source,
         )
     if source_format == "markdown":
         return generate_markdown_import_preview(
@@ -226,6 +231,7 @@ def generate_import_preview(
             workspace_root=workspace_root,
             source_path=source_path,
             scope=scope,
+            retain_private_media_source=retain_private_media_source,
         )
     if source_format == "text":
         return generate_text_import_preview(
@@ -375,18 +381,122 @@ def generate_html_content_import_preview(
     return summary
 
 
-def extract_markdown_title(markdown: str, fallback: str) -> tuple[str, str]:
+def extract_markdown_title(
+    markdown: str,
+    fallback: str,
+    *,
+    front_matter_title: str = "",
+) -> tuple[str, str]:
     match = MARKDOWN_HEADING_PATTERN.search(markdown or "")
     if match:
         title = normalize_space(re.sub(r"\s+#*$", "", match.group(1)))
         if title:
             return title, "h1"
+    normalized_front_matter_title = normalize_space(front_matter_title)
+    if normalized_front_matter_title:
+        return normalized_front_matter_title, "front_matter"
     return humanize(fallback) or "Imported Doc", "filename"
 
 
-def build_markdown_summary(source_markdown: str, source_filename_stem: str) -> dict[str, Any]:
+def normalize_ordinary_markdown_front_matter(
+    source_markdown: str,
+    *,
+    source_name: str,
+) -> tuple[str, str, dict[str, Any] | None, list[str]]:
+    markdown = (source_markdown or "").lstrip("\ufeff")
+    if not markdown.startswith("---"):
+        return markdown, "", None, []
+
+    lines = markdown.splitlines(keepends=True)
+    if not lines or lines[0].strip() != "---":
+        raise ValueError(
+            f"Ordinary Markdown front matter is malformed in {source_name}: "
+            "the opening delimiter must be a line containing only ---.",
+        )
+
+    closing_index = next(
+        (
+            index
+            for index, line in enumerate(lines[1:], start=1)
+            if line.strip() == "---"
+        ),
+        None,
+    )
+    if closing_index is None:
+        raise ValueError(
+            f"Ordinary Markdown front matter is unterminated in {source_name}.",
+        )
+
+    fields: dict[str, Any] = {}
+    raw_values: dict[str, str] = {}
+    for line_number, line in enumerate(lines[1:closing_index], start=2):
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        if ":" not in stripped:
+            raise ValueError(
+                f"Ordinary Markdown front matter is malformed in {source_name} "
+                f"at line {line_number}: expected a key and scalar value.",
+            )
+        key, raw_value = stripped.split(":", 1)
+        key = key.strip()
+        if not ORDINARY_FRONT_MATTER_KEY_PATTERN.fullmatch(key):
+            raise ValueError(
+                f"Ordinary Markdown front matter is malformed in {source_name} "
+                f"at line {line_number}: invalid field name {key!r}.",
+            )
+        if key in fields:
+            raise ValueError(
+                f"Ordinary Markdown front matter is malformed in {source_name}: "
+                f"duplicate field {key!r}.",
+            )
+        raw_values[key] = raw_value.strip()
+        fields[key] = parse_front_matter_value(raw_value)
+
+    title = ""
+    warnings: list[str] = []
+    if "title" in fields:
+        raw_title = raw_values["title"]
+        title_value = fields["title"]
+        structured_title = raw_title.startswith(("[", "{", "|", ">"))
+        if isinstance(title_value, str) and not structured_title:
+            title = normalize_space(title_value)
+        if not title:
+            warnings.append(
+                "Ignored ordinary Markdown front matter title because it was "
+                "not a non-blank scalar string.",
+            )
+
+    ignored_fields = [field for field in fields if field != "title"]
+    if ignored_fields:
+        warnings.append(
+            "Ignored ordinary Markdown front matter fields: "
+            + ", ".join(ignored_fields)
+            + ".",
+        )
+
+    body = "".join(lines[closing_index + 1 :])
+    diagnostics = {
+        "stripped": True,
+        "fields": list(fields),
+        "ignored_fields": ignored_fields,
+        "title_used": False,
+    }
+    return body, title, diagnostics, warnings
+
+
+def build_markdown_summary(
+    source_markdown: str,
+    source_filename_stem: str,
+    *,
+    front_matter_title: str = "",
+) -> dict[str, Any]:
     markdown = (source_markdown or "").lstrip("\ufeff").strip()
-    title, title_source = extract_markdown_title(markdown, source_filename_stem)
+    title, title_source = extract_markdown_title(
+        markdown,
+        source_filename_stem,
+        front_matter_title=front_matter_title,
+    )
     warnings: list[str] = []
     if not markdown:
         markdown = f"# {title}"
@@ -453,6 +563,7 @@ def generate_markdown_import_preview(
     workspace_root: Path,
     source_path: Path,
     scope: str,
+    retain_private_media_source: bool = False,
 ) -> dict[str, Any]:
     source_markdown = source_path.read_text(encoding="utf-8", errors="replace")
     summary = generate_markdown_content_import_preview(
@@ -462,8 +573,10 @@ def generate_markdown_import_preview(
         scope=scope,
         staging_root=staging_root,
         workspace_root=workspace_root,
+        normalize_ordinary_front_matter=True,
     )
-    summary.pop("_inline_media_source_markdown", None)
+    if not retain_private_media_source:
+        summary.pop("_inline_media_source_markdown", None)
     summary["source_path"] = import_artifact_path(repo_root, source_path, workspace_root)
     summary["source_markdown"] = summary["source_path"]
     return summary
@@ -479,9 +592,37 @@ def generate_markdown_content_import_preview(
     workspace_root: Path,
     title: str = "",
     doc_id: str = "",
+    normalize_ordinary_front_matter: bool = False,
 ) -> dict[str, Any]:
     normalized_scope = normalize_scope(scope)
-    summary = build_markdown_summary(source_markdown, source_identity)
+    ordinary_front_matter = None
+    front_matter_title = ""
+    front_matter_warnings: list[str] = []
+    normalized_markdown = source_markdown
+    if normalize_ordinary_front_matter:
+        (
+            normalized_markdown,
+            front_matter_title,
+            ordinary_front_matter,
+            front_matter_warnings,
+        ) = normalize_ordinary_markdown_front_matter(
+            source_markdown,
+            source_name=source_identity,
+        )
+    summary = build_markdown_summary(
+        normalized_markdown,
+        source_identity,
+        front_matter_title=front_matter_title,
+    )
+    if ordinary_front_matter is not None:
+        ordinary_front_matter["title_used"] = summary["title_source"] == "front_matter"
+        if front_matter_title and not ordinary_front_matter["title_used"]:
+            front_matter_warnings.append(
+                "Ignored ordinary Markdown front matter title because the body "
+                "already has an H1.",
+            )
+        summary["ordinary_front_matter"] = ordinary_front_matter
+        summary["warnings"] = front_matter_warnings + summary["warnings"]
     apply_content_identity_hints(summary, title=title, doc_id=doc_id)
     summary["scope"] = normalized_scope
     summary["source_format"] = "markdown"
@@ -505,13 +646,36 @@ def generate_markdown_package_import_preview(
     workspace_root: Path,
     package_path: Path,
     scope: str,
+    retain_private_media_source: bool = False,
 ) -> dict[str, Any]:
     normalized_scope = normalize_scope(scope)
     package_root = package_path.resolve()
     markdown_path = find_package_markdown_file(package_root)
     source_markdown = markdown_path.read_text(encoding="utf-8", errors="replace")
     package_markdown = normalize_apple_notes_caption_spans(source_markdown)
-    summary = build_markdown_summary(package_markdown, package_path.name)
+    (
+        package_markdown,
+        front_matter_title,
+        ordinary_front_matter,
+        front_matter_warnings,
+    ) = normalize_ordinary_markdown_front_matter(
+        package_markdown,
+        source_name=markdown_path.relative_to(package_root).as_posix(),
+    )
+    summary = build_markdown_summary(
+        package_markdown,
+        package_path.name,
+        front_matter_title=front_matter_title,
+    )
+    if ordinary_front_matter is not None:
+        ordinary_front_matter["title_used"] = summary["title_source"] == "front_matter"
+        if front_matter_title and not ordinary_front_matter["title_used"]:
+            front_matter_warnings.append(
+                "Ignored ordinary Markdown front matter title because the body "
+                "already has an H1.",
+            )
+        summary["ordinary_front_matter"] = ordinary_front_matter
+        summary["warnings"] = front_matter_warnings + summary["warnings"]
     summary["scope"] = normalized_scope
     summary["source_format"] = "markdown_package"
     summary["source_path"] = marker_path(package_root, workspace_root=workspace_root)
@@ -531,6 +695,8 @@ def generate_markdown_package_import_preview(
         scope=normalized_scope,
     )
     apply_inline_raster_media_plans(repo_root, staging_root, workspace_root, summary, normalized_scope)
+    if retain_private_media_source:
+        summary["_inline_media_source_markdown"] = package_markdown
     summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
     return summary
 

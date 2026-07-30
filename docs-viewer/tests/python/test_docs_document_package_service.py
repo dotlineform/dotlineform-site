@@ -18,6 +18,7 @@ from docs_document_packages.workspace import workspace_paths
 import docs_document_package_routes as routes
 import docs_import_document_package as import_package
 import docs_import_source_service as import_source_service
+from docs_management_document_target import resolve_managed_document_collection
 import docs_source_model as source_model
 from docs_viewer_service import DocsViewerServer, DocsViewerServiceConfig
 from repo_factory import (
@@ -782,6 +783,7 @@ def test_sub_scope_written_package_is_reviewable_but_blocked_from_import() -> No
         dependencies = import_source_service.ImportSourceDependencies(
             log_event=lambda *_args, **_kwargs: None,
             perform_source_write_and_rebuild=lambda *_args, **_kwargs: {},
+            perform_sub_scope_source_write_and_rebuild=lambda *_args, **_kwargs: {},
         )
         with pytest.raises(ValueError, match="Export-only document packages"):
             import_source_service.handle_import_source(
@@ -796,6 +798,10 @@ def test_sub_scope_written_package_is_reviewable_but_blocked_from_import() -> No
                 staging_root=paths.import_staging,
                 workspace_root=paths.root,
                 metadata_root=paths.meta,
+                destination=resolve_managed_document_collection(
+                    repo_root,
+                    scope="library",
+                ),
             )
         source_after = (
             repo_root / "docs-viewer/scopes/library/source/documents/alpha.md"

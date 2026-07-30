@@ -19,6 +19,9 @@ def import_source_dependencies() -> import_source_service.ImportSourceDependenci
     return import_source_service.ImportSourceDependencies(
         log_event=log_event,
         perform_source_write_and_rebuild=write_rebuild.perform_source_write_and_rebuild,
+        perform_sub_scope_source_write_and_rebuild=(
+            write_rebuild.perform_sub_scope_source_write_and_rebuild
+        ),
     )
 
 
@@ -41,11 +44,6 @@ def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
         repo_root,
         ordinary_import_target_request(body),
     )
-    if target.sub_scope:
-        raise ValueError(
-            "Ordinary Docs Import preview and create are not yet available "
-            "for configured sub-scope destinations."
-        )
     status = workspace_status(repo_root, required_paths=("import_staging",))
     if not status["available"]:
         raise ValueError(status["message"])
@@ -58,4 +56,5 @@ def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
         staging_root=workspace_paths.import_staging,
         workspace_root=workspace_paths.root,
         metadata_root=workspace_paths.meta,
+        destination=target,
     )

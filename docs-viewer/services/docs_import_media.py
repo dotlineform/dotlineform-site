@@ -275,15 +275,37 @@ def raw_markdown_for_inline_media(source_path: Path, *, include_prompt_meta: boo
         source_html = source_path.read_text(encoding="utf-8", errors="replace")
         return html_to_markdown(source_html, include_prompt_meta=include_prompt_meta).markdown
     if source_format == "markdown":
-        from docs_import_preview import build_markdown_summary
+        from docs_import_preview import (
+            build_markdown_summary,
+            normalize_ordinary_markdown_front_matter,
+        )
 
-        summary = build_markdown_summary(source_path.read_text(encoding="utf-8", errors="replace"), source_path.stem)
+        markdown, front_matter_title, _diagnostics, _warnings = (
+            normalize_ordinary_markdown_front_matter(
+                source_path.read_text(encoding="utf-8", errors="replace"),
+                source_name=source_path.name,
+            )
+        )
+        summary = build_markdown_summary(
+            markdown,
+            source_path.stem,
+            front_matter_title=front_matter_title,
+        )
         return str(summary.get("markdown_preview") or "")
     if source_format == "markdown_package":
         from docs_import_markdown_package import find_package_markdown_file, normalize_apple_notes_caption_spans
+        from docs_import_preview import normalize_ordinary_markdown_front_matter
 
         markdown_path = find_package_markdown_file(source_path)
-        return normalize_apple_notes_caption_spans(markdown_path.read_text(encoding="utf-8", errors="replace"))
+        markdown, _title, _diagnostics, _warnings = (
+            normalize_ordinary_markdown_front_matter(
+                normalize_apple_notes_caption_spans(
+                    markdown_path.read_text(encoding="utf-8", errors="replace"),
+                ),
+                source_name=markdown_path.relative_to(source_path).as_posix(),
+            )
+        )
+        return markdown
     return ""
 
 
