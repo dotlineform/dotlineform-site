@@ -7,7 +7,31 @@
       "doc_id": "d-20260730-121423-469e54",
       "title": "Sub-Scope Ordinary Document Import Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260730-121423-469e54.json",
-      "timestamp": "2026-07-30 14:30:58",
+      "timestamp": "2026-07-30 14:49:04",
+      "parent_id": "d-20260728-113139-285eae",
+      "parent_title": "Sub-Scope Index"
+    },
+    {
+      "doc_id": "d-20260424-000000-fc8b5d",
+      "title": "Docs Import",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260424-000000-fc8b5d.json",
+      "timestamp": "2026-07-30 14:49:00",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260514-164722-3de65e",
+      "title": "Docs Import Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260514-164722-3de65e.json",
+      "timestamp": "2026-07-30 14:49:00",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260728-113139-763354",
+      "title": "Sub-Scope Index Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-113139-763354.json",
+      "timestamp": "2026-07-30 14:49:00",
       "parent_id": "d-20260728-113139-285eae",
       "parent_title": "Sub-Scope Index"
     },
@@ -58,31 +82,7 @@
       "timestamp": "2026-07-30 12:14:23",
       "parent_id": "d-20260728-113139-285eae",
       "parent_title": "Sub-Scope Index"
-    },
-    {
-      "doc_id": "d-20260711-214307-b4c800",
-      "title": "Docs Review",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260711-214307-b4c800.json",
-      "timestamp": "2026-07-30 10:52:00",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260711-214307-6d6d46",
-      "title": "Docs Review Endpoints",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260711-214307-6d6d46.json",
-      "timestamp": "2026-07-30 10:52:00",
-      "parent_id": "d-20260607-222033-647b52",
-      "parent_title": "Endpoint Overview"
-    },
-    {
-      "doc_id": "d-20260605-125108-1d1ef3",
-      "title": "Runtime Module Ownership",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260605-125108-1d1ef3.json",
-      "timestamp": "2026-07-30 10:52:00",
-      "parent_id": "d-20260331-000000-c313fd",
-      "parent_title": "Runtime"
     }
   ],
-  "generated_at": "2026-07-30T13:31:20Z"
+  "generated_at": "2026-07-30T13:49:36Z"
 }

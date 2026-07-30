@@ -910,13 +910,13 @@
               "doc_id": "d-20260728-113139-763354",
               "title": "Sub-Scope Index Architecture",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-113139-763354.json",
-              "ui_status": "proposed"
+              "ui_status": "done"
             },
             {
               "doc_id": "d-20260730-121423-469e54",
               "title": "Sub-Scope Ordinary Document Import Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260730-121423-469e54.json",
-              "ui_status": "in-progress"
+              "ui_status": "done"
             },
             {
               "doc_id": "d-20260728-115825-ae1461",
@@ -1303,5 +1303,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-30T12:47:47Z"
+  "generated_at": "2026-07-30T13:49:36Z"
 }

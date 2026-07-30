@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e32b45a0bfd5e8a0a602b6e81fc7da17",
-    "generated_at_utc": "2026-07-30T13:31:20Z",
+    "version": "blake2b-552ada2b0cc251ddd98cbb13190a6f8b",
+    "generated_at_utc": "2026-07-30T13:49:36Z",
     "count": 233
   },
   "entries": [
@@ -1057,25 +1057,26 @@
       "kind": "doc",
       "title": "Docs Import",
       "href": "/docs/?scope=studio&doc=d-20260424-000000-fc8b5d",
-      "last_updated": "2026-07-22 22:40:23",
+      "last_updated": "2026-07-30 14:49:00",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-22 22:40:23 • Docs Viewer",
+      "display_meta": "2026-07-30 14:49:00 • Docs Viewer",
       "search_terms": [
         "docs import",
         "docs",
         "import",
         "docs viewer",
         "viewer",
-        "2026-07-22 22:40:23",
+        "2026-07-30 14:49:00",
         "2026",
         "07",
-        "22",
-        "40",
-        "23",
+        "30",
+        "14",
+        "49",
+        "00",
         "d-20260424-000000-fc8b5d"
       ],
-      "search_text": "docs import docs import docs viewer viewer 2026-07-22 22:40:23 2026 07 22 40 23 d-20260424-000000-fc8b5d"
+      "search_text": "docs import docs import docs viewer viewer 2026-07-30 14:49:00 2026 07 30 14 49 00 d-20260424-000000-fc8b5d"
     },
     {
       "id": "d-20260719-182348-492a48",
@@ -1135,10 +1136,10 @@
       "kind": "doc",
       "title": "Docs Import Architecture",
       "href": "/docs/?scope=studio&doc=d-20260514-164722-3de65e",
-      "last_updated": "2026-07-22 22:40:23",
+      "last_updated": "2026-07-30 14:49:00",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-22 22:40:23 • Docs Viewer",
+      "display_meta": "2026-07-30 14:49:00 • Docs Viewer",
       "search_terms": [
         "docs import architecture",
         "docs",
@@ -1146,15 +1147,16 @@
         "architecture",
         "docs viewer",
         "viewer",
-        "2026-07-22 22:40:23",
+        "2026-07-30 14:49:00",
         "2026",
         "07",
-        "22",
-        "40",
-        "23",
+        "30",
+        "14",
+        "49",
+        "00",
         "d-20260514-164722-3de65e"
       ],
-      "search_text": "docs import architecture docs import architecture docs viewer viewer 2026-07-22 22:40:23 2026 07 22 40 23 d-20260514-164722-3de65e"
+      "search_text": "docs import architecture docs import architecture docs viewer viewer 2026-07-30 14:49:00 2026 07 30 14 49 00 d-20260514-164722-3de65e"
     },
     {
       "id": "d-20260711-214307-b4c800",
@@ -4186,10 +4188,10 @@
       "kind": "doc",
       "title": "Sub-Scope Index Architecture",
       "href": "/docs/?scope=studio&doc=d-20260728-113139-763354",
-      "last_updated": "2026-07-29 11:11:42",
+      "last_updated": "2026-07-30 14:49:00",
       "parent_id": "d-20260728-113139-285eae",
       "parent_title": "Sub-Scope Index",
-      "display_meta": "2026-07-29 11:11:42 • Sub-Scope Index",
+      "display_meta": "2026-07-30 14:49:00 • Sub-Scope Index",
       "search_terms": [
         "sub-scope index architecture",
         "sub",
@@ -4197,25 +4199,26 @@
         "index",
         "architecture",
         "sub-scope index",
-        "2026-07-29 11:11:42",
+        "2026-07-30 14:49:00",
         "2026",
         "07",
-        "29",
-        "11",
-        "42",
+        "30",
+        "14",
+        "49",
+        "00",
         "d-20260728-113139-763354"
       ],
-      "search_text": "sub-scope index architecture sub scope index architecture sub-scope index 2026-07-29 11:11:42 2026 07 29 11 42 d-20260728-113139-763354"
+      "search_text": "sub-scope index architecture sub scope index architecture sub-scope index 2026-07-30 14:49:00 2026 07 30 14 49 00 d-20260728-113139-763354"
     },
     {
       "id": "d-20260730-121423-469e54",
       "kind": "doc",
       "title": "Sub-Scope Ordinary Document Import Delivery",
       "href": "/docs/?scope=studio&doc=d-20260730-121423-469e54",
-      "last_updated": "2026-07-30 14:30:58",
+      "last_updated": "2026-07-30 14:49:04",
       "parent_id": "d-20260728-113139-285eae",
       "parent_title": "Sub-Scope Index",
-      "display_meta": "2026-07-30 14:30:58 • Sub-Scope Index",
+      "display_meta": "2026-07-30 14:49:04 • Sub-Scope Index",
       "search_terms": [
         "sub-scope ordinary document import delivery",
         "sub",
@@ -4226,15 +4229,16 @@
         "delivery",
         "sub-scope index",
         "index",
-        "2026-07-30 14:30:58",
+        "2026-07-30 14:49:04",
         "2026",
         "07",
         "30",
         "14",
-        "58",
+        "49",
+        "04",
         "d-20260730-121423-469e54"
       ],
-      "search_text": "sub-scope ordinary document import delivery sub scope ordinary document import delivery sub-scope index index 2026-07-30 14:30:58 2026 07 30 14 58 d-20260730-121423-469e54"
+      "search_text": "sub-scope ordinary document import delivery sub scope ordinary document import delivery sub-scope index index 2026-07-30 14:49:04 2026 07 30 14 49 04 d-20260730-121423-469e54"
     },
     {
       "id": "d-20260728-115825-ae1461",

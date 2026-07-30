@@ -29,6 +29,7 @@ def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
 def assert_multi_selection(page: Page, base_url: str) -> None:
     import_requests: list[dict[str, object]] = []
     source_requests: list[dict[str, object]] = []
+    child_failures_remaining = 1
     staged_files = [
         {"filename": "alpha.md", "source_format": "markdown"},
         {"filename": "beta.html", "source_format": "html"},
@@ -60,9 +61,23 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
     )
 
     def fulfill_import(route) -> None:
+        nonlocal child_failures_remaining
         body = route.request.post_data_json
         import_requests.append(body)
         filename = str(body["staged_filename"])
+        if body.get("sub_scope") == "tags" and child_failures_remaining:
+            child_failures_remaining -= 1
+            route.fulfill(
+                status=422,
+                content_type="application/json",
+                body=json.dumps(
+                    {
+                        "ok": False,
+                        "error": "Synthetic child Import failure.",
+                    }
+                ),
+            )
+            return
         if filename == "beta.html" and not body.get("confirm_interactive_html_overwrite"):
             fulfill(
                 route,
@@ -222,6 +237,19 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
             selected: Array.from(fileSelect.selectedOptions).map(option => option.value)
           };
           runButton.click();
+          while (document.getElementById('docsHtmlImportRoot').dataset.studioBusy === 'true') {
+            await new Promise(resolve => setTimeout(resolve, 0));
+          }
+          const childFailure = {
+            destination: document.getElementById('docsHtmlImportScopeSelect').value,
+            destinationDisabled: document.getElementById('docsHtmlImportScopeSelect').disabled,
+            runDisabled: runButton.disabled,
+            selected: Array.from(fileSelect.selectedOptions).map(option => option.value),
+            status: document.getElementById('docsHtmlImportStatus').textContent,
+            statusState: document.getElementById('docsHtmlImportStatus').dataset.state || '',
+            terminalCount: terminalDetails.length
+          };
+          runButton.click();
           while (terminalDetails.length < 2) {
             await new Promise(resolve => setTimeout(resolve, 0));
           }
@@ -261,6 +289,7 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
             initial,
             afterSelectAll,
             childDestination,
+            childFailure,
             childResult,
             packageMode,
             restoredGlobal,
@@ -314,6 +343,15 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
         "filenames": ["alpha.md", "beta.html", "word.docx", "notes.json"],
         "selected": ["alpha.md"],
     }
+    assert result["childFailure"] == {
+        "destination": "studio",
+        "destinationDisabled": True,
+        "runDisabled": False,
+        "selected": ["alpha.md"],
+        "status": "Synthetic child Import failure.",
+        "statusState": "error",
+        "terminalCount": 1,
+    }
     child_target = {
         "scope": "studio",
         "sub_scope": "tags",
@@ -347,6 +385,7 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
         "word.docx",
         "notes.json",
         "alpha.md",
+        "alpha.md",
     ]:
         raise AssertionError(f"ordinary multi-import crossed the package boundary: {import_requests!r}")
     beta_requests = [request for request in import_requests if request["staged_filename"] == "beta.html"]
@@ -357,9 +396,9 @@ def assert_multi_selection(page: Page, base_url: str) -> None:
         raise AssertionError(f"ordinary import still sent retired document collision fields: {import_requests!r}")
     if result["terminal"] != {"scope": "studio", "docId": "notes", "resultCount": 4}:
         raise AssertionError(f"multi-import did not identify the last imported doc: {result!r}")
-    if import_requests[-1].get("sub_scope") != "tags":
-        raise AssertionError(f"child Import did not keep its exact destination: {import_requests!r}")
-    if any(request.get("sub_scope") for request in import_requests[:-1]):
+    if any(request.get("sub_scope") != "tags" for request in import_requests[-2:]):
+        raise AssertionError(f"child Import retries did not keep their exact destination: {import_requests!r}")
+    if any(request.get("sub_scope") for request in import_requests[:-2]):
         raise AssertionError(f"parent Import requests unexpectedly gained a child target: {import_requests!r}")
     if source_requests != [
         {
