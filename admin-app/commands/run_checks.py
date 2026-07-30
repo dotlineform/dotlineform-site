@@ -211,6 +211,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/smoke/docs_viewer_document_transfer_workflow_modules.py",
                 "docs-viewer/tests/smoke/docs_viewer_prepare_package_workflow_modules.py",
                 "docs-viewer/tests/smoke/docs_import_multi_selection_modules.py",
+                "docs-viewer/tests/smoke/docs_viewer_consolidated_import_route.py",
                 "docs-viewer/tests/smoke/docs_viewer_prepare_package_workflow_route.py",
                 "docs-viewer/tests/smoke/docs_viewer_index_selection_lifecycle_route.py",
                 "docs-viewer/tests/smoke/docs_viewer_tree_move_projection_modules.py",
@@ -549,6 +550,14 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 str(REPO_ROOT),
             ),
             "Smoke-check candidate-driven app Import, exact destination links and refresh routing, and selected-row Docs Review handoff.",
+        ),
+        CheckCommand(
+            "docs-viewer-consolidated-import-route-smoke",
+            (
+                sys.executable,
+                "docs-viewer/tests/smoke/docs_viewer_consolidated_import_route.py",
+            ),
+            "Smoke-check the consolidated Import matrix through the real manage route without canonical writes.",
         ),
         CheckCommand(
             "docs-viewer-prepare-package-workflow-route-smoke",
