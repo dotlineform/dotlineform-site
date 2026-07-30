@@ -200,6 +200,7 @@
           "sub_scope": "tags",
           "title": "Tags",
           "public_title": "Concepts",
+          "supports_return_import": true,
           "ui_statuses": [
             "draft",
             "done",

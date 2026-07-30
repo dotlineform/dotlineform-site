@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b91f9d58c206f70bd819b119ac30408c",
-    "generated_at_utc": "2026-07-30T15:20:07Z",
+    "version": "blake2b-893dbabe074fe12674502d42706cc2bf",
+    "generated_at_utc": "2026-07-30T16:00:42Z",
     "count": 234
   },
   "entries": [
@@ -546,10 +546,10 @@
       "kind": "doc",
       "title": "Development Checklist",
       "href": "/docs/?scope=studio&doc=d-20260523-190651-7157ec",
-      "last_updated": "2026-07-28 20:01:43",
+      "last_updated": "2026-07-30 16:53:34",
       "parent_id": "d-20260419-000000-d2e47b",
       "parent_title": "Dev Home",
-      "display_meta": "2026-07-28 20:01:43 • Dev Home",
+      "display_meta": "2026-07-30 16:53:34 • Dev Home",
       "search_terms": [
         "development checklist",
         "development",
@@ -557,16 +557,16 @@
         "dev home",
         "dev",
         "home",
-        "2026-07-28 20:01:43",
+        "2026-07-30 16:53:34",
         "2026",
         "07",
-        "28",
-        "20",
-        "01",
-        "43",
+        "30",
+        "16",
+        "53",
+        "34",
         "d-20260523-190651-7157ec"
       ],
-      "search_text": "development checklist development checklist dev home dev home 2026-07-28 20:01:43 2026 07 28 20 01 43 d-20260523-190651-7157ec"
+      "search_text": "development checklist development checklist dev home dev home 2026-07-30 16:53:34 2026 07 30 16 53 34 d-20260523-190651-7157ec"
     },
     {
       "id": "d-20260523-000000-bf7161",
@@ -1136,10 +1136,10 @@
       "kind": "doc",
       "title": "Docs Import Architecture",
       "href": "/docs/?scope=studio&doc=d-20260514-164722-3de65e",
-      "last_updated": "2026-07-30 14:49:00",
+      "last_updated": "2026-07-30 16:53:34",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-30 14:49:00 • Docs Viewer",
+      "display_meta": "2026-07-30 16:53:34 • Docs Viewer",
       "search_terms": [
         "docs import architecture",
         "docs",
@@ -1147,16 +1147,16 @@
         "architecture",
         "docs viewer",
         "viewer",
-        "2026-07-30 14:49:00",
+        "2026-07-30 16:53:34",
         "2026",
         "07",
         "30",
-        "14",
-        "49",
-        "00",
+        "16",
+        "53",
+        "34",
         "d-20260514-164722-3de65e"
       ],
-      "search_text": "docs import architecture docs import architecture docs viewer viewer 2026-07-30 14:49:00 2026 07 30 14 49 00 d-20260514-164722-3de65e"
+      "search_text": "docs import architecture docs import architecture docs viewer viewer 2026-07-30 16:53:34 2026 07 30 16 53 34 d-20260514-164722-3de65e"
     },
     {
       "id": "d-20260711-214307-b4c800",
@@ -1456,10 +1456,10 @@
       "kind": "doc",
       "title": "Endpoint Overview",
       "href": "/docs/?scope=studio&doc=d-20260607-222033-647b52",
-      "last_updated": "2026-07-26 17:54:41",
+      "last_updated": "2026-07-30 16:53:34",
       "parent_id": "d-20260424-000000-04d75e",
       "parent_title": "Management Services",
-      "display_meta": "2026-07-26 17:54:41 • Management Services",
+      "display_meta": "2026-07-30 16:53:34 • Management Services",
       "search_terms": [
         "endpoint overview",
         "endpoint",
@@ -1467,16 +1467,16 @@
         "management services",
         "management",
         "services",
-        "2026-07-26 17:54:41",
+        "2026-07-30 16:53:34",
         "2026",
         "07",
-        "26",
-        "17",
-        "54",
-        "41",
+        "30",
+        "16",
+        "53",
+        "34",
         "d-20260607-222033-647b52"
       ],
-      "search_text": "endpoint overview endpoint overview management services management services 2026-07-26 17:54:41 2026 07 26 17 54 41 d-20260607-222033-647b52"
+      "search_text": "endpoint overview endpoint overview management services management services 2026-07-30 16:53:34 2026 07 30 16 53 34 d-20260607-222033-647b52"
     },
     {
       "id": "d-20260607-222033-78a47c",
@@ -4359,10 +4359,10 @@
       "kind": "doc",
       "title": "Sub-Scope Returned Package Import Delivery",
       "href": "/docs/?scope=studio&doc=d-20260730-102954-1b363f",
-      "last_updated": "2026-07-30 12:14:23",
+      "last_updated": "2026-07-30 17:00:41",
       "parent_id": "d-20260728-113139-285eae",
       "parent_title": "Sub-Scope Index",
-      "display_meta": "2026-07-30 12:14:23 • Sub-Scope Index",
+      "display_meta": "2026-07-30 17:00:41 • Sub-Scope Index",
       "search_terms": [
         "sub-scope returned package import delivery",
         "sub",
@@ -4373,16 +4373,16 @@
         "delivery",
         "sub-scope index",
         "index",
-        "2026-07-30 12:14:23",
+        "2026-07-30 17:00:41",
         "2026",
         "07",
         "30",
-        "12",
-        "14",
-        "23",
+        "17",
+        "00",
+        "41",
         "d-20260730-102954-1b363f"
       ],
-      "search_text": "sub-scope returned package import delivery sub scope returned package import delivery sub-scope index index 2026-07-30 12:14:23 2026 07 30 12 14 23 d-20260730-102954-1b363f"
+      "search_text": "sub-scope returned package import delivery sub scope returned package import delivery sub-scope index index 2026-07-30 17:00:41 2026 07 30 17 00 41 d-20260730-102954-1b363f"
     },
     {
       "id": "d-20260728-173227-bb7426",

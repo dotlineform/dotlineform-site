@@ -34,11 +34,14 @@ def parse_staged_import(
     *,
     repo_root: Path,
     scope: str,
+    sub_scope: str | None = None,
     staged_file: str,
     staging_root: Path | str | None = None,
     metadata_root: Path | None = None,
     required_capability: str = RETURN_IMPORT_CAPABILITY,
 ) -> dict[str, Any]:
+    """Parse one trusted return against a scope and optional exact child target."""
+
     if required_capability not in {
         DOCS_REVIEW_CAPABILITY,
         RETURN_IMPORT_CAPABILITY,
@@ -146,10 +149,20 @@ def parse_staged_import(
             package_metadata,
             repo_root=repo_root,
             scope=normalized_scope,
+            sub_scope=sub_scope,
             required_capability=required_capability,
         )
     )
-    current_context, current_issues = load_current_docs_context(repo_root, normalized_scope)
+    metadata_sub_scope = normalize_text(package_metadata.get("sub_scope")).lower()
+    current_context, current_issues = load_current_docs_context(
+        repo_root,
+        normalized_scope,
+        (
+            metadata_sub_scope
+            if sub_scope is None
+            else normalize_text(sub_scope).lower()
+        ),
+    )
     report["issues"].extend(current_issues)
     source_export_id = normalize_text(package_metadata.get("export_id"))
     source_profile_id = normalize_text(package_metadata.get("profile_id"))

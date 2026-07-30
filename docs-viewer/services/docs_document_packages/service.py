@@ -18,6 +18,10 @@ from docs_document_packages.export_config import (
     supports_return_import,
     validate_full_config_payload,
 )
+from docs_document_packages.returned_common import (
+    DOCS_REVIEW_CAPABILITY,
+    RETURN_IMPORT_CAPABILITY,
+)
 from docs_document_packages.package import (
     build_document_package,
     list_returned_document_packages,
@@ -104,7 +108,7 @@ def optional_boolean_value(body: dict[str, Any], key: str) -> bool | None:
 def profile_contract(
     config: dict[str, Any],
     *,
-    export_only: bool = False,
+    return_import_enabled: bool,
     flat_collection: bool = False,
 ) -> dict[str, Any]:
     target = config.get("target") if isinstance(config.get("target"), dict) else {}
@@ -134,7 +138,7 @@ def profile_contract(
         "supported_content_formats": supported_content_formats(config),
         "supports_docs_review": supports_docs_review(config),
         "supports_return_import": (
-            False if export_only else supports_return_import(config)
+            return_import_enabled and supports_return_import(config)
         ),
         "selection": {
             "mode": str(selection.get("mode") or "").strip(),
@@ -178,7 +182,10 @@ def config_payload(
         "profiles": [
             profile_contract(
                 config,
-                export_only=collection is not None,
+                return_import_enabled=(
+                    collection is None
+                    or collection.document_config.supports_return_import
+                ),
                 flat_collection=collection is not None,
             )
             for config in profile_payload.get("configs", [])
@@ -223,10 +230,29 @@ def documents_payload(repo_root: Path, params: dict[str, list[str]]) -> dict[str
 
 def returned_payload(repo_root: Path, params: dict[str, list[str]]) -> dict[str, Any]:
     scope = require_scope(repo_root, query_value(params, "scope"))
+    sub_scope = None
+    if "sub_scope" in params:
+        collection = resolve_managed_document_collection(
+            repo_root,
+            scope=scope,
+            sub_scope=query_value(params, "sub_scope"),
+        )
+        if not collection.document_config.supports_return_import:
+            raise ValueError(
+                "returned-package import is not enabled for configured "
+                f"sub-scope {collection.scope}/{collection.sub_scope}"
+            )
+        sub_scope = collection.sub_scope
     roots = configured_workspace_paths(repo_root)
     report = list_returned_document_packages(
         repo_root,
         scope=scope,
+        sub_scope=sub_scope,
+        required_capability=(
+            RETURN_IMPORT_CAPABILITY
+            if sub_scope is not None
+            else DOCS_REVIEW_CAPABILITY
+        ),
         staging_root=roots.import_staging,
         metadata_root=roots.meta,
     )

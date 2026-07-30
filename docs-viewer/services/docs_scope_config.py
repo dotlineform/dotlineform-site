@@ -159,6 +159,7 @@ class DocsSubScopeConfig:
     sub_scope: str
     title: str
     public_title: str
+    supports_return_import: bool
     ui_statuses: tuple[str, ...]
     document_groups: tuple[str, ...]
     source: DocsSourceConfig
@@ -770,11 +771,18 @@ def normalize_sub_scope_configs(
             if "public_title" not in item
             else str(item.get("public_title") or "").strip()
         )
+        supports_return_import = item.get("supports_return_import", False)
+        if not isinstance(supports_return_import, bool):
+            raise ValueError(
+                f"docs scope config field {item_field}.supports_return_import "
+                "must be true or false"
+            )
         configs.append(
             DocsSubScopeConfig(
                 sub_scope=sub_scope,
                 title=title,
                 public_title=public_title,
+                supports_return_import=supports_return_import,
                 ui_statuses=ui_statuses,
                 document_groups=document_groups,
                 source=source,

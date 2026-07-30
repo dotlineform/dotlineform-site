@@ -18,6 +18,8 @@ from docs_document_packages.workspace import workspace_paths
 import docs_document_package_routes as routes
 import docs_import_document_package as import_package
 import docs_import_source_service as import_source_service
+from docs_document_packages.returned_parser import parse_staged_import
+from docs_document_packages.returned_common import RETURN_IMPORT_CAPABILITY
 from docs_management_document_target import resolve_managed_document_collection
 import docs_source_model as source_model
 from docs_viewer_service import DocsViewerServer, DocsViewerServiceConfig
@@ -71,7 +73,11 @@ def write_sub_scope_source_doc(
     path.write_text("\n".join(lines), encoding="utf-8")
 
 
-def add_sub_scope_package_fixture(repo_root: Path) -> None:
+def add_sub_scope_package_fixture(
+    repo_root: Path,
+    *,
+    tags_return_import_enabled: bool = False,
+) -> None:
     config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
     config = json.loads(config_path.read_text(encoding="utf-8"))
     config["scopes"][0]["default_doc_id"] = PARENT_ROOT_ID
@@ -80,6 +86,7 @@ def add_sub_scope_package_fixture(repo_root: Path) -> None:
             "library",
             "tags",
             title="Tags",
+            supports_return_import=tags_return_import_enabled,
             scope_type="public",
             public_docs_path="site/assets/data/docs/scopes/library/tags",
         ),
@@ -858,6 +865,179 @@ def test_sub_scope_written_package_is_reviewable_but_blocked_from_import() -> No
         record["filename"] for record in import_files["files"]
     }
     assert source_after == source_before
+
+
+def test_opted_in_sub_scope_projects_importable_package_and_exact_listing() -> None:
+    with make_docs_import_repo() as temp:
+        repo_root = Path(temp)
+        add_sub_scope_package_fixture(
+            repo_root,
+            tags_return_import_enabled=True,
+        )
+        add_document_tree_profile(repo_root)
+        child_config = service.get_payload(
+            repo_root,
+            routes.CONFIG_PATH,
+            {"scope": ["library"], "sub_scope": ["tags"]},
+        )
+        notes_config = service.get_payload(
+            repo_root,
+            routes.CONFIG_PATH,
+            {"scope": ["library"], "sub_scope": ["notes"]},
+        )
+        _, payload = service.post_response(
+            repo_root,
+            routes.PREPARE_PATH,
+            {
+                "scope": "library",
+                "sub_scope": "tags",
+                "profile_id": "document-content",
+                "doc_ids": [TAG_B_ID, TAG_A_ID],
+                "select_all": False,
+                "missing_summary_only": False,
+                "include_non_viewable": True,
+                "dry_run": False,
+            },
+        )
+        paths = workspace_paths()
+        metadata = json.loads(
+            (paths.meta / f"{payload['export_id']}.meta.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        external_context = json.loads(
+            resolve_data_sharing_marker(payload["context_file"]).read_text(
+                encoding="utf-8"
+            )
+        )
+        output_path = resolve_data_sharing_marker(payload["output_file"])
+        staged_filename = "returned-importable-tags.jsonl"
+        shutil.copy2(output_path, paths.import_staging / staged_filename)
+        write_returned_package(
+            "ds_20260720T120011Z",
+            selected_doc_ids=[NOTE_ID],
+            rows=[{"doc_id": NOTE_ID, "title": "Note Only"}],
+            filename="returned-notes.jsonl",
+            sub_scope="notes",
+            supports_docs_review=True,
+            supports_return_import=True,
+        )
+        write_returned_package(
+            "ds_20260720T120012Z",
+            selected_doc_ids=[TAG_A_ID],
+            rows=[{"doc_id": TAG_A_ID, "title": "Tag A"}],
+            filename="returned-review-only-tags.jsonl",
+            sub_scope="tags",
+            supports_docs_review=True,
+            supports_return_import=False,
+        )
+
+        exact = service.returned_payload(
+            repo_root,
+            {"scope": ["library"], "sub_scope": ["tags"]},
+        )
+        exact_validation = parse_staged_import(
+            repo_root=repo_root,
+            scope="library",
+            sub_scope="tags",
+            staged_file=staged_filename,
+            staging_root=paths.import_staging,
+            metadata_root=paths.meta,
+            required_capability=RETURN_IMPORT_CAPABILITY,
+        )
+        import_files = import_source_service.handle_import_source_files(repo_root)
+        mismatch = parse_staged_import(
+            repo_root=repo_root,
+            scope="library",
+            sub_scope="tags",
+            staged_file="returned-notes.jsonl",
+            staging_root=paths.import_staging,
+            metadata_root=paths.meta,
+            required_capability=RETURN_IMPORT_CAPABILITY,
+        )
+        with pytest.raises(
+            ValueError,
+            match="returned-package import is not enabled",
+        ):
+            service.returned_payload(
+                repo_root,
+                {"scope": ["library"], "sub_scope": ["notes"]},
+            )
+        with pytest.raises(ValueError, match="sub_scope is required"):
+            service.returned_payload(
+                repo_root,
+                {"scope": ["library"], "sub_scope": [""]},
+            )
+        with pytest.raises(ValueError, match="unknown sub_scope"):
+            service.returned_payload(
+                repo_root,
+                {"scope": ["library"], "sub_scope": ["missing"]},
+            )
+
+    child_capabilities = {
+        profile["profile_id"]: (
+            profile["supports_docs_review"],
+            profile["supports_return_import"],
+        )
+        for profile in child_config["profiles"]
+    }
+    notes_capabilities = {
+        profile["profile_id"]: (
+            profile["supports_docs_review"],
+            profile["supports_return_import"],
+        )
+        for profile in notes_config["profiles"]
+    }
+    assert child_capabilities == {
+        "document-content": (True, True),
+        "document-tree": (False, False),
+    }
+    assert notes_capabilities == {
+        "document-content": (True, False),
+        "document-tree": (False, False),
+    }
+    assert payload["supports_docs_review"] is True
+    assert payload["supports_return_import"] is True
+    assert metadata["scope"] == "library"
+    assert metadata["sub_scope"] == "tags"
+    assert metadata["supports_docs_review"] is True
+    assert metadata["supports_return_import"] is True
+    assert external_context["supports_docs_review"] is True
+    assert external_context["supports_return_import"] is True
+    assert "exact configured collection Import" in external_context[
+        "return_import_notice"
+    ]
+    assert exact["scope"] == "library"
+    assert exact["sub_scope"] == "tags"
+    assert exact["required_capability"] == RETURN_IMPORT_CAPABILITY
+    assert [item["filename"] for item in exact["files"]] == [staged_filename]
+    assert exact["files"][0]["return_import_supported"] is True
+    assert exact_validation["ok"] is True
+    assert exact_validation["current_library"]["source_root"].endswith(
+        "/source/sub-scopes/tags/documents"
+    )
+    assert all(
+        record["current_library"]["exists"]
+        for record in exact_validation["records"]
+    )
+    assert {
+        item["filename"]: item["blocked_reason"]
+        for item in exact["blocked_files"]
+    } == {
+        "returned-review-only-tags.jsonl": "export_only_sub_scope",
+    }
+    assert "returned-notes.jsonl" not in {
+        item["filename"]
+        for collection_name in ("files", "blocked_files")
+        for item in exact[collection_name]
+    }
+    assert staged_filename not in {
+        item["filename"] for item in import_files["files"]
+    }
+    assert mismatch["ok"] is False
+    assert "sub_scope_mismatch" in {
+        item["code"] for item in mismatch["issues"]
+    }
 
 
 def test_atomic_return_uses_order_insensitive_exact_set_equality() -> None:

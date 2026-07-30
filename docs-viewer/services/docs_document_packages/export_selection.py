@@ -25,6 +25,7 @@ class ExportContext:
     repo_root: Path
     scope: str
     sub_scope: str
+    supports_return_import: bool
     data_domain: str
     content_format: str
     config: dict[str, Any]

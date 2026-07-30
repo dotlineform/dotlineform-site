@@ -946,7 +946,7 @@
               "doc_id": "d-20260730-102954-1b363f",
               "title": "Sub-Scope Returned Package Import Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260730-102954-1b363f.json",
-              "ui_status": "proposed"
+              "ui_status": "active"
             },
             {
               "doc_id": "d-20260728-173227-bb7426",
@@ -1309,5 +1309,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-30T15:19:14Z"
+  "generated_at": "2026-07-30T15:56:48Z"
 }

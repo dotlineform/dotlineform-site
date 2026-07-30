@@ -25,9 +25,10 @@ def validate_whole_returned_package(
     *,
     repo_root: Path,
     scope: str,
+    sub_scope: str | None = None,
     required_capability: str,
 ) -> list[dict[str, Any]]:
-    """Require trusted document routing and the complete prepared document set."""
+    """Require trusted routing, optional exact child identity, and full membership."""
 
     if required_capability not in {
         DOCS_REVIEW_CAPABILITY,
@@ -122,6 +123,27 @@ def validate_whole_returned_package(
         )
 
     metadata_sub_scope = normalize_text(trusted_metadata.get("sub_scope")).lower()
+    expected_sub_scope = (
+        None
+        if sub_scope is None
+        else normalize_text(sub_scope).lower()
+    )
+    sub_scope_matches_request = (
+        expected_sub_scope is None
+        or metadata_sub_scope == expected_sub_scope
+    )
+    if not sub_scope_matches_request:
+        issues.append(
+            issue(
+                "error",
+                "sub_scope_mismatch",
+                (
+                    "trusted package sub_scope "
+                    f"{metadata_sub_scope or '<parent>'!r} does not match "
+                    f"requested sub_scope {expected_sub_scope or '<parent>'!r}"
+                ),
+            )
+        )
     if (
         capabilities_valid
         and required_capability == DOCS_REVIEW_CAPABILITY
@@ -206,7 +228,12 @@ def validate_whole_returned_package(
         expected_seen.add(doc_id)
         expected.append(doc_id)
 
-    if metadata_sub_scope and metadata_scope == expected_scope and expected_seen:
+    if (
+        metadata_sub_scope
+        and metadata_scope == expected_scope
+        and sub_scope_matches_request
+        and expected_seen
+    ):
         try:
             collection = resolve_managed_document_collection(
                 repo_root,

@@ -33,6 +33,7 @@ class DocumentPackageSourceContext:
     repo_root: Path
     scope: str
     sub_scope: str
+    return_import_enabled: bool
     scope_config: DocsScopeConfig
     source_root: Path
     builder: DocsDataBuilder | SubScopeDocsBuilder
@@ -69,6 +70,7 @@ def load_document_package_source_context(
         normalized_scope = collection.scope
         config = collection.parent_config
         source_root = collection.source_root
+        return_import_enabled = collection.document_config.supports_return_import
         builder: DocsDataBuilder | SubScopeDocsBuilder = SubScopeDocsBuilder(
             repo_root=root,
             config=config,
@@ -86,6 +88,7 @@ def load_document_package_source_context(
                 f"missing source root for scope {normalized_scope}: "
                 f"{document_source_path(config).as_posix()}"
             )
+        return_import_enabled = True
         builder = DocsDataBuilder(repo_root=root, config=config)
     source_docs = builder.load_docs()
     builder.validate_docs(source_docs)
@@ -96,6 +99,7 @@ def load_document_package_source_context(
         repo_root=root,
         scope=normalized_scope,
         sub_scope=normalized_sub_scope,
+        return_import_enabled=return_import_enabled,
         scope_config=config,
         source_root=source_root,
         builder=builder,

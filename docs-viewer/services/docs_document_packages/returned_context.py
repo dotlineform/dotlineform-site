@@ -9,9 +9,16 @@ from typing import Any
 
 from docs_document_packages import source_context as docs_source_context
 from docs_document_packages.returned_common import issue, normalize_text, scope_title
-from docs_scope_config import document_source_path
+from docs_scope_config import path_label
 
-def load_current_docs_context(repo_root: Path, scope: str) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+
+def load_current_docs_context(
+    repo_root: Path,
+    scope: str,
+    sub_scope: str = "",
+) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    """Load current records from the exact package collection."""
+
     issues: list[dict[str, Any]] = []
     context: dict[str, Any] = {
         "source_loaded": False,
@@ -22,7 +29,11 @@ def load_current_docs_context(repo_root: Path, scope: str) -> tuple[dict[str, An
         "renderable_ids": [],
     }
     try:
-        loaded_context = docs_source_context.load_document_package_source_context(repo_root, scope)
+        loaded_context = docs_source_context.load_document_package_source_context(
+            repo_root,
+            scope,
+            sub_scope,
+        )
     except (FileNotFoundError, json.JSONDecodeError, ValueError, RuntimeError, OSError) as exc:
         issues.append(issue("warning", "current_source_unreadable", f"current {scope} docs source context could not be read: {exc}"))
         return context, issues
@@ -36,7 +47,7 @@ def load_current_docs_context(repo_root: Path, scope: str) -> tuple[dict[str, An
     context.update(
         {
             "source_loaded": True,
-            "source_root": document_source_path(loaded_context.scope_config).as_posix(),
+            "source_root": path_label(repo_root, loaded_context.source_root),
             "doc_count": len(docs_by_id),
             "renderable_count": len(set(renderable_ids)),
             "docs_by_id": docs_by_id,

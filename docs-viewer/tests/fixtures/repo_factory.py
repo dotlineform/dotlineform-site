@@ -158,6 +158,7 @@ def docs_sub_scope_record(
     *,
     title: str = "",
     public_title: str | None = None,
+    supports_return_import: bool | None = None,
     scope_type: str = "local",
     public_docs_path: str | None = None,
     ui_statuses: list[str] | None = None,
@@ -184,6 +185,8 @@ def docs_sub_scope_record(
     }
     if public_title is not None:
         record["public_title"] = public_title
+    if supports_return_import is not None:
+        record["supports_return_import"] = supports_return_import
     return record
 
 

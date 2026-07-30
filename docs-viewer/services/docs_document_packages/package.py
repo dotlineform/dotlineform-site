@@ -11,8 +11,14 @@ from docs_document_packages.export import (
     parse_doc_ids as parse_export_doc_ids,
 )
 from docs_document_packages.export_config import update_external_context_config
-from docs_document_packages.returned_common import DOCS_REVIEW_CAPABILITY
-from docs_document_packages.returned_profiles import supported_docs_review_profile_ids
+from docs_document_packages.returned_common import (
+    DOCS_REVIEW_CAPABILITY,
+    RETURN_IMPORT_CAPABILITY,
+)
+from docs_document_packages.returned_profiles import (
+    supported_docs_review_profile_ids,
+    supported_return_import_profile_ids,
+)
 from docs_document_packages.returned_parser import parse_staged_import
 from docs_document_packages import source_context
 from docs_document_packages.metadata import list_staged_files_with_metadata
@@ -170,10 +176,28 @@ def list_returned_document_packages(
     repo_root: Path,
     *,
     scope: str,
+    sub_scope: str | None = None,
+    required_capability: str = DOCS_REVIEW_CAPABILITY,
     staging_root: Path,
     metadata_root: Path,
 ) -> Dict[str, Any]:
+    """List reviewable packages for a scope or importable packages for one child."""
+
+    if required_capability not in {
+        DOCS_REVIEW_CAPABILITY,
+        RETURN_IMPORT_CAPABILITY,
+    }:
+        raise ValueError(
+            f"unsupported returned-package capability: {required_capability}"
+        )
     normalized_scope = source_model.normalize_scope(scope)
+    normalized_sub_scope = (
+        None
+        if sub_scope is None
+        else str(sub_scope or "").strip().lower()
+    )
+    if sub_scope is not None and not normalized_sub_scope:
+        raise ValueError("sub_scope is required for exact returned-package listing")
     scope_config = load_docs_scope_configs(
         repo_root,
         scope_ids=[normalized_scope],
@@ -211,9 +235,20 @@ def list_returned_document_packages(
         if not item_scope:
             unassigned_files.append(item)
             continue
-        if item_scope == normalized_scope:
+        item_sub_scope = str(item.get("sub_scope") or "").strip().lower()
+        if (
+            item_scope == normalized_scope
+            and (
+                normalized_sub_scope is None
+                or item_sub_scope == normalized_sub_scope
+            )
+        ):
             staged_files.append(add_collection_labels(item))
-    reviewable_profile_ids = supported_docs_review_profile_ids()
+    supported_profile_ids = (
+        supported_return_import_profile_ids()
+        if required_capability == RETURN_IMPORT_CAPABILITY
+        else supported_docs_review_profile_ids()
+    )
     files: list[dict[str, Any]] = []
     blocked_files: list[dict[str, Any]] = []
     for item in report.get("blocked_files", []):
@@ -223,7 +258,14 @@ def list_returned_document_packages(
         if not item_scope:
             unassigned_files.append(item)
             continue
-        if item_scope == normalized_scope:
+        item_sub_scope = str(item.get("sub_scope") or "").strip().lower()
+        if (
+            item_scope == normalized_scope
+            and (
+                normalized_sub_scope is None
+                or item_sub_scope == normalized_sub_scope
+            )
+        ):
             blocked_files.append(add_collection_labels(item))
     for item in staged_files:
         profile_id = str(item.get("profile_id") or "").strip()
@@ -234,20 +276,39 @@ def list_returned_document_packages(
             blocked["blocked_reason"] = "export_only_profile"
             blocked_files.append(blocked)
             continue
-        if profile_id not in reviewable_profile_ids:
+        if profile_id not in supported_profile_ids:
             blocked = dict(item)
             blocked["docs_review_supported"] = False
             blocked["return_import_supported"] = False
-            blocked["blocked_reason"] = "unsupported_review_profile"
+            blocked["blocked_reason"] = (
+                "unsupported_import_profile"
+                if required_capability == RETURN_IMPORT_CAPABILITY
+                else "unsupported_review_profile"
+            )
+            blocked_files.append(blocked)
+            continue
+        if (
+            required_capability == RETURN_IMPORT_CAPABILITY
+            and item.get("supports_return_import") is not True
+        ):
+            blocked = dict(item)
+            blocked["docs_review_supported"] = True
+            blocked["return_import_supported"] = False
+            blocked["blocked_reason"] = (
+                "export_only_sub_scope"
+                if str(item.get("sub_scope") or "").strip()
+                else "export_only_profile"
+            )
             blocked_files.append(blocked)
             continue
         validation = parse_staged_import(
             repo_root=repo_root,
             scope=normalized_scope,
+            sub_scope=normalized_sub_scope,
             staged_file=str(item.get("filename") or "").strip(),
             staging_root=staging_root,
             metadata_root=metadata_root,
-            required_capability=DOCS_REVIEW_CAPABILITY,
+            required_capability=required_capability,
         )
         if validation.get("ok") is not True:
             blocked = dict(item)
@@ -278,4 +339,7 @@ def list_returned_document_packages(
     report["files"] = files
     report["blocked_files"] = blocked_files
     report["unassigned_files"] = unassigned_files
+    report["required_capability"] = required_capability
+    if normalized_sub_scope is not None:
+        report["sub_scope"] = normalized_sub_scope
     return report

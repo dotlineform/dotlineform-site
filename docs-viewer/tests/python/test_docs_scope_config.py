@@ -8,8 +8,13 @@ from dataclasses import replace
 from pathlib import Path
 from unittest.mock import patch
 
+import pytest
+
 from docs_management_test_support import docs_scope_config, make_repo, write_docs_scope_config, write_json
 from repo_factory import docs_scope_record, docs_sub_scope_record
+
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
 
 
 def write_scope_record(repo_root: Path, record: dict[str, object]) -> None:
@@ -180,6 +185,7 @@ def test_docs_scope_config_accepts_nested_sub_scopes() -> None:
     assert sub_scope.sub_scope == "tags"
     assert sub_scope.title == "Tags"
     assert sub_scope.public_title == "Tags"
+    assert sub_scope.supports_return_import is False
     assert sub_scope.ui_statuses == ("draft", "done")
     assert sub_scope.document_groups == ("subject", "theme")
     assert docs_scope_config.document_source_path(sub_scope).as_posix() == (
@@ -212,6 +218,59 @@ def test_docs_scope_config_accepts_route_specific_sub_scope_public_title() -> No
 
     assert config.sub_scopes[0].title == "Tags"
     assert config.sub_scopes[0].public_title == "Concepts"
+
+
+def test_docs_scope_config_accepts_explicit_sub_scope_return_import_opt_in() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        sub_scope = sub_scope_record("research", "tags")
+        sub_scope["supports_return_import"] = True
+        write_scope_record(
+            repo_root,
+            docs_scope_record(
+                "research",
+                scope_type="public",
+                viewer_base_url="/research/",
+                include_scope_param=False,
+                default_doc_id="research",
+                sub_scopes=[sub_scope],
+            ),
+        )
+
+        config = docs_scope_config.load_docs_scope_configs(repo_root)["research"]
+
+    assert config.sub_scopes[0].supports_return_import is True
+
+
+def test_checked_scope_config_opts_only_analysis_tags_into_return_import() -> None:
+    configs = docs_scope_config.load_docs_scope_configs(
+        REPO_ROOT,
+        scope_ids=["analysis"],
+    )
+
+    assert [
+        (sub_scope.sub_scope, sub_scope.supports_return_import)
+        for sub_scope in configs["analysis"].sub_scopes
+    ] == [("tags", True)]
+
+
+@pytest.mark.parametrize("value", [None, 1, "true", []])
+def test_docs_scope_config_rejects_invalid_sub_scope_return_import_opt_in(
+    value: object,
+) -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        sub_scope = docs_sub_scope_record(
+            "studio",
+            "tags",
+            scope_type="local",
+        )
+        sub_scope["supports_return_import"] = value
+        record = docs_scope_record("studio", sub_scopes=[sub_scope])
+        write_scope_record(repo_root, record)
+
+        with pytest.raises(ValueError, match="supports_return_import must be true or false"):
+            docs_scope_config.load_docs_scope_configs(repo_root)
 
 
 def test_docs_scope_config_rejects_invalid_sub_scope_metadata_vocabularies() -> None:

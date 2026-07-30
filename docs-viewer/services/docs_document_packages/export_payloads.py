@@ -11,7 +11,6 @@ from docs_document_packages.export_config import (
     EXPORT_META_SCHEMA_VERSION,
     config_checksum,
     supports_docs_review,
-    supports_return_import,
 )
 from docs_document_packages.export_selection import ExportContext
 from docs_document_packages.workspace import configured_workspace_paths, path_is_relative_to
@@ -51,9 +50,7 @@ def export_metadata(
         "record_shape": record_shape,
         "generated_at": generated_at,
         "supports_docs_review": supports_docs_review(context.config),
-        "supports_return_import": (
-            False if context.sub_scope else supports_return_import(context.config)
-        ),
+        "supports_return_import": context.supports_return_import,
     }
     if context.sub_scope:
         metadata["sub_scope"] = context.sub_scope
@@ -136,6 +133,7 @@ def build_external_context(
     *,
     scope: str = "",
     sub_scope: str = "",
+    return_import_supported: bool,
 ) -> dict[str, Any]:
     target = config.get("target") if isinstance(config.get("target"), dict) else {}
     record_shape = normalize_text(target.get("record_shape"))
@@ -192,17 +190,22 @@ def build_external_context(
         payload["content_format"] = content_format
     payload.update({
         "supports_docs_review": supports_docs_review(config),
-        "supports_return_import": (
-            False if sub_scope else supports_return_import(config)
-        ),
+        "supports_return_import": return_import_supported,
     })
     if sub_scope:
         payload.update({
             "scope": normalize_text(scope).lower(),
             "sub_scope": normalize_text(sub_scope).lower(),
             "return_import_notice": (
-                "This sub-scope package may enter read-only Docs Review after "
-                "trusted return validation. Docs Import is not supported."
+                (
+                    "This sub-scope package may enter Docs Review and exact "
+                    "configured collection Import after trusted return validation."
+                )
+                if return_import_supported
+                else (
+                    "This sub-scope package may enter read-only Docs Review after "
+                    "trusted return validation. Docs Import is not supported."
+                )
             ),
         })
     payload.update({

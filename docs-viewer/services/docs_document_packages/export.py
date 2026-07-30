@@ -447,6 +447,10 @@ def build_export(
         repo_root=repo_root,
         scope=scope,
         sub_scope=normalized_sub_scope,
+        supports_return_import=(
+            supports_return_import(config)
+            and source_context.return_import_enabled
+        ),
         data_domain=data_domain,
         content_format=resolved_content_format,
         config=config,
@@ -496,9 +500,7 @@ def build_export(
         "content_format": resolved_content_format,
         "supported_content_formats": content_formats,
         "supports_docs_review": supports_docs_review(config),
-        "supports_return_import": (
-            False if normalized_sub_scope else supports_return_import(config)
-        ),
+        "supports_return_import": context.supports_return_import,
         "output_file": paths.output_file,
         "metadata_file": paths.metadata_file,
         "context_file": paths.context_file,
@@ -548,6 +550,7 @@ def build_export(
         resolved_content_format,
         scope=scope,
         sub_scope=normalized_sub_scope,
+        return_import_supported=context.supports_return_import,
     )
     if write:
         write_export_outputs(
