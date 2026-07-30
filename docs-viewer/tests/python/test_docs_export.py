@@ -56,7 +56,7 @@ BASE_CONFIG = {
                 "record_shape": "document_rows",
             },
             "output": {
-                "path_pattern": "{timestamp}-{data_domain}-{profile_id}.jsonl",
+                "path_pattern": "{timestamp}-{profile_id}.jsonl",
                 "timestamp_format": "%Y%m%d-%H%M%S",
             },
             "selection": {
@@ -344,7 +344,7 @@ def test_unknown_config_returns_structured_validation_report() -> None:
 
 def test_jsonl_config_requires_jsonl_output_extension() -> None:
     config = copy.deepcopy(BASE_CONFIG)
-    config["configs"][0]["output"]["path_pattern"] = "{timestamp}-{data_domain}-{profile_id}.json"
+    config["configs"][0]["output"]["path_pattern"] = "{timestamp}-{profile_id}.json"
     with make_repo(config) as temp:
         report = run_export(Path(temp))
     assert report["ok"] is False
@@ -353,11 +353,25 @@ def test_jsonl_config_requires_jsonl_output_extension() -> None:
 
 def test_output_path_rejects_export_id_placeholder() -> None:
     config = copy.deepcopy(BASE_CONFIG)
-    config["configs"][0]["output"]["path_pattern"] = "{timestamp}-{data_domain}-{export_id}.jsonl"
+    config["configs"][0]["output"]["path_pattern"] = "{timestamp}-{export_id}.jsonl"
     with make_repo(config) as temp:
         report = run_export(Path(temp))
     assert report["ok"] is False
     assert "config document-content: output.path_pattern must not include export_id; use profile_id for filenames" in report["errors"]
+
+
+def test_output_path_rejects_retired_document_domain_name_segment() -> None:
+    config = copy.deepcopy(BASE_CONFIG)
+    config["configs"][0]["output"]["path_pattern"] = (
+        "{timestamp}-{data_domain}-{profile_id}.jsonl"
+    )
+    with make_repo(config) as temp:
+        report = run_export(Path(temp))
+    assert report["ok"] is False
+    assert (
+        "config document-content: output.path_pattern must not include "
+        "data_domain; document package names use timestamp and profile_id"
+    ) in report["errors"]
 
 
 def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
@@ -389,13 +403,13 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
     assert first_report["ok"] is True
     assert first_report["export_id"] == "ds_20260503T151507Z"
     assert first_report["output_file"] == (
-        "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/20260503-161507-documents-document-content.jsonl"
+        "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/20260503-161507-document-content.jsonl"
     )
     assert first_report["metadata_file"] == (
         "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta/ds_20260503T151507Z.meta.json"
     )
     assert first_report["context_file"] == (
-        "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/20260503-161507-documents-document-content.context.json"
+        "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/20260503-161507-document-content.context.json"
     )
     assert first_text == second_text
     assert first_metadata_text == second_metadata_text
@@ -467,7 +481,7 @@ def test_document_rows_json_format_override_writes_json_array() -> None:
     assert report["target_format"] == "json"
     assert report["export_id"] == "ds_20260503T151507Z"
     assert report["output_file"] == (
-        "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/20260503-161507-documents-document-content.json"
+        "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/20260503-161507-document-content.json"
     )
     assert payload["schema_version"] == "data_sharing_returned_package_v1"
     assert payload["export_id"] == "ds_20260503T151507Z"
@@ -549,7 +563,7 @@ def test_document_tree_profile_exports_selected_subtree() -> None:
                 "record_shape": "document_tree",
             },
             "output": {
-                "path_pattern": "{timestamp}-{data_domain}-{profile_id}.json",
+                "path_pattern": "{timestamp}-{profile_id}.json",
                 "timestamp_format": "%Y%m%d-%H%M%S",
             },
             "workflow": {
@@ -619,7 +633,7 @@ def test_document_tree_profile_requires_descendant_selection() -> None:
         "supported_formats": ["json"],
         "record_shape": "document_tree",
     }
-    config["configs"][0]["output"]["path_pattern"] = "{timestamp}-{data_domain}-{profile_id}.json"
+    config["configs"][0]["output"]["path_pattern"] = "{timestamp}-{profile_id}.json"
     config["configs"][0]["selection"]["include_descendants"] = False
     config["configs"][0]["document_fields"] = [
         {"source": "doc_id", "output_path": "doc_id", "required": True},
@@ -966,7 +980,7 @@ def test_repo_representative_library_exports_dry_run_successfully() -> None:
         assert report["output_written"] is False
         assert report["export_id"].startswith("ds_")
         assert report["output_file"].startswith("$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/")
-        assert f"-documents-{case['config_id']}" in report["output_file"]
+        assert f"-{case['config_id']}" in report["output_file"]
         assert report["output_file"].endswith(f".{case['target_format']}")
         assert report["metadata_file"].startswith("$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta/ds_")
         assert report["metadata_file"].endswith(".meta.json")

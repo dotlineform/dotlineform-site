@@ -290,7 +290,7 @@ def write_documents_prepare_profiles(root: Path) -> None:
                         "record_shape": "document_rows",
                     },
                     "output": {
-                        "path_pattern": "{timestamp}-{data_domain}-{profile_id}.jsonl",
+                        "path_pattern": "{timestamp}-{profile_id}.jsonl",
                         "timestamp_format": "%Y%m%d-%H%M%S",
                     },
                     "selection": {

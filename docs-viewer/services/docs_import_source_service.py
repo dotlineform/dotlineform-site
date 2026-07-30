@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict
 
 from docs_import_common import is_interactive_html_import_asset
+from docs_import_candidate_projection import list_import_candidates
 from docs_import_content import CONTENT_FORMAT_MARKDOWN, CONTENT_INTENT_REPLACE, ImportContent
 from docs_import_document import (
     IMPORT_DOCUMENT_CREATE,
@@ -121,6 +122,7 @@ def handle_import_source_files(repo_root: Path) -> Dict[str, Any]:
             "available": False,
             "staging_root": status["root"],
             "message": status["message"],
+            "candidates": [],
             "files": [],
         }
     workspace_paths = configured_workspace_paths(repo_root)
@@ -163,6 +165,12 @@ def handle_import_source_files(repo_root: Path) -> Dict[str, Any]:
         "available": True,
         "staging_root": marker_path(workspace_paths.import_staging, workspace_root=workspace_paths.root),
         "message": "",
+        "candidates": list_import_candidates(
+            repo_root,
+            staging_root=workspace_paths.import_staging,
+            workspace_root=workspace_paths.root,
+            metadata_root=workspace_paths.meta,
+        ),
         "files": [
             {
                 **record,

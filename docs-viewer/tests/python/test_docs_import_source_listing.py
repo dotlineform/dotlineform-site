@@ -39,11 +39,11 @@ from docs_import_test_support import (
 )
 
 
-REVIEW_FOLDER_ID = "20260730-095512-documents-document-content"
+REVIEW_FOLDER_ID = "20260730-105512-document-content"
 REVIEW_EXPORT_ID = "ds_20260730T095512Z"
-SUB_REVIEW_FOLDER_ID = "20260730-180000-tags-document-content"
+SUB_REVIEW_FOLDER_ID = "20260730-190000-document-content"
 SUB_REVIEW_EXPORT_ID = "ds_20260730T180000Z"
-ANALYSIS_REVIEW_FOLDER_ID = "20260730-190000-tags-document-content"
+ANALYSIS_REVIEW_FOLDER_ID = "20260730-200000-document-content"
 ANALYSIS_REVIEW_EXPORT_ID = "ds_20260730T190000Z"
 
 
@@ -139,6 +139,10 @@ def write_review_source_fixture(
         json.dumps(manifest) + "\n",
         encoding="utf-8",
     )
+    generated_at = (
+        f"{export_id[3:7]}-{export_id[7:9]}-{export_id[9:11]}"
+        f"T{export_id[12:14]}:{export_id[14:16]}:{export_id[16:18]}Z"
+    )
     metadata = {
         "schema_version": "data_sharing_export_meta_v1",
         "export_id": export_id,
@@ -153,7 +157,7 @@ def write_review_source_fixture(
         "record_shape": "document_rows",
         "supports_docs_review": True,
         "supports_return_import": supports_return_import,
-        "generated_at": "2026-07-30T09:55:12Z",
+        "generated_at": generated_at,
         "selected_doc_ids": [
             doc_id
             for doc_id, _title in source_records
@@ -628,6 +632,178 @@ def test_source_import_lists_valid_edited_review_folder_with_display_identity() 
     assert reviewed["filename"] == "edited-review-copy"
     assert reviewed["review_folder_id"] == REVIEW_FOLDER_ID
     assert reviewed["document_count"] == 2
+
+
+def test_app_level_candidate_projection_is_global_body_free_and_recognizer_first() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        configure_review_sub_scope_targets(root)
+        write_staged_markdown(root, "ordinary.md", "# Ordinary\n")
+        write_staged_package_file(
+            root,
+            "multiple-markdown",
+            "one.md",
+            "# One\n",
+        )
+        write_staged_package_file(
+            root,
+            "multiple-markdown",
+            "two.md",
+            "# Two\n",
+        )
+        write_staged_bytes(root, "standalone.png", b"not imported")
+        write_returned_jsonl(
+            root,
+            "returned-documents.jsonl",
+            [
+                {
+                    "doc_id": "returned-doc",
+                    "title": "Returned Doc",
+                    "content": "Returned body must not enter the listing.",
+                },
+            ],
+            export_id="ds_20260730T171500Z",
+        )
+        edited = write_review_sub_scope_fixture(root)
+        paths = configured_workspace_paths(root)
+        standalone_review = paths.import_staging / "tag-a-reviewed.md"
+        standalone_review.write_text(
+            (edited / "tag-a.md").read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
+
+        payload = import_source_service.handle_import_source_files(root)
+
+    candidates = {
+        item["filename"]: item
+        for item in payload["candidates"]
+    }
+    assert set(candidates) == {
+        "edited-tags-review",
+        "multiple-markdown",
+        "ordinary.md",
+        "returned-documents.jsonl",
+        "tag-a-reviewed.md",
+    }
+    assert "standalone.png" not in candidates
+    ordinary = candidates["ordinary.md"]
+    assert ordinary["candidate_kind"] == "ordinary_document"
+    assert ordinary["validation_state"] == "ready"
+    assert ordinary["target_mode"] == "ordinary_context"
+    assert ordinary["target"] is None
+    assert ordinary["supports_docs_review"] is False
+    assert ordinary["supports_return_import"] is False
+    assert ordinary["docs_review_enabled"] is False
+    assert ordinary["import_enabled"] is True
+    assert ordinary["diagnostics"] == []
+    returned = candidates["returned-documents.jsonl"]
+    assert returned["candidate_kind"] == "returned_package"
+    assert returned["target_mode"] == "manifest_collection"
+    assert returned["target"] == {"scope": "library"}
+    assert returned["target_label"] == "Library"
+    assert returned["docs_review_enabled"] is True
+    assert returned["import_enabled"] is True
+    assert returned["document_count"] == 1
+    assert {"records", "source_metadata", "content"}.isdisjoint(returned)
+
+    reviewed = candidates["edited-tags-review"]
+    assert reviewed["candidate_kind"] == "edited_review_source"
+    assert reviewed["target"] == {
+        "scope": "library",
+        "sub_scope": "tags",
+    }
+    assert reviewed["target_label"] == "Library / Tags"
+    assert reviewed["docs_review_enabled"] is False
+    assert reviewed["import_enabled"] is True
+    assert "records" not in reviewed
+
+    incomplete = candidates["tag-a-reviewed.md"]
+    assert incomplete["candidate_kind"] == "edited_review_source"
+    assert incomplete["validation_state"] == "blocked"
+    assert incomplete["disabled_reason"] == "incomplete_edited_review_source"
+    assert incomplete["source_format"] == "edited_review_sources"
+    multi_markdown = candidates["multiple-markdown"]
+    assert multi_markdown["candidate_kind"] == "ordinary_document"
+    assert multi_markdown["validation_state"] == "blocked"
+    assert multi_markdown["disabled_reason"] == (
+        "invalid_ordinary_markdown_folder"
+    )
+
+
+def test_app_level_candidate_projection_keeps_safe_blocked_package_diagnostics() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        paths = configured_workspace_paths(root)
+        write_staged(
+            root,
+            "missing-metadata.jsonl",
+            [
+                {
+                    "record_type": "data_sharing_header",
+                    "export_id": "ds_20260730T171501Z",
+                },
+                {
+                    "doc_id": "alpha",
+                    "title": "Alpha",
+                },
+            ],
+        )
+        write_staged(
+            root,
+            "unrelated.json",
+            {"kind": "not-a-documents-package"},
+        )
+        write_returned_jsonl(
+            root,
+            "20260730-181500-documents-document-content.jsonl",
+            [
+                {
+                    "doc_id": "returned-doc",
+                    "title": "Returned Doc",
+                    "content": "Body.",
+                },
+            ],
+            export_id="ds_20260730T171500Z",
+        )
+        old_folder_id = "20260730-105512-documents-document-content"
+        write_review_source_fixture(
+            root,
+            staged_folder="retired-review-name",
+            folder_id=old_folder_id,
+        )
+
+        payload = import_source_service.handle_import_source_files(root)
+
+    candidates = {
+        item["filename"]: item
+        for item in payload["candidates"]
+    }
+    assert "unrelated.json" not in candidates
+    retired_package = candidates[
+        "20260730-181500-documents-document-content.jsonl"
+    ]
+    assert retired_package["validation_state"] == "blocked"
+    assert retired_package["docs_review_enabled"] is False
+    assert retired_package["import_enabled"] is False
+    assert retired_package["disabled_reason"] == "retired_package_filename"
+    missing = candidates["missing-metadata.jsonl"]
+    assert missing["candidate_kind"] == "returned_package"
+    assert missing["validation_state"] == "blocked"
+    assert missing["disabled_reason"] == "untrusted_package_metadata"
+    assert missing["diagnostics"] == [
+        {
+            "code": "untrusted_package_metadata",
+            "message": (
+                "Trusted export metadata is unavailable for this claimed package."
+            ),
+        }
+    ]
+    retired = candidates["retired-review-name"]
+    assert retired["candidate_kind"] == "edited_review_source"
+    assert retired["validation_state"] == "blocked"
+    assert retired["disabled_reason"] == "invalid_edited_review_source"
+    assert "retired review_folder_id" in retired["diagnostics"][0]["message"]
+    assert str(paths.root) not in retired["diagnostics"][0]["message"]
 
 
 @pytest.mark.parametrize(

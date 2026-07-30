@@ -14,6 +14,7 @@ from docs_document_packages.returned_common import (
     empty_report,
     issue,
     normalize_text,
+    retired_document_package_filename,
     relative_path,
     resolve_staged_path,
 )
@@ -65,6 +66,19 @@ def parse_staged_import(
         return report
     if not path.exists():
         report["issues"].append(issue("error", "unreadable_file", "staged file does not exist"))
+        report["counts"]["errors"] = 1
+        return report
+    if retired_document_package_filename(path.name):
+        report["issues"].append(
+            issue(
+                "error",
+                "retired_package_filename",
+                (
+                    "staged document package uses the retired domain-bearing "
+                    "filename; clear it and prepare a new package"
+                ),
+            )
+        )
         report["counts"]["errors"] = 1
         return report
 

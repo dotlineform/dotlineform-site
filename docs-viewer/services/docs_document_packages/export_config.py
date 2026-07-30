@@ -288,10 +288,25 @@ def validate_export_config(config: dict[str, Any]) -> tuple[list[str], list[str]
         errors.append(f"config {config_id}: output.path_pattern is required")
     elif "{export_id}" in path_pattern:
         errors.append(f"config {config_id}: output.path_pattern must not include export_id; use profile_id for filenames")
-    elif "{data_domain}" not in path_pattern or "{profile_id}" not in path_pattern or "{timestamp}" not in path_pattern:
-        errors.append(f"config {config_id}: output.path_pattern must include data_domain, profile_id, and timestamp placeholders")
+    elif "{data_domain}" in path_pattern:
+        errors.append(
+            f"config {config_id}: output.path_pattern must not include data_domain; "
+            "document package names use timestamp and profile_id"
+        )
+    elif "{profile_id}" not in path_pattern or "{timestamp}" not in path_pattern:
+        errors.append(
+            f"config {config_id}: output.path_pattern must include profile_id "
+            "and timestamp placeholders"
+        )
     elif target_format and not path_pattern.endswith(f".{target_format}"):
         errors.append(f"config {config_id}: output.path_pattern extension must match target.format")
+    elif target_format and path_pattern != (
+        f"{{timestamp}}-{{profile_id}}.{target_format}"
+    ):
+        errors.append(
+            f"config {config_id}: output.path_pattern must be "
+            f"{{timestamp}}-{{profile_id}}.{target_format}"
+        )
     timestamp_format = normalize_text(output.get("timestamp_format") or "%Y%m%d-%H%M%S")
     try:
         dt.datetime.now(dt.timezone.utc).strftime(timestamp_format)

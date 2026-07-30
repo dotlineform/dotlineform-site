@@ -18,6 +18,7 @@ from docs_document_packages.returned_common import RETURN_IMPORT_CAPABILITY
 from docs_document_packages.returned_files import metadata_from_internal_export_meta
 from docs_document_packages.returned_profiles import supported_return_import_profile_ids
 from docs_document_packages.returned_validation import validate_whole_returned_package
+from docs_document_packages.review_sources import derive_folder_id
 
 
 EDITED_REVIEW_SOURCE_FORMAT = "edited_review_sources"
@@ -111,6 +112,16 @@ def _folder_has_review_source_marker(path: Path) -> bool:
     except OSError as exc:
         raise ValueError(f"edited review source folder is unreadable: {exc}") from exc
     return any(is_review_source_markdown(candidate) for candidate in markdown_paths)
+
+
+def is_edited_review_source_candidate(path: Path) -> bool:
+    """Claim a folder before ordinary Markdown package normalization."""
+
+    return (
+        path.is_dir()
+        and not path.is_symlink()
+        and _folder_has_review_source_marker(path)
+    )
 
 
 def _source_paths(path: Path) -> list[Path]:
@@ -537,6 +548,12 @@ def recognize_edited_review_source_folder(
             "trusted export metadata profile_id does not match the edited review "
             "sources",
         )
+    expected_folder_id = derive_folder_id(trusted_metadata)
+    if folder_id != expected_folder_id:
+        raise ValueError(
+            "edited review sources use a retired review_folder_id; regenerate "
+            f"the package as {expected_folder_id}",
+        )
     source_last_updated = _validate_source_versions(
         trusted_metadata,
         set(doc_ids),
@@ -582,6 +599,7 @@ __all__ = [
     "EDITED_REVIEW_SOURCE_FORMAT",
     "EditedReviewSourceFolder",
     "EditedReviewSourceRecord",
+    "is_edited_review_source_candidate",
     "is_review_source_markdown",
     "recognize_edited_review_source_folder",
 ]

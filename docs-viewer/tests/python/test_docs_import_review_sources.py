@@ -189,7 +189,7 @@ def test_review_source_folder_uses_shared_markdown_content_normalization() -> No
         generated = docs_review_packages.read_payload(root, payload["folder_id"], "alpha")
 
     assert payload["ok"] is True
-    assert payload["folder_id"] == "20260627-215010-documents-document-content"
+    assert payload["folder_id"] == "20260627-215010-document-content"
     assert payload["content_format"] == "markdown"
     assert payload["counts"] == {"records": 1, "valid_records": 1, "skipped_records": 0, "errors": 0, "warnings": 0}
     assert payload["review_source_folder_written"] is True
@@ -622,7 +622,7 @@ def test_review_source_folder_rejects_a_changed_atomic_return_before_existing_fo
         )
         first_body = source_folder_body(root, first, "alpha.md")
 
-    assert first["folder_id"] == "20260627-215010-documents-document-content"
+    assert first["folder_id"] == "20260627-215010-document-content"
     assert second["folder_id"] == ""
     assert second["ok"] is False
     assert second["review_source_folder_written"] is False

@@ -15,6 +15,9 @@ from docs_document_packages.workspace import configured_workspace_paths, marker_
 SUPPORTED_EXTENSIONS = {".json", ".jsonl"}
 TEXT_WHITESPACE_RE = re.compile(r"\s+")
 EXPORT_ID_RE = re.compile(r"^ds_\d{8}T\d{6}Z$")
+RETIRED_DOCUMENT_PACKAGE_FILENAME_RE = re.compile(
+    r"^\d{8}-\d{6}-documents-[A-Za-z0-9][A-Za-z0-9._-]*\.(?:json|jsonl)$",
+)
 
 PROFILE_ID_TO_IMPORT_TYPE = {
     "document-content": "document_changes",
@@ -56,6 +59,13 @@ KNOWN_RECORD_FIELDS = {
 }
 DOCS_REVIEW_CAPABILITY = "supports_docs_review"
 RETURN_IMPORT_CAPABILITY = "supports_return_import"
+
+
+def retired_document_package_filename(value: Any) -> bool:
+    return RETIRED_DOCUMENT_PACKAGE_FILENAME_RE.fullmatch(
+        Path(str(value or "")).name,
+    ) is not None
+
 
 def normalize_text(value: Any) -> str:
     return TEXT_WHITESPACE_RE.sub(" ", str(value or "")).strip()

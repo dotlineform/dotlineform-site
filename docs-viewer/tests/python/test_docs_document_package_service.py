@@ -169,7 +169,7 @@ def add_document_tree_profile(repo_root: Path) -> None:
             "label": "Document tree",
             "target": {"format": "json", "record_shape": "document_tree"},
             "output": {
-                "path_pattern": "{timestamp}-{data_domain}-{profile_id}.json",
+                "path_pattern": "{timestamp}-{profile_id}.json",
                 "timestamp_format": "%Y%m%d-%H%M%S",
             },
             "workflow": {
@@ -396,7 +396,7 @@ def test_direct_prepare_treats_tree_doc_ids_as_the_final_target() -> None:
                 "label": "Document tree",
                 "target": {"format": "json", "record_shape": "document_tree"},
                 "output": {
-                    "path_pattern": "{timestamp}-{data_domain}-{profile_id}.json",
+                    "path_pattern": "{timestamp}-{profile_id}.json",
                     "timestamp_format": "%Y%m%d-%H%M%S",
                 },
                 "workflow": {
@@ -867,6 +867,20 @@ def test_sub_scope_written_package_is_reviewable_but_blocked_from_import() -> No
     assert staged_filename not in {
         record["filename"] for record in import_files["files"]
     }
+    review_only_candidate = next(
+        record
+        for record in import_files["candidates"]
+        if record["filename"] == staged_filename
+    )
+    assert review_only_candidate["target"] == {
+        "scope": "library",
+        "sub_scope": "tags",
+    }
+    assert review_only_candidate["docs_review_enabled"] is True
+    assert review_only_candidate["import_enabled"] is False
+    assert review_only_candidate["import_disabled_reason"] == (
+        "return_import_unsupported"
+    )
     assert source_after == source_before
 
 
@@ -1037,6 +1051,17 @@ def test_opted_in_sub_scope_projects_importable_package_and_exact_listing() -> N
     assert staged_filename not in {
         item["filename"] for item in import_files["files"]
     }
+    importable_candidate = next(
+        item
+        for item in import_files["candidates"]
+        if item["filename"] == staged_filename
+    )
+    assert importable_candidate["target"] == {
+        "scope": "library",
+        "sub_scope": "tags",
+    }
+    assert importable_candidate["docs_review_enabled"] is True
+    assert importable_candidate["import_enabled"] is True
     assert mismatch["ok"] is False
     assert "sub_scope_mismatch" in {
         item["code"] for item in mismatch["issues"]
@@ -1203,6 +1228,9 @@ def test_review_rejects_legacy_single_capability_metadata() -> None:
         metadata_path.write_text(json.dumps(metadata) + "\n", encoding="utf-8")
 
         returned = service.returned_payload(repo_root, {"scope": ["library"]})
+        import_listing = import_source_service.handle_import_source_files(
+            repo_root
+        )
         review = service.review_returned(
             repo_root,
             {
@@ -1214,6 +1242,21 @@ def test_review_rejects_legacy_single_capability_metadata() -> None:
 
     assert returned["files"] == []
     assert returned["blocked_files"][0]["blocked_reason"] == (
+        "invalid_capability_metadata"
+    )
+    blocked_candidate = next(
+        item
+        for item in import_listing["candidates"]
+        if item["filename"] == "returned.jsonl"
+    )
+    assert blocked_candidate["validation_state"] == "blocked"
+    assert blocked_candidate["disabled_reason"] == (
+        "invalid_capability_metadata"
+    )
+    assert blocked_candidate["docs_review_disabled_reason"] == (
+        "invalid_capability_metadata"
+    )
+    assert blocked_candidate["import_disabled_reason"] == (
         "invalid_capability_metadata"
     )
     assert review["ok"] is False

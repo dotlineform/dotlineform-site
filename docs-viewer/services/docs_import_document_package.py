@@ -14,7 +14,10 @@ from docs_import_document_package_content import COMPACT_PROFILE_ID, FULL_SOURCE
 from docs_import_document_package_content import normalize_documents_import_content
 from docs_import_collection_plan import CollectionRecordState, collection_issue
 from docs_import_preview import resolve_staged_import_source
-from docs_document_packages.returned_common import RETURN_IMPORT_CAPABILITY
+from docs_document_packages.returned_common import (
+    RETURN_IMPORT_CAPABILITY,
+    retired_document_package_filename,
+)
 from docs_document_packages.returned_files import (
     export_id_from_json_payload,
     export_id_from_jsonl_header,
@@ -162,6 +165,17 @@ def load_document_package(
         )
     except (FileNotFoundError, ValueError) as exc:
         return None, [collection_issue("error", "unsafe_or_missing_staged_package", str(exc))]
+    if retired_document_package_filename(path.name):
+        return None, [
+            collection_issue(
+                "error",
+                "retired_package_filename",
+                (
+                    "staged document package uses the retired domain-bearing "
+                    "filename; clear it and prepare a new package"
+                ),
+            )
+        ]
 
     package_metadata: dict[str, Any] = {}
     raw_rows: list[Any] = []

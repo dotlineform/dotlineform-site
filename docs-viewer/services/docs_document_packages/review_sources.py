@@ -90,7 +90,7 @@ def derive_folder_id(metadata: dict[str, Any]) -> str:
         raise ValueError("metadata data_domain is required")
     if not profile_id:
         raise ValueError("metadata profile_id is required")
-    return validate_folder_id(f"{timestamp}-{data_domain}-{profile_id}")
+    return validate_folder_id(f"{timestamp}-{profile_id}")
 
 
 def resolve_review_folder(repo_root: Path, preview_root: Path, folder_id: str) -> Path:
