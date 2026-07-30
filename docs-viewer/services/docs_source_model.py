@@ -110,6 +110,20 @@ def parse_source(path: Path) -> tuple[Dict[str, Any], str]:
     return parse_source_text(path.read_text(encoding="utf-8"), source_name=path.name)
 
 
+def split_source_text(
+    raw: str,
+    *,
+    source_name: str = "source",
+) -> tuple[str, Dict[str, Any], str]:
+    """Return exact front-matter source, parsed metadata, and body."""
+
+    match = FRONT_MATTER_PATTERN.match(raw)
+    if not match:
+        raise ValueError(f"front matter could not be parsed in {source_name}")
+    front_matter, body = parse_source_text(raw, source_name=source_name)
+    return raw[: match.end()], front_matter, body
+
+
 def format_front_matter_value(value: Any) -> str:
     if value is None:
         return '""'
@@ -412,7 +426,11 @@ def load_scope_docs_for_config(repo_root: Path, config: DocsScopeConfig) -> list
 
     docs: list[ScopeDoc] = []
     for path in scope_markdown_paths(root):
-        front_matter, body = parse_source(path)
+        source_text = path.read_bytes().decode("utf-8")
+        front_matter, body = parse_source_text(
+            source_text,
+            source_name=path.name,
+        )
         doc_id = str(front_matter.get("doc_id") or "").strip()
         if not doc_id:
             raise ValueError(f"missing required doc_id in {path.relative_to(root).as_posix()}")
@@ -425,7 +443,7 @@ def load_scope_docs_for_config(repo_root: Path, config: DocsScopeConfig) -> list
             ScopeDoc(
                 scope=scope,
                 path=path,
-                source_text=path.read_text(encoding="utf-8"),
+                source_text=source_text,
                 front_matter=dict(front_matter),
                 body=body,
                 doc_id=doc_id,

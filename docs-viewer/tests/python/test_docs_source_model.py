@@ -90,6 +90,34 @@ def test_front_matter_parses_and_formats_supported_scalar_values() -> None:
     assert "viewable: false" in formatted
 
 
+def test_scope_loader_preserves_exact_source_bytes_and_newlines() -> None:
+    raw_source = (
+        "---\r\n"
+        f"doc_id: {FIXTURE_DOC_ID}\r\n"
+        "title: Exact Source\r\n"
+        'parent_id: ""\r\n'
+        "---\r\n"
+        "# Exact Source\r\n"
+    ).encode("utf-8")
+    with tempfile.TemporaryDirectory() as temp:
+        root = Path(temp)
+        path = (
+            root
+            / "docs-viewer/scopes/studio/source/documents/exact-source.md"
+        )
+        path.parent.mkdir(parents=True)
+        path.write_bytes(raw_source)
+
+        docs = source_model.load_scope_docs(root, "studio")
+
+    assert len(docs) == 1
+    assert docs[0].source_text.encode("utf-8") == raw_source
+    assert docs[0].body == "# Exact Source\r\n"
+    assert source_model.source_revision(
+        docs[0].source_text.encode("utf-8")
+    ) == source_model.source_revision(raw_source)
+
+
 def test_atomic_new_source_write_refuses_existing_destination() -> None:
     with tempfile.TemporaryDirectory() as temp:
         root = Path(temp)
@@ -380,6 +408,7 @@ def test_allocate_doc_id_uses_timestamp_and_retries_collisions() -> None:
 def main() -> None:
     tests = [
         test_front_matter_parses_and_formats_supported_scalar_values,
+        test_scope_loader_preserves_exact_source_bytes_and_newlines,
         test_atomic_new_source_write_refuses_existing_destination,
         test_atomic_source_write_failure_preserves_existing_file,
         test_load_scope_docs_rejects_duplicate_doc_ids,

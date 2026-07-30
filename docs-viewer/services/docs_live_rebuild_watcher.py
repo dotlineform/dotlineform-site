@@ -40,8 +40,12 @@ from docs_source_model import (
     is_doc_timestamp,
     load_scope_docs,
     recent_edit_content,
+    rewrite_front_matter_source_timestamp,
     scope_doc_sort_key,
+    source_revision,
+    split_source_text,
     strictly_later_doc_timestamp,
+    write_text_atomic,
 )
 from docs_artifact_locations import (
     ArtifactLocation,
@@ -364,6 +368,7 @@ def parsed_doc_snapshot(repo_root: Path, scope: str) -> Dict[str, Dict[str, Any]
             "added_date": str(doc.front_matter.get("added_date") or "").strip(),
             "last_updated": str(doc.front_matter.get("last_updated") or "").strip(),
             "recent_edit_content": recent_edit_content(doc.front_matter, doc.body),
+            "source_revision": source_revision(doc.source_text.encode("utf-8")),
             "sort_key": scope_doc_sort_key(doc),
         }
         for doc in docs
@@ -479,6 +484,10 @@ def direct_edit_timestamp_plan(
             "requires_rewrite": False,
             "previous_last_updated": "",
             "current_last_updated": current_last_updated,
+            "previous_source_revision": "",
+            "current_source_revision": str(
+                current.get("source_revision") or ""
+            ).strip(),
             "replacement_last_updated": "",
             "reason": unmatched_reason,
         }
@@ -488,6 +497,9 @@ def direct_edit_timestamp_plan(
 
         previous_last_updated = str(previous.get("last_updated") or "").strip()
         plan["previous_last_updated"] = previous_last_updated
+        plan["previous_source_revision"] = str(
+            previous.get("source_revision") or ""
+        ).strip()
         previous_content = previous.get("recent_edit_content")
         current_content = current.get("recent_edit_content")
         if not (
@@ -532,21 +544,11 @@ def direct_edit_timestamp_plan(
     return plans
 
 
-def direct_edit_timestamp_issues(
-    previous_docs: Optional[Dict[str, Dict[str, Any]]],
-    current_docs: Dict[str, Dict[str, Any]],
-    changed_files: list[str],
+def timestamp_issues_from_plan(
+    plans: list[Dict[str, Any]],
 ) -> list[Dict[str, str]]:
-    """Describe changed source whose explicit write timestamp evidence is missing."""
+    """Render warning records for plan entries that still lack timestamp evidence."""
 
-    if previous_docs is None:
-        return []
-    plans = direct_edit_timestamp_plan(
-        previous_docs,
-        current_docs,
-        changed_files,
-        captured_timestamp=current_doc_timestamp(),
-    )
     issues: list[Dict[str, str]] = []
     for plan in plans:
         reason = ""
@@ -570,6 +572,144 @@ def direct_edit_timestamp_issues(
             }
         )
     return issues
+
+
+def direct_edit_timestamp_issues(
+    previous_docs: Optional[Dict[str, Dict[str, Any]]],
+    current_docs: Dict[str, Dict[str, Any]],
+    changed_files: list[str],
+) -> list[Dict[str, str]]:
+    """Describe changed source whose explicit write timestamp evidence is missing."""
+
+    if previous_docs is None:
+        return []
+    plans = direct_edit_timestamp_plan(
+        previous_docs,
+        current_docs,
+        changed_files,
+        captured_timestamp=current_doc_timestamp(),
+    )
+    return timestamp_issues_from_plan(plans)
+
+
+def apply_parent_scope_timestamp_rewrites(
+    source_root: Path,
+    plans: list[Dict[str, Any]],
+) -> Dict[str, list[Dict[str, Any]]]:
+    """Apply planned parent-scope timestamp-only writes with revision checks."""
+
+    resolved_root = source_root.resolve()
+    result: Dict[str, list[Dict[str, Any]]] = {
+        "rewritten": [],
+        "conflicts": [],
+        "failures": [],
+    }
+    for plan in plans:
+        if not plan["requires_rewrite"]:
+            continue
+
+        filename = str(plan["filename"])
+        doc_id = str(plan["doc_id"])
+        path = source_root / filename
+        record = {
+            "filename": filename,
+            "doc_id": doc_id,
+        }
+        try:
+            if path.is_symlink() or path.resolve().parent != resolved_root:
+                raise ValueError("planned timestamp source path is not confined")
+            expected_revision = str(plan["current_source_revision"])
+            if not expected_revision:
+                raise ValueError("planned timestamp source revision is missing")
+            current_bytes = path.read_bytes()
+            current_revision = source_revision(current_bytes)
+            if current_revision != expected_revision:
+                result["conflicts"].append(
+                    {
+                        **record,
+                        "reason": "source changed after timestamp planning",
+                    }
+                )
+                continue
+
+            current_text = current_bytes.decode("utf-8")
+            front_matter_source, front_matter, body = split_source_text(
+                current_text,
+                source_name=filename,
+            )
+            current_doc_id = str(front_matter.get("doc_id") or "").strip()
+            if current_doc_id != doc_id:
+                raise ValueError("planned timestamp doc_id no longer matches source")
+            next_front_matter_source = rewrite_front_matter_source_timestamp(
+                front_matter_source,
+                front_matter,
+                timestamp=str(plan["replacement_last_updated"]),
+            )
+            next_text = next_front_matter_source + body
+            write_text_atomic(path, next_text)
+
+            before_read = path.stat()
+            verified_bytes = path.read_bytes()
+            after_read = path.stat()
+            signature = (after_read.st_mtime_ns, after_read.st_size)
+            if (
+                (before_read.st_mtime_ns, before_read.st_size) != signature
+                or verified_bytes != next_text.encode("utf-8")
+            ):
+                result["conflicts"].append(
+                    {
+                        **record,
+                        "reason": "source changed after timestamp write",
+                    }
+                )
+                continue
+
+            _next_source, next_front_matter, _next_body = split_source_text(
+                next_text,
+                source_name=filename,
+            )
+            result["rewritten"].append(
+                {
+                    **record,
+                    "signature": signature,
+                    "source_revision": source_revision(verified_bytes),
+                    "added_date": str(
+                        next_front_matter.get("added_date") or ""
+                    ).strip(),
+                    "last_updated": str(
+                        next_front_matter.get("last_updated") or ""
+                    ).strip(),
+                }
+            )
+        except Exception as exc:  # noqa: BLE001 - watcher reports one failed source and continues the batch.
+            result["failures"].append(
+                {
+                    **record,
+                    "reason": str(exc),
+                }
+            )
+    return result
+
+
+def adopt_parent_scope_timestamp_rewrites(
+    state: Dict[str, Any],
+    current_docs: Dict[str, Dict[str, Any]],
+    rewrite_result: Dict[str, list[Dict[str, Any]]],
+) -> list[str]:
+    """Adopt verified watcher writes into physical and parsed snapshots."""
+
+    adopted: list[str] = []
+    for record in rewrite_result["rewritten"]:
+        filename = str(record["filename"])
+        current = current_docs.get(filename)
+        if current is None:
+            continue
+        state["snapshot"][filename] = tuple(record["signature"])
+        current["source_revision"] = str(record["source_revision"])
+        current["added_date"] = str(record["added_date"])
+        current["last_updated"] = str(record["last_updated"])
+        adopted.append(filename)
+    return adopted
 
 
 def rebuild_scope(
@@ -634,6 +774,108 @@ def rebuild_scope(
                 continue
         log(f"{scope} {label}: {summarize_output(stdout, 'done')}")
     return True
+
+
+def process_parent_scope_changes(
+    repo_root: Path,
+    state: Dict[str, Any],
+    changed_files: list[str],
+    *,
+    targeted_search_threshold: int,
+) -> tuple[bool, Optional[Dict[str, Dict[str, Any]]]]:
+    """Capture eligible timestamps, then run one existing parent-scope rebuild."""
+
+    scope = str(state["scope"])
+    current_docs, snapshot_error = try_parsed_doc_snapshot(repo_root, scope)
+    if snapshot_error or current_docs is None:
+        log(
+            f"{scope} targeted search fallback; affected ids unavailable: "
+            f"{snapshot_error or 'parsed docs snapshot unavailable'}"
+        )
+        return rebuild_scope(repo_root, scope), None
+
+    search_doc_ids, fallback_reason = affected_search_doc_ids(
+        state["doc_snapshot"],
+        current_docs,
+        changed_files,
+        targeted_search_threshold,
+    )
+    docs_doc_ids = None
+    if fallback_reason:
+        log(f"{scope} targeted search fallback; affected ids unavailable: {fallback_reason}")
+    else:
+        docs_doc_ids = search_doc_ids
+        log(
+            f"{scope} affected docs for targeted search: "
+            f"{affected_doc_ids_log_text(search_doc_ids)}."
+        )
+
+    timestamp_plans = direct_edit_timestamp_plan(
+        state["doc_snapshot"],
+        current_docs,
+        changed_files,
+        captured_timestamp=current_doc_timestamp(),
+    )
+    rewrite_result = apply_parent_scope_timestamp_rewrites(
+        state["root"],
+        timestamp_plans,
+    )
+    adopted_files = adopt_parent_scope_timestamp_rewrites(
+        state,
+        current_docs,
+        rewrite_result,
+    )
+    adopted_set = set(adopted_files)
+    if adopted_files:
+        captured = [
+            f"{record['filename']} ({record['doc_id']})"
+            for record in rewrite_result["rewritten"]
+            if record["filename"] in adopted_set
+        ]
+        log(
+            f"{scope} captured last_updated for direct source edits: "
+            f"{', '.join(captured)}."
+        )
+    for record in rewrite_result["conflicts"]:
+        log(
+            f"{scope} timestamp capture deferred for "
+            f"{record['filename']} ({record['doc_id']}): "
+            f"{record['reason']}."
+        )
+    for record in rewrite_result["failures"]:
+        log(
+            f"{scope} timestamp capture failed for "
+            f"{record['filename']} ({record['doc_id']}): "
+            f"{record['reason']}."
+        )
+    handled_files = {
+        str(record["filename"])
+        for result_key in ("rewritten", "conflicts", "failures")
+        for record in rewrite_result[result_key]
+    }
+    for issue in timestamp_issues_from_plan(
+        [
+            plan
+            for plan in timestamp_plans
+            if str(plan["filename"]) not in handled_files
+        ]
+    ):
+        log(
+            f"{scope} timestamp evidence warning for "
+            f"{issue['filename']} ({issue['doc_id']}): "
+            f"{issue['reason']}; this source is not eligible "
+            "for automatic timestamp capture."
+        )
+
+    return (
+        rebuild_scope(
+            repo_root,
+            scope,
+            docs_doc_ids=docs_doc_ids,
+            search_doc_ids=search_doc_ids,
+        ),
+        current_docs,
+    )
 
 
 def rebuild_sub_scope(repo_root: Path, scope: str, sub_scope: str) -> bool:
@@ -879,41 +1121,15 @@ def main() -> int:
                     rebuild_succeeded = rebuild_sub_scope(repo_root, ready_scope, state["sub_scope"])
                     current_doc_snapshot = None
                 else:
-                    current_doc_snapshot, snapshot_error = try_parsed_doc_snapshot(repo_root, ready_scope)
-                    search_doc_ids = None
-                    docs_doc_ids = None
-                    if snapshot_error:
-                        log(f"{ready_scope} targeted search fallback; affected ids unavailable: {snapshot_error}")
-                    else:
-                        for issue in direct_edit_timestamp_issues(
-                            state["doc_snapshot"],
-                            current_doc_snapshot,
+                    rebuild_succeeded, current_doc_snapshot = (
+                        process_parent_scope_changes(
+                            repo_root,
+                            state,
                             changed_files,
-                        ):
-                            log(
-                                f"{ready_scope} timestamp evidence warning for {issue['filename']} "
-                                f"({issue['doc_id']}): {issue['reason']}; advance last_updated for this direct source edit."
-                            )
-                        search_doc_ids, fallback_reason = affected_search_doc_ids(
-                            state["doc_snapshot"],
-                            current_doc_snapshot,
-                            changed_files,
-                            args.targeted_search_threshold,
+                            targeted_search_threshold=(
+                                args.targeted_search_threshold
+                            ),
                         )
-                        if fallback_reason:
-                            log(f"{ready_scope} targeted search fallback; affected ids unavailable: {fallback_reason}")
-                        else:
-                            docs_doc_ids = search_doc_ids
-                            log(
-                                f"{ready_scope} affected docs for targeted search: "
-                                f"{affected_doc_ids_log_text(search_doc_ids)}."
-                            )
-
-                    rebuild_succeeded = rebuild_scope(
-                        repo_root,
-                        ready_scope,
-                        docs_doc_ids=docs_doc_ids,
-                        search_doc_ids=search_doc_ids,
                     )
 
                 post_rebuild_snapshot, source_error = try_state_snapshot(state)

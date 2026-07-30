@@ -6,6 +6,7 @@ from __future__ import annotations
 import copy
 import importlib.util
 import sys
+import tempfile
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -25,6 +26,37 @@ def load_docs_live_rebuild_watcher_module():
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
+
+
+def timestamp_source_text(
+    *,
+    doc_id: str,
+    title: str,
+    summary: str,
+    last_updated: str,
+    body: str,
+) -> str:
+    return (
+        "---\n"
+        f"doc_id: {doc_id}\n"
+        f"title: {title}\n"
+        "added_date: 2026-07-15 09:00:00\n"
+        f"last_updated: {last_updated}\n"
+        f"summary: {summary}\n"
+        "custom_field: retained\n"
+        "---\n"
+        f"{body}"
+    )
+
+
+def timestamp_snapshot_row(module, source_text: str) -> dict[str, object]:
+    _front_matter_source, front_matter, body = module.split_source_text(source_text)
+    return {
+        "doc_id": str(front_matter.get("doc_id") or ""),
+        "last_updated": str(front_matter.get("last_updated") or ""),
+        "recent_edit_content": module.recent_edit_content(front_matter, body),
+        "source_revision": module.source_revision(source_text.encode("utf-8")),
+    }
 
 
 def test_watcher_imports_source_model_helpers_directly() -> None:
@@ -363,6 +395,8 @@ def test_watcher_plans_direct_edit_timestamp_evidence_without_writing() -> None:
         "requires_rewrite": True,
         "previous_last_updated": "2026-07-16 10:00:00",
         "current_last_updated": "2026-07-16 10:00:00",
+        "previous_source_revision": "",
+        "current_source_revision": "",
         "replacement_last_updated": "2026-07-16 10:00:06",
         "reason": "last_updated_not_advanced",
     }
@@ -382,6 +416,8 @@ def test_watcher_plans_direct_edit_timestamp_evidence_without_writing() -> None:
         "requires_rewrite": False,
         "previous_last_updated": "2026-07-16 10:00:00",
         "current_last_updated": "2026-07-16 09:59:59",
+        "previous_source_revision": "",
+        "current_source_revision": "",
         "replacement_last_updated": "",
         "reason": "manual_full_timestamp",
     }
@@ -426,6 +462,8 @@ def test_watcher_timestamp_plan_fails_closed_without_valid_snapshot_or_capture()
             "requires_rewrite": False,
             "previous_last_updated": "",
             "current_last_updated": "",
+            "previous_source_revision": "",
+            "current_source_revision": "",
             "replacement_last_updated": "",
             "reason": "missing_previous_snapshot",
         }
@@ -459,6 +497,385 @@ def test_watcher_invalid_parsed_snapshot_fails_closed() -> None:
 
     assert snapshot is None
     assert error == "simulated invalid source"
+
+
+def test_parent_watcher_rewrites_body_title_and_summary_once_then_adopts() -> None:
+    module = load_docs_live_rebuild_watcher_module()
+    previous_sources = {
+        "body.md": timestamp_source_text(
+            doc_id="body",
+            title="Body",
+            summary="Summary",
+            last_updated="2026-07-16 10:00:00",
+            body="# Old body\n",
+        ),
+        "title.md": timestamp_source_text(
+            doc_id="title",
+            title="Old title",
+            summary="Summary",
+            last_updated="2026-07-16 10:00:00",
+            body="# Body\n",
+        ),
+        "summary.md": timestamp_source_text(
+            doc_id="summary",
+            title="Summary",
+            summary="Old summary",
+            last_updated="2026-07-16 10:00:00",
+            body="# Body\n",
+        ),
+    }
+    current_sources = {
+        "body.md": timestamp_source_text(
+            doc_id="body",
+            title="Body",
+            summary="Summary",
+            last_updated="2026-07-16 10:00:00",
+            body="# New body\n",
+        ),
+        "title.md": timestamp_source_text(
+            doc_id="title",
+            title="New title",
+            summary="Summary",
+            last_updated="2026-07-16 10:00:00",
+            body="# Body\n",
+        ),
+        "summary.md": timestamp_source_text(
+            doc_id="summary",
+            title="Summary",
+            summary="New summary",
+            last_updated="2026-07-16 10:00:00",
+            body="# Body\n",
+        ),
+    }
+
+    with tempfile.TemporaryDirectory() as temp:
+        source_root = Path(temp)
+        for filename, source_text in current_sources.items():
+            (source_root / filename).write_text(source_text, encoding="utf-8")
+        previous = {
+            filename: timestamp_snapshot_row(module, source_text)
+            for filename, source_text in previous_sources.items()
+        }
+        current = {
+            filename: timestamp_snapshot_row(module, source_text)
+            for filename, source_text in current_sources.items()
+        }
+        state = {"snapshot": module.snapshot_markdown_root(source_root)}
+        plans = module.direct_edit_timestamp_plan(
+            previous,
+            current,
+            list(current_sources),
+            captured_timestamp="2026-07-16 10:00:00",
+        )
+
+        result = module.apply_parent_scope_timestamp_rewrites(
+            source_root,
+            plans,
+        )
+        adopted = module.adopt_parent_scope_timestamp_rewrites(
+            state,
+            current,
+            result,
+        )
+
+        assert result["conflicts"] == []
+        assert result["failures"] == []
+        assert adopted == ["body.md", "title.md", "summary.md"]
+        assert {
+            record["last_updated"]
+            for record in result["rewritten"]
+        } == {"2026-07-16 10:00:01"}
+        assert state["snapshot"] == module.snapshot_markdown_root(source_root)
+
+        fresh = {}
+        for filename in current_sources:
+            rewritten_text = (source_root / filename).read_text(encoding="utf-8")
+            fresh[filename] = timestamp_snapshot_row(module, rewritten_text)
+            assert fresh[filename]["last_updated"] == "2026-07-16 10:00:01"
+            assert "custom_field: retained" in rewritten_text
+        assert fresh["body.md"]["recent_edit_content"][0] == "# New body\n"
+        assert fresh["title.md"]["recent_edit_content"][1] == "New title"
+        assert fresh["summary.md"]["recent_edit_content"][2] == "New summary"
+
+        next_plans = module.direct_edit_timestamp_plan(
+            current,
+            fresh,
+            list(current_sources),
+            captured_timestamp="2026-07-16 10:00:02",
+        )
+        assert all(not plan["requires_rewrite"] for plan in next_plans)
+        assert all(
+            not plan["qualifying_content_changed"]
+            for plan in next_plans
+        )
+
+
+def test_parent_watcher_capture_runs_one_existing_rebuild() -> None:
+    module = load_docs_live_rebuild_watcher_module()
+    previous_source = timestamp_source_text(
+        doc_id="doc",
+        title="Doc",
+        summary="",
+        last_updated="2026-07-16 10:00:00",
+        body="# Old body\n",
+    )
+    current_source = timestamp_source_text(
+        doc_id="doc",
+        title="Doc",
+        summary="",
+        last_updated="2026-07-16 10:00:00",
+        body="# Current body\n",
+    )
+    original_snapshot = module.try_parsed_doc_snapshot
+    original_rebuild = module.rebuild_scope
+    original_timestamp = module.current_doc_timestamp
+    original_log = module.log
+    rebuilds = []
+    logs = []
+
+    with tempfile.TemporaryDirectory() as temp:
+        repo_root = Path(temp)
+        source_root = repo_root / "source"
+        source_root.mkdir()
+        (source_root / "doc.md").write_text(current_source, encoding="utf-8")
+        previous = {"doc.md": timestamp_snapshot_row(module, previous_source)}
+        current = {"doc.md": timestamp_snapshot_row(module, current_source)}
+        state = {
+            "scope": "studio",
+            "root": source_root,
+            "doc_snapshot": previous,
+            "snapshot": module.snapshot_markdown_root(source_root),
+        }
+
+        module.try_parsed_doc_snapshot = lambda _root, _scope: (current, "")
+        module.current_doc_timestamp = lambda: "2026-07-16 10:00:01"
+        module.rebuild_scope = lambda *args, **kwargs: (
+            rebuilds.append((args, kwargs)) or True
+        )
+        module.log = logs.append
+        try:
+            rebuilt, adopted_docs = module.process_parent_scope_changes(
+                repo_root,
+                state,
+                ["doc.md"],
+                targeted_search_threshold=5,
+            )
+        finally:
+            module.try_parsed_doc_snapshot = original_snapshot
+            module.rebuild_scope = original_rebuild
+            module.current_doc_timestamp = original_timestamp
+            module.log = original_log
+
+        assert rebuilt is True
+        assert adopted_docs is current
+        assert current["doc.md"]["last_updated"] == "2026-07-16 10:00:01"
+        assert state["snapshot"] == module.snapshot_markdown_root(source_root)
+        assert rebuilds == [
+            (
+                (repo_root, "studio"),
+                {
+                    "docs_doc_ids": ["doc"],
+                    "search_doc_ids": ["doc"],
+                },
+            )
+        ]
+        assert any(
+            message
+            == (
+                "studio captured last_updated for direct source edits: "
+                "doc.md (doc)."
+            )
+            for message in logs
+        )
+
+
+def test_parent_watcher_timestamp_write_refuses_a_stale_source_revision() -> None:
+    module = load_docs_live_rebuild_watcher_module()
+    previous_source = timestamp_source_text(
+        doc_id="doc",
+        title="Doc",
+        summary="",
+        last_updated="2026-07-16 10:00:00",
+        body="# Old body\n",
+    )
+    planned_source = timestamp_source_text(
+        doc_id="doc",
+        title="Doc",
+        summary="",
+        last_updated="2026-07-16 10:00:00",
+        body="# Planned body\n",
+    )
+    later_source = timestamp_source_text(
+        doc_id="doc",
+        title="Doc",
+        summary="",
+        last_updated="2026-07-16 10:00:00",
+        body="# Later body\n",
+    )
+
+    with tempfile.TemporaryDirectory() as temp:
+        source_root = Path(temp)
+        path = source_root / "doc.md"
+        path.write_text(planned_source, encoding="utf-8")
+        plans = module.direct_edit_timestamp_plan(
+            {"doc.md": timestamp_snapshot_row(module, previous_source)},
+            {"doc.md": timestamp_snapshot_row(module, planned_source)},
+            ["doc.md"],
+            captured_timestamp="2026-07-16 10:00:01",
+        )
+        path.write_text(later_source, encoding="utf-8")
+
+        result = module.apply_parent_scope_timestamp_rewrites(
+            source_root,
+            plans,
+        )
+
+        assert result == {
+            "rewritten": [],
+            "conflicts": [
+                {
+                    "filename": "doc.md",
+                    "doc_id": "doc",
+                    "reason": "source changed after timestamp planning",
+                }
+            ],
+            "failures": [],
+        }
+        assert path.read_text(encoding="utf-8") == later_source
+
+
+def test_parent_watcher_timestamp_write_failure_leaves_source_for_retry() -> None:
+    module = load_docs_live_rebuild_watcher_module()
+    previous_source = timestamp_source_text(
+        doc_id="doc",
+        title="Doc",
+        summary="",
+        last_updated="2026-07-16 10:00:00",
+        body="# Old body\n",
+    )
+    current_source = timestamp_source_text(
+        doc_id="doc",
+        title="Doc",
+        summary="",
+        last_updated="2026-07-16 10:00:00",
+        body="# Current body\n",
+    )
+    original_write = module.write_text_atomic
+
+    def fail_write(_path: Path, _text: str) -> None:
+        raise OSError("simulated timestamp write failure")
+
+    with tempfile.TemporaryDirectory() as temp:
+        source_root = Path(temp)
+        path = source_root / "doc.md"
+        path.write_text(current_source, encoding="utf-8")
+        plans = module.direct_edit_timestamp_plan(
+            {"doc.md": timestamp_snapshot_row(module, previous_source)},
+            {"doc.md": timestamp_snapshot_row(module, current_source)},
+            ["doc.md"],
+            captured_timestamp="2026-07-16 10:00:01",
+        )
+        module.write_text_atomic = fail_write
+        try:
+            result = module.apply_parent_scope_timestamp_rewrites(
+                source_root,
+                plans,
+            )
+        finally:
+            module.write_text_atomic = original_write
+
+        assert result == {
+            "rewritten": [],
+            "conflicts": [],
+            "failures": [
+                {
+                    "filename": "doc.md",
+                    "doc_id": "doc",
+                    "reason": "simulated timestamp write failure",
+                }
+            ],
+        }
+        assert path.read_text(encoding="utf-8") == current_source
+
+
+def test_parent_watcher_leaves_managed_and_nonqualifying_edits_untouched() -> None:
+    module = load_docs_live_rebuild_watcher_module()
+    previous = {
+        "source.md": {
+            "doc_id": "source",
+            "last_updated": "2026-07-16 10:00:00",
+            "recent_edit_content": ("old body", "Source", ""),
+        },
+        "metadata.md": {
+            "doc_id": "metadata",
+            "last_updated": "2026-07-16 10:00:00",
+            "recent_edit_content": ("body", "Old title", ""),
+        },
+        "import.md": {
+            "doc_id": "import",
+            "last_updated": "2026-07-16 10:00:00",
+            "recent_edit_content": ("old body", "Import", ""),
+        },
+        "placement.md": {
+            "doc_id": "placement",
+            "last_updated": "2026-07-16",
+            "recent_edit_content": ("body", "Placement", ""),
+        },
+        "old-name.md": {
+            "doc_id": "rename",
+            "last_updated": "2026-07-16",
+            "recent_edit_content": ("body", "Rename", ""),
+        },
+    }
+    current = {
+        "source.md": {
+            "doc_id": "source",
+            "last_updated": "2026-07-16 10:00:01",
+            "recent_edit_content": ("new body", "Source", ""),
+        },
+        "metadata.md": {
+            "doc_id": "metadata",
+            "last_updated": "2026-07-16 10:00:01",
+            "recent_edit_content": ("body", "New title", ""),
+        },
+        "import.md": {
+            "doc_id": "import",
+            "last_updated": "2026-07-16 10:00:01",
+            "recent_edit_content": ("new body", "Import", ""),
+        },
+        "placement.md": {
+            "doc_id": "placement",
+            "last_updated": "2026-07-16",
+            "recent_edit_content": ("body", "Placement", ""),
+        },
+        "new-name.md": {
+            "doc_id": "rename",
+            "last_updated": "2026-07-16",
+            "recent_edit_content": ("body", "Rename", ""),
+        },
+        "new.md": {
+            "doc_id": "new",
+            "last_updated": "",
+            "recent_edit_content": ("body", "New", ""),
+        },
+    }
+
+    plans = module.direct_edit_timestamp_plan(
+        previous,
+        current,
+        list(current),
+        captured_timestamp="2026-07-16 10:00:02",
+    )
+
+    assert all(not plan["requires_rewrite"] for plan in plans)
+    assert module.apply_parent_scope_timestamp_rewrites(
+        Path("/unused"),
+        plans,
+    ) == {
+        "rewritten": [],
+        "conflicts": [],
+        "failures": [],
+    }
 
 
 def test_watcher_surfaces_direct_edits_without_advanced_full_timestamp() -> None:
@@ -628,6 +1045,11 @@ def main() -> None:
     test_watcher_plans_direct_edit_timestamp_evidence_without_writing()
     test_watcher_timestamp_plan_fails_closed_without_valid_snapshot_or_capture()
     test_watcher_invalid_parsed_snapshot_fails_closed()
+    test_parent_watcher_rewrites_body_title_and_summary_once_then_adopts()
+    test_parent_watcher_capture_runs_one_existing_rebuild()
+    test_parent_watcher_timestamp_write_refuses_a_stale_source_revision()
+    test_parent_watcher_timestamp_write_failure_leaves_source_for_retry()
+    test_parent_watcher_leaves_managed_and_nonqualifying_edits_untouched()
     test_watcher_surfaces_direct_edits_without_advanced_full_timestamp()
     test_watcher_formats_docs_builder_diagnostics_on_separate_lines()
     test_watcher_falls_back_to_full_docs_build_when_targeted_payloads_are_missing()
