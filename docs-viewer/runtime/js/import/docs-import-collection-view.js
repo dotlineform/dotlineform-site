@@ -1,6 +1,9 @@
 import {
   importText
 } from "./docs-html-import-text.js";
+import {
+  docsImportResultDestination
+} from "../management/docs-viewer-management-import-result.js";
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -86,10 +89,22 @@ function resultPanel(result, phase, renderActions) {
     importText("collectionNotAttemptedCount", { count: Number(counts.not_attempted || 0) })
   ].join(" · ");
   const warnings = Array.isArray(result.warnings) ? result.warnings : [];
+  const destinationLink = (() => {
+    try {
+      const destination = docsImportResultDestination(result, { collection: true });
+      return (
+        `<p><a href="${escapeHtml(destination.href)}" data-collection-destination-link="true">`
+        + `${escapeHtml(destination.label)}</a></p>`
+      );
+    } catch (_error) {
+      return "";
+    }
+  })();
   return [
     '<section class="docsViewerImport__collectionSummary">',
     `<h3>${escapeHtml(importText("collectionResultHeading"))}</h3>`,
     `<p>${escapeHtml(summary)}</p>`,
+    destinationLink,
     "</section>",
     issueList(importText("collectionWarningsHeading"), warnings),
     recordList(Array.isArray(result.records) ? result.records.map((record) => ({

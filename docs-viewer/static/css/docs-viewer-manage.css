@@ -410,11 +410,6 @@
   --docs-viewer-modal-offset: min(2vh, 1rem);
 }
 
-.docsViewer__modalCard--review-package{
-  --docs-viewer-modal-width: 53rem;
-  --docs-viewer-modal-offset: min(2vh, 1rem);
-}
-
 .docsViewer__modalCard--document{
   --docs-viewer-modal-width: 56rem;
   --docs-viewer-modal-offset: 1rem;
@@ -778,75 +773,6 @@ select.docsViewer__fieldInput--listbox{
 
 .docsViewerPackagePrepare__resultSection > code{
   overflow-wrap: anywhere;
-}
-
-.docsViewerReviewPackage__tableWrap{
-  max-block-size: min(24rem, 52vh);
-  overflow: auto;
-  overscroll-behavior: contain;
-}
-
-.docsViewerReviewPackage__table{
-  width: 100%;
-  border-collapse: collapse;
-  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
-  table-layout: fixed;
-}
-
-.docsViewerReviewPackage__fileColumn{
-  width: 61%;
-}
-
-.docsViewerReviewPackage__collectionColumn{
-  width: 21%;
-}
-
-.docsViewerReviewPackage__documentsColumn{
-  width: 18%;
-}
-
-.docsViewerReviewPackage__table th,
-.docsViewerReviewPackage__table td{
-  border-bottom: 1px solid var(--docs-viewer-border);
-  padding: 0.55rem 0.45rem;
-  text-align: left;
-  vertical-align: middle;
-}
-
-.docsViewerReviewPackage__table th{
-  color: var(--docs-viewer-muted);
-  font-weight: 600;
-}
-
-.docsViewerReviewPackage__count{
-  text-align: right;
-  white-space: nowrap;
-}
-
-.docsViewerReviewPackage__choice{
-  display: flex;
-  min-width: 0;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-}
-
-.docsViewerReviewPackage__choice span{
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-
-.docsViewerReviewPackage__empty{
-  color: var(--docs-viewer-muted);
-}
-
-.docsViewerReviewPackage__issues{
-  margin-block: 0.75rem 0;
-  padding-inline-start: 1.2rem;
-}
-
-.docsViewerReviewPackage__resultLink{
-  margin-block: 0.85rem 0;
 }
 
 .docsViewer__settingsWarnings ul{

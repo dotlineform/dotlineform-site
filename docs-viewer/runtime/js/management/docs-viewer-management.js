@@ -3,7 +3,6 @@ import {
 } from "../shared/docs-viewer-tree.js";
 import {
   createDocsViewerManagementCapabilityController,
-  documentPackageReviewCapability,
   scopePublishSupported,
   scopeStaticHtmlExportSupported
 } from "./docs-viewer-management-capabilities.js";
@@ -36,6 +35,9 @@ import {
   normalizeManagedDocumentCollectionTarget,
   normalizeManagedDocumentTarget
 } from "./docs-viewer-management-document-target.js";
+import {
+  docsImportResultDestination
+} from "./docs-viewer-management-import-result.js";
 import {
   projectDocsViewerReportControlState
 } from "./docs-viewer-management-report-controls.js";
@@ -87,40 +89,61 @@ export function createDocsViewerManagementActionResolver(options = {}) {
   };
 }
 
-export function docsViewerReviewPackageActionControlState(options = {}) {
-  var disabledReason = "";
-  if (!options.managementChecked) {
-    disabledReason = "Checking Review package availability.";
-  } else if (!options.managementAvailable) {
-    disabledReason = "Review package is unavailable.";
-  } else if (options.managementBusy) {
-    disabledReason = "Docs management is busy.";
-  } else if (!String(options.scope || "").trim()) {
-    disabledReason = "A Docs Viewer scope is required.";
-  } else {
-    var capability = documentPackageReviewCapability(options.capabilities);
-    if (!capability.available) disabledReason = capability.reason;
+export function refreshDocsImportTerminalDestination(detail, options = {}) {
+  var result = detail && detail.result;
+  var isCollection = Boolean(result && result.collection === true);
+  var destination = docsImportResultDestination(
+    result,
+    { collection: isCollection }
+  );
+  if (String(detail && detail.destinationUrl || "").trim() !== destination.href) {
+    throw new Error("Docs Import terminal destination URL does not match its result.");
   }
-  return {
-    disabled: Boolean(disabledReason),
-    disabledReason: disabledReason
-  };
-}
+  var target = destination.target;
+  var targetCollection = normalizeManagedDocumentCollectionTarget({
+    scope: target.scope,
+    ...(target.sub_scope ? { sub_scope: target.sub_scope } : {})
+  });
+  var displayedCollection = normalizeManagedDocumentCollectionTarget(
+    options.currentCollection
+  );
+  var destinationIsDisplayed = (
+    displayedCollection.scope === targetCollection.scope
+    && String(displayedCollection.sub_scope || "")
+      === String(targetCollection.sub_scope || "")
+  );
+  if (!destinationIsDisplayed) {
+    return Promise.resolve({
+      refreshed: false,
+      target: target
+    });
+  }
 
-export function projectDocsViewerReviewPackageActionControl(button, state) {
-  if (!button) return null;
-  var controlState = state || { disabled: true, disabledReason: "Review package is unavailable." };
-  var label = "Review package";
-  var accessibleLabel = controlState.disabledReason ? label + ". " + controlState.disabledReason : label;
-  button.disabled = Boolean(controlState.disabled);
-  button.title = accessibleLabel;
-  button.setAttribute("aria-label", accessibleLabel);
-  if (controlState.disabledReason) {
-    button.dataset.docsViewerDisabledReason = controlState.disabledReason;
-  } else {
-    delete button.dataset.docsViewerDisabledReason;
+  if (targetCollection.sub_scope) {
+    var reportState = options.reportState || {};
+    var refresh = isCollection
+      ? reportState.refreshCollection
+      : reportState.refreshDocument;
+    if (typeof refresh !== "function") {
+      return Promise.reject(new Error(
+        "The exact imported sub-scope destination is no longer mounted."
+      ));
+    }
+    return Promise.resolve(refresh(target)).then(function () {
+      return { refreshed: true, target: target };
+    });
   }
-  return controlState;
+
+  if (typeof options.reloadParent !== "function") {
+    return Promise.reject(new Error(
+      "The exact imported parent-scope destination cannot be refreshed."
+    ));
+  }
+  return Promise.resolve(
+    options.reloadParent(isCollection ? "" : target.doc_id)
+  ).then(function () {
+    return { refreshed: true, target: target };
+  });
 }
 
 export function initDocsViewerManagement(context) {
@@ -159,7 +182,6 @@ export function initDocsViewerManagement(context) {
   var manageImportButton = document.getElementById("docsViewerManageImportButton");
   var manageToolbarImportButton = document.getElementById("docsViewerManageToolbarImportButton");
   var manageImportButtons = [manageImportButton, manageToolbarImportButton].filter(Boolean);
-  var manageReviewPackageButton = document.getElementById("docsViewerManageReviewPackageButton");
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
   var importRoot = shellRef("importRoot", "docsHtmlImportRoot");
   var importBootStatus = shellRef("importBootStatus", "docsHtmlImportBootStatus");
@@ -169,7 +191,6 @@ export function initDocsViewerManagement(context) {
   var interactionController = null;
   var metadataWorkflow = null;
   var modalController = null;
-  var reviewPackageWorkflowRequest = null;
   var scopeLifecycleController = null;
   var settingsWorkflow = null;
   var actionController = null;
@@ -331,7 +352,13 @@ export function initDocsViewerManagement(context) {
           parentTarget: parentTarget,
           collectionTarget: collectionTarget,
           collectionLabel: String(state.collectionLabel || "").trim(),
-          subdocTarget: subdocTarget
+          subdocTarget: subdocTarget,
+          refreshDocument: typeof state.refreshDocument === "function"
+            ? state.refreshDocument
+            : null,
+          refreshCollection: typeof state.refreshCollection === "function"
+            ? state.refreshCollection
+            : null
         }
       : null;
     var documentMode = root && root.dataset
@@ -461,23 +488,6 @@ export function initDocsViewerManagement(context) {
     });
   }
 
-  function reviewPackageActionControlState() {
-    return docsViewerReviewPackageActionControlState({
-      capabilities: management.managementCapabilities,
-      managementAvailable: management.managementAvailable,
-      managementBusy: management.managementBusy,
-      managementChecked: management.managementChecked,
-      scope: viewerScope()
-    });
-  }
-
-  function projectReviewPackageAction() {
-    return projectDocsViewerReviewPackageActionControl(
-      manageReviewPackageButton,
-      reviewPackageActionControlState()
-    );
-  }
-
   function handleMainViewControl(detail) {
     var controlId = String(detail && detail.controlId || "").trim();
     var actionId = String(detail && detail.actionId || "").trim();
@@ -588,10 +598,6 @@ export function initDocsViewerManagement(context) {
   function handleAppManagementControl(detail) {
     var actionId = String(detail && detail.actionId || "").trim();
     if (actionId && !resolveAction(actionId).enabled) return false;
-    if (
-      actionId === DOCS_VIEWER_ACTION_IDS.REVIEW_DOCUMENT_PACKAGE
-      && reviewPackageActionControlState().disabled
-    ) return false;
     return eventRouter.handleAppManagementControl(detail);
   }
 
@@ -600,7 +606,6 @@ export function initDocsViewerManagement(context) {
 
     routeSession.managementContext = typeof context.isManagementContext === "function" && context.isManagementContext();
     indexController.render();
-    projectReviewPackageAction();
     if (!routeSession.managementContext) {
       syncManagementStatus("", false);
       hideAppManagementControls();
@@ -752,72 +757,19 @@ export function initDocsViewerManagement(context) {
   }
 
   function displayImportedDocument(detail) {
-    var importedScope = String(detail && detail.scope || "").trim().toLowerCase();
-    var importedDocId = String(detail && detail.docId || "").trim();
-    if (!importedDocId) return Promise.resolve();
-
-    if (importedScope && importedScope !== viewerScope()) {
-      var url = new URL(window.location.href);
-      url.searchParams.set("scope", importedScope);
-      url.searchParams.set("doc", importedDocId);
-      url.searchParams.delete("import");
-      url.searchParams.delete("q");
-      url.hash = "";
-      window.location.assign(url.toString());
-      return Promise.resolve();
-    }
-
-    return reloadDocsIndex(importedDocId, "");
+    return refreshDocsImportTerminalDestination(detail, {
+      currentCollection: currentImportDisplayContext(),
+      reportState: subscopeReportState,
+      reloadParent: function (targetDocId) {
+        return reloadDocsIndex(targetDocId, "");
+      }
+    });
   }
 
   function setManagementMessage(message, isError) {
     management.managementMessage = String(message || "");
     management.managementMessageIsError = Boolean(isError);
     renderManagementUi();
-  }
-
-  function loadReviewPackageWorkflow() {
-    if (reviewPackageWorkflowRequest) return reviewPackageWorkflowRequest;
-    reviewPackageWorkflowRequest = import("../packages/document-package-review-workflow.js")
-      .then(function (module) {
-        if (!module || typeof module.openDocumentPackageReviewWorkflow !== "function") {
-          throw new Error("Review package workflow is unavailable.");
-        }
-        return module;
-      })
-      .catch(function (error) {
-        reviewPackageWorkflowRequest = null;
-        throw error;
-      });
-    return reviewPackageWorkflowRequest;
-  }
-
-  function handleReviewPackage() {
-    if (reviewPackageActionControlState().disabled) return Promise.resolve(null);
-    return loadReviewPackageWorkflow()
-      .then(function (module) {
-        return module.openDocumentPackageReviewWorkflow({
-          root: root,
-          scope: viewerScope(),
-          restoreFocus: manageReviewPackageButton,
-          callbacks: {
-            hideManageActionsMenu: eventRouter.hideManageActionsMenu,
-            setBusy: function (busy) {
-              setManagementBusy(busy);
-              renderManagementUi();
-            },
-            setMessage: setManagementMessage
-          }
-        });
-      })
-      .catch(function (error) {
-        setManagementBusy(false);
-        setManagementMessage(
-          error && error.message ? error.message : "Review package workflow is unavailable.",
-          true
-        );
-        return null;
-      });
   }
 
   function applyConfig(config) {
@@ -962,7 +914,6 @@ export function initDocsViewerManagement(context) {
       deleteSubScope: function () { scopeLifecycleController.deleteSubScope(); },
       exportDocs: function () { actionController.handleExportDocs(); },
       openImport: openAppImport,
-      reviewPackage: handleReviewPackage,
       openSettings: function () { settingsWorkflow.open(); },
       publish: function () { actionController.handlePublishDocs(); },
       renameScope: function () { scopeLifecycleController.renameScope(); },
@@ -1073,7 +1024,6 @@ export function initDocsViewerManagement(context) {
     indexSelection: indexSelection,
     initialize: initializeManagement,
     openImportModal: importController.open,
-    openSubscopeImport: importController.openForCollection,
     publishSubscopeReportState: publishSubscopeReportState,
     reconcileIndexSelectionReload: indexController.reconcileReload,
     render: renderManagementUi,

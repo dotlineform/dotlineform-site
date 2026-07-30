@@ -714,8 +714,9 @@ def assert_index_actions_menu_projection(page: Page) -> None:
                 appMenu: {
                     hasPrepare: Boolean(app.root.querySelector('#docsViewerManagePreparePackageButton')),
                     hasDelete: Boolean(app.root.querySelector('#docsViewerManageDeleteButton')),
-                    reviewActionId: app.root.querySelector('#docsViewerManageReviewPackageButton')
-                        ?.dataset.docsViewerAction || ''
+                    hasRetiredReviewPackage: Boolean(
+                        app.root.querySelector('#docsViewerManageReviewPackageButton')
+                    )
                 },
                 button: {
                     text: button.textContent,
@@ -743,7 +744,7 @@ def assert_index_actions_menu_projection(page: Page) -> None:
         "appMenu": {
             "hasPrepare": False,
             "hasDelete": False,
-            "reviewActionId": "review-document-package",
+            "hasRetiredReviewPackage": False,
         },
         "button": {
             "text": "🛠️",

@@ -191,16 +191,10 @@ def assert_control_projection(page: Page) -> None:
               viewerScope: () => 'studio'
             }
           });
-          await importController.openForCollection(
-            { scope: 'studio', sub_scope: 'tags' },
+          await importController.open(
             {
+              destination: { scope: 'studio', sub_scope: 'tags' },
               destinationLabel: 'studio / Tags',
-              onComplete: detail => {
-                completionRecords.push({
-                  owner: 'report',
-                  target: detail.target
-                });
-              },
               restoreFocus
             }
           );
@@ -220,12 +214,6 @@ def assert_control_projection(page: Page) -> None:
               doc_id: 'imported-parent'
             }
           });
-          let parentCollectionError = '';
-          try {
-            await importController.openForCollection({ scope: 'studio' });
-          } catch (error) {
-            parentCollectionError = error.message;
-          }
           const importControllerProjection = {
             appDestinations,
             appRefreshes,
@@ -233,8 +221,7 @@ def assert_control_projection(page: Page) -> None:
             initialDestination: initializedImportOptions.initialDestination,
             initialDestinationLabel: initializedImportOptions.initialDestinationLabel,
             modalOpenRecords,
-            modalTerminalRecords,
-            parentCollectionError
+            modalTerminalRecords
           };
 
           const requests = [];
@@ -349,7 +336,7 @@ def assert_control_projection(page: Page) -> None:
         "appRefreshes": ["refresh"],
         "completionRecords": [
             {
-                "owner": "report",
+                "owner": "default",
                 "target": {
                     "scope": "studio",
                     "sub_scope": "tags",
@@ -371,9 +358,6 @@ def assert_control_projection(page: Page) -> None:
             {"restoreFocusMatches": False},
         ],
         "modalTerminalRecords": ["terminal", "terminal"],
-        "parentCollectionError": (
-            "Sub-scope report Import requires a configured child collection."
-        ),
     }
     assert cases["ordinary"]["editMetadata"]["target"] == parent
     assert cases["ordinary"]["openVsCode"]["target"] == parent
@@ -1898,6 +1882,14 @@ def assert_manage_report_bridge(page: Page) -> None:
             return { ok: false, status: 404, json: async () => ({}) };
           };
           const states = [];
+          const serialState = state => {
+            const {
+              refreshCollection,
+              refreshDocument,
+              ...serial
+            } = state;
+            return serial;
+          };
           const content = document.querySelector('#bridge-content');
           const context = {
             appContext: { kind: 'manage' },
@@ -1910,7 +1902,7 @@ def assert_manage_report_bridge(page: Page) -> None:
               viewer_report_access: 'local',
               viewer_report_subscope: 'tags'
             },
-            publishSubscopeReportState: state => states.push(state),
+            publishSubscopeReportState: state => states.push(serialState(state)),
             routeContext: { reportRegistryUrl: '/reports-registry.json' },
             setStatus: (message, isError) => {
               managementStatuses.push({ message, isError });
@@ -2078,7 +2070,7 @@ def assert_manage_report_bridge(page: Page) -> None:
           await bridge.mountDocsViewerManageDocumentExtras({
             ...context,
             content: failureContent,
-            publishSubscopeReportState: state => failureStates.push(state)
+            publishSubscopeReportState: state => failureStates.push(serialState(state))
           });
           window.syntheticManifestFailure = false;
           const failedManifest = {
@@ -2311,8 +2303,6 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
 
           const createCalls = [];
           const releases = [];
-          const importCalls = [];
-          const importReleases = [];
           const states = [];
           const statuses = [];
           const content = document.querySelector('#create-report');
@@ -2337,20 +2327,6 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
                     };
                     Promise.resolve(options.refreshAndSelect(target))
                       .then(resolve, reject);
-                  });
-                });
-              },
-              openSubscopeImport: (collection, options) => {
-                const restoreFocus = options.restoreFocus;
-                importCalls.push({
-                  collection,
-                  destinationLabel: options.destinationLabel,
-                  onCompleteType: typeof options.onComplete,
-                  restoreFocusIsImport: restoreFocus?.dataset.docsSubscopeImport === 'true'
-                });
-                return new Promise((resolve, reject) => {
-                  importReleases.push(detail => {
-                    Promise.resolve(options.onComplete(detail)).then(resolve, reject);
                   });
                 });
               }
@@ -2390,11 +2366,16 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
             };
             poll();
           });
+          const serialReportState = () => {
+            const {
+              refreshCollection,
+              refreshDocument,
+              ...state
+            } = states.at(-1);
+            return state;
+          };
           const newButton = () => content.querySelector(
             '[data-docs-subscope-new="true"]'
-          );
-          const importButton = () => content.querySelector(
-            '[data-docs-subscope-import="true"]'
           );
           const initial = {
             actionsDisabled: content.querySelector(
@@ -2417,39 +2398,30 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
             )).map(row => row.dataset.reportSubdocId)
           };
 
-          importButton().click();
-          const importInFlight = {
-            ariaLabel: importButton().getAttribute('aria-label'),
-            calls: importCalls.length,
-            disabled: importButton().disabled,
-            selectionState: content.querySelector('.docsViewerReport')
-              ?.dataset.reportSubscopeSelection || ''
+          const refreshTypes = {
+            collection: typeof states.at(-1).refreshCollection,
+            document: typeof states.at(-1).refreshDocument
           };
-          importButton().click();
-          importInFlight.callsAfterSecondClick = importCalls.length;
           const importedRecord = {
             doc_id: 'imported-first',
             title: 'Imported first',
             viewable: false
           };
           window.syntheticCreatedDocs.push(importedRecord);
-          importReleases[0]({
-            target: {
-              scope: 'studio',
-              sub_scope: 'tags',
-              doc_id: importedRecord.doc_id
-            }
+          await states.at(-1).refreshDocument({
+            scope: 'studio',
+            sub_scope: 'tags',
+            doc_id: importedRecord.doc_id
           });
           await waitFor(() => (
             content.querySelector('.docsReportDetail')
               ?.dataset.reportSubdocId === 'imported-first'
           ));
           const imported = {
-            calls: importCalls.slice(),
             detailText: content.querySelector(
               '.docsReportDetail__body'
             ).textContent,
-            state: states.at(-1),
+            state: serialReportState(),
             subdoc: new URLSearchParams(location.search).get('subdoc')
           };
 
@@ -2458,7 +2430,6 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
             '.docsViewerReport'
           )?.dataset.reportState === 'list');
           const packageHistoryLength = history.length;
-          importButton().click();
           window.syntheticCreatedDocs[0] = {
             ...window.syntheticCreatedDocs[0],
             title: 'Imported first refreshed'
@@ -2468,22 +2439,15 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
             title: 'Package imported',
             viewable: true
           });
-          importReleases[1]({
-            target: {
-              scope: 'studio',
-              sub_scope: 'tags'
-            },
-            result: {
-              collection: true,
-              outcome: 'completed'
-            }
+          await states.at(-1).refreshCollection({
+            scope: 'studio',
+            sub_scope: 'tags'
           });
           await waitFor(() => content.querySelector(
             '[data-report-subdoc-id="package-imported"]'
           ));
           const packageImported = {
             historyLength: history.length,
-            importCalls: importCalls.length,
             reportState: content.querySelector('.docsViewerReport')
               ?.dataset.reportState,
             rowIds: Array.from(content.querySelectorAll(
@@ -2518,7 +2482,7 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
             detailText: content.querySelector(
               '.docsReportDetail__body'
             ).textContent,
-            state: states.at(-1),
+            state: serialReportState(),
             subdoc: new URLSearchParams(location.search).get('subdoc')
           };
 
@@ -2552,12 +2516,12 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
               record.path.startsWith('/synthetic/')
             )),
             first,
-            importInFlight,
             imported,
             inFlight,
             initial,
             packageHistoryLength,
             packageImported,
+            refreshTypes,
             second,
             statuses
           };
@@ -2568,7 +2532,7 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
         "actionsDisabled": True,
         "contributionHosts": 1,
         "emptyText": "No documents are available in Tags.",
-        "importButtons": 1,
+        "importButtons": 0,
         "newButtons": 1,
         "rowIds": [],
     }
@@ -2579,22 +2543,11 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
         "callsAfterSecondClick": 1,
     }
     expected_collection = {"scope": "studio", "sub_scope": "tags"}
-    assert result["importInFlight"] == {
-        "ariaLabel": "Import",
-        "calls": 1,
-        "disabled": True,
-        "selectionState": "inactive",
-        "callsAfterSecondClick": 1,
+    assert result["refreshTypes"] == {
+        "collection": "function",
+        "document": "function",
     }
-    assert result["imported"] == {
-        "calls": [
-            {
-                "collection": expected_collection,
-                "destinationLabel": "studio / Tags",
-                "onCompleteType": "function",
-                "restoreFocusIsImport": True,
-            }
-        ],
+    expected_imported = {
         "detailText": "Imported first",
         "state": {
             "state": "detail",
@@ -2609,9 +2562,12 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
         },
         "subdoc": "imported-first",
     }
+    if result["imported"] != expected_imported:
+        raise AssertionError(
+            f"unexpected imported document refresh: {result['imported']!r}"
+        )
     expected_package_imported = {
         "historyLength": result["packageHistoryLength"],
-        "importCalls": 2,
         "reportState": "list",
         "rowIds": ["imported-first", "package-imported"],
         "rowTitles": ["Imported first refreshed", "Package imported"],

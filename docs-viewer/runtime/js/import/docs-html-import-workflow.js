@@ -11,6 +11,9 @@ import {
 import {
   importText
 } from "./docs-html-import-text.js";
+import {
+  docsImportResultDestination
+} from "../management/docs-viewer-management-import-result.js";
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -219,21 +222,15 @@ export async function runDocsHtmlImportWorkflow(
         : normalizeText(results[0] && results[0].summary_text)
     );
     const displayedResult = results.slice().reverse().find((result) => normalizeText(result && result.doc_id)) || null;
-    const displayedTarget = displayedResult
-      && displayedResult.target
-      && typeof displayedResult.target === "object"
-      ? Object.assign({}, displayedResult.target)
-      : {
-          scope: workflowContext.scope,
-          ...(workflowContext.subScope ? { sub_scope: workflowContext.subScope } : {}),
-          doc_id: normalizeText(displayedResult && displayedResult.doc_id)
-        };
     try {
+      const destination = docsImportResultDestination(displayedResult);
       await onTerminalResult({
-        scope: workflowContext.scope,
-        subScope: workflowContext.subScope,
-        docId: normalizeText(displayedResult && displayedResult.doc_id),
-        target: displayedTarget,
+        scope: destination.target.scope,
+        subScope: normalizeText(destination.target.sub_scope),
+        docId: destination.target.doc_id,
+        target: destination.target,
+        destinationUrl: destination.href,
+        result: displayedResult,
         results: results.slice()
       });
     } catch (error) {

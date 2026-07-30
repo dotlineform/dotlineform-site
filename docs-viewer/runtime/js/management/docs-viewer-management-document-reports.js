@@ -77,7 +77,13 @@ function publishReportState(settings, parent, subScope, state) {
       parent.scope,
       subScope
     ),
-    subdocTarget: subdocTarget
+    subdocTarget: subdocTarget,
+    refreshDocument: typeof detail.refreshDocument === "function"
+      ? detail.refreshDocument
+      : null,
+    refreshCollection: typeof detail.refreshCollection === "function"
+      ? detail.refreshCollection
+      : null
   };
   if (Number.isInteger(settings.documentMountGeneration)) {
     published.documentMountGeneration = settings.documentMountGeneration;
@@ -103,13 +109,6 @@ function createSubscopeDocumentAction(settings) {
   var actions = settings && settings.managementDocumentActions;
   return actions && typeof actions.createSubscopeDocument === "function"
     ? actions.createSubscopeDocument
-    : null;
-}
-
-function openSubscopeImportAction(settings) {
-  var actions = settings && settings.managementDocumentActions;
-  return actions && typeof actions.openSubscopeImport === "function"
-    ? actions.openSubscopeImport
     : null;
 }
 
@@ -165,78 +164,6 @@ function openSubscopeCreate(settings, parent, subScope, request, context) {
     },
     {
       refreshAndSelect: refreshAndOpenDocument
-    }
-  );
-}
-
-function openSubscopeImport(settings, parent, subScope, request, context) {
-  var collection = request && typeof request === "object" ? request : {};
-  var keys = Object.keys(collection).sort();
-  if (
-    keys.length !== 2
-    || keys[0] !== "scope"
-    || keys[1] !== "sub_scope"
-    || cleanString(collection.scope).toLowerCase() !== parent.scope
-    || cleanString(collection.sub_scope).toLowerCase() !== subScope
-  ) {
-    return Promise.reject(new Error(
-      "Sub-scope Import collection did not match the mounted report."
-    ));
-  }
-  var actionContext = context || {};
-  var refreshAndOpenDocument = typeof actionContext.refreshAndOpenDocument === "function"
-    ? actionContext.refreshAndOpenDocument
-    : null;
-  var refreshCollection = typeof actionContext.refreshCollection === "function"
-    ? actionContext.refreshCollection
-    : null;
-  if (!refreshAndOpenDocument || !refreshCollection) {
-    return Promise.reject(new Error(
-      "Sub-scope Import report refresh is unavailable."
-    ));
-  }
-  var action = openSubscopeImportAction(settings);
-  if (!action) {
-    return Promise.reject(new Error("Sub-scope document Import is unavailable."));
-  }
-  return action(
-    {
-      scope: parent.scope,
-      sub_scope: subScope
-    },
-    {
-      destinationLabel: configuredSubScopeLabel(
-        settings,
-        parent.scope,
-        subScope
-      ),
-      restoreFocus: actionContext.restoreFocus,
-      onComplete: function (detail) {
-        if (detail && detail.result && detail.result.collection === true) {
-          var collectionTarget = normalizeManagedDocumentCollectionTarget(
-            detail.target
-          );
-          if (
-            collectionTarget.scope !== parent.scope
-            || collectionTarget.sub_scope !== subScope
-          ) {
-            throw new Error(
-              "Imported package target did not match the mounted sub-scope report."
-            );
-          }
-          return refreshCollection(collectionTarget);
-        }
-        var target = normalizeManagedDocumentTarget(detail && detail.target);
-        if (
-          target.scope !== parent.scope
-          || target.sub_scope !== subScope
-        ) {
-          throw new Error(
-            "Imported document target did not match the mounted sub-scope report."
-          );
-        }
-        return refreshAndOpenDocument(target);
-      }
     }
   );
 }
@@ -297,7 +224,9 @@ export function mountDocsViewerManageDocumentExtras(context) {
         parentTarget: null,
         collectionTarget: null,
         collectionLabel: "",
-        subdocTarget: null
+        subdocTarget: null,
+        refreshDocument: null,
+        refreshCollection: null
       };
       if (Number.isInteger(settings.documentMountGeneration)) {
         inactive.documentMountGeneration = settings.documentMountGeneration;
@@ -340,7 +269,6 @@ export function mountDocsViewerManageDocumentExtras(context) {
   });
   var scopeConfig = settings.scopeConfigState || {};
   var createAction = createSubscopeDocumentAction(settings);
-  var importAction = openSubscopeImportAction(settings);
   var contribution = createDocsViewerManagementSubscopeContribution({
     clientOptions: managementClientOptions(settings),
     managementContext: Boolean(settings.managementContext),
@@ -365,21 +293,6 @@ export function mountDocsViewerManageDocumentExtras(context) {
         publishReportState(settings, parent, subScope, event);
       }
     },
-    onImportDocument: (
-      settings.managementContext
-      && reportManagementBaseUrl
-      && importAction
-    )
-      ? function (request, context) {
-          return openSubscopeImport(
-            settings,
-            parent,
-            subScope,
-            request,
-            context
-          );
-        }
-      : null,
     onPreparePackage: reportManagementBaseUrl
       ? function (request, context) {
           return openSubScopePreparePackage(settings, request, context);

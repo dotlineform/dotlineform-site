@@ -10,6 +10,9 @@ import {
 import {
   buildDocsImportActivityContext
 } from "./docs-html-import-workflow.js";
+import {
+  docsImportResultDestination
+} from "../management/docs-viewer-management-import-result.js";
 
 export const DOCS_IMPORT_COLLECTION_SOURCE_FORMAT = "data_sharing_documents";
 export const DOCS_IMPORT_EDITED_REVIEW_SOURCE_FORMAT = "edited_review_sources";
@@ -318,6 +321,10 @@ export function createDocsImportCollectionController(options = {}) {
           throw new Error(importText("collectionUnsupportedPreview"));
         }
         const target = exactCollectionTarget(payload, "result");
+        const destination = docsImportResultDestination(
+          payload,
+          { collection: true }
+        );
         state.result = payload;
         const completed = payload.outcome === "completed";
         state.phase = state.subScope && !completed ? "confirmation" : "result";
@@ -333,6 +340,7 @@ export function createDocsImportCollectionController(options = {}) {
             subScope: state.subScope,
             docId: normalizeText(displayedRecord && displayedRecord.doc_id),
             target,
+            destinationUrl: destination.href,
             result: payload
           };
           try {

@@ -1,6 +1,9 @@
 import {
   importText
 } from "./docs-html-import-text.js";
+import {
+  docsImportResultDestination
+} from "../management/docs-viewer-management-import-result.js";
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -25,7 +28,7 @@ function setHtml(node, value) {
   node.innerHTML = String(value == null ? "" : value);
 }
 
-function sourceDocLinkHtml(payload) {
+function resultDocLinksHtml(payload) {
   const returnedTarget = payload
     && payload.target
     && typeof payload.target === "object"
@@ -37,15 +40,25 @@ function sourceDocLinkHtml(payload) {
   );
   const normalizedDocId = normalizeText(returnedTarget.doc_id || (payload && payload.doc_id));
   if (!normalizedScope || !normalizedDocId) return "";
-  return [
+  const sourceLink = [
     `<a href="#" data-doc-source-link="true"`,
     ` data-scope="${escapeHtml(normalizedScope)}"`,
     normalizedSubScope
       ? ` data-sub-scope="${escapeHtml(normalizedSubScope)}"`
       : "",
     ` data-doc-id="${escapeHtml(normalizedDocId)}">`,
-    `${escapeHtml(normalizedDocId)}</a>`
+    `Source</a>`
   ].join("");
+  try {
+    const destination = docsImportResultDestination(payload);
+    return [
+      `<a href="${escapeHtml(destination.href)}" data-doc-destination-link="true">`,
+      `${escapeHtml(normalizedDocId)}</a>`,
+      ` <span aria-hidden="true">·</span> ${sourceLink}`
+    ].join("");
+  } catch (_error) {
+    return `${escapeHtml(normalizedDocId)} <span aria-hidden="true">·</span> ${sourceLink}`;
+  }
 }
 
 function resultCountsText(preview) {
@@ -84,7 +97,7 @@ function resultRowsForPayload(payload, includeFilename) {
   const mediaPlans = []
     .concat(Array.isArray(preview.media_plans) ? preview.media_plans : [])
     .concat(preview.media_plan && typeof preview.media_plan === "object" ? [preview.media_plan] : []);
-  const sourceLabel = sourceDocLinkHtml(payload);
+  const sourceLabel = resultDocLinksHtml(payload);
   const sourceName = normalizeText(payload && payload.staged_filename);
   const rows = [
     [

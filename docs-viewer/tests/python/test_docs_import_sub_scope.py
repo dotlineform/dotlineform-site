@@ -23,6 +23,9 @@ from repo_factory import (
 from docs_import_test_support import write_test_image
 
 
+REPORT_DOC_ID = "d-20260730-000000-000001"
+
+
 def prepare_repo(repo_root: Path) -> None:
     write_site_tools_config(repo_root)
     write_docs_scope_config(
@@ -50,6 +53,21 @@ def prepare_repo(repo_root: Path) -> None:
         ),
     ):
         path.mkdir(parents=True, exist_ok=True)
+    (
+        repo_root
+        / f"docs-viewer/scopes/analysis/source/documents/{REPORT_DOC_ID}.md"
+    ).write_text(
+        (
+            "---\n"
+            f"doc_id: {REPORT_DOC_ID}\n"
+            "title: Tags\n"
+            "viewer_report: docs_subscope\n"
+            "viewer_report_subscope: tags\n"
+            "---\n"
+            "# Tags\n"
+        ),
+        encoding="utf-8",
+    )
 
 
 def stub_markdown_validation(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -160,6 +178,9 @@ Body without an H1.
         "sub_scope": "tags",
         "doc_id": payload["doc_id"],
     }
+    assert payload["viewer_url"] == (
+        f"/docs/?scope=analysis&doc={REPORT_DOC_ID}&subdoc={payload['doc_id']}"
+    )
     assert payload["record"] == {
         "doc_id": payload["doc_id"],
         "title": "Imported Tag Note",
@@ -168,9 +189,12 @@ Body without an H1.
     assert source_model.is_immutable_doc_id(payload["doc_id"])
     assert payload["doc_id"] != "existing-tag-doc"
     assert target_path.parent == child_root
-    assert not list(
-        (tmp_path / "docs-viewer/scopes/analysis/source/documents").glob("*.md")
-    )
+    assert [
+        path.name
+        for path in (
+            tmp_path / "docs-viewer/scopes/analysis/source/documents"
+        ).glob("*.md")
+    ] == [f"{REPORT_DOC_ID}.md"]
     assert front_matter["doc_id"] == payload["doc_id"]
     assert front_matter["title"] == "Imported Tag Note"
     assert front_matter["viewable"] is False
@@ -247,6 +271,9 @@ Package body.
     assert markdown_path.is_file()
     assert payload["import_preview"]["source_format"] == "markdown_package"
     assert payload["title"] == "Package Tag Note"
+    assert payload["viewer_url"] == (
+        f"/docs/?scope=analysis&doc={REPORT_DOC_ID}&subdoc={payload['doc_id']}"
+    )
     assert "---" not in payload["import_preview"]["markdown_preview"]
     assert "package-overwrite-id" not in source_text
     assert target_path.parent.name == "documents"

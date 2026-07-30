@@ -17,6 +17,11 @@ class QuietStaticHandler(SimpleHTTPRequestHandler):
     def log_message(self, format, *args):  # noqa: A003
         return
 
+    def translate_path(self, path: str) -> str:
+        if path.startswith("/docs-viewer/runtime/js/shared/"):
+            path = "/site" + path
+        return super().translate_path(path)
+
 
 def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
     resolved_root = site_root.expanduser().resolve()
@@ -257,6 +262,49 @@ def assert_consolidated_modal(page: Page, base_url: str, site_root: Path) -> Non
                 },
             )
             return
+        if filename == "returned-tags.jsonl":
+            fulfill(
+                route,
+                {
+                    "ok": True,
+                    "collection": True,
+                    "preview_only": False,
+                    "confirmed": True,
+                    "source_format": "data_sharing_documents",
+                    "target": {"scope": "studio", "sub_scope": "tags"},
+                    "viewer_url": (
+                        "/docs/?scope=studio&doc=report-tags"
+                    ),
+                    "staged_filename": filename,
+                    "outcome": "completed",
+                    "counts": {
+                        "created": 0,
+                        "overwritten": 2,
+                        "failed": 0,
+                        "not_attempted": 0,
+                    },
+                    "records": [
+                        {
+                            "record_index": 0,
+                            "doc_id": "tag-a",
+                            "title": "Tag A",
+                            "status": "overwritten",
+                            "warnings": [],
+                        },
+                        {
+                            "record_index": 1,
+                            "doc_id": "tag-b",
+                            "title": "Tag B",
+                            "status": "overwritten",
+                            "warnings": [],
+                        },
+                    ],
+                    "warnings": [],
+                },
+            )
+            return
+        doc_id = f"imported-{len(import_requests)}"
+        sub_scope = str(body.get("sub_scope") or "")
         fulfill(
             route,
             {
@@ -264,16 +312,22 @@ def assert_consolidated_modal(page: Page, base_url: str, site_root: Path) -> Non
                 "collection": False,
                 "preview_only": False,
                 "staged_filename": filename,
-                "doc_id": f"imported-{len(import_requests)}",
+                "doc_id": doc_id,
                 "target": {
                     "scope": body["scope"],
                     **(
-                        {"sub_scope": body["sub_scope"]}
-                        if body.get("sub_scope")
+                        {"sub_scope": sub_scope}
+                        if sub_scope
                         else {}
                     ),
-                    "doc_id": f"imported-{len(import_requests)}",
+                    "doc_id": doc_id,
                 },
+                "viewer_url": (
+                    f"/docs/?scope={body['scope']}&doc=report-{sub_scope}"
+                    f"&subdoc={doc_id}"
+                    if sub_scope
+                    else f"/docs/?scope={body['scope']}&doc={doc_id}"
+                ),
                 "source_format": "markdown",
                 "summary_text": f"Imported {filename}.",
                 "import_preview": {
@@ -388,6 +442,9 @@ def assert_consolidated_modal(page: Page, base_url: str, site_root: Path) -> Non
     assert import_requests[0]["scope"] == "studio"
     assert "sub_scope" not in import_requests[0]
     assert import_requests[0]["staged_filename"] == "alpha.md"
+    assert page.locator("[data-doc-destination-link]").get_attribute("href") == (
+        "/docs/?scope=studio&doc=imported-1"
+    )
 
     page.evaluate(
         """() => window.__caiImportApp.setDestination(
@@ -405,6 +462,9 @@ def assert_consolidated_modal(page: Page, base_url: str, site_root: Path) -> Non
     assert import_requests[1]["scope"] == "studio"
     assert import_requests[1]["sub_scope"] == "tags"
     assert import_requests[1]["staged_filename"] == "beta.html"
+    assert page.locator("[data-doc-destination-link]").get_attribute("href") == (
+        "/docs/?scope=studio&doc=report-tags&subdoc=imported-2"
+    )
 
     page.evaluate(
         """() => window.__caiImportApp.setDestination(
@@ -431,7 +491,13 @@ def assert_consolidated_modal(page: Page, base_url: str, site_root: Path) -> Non
     assert import_requests[2]["preview_only"] is True
     assert page.locator("#docsViewerImportModal").is_hidden()
     assert page.locator("#docsImportCollectionCancel").is_visible()
-    page.locator("#docsImportCollectionCancel").click()
+    page.locator("#docsImportCollectionConfirm").click()
+    wait_until_idle(page)
+    collection_link = page.locator("[data-collection-destination-link]")
+    assert collection_link.get_attribute("href") == (
+        "/docs/?scope=studio&doc=report-tags"
+    )
+    page.locator("#docsImportCollectionClose").click()
 
     page.evaluate(
         """() => window.__caiModalController.openImportModal({
@@ -516,6 +582,38 @@ def assert_consolidated_modal(page: Page, base_url: str, site_root: Path) -> Non
         False,
         True,
         False,
+        True,
+        False,
+    ]
+    terminal_details = page.evaluate(
+        """() => window.__caiTerminalDetails.map(detail => ({
+          destinationUrl: detail.destinationUrl,
+          target: detail.target,
+          collection: detail.result?.collection === true
+        }))""",
+    )
+    assert terminal_details == [
+        {
+            "destinationUrl": "/docs/?scope=studio&doc=imported-1",
+            "target": {"scope": "studio", "doc_id": "imported-1"},
+            "collection": False,
+        },
+        {
+            "destinationUrl": (
+                "/docs/?scope=studio&doc=report-tags&subdoc=imported-2"
+            ),
+            "target": {
+                "scope": "studio",
+                "sub_scope": "tags",
+                "doc_id": "imported-2",
+            },
+            "collection": False,
+        },
+        {
+            "destinationUrl": "/docs/?scope=studio&doc=report-tags",
+            "target": {"scope": "studio", "sub_scope": "tags"},
+            "collection": True,
+        },
     ]
 
     malformed_error = page.evaluate(
@@ -548,6 +646,142 @@ def assert_consolidated_modal(page: Page, base_url: str, site_root: Path) -> Non
     assert malformed_error == (
         "Manifest Import candidate fabricated.jsonl cannot use display context."
     )
+
+    refresh_contract = page.evaluate(
+        """async () => {
+          const management = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management.js'
+          );
+          const calls = [];
+          const reportState = {
+            refreshDocument: target => calls.push({
+              kind: 'document',
+              target
+            }),
+            refreshCollection: target => calls.push({
+              kind: 'collection',
+              target
+            })
+          };
+          const ordinaryParent = {
+            result: {
+              collection: false,
+              target: { scope: 'studio', doc_id: 'parent-import' },
+              viewer_url: '/docs/?scope=studio&doc=parent-import'
+            },
+            destinationUrl: '/docs/?scope=studio&doc=parent-import'
+          };
+          const ordinaryChild = {
+            result: {
+              collection: false,
+              target: {
+                scope: 'studio',
+                sub_scope: 'tags',
+                doc_id: 'child-import'
+              },
+              viewer_url: (
+                '/docs/?scope=studio&doc=report-tags&subdoc=child-import'
+              )
+            },
+            destinationUrl: (
+              '/docs/?scope=studio&doc=report-tags&subdoc=child-import'
+            )
+          };
+          const childCollection = {
+            result: {
+              collection: true,
+              target: { scope: 'studio', sub_scope: 'tags' },
+              viewer_url: '/docs/?scope=studio&doc=report-tags'
+            },
+            destinationUrl: '/docs/?scope=studio&doc=report-tags'
+          };
+          const parent = await management.refreshDocsImportTerminalDestination(
+            ordinaryParent,
+            {
+              currentCollection: { scope: 'studio' },
+              reloadParent: docId => calls.push({ kind: 'parent', docId })
+            }
+          );
+          const child = await management.refreshDocsImportTerminalDestination(
+            ordinaryChild,
+            {
+              currentCollection: { scope: 'studio', sub_scope: 'tags' },
+              reportState
+            }
+          );
+          const collection = await management.refreshDocsImportTerminalDestination(
+            childCollection,
+            {
+              currentCollection: { scope: 'studio', sub_scope: 'tags' },
+              reportState
+            }
+          );
+          const crossContext = await management.refreshDocsImportTerminalDestination(
+            childCollection,
+            {
+              currentCollection: { scope: 'library' },
+              reportState,
+              reloadParent: docId => calls.push({ kind: 'wrong-parent', docId })
+            }
+          );
+          let mismatchedUrl = '';
+          try {
+            await management.refreshDocsImportTerminalDestination(
+              {
+                ...ordinaryParent,
+                destinationUrl: '/docs/?scope=studio&doc=other'
+              },
+              {
+                currentCollection: { scope: 'studio' },
+                reloadParent: () => {}
+              }
+            );
+          } catch (error) {
+            mismatchedUrl = error.message;
+          }
+          return { calls, child, collection, crossContext, mismatchedUrl, parent };
+        }""",
+    )
+    assert refresh_contract == {
+        "calls": [
+            {"kind": "parent", "docId": "parent-import"},
+            {
+                "kind": "document",
+                "target": {
+                    "scope": "studio",
+                    "sub_scope": "tags",
+                    "doc_id": "child-import",
+                },
+            },
+            {
+                "kind": "collection",
+                "target": {"scope": "studio", "sub_scope": "tags"},
+            },
+        ],
+        "parent": {
+            "refreshed": True,
+            "target": {"scope": "studio", "doc_id": "parent-import"},
+        },
+        "child": {
+            "refreshed": True,
+            "target": {
+                "scope": "studio",
+                "sub_scope": "tags",
+                "doc_id": "child-import",
+            },
+        },
+        "collection": {
+            "refreshed": True,
+            "target": {"scope": "studio", "sub_scope": "tags"},
+        },
+        "crossContext": {
+            "refreshed": False,
+            "target": {"scope": "studio", "sub_scope": "tags"},
+        },
+        "mismatchedUrl": (
+            "Docs Import terminal destination URL does not match its result."
+        ),
+    }
 
 
 def parse_args() -> argparse.Namespace:

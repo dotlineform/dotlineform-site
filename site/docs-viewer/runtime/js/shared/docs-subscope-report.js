@@ -500,7 +500,13 @@ function publishState(state, reportState, target, reason) {
     type: "state",
     state: cleanString(reportState),
     reason: cleanString(reason),
-    target: target || null
+    target: target || null,
+    refreshDocument: function (documentTarget) {
+      return refreshAndOpenDocument(state, documentTarget);
+    },
+    refreshCollection: function (collection) {
+      return refreshCollection(state, collection);
+    }
   });
 }
 

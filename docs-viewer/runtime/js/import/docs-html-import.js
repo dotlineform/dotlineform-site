@@ -7,8 +7,8 @@ import {
   normalizeManagedDocumentCollectionTarget
 } from "../management/docs-viewer-management-document-target.js";
 import {
-  openReturnedDocumentPackageInDocsReview
-} from "../packages/document-package-review-workflow.js";
+  openDocsImportCandidateInReview
+} from "./docs-import-review-handoff.js";
 import {
   clearDocsHtmlImportResult,
   resetDocsHtmlImportWarning
@@ -356,7 +356,7 @@ async function runReview(state) {
   state.onBusyChange(true);
   setStatus(state.statusNode, "busy", "Preparing the complete package for Docs Review...");
   try {
-    const result = await openReturnedDocumentPackageInDocsReview({
+    const result = await openDocsImportCandidateInReview({
       scope: target.scope,
       stagedFilename: candidate.filename,
       review: (payload) => fetchManagementJson(

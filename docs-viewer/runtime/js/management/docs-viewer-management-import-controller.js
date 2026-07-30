@@ -127,24 +127,8 @@ export function createDocsViewerManagementImportController(options = {}) {
     });
   }
 
-  function openForCollection(collection, options = {}) {
-    var destination = normalizeManagedDocumentCollectionTarget(collection);
-    if (!destination.sub_scope) {
-      return Promise.reject(
-        new Error("Sub-scope report Import requires a configured child collection.")
-      );
-    }
-    return open({
-      destination: destination,
-      destinationLabel: options.destinationLabel,
-      onComplete: options.onComplete,
-      restoreFocus: options.restoreFocus
-    });
-  }
-
   return {
     initialize: initialize,
-    open: open,
-    openForCollection: openForCollection
+    open: open
   };
 }

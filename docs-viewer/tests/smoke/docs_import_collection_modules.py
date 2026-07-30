@@ -41,6 +41,7 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
                   "source_format": "data_sharing_documents",
                   "scope": "library",
                   "target": {"scope": "library"},
+                  "viewer_url": "/docs/?scope=library",
                   "staged_filename": "reviewed.jsonl",
                   "preview_only": false,
                   "confirmed": true,
@@ -100,7 +101,12 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
             onBusyChange: (busy) => { busyStates.push(busy); },
             onTerminalResult: (detail) => {
               terminalResultCount += 1;
-              terminalResultDetail = { scope: detail.scope, docId: detail.docId };
+              terminalResultDetail = {
+                scope: detail.scope,
+                docId: detail.docId,
+                destinationUrl: detail.destinationUrl,
+                target: detail.target
+              };
             }
           });
           await controller.preview({
@@ -114,6 +120,7 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
           const resultSnapshot = controller.snapshot();
           const terminalResultVisible = document.getElementById('host').textContent.includes('Collection result');
           const resultReportVisible = document.getElementById('host').textContent.includes('results/result.md');
+          const resultLink = document.querySelector('[data-collection-destination-link]');
           controller.reset({ active: true });
           await controller.preview({
             file: { filename: 'reviewed.jsonl', source_format: 'data_sharing_documents' },
@@ -127,6 +134,10 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
             resultSnapshot,
             terminalResultVisible,
             resultReportVisible,
+            resultLink: resultLink ? {
+              href: resultLink.getAttribute('href'),
+              text: resultLink.textContent
+            } : null,
             busyStates,
             terminalResultCount,
             terminalResultDetail,
@@ -149,8 +160,18 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
         raise AssertionError(f"confirmed apply result did not remain collection-controller owned: {result!r}")
     if result["terminalResultCount"] != 1:
         raise AssertionError(f"confirmed apply did not signal one terminal result: {result!r}")
-    if result["terminalResultDetail"] != {"scope": "library", "docId": "alpha"}:
+    if result["terminalResultDetail"] != {
+        "scope": "library",
+        "docId": "alpha",
+        "destinationUrl": "/docs/?scope=library",
+        "target": {"scope": "library"},
+    }:
         raise AssertionError(f"confirmed apply did not identify the first imported collection doc: {result!r}")
+    if result["resultLink"] != {
+        "href": "/docs/?scope=library",
+        "text": "Open imported collection",
+    }:
+        raise AssertionError(f"confirmed apply did not link its exact collection: {result!r}")
     if result["busyStates"] != [True, False, True, False, True, False]:
         raise AssertionError(f"collection busy state did not bracket preview/apply requests: {result!r}")
     if result["cancelledSnapshot"]["phase"] != "cancelled" or result["recordDecisionVisible"]:

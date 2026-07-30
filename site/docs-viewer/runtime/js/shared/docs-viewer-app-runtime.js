@@ -162,7 +162,9 @@ export function startDocsViewerRuntime(options) {
     parentTarget: null,
     collectionTarget: null,
     collectionLabel: "",
-    subdocTarget: null
+    subdocTarget: null,
+    refreshDocument: null,
+    refreshCollection: null
   };
   var appViewerControlOwners = new Map();
   var appViewerControlHost = null;
@@ -188,7 +190,9 @@ export function startDocsViewerRuntime(options) {
           parentTarget: null,
           collectionTarget: null,
           collectionLabel: "",
-          subdocTarget: null
+          subdocTarget: null,
+          refreshDocument: null,
+          refreshCollection: null
         };
     var controller = managementRuntime ? managementRuntime.controller() : null;
     if (controller && typeof controller.publishSubscopeReportState === "function") {
@@ -363,14 +367,6 @@ export function startDocsViewerRuntime(options) {
             throw new Error("Sub-scope document creation is unavailable.");
           }
           return controller.createSubscopeDocument(collection, options);
-        });
-      },
-      openSubscopeImport: function (collection, options) {
-        return loadManagementController().then(function (controller) {
-          if (!controller || typeof controller.openSubscopeImport !== "function") {
-            throw new Error("Sub-scope document Import is unavailable.");
-          }
-          return controller.openSubscopeImport(collection, options);
         });
       }
     },

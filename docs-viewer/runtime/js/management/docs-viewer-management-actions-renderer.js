@@ -18,12 +18,6 @@ var MANAGEMENT_ACTION_MENU_ITEMS = [
     label: "Import"
   },
   {
-    id: "docsViewerManageReviewPackageButton",
-    actionId: ACTION_IDS.REVIEW_DOCUMENT_PACKAGE,
-    emoji: "🔎",
-    label: "Review package"
-  },
-  {
     id: "docsViewerManageNewScopeButton",
     actionId: ACTION_IDS.NEW_SCOPE,
     emoji: "🗂️",

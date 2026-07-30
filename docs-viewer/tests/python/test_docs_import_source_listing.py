@@ -45,6 +45,8 @@ SUB_REVIEW_FOLDER_ID = "20260730-190000-document-content"
 SUB_REVIEW_EXPORT_ID = "ds_20260730T180000Z"
 ANALYSIS_REVIEW_FOLDER_ID = "20260730-200000-document-content"
 ANALYSIS_REVIEW_EXPORT_ID = "ds_20260730T190000Z"
+LIBRARY_TAGS_REPORT_DOC_ID = "d-20260730-190000-000001"
+ANALYSIS_TAGS_REPORT_DOC_ID = "d-20260730-200000-000001"
 
 
 def review_source_text(
@@ -252,6 +254,20 @@ def configure_review_sub_scope_targets(root: Path) -> dict[str, Path]:
         ),
     ]
     config_path.write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
+    parent_root = root / "docs-viewer/scopes/library/source/documents"
+    parent_root.mkdir(parents=True, exist_ok=True)
+    (parent_root / f"{LIBRARY_TAGS_REPORT_DOC_ID}.md").write_text(
+        docs_source_model.format_source(
+            {
+                "doc_id": LIBRARY_TAGS_REPORT_DOC_ID,
+                "title": "Tags",
+                "viewer_report": "docs_subscope",
+                "viewer_report_subscope": "tags",
+            },
+            "# Tags\n",
+        ),
+        encoding="utf-8",
+    )
     tags_root = (
         root
         / "docs-viewer/scopes/library/source/sub-scopes/tags/documents"
@@ -377,10 +393,10 @@ def configure_analysis_tags_round_trip_targets(root: Path) -> dict[str, Path]:
         ),
         encoding="utf-8",
     )
-    (parent_root / "tags-report.md").write_text(
+    (parent_root / f"{ANALYSIS_TAGS_REPORT_DOC_ID}.md").write_text(
         docs_source_model.format_source(
             {
-                "doc_id": "tags-report",
+                "doc_id": ANALYSIS_TAGS_REPORT_DOC_ID,
                 "title": "Tags",
                 "added_date": "2026-07-01 09:30:00",
                 "last_updated": "2026-07-29 09:30:00",
@@ -1378,6 +1394,9 @@ def test_edited_review_sub_scope_preview_apply_and_discovery_are_exact(
     ]
     assert payload["outcome"] == "completed"
     assert payload["target"] == {"scope": "library", "sub_scope": "tags"}
+    assert payload["viewer_url"] == (
+        f"/docs/?scope=library&doc={LIBRARY_TAGS_REPORT_DOC_ID}"
+    )
     assert payload["rollback"]["status"] == "not-needed"
     assert boundary_calls == [
         {
@@ -1783,6 +1802,9 @@ def test_edited_review_scope_and_analysis_tags_round_trip_render_end_to_end(
             "scope": "analysis",
             "sub_scope": "tags",
         }
+        assert child_apply["viewer_url"] == (
+            f"/docs/?scope=analysis&doc={ANALYSIS_TAGS_REPORT_DOC_ID}"
+        )
         assert "Edited tag body." in child_rendered["content_html"]
         assert [warning["code"] for warning in child_preview["warnings"]] == [
             "derived_markdown_fidelity"

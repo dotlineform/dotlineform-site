@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ebd7c4187f06c30170fc6cfc3a750511",
-    "generated_at_utc": "2026-07-30T22:18:54Z",
+    "version": "blake2b-573b3a352ee0795d99548183a1494deb",
+    "generated_at_utc": "2026-07-30T22:54:20Z",
     "count": 235
   },
   "entries": [
@@ -3434,10 +3434,10 @@
       "kind": "doc",
       "title": "Consolidated App-Level Docs Import Delivery",
       "href": "/docs/?scope=studio&doc=d-20260730-222344-be311c",
-      "last_updated": "2026-07-30 23:18:33",
+      "last_updated": "2026-07-30 23:54:20",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-30 23:18:33 • Roadmap",
+      "display_meta": "2026-07-30 23:54:20 • Roadmap",
       "search_terms": [
         "consolidated app-level docs import delivery",
         "consolidated",
@@ -3447,16 +3447,16 @@
         "import",
         "delivery",
         "roadmap",
-        "2026-07-30 23:18:33",
+        "2026-07-30 23:54:20",
         "2026",
         "07",
         "30",
         "23",
-        "18",
-        "33",
+        "54",
+        "20",
         "d-20260730-222344-be311c"
       ],
-      "search_text": "consolidated app-level docs import delivery consolidated app level docs import delivery roadmap 2026-07-30 23:18:33 2026 07 30 23 18 33 d-20260730-222344-be311c"
+      "search_text": "consolidated app-level docs import delivery consolidated app level docs import delivery roadmap 2026-07-30 23:54:20 2026 07 30 23 54 20 d-20260730-222344-be311c"
     },
     {
       "id": "d-20260716-193410-98d1a8",

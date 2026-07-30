@@ -25,6 +25,9 @@ from docs_import_test_support import handle_import_source, make_repo, write_libr
 from repo_factory import data_sharing_workspace_root, docs_sub_scope_record
 
 
+REPORT_DOC_ID = "d-20260730-180000-000001"
+
+
 def write_collection_metadata(export_id: str, records: list[dict[str, object]]) -> None:
     path = data_sharing_workspace_root() / "meta" / f"{export_id}.meta.json"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -91,6 +94,20 @@ def configure_importable_tags_collection(root: Path) -> dict[str, Path]:
         )
     ]
     config_path.write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
+    parent_source_root = root / "docs-viewer/scopes/library/source/documents"
+    parent_source_root.mkdir(parents=True, exist_ok=True)
+    (parent_source_root / f"{REPORT_DOC_ID}.md").write_text(
+        docs_source_model.format_source(
+            {
+                "doc_id": REPORT_DOC_ID,
+                "title": "Tags",
+                "viewer_report": "docs_subscope",
+                "viewer_report_subscope": "tags",
+            },
+            "# Tags\n",
+        ),
+        encoding="utf-8",
+    )
     source_root = (
         root
         / "docs-viewer/scopes/library/source/sub-scopes/tags/documents"
@@ -390,6 +407,9 @@ def test_sub_scope_package_preview_and_apply_overwrites_every_exact_target(
 
     assert payload["outcome"] == "completed"
     assert payload["target"] == {"scope": "library", "sub_scope": "tags"}
+    assert payload["viewer_url"] == (
+        f"/docs/?scope=library&doc={REPORT_DOC_ID}"
+    )
     assert payload["counts"] == {
         "created": 0,
         "overwritten": 2,
@@ -420,6 +440,58 @@ def test_sub_scope_package_preview_and_apply_overwrites_every_exact_target(
     assert tag_b_front_matter["title"] == "Returned Tag B"
     assert tag_b_front_matter["summary"] == "Returned B summary."
     assert "Returned B body." in tag_b_body
+
+
+def test_sub_scope_package_apply_requires_exact_report_before_write(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    stub_markdown_validation(monkeypatch)
+    monkeypatch.setattr(
+        docs_write_rebuild,
+        "perform_sub_scope_source_write_and_rebuild",
+        lambda *_args, **_kwargs: pytest.fail(
+            "unroutable child collection must fail before writing"
+        ),
+    )
+    with make_repo() as temp:
+        root = Path(temp)
+        paths = configure_importable_tags_collection(root)
+        originals = {
+            doc_id: path.read_bytes()
+            for doc_id, path in paths.items()
+        }
+        (
+            root
+            / "docs-viewer/scopes/library/source/documents"
+            / f"{REPORT_DOC_ID}.md"
+        ).unlink()
+        write_sub_scope_collection(
+            root,
+            "sub-scope-missing-report.jsonl",
+            [
+                {
+                    "doc_id": "tag-a",
+                    "title": "Returned Tag A",
+                    "content": "Returned body.",
+                },
+            ],
+            "ds_20260730T180010Z",
+        )
+        preview = sub_scope_preview(root, "sub-scope-missing-report.jsonl")
+
+        with pytest.raises(
+            ValueError,
+            match=(
+                "Docs Viewer sub-scope report must resolve exactly once "
+                "for library/tags; found 0"
+            ),
+        ):
+            sub_scope_apply(root, "sub-scope-missing-report.jsonl", preview)
+
+        assert {
+            doc_id: path.read_bytes()
+            for doc_id, path in paths.items()
+        } == originals
 
 
 def test_sub_scope_package_blocks_stale_sources_and_hierarchy(

@@ -65,15 +65,11 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
   var onCreateDocument = typeof options.onCreateDocument === "function"
     ? options.onCreateDocument
     : null;
-  var onImportDocument = typeof options.onImportDocument === "function"
-    ? options.onImportDocument
-    : null;
   var managementContext = Boolean(options.managementContext);
   var selectionOwner = options.selectionOwner || createDocsViewerSubscopeSelectionOwner();
   var currentDocuments = [];
   var listToolbar = null;
   var createInFlight = false;
-  var importInFlight = false;
   var prepareInFlight = false;
   var rowSelections = new Map();
   var activeDeleteWorkflow = null;
@@ -137,15 +133,6 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
         listToolbar.createButton.setAttribute("aria-busy", "true");
       } else {
         listToolbar.createButton.removeAttribute("aria-busy");
-      }
-    }
-    if (listToolbar.importButton) {
-      listToolbar.importButton.disabled = importInFlight;
-      listToolbar.importButton.textContent = "📥";
-      if (importInFlight) {
-        listToolbar.importButton.setAttribute("aria-busy", "true");
-      } else {
-        listToolbar.importButton.removeAttribute("aria-busy");
       }
     }
     listToolbar.actionsButton.disabled = !available || eligible.length === 0;
@@ -332,20 +319,6 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
     menu.appendChild(prepareButton);
     actionsHost.replaceChildren(actionsButton, menu);
 
-    var importButton = null;
-    if (managementContext && onImportDocument) {
-      importButton = documentRef.createElement("button");
-      importButton.className = (
-        "docsViewerReport__subscopeActionsButton "
-        + "docsViewerReport__subscopeImportButton"
-      );
-      importButton.type = "button";
-      importButton.dataset.docsSubscopeImport = "true";
-      importButton.setAttribute("aria-label", "Import");
-      importButton.title = "Import";
-      importButton.textContent = "📥";
-    }
-
     var selectionControl = documentRef.createElement("div");
     selectionControl.className = "docsViewerReport__subscopeSelectionControl";
     selectionControl.setAttribute("role", "group");
@@ -357,7 +330,6 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
     root.replaceChildren.apply(
       root,
       (createButton ? [createButton] : [])
-        .concat(importButton ? [importButton] : [])
         .concat([actionsHost, selectionControl])
     );
     host.appendChild(root);
@@ -380,7 +352,6 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
       doneButton: doneButton,
       handleDocumentClick: handleDocumentClick,
       handleDocumentKeydown: handleDocumentKeydown,
-      importButton: importButton,
       menu: menu,
       prepareButton: prepareButton,
       root: root,
@@ -416,37 +387,6 @@ export function createDocsViewerManagementSubscopeContribution(options = {}) {
           }
         }).finally(function () {
           createInFlight = false;
-          projectSelection();
-        });
-      });
-    }
-    if (importButton) {
-      importButton.addEventListener("click", function () {
-        if (importButton.disabled || importInFlight) return;
-        var collection = selectionOwner.collection();
-        importInFlight = true;
-        projectSelection();
-        Promise.resolve(onImportDocument(
-          {
-            scope: collection.scope,
-            sub_scope: collection.sub_scope
-          },
-          {
-            refreshAndOpenDocument: settings.refreshAndOpenDocument,
-            refreshCollection: settings.refreshCollection,
-            restoreFocus: importButton
-          }
-        )).catch(function (error) {
-          if (typeof options.setStatus === "function") {
-            options.setStatus(
-              error && error.message
-                ? error.message
-                : "Sub-scope document Import failed.",
-              true
-            );
-          }
-        }).finally(function () {
-          importInFlight = false;
           projectSelection();
         });
       });

@@ -10,6 +10,10 @@ from typing import Any, Callable, Dict
 from docs_import_common import is_interactive_html_import_asset
 from docs_import_candidate_projection import list_import_candidates
 from docs_import_content import CONTENT_FORMAT_MARKDOWN, CONTENT_INTENT_REPLACE, ImportContent
+from docs_document_location import (
+    management_collection_viewer_url,
+    management_document_viewer_url,
+)
 from docs_import_document import (
     IMPORT_DOCUMENT_CREATE,
     ImportDocumentApplyResult,
@@ -220,7 +224,12 @@ def handle_import_source(
                 "configured sub-scope destination.",
             )
         if not (dry_run or preview_only):
-            return apply_edited_review_source_collection(
+            destination_url = management_collection_viewer_url(
+                repo_root,
+                scope,
+                sub_scope,
+            )
+            result = apply_edited_review_source_collection(
                 repo_root,
                 folder=edited_review_source,
                 collection=destination,
@@ -235,6 +244,8 @@ def handle_import_source(
                     dependencies.perform_sub_scope_source_write_and_rebuild
                 ),
             )
+            result["viewer_url"] = destination_url
+            return result
         plan = plan_edited_review_source_collection(
             repo_root,
             folder=edited_review_source,
@@ -293,7 +304,12 @@ def handle_import_source(
                 "sub-scope destination.",
             )
         if not (dry_run or preview_only):
-            return apply_document_package_collection(
+            destination_url = management_collection_viewer_url(
+                repo_root,
+                scope,
+                sub_scope,
+            )
+            result = apply_document_package_collection(
                 repo_root,
                 scope=scope,
                 staged_filename=staged_filename,
@@ -310,6 +326,8 @@ def handle_import_source(
                     else None
                 ),
             )
+            result["viewer_url"] = destination_url
+            return result
         plan = plan_document_package_collection(
             repo_root,
             scope=scope,
@@ -414,6 +432,11 @@ def handle_import_source(
         interactive_plans,
         allow_overwrite=confirm_interactive_html_overwrite,
     )
+    destination_url = management_collection_viewer_url(
+        repo_root,
+        scope,
+        sub_scope,
+    )
     source_doc_id = str(preview["proposed_doc_id"])
     create_added_date = current_doc_timestamp()
     create_doc_id = allocate_ordinary_import_doc_id(
@@ -508,6 +531,11 @@ def handle_import_source(
         apply_result=apply_result,
         rebuild=rebuild,
         dry_run=dry_run,
+    )
+    result["viewer_url"] = management_document_viewer_url(
+        destination_url,
+        plan.doc_id,
+        sub_scope=bool(sub_scope),
     )
     response = {
         "ok": True,
