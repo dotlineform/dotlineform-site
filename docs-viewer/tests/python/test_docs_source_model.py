@@ -109,6 +109,31 @@ def test_atomic_new_source_write_refuses_existing_destination() -> None:
         assert created.read_text(encoding="utf-8") == "created\n"
 
 
+def test_atomic_source_write_failure_preserves_existing_file() -> None:
+    with tempfile.TemporaryDirectory() as temp:
+        root = Path(temp)
+        existing = root / "existing.md"
+        existing.write_text("original\n", encoding="utf-8")
+        original_replace = source_model.os.replace
+
+        def fail_replace(_source: Path, _target: Path) -> None:
+            raise OSError("simulated replace failure")
+
+        source_model.os.replace = fail_replace
+        try:
+            try:
+                source_model.write_text_atomic(existing, "replacement\n")
+            except OSError as exc:
+                assert "simulated replace failure" in str(exc)
+            else:
+                raise AssertionError("atomic source write failure should propagate")
+        finally:
+            source_model.os.replace = original_replace
+
+        assert existing.read_text(encoding="utf-8") == "original\n"
+        assert list(root.glob("existing.md.*.tmp")) == []
+
+
 def test_load_scope_docs_rejects_duplicate_doc_ids() -> None:
     with tempfile.TemporaryDirectory() as temp:
         root = Path(temp)
@@ -277,6 +302,67 @@ def test_advance_doc_front_matter_requires_a_full_timestamp() -> None:
         raise AssertionError("date-only document write timestamp should be rejected")
 
 
+def test_strictly_later_doc_timestamp_handles_same_second_and_invalid_history() -> None:
+    assert source_model.strictly_later_doc_timestamp(
+        "2026-07-16 10:00:00",
+        "2026-07-16 10:00:01",
+    ) == "2026-07-16 10:00:01"
+    assert source_model.strictly_later_doc_timestamp(
+        "2026-07-16 10:00:00",
+        "2026-07-16 10:00:00",
+    ) == "2026-07-16 10:00:01"
+    assert source_model.strictly_later_doc_timestamp(
+        "2026-07-16 10:00:00",
+        "2026-07-16 09:59:59",
+    ) == "2026-07-16 10:00:01"
+    assert source_model.strictly_later_doc_timestamp(
+        "2026-07-16",
+        "2026-07-16 10:00:00",
+    ) == "2026-07-16 10:00:00"
+
+    try:
+        source_model.strictly_later_doc_timestamp(
+            "2026-07-16 10:00:00",
+            "2026-07-16",
+        )
+    except ValueError as exc:
+        assert "YYYY-MM-DD HH:MM:SS" in str(exc)
+    else:
+        raise AssertionError("invalid captured timestamp should be rejected")
+
+
+def test_timestamp_rewrite_preserves_unrelated_raw_front_matter() -> None:
+    front_matter_source = (
+        "---\r\n"
+        "# retained comment\r\n"
+        'title: "Retained title"\r\n'
+        "last_updated: 2026-07-16 10:00:00\r\n"
+        "custom_field: retained\r\n"
+        "---\r\n"
+    )
+
+    rewritten = source_model.rewrite_front_matter_source_timestamp(
+        front_matter_source,
+        {
+            "title": "Retained title",
+            "added_date": "2026-07-15 09:00:00",
+            "last_updated": "2026-07-16 10:00:00",
+            "custom_field": "retained",
+        },
+        timestamp="2026-07-16 10:00:01",
+    )
+
+    assert rewritten == (
+        "---\r\n"
+        "# retained comment\r\n"
+        'title: "Retained title"\r\n'
+        'added_date: "2026-07-15 09:00:00"\r\n'
+        'last_updated: "2026-07-16 10:00:01"\r\n'
+        "custom_field: retained\r\n"
+        "---\r\n"
+    )
+
+
 def test_allocate_doc_id_uses_timestamp_and_retries_collisions() -> None:
     tokens = iter(["abcdef", "123abc"])
 
@@ -295,6 +381,7 @@ def main() -> None:
     tests = [
         test_front_matter_parses_and_formats_supported_scalar_values,
         test_atomic_new_source_write_refuses_existing_destination,
+        test_atomic_source_write_failure_preserves_existing_file,
         test_load_scope_docs_rejects_duplicate_doc_ids,
         test_load_scope_docs_rejects_unknown_studio_parent,
         test_load_scope_docs_allows_unknown_library_parent,
@@ -303,6 +390,8 @@ def main() -> None:
         test_source_rewrite_advances_only_for_recent_edit_content,
         test_recent_edit_content_positive_allowlist_is_body_title_and_summary,
         test_advance_doc_front_matter_requires_a_full_timestamp,
+        test_strictly_later_doc_timestamp_handles_same_second_and_invalid_history,
+        test_timestamp_rewrite_preserves_unrelated_raw_front_matter,
         test_allocate_doc_id_uses_timestamp_and_retries_collisions,
     ]
     for test in tests:

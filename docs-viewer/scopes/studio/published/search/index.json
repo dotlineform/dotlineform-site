@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-68b5982e7f048e5ef802ceb5f9ed1b6b",
-    "generated_at_utc": "2026-07-30T14:26:33Z",
+    "version": "blake2b-885d849e08298e23c92032d4ba5aea8c",
+    "generated_at_utc": "2026-07-30T14:37:36Z",
     "count": 234
   },
   "entries": [
@@ -3553,10 +3553,10 @@
       "kind": "doc",
       "title": "Filesystem Edit Timestamp Capture Delivery",
       "href": "/docs/?scope=studio&doc=d-20260730-151218-f4968c",
-      "last_updated": "2026-07-30 15:12:34",
+      "last_updated": "2026-07-30 15:37:28",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-30 15:12:34 • Roadmap",
+      "display_meta": "2026-07-30 15:37:28 • Roadmap",
       "search_terms": [
         "filesystem edit timestamp capture delivery",
         "filesystem",
@@ -3565,16 +3565,16 @@
         "capture",
         "delivery",
         "roadmap",
-        "2026-07-30 15:12:34",
+        "2026-07-30 15:37:28",
         "2026",
         "07",
         "30",
         "15",
-        "12",
-        "34",
+        "37",
+        "28",
         "d-20260730-151218-f4968c"
       ],
-      "search_text": "filesystem edit timestamp capture delivery filesystem edit timestamp capture delivery roadmap 2026-07-30 15:12:34 2026 07 30 15 12 34 d-20260730-151218-f4968c"
+      "search_text": "filesystem edit timestamp capture delivery filesystem edit timestamp capture delivery roadmap 2026-07-30 15:37:28 2026 07 30 15 37 28 d-20260730-151218-f4968c"
     },
     {
       "id": "d-20260726-224323-eb0a65",

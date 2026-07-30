@@ -35,7 +35,14 @@ for path in (SCRIPTS_DIR, SCRIPTS_DOCS_DIR):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-from docs_source_model import is_doc_timestamp, load_scope_docs, recent_edit_content, scope_doc_sort_key
+from docs_source_model import (
+    current_doc_timestamp,
+    is_doc_timestamp,
+    load_scope_docs,
+    recent_edit_content,
+    scope_doc_sort_key,
+    strictly_later_doc_timestamp,
+)
 from docs_artifact_locations import (
     ArtifactLocation,
     artifact_location_adapter,
@@ -412,6 +419,119 @@ def affected_search_doc_ids(
     return ordered_unique(affected), ""
 
 
+def direct_edit_timestamp_plan(
+    previous_docs: Optional[Dict[str, Dict[str, Any]]],
+    current_docs: Dict[str, Dict[str, Any]],
+    changed_files: list[str],
+    *,
+    captured_timestamp: str,
+) -> list[Dict[str, Any]]:
+    """Plan timestamp evidence for changed current docs without writing source."""
+
+    if not is_doc_timestamp(captured_timestamp):
+        raise ValueError("captured timestamp must use YYYY-MM-DD HH:MM:SS")
+
+    plans: list[Dict[str, Any]] = []
+    for filename in changed_files:
+        current = current_docs.get(filename)
+        if current is None:
+            continue
+
+        doc_id = str(current.get("doc_id") or "").strip()
+        current_last_updated = str(current.get("last_updated") or "").strip()
+        previous_filename = ""
+        previous: Optional[Dict[str, Any]] = None
+        unmatched_reason = ""
+        if previous_docs is None:
+            unmatched_reason = "missing_previous_snapshot"
+        elif not doc_id:
+            unmatched_reason = "invalid_current_identity"
+        else:
+            same_filename = previous_docs.get(filename)
+            if (
+                same_filename is not None
+                and str(same_filename.get("doc_id") or "").strip() == doc_id
+            ):
+                previous_filename = filename
+                previous = same_filename
+            else:
+                same_doc_id = [
+                    (candidate_filename, row)
+                    for candidate_filename, row in previous_docs.items()
+                    if str(row.get("doc_id") or "").strip() == doc_id
+                ]
+                if len(same_doc_id) == 1:
+                    previous_filename, previous = same_doc_id[0]
+                elif len(same_doc_id) > 1:
+                    unmatched_reason = "ambiguous_previous_identity"
+                elif same_filename is not None:
+                    unmatched_reason = "document_identity_changed"
+                else:
+                    unmatched_reason = "no_previous_document"
+
+        plan: Dict[str, Any] = {
+            "filename": filename,
+            "previous_filename": previous_filename,
+            "doc_id": doc_id,
+            "matched": previous is not None,
+            "qualifying_content_changed": None,
+            "manual_timestamp_evidence": False,
+            "requires_rewrite": False,
+            "previous_last_updated": "",
+            "current_last_updated": current_last_updated,
+            "replacement_last_updated": "",
+            "reason": unmatched_reason,
+        }
+        if previous is None:
+            plans.append(plan)
+            continue
+
+        previous_last_updated = str(previous.get("last_updated") or "").strip()
+        plan["previous_last_updated"] = previous_last_updated
+        previous_content = previous.get("recent_edit_content")
+        current_content = current.get("recent_edit_content")
+        if not (
+            isinstance(previous_content, tuple)
+            and len(previous_content) == 3
+            and isinstance(current_content, tuple)
+            and len(current_content) == 3
+        ):
+            plan["reason"] = "invalid_recent_edit_content"
+            plans.append(plan)
+            continue
+
+        content_changed = previous_content != current_content
+        plan["qualifying_content_changed"] = content_changed
+        if not content_changed:
+            plan["reason"] = "recent_edit_content_unchanged"
+        elif (
+            is_doc_timestamp(current_last_updated)
+            and current_last_updated != previous_last_updated
+        ):
+            plan["manual_timestamp_evidence"] = True
+            plan["reason"] = "manual_full_timestamp"
+        else:
+            plan["requires_rewrite"] = True
+            plan["reason"] = (
+                "last_updated_not_advanced"
+                if current_last_updated == previous_last_updated
+                else "invalid_last_updated"
+            )
+        plans.append(plan)
+
+    replacement_timestamp = captured_timestamp
+    for plan in plans:
+        if plan["requires_rewrite"]:
+            replacement_timestamp = strictly_later_doc_timestamp(
+                plan["previous_last_updated"],
+                replacement_timestamp,
+            )
+    for plan in plans:
+        if plan["requires_rewrite"]:
+            plan["replacement_last_updated"] = replacement_timestamp
+    return plans
+
+
 def direct_edit_timestamp_issues(
     previous_docs: Optional[Dict[str, Dict[str, Any]]],
     current_docs: Dict[str, Dict[str, Any]],
@@ -421,46 +541,31 @@ def direct_edit_timestamp_issues(
 
     if previous_docs is None:
         return []
-    removed_previous = [
-        previous_docs[filename]
-        for filename in changed_files
-        if filename in previous_docs and filename not in current_docs
-    ]
+    plans = direct_edit_timestamp_plan(
+        previous_docs,
+        current_docs,
+        changed_files,
+        captured_timestamp=current_doc_timestamp(),
+    )
     issues: list[Dict[str, str]] = []
-    for filename in changed_files:
-        current = current_docs.get(filename)
-        if current is None:
-            continue
-        previous = previous_docs.get(filename)
-        if previous is None:
-            same_doc_id = [
-                row
-                for row in previous_docs.values()
-                if str(row.get("doc_id") or "") == str(current.get("doc_id") or "")
-            ]
-            if len(same_doc_id) == 1:
-                previous = same_doc_id[0]
-        if previous is None:
-            same_content = [
-                row
-                for row in removed_previous
-                if row.get("recent_edit_content") == current.get("recent_edit_content")
-            ]
-            if len(same_content) == 1:
-                previous = same_content[0]
-        if previous is not None and previous.get("recent_edit_content") == current.get("recent_edit_content"):
-            continue
-        last_updated = str(current.get("last_updated") or "").strip()
-        if not is_doc_timestamp(last_updated):
-            reason = "new source lacks a full last_updated timestamp" if previous is None else "last_updated is not a full timestamp"
-        elif previous is not None and last_updated == str(previous.get("last_updated") or "").strip():
-            reason = "last_updated did not advance"
-        else:
+    for plan in plans:
+        reason = ""
+        if plan["requires_rewrite"]:
+            reason = (
+                "last_updated did not advance"
+                if plan["reason"] == "last_updated_not_advanced"
+                else "last_updated is not a full timestamp"
+            )
+        elif not plan["matched"] and not is_doc_timestamp(
+            plan["current_last_updated"]
+        ):
+            reason = "new source lacks a full last_updated timestamp"
+        if not reason:
             continue
         issues.append(
             {
-                "filename": filename,
-                "doc_id": str(current.get("doc_id") or "").strip(),
+                "filename": str(plan["filename"]),
+                "doc_id": str(plan["doc_id"]),
                 "reason": reason,
             }
         )

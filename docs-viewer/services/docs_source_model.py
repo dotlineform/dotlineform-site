@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import datetime as dt
 import json
 import hashlib
 import os
@@ -237,6 +238,26 @@ def recent_edit_content(front_matter: Dict[str, Any], body: str) -> tuple[str, s
     )
 
 
+def strictly_later_doc_timestamp(
+    previous_timestamp: Any,
+    candidate_timestamp: Any,
+) -> str:
+    """Return a full candidate timestamp strictly after a comparable previous value."""
+
+    candidate_text = str(candidate_timestamp or "").strip()
+    if not is_doc_timestamp(candidate_text):
+        raise ValueError("candidate document timestamp must use YYYY-MM-DD HH:MM:SS")
+    previous_text = str(previous_timestamp or "").strip()
+    if not is_doc_timestamp(previous_text):
+        return candidate_text
+
+    previous_value = dt.datetime.strptime(previous_text, DOC_TIMESTAMP_FORMAT)
+    candidate_value = dt.datetime.strptime(candidate_text, DOC_TIMESTAMP_FORMAT)
+    if candidate_value > previous_value:
+        return candidate_text
+    return (previous_value + dt.timedelta(seconds=1)).strftime(DOC_TIMESTAMP_FORMAT)
+
+
 def advance_front_matter_for_recent_edit(
     previous_front_matter: Dict[str, Any],
     previous_body: str,
@@ -280,12 +301,16 @@ def rewrite_front_matter_source_timestamp(
     if closing_index < 1:
         raise ValueError("source front matter closing delimiter could not be found")
 
+    default_newline = "\r\n" if any(line.endswith("\r\n") for line in lines) else "\n"
     for key in ("added_date", "last_updated"):
-        rendered = f"{key}: {format_front_matter_value(updated_front_matter[key])}\n"
+        rendered = (
+            f"{key}: {format_front_matter_value(updated_front_matter[key])}"
+            f"{default_newline}"
+        )
         index = field_indices.get(key)
         if index is not None:
             newline = "\r\n" if lines[index].endswith("\r\n") else "\n"
-            lines[index] = rendered.rstrip("\n") + newline
+            lines[index] = rendered.rstrip("\r\n") + newline
             continue
         if key == "added_date" and "last_updated" in field_indices:
             insert_at = field_indices["last_updated"]

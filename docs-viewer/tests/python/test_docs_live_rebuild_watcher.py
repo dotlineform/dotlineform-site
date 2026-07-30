@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import copy
 import importlib.util
 import sys
 from pathlib import Path
@@ -233,6 +234,233 @@ def test_watcher_formats_affected_doc_ids_for_logs() -> None:
     assert module.affected_doc_ids_log_text(["parent", "child"]) == "parent, child"
 
 
+def test_watcher_plans_direct_edit_timestamp_evidence_without_writing() -> None:
+    module = load_docs_live_rebuild_watcher_module()
+    previous = {
+        "body.md": {
+            "doc_id": "body",
+            "last_updated": "2026-07-16 10:00:00",
+            "recent_edit_content": ("old body", "Body", ""),
+        },
+        "summary.md": {
+            "doc_id": "summary",
+            "last_updated": "2026-07-16 10:00:05",
+            "recent_edit_content": ("body", "Summary", "Old summary"),
+        },
+        "old-title.md": {
+            "doc_id": "renamed-title",
+            "last_updated": "2026-07-16 10:00:00",
+            "recent_edit_content": ("body", "Old title", ""),
+        },
+        "metadata.md": {
+            "doc_id": "metadata",
+            "last_updated": "2026-07-16",
+            "recent_edit_content": ("body", "Metadata", ""),
+        },
+        "replaced.md": {
+            "doc_id": "old-identity",
+            "last_updated": "2026-07-16 10:00:00",
+            "recent_edit_content": ("body", "Replaced", ""),
+        },
+        "ambiguous-a.md": {
+            "doc_id": "ambiguous",
+            "last_updated": "2026-07-16 10:00:00",
+            "recent_edit_content": ("body", "Ambiguous", ""),
+        },
+        "ambiguous-b.md": {
+            "doc_id": "ambiguous",
+            "last_updated": "2026-07-16 10:00:00",
+            "recent_edit_content": ("body", "Ambiguous", ""),
+        },
+        "invalid-content.md": {
+            "doc_id": "invalid-content",
+            "last_updated": "2026-07-16 10:00:00",
+            "recent_edit_content": ["body", "Invalid", ""],
+        },
+    }
+    current = {
+        "body.md": {
+            "doc_id": "body",
+            "last_updated": "2026-07-16 10:00:00",
+            "recent_edit_content": ("new body", "Body", ""),
+        },
+        "summary.md": {
+            "doc_id": "summary",
+            "last_updated": "2026-07-16",
+            "recent_edit_content": ("body", "Summary", "New summary"),
+        },
+        "renamed-title.md": {
+            "doc_id": "renamed-title",
+            "last_updated": "2026-07-16 09:59:59",
+            "recent_edit_content": ("body", "New title", ""),
+        },
+        "metadata.md": {
+            "doc_id": "metadata",
+            "last_updated": "2026-07-16",
+            "recent_edit_content": ("body", "Metadata", ""),
+        },
+        "replaced.md": {
+            "doc_id": "new-identity",
+            "last_updated": "",
+            "recent_edit_content": ("body", "Replaced", ""),
+        },
+        "ambiguous-new.md": {
+            "doc_id": "ambiguous",
+            "last_updated": "",
+            "recent_edit_content": ("changed body", "Ambiguous", ""),
+        },
+        "invalid-content.md": {
+            "doc_id": "invalid-content",
+            "last_updated": "",
+            "recent_edit_content": ("changed body", "Invalid", ""),
+        },
+        "new.md": {
+            "doc_id": "new",
+            "last_updated": "",
+            "recent_edit_content": ("new body", "New", ""),
+        },
+    }
+    previous_before = copy.deepcopy(previous)
+    current_before = copy.deepcopy(current)
+
+    plans = module.direct_edit_timestamp_plan(
+        previous,
+        current,
+        [
+            "body.md",
+            "summary.md",
+            "old-title.md",
+            "renamed-title.md",
+            "metadata.md",
+            "replaced.md",
+            "ambiguous-new.md",
+            "invalid-content.md",
+            "new.md",
+        ],
+        captured_timestamp="2026-07-16 10:00:00",
+    )
+    plans_by_filename = {plan["filename"]: plan for plan in plans}
+
+    assert previous == previous_before
+    assert current == current_before
+    assert list(plans_by_filename) == [
+        "body.md",
+        "summary.md",
+        "renamed-title.md",
+        "metadata.md",
+        "replaced.md",
+        "ambiguous-new.md",
+        "invalid-content.md",
+        "new.md",
+    ]
+    assert plans_by_filename["body.md"] == {
+        "filename": "body.md",
+        "previous_filename": "body.md",
+        "doc_id": "body",
+        "matched": True,
+        "qualifying_content_changed": True,
+        "manual_timestamp_evidence": False,
+        "requires_rewrite": True,
+        "previous_last_updated": "2026-07-16 10:00:00",
+        "current_last_updated": "2026-07-16 10:00:00",
+        "replacement_last_updated": "2026-07-16 10:00:06",
+        "reason": "last_updated_not_advanced",
+    }
+    assert plans_by_filename["summary.md"]["qualifying_content_changed"] is True
+    assert plans_by_filename["summary.md"]["requires_rewrite"] is True
+    assert plans_by_filename["summary.md"]["replacement_last_updated"] == (
+        "2026-07-16 10:00:06"
+    )
+    assert plans_by_filename["summary.md"]["reason"] == "invalid_last_updated"
+    assert plans_by_filename["renamed-title.md"] == {
+        "filename": "renamed-title.md",
+        "previous_filename": "old-title.md",
+        "doc_id": "renamed-title",
+        "matched": True,
+        "qualifying_content_changed": True,
+        "manual_timestamp_evidence": True,
+        "requires_rewrite": False,
+        "previous_last_updated": "2026-07-16 10:00:00",
+        "current_last_updated": "2026-07-16 09:59:59",
+        "replacement_last_updated": "",
+        "reason": "manual_full_timestamp",
+    }
+    assert plans_by_filename["metadata.md"]["qualifying_content_changed"] is False
+    assert plans_by_filename["metadata.md"]["reason"] == "recent_edit_content_unchanged"
+    assert plans_by_filename["metadata.md"]["requires_rewrite"] is False
+    assert plans_by_filename["replaced.md"]["matched"] is False
+    assert plans_by_filename["replaced.md"]["reason"] == "document_identity_changed"
+    assert plans_by_filename["ambiguous-new.md"]["matched"] is False
+    assert plans_by_filename["ambiguous-new.md"]["reason"] == "ambiguous_previous_identity"
+    assert plans_by_filename["invalid-content.md"]["matched"] is True
+    assert plans_by_filename["invalid-content.md"]["reason"] == "invalid_recent_edit_content"
+    assert plans_by_filename["invalid-content.md"]["requires_rewrite"] is False
+    assert plans_by_filename["new.md"]["matched"] is False
+    assert plans_by_filename["new.md"]["reason"] == "no_previous_document"
+    assert plans_by_filename["new.md"]["requires_rewrite"] is False
+
+
+def test_watcher_timestamp_plan_fails_closed_without_valid_snapshot_or_capture() -> None:
+    module = load_docs_live_rebuild_watcher_module()
+    current = {
+        "doc.md": {
+            "doc_id": "doc",
+            "last_updated": "",
+            "recent_edit_content": ("body", "Doc", ""),
+        }
+    }
+
+    assert module.direct_edit_timestamp_plan(
+        None,
+        current,
+        ["doc.md"],
+        captured_timestamp="2026-07-16 10:00:00",
+    ) == [
+        {
+            "filename": "doc.md",
+            "previous_filename": "",
+            "doc_id": "doc",
+            "matched": False,
+            "qualifying_content_changed": None,
+            "manual_timestamp_evidence": False,
+            "requires_rewrite": False,
+            "previous_last_updated": "",
+            "current_last_updated": "",
+            "replacement_last_updated": "",
+            "reason": "missing_previous_snapshot",
+        }
+    ]
+
+    try:
+        module.direct_edit_timestamp_plan(
+            {},
+            current,
+            ["doc.md"],
+            captured_timestamp="2026-07-16",
+        )
+    except ValueError as exc:
+        assert "YYYY-MM-DD HH:MM:SS" in str(exc)
+    else:
+        raise AssertionError("invalid batch timestamp should block timestamp planning")
+
+
+def test_watcher_invalid_parsed_snapshot_fails_closed() -> None:
+    module = load_docs_live_rebuild_watcher_module()
+    original_snapshot = module.parsed_doc_snapshot
+
+    def fail_snapshot(_repo_root: Path, _scope: str):
+        raise ValueError("simulated invalid source")
+
+    module.parsed_doc_snapshot = fail_snapshot
+    try:
+        snapshot, error = module.try_parsed_doc_snapshot(Path("/repo"), "studio")
+    finally:
+        module.parsed_doc_snapshot = original_snapshot
+
+    assert snapshot is None
+    assert error == "simulated invalid source"
+
+
 def test_watcher_surfaces_direct_edits_without_advanced_full_timestamp() -> None:
     module = load_docs_live_rebuild_watcher_module()
     previous = {
@@ -320,6 +548,11 @@ def test_watcher_surfaces_direct_edits_without_advanced_full_timestamp() -> None
             "reason": "last_updated is not a full timestamp",
         },
         {
+            "filename": "new-name.md",
+            "doc_id": "new-id",
+            "reason": "new source lacks a full last_updated timestamp",
+        },
+        {
             "filename": "new.md",
             "doc_id": "new",
             "reason": "new source lacks a full last_updated timestamp",
@@ -392,6 +625,9 @@ def main() -> None:
     test_watcher_imports_source_model_helpers_directly()
     test_watcher_accumulates_changed_files_during_debounce()
     test_watcher_formats_affected_doc_ids_for_logs()
+    test_watcher_plans_direct_edit_timestamp_evidence_without_writing()
+    test_watcher_timestamp_plan_fails_closed_without_valid_snapshot_or_capture()
+    test_watcher_invalid_parsed_snapshot_fails_closed()
     test_watcher_surfaces_direct_edits_without_advanced_full_timestamp()
     test_watcher_formats_docs_builder_diagnostics_on_separate_lines()
     test_watcher_falls_back_to_full_docs_build_when_targeted_payloads_are_missing()
