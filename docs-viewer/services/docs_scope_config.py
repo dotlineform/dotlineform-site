@@ -35,6 +35,7 @@ from docs_artifact_locations import (  # noqa: E402
     filesystem_location_root,
     require_location_capabilities,
 )
+from docs_document_identity import is_immutable_doc_id  # noqa: E402
 from docs_subscope_report_customisations import (  # noqa: E402
     DocsSubScopeReportCustomisationConfig,
     normalize_docs_subscope_report_customisation,
@@ -66,6 +67,8 @@ SUPPORTED_SCOPE_TYPES = {PUBLIC_SCOPE_TYPE, LOCAL_SCOPE_TYPE, LOCAL_EXTERNAL_SCO
 DOTLINEFORM_PROJECTS_BASE_DIR_ENV = "DOTLINEFORM_PROJECTS_BASE_DIR"
 EXTERNAL_DATA_ROOT_MARKER = f"${DOTLINEFORM_PROJECTS_BASE_DIR_ENV}/docs-viewer"
 SUB_SCOPE_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9_-]*\Z")
+SOURCE_REVISION_PATTERN = re.compile(r"\Asha256:[0-9a-f]{64}\Z")
+SCOPE_LIFECYCLE_TOOL_ID = "docs-viewer-scope-lifecycle"
 MEDIA_TYPE_PATTERN = re.compile(r"\A[a-z][a-z0-9_-]*\Z")
 PUBLISHED_MEDIA_TYPES = frozenset({"files", "html", "img", "svg"})
 BUILD_MEDIA_TYPES = frozenset({"mermaid"})
@@ -159,6 +162,13 @@ class DocsScopeConfig:
 
 
 @dataclass(frozen=True)
+class DocsSubScopeLifecycleConfig:
+    tool_id: str
+    report_host_doc_id: str
+    report_host_source_revision: str
+
+
+@dataclass(frozen=True)
 class DocsSubScopeConfig:
     sub_scope: str
     title: str
@@ -166,6 +176,7 @@ class DocsSubScopeConfig:
     supports_return_import: bool
     ui_statuses: tuple[str, ...]
     report_customisation: DocsSubScopeReportCustomisationConfig | None
+    lifecycle: DocsSubScopeLifecycleConfig | None
     source: DocsSourceConfig
     published: DocsPublishedConfig
     public_projection: DocsPublicProjectionConfig | None
@@ -697,6 +708,54 @@ def normalize_ordered_sub_scope_values(
     return tuple(values)
 
 
+def normalize_sub_scope_lifecycle(
+    raw: Any,
+    *,
+    field: str,
+) -> DocsSubScopeLifecycleConfig | None:
+    """Normalize one exact lifecycle-created collection/host association."""
+
+    if raw is None:
+        return None
+    if not isinstance(raw, dict):
+        raise ValueError(f"docs scope config field {field} must be an object")
+    expected_keys = {
+        "tool_id",
+        "report_host_doc_id",
+        "report_host_source_revision",
+    }
+    if set(raw) != expected_keys:
+        raise ValueError(
+            f"docs scope config field {field} must contain exactly "
+            "tool_id, report_host_doc_id, and report_host_source_revision"
+        )
+    tool_id = str(raw.get("tool_id") or "").strip()
+    if tool_id != SCOPE_LIFECYCLE_TOOL_ID:
+        raise ValueError(
+            f"docs scope config field {field}.tool_id must be "
+            f"{SCOPE_LIFECYCLE_TOOL_ID!r}"
+        )
+    report_host_doc_id = str(raw.get("report_host_doc_id") or "").strip()
+    if not is_immutable_doc_id(report_host_doc_id):
+        raise ValueError(
+            f"docs scope config field {field}.report_host_doc_id must use "
+            "immutable document identity"
+        )
+    report_host_source_revision = str(
+        raw.get("report_host_source_revision") or ""
+    ).strip()
+    if not SOURCE_REVISION_PATTERN.fullmatch(report_host_source_revision):
+        raise ValueError(
+            f"docs scope config field {field}.report_host_source_revision must "
+            "be a sha256 revision receipt"
+        )
+    return DocsSubScopeLifecycleConfig(
+        tool_id=tool_id,
+        report_host_doc_id=report_host_doc_id,
+        report_host_source_revision=report_host_source_revision,
+    )
+
+
 def normalize_sub_scope_configs(
     raw: Any,
     *,
@@ -774,6 +833,10 @@ def normalize_sub_scope_configs(
             item.get("report_customisation"),
             field=f"{item_field}.report_customisation",
         )
+        lifecycle = normalize_sub_scope_lifecycle(
+            item.get("lifecycle"),
+            field=f"{item_field}.lifecycle",
+        )
         title = str(item.get("title") or "").strip()
         public_title = (
             title
@@ -794,6 +857,7 @@ def normalize_sub_scope_configs(
                 supports_return_import=supports_return_import,
                 ui_statuses=ui_statuses,
                 report_customisation=report_customisation,
+                lifecycle=lifecycle,
                 source=source,
                 published=published,
                 public_projection=projection,

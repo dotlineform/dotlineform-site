@@ -7,6 +7,8 @@ import json
 import os
 from pathlib import Path
 
+import pytest
+
 from docs_management_test_support import (
     EXTERNAL_DATA_ROOT_MARKER,
     docs_management_service,
@@ -16,6 +18,80 @@ from docs_management_test_support import (
     write_json,
 )
 from repo_factory import docs_scope_record
+
+
+def rebuild_sub_scope_fixture(repo_root: Path, scope: str, sub_scope: str):
+    lifecycle = docs_management_service.docs_sub_scope_lifecycle
+    parent = lifecycle.load_docs_scope_configs(repo_root)[scope]
+    output = lifecycle.resolve_scope_path(
+        repo_root,
+        lifecycle.published_documents_path(parent)
+        / lifecycle.SOURCE_SUB_SCOPES_PATH
+        / sub_scope,
+    )
+    write_json(output / "manifest.json", {"docs": []})
+    write_json(output / "manage-manifest.json", {"docs": []})
+    return {"ok": True}
+
+
+def rebuild_parent_fixture(repo_root: Path, scope: str, **_kwargs):
+    lifecycle = docs_management_service.docs_sub_scope_lifecycle
+    parent = lifecycle.load_docs_scope_configs(repo_root)[scope]
+    source = lifecycle.resolve_scope_path(
+        repo_root,
+        lifecycle.document_source_path(parent),
+    )
+    output = lifecycle.resolve_scope_path(
+        repo_root,
+        lifecycle.published_documents_path(parent),
+    )
+    rows = []
+    for path in sorted(source.glob("*.md")):
+        front_matter, _body = lifecycle.source_model.parse_source(path)
+        rows.append({"doc_id": front_matter.get("doc_id"), "title": front_matter.get("title")})
+    write_json(output / "index-tree.json", {"docs": rows})
+    return {"ok": True}
+
+
+def apply_sub_scope_fixture(repo_root: Path, scope: str, sub_scope: str, title: str):
+    lifecycle = docs_management_service.docs_sub_scope_lifecycle
+    preview = lifecycle.plan_create_sub_scope_preview(
+        repo_root,
+        {"parent_scope": scope, "sub_scope": sub_scope, "title": title},
+    )
+    original_child = docs_management_service.write_rebuild.rebuild_sub_scope_outputs
+    original_parent = docs_management_service.write_rebuild.rebuild_scope_outputs
+    docs_management_service.write_rebuild.rebuild_sub_scope_outputs = rebuild_sub_scope_fixture
+    docs_management_service.write_rebuild.rebuild_scope_outputs = rebuild_parent_fixture
+    try:
+        result = docs_management_service.handle_sub_scope_create_apply(
+            repo_root,
+            {
+                "parent_scope": scope,
+                "sub_scope": sub_scope,
+                "title": title,
+                "planned_report_host_identity": preview["planned_report_host_identity"],
+                "confirm": True,
+            },
+            dry_run=False,
+        )
+    finally:
+        docs_management_service.write_rebuild.rebuild_sub_scope_outputs = original_child
+        docs_management_service.write_rebuild.rebuild_scope_outputs = original_parent
+    return preview, result
+
+
+def delete_sub_scope_fixture(repo_root: Path, scope: str, sub_scope: str):
+    original = docs_management_service.write_rebuild.rebuild_scope_outputs
+    docs_management_service.write_rebuild.rebuild_scope_outputs = rebuild_parent_fixture
+    try:
+        return docs_management_service.handle_sub_scope_delete_apply(
+            repo_root,
+            {"parent_scope": scope, "sub_scope": sub_scope, "confirm": True},
+            dry_run=False,
+        )
+    finally:
+        docs_management_service.write_rebuild.rebuild_scope_outputs = original
 
 def test_scope_manifest_backfills_existing_scopes_as_system_owned() -> None:
     with make_repo() as temp_path:
@@ -179,15 +255,8 @@ def test_sub_scope_create_apply_updates_parent_config_and_creates_nested_roots()
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         write_docs_scope_config(repo_root)
-        payload = docs_management_service.handle_sub_scope_create_apply(
-            repo_root,
-            {
-                "parent_scope": "studio",
-                "sub_scope": "tags",
-                "title": "Tags",
-                "confirm": True,
-            },
-            dry_run=False,
+        preview, payload = apply_sub_scope_fixture(
+            repo_root, "studio", "tags", "Tags"
         )
         source_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
         source_root_exists = (repo_root / "docs-viewer/scopes/studio/source/sub-scopes/tags").is_dir()
@@ -195,11 +264,18 @@ def test_sub_scope_create_apply_updates_parent_config_and_creates_nested_roots()
         generated_payload_root_exists = (repo_root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/by-id").is_dir()
         top_level_source_exists = (repo_root / "docs-viewer/scopes/tags/source").exists()
         default_doc_exists = (repo_root / "docs-viewer/scopes/studio/source/sub-scopes/tags/documents/tags.md").exists()
+        host_id = preview["planned_report_host_identity"]["doc_id"]
+        host_path = repo_root / f"docs-viewer/scopes/studio/source/documents/{host_id}.md"
+        host_front_matter, _body = docs_management_service.docs_sub_scope_lifecycle.source_model.parse_source(host_path)
+        manifest = json.loads((repo_root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/manifest.json").read_text())
+        index = json.loads((repo_root / "docs-viewer/scopes/studio/published/documents/index-tree.json").read_text())
 
     assert payload["ok"] is True
     assert payload["action"] == "create_sub_scope"
     assert payload["parent_scope"] == "studio"
     assert payload["sub_scope"] == "tags"
+    assert payload["committed"] is True
+    assert payload["report_host_target"] == {"scope": "studio", "doc_id": host_id}
     assert source_root_exists is True
     assert recursive_source_root_exists is False
     assert generated_payload_root_exists is True
@@ -212,10 +288,65 @@ def test_sub_scope_create_apply_updates_parent_config_and_creates_nested_roots()
     assert "source" not in sub_scope
     assert "published" not in sub_scope
     assert sub_scope["public_projection"] is None
+    assert sub_scope["lifecycle"] == payload["association"]
+    assert host_front_matter["viewer_report_subscope"] == "tags"
+    assert manifest == {"docs": []}
+    assert any(row["doc_id"] == host_id for row in index["docs"])
     assert any(file["path"] == "docs-viewer/scopes/studio/source/sub-scopes/tags" for file in payload["created_files"])
     assert not any(file["kind"] == "sub_scope_source_sub_scopes_root" for file in payload["created_files"])
     assert any(file["path"] == "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/by-id" for file in payload["created_files"])
     assert payload["publish_files"] == []
+
+
+def test_sub_scope_create_requires_preview_identity_and_preserves_committed_target(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
+        lifecycle = docs_management_service.docs_sub_scope_lifecycle
+        with pytest.raises(ValueError, match="planned_report_host_identity is required"):
+            docs_management_service.handle_sub_scope_create_apply(
+                repo_root,
+                {
+                    "parent_scope": "studio",
+                    "sub_scope": "tags",
+                    "title": "Tags",
+                    "confirm": True,
+                },
+                dry_run=False,
+            )
+        preview = lifecycle.plan_create_sub_scope_preview(
+            repo_root,
+            {"parent_scope": "studio", "sub_scope": "tags", "title": "Tags"},
+        )
+        def fail_rebuild(*_args, **_kwargs):
+            raise RuntimeError("build failed")
+
+        monkeypatch.setattr(
+            docs_management_service.write_rebuild,
+            "rebuild_sub_scope_outputs",
+            fail_rebuild,
+        )
+        with pytest.raises(lifecycle.SubScopeLifecycleApplyError) as caught:
+            docs_management_service.handle_sub_scope_create_apply(
+                repo_root,
+                {
+                    "parent_scope": "studio",
+                    "sub_scope": "tags",
+                    "title": "Tags",
+                    "planned_report_host_identity": preview["planned_report_host_identity"],
+                    "confirm": True,
+                },
+                dry_run=False,
+            )
+        host_id = preview["planned_report_host_identity"]["doc_id"]
+        host_exists = (repo_root / f"docs-viewer/scopes/studio/source/documents/{host_id}.md").is_file()
+
+    assert caught.value.payload["committed"] is True
+    assert caught.value.payload["retry_create"] is False
+    assert caught.value.payload["report_host_target"] == {"scope": "studio", "doc_id": host_id}
+    assert host_exists is True
 
 def test_sub_scope_delete_apply_removes_config_source_generated_and_published_payloads() -> None:
     with make_repo() as temp_path:
@@ -232,16 +363,13 @@ def test_sub_scope_delete_apply_removes_config_source_generated_and_published_pa
             default_doc_id="child",
         )
         write_json(config_path, source_payload)
-        docs_management_service.handle_sub_scope_create_apply(
-            repo_root,
-            {
-                "parent_scope": "studio",
-                "sub_scope": "tags",
-                "title": "Tags",
-                "confirm": True,
-            },
-            dry_run=False,
+        create_preview, _create_result = apply_sub_scope_fixture(
+            repo_root, "studio", "tags", "Tags"
         )
+        host_id = create_preview["planned_report_host_identity"]["doc_id"]
+        host_path = repo_root / f"docs-viewer/scopes/studio/source/documents/{host_id}.md"
+        host_front_matter, _body = docs_management_service.docs_sub_scope_lifecycle.source_model.parse_source(host_path)
+        public_manifest_after_create = (repo_root / "site/assets/data/docs/scopes/studio/tags/manifest.json").exists()
         (repo_root / "docs-viewer/scopes/studio/source/sub-scopes/tags/documents/scale.md").write_text("# Scale\n", encoding="utf-8")
         write_json(repo_root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/manifest.json", {"doc_ids": "scale"})
         write_json(repo_root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/by-id/scale.json", {"doc_id": "scale"})
@@ -254,19 +382,14 @@ def test_sub_scope_delete_apply_removes_config_source_generated_and_published_pa
                 "sub_scope": "tags",
             },
         )
-        payload = docs_management_service.handle_sub_scope_delete_apply(
-            repo_root,
-            {
-                "parent_scope": "studio",
-                "sub_scope": "tags",
-                "confirm": True,
-            },
-            dry_run=False,
+        payload = delete_sub_scope_fixture(
+            repo_root, "studio", "tags"
         )
         final_config = json.loads(config_path.read_text(encoding="utf-8"))
         source_root_exists = (repo_root / "docs-viewer/scopes/studio/source/sub-scopes/tags").exists()
         generated_root_exists = (repo_root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags").exists()
         published_root_exists = (repo_root / "site/assets/data/docs/scopes/studio/tags").exists()
+        host_exists = (repo_root / f"docs-viewer/scopes/studio/source/documents/{host_id}.md").exists()
 
     assert preview["ok"] is True
     assert preview["allowed"] is True
@@ -275,10 +398,34 @@ def test_sub_scope_delete_apply_removes_config_source_generated_and_published_pa
     assert any(file["path"] == "site/assets/data/docs/scopes/studio/tags" for file in preview["delete_files"])
     assert payload["ok"] is True
     assert payload["action"] == "delete_sub_scope"
+    assert payload["committed"] is True
+    assert host_front_matter["viewable"] is False
+    assert public_manifest_after_create is False
     assert source_root_exists is False
     assert generated_root_exists is False
     assert published_root_exists is False
+    assert host_exists is False
     assert "sub_scopes" not in final_config["scopes"][0]
+
+
+def test_sub_scope_delete_blocks_an_edited_associated_host() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
+        create_preview, _result = apply_sub_scope_fixture(
+            repo_root, "studio", "tags", "Tags"
+        )
+        host_id = create_preview["planned_report_host_identity"]["doc_id"]
+        host_path = repo_root / f"docs-viewer/scopes/studio/source/documents/{host_id}.md"
+        host_path.write_text(host_path.read_text() + "\nEdited.\n")
+        preview = docs_management_service.docs_sub_scope_lifecycle.plan_delete_sub_scope_preview(
+            repo_root,
+            {"parent_scope": "studio", "sub_scope": "tags"},
+        )
+
+    assert preview["allowed"] is False
+    assert "Report host edited since creation" in preview["blockers"]
+    assert preview["report_host_target"] == {"scope": "studio", "doc_id": host_id}
 
 def test_scope_create_preview_blocks_local_tracked_assets_regression() -> None:
     with make_repo() as temp_path:
@@ -575,15 +722,8 @@ def test_scope_rename_apply_moves_external_roots_and_preserves_links_and_doc_ids
                 (repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8")
             )
             default_doc_id = created_config["scopes"][1]["default_doc_id"]
-            docs_management_service.handle_sub_scope_create_apply(
-                repo_root,
-                {
-                    "parent_scope": "research",
-                    "sub_scope": "notes",
-                    "title": "Notes",
-                    "confirm": True,
-                },
-                dry_run=False,
+            apply_sub_scope_fixture(
+                repo_root, "research", "notes", "Notes"
             )
             source_path = external_root / f"scopes/research/source/documents/{default_doc_id}.md"
             source_path.write_text(

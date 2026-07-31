@@ -186,6 +186,7 @@ def test_docs_scope_config_accepts_nested_sub_scopes() -> None:
     assert sub_scope.title == "Tags"
     assert sub_scope.public_title == "Tags"
     assert sub_scope.supports_return_import is False
+    assert sub_scope.lifecycle is None
     assert sub_scope.ui_statuses == ("draft", "done")
     assert sub_scope.report_customisation is not None
     assert sub_scope.report_customisation.customisation_id == "analysis_tags"
@@ -199,6 +200,37 @@ def test_docs_scope_config_accepts_nested_sub_scopes() -> None:
         "docs-viewer/scopes/research/published/documents/sub-scopes/tags"
     )
     assert docs_scope_config.public_documents_path(sub_scope).as_posix() == "site/assets/data/docs/scopes/research/tags"
+
+
+def test_docs_scope_config_validates_sub_scope_lifecycle_association() -> None:
+    association = {
+        "tool_id": "docs-viewer-scope-lifecycle",
+        "report_host_doc_id": "d-20260731-120000-a1b2c3",
+        "report_host_source_revision": f"sha256:{'0' * 64}",
+    }
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_scope_record(
+            repo_root,
+            docs_scope_record(
+                "studio",
+                sub_scopes=[docs_sub_scope_record("studio", "tags", lifecycle=association)],
+            ),
+        )
+        lifecycle = docs_scope_config.load_docs_scope_configs(repo_root)["studio"].sub_scopes[0].lifecycle
+        assert lifecycle is not None
+        assert lifecycle.report_host_doc_id == association["report_host_doc_id"]
+
+        association["report_host_source_revision"] = "stale"
+        write_scope_record(
+            repo_root,
+            docs_scope_record(
+                "studio",
+                sub_scopes=[docs_sub_scope_record("studio", "tags", lifecycle=association)],
+            ),
+        )
+        with pytest.raises(ValueError, match="sha256 revision receipt"):
+            docs_scope_config.load_docs_scope_configs(repo_root)
 
 
 def test_docs_scope_config_accepts_route_specific_sub_scope_public_title() -> None:

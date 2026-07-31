@@ -70,6 +70,41 @@ Sub-scope detail body.
         }
     ]
 
+
+def test_python_docs_builder_writes_empty_sub_scope_manifest_pair() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        config_path = root / "docs-viewer/config/scopes/docs_scopes.json"
+        payload = read_json(config_path)
+        payload["scopes"][0]["sub_scopes"] = [
+            docs_sub_scope_record("studio", "tags", title="Tags")
+        ]
+        write_json(config_path, payload)
+        (
+            root
+            / "docs-viewer/scopes/studio/source/sub-scopes/tags/documents"
+        ).mkdir(parents=True)
+
+        exit_code, stdout, stderr = run_cli(
+            root,
+            ["--scope", "studio", "--sub-scope", "tags", "--write"],
+        )
+        manifest = read_json(
+            root
+            / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/manifest.json"
+        )
+        manage_manifest = read_json(
+            root
+            / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/manage-manifest.json"
+        )
+
+    assert exit_code == 0
+    assert stderr == ""
+    assert "docs total: 0" in stdout
+    assert manifest == {"docs": []}
+    assert manage_manifest == {"docs": []}
+
 def test_python_docs_builder_writes_sub_scope_payloads_and_minimal_manifest() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)

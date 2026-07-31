@@ -268,13 +268,19 @@ def docs_management_post_response(
         payload["dry_run"] = True
         return HTTPStatus.OK, payload
     if path == routes.SUB_SCOPE_CREATE_APPLY_PATH:
-        return HTTPStatus.OK, handle_sub_scope_create_apply(repo_root, body, dry_run)
+        try:
+            return HTTPStatus.OK, handle_sub_scope_create_apply(repo_root, body, dry_run)
+        except docs_sub_scope_lifecycle.SubScopeLifecycleApplyError as error:
+            return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
     if path == routes.SUB_SCOPE_DELETE_PREVIEW_PATH:
         payload = docs_sub_scope_lifecycle.plan_delete_sub_scope_preview(repo_root, body)
         payload["dry_run"] = True
         return HTTPStatus.OK, payload
     if path == routes.SUB_SCOPE_DELETE_APPLY_PATH:
-        return HTTPStatus.OK, handle_sub_scope_delete_apply(repo_root, body, dry_run)
+        try:
+            return HTTPStatus.OK, handle_sub_scope_delete_apply(repo_root, body, dry_run)
+        except docs_sub_scope_lifecycle.SubScopeLifecycleApplyError as error:
+            return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
     if path == routes.PUBLISH_CONFIRM_PATH:
         return HTTPStatus.OK, docs_publish_gate.publish_confirm(repo_root, body)
     if path == routes.PUBLISH_APPLY_PATH:

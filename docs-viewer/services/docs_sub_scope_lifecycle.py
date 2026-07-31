@@ -4,22 +4,23 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from docs_lifecycle_paths import (
     delete_manifest_paths,
     load_json_object,
     path_record,
     render_json,
-    resolve_lifecycle_record_path,
     write_text_atomic,
 )
 from docs_scope_config import (
     CONFIG_REL_PATH,
     SCHEMA_VERSION as SCOPE_CONFIG_SCHEMA_VERSION,
+    SCOPE_LIFECYCLE_TOOL_ID,
     SOURCE_DOCUMENTS_PATH,
     SOURCE_SUB_SCOPES_PATH,
     DocsScopeConfig,
+    document_source_path,
     load_docs_scope_configs,
     normalize_sub_scope_id,
     public_documents_path,
@@ -34,6 +35,17 @@ from docs_scope_manifest import (
     normalize_title,
     require_confirmed,
 )
+import docs_source_model as source_model
+
+
+REPORT_ID = "docs_subscope"
+REPORT_ACCESS = "local"
+
+
+class SubScopeLifecycleApplyError(RuntimeError):
+    def __init__(self, payload: dict[str, Any]) -> None:
+        super().__init__(str(payload.get("error") or "sub-scope lifecycle failed"))
+        self.payload = payload
 
 
 def find_raw_scope_config(payload: dict[str, Any], scope_id: str) -> dict[str, Any]:
@@ -50,6 +62,7 @@ def planned_sub_scope_config_record(
     parent_config: DocsScopeConfig,
     sub_scope: str,
     title: str,
+    lifecycle: dict[str, str],
 ) -> dict[str, Any]:
     projection = None
     if parent_config.public_projection is not None:
@@ -66,6 +79,7 @@ def planned_sub_scope_config_record(
         "sub_scope": sub_scope,
         "title": title,
         "public_projection": projection,
+        "lifecycle": lifecycle,
     }
 
 
@@ -137,8 +151,9 @@ def sub_scope_storage_contract(
         "publish_output": public_docs,
         "search_output": "",
         "summary": (
-            f"Sub-scope under {parent_scope}: creates nested source and published payload roots. "
-            "It does not create a top-level scope, default document, route, or scope selector entry."
+            f"Sub-scope under {parent_scope}: creates nested source and published payload roots "
+            "plus one parent report host. It does not create a top-level scope, route, or scope "
+            "selector entry."
         ),
     }
 
@@ -158,6 +173,8 @@ def sub_scope_path_records(repo_root: Path, parent_config: DocsScopeConfig, sub_
         path_record(repo_root, "sub_scope_source_documents_root", source_documents_root, action="create"),
         path_record(repo_root, "sub_scope_published_docs_root", docs_output, action="create"),
         path_record(repo_root, "sub_scope_published_docs_payload_root", docs_output / "by-id", action="create"),
+        path_record(repo_root, "sub_scope_manifest", docs_output / "manifest.json", action="generate"),
+        path_record(repo_root, "sub_scope_manage_manifest", docs_output / "manage-manifest.json", action="generate"),
     ]
     publish_records: list[dict[str, Any]] = []
     public_output = public_documents_path(parent_config)
@@ -172,6 +189,58 @@ def sub_scope_path_records(repo_root: Path, parent_config: DocsScopeConfig, sub_
     return records, publish_records
 
 
+def parent_source_records(repo_root: Path, parent_config: DocsScopeConfig) -> list[tuple[Path, dict[str, Any]]]:
+    source_root = resolve_scope_path(repo_root, document_source_path(parent_config))
+    if not source_root.is_dir():
+        raise ValueError(f"parent source documents root does not exist for {parent_config.scope_id!r}")
+    return [(path, source_model.parse_source(path)[0]) for path in sorted(source_root.glob("*.md"))]
+
+
+def report_claimants(records: list[tuple[Path, dict[str, Any]]], sub_scope: str) -> list[tuple[Path, dict[str, Any]]]:
+    return [
+        item for item in records
+        if str(item[1].get("viewer_report") or "").strip() == REPORT_ID
+        and str(item[1].get("viewer_report_subscope") or "").strip().lower() == sub_scope
+    ]
+
+
+def planned_host_identity(body: dict[str, Any], existing: set[str]) -> dict[str, str]:
+    raw = body.get("planned_report_host_identity")
+    if raw is None:
+        if body.get("confirm") is True:
+            raise ValueError("planned_report_host_identity is required for confirmed apply")
+        added_date = source_model.current_doc_timestamp()
+        return {"doc_id": source_model.allocate_doc_id(added_date, existing), "added_date": added_date}
+    if not isinstance(raw, dict) or set(raw) != {"doc_id", "added_date"}:
+        raise ValueError("planned_report_host_identity must contain exactly doc_id and added_date")
+    doc_id = str(raw.get("doc_id") or "").strip()
+    added_date = str(raw.get("added_date") or "").strip()
+    if not source_model.is_immutable_doc_id(doc_id):
+        raise ValueError("planned_report_host_identity.doc_id must use immutable document identity")
+    if not source_model.doc_id_matches_added_date(doc_id, added_date):
+        raise ValueError("planned_report_host_identity added_date must match its document ID timestamp")
+    if doc_id in existing:
+        raise ValueError(f"planned report host identity {doc_id!r} already exists")
+    return {"doc_id": doc_id, "added_date": added_date}
+
+
+def report_host_source(parent_config: DocsScopeConfig, sub_scope: str, title: str, identity: dict[str, str]) -> str:
+    front_matter: dict[str, Any] = {
+        "doc_id": identity["doc_id"],
+        "title": title,
+        "added_date": identity["added_date"],
+        "last_updated": identity["added_date"],
+    }
+    if not source_model.default_viewable_for_config(parent_config):
+        front_matter["viewable"] = False
+    front_matter.update({
+        "viewer_report": REPORT_ID,
+        "viewer_report_access": REPORT_ACCESS,
+        "viewer_report_subscope": sub_scope,
+    })
+    return source_model.format_source(front_matter, f"# {title}\n")
+
+
 def plan_create_sub_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     parent_scope = normalize_scope_id(body.get("parent_scope") or body.get("scope"))
     sub_scope = normalize_sub_scope_id(body.get("sub_scope"), field="sub_scope")
@@ -183,8 +252,33 @@ def plan_create_sub_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict
     if any(item.sub_scope == sub_scope for item in parent_config.sub_scopes):
         raise ValueError(f"sub_scope {sub_scope!r} already exists in scope {parent_scope!r}")
 
-    planned_sub_scope_config = planned_sub_scope_config_record(parent_config, sub_scope, title)
+    parent_sources = parent_source_records(repo_root, parent_config)
+    claimants = report_claimants(parent_sources, sub_scope)
+    if claimants:
+        raise ValueError(
+            f"sub-scope creation found an existing report host for {parent_scope}/{sub_scope}: "
+            + ", ".join(path.name for path, _front_matter in claimants)
+        )
+    existing = {
+        value
+        for path, front_matter in parent_sources
+        for value in (path.stem, str(front_matter.get("doc_id") or "").strip())
+        if value
+    }
+    identity = planned_host_identity(body, existing)
+    host_text = report_host_source(parent_config, sub_scope, title, identity)
+    host_revision = source_model.source_revision(host_text.encode("utf-8"))
+    association = {
+        "tool_id": SCOPE_LIFECYCLE_TOOL_ID,
+        "report_host_doc_id": identity["doc_id"],
+        "report_host_source_revision": host_revision,
+    }
+    planned_sub_scope_config = planned_sub_scope_config_record(
+        parent_config, sub_scope, title, association
+    )
     created_files, publish_files = sub_scope_path_records(repo_root, parent_config, sub_scope)
+    host_path = resolve_scope_path(repo_root, document_source_path(parent_config)) / f"{identity['doc_id']}.md"
+    created_files.append(path_record(repo_root, "report_host_source", host_path, action="create"))
     conflicts = [
         record["path"]
         for record in [*created_files, *publish_files]
@@ -203,6 +297,11 @@ def plan_create_sub_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict
         "parent_scope": parent_scope,
         "sub_scope": sub_scope,
         "title": title,
+        "planned_report_host_identity": identity,
+        "report_host_source_revision": host_revision,
+        "collection_target": {"scope": parent_scope, "sub_scope": sub_scope},
+        "report_host_target": {"scope": parent_scope, "doc_id": identity["doc_id"]},
+        "association": association,
         "planned_sub_scope_config": planned_sub_scope_config,
         "storage_contract": sub_scope_storage_contract(
             parent_scope,
@@ -216,49 +315,82 @@ def plan_create_sub_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict
         "changed_files": [
             path_record(repo_root, "scope_config", repo_root / CONFIG_REL_PATH, action="change"),
         ],
-        "build_commands": [],
+        "rebuild_plan": ["sub_scope_docs", "parent_docs", "parent_search", "browser_config"],
         "urls": {
-            "management": f"/docs/?scope={parent_scope}",
+            "management": f"/docs/?scope={parent_scope}&doc={identity['doc_id']}",
             "public": "",
         },
         "warnings": [],
-        "summary_text": f"Previewed new Docs Viewer sub-scope {parent_scope}/{sub_scope}.",
+        "summary_text": (
+            f"Previewed new Docs Viewer sub-scope {parent_scope}/{sub_scope} "
+            f"with report host {identity['doc_id']}."
+        ),
     }
 
 
-def apply_create_sub_scope(repo_root: Path, body: dict[str, Any], *, dry_run: bool) -> dict[str, Any]:
+def apply_error(result: dict[str, Any], error: Exception, *, committed: bool, stage: str) -> SubScopeLifecycleApplyError:
+    retry_field = "retry_create" if result["action"] == "create_sub_scope" else "retry_delete"
+    result.update({"ok": False, "committed": committed, retry_field: False, "failed_stage": stage, "error": str(error)})
+    return SubScopeLifecycleApplyError(result)
+
+
+def apply_create_sub_scope(
+    repo_root: Path,
+    body: dict[str, Any],
+    *,
+    dry_run: bool,
+    rebuild_sub_scope_outputs: Callable[[Path, str, str], dict[str, Any]],
+    rebuild_scope_outputs: Callable[..., dict[str, Any]],
+) -> dict[str, Any]:
     require_confirmed(body)
     preview = plan_create_sub_scope_preview(repo_root, body)
-    if not dry_run:
-        for record in [*preview["created_files"], *preview.get("publish_files", [])]:
-            path = resolve_lifecycle_record_path(repo_root, record["path"], field="sub-scope created file path")
-            path.mkdir(parents=True, exist_ok=False)
-        append_sub_scope_config(repo_root, str(preview["parent_scope"]), preview["planned_sub_scope_config"])
+    result = {**preview, "schema_version": LIFECYCLE_APPLY_SCHEMA_VERSION, "operation": "apply", "dry_run": dry_run, "committed": False, "retry_create": True, "rebuild": {}}
+    if dry_run:
+        return result
 
-    return {
-        "ok": True,
-        "schema_version": LIFECYCLE_APPLY_SCHEMA_VERSION,
-        "action": "create_sub_scope",
-        "operation": "apply",
-        "scope_id": preview["scope_id"],
-        "parent_scope": preview["parent_scope"],
-        "sub_scope": preview["sub_scope"],
-        "title": preview["title"],
-        "storage_contract": preview.get("storage_contract", {}),
-        "created_files": preview["created_files"],
-        "publish_files": preview.get("publish_files", []),
-        "changed_files": preview["changed_files"],
-        "deleted_files": [],
-        "missing_files": [],
-        "build_commands": [],
-        "urls": preview["urls"],
-        "summary_text": (
-            f"Created Docs Viewer sub-scope {preview['parent_scope']}/{preview['sub_scope']}."
-            if not dry_run
-            else f"Validated create apply for Docs Viewer sub-scope {preview['parent_scope']}/{preview['sub_scope']}."
-        ),
-        "dry_run": dry_run,
-    }
+    scope = str(preview["parent_scope"])
+    sub_scope = str(preview["sub_scope"])
+    parent_config = load_docs_scope_configs(repo_root)[scope]
+    identity = preview["planned_report_host_identity"]
+    host_text = report_host_source(parent_config, sub_scope, str(preview["title"]), identity)
+    host_path = resolve_scope_path(repo_root, document_source_path(parent_config)) / f"{identity['doc_id']}.md"
+    host_created = False
+    try:
+        source_model.write_text_atomic_new(host_path, host_text)
+        host_created = True
+        append_sub_scope_config(repo_root, scope, preview["planned_sub_scope_config"])
+    except Exception as error:
+        if host_created and host_path.exists() and host_path.read_text(encoding="utf-8") == host_text:
+            host_path.unlink()
+        raise apply_error(result, error, committed=False, stage="config_commit") from error
+
+    result.update({"committed": True, "retry_create": False})
+    source_root = resolve_scope_path(
+        repo_root,
+        parent_config.source.location.path / parent_config.source.sub_scopes_path / sub_scope,
+    )
+    docs_output = resolve_scope_path(
+        repo_root,
+        published_documents_path(parent_config) / SOURCE_SUB_SCOPES_PATH / sub_scope,
+    )
+    public_root = public_documents_path(parent_config)
+    stage = "roots"
+    try:
+        (source_root / SOURCE_DOCUMENTS_PATH).mkdir(parents=True, exist_ok=False)
+        (docs_output / "by-id").mkdir(parents=True, exist_ok=False)
+        if public_root is not None:
+            (resolve_scope_path(repo_root, public_root / sub_scope) / "by-id").mkdir(parents=True, exist_ok=False)
+        stage = "sub_scope_build"
+        result["rebuild"]["sub_scope"] = rebuild_sub_scope_outputs(repo_root, scope, sub_scope)
+        stage = "parent_rebuild"
+        result["rebuild"]["parent"] = rebuild_scope_outputs(
+            repo_root, scope, include_search=True,
+            docs_doc_ids=[identity["doc_id"]], search_doc_ids=[identity["doc_id"]],
+        )
+    except Exception as error:
+        raise apply_error(result, error, committed=True, stage=stage) from error
+    result["summary_text"] = f"Created Docs Viewer sub-scope {scope}/{sub_scope} with report host {identity['doc_id']}."
+    return result
 
 
 def sub_scope_delete_path_records(repo_root: Path, sub_scope_config: Any, parent_config: DocsScopeConfig) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
@@ -286,46 +418,7 @@ def sub_scope_delete_path_records(repo_root: Path, sub_scope_config: Any, parent
     return delete_files, missing_files
 
 
-def plan_delete_sub_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    parent_scope = normalize_scope_id(body.get("parent_scope") or body.get("scope"))
-    sub_scope = normalize_sub_scope_id(body.get("sub_scope"), field="sub_scope")
-    configs = load_docs_scope_configs(repo_root)
-    parent_config = configs.get(parent_scope)
-    if parent_config is None:
-        return {
-            "ok": True,
-            "schema_version": LIFECYCLE_PREVIEW_SCHEMA_VERSION,
-            "action": "delete_sub_scope",
-            "operation": "preview",
-            "scope_id": parent_scope,
-            "parent_scope": parent_scope,
-            "sub_scope": sub_scope,
-            "allowed": False,
-            "blockers": [f"parent scope {parent_scope!r} does not exist"],
-            "delete_files": [],
-            "missing_files": [],
-            "changed_files": [],
-            "build_commands": [],
-        }
-    matching = [item for item in parent_config.sub_scopes if item.sub_scope == sub_scope]
-    if not matching:
-        return {
-            "ok": True,
-            "schema_version": LIFECYCLE_PREVIEW_SCHEMA_VERSION,
-            "action": "delete_sub_scope",
-            "operation": "preview",
-            "scope_id": parent_scope,
-            "parent_scope": parent_scope,
-            "sub_scope": sub_scope,
-            "allowed": False,
-            "blockers": [f"sub_scope {sub_scope!r} is not configured in scope {parent_scope!r}"],
-            "delete_files": [],
-            "missing_files": [],
-            "changed_files": [],
-            "build_commands": [],
-        }
-
-    delete_files, missing_files = sub_scope_delete_path_records(repo_root, matching[0], parent_config)
+def blocked_delete_preview(parent_scope: str, sub_scope: str, blockers: list[str], **details: Any) -> dict[str, Any]:
     return {
         "ok": True,
         "schema_version": LIFECYCLE_PREVIEW_SCHEMA_VERSION,
@@ -334,51 +427,142 @@ def plan_delete_sub_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict
         "scope_id": parent_scope,
         "parent_scope": parent_scope,
         "sub_scope": sub_scope,
-        "title": matching[0].title,
+        "allowed": False,
+        "blockers": blockers,
+        "delete_files": [],
+        "missing_files": [],
+        "changed_files": [],
+        "rebuild_plan": [],
+        **details,
+    }
+
+
+def plan_delete_sub_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
+    parent_scope = normalize_scope_id(body.get("parent_scope") or body.get("scope"))
+    sub_scope = normalize_sub_scope_id(body.get("sub_scope"), field="sub_scope")
+    configs = load_docs_scope_configs(repo_root)
+    parent_config = configs.get(parent_scope)
+    if parent_config is None:
+        return blocked_delete_preview(parent_scope, sub_scope, [f"parent scope {parent_scope!r} does not exist"])
+    matching = [item for item in parent_config.sub_scopes if item.sub_scope == sub_scope]
+    if not matching:
+        return blocked_delete_preview(parent_scope, sub_scope, [f"sub_scope {sub_scope!r} is not configured in scope {parent_scope!r}"])
+
+    sub_scope_config = matching[0]
+    lifecycle = sub_scope_config.lifecycle
+    if lifecycle is None:
+        return blocked_delete_preview(
+            parent_scope, sub_scope,
+            ["sub-scope has no lifecycle-created report-host association"],
+            title=sub_scope_config.title,
+        )
+    association = {
+        "tool_id": lifecycle.tool_id,
+        "report_host_doc_id": lifecycle.report_host_doc_id,
+        "report_host_source_revision": lifecycle.report_host_source_revision,
+    }
+    host_target = {"scope": parent_scope, "doc_id": lifecycle.report_host_doc_id}
+    host_path = resolve_scope_path(repo_root, document_source_path(parent_config)) / f"{lifecycle.report_host_doc_id}.md"
+    details = {
+        "title": sub_scope_config.title,
+        "association": association,
+        "report_host_target": host_target,
+        "recorded_report_host_source_revision": lifecycle.report_host_source_revision,
+    }
+    if not host_path.is_file():
+        return blocked_delete_preview(parent_scope, sub_scope, ["lifecycle-associated report host source is missing"], **details)
+
+    revision = source_model.source_revision(host_path.read_bytes())
+    front_matter, _body = source_model.parse_source(host_path)
+    blockers = []
+    if revision != lifecycle.report_host_source_revision:
+        blockers.append("Report host edited since creation")
+    if (
+        str(front_matter.get("doc_id") or "").strip() != lifecycle.report_host_doc_id
+        or str(front_matter.get("viewer_report") or "").strip() != REPORT_ID
+        or str(front_matter.get("viewer_report_access") or "").strip() != REPORT_ACCESS
+        or str(front_matter.get("viewer_report_subscope") or "").strip().lower() != sub_scope
+    ):
+        blockers.append("lifecycle-associated report host is detached")
+    claimants = report_claimants(parent_source_records(repo_root, parent_config), sub_scope)
+    if len(claimants) != 1 or claimants[0][0].resolve() != host_path.resolve():
+        blockers.append("sub-scope report-host association is ambiguous")
+    if blockers:
+        return blocked_delete_preview(
+            parent_scope, sub_scope, blockers,
+            current_report_host_source_revision=revision, **details,
+        )
+
+    delete_files, missing_files = sub_scope_delete_path_records(repo_root, sub_scope_config, parent_config)
+    delete_files.append(path_record(repo_root, "report_host_source", host_path, action="delete"))
+    return {
+        "ok": True,
+        "schema_version": LIFECYCLE_PREVIEW_SCHEMA_VERSION,
+        "action": "delete_sub_scope",
+        "operation": "preview",
+        "scope_id": parent_scope,
+        "parent_scope": parent_scope,
+        "sub_scope": sub_scope,
+        "title": sub_scope_config.title,
         "allowed": True,
         "blockers": [],
+        "collection_target": {"scope": parent_scope, "sub_scope": sub_scope},
+        "report_host_target": host_target,
+        "report_host_source_revision": revision,
+        "association": association,
         "delete_files": delete_files,
         "missing_files": missing_files,
         "changed_files": [
             path_record(repo_root, "scope_config", repo_root / CONFIG_REL_PATH, action="change"),
         ],
-        "build_commands": [],
-        "summary_text": f"Previewed deletion for Docs Viewer sub-scope {parent_scope}/{sub_scope}.",
+        "rebuild_plan": ["parent_docs", "parent_search", "browser_config"],
+        "summary_text": f"Previewed deletion for Docs Viewer sub-scope {parent_scope}/{sub_scope} and report host {lifecycle.report_host_doc_id}.",
     }
 
 
-def apply_delete_sub_scope(repo_root: Path, body: dict[str, Any], *, dry_run: bool) -> dict[str, Any]:
+def apply_delete_sub_scope(
+    repo_root: Path,
+    body: dict[str, Any],
+    *,
+    dry_run: bool,
+    rebuild_scope_outputs: Callable[..., dict[str, Any]],
+) -> dict[str, Any]:
     require_confirmed(body)
     preview = plan_delete_sub_scope_preview(repo_root, body)
     if not preview.get("allowed"):
         blockers = preview.get("blockers") if isinstance(preview.get("blockers"), list) else []
         raise ValueError("; ".join(str(blocker) for blocker in blockers) or "sub-scope delete is not allowed")
 
-    if not dry_run:
-        delete_manifest_paths(repo_root, preview["delete_files"])
-        remove_sub_scope_config(repo_root, str(preview["parent_scope"]), str(preview["sub_scope"]))
-
-    return {
-        "ok": True,
+    result = {
+        **preview,
         "schema_version": LIFECYCLE_APPLY_SCHEMA_VERSION,
-        "action": "delete_sub_scope",
         "operation": "apply",
-        "scope_id": preview["scope_id"],
-        "parent_scope": preview["parent_scope"],
-        "sub_scope": preview["sub_scope"],
-        "created_files": [],
-        "changed_files": preview["changed_files"],
-        "deleted_files": preview["delete_files"],
-        "missing_files": preview["missing_files"],
-        "build_commands": [],
-        "urls": {
-            "management": f"/docs/?scope={preview['parent_scope']}",
-            "public": "",
-        },
-        "summary_text": (
-            f"Deleted Docs Viewer sub-scope {preview['parent_scope']}/{preview['sub_scope']}."
-            if not dry_run
-            else f"Validated delete apply for Docs Viewer sub-scope {preview['parent_scope']}/{preview['sub_scope']}."
-        ),
         "dry_run": dry_run,
+        "committed": False,
+        "retry_delete": True,
+        "deleted_files": preview["delete_files"],
+        "rebuild": {},
+        "urls": {"management": f"/docs/?scope={preview['parent_scope']}", "public": ""},
     }
+    if dry_run:
+        return result
+
+    scope = str(preview["parent_scope"])
+    sub_scope = str(preview["sub_scope"])
+    try:
+        remove_sub_scope_config(repo_root, scope, sub_scope)
+    except Exception as error:
+        raise apply_error(result, error, committed=False, stage="config_commit") from error
+
+    result.update({"committed": True, "retry_delete": False})
+    try:
+        delete_manifest_paths(repo_root, preview["delete_files"])
+        host_id = str(preview["report_host_target"]["doc_id"])
+        result["rebuild"]["parent"] = rebuild_scope_outputs(
+            repo_root, scope, include_search=True,
+            docs_doc_ids=[host_id], search_doc_ids=[host_id],
+        )
+    except Exception as error:
+        raise apply_error(result, error, committed=True, stage="cleanup_rebuild") from error
+    result["summary_text"] = f"Deleted Docs Viewer sub-scope {scope}/{sub_scope} and report host {host_id}."
+    return result

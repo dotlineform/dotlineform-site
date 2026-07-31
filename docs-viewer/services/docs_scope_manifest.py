@@ -21,6 +21,7 @@ from docs_scope_config import (
     SCHEMA_VERSION as SCOPE_CONFIG_SCHEMA_VERSION,
     SCOPE_ROOTS_PATH,
     SCOPE_SOURCE_PATH,
+    SCOPE_LIFECYCLE_TOOL_ID,
     DocsScopeConfig,
     document_source_path,
     load_docs_scope_configs,
@@ -52,7 +53,7 @@ MANIFEST_REL_PATH = Path("docs-viewer/config/scopes/docs_scope_manifest.json")
 SCHEMA_VERSION = "docs_scope_manifest_v1"
 LIFECYCLE_PREVIEW_SCHEMA_VERSION = "docs_scope_lifecycle_preview_v1"
 LIFECYCLE_APPLY_SCHEMA_VERSION = "docs_scope_lifecycle_apply_v1"
-TOOL_ID = "docs-viewer-scope-lifecycle"
+TOOL_ID = SCOPE_LIFECYCLE_TOOL_ID
 SAFE_SCOPE_ID_PATTERN = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$")
 PUBLIC_MODE = "public_readonly"
 LOCAL_COMMITTED_MODE = "local_committed"

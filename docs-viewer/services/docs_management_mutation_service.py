@@ -386,8 +386,13 @@ def handle_sub_scope_create_apply(repo_root: Path, body: Dict[str, Any], dry_run
     parent_scope = docs_scope_manifest.normalize_scope_id(body.get("parent_scope") or body.get("scope"))
     sub_scope = normalize_sub_scope_id(body.get("sub_scope"), field="sub_scope")
     docs_scope_manifest.require_confirmed(body)
-    docs_sub_scope_lifecycle.plan_create_sub_scope_preview(repo_root, body)
-    payload = docs_sub_scope_lifecycle.apply_create_sub_scope(repo_root, body, dry_run=dry_run)
+    payload = docs_sub_scope_lifecycle.apply_create_sub_scope(
+        repo_root,
+        body,
+        dry_run=dry_run,
+        rebuild_sub_scope_outputs=write_rebuild.rebuild_sub_scope_outputs,
+        rebuild_scope_outputs=write_rebuild.rebuild_scope_outputs,
+    )
     if not dry_run:
         log_event(
             repo_root,
@@ -406,11 +411,12 @@ def handle_sub_scope_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run
     parent_scope = docs_scope_manifest.normalize_scope_id(body.get("parent_scope") or body.get("scope"))
     sub_scope = normalize_sub_scope_id(body.get("sub_scope"), field="sub_scope")
     docs_scope_manifest.require_confirmed(body)
-    preview = docs_sub_scope_lifecycle.plan_delete_sub_scope_preview(repo_root, body)
-    if not preview.get("allowed"):
-        blockers = preview.get("blockers") if isinstance(preview.get("blockers"), list) else []
-        raise ValueError("; ".join(str(blocker) for blocker in blockers) or "sub-scope delete is not allowed")
-    payload = docs_sub_scope_lifecycle.apply_delete_sub_scope(repo_root, body, dry_run=dry_run)
+    payload = docs_sub_scope_lifecycle.apply_delete_sub_scope(
+        repo_root,
+        body,
+        dry_run=dry_run,
+        rebuild_scope_outputs=write_rebuild.rebuild_scope_outputs,
+    )
     if not dry_run:
         log_event(
             repo_root,

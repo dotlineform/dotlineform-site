@@ -747,7 +747,9 @@ export async function openCreateSubScopeFlow(options = {}) {
     setBusy(callbacks, true);
     setMessage(callbacks, SCOPE_LIFECYCLE_TEXT.subScopeCreateSaving, false);
     render(callbacks);
-    appliedPayload = await applySubScopeCreate(result.payload, options.clientOptions);
+    appliedPayload = await applySubScopeCreate(Object.assign({}, result.payload, {
+      planned_report_host_identity: preview.planned_report_host_identity
+    }), options.clientOptions);
     setMessage(callbacks, normalizeText(appliedPayload.summary_text), false);
     applied(callbacks, appliedPayload);
   } catch (error) {

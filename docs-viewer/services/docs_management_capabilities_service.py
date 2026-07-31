@@ -111,7 +111,10 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             },
             "sub_scope_lifecycle": {
                 "create_eligible": True,
-                "delete_eligible": bool(config.sub_scopes),
+                "delete_eligible": any(
+                    sub_scope.lifecycle is not None
+                    for sub_scope in config.sub_scopes
+                ),
                 "sub_scopes": [
                     {
                         "sub_scope": sub_scope.sub_scope,
@@ -121,6 +124,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                         "publish_output": path_label(repo_root, publication_documents_path(sub_scope)),
                     }
                     for sub_scope in config.sub_scopes
+                    if sub_scope.lifecycle is not None
                 ],
             },
             "publishing": {

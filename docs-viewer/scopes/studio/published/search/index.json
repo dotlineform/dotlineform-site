@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-0e2db9eaf8af2e442fb815fd8d6fa84f",
-    "generated_at_utc": "2026-07-31T20:18:54Z",
+    "version": "blake2b-aa82b935d2e8c5369d1c092b35f28a5a",
+    "generated_at_utc": "2026-07-31T21:23:45Z",
     "count": 244
   },
   "entries": [
@@ -4505,10 +4505,10 @@
       "kind": "doc",
       "title": "Sub-Scope Report Defaults And Customisations",
       "href": "/docs/?scope=studio&doc=d-20260731-150644-3dfab5",
-      "last_updated": "2026-07-31 21:15:35",
+      "last_updated": "2026-07-31 21:45:08",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-31 21:15:35 • Roadmap",
+      "display_meta": "2026-07-31 21:45:08 • Roadmap",
       "search_terms": [
         "sub-scope report defaults and customisations",
         "sub",
@@ -4518,16 +4518,16 @@
         "and",
         "customisations",
         "roadmap",
-        "2026-07-31 21:15:35",
+        "2026-07-31 21:45:08",
         "2026",
         "07",
         "31",
         "21",
-        "15",
-        "35",
+        "45",
+        "08",
         "d-20260731-150644-3dfab5"
       ],
-      "search_text": "sub-scope report defaults and customisations sub scope report defaults and customisations roadmap 2026-07-31 21:15:35 2026 07 31 21 15 35 d-20260731-150644-3dfab5"
+      "search_text": "sub-scope report defaults and customisations sub scope report defaults and customisations roadmap 2026-07-31 21:45:08 2026 07 31 21 45 08 d-20260731-150644-3dfab5"
     },
     {
       "id": "d-20260731-155054-1fcd80",
@@ -4632,10 +4632,10 @@
       "kind": "doc",
       "title": "New Sub-Scope Default Report Lifecycle Delivery",
       "href": "/docs/?scope=studio&doc=d-20260731-155055-0b921e",
-      "last_updated": "2026-07-31 21:18:53",
+      "last_updated": "2026-07-31 22:23:36",
       "parent_id": "d-20260731-150644-3dfab5",
       "parent_title": "Sub-Scope Report Defaults And Customisations",
-      "display_meta": "2026-07-31 21:18:53 • Sub-Scope Report Defaults And Customisations",
+      "display_meta": "2026-07-31 22:23:36 • Sub-Scope Report Defaults And Customisations",
       "search_terms": [
         "new sub-scope default report lifecycle delivery",
         "new",
@@ -4649,16 +4649,16 @@
         "defaults",
         "and",
         "customisations",
-        "2026-07-31 21:18:53",
+        "2026-07-31 22:23:36",
         "2026",
         "07",
         "31",
-        "21",
-        "18",
-        "53",
+        "22",
+        "23",
+        "36",
         "d-20260731-155055-0b921e"
       ],
-      "search_text": "new sub-scope default report lifecycle delivery new sub scope default report lifecycle delivery sub-scope report defaults and customisations defaults and customisations 2026-07-31 21:18:53 2026 07 31 21 18 53 d-20260731-155055-0b921e"
+      "search_text": "new sub-scope default report lifecycle delivery new sub scope default report lifecycle delivery sub-scope report defaults and customisations defaults and customisations 2026-07-31 22:23:36 2026 07 31 22 23 36 d-20260731-155055-0b921e"
     },
     {
       "id": "d-20260731-160944-f68b74",
