@@ -1,0 +1,11 @@
+{
+  "doc_id": "d-20260731-160944-f68b74",
+  "title": "notes on default report",
+  "added_date": "2026-07-31 16:09:44",
+  "last_updated": "2026-07-31 16:52:42",
+  "viewer_url": "/docs/?scope=studio&doc=d-20260731-160944-f68b74",
+  "parent_id": "d-20260731-150644-3dfab5",
+  "summary": "rough notes to inform a design spec",
+  "ui_status": "review",
+  "content_html": "<h1>notes on default report</h1>\n<p>tags report is already close to the default.</p>\n<ul>\n<li>the group filters and corresponding manifest <code>group</code> field are a customisation</li>\n<li>it currently lacks the default ability to sort the list in manage mode, and a 'copy link' button on a doc page</li>\n</ul>\n<h2>report toolbar</h2>\n<p>all scopes (public + manage):</p>\n<ul>\n<li>search by title</li>\n</ul>\n<p>manage only:</p>\n<ul>\n<li>New doc 📄</li>\n<li>sort toggle button:\n<ul>\n<li>🔤 = <code>title</code> asc</li>\n<li>🕒 = <code>last_updated</code> desc</li>\n</ul>\n</li>\n<li>Actions menu 🔧\n<ul>\n<li>Prepare package 📦</li>\n</ul>\n</li>\n<li>checkbox controls (Select all, clear, done)</li>\n</ul>\n<h2>list</h2>\n<ul>\n<li>list of doc titles</li>\n<li>sorting is manage only</li>\n<li>additional columns are customisations</li>\n</ul>\n<h2>doc toolbar</h2>\n<p>all scopes (public + manage):</p>\n<ul>\n<li>← back</li>\n</ul>\n<p>manage only:</p>\n<ul>\n<li>🗑️ delete doc</li>\n<li>'Copy Link' button</li>\n</ul>\n<h2>manifest</h2>\n<p>public:</p>\n<pre><code>{\n  &quot;docs&quot;: [\n    {\n        &quot;doc_id&quot;: &quot;d-*&quot;,\n        &quot;title&quot;: &quot;title&quot;\n    },\n</code></pre>\n<p>manage:</p>\n<pre><code>{\n  &quot;docs&quot;: [\n    {\n        &quot;doc_id&quot;: &quot;d-*&quot;,\n        &quot;title&quot;: &quot;title&quot;\n        &quot;ui_status&quot;: &quot;&quot;,\n        &quot;viewable&quot;: true,\n        &quot;last_updated&quot;: &quot;&quot;\n    },\n</code></pre>\n"
+}

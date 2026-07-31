@@ -1001,6 +1001,12 @@
               "ui_status": "proposed"
             },
             {
+              "doc_id": "d-20260731-160944-f68b74",
+              "title": "notes on default report",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-160944-f68b74.json",
+              "ui_status": "review"
+            },
+            {
               "doc_id": "d-20260731-155053-3929e2",
               "title": "Sub-Scope Report Customisation Architecture",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155053-3929e2.json",
@@ -1361,5 +1367,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-31T14:53:57Z"
+  "generated_at": "2026-07-31T15:10:30Z"
 }
