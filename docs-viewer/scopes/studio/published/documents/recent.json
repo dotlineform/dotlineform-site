@@ -7,9 +7,73 @@
       "doc_id": "d-20260731-155054-1fcd80",
       "title": "Default Report And Analysis Tags Refactor Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155054-1fcd80.json",
-      "timestamp": "2026-07-31 20:14:14",
+      "timestamp": "2026-07-31 20:51:26",
       "parent_id": "d-20260731-150644-3dfab5",
       "parent_title": "Sub-Scope Report Defaults And Customisations"
+    },
+    {
+      "doc_id": "d-20260623-221357-a97b66",
+      "title": "Embedded Detail Documents",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260623-221357-a97b66.json",
+      "timestamp": "2026-07-31 20:38:00",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260528-224754-964108",
+      "title": "Panel Hosts and Control Surfaces",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260528-224754-964108.json",
+      "timestamp": "2026-07-31 20:38:00",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260728-113139-285eae",
+      "title": "Sub-Scope Index",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-113139-285eae.json",
+      "timestamp": "2026-07-31 20:38:00",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260728-113139-763354",
+      "title": "Sub-Scope Index Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-113139-763354.json",
+      "timestamp": "2026-07-31 20:38:00",
+      "parent_id": "d-20260728-113139-285eae",
+      "parent_title": "Sub-Scope Index"
+    },
+    {
+      "doc_id": "d-20260728-205013-41deb8",
+      "title": "Sub-Scope Public And Manage Manifests",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-205013-41deb8.json",
+      "timestamp": "2026-07-31 20:38:00",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260731-155053-3929e2",
+      "title": "Sub-Scope Report Customisation Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155053-3929e2.json",
+      "timestamp": "2026-07-31 20:38:00",
+      "parent_id": "d-20260731-150644-3dfab5",
+      "parent_title": "Sub-Scope Report Defaults And Customisations"
+    },
+    {
+      "doc_id": "d-20260731-150644-3dfab5",
+      "title": "Sub-Scope Report Defaults And Customisations",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-150644-3dfab5.json",
+      "timestamp": "2026-07-31 20:38:00",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260531-152622-ed2451",
+      "title": "Toolbar Model",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260531-152622-ed2451.json",
+      "timestamp": "2026-07-31 20:38:00",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
     },
     {
       "doc_id": "d-20260731-185207-2dbb6f",
@@ -18,71 +82,7 @@
       "timestamp": "2026-07-31 20:02:26",
       "parent_id": "d-20260731-150644-3dfab5",
       "parent_title": "Sub-Scope Report Defaults And Customisations"
-    },
-    {
-      "doc_id": "d-20260731-155053-3929e2",
-      "title": "Sub-Scope Report Customisation Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155053-3929e2.json",
-      "timestamp": "2026-07-31 19:29:10",
-      "parent_id": "d-20260731-150644-3dfab5",
-      "parent_title": "Sub-Scope Report Defaults And Customisations"
-    },
-    {
-      "doc_id": "d-20260731-150644-3dfab5",
-      "title": "Sub-Scope Report Defaults And Customisations",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-150644-3dfab5.json",
-      "timestamp": "2026-07-31 17:01:54",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260731-160944-f68b74",
-      "title": "notes on default report",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-160944-f68b74.json",
-      "timestamp": "2026-07-31 16:52:42",
-      "parent_id": "d-20260731-150644-3dfab5",
-      "parent_title": "Sub-Scope Report Defaults And Customisations"
-    },
-    {
-      "doc_id": "d-20260731-155056-2677a3",
-      "title": "Dotlineform Projects Report Customisation Decision Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155056-2677a3.json",
-      "timestamp": "2026-07-31 15:50:56",
-      "parent_id": "d-20260731-150644-3dfab5",
-      "parent_title": "Sub-Scope Report Defaults And Customisations"
-    },
-    {
-      "doc_id": "d-20260731-155055-0b921e",
-      "title": "New Sub-Scope Default Report Lifecycle Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155055-0b921e.json",
-      "timestamp": "2026-07-31 15:50:55",
-      "parent_id": "d-20260731-150644-3dfab5",
-      "parent_title": "Sub-Scope Report Defaults And Customisations"
-    },
-    {
-      "doc_id": "d-20260716-193410-98d1a8",
-      "title": "Dated Export Snapshots",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260716-193410-98d1a8.json",
-      "timestamp": "2026-07-31 14:38:49",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260731-124327-65d30d",
-      "title": "Dated Export Snapshots Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-124327-65d30d.json",
-      "timestamp": "2026-07-31 14:38:49",
-      "parent_id": "d-20260716-193410-98d1a8",
-      "parent_title": "Dated Export Snapshots"
-    },
-    {
-      "doc_id": "d-20260629-152159-ac1af9",
-      "title": "Export",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260629-152159-ac1af9.json",
-      "timestamp": "2026-07-31 14:37:50",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-07-31T19:14:14Z"
+  "generated_at": "2026-07-31T19:51:27Z"
 }

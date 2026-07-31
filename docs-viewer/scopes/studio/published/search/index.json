@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-fa6941b0bba785aca751b0b1fbbd2e80",
-    "generated_at_utc": "2026-07-31T19:14:15Z",
+    "version": "blake2b-b29f9e97317f528cab44f44cc0e1c8ce",
+    "generated_at_utc": "2026-07-31T19:51:27Z",
     "count": 244
   },
   "entries": [
@@ -1297,10 +1297,10 @@
       "kind": "doc",
       "title": "Embedded Detail Documents",
       "href": "/docs/?scope=studio&doc=d-20260623-221357-a97b66",
-      "last_updated": "2026-07-29 13:15:40",
+      "last_updated": "2026-07-31 20:38:00",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-29 13:15:40 • Docs Viewer",
+      "display_meta": "2026-07-31 20:38:00 • Docs Viewer",
       "search_terms": [
         "embedded detail documents",
         "embedded",
@@ -1309,16 +1309,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-29 13:15:40",
+        "2026-07-31 20:38:00",
         "2026",
         "07",
-        "29",
-        "13",
-        "15",
-        "40",
+        "31",
+        "20",
+        "38",
+        "00",
         "d-20260623-221357-a97b66"
       ],
-      "search_text": "embedded detail documents embedded detail documents docs viewer docs viewer 2026-07-29 13:15:40 2026 07 29 13 15 40 d-20260623-221357-a97b66"
+      "search_text": "embedded detail documents embedded detail documents docs viewer docs viewer 2026-07-31 20:38:00 2026 07 31 20 38 00 d-20260623-221357-a97b66"
     },
     {
       "id": "d-20260629-152159-ac1af9",
@@ -2200,10 +2200,10 @@
       "kind": "doc",
       "title": "Panel Hosts and Control Surfaces",
       "href": "/docs/?scope=studio&doc=d-20260528-224754-964108",
-      "last_updated": "2026-07-28 20:01:43",
+      "last_updated": "2026-07-31 20:38:00",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-28 20:01:43 • Docs Viewer",
+      "display_meta": "2026-07-31 20:38:00 • Docs Viewer",
       "search_terms": [
         "panel hosts and control surfaces",
         "panel",
@@ -2214,16 +2214,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-28 20:01:43",
+        "2026-07-31 20:38:00",
         "2026",
         "07",
-        "28",
+        "31",
         "20",
-        "01",
-        "43",
+        "38",
+        "00",
         "d-20260528-224754-964108"
       ],
-      "search_text": "panel hosts and control surfaces panel hosts and control surfaces docs viewer docs viewer 2026-07-28 20:01:43 2026 07 28 20 01 43 d-20260528-224754-964108"
+      "search_text": "panel hosts and control surfaces panel hosts and control surfaces docs viewer docs viewer 2026-07-31 20:38:00 2026 07 31 20 38 00 d-20260528-224754-964108"
     },
     {
       "id": "d-20260331-000000-f992b9",
@@ -2623,10 +2623,10 @@
       "kind": "doc",
       "title": "Sub-Scope Public And Manage Manifests",
       "href": "/docs/?scope=studio&doc=d-20260728-205013-41deb8",
-      "last_updated": "2026-07-29 13:15:40",
+      "last_updated": "2026-07-31 20:38:00",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-29 13:15:40 • Docs Viewer",
+      "display_meta": "2026-07-31 20:38:00 • Docs Viewer",
       "search_terms": [
         "sub-scope public and manage manifests",
         "sub",
@@ -2638,26 +2638,26 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-29 13:15:40",
+        "2026-07-31 20:38:00",
         "2026",
         "07",
-        "29",
-        "13",
-        "15",
-        "40",
+        "31",
+        "20",
+        "38",
+        "00",
         "d-20260728-205013-41deb8"
       ],
-      "search_text": "sub-scope public and manage manifests sub scope public and manage manifests docs viewer docs viewer 2026-07-29 13:15:40 2026 07 29 13 15 40 d-20260728-205013-41deb8"
+      "search_text": "sub-scope public and manage manifests sub scope public and manage manifests docs viewer docs viewer 2026-07-31 20:38:00 2026 07 31 20 38 00 d-20260728-205013-41deb8"
     },
     {
       "id": "d-20260531-152622-ed2451",
       "kind": "doc",
       "title": "Toolbar Model",
       "href": "/docs/?scope=studio&doc=d-20260531-152622-ed2451",
-      "last_updated": "2026-07-16 20:40:13",
+      "last_updated": "2026-07-31 20:38:00",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-16 20:40:13 • Docs Viewer",
+      "display_meta": "2026-07-31 20:38:00 • Docs Viewer",
       "search_terms": [
         "toolbar model",
         "toolbar",
@@ -2665,16 +2665,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-16 20:40:13",
+        "2026-07-31 20:38:00",
         "2026",
         "07",
-        "16",
+        "31",
         "20",
-        "40",
-        "13",
+        "38",
+        "00",
         "d-20260531-152622-ed2451"
       ],
-      "search_text": "toolbar model toolbar model docs viewer docs viewer 2026-07-16 20:40:13 2026 07 16 20 40 13 d-20260531-152622-ed2451"
+      "search_text": "toolbar model toolbar model docs viewer docs viewer 2026-07-31 20:38:00 2026 07 31 20 38 00 d-20260531-152622-ed2451"
     },
     {
       "id": "d-20260513-214100-0a7f44",
@@ -4216,26 +4216,26 @@
       "kind": "doc",
       "title": "Sub-Scope Index",
       "href": "/docs/?scope=studio&doc=d-20260728-113139-285eae",
-      "last_updated": "2026-07-31 00:09:51",
+      "last_updated": "2026-07-31 20:38:00",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-31 00:09:51 • Roadmap",
+      "display_meta": "2026-07-31 20:38:00 • Roadmap",
       "search_terms": [
         "sub-scope index",
         "sub",
         "scope",
         "index",
         "roadmap",
-        "2026-07-31 00:09:51",
+        "2026-07-31 20:38:00",
         "2026",
         "07",
         "31",
+        "20",
+        "38",
         "00",
-        "09",
-        "51",
         "d-20260728-113139-285eae"
       ],
-      "search_text": "sub-scope index sub scope index roadmap 2026-07-31 00:09:51 2026 07 31 00 09 51 d-20260728-113139-285eae"
+      "search_text": "sub-scope index sub scope index roadmap 2026-07-31 20:38:00 2026 07 31 20 38 00 d-20260728-113139-285eae"
     },
     {
       "id": "d-20260728-113139-95a885",
@@ -4300,10 +4300,10 @@
       "kind": "doc",
       "title": "Sub-Scope Index Architecture",
       "href": "/docs/?scope=studio&doc=d-20260728-113139-763354",
-      "last_updated": "2026-07-31 00:09:51",
+      "last_updated": "2026-07-31 20:38:00",
       "parent_id": "d-20260728-113139-285eae",
       "parent_title": "Sub-Scope Index",
-      "display_meta": "2026-07-31 00:09:51 • Sub-Scope Index",
+      "display_meta": "2026-07-31 20:38:00 • Sub-Scope Index",
       "search_terms": [
         "sub-scope index architecture",
         "sub",
@@ -4311,16 +4311,16 @@
         "index",
         "architecture",
         "sub-scope index",
-        "2026-07-31 00:09:51",
+        "2026-07-31 20:38:00",
         "2026",
         "07",
         "31",
+        "20",
+        "38",
         "00",
-        "09",
-        "51",
         "d-20260728-113139-763354"
       ],
-      "search_text": "sub-scope index architecture sub scope index architecture sub-scope index 2026-07-31 00:09:51 2026 07 31 00 09 51 d-20260728-113139-763354"
+      "search_text": "sub-scope index architecture sub scope index architecture sub-scope index 2026-07-31 20:38:00 2026 07 31 20 38 00 d-20260728-113139-763354"
     },
     {
       "id": "d-20260730-121423-469e54",
@@ -4505,10 +4505,10 @@
       "kind": "doc",
       "title": "Sub-Scope Report Defaults And Customisations",
       "href": "/docs/?scope=studio&doc=d-20260731-150644-3dfab5",
-      "last_updated": "2026-07-31 17:01:54",
+      "last_updated": "2026-07-31 20:38:00",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-31 17:01:54 • Roadmap",
+      "display_meta": "2026-07-31 20:38:00 • Roadmap",
       "search_terms": [
         "sub-scope report defaults and customisations",
         "sub",
@@ -4518,26 +4518,26 @@
         "and",
         "customisations",
         "roadmap",
-        "2026-07-31 17:01:54",
+        "2026-07-31 20:38:00",
         "2026",
         "07",
         "31",
-        "17",
-        "01",
-        "54",
+        "20",
+        "38",
+        "00",
         "d-20260731-150644-3dfab5"
       ],
-      "search_text": "sub-scope report defaults and customisations sub scope report defaults and customisations roadmap 2026-07-31 17:01:54 2026 07 31 17 01 54 d-20260731-150644-3dfab5"
+      "search_text": "sub-scope report defaults and customisations sub scope report defaults and customisations roadmap 2026-07-31 20:38:00 2026 07 31 20 38 00 d-20260731-150644-3dfab5"
     },
     {
       "id": "d-20260731-155054-1fcd80",
       "kind": "doc",
       "title": "Default Report And Analysis Tags Refactor Delivery",
       "href": "/docs/?scope=studio&doc=d-20260731-155054-1fcd80",
-      "last_updated": "2026-07-31 20:14:14",
+      "last_updated": "2026-07-31 20:51:26",
       "parent_id": "d-20260731-150644-3dfab5",
       "parent_title": "Sub-Scope Report Defaults And Customisations",
-      "display_meta": "2026-07-31 20:14:14 • Sub-Scope Report Defaults And Customisations",
+      "display_meta": "2026-07-31 20:51:26 • Sub-Scope Report Defaults And Customisations",
       "search_terms": [
         "default report and analysis tags refactor delivery",
         "default",
@@ -4552,15 +4552,16 @@
         "scope",
         "defaults",
         "customisations",
-        "2026-07-31 20:14:14",
+        "2026-07-31 20:51:26",
         "2026",
         "07",
         "31",
         "20",
-        "14",
+        "51",
+        "26",
         "d-20260731-155054-1fcd80"
       ],
-      "search_text": "default report and analysis tags refactor delivery default report and analysis tags refactor delivery sub-scope report defaults and customisations sub scope defaults customisations 2026-07-31 20:14:14 2026 07 31 20 14 d-20260731-155054-1fcd80"
+      "search_text": "default report and analysis tags refactor delivery default report and analysis tags refactor delivery sub-scope report defaults and customisations sub scope defaults customisations 2026-07-31 20:51:26 2026 07 31 20 51 26 d-20260731-155054-1fcd80"
     },
     {
       "id": "d-20260731-185207-2dbb6f",
@@ -4696,10 +4697,10 @@
       "kind": "doc",
       "title": "Sub-Scope Report Customisation Architecture",
       "href": "/docs/?scope=studio&doc=d-20260731-155053-3929e2",
-      "last_updated": "2026-07-31 19:29:10",
+      "last_updated": "2026-07-31 20:38:00",
       "parent_id": "d-20260731-150644-3dfab5",
       "parent_title": "Sub-Scope Report Defaults And Customisations",
-      "display_meta": "2026-07-31 19:29:10 • Sub-Scope Report Defaults And Customisations",
+      "display_meta": "2026-07-31 20:38:00 • Sub-Scope Report Defaults And Customisations",
       "search_terms": [
         "sub-scope report customisation architecture",
         "sub",
@@ -4711,16 +4712,16 @@
         "defaults",
         "and",
         "customisations",
-        "2026-07-31 19:29:10",
+        "2026-07-31 20:38:00",
         "2026",
         "07",
         "31",
-        "19",
-        "29",
-        "10",
+        "20",
+        "38",
+        "00",
         "d-20260731-155053-3929e2"
       ],
-      "search_text": "sub-scope report customisation architecture sub scope report customisation architecture sub-scope report defaults and customisations defaults and customisations 2026-07-31 19:29:10 2026 07 31 19 29 10 d-20260731-155053-3929e2"
+      "search_text": "sub-scope report customisation architecture sub scope report customisation architecture sub-scope report defaults and customisations defaults and customisations 2026-07-31 20:38:00 2026 07 31 20 38 00 d-20260731-155053-3929e2"
     },
     {
       "id": "d-20260726-211842-cc8f6c",
