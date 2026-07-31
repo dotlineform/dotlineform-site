@@ -716,30 +716,10 @@ select.docsViewer__fieldInput--listbox{
   padding-inline-start: 1.1rem;
 }
 
-.docsViewerPackagePrepare__context{
-  border-top: 1px solid var(--docs-viewer-border);
-  padding-top: 0.75rem;
-}
-
-.docsViewerPackagePrepare__context > summary{
-  cursor: pointer;
-  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
-  font-weight: 600;
-}
-
-.docsViewerPackagePrepare__contextFields,
 .docsViewerPackagePrepare__resultSection{
   display: grid;
   gap: 0.7rem;
   margin-top: 0.75rem;
-}
-
-.docsViewerPackagePrepare__contextFields{
-  max-block-size: min(20rem, 34vh);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  padding-block-end: 0.5rem;
-  padding-inline-end: 0.35rem;
 }
 
 .docsViewerPackagePrepare__summary,

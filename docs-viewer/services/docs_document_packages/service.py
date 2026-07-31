@@ -26,7 +26,6 @@ from docs_document_packages.package import (
     build_document_package,
     list_returned_document_packages,
     selectable_document_records,
-    update_document_prepare_context,
 )
 from docs_document_packages.review_sources import create_review_source_folder
 from docs_document_packages.workspace import configured_workspace_paths, workspace_status
@@ -114,19 +113,6 @@ def profile_contract(
     target = config.get("target") if isinstance(config.get("target"), dict) else {}
     selection = config.get("selection") if isinstance(config.get("selection"), dict) else {}
     limits = config.get("limits") if isinstance(config.get("limits"), dict) else {}
-    external_context = (
-        config.get("external_context")
-        if isinstance(config.get("external_context"), dict)
-        else {}
-    )
-    document_fields = [
-        {
-            "output_path": str(field.get("output_path") or "").strip(),
-            "required": field.get("required") is True,
-        }
-        for field in config.get("document_fields", [])
-        if isinstance(field, dict) and str(field.get("output_path") or "").strip()
-    ]
     contract = {
         "profile_id": str(config.get("id") or "").strip(),
         "label": str(config.get("label") or "").strip(),
@@ -151,8 +137,6 @@ def profile_contract(
         "limits": {
             "max_documents": limits.get("max_documents") if isinstance(limits.get("max_documents"), int) else None,
         },
-        "external_context": external_context,
-        "document_fields": document_fields,
     }
     if flat_collection:
         contract["selection"]["include_descendants"] = False
@@ -363,29 +347,6 @@ def prepare_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     return payload
 
 
-def update_context(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    refresh_source_model_scope_configs(repo_root)
-    profile_id = str(body.get("profile_id") or "").strip()
-    if not profile_id:
-        raise ValueError("profile_id is required")
-    dry_run = dry_run_value(body)
-    payload = update_document_prepare_context(
-        repo_root,
-        config_id=profile_id,
-        external_context=body.get("external_context"),
-        config_path="",
-        dry_run=dry_run,
-    )
-    payload["profile_id"] = profile_id
-    payload.pop("config_id", None)
-    log_event(
-        repo_root,
-        "document-package-context",
-        {"profile_id": profile_id, "dry_run": dry_run, "output_written": bool(payload.get("output_written"))},
-    )
-    return payload
-
-
 def content_review_response(payload: dict[str, Any]) -> dict[str, Any]:
     ok = payload.get("ok") is True
     existing = ok and payload.get("review_existing") is True
@@ -467,8 +428,6 @@ def post_response(
     require_direct_request(body)
     if path == routes.PREPARE_PATH:
         payload = prepare_package(repo_root, body)
-    elif path == routes.CONTEXT_PATH:
-        payload = update_context(repo_root, body)
     elif path == routes.RETURNED_REVIEW_PATH:
         payload = review_returned(repo_root, body)
     else:

@@ -106,9 +106,6 @@ def add_sub_scope_package_fixture(
         "format": "markdown",
         "supported_formats": ["markdown", "plain_text"],
     }
-    content_profile["external_context"]["field_descriptions"]["content"] = (
-        "Document body content."
-    )
     content_profile["document_fields"].append(
         {
             "source": "content",
@@ -180,10 +177,6 @@ def add_document_tree_profile(repo_root: Path) -> None:
     )
     tree_profile["selection"]["include_descendants"] = True
     tree_profile.pop("content_format", None)
-    tree_profile["external_context"]["field_descriptions"] = {
-        "doc_id": "Stable document identifier. Preserve exactly in responses.",
-        "title": "Document title.",
-    }
     tree_profile["document_fields"] = [
         {"source": "doc_id", "output_path": "doc_id", "required": True},
         {"source": "title", "output_path": "title", "required": True},
@@ -258,7 +251,6 @@ def test_fixed_routes_and_config_contract() -> None:
     )
     assert set(routes.POST_PATHS) == {
         "/docs/packages/prepare",
-        "/docs/packages/context",
         "/docs/packages/returned/review",
     }
     assert [profile["profile_id"] for profile in payload["profiles"]] == ["document-content"]
@@ -271,11 +263,8 @@ def test_fixed_routes_and_config_contract() -> None:
         "default_missing_summary_only": False,
     }
     assert payload["profiles"][0]["limits"] == {"max_documents": None}
-    assert payload["profiles"][0]["external_context"]["task"] == "review_document_content"
-    assert payload["profiles"][0]["document_fields"] == [
-        {"output_path": "doc_id", "required": True},
-        {"output_path": "title", "required": True},
-    ]
+    assert "external_context" not in payload["profiles"][0]
+    assert "document_fields" not in payload["profiles"][0]
     assert "review_actions" not in payload
     assert "apply_actions" not in payload
     assert payload["scopes"] == [{"scope": "library", "label": "Library"}]
@@ -743,9 +732,6 @@ def test_sub_scope_written_package_is_reviewable_but_blocked_from_import() -> No
         metadata = json.loads(
             (paths.meta / f"{payload['export_id']}.meta.json").read_text(encoding="utf-8")
         )
-        external_context = json.loads(
-            resolve_data_sharing_marker(payload["context_file"]).read_text(encoding="utf-8")
-        )
         output_path = resolve_data_sharing_marker(payload["output_file"])
         output_rows = [
             json.loads(line)
@@ -836,12 +822,7 @@ def test_sub_scope_written_package_is_reviewable_but_blocked_from_import() -> No
     assert metadata["supports_docs_review"] is True
     assert metadata["supports_return_import"] is False
     assert metadata["selected_doc_ids"] == [TAG_A_ID, TAG_B_ID]
-    assert external_context["scope"] == "library"
-    assert external_context["sub_scope"] == "tags"
-    assert external_context["supports_docs_review"] is True
-    assert external_context["supports_return_import"] is False
-    assert "read-only Docs Review" in external_context["return_import_notice"]
-    assert "Docs Import is not supported" in external_context["return_import_notice"]
+    assert "context_file" not in payload
     assert [row["doc_id"] for row in output_rows[1:]] == [TAG_A_ID, TAG_B_ID]
     assert len(returned["files"]) == 1
     assert returned["files"][0]["filename"] == staged_filename
@@ -919,11 +900,6 @@ def test_opted_in_sub_scope_projects_importable_package_and_exact_listing() -> N
         paths = workspace_paths()
         metadata = json.loads(
             (paths.meta / f"{payload['export_id']}.meta.json").read_text(
-                encoding="utf-8"
-            )
-        )
-        external_context = json.loads(
-            resolve_data_sharing_marker(payload["context_file"]).read_text(
                 encoding="utf-8"
             )
         )
@@ -1019,11 +995,7 @@ def test_opted_in_sub_scope_projects_importable_package_and_exact_listing() -> N
     assert metadata["sub_scope"] == "tags"
     assert metadata["supports_docs_review"] is True
     assert metadata["supports_return_import"] is True
-    assert external_context["supports_docs_review"] is True
-    assert external_context["supports_return_import"] is True
-    assert "exact configured collection Import" in external_context[
-        "return_import_notice"
-    ]
+    assert "context_file" not in payload
     assert exact["scope"] == "library"
     assert exact["sub_scope"] == "tags"
     assert exact["required_capability"] == RETURN_IMPORT_CAPABILITY
@@ -1397,12 +1369,17 @@ def test_returned_listing_separates_scope_owned_and_unassigned_files() -> None:
             + "\n",
             encoding="utf-8",
         )
+        (workspace_paths().import_staging / "orphan.context.json").write_text(
+            "{}\n",
+            encoding="utf-8",
+        )
 
         payload = service.returned_payload(repo_root, {"scope": ["library"]})
 
     assert [item["filename"] for item in payload["files"]] == ["library.jsonl"]
     assert payload["blocked_files"] == []
     assert {item["filename"] for item in payload["unassigned_files"]} == {
+        "orphan.context.json",
         "orphan.jsonl",
         "unscoped.jsonl",
     }

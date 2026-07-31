@@ -10,7 +10,6 @@ from docs_document_packages.export import (
     build_export,
     parse_doc_ids as parse_export_doc_ids,
 )
-from docs_document_packages.export_config import update_external_context_config
 from docs_document_packages.returned_common import (
     DOCS_REVIEW_CAPABILITY,
     RETURN_IMPORT_CAPABILITY,
@@ -149,27 +148,6 @@ def build_document_package(
         output_root=output_root,
         metadata_root=metadata_root,
     )
-
-
-def update_document_prepare_context(
-    repo_root: Path,
-    *,
-    config_id: str,
-    external_context: Any,
-    config_path: str,
-    dry_run: bool = False,
-) -> Dict[str, Any]:
-    if not config_id:
-        raise ValueError("config_id is required")
-    report = update_external_context_config(
-        repo_root,
-        config_id=config_id,
-        external_context=external_context,
-        config_path=config_path,
-        write=not dry_run,
-    )
-    report["summary_text"] = "Validated context." if dry_run else "Saved context."
-    return report
 
 
 def list_returned_document_packages(

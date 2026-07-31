@@ -148,7 +148,7 @@ def list_staged_files_with_metadata(
     blocked_files: list[dict[str, Any]] = []
     if resolved_staging_root.exists():
         for path in sorted(resolved_staging_root.iterdir()):
-            if path.name.endswith(".context.json") or path.name.endswith(".meta.json"):
+            if path.name.endswith(".meta.json"):
                 continue
             if not path.is_file() or path.suffix.lower() not in SUPPORTED_EXTENSIONS:
                 continue

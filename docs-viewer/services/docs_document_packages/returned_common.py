@@ -197,7 +197,7 @@ def list_staged_import_files(repo_root: Path, scope: str, staging_root: Path | s
         return []
     files: list[dict[str, Any]] = []
     for path in sorted(resolved_staging_root.iterdir()):
-        if path.name.endswith(".meta.json") or path.name.endswith(".context.json"):
+        if path.name.endswith(".meta.json"):
             continue
         if not path.is_file() or path.suffix.lower() not in SUPPORTED_EXTENSIONS:
             continue

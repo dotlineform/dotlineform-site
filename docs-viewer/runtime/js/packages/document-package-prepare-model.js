@@ -172,42 +172,6 @@ export function projectDocumentPackageSelection(options = {}) {
   };
 }
 
-export function documentPackageExternalContext(profile) {
-  const context = profile && typeof profile.external_context === "object" ? profile.external_context : {};
-  const descriptions = context && typeof context.field_descriptions === "object"
-    ? context.field_descriptions
-    : {};
-  const fieldDescriptions = {};
-  (Array.isArray(profile && profile.document_fields) ? profile.document_fields : []).forEach((field) => {
-    const outputPath = packageText(field && field.output_path);
-    if (outputPath) fieldDescriptions[outputPath] = packageText(descriptions[outputPath]);
-  });
-  return {
-    task: packageText(context.task),
-    response_guidance: packageText(context.response_guidance),
-    field_descriptions: fieldDescriptions
-  };
-}
-
-export function documentPackageExternalContextMissingValues(profile, externalContext) {
-  const context = externalContext && typeof externalContext === "object" ? externalContext : {};
-  const descriptions = context.field_descriptions && typeof context.field_descriptions === "object"
-    ? context.field_descriptions
-    : {};
-  const missing = [];
-  if (!packageText(context.task)) missing.push("task");
-  if (!packageText(context.response_guidance)) missing.push("response guidance");
-  (Array.isArray(profile && profile.document_fields) ? profile.document_fields : []).forEach((field) => {
-    const outputPath = packageText(field && field.output_path);
-    if (outputPath && !packageText(descriptions[outputPath])) missing.push(outputPath);
-  });
-  return missing;
-}
-
-export function documentPackageExternalContextChanged(profile, externalContext) {
-  return JSON.stringify(documentPackageExternalContext(profile)) !== JSON.stringify(externalContext || {});
-}
-
 export function documentPackageProfileLabel(profile) {
   const label = packageText(profile && profile.label) || packageText(profile && profile.profile_id);
   return profile && profile.supports_return_import === false

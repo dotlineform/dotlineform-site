@@ -84,15 +84,6 @@ BASE_CONFIG = {
             "metadata": {
                 "include": ["export_id", "config_id", "scope", "generated_at", "selected_doc_ids", "counts"],
             },
-            "external_context": {
-                "task": "review_document_content",
-                "response_guidance": "Return only proposed changed fields keyed by doc_id.",
-                "field_descriptions": {
-                    "doc_id": "Stable document identifier. Preserve exactly in responses.",
-                    "title": "Document title.",
-                    "current_summary": "Existing document summary.",
-                },
-            },
             "document_fields": [
                 {"source": "doc_id", "output_path": "doc_id", "required": True},
                 {"source": "title", "output_path": "title", "required": True},
@@ -321,18 +312,6 @@ def test_config_validation_blocks_duplicate_output_paths() -> None:
     assert "config document-content: duplicate document output_path title" in report["errors"]
 
 
-def test_config_validation_requires_external_context_descriptions() -> None:
-    config = copy.deepcopy(BASE_CONFIG)
-    del config["configs"][0]["external_context"]["field_descriptions"]["current_summary"]
-    config["configs"][0]["external_context"]["field_descriptions"]["retired_field"] = "Stale field."
-    with make_repo(config) as temp:
-        report = run_export(Path(temp))
-
-    assert report["ok"] is False
-    assert "config document-content: external_context.field_descriptions.current_summary is required" in report["errors"]
-    assert "config document-content: external_context.field_descriptions.retired_field does not match a document output_path" in report["errors"]
-
-
 def test_unknown_config_returns_structured_validation_report() -> None:
     with make_repo() as temp:
         report = run_export(Path(temp), config_id="missing-config")
@@ -386,17 +365,14 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
             first_report = run_export(root, selected_doc_ids=selected_doc_ids, missing_summary_only=False, write=True)
             first_output = artifact_path(first_report["output_file"])
             first_metadata_output = artifact_path(first_report["metadata_file"])
-            first_context_output = artifact_path(first_report["context_file"])
             first_text = first_output.read_text(encoding="utf-8")
             first_metadata_text = first_metadata_output.read_text(encoding="utf-8")
-            first_context_text = first_context_output.read_text(encoding="utf-8")
 
             with make_repo() as second_temp:
                 second_root = Path(second_temp)
                 second_report = run_export(second_root, selected_doc_ids=selected_doc_ids, missing_summary_only=False, write=True)
                 second_text = artifact_path(second_report["output_file"]).read_text(encoding="utf-8")
                 second_metadata_text = artifact_path(second_report["metadata_file"]).read_text(encoding="utf-8")
-                second_context_text = artifact_path(second_report["context_file"]).read_text(encoding="utf-8")
     finally:
         docs_export.export_run_times = original_export_run_times
 
@@ -408,16 +384,11 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
     assert first_report["metadata_file"] == (
         "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta/ds_20260503T151507Z.meta.json"
     )
-    assert first_report["context_file"] == (
-        "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/20260503-161507-document-content.context.json"
-    )
     assert first_text == second_text
     assert first_metadata_text == second_metadata_text
-    assert first_context_text == second_context_text
     lines = first_text.splitlines()
     rows = [json.loads(line) for line in lines]
     metadata = json.loads(first_metadata_text)
-    context = json.loads(first_context_text)
     assert lines[0].startswith('{"record_type":')
     assert lines[1].startswith('{"doc_id":')
     assert lines[1].find('"doc_id"') < lines[1].find('"title"') < lines[1].find('"current_summary"')
@@ -442,18 +413,7 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
     assert metadata["generated_at"] == fixed_generated_at
     assert metadata["scope"] == "library"
     assert metadata["selected_doc_ids"] == ["library", "child-with-summary"]
-    assert context["task"] == "review_document_content"
-    assert context["response_guidance"] == (
-        "Return only proposed changed fields keyed by doc_id. "
-        "Preserve the first JSONL line unchanged; it is an internal routing header."
-    )
-    assert context["record_format"] == "jsonl"
-    assert {field["field"] for field in context["record_schema"]} >= {"doc_id", "title", "current_summary"}
-    description_by_field = {field["field"]: field["description"] for field in context["record_schema"]}
-    assert description_by_field["current_summary"] == "Existing document summary."
-    assert "last_updated" not in {field["field"] for field in context["record_schema"]}
-    assert "generated_at" not in context
-    assert "counts" not in context
+    assert "context_file" not in first_report
 
 
 def test_document_rows_json_format_override_writes_json_array() -> None:
@@ -473,7 +433,6 @@ def test_document_rows_json_format_override_writes_json_array() -> None:
             )
             payload = json.loads(artifact_path(report["output_file"]).read_text(encoding="utf-8"))
             metadata = json.loads(artifact_path(report["metadata_file"]).read_text(encoding="utf-8"))
-            context = json.loads(artifact_path(report["context_file"]).read_text(encoding="utf-8"))
     finally:
         docs_export.export_run_times = original_export_run_times
 
@@ -491,8 +450,7 @@ def test_document_rows_json_format_override_writes_json_array() -> None:
     assert metadata["export_id"] == "ds_20260503T151507Z"
     assert metadata["generated_at"] == fixed_generated_at
     assert metadata["scope"] == "library"
-    assert context["record_container"] == "JSON object containing a records array"
-    assert context["records_path"] == "records"
+    assert "context_file" not in report
 
 
 def test_export_only_profile_writes_provenance_metadata_without_import_support() -> None:
@@ -570,14 +528,6 @@ def test_document_tree_profile_exports_selected_subtree() -> None:
                 "supports_docs_review": False,
                 "supports_return_import": False,
             },
-            "external_context": {
-                "task": "review_document_tree",
-                "response_guidance": "Use the nested docs tree as read-only hierarchy context.",
-                "field_descriptions": {
-                    "doc_id": "Stable document identifier.",
-                    "title": "Document title.",
-                },
-            },
             "document_fields": [
                 {"source": "doc_id", "output_path": "doc_id", "required": True},
                 {"source": "title", "output_path": "title", "required": True},
@@ -595,7 +545,6 @@ def test_document_tree_profile_exports_selected_subtree() -> None:
             report = run_export(root, config_id="document-tree", selected_doc_ids=["library"], write=True)
             payload = json.loads(artifact_path(report["output_file"]).read_text(encoding="utf-8"))
             metadata = json.loads(artifact_path(report["metadata_file"]).read_text(encoding="utf-8"))
-            context = json.loads(artifact_path(report["context_file"]).read_text(encoding="utf-8"))
     finally:
         docs_export.export_run_times = original_export_run_times
 
@@ -622,8 +571,7 @@ def test_document_tree_profile_exports_selected_subtree() -> None:
     assert metadata["record_shape"] == "document_tree"
     assert metadata["supports_docs_review"] is False
     assert metadata["supports_return_import"] is False
-    assert context["record_container"] == "JSON object containing a nested docs tree"
-    assert context["records_path"] == "docs"
+    assert "context_file" not in report
 
 
 def test_document_tree_profile_requires_descendant_selection() -> None:
@@ -639,10 +587,6 @@ def test_document_tree_profile_requires_descendant_selection() -> None:
         {"source": "doc_id", "output_path": "doc_id", "required": True},
         {"source": "title", "output_path": "title", "required": True},
     ]
-    config["configs"][0]["external_context"]["field_descriptions"] = {
-        "doc_id": "Stable document identifier.",
-        "title": "Document title.",
-    }
     with make_repo(config) as temp:
         report = run_export(Path(temp))
 
@@ -903,18 +847,11 @@ def test_document_content_json_output_declares_content_format() -> None:
             content_format="markdown",
         )
         payload = json.loads(artifact_path(report["output_file"]).read_text(encoding="utf-8"))
-        context = json.loads(artifact_path(report["context_file"]).read_text(encoding="utf-8"))
 
     assert report["ok"] is True, report
     assert payload["content_format"] == "markdown"
     assert payload["records"][0]["content"] == "# Library\n\nBody text."
-    assert context["content_format"] == "markdown"
-    assert list(context.keys())[:4] == [
-        "schema_version",
-        "task",
-        "response_guidance",
-        "content_format",
-    ]
+    assert "context_file" not in report
 
 
 def test_missing_source_context_returns_structured_export_error() -> None:
@@ -984,7 +921,7 @@ def test_repo_representative_library_exports_dry_run_successfully() -> None:
         assert report["output_file"].endswith(f".{case['target_format']}")
         assert report["metadata_file"].startswith("$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta/ds_")
         assert report["metadata_file"].endswith(".meta.json")
-        assert report["context_file"].endswith(".context.json")
+        assert "context_file" not in report
 
 
 def main() -> None:
@@ -993,7 +930,6 @@ def main() -> None:
         test_selected_doc_resolution_uses_explicit_ids_only,
         test_unknown_selected_doc_blocks_export,
         test_config_validation_blocks_duplicate_output_paths,
-        test_config_validation_requires_external_context_descriptions,
         test_unknown_config_returns_structured_validation_report,
         test_jsonl_config_requires_jsonl_output_extension,
         test_output_path_rejects_export_id_placeholder,

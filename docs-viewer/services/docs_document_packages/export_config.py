@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-import copy
 import datetime as dt
 import hashlib
 import json
@@ -11,7 +10,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from docs_document_packages.export_common import normalize_text, read_json, write_json_atomic
+from docs_document_packages.export_common import normalize_text, read_json
 
 
 DEFAULT_CONFIG_PATH = Path("docs-viewer/config/document-packages/profiles.json")
@@ -67,24 +66,6 @@ def find_export_config(config_payload: dict[str, Any], config_id: str) -> dict[s
     return matches[0]
 
 
-def config_file_path(repo_root: Path, config_path: str | None = None) -> Path:
-    path = Path(config_path) if config_path else DEFAULT_CONFIG_PATH
-    if not path.is_absolute():
-        path = repo_root / path
-    return path
-
-
-def document_output_paths(config: dict[str, Any]) -> list[str]:
-    paths: list[str] = []
-    for field in config.get("document_fields", []):
-        if not isinstance(field, dict):
-            continue
-        output_path = normalize_text(field.get("output_path"))
-        if output_path:
-            paths.append(output_path)
-    return paths
-
-
 def supported_target_formats(config: dict[str, Any]) -> list[str]:
     target = config.get("target") if isinstance(config.get("target"), dict) else {}
     raw_formats = target.get("supported_formats")
@@ -134,37 +115,6 @@ def supports_return_import(config: dict[str, Any]) -> bool:
     return isinstance(workflow, dict) and workflow.get("supports_return_import") is True
 
 
-def clean_context_text(value: Any) -> str:
-    return str(value or "").replace("\r\n", "\n").replace("\r", "\n").strip()
-
-
-def normalize_external_context_for_config(config: dict[str, Any], external_context: Any) -> dict[str, Any]:
-    config_id = normalize_text(config.get("id")) or "<unknown>"
-    if not isinstance(external_context, dict):
-        raise ValueError("external_context must be an object")
-    field_descriptions = external_context.get("field_descriptions")
-    if not isinstance(field_descriptions, dict):
-        raise ValueError("external_context.field_descriptions must be an object")
-
-    output_paths = document_output_paths(config)
-    output_path_set = set(output_paths)
-    stale_fields = sorted({normalize_text(key) for key in field_descriptions.keys()} - output_path_set)
-    if stale_fields:
-        raise ValueError(
-            f"config {config_id}: external_context.field_descriptions has unknown field(s): {', '.join(stale_fields)}"
-        )
-
-    normalized_descriptions = {
-        output_path: clean_context_text(field_descriptions.get(output_path))
-        for output_path in output_paths
-    }
-    return {
-        "task": clean_context_text(external_context.get("task")),
-        "response_guidance": clean_context_text(external_context.get("response_guidance")),
-        "field_descriptions": normalized_descriptions,
-    }
-
-
 def validate_full_config_payload(config_payload: dict[str, Any]) -> tuple[list[str], list[str]]:
     errors, warnings = validate_config_payload(config_payload)
     configs = config_payload.get("configs")
@@ -176,40 +126,6 @@ def validate_full_config_payload(config_payload: dict[str, Any]) -> tuple[list[s
             errors.extend(config_errors)
             warnings.extend(config_warnings)
     return errors, warnings
-
-
-def update_external_context_config(
-    repo_root: Path,
-    *,
-    config_id: str,
-    external_context: Any,
-    config_path: str | None = None,
-    write: bool = True,
-) -> dict[str, Any]:
-    normalized_config_id = normalize_text(config_id)
-    if not normalized_config_id:
-        raise ValueError("config_id is required")
-    path = config_file_path(repo_root, config_path)
-    config_payload = read_json(path, "export config")
-    config = find_export_config(config_payload, normalized_config_id)
-    normalized_context = normalize_external_context_for_config(config, external_context)
-
-    updated_payload = copy.deepcopy(config_payload)
-    updated_config = find_export_config(updated_payload, normalized_config_id)
-    updated_config["external_context"] = normalized_context
-    errors, warnings = validate_full_config_payload(updated_payload)
-    if errors:
-        raise ValueError("; ".join(errors))
-    if write:
-        write_json_atomic(path, updated_payload)
-    return {
-        "ok": True,
-        "config_id": normalized_config_id,
-        "config_path": path.relative_to(repo_root).as_posix() if path.is_relative_to(repo_root) else path.as_posix(),
-        "external_context": normalized_context,
-        "warnings": warnings,
-        "output_written": bool(write),
-    }
 
 
 def validate_config_payload(config_payload: dict[str, Any]) -> tuple[list[str], list[str]]:
@@ -405,26 +321,6 @@ def validate_export_config(config: dict[str, Any]) -> tuple[list[str], list[str]
         if seen_output_paths != {"doc_id", "title"} or seen_sources != {"doc_id", "title"}:
             errors.append(f"config {config_id}: document_tree exports support only doc_id and title fields")
 
-    external_context = config.get("external_context")
-    if not isinstance(external_context, dict):
-        errors.append(f"config {config_id}: external_context must be an object")
-    else:
-        task = normalize_text(external_context.get("task"))
-        response_guidance = normalize_text(external_context.get("response_guidance"))
-        if not task:
-            errors.append(f"config {config_id}: external_context.task is required")
-        if not response_guidance:
-            errors.append(f"config {config_id}: external_context.response_guidance is required")
-        field_descriptions = external_context.get("field_descriptions")
-        if not isinstance(field_descriptions, dict):
-            errors.append(f"config {config_id}: external_context.field_descriptions must be an object")
-        else:
-            described_fields = {normalize_text(key) for key in field_descriptions.keys()}
-            for output_path in sorted(seen_output_paths):
-                if not normalize_text(field_descriptions.get(output_path)):
-                    errors.append(f"config {config_id}: external_context.field_descriptions.{output_path} is required")
-            for field_name in sorted(described_fields - seen_output_paths):
-                errors.append(f"config {config_id}: external_context.field_descriptions.{field_name} does not match a document output_path")
     return errors, warnings
 
 

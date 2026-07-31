@@ -1800,12 +1800,6 @@ def assert_manage_report_bridge(page: Page) -> None:
                     default_missing_summary_only: false
                   },
                   limits: { max_documents: null },
-                  external_context: {
-                    task: 'Review selected child records',
-                    response_guidance: 'Return observations',
-                    field_descriptions: { doc_id: 'Stable document id' }
-                  },
-                  document_fields: [{ output_path: 'doc_id' }]
                 }]
               });
             }

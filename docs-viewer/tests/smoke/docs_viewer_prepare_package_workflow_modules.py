@@ -58,12 +58,6 @@ def assert_prepare_model(page: Page) -> None:
                     default_missing_summary_only: false
                 },
                 limits: { max_documents: null },
-                external_context: {
-                    task: 'Review',
-                    response_guidance: 'Return changes',
-                    field_descriptions: { doc_id: 'Stable id', content: 'Body' }
-                },
-                document_fields: [{ output_path: 'doc_id' }, { output_path: 'content' }]
             };
             const treeProfile = {
                 ...contentProfile,
@@ -161,12 +155,6 @@ def assert_prepare_model(page: Page) -> None:
                     effectiveDocIds: childTreeProjection.docIds,
                     missingSummaryOnly: childTreeProjection.missingSummaryOnly,
                     includeNonViewable: childTreeProjection.includeNonViewable
-                }),
-                context: model.documentPackageExternalContext(contentProfile),
-                missingContext: model.documentPackageExternalContextMissingValues(contentProfile, {
-                    task: '',
-                    response_guidance: 'Return changes',
-                    field_descriptions: { doc_id: 'Stable id', content: '' }
                 }),
                 ineligibleMessage
             };
@@ -268,12 +256,6 @@ def assert_prepare_model(page: Page) -> None:
             "dry_run": False,
             "activity_context": {},
         },
-        "context": {
-            "task": "Review",
-            "response_guidance": "Return changes",
-            "field_descriptions": {"doc_id": "Stable id", "content": "Body"},
-        },
-        "missingContext": ["task", "content"],
         "ineligibleMessage": "Target documents are unavailable for package preparation: blocked",
     }
     if result != expected:
@@ -391,12 +373,6 @@ def install_workflow_fixture(page: Page, prepare_outcome: str = "success") -> No
                     default_missing_summary_only: false
                 },
                 limits: { max_documents: null },
-                external_context: {
-                    task: 'Review',
-                    response_guidance: 'Return changes',
-                    field_descriptions: { doc_id: 'Stable id', content: 'Body' }
-                },
-                document_fields: [{ output_path: 'doc_id' }, { output_path: 'content' }]
             };
             const profiles = [contentProfile, {
                 ...contentProfile,
@@ -436,10 +412,6 @@ def install_workflow_fixture(page: Page, prepare_outcome: str = "success") -> No
                 getDocuments: async (scope) => {
                     window.prepareFixture.calls.push({ method: 'documents', scope });
                     return { ok: true, records: documents };
-                },
-                saveContext: async (payload) => {
-                    window.prepareFixture.calls.push({ method: 'context', payload });
-                    return { ok: true, external_context: payload.external_context };
                 },
                 prepare: async (payload) => {
                     window.prepareFixture.calls.push({ method: 'prepare', payload });
@@ -554,8 +526,6 @@ def exercise_success(page: Page, timeout_ms: int) -> None:
 
     page.locator("[data-package-target-format]").select_option("json")
     page.locator("[data-package-content-format]").select_option("plain_text")
-    page.locator("[data-package-context-details]").evaluate("details => { details.open = true; }")
-    page.locator("[data-package-context-task]").fill("Review selected docs")
     page.locator('[data-role="modal-primary"]').click()
     page.wait_for_selector(
         '[data-role="docs-viewer-management-modal"] h2:text("Document package prepared")',
@@ -581,8 +551,7 @@ def exercise_success(page: Page, timeout_ms: int) -> None:
         }"""
     )
     prepare_calls = [call for call in result["calls"] if call["method"] == "prepare"]
-    context_calls = [call for call in result["calls"] if call["method"] == "context"]
-    if len(prepare_calls) != 1 or len(context_calls) != 1:
+    if len(prepare_calls) != 1:
         raise AssertionError(f"unexpected Prepare workflow calls: {result['calls']!r}")
     request = prepare_calls[0]["payload"]
     if request["doc_ids"] != ["root"]:
@@ -597,8 +566,6 @@ def exercise_success(page: Page, timeout_ms: int) -> None:
         or request["activity_context"]["control_id"] != "docsViewerIndexPreparePackageButton"
     ):
         raise AssertionError(f"unexpected package request context: {request!r}")
-    if context_calls[0]["payload"]["external_context"]["task"] != "Review selected docs":
-        raise AssertionError(f"context edit was not saved: {context_calls!r}")
     if result["selection"] != ["root", "sibling"]:
         raise AssertionError(f"workflow mutated checkbox selection: {result!r}")
     if result["busy"] != [True, False, True, False]:
@@ -663,7 +630,7 @@ def exercise_cancel(page: Page, timeout_ms: int) -> None:
             return window.prepareFixture;
         }"""
     )
-    if any(call["method"] in {"context", "prepare"} for call in result["calls"]):
+    if any(call["method"] == "prepare" for call in result["calls"]):
         raise AssertionError(f"cancelled workflow should not write: {result['calls']!r}")
     if result["selection"] != ["root", "sibling"] or result["result"] != {"confirmed": False}:
         raise AssertionError(f"cancelled workflow changed state: {result!r}")
@@ -697,12 +664,6 @@ def exercise_subscope_success(page: Page, timeout_ms: int) -> None:
                     default_missing_summary_only: false
                 },
                 limits: { max_documents: null },
-                external_context: {
-                    task: 'Review child records',
-                    response_guidance: 'Return observations',
-                    field_descriptions: {}
-                },
-                document_fields: []
             };
             const documents = [
                 { doc_id: 'root', parent_id: '', title: 'Root', selectable: true, viewable: true },
@@ -742,9 +703,6 @@ def exercise_subscope_success(page: Page, timeout_ms: int) -> None:
                         flat_collection: true,
                         records: documents
                     };
-                },
-                saveContext: async () => {
-                    throw new Error('unchanged context must not be saved');
                 },
                 prepare: async payload => {
                     window.subscopePrepareFixture.calls.push({

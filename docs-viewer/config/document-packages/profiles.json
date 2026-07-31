@@ -55,22 +55,6 @@
           "counts"
         ]
       },
-      "external_context": {
-        "task": "Review and edit document content",
-        "response_guidance": "Return only proposed changed fields keyed by doc_id. Preserve doc_id values exactly and do not invent document ids.",
-        "field_descriptions": {
-          "doc_id": "Stable document identifier. Preserve exactly in responses.",
-          "title": "Document title.",
-          "parent_id": "Current parent document id, if present.",
-          "parent_title": "Current parent document title, if present.",
-          "ancestors": "Current ancestor documents as id/title objects, ordered from root to nearest parent.",
-          "children": "Current direct child documents as id/title objects.",
-          "current_summary": "Existing document summary. Empty means a new summary may be needed.",
-          "summary": "Proposed document summary.",
-          "headings": "Headings extracted from the document.",
-          "content": "Document body content extracted from rendered Docs Viewer HTML. Package-level content_format declares whether this value is Markdown or plain text."
-        }
-      },
       "document_fields": [
         {
           "source": "doc_id",
@@ -185,14 +169,6 @@
           "source_last_updated",
           "counts"
         ]
-      },
-      "external_context": {
-        "task": "Review document tree",
-        "response_guidance": "Use the nested docs tree as read-only document hierarchy context.",
-        "field_descriptions": {
-          "doc_id": "Stable document identifier.",
-          "title": "Document title."
-        }
       },
       "document_fields": [
         {

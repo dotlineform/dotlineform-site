@@ -57,13 +57,6 @@ def write_json(path: Path, payload: Any) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
-def write_json_atomic(path: Path, payload: Any) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temp_path = path.with_name(f".{path.name}.tmp")
-    temp_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    temp_path.replace(path)
-
-
 def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     text = "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows)
@@ -100,7 +93,3 @@ def package_metadata_path(repo_root: Path, export_id: str, metadata_root: Path |
         raise ValueError(f"invalid export_id: {export_id}")
     root = metadata_root or configured_workspace_paths(repo_root).meta
     return root / f"{normalized}.meta.json"
-
-
-def package_context_sidecar_path(path: Path) -> Path:
-    return path.with_suffix(".context.json")

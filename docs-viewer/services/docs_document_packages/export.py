@@ -33,7 +33,6 @@ from docs_document_packages.export_common import (  # noqa: E402
     data_sharing_header_row,
     export_id_from_generated_at,
     normalize_text,
-    package_context_sidecar_path,
     package_metadata_path,
     write_json,
     write_jsonl,
@@ -54,7 +53,6 @@ from docs_document_packages.export_config import (  # noqa: E402
 from docs_document_packages.export_payloads import (  # noqa: E402
     build_document_tree_payload,
     build_export_payload,
-    build_external_context,
     export_metadata,
     resolve_output_path,
 )
@@ -80,8 +78,6 @@ class ExportOutputPaths:
     output_file: str = ""
     metadata_path: Path | None = None
     metadata_file: str = ""
-    context_path: Path | None = None
-    context_file: str = ""
 
 
 @dataclasses.dataclass(frozen=True)
@@ -161,7 +157,6 @@ def empty_export_report(
         "supports_return_import": False,
         "output_file": output_paths.output_file,
         "metadata_file": output_paths.metadata_file,
-        "context_file": output_paths.context_file,
         "counts": dict(ZERO_EXPORT_COUNTS),
         "selected_doc_ids": [],
         "exported_doc_ids": [],
@@ -208,7 +203,6 @@ def resolve_export_paths(
             export_id,
             Path(metadata_root) if metadata_root else roots.meta,
         )
-        context_path = package_context_sidecar_path(output_path)
     except ValueError as exc:
         return ExportOutputPaths(), [f"config {config_id}: {exc}"]
     return (
@@ -217,8 +211,6 @@ def resolve_export_paths(
             output_file=marker_path(output_path, workspace_root=roots.root),
             metadata_path=metadata_path,
             metadata_file=marker_path(metadata_path, workspace_root=roots.root),
-            context_path=context_path,
-            context_file=marker_path(context_path, workspace_root=roots.root),
         ),
         [],
     )
@@ -276,7 +268,6 @@ def write_export_outputs(
     export_id: str,
     payload: dict[str, Any] | list[dict[str, Any]],
     metadata: dict[str, Any],
-    external_context: dict[str, Any],
 ) -> None:
     if paths.output_path is None:
         raise ValueError("Export output path was not resolved")
@@ -300,8 +291,6 @@ def write_export_outputs(
         raise ValueError(f"Unsupported target.format: {target_format}")
     if paths.metadata_path is not None:
         write_json(paths.metadata_path, metadata)
-    if paths.context_path is not None:
-        write_json(paths.context_path, external_context)
 
 
 def build_export(
@@ -503,7 +492,6 @@ def build_export(
         "supports_return_import": context.supports_return_import,
         "output_file": paths.output_file,
         "metadata_file": paths.metadata_file,
-        "context_file": paths.context_file,
         "counts": counts,
         "selected_doc_ids": [normalize_text(doc.get("doc_id")) for doc in selected],
         "exported_doc_ids": [normalize_text(record.get("doc_id")) for record in record_build.records if isinstance(record, dict)],
@@ -544,14 +532,6 @@ def build_export(
             records=record_build.records,
             target_format=resolved_target_format,
         )
-    external_context = build_external_context(
-        config,
-        resolved_target_format,
-        resolved_content_format,
-        scope=scope,
-        sub_scope=normalized_sub_scope,
-        return_import_supported=context.supports_return_import,
-    )
     if write:
         write_export_outputs(
             paths=paths,
@@ -560,7 +540,6 @@ def build_export(
             export_id=export_id,
             payload=payload,
             metadata=metadata,
-            external_context=external_context,
         )
         report["output_written"] = True
     else:

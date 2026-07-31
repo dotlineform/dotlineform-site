@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Payload and sidecar builders for document-package exports."""
+"""Payload builders for document-package exports."""
 
 from __future__ import annotations
 
@@ -14,9 +14,6 @@ from docs_document_packages.export_config import (
 )
 from docs_document_packages.export_selection import ExportContext
 from docs_document_packages.workspace import configured_workspace_paths, path_is_relative_to
-
-
-EXTERNAL_CONTEXT_SCHEMA_VERSION = "documents_external_context_v1"
 
 
 def export_metadata(
@@ -103,118 +100,6 @@ def resolve_output_path(
     if not path_is_relative_to(resolved, allowed_root):
         raise ValueError(f"Export output path must stay under the configured outbound package root: {relative}")
     return resolved
-
-
-def external_field_type(field: dict[str, Any]) -> str:
-    output_path = normalize_text(field.get("output_path"))
-    source = normalize_text(field.get("source"))
-    if output_path in {"ancestors", "children"} or source in {"ancestors", "children"}:
-        return "array<object>"
-    if output_path in {"headings"}:
-        return "array<string>"
-    if source == "viewable" or output_path == "viewable":
-        return "boolean"
-    default = field.get("default")
-    if isinstance(default, list):
-        return "array"
-    if isinstance(default, bool):
-        return "boolean"
-    if isinstance(default, (int, float)) and not isinstance(default, bool):
-        return "number"
-    if isinstance(default, dict):
-        return "object"
-    return "string"
-
-
-def build_external_context(
-    config: dict[str, Any],
-    target_format: str,
-    content_format: str = "",
-    *,
-    scope: str = "",
-    sub_scope: str = "",
-    return_import_supported: bool,
-) -> dict[str, Any]:
-    target = config.get("target") if isinstance(config.get("target"), dict) else {}
-    record_shape = normalize_text(target.get("record_shape"))
-    external_context = config.get("external_context") if isinstance(config.get("external_context"), dict) else {}
-    field_descriptions = (
-        external_context.get("field_descriptions")
-        if isinstance(external_context.get("field_descriptions"), dict)
-        else {}
-    )
-    if record_shape == "document_tree":
-        record_container = "JSON object containing a nested docs tree"
-        records_path = "docs"
-    elif target_format == "jsonl":
-        record_container = "JSONL header row followed by one JSON object per line"
-        records_path = ""
-    else:
-        record_container = "JSON object containing a records array"
-        records_path = "records"
-
-    schema: list[dict[str, str]] = []
-    for field in config.get("document_fields", []):
-        if not isinstance(field, dict):
-            continue
-        output_path = normalize_text(field.get("output_path"))
-        if not output_path:
-            continue
-        schema.append(
-            {
-                "field": output_path,
-                "type": external_field_type(field),
-                "description": normalize_text(field_descriptions.get(output_path)),
-            }
-        )
-    if record_shape == "document_tree":
-        schema.append(
-            {
-                "field": "children",
-                "type": "array<object>",
-                "description": "Nested child documents with doc_id, title, and optional children.",
-            }
-        )
-
-    response_guidance = normalize_text(external_context.get("response_guidance"))
-    if target_format == "jsonl":
-        header_guidance = "Preserve the first JSONL line unchanged; it is an internal routing header."
-        response_guidance = f"{response_guidance} {header_guidance}".strip()
-
-    payload = {
-        "schema_version": EXTERNAL_CONTEXT_SCHEMA_VERSION,
-        "task": normalize_text(external_context.get("task")),
-        "response_guidance": response_guidance,
-    }
-    if content_format:
-        payload["content_format"] = content_format
-    payload.update({
-        "supports_docs_review": supports_docs_review(config),
-        "supports_return_import": return_import_supported,
-    })
-    if sub_scope:
-        payload.update({
-            "scope": normalize_text(scope).lower(),
-            "sub_scope": normalize_text(sub_scope).lower(),
-            "return_import_notice": (
-                (
-                    "This sub-scope package may enter Docs Review and exact "
-                    "configured collection Import after trusted return validation."
-                )
-                if return_import_supported
-                else (
-                    "This sub-scope package may enter read-only Docs Review after "
-                    "trusted return validation. Docs Import is not supported."
-                )
-            ),
-        })
-    payload.update({
-        "record_format": target_format,
-        "record_container": record_container,
-        "records_path": records_path,
-        "record_schema": schema,
-    })
-    return payload
 
 
 def build_export_payload(

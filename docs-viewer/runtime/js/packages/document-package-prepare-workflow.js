@@ -1,15 +1,11 @@
 import {
   getDocumentPackageConfig,
   getPackageDocuments,
-  prepareDocumentPackage,
-  saveDocumentPackageContext
+  prepareDocumentPackage
 } from "./document-package-client.js";
 import {
   createDocumentPackagePrepareRequest,
   documentPackageContentFormats,
-  documentPackageExternalContext,
-  documentPackageExternalContextChanged,
-  documentPackageExternalContextMissingValues,
   documentPackageProfile,
   documentPackageProfileLabel,
   documentPackageProfileIncludesDescendants,
@@ -61,44 +57,6 @@ function writeSelectOptions(select, values, selectedValue, labelForValue = forma
   }));
 }
 
-function contextFieldsHtml(profile, externalContext) {
-  const context = externalContext || documentPackageExternalContext(profile);
-  const descriptions = context.field_descriptions || {};
-  const fields = Array.isArray(profile && profile.document_fields) ? profile.document_fields : [];
-  return [
-    '<label class="docsViewer__field" for="docsViewerPackageContextTask">',
-    '  <span class="docsViewer__fieldLabel">Task</span>',
-    '  <input class="docsViewer__fieldInput" id="docsViewerPackageContextTask" data-package-context-task value="' + escapeHtml(context.task) + '">',
-    '</label>',
-    '<label class="docsViewer__field" for="docsViewerPackageContextGuidance">',
-    '  <span class="docsViewer__fieldLabel">Response guidance</span>',
-    '  <textarea class="docsViewer__fieldInput" id="docsViewerPackageContextGuidance" data-package-context-guidance rows="3">' + escapeHtml(context.response_guidance) + '</textarea>',
-    '</label>',
-    ...fields.map((field, index) => {
-      const outputPath = packageText(field && field.output_path);
-      return [
-        '<label class="docsViewer__field" for="docsViewerPackageContextField-' + String(index + 1) + '">',
-        '  <span class="docsViewer__fieldLabel">' + escapeHtml(outputPath) + '</span>',
-        '  <textarea class="docsViewer__fieldInput" id="docsViewerPackageContextField-' + String(index + 1) + '" data-package-context-field data-output-path="' + escapeHtml(outputPath) + '" rows="2">' + escapeHtml(descriptions[outputPath]) + '</textarea>',
-        '</label>'
-      ].join("");
-    })
-  ].join("");
-}
-
-function readContextFields(host) {
-  const fieldDescriptions = {};
-  host.querySelectorAll("[data-package-context-field]").forEach((node) => {
-    const outputPath = packageText(node.dataset.outputPath);
-    if (outputPath) fieldDescriptions[outputPath] = packageText(node.value);
-  });
-  return {
-    task: packageText(host.querySelector("[data-package-context-task]")?.value),
-    response_guidance: packageText(host.querySelector("[data-package-context-guidance]")?.value),
-    field_descriptions: fieldDescriptions
-  };
-}
-
 function optionsBodyHtml() {
   return [
     '<label class="docsViewer__field" for="docsViewerPackageProfile">',
@@ -129,11 +87,7 @@ function optionsBodyHtml() {
     '<section class="docsViewerPackagePrepare__selectionSummary" aria-live="polite">',
     '  <p data-package-effective-total></p>',
     '  <ul class="muted small" data-package-selection-details hidden></ul>',
-    '</section>',
-    '<details class="docsViewerPackagePrepare__context" data-package-context-details>',
-    '  <summary>Edit package context</summary>',
-    '  <div class="docsViewerPackagePrepare__contextFields" data-package-context-fields></div>',
-    '</details>'
+    '</section>'
   ].join("");
 }
 
@@ -218,7 +172,6 @@ export function documentPackagePrepareResultHtml(payload) {
   const paths = [
     report.output_file,
     report.metadata_file,
-    report.context_file,
     ...(Array.isArray(report.output_files) ? report.output_files : [])
   ].map(packageText).filter((value, index, all) => value && all.indexOf(value) === index);
   const issues = [
@@ -243,10 +196,6 @@ export function documentPackagePrepareResultHtml(payload) {
 function openPrepareOptions(options) {
   const profiles = Array.isArray(options.profiles) ? options.profiles : [];
   const choicesByProfile = new Map();
-  const contextByProfile = new Map(profiles.map((profile) => [
-    packageText(profile && profile.profile_id),
-    documentPackageExternalContext(profile)
-  ]));
   let currentProfileId = packageText(profiles[0] && profiles[0].profile_id);
 
   return openDocsViewerManagementModal({
@@ -272,7 +221,6 @@ function openPrepareOptions(options) {
       const includeNonViewableField = api.host.querySelector("[data-package-include-non-viewable-field]");
       const includeNonViewableInput = api.host.querySelector("[data-package-include-non-viewable]");
       const description = api.host.querySelector("[data-package-profile-description]");
-      const contextFields = api.host.querySelector("[data-package-context-fields]");
       let currentProjection = null;
 
       function captureCurrentProfile() {
@@ -284,7 +232,6 @@ function openPrepareOptions(options) {
           missingSummaryOnly: Boolean(missingSummaryInput && missingSummaryInput.checked),
           includeNonViewable: Boolean(includeNonViewableInput && includeNonViewableInput.checked)
         });
-        contextByProfile.set(currentProfileId, readContextFields(api.host));
       }
 
       function updateSelectionProjection() {
@@ -352,7 +299,6 @@ function openPrepareOptions(options) {
             : selection.include_non_viewable !== false
           : selection.include_non_viewable !== false;
         description.textContent = packageText(profile.description);
-        contextFields.innerHTML = contextFieldsHtml(profile, contextByProfile.get(currentProfileId));
         updateSelectionProjection();
       }
 
@@ -370,13 +316,11 @@ function openPrepareOptions(options) {
       [descendantsInput, missingSummaryInput, includeNonViewableInput].forEach((input) => {
         input.addEventListener("change", updateSelectionProjection);
       });
-      api.capturePrepareOptions = captureCurrentProfile;
       api.prepareOptionState = function () {
         captureCurrentProfile();
         updateSelectionProjection();
         return {
           choices: choicesByProfile.get(currentProfileId) || {},
-          externalContext: contextByProfile.get(currentProfileId),
           profile: documentPackageProfile(profiles, currentProfileId),
           projection: currentProjection
         };
@@ -394,13 +338,6 @@ function openPrepareOptions(options) {
         api.setStatus("No documents remain for package preparation.");
         return false;
       }
-      const missingContextValues = documentPackageExternalContextChanged(profile, state.externalContext)
-        ? documentPackageExternalContextMissingValues(profile, state.externalContext)
-        : [];
-      if (missingContextValues.length) {
-        api.setStatus("Complete every package context field: " + missingContextValues.join(", ") + ".");
-        return false;
-      }
       try {
         const request = createDocumentPackagePrepareRequest({
           scope: options.scope,
@@ -416,10 +353,6 @@ function openPrepareOptions(options) {
         });
         return {
           confirmed: true,
-          externalContext: documentPackageExternalContextChanged(profile, state.externalContext)
-            ? state.externalContext
-            : null,
-          profile,
           request
         };
       } catch (error) {
@@ -458,7 +391,6 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
     getConfig: getDocumentPackageConfig,
     getDocuments: getPackageDocuments,
     prepare: prepareDocumentPackage,
-    saveContext: saveDocumentPackageContext,
     ...(options.client || {})
   };
   const setBusy = (busy) => {
@@ -550,14 +482,6 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
     setBusy(true);
     let payload;
     try {
-      if (result.externalContext) {
-        setMessage("Saving package context...", false);
-        await client.saveContext({
-          profile_id: packageText(result.profile.profile_id),
-          external_context: result.externalContext,
-          dry_run: false
-        });
-      }
       setMessage("Preparing document package...", false);
       payload = await client.prepare(result.request);
       setMessage(packageText(payload && payload.summary_text) || "Document package prepared.", false);
