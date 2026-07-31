@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e1e132682c48310fc1594c44e817228d",
-    "generated_at_utc": "2026-07-31T10:36:31Z",
-    "count": 236
+    "version": "blake2b-53e5f91bb2f9b425b6cee082a5450320",
+    "generated_at_utc": "2026-07-31T12:04:07Z",
+    "count": 237
   },
   "entries": [
     {
@@ -3464,25 +3464,53 @@
       "kind": "doc",
       "title": "Dated Export Snapshots",
       "href": "/docs/?scope=studio&doc=d-20260716-193410-98d1a8",
-      "last_updated": "2026-07-25 20:23:07",
+      "last_updated": "2026-07-31 13:02:58",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-25 20:23:07 • Roadmap",
+      "display_meta": "2026-07-31 13:02:58 • Roadmap",
       "search_terms": [
         "dated export snapshots",
         "dated",
         "export",
         "snapshots",
         "roadmap",
-        "2026-07-25 20:23:07",
+        "2026-07-31 13:02:58",
         "2026",
         "07",
-        "25",
-        "20",
-        "23",
+        "31",
+        "13",
+        "02",
+        "58",
         "d-20260716-193410-98d1a8"
       ],
-      "search_text": "dated export snapshots dated export snapshots roadmap 2026-07-25 20:23:07 2026 07 25 20 23 d-20260716-193410-98d1a8"
+      "search_text": "dated export snapshots dated export snapshots roadmap 2026-07-31 13:02:58 2026 07 31 13 02 58 d-20260716-193410-98d1a8"
+    },
+    {
+      "id": "d-20260731-124327-65d30d",
+      "kind": "doc",
+      "title": "Dated Export Snapshots Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260731-124327-65d30d",
+      "last_updated": "2026-07-31 13:02:58",
+      "parent_id": "d-20260716-193410-98d1a8",
+      "parent_title": "Dated Export Snapshots",
+      "display_meta": "2026-07-31 13:02:58 • Dated Export Snapshots",
+      "search_terms": [
+        "dated export snapshots delivery",
+        "dated",
+        "export",
+        "snapshots",
+        "delivery",
+        "dated export snapshots",
+        "2026-07-31 13:02:58",
+        "2026",
+        "07",
+        "31",
+        "13",
+        "02",
+        "58",
+        "d-20260731-124327-65d30d"
+      ],
+      "search_text": "dated export snapshots delivery dated export snapshots delivery dated export snapshots 2026-07-31 13:02:58 2026 07 31 13 02 58 d-20260731-124327-65d30d"
     },
     {
       "id": "d-20260730-121423-78b0f6",
