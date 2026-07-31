@@ -745,13 +745,13 @@
           "doc_id": "d-20260716-193410-98d1a8",
           "title": "Dated Export Snapshots",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260716-193410-98d1a8.json",
-          "ui_status": "planned",
+          "ui_status": "in-progress",
           "children": [
             {
               "doc_id": "d-20260731-124327-65d30d",
               "title": "Dated Export Snapshots Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-124327-65d30d.json",
-              "ui_status": "planned"
+              "ui_status": "in-progress"
             }
           ]
         },
@@ -1329,5 +1329,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-31T11:45:12Z"
+  "generated_at": "2026-07-31T12:18:42Z"
 }

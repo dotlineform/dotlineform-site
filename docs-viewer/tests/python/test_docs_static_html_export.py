@@ -7,6 +7,7 @@ import json
 import os
 import sys
 import tempfile
+from datetime import date
 from pathlib import Path
 
 from repo_factory import docs_scope_record
@@ -20,6 +21,9 @@ if str(DOCS_SERVICES_DIR) not in sys.path:
 import docs_management_routes as routes  # noqa: E402
 import docs_management_service  # noqa: E402
 import docs_static_html_export as exporter  # noqa: E402
+
+
+FIXED_EXPORT_DATE = date(2026, 7, 31)
 
 
 def write_json(path: Path, payload: dict[str, object]) -> None:
@@ -47,51 +51,324 @@ def write_scope_config(root: Path) -> None:
     )
 
 
+def write_generated_scope(
+    generated_root: Path,
+    rows: list[dict[str, object]],
+    payloads: list[dict[str, object]],
+) -> None:
+    write_json(
+        generated_root / "index-tree.json",
+        {
+            "schema": "docs_index_tree_v1",
+            "docs": rows,
+        },
+    )
+    for payload in payloads:
+        doc_id = str(payload["doc_id"])
+        write_json(generated_root / f"by-id/{doc_id}.json", payload)
+
+
 def prepare_repo(root: Path, projects_root: Path) -> None:
     os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = str(projects_root)
     (projects_root / "docs-viewer").mkdir(parents=True, exist_ok=True)
     write_scope_config(root)
-    write_json(
-        root / "docs-viewer/scopes/studio/published/documents/index-tree.json",
-        {
-            "schema": "docs_index_tree_v1",
-            "docs": [
-                {
-                    "doc_id": "parent",
-                    "title": "Parent & Root",
-                    "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/parent.json",
-                    "children": [
-                        {
-                            "doc_id": "child",
-                            "title": "Child",
-                            "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/child.json",
-                        }
-                    ],
-                }
-            ],
-        },
+    write_generated_scope(
+        root / "docs-viewer/scopes/studio/published/documents",
+        [
+            {
+                "doc_id": "parent",
+                "title": "Parent & Root",
+                "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/parent.json",
+                "children": [
+                    {
+                        "doc_id": "child",
+                        "title": "Child",
+                        "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/child.json",
+                    }
+                ],
+            },
+            {
+                "doc_id": "sibling",
+                "title": "Sibling",
+                "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/sibling.json",
+            },
+        ],
+        [
+            {
+                "doc_id": "parent",
+                "title": "Parent & Root",
+                "content_html": '<p><a href="/docs/?scope=studio&amp;doc=child">Child</a> <a href="https://example.com/">External</a></p>',
+            },
+            {
+                "doc_id": "child",
+                "title": "Child",
+                "content_html": '<p><a href="/docs/?scope=studio&doc=parent#top">Parent</a></p>',
+            },
+            {
+                "doc_id": "sibling",
+                "title": "Sibling",
+                "content_html": "<p>Sibling body</p>",
+            },
+        ],
     )
-    write_json(
-        root / "docs-viewer/scopes/studio/published/documents/by-id/parent.json",
-        {
-            "doc_id": "parent",
-            "title": "Parent & Root",
-            "content_html": '<p><a href="/docs/?scope=studio&amp;doc=child">Child</a> <a href="https://example.com/">External</a></p>',
-        },
+    write_generated_scope(
+        root / "docs-viewer/scopes/library/published/documents",
+        [{"doc_id": "library", "title": "Library"}],
+        [{"doc_id": "library", "title": "Library", "content_html": "<p>Library body</p>"}],
     )
-    write_json(
-        root / "docs-viewer/scopes/studio/published/documents/by-id/child.json",
-        {
-            "doc_id": "child",
-            "title": "Child",
-            "content_html": '<p><a href="/docs/?scope=studio&doc=parent#top">Parent</a></p>',
-        },
+    write_generated_scope(
+        projects_root / "docs-viewer/scopes/external/published/documents",
+        [{"doc_id": "external", "title": "External"}],
+        [{"doc_id": "external", "title": "External", "content_html": "<p>External body</p>"}],
     )
 
 
 def test_tree_doc_id_collection_preserves_order() -> None:
     tree = [{"doc_id": "parent", "children": [{"doc_id": "child"}]}, {"doc_id": "sibling"}]
     assert exporter.collect_doc_ids_from_tree(tree) == ["parent", "child", "sibling"]
+
+
+def test_snapshot_preview_plans_exact_single_partial_and_complete_sets_without_writes() -> None:
+    with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
+        repo_root = Path(repo_path)
+        projects_root = Path(projects_path)
+        prepare_repo(repo_root, projects_root)
+
+        single = exporter.plan_static_html_snapshot(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        assert single.doc_ids == ("parent",)
+        assert single.selection_kind == "single"
+        assert single.folder_name == "Parent & Root - 2026-07-31"
+        assert single.default_doc_id == "parent"
+        assert single.index_tree["docs"] == [
+            {
+                "doc_id": "parent",
+                "title": "Parent & Root",
+                "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/parent.json",
+            }
+        ]
+
+        partial = exporter.plan_static_html_snapshot(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["sibling", "child"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        assert partial.doc_ids == ("child", "sibling")
+        assert partial.selection_kind == "partial"
+        assert partial.folder_name == "studio selection - 2026-07-31"
+        assert partial.default_doc_id == "child"
+        assert [row["doc_id"] for row in partial.index_tree["docs"]] == ["child", "sibling"]
+        assert all("children" not in row for row in partial.index_tree["docs"])
+
+        partial_reordered = exporter.plan_static_html_snapshot(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["child", "sibling"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        assert partial_reordered.plan_revision == partial.plan_revision
+
+        complete = exporter.plan_static_html_snapshot(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["sibling", "child", "parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        assert complete.doc_ids == ("parent", "child", "sibling")
+        assert complete.selection_kind == "complete"
+        assert complete.folder_name == "studio - 2026-07-31"
+        assert complete.default_doc_id == "parent"
+        assert complete.index_tree["docs"][0]["children"][0]["doc_id"] == "child"
+        assert not (projects_root / "docs-export").exists()
+
+
+def test_snapshot_preview_rejects_invalid_or_inferred_selection_fields() -> None:
+    with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
+        repo_root = Path(repo_path)
+        prepare_repo(repo_root, Path(projects_path))
+        invalid_requests = [
+            ({"scope": "studio"}, "non-empty array"),
+            ({"scope": "studio", "doc_ids": []}, "non-empty array"),
+            ({"scope": "studio", "doc_ids": ["parent", "parent"]}, "duplicate doc_id"),
+            ({"scope": "studio", "doc_ids": ["library"]}, "active generated scope"),
+            ({"scope": "studio", "doc_ids": ["../escape"]}, "safe HTML filename"),
+            ({"scope": "studio", "doc_ids": ["parent"], "mode": "complete"}, "mode is not supported"),
+            (
+                {"scope": "studio", "doc_ids": ["parent"], "include_descendants": True},
+                "include_descendants is not supported",
+            ),
+            ({"scope": "studio", "sub_scope": "tags", "doc_ids": ["parent"]}, "sub_scope is not supported"),
+        ]
+        for body, expected_message in invalid_requests:
+            try:
+                exporter.plan_static_html_snapshot(repo_root, body, export_date=FIXED_EXPORT_DATE)
+            except ValueError as exc:
+                assert expected_message in str(exc)
+            else:
+                raise AssertionError(f"invalid snapshot request should fail: {body!r}")
+
+
+def test_snapshot_preview_reads_repo_public_and_external_local_generated_payloads() -> None:
+    with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
+        repo_root = Path(repo_path)
+        prepare_repo(repo_root, Path(projects_path))
+
+        for scope, doc_id, folder_name in (
+            ("studio", "parent", "Parent & Root - 2026-07-31"),
+            ("library", "library", "library - 2026-07-31"),
+            ("external", "external", "external - 2026-07-31"),
+        ):
+            plan = exporter.plan_static_html_snapshot(
+                repo_root,
+                {"scope": scope, "doc_ids": [doc_id]},
+                export_date=FIXED_EXPORT_DATE,
+            )
+            assert plan.scope == scope
+            assert plan.doc_ids == (doc_id,)
+            assert plan.folder_name == folder_name
+
+
+def test_snapshot_folder_labels_are_portable_and_bounded() -> None:
+    assert exporter.normalize_snapshot_folder_label("CON") == "CON snapshot"
+    assert exporter.normalize_snapshot_folder_label("A/B\\C:*?") == "A-B-C---"
+    assert exporter.normalize_snapshot_folder_label(" . ") == "snapshot"
+    assert len(exporter.normalize_snapshot_folder_label("é" * 300).encode("utf-8")) <= 180
+
+
+def test_snapshot_preview_reports_absent_recognized_unrecognized_and_non_directory_targets() -> None:
+    with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
+        repo_root = Path(repo_path)
+        projects_root = Path(projects_path)
+        prepare_repo(repo_root, projects_root)
+
+        absent = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        assert absent["target_state"] == "absent"
+        assert absent["replacement_required"] is False
+        assert absent["replace_allowed"] is True
+        assert "destination" not in absent
+
+        recognized_root = projects_root / "docs-export/Parent & Root - 2026-07-31"
+        write_json(
+            recognized_root / exporter.SNAPSHOT_PROVENANCE_FILENAME,
+            {
+                "schema_version": exporter.SNAPSHOT_SCHEMA_VERSION,
+                "scope": "studio",
+                "doc_ids": ["parent"],
+                "selection_kind": "single",
+                "document_count": 1,
+                "generated_at": "2026-07-31T12:00:00+01:00",
+            },
+        )
+        recognized = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        assert recognized["target_state"] == "recognized"
+        assert recognized["replacement_required"] is True
+        assert recognized["existing_snapshot"]["scope"] == "studio"
+        assert recognized["existing_snapshot"]["selection_kind"] == "single"
+        assert recognized["existing_snapshot"]["document_count"] == 1
+        assert recognized["existing_snapshot"]["generated_at"] == "2026-07-31T12:00:00+01:00"
+        assert len(recognized["existing_snapshot"]["selection_revision"]) == 64
+        first_target_revision = recognized["target_revision"]
+        extra_path = recognized_root / "extra.txt"
+        extra_path.write_text("changed", encoding="utf-8")
+        changed = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        assert changed["target_revision"] != first_target_revision
+        changed_stat = extra_path.stat()
+        extra_path.write_text("altered", encoding="utf-8")
+        os.utime(extra_path, ns=(changed_stat.st_atime_ns, changed_stat.st_mtime_ns))
+        content_changed = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        assert content_changed["target_revision"] != changed["target_revision"]
+
+        unrecognized_root = projects_root / "docs-export/studio selection - 2026-07-31"
+        write_json(
+            unrecognized_root / exporter.SNAPSHOT_PROVENANCE_FILENAME,
+            {
+                "schema_version": exporter.SNAPSHOT_SCHEMA_VERSION,
+                "scope": "studio",
+                "doc_ids": ["child", "sibling"],
+                "selection_kind": "partial",
+                "document_count": 1,
+                "generated_at": "2026-07-31T12:00:00+01:00",
+            },
+        )
+        unrecognized = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["child", "sibling"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        assert unrecognized["target_state"] == "unrecognized"
+        assert unrecognized["existing_snapshot"] is None
+        assert unrecognized["replacement_required"] is True
+
+        non_directory_root = projects_root / "docs-export/studio - 2026-07-31"
+        non_directory_root.write_text("collision", encoding="utf-8")
+        non_directory = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent", "child", "sibling"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        assert non_directory["target_state"] == "non_directory"
+        assert non_directory["replace_allowed"] is False
+
+        symlink_root = projects_root / "docs-export/Child - 2026-07-31"
+        symlink_root.symlink_to(recognized_root, target_is_directory=True)
+        symlink = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["child"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        assert symlink["target_state"] == "non_directory"
+        assert symlink["replace_allowed"] is False
+
+
+def test_snapshot_link_rewriting_only_localizes_included_documents() -> None:
+    html = (
+        '<a href="/docs/?scope=studio&amp;doc=child">Child</a>'
+        '<a href="/docs/?scope=studio&amp;doc=sibling">Sibling</a>'
+    )
+    rewritten = exporter.rewrite_internal_docs_viewer_links(
+        html,
+        scope="studio",
+        link_prefix="",
+        included_doc_ids={"child"},
+    )
+    assert 'href="child.html"' in rewritten
+    assert 'href="/docs/?scope=studio&amp;doc=sibling"' in rewritten
+
+
+def test_snapshot_preview_missing_payload_error_omits_filesystem_path() -> None:
+    with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
+        repo_root = Path(repo_path)
+        prepare_repo(repo_root, Path(projects_path))
+        (repo_root / "docs-viewer/scopes/studio/published/documents/by-id/sibling.json").unlink()
+
+        try:
+            exporter.preview_static_html_export(
+                repo_root,
+                {"scope": "studio", "doc_ids": ["sibling"]},
+                export_date=FIXED_EXPORT_DATE,
+            )
+        except FileNotFoundError as exc:
+            assert str(exc) == "selected document payload not found for scope studio"
+            assert repo_path not in str(exc)
+        else:
+            raise AssertionError("missing selected payload should fail")
 
 
 def test_load_doc_payload_and_reject_unsafe_doc_id() -> None:
@@ -191,7 +468,7 @@ def test_apply_export_replaces_destination_and_writes_static_files() -> None:
 
         destination = projects_root / "docs-export/studio"
         assert payload["ok"] is True
-        assert payload["document_count"] == 2
+        assert payload["document_count"] == 3
         assert not stale_path.exists()
         assert (destination / "index.html").exists()
         assert (destination / "styles.css").exists()
@@ -259,6 +536,30 @@ def test_management_apply_route_returns_export_response() -> None:
         assert payload["ok"] is True
         assert payload["operation"] == "apply"
         assert payload["destination_label"] == "/docs-export/studio/"
+
+
+def test_management_preview_route_returns_write_free_browser_safe_plan() -> None:
+    with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
+        repo_root = Path(repo_path)
+        projects_root = Path(projects_path)
+        prepare_repo(repo_root, projects_root)
+
+        status, payload = docs_management_service.docs_management_post_response(
+            repo_root,
+            routes.STATIC_HTML_EXPORT_PREVIEW_PATH,
+            {"scope": "studio", "doc_ids": ["sibling", "child"]},
+        )
+
+        assert status.value == 200
+        assert payload["ok"] is True
+        assert payload["schema_version"] == exporter.SNAPSHOT_PREVIEW_SCHEMA_VERSION
+        assert payload["operation"] == "preview"
+        assert payload["dry_run"] is True
+        assert payload["doc_ids"] == ["child", "sibling"]
+        assert payload["selection_kind"] == "partial"
+        assert payload["destination_label"].startswith("/docs-export/studio selection - ")
+        assert "destination" not in payload
+        assert not (projects_root / "docs-export").exists()
 
 
 def test_delete_export_does_not_require_generated_payloads() -> None:

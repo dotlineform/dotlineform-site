@@ -279,6 +279,8 @@ def docs_management_post_response(
         return HTTPStatus.OK, docs_publish_gate.publish_confirm(repo_root, body)
     if path == routes.PUBLISH_APPLY_PATH:
         return HTTPStatus.OK, docs_publish_gate.publish_apply(repo_root, body)
+    if path == routes.STATIC_HTML_EXPORT_PREVIEW_PATH:
+        return HTTPStatus.OK, docs_static_html_export.preview_static_html_export(repo_root, body)
     if path == routes.STATIC_HTML_EXPORT_APPLY_PATH:
         return HTTPStatus.OK, docs_static_html_export.build_static_html_export(repo_root, body)
     if path == routes.STATIC_HTML_EXPORT_DELETE_PATH:
