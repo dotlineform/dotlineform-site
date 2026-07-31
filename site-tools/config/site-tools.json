@@ -155,6 +155,7 @@
         "shared/docs-viewer-service-context.js",
         "shared/docs-viewer-sidebar.js",
         "shared/docs-viewer-status-controller.js",
+        "shared/docs-subscope-customisation-registry.js",
         "shared/docs-subscope-report-filter.js",
         "shared/docs-subscope-report.js",
         "shared/docs-viewer-top-bar-renderer.js",
