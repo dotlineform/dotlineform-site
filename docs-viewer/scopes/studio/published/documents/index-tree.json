@@ -888,6 +888,12 @@
           ]
         },
         {
+          "doc_id": "d-20260731-085838-c1eaca",
+          "title": "Source Editor Image Presentation Delivery",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-085838-c1eaca.json",
+          "ui_status": "proposed"
+        },
+        {
           "doc_id": "d-20260511-120352-90ffa6",
           "title": "Standalone Docs Viewer",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260511-120352-90ffa6.json",
@@ -1315,5 +1321,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-30T23:17:15Z"
+  "generated_at": "2026-07-31T08:00:34Z"
 }
