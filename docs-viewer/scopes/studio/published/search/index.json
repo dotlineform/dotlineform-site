@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f103e2aa4eed27ac7417461bd6eb4558",
-    "generated_at_utc": "2026-07-31T12:59:41Z",
+    "version": "blake2b-8d6165f494d29b385256251b72b343dd",
+    "generated_at_utc": "2026-07-31T13:39:08Z",
     "count": 237
   },
   "entries": [
@@ -1325,25 +1325,25 @@
       "kind": "doc",
       "title": "Export",
       "href": "/docs/?scope=studio&doc=d-20260629-152159-ac1af9",
-      "last_updated": "2026-07-20 13:40:46",
+      "last_updated": "2026-07-31 14:37:50",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-20 13:40:46 • Docs Viewer",
+      "display_meta": "2026-07-31 14:37:50 • Docs Viewer",
       "search_terms": [
         "export",
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-20 13:40:46",
+        "2026-07-31 14:37:50",
         "2026",
         "07",
-        "20",
-        "13",
-        "40",
-        "46",
+        "31",
+        "14",
+        "37",
+        "50",
         "d-20260629-152159-ac1af9"
       ],
-      "search_text": "export docs viewer docs viewer 2026-07-20 13:40:46 2026 07 20 13 40 46 d-20260629-152159-ac1af9"
+      "search_text": "export docs viewer docs viewer 2026-07-31 14:37:50 2026 07 31 14 37 50 d-20260629-152159-ac1af9"
     },
     {
       "id": "d-20260623-000000-c99cef",
@@ -3464,36 +3464,36 @@
       "kind": "doc",
       "title": "Dated Export Snapshots",
       "href": "/docs/?scope=studio&doc=d-20260716-193410-98d1a8",
-      "last_updated": "2026-07-31 13:18:21",
+      "last_updated": "2026-07-31 14:38:49",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-31 13:18:21 • Roadmap",
+      "display_meta": "2026-07-31 14:38:49 • Roadmap",
       "search_terms": [
         "dated export snapshots",
         "dated",
         "export",
         "snapshots",
         "roadmap",
-        "2026-07-31 13:18:21",
+        "2026-07-31 14:38:49",
         "2026",
         "07",
         "31",
-        "13",
-        "18",
-        "21",
+        "14",
+        "38",
+        "49",
         "d-20260716-193410-98d1a8"
       ],
-      "search_text": "dated export snapshots dated export snapshots roadmap 2026-07-31 13:18:21 2026 07 31 13 18 21 d-20260716-193410-98d1a8"
+      "search_text": "dated export snapshots dated export snapshots roadmap 2026-07-31 14:38:49 2026 07 31 14 38 49 d-20260716-193410-98d1a8"
     },
     {
       "id": "d-20260731-124327-65d30d",
       "kind": "doc",
       "title": "Dated Export Snapshots Delivery",
       "href": "/docs/?scope=studio&doc=d-20260731-124327-65d30d",
-      "last_updated": "2026-07-31 13:59:09",
+      "last_updated": "2026-07-31 14:38:49",
       "parent_id": "d-20260716-193410-98d1a8",
       "parent_title": "Dated Export Snapshots",
-      "display_meta": "2026-07-31 13:59:09 • Dated Export Snapshots",
+      "display_meta": "2026-07-31 14:38:49 • Dated Export Snapshots",
       "search_terms": [
         "dated export snapshots delivery",
         "dated",
@@ -3501,16 +3501,16 @@
         "snapshots",
         "delivery",
         "dated export snapshots",
-        "2026-07-31 13:59:09",
+        "2026-07-31 14:38:49",
         "2026",
         "07",
         "31",
-        "13",
-        "59",
-        "09",
+        "14",
+        "38",
+        "49",
         "d-20260731-124327-65d30d"
       ],
-      "search_text": "dated export snapshots delivery dated export snapshots delivery dated export snapshots 2026-07-31 13:59:09 2026 07 31 13 59 09 d-20260731-124327-65d30d"
+      "search_text": "dated export snapshots delivery dated export snapshots delivery dated export snapshots 2026-07-31 14:38:49 2026 07 31 14 38 49 d-20260731-124327-65d30d"
     },
     {
       "id": "d-20260730-121423-78b0f6",

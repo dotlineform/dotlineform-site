@@ -476,9 +476,7 @@ def plan_static_html_snapshot(
     selected_date = export_date or datetime.now().astimezone().date()
     if type(selected_date) is not date:
         raise ValueError("export_date must be a date")
-    if selection_kind == "single":
-        base_label = str(doc_payloads[doc_ids[0]].get("title") or doc_ids[0]).strip() or doc_ids[0]
-    elif selection_kind == "complete":
+    if selection_kind == "complete":
         base_label = scope
     else:
         base_label = f"{scope} selection"
@@ -673,6 +671,7 @@ def render_tree_rows(rows: Any) -> str:
 
 def render_index_html(index_tree: dict[str, Any], *, scope: str, default_doc_id: str, document_count: int) -> str:
     title = f"{scope} docs"
+    document_label = "document" if document_count == 1 else "documents"
     default_html = ""
     if default_doc_id:
         safe_default = validate_doc_id_for_html_filename(default_doc_id)
@@ -693,7 +692,7 @@ def render_index_html(index_tree: dict[str, Any], *, scope: str, default_doc_id:
             "<body>",
             "  <main>",
             f"    <h1>{html.escape(title)}</h1>",
-            f'    <p class="docsExport__meta">{document_count} documents exported from generated Docs Viewer payloads.</p>',
+            f'    <p class="docsExport__meta">{document_count} {document_label} exported from generated Docs Viewer payloads.</p>',
             f"    {default_html}",
             f"    {render_tree_rows(index_tree.get('docs'))}",
             "  </main>",
@@ -946,6 +945,7 @@ def apply_static_html_snapshot(repo_root: Path, body: dict[str, Any]) -> dict[st
     target_state, target_revision, existing_snapshot = inspect_snapshot_destination(plan.destination_root)
     if target_state != "recognized" or existing_snapshot is None:
         raise RuntimeError("installed snapshot failed post-apply provenance validation")
+    document_label = "document" if len(plan.doc_ids) == 1 else "documents"
     return {
         "ok": True,
         "schema_version": SNAPSHOT_APPLY_SCHEMA_VERSION,
@@ -962,7 +962,7 @@ def apply_static_html_snapshot(repo_root: Path, body: dict[str, Any]) -> dict[st
         "replaced": replaced,
         "plan_revision": plan.plan_revision,
         "target_revision": target_revision,
-        "summary_text": f"Exported {len(plan.doc_ids)} documents to {plan.destination_label}.",
+        "summary_text": f"Exported {len(plan.doc_ids)} {document_label} to {plan.destination_label}.",
     }
 
 

@@ -154,7 +154,7 @@ def test_snapshot_preview_plans_exact_single_partial_and_complete_sets_without_w
         )
         assert single.doc_ids == ("parent",)
         assert single.selection_kind == "single"
-        assert single.folder_name == "Parent & Root - 2026-07-31"
+        assert single.folder_name == "studio selection - 2026-07-31"
         assert single.default_doc_id == "parent"
         assert single.index_tree["docs"] == [
             {
@@ -229,7 +229,7 @@ def test_snapshot_preview_reads_repo_public_and_external_local_generated_payload
         prepare_repo(repo_root, Path(projects_path))
 
         for scope, doc_id, folder_name in (
-            ("studio", "parent", "Parent & Root - 2026-07-31"),
+            ("studio", "parent", "studio selection - 2026-07-31"),
             ("library", "library", "library - 2026-07-31"),
             ("external", "external", "external - 2026-07-31"),
         ):
@@ -290,7 +290,7 @@ def test_snapshot_preview_reports_absent_recognized_unrecognized_and_non_directo
         assert absent["replace_allowed"] is True
         assert "destination" not in absent
 
-        recognized_root = projects_root / "docs-export/Parent & Root - 2026-07-31"
+        recognized_root = projects_root / "docs-export/studio selection - 2026-07-31"
         write_json(
             recognized_root / exporter.SNAPSHOT_PROVENANCE_FILENAME,
             {
@@ -333,7 +333,7 @@ def test_snapshot_preview_reports_absent_recognized_unrecognized_and_non_directo
         )
         assert content_changed["target_revision"] != changed["target_revision"]
 
-        unrecognized_root = projects_root / "docs-export/studio selection - 2026-07-31"
+        unrecognized_root = projects_root / "docs-export/studio selection - 2026-07-30"
         write_json(
             unrecognized_root / exporter.SNAPSHOT_PROVENANCE_FILENAME,
             {
@@ -348,7 +348,7 @@ def test_snapshot_preview_reports_absent_recognized_unrecognized_and_non_directo
         unrecognized = exporter.preview_static_html_export(
             repo_root,
             {"scope": "studio", "doc_ids": ["child", "sibling"]},
-            export_date=FIXED_EXPORT_DATE,
+            export_date=date(2026, 7, 30),
         )
         assert unrecognized["target_state"] == "unrecognized"
         assert unrecognized["existing_snapshot"] is None
@@ -364,12 +364,12 @@ def test_snapshot_preview_reports_absent_recognized_unrecognized_and_non_directo
         assert non_directory["target_state"] == "non_directory"
         assert non_directory["replace_allowed"] is False
 
-        symlink_root = projects_root / "docs-export/Child - 2026-07-31"
+        symlink_root = projects_root / "docs-export/studio selection - 2026-07-29"
         symlink_root.symlink_to(recognized_root, target_is_directory=True)
         symlink = exporter.preview_static_html_export(
             repo_root,
             {"scope": "studio", "doc_ids": ["child"]},
-            export_date=FIXED_EXPORT_DATE,
+            export_date=date(2026, 7, 29),
         )
         assert symlink["target_state"] == "non_directory"
         assert symlink["replace_allowed"] is False
@@ -477,6 +477,12 @@ def test_index_page_renders_tree_links() -> None:
     assert 'href="docs/parent.html"' in html
     assert 'href="docs/child.html"' in html
     assert "2 documents exported" in html
+    assert "1 document exported" in exporter.render_index_html(
+        {"docs": [{"doc_id": "parent", "title": "Parent"}]},
+        scope="studio",
+        default_doc_id="parent",
+        document_count=1,
+    )
 
 
 def test_rewrite_internal_docs_viewer_links_leaves_other_links() -> None:
@@ -575,7 +581,7 @@ def test_snapshot_apply_replaces_only_explicitly_confirmed_existing_target() -> 
             export_date=FIXED_EXPORT_DATE,
         )
         exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(first_preview))
-        destination = projects_root / "docs-export/Parent & Root - 2026-07-31"
+        destination = projects_root / "docs-export/studio selection - 2026-07-31"
         stale_path = destination / "stale.txt"
         stale_path.write_text("stale", encoding="utf-8")
         replacement_preview = exporter.preview_static_html_export(
@@ -609,7 +615,7 @@ def test_snapshot_apply_can_replace_an_explicitly_confirmed_unrecognized_directo
         repo_root = Path(repo_path)
         projects_root = Path(projects_path)
         prepare_repo(repo_root, projects_root)
-        destination = projects_root / "docs-export/Parent & Root - 2026-07-31"
+        destination = projects_root / "docs-export/studio selection - 2026-07-31"
         destination.mkdir(parents=True)
         (destination / "unrelated.txt").write_text("existing", encoding="utf-8")
         preview = exporter.preview_static_html_export(
@@ -634,7 +640,7 @@ def test_snapshot_apply_rejects_missing_confirmation_and_non_directory_target() 
         repo_root = Path(repo_path)
         projects_root = Path(projects_path)
         prepare_repo(repo_root, projects_root)
-        destination = projects_root / "docs-export/Parent & Root - 2026-07-31"
+        destination = projects_root / "docs-export/studio selection - 2026-07-31"
         destination.parent.mkdir(parents=True)
         destination.write_text("preserve collision", encoding="utf-8")
         preview = exporter.preview_static_html_export(
@@ -696,7 +702,7 @@ def test_snapshot_apply_rejects_stale_plan_and_target_while_preserving_existing_
             assert exc.payload["requires_preview"] is True
         else:
             raise AssertionError("stale plan should fail")
-        original_destination = projects_root / "docs-export/Parent & Root - 2026-07-31"
+        original_destination = projects_root / "docs-export/studio selection - 2026-07-31"
         assert (original_destination / exporter.SNAPSHOT_PROVENANCE_FILENAME).is_file()
 
         current_preview = exporter.preview_static_html_export(
@@ -704,13 +710,16 @@ def test_snapshot_apply_rejects_stale_plan_and_target_while_preserving_existing_
             {"scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
-        exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(current_preview))
+        exporter.apply_static_html_snapshot(
+            repo_root,
+            snapshot_apply_body(current_preview, replace_existing=True),
+        )
         replacement_preview = exporter.preview_static_html_export(
             repo_root,
             {"scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
-        destination = projects_root / "docs-export/Changed title - 2026-07-31"
+        destination = projects_root / "docs-export/studio selection - 2026-07-31"
         changed_path = destination / "changed-after-preview.txt"
         changed_path.write_text("preserve me", encoding="utf-8")
 
@@ -737,7 +746,7 @@ def test_snapshot_render_staging_and_validation_failures_preserve_existing_targe
             export_date=FIXED_EXPORT_DATE,
         )
         exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(first_preview))
-        destination = projects_root / "docs-export/Parent & Root - 2026-07-31"
+        destination = projects_root / "docs-export/studio selection - 2026-07-31"
         marker = destination / "preserved.txt"
         marker.write_text("original", encoding="utf-8")
         replacement_preview = exporter.preview_static_html_export(
@@ -805,7 +814,7 @@ def test_snapshot_final_switch_failure_restores_existing_target() -> None:
             export_date=FIXED_EXPORT_DATE,
         )
         exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(first_preview))
-        destination = projects_root / "docs-export/Parent & Root - 2026-07-31"
+        destination = projects_root / "docs-export/studio selection - 2026-07-31"
         marker = destination / "preserved.txt"
         marker.write_text("original", encoding="utf-8")
         replacement_preview = exporter.preview_static_html_export(
@@ -857,7 +866,8 @@ def test_management_apply_route_returns_snapshot_response_and_stale_conflict() -
         assert status.value == 200
         assert payload["ok"] is True
         assert payload["operation"] == "apply"
-        assert payload["destination_label"].startswith("/docs-export/Parent & Root - ")
+        assert payload["destination_label"].startswith("/docs-export/studio selection - ")
+        assert payload["summary_text"].startswith("Exported 1 document to ")
         assert "destination" not in payload
 
         _replacement_status, replacement_preview = docs_management_service.docs_management_post_response(

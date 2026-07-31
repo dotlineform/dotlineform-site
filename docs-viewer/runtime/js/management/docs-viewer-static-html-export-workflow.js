@@ -112,34 +112,12 @@ export function staticHtmlSnapshotPreviewCanApply(preview) {
 }
 
 export function buildStaticHtmlSnapshotConfirmationBody(preview) {
-  var selectionLabel = preview.selection_kind === "complete"
-    ? "Complete scope"
-    : preview.selection_kind === "single"
-      ? "One checked document"
-      : "Checked selection";
-  var lines = [
-    "Source scope: " + preview.scope,
-    "Documents: " + preview.document_count,
-    "Selection: " + selectionLabel,
-    "Destination folder: " + preview.destination_label
-  ];
-  if (preview.target_state === "absent") {
-    lines.push("Consequence: Create a new dated snapshot.");
-  } else if (preview.target_state === "recognized") {
-    var existing = preview.existing_snapshot || {};
-    lines.push(
-      "Existing snapshot: " + Number(existing.document_count || 0) +
-      " documents from " + String(existing.scope || "unknown") +
-      ", generated " + String(existing.generated_at || "at an unknown time") + "."
-    );
-    lines.push("Consequence: Replace the existing dated snapshot and all of its contents.");
-  } else if (preview.target_state === "unrecognized") {
-    lines.push("Existing folder: No recognized snapshot provenance.");
-    lines.push("Consequence: Replace the existing folder and all of its contents.");
-  } else {
-    lines.push("Collision: The destination is not a directory and cannot be replaced.");
-  }
-  return lines;
+  return [preview.destination_label];
+}
+
+export function staticHtmlSnapshotConfirmationTitle(preview) {
+  var documentCount = Number(preview.document_count || 0);
+  return "Export " + documentCount + " document" + (documentCount === 1 ? "" : "s") + " to:";
 }
 
 export function staticHtmlSnapshotConfirmationOptions(preview, options = {}) {
@@ -148,7 +126,7 @@ export function staticHtmlSnapshotConfirmationOptions(preview, options = {}) {
   return {
     root: options.root,
     restoreFocus: options.restoreFocus,
-    title: "Export dated snapshot",
+    title: staticHtmlSnapshotConfirmationTitle(preview),
     body: buildStaticHtmlSnapshotConfirmationBody(preview),
     primaryLabel: replacing ? "Replace" : canApply ? "Create snapshot" : "Unavailable",
     primaryDisabled: !canApply,

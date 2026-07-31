@@ -1125,7 +1125,7 @@ def assert_static_snapshot_export_workflow(page: Page) -> None:
                 doc_ids: ['a'],
                 document_count: 1,
                 selection_kind: 'single',
-                destination_label: '/docs-export/A - 2026-07-31/'
+                destination_label: '/docs-export/studio selection - 2026-07-31/'
             };
             const modalRequests = [];
             const modalMessages = [];
@@ -1205,7 +1205,8 @@ def assert_static_snapshot_export_workflow(page: Page) -> None:
                 confirmation: {
                     body: confirmOptions.body,
                     primaryDisabled: confirmOptions.primaryDisabled,
-                    primaryLabel: confirmOptions.primaryLabel
+                    primaryLabel: confirmOptions.primaryLabel,
+                    title: confirmOptions.title
                 },
                 dispatched: {
                     checkedDocIds: dispatchedOptions && dispatchedOptions.checkedDocIds,
@@ -1271,14 +1272,11 @@ def assert_static_snapshot_export_workflow(page: Page) -> None:
         ],
         "confirmation": {
             "body": [
-                "Source scope: studio",
-                "Documents: 2",
-                "Selection: Checked selection",
-                "Destination folder: /docs-export/studio selection - 2026-07-31/",
-                "Consequence: Create a new dated snapshot.",
+                "/docs-export/studio selection - 2026-07-31/",
             ],
             "primaryDisabled": False,
             "primaryLabel": "Create snapshot",
+            "title": "Export 2 documents to:",
         },
         "dispatched": {"checkedDocIds": ["a"], "handled": True, "scope": "studio"},
         "duplicateError": "Snapshot preview documents no longer match the checked selection.",
@@ -1297,12 +1295,8 @@ def assert_static_snapshot_export_workflow(page: Page) -> None:
                 ["Modal snapshot complete.", False],
             ],
             "modalText": [
-                "Export dated snapshot",
-                "Source scope: studio",
-                "Documents: 1",
-                "Selection: One checked document",
-                "Destination folder: /docs-export/A - 2026-07-31/",
-                "Consequence: Create a new dated snapshot.",
+                "Export 1 document to:",
+                "/docs-export/studio selection - 2026-07-31/",
                 "Cancel",
                 "Create snapshot",
             ],
@@ -1333,12 +1327,7 @@ def assert_static_snapshot_export_workflow(page: Page) -> None:
         "providerNeutralControl": {"disabled": False, "disabledReason": ""},
         "recognized": {
             "body": [
-                "Source scope: studio",
-                "Documents: 2",
-                "Selection: Checked selection",
-                "Destination folder: /docs-export/studio selection - 2026-07-31/",
-                "Existing snapshot: 1 documents from studio, generated 2026-07-31T12:00:00+01:00.",
-                "Consequence: Replace the existing dated snapshot and all of its contents.",
+                "/docs-export/studio selection - 2026-07-31/",
             ],
             "initialFocus": "cancel",
             "primaryLabel": "Replace",
@@ -1346,23 +1335,14 @@ def assert_static_snapshot_export_workflow(page: Page) -> None:
         },
         "blocked": {
             "body": [
-                "Source scope: studio",
-                "Documents: 2",
-                "Selection: Checked selection",
-                "Destination folder: /docs-export/studio selection - 2026-07-31/",
-                "Collision: The destination is not a directory and cannot be replaced.",
+                "/docs-export/studio selection - 2026-07-31/",
             ],
             "primaryDisabled": True,
             "primaryLabel": "Unavailable",
         },
         "unrecognized": {
             "body": [
-                "Source scope: studio",
-                "Documents: 2",
-                "Selection: Checked selection",
-                "Destination folder: /docs-export/studio selection - 2026-07-31/",
-                "Existing folder: No recognized snapshot provenance.",
-                "Consequence: Replace the existing folder and all of its contents.",
+                "/docs-export/studio selection - 2026-07-31/",
             ],
             "primaryLabel": "Replace",
         },
