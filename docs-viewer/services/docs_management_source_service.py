@@ -5,24 +5,35 @@ from __future__ import annotations
 import hashlib
 import re
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-import docs_source_model as source_model
-import docs_write_rebuild as write_rebuild
-from docs_management_context import DEFAULT_MARKDOWN_APP_ENV, log_event
-from docs_management_document_target import (
+REPO_ROOT = Path(__file__).resolve().parents[2]
+SHARED_PYTHON_DIR = REPO_ROOT / "studio" / "shared" / "python"
+if str(SHARED_PYTHON_DIR) not in sys.path:
+    sys.path.insert(0, str(SHARED_PYTHON_DIR))
+
+import docs_source_model as source_model  # noqa: E402
+import docs_write_rebuild as write_rebuild  # noqa: E402
+from docs_management_context import DEFAULT_MARKDOWN_APP_ENV, log_event  # noqa: E402
+from docs_management_document_target import (  # noqa: E402
     managed_document_target_request,
     resolve_managed_document_target,
 )
-from docs_scope_config import path_label
-from local_env import runtime_env
+from docs_scope_config import path_label  # noqa: E402
+from local_env import runtime_env  # noqa: E402
+from markdown_renderer import normalize_markdown_blank_lines  # noqa: E402
 
 STRICT_FRONT_MATTER_PATTERN = re.compile(r"\A---[ \t]*\r?\n(.*?)\r?\n---[ \t]*(?:\r?\n|$)", re.DOTALL)
 
 
 def normalize_source_body(value: Any) -> str:
     return str(value if value is not None else "").replace("\r\n", "\n").replace("\r", "\n")
+
+
+def normalize_source_body_for_write(value: Any) -> str:
+    return normalize_markdown_blank_lines(normalize_source_body(value))
 
 
 def source_revision_for_text(source_text: str) -> str:
@@ -107,7 +118,7 @@ def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
     if existing_doc_id != target.doc_id:
         raise ValueError(f"existing source doc_id {existing_doc_id!r} does not match requested doc {target.doc_id!r}")
 
-    next_source_body = normalize_source_body(body.get("source_body"))
+    next_source_body = normalize_source_body_for_write(body.get("source_body"))
     source_changed = next_source_body != normalize_source_body(current_source_body)
     next_source_text = front_matter_source + next_source_body
     rebuild = None

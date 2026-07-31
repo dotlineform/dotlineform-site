@@ -16,6 +16,7 @@ if str(SHARED_PYTHON_DIR) not in sys.path:
 from markdown_renderer import (  # noqa: E402
     MarkdownRenderOptions,
     markdown_renderer_contract,
+    normalize_markdown_blank_lines,
     render_markdown_to_html,
 )
 
@@ -76,6 +77,52 @@ def test_contract_records_no_external_plugins() -> None:
     assert_equal(contract["allow_raw_html"], True, "raw html")
 
 
+def test_normalizes_unicode_space_only_lines_outside_literal_blocks() -> None:
+    source = (
+        "Text with a hard break  \n"
+        "\u00a0\n"
+        "Inline\u00a0space\n"
+        "```text\n"
+        "\u00a0\n"
+        "```\n"
+        "<pre>\n"
+        "\u00a0\n"
+        "</pre>\n"
+    )
+
+    normalized = normalize_markdown_blank_lines(source)
+
+    assert_equal(
+        normalized,
+        (
+            "Text with a hard break  \n"
+            "\n"
+            "Inline\u00a0space\n"
+            "```text\n"
+            "\u00a0\n"
+            "```\n"
+            "<pre>\n"
+            "\u00a0\n"
+            "</pre>\n"
+        ),
+        "Unicode-only blank lines",
+    )
+
+
+def test_unicode_space_only_line_ends_raw_html_block() -> None:
+    html = render_markdown_to_html(
+        "<figure>\n"
+        "<img src=\"example.png\" alt=\"Example\">\n"
+        "</figure>\n"
+        "\u00a0\n"
+        "## 3 symbols\n\n"
+        "**birth**\n"
+    )
+
+    assert_contains(html, "<h2>3 symbols</h2>", "heading after raw HTML")
+    assert_contains(html, "<strong>birth</strong>", "bold text after raw HTML")
+
+
 def main() -> None:
     test_renders_commonmark_blocks_and_inline_code()
     test_enables_table_rule_by_default()
@@ -83,6 +130,8 @@ def main() -> None:
     test_raw_html_is_explicit_and_unsanitized_by_default()
     test_raw_html_can_be_escaped_for_untrusted_input()
     test_contract_records_no_external_plugins()
+    test_normalizes_unicode_space_only_lines_outside_literal_blocks()
+    test_unicode_space_only_line_ends_raw_html_block()
     print("Markdown renderer tests OK")
 
 

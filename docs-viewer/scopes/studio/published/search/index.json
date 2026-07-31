@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-55053c6b66716c6a1345eb443c5eb181",
-    "generated_at_utc": "2026-07-31T09:21:23Z",
+    "version": "blake2b-e1e132682c48310fc1594c44e817228d",
+    "generated_at_utc": "2026-07-31T10:36:31Z",
     "count": 236
   },
   "entries": [
@@ -1136,10 +1136,10 @@
       "kind": "doc",
       "title": "Docs Import Architecture",
       "href": "/docs/?scope=studio&doc=d-20260514-164722-3de65e",
-      "last_updated": "2026-07-31 00:09:51",
+      "last_updated": "2026-07-31 11:36:14",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-31 00:09:51 • Docs Viewer",
+      "display_meta": "2026-07-31 11:36:14 • Docs Viewer",
       "search_terms": [
         "docs import architecture",
         "docs",
@@ -1147,16 +1147,16 @@
         "architecture",
         "docs viewer",
         "viewer",
-        "2026-07-31 00:09:51",
+        "2026-07-31 11:36:14",
         "2026",
         "07",
         "31",
-        "00",
-        "09",
-        "51",
+        "11",
+        "36",
+        "14",
         "d-20260514-164722-3de65e"
       ],
-      "search_text": "docs import architecture docs import architecture docs viewer viewer 2026-07-31 00:09:51 2026 07 31 00 09 51 d-20260514-164722-3de65e"
+      "search_text": "docs import architecture docs import architecture docs viewer viewer 2026-07-31 11:36:14 2026 07 31 11 36 14 d-20260514-164722-3de65e"
     },
     {
       "id": "d-20260711-214307-b4c800",
@@ -1189,26 +1189,26 @@
       "kind": "doc",
       "title": "Docs Viewer Builder",
       "href": "/docs/?scope=studio&doc=d-20260423-000000-c9f3ea",
-      "last_updated": "2026-07-26 17:54:41",
+      "last_updated": "2026-07-31 11:36:14",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-26 17:54:41 • Docs Viewer",
+      "display_meta": "2026-07-31 11:36:14 • Docs Viewer",
       "search_terms": [
         "docs viewer builder",
         "docs",
         "viewer",
         "builder",
         "docs viewer",
-        "2026-07-26 17:54:41",
+        "2026-07-31 11:36:14",
         "2026",
         "07",
-        "26",
-        "17",
-        "54",
-        "41",
+        "31",
+        "11",
+        "36",
+        "14",
         "d-20260423-000000-c9f3ea"
       ],
-      "search_text": "docs viewer builder docs viewer builder docs viewer 2026-07-26 17:54:41 2026 07 26 17 54 41 d-20260423-000000-c9f3ea"
+      "search_text": "docs viewer builder docs viewer builder docs viewer 2026-07-31 11:36:14 2026 07 31 11 36 14 d-20260423-000000-c9f3ea"
     },
     {
       "id": "d-20260613-115624-3d377c",
@@ -1676,10 +1676,10 @@
       "kind": "doc",
       "title": "Source Editor Endpoints",
       "href": "/docs/?scope=studio&doc=d-20260607-222033-4b1d77",
-      "last_updated": "2026-07-27 22:05:53",
+      "last_updated": "2026-07-31 11:36:14",
       "parent_id": "d-20260607-222033-647b52",
       "parent_title": "Endpoint Overview",
-      "display_meta": "2026-07-27 22:05:53 • Endpoint Overview",
+      "display_meta": "2026-07-31 11:36:14 • Endpoint Overview",
       "search_terms": [
         "source editor endpoints",
         "source",
@@ -1688,16 +1688,16 @@
         "endpoint overview",
         "endpoint",
         "overview",
-        "2026-07-27 22:05:53",
+        "2026-07-31 11:36:14",
         "2026",
         "07",
-        "27",
-        "22",
-        "05",
-        "53",
+        "31",
+        "11",
+        "36",
+        "14",
         "d-20260607-222033-4b1d77"
       ],
-      "search_text": "source editor endpoints source editor endpoints endpoint overview endpoint overview 2026-07-27 22:05:53 2026 07 27 22 05 53 d-20260607-222033-4b1d77"
+      "search_text": "source editor endpoints source editor endpoints endpoint overview endpoint overview 2026-07-31 11:36:14 2026 07 31 11 36 14 d-20260607-222033-4b1d77"
     },
     {
       "id": "d-20260607-222033-ce5515",
@@ -1983,10 +1983,10 @@
       "kind": "doc",
       "title": "Media And Asset Handling",
       "href": "/docs/?scope=studio&doc=d-20260514-184303-7914e2",
-      "last_updated": "2026-07-20 19:09:50",
+      "last_updated": "2026-07-31 11:10:43",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-20 19:09:50 • Docs Viewer",
+      "display_meta": "2026-07-31 11:10:43 • Docs Viewer",
       "search_terms": [
         "media and asset handling",
         "media",
@@ -1996,16 +1996,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-20 19:09:50",
+        "2026-07-31 11:10:43",
         "2026",
         "07",
-        "20",
-        "19",
-        "09",
-        "50",
+        "31",
+        "11",
+        "10",
+        "43",
         "d-20260514-184303-7914e2"
       ],
-      "search_text": "media and asset handling media and asset handling docs viewer docs viewer 2026-07-20 19:09:50 2026 07 20 19 09 50 d-20260514-184303-7914e2"
+      "search_text": "media and asset handling media and asset handling docs viewer docs viewer 2026-07-31 11:10:43 2026 07 31 11 10 43 d-20260514-184303-7914e2"
     },
     {
       "id": "d-20260424-000000-291cc8",
@@ -4108,10 +4108,10 @@
       "kind": "doc",
       "title": "Source Editor Image Presentation Delivery",
       "href": "/docs/?scope=studio&doc=d-20260731-085838-c1eaca",
-      "last_updated": "2026-07-31 10:20:25",
+      "last_updated": "2026-07-31 11:12:30",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-31 10:20:25 • Roadmap",
+      "display_meta": "2026-07-31 11:12:30 • Roadmap",
       "search_terms": [
         "source editor image presentation delivery",
         "source",
@@ -4120,16 +4120,16 @@
         "presentation",
         "delivery",
         "roadmap",
-        "2026-07-31 10:20:25",
+        "2026-07-31 11:12:30",
         "2026",
         "07",
         "31",
-        "10",
-        "20",
-        "25",
+        "11",
+        "12",
+        "30",
         "d-20260731-085838-c1eaca"
       ],
-      "search_text": "source editor image presentation delivery source editor image presentation delivery roadmap 2026-07-31 10:20:25 2026 07 31 10 20 25 d-20260731-085838-c1eaca"
+      "search_text": "source editor image presentation delivery source editor image presentation delivery roadmap 2026-07-31 11:12:30 2026 07 31 11 12 30 d-20260731-085838-c1eaca"
     },
     {
       "id": "d-20260511-120352-90ffa6",

@@ -126,6 +126,50 @@
   tab-size: 2;
 }
 
+.docsViewerSourceEditorMedia__presentation{
+  display: grid;
+  gap: 0.9rem;
+}
+
+.docsViewerSourceEditorMedia__placement{
+  display: grid;
+  grid-template-columns: minmax(7.5rem, 0.42fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.docsViewerSourceEditorMedia__placementOptions{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 0.9rem;
+  min-width: 0;
+}
+
+.docsViewerSourceEditorMedia__placementOption{
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
+  line-height: var(--docs-viewer-line-snug, var(--line-snug, 1.25));
+  cursor: pointer;
+}
+
+.docsViewerSourceEditorMedia__radioInput{
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  accent-color: var(--docs-viewer-focus-ring);
+}
+
+@media (max-width: 34rem){
+  .docsViewerSourceEditorMedia__placement{
+    grid-template-columns: 1fr;
+    gap: 0.28rem;
+  }
+}
+
 .docsViewerCatalogueTargetPicker{
   display: grid;
   gap: 0.75rem;

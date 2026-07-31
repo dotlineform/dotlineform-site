@@ -301,6 +301,61 @@ def test_rebuild_source_body_noops_without_timestamp_or_rebuild(monkeypatch) -> 
     assert payload["rebuild"] is None
 
 
+def test_rebuild_source_body_cleans_unicode_only_blank_lines_outside_literal_blocks(monkeypatch) -> None:
+    calls: list[object] = []
+
+    def fake_rebuild(_repo_root, _scope, _changed_paths, write_operation, **_kwargs):
+        calls.append(object())
+        write_operation()
+        return {"ok": True}
+
+    monkeypatch.setattr(source_service.write_rebuild, "perform_source_write_and_rebuild", fake_rebuild)
+    monkeypatch.setattr(source_service.source_model, "current_doc_timestamp", lambda: "2026-07-31 12:34:56")
+
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        source_path = write_source(
+            repo_root,
+            "target.md",
+            "---\n"
+            "title: Target\n"
+            "doc_id: target\n"
+            "---\n"
+            "<figure>\n"
+            "Image\n"
+            "</figure>\n"
+            "\u00a0\n"
+            "## Heading\n\n"
+            "```text\n"
+            "\u00a0\n"
+            "```\n\n"
+            "<pre>\n"
+            "\u00a0\n"
+            "</pre>\n",
+        )
+        read_payload = source_service.read_source_body(
+            repo_root,
+            {"scope": ["studio"], "doc_id": ["target"]},
+        )
+        payload = source_service.rebuild_source_body(
+            repo_root,
+            {
+                "scope": "studio",
+                "doc_id": "target",
+                "source_revision": read_payload["source_revision"],
+                "source_body": read_payload["source_body"],
+            },
+            dry_run=False,
+        )
+        written = source_path.read_text(encoding="utf-8")
+
+    assert len(calls) == 1
+    assert payload["source_changed"] is True
+    assert "</figure>\n\n## Heading" in written
+    assert "```text\n\u00a0\n```" in written
+    assert "<pre>\n\u00a0\n</pre>" in written
+
+
 def test_rebuild_sub_scope_source_uses_configured_build_and_preserves_target(
     monkeypatch,
 ) -> None:

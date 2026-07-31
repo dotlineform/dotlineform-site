@@ -13,6 +13,54 @@ function actionCopy(kind) {
     : { title: "Add image", fieldLabel: "Alt text", empty: "No staged images are available.", primary: "Add image" };
 }
 
+function imagePresentationHtml() {
+  return "" +
+    '<label class="docsViewer__field docsViewer__field--checkbox">' +
+      '<input class="docsViewer__checkboxInput" data-role="staged-media-caption" type="checkbox" checked>' +
+      '<span class="docsViewer__fieldLabel">Add caption</span>' +
+    "</label>" +
+    '<div class="docsViewerSourceEditorMedia__presentation" data-role="staged-media-presentation">' +
+      '<label class="docsViewer__field" for="docsViewerStagedMediaCaption">' +
+        '<span class="docsViewer__fieldLabel">Caption</span>' +
+        '<input class="docsViewer__fieldInput" id="docsViewerStagedMediaCaption" data-role="staged-media-caption-text" type="text" required>' +
+      "</label>" +
+      '<label class="docsViewer__field docsViewer__field--textarea" for="docsViewerStagedMediaSummary">' +
+        '<span class="docsViewer__fieldLabel">Summary</span>' +
+        '<textarea class="docsViewer__fieldInput docsViewer__fieldInput--textarea" id="docsViewerStagedMediaSummary" data-role="staged-media-summary" rows="3"></textarea>' +
+      "</label>" +
+      '<div class="docsViewerSourceEditorMedia__placement" role="group" aria-labelledby="docsViewerStagedMediaPlacementLabel">' +
+        '<span class="docsViewer__fieldLabel" id="docsViewerStagedMediaPlacementLabel">Placement</span>' +
+        '<div class="docsViewerSourceEditorMedia__placementOptions">' +
+          '<label class="docsViewerSourceEditorMedia__placementOption">' +
+            '<input class="docsViewerSourceEditorMedia__radioInput" data-role="staged-media-placement" type="radio" name="docsViewerStagedMediaPlacement" value="full" checked>' +
+            '<span>Full column</span>' +
+          "</label>" +
+          '<label class="docsViewerSourceEditorMedia__placementOption">' +
+            '<input class="docsViewerSourceEditorMedia__radioInput" data-role="staged-media-placement" type="radio" name="docsViewerStagedMediaPlacement" value="left">' +
+            '<span>Image left</span>' +
+          "</label>" +
+          '<label class="docsViewerSourceEditorMedia__placementOption">' +
+            '<input class="docsViewerSourceEditorMedia__radioInput" data-role="staged-media-placement" type="radio" name="docsViewerStagedMediaPlacement" value="right">' +
+            '<span>Image right</span>' +
+          "</label>" +
+        "</div>" +
+      "</div>" +
+      '<label class="docsViewer__field docsViewer__field--checkbox">' +
+        '<input class="docsViewer__checkboxInput" data-role="staged-media-fill-width" type="checkbox" checked>' +
+        '<span class="docsViewer__fieldLabel">Fill available width</span>' +
+      "</label>" +
+    "</div>";
+}
+
+function setImagePresentationEnabled(host, enabled) {
+  var presentation = host.querySelector('[data-role="staged-media-presentation"]');
+  if (!presentation) return;
+  presentation.hidden = !enabled;
+  presentation.querySelectorAll("input, textarea").forEach(function (control) {
+    control.disabled = !enabled;
+  });
+}
+
 function chooseStagedMedia(root, kind, files) {
   var copy = actionCopy(kind);
   var records = Array.isArray(files) ? files : [];
@@ -20,12 +68,7 @@ function chooseStagedMedia(root, kind, files) {
   var optionsHtml = records.map(function (file) {
     return '<option value="' + escapeHtml(file.filename) + '">' + escapeHtml(file.filename) + "</option>";
   }).join("");
-  var captionHtml = kind === "image"
-    ? '<label class="docsViewer__field docsViewer__field--checkbox">' +
-        '<input class="docsViewer__checkboxInput" data-role="staged-media-caption" type="checkbox" checked>' +
-        '<span class="docsViewer__fieldLabel">Add caption</span>' +
-      "</label>"
-    : "";
+  var captionHtml = kind === "image" ? imagePresentationHtml() : "";
   return openDocsViewerManagementModal({
     root: root,
     title: copy.title,
@@ -48,28 +91,71 @@ function chooseStagedMedia(root, kind, files) {
     onOpen: function (api) {
       var select = api.host.querySelector('[data-role="staged-media-file"]');
       var label = api.host.querySelector('[data-role="staged-media-label"]');
+      var captionToggle = api.host.querySelector('[data-role="staged-media-caption"]');
+      var captionInput = api.host.querySelector('[data-role="staged-media-caption-text"]');
+      var captionEdited = false;
       function projectSuggestedLabel() {
         var selected = records.find(function (record) { return record.filename === select.value; });
         label.value = cleanString(selected && selected.suggested_label);
+        if (captionInput) {
+          captionInput.value = label.value;
+          captionEdited = false;
+        }
+      }
+      function projectCaptionSuggestion() {
+        if (captionInput && !captionEdited) captionInput.value = label.value;
+      }
+      function projectCaptionAvailability() {
+        setImagePresentationEnabled(api.host, Boolean(captionToggle && captionToggle.checked));
       }
       select.addEventListener("change", projectSuggestedLabel);
+      label.addEventListener("input", projectCaptionSuggestion);
+      if (captionInput) {
+        captionInput.addEventListener("input", function () {
+          captionEdited = true;
+        });
+      }
+      if (captionToggle) captionToggle.addEventListener("change", projectCaptionAvailability);
       projectSuggestedLabel();
+      projectCaptionAvailability();
     },
     onSubmit: function (api) {
       var select = api.host.querySelector('[data-role="staged-media-file"]');
       var label = api.host.querySelector('[data-role="staged-media-label"]');
-      var caption = api.host.querySelector('[data-role="staged-media-caption"]');
+      var captionToggle = api.host.querySelector('[data-role="staged-media-caption"]');
+      var captionInput = api.host.querySelector('[data-role="staged-media-caption-text"]');
+      var summaryInput = api.host.querySelector('[data-role="staged-media-summary"]');
+      var placementInput = api.host.querySelector('[data-role="staged-media-placement"]:checked');
+      var fillWidthInput = api.host.querySelector('[data-role="staged-media-fill-width"]');
       var filename = cleanString(select && select.value);
       var labelValue = cleanString(label && label.value);
+      var addCaption = Boolean(captionToggle && captionToggle.checked);
+      var captionValue = cleanString(captionInput && captionInput.value);
+      var summaryValue = cleanString(summaryInput && summaryInput.value);
+      var placementValue = cleanString(placementInput && placementInput.value);
+      var fillWidth = Boolean(fillWidthInput && fillWidthInput.checked);
       if (!filename || !labelValue) {
         api.setStatus("Choose a staged file and enter " + copy.fieldLabel.toLowerCase() + ".");
+        return false;
+      }
+      if (addCaption && !captionValue) {
+        api.setStatus("Enter caption text or turn off Add caption.");
+        if (captionInput) captionInput.focus();
+        return false;
+      }
+      if (addCaption && !placementValue) {
+        api.setStatus("Choose an image placement.");
         return false;
       }
       return {
         confirmed: true,
         stagedFilename: filename,
         label: labelValue,
-        addCaption: Boolean(caption && caption.checked)
+        addCaption: addCaption,
+        caption: captionValue,
+        summary: summaryValue,
+        placement: placementValue,
+        fillWidth: fillWidth
       };
     }
   }).then(function (result) {
@@ -134,7 +220,15 @@ export async function publishAndInsertStagedMedia(options = {}) {
     staged_filename: choice.stagedFilename,
     label: choice.label
   };
-  if (kind === "image") request.add_caption = Boolean(choice.addCaption);
+  if (kind === "image") {
+    request.add_caption = Boolean(choice.addCaption);
+    if (choice.addCaption) {
+      request.caption = choice.caption;
+      request.summary = choice.summary;
+      request.placement = choice.placement;
+      request.fill_width = Boolean(choice.fillWidth);
+    }
+  }
   var preview = await provider.previewStagedMedia(request);
   var confirmed = await confirmStagedMedia(options.root || document.body, kind, preview);
   if (!confirmed) return null;

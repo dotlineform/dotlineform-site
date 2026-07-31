@@ -224,6 +224,7 @@ def _source_fragment(
         caption=body.get("caption"),
         summary=body.get("summary"),
         placement=body.get("placement"),
+        fill_width=body.get("fill_width"),
     )
 
 

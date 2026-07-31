@@ -1076,6 +1076,96 @@ body.docs-viewer-service{
   display: block;
 }
 
+.docsViewer__content .docsViewerFigure{
+  box-sizing: border-box;
+  display: grid;
+  align-items: start;
+  width: 100%;
+  max-width: 100%;
+  margin: var(--docs-viewer-space-5) 0;
+  gap: var(--docs-viewer-space-3);
+}
+
+.docsViewer__content .docsViewerFigure > img{
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: auto;
+  margin: 0;
+}
+
+.docsViewer__content .docsViewerFigure--natural-width > img{
+  width: auto;
+  justify-self: start;
+}
+
+.docsViewer__content .docsViewerFigure > figcaption{
+  display: grid;
+  align-content: start;
+  gap: var(--docs-viewer-space-2);
+  min-width: 0;
+  margin: 0;
+  color: var(--docs-viewer-text);
+  font-size: var(--docs-viewer-font-caption);
+  font-style: normal;
+  line-height: var(--docs-viewer-line-normal);
+  text-align: left;
+}
+
+.docsViewer__content .docsViewerFigure__caption,
+.docsViewer__content .docsViewerFigure__summary{
+  display: block;
+}
+
+.docsViewer__content .docsViewerFigure__caption{
+  font-weight: 600;
+}
+
+.docsViewer__content .docsViewerFigure__summary{
+  white-space: pre-line;
+}
+
+.docsViewer__content .docsViewerFigure--image-left,
+.docsViewer__content .docsViewerFigure--image-right{
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--docs-viewer-space-5);
+}
+
+.docsViewer__content .docsViewerFigure--image-right > img{
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.docsViewer__content .docsViewerFigure--image-right.docsViewerFigure--natural-width > img{
+  justify-self: end;
+}
+
+.docsViewer__content .docsViewerFigure--image-right > figcaption{
+  grid-column: 1;
+  grid-row: 1;
+  text-align: right;
+}
+
+@media (max-width: 820px){
+  .docsViewer__content .docsViewerFigure--image-left,
+  .docsViewer__content .docsViewerFigure--image-right{
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--docs-viewer-space-3);
+  }
+
+  .docsViewer__content .docsViewerFigure--image-right > img,
+  .docsViewer__content .docsViewerFigure--image-right > figcaption{
+    grid-column: 1;
+    grid-row: auto;
+    text-align: left;
+  }
+
+  .docsViewer__content .docsViewerFigure--image-right.docsViewerFigure--natural-width > img{
+    justify-self: start;
+  }
+}
+
 /* top text margin for image followed by text */
 .docsViewer__content > img + p,
 .docsViewer__content > img + pre,

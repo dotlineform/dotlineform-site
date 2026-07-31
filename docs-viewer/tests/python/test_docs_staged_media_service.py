@@ -130,6 +130,7 @@ def test_add_image_caption_uses_explicit_full_figure_contract() -> None:
             "add_caption": True,
             "caption": "A [quiet] field & <stream>",
             "placement": "full",
+            "fill_width": True,
         }
 
         preview = staged_media.preview_staged_media(root, request)
@@ -162,19 +163,21 @@ def test_add_image_preview_and_apply_share_explicit_figure_fragment() -> None:
             "label": "Alternative text",
             "add_caption": True,
             "caption": "Visible caption",
-            "summary": "Supporting copy",
+            "summary": "Supporting copy\nSecond line",
             "placement": "left",
+            "fill_width": False,
         }
 
         preview = staged_media.preview_staged_media(root, request)
         payload = staged_media.apply_staged_media(root, request)
 
     expected = (
-        '<figure class="docsViewerFigure docsViewerFigure--image-left">\n'
+        '<figure class="docsViewerFigure docsViewerFigure--image-left '
+        'docsViewerFigure--natural-width">\n'
         '  <img src="[[media:docs/library/img/photo.png]]" alt="Alternative text">\n'
         "  <figcaption>\n"
         '    <span class="docsViewerFigure__caption">Visible caption</span>\n'
-        '    <span class="docsViewerFigure__summary">Supporting copy</span>\n'
+        '    <span class="docsViewerFigure__summary">Supporting copy\nSecond line</span>\n'
         "  </figcaption>\n"
         "</figure>"
     )
@@ -194,6 +197,7 @@ def test_add_image_rejects_explicit_empty_caption_and_invalid_placement() -> Non
             "add_caption": True,
             "caption": "",
             "placement": "full",
+            "fill_width": True,
         }
 
         with pytest.raises(ValueError, match="caption is required"):
@@ -223,6 +227,11 @@ def test_add_image_caption_requires_explicit_caption_and_placement() -> None:
             staged_media.preview_staged_media(
                 root,
                 {**request, "caption": "Visible caption"},
+            )
+        with pytest.raises(ValueError, match="fill_width must be a boolean"):
+            staged_media.preview_staged_media(
+                root,
+                {**request, "caption": "Visible caption", "placement": "full"},
             )
 
 

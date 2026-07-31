@@ -1798,14 +1798,14 @@ def assert_open_source_target_handoff(page: Page) -> None:
         raise AssertionError(f"unexpected source-open target handoff: {result!r}")
 
 
-def assert_source_editor_media_caption_option(page: Page) -> None:
+def assert_source_editor_media_presentation(page: Page) -> None:
     result = page.evaluate(
         """async () => {
             const sourceEditorMedia = await import(
                 '/docs-viewer/runtime/js/management/source-editor/source-editor-media.js'
             );
 
-            async function runCase(kind, uncheckCaption) {
+            async function runCase(kind, mode) {
                 const root = document.createElement('div');
                 root.className = 'docsViewer';
                 document.body.appendChild(root);
@@ -1827,13 +1827,12 @@ def assert_source_editor_media_caption_option(page: Page) -> None:
                     },
                     applyStagedMedia: request => {
                         applyRequest = Object.assign({}, request);
-                        const base = kind === 'image'
-                            ? '![Photo]([[media:docs/studio/img/photo.png]])'
-                            : '[Notes]([[media:docs/studio/files/notes.pdf]])';
-                        const caption = request.add_caption
-                            ? '\\n\\n<span style="font-size: var(--docs-viewer-font-caption);">Photo</span>'
-                            : '';
-                        return Promise.resolve({ markdown: base + caption });
+                        const markdown = kind === 'file'
+                            ? '[Notes]([[media:docs/studio/files/notes.pdf]])'
+                            : request.add_caption
+                            ? `<figure data-server-fragment="${request.placement}"></figure>`
+                            : '![Photo]([[media:docs/studio/img/photo.png]])';
+                        return Promise.resolve({ markdown });
                     }
                 };
                 const adapter = {
@@ -1851,65 +1850,201 @@ def assert_source_editor_media_caption_option(page: Page) -> None:
                 await new Promise(resolve => setTimeout(resolve, 0));
                 const host = root.querySelector('[data-docs-viewer-management-modal-host="true"]');
                 const checkbox = host?.querySelector('[data-role="staged-media-caption"]') || null;
+                const caption = host?.querySelector('[data-role="staged-media-caption-text"]') || null;
+                const labelInput = host?.querySelector('[data-role="staged-media-label"]') || null;
+                const presentation = host?.querySelector('[data-role="staged-media-presentation"]') || null;
+                const summary = host?.querySelector('[data-role="staged-media-summary"]') || null;
+                const fillWidth = host?.querySelector('[data-role="staged-media-fill-width"]') || null;
+                const placementInputs = Array.from(
+                    host?.querySelectorAll('[data-role="staged-media-placement"]') || []
+                );
                 const initialChecked = checkbox ? checkbox.checked : null;
-                if (checkbox && uncheckCaption) checkbox.checked = false;
+                const initialCaption = caption ? caption.value : null;
+                const initialPlacement = placementInputs.find(input => input.checked)?.value || null;
+                const initialFillWidth = fillWidth ? fillWidth.checked : null;
+                let labelAfterCaption = null;
+                let suggestedAfterAlt = null;
+                if (mode === 'custom') {
+                    labelInput.value = 'Alternative text';
+                    labelInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    suggestedAfterAlt = caption.value;
+                    caption.value = 'Visible caption';
+                    caption.dispatchEvent(new Event('input', { bubbles: true }));
+                    labelAfterCaption = labelInput.value;
+                    summary.value = 'Supporting copy';
+                    placementInputs.find(input => input.value === 'right').checked = true;
+                    fillWidth.checked = false;
+                }
+                if (checkbox && mode === 'unchecked') {
+                    checkbox.checked = false;
+                    checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+                }
                 const submittedChecked = checkbox ? checkbox.checked : null;
+                const presentationControlsDisabled = presentation
+                    ? Array.from(presentation.querySelectorAll('input, textarea')).every(control => control.disabled)
+                    : null;
+                const presentationHidden = presentation ? presentation.hidden : null;
                 host?.querySelector('button[data-role="modal-primary"]')?.click();
                 await publishing;
                 const state = {
-                    applyCaption: Object.prototype.hasOwnProperty.call(applyRequest, 'add_caption')
-                        ? applyRequest.add_caption
-                        : null,
                     captionPresent: Boolean(checkbox),
+                    applyRequest,
                     initialChecked,
+                    initialCaption,
+                    initialFillWidth,
+                    initialPlacement,
                     inserted,
-                    previewCaption: Object.prototype.hasOwnProperty.call(previewRequest, 'add_caption')
-                        ? previewRequest.add_caption
-                        : null,
-                    submittedChecked
+                    labelAfterCaption,
+                    presentationControlsDisabled,
+                    presentationHidden,
+                    presentationPresent: Boolean(presentation),
+                    previewRequest,
+                    suggestedAfterAlt,
+                    submittedChecked,
+                    submittedFillWidth: fillWidth ? fillWidth.checked : null
                 };
                 root.remove();
                 return state;
             }
 
             return {
-                file: await runCase('file', false),
-                imageDefault: await runCase('image', false),
-                imageUnchecked: await runCase('image', true)
+                file: await runCase('file', 'default'),
+                imageCustom: await runCase('image', 'custom'),
+                imageDefault: await runCase('image', 'default'),
+                imageUnchecked: await runCase('image', 'unchecked')
             };
         }"""
     )
     expected = {
         "file": {
-            "applyCaption": None,
             "captionPresent": False,
+            "applyRequest": {
+                "media_kind": "file",
+                "staged_filename": "notes.pdf",
+                "label": "Notes",
+                "confirm_replace": False,
+            },
             "initialChecked": None,
+            "initialCaption": None,
+            "initialFillWidth": None,
+            "initialPlacement": None,
             "inserted": "[Notes]([[media:docs/studio/files/notes.pdf]])",
-            "previewCaption": None,
+            "labelAfterCaption": None,
+            "presentationControlsDisabled": None,
+            "presentationHidden": None,
+            "presentationPresent": False,
+            "previewRequest": {
+                "media_kind": "file",
+                "staged_filename": "notes.pdf",
+                "label": "Notes",
+            },
+            "suggestedAfterAlt": None,
             "submittedChecked": None,
+            "submittedFillWidth": None,
+        },
+        "imageCustom": {
+            "captionPresent": True,
+            "applyRequest": {
+                "media_kind": "image",
+                "staged_filename": "photo.png",
+                "label": "Alternative text",
+                "add_caption": True,
+                "caption": "Visible caption",
+                "summary": "Supporting copy",
+                "placement": "right",
+                "fill_width": False,
+                "confirm_replace": False,
+            },
+            "initialChecked": True,
+            "initialCaption": "Photo",
+            "initialFillWidth": True,
+            "initialPlacement": "full",
+            "inserted": '<figure data-server-fragment="right"></figure>',
+            "labelAfterCaption": "Alternative text",
+            "presentationControlsDisabled": False,
+            "presentationHidden": False,
+            "presentationPresent": True,
+            "previewRequest": {
+                "media_kind": "image",
+                "staged_filename": "photo.png",
+                "label": "Alternative text",
+                "add_caption": True,
+                "caption": "Visible caption",
+                "summary": "Supporting copy",
+                "placement": "right",
+                "fill_width": False,
+            },
+            "suggestedAfterAlt": "Alternative text",
+            "submittedChecked": True,
+            "submittedFillWidth": False,
         },
         "imageDefault": {
-            "applyCaption": True,
             "captionPresent": True,
+            "applyRequest": {
+                "media_kind": "image",
+                "staged_filename": "photo.png",
+                "label": "Photo",
+                "add_caption": True,
+                "caption": "Photo",
+                "summary": "",
+                "placement": "full",
+                "fill_width": True,
+                "confirm_replace": False,
+            },
             "initialChecked": True,
-            "inserted": (
-                "![Photo]([[media:docs/studio/img/photo.png]])\n\n"
-                '<span style="font-size: var(--docs-viewer-font-caption);">Photo</span>'
-            ),
-            "previewCaption": True,
+            "initialCaption": "Photo",
+            "initialFillWidth": True,
+            "initialPlacement": "full",
+            "inserted": '<figure data-server-fragment="full"></figure>',
+            "labelAfterCaption": None,
+            "presentationControlsDisabled": False,
+            "presentationHidden": False,
+            "presentationPresent": True,
+            "previewRequest": {
+                "media_kind": "image",
+                "staged_filename": "photo.png",
+                "label": "Photo",
+                "add_caption": True,
+                "caption": "Photo",
+                "summary": "",
+                "placement": "full",
+                "fill_width": True,
+            },
+            "suggestedAfterAlt": None,
             "submittedChecked": True,
+            "submittedFillWidth": True,
         },
         "imageUnchecked": {
-            "applyCaption": False,
             "captionPresent": True,
+            "applyRequest": {
+                "media_kind": "image",
+                "staged_filename": "photo.png",
+                "label": "Photo",
+                "add_caption": False,
+                "confirm_replace": False,
+            },
             "initialChecked": True,
+            "initialCaption": "Photo",
+            "initialFillWidth": True,
+            "initialPlacement": "full",
             "inserted": "![Photo]([[media:docs/studio/img/photo.png]])",
-            "previewCaption": False,
+            "labelAfterCaption": None,
+            "presentationControlsDisabled": True,
+            "presentationHidden": True,
+            "presentationPresent": True,
+            "previewRequest": {
+                "media_kind": "image",
+                "staged_filename": "photo.png",
+                "label": "Photo",
+                "add_caption": False,
+            },
+            "suggestedAfterAlt": None,
             "submittedChecked": False,
+            "submittedFillWidth": True,
         },
     }
     if result != expected:
-        raise AssertionError(f"source-editor media caption option changed: {result!r}")
+        raise AssertionError(f"source-editor media presentation changed: {result!r}")
 
 
 def assert_document_transfer_module_contract(page: Page) -> None:
@@ -2497,7 +2632,7 @@ def exercise_manage_route(
     assert_metadata_workflow_uses_exact_sub_scope_target(page)
     assert_metadata_client_uses_exact_target_requests(page)
     assert_metadata_response_refreshes_exact_target(page)
-    assert_source_editor_media_caption_option(page)
+    assert_source_editor_media_presentation(page)
     assert_open_source_target_handoff(page)
     assert_delete_uses_first_remaining_root(page)
     assert_manage_route_contract(manage_route_state(page), base_url)

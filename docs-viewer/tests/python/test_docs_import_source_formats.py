@@ -65,6 +65,50 @@ def test_markdown_import_create_wraps_body_with_generated_front_matter() -> None
     assert "Body from staged Markdown" in source_text
 
 
+def test_markdown_import_cleans_unicode_only_blank_lines_outside_literal_blocks() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_staged_markdown(
+            root,
+            "exported-note.md",
+            "# Exported Note\n\n"
+            "<figure>\n"
+            "Image\n"
+            "</figure>\n"
+            "\u00a0\n"
+            "## Heading\n\n"
+            "```text\n"
+            "\u00a0\n"
+            "```\n\n"
+            "<pre>\n"
+            "\u00a0\n"
+            "</pre>\n",
+        )
+        original_rebuild = stub_rebuild()
+        original_validation = docs_import_preview.validate_markdown_preview
+        docs_import_preview.validate_markdown_preview = lambda markdown, *, title="": {
+            "ok": True,
+            "html_chars": len(markdown),
+            "renderer": "stub",
+        }
+        try:
+            payload = handle_import_source(
+                root,
+                {"scope": "library", "staged_filename": "exported-note.md"},
+                dry_run=False,
+            )
+        finally:
+            write_rebuild.perform_source_write_and_rebuild = original_rebuild
+            docs_import_preview.validate_markdown_preview = original_validation
+
+        source_text = (root / payload["path"]).read_text(encoding="utf-8")
+
+    assert "</figure>\n\n## Heading" in source_text
+    assert "```text\n\u00a0\n```" in source_text
+    assert "<pre>\n\u00a0\n</pre>" in source_text
+
+
 def test_parent_markdown_front_matter_is_hygiene_not_canonical_identity() -> None:
     with make_repo() as temp:
         root = Path(temp)

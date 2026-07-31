@@ -21,9 +21,69 @@ class MarkdownRenderOptions:
 
 DEFAULT_MARKDOWN_RENDER_OPTIONS = MarkdownRenderOptions()
 
+FENCED_CODE_OPEN_PATTERN = re.compile(r"^(?P<indent> {0,3})(?P<fence>`{3,}|~{3,})(?P<info>.*)$")
+PRE_OPEN_PATTERN = re.compile(r"<pre(?:\s[^>]*)?>", re.IGNORECASE)
+PRE_CLOSE_PATTERN = re.compile(r"</pre\s*>", re.IGNORECASE)
+
 
 def normalize_plain_text(value: str | None) -> str:
     return re.sub(r"\s+", " ", value or "").strip()
+
+
+def normalize_markdown_blank_lines(markdown: str | None) -> str:
+    """Treat Unicode-whitespace-only Markdown lines as blank outside literal blocks."""
+
+    source = markdown or ""
+    parts = re.split(r"(\r\n|\r|\n)", source)
+    normalized: List[str] = []
+    fence_character = ""
+    fence_length = 0
+    pre_depth = 0
+
+    for index in range(0, len(parts), 2):
+        line = parts[index]
+        line_ending = parts[index + 1] if index + 1 < len(parts) else ""
+
+        if fence_character:
+            normalized.extend((line, line_ending))
+            if re.fullmatch(
+                rf" {{0,3}}{re.escape(fence_character)}{{{fence_length},}}[ \t]*",
+                line,
+            ):
+                fence_character = ""
+                fence_length = 0
+            continue
+
+        if pre_depth:
+            normalized.extend((line, line_ending))
+            pre_depth += len(PRE_OPEN_PATTERN.findall(line))
+            pre_depth = max(0, pre_depth - len(PRE_CLOSE_PATTERN.findall(line)))
+            continue
+
+        fence_match = FENCED_CODE_OPEN_PATTERN.match(line)
+        if fence_match:
+            fence = fence_match.group("fence")
+            info = fence_match.group("info")
+            if fence[0] != "`" or "`" not in info:
+                fence_character = fence[0]
+                fence_length = len(fence)
+                normalized.extend((line, line_ending))
+                continue
+
+        pre_depth = max(
+            0,
+            len(PRE_OPEN_PATTERN.findall(line)) - len(PRE_CLOSE_PATTERN.findall(line)),
+        )
+        if pre_depth:
+            normalized.extend((line, line_ending))
+            continue
+
+        is_unicode_space_only = bool(line) and line.isspace() and any(
+            character not in " \t" for character in line
+        )
+        normalized.extend(("" if is_unicode_space_only else line, line_ending))
+
+    return "".join(normalized)
 
 
 class PlainTextRenderer(HTMLParser):
@@ -168,7 +228,7 @@ def build_markdown_renderer(options: MarkdownRenderOptions | None = None) -> Mar
 
 
 def render_markdown_to_html(markdown: str | None, options: MarkdownRenderOptions | None = None) -> str:
-    return build_markdown_renderer(options).render(markdown or "")
+    return build_markdown_renderer(options).render(normalize_markdown_blank_lines(markdown))
 
 
 def plain_text_from_html(content_html: str | None, *, title: str = "") -> str:

@@ -4,22 +4,28 @@
 from __future__ import annotations
 
 import copy
+import sys
 from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
-from docs_import_content import (
+REPO_ROOT = Path(__file__).resolve().parents[2]
+SHARED_PYTHON_DIR = REPO_ROOT / "studio" / "shared" / "python"
+if str(SHARED_PYTHON_DIR) not in sys.path:
+    sys.path.insert(0, str(SHARED_PYTHON_DIR))
+
+from docs_import_content import (  # noqa: E402
     CONTENT_INTENT_EMPTY_NEW,
     CONTENT_INTENT_PRESERVE_EXISTING,
     CONTENT_INTENT_REPLACE,
     ImportContent,
 )
-from docs_import_media import materialize_import_media
-from docs_import_source_helpers import import_summary_text, relative_path, viewer_url_for
-from docs_import_source_interactive import materialize_interactive_html_assets
-from docs_management_document_target import ManagedDocumentCollection
-from docs_management_mutations import metadata_search_doc_ids
-from docs_source_model import (
+from docs_import_media import materialize_import_media  # noqa: E402
+from docs_import_source_helpers import import_summary_text, relative_path, viewer_url_for  # noqa: E402
+from docs_import_source_interactive import materialize_interactive_html_assets  # noqa: E402
+from docs_management_document_target import ManagedDocumentCollection  # noqa: E402
+from docs_management_mutations import metadata_search_doc_ids  # noqa: E402
+from docs_source_model import (  # noqa: E402
     ScopeDoc,
     advance_doc_front_matter,
     advance_front_matter_for_recent_edit,
@@ -35,6 +41,7 @@ from docs_source_model import (
     write_text_atomic,
     write_text_atomic_new,
 )
+from markdown_renderer import normalize_markdown_blank_lines  # noqa: E402
 
 
 IMPORT_DOCUMENT_CREATE = "create"
@@ -131,7 +138,7 @@ def _viewable_value(front_matter: dict[str, Any], default: bool) -> bool:
 
 
 def _replacement_body(import_preview: dict[str, Any], title: str) -> str:
-    markdown = _clean_text(import_preview.get("markdown_preview"))
+    markdown = normalize_markdown_blank_lines(_clean_text(import_preview.get("markdown_preview")))
     if markdown:
         return markdown + "\n"
     return f"# {title}\n"
