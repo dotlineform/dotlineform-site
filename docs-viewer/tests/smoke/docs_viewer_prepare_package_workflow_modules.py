@@ -415,6 +415,14 @@ def install_workflow_fixture(page: Page, prepare_outcome: str = "success") -> No
                 },
                 prepare: async (payload) => {
                     window.prepareFixture.calls.push({ method: 'prepare', payload });
+                    if (prepareOutcome === 'api-error') {
+                        const error = new Error('Request failed.');
+                        error.payload = {
+                            ok: false,
+                            error: 'Document package profiles are invalid: unsupported target format.'
+                        };
+                        throw error;
+                    }
                     if (prepareOutcome === 'failure') {
                         const error = new Error('Package write failed.');
                         error.payload = {
@@ -478,6 +486,9 @@ def exercise_success(page: Page, timeout_ms: int) -> None:
     profile_labels = page.locator("[data-package-profile] option").all_text_contents()
     if profile_labels != ["Document content", "Document tree (export only)"]:
         raise AssertionError(f"Prepare workflow projected unexpected profile labels: {profile_labels!r}")
+    format_labels = page.locator("[data-package-target-format] option").all_text_contents()
+    if format_labels != ["JSONL", "JSON"]:
+        raise AssertionError(f"Prepare workflow projected unexpected format labels: {format_labels!r}")
     modal_text = page.locator('[data-role="docs-viewer-management-modal"]').inner_text()
     if "checked document" in modal_text:
         raise AssertionError(f"Prepare workflow retained the raw checked-count note: {modal_text!r}")
@@ -594,6 +605,21 @@ def exercise_failure(page: Page, timeout_ms: int) -> None:
     )
     if result["result"]["ok"] is not False or result["selection"] != ["root", "sibling"]:
         raise AssertionError(f"unexpected failed workflow result: {result!r}")
+
+
+def exercise_api_error(page: Page, timeout_ms: int) -> None:
+    install_workflow_fixture(page, "api-error")
+    page.wait_for_selector('[data-role="docs-viewer-management-modal"]', timeout=timeout_ms)
+    page.locator('[data-role="modal-primary"]').click()
+    page.wait_for_selector(
+        '[data-role="docs-viewer-management-modal"] h2:text("Document package was not prepared")',
+        timeout=timeout_ms,
+    )
+    result_text = page.locator('[data-role="docs-viewer-management-modal"]').inner_text()
+    expected = "Document package profiles are invalid: unsupported target format."
+    if expected not in result_text or "The action completed." in result_text:
+        raise AssertionError(f"Prepare API error was not shown: {result_text!r}")
+    page.locator('[data-role="modal-primary"]').click()
 
 
 def exercise_zero_target(page: Page, timeout_ms: int) -> None:
@@ -787,6 +813,7 @@ def main(argv: list[str] | None = None) -> int:
             assert_prepare_is_not_an_app_action(page)
             exercise_success(page, args.timeout_ms)
             exercise_failure(page, args.timeout_ms)
+            exercise_api_error(page, args.timeout_ms)
             exercise_zero_target(page, args.timeout_ms)
             exercise_cancel(page, args.timeout_ms)
             exercise_subscope_success(page, args.timeout_ms)

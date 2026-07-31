@@ -33,6 +33,7 @@ const DOCUMENT_PACKAGE_PREPARE_COUNT_ORDER = Object.freeze([
 
 function formatLabel(value) {
   const normalized = packageText(value);
+  if (normalized === "json" || normalized === "jsonl") return normalized.toUpperCase();
   if (normalized === "plain_text") return "Plain text";
   return normalized.replace(/_/g, " ").replace(/\b\w/g, (character) => character.toUpperCase());
 }
@@ -364,9 +365,20 @@ function openPrepareOptions(options) {
 }
 
 function resultPayloadForError(error) {
-  if (error && error.payload && typeof error.payload === "object") return error.payload;
-  const message = packageText(error && error.message) || "Document package preparation failed.";
-  return { ok: false, summary_text: message, errors: [message] };
+  const attached = error && error.payload && typeof error.payload === "object"
+    ? error.payload
+    : {};
+  const message = (
+    packageText(attached.summary_text)
+    || packageText(attached.error)
+    || packageText(error && error.message)
+    || "Document package preparation failed."
+  );
+  return {
+    ...attached,
+    ok: false,
+    summary_text: message
+  };
 }
 
 function showPrepareResult(options) {
