@@ -7,7 +7,7 @@
       "doc_id": "d-20260731-155053-3929e2",
       "title": "Sub-Scope Report Customisation Architecture",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155053-3929e2.json",
-      "timestamp": "2026-07-31 17:12:57",
+      "timestamp": "2026-07-31 17:28:18",
       "parent_id": "d-20260731-150644-3dfab5",
       "parent_title": "Sub-Scope Report Defaults And Customisations"
     },
@@ -15,7 +15,7 @@
       "doc_id": "d-20260731-155054-1fcd80",
       "title": "Default Report And Analysis Tags Refactor Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155054-1fcd80.json",
-      "timestamp": "2026-07-31 17:05:03",
+      "timestamp": "2026-07-31 17:27:23",
       "parent_id": "d-20260731-150644-3dfab5",
       "parent_title": "Sub-Scope Report Defaults And Customisations"
     },
@@ -84,5 +84,5 @@
       "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-07-31T16:13:58Z"
+  "generated_at": "2026-07-31T16:28:18Z"
 }
