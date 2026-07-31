@@ -1004,7 +1004,7 @@
               "doc_id": "d-20260731-155055-0b921e",
               "title": "New Sub-Scope Default Report Lifecycle Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155055-0b921e.json",
-              "ui_status": "proposed"
+              "ui_status": "in-progress"
             },
             {
               "doc_id": "d-20260731-160944-f68b74",
@@ -1373,5 +1373,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-31T19:56:40Z"
+  "generated_at": "2026-07-31T20:18:37Z"
 }
