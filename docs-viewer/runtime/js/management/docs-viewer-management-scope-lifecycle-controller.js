@@ -9,8 +9,56 @@ import {
   subScopeDeleteSupported,
   subScopeLifecycleDeleteTargets
 } from "./docs-viewer-management-capabilities.js";
+import {
+  normalizeManagedDocumentTarget
+} from "./docs-viewer-management-document-target.js";
 
 var LIFECYCLE_ERROR = "Scope lifecycle unavailable.";
+
+export function followCreatedSubScopeReport(payload, options = {}) {
+  var target;
+  try {
+    target = normalizeManagedDocumentTarget(payload && payload.report_host_target);
+    if (
+      !payload
+      || payload.action !== "create_sub_scope"
+      || payload.committed !== true
+      || Object.prototype.hasOwnProperty.call(target, "sub_scope")
+      || target.scope !== String(options.activeScope || "").trim().toLowerCase()
+    ) {
+      throw new Error("Created sub-scope report target is invalid.");
+    }
+  } catch (error) {
+    return Promise.reject(
+      new Error("Created sub-scope report target is invalid.", { cause: error })
+    );
+  }
+  if (
+    typeof options.reloadViewerConfiguration !== "function"
+    || typeof options.reloadDocsIndex !== "function"
+  ) {
+    return Promise.reject(new Error("Created sub-scope report refresh is unavailable."));
+  }
+  return Promise.resolve()
+    .then(options.reloadViewerConfiguration)
+    .then(function () {
+      return typeof options.refreshManagementCapabilities === "function"
+        ? options.refreshManagementCapabilities()
+        : null;
+    })
+    .then(function () {
+      return options.reloadDocsIndex(target.doc_id, "");
+    })
+    .then(function () {
+      return target;
+    })
+    .catch(function (error) {
+      throw new Error(
+        "Sub-scope created, but its report could not be opened. " + error.message,
+        { cause: error }
+      );
+    });
+}
 
 export function createDocsViewerManagementScopeLifecycleController(options = {}) {
   var root = options.root || null;
@@ -35,6 +83,7 @@ export function createDocsViewerManagementScopeLifecycleController(options = {})
       onApplied: function (payload) {
         if (payload && payload.action === "rename_scope" && typeof callbacks.navigateToScope === "function") return;
         if (scopeDeleteNavigationTarget(payload, viewerScope()) && typeof callbacks.navigateToScope === "function") return;
+        if (payload && payload.action === "create_sub_scope") return;
         var reloadConfig = typeof callbacks.reloadViewerConfiguration === "function"
           ? callbacks.reloadViewerConfiguration()
           : Promise.resolve(null);
@@ -44,6 +93,14 @@ export function createDocsViewerManagementScopeLifecycleController(options = {})
             .then(callbacks.refreshManagementCapabilities)
             .catch(callbacks.refreshManagementCapabilities);
         }
+      },
+      followCreatedSubScopeReport: function (payload) {
+        return followCreatedSubScopeReport(payload, {
+          activeScope: viewerScope(),
+          reloadViewerConfiguration: callbacks.reloadViewerConfiguration,
+          refreshManagementCapabilities: callbacks.refreshManagementCapabilities,
+          reloadDocsIndex: callbacks.reloadDocsIndex
+        });
       },
       render: callbacks.render,
       setBusy: callbacks.setBusy,

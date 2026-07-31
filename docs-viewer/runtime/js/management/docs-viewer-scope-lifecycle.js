@@ -766,6 +766,9 @@ export async function openCreateSubScopeFlow(options = {}) {
     payload: appliedPayload,
     primaryLabel: SCOPE_LIFECYCLE_TEXT.scopeResultOkButton
   });
+  if (typeof callbacks.followCreatedSubScopeReport === "function") {
+    await callbacks.followCreatedSubScopeReport(appliedPayload);
+  }
   return appliedPayload;
 }
 

@@ -954,6 +954,7 @@ export function initDocsViewerManagement(context) {
         window.location.assign(url.toString());
       },
       refreshManagementCapabilities: refreshManagementCapabilities,
+      reloadDocsIndex: reloadDocsIndex,
       reloadViewerConfiguration: reloadViewerConfiguration,
       render: renderManagementUi,
       setBusy: setManagementBusy,

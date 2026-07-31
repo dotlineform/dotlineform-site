@@ -350,6 +350,69 @@ def assert_create_presentation_coordinator(page: Page) -> None:
     }
 
 
+def assert_subscope_lifecycle_lands_on_exact_host(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const lifecycle = await import(
+                '/docs-viewer/runtime/js/management/' +
+                'docs-viewer-management-scope-lifecycle-controller.js'
+            );
+            const payload = {
+                ok: true,
+                action: 'create_sub_scope',
+                committed: true,
+                planned_report_host_identity: {
+                    doc_id: 'created-report-host',
+                    added_date: '2000-01-01 00:00:00'
+                },
+                report_host_target: {
+                    scope: 'studio',
+                    doc_id: 'created-report-host'
+                },
+                urls: {
+                    management: '/docs/?scope=wrong&doc=fallback-host'
+                }
+            };
+            const events = [];
+            const target = await lifecycle.followCreatedSubScopeReport(payload, {
+                activeScope: 'studio',
+                reloadViewerConfiguration: async () => {
+                    events.push(['config']);
+                },
+                refreshManagementCapabilities: async () => {
+                    events.push(['capabilities']);
+                },
+                reloadDocsIndex: async (docId, summaryText) => {
+                    events.push(['index', docId, summaryText]);
+                }
+            });
+            let fallbackError = '';
+            try {
+                await lifecycle.followCreatedSubScopeReport(
+                    Object.assign({}, payload, { report_host_target: null }),
+                    {
+                        activeScope: 'studio',
+                        reloadViewerConfiguration: () => events.push(['unexpected-config']),
+                        reloadDocsIndex: () => events.push(['unexpected-index'])
+                    }
+                );
+            } catch (error) {
+                fallbackError = error.message;
+            }
+            return { target, events, fallbackError };
+        }"""
+    )
+    assert result == {
+        "target": {"scope": "studio", "doc_id": "created-report-host"},
+        "events": [
+            ["config"],
+            ["capabilities"],
+            ["index", "created-report-host", ""],
+        ],
+        "fallbackError": "Created sub-scope report target is invalid.",
+    }
+
+
 def assert_management_client_preserves_committed_error_payload(
     page: Page,
 ) -> None:
@@ -510,6 +573,7 @@ def assert_document_mode_failure_callback(page: Page) -> None:
 def run_smoke(page: Page, base_url: str) -> None:
     page.goto(f"{base_url.rstrip('/')}/", wait_until="domcontentloaded")
     assert_create_presentation_coordinator(page)
+    assert_subscope_lifecycle_lands_on_exact_host(page)
     assert_management_client_preserves_committed_error_payload(page)
     assert_document_mode_failure_callback(page)
 
