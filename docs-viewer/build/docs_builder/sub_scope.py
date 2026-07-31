@@ -18,8 +18,8 @@ from .common import (
 from .pipeline import DocsDataBuilder
 from .source import DocRecord
 from docs_subscope_report_customisations import (
-    analysis_tags_groups,
     project_report_customisation_manifest,
+    report_customisation_document_groups,
 )
 
 
@@ -59,7 +59,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         matching = [
             doc.doc_id for doc in parent_docs
             if (
-                doc.viewer_report in {"docs_subscope", "docs_subscope_candidate"}
+                doc.viewer_report == "docs_subscope"
                 and doc.viewer_report_subscope == self.sub_scope_id
             )
         ]
@@ -115,26 +115,18 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         return payload
 
     def manage_manifest_payload(self, ordered_docs: list[DocRecord]) -> dict[str, Any]:
-        payload: dict[str, Any] = {}
-        if self.sub_scope_config.document_groups:
-            payload["groups"] = list(self.sub_scope_config.document_groups)
-        payload["docs"] = [
-            {
-                **{
+        payload: dict[str, Any] = {
+            "docs": [
+                {
                     "doc_id": doc.doc_id,
                     "title": doc.title,
                     "ui_status": doc.ui_status,
                     "viewable": doc.viewable,
                     "last_updated": doc.last_updated,
-                },
-                **(
-                    {"group": doc.group}
-                    if doc.group and self.sub_scope_config.document_groups
-                    else {}
-                ),
-            }
-            for doc in ordered_docs
-        ]
+                }
+                for doc in ordered_docs
+            ]
+        }
         projected = project_report_customisation_manifest(
             self.sub_scope_config.report_customisation,
             ordered_docs,
@@ -163,8 +155,10 @@ class SubScopeDocsBuilder(DocsDataBuilder):
     def validate_docs(self, docs: list[DocRecord]) -> None:
         super().validate_docs(docs)
         allowed_statuses = set(self.sub_scope_config.ui_statuses)
-        allowed_groups = set(self.sub_scope_config.document_groups) or set(
-            analysis_tags_groups(self.sub_scope_config.report_customisation)
+        allowed_groups = set(
+            report_customisation_document_groups(
+                self.sub_scope_config.report_customisation
+            )
         )
         for doc in docs:
             if doc.ui_status and doc.ui_status not in allowed_statuses:

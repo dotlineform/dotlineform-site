@@ -25,6 +25,7 @@ from tags import tag_source_model as tag_source  # noqa: E402
 
 
 PLAN_SCHEMA = "analysis_tag_document_group_seed_v1"
+SOURCE_REGISTRY_VERSION = "tag_registry_v4"
 BOOTSTRAP_ADDED_DATE = "2026-07-27 22:56:08"
 EXPECTED_BOOTSTRAP_DOCUMENTS = 245
 EXPECTED_INDEPENDENT_DOCUMENTS = 3
@@ -72,7 +73,7 @@ def _load_json(path: Path) -> dict[str, Any]:
     return payload
 
 
-def _analysis_tag_document_groups(repo_root: Path) -> list[str]:
+def _analysis_tag_groups(repo_root: Path) -> list[str]:
     payload = _load_json(repo_root / SCOPES_CONFIG_PATH)
     scopes = payload.get("scopes")
     if not isinstance(scopes, list):
@@ -86,18 +87,25 @@ def _analysis_tag_document_groups(repo_root: Path) -> list[str]:
         for sub_scope in sub_scopes:
             if not isinstance(sub_scope, dict) or sub_scope.get("sub_scope") != "tags":
                 continue
-            raw_groups = sub_scope.get("document_groups")
+            customisation = sub_scope.get("report_customisation")
+            settings = (
+                customisation.get("settings")
+                if isinstance(customisation, dict)
+                and customisation.get("id") == "analysis_tags"
+                else None
+            )
+            raw_groups = settings.get("groups") if isinstance(settings, dict) else None
             if (
                 not isinstance(raw_groups, list)
                 or not raw_groups
                 or not all(isinstance(group, str) and group.strip() for group in raw_groups)
             ):
                 raise ValueError(
-                    "Analysis/tags must configure a non-empty document_groups array"
+                    "Analysis/tags must configure non-empty analysis_tags groups"
                 )
             groups = [group.strip().lower() for group in raw_groups]
             if len(set(groups)) != len(groups):
-                raise ValueError("Analysis/tags document_groups must be unique")
+                raise ValueError("Analysis/tags customisation groups must be unique")
             return groups
     raise ValueError("Analysis/tags sub-scope config was not found")
 
@@ -105,19 +113,19 @@ def _analysis_tag_document_groups(repo_root: Path) -> list[str]:
 def _registry_rows(
     repo_root: Path,
     *,
-    document_groups: list[str],
+    analysis_tag_groups: list[str],
 ) -> tuple[bytes, dict[str, dict[str, str]]]:
     registry_path = repo_root / REGISTRY_PATH
     registry_bytes = registry_path.read_bytes()
     payload = json.loads(registry_bytes.decode("utf-8"))
     if not isinstance(payload, dict):
         raise ValueError("tag Registry must contain a JSON object")
-    if payload.get("tag_registry_version") != tag_source.TAG_REGISTRY_VERSION:
+    if payload.get("tag_registry_version") != SOURCE_REGISTRY_VERSION:
         raise ValueError(
-            f"tag Registry must use {tag_source.TAG_REGISTRY_VERSION}"
+            f"tag Registry must use {SOURCE_REGISTRY_VERSION}"
         )
     allowed_groups = tag_source.extract_allowed_groups(payload)
-    if allowed_groups != document_groups:
+    if allowed_groups != analysis_tag_groups:
         raise ValueError(
             "Analysis/tags document groups must exactly match Registry allowed groups"
         )
@@ -253,10 +261,10 @@ def build_seed_plan(
     expected_independent_count: int = EXPECTED_INDEPENDENT_DOCUMENTS,
 ) -> dict[str, Any]:
     repo_root = repo_root.resolve()
-    document_groups = _analysis_tag_document_groups(repo_root)
+    analysis_tag_groups = _analysis_tag_groups(repo_root)
     registry_bytes, registry_by_doc_id = _registry_rows(
         repo_root,
-        document_groups=document_groups,
+        analysis_tag_groups=analysis_tag_groups,
     )
     source_records = _source_inventory(repo_root)
     candidates: list[dict[str, Any]] = []
@@ -372,7 +380,7 @@ def build_seed_plan(
             "registry_path": REGISTRY_PATH.as_posix(),
             "registry_sha256": _sha256_bytes(registry_bytes),
             "source_inventory_sha256": _canonical_sha256(public_inventory),
-            "document_groups": document_groups,
+            "analysis_tag_groups": analysis_tag_groups,
             "source_document_count": len(source_records),
             "registry_linked_document_count": len(linked_source_ids),
         },

@@ -223,12 +223,17 @@
             "report",
             "research"
           ],
-          "document_groups": [
-            "subject",
-            "domain",
-            "form",
-            "theme"
-          ],
+          "report_customisation": {
+            "id": "analysis_tags",
+            "settings": {
+              "groups": [
+                "subject",
+                "domain",
+                "form",
+                "theme"
+              ]
+            }
+          },
           "public_projection": {
             "documents": {
               "location": {

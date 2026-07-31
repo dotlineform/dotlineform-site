@@ -81,7 +81,7 @@ def test_python_docs_builder_writes_sub_scope_payloads_and_minimal_manifest() ->
                 "studio",
                 "tags",
                 title="Tags",
-                document_groups=["subject", "domain", "form", "theme"],
+                analysis_tag_groups=["subject", "domain", "form", "theme"],
             )
         ]
         write_json(config_path, payload)
@@ -155,7 +155,12 @@ Related body.
         ]
     }
     assert manage_manifest == {
-        "groups": ["subject", "domain", "form", "theme"],
+        "customisation": {
+            "id": "analysis_tags",
+            "data": {
+                "groups": ["subject", "domain", "form", "theme"],
+            },
+        },
         "docs": [
             {
                 "doc_id": DETAIL_DOC_ID,
@@ -163,7 +168,7 @@ Related body.
                 "ui_status": "draft",
                 "viewable": True,
                 "last_updated": "2026-06-21",
-                "group": "subject",
+                "customisation": {"group": "subject"},
             },
             {
                 "doc_id": RELATED_DOC_ID,
@@ -207,7 +212,7 @@ def test_python_docs_builder_rejects_invalid_sub_scope_group(
             docs_sub_scope_record(
                 "studio",
                 "tags",
-                document_groups=["subject", "domain", "form", "theme"],
+                analysis_tag_groups=["subject", "domain", "form", "theme"],
             )
         ]
         write_json(config_path, payload)
@@ -404,7 +409,7 @@ def test_python_docs_builder_projects_registered_manage_customisation_only() -> 
             f"""---
 doc_id: {TAGS_REPORT_DOC_ID}
 title: Tags
-viewer_report: docs_subscope_candidate
+viewer_report: docs_subscope
 viewer_report_access: local
 viewer_report_subscope: tags
 ---

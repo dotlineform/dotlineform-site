@@ -11,6 +11,7 @@ import re
 from typing import Any, Callable
 
 import docs_source_model as source_model
+from docs_subscope_report_customisations import report_customisation_document_groups
 from docs_import_content import (
     CONTENT_INTENT_EMPTY_NEW,
     CONTENT_INTENT_PRESERVE_EXISTING,
@@ -307,7 +308,9 @@ def load_current_collection_docs(
         source_model.validate_sub_scope_document_metadata(
             doc,
             ui_statuses=collection.document_config.ui_statuses,
-            document_groups=collection.document_config.document_groups,
+            document_groups=report_customisation_document_groups(
+                collection.document_config.report_customisation
+            ),
         )
     return docs
 

@@ -16,6 +16,7 @@ from docs_scope_config import (
     load_docs_scope_configs,
     resolve_scope_path,
 )
+from docs_subscope_report_customisations import report_customisation_document_groups
 
 
 PARENT_TARGET_KEYS = frozenset({"scope", "doc_id"})
@@ -261,7 +262,9 @@ def resolve_managed_document_target(
         source_model.validate_sub_scope_document_metadata(
             document,
             ui_statuses=collection.document_config.ui_statuses,
-            document_groups=collection.document_config.document_groups,
+            document_groups=report_customisation_document_groups(
+                collection.document_config.report_customisation
+            ),
         )
     else:
         parent_documents = [
@@ -336,6 +339,10 @@ def managed_document_metadata(
         )
         payload["choices"] = {
             "ui_status": list(resolved.document_config.ui_statuses),
-            "group": list(resolved.document_config.document_groups),
+            "group": list(
+                report_customisation_document_groups(
+                    resolved.document_config.report_customisation
+                )
+            ),
         }
     return payload

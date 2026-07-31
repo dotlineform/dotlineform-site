@@ -165,7 +165,7 @@ def test_sub_scope_metadata_write_rebuilds_detail_and_both_manifests(
                         docs_sub_scope_record(
                             "studio",
                             "tags",
-                            document_groups=["subject", "domain", "form", "theme"],
+                            analysis_tag_groups=["subject", "domain", "form", "theme"],
                         )
                     ],
                 )
@@ -268,15 +268,21 @@ def test_sub_scope_metadata_write_rebuilds_detail_and_both_manifests(
         }
     ]
     assert manage_manifest == {
-        "groups": ["subject", "domain", "form", "theme"],
+        "customisation": {
+            "id": "analysis_tags",
+            "data": {
+                "groups": ["subject", "domain", "form", "theme"],
+            },
+        },
         "docs": [
-        {
-            "doc_id": SUB_SCOPE_DOC_ID,
-            "title": "Renamed Detail",
-            "ui_status": "done",
-            "viewable": False,
-            "group": "theme",
-        }
+            {
+                "doc_id": SUB_SCOPE_DOC_ID,
+                "title": "Renamed Detail",
+                "ui_status": "done",
+                "viewable": False,
+                "last_updated": "2026-07-27 21:15:00",
+                "customisation": {"group": "theme"},
+            }
         ],
     }
     assert manifest == {"docs": []}
@@ -359,7 +365,7 @@ def test_sub_scope_metadata_service_returns_conflict_for_write_race(
                         docs_sub_scope_record(
                             "studio",
                             "tags",
-                            document_groups=["subject", "domain", "form", "theme"],
+                            analysis_tag_groups=["subject", "domain", "form", "theme"],
                         )
                     ],
                 )

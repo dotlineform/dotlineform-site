@@ -67,7 +67,9 @@ def test_public_docs_viewer_entry_static_graph_excludes_manage_document_actions(
 
     assert "docs-viewer/runtime/js/management/docs-viewer-management-control-renderers.js" not in graph_paths
     assert "docs-viewer/runtime/js/management/docs-viewer-management-document-reports.js" not in graph_paths
-    assert "docs-viewer/runtime/js/management/docs-viewer-management-subscope-contribution.js" not in graph_paths
+    assert "docs-viewer/runtime/js/management/docs-viewer-management-subscope-default-contribution.js" not in graph_paths
+    assert "docs-viewer/runtime/js/management/docs-viewer-management-subscope-composition.js" not in graph_paths
+    assert "docs-viewer/runtime/js/management/docs-viewer-management-subscope-analysis-tags.js" not in graph_paths
     assert (
         "docs-viewer/runtime/js/management/"
         "docs-viewer-management-subscope-delete-workflow.js"
@@ -85,7 +87,7 @@ def test_public_docs_viewer_entry_static_graph_excludes_manage_document_actions(
     ]
 
 
-def test_subscope_candidate_and_manage_customisations_are_publicly_isolated() -> None:
+def test_subscope_manage_customisations_are_publicly_isolated() -> None:
     public_reports = json.loads(
         (REPO_ROOT / "site/assets/data/docs/public-reports.json").read_text(
             encoding="utf-8"
@@ -93,6 +95,9 @@ def test_subscope_candidate_and_manage_customisations_are_publicly_isolated() ->
     )
     public_loader = (
         REPO_ROOT / "site/docs-viewer/runtime/js/reports/docs-viewer-public-reports.js"
+    ).read_text(encoding="utf-8")
+    canonical_report = (
+        REPO_ROOT / "site/docs-viewer/runtime/js/shared/docs-subscope-report.js"
     ).read_text(encoding="utf-8")
     entry = REPO_ROOT / "site/docs-viewer/runtime/js/public/docs-viewer-public.js"
     graph_paths = {
@@ -105,10 +110,12 @@ def test_subscope_candidate_and_manage_customisations_are_publicly_isolated() ->
     }
     assert "docs_subscope_candidate" not in public_loader
     assert "docs-viewer/runtime/js/reports/docs-subscope-candidate-report.js" not in graph_paths
+    assert 'from "./docs-subscope-customisation-registry.js"' in canonical_report
     assert not [
         path
         for path in graph_paths
-        if "subscope-customisation" in path or "subscope-composition" in path
+        if path.startswith("docs-viewer/runtime/js/management/")
+        and ("subscope-customisation" in path or "subscope-composition" in path)
     ]
 
 

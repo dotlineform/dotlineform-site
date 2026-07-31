@@ -165,7 +165,6 @@ class DocsSubScopeConfig:
     public_title: str
     supports_return_import: bool
     ui_statuses: tuple[str, ...]
-    document_groups: tuple[str, ...]
     report_customisation: DocsSubScopeReportCustomisationConfig | None
     source: DocsSourceConfig
     published: DocsPublishedConfig
@@ -766,19 +765,15 @@ def normalize_sub_scope_configs(
             item.get("ui_statuses"),
             field=f"{item_field}.ui_statuses",
         )
-        document_groups = normalize_ordered_sub_scope_values(
-            item.get("document_groups"),
-            field=f"{item_field}.document_groups",
-        )
+        if "document_groups" in item:
+            raise ValueError(
+                f"docs scope config field {item_field}.document_groups is no longer supported; "
+                "configure groups through report_customisation"
+            )
         report_customisation = normalize_docs_subscope_report_customisation(
             item.get("report_customisation"),
             field=f"{item_field}.report_customisation",
         )
-        if report_customisation is not None and document_groups:
-            raise ValueError(
-                f"docs scope config field {item_field} must not combine "
-                "document_groups with report_customisation"
-            )
         title = str(item.get("title") or "").strip()
         public_title = (
             title
@@ -798,7 +793,6 @@ def normalize_sub_scope_configs(
                 public_title=public_title,
                 supports_return_import=supports_return_import,
                 ui_statuses=ui_statuses,
-                document_groups=document_groups,
                 report_customisation=report_customisation,
                 source=source,
                 published=published,

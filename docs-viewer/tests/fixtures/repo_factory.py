@@ -162,14 +162,17 @@ def docs_sub_scope_record(
     scope_type: str = "local",
     public_docs_path: str | None = None,
     ui_statuses: list[str] | None = None,
-    document_groups: list[str] | None = None,
+    analysis_tag_groups: list[str] | None = None,
     report_customisation: dict[str, object] | None = None,
 ) -> dict[str, object]:
+    if analysis_tag_groups is not None and report_customisation is not None:
+        raise ValueError(
+            "analysis_tag_groups and report_customisation are mutually exclusive"
+        )
     record: dict[str, object] = {
         "sub_scope": sub_scope,
         "title": title,
         "ui_statuses": ["draft", "done"] if ui_statuses is None else ui_statuses,
-        "document_groups": document_groups or [],
         "public_projection": (
             {
                 "documents": {
@@ -188,6 +191,11 @@ def docs_sub_scope_record(
         record["public_title"] = public_title
     if supports_return_import is not None:
         record["supports_return_import"] = supports_return_import
+    if analysis_tag_groups is not None:
+        record["report_customisation"] = {
+            "id": "analysis_tags",
+            "settings": {"groups": analysis_tag_groups},
+        }
     if report_customisation is not None:
         record["report_customisation"] = report_customisation
     return record

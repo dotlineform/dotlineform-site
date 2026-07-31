@@ -77,12 +77,17 @@ def write_scope_config(repo_root: Path) -> None:
                             "sub_scope": "tags",
                             "title": "Tags",
                             "ui_statuses": [],
-                            "document_groups": [
-                                "subject",
-                                "domain",
-                                "form",
-                                "theme",
-                            ],
+                            "report_customisation": {
+                                "id": "analysis_tags",
+                                "settings": {
+                                    "groups": [
+                                        "subject",
+                                        "domain",
+                                        "form",
+                                        "theme",
+                                    ]
+                                },
+                            },
                             "public_projection": None,
                         }
                     ],

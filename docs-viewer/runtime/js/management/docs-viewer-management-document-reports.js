@@ -8,9 +8,6 @@ import {
   normalizeManagedDocumentCollectionTarget,
   normalizeManagedDocumentTarget
 } from "./docs-viewer-management-document-target.js";
-import {
-  createDocsViewerManagementSubscopeContribution
-} from "./docs-viewer-management-subscope-contribution.js";
 
 function cleanString(value) {
   return String(value || "").trim();
@@ -37,14 +34,8 @@ function payloadHasReport(payload) {
 }
 
 function reportSubScope(payload) {
-  if (!["docs_subscope", "docs_subscope_candidate"].includes(
-    cleanString(payload && payload.viewer_report)
-  )) return "";
+  if (cleanString(payload && payload.viewer_report) !== "docs_subscope") return "";
   return cleanString(payload && payload.viewer_report_subscope).toLowerCase();
-}
-
-function candidateReport(payload) {
-  return cleanString(payload && payload.viewer_report) === "docs_subscope_candidate";
 }
 
 function parentTarget(settings) {
@@ -169,8 +160,8 @@ function markdownLinkForSubscopeDocument(settings, parent, subScope, target, doc
   return "[" + title + "](" + url.pathname + url.search + url.hash + ")";
 }
 
-function loadCandidateContribution(settings, parent, subScope, options) {
-  var candidateOptions = options || {};
+function loadSubscopeContribution(settings, parent, subScope, options) {
+  var contributionOptions = options || {};
   var subScopeConfig = configuredSubScope(settings, parent.scope, subScope);
   if (!subScopeConfig) {
     return Promise.reject(new Error(
@@ -194,13 +185,13 @@ function loadCandidateContribution(settings, parent, subScope, options) {
           documentRecord
         );
       },
-      nonViewableEmoji: candidateOptions.nonViewableEmoji,
-      onCreateDocument: candidateOptions.onCreateDocument,
-      onLifecycleEvent: candidateOptions.onLifecycleEvent,
-      onPreparePackage: candidateOptions.onPreparePackage,
+      nonViewableEmoji: contributionOptions.nonViewableEmoji,
+      onCreateDocument: contributionOptions.onCreateDocument,
+      onLifecycleEvent: contributionOptions.onLifecycleEvent,
+      onPreparePackage: contributionOptions.onPreparePackage,
       root: managementModalRoot(settings),
       setStatus: settings.setStatus,
-      uiStatusByValue: candidateOptions.uiStatusByValue
+      uiStatusByValue: contributionOptions.uiStatusByValue
     });
     return modules[2].resolveManagementDocsSubscopeCustomisation(
       subScopeConfig.reportCustomisation,
@@ -353,68 +344,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
   });
   var scopeConfig = settings.scopeConfigState || {};
   var createAction = createSubscopeDocumentAction(settings);
-  if (candidateReport(payload)) {
-    var candidateContribution = loadCandidateContribution(
-      settings,
-      parent,
-      subScope,
-      {
-        nonViewableEmoji: cleanString(scopeConfig.docNonViewableEmoji),
-        onCreateDocument: (
-          settings.managementContext
-          && reportManagementBaseUrl
-          && createAction
-        )
-          ? function (request, context) {
-              return openSubscopeCreate(settings, parent, subScope, request, context);
-            }
-          : null,
-        onLifecycleEvent: function (event) {
-          if (event && event.type === "state") {
-            publishReportState(settings, parent, subScope, event);
-          }
-        },
-        onPreparePackage: reportManagementBaseUrl
-          ? function (request, context) {
-              return openSubScopePreparePackage(settings, request, context);
-            }
-          : null,
-        uiStatusByValue: scopeConfig.uiStatusByValue instanceof Map
-          ? scopeConfig.uiStatusByValue
-          : new Map()
-      }
-    ).catch(function (error) {
-      publishReportState(settings, parent, subScope, {
-        state: "error",
-        reason: "customisation-resolution-failed"
-      });
-      throw error;
-    });
-    return mountDocsViewerReport({
-      appContext: settings.appContext,
-      checkGeneratedDataReadCapability: settings.checkGeneratedDataReadCapability,
-      content: settings.content,
-      doc: settings.doc,
-      fetchDocsIndexTree: function (scope) {
-        return fetchDocsIndexTreeForScope(settings, scope);
-      },
-      managementContext: Boolean(settings.managementContext),
-      managementService: managementService,
-      payload: payload,
-      reportRegistryUrl: cleanString(routeContext.reportRegistryUrl),
-      reportService: reportManagementBaseUrl
-        ? createDocsViewerReportService({ baseUrl: reportManagementBaseUrl })
-        : null,
-      setStatus: settings.setStatus,
-      scopeConfigs: scopeConfigs(settings).slice(),
-      subscopeReportContributionPromise: candidateContribution,
-      viewerScope: currentViewerScope(settings),
-      viewerUrlForScope: settings.viewerUrlForScope
-    });
-  }
-  var contribution = createDocsViewerManagementSubscopeContribution({
-    clientOptions: managementClientOptions(settings),
-    managementContext: Boolean(settings.managementContext),
+  var contribution = loadSubscopeContribution(settings, parent, subScope, {
     nonViewableEmoji: cleanString(scopeConfig.docNonViewableEmoji),
     onCreateDocument: (
       settings.managementContext
@@ -422,13 +352,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
       && createAction
     )
       ? function (request, context) {
-          return openSubscopeCreate(
-            settings,
-            parent,
-            subScope,
-            request,
-            context
-          );
+          return openSubscopeCreate(settings, parent, subScope, request, context);
         }
       : null,
     onLifecycleEvent: function (event) {
@@ -441,11 +365,15 @@ export function mountDocsViewerManageDocumentExtras(context) {
           return openSubScopePreparePackage(settings, request, context);
         }
       : null,
-    root: managementModalRoot(settings),
-    setStatus: settings.setStatus,
     uiStatusByValue: scopeConfig.uiStatusByValue instanceof Map
       ? scopeConfig.uiStatusByValue
       : new Map()
+  }).catch(function (error) {
+    publishReportState(settings, parent, subScope, {
+      state: "error",
+      reason: "customisation-resolution-failed"
+    });
+    throw error;
   });
   return mountDocsViewerReport({
     appContext: settings.appContext,
@@ -464,7 +392,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
       : null,
     setStatus: settings.setStatus,
     scopeConfigs: scopeConfigs(settings).slice(),
-    subscopeReportContribution: contribution,
+    subscopeReportContributionPromise: contribution,
     viewerScope: currentViewerScope(settings),
     viewerUrlForScope: settings.viewerUrlForScope
   });

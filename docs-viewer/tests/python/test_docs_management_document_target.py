@@ -79,7 +79,7 @@ def prepare_repo(
                         "analysis",
                         "tags",
                         title="Tags",
-                        document_groups=["subject", "domain", "form", "theme"],
+                        analysis_tag_groups=["subject", "domain", "form", "theme"],
                     )
                 ],
             )

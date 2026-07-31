@@ -103,11 +103,16 @@ viewer_report_subscope: tags
                                 "sub_scope": "tags",
                                 "title": "Tags",
                                 "ui_statuses": [],
-                                "document_groups": [
-                                    "subject",
-                                    "form",
-                                    "theme",
-                                ],
+                                "report_customisation": {
+                                    "id": "analysis_tags",
+                                    "settings": {
+                                        "groups": [
+                                            "subject",
+                                            "form",
+                                            "theme",
+                                        ]
+                                    },
+                                },
                                 "public_projection": None,
                             }
                         ],

@@ -57,7 +57,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
                     docs_sub_scope_record(
                         "studio",
                         "tags",
-                        document_groups=["subject", "domain", "form", "theme"],
+                        analysis_tag_groups=["subject", "domain", "form", "theme"],
                     )
                 ],
             ),
@@ -480,7 +480,6 @@ def test_sub_scope_metadata_plan_rejects_group_for_unconfigured_collection() -> 
                         docs_sub_scope_record(
                             "studio",
                             "tags",
-                            document_groups=[],
                         )
                     ],
                 ),

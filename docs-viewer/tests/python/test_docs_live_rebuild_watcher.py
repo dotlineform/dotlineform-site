@@ -76,7 +76,10 @@ def configured_analysis_tags(
         title="Tags",
         public_title="Concepts",
         ui_statuses=("draft", "done"),
-        document_groups=("subject", "domain"),
+        report_customisation=SimpleNamespace(
+            customisation_id="analysis_tags",
+            settings={"groups": ("subject", "domain")},
+        ),
         source=source(child_path),
     )
     analysis = SimpleNamespace(

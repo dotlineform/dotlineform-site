@@ -24,6 +24,7 @@ from docs_scope_config import (
     resolve_external_data_root,
     resolve_scope_path,
 )
+from docs_subscope_report_customisations import report_customisation_document_groups
 
 
 SUB_SCOPE_DELETE_PREVIEW_KEYS = frozenset({"scope", "sub_scope", "doc_id"})
@@ -242,7 +243,9 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
             source_model.validate_sub_scope_document_metadata(
                 document,
                 ui_statuses=collection.document_config.ui_statuses,
-                document_groups=collection.document_config.document_groups,
+                document_groups=report_customisation_document_groups(
+                    collection.document_config.report_customisation
+                ),
             )
             docs.append(document)
         if "parent_id" in body:
@@ -406,13 +409,20 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
     status_changed = status_was_provided and ui_status != current_ui_status
     group_was_provided = resolved.sub_scope and "group" in body
     current_group = target.group
-    if group_was_provided and not resolved.document_config.document_groups:
+    document_groups = (
+        report_customisation_document_groups(
+            resolved.document_config.report_customisation
+        )
+        if resolved.sub_scope
+        else ()
+    )
+    if group_was_provided and not document_groups:
         raise ValueError("group is not configured for this sub-scope")
     group = (
         normalize_configured_metadata_choice(
             body.get("group"),
             field="group",
-            allowed_values=resolved.document_config.document_groups,
+            allowed_values=document_groups,
         )
         if group_was_provided
         else current_group

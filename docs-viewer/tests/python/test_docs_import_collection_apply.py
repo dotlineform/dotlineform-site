@@ -90,7 +90,7 @@ def configure_importable_tags_collection(root: Path) -> dict[str, Path]:
             scope_type="public",
             public_docs_path="site/assets/data/docs/scopes/library/tags",
             ui_statuses=["draft", "done"],
-            document_groups=["theme"],
+            analysis_tag_groups=["theme"],
         )
     ]
     config_path.write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")

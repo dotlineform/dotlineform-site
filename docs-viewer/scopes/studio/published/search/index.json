@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-465b4bcde3857f81fea28a8e5ea46c6d",
-    "generated_at_utc": "2026-07-31T18:29:11Z",
+    "version": "blake2b-fa6941b0bba785aca751b0b1fbbd2e80",
+    "generated_at_utc": "2026-07-31T19:14:15Z",
     "count": 244
   },
   "entries": [
@@ -4534,10 +4534,10 @@
       "kind": "doc",
       "title": "Default Report And Analysis Tags Refactor Delivery",
       "href": "/docs/?scope=studio&doc=d-20260731-155054-1fcd80",
-      "last_updated": "2026-07-31 19:26:44",
+      "last_updated": "2026-07-31 20:14:14",
       "parent_id": "d-20260731-150644-3dfab5",
       "parent_title": "Sub-Scope Report Defaults And Customisations",
-      "display_meta": "2026-07-31 19:26:44 • Sub-Scope Report Defaults And Customisations",
+      "display_meta": "2026-07-31 20:14:14 • Sub-Scope Report Defaults And Customisations",
       "search_terms": [
         "default report and analysis tags refactor delivery",
         "default",
@@ -4552,26 +4552,25 @@
         "scope",
         "defaults",
         "customisations",
-        "2026-07-31 19:26:44",
+        "2026-07-31 20:14:14",
         "2026",
         "07",
         "31",
-        "19",
-        "26",
-        "44",
+        "20",
+        "14",
         "d-20260731-155054-1fcd80"
       ],
-      "search_text": "default report and analysis tags refactor delivery default report and analysis tags refactor delivery sub-scope report defaults and customisations sub scope defaults customisations 2026-07-31 19:26:44 2026 07 31 19 26 44 d-20260731-155054-1fcd80"
+      "search_text": "default report and analysis tags refactor delivery default report and analysis tags refactor delivery sub-scope report defaults and customisations sub scope defaults customisations 2026-07-31 20:14:14 2026 07 31 20 14 d-20260731-155054-1fcd80"
     },
     {
       "id": "d-20260731-185207-2dbb6f",
       "kind": "doc",
       "title": "Default Sub-Scope Report",
       "href": "/docs/?scope=studio&doc=d-20260731-185207-2dbb6f",
-      "last_updated": "2026-07-31 18:52:07",
+      "last_updated": "2026-07-31 20:02:26",
       "parent_id": "d-20260731-150644-3dfab5",
       "parent_title": "Sub-Scope Report Defaults And Customisations",
-      "display_meta": "2026-07-31 18:52:07 • Sub-Scope Report Defaults And Customisations",
+      "display_meta": "2026-07-31 20:02:26 • Sub-Scope Report Defaults And Customisations",
       "search_terms": [
         "default sub-scope report",
         "default",
@@ -4582,15 +4581,16 @@
         "defaults",
         "and",
         "customisations",
-        "2026-07-31 18:52:07",
+        "2026-07-31 20:02:26",
         "2026",
         "07",
         "31",
-        "18",
-        "52",
+        "20",
+        "02",
+        "26",
         "d-20260731-185207-2dbb6f"
       ],
-      "search_text": "default sub-scope report default sub scope report sub-scope report defaults and customisations defaults and customisations 2026-07-31 18:52:07 2026 07 31 18 52 d-20260731-185207-2dbb6f"
+      "search_text": "default sub-scope report default sub scope report sub-scope report defaults and customisations defaults and customisations 2026-07-31 20:02:26 2026 07 31 20 02 26 d-20260731-185207-2dbb6f"
     },
     {
       "id": "d-20260731-155056-2677a3",

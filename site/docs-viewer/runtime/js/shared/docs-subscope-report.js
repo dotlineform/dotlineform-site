@@ -5,6 +5,9 @@ import {
   normalizeDocsSubscopeFilterValue,
   projectDocsSubscopeDocuments
 } from "./docs-subscope-report-filter.js";
+import {
+  resolvePublicDocsSubscopeCustomisation
+} from "./docs-subscope-customisation-registry.js";
 
 /**
  * Optional caller-owned composition for one shared sub-scope report.
@@ -15,6 +18,7 @@ import {
  *
  * @typedef {Object} DocsSubscopeReportContribution
  * @property {function(Object): void} [notify]
+ * @property {function(Object): Array<Object>} [createFilters]
  * @property {function(Object): (Object|void)} [renderRow]
  * @property {function(Object): void} [renderListToolbar]
  * @property {function(Object): void} [renderDetailToolbar]
@@ -68,35 +72,56 @@ function manifestDocs(payload) {
   });
 }
 
-function manifestGroups(payload) {
-  var groups = payload && Array.isArray(payload.groups) ? payload.groups : [];
-  var seen = new Set();
-  return groups.map(function (group) {
-    return normalizeDocsSubscopeFilterValue(group);
-  }).filter(function (group) {
-    if (!group || seen.has(group)) return false;
-    seen.add(group);
-    return true;
-  });
+function manifestCustomisation(payload) {
+  var value = payload && payload.customisation;
+  if (value == null) return null;
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw new Error("Docs sub-scope manifest customisation must be an object.");
+  }
+  var keys = Object.keys(value).sort();
+  var customisationId = cleanId(value.id);
+  var data = value.data;
+  if (
+    keys.length !== 2
+    || keys[0] !== "data"
+    || keys[1] !== "id"
+    || !customisationId
+    || !data
+    || typeof data !== "object"
+    || Array.isArray(data)
+  ) {
+    throw new Error("Docs sub-scope manifest customisation is invalid.");
+  }
+  return { id: customisationId, data: Object.assign({}, data) };
 }
 
 function manifestPayload(payload) {
   return {
     documents: manifestDocs(payload),
-    groups: manifestGroups(payload)
+    customisation: manifestCustomisation(payload)
   };
 }
 
 function normalizeDocument(record) {
   var docId = cleanString(record && record.doc_id);
   var title = cleanString(record && record.title);
+  var normalizedRecord = Object.assign({}, record || {}, {
+    doc_id: docId,
+    title: title
+  });
+  if (
+    normalizedRecord.customisation
+    && typeof normalizedRecord.customisation === "object"
+    && !Array.isArray(normalizedRecord.customisation)
+  ) {
+    normalizedRecord.customisation = Object.freeze(
+      Object.assign({}, normalizedRecord.customisation)
+    );
+  }
   return {
     docId: docId,
     title: title,
-    record: Object.assign({}, record || {}, {
-      doc_id: docId,
-      title: title
-    })
+    record: Object.freeze(normalizedRecord)
   };
 }
 
@@ -106,9 +131,35 @@ function normalizeDocuments(records) {
   });
 }
 
-function reportContribution(context) {
-  var contribution = context && context.subscopeReportContribution;
-  return contribution && typeof contribution === "object" ? contribution : null;
+function resolveReportContribution(context) {
+  var hasSuppliedContribution = context && Object.prototype.hasOwnProperty.call(
+    context,
+    "subscopeReportContributionPromise"
+  );
+  var contribution = hasSuppliedContribution
+    ? context.subscopeReportContributionPromise
+    : context && context.subscopeReportContribution;
+  if (!hasSuppliedContribution && contribution == null) {
+    var reportMeta = context && context.reportMeta ? context.reportMeta : {};
+    var subScopeIdValue = cleanId(reportMeta.subScope);
+    var subScope = findSubScope(context, subScopeIdValue);
+    contribution = resolvePublicDocsSubscopeCustomisation(
+      subScope && subScope.reportCustomisation,
+      {
+        collection: collectionTarget(
+          context && context.viewerScope,
+          subScopeIdValue
+        )
+      }
+    );
+  }
+  return Promise.resolve(contribution).then(function (resolved) {
+    if (resolved == null) return null;
+    if (typeof resolved !== "object" || Array.isArray(resolved)) {
+      throw new Error("Docs sub-scope report contribution is invalid.");
+    }
+    return resolved;
+  });
 }
 
 function contributionCallback(contribution, name) {
@@ -182,14 +233,15 @@ function detailTarget(state, docId) {
 }
 
 function documentRecord(doc) {
-  return Object.assign({}, doc && doc.record || {});
+  return doc && doc.record ? doc.record : Object.freeze({});
 }
 
 function contributionEvent(context, subScopeIdValue, detail) {
-  var contribution = reportContribution(context);
+  var contribution = context && context.resolvedSubscopeReportContribution;
   var notify = contributionCallback(contribution, "notify");
   if (!notify) return;
   notify(Object.assign({
+    access: context && context.managementContext ? "manage" : "public",
     collection: collectionTarget(context && context.viewerScope, subScopeIdValue)
   }, detail || {}));
 }
@@ -198,8 +250,17 @@ function notifyContribution(state, detail) {
   var notify = contributionCallback(state.contribution, "notify");
   if (!notify) return;
   notify(Object.assign({
+    access: state.managementContext ? "manage" : "public",
     collection: collectionTarget(state.viewerScope, state.subScopeId)
   }, detail || {}));
+}
+
+function filterValuesPayload(state) {
+  var payload = {};
+  state.filterValues.forEach(function (value, filterId) {
+    payload[filterId] = cleanString(value);
+  });
+  return Object.freeze(payload);
 }
 
 function writeSubdocUrl(state, docId, mode) {
@@ -261,12 +322,17 @@ function appendDocRow(state, doc) {
   titleText.className = "docsViewerReport__title";
   titleText.textContent = doc.title || humanize(docId) || docId;
 
+  var trailingHost = document.createElement("span");
+  trailingHost.className = "docsViewerReport__rowContribution docsViewerReport__rowContribution--trailing";
+  trailingHost.dataset.reportContributionHost = "row-trailing";
+
   var renderRow = contributionCallback(state.contribution, "renderRow");
   var rowResult = renderRow ? renderRow({
     collection: collectionTarget(state.viewerScope, state.subScopeId),
     document: documentRecord(doc),
     leadingHost: leadingHost,
-    titlePrefixHost: titlePrefixHost
+    titlePrefixHost: titlePrefixHost,
+    trailingHost: trailingHost
   }) : null;
   if (titlePrefixHost.childNodes.length) title.appendChild(titlePrefixHost);
   title.appendChild(titleText);
@@ -282,6 +348,7 @@ function appendDocRow(state, doc) {
   });
   if (leadingHost.childNodes.length) row.appendChild(leadingHost);
   row.appendChild(title);
+  if (trailingHost.childNodes.length) row.appendChild(trailingHost);
   state.rowsNode.appendChild(row);
   return {
     hasLeadingContent: leadingHost.childNodes.length > 0,
@@ -325,17 +392,16 @@ function renderFilterShell(context, subScope) {
   search.appendChild(input);
   search.appendChild(clear);
 
-  var groups = document.createElement("div");
-  groups.className = "docsViewerReport__filters";
-  groups.hidden = true;
-  groups.setAttribute("role", "group");
+  var extensions = document.createElement("div");
+  extensions.className = "docsViewerReport__filters";
+  extensions.hidden = true;
 
   toolbar.appendChild(searchLabel);
-  toolbar.appendChild(groups);
+  toolbar.appendChild(extensions);
   toolbar.appendChild(search);
   return {
     clearNode: clear,
-    groupsNode: groups,
+    extensionsNode: extensions,
     inputNode: input,
     toolbarNode: toolbar
   };
@@ -367,7 +433,7 @@ function renderShell(context, subScope) {
 
   return {
     filterClearNode: filters.clearNode,
-    filterGroupsNode: filters.groupsNode,
+    filterExtensionsNode: filters.extensionsNode,
     filterInputNode: filters.inputNode,
     filterToolbarNode: filters.toolbarNode,
     rowsNode: rows,
@@ -376,35 +442,56 @@ function renderShell(context, subScope) {
   };
 }
 
-function groupButtonLabel(group) {
-  return group || "all";
+function configureContributionFilters(state) {
+  state.filters = [];
+  state.filterValues = new Map();
+  var createFilters = contributionCallback(state.contribution, "createFilters");
+  if (!createFilters) return;
+  var created = createFilters({
+    access: state.managementContext ? "manage" : "public",
+    collection: collectionTarget(state.viewerScope, state.subScopeId),
+    data: state.customisationData,
+    documents: Object.freeze(state.docs.map(documentRecord))
+  });
+  if (!Array.isArray(created)) {
+    throw new Error("Docs sub-scope customisation filters must be an array.");
+  }
+  var seen = new Set();
+  state.filters = created.map(function (filter) {
+    var filterId = cleanId(filter && filter.id);
+    if (
+      !filterId
+      || seen.has(filterId)
+      || typeof filter.matches !== "function"
+      || typeof filter.render !== "function"
+    ) {
+      throw new Error("Docs sub-scope customisation filter is invalid.");
+    }
+    seen.add(filterId);
+    state.filterValues.set(filterId, cleanString(filter.initialValue));
+    return filter;
+  });
 }
 
-function configureGroupControls(state) {
-  clearNode(state.filterGroupsNode);
-  state.groupButtons = new Map();
-  state.activeGroup = "";
-  if (!state.groups.length) {
-    state.filterGroupsNode.hidden = true;
-    return;
-  }
-  state.filterGroupsNode.hidden = false;
-  state.filterGroupsNode.setAttribute(
-    "aria-label",
-    "Filter " + collectionTitle(state) + " by group"
-  );
-  ["", ...state.groups].forEach(function (group) {
-    var button = document.createElement("button");
-    button.className = "docsViewerReport__filter";
-    button.type = "button";
-    button.dataset.docsSubscopeGroup = group;
-    button.addEventListener("click", function () {
-      state.activeGroup = group;
-      renderListProjection(state);
+function renderContributionFilters(state) {
+  clearNode(state.filterExtensionsNode);
+  state.filterExtensionsNode.hidden = state.filters.length === 0;
+  state.filters.forEach(function (filter) {
+    var filterId = cleanId(filter.id);
+    var host = document.createElement("div");
+    host.dataset.docsSubscopeCustomFilter = filterId;
+    filter.render({
+      collection: collectionTarget(state.viewerScope, state.subScopeId),
+      host: host,
+      value: state.filterValues.get(filterId) || "",
+      setValue: function (value) {
+        state.filterValues.set(filterId, cleanString(value));
+        renderListProjectionContained(state, "custom-filter");
+      }
     });
-    state.filterGroupsNode.appendChild(button);
-    state.groupButtons.set(group, button);
+    if (host.childNodes.length) state.filterExtensionsNode.appendChild(host);
   });
+  state.filterExtensionsNode.hidden = !state.filterExtensionsNode.childNodes.length;
 }
 
 function updateFilterControls(state) {
@@ -418,28 +505,102 @@ function updateFilterControls(state) {
     "Clear " + collectionTitle(state) + " title filter"
   );
   state.filterClearNode.title = state.filterClearNode.getAttribute("aria-label");
-  state.groupButtons.forEach(function (button, group) {
-    button.textContent = groupButtonLabel(group);
-    button.setAttribute("aria-pressed", group === state.activeGroup ? "true" : "false");
+  renderContributionFilters(state);
+}
+
+function compareText(left, right) {
+  var leftValue = cleanString(left).normalize("NFKC").toLowerCase();
+  var rightValue = cleanString(right).normalize("NFKC").toLowerCase();
+  if (leftValue < rightValue) return -1;
+  if (leftValue > rightValue) return 1;
+  var leftRaw = cleanString(left);
+  var rightRaw = cleanString(right);
+  if (leftRaw < rightRaw) return -1;
+  if (leftRaw > rightRaw) return 1;
+  return 0;
+}
+
+function compareTitleAscending(left, right) {
+  return compareText(left.title, right.title) || compareText(left.docId, right.docId);
+}
+
+function lastUpdatedTimestamp(doc) {
+  var value = cleanString(doc && doc.record && doc.record.last_updated);
+  var match = /^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2}):(\d{2})(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?)?$/.exec(value);
+  if (!match) return NaN;
+  if (/Z$|[+-]\d{2}:\d{2}$/.test(value)) {
+    return Date.parse(value.replace(" ", "T"));
+  }
+  var parts = match.slice(1, 7).map(function (part, index) {
+    if (part == null) return index < 3 ? NaN : 0;
+    return Number(part);
   });
+  var timestamp = Date.UTC(
+    parts[0],
+    parts[1] - 1,
+    parts[2],
+    parts[3],
+    parts[4],
+    parts[5]
+  );
+  var date = new Date(timestamp);
+  if (
+    date.getUTCFullYear() !== parts[0]
+    || date.getUTCMonth() !== parts[1] - 1
+    || date.getUTCDate() !== parts[2]
+    || date.getUTCHours() !== parts[3]
+    || date.getUTCMinutes() !== parts[4]
+    || date.getUTCSeconds() !== parts[5]
+  ) return NaN;
+  return timestamp;
+}
+
+function compareLastUpdatedDescending(left, right) {
+  var leftTimestamp = lastUpdatedTimestamp(left);
+  var rightTimestamp = lastUpdatedTimestamp(right);
+  var leftValid = Number.isFinite(leftTimestamp);
+  var rightValid = Number.isFinite(rightTimestamp);
+  if (leftValid && !rightValid) return -1;
+  if (!leftValid && rightValid) return 1;
+  if (leftValid && rightValid && leftTimestamp !== rightTimestamp) {
+    return rightTimestamp - leftTimestamp;
+  }
+  return compareTitleAscending(left, right);
 }
 
 function visibleDocuments(state) {
-  return projectDocsSubscopeDocuments(state.docs, {
-    group: state.activeGroup,
+  var visible = projectDocsSubscopeDocuments(state.docs, {
     query: state.query
+  }).filter(function (doc) {
+    return state.filters.every(function (filter) {
+      var filterId = cleanId(filter.id);
+      var matches = filter.matches({
+        collection: collectionTarget(state.viewerScope, state.subScopeId),
+        document: documentRecord(doc),
+        value: state.filterValues.get(filterId) || ""
+      });
+      if (typeof matches !== "boolean") {
+        throw new Error(
+          "Docs sub-scope customisation filter must return a boolean: " + filterId
+        );
+      }
+      return matches;
+    });
   });
+  return visible.slice().sort(state.sortMode === "last-updated-desc"
+    ? compareLastUpdatedDescending
+    : compareTitleAscending);
 }
 
 function bindFilterControls(state) {
   state.filterInputNode.addEventListener("input", function () {
     state.query = state.filterInputNode.value;
-    renderListProjection(state);
+    renderListProjectionContained(state, "title-filter");
   });
   state.filterClearNode.addEventListener("click", function () {
     state.query = "";
     state.filterInputNode.value = "";
-    renderListProjection(state);
+    renderListProjectionContained(state, "title-filter-clear");
     state.filterInputNode.focus();
   });
 }
@@ -456,13 +617,38 @@ function renderListToolbar(state, documents) {
   host.dataset.reportContributionHost = "list-toolbar";
   renderToolbar({
     collection: collectionTarget(state.viewerScope, state.subScopeId),
-    documents: documents.map(documentRecord),
+    documents: Object.freeze(documents.map(documentRecord)),
+    handleContributionError: function (error, reason) {
+      try {
+        publishState(state, "error", null, cleanString(reason));
+      } catch (_notifyError) {
+        // The contained report error below remains authoritative.
+      }
+      renderError(
+        state.root,
+        error && error.message
+          ? error.message
+          : "Failed to render docs sub-scope customisation."
+      );
+    },
     host: host,
     refreshAndOpenDocument: function (target) {
       return refreshAndOpenDocument(state, target);
     },
     refreshCollection: function (target) {
       return refreshCollection(state, target);
+    },
+    sort: {
+      mode: state.sortMode,
+      setMode: function (mode) {
+        var nextMode = cleanString(mode);
+        if (!["title-asc", "last-updated-desc"].includes(nextMode)) {
+          throw new Error("Docs sub-scope sort mode is invalid: " + nextMode);
+        }
+        state.sortMode = nextMode;
+        renderListProjectionContained(state, "sort-change");
+        return nextMode;
+      }
     }
   });
   if (!host.childNodes.length) return;
@@ -522,9 +708,31 @@ function renderListProjection(state) {
   renderRows(state, documents);
   notifyContribution(state, {
     type: "projection",
-    documents: documents.map(documentRecord),
+    documents: Object.freeze(documents.map(documentRecord)),
+    filterValues: filterValuesPayload(state),
+    sort: state.sortMode,
     reason: "filters-projected"
   });
+}
+
+function renderListProjectionContained(state, reason) {
+  try {
+    renderListProjection(state);
+    return true;
+  } catch (error) {
+    try {
+      publishState(state, "error", null, cleanString(reason) || "contribution-failed");
+    } catch (_notifyError) {
+      // The contained report error below remains authoritative.
+    }
+    renderError(
+      state.root,
+      error && error.message
+        ? error.message
+        : "Failed to render docs sub-scope customisation."
+    );
+    return false;
+  }
 }
 
 function renderListView(state) {
@@ -535,7 +743,7 @@ function renderListView(state) {
   state.tableNode.hidden = false;
   state.statusNode.hidden = false;
   if (state.detailNode) state.detailNode.hidden = true;
-  renderListProjection(state);
+  if (!renderListProjectionContained(state, "list-projection-failed")) return;
   if (state.listToolbarNode) state.listToolbarNode.hidden = false;
   publishState(state, "list", null, "list-view");
 }
@@ -588,11 +796,18 @@ function renderDetailToolbar(state, docId) {
   host.dataset.reportContributionHost = "detail-toolbar";
   var doc = state.docs.find(function (record) { return record.docId === docId; });
   renderToolbar({
+    collection: collectionTarget(state.viewerScope, state.subScopeId),
     commitDeletedDocument: function (target) {
       return reconcileCommittedDeletion(state, target);
     },
     document: documentRecord(doc),
     host: host,
+    refreshAndOpenDocument: function (target) {
+      return refreshAndOpenDocument(state, target);
+    },
+    refreshCollection: function (target) {
+      return refreshCollection(state, target);
+    },
     target: detailTarget(state, docId)
   });
   if (host.childNodes.length) {
@@ -717,15 +932,30 @@ function focusFirstListRow(state) {
 function publishDocumentsRefresh(state, reason) {
   notifyContribution(state, {
     type: "refresh",
-    documents: state.docs.map(documentRecord),
+    data: state.customisationData,
+    documents: Object.freeze(state.docs.map(documentRecord)),
     reason: cleanString(reason)
   });
 }
 
 function applyManifest(state, manifest) {
+  var descriptorId = cleanId(
+    state.subScope
+    && state.subScope.reportCustomisation
+    && state.subScope.reportCustomisation.id
+  );
+  var manifestCustomisation = manifest.customisation;
+  var manifestId = cleanId(manifestCustomisation && manifestCustomisation.id);
+  if (descriptorId !== manifestId) {
+    throw new Error(
+      "Docs sub-scope customisation identity did not match its manifest projection."
+    );
+  }
   state.docs = manifest.documents;
-  state.groups = manifest.groups;
-  configureGroupControls(state);
+  state.customisationData = manifestCustomisation
+    ? Object.freeze(Object.assign({}, manifestCustomisation.data))
+    : Object.freeze({});
+  configureContributionFilters(state);
   state.docIds = state.docs.map(function (doc) { return doc.docId; });
 }
 
@@ -870,7 +1100,7 @@ function reconcileCommittedDeletion(state, target) {
  * @param {Object} context
  * @returns {Promise<boolean>}
  */
-export function mountDocsSubscopeReport(context) {
+function mountResolvedDocsSubscopeReport(context, contribution) {
   var root = context && context.reportRoot;
   var reportMeta = context && context.reportMeta ? context.reportMeta : {};
   var subScopeIdValue = cleanId(reportMeta.subScope);
@@ -921,17 +1151,19 @@ export function mountDocsSubscopeReport(context) {
     byIdUrlBase: byIdUrlBase(subScope),
     docs: [],
     docIds: [],
-    groups: [],
-    activeGroup: "",
+    customisationData: {},
     query: "",
+    sortMode: "title-asc",
     detailRequestVersion: 0,
     detailPayloads: {},
-    contribution: reportContribution(context),
+    contribution: contribution,
+    managementContext: Boolean(context && context.managementContext),
     filterClearNode: refs.filterClearNode,
-    filterGroupsNode: refs.filterGroupsNode,
+    filterExtensionsNode: refs.filterExtensionsNode,
     filterInputNode: refs.filterInputNode,
     filterToolbarNode: refs.filterToolbarNode,
-    groupButtons: new Map(),
+    filters: [],
+    filterValues: new Map(),
     listToolbarNode: null,
     statusNode: refs.statusNode,
     tableNode: refs.tableNode,
@@ -971,7 +1203,8 @@ export function mountDocsSubscopeReport(context) {
       applyManifest(state, manifest);
       notifyContribution(state, {
         type: "refresh",
-        documents: state.docs.map(documentRecord),
+        data: state.customisationData,
+        documents: Object.freeze(state.docs.map(documentRecord)),
         reason: "documents-loaded"
       });
       var selectedDetailId = currentSubdocId();
@@ -987,8 +1220,35 @@ export function mountDocsSubscopeReport(context) {
       return true;
     })
     .catch(function (error) {
-      publishState(state, "error", null, "report-load-failed");
+      try {
+        publishState(state, "error", null, "report-load-failed");
+      } catch (_notifyError) {
+        // The contained report error below remains authoritative.
+      }
       renderError(root, error && error.message ? error.message : "Failed to render docs sub-scope report.");
+      return true;
+    });
+}
+
+export function mountDocsSubscopeReport(context) {
+  var root = context && context.reportRoot;
+  if (!root) return Promise.resolve(false);
+  return resolveReportContribution(context)
+    .then(function (contribution) {
+      return mountResolvedDocsSubscopeReport(
+        Object.assign({}, context, {
+          resolvedSubscopeReportContribution: contribution
+        }),
+        contribution
+      );
+    })
+    .catch(function (error) {
+      renderError(
+        root,
+        error && error.message
+          ? error.message
+          : "Failed to resolve docs sub-scope report customisation."
+      );
       return true;
     });
 }

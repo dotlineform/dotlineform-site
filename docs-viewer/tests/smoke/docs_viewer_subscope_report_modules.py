@@ -468,6 +468,9 @@ def assert_filter_projection(page: Page) -> None:
           const report = await import(
             '/site/docs-viewer/runtime/js/shared/docs-subscope-report.js'
           );
+          const manageRegistry = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-subscope-customisation-registry.js'
+          );
           const pureDocuments = Object.freeze([
             Object.freeze({
               doc_id: 'first',
@@ -496,7 +499,7 @@ def assert_filter_projection(page: Page) -> None:
               pureDocuments,
               { query: '  ALPHA   B ' }
             )),
-            intersection: ids(filter.projectDocsSubscopeDocuments(
+            ignoresGroup: ids(filter.projectDocsSubscopeDocuments(
               pureDocuments,
               { query: 'alp', group: 'DOMAIN' }
             )),
@@ -523,12 +526,15 @@ def assert_filter_projection(page: Page) -> None:
             });
             if (url.pathname === '/filter/manifest.json') {
               return response({
-                groups: ['subject', 'domain', 'form', 'theme'],
+                customisation: {
+                  id: 'analysis_tags',
+                  data: { groups: ['subject', 'domain', 'form', 'theme'] }
+                },
                 docs: [
-                  { doc_id: 'alpha', title: 'Alpha', group: 'subject' },
-                  { doc_id: 'alpine', title: 'Alpine', group: 'domain' },
-                  { doc_id: 'beta', title: 'Beta', group: 'subject' },
-                  { doc_id: 'gamma', title: 'Gamma', group: 'form' },
+                  { doc_id: 'alpha', title: 'Alpha', customisation: { group: 'subject' } },
+                  { doc_id: 'alpine', title: 'Alpine', customisation: { group: 'domain' } },
+                  { doc_id: 'beta', title: 'Beta', customisation: { group: 'subject' } },
+                  { doc_id: 'gamma', title: 'Gamma', customisation: { group: 'form' } },
                   { doc_id: 'alps', title: 'Alps' }
                 ]
               });
@@ -545,7 +551,10 @@ def assert_filter_projection(page: Page) -> None:
             }
             return { ok: false, status: 404, json: async () => ({}) };
           };
-          const contribution = {
+          const analysisTags = await manageRegistry.resolveManagementDocsSubscopeCustomisation({
+            id: 'analysis_tags'
+          });
+          const contribution = Object.assign({}, analysisTags, {
             notify: event => {
               if (event.type === 'refresh') {
                 refreshes.push(ids(event.documents));
@@ -557,7 +566,7 @@ def assert_filter_projection(page: Page) -> None:
             renderListToolbar: ({ documents }) => {
               toolbarProjections.push(ids(documents));
             }
-          };
+          });
           await report.mountDocsSubscopeReport({
             doc: { doc_id: 'parent-doc' },
             reportMeta: { subScope: 'tags' },
@@ -567,7 +576,8 @@ def assert_filter_projection(page: Page) -> None:
                 subScope: 'tags',
                 title: 'Tags',
                 manifestUrl: '/filter/manifest.json',
-                byIdUrlBase: '/filter/by-id'
+                byIdUrlBase: '/filter/by-id',
+                reportCustomisation: { id: 'analysis_tags' }
               }]
             },
             subscopeReportContribution: contribution,
@@ -654,7 +664,7 @@ def assert_filter_projection(page: Page) -> None:
     assert result["pure"] == {
         "prefix": ["first", "needle"],
         "normalized": ["first"],
-        "intersection": ["needle"],
+        "ignoresGroup": ["first", "needle"],
         "ignoresDocId": [],
     }
     assert result["initial"] == {
@@ -672,11 +682,11 @@ def assert_filter_projection(page: Page) -> None:
         ],
         "placeholder": "search",
         "query": "",
-        "rowIds": ["alpha", "alpine", "beta", "gamma", "alps"],
+        "rowIds": ["alpha", "alpine", "alps", "beta", "gamma"],
         "status": "5 Tags documents",
         "statusHidden": True,
         "statusRole": "status",
-    }
+    }, result["initial"]
     assert result["prefix"]["rowIds"] == ["alpha", "alpine", "alps"]
     assert result["prefix"]["status"] == "3 of 5 Tags documents"
     assert result["prefix"]["requests"] == ["/filter/manifest.json"]
@@ -705,14 +715,14 @@ def assert_filter_projection(page: Page) -> None:
     ]
     assert result["projections"] == result["toolbarProjections"]
     assert result["projections"] == [
-        ["alpha", "alpine", "beta", "gamma", "alps"],
+        ["alpha", "alpine", "alps", "beta", "gamma"],
         ["alpha", "alpine", "alps"],
         ["alpha"],
         ["alpha"],
         ["alpha", "alpine", "alps"],
         ["alpha"],
         ["alpha", "beta"],
-        ["alpha", "alpine", "beta", "gamma", "alps"],
+        ["alpha", "alpine", "alps", "beta", "gamma"],
         [],
     ]
 
@@ -879,10 +889,10 @@ def assert_report_module(page: Page) -> None:
         }"""
     )
     expected_managed = {
-        "rowIds": ["visible-doc", "hidden-doc"],
+        "rowIds": ["hidden-doc", "visible-doc"],
         "labels": [
-            "Visible document, done",
             "Hidden document, draft",
+            "Visible document, done",
         ],
         "titlePrefixes": 2,
         "leadingControls": 1,
@@ -925,7 +935,7 @@ def assert_report_module(page: Page) -> None:
                 "state": "",
                 "reason": "filters-projected",
                 "target": None,
-                "documentIds": ["visible-doc", "hidden-doc"],
+                "documentIds": ["hidden-doc", "visible-doc"],
             },
             {
                 "type": "state",
@@ -1398,8 +1408,11 @@ def assert_subscope_selection_contribution(page: Page) -> None:
           const report = await import(
             '/site/docs-viewer/runtime/js/shared/docs-subscope-report.js'
           );
-          const contributionModule = await import(
-            '/docs-viewer/runtime/js/management/docs-viewer-management-subscope-contribution.js'
+          const defaults = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-subscope-default-contribution.js'
+          );
+          const composition = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-subscope-composition.js'
           );
           history.replaceState({}, '', '/?scope=studio&doc=parent-doc');
           document.body.innerHTML = (
@@ -1438,7 +1451,7 @@ def assert_subscope_selection_contribution(page: Page) -> None:
           };
           const prepared = [];
           const root = document.querySelector('#selection-report');
-          const contribution = contributionModule.createDocsViewerManagementSubscopeContribution({
+          const defaultContribution = defaults.createDocsViewerManagementSubscopeDefaultContribution({
             clientOptions: { baseUrl: window.location.origin },
             managementContext: true,
             nonViewableEmoji: '🚫',
@@ -1447,6 +1460,9 @@ def assert_subscope_selection_contribution(page: Page) -> None:
             uiStatusByValue: new Map([
               ['draft', { label: 'Draft', emoji: '📝' }]
             ])
+          });
+          const contribution = composition.composeDocsViewerManagementSubscopeContributions({
+            defaultContribution
           });
           await report.mountDocsSubscopeReport({
             doc: { doc_id: 'parent-doc' },
@@ -1612,7 +1628,7 @@ def assert_subscope_selection_contribution(page: Page) -> None:
         "prepareReason": "Select one or more documents.",
         "selectionControlHidden": True,
         "selectionState": "inactive",
-        "visibleCheckboxes": 0,
+        "visibleCheckboxes": 3,
         "actionIds": ["prepare-document-package"],
         "nonViewableIcons": 1,
         "rowIds": ["a", "b", "c"],
@@ -1759,18 +1775,23 @@ def assert_manage_report_bridge(page: Page) -> None:
                 };
               }
               return response({
-                groups: ['subject', 'domain', 'form', 'theme'],
+                customisation: {
+                  id: 'analysis_tags',
+                  data: { groups: ['subject', 'domain', 'form', 'theme'] }
+                },
                 docs: [
                   {
                     doc_id: 'detail-doc',
                     title: 'Detail',
                     ui_status: 'draft',
-                    viewable: false
+                    viewable: false,
+                    customisation: { group: 'subject' }
                   },
                   {
                     doc_id: 'no-status-doc',
                     title: 'No status',
-                    viewable: true
+                    viewable: true,
+                    customisation: { group: 'domain' }
                   }
                 ]
               });
@@ -1909,7 +1930,8 @@ def assert_manage_report_bridge(page: Page) -> None:
                   subScope: 'tags',
                   title: 'Tags',
                   manifestUrl: '/synthetic/manifest.json',
-                  byIdUrlBase: '/synthetic/by-id'
+                  byIdUrlBase: '/synthetic/by-id',
+                  reportCustomisation: { id: 'analysis_tags' }
                 }]
               }],
               uiStatusByValue: new Map([
@@ -1987,7 +2009,10 @@ def assert_manage_report_bridge(page: Page) -> None:
             ).length,
             detailToolbarHosts: content.querySelectorAll(
               '[data-report-contribution-host="detail-toolbar"]'
-            ).length
+            ).length,
+            groupLabels: Array.from(content.querySelectorAll(
+              '[data-docs-subscope-group]'
+            )).map(button => button.textContent)
           };
           const deleteButton = content.querySelector(
             '[data-docs-subscope-delete="true"]'
@@ -2131,6 +2156,13 @@ def assert_manage_report_bridge(page: Page) -> None:
     assert mounted["beforeClear"]["nonViewableIcons"] == 1
     assert mounted["beforeClear"]["listToolbarHosts"] == 1
     assert mounted["beforeClear"]["detailToolbarHosts"] == 1
+    assert mounted["beforeClear"]["groupLabels"] == [
+        "all",
+        "subject",
+        "domain",
+        "form",
+        "theme",
+    ]
     assert mounted["beforeClear"]["states"][-1] == {
         "state": "detail",
         "reason": "detail-loaded",
@@ -3173,11 +3205,11 @@ def assert_delete_workflow(page: Page) -> None:
     }
 
 
-def assert_default_candidate_and_customisation_framework(page: Page) -> None:
+def assert_default_report_and_customisation_framework(page: Page) -> None:
     result = page.evaluate(
         """async () => {
           const report = await import(
-            '/docs-viewer/runtime/js/reports/docs-subscope-candidate-report.js'
+            '/site/docs-viewer/runtime/js/shared/docs-subscope-report.js'
           );
           const defaults = await import(
             '/docs-viewer/runtime/js/management/docs-viewer-management-subscope-default-contribution.js'
@@ -3296,7 +3328,7 @@ def assert_default_candidate_and_customisation_framework(page: Page) -> None:
           });
           const root = document.createElement('section');
           host.appendChild(root);
-          await report.mountDocsSubscopeCandidateReport({
+          await report.mountDocsSubscopeReport({
             doc: { doc_id: 'parent-doc' },
             managementContext: true,
             reportMeta: { subScope: 'default' },
@@ -3370,7 +3402,7 @@ def assert_default_candidate_and_customisation_framework(page: Page) -> None:
           });
           const emptyRoot = document.createElement('section');
           host.appendChild(emptyRoot);
-          await report.mountDocsSubscopeCandidateReport({
+          await report.mountDocsSubscopeReport({
             doc: { doc_id: 'empty-parent' },
             managementContext: true,
             reportMeta: { subScope: 'empty' },
@@ -3468,7 +3500,7 @@ def assert_default_candidate_and_customisation_framework(page: Page) -> None:
           });
           const customRoot = document.createElement('section');
           host.appendChild(customRoot);
-          await report.mountDocsSubscopeCandidateReport({
+          await report.mountDocsSubscopeReport({
             doc: { doc_id: 'custom-parent' },
             managementContext: true,
             reportMeta: { subScope: 'custom' },
@@ -3575,7 +3607,7 @@ def assert_default_candidate_and_customisation_framework(page: Page) -> None:
           }
           const failedRoot = document.createElement('section');
           host.appendChild(failedRoot);
-          await report.mountDocsSubscopeCandidateReport({
+          await report.mountDocsSubscopeReport({
             reportMeta: { subScope: 'default' },
             reportRoot: failedRoot,
             routeContext: { subScopes: [{
@@ -3588,7 +3620,7 @@ def assert_default_candidate_and_customisation_framework(page: Page) -> None:
           });
           const mismatchRoot = document.createElement('section');
           host.appendChild(mismatchRoot);
-          await report.mountDocsSubscopeCandidateReport({
+          await report.mountDocsSubscopeReport({
             reportMeta: { subScope: 'mismatch' },
             reportRoot: mismatchRoot,
             routeContext: { subScopes: [{
@@ -3606,7 +3638,7 @@ def assert_default_candidate_and_customisation_framework(page: Page) -> None:
           const callbackDefault = defaults.createDocsViewerManagementSubscopeDefaultContribution({
             managementContext: true
           });
-          await report.mountDocsSubscopeCandidateReport({
+          await report.mountDocsSubscopeReport({
             reportMeta: { subScope: 'callback' },
             reportRoot: callbackRoot,
             routeContext: { subScopes: [{
@@ -3783,7 +3815,7 @@ def main(argv: list[str] | None = None) -> int:
                 assert_report_delete_reconciliation(page)
                 assert_delete_workflow(page)
                 assert_manage_report_bridge(page)
-                assert_default_candidate_and_customisation_framework(page)
+                assert_default_report_and_customisation_framework(page)
             finally:
                 browser.close()
             if errors:

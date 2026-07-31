@@ -39,7 +39,7 @@ def prepare_repo(repo_root: Path) -> None:
                         "tags",
                         title="Tags",
                         ui_statuses=["draft", "done"],
-                        document_groups=["theme"],
+                        analysis_tag_groups=["theme"],
                     )
                 ],
             ),

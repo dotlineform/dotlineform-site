@@ -1,10 +1,4 @@
 {
-  "groups": [
-    "subject",
-    "domain",
-    "form",
-    "theme"
-  ],
   "docs": [
     {
       "doc_id": "d-20260727-225608-579c27",
@@ -12,7 +6,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-31 07:02:25",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-b5e4f7",
@@ -20,7 +16,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-51df31",
@@ -28,7 +26,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-79f04e",
@@ -36,7 +36,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-84a2a1",
@@ -44,7 +46,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-651586",
@@ -52,7 +56,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-208450",
@@ -60,7 +66,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-24dfb5",
@@ -68,7 +76,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-ac0827",
@@ -76,7 +86,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-ecb7a9",
@@ -84,7 +96,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-32e172",
@@ -92,7 +106,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-c4b45c",
@@ -100,7 +116,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-87a3e0",
@@ -108,7 +126,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-10fc9c",
@@ -116,7 +136,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260624-204534-0d6ae2",
@@ -131,7 +153,9 @@
       "ui_status": "review",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260730-143553-290a71",
@@ -146,7 +170,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-7fbfa5",
@@ -154,7 +180,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-381c61",
@@ -162,7 +190,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-440ecd",
@@ -170,7 +200,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-833b94",
@@ -178,7 +210,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-84a22b",
@@ -186,7 +220,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-591e49",
@@ -194,7 +230,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-b85e09",
@@ -202,7 +240,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-ecf994",
@@ -210,7 +250,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-1e1df9",
@@ -218,7 +260,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-ecb267",
@@ -226,7 +270,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-75f272",
@@ -234,7 +280,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-8d753d",
@@ -242,7 +290,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-30dfef",
@@ -250,7 +300,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-afb0a7",
@@ -258,7 +310,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-0d540d",
@@ -266,7 +320,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-e546d0",
@@ -274,7 +330,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-0fa362",
@@ -282,7 +340,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-8b320d",
@@ -290,7 +350,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-cfc88e",
@@ -298,7 +360,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-616fda",
@@ -306,7 +370,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-45ac22",
@@ -314,7 +380,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-bed170",
@@ -322,7 +390,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-686651",
@@ -330,7 +400,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-3374bd",
@@ -338,7 +410,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-2497a8",
@@ -346,7 +420,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-330a89",
@@ -354,7 +430,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-f8abb3",
@@ -362,7 +440,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-8dc973",
@@ -370,7 +450,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-6d8930",
@@ -378,7 +460,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-21836e",
@@ -386,7 +470,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-a34891",
@@ -394,7 +480,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-db297c",
@@ -402,7 +490,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-c04eca",
@@ -410,7 +500,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-a60c24",
@@ -418,7 +510,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-78ee39",
@@ -426,7 +520,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-ca7056",
@@ -434,7 +530,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-2af018",
@@ -442,7 +540,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-c88144",
@@ -450,7 +550,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-1ee86d",
@@ -458,7 +560,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-be5e27",
@@ -466,7 +570,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-a45198",
@@ -474,7 +580,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-6c8101",
@@ -482,7 +590,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-90eabc",
@@ -490,7 +600,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-22f690",
@@ -498,7 +610,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-b5542c",
@@ -506,7 +620,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-44902d",
@@ -514,7 +630,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-f1e271",
@@ -522,7 +640,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-fb78ac",
@@ -530,7 +650,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-57a4c7",
@@ -538,7 +660,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-0d87ce",
@@ -546,7 +670,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-55e44d",
@@ -554,7 +680,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-0ccf1f",
@@ -562,7 +690,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-82cce1",
@@ -570,7 +700,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-11de40",
@@ -578,7 +710,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-295b0c",
@@ -586,7 +720,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-04889f",
@@ -594,7 +730,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-3cd1dd",
@@ -602,7 +740,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-32eda3",
@@ -610,7 +750,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-a607e0",
@@ -618,7 +760,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-531c17",
@@ -626,7 +770,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-c913bf",
@@ -634,7 +780,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-6c146c",
@@ -642,7 +790,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-4ab240",
@@ -650,7 +800,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-8a0601",
@@ -658,7 +810,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-3899cc",
@@ -666,7 +820,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-c21bf0",
@@ -674,7 +830,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-63967a",
@@ -682,7 +840,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-6f0bef",
@@ -690,7 +850,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-f3f980",
@@ -698,7 +860,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-0066f5",
@@ -706,7 +870,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-3bf2bc",
@@ -714,7 +880,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-e124eb",
@@ -722,7 +890,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-e8d7a7",
@@ -730,7 +900,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-f9d97a",
@@ -738,7 +910,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-ef31f9",
@@ -746,7 +920,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-3a5f20",
@@ -754,7 +930,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-ba99c7",
@@ -762,7 +940,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-d9afd4",
@@ -770,7 +950,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-34d9fb",
@@ -778,7 +960,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-c474d0",
@@ -786,7 +970,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-93f7d5",
@@ -794,7 +980,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-723889",
@@ -802,7 +990,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-aa54c9",
@@ -810,7 +1000,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-fd71ef",
@@ -818,7 +1010,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-dc2548",
@@ -826,7 +1020,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-2d38a1",
@@ -834,7 +1030,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-31a370",
@@ -842,7 +1040,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-1091be",
@@ -850,7 +1050,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-13749a",
@@ -858,7 +1060,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-dd62ff",
@@ -866,7 +1070,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-ce80bb",
@@ -874,7 +1080,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-37bb5c",
@@ -882,7 +1090,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-ef7408",
@@ -890,7 +1100,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-107781",
@@ -898,7 +1110,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-7927df",
@@ -906,7 +1120,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-b61c55",
@@ -914,7 +1130,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-9eb839",
@@ -922,7 +1140,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-7abff3",
@@ -930,7 +1150,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-bd3137",
@@ -938,7 +1160,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-2c1b7a",
@@ -946,7 +1170,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-e943ff",
@@ -954,7 +1180,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-200179",
@@ -962,7 +1190,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-85a70e",
@@ -970,7 +1200,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-6e75fd",
@@ -978,7 +1210,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-603ccd",
@@ -986,7 +1220,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-b2a6f0",
@@ -994,7 +1230,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-476c0b",
@@ -1002,7 +1240,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-20f785",
@@ -1010,7 +1250,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-012951",
@@ -1018,7 +1260,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-452c13",
@@ -1026,7 +1270,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-07e0eb",
@@ -1034,7 +1280,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-d39666",
@@ -1042,7 +1290,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-b7eb37",
@@ -1050,7 +1300,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-5cb64c",
@@ -1058,7 +1310,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-169780",
@@ -1066,7 +1320,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-38c206",
@@ -1074,7 +1330,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-7fe018",
@@ -1082,7 +1340,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-96dc3a",
@@ -1090,7 +1350,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-753567",
@@ -1098,7 +1360,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-955195",
@@ -1106,7 +1370,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-6cac49",
@@ -1114,7 +1380,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-7d2c08",
@@ -1122,7 +1390,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-422df7",
@@ -1130,7 +1400,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-84860c",
@@ -1138,7 +1410,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-626b4c",
@@ -1146,7 +1420,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-03e966",
@@ -1154,7 +1430,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260624-204534-ecfc12",
@@ -1169,7 +1447,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-438fab",
@@ -1177,7 +1457,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-6b3825",
@@ -1185,7 +1467,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-8104f2",
@@ -1193,7 +1477,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-6796ef",
@@ -1201,7 +1487,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-1bf2c3",
@@ -1209,7 +1497,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-23cb8e",
@@ -1217,7 +1507,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-0e1745",
@@ -1225,7 +1517,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-dbeb69",
@@ -1233,7 +1527,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260624-204534-e3de0b",
@@ -1248,7 +1544,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-44c370",
@@ -1256,7 +1554,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-6e036f",
@@ -1264,7 +1564,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-f5791d",
@@ -1272,7 +1574,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-16b7b8",
@@ -1280,7 +1584,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-6250bf",
@@ -1288,7 +1594,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-0b3df4",
@@ -1296,7 +1604,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-58741a",
@@ -1304,7 +1614,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-b84d7e",
@@ -1312,7 +1624,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-9e62b8",
@@ -1320,7 +1634,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-27bc3b",
@@ -1328,7 +1644,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-4e62cb",
@@ -1336,7 +1654,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-2f1649",
@@ -1344,7 +1664,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-759902",
@@ -1352,7 +1674,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-d2e201",
@@ -1360,7 +1684,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-761a32",
@@ -1368,7 +1694,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-812ad8",
@@ -1376,7 +1704,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-085a6c",
@@ -1384,7 +1714,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-b10f2d",
@@ -1392,7 +1724,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-8258a1",
@@ -1400,7 +1734,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-60991f",
@@ -1408,7 +1744,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-a4d142",
@@ -1416,7 +1754,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-9c842f",
@@ -1424,7 +1764,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-3eabe1",
@@ -1432,7 +1774,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-520788",
@@ -1440,7 +1784,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-708a9e",
@@ -1448,7 +1794,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-e97d11",
@@ -1456,7 +1804,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-2a8ef3",
@@ -1464,7 +1814,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-6555f7",
@@ -1472,7 +1824,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-f589fc",
@@ -1480,7 +1834,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-5b31e2",
@@ -1488,7 +1844,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-d6cc89",
@@ -1496,7 +1854,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-52dcb3",
@@ -1504,7 +1864,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-36c93d",
@@ -1512,7 +1874,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-5296a2",
@@ -1520,7 +1884,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-d41939",
@@ -1528,7 +1894,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-8fec97",
@@ -1536,7 +1904,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-2dd29d",
@@ -1544,7 +1914,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-42c9e0",
@@ -1552,7 +1924,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-8d3c1d",
@@ -1560,7 +1934,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-2ded48",
@@ -1568,7 +1944,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-388a29",
@@ -1576,7 +1954,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-e18b6c",
@@ -1584,7 +1964,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-b2d217",
@@ -1592,7 +1974,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-6bdf47",
@@ -1600,7 +1984,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-c11b96",
@@ -1608,7 +1994,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-9b8192",
@@ -1616,7 +2004,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-99c3be",
@@ -1624,7 +2014,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-ed1025",
@@ -1632,7 +2024,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-3239cc",
@@ -1640,7 +2034,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-0813e3",
@@ -1648,7 +2044,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-dc0028",
@@ -1656,7 +2054,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-482c64",
@@ -1664,7 +2064,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-24efce",
@@ -1672,7 +2074,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-391f5b",
@@ -1680,7 +2084,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-25c814",
@@ -1688,7 +2094,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-e3851f",
@@ -1696,7 +2104,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-f543c8",
@@ -1704,7 +2114,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-933750",
@@ -1712,7 +2124,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-f5ddde",
@@ -1720,7 +2134,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-6f785e",
@@ -1728,7 +2144,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-7be84b",
@@ -1736,7 +2154,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-49e2d4",
@@ -1744,7 +2164,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-124217",
@@ -1752,7 +2174,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-43e86d",
@@ -1760,7 +2184,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-557834",
@@ -1768,7 +2194,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-3ccb9e",
@@ -1776,7 +2204,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-f16645",
@@ -1784,7 +2214,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-4c4195",
@@ -1792,7 +2224,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-2c1750",
@@ -1800,7 +2234,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-6c7384",
@@ -1808,7 +2244,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-fb0e11",
@@ -1816,7 +2254,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-ae606d",
@@ -1824,7 +2264,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-cbb3d7",
@@ -1832,7 +2274,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-edadc1",
@@ -1840,7 +2284,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-7893a2",
@@ -1848,7 +2294,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-12c5ee",
@@ -1856,7 +2304,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-8be4b8",
@@ -1864,7 +2314,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-e0e993",
@@ -1872,7 +2324,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-c7b1f6",
@@ -1880,7 +2334,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-c844db",
@@ -1888,7 +2344,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-d81ffc",
@@ -1896,7 +2354,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-8a8d26",
@@ -1904,7 +2364,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-80e8b0",
@@ -1912,7 +2374,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-1864ea",
@@ -1920,7 +2384,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-4c0762",
@@ -1928,7 +2394,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-a05992",
@@ -1936,7 +2404,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-b235c6",
@@ -1944,7 +2414,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     },
     {
       "doc_id": "d-20260727-225608-2fffa8",
@@ -1952,7 +2424,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-2a27c8",
@@ -1960,7 +2434,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-2617b3",
@@ -1968,7 +2444,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "subject"
+      "customisation": {
+        "group": "subject"
+      }
     },
     {
       "doc_id": "d-20260727-225608-ab4327",
@@ -1976,7 +2454,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "theme"
+      "customisation": {
+        "group": "theme"
+      }
     },
     {
       "doc_id": "d-20260727-225608-d0194d",
@@ -1984,7 +2464,9 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "form"
+      "customisation": {
+        "group": "form"
+      }
     },
     {
       "doc_id": "d-20260727-225608-defa99",
@@ -1992,7 +2474,20 @@
       "ui_status": "",
       "viewable": true,
       "last_updated": "2026-07-27",
-      "group": "domain"
+      "customisation": {
+        "group": "domain"
+      }
     }
-  ]
+  ],
+  "customisation": {
+    "id": "analysis_tags",
+    "data": {
+      "groups": [
+        "subject",
+        "domain",
+        "form",
+        "theme"
+      ]
+    }
+  }
 }

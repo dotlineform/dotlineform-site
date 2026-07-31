@@ -123,7 +123,10 @@ def test_document_collection_loader_selects_exact_configured_sub_scope() -> None
     child_config = SimpleNamespace(
         sub_scope="tags",
         ui_statuses=("draft",),
-        document_groups=("subject",),
+        report_customisation=SimpleNamespace(
+            customisation_id="analysis_tags",
+            settings={"groups": ("subject",)},
+        ),
         source=SimpleNamespace(
             location=SimpleNamespace(path=Path("analysis-tags")),
             documents_path=Path("documents"),

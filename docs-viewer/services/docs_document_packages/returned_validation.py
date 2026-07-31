@@ -17,6 +17,7 @@ from docs_document_packages.returned_common import (
     normalize_text,
 )
 import docs_source_model as source_model
+from docs_subscope_report_customisations import report_customisation_document_groups
 
 
 def validate_whole_returned_package(
@@ -253,7 +254,9 @@ def validate_whole_returned_package(
                 source_model.validate_sub_scope_document_metadata(
                     doc,
                     ui_statuses=collection.document_config.ui_statuses,
-                    document_groups=collection.document_config.document_groups,
+                    document_groups=report_customisation_document_groups(
+                        collection.document_config.report_customisation
+                    ),
                 )
             collection_ids = {
                 doc.doc_id

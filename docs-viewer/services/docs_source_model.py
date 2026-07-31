@@ -31,6 +31,7 @@ from docs_scope_config import (
     document_source_path,
     resolve_scope_path,
 )
+from docs_subscope_report_customisations import report_customisation_document_groups
 
 
 FRONT_MATTER_PATTERN = re.compile(r"\A---\s*\n(.*?)\n---\s*\n?", re.DOTALL)
@@ -476,7 +477,9 @@ def load_document_collection_docs_for_config(
             validate_sub_scope_document_metadata(
                 doc,
                 ui_statuses=document_config.ui_statuses,
-                document_groups=document_config.document_groups,
+                document_groups=report_customisation_document_groups(
+                    document_config.report_customisation
+                ),
             )
     return docs
 

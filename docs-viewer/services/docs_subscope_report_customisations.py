@@ -22,6 +22,7 @@ class DocsSubScopeReportCustomisationConfig:
 class DocsSubScopeReportCustomisationDefinition:
     customisation_id: str
     normalize_settings: Callable[[Any, str], Mapping[str, Any]]
+    document_groups: Callable[[Mapping[str, Any]], tuple[str, ...]] | None
     public_browser: bool
     manage_browser: bool
 
@@ -80,10 +81,15 @@ def _normalize_analysis_tags_settings(raw: Any, field: str) -> Mapping[str, Any]
     }
 
 
+def _analysis_tags_document_groups(settings: Mapping[str, Any]) -> tuple[str, ...]:
+    return tuple(str(value) for value in settings.get("groups", ()))
+
+
 REPORT_CUSTOMISATION_DEFINITIONS = {
     ANALYSIS_TAGS_CUSTOMISATION_ID: DocsSubScopeReportCustomisationDefinition(
         customisation_id=ANALYSIS_TAGS_CUSTOMISATION_ID,
         normalize_settings=_normalize_analysis_tags_settings,
+        document_groups=_analysis_tags_document_groups,
         public_browser=False,
         manage_browser=True,
     )
@@ -134,7 +140,27 @@ def analysis_tags_groups(
 ) -> tuple[str, ...]:
     if customisation is None or customisation.customisation_id != ANALYSIS_TAGS_CUSTOMISATION_ID:
         return ()
-    return tuple(str(value) for value in customisation.settings.get("groups", ()))
+    return _analysis_tags_document_groups(customisation.settings)
+
+
+def report_customisation_document_groups(
+    customisation: DocsSubScopeReportCustomisationConfig | None,
+) -> tuple[str, ...]:
+    """Return document-group choices owned by the selected customisation."""
+
+    if customisation is None:
+        return ()
+    definition = REPORT_CUSTOMISATION_DEFINITIONS.get(
+        customisation.customisation_id
+    )
+    if definition is None:
+        raise ValueError(
+            "Docs sub-scope report customisation is not registered: "
+            f"{customisation.customisation_id}"
+        )
+    if definition.document_groups is None:
+        return ()
+    return definition.document_groups(customisation.settings)
 
 
 def project_report_customisation_manifest(
@@ -193,4 +219,5 @@ __all__ = [
     "normalize_docs_subscope_report_customisation",
     "project_report_customisation_manifest",
     "registered_report_customisation_access",
+    "report_customisation_document_groups",
 ]

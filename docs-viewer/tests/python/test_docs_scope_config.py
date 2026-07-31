@@ -71,7 +71,7 @@ def sub_scope_record(
     source_path: str | None = None,
     public_docs_path: str | None = None,
     ui_statuses: list[str] | None = None,
-    document_groups: list[str] | None = None,
+    analysis_tag_groups: list[str] | None = None,
 ) -> dict[str, object]:
     record = docs_sub_scope_record(
         scope_id,
@@ -80,7 +80,7 @@ def sub_scope_record(
         scope_type="public",
         public_docs_path=public_docs_path,
         ui_statuses=ui_statuses,
-        document_groups=document_groups,
+        analysis_tag_groups=analysis_tag_groups,
     )
     if source_path is not None:
         record["source"] = {
@@ -174,7 +174,7 @@ def test_docs_scope_config_accepts_nested_sub_scopes() -> None:
                     "research",
                     "tags",
                     ui_statuses=["draft", "done"],
-                    document_groups=["subject", "theme"],
+                    analysis_tag_groups=["subject", "theme"],
                 )
             ],
         )
@@ -187,8 +187,11 @@ def test_docs_scope_config_accepts_nested_sub_scopes() -> None:
     assert sub_scope.public_title == "Tags"
     assert sub_scope.supports_return_import is False
     assert sub_scope.ui_statuses == ("draft", "done")
-    assert sub_scope.document_groups == ("subject", "theme")
-    assert sub_scope.report_customisation is None
+    assert sub_scope.report_customisation is not None
+    assert sub_scope.report_customisation.customisation_id == "analysis_tags"
+    assert sub_scope.report_customisation.settings == {
+        "groups": ("subject", "theme")
+    }
     assert docs_scope_config.document_source_path(sub_scope).as_posix() == (
         "docs-viewer/scopes/research/source/sub-scopes/tags/documents"
     )
@@ -243,7 +246,6 @@ def test_docs_scope_config_accepts_registered_sub_scope_report_customisation() -
     assert customisation is not None
     assert customisation.customisation_id == "analysis_tags"
     assert customisation.settings == {"groups": ("subject", "theme")}
-    assert config.sub_scopes[0].document_groups == ()
 
 
 @pytest.mark.parametrize(
@@ -282,24 +284,24 @@ def test_docs_scope_config_rejects_invalid_sub_scope_report_customisation(
             docs_scope_config.load_docs_scope_configs(repo_root)
 
 
-def test_docs_scope_config_rejects_legacy_and_registered_group_config_together() -> None:
+def test_docs_scope_config_rejects_legacy_document_groups_field() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         sub_scope = docs_sub_scope_record(
             "studio",
             "tags",
-            document_groups=["subject"],
             report_customisation={
                 "id": "analysis_tags",
                 "settings": {"groups": ["subject"]},
             },
         )
+        sub_scope["document_groups"] = ["subject"]
         write_scope_record(
             repo_root,
             docs_scope_record("studio", sub_scopes=[sub_scope]),
         )
 
-        with pytest.raises(ValueError, match="must not combine document_groups"):
+        with pytest.raises(ValueError, match="document_groups is no longer supported"):
             docs_scope_config.load_docs_scope_configs(repo_root)
 
 
@@ -331,10 +333,17 @@ def test_checked_scope_config_opts_only_analysis_tags_into_return_import() -> No
         scope_ids=["analysis"],
     )
 
+    analysis_tags = configs["analysis"].sub_scopes[0]
     assert [
         (sub_scope.sub_scope, sub_scope.supports_return_import)
         for sub_scope in configs["analysis"].sub_scopes
     ] == [("tags", True)]
+    assert not hasattr(analysis_tags, "document_groups")
+    assert analysis_tags.report_customisation is not None
+    assert analysis_tags.report_customisation.customisation_id == "analysis_tags"
+    assert analysis_tags.report_customisation.settings == {
+        "groups": ("subject", "domain", "form", "theme")
+    }
 
 
 @pytest.mark.parametrize("value", [None, 1, "true", []])
@@ -360,8 +369,6 @@ def test_docs_scope_config_rejects_invalid_sub_scope_metadata_vocabularies() -> 
     invalid_values = (
         ("ui_statuses", "draft", "must be an array"),
         ("ui_statuses", ["draft", "draft"], "must not contain duplicates"),
-        ("document_groups", ["subject", 2], "must be a string"),
-        ("document_groups", ["Bad Group"], "is invalid"),
     )
     for field, value, error in invalid_values:
         with make_repo() as temp_path:

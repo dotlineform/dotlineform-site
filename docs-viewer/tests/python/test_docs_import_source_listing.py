@@ -241,7 +241,7 @@ def configure_review_sub_scope_targets(root: Path) -> dict[str, Path]:
             scope_type="public",
             public_docs_path="site/assets/data/docs/scopes/library/tags",
             ui_statuses=["draft", "done"],
-            document_groups=["theme"],
+            analysis_tag_groups=["theme"],
         ),
         docs_sub_scope_record(
             "library",
@@ -368,7 +368,7 @@ def configure_analysis_tags_round_trip_targets(root: Path) -> dict[str, Path]:
                     "tags",
                     title="Tags",
                     supports_return_import=True,
-                    document_groups=["theme"],
+                    analysis_tag_groups=["theme"],
                 )
             ],
         )
