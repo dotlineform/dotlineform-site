@@ -13,6 +13,7 @@
 - The public site has no deploy-time build or copy step: `site/` is the tracked GitHub Pages artifact. Local apps and `/docs/` may share site-owned config, CSS, and runtime files through explicit service route mapping, especially Docs Viewer public/shared assets.
 - For long multi-batch work, or before a long thread reaches context limits, produce a handoff with changed files, decisions made, remaining tasks, commands run, and known risks. Keep the delivery document to current/next state, checkboxes, decisions, and completion gates. When detailed working notes, scan inventories, or reusable verification history must survive between sessions, put them in temporary sibling documents, link them from the active delivery, and retire them at closeout as defined in `docs-viewer/scopes/studio/source/documents/d-20260523-000000-bf7161.md`.
 - For material new changes, requirements, or refactors, state the main benefits and risks. For trivial or mechanical edits, a short summary is enough.
+- Local servers do not need to support multiple concurrent users. Modal workflows always complete before another one starts.
 
 ## Processing Project Boundary
 

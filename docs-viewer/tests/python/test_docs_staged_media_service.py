@@ -118,7 +118,7 @@ def test_add_image_publishes_then_returns_markdown_without_creating_a_doc() -> N
     assert before == after
 
 
-def test_add_image_caption_uses_raw_alt_text_with_current_docs_viewer_token() -> None:
+def test_add_image_caption_uses_explicit_full_figure_contract() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_staged_bytes(root, "photo.png", b"png bytes")
@@ -128,21 +128,102 @@ def test_add_image_caption_uses_raw_alt_text_with_current_docs_viewer_token() ->
             "staged_filename": "photo.png",
             "label": "A [quiet] field & <stream>",
             "add_caption": True,
+            "caption": "A [quiet] field & <stream>",
+            "placement": "full",
         }
 
         preview = staged_media.preview_staged_media(root, request)
         payload = staged_media.apply_staged_media(root, request)
 
     expected = (
-        r"![A \[quiet\] field & <stream>]([[media:docs/library/img/photo.png]])"
-        "\n\n"
-        '<span style="font-size: var(--docs-viewer-font-caption);">'
-        "A [quiet] field &amp; &lt;stream&gt;</span>"
+        '<figure class="docsViewerFigure docsViewerFigure--full-column">\n'
+        '  <img src="[[media:docs/library/img/photo.png]]" '
+        'alt="A [quiet] field &amp; &lt;stream&gt;">\n'
+        "  <figcaption>\n"
+        '    <span class="docsViewerFigure__caption">'
+        "A [quiet] field &amp; &lt;stream&gt;</span>\n"
+        "  </figcaption>\n"
+        "</figure>"
     )
     assert preview["add_caption"] is True
     assert preview["markdown"] == expected
     assert payload["add_caption"] is True
     assert payload["markdown"] == expected
+
+
+def test_add_image_preview_and_apply_share_explicit_figure_fragment() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_staged_bytes(root, "photo.png", b"png bytes")
+        request = {
+            "scope": "library",
+            "media_kind": "image",
+            "staged_filename": "photo.png",
+            "label": "Alternative text",
+            "add_caption": True,
+            "caption": "Visible caption",
+            "summary": "Supporting copy",
+            "placement": "left",
+        }
+
+        preview = staged_media.preview_staged_media(root, request)
+        payload = staged_media.apply_staged_media(root, request)
+
+    expected = (
+        '<figure class="docsViewerFigure docsViewerFigure--image-left">\n'
+        '  <img src="[[media:docs/library/img/photo.png]]" alt="Alternative text">\n'
+        "  <figcaption>\n"
+        '    <span class="docsViewerFigure__caption">Visible caption</span>\n'
+        '    <span class="docsViewerFigure__summary">Supporting copy</span>\n'
+        "  </figcaption>\n"
+        "</figure>"
+    )
+    assert preview["markdown"] == expected
+    assert payload["markdown"] == expected
+
+
+def test_add_image_rejects_explicit_empty_caption_and_invalid_placement() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_staged_bytes(root, "photo.png", b"png bytes")
+        request = {
+            "scope": "library",
+            "media_kind": "image",
+            "staged_filename": "photo.png",
+            "label": "Alternative text",
+            "add_caption": True,
+            "caption": "",
+            "placement": "full",
+        }
+
+        with pytest.raises(ValueError, match="caption is required"):
+            staged_media.preview_staged_media(root, request)
+        with pytest.raises(ValueError, match="placement must be one of"):
+            staged_media.preview_staged_media(
+                root,
+                {**request, "caption": "Caption", "placement": "center"},
+            )
+
+
+def test_add_image_caption_requires_explicit_caption_and_placement() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_staged_bytes(root, "photo.png", b"png bytes")
+        request = {
+            "scope": "library",
+            "media_kind": "image",
+            "staged_filename": "photo.png",
+            "label": "Alternative text",
+            "add_caption": True,
+        }
+
+        with pytest.raises(ValueError, match="caption is required"):
+            staged_media.preview_staged_media(root, request)
+        with pytest.raises(ValueError, match="placement is required"):
+            staged_media.preview_staged_media(
+                root,
+                {**request, "caption": "Visible caption"},
+            )
 
 
 def test_add_file_publishes_to_file_media_role() -> None:

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-1533956f21c5aabd5aa17c6cd5062931",
-    "generated_at_utc": "2026-07-31T09:11:25Z",
+    "version": "blake2b-55053c6b66716c6a1345eb443c5eb181",
+    "generated_at_utc": "2026-07-31T09:21:23Z",
     "count": 236
   },
   "entries": [
@@ -4108,10 +4108,10 @@
       "kind": "doc",
       "title": "Source Editor Image Presentation Delivery",
       "href": "/docs/?scope=studio&doc=d-20260731-085838-c1eaca",
-      "last_updated": "2026-07-31 10:11:24",
+      "last_updated": "2026-07-31 10:20:25",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-31 10:11:24 • Roadmap",
+      "display_meta": "2026-07-31 10:20:25 • Roadmap",
       "search_terms": [
         "source editor image presentation delivery",
         "source",
@@ -4120,16 +4120,16 @@
         "presentation",
         "delivery",
         "roadmap",
-        "2026-07-31 10:11:24",
+        "2026-07-31 10:20:25",
         "2026",
         "07",
         "31",
         "10",
-        "11",
-        "24",
+        "20",
+        "25",
         "d-20260731-085838-c1eaca"
       ],
-      "search_text": "source editor image presentation delivery source editor image presentation delivery roadmap 2026-07-31 10:11:24 2026 07 31 10 11 24 d-20260731-085838-c1eaca"
+      "search_text": "source editor image presentation delivery source editor image presentation delivery roadmap 2026-07-31 10:20:25 2026 07 31 10 20 25 d-20260731-085838-c1eaca"
     },
     {
       "id": "d-20260511-120352-90ffa6",

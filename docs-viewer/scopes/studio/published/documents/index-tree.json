@@ -891,7 +891,7 @@
           "doc_id": "d-20260731-085838-c1eaca",
           "title": "Source Editor Image Presentation Delivery",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-085838-c1eaca.json",
-          "ui_status": "proposed"
+          "ui_status": "in-progress"
         },
         {
           "doc_id": "d-20260511-120352-90ffa6",
@@ -1321,5 +1321,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-31T08:00:34Z"
+  "generated_at": "2026-07-31T09:18:36Z"
 }
