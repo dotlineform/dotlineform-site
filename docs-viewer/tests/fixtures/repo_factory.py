@@ -163,6 +163,7 @@ def docs_sub_scope_record(
     public_docs_path: str | None = None,
     ui_statuses: list[str] | None = None,
     document_groups: list[str] | None = None,
+    report_customisation: dict[str, object] | None = None,
 ) -> dict[str, object]:
     record: dict[str, object] = {
         "sub_scope": sub_scope,
@@ -187,6 +188,8 @@ def docs_sub_scope_record(
         record["public_title"] = public_title
     if supports_return_import is not None:
         record["supports_return_import"] = supports_return_import
+    if report_customisation is not None:
+        record["report_customisation"] = report_customisation
     return record
 
 

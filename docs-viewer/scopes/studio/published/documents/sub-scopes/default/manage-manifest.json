@@ -1,0 +1,18 @@
+{
+  "docs": [
+    {
+      "doc_id": "d-20260731-185430-70baff",
+      "title": "Alpha Default Document",
+      "ui_status": "done",
+      "viewable": true,
+      "last_updated": "2026-07-30 09:00:00"
+    },
+    {
+      "doc_id": "d-20260731-185431-53b71d",
+      "title": "Zeta Recent Draft",
+      "ui_status": "draft",
+      "viewable": false,
+      "last_updated": "2026-07-31 09:00:00"
+    }
+  ]
+}

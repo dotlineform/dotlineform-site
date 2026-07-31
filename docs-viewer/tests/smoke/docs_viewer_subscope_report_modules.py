@@ -3173,6 +3173,577 @@ def assert_delete_workflow(page: Page) -> None:
     }
 
 
+def assert_default_candidate_and_customisation_framework(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+          const report = await import(
+            '/docs-viewer/runtime/js/reports/docs-subscope-candidate-report.js'
+          );
+          const defaults = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-subscope-default-contribution.js'
+          );
+          const composition = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-subscope-composition.js'
+          );
+          const manageRegistry = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-subscope-customisation-registry.js'
+          );
+          const publicRegistry = await import(
+            '/site/docs-viewer/runtime/js/shared/docs-subscope-customisation-registry.js'
+          );
+          history.replaceState({}, '', '/?scope=studio&doc=parent-doc');
+          document.body.innerHTML = '<main id="candidate-host"></main>';
+          const host = document.querySelector('#candidate-host');
+          const copied = [];
+          Object.defineProperty(navigator, 'clipboard', {
+            configurable: true,
+            value: {
+              writeText: text => {
+                copied.push(text);
+                return Promise.resolve();
+              }
+            }
+          });
+          document.execCommand = command => {
+            if (command !== 'copy') return false;
+            copied.push(document.querySelector('textarea')?.value || '');
+            return true;
+          };
+          window.fetch = async input => {
+            const url = new URL(String(input), location.href);
+            const response = payload => ({
+              ok: true,
+              status: 200,
+              json: async () => payload
+            });
+            if (url.pathname === '/candidate/default-manifest.json') {
+              return response({ docs: [
+                {
+                  doc_id: 'alpha', title: 'Alpha', ui_status: 'done',
+                  viewable: true, last_updated: '2026-07-30 09:00:00'
+                },
+                {
+                  doc_id: 'alpha-2', title: 'Alpha', ui_status: 'draft',
+                  viewable: false, last_updated: '2026-07-30 09:00:00'
+                },
+                {
+                  doc_id: 'beta', title: 'Beta', viewable: true,
+                  last_updated: 'not-a-date'
+                },
+                {
+                  doc_id: 'zeta', title: 'Zeta', viewable: true,
+                  last_updated: '2026-07-31 09:00:00'
+                }
+              ] });
+            }
+            if (url.pathname === '/candidate/empty-manifest.json') {
+              return response({ docs: [] });
+            }
+            if (url.pathname === '/candidate/custom-manifest.json') {
+              return response({
+                customisation: {
+                  id: 'synthetic',
+                  data: { categories: ['x', 'y'] }
+                },
+                docs: [
+                  {
+                    doc_id: 'x-one', title: 'X One', viewable: true,
+                    last_updated: '', customisation: { category: 'x' }
+                  },
+                  {
+                    doc_id: 'y-one', title: 'Y One', viewable: true,
+                    last_updated: '', customisation: { category: 'y' }
+                  }
+                ]
+              });
+            }
+            if (url.pathname === '/candidate/mismatch-manifest.json') {
+              return response({ docs: [] });
+            }
+            if (url.pathname.includes('/candidate/by-id/')) {
+              const docId = decodeURIComponent(
+                url.pathname.split('/').pop().replace(/\\.json$/, '')
+              );
+              return response({
+                doc_id: docId,
+                title: docId,
+                content_html: `<h2>${docId}</h2>`
+              });
+            }
+            return { ok: false, status: 404, json: async () => ({}) };
+          };
+
+          const lifecycle = [];
+          const created = [];
+          const prepared = [];
+          const copyTargets = [];
+          const defaultContribution = defaults.createDocsViewerManagementSubscopeDefaultContribution({
+            managementContext: true,
+            markdownLinkForDocument: (target, doc) => {
+              copyTargets.push(target);
+              return `[${doc.title}](/docs/?scope=${target.scope}&doc=parent-doc&subdoc=${target.doc_id})`;
+            },
+            onCreateDocument: target => created.push(target),
+            onLifecycleEvent: event => lifecycle.push(event.type),
+            onPreparePackage: target => prepared.push(target),
+            uiStatusByValue: new Map([
+              ['done', { label: 'Done', emoji: '✅' }],
+              ['draft', { label: 'Draft', emoji: '📝' }]
+            ])
+          });
+          const composedDefault = composition.composeDocsViewerManagementSubscopeContributions({
+            defaultContribution
+          });
+          const root = document.createElement('section');
+          host.appendChild(root);
+          await report.mountDocsSubscopeCandidateReport({
+            doc: { doc_id: 'parent-doc' },
+            managementContext: true,
+            reportMeta: { subScope: 'default' },
+            reportRoot: root,
+            routeContext: { subScopes: [{
+              subScope: 'default',
+              title: 'Default',
+              manifestUrl: '/candidate/default-manifest.json',
+              byIdUrlBase: '/candidate/by-id'
+            }] },
+            subscopeReportContributionPromise: Promise.resolve(composedDefault),
+            viewerScope: 'studio'
+          });
+          const rowIds = node => Array.from(
+            node.querySelectorAll('[data-report-subdoc-id]')
+          ).map(row => row.dataset.reportSubdocId);
+          const checkedIds = node => Array.from(
+            node.querySelectorAll('[data-docs-subscope-selection-checkbox]:checked')
+          ).map(input => input.dataset.docsSubscopeSelectionCheckbox);
+          const initial = {
+            rows: rowIds(root),
+            sortMode: root.querySelector('[data-docs-subscope-sort]')
+              ?.dataset.docsSubscopeSort || '',
+            newPresent: root.querySelector('[data-docs-subscope-new]') !== null,
+            customFilters: root.querySelectorAll('[data-docs-subscope-custom-filter]').length,
+            statusIcons: root.querySelectorAll('.docsViewer__navStatus').length,
+            nonViewableIcons: root.querySelectorAll('.docsViewer__draftPrefix').length
+          };
+          root.querySelector('[data-docs-subscope-new]').click();
+          await Promise.resolve();
+          root.querySelector('[data-docs-subscope-actions]').click();
+          root.querySelector('[data-docs-subscope-selection-checkbox="zeta"]').click();
+          const selectedBeforeSort = checkedIds(root);
+          root.querySelector('[data-docs-subscope-sort]').click();
+          const afterSort = {
+            rows: rowIds(root),
+            checked: checkedIds(root),
+            sortMode: root.querySelector('[data-docs-subscope-sort]')
+              ?.dataset.docsSubscopeSort || ''
+          };
+          root.querySelector('[data-docs-subscope-selection-command="select-all"]').click();
+          root.querySelector('[data-docs-subscope-actions]').click();
+          root.querySelector('[data-docs-viewer-action="prepare-document-package"]').click();
+          await Promise.resolve();
+          await Promise.resolve();
+          root.querySelector(
+            '[data-report-subdoc-id="alpha"] .docsViewerReport__subscopeButton'
+          ).click();
+          await new Promise(resolve => {
+            const poll = () => root.querySelector('[data-docs-subscope-copy-link]')
+              ? resolve()
+              : setTimeout(poll, 0);
+            poll();
+          });
+          root.querySelector('[data-docs-subscope-copy-link]').click();
+          await Promise.resolve();
+          await Promise.resolve();
+          const detail = {
+            copied: copied.slice(),
+            copyTargets: copyTargets.slice(),
+            target: root.querySelector('[data-docs-subscope-copy-link]') !== null
+          };
+          root.remove();
+          await new Promise(resolve => setTimeout(resolve, 0));
+          history.replaceState({}, '', '/?scope=studio&doc=empty-parent');
+
+          const emptyCreated = [];
+          const emptyDefault = defaults.createDocsViewerManagementSubscopeDefaultContribution({
+            managementContext: true,
+            onCreateDocument: target => emptyCreated.push(target)
+          });
+          const emptyRoot = document.createElement('section');
+          host.appendChild(emptyRoot);
+          await report.mountDocsSubscopeCandidateReport({
+            doc: { doc_id: 'empty-parent' },
+            managementContext: true,
+            reportMeta: { subScope: 'empty' },
+            reportRoot: emptyRoot,
+            routeContext: { subScopes: [{
+              subScope: 'empty',
+              title: 'Empty',
+              manifestUrl: '/candidate/empty-manifest.json',
+              byIdUrlBase: '/candidate/by-id'
+            }] },
+            subscopeReportContribution: composition.composeDocsViewerManagementSubscopeContributions({
+              defaultContribution: emptyDefault
+            }),
+            viewerScope: 'studio'
+          });
+          const emptySnapshot = {
+            actionsDisabled: emptyRoot.querySelector('[data-docs-subscope-actions]')?.disabled ?? null,
+            newDisabled: emptyRoot.querySelector('[data-docs-subscope-new]')?.disabled ?? null,
+            text: emptyRoot.querySelector('.docsViewerReport__empty')?.textContent || ''
+          };
+          emptyRoot.querySelector('[data-docs-subscope-new]')?.click();
+          await Promise.resolve();
+          history.replaceState({}, '', '/?scope=studio&doc=custom-parent');
+
+          const customTargets = { list: [], selection: [], detail: [] };
+          const customContribution = {
+            id: 'synthetic',
+            createFilters: ({ data }) => [{
+              id: 'category',
+              initialValue: 'x',
+              matches: ({ document, value }) => (
+                !value || document.customisation?.category === value
+              ),
+              render: ({ host: filterHost, value, setValue }) => {
+                data.categories.forEach(category => {
+                  const button = filterHost.ownerDocument.createElement('button');
+                  button.type = 'button';
+                  button.dataset.syntheticFilter = category;
+                  button.setAttribute('aria-pressed', category === value ? 'true' : 'false');
+                  button.textContent = category;
+                  button.addEventListener('click', () => setValue(category));
+                  filterHost.appendChild(button);
+                });
+              }
+            }],
+            renderRow: ({ document: doc, trailingHost }) => {
+              const marker = trailingHost.ownerDocument.createElement('span');
+              marker.dataset.syntheticRow = doc.doc_id;
+              marker.textContent = doc.customisation.category;
+              trailingHost.appendChild(marker);
+            },
+            renderListToolbar: ({ host: toolbarHost, registerAction }) => {
+              const action = registerAction({
+                id: 'synthetic-list', placement: 'list-toolbar',
+                targetKind: 'collection', capability: true,
+                emptyState: 'enabled', refreshEffect: 'none',
+                handler: target => customTargets.list.push(target)
+              });
+              const button = toolbarHost.ownerDocument.createElement('button');
+              button.type = 'button';
+              button.dataset.syntheticListAction = 'true';
+              button.addEventListener('click', () => action.invoke());
+              toolbarHost.appendChild(button);
+            },
+            renderSelectionToolbar: ({ host: selectionHost, registerAction }) => {
+              const action = registerAction({
+                id: 'synthetic-selection', placement: 'selection',
+                targetKind: 'selection', capability: true,
+                emptyState: 'disabled', refreshEffect: 'none',
+                handler: target => customTargets.selection.push(target)
+              });
+              const button = selectionHost.ownerDocument.createElement('button');
+              button.type = 'button';
+              button.dataset.syntheticSelectionAction = 'true';
+              button.disabled = !action.enabled;
+              button.addEventListener('click', () => action.invoke());
+              selectionHost.appendChild(button);
+            },
+            renderDetailToolbar: ({ host: detailHost, registerAction }) => {
+              const action = registerAction({
+                id: 'synthetic-detail', placement: 'detail-toolbar',
+                targetKind: 'validated-detail', capability: true,
+                emptyState: 'omitted', refreshEffect: 'none',
+                handler: target => customTargets.detail.push(target)
+              });
+              const button = detailHost.ownerDocument.createElement('button');
+              button.type = 'button';
+              button.dataset.syntheticDetailAction = 'true';
+              button.addEventListener('click', () => action.invoke());
+              detailHost.appendChild(button);
+            }
+          };
+          const customDefault = defaults.createDocsViewerManagementSubscopeDefaultContribution({
+            managementContext: true
+          });
+          const customRoot = document.createElement('section');
+          host.appendChild(customRoot);
+          await report.mountDocsSubscopeCandidateReport({
+            doc: { doc_id: 'custom-parent' },
+            managementContext: true,
+            reportMeta: { subScope: 'custom' },
+            reportRoot: customRoot,
+            routeContext: { subScopes: [{
+              subScope: 'custom',
+              title: 'Custom',
+              manifestUrl: '/candidate/custom-manifest.json',
+              byIdUrlBase: '/candidate/by-id',
+              reportCustomisation: { id: 'synthetic' }
+            }] },
+            subscopeReportContribution: composition.composeDocsViewerManagementSubscopeContributions({
+              customisationContribution: customContribution,
+              defaultContribution: customDefault
+            }),
+            viewerScope: 'studio'
+          });
+          const customInitial = {
+            rows: rowIds(customRoot),
+            rowFeatures: customRoot.querySelectorAll('[data-synthetic-row]').length,
+            listAction: customRoot.querySelector('[data-synthetic-list-action]') !== null,
+            selectionActionDisabled: customRoot.querySelector(
+              '[data-synthetic-selection-action]'
+            )?.disabled ?? null
+          };
+          customRoot.querySelector('[data-synthetic-list-action]')?.click();
+          customRoot.querySelector('[data-docs-subscope-actions]')?.click();
+          customRoot.querySelector(
+            '[data-docs-subscope-selection-checkbox="x-one"]'
+          )?.click();
+          customRoot.querySelector('[data-synthetic-selection-action]')?.click();
+          customRoot.querySelector('[data-synthetic-filter="y"]')?.click();
+          const customFiltered = rowIds(customRoot);
+          const customDetailButton = customRoot.querySelector(
+            '[data-report-subdoc-id="y-one"] .docsViewerReport__subscopeButton'
+          );
+          if (customDetailButton) {
+            customDetailButton.click();
+            await new Promise(resolve => {
+              const poll = () => customRoot.querySelector('[data-synthetic-detail-action]')
+                ? resolve()
+                : setTimeout(poll, 0);
+              poll();
+            });
+            customRoot.querySelector('[data-synthetic-detail-action]').click();
+          }
+          await Promise.resolve();
+          history.replaceState({}, '', '/?scope=studio&doc=failed-parent');
+
+          let unknownRegistry = '';
+          try {
+            await manageRegistry.resolveManagementDocsSubscopeCustomisation({ id: 'unknown' });
+          } catch (error) {
+            unknownRegistry = error.message;
+          }
+          let unavailableContract = null;
+          const unavailableContribution = composition.composeDocsViewerManagementSubscopeContributions({
+            customisationContribution: {
+              id: 'unavailable-test',
+              renderListToolbar: ({ registerAction }) => {
+                const registration = registerAction({
+                  id: 'unavailable-list', placement: 'list-toolbar',
+                  targetKind: 'collection',
+                  capability: { available: false, reason: 'Unavailable in this scope.' },
+                  emptyState: 'disabled', refreshEffect: 'none',
+                  handler: () => {}
+                });
+                unavailableContract = {
+                  disabledReason: registration.disabledReason,
+                  enabled: registration.enabled,
+                  hidden: registration.hidden,
+                  target: registration.target
+                };
+              }
+            }
+          });
+          unavailableContribution.renderListToolbar({
+            collection: { scope: 'studio', sub_scope: 'custom' },
+            documents: [],
+            host: document.createElement('div')
+          });
+          let invalidTarget = '';
+          const invalidContribution = composition.composeDocsViewerManagementSubscopeContributions({
+            customisationContribution: {
+              id: 'invalid-test',
+              renderDetailToolbar: ({ registerAction }) => registerAction({
+                id: 'invalid-detail', placement: 'detail-toolbar',
+                targetKind: 'validated-detail', capability: true,
+                emptyState: 'omitted', refreshEffect: 'none',
+                handler: () => {}
+              })
+            }
+          });
+          try {
+            invalidContribution.renderDetailToolbar({
+              collection: { scope: 'studio', sub_scope: 'custom' },
+              host: document.createElement('div'),
+              target: {
+                scope: 'studio', sub_scope: 'custom', doc_id: 'x-one', extra: true
+              }
+            });
+          } catch (error) {
+            invalidTarget = error.message;
+          }
+          const failedRoot = document.createElement('section');
+          host.appendChild(failedRoot);
+          await report.mountDocsSubscopeCandidateReport({
+            reportMeta: { subScope: 'default' },
+            reportRoot: failedRoot,
+            routeContext: { subScopes: [{
+              subScope: 'default', title: 'Default',
+              manifestUrl: '/candidate/default-manifest.json',
+              byIdUrlBase: '/candidate/by-id'
+            }] },
+            subscopeReportContributionPromise: Promise.reject(new Error('module failed')),
+            viewerScope: 'studio'
+          });
+          const mismatchRoot = document.createElement('section');
+          host.appendChild(mismatchRoot);
+          await report.mountDocsSubscopeCandidateReport({
+            reportMeta: { subScope: 'mismatch' },
+            reportRoot: mismatchRoot,
+            routeContext: { subScopes: [{
+              subScope: 'mismatch', title: 'Mismatch',
+              manifestUrl: '/candidate/mismatch-manifest.json',
+              byIdUrlBase: '/candidate/by-id',
+              reportCustomisation: { id: 'analysis_tags' }
+            }] },
+            subscopeReportContribution: {},
+            viewerScope: 'studio'
+          });
+          history.replaceState({}, '', '/?scope=studio&doc=callback-parent');
+          const callbackRoot = document.createElement('section');
+          host.appendChild(callbackRoot);
+          const callbackDefault = defaults.createDocsViewerManagementSubscopeDefaultContribution({
+            managementContext: true
+          });
+          await report.mountDocsSubscopeCandidateReport({
+            reportMeta: { subScope: 'callback' },
+            reportRoot: callbackRoot,
+            routeContext: { subScopes: [{
+              subScope: 'callback', title: 'Callback',
+              manifestUrl: '/candidate/custom-manifest.json',
+              byIdUrlBase: '/candidate/by-id',
+              reportCustomisation: { id: 'synthetic' }
+            }] },
+            subscopeReportContribution: composition.composeDocsViewerManagementSubscopeContributions({
+              defaultContribution: callbackDefault,
+              customisationContribution: {
+                id: 'callback-failure',
+                notify: event => {
+                  if (event.type === 'selection') throw new Error('selection callback failed');
+                }
+              }
+            }),
+            viewerScope: 'studio',
+            managementContext: true
+          });
+          const callbackFailure = {
+            state: callbackRoot.dataset.reportState,
+            text: callbackRoot.textContent
+          };
+          return {
+            afterSort,
+            callbackFailure,
+            created,
+            customFiltered,
+            customInitial,
+            customTargets,
+            detail,
+            emptyCreated,
+            emptySnapshot,
+            failed: {
+              state: failedRoot.dataset.reportState,
+              text: failedRoot.textContent
+            },
+            initial,
+            invalidTarget,
+            lifecycle,
+            mismatch: {
+              state: mismatchRoot.dataset.reportState,
+              text: mismatchRoot.textContent
+            },
+            prepared,
+            registries: {
+              manage: manageRegistry.listManagementDocsSubscopeCustomisationIds(),
+              public: publicRegistry.listPublicDocsSubscopeCustomisationIds(),
+              unknownRegistry
+            },
+            selectedBeforeSort,
+            unavailableContract
+          };
+        }"""
+    )
+    assert result["initial"] == {
+        "rows": ["alpha", "alpha-2", "beta", "zeta"],
+        "sortMode": "title-asc",
+        "newPresent": True,
+        "customFilters": 0,
+        "statusIcons": 2,
+        "nonViewableIcons": 1,
+    }
+    assert result["selectedBeforeSort"] == ["zeta"]
+    assert result["created"] == [
+        {"scope": "studio", "sub_scope": "default"}
+    ]
+    assert result["afterSort"] == {
+        "rows": ["zeta", "alpha", "alpha-2", "beta"],
+        "checked": ["zeta"],
+        "sortMode": "last-updated-desc",
+    }
+    assert result["prepared"][0]["scope"] == "studio"
+    assert result["prepared"][0]["sub_scope"] == "default"
+    assert sorted(result["prepared"][0]["doc_ids"]) == [
+        "alpha", "alpha-2", "beta", "zeta"
+    ]
+    assert result["detail"] == {
+        "copied": [
+            "[Alpha](/docs/?scope=studio&doc=parent-doc&subdoc=alpha)"
+        ],
+        "copyTargets": [
+            {"scope": "studio", "sub_scope": "default", "doc_id": "alpha"}
+        ],
+        "target": True,
+    }, result
+    assert "unmount" in result["lifecycle"]
+    assert result["emptySnapshot"] == {
+        "actionsDisabled": True,
+        "newDisabled": False,
+        "text": "No documents are available in Empty.",
+    }, result
+    assert result["emptyCreated"] == [
+        {"scope": "studio", "sub_scope": "empty"}
+    ]
+    assert result["customInitial"] == {
+        "rows": ["x-one"],
+        "rowFeatures": 1,
+        "listAction": True,
+        "selectionActionDisabled": True,
+    }
+    assert result["customFiltered"] == ["y-one"]
+    assert result["customTargets"] == {
+        "list": [{"scope": "studio", "sub_scope": "custom"}],
+        "selection": [
+            {"scope": "studio", "sub_scope": "custom", "doc_ids": ["x-one"]}
+        ],
+        "detail": [
+            {"scope": "studio", "sub_scope": "custom", "doc_id": "y-one"}
+        ],
+    }
+    assert result["registries"] == {
+        "manage": ["analysis_tags"],
+        "public": [],
+        "unknownRegistry": "Manage Docs sub-scope customisation is unavailable: unknown",
+    }
+    assert result["unavailableContract"] == {
+        "disabledReason": "Unavailable in this scope.",
+        "enabled": False,
+        "hidden": False,
+        "target": {"scope": "studio", "sub_scope": "custom"},
+    }
+    assert result["invalidTarget"] == "Sub-scope action detail target is invalid."
+    assert result["failed"] == {"state": "error", "text": "module failed"}
+    assert result["callbackFailure"] == {
+        "state": "error",
+        "text": "selection callback failed",
+    }
+    assert result["mismatch"] == {
+        "state": "error",
+        "text": (
+            "Docs sub-scope customisation identity did not match its manifest projection."
+        ),
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--site-root", default=".", help="Repository root to serve.")
@@ -3212,6 +3783,7 @@ def main(argv: list[str] | None = None) -> int:
                 assert_report_delete_reconciliation(page)
                 assert_delete_workflow(page)
                 assert_manage_report_bridge(page)
+                assert_default_candidate_and_customisation_framework(page)
             finally:
                 browser.close()
             if errors:

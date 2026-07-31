@@ -17,6 +17,10 @@ from .common import (
 )
 from .pipeline import DocsDataBuilder
 from .source import DocRecord
+from docs_subscope_report_customisations import (
+    analysis_tags_groups,
+    project_report_customisation_manifest,
+)
 
 
 class SubScopeDocsBuilder(DocsDataBuilder):
@@ -54,7 +58,10 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         parent_builder.validate_canonical_doc_ids(parent_docs)
         matching = [
             doc.doc_id for doc in parent_docs
-            if doc.viewer_report == "docs_subscope" and doc.viewer_report_subscope == self.sub_scope_id
+            if (
+                doc.viewer_report in {"docs_subscope", "docs_subscope_candidate"}
+                and doc.viewer_report_subscope == self.sub_scope_id
+            )
         ]
         if len(matching) == 1:
             self._parent_report_doc_id = matching[0]
@@ -83,16 +90,29 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         return self.metadata_entry(doc, docs)
 
     def manifest_payload(self, ordered_docs: list[DocRecord]) -> dict[str, Any]:
-        return {
+        visible_docs = [doc for doc in ordered_docs if doc.viewable]
+        payload: dict[str, Any] = {
             "docs": [
                 {
                     "doc_id": doc.doc_id,
                     "title": doc.title,
                 }
-                for doc in ordered_docs
-                if doc.viewable
-            ],
+                for doc in visible_docs
+            ]
         }
+        projected = project_report_customisation_manifest(
+            self.sub_scope_config.report_customisation,
+            visible_docs,
+            published=True,
+        )
+        if projected is not None:
+            payload["customisation"] = projected["root"]
+            rows_by_id = projected["rows"]
+            for row in payload["docs"]:
+                row_customisation = rows_by_id.get(row["doc_id"])
+                if row_customisation is not None:
+                    row["customisation"] = row_customisation
+        return payload
 
     def manage_manifest_payload(self, ordered_docs: list[DocRecord]) -> dict[str, Any]:
         payload: dict[str, Any] = {}
@@ -105,17 +125,47 @@ class SubScopeDocsBuilder(DocsDataBuilder):
                     "title": doc.title,
                     "ui_status": doc.ui_status,
                     "viewable": doc.viewable,
+                    "last_updated": doc.last_updated,
                 },
-                **({"group": doc.group} if doc.group else {}),
+                **(
+                    {"group": doc.group}
+                    if doc.group and self.sub_scope_config.document_groups
+                    else {}
+                ),
             }
             for doc in ordered_docs
         ]
+        projected = project_report_customisation_manifest(
+            self.sub_scope_config.report_customisation,
+            ordered_docs,
+            published=False,
+        )
+        if projected is not None:
+            payload["customisation"] = projected["root"]
+            rows_by_id = projected["rows"]
+            unknown_ids = sorted(set(rows_by_id) - {doc.doc_id for doc in ordered_docs})
+            if unknown_ids:
+                raise RuntimeError(
+                    "Docs sub-scope customisation projected unknown document IDs: "
+                    + ", ".join(unknown_ids)
+                )
+            for row in payload["docs"]:
+                row_customisation = rows_by_id.get(row["doc_id"])
+                if row_customisation is not None:
+                    if "customisation" in row:
+                        raise RuntimeError(
+                            "Docs sub-scope customisation row namespace collision: "
+                            + row["doc_id"]
+                        )
+                    row["customisation"] = row_customisation
         return payload
 
     def validate_docs(self, docs: list[DocRecord]) -> None:
         super().validate_docs(docs)
         allowed_statuses = set(self.sub_scope_config.ui_statuses)
-        allowed_groups = set(self.sub_scope_config.document_groups)
+        allowed_groups = set(self.sub_scope_config.document_groups) or set(
+            analysis_tags_groups(self.sub_scope_config.report_customisation)
+        )
         for doc in docs:
             if doc.ui_status and doc.ui_status not in allowed_statuses:
                 raise RuntimeError(

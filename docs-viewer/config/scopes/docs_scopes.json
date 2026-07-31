@@ -42,7 +42,17 @@
       "non_loadable_doc_ids": [],
       "manage_only_tree_root_ids": [],
       "allow_unresolved_parent_ids": false,
-      "sub_scopes": [],
+      "sub_scopes": [
+        {
+          "sub_scope": "default",
+          "title": "Default",
+          "ui_statuses": [
+            "draft",
+            "done"
+          ],
+          "public_projection": null
+        }
+      ],
       "scope_root": {
         "provider": "repository",
         "path": "docs-viewer/scopes/studio"

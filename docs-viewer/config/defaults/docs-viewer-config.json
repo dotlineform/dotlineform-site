@@ -36,7 +36,15 @@
           "update",
           "delete"
         ]
-      }
+      },
+      "sub_scopes": [
+        {
+          "sub_scope": "default",
+          "title": "Default",
+          "manifest_url": "/docs-viewer/scopes/studio/published/documents/sub-scopes/default/manage-manifest.json",
+          "by_id_url_base": "/docs-viewer/scopes/studio/published/documents/sub-scopes/default/by-id"
+        }
+      ]
     },
     {
       "scope_id": "library",

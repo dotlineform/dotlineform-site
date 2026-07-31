@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e018b4baffa0940352ac34949f104aff",
-    "generated_at_utc": "2026-07-31T16:28:18Z",
-    "count": 243
+    "version": "blake2b-465b4bcde3857f81fea28a8e5ea46c6d",
+    "generated_at_utc": "2026-07-31T18:29:11Z",
+    "count": 244
   },
   "entries": [
     {
@@ -4534,10 +4534,10 @@
       "kind": "doc",
       "title": "Default Report And Analysis Tags Refactor Delivery",
       "href": "/docs/?scope=studio&doc=d-20260731-155054-1fcd80",
-      "last_updated": "2026-07-31 17:27:23",
+      "last_updated": "2026-07-31 19:26:44",
       "parent_id": "d-20260731-150644-3dfab5",
       "parent_title": "Sub-Scope Report Defaults And Customisations",
-      "display_meta": "2026-07-31 17:27:23 • Sub-Scope Report Defaults And Customisations",
+      "display_meta": "2026-07-31 19:26:44 • Sub-Scope Report Defaults And Customisations",
       "search_terms": [
         "default report and analysis tags refactor delivery",
         "default",
@@ -4552,16 +4552,45 @@
         "scope",
         "defaults",
         "customisations",
-        "2026-07-31 17:27:23",
+        "2026-07-31 19:26:44",
         "2026",
         "07",
         "31",
-        "17",
-        "27",
-        "23",
+        "19",
+        "26",
+        "44",
         "d-20260731-155054-1fcd80"
       ],
-      "search_text": "default report and analysis tags refactor delivery default report and analysis tags refactor delivery sub-scope report defaults and customisations sub scope defaults customisations 2026-07-31 17:27:23 2026 07 31 17 27 23 d-20260731-155054-1fcd80"
+      "search_text": "default report and analysis tags refactor delivery default report and analysis tags refactor delivery sub-scope report defaults and customisations sub scope defaults customisations 2026-07-31 19:26:44 2026 07 31 19 26 44 d-20260731-155054-1fcd80"
+    },
+    {
+      "id": "d-20260731-185207-2dbb6f",
+      "kind": "doc",
+      "title": "Default Sub-Scope Report",
+      "href": "/docs/?scope=studio&doc=d-20260731-185207-2dbb6f",
+      "last_updated": "2026-07-31 18:52:07",
+      "parent_id": "d-20260731-150644-3dfab5",
+      "parent_title": "Sub-Scope Report Defaults And Customisations",
+      "display_meta": "2026-07-31 18:52:07 • Sub-Scope Report Defaults And Customisations",
+      "search_terms": [
+        "default sub-scope report",
+        "default",
+        "sub",
+        "scope",
+        "report",
+        "sub-scope report defaults and customisations",
+        "defaults",
+        "and",
+        "customisations",
+        "2026-07-31 18:52:07",
+        "2026",
+        "07",
+        "31",
+        "18",
+        "52",
+        "d-20260731-185207-2dbb6f"
+      ],
+      "search_text": "default sub-scope report default sub scope report sub-scope report defaults and customisations defaults and customisations 2026-07-31 18:52:07 2026 07 31 18 52 d-20260731-185207-2dbb6f"
     },
     {
       "id": "d-20260731-155056-2677a3",
@@ -4667,10 +4696,10 @@
       "kind": "doc",
       "title": "Sub-Scope Report Customisation Architecture",
       "href": "/docs/?scope=studio&doc=d-20260731-155053-3929e2",
-      "last_updated": "2026-07-31 17:28:18",
+      "last_updated": "2026-07-31 19:29:10",
       "parent_id": "d-20260731-150644-3dfab5",
       "parent_title": "Sub-Scope Report Defaults And Customisations",
-      "display_meta": "2026-07-31 17:28:18 • Sub-Scope Report Defaults And Customisations",
+      "display_meta": "2026-07-31 19:29:10 • Sub-Scope Report Defaults And Customisations",
       "search_terms": [
         "sub-scope report customisation architecture",
         "sub",
@@ -4682,16 +4711,16 @@
         "defaults",
         "and",
         "customisations",
-        "2026-07-31 17:28:18",
+        "2026-07-31 19:29:10",
         "2026",
         "07",
         "31",
-        "17",
-        "28",
-        "18",
+        "19",
+        "29",
+        "10",
         "d-20260731-155053-3929e2"
       ],
-      "search_text": "sub-scope report customisation architecture sub scope report customisation architecture sub-scope report defaults and customisations defaults and customisations 2026-07-31 17:28:18 2026 07 31 17 28 18 d-20260731-155053-3929e2"
+      "search_text": "sub-scope report customisation architecture sub scope report customisation architecture sub-scope report defaults and customisations defaults and customisations 2026-07-31 19:29:10 2026 07 31 19 29 10 d-20260731-155053-3929e2"
     },
     {
       "id": "d-20260726-211842-cc8f6c",

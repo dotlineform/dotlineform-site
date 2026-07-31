@@ -37,8 +37,14 @@ function payloadHasReport(payload) {
 }
 
 function reportSubScope(payload) {
-  if (cleanString(payload && payload.viewer_report) !== "docs_subscope") return "";
+  if (!["docs_subscope", "docs_subscope_candidate"].includes(
+    cleanString(payload && payload.viewer_report)
+  )) return "";
   return cleanString(payload && payload.viewer_report_subscope).toLowerCase();
+}
+
+function candidateReport(payload) {
+  return cleanString(payload && payload.viewer_report) === "docs_subscope_candidate";
 }
 
 function parentTarget(settings) {
@@ -113,6 +119,14 @@ function createSubscopeDocumentAction(settings) {
 }
 
 function configuredSubScopeLabel(settings, scope, subScope) {
+  var child = configuredSubScope(settings, scope, subScope);
+  var normalizedScope = cleanString(scope).toLowerCase();
+  var normalizedSubScope = cleanString(subScope).toLowerCase();
+  var childTitle = cleanString(child && child.title) || normalizedSubScope;
+  return normalizedScope + " / " + childTitle;
+}
+
+function configuredSubScope(settings, scope, subScope) {
   var normalizedScope = cleanString(scope).toLowerCase();
   var normalizedSubScope = cleanString(subScope).toLowerCase();
   var parentConfig = scopeConfigs(settings).find(function (config) {
@@ -126,8 +140,78 @@ function configuredSubScopeLabel(settings, scope, subScope) {
     return cleanString(record && (record.subScope || record.sub_scope)).toLowerCase()
       === normalizedSubScope;
   });
-  var childTitle = cleanString(child && child.title) || normalizedSubScope;
-  return normalizedScope + " / " + childTitle;
+  return child || null;
+}
+
+function escapeMarkdownLinkText(value) {
+  return String(value == null ? "" : value)
+    .replace(/\\/g, "\\\\")
+    .replace(/\[/g, "\\[")
+    .replace(/\]/g, "\\]");
+}
+
+function markdownLinkForSubscopeDocument(settings, parent, subScope, target, documentRecord) {
+  var normalized = normalizeManagedDocumentTarget(target);
+  if (
+    normalized.scope !== parent.scope
+    || normalized.sub_scope !== subScope
+    || typeof settings.viewerUrlForScope !== "function"
+  ) {
+    throw new Error("Copy Link target did not match the mounted sub-scope report.");
+  }
+  var base = settings.viewerUrlForScope(parent.scope, parent.doc_id, { manage: false });
+  if (!cleanString(base)) throw new Error("Copy Link viewer URL is unavailable.");
+  var url = new URL(base, "http://docs.local");
+  url.searchParams.set("subdoc", normalized.doc_id);
+  var title = escapeMarkdownLinkText(
+    cleanString(documentRecord && documentRecord.title) || normalized.doc_id
+  );
+  return "[" + title + "](" + url.pathname + url.search + url.hash + ")";
+}
+
+function loadCandidateContribution(settings, parent, subScope, options) {
+  var candidateOptions = options || {};
+  var subScopeConfig = configuredSubScope(settings, parent.scope, subScope);
+  if (!subScopeConfig) {
+    return Promise.reject(new Error(
+      "Docs sub-scope is not configured: " + parent.scope + "/" + subScope
+    ));
+  }
+  return Promise.all([
+    import("./docs-viewer-management-subscope-default-contribution.js"),
+    import("./docs-viewer-management-subscope-composition.js"),
+    import("./docs-viewer-management-subscope-customisation-registry.js")
+  ]).then(function (modules) {
+    var defaultContribution = modules[0].createDocsViewerManagementSubscopeDefaultContribution({
+      clientOptions: managementClientOptions(settings),
+      managementContext: Boolean(settings.managementContext),
+      markdownLinkForDocument: function (target, documentRecord) {
+        return markdownLinkForSubscopeDocument(
+          settings,
+          parent,
+          subScope,
+          target,
+          documentRecord
+        );
+      },
+      nonViewableEmoji: candidateOptions.nonViewableEmoji,
+      onCreateDocument: candidateOptions.onCreateDocument,
+      onLifecycleEvent: candidateOptions.onLifecycleEvent,
+      onPreparePackage: candidateOptions.onPreparePackage,
+      root: managementModalRoot(settings),
+      setStatus: settings.setStatus,
+      uiStatusByValue: candidateOptions.uiStatusByValue
+    });
+    return modules[2].resolveManagementDocsSubscopeCustomisation(
+      subScopeConfig.reportCustomisation,
+      { collection: { scope: parent.scope, sub_scope: subScope } }
+    ).then(function (customisationContribution) {
+      return modules[1].composeDocsViewerManagementSubscopeContributions({
+        customisationContribution: customisationContribution,
+        defaultContribution: defaultContribution
+      });
+    });
+  });
 }
 
 function openSubscopeCreate(settings, parent, subScope, request, context) {
@@ -269,6 +353,65 @@ export function mountDocsViewerManageDocumentExtras(context) {
   });
   var scopeConfig = settings.scopeConfigState || {};
   var createAction = createSubscopeDocumentAction(settings);
+  if (candidateReport(payload)) {
+    var candidateContribution = loadCandidateContribution(
+      settings,
+      parent,
+      subScope,
+      {
+        nonViewableEmoji: cleanString(scopeConfig.docNonViewableEmoji),
+        onCreateDocument: (
+          settings.managementContext
+          && reportManagementBaseUrl
+          && createAction
+        )
+          ? function (request, context) {
+              return openSubscopeCreate(settings, parent, subScope, request, context);
+            }
+          : null,
+        onLifecycleEvent: function (event) {
+          if (event && event.type === "state") {
+            publishReportState(settings, parent, subScope, event);
+          }
+        },
+        onPreparePackage: reportManagementBaseUrl
+          ? function (request, context) {
+              return openSubScopePreparePackage(settings, request, context);
+            }
+          : null,
+        uiStatusByValue: scopeConfig.uiStatusByValue instanceof Map
+          ? scopeConfig.uiStatusByValue
+          : new Map()
+      }
+    ).catch(function (error) {
+      publishReportState(settings, parent, subScope, {
+        state: "error",
+        reason: "customisation-resolution-failed"
+      });
+      throw error;
+    });
+    return mountDocsViewerReport({
+      appContext: settings.appContext,
+      checkGeneratedDataReadCapability: settings.checkGeneratedDataReadCapability,
+      content: settings.content,
+      doc: settings.doc,
+      fetchDocsIndexTree: function (scope) {
+        return fetchDocsIndexTreeForScope(settings, scope);
+      },
+      managementContext: Boolean(settings.managementContext),
+      managementService: managementService,
+      payload: payload,
+      reportRegistryUrl: cleanString(routeContext.reportRegistryUrl),
+      reportService: reportManagementBaseUrl
+        ? createDocsViewerReportService({ baseUrl: reportManagementBaseUrl })
+        : null,
+      setStatus: settings.setStatus,
+      scopeConfigs: scopeConfigs(settings).slice(),
+      subscopeReportContributionPromise: candidateContribution,
+      viewerScope: currentViewerScope(settings),
+      viewerUrlForScope: settings.viewerUrlForScope
+    });
+  }
   var contribution = createDocsViewerManagementSubscopeContribution({
     clientOptions: managementClientOptions(settings),
     managementContext: Boolean(settings.managementContext),

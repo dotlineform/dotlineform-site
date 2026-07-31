@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import json
+import re
 
+from docs_subscope_report_customisations import registered_report_customisation_access
 from docs_viewer_service_test_support import REPO_ROOT, public_entry_static_import_graph
 
 
@@ -81,6 +83,60 @@ def test_public_docs_viewer_entry_static_graph_excludes_manage_document_actions(
         for path in graph_paths
         if path.startswith("docs-viewer/runtime/js/reports/")
     ]
+
+
+def test_subscope_candidate_and_manage_customisations_are_publicly_isolated() -> None:
+    public_reports = json.loads(
+        (REPO_ROOT / "site/assets/data/docs/public-reports.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    public_loader = (
+        REPO_ROOT / "site/docs-viewer/runtime/js/reports/docs-viewer-public-reports.js"
+    ).read_text(encoding="utf-8")
+    entry = REPO_ROOT / "site/docs-viewer/runtime/js/public/docs-viewer-public.js"
+    graph_paths = {
+        path.relative_to(REPO_ROOT).as_posix()
+        for path in public_entry_static_import_graph(REPO_ROOT, entry)
+    }
+
+    assert "docs_subscope_candidate" not in {
+        report["report_id"] for report in public_reports["reports"]
+    }
+    assert "docs_subscope_candidate" not in public_loader
+    assert "docs-viewer/runtime/js/reports/docs-subscope-candidate-report.js" not in graph_paths
+    assert not [
+        path
+        for path in graph_paths
+        if "subscope-customisation" in path or "subscope-composition" in path
+    ]
+
+
+def test_subscope_customisation_registry_access_agrees_across_runtimes() -> None:
+    manage_source = (
+        REPO_ROOT
+        / "docs-viewer/runtime/js/management/"
+        "docs-viewer-management-subscope-customisation-registry.js"
+    ).read_text(encoding="utf-8")
+    public_source = (
+        REPO_ROOT
+        / "site/docs-viewer/runtime/js/shared/"
+        "docs-subscope-customisation-registry.js"
+    ).read_text(encoding="utf-8")
+    manage_ids = set(re.findall(r"^  ([a-z][a-z0-9_]*): function", manage_source, re.MULTILINE))
+    public_ids = set(re.findall(r"^  ([a-z][a-z0-9_]*): function", public_source, re.MULTILINE))
+    python_access = registered_report_customisation_access()
+
+    assert manage_ids == {
+        customisation_id
+        for customisation_id, access in python_access.items()
+        if "manage" in access
+    }
+    assert public_ids == {
+        customisation_id
+        for customisation_id, access in python_access.items()
+        if "public" in access
+    }
 
 def test_public_docs_viewer_entry_static_graph_excludes_manage_owned_modules() -> None:
     entry = REPO_ROOT / "site/docs-viewer/runtime/js/public/docs-viewer-public.js"

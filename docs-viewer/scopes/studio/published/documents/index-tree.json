@@ -989,6 +989,12 @@
               "ui_status": "proposed"
             },
             {
+              "doc_id": "d-20260731-185207-2dbb6f",
+              "title": "Default Sub-Scope Report",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-185207-2dbb6f.json",
+              "ui_status": "proposed"
+            },
+            {
               "doc_id": "d-20260731-155056-2677a3",
               "title": "Dotlineform Projects Report Customisation Decision Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155056-2677a3.json",
@@ -1367,5 +1373,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-31T15:10:30Z"
+  "generated_at": "2026-07-31T17:52:58Z"
 }

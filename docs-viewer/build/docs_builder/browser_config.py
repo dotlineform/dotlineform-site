@@ -19,6 +19,7 @@ from .common import (
     published_search_path,
     scope_uses_external_data,
 )
+from docs_subscope_report_customisations import browser_report_customisation_payload
 
 
 def raw_scope_items(repo_root: Path) -> dict[str, dict[str, Any]]:
@@ -94,18 +95,23 @@ def browser_sub_scope_records(
             sub_scope,
             published=published,
         )
-        records.append(
-            {
-                "sub_scope": sub_scope.sub_scope,
-                "title": sub_scope.public_title if published else sub_scope.title,
-                "manifest_url": (
-                    f"{output_base}/manifest.json"
-                    if published
-                    else f"{output_base}/manage-manifest.json"
-                ),
-                "by_id_url_base": f"{output_base}/by-id",
-            }
+        record = {
+            "sub_scope": sub_scope.sub_scope,
+            "title": sub_scope.public_title if published else sub_scope.title,
+            "manifest_url": (
+                f"{output_base}/manifest.json"
+                if published
+                else f"{output_base}/manage-manifest.json"
+            ),
+            "by_id_url_base": f"{output_base}/by-id",
+        }
+        report_customisation = browser_report_customisation_payload(
+            sub_scope.report_customisation,
+            published=published,
         )
+        if report_customisation is not None:
+            record["report_customisation"] = report_customisation
+        records.append(record)
     return records
 
 

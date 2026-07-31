@@ -11,6 +11,7 @@
       "title": "absence",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-31 07:02:25",
       "group": "theme"
     },
     {
@@ -18,6 +19,7 @@
       "title": "alienation",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -25,6 +27,7 @@
       "title": "ambiguity",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -32,6 +35,7 @@
       "title": "angular",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -39,6 +43,7 @@
       "title": "animal",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -46,6 +51,7 @@
       "title": "anxiety",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -53,6 +59,7 @@
       "title": "architecture",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -60,6 +67,7 @@
       "title": "astronomy",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -67,6 +75,7 @@
       "title": "asymmetric",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -74,6 +83,7 @@
       "title": "attention",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -81,6 +91,7 @@
       "title": "awe",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -88,6 +99,7 @@
       "title": "balanced",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -95,6 +107,7 @@
       "title": "becoming",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -102,32 +115,37 @@
       "title": "biology",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
       "doc_id": "d-20260624-204534-0d6ae2",
       "title": "bird",
       "ui_status": "",
-      "viewable": true
+      "viewable": true,
+      "last_updated": "2026-06-24"
     },
     {
       "doc_id": "d-20260727-225608-f7402d",
       "title": "bird",
       "ui_status": "review",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
       "doc_id": "d-20260730-143553-290a71",
       "title": "bird 2",
       "ui_status": "",
-      "viewable": false
+      "viewable": false,
+      "last_updated": "2026-07-30 14:35:53"
     },
     {
       "doc_id": "d-20260727-225608-932f79",
       "title": "blurred",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -135,6 +153,7 @@
       "title": "body",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -142,6 +161,7 @@
       "title": "botany",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -149,6 +169,7 @@
       "title": "boundary",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -156,6 +177,7 @@
       "title": "braided",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -163,6 +185,7 @@
       "title": "branch",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -170,6 +193,7 @@
       "title": "branching",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -177,6 +201,7 @@
       "title": "broken",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -184,6 +209,7 @@
       "title": "building",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -191,6 +217,7 @@
       "title": "calm",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -198,6 +225,7 @@
       "title": "cellular",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -205,6 +233,7 @@
       "title": "central",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -212,6 +241,7 @@
       "title": "chance",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -219,6 +249,7 @@
       "title": "change",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -226,6 +257,7 @@
       "title": "chaotic",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -233,6 +265,7 @@
       "title": "clarity",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -240,6 +273,7 @@
       "title": "cloud",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -247,6 +281,7 @@
       "title": "cloudlike",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -254,6 +289,7 @@
       "title": "communication",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -261,6 +297,7 @@
       "title": "compressed",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -268,6 +305,7 @@
       "title": "confusion",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -275,6 +313,7 @@
       "title": "connection",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -282,6 +321,7 @@
       "title": "consciousness",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -289,6 +329,7 @@
       "title": "containment",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -296,6 +337,7 @@
       "title": "contemplation",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -303,6 +345,7 @@
       "title": "continuous",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -310,6 +353,7 @@
       "title": "contour",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -317,6 +361,7 @@
       "title": "contoured",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -324,6 +369,7 @@
       "title": "control",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -331,6 +377,7 @@
       "title": "craft",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -338,6 +385,7 @@
       "title": "curve",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -345,6 +393,7 @@
       "title": "curvilinear",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -352,6 +401,7 @@
       "title": "cutoff",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -359,6 +409,7 @@
       "title": "cycle",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -366,6 +417,7 @@
       "title": "dark",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -373,6 +425,7 @@
       "title": "decay",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -380,6 +433,7 @@
       "title": "decoding",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -387,6 +441,7 @@
       "title": "dense",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -394,6 +449,7 @@
       "title": "depth",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -401,6 +457,7 @@
       "title": "diagram",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -408,6 +465,7 @@
       "title": "digital",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -415,6 +473,7 @@
       "title": "dispersed",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -422,6 +481,7 @@
       "title": "door",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -429,6 +489,7 @@
       "title": "dot",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -436,6 +497,7 @@
       "title": "drawing",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -443,6 +505,7 @@
       "title": "drift",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -450,6 +513,7 @@
       "title": "droplet",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -457,6 +521,7 @@
       "title": "duration",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -464,6 +529,7 @@
       "title": "ecology",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -471,6 +537,7 @@
       "title": "edge",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -478,6 +545,7 @@
       "title": "embodiment",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -485,6 +553,7 @@
       "title": "emergence",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -492,6 +561,7 @@
       "title": "emptiness",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -499,6 +569,7 @@
       "title": "enclosed",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -506,6 +577,7 @@
       "title": "encoding",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -513,6 +585,7 @@
       "title": "entanglement",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -520,6 +593,7 @@
       "title": "eye",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -527,6 +601,7 @@
       "title": "face",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -534,6 +609,7 @@
       "title": "fear",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -541,6 +617,7 @@
       "title": "fence",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -548,6 +625,7 @@
       "title": "fiber",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -555,6 +633,7 @@
       "title": "field",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -562,6 +641,7 @@
       "title": "fieldlike",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -569,6 +649,7 @@
       "title": "figure",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -576,6 +657,7 @@
       "title": "filament",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -583,6 +665,7 @@
       "title": "flat",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -590,6 +673,7 @@
       "title": "flow",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -597,6 +681,7 @@
       "title": "flower",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -604,6 +689,7 @@
       "title": "fog",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -611,6 +697,7 @@
       "title": "form",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -618,6 +705,7 @@
       "title": "fragility",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -625,6 +713,7 @@
       "title": "fragment",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -632,6 +721,7 @@
       "title": "fragmentation",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -639,6 +729,7 @@
       "title": "fragmented",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -646,6 +737,7 @@
       "title": "frame",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -653,6 +745,7 @@
       "title": "freedom",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -660,6 +753,7 @@
       "title": "geology",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -667,6 +761,7 @@
       "title": "gesture",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -674,6 +769,7 @@
       "title": "glitch",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -681,6 +777,7 @@
       "title": "grainy",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -688,6 +785,7 @@
       "title": "granular",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -695,6 +793,7 @@
       "title": "grass",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -702,6 +801,7 @@
       "title": "grid",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -709,6 +809,7 @@
       "title": "grief",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -716,6 +817,7 @@
       "title": "growth",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -723,6 +825,7 @@
       "title": "hand",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -730,6 +833,7 @@
       "title": "hard",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -737,6 +841,7 @@
       "title": "hope",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -744,6 +849,7 @@
       "title": "i-ching",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -751,6 +857,7 @@
       "title": "identity",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -758,6 +865,7 @@
       "title": "information",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -765,6 +873,7 @@
       "title": "insect",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -772,6 +881,7 @@
       "title": "interpretation",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -779,6 +889,7 @@
       "title": "intimacy",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -786,6 +897,7 @@
       "title": "joy",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -793,6 +905,7 @@
       "title": "knotted",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -800,6 +913,7 @@
       "title": "landscape",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -807,6 +921,7 @@
       "title": "language",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -814,6 +929,7 @@
       "title": "layered",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -821,6 +937,7 @@
       "title": "leaf",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -828,6 +945,7 @@
       "title": "letter",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -835,6 +953,7 @@
       "title": "lichen",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -842,6 +961,7 @@
       "title": "light",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -849,6 +969,7 @@
       "title": "line",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -856,6 +977,7 @@
       "title": "linear",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -863,6 +985,7 @@
       "title": "loop",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -870,6 +993,7 @@
       "title": "looped",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -877,6 +1001,7 @@
       "title": "low-contrast",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -884,6 +1009,7 @@
       "title": "map",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -891,6 +1017,7 @@
       "title": "margin",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -898,6 +1025,7 @@
       "title": "mark",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -905,6 +1033,7 @@
       "title": "materiality",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -912,6 +1041,7 @@
       "title": "mathematics",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -919,6 +1049,7 @@
       "title": "maximal",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -926,6 +1057,7 @@
       "title": "melancholy",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -933,6 +1065,7 @@
       "title": "memory",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -940,6 +1073,7 @@
       "title": "memory-trace",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -947,6 +1081,7 @@
       "title": "micro-macro",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -954,6 +1089,7 @@
       "title": "minimal",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -961,6 +1097,7 @@
       "title": "mirror",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -968,6 +1105,7 @@
       "title": "monochrome",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -975,6 +1113,7 @@
       "title": "moon",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -982,6 +1121,7 @@
       "title": "moss",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -989,6 +1129,7 @@
       "title": "movement",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -996,6 +1137,7 @@
       "title": "music",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -1003,6 +1145,7 @@
       "title": "myth",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1010,19 +1153,22 @@
       "title": "nature",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
       "doc_id": "d-20260624-204534-ecfc12",
       "title": "nerve",
       "ui_status": "",
-      "viewable": true
+      "viewable": true,
+      "last_updated": "2026-07-27 21:46:03"
     },
     {
       "doc_id": "d-20260727-225608-2517eb",
       "title": "nerve",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -1030,6 +1176,7 @@
       "title": "net",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1037,6 +1184,7 @@
       "title": "netted",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -1044,6 +1192,7 @@
       "title": "networks",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -1051,6 +1200,7 @@
       "title": "noise",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1058,6 +1208,7 @@
       "title": "number",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1065,6 +1216,7 @@
       "title": "object",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1072,6 +1224,7 @@
       "title": "open",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -1079,19 +1232,22 @@
       "title": "order",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
       "doc_id": "d-20260624-204534-e3de0b",
       "title": "ordered",
       "ui_status": "",
-      "viewable": true
+      "viewable": true,
+      "last_updated": "2026-06-24"
     },
     {
       "doc_id": "d-20260727-225608-4c56a9",
       "title": "overlay",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -1099,6 +1255,7 @@
       "title": "overwhelm",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1106,6 +1263,7 @@
       "title": "path",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1113,6 +1271,7 @@
       "title": "pattern",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1120,6 +1279,7 @@
       "title": "perception",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -1127,6 +1287,7 @@
       "title": "peripheral",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -1134,6 +1295,7 @@
       "title": "photography",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -1141,6 +1303,7 @@
       "title": "physics",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -1148,6 +1311,7 @@
       "title": "play",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1155,6 +1319,7 @@
       "title": "point",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1162,6 +1327,7 @@
       "title": "polychrome",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -1169,6 +1335,7 @@
       "title": "porous",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -1176,6 +1343,7 @@
       "title": "presence",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1183,6 +1351,7 @@
       "title": "print",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -1190,6 +1359,7 @@
       "title": "quantum",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -1197,6 +1367,7 @@
       "title": "quiet",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -1204,6 +1375,7 @@
       "title": "radial",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -1211,6 +1383,7 @@
       "title": "rain",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1218,6 +1391,7 @@
       "title": "random",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -1225,6 +1399,7 @@
       "title": "reconstruction",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1232,6 +1407,7 @@
       "title": "recurrence",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1239,6 +1415,7 @@
       "title": "reflection",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1246,6 +1423,7 @@
       "title": "release",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1253,6 +1431,7 @@
       "title": "renewal",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1260,6 +1439,7 @@
       "title": "repair",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1267,6 +1447,7 @@
       "title": "repetition",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1274,6 +1455,7 @@
       "title": "resilience",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1281,6 +1463,7 @@
       "title": "resistance",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1288,6 +1471,7 @@
       "title": "restlessness",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1295,6 +1479,7 @@
       "title": "return",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1302,6 +1487,7 @@
       "title": "rhythmic",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -1309,6 +1495,7 @@
       "title": "ritual",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1316,6 +1503,7 @@
       "title": "road",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1323,6 +1511,7 @@
       "title": "rock",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1330,6 +1519,7 @@
       "title": "root",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1337,6 +1527,7 @@
       "title": "ruin",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1344,6 +1535,7 @@
       "title": "sand",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1351,6 +1543,7 @@
       "title": "scale",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1358,6 +1551,7 @@
       "title": "science",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -1365,6 +1559,7 @@
       "title": "screen",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1372,6 +1567,7 @@
       "title": "seed",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1379,6 +1575,7 @@
       "title": "shadow",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1386,6 +1583,7 @@
       "title": "shallow",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -1393,6 +1591,7 @@
       "title": "shape",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1400,6 +1599,7 @@
       "title": "sharp",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -1407,6 +1607,7 @@
       "title": "signal",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1414,6 +1615,7 @@
       "title": "silhouette",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1421,6 +1623,7 @@
       "title": "skin",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1428,6 +1631,7 @@
       "title": "sky",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1435,6 +1639,7 @@
       "title": "slaughter",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1442,6 +1647,7 @@
       "title": "smooth",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -1449,6 +1655,7 @@
       "title": "soft",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -1456,6 +1663,7 @@
       "title": "sorrow",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1463,6 +1671,7 @@
       "title": "sparse",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -1470,6 +1679,7 @@
       "title": "spiralling",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -1477,6 +1687,7 @@
       "title": "splash",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1484,6 +1695,7 @@
       "title": "stacked",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -1491,6 +1703,7 @@
       "title": "stain",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1498,6 +1711,7 @@
       "title": "stairs",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1505,6 +1719,7 @@
       "title": "stillness",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1512,6 +1727,7 @@
       "title": "stone",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1519,6 +1735,7 @@
       "title": "stroke",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1526,6 +1743,7 @@
       "title": "sun",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1533,6 +1751,7 @@
       "title": "surface",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1540,6 +1759,7 @@
       "title": "symbol",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1547,6 +1767,7 @@
       "title": "symmetric",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -1554,6 +1775,7 @@
       "title": "system",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -1561,6 +1783,7 @@
       "title": "tangled",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -1568,6 +1791,7 @@
       "title": "technology",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -1575,6 +1799,7 @@
       "title": "tension",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1582,6 +1807,7 @@
       "title": "text",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1589,6 +1815,7 @@
       "title": "textured",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -1596,6 +1823,7 @@
       "title": "threadlike",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -1603,6 +1831,7 @@
       "title": "threshold",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1610,6 +1839,7 @@
       "title": "time",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1617,6 +1847,7 @@
       "title": "trace",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1624,6 +1855,7 @@
       "title": "transformation",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1631,6 +1863,7 @@
       "title": "translation",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1638,6 +1871,7 @@
       "title": "tree",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1645,6 +1879,7 @@
       "title": "unbalanced",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -1652,6 +1887,7 @@
       "title": "uncertainty",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1659,6 +1895,7 @@
       "title": "urban",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -1666,6 +1903,7 @@
       "title": "violent",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -1673,6 +1911,7 @@
       "title": "volumetric",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -1680,6 +1919,7 @@
       "title": "wall",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1687,6 +1927,7 @@
       "title": "water",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1694,6 +1935,7 @@
       "title": "wave",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1701,6 +1943,7 @@
       "title": "weather",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     },
     {
@@ -1708,6 +1951,7 @@
       "title": "weed",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1715,6 +1959,7 @@
       "title": "window",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1722,6 +1967,7 @@
       "title": "wire",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "subject"
     },
     {
@@ -1729,6 +1975,7 @@
       "title": "wonder",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "theme"
     },
     {
@@ -1736,6 +1983,7 @@
       "title": "woven",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "form"
     },
     {
@@ -1743,6 +1991,7 @@
       "title": "writing",
       "ui_status": "",
       "viewable": true,
+      "last_updated": "2026-07-27",
       "group": "domain"
     }
   ]

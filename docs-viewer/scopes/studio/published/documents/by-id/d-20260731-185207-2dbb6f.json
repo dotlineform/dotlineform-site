@@ -1,0 +1,14 @@
+{
+  "doc_id": "d-20260731-185207-2dbb6f",
+  "title": "Default Sub-Scope Report",
+  "added_date": "2026-07-31 18:52:07",
+  "last_updated": "2026-07-31 18:52:07",
+  "viewer_url": "/docs/?scope=studio&doc=d-20260731-185207-2dbb6f",
+  "parent_id": "d-20260731-150644-3dfab5",
+  "summary": "reference instance for developing and reviewing the default docs_subscope report",
+  "ui_status": "proposed",
+  "viewer_report": "docs_subscope_candidate",
+  "viewer_report_access": "local",
+  "viewer_report_subscope": "default",
+  "content_html": "<h1>Default Sub-Scope Report</h1>\n<p>This document hosts the temporary local-only default-report candidate during\nSSR-1. It becomes the permanent canonical <code>docs_subscope</code> reference host at\ncutover.</p>\n"
+}

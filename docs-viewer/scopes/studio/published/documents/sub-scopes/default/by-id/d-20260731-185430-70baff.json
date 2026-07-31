@@ -1,0 +1,10 @@
+{
+  "doc_id": "d-20260731-185430-70baff",
+  "title": "Alpha Default Document",
+  "added_date": "2026-07-30 09:00:00",
+  "last_updated": "2026-07-30 09:00:00",
+  "viewer_url": "/docs/?scope=studio&doc=d-20260731-185207-2dbb6f&subdoc=d-20260731-185430-70baff",
+  "summary": "viewable reference row for the default sub-scope report",
+  "ui_status": "done",
+  "content_html": "<h1>Alpha Default Document</h1>\n<p>This viewable document exercises the default report detail route and standard\nManage row fields.</p>\n"
+}

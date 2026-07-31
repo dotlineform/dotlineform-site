@@ -65,11 +65,30 @@ export function initDocsViewerConfigController(context) {
     var manifestUrl = String(rawSubScope.manifest_url || "").trim();
     var byIdUrlBase = String(rawSubScope.by_id_url_base || "").trim().replace(/\/+$/, "");
     if (!manifestUrl || !byIdUrlBase) return null;
+    var reportCustomisation = null;
+    if (Object.prototype.hasOwnProperty.call(rawSubScope, "report_customisation")) {
+      var rawCustomisation = rawSubScope.report_customisation;
+      if (!rawCustomisation || typeof rawCustomisation !== "object" || Array.isArray(rawCustomisation)) {
+        throw new Error("Docs Viewer sub-scope report_customisation must be an object.");
+      }
+      var customisationKeys = Object.keys(rawCustomisation).sort();
+      if (customisationKeys.length !== 1 || customisationKeys[0] !== "id") {
+        throw new Error(
+          "Docs Viewer sub-scope report_customisation must contain exactly id."
+        );
+      }
+      var customisationId = String(rawCustomisation.id || "").trim();
+      if (!/^[a-z][a-z0-9_]*$/.test(customisationId)) {
+        throw new Error("Docs Viewer sub-scope report_customisation id is invalid.");
+      }
+      reportCustomisation = Object.freeze({ id: customisationId });
+    }
     return {
       subScope: subScope,
       title: String(rawSubScope.title || "").trim(),
       manifestUrl: manifestUrl,
-      byIdUrlBase: byIdUrlBase
+      byIdUrlBase: byIdUrlBase,
+      reportCustomisation: reportCustomisation
     };
   }
 

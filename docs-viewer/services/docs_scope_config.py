@@ -35,6 +35,10 @@ from docs_artifact_locations import (  # noqa: E402
     filesystem_location_root,
     require_location_capabilities,
 )
+from docs_subscope_report_customisations import (  # noqa: E402
+    DocsSubScopeReportCustomisationConfig,
+    normalize_docs_subscope_report_customisation,
+)
 from studio.shared.python.external_workspace_paths import (  # noqa: E402
     ExternalWorkspaceRoot,
     resolve_external_workspace_root,
@@ -162,6 +166,7 @@ class DocsSubScopeConfig:
     supports_return_import: bool
     ui_statuses: tuple[str, ...]
     document_groups: tuple[str, ...]
+    report_customisation: DocsSubScopeReportCustomisationConfig | None
     source: DocsSourceConfig
     published: DocsPublishedConfig
     public_projection: DocsPublicProjectionConfig | None
@@ -765,6 +770,15 @@ def normalize_sub_scope_configs(
             item.get("document_groups"),
             field=f"{item_field}.document_groups",
         )
+        report_customisation = normalize_docs_subscope_report_customisation(
+            item.get("report_customisation"),
+            field=f"{item_field}.report_customisation",
+        )
+        if report_customisation is not None and document_groups:
+            raise ValueError(
+                f"docs scope config field {item_field} must not combine "
+                "document_groups with report_customisation"
+            )
         title = str(item.get("title") or "").strip()
         public_title = (
             title
@@ -785,6 +799,7 @@ def normalize_sub_scope_configs(
                 supports_return_import=supports_return_import,
                 ui_statuses=ui_statuses,
                 document_groups=document_groups,
+                report_customisation=report_customisation,
                 source=source,
                 published=published,
                 public_projection=projection,
@@ -1013,6 +1028,7 @@ __all__ = [
     "DocsScopeConfig",
     "DocsSourceConfig",
     "DocsSubScopeConfig",
+    "DocsSubScopeReportCustomisationConfig",
     "EXTERNAL_DATA_ROOT_MARKER",
     "LOCAL_EXTERNAL_SCOPE_TYPE",
     "LOCAL_SCOPE_TYPE",

@@ -162,6 +162,7 @@ Related body.
                 "title": "Detail",
                 "ui_status": "draft",
                 "viewable": True,
+                "last_updated": "2026-06-21",
                 "group": "subject",
             },
             {
@@ -169,6 +170,7 @@ Related body.
                 "title": "Related",
                 "ui_status": "",
                 "viewable": True,
+                "last_updated": "2026-06-23",
             },
         ],
     }
@@ -364,17 +366,112 @@ viewable: false
                 "title": "Detail",
                 "ui_status": "",
                 "viewable": True,
+                "last_updated": "",
             },
             {
                 "doc_id": HIDDEN_DOC_ID,
                 "title": "Hidden",
                 "ui_status": "",
                 "viewable": False,
+                "last_updated": "",
             },
         ]
     }
     assert set(visible_payload) >= {"doc_id", "title", "content_html"}
     assert hidden_payload_exists
+
+
+def test_python_docs_builder_projects_registered_manage_customisation_only() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        config_path = root / "docs-viewer/config/scopes/docs_scopes.json"
+        payload = read_json(config_path)
+        payload["scopes"][0]["sub_scopes"] = [
+            docs_sub_scope_record(
+                "studio",
+                "tags",
+                title="Tags",
+                report_customisation={
+                    "id": "analysis_tags",
+                    "settings": {"groups": ["subject", "theme"]},
+                },
+            )
+        ]
+        write_json(config_path, payload)
+        write_text(
+            root / f"docs-viewer/scopes/studio/source/documents/{TAGS_REPORT_DOC_ID}.md",
+            f"""---
+doc_id: {TAGS_REPORT_DOC_ID}
+title: Tags
+viewer_report: docs_subscope_candidate
+viewer_report_access: local
+viewer_report_subscope: tags
+---
+# Tags
+""",
+        )
+        write_text(
+            root / f"docs-viewer/scopes/studio/source/sub-scopes/tags/documents/{DETAIL_DOC_ID}.md",
+            f"""---
+doc_id: {DETAIL_DOC_ID}
+title: Detail
+last_updated: 2026-06-21
+group: subject
+---
+# Detail
+""",
+        )
+
+        exit_code, _stdout, stderr = run_cli(
+            root,
+            ["--scope", "studio", "--sub-scope", "tags", "--write"],
+        )
+        manifest = read_json(
+            root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/manifest.json"
+        )
+        manage_manifest = read_json(
+            root
+            / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/manage-manifest.json"
+        )
+        detail = read_json(
+            root
+            / f"docs-viewer/scopes/studio/published/documents/sub-scopes/tags/by-id/{DETAIL_DOC_ID}.json"
+        )
+        config = load_docs_scope_configs(root)["studio"]
+        browser_config = build_docs.browser_scope_config_payload(root, [config])
+        public_browser_config = build_docs.browser_scope_config_payload(
+            root,
+            [config],
+            published=True,
+        )
+
+    assert exit_code == 0
+    assert stderr == ""
+    assert manifest == {"docs": [{"doc_id": DETAIL_DOC_ID, "title": "Detail"}]}
+    assert manage_manifest == {
+        "customisation": {
+            "id": "analysis_tags",
+            "data": {"groups": ["subject", "theme"]},
+        },
+        "docs": [
+            {
+                "doc_id": DETAIL_DOC_ID,
+                "title": "Detail",
+                "ui_status": "",
+                "viewable": True,
+                "last_updated": "2026-06-21",
+                "customisation": {"group": "subject"},
+            }
+        ],
+    }
+    assert detail["viewer_url"] == (
+        f"/docs/?scope=studio&doc={TAGS_REPORT_DOC_ID}&subdoc={DETAIL_DOC_ID}"
+    )
+    assert browser_config["scopes"][0]["sub_scopes"][0]["report_customisation"] == {
+        "id": "analysis_tags"
+    }
+    assert "report_customisation" not in public_browser_config["scopes"][0]["sub_scopes"][0]
 
 
 def test_python_docs_builder_public_sub_scope_separates_manage_and_public_url_bases() -> None:

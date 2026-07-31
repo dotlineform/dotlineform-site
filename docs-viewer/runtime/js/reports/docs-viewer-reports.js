@@ -31,6 +31,13 @@ const REPORT_LOADERS = {
       });
     }
   },
+  docs_subscope_candidate: {
+    load: function () {
+      return import("./docs-subscope-candidate-report.js").then(function (module) {
+        return module.mountDocsSubscopeCandidateReport;
+      });
+    }
+  },
   docs_broken_links: {
     load: function () {
       return import("./docs-broken-links-report.js").then(function (module) {

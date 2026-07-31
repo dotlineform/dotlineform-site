@@ -188,6 +188,7 @@ def test_docs_scope_config_accepts_nested_sub_scopes() -> None:
     assert sub_scope.supports_return_import is False
     assert sub_scope.ui_statuses == ("draft", "done")
     assert sub_scope.document_groups == ("subject", "theme")
+    assert sub_scope.report_customisation is None
     assert docs_scope_config.document_source_path(sub_scope).as_posix() == (
         "docs-viewer/scopes/research/source/sub-scopes/tags/documents"
     )
@@ -218,6 +219,88 @@ def test_docs_scope_config_accepts_route_specific_sub_scope_public_title() -> No
 
     assert config.sub_scopes[0].title == "Tags"
     assert config.sub_scopes[0].public_title == "Concepts"
+
+
+def test_docs_scope_config_accepts_registered_sub_scope_report_customisation() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        sub_scope = docs_sub_scope_record(
+            "studio",
+            "tags",
+            report_customisation={
+                "id": "analysis_tags",
+                "settings": {"groups": ["Subject", "theme"]},
+            },
+        )
+        write_scope_record(
+            repo_root,
+            docs_scope_record("studio", sub_scopes=[sub_scope]),
+        )
+
+        config = docs_scope_config.load_docs_scope_configs(repo_root)["studio"]
+
+    customisation = config.sub_scopes[0].report_customisation
+    assert customisation is not None
+    assert customisation.customisation_id == "analysis_tags"
+    assert customisation.settings == {"groups": ("subject", "theme")}
+    assert config.sub_scopes[0].document_groups == ()
+
+
+@pytest.mark.parametrize(
+    ("report_customisation", "error"),
+    [
+        ("analysis_tags", "must be an object"),
+        ({"id": "analysis_tags"}, "missing required fields: settings"),
+        (
+            {"id": "analysis_tags", "settings": {"groups": ["subject"]}, "module": "bad.js"},
+            "unknown fields: module",
+        ),
+        ({"id": "analysis-tags", "settings": {"groups": ["subject"]}}, "id is invalid"),
+        ({"id": "unknown", "settings": {}}, "id is unknown"),
+        ({"id": "analysis_tags", "settings": {}}, "missing required fields: groups"),
+        ({"id": "analysis_tags", "settings": {"groups": []}}, "must not be empty"),
+        (
+            {"id": "analysis_tags", "settings": {"groups": ["subject", "subject"]}},
+            "must not contain duplicates",
+        ),
+    ],
+)
+def test_docs_scope_config_rejects_invalid_sub_scope_report_customisation(
+    report_customisation: object,
+    error: str,
+) -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        sub_scope = docs_sub_scope_record("studio", "tags")
+        sub_scope["report_customisation"] = report_customisation
+        write_scope_record(
+            repo_root,
+            docs_scope_record("studio", sub_scopes=[sub_scope]),
+        )
+
+        with pytest.raises(ValueError, match=error):
+            docs_scope_config.load_docs_scope_configs(repo_root)
+
+
+def test_docs_scope_config_rejects_legacy_and_registered_group_config_together() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        sub_scope = docs_sub_scope_record(
+            "studio",
+            "tags",
+            document_groups=["subject"],
+            report_customisation={
+                "id": "analysis_tags",
+                "settings": {"groups": ["subject"]},
+            },
+        )
+        write_scope_record(
+            repo_root,
+            docs_scope_record("studio", sub_scopes=[sub_scope]),
+        )
+
+        with pytest.raises(ValueError, match="must not combine document_groups"):
+            docs_scope_config.load_docs_scope_configs(repo_root)
 
 
 def test_docs_scope_config_accepts_explicit_sub_scope_return_import_opt_in() -> None:
