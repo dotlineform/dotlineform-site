@@ -78,7 +78,7 @@ def test_abandoned_review_session_routes_remain_retired() -> None:
 def test_static_html_export_routes_are_management_owned() -> None:
     assert routes.STATIC_HTML_EXPORT_PREVIEW_PATH in routes.POST_PATHS
     assert routes.STATIC_HTML_EXPORT_APPLY_PATH in routes.POST_PATHS
-    assert routes.STATIC_HTML_EXPORT_DELETE_PATH in routes.POST_PATHS
+    assert "/docs/export/static-html/delete" not in routes.POST_PATHS
 
 
 def test_document_transfer_routes_are_management_owned_and_singular_copy_is_retired() -> None:

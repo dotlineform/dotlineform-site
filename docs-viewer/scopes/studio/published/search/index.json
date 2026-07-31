@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b174c7ba16cd28f084394d7f36237826",
-    "generated_at_utc": "2026-07-31T12:18:42Z",
+    "version": "blake2b-9ba24c6cd09ebf91413e95bc00310ff8",
+    "generated_at_utc": "2026-07-31T12:35:36Z",
     "count": 237
   },
   "entries": [
@@ -3490,10 +3490,10 @@
       "kind": "doc",
       "title": "Dated Export Snapshots Delivery",
       "href": "/docs/?scope=studio&doc=d-20260731-124327-65d30d",
-      "last_updated": "2026-07-31 13:18:21",
+      "last_updated": "2026-07-31 13:35:08",
       "parent_id": "d-20260716-193410-98d1a8",
       "parent_title": "Dated Export Snapshots",
-      "display_meta": "2026-07-31 13:18:21 • Dated Export Snapshots",
+      "display_meta": "2026-07-31 13:35:08 • Dated Export Snapshots",
       "search_terms": [
         "dated export snapshots delivery",
         "dated",
@@ -3501,16 +3501,16 @@
         "snapshots",
         "delivery",
         "dated export snapshots",
-        "2026-07-31 13:18:21",
+        "2026-07-31 13:35:08",
         "2026",
         "07",
         "31",
         "13",
-        "18",
-        "21",
+        "35",
+        "08",
         "d-20260731-124327-65d30d"
       ],
-      "search_text": "dated export snapshots delivery dated export snapshots delivery dated export snapshots 2026-07-31 13:18:21 2026 07 31 13 18 21 d-20260731-124327-65d30d"
+      "search_text": "dated export snapshots delivery dated export snapshots delivery dated export snapshots 2026-07-31 13:35:08 2026 07 31 13 35 08 d-20260731-124327-65d30d"
     },
     {
       "id": "d-20260730-121423-78b0f6",

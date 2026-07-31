@@ -195,8 +195,8 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 "apply": True,
             },
             "static_html_export": {
-                "apply": True,
-                "delete": True,
+                "apply": False,
+                "delete": False,
             },
             "scopes": scopes,
         },

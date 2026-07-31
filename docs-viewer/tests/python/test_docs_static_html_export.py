@@ -9,6 +9,7 @@ import sys
 import tempfile
 from datetime import date
 from pathlib import Path
+from unittest.mock import patch
 
 from repo_factory import docs_scope_record
 
@@ -24,6 +25,18 @@ import docs_static_html_export as exporter  # noqa: E402
 
 
 FIXED_EXPORT_DATE = date(2026, 7, 31)
+
+
+def snapshot_apply_body(preview: dict[str, object], *, replace_existing: bool = False) -> dict[str, object]:
+    return {
+        "scope": preview["scope"],
+        "doc_ids": preview["doc_ids"],
+        "export_date": preview["export_date"],
+        "plan_revision": preview["plan_revision"],
+        "target_revision": preview["target_revision"],
+        "confirm": True,
+        "replace_existing": replace_existing,
+    }
 
 
 def write_json(path: Path, payload: dict[str, object]) -> None:
@@ -193,6 +206,7 @@ def test_snapshot_preview_rejects_invalid_or_inferred_selection_fields() -> None
             ({"scope": "studio", "doc_ids": ["parent", "parent"]}, "duplicate doc_id"),
             ({"scope": "studio", "doc_ids": ["library"]}, "active generated scope"),
             ({"scope": "studio", "doc_ids": ["../escape"]}, "safe HTML filename"),
+            ({"scope": "studio", "doc_ids": ["parent"], "action": "export"}, "action is not supported"),
             ({"scope": "studio", "doc_ids": ["parent"], "mode": "complete"}, "mode is not supported"),
             (
                 {"scope": "studio", "doc_ids": ["parent"], "include_descendants": True},
@@ -455,43 +469,45 @@ def test_rewrite_internal_docs_viewer_links_leaves_other_links() -> None:
     assert 'href="https://example.com/"' in rewritten
 
 
-def test_apply_export_replaces_destination_and_writes_static_files() -> None:
+def test_snapshot_apply_creates_exact_partial_artifact_with_provenance() -> None:
     with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
         repo_root = Path(repo_path)
         projects_root = Path(projects_path)
         prepare_repo(repo_root, projects_root)
-        stale_path = projects_root / "docs-export/studio/stale.txt"
-        stale_path.parent.mkdir(parents=True)
-        stale_path.write_text("stale", encoding="utf-8")
+        preview = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["sibling", "child"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
 
-        payload = exporter.build_static_html_export(repo_root, {"scope": "studio", "action": "export"})
+        payload = exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(preview))
 
-        destination = projects_root / "docs-export/studio"
+        destination = projects_root / "docs-export/studio selection - 2026-07-31"
         assert payload["ok"] is True
-        assert payload["document_count"] == 3
-        assert not stale_path.exists()
+        assert payload["schema_version"] == exporter.SNAPSHOT_APPLY_SCHEMA_VERSION
+        assert payload["doc_ids"] == ["child", "sibling"]
+        assert payload["document_count"] == 2
+        assert payload["file_count"] == 5
+        assert payload["replaced"] is False
+        assert payload["destination_label"] == "/docs-export/studio selection - 2026-07-31/"
+        assert "destination" not in payload
         assert (destination / "index.html").exists()
         assert (destination / "styles.css").exists()
-        assert 'href="child.html"' in (destination / "docs/parent.html").read_text(encoding="utf-8")
-        assert 'href="parent.html#top"' in (destination / "docs/child.html").read_text(encoding="utf-8")
-
-
-def test_empty_conflict_dir_cleanup_is_narrow() -> None:
-    with tempfile.TemporaryDirectory() as temp_path:
-        destination = Path(temp_path) / "docs-export/studio"
-        (destination / "docs 2").mkdir(parents=True)
-        (destination / "docs 3").mkdir()
-        (destination / "docs 4").mkdir()
-        (destination / "docs 4/keep.txt").write_text("keep", encoding="utf-8")
-        (destination / "media 2").mkdir()
-
-        removed = exporter.remove_empty_conflict_dirs(destination, {"docs"})
-
-        assert removed == ["docs 2", "docs 3"]
-        assert not (destination / "docs 2").exists()
-        assert not (destination / "docs 3").exists()
-        assert (destination / "docs 4").exists()
-        assert (destination / "media 2").exists()
+        assert not (destination / "docs/parent.html").exists()
+        child_html = (destination / "docs/child.html").read_text(encoding="utf-8")
+        assert 'href="/docs/?scope=studio&doc=parent#top"' in child_html
+        provenance = json.loads((destination / exporter.SNAPSHOT_PROVENANCE_FILENAME).read_text(encoding="utf-8"))
+        assert provenance == {
+            "schema_version": exporter.SNAPSHOT_SCHEMA_VERSION,
+            "scope": "studio",
+            "doc_ids": ["child", "sibling"],
+            "selection_kind": "partial",
+            "document_count": 2,
+            "default_doc_id": "child",
+            "export_date": "2026-07-31",
+            "generated_at": payload["generated_at"],
+            "plan_revision": preview["plan_revision"],
+        }
 
 
 def test_output_path_validation_requires_projects_export_root() -> None:
@@ -505,37 +521,338 @@ def test_output_path_validation_requires_projects_export_root() -> None:
             raise AssertionError("destination outside docs-export must be rejected")
 
 
-def test_export_rejects_public_and_local_external_scopes() -> None:
+def test_snapshot_apply_reads_public_and_external_local_generated_scopes() -> None:
     with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
         repo_root = Path(repo_path)
         projects_root = Path(projects_path)
         prepare_repo(repo_root, projects_root)
 
         for scope in ("library", "external"):
-            try:
-                exporter.build_static_html_export(repo_root, {"scope": scope, "action": "export"})
-            except ValueError as exc:
-                assert "repo-backed local scope" in str(exc)
-            else:
-                raise AssertionError(f"{scope} should be rejected")
+            preview = exporter.preview_static_html_export(
+                repo_root,
+                {"scope": scope, "doc_ids": [scope]},
+                export_date=FIXED_EXPORT_DATE,
+            )
+            payload = exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(preview))
+
+            assert payload["scope"] == scope
+            assert payload["selection_kind"] == "complete"
+            assert (projects_root / f"docs-export/{scope} - 2026-07-31/docs/{scope}.html").is_file()
 
 
-def test_management_apply_route_returns_export_response() -> None:
+def test_snapshot_apply_replaces_only_explicitly_confirmed_existing_target() -> None:
     with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
         repo_root = Path(repo_path)
         projects_root = Path(projects_path)
         prepare_repo(repo_root, projects_root)
+        first_preview = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(first_preview))
+        destination = projects_root / "docs-export/Parent & Root - 2026-07-31"
+        stale_path = destination / "stale.txt"
+        stale_path.write_text("stale", encoding="utf-8")
+        replacement_preview = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+
+        try:
+            exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(replacement_preview))
+        except ValueError as exc:
+            assert "replace_existing must be true" in str(exc)
+        else:
+            raise AssertionError("replacement without explicit confirmation should fail")
+        assert stale_path.read_text(encoding="utf-8") == "stale"
+
+        payload = exporter.apply_static_html_snapshot(
+            repo_root,
+            snapshot_apply_body(replacement_preview, replace_existing=True),
+        )
+
+        assert payload["replaced"] is True
+        assert not stale_path.exists()
+        assert (destination / "docs/parent.html").is_file()
+        assert not list(destination.parent.glob(".*.backup"))
+        assert not list(destination.parent.glob(".*.staging"))
+
+
+def test_snapshot_apply_can_replace_an_explicitly_confirmed_unrecognized_directory() -> None:
+    with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
+        repo_root = Path(repo_path)
+        projects_root = Path(projects_path)
+        prepare_repo(repo_root, projects_root)
+        destination = projects_root / "docs-export/Parent & Root - 2026-07-31"
+        destination.mkdir(parents=True)
+        (destination / "unrelated.txt").write_text("existing", encoding="utf-8")
+        preview = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        assert preview["target_state"] == "unrecognized"
+
+        payload = exporter.apply_static_html_snapshot(
+            repo_root,
+            snapshot_apply_body(preview, replace_existing=True),
+        )
+
+        assert payload["replaced"] is True
+        assert not (destination / "unrelated.txt").exists()
+        assert (destination / exporter.SNAPSHOT_PROVENANCE_FILENAME).is_file()
+
+
+def test_snapshot_apply_rejects_missing_confirmation_and_non_directory_target() -> None:
+    with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
+        repo_root = Path(repo_path)
+        projects_root = Path(projects_path)
+        prepare_repo(repo_root, projects_root)
+        destination = projects_root / "docs-export/Parent & Root - 2026-07-31"
+        destination.parent.mkdir(parents=True)
+        destination.write_text("preserve collision", encoding="utf-8")
+        preview = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        assert preview["target_state"] == "non_directory"
+        unconfirmed = snapshot_apply_body(preview, replace_existing=True)
+        unconfirmed["confirm"] = False
+
+        try:
+            exporter.apply_static_html_snapshot(repo_root, unconfirmed)
+        except ValueError as exc:
+            assert "confirm must be true" in str(exc)
+        else:
+            raise AssertionError("unconfirmed apply should fail")
+
+        try:
+            exporter.apply_static_html_snapshot(
+                repo_root,
+                snapshot_apply_body(preview, replace_existing=True),
+            )
+        except exporter.StaticHtmlSnapshotApplyConflict as exc:
+            assert "not a replaceable directory" in str(exc)
+        else:
+            raise AssertionError("non-directory target should fail")
+        assert destination.read_text(encoding="utf-8") == "preserve collision"
+
+
+def test_snapshot_apply_rejects_stale_plan_and_target_while_preserving_existing_artifacts() -> None:
+    with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
+        repo_root = Path(repo_path)
+        projects_root = Path(projects_path)
+        prepare_repo(repo_root, projects_root)
+        stale_plan_preview = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(stale_plan_preview))
+        stale_plan_preview = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        parent_payload_path = repo_root / "docs-viewer/scopes/studio/published/documents/by-id/parent.json"
+        parent_payload = json.loads(parent_payload_path.read_text(encoding="utf-8"))
+        parent_payload["title"] = "Changed title"
+        write_json(parent_payload_path, parent_payload)
+
+        try:
+            exporter.apply_static_html_snapshot(
+                repo_root,
+                snapshot_apply_body(stale_plan_preview, replace_existing=True),
+            )
+        except exporter.StaticHtmlSnapshotApplyConflict as exc:
+            assert "plan changed" in str(exc)
+            assert exc.payload["requires_preview"] is True
+        else:
+            raise AssertionError("stale plan should fail")
+        original_destination = projects_root / "docs-export/Parent & Root - 2026-07-31"
+        assert (original_destination / exporter.SNAPSHOT_PROVENANCE_FILENAME).is_file()
+
+        current_preview = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(current_preview))
+        replacement_preview = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        destination = projects_root / "docs-export/Changed title - 2026-07-31"
+        changed_path = destination / "changed-after-preview.txt"
+        changed_path.write_text("preserve me", encoding="utf-8")
+
+        try:
+            exporter.apply_static_html_snapshot(
+                repo_root,
+                snapshot_apply_body(replacement_preview, replace_existing=True),
+            )
+        except exporter.StaticHtmlSnapshotApplyConflict as exc:
+            assert "destination changed" in str(exc)
+        else:
+            raise AssertionError("stale target should fail")
+        assert changed_path.read_text(encoding="utf-8") == "preserve me"
+
+
+def test_snapshot_render_staging_and_validation_failures_preserve_existing_target() -> None:
+    with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
+        repo_root = Path(repo_path)
+        projects_root = Path(projects_path)
+        prepare_repo(repo_root, projects_root)
+        first_preview = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(first_preview))
+        destination = projects_root / "docs-export/Parent & Root - 2026-07-31"
+        marker = destination / "preserved.txt"
+        marker.write_text("original", encoding="utf-8")
+        replacement_preview = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        real_writer = exporter.write_snapshot_staging_files
+
+        with patch.object(exporter, "compute_snapshot_files", side_effect=RuntimeError("simulated render failure")):
+            try:
+                exporter.apply_static_html_snapshot(
+                    repo_root,
+                    snapshot_apply_body(replacement_preview, replace_existing=True),
+                )
+            except RuntimeError as exc:
+                assert str(exc) == "simulated render failure"
+            else:
+                raise AssertionError("simulated render failure should escape")
+        assert marker.read_text(encoding="utf-8") == "original"
+
+        def fail_after_write(staging_root: Path, files: dict[Path, bytes]) -> None:
+            real_writer(staging_root, files)
+            raise RuntimeError("simulated staging failure")
+
+        with patch.object(exporter, "write_snapshot_staging_files", side_effect=fail_after_write):
+            try:
+                exporter.apply_static_html_snapshot(
+                    repo_root,
+                    snapshot_apply_body(replacement_preview, replace_existing=True),
+                )
+            except RuntimeError as exc:
+                assert str(exc) == "simulated staging failure"
+            else:
+                raise AssertionError("simulated staging failure should escape")
+        assert marker.read_text(encoding="utf-8") == "original"
+
+        def corrupt_after_write(staging_root: Path, files: dict[Path, bytes]) -> None:
+            real_writer(staging_root, files)
+            (staging_root / "index.html").write_text("corrupt", encoding="utf-8")
+
+        with patch.object(exporter, "write_snapshot_staging_files", side_effect=corrupt_after_write):
+            try:
+                exporter.apply_static_html_snapshot(
+                    repo_root,
+                    snapshot_apply_body(replacement_preview, replace_existing=True),
+                )
+            except ValueError as exc:
+                assert "content validation failed" in str(exc)
+            else:
+                raise AssertionError("simulated validation failure should escape")
+
+        assert marker.read_text(encoding="utf-8") == "original"
+        assert not list(destination.parent.glob(".*.staging"))
+
+
+def test_snapshot_final_switch_failure_restores_existing_target() -> None:
+    with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
+        repo_root = Path(repo_path)
+        projects_root = Path(projects_path)
+        prepare_repo(repo_root, projects_root)
+        first_preview = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(first_preview))
+        destination = projects_root / "docs-export/Parent & Root - 2026-07-31"
+        marker = destination / "preserved.txt"
+        marker.write_text("original", encoding="utf-8")
+        replacement_preview = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        path_type = type(destination)
+        real_rename = path_type.rename
+
+        def fail_staging_install(source: Path, target: Path) -> Path:
+            if source.name.endswith(".staging"):
+                raise OSError("simulated final switch failure")
+            return real_rename(source, target)
+
+        with patch.object(path_type, "rename", new=fail_staging_install):
+            try:
+                exporter.apply_static_html_snapshot(
+                    repo_root,
+                    snapshot_apply_body(replacement_preview, replace_existing=True),
+                )
+            except OSError as exc:
+                assert str(exc) == "simulated final switch failure"
+            else:
+                raise AssertionError("simulated final switch failure should escape")
+
+        assert marker.read_text(encoding="utf-8") == "original"
+        assert not list(destination.parent.glob(".*.backup"))
+        assert not list(destination.parent.glob(".*.staging"))
+
+
+def test_management_apply_route_returns_snapshot_response_and_stale_conflict() -> None:
+    with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
+        repo_root = Path(repo_path)
+        projects_root = Path(projects_path)
+        prepare_repo(repo_root, projects_root)
+        _preview_status, preview = docs_management_service.docs_management_post_response(
+            repo_root,
+            routes.STATIC_HTML_EXPORT_PREVIEW_PATH,
+            {"scope": "studio", "doc_ids": ["parent"]},
+        )
 
         status, payload = docs_management_service.docs_management_post_response(
             repo_root,
             routes.STATIC_HTML_EXPORT_APPLY_PATH,
-            {"scope": "studio", "action": "export"},
+            snapshot_apply_body(preview),
         )
 
         assert status.value == 200
         assert payload["ok"] is True
         assert payload["operation"] == "apply"
-        assert payload["destination_label"] == "/docs-export/studio/"
+        assert payload["destination_label"].startswith("/docs-export/Parent & Root - ")
+        assert "destination" not in payload
+
+        _replacement_status, replacement_preview = docs_management_service.docs_management_post_response(
+            repo_root,
+            routes.STATIC_HTML_EXPORT_PREVIEW_PATH,
+            {"scope": "studio", "doc_ids": ["parent"]},
+        )
+        destination = projects_root / replacement_preview["destination_label"].strip("/")
+        (destination / "changed.txt").write_text("changed", encoding="utf-8")
+        conflict_status, conflict = docs_management_service.docs_management_post_response(
+            repo_root,
+            routes.STATIC_HTML_EXPORT_APPLY_PATH,
+            snapshot_apply_body(replacement_preview, replace_existing=True),
+        )
+
+        assert conflict_status.value == 409
+        assert conflict["ok"] is False
+        assert conflict["requires_preview"] is True
+        assert "destination" not in conflict
 
 
 def test_management_preview_route_returns_write_free_browser_safe_plan() -> None:
@@ -562,19 +879,8 @@ def test_management_preview_route_returns_write_free_browser_safe_plan() -> None
         assert not (projects_root / "docs-export").exists()
 
 
-def test_delete_export_does_not_require_generated_payloads() -> None:
-    with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
-        repo_root = Path(repo_path)
-        projects_root = Path(projects_path)
-        os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = str(projects_root)
-        (projects_root / "docs-viewer").mkdir(parents=True)
-        write_scope_config(repo_root)
-        destination = projects_root / "docs-export/studio"
-        destination.mkdir(parents=True)
-        (destination / "index.html").write_text("<!doctype html>", encoding="utf-8")
-
-        payload = exporter.delete_static_html_export(repo_root, {"scope": "studio"})
-
-        assert payload["ok"] is True
-        assert payload["deleted"] is True
-        assert not destination.exists()
+def test_legacy_latest_folder_and_delete_service_are_retired() -> None:
+    assert not hasattr(exporter, "build_static_html_export")
+    assert not hasattr(exporter, "delete_static_html_export")
+    assert not hasattr(routes, "STATIC_HTML_EXPORT_DELETE_PATH")
+    assert "/docs/export/static-html/delete" not in routes.POST_PATHS

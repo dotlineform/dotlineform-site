@@ -30,6 +30,29 @@ def test_capabilities_advertise_generated_data_reads() -> None:
     assert payload["capabilities"]["scopes"]["studio"]["generated_data_reads"] is True
     assert payload["capabilities"]["scopes"]["studio"]["generated_search_reads"] is True
 
+
+def test_legacy_app_level_static_export_capability_is_fail_closed() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
+        write_generated_docs(repo_root)
+        payload = docs_management_service.capabilities_payload(repo_root)
+
+    capabilities = payload["capabilities"]
+    assert capabilities["static_html_export"] == {
+        "apply": False,
+        "delete": False,
+    }
+    assert capabilities["scopes"]["studio"]["static_html_export"] == {
+        "apply": False,
+        "delete": False,
+        "destination": "",
+        "document_count": 0,
+        "default_doc_id": "child",
+        "error": "Dated snapshot Export is awaiting Index Actions integration.",
+    }
+
+
 def test_capabilities_advertise_source_config_reads() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)

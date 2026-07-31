@@ -47,7 +47,6 @@ PUBLISH_CONFIRM_PATH = "/docs/publish/confirm"
 PUBLISH_APPLY_PATH = "/docs/publish/apply"
 STATIC_HTML_EXPORT_PREVIEW_PATH = "/docs/export/static-html/preview"
 STATIC_HTML_EXPORT_APPLY_PATH = "/docs/export/static-html/apply"
-STATIC_HTML_EXPORT_DELETE_PATH = "/docs/export/static-html/delete"
 
 GET_PATHS = (
     HEALTH_PATH,
@@ -98,7 +97,6 @@ POST_PATHS = (
     PUBLISH_APPLY_PATH,
     STATIC_HTML_EXPORT_PREVIEW_PATH,
     STATIC_HTML_EXPORT_APPLY_PATH,
-    STATIC_HTML_EXPORT_DELETE_PATH,
 )
 
 OPTIONS_PATHS = tuple(dict.fromkeys((*POST_PATHS, *GET_PATHS)))

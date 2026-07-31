@@ -282,8 +282,11 @@ def docs_management_post_response(
     if path == routes.STATIC_HTML_EXPORT_PREVIEW_PATH:
         return HTTPStatus.OK, docs_static_html_export.preview_static_html_export(repo_root, body)
     if path == routes.STATIC_HTML_EXPORT_APPLY_PATH:
-        return HTTPStatus.OK, docs_static_html_export.build_static_html_export(repo_root, body)
-    if path == routes.STATIC_HTML_EXPORT_DELETE_PATH:
-        return HTTPStatus.OK, docs_static_html_export.delete_static_html_export(repo_root, body)
+        if dry_run:
+            raise ValueError("static HTML snapshot apply does not support dry_run")
+        try:
+            return HTTPStatus.OK, docs_static_html_export.apply_static_html_snapshot(repo_root, body)
+        except docs_static_html_export.StaticHtmlSnapshotApplyConflict as error:
+            return HTTPStatus.CONFLICT, error.payload
 
     raise FileNotFoundError("Not found")

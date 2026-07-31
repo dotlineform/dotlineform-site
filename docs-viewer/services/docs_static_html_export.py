@@ -4,13 +4,16 @@
 from __future__ import annotations
 
 import hashlib
+import hmac
 import html
 import json
 import os
 import re
 import shutil
 import stat as stat_module
+import tempfile
 import unicodedata
+import uuid
 from dataclasses import dataclass
 from datetime import date, datetime
 from pathlib import Path
@@ -18,46 +21,31 @@ from typing import Any
 from urllib.parse import parse_qs, urlsplit
 
 from docs_scope_config import (
-    LOCAL_EXTERNAL_SCOPE_TYPE,
     DocsScopeConfig,
-    published_documents_path,
-    is_public_readonly_scope,
     load_docs_scope_configs,
-    path_is_relative_to,
     resolve_location_path,
-    resolve_scope_path,
-    scope_uses_external_data,
 )
 from studio.shared.python.external_workspace_paths import (
     ExternalWorkspaceRoot,
     PROJECTS_BASE_DIR_ENV,
     resolve_external_workspace_root,
-    resolve_workspace_path,
 )
 
 
-EXPORT_SCHEMA_VERSION = "docs_static_html_export_v1"
 SNAPSHOT_SCHEMA_VERSION = "docs_static_html_snapshot_v1"
 SNAPSHOT_PREVIEW_SCHEMA_VERSION = "docs_static_html_snapshot_preview_v1"
+SNAPSHOT_APPLY_SCHEMA_VERSION = "docs_static_html_snapshot_apply_v1"
 SNAPSHOT_PROVENANCE_FILENAME = "snapshot.json"
 SAFE_DOC_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9_-]*\Z")
+REVISION_PATTERN = re.compile(r"\A[0-9a-f]{64}\Z")
+ISO_DATE_PATTERN = re.compile(r"\A[0-9]{4}-[0-9]{2}-[0-9]{2}\Z")
 HREF_PATTERN = re.compile(r"""(?P<prefix>\bhref\s*=\s*)(?P<quote>["'])(?P<url>.*?)(?P=quote)""", re.IGNORECASE)
-EMPTY_CONFLICT_DIR_PATTERN = re.compile(r"\A(?P<base>[A-Za-z0-9_-]+) [2-9][0-9]*\Z")
 UNSAFE_FOLDER_CHARACTER_PATTERN = re.compile(r'[<>:"/\\|?*\x00-\x1f]')
 WINDOWS_RESERVED_FOLDER_NAMES = frozenset(
     {"CON", "PRN", "AUX", "NUL", *(f"COM{index}" for index in range(1, 10)), *(f"LPT{index}" for index in range(1, 10))}
 )
 MAX_SNAPSHOT_LABEL_BYTES = 180
 DOCS_EXPORT_WORKSPACE_SUBDIR = "docs-export"
-
-
-@dataclass(frozen=True)
-class StaticHtmlExportPaths:
-    scope: str
-    generated_root: Path
-    index_tree_path: Path
-    payload_root: Path
-    destination_root: Path
 
 
 @dataclass(frozen=True)
@@ -83,26 +71,32 @@ class StaticHtmlSnapshotPlan:
     plan_revision: str
     target_state: str
     target_revision: str
+    target_content_revision: str
     existing_snapshot: dict[str, Any] | None
 
 
-def normalize_export_scope(repo_root: Path, value: Any) -> tuple[str, DocsScopeConfig]:
-    scope = str(value or "").strip().lower()
-    if not scope:
-        raise ValueError("scope is required")
-    config = load_docs_scope_configs(repo_root).get(scope)
-    if config is None:
-        raise ValueError(f"unsupported docs scope: {scope}")
-    if config.scope_type == LOCAL_EXTERNAL_SCOPE_TYPE or scope_uses_external_data(config):
-        raise ValueError(f"scope {scope!r} is not a repo-backed local scope")
-    if is_public_readonly_scope(
-        viewer_base_url=config.viewer_base_url,
-        include_scope_param=config.include_scope_param,
-    ):
-        raise ValueError(f"scope {scope!r} is not a repo-backed local scope")
-    if config.scope_type != "local" or not config.include_scope_param:
-        raise ValueError(f"scope {scope!r} is not a repo-backed local scope")
-    return scope, config
+class StaticHtmlSnapshotApplyConflict(ValueError):
+    """A stale or unsafe snapshot apply that requires a fresh preview."""
+
+    def __init__(self, message: str, *, plan: StaticHtmlSnapshotPlan | None = None) -> None:
+        super().__init__(message)
+        self.payload = {
+            "ok": False,
+            "schema_version": SNAPSHOT_APPLY_SCHEMA_VERSION,
+            "operation": "apply",
+            "conflict": True,
+            "requires_preview": True,
+            "error": message,
+        }
+        if plan is not None:
+            self.payload.update(
+                {
+                    "scope": plan.scope,
+                    "doc_ids": list(plan.doc_ids),
+                    "destination_label": plan.destination_label,
+                    "target_state": plan.target_state,
+                }
+            )
 
 
 def normalize_snapshot_scope(repo_root: Path, value: Any) -> tuple[str, DocsScopeConfig]:
@@ -126,33 +120,6 @@ def resolve_docs_export_workspace() -> ExternalWorkspaceRoot:
         raise
 
 
-def resolve_projects_base_dir() -> Path:
-    return resolve_docs_export_workspace().projects_base
-
-
-def resolve_repo_backed_scope_input_paths(repo_root: Path, scope: str, config: DocsScopeConfig) -> StaticHtmlExportPaths:
-    generated_root = resolve_scope_path(repo_root, published_documents_path(config)).resolve()
-    repo_resolved = repo_root.resolve()
-    if not path_is_relative_to(generated_root, repo_resolved):
-        raise ValueError(f"scope {scope!r} generated output is not repo-backed")
-    index_tree_path = generated_root / "index-tree.json"
-    payload_root = generated_root / "by-id"
-    if not index_tree_path.is_file():
-        raise FileNotFoundError(f"index-tree.json not found for scope {scope}")
-    if not payload_root.is_dir():
-        raise FileNotFoundError(f"by-id payload root not found for scope {scope}")
-
-    destination_root = resolve_workspace_path(resolve_docs_export_workspace(), scope)
-    validate_destination_path(destination_root)
-    return StaticHtmlExportPaths(
-        scope=scope,
-        generated_root=generated_root,
-        index_tree_path=index_tree_path,
-        payload_root=payload_root,
-        destination_root=destination_root,
-    )
-
-
 def resolve_snapshot_input_paths(
     repo_root: Path,
     scope: str,
@@ -173,12 +140,6 @@ def resolve_snapshot_input_paths(
         index_tree_path=index_tree_path,
         payload_root=payload_root,
     )
-
-
-def resolve_scope_export_destination(scope: str) -> Path:
-    destination_root = resolve_workspace_path(resolve_docs_export_workspace(), scope)
-    validate_destination_path(destination_root)
-    return destination_root
 
 
 def validate_destination_path(path: Path) -> None:
@@ -374,14 +335,33 @@ def _target_entry_state(path: Path, relative_path: Path) -> list[dict[str, Any]]
     return [{**common, "kind": "special"}]
 
 
-def snapshot_target_revision(path: Path, state: str) -> str:
+def snapshot_target_revisions(path: Path, state: str) -> tuple[str, str]:
     if state == "absent":
-        return _revision({"state": state})
+        revision = _revision({"state": state})
+        return revision, revision
     try:
         entries = _target_entry_state(path, Path())
     except OSError as exc:
         raise ValueError("could not inspect export destination; resolve filesystem permissions and preview again") from exc
-    return _revision({"state": state, "entries": entries})
+    full_revision = _revision({"state": state, "entries": entries})
+    content_entries = [dict(entry) for entry in entries]
+    if content_entries and content_entries[0].get("path") == ".":
+        content_entries[0] = {
+            key: value
+            for key, value in content_entries[0].items()
+            if key not in {"mtime_ns", "ctime_ns"}
+        }
+    return full_revision, _revision({"state": state, "entries": content_entries})
+
+
+def snapshot_target_revision(path: Path, state: str) -> str:
+    return snapshot_target_revisions(path, state)[0]
+
+
+def snapshot_target_content_revision(path: Path, state: str) -> str:
+    """Fingerprint target contents while ignoring root metadata changed by rename."""
+
+    return snapshot_target_revisions(path, state)[1]
 
 
 def load_existing_snapshot_summary(destination_root: Path) -> dict[str, Any] | None:
@@ -421,16 +401,28 @@ def load_existing_snapshot_summary(destination_root: Path) -> dict[str, Any] | N
     }
 
 
-def inspect_snapshot_destination(destination_root: Path) -> tuple[str, str, dict[str, Any] | None]:
+def inspect_snapshot_destination_details(
+    destination_root: Path,
+) -> tuple[str, str, str, dict[str, Any] | None]:
     if not os.path.lexists(destination_root):
         state = "absent"
-        return state, snapshot_target_revision(destination_root, state), None
+        target_revision, target_content_revision = snapshot_target_revisions(destination_root, state)
+        return state, target_revision, target_content_revision, None
     if destination_root.is_symlink() or not destination_root.is_dir():
         state = "non_directory"
-        return state, snapshot_target_revision(destination_root, state), None
+        target_revision, target_content_revision = snapshot_target_revisions(destination_root, state)
+        return state, target_revision, target_content_revision, None
     existing_snapshot = load_existing_snapshot_summary(destination_root)
     state = "recognized" if existing_snapshot is not None else "unrecognized"
-    return state, snapshot_target_revision(destination_root, state), existing_snapshot
+    target_revision, target_content_revision = snapshot_target_revisions(destination_root, state)
+    return state, target_revision, target_content_revision, existing_snapshot
+
+
+def inspect_snapshot_destination(destination_root: Path) -> tuple[str, str, dict[str, Any] | None]:
+    state, target_revision, _target_content_revision, existing_snapshot = inspect_snapshot_destination_details(
+        destination_root
+    )
+    return state, target_revision, existing_snapshot
 
 
 def _snapshot_plan_revision(
@@ -464,7 +456,7 @@ def plan_static_html_snapshot(
 ) -> StaticHtmlSnapshotPlan:
     """Build a write-free exact-selection snapshot plan from generated payloads."""
 
-    for unsupported_field in ("mode", "include_descendants", "root_doc_id"):
+    for unsupported_field in ("action", "mode", "include_descendants", "root_doc_id"):
         if unsupported_field in body:
             raise ValueError(f"{unsupported_field} is not supported for static HTML snapshots")
     if str(body.get("sub_scope") or "").strip():
@@ -495,7 +487,9 @@ def plan_static_html_snapshot(
     validate_destination_path(destination_root)
     default_doc_id = config.default_doc_id if config.default_doc_id in included_doc_ids else doc_ids[0]
     destination_label_value = f"/docs-export/{folder_name}/"
-    target_state, target_revision, existing_snapshot = inspect_snapshot_destination(destination_root)
+    target_state, target_revision, target_content_revision, existing_snapshot = inspect_snapshot_destination_details(
+        destination_root
+    )
     plan_revision = _snapshot_plan_revision(
         scope=scope,
         doc_ids=doc_ids,
@@ -519,6 +513,7 @@ def plan_static_html_snapshot(
         plan_revision=plan_revision,
         target_state=target_state,
         target_revision=target_revision,
+        target_content_revision=target_content_revision,
         existing_snapshot=existing_snapshot,
     )
 
@@ -746,134 +741,239 @@ def render_doc_html(
     )
 
 
-def compute_replace_plan(
-    *,
-    paths: StaticHtmlExportPaths,
-    index_tree: dict[str, Any],
-    doc_payloads: dict[str, dict[str, Any]],
-    default_doc_id: str,
-) -> dict[Path, bytes]:
-    doc_ids = list(doc_payloads)
+def snapshot_provenance(plan: StaticHtmlSnapshotPlan, *, generated_at: str) -> dict[str, Any]:
+    return {
+        "schema_version": SNAPSHOT_SCHEMA_VERSION,
+        "scope": plan.scope,
+        "doc_ids": list(plan.doc_ids),
+        "selection_kind": plan.selection_kind,
+        "document_count": len(plan.doc_ids),
+        "default_doc_id": plan.default_doc_id,
+        "export_date": plan.export_date,
+        "generated_at": generated_at,
+        "plan_revision": plan.plan_revision,
+    }
+
+
+def compute_snapshot_files(plan: StaticHtmlSnapshotPlan, *, generated_at: str) -> dict[Path, bytes]:
+    included_doc_ids = set(plan.doc_ids)
     files: dict[Path, bytes] = {
         Path("index.html"): render_index_html(
-            index_tree,
-            scope=paths.scope,
-            default_doc_id=default_doc_id,
-            document_count=len(doc_ids),
+            plan.index_tree,
+            scope=plan.scope,
+            default_doc_id=plan.default_doc_id,
+            document_count=len(plan.doc_ids),
         ).encode("utf-8"),
         Path("styles.css"): render_styles_css().encode("utf-8"),
+        Path(SNAPSHOT_PROVENANCE_FILENAME): (
+            json.dumps(snapshot_provenance(plan, generated_at=generated_at), ensure_ascii=False, indent=2) + "\n"
+        ).encode("utf-8"),
     }
-    for doc_id, payload in doc_payloads.items():
-        files[Path("docs") / f"{doc_id}.html"] = render_doc_html(payload, scope=paths.scope).encode("utf-8")
+    for doc_id in plan.doc_ids:
+        files[Path("docs") / f"{doc_id}.html"] = render_doc_html(
+            plan.doc_payloads[doc_id],
+            scope=plan.scope,
+            included_doc_ids=included_doc_ids,
+        ).encode("utf-8")
     return files
 
 
-def wipe_and_write_destination(destination_root: Path, files: dict[Path, bytes]) -> None:
-    if destination_root.exists():
-        if not destination_root.is_dir():
-            raise ValueError(f"export destination exists and is not a directory: {destination_root}")
-        shutil.rmtree(destination_root)
-    destination_root.mkdir(parents=True, exist_ok=True)
+def write_snapshot_staging_files(staging_root: Path, files: dict[Path, bytes]) -> None:
     for relative_path, content in files.items():
         if relative_path.is_absolute() or ".." in relative_path.parts:
-            raise ValueError(f"unsafe export output path: {relative_path}")
-        target_path = destination_root / relative_path
+            raise ValueError(f"unsafe snapshot output path: {relative_path}")
+        target_path = staging_root / relative_path
         target_path.parent.mkdir(parents=True, exist_ok=True)
         target_path.write_bytes(content)
 
 
-def remove_empty_conflict_dirs(destination_root: Path, canonical_dir_names: set[str]) -> list[str]:
-    if not destination_root.is_dir():
-        return []
-    removed: list[str] = []
-    for child in sorted(destination_root.iterdir(), key=lambda item: item.name):
-        if not child.is_dir():
-            continue
-        match = EMPTY_CONFLICT_DIR_PATTERN.fullmatch(child.name)
-        if not match or match.group("base") not in canonical_dir_names:
-            continue
-        try:
-            child.rmdir()
-        except OSError:
-            continue
-        removed.append(child.name)
-    return removed
+def validate_staged_snapshot(
+    plan: StaticHtmlSnapshotPlan,
+    staging_root: Path,
+    expected_files: dict[Path, bytes],
+) -> None:
+    expected_paths = set(expected_files)
+    expected_dirs = {parent for path in expected_paths for parent in path.parents if parent.parts}
+    actual_files: set[Path] = set()
+    actual_dirs: set[Path] = set()
+    for path in staging_root.rglob("*"):
+        relative_path = path.relative_to(staging_root)
+        if path.is_symlink():
+            raise ValueError(f"staged snapshot contains a symlink: {relative_path.as_posix()}")
+        if path.is_dir():
+            actual_dirs.add(relative_path)
+        elif path.is_file():
+            actual_files.add(relative_path)
+        else:
+            raise ValueError(f"staged snapshot contains a special entry: {relative_path.as_posix()}")
+    if actual_files != expected_paths or actual_dirs != expected_dirs:
+        raise ValueError("staged snapshot file set does not match the planned artifact")
+    for relative_path, expected_content in expected_files.items():
+        if (staging_root / relative_path).read_bytes() != expected_content:
+            raise ValueError(f"staged snapshot content validation failed: {relative_path.as_posix()}")
+    summary = load_existing_snapshot_summary(staging_root)
+    if summary is None:
+        raise ValueError("staged snapshot provenance validation failed")
+    expected_selection_revision = _revision({"scope": plan.scope, "doc_ids": plan.doc_ids})
+    if (
+        summary["scope"] != plan.scope
+        or summary["selection_kind"] != plan.selection_kind
+        or summary["document_count"] != len(plan.doc_ids)
+        or summary["selection_revision"] != expected_selection_revision
+    ):
+        raise ValueError("staged snapshot provenance does not match the planned selection")
 
 
-def destination_label(scope: str) -> str:
-    return f"/docs-export/{scope}/"
+def normalize_snapshot_apply_revision(value: Any, *, field: str) -> str:
+    revision = str(value or "").strip().lower()
+    if not REVISION_PATTERN.fullmatch(revision):
+        raise ValueError(f"{field} must be a snapshot preview revision")
+    return revision
 
 
-def build_static_html_export(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    if str(body.get("action") or "").strip() != "export":
-        raise ValueError("action must be export")
-    scope, config = normalize_export_scope(repo_root, body.get("scope"))
-    paths = resolve_repo_backed_scope_input_paths(repo_root, scope, config)
-    index_tree = load_index_tree(paths.index_tree_path)
-    doc_ids = collect_doc_ids_from_tree(index_tree.get("docs"))
-    doc_payloads = {doc_id: load_doc_payload(paths.payload_root, doc_id) for doc_id in doc_ids}
-    files = compute_replace_plan(
-        paths=paths,
-        index_tree=index_tree,
-        doc_payloads=doc_payloads,
-        default_doc_id=config.default_doc_id,
-    )
-    wipe_and_write_destination(paths.destination_root, files)
-    cleaned_empty_conflict_dirs = remove_empty_conflict_dirs(paths.destination_root, {"docs"})
-    return {
-        "ok": True,
-        "schema_version": EXPORT_SCHEMA_VERSION,
-        "action": "export",
-        "operation": "apply",
-        "scope": scope,
-        "document_count": len(doc_ids),
-        "file_count": len(files),
-        "cleaned_empty_conflict_dirs": cleaned_empty_conflict_dirs,
-        "default_doc_id": config.default_doc_id,
-        "destination": str(paths.destination_root),
-        "destination_label": destination_label(scope),
-        "summary_text": f"Exported {len(doc_ids)} docs to {destination_label(scope)}.",
-    }
-
-
-def delete_static_html_export(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    scope, _config = normalize_export_scope(repo_root, body.get("scope"))
-    destination_root = resolve_scope_export_destination(scope)
-    deleted = destination_root.exists()
-    if deleted:
-        if not destination_root.is_dir():
-            raise ValueError(f"export destination exists and is not a directory: {destination_root}")
-        shutil.rmtree(destination_root)
-    return {
-        "ok": True,
-        "schema_version": EXPORT_SCHEMA_VERSION,
-        "action": "delete_export",
-        "operation": "delete",
-        "scope": scope,
-        "deleted": deleted,
-        "destination": str(destination_root),
-        "destination_label": destination_label(scope),
-        "summary_text": f"Deleted static HTML export for {scope}." if deleted else f"No static HTML export found for {scope}.",
-    }
-
-
-def scope_static_html_export_capability(repo_root: Path, scope: str, config: DocsScopeConfig) -> dict[str, Any]:
+def normalize_snapshot_export_date(value: Any) -> date:
+    date_text = str(value or "").strip()
+    if not ISO_DATE_PATTERN.fullmatch(date_text):
+        raise ValueError("export_date must be an ISO local date from snapshot preview")
     try:
-        normalize_export_scope(repo_root, scope)
-        paths = resolve_repo_backed_scope_input_paths(repo_root, scope, config)
-        index_tree = load_index_tree(paths.index_tree_path)
-        doc_count = len(collect_doc_ids_from_tree(index_tree.get("docs")))
-        available = True
-        error = ""
-    except (FileNotFoundError, ValueError) as exc:
-        doc_count = 0
-        available = False
-        error = str(exc)
+        parsed = date.fromisoformat(date_text)
+    except ValueError as exc:
+        raise ValueError("export_date must be an ISO local date from snapshot preview") from exc
+    if parsed.isoformat() != date_text:
+        raise ValueError("export_date must be an ISO local date from snapshot preview")
+    return parsed
+
+
+def ensure_snapshot_target_unchanged(plan: StaticHtmlSnapshotPlan) -> None:
+    state, revision, _summary = inspect_snapshot_destination(plan.destination_root)
+    if state != plan.target_state or not hmac.compare_digest(revision, plan.target_revision):
+        raise StaticHtmlSnapshotApplyConflict(
+            "Snapshot destination changed after preview; preview and confirm again.",
+            plan=plan,
+        )
+
+
+def install_staged_snapshot(plan: StaticHtmlSnapshotPlan, staging_root: Path) -> bool:
+    """Install validated staging, restoring an existing target if the switch fails."""
+
+    ensure_snapshot_target_unchanged(plan)
+    if plan.target_state == "absent":
+        try:
+            staging_root.rename(plan.destination_root)
+        except OSError as exc:
+            raise StaticHtmlSnapshotApplyConflict(
+                "Snapshot destination changed during apply; preview and confirm again.",
+                plan=plan,
+            ) from exc
+        return False
+
+    backup_root = plan.destination_root.parent / f".{plan.folder_name}.{uuid.uuid4().hex}.backup"
+    try:
+        plan.destination_root.rename(backup_root)
+    except OSError as exc:
+        raise StaticHtmlSnapshotApplyConflict(
+            "Snapshot destination changed during apply; preview and confirm again.",
+            plan=plan,
+        ) from exc
+    try:
+        backup_state, _backup_revision, backup_content_revision, _summary = inspect_snapshot_destination_details(
+            backup_root
+        )
+        if backup_state != plan.target_state or not hmac.compare_digest(
+            backup_content_revision,
+            plan.target_content_revision,
+        ):
+            raise StaticHtmlSnapshotApplyConflict(
+                "Snapshot destination changed during apply; preview and confirm again.",
+                plan=plan,
+            )
+        staging_root.rename(plan.destination_root)
+    except Exception:
+        if not os.path.lexists(plan.destination_root) and os.path.lexists(backup_root):
+            backup_root.rename(plan.destination_root)
+        raise
+    shutil.rmtree(backup_root)
+    return True
+
+
+def apply_static_html_snapshot(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
+    if body.get("confirm") is not True:
+        raise ValueError("confirm must be true to apply a static HTML snapshot")
+    export_date = normalize_snapshot_export_date(body.get("export_date"))
+    requested_plan_revision = normalize_snapshot_apply_revision(body.get("plan_revision"), field="plan_revision")
+    requested_target_revision = normalize_snapshot_apply_revision(body.get("target_revision"), field="target_revision")
+    plan = plan_static_html_snapshot(repo_root, body, export_date=export_date)
+    if not hmac.compare_digest(plan.plan_revision, requested_plan_revision):
+        raise StaticHtmlSnapshotApplyConflict(
+            "Snapshot plan changed after preview; preview and confirm again.",
+            plan=plan,
+        )
+    if not hmac.compare_digest(plan.target_revision, requested_target_revision):
+        raise StaticHtmlSnapshotApplyConflict(
+            "Snapshot destination changed after preview; preview and confirm again.",
+            plan=plan,
+        )
+    if plan.target_state == "non_directory":
+        raise StaticHtmlSnapshotApplyConflict(
+            "Snapshot destination is not a replaceable directory.",
+            plan=plan,
+        )
+    replace_existing = body.get("replace_existing") is True
+    if plan.target_state in {"recognized", "unrecognized"} and not replace_existing:
+        raise ValueError("replace_existing must be true to replace the confirmed snapshot destination")
+    if plan.target_state == "absent" and replace_existing:
+        raise ValueError("replace_existing must be false when the confirmed snapshot destination is absent")
+
+    generated_at = datetime.now().astimezone().isoformat(timespec="seconds")
+    files = compute_snapshot_files(plan, generated_at=generated_at)
+    workspace = resolve_docs_export_workspace()
+    workspace.root.mkdir(exist_ok=True)
+    staging_root = Path(
+        tempfile.mkdtemp(
+            prefix=f".{plan.folder_name}.",
+            suffix=".staging",
+            dir=workspace.root,
+        )
+    )
+    try:
+        write_snapshot_staging_files(staging_root, files)
+        validate_staged_snapshot(plan, staging_root, files)
+        replaced = install_staged_snapshot(plan, staging_root)
+    finally:
+        if os.path.lexists(staging_root):
+            shutil.rmtree(staging_root, ignore_errors=True)
+
+    target_state, target_revision, existing_snapshot = inspect_snapshot_destination(plan.destination_root)
+    if target_state != "recognized" or existing_snapshot is None:
+        raise RuntimeError("installed snapshot failed post-apply provenance validation")
     return {
-        "apply": available,
-        "delete": available,
-        "destination": destination_label(scope),
-        "document_count": doc_count,
+        "ok": True,
+        "schema_version": SNAPSHOT_APPLY_SCHEMA_VERSION,
+        "operation": "apply",
+        "scope": plan.scope,
+        "doc_ids": list(plan.doc_ids),
+        "document_count": len(plan.doc_ids),
+        "file_count": len(files),
+        "selection_kind": plan.selection_kind,
+        "default_doc_id": plan.default_doc_id,
+        "export_date": plan.export_date,
+        "generated_at": generated_at,
+        "destination_label": plan.destination_label,
+        "replaced": replaced,
+        "plan_revision": plan.plan_revision,
+        "target_revision": target_revision,
+        "summary_text": f"Exported {len(plan.doc_ids)} documents to {plan.destination_label}.",
+    }
+
+
+def scope_static_html_export_capability(_repo_root: Path, _scope: str, config: DocsScopeConfig) -> dict[str, Any]:
+    """Keep the legacy app-level action hidden until DXS-3 owns capability projection."""
+
+    return {
+        "apply": False,
+        "delete": False,
+        "destination": "",
+        "document_count": 0,
         "default_doc_id": config.default_doc_id,
-        "error": error,
+        "error": "Dated snapshot Export is awaiting Index Actions integration.",
     }
