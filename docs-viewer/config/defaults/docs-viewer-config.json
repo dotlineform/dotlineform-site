@@ -229,6 +229,50 @@
           "delete"
         ]
       }
+    },
+    {
+      "scope_id": "dotlineform",
+      "scope_type": "local_external",
+      "meta": "external local",
+      "viewer_base_url": "/docs/",
+      "include_scope_param": true,
+      "default_doc_id": "d-20260731-144749-b8a097",
+      "media": {
+        "files": {
+          "reference_prefix": "docs/dotlineform/files",
+          "served_path_prefix": "/docs/media/dotlineform/files"
+        },
+        "img": {
+          "reference_prefix": "docs/dotlineform/img",
+          "served_path_prefix": "/docs/media/dotlineform/img"
+        },
+        "svg": {
+          "reference_prefix": "docs/dotlineform/svg",
+          "served_path_prefix": "/docs/media/dotlineform/svg"
+        }
+      },
+      "index_tree_url": "/docs/index-tree?scope=dotlineform",
+      "recent_url": "/docs/recent?scope=dotlineform",
+      "search_index_url": "/docs/search?scope=dotlineform",
+      "search": {
+        "domain": "docs_viewer",
+        "schema": "search_index_dotlineform_v1",
+        "index_url": "/docs/search?scope=dotlineform",
+        "targeted_policy": "record_update",
+        "targeted_operations": [
+          "create",
+          "update",
+          "delete"
+        ]
+      },
+      "sub_scopes": [
+        {
+          "sub_scope": "projects",
+          "title": "projects",
+          "manifest_url": "/docs/published/external/dotlineform/projects/manage-manifest.json",
+          "by_id_url_base": "/docs/published/external/dotlineform/projects/by-id"
+        }
+      ]
     }
   ],
   "docs_viewer": {

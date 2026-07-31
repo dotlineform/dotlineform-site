@@ -977,6 +977,38 @@
           ]
         },
         {
+          "doc_id": "d-20260731-150644-3dfab5",
+          "title": "Sub-Scope Report Defaults And Customisations",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-150644-3dfab5.json",
+          "ui_status": "proposed",
+          "children": [
+            {
+              "doc_id": "d-20260731-155054-1fcd80",
+              "title": "Default Report And Analysis Tags Refactor Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155054-1fcd80.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "d-20260731-155056-2677a3",
+              "title": "Dotlineform Projects Report Customisation Decision Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155056-2677a3.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "d-20260731-155055-0b921e",
+              "title": "New Sub-Scope Default Report Lifecycle Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155055-0b921e.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "d-20260731-155053-3929e2",
+              "title": "Sub-Scope Report Customisation Architecture",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155053-3929e2.json",
+              "ui_status": "proposed"
+            }
+          ]
+        },
+        {
           "doc_id": "d-20260726-211842-cc8f6c",
           "title": "Tag-document linking",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-211842-cc8f6c.json",
@@ -1329,5 +1361,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-31T13:39:08Z"
+  "generated_at": "2026-07-31T14:53:57Z"
 }

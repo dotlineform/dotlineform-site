@@ -4,6 +4,46 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260731-155054-1fcd80",
+      "title": "Default Report And Analysis Tags Refactor Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155054-1fcd80.json",
+      "timestamp": "2026-07-31 16:01:54",
+      "parent_id": "d-20260731-150644-3dfab5",
+      "parent_title": "Sub-Scope Report Defaults And Customisations"
+    },
+    {
+      "doc_id": "d-20260731-155053-3929e2",
+      "title": "Sub-Scope Report Customisation Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155053-3929e2.json",
+      "timestamp": "2026-07-31 16:01:54",
+      "parent_id": "d-20260731-150644-3dfab5",
+      "parent_title": "Sub-Scope Report Defaults And Customisations"
+    },
+    {
+      "doc_id": "d-20260731-150644-3dfab5",
+      "title": "Sub-Scope Report Defaults And Customisations",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-150644-3dfab5.json",
+      "timestamp": "2026-07-31 16:01:54",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260731-155056-2677a3",
+      "title": "Dotlineform Projects Report Customisation Decision Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155056-2677a3.json",
+      "timestamp": "2026-07-31 15:50:56",
+      "parent_id": "d-20260731-150644-3dfab5",
+      "parent_title": "Sub-Scope Report Defaults And Customisations"
+    },
+    {
+      "doc_id": "d-20260731-155055-0b921e",
+      "title": "New Sub-Scope Default Report Lifecycle Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155055-0b921e.json",
+      "timestamp": "2026-07-31 15:50:55",
+      "parent_id": "d-20260731-150644-3dfab5",
+      "parent_title": "Sub-Scope Report Defaults And Customisations"
+    },
+    {
       "doc_id": "d-20260716-193410-98d1a8",
       "title": "Dated Export Snapshots",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260716-193410-98d1a8.json",
@@ -42,47 +82,7 @@
       "timestamp": "2026-07-31 11:36:14",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260607-222033-4b1d77",
-      "title": "Source Editor Endpoints",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-4b1d77.json",
-      "timestamp": "2026-07-31 11:36:14",
-      "parent_id": "d-20260607-222033-647b52",
-      "parent_title": "Endpoint Overview"
-    },
-    {
-      "doc_id": "d-20260731-085838-c1eaca",
-      "title": "Source Editor Image Presentation Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-085838-c1eaca.json",
-      "timestamp": "2026-07-31 11:12:30",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260514-184303-7914e2",
-      "title": "Media And Asset Handling",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260514-184303-7914e2.json",
-      "timestamp": "2026-07-31 11:10:43",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260607-222033-647b52",
-      "title": "Endpoint Overview",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-647b52.json",
-      "timestamp": "2026-07-31 06:29:03",
-      "parent_id": "d-20260424-000000-04d75e",
-      "parent_title": "Management Services"
-    },
-    {
-      "doc_id": "d-20260627-113800-55dd63",
-      "title": "Package Export Metadata",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260627-113800-55dd63.json",
-      "timestamp": "2026-07-31 06:29:03",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-07-31T13:39:08Z"
+  "generated_at": "2026-07-31T15:02:45Z"
 }
