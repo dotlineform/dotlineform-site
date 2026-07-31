@@ -36,7 +36,6 @@ var DOCS_HTML_IMPORT_TEXT = {
   confirmOverwriteButton: "Confirm overwrite",
   clearSelectionButton: "Clear selection",
   dataSharingPackagesOption: "Document packages ({count})",
-  fileLabel: "staged documents",
   fileRequired: "Select at least one staged document first.",
   filesOption: "Documents ({count})",
   imageMediaResultType: "image, {format} <= {max_width}px",

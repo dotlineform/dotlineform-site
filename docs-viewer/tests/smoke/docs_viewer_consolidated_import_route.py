@@ -375,7 +375,21 @@ def close_import(page: Page) -> None:
 
 
 def select_candidate(page: Page, filename: str) -> None:
-    page.locator("#docsHtmlImportFileSelect").select_option(filename)
+    page.wait_for_function(
+        """() => document.getElementById(
+          'docsHtmlImportCandidateList'
+        )?.getAttribute('aria-disabled') !== 'true'""",
+    )
+    page.locator(
+        "#docsHtmlImportCandidateList [data-import-candidate]"
+    ).evaluate_all(
+        """(rows, selectedFilename) => {
+            const row = rows.find(item => item.dataset.filename === selectedFilename);
+            if (!row) throw new Error(`Missing Import candidate: ${selectedFilename}`);
+            row.click();
+        }""",
+        filename,
+    )
 
 
 def wait_for_import_idle(page: Page, timeout_ms: int) -> None:
@@ -407,8 +421,10 @@ def assert_inventory_surface(page: Page, request_paths: list[str]) -> None:
         EDITED_SOURCE_FOLDER,
         BLOCKED_PACKAGE,
     ]
-    actual = page.locator("#docsHtmlImportFileSelect option").evaluate_all(
-        "(options) => options.map(option => option.value)",
+    actual = page.locator(
+        "#docsHtmlImportCandidateList [data-import-candidate]"
+    ).evaluate_all(
+        "(rows) => rows.map(row => row.dataset.filename)",
     )
     if actual != expected:
         state = page.evaluate(
@@ -429,6 +445,15 @@ def assert_inventory_surface(page: Page, request_paths: list[str]) -> None:
         raise AssertionError("consolidated Import restored a source-type selector")
     if page.locator("#docsHtmlImportScopeSelect").count():
         raise AssertionError("consolidated Import restored a destination selector")
+    headers = page.locator(
+        ".docsViewerImport__candidateHeader > span"
+    ).all_text_contents()
+    if headers != ["File", "Destination"]:
+        raise AssertionError(f"Import candidate columns changed: {headers!r}")
+    if page.locator("#docsHtmlImportFileLabel").count():
+        raise AssertionError("Import modal retained the visible staged-sources label")
+    if page.locator("#docsHtmlImportCandidateDetails").count():
+        raise AssertionError("Import modal retained duplicate candidate details")
 
 
 def exercise_parent_import(
@@ -481,9 +506,11 @@ def exercise_child_import(
     )
     open_import(page, timeout_ms)
     select_candidate(page, CHILD_SOURCE)
-    child_destination = (
-        page.locator("#docsHtmlImportCandidateDestination").inner_text().strip()
-    )
+    child_destination = page.locator(
+        "#docsHtmlImportCandidateList "
+        "[data-import-candidate][aria-selected='true'] "
+        ".docsViewerImport__candidateValue"
+    ).inner_text().strip()
     if child_destination != "studio / Smoke Documents":
         raise AssertionError(
             "ordinary child source did not freeze the displayed child collection: "
@@ -614,7 +641,10 @@ def exercise_edited_folder_and_blocked_candidate(
         EDITED_SOURCE_FOLDER,
         EDITED_SOURCE_FOLDER,
     ]:
-        raise AssertionError("edited review-source folder did not preserve its staged identity")
+        raise AssertionError(
+            "edited review-source folder did not preserve its staged identity: "
+            f"{imports[request_count:]!r}"
+        )
     expected_url = f"/docs/?scope=studio&doc={SUBSCOPE_REPORT_DOC_ID}"
     if (
         page.locator("[data-collection-destination-link]").get_attribute("href")

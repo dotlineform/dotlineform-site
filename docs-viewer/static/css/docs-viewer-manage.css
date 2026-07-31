@@ -461,6 +461,7 @@
   display: grid;
   gap: 0.9rem;
   min-width: 0;
+  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
 }
 
 .docsViewer__modalForm--dynamic{
@@ -477,6 +478,15 @@
   overflow: auto;
   overscroll-behavior: contain;
   padding: 0.2rem 0.25rem 0.25rem 0;
+  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
+}
+
+.docsViewer__modalBody h3{
+  font-size: var(--font-heading-3, 1.125rem);
+}
+
+.docsViewer__modalBody h4{
+  font-size: var(--font-heading-4, 1rem);
 }
 
 .docsViewer__modalForm--dynamic > [data-role="modal-status"],

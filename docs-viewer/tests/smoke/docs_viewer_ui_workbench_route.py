@@ -144,6 +144,75 @@ def assert_single_specimen_controls(page: Page) -> None:
             raise AssertionError(f"Retired Workbench control remains: {retired_selector}")
 
 
+def assert_modal_typography(page: Page, record: dict[str, object]) -> None:
+    specimen_id = str(record["id"])
+    frame = page.frame_locator("#adminUiWorkbenchPrimaryFrame")
+    frame.locator(
+        "#adminUiWorkbenchFrameRoot"
+        f'[data-workbench-frame-specimen="{specimen_id}"]'
+        '[data-workbench-frame-busy="false"]'
+    ).wait_for(state="attached")
+    active_modals = frame.locator(".docsViewer__modal:not([hidden])")
+    if active_modals.count():
+        modal = active_modals.first
+    else:
+        fallback_selectors = {
+            "metadata": "#docsViewerMetadataModal",
+            "settings": "#docsViewerSettingsModal",
+            "import": "#docsViewerImportModal",
+        }
+        fallback_selector = fallback_selectors.get(str(record["family"]), "")
+        if not fallback_selector:
+            raise AssertionError(
+                f"Modal specimen did not mount a modal for {specimen_id}"
+            )
+        modal = frame.locator(fallback_selector)
+    typography = modal.evaluate(
+        """modal => {
+          const content = modal.querySelector(
+            '.docsViewer__modalForm, .docsViewer__importBody'
+          );
+          const title = modal.querySelector('.docsViewer__modalTitle');
+          const button = modal.querySelector(
+            '.docsViewer__actionButton:not([hidden]), '
+            + '.docsViewerImport__button:not([hidden])'
+          );
+          const sectionHeadings = Array.from(
+            modal.querySelectorAll(
+              '.docsViewer__modalBody h3, .docsViewer__modalBody h4, '
+              + '.docsViewer__importBody h3, .docsViewer__importBody h4'
+            )
+          );
+          return {
+            contentFontSize: content ? getComputedStyle(content).fontSize : '',
+            titleFontSize: title ? getComputedStyle(title).fontSize : '',
+            buttonFontSize: button ? getComputedStyle(button).fontSize : '',
+            sectionHeadingFontSizes: sectionHeadings.map(
+              heading => getComputedStyle(heading).fontSize
+            )
+          };
+        }"""
+    )
+    if not typography["contentFontSize"] or not typography["buttonFontSize"]:
+        raise AssertionError(
+            f"Modal typography owners are missing for {specimen_id}: {typography!r}"
+        )
+    if typography["contentFontSize"] != typography["buttonFontSize"]:
+        raise AssertionError(
+            f"Modal content and controls use different font sizes for "
+            f"{specimen_id}: {typography!r}"
+        )
+    if typography["titleFontSize"] == typography["contentFontSize"]:
+        raise AssertionError(
+            f"Modal title lost its heading size for {specimen_id}: {typography!r}"
+        )
+    if typography["contentFontSize"] in typography["sectionHeadingFontSizes"]:
+        raise AssertionError(
+            f"Modal section heading lost its heading size for "
+            f"{specimen_id}: {typography!r}"
+        )
+
+
 def assert_recipe(
     page: Page,
     recipe: dict[str, object],
@@ -231,6 +300,7 @@ def run_browser_smoke(admin_url: str, timeout_ms: int) -> None:
         assert_single_specimen_controls(page)
         for record in records:
             select_exact_specimen(page, record, timeout_ms)
+            assert_modal_typography(page, record)
 
         for recipe in recipes:
             assert_recipe(page, recipe, timeout_ms)

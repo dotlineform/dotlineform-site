@@ -259,15 +259,40 @@ function importNode(documentRef, id) {
   return documentRef.getElementById(id);
 }
 
-function setSelectOptions(documentRef, select, records, selectedValue = "") {
-  select.replaceChildren();
-  records.forEach((record) => {
-    const option = documentRef.createElement("option");
-    option.value = record.value;
-    option.textContent = record.label;
-    select.append(option);
+function setImportCandidateRows(documentRef, list, records, selectedValue = "") {
+  list.replaceChildren();
+  records.forEach((record, index) => {
+    const row = documentRef.createElement("span");
+    row.className = "docsViewerImport__candidateRow";
+    row.id = `docsHtmlImportCandidate-${index + 1}`;
+    row.setAttribute("role", "option");
+    row.setAttribute("data-import-candidate", "");
+    row.dataset.filename = record.value;
+    row.setAttribute("aria-selected", record.value === selectedValue ? "true" : "false");
+    [
+      ["file", record.file],
+      ["destination", record.destination]
+    ].forEach(([column, value]) => {
+      const cell = documentRef.createElement("span");
+      cell.className = (
+        `docsViewerImport__candidateCell docsViewerImport__candidateCell--${column}`
+      );
+      cell.title = value;
+      if (column === "destination") {
+        const candidateValue = documentRef.createElement("span");
+        candidateValue.className = "docsViewerImport__candidateValue";
+        candidateValue.title = value;
+        candidateValue.textContent = value;
+        cell.append(candidateValue);
+      } else {
+        cell.textContent = value;
+      }
+      row.append(cell);
+    });
+    list.append(row);
   });
-  if (selectedValue) select.value = selectedValue;
+  const selected = list.querySelector('[aria-selected="true"]');
+  if (selected) list.setAttribute("aria-activedescendant", selected.id);
 }
 
 function importRenderState(documentRef) {
@@ -298,7 +323,6 @@ function configureImportFixture(context, state) {
   fixture.refs.importBootStatus.hidden = true;
   fixture.controller.openImportModal();
 
-  importNode(documentRef, "docsHtmlImportFileLabel").textContent = importText("fileLabel");
   importNode(documentRef, "docsHtmlImportIncludePromptMetaLabel").textContent = importText("includePromptMetaLabel");
   importNode(documentRef, "docsHtmlImportRun").textContent = importText("importButton");
   importNode(documentRef, "docsHtmlImportConfirm").textContent = importText("confirmOverwriteButton");
@@ -307,22 +331,24 @@ function configureImportFixture(context, state) {
   const files = state === "empty"
     ? []
     : [
-        { value: "modal-consistency.md", label: "modal-consistency.md — staged document" },
-        { value: "reviewed-package.jsonl", label: "reviewed-package.jsonl — returned package" }
+        {
+          value: "modal-consistency.md",
+          file: "modal-consistency.md",
+          destination: "Studio"
+        },
+        {
+          value: "reviewed-package.jsonl",
+          file: "reviewed-package.jsonl",
+          destination: "Analysis / Tags"
+        }
       ];
   const isCollection = state === "collection";
-  setSelectOptions(
+  setImportCandidateRows(
     documentRef,
-    importNode(documentRef, "docsHtmlImportFileSelect"),
+    importNode(documentRef, "docsHtmlImportCandidateList"),
     files,
     isCollection ? "reviewed-package.jsonl" : "modal-consistency.md"
   );
-  importNode(documentRef, "docsHtmlImportCandidateKind").textContent = files.length
-    ? (isCollection ? "Returned document package" : "Staged document")
-    : "—";
-  importNode(documentRef, "docsHtmlImportCandidateDestination").textContent = files.length
-    ? (isCollection ? "Analysis / Tags" : "Studio")
-    : "—";
   importNode(documentRef, "docsHtmlImportCandidateNote").textContent = files.length
     ? (
         isCollection
@@ -359,10 +385,10 @@ async function mountImport(context, state) {
   const documentRef = context.document;
   const statusNode = importNode(documentRef, "docsHtmlImportStatus");
   const runButton = importNode(documentRef, "docsHtmlImportRun");
-  const fileSelect = importNode(documentRef, "docsHtmlImportFileSelect");
+  const candidateList = importNode(documentRef, "docsHtmlImportCandidateList");
 
   if (state === "empty") {
-    fileSelect.disabled = true;
+    candidateList.setAttribute("aria-disabled", "true");
     runButton.disabled = true;
     statusNode.textContent = importText("noFiles");
   } else if (state === "selected") {
@@ -384,7 +410,7 @@ async function mountImport(context, state) {
   } else if (state === "busy") {
     fixture.controller.projectImportBusy(true);
     runButton.disabled = true;
-    fileSelect.disabled = true;
+    candidateList.setAttribute("aria-disabled", "true");
     statusNode.textContent = importText("runningStatus");
     statusNode.dataset.state = "busy";
   } else if (state === "success") {

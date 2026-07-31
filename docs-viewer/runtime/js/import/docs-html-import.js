@@ -28,7 +28,6 @@ import {
   docsImportCandidateDestinationLabel,
   docsImportCandidateDisabledMessage,
   docsImportCandidateInventory,
-  docsImportCandidateKindLabel,
   docsImportCandidateTarget
 } from "./docs-import-candidate-model.js";
 import {
@@ -139,8 +138,9 @@ async function fetchImportCandidates(state) {
 }
 
 function selectedCandidate(state) {
-  const filename = normalizeText(state.fileSelect.value);
-  return state.candidates.find((candidate) => candidate.filename === filename) || null;
+  return state.candidates.find(
+    (candidate) => candidate.filename === state.selectedFilename
+  ) || null;
 }
 
 function selectedCandidateTarget(state) {
@@ -158,16 +158,27 @@ function selectedCandidateIsCollection(state) {
   );
 }
 
-function candidateOptionLabel(state, candidate) {
+function candidateRowHtml(state, candidate, index, selectedFilename) {
   const name = candidate.displayName || candidate.filename;
-  const kind = docsImportCandidateKindLabel(candidate);
   const destination = docsImportCandidateDestinationLabel(
     candidate,
     state.importDestination,
     state.importDestinationLabel
   );
-  const availability = candidate.validationState === "blocked" ? " — blocked" : "";
-  return `${name} — ${kind} — ${destination}${availability}`;
+  const blocked = candidate.validationState === "blocked";
+  const selected = candidate.filename === selectedFilename;
+  return [
+    `<span class="docsViewerImport__candidateRow" id="docsHtmlImportCandidate-${index + 1}"`,
+    ' role="option"',
+    ` data-import-candidate data-filename="${escapeHtml(candidate.filename)}"`,
+    ` aria-selected="${selected ? "true" : "false"}">`,
+    `<span class="docsViewerImport__candidateCell docsViewerImport__candidateCell--file" title="${escapeHtml(name)}">${escapeHtml(name)}</span>`,
+    '<span class="docsViewerImport__candidateCell docsViewerImport__candidateCell--destination">',
+    `<span class="docsViewerImport__candidateValue" title="${escapeHtml(destination)}">${escapeHtml(destination)}</span>`,
+    `${blocked ? '<span class="docsViewerImport__candidateBlocked">Blocked</span>' : ""}`,
+    "</span>",
+    "</span>"
+  ].join("");
 }
 
 function resetImportView(state, statusMessage = "") {
@@ -193,21 +204,35 @@ function candidateNote(state, candidate, target) {
 function syncCandidateDetails(state) {
   const candidate = selectedCandidate(state);
   const target = selectedCandidateTarget(state);
-  setText(
-    state.candidateKindNode,
-    candidate ? docsImportCandidateKindLabel(candidate) : "Unavailable"
-  );
-  setText(
-    state.candidateDestinationNode,
-    candidate
-      ? docsImportCandidateDestinationLabel(
-        candidate,
-        state.importDestination,
-        state.importDestinationLabel
-      )
-      : "Unavailable"
-  );
   setText(state.candidateNoteNode, candidateNote(state, candidate, target));
+}
+
+function syncCandidateListSelection(state, options = {}) {
+  let activeRow = null;
+  state.candidateList.querySelectorAll("[data-import-candidate]").forEach((row) => {
+    const selected = normalizeText(row.dataset.filename) === state.selectedFilename;
+    row.setAttribute("aria-selected", selected ? "true" : "false");
+    if (selected) activeRow = row;
+  });
+  if (activeRow) {
+    state.candidateList.setAttribute("aria-activedescendant", activeRow.id);
+    if (options.scroll === true) activeRow.scrollIntoView({ block: "nearest" });
+  } else {
+    state.candidateList.removeAttribute("aria-activedescendant");
+  }
+}
+
+function selectCandidateFilename(state, filename, options = {}) {
+  const normalizedFilename = normalizeText(filename);
+  if (!state.candidates.some((candidate) => candidate.filename === normalizedFilename)) return;
+  const changed = state.selectedFilename !== normalizedFilename;
+  state.selectedFilename = normalizedFilename;
+  syncCandidateListSelection(state, { scroll: options.scroll === true });
+  if (!changed) return;
+  resetImportView(state);
+  state.collectionController.reset({ active: false });
+  syncImportInputControls(state);
+  markRouteReady(state, true);
 }
 
 function syncImportInputControls(state) {
@@ -234,7 +259,8 @@ function syncImportInputControls(state) {
     && candidate.candidateKind === DOCS_IMPORT_CANDIDATE_ORDINARY
     && docsHtmlImportSourceFormatForRecord(candidate.raw) === "html"
   );
-  state.fileSelect.disabled = state.isRunning || !state.candidates.length;
+  const listDisabled = state.isRunning || !state.candidates.length;
+  state.candidateList.setAttribute("aria-disabled", listDisabled ? "true" : "false");
   state.includePromptMetaWrap.hidden = !supportsPromptMeta;
   state.includePromptMeta.disabled = state.isRunning || !actionable || !supportsPromptMeta;
   if (!supportsPromptMeta) state.includePromptMeta.checked = false;
@@ -248,18 +274,16 @@ function syncImportInputControls(state) {
 }
 
 function renderCandidateList(state, candidates) {
-  const previousFilename = normalizeText(state.fileSelect.value) || state.selectedFilename;
+  const previousFilename = state.selectedFilename;
   state.candidates = Array.from(candidates || []);
-  state.fileSelect.multiple = false;
-  state.fileSelect.innerHTML = state.candidates.map((candidate) => (
-    `<option value="${escapeHtml(candidate.filename)}">`
-    + `${escapeHtml(candidateOptionLabel(state, candidate))}</option>`
-  )).join("");
   const retained = state.candidates.some((candidate) => candidate.filename === previousFilename)
     ? previousFilename
     : state.candidates[0] && state.candidates[0].filename;
-  state.fileSelect.value = retained || "";
-  state.selectedFilename = normalizeText(state.fileSelect.value);
+  state.selectedFilename = normalizeText(retained);
+  state.candidateList.innerHTML = state.candidates.map((candidate, index) => (
+    candidateRowHtml(state, candidate, index, state.selectedFilename)
+  )).join("");
+  syncCandidateListSelection(state);
   state.collectionController.reset({ active: false });
   resetImportView(state);
   syncImportInputControls(state);
@@ -287,10 +311,11 @@ function refreshStagedFiles(state) {
   }
   if (state.refreshPromise) return state.refreshPromise;
   state.inventoryCurrent = false;
-  state.fileSelect.disabled = true;
+  state.candidateList.setAttribute("aria-disabled", "true");
   state.runButton.disabled = true;
   state.reviewButton.disabled = true;
-  setStatus(state.statusNode, "busy", "Loading staged sources...");
+  setStatus(state.statusNode, "", "");
+  setText(state.candidateNoteNode, "Loading staged sources...");
   state.refreshPromise = fetchImportCandidates(state)
     .then((candidates) => {
       state.inventoryCurrent = true;
@@ -424,12 +449,29 @@ async function runImport(state) {
 }
 
 function bindImportEvents(state) {
-  state.fileSelect.addEventListener("change", () => {
-    state.selectedFilename = normalizeText(state.fileSelect.value);
-    resetImportView(state);
-    state.collectionController.reset({ active: false });
-    syncImportInputControls(state);
-    markRouteReady(state, true);
+  state.candidateList.addEventListener("click", (event) => {
+    if (state.candidateList.getAttribute("aria-disabled") === "true") return;
+    const row = event.target && typeof event.target.closest === "function"
+      ? event.target.closest("[data-import-candidate]")
+      : null;
+    if (!row || !state.candidateList.contains(row)) return;
+    selectCandidateFilename(state, row.dataset.filename);
+    state.candidateList.focus();
+  });
+  state.candidateList.addEventListener("keydown", (event) => {
+    if (state.candidateList.getAttribute("aria-disabled") === "true") return;
+    const currentIndex = state.candidates.findIndex(
+      (candidate) => candidate.filename === state.selectedFilename
+    );
+    let nextIndex = currentIndex < 0 ? 0 : currentIndex;
+    if (event.key === "ArrowDown") nextIndex = Math.min(state.candidates.length - 1, nextIndex + 1);
+    else if (event.key === "ArrowUp") nextIndex = Math.max(0, nextIndex - 1);
+    else if (event.key === "Home") nextIndex = 0;
+    else if (event.key === "End") nextIndex = state.candidates.length - 1;
+    else return;
+    event.preventDefault();
+    const candidate = state.candidates[nextIndex];
+    if (candidate) selectCandidateFilename(state, candidate.filename, { scroll: true });
   });
   state.runButton.addEventListener("click", () => {
     runImport(state).catch((error) => {
@@ -481,10 +523,7 @@ export async function initDocsHtmlImport(options = {}) {
   const state = {
     bootStatus,
     root,
-    fileLabelNode: document.getElementById("docsHtmlImportFileLabel"),
-    fileSelect: document.getElementById("docsHtmlImportFileSelect"),
-    candidateKindNode: document.getElementById("docsHtmlImportCandidateKind"),
-    candidateDestinationNode: document.getElementById("docsHtmlImportCandidateDestination"),
+    candidateList: document.getElementById("docsHtmlImportCandidateList"),
     candidateNoteNode: document.getElementById("docsHtmlImportCandidateNote"),
     includePromptMeta: document.getElementById("docsHtmlImportIncludePromptMeta"),
     includePromptMetaWrap: document.getElementById("docsHtmlImportIncludePromptMetaWrap"),
@@ -544,10 +583,7 @@ export async function initDocsHtmlImport(options = {}) {
   });
 
   const requiredNodes = [
-    state.fileLabelNode,
-    state.fileSelect,
-    state.candidateKindNode,
-    state.candidateDestinationNode,
+    state.candidateList,
     state.candidateNoteNode,
     state.includePromptMeta,
     state.includePromptMetaWrap,
@@ -589,7 +625,6 @@ export async function initDocsHtmlImport(options = {}) {
     setImportDestination(state, options.initialDestination || null, {
       label: options.initialDestinationLabel
     });
-    setText(state.fileLabelNode, "staged sources");
     setText(state.includePromptMetaLabelNode, importText("includePromptMetaLabel"));
     setText(state.confirmButton, importText("confirmOverwriteButton"));
     setText(state.cancelButton, importText("cancelOverwriteButton"));

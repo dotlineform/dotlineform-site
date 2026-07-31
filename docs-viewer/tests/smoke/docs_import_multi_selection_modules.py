@@ -139,9 +139,13 @@ def wait_until_idle(page: Page) -> None:
 def selected_snapshot(page: Page) -> dict[str, object]:
     return page.evaluate(
         """() => ({
-          filename: document.getElementById('docsHtmlImportFileSelect').value,
-          kind: document.getElementById('docsHtmlImportCandidateKind').textContent,
-          destination: document.getElementById('docsHtmlImportCandidateDestination').textContent,
+          filename: document.querySelector(
+            '#docsHtmlImportCandidateList [data-import-candidate][aria-selected="true"]'
+          )?.dataset.filename || '',
+          destination: document.querySelector(
+            '#docsHtmlImportCandidateList [data-import-candidate][aria-selected="true"] '
+            + '.docsViewerImport__candidateValue'
+          )?.textContent || '',
           note: document.getElementById('docsHtmlImportCandidateNote').textContent,
           importDisabled: document.getElementById('docsHtmlImportRun').disabled,
           reviewDisabled: document.getElementById('docsHtmlImportReview').disabled,
@@ -151,7 +155,21 @@ def selected_snapshot(page: Page) -> dict[str, object]:
 
 
 def select_candidate(page: Page, filename: str) -> None:
-    page.locator("#docsHtmlImportFileSelect").select_option(filename)
+    page.wait_for_function(
+        """() => document.getElementById(
+          'docsHtmlImportCandidateList'
+        )?.getAttribute('aria-disabled') !== 'true'""",
+    )
+    page.locator(
+        "#docsHtmlImportCandidateList [data-import-candidate]"
+    ).evaluate_all(
+        """(rows, selectedFilename) => {
+            const row = rows.find(item => item.dataset.filename === selectedFilename);
+            if (!row) throw new Error(`Missing Import candidate: ${selectedFilename}`);
+            row.click();
+        }""",
+        filename,
+    )
 
 
 def assert_consolidated_modal(page: Page, base_url: str, site_root: Path) -> None:
@@ -421,15 +439,21 @@ def assert_consolidated_modal(page: Page, base_url: str, site_root: Path) -> Non
         base_url,
     )
 
-    option_values = page.locator("#docsHtmlImportFileSelect option").evaluate_all(
-        "(options) => options.map((option) => option.value)",
+    option_values = page.locator(
+        "#docsHtmlImportCandidateList [data-import-candidate]"
+    ).evaluate_all(
+        "(rows) => rows.map((row) => row.dataset.filename)",
     )
     assert option_values == [str(candidate["filename"]) for candidate in candidates]
+    assert page.locator(
+        ".docsViewerImport__candidateHeader > span"
+    ).all_text_contents() == ["File", "Destination"]
+    assert page.locator("#docsHtmlImportFileLabel").count() == 0
+    assert page.locator("#docsHtmlImportCandidateDetails").count() == 0
     assert page.locator("#docsHtmlImportTypeSelect").count() == 0
     assert page.locator("#docsHtmlImportScopeSelect").count() == 0
     assert selected_snapshot(page) == {
         "filename": "alpha.md",
-        "kind": "Ordinary document",
         "destination": "Studio",
         "note": "",
         "importDisabled": False,
@@ -452,7 +476,9 @@ def assert_consolidated_modal(page: Page, base_url: str, site_root: Path) -> Non
           { label: 'Studio / Tags' }
         )""",
     )
-    assert page.locator("#docsHtmlImportFileSelect option").count() == len(candidates)
+    assert page.locator(
+        "#docsHtmlImportCandidateList [data-import-candidate]"
+    ).count() == len(candidates)
     select_candidate(page, "beta.html")
     child_ordinary = selected_snapshot(page)
     assert child_ordinary["destination"] == "Studio / Tags"
@@ -476,7 +502,6 @@ def assert_consolidated_modal(page: Page, base_url: str, site_root: Path) -> Non
     cross_context = selected_snapshot(page)
     assert cross_context == {
         "filename": "returned-tags.jsonl",
-        "kind": "Returned package",
         "destination": "Studio / Tags",
         "note": "",
         "importDisabled": False,
@@ -504,7 +529,9 @@ def assert_consolidated_modal(page: Page, base_url: str, site_root: Path) -> Non
           restoreFocus: document.getElementById('importTrigger')
         })""",
     )
-    assert page.locator("#docsHtmlImportFileSelect").input_value() == (
+    assert page.locator(
+        "#docsHtmlImportCandidateList [data-import-candidate][aria-selected='true']"
+    ).get_attribute("data-filename") == (
         "returned-tags.jsonl"
     )
 
@@ -520,7 +547,9 @@ def assert_consolidated_modal(page: Page, base_url: str, site_root: Path) -> Non
     failed_popup = failed_popup_info.value
     failed_popup.wait_for_event("close")
     wait_until_idle(page)
-    assert page.locator("#docsHtmlImportFileSelect").input_value() == (
+    assert page.locator(
+        "#docsHtmlImportCandidateList [data-import-candidate][aria-selected='true']"
+    ).get_attribute("data-filename") == (
         "review-only-library.jsonl"
     )
     assert page.locator("#docsHtmlImportReview").is_enabled()

@@ -43,12 +43,6 @@
   height: var(--docs-viewer-import-control-height);
 }
 
-.docsViewerImport__input:is(select).docsViewerImport__input--list{
-  min-height: 14rem;
-  height: auto;
-  padding-block: 0.35rem;
-}
-
 .docsViewerImport__input:disabled{
   color: var(--docs-viewer-disabled);
   background: var(--docs-viewer-panel);
@@ -387,6 +381,15 @@
   border: 0;
   background: transparent;
   padding: 0;
+  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
+}
+
+.docsViewer__importBody h3{
+  font-size: var(--font-heading-3, 1.125rem);
+}
+
+.docsViewer__importBody h4{
+  font-size: var(--font-heading-4, 1rem);
 }
 
 .docsViewer__importBody .docsViewerImport{
@@ -436,11 +439,8 @@
 }
 
 .docsViewer__importBody .docsViewerImport__field--file{
+  grid-column: 1 / -1;
   align-items: start;
-}
-
-.docsViewer__importBody .docsViewerImport__field--file .docsViewerImport__fieldLabel{
-  padding-top: 0.48rem;
 }
 
 .docsViewer__importBody .docsViewerImport__fileControl{
@@ -448,35 +448,113 @@
   gap: 0.45rem;
 }
 
-.docsViewer__importBody .docsViewerImport__candidateDetails{
-  grid-column: 2;
-  display: grid;
-  gap: 0.45rem;
-  margin: 0;
-  padding: 0.75rem 0.85rem;
-  border: 1px solid var(--docs-viewer-border);
-  border-radius: 0.8rem;
-  background: var(--docs-viewer-panel);
-}
-
-.docsViewer__importBody .docsViewerImport__candidateDetails > div{
-  display: grid;
-  grid-template-columns: minmax(7.5rem, auto) minmax(0, 1fr);
-  gap: 0.75rem;
-}
-
-.docsViewer__importBody .docsViewerImport__candidateDetails dt{
-  color: var(--docs-viewer-muted);
-}
-
-.docsViewer__importBody .docsViewerImport__candidateDetails dd{
+.docsViewer__importBody .docsViewerImport__candidateTable{
+  --docs-viewer-import-candidate-columns:
+    minmax(0, 3fr)
+    minmax(12rem, 1fr);
+  display: block;
   min-width: 0;
-  margin: 0;
-  overflow-wrap: anywhere;
+  max-height: min(24rem, 46vh);
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  border: 1px solid var(--docs-viewer-border-strong);
+  border-radius: var(--docs-viewer-import-radius-sm);
+  background: var(--docs-viewer-panel);
+  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
+  line-height: var(--docs-viewer-line-snug, var(--line-snug, 1.25));
+}
+
+.docsViewer__importBody .docsViewerImport__candidateHeader,
+.docsViewer__importBody .docsViewerImport__candidateRow{
+  display: grid;
+  grid-template-columns: var(--docs-viewer-import-candidate-columns);
+  min-width: 32rem;
+}
+
+.docsViewer__importBody .docsViewerImport__candidateHeader{
+  position: sticky;
+  z-index: 1;
+  top: 0;
+  border-bottom: 1px solid var(--docs-viewer-border);
+  background: var(--docs-viewer-panel-2);
+  color: var(--docs-viewer-muted);
+  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
+  font-weight: 600;
+}
+
+.docsViewer__importBody .docsViewerImport__candidateHeader > span,
+.docsViewer__importBody .docsViewerImport__candidateCell{
+  min-width: 0;
+  padding: 0.45rem 0.55rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.docsViewer__importBody .docsViewerImport__candidateHeader > span + span,
+.docsViewer__importBody .docsViewerImport__candidateCell + .docsViewerImport__candidateCell{
+  border-inline-start: 1px solid var(--docs-viewer-border);
+}
+
+.docsViewer__importBody .docsViewerImport__candidateList{
+  display: block;
+  min-height: 14rem;
+}
+
+.docsViewer__importBody .docsViewerImport__candidateTable:focus-within{
+  outline: 2px solid var(--docs-viewer-focus-ring);
+  outline-offset: 2px;
+}
+
+.docsViewer__importBody .docsViewerImport__candidateList:focus{
+  outline: 0;
+}
+
+.docsViewer__importBody .docsViewerImport__candidateList[aria-disabled="true"]{
+  color: var(--docs-viewer-disabled);
+  cursor: not-allowed;
+}
+
+.docsViewer__importBody .docsViewerImport__candidateRow{
+  border-bottom: 1px solid var(--docs-viewer-border);
+  color: var(--docs-viewer-text);
+  cursor: pointer;
+}
+
+.docsViewer__importBody .docsViewerImport__candidateRow:last-child{
+  border-bottom: 0;
+}
+
+.docsViewer__importBody .docsViewerImport__candidateRow:hover{
+  background: var(--docs-viewer-panel-2);
+}
+
+.docsViewer__importBody .docsViewerImport__candidateRow[aria-selected="true"]{
+  background: var(--docs-viewer-selection-bg);
+  color: var(--docs-viewer-selection-text);
+}
+
+.docsViewer__importBody .docsViewerImport__candidateCell--destination{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.45rem;
+}
+
+.docsViewer__importBody .docsViewerImport__candidateValue{
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.docsViewer__importBody .docsViewerImport__candidateBlocked{
+  flex: 0 0 auto;
+  font-weight: 600;
 }
 
 .docsViewer__importBody .docsViewerImport__candidateNote{
-  grid-column: 2;
+  grid-column: 1 / -1;
   min-height: 1.25rem;
   margin: 0;
 }
@@ -541,17 +619,18 @@
     grid-column: auto;
   }
 
-  .docsViewer__importBody .docsViewerImport__candidateDetails,
   .docsViewer__importBody .docsViewerImport__candidateNote{
     grid-column: auto;
   }
 
-  .docsViewer__importBody .docsViewerImport__candidateDetails > div{
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0.15rem;
+  .docsViewer__importBody .docsViewerImport__candidateTable{
+    --docs-viewer-import-candidate-columns:
+      minmax(16rem, 2fr)
+      minmax(10rem, 1fr);
   }
 
-  .docsViewer__importBody .docsViewerImport__field--file .docsViewerImport__fieldLabel{
-    padding-top: 0;
+  .docsViewer__importBody .docsViewerImport__candidateHeader,
+  .docsViewer__importBody .docsViewerImport__candidateRow{
+    min-width: 26rem;
   }
 }
