@@ -48,6 +48,12 @@ function renderIndexSelectionControl(context) {
 
 var INDEX_ACTION_ITEMS = [
   {
+    id: "docsViewerIndexExportButton",
+    actionId: "export-docs",
+    emoji: "⬇️",
+    label: "Export…"
+  },
+  {
     id: "docsViewerIndexPreparePackageButton",
     actionId: "prepare-document-package",
     emoji: "📦",

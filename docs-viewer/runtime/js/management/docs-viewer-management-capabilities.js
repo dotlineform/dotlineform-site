@@ -113,7 +113,7 @@ export function scopePublishSupported(capabilities, scope) {
   );
 }
 
-export function scopeStaticHtmlExportSupported(capabilities, scope) {
+export function scopeStaticHtmlExportCapability(capabilities, scope) {
   var scopeCaps = scopeManagementCapabilities(capabilities, scope);
   var exportCapabilities = capabilities && capabilities.static_html_export && typeof capabilities.static_html_export === "object"
     ? capabilities.static_html_export
@@ -121,14 +121,19 @@ export function scopeStaticHtmlExportSupported(capabilities, scope) {
   var scopeExport = scopeCaps && scopeCaps.static_html_export && typeof scopeCaps.static_html_export === "object"
     ? scopeCaps.static_html_export
     : null;
-  return Boolean(
-    exportCapabilities &&
-    exportCapabilities.apply &&
-    scopeCaps &&
-    scopeCaps.available &&
-    scopeExport &&
-    scopeExport.apply
-  );
+  if (!exportCapabilities || exportCapabilities.preview !== true || exportCapabilities.apply !== true) {
+    return {
+      available: false,
+      reason: String(exportCapabilities && exportCapabilities.error || "Snapshot Export is unavailable.").trim()
+    };
+  }
+  if (!scopeExport || scopeExport.preview !== true || scopeExport.apply !== true) {
+    return {
+      available: false,
+      reason: String(scopeExport && scopeExport.error || "Snapshot Export is unavailable for this scope.").trim()
+    };
+  }
+  return { available: true, reason: "" };
 }
 
 export function documentTransferSupported(capabilities) {

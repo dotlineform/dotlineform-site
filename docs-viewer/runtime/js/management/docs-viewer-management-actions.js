@@ -1,6 +1,5 @@
 import {
   applyManagedDocDelete,
-  applyManagedDocsStaticHtmlExport,
   applyManagedDocsPublish,
   confirmManagedDocsPublish,
   createManagedDoc,
@@ -43,11 +42,6 @@ var ACTION_TEXT = {
   publishApplying: "Copying docs to site assets...",
   publishApplied: "Docs copied to site assets.",
   publishFailed: "Publish failed.",
-  exportConfirmTitle: "Export docs",
-  exportConfirmButton: "Export",
-  exportApplying: "Exporting docs as static HTML...",
-  exportApplied: "Docs exported as static HTML.",
-  exportFailed: "Static HTML export failed.",
   copyLinkFailed: "Copy link failed."
 };
 
@@ -642,58 +636,6 @@ export function createDocsViewerManagementActionController(options) {
       });
   }
 
-  function currentScopeExportDetail() {
-    var scopeId = typeof callbacks.viewerScope === "function" ? callbacks.viewerScope() : "";
-    var capabilities = management.managementCapabilities || {};
-    var scopeCaps = capabilities.scopes && scopeId ? capabilities.scopes[scopeId] : null;
-    return scopeCaps && scopeCaps.static_html_export ? scopeCaps.static_html_export : {};
-  }
-
-  function exportConfirmBody() {
-    var scopeId = typeof callbacks.viewerScope === "function" ? callbacks.viewerScope() : "";
-    var detail = currentScopeExportDetail();
-    var docCount = Number(detail.document_count || 0);
-    var defaultDocId = String(detail.default_doc_id || "").trim() || "(none)";
-    var destination = String(detail.destination || "").trim() || "/docs-export/" + scopeId + "/";
-    return [
-      "Source scope: " + scopeId,
-      "Documents: " + docCount,
-      "Default document: " + defaultDocId,
-      "Destination folder: " + destination
-    ].join("\n");
-  }
-
-  function handleExportDocs() {
-    openDocsViewerConfirmModal({
-      root: root,
-      title: ACTION_TEXT.exportConfirmTitle,
-      body: exportConfirmBody(),
-      primaryLabel: ACTION_TEXT.exportConfirmButton,
-      cancelLabel: ACTION_TEXT.cancelButton
-    })
-      .then(function (confirmed) {
-        if (!confirmed) {
-          setManagementMessage("", false);
-          return null;
-        }
-        setManagementBusy(true);
-        setManagementMessage(ACTION_TEXT.exportApplying, false);
-        return applyManagedDocsStaticHtmlExport(managementClientOptions());
-      })
-      .then(function (payload) {
-        if (!payload) return;
-        setManagementMessage(payload.summary_text || ACTION_TEXT.exportApplied, false);
-        if (callbacks.refreshManagementCapabilities) callbacks.refreshManagementCapabilities();
-      })
-      .catch(function (error) {
-        setManagementMessage(error.message || ACTION_TEXT.exportFailed, true);
-      })
-      .finally(function () {
-        setManagementBusy(false);
-        renderManagementUi();
-      });
-  }
-
   function handleMarkdownSource(target) {
     if (typeof context.requestDocumentMode !== "function") return false;
     var sourceTarget = normalizeManagedDocumentTarget(target);
@@ -918,7 +860,6 @@ export function createDocsViewerManagementActionController(options) {
     handleReturnToDoc: handleReturnToDoc,
     handleMoveDoc: handleMoveDoc,
     handleOpenSource: handleOpenSource,
-    handleExportDocs: handleExportDocs,
     handlePublishDocs: handlePublishDocs,
     handleRebuildDocs: handleRebuildDocs,
     handleSettingsSubmit: handleSettingsSubmit

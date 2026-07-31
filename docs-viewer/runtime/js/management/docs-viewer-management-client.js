@@ -75,10 +75,29 @@ export function applyManagedDocsPublish(options) {
   }, options), options);
 }
 
-export function applyManagedDocsStaticHtmlExport(options) {
-  return fetchManagementJson("/docs/export/static-html/apply", "POST", scopedPayload({
-    action: "export"
+export function previewManagedDocsStaticHtmlExport(docIds, options) {
+  return fetchManagementJson("/docs/export/static-html/preview", "POST", scopedPayload({
+    doc_ids: Array.isArray(docIds) ? docIds.slice() : []
   }, options), options);
+}
+
+export function applyManagedDocsStaticHtmlExport(preview, options) {
+  var plan = preview && typeof preview === "object" ? preview : {};
+  var settings = options || {};
+  var scope = String(plan.scope || "").trim();
+  if (!scope || scope !== String(settings.scope || "").trim()) {
+    return Promise.reject(new Error("Snapshot preview scope no longer matches the active scope."));
+  }
+  var replaceExisting = plan.target_state === "recognized" || plan.target_state === "unrecognized";
+  return fetchManagementJson("/docs/export/static-html/apply", "POST", {
+    scope: scope,
+    doc_ids: Array.isArray(plan.doc_ids) ? plan.doc_ids.slice() : [],
+    export_date: String(plan.export_date || "").trim(),
+    plan_revision: String(plan.plan_revision || "").trim(),
+    target_revision: String(plan.target_revision || "").trim(),
+    confirm: true,
+    replace_existing: replaceExisting
+  }, options);
 }
 
 function targetQuery(target) {

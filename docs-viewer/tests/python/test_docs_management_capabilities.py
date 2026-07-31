@@ -31,7 +31,7 @@ def test_capabilities_advertise_generated_data_reads() -> None:
     assert payload["capabilities"]["scopes"]["studio"]["generated_search_reads"] is True
 
 
-def test_legacy_app_level_static_export_capability_is_fail_closed() -> None:
+def test_static_snapshot_export_capability_projects_preview_and_apply() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         write_docs_scope_config(repo_root)
@@ -40,16 +40,16 @@ def test_legacy_app_level_static_export_capability_is_fail_closed() -> None:
 
     capabilities = payload["capabilities"]
     assert capabilities["static_html_export"] == {
-        "apply": False,
-        "delete": False,
+        "preview": True,
+        "apply": True,
+        "error": "",
     }
     assert capabilities["scopes"]["studio"]["static_html_export"] == {
-        "apply": False,
-        "delete": False,
-        "destination": "",
-        "document_count": 0,
+        "preview": True,
+        "apply": True,
+        "document_count": 2,
         "default_doc_id": "child",
-        "error": "Dated snapshot Export is awaiting Index Actions integration.",
+        "error": "",
     }
 
 
@@ -149,6 +149,10 @@ def test_missing_external_workspace_disables_only_import_and_review_capabilities
     assert capabilities["docs_import"]["available"] is False
     assert capabilities["docs_review"]["available"] is False
     assert capabilities["scopes"]["studio"]["available"] is True
+    assert capabilities["static_html_export"]["preview"] is False
+    assert capabilities["static_html_export"]["apply"] is False
+    assert capabilities["scopes"]["studio"]["static_html_export"]["preview"] is False
+    assert str(tmp_path) not in capabilities["static_html_export"]["error"]
 
 def test_source_config_report_reads_known_config_files() -> None:
     with make_repo() as temp_path:

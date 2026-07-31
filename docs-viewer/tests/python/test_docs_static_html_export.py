@@ -243,6 +243,30 @@ def test_snapshot_preview_reads_repo_public_and_external_local_generated_payload
             assert plan.folder_name == folder_name
 
 
+def test_snapshot_capability_accepts_readable_repo_public_and_external_generated_payloads() -> None:
+    with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
+        repo_root = Path(repo_path)
+        prepare_repo(repo_root, Path(projects_path))
+        configs = exporter.load_docs_scope_configs(repo_root)
+        workspace = exporter.static_html_export_capability()
+
+        assert workspace == {"preview": True, "apply": True, "error": ""}
+        for scope, document_count in (("studio", 3), ("library", 1), ("external", 1)):
+            capability = exporter.scope_static_html_export_capability(
+                repo_root,
+                scope,
+                configs[scope],
+                workspace_available=True,
+            )
+            assert capability == {
+                "preview": True,
+                "apply": True,
+                "document_count": document_count,
+                "default_doc_id": configs[scope].default_doc_id,
+                "error": "",
+            }
+
+
 def test_snapshot_folder_labels_are_portable_and_bounded() -> None:
     assert exporter.normalize_snapshot_folder_label("CON") == "CON snapshot"
     assert exporter.normalize_snapshot_folder_label("A/B\\C:*?") == "A-B-C---"

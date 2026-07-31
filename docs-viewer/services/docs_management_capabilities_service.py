@@ -66,6 +66,7 @@ def capability_scope_root_label(repo_root: Path, scope: str, config: Any) -> str
 def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
     data_sharing_workspace = workspace_status(repo_root)
     docs_import_workspace = workspace_status(repo_root, required_paths=("import_staging",))
+    static_html_export = docs_static_html_export.static_html_export_capability()
     scopes: Dict[str, Any] = {}
     try:
         manifest = docs_scope_manifest.load_manifest(repo_root)
@@ -129,7 +130,12 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 "published_docs_root": publication_documents_path(config).as_posix(),
                 "published_search_index": publication_search_path(config).as_posix(),
             },
-            "static_html_export": docs_static_html_export.scope_static_html_export_capability(repo_root, scope, config),
+            "static_html_export": docs_static_html_export.scope_static_html_export_capability(
+                repo_root,
+                scope,
+                config,
+                workspace_available=static_html_export["preview"] and static_html_export["apply"],
+            ),
         }
     return {
         "ok": True,
@@ -194,10 +200,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 "confirm": True,
                 "apply": True,
             },
-            "static_html_export": {
-                "apply": False,
-                "delete": False,
-            },
+            "static_html_export": static_html_export,
             "scopes": scopes,
         },
     }

@@ -2,7 +2,8 @@ import {
   documentPackagePrepareCapability,
   documentTransferSourceSupported,
   documentTransferSupported,
-  documentTransferTargetScopes
+  documentTransferTargetScopes,
+  scopeStaticHtmlExportCapability
 } from "./docs-viewer-management-capabilities.js";
 import {
   DOCS_VIEWER_ACTION_IDS
@@ -12,6 +13,9 @@ import {
   createDocsViewerIndexSelectionOwner,
   projectDocsViewerIndexSelectionRows
 } from "./docs-viewer-index-selection.js";
+import {
+  openStaticHtmlSnapshotExportWorkflow
+} from "./docs-viewer-static-html-export-workflow.js";
 
 export function docsViewerPreparePackageActionControlState(options = {}) {
   var resolution = options.resolution || null;
@@ -67,6 +71,28 @@ export function docsViewerDocumentTransferActionControlState(options = {}) {
   };
 }
 
+export function docsViewerStaticHtmlExportActionControlState(options = {}) {
+  var resolution = options.resolution || null;
+  var disabledReason = "";
+  if (!options.managementChecked) {
+    disabledReason = "Checking Export availability.";
+  } else if (options.managementBusy || options.workflowActive) {
+    disabledReason = "Docs management is busy.";
+  } else {
+    var capability = scopeStaticHtmlExportCapability(options.capabilities, options.scope);
+    if (!capability.available) disabledReason = capability.reason;
+    else if (!resolution || !resolution.enabled) {
+      disabledReason = resolution && resolution.disabledReason
+        ? resolution.disabledReason
+        : "Select one or more documents.";
+    }
+  }
+  return {
+    disabled: Boolean(disabledReason),
+    disabledReason: disabledReason
+  };
+}
+
 export function createDocsViewerManagementIndexController(options = {}) {
   var root = options.root || null;
   var nav = options.nav || null;
@@ -77,12 +103,14 @@ export function createDocsViewerManagementIndexController(options = {}) {
   var callbacks = options.callbacks || {};
   var documentRef = options.document || document;
   var windowRef = options.window || window;
+  var openSnapshotExportWorkflow = options.openSnapshotExportWorkflow || openStaticHtmlSnapshotExportWorkflow;
   var indexSelection = options.indexSelection || createDocsViewerIndexSelectionOwner({
     initialScopeId: viewerScope()
   });
   var documentTransferWorkflowActive = false;
   var documentTransferWorkflowRequest = null;
   var preparePackageWorkflowRequest = null;
+  var snapshotExportWorkflowActive = false;
 
   function viewerScope() {
     return typeof callbacks.viewerScope === "function" ? callbacks.viewerScope() : "";
@@ -155,11 +183,15 @@ export function createDocsViewerManagementIndexController(options = {}) {
   }
 
   function indexSelectionAvailable() {
+    var snapshotCapability = scopeStaticHtmlExportCapability(
+      management.managementCapabilities,
+      viewerScope()
+    );
     return Boolean(
       routeSession.managementContext
       && activeIndexViewId() === "index-tree"
       && management.managementChecked
-      && management.managementAvailable
+      && (management.managementAvailable || snapshotCapability.available)
     );
   }
 
@@ -227,6 +259,17 @@ export function createDocsViewerManagementIndexController(options = {}) {
     });
   }
 
+  function snapshotExportActionControlState() {
+    return docsViewerStaticHtmlExportActionControlState({
+      capabilities: management.managementCapabilities,
+      managementBusy: management.managementBusy,
+      managementChecked: management.managementChecked,
+      resolution: resolveAction(DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS),
+      scope: viewerScope(),
+      workflowActive: snapshotExportWorkflowActive
+    });
+  }
+
   function projectActions() {
     if (typeof callbacks.projectIndexViewControlState !== "function") return null;
     var visible = Boolean(
@@ -237,6 +280,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
       hidden: !visible,
       disabled: false,
       items: {
+        [DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS]: snapshotExportActionControlState(),
         [DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE]: preparePackageActionControlState(),
         [DOCS_VIEWER_ACTION_IDS.COPY]: documentTransferActionControlState("copy"),
         [DOCS_VIEWER_ACTION_IDS.MOVE]: documentTransferActionControlState("move"),
@@ -446,6 +490,50 @@ export function createDocsViewerManagementIndexController(options = {}) {
       });
   }
 
+  function handleSnapshotExport() {
+    var resolution = resolveAction(DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS);
+    var controlState = snapshotExportActionControlState();
+    if (
+      !resolution
+      || !resolution.enabled
+      || controlState.disabled
+      || snapshotExportWorkflowActive
+    ) {
+      return Promise.resolve(null);
+    }
+    var checkedDocIds = resolution.targetDocIds.slice();
+    snapshotExportWorkflowActive = true;
+    renderManagementUi();
+    return openSnapshotExportWorkflow({
+      root: root,
+      restoreFocus: indexActionsButton(),
+      scope: viewerScope(),
+      checkedDocIds: checkedDocIds,
+      clientOptions: managementClientOptions(),
+      callbacks: {
+        setBusy: setManagementBusy,
+        setMessage: setManagementMessage,
+        render: renderManagementUi,
+        onApplied: function () {
+          if (typeof callbacks.refreshManagementCapabilities === "function") {
+            return callbacks.refreshManagementCapabilities();
+          }
+          return null;
+        }
+      }
+    }).catch(function (error) {
+      setManagementBusy(false);
+      setManagementMessage(
+        error && error.message ? error.message : "Snapshot Export failed.",
+        true
+      );
+      return null;
+    }).finally(function () {
+      snapshotExportWorkflowActive = false;
+      renderManagementUi();
+    });
+  }
+
   function handleControl(detail) {
     var controlId = String(detail && detail.controlId || "").trim();
     var actionId = String(detail && detail.actionId || "").trim();
@@ -500,6 +588,8 @@ export function createDocsViewerManagementIndexController(options = {}) {
     hideIndexActionsMenu({ focusButton: true });
     if (actionId === DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE) {
       handlePreparePackage();
+    } else if (actionId === DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS) {
+      handleSnapshotExport();
     } else if (actionId === DOCS_VIEWER_ACTION_IDS.COPY) {
       handleDocumentTransfer("copy");
     } else if (actionId === DOCS_VIEWER_ACTION_IDS.MOVE) {

@@ -1482,7 +1482,7 @@ def assert_action_target_definitions(page: Page) -> None:
                     all: module.resolveDocsViewerAction('prepare-document-package', multiContext),
                     deleteSelection: module.resolveDocsViewerAction('delete', multiContext),
                     primary: module.resolveDocsViewerAction('info', multiContext),
-                    scope: module.resolveDocsViewerAction('export-docs', multiContext),
+                    exportSelection: module.resolveDocsViewerAction('export-docs', multiContext),
                     emptyDelete: module.resolveDocsViewerAction('delete', emptySelectionContext),
                     emptyPrepare: module.resolveDocsViewerAction('prepare-document-package', emptySelectionContext),
                     multiPrepare: module.resolveDocsViewerAction('prepare-document-package', multiSelectionContext),
@@ -1508,7 +1508,7 @@ def assert_action_target_definitions(page: Page) -> None:
             "source-add-file",
             "source-add-image",
         ],
-        "all": ["copy", "delete", "move", "prepare-document-package"],
+        "all": ["copy", "delete", "export-docs", "move", "prepare-document-package"],
         "document": [
             "copy-link",
             "new-child",
@@ -1521,7 +1521,6 @@ def assert_action_target_definitions(page: Page) -> None:
         "scope": [
             "delete-scope",
             "delete-sub-scope",
-            "export-docs",
             "import",
             "new",
             "new-scope",
@@ -1590,13 +1589,13 @@ def assert_action_target_definitions(page: Page) -> None:
                 "target": "active-document",
                 "targetDocIds": ["active"],
             },
-            "scope": {
+            "exportSelection": {
                 "actionId": "export-docs",
                 "disabledReason": "",
                 "enabled": True,
-                "selectionPolicy": "",
-                "target": "scope",
-                "targetDocIds": [],
+                "selectionPolicy": "all",
+                "target": "selection",
+                "targetDocIds": ["first", "second"],
             },
             "emptyDelete": {
                 "actionId": "delete",

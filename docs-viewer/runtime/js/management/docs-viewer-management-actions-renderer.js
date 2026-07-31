@@ -59,13 +59,6 @@ var MANAGEMENT_ACTION_MENU_ITEMS = [
     label: "Publish"
   },
   {
-    id: "docsViewerManageExportButton",
-    actionId: ACTION_IDS.EXPORT_DOCS,
-    emoji: "⬇️",
-    label: "Export",
-    hidden: true
-  },
-  {
     id: "docsViewerManageSettingsButton",
     actionId: ACTION_IDS.SETTINGS,
     emoji: "⚙️",

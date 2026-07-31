@@ -517,7 +517,7 @@ def assert_action_target_isolation(page: Page) -> None:
             "primaryDocId": "context",
             "selectedDocIds": ["checked-a", "checked-b"],
         },
-        "selectionActionIds": ["copy", "delete", "move", "prepare-document-package"],
+        "selectionActionIds": ["copy", "delete", "export-docs", "move", "prepare-document-package"],
         "prepareControlStates": {
             "empty": {
                 "disabled": True,
@@ -669,7 +669,7 @@ def assert_index_actions_menu_projection(page: Page) -> None:
             });
             const render = controlRenderers.createDocsViewerManagementControlRenderers()['manage-index-actions'];
             const itemStates = Object.fromEntries(
-                ['prepare-document-package', 'copy', 'move', 'delete'].map(actionId => [
+                ['export-docs', 'prepare-document-package', 'copy', 'move', 'delete'].map(actionId => [
                     actionId,
                     { disabled: true, disabledReason: 'Select one or more documents.' }
                 ])
@@ -699,7 +699,7 @@ def assert_index_actions_menu_projection(page: Page) -> None:
                     state: {
                         disabled: false,
                         items: Object.fromEntries(
-                            ['prepare-document-package', 'copy', 'move', 'delete'].map(
+                            ['export-docs', 'prepare-document-package', 'copy', 'move', 'delete'].map(
                                 actionId => [actionId, { disabled: false, disabledReason: '' }]
                             )
                         )
@@ -712,6 +712,7 @@ def assert_index_actions_menu_projection(page: Page) -> None:
                 .find(control => control.id === 'index-actions');
             return {
                 appMenu: {
+                    hasExport: Boolean(app.root.querySelector('#docsViewerManageExportButton')),
                     hasPrepare: Boolean(app.root.querySelector('#docsViewerManagePreparePackageButton')),
                     hasDelete: Boolean(app.root.querySelector('#docsViewerManageDeleteButton')),
                     hasRetiredReviewPackage: Boolean(
@@ -742,6 +743,7 @@ def assert_index_actions_menu_projection(page: Page) -> None:
     )
     expected = {
         "appMenu": {
+            "hasExport": False,
             "hasPrepare": False,
             "hasDelete": False,
             "hasRetiredReviewPackage": False,
@@ -753,6 +755,13 @@ def assert_index_actions_menu_projection(page: Page) -> None:
             "hasVisibleCount": False,
         },
         "disabledItems": [
+            {
+                "actionId": "export-docs",
+                "label": "Export…",
+                "disabled": True,
+                "reason": "Select one or more documents.",
+                "ariaLabel": "Export… Select one or more documents.",
+            },
             {
                 "actionId": "prepare-document-package",
                 "label": "Prepare package…",
@@ -902,6 +911,465 @@ def assert_index_actions_selection_entry(page: Page) -> None:
     }
     if result != expected:
         raise AssertionError(f"unexpected Index actions selection entry: {result!r}")
+
+
+def assert_static_snapshot_export_workflow(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const actions = await import('/docs-viewer/runtime/js/management/docs-viewer-action-definitions.js');
+            const capabilities = await import('/docs-viewer/runtime/js/management/docs-viewer-management-capabilities.js');
+            const client = await import('/docs-viewer/runtime/js/management/docs-viewer-management-client.js');
+            const controllerModule = await import('/docs-viewer/runtime/js/management/docs-viewer-management-index-controller.js');
+            const selection = await import('/docs-viewer/runtime/js/management/docs-viewer-index-selection.js');
+            const workflow = await import('/docs-viewer/runtime/js/management/docs-viewer-static-html-export-workflow.js');
+            const preview = {
+                ok: true,
+                schema_version: 'docs_static_html_snapshot_preview_v1',
+                operation: 'preview',
+                dry_run: true,
+                scope: 'studio',
+                doc_ids: ['a', 'b'],
+                document_count: 2,
+                selection_kind: 'partial',
+                default_doc_id: 'a',
+                export_date: '2026-07-31',
+                destination_label: '/docs-export/studio selection - 2026-07-31/',
+                target_state: 'absent',
+                replacement_required: false,
+                replace_allowed: true,
+                existing_snapshot: null,
+                plan_revision: 'a'.repeat(64),
+                target_revision: 'b'.repeat(64)
+            };
+            const projectedCapability = capabilities.scopeStaticHtmlExportCapability({
+                static_html_export: { preview: true, apply: true, error: '' },
+                scopes: {
+                    library: {
+                        available: false,
+                        static_html_export: { preview: true, apply: true, error: '' }
+                    }
+                }
+            }, 'library');
+            const providerNeutralControl = controllerModule.docsViewerStaticHtmlExportActionControlState({
+                capabilities: {
+                    static_html_export: { preview: true, apply: true, error: '' },
+                    scopes: {
+                        library: {
+                            available: false,
+                            static_html_export: { preview: true, apply: true, error: '' }
+                        }
+                    }
+                },
+                managementAvailable: false,
+                managementBusy: false,
+                managementChecked: true,
+                resolution: {
+                    enabled: true,
+                    disabledReason: '',
+                    targetDocIds: ['library']
+                },
+                scope: 'library',
+                workflowActive: false
+            });
+
+            const clientRequests = [];
+            const fakeFetch = async (url, request) => {
+                clientRequests.push({
+                    method: request.method,
+                    path: new URL(url).pathname,
+                    payload: JSON.parse(request.body)
+                });
+                return { ok: true, status: 200, json: async () => ({ ok: true }) };
+            };
+            const clientOptions = { baseUrl: 'http://management.test', scope: 'studio', fetch: fakeFetch };
+            await client.previewManagedDocsStaticHtmlExport(['b', 'a'], clientOptions);
+            await client.applyManagedDocsStaticHtmlExport(preview, clientOptions);
+
+            const busy = [];
+            const messages = [];
+            let refreshCount = 0;
+            let previewArgs = null;
+            let applyUsedPreview = false;
+            let confirmOptions = null;
+            const applied = await workflow.openStaticHtmlSnapshotExportWorkflow({
+                root: document.body,
+                scope: 'studio',
+                checkedDocIds: ['b', 'a'],
+                clientOptions,
+                previewSnapshot: async (docIds, options) => {
+                    previewArgs = { docIds, sameOptions: options === clientOptions };
+                    return preview;
+                },
+                confirmSnapshot: async options => {
+                    confirmOptions = options;
+                    return true;
+                },
+                applySnapshot: async (value, options) => {
+                    applyUsedPreview = value === preview && options === clientOptions;
+                    return { ok: true, summary_text: 'Snapshot complete.' };
+                },
+                callbacks: {
+                    setBusy: value => busy.push(value),
+                    setMessage: (message, isError) => messages.push([message, isError]),
+                    onApplied: async () => { refreshCount += 1; }
+                }
+            });
+
+            const recognized = {
+                ...preview,
+                target_state: 'recognized',
+                replacement_required: true,
+                existing_snapshot: {
+                    scope: 'studio',
+                    document_count: 1,
+                    generated_at: '2026-07-31T12:00:00+01:00'
+                }
+            };
+            const blocked = {
+                ...preview,
+                target_state: 'non_directory',
+                replace_allowed: false
+            };
+            const unrecognized = {
+                ...preview,
+                target_state: 'unrecognized',
+                replacement_required: true
+            };
+            let duplicateError = '';
+            try {
+                workflow.validateStaticHtmlSnapshotPreview(
+                    { ...preview, doc_ids: ['a', 'a'] },
+                    { scope: 'studio', checkedDocIds: ['a', 'b'] }
+                );
+            } catch (error) {
+                duplicateError = String(error && error.message || '');
+            }
+
+            document.body.innerHTML = `
+              <button id="docsViewerIndexActionsButton" type="button"></button>
+              <div id="docsViewerIndexActionsMenu"></div>`;
+            const docs = [
+                { doc_id: 'a', parent_id: '', title: 'A' },
+                { doc_id: 'b', parent_id: '', title: 'B' }
+            ];
+            const owner = selection.createDocsViewerIndexSelectionOwner();
+            owner.enter();
+            owner.toggle('a', true);
+            let dispatchedOptions = null;
+            const controller = controllerModule.createDocsViewerManagementIndexController({
+                document,
+                documentIndex: { docs, docsById: new Map(docs.map(doc => [doc.doc_id, doc])) },
+                indexSelection: owner,
+                management: {
+                    managementAvailable: true,
+                    managementBusy: false,
+                    managementChecked: true,
+                    managementCapabilities: {
+                        static_html_export: { preview: true, apply: true, error: '' },
+                        scopes: {
+                            studio: { static_html_export: { preview: true, apply: true, error: '' } }
+                        }
+                    }
+                },
+                routeSession: { managementContext: true },
+                searchRecent: { searchRouteActive: false },
+                openSnapshotExportWorkflow: options => {
+                    dispatchedOptions = options;
+                    return Promise.resolve({ ok: true });
+                },
+                callbacks: {
+                    activeDocId: () => 'b',
+                    activeIndexViewId: () => 'index-tree',
+                    hideIndexActionsMenu: () => {},
+                    managementClientOptions: () => clientOptions,
+                    projectIndexViewControlState: () => {},
+                    renderManagementUi: () => {},
+                    resolveAction: actionId => actions.resolveDocsViewerAction(actionId, {
+                        activeDocId: 'b',
+                        selectedDocIds: owner.selectedDocIds()
+                    }),
+                    setManagementBusy: () => {},
+                    setManagementMessage: () => {},
+                    viewerScope: () => 'studio'
+                }
+            });
+            const handled = controller.handleControl({
+                actionId: 'export-docs',
+                controlId: 'index-actions',
+                eventType: 'click'
+            });
+            await new Promise(resolve => setTimeout(resolve, 0));
+
+            document.body.innerHTML = `
+              <div id="snapshotModalRoot">
+                <button id="docsViewerIndexActionsButton" type="button"></button>
+                <div id="docsViewerIndexActionsMenu"></div>
+              </div>`;
+            const modalRoot = document.querySelector('#snapshotModalRoot');
+            const modalOwner = selection.createDocsViewerIndexSelectionOwner();
+            modalOwner.enter();
+            modalOwner.toggle('a', true);
+            const modalManagement = {
+                managementAvailable: true,
+                managementBusy: false,
+                managementChecked: true,
+                managementCapabilities: {
+                    static_html_export: { preview: true, apply: true, error: '' },
+                    scopes: {
+                        studio: { static_html_export: { preview: true, apply: true, error: '' } }
+                    }
+                }
+            };
+            const modalPreview = {
+                ...preview,
+                doc_ids: ['a'],
+                document_count: 1,
+                selection_kind: 'single',
+                destination_label: '/docs-export/A - 2026-07-31/'
+            };
+            const modalRequests = [];
+            const modalMessages = [];
+            let modalRefreshCount = 0;
+            const modalFetch = async (url, request) => {
+                const path = new URL(url).pathname;
+                modalRequests.push({ path, payload: JSON.parse(request.body) });
+                return {
+                    ok: true,
+                    status: 200,
+                    json: async () => path.endsWith('/preview')
+                        ? modalPreview
+                        : { ok: true, summary_text: 'Modal snapshot complete.' }
+                };
+            };
+            const modalController = controllerModule.createDocsViewerManagementIndexController({
+                root: modalRoot,
+                document,
+                documentIndex: { docs, docsById: new Map(docs.map(doc => [doc.doc_id, doc])) },
+                indexSelection: modalOwner,
+                management: modalManagement,
+                routeSession: { managementContext: true },
+                searchRecent: { searchRouteActive: false },
+                callbacks: {
+                    activeDocId: () => 'b',
+                    activeIndexViewId: () => 'index-tree',
+                    hideIndexActionsMenu: () => {},
+                    managementClientOptions: () => ({
+                        baseUrl: 'http://management.test',
+                        scope: 'studio',
+                        fetch: modalFetch
+                    }),
+                    projectIndexViewControlState: () => {},
+                    refreshManagementCapabilities: () => { modalRefreshCount += 1; },
+                    renderManagementUi: () => {},
+                    resolveAction: actionId => actions.resolveDocsViewerAction(actionId, {
+                        activeDocId: 'b',
+                        selectedDocIds: modalOwner.selectedDocIds()
+                    }),
+                    setManagementBusy: value => { modalManagement.managementBusy = value; },
+                    setManagementMessage: (message, isError) => {
+                        modalMessages.push([message, isError]);
+                    },
+                    viewerScope: () => 'studio'
+                }
+            });
+            const modalHandled = modalController.handleControl({
+                actionId: 'export-docs',
+                controlId: 'index-actions',
+                eventType: 'click'
+            });
+            const waitFor = async predicate => {
+                for (let attempt = 0; attempt < 100; attempt += 1) {
+                    if (predicate()) return;
+                    await new Promise(resolve => setTimeout(resolve, 5));
+                }
+                throw new Error('Timed out waiting for snapshot modal flow.');
+            };
+            await waitFor(() => modalRoot.querySelector('[data-role="modal-primary"]'));
+            const modalText = modalRoot.querySelector('.docsViewer__modalCard').innerText
+                .split(/\\n+/)
+                .map(value => value.trim())
+                .filter(Boolean);
+            const modalPrimary = modalRoot.querySelector('[data-role="modal-primary"]');
+            const modalPrimaryLabel = modalPrimary.textContent;
+            modalPrimary.click();
+            await waitFor(() => modalMessages.some(item => item[0] === 'Modal snapshot complete.'));
+
+            const recognizedOptions = workflow.staticHtmlSnapshotConfirmationOptions(recognized);
+            const blockedOptions = workflow.staticHtmlSnapshotConfirmationOptions(blocked);
+            const unrecognizedOptions = workflow.staticHtmlSnapshotConfirmationOptions(unrecognized);
+            return {
+                applied,
+                applyUsedPreview,
+                busy,
+                clientRequests,
+                confirmation: {
+                    body: confirmOptions.body,
+                    primaryDisabled: confirmOptions.primaryDisabled,
+                    primaryLabel: confirmOptions.primaryLabel
+                },
+                dispatched: {
+                    checkedDocIds: dispatchedOptions && dispatchedOptions.checkedDocIds,
+                    handled,
+                    scope: dispatchedOptions && dispatchedOptions.scope
+                },
+                duplicateError,
+                messages,
+                modalFlow: {
+                    handled: modalHandled,
+                    messages: modalMessages,
+                    modalText,
+                    primaryLabel: modalPrimaryLabel,
+                    refreshCount: modalRefreshCount,
+                    requests: modalRequests,
+                    selectedDocIds: modalOwner.selectedDocIds()
+                },
+                previewArgs,
+                projectedCapability,
+                providerNeutralControl,
+                recognized: {
+                    body: recognizedOptions.body,
+                    initialFocus: recognizedOptions.initialFocus,
+                    primaryLabel: recognizedOptions.primaryLabel,
+                    primaryTone: recognizedOptions.primaryTone
+                },
+                blocked: {
+                    body: blockedOptions.body,
+                    primaryDisabled: blockedOptions.primaryDisabled,
+                    primaryLabel: blockedOptions.primaryLabel
+                },
+                unrecognized: {
+                    body: unrecognizedOptions.body,
+                    primaryLabel: unrecognizedOptions.primaryLabel
+                },
+                refreshCount
+            };
+        }"""
+    )
+    expected = {
+        "applied": {"ok": True, "summary_text": "Snapshot complete."},
+        "applyUsedPreview": True,
+        "busy": [True, False, True, False],
+        "clientRequests": [
+            {
+                "method": "POST",
+                "path": "/docs/export/static-html/preview",
+                "payload": {"scope": "studio", "doc_ids": ["b", "a"]},
+            },
+            {
+                "method": "POST",
+                "path": "/docs/export/static-html/apply",
+                "payload": {
+                    "scope": "studio",
+                    "doc_ids": ["a", "b"],
+                    "export_date": "2026-07-31",
+                    "plan_revision": "a" * 64,
+                    "target_revision": "b" * 64,
+                    "confirm": True,
+                    "replace_existing": False,
+                },
+            },
+        ],
+        "confirmation": {
+            "body": [
+                "Source scope: studio",
+                "Documents: 2",
+                "Selection: Checked selection",
+                "Destination folder: /docs-export/studio selection - 2026-07-31/",
+                "Consequence: Create a new dated snapshot.",
+            ],
+            "primaryDisabled": False,
+            "primaryLabel": "Create snapshot",
+        },
+        "dispatched": {"checkedDocIds": ["a"], "handled": True, "scope": "studio"},
+        "duplicateError": "Snapshot preview documents no longer match the checked selection.",
+        "messages": [
+            ["Preparing dated snapshot…", False],
+            ["", False],
+            ["Exporting dated snapshot…", False],
+            ["Snapshot complete.", False],
+        ],
+        "modalFlow": {
+            "handled": True,
+            "messages": [
+                ["Preparing dated snapshot…", False],
+                ["", False],
+                ["Exporting dated snapshot…", False],
+                ["Modal snapshot complete.", False],
+            ],
+            "modalText": [
+                "Export dated snapshot",
+                "Source scope: studio",
+                "Documents: 1",
+                "Selection: One checked document",
+                "Destination folder: /docs-export/A - 2026-07-31/",
+                "Consequence: Create a new dated snapshot.",
+                "Cancel",
+                "Create snapshot",
+            ],
+            "primaryLabel": "Create snapshot",
+            "refreshCount": 1,
+            "requests": [
+                {
+                    "path": "/docs/export/static-html/preview",
+                    "payload": {"scope": "studio", "doc_ids": ["a"]},
+                },
+                {
+                    "path": "/docs/export/static-html/apply",
+                    "payload": {
+                        "scope": "studio",
+                        "doc_ids": ["a"],
+                        "export_date": "2026-07-31",
+                        "plan_revision": "a" * 64,
+                        "target_revision": "b" * 64,
+                        "confirm": True,
+                        "replace_existing": False,
+                    },
+                },
+            ],
+            "selectedDocIds": ["a"],
+        },
+        "previewArgs": {"docIds": ["b", "a"], "sameOptions": True},
+        "projectedCapability": {"available": True, "reason": ""},
+        "providerNeutralControl": {"disabled": False, "disabledReason": ""},
+        "recognized": {
+            "body": [
+                "Source scope: studio",
+                "Documents: 2",
+                "Selection: Checked selection",
+                "Destination folder: /docs-export/studio selection - 2026-07-31/",
+                "Existing snapshot: 1 documents from studio, generated 2026-07-31T12:00:00+01:00.",
+                "Consequence: Replace the existing dated snapshot and all of its contents.",
+            ],
+            "initialFocus": "cancel",
+            "primaryLabel": "Replace",
+            "primaryTone": "danger",
+        },
+        "blocked": {
+            "body": [
+                "Source scope: studio",
+                "Documents: 2",
+                "Selection: Checked selection",
+                "Destination folder: /docs-export/studio selection - 2026-07-31/",
+                "Collision: The destination is not a directory and cannot be replaced.",
+            ],
+            "primaryDisabled": True,
+            "primaryLabel": "Unavailable",
+        },
+        "unrecognized": {
+            "body": [
+                "Source scope: studio",
+                "Documents: 2",
+                "Selection: Checked selection",
+                "Destination folder: /docs-export/studio selection - 2026-07-31/",
+                "Existing folder: No recognized snapshot provenance.",
+                "Consequence: Replace the existing folder and all of its contents.",
+            ],
+            "primaryLabel": "Replace",
+        },
+        "refreshCount": 1,
+    }
+    if result != expected:
+        raise AssertionError(f"unexpected static snapshot Export workflow: {result!r}")
 
 
 def assert_selection_projection_and_interaction(page: Page) -> None:
@@ -1130,6 +1598,7 @@ def main(argv: list[str] | None = None) -> int:
             assert_action_target_isolation(page)
             assert_index_actions_menu_projection(page)
             assert_index_actions_selection_entry(page)
+            assert_static_snapshot_export_workflow(page)
             assert_selection_projection_and_interaction(page)
             browser.close()
         print("Docs Viewer index selection module contracts OK")

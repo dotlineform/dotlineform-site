@@ -3,8 +3,7 @@ import {
 } from "../shared/docs-viewer-tree.js";
 import {
   createDocsViewerManagementCapabilityController,
-  scopePublishSupported,
-  scopeStaticHtmlExportSupported
+  scopePublishSupported
 } from "./docs-viewer-management-capabilities.js";
 import {
   applyDocsViewerManagementConfig
@@ -178,7 +177,6 @@ export function initDocsViewerManagement(context) {
   var managePublishButton = document.getElementById("docsViewerManagePublishButton");
   var manageToolbarPublishButton = document.getElementById("docsViewerManageToolbarPublishButton");
   var managePublishButtons = [managePublishButton, manageToolbarPublishButton].filter(Boolean);
-  var manageExportButton = document.getElementById("docsViewerManageExportButton");
   var manageImportButton = document.getElementById("docsViewerManageImportButton");
   var manageToolbarImportButton = document.getElementById("docsViewerManageToolbarImportButton");
   var manageImportButtons = [manageImportButton, manageToolbarImportButton].filter(Boolean);
@@ -230,6 +228,7 @@ export function initDocsViewerManagement(context) {
         }
         return null;
       },
+      refreshManagementCapabilities: refreshManagementCapabilities,
       renderManagementUi: renderManagementUi,
       renderSidebar: function () {
         if (typeof context.renderSidebar === "function") context.renderSidebar();
@@ -645,7 +644,6 @@ export function initDocsViewerManagement(context) {
       searchRecent.searchRouteActive
     );
     var publishAvailable = management.managementAvailable && scopePublishSupported(management.managementCapabilities, viewerScope());
-    var exportAvailable = management.managementAvailable && scopeStaticHtmlExportSupported(management.managementCapabilities, viewerScope());
     var themeIsDark = document.documentElement && document.documentElement.getAttribute("data-theme") === "dark";
 
     projectAppControl("manage-import", {
@@ -679,10 +677,6 @@ export function initDocsViewerManagement(context) {
       button.disabled = management.managementBusy || !publishAvailable;
     });
     if (manageToolbarPublishButton) manageToolbarPublishButton.hidden = !publishAvailable;
-    if (manageExportButton) {
-      manageExportButton.hidden = !exportAvailable;
-      manageExportButton.disabled = management.managementBusy || !exportAvailable;
-    }
     manageImportButtons.forEach(function (button) {
       button.disabled = management.managementBusy || !management.managementAvailable;
     });
@@ -912,7 +906,6 @@ export function initDocsViewerManagement(context) {
       deleteDoc: function () { actionController.handleDeleteDoc(); },
       deleteScope: function () { scopeLifecycleController.deleteScope(); },
       deleteSubScope: function () { scopeLifecycleController.deleteSubScope(); },
-      exportDocs: function () { actionController.handleExportDocs(); },
       openImport: openAppImport,
       openSettings: function () { settingsWorkflow.open(); },
       publish: function () { actionController.handlePublishDocs(); },

@@ -966,14 +966,49 @@ def apply_static_html_snapshot(repo_root: Path, body: dict[str, Any]) -> dict[st
     }
 
 
-def scope_static_html_export_capability(_repo_root: Path, _scope: str, config: DocsScopeConfig) -> dict[str, Any]:
-    """Keep the legacy app-level action hidden until DXS-3 owns capability projection."""
-
+def static_html_export_capability() -> dict[str, Any]:
+    try:
+        resolve_docs_export_workspace()
+    except ValueError:
+        return {
+            "preview": False,
+            "apply": False,
+            "error": f"Snapshot workspace is unavailable. Configure {PROJECTS_BASE_DIR_ENV}.",
+        }
     return {
-        "apply": False,
-        "delete": False,
-        "destination": "",
-        "document_count": 0,
+        "preview": True,
+        "apply": True,
+        "error": "",
+    }
+
+
+def scope_static_html_export_capability(
+    repo_root: Path,
+    scope: str,
+    config: DocsScopeConfig,
+    *,
+    workspace_available: bool,
+) -> dict[str, Any]:
+    available = False
+    document_count = 0
+    if not workspace_available:
+        error = "Snapshot workspace is unavailable."
+    else:
+        try:
+            paths = resolve_snapshot_input_paths(repo_root, scope, config)
+            index_tree = load_index_tree(paths.index_tree_path)
+            doc_ids = collect_doc_ids_from_tree(index_tree.get("docs"))
+            for doc_id in doc_ids:
+                load_doc_payload(paths.payload_root, doc_id)
+            document_count = len(doc_ids)
+            available = document_count > 0
+            error = "" if available else "No generated documents are available for this scope."
+        except (FileNotFoundError, OSError, ValueError, json.JSONDecodeError):
+            error = "Generated documents are unavailable for this scope."
+    return {
+        "preview": available,
+        "apply": available,
+        "document_count": document_count,
         "default_doc_id": config.default_doc_id,
-        "error": "Dated snapshot Export is awaiting Index Actions integration.",
+        "error": error,
     }
