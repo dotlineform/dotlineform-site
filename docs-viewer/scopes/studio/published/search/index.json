@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f4dc643ed2d7adc34dc0fda2b50190b0",
-    "generated_at_utc": "2026-08-01T17:22:28Z",
+    "version": "blake2b-7a8bf173a28bc2a9182e97fd02508657",
+    "generated_at_utc": "2026-08-01T17:43:07Z",
     "count": 220
   },
   "entries": [
@@ -3568,23 +3568,23 @@
       "kind": "doc",
       "title": "Projects",
       "href": "/docs/?scope=studio&doc=d-20260801-095819-30103c",
-      "last_updated": "2026-08-01 18:17:09",
+      "last_updated": "2026-08-01 18:42:54",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-01 18:17:09 • Roadmap",
+      "display_meta": "2026-08-01 18:42:54 • Roadmap",
       "search_terms": [
         "projects",
         "roadmap",
-        "2026-08-01 18:17:09",
+        "2026-08-01 18:42:54",
         "2026",
         "08",
         "01",
         "18",
-        "17",
-        "09",
+        "42",
+        "54",
         "d-20260801-095819-30103c"
       ],
-      "search_text": "projects roadmap 2026-08-01 18:17:09 2026 08 01 18 17 09 d-20260801-095819-30103c"
+      "search_text": "projects roadmap 2026-08-01 18:42:54 2026 08 01 18 42 54 d-20260801-095819-30103c"
     },
     {
       "id": "d-20260801-150013-f26b87",
@@ -3649,33 +3649,33 @@
     {
       "id": "d-20260801-133317-e8eb39",
       "kind": "doc",
-      "title": "PRJ-2 — Projects Sub-Scope Customisation And Seed Delivery",
+      "title": "PRJ-2 — Projects Customisation And Apple Notes Migration Delivery",
       "href": "/docs/?scope=studio&doc=d-20260801-133317-e8eb39",
-      "last_updated": "2026-08-01 15:21:09",
+      "last_updated": "2026-08-01 18:40:44",
       "parent_id": "d-20260801-095819-30103c",
       "parent_title": "Projects",
-      "display_meta": "2026-08-01 15:21:09 • Projects",
+      "display_meta": "2026-08-01 18:40:44 • Projects",
       "search_terms": [
-        "prj-2 — projects sub-scope customisation and seed delivery",
+        "prj-2 — projects customisation and apple notes migration delivery",
         "prj",
         "2",
         "projects",
-        "sub",
-        "scope",
         "customisation",
         "and",
-        "seed",
+        "apple",
+        "notes",
+        "migration",
         "delivery",
-        "2026-08-01 15:21:09",
+        "2026-08-01 18:40:44",
         "2026",
         "08",
         "01",
-        "15",
-        "21",
-        "09",
+        "18",
+        "40",
+        "44",
         "d-20260801-133317-e8eb39"
       ],
-      "search_text": "prj-2 — projects sub-scope customisation and seed delivery prj 2 projects sub scope customisation and seed delivery 2026-08-01 15:21:09 2026 08 01 15 21 09 d-20260801-133317-e8eb39"
+      "search_text": "prj-2 — projects customisation and apple notes migration delivery prj 2 projects customisation and apple notes migration delivery 2026-08-01 18:40:44 2026 08 01 18 40 44 d-20260801-133317-e8eb39"
     },
     {
       "id": "d-20260801-133318-15e8fa",

@@ -4,6 +4,22 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260801-095819-30103c",
+      "title": "Projects",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-095819-30103c.json",
+      "timestamp": "2026-08-01 18:42:54",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260801-133317-e8eb39",
+      "title": "PRJ-2 — Projects Customisation And Apple Notes Migration Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133317-e8eb39.json",
+      "timestamp": "2026-08-01 18:40:44",
+      "parent_id": "d-20260801-095819-30103c",
+      "parent_title": "Projects"
+    },
+    {
       "doc_id": "d-20260801-133316-a435ad",
       "title": "PRJ-1 — Docs Viewer Local Folder Links Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133316-a435ad.json",
@@ -36,14 +52,6 @@
       "parent_title": "Docs Viewer"
     },
     {
-      "doc_id": "d-20260801-095819-30103c",
-      "title": "Projects",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-095819-30103c.json",
-      "timestamp": "2026-08-01 18:17:09",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
       "doc_id": "d-20260607-222033-4b1d77",
       "title": "Source Editor Endpoints",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-4b1d77.json",
@@ -68,14 +76,6 @@
       "parent_title": "Projects"
     },
     {
-      "doc_id": "d-20260801-133317-e8eb39",
-      "title": "PRJ-2 — Projects Sub-Scope Customisation And Seed Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133317-e8eb39.json",
-      "timestamp": "2026-08-01 15:21:09",
-      "parent_id": "d-20260801-095819-30103c",
-      "parent_title": "Projects"
-    },
-    {
       "doc_id": "d-20260801-133318-15e8fa",
       "title": "PRJ-3 — Docs Viewer Project State Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133318-15e8fa.json",
@@ -84,5 +84,5 @@
       "parent_title": "Projects"
     }
   ],
-  "generated_at": "2026-08-01T17:22:28Z"
+  "generated_at": "2026-08-01T17:43:07Z"
 }
