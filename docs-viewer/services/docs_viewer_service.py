@@ -40,6 +40,7 @@ import docs_management_routes as routes  # noqa: E402
 import docs_management_service as docs_service  # noqa: E402
 import docs_document_package_routes as package_routes  # noqa: E402
 from docs_document_packages import service as package_service  # noqa: E402
+import docs_generated_reads as generated_reads  # noqa: E402
 import docs_media_storage as media_storage  # noqa: E402
 import docs_review_routes as review_routes  # noqa: E402
 import docs_review_service as review_service  # noqa: E402
@@ -449,6 +450,12 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         if path.startswith(media_storage.DOCS_MEDIA_ROUTE_PREFIX):
             self.send_docs_media(path)
             return
+        if path.startswith(generated_reads.EXTERNAL_SUB_SCOPE_PUBLISHED_PREFIX):
+            if not self.config.generated_reads_enabled:
+                self.send_json({"ok": False, "error": "Generated reads are disabled"}, HTTPStatus.FORBIDDEN)
+                return
+            self.send_external_sub_scope_payload(path)
+            return
         if path in routes.GET_PATHS:
             self.send_docs_api_json(path, query)
             return
@@ -642,6 +649,23 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
             self.send_header("X-Content-Type-Options", "nosniff")
             if media_class == "files":
                 self.send_header("Content-Disposition", f"attachment; filename*=UTF-8''{quote(path.name, safe='')}")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+        except FileNotFoundError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
+        except ValueError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
+
+    def send_external_sub_scope_payload(self, request_path: str) -> None:
+        try:
+            path = generated_reads.external_sub_scope_payload_path(self.repo_root, request_path)
+            body = path.read_bytes()
+            self.send_response(HTTPStatus.OK)
+            self.send_cors_headers()
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("X-Content-Type-Options", "nosniff")
             self.send_header("Content-Length", str(len(body)))
             self.end_headers()
             self.wfile.write(body)

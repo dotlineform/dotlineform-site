@@ -9,7 +9,9 @@ import sys
 import tempfile
 from pathlib import Path
 
-from repo_factory import docs_scope_record
+import pytest
+
+from repo_factory import docs_scope_record, docs_sub_scope_record
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -437,6 +439,47 @@ def test_generated_reads_support_external_local_scope_payloads() -> None:
     assert search["entries"] == [{"id": PRIVATE_DOC_ID}]
 
 
+def test_external_sub_scope_payload_route_resolves_only_configured_json() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        projects_root = (repo_root.parent / f"{repo_root.name}-external").resolve()
+        external_root = projects_root / "docs-viewer"
+        external_root.mkdir(parents=True)
+        old_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
+        os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
+        scope = external_scope_config("private", external_root)
+        scope["sub_scopes"] = [docs_sub_scope_record("private", "projects")]
+        write_scope_config(repo_root, [scope])
+        output = external_root / "scopes/private/published/documents/sub-scopes/projects"
+        write_json(output / "manage-manifest.json", {"docs": [{"doc_id": PRIVATE_DOC_ID}]})
+        write_json(output / f"by-id/{PRIVATE_DOC_ID}.json", {"doc_id": PRIVATE_DOC_ID})
+
+        try:
+            assert generated_reads.external_sub_scope_payload_path(
+                repo_root,
+                "/docs/published/external/private/projects/manage-manifest.json",
+            ) == output / "manage-manifest.json"
+            assert generated_reads.external_sub_scope_payload_path(
+                repo_root,
+                f"/docs/published/external/private/projects/by-id/{PRIVATE_DOC_ID}.json",
+            ) == output / f"by-id/{PRIVATE_DOC_ID}.json"
+            with pytest.raises(ValueError, match="immutable identity"):
+                generated_reads.external_sub_scope_payload_path(
+                    repo_root,
+                    "/docs/published/external/private/projects/by-id/not-a-doc.json",
+                )
+            with pytest.raises(FileNotFoundError, match="sub-scope not found"):
+                generated_reads.external_sub_scope_payload_path(
+                    repo_root,
+                    "/docs/published/external/private/missing/manage-manifest.json",
+                )
+        finally:
+            if old_projects_base is None:
+                os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
+            else:
+                os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = old_projects_base
+
+
 def test_read_generated_json_reports_invalid_json() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         path = Path(temp_path) / "index-tree.json"
@@ -462,6 +505,7 @@ def main() -> None:
     test_generated_doc_paths_use_derived_scope_output()
     test_generated_search_path_uses_derived_scope_output()
     test_generated_reads_support_external_local_scope_payloads()
+    test_external_sub_scope_payload_route_resolves_only_configured_json()
     test_read_generated_json_reports_invalid_json()
     print("Docs generated-read tests OK")
 

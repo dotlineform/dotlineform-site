@@ -20,6 +20,9 @@ from docs_scope_config import (
 )
 
 
+EXTERNAL_SUB_SCOPE_PUBLISHED_PREFIX = "/docs/published/external/"
+
+
 def browser_path_for_repo_relative(path: Path) -> str:
     rel = Path(path.as_posix().lstrip("/"))
     if len(rel.parts) >= 2 and rel.parts[0] == "site":
@@ -37,6 +40,40 @@ def generated_scope_config(repo_root: Path, scope: str) -> DocsScopeConfig:
 def generated_docs_output_root(repo_root: Path, scope: str) -> Path:
     config = generated_scope_config(repo_root, scope)
     return resolve_scope_path(repo_root, published_documents_path(config))
+
+
+def external_sub_scope_payload_path(repo_root: Path, request_path: str) -> Path:
+    if not request_path.startswith(EXTERNAL_SUB_SCOPE_PUBLISHED_PREFIX):
+        raise ValueError("Invalid external Docs sub-scope payload route")
+    parts = request_path.removeprefix(EXTERNAL_SUB_SCOPE_PUBLISHED_PREFIX).split("/")
+    if len(parts) == 3 and parts[2] in {"manifest.json", "manage-manifest.json"}:
+        scope, sub_scope, filename = parts
+        relative_path = Path(filename)
+    elif len(parts) == 4 and parts[2] == "by-id" and parts[3].endswith(".json"):
+        scope, sub_scope, _, filename = parts
+        doc_id = filename.removesuffix(".json")
+        if not is_immutable_doc_id(doc_id):
+            raise ValueError("External Docs sub-scope payload doc_id must use immutable identity")
+        relative_path = Path("by-id") / filename
+    else:
+        raise ValueError("Invalid external Docs sub-scope payload route")
+
+    config = load_docs_scope_configs(repo_root, scope_ids=[scope]).get(scope)
+    if config is None or not scope_uses_external_data(config):
+        raise FileNotFoundError(f"External Docs scope not found: {scope!r}")
+    selected = next((item for item in config.sub_scopes if item.sub_scope == sub_scope), None)
+    if selected is None:
+        raise FileNotFoundError(f"Docs sub-scope not found: {scope}/{sub_scope}")
+
+    output_root = resolve_scope_path(repo_root, published_documents_path(selected)).resolve()
+    path = (output_root / relative_path).resolve()
+    try:
+        path.relative_to(output_root)
+    except ValueError as exc:
+        raise ValueError("External Docs sub-scope payload must remain under its configured output") from exc
+    if not path.is_file():
+        raise FileNotFoundError(f"External Docs sub-scope payload not found: {scope}/{sub_scope}/{relative_path}")
+    return path
 
 
 def generated_docs_index_tree_path(repo_root: Path, scope: str) -> Path:

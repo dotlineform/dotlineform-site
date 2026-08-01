@@ -436,7 +436,19 @@
       "default_doc_id": "d-20260731-144749-b8a097",
       "non_loadable_doc_ids": [],
       "manage_only_tree_root_ids": [],
-      "allow_unresolved_parent_ids": false
+      "allow_unresolved_parent_ids": false,
+      "sub_scopes": [
+        {
+          "sub_scope": "projects",
+          "title": "Projects",
+          "public_projection": null,
+          "lifecycle": {
+            "tool_id": "docs-viewer-scope-lifecycle",
+            "report_host_doc_id": "d-20260801-073826-8865a8",
+            "report_host_source_revision": "sha256:e1931a79360f5fb98ffc3bc0b2e2f518f7da04ebdae1309eb8233cf180eb7ab5"
+          }
+        }
+      ]
     }
   ],
   "docs_viewer": {
