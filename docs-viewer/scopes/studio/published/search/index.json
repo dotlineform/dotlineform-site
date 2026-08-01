@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d2cb6f934818a24215ef708b5999245c",
-    "generated_at_utc": "2026-08-01T20:43:18Z",
-    "count": 222
+    "version": "blake2b-db900e9f03e97acb7d1b3b18fbe9ffd0",
+    "generated_at_utc": "2026-08-01T23:25:20Z",
+    "count": 224
   },
   "entries": [
     {
@@ -2413,10 +2413,10 @@
       "kind": "doc",
       "title": "Semantic Tokens",
       "href": "/docs/?scope=studio&doc=d-20260725-153656-516b61",
-      "last_updated": "2026-07-26 20:38:29",
+      "last_updated": "2026-08-02 00:22:13",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-26 20:38:29 • Docs Viewer",
+      "display_meta": "2026-08-02 00:22:13 • Docs Viewer",
       "search_terms": [
         "semantic tokens",
         "semantic",
@@ -2424,16 +2424,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-26 20:38:29",
+        "2026-08-02 00:22:13",
         "2026",
-        "07",
-        "26",
-        "20",
-        "38",
-        "29",
+        "08",
+        "02",
+        "00",
+        "22",
+        "13",
         "d-20260725-153656-516b61"
       ],
-      "search_text": "semantic tokens semantic tokens docs viewer docs viewer 2026-07-26 20:38:29 2026 07 26 20 38 29 d-20260725-153656-516b61"
+      "search_text": "semantic tokens semantic tokens docs viewer docs viewer 2026-08-02 00:22:13 2026 08 02 00 22 13 d-20260725-153656-516b61"
     },
     {
       "id": "d-20260714-234030-434069",
@@ -2540,6 +2540,36 @@
         "d-20260726-185814-c5e581"
       ],
       "search_text": "target lookup target lookup semantic tokens semantic tokens 2026-07-26 19:53:26 2026 07 26 19 53 d-20260726-185814-c5e581"
+    },
+    {
+      "id": "d-20260802-002213-b7d4e2",
+      "kind": "doc",
+      "title": "TST-1 — Tag Semantic Token Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260802-002213-b7d4e2",
+      "last_updated": "2026-08-02 00:25:20",
+      "parent_id": "d-20260725-153656-516b61",
+      "parent_title": "Semantic Tokens",
+      "display_meta": "2026-08-02 00:25:20 • Semantic Tokens",
+      "search_terms": [
+        "tst-1 — tag semantic token delivery",
+        "tst",
+        "1",
+        "tag",
+        "semantic",
+        "token",
+        "delivery",
+        "semantic tokens",
+        "tokens",
+        "2026-08-02 00:25:20",
+        "2026",
+        "08",
+        "02",
+        "00",
+        "25",
+        "20",
+        "d-20260802-002213-b7d4e2"
+      ],
+      "search_text": "tst-1 — tag semantic token delivery tst 1 tag semantic token delivery semantic tokens tokens 2026-08-02 00:25:20 2026 08 02 00 25 20 d-20260802-002213-b7d4e2"
     },
     {
       "id": "d-20260726-191340-d00c52",
@@ -3565,6 +3595,36 @@
       "search_text": "tests report tests report admin checks responsibility reports admin checks responsibility reports 2026-06-09 2026 06 09 d-20260609-212515-6d8aa2"
     },
     {
+      "id": "d-20260801-233534-239eab",
+      "kind": "doc",
+      "title": "DCC-1 — Collection-Aware Document Copy Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260801-233534-239eab",
+      "last_updated": "2026-08-01 23:35:34",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap",
+      "display_meta": "2026-08-01 23:35:34 • Roadmap",
+      "search_terms": [
+        "dcc-1 — collection-aware document copy delivery",
+        "dcc",
+        "1",
+        "collection",
+        "aware",
+        "document",
+        "copy",
+        "delivery",
+        "roadmap",
+        "2026-08-01 23:35:34",
+        "2026",
+        "08",
+        "01",
+        "23",
+        "35",
+        "34",
+        "d-20260801-233534-239eab"
+      ],
+      "search_text": "dcc-1 — collection-aware document copy delivery dcc 1 collection aware document copy delivery roadmap 2026-08-01 23:35:34 2026 08 01 23 35 34 d-20260801-233534-239eab"
+    },
+    {
       "id": "d-20260801-190502-6927fb",
       "kind": "doc",
       "title": "IFS-1 — Docs Import Folder Source Selection Delivery",
@@ -3773,10 +3833,10 @@
       "kind": "doc",
       "title": "PRJ-4 — Resolver Tokens Delivery",
       "href": "/docs/?scope=studio&doc=d-20260801-133319-cdfdbf",
-      "last_updated": "2026-08-01 15:22:45",
+      "last_updated": "2026-08-01 23:55:43",
       "parent_id": "d-20260801-095819-30103c",
       "parent_title": "Projects",
-      "display_meta": "2026-08-01 15:22:45 • Projects",
+      "display_meta": "2026-08-01 23:55:43 • Projects",
       "search_terms": [
         "prj-4 — resolver tokens delivery",
         "prj",
@@ -3785,16 +3845,16 @@
         "tokens",
         "delivery",
         "projects",
-        "2026-08-01 15:22:45",
+        "2026-08-01 23:55:43",
         "2026",
         "08",
         "01",
-        "15",
-        "22",
-        "45",
+        "23",
+        "55",
+        "43",
         "d-20260801-133319-cdfdbf"
       ],
-      "search_text": "prj-4 — resolver tokens delivery prj 4 resolver tokens delivery projects 2026-08-01 15:22:45 2026 08 01 15 22 45 d-20260801-133319-cdfdbf"
+      "search_text": "prj-4 — resolver tokens delivery prj 4 resolver tokens delivery projects 2026-08-01 23:55:43 2026 08 01 23 55 43 d-20260801-133319-cdfdbf"
     },
     {
       "id": "d-20260801-133315-80f527",

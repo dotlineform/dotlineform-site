@@ -534,6 +534,12 @@
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-185814-c5e581.json"
             },
             {
+              "doc_id": "d-20260802-002213-b7d4e2",
+              "title": "TST-1 — Tag Semantic Token Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-002213-b7d4e2.json",
+              "ui_status": "proposed"
+            },
+            {
               "doc_id": "d-20260726-191340-d00c52",
               "title": "Usage Index",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-191340-d00c52.json"
@@ -762,6 +768,12 @@
               "ui_status": "draft"
             }
           ]
+        },
+        {
+          "doc_id": "d-20260801-233534-239eab",
+          "title": "DCC-1 — Collection-Aware Document Copy Delivery",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-233534-239eab.json",
+          "ui_status": "proposed"
         },
         {
           "doc_id": "d-20260801-190502-6927fb",
@@ -1226,5 +1238,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-01T20:41:26Z"
+  "generated_at": "2026-08-01T23:24:26Z"
 }
