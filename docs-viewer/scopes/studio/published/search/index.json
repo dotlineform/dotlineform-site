@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-7a8bf173a28bc2a9182e97fd02508657",
-    "generated_at_utc": "2026-08-01T17:43:07Z",
-    "count": 220
+    "version": "blake2b-28b649bc76a1b3b2abb1df886f4e8bfa",
+    "generated_at_utc": "2026-08-01T18:57:18Z",
+    "count": 222
   },
   "entries": [
     {
@@ -3564,6 +3564,37 @@
       "search_text": "tests report tests report admin checks responsibility reports admin checks responsibility reports 2026-06-09 2026 06 09 d-20260609-212515-6d8aa2"
     },
     {
+      "id": "d-20260801-190502-6927fb",
+      "kind": "doc",
+      "title": "IFS-1 — Docs Import Folder Source Selection Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260801-190502-6927fb",
+      "last_updated": "2026-08-01 19:10:13",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap",
+      "display_meta": "2026-08-01 19:10:13 • Roadmap",
+      "search_terms": [
+        "ifs-1 — docs import folder source selection delivery",
+        "ifs",
+        "1",
+        "docs",
+        "import",
+        "folder",
+        "source",
+        "selection",
+        "delivery",
+        "roadmap",
+        "2026-08-01 19:10:13",
+        "2026",
+        "08",
+        "01",
+        "19",
+        "10",
+        "13",
+        "d-20260801-190502-6927fb"
+      ],
+      "search_text": "ifs-1 — docs import folder source selection delivery ifs 1 docs import folder source selection delivery roadmap 2026-08-01 19:10:13 2026 08 01 19 10 13 d-20260801-190502-6927fb"
+    },
+    {
       "id": "d-20260801-095819-30103c",
       "kind": "doc",
       "title": "Projects",
@@ -3647,14 +3678,43 @@
       "search_text": "prj-1 — docs viewer local folder links delivery prj 1 docs viewer local folder links delivery projects 2026-08-01 18:22:28 2026 08 01 18 22 28 d-20260801-133316-a435ad"
     },
     {
+      "id": "d-20260801-193557-78fd17",
+      "kind": "doc",
+      "title": "PRJ-2 — Implementation And Verification Record",
+      "href": "/docs/?scope=studio&doc=d-20260801-193557-78fd17",
+      "last_updated": "2026-08-01 19:57:17",
+      "parent_id": "d-20260801-095819-30103c",
+      "parent_title": "Projects",
+      "display_meta": "2026-08-01 19:57:17 • Projects",
+      "search_terms": [
+        "prj-2 — implementation and verification record",
+        "prj",
+        "2",
+        "implementation",
+        "and",
+        "verification",
+        "record",
+        "projects",
+        "2026-08-01 19:57:17",
+        "2026",
+        "08",
+        "01",
+        "19",
+        "57",
+        "17",
+        "d-20260801-193557-78fd17"
+      ],
+      "search_text": "prj-2 — implementation and verification record prj 2 implementation and verification record projects 2026-08-01 19:57:17 2026 08 01 19 57 17 d-20260801-193557-78fd17"
+    },
+    {
       "id": "d-20260801-133317-e8eb39",
       "kind": "doc",
       "title": "PRJ-2 — Projects Customisation And Apple Notes Migration Delivery",
       "href": "/docs/?scope=studio&doc=d-20260801-133317-e8eb39",
-      "last_updated": "2026-08-01 18:40:44",
+      "last_updated": "2026-08-01 19:55:57",
       "parent_id": "d-20260801-095819-30103c",
       "parent_title": "Projects",
-      "display_meta": "2026-08-01 18:40:44 • Projects",
+      "display_meta": "2026-08-01 19:55:57 • Projects",
       "search_terms": [
         "prj-2 — projects customisation and apple notes migration delivery",
         "prj",
@@ -3666,16 +3726,16 @@
         "notes",
         "migration",
         "delivery",
-        "2026-08-01 18:40:44",
+        "2026-08-01 19:55:57",
         "2026",
         "08",
         "01",
-        "18",
-        "40",
-        "44",
+        "19",
+        "55",
+        "57",
         "d-20260801-133317-e8eb39"
       ],
-      "search_text": "prj-2 — projects customisation and apple notes migration delivery prj 2 projects customisation and apple notes migration delivery 2026-08-01 18:40:44 2026 08 01 18 40 44 d-20260801-133317-e8eb39"
+      "search_text": "prj-2 — projects customisation and apple notes migration delivery prj 2 projects customisation and apple notes migration delivery 2026-08-01 19:55:57 2026 08 01 19 55 57 d-20260801-133317-e8eb39"
     },
     {
       "id": "d-20260801-133318-15e8fa",
