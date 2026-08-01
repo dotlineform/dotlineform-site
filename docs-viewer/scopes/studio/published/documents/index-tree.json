@@ -299,6 +299,12 @@
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260629-152159-ac1af9.json"
         },
         {
+          "doc_id": "d-20260728-113139-95a885",
+          "title": "Independent Canonical Documents",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-113139-95a885.json",
+          "ui_status": "proposed"
+        },
+        {
           "doc_id": "d-20260623-000000-c99cef",
           "title": "Info Panel",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260623-000000-c99cef.json"
@@ -552,10 +558,32 @@
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260423-000000-8fd731.json"
         },
         {
-          "doc_id": "d-20260728-205013-41deb8",
-          "title": "Sub-Scope Public And Manage Manifests",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-205013-41deb8.json",
-          "ui_status": "done"
+          "doc_id": "d-20260801-084127-752d7e",
+          "title": "Sub-Scopes",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-084127-752d7e.json",
+          "children": [
+            {
+              "doc_id": "d-20260731-185207-2dbb6f",
+              "title": "Sub-Scope Default Report",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-185207-2dbb6f.json",
+              "ui_status": "report"
+            },
+            {
+              "doc_id": "d-20260728-113139-763354",
+              "title": "Sub-Scope Index Architecture",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-113139-763354.json"
+            },
+            {
+              "doc_id": "d-20260728-205013-41deb8",
+              "title": "Sub-Scope Public And Manage Manifests",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-205013-41deb8.json"
+            },
+            {
+              "doc_id": "d-20260731-155053-3929e2",
+              "title": "Sub-Scope Report Customisation Architecture",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155053-3929e2.json"
+            }
+          ]
         },
         {
           "doc_id": "d-20260531-152622-ed2451",
@@ -736,85 +764,6 @@
           ]
         },
         {
-          "doc_id": "d-20260730-222344-be311c",
-          "title": "Consolidated App-Level Docs Import Delivery",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260730-222344-be311c.json",
-          "ui_status": "done"
-        },
-        {
-          "doc_id": "d-20260716-193410-98d1a8",
-          "title": "Dated Export Snapshots",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260716-193410-98d1a8.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "d-20260731-124327-65d30d",
-              "title": "Dated Export Snapshots Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-124327-65d30d.json",
-              "ui_status": "done"
-            }
-          ]
-        },
-        {
-          "doc_id": "d-20260730-121423-78b0f6",
-          "title": "Edited Docs Review Source Round-Trip",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260730-121423-78b0f6.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "d-20260730-123213-f7d58b",
-              "title": "Docs Import Capability Parity Quick Reference",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260730-123213-f7d58b.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "d-20260730-112029-799346",
-              "title": "Edited Docs Review Source Round-Trip Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260730-112029-799346.json",
-              "ui_status": "done"
-            }
-          ]
-        },
-        {
-          "doc_id": "d-20260730-151218-f4968c",
-          "title": "Filesystem Edit Timestamp Capture Delivery",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260730-151218-f4968c.json",
-          "ui_status": "done"
-        },
-        {
-          "doc_id": "d-20260726-224323-eb0a65",
-          "title": "Manage Sub-Scope Documents",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-224323-eb0a65.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "d-20260729-180308-c92eed",
-              "title": "New Document Source Entry Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260729-180308-c92eed.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "d-20260727-111354-3ac5f0",
-              "title": "Sub-Scope Document Editing Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260727-111354-3ac5f0.json",
-              "ui_status": "done"
-            }
-          ]
-        },
-        {
-          "doc_id": "d-20260715-092247-4b7382",
-          "title": "Portable Document Packages",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-4b7382.json",
-          "children": [
-            {
-              "doc_id": "d-20260711-012238-8a04a6",
-              "title": "Full Document Export Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260711-012238-8a04a6.json",
-              "ui_status": "proposed"
-            }
-          ]
-        },
-        {
           "doc_id": "d-20260723-191039-f8cb88",
           "title": "Public Docs Viewer Mobile Experience",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-191039-f8cb88.json"
@@ -871,37 +820,6 @@
           ]
         },
         {
-          "doc_id": "d-20260713-000000-d9bad2",
-          "title": "Source Documentation and Linting",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260713-000000-d9bad2.json",
-          "ui_status": "draft",
-          "children": [
-            {
-              "doc_id": "d-20260718-125756-a41c70",
-              "title": "Docs Viewer Source Documentation And Linting Pilot Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-125756-a41c70.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "d-20260726-095013-073d1f",
-              "title": "Repository Source Documentation And Linting Adoption Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-095013-073d1f.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "d-20260713-133928-c786c7",
-              "title": "Source Documentation and Linting Concept",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260713-133928-c786c7.json"
-            }
-          ]
-        },
-        {
-          "doc_id": "d-20260731-085838-c1eaca",
-          "title": "Source Editor Image Presentation Delivery",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-085838-c1eaca.json",
-          "ui_status": "done"
-        },
-        {
           "doc_id": "d-20260511-120352-90ffa6",
           "title": "Standalone Docs Viewer",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260511-120352-90ffa6.json",
@@ -911,132 +829,6 @@
               "title": "Standalone Docs Viewer Concept",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-105957-c72b2a.json",
               "ui_status": "proposed"
-            }
-          ]
-        },
-        {
-          "doc_id": "d-20260728-113139-285eae",
-          "title": "Sub-Scope Index",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-113139-285eae.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "d-20260728-113139-95a885",
-              "title": "Independent Canonical Documents",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-113139-95a885.json",
-              "ui_status": "proposed"
-            },
-            {
-              "doc_id": "d-20260728-115825-e2561b",
-              "title": "Sub-Scope Detail Delete Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-115825-e2561b.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "d-20260728-113139-763354",
-              "title": "Sub-Scope Index Architecture",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-113139-763354.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "d-20260730-121423-469e54",
-              "title": "Sub-Scope Ordinary Document Import Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260730-121423-469e54.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "d-20260728-115825-ae1461",
-              "title": "Sub-Scope Package Preparation Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-115825-ae1461.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "d-20260728-115825-41e819",
-              "title": "Sub-Scope Report Contribution Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-115825-41e819.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "d-20260728-141505-277932",
-              "title": "Sub-Scope Report List Filter Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-141505-277932.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "d-20260730-102954-1b363f",
-              "title": "Sub-Scope Returned Package Import Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260730-102954-1b363f.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "d-20260728-173227-bb7426",
-              "title": "Sub-Scope Returned Package Review Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-173227-bb7426.json",
-              "ui_status": "done"
-            }
-          ]
-        },
-        {
-          "doc_id": "d-20260731-150644-3dfab5",
-          "title": "Sub-Scope Report Defaults And Customisations",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-150644-3dfab5.json",
-          "ui_status": "in-progress",
-          "children": [
-            {
-              "doc_id": "d-20260731-155054-1fcd80",
-              "title": "Default Report And Analysis Tags Refactor Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155054-1fcd80.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "d-20260731-185207-2dbb6f",
-              "title": "Default Sub-Scope Report",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-185207-2dbb6f.json",
-              "ui_status": "proposed"
-            },
-            {
-              "doc_id": "d-20260731-155056-2677a3",
-              "title": "Dotlineform Projects Report Customisation Decision Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155056-2677a3.json",
-              "ui_status": "proposed"
-            },
-            {
-              "doc_id": "d-20260731-155055-0b921e",
-              "title": "New Sub-Scope Default Report Lifecycle Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155055-0b921e.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "d-20260731-160944-f68b74",
-              "title": "notes on default report",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-160944-f68b74.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "d-20260731-155053-3929e2",
-              "title": "Sub-Scope Report Customisation Architecture",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155053-3929e2.json",
-              "ui_status": "proposed"
-            }
-          ]
-        },
-        {
-          "doc_id": "d-20260726-211842-cc8f6c",
-          "title": "Tag-document linking",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-211842-cc8f6c.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "d-20260727-224141-d28e4c",
-              "title": "Tag Document Bootstrap Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260727-224141-d28e4c.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "d-20260729-151446-09489e",
-              "title": "Tag Link Management Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260729-151446-09489e.json",
-              "ui_status": "done"
             }
           ]
         },
@@ -1373,5 +1165,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-01T06:51:15Z"
+  "generated_at": "2026-08-01T08:19:28Z"
 }
