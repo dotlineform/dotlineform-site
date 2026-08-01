@@ -4,12 +4,68 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260801-133319-cdfdbf",
+      "title": "PRJ-4 — Resolver Tokens Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133319-cdfdbf.json",
+      "timestamp": "2026-08-01 15:22:45",
+      "parent_id": "d-20260801-095819-30103c",
+      "parent_title": "Projects"
+    },
+    {
+      "doc_id": "d-20260801-133316-a435ad",
+      "title": "PRJ-1 — Docs Viewer Local Folder Links Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133316-a435ad.json",
+      "timestamp": "2026-08-01 15:21:09",
+      "parent_id": "d-20260801-095819-30103c",
+      "parent_title": "Projects"
+    },
+    {
+      "doc_id": "d-20260801-133317-e8eb39",
+      "title": "PRJ-2 — Projects Sub-Scope Customisation And Seed Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133317-e8eb39.json",
+      "timestamp": "2026-08-01 15:21:09",
+      "parent_id": "d-20260801-095819-30103c",
+      "parent_title": "Projects"
+    },
+    {
+      "doc_id": "d-20260801-133318-15e8fa",
+      "title": "PRJ-3 — Docs Viewer Project State Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133318-15e8fa.json",
+      "timestamp": "2026-08-01 15:21:09",
+      "parent_id": "d-20260801-095819-30103c",
+      "parent_title": "Projects"
+    },
+    {
+      "doc_id": "d-20260801-150013-f26b87",
+      "title": "Local File And Folder Links Concept",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-150013-f26b87.json",
+      "timestamp": "2026-08-01 15:16:10",
+      "parent_id": "d-20260801-095819-30103c",
+      "parent_title": "Projects"
+    },
+    {
       "doc_id": "d-20260801-095819-30103c",
       "title": "Projects",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-095819-30103c.json",
-      "timestamp": "2026-08-01 10:55:58",
+      "timestamp": "2026-08-01 15:11:21",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260801-133315-80f527",
+      "title": "Projects Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133315-80f527.json",
+      "timestamp": "2026-08-01 15:11:21",
+      "parent_id": "d-20260801-095819-30103c",
+      "parent_title": "Projects"
+    },
+    {
+      "doc_id": "d-20260801-133314-870275",
+      "title": "Projects Concept",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133314-870275.json",
+      "timestamp": "2026-08-01 15:11:21",
+      "parent_id": "d-20260801-095819-30103c",
+      "parent_title": "Projects"
     },
     {
       "doc_id": "d-20260714-164200-381988",
@@ -26,61 +82,7 @@
       "timestamp": "2026-08-01 09:09:17",
       "parent_id": "d-20260419-000000-d2e47b",
       "parent_title": "Dev Home"
-    },
-    {
-      "doc_id": "d-20260724-213457-6e1cf7",
-      "title": "Docs Viewer Core Definition Baseline v1",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260724-213457-6e1cf7.json",
-      "timestamp": "2026-08-01 09:08:36",
-      "parent_id": "d-20260718-114645-7b9d24",
-      "parent_title": "Docs Viewer Core Refactor"
-    },
-    {
-      "doc_id": "d-20260718-114645-7b9d24",
-      "title": "Docs Viewer Core Refactor",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-114645-7b9d24.json",
-      "timestamp": "2026-08-01 09:08:36"
-    },
-    {
-      "doc_id": "d-20260718-114201-4e7a93",
-      "title": "Docs Viewer Core Refactor Working Method",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-114201-4e7a93.json",
-      "timestamp": "2026-08-01 09:08:36",
-      "parent_id": "d-20260718-114645-7b9d24",
-      "parent_title": "Docs Viewer Core Refactor"
-    },
-    {
-      "doc_id": "d-20260718-124244-3f7a92",
-      "title": "Git",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-124244-3f7a92.json",
-      "timestamp": "2026-08-01 09:08:36",
-      "parent_id": "d-20260718-114645-7b9d24",
-      "parent_title": "Docs Viewer Core Refactor"
-    },
-    {
-      "doc_id": "d-20260419-000000-86255c",
-      "title": "Tag Source Data",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260419-000000-86255c.json",
-      "timestamp": "2026-08-01 08:56:10",
-      "parent_id": "d-20260423-000000-d015e6",
-      "parent_title": "Studio"
-    },
-    {
-      "doc_id": "d-20260331-000000-4519a5",
-      "title": "Tag Registry",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-4519a5.json",
-      "timestamp": "2026-08-01 08:55:27",
-      "parent_id": "d-20260419-000000-86255c",
-      "parent_title": "Tag Source Data"
-    },
-    {
-      "doc_id": "d-20260728-113139-763354",
-      "title": "Sub-Scope Index Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-113139-763354.json",
-      "timestamp": "2026-08-01 08:52:25",
-      "parent_id": "d-20260801-084127-752d7e",
-      "parent_title": "Sub-Scopes"
     }
   ],
-  "generated_at": "2026-08-01T09:56:12Z"
+  "generated_at": "2026-08-01T14:22:46Z"
 }
