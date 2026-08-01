@@ -26,6 +26,7 @@ import docs_document_move_apply  # noqa: E402
 import docs_document_transfer  # noqa: E402
 import docs_document_transfer_apply  # noqa: E402
 import docs_import_source_service as import_source_service  # noqa: E402
+import docs_local_links  # noqa: E402
 import docs_management_mutations as mutations  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
 import docs_publish_gate  # noqa: E402
@@ -116,6 +117,8 @@ def docs_management_post_response(
         return HTTPStatus.OK, open_source_doc(repo_root, body, dry_run)
     if path == routes.OPEN_DIAGRAM_SOURCE_PATH:
         return HTTPStatus.OK, docs_diagram_source_service.open_diagram_source(repo_root, body, dry_run)
+    if path == routes.OPEN_LOCAL_TARGET_PATH:
+        return docs_local_links.open_local_target_response(repo_root, body, dry_run=dry_run)
     if path == routes.BROKEN_LINKS_PATH:
         payload = handle_broken_links(repo_root, body)
         docs_activity.maybe_attach_broken_links_activity(repo_root, body, payload)

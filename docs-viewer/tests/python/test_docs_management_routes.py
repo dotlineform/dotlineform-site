@@ -99,6 +99,11 @@ def test_diagram_source_routes_are_management_owned() -> None:
     assert routes.OPEN_DIAGRAM_SOURCE_PATH in routes.POST_PATHS
 
 
+def test_local_target_route_is_management_owned() -> None:
+    assert routes.OPEN_LOCAL_TARGET_PATH == "/docs/open-local-target"
+    assert routes.OPEN_LOCAL_TARGET_PATH in routes.POST_PATHS
+
+
 def test_semantic_token_usage_route_is_management_owned() -> None:
     assert routes.GENERATED_SEMANTIC_TOKENS_PATH in routes.GET_PATHS
 
@@ -129,6 +134,7 @@ def main() -> None:
     test_document_transfer_routes_are_management_owned_and_singular_copy_is_retired()
     test_staged_media_routes_are_management_owned()
     test_diagram_source_routes_are_management_owned()
+    test_local_target_route_is_management_owned()
     test_semantic_token_usage_route_is_management_owned()
     test_source_backed_sub_scope_document_inventory_route_is_retired()
     test_metadata_read_route_is_management_owned()

@@ -20,6 +20,7 @@ METADATA_PATH = "/docs/metadata"
 SOURCE_REBUILD_PATH = "/docs/source/rebuild"
 OPEN_SOURCE_PATH = "/docs/open-source"
 OPEN_DIAGRAM_SOURCE_PATH = "/docs/open-diagram-source"
+OPEN_LOCAL_TARGET_PATH = "/docs/open-local-target"
 BROKEN_LINKS_PATH = "/docs/broken-links"
 IMPORT_SOURCE_PATH = "/docs/import-source"
 STAGED_MEDIA_PREVIEW_PATH = "/docs/staged-media-preview"
@@ -70,6 +71,7 @@ POST_PATHS = (
     SOURCE_REBUILD_PATH,
     OPEN_SOURCE_PATH,
     OPEN_DIAGRAM_SOURCE_PATH,
+    OPEN_LOCAL_TARGET_PATH,
     BROKEN_LINKS_PATH,
     SOURCE_CONFIG_SETTINGS_PATH,
     IMPORT_SOURCE_PATH,

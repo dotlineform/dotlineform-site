@@ -18,6 +18,7 @@ from docs_management_test_support import (
 from docs_management_capabilities_service import (
     capability_scope_root_label,
 )
+import docs_local_links
 
 def test_capabilities_advertise_generated_data_reads() -> None:
     with make_repo() as temp_path:
@@ -29,6 +30,26 @@ def test_capabilities_advertise_generated_data_reads() -> None:
     assert payload["capabilities"]["generated_data_reads"] is True
     assert payload["capabilities"]["scopes"]["studio"]["generated_data_reads"] is True
     assert payload["capabilities"]["scopes"]["studio"]["generated_search_reads"] is True
+
+
+def test_capabilities_expose_exact_local_folder_link_shape(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    with make_repo() as repo_name:
+        repo_root = Path(repo_name)
+        base = tmp_path / "projects"
+        base.mkdir()
+        monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(base))
+        monkeypatch.setattr(docs_local_links.sys, "platform", "darwin")
+
+        payload = docs_management_service.capabilities_payload(repo_root)
+
+    assert payload["capabilities"]["local_folder_links"] == {
+        "authoring": True,
+        "activation": True,
+        "base_path": str(base.resolve()),
+    }
 
 
 def test_static_snapshot_export_capability_projects_preview_and_apply() -> None:
@@ -134,8 +155,8 @@ def test_missing_external_workspace_disables_only_import_and_review_capabilities
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
+    with make_repo() as repo_name:
+        repo_root = Path(repo_name)
         write_docs_scope_config(repo_root)
         monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(tmp_path / "missing-projects"))
 
@@ -144,6 +165,11 @@ def test_missing_external_workspace_disables_only_import_and_review_capabilities
     capabilities = payload["capabilities"]
     assert capabilities["docs_management"] is True
     assert capabilities["source_editor"] is True
+    assert capabilities["local_folder_links"] == {
+        "authoring": False,
+        "activation": False,
+        "base_path": "",
+    }
     assert capabilities["html_import"] is False
     assert capabilities["library_import"] is False
     assert capabilities["docs_import"]["available"] is False
