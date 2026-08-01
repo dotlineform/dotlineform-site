@@ -398,7 +398,6 @@ function bindEvents(context, state) {
     event.preventDefault();
     state.textarea.setRangeText(replacement, selection.start, selection.end, "end");
     state.textarea.dispatchEvent(new Event("input", { bubbles: true }));
-    setStatus(state, "Local link inserted. Undo to restore the pasted path.", false);
   };
   state.onClick = function (event) {
     var action = event.target.closest("[data-source-editor-action]");

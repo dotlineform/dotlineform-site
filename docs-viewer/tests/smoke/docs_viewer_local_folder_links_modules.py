@@ -144,7 +144,7 @@ def assert_contract(result: dict[str, object]) -> None:
     if result["inserted"] != {
         "prevented": True,
         "value": "Before\n[3 symbols](dlf-local:projects/3%20symbols)\nAfter",
-        "status": "Local link inserted. Undo to restore the pasted path.",
+        "status": "",
         "dirty": True,
     }:
         raise AssertionError(f"Source paste insertion changed: {result!r}")
