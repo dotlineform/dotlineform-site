@@ -156,7 +156,32 @@ def resolve_package_link_target(package_root: Path, markdown_path: Path, target:
     return resolved
 
 
-def package_source_original_path(source_path: Path, workspace_root: Path) -> str:
+def normalize_package_provenance_label(value: str) -> str:
+    label = str(value or "")
+    if not label or label != label.strip() or "\\" in label:
+        raise ValueError("Package provenance label must be one exact relative label")
+    parts = label.split("/")
+    if any(not part or part in {".", ".."} for part in parts):
+        raise ValueError("Package provenance label contains an unsafe segment")
+    if any(ord(char) < 32 or ord(char) == 127 for char in label):
+        raise ValueError("Package provenance label contains control characters")
+    if urlsplit(label).scheme:
+        raise ValueError("Package provenance label must not be a URL")
+    return label
+
+
+def package_source_original_path(
+    source_path: Path,
+    workspace_root: Path,
+    *,
+    package_root: Path | None = None,
+    provenance_label: str = "",
+) -> str:
+    if provenance_label:
+        if package_root is None:
+            raise ValueError("Package provenance label requires package_root")
+        relative = source_path.resolve().relative_to(package_root.resolve()).as_posix()
+        return f"{normalize_package_provenance_label(provenance_label)}/{relative}"
     return marker_path(source_path, workspace_root=workspace_root)
 
 
@@ -201,10 +226,16 @@ def build_package_media_plan(
     filename: str,
     title: str,
     kind: str,
+    provenance_label: str = "",
 ) -> dict[str, Any]:
     media_class = "img" if kind == "image" else "files"
     plan = build_media_plan(scope, media_class, Path(filename), title, repo_root=repo_root)
-    source_rel = package_source_original_path(source_path, workspace_root)
+    source_rel = package_source_original_path(
+        source_path,
+        workspace_root,
+        package_root=package_root,
+        provenance_label=provenance_label,
+    )
     plan.update(
         {
             "source": f"markdown_package_{kind}",
@@ -255,6 +286,7 @@ def rewrite_markdown_package_media_links(
     markdown_path: Path,
     summary: dict[str, Any],
     scope: str,
+    provenance_label: str = "",
 ) -> None:
     markdown = str(summary.get("markdown_preview") or "")
     doc_id = str(summary.get("proposed_doc_id") or package_root.name or "imported-doc")
@@ -295,6 +327,7 @@ def rewrite_markdown_package_media_links(
             filename=filename,
             title=title,
             kind="image",
+            provenance_label=provenance_label,
         )
         plans.append(plan)
         plans_by_target[key] = plan
@@ -331,6 +364,7 @@ def rewrite_markdown_package_media_links(
             filename=filename,
             title=title,
             kind="attachment",
+            provenance_label=provenance_label,
         )
         plans.append(plan)
         plans_by_target[key] = plan

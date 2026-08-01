@@ -33,6 +33,7 @@ class DocsSubScopeReportCustomisationDefinition:
     validate_document: Callable[..., None] | None = None
     metadata_record: Callable[..., dict[str, Any]] | None = None
     normalize_metadata_update: Callable[..., dict[str, Any]] | None = None
+    normalize_import_front_matter: Callable[..., dict[str, Any]] | None = None
     collections: tuple[tuple[str, str], ...] | None = None
 
 
@@ -132,6 +133,9 @@ REPORT_CUSTOMISATION_DEFINITIONS = {
         validate_document=dotlineform_projects.validate_document,
         metadata_record=dotlineform_projects.metadata_record,
         normalize_metadata_update=dotlineform_projects.normalize_metadata_update,
+        normalize_import_front_matter=(
+            dotlineform_projects.normalize_import_front_matter
+        ),
         collections=(("dotlineform", "projects"),),
     ),
 }
@@ -303,6 +307,24 @@ def normalize_report_customisation_metadata_update(
     )
 
 
+def normalize_report_customisation_import_front_matter(
+    customisation: DocsSubScopeReportCustomisationConfig | None,
+    raw: Any,
+    *,
+    doc_id: str,
+) -> dict[str, Any]:
+    if customisation is None:
+        raise ValueError("custom import front matter requires a configured sub-scope")
+    definition = REPORT_CUSTOMISATION_DEFINITIONS[customisation.customisation_id]
+    if definition.normalize_import_front_matter is None:
+        raise ValueError("custom import front matter is unavailable for this sub-scope")
+    return definition.normalize_import_front_matter(
+        customisation.settings,
+        raw,
+        doc_id=doc_id,
+    )
+
+
 def registered_report_customisation_access() -> dict[str, tuple[str, ...]]:
     return {
         customisation_id: tuple(
@@ -329,6 +351,7 @@ __all__ = [
     "project_report_customisation_manifest",
     "registered_report_customisation_access",
     "normalize_report_customisation_metadata_update",
+    "normalize_report_customisation_import_front_matter",
     "report_customisation_metadata_record",
     "report_customisation_document_groups",
     "validate_report_customisation_document",

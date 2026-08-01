@@ -25,6 +25,9 @@ from docs_import_source_helpers import import_summary_text, relative_path, viewe
 from docs_import_source_interactive import materialize_interactive_html_assets  # noqa: E402
 from docs_management_document_target import ManagedDocumentCollection  # noqa: E402
 from docs_management_mutations import metadata_search_doc_ids  # noqa: E402
+from docs_subscope_report_customisations import (  # noqa: E402
+    normalize_report_customisation_import_front_matter,
+)
 from docs_source_model import (  # noqa: E402
     ScopeDoc,
     advance_doc_front_matter,
@@ -169,6 +172,7 @@ def _create_source(
     sub_scope: str,
     import_preview: dict[str, Any],
     explicit_front_matter: dict[str, Any],
+    custom_front_matter: dict[str, Any],
     added_date: str,
 ) -> tuple[str, str, bool]:
     if record.content_intent == CONTENT_INTENT_PRESERVE_EXISTING:
@@ -192,6 +196,7 @@ def _create_source(
     if not default_viewable:
         front_matter["viewable"] = False
     _apply_explicit_front_matter(front_matter, explicit_front_matter)
+    front_matter.update(custom_front_matter)
     viewable = _viewable_value(front_matter, True)
     body = (
         _replacement_body(import_preview, record.title)
@@ -256,6 +261,7 @@ def plan_import_document(
     create_added_date: str = "",
     collection: ManagedDocumentCollection | None = None,
     preserve_collection_metadata: bool = False,
+    custom_front_matter: dict[str, Any] | None = None,
 ) -> ImportDocumentPlan:
     """Validate and plan one create or overwrite without writing."""
 
@@ -306,6 +312,19 @@ def plan_import_document(
         added_date = ""
 
     explicit_front_matter = _explicit_front_matter(record)
+    normalized_custom_front_matter: dict[str, Any] = {}
+    if custom_front_matter is not None:
+        if operation != IMPORT_DOCUMENT_CREATE or collection is None or not sub_scope:
+            raise ValueError(
+                "custom import front matter requires a configured sub-scope create"
+            )
+        normalized_custom_front_matter = (
+            normalize_report_customisation_import_front_matter(
+                collection.document_config.report_customisation,
+                custom_front_matter,
+                doc_id=record.doc_id,
+            )
+        )
     title = _clean_text(record.title)
     if operation == IMPORT_DOCUMENT_CREATE:
         target_path = create_root / f"{record.doc_id}.md"
@@ -319,6 +338,7 @@ def plan_import_document(
             sub_scope,
             preview,
             explicit_front_matter,
+            normalized_custom_front_matter,
             added_date,
         )
         search_doc_ids = () if sub_scope else (record.doc_id,)

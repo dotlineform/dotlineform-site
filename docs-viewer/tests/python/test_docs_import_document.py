@@ -20,9 +20,11 @@ from docs_import_document import (
     apply_import_document,
     plan_import_document,
 )
+from docs_management_document_target import resolve_managed_document_collection
 import docs_source_model as source_model
 
 from docs_import_test_support import make_repo, write_library_doc
+from repo_factory import docs_scope_record, docs_sub_scope_record, write_docs_scope_config
 
 
 def import_content(**changes: object) -> ImportContent:
@@ -49,6 +51,80 @@ def normalized_preview(record: ImportContent) -> dict[str, object]:
         "markdown_preview": record.content,
         "media_plans": [],
     }
+
+
+def test_projects_create_plan_accepts_only_custom_folder_path(
+    external_data_sharing_workspace: Path,
+) -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_docs_scope_config(
+            root,
+            [
+                docs_scope_record(
+                    "dotlineform",
+                    scope_type="local_external",
+                    sub_scopes=[
+                        docs_sub_scope_record(
+                            "dotlineform",
+                            "projects",
+                            report_customisation={
+                                "id": "dotlineform_projects",
+                                "settings": {},
+                            },
+                        )
+                    ],
+                )
+            ],
+        )
+        source_root = (
+            external_data_sharing_workspace.parent
+            / "docs-viewer/scopes/dotlineform/source/sub-scopes/projects/documents"
+        )
+        source_root.mkdir(parents=True)
+        collection = resolve_managed_document_collection(
+            root,
+            scope="dotlineform",
+            sub_scope="projects",
+        )
+        record = import_content(
+            doc_id="d-20260801-120000-a1b2c3",
+            title="Architecture notes",
+        )
+        preview = {
+            **normalized_preview(record),
+            "scope": "dotlineform",
+        }
+
+        plan = plan_import_document(
+            root,
+            "dotlineform",
+            record,
+            operation=IMPORT_DOCUMENT_CREATE,
+            docs=[],
+            import_preview=preview,
+            create_doc_id=record.doc_id,
+            create_added_date="2026-08-01 12:00:00",
+            collection=collection,
+            custom_front_matter={"folder_path": "projects/architecture"},
+        )
+        front_matter, _body = source_model.parse_source_text(plan.source_text)
+
+        with pytest.raises(ValueError, match="unknown fields"):
+            plan_import_document(
+                root,
+                "dotlineform",
+                record,
+                operation=IMPORT_DOCUMENT_CREATE,
+                docs=[],
+                import_preview=preview,
+                create_doc_id=record.doc_id,
+                create_added_date="2026-08-01 12:00:00",
+                collection=collection,
+                custom_front_matter={"folder_path": "projects/architecture", "extra": "no"},
+            )
+
+    assert front_matter["folder_path"] == "projects/architecture"
 
 
 def test_create_plan_applies_allowed_front_matter_and_empty_new_body() -> None:

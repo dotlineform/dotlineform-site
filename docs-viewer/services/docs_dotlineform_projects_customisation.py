@@ -129,10 +129,41 @@ def normalize_metadata_update(
     }
 
 
+def normalize_import_front_matter(
+    settings: Mapping[str, Any],
+    raw: Any,
+    *,
+    doc_id: str,
+) -> dict[str, str]:
+    """Validate optional Projects-owned front matter for create-only import."""
+
+    if settings:
+        raise ValueError("dotlineform_projects settings must be empty")
+    if not isinstance(raw, dict):
+        raise ValueError("custom import front matter must be an object")
+    if set(raw) - {FOLDER_PATH_FIELD}:
+        raise ValueError("custom import front matter contains unknown fields")
+    if FOLDER_PATH_FIELD not in raw:
+        return {}
+    value = raw[FOLDER_PATH_FIELD]
+    if not isinstance(value, str):
+        raise ValueError("custom import folder_path must be a scalar string")
+    if not value:
+        return {}
+    try:
+        folder_path = normalize_decoded_relative_target(value)
+    except ValueError as error:
+        raise ValueError(
+            f"custom import folder_path is invalid for {doc_id!r}: {error}"
+        ) from error
+    return {FOLDER_PATH_FIELD: folder_path}
+
+
 __all__ = [
     "CUSTOMISATION_ID",
     "metadata_record",
     "normalize_metadata_update",
+    "normalize_import_front_matter",
     "normalize_settings",
     "project_manifest",
     "source_folder_path",

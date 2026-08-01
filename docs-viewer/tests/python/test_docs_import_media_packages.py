@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 
 import docs_import_media
+import docs_import_markdown_package
 import docs_import_preview
 import docs_write_rebuild as write_rebuild
 from docs_media_storage import DocsMediaPublishResult
@@ -23,6 +24,37 @@ from docs_import_test_support import (
     write_staged_package_file,
     write_test_image,
 )
+
+
+def test_package_provenance_label_preserves_fixed_external_source_identity(
+    tmp_path: Path,
+) -> None:
+    package = tmp_path / "Nerve"
+    source = package / "assets" / "scan.png"
+    source.parent.mkdir(parents=True)
+    source.write_bytes(b"png")
+
+    result = docs_import_markdown_package.package_source_original_path(
+        source,
+        tmp_path,
+        package_root=package,
+        provenance_label=(
+            "$DOTLINEFORM_PROJECTS_BASE_DIR/Notes export - 2026-05-18/"
+            "iCloud/dotlineform/projects/Nerve"
+        ),
+    )
+
+    assert result == (
+        "$DOTLINEFORM_PROJECTS_BASE_DIR/Notes export - 2026-05-18/"
+        "iCloud/dotlineform/projects/Nerve/assets/scan.png"
+    )
+    with pytest.raises(ValueError, match="unsafe segment"):
+        docs_import_markdown_package.package_source_original_path(
+            source,
+            tmp_path,
+            package_root=package,
+            provenance_label="Notes export/../Nerve",
+        )
 
 def test_html_import_extracts_inline_png_to_staged_media_plan() -> None:
     with make_repo() as temp:
