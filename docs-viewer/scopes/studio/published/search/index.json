@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-84327404e754484a9ff68df9d547357d",
-    "generated_at_utc": "2026-08-01T14:22:46Z",
+    "version": "blake2b-fd6abdb86bc1841cd0b1eb8ecbcdc00a",
+    "generated_at_utc": "2026-08-01T15:40:39Z",
     "count": 220
   },
   "entries": [
@@ -3617,10 +3617,10 @@
       "kind": "doc",
       "title": "PRJ-1 — Docs Viewer Local Folder Links Delivery",
       "href": "/docs/?scope=studio&doc=d-20260801-133316-a435ad",
-      "last_updated": "2026-08-01 15:21:09",
+      "last_updated": "2026-08-01 16:40:39",
       "parent_id": "d-20260801-095819-30103c",
       "parent_title": "Projects",
-      "display_meta": "2026-08-01 15:21:09 • Projects",
+      "display_meta": "2026-08-01 16:40:39 • Projects",
       "search_terms": [
         "prj-1 — docs viewer local folder links delivery",
         "prj",
@@ -3632,16 +3632,16 @@
         "links",
         "delivery",
         "projects",
-        "2026-08-01 15:21:09",
+        "2026-08-01 16:40:39",
         "2026",
         "08",
         "01",
-        "15",
-        "21",
-        "09",
+        "16",
+        "40",
+        "39",
         "d-20260801-133316-a435ad"
       ],
-      "search_text": "prj-1 — docs viewer local folder links delivery prj 1 docs viewer local folder links delivery projects 2026-08-01 15:21:09 2026 08 01 15 21 09 d-20260801-133316-a435ad"
+      "search_text": "prj-1 — docs viewer local folder links delivery prj 1 docs viewer local folder links delivery projects 2026-08-01 16:40:39 2026 08 01 16 40 39 d-20260801-133316-a435ad"
     },
     {
       "id": "d-20260801-133317-e8eb39",
