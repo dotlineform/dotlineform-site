@@ -134,6 +134,8 @@ def is_external_or_special_markdown_target(target: str) -> bool:
     value = str(target or "").strip()
     if not value:
         return True
+    if value.startswith("[[media:") and value.endswith("]]"):
+        return True
     if value.startswith("#"):
         return True
     parsed = urlsplit(value)
@@ -158,7 +160,7 @@ def resolve_package_link_target(package_root: Path, markdown_path: Path, target:
 
 def normalize_package_provenance_label(value: str) -> str:
     label = str(value or "")
-    if not label or label != label.strip() or "\\" in label:
+    if not label.strip() or "\\" in label:
         raise ValueError("Package provenance label must be one exact relative label")
     parts = label.split("/")
     if any(not part or part in {".", ".."} for part in parts):

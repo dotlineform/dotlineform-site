@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-7255cd13e9a1036dac374608456f112a",
-    "generated_at_utc": "2026-08-01T20:14:40Z",
+    "version": "blake2b-d2cb6f934818a24215ef708b5999245c",
+    "generated_at_utc": "2026-08-01T20:43:18Z",
     "count": 222
   },
   "entries": [
@@ -2762,10 +2762,10 @@
       "kind": "doc",
       "title": "Sub-Scope Report Customisation Architecture",
       "href": "/docs/?scope=studio&doc=d-20260731-155053-3929e2",
-      "last_updated": "2026-08-01 08:33:12",
+      "last_updated": "2026-08-01 21:40:00",
       "parent_id": "d-20260801-084127-752d7e",
       "parent_title": "Sub-Scopes",
-      "display_meta": "2026-08-01 08:33:12 • Sub-Scopes",
+      "display_meta": "2026-08-01 21:40:00 • Sub-Scopes",
       "search_terms": [
         "sub-scope report customisation architecture",
         "sub",
@@ -2775,15 +2775,16 @@
         "architecture",
         "sub-scopes",
         "scopes",
-        "2026-08-01 08:33:12",
+        "2026-08-01 21:40:00",
         "2026",
         "08",
         "01",
-        "33",
-        "12",
+        "21",
+        "40",
+        "00",
         "d-20260731-155053-3929e2"
       ],
-      "search_text": "sub-scope report customisation architecture sub scope report customisation architecture sub-scopes scopes 2026-08-01 08:33:12 2026 08 01 33 12 d-20260731-155053-3929e2"
+      "search_text": "sub-scope report customisation architecture sub scope report customisation architecture sub-scopes scopes 2026-08-01 21:40:00 2026 08 01 21 40 00 d-20260731-155053-3929e2"
     },
     {
       "id": "d-20260531-152622-ed2451",
@@ -3599,23 +3600,23 @@
       "kind": "doc",
       "title": "Projects",
       "href": "/docs/?scope=studio&doc=d-20260801-095819-30103c",
-      "last_updated": "2026-08-01 18:42:54",
+      "last_updated": "2026-08-01 21:43:18",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-01 18:42:54 • Roadmap",
+      "display_meta": "2026-08-01 21:43:18 • Roadmap",
       "search_terms": [
         "projects",
         "roadmap",
-        "2026-08-01 18:42:54",
+        "2026-08-01 21:43:18",
         "2026",
         "08",
         "01",
+        "21",
+        "43",
         "18",
-        "42",
-        "54",
         "d-20260801-095819-30103c"
       ],
-      "search_text": "projects roadmap 2026-08-01 18:42:54 2026 08 01 18 42 54 d-20260801-095819-30103c"
+      "search_text": "projects roadmap 2026-08-01 21:43:18 2026 08 01 21 43 18 d-20260801-095819-30103c"
     },
     {
       "id": "d-20260801-150013-f26b87",
@@ -3682,10 +3683,10 @@
       "kind": "doc",
       "title": "PRJ-2 — Implementation And Verification Record",
       "href": "/docs/?scope=studio&doc=d-20260801-193557-78fd17",
-      "last_updated": "2026-08-01 21:14:40",
+      "last_updated": "2026-08-01 21:40:00",
       "parent_id": "d-20260801-095819-30103c",
       "parent_title": "Projects",
-      "display_meta": "2026-08-01 21:14:40 • Projects",
+      "display_meta": "2026-08-01 21:40:00 • Projects",
       "search_terms": [
         "prj-2 — implementation and verification record",
         "prj",
@@ -3695,26 +3696,26 @@
         "verification",
         "record",
         "projects",
-        "2026-08-01 21:14:40",
+        "2026-08-01 21:40:00",
         "2026",
         "08",
         "01",
         "21",
-        "14",
         "40",
+        "00",
         "d-20260801-193557-78fd17"
       ],
-      "search_text": "prj-2 — implementation and verification record prj 2 implementation and verification record projects 2026-08-01 21:14:40 2026 08 01 21 14 40 d-20260801-193557-78fd17"
+      "search_text": "prj-2 — implementation and verification record prj 2 implementation and verification record projects 2026-08-01 21:40:00 2026 08 01 21 40 00 d-20260801-193557-78fd17"
     },
     {
       "id": "d-20260801-133317-e8eb39",
       "kind": "doc",
       "title": "PRJ-2 — Projects Customisation And Apple Notes Migration Delivery",
       "href": "/docs/?scope=studio&doc=d-20260801-133317-e8eb39",
-      "last_updated": "2026-08-01 21:09:58",
+      "last_updated": "2026-08-01 21:40:00",
       "parent_id": "d-20260801-095819-30103c",
       "parent_title": "Projects",
-      "display_meta": "2026-08-01 21:09:58 • Projects",
+      "display_meta": "2026-08-01 21:40:00 • Projects",
       "search_terms": [
         "prj-2 — projects customisation and apple notes migration delivery",
         "prj",
@@ -3726,16 +3727,16 @@
         "notes",
         "migration",
         "delivery",
-        "2026-08-01 21:09:58",
+        "2026-08-01 21:40:00",
         "2026",
         "08",
         "01",
         "21",
-        "09",
-        "58",
+        "40",
+        "00",
         "d-20260801-133317-e8eb39"
       ],
-      "search_text": "prj-2 — projects customisation and apple notes migration delivery prj 2 projects customisation and apple notes migration delivery 2026-08-01 21:09:58 2026 08 01 21 09 58 d-20260801-133317-e8eb39"
+      "search_text": "prj-2 — projects customisation and apple notes migration delivery prj 2 projects customisation and apple notes migration delivery 2026-08-01 21:40:00 2026 08 01 21 40 00 d-20260801-133317-e8eb39"
     },
     {
       "id": "d-20260801-133318-15e8fa",

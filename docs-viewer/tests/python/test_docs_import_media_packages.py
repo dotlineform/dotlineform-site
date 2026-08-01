@@ -48,6 +48,11 @@ def test_package_provenance_label_preserves_fixed_external_source_identity(
         "$DOTLINEFORM_PROJECTS_BASE_DIR/Notes export - 2026-05-18/"
         "iCloud/dotlineform/projects/Nerve/assets/scan.png"
     )
+    assert docs_import_markdown_package.normalize_package_provenance_label(
+        "$DOTLINEFORM_PROJECTS_BASE_DIR/Notes export/projects/trailing space "
+    ).endswith("trailing space ")
+    with pytest.raises(ValueError, match="one exact relative label"):
+        docs_import_markdown_package.normalize_package_provenance_label("   ")
     with pytest.raises(ValueError, match="unsafe segment"):
         docs_import_markdown_package.package_source_original_path(
             source,
@@ -55,6 +60,12 @@ def test_package_provenance_label_preserves_fixed_external_source_identity(
             package_root=package,
             provenance_label="Notes export/../Nerve",
         )
+
+
+def test_package_rewrite_recognizes_existing_media_token_as_special() -> None:
+    assert docs_import_markdown_package.is_external_or_special_markdown_target(
+        "[[media:docs/dotlineform/img/existing.webp]]"
+    )
 
 def test_html_import_extracts_inline_png_to_staged_media_plan() -> None:
     with make_repo() as temp:

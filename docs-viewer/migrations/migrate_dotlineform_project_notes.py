@@ -69,6 +69,7 @@ from docs_scope_config import (  # noqa: E402
     published_media_config,
     resolve_scope_path,
 )
+from local_env import runtime_env  # noqa: E402
 
 
 SCOPE = "dotlineform"
@@ -377,7 +378,6 @@ def _link_exceptions(markdown: str) -> list[dict[str, str]]:
         {"kind": "media_token", "target": match.group(0), "scheme": "media"}
         for match in MEDIA_TOKEN_PATTERN.finditer(markdown)
     ]
-    seen: set[tuple[str, str]] = set()
     matches = [
         ("image", match.group("target"))
         for match in MARKDOWN_IMAGE_REWRITE_PATTERN.finditer(markdown)
@@ -390,10 +390,6 @@ def _link_exceptions(markdown: str) -> list[dict[str, str]]:
         scheme = urlsplit(target).scheme.lower()
         if not scheme or scheme in {"http", "https"} or target.startswith("#"):
             continue
-        key = (kind, target)
-        if key in seen:
-            continue
-        seen.add(key)
         exceptions.append({"kind": kind, "target": target, "scheme": scheme})
     return exceptions
 
@@ -1179,6 +1175,7 @@ def _parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     try:
+        os.environ.update(runtime_env(repo_root=args.repo_root))
         paths = MigrationPaths.resolve(args.repo_root)
         if args.plan:
             result = plan_migration(paths)

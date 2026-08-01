@@ -99,7 +99,8 @@ def _fixture(tmp_path: Path, projects_base: Path) -> migration.MigrationPaths:
         export_root / "Alpha/two.md",
         "---\ntitle: Front matter title\n---\n\nBody.\n\n"
         "[Attachment](files/context.pdf)\n\n[Missing](files/missing.pdf)\n\n"
-        "[Unsupported](files/archive.rtf)\n\n[Lost](sandbox:/mnt/data/lost.txt)\n",
+        "[Unsupported](files/archive.rtf)\n\n[Lost](sandbox:/mnt/data/lost.txt)\n\n"
+        "[Lost again](sandbox:/mnt/data/lost.txt)\n",
     )
     _write(export_root / "Alpha/files/context.pdf", b"test-pdf")
     _write(export_root / "Alpha/files/archive.rtf", b"{\\rtf1 unsupported}")
@@ -197,6 +198,10 @@ def test_plan_blocks_for_review_then_freezes_stable_create_only_operations(
         exception["scheme"] == "sandbox"
         for exception in documents[1]["exceptions"]
     )
+    assert sum(
+        exception["scheme"] == "sandbox"
+        for exception in documents[1]["exceptions"]
+    ) == 2
     assert any(
         "not found" in exception["target"]
         for exception in documents[1]["exceptions"]
