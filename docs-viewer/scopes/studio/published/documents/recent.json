@@ -4,6 +4,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260801-095819-30103c",
+      "title": "Projects",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-095819-30103c.json",
+      "timestamp": "2026-08-01 10:55:58",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
       "doc_id": "d-20260714-164200-381988",
       "title": "Processing Project Setup",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-164200-381988.json",
@@ -72,15 +80,7 @@
       "timestamp": "2026-08-01 08:52:25",
       "parent_id": "d-20260801-084127-752d7e",
       "parent_title": "Sub-Scopes"
-    },
-    {
-      "doc_id": "d-20260711-012238-814555",
-      "title": "Knowledge System Vision",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260711-012238-814555.json",
-      "timestamp": "2026-08-01 08:51:37",
-      "parent_id": "d-20260331-000000-4a16b0",
-      "parent_title": "Architecture"
     }
   ],
-  "generated_at": "2026-08-01T08:10:35Z"
+  "generated_at": "2026-08-01T09:56:12Z"
 }

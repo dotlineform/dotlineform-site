@@ -764,6 +764,11 @@
           ]
         },
         {
+          "doc_id": "d-20260801-095819-30103c",
+          "title": "Projects",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-095819-30103c.json"
+        },
+        {
           "doc_id": "d-20260723-191039-f8cb88",
           "title": "Public Docs Viewer Mobile Experience",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-191039-f8cb88.json"
@@ -1165,5 +1170,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-01T08:19:28Z"
+  "generated_at": "2026-08-01T08:59:29Z"
 }

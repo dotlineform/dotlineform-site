@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3542897a27367ea83a7dc2c797aae591",
-    "generated_at_utc": "2026-08-01T08:19:28Z",
-    "count": 212
+    "version": "blake2b-e056d2f4be78e029a0ed386a0675820e",
+    "generated_at_utc": "2026-08-01T09:56:12Z",
+    "count": 213
   },
   "entries": [
     {
@@ -3559,6 +3559,29 @@
         "d-20260609-212515-6d8aa2"
       ],
       "search_text": "tests report tests report admin checks responsibility reports admin checks responsibility reports 2026-06-09 2026 06 09 d-20260609-212515-6d8aa2"
+    },
+    {
+      "id": "d-20260801-095819-30103c",
+      "kind": "doc",
+      "title": "Projects",
+      "href": "/docs/?scope=studio&doc=d-20260801-095819-30103c",
+      "last_updated": "2026-08-01 10:55:58",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap",
+      "display_meta": "2026-08-01 10:55:58 • Roadmap",
+      "search_terms": [
+        "projects",
+        "roadmap",
+        "2026-08-01 10:55:58",
+        "2026",
+        "08",
+        "01",
+        "10",
+        "55",
+        "58",
+        "d-20260801-095819-30103c"
+      ],
+      "search_text": "projects roadmap 2026-08-01 10:55:58 2026 08 01 10 55 58 d-20260801-095819-30103c"
     },
     {
       "id": "d-20260723-191039-f8cb88",
