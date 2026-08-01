@@ -1,4 +1,7 @@
-import { openLocalTarget } from "../docs-viewer-management-client.js";
+import {
+  encodeDecodedLocalTarget,
+  openLocalTarget
+} from "../docs-viewer-management-client.js";
 
 var mountedActivationRoots = new WeakSet();
 function hasControl(value) { return Array.from(value).some(function (character) { return character.charCodeAt(0) < 32 || character.charCodeAt(0) === 127; }); }
@@ -19,16 +22,6 @@ function shellUnescape(value) {
   return output;
 }
 
-function encodedTarget(parts) {
-  try {
-    return parts.map(function (part) {
-      return encodeURIComponent(part).replace(/[!'()*]/g, function (character) {
-        return "%" + character.charCodeAt(0).toString(16).toUpperCase();
-      });
-    }).join("/");
-  } catch (_error) { return ""; }
-}
-
 export function normalizeLocalFolderPath(value, basePath) {
   if (typeof value !== "string" || !value || value !== value.trim() || hasControl(value)) return null;
   var absolute;
@@ -47,7 +40,7 @@ export function normalizeLocalFolderPath(value, basePath) {
   if (!candidate || !base || candidate.length === base.length) return null;
   if (!base.every(function (part, index) { return candidate[index] === part; })) return null;
   var relativeParts = candidate.slice(base.length);
-  var target = encodedTarget(relativeParts);
+  var target = encodeDecodedLocalTarget(relativeParts.join("/"));
   if (!target) return null;
   var label = relativeParts[relativeParts.length - 1];
   var escapedLabel = label.replace(/\\/g, "\\\\").replace(/\[/g, "\\[").replace(/\]/g, "\\]");

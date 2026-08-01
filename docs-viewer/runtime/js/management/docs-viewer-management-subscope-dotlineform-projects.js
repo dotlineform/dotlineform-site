@@ -1,3 +1,7 @@
+import {
+  encodeDecodedLocalTarget
+} from "./docs-viewer-management-client.js";
+
 const CUSTOMISATION_ID = "dotlineform_projects";
 const EXPECTED_COLLECTION = Object.freeze({
   scope: "dotlineform",
@@ -92,10 +96,12 @@ function renderOpenInFinder(context, options) {
     refreshEffect: "none",
     handler: function () {
       if (!path) throw new Error("This Project document has no Folder Link.");
+      var encodedPath = encodeDecodedLocalTarget(path);
+      if (!encodedPath) throw new Error("This Project document has an invalid Folder Link.");
       if (typeof options.openLocalTarget !== "function") {
         throw new Error("Open in Finder is unavailable.");
       }
-      return options.openLocalTarget(path, options.clientOptions || {}).then(function (response) {
+      return options.openLocalTarget(encodedPath, options.clientOptions || {}).then(function (response) {
         if (typeof options.setStatus === "function") {
           options.setStatus(
             cleanString(response && response.summary_text) || "Local target opened.",

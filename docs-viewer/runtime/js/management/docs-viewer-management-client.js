@@ -57,6 +57,35 @@ export function readManagementCapabilities(options) {
   return fetchManagementJson("/capabilities", "GET", undefined, options);
 }
 
+export function encodeDecodedLocalTarget(target) {
+  if (
+    typeof target !== "string"
+    || !target
+    || target !== target.trim()
+    || target.startsWith("/")
+    || target.includes("\\")
+    || Array.from(target).some(function (character) {
+      return character.charCodeAt(0) < 32 || character.charCodeAt(0) === 127;
+    })
+    || /^[A-Za-z][A-Za-z0-9+.-]*:/.test(target)
+  ) {
+    return "";
+  }
+  var parts = target.split("/");
+  if (parts.some(function (part) { return !part || part === "." || part === ".."; })) {
+    return "";
+  }
+  try {
+    return parts.map(function (part) {
+      return encodeURIComponent(part).replace(/[!'()*]/g, function (character) {
+        return "%" + character.charCodeAt(0).toString(16).toUpperCase();
+      });
+    }).join("/");
+  } catch (_error) {
+    return "";
+  }
+}
+
 export function openLocalTarget(target, options) {
   return fetchManagementJson("/docs/open-local-target", "POST", { target: String(target || "") }, options);
 }

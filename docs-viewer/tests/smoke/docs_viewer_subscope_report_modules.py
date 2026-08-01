@@ -3788,11 +3788,11 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
           const documents = [
             {
               doc_id: 'architecture',
-              customisation: { folder_path: 'projects/architecture' }
+              customisation: { folder_path: 'projects/16 forms' }
             },
             {
               doc_id: 'architecture-notes',
-              customisation: { folder_path: 'projects/architecture' }
+              customisation: { folder_path: 'projects/16 forms' }
             },
             { doc_id: 'pathless' }
           ];
@@ -3931,9 +3931,9 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
         "linkedRow": {
             "duplicate": "2 documents",
             "state": "duplicate",
-            "text": "projects/architecture",
+            "text": "projects/16 forms",
         },
-        "opened": ["projects/architecture"],
+        "opened": ["projects/16%20forms"],
         "pathlessButton": {
             "disabled": True,
             "title": "This Project document has no Folder Link.",
