@@ -7,9 +7,57 @@
       "doc_id": "d-20260801-133316-a435ad",
       "title": "PRJ-1 — Docs Viewer Local Folder Links Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133316-a435ad.json",
-      "timestamp": "2026-08-01 18:12:26",
+      "timestamp": "2026-08-01 18:22:28",
       "parent_id": "d-20260801-095819-30103c",
       "parent_title": "Projects"
+    },
+    {
+      "doc_id": "d-20260607-222033-647b52",
+      "title": "Endpoint Overview",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-647b52.json",
+      "timestamp": "2026-08-01 18:17:09",
+      "parent_id": "d-20260424-000000-04d75e",
+      "parent_title": "Management Services"
+    },
+    {
+      "doc_id": "d-20260801-150013-f26b87",
+      "title": "Local File And Folder Links Concept",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-150013-f26b87.json",
+      "timestamp": "2026-08-01 18:17:09",
+      "parent_id": "d-20260801-095819-30103c",
+      "parent_title": "Projects"
+    },
+    {
+      "doc_id": "d-20260424-000000-04d75e",
+      "title": "Management Services",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260424-000000-04d75e.json",
+      "timestamp": "2026-08-01 18:17:09",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260801-095819-30103c",
+      "title": "Projects",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-095819-30103c.json",
+      "timestamp": "2026-08-01 18:17:09",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260607-222033-4b1d77",
+      "title": "Source Editor Endpoints",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-4b1d77.json",
+      "timestamp": "2026-08-01 18:17:09",
+      "parent_id": "d-20260607-222033-647b52",
+      "parent_title": "Endpoint Overview"
+    },
+    {
+      "doc_id": "d-20260607-222033-704641",
+      "title": "Source Editor Scripts",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-704641.json",
+      "timestamp": "2026-08-01 18:17:09",
+      "parent_id": "d-20260607-222033-2a494e",
+      "parent_title": "Scripts Overview"
     },
     {
       "doc_id": "d-20260801-133319-cdfdbf",
@@ -34,55 +82,7 @@
       "timestamp": "2026-08-01 15:21:09",
       "parent_id": "d-20260801-095819-30103c",
       "parent_title": "Projects"
-    },
-    {
-      "doc_id": "d-20260801-150013-f26b87",
-      "title": "Local File And Folder Links Concept",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-150013-f26b87.json",
-      "timestamp": "2026-08-01 15:16:10",
-      "parent_id": "d-20260801-095819-30103c",
-      "parent_title": "Projects"
-    },
-    {
-      "doc_id": "d-20260801-095819-30103c",
-      "title": "Projects",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-095819-30103c.json",
-      "timestamp": "2026-08-01 15:11:21",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260801-133315-80f527",
-      "title": "Projects Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133315-80f527.json",
-      "timestamp": "2026-08-01 15:11:21",
-      "parent_id": "d-20260801-095819-30103c",
-      "parent_title": "Projects"
-    },
-    {
-      "doc_id": "d-20260801-133314-870275",
-      "title": "Projects Concept",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133314-870275.json",
-      "timestamp": "2026-08-01 15:11:21",
-      "parent_id": "d-20260801-095819-30103c",
-      "parent_title": "Projects"
-    },
-    {
-      "doc_id": "d-20260714-164200-381988",
-      "title": "Processing Project Setup",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-164200-381988.json",
-      "timestamp": "2026-08-01 09:10:35",
-      "parent_id": "d-20260720-101826-994dd0",
-      "parent_title": "Processing"
-    },
-    {
-      "doc_id": "d-20260523-190651-7157ec",
-      "title": "Development Checklist",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260523-190651-7157ec.json",
-      "timestamp": "2026-08-01 09:09:17",
-      "parent_id": "d-20260419-000000-d2e47b",
-      "parent_title": "Dev Home"
     }
   ],
-  "generated_at": "2026-08-01T17:12:50Z"
+  "generated_at": "2026-08-01T17:22:28Z"
 }

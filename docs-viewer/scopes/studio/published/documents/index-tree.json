@@ -773,13 +773,13 @@
               "doc_id": "d-20260801-150013-f26b87",
               "title": "Local File And Folder Links Concept",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-150013-f26b87.json",
-              "ui_status": "proposed"
+              "ui_status": "done"
             },
             {
               "doc_id": "d-20260801-133316-a435ad",
               "title": "PRJ-1 — Docs Viewer Local Folder Links Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133316-a435ad.json",
-              "ui_status": "in-progress"
+              "ui_status": "done"
             },
             {
               "doc_id": "d-20260801-133317-e8eb39",
@@ -1215,5 +1215,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-01T15:38:26Z"
+  "generated_at": "2026-08-01T17:19:51Z"
 }
