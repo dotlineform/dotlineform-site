@@ -54,8 +54,8 @@ def test_management_request_refreshes_scope_model_from_config() -> None:
         source_model.DOCUMENT_SOURCE_ROOTS.update(original_roots)
 
 def test_hidden_doc_is_editable_in_dry_run() -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
+    with make_repo() as repo_name:
+        repo_root = Path(repo_name)
         result = docs_management_service.handle_update_metadata(
             repo_root,
             {
@@ -83,8 +83,8 @@ def test_hidden_doc_is_editable_in_dry_run() -> None:
     }
 
 def test_update_metadata_can_change_viewability_in_dry_run() -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
+    with make_repo() as repo_name:
+        repo_root = Path(repo_name)
         result = docs_management_service.handle_update_metadata(
             repo_root,
             {
@@ -291,6 +291,206 @@ def test_sub_scope_metadata_write_rebuilds_detail_and_both_manifests(
     assert all(set(record) == {"doc_id", "title"} for record in manifest["docs"])
     assert "parent_id: retained-parent" in source_after
     assert 'last_updated: "2026-07-27 21:15:00"' in source_after
+
+
+def test_projects_folder_link_read_save_remove_and_strict_rejection(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    rebuild_calls: list[dict[str, object]] = []
+
+    def fake_sub_scope_rebuild(
+        repo_root,
+        scope,
+        sub_scope,
+        changed_paths,
+        write_operation,
+        **_kwargs,
+    ):
+        write_operation()
+        config = load_docs_scope_configs(repo_root, scope_ids=[scope])[scope]
+        builder = SubScopeDocsBuilder(
+            repo_root=repo_root,
+            config=config,
+            sub_scope=selected_sub_scope(config, sub_scope),
+        )
+        builder._parent_report_doc_id = ""
+        builder.run(write=True)
+        rebuild_calls.append(
+            {
+                "scope": scope,
+                "sub_scope": sub_scope,
+                "changed_paths": [path.name for path in changed_paths],
+            }
+        )
+        return {
+            "ok": True,
+            "docs": {"mode": "sub_scope", "sub_scope": sub_scope},
+            "search": {"mode": "full", "doc_ids": []},
+        }
+
+    monkeypatch.setattr(
+        docs_management_service.write_rebuild,
+        "perform_sub_scope_source_write_and_rebuild",
+        fake_sub_scope_rebuild,
+    )
+    projects_base = tmp_path / "Projects Base"
+    projects_base.mkdir()
+    monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
+
+    with make_repo() as repo_name:
+        repo_root = Path(repo_name)
+        write_scope_registry(
+            repo_root,
+            [
+                docs_scope_record(
+                    "dotlineform",
+                    sub_scopes=[
+                        docs_sub_scope_record(
+                            "dotlineform",
+                            "projects",
+                            report_customisation={
+                                "id": "dotlineform_projects",
+                                "settings": {},
+                            },
+                        )
+                    ],
+                )
+            ],
+        )
+        source_path = repo_root / (
+            "docs-viewer/scopes/dotlineform/source/sub-scopes/"
+            f"projects/documents/{SUB_SCOPE_DOC_ID}.md"
+        )
+        source_path.parent.mkdir(parents=True, exist_ok=True)
+        source_path.write_text(
+            docs_management_mutations.source_model.format_source(
+                {
+                    "doc_id": SUB_SCOPE_DOC_ID,
+                    "title": "Architecture",
+                    "added_date": "2026-07-26 10:00:00",
+                    "last_updated": "2026-07-26 11:00:00",
+                    "folder_path": "projects/architecture",
+                },
+                "# Architecture\n",
+            ),
+            encoding="utf-8",
+        )
+        config = load_docs_scope_configs(repo_root, scope_ids=["dotlineform"])[
+            "dotlineform"
+        ]
+        builder = SubScopeDocsBuilder(
+            repo_root=repo_root,
+            config=config,
+            sub_scope=selected_sub_scope(config, "projects"),
+        )
+        builder._parent_report_doc_id = ""
+        builder.run(write=True)
+
+        metadata = docs_management_service.docs_management_get_payload(
+            repo_root,
+            docs_management_service.routes.METADATA_PATH,
+            {
+                "scope": ["dotlineform"],
+                "sub_scope": ["projects"],
+                "doc_id": [SUB_SCOPE_DOC_ID],
+            },
+        )
+        revision = str(metadata["source_revision"])
+        base_body = {
+            "scope": "dotlineform",
+            "sub_scope": "projects",
+            "doc_id": SUB_SCOPE_DOC_ID,
+            "source_revision": revision,
+            "title": "Architecture",
+        }
+        source_before_rejections = source_path.read_bytes()
+        invalid_customisations = [
+            None,
+            {"folder_path": "projects/architecture", "extra": "rejected"},
+            {"folder_path": str(tmp_path / "outside")},
+            {"folder_path": "dlf-local:projects/architecture"},
+        ]
+        for customisation in invalid_customisations:
+            body = dict(base_body)
+            if customisation is not None:
+                body["customisation"] = customisation
+            with pytest.raises(ValueError):
+                docs_management_service.docs_management_post_response(
+                    repo_root,
+                    docs_management_service.routes.UPDATE_METADATA_PATH,
+                    body,
+                    dry_run=True,
+                )
+        assert source_path.read_bytes() == source_before_rejections
+
+        prospective = projects_base / "projects" / "Future Folder"
+        status, result = docs_management_service.docs_management_post_response(
+            repo_root,
+            docs_management_service.routes.UPDATE_METADATA_PATH,
+            {
+                **base_body,
+                "customisation": {"folder_path": str(prospective)},
+            },
+            dry_run=False,
+        )
+        linked_source = source_path.read_text(encoding="utf-8")
+        linked_manifest = read_json(
+            repo_root / (
+                "docs-viewer/scopes/dotlineform/published/documents/"
+                "sub-scopes/projects/manage-manifest.json"
+            )
+        )
+
+        status_removed, removed = (
+            docs_management_service.docs_management_post_response(
+                repo_root,
+                docs_management_service.routes.UPDATE_METADATA_PATH,
+                {
+                    **base_body,
+                    "source_revision": result["source_revision"],
+                    "customisation": {"folder_path": ""},
+                },
+                dry_run=False,
+            )
+        )
+        removed_source = source_path.read_text(encoding="utf-8")
+        removed_manifest = read_json(
+            repo_root / (
+                "docs-viewer/scopes/dotlineform/published/documents/"
+                "sub-scopes/projects/manage-manifest.json"
+            )
+        )
+
+    assert metadata["record"]["customisation"] == {
+        "folder_path": "projects/architecture"
+    }
+    assert status is HTTPStatus.OK
+    assert result["record"]["customisation"] == {
+        "folder_path": "projects/Future Folder"
+    }
+    assert result["changes"]["folder_path_changed"] is True
+    assert "folder_path: projects/Future Folder" in linked_source
+    assert 'last_updated: "2026-07-26 11:00:00"' in linked_source
+    assert linked_manifest["docs"][0]["customisation"] == {
+        "folder_path": "projects/Future Folder"
+    }
+    assert status_removed is HTTPStatus.OK
+    assert removed["record"]["customisation"] == {"folder_path": ""}
+    assert "folder_path:" not in removed_source
+    assert "customisation" not in removed_manifest["docs"][0]
+    assert rebuild_calls == [
+        {
+            "scope": "dotlineform",
+            "sub_scope": "projects",
+            "changed_paths": [f"{SUB_SCOPE_DOC_ID}.md"],
+        },
+        {
+            "scope": "dotlineform",
+            "sub_scope": "projects",
+            "changed_paths": [f"{SUB_SCOPE_DOC_ID}.md"],
+        },
+    ]
 
 
 def test_sub_scope_metadata_service_rejects_parent_without_writing(

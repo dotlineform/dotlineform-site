@@ -20,6 +20,7 @@ from .source import DocRecord
 from docs_subscope_report_customisations import (
     project_report_customisation_manifest,
     report_customisation_document_groups,
+    validate_report_customisation_document,
 )
 
 
@@ -176,6 +177,11 @@ class SubScopeDocsBuilder(DocsDataBuilder):
                     f"Unknown group {doc.group!r} for "
                     f"{self.scope_id}/{self.sub_scope_id} doc {doc.doc_id!r}"
                 )
+            validate_report_customisation_document(
+                self.sub_scope_config.report_customisation,
+                doc.front_matter,
+                doc_id=doc.doc_id,
+            )
 
     def run(self, *, write: bool, emit_diagnostics: bool = False) -> dict[str, Any]:
         started_at = monotonic_time()

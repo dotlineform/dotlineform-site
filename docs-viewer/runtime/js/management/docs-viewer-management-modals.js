@@ -45,6 +45,7 @@ export function createDocsViewerManagementModalController(options = {}) {
   var metadataStatusPointerValue = null;
   var metadataEditingDoc = null;
   var metadataEditingChoices = null;
+  var metadataCustomisationEditor = null;
   var settingsFieldState = null;
   var importModalCancelButton = null;
   var importLifecycle = null;
@@ -230,6 +231,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     dismissMetadataParentSuggestions();
     if (metadataLifecycle) metadataLifecycle.close();
     refs.metadataModal.hidden = true;
+    destroyMetadataCustomisationEditor();
     management.metadataEditingDocId = "";
     metadataEditingDoc = null;
     metadataEditingChoices = null;
@@ -238,6 +240,51 @@ export function createDocsViewerManagementModalController(options = {}) {
       metadataModalResolve = null;
       resolve(result || null);
     }
+  }
+
+  function destroyMetadataCustomisationEditor() {
+    if (
+      metadataCustomisationEditor
+      && typeof metadataCustomisationEditor.destroy === "function"
+    ) {
+      metadataCustomisationEditor.destroy();
+    }
+    metadataCustomisationEditor = null;
+    if (refs.metadataCustomisationHost) {
+      refs.metadataCustomisationHost.replaceChildren();
+      refs.metadataCustomisationHost.hidden = true;
+    }
+  }
+
+  function mountMetadataCustomisationEditor(contribution, doc, target) {
+    destroyMetadataCustomisationEditor();
+    var mount = contribution && contribution.mountMetadataEditor;
+    if (typeof mount !== "function") return;
+    if (!refs.metadataCustomisationHost) {
+      throw new Error("Edit Metadata customisation host is unavailable.");
+    }
+    var editor = mount({
+      host: refs.metadataCustomisationHost,
+      record: doc,
+      target: target
+    });
+    if (
+      !editor
+      || typeof editor.read !== "function"
+      || typeof editor.destroy !== "function"
+    ) {
+      throw new Error("Edit Metadata customisation editor is invalid.");
+    }
+    metadataCustomisationEditor = editor;
+  }
+
+  function readMetadataCustomisation() {
+    if (!metadataCustomisationEditor) return null;
+    var value = metadataCustomisationEditor.read();
+    if (!value || typeof value !== "object" || Array.isArray(value)) {
+      throw new Error("Edit Metadata customisation value is invalid.");
+    }
+    return value;
   }
 
   function openMetadataModal(doc, options) {
@@ -260,6 +307,11 @@ export function createDocsViewerManagementModalController(options = {}) {
     refs.metadataDateDisplayInput.value = doc.date_display || "";
     renderMetadataStatusOptions(doc, metadataEditingChoices);
     renderMetadataGroupOptions(doc, metadataEditingChoices);
+    mountMetadataCustomisationEditor(
+      settings.metadataContribution,
+      doc,
+      target
+    );
     refs.metadataNonViewableInput.checked = typeof callbacks.isDocNonViewable === "function" ? callbacks.isDocNonViewable(doc) : doc.viewable === false;
     var showParent = settings.showParent === true;
     refs.metadataParentField.hidden = !showParent;
@@ -776,6 +828,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     projectImportCollectionState: projectImportCollectionState,
     renderMetadataParentOptions: renderMetadataParentOptions,
     renderMetadataStatusOptions: renderMetadataStatusOptions,
+    readMetadataCustomisation: readMetadataCustomisation,
     renderSettingsWarnings: renderSettingsWarnings,
     resolveMetadataParentId: resolveMetadataParentId,
     projectImportTerminalResult: projectImportTerminalResult,

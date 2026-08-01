@@ -7,6 +7,11 @@ const MANAGEMENT_CUSTOMISATION_LOADERS = Object.freeze({
     return import("./docs-viewer-management-subscope-analysis-tags.js").then(function (module) {
       return module.createDocsViewerManagementSubscopeAnalysisTags;
     });
+  },
+  dotlineform_projects: function () {
+    return import("./docs-viewer-management-subscope-dotlineform-projects.js").then(function (module) {
+      return module.createDocsViewerManagementSubscopeDotlineformProjects;
+    });
   }
 });
 

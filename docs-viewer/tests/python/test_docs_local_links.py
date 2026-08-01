@@ -65,6 +65,37 @@ def test_authoring_rejects_ambiguous_or_outside_values(tmp_path: Path) -> None:
             docs_local_links.normalize_local_path_input(value, base)
 
 
+def test_structured_targets_accept_relative_or_contained_absolute_input(
+    tmp_path: Path,
+) -> None:
+    base = tmp_path / "Projects Base"
+    base.mkdir()
+    target = base / "projects" / "Future Folder"
+
+    accepted = [
+        "projects/Future Folder",
+        str(target),
+        str(target).replace(" ", "\\ "),
+        target.as_uri(),
+    ]
+    assert [
+        docs_local_links.normalize_structured_local_target_input(value, base)
+        for value in accepted
+    ] == ["projects/Future Folder"] * len(accepted)
+
+    rejected = [
+        "dlf-local:projects/Future%20Folder",
+        "[Future Folder](dlf-local:projects/Future%20Folder)",
+        "../Future Folder",
+        "projects/../Future Folder",
+        "https://example.com/Future Folder",
+        str(tmp_path / "outside"),
+    ]
+    for value in rejected:
+        with pytest.raises(docs_local_links.LocalLinkInputError):
+            docs_local_links.normalize_structured_local_target_input(value, base)
+
+
 def test_encoded_targets_require_a_canonical_safe_round_trip() -> None:
     encoded = "projects/3%20symbols/M%C3%BCnchen%20%E2%9C%93~"
     decoded = docs_local_links.decode_relative_target(encoded)

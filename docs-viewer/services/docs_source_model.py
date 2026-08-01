@@ -31,7 +31,10 @@ from docs_scope_config import (
     document_source_path,
     resolve_scope_path,
 )
-from docs_subscope_report_customisations import report_customisation_document_groups
+from docs_subscope_report_customisations import (
+    report_customisation_document_groups,
+    validate_report_customisation_document,
+)
 
 
 FRONT_MATTER_PATTERN = re.compile(r"\A---\s*\n(.*?)\n---\s*\n?", re.DOTALL)
@@ -152,6 +155,7 @@ def format_source(front_matter: Dict[str, Any], body: str) -> str:
         "summary",
         "ui_status",
         "group",
+        "folder_path",
         "parent_id",
         "viewable",
     ]
@@ -375,6 +379,7 @@ def validate_sub_scope_document_metadata(
     *,
     ui_statuses: tuple[str, ...],
     document_groups: tuple[str, ...],
+    report_customisation: Any = None,
 ) -> None:
     """Validate metadata owned by one configured sub-scope."""
 
@@ -390,6 +395,11 @@ def validate_sub_scope_document_metadata(
         raise ValueError(
             f"Unknown group {doc.group!r} for sub-scope doc {doc.doc_id!r}"
         )
+    validate_report_customisation_document(
+        report_customisation,
+        doc.front_matter,
+        doc_id=doc.doc_id,
+    )
 
 
 def default_viewable_for_scope(scope: str) -> bool:
@@ -480,6 +490,7 @@ def load_document_collection_docs_for_config(
                 document_groups=report_customisation_document_groups(
                     document_config.report_customisation
                 ),
+                report_customisation=document_config.report_customisation,
             )
     return docs
 

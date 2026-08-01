@@ -257,6 +257,7 @@ def validate_whole_returned_package(
                     document_groups=report_customisation_document_groups(
                         collection.document_config.report_customisation
                     ),
+                    report_customisation=collection.document_config.report_customisation,
                 )
             collection_ids = {
                 doc.doc_id

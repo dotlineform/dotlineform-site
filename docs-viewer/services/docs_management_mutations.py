@@ -24,7 +24,10 @@ from docs_scope_config import (
     resolve_external_data_root,
     resolve_scope_path,
 )
-from docs_subscope_report_customisations import report_customisation_document_groups
+from docs_subscope_report_customisations import (
+    normalize_report_customisation_metadata_update,
+    report_customisation_document_groups,
+)
 
 
 SUB_SCOPE_DELETE_PREVIEW_KEYS = frozenset({"scope", "sub_scope", "doc_id"})
@@ -246,6 +249,7 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
                 document_groups=report_customisation_document_groups(
                     collection.document_config.report_customisation
                 ),
+                report_customisation=collection.document_config.report_customisation,
             )
             docs.append(document)
         if "parent_id" in body:
@@ -428,6 +432,18 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         else current_group
     )
     group_changed = group_was_provided and group != current_group
+    customisation_update = normalize_report_customisation_metadata_update(
+        (
+            resolved.document_config.report_customisation
+            if resolved.sub_scope
+            else None
+        ),
+        body.get("customisation"),
+        provided="customisation" in body,
+        repo_root=repo_root,
+        front_matter=target.front_matter,
+        doc_id=target.doc_id,
+    )
     viewable_was_provided = "viewable" in body
     current_viewable = target.viewable
     viewable = source_model.front_matter_boolean(body, "viewable", True) if viewable_was_provided else current_viewable
@@ -443,6 +459,8 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
     }
     if resolved.sub_scope:
         changes["group_changed"] = group_changed
+    if customisation_update is not None:
+        changes.update(customisation_update["changes"])
     if not any(changes.values()):
         record: dict[str, object] = {
             "doc_id": target.doc_id,
@@ -457,6 +475,8 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
             record["parent_id"] = target.parent_id
         else:
             record["group"] = current_group
+            if customisation_update is not None:
+                record["customisation"] = customisation_update["record"]
         response: dict[str, Any] = {
             "ok": True,
             "scope": scope,
@@ -507,6 +527,14 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
             updated_front_matter["group"] = group
         else:
             updated_front_matter.pop("group", None)
+    if customisation_update is not None:
+        for field_name, field_value in customisation_update[
+            "front_matter_updates"
+        ].items():
+            if field_value is None:
+                updated_front_matter.pop(field_name, None)
+            else:
+                updated_front_matter[field_name] = field_value
     if not resolved.sub_scope:
         updated_front_matter["parent_id"] = parent_id
         updated_front_matter.pop("sort_order", None)
@@ -542,6 +570,8 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         record["parent_id"] = parent_id
     else:
         record["group"] = group
+        if customisation_update is not None:
+            record["customisation"] = customisation_update["record"]
     updated_source_text = source_model.format_source(
         updated_front_matter,
         target.body,
@@ -572,6 +602,8 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
     if resolved.sub_scope:
         log_details["sub_scope"] = resolved.sub_scope
         log_details["group_changed"] = group_changed
+    if customisation_update is not None:
+        log_details.update(customisation_update["changes"])
 
     return ManagementMutationPlan(
         scope=scope,

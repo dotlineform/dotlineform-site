@@ -16,7 +16,10 @@ from docs_scope_config import (
     load_docs_scope_configs,
     resolve_scope_path,
 )
-from docs_subscope_report_customisations import report_customisation_document_groups
+from docs_subscope_report_customisations import (
+    report_customisation_document_groups,
+    report_customisation_metadata_record,
+)
 
 
 PARENT_TARGET_KEYS = frozenset({"scope", "doc_id"})
@@ -265,6 +268,7 @@ def resolve_managed_document_target(
             document_groups=report_customisation_document_groups(
                 collection.document_config.report_customisation
             ),
+            report_customisation=collection.document_config.report_customisation,
         )
     else:
         parent_documents = [
@@ -333,6 +337,13 @@ def managed_document_metadata(
     }
     if resolved.sub_scope:
         record["group"] = document.group
+        customisation_record = report_customisation_metadata_record(
+            resolved.document_config.report_customisation,
+            front_matter,
+            doc_id=document.doc_id,
+        )
+        if customisation_record is not None:
+            record["customisation"] = customisation_record
         payload["sub_scope"] = resolved.sub_scope
         payload["source_revision"] = source_model.source_revision(
             document.source_text.encode("utf-8")

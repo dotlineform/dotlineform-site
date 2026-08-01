@@ -7,6 +7,33 @@ import {
 import {
   createDocsViewerManagementSettingsWorkflow
 } from "./docs-viewer-management-settings-workflow.js";
+import {
+  resolveManagementDocsSubscopeCustomisation
+} from "./docs-viewer-management-subscope-customisation-registry.js";
+
+function cleanString(value) {
+  return String(value == null ? "" : value).trim();
+}
+
+function metadataCustomisationDescriptor(scopeConfig, target) {
+  if (!target || !target.sub_scope) return null;
+  var configs = Array.isArray(scopeConfig && scopeConfig.scopeConfigs)
+    ? scopeConfig.scopeConfigs
+    : [];
+  var scope = cleanString(target.scope).toLowerCase();
+  var subScope = cleanString(target.sub_scope).toLowerCase();
+  var parent = configs.find(function (config) {
+    return cleanString(config && (config.scope_id || config.scopeId)).toLowerCase() === scope;
+  });
+  var children = parent && Array.isArray(parent.subScopes) ? parent.subScopes : [];
+  var child = children.find(function (record) {
+    return cleanString(record && (record.subScope || record.sub_scope)).toLowerCase() === subScope;
+  });
+  if (!child) {
+    throw new Error("Edit Metadata target collection is not configured.");
+  }
+  return child.reportCustomisation || null;
+}
 
 function shellRef(shellRefs, name, id) {
   return shellRefs[name] || document.getElementById(id);
@@ -37,6 +64,7 @@ export function createDocsViewerManagementModalComposition(options = {}) {
     metadataForm: shellRef(shellRefs, "metadataForm", "docsViewerMetadataForm"),
     metadataGroupField: shellRef(shellRefs, "metadataGroupField", "docsViewerMetadataGroupField"),
     metadataGroupInput: shellRef(shellRefs, "metadataGroupInput", "docsViewerMetadataGroupInput"),
+    metadataCustomisationHost: shellRef(shellRefs, "metadataCustomisationHost", "docsViewerMetadataCustomisationHost"),
     metadataDateDisplayInput: shellRef(shellRefs, "metadataDateDisplayInput", "docsViewerMetadataDateDisplayInput"),
     metadataDateInput: shellRef(shellRefs, "metadataDateInput", "docsViewerMetadataDateInput"),
     metadataNonViewableInput: shellRef(shellRefs, "metadataNonViewableInput", "docsViewerMetadataNonViewableInput"),
@@ -86,7 +114,16 @@ export function createDocsViewerManagementModalComposition(options = {}) {
       },
       loadMetadataDoc: callbacks.loadMetadataDoc,
       onLoadError: callbacks.onMetadataLoadError,
-      onSave: callbacks.onMetadataSave
+      onSave: callbacks.onMetadataSave,
+      resolveMetadataContribution: function (target) {
+        var descriptor = metadataCustomisationDescriptor(scopeConfig, target);
+        return resolveManagementDocsSubscopeCustomisation(descriptor, {
+          collection: {
+            scope: cleanString(target && target.scope).toLowerCase(),
+            sub_scope: cleanString(target && target.sub_scope).toLowerCase()
+          }
+        });
+      }
     }
   });
   var settingsWorkflow = createDocsViewerManagementSettingsWorkflow({

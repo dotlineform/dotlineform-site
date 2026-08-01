@@ -1242,6 +1242,123 @@ def assert_metadata_workflow_uses_exact_sub_scope_target(page: Page) -> None:
         raise AssertionError(f"sub-scope metadata payload included Parent: {result!r}")
 
 
+def assert_metadata_workflow_collects_projects_customisation(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const workflowModule = await import(
+                '/docs-viewer/runtime/js/management/docs-viewer-management-metadata-workflow.js'
+            );
+            const target = {
+                scope: 'dotlineform',
+                sub_scope: 'projects',
+                doc_id: 'project-doc'
+            };
+            const refs = {
+                titleInput: { value: 'Project', focus: () => {} },
+                summaryInput: { value: '' },
+                dateInput: { value: '' },
+                dateDisplayInput: { value: '' },
+                statusInput: { value: '' },
+                groupInput: { value: '' },
+                nonViewableInput: { checked: false },
+                parentInput: { value: '', focus: () => {} }
+            };
+            let modalResolve = null;
+            let opened = null;
+            let resolvedTarget = null;
+            let saved = null;
+            const contribution = {
+                id: 'dotlineform_projects',
+                mountMetadataEditor: () => ({ read: () => ({}), destroy: () => {} })
+            };
+            const modal = {
+                closeMetadataModal: payload => modalResolve(payload),
+                openMetadataModal: (doc, options) => {
+                    opened = {
+                        customisation: doc.customisation,
+                        contributionId: options.metadataContribution.id,
+                        target: options.target
+                    };
+                    return new Promise(resolve => {
+                        modalResolve = resolve;
+                    });
+                },
+                readMetadataCustomisation: () => ({
+                    folder_path: 'projects/future'
+                }),
+                resolveMetadataParentId: () => {
+                    throw new Error('Projects metadata must not resolve Parent.');
+                },
+                setMetadataStatus: () => {}
+            };
+            const workflow = workflowModule.createDocsViewerManagementMetadataWorkflow({
+                documentIndex: { allDocs: [], docsById: new Map() },
+                management: {},
+                refs,
+                callbacks: {
+                    getModalController: () => modal,
+                    loadMetadataDoc: () => ({
+                        ok: true,
+                        scope: 'dotlineform',
+                        sub_scope: 'projects',
+                        doc_id: 'project-doc',
+                        source_revision: 'sha256:' + 'b'.repeat(64),
+                        choices: { ui_status: [], group: [] },
+                        record: {
+                            doc_id: 'project-doc',
+                            title: 'Project',
+                            summary: '',
+                            date: '',
+                            date_display: '',
+                            ui_status: '',
+                            group: '',
+                            viewable: true,
+                            customisation: { folder_path: 'projects/current' }
+                        }
+                    }),
+                    onSave: (savedTarget, payload) => {
+                        saved = { target: savedTarget, payload };
+                    },
+                    resolveMetadataContribution: requestedTarget => {
+                        resolvedTarget = requestedTarget;
+                        return Promise.resolve(contribution);
+                    }
+                }
+            });
+            const pending = workflow.openForTarget(target);
+            await new Promise(resolve => setTimeout(resolve, 0));
+            workflow.confirm();
+            const payload = await pending;
+            return { opened, payload, resolvedTarget, saved };
+        }"""
+    )
+    expected_target = {
+        "scope": "dotlineform",
+        "sub_scope": "projects",
+        "doc_id": "project-doc",
+    }
+    expected_payload = {
+        "title": "Project",
+        "summary": "",
+        "date": "",
+        "date_display": "",
+        "ui_status": "",
+        "viewable": True,
+        "source_revision": "sha256:" + ("b" * 64),
+        "customisation": {"folder_path": "projects/future"},
+    }
+    assert result == {
+        "opened": {
+            "customisation": {"folder_path": "projects/current"},
+            "contributionId": "dotlineform_projects",
+            "target": expected_target,
+        },
+        "payload": expected_payload,
+        "resolvedTarget": expected_target,
+        "saved": {"target": expected_target, "payload": expected_payload},
+    }
+
+
 def assert_metadata_client_uses_exact_target_requests(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -2629,6 +2746,7 @@ def exercise_manage_route(
     assert_action_target_definitions(page)
     assert_metadata_hydration_failure_is_safe(page)
     assert_metadata_workflow_uses_exact_sub_scope_target(page)
+    assert_metadata_workflow_collects_projects_customisation(page)
     assert_metadata_client_uses_exact_target_requests(page)
     assert_metadata_response_refreshes_exact_target(page)
     assert_source_editor_media_presentation(page)

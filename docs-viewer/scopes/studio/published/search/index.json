@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-228e8e9a7d859be2c2f6a01163bae817",
-    "generated_at_utc": "2026-08-01T19:10:12Z",
+    "version": "blake2b-98c651cec6e864b0f0e623b5a2f74a33",
+    "generated_at_utc": "2026-08-01T19:39:42Z",
     "count": 222
   },
   "entries": [
@@ -3682,10 +3682,10 @@
       "kind": "doc",
       "title": "PRJ-2 — Implementation And Verification Record",
       "href": "/docs/?scope=studio&doc=d-20260801-193557-78fd17",
-      "last_updated": "2026-08-01 20:09:52",
+      "last_updated": "2026-08-01 20:36:54",
       "parent_id": "d-20260801-095819-30103c",
       "parent_title": "Projects",
-      "display_meta": "2026-08-01 20:09:52 • Projects",
+      "display_meta": "2026-08-01 20:36:54 • Projects",
       "search_terms": [
         "prj-2 — implementation and verification record",
         "prj",
@@ -3695,26 +3695,26 @@
         "verification",
         "record",
         "projects",
-        "2026-08-01 20:09:52",
+        "2026-08-01 20:36:54",
         "2026",
         "08",
         "01",
         "20",
-        "09",
-        "52",
+        "36",
+        "54",
         "d-20260801-193557-78fd17"
       ],
-      "search_text": "prj-2 — implementation and verification record prj 2 implementation and verification record projects 2026-08-01 20:09:52 2026 08 01 20 09 52 d-20260801-193557-78fd17"
+      "search_text": "prj-2 — implementation and verification record prj 2 implementation and verification record projects 2026-08-01 20:36:54 2026 08 01 20 36 54 d-20260801-193557-78fd17"
     },
     {
       "id": "d-20260801-133317-e8eb39",
       "kind": "doc",
       "title": "PRJ-2 — Projects Customisation And Apple Notes Migration Delivery",
       "href": "/docs/?scope=studio&doc=d-20260801-133317-e8eb39",
-      "last_updated": "2026-08-01 20:09:52",
+      "last_updated": "2026-08-01 20:36:54",
       "parent_id": "d-20260801-095819-30103c",
       "parent_title": "Projects",
-      "display_meta": "2026-08-01 20:09:52 • Projects",
+      "display_meta": "2026-08-01 20:36:54 • Projects",
       "search_terms": [
         "prj-2 — projects customisation and apple notes migration delivery",
         "prj",
@@ -3726,16 +3726,16 @@
         "notes",
         "migration",
         "delivery",
-        "2026-08-01 20:09:52",
+        "2026-08-01 20:36:54",
         "2026",
         "08",
         "01",
         "20",
-        "09",
-        "52",
+        "36",
+        "54",
         "d-20260801-133317-e8eb39"
       ],
-      "search_text": "prj-2 — projects customisation and apple notes migration delivery prj 2 projects customisation and apple notes migration delivery 2026-08-01 20:09:52 2026 08 01 20 09 52 d-20260801-133317-e8eb39"
+      "search_text": "prj-2 — projects customisation and apple notes migration delivery prj 2 projects customisation and apple notes migration delivery 2026-08-01 20:36:54 2026 08 01 20 36 54 d-20260801-133317-e8eb39"
     },
     {
       "id": "d-20260801-133318-15e8fa",

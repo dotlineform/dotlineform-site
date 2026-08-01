@@ -311,6 +311,7 @@ def load_current_collection_docs(
             document_groups=report_customisation_document_groups(
                 collection.document_config.report_customisation
             ),
+            report_customisation=collection.document_config.report_customisation,
         )
     return docs
 

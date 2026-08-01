@@ -441,6 +441,10 @@
         {
           "sub_scope": "projects",
           "title": "Projects",
+          "report_customisation": {
+            "id": "dotlineform_projects",
+            "settings": {}
+          },
           "public_projection": null,
           "lifecycle": {
             "tool_id": "docs-viewer-scope-lifecycle",

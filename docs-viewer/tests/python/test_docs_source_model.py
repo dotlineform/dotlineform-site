@@ -190,6 +190,80 @@ def test_document_collection_loader_selects_exact_configured_sub_scope() -> None
     assert "unknown sub_scope 'missing' for scope 'analysis'" in missing_error
 
 
+def test_projects_collection_loader_validates_decoded_relative_folder_path() -> None:
+    child_config = SimpleNamespace(
+        sub_scope="projects",
+        ui_statuses=("draft", "done"),
+        report_customisation=SimpleNamespace(
+            customisation_id="dotlineform_projects",
+            settings={},
+        ),
+        source=SimpleNamespace(
+            location=SimpleNamespace(path=Path("dotlineform-projects")),
+            documents_path=Path("documents"),
+        ),
+    )
+    parent_config = SimpleNamespace(
+        scope_id="dotlineform",
+        allow_unresolved_parent_ids=False,
+        source=SimpleNamespace(
+            location=SimpleNamespace(path=Path("dotlineform-parent")),
+            documents_path=Path("documents"),
+        ),
+        sub_scopes=(child_config,),
+    )
+    original_configs = dict(source_model.DOCS_SCOPE_CONFIGS)
+
+    with tempfile.TemporaryDirectory() as temp:
+        root = Path(temp)
+        path = root / "dotlineform-projects/documents/project.md"
+        write_doc(
+            root,
+            "dotlineform-projects/documents",
+            "project.md",
+            {
+                "doc_id": FIXTURE_DOC_ID,
+                "title": "Project",
+                "folder_path": "projects/Future Folder",
+            },
+        )
+        source_model.DOCS_SCOPE_CONFIGS.clear()
+        source_model.DOCS_SCOPE_CONFIGS["dotlineform"] = parent_config
+        try:
+            docs = source_model.load_document_collection_docs(
+                root,
+                "dotlineform",
+                "projects",
+            )
+            path.write_text(
+                source_model.format_source(
+                    {
+                        "doc_id": FIXTURE_DOC_ID,
+                        "title": "Project",
+                        "folder_path": "/absolute/not-stored",
+                    },
+                    "# Project\n",
+                ),
+                encoding="utf-8",
+            )
+            try:
+                source_model.load_document_collection_docs(
+                    root,
+                    "dotlineform",
+                    "projects",
+                )
+            except ValueError as exc:
+                invalid_error = str(exc)
+            else:
+                raise AssertionError("absolute source folder_path should fail")
+        finally:
+            source_model.DOCS_SCOPE_CONFIGS.clear()
+            source_model.DOCS_SCOPE_CONFIGS.update(original_configs)
+
+    assert docs[0].front_matter["folder_path"] == "projects/Future Folder"
+    assert "Invalid folder_path" in invalid_error
+
+
 def test_atomic_new_source_write_refuses_existing_destination() -> None:
     with tempfile.TemporaryDirectory() as temp:
         root = Path(temp)

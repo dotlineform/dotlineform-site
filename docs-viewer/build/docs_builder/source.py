@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
@@ -56,6 +56,7 @@ class DocRecord:
     viewer_report_subscope: str
     body_markdown: str
     group: str = ""
+    front_matter: dict[str, Any] = field(default_factory=dict)
 def parse_front_matter_value(raw_value: str) -> Any:
     value = raw_value.strip()
     if value == '""':
@@ -176,6 +177,7 @@ class SourceLoadingMixin:
                     viewer_report_subscope=str(front_matter.get("viewer_report_subscope") or "").strip(),
                     body_markdown=body_markdown,
                     group=group,
+                    front_matter=dict(front_matter),
                 )
             )
         return docs

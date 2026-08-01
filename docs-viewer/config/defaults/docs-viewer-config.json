@@ -281,7 +281,10 @@
           "sub_scope": "projects",
           "title": "Projects",
           "manifest_url": "/docs/published/external/dotlineform/projects/manage-manifest.json",
-          "by_id_url_base": "/docs/published/external/dotlineform/projects/by-id"
+          "by_id_url_base": "/docs/published/external/dotlineform/projects/by-id",
+          "report_customisation": {
+            "id": "dotlineform_projects"
+          }
         }
       ]
     }

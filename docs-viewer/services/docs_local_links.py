@@ -62,6 +62,17 @@ def decode_relative_target(value: Any) -> str:
     return decoded
 
 
+def normalize_decoded_relative_target(value: Any) -> str:
+    """Validate one decoded relative target without requiring it to exist."""
+
+    if not isinstance(value, str) or not value or value != value.strip():
+        raise LocalLinkInputError("target must be one nonblank line")
+    if "dlf-local:" in value.lower():
+        raise LocalLinkInputError("local-link markup is not a structured target")
+    _relative_parts(value)
+    return value
+
+
 def _shell_unescape(value: str) -> str:
     output: list[str] = []
     index = 0
@@ -113,6 +124,19 @@ def normalize_local_path_input(value: Any, base_path: str | Path) -> dict[str, s
         "target": relative, "encoded_target": encoded, "label": label,
         "markdown": f"[{escaped_label}](dlf-local:{encoded})",
     }
+
+
+def normalize_structured_local_target_input(
+    value: Any,
+    base_path: str | Path,
+) -> str:
+    """Normalize decoded-relative, absolute POSIX, or local file-URL input."""
+
+    if not isinstance(value, str) or not value or value != value.strip():
+        raise LocalLinkInputError("value must be one exact nonblank line")
+    if value.startswith("/") or value.lower().startswith("file:"):
+        return normalize_local_path_input(value, base_path)["target"]
+    return normalize_decoded_relative_target(value)
 
 
 def configured_base_dir(repo_root: Path) -> Path:

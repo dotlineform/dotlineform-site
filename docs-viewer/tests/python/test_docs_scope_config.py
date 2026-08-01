@@ -280,6 +280,48 @@ def test_docs_scope_config_accepts_registered_sub_scope_report_customisation() -
     assert customisation.settings == {"groups": ("subject", "theme")}
 
 
+def test_docs_scope_config_restricts_projects_customisation_to_exact_collection() -> None:
+    projects_customisation = {
+        "id": "dotlineform_projects",
+        "settings": {},
+    }
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_scope_record(
+            repo_root,
+            docs_scope_record(
+                "dotlineform",
+                sub_scopes=[
+                    docs_sub_scope_record(
+                        "dotlineform",
+                        "projects",
+                        report_customisation=projects_customisation,
+                    )
+                ],
+            ),
+        )
+        config = docs_scope_config.load_docs_scope_configs(repo_root)["dotlineform"]
+
+        wrong_collection = docs_scope_record(
+            "studio",
+            sub_scopes=[
+                docs_sub_scope_record(
+                    "studio",
+                    "projects",
+                    report_customisation=projects_customisation,
+                )
+            ],
+        )
+        write_scope_record(repo_root, wrong_collection)
+        with pytest.raises(ValueError, match="unavailable for studio/projects"):
+            docs_scope_config.load_docs_scope_configs(repo_root)
+
+    customisation = config.sub_scopes[0].report_customisation
+    assert customisation is not None
+    assert customisation.customisation_id == "dotlineform_projects"
+    assert customisation.settings == {}
+
+
 @pytest.mark.parametrize(
     ("report_customisation", "error"),
     [
@@ -296,6 +338,10 @@ def test_docs_scope_config_accepts_registered_sub_scope_report_customisation() -
         (
             {"id": "analysis_tags", "settings": {"groups": ["subject", "subject"]}},
             "must not contain duplicates",
+        ),
+        (
+            {"id": "dotlineform_projects", "settings": {"extra": True}},
+            "unknown fields: extra",
         ),
     ],
 )

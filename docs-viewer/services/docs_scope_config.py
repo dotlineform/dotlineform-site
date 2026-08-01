@@ -39,6 +39,7 @@ from docs_document_identity import is_immutable_doc_id  # noqa: E402
 from docs_subscope_report_customisations import (  # noqa: E402
     DocsSubScopeReportCustomisationConfig,
     normalize_docs_subscope_report_customisation,
+    validate_report_customisation_collection,
 )
 from studio.shared.python.external_workspace_paths import (  # noqa: E402
     ExternalWorkspaceRoot,
@@ -832,6 +833,11 @@ def normalize_sub_scope_configs(
         report_customisation = normalize_docs_subscope_report_customisation(
             item.get("report_customisation"),
             field=f"{item_field}.report_customisation",
+        )
+        validate_report_customisation_collection(
+            report_customisation,
+            scope=parent.scope_id,
+            sub_scope=sub_scope,
         )
         lifecycle = normalize_sub_scope_lifecycle(
             item.get("lifecycle"),

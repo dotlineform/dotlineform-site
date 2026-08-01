@@ -68,6 +68,10 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
       viewable: !refs.nonViewableInput.checked
     };
     if (editingRevision) payload.source_revision = editingRevision;
+    var customisation = typeof modal.readMetadataCustomisation === "function"
+      ? modal.readMetadataCustomisation()
+      : null;
+    if (customisation !== null) payload.customisation = customisation;
     if (editingTarget.sub_scope) {
       var groupChoices = Array.isArray(editingChoices && editingChoices.group)
         ? editingChoices.group
@@ -169,12 +173,22 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
         if (normalizedTarget.sub_scope && !/^sha256:[0-9a-f]{64}$/.test(editingRevision)) {
           throw new Error("Sub-scope metadata revision could not be loaded.");
         }
-        var modal = modalController();
-        return modal ? modal.openMetadataModal(editingDoc, {
-          target: normalizedTarget,
-          showParent: !normalizedTarget.sub_scope,
-          choices: editingChoices
-        }) : null;
+        var contributionRequest = typeof callbacks.resolveMetadataContribution === "function"
+          ? callbacks.resolveMetadataContribution(normalizedTarget)
+          : null;
+        return Promise.resolve(contributionRequest).then(function (metadataContribution) {
+          var modal = modalController();
+          if (!modal) return null;
+          var modalOptions = {
+            target: normalizedTarget,
+            showParent: !normalizedTarget.sub_scope,
+            choices: editingChoices
+          };
+          if (metadataContribution) {
+            modalOptions.metadataContribution = metadataContribution;
+          }
+          return modal.openMetadataModal(editingDoc, modalOptions);
+        });
       })
       .then(function (payload) {
         if (payload && editingTarget && typeof callbacks.onSave === "function") {

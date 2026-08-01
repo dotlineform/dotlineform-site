@@ -70,6 +70,7 @@ def test_public_docs_viewer_entry_static_graph_excludes_manage_document_actions(
     assert "docs-viewer/runtime/js/management/docs-viewer-management-subscope-default-contribution.js" not in graph_paths
     assert "docs-viewer/runtime/js/management/docs-viewer-management-subscope-composition.js" not in graph_paths
     assert "docs-viewer/runtime/js/management/docs-viewer-management-subscope-analysis-tags.js" not in graph_paths
+    assert "docs-viewer/runtime/js/management/docs-viewer-management-subscope-dotlineform-projects.js" not in graph_paths
     assert (
         "docs-viewer/runtime/js/management/"
         "docs-viewer-management-subscope-delete-workflow.js"
@@ -144,6 +145,20 @@ def test_subscope_customisation_registry_access_agrees_across_runtimes() -> None
         for customisation_id, access in python_access.items()
         if "public" in access
     }
+
+
+def test_projects_metadata_contribution_does_not_intercept_native_paste_or_undo() -> None:
+    source = (
+        REPO_ROOT
+        / "docs-viewer/runtime/js/management/"
+        "docs-viewer-management-subscope-dotlineform-projects.js"
+    ).read_text(encoding="utf-8")
+
+    assert "execCommand" not in source
+    assert "clipboard" not in source.lower()
+    assert "onpaste" not in source
+    assert 'addEventListener("paste"' not in source
+    assert 'addEventListener("beforeinput"' not in source
 
 def test_public_docs_viewer_entry_static_graph_excludes_manage_owned_modules() -> None:
     entry = REPO_ROOT / "site/docs-viewer/runtime/js/public/docs-viewer-public.js"

@@ -8,6 +8,9 @@ import {
   normalizeManagedDocumentCollectionTarget,
   normalizeManagedDocumentTarget
 } from "./docs-viewer-management-document-target.js";
+import {
+  openLocalTarget
+} from "./docs-viewer-management-client.js";
 
 function cleanString(value) {
   return String(value || "").trim();
@@ -195,7 +198,12 @@ function loadSubscopeContribution(settings, parent, subScope, options) {
     });
     return modules[2].resolveManagementDocsSubscopeCustomisation(
       subScopeConfig.reportCustomisation,
-      { collection: { scope: parent.scope, sub_scope: subScope } }
+      {
+        clientOptions: managementClientOptions(settings),
+        collection: { scope: parent.scope, sub_scope: subScope },
+        openLocalTarget: openLocalTarget,
+        setStatus: settings.setStatus
+      }
     ).then(function (customisationContribution) {
       return modules[1].composeDocsViewerManagementSubscopeContributions({
         customisationContribution: customisationContribution,

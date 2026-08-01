@@ -23,7 +23,7 @@ from build_docs_test_support import (
     write_site_tools_config,
     write_text,
 )
-from repo_factory import docs_sub_scope_record
+from repo_factory import docs_scope_record, docs_sub_scope_record
 
 
 TAGS_REPORT_DOC_ID = "d-20260620-000000-000011"
@@ -104,6 +104,125 @@ def test_python_docs_builder_writes_empty_sub_scope_manifest_pair() -> None:
     assert "docs total: 0" in stdout
     assert manifest == {"docs": []}
     assert manage_manifest == {"docs": []}
+
+
+def test_python_docs_builder_projects_folder_paths_only_into_manage_manifest() -> None:
+    first_doc_id = "d-20260801-101500-a1b2c3"
+    second_doc_id = "d-20260801-101501-b2c3d4"
+    pathless_doc_id = "d-20260801-101502-c3d4e5"
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        write_json(
+            root / "docs-viewer/config/scopes/docs_scopes.json",
+            {
+                "schema_version": "docs_scopes_v3",
+                "scopes": [
+                    docs_scope_record(
+                        "dotlineform",
+                        sub_scopes=[
+                            docs_sub_scope_record(
+                                "dotlineform",
+                                "projects",
+                                title="Projects",
+                                report_customisation={
+                                    "id": "dotlineform_projects",
+                                    "settings": {},
+                                },
+                            )
+                        ],
+                    )
+                ],
+            },
+        )
+        source_root = root / (
+            "docs-viewer/scopes/dotlineform/source/sub-scopes/"
+            "projects/documents"
+        )
+        write_text(
+            source_root / f"{first_doc_id}.md",
+            f"""---
+doc_id: {first_doc_id}
+title: Architecture
+folder_path: projects/architecture
+---
+# Architecture
+""",
+        )
+        write_text(
+            source_root / f"{second_doc_id}.md",
+            f"""---
+doc_id: {second_doc_id}
+title: Architecture notes
+folder_path: projects/architecture
+---
+# Architecture notes
+""",
+        )
+        write_text(
+            source_root / f"{pathless_doc_id}.md",
+            f"""---
+doc_id: {pathless_doc_id}
+title: Pathless
+---
+# Pathless
+""",
+        )
+
+        exit_code, _stdout, stderr = run_cli(
+            root,
+            ["--scope", "dotlineform", "--sub-scope", "projects", "--write"],
+        )
+        manifest = read_json(
+            root / (
+                "docs-viewer/scopes/dotlineform/published/documents/"
+                "sub-scopes/projects/manifest.json"
+            )
+        )
+        manage_manifest = read_json(
+            root / (
+                "docs-viewer/scopes/dotlineform/published/documents/"
+                "sub-scopes/projects/manage-manifest.json"
+            )
+        )
+
+    assert exit_code == 0
+    assert stderr == ""
+    assert manifest == {
+        "docs": [
+            {"doc_id": first_doc_id, "title": "Architecture"},
+            {"doc_id": second_doc_id, "title": "Architecture notes"},
+            {"doc_id": pathless_doc_id, "title": "Pathless"},
+        ]
+    }
+    assert manage_manifest == {
+        "customisation": {"id": "dotlineform_projects", "data": {}},
+        "docs": [
+            {
+                "doc_id": first_doc_id,
+                "title": "Architecture",
+                "ui_status": "",
+                "viewable": True,
+                "last_updated": "",
+                "customisation": {"folder_path": "projects/architecture"},
+            },
+            {
+                "doc_id": second_doc_id,
+                "title": "Architecture notes",
+                "ui_status": "",
+                "viewable": True,
+                "last_updated": "",
+                "customisation": {"folder_path": "projects/architecture"},
+            },
+            {
+                "doc_id": pathless_doc_id,
+                "title": "Pathless",
+                "ui_status": "",
+                "viewable": True,
+                "last_updated": "",
+            },
+        ],
+    }
 
 def test_python_docs_builder_writes_sub_scope_payloads_and_minimal_manifest() -> None:
     with tempfile.TemporaryDirectory() as temp_path:

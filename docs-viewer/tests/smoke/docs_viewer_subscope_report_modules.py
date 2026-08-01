@@ -3752,7 +3752,7 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
         ],
     }
     assert result["registries"] == {
-        "manage": ["analysis_tags"],
+        "manage": ["analysis_tags", "dotlineform_projects"],
         "public": [],
         "unknownRegistry": "Manage Docs sub-scope customisation is unavailable: unknown",
     }
@@ -3773,6 +3773,177 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
         "text": (
             "Docs sub-scope customisation identity did not match its manifest projection."
         ),
+    }
+
+
+def assert_dotlineform_projects_customisation(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+          const module = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-subscope-dotlineform-projects.js'
+          );
+          const registry = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-subscope-customisation-registry.js'
+          );
+          const documents = [
+            {
+              doc_id: 'architecture',
+              customisation: { folder_path: 'projects/architecture' }
+            },
+            {
+              doc_id: 'architecture-notes',
+              customisation: { folder_path: 'projects/architecture' }
+            },
+            { doc_id: 'pathless' }
+          ];
+          const opened = [];
+          const statuses = [];
+          const contribution = module.createDocsViewerManagementSubscopeDotlineformProjects({
+            descriptor: { id: 'dotlineform_projects' },
+            collection: { scope: 'dotlineform', sub_scope: 'projects' },
+            openLocalTarget: async target => {
+              opened.push(target);
+              return { summary_text: 'Local target opened.' };
+            },
+            setStatus: (message, isError) => statuses.push({ message, isError })
+          });
+
+          function renderRow(documentRecord) {
+            const host = document.createElement('span');
+            contribution.renderRow({
+              document: documentRecord,
+              documents,
+              trailingHost: host
+            });
+            return host;
+          }
+          const linkedRow = renderRow(documents[0]);
+          const pathlessRow = renderRow(documents[2]);
+
+          function detailButton(documentRecord) {
+            const host = document.createElement('div');
+            contribution.renderDetailToolbar({
+              document: documentRecord,
+              host,
+              registerAction: definition => {
+                const enabled = definition.capability === true;
+                return {
+                  enabled,
+                  disabledReason: enabled ? '' : definition.capability.reason,
+                  invoke: () => Promise.resolve(definition.handler())
+                };
+              }
+            });
+            return host.querySelector('[data-docs-projects-open-folder]');
+          }
+          const linkedButton = detailButton(documents[0]);
+          linkedButton.click();
+          await new Promise(resolve => setTimeout(resolve, 0));
+          const pathlessButton = detailButton(documents[2]);
+
+          const editorHost = document.createElement('div');
+          const editor = contribution.mountMetadataEditor({
+            host: editorHost,
+            record: {
+              customisation: { folder_path: 'projects/architecture' }
+            },
+            target: {
+              scope: 'dotlineform',
+              sub_scope: 'projects',
+              doc_id: 'architecture'
+            }
+          });
+          const input = editorHost.querySelector('input');
+          const editorInitial = {
+            hidden: editorHost.hidden,
+            label: editorHost.querySelector('.docsViewer__fieldLabel').textContent,
+            name: input.name,
+            onpaste: input.onpaste,
+            value: input.value
+          };
+          input.value = 'projects/future';
+          const editorValue = editor.read();
+          editor.destroy();
+
+          let collectionError = '';
+          try {
+            module.createDocsViewerManagementSubscopeDotlineformProjects({
+              descriptor: { id: 'dotlineform_projects' },
+              collection: { scope: 'studio', sub_scope: 'projects' }
+            });
+          } catch (error) {
+            collectionError = error.message;
+          }
+          let rowError = '';
+          try {
+            renderRow({ customisation: { folder_path: 'projects/a', extra: true } });
+          } catch (error) {
+            rowError = error.message;
+          }
+
+          return {
+            collectionError,
+            editorDestroyed: {
+              childCount: editorHost.childElementCount,
+              hidden: editorHost.hidden
+            },
+            editorInitial,
+            editorValue,
+            linkedButton: {
+              disabled: linkedButton.disabled,
+              text: linkedButton.textContent
+            },
+            linkedRow: {
+              duplicate: linkedRow.querySelector('.docsViewerReport__projectsFolderDuplicate').textContent,
+              state: linkedRow.querySelector('[data-projects-folder-state]').dataset.projectsFolderState,
+              text: linkedRow.querySelector('[data-projects-folder-state]').firstChild.textContent
+            },
+            opened,
+            pathlessButton: {
+              disabled: pathlessButton.disabled,
+              title: pathlessButton.title
+            },
+            pathlessRow: {
+              state: pathlessRow.querySelector('[data-projects-folder-state]').dataset.projectsFolderState,
+              text: pathlessRow.querySelector('[data-projects-folder-state]').textContent
+            },
+            registryIds: registry.listManagementDocsSubscopeCustomisationIds(),
+            rowError,
+            statuses
+          };
+        }"""
+    )
+
+    assert result == {
+        "collectionError": (
+            "Projects customisation collection did not match dotlineform/projects."
+        ),
+        "editorDestroyed": {"childCount": 0, "hidden": True},
+        "editorInitial": {
+            "hidden": False,
+            "label": "Folder Link",
+            "name": "folder_path",
+            "onpaste": None,
+            "value": "projects/architecture",
+        },
+        "editorValue": {"folder_path": "projects/future"},
+        "linkedButton": {"disabled": False, "text": "Open in Finder"},
+        "linkedRow": {
+            "duplicate": "2 documents",
+            "state": "duplicate",
+            "text": "projects/architecture",
+        },
+        "opened": ["projects/architecture"],
+        "pathlessButton": {
+            "disabled": True,
+            "title": "This Project document has no Folder Link.",
+        },
+        "pathlessRow": {"state": "unlinked", "text": "No folder link"},
+        "registryIds": ["analysis_tags", "dotlineform_projects"],
+        "rowError": (
+            "Projects document customisation must contain exactly folder_path."
+        ),
+        "statuses": [{"message": "Local target opened.", "isError": False}],
     }
 
 
@@ -3816,6 +3987,7 @@ def main(argv: list[str] | None = None) -> int:
                 assert_delete_workflow(page)
                 assert_manage_report_bridge(page)
                 assert_default_report_and_customisation_framework(page)
+                assert_dotlineform_projects_customisation(page)
             finally:
                 browser.close()
             if errors:

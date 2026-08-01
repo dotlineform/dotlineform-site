@@ -3,13 +3,17 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 import re
 from typing import Any, Callable, Mapping, Sequence
+
+import docs_dotlineform_projects_customisation as dotlineform_projects
 
 
 CUSTOMISATION_ID_PATTERN = re.compile(r"\A[a-z][a-z0-9_]*\Z")
 VALUE_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9_-]*\Z")
 ANALYSIS_TAGS_CUSTOMISATION_ID = "analysis_tags"
+DOTLINEFORM_PROJECTS_CUSTOMISATION_ID = dotlineform_projects.CUSTOMISATION_ID
 
 
 @dataclass(frozen=True)
@@ -25,6 +29,11 @@ class DocsSubScopeReportCustomisationDefinition:
     document_groups: Callable[[Mapping[str, Any]], tuple[str, ...]] | None
     public_browser: bool
     manage_browser: bool
+    project_manifest: Callable[[Mapping[str, Any], Sequence[Any]], dict[str, Any]]
+    validate_document: Callable[..., None] | None = None
+    metadata_record: Callable[..., dict[str, Any]] | None = None
+    normalize_metadata_update: Callable[..., dict[str, Any]] | None = None
+    collections: tuple[tuple[str, str], ...] | None = None
 
 
 def _strict_object(raw: Any, *, field: str, keys: set[str]) -> dict[str, Any]:
@@ -85,6 +94,25 @@ def _analysis_tags_document_groups(settings: Mapping[str, Any]) -> tuple[str, ..
     return tuple(str(value) for value in settings.get("groups", ()))
 
 
+def _project_analysis_tags_manifest(
+    settings: Mapping[str, Any],
+    documents: Sequence[Any],
+) -> dict[str, Any]:
+    groups = _analysis_tags_document_groups(settings)
+    rows = {
+        str(document.doc_id): {"group": str(document.group)}
+        for document in documents
+        if str(getattr(document, "group", "") or "").strip()
+    }
+    return {
+        "root": {
+            "id": ANALYSIS_TAGS_CUSTOMISATION_ID,
+            "data": {"groups": list(groups)},
+        },
+        "rows": rows,
+    }
+
+
 REPORT_CUSTOMISATION_DEFINITIONS = {
     ANALYSIS_TAGS_CUSTOMISATION_ID: DocsSubScopeReportCustomisationDefinition(
         customisation_id=ANALYSIS_TAGS_CUSTOMISATION_ID,
@@ -92,7 +120,20 @@ REPORT_CUSTOMISATION_DEFINITIONS = {
         document_groups=_analysis_tags_document_groups,
         public_browser=False,
         manage_browser=True,
-    )
+        project_manifest=_project_analysis_tags_manifest,
+    ),
+    DOTLINEFORM_PROJECTS_CUSTOMISATION_ID: DocsSubScopeReportCustomisationDefinition(
+        customisation_id=DOTLINEFORM_PROJECTS_CUSTOMISATION_ID,
+        normalize_settings=dotlineform_projects.normalize_settings,
+        document_groups=None,
+        public_browser=False,
+        manage_browser=True,
+        project_manifest=dotlineform_projects.project_manifest,
+        validate_document=dotlineform_projects.validate_document,
+        metadata_record=dotlineform_projects.metadata_record,
+        normalize_metadata_update=dotlineform_projects.normalize_metadata_update,
+        collections=(("dotlineform", "projects"),),
+    ),
 }
 
 
@@ -135,6 +176,26 @@ def browser_report_customisation_payload(
     return {"id": customisation.customisation_id}
 
 
+def validate_report_customisation_collection(
+    customisation: DocsSubScopeReportCustomisationConfig | None,
+    *,
+    scope: str,
+    sub_scope: str,
+) -> None:
+    if customisation is None:
+        return
+    definition = REPORT_CUSTOMISATION_DEFINITIONS[customisation.customisation_id]
+    if definition.collections is None:
+        return
+    collection = (str(scope).strip().lower(), str(sub_scope).strip().lower())
+    if collection not in definition.collections:
+        raise ValueError(
+            "docs sub-scope report customisation "
+            f"{customisation.customisation_id!r} is unavailable for "
+            f"{collection[0]}/{collection[1]}"
+        )
+
+
 def analysis_tags_groups(
     customisation: DocsSubScopeReportCustomisationConfig | None,
 ) -> tuple[str, ...]:
@@ -175,24 +236,71 @@ def project_report_customisation_manifest(
     projector_enabled = definition.public_browser if published else definition.manage_browser
     if not projector_enabled:
         return None
-    if customisation.customisation_id != ANALYSIS_TAGS_CUSTOMISATION_ID:
-        raise ValueError(
-            f"Docs sub-scope report customisation projector is unavailable: "
-            f"{customisation.customisation_id}"
+    return definition.project_manifest(customisation.settings, documents)
+
+
+def validate_report_customisation_document(
+    customisation: DocsSubScopeReportCustomisationConfig | None,
+    front_matter: Mapping[str, Any],
+    *,
+    doc_id: str,
+) -> None:
+    if customisation is None:
+        return
+    definition = REPORT_CUSTOMISATION_DEFINITIONS[customisation.customisation_id]
+    if definition.validate_document is not None:
+        definition.validate_document(
+            customisation.settings,
+            front_matter,
+            doc_id=doc_id,
         )
-    groups = analysis_tags_groups(customisation)
-    rows = {
-        str(document.doc_id): {"group": str(document.group)}
-        for document in documents
-        if str(getattr(document, "group", "") or "").strip()
-    }
-    return {
-        "root": {
-            "id": ANALYSIS_TAGS_CUSTOMISATION_ID,
-            "data": {"groups": list(groups)},
-        },
-        "rows": rows,
-    }
+
+
+def report_customisation_metadata_record(
+    customisation: DocsSubScopeReportCustomisationConfig | None,
+    front_matter: Mapping[str, Any],
+    *,
+    doc_id: str,
+) -> dict[str, Any] | None:
+    if customisation is None:
+        return None
+    definition = REPORT_CUSTOMISATION_DEFINITIONS[customisation.customisation_id]
+    if definition.metadata_record is None:
+        return None
+    return definition.metadata_record(
+        customisation.settings,
+        front_matter,
+        doc_id=doc_id,
+    )
+
+
+def normalize_report_customisation_metadata_update(
+    customisation: DocsSubScopeReportCustomisationConfig | None,
+    raw: Any,
+    *,
+    provided: bool,
+    repo_root: Path,
+    front_matter: Mapping[str, Any],
+    doc_id: str,
+) -> dict[str, Any] | None:
+    if customisation is None:
+        if provided:
+            raise ValueError("customisation is not configured for this sub-scope")
+        return None
+    definition = REPORT_CUSTOMISATION_DEFINITIONS[customisation.customisation_id]
+    if definition.normalize_metadata_update is None:
+        if provided:
+            raise ValueError("customisation metadata is not editable for this sub-scope")
+        return None
+    if not provided:
+        raise ValueError("customisation is required for this sub-scope metadata update")
+    return definition.normalize_metadata_update(
+        customisation.settings,
+        raw,
+        repo_root=repo_root,
+        front_matter=front_matter,
+        doc_id=doc_id,
+    )
 
 
 def registered_report_customisation_access() -> dict[str, tuple[str, ...]]:
@@ -213,11 +321,16 @@ def registered_report_customisation_access() -> dict[str, tuple[str, ...]]:
 
 __all__ = [
     "ANALYSIS_TAGS_CUSTOMISATION_ID",
+    "DOTLINEFORM_PROJECTS_CUSTOMISATION_ID",
     "DocsSubScopeReportCustomisationConfig",
     "analysis_tags_groups",
     "browser_report_customisation_payload",
     "normalize_docs_subscope_report_customisation",
     "project_report_customisation_manifest",
     "registered_report_customisation_access",
+    "normalize_report_customisation_metadata_update",
+    "report_customisation_metadata_record",
     "report_customisation_document_groups",
+    "validate_report_customisation_document",
+    "validate_report_customisation_collection",
 ]

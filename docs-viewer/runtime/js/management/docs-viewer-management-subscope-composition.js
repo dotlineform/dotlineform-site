@@ -266,6 +266,7 @@ export function composeDocsViewerManagementSubscopeContributions(options = {}) {
       var trailing = createHost(context.trailingHost, "span", ownerId, "row-trailing");
       var result = render(Object.assign({}, context, {
         access: "manage",
+        documents: currentList ? currentList.context.documents : [],
         leadingHost: leading,
         titlePrefixHost: titlePrefix,
         trailingHost: trailing
