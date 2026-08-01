@@ -842,6 +842,10 @@ export function startDocsViewerRuntime(options) {
 
     return {
       reloadRenderedDoc: reloadManagedDocumentTarget,
+      localFolderLinksCapability: function () {
+        var capabilities = appSession.domains.management.managementCapabilities;
+        return capabilities ? capabilities.local_folder_links || null : null;
+      },
       clearActiveSourceEditorContextAdapter: function (adapter) {
         if (!adapter || activeSourceEditorContextAdapter === adapter) {
           clearInfoSubscription();

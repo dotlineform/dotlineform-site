@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import filecmp
+import html
 import json
+import re
 import shutil
 from pathlib import Path
 from typing import Any
@@ -37,6 +39,7 @@ from docs_document_location_projection import (
 
 PUBLISH_SCHEMA_VERSION = "docs_publish_gate_v1"
 MANAGE_MANIFEST_PATH = Path("manage-manifest.json")
+LOCAL_FOLDER_ANCHOR_PATTERN = re.compile(r"<a\b(?P<attrs>(?:[^>\"']|\"[^\"]*\"|'[^']*')*)>(?P<label>.*?)</a\s*>", re.IGNORECASE | re.DOTALL)
 
 
 def repo_relative(repo_root: Path, path: Path) -> str:
@@ -229,6 +232,19 @@ def manifest_doc_ids(working_root: Path) -> set[str] | None:
     }
 
 
+def project_public_local_folder_links(content_html: str) -> str:
+    def replace(match: re.Match[str]) -> str:
+        attrs = match.group("attrs").lower()
+        if "data-docs-viewer-local-target" not in attrs and not re.search(r"\bhref\s*=\s*(?:[\"']dlf-local:|dlf-local:)", attrs, re.IGNORECASE):
+            return match.group(0)
+        label = html.unescape(re.sub(r"<[^>]*>", "", match.group("label"))).strip()
+        if not label or label.startswith("/") or label.lower().startswith(("file:", "dlf-local:")):
+            label = "[local file or folder]"
+        return html.escape(label)
+
+    return LOCAL_FOLDER_ANCHOR_PATTERN.sub(replace, content_html)
+
+
 def publishable_docs_files(
     working_root: Path,
     published_root: Path,
@@ -283,6 +299,12 @@ def publishable_docs_files(
             continue
         if by_id_doc_id:
             payload = read_json(source_path)
+            payload_changed = False
+            content_html = payload.get("content_html") if isinstance(payload, dict) else None
+            if isinstance(content_html, str):
+                projected_html = project_public_local_folder_links(content_html)
+                payload_changed = projected_html != content_html
+                payload["content_html"] = projected_html
             records = mermaid_projection.records_by_doc_id.get(by_id_doc_id, ())
             if records or public_mermaid_payload_requires_projection(payload):
                 payload, used_projection_ids = project_public_mermaid_payload(
@@ -291,9 +313,8 @@ def publishable_docs_files(
                     records=records,
                 )
                 used_mermaid_projection_ids.update(used_projection_ids)
-                files[relative_path] = json_bytes(payload)
-            else:
-                files[relative_path] = source_path.read_bytes()
+                payload_changed = True
+            files[relative_path] = json_bytes(payload) if payload_changed else source_path.read_bytes()
             continue
         files[relative_path] = source_path.read_bytes()
 

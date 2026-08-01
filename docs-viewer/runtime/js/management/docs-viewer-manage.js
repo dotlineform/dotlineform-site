@@ -34,6 +34,9 @@ import {
 import {
   mountSemanticTokenTargetLinks
 } from "./source-editor/semantic-token-targets.js";
+import {
+  mountLocalFolderLinkActivation
+} from "./source-editor/local-folder-links.js";
 
 function mountDocsViewerManageExtras(context) {
   var settings = context || {};
@@ -42,6 +45,7 @@ function mountDocsViewerManageExtras(context) {
     settings.content,
     routeContext.publicPreviewBase
   );
+  mountLocalFolderLinkActivation(settings);
   return mountDocsViewerManageDocumentExtras(settings);
 }
 

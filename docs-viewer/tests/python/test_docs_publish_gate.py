@@ -129,7 +129,15 @@ def prepare_publish_repo(root: Path) -> None:
     )
     write_json(
         root / f"docs-viewer/scopes/library/published/documents/by-id/{LIBRARY_DOC_ID}.json",
-        {"title": "Library"},
+        {
+            "title": "Library",
+            "content_html": (
+                '<p><a href="#" title=">" DATA-DOCS-VIEWER-LOCAL-TARGET="projects/3%20symbols">3 <em>symbols</em></a> '
+                '<a href=dlf-local:bad%ZZ>/Users/private</a> '
+                '<a href="#" data-docs-viewer-local-target=""></a> '
+                '<a href="https://example.com">ordinary</a></p>'
+            ),
+        },
     )
     write_json(root / "docs-viewer/scopes/library/published/documents/by-id/hidden.json", {"title": "Hidden"})
     write_json(root / "docs-viewer/scopes/library/published/documents/by-id/hidden-child.json", {"title": "Hidden Child"})
@@ -203,10 +211,19 @@ def test_publish_confirm_reports_changes_and_apply_syncs_stale_files() -> None:
         assert applied["operation"] == "apply"
         public_tree = json.loads((repo_root / "site/assets/data/docs/scopes/library/index-tree.json").read_text(encoding="utf-8"))
         recent = json.loads((repo_root / "site/assets/data/docs/scopes/library/recent.json").read_text(encoding="utf-8"))
+        public_doc = json.loads(
+            (repo_root / f"site/assets/data/docs/scopes/library/by-id/{LIBRARY_DOC_ID}.json").read_text(encoding="utf-8")
+        )
 
         assert public_tree["docs"][0]["doc_id"] == LIBRARY_DOC_ID
         assert "children" not in public_tree["docs"][0]
         assert recent["docs"][0]["doc_id"] == LIBRARY_DOC_ID
+        assert public_doc["content_html"] == (
+            '<p>3 symbols [local file or folder] [local file or folder] '
+            '<a href="https://example.com">ordinary</a></p>'
+        )
+        assert "dlf-local:" not in json.dumps(public_doc)
+        assert "data-docs-viewer-local-target" not in json.dumps(public_doc)
         assert (
             repo_root
             / f"site/assets/data/docs/scopes/library/by-id/{LIBRARY_DOC_ID}.json"

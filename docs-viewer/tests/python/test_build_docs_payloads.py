@@ -184,3 +184,34 @@ def test_python_docs_builder_leaves_unresolved_catalogue_tokens_literal() -> Non
         occurrence["target_id"] != "99999"
         for occurrence in usage_index["occurrences"]
     )
+
+
+def test_python_docs_builder_projects_only_valid_local_folder_links() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        write_source_docs(
+            root,
+            child_body_suffix="""
+[Folder](dlf-local:projects/3%20symbols)
+[](dlf-local:archives/future)
+[Unsafe](dlf-local:projects/%2E%2E)
+![Image](dlf-local:projects/image.png)
+`[Inline](dlf-local:projects/inline)`
+
+    [Indented](dlf-local:projects/indented)
+
+<pre>[Pre](dlf-local:projects/pre)</pre>
+""",
+        )
+        run_builder(root)
+        child = read_json(root / f"docs-viewer/scopes/studio/published/documents/by-id/{CHILD_DOC_ID}.json")
+
+    content_html = child["content_html"]
+    assert '<a href="#" data-docs-viewer-local-target="projects/3%20symbols">Folder</a>' in content_html
+    assert '<a href="#" data-docs-viewer-local-target="archives/future">[local file or folder]</a>' in content_html
+    assert content_html.count("data-docs-viewer-local-target") == 2
+    assert "Unsafe" in content_html and "Image" in content_html
+    assert "dlf-local:projects/inline" in content_html
+    assert "dlf-local:projects/indented" in content_html
+    assert "dlf-local:projects/pre" in content_html

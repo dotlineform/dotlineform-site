@@ -43,7 +43,7 @@ export function fetchManagementJson(path, method, payload, options) {
         || !responsePayload
         || (responsePayload.ok === false && settings.acceptNotOk !== true)
       ) {
-        var error = new Error(responsePayload && responsePayload.error ? responsePayload.error : "HTTP " + response.status);
+        var error = new Error(responsePayload && (responsePayload.error || responsePayload.summary_text) ? (responsePayload.error || responsePayload.summary_text) : "HTTP " + response.status);
         error.status = response.status;
         error.payload = responsePayload;
         throw error;
@@ -55,6 +55,10 @@ export function fetchManagementJson(path, method, payload, options) {
 
 export function readManagementCapabilities(options) {
   return fetchManagementJson("/capabilities", "GET", undefined, options);
+}
+
+export function openLocalTarget(target, options) {
+  return fetchManagementJson("/docs/open-local-target", "POST", { target: String(target || "") }, options);
 }
 
 export function createManagedDoc(payload, options) {

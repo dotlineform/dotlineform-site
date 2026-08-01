@@ -22,6 +22,11 @@ from .common import (
     published_media_config,
 )
 from .source import DocRecord
+from .semantic_tokens import semantic_token_text_ranges
+from docs_local_links import LocalLinkInputError, decode_relative_target
+
+
+LOCAL_FOLDER_LINK_PATTERN = re.compile(r"(?P<image>!)?\[(?P<label>(?:\\.|[^\]\\])*)\]\(\s*dlf-local:(?P<target>[^)\r\n]*?)\s*\)")
 
 
 def add_missing_image_titles(content_html: str) -> str:
@@ -39,6 +44,28 @@ def add_missing_image_titles(content_html: str) -> str:
 
 
 class ContentRenderingMixin:
+    def resolve_local_folder_links(self, markdown: str) -> str:
+        matches: list[re.Match[str]] = []
+        for start, end in semantic_token_text_ranges(markdown):
+            for match in LOCAL_FOLDER_LINK_PATTERN.finditer(markdown, start, end):
+                line_start = markdown.rfind("\n", 0, match.start()) + 1
+                if markdown.startswith(("    ", "\t"), line_start) or markdown[:match.start()].lower().rfind("<pre") > markdown[:match.start()].lower().rfind("</pre"):
+                    continue
+                matches.append(match)
+        for match in reversed(matches):
+            label = self.unescape_markdown_label(match.group("label")) or "[local file or folder]"
+            replacement = html.escape(label)
+            if not match.group("image"):
+                target = match.group("target")
+                try:
+                    decode_relative_target(target)
+                except LocalLinkInputError:
+                    pass
+                else:
+                    replacement = f'<a href="#" data-docs-viewer-local-target="{html.escape(target, quote=True)}">{replacement}</a>'
+            markdown = markdown[:match.start()] + replacement + markdown[match.end():]
+        return markdown
+
     def rewrite_doc_links(self, content_html: str, *, current_doc: DocRecord, docs: list[DocRecord]) -> str:
         docs_by_id = {doc.doc_id: doc for doc in docs}
 
@@ -102,7 +129,7 @@ class ContentRenderingMixin:
             doc=doc,
             occurrences_by_doc=semantic_tokens_by_doc,
         )
-        return self.resolve_html_media_tokens(self.resolve_media_tokens(resolved))
+        return self.resolve_html_media_tokens(self.resolve_media_tokens(self.resolve_local_folder_links(resolved)))
 
     def resolve_media_tokens(self, markdown: str) -> str:
         if "[[media:" not in markdown:

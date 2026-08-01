@@ -5,6 +5,7 @@ import {
   managedDocumentTargetsEqual,
   normalizeManagedDocumentTarget
 } from "../docs-viewer-management-document-target.js";
+import { localFolderPasteReplacement } from "./local-folder-links.js";
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -382,6 +383,23 @@ function bindEvents(context, state) {
   state.onSelectionChange = function () {
     emitSelectionChange(state);
   };
+  state.onPaste = function (event) {
+    var capability = typeof services.localFolderLinksCapability === "function" ? services.localFolderLinksCapability() : null;
+    if (!state.loaded || state.busy || !capability || capability.authoring !== true || !capability.base_path) return;
+    var selection = sourceSelection(state);
+    var replacement = localFolderPasteReplacement({
+      text: event.clipboardData ? event.clipboardData.getData("text/plain") : "",
+      basePath: capability.base_path,
+      markdown: state.textarea.value,
+      start: selection.start,
+      end: selection.end
+    });
+    if (!replacement) return;
+    event.preventDefault();
+    state.textarea.setRangeText(replacement, selection.start, selection.end, "end");
+    state.textarea.dispatchEvent(new Event("input", { bubbles: true }));
+    setStatus(state, "Local link inserted. Undo to restore the pasted path.", false);
+  };
   state.onClick = function (event) {
     var action = event.target.closest("[data-source-editor-action]");
     if (!action || action.disabled) return;
@@ -406,6 +424,7 @@ function bindEvents(context, state) {
 
   if (state.textarea) {
     state.textarea.addEventListener("input", state.onInput);
+    state.textarea.addEventListener("paste", state.onPaste);
     state.textarea.addEventListener("keyup", state.onSelectionChange);
     state.textarea.addEventListener("mouseup", state.onSelectionChange);
     state.textarea.addEventListener("select", state.onSelectionChange);
@@ -421,6 +440,7 @@ function bindEvents(context, state) {
 function unbindEvents(context, state) {
   var root = context && context.root ? context.root : document;
   if (state.textarea && state.onInput) state.textarea.removeEventListener("input", state.onInput);
+  if (state.textarea && state.onPaste) state.textarea.removeEventListener("paste", state.onPaste);
   if (state.textarea && state.onSelectionChange) {
     state.textarea.removeEventListener("keyup", state.onSelectionChange);
     state.textarea.removeEventListener("mouseup", state.onSelectionChange);
