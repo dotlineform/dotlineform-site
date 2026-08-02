@@ -4,6 +4,30 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260802-123450-f7493d",
+      "title": "Data Model Maps",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123450-f7493d.json",
+      "timestamp": "2026-08-02 21:05:21",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260802-123452-6a2fd3",
+      "title": "DMM-1 — Data Model Maps Foundation Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123452-6a2fd3.json",
+      "timestamp": "2026-08-02 21:02:58",
+      "parent_id": "d-20260802-123450-f7493d",
+      "parent_title": "Data Model Maps"
+    },
+    {
+      "doc_id": "d-20260802-123451-d0e52e",
+      "title": "Data Model Maps Concept And Examples",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123451-d0e52e.json",
+      "timestamp": "2026-08-02 21:01:06",
+      "parent_id": "d-20260802-123450-f7493d",
+      "parent_title": "Data Model Maps"
+    },
+    {
       "doc_id": "d-20260802-174340-2fe9f4",
       "title": "SSP-3 — Resolver Tokens Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-174340-2fe9f4.json",
@@ -58,31 +82,7 @@
       "timestamp": "2026-08-02 20:14:17",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
-    },
-    {
-      "doc_id": "d-20260802-194357-4d857b",
-      "title": "Sub-Scope Publishing",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194357-4d857b.json",
-      "timestamp": "2026-08-02 20:14:17",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260801-133315-80f527",
-      "title": "Projects Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133315-80f527.json",
-      "timestamp": "2026-08-02 20:07:37",
-      "parent_id": "d-20260801-095819-30103c",
-      "parent_title": "Projects"
-    },
-    {
-      "doc_id": "d-20260801-133314-870275",
-      "title": "Projects Concept",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133314-870275.json",
-      "timestamp": "2026-08-02 20:07:37",
-      "parent_id": "d-20260801-095819-30103c",
-      "parent_title": "Projects"
     }
   ],
-  "generated_at": "2026-08-02T19:40:56Z"
+  "generated_at": "2026-08-02T20:05:21Z"
 }
