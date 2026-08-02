@@ -4,6 +4,30 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260802-123451-d0e52e",
+      "title": "Data Model Maps Concept And Examples",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123451-d0e52e.json",
+      "timestamp": "2026-08-02 12:39:28",
+      "parent_id": "d-20260802-123450-f7493d",
+      "parent_title": "Data Model Maps"
+    },
+    {
+      "doc_id": "d-20260802-123452-6a2fd3",
+      "title": "DMM-1 — Data Model Maps Foundation Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123452-6a2fd3.json",
+      "timestamp": "2026-08-02 12:39:05",
+      "parent_id": "d-20260802-123450-f7493d",
+      "parent_title": "Data Model Maps"
+    },
+    {
+      "doc_id": "d-20260802-123450-f7493d",
+      "title": "Data Model Maps",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123450-f7493d.json",
+      "timestamp": "2026-08-02 12:34:50",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
       "doc_id": "d-20260801-095819-30103c",
       "title": "Projects",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-095819-30103c.json",
@@ -58,31 +82,7 @@
       "timestamp": "2026-08-02 12:11:04",
       "parent_id": "d-20260801-095819-30103c",
       "parent_title": "Projects"
-    },
-    {
-      "doc_id": "d-20260801-133314-870275",
-      "title": "Projects Concept",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133314-870275.json",
-      "timestamp": "2026-08-02 12:11:04",
-      "parent_id": "d-20260801-095819-30103c",
-      "parent_title": "Projects"
-    },
-    {
-      "doc_id": "d-20260427-223830-ad1ab0",
-      "title": "Studio Project State",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260427-223830-ad1ab0.json",
-      "timestamp": "2026-08-02 12:11:04",
-      "parent_id": "d-20260423-000000-d015e6",
-      "parent_title": "Studio"
-    },
-    {
-      "doc_id": "d-20260802-002213-b7d4e2",
-      "title": "TST-1 — Tag Semantic Token Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-002213-b7d4e2.json",
-      "timestamp": "2026-08-02 11:09:26",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
     }
   ],
-  "generated_at": "2026-08-02T11:20:58Z"
+  "generated_at": "2026-08-02T11:39:29Z"
 }

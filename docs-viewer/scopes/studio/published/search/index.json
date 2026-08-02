@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b60aecbeaefee13ec7be9dedb1382c9a",
-    "generated_at_utc": "2026-08-02T11:20:58Z",
-    "count": 227
+    "version": "blake2b-b782b3f339f7f86f81589a0c5043a547",
+    "generated_at_utc": "2026-08-02T11:39:29Z",
+    "count": 230
   },
   "entries": [
     {
@@ -3563,6 +3563,91 @@
         "d-20260609-212515-6d8aa2"
       ],
       "search_text": "tests report tests report admin checks responsibility reports admin checks responsibility reports 2026-06-09 2026 06 09 d-20260609-212515-6d8aa2"
+    },
+    {
+      "id": "d-20260802-123450-f7493d",
+      "kind": "doc",
+      "title": "Data Model Maps",
+      "href": "/docs/?scope=studio&doc=d-20260802-123450-f7493d",
+      "last_updated": "2026-08-02 12:34:50",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap",
+      "display_meta": "2026-08-02 12:34:50 • Roadmap",
+      "search_terms": [
+        "data model maps",
+        "data",
+        "model",
+        "maps",
+        "roadmap",
+        "2026-08-02 12:34:50",
+        "2026",
+        "08",
+        "02",
+        "12",
+        "34",
+        "50",
+        "d-20260802-123450-f7493d"
+      ],
+      "search_text": "data model maps data model maps roadmap 2026-08-02 12:34:50 2026 08 02 12 34 50 d-20260802-123450-f7493d"
+    },
+    {
+      "id": "d-20260802-123451-d0e52e",
+      "kind": "doc",
+      "title": "Data Model Maps Concept And Examples",
+      "href": "/docs/?scope=studio&doc=d-20260802-123451-d0e52e",
+      "last_updated": "2026-08-02 12:39:28",
+      "parent_id": "d-20260802-123450-f7493d",
+      "parent_title": "Data Model Maps",
+      "display_meta": "2026-08-02 12:39:28 • Data Model Maps",
+      "search_terms": [
+        "data model maps concept and examples",
+        "data",
+        "model",
+        "maps",
+        "concept",
+        "and",
+        "examples",
+        "data model maps",
+        "2026-08-02 12:39:28",
+        "2026",
+        "08",
+        "02",
+        "12",
+        "39",
+        "28",
+        "d-20260802-123451-d0e52e"
+      ],
+      "search_text": "data model maps concept and examples data model maps concept and examples data model maps 2026-08-02 12:39:28 2026 08 02 12 39 28 d-20260802-123451-d0e52e"
+    },
+    {
+      "id": "d-20260802-123452-6a2fd3",
+      "kind": "doc",
+      "title": "DMM-1 — Data Model Maps Foundation Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260802-123452-6a2fd3",
+      "last_updated": "2026-08-02 12:39:05",
+      "parent_id": "d-20260802-123450-f7493d",
+      "parent_title": "Data Model Maps",
+      "display_meta": "2026-08-02 12:39:05 • Data Model Maps",
+      "search_terms": [
+        "dmm-1 — data model maps foundation delivery",
+        "dmm",
+        "1",
+        "data",
+        "model",
+        "maps",
+        "foundation",
+        "delivery",
+        "data model maps",
+        "2026-08-02 12:39:05",
+        "2026",
+        "08",
+        "02",
+        "12",
+        "39",
+        "05",
+        "d-20260802-123452-6a2fd3"
+      ],
+      "search_text": "dmm-1 — data model maps foundation delivery dmm 1 data model maps foundation delivery data model maps 2026-08-02 12:39:05 2026 08 02 12 39 05 d-20260802-123452-6a2fd3"
     },
     {
       "id": "d-20260801-233534-239eab",
