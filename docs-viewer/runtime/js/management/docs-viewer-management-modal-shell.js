@@ -175,7 +175,7 @@ export function openDocsViewerConfirmModal(options = {}) {
     title: options.title,
     closeLabel: options.closeLabel || options.cancelLabel,
     size: options.size || "compact",
-    bodyHtml: bodyHtmlFromText(options.body),
+    bodyHtml: options.bodyHtml || bodyHtmlFromText(options.body),
     signal: options.signal,
     focusSelector: options.primaryDisabled || options.initialFocus === "cancel"
       ? 'button[data-role="modal-cancel"]'

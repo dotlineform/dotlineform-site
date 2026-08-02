@@ -164,6 +164,8 @@ def assert_transfer_workflow(page: Page) -> None:
                 focusedRole: document.activeElement?.dataset.role || '',
                 body: Array.from(document.querySelectorAll('.docsViewer__modalBody p'))
                     .map(node => node.textContent),
+                bold: Array.from(document.querySelectorAll('.docsViewer__modalBody strong'))
+                    .map(node => node.textContent),
                 primaryDisabled: document.querySelector('[data-role="modal-primary"]').disabled
             };
             document.querySelector('[data-role="modal-primary"]').click();
@@ -217,6 +219,8 @@ def assert_transfer_workflow(page: Page) -> None:
             const blockedConfirmation = {
                 primaryDisabled: document.querySelector('[data-role="modal-primary"]').disabled,
                 body: Array.from(document.querySelectorAll('.docsViewer__modalBody p'))
+                    .map(node => node.textContent),
+                bold: Array.from(document.querySelectorAll('.docsViewer__modalBody strong'))
                     .map(node => node.textContent)
             };
             document.querySelector('[data-role="modal-cancel"]').click();
@@ -334,12 +338,10 @@ def assert_transfer_workflow(page: Page) -> None:
     if result["confirmation"] != {
         "focusedRole": "modal-cancel",
         "body": [
-            "Copy 3 documents across 2 target roots to “notes”.",
-            "1 descendant and 2 unique media items are included.",
-            "1 registered media source will also transfer.",
-            "1 external dependency will remain unchanged.",
-            "The source documents and media will not change.",
+            "Copy 3 documents to notes",
+            "includes 2 media",
         ],
+        "bold": ["3", "notes", "2"],
         "primaryDisabled": False,
     }:
         raise AssertionError(f"unexpected Copy confirmation: {result['confirmation']!r}")
@@ -383,6 +385,13 @@ def assert_transfer_workflow(page: Page) -> None:
         raise AssertionError(f"unexpected Move options: {result['moveOptions']!r}")
     if not result["blockedConfirmation"]["primaryDisabled"]:
         raise AssertionError("blocked transfer confirmation enabled its primary action")
+    if result["blockedConfirmation"]["body"][:2] != [
+        "Move 1 document to notes",
+        "includes 0 media",
+    ] or result["blockedConfirmation"]["bold"] != ["1", "notes", "0"]:
+        raise AssertionError(
+            f"unexpected Move confirmation summary: {result['blockedConfirmation']!r}"
+        )
     if not any(
         line == "Blocked: An outside document links here."
         for line in result["blockedConfirmation"]["body"]

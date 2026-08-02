@@ -1914,6 +1914,76 @@ def assert_open_source_target_handoff(page: Page) -> None:
         raise AssertionError(f"unexpected source-open target handoff: {result!r}")
 
 
+def assert_copy_link_success_is_silent(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const actions = await import(
+                '/docs-viewer/runtime/js/management/docs-viewer-management-actions.js'
+            );
+            const copied = [];
+            const statuses = [];
+            let hiddenCount = 0;
+            const originalClipboard = Object.getOwnPropertyDescriptor(
+                window.navigator,
+                'clipboard'
+            );
+            Object.defineProperty(window.navigator, 'clipboard', {
+                configurable: true,
+                value: {
+                    writeText: (text) => {
+                        copied.push(text);
+                        return Promise.resolve();
+                    }
+                }
+            });
+            try {
+                const doc = { doc_id: 'copy-doc', title: 'Copy Doc' };
+                const controller = actions.createDocsViewerManagementActionController({
+                    root: null,
+                    documentIndex: { docsById: new Map([[doc.doc_id, doc]]) },
+                    management: {},
+                    context: {
+                        markdownDocLink: () => (
+                            '[Copy Doc](/docs/?scope=studio&doc=copy-doc)'
+                        )
+                    },
+                    resolveAction: () => ({
+                        enabled: true,
+                        targetDocIds: [doc.doc_id]
+                    }),
+                    callbacks: {
+                        currentContextMenuDoc: () => doc,
+                        hideContextMenu: () => { hiddenCount += 1; },
+                        setManagementMessage: (message, isError) => {
+                            statuses.push({ message, isError });
+                        }
+                    }
+                });
+                controller.handleCopyLink();
+                await new Promise((resolve) => window.setTimeout(resolve, 0));
+                return { copied, hiddenCount, statuses };
+            } finally {
+                if (originalClipboard) {
+                    Object.defineProperty(
+                        window.navigator,
+                        'clipboard',
+                        originalClipboard
+                    );
+                } else {
+                    delete window.navigator.clipboard;
+                }
+            }
+        }"""
+    )
+    expected = {
+        "copied": ["[Copy Doc](/docs/?scope=studio&doc=copy-doc)"],
+        "hiddenCount": 1,
+        "statuses": [],
+    }
+    if result != expected:
+        raise AssertionError(f"Copy Link success feedback changed: {result!r}")
+
+
 def assert_source_editor_media_presentation(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -2750,6 +2820,7 @@ def exercise_manage_route(
     assert_metadata_client_uses_exact_target_requests(page)
     assert_metadata_response_refreshes_exact_target(page)
     assert_source_editor_media_presentation(page)
+    assert_copy_link_success_is_silent(page)
     assert_open_source_target_handoff(page)
     assert_delete_uses_first_remaining_root(page)
     assert_manage_route_contract(manage_route_state(page), base_url)

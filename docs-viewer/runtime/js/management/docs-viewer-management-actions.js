@@ -838,10 +838,6 @@ export function createDocsViewerManagementActionController(options) {
 
     hideContextMenu();
     writeClipboardText(markdownLink)
-      .then(function () {
-        var message = "Copied link for " + (doc.title || doc.doc_id) + ".";
-        setManagementMessage(message, false);
-      })
       .catch(function (error) {
         var message = error && error.message ? error.message : ACTION_TEXT.copyLinkFailed;
         setManagementMessage(message, true);

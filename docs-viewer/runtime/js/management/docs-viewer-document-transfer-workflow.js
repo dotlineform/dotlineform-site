@@ -77,39 +77,17 @@ function optionMarkup(options) {
 export function buildDocumentTransferConfirmationBody(preview) {
   var mode = normalizedMode(preview && preview.mode);
   var documentCount = Number(preview && preview.document_count) || 0;
-  var rootCount = Number(preview && preview.effective_root_count) || 0;
-  var descendantCount = Number(preview && preview.descendant_count) || 0;
   var mediaCount = Number(preview && preview.unique_media_count) || 0;
-  var retained = Array.isArray(preview && preview.retained_external_dependencies)
-    ? preview.retained_external_dependencies
-    : [];
-  var media = Array.isArray(preview && preview.media) ? preview.media : [];
-  var buildSourceCount = media.reduce(function (count, item) {
-    return count + (Array.isArray(item && item.build_sources) ? item.build_sources.length : 0);
-  }, 0);
   var blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
   var warnings = Array.isArray(preview && preview.warnings) ? preview.warnings : [];
   var target = preview && preview.target || {};
+  var targetScope = String(target.scope || "").trim();
+  var documentNoun = documentCount === 1 ? "document" : "documents";
   var lines = [
-    (mode === "copy" ? "Copy" : "Move") + " " +
-      countLabel(documentCount, "document", "documents") + " across " +
-      countLabel(rootCount, "target root", "target roots") + " to “" +
-      String(target.scope || "").trim() + "”.",
-    countLabel(descendantCount, "descendant", "descendants") + " and " +
-      countLabel(mediaCount, "unique media item", "unique media items") +
-      " are included."
+    (mode === "copy" ? "Copy" : "Move") + " " + documentCount +
+      " " + documentNoun + " to " + targetScope,
+    "includes " + mediaCount + " media"
   ];
-  if (buildSourceCount) {
-    lines.push(countLabel(buildSourceCount, "registered media source", "registered media sources") + " will also transfer.");
-  }
-  if (retained.length) {
-    lines.push(countLabel(retained.length, "external dependency", "external dependencies") + " will remain unchanged.");
-  }
-  lines.push(
-    mode === "copy"
-      ? "The source documents and media will not change."
-      : "The target is completed first; source documents and exclusive media are removed only after both rebuilds succeed."
-  );
   blockers.forEach(function (blocker) {
     lines.push("Blocked: " + String(blocker && blocker.message || blocker || "").trim());
   });
@@ -135,6 +113,24 @@ export function buildDocumentTransferConfirmationBody(preview) {
     lines.push("Warning: " + String(warning && warning.message || warning || "").trim());
   });
   return lines.filter(Boolean);
+}
+
+function documentTransferConfirmationBodyHtml(preview) {
+  var mode = normalizedMode(preview && preview.mode);
+  var lines = buildDocumentTransferConfirmationBody(preview);
+  var documentCount = Number(preview && preview.document_count) || 0;
+  var mediaCount = Number(preview && preview.unique_media_count) || 0;
+  var targetScope = String(preview && preview.target && preview.target.scope || "").trim();
+  var documentNoun = documentCount === 1 ? "document" : "documents";
+  return [
+    '<p class="docsViewer__modalNote muted small">' +
+      (mode === "copy" ? "Copy" : "Move") + " <strong>" +
+      escapeHtml(documentCount) + "</strong> " + documentNoun + " to <strong>" +
+      escapeHtml(targetScope) + "</strong></p>",
+    '<p class="docsViewer__modalNote muted small">includes <strong>' +
+      escapeHtml(mediaCount) + "</strong> media</p>",
+    lines.slice(2).map(noteMarkup).join("")
+  ].join("");
 }
 
 export function documentTransferPreviewCanApply(preview) {
@@ -234,7 +230,7 @@ export async function openDocumentTransferWorkflow(options = {}) {
     root: options.root,
     restoreFocus: options.restoreFocus,
     title: TRANSFER_TEXT[mode].confirmTitle,
-    body: buildDocumentTransferConfirmationBody(preview),
+    bodyHtml: documentTransferConfirmationBodyHtml(preview),
     primaryLabel: TRANSFER_TEXT[mode].confirmButton,
     primaryDisabled: !canApply,
     initialFocus: "cancel",

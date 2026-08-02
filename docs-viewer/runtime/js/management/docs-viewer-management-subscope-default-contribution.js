@@ -582,16 +582,7 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
           if (!cleanString(markdownLink)) {
             throw new Error("Copy Link could not resolve an exact document URL.");
           }
-          return writeClipboardText(host.ownerDocument, markdownLink).then(function () {
-            if (typeof options.setStatus === "function") {
-              options.setStatus(
-                "Copied link for "
-                + (cleanString(settings.document && settings.document.title) || actionTarget.doc_id)
-                + ".",
-                false
-              );
-            }
-          });
+          return writeClipboardText(host.ownerDocument, markdownLink);
         }
       });
       var copyButton = host.ownerDocument.createElement("button");

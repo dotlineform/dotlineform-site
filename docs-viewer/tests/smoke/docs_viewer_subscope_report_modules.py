@@ -3309,6 +3309,7 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
           const created = [];
           const prepared = [];
           const copyTargets = [];
+          const copyStatuses = [];
           const defaultContribution = defaults.createDocsViewerManagementSubscopeDefaultContribution({
             managementContext: true,
             markdownLinkForDocument: (target, doc) => {
@@ -3318,6 +3319,7 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
             onCreateDocument: target => created.push(target),
             onLifecycleEvent: event => lifecycle.push(event.type),
             onPreparePackage: target => prepared.push(target),
+            setStatus: (message, isError) => copyStatuses.push({ message, isError }),
             uiStatusByValue: new Map([
               ['done', { label: 'Done', emoji: '✅' }],
               ['draft', { label: 'Draft', emoji: '📝' }]
@@ -3389,6 +3391,7 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
           const detail = {
             copied: copied.slice(),
             copyTargets: copyTargets.slice(),
+            statuses: copyStatuses.slice(),
             target: root.querySelector('[data-docs-subscope-copy-link]') !== null
           };
           root.remove();
@@ -3724,6 +3727,7 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
         "copyTargets": [
             {"scope": "studio", "sub_scope": "default", "doc_id": "alpha"}
         ],
+        "statuses": [],
         "target": True,
     }, result
     assert "unmount" in result["lifecycle"]
