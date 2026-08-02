@@ -784,41 +784,9 @@
           ]
         },
         {
-          "doc_id": "d-20260801-233534-239eab",
-          "title": "DCC-1 — Collection-Aware Document Copy Delivery",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-233534-239eab.json",
-          "ui_status": "proposed"
-        },
-        {
           "doc_id": "d-20260801-190502-6927fb",
           "title": "IFS-1 — Docs Import Folder Source Selection Delivery",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-190502-6927fb.json"
-        },
-        {
-          "doc_id": "d-20260802-121104-530958",
-          "title": "Project State",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121104-530958.json",
-          "ui_status": "proposed",
-          "children": [
-            {
-              "doc_id": "d-20260802-121105-c574f9",
-              "title": "Project State Concept And Architecture",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121105-c574f9.json",
-              "ui_status": "proposed"
-            },
-            {
-              "doc_id": "d-20260801-133318-15e8fa",
-              "title": "PS-1 — Docs Viewer Project State Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133318-15e8fa.json",
-              "ui_status": "proposed"
-            },
-            {
-              "doc_id": "d-20260802-121106-15ea55",
-              "title": "PS-2 — Project Media Audit Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121106-15ea55.json",
-              "ui_status": "proposed"
-            }
-          ]
         },
         {
           "doc_id": "d-20260801-095819-30103c",
@@ -875,26 +843,6 @@
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-7c7c8d.json"
         },
         {
-          "doc_id": "d-20260801-133319-cdfdbf",
-          "title": "Resolver Tokens",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133319-cdfdbf.json",
-          "ui_status": "proposed",
-          "children": [
-            {
-              "doc_id": "d-20260802-174339-53877d",
-              "title": "Resolver Tokens Architecture",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-174339-53877d.json",
-              "ui_status": "proposed"
-            },
-            {
-              "doc_id": "d-20260802-174340-2fe9f4",
-              "title": "RT-1 — Resolver Tokens Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-174340-2fe9f4.json",
-              "ui_status": "proposed"
-            }
-          ]
-        },
-        {
           "doc_id": "d-20260720-100017-9855dd",
           "title": "Scope Media Management",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-100017-9855dd.json",
@@ -949,6 +897,74 @@
               "doc_id": "d-20260718-105957-c72b2a",
               "title": "Standalone Docs Viewer Concept",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-105957-c72b2a.json",
+              "ui_status": "proposed"
+            }
+          ]
+        },
+        {
+          "doc_id": "d-20260802-194357-4d857b",
+          "title": "Sub-Scope Publishing",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194357-4d857b.json",
+          "ui_status": "proposed",
+          "children": [
+            {
+              "doc_id": "d-20260802-121105-c574f9",
+              "title": "Project State Concept And Architecture",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121105-c574f9.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "d-20260802-174339-53877d",
+              "title": "Resolver Tokens Architecture",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-174339-53877d.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "d-20260802-194426-087cfe",
+              "title": "SSP-1 — Sub-Scope Subject And Association Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194426-087cfe.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "d-20260801-133318-15e8fa",
+              "title": "SSP-2 — Docs Viewer Project State Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133318-15e8fa.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "d-20260802-174340-2fe9f4",
+              "title": "SSP-3 — Resolver Tokens Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-174340-2fe9f4.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "d-20260801-233534-239eab",
+              "title": "SSP-4 — Collection-Aware Document Copy Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-233534-239eab.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "d-20260802-002213-b7d4e2",
+              "title": "SSP-5 — Tag Semantic Token Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-002213-b7d4e2.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "d-20260802-195805-94a5be",
+              "title": "SSP-6 — Work Document Metadata Publication Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-195805-94a5be.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "d-20260802-121106-15ea55",
+              "title": "SSP-7 — Project Media Audit Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121106-15ea55.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "d-20260802-194358-7717ee",
+              "title": "Sub-Scope Publishing Concept And Architecture",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194358-7717ee.json",
               "ui_status": "proposed"
             }
           ]
@@ -1014,11 +1030,6 @@
               "ui_status": "proposed"
             }
           ]
-        },
-        {
-          "doc_id": "d-20260802-002213-b7d4e2",
-          "title": "TST-1 — Tag Semantic Token Delivery",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-002213-b7d4e2.json"
         },
         {
           "doc_id": "d-20260712-213026-ee0f22",
@@ -1353,5 +1364,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-02T16:50:46Z"
+  "generated_at": "2026-08-02T19:07:51Z"
 }
