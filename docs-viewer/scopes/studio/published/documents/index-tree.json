@@ -534,12 +534,6 @@
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-185814-c5e581.json"
             },
             {
-              "doc_id": "d-20260802-002213-b7d4e2",
-              "title": "TST-1 — Tag Semantic Token Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-002213-b7d4e2.json",
-              "ui_status": "proposed"
-            },
-            {
               "doc_id": "d-20260726-191340-d00c52",
               "title": "Usage Index",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-191340-d00c52.json"
@@ -906,6 +900,11 @@
           ]
         },
         {
+          "doc_id": "d-20260802-002213-b7d4e2",
+          "title": "TST-1 — Tag Semantic Token Delivery",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-002213-b7d4e2.json"
+        },
+        {
           "doc_id": "d-20260712-213026-ee0f22",
           "title": "Workspaces",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260712-213026-ee0f22.json",
@@ -1238,5 +1237,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-01T23:24:26Z"
+  "generated_at": "2026-08-02T09:43:00Z"
 }

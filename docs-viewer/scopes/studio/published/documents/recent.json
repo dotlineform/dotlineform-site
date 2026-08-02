@@ -7,47 +7,47 @@
       "doc_id": "d-20260802-002213-b7d4e2",
       "title": "TST-1 — Tag Semantic Token Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-002213-b7d4e2.json",
-      "timestamp": "2026-08-02 00:25:20",
-      "parent_id": "d-20260725-153656-516b61",
-      "parent_title": "Semantic Tokens"
-    },
-    {
-      "doc_id": "d-20260725-153656-516b61",
-      "title": "Semantic Tokens",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-153656-516b61.json",
-      "timestamp": "2026-08-02 00:22:13",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260801-133319-cdfdbf",
-      "title": "PRJ-4 — Resolver Tokens Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133319-cdfdbf.json",
-      "timestamp": "2026-08-01 23:55:43",
-      "parent_id": "d-20260801-095819-30103c",
-      "parent_title": "Projects"
+      "timestamp": "2026-08-02 11:09:26",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
     },
     {
       "doc_id": "d-20260801-233534-239eab",
       "title": "DCC-1 — Collection-Aware Document Copy Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-233534-239eab.json",
-      "timestamp": "2026-08-01 23:35:34",
+      "timestamp": "2026-08-02 11:00:44",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
     },
     {
-      "doc_id": "d-20260801-095819-30103c",
-      "title": "Projects",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-095819-30103c.json",
-      "timestamp": "2026-08-01 21:43:18",
+      "doc_id": "d-20260801-190502-6927fb",
+      "title": "IFS-1 — Docs Import Folder Source Selection Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-190502-6927fb.json",
+      "timestamp": "2026-08-02 11:00:44",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260801-150013-f26b87",
+      "title": "Local File And Folder Links Concept",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-150013-f26b87.json",
+      "timestamp": "2026-08-02 11:00:44",
+      "parent_id": "d-20260801-095819-30103c",
+      "parent_title": "Projects"
+    },
+    {
+      "doc_id": "d-20260801-133316-a435ad",
+      "title": "PRJ-1 — Docs Viewer Local Folder Links Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133316-a435ad.json",
+      "timestamp": "2026-08-02 11:00:44",
+      "parent_id": "d-20260801-095819-30103c",
+      "parent_title": "Projects"
     },
     {
       "doc_id": "d-20260801-193557-78fd17",
       "title": "PRJ-2 — Implementation And Verification Record",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-193557-78fd17.json",
-      "timestamp": "2026-08-01 21:40:00",
+      "timestamp": "2026-08-02 11:00:44",
       "parent_id": "d-20260801-095819-30103c",
       "parent_title": "Projects"
     },
@@ -55,34 +55,34 @@
       "doc_id": "d-20260801-133317-e8eb39",
       "title": "PRJ-2 — Projects Customisation And Apple Notes Migration Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133317-e8eb39.json",
-      "timestamp": "2026-08-01 21:40:00",
+      "timestamp": "2026-08-02 11:00:44",
       "parent_id": "d-20260801-095819-30103c",
       "parent_title": "Projects"
     },
     {
-      "doc_id": "d-20260731-155053-3929e2",
-      "title": "Sub-Scope Report Customisation Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155053-3929e2.json",
-      "timestamp": "2026-08-01 21:40:00",
-      "parent_id": "d-20260801-084127-752d7e",
-      "parent_title": "Sub-Scopes"
+      "doc_id": "d-20260801-133318-15e8fa",
+      "title": "PRJ-3 — Docs Viewer Project State Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133318-15e8fa.json",
+      "timestamp": "2026-08-02 11:00:44",
+      "parent_id": "d-20260801-095819-30103c",
+      "parent_title": "Projects"
     },
     {
-      "doc_id": "d-20260801-190502-6927fb",
-      "title": "IFS-1 — Docs Import Folder Source Selection Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-190502-6927fb.json",
-      "timestamp": "2026-08-01 19:10:13",
+      "doc_id": "d-20260801-133319-cdfdbf",
+      "title": "PRJ-4 — Resolver Tokens Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133319-cdfdbf.json",
+      "timestamp": "2026-08-02 11:00:44",
+      "parent_id": "d-20260801-095819-30103c",
+      "parent_title": "Projects"
+    },
+    {
+      "doc_id": "d-20260801-095819-30103c",
+      "title": "Projects",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-095819-30103c.json",
+      "timestamp": "2026-08-02 11:00:44",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260801-133316-a435ad",
-      "title": "PRJ-1 — Docs Viewer Local Folder Links Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133316-a435ad.json",
-      "timestamp": "2026-08-01 18:22:28",
-      "parent_id": "d-20260801-095819-30103c",
-      "parent_title": "Projects"
     }
   ],
-  "generated_at": "2026-08-01T23:25:20Z"
+  "generated_at": "2026-08-02T10:09:26Z"
 }
