@@ -7,25 +7,71 @@
       "doc_id": "d-20260802-123450-f7493d",
       "title": "Data Model Maps",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123450-f7493d.json",
-      "timestamp": "2026-08-02 21:05:21",
+      "timestamp": "2026-08-02 22:58:02",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260802-123451-d0e52e",
+      "title": "Data Models Diagrams",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123451-d0e52e.json",
+      "timestamp": "2026-08-02 22:58:01",
+      "parent_id": "d-20260331-000000-4a16b0",
+      "parent_title": "Architecture"
     },
     {
       "doc_id": "d-20260802-123452-6a2fd3",
       "title": "DMM-1 — Data Model Maps Foundation Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123452-6a2fd3.json",
-      "timestamp": "2026-08-02 21:02:58",
+      "timestamp": "2026-08-02 22:58:00",
       "parent_id": "d-20260802-123450-f7493d",
       "parent_title": "Data Model Maps"
     },
     {
-      "doc_id": "d-20260802-123451-d0e52e",
-      "title": "Data Model Maps Concept And Examples",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123451-d0e52e.json",
-      "timestamp": "2026-08-02 21:01:06",
+      "doc_id": "d-20260802-225626-b123fa",
+      "title": "Catalogue Data Visualisation",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-225626-b123fa.json",
+      "timestamp": "2026-08-02 22:56:26",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260802-223430-cf2abe",
+      "title": "DMM-2 — Mermaid And D2 Evaluation",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-223430-cf2abe.json",
+      "timestamp": "2026-08-02 22:46:39",
       "parent_id": "d-20260802-123450-f7493d",
       "parent_title": "Data Model Maps"
+    },
+    {
+      "doc_id": "d-20260802-205910-533be0",
+      "title": "Catalogue Data Model Map",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-205910-533be0.json",
+      "timestamp": "2026-08-02 22:38:00",
+      "parent_id": "d-20260802-123451-d0e52e",
+      "parent_title": "Data Models Diagrams"
+    },
+    {
+      "doc_id": "d-20260802-205912-16bc10",
+      "title": "Cross-System Relationship Map",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-205912-16bc10.json",
+      "timestamp": "2026-08-02 22:31:00",
+      "parent_id": "d-20260802-123451-d0e52e",
+      "parent_title": "Data Models Diagrams"
+    },
+    {
+      "doc_id": "d-20260802-205911-bec41f",
+      "title": "Docs Viewer Projection Map",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-205911-bec41f.json",
+      "timestamp": "2026-08-02 22:26:00",
+      "parent_id": "d-20260802-123451-d0e52e",
+      "parent_title": "Data Models Diagrams"
+    },
+    {
+      "doc_id": "d-20260331-000000-4a16b0",
+      "title": "Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-4a16b0.json",
+      "timestamp": "2026-08-02 21:28:53"
     },
     {
       "doc_id": "d-20260802-174340-2fe9f4",
@@ -34,55 +80,7 @@
       "timestamp": "2026-08-02 20:40:56",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
-    },
-    {
-      "doc_id": "d-20260802-160429-69a5f6",
-      "title": "Authoring Directives Concept And Examples",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-160429-69a5f6.json",
-      "timestamp": "2026-08-02 20:40:30",
-      "parent_id": "d-20260802-150245-4e7f85",
-      "parent_title": "Table Enhancements"
-    },
-    {
-      "doc_id": "d-20260802-150245-4e7f85",
-      "title": "Table Enhancements",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-150245-4e7f85.json",
-      "timestamp": "2026-08-02 20:40:13",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260802-163320-9015b0",
-      "title": "TE-1 — Source Editor Directive Actions Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-163320-9015b0.json",
-      "timestamp": "2026-08-02 20:40:13",
-      "parent_id": "d-20260802-150245-4e7f85",
-      "parent_title": "Table Enhancements"
-    },
-    {
-      "doc_id": "d-20260802-002213-b7d4e2",
-      "title": "SSP-5 — Tag Semantic Token Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-002213-b7d4e2.json",
-      "timestamp": "2026-08-02 20:16:30",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
-    },
-    {
-      "doc_id": "d-20260802-194358-7717ee",
-      "title": "Sub-Scope Publishing Concept And Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194358-7717ee.json",
-      "timestamp": "2026-08-02 20:16:30",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
-    },
-    {
-      "doc_id": "d-20260802-194426-087cfe",
-      "title": "SSP-1 — Sub-Scope Subject And Association Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194426-087cfe.json",
-      "timestamp": "2026-08-02 20:14:17",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
     }
   ],
-  "generated_at": "2026-08-02T20:05:21Z"
+  "generated_at": "2026-08-02T21:58:35Z"
 }

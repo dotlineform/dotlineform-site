@@ -97,6 +97,32 @@
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-4a16b0.json",
       "children": [
         {
+          "doc_id": "d-20260802-123451-d0e52e",
+          "title": "Data Models Diagrams",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123451-d0e52e.json",
+          "ui_status": "stable",
+          "children": [
+            {
+              "doc_id": "d-20260802-205910-533be0",
+              "title": "Catalogue Data Model Map",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-205910-533be0.json",
+              "ui_status": "stable"
+            },
+            {
+              "doc_id": "d-20260802-205912-16bc10",
+              "title": "Cross-System Relationship Map",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-205912-16bc10.json",
+              "ui_status": "stable"
+            },
+            {
+              "doc_id": "d-20260802-205911-bec41f",
+              "title": "Docs Viewer Projection Map",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-205911-bec41f.json",
+              "ui_status": "stable"
+            }
+          ]
+        },
+        {
           "doc_id": "d-20260711-012238-814555",
           "title": "Knowledge System Vision",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260711-012238-814555.json"
@@ -764,22 +790,28 @@
           ]
         },
         {
+          "doc_id": "d-20260802-225626-b123fa",
+          "title": "Catalogue Data Visualisation",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-225626-b123fa.json",
+          "ui_status": "proposed"
+        },
+        {
           "doc_id": "d-20260802-123450-f7493d",
           "title": "Data Model Maps",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123450-f7493d.json",
           "ui_status": "in-progress",
           "children": [
             {
-              "doc_id": "d-20260802-123451-d0e52e",
-              "title": "Data Model Maps Concept And Examples",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123451-d0e52e.json",
-              "ui_status": "proposed"
-            },
-            {
               "doc_id": "d-20260802-123452-6a2fd3",
               "title": "DMM-1 — Data Model Maps Foundation Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123452-6a2fd3.json",
-              "ui_status": "in-progress"
+              "ui_status": "done"
+            },
+            {
+              "doc_id": "d-20260802-223430-cf2abe",
+              "title": "DMM-2 — Mermaid And D2 Evaluation",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-223430-cf2abe.json",
+              "ui_status": "proposed"
             }
           ]
         },
@@ -1364,5 +1396,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-02T20:05:21Z"
+  "generated_at": "2026-08-02T21:58:35Z"
 }
