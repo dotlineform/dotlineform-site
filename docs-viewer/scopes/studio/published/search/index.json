@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-33f8d0773246c57e4f193681aef11267",
-    "generated_at_utc": "2026-08-02T19:16:31Z",
+    "version": "blake2b-fc3a14d877cfd427cb57fd5585078d1b",
+    "generated_at_utc": "2026-08-02T19:40:56Z",
     "count": 244
   },
   "entries": [
@@ -4319,10 +4319,10 @@
       "kind": "doc",
       "title": "SSP-3 — Resolver Tokens Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-174340-2fe9f4",
-      "last_updated": "2026-08-02 19:58:05",
+      "last_updated": "2026-08-02 20:40:56",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-02 19:58:05 • Sub-Scope Publishing",
+      "display_meta": "2026-08-02 20:40:56 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-3 — resolver tokens delivery",
         "ssp",
@@ -4334,16 +4334,16 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-02 19:58:05",
+        "2026-08-02 20:40:56",
         "2026",
         "08",
         "02",
-        "19",
-        "58",
-        "05",
+        "20",
+        "40",
+        "56",
         "d-20260802-174340-2fe9f4"
       ],
-      "search_text": "ssp-3 — resolver tokens delivery ssp 3 resolver tokens delivery sub-scope publishing sub scope publishing 2026-08-02 19:58:05 2026 08 02 19 58 05 d-20260802-174340-2fe9f4"
+      "search_text": "ssp-3 — resolver tokens delivery ssp 3 resolver tokens delivery sub-scope publishing sub scope publishing 2026-08-02 20:40:56 2026 08 02 20 40 56 d-20260802-174340-2fe9f4"
     },
     {
       "id": "d-20260801-233534-239eab",
@@ -4509,35 +4509,35 @@
       "kind": "doc",
       "title": "Table Enhancements",
       "href": "/docs/?scope=studio&doc=d-20260802-150245-4e7f85",
-      "last_updated": "2026-08-02 17:06:57",
+      "last_updated": "2026-08-02 20:40:13",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-02 17:06:57 • Roadmap",
+      "display_meta": "2026-08-02 20:40:13 • Roadmap",
       "search_terms": [
         "table enhancements",
         "table",
         "enhancements",
         "roadmap",
-        "2026-08-02 17:06:57",
+        "2026-08-02 20:40:13",
         "2026",
         "08",
         "02",
-        "17",
-        "06",
-        "57",
+        "20",
+        "40",
+        "13",
         "d-20260802-150245-4e7f85"
       ],
-      "search_text": "table enhancements table enhancements roadmap 2026-08-02 17:06:57 2026 08 02 17 06 57 d-20260802-150245-4e7f85"
+      "search_text": "table enhancements table enhancements roadmap 2026-08-02 20:40:13 2026 08 02 20 40 13 d-20260802-150245-4e7f85"
     },
     {
       "id": "d-20260802-160429-69a5f6",
       "kind": "doc",
       "title": "Authoring Directives Concept And Examples",
       "href": "/docs/?scope=studio&doc=d-20260802-160429-69a5f6",
-      "last_updated": "2026-08-02 17:06:57",
+      "last_updated": "2026-08-02 20:40:30",
       "parent_id": "d-20260802-150245-4e7f85",
       "parent_title": "Table Enhancements",
-      "display_meta": "2026-08-02 17:06:57 • Table Enhancements",
+      "display_meta": "2026-08-02 20:40:30 • Table Enhancements",
       "search_terms": [
         "authoring directives concept and examples",
         "authoring",
@@ -4548,16 +4548,16 @@
         "table enhancements",
         "table",
         "enhancements",
-        "2026-08-02 17:06:57",
+        "2026-08-02 20:40:30",
         "2026",
         "08",
         "02",
-        "17",
-        "06",
-        "57",
+        "20",
+        "40",
+        "30",
         "d-20260802-160429-69a5f6"
       ],
-      "search_text": "authoring directives concept and examples authoring directives concept and examples table enhancements table enhancements 2026-08-02 17:06:57 2026 08 02 17 06 57 d-20260802-160429-69a5f6"
+      "search_text": "authoring directives concept and examples authoring directives concept and examples table enhancements table enhancements 2026-08-02 20:40:30 2026 08 02 20 40 30 d-20260802-160429-69a5f6"
     },
     {
       "id": "d-20260802-150246-bb3f88",
@@ -4595,10 +4595,10 @@
       "kind": "doc",
       "title": "TE-1 — Source Editor Directive Actions Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-163320-9015b0",
-      "last_updated": "2026-08-02 17:14:31",
+      "last_updated": "2026-08-02 20:40:13",
       "parent_id": "d-20260802-150245-4e7f85",
       "parent_title": "Table Enhancements",
-      "display_meta": "2026-08-02 17:14:31 • Table Enhancements",
+      "display_meta": "2026-08-02 20:40:13 • Table Enhancements",
       "search_terms": [
         "te-1 — source editor directive actions delivery",
         "te",
@@ -4611,16 +4611,16 @@
         "table enhancements",
         "table",
         "enhancements",
-        "2026-08-02 17:14:31",
+        "2026-08-02 20:40:13",
         "2026",
         "08",
         "02",
-        "17",
-        "14",
-        "31",
+        "20",
+        "40",
+        "13",
         "d-20260802-163320-9015b0"
       ],
-      "search_text": "te-1 — source editor directive actions delivery te 1 source editor directive actions delivery table enhancements table enhancements 2026-08-02 17:14:31 2026 08 02 17 14 31 d-20260802-163320-9015b0"
+      "search_text": "te-1 — source editor directive actions delivery te 1 source editor directive actions delivery table enhancements table enhancements 2026-08-02 20:40:13 2026 08 02 20 40 13 d-20260802-163320-9015b0"
     },
     {
       "id": "d-20260802-162149-3ba013",
