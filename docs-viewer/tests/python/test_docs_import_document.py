@@ -270,6 +270,28 @@ def test_replace_plan_retains_single_source_overwrite_behavior() -> None:
     assert plan.search_doc_ids == ("alpha", "child")
 
 
+def test_replace_plan_normalizes_unicode_markdown_separators() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_library_doc(root, "alpha.md", {"doc_id": "alpha", "title": "Alpha", "parent_id": ""})
+        docs = source_model.load_scope_docs(root, "library")
+        target = next(doc for doc in docs if doc.doc_id == "alpha")
+        record = import_content(content="# Alpha\n\nFirst\u2028Second\u2029Third\n")
+
+        plan = plan_import_document(
+            root,
+            "library",
+            record,
+            operation=IMPORT_DOCUMENT_OVERWRITE,
+            docs=docs,
+            target=target,
+            import_preview=normalized_preview(record),
+        )
+        _front_matter, body = source_model.parse_source_text(plan.source_text)
+
+    assert body == "# Alpha\n\nFirst  \nSecond\n\nThird\n"
+
+
 @pytest.mark.parametrize(
     ("record", "operation", "with_target", "message"),
     [

@@ -326,6 +326,7 @@ def test_rebuild_source_body_cleans_unicode_only_blank_lines_outside_literal_blo
             "</figure>\n"
             "\u00a0\n"
             "## Heading\n\n"
+            "First\u2028Second\u2029Third\n\n"
             "```text\n"
             "\u00a0\n"
             "```\n\n"
@@ -352,6 +353,7 @@ def test_rebuild_source_body_cleans_unicode_only_blank_lines_outside_literal_blo
     assert len(calls) == 1
     assert payload["source_changed"] is True
     assert "</figure>\n\n## Heading" in written
+    assert "First  \nSecond\n\nThird" in written
     assert "```text\n\u00a0\n```" in written
     assert "<pre>\n\u00a0\n</pre>" in written
 

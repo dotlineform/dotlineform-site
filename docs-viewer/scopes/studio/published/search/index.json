@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-bebbc2ff5fea62f909bc9905f1a3baef",
-    "generated_at_utc": "2026-08-03T13:08:35Z",
+    "version": "blake2b-746bb5d18a482e8059430b4579acbfb1",
+    "generated_at_utc": "2026-08-03T13:46:02Z",
     "count": 252
   },
   "entries": [
@@ -5205,10 +5205,10 @@
       "kind": "doc",
       "title": "Folder Picker",
       "href": "/docs/?scope=studio&doc=d-20260803-140610-983dc5",
-      "last_updated": "2026-08-03 14:06:10",
+      "last_updated": "2026-08-03 14:46:01",
       "parent_id": "d-20260505-181739-bb5223",
       "parent_title": "Shared UI",
-      "display_meta": "2026-08-03 14:06:10 • Shared UI",
+      "display_meta": "2026-08-03 14:46:01 • Shared UI",
       "search_terms": [
         "folder picker",
         "folder",
@@ -5216,16 +5216,16 @@
         "shared ui",
         "shared",
         "ui",
-        "2026-08-03 14:06:10",
+        "2026-08-03 14:46:01",
         "2026",
         "08",
         "03",
         "14",
-        "06",
-        "10",
+        "46",
+        "01",
         "d-20260803-140610-983dc5"
       ],
-      "search_text": "folder picker folder picker shared ui shared ui 2026-08-03 14:06:10 2026 08 03 14 06 10 d-20260803-140610-983dc5"
+      "search_text": "folder picker folder picker shared ui shared ui 2026-08-03 14:46:01 2026 08 03 14 46 01 d-20260803-140610-983dc5"
     },
     {
       "id": "d-20260614-201632-79c9cb",

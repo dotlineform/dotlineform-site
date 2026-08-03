@@ -17,6 +17,7 @@ from markdown_renderer import (  # noqa: E402
     MarkdownRenderOptions,
     markdown_renderer_contract,
     normalize_markdown_blank_lines,
+    normalize_markdown_unicode_separators,
     render_markdown_to_html,
 )
 
@@ -123,6 +124,52 @@ def test_unicode_space_only_line_ends_raw_html_block() -> None:
     assert_contains(html, "<strong>birth</strong>", "bold text after raw HTML")
 
 
+def test_normalizes_unicode_line_and_paragraph_separators() -> None:
+    source = (
+        "First line\u2028Second line\u2029Second paragraph\n"
+        "Already hard  \u2028Still hard\n"
+        "Backslash hard\\\u2028Still hard\n"
+        "One trailing space \u2028Still hard\n"
+    )
+
+    normalized = normalize_markdown_blank_lines(source)
+
+    assert_equal(
+        normalized,
+        (
+            "First line  \nSecond line\n\nSecond paragraph\n"
+            "Already hard  \nStill hard\n"
+            "Backslash hard\\\nStill hard\n"
+            "One trailing space  \nStill hard\n"
+        ),
+        "Unicode line and paragraph separators",
+    )
+    html = render_markdown_to_html("First line\u2028Second line\u2029Second paragraph")
+    assert_contains(html, "First line<br />\nSecond line", "Unicode line separator hard break")
+    assert_contains(html, "</p>\n<p>Second paragraph</p>", "Unicode paragraph separator")
+
+
+def test_separator_only_normalizer_preserves_unicode_blank_lines() -> None:
+    normalized = normalize_markdown_unicode_separators("Before\n\u00a0\nAfter\u2028Next")
+
+    assert_equal(normalized, "Before\n\u00a0\nAfter  \nNext", "separator-only normalization")
+
+
+def test_normalizes_unicode_separators_without_markdown_spaces_in_literal_blocks() -> None:
+    source = (
+        "```text\u2028first\u2029second\u2028```\n"
+        "<pre>\u2028first\u2029second\u2028</pre>\n"
+    )
+
+    normalized = normalize_markdown_blank_lines(source)
+
+    assert_equal(
+        normalized,
+        "```text\nfirst\nsecond\n```\n<pre>\nfirst\nsecond\n</pre>\n",
+        "Unicode separators in literal blocks",
+    )
+
+
 def main() -> None:
     test_renders_commonmark_blocks_and_inline_code()
     test_enables_table_rule_by_default()
@@ -132,6 +179,9 @@ def main() -> None:
     test_contract_records_no_external_plugins()
     test_normalizes_unicode_space_only_lines_outside_literal_blocks()
     test_unicode_space_only_line_ends_raw_html_block()
+    test_normalizes_unicode_line_and_paragraph_separators()
+    test_separator_only_normalizer_preserves_unicode_blank_lines()
+    test_normalizes_unicode_separators_without_markdown_spaces_in_literal_blocks()
     print("Markdown renderer tests OK")
 
 

@@ -24,17 +24,33 @@ DEFAULT_MARKDOWN_RENDER_OPTIONS = MarkdownRenderOptions()
 FENCED_CODE_OPEN_PATTERN = re.compile(r"^(?P<indent> {0,3})(?P<fence>`{3,}|~{3,})(?P<info>.*)$")
 PRE_OPEN_PATTERN = re.compile(r"<pre(?:\s[^>]*)?>", re.IGNORECASE)
 PRE_CLOSE_PATTERN = re.compile(r"</pre\s*>", re.IGNORECASE)
+MARKDOWN_LINE_ENDING_PATTERN = re.compile(r"(\r\n|\r|\n|\u2028|\u2029)")
 
 
 def normalize_plain_text(value: str | None) -> str:
     return re.sub(r"\s+", " ", value or "").strip()
 
 
+def normalize_markdown_unicode_separators(markdown: str | None) -> str:
+    """Convert Unicode line separators to explicit Markdown line boundaries."""
+
+    return _normalize_markdown_line_boundaries(markdown, normalize_unicode_blank_lines=False)
+
+
 def normalize_markdown_blank_lines(markdown: str | None) -> str:
-    """Treat Unicode-whitespace-only Markdown lines as blank outside literal blocks."""
+    """Normalize Unicode Markdown line boundaries outside literal blocks."""
+
+    return _normalize_markdown_line_boundaries(markdown, normalize_unicode_blank_lines=True)
+
+
+def _normalize_markdown_line_boundaries(
+    markdown: str | None,
+    *,
+    normalize_unicode_blank_lines: bool,
+) -> str:
 
     source = markdown or ""
-    parts = re.split(r"(\r\n|\r|\n)", source)
+    parts = MARKDOWN_LINE_ENDING_PATTERN.split(source)
     normalized: List[str] = []
     fence_character = ""
     fence_length = 0
@@ -43,9 +59,10 @@ def normalize_markdown_blank_lines(markdown: str | None) -> str:
     for index in range(0, len(parts), 2):
         line = parts[index]
         line_ending = parts[index + 1] if index + 1 < len(parts) else ""
+        literal_line_ending = "\n" if line_ending in {"\u2028", "\u2029"} else line_ending
 
         if fence_character:
-            normalized.extend((line, line_ending))
+            normalized.extend((line, literal_line_ending))
             if re.fullmatch(
                 rf" {{0,3}}{re.escape(fence_character)}{{{fence_length},}}[ \t]*",
                 line,
@@ -55,7 +72,7 @@ def normalize_markdown_blank_lines(markdown: str | None) -> str:
             continue
 
         if pre_depth:
-            normalized.extend((line, line_ending))
+            normalized.extend((line, literal_line_ending))
             pre_depth += len(PRE_OPEN_PATTERN.findall(line))
             pre_depth = max(0, pre_depth - len(PRE_CLOSE_PATTERN.findall(line)))
             continue
@@ -67,7 +84,7 @@ def normalize_markdown_blank_lines(markdown: str | None) -> str:
             if fence[0] != "`" or "`" not in info:
                 fence_character = fence[0]
                 fence_length = len(fence)
-                normalized.extend((line, line_ending))
+                normalized.extend((line, literal_line_ending))
                 continue
 
         pre_depth = max(
@@ -75,13 +92,23 @@ def normalize_markdown_blank_lines(markdown: str | None) -> str:
             len(PRE_OPEN_PATTERN.findall(line)) - len(PRE_CLOSE_PATTERN.findall(line)),
         )
         if pre_depth:
-            normalized.extend((line, line_ending))
+            normalized.extend((line, literal_line_ending))
             continue
 
-        is_unicode_space_only = bool(line) and line.isspace() and any(
-            character not in " \t" for character in line
+        is_unicode_space_only = (
+            normalize_unicode_blank_lines
+            and bool(line)
+            and line.isspace()
+            and any(character not in " \t" for character in line)
         )
-        normalized.extend(("" if is_unicode_space_only else line, line_ending))
+        normalized_line = "" if is_unicode_space_only else line
+        if line_ending == "\u2028":
+            if normalized_line and not normalized_line.endswith(("  ", "\\")):
+                normalized_line += " " if normalized_line.endswith(" ") else "  "
+            line_ending = "\n"
+        elif line_ending == "\u2029":
+            line_ending = "\n\n"
+        normalized.extend((normalized_line, line_ending))
 
     return "".join(normalized)
 

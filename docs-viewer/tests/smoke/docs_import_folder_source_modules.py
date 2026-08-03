@@ -69,9 +69,11 @@ def assert_shared_folder_picker(page: Page) -> None:
             }
           };
           const loads = [];
+          const errors = [];
           const submits = [];
           window.folderPickerFixture = {
             directories,
+            errors,
             loads,
             submits,
             controller: module.createFolderPicker(
@@ -85,6 +87,7 @@ def assert_shared_folder_picker(page: Page) -> None:
                   }
                   return directories[directory];
                 },
+                onError: error => errors.push(error.message),
                 onSubmit: async ({ directory }) => {
                   submits.push(directory);
                   return directory;
@@ -102,9 +105,11 @@ def assert_shared_folder_picker(page: Page) -> None:
     assert page.locator('[data-directory][aria-selected="true"]').text_content() == (
         "alpha"
     )
-    assert page.locator("[data-status]").text_content() == (
-        "This folder can be selected."
+    assert page.locator("[data-breadcrumbs]").text_content() == (
+        "Projects/projects"
     )
+    assert page.locator('[data-nav="."]').text_content() == "Projects"
+    assert page.locator("[data-status]").count() == 0
 
     page.locator("[data-list]").press("End")
     assert page.locator('[data-directory][aria-selected="true"]').text_content() == (
@@ -112,14 +117,14 @@ def assert_shared_folder_picker(page: Page) -> None:
     )
     page.locator("[data-list]").press("Enter")
     page.wait_for_function(
-        "document.querySelector('[data-status]').dataset.state === 'error'"
+        "window.folderPickerFixture.errors.length === 1"
     )
     assert page.evaluate("window.folderPickerFixture.controller.getDirectory()") == (
         "projects"
     )
-    assert page.locator("[data-status]").text_content() == (
+    assert page.evaluate("window.folderPickerFixture.errors") == [
         "Synthetic folder failure."
-    )
+    ]
 
     page.locator("[data-list]").press("Home")
     page.locator("[data-list]").press("Enter")
@@ -133,7 +138,16 @@ def assert_shared_folder_picker(page: Page) -> None:
     assert page.locator(".sharedFolderPicker__empty").text_content() == (
         "No folders in this location."
     )
-    page.locator("[data-parent]").click()
+    assert page.locator("[data-breadcrumbs]").text_content() == (
+        "Projects/projects/alpha/empty"
+    )
+    assert page.locator("[data-nav]").all_text_contents() == [
+        "Projects",
+        "projects",
+        "alpha",
+    ]
+    assert page.locator("[data-parent]").count() == 0
+    page.locator('[data-nav="projects/alpha"]').click()
     page.wait_for_function(
         "window.folderPickerFixture.controller.getDirectory() === 'projects/alpha'"
     )
@@ -144,7 +158,7 @@ def assert_shared_folder_picker(page: Page) -> None:
     try:
         page.evaluate("window.folderPickerFixture.controller.submit()")
     except Exception as error:  # Playwright projects the rejected promise.
-        if "Choose a selectable folder" not in str(error):
+        if "Choose a folder below the Projects root" not in str(error):
             raise
     page.locator("[data-directory]").click()
     page.wait_for_function(

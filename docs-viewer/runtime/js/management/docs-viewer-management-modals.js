@@ -3,7 +3,8 @@ import {
   renderSettingsWarningsMarkup
 } from "./docs-viewer-management-render.js";
 import {
-  normalizeText
+  normalizeText,
+  openDocsViewerNoticeModal
 } from "./docs-viewer-management-modal-shell.js";
 import {
   createDocsViewerModalLifecycle
@@ -16,9 +17,10 @@ export {
   openDocsViewerChoiceModal,
   openDocsViewerConfirmModal,
   openDocsViewerManagementModal,
-  openDocsViewerNoticeModal,
   openDocsViewerTextInputModal
 } from "./docs-viewer-management-modal-shell.js";
+
+export { openDocsViewerNoticeModal };
 
 var MODAL_TEXT = {
   importCancelButton: "Cancel",
@@ -458,6 +460,20 @@ export function createDocsViewerManagementModalController(options = {}) {
     return true;
   }
 
+  function showImportFolderError(error) {
+    var message = normalizeText(error && error.message) || "Folder could not be loaded.";
+    var restoreFocus = importFolderRestoreFocusTarget;
+    closeImportFolderModal();
+    return openDocsViewerNoticeModal({
+      root: refs.importFolderModal && refs.importFolderModal.parentElement,
+      title: "Folder unavailable",
+      body: message
+    }).then(function () {
+      if (isFocusableNow(restoreFocus)) focusWithoutScroll(restoreFocus);
+      return false;
+    });
+  }
+
   function openImportFolderModal(options) {
     var settings = options || {};
     if (
@@ -485,6 +501,7 @@ export function createDocsViewerManagementModalController(options = {}) {
       importFolderPicker = settings.createFolderPicker(refs.importFolderPicker, {
         initialDirectory: settings.initialDirectory,
         loadDirectory: settings.loadDirectory,
+        onError: showImportFolderError,
         onSubmit: settings.onSubmit
       });
     } catch (error) {
@@ -499,6 +516,8 @@ export function createDocsViewerManagementModalController(options = {}) {
         importFolderPicker.focusPreferred();
       }
       return true;
+    }).catch(function (error) {
+      return showImportFolderError(error);
     });
   }
 
@@ -510,9 +529,8 @@ export function createDocsViewerManagementModalController(options = {}) {
     return Promise.resolve(importFolderPicker.submit()).then(function () {
       closeImportFolderModal();
       return true;
-    }).catch(function () {
-      if (refs.importFolderConfirmButton) refs.importFolderConfirmButton.disabled = false;
-      return false;
+    }).catch(function (error) {
+      return showImportFolderError(error);
     });
   }
 

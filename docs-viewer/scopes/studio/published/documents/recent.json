@@ -4,6 +4,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260803-140610-983dc5",
+      "title": "Folder Picker",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260803-140610-983dc5.json",
+      "timestamp": "2026-08-03 14:46:01",
+      "parent_id": "d-20260505-181739-bb5223",
+      "parent_title": "Shared UI"
+    },
+    {
       "doc_id": "d-20260505-181739-bb5223",
       "title": "Shared UI",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260505-181739-bb5223.json",
@@ -24,14 +32,6 @@
       "timestamp": "2026-08-03 14:08:12",
       "parent_id": "d-20260331-000000-4a16b0",
       "parent_title": "Architecture"
-    },
-    {
-      "doc_id": "d-20260803-140610-983dc5",
-      "title": "Folder Picker",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260803-140610-983dc5.json",
-      "timestamp": "2026-08-03 14:06:10",
-      "parent_id": "d-20260505-181739-bb5223",
-      "parent_title": "Shared UI"
     },
     {
       "doc_id": "d-20260803-113717-fd92bc",
@@ -82,5 +82,5 @@
       "parent_title": "Docs Import Folder Source Selection"
     }
   ],
-  "generated_at": "2026-08-03T13:08:35Z"
+  "generated_at": "2026-08-03T13:46:02Z"
 }

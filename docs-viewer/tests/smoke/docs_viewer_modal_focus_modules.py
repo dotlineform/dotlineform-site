@@ -429,8 +429,10 @@ def assert_sequential_import_folder_modal(page: Page) -> None:
           refs.importRoot.hidden = false;
           const choose = document.querySelector('#docsHtmlImportChooseSource');
           let submitted = 0;
+          let reportError = () => {};
           function createFolderPicker(host, options) {
             host.innerHTML = '<button id="folderPickerFocus">Folder row</button>';
+            reportError = options.onError;
             return {
               ready: Promise.resolve(),
               focusPreferred: () => document.querySelector('#folderPickerFocus').focus(),
@@ -459,6 +461,7 @@ def assert_sequential_import_folder_modal(page: Page) -> None:
             choose,
             controller,
             openFolder,
+            raiseError: () => { reportError(new Error('Synthetic folder failure.')); },
             refs,
             submitted: () => submitted
           };
@@ -481,6 +484,30 @@ def assert_sequential_import_folder_modal(page: Page) -> None:
         "document.activeElement?.id === 'docsHtmlImportChooseSource'"
     )
     cancelled = page.evaluate(
+        """() => [
+          document.querySelector('#docsViewerImportModal').hidden,
+          document.querySelector('#docsViewerImportFolderModal').hidden,
+          document.activeElement?.id || '',
+          window.importFolderModalFixture.submitted()
+        ]"""
+    )
+    page.evaluate("window.importFolderModalFixture.openFolder()")
+    page.wait_for_function("document.activeElement?.id === 'folderPickerFocus'")
+    page.evaluate("window.importFolderModalFixture.raiseError()")
+    page.wait_for_function(
+        "document.querySelector('[data-role=\"docs-viewer-management-modal\"]')"
+    )
+    assert page.locator('[data-role="docs-viewer-management-modal"] h2').text_content() == (
+        "Folder unavailable"
+    )
+    assert page.locator('[data-role="docs-viewer-management-modal"] .docsViewer__modalBody').text_content() == (
+        "Synthetic folder failure."
+    )
+    page.locator('[data-role="modal-primary"]').click()
+    page.wait_for_function(
+        "document.activeElement?.id === 'docsHtmlImportChooseSource'"
+    )
+    failed = page.evaluate(
         """() => [
           document.querySelector('#docsViewerImportModal').hidden,
           document.querySelector('#docsViewerImportFolderModal').hidden,
@@ -517,12 +544,15 @@ def assert_sequential_import_folder_modal(page: Page) -> None:
     )
     expected_opened = [True, False, 1, "folderPickerFocus", "hidden", "hidden"]
     expected_cancelled = [False, True, "docsHtmlImportChooseSource", 0]
+    expected_failed = [False, True, "docsHtmlImportChooseSource", 0]
     expected_confirmed = [False, True, "docsHtmlImportChooseSource", 1]
     expected_closed = [0, "openImportFolderFixture", "", ""]
     if opened != expected_opened:
         raise AssertionError(f"folder modal did not suspend Import: {opened!r}")
     if cancelled != expected_cancelled:
         raise AssertionError(f"folder modal cancel did not restore Import: {cancelled!r}")
+    if failed != expected_failed:
+        raise AssertionError(f"folder modal error did not restore Import: {failed!r}")
     if confirmed != expected_confirmed:
         raise AssertionError(f"folder modal confirm did not restore Import: {confirmed!r}")
     if closed != expected_closed:
