@@ -9,7 +9,7 @@ import os
 from pathlib import Path
 import re
 import tempfile
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 from playwright.sync_api import Page, Route, sync_playwright
 
@@ -203,6 +203,24 @@ def install_import_routes(
     candidates = candidate_inventory()
 
     page.on("request", lambda request: request_paths.append(urlparse(request.url).path))
+
+    def requested_source_directory(route: Route) -> str:
+        query = parse_qs(urlparse(route.request.url).query)
+        return str(query.get("source_directory", [""])[0])
+
+    page.route(
+        re.compile(r".*/docs/import-source-directories(?:\?.*)?$"),
+        lambda route: fulfill_json(
+            route,
+            {
+                "ok": True,
+                "current_directory": requested_source_directory(route),
+                "current_selectable": True,
+                "parent_directory": "data-sharing",
+                "directories": [],
+            },
+        ),
+    )
     page.route(
         re.compile(r".*/docs/import-source-files(?:\?.*)?$"),
         lambda route: fulfill_json(
@@ -210,6 +228,7 @@ def install_import_routes(
             {
                 "ok": True,
                 "available": True,
+                "source_directory": requested_source_directory(route),
                 "files": [{"filename": IGNORED_MEDIA}],
                 "ignored_files": [{"filename": IGNORED_MEDIA, "reason": "media"}],
                 "candidates": candidates,
@@ -673,11 +692,17 @@ def exercise_edited_folder_and_blocked_candidate(
 
 
 def assert_request_matrix(imports: list[dict[str, object]]) -> None:
+    if any(
+        request.get("source_directory") != "data-sharing/import-staging"
+        for request in imports
+    ):
+        raise AssertionError(f"Import requests lost exact source identity: {imports!r}")
     ordinary = imports[:2]
     ordinary_contracts = [
         {
             "scope": request.get("scope"),
             "sub_scope": request.get("sub_scope"),
+            "source_directory": request.get("source_directory"),
             "staged_filename": request.get("staged_filename"),
             "include_prompt_meta": request.get("include_prompt_meta"),
             "preview_only": request.get("preview_only"),
@@ -688,6 +713,7 @@ def assert_request_matrix(imports: list[dict[str, object]]) -> None:
         {
             "scope": "studio",
             "sub_scope": None,
+            "source_directory": "data-sharing/import-staging",
             "staged_filename": PARENT_SOURCE,
             "include_prompt_meta": False,
             "preview_only": False,
@@ -695,6 +721,7 @@ def assert_request_matrix(imports: list[dict[str, object]]) -> None:
         {
             "scope": "studio",
             "sub_scope": SUBSCOPE_ID,
+            "source_directory": "data-sharing/import-staging",
             "staged_filename": CHILD_SOURCE,
             "include_prompt_meta": False,
             "preview_only": False,

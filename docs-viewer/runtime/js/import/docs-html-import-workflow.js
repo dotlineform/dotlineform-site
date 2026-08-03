@@ -103,6 +103,7 @@ async function requestImport(
   const stagedFilename = normalizeText(file && file.filename);
   const requestBody = {
     scope: context.scope,
+    source_directory: context.sourceDirectory,
     staged_filename: stagedFilename,
     include_prompt_meta: docsHtmlImportSourceFormatForRecord(file) === "html" ? Boolean(context.includePromptMeta) : false,
     confirm_interactive_html_overwrite: confirmInteractiveHtmlOverwrite,
@@ -145,6 +146,7 @@ async function importFileWithPrompts(state, file, context = {}) {
     const payload = await requestImport(file, {
       scope: context.scope,
       subScope: context.subScope,
+      sourceDirectory: context.sourceDirectory,
       includePromptMeta: context.includePromptMeta,
       routePath: context.routePath,
       managementBaseUrl: context.managementBaseUrl
@@ -169,6 +171,7 @@ export async function runDocsHtmlImportWorkflow(
     files = [],
     scope = "",
     subScope = "",
+    sourceDirectory = "",
     includePromptMeta = false,
     routePath = "/docs/",
     managementBaseUrl = "",
@@ -179,6 +182,7 @@ export async function runDocsHtmlImportWorkflow(
   const workflowContext = {
     scope: normalizeText(scope),
     subScope: normalizeText(subScope).toLowerCase(),
+    sourceDirectory: normalizeText(sourceDirectory),
     includePromptMeta: Boolean(includePromptMeta),
     routePath: normalizeText(routePath) || "/docs/",
     managementBaseUrl: normalizeText(managementBaseUrl)

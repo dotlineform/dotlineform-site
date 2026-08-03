@@ -50,6 +50,10 @@ export function createDocsViewerManagementModalController(options = {}) {
   var importModalCancelButton = null;
   var importLifecycle = null;
   var importRestoreFocusTarget = null;
+  var importEntryFocusTarget = null;
+  var importFolderLifecycle = null;
+  var importFolderPicker = null;
+  var importFolderRestoreFocusTarget = null;
   var importCollectionLifecycle = null;
   var importCollectionCommand = null;
   var importCollectionPhase = "idle";
@@ -387,7 +391,11 @@ export function createDocsViewerManagementModalController(options = {}) {
         .filter(Boolean),
       consumeEscape: consumeImportEscape,
       document: document,
-      initialFocus: function () { return cancelButton || refs.importRoot; },
+      initialFocus: function () {
+        return isFocusableNow(importEntryFocusTarget)
+          ? importEntryFocusTarget
+          : cancelButton || refs.importRoot;
+      },
       modal: refs.importModal,
       onRequestClose: function () { return closeImportModal(); }
     });
@@ -396,6 +404,116 @@ export function createDocsViewerManagementModalController(options = {}) {
 
   function focusImportModalEntry() {
     if (importLifecycle) importLifecycle.focusInitial();
+  }
+
+  function ensureImportFolderLifecycle() {
+    if (importFolderLifecycle || !refs.importFolderModal) return importFolderLifecycle;
+    importFolderLifecycle = createDocsViewerModalLifecycle({
+      cancelElements: Array.from(
+        refs.importFolderModal.querySelectorAll("[data-import-folder-close]")
+      ).concat(refs.importFolderCancelButton || []).filter(Boolean),
+      document: document,
+      initialFocus: function () { return refs.importFolderModal; },
+      modal: refs.importFolderModal,
+      onRequestClose: function () {
+        if (refs.importFolderConfirmButton && refs.importFolderConfirmButton.disabled) {
+          return false;
+        }
+        return closeImportFolderModal();
+      }
+    });
+    return importFolderLifecycle;
+  }
+
+  function restoreImportFromFolder() {
+    if (refs.importModal) refs.importModal.hidden = false;
+    importEntryFocusTarget = importFolderRestoreFocusTarget;
+    var lifecycle = ensureImportModalLifecycle();
+    if (lifecycle && !lifecycle.isActive()) {
+      lifecycle.open({ restoreFocus: importRestoreFocusTarget });
+    } else {
+      if (isFocusableNow(importFolderRestoreFocusTarget)) {
+        focusWithoutScroll(importFolderRestoreFocusTarget);
+      } else {
+        focusImportModalEntry();
+      }
+    }
+    window.setTimeout(function () {
+      importEntryFocusTarget = null;
+    }, 0);
+  }
+
+  function closeImportFolderModal() {
+    if (!refs.importFolderModal || refs.importFolderModal.hidden) return false;
+    if (importFolderLifecycle) {
+      importFolderLifecycle.close({ restoreFocus: false });
+    }
+    refs.importFolderModal.hidden = true;
+    if (importFolderPicker && typeof importFolderPicker.destroy === "function") {
+      importFolderPicker.destroy();
+    }
+    importFolderPicker = null;
+    if (refs.importFolderConfirmButton) refs.importFolderConfirmButton.disabled = false;
+    restoreImportFromFolder();
+    return true;
+  }
+
+  function openImportFolderModal(options) {
+    var settings = options || {};
+    if (
+      !refs.importModal
+      || !refs.importFolderModal
+      || !refs.importFolderPicker
+      || typeof settings.createFolderPicker !== "function"
+      || typeof settings.loadDirectory !== "function"
+      || typeof settings.onSubmit !== "function"
+    ) {
+      return Promise.reject(new Error("Docs Import folder modal is unavailable."));
+    }
+    if (importLifecycle && importLifecycle.isActive()) {
+      importLifecycle.close({ restoreFocus: false });
+    }
+    refs.importModal.hidden = true;
+    importFolderRestoreFocusTarget = settings.restoreFocus || null;
+    refs.importFolderModal.hidden = false;
+    if (refs.importFolderConfirmButton) refs.importFolderConfirmButton.disabled = false;
+    var lifecycle = ensureImportFolderLifecycle();
+    if (lifecycle && !lifecycle.isActive()) {
+      lifecycle.open({ restoreFocus: importFolderRestoreFocusTarget });
+    }
+    try {
+      importFolderPicker = settings.createFolderPicker(refs.importFolderPicker, {
+        initialDirectory: settings.initialDirectory,
+        loadDirectory: settings.loadDirectory,
+        onSubmit: settings.onSubmit
+      });
+    } catch (error) {
+      closeImportFolderModal();
+      return Promise.reject(error);
+    }
+    return Promise.resolve(importFolderPicker.ready).then(function () {
+      if (
+        importFolderPicker
+        && typeof importFolderPicker.focusPreferred === "function"
+      ) {
+        importFolderPicker.focusPreferred();
+      }
+      return true;
+    });
+  }
+
+  function confirmImportFolder() {
+    if (!importFolderPicker || typeof importFolderPicker.submit !== "function") {
+      return Promise.resolve(false);
+    }
+    if (refs.importFolderConfirmButton) refs.importFolderConfirmButton.disabled = true;
+    return Promise.resolve(importFolderPicker.submit()).then(function () {
+      closeImportFolderModal();
+      return true;
+    }).catch(function () {
+      if (refs.importFolderConfirmButton) refs.importFolderConfirmButton.disabled = false;
+      return false;
+    });
   }
 
   function projectImportTerminalResult() {
@@ -543,6 +661,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     if (!refs.importModal || !refs.importRoot) return Promise.resolve();
     var settings = options || {};
     var scope = viewerScope();
+    importEntryFocusTarget = null;
     var lifecycle = ensureImportModalLifecycle();
     refs.importModal.hidden = false;
     resetImportModalActions();
@@ -725,6 +844,11 @@ export function createDocsViewerManagementModalController(options = {}) {
   }
 
   function wireEvents() {
+    if (refs.importFolderConfirmButton) {
+      refs.importFolderConfirmButton.addEventListener("click", function () {
+        confirmImportFolder();
+      });
+    }
     [
       refs.importCollectionCancelButton,
       refs.importCollectionConfirmButton,
@@ -813,6 +937,7 @@ export function createDocsViewerManagementModalController(options = {}) {
 
   return {
     closeImportModal: closeImportModal,
+    closeImportFolderModal: closeImportFolderModal,
     closeMetadataModal: closeMetadataModal,
     closeSettingsModal: closeSettingsModal,
     getSettingsFieldState: function () {
@@ -822,6 +947,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     handleRootClick: handleRootClick,
     metadataModalOpen: metadataModalOpen,
     openImportModal: openImportModal,
+    openImportFolderModal: openImportFolderModal,
     openMetadataModal: openMetadataModal,
     openSettingsModalShell: openSettingsModalShell,
     projectImportBusy: projectImportBusy,

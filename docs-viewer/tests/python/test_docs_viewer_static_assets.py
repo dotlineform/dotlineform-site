@@ -152,6 +152,7 @@ def test_manage_shell_loads_feature_owned_css_after_shared_management_css() -> N
     assert [shell.index(stylesheet) for stylesheet in stylesheets] == sorted(
         shell.index(stylesheet) for stylesheet in stylesheets
     )
+    assert "shared-folder-picker.css" in shell
 
 
 def test_document_package_prepare_and_import_review_own_browser_assets() -> None:
@@ -209,6 +210,9 @@ def test_static_path_policy_is_docs_viewer_scoped() -> None:
     assert allowed("/docs-viewer/runtime/vendor/mermaid/11.16.0/LICENSE") is True
     assert allowed("/docs-viewer/runtime/js/management/docs-viewer-manage.js") is True
     assert allowed("/docs-viewer/runtime/js/import/docs-html-import.js") is True
+    assert allowed(
+        "/docs-viewer/runtime/js/shared-frontend/folder-picker.js"
+    ) is True
     assert allowed("/docs-viewer/runtime/js/packages/document-package-client.js") is True
     assert allowed("/docs-viewer/runtime/js/reports/docs-viewer-reports.js") is True
     assert allowed("/docs-viewer/tests/workbench/docs-viewer-workbench-registry.js") is False
@@ -223,6 +227,7 @@ def test_static_path_policy_is_docs_viewer_scoped() -> None:
     assert allowed("/docs-viewer/static/css/docs-viewer-manage.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-source-editor.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-import.css") is True
+    assert allowed("/docs-viewer/static/css/shared-folder-picker.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-review.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-packages.css") is False
     assert allowed("/docs-viewer/runtime/js/packages/document-package-modal.js") is False
@@ -274,6 +279,12 @@ def test_runtime_static_route_prefixes_resolve_to_owning_roots() -> None:
     ) is None
 
 def test_shared_static_routes_resolve_to_owning_roots() -> None:
+    assert docs_viewer_service.shared_static_relative_path(
+        "/docs-viewer/runtime/js/shared-frontend/folder-picker.js"
+    ) == Path("shared/frontend/js/folder-picker.js")
+    assert docs_viewer_service.shared_static_relative_path(
+        "/docs-viewer/static/css/shared-folder-picker.css"
+    ) == Path("shared/frontend/css/folder-picker.css")
     assert docs_viewer_service.shared_static_relative_path(
         "/docs-viewer/static/css/docs-viewer-theme.css"
     ) == Path("site/docs-viewer/static/css/docs-viewer-theme.css")

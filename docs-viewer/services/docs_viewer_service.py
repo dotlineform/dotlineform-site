@@ -76,6 +76,12 @@ RUNTIME_STATIC_ROUTES = (
     ("/docs-viewer/runtime/js/local/", Path("docs-viewer/runtime/js/local")),
 )
 SHARED_STATIC_ROUTES = {
+    "/docs-viewer/runtime/js/shared-frontend/folder-picker.js": Path(
+        "shared/frontend/js/folder-picker.js"
+    ),
+    "/docs-viewer/static/css/shared-folder-picker.css": Path(
+        "shared/frontend/css/folder-picker.css"
+    ),
     "/docs-viewer/static/css/docs-viewer-theme.css": Path(
         "site/docs-viewer/static/css/docs-viewer-theme.css"
     ),
@@ -258,6 +264,8 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-manage.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-source-editor.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-import.css",
+        repo_root / "shared" / "frontend" / "js" / "folder-picker.js",
+        repo_root / "shared" / "frontend" / "css" / "folder-picker.css",
         repo_root / "docs-viewer" / "config" / "defaults" / "docs-viewer-config.json",
         repo_root / "docs-viewer" / "config" / "routes" / "docs-viewer-routes.json",
         repo_root / "site" / "docs-viewer" / "config" / "routes" / "docs-viewer-public-routes.json",
@@ -515,6 +523,7 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         return (
             path in STATIC_FILES
             or runtime_static_relative_path(path) is not None
+            or shared_static_relative_path(path) is not None
             or bool(SCOPE_PUBLISHED_STATIC_PATTERN.match(path))
             or any(path.startswith(prefix) for prefix in STATIC_PREFIXES)
         )

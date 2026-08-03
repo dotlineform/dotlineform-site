@@ -399,6 +399,136 @@ def assert_sequential_import_collection_modal(page: Page) -> None:
         raise AssertionError(f"package result did not focus its close action: {result_state!r}")
 
 
+def assert_sequential_import_folder_modal(page: Page) -> None:
+    page.evaluate(
+        """async () => {
+          const modalModule = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-modals.js'
+          );
+          const shellModule = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-shell-renderer.js'
+          );
+          document.body.innerHTML = `
+            <main class="docsViewer" id="root">
+              <button id="openImportFolderFixture">Import</button>
+              <div data-docs-viewer-management-shell-mount></div>
+            </main>`;
+          const root = document.querySelector('#root');
+          const refs = shellModule.renderDocsViewerManagementShell({
+            document,
+            root,
+            mount: root.querySelector('[data-docs-viewer-management-shell-mount]')
+          });
+          const controller = modalModule.createDocsViewerManagementModalController({
+            refs,
+            management: {},
+            scopeConfig: {},
+            callbacks: { viewerScope: () => 'analysis' }
+          });
+          controller.wireEvents();
+          refs.importRoot.hidden = false;
+          const choose = document.querySelector('#docsHtmlImportChooseSource');
+          let submitted = 0;
+          function createFolderPicker(host, options) {
+            host.innerHTML = '<button id="folderPickerFocus">Folder row</button>';
+            return {
+              ready: Promise.resolve(),
+              focusPreferred: () => document.querySelector('#folderPickerFocus').focus(),
+              getDirectory: () => 'projects/alpha',
+              submit: async () => {
+                submitted += 1;
+                return options.onSubmit({ directory: 'projects/alpha' });
+              },
+              destroy: () => host.replaceChildren()
+            };
+          }
+          async function openFolder() {
+            return controller.openImportFolderModal({
+              createFolderPicker,
+              initialDirectory: 'data-sharing/import-staging',
+              loadDirectory: async () => ({}),
+              onSubmit: async ({ directory }) => directory,
+              restoreFocus: choose
+            });
+          }
+          await controller.openImportModal({
+            restoreFocus: document.querySelector('#openImportFolderFixture')
+          });
+          await openFolder();
+          window.importFolderModalFixture = {
+            choose,
+            controller,
+            openFolder,
+            refs,
+            submitted: () => submitted
+          };
+        }"""
+    )
+    page.wait_for_function("document.activeElement?.id === 'folderPickerFocus'")
+    opened = page.evaluate(
+        """() => [
+          document.querySelector('#docsViewerImportModal').hidden,
+          document.querySelector('#docsViewerImportFolderModal').hidden,
+          Array.from(document.querySelectorAll('.docsViewer__modal'))
+            .filter(modal => !modal.hidden).length,
+          document.activeElement?.id || '',
+          document.documentElement.style.overflow,
+          document.body.style.overflow
+        ]"""
+    )
+    page.locator("#docsViewerImportFolderCancel").click()
+    page.wait_for_function(
+        "document.activeElement?.id === 'docsHtmlImportChooseSource'"
+    )
+    cancelled = page.evaluate(
+        """() => [
+          document.querySelector('#docsViewerImportModal').hidden,
+          document.querySelector('#docsViewerImportFolderModal').hidden,
+          document.activeElement?.id || '',
+          window.importFolderModalFixture.submitted()
+        ]"""
+    )
+    page.evaluate("window.importFolderModalFixture.openFolder()")
+    page.wait_for_function("document.activeElement?.id === 'folderPickerFocus'")
+    page.locator("#docsViewerImportFolderConfirm").click()
+    page.wait_for_function(
+        "document.activeElement?.id === 'docsHtmlImportChooseSource'"
+    )
+    confirmed = page.evaluate(
+        """() => [
+          document.querySelector('#docsViewerImportModal').hidden,
+          document.querySelector('#docsViewerImportFolderModal').hidden,
+          document.activeElement?.id || '',
+          window.importFolderModalFixture.submitted()
+        ]"""
+    )
+    page.evaluate("window.importFolderModalFixture.controller.closeImportModal()")
+    page.wait_for_function(
+        "document.activeElement?.id === 'openImportFolderFixture'"
+    )
+    closed = page.evaluate(
+        """() => [
+          Array.from(document.querySelectorAll('.docsViewer__modal'))
+            .filter(modal => !modal.hidden).length,
+          document.activeElement?.id || '',
+          document.documentElement.style.overflow,
+          document.body.style.overflow
+        ]"""
+    )
+    expected_opened = [True, False, 1, "folderPickerFocus", "hidden", "hidden"]
+    expected_cancelled = [False, True, "docsHtmlImportChooseSource", 0]
+    expected_confirmed = [False, True, "docsHtmlImportChooseSource", 1]
+    expected_closed = [0, "openImportFolderFixture", "", ""]
+    if opened != expected_opened:
+        raise AssertionError(f"folder modal did not suspend Import: {opened!r}")
+    if cancelled != expected_cancelled:
+        raise AssertionError(f"folder modal cancel did not restore Import: {cancelled!r}")
+    if confirmed != expected_confirmed:
+        raise AssertionError(f"folder modal confirm did not restore Import: {confirmed!r}")
+    if closed != expected_closed:
+        raise AssertionError(f"restored Import did not return final focus: {closed!r}")
+
+
 def assert_metadata_status_list_selection(page: Page) -> None:
     page.route(
         "**/docs-viewer/runtime/js/shared/docs-viewer-render.js",
@@ -783,6 +913,7 @@ def main(argv: list[str] | None = None) -> int:
                 assert_shared_focus_trap(page)
                 assert_choice_modal_radio_navigation(page)
                 assert_sequential_import_collection_modal(page)
+                assert_sequential_import_folder_modal(page)
                 assert_metadata_status_list_selection(page)
                 assert_metadata_parent_duplicate_title_selection(page)
                 assert_sub_scope_metadata_omits_parent_field(page)

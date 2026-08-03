@@ -26,6 +26,33 @@ export function createDocsViewerManagementImportController(options = {}) {
     return import("../import/docs-html-import.js");
   }
 
+  function folderPickerModule() {
+    if (typeof callbacks.loadFolderPickerModule === "function") {
+      return callbacks.loadFolderPickerModule();
+    }
+    return import("/docs-viewer/runtime/js/shared-frontend/folder-picker.js");
+  }
+
+  function openFolderPicker(settings) {
+    var request = settings || {};
+    var modalController = typeof callbacks.getModalController === "function" ? callbacks.getModalController() : null;
+    if (!modalController || typeof modalController.openImportFolderModal !== "function") {
+      return Promise.reject(new Error("Docs Import folder modal is unavailable."));
+    }
+    return folderPickerModule().then(function (module) {
+      if (!module || typeof module.createFolderPicker !== "function") {
+        throw new Error("Folder picker module did not expose createFolderPicker().");
+      }
+      return modalController.openImportFolderModal({
+        createFolderPicker: module.createFolderPicker,
+        initialDirectory: request.initialDirectory,
+        loadDirectory: request.loadDirectory,
+        onSubmit: request.onSubmit,
+        restoreFocus: request.restoreFocus
+      });
+    });
+  }
+
   function setBootError(error) {
     console.warn("docs_viewer: docs import modal failed to initialize", error);
     if (!refs.bootStatus) return;
@@ -89,6 +116,7 @@ export function createDocsViewerManagementImportController(options = {}) {
           docsViewerConfigUrl: context.docsViewerConfigUrl || context.root && context.root.dataset.docsViewerConfigUrl || DEFAULT_CONFIG_URL,
           managementBaseUrl: context.managementBaseUrl,
           routePath: IMPORT_ROUTE_PATH,
+          onChooseSource: openFolderPicker,
           onBusyChange: projectBusy,
           onCollectionStateChange: projectCollectionState,
           onTerminalResult: projectTerminalResult

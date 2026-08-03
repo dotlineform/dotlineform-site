@@ -1,0 +1,83 @@
+.sharedFolderPicker{
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.sharedFolderPicker__breadcrumbs,
+.sharedFolderPicker__toolbar{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.sharedFolderPicker__breadcrumb,
+.sharedFolderPicker__parent{
+  border: 1px solid var(--studio-line-input, var(--docs-viewer-border-strong, #cfcfcf));
+  border-radius: var(--studio-radius-sm, 0.35rem);
+  background: var(--surface, var(--docs-viewer-panel, #fff));
+  color: inherit;
+  font: inherit;
+  font-size: var(--font-small, 0.875rem);
+  padding: 0.3rem 0.5rem;
+}
+
+button.sharedFolderPicker__breadcrumb,
+.sharedFolderPicker__parent,
+.sharedFolderPicker__option{
+  cursor: pointer;
+}
+
+.sharedFolderPicker__breadcrumb:focus,
+.sharedFolderPicker__parent:focus,
+.sharedFolderPicker__list:focus{
+  outline: 2px solid var(--studio-focus, var(--docs-viewer-focus-ring, #5f8ffb));
+  outline-offset: 2px;
+}
+
+.sharedFolderPicker__parent:disabled{
+  color: var(--studio-muted, var(--docs-viewer-disabled, #777));
+  cursor: not-allowed;
+}
+
+.sharedFolderPicker__status,
+.sharedFolderPicker__separator{
+  color: var(--studio-muted, var(--docs-viewer-muted, #666));
+  font-size: var(--font-small, 0.875rem);
+}
+
+.sharedFolderPicker__status{
+  min-height: 1.25rem;
+  margin: 0;
+}
+
+.sharedFolderPicker__status[data-state="error"]{
+  color: var(--studio-danger, var(--docs-viewer-danger, #a33));
+}
+
+.sharedFolderPicker__list{
+  box-sizing: border-box;
+  min-height: min(20rem, 42vh);
+  max-height: min(28rem, 52vh);
+  overflow: auto;
+  border: 1px solid var(--studio-line-input, var(--docs-viewer-border-strong, #cfcfcf));
+  border-radius: var(--studio-radius-sm, 0.35rem);
+  background: var(--surface, var(--docs-viewer-panel, #fff));
+  padding: 0.35rem;
+}
+
+.sharedFolderPicker__empty{
+  padding: 0.45rem 0.55rem;
+  overflow-wrap: anywhere;
+}
+
+.sharedFolderPicker__option{
+  border-radius: var(--studio-radius-sm, 0.35rem);
+  padding: 0.45rem 0.55rem;
+}
+
+.sharedFolderPicker__option:hover,
+.sharedFolderPicker__option[data-active="true"]{
+  background: var(--studio-focus-ring, var(--docs-viewer-selection-bg, rgba(95, 143, 251, 0.18)));
+}

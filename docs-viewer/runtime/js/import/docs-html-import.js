@@ -33,6 +33,9 @@ import {
 import {
   createDocsImportCollectionController
 } from "./docs-import-collection-controller.js";
+import {
+  createDocsImportSourceSelection
+} from "./docs-import-source-selection.js";
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -127,13 +130,17 @@ function managementOptionsForState(state) {
   });
 }
 
-async function fetchImportCandidates(state) {
+async function fetchImportCandidates(state, sourceDirectory) {
+  const directory = normalizeText(sourceDirectory);
   const payload = await fetchManagementJson(
-    "/docs/import-source-files",
+    `/docs/import-source-files?source_directory=${encodeURIComponent(directory)}`,
     "GET",
     undefined,
     managementOptionsForState(state)
   );
+  if (normalizeText(payload && payload.source_directory) !== directory) {
+    throw new Error("Docs Import candidate inventory did not match the selected folder.");
+  }
   return docsImportCandidateInventory(payload);
 }
 
@@ -261,6 +268,8 @@ function syncImportInputControls(state) {
   );
   const listDisabled = state.isRunning || !state.candidates.length;
   state.candidateList.setAttribute("aria-disabled", listDisabled ? "true" : "false");
+  state.sourceChooseButton.disabled = state.isRunning || !state.serviceAvailable;
+  state.sourceStagingButton.disabled = state.isRunning || !state.serviceAvailable;
   state.includePromptMetaWrap.hidden = !supportsPromptMeta;
   state.includePromptMeta.disabled = state.isRunning || !actionable || !supportsPromptMeta;
   if (!supportsPromptMeta) state.includePromptMeta.checked = false;
@@ -305,7 +314,8 @@ function setImportDestination(state, destination, options = {}) {
   }
 }
 
-function refreshStagedFiles(state) {
+function refreshSourceDirectory(state, sourceDirectory) {
+  const directory = normalizeText(sourceDirectory);
   if (!state.serviceAvailable || state.isRunning) {
     return Promise.resolve(state.candidates);
   }
@@ -315,8 +325,8 @@ function refreshStagedFiles(state) {
   state.runButton.disabled = true;
   state.reviewButton.disabled = true;
   setStatus(state.statusNode, "", "");
-  setText(state.candidateNoteNode, "Loading staged sources...");
-  state.refreshPromise = fetchImportCandidates(state)
+  setText(state.candidateNoteNode, "Loading import sources...");
+  state.refreshPromise = fetchImportCandidates(state, directory)
     .then((candidates) => {
       state.inventoryCurrent = true;
       renderCandidateList(state, candidates);
@@ -338,6 +348,11 @@ function refreshStagedFiles(state) {
       state.refreshPromise = null;
     });
   return state.refreshPromise;
+}
+
+function refreshStagedFiles(state) {
+  if (!state.sourceSelection) return Promise.resolve(state.candidates);
+  return state.sourceSelection.refresh();
 }
 
 async function openResultSource(state, link) {
@@ -427,6 +442,7 @@ async function runImport(state) {
       file: candidate.raw,
       scope: target.scope,
       subScope: normalizeText(target.sub_scope),
+      sourceDirectory: state.sourceDirectory,
       managementBaseUrl: state.managementBaseUrl
     });
     return;
@@ -436,6 +452,7 @@ async function runImport(state) {
     scope: target.scope,
     subScope: normalizeText(target.sub_scope),
     includePromptMeta: Boolean(state.includePromptMeta.checked),
+    sourceDirectory: state.sourceDirectory,
     routePath: state.routePath,
     managementBaseUrl: state.managementBaseUrl,
     onRunningChange: (busy) => {
@@ -510,6 +527,29 @@ function bindImportEvents(state) {
     resetDocsHtmlImportWarning(state);
     setStatus(state.statusNode, "", importText("overwriteCancelled"));
   });
+  state.sourceChooseButton.addEventListener("click", () => {
+    if (!state.sourceSelection || state.isRunning) return;
+    state.sourceSelection.chooseFolder(state.sourceChooseButton).catch((error) => {
+      setStatus(
+        state.statusNode,
+        "error",
+        normalizeText(error && error.message) || "Import source folder could not be opened."
+      );
+    });
+  });
+  state.sourceStagingButton.addEventListener("click", () => {
+    if (!state.sourceSelection || state.isRunning) return;
+    state.sourceStagingButton.disabled = true;
+    state.sourceSelection.useImportStaging(state.sourceStagingButton).catch((error) => {
+      setStatus(
+        state.statusNode,
+        "error",
+        normalizeText(error && error.message) || "Import staging could not be loaded."
+      );
+    }).finally(() => {
+      state.sourceStagingButton.disabled = state.isRunning;
+    });
+  });
 }
 
 export async function initDocsHtmlImport(options = {}) {
@@ -525,6 +565,9 @@ export async function initDocsHtmlImport(options = {}) {
     root,
     candidateList: document.getElementById("docsHtmlImportCandidateList"),
     candidateNoteNode: document.getElementById("docsHtmlImportCandidateNote"),
+    sourceDirectoryNode: document.getElementById("docsHtmlImportSourceDirectory"),
+    sourceChooseButton: document.getElementById("docsHtmlImportChooseSource"),
+    sourceStagingButton: document.getElementById("docsHtmlImportUseStaging"),
     includePromptMeta: document.getElementById("docsHtmlImportIncludePromptMeta"),
     includePromptMetaWrap: document.getElementById("docsHtmlImportIncludePromptMetaWrap"),
     includePromptMetaLabelNode: document.getElementById("docsHtmlImportIncludePromptMetaLabel"),
@@ -554,6 +597,8 @@ export async function initDocsHtmlImport(options = {}) {
     inventoryCurrent: false,
     isRunning: false,
     refreshPromise: null,
+    sourceDirectory: "",
+    sourceSelection: null,
     candidates: [],
     selectedFilename: "",
     importDestination: null,
@@ -585,6 +630,9 @@ export async function initDocsHtmlImport(options = {}) {
   const requiredNodes = [
     state.candidateList,
     state.candidateNoteNode,
+    state.sourceDirectoryNode,
+    state.sourceChooseButton,
+    state.sourceStagingButton,
     state.includePromptMeta,
     state.includePromptMetaWrap,
     state.includePromptMetaLabelNode,
@@ -646,7 +694,33 @@ export async function initDocsHtmlImport(options = {}) {
       return importApp;
     }
 
-    await refreshStagedFiles(state);
+    state.sourceSelection = createDocsImportSourceSelection({
+      loadDirectory: ({ directory }) => fetchManagementJson(
+        `/docs/import-source-directories?source_directory=${encodeURIComponent(directory)}`,
+        "GET",
+        undefined,
+        managementOptionsForState(state)
+      ),
+      loadCandidates: ({ directory }) => refreshSourceDirectory(state, directory),
+      onDirectoryChange: ({ directory }) => {
+        state.sourceDirectory = normalizeText(directory);
+        setText(state.sourceDirectoryNode, state.sourceDirectory);
+      },
+      openFolderPicker: typeof options.onChooseSource === "function"
+        ? options.onChooseSource
+        : null
+    });
+    try {
+      await state.sourceSelection.initialize();
+    } catch (error) {
+      setStatus(
+        state.statusNode,
+        "error",
+        normalizeText(error && error.message) || importText("loadFilesFailed")
+      );
+      syncImportInputControls(state);
+      markRouteReady(state, true);
+    }
     return importApp;
   } catch (error) {
     console.warn("docs_import_source: init failed", error);

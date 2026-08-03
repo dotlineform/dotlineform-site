@@ -8,6 +8,7 @@ from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
+import re
 from threading import Thread
 
 from playwright.sync_api import Page, sync_playwright
@@ -216,12 +217,26 @@ def assert_consolidated_modal(page: Page, base_url: str, site_root: Path) -> Non
     )
     page.route("**/health", lambda route: fulfill(route, {"ok": True}))
     page.route(
-        "**/docs/import-source-files",
+        re.compile(r".*/docs/import-source-directories(?:\?.*)?$"),
+        lambda route: fulfill(
+            route,
+            {
+                "ok": True,
+                "current_directory": "data-sharing/import-staging",
+                "current_selectable": True,
+                "parent_directory": "data-sharing",
+                "directories": [],
+            },
+        ),
+    )
+    page.route(
+        re.compile(r".*/docs/import-source-files(?:\?.*)?$"),
         lambda route: fulfill(
             route,
             {
                 "ok": True,
                 "available": True,
+                "source_directory": "data-sharing/import-staging",
                 "files": [{"filename": "legacy-ignored.md"}],
                 "candidates": candidates,
             },
@@ -452,6 +467,9 @@ def assert_consolidated_modal(page: Page, base_url: str, site_root: Path) -> Non
     assert page.locator("#docsHtmlImportCandidateDetails").count() == 0
     assert page.locator("#docsHtmlImportTypeSelect").count() == 0
     assert page.locator("#docsHtmlImportScopeSelect").count() == 0
+    assert page.locator("#docsHtmlImportSourceDirectory").text_content() == (
+        "data-sharing/import-staging"
+    )
     assert selected_snapshot(page) == {
         "filename": "alpha.md",
         "destination": "Studio",
@@ -464,6 +482,7 @@ def assert_consolidated_modal(page: Page, base_url: str, site_root: Path) -> Non
     page.locator("#docsHtmlImportRun").click()
     wait_until_idle(page)
     assert import_requests[0]["scope"] == "studio"
+    assert import_requests[0]["source_directory"] == "data-sharing/import-staging"
     assert "sub_scope" not in import_requests[0]
     assert import_requests[0]["staged_filename"] == "alpha.md"
     assert page.locator("[data-doc-destination-link]").get_attribute("href") == (
@@ -486,6 +505,7 @@ def assert_consolidated_modal(page: Page, base_url: str, site_root: Path) -> Non
     page.locator("#docsHtmlImportRun").click()
     wait_until_idle(page)
     assert import_requests[1]["scope"] == "studio"
+    assert import_requests[1]["source_directory"] == "data-sharing/import-staging"
     assert import_requests[1]["sub_scope"] == "tags"
     assert import_requests[1]["staged_filename"] == "beta.html"
     assert page.locator("[data-doc-destination-link]").get_attribute("href") == (
@@ -511,6 +531,7 @@ def assert_consolidated_modal(page: Page, base_url: str, site_root: Path) -> Non
     page.locator("#docsHtmlImportRun").click()
     page.locator("#docsViewerImportCollectionModal:not([hidden])").wait_for()
     assert import_requests[2]["scope"] == "studio"
+    assert import_requests[2]["source_directory"] == "data-sharing/import-staging"
     assert import_requests[2]["sub_scope"] == "tags"
     assert import_requests[2]["staged_filename"] == "returned-tags.jsonl"
     assert import_requests[2]["preview_only"] is True
@@ -518,6 +539,7 @@ def assert_consolidated_modal(page: Page, base_url: str, site_root: Path) -> Non
     assert page.locator("#docsImportCollectionCancel").is_visible()
     page.locator("#docsImportCollectionConfirm").click()
     wait_until_idle(page)
+    assert import_requests[3]["source_directory"] == "data-sharing/import-staging"
     collection_link = page.locator("[data-collection-destination-link]")
     assert collection_link.get_attribute("href") == (
         "/docs/?scope=studio&doc=report-tags"

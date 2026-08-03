@@ -51,6 +51,10 @@ export function createDocsViewerManagementModalComposition(options = {}) {
   var refs = {
     importModal: shellRef(shellRefs, "importModal", "docsViewerImportModal"),
     importRoot: shellRef(shellRefs, "importRoot", "docsHtmlImportRoot"),
+    importFolderModal: shellRef(shellRefs, "importFolderModal", "docsViewerImportFolderModal"),
+    importFolderPicker: shellRef(shellRefs, "importFolderPicker", "docsViewerImportFolderPicker"),
+    importFolderCancelButton: shellRef(shellRefs, "importFolderCancelButton", "docsViewerImportFolderCancel"),
+    importFolderConfirmButton: shellRef(shellRefs, "importFolderConfirmButton", "docsViewerImportFolderConfirm"),
     importCollectionModal: shellRef(shellRefs, "importCollectionModal", "docsViewerImportCollectionModal"),
     importCollectionCancelButton: shellRef(shellRefs, "importCollectionCancelButton", "docsImportCollectionCancel"),
     importCollectionConfirmButton: shellRef(shellRefs, "importCollectionConfirmButton", "docsImportCollectionConfirm"),
