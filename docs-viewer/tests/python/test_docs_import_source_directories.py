@@ -129,12 +129,20 @@ def test_post_binds_preview_and_apply_to_exact_source_pair(
         selected = source_root()
         source = selected / "notes.md"
         source.write_text("# Alternate Notes\n\nBody.\n", encoding="utf-8")
+        source_bytes = source.read_bytes()
         nested = selected / "nested"
         nested.mkdir()
         (nested / "nested.md").write_text("# Nested\n", encoding="utf-8")
         stub_markdown_validation(monkeypatch)
 
         preview = request_import(repo_root, "notes.md", preview_only=True)
+        original_rebuild = stub_rebuild()
+        try:
+            applied = request_import(repo_root, "notes.md")
+        finally:
+            docs_write_rebuild.perform_source_write_and_rebuild = original_rebuild
+        imported_source = (repo_root / applied["path"]).read_text(encoding="utf-8")
+        source_unchanged = source.read_bytes() == source_bytes
 
         source.rename(selected / "moved.md")
         with pytest.raises(FileNotFoundError, match="does not exist"):
@@ -150,7 +158,13 @@ def test_post_binds_preview_and_apply_to_exact_source_pair(
 
     assert preview["source_directory"] == SOURCE_DIRECTORY
     assert preview["import_preview"]["source_path"] == f"{SOURCE_DIRECTORY}/notes.md"
+    assert applied["operation"] == "create"
+    assert applied["source_directory"] == SOURCE_DIRECTORY
+    assert applied["import_preview"]["source_path"] == f"{SOURCE_DIRECTORY}/notes.md"
+    assert "# Alternate Notes" in imported_source
+    assert source_unchanged is True
     assert str(projects_base()) not in repr(preview)
+    assert str(projects_base()) not in repr(applied)
 
 
 def test_non_staging_markdown_package_keeps_its_media_root(
@@ -171,7 +185,10 @@ def test_non_staging_markdown_package_keeps_its_media_root(
             "![Package image](image.png)\n",
             encoding="utf-8",
         )
-        write_test_image(package / "image.png", (24, 18))
+        package_markdown = package / "Note.md"
+        package_image = package / "image.png"
+        write_test_image(package_image, (24, 18))
+        source_bytes = (package_markdown.read_bytes(), package_image.read_bytes())
         stub_markdown_validation(monkeypatch)
         original_rebuild = stub_rebuild()
         try:
@@ -187,12 +204,17 @@ def test_non_staging_markdown_package_keeps_its_media_root(
             / media_result["artifact_identity"]
         )
         media_exists = media_path.is_file()
+        source_unchanged = source_bytes == (
+            package_markdown.read_bytes(),
+            package_image.read_bytes(),
+        )
 
     assert payload["source_directory"] == SOURCE_DIRECTORY
     assert payload["import_preview"]["source_path"] == f"{SOURCE_DIRECTORY}/package-note"
     assert payload["import_preview"]["source_markdown"] == f"{SOURCE_DIRECTORY}/package-note/Note.md"
     assert payload["import_preview"]["source_format"] == "markdown_package"
     assert media_exists is True
+    assert source_unchanged is True
     assert f"[[media:{media_result['media_path']}]]" in source_text
     assert str(projects_base()) not in repr(payload)
 

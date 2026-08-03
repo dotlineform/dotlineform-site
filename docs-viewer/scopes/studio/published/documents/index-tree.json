@@ -819,7 +819,7 @@
           "doc_id": "d-20260801-190502-6927fb",
           "title": "Docs Import Folder Source Selection",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-190502-6927fb.json",
-          "ui_status": "proposed",
+          "ui_status": "done",
           "children": [
             {
               "doc_id": "d-20260803-113716-8ef8e5",
@@ -831,7 +831,7 @@
               "doc_id": "d-20260803-113717-fd92bc",
               "title": "IFS-1 — Docs Import Folder Source Selection Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260803-113717-fd92bc.json",
-              "ui_status": "in-progress"
+              "ui_status": "done"
             }
           ]
         },
@@ -1411,5 +1411,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-03T10:59:59Z"
+  "generated_at": "2026-08-03T12:57:29Z"
 }

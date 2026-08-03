@@ -7,9 +7,33 @@
       "doc_id": "d-20260803-113717-fd92bc",
       "title": "IFS-1 — Docs Import Folder Source Selection Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260803-113717-fd92bc.json",
-      "timestamp": "2026-08-03 13:38:25",
+      "timestamp": "2026-08-03 13:56:00",
       "parent_id": "d-20260801-190502-6927fb",
       "parent_title": "Docs Import Folder Source Selection"
+    },
+    {
+      "doc_id": "d-20260801-190502-6927fb",
+      "title": "Docs Import Folder Source Selection",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-190502-6927fb.json",
+      "timestamp": "2026-08-03 13:55:56",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260424-000000-fc8b5d",
+      "title": "Docs Import",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260424-000000-fc8b5d.json",
+      "timestamp": "2026-08-03 13:53:21",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260514-164722-3de65e",
+      "title": "Docs Import Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260514-164722-3de65e.json",
+      "timestamp": "2026-08-03 13:53:21",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
     },
     {
       "doc_id": "d-20260801-133317-e8eb39",
@@ -26,14 +50,6 @@
       "timestamp": "2026-08-03 11:37:16",
       "parent_id": "d-20260801-190502-6927fb",
       "parent_title": "Docs Import Folder Source Selection"
-    },
-    {
-      "doc_id": "d-20260801-190502-6927fb",
-      "title": "Docs Import Folder Source Selection",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-190502-6927fb.json",
-      "timestamp": "2026-08-03 11:37:15",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
     },
     {
       "doc_id": "d-20260501-000000-49b626",
@@ -66,23 +82,7 @@
       "timestamp": "2026-08-03 00:00:00",
       "parent_id": "d-20260802-123450-f7493d",
       "parent_title": "Data Model Maps"
-    },
-    {
-      "doc_id": "d-20260719-123719-fb7565",
-      "title": "Document Diagrams",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260719-123719-fb7565.json",
-      "timestamp": "2026-08-03 00:00:00",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260514-184303-7914e2",
-      "title": "Media And Asset Handling",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260514-184303-7914e2.json",
-      "timestamp": "2026-08-03 00:00:00",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-08-03T12:38:25Z"
+  "generated_at": "2026-08-03T12:57:29Z"
 }

@@ -213,6 +213,7 @@ def sub_scope_preview(root: Path, filename: str) -> dict[str, object]:
         {
             "scope": "library",
             "sub_scope": "tags",
+            "source_directory": "data-sharing/import-staging",
             "staged_filename": filename,
             "preview_only": True,
         },
@@ -232,6 +233,7 @@ def sub_scope_apply(
         {
             "scope": "library",
             "sub_scope": "tags",
+            "source_directory": "data-sharing/import-staging",
             "staged_filename": filename,
             "preview_only": False,
             "confirm": True,
