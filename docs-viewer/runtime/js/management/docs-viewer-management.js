@@ -587,6 +587,7 @@ export function initDocsViewerManagement(context) {
       detail: detail,
       resolution: resolution,
       root: root,
+      setStatus: context.setStatus,
       sourceEditorServices: typeof context.sourceEditorServices === "function"
         ? context.sourceEditorServices()
         : context.sourceEditorServices

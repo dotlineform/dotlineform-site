@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d56949b7cf096a2a67acf55c2d2a8a6e",
-    "generated_at_utc": "2026-08-03T20:50:54Z",
+    "version": "blake2b-418c8aba499335d769c28ab9edbad1af",
+    "generated_at_utc": "2026-08-03T21:24:46Z",
     "count": 241
   },
   "entries": [
@@ -4415,25 +4415,25 @@
       "kind": "doc",
       "title": "Table Enhancements",
       "href": "/docs/?scope=studio&doc=d-20260802-150245-4e7f85",
-      "last_updated": "2026-08-03 21:50:53",
+      "last_updated": "2026-08-03 22:24:15",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-03 21:50:53 • Roadmap",
+      "display_meta": "2026-08-03 22:24:15 • Roadmap",
       "search_terms": [
         "table enhancements",
         "table",
         "enhancements",
         "roadmap",
-        "2026-08-03 21:50:53",
+        "2026-08-03 22:24:15",
         "2026",
         "08",
         "03",
-        "21",
-        "50",
-        "53",
+        "22",
+        "24",
+        "15",
         "d-20260802-150245-4e7f85"
       ],
-      "search_text": "table enhancements table enhancements roadmap 2026-08-03 21:50:53 2026 08 03 21 50 53 d-20260802-150245-4e7f85"
+      "search_text": "table enhancements table enhancements roadmap 2026-08-03 22:24:15 2026 08 03 22 24 15 d-20260802-150245-4e7f85"
     },
     {
       "id": "d-20260802-160429-69a5f6",
@@ -4470,10 +4470,10 @@
       "kind": "doc",
       "title": "Content Detail View Concept And Architecture",
       "href": "/docs/?scope=studio&doc=d-20260802-150246-bb3f88",
-      "last_updated": "2026-08-03 21:47:17",
+      "last_updated": "2026-08-03 22:14:36",
       "parent_id": "d-20260802-150245-4e7f85",
       "parent_title": "Table Enhancements",
-      "display_meta": "2026-08-03 21:47:17 • Table Enhancements",
+      "display_meta": "2026-08-03 22:14:36 • Table Enhancements",
       "search_terms": [
         "content detail view concept and architecture",
         "content",
@@ -4485,16 +4485,16 @@
         "table enhancements",
         "table",
         "enhancements",
-        "2026-08-03 21:47:17",
+        "2026-08-03 22:14:36",
         "2026",
         "08",
         "03",
-        "21",
-        "47",
-        "17",
+        "22",
+        "14",
+        "36",
         "d-20260802-150246-bb3f88"
       ],
-      "search_text": "content detail view concept and architecture content detail view concept and architecture table enhancements table enhancements 2026-08-03 21:47:17 2026 08 03 21 47 17 d-20260802-150246-bb3f88"
+      "search_text": "content detail view concept and architecture content detail view concept and architecture table enhancements table enhancements 2026-08-03 22:14:36 2026 08 03 22 14 36 d-20260802-150246-bb3f88"
     },
     {
       "id": "d-20260802-163320-9015b0",
@@ -4559,10 +4559,10 @@
       "kind": "doc",
       "title": "TE-3 — Managed Table Tools",
       "href": "/docs/?scope=studio&doc=d-20260802-151403-d381d6",
-      "last_updated": "2026-08-03 21:50:53",
+      "last_updated": "2026-08-03 22:24:15",
       "parent_id": "d-20260802-150245-4e7f85",
       "parent_title": "Table Enhancements",
-      "display_meta": "2026-08-03 21:50:53 • Table Enhancements",
+      "display_meta": "2026-08-03 22:24:15 • Table Enhancements",
       "search_terms": [
         "te-3 — managed table tools",
         "te",
@@ -4572,16 +4572,16 @@
         "tools",
         "table enhancements",
         "enhancements",
-        "2026-08-03 21:50:53",
+        "2026-08-03 22:24:15",
         "2026",
         "08",
         "03",
-        "21",
-        "50",
-        "53",
+        "22",
+        "24",
+        "15",
         "d-20260802-151403-d381d6"
       ],
-      "search_text": "te-3 — managed table tools te 3 managed table tools table enhancements enhancements 2026-08-03 21:50:53 2026 08 03 21 50 53 d-20260802-151403-d381d6"
+      "search_text": "te-3 — managed table tools te 3 managed table tools table enhancements enhancements 2026-08-03 22:24:15 2026 08 03 22 24 15 d-20260802-151403-d381d6"
     },
     {
       "id": "d-20260802-150248-e1461d",

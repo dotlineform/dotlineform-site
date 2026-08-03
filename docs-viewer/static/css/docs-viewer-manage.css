@@ -989,6 +989,67 @@ select.docsViewer__fieldInput--listbox{
   padding-inline: 0;
 }
 
+.docsViewer__tableToolIcon{
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.docsViewer__content table.docsViewer__tableDetailTable--managedWidths{
+  table-layout: fixed;
+}
+
+.docsViewer__tableDetailTable--managedWidths th,
+.docsViewer__tableDetailTable--managedWidths td{
+  max-inline-size: none;
+}
+
+.docsViewer__tableResizeHeader{
+  padding-inline-end: calc(var(--docs-viewer-space-3) + 0.5rem);
+}
+
+.docsViewer__tableResizeHandle{
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: -0.5rem;
+  z-index: 4;
+  box-sizing: border-box;
+  width: 1rem;
+  border: 0;
+  background: transparent;
+  cursor: col-resize;
+  touch-action: none;
+  user-select: none;
+}
+
+.docsViewer__tableResizeHandle::after{
+  position: absolute;
+  inset-block: 18%;
+  inset-inline-start: calc(50% - 0.5px);
+  width: 1px;
+  border-radius: 999px;
+  background: var(--docs-viewer-border-strong);
+  content: "";
+  opacity: 0.5;
+}
+
+.docsViewer__tableResizeHandle:hover::after,
+.docsViewer__tableResizeHandle:focus-visible::after{
+  width: 2px;
+  background: var(--docs-viewer-link);
+  opacity: 1;
+}
+
+.docsViewer__tableResizeHandle:focus-visible{
+  outline: 2px solid var(--docs-viewer-focus-ring);
+  outline-offset: -3px;
+}
+
 .docsViewer__scopeField{
   display: inline-flex;
   align-items: center;

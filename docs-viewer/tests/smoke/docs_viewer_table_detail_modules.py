@@ -14,6 +14,7 @@ from playwright.sync_api import Page, sync_playwright
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SHARED_RUNTIME_PREFIX = "/docs-viewer/runtime/js/shared/"
+MANAGEMENT_RUNTIME_PREFIX = "/docs-viewer/runtime/js/management/"
 
 
 class QuietStaticHandler(SimpleHTTPRequestHandler):
@@ -25,6 +26,9 @@ class QuietStaticHandler(SimpleHTTPRequestHandler):
         if clean_path.startswith(SHARED_RUNTIME_PREFIX):
             relative_path = clean_path.removeprefix(SHARED_RUNTIME_PREFIX)
             return str(REPO_ROOT / "site/docs-viewer/runtime/js/shared" / relative_path)
+        if clean_path.startswith(MANAGEMENT_RUNTIME_PREFIX):
+            relative_path = clean_path.removeprefix(MANAGEMENT_RUNTIME_PREFIX)
+            return str(REPO_ROOT / "docs-viewer/runtime/js/management" / relative_path)
         return super().translate_path(path)
 
 
@@ -53,6 +57,14 @@ def assert_entrypoint_composition() -> None:
         raise AssertionError("public entrypoint did not explicitly compose Table Detail View")
     if any(value not in manage_entry for value in required):
         raise AssertionError("Manage entrypoint did not explicitly compose Table Detail View")
+    managed_required = (
+        "createDocsViewerManagedTableTools",
+        "docs-viewer-managed-table-tools.js",
+        "managedTableDetailAdapter",
+        "withDocsViewerManagedTableToolDefinitions",
+    )
+    if any(value not in manage_entry for value in managed_required):
+        raise AssertionError("Manage entrypoint did not explicitly compose Managed Table Tools")
     if "/management/" in public_entry:
         raise AssertionError("public Table Detail composition imports management runtime")
 
@@ -68,7 +80,8 @@ def install_fixture(page: Page) -> None:
                 import('/docs-viewer/runtime/js/shared/docs-viewer-main-view-host.js'),
                 import('/docs-viewer/runtime/js/shared/docs-viewer-panel-layout.js'),
                 import('/docs-viewer/runtime/js/shared/docs-viewer-table-detail.js'),
-                import('/docs-viewer/runtime/js/shared/docs-viewer-view-registry.js')
+                import('/docs-viewer/runtime/js/shared/docs-viewer-view-registry.js'),
+                import('/docs-viewer/runtime/js/management/docs-viewer-managed-table-tools.js')
             ]);
             window.__docsViewerTableDetailSmoke = {
                 controlRenderers: modules[0],
@@ -78,7 +91,8 @@ def install_fixture(page: Page) -> None:
                 mainViewHost: modules[4],
                 panelLayout: modules[5],
                 tableDetail: modules[6],
-                viewRegistry: modules[7]
+                viewRegistry: modules[7],
+                managedTableTools: modules[8]
             };
         }"""
     )
@@ -413,6 +427,158 @@ def assert_table_detail_lifecycle(page: Page) -> None:
         raise AssertionError(f"stale target failure was not explicit: {result!r}")
 
 
+def assert_managed_table_tools(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const managed = window.__docsViewerTableDetailSmoke.managedTableTools;
+            const copied = [];
+            const statuses = [];
+            const controlStates = {};
+            const tools = managed.createDocsViewerManagedTableTools({
+                writeClipboardText: text => {
+                    copied.push(text);
+                    return Promise.resolve();
+                }
+            });
+            const table = document.createElement('table');
+            table.innerHTML = [
+                '<thead><tr><th>Project</th><th>Owner</th></tr></thead>',
+                '<tbody><tr><td> Alpha   Beta </td><td><a href="/studio">Studio Team</a></td></tr>',
+                '<tr><td></td><td>Last</td></tr></tbody>'
+            ].join('');
+            document.body.replaceChildren(table);
+            const handlers = tools.controlHandlers();
+            const extension = tools.presentationExtension.mount({
+                document,
+                table,
+                viewport: document.body
+            });
+            extension.activate({
+                projectControlState: (id, state) => { controlStates[id] = state; }
+            });
+
+            const definitions = managed.withDocsViewerManagedTableToolDefinitions({
+                controls: [], modes: [], views: []
+            });
+            const renderers = managed.createDocsViewerManagedTableToolControlRenderers();
+            const copy = renderers[managed.CONTENT_DETAIL_COPY_TABLE_CONTROL_ID]({ document });
+            const handles = Array.from(table.querySelectorAll('.docsViewer__tableResizeHandle'));
+            const initial = {
+                controls: definitions.controls.map(control => [control.id, control.label]),
+                copyText: copy.textContent.trim(),
+                copyIconRect: Boolean(copy.querySelector('svg rect')),
+                copyIconPath: Boolean(copy.querySelector('svg path')),
+                handleCount: handles.length,
+                handleLabels: handles.map(handle => handle.getAttribute('aria-label')),
+                handleRole: handles[0]?.getAttribute('role') || '',
+                resetDisabled: controlStates[managed.CONTENT_DETAIL_RESET_WIDTHS_CONTROL_ID].disabled
+            };
+
+            const firstBefore = Number(handles[0].getAttribute('aria-valuenow'));
+            handles[0].dispatchEvent(new KeyboardEvent('keydown', {
+                bubbles: true, cancelable: true, key: 'ArrowRight'
+            }));
+            const firstAfter = Number(handles[0].getAttribute('aria-valuenow'));
+            const secondBefore = Number(handles[1].getAttribute('aria-valuenow'));
+            handles[1].dispatchEvent(new PointerEvent('pointerdown', {
+                bubbles: true, button: 0, cancelable: true, clientX: 100, pointerId: 21
+            }));
+            handles[1].dispatchEvent(new PointerEvent('pointermove', {
+                bubbles: true, cancelable: true, clientX: 132, pointerId: 21
+            }));
+            handles[1].dispatchEvent(new PointerEvent('pointerup', {
+                bubbles: true, cancelable: true, clientX: 132, pointerId: 21
+            }));
+            const secondAfter = Number(handles[1].getAttribute('aria-valuenow'));
+            const resized = {
+                keyboardDelta: firstAfter - firstBefore,
+                managedClass: table.classList.contains('docsViewer__tableDetailTable--managedWidths'),
+                pointerDelta: secondAfter - secondBefore,
+                resetEnabled: !controlStates[managed.CONTENT_DETAIL_RESET_WIDTHS_CONTROL_ID].disabled,
+                widthColumns: table.querySelectorAll('colgroup[data-docs-viewer-managed-table-widths] > col').length
+            };
+
+            handlers[managed.CONTENT_DETAIL_RESET_WIDTHS_CONTROL_ID]({
+                setStatus: (message, error) => statuses.push({ message, error })
+            });
+            const resetState = {
+                managedClass: table.classList.contains('docsViewer__tableDetailTable--managedWidths'),
+                resetDisabled: controlStates[managed.CONTENT_DETAIL_RESET_WIDTHS_CONTROL_ID].disabled,
+                widthColumns: table.querySelectorAll('colgroup[data-docs-viewer-managed-table-widths] > col').length
+            };
+            handlers[managed.CONTENT_DETAIL_COPY_TABLE_CONTROL_ID]({
+                setStatus: (message, error) => statuses.push({ message, error })
+            });
+            await new Promise(resolve => setTimeout(resolve, 0));
+
+            const spanTable = document.createElement('table');
+            spanTable.innerHTML = [
+                '<thead><tr><th rowspan="2">A</th><th>B</th></tr><tr><th>C</th></tr></thead>',
+                '<tbody><tr><td colspan="2"> Value\\nwith   space </td></tr></tbody>'
+            ].join('');
+            const spanTsv = managed.serializeDocsViewerTableToTsv(spanTable);
+
+            extension.release();
+            const released = {
+                handles: table.querySelectorAll('.docsViewer__tableResizeHandle').length,
+                managedClass: table.classList.contains('docsViewer__tableDetailTable--managedWidths'),
+                resetHidden: controlStates[managed.CONTENT_DETAIL_RESET_WIDTHS_CONTROL_ID].hidden,
+                copyHidden: controlStates[managed.CONTENT_DETAIL_COPY_TABLE_CONTROL_ID].hidden
+            };
+            handlers[managed.CONTENT_DETAIL_COPY_TABLE_CONTROL_ID]({
+                setStatus: (message, error) => statuses.push({ message, error })
+            });
+            await new Promise(resolve => setTimeout(resolve, 0));
+            return {
+                copied,
+                initial,
+                released,
+                resetState,
+                resized,
+                spanTsv,
+                statuses
+            };
+        }"""
+    )
+    if result["initial"] != {
+        "controls": [
+            ["content-detail-reset-widths", "Reset widths"],
+            ["content-detail-copy-table", "Copy table"],
+        ],
+        "copyText": "",
+        "copyIconRect": True,
+        "copyIconPath": True,
+        "handleCount": 2,
+        "handleLabels": ["Resize Project", "Resize Owner"],
+        "handleRole": "separator",
+        "resetDisabled": True,
+    }:
+        raise AssertionError(f"Managed Table Tools presentation changed: {result!r}")
+    if result["resized"] != {
+        "keyboardDelta": 16,
+        "managedClass": True,
+        "pointerDelta": 32,
+        "resetEnabled": True,
+        "widthColumns": 2,
+    }:
+        raise AssertionError(f"Managed Table Tools resizing changed: {result!r}")
+    if result["resetState"] != {"managedClass": False, "resetDisabled": True, "widthColumns": 0}:
+        raise AssertionError(f"Managed Table Tools Reset changed: {result!r}")
+    if result["copied"] != ["Project\tOwner\nAlpha Beta\tStudio Team\n\tLast"]:
+        raise AssertionError(f"Copy table TSV changed: {result!r}")
+    if result["spanTsv"] != "A\tB\n\tC\nValue with space\t":
+        raise AssertionError(f"semantic span serialization changed: {result!r}")
+    if result["released"] != {
+        "copyHidden": True,
+        "handles": 0,
+        "managedClass": False,
+        "resetHidden": True,
+    }:
+        raise AssertionError(f"Managed Table Tools lifecycle cleanup changed: {result!r}")
+    if result["statuses"] != [{"message": "Copy table is unavailable.", "error": True}]:
+        raise AssertionError(f"Managed Table Tools failure reporting changed: {result!r}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--site-root", type=Path, default=Path("site"))
@@ -434,6 +600,7 @@ def main() -> None:
                 install_fixture(page)
                 assert_document_controller_table_mount(page)
                 assert_table_detail_lifecycle(page)
+                assert_managed_table_tools(page)
             finally:
                 browser.close()
     finally:

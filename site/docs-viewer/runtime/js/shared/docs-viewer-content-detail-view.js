@@ -69,6 +69,12 @@ export function createDocsViewerContentDetailView(options) {
     };
     mount.dataset.docsContentDetailActive = "true";
     mount.appendChild(presentation.root);
+    if (typeof presentation.activate === "function") {
+      presentation.activate({
+        projectControlState: context.mainView.projectControlState,
+        showWarning: context.mainView.showWarning
+      });
+    }
     showContentDetailControls(context, presentation.label);
     presentation.focusTarget.focus({ preventScroll: true });
   }

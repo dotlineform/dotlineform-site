@@ -9,7 +9,7 @@ import {
   withDocsViewerContentDetailDefinitions
 } from "../shared/docs-viewer-content-detail-view.js";
 import {
-  docsViewerTableDetailAdapter
+  createDocsViewerTableDetailAdapter
 } from "../shared/docs-viewer-table-detail.js";
 import {
   docsViewerInlineMermaidAdapter
@@ -20,6 +20,11 @@ import {
 import {
   createDocsViewerManagementViewDefinitions
 } from "./docs-viewer-management-hosted-views.js";
+import {
+  createDocsViewerManagedTableToolControlRenderers,
+  createDocsViewerManagedTableTools,
+  withDocsViewerManagedTableToolDefinitions
+} from "./docs-viewer-managed-table-tools.js";
 import {
   createDocsViewerManagementShellRenderers
 } from "./docs-viewer-management-shell-composition.js";
@@ -61,12 +66,18 @@ function mountDocsViewerManageExtras(context) {
   return mountDocsViewerManageDocumentExtras(settings);
 }
 
+const managedTableTools = createDocsViewerManagedTableTools();
+const managedTableDetailAdapter = createDocsViewerTableDetailAdapter({
+  presentationExtension: managedTableTools.presentationExtension
+});
+
 startDocsViewerManageApp({
   contentDetailBackControlId: CONTENT_DETAIL_BACK_CONTROL_ID,
   controlRendererContributions: Object.assign(
     {},
     createDocsViewerManagementAppControlRenderers(),
     createDocsViewerManagementControlRenderers(),
+    createDocsViewerManagedTableToolControlRenderers(),
     {
       [CATALOGUE_TOKEN_CONTROL_ID]: catalogueTokenControlRenderer,
       [DIRECTIVE_ACTIONS_CONTROL_ID]: directiveActionsControlRenderer
@@ -74,9 +85,11 @@ startDocsViewerManageApp({
   ),
   createSourceAdapter: createDocsViewerManagementSourceAdapter,
   diagramDetailAdapter: docsViewerDiagramDetailAdapter,
-  viewRegistryContributions: withDocsViewerContentDetailDefinitions(
-    createDocsViewerManagementViewDefinitions(),
-    { tableDetailAdapter: docsViewerTableDetailAdapter }
+  viewRegistryContributions: withDocsViewerManagedTableToolDefinitions(
+    withDocsViewerContentDetailDefinitions(
+      createDocsViewerManagementViewDefinitions(),
+      { tableDetailAdapter: managedTableDetailAdapter }
+    )
   ),
   infoPanelAutoOpenDocumentModes: ["markdown-source"],
   infoPanelDefaultViewByDocumentMode: {
@@ -87,11 +100,12 @@ startDocsViewerManageApp({
   mainViewControlHandlerContributions: Object.assign(
     {},
     createCatalogueTokenMainViewControlHandlers(),
-    createDirectiveActionsMainViewControlHandlers()
+    createDirectiveActionsMainViewControlHandlers(),
+    managedTableTools.controlHandlers()
   ),
   managementShellRenderers: createDocsViewerManagementShellRenderers(),
   mountDocumentExtras: mountDocsViewerManageExtras,
   sourceEditorActionControlIds: [CATALOGUE_TOKEN_CONTROL_ID, DIRECTIVE_ACTIONS_CONTROL_ID],
   sourceEditorInfoViewResolver: createCatalogueTokenInfoViewResolver(),
-  tableDetailAdapter: docsViewerTableDetailAdapter
+  tableDetailAdapter: managedTableDetailAdapter
 });

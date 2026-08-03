@@ -110,7 +110,9 @@ export function cloneDocsViewerTableDetailTable(table, targetContext) {
 }
 
 /** Own exact marked-table registration for one rendered-document mount. */
-export function createDocsViewerTableDetailAdapter() {
+export function createDocsViewerTableDetailAdapter(options) {
+  var settings = options || {};
+  var presentationExtension = settings.presentationExtension || null;
   var stateByRoot = new WeakMap();
 
   function releaseState(root, state) {
@@ -224,11 +226,28 @@ export function createDocsViewerTableDetailAdapter() {
     viewport.tabIndex = 0;
     viewport.setAttribute("role", "region");
     viewport.setAttribute("aria-label", record.label);
-    viewport.appendChild(cloneDocsViewerTableDetailTable(record.table, context.targetContext));
+    var table = cloneDocsViewerTableDetailTable(record.table, context.targetContext);
+    viewport.appendChild(table);
     section.appendChild(viewport);
+
+    var extension = presentationExtension && typeof presentationExtension.mount === "function"
+      ? presentationExtension.mount({
+          document: documentRef,
+          label: record.label,
+          root: section,
+          table: table,
+          targetContext: context.targetContext,
+          viewport: viewport
+        })
+      : null;
 
     var released = false;
     var presentation = {
+      activate: function (activationContext) {
+        if (extension && typeof extension.activate === "function") {
+          extension.activate(activationContext || {});
+        }
+      },
       focusTarget: viewport,
       invocationControl: record.button,
       label: record.label,
@@ -236,8 +255,12 @@ export function createDocsViewerTableDetailAdapter() {
       release: function () {
         if (released) return;
         released = true;
-        section.remove();
-        state.presentations.delete(presentation);
+        try {
+          if (extension && typeof extension.release === "function") extension.release();
+        } finally {
+          section.remove();
+          state.presentations.delete(presentation);
+        }
       }
     };
     state.presentations.add(presentation);
