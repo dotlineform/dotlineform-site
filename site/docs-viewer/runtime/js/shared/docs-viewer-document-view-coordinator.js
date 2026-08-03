@@ -67,6 +67,8 @@ export function createDocsViewerDocumentViewCoordinator(options) {
     defaultViewId: "rendered-document",
     mount: settings.mount,
     panelLayout: panelLayout,
+    onViewChange: projectControlState,
+    projectControlState: settings.projectMainViewControlState,
     projectToolbar: settings.projectMainView,
     projectViewState: function () { return panelLayout.projectViewState(); },
     registry: viewRegistry,
@@ -154,14 +156,15 @@ export function createDocsViewerDocumentViewCoordinator(options) {
   }
 
   function showView(viewId, onAccepted, optionsForRequest) {
+    var viewRequestSettings = Object.assign({}, optionsForRequest || {});
     var requestSettings = Object.assign({}, optionsForRequest || {}, {
       onAccepted: function () {
-        mainViewHost.requestView(viewId, {
+        mainViewHost.requestView(viewId, Object.assign({}, viewRequestSettings, {
           warn: false,
           onAccepted: function () {
             if (typeof onAccepted === "function") onAccepted();
           }
-        });
+        }));
       }
     });
     if (!Object.prototype.hasOwnProperty.call(requestSettings, "warn")) requestSettings.warn = false;

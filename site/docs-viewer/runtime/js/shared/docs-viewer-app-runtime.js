@@ -59,6 +59,7 @@ import {
 
 export function startDocsViewerRuntime(options) {
   var settings = options || {};
+  var contentDetailBackControlId = String(settings.contentDetailBackControlId || "").trim();
   var root = settings.root;
   var document = settings.document;
   var window = settings.window;
@@ -283,6 +284,15 @@ export function startDocsViewerRuntime(options) {
     }
     documentViewCoordinator.handleInfoControl();
   });
+  if (contentDetailBackControlId) {
+    mainViewControlOwners.set(contentDetailBackControlId, function () {
+      if (!documentViewCoordinator) return;
+      documentViewCoordinator.requestMainView("rendered-document", {
+        reason: "back",
+        warn: false
+      });
+    });
+  }
   renderAppViewerControls();
   renderAppManagementControls();
   renderIndexViewControls();
@@ -330,6 +340,9 @@ export function startDocsViewerRuntime(options) {
     panelLayout: panelLayout,
     panelView: appSession.domains.panelView,
     projectMainView: panelLayout.projectMainView,
+    projectMainViewControlState: function (controlId, controlState) {
+      projectMainViewControlState("content-detail", controlId, controlState);
+    },
     projectControlStates: function () {
       renderBookmarkControl();
       renderManagementUi();
@@ -381,6 +394,14 @@ export function startDocsViewerRuntime(options) {
     renderSidebar: renderSidebar,
     results: results,
     publishSubscopeReportState: publishSubscopeReportState,
+    requestContentDetail: function (targetContext) {
+      if (!documentViewCoordinator) return false;
+      return documentViewCoordinator.requestMainView("content-detail", {
+        reason: "content-detail-open",
+        targetContext: targetContext,
+        warn: true
+      });
+    },
     routeContext: function () { return routeContext; },
     routeSession: appSession.domains.routeSession,
     scopeConfig: appSession.domains.scopeConfig,
@@ -389,6 +410,7 @@ export function startDocsViewerRuntime(options) {
     statusCommands: {
       setStatus: statusController.setStatus
     },
+    tableDetailAdapter: settings.tableDetailAdapter,
     themedDiagramAdapter: settings.themedDiagramAdapter,
     toolbar: mainViewToolbar,
     viewerScope: function () { return viewerScope; },
@@ -1002,17 +1024,23 @@ export function startDocsViewerRuntime(options) {
   }
 
   function hideDocPane() {
-    documentViewCoordinator.showRenderedDocument(documentController.hideDocPane);
+    documentViewCoordinator.showRenderedDocument(documentController.hideDocPane, {
+      reason: "document-navigation"
+    });
     documentViewCoordinator.updateInfoPanel();
   }
 
   function showSearchPane() {
-    documentViewCoordinator.showView("search-results", documentController.showSearchPane);
+    documentViewCoordinator.showView("search-results", documentController.showSearchPane, {
+      reason: "document-navigation"
+    });
     documentViewCoordinator.updateInfoPanel();
   }
 
   function showRecentPane() {
-    documentViewCoordinator.showView("recent-results", documentController.showRecentPane);
+    documentViewCoordinator.showView("recent-results", documentController.showRecentPane, {
+      reason: "document-navigation"
+    });
     documentViewCoordinator.updateInfoPanel();
   }
 
@@ -1020,7 +1048,7 @@ export function startDocsViewerRuntime(options) {
     documentViewCoordinator.showRenderedDocument(function () {
       documentController.renderPayload(doc, payload, hash);
       documentViewCoordinator.updateInfoPanel();
-    });
+    }, { reason: "document-navigation" });
   }
 
   function cancelSearchDebounce() {
@@ -1034,21 +1062,21 @@ export function startDocsViewerRuntime(options) {
     documentViewCoordinator.showRenderedDocument(function () {
       documentController.handleMissingDoc();
       documentViewCoordinator.updateInfoPanel();
-    });
+    }, { reason: "document-navigation" });
   }
 
   function renderDocLoadingState(doc) {
     documentViewCoordinator.showRenderedDocument(function () {
       documentController.renderDocLoadingState(doc);
       documentViewCoordinator.updateInfoPanel();
-    });
+    }, { reason: "document-navigation" });
   }
 
   function handlePayloadError(error) {
     documentViewCoordinator.showRenderedDocument(function () {
       documentController.handlePayloadError(error);
       documentViewCoordinator.updateInfoPanel();
-    });
+    }, { reason: "document-navigation" });
   }
 
   function bindLinkInterception() {

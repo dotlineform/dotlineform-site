@@ -4,34 +4,18 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "d-20260802-194357-4d857b",
-      "title": "Sub-Scope Publishing",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194357-4d857b.json",
-      "timestamp": "2026-08-03 20:26:35",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260802-121105-c574f9",
-      "title": "Project State Concept And Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121105-c574f9.json",
-      "timestamp": "2026-08-03 20:24:58",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
-    },
-    {
       "doc_id": "d-20260802-150245-4e7f85",
       "title": "Table Enhancements",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-150245-4e7f85.json",
-      "timestamp": "2026-08-03 20:14:13",
+      "timestamp": "2026-08-03 21:39:26",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
     },
     {
-      "doc_id": "d-20260802-160429-69a5f6",
-      "title": "Authoring Directives Concept And Examples",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-160429-69a5f6.json",
-      "timestamp": "2026-08-03 20:13:22",
+      "doc_id": "d-20260802-162149-3ba013",
+      "title": "TE-2 — Table Detail View",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-162149-3ba013.json",
+      "timestamp": "2026-08-03 21:39:26",
       "parent_id": "d-20260802-150245-4e7f85",
       "parent_title": "Table Enhancements"
     },
@@ -39,50 +23,66 @@
       "doc_id": "d-20260802-150246-bb3f88",
       "title": "Content Detail View Concept And Architecture",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-150246-bb3f88.json",
-      "timestamp": "2026-08-03 20:13:22",
+      "timestamp": "2026-08-03 21:30:50",
       "parent_id": "d-20260802-150245-4e7f85",
       "parent_title": "Table Enhancements"
-    },
-    {
-      "doc_id": "d-20260802-174340-2fe9f4",
-      "title": "SSP-3 — Resolver Tokens Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-174340-2fe9f4.json",
-      "timestamp": "2026-08-03 20:13:22",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
     },
     {
       "doc_id": "d-20260802-153340-61863b",
       "title": "TE-5 — Default Presentation",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-153340-61863b.json",
-      "timestamp": "2026-08-03 20:12:26",
+      "timestamp": "2026-08-03 21:30:28",
       "parent_id": "d-20260802-150245-4e7f85",
       "parent_title": "Table Enhancements"
     },
     {
-      "doc_id": "d-20260802-160430-34cb3b",
-      "title": "TE-6 — Table-to-SVG Publication",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-160430-34cb3b.json",
-      "timestamp": "2026-08-03 20:12:26",
+      "doc_id": "d-20260523-222005-1085b2",
+      "title": "Projection Contract",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260523-222005-1085b2.json",
+      "timestamp": "2026-08-03 21:18:03",
+      "parent_id": "d-20260331-000000-4a16b0",
+      "parent_title": "Architecture"
+    },
+    {
+      "doc_id": "d-20260802-163320-9015b0",
+      "title": "TE-1 — Directive Insertion",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-163320-9015b0.json",
+      "timestamp": "2026-08-03 21:14:37",
       "parent_id": "d-20260802-150245-4e7f85",
       "parent_title": "Table Enhancements"
     },
     {
-      "doc_id": "d-20260802-151403-d381d6",
-      "title": "TE-3 — Managed Table Tools",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-151403-d381d6.json",
-      "timestamp": "2026-08-03 20:11:23",
+      "doc_id": "d-20260528-224754-964108",
+      "title": "Panel Hosts and Control Surfaces",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260528-224754-964108.json",
+      "timestamp": "2026-08-03 21:07:43",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260802-160429-69a5f6",
+      "title": "Authoring Directives Concept And Examples",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-160429-69a5f6.json",
+      "timestamp": "2026-08-03 20:55:39",
       "parent_id": "d-20260802-150245-4e7f85",
       "parent_title": "Table Enhancements"
     },
     {
-      "doc_id": "d-20260802-150248-e1461d",
-      "title": "TE-4 — Diagram Migration",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-150248-e1461d.json",
-      "timestamp": "2026-08-03 20:11:23",
-      "parent_id": "d-20260802-150245-4e7f85",
-      "parent_title": "Table Enhancements"
+      "doc_id": "d-20260531-152622-ed2451",
+      "title": "Toolbar Model",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260531-152622-ed2451.json",
+      "timestamp": "2026-08-03 20:55:39",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260802-194357-4d857b",
+      "title": "Sub-Scope Publishing",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194357-4d857b.json",
+      "timestamp": "2026-08-03 20:26:35",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
     }
   ],
-  "generated_at": "2026-08-03T19:26:35Z"
+  "generated_at": "2026-08-03T20:39:26Z"
 }

@@ -7,6 +7,7 @@ import {
 
 var PANELS = ["index", "main", "info"];
 var APP_KINDS = ["public", "manage", "review"];
+var MAIN_LAYOUT_STATES = ["normal", "expanded-main"];
 var CONTROL_OWNER_TYPES = ["app", "view"];
 var CONTROL_SURFACES = ["app-viewer", "app-management", "index-view", "main-view"];
 
@@ -78,10 +79,18 @@ function normalizeView(record) {
   if (PANELS.indexOf(panel) === -1) {
     throw new Error("Docs Viewer view " + view.id + " requires panel index, main, or info.");
   }
+  var mainLayoutState = cleanString(source.mainLayoutState) || "normal";
+  if (MAIN_LAYOUT_STATES.indexOf(mainLayoutState) === -1) {
+    throw new Error("Docs Viewer view " + view.id + " has unknown main layout state: " + mainLayoutState);
+  }
+  if (panel !== "main" && mainLayoutState !== "normal") {
+    throw new Error("Docs Viewer view " + view.id + " cannot project a main layout state outside the main panel.");
+  }
   return Object.assign(view, {
     panel: panel,
     renderer: cleanString(source.renderer),
     placeholderText: cleanString(source.placeholderText),
+    mainLayoutState: mainLayoutState,
     capabilities: normalizeHostedViewCapabilities(source.capabilities)
   });
 }

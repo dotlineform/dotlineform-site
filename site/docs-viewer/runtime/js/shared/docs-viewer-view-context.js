@@ -98,11 +98,16 @@ export function createDocsViewerMainViewModuleContext(options = {}) {
     mount: options.mount || null,
     mainView: {
       activeViewId: cleanString(mainView.activeViewId),
+      projectControlState: typeof mainView.projectControlState === "function" ? mainView.projectControlState : noop,
       projectToolbar: typeof mainView.projectToolbar === "function" ? mainView.projectToolbar : noop,
       requestView: typeof mainView.requestView === "function" ? mainView.requestView : function () { return false; },
       showWarning: typeof mainView.showWarning === "function" ? mainView.showWarning : noop
     },
-    requestedViewId: cleanString(options.requestedViewId)
+    requestedViewId: cleanString(options.requestedViewId),
+    requestReason: cleanString(options.requestReason),
+    targetContext: options.targetContext && typeof options.targetContext === "object"
+      ? options.targetContext
+      : null
   });
   return context;
 }

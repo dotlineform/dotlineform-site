@@ -217,6 +217,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/smoke/docs_viewer_tree_move_projection_modules.py",
                 "docs-viewer/tests/smoke/docs_viewer_tree_move_projection_route.py",
                 "docs-viewer/tests/smoke/docs_viewer_diagram_detail_modules.py",
+                "docs-viewer/tests/smoke/docs_viewer_table_detail_modules.py",
                 "docs-viewer/tests/smoke/docs_viewer_inline_mermaid_modules.py",
                 "docs-viewer/tests/smoke/docs_viewer_index_panel_route.py",
                 "studio/tests/smoke/local_studio_tag_alias_apis.py",
@@ -510,6 +511,16 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 str(PUBLIC_SITE_ROOT),
             ),
             "Smoke-check persistent diagram eligibility, stable targets, accessible controls, and ordinary document mounting.",
+        ),
+        CheckCommand(
+            "docs-viewer-table-detail-module-smoke",
+            (
+                sys.executable,
+                "docs-viewer/tests/smoke/docs_viewer_table_detail_modules.py",
+                "--site-root",
+                str(PUBLIC_SITE_ROOT),
+            ),
+            "Smoke-check exact table eligibility, immutable mount targets, shared composition, restoration, and app ownership.",
         ),
         CheckCommand(
             "docs-viewer-index-selection-module-smoke",

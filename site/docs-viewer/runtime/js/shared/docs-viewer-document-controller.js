@@ -91,6 +91,39 @@ export function initDocsViewerDocumentController(context) {
     }
   }
 
+  function mountTableDetails(doc, payload, mountGeneration) {
+    var adapter = context.tableDetailAdapter;
+    if (!adapter || typeof adapter.mountDocument !== "function") return;
+    try {
+      adapter.mountDocument({
+        content: content,
+        doc: doc,
+        document: content ? content.ownerDocument : null,
+        documentMountGeneration: mountGeneration,
+        payload: payload,
+        requestContentDetail: context.requestContentDetail,
+        viewerScope: currentViewerScope(),
+        window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+      });
+    } catch (error) {
+      console.warn("docs_viewer: table detail adapter unavailable", error);
+    }
+  }
+
+  function releaseTableDetails() {
+    var adapter = context.tableDetailAdapter;
+    if (!adapter || typeof adapter.releaseDocument !== "function") return;
+    try {
+      adapter.releaseDocument({
+        content: content,
+        document: content ? content.ownerDocument : null,
+        window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+      });
+    } catch (error) {
+      console.warn("docs_viewer: table detail cleanup unavailable", error);
+    }
+  }
+
   function releaseDiagramDetails() {
     var inlineAdapter = context.inlineMermaidAdapter;
     if (inlineAdapter && typeof inlineAdapter.releaseDocument === "function") {
@@ -185,6 +218,7 @@ export function initDocsViewerDocumentController(context) {
   function hideDocPane() {
     var mountGeneration = nextDocumentMountGeneration();
     clearSubscopeReportState("document-pane-hidden", mountGeneration);
+    releaseTableDetails();
     projectDocumentShell({
       toolbarHidden: true,
       contentHidden: true
@@ -215,6 +249,7 @@ export function initDocsViewerDocumentController(context) {
       });
     }
     if (!content) return;
+    releaseTableDetails();
     releaseDiagramDetails();
     content.textContent = "";
     var status = document.createElement("p");
@@ -251,8 +286,10 @@ export function initDocsViewerDocumentController(context) {
 
     showDocPane();
     context.renderMeta(doc);
+    releaseTableDetails();
     releaseDiagramDetails();
     content.innerHTML = payload.content_html || "";
+    mountTableDetails(doc, payload, mountGeneration);
     mountThemedDiagrams(doc, payload);
     mountDiagramDetails(doc, payload);
     mountInlineMermaid(doc, payload, mountGeneration);
@@ -280,6 +317,7 @@ export function initDocsViewerDocumentController(context) {
     context.renderSidebar();
     showDocPane();
     context.renderMeta(doc);
+    releaseTableDetails();
     releaseDiagramDetails();
     content.textContent = "";
   }

@@ -9,6 +9,7 @@ import re
 from typing import Any, Dict, List
 
 from markdown_it import MarkdownIt
+from markdown_it.rules_core import StateCore
 
 
 @dataclass(frozen=True)
@@ -17,6 +18,7 @@ class MarkdownRenderOptions:
 
     enable_tables: bool = True
     allow_raw_html: bool = True
+    content_detail_default_table: bool = False
 
 
 DEFAULT_MARKDOWN_RENDER_OPTIONS = MarkdownRenderOptions()
@@ -25,6 +27,50 @@ FENCED_CODE_OPEN_PATTERN = re.compile(r"^(?P<indent> {0,3})(?P<fence>`{3,}|~{3,}
 PRE_OPEN_PATTERN = re.compile(r"<pre(?:\s[^>]*)?>", re.IGNORECASE)
 PRE_CLOSE_PATTERN = re.compile(r"</pre\s*>", re.IGNORECASE)
 MARKDOWN_LINE_ENDING_PATTERN = re.compile(r"(\r\n|\r|\n|\u2028|\u2029)")
+TABLE_DETAIL_DIRECTIVE = "<!-- dotlineform:table-detail -->"
+TABLE_DETAIL_ATTRIBUTE = "data-docs-content-detail"
+
+
+def _source_lines(markdown: str) -> List[str]:
+    return markdown.splitlines(keepends=True)
+
+
+def _exact_table_detail_directive(token: Any, lines: List[str]) -> bool:
+    if token.type != "html_block" or not token.map or len(token.map) != 2:
+        return False
+    start, end = token.map
+    source = "".join(lines[start:end])
+    return source in {
+        TABLE_DETAIL_DIRECTIVE,
+        f"{TABLE_DETAIL_DIRECTIVE}\n",
+        f"{TABLE_DETAIL_DIRECTIVE}\r\n",
+        f"{TABLE_DETAIL_DIRECTIVE}\r",
+    }
+
+
+def _blank_source_range(lines: List[str], start: int, end: int) -> bool:
+    return all(not line.strip() for line in lines[start:end])
+
+
+def project_table_detail_eligibility(state: StateCore) -> None:
+    """Project explicit table-detail eligibility without altering Markdown source."""
+
+    if not state.tokens:
+        return
+    lines = _source_lines(state.src)
+    table_tokens = [token for token in state.tokens if token.type == "table_open"]
+    for index, token in enumerate(state.tokens[:-1]):
+        if not _exact_table_detail_directive(token, lines):
+            continue
+        table = state.tokens[index + 1]
+        if table.type != "table_open" or table.level != token.level or not table.map:
+            continue
+        if not _blank_source_range(lines, token.map[1], table.map[0]):
+            continue
+        table.attrSet(TABLE_DETAIL_ATTRIBUTE, "table")
+
+    if state.md.options.get("content_detail_default_table") and len(table_tokens) == 1:
+        table_tokens[0].attrSet(TABLE_DETAIL_ATTRIBUTE, "table")
 
 
 def normalize_plain_text(value: str | None) -> str:
@@ -245,12 +291,16 @@ def collapse_blank_lines(lines: List[str]) -> List[str]:
 
 def build_markdown_renderer(options: MarkdownRenderOptions | None = None) -> MarkdownIt:
     render_options = options or DEFAULT_MARKDOWN_RENDER_OPTIONS
-    renderer = MarkdownIt("commonmark")
+    renderer = MarkdownIt(
+        "commonmark",
+        {"content_detail_default_table": render_options.content_detail_default_table},
+    )
     if render_options.enable_tables:
         renderer.enable("table")
     if not render_options.allow_raw_html:
         renderer.disable("html_block")
         renderer.disable("html_inline")
+    renderer.core.ruler.after("block", "table_detail_eligibility", project_table_detail_eligibility)
     return renderer
 
 
@@ -286,5 +336,7 @@ def markdown_renderer_contract(options: MarkdownRenderOptions | None = None) -> 
         "enabled_rules": enabled_rules,
         "enabled_plugins": [],
         "allow_raw_html": render_options.allow_raw_html,
+        "content_detail_default_table": render_options.content_detail_default_table,
+        "table_detail_directive": TABLE_DETAIL_DIRECTIVE,
         "sanitizes_html": False,
     }

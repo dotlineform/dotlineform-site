@@ -186,6 +186,39 @@ def test_python_docs_builder_leaves_unresolved_catalogue_tokens_literal() -> Non
     )
 
 
+def test_python_docs_builder_projects_exact_table_detail_eligibility() -> None:
+    table_detail_source = f"""
+<!-- dotlineform:table-detail -->
+
+| Detailed | Link |
+| --- | --- |
+| one | [Parent](/docs/?scope=studio&doc={PARENT_DOC_ID}) |
+
+| Ordinary |
+| --- |
+| two |
+"""
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        write_source_docs(root, child_body_suffix=table_detail_source)
+        run_builder(root)
+        child_source = (
+            root / f"docs-viewer/scopes/studio/source/documents/{CHILD_DOC_ID}.md"
+        ).read_text(encoding="utf-8")
+        child = read_json(
+            root / f"docs-viewer/scopes/studio/published/documents/by-id/{CHILD_DOC_ID}.json"
+        )
+
+    content_html = child["content_html"]
+    assert child_source.count("<!-- dotlineform:table-detail -->") == 1
+    assert content_html.count('data-docs-content-detail="table"') == 1
+    assert '<table data-docs-content-detail="table">' in content_html
+    assert "<!-- dotlineform:table-detail -->" in content_html
+    assert f'href="/docs/?scope=studio&amp;doc={PARENT_DOC_ID}"' in content_html
+    assert content_html.count("<table") == 2
+
+
 def test_python_docs_builder_projects_only_valid_local_folder_links() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)

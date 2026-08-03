@@ -48,6 +48,73 @@ def test_enables_table_rule_by_default() -> None:
     assert_contains(html, "<td>2</td>", "table cell")
 
 
+def test_projects_exact_table_detail_directive_onto_next_table() -> None:
+    html = render_markdown_to_html(
+        "<!-- dotlineform:table-detail -->\n\n"
+        "| A | B |\n"
+        "| - | - |\n"
+        "| 1 | 2 |\n"
+    )
+
+    assert_contains(html, "<!-- dotlineform:table-detail -->", "directive preserved")
+    assert_contains(html, '<table data-docs-content-detail="table">', "table detail marker")
+
+    adjacent_html = render_markdown_to_html(
+        "<!-- dotlineform:table-detail -->\n"
+        "| A |\n"
+        "| - |\n"
+        "| 1 |\n"
+    )
+    assert_contains(adjacent_html, '<table data-docs-content-detail="table">', "adjacent table marker")
+
+
+def test_table_detail_directive_ignores_lookalikes_and_intervening_blocks() -> None:
+    cases = (
+        "<!-- dotlineform:table-detail extra -->\n\n",
+        " <!-- dotlineform:table-detail -->\n\n",
+        "<!-- dotlineform:table-detail -->\n\nIntervening prose.\n\n",
+        "<!-- dotlineform:table-detail -->\n\n<!-- ordinary comment -->\n\n",
+        "<!-- dotlineform:table-detail -->\n\n[reference]: https://example.com\n\n",
+    )
+    table = "| A |\n| - |\n| 1 |\n"
+
+    for source_prefix in cases:
+        html = render_markdown_to_html(source_prefix + table)
+        if 'data-docs-content-detail="table"' in html:
+            raise AssertionError(f"unsupported table-detail association projected a marker: {source_prefix!r}")
+
+
+def test_table_detail_directive_marks_only_its_associated_table() -> None:
+    html = render_markdown_to_html(
+        "| Ordinary |\n| - |\n| one |\n\n"
+        "<!-- dotlineform:table-detail -->\n\n"
+        "| Detailed |\n| - |\n| two |\n\n"
+        "| Ordinary again |\n| - |\n| three |\n"
+    )
+
+    assert_equal(html.count('data-docs-content-detail="table"'), 1, "one associated table")
+    assert_contains(html, '<table>\n<thead>\n<tr>\n<th>Ordinary</th>', "ordinary table fallback")
+    assert_contains(
+        html,
+        '<table data-docs-content-detail="table">\n<thead>\n<tr>\n<th>Detailed</th>',
+        "associated table",
+    )
+
+
+def test_content_detail_default_projects_the_same_marker_only_for_one_table() -> None:
+    one_table = render_markdown_to_html(
+        "| A |\n| - |\n| 1 |\n",
+        MarkdownRenderOptions(content_detail_default_table=True),
+    )
+    two_tables = render_markdown_to_html(
+        "| A |\n| - |\n| 1 |\n\n| B |\n| - |\n| 2 |\n",
+        MarkdownRenderOptions(content_detail_default_table=True),
+    )
+
+    assert_contains(one_table, 'data-docs-content-detail="table"', "single default table")
+    assert_equal(two_tables.count('data-docs-content-detail="table"'), 0, "ambiguous default tables")
+
+
 def test_preserves_mermaid_fence_for_browser_adapter() -> None:
     html = render_markdown_to_html("```mermaid\nflowchart LR\n    A --> B\n```\n")
 
@@ -76,6 +143,8 @@ def test_contract_records_no_external_plugins() -> None:
     assert_equal(contract["enabled_rules"], ["table"], "enabled rules")
     assert_equal(contract["enabled_plugins"], [], "enabled plugins")
     assert_equal(contract["allow_raw_html"], True, "raw html")
+    assert_equal(contract["content_detail_default_table"], False, "table default opt-in")
+    assert_equal(contract["table_detail_directive"], "<!-- dotlineform:table-detail -->", "table directive")
 
 
 def test_normalizes_unicode_space_only_lines_outside_literal_blocks() -> None:
@@ -173,6 +242,10 @@ def test_normalizes_unicode_separators_without_markdown_spaces_in_literal_blocks
 def main() -> None:
     test_renders_commonmark_blocks_and_inline_code()
     test_enables_table_rule_by_default()
+    test_projects_exact_table_detail_directive_onto_next_table()
+    test_table_detail_directive_ignores_lookalikes_and_intervening_blocks()
+    test_table_detail_directive_marks_only_its_associated_table()
+    test_content_detail_default_projects_the_same_marker_only_for_one_table()
     test_preserves_mermaid_fence_for_browser_adapter()
     test_raw_html_is_explicit_and_unsanitized_by_default()
     test_raw_html_can_be_escaped_for_untrusted_input()

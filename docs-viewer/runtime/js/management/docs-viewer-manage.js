@@ -5,6 +5,13 @@ import {
   docsViewerDiagramDetailAdapter
 } from "../shared/docs-viewer-diagram-detail.js";
 import {
+  CONTENT_DETAIL_BACK_CONTROL_ID,
+  withDocsViewerContentDetailDefinitions
+} from "../shared/docs-viewer-content-detail-view.js";
+import {
+  docsViewerTableDetailAdapter
+} from "../shared/docs-viewer-table-detail.js";
+import {
   docsViewerInlineMermaidAdapter
 } from "./docs-viewer-inline-mermaid.js";
 import {
@@ -55,6 +62,7 @@ function mountDocsViewerManageExtras(context) {
 }
 
 startDocsViewerManageApp({
+  contentDetailBackControlId: CONTENT_DETAIL_BACK_CONTROL_ID,
   controlRendererContributions: Object.assign(
     {},
     createDocsViewerManagementAppControlRenderers(),
@@ -66,7 +74,10 @@ startDocsViewerManageApp({
   ),
   createSourceAdapter: createDocsViewerManagementSourceAdapter,
   diagramDetailAdapter: docsViewerDiagramDetailAdapter,
-  viewRegistryContributions: createDocsViewerManagementViewDefinitions(),
+  viewRegistryContributions: withDocsViewerContentDetailDefinitions(
+    createDocsViewerManagementViewDefinitions(),
+    { tableDetailAdapter: docsViewerTableDetailAdapter }
+  ),
   infoPanelAutoOpenDocumentModes: ["markdown-source"],
   infoPanelDefaultViewByDocumentMode: {
     "markdown-source": "metadata-info",
@@ -81,5 +92,6 @@ startDocsViewerManageApp({
   managementShellRenderers: createDocsViewerManagementShellRenderers(),
   mountDocumentExtras: mountDocsViewerManageExtras,
   sourceEditorActionControlIds: [CATALOGUE_TOKEN_CONTROL_ID, DIRECTIVE_ACTIONS_CONTROL_ID],
-  sourceEditorInfoViewResolver: createCatalogueTokenInfoViewResolver()
+  sourceEditorInfoViewResolver: createCatalogueTokenInfoViewResolver(),
+  tableDetailAdapter: docsViewerTableDetailAdapter
 });

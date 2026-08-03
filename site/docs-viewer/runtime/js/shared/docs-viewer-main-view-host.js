@@ -23,6 +23,15 @@ function unavailableStatus(reason) {
   return "This view is unavailable.";
 }
 
+function immutableValue(value) {
+  if (Array.isArray(value)) return Object.freeze(value.map(immutableValue));
+  if (!value || typeof value !== "object") return value;
+  return Object.freeze(Object.keys(value).reduce(function (copy, key) {
+    copy[key] = immutableValue(value[key]);
+    return copy;
+  }, {}));
+}
+
 export function createDocsViewerMainViewHost(options) {
   var settings = options || {};
   var registry = settings.registry || null;
@@ -34,6 +43,9 @@ export function createDocsViewerMainViewHost(options) {
   var mount = settings.mount || null;
   var activeViewId = cleanString(settings.defaultViewId) || "rendered-document";
   var activeLifecycle = null;
+  var activeTargetContext = null;
+  var activeRequestReason = "";
+  var requestGeneration = 0;
 
   function viewOptions() {
     return (registry ? registry.listViews("main") : []).map(function (view) {
@@ -67,6 +79,9 @@ export function createDocsViewerMainViewHost(options) {
     return Object.assign({}, base || {}, overrides || {}, {
       mainView: Object.assign({}, base && base.mainView ? base.mainView : {}, overrides && overrides.mainView ? overrides.mainView : {}, {
         activeViewId: activeViewId,
+        projectControlState: typeof settings.projectControlState === "function"
+          ? settings.projectControlState
+          : function () {},
         projectToolbar: projectToolbar,
         requestView: requestView,
         showWarning: showWarning
@@ -78,25 +93,26 @@ export function createDocsViewerMainViewHost(options) {
     return createDocsViewerMainViewModuleContext(contextOptions(overrides));
   }
 
-  function unmountActive() {
+  function unmountActive(overrides) {
     var lifecycle = activeLifecycle;
+    var context = moduleContext(overrides || {});
     activeLifecycle = null;
-    return callLifecycle(lifecycle, "unmount", moduleContext({ mount: mount }));
+    return callLifecycle(lifecycle, "unmount", context);
   }
 
-  function loadLifecycle(view) {
+  function loadLifecycle(view, context) {
     return Promise.resolve()
       .then(function () {
-        return typeof view.load === "function" ? view.load() : null;
+        return typeof view.load === "function" ? view.load(context) : null;
       })
       .then(function (loaded) {
         return lifecycleFromLoaded(loaded, view);
       });
   }
 
-  function mountLifecycle(lifecycle) {
+  function mountLifecycle(lifecycle, context) {
     activeLifecycle = lifecycle;
-    return callLifecycle(lifecycle, "mount", moduleContext({ mount: mount }));
+    return callLifecycle(lifecycle, "mount", context);
   }
 
   function requestView(viewId, optionsForRequest) {
@@ -115,40 +131,76 @@ export function createDocsViewerMainViewHost(options) {
       typeof activeLifecycle.beforeLeave === "function" &&
       activeLifecycle.beforeLeave(moduleContext({
         mount: mount,
-        requestedViewId: resolved.view.id
+        requestedViewId: resolved.view.id,
+        requestReason: cleanString(requestSettings.reason),
+        targetContext: activeTargetContext
       })) === false
     ) {
       return false;
     }
+    var requestId = requestGeneration + 1;
+    requestGeneration = requestId;
+    var requestReason = cleanString(requestSettings.reason);
+    var previousTargetContext = activeTargetContext;
+    var unmountPromise = unmountActive({
+      mount: mount,
+      requestedViewId: resolved.view.id,
+      requestReason: requestReason,
+      targetContext: previousTargetContext
+    });
     activeViewId = resolved.view.id;
+    activeTargetContext = requestSettings.targetContext && typeof requestSettings.targetContext === "object"
+      ? immutableValue(requestSettings.targetContext)
+      : null;
+    activeRequestReason = requestReason;
     if (panelLayout && typeof panelLayout.setActiveMainView === "function") {
       panelLayout.setActiveMainView(activeViewId);
     }
+    if (panelLayout && typeof panelLayout.setMainLayoutState === "function") {
+      panelLayout.setMainLayoutState(resolved.view.mainLayoutState || "normal");
+    }
     projectState();
+    if (requestSettings.projectControls !== false && typeof settings.onViewChange === "function") {
+      settings.onViewChange(activeViewId);
+    }
     if (typeof requestSettings.onAccepted === "function") {
       requestSettings.onAccepted(resolved.view);
     }
     if (resolved.view.id === "rendered-document" || !resolved.view.load) {
-      unmountActive();
       return true;
     }
-    unmountActive()
+    var lifecycleContext = moduleContext({
+      mount: mount,
+      requestReason: activeRequestReason,
+      targetContext: activeTargetContext
+    });
+    unmountPromise
       .then(function () {
-        return loadLifecycle(resolved.view);
+        if (requestId !== requestGeneration) return null;
+        return loadLifecycle(resolved.view, lifecycleContext);
       })
-      .then(mountLifecycle)
+      .then(function (lifecycle) {
+        if (!lifecycle || requestId !== requestGeneration) return null;
+        return mountLifecycle(lifecycle, lifecycleContext);
+      })
       .catch(function (error) {
+        if (requestId !== requestGeneration) return;
         console.warn("docs_viewer: main hosted view failed", error);
-        activeLifecycle = null;
         showWarning(error && error.message ? error.message : "View failed to load.", true);
+        requestView("rendered-document", {
+          force: true,
+          reason: "view-failure",
+          warn: false
+        });
       });
     return true;
   }
 
-  requestView(activeViewId, { warn: false });
+  requestView(activeViewId, { projectControls: false, warn: false });
 
   return {
     activeViewId: function () { return activeViewId; },
+    activeTargetContext: function () { return activeTargetContext; },
     moduleContext: moduleContext,
     projectToolbar: projectToolbar,
     requestView: requestView,

@@ -102,12 +102,35 @@ function renderInfoToggle(context) {
   return button;
 }
 
+function renderContentDetailBack(context) {
+  var button = context.existingRoot;
+  if (!button || button.tagName !== "BUTTON") {
+    button = context.document.createElement("button");
+    button.className = "docsViewer__actionButton docsViewer__contentDetailBack";
+    button.type = "button";
+  }
+  button.textContent = "Back to document";
+  return button;
+}
+
+function renderContentDetailLabel(context) {
+  var label = context.existingRoot;
+  if (!label || label.tagName !== "SPAN") {
+    label = context.document.createElement("span");
+    label.className = "docsViewer__contentDetailLabel";
+  }
+  label.textContent = context.control.state && context.control.state.label || context.control.label;
+  return label;
+}
+
 export function createDocsViewerSharedControlRenderers() {
   return {
     "recent-button": renderRecentButton,
     "search-input": renderSearchInput,
     "index-view-toggle": renderIndexViewToggle,
     "bookmark-toggle": renderBookmarkToggle,
-    "info-toggle": renderInfoToggle
+    "info-toggle": renderInfoToggle,
+    "content-detail-back": renderContentDetailBack,
+    "content-detail-label": renderContentDetailLabel
   };
 }

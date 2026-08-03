@@ -961,13 +961,13 @@
               "doc_id": "d-20260802-160429-69a5f6",
               "title": "Authoring Directives Concept And Examples",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-160429-69a5f6.json",
-              "ui_status": "proposed"
+              "ui_status": "in-progress"
             },
             {
               "doc_id": "d-20260802-150246-bb3f88",
               "title": "Content Detail View Concept And Architecture",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-150246-bb3f88.json",
-              "ui_status": "proposed"
+              "ui_status": "in-progress"
             },
             {
               "doc_id": "d-20260802-163320-9015b0",
@@ -979,7 +979,7 @@
               "doc_id": "d-20260802-162149-3ba013",
               "title": "TE-2 — Table Detail View",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-162149-3ba013.json",
-              "ui_status": "proposed"
+              "ui_status": "done"
             },
             {
               "doc_id": "d-20260802-151403-d381d6",
@@ -1345,5 +1345,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-03T19:23:36Z"
+  "generated_at": "2026-08-03T20:39:26Z"
 }
