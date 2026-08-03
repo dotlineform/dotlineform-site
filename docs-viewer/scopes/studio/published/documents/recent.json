@@ -4,6 +4,36 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260505-181739-bb5223",
+      "title": "Shared UI",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260505-181739-bb5223.json",
+      "timestamp": "2026-08-03 14:08:34"
+    },
+    {
+      "doc_id": "d-20260614-155753-e87844",
+      "title": "File Picker",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260614-155753-e87844.json",
+      "timestamp": "2026-08-03 14:08:12",
+      "parent_id": "d-20260505-181739-bb5223",
+      "parent_title": "Shared UI"
+    },
+    {
+      "doc_id": "d-20260524-214228-7247ef",
+      "title": "Source Tree Ownership",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260524-214228-7247ef.json",
+      "timestamp": "2026-08-03 14:08:12",
+      "parent_id": "d-20260331-000000-4a16b0",
+      "parent_title": "Architecture"
+    },
+    {
+      "doc_id": "d-20260803-140610-983dc5",
+      "title": "Folder Picker",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260803-140610-983dc5.json",
+      "timestamp": "2026-08-03 14:06:10",
+      "parent_id": "d-20260505-181739-bb5223",
+      "parent_title": "Shared UI"
+    },
+    {
       "doc_id": "d-20260803-113717-fd92bc",
       "title": "IFS-1 — Docs Import Folder Source Selection Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260803-113717-fd92bc.json",
@@ -50,39 +80,7 @@
       "timestamp": "2026-08-03 11:37:16",
       "parent_id": "d-20260801-190502-6927fb",
       "parent_title": "Docs Import Folder Source Selection"
-    },
-    {
-      "doc_id": "d-20260501-000000-49b626",
-      "title": "Browser Smoke Testing",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260501-000000-49b626.json",
-      "timestamp": "2026-08-03 00:00:00",
-      "parent_id": "d-20260501-174746-efd581",
-      "parent_title": "Testing"
-    },
-    {
-      "doc_id": "d-20260802-123451-d0e52e",
-      "title": "Data Models Diagrams",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123451-d0e52e.json",
-      "timestamp": "2026-08-03 00:00:00",
-      "parent_id": "d-20260331-000000-4a16b0",
-      "parent_title": "Architecture"
-    },
-    {
-      "doc_id": "d-20260523-190651-7157ec",
-      "title": "Development Checklist",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260523-190651-7157ec.json",
-      "timestamp": "2026-08-03 00:00:00",
-      "parent_id": "d-20260419-000000-d2e47b",
-      "parent_title": "Dev Home"
-    },
-    {
-      "doc_id": "d-20260802-123452-6a2fd3",
-      "title": "DMM-1 — Data Model Maps Foundation Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123452-6a2fd3.json",
-      "timestamp": "2026-08-03 00:00:00",
-      "parent_id": "d-20260802-123450-f7493d",
-      "parent_title": "Data Model Maps"
     }
   ],
-  "generated_at": "2026-08-03T12:57:29Z"
+  "generated_at": "2026-08-03T13:08:35Z"
 }

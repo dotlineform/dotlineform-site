@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-cf071ac15e718021d1f0fa1024dee81a",
-    "generated_at_utc": "2026-08-03T12:57:30Z",
-    "count": 251
+    "version": "blake2b-bebbc2ff5fea62f909bc9905f1a3baef",
+    "generated_at_utc": "2026-08-03T13:08:35Z",
+    "count": 252
   },
   "entries": [
     {
@@ -589,26 +589,25 @@
       "kind": "doc",
       "title": "Source Tree Ownership",
       "href": "/docs/?scope=studio&doc=d-20260524-214228-7247ef",
-      "last_updated": "2026-07-27 15:18:21",
+      "last_updated": "2026-08-03 14:08:12",
       "parent_id": "d-20260331-000000-4a16b0",
       "parent_title": "Architecture",
-      "display_meta": "2026-07-27 15:18:21 • Architecture",
+      "display_meta": "2026-08-03 14:08:12 • Architecture",
       "search_terms": [
         "source tree ownership",
         "source",
         "tree",
         "ownership",
         "architecture",
-        "2026-07-27 15:18:21",
+        "2026-08-03 14:08:12",
         "2026",
-        "07",
-        "27",
-        "15",
-        "18",
-        "21",
+        "08",
+        "03",
+        "14",
+        "12",
         "d-20260524-214228-7247ef"
       ],
-      "search_text": "source tree ownership source tree ownership architecture 2026-07-27 15:18:21 2026 07 27 15 18 21 d-20260524-214228-7247ef"
+      "search_text": "source tree ownership source tree ownership architecture 2026-08-03 14:08:12 2026 08 03 14 12 d-20260524-214228-7247ef"
     },
     {
       "id": "d-20260419-000000-d2e47b",
@@ -5159,32 +5158,31 @@
       "kind": "doc",
       "title": "Shared UI",
       "href": "/docs/?scope=studio&doc=d-20260505-181739-bb5223",
-      "last_updated": "2026-07-25 19:30:43",
-      "display_meta": "2026-07-25 19:30:43",
+      "last_updated": "2026-08-03 14:08:34",
+      "display_meta": "2026-08-03 14:08:34",
       "search_terms": [
         "shared ui",
         "shared",
         "ui",
-        "2026-07-25 19:30:43",
+        "2026-08-03 14:08:34",
         "2026",
-        "07",
-        "25",
-        "19",
-        "30",
-        "43",
+        "08",
+        "03",
+        "14",
+        "34",
         "d-20260505-181739-bb5223"
       ],
-      "search_text": "shared ui shared ui 2026-07-25 19:30:43 2026 07 25 19 30 43 d-20260505-181739-bb5223"
+      "search_text": "shared ui shared ui 2026-08-03 14:08:34 2026 08 03 14 34 d-20260505-181739-bb5223"
     },
     {
       "id": "d-20260614-155753-e87844",
       "kind": "doc",
       "title": "File Picker",
       "href": "/docs/?scope=studio&doc=d-20260614-155753-e87844",
-      "last_updated": "2026-07-15",
+      "last_updated": "2026-08-03 14:08:12",
       "parent_id": "d-20260505-181739-bb5223",
       "parent_title": "Shared UI",
-      "display_meta": "2026-07-15 • Shared UI",
+      "display_meta": "2026-08-03 14:08:12 • Shared UI",
       "search_terms": [
         "file picker",
         "file",
@@ -5192,13 +5190,42 @@
         "shared ui",
         "shared",
         "ui",
-        "2026-07-15",
+        "2026-08-03 14:08:12",
         "2026",
-        "07",
-        "15",
+        "08",
+        "03",
+        "14",
+        "12",
         "d-20260614-155753-e87844"
       ],
-      "search_text": "file picker file picker shared ui shared ui 2026-07-15 2026 07 15 d-20260614-155753-e87844"
+      "search_text": "file picker file picker shared ui shared ui 2026-08-03 14:08:12 2026 08 03 14 12 d-20260614-155753-e87844"
+    },
+    {
+      "id": "d-20260803-140610-983dc5",
+      "kind": "doc",
+      "title": "Folder Picker",
+      "href": "/docs/?scope=studio&doc=d-20260803-140610-983dc5",
+      "last_updated": "2026-08-03 14:06:10",
+      "parent_id": "d-20260505-181739-bb5223",
+      "parent_title": "Shared UI",
+      "display_meta": "2026-08-03 14:06:10 • Shared UI",
+      "search_terms": [
+        "folder picker",
+        "folder",
+        "picker",
+        "shared ui",
+        "shared",
+        "ui",
+        "2026-08-03 14:06:10",
+        "2026",
+        "08",
+        "03",
+        "14",
+        "06",
+        "10",
+        "d-20260803-140610-983dc5"
+      ],
+      "search_text": "folder picker folder picker shared ui shared ui 2026-08-03 14:06:10 2026 08 03 14 06 10 d-20260803-140610-983dc5"
     },
     {
       "id": "d-20260614-201632-79c9cb",
