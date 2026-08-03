@@ -163,13 +163,6 @@
   accent-color: var(--docs-viewer-focus-ring);
 }
 
-@media (max-width: 34rem){
-  .docsViewerSourceEditorMedia__placement{
-    grid-template-columns: 1fr;
-    gap: 0.28rem;
-  }
-}
-
 .docsViewerCatalogueTargetPicker{
   display: grid;
   gap: 0.75rem;
@@ -317,18 +310,4 @@
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: 0.75rem;
-}
-
-@media (max-width: 720px){
-  .docsViewerSourceEditor__header{
-    display: grid;
-  }
-
-  .docsViewerSourceEditor__actions{
-    justify-content: flex-start;
-  }
-
-  .docsViewerSourceEditor__editor{
-    min-width: 0;
-  }
 }

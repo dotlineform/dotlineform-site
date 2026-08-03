@@ -514,20 +514,12 @@ body.adminApp [hidden] {
   background: var(--admin-background);
 }
 
-.adminWorkbench__frameShell[data-workbench-viewport="narrow"] {
-  width: min(390px, 100%);
-}
-
 .adminWorkbench__specimenFrame {
   display: block;
   width: 100%;
   height: 46rem;
   border: 0;
   background: var(--admin-background);
-}
-
-.adminWorkbench__frameShell[data-workbench-viewport="narrow"] .adminWorkbench__specimenFrame {
-  height: 844px;
 }
 
 .studioAuditsPage__list,
@@ -782,47 +774,4 @@ body.adminApp [hidden] {
 .adminHeader__brand:focus-visible {
   outline: 2px solid var(--admin-focus);
   outline-offset: 3px;
-}
-
-@media (max-width: 760px) {
-  .studioHomeLinks {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.4rem 1.75rem;
-  }
-
-  .adminWorkbench__stages[data-workbench-comparing="true"] {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-@media (max-width: 640px) {
-  .adminHeader__inner {
-    gap: 8px;
-    padding: 14px 0;
-  }
-
-  .studioThemeToggle {
-    width: 1.85rem;
-    min-width: 1.85rem;
-    height: 1.85rem;
-  }
-
-  .adminMain {
-    padding-top: 24px;
-  }
-
-  .studioChecksTop {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .adminWorkbench__controls {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-}
-
-@media (max-width: 480px) {
-  .studioHomeLinks {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }

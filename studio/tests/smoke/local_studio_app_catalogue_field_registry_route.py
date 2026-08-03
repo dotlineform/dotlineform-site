@@ -60,7 +60,6 @@ def main(argv: list[str] | None = None) -> int:
             registry_requests: list[str] = []
             viewports = (
                 ("desktop", {"width": 1280, "height": 900}),
-                ("mobile", {"width": 390, "height": 844}),
             )
             for label, viewport in viewports:
                 page = browser.new_page(viewport=viewport)

@@ -417,7 +417,7 @@ def assert_inline_blob_contract(page: Page) -> None:
         if not markup.startswith('<?xml version="1.0" encoding="UTF-8"?>'):
             raise AssertionError(f"inline detail target is not a standalone XML SVG: {result!r}")
         if "viewBox=" not in markup or "<title>" not in markup or "<desc>" not in markup:
-            raise AssertionError(f"inline detail target lost responsive or accessible SVG content: {result!r}")
+            raise AssertionError(f"inline detail target lost scalable or accessible SVG content: {result!r}")
         if "docsViewer" in markup or "diagramDetailControl" in markup:
             raise AssertionError(f"inline detail target serialized viewer chrome: {result!r}")
     if ".node{fill:#123456}" not in result["resources"][0]["markup"]:

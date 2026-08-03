@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d39096333c6ced614b4513de96b51bb5",
-    "generated_at_utc": "2026-08-02T21:58:35Z",
+    "version": "blake2b-841303f2cba1eb18b6fbb421baf0a5bb",
+    "generated_at_utc": "2026-08-03T09:38:38Z",
     "count": 249
   },
   "entries": [
@@ -377,26 +377,24 @@
       "kind": "doc",
       "title": "Data Models Diagrams",
       "href": "/docs/?scope=studio&doc=d-20260802-123451-d0e52e",
-      "last_updated": "2026-08-02 22:58:01",
+      "last_updated": "2026-08-03 00:00:00",
       "parent_id": "d-20260331-000000-4a16b0",
       "parent_title": "Architecture",
-      "display_meta": "2026-08-02 22:58:01 • Architecture",
+      "display_meta": "2026-08-03 00:00:00 • Architecture",
       "search_terms": [
         "data models diagrams",
         "data",
         "models",
         "diagrams",
         "architecture",
-        "2026-08-02 22:58:01",
+        "2026-08-03 00:00:00",
         "2026",
         "08",
-        "02",
-        "22",
-        "58",
-        "01",
+        "03",
+        "00",
         "d-20260802-123451-d0e52e"
       ],
-      "search_text": "data models diagrams data models diagrams architecture 2026-08-02 22:58:01 2026 08 02 22 58 01 d-20260802-123451-d0e52e"
+      "search_text": "data models diagrams data models diagrams architecture 2026-08-03 00:00:00 2026 08 03 00 d-20260802-123451-d0e52e"
     },
     {
       "id": "d-20260802-205910-533be0",
@@ -663,10 +661,10 @@
       "kind": "doc",
       "title": "Development Checklist",
       "href": "/docs/?scope=studio&doc=d-20260523-190651-7157ec",
-      "last_updated": "2026-08-01 09:09:17",
+      "last_updated": "2026-08-03 00:00:00",
       "parent_id": "d-20260419-000000-d2e47b",
       "parent_title": "Dev Home",
-      "display_meta": "2026-08-01 09:09:17 • Dev Home",
+      "display_meta": "2026-08-03 00:00:00 • Dev Home",
       "search_terms": [
         "development checklist",
         "development",
@@ -674,15 +672,14 @@
         "dev home",
         "dev",
         "home",
-        "2026-08-01 09:09:17",
+        "2026-08-03 00:00:00",
         "2026",
         "08",
-        "01",
-        "09",
-        "17",
+        "03",
+        "00",
         "d-20260523-190651-7157ec"
       ],
-      "search_text": "development checklist development checklist dev home dev home 2026-08-01 09:09:17 2026 08 01 09 17 d-20260523-190651-7157ec"
+      "search_text": "development checklist development checklist dev home dev home 2026-08-03 00:00:00 2026 08 03 00 d-20260523-190651-7157ec"
     },
     {
       "id": "d-20260523-000000-bf7161",
@@ -1360,10 +1357,10 @@
       "kind": "doc",
       "title": "Document Diagrams",
       "href": "/docs/?scope=studio&doc=d-20260719-123719-fb7565",
-      "last_updated": "2026-07-26 17:54:41",
+      "last_updated": "2026-08-03 00:00:00",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-26 17:54:41 • Docs Viewer",
+      "display_meta": "2026-08-03 00:00:00 • Docs Viewer",
       "search_terms": [
         "document diagrams",
         "document",
@@ -1371,16 +1368,14 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-26 17:54:41",
+        "2026-08-03 00:00:00",
         "2026",
-        "07",
-        "26",
-        "17",
-        "54",
-        "41",
+        "08",
+        "03",
+        "00",
         "d-20260719-123719-fb7565"
       ],
-      "search_text": "document diagrams document diagrams docs viewer docs viewer 2026-07-26 17:54:41 2026 07 26 17 54 41 d-20260719-123719-fb7565"
+      "search_text": "document diagrams document diagrams docs viewer docs viewer 2026-08-03 00:00:00 2026 08 03 00 d-20260719-123719-fb7565"
     },
     {
       "id": "d-20260715-094411-2b6e65",
@@ -2130,10 +2125,10 @@
       "kind": "doc",
       "title": "Media And Asset Handling",
       "href": "/docs/?scope=studio&doc=d-20260514-184303-7914e2",
-      "last_updated": "2026-07-31 11:10:43",
+      "last_updated": "2026-08-03 00:00:00",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-31 11:10:43 • Docs Viewer",
+      "display_meta": "2026-08-03 00:00:00 • Docs Viewer",
       "search_terms": [
         "media and asset handling",
         "media",
@@ -2143,16 +2138,14 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-31 11:10:43",
+        "2026-08-03 00:00:00",
         "2026",
-        "07",
-        "31",
-        "11",
-        "10",
-        "43",
+        "08",
+        "03",
+        "00",
         "d-20260514-184303-7914e2"
       ],
-      "search_text": "media and asset handling media and asset handling docs viewer docs viewer 2026-07-31 11:10:43 2026 07 31 11 10 43 d-20260514-184303-7914e2"
+      "search_text": "media and asset handling media and asset handling docs viewer docs viewer 2026-08-03 00:00:00 2026 08 03 00 d-20260514-184303-7914e2"
     },
     {
       "id": "d-20260424-000000-291cc8",
@@ -2610,10 +2603,10 @@
       "kind": "doc",
       "title": "Semantic Tokens Source Editor UI",
       "href": "/docs/?scope=studio&doc=d-20260623-180405-631ef4",
-      "last_updated": "2026-07-26 20:38:29",
+      "last_updated": "2026-08-03 00:00:00",
       "parent_id": "d-20260725-153656-516b61",
       "parent_title": "Semantic Tokens",
-      "display_meta": "2026-07-26 20:38:29 • Semantic Tokens",
+      "display_meta": "2026-08-03 00:00:00 • Semantic Tokens",
       "search_terms": [
         "semantic tokens source editor ui",
         "semantic",
@@ -2622,16 +2615,14 @@
         "editor",
         "ui",
         "semantic tokens",
-        "2026-07-26 20:38:29",
+        "2026-08-03 00:00:00",
         "2026",
-        "07",
-        "26",
-        "20",
-        "38",
-        "29",
+        "08",
+        "03",
+        "00",
         "d-20260623-180405-631ef4"
       ],
-      "search_text": "semantic tokens source editor ui semantic tokens source editor ui semantic tokens 2026-07-26 20:38:29 2026 07 26 20 38 29 d-20260623-180405-631ef4"
+      "search_text": "semantic tokens source editor ui semantic tokens source editor ui semantic tokens 2026-08-03 00:00:00 2026 08 03 00 d-20260623-180405-631ef4"
     },
     {
       "id": "d-20260726-185814-c5e581",
@@ -2823,10 +2814,10 @@
       "kind": "doc",
       "title": "Sub-Scope Index Architecture",
       "href": "/docs/?scope=studio&doc=d-20260728-113139-763354",
-      "last_updated": "2026-08-01 08:52:25",
+      "last_updated": "2026-08-03 00:00:00",
       "parent_id": "d-20260801-084127-752d7e",
       "parent_title": "Sub-Scopes",
-      "display_meta": "2026-08-01 08:52:25 • Sub-Scopes",
+      "display_meta": "2026-08-03 00:00:00 • Sub-Scopes",
       "search_terms": [
         "sub-scope index architecture",
         "sub",
@@ -2835,15 +2826,14 @@
         "architecture",
         "sub-scopes",
         "scopes",
-        "2026-08-01 08:52:25",
+        "2026-08-03 00:00:00",
         "2026",
         "08",
-        "01",
-        "52",
-        "25",
+        "03",
+        "00",
         "d-20260728-113139-763354"
       ],
-      "search_text": "sub-scope index architecture sub scope index architecture sub-scopes scopes 2026-08-01 08:52:25 2026 08 01 52 25 d-20260728-113139-763354"
+      "search_text": "sub-scope index architecture sub scope index architecture sub-scopes scopes 2026-08-03 00:00:00 2026 08 03 00 d-20260728-113139-763354"
     },
     {
       "id": "d-20260728-205013-41deb8",
@@ -2909,10 +2899,10 @@
       "kind": "doc",
       "title": "Toolbar Model",
       "href": "/docs/?scope=studio&doc=d-20260531-152622-ed2451",
-      "last_updated": "2026-07-31 20:38:00",
+      "last_updated": "2026-08-03 00:00:00",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-31 20:38:00 • Docs Viewer",
+      "display_meta": "2026-08-03 00:00:00 • Docs Viewer",
       "search_terms": [
         "toolbar model",
         "toolbar",
@@ -2920,16 +2910,14 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-31 20:38:00",
+        "2026-08-03 00:00:00",
         "2026",
-        "07",
-        "31",
-        "20",
-        "38",
+        "08",
+        "03",
         "00",
         "d-20260531-152622-ed2451"
       ],
-      "search_text": "toolbar model toolbar model docs viewer docs viewer 2026-07-31 20:38:00 2026 07 31 20 38 00 d-20260531-152622-ed2451"
+      "search_text": "toolbar model toolbar model docs viewer docs viewer 2026-08-03 00:00:00 2026 08 03 00 d-20260531-152622-ed2451"
     },
     {
       "id": "d-20260513-214100-0a7f44",
@@ -3738,10 +3726,10 @@
       "kind": "doc",
       "title": "DMM-1 — Data Model Maps Foundation Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-123452-6a2fd3",
-      "last_updated": "2026-08-02 22:58:00",
+      "last_updated": "2026-08-03 00:00:00",
       "parent_id": "d-20260802-123450-f7493d",
       "parent_title": "Data Model Maps",
-      "display_meta": "2026-08-02 22:58:00 • Data Model Maps",
+      "display_meta": "2026-08-03 00:00:00 • Data Model Maps",
       "search_terms": [
         "dmm-1 — data model maps foundation delivery",
         "dmm",
@@ -3752,16 +3740,14 @@
         "foundation",
         "delivery",
         "data model maps",
-        "2026-08-02 22:58:00",
+        "2026-08-03 00:00:00",
         "2026",
         "08",
-        "02",
-        "22",
-        "58",
+        "03",
         "00",
         "d-20260802-123452-6a2fd3"
       ],
-      "search_text": "dmm-1 — data model maps foundation delivery dmm 1 data model maps foundation delivery data model maps 2026-08-02 22:58:00 2026 08 02 22 58 00 d-20260802-123452-6a2fd3"
+      "search_text": "dmm-1 — data model maps foundation delivery dmm 1 data model maps foundation delivery data model maps 2026-08-03 00:00:00 2026 08 03 00 d-20260802-123452-6a2fd3"
     },
     {
       "id": "d-20260802-223430-cf2abe",
@@ -4022,10 +4008,10 @@
       "kind": "doc",
       "title": "Public Docs Viewer Mobile Experience",
       "href": "/docs/?scope=studio&doc=d-20260723-191039-f8cb88",
-      "last_updated": "2026-07-25 20:22:41",
+      "last_updated": "2026-08-03 00:00:00",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-25 20:22:41 • Roadmap",
+      "display_meta": "2026-08-03 00:00:00 • Roadmap",
       "search_terms": [
         "public docs viewer mobile experience",
         "public",
@@ -4034,16 +4020,14 @@
         "mobile",
         "experience",
         "roadmap",
-        "2026-07-25 20:22:41",
+        "2026-08-03 00:00:00",
         "2026",
-        "07",
-        "25",
-        "20",
-        "22",
-        "41",
+        "08",
+        "03",
+        "00",
         "d-20260723-191039-f8cb88"
       ],
-      "search_text": "public docs viewer mobile experience public docs viewer mobile experience roadmap 2026-07-25 20:22:41 2026 07 25 20 22 41 d-20260723-191039-f8cb88"
+      "search_text": "public docs viewer mobile experience public docs viewer mobile experience roadmap 2026-08-03 00:00:00 2026 08 03 00 d-20260723-191039-f8cb88"
     },
     {
       "id": "d-20260715-084611-7c7c8d",
@@ -4100,10 +4084,10 @@
       "kind": "doc",
       "title": "Scope Media Inventory Surface Delivery",
       "href": "/docs/?scope=studio&doc=d-20260720-100017-7e52de",
-      "last_updated": "2026-07-20 10:00:17",
+      "last_updated": "2026-08-03 00:00:00",
       "parent_id": "d-20260720-100017-9855dd",
       "parent_title": "Scope Media Management",
-      "display_meta": "2026-07-20 10:00:17 • Scope Media Management",
+      "display_meta": "2026-08-03 00:00:00 • Scope Media Management",
       "search_terms": [
         "scope media inventory surface delivery",
         "scope",
@@ -4113,16 +4097,14 @@
         "delivery",
         "scope media management",
         "management",
-        "2026-07-20 10:00:17",
+        "2026-08-03 00:00:00",
         "2026",
-        "07",
-        "20",
-        "10",
+        "08",
+        "03",
         "00",
-        "17",
         "d-20260720-100017-7e52de"
       ],
-      "search_text": "scope media inventory surface delivery scope media inventory surface delivery scope media management management 2026-07-20 10:00:17 2026 07 20 10 00 17 d-20260720-100017-7e52de"
+      "search_text": "scope media inventory surface delivery scope media inventory surface delivery scope media management management 2026-08-03 00:00:00 2026 08 03 00 d-20260720-100017-7e52de"
     },
     {
       "id": "d-20260720-100017-e094d8",
@@ -4432,10 +4414,10 @@
       "kind": "doc",
       "title": "SSP-2 — Docs Viewer Project State Delivery",
       "href": "/docs/?scope=studio&doc=d-20260801-133318-15e8fa",
-      "last_updated": "2026-08-02 20:07:37",
+      "last_updated": "2026-08-03 00:00:00",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-02 20:07:37 • Sub-Scope Publishing",
+      "display_meta": "2026-08-03 00:00:00 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-2 — docs viewer project state delivery",
         "ssp",
@@ -4449,26 +4431,24 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-02 20:07:37",
+        "2026-08-03 00:00:00",
         "2026",
         "08",
-        "02",
-        "20",
-        "07",
-        "37",
+        "03",
+        "00",
         "d-20260801-133318-15e8fa"
       ],
-      "search_text": "ssp-2 — docs viewer project state delivery ssp 2 docs viewer project state delivery sub-scope publishing sub scope publishing 2026-08-02 20:07:37 2026 08 02 20 07 37 d-20260801-133318-15e8fa"
+      "search_text": "ssp-2 — docs viewer project state delivery ssp 2 docs viewer project state delivery sub-scope publishing sub scope publishing 2026-08-03 00:00:00 2026 08 03 00 d-20260801-133318-15e8fa"
     },
     {
       "id": "d-20260802-174340-2fe9f4",
       "kind": "doc",
       "title": "SSP-3 — Resolver Tokens Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-174340-2fe9f4",
-      "last_updated": "2026-08-02 20:40:56",
+      "last_updated": "2026-08-03 00:00:00",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-02 20:40:56 • Sub-Scope Publishing",
+      "display_meta": "2026-08-03 00:00:00 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-3 — resolver tokens delivery",
         "ssp",
@@ -4480,16 +4460,14 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-02 20:40:56",
+        "2026-08-03 00:00:00",
         "2026",
         "08",
-        "02",
-        "20",
-        "40",
-        "56",
+        "03",
+        "00",
         "d-20260802-174340-2fe9f4"
       ],
-      "search_text": "ssp-3 — resolver tokens delivery ssp 3 resolver tokens delivery sub-scope publishing sub scope publishing 2026-08-02 20:40:56 2026 08 02 20 40 56 d-20260802-174340-2fe9f4"
+      "search_text": "ssp-3 — resolver tokens delivery ssp 3 resolver tokens delivery sub-scope publishing sub scope publishing 2026-08-03 00:00:00 2026 08 03 00 d-20260802-174340-2fe9f4"
     },
     {
       "id": "d-20260801-233534-239eab",
@@ -4741,10 +4719,10 @@
       "kind": "doc",
       "title": "TE-1 — Source Editor Directive Actions Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-163320-9015b0",
-      "last_updated": "2026-08-02 20:40:13",
+      "last_updated": "2026-08-03 00:00:00",
       "parent_id": "d-20260802-150245-4e7f85",
       "parent_title": "Table Enhancements",
-      "display_meta": "2026-08-02 20:40:13 • Table Enhancements",
+      "display_meta": "2026-08-03 00:00:00 • Table Enhancements",
       "search_terms": [
         "te-1 — source editor directive actions delivery",
         "te",
@@ -4757,16 +4735,14 @@
         "table enhancements",
         "table",
         "enhancements",
-        "2026-08-02 20:40:13",
+        "2026-08-03 00:00:00",
         "2026",
         "08",
-        "02",
-        "20",
-        "40",
-        "13",
+        "03",
+        "00",
         "d-20260802-163320-9015b0"
       ],
-      "search_text": "te-1 — source editor directive actions delivery te 1 source editor directive actions delivery table enhancements table enhancements 2026-08-02 20:40:13 2026 08 02 20 40 13 d-20260802-163320-9015b0"
+      "search_text": "te-1 — source editor directive actions delivery te 1 source editor directive actions delivery table enhancements table enhancements 2026-08-03 00:00:00 2026 08 03 00 d-20260802-163320-9015b0"
     },
     {
       "id": "d-20260802-162149-3ba013",
@@ -4804,10 +4780,10 @@
       "kind": "doc",
       "title": "TE-3 — Public Static Content Detail View Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-150247-b5dffe",
-      "last_updated": "2026-08-02 17:11:58",
+      "last_updated": "2026-08-03 00:00:00",
       "parent_id": "d-20260802-150245-4e7f85",
       "parent_title": "Table Enhancements",
-      "display_meta": "2026-08-02 17:11:58 • Table Enhancements",
+      "display_meta": "2026-08-03 00:00:00 • Table Enhancements",
       "search_terms": [
         "te-3 — public static content detail view delivery",
         "te",
@@ -4821,26 +4797,24 @@
         "table enhancements",
         "table",
         "enhancements",
-        "2026-08-02 17:11:58",
+        "2026-08-03 00:00:00",
         "2026",
         "08",
-        "02",
-        "17",
-        "11",
-        "58",
+        "03",
+        "00",
         "d-20260802-150247-b5dffe"
       ],
-      "search_text": "te-3 — public static content detail view delivery te 3 public static content detail view delivery table enhancements table enhancements 2026-08-02 17:11:58 2026 08 02 17 11 58 d-20260802-150247-b5dffe"
+      "search_text": "te-3 — public static content detail view delivery te 3 public static content detail view delivery table enhancements table enhancements 2026-08-03 00:00:00 2026 08 03 00 d-20260802-150247-b5dffe"
     },
     {
       "id": "d-20260802-151403-d381d6",
       "kind": "doc",
       "title": "TE-4 — Managed Table Tools Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-151403-d381d6",
-      "last_updated": "2026-08-02 17:12:22",
+      "last_updated": "2026-08-03 00:00:00",
       "parent_id": "d-20260802-150245-4e7f85",
       "parent_title": "Table Enhancements",
-      "display_meta": "2026-08-02 17:12:22 • Table Enhancements",
+      "display_meta": "2026-08-03 00:00:00 • Table Enhancements",
       "search_terms": [
         "te-4 — managed table tools delivery",
         "te",
@@ -4851,26 +4825,24 @@
         "delivery",
         "table enhancements",
         "enhancements",
-        "2026-08-02 17:12:22",
+        "2026-08-03 00:00:00",
         "2026",
         "08",
-        "02",
-        "17",
-        "12",
-        "22",
+        "03",
+        "00",
         "d-20260802-151403-d381d6"
       ],
-      "search_text": "te-4 — managed table tools delivery te 4 managed table tools delivery table enhancements enhancements 2026-08-02 17:12:22 2026 08 02 17 12 22 d-20260802-151403-d381d6"
+      "search_text": "te-4 — managed table tools delivery te 4 managed table tools delivery table enhancements enhancements 2026-08-03 00:00:00 2026 08 03 00 d-20260802-151403-d381d6"
     },
     {
       "id": "d-20260802-150248-e1461d",
       "kind": "doc",
       "title": "TE-5 — Diagram Detail View Migration Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-150248-e1461d",
-      "last_updated": "2026-08-02 17:12:43",
+      "last_updated": "2026-08-03 00:00:00",
       "parent_id": "d-20260802-150245-4e7f85",
       "parent_title": "Table Enhancements",
-      "display_meta": "2026-08-02 17:12:43 • Table Enhancements",
+      "display_meta": "2026-08-03 00:00:00 • Table Enhancements",
       "search_terms": [
         "te-5 — diagram detail view migration delivery",
         "te",
@@ -4883,26 +4855,24 @@
         "table enhancements",
         "table",
         "enhancements",
-        "2026-08-02 17:12:43",
+        "2026-08-03 00:00:00",
         "2026",
         "08",
-        "02",
-        "17",
-        "12",
-        "43",
+        "03",
+        "00",
         "d-20260802-150248-e1461d"
       ],
-      "search_text": "te-5 — diagram detail view migration delivery te 5 diagram detail view migration delivery table enhancements table enhancements 2026-08-02 17:12:43 2026 08 02 17 12 43 d-20260802-150248-e1461d"
+      "search_text": "te-5 — diagram detail view migration delivery te 5 diagram detail view migration delivery table enhancements table enhancements 2026-08-03 00:00:00 2026 08 03 00 d-20260802-150248-e1461d"
     },
     {
       "id": "d-20260802-153340-61863b",
       "kind": "doc",
       "title": "TE-6 — Default Content Detail Presentation Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-153340-61863b",
-      "last_updated": "2026-08-02 17:14:31",
+      "last_updated": "2026-08-03 00:00:00",
       "parent_id": "d-20260802-150245-4e7f85",
       "parent_title": "Table Enhancements",
-      "display_meta": "2026-08-02 17:14:31 • Table Enhancements",
+      "display_meta": "2026-08-03 00:00:00 • Table Enhancements",
       "search_terms": [
         "te-6 — default content detail presentation delivery",
         "te",
@@ -4915,26 +4885,24 @@
         "table enhancements",
         "table",
         "enhancements",
-        "2026-08-02 17:14:31",
+        "2026-08-03 00:00:00",
         "2026",
         "08",
-        "02",
-        "17",
-        "14",
-        "31",
+        "03",
+        "00",
         "d-20260802-153340-61863b"
       ],
-      "search_text": "te-6 — default content detail presentation delivery te 6 default content detail presentation delivery table enhancements table enhancements 2026-08-02 17:14:31 2026 08 02 17 14 31 d-20260802-153340-61863b"
+      "search_text": "te-6 — default content detail presentation delivery te 6 default content detail presentation delivery table enhancements table enhancements 2026-08-03 00:00:00 2026 08 03 00 d-20260802-153340-61863b"
     },
     {
       "id": "d-20260802-160430-34cb3b",
       "kind": "doc",
       "title": "TE-7 — Table-To-SVG Publication Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-160430-34cb3b",
-      "last_updated": "2026-08-02 17:14:31",
+      "last_updated": "2026-08-03 00:00:00",
       "parent_id": "d-20260802-150245-4e7f85",
       "parent_title": "Table Enhancements",
-      "display_meta": "2026-08-02 17:14:31 • Table Enhancements",
+      "display_meta": "2026-08-03 00:00:00 • Table Enhancements",
       "search_terms": [
         "te-7 — table-to-svg publication delivery",
         "te",
@@ -4946,16 +4914,14 @@
         "delivery",
         "table enhancements",
         "enhancements",
-        "2026-08-02 17:14:31",
+        "2026-08-03 00:00:00",
         "2026",
         "08",
-        "02",
-        "17",
-        "14",
-        "31",
+        "03",
+        "00",
         "d-20260802-160430-34cb3b"
       ],
-      "search_text": "te-7 — table-to-svg publication delivery te 7 table to svg publication delivery table enhancements enhancements 2026-08-02 17:14:31 2026 08 02 17 14 31 d-20260802-160430-34cb3b"
+      "search_text": "te-7 — table-to-svg publication delivery te 7 table to svg publication delivery table enhancements enhancements 2026-08-03 00:00:00 2026 08 03 00 d-20260802-160430-34cb3b"
     },
     {
       "id": "d-20260712-213026-ee0f22",
@@ -6331,45 +6297,41 @@
       "kind": "doc",
       "title": "Testing",
       "href": "/docs/?scope=studio&doc=d-20260501-174746-efd581",
-      "last_updated": "2026-07-25 19:30:43",
-      "display_meta": "2026-07-25 19:30:43",
+      "last_updated": "2026-08-03 00:00:00",
+      "display_meta": "2026-08-03 00:00:00",
       "search_terms": [
         "testing",
-        "2026-07-25 19:30:43",
+        "2026-08-03 00:00:00",
         "2026",
-        "07",
-        "25",
-        "19",
-        "30",
-        "43",
+        "08",
+        "03",
+        "00",
         "d-20260501-174746-efd581"
       ],
-      "search_text": "testing 2026-07-25 19:30:43 2026 07 25 19 30 43 d-20260501-174746-efd581"
+      "search_text": "testing 2026-08-03 00:00:00 2026 08 03 00 d-20260501-174746-efd581"
     },
     {
       "id": "d-20260501-000000-49b626",
       "kind": "doc",
       "title": "Browser Smoke Testing",
       "href": "/docs/?scope=studio&doc=d-20260501-000000-49b626",
-      "last_updated": "2026-07-25 19:30:43",
+      "last_updated": "2026-08-03 00:00:00",
       "parent_id": "d-20260501-174746-efd581",
       "parent_title": "Testing",
-      "display_meta": "2026-07-25 19:30:43 • Testing",
+      "display_meta": "2026-08-03 00:00:00 • Testing",
       "search_terms": [
         "browser smoke testing",
         "browser",
         "smoke",
         "testing",
-        "2026-07-25 19:30:43",
+        "2026-08-03 00:00:00",
         "2026",
-        "07",
-        "25",
-        "19",
-        "30",
-        "43",
+        "08",
+        "03",
+        "00",
         "d-20260501-000000-49b626"
       ],
-      "search_text": "browser smoke testing browser smoke testing 2026-07-25 19:30:43 2026 07 25 19 30 43 d-20260501-000000-49b626"
+      "search_text": "browser smoke testing browser smoke testing 2026-08-03 00:00:00 2026 08 03 00 d-20260501-000000-49b626"
     },
     {
       "id": "d-20260514-135716-c70591",

@@ -154,39 +154,39 @@ def test_manage_shell_loads_feature_owned_css_after_shared_management_css() -> N
     )
 
 
-def test_document_package_actions_own_the_surviving_browser_assets() -> None:
-    management_runtime = "\n".join(
-        (
-            REPO_ROOT / "docs-viewer/runtime/js/management" / filename
-        ).read_text(encoding="utf-8")
-        for filename in (
-            "docs-viewer-management-actions-renderer.js",
-            "docs-viewer-management-index-controller.js",
-            "docs-viewer-management.js",
-        )
-    )
-    runtime_root = REPO_ROOT / "docs-viewer/runtime/js/packages"
-    runtime = "\n".join(
-        path.read_text(encoding="utf-8") for path in sorted(runtime_root.glob("*.js"))
-    )
+def test_document_package_prepare_and_import_review_own_browser_assets() -> None:
+    management_root = REPO_ROOT / "docs-viewer/runtime/js/management"
+    index_controller = (
+        management_root / "docs-viewer-management-index-controller.js"
+    ).read_text(encoding="utf-8")
+    control_renderers = (
+        management_root / "docs-viewer-management-control-renderers.js"
+    ).read_text(encoding="utf-8")
+    action_definitions = (
+        management_root / "docs-viewer-action-definitions.js"
+    ).read_text(encoding="utf-8")
+    package_client = (
+        REPO_ROOT / "docs-viewer/runtime/js/packages/document-package-client.js"
+    ).read_text(encoding="utf-8")
+    import_entrypoint = (
+        REPO_ROOT / "docs-viewer/runtime/js/import/docs-html-import.js"
+    ).read_text(encoding="utf-8")
+    import_review_handoff = (
+        REPO_ROOT / "docs-viewer/runtime/js/import/docs-import-review-handoff.js"
+    ).read_text(encoding="utf-8")
 
-    assert not (REPO_ROOT / "docs-viewer/shell/docs-viewer-package-prepare.html").exists()
-    assert not (REPO_ROOT / "docs-viewer/shell/docs-viewer-package-returned.html").exists()
-    assert not (runtime_root / "document-package-prepare.js").exists()
-    assert not (runtime_root / "document-package-modal.js").exists()
-    assert not (runtime_root / "document-package-returned.js").exists()
-    assert not (REPO_ROOT / "docs-viewer/static/css/docs-viewer-packages.css").exists()
-    assert "docsViewerIndexPreparePackageButton" in management_runtime
-    assert "docsViewerManageReviewPackageButton" in management_runtime
-    assert "docsViewerManagePreparePackageButton" not in management_runtime
-    assert "docsViewerManageReturnedPackagesLink" not in management_runtime
-    assert 'page_id: "docs-manage"' in management_runtime
-    assert "record_indices" not in runtime
-    assert "data-sharing" not in runtime.lower()
-    assert "review_action" not in runtime
-    assert "/docs/packages/returned/apply" not in runtime
-    assert "/docs/packages/returned/inspect" not in runtime
-    assert "reviewReturnedDocumentPackage" in runtime
+    assert 'PREPARE_DOCUMENT_PACKAGE: "prepare-document-package"' in action_definitions
+    assert 'id: "docsViewerIndexPreparePackageButton"' in control_renderers
+    assert 'actionId: "prepare-document-package"' in control_renderers
+    assert 'page_id: "docs-manage"' in index_controller
+    assert 'control_id: "docsViewerIndexPreparePackageButton"' in index_controller
+    assert "prepareDocumentPackage" in package_client
+    assert "openDocsImportCandidateInReview" in import_entrypoint
+    assert '"/docs/packages/returned/review"' in import_entrypoint
+    assert "reviewReturnedDocumentPackage" in import_review_handoff
+    assert 'linkLabel: existing ? "Open existing review" : "Open in Docs Review"' in (
+        import_review_handoff
+    )
 
 
 def test_moments_css_is_loaded_by_public_and_manage_shells() -> None:

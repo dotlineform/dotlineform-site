@@ -704,7 +704,7 @@ def assert_inline_mermaid_browser_review(page: Page, timeout_ms: int) -> None:
         ):
             raise AssertionError(f"inline diagram lost its themed readable surface in {theme}: {state!r}")
         if state["hostOverflowX"] != "visible" or state["viewportOverflowX"] != "auto":
-            raise AssertionError(f"inline diagram responsive overflow changed in {theme}: {state!r}")
+            raise AssertionError(f"inline diagram overflow ownership changed in {theme}: {state!r}")
         if state["svgTitle"] != "Inline Mermaid diagram lifecycle" or not str(state["svgDescription"]).startswith(
             "A document mount registers"
         ):
@@ -724,7 +724,7 @@ def assert_inline_mermaid_browser_review(page: Page, timeout_ms: int) -> None:
         or "background-color" not in detail_markup
     ):
         raise AssertionError(
-            "refreshed inline detail target lost accessible, responsive, or themed SVG content"
+            "refreshed inline detail target lost accessible or themed SVG content"
         )
 
     reading_state = toggled
@@ -741,39 +741,6 @@ def assert_inline_mermaid_browser_review(page: Page, timeout_ms: int) -> None:
         or not reading_state["nextText"]
     ):
         raise AssertionError(f"inline diagram changed keyboard or document reading order: {reading_state!r}")
-
-    page.set_viewport_size({"width": 420, "height": 820})
-    page.wait_for_timeout(50)
-    responsive = page.locator("#docsViewerContent").evaluate(
-        """content => {
-            const host = content.querySelector(
-                '.docsViewer__diagram[data-docs-viewer-diagram-kind="inline-mermaid"]'
-            );
-            const svg = host?.querySelector(':scope > svg');
-            const contentRect = content.getBoundingClientRect();
-            const hostRect = host?.getBoundingClientRect();
-            const svgRect = svg?.getBoundingClientRect();
-            return {
-                contentWidth: contentRect.width,
-                hostWidth: hostRect?.width || 0,
-                svgWidth: svgRect?.width || 0,
-                containedLeft: Boolean(hostRect && hostRect.left >= contentRect.left - 1),
-                containedRight: Boolean(hostRect && hostRect.right <= contentRect.right + 1),
-                svgContained: Boolean(hostRect && svgRect && svgRect.width <= host.clientWidth + 1)
-            };
-        }"""
-    )
-    if (
-        responsive["hostWidth"] <= 0
-        or responsive["svgWidth"] <= 0
-        or responsive["hostWidth"] > responsive["contentWidth"] + 1
-        or not responsive["containedLeft"]
-        or not responsive["containedRight"]
-        or not responsive["svgContained"]
-    ):
-        raise AssertionError(f"inline diagram did not remain contained at a narrow viewport: {responsive!r}")
-    page.set_viewport_size({"width": 1280, "height": 900})
-
 
 def manage_route_state(page: Page) -> dict[str, object]:
     return page.locator("#docsViewerRoot").evaluate(

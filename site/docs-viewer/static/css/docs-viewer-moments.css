@@ -71,22 +71,22 @@
 }
 
 @media (max-width: 40rem){
-  .docsViewer[data-viewer-scope="moments"] .docsViewer__content
+  .docsViewer[data-docs-viewer-app-kind="public"][data-viewer-scope="moments"] .docsViewer__content
     :is(.moment-axis-line, .moment-text--axis .axis-line){
     display: inline;
     white-space: normal;
   }
 
-  .docsViewer[data-viewer-scope="moments"] .docsViewer__content
+  .docsViewer[data-docs-viewer-app-kind="public"][data-viewer-scope="moments"] .docsViewer__content
     :is(.moment-axis-line, .moment-text--axis .axis-line) > :is(.axis-before, .axis-after){
     display: inline;
     padding: 0;
     text-align: left;
   }
 
-  .docsViewer[data-viewer-scope="moments"] .docsViewer__content
+  .docsViewer[data-docs-viewer-app-kind="public"][data-viewer-scope="moments"] .docsViewer__content
     :is(.moment-axis-line, .moment-text--axis .axis-line) > .axis-before::after,
-  .docsViewer[data-viewer-scope="moments"] .moment-text--axis .axis-line:not(:last-child)::after{
+  .docsViewer[data-docs-viewer-app-kind="public"][data-viewer-scope="moments"] .moment-text--axis .axis-line:not(:last-child)::after{
     content: " ";
   }
 }

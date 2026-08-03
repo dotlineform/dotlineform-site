@@ -960,38 +960,6 @@ select.docsViewer__fieldInput--listbox{
   outline-offset: 2px;
 }
 
-@media (max-width: 34rem){
-  .docsViewer__modal{
-    --docs-viewer-modal-offset: 1rem;
-  }
-
-  .docsViewer__modalCard{
-    max-height: calc(100vh - 2rem);
-    max-height: calc(100dvh - 2rem);
-  }
-
-  .docsViewer__field:not(.docsViewer__field--checkbox){
-    grid-template-columns: 1fr;
-    gap: 0.28rem;
-  }
-
-  .docsViewerReport__contributionToolbar--list,
-  .docsViewerReport__subscopeSelectionToolbar{
-    justify-content: flex-start;
-  }
-
-  .docsViewerReport__subscopeFilterToolbar
-    > .docsViewerReport__contributionToolbar--list{
-    margin-inline-start: 0;
-  }
-
-  .docsViewerReport__subscopeActionsMenu{
-    right: auto;
-    left: 0;
-  }
-}
-
-
 .docsViewer__manageRow{
   flex: 0 0 auto;
   display: flex;

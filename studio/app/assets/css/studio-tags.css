@@ -682,31 +682,7 @@
   background: var(--analytics-rag-green);
 }
 
-@media (min-width: 900px) {
-  .analyticsPage__header {
-    grid-template-columns: minmax(16rem, 26rem) minmax(0, 1fr);
-    align-items: start;
-  }
-}
-
-@media (max-width: 900px) {
-  .seriesTags__head,
-  .seriesTags__row,
-  .tagRegistry__head,
-  .tagRegistry__row,
-  .tagAliases__head,
-  .tagAliases__row {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-@media (max-width: 700px) {
-  .analytics__editorActionGrid,
-  .analyticsGroupRow {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .studioUi__inputRow {
-    flex-wrap: wrap;
-  }
+.analyticsPage__header {
+  grid-template-columns: minmax(16rem, 26rem) minmax(0, 1fr);
+  align-items: start;
 }

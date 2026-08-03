@@ -318,19 +318,6 @@ def run_browser_smoke(admin_url: str, timeout_ms: int) -> None:
         )
         if page.locator("#adminUiWorkbenchTheme").get_attribute("data-value") != "dark":
             raise AssertionError("Theme toggle did not project dark")
-        page.locator("#adminUiWorkbenchViewport").click()
-        wait_for_mount(
-            page,
-            str(side_by_side["primarySpecimenId"]),
-            str(side_by_side["comparisonSpecimenId"]),
-            timeout_ms,
-        )
-        if page.locator("#adminUiWorkbenchViewport").get_attribute("data-value") != "narrow":
-            raise AssertionError("Viewport toggle did not project narrow")
-        if page.locator(
-            '.adminWorkbench__frameShell[data-workbench-viewport="narrow"]'
-        ).count() != 2:
-            raise AssertionError("Narrow viewport was not projected to both comparison panels")
         frame_sources = page.locator(".adminWorkbench__specimenFrame").evaluate_all(
             "frames => frames.filter((frame) => frame.src).map((frame) => frame.src)"
         )

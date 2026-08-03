@@ -346,35 +346,6 @@ html[data-theme="dark"] {
   stroke-linejoin: round;
 }
 
-@media (max-width: 640px) {
-  .studio-local-app .site-header .container {
-    padding-right: 12px;
-    padding-left: 12px;
-    gap: 8px;
-  }
-
-  .studio-local-app .site-title,
-  .studio-local-app .site-nav {
-    font-size: var(--font-caption);
-  }
-
-  .studioHeader__actions {
-    gap: 7px;
-  }
-
-  .studio-local-app .site-nav .nav-item {
-    margin-left: 7px;
-    padding-right: 0;
-    padding-left: 0;
-  }
-
-  .studioThemeToggle {
-    width: 1.85rem;
-    min-width: 1.85rem;
-    height: 1.85rem;
-  }
-}
-
 .studio-local-app .studio {
   max-width: 980px;
   margin: 0 auto;
@@ -464,19 +435,6 @@ html[data-theme="dark"] {
 .studio-local-app .studioHomeLinks__pill:hover,
 .studio-local-app .studioHomeLinks__pill:focus-visible {
   border-color: var(--border-strong);
-}
-
-@media (max-width: 760px) {
-  .studioHomeLinks {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.4rem 1.75rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .studioHomeLinks {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }
 
 .studio,
@@ -581,12 +539,7 @@ html[data-theme="dark"] .studioPage {
 .studioUi__grid {
   display: grid;
   gap: 1rem;
-}
-
-@media (min-width: 920px) {
-  .studioUi__grid {
-    grid-template-columns: 1.5fr 1fr;
-  }
+  grid-template-columns: 1.5fr 1fr;
 }
 
 .studioUi__panel {
@@ -1211,13 +1164,6 @@ button.studioList__cellLink {
   margin: 0;
 }
 
-@media (max-width: 760px) {
-  .buildActivityEntry__detailItem {
-    grid-template-columns: 1fr;
-    gap: 0.15rem;
-  }
-}
-
 .worksList--studio .worksList__head {
   grid-template-columns: 7ch 10.5ch minmax(0, 1.35fr) minmax(0, 1fr) 8ch;
   margin: var(--list-section-gap) 0 4px;
@@ -1796,100 +1742,4 @@ button.studioList__cellLink {
   flex-wrap: wrap;
   gap: 0.35rem;
   justify-content: flex-end;
-}
-
-@media (max-width: 700px) {
-  .studioUi__inputRow {
-    flex-wrap: wrap;
-  }
-
-  .studioUi__inputRow--editor .studioUi__input {
-    flex: 1 1 100%;
-    width: 100%;
-  }
-
-  .worksList--studio .worksList__head,
-  .worksList--studio .worksList__item,
-  .worksList--studio.worksList--singleSeries .worksList__head,
-  .worksList--studio.worksList--singleSeries .worksList__item {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .catalogueWorkForm__fields {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .catalogueWorkDetails__row {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0.2rem;
-  }
-
-  .catalogueWorkDetailBrowser__layout {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .catalogueWorkDetailBrowser__actionRow {
-    align-items: stretch;
-  }
-
-  .catalogueWorkDetailBrowser__searchWrap {
-    flex: 1 1 100%;
-  }
-
-  .catalogueWorkDetails__rowActions {
-    justify-content: flex-start;
-  }
-
-  .catalogueSeriesMembers__actions {
-    justify-content: flex-start;
-  }
-
-  .studioFilters__searchWrap {
-    flex: 1 1 100%;
-  }
-
-  .studioFilters__searchInput {
-    min-width: 0;
-  }
-
-  .studioFilters__key {
-    flex: 1 1 100%;
-  }
-
-}
-
-@media (max-width: 900px) {
-  .catalogueWorkForm__field {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0.22rem;
-  }
-
-  .catalogueWorkForm__field > .studioForm__label,
-  .catalogueWorkForm__field > .studioUi__input,
-  .catalogueWorkForm__field > .catalogueProjectMediaPicker__displayControl,
-  .catalogueWorkForm__field > .studioForm__meta,
-  .catalogueWorkForm__field > .catalogueWorkForm__fieldStatus {
-    grid-column: 1;
-  }
-
-  .catalogueWorkForm__field > .studioForm__label {
-    align-self: start;
-    padding-top: 0;
-  }
-
-  .catalogueStatusPage__head {
-    display: none;
-  }
-
-  .catalogueStatusRow {
-    grid-template-columns: 1fr;
-    gap: 0.22rem;
-  }
-
-  .catalogueStatusRow__family,
-  .catalogueStatusRow__status,
-  .catalogueStatusRow__reference {
-    font-size: var(--font-small);
-  }
-
 }

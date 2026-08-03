@@ -544,25 +544,25 @@
 }
 
 @media (max-width: 820px){
-  .docsViewerReport__head,
-  .docsViewerReport__row{
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewerReport__head,
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewerReport__row{
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .docsViewerReport__row{
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewerReport__row{
     gap: 0.22rem;
   }
 
-  .docsViewerReport__configRow{
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewerReport__configRow{
     grid-template-columns: minmax(0, 1fr);
     gap: 0.18rem;
   }
 
-  .docsViewerReport__pager{
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewerReport__pager{
     justify-content: flex-start;
   }
 
-  .docsViewerReport__pager--top{
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewerReport__pager--top{
     margin-left: 0;
   }
 }

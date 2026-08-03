@@ -13,7 +13,6 @@ const recipeSelect = document.querySelector("#adminUiWorkbenchRecipe");
 const recipeStepField = document.querySelector("#adminUiWorkbenchRecipeStepField");
 const recipeStepSelect = document.querySelector("#adminUiWorkbenchRecipeStep");
 const themeButton = document.querySelector("#adminUiWorkbenchTheme");
-const viewportButton = document.querySelector("#adminUiWorkbenchViewport");
 const recipeDetail = document.querySelector("#adminUiWorkbenchRecipeDetail");
 const recipeQuestion = document.querySelector("#adminUiWorkbenchRecipeQuestion");
 const recipeDimensions = document.querySelector("#adminUiWorkbenchRecipeDimensions");
@@ -46,10 +45,6 @@ function themeValue() {
   return themeButton?.dataset.value === "dark" ? "dark" : "light";
 }
 
-function viewportValue() {
-  return viewportButton?.dataset.value === "narrow" ? "narrow" : "desktop";
-}
-
 function projectConditionButton(button, value, currentLabel, label, nextLabel, pressed) {
   if (!button) return;
   button.dataset.value = value;
@@ -69,20 +64,6 @@ function projectThemeButton(value) {
     "Theme",
     dark ? "light" : "dark",
     dark
-  );
-}
-
-function projectViewportButton(value) {
-  const narrow = value === "narrow";
-  const currentLabel = narrow ? "390 × 844" : "desktop";
-  const nextLabel = narrow ? "desktop" : "390 by 844";
-  projectConditionButton(
-    viewportButton,
-    narrow ? "narrow" : "desktop",
-    currentLabel,
-    "Viewport",
-    nextLabel,
-    narrow
   );
 }
 
@@ -275,12 +256,6 @@ function projectRemountButtons(disabled) {
   if (comparisonRemountButton) comparisonRemountButton.disabled = disabled;
 }
 
-function projectFrameShellViewport(viewport) {
-  document.querySelectorAll(".adminWorkbench__frameShell").forEach((node) => {
-    node.dataset.workbenchViewport = viewport;
-  });
-}
-
 function renderFrames() {
   if (!activePack || !primaryFrame) return;
   populateRecipeSteps(activeRecipe());
@@ -292,8 +267,6 @@ function renderFrames() {
     return;
   }
 
-  const viewport = viewportValue();
-  projectFrameShellViewport(viewport);
   renderRecipeDetail(state.recipe);
   if (recipeStepField) recipeStepField.hidden = state.recipe?.mode !== "sequential";
   if (specimenInput) {
@@ -429,10 +402,6 @@ function bindControls() {
     projectThemeButton(themeValue() === "dark" ? "light" : "dark");
     renderFrames();
   });
-  viewportButton?.addEventListener("click", () => {
-    projectViewportButton(viewportValue() === "narrow" ? "desktop" : "narrow");
-    renderFrames();
-  });
   window.addEventListener("message", handleFrameMessage);
 }
 
@@ -467,7 +436,6 @@ async function boot() {
   });
   setAdminRouteBusy(root, true);
   projectThemeButton(themeValue());
-  projectViewportButton(viewportValue());
   bindControls();
   try {
     packs = packRecords(await loadAdminConfig());

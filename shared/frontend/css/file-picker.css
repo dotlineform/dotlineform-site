@@ -149,9 +149,3 @@
 .sharedFilePicker__option--subfolder {
   padding-left: 1rem;
 }
-
-@media (max-width: 720px) {
-  .sharedFilePicker__listboxes {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}

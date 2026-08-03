@@ -4,83 +4,85 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "d-20260802-123450-f7493d",
-      "title": "Data Model Maps",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123450-f7493d.json",
-      "timestamp": "2026-08-02 22:58:02",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
+      "doc_id": "d-20260501-000000-49b626",
+      "title": "Browser Smoke Testing",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260501-000000-49b626.json",
+      "timestamp": "2026-08-03 00:00:00",
+      "parent_id": "d-20260501-174746-efd581",
+      "parent_title": "Testing"
     },
     {
       "doc_id": "d-20260802-123451-d0e52e",
       "title": "Data Models Diagrams",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123451-d0e52e.json",
-      "timestamp": "2026-08-02 22:58:01",
+      "timestamp": "2026-08-03 00:00:00",
       "parent_id": "d-20260331-000000-4a16b0",
       "parent_title": "Architecture"
+    },
+    {
+      "doc_id": "d-20260523-190651-7157ec",
+      "title": "Development Checklist",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260523-190651-7157ec.json",
+      "timestamp": "2026-08-03 00:00:00",
+      "parent_id": "d-20260419-000000-d2e47b",
+      "parent_title": "Dev Home"
     },
     {
       "doc_id": "d-20260802-123452-6a2fd3",
       "title": "DMM-1 — Data Model Maps Foundation Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123452-6a2fd3.json",
-      "timestamp": "2026-08-02 22:58:00",
+      "timestamp": "2026-08-03 00:00:00",
       "parent_id": "d-20260802-123450-f7493d",
       "parent_title": "Data Model Maps"
     },
     {
-      "doc_id": "d-20260802-225626-b123fa",
-      "title": "Catalogue Data Visualisation",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-225626-b123fa.json",
-      "timestamp": "2026-08-02 22:56:26",
+      "doc_id": "d-20260719-123719-fb7565",
+      "title": "Document Diagrams",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260719-123719-fb7565.json",
+      "timestamp": "2026-08-03 00:00:00",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260514-184303-7914e2",
+      "title": "Media And Asset Handling",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260514-184303-7914e2.json",
+      "timestamp": "2026-08-03 00:00:00",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260723-191039-f8cb88",
+      "title": "Public Docs Viewer Mobile Experience",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-191039-f8cb88.json",
+      "timestamp": "2026-08-03 00:00:00",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
     },
     {
-      "doc_id": "d-20260802-223430-cf2abe",
-      "title": "DMM-2 — Mermaid And D2 Evaluation",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-223430-cf2abe.json",
-      "timestamp": "2026-08-02 22:46:39",
-      "parent_id": "d-20260802-123450-f7493d",
-      "parent_title": "Data Model Maps"
+      "doc_id": "d-20260720-100017-7e52de",
+      "title": "Scope Media Inventory Surface Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-100017-7e52de.json",
+      "timestamp": "2026-08-03 00:00:00",
+      "parent_id": "d-20260720-100017-9855dd",
+      "parent_title": "Scope Media Management"
     },
     {
-      "doc_id": "d-20260802-205910-533be0",
-      "title": "Catalogue Data Model Map",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-205910-533be0.json",
-      "timestamp": "2026-08-02 22:38:00",
-      "parent_id": "d-20260802-123451-d0e52e",
-      "parent_title": "Data Models Diagrams"
+      "doc_id": "d-20260623-180405-631ef4",
+      "title": "Semantic Tokens Source Editor UI",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260623-180405-631ef4.json",
+      "timestamp": "2026-08-03 00:00:00",
+      "parent_id": "d-20260725-153656-516b61",
+      "parent_title": "Semantic Tokens"
     },
     {
-      "doc_id": "d-20260802-205912-16bc10",
-      "title": "Cross-System Relationship Map",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-205912-16bc10.json",
-      "timestamp": "2026-08-02 22:31:00",
-      "parent_id": "d-20260802-123451-d0e52e",
-      "parent_title": "Data Models Diagrams"
-    },
-    {
-      "doc_id": "d-20260802-205911-bec41f",
-      "title": "Docs Viewer Projection Map",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-205911-bec41f.json",
-      "timestamp": "2026-08-02 22:26:00",
-      "parent_id": "d-20260802-123451-d0e52e",
-      "parent_title": "Data Models Diagrams"
-    },
-    {
-      "doc_id": "d-20260331-000000-4a16b0",
-      "title": "Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-4a16b0.json",
-      "timestamp": "2026-08-02 21:28:53"
-    },
-    {
-      "doc_id": "d-20260802-174340-2fe9f4",
-      "title": "SSP-3 — Resolver Tokens Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-174340-2fe9f4.json",
-      "timestamp": "2026-08-02 20:40:56",
+      "doc_id": "d-20260801-133318-15e8fa",
+      "title": "SSP-2 — Docs Viewer Project State Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133318-15e8fa.json",
+      "timestamp": "2026-08-03 00:00:00",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
     }
   ],
-  "generated_at": "2026-08-02T21:58:35Z"
+  "generated_at": "2026-08-03T09:38:34Z"
 }
