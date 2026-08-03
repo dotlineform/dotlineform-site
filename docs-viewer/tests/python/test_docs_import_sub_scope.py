@@ -157,6 +157,7 @@ Body without an H1.
         {
             "scope": "analysis",
             "sub_scope": "tags",
+            "source_directory": "data-sharing/import-staging",
             "staged_filename": "ordinary.md",
         },
         dry_run=False,
@@ -173,6 +174,7 @@ Body without an H1.
     assert payload["operation"] == "create"
     assert payload["scope"] == "analysis"
     assert payload["sub_scope"] == "tags"
+    assert payload["source_directory"] == "data-sharing/import-staging"
     assert payload["target"] == {
         "scope": "analysis",
         "sub_scope": "tags",
@@ -254,6 +256,7 @@ Package body.
         {
             "scope": "analysis",
             "sub_scope": "tags",
+            "source_directory": "data-sharing/import-staging",
             "staged_filename": "tag-package",
         },
         dry_run=False,
@@ -320,6 +323,7 @@ def test_child_destination_rejects_registered_collection_before_markdown(
             {
                 "scope": "analysis",
                 "sub_scope": "tags",
+                "source_directory": "data-sharing/import-staging",
                 "staged_filename": "claimed.md",
             },
             dry_run=False,
@@ -364,6 +368,7 @@ group: unsupported
             {
                 "scope": "analysis",
                 "sub_scope": "tags",
+                "source_directory": "data-sharing/import-staging",
                 "staged_filename": "ordinary.md",
                 "preview_only": True,
             },

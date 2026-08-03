@@ -13,7 +13,7 @@ from docs_import_common import HTML_STAGED_SUFFIXES, is_interactive_html_import_
 from docs_media_storage import docs_media_file, docs_publish_succeeded, publish_docs_media_files
 from docs_scope_config import load_docs_scope_configs, published_media_config
 from docs_source_model import normalize_scope, slugify
-from docs_document_packages.workspace import marker_path
+from studio.shared.python.projects_directories import projects_path_marker
 
 INTERACTIVE_HTML_FILENAME_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]*\.html$")
 
@@ -61,7 +61,7 @@ def interactive_html_asset_plan_for_path(
 
     return {
         "scope": normalized_scope,
-        "source_path": marker_path(source_path, workspace_root=workspace_root),
+        "source_path": projects_path_marker(source_path, workspace_root),
         "target_path": media_path,
         "public_path": adapter.served_reference(filename),
         "token": f"[[html-media:{media_path}]]",

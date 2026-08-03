@@ -11,6 +11,7 @@ GENERATED_SEARCH_PATH = "/docs/search"
 GENERATED_SEMANTIC_TOKENS_PATH = "/docs/semantic-tokens"
 SOURCE_CONFIG_PATH = "/docs/source-config"
 SOURCE_CONFIG_SETTINGS_PATH = "/docs/source-config-settings"
+IMPORT_SOURCE_DIRECTORIES_PATH = "/docs/import-source-directories"
 IMPORT_SOURCE_FILES_PATH = "/docs/import-source-files"
 STAGED_MEDIA_FILES_PATH = "/docs/staged-media-files"
 DIAGRAM_SOURCES_PATH = "/docs/diagram-sources"
@@ -61,6 +62,7 @@ GET_PATHS = (
     SOURCE_CONFIG_SETTINGS_PATH,
     SOURCE_BODY_PATH,
     METADATA_PATH,
+    IMPORT_SOURCE_DIRECTORIES_PATH,
     IMPORT_SOURCE_FILES_PATH,
     STAGED_MEDIA_FILES_PATH,
     DIAGRAM_SOURCES_PATH,

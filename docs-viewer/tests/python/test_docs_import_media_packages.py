@@ -48,6 +48,11 @@ def test_package_provenance_label_preserves_fixed_external_source_identity(
         "$DOTLINEFORM_PROJECTS_BASE_DIR/Notes export - 2026-05-18/"
         "iCloud/dotlineform/projects/Nerve/assets/scan.png"
     )
+    assert docs_import_markdown_package.package_source_original_path(
+        source,
+        tmp_path,
+        package_root=package,
+    ) == "Nerve/assets/scan.png"
     assert docs_import_markdown_package.normalize_package_provenance_label(
         "$DOTLINEFORM_PROJECTS_BASE_DIR/Notes export/projects/trailing space "
     ).endswith("trailing space ")

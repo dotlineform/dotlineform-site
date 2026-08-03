@@ -56,7 +56,8 @@ from docs_import_media import (  # noqa: E402
     apply_inline_svg_media_plans,
 )
 from docs_source_model import parse_front_matter_value  # noqa: E402
-from docs_document_packages.workspace import configured_workspace_paths, marker_path  # noqa: E402
+from docs_document_packages.workspace import configured_workspace_paths  # noqa: E402
+from studio.shared.python.projects_directories import projects_path_marker  # noqa: E402
 
 
 ORDINARY_FRONT_MATTER_KEY_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_-]*$")
@@ -65,7 +66,7 @@ ORDINARY_FRONT_MATTER_KEY_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_-]*$")
 def import_artifact_path(repo_root: Path, path: Path, workspace_root: Path) -> str:
     resolved = path.resolve()
     if resolved.is_relative_to(workspace_root.resolve()):
-        return marker_path(resolved, workspace_root=workspace_root)
+        return projects_path_marker(resolved, workspace_root)
     return relative_path(repo_root, resolved)
 
 def validate_markdown_preview(markdown: str, *, title: str = "") -> dict[str, Any]:
@@ -108,21 +109,21 @@ def resolve_staged_import_source(
         raise ValueError("staged import sources must not be symlinks")
     path = unresolved_path.resolve()
     if staging_root not in [path, *path.parents]:
-        raise ValueError("staged file must resolve inside the configured import staging root")
+        raise ValueError("staged file must resolve inside the selected source directory")
     if not path.exists():
         raise FileNotFoundError(f"staged import source does not exist: {filename}")
     if path.is_dir():
         if allowed_suffixes is not None:
             raise ValueError("staged file must use one of these extensions: " + ", ".join(sorted(allowed_suffixes)))
         if path.parent != staging_root:
-            raise ValueError("staged Markdown packages must be direct child directories of the configured import staging root")
+            raise ValueError("staged Markdown packages must be direct child directories of the selected source directory")
         if path.is_symlink():
             raise ValueError("staged Markdown packages must not be symlinks")
         if any(candidate.is_symlink() for candidate in path.rglob("*")):
             raise ValueError("staged Markdown packages must not contain symlinks")
         return path
     if path.parent != staging_root:
-        raise ValueError("staged import files must be direct children of the configured import staging root")
+        raise ValueError("staged import files must be direct children of the selected source directory")
     suffixes = allowed_suffixes or SUPPORTED_STAGED_SUFFIXES
     if path.suffix.lower() not in suffixes:
         raise ValueError("staged file must use one of these extensions: " + ", ".join(sorted(suffixes)))
@@ -172,7 +173,7 @@ def list_staged_import_source_files(
         files.append(
             {
                 "filename": path.name,
-                "path": marker_path(path, workspace_root=workspace_root),
+                "path": projects_path_marker(path, workspace_root),
                 "source_format": registered_formats.get(path.name) or source_format_for_path(path),
                 "size_bytes": stat.st_size,
                 "modified_utc": dt.datetime.fromtimestamp(stat.st_mtime, tz=dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -191,7 +192,7 @@ def list_staged_import_source_files(
         files.append(
             {
                 "filename": path.name,
-                "path": marker_path(path, workspace_root=workspace_root),
+                "path": projects_path_marker(path, workspace_root),
                 "source_format": registered_formats.get(path.name) or "markdown_package",
                 "size_bytes": sum(file.stat().st_size for file in package_files),
                 "modified_utc": dt.datetime.fromtimestamp(modified, tz=dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -357,7 +358,7 @@ def generate_html_content_import_preview(
     apply_content_identity_hints(summary, title=title, doc_id=doc_id)
     summary["scope"] = normalized_scope
     summary["source_format"] = "html"
-    summary["staging_root"] = marker_path(staging_root, workspace_root=workspace_root)
+    summary["staging_root"] = projects_path_marker(staging_root, workspace_root)
     summary["tag_counts"] = dict(parsed.tag_counts.most_common())
     summary["comment_count"] = parsed.comment_count
     summary["_inline_media_source_markdown"] = str(summary.get("markdown_preview") or "")
@@ -624,7 +625,7 @@ def generate_markdown_content_import_preview(
     apply_content_identity_hints(summary, title=title, doc_id=doc_id)
     summary["scope"] = normalized_scope
     summary["source_format"] = "markdown"
-    summary["staging_root"] = marker_path(staging_root, workspace_root=workspace_root)
+    summary["staging_root"] = projects_path_marker(staging_root, workspace_root)
     summary["tag_counts"] = {}
     summary["comment_count"] = 0
     summary["_inline_media_source_markdown"] = str(summary.get("markdown_preview") or "")
@@ -676,11 +677,11 @@ def generate_markdown_package_import_preview(
         summary["warnings"] = front_matter_warnings + summary["warnings"]
     summary["scope"] = normalized_scope
     summary["source_format"] = "markdown_package"
-    summary["source_path"] = marker_path(package_root, workspace_root=workspace_root)
-    summary["source_markdown"] = marker_path(markdown_path, workspace_root=workspace_root)
+    summary["source_path"] = projects_path_marker(package_root, workspace_root)
+    summary["source_markdown"] = projects_path_marker(markdown_path, workspace_root)
     summary["package_path"] = summary["source_path"]
     summary["package_markdown_path"] = markdown_path.relative_to(package_root).as_posix()
-    summary["staging_root"] = marker_path(staging_root, workspace_root=workspace_root)
+    summary["staging_root"] = projects_path_marker(staging_root, workspace_root)
     summary["tag_counts"] = {}
     summary["comment_count"] = 0
     rewrite_markdown_package_media_links(
@@ -735,7 +736,7 @@ def generate_plain_text_content_import_preview(
     apply_content_identity_hints(summary, title=title, doc_id=doc_id)
     summary["scope"] = normalized_scope
     summary["source_format"] = "text"
-    summary["staging_root"] = marker_path(staging_root, workspace_root=workspace_root)
+    summary["staging_root"] = projects_path_marker(staging_root, workspace_root)
     summary["tag_counts"] = {}
     summary["comment_count"] = 0
     summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])

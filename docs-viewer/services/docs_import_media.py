@@ -25,7 +25,7 @@ from docs_media_storage import (
     publish_docs_media_files,
 )
 from docs_svg_sanitizer import sanitize_svg_bytes
-from docs_document_packages.workspace import marker_path
+from studio.shared.python.projects_directories import projects_path_marker
 
 
 INLINE_SVG_PATTERN = re.compile(r"<svg\b[^>]*>.*?</svg>", re.IGNORECASE | re.DOTALL)
@@ -80,7 +80,7 @@ def inline_media_plan(
     plan.update(
         {
             "source": source,
-            "staging_path": marker_path(staging_root / filename, workspace_root=workspace_root),
+            "staging_path": projects_path_marker(staging_root / filename, workspace_root),
             "mime_type": mime_type,
             "size_bytes": size_bytes,
         }

@@ -177,4 +177,11 @@ def stub_rebuild():
 
 
 def handle_import_source(root: Path, body: dict[str, object], dry_run: bool) -> dict[str, object]:
-    return handle_managed_import_source(root, body, dry_run)
+    return handle_managed_import_source(
+        root,
+        {
+            "source_directory": "data-sharing/import-staging",
+            **body,
+        },
+        dry_run,
+    )

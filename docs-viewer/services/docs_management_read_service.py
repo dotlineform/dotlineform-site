@@ -17,6 +17,7 @@ import docs_staged_media_service
 from docs_management_capabilities_service import capabilities_payload
 from docs_management_document_target import managed_document_metadata
 from docs_management_source_service import read_source_body
+from studio.shared.python.projects_directories import list_projects_directory
 
 
 def docs_api_query_value(params: dict[str, list[str]], key: str) -> str:
@@ -80,8 +81,19 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         if "sub_scope" in params:
             target["sub_scope"] = docs_api_query_value(params, "sub_scope")
         return managed_document_metadata(repo_root, target)
-    if path == routes.IMPORT_SOURCE_FILES_PATH:
-        return import_source_service.handle_import_source_files(repo_root)
+    if path in {
+        routes.IMPORT_SOURCE_DIRECTORIES_PATH,
+        routes.IMPORT_SOURCE_FILES_PATH,
+    }:
+        source_directory = docs_api_query_value(params, "source_directory")
+        if not source_directory:
+            raise ValueError("source_directory is required")
+        if path == routes.IMPORT_SOURCE_DIRECTORIES_PATH:
+            return list_projects_directory(source_directory)
+        return import_source_service.handle_import_source_files(
+            repo_root,
+            source_directory=source_directory,
+        )
     if path == routes.STAGED_MEDIA_FILES_PATH:
         return docs_staged_media_service.list_staged_media_files(
             repo_root,

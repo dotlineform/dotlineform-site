@@ -49,6 +49,16 @@ LIBRARY_TAGS_REPORT_DOC_ID = "d-20260730-190000-000001"
 ANALYSIS_TAGS_REPORT_DOC_ID = "d-20260730-200000-000001"
 
 
+def list_import_sources(
+    root: Path,
+    source_directory: str = "data-sharing/import-staging",
+) -> dict[str, object]:
+    return import_source_service.handle_import_source_files(
+        root,
+        source_directory=source_directory,
+    )
+
+
 def review_source_text(
     doc_id: str,
     title: str,
@@ -532,6 +542,7 @@ def reviewed_scope_preview(root: Path, staged_filename: str) -> dict[str, object
         root,
         {
             "scope": "library",
+            "source_directory": "data-sharing/import-staging",
             "staged_filename": staged_filename,
             "preview_only": True,
         },
@@ -550,6 +561,7 @@ def reviewed_scope_apply(
         root,
         {
             "scope": "library",
+            "source_directory": "data-sharing/import-staging",
             "staged_filename": staged_filename,
             "preview_only": False,
             "confirm": True,
@@ -574,6 +586,7 @@ def reviewed_sub_scope_preview(
         {
             "scope": "library",
             "sub_scope": sub_scope,
+            "source_directory": "data-sharing/import-staging",
             "staged_filename": staged_filename,
             "preview_only": True,
         },
@@ -593,6 +606,7 @@ def reviewed_sub_scope_apply(
         {
             "scope": "library",
             "sub_scope": "tags",
+            "source_directory": "data-sharing/import-staging",
             "staged_filename": staged_filename,
             "preview_only": False,
             "confirm": True,
@@ -618,7 +632,7 @@ def test_source_import_files_list_registered_document_formats() -> None:
         write_staged_bytes(root, "source.pdf", b"fake pdf")
         write_staged_package_file(root, "package-note", "Note.md", "# Package Note\n")
 
-        files = import_source_service.handle_import_source_files(root)["files"]
+        files = list_import_sources(root)["files"]
 
     by_filename = {item["filename"]: item for item in files}
     assert by_filename["source.html"]["source_format"] == "html"
@@ -628,7 +642,7 @@ def test_source_import_files_list_registered_document_formats() -> None:
     assert ".docx" in FILE_MEDIA_STAGED_SUFFIXES
     assert by_filename["package-note"]["source_format"] == "markdown_package"
     assert by_filename["package-note"]["package_markdown_count"] == 1
-    assert by_filename["source.md"]["path"] == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/source.md"
+    assert by_filename["source.md"]["path"] == "data-sharing/import-staging/source.md"
     assert {"source.svg", "source.png", "source.pdf"}.isdisjoint(by_filename)
 
 
@@ -637,7 +651,7 @@ def test_source_import_lists_valid_edited_review_folder_with_display_identity() 
         root = Path(temp)
         write_review_source_fixture(root)
 
-        files = import_source_service.handle_import_source_files(root)["files"]
+        files = list_import_sources(root)["files"]
 
     by_filename = {item["filename"]: item for item in files}
     reviewed = by_filename["edited-review-copy"]
@@ -648,6 +662,40 @@ def test_source_import_lists_valid_edited_review_folder_with_display_identity() 
     assert reviewed["filename"] == "edited-review-copy"
     assert reviewed["review_folder_id"] == REVIEW_FOLDER_ID
     assert reviewed["document_count"] == 2
+
+
+def test_edited_review_source_outside_staging_remains_blocked() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        staged = write_review_source_fixture(root)
+        paths = configured_workspace_paths(root)
+        selected = paths.root.parent / "projects/review-source"
+        selected.mkdir(parents=True)
+        moved = selected / staged.name
+        shutil.move(staged, moved)
+
+        listing = list_import_sources(root, "projects/review-source")
+        candidate = listing["candidates"][0]
+        with pytest.raises(
+            ValueError,
+            match="must be selected from data-sharing/import-staging",
+        ):
+            docs_management_import_service.handle_import_source(
+                root,
+                {
+                    "scope": "library",
+                    "source_directory": "projects/review-source",
+                    "staged_filename": moved.name,
+                },
+                dry_run=False,
+            )
+
+    assert candidate["candidate_kind"] == "edited_review_source"
+    assert candidate["validation_state"] == "blocked"
+    assert candidate["disabled_reason"] == (
+        "trusted_source_requires_import_staging"
+    )
+    assert candidate["path"] == "projects/review-source/edited-review-copy"
 
 
 def test_app_level_candidate_projection_is_global_body_free_and_recognizer_first() -> None:
@@ -688,7 +736,7 @@ def test_app_level_candidate_projection_is_global_body_free_and_recognizer_first
             encoding="utf-8",
         )
 
-        payload = import_source_service.handle_import_source_files(root)
+        payload = list_import_sources(root)
 
     candidates = {
         item["filename"]: item
@@ -788,7 +836,7 @@ def test_app_level_candidate_projection_keeps_safe_blocked_package_diagnostics()
             folder_id=old_folder_id,
         )
 
-        payload = import_source_service.handle_import_source_files(root)
+        payload = list_import_sources(root)
 
     candidates = {
         item["filename"]: item
@@ -900,7 +948,7 @@ def test_source_import_blocks_invalid_edited_review_folders(
                 staging_root=paths.import_staging,
                 metadata_root=paths.meta,
             )
-        files = import_source_service.handle_import_source_files(root)["files"]
+        files = list_import_sources(root)["files"]
 
     assert staged_folder not in {
         item["filename"]
@@ -939,6 +987,9 @@ def test_source_import_rejects_review_file_and_plans_folder_before_generic_markd
                 workspace_root=paths.root,
                 metadata_root=paths.meta,
                 destination=destination,
+                projects_base=paths.root.parent,
+                source_directory="data-sharing/import-staging",
+                trusted_sources_allowed=True,
             )
         preview = import_source_service.handle_import_source(
             root,
@@ -953,6 +1004,9 @@ def test_source_import_rejects_review_file_and_plans_folder_before_generic_markd
             workspace_root=paths.root,
             metadata_root=paths.meta,
             destination=destination,
+            projects_base=paths.root.parent,
+            source_directory="data-sharing/import-staging",
+            trusted_sources_allowed=True,
         )
 
     assert preview["collection"] is True
@@ -1357,7 +1411,7 @@ def test_edited_review_sub_scope_preview_apply_and_discovery_are_exact(
             root / "site/assets/data/docs/scopes/library/tags"
         )
 
-        listing = import_source_service.handle_import_source_files(root)
+        listing = list_import_sources(root)
         assert public_projection.exists() is False
         preview = reviewed_sub_scope_preview(root, staged_folder.name)
         assert public_projection.exists() is False
@@ -1677,7 +1731,7 @@ def test_edited_review_scope_and_analysis_tags_round_trip_render_end_to_end(
         )["payload"]
         shutil.copytree(scope_retained, scope_staged, dirs_exist_ok=True)
 
-        scope_listing = import_source_service.handle_import_source_files(root)
+        scope_listing = list_import_sources(root)
         scope_preview = reviewed_scope_preview(root, scope_staged.name)
         scope_apply = reviewed_scope_apply(
             root,
@@ -1729,12 +1783,13 @@ def test_edited_review_scope_and_analysis_tags_round_trip_render_end_to_end(
         )["payload"]
         shutil.copytree(child_retained, child_staged, dirs_exist_ok=True)
 
-        child_listing = import_source_service.handle_import_source_files(root)
+        child_listing = list_import_sources(root)
         child_preview = docs_management_import_service.handle_import_source(
             root,
             {
                 "scope": "analysis",
                 "sub_scope": "tags",
+                "source_directory": "data-sharing/import-staging",
                 "staged_filename": child_staged.name,
                 "preview_only": True,
             },
@@ -1747,6 +1802,7 @@ def test_edited_review_scope_and_analysis_tags_round_trip_render_end_to_end(
             {
                 "scope": "analysis",
                 "sub_scope": "tags",
+                "source_directory": "data-sharing/import-staging",
                 "staged_filename": child_staged.name,
                 "preview_only": False,
                 "confirm": True,
@@ -1770,7 +1826,7 @@ def test_edited_review_scope_and_analysis_tags_round_trip_render_end_to_end(
         child_front_matter, _child_body = docs_source_model.parse_source(
             child_targets["tag-a"],
         )
-        final_listing = import_source_service.handle_import_source_files(root)
+        final_listing = list_import_sources(root)
 
         assert scope_build["built"] is True
         assert "Edited reviewed body." in scope_review_payload["content_html"]
@@ -1844,7 +1900,7 @@ def test_supported_documents_collection_registers_before_generic_json_fallback()
         )
         write_staged(root, "ordinary.json", {"kind": "ordinary-attachment"})
 
-        files = import_source_service.handle_import_source_files(root)["files"]
+        files = list_import_sources(root)["files"]
 
     by_filename = {item["filename"]: item for item in files}
     assert by_filename["reviewed-documents.jsonl"]["source_format"] == "data_sharing_documents"
@@ -1863,14 +1919,15 @@ def test_source_import_ignores_repo_local_staging_and_rejects_traversal() -> Non
         outside.write_text("# Outside\n", encoding="utf-8")
         (paths.import_staging / "linked.md").symlink_to(outside)
 
-        payload = import_source_service.handle_import_source_files(root)
-        with pytest.raises(ValueError, match="configured import staging root"):
+        payload = list_import_sources(root)
+        with pytest.raises(ValueError, match="selected source directory"):
             docs_import_preview.resolve_staged_import_source(paths.import_staging, "../outside.md")
         with pytest.raises(ValueError, match="must not be symlinks"):
             docs_import_preview.resolve_staged_import_source(paths.import_staging, "linked.md")
 
     assert payload["available"] is True
-    assert payload["staging_root"] == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging"
+    assert payload["staging_root"] == "data-sharing/import-staging"
+    assert payload["source_directory"] == "data-sharing/import-staging"
     assert [item["filename"] for item in payload["files"]] == ["external.md"]
 
 
@@ -1882,13 +1939,11 @@ def test_source_import_listing_reports_unavailable_workspace(
         root = Path(temp)
         monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(tmp_path / "missing-projects"))
 
-        payload = import_source_service.handle_import_source_files(root)
-
-    assert payload["ok"] is True
-    assert payload["available"] is False
-    assert payload["staging_root"] == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing"
-    assert payload["files"] == []
-    assert "does not exist" in payload["message"]
+        with pytest.raises(
+            ValueError,
+            match="DOTLINEFORM_PROJECTS_BASE_DIR must identify an existing directory",
+        ):
+            list_import_sources(root)
 
 
 def test_source_import_listing_reports_missing_configured_staging_root() -> None:
@@ -1897,11 +1952,8 @@ def test_source_import_listing_reports_missing_configured_staging_root() -> None
         paths = configured_workspace_paths(root)
         paths.import_staging.rmdir()
 
-        payload = import_source_service.handle_import_source_files(root)
-
-    assert payload["available"] is False
-    assert payload["files"] == []
-    assert "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging" in payload["message"]
+        with pytest.raises(FileNotFoundError, match="source_directory does not exist"):
+            list_import_sources(root)
 
 def test_source_import_previews_validate_with_python_renderer() -> None:
     with make_repo() as temp:

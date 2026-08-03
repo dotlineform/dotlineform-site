@@ -253,7 +253,10 @@ def test_html_import_reports_role_marked_interactive_assets_in_preview_only() ->
                 {"scope": "library", "staged_filename": "worksheet.html", "preview_only": True},
                 dry_run=False,
             )
-            files = import_source_service.handle_import_source_files(root)["files"]
+            files = import_source_service.handle_import_source_files(
+                root,
+                source_directory="data-sharing/import-staging",
+            )["files"]
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
             docs_import_preview.validate_markdown_preview = original_validation

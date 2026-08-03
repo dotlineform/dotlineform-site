@@ -769,7 +769,10 @@ def test_sub_scope_written_package_is_reviewable_but_blocked_from_import() -> No
             )[0]
             for record in review["source_files"]
         }
-        import_files = import_source_service.handle_import_source_files(repo_root)
+        import_files = import_source_service.handle_import_source_files(
+            repo_root,
+            source_directory="data-sharing/import-staging",
+        )
         source_before = (
             repo_root / "docs-viewer/scopes/library/source/documents/alpha.md"
         ).read_text(encoding="utf-8")
@@ -798,6 +801,9 @@ def test_sub_scope_written_package_is_reviewable_but_blocked_from_import() -> No
                     repo_root,
                     scope="library",
                 ),
+                projects_base=paths.root.parent,
+                source_directory="data-sharing/import-staging",
+                trusted_sources_allowed=True,
             )
         source_after = (
             repo_root / "docs-viewer/scopes/library/source/documents/alpha.md"
@@ -938,7 +944,10 @@ def test_opted_in_sub_scope_projects_importable_package_and_exact_listing() -> N
             metadata_root=paths.meta,
             required_capability=RETURN_IMPORT_CAPABILITY,
         )
-        import_files = import_source_service.handle_import_source_files(repo_root)
+        import_files = import_source_service.handle_import_source_files(
+            repo_root,
+            source_directory="data-sharing/import-staging",
+        )
         mismatch = parse_staged_import(
             repo_root=repo_root,
             scope="library",
@@ -1201,7 +1210,8 @@ def test_review_rejects_legacy_single_capability_metadata() -> None:
 
         returned = service.returned_payload(repo_root, {"scope": ["library"]})
         import_listing = import_source_service.handle_import_source_files(
-            repo_root
+            repo_root,
+            source_directory="data-sharing/import-staging",
         )
         review = service.review_returned(
             repo_root,

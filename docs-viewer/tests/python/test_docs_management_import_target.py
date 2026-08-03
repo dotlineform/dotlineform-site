@@ -94,6 +94,7 @@ def test_import_handler_preview_freezes_child_destination(
         {
             "scope": "analysis",
             "sub_scope": "tags",
+            "source_directory": "data-sharing/import-staging",
             "staged_filename": "ordinary.md",
             "preview_only": True,
         },

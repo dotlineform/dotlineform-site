@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-551f32ede6274f557813b57f2508c369",
-    "generated_at_utc": "2026-08-03T11:00:27Z",
+    "version": "blake2b-8a48355a1d8a34ea75ad12e4336815e9",
+    "generated_at_utc": "2026-08-03T11:37:14Z",
     "count": 251
   },
   "entries": [
@@ -3845,10 +3845,10 @@
       "kind": "doc",
       "title": "IFS-1 — Docs Import Folder Source Selection Delivery",
       "href": "/docs/?scope=studio&doc=d-20260803-113717-fd92bc",
-      "last_updated": "2026-08-03 12:00:27",
+      "last_updated": "2026-08-03 12:37:05",
       "parent_id": "d-20260801-190502-6927fb",
       "parent_title": "Docs Import Folder Source Selection",
-      "display_meta": "2026-08-03 12:00:27 • Docs Import Folder Source Selection",
+      "display_meta": "2026-08-03 12:37:05 • Docs Import Folder Source Selection",
       "search_terms": [
         "ifs-1 — docs import folder source selection delivery",
         "ifs",
@@ -3860,16 +3860,16 @@
         "selection",
         "delivery",
         "docs import folder source selection",
-        "2026-08-03 12:00:27",
+        "2026-08-03 12:37:05",
         "2026",
         "08",
         "03",
         "12",
-        "00",
-        "27",
+        "37",
+        "05",
         "d-20260803-113717-fd92bc"
       ],
-      "search_text": "ifs-1 — docs import folder source selection delivery ifs 1 docs import folder source selection delivery docs import folder source selection 2026-08-03 12:00:27 2026 08 03 12 00 27 d-20260803-113717-fd92bc"
+      "search_text": "ifs-1 — docs import folder source selection delivery ifs 1 docs import folder source selection delivery docs import folder source selection 2026-08-03 12:37:05 2026 08 03 12 37 05 d-20260803-113717-fd92bc"
     },
     {
       "id": "d-20260801-095819-30103c",

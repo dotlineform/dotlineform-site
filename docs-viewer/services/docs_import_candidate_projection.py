@@ -15,6 +15,8 @@ from docs_document_packages.returned_common import (
 from docs_document_packages.returned_parser import parse_staged_import
 from docs_import_document_package import (
     COLLECTION_SOURCE_FORMAT,
+    EXPORT_ONLY_COLLECTION_SOURCE_FORMAT,
+    document_package_source_format,
 )
 from docs_import_preview import list_staged_import_source_files
 from docs_import_review_source_folder import (
@@ -27,6 +29,7 @@ from docs_management_document_target import (
     ManagedDocumentCollection,
     resolve_managed_document_collection,
 )
+from studio.shared.python.projects_directories import projects_path_marker
 
 
 ORDINARY_CANDIDATE_KIND = "ordinary_document"
@@ -35,6 +38,11 @@ EDITED_REVIEW_SOURCE_CANDIDATE_KIND = "edited_review_source"
 ORDINARY_CONTEXT_TARGET_MODE = "ordinary_context"
 MANIFEST_COLLECTION_TARGET_MODE = "manifest_collection"
 NO_TARGET_MODE = "none"
+TRUSTED_SOURCE_STAGING_CODE = "trusted_source_requires_import_staging"
+TRUSTED_SOURCE_STAGING_MESSAGE = (
+    "Trusted document packages and edited review sources must be selected from "
+    "data-sharing/import-staging."
+)
 
 
 def _clean_text(value: Any) -> str:
@@ -123,6 +131,35 @@ def _project_ordinary_candidate(record: dict[str, Any]) -> dict[str, Any]:
             target_mode=ORDINARY_CONTEXT_TARGET_MODE,
         )
     return _ordinary_candidate(record)
+
+
+def _trusted_source_staging_block(
+    record: dict[str, Any],
+    *,
+    candidate_kind: str,
+    source_format: str,
+) -> dict[str, Any]:
+    return _blocked_candidate(
+        record,
+        candidate_kind=candidate_kind,
+        source_format=source_format,
+        code=TRUSTED_SOURCE_STAGING_CODE,
+        message=TRUSTED_SOURCE_STAGING_MESSAGE,
+        target_mode=MANIFEST_COLLECTION_TARGET_MODE,
+    )
+
+
+def _source_record(
+    path: Path,
+    projects_base: Path,
+    ordinary_record: dict[str, Any] | None,
+) -> dict[str, Any]:
+    if ordinary_record is not None:
+        return ordinary_record
+    return {
+        "filename": path.name,
+        "path": projects_path_marker(path, projects_base),
+    }
 
 
 def _collection_label(collection: ManagedDocumentCollection) -> str:
@@ -371,14 +408,17 @@ def list_import_candidates(
     staging_root: Path,
     workspace_root: Path,
     metadata_root: Path,
+    projects_base: Path | None = None,
+    trusted_sources_allowed: bool = True,
 ) -> list[dict[str, Any]]:
     """List all claimed document candidates without projecting source bodies."""
 
+    source_projects_base = (projects_base or workspace_root).resolve()
     ordinary_records = {
         str(record.get("filename") or ""): record
         for record in list_staged_import_source_files(
             staging_root,
-            workspace_root,
+            source_projects_base,
         )
     }
     candidates: list[dict[str, Any]] = []
@@ -409,6 +449,15 @@ def list_import_candidates(
                     )
                 continue
             if claimed_review_folder:
+                if not trusted_sources_allowed:
+                    candidates.append(
+                        _trusted_source_staging_block(
+                            _source_record(path, source_projects_base, ordinary_record),
+                            candidate_kind=EDITED_REVIEW_SOURCE_CANDIDATE_KIND,
+                            source_format=EDITED_REVIEW_SOURCE_FORMAT,
+                        )
+                    )
+                    continue
                 try:
                     edited = recognize_edited_review_source_folder(
                         repo_root,
@@ -434,7 +483,7 @@ def list_import_candidates(
                                 "<repository>",
                             )
                             .replace(
-                                str(workspace_root.resolve()),
+                                str(source_projects_base),
                                 "$DOTLINEFORM_PROJECTS_BASE_DIR",
                             )
                         )
@@ -465,7 +514,13 @@ def list_import_candidates(
         if is_review_source_markdown(path):
             if ordinary_record is not None:
                 candidates.append(
-                    _blocked_candidate(
+                    _trusted_source_staging_block(
+                        ordinary_record,
+                        candidate_kind=EDITED_REVIEW_SOURCE_CANDIDATE_KIND,
+                        source_format=EDITED_REVIEW_SOURCE_FORMAT,
+                    )
+                    if not trusted_sources_allowed
+                    else _blocked_candidate(
                         ordinary_record,
                         candidate_kind=EDITED_REVIEW_SOURCE_CANDIDATE_KIND,
                         source_format=EDITED_REVIEW_SOURCE_FORMAT,
@@ -479,6 +534,24 @@ def list_import_candidates(
                 )
             continue
         if path.suffix.lower() in package_metadata.SUPPORTED_EXTENSIONS:
+            if not trusted_sources_allowed:
+                source_format = document_package_source_format(
+                    repo_root,
+                    path,
+                    metadata_root=metadata_root,
+                )
+                if source_format in {
+                    COLLECTION_SOURCE_FORMAT,
+                    EXPORT_ONLY_COLLECTION_SOURCE_FORMAT,
+                }:
+                    candidates.append(
+                        _trusted_source_staging_block(
+                            _source_record(path, source_projects_base, ordinary_record),
+                            candidate_kind=RETURNED_PACKAGE_CANDIDATE_KIND,
+                            source_format=source_format,
+                        )
+                    )
+                continue
             returned = _returned_package_candidate(
                 repo_root,
                 path,
@@ -500,5 +573,7 @@ __all__ = [
     "ORDINARY_CANDIDATE_KIND",
     "ORDINARY_CONTEXT_TARGET_MODE",
     "RETURNED_PACKAGE_CANDIDATE_KIND",
+    "TRUSTED_SOURCE_STAGING_CODE",
+    "TRUSTED_SOURCE_STAGING_MESSAGE",
     "list_import_candidates",
 ]

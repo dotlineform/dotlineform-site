@@ -8,7 +8,10 @@ from pathlib import Path
 from typing import Any, Callable, Dict
 
 from docs_import_common import is_interactive_html_import_asset
-from docs_import_candidate_projection import list_import_candidates
+from docs_import_candidate_projection import (
+    TRUSTED_SOURCE_STAGING_MESSAGE,
+    list_import_candidates,
+)
 from docs_import_content import CONTENT_FORMAT_MARKDOWN, CONTENT_INTENT_REPLACE, ImportContent
 from docs_document_location import (
     management_collection_viewer_url,
@@ -41,6 +44,7 @@ from docs_import_preview import (
 )
 from docs_import_review_source_folder import (
     EDITED_REVIEW_SOURCE_FORMAT,
+    is_edited_review_source_candidate,
     is_review_source_markdown,
     recognize_edited_review_source_folder,
 )
@@ -63,7 +67,12 @@ from docs_source_model import (
     allocate_doc_id,
     current_doc_timestamp,
 )
-from docs_document_packages.workspace import configured_workspace_paths, marker_path, workspace_status
+from docs_document_packages.workspace import configured_workspace_paths
+from studio.shared.python.projects_directories import (
+    PROJECTS_ROOT_MARKER,
+    ProjectsDirectory,
+    resolve_projects_directory,
+)
 
 
 LogEvent = Callable[[Path, str, Dict[str, Any]], None]
@@ -118,27 +127,35 @@ def allocate_ordinary_import_doc_id(
     raise RuntimeError("could not allocate an available ordinary import document identity")
 
 
-def handle_import_source_files(repo_root: Path) -> Dict[str, Any]:
-    status = workspace_status(repo_root, required_paths=("import_staging",))
-    if not status["available"]:
-        return {
-            "ok": True,
-            "available": False,
-            "staging_root": status["root"],
-            "message": status["message"],
-            "candidates": [],
-            "files": [],
-        }
+def resolve_import_source_directory(source_directory: str) -> ProjectsDirectory:
+    source = resolve_projects_directory(source_directory)
+    if source.marker == PROJECTS_ROOT_MARKER:
+        raise ValueError(
+            "source_directory must identify a selectable directory below the "
+            "Projects base",
+        )
+    return source
+
+
+def handle_import_source_files(
+    repo_root: Path,
+    *,
+    source_directory: str,
+) -> Dict[str, Any]:
+    source = resolve_import_source_directory(source_directory)
     workspace_paths = configured_workspace_paths(repo_root)
+    trusted_sources_allowed = (
+        source.path == workspace_paths.import_staging.resolve()
+    )
     registered_source_formats: dict[str, str] = {}
     blocked_package_filenames: set[str] = set()
     edited_review_sources: dict[str, dict[str, Any]] = {}
-    for path in workspace_paths.import_staging.iterdir():
+    for path in source.path.iterdir():
         try:
             edited_review_source = recognize_edited_review_source_folder(
                 repo_root,
                 candidate=path,
-                staging_root=workspace_paths.import_staging,
+                staging_root=source.path,
                 metadata_root=workspace_paths.meta,
             )
         except (FileNotFoundError, OSError, ValueError):
@@ -160,20 +177,23 @@ def handle_import_source_files(repo_root: Path) -> Dict[str, Any]:
         elif source_format:
             registered_source_formats[path.name] = source_format
     files = list_staged_import_source_files(
-        workspace_paths.import_staging,
-        workspace_paths.root,
+        source.path,
+        source.projects_base,
         registered_source_formats=registered_source_formats,
     )
     return {
         "ok": True,
         "available": True,
-        "staging_root": marker_path(workspace_paths.import_staging, workspace_root=workspace_paths.root),
+        "staging_root": source.marker,
+        "source_directory": source.marker,
         "message": "",
         "candidates": list_import_candidates(
             repo_root,
-            staging_root=workspace_paths.import_staging,
+            staging_root=source.path,
             workspace_root=workspace_paths.root,
             metadata_root=workspace_paths.meta,
+            projects_base=source.projects_base,
+            trusted_sources_allowed=trusted_sources_allowed,
         ),
         "files": [
             {
@@ -199,6 +219,9 @@ def handle_import_source(
     workspace_root: Path,
     metadata_root: Path,
     destination: ManagedDocumentCollection,
+    projects_base: Path,
+    source_directory: str,
+    trusted_sources_allowed: bool,
 ) -> Dict[str, Any]:
     scope = destination.scope
     sub_scope = destination.sub_scope
@@ -206,7 +229,14 @@ def handle_import_source(
     include_prompt_meta = bool(body.get("include_prompt_meta"))
     confirm_interactive_html_overwrite = bool(body.get("confirm_interactive_html_overwrite"))
     preview_only = bool(body.get("preview_only"))
+    source_projects_base = projects_base.resolve()
+    accepted_source_directory = source_directory
     source_path = resolve_staged_import_source(staging_root, staged_filename)
+    if (
+        not trusted_sources_allowed
+        and is_edited_review_source_candidate(source_path)
+    ):
+        raise ValueError(TRUSTED_SOURCE_STAGING_MESSAGE)
     edited_review_source = recognize_edited_review_source_folder(
         repo_root,
         candidate=source_path,
@@ -214,6 +244,8 @@ def handle_import_source(
         metadata_root=metadata_root,
     )
     if edited_review_source is not None:
+        if not trusted_sources_allowed:
+            raise ValueError(TRUSTED_SOURCE_STAGING_MESSAGE)
         if sub_scope and not getattr(
             destination.document_config,
             "supports_return_import",
@@ -245,6 +277,7 @@ def handle_import_source(
                 ),
             )
             result["viewer_url"] = destination_url
+            result["source_directory"] = accepted_source_directory
             return result
         plan = plan_edited_review_source_collection(
             repo_root,
@@ -265,6 +298,7 @@ def handle_import_source(
                 "scope": scope,
                 **({"sub_scope": sub_scope} if sub_scope else {}),
                 "staged_filename": staged_filename,
+                "source_directory": accepted_source_directory,
                 "source_format": EDITED_REVIEW_SOURCE_FORMAT,
                 "records": payload["counts"]["records"],
                 "collisions": payload["counts"]["collisions"],
@@ -274,8 +308,11 @@ def handle_import_source(
             },
         )
         payload["dry_run"] = dry_run
+        payload["source_directory"] = accepted_source_directory
         return payload
     if is_review_source_markdown(source_path):
+        if not trusted_sources_allowed:
+            raise ValueError(TRUSTED_SOURCE_STAGING_MESSAGE)
         raise ValueError(
             "A review source cannot be imported by itself. Stage and select the "
             "complete edited review source folder.",
@@ -289,6 +326,14 @@ def handle_import_source(
             and getattr(destination.document_config, "supports_return_import", False)
         ),
     )
+    if (
+        not trusted_sources_allowed
+        and source_format in {
+            COLLECTION_SOURCE_FORMAT,
+            EXPORT_ONLY_COLLECTION_SOURCE_FORMAT,
+        }
+    ):
+        raise ValueError(TRUSTED_SOURCE_STAGING_MESSAGE)
     if source_format == EXPORT_ONLY_COLLECTION_SOURCE_FORMAT:
         raise ValueError(
             "Export-only document packages cannot enter Docs Import."
@@ -327,6 +372,7 @@ def handle_import_source(
                 ),
             )
             result["viewer_url"] = destination_url
+            result["source_directory"] = accepted_source_directory
             return result
         plan = plan_document_package_collection(
             repo_root,
@@ -344,6 +390,7 @@ def handle_import_source(
             {
                 "scope": scope,
                 "staged_filename": staged_filename,
+                "source_directory": accepted_source_directory,
                 "source_format": source_format,
                 "records": payload["counts"]["records"],
                 "collisions": payload["counts"]["collisions"],
@@ -354,6 +401,7 @@ def handle_import_source(
             },
         )
         payload["dry_run"] = dry_run
+        payload["source_directory"] = accepted_source_directory
         return payload
     if is_interactive_html_import_asset(source_path):
         raise ValueError("interactive HTML script files cannot be selected as the primary import source")
@@ -361,7 +409,7 @@ def handle_import_source(
     preview = generate_import_preview(
         repo_root,
         staging_root=staging_root,
-        workspace_root=workspace_root,
+        workspace_root=source_projects_base,
         source_path=source_path,
         scope=scope,
         include_prompt_meta=include_prompt_meta,
@@ -372,7 +420,12 @@ def handle_import_source(
         preview["sub_scope"] = sub_scope
     private_media_source_markdown = str(preview.pop("_inline_media_source_markdown", "") or "")
     preview.pop("_inline_svg_source_markup", None)
-    interactive_plans = interactive_html_asset_plans(repo_root, staging_root, workspace_root, scope)
+    interactive_plans = interactive_html_asset_plans(
+        repo_root,
+        staging_root,
+        source_projects_base,
+        scope,
+    )
     if interactive_plans:
         preview["interactive_html_plans"] = interactive_plans
         for interactive_plan in interactive_plans:
@@ -395,6 +448,7 @@ def handle_import_source(
         preview_event = {
             "scope": scope,
             "staged_filename": staged_filename,
+            "source_directory": accepted_source_directory,
             "source_format": preview.get("source_format"),
             "include_prompt_meta": include_prompt_meta,
             "proposed_doc_id": preview["proposed_doc_id"],
@@ -413,6 +467,7 @@ def handle_import_source(
             "ok": True,
             "scope": scope,
             "staged_filename": staged_filename,
+            "source_directory": accepted_source_directory,
             "include_prompt_meta": include_prompt_meta,
             "preview_only": True,
             "requires_interactive_html_confirmation": requires_interactive_html_confirmation,
@@ -450,12 +505,18 @@ def handle_import_source(
         retarget_markdown_package_media_plans(
             repo_root,
             staging_root,
-            workspace_root,
+            source_projects_base,
             source_path,
             preview,
             scope,
         )
-    retarget_inline_media_plans(repo_root, staging_root, workspace_root, preview, scope)
+    retarget_inline_media_plans(
+        repo_root,
+        staging_root,
+        source_projects_base,
+        preview,
+        scope,
+    )
     title = str(preview.get("title") or "Imported Doc").strip()
     record = ImportContent(
         source_kind="staged-source",
@@ -481,7 +542,7 @@ def handle_import_source(
     )
     media_context = ImportDocumentMediaContext(
         staging_root=staging_root,
-        workspace_root=workspace_root,
+        workspace_root=source_projects_base,
         source_path=source_path,
         include_prompt_meta=include_prompt_meta,
         interactive_html_plans=tuple(interactive_plans),
@@ -523,6 +584,7 @@ def handle_import_source(
         staged_filename,
         include_prompt_meta=include_prompt_meta,
     )
+    event_details["source_directory"] = accepted_source_directory
     dependencies.log_event(repo_root, event_name, event_details)
     result = import_document_result(
         repo_root,
@@ -541,6 +603,7 @@ def handle_import_source(
         "ok": True,
         "scope": scope,
         "staged_filename": staged_filename,
+        "source_directory": accepted_source_directory,
         "include_prompt_meta": include_prompt_meta,
         "preview_only": False,
         "requires_interactive_html_confirmation": False,

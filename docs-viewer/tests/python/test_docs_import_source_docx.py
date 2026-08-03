@@ -32,7 +32,7 @@ def _preview(root: Path, filename: str) -> dict[str, object]:
     return docs_import_preview.generate_import_preview(
         root,
         staging_root=paths.import_staging,
-        workspace_root=paths.root,
+        workspace_root=paths.root.parent,
         source_path=source_path,
         scope="library",
         include_prompt_meta=False,
@@ -50,7 +50,7 @@ def test_docx_preview_uses_one_semantic_style_map_and_existing_html_converter() 
     assert preview["source_format"] == "docx"
     assert preview["title"] == "A Word Title"
     assert preview["title_source"] == "docx-title"
-    assert preview["source_path"] == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/semantic-word.docx"
+    assert preview["source_path"] == "data-sharing/import-staging/semantic-word.docx"
     assert markdown.startswith("# A Word Title\n\nA useful subtitle\n\n## First Section")
     assert "Body with **bold** and *italic* plus [a link](https://example.com/path)." in markdown
     assert "- First item\n- Second item" in markdown

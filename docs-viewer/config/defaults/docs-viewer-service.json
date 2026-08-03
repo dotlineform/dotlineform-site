@@ -42,6 +42,7 @@
     "source_body": "/docs/source",
     "metadata": "/docs/metadata",
     "source_rebuild": "/docs/source/rebuild",
+    "import_source_directories": "/docs/import-source-directories",
     "import_source_files": "/docs/import-source-files",
     "open_source": "/docs/open-source",
     "broken_links": "/docs/broken-links",

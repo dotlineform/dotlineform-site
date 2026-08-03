@@ -94,6 +94,14 @@ def test_staged_media_routes_are_management_owned() -> None:
     assert routes.STAGED_MEDIA_APPLY_PATH in routes.POST_PATHS
 
 
+def test_import_source_directory_route_is_management_owned() -> None:
+    assert routes.IMPORT_SOURCE_DIRECTORIES_PATH == "/docs/import-source-directories"
+    assert routes.IMPORT_SOURCE_DIRECTORIES_PATH in routes.GET_PATHS
+    config_path = REPO_ROOT / "docs-viewer/config/defaults/docs-viewer-service.json"
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    assert config["routes"]["import_source_directories"] == routes.IMPORT_SOURCE_DIRECTORIES_PATH
+
+
 def test_diagram_source_routes_are_management_owned() -> None:
     assert routes.DIAGRAM_SOURCES_PATH in routes.GET_PATHS
     assert routes.OPEN_DIAGRAM_SOURCE_PATH in routes.POST_PATHS
@@ -133,6 +141,7 @@ def main() -> None:
     test_static_html_export_routes_are_management_owned()
     test_document_transfer_routes_are_management_owned_and_singular_copy_is_retired()
     test_staged_media_routes_are_management_owned()
+    test_import_source_directory_route_is_management_owned()
     test_diagram_source_routes_are_management_owned()
     test_local_target_route_is_management_owned()
     test_semantic_token_usage_route_is_management_owned()

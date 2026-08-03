@@ -24,7 +24,7 @@ from docs_import_common import (
 )
 from docs_import_media import build_media_plan
 from docs_scope_config import load_docs_scope_configs, published_media_config
-from docs_document_packages.workspace import marker_path
+from studio.shared.python.projects_directories import projects_path_marker
 
 def retarget_markdown_package_media_plans(
     repo_root: Path,
@@ -184,7 +184,7 @@ def package_source_original_path(
             raise ValueError("Package provenance label requires package_root")
         relative = source_path.resolve().relative_to(package_root.resolve()).as_posix()
         return f"{normalize_package_provenance_label(provenance_label)}/{relative}"
-    return marker_path(source_path, workspace_root=workspace_root)
+    return projects_path_marker(source_path, workspace_root)
 
 
 def next_package_media_filename(

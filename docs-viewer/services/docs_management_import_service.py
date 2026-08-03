@@ -47,17 +47,28 @@ def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
         repo_root,
         ordinary_import_target_request(body),
     )
-    status = workspace_status(repo_root, required_paths=("import_staging",))
+    source_directory = str(body.get("source_directory") or "")
+    if not source_directory.strip():
+        raise ValueError("source_directory is required")
+    source = import_source_service.resolve_import_source_directory(source_directory)
+    status = workspace_status(repo_root)
     if not status["available"]:
         raise ValueError(status["message"])
     workspace_paths = configured_workspace_paths(repo_root)
+    source_body = dict(body)
+    source_body.pop("source_directory", None)
     return import_source_service.handle_import_source(
         repo_root,
-        {**body, "scope": target.scope},
+        {**source_body, "scope": target.scope},
         dry_run,
         import_source_dependencies(),
-        staging_root=workspace_paths.import_staging,
+        staging_root=source.path,
         workspace_root=workspace_paths.root,
         metadata_root=workspace_paths.meta,
         destination=target,
+        projects_base=source.projects_base,
+        source_directory=source.marker,
+        trusted_sources_allowed=(
+            source.path == workspace_paths.import_staging.resolve()
+        ),
     )
