@@ -817,8 +817,23 @@
         },
         {
           "doc_id": "d-20260801-190502-6927fb",
-          "title": "IFS-1 — Docs Import Folder Source Selection Delivery",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-190502-6927fb.json"
+          "title": "Docs Import Folder Source Selection",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-190502-6927fb.json",
+          "ui_status": "proposed",
+          "children": [
+            {
+              "doc_id": "d-20260803-113716-8ef8e5",
+              "title": "Docs Import Folder Source Selection Concept And Architecture",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260803-113716-8ef8e5.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "d-20260803-113717-fd92bc",
+              "title": "IFS-1 — Docs Import Folder Source Selection Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260803-113717-fd92bc.json",
+              "ui_status": "proposed"
+            }
+          ]
         },
         {
           "doc_id": "d-20260801-095819-30103c",
@@ -1396,5 +1411,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-02T21:58:35Z"
+  "generated_at": "2026-08-03T10:40:25Z"
 }
