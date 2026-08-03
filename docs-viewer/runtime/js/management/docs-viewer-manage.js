@@ -32,6 +32,11 @@ import {
   createCatalogueTokenMainViewControlHandlers
 } from "./source-editor/catalogue-token-contribution.js";
 import {
+  DIRECTIVE_ACTIONS_CONTROL_ID,
+  createDirectiveActionsMainViewControlHandlers,
+  directiveActionsControlRenderer
+} from "./source-editor/directive-actions.js";
+import {
   mountSemanticTokenTargetLinks
 } from "./source-editor/semantic-token-targets.js";
 import {
@@ -54,7 +59,10 @@ startDocsViewerManageApp({
     {},
     createDocsViewerManagementAppControlRenderers(),
     createDocsViewerManagementControlRenderers(),
-    { [CATALOGUE_TOKEN_CONTROL_ID]: catalogueTokenControlRenderer }
+    {
+      [CATALOGUE_TOKEN_CONTROL_ID]: catalogueTokenControlRenderer,
+      [DIRECTIVE_ACTIONS_CONTROL_ID]: directiveActionsControlRenderer
+    }
   ),
   createSourceAdapter: createDocsViewerManagementSourceAdapter,
   diagramDetailAdapter: docsViewerDiagramDetailAdapter,
@@ -65,9 +73,13 @@ startDocsViewerManageApp({
     "rendered-document": "metadata-info"
   },
   inlineMermaidAdapter: docsViewerInlineMermaidAdapter,
-  mainViewControlHandlerContributions: createCatalogueTokenMainViewControlHandlers(),
+  mainViewControlHandlerContributions: Object.assign(
+    {},
+    createCatalogueTokenMainViewControlHandlers(),
+    createDirectiveActionsMainViewControlHandlers()
+  ),
   managementShellRenderers: createDocsViewerManagementShellRenderers(),
   mountDocumentExtras: mountDocsViewerManageExtras,
-  sourceEditorActionControlIds: [CATALOGUE_TOKEN_CONTROL_ID],
+  sourceEditorActionControlIds: [CATALOGUE_TOKEN_CONTROL_ID, DIRECTIVE_ACTIONS_CONTROL_ID],
   sourceEditorInfoViewResolver: createCatalogueTokenInfoViewResolver()
 });

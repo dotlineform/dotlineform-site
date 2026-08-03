@@ -4,83 +4,83 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "d-20260803-140610-983dc5",
-      "title": "Folder Picker",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260803-140610-983dc5.json",
-      "timestamp": "2026-08-03 14:46:01",
-      "parent_id": "d-20260505-181739-bb5223",
-      "parent_title": "Shared UI"
+      "doc_id": "d-20260523-000000-bf7161",
+      "title": "Development Workflow",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260523-000000-bf7161.json",
+      "timestamp": "2026-08-03 19:53:17",
+      "parent_id": "d-20260419-000000-d2e47b",
+      "parent_title": "Dev Home"
     },
     {
-      "doc_id": "d-20260505-181739-bb5223",
-      "title": "Shared UI",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260505-181739-bb5223.json",
-      "timestamp": "2026-08-03 14:08:34"
+      "doc_id": "d-20260523-190651-7157ec",
+      "title": "Development Checklist",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260523-190651-7157ec.json",
+      "timestamp": "2026-08-03 19:52:37",
+      "parent_id": "d-20260419-000000-d2e47b",
+      "parent_title": "Dev Home"
     },
     {
-      "doc_id": "d-20260614-155753-e87844",
-      "title": "File Picker",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260614-155753-e87844.json",
-      "timestamp": "2026-08-03 14:08:12",
-      "parent_id": "d-20260505-181739-bb5223",
-      "parent_title": "Shared UI"
+      "doc_id": "d-20260802-150247-b5dffe",
+      "title": "TE-3 — Public Static Content Detail View Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-150247-b5dffe.json",
+      "timestamp": "2026-08-03 19:52:37",
+      "parent_id": "d-20260802-150245-4e7f85",
+      "parent_title": "Table Enhancements"
     },
     {
-      "doc_id": "d-20260524-214228-7247ef",
-      "title": "Source Tree Ownership",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260524-214228-7247ef.json",
-      "timestamp": "2026-08-03 14:08:12",
-      "parent_id": "d-20260331-000000-4a16b0",
-      "parent_title": "Architecture"
+      "doc_id": "d-20260802-151403-d381d6",
+      "title": "TE-4 — Managed Table Tools Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-151403-d381d6.json",
+      "timestamp": "2026-08-03 19:52:37",
+      "parent_id": "d-20260802-150245-4e7f85",
+      "parent_title": "Table Enhancements"
     },
     {
-      "doc_id": "d-20260803-113717-fd92bc",
-      "title": "IFS-1 — Docs Import Folder Source Selection Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260803-113717-fd92bc.json",
-      "timestamp": "2026-08-03 13:56:00",
-      "parent_id": "d-20260801-190502-6927fb",
-      "parent_title": "Docs Import Folder Source Selection"
+      "doc_id": "d-20260802-150248-e1461d",
+      "title": "TE-5 — Diagram Detail View Migration Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-150248-e1461d.json",
+      "timestamp": "2026-08-03 19:52:37",
+      "parent_id": "d-20260802-150245-4e7f85",
+      "parent_title": "Table Enhancements"
     },
     {
-      "doc_id": "d-20260801-190502-6927fb",
-      "title": "Docs Import Folder Source Selection",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-190502-6927fb.json",
-      "timestamp": "2026-08-03 13:55:56",
+      "doc_id": "d-20260802-153340-61863b",
+      "title": "TE-6 — Default Content Detail Presentation Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-153340-61863b.json",
+      "timestamp": "2026-08-03 19:52:37",
+      "parent_id": "d-20260802-150245-4e7f85",
+      "parent_title": "Table Enhancements"
+    },
+    {
+      "doc_id": "d-20260802-160430-34cb3b",
+      "title": "TE-7 — Table-To-SVG Publication Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-160430-34cb3b.json",
+      "timestamp": "2026-08-03 19:52:37",
+      "parent_id": "d-20260802-150245-4e7f85",
+      "parent_title": "Table Enhancements"
+    },
+    {
+      "doc_id": "d-20260428-000000-f5ff18",
+      "title": "Roadmap",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260428-000000-f5ff18.json",
+      "timestamp": "2026-08-03 19:48:25"
+    },
+    {
+      "doc_id": "d-20260802-162149-3ba013",
+      "title": "TE-2 — Table Detail Eligibility Directive Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-162149-3ba013.json",
+      "timestamp": "2026-08-03 19:48:25",
+      "parent_id": "d-20260802-150245-4e7f85",
+      "parent_title": "Table Enhancements"
+    },
+    {
+      "doc_id": "d-20260802-150245-4e7f85",
+      "title": "Table Enhancements",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-150245-4e7f85.json",
+      "timestamp": "2026-08-03 19:31:47",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260424-000000-fc8b5d",
-      "title": "Docs Import",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260424-000000-fc8b5d.json",
-      "timestamp": "2026-08-03 13:53:21",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260514-164722-3de65e",
-      "title": "Docs Import Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260514-164722-3de65e.json",
-      "timestamp": "2026-08-03 13:53:21",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260801-133317-e8eb39",
-      "title": "PRJ-2 — Projects Customisation And Apple Notes Migration Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133317-e8eb39.json",
-      "timestamp": "2026-08-03 11:40:25",
-      "parent_id": "d-20260801-095819-30103c",
-      "parent_title": "Projects"
-    },
-    {
-      "doc_id": "d-20260803-113716-8ef8e5",
-      "title": "Docs Import Folder Source Selection Concept And Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260803-113716-8ef8e5.json",
-      "timestamp": "2026-08-03 11:37:16",
-      "parent_id": "d-20260801-190502-6927fb",
-      "parent_title": "Docs Import Folder Source Selection"
     }
   ],
-  "generated_at": "2026-08-03T13:46:02Z"
+  "generated_at": "2026-08-03T18:53:17Z"
 }

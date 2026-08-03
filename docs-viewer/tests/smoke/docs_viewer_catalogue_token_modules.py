@@ -58,6 +58,9 @@ def install_modules(page: Page) -> None:
             const contribution = await import(
                 '/docs-viewer/runtime/js/management/source-editor/catalogue-token-contribution.js'
             );
+            const directiveActions = await import(
+                '/docs-viewer/runtime/js/management/source-editor/directive-actions.js'
+            );
             const registry = await import(
                 '/docs-viewer/runtime/js/management/source-editor/semantic-token-registry.js'
             );
@@ -88,6 +91,7 @@ def install_modules(page: Page) -> None:
             window.__catalogueTokenSmoke = {
                 contract,
                 contribution,
+                directiveActions,
                 documentTarget,
                 infoView,
                 managementActions,
@@ -412,6 +416,223 @@ def assert_source_adapter_captures_and_guards_range(page: Page) -> None:
         "staleRejected": True,
     }:
         raise AssertionError(f"captured source-range adapter changed: {result!r}")
+
+
+def assert_directive_actions_insertion_and_menu_contract(page: Page) -> None:
+    result = page.evaluate(
+        r"""async () => {
+            const smoke = window.__catalogueTokenSmoke;
+            const directives = smoke.directiveActions;
+            const detail = '<!-- dotlineform:table-detail -->';
+            const fixture = [
+                ['blank-before-table', 'Lead\n\n| A |', 5, 5, '', 'Lead\n' + detail + '\n\n| A |'],
+                ['table-on-insertion-line', 'Lead\n| A |', 5, 5, '', 'Lead\n' + detail + '\n\n| A |'],
+                ['ordinary-prose', 'Lead prose', 4, 4, '', 'Lead\n' + detail + '\n\n prose'],
+                ['existing-exact-comment', detail, 0, 0, '', detail + '\n\n' + detail],
+                [
+                    'existing-malformed-comment', '<!-- dotlineform:table-detail --', 0, 0, '',
+                    detail + '\n\n<!-- dotlineform:table-detail --'
+                ],
+                [
+                    'non-collapsed-selection', 'Before nerve after', 7, 12, 'nerve',
+                    'Before \n' + detail + '\n\nnerve after'
+                ],
+                ['end-of-file', 'Lead', 4, 4, '', 'Lead\n' + detail + '\n']
+            ].map(([id, source, start, end, text, expected]) => {
+                const capture = { start, end, text, revision: 0 };
+                const plan = directives.createDirectiveInsertionPlan({
+                    capture,
+                    directiveId: 'table-detail',
+                    snapshot: { revision: 0, value: source }
+                });
+                return {
+                    actual: source.slice(0, start)
+                        + plan.replacement
+                        + source.slice(end),
+                    expected,
+                    id
+                };
+            });
+            const stalePlan = directives.createDirectiveInsertionPlan({
+                capture: { start: 0, end: 0, text: '', revision: 0 },
+                directiveId: 'table-detail',
+                snapshot: { revision: 1, value: 'unchanged' }
+            });
+            const state = {
+                focusCount: 0,
+                revision: 0,
+                selection: { start: 7, end: 12 },
+                value: 'Before nerve after'
+            };
+            const adapter = {
+                captureSelection() {
+                    return {
+                        ...state.selection,
+                        revision: state.revision,
+                        text: state.value.slice(state.selection.start, state.selection.end)
+                    };
+                },
+                focus() { state.focusCount += 1; },
+                getBufferSnapshot() { return { revision: state.revision, value: state.value }; },
+                replaceCapturedRange(capture, replacement) {
+                    if (
+                        capture.revision !== state.revision
+                        || state.value.slice(capture.start, capture.end) !== capture.text
+                    ) return false;
+                    state.value = state.value.slice(0, capture.start)
+                        + replacement + state.value.slice(capture.end);
+                    state.revision += 1;
+                    return true;
+                },
+                selectCapturedRange(capture) {
+                    if (
+                        capture.revision !== state.revision
+                        || state.value.slice(capture.start, capture.end) !== capture.text
+                    ) return false;
+                    state.selection = { start: capture.start, end: capture.end };
+                    state.focusCount += 1;
+                    return true;
+                }
+            };
+            const rendered = directives.directiveActionsControlRenderer({
+                control: { state: {} },
+                document,
+                existingRoot: null
+            });
+            const controlRoot = rendered.root;
+            document.body.appendChild(controlRoot);
+            const button = rendered.interactive;
+            const menu = controlRoot.querySelector('[role="menu"]');
+            const handlers = directives.createDirectiveActionsMainViewControlHandlers();
+            const handler = handlers[directives.DIRECTIVE_ACTIONS_CONTROL_ID];
+            const services = {
+                getActiveSourceEditorContextAdapter() {
+                    return adapter;
+                }
+            };
+            function invoke(target) {
+                return handler({
+                    detail: {
+                        event: { target },
+                        eventType: 'click',
+                        target: controlRoot
+                    },
+                    sourceEditorServices: services
+                });
+            }
+
+            invoke(button);
+            invoke(controlRoot.querySelector('[data-docs-viewer-directive-action="table-detail"]'));
+            const detailInsertion = {
+                focusCount: state.focusCount,
+                menuHidden: menu.hidden,
+                selection: state.selection,
+                value: state.value
+            };
+
+            state.value = 'Lead\n| A |';
+            state.revision += 1;
+            state.selection = { start: 5, end: 5 };
+            invoke(button);
+            invoke(controlRoot.querySelector(
+                '[data-docs-viewer-directive-action="table-publish-svg"]'
+            ));
+            const svgInsertion = {
+                selected: state.value.slice(state.selection.start, state.selection.end),
+                value: state.value
+            };
+
+            state.selection = { start: 0, end: 0 };
+            invoke(button);
+            const staleValue = state.value;
+            state.revision += 1;
+            const staleResult = invoke(controlRoot.querySelector(
+                '[data-docs-viewer-directive-action="table-detail"]'
+            ));
+            const staleInsertion = {
+                menuHidden: menu.hidden,
+                result: staleResult,
+                unchanged: state.value === staleValue
+            };
+
+            invoke(button);
+            directives.directiveActionsControlRenderer({
+                control: { state: { disabled: true } },
+                document,
+                existingRoot: controlRoot
+            });
+            const disabledClosed = menu.hidden;
+
+            controlRoot.remove();
+            await new Promise(resolve => setTimeout(resolve, 0));
+
+            return {
+                actions: directives.DIRECTIVE_ACTIONS.map(action => [
+                    action.id,
+                    action.emoji,
+                    action.label,
+                    action.source,
+                    action.placeholder ? [action.placeholder.start, action.placeholder.end] : null
+                ]),
+                detailInsertion,
+                disabledClosed,
+                fixture,
+                presentation: {
+                    buttonClass: button.className,
+                    buttonText: button.textContent,
+                    items: Array.from(menu.querySelectorAll('[role="menuitem"]')).map(item => [
+                        item.querySelector('.docsViewer__actionMenuEmoji').textContent,
+                        item.querySelector('.docsViewer__actionMenuLabel').textContent
+                    ])
+                },
+                staleInsertion,
+                stalePlan,
+                svgInsertion
+            };
+        }"""
+    )
+    fixture_mismatches = [
+        case for case in result["fixture"] if case["actual"] != case["expected"]
+    ]
+    if fixture_mismatches:
+        raise AssertionError(f"directive insertion fixture changed: {fixture_mismatches!r}")
+    if result["actions"] != [
+        ["table-detail", "⊞", "Table detail", "<!-- dotlineform:table-detail -->", None],
+        [
+            "table-publish-svg",
+            "📐",
+            "Table to SVG",
+            "<!-- dotlineform:table-publish format=svg id=table-name -->",
+            [45, 55],
+        ],
+    ]:
+        raise AssertionError(f"directive definitions changed: {result!r}")
+    if result["detailInsertion"] != {
+        "focusCount": 1,
+        "menuHidden": True,
+        "selection": {"end": 43, "start": 43},
+        "value": "Before \n<!-- dotlineform:table-detail -->\n\nnerve after",
+    }:
+        raise AssertionError(f"guarded directive insertion changed: {result!r}")
+    if result["svgInsertion"] != {
+        "selected": "table-name",
+        "value": "Lead\n<!-- dotlineform:table-publish format=svg id=table-name -->\n\n| A |",
+    }:
+        raise AssertionError(f"SVG placeholder insertion changed: {result!r}")
+    if result["staleInsertion"] != {
+        "menuHidden": True,
+        "result": False,
+        "unchanged": True,
+    } or result["stalePlan"] is not None:
+        raise AssertionError(f"stale directive capture mutated source: {result!r}")
+    if not result["disabledClosed"]:
+        raise AssertionError(f"disabled directive control retained an open menu: {result!r}")
+    if result["presentation"] != {
+        "buttonClass": "docsViewer__documentActionButton",
+        "buttonText": "🧩",
+        "items": [["⊞", "Table detail"], ["📐", "Table to SVG"]],
+    }:
+        raise AssertionError(f"directive action presentation changed: {result!r}")
 
 
 def assert_source_target_transport_and_fixed_session(page: Page) -> None:
@@ -1643,6 +1864,7 @@ def run_smoke(page: Page, base_url: str) -> None:
     install_modules(page)
     assert_contract_fixture_and_mixed_search(page)
     assert_source_adapter_captures_and_guards_range(page)
+    assert_directive_actions_insertion_and_menu_contract(page)
     assert_source_target_transport_and_fixed_session(page)
     assert_modal_insertion_cancellation_and_stale_guard(page)
     assert_catalogue_info_exact_range_update_remove_and_stale_guard(page)

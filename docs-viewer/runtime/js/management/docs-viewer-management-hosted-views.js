@@ -4,6 +4,9 @@ import {
 import {
   catalogueTokenControlDefinition
 } from "./source-editor/catalogue-token-contribution.js";
+import {
+  directiveActionsControlDefinition
+} from "./source-editor/directive-actions.js";
 
 export function createDocsViewerManagementViewDefinitions() {
   return {
@@ -163,6 +166,7 @@ export function createDocsViewerManagementViewDefinitions() {
         renderer: "source-add-file"
       },
       catalogueTokenControlDefinition(),
+      directiveActionsControlDefinition(),
       {
         id: "save-markdown-source",
         actionId: "markdown-save",

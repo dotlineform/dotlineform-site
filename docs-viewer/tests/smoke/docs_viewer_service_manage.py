@@ -2955,10 +2955,36 @@ def exercise_manage_route(
             const actions = document.querySelector('[data-docs-viewer-control-surface-mount="main-view"]');
             return root?.dataset.documentDisplayMode === 'markdown-source'
                 && actions
-                && Array.from(actions.children).map(node => node.dataset.docsViewerControl).join(',') === 'open-vscode,source-add-image,source-add-file,source-add-catalogue-token,save-markdown-source,markdown-source,subdoc-source,return-to-doc,info'
+                && Array.from(actions.children).map(node => node.dataset.docsViewerControl).join(',') === 'open-vscode,source-add-image,source-add-file,source-add-catalogue-token,source-directives,save-markdown-source,markdown-source,subdoc-source,return-to-doc,info'
                 && !document.querySelector('#docsViewerManageSourceSaveButton')?.disabled
+                && !document.querySelector('#docsViewerManageSourceDirectivesButton')?.disabled
                 && document.querySelector('#docsViewerManageSourceButton')?.disabled
                 && !document.querySelector('#docsViewerManageReturnToDocButton')?.disabled;
+        }""",
+        timeout=timeout_ms,
+    )
+    page.locator("#docsViewerManageSourceDirectivesButton").click()
+    page.wait_for_selector(
+        "#docsViewerManageSourceDirectivesMenu:not([hidden]) [role='menuitem']",
+        state="visible",
+        timeout=timeout_ms,
+    )
+    page.keyboard.press("Escape")
+    page.wait_for_function(
+        """() => document.querySelector('#docsViewerManageSourceDirectivesMenu')?.hidden === true
+            && document.activeElement?.id === 'docsViewerManageSourceDirectivesButton'""",
+        timeout=timeout_ms,
+    )
+    page.locator("#docsViewerManageSourceDirectivesButton").click()
+    page.locator('[data-docs-viewer-directive-action="table-detail"]').click()
+    page.wait_for_function(
+        r"""() => {
+            const textarea = document.querySelector('.docsViewerSourceEditor__textarea');
+            return textarea?.value.startsWith('<!-- dotlineform:table-detail -->\n\n# ')
+                && textarea.selectionStart === 35
+                && textarea.selectionEnd === 35
+                && document.activeElement === textarea
+                && !document.querySelector('.docsViewerSourceEditor__dirty')?.hidden;
         }""",
         timeout=timeout_ms,
     )
@@ -2973,9 +2999,12 @@ def exercise_manage_route(
     page.locator(
         "#catalogue-token-add-modal button[data-role='modal-cancel']"
     ).evaluate("button => button.click()")
+    page.locator("#docsViewerManageSourceDirectivesButton").click()
     page.locator("#docsViewerManageReturnToDocButton").evaluate("button => button.click()")
+    page.locator('[data-role="docs-viewer-management-modal"] [data-role="modal-primary"]').click()
     page.wait_for_function(
-        "() => document.querySelector('#docsViewerRoot')?.dataset.documentDisplayMode === 'rendered-document'",
+        """() => document.querySelector('#docsViewerRoot')?.dataset.documentDisplayMode === 'rendered-document'
+            && !document.querySelector('[data-docs-viewer-control="source-directives"]')""",
         timeout=timeout_ms,
     )
 

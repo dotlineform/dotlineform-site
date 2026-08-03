@@ -1183,6 +1183,11 @@ select.docsViewer__fieldInput--listbox{
   display: none;
 }
 
+.docsViewerDirectiveActions__menu{
+  right: 0;
+  left: auto;
+}
+
 .docsViewer__actionMenuItem{
   display: grid;
   grid-template-columns: 1.35rem minmax(0, 1fr);

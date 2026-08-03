@@ -1019,7 +1019,7 @@
           "doc_id": "d-20260802-150245-4e7f85",
           "title": "Table Enhancements",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-150245-4e7f85.json",
-          "ui_status": "proposed",
+          "ui_status": "in-progress",
           "children": [
             {
               "doc_id": "d-20260802-160429-69a5f6",
@@ -1037,7 +1037,7 @@
               "doc_id": "d-20260802-163320-9015b0",
               "title": "TE-1 — Source Editor Directive Actions Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-163320-9015b0.json",
-              "ui_status": "proposed"
+              "ui_status": "done"
             },
             {
               "doc_id": "d-20260802-162149-3ba013",
@@ -1415,5 +1415,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-03T14:21:11Z"
+  "generated_at": "2026-08-03T18:32:15Z"
 }
