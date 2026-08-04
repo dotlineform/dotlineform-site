@@ -7,9 +7,25 @@
       "doc_id": "d-20260804-172012-5d91bf",
       "title": "SSC-1 — Unified Sub-Scope Customisation Contract Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-172012-5d91bf.json",
-      "timestamp": "2026-08-04 18:35:54",
+      "timestamp": "2026-08-04 18:52:24",
       "parent_id": "d-20260804-172011-a4c8e1",
       "parent_title": "Sub-Scope Customisation"
+    },
+    {
+      "doc_id": "d-20260804-185224-72b1e9",
+      "title": "SSC-1.2 — Explicit Aspect Checkpoint Evidence",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-185224-72b1e9.json",
+      "timestamp": "2026-08-04 18:52:24",
+      "parent_id": "d-20260804-172012-5d91bf",
+      "parent_title": "SSC-1 — Unified Sub-Scope Customisation Contract Delivery"
+    },
+    {
+      "doc_id": "d-20260804-172011-a4c8e1",
+      "title": "Sub-Scope Customisation",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-172011-a4c8e1.json",
+      "timestamp": "2026-08-04 18:52:24",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
     },
     {
       "doc_id": "d-20260804-183554-0c4be2",
@@ -18,14 +34,6 @@
       "timestamp": "2026-08-04 18:35:54",
       "parent_id": "d-20260804-172012-5d91bf",
       "parent_title": "SSC-1 — Unified Sub-Scope Customisation Contract Delivery"
-    },
-    {
-      "doc_id": "d-20260804-172011-a4c8e1",
-      "title": "Sub-Scope Customisation",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-172011-a4c8e1.json",
-      "timestamp": "2026-08-04 18:35:54",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
     },
     {
       "doc_id": "d-20260804-182355-7ac901",
@@ -74,15 +82,7 @@
       "timestamp": "2026-08-04 17:20:12",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
-    },
-    {
-      "doc_id": "d-20260804-160200-fa7bb7",
-      "title": "Tag Document Linking",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-160200-fa7bb7.json",
-      "timestamp": "2026-08-04 17:20:12",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
     }
   ],
-  "generated_at": "2026-08-04T17:37:00Z"
+  "generated_at": "2026-08-04T17:53:20Z"
 }

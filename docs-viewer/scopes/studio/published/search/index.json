@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c7810ace082fc78b8e10c1a16fd6b4ce",
-    "generated_at_utc": "2026-08-04T17:37:01Z",
-    "count": 240
+    "version": "blake2b-e5932fa4f52c48b1adb7f7e38397463f",
+    "generated_at_utc": "2026-08-04T17:53:20Z",
+    "count": 241
   },
   "entries": [
     {
@@ -4078,36 +4078,36 @@
       "kind": "doc",
       "title": "Sub-Scope Customisation",
       "href": "/docs/?scope=studio&doc=d-20260804-172011-a4c8e1",
-      "last_updated": "2026-08-04 18:35:54",
+      "last_updated": "2026-08-04 18:52:24",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-04 18:35:54 • Roadmap",
+      "display_meta": "2026-08-04 18:52:24 • Roadmap",
       "search_terms": [
         "sub-scope customisation",
         "sub",
         "scope",
         "customisation",
         "roadmap",
-        "2026-08-04 18:35:54",
+        "2026-08-04 18:52:24",
         "2026",
         "08",
         "04",
         "18",
-        "35",
-        "54",
+        "52",
+        "24",
         "d-20260804-172011-a4c8e1"
       ],
-      "search_text": "sub-scope customisation sub scope customisation roadmap 2026-08-04 18:35:54 2026 08 04 18 35 54 d-20260804-172011-a4c8e1"
+      "search_text": "sub-scope customisation sub scope customisation roadmap 2026-08-04 18:52:24 2026 08 04 18 52 24 d-20260804-172011-a4c8e1"
     },
     {
       "id": "d-20260804-172012-5d91bf",
       "kind": "doc",
       "title": "SSC-1 — Unified Sub-Scope Customisation Contract Delivery",
       "href": "/docs/?scope=studio&doc=d-20260804-172012-5d91bf",
-      "last_updated": "2026-08-04 18:35:54",
+      "last_updated": "2026-08-04 18:52:24",
       "parent_id": "d-20260804-172011-a4c8e1",
       "parent_title": "Sub-Scope Customisation",
-      "display_meta": "2026-08-04 18:35:54 • Sub-Scope Customisation",
+      "display_meta": "2026-08-04 18:52:24 • Sub-Scope Customisation",
       "search_terms": [
         "ssc-1 — unified sub-scope customisation contract delivery",
         "ssc",
@@ -4119,16 +4119,16 @@
         "contract",
         "delivery",
         "sub-scope customisation",
-        "2026-08-04 18:35:54",
+        "2026-08-04 18:52:24",
         "2026",
         "08",
         "04",
         "18",
-        "35",
-        "54",
+        "52",
+        "24",
         "d-20260804-172012-5d91bf"
       ],
-      "search_text": "ssc-1 — unified sub-scope customisation contract delivery ssc 1 unified sub scope customisation contract delivery sub-scope customisation 2026-08-04 18:35:54 2026 08 04 18 35 54 d-20260804-172012-5d91bf"
+      "search_text": "ssc-1 — unified sub-scope customisation contract delivery ssc 1 unified sub scope customisation contract delivery sub-scope customisation 2026-08-04 18:52:24 2026 08 04 18 52 24 d-20260804-172012-5d91bf"
     },
     {
       "id": "d-20260804-182355-7ac901",
@@ -4199,6 +4199,42 @@
         "d-20260804-183554-0c4be2"
       ],
       "search_text": "ssc-1.1 — contract rename checkpoint evidence ssc 1 contract rename checkpoint evidence ssc-1 — unified sub-scope customisation contract delivery unified sub scope customisation delivery 2026-08-04 18:35:54 2026 08 04 18 35 54 d-20260804-183554-0c4be2"
+    },
+    {
+      "id": "d-20260804-185224-72b1e9",
+      "kind": "doc",
+      "title": "SSC-1.2 — Explicit Aspect Checkpoint Evidence",
+      "href": "/docs/?scope=studio&doc=d-20260804-185224-72b1e9",
+      "last_updated": "2026-08-04 18:52:24",
+      "parent_id": "d-20260804-172012-5d91bf",
+      "parent_title": "SSC-1 — Unified Sub-Scope Customisation Contract Delivery",
+      "display_meta": "2026-08-04 18:52:24 • SSC-1 — Unified Sub-Scope Customisation Contract Delivery",
+      "search_terms": [
+        "ssc-1.2 — explicit aspect checkpoint evidence",
+        "ssc",
+        "1",
+        "2",
+        "explicit",
+        "aspect",
+        "checkpoint",
+        "evidence",
+        "ssc-1 — unified sub-scope customisation contract delivery",
+        "unified",
+        "sub",
+        "scope",
+        "customisation",
+        "contract",
+        "delivery",
+        "2026-08-04 18:52:24",
+        "2026",
+        "08",
+        "04",
+        "18",
+        "52",
+        "24",
+        "d-20260804-185224-72b1e9"
+      ],
+      "search_text": "ssc-1.2 — explicit aspect checkpoint evidence ssc 1 2 explicit aspect checkpoint evidence ssc-1 — unified sub-scope customisation contract delivery unified sub scope customisation contract delivery 2026-08-04 18:52:24 2026 08 04 18 52 24 d-20260804-185224-72b1e9"
     },
     {
       "id": "d-20260802-194357-4d857b",

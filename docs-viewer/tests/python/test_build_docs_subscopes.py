@@ -7,6 +7,7 @@ import tempfile
 from pathlib import Path
 
 import build_docs
+import docs_subscope_customisations as customisations
 import pytest
 from docs_scope_config import load_docs_scope_configs
 
@@ -631,6 +632,83 @@ group: subject
         "id": "analysis_tags"
     }
     assert "sub_scope_customisation" not in public_browser_config["scopes"][0]["sub_scopes"][0]
+
+
+def test_browser_config_projects_assignable_group_for_exact_configured_collection(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def normalize_settings(raw: object, field: str) -> dict[str, object]:
+        if raw != {}:
+            raise ValueError(f"{field} must be empty")
+        return {}
+
+    def project_manifest(
+        settings: object,
+        documents: object,
+    ) -> dict[str, object]:
+        assert settings == {}
+        assert documents == ()
+        return {
+            "root": {"id": "synthetic_fields", "data": {}},
+            "rows": {},
+        }
+
+    monkeypatch.setitem(
+        customisations.SUB_SCOPE_CUSTOMISATION_DEFINITIONS,
+        "synthetic_fields",
+        customisations.DocsSubScopeCustomisationDefinition(
+            customisation_id="synthetic_fields",
+            normalize_settings=normalize_settings,
+            manifest_projection=customisations.DocsSubScopeManifestProjectionAspect(
+                project=project_manifest,
+            ),
+            browser_composition=customisations.DocsSubScopeBrowserCompositionAspect(
+                accesses=frozenset({"manage"}),
+            ),
+            assignable_field_groups=(
+                customisations.DocsSubScopeAssignableFieldGroup(
+                    group_id="authoring_subject",
+                    field_names=("folder_path",),
+                ),
+            ),
+        ),
+    )
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        config_path = root / "docs-viewer/config/scopes/docs_scopes.json"
+        payload = read_json(config_path)
+        payload["scopes"][0]["sub_scopes"] = [
+            docs_sub_scope_record(
+                "studio",
+                "project-notes",
+                title="Project notes",
+                sub_scope_customisation={
+                    "id": "synthetic_fields",
+                    "settings": {},
+                },
+            ),
+            docs_sub_scope_record("studio", "default", title="Default"),
+        ]
+        write_json(config_path, payload)
+        config = load_docs_scope_configs(root)["studio"]
+        manage = build_docs.browser_scope_config_payload(root, [config])
+        public = build_docs.browser_scope_config_payload(
+            root,
+            [config],
+            published=True,
+        )
+
+    manage_records = manage["scopes"][0]["sub_scopes"]
+    public_records = public["scopes"][0]["sub_scopes"]
+    assert manage_records[0]["sub_scope_customisation"] == {
+        "id": "synthetic_fields",
+        "capabilities": {
+            "assignable_field_groups": ["authoring_subject"],
+        },
+    }
+    assert "sub_scope_customisation" not in manage_records[1]
+    assert all("sub_scope_customisation" not in record for record in public_records)
 
 
 def test_python_docs_builder_public_sub_scope_separates_manage_and_public_url_bases() -> None:

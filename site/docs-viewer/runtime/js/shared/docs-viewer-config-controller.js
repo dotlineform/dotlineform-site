@@ -41,6 +41,74 @@ export function formatText(template, tokens) {
   return text;
 }
 
+export function normalizeDocsViewerSubScopeCustomisation(rawCustomisation) {
+  if (!rawCustomisation || typeof rawCustomisation !== "object" || Array.isArray(rawCustomisation)) {
+    throw new Error("Docs Viewer sub_scope_customisation must be an object.");
+  }
+  var customisationKeys = Object.keys(rawCustomisation).sort();
+  if (
+    customisationKeys.length < 1
+    || customisationKeys.length > 2
+    || !customisationKeys.includes("id")
+    || customisationKeys.some(function (key) {
+      return key !== "id" && key !== "capabilities";
+    })
+  ) {
+    throw new Error(
+      "Docs Viewer sub_scope_customisation must contain id and optional capabilities."
+    );
+  }
+  var customisationId = String(rawCustomisation.id || "").trim();
+  if (!/^[a-z][a-z0-9_]*$/.test(customisationId)) {
+    throw new Error("Docs Viewer sub_scope_customisation id is invalid.");
+  }
+  if (!Object.prototype.hasOwnProperty.call(rawCustomisation, "capabilities")) {
+    return Object.freeze({ id: customisationId });
+  }
+
+  var rawCapabilities = rawCustomisation.capabilities;
+  if (!rawCapabilities || typeof rawCapabilities !== "object" || Array.isArray(rawCapabilities)) {
+    throw new Error("Docs Viewer sub_scope_customisation capabilities must be an object.");
+  }
+  var capabilityKeys = Object.keys(rawCapabilities).sort();
+  if (capabilityKeys.length !== 1 || capabilityKeys[0] !== "assignable_field_groups") {
+    throw new Error(
+      "Docs Viewer sub_scope_customisation capabilities must contain exactly assignable_field_groups."
+    );
+  }
+  var rawGroups = rawCapabilities.assignable_field_groups;
+  if (!Array.isArray(rawGroups) || !rawGroups.length) {
+    throw new Error(
+      "Docs Viewer sub_scope_customisation assignable_field_groups must be a non-empty array."
+    );
+  }
+  var seen = new Set();
+  var assignableFieldGroups = rawGroups.map(function (rawGroup) {
+    var groupId = String(rawGroup || "").trim();
+    if (!/^[a-z][a-z0-9_]*$/.test(groupId) || seen.has(groupId)) {
+      throw new Error(
+        "Docs Viewer sub_scope_customisation assignable_field_groups contains an invalid or duplicate id."
+      );
+    }
+    seen.add(groupId);
+    return groupId;
+  });
+  return Object.freeze({
+    id: customisationId,
+    capabilities: Object.freeze({
+      assignableFieldGroups: Object.freeze(assignableFieldGroups)
+    })
+  });
+}
+
+export function hasDocsViewerAssignableFieldGroup(descriptor, groupId) {
+  var value = String(groupId || "").trim();
+  var groups = descriptor
+    && descriptor.capabilities
+    && descriptor.capabilities.assignableFieldGroups;
+  return Boolean(value && Array.isArray(groups) && groups.includes(value));
+}
+
 export function initDocsViewerConfigController(context) {
   var scopeConfig = context.scopeConfig || {};
   var documentIndex = context.documentIndex || {};
@@ -67,21 +135,9 @@ export function initDocsViewerConfigController(context) {
     if (!manifestUrl || !byIdUrlBase) return null;
     var subScopeCustomisation = null;
     if (Object.prototype.hasOwnProperty.call(rawSubScope, "sub_scope_customisation")) {
-      var rawCustomisation = rawSubScope.sub_scope_customisation;
-      if (!rawCustomisation || typeof rawCustomisation !== "object" || Array.isArray(rawCustomisation)) {
-        throw new Error("Docs Viewer sub_scope_customisation must be an object.");
-      }
-      var customisationKeys = Object.keys(rawCustomisation).sort();
-      if (customisationKeys.length !== 1 || customisationKeys[0] !== "id") {
-        throw new Error(
-          "Docs Viewer sub_scope_customisation must contain exactly id."
-        );
-      }
-      var customisationId = String(rawCustomisation.id || "").trim();
-      if (!/^[a-z][a-z0-9_]*$/.test(customisationId)) {
-        throw new Error("Docs Viewer sub_scope_customisation id is invalid.");
-      }
-      subScopeCustomisation = Object.freeze({ id: customisationId });
+      subScopeCustomisation = normalizeDocsViewerSubScopeCustomisation(
+        rawSubScope.sub_scope_customisation
+      );
     }
     return {
       subScope: subScope,

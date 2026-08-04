@@ -3955,6 +3955,91 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
     }
 
 
+def assert_subscope_customisation_capability_projection(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+          const config = await import(
+            '/site/docs-viewer/runtime/js/shared/docs-viewer-config-controller.js'
+          );
+          const basic = config.normalizeDocsViewerSubScopeCustomisation({
+            id: 'analysis_tags'
+          });
+          const assignable = config.normalizeDocsViewerSubScopeCustomisation({
+            id: 'synthetic_fields',
+            capabilities: {
+              assignable_field_groups: ['authoring_subject', 'tag_fields']
+            }
+          });
+          let unknownCapabilityError = '';
+          let duplicateGroupError = '';
+          try {
+            config.normalizeDocsViewerSubScopeCustomisation({
+              id: 'synthetic_fields',
+              capabilities: {
+                assignable_field_groups: ['authoring_subject'],
+                settings: {}
+              }
+            });
+          } catch (error) {
+            unknownCapabilityError = error.message;
+          }
+          try {
+            config.normalizeDocsViewerSubScopeCustomisation({
+              id: 'synthetic_fields',
+              capabilities: {
+                assignable_field_groups: ['authoring_subject', 'authoring_subject']
+              }
+            });
+          } catch (error) {
+            duplicateGroupError = error.message;
+          }
+          return {
+            assignable: {
+              groups: assignable.capabilities.assignableFieldGroups,
+              hasAuthoringSubject: config.hasDocsViewerAssignableFieldGroup(
+                assignable,
+                'authoring_subject'
+              ),
+              hasMissing: config.hasDocsViewerAssignableFieldGroup(
+                assignable,
+                'missing'
+              ),
+              id: assignable.id,
+              keys: Object.keys(assignable).sort()
+            },
+            basic: {
+              id: basic.id,
+              keys: Object.keys(basic)
+            },
+            duplicateGroupError,
+            unknownCapabilityError
+          };
+        }"""
+    )
+
+    assert result == {
+        "assignable": {
+            "groups": ["authoring_subject", "tag_fields"],
+            "hasAuthoringSubject": True,
+            "hasMissing": False,
+            "id": "synthetic_fields",
+            "keys": ["capabilities", "id"],
+        },
+        "basic": {
+            "id": "analysis_tags",
+            "keys": ["id"],
+        },
+        "duplicateGroupError": (
+            "Docs Viewer sub_scope_customisation assignable_field_groups "
+            "contains an invalid or duplicate id."
+        ),
+        "unknownCapabilityError": (
+            "Docs Viewer sub_scope_customisation capabilities must contain "
+            "exactly assignable_field_groups."
+        ),
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--site-root", default=".", help="Repository root to serve.")
@@ -3995,6 +4080,7 @@ def main(argv: list[str] | None = None) -> int:
                 assert_delete_workflow(page)
                 assert_manage_report_bridge(page)
                 assert_default_report_and_customisation_framework(page)
+                assert_subscope_customisation_capability_projection(page)
                 assert_dotlineform_projects_customisation(page)
             finally:
                 browser.close()

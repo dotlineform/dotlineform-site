@@ -906,6 +906,12 @@
                   "title": "SSC-1.1 — Contract Rename Checkpoint Evidence",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-183554-0c4be2.json",
                   "ui_status": "done"
+                },
+                {
+                  "doc_id": "d-20260804-185224-72b1e9",
+                  "title": "SSC-1.2 — Explicit Aspect Checkpoint Evidence",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-185224-72b1e9.json",
+                  "ui_status": "done"
                 }
               ]
             }
@@ -1343,5 +1349,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-04T17:37:00Z"
+  "generated_at": "2026-08-04T17:53:20Z"
 }
