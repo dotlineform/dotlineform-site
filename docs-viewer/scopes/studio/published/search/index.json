@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-495ea31e53a1d41284e3ec81f0d42d1c",
-    "generated_at_utc": "2026-08-04T11:06:35Z",
+    "version": "blake2b-3d3ae5ff0f4063dce5929304f1af684e",
+    "generated_at_utc": "2026-08-04T12:43:50Z",
     "count": 242
   },
   "entries": [
@@ -4446,35 +4446,35 @@
       "kind": "doc",
       "title": "Table Enhancements",
       "href": "/docs/?scope=studio&doc=d-20260802-150245-4e7f85",
-      "last_updated": "2026-08-04 12:03:49",
+      "last_updated": "2026-08-04 13:41:06",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-04 12:03:49 • Roadmap",
+      "display_meta": "2026-08-04 13:41:06 • Roadmap",
       "search_terms": [
         "table enhancements",
         "table",
         "enhancements",
         "roadmap",
-        "2026-08-04 12:03:49",
+        "2026-08-04 13:41:06",
         "2026",
         "08",
         "04",
-        "12",
-        "03",
-        "49",
+        "13",
+        "41",
+        "06",
         "d-20260802-150245-4e7f85"
       ],
-      "search_text": "table enhancements table enhancements roadmap 2026-08-04 12:03:49 2026 08 04 12 03 49 d-20260802-150245-4e7f85"
+      "search_text": "table enhancements table enhancements roadmap 2026-08-04 13:41:06 2026 08 04 13 41 06 d-20260802-150245-4e7f85"
     },
     {
       "id": "d-20260802-160429-69a5f6",
       "kind": "doc",
       "title": "Authoring Directives Concept And Examples",
       "href": "/docs/?scope=studio&doc=d-20260802-160429-69a5f6",
-      "last_updated": "2026-08-04 12:05:31",
+      "last_updated": "2026-08-04 13:41:06",
       "parent_id": "d-20260802-150245-4e7f85",
       "parent_title": "Table Enhancements",
-      "display_meta": "2026-08-04 12:05:31 • Table Enhancements",
+      "display_meta": "2026-08-04 13:41:06 • Table Enhancements",
       "search_terms": [
         "authoring directives concept and examples",
         "authoring",
@@ -4485,16 +4485,16 @@
         "table enhancements",
         "table",
         "enhancements",
-        "2026-08-04 12:05:31",
+        "2026-08-04 13:41:06",
         "2026",
         "08",
         "04",
-        "12",
-        "05",
-        "31",
+        "13",
+        "41",
+        "06",
         "d-20260802-160429-69a5f6"
       ],
-      "search_text": "authoring directives concept and examples authoring directives concept and examples table enhancements table enhancements 2026-08-04 12:05:31 2026 08 04 12 05 31 d-20260802-160429-69a5f6"
+      "search_text": "authoring directives concept and examples authoring directives concept and examples table enhancements table enhancements 2026-08-04 13:41:06 2026 08 04 13 41 06 d-20260802-160429-69a5f6"
     },
     {
       "id": "d-20260802-150246-bb3f88",
@@ -4532,10 +4532,10 @@
       "kind": "doc",
       "title": "TE-1 — Directive Insertion",
       "href": "/docs/?scope=studio&doc=d-20260802-163320-9015b0",
-      "last_updated": "2026-08-04 12:06:35",
+      "last_updated": "2026-08-04 13:41:06",
       "parent_id": "d-20260802-150245-4e7f85",
       "parent_title": "Table Enhancements",
-      "display_meta": "2026-08-04 12:06:35 • Table Enhancements",
+      "display_meta": "2026-08-04 13:41:06 • Table Enhancements",
       "search_terms": [
         "te-1 — directive insertion",
         "te",
@@ -4545,16 +4545,16 @@
         "table enhancements",
         "table",
         "enhancements",
-        "2026-08-04 12:06:35",
+        "2026-08-04 13:41:06",
         "2026",
         "08",
         "04",
-        "12",
+        "13",
+        "41",
         "06",
-        "35",
         "d-20260802-163320-9015b0"
       ],
-      "search_text": "te-1 — directive insertion te 1 directive insertion table enhancements table enhancements 2026-08-04 12:06:35 2026 08 04 12 06 35 d-20260802-163320-9015b0"
+      "search_text": "te-1 — directive insertion te 1 directive insertion table enhancements table enhancements 2026-08-04 13:41:06 2026 08 04 13 41 06 d-20260802-163320-9015b0"
     },
     {
       "id": "d-20260802-162149-3ba013",
@@ -4676,10 +4676,10 @@
       "kind": "doc",
       "title": "TE-6 — Table-to-SVG Publication",
       "href": "/docs/?scope=studio&doc=d-20260802-160430-34cb3b",
-      "last_updated": "2026-08-04 12:04:17",
+      "last_updated": "2026-08-04 13:41:06",
       "parent_id": "d-20260802-150245-4e7f85",
       "parent_title": "Table Enhancements",
-      "display_meta": "2026-08-04 12:04:17 • Table Enhancements",
+      "display_meta": "2026-08-04 13:41:06 • Table Enhancements",
       "search_terms": [
         "te-6 — table-to-svg publication",
         "te",
@@ -4690,15 +4690,16 @@
         "publication",
         "table enhancements",
         "enhancements",
-        "2026-08-04 12:04:17",
+        "2026-08-04 13:41:06",
         "2026",
         "08",
         "04",
-        "12",
-        "17",
+        "13",
+        "41",
+        "06",
         "d-20260802-160430-34cb3b"
       ],
-      "search_text": "te-6 — table-to-svg publication te 6 table to svg publication table enhancements enhancements 2026-08-04 12:04:17 2026 08 04 12 17 d-20260802-160430-34cb3b"
+      "search_text": "te-6 — table-to-svg publication te 6 table to svg publication table enhancements enhancements 2026-08-04 13:41:06 2026 08 04 13 41 06 d-20260802-160430-34cb3b"
     },
     {
       "id": "d-20260712-213026-ee0f22",

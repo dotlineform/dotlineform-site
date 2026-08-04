@@ -6,13 +6,6 @@ export const DIRECTIVE_ACTIONS = Object.freeze([
     id: "table-detail",
     label: "Table detail",
     source: "<!-- dotlineform:table-detail -->"
-  }),
-  Object.freeze({
-    emoji: "📐",
-    id: "table-publish-svg",
-    label: "Table to SVG",
-    source: "<!-- dotlineform:table-publish format=svg id=table-name -->",
-    placeholder: Object.freeze({ start: 45, end: 55 })
   })
 ]);
 

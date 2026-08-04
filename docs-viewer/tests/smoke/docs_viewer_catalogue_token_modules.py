@@ -530,18 +530,6 @@ def assert_directive_actions_insertion_and_menu_contract(page: Page) -> None:
                 value: state.value
             };
 
-            state.value = 'Lead\n| A |';
-            state.revision += 1;
-            state.selection = { start: 5, end: 5 };
-            invoke(button);
-            invoke(controlRoot.querySelector(
-                '[data-docs-viewer-directive-action="table-publish-svg"]'
-            ));
-            const svgInsertion = {
-                selected: state.value.slice(state.selection.start, state.selection.end),
-                value: state.value
-            };
-
             state.selection = { start: 0, end: 0 };
             invoke(button);
             const staleValue = state.value;
@@ -586,8 +574,7 @@ def assert_directive_actions_insertion_and_menu_contract(page: Page) -> None:
                     ])
                 },
                 staleInsertion,
-                stalePlan,
-                svgInsertion
+                stalePlan
             };
         }"""
     )
@@ -598,13 +585,6 @@ def assert_directive_actions_insertion_and_menu_contract(page: Page) -> None:
         raise AssertionError(f"directive insertion fixture changed: {fixture_mismatches!r}")
     if result["actions"] != [
         ["table-detail", "⊞", "Table detail", "<!-- dotlineform:table-detail -->", None],
-        [
-            "table-publish-svg",
-            "📐",
-            "Table to SVG",
-            "<!-- dotlineform:table-publish format=svg id=table-name -->",
-            [45, 55],
-        ],
     ]:
         raise AssertionError(f"directive definitions changed: {result!r}")
     if result["detailInsertion"] != {
@@ -614,11 +594,6 @@ def assert_directive_actions_insertion_and_menu_contract(page: Page) -> None:
         "value": "Before \n<!-- dotlineform:table-detail -->\n\nnerve after",
     }:
         raise AssertionError(f"guarded directive insertion changed: {result!r}")
-    if result["svgInsertion"] != {
-        "selected": "table-name",
-        "value": "Lead\n<!-- dotlineform:table-publish format=svg id=table-name -->\n\n| A |",
-    }:
-        raise AssertionError(f"SVG placeholder insertion changed: {result!r}")
     if result["staleInsertion"] != {
         "menuHidden": True,
         "result": False,
@@ -630,7 +605,7 @@ def assert_directive_actions_insertion_and_menu_contract(page: Page) -> None:
     if result["presentation"] != {
         "buttonClass": "docsViewer__documentActionButton",
         "buttonText": "🧩",
-        "items": [["⊞", "Table detail"], ["📐", "Table to SVG"]],
+        "items": [["⊞", "Table detail"]],
     }:
         raise AssertionError(f"directive action presentation changed: {result!r}")
 
