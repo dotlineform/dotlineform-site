@@ -93,9 +93,14 @@ export function openDocsViewerManagementModal(options = {}) {
   var cancelNodes = host.querySelectorAll('[data-role="modal-cancel"]');
   var statusNode = host.querySelector('[data-role="modal-status"]');
   var focusTarget = options.focusSelector ? host.querySelector(options.focusSelector) : primary;
+  var modalControls = Array.from(host.querySelectorAll("button, input, select, textarea"));
+  modalControls.forEach(function (control) {
+    if (control.disabled) control.dataset.initiallyDisabled = "true";
+  });
 
   return new Promise(function (resolve) {
     var settled = false;
+    var submitting = false;
 
     function setStatus(message) {
       if (!statusNode) return;
@@ -117,23 +122,63 @@ export function openDocsViewerManagementModal(options = {}) {
       resolve(value);
     }
 
+    function setBusy(value) {
+      submitting = value === true;
+      if (form) {
+        if (submitting) form.dataset.busy = "true";
+        else delete form.dataset.busy;
+      }
+      modalControls.forEach(function (control) {
+        control.disabled = submitting || control.dataset.initiallyDisabled === "true";
+      });
+      if (form && form.ownerDocument && form.ownerDocument.defaultView) {
+        form.dispatchEvent(new form.ownerDocument.defaultView.CustomEvent(
+          "docs-viewer-modal-busy-change",
+          { bubbles: true, detail: { busy: submitting } }
+        ));
+      }
+    }
+
     var api = {
       host: host,
+      setBusy: setBusy,
       setStatus: setStatus
     };
 
     function cancel() {
+      if (submitting) return;
       close({ confirmed: false });
     }
 
-    function submit() {
-      if (primary && primary.disabled) return;
-      setStatus("");
-      var result = typeof options.onSubmit === "function"
-        ? options.onSubmit(api)
-        : { confirmed: true };
+    function settleSubmission(result) {
       if (result === false) return;
       close(result || { confirmed: true });
+    }
+
+    function submit() {
+      if (submitting || (primary && primary.disabled)) return;
+      setStatus("");
+      var result;
+      try {
+        result = typeof options.onSubmit === "function"
+          ? options.onSubmit(api)
+          : { confirmed: true };
+      } catch (error) {
+        setStatus(error && error.message ? error.message : "The request failed.");
+        return;
+      }
+      if (!result || typeof result.then !== "function") {
+        settleSubmission(result);
+        return;
+      }
+      setBusy(true);
+      Promise.resolve(result).then(function (resolved) {
+        settleSubmission(resolved);
+      }).catch(function (error) {
+        setStatus(error && error.message ? error.message : "The request failed.");
+      }).finally(function () {
+        if (!settled) setBusy(false);
+      });
     }
 
     var lifecycle = createDocsViewerModalLifecycle({

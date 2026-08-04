@@ -26,6 +26,7 @@ from docs_scope_config import (
 )
 from docs_subscope_customisations import (
     normalize_sub_scope_customisation_metadata_update,
+    sub_scope_customisation_assignable_field_groups,
     sub_scope_customisation_document_groups,
 )
 
@@ -35,6 +36,17 @@ SUB_SCOPE_DELETE_APPLY_KEYS = frozenset(
     {"scope", "sub_scope", "doc_id", "source_revision", "confirm"}
 )
 SOURCE_REVISION_PATTERN = re.compile(r"^sha256:[0-9a-f]{64}$")
+ASSIGN_FIELD_GROUP_KEYS = frozenset(
+    {
+        "scope",
+        "sub_scope",
+        "doc_id",
+        "source_revision",
+        "field_group",
+        "fields",
+        "confirm",
+    }
+)
 
 
 class ManagedDocumentRevisionConflict(ValueError):
@@ -212,6 +224,10 @@ class ManagementMutationPlan:
     include_write_result_keys: bool = False
     restore_deletes_on_rebuild_failure: bool = False
     report_create_commit_on_rebuild_failure: bool = False
+    revision_conflict_operation: str = "update_metadata"
+    revision_conflict_error: str = (
+        "managed document source changed before metadata save"
+    )
 
     @property
     def changed_paths(self) -> list[Path]:
@@ -337,6 +353,192 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
     )
 
 
+def _assignable_field_groups(resolved: ManagedDocumentTarget) -> tuple[Any, ...]:
+    if not resolved.sub_scope:
+        return ()
+    return sub_scope_customisation_assignable_field_groups(
+        resolved.document_config.sub_scope_customisation
+    )
+
+
+def _reject_assignable_fields_from_metadata_update(
+    resolved: ManagedDocumentTarget,
+    raw: Any,
+    *,
+    provided: bool,
+) -> None:
+    if not provided or not isinstance(raw, dict):
+        return
+    reserved = {
+        field_name
+        for group in _assignable_field_groups(resolved)
+        for field_name in group.field_names
+    }
+    attempted = sorted(set(raw).intersection(reserved))
+    if attempted:
+        raise ValueError(
+            "customisation fields owned by an assignable field group are not "
+            "editable through generic metadata: " + ", ".join(attempted)
+        )
+
+
+def plan_assign_field_group(
+    repo_root: Path,
+    body: Dict[str, Any],
+) -> ManagementMutationPlan:
+    if frozenset(body) != ASSIGN_FIELD_GROUP_KEYS:
+        required = ", ".join(sorted(ASSIGN_FIELD_GROUP_KEYS))
+        raise ValueError(
+            "assign field group must contain exactly " + required
+        )
+    if body.get("confirm") is not True:
+        raise ValueError("assign field group requires confirm=true")
+
+    resolved = resolve_managed_document_target(
+        repo_root,
+        managed_document_target_request(body),
+    )
+    if not resolved.sub_scope:
+        raise ValueError("assign field group requires a sub-scope document")
+
+    requested_revision = str(body.get("source_revision") or "").strip()
+    if not SOURCE_REVISION_PATTERN.fullmatch(requested_revision):
+        raise ValueError(
+            "source_revision is required for assignable field group updates"
+        )
+    raw_group_id = body.get("field_group")
+    if (
+        not isinstance(raw_group_id, str)
+        or raw_group_id != raw_group_id.strip()
+        or raw_group_id != raw_group_id.lower()
+        or not raw_group_id
+    ):
+        raise ValueError("field_group must be one exact configured identity")
+    group_id = raw_group_id
+    groups = [
+        group
+        for group in _assignable_field_groups(resolved)
+        if group.group_id == group_id
+    ]
+    if len(groups) != 1:
+        raise ValueError(
+            f"assignable field group is not configured: {group_id or 'missing identity'}"
+        )
+    group = groups[0]
+    raw_fields = body.get("fields")
+    if not isinstance(raw_fields, dict):
+        raise ValueError("assign field group fields must be an object")
+    if set(raw_fields) != set(group.field_names):
+        raise ValueError(
+            "assign field group fields must contain exactly "
+            + ", ".join(group.field_names)
+        )
+
+    target = resolved.document
+    source_bytes = target.source_text.encode("utf-8")
+    current_revision = source_revision(source_bytes)
+    if requested_revision != current_revision:
+        raise ManagedDocumentRevisionConflict(
+            revision_conflict_payload(
+                target=resolved.request_target(),
+                requested_revision=requested_revision,
+                current_revision=current_revision,
+                operation="assign_field_group",
+                error="managed document source changed before field group assignment",
+            )
+        )
+
+    customisation_update = normalize_sub_scope_customisation_metadata_update(
+        resolved.document_config.sub_scope_customisation,
+        raw_fields,
+        provided=True,
+        repo_root=repo_root,
+        front_matter=target.front_matter,
+        doc_id=target.doc_id,
+    )
+    if customisation_update is None:
+        raise ValueError("assignable field group customisation is unavailable")
+    expected_fields = set(group.field_names)
+    if (
+        set(customisation_update.get("front_matter_updates") or {})
+        != expected_fields
+        or set(customisation_update.get("record") or {}) != expected_fields
+    ):
+        raise ValueError(
+            "assignable field group normalizer returned fields outside its declaration"
+        )
+
+    response: Dict[str, Any] = {
+        "ok": True,
+        "operation": "assign_field_group",
+        "target": resolved.request_target(),
+        "scope": resolved.scope,
+        "sub_scope": resolved.sub_scope,
+        "doc_id": target.doc_id,
+        "field_group": group.group_id,
+        "fields": customisation_update["record"],
+        "changes": customisation_update["changes"],
+        "path": relative_path(repo_root, target.path),
+        "source_revision": current_revision,
+    }
+    if not any(customisation_update["changes"].values()):
+        response["summary_text"] = f"No {group.group_id} changes for {target.doc_id}."
+        return ManagementMutationPlan(
+            scope=resolved.scope,
+            sub_scope=resolved.sub_scope,
+            response=response,
+        )
+
+    updated_front_matter = dict(target.front_matter)
+    for field_name, field_value in customisation_update[
+        "front_matter_updates"
+    ].items():
+        if field_value is None:
+            updated_front_matter.pop(field_name, None)
+        else:
+            updated_front_matter[field_name] = field_value
+    updated_front_matter = source_model.advance_front_matter_for_recent_edit(
+        target.front_matter,
+        target.body,
+        updated_front_matter,
+        target.body,
+    )
+    updated_source_text = source_model.format_source(
+        updated_front_matter,
+        target.body,
+    )
+    response["source_revision"] = source_revision(
+        updated_source_text.encode("utf-8")
+    )
+    response["summary_text"] = f"Updated {group.group_id} for {target.doc_id}."
+    return ManagementMutationPlan(
+        scope=resolved.scope,
+        sub_scope=resolved.sub_scope,
+        response=response,
+        source_writes=(
+            SourceWrite(
+                target.path,
+                updated_source_text,
+                original_bytes=source_bytes,
+            ),
+        ),
+        suppression_reason="docs-assign-field-group",
+        log_event_name="docs-assign-field-group",
+        log_details={
+            "scope": resolved.scope,
+            "sub_scope": resolved.sub_scope,
+            "doc_id": target.doc_id,
+            "field_group": group.group_id,
+            **customisation_update["changes"],
+        },
+        include_write_result_keys=True,
+        revision_conflict_operation="assign_field_group",
+        revision_conflict_error=(
+            "managed document source changed before field group assignment"
+        ),
+    )
+
+
 def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
     resolved = resolve_managed_document_target(
         repo_root,
@@ -432,6 +634,11 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         else current_group
     )
     group_changed = group_was_provided and group != current_group
+    _reject_assignable_fields_from_metadata_update(
+        resolved,
+        body.get("customisation"),
+        provided="customisation" in body,
+    )
     customisation_update = normalize_sub_scope_customisation_metadata_update(
         (
             resolved.document_config.sub_scope_customisation

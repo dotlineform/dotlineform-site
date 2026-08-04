@@ -9,7 +9,9 @@ import {
   normalizeManagedDocumentTarget
 } from "./docs-viewer-management-document-target.js";
 import {
-  openLocalTarget
+  assignManagedDocFieldGroup,
+  openLocalTarget,
+  readManagedDocMetadata
 } from "./docs-viewer-management-client.js";
 
 function cleanString(value) {
@@ -189,6 +191,11 @@ function markdownLinkForSubscopeDocument(settings, parent, subScope, target, doc
 
 function loadSubscopeContribution(settings, parent, subScope, options) {
   var contributionOptions = options || {};
+  var clientOptions = managementClientOptions(settings);
+  var mutationAvailable = Boolean(
+    settings.managementContext
+    && cleanString(clientOptions.baseUrl)
+  );
   var subScopeConfig = configuredSubScope(settings, parent.scope, subScope);
   if (!subScopeConfig) {
     return Promise.reject(new Error(
@@ -201,7 +208,7 @@ function loadSubscopeContribution(settings, parent, subScope, options) {
     import("./docs-viewer-management-subscope-customisation-registry.js")
   ]).then(function (modules) {
     var defaultContribution = modules[0].createDocsViewerManagementSubscopeDefaultContribution({
-      clientOptions: managementClientOptions(settings),
+      clientOptions: clientOptions,
       managementContext: Boolean(settings.managementContext),
       markdownLinkForDocument: function (target, documentRecord) {
         return markdownLinkForSubscopeDocument(
@@ -223,9 +230,20 @@ function loadSubscopeContribution(settings, parent, subScope, options) {
     return modules[2].resolveManagementDocsSubscopeCustomisation(
       subScopeConfig.subScopeCustomisation,
       {
-        clientOptions: managementClientOptions(settings),
+        assignFieldGroup: mutationAvailable
+          ? function (target, payload) {
+              return assignManagedDocFieldGroup(target, payload, clientOptions);
+            }
+          : null,
+        clientOptions: clientOptions,
         collection: { scope: parent.scope, sub_scope: subScope },
         openLocalTarget: openLocalTarget,
+        readMetadata: mutationAvailable
+          ? function (target) {
+              return readManagedDocMetadata(target, clientOptions);
+            }
+          : null,
+        root: managementModalRoot(settings),
         setStatus: settings.setStatus
       }
     ).then(function (customisationContribution) {

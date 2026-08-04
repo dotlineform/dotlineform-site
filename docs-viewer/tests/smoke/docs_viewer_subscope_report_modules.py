@@ -3831,6 +3831,9 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
           ];
           const opened = [];
           const statuses = [];
+          const assignments = [];
+          const refreshed = [];
+          let rejectAssignment = false;
           const contribution = module.createDocsViewerManagementSubscopeDotlineformProjects({
             descriptor: {
               id: 'dotlineform_projects',
@@ -3839,6 +3842,31 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
               }
             },
             collection: { scope: 'dotlineform', sub_scope: 'projects' },
+            root: document.body,
+            readMetadata: async target => ({
+              ...target,
+              record: {
+                doc_id: target.doc_id,
+                customisation: { folder_path: 'projects/16 forms' }
+              },
+              source_revision: 'sha256:' + 'a'.repeat(64)
+            }),
+            assignFieldGroup: async (target, payload) => {
+              if (rejectAssignment) throw new Error('Folder is outside the configured base.');
+              assignments.push({ target, payload });
+              return {
+                ok: true,
+                operation: 'assign_field_group',
+                target,
+                scope: target.scope,
+                sub_scope: target.sub_scope,
+                doc_id: target.doc_id,
+                field_group: 'authoring_subject',
+                fields: { folder_path: 'projects/future' },
+                source_revision: 'sha256:' + 'b'.repeat(64),
+                summary_text: 'Subject updated.'
+              };
+            },
             openLocalTarget: async target => {
               opened.push(target);
               return { summary_text: 'Local target opened.' };
@@ -3876,54 +3904,123 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
             }
           });
 
-          function detailButton(documentRecord) {
+          function detailToolbar(documentRecord) {
             const host = document.createElement('div');
+            document.body.appendChild(host);
             contribution.renderDetailToolbar({
               document: documentRecord,
               host,
               registerAction: definition => {
-                const enabled = definition.capability === true;
+                const enabled = definition.capability === true
+                  || definition.capability?.available === true;
                 return {
                   enabled,
                   disabledReason: enabled ? '' : definition.capability.reason,
-                  invoke: () => Promise.resolve(definition.handler())
+                  hidden: false,
+                  invoke: () => Promise.resolve(definition.handler(
+                    {
+                      scope: 'dotlineform',
+                      sub_scope: 'projects',
+                      doc_id: documentRecord.doc_id
+                    },
+                    {
+                      refreshDocument: async target => {
+                        refreshed.push(target);
+                        return target;
+                      }
+                    }
+                  ))
                 };
+              },
+              target: {
+                scope: 'dotlineform',
+                sub_scope: 'projects',
+                doc_id: documentRecord.doc_id
               }
             });
-            return host.querySelector('[data-docs-projects-open-folder]');
+            return host;
           }
-          const linkedButton = detailButton(documents[0]);
+          const linkedToolbar = detailToolbar(documents[0]);
+          const linkedButton = linkedToolbar.querySelector('[data-docs-projects-open-folder]');
+          const assignButton = linkedToolbar.querySelector('[data-docs-projects-assign-subject]');
           linkedButton.click();
           await new Promise(resolve => setTimeout(resolve, 0));
-          const pathlessButton = detailButton(documents[2]);
+          const pathlessToolbar = detailToolbar(documents[2]);
+          const pathlessButton = pathlessToolbar.querySelector('[data-docs-projects-open-folder]');
 
-          const editorHost = document.createElement('div');
-          const editor = contribution.mountMetadataEditor({
-            host: editorHost,
-            record: {
-              customisation: { folder_path: 'projects/architecture' }
-            },
-            target: {
-              scope: 'dotlineform',
-              sub_scope: 'projects',
-              doc_id: 'architecture'
-            }
-          });
-          const input = editorHost.querySelector('input');
-          const editorInitial = {
-            hidden: editorHost.hidden,
-            label: editorHost.querySelector('.docsViewer__fieldLabel').textContent,
-            name: input.name,
-            onpaste: input.onpaste,
-            value: input.value
+          assignButton.click();
+          await new Promise(resolve => setTimeout(resolve, 0));
+          let modalHost = document.querySelector('[data-docs-viewer-management-modal-host="true"]');
+          const initialModal = {
+            checked: modalHost.querySelector('input[name="docs-project-subject"]:checked').value,
+            folderHidden: modalHost.querySelector('[data-project-subject-folder]').hidden,
+            folderValue: modalHost.querySelector('[data-project-subject-folder-input]').value,
+            title: modalHost.querySelector('.docsViewer__modalTitle').textContent
           };
-          input.value = 'projects/future';
-          const editorValue = editor.read();
-          editor.destroy();
+          modalHost.querySelector('button[data-role="modal-cancel"]').click();
+          await new Promise(resolve => setTimeout(resolve, 0));
+          const cancelled = {
+            assignments: assignments.length,
+            refreshed: refreshed.length
+          };
+
+          assignButton.click();
+          await new Promise(resolve => setTimeout(resolve, 0));
+          modalHost = document.querySelector('[data-docs-viewer-management-modal-host="true"]');
+          const folderRadio = modalHost.querySelector('input[value="folder"]');
+          folderRadio.checked = true;
+          folderRadio.dispatchEvent(new Event('change', { bubbles: true }));
+          modalHost.querySelector('[data-project-subject-folder-input]').value =
+            '/configured/base/projects/future';
+          modalHost.querySelector('button[data-role="modal-primary"]').click();
+          await new Promise(resolve => setTimeout(resolve, 0));
+          await new Promise(resolve => setTimeout(resolve, 0));
+
+          rejectAssignment = true;
+          assignButton.click();
+          await new Promise(resolve => setTimeout(resolve, 0));
+          modalHost = document.querySelector('[data-docs-viewer-management-modal-host="true"]');
+          const noneRadio = modalHost.querySelector('input[value="none"]');
+          noneRadio.checked = true;
+          noneRadio.dispatchEvent(new Event('change', { bubbles: true }));
+          modalHost.querySelector('button[data-role="modal-primary"]').click();
+          await new Promise(resolve => setTimeout(resolve, 0));
+          await new Promise(resolve => setTimeout(resolve, 0));
+          const containedError = {
+            folderDisabled: modalHost.querySelector(
+              '[data-project-subject-folder-input]'
+            ).disabled,
+            modalOpen: Boolean(modalHost.querySelector('[data-role="docs-viewer-management-modal"]')),
+            status: modalHost.querySelector('[data-role="modal-status"]').textContent,
+            submitDisabled: modalHost.querySelector('button[data-role="modal-primary"]').disabled
+          };
+          modalHost.querySelector('button[data-role="modal-cancel"]').click();
+          await new Promise(resolve => setTimeout(resolve, 0));
 
           const configuredCollection = module.createDocsViewerManagementSubscopeDotlineformProjects({
             descriptor: { id: 'dotlineform_projects' },
             collection: { scope: 'studio', sub_scope: 'project-notes' }
+          });
+          const configuredHost = document.createElement('div');
+          const configuredActionIds = [];
+          configuredCollection.renderDetailToolbar({
+            document: { doc_id: 'configured' },
+            host: configuredHost,
+            registerAction: definition => {
+              configuredActionIds.push(definition.id);
+              return {
+                disabledReason: 'Unavailable.',
+                enabled: false,
+                hidden: false,
+                invoke: () => Promise.reject(new Error('Unavailable.'))
+              };
+            },
+            target: { scope: 'studio', sub_scope: 'project-notes', doc_id: 'configured' }
+          });
+          const analysisContribution = await registry.resolveManagementDocsSubscopeCustomisation({
+            id: 'analysis_tags'
+          }, {
+            collection: { scope: 'analysis', sub_scope: 'tags' }
           });
           let collectionTargetError = '';
           try {
@@ -3942,14 +4039,22 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
           }
 
           return {
+            assignments,
+            analysisSubjectAction: typeof analysisContribution.renderDetailToolbar,
+            assignButton: {
+              disabled: assignButton.disabled,
+              text: assignButton.textContent
+            },
+            cancelled,
             collectionTargetError,
             configuredCollectionId: configuredCollection.id,
-            editorDestroyed: {
-              childCount: editorHost.childElementCount,
-              hidden: editorHost.hidden
-            },
-            editorInitial,
-            editorValue,
+            configuredActionIds,
+            configuredSubjectAction: Boolean(
+              configuredHost.querySelector('[data-docs-projects-assign-subject]')
+            ),
+            containedError,
+            genericMetadataEditor: typeof contribution.mountMetadataEditor,
+            initialModal,
             linkedButton: {
               disabled: linkedButton.disabled,
               text: linkedButton.textContent
@@ -3971,6 +4076,7 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
               text: pathlessRow.querySelector('[data-projects-folder-state]').textContent
             },
             registryIds: registry.listManagementDocsSubscopeCustomisationIds(),
+            refreshed,
             rowError,
             statuses
           };
@@ -3978,17 +4084,41 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
     )
 
     assert result == {
+        "assignments": [
+            {
+                "target": {
+                    "scope": "dotlineform",
+                    "sub_scope": "projects",
+                    "doc_id": "architecture",
+                },
+                "payload": {
+                    "source_revision": "sha256:" + "a" * 64,
+                    "field_group": "authoring_subject",
+                    "fields": {"folder_path": "/configured/base/projects/future"},
+                    "confirm": True,
+                },
+            }
+        ],
+        "analysisSubjectAction": "undefined",
+        "assignButton": {"disabled": False, "text": "Assign subject"},
+        "cancelled": {"assignments": 0, "refreshed": 0},
         "collectionTargetError": "Projects customisation collection target is invalid.",
         "configuredCollectionId": "dotlineform_projects",
-        "editorDestroyed": {"childCount": 0, "hidden": True},
-        "editorInitial": {
-            "hidden": False,
-            "label": "Folder Link",
-            "name": "folder_path",
-            "onpaste": None,
-            "value": "projects/architecture",
+        "configuredActionIds": ["open-project-folder"],
+        "configuredSubjectAction": False,
+        "containedError": {
+            "folderDisabled": True,
+            "modalOpen": True,
+            "status": "Folder is outside the configured base.",
+            "submitDisabled": False,
         },
-        "editorValue": {"folder_path": "projects/future"},
+        "genericMetadataEditor": "undefined",
+        "initialModal": {
+            "checked": "folder",
+            "folderHidden": False,
+            "folderValue": "projects/16 forms",
+            "title": "Assign subject",
+        },
         "linkedButton": {"disabled": False, "text": "Open in Finder"},
         "linkedInfo": {
             "actions": {"assignSubject": True},
@@ -4026,10 +4156,20 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
         },
         "pathlessRow": {"state": "unlinked", "text": "No folder link"},
         "registryIds": ["analysis_tags", "dotlineform_projects"],
+        "refreshed": [
+            {
+                "scope": "dotlineform",
+                "sub_scope": "projects",
+                "doc_id": "architecture",
+            }
+        ],
         "rowError": (
             "Projects document customisation must contain exactly folder_path."
         ),
-        "statuses": [{"message": "Local target opened.", "isError": False}],
+        "statuses": [
+            {"message": "Local target opened.", "isError": False},
+            {"message": "Subject updated.", "isError": False},
+        ],
     }
 
 

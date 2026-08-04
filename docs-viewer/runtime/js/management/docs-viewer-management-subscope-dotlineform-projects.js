@@ -4,6 +4,9 @@ import {
 import {
   hasDocsViewerAssignableFieldGroup
 } from "../shared/docs-viewer-config-controller.js";
+import {
+  openDocsViewerProjectSubjectModal
+} from "./docs-viewer-management-project-subject-modal.js";
 
 const CUSTOMISATION_ID = "dotlineform_projects";
 const AUTHORING_SUBJECT_GROUP_ID = "authoring_subject";
@@ -28,14 +31,9 @@ function exactCollection(value) {
   return Object.freeze({ scope: scope, sub_scope: subScope });
 }
 
-function folderPath(documentRecord, options = {}) {
+function folderPath(documentRecord) {
   var customisation = documentRecord && documentRecord.customisation;
-  if (customisation == null) {
-    if (options.required) {
-      throw new Error("Projects metadata customisation is missing.");
-    }
-    return "";
-  }
+  if (customisation == null) return "";
   if (typeof customisation !== "object" || Array.isArray(customisation)) {
     throw new Error("Projects document customisation must be an object.");
   }
@@ -132,6 +130,78 @@ function renderOpenInFinder(context, options) {
   host.appendChild(button);
 }
 
+function renderAssignSubject(context, options, assignSubjectAvailable) {
+  var settings = context || {};
+  var host = settings.host;
+  if (
+    !host
+    || !assignSubjectAvailable
+    || typeof settings.registerAction !== "function"
+  ) return;
+  var serviceAvailable = (
+    typeof options.readMetadata === "function"
+    && typeof options.assignFieldGroup === "function"
+  );
+  var button = host.ownerDocument.createElement("button");
+  var registration = settings.registerAction({
+    id: "assign-subject",
+    placement: "detail-toolbar",
+    targetKind: "validated-detail",
+    capability: serviceAvailable
+      ? true
+      : { available: false, reason: "Subject assignment service is unavailable." },
+    emptyState: "omitted",
+    refreshEffect: "none",
+    handler: function (target, actionContext) {
+      return openDocsViewerProjectSubjectModal({
+        assignFieldGroup: options.assignFieldGroup,
+        readMetadata: options.readMetadata,
+        restoreFocus: button,
+        root: options.root,
+        target: target
+      }).then(function (result) {
+        if (!result || result.confirmed !== true) return result;
+        var refresh = actionContext && actionContext.refreshDocument;
+        var refreshed = typeof refresh === "function"
+          ? refresh(target)
+          : Promise.resolve(target);
+        return Promise.resolve(refreshed).then(function () {
+          if (typeof options.setStatus === "function") {
+            options.setStatus(
+              cleanString(result.payload && result.payload.summary_text)
+                || "Subject updated.",
+              false
+            );
+          }
+          return result.payload;
+        });
+      });
+    }
+  });
+  if (registration.hidden) return;
+  button.className = "docsViewerReport__button docsReportDetail__iconButton docsReportDetail__assignSubject";
+  button.type = "button";
+  button.dataset.docsProjectsAssignSubject = "true";
+  button.textContent = "Assign subject";
+  button.disabled = !registration.enabled;
+  if (registration.disabledReason) button.title = registration.disabledReason;
+  button.addEventListener("click", function () {
+    if (button.disabled) return;
+    button.disabled = true;
+    registration.invoke().catch(function (error) {
+      if (typeof options.setStatus === "function") {
+        options.setStatus(
+          error && error.message ? error.message : "Subject assignment failed.",
+          true
+        );
+      }
+    }).finally(function () {
+      if (button.isConnected) button.disabled = !registration.enabled;
+    });
+  });
+  host.appendChild(button);
+}
+
 function projectDetailInfo(context, assignSubjectAvailable) {
   var settings = context || {};
   var collection = exactCollection(settings.collection);
@@ -160,43 +230,6 @@ function projectDetailInfo(context, assignSubjectAvailable) {
   });
 }
 
-function mountMetadataEditor(context) {
-  var settings = context || {};
-  var host = settings.host;
-  if (!host) throw new Error("Projects metadata editor host is unavailable.");
-  exactCollection({
-    scope: settings.target && settings.target.scope,
-    sub_scope: settings.target && settings.target.sub_scope
-  });
-  var path = folderPath(settings.record, { required: true });
-  host.replaceChildren();
-  var label = host.ownerDocument.createElement("label");
-  label.className = "docsViewer__field docsViewer__field--projectsFolder";
-  var labelText = host.ownerDocument.createElement("span");
-  labelText.className = "docsViewer__fieldLabel";
-  labelText.textContent = "Folder Link";
-  var input = host.ownerDocument.createElement("input");
-  input.className = "docsViewer__fieldInput";
-  input.name = "folder_path";
-  input.type = "text";
-  input.autocomplete = "off";
-  input.spellcheck = false;
-  input.value = path;
-  label.appendChild(labelText);
-  label.appendChild(input);
-  host.appendChild(label);
-  host.hidden = false;
-  return {
-    read: function () {
-      return { folder_path: input.value };
-    },
-    destroy: function () {
-      host.replaceChildren();
-      host.hidden = true;
-    }
-  };
-}
-
 export function createDocsViewerManagementSubscopeDotlineformProjects(options = {}) {
   var descriptorId = cleanString(options.descriptor && options.descriptor.id);
   if (descriptorId !== CUSTOMISATION_ID) {
@@ -209,11 +242,11 @@ export function createDocsViewerManagementSubscopeDotlineformProjects(options = 
   );
   return {
     id: CUSTOMISATION_ID,
-    mountMetadataEditor: mountMetadataEditor,
     projectDetailInfo: function (context) {
       return projectDetailInfo(context, assignSubjectAvailable);
     },
     renderDetailToolbar: function (context) {
+      renderAssignSubject(context, options, assignSubjectAvailable);
       renderOpenInFinder(context, options);
     },
     renderRow: renderFolderState

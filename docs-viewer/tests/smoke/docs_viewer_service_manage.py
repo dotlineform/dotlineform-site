@@ -1464,6 +1464,16 @@ def assert_metadata_client_uses_exact_target_requests(page: Page) -> None:
                 ui_status: 'done',
                 viewable: false
             }, options);
+            await client.assignManagedDocFieldGroup({
+                scope: 'dotlineform',
+                sub_scope: 'projects',
+                doc_id: 'project-doc'
+            }, {
+                source_revision: 'sha256:' + 'a'.repeat(64),
+                field_group: 'authoring_subject',
+                fields: { folder_path: 'projects/example' },
+                confirm: true
+            }, options);
             let overrideError = '';
             try {
                 await client.updateManagedDocMetadata({
@@ -1503,6 +1513,19 @@ def assert_metadata_client_uses_exact_target_requests(page: Page) -> None:
                     "date_display": "July 2026",
                     "ui_status": "done",
                     "viewable": False,
+                },
+            },
+            {
+                "url": "http://manage.test/docs/assign-field-group",
+                "method": "POST",
+                "body": {
+                    "scope": "dotlineform",
+                    "doc_id": "project-doc",
+                    "sub_scope": "projects",
+                    "source_revision": "sha256:" + "a" * 64,
+                    "field_group": "authoring_subject",
+                    "fields": {"folder_path": "projects/example"},
+                    "confirm": True,
                 },
             },
         ],

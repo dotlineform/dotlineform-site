@@ -293,7 +293,7 @@ def test_sub_scope_metadata_write_rebuilds_detail_and_both_manifests(
     assert 'last_updated: "2026-07-27 21:15:00"' in source_after
 
 
-def test_projects_folder_link_read_save_remove_and_strict_rejection(
+def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
     monkeypatch,
     tmp_path: Path,
 ) -> None:
@@ -305,7 +305,7 @@ def test_projects_folder_link_read_save_remove_and_strict_rejection(
         sub_scope,
         changed_paths,
         write_operation,
-        **_kwargs,
+        **kwargs,
     ):
         write_operation()
         config = load_docs_scope_configs(repo_root, scope_ids=[scope])[scope]
@@ -321,6 +321,7 @@ def test_projects_folder_link_read_save_remove_and_strict_rejection(
                 "scope": scope,
                 "sub_scope": sub_scope,
                 "changed_paths": [path.name for path in changed_paths],
+                "suppression_reason": kwargs.get("suppression_reason"),
             }
         )
         return {
@@ -397,28 +398,45 @@ def test_projects_folder_link_read_save_remove_and_strict_rejection(
             },
         )
         revision = str(metadata["source_revision"])
-        base_body = {
+        target_body = {
             "scope": "dotlineform",
             "sub_scope": "projects",
             "doc_id": SUB_SCOPE_DOC_ID,
             "source_revision": revision,
-            "title": "Architecture",
+            "field_group": "authoring_subject",
+            "confirm": True,
         }
         source_before_rejections = source_path.read_bytes()
-        invalid_customisations = [
-            None,
-            {"folder_path": "projects/architecture", "extra": "rejected"},
-            {"folder_path": str(tmp_path / "outside")},
-            {"folder_path": "dlf-local:projects/architecture"},
+        with pytest.raises(
+            ValueError,
+            match="fields owned by an assignable field group",
+        ):
+            docs_management_service.docs_management_post_response(
+                repo_root,
+                docs_management_service.routes.UPDATE_METADATA_PATH,
+                {
+                    "scope": "dotlineform",
+                    "sub_scope": "projects",
+                    "doc_id": SUB_SCOPE_DOC_ID,
+                    "source_revision": revision,
+                    "title": "Architecture",
+                    "customisation": {"folder_path": "projects/other"},
+                },
+                dry_run=True,
+            )
+        invalid_assignments = [
+            {**target_body, "confirm": False, "fields": {"folder_path": ""}},
+            {**target_body, "field_group": "AUTHORING_SUBJECT", "fields": {"folder_path": ""}},
+            {**target_body, "field_group": "unknown", "fields": {"folder_path": ""}},
+            {**target_body, "fields": {"folder_path": "", "extra": "rejected"}},
+            {**target_body, "fields": {"folder_path": str(tmp_path / "outside")}},
+            {**target_body, "fields": {"folder_path": "dlf-local:projects/architecture"}},
         ]
-        for customisation in invalid_customisations:
-            body = dict(base_body)
-            if customisation is not None:
-                body["customisation"] = customisation
+        for body in invalid_assignments:
             with pytest.raises(ValueError):
                 docs_management_service.docs_management_post_response(
                     repo_root,
-                    docs_management_service.routes.UPDATE_METADATA_PATH,
+                    docs_management_service.routes.ASSIGN_FIELD_GROUP_PATH,
                     body,
                     dry_run=True,
                 )
@@ -427,10 +445,10 @@ def test_projects_folder_link_read_save_remove_and_strict_rejection(
         prospective = projects_base / "projects" / "Future Folder"
         status, result = docs_management_service.docs_management_post_response(
             repo_root,
-            docs_management_service.routes.UPDATE_METADATA_PATH,
+            docs_management_service.routes.ASSIGN_FIELD_GROUP_PATH,
             {
-                **base_body,
-                "customisation": {"folder_path": str(prospective)},
+                **target_body,
+                "fields": {"folder_path": prospective.as_uri()},
             },
             dry_run=False,
         )
@@ -442,14 +460,46 @@ def test_projects_folder_link_read_save_remove_and_strict_rejection(
             )
         )
 
+        stale_status, stale = docs_management_service.docs_management_post_response(
+            repo_root,
+            docs_management_service.routes.ASSIGN_FIELD_GROUP_PATH,
+            {
+                **target_body,
+                "fields": {"folder_path": ""},
+            },
+            dry_run=False,
+        )
+        stale_source = source_path.read_text(encoding="utf-8")
+
+        race_plan = docs_management_mutations.plan_assign_field_group(
+            repo_root,
+            {
+                **target_body,
+                "source_revision": result["source_revision"],
+                "fields": {"folder_path": ""},
+            },
+        )
+        linked_bytes = source_path.read_bytes()
+        source_path.write_bytes(linked_bytes + b"\nConcurrent edit.\n")
+        with pytest.raises(
+            docs_management_mutations.ManagedDocumentRevisionConflict
+        ) as race_error:
+            docs_management_service.execute_management_mutation_plan(
+                repo_root,
+                race_plan,
+                dry_run=False,
+            )
+        race_payload = race_error.value.payload
+        source_path.write_bytes(linked_bytes)
+
         status_removed, removed = (
             docs_management_service.docs_management_post_response(
                 repo_root,
-                docs_management_service.routes.UPDATE_METADATA_PATH,
+                docs_management_service.routes.ASSIGN_FIELD_GROUP_PATH,
                 {
-                    **base_body,
+                    **target_body,
                     "source_revision": result["source_revision"],
-                    "customisation": {"folder_path": ""},
+                    "fields": {"folder_path": ""},
                 },
                 dry_run=False,
             )
@@ -466,7 +516,13 @@ def test_projects_folder_link_read_save_remove_and_strict_rejection(
         "folder_path": "projects/architecture"
     }
     assert status is HTTPStatus.OK
-    assert result["record"]["customisation"] == {
+    assert result["target"] == {
+        "scope": "dotlineform",
+        "sub_scope": "projects",
+        "doc_id": SUB_SCOPE_DOC_ID,
+    }
+    assert result["field_group"] == "authoring_subject"
+    assert result["fields"] == {
         "folder_path": "projects/Future Folder"
     }
     assert result["changes"]["folder_path_changed"] is True
@@ -475,8 +531,17 @@ def test_projects_folder_link_read_save_remove_and_strict_rejection(
     assert linked_manifest["docs"][0]["customisation"] == {
         "folder_path": "projects/Future Folder"
     }
+    assert stale_status is HTTPStatus.CONFLICT
+    assert stale["operation"] == "assign_field_group"
+    assert stale["retry_safe"] is False
+    assert "folder_path: projects/Future Folder" in stale_source
+    assert race_payload["operation"] == "assign_field_group"
+    assert race_payload["error"] == (
+        "managed document source changed before field group assignment"
+    )
+    assert race_payload["retry_safe"] is False
     assert status_removed is HTTPStatus.OK
-    assert removed["record"]["customisation"] == {"folder_path": ""}
+    assert removed["fields"] == {"folder_path": ""}
     assert "folder_path:" not in removed_source
     assert "customisation" not in removed_manifest["docs"][0]
     assert rebuild_calls == [
@@ -484,11 +549,13 @@ def test_projects_folder_link_read_save_remove_and_strict_rejection(
             "scope": "dotlineform",
             "sub_scope": "projects",
             "changed_paths": [f"{SUB_SCOPE_DOC_ID}.md"],
+            "suppression_reason": "docs-assign-field-group",
         },
         {
             "scope": "dotlineform",
             "sub_scope": "projects",
             "changed_paths": [f"{SUB_SCOPE_DOC_ID}.md"],
+            "suppression_reason": "docs-assign-field-group",
         },
     ]
 

@@ -169,11 +169,8 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
                                     if current_bytes
                                     else ""
                                 ),
-                                operation="update_metadata",
-                                error=(
-                                    "managed document source changed before "
-                                    "metadata save"
-                                ),
+                                operation=plan.revision_conflict_operation,
+                                error=plan.revision_conflict_error,
                             )
                         )
                 if source_write.create_only:
@@ -283,6 +280,18 @@ def handle_create(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[
 
 def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
     return execute_management_mutation_plan(repo_root, mutations.plan_update_metadata(repo_root, body), dry_run)
+
+
+def handle_assign_field_group(
+    repo_root: Path,
+    body: Dict[str, Any],
+    dry_run: bool,
+) -> Dict[str, Any]:
+    return execute_management_mutation_plan(
+        repo_root,
+        mutations.plan_assign_field_group(repo_root, body),
+        dry_run,
+    )
 
 
 def handle_move(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:

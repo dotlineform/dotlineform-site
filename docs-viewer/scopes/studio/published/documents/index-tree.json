@@ -958,6 +958,12 @@
                   "title": "SSP-0.1 — Exact Subject Info Checkpoint Evidence",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-194710-24329a.json",
                   "ui_status": "done"
+                },
+                {
+                  "doc_id": "d-20260804-201111-a7646e",
+                  "title": "SSP-0.2 — Focused Projects Subject Assignment Checkpoint Evidence",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-201111-a7646e.json",
+                  "ui_status": "done"
                 }
               ]
             },
@@ -1369,5 +1375,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-04T18:48:31Z"
+  "generated_at": "2026-08-04T19:12:08Z"
 }

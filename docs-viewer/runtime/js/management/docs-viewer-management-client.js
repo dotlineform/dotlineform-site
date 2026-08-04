@@ -173,6 +173,15 @@ export function updateManagedDocMetadata(target, payload, options) {
   );
 }
 
+export function assignManagedDocFieldGroup(target, payload, options) {
+  return fetchManagementJson(
+    "/docs/assign-field-group",
+    "POST",
+    targetPayload(target, payload),
+    options
+  );
+}
+
 export function rebuildManagedDocSource(target, payload, options) {
   return fetchManagementJson("/docs/source/rebuild", "POST", targetPayload(target, payload), options);
 }

@@ -112,6 +112,14 @@ def test_local_target_route_is_management_owned() -> None:
     assert routes.OPEN_LOCAL_TARGET_PATH in routes.POST_PATHS
 
 
+def test_assignable_field_group_route_is_management_owned() -> None:
+    assert routes.ASSIGN_FIELD_GROUP_PATH == "/docs/assign-field-group"
+    assert routes.ASSIGN_FIELD_GROUP_PATH in routes.POST_PATHS
+    config_path = REPO_ROOT / "docs-viewer/config/defaults/docs-viewer-service.json"
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    assert config["routes"]["assign_field_group"] == routes.ASSIGN_FIELD_GROUP_PATH
+
+
 def test_semantic_token_usage_route_is_management_owned() -> None:
     assert routes.GENERATED_SEMANTIC_TOKENS_PATH in routes.GET_PATHS
 

@@ -27,6 +27,7 @@ IMPORT_SOURCE_PATH = "/docs/import-source"
 STAGED_MEDIA_PREVIEW_PATH = "/docs/staged-media-preview"
 STAGED_MEDIA_APPLY_PATH = "/docs/staged-media-apply"
 UPDATE_METADATA_PATH = "/docs/update-metadata"
+ASSIGN_FIELD_GROUP_PATH = "/docs/assign-field-group"
 CREATE_PATH = "/docs/create"
 REBUILD_PATH = "/docs/rebuild"
 MOVE_PATH = "/docs/move"
@@ -80,6 +81,7 @@ POST_PATHS = (
     STAGED_MEDIA_PREVIEW_PATH,
     STAGED_MEDIA_APPLY_PATH,
     UPDATE_METADATA_PATH,
+    ASSIGN_FIELD_GROUP_PATH,
     CREATE_PATH,
     REBUILD_PATH,
     MOVE_PATH,

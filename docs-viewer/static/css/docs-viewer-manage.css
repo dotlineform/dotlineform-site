@@ -537,6 +537,20 @@
   gap: 0.28rem;
 }
 
+.docsViewer__fieldGroup{
+  display: grid;
+  gap: 0.45rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.docsViewer__fieldGroup > legend{
+  margin-bottom: 0.15rem;
+  padding: 0;
+}
+
 .docsViewer__field:not(.docsViewer__field--checkbox){
   grid-template-columns: minmax(7.5rem, 0.42fr) minmax(0, 1fr);
   align-items: center;
