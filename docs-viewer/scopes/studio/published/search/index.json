@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-6bbb7e6efd1e8f8d2bd18211e3a38acf",
-    "generated_at_utc": "2026-08-04T19:32:57Z",
-    "count": 246
+    "version": "blake2b-69d44836aed488e659ed25a4882f0728",
+    "generated_at_utc": "2026-08-04T19:47:09Z",
+    "count": 247
   },
   "entries": [
     {
@@ -4280,26 +4280,26 @@
       "kind": "doc",
       "title": "Sub-Scope Publishing",
       "href": "/docs/?scope=studio&doc=d-20260802-194357-4d857b",
-      "last_updated": "2026-08-04 20:28:06",
+      "last_updated": "2026-08-04 20:47:09",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-04 20:28:06 • Roadmap",
+      "display_meta": "2026-08-04 20:47:09 • Roadmap",
       "search_terms": [
         "sub-scope publishing",
         "sub",
         "scope",
         "publishing",
         "roadmap",
-        "2026-08-04 20:28:06",
+        "2026-08-04 20:47:09",
         "2026",
         "08",
         "04",
         "20",
-        "28",
-        "06",
+        "47",
+        "09",
         "d-20260802-194357-4d857b"
       ],
-      "search_text": "sub-scope publishing sub scope publishing roadmap 2026-08-04 20:28:06 2026 08 04 20 28 06 d-20260802-194357-4d857b"
+      "search_text": "sub-scope publishing sub scope publishing roadmap 2026-08-04 20:47:09 2026 08 04 20 47 09 d-20260802-194357-4d857b"
     },
     {
       "id": "d-20260802-121105-c574f9",
@@ -4532,10 +4532,10 @@
       "kind": "doc",
       "title": "SSP-1 — Document Subject And Association Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-194426-087cfe",
-      "last_updated": "2026-08-04 20:28:06",
+      "last_updated": "2026-08-04 20:45:35",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-04 20:28:06 • Sub-Scope Publishing",
+      "display_meta": "2026-08-04 20:45:35 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-1 — document subject and association delivery",
         "ssp",
@@ -4549,16 +4549,49 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-04 20:28:06",
+        "2026-08-04 20:45:35",
         "2026",
         "08",
         "04",
         "20",
-        "28",
-        "06",
+        "45",
+        "35",
         "d-20260802-194426-087cfe"
       ],
-      "search_text": "ssp-1 — document subject and association delivery ssp 1 document subject and association delivery sub-scope publishing sub scope publishing 2026-08-04 20:28:06 2026 08 04 20 28 06 d-20260802-194426-087cfe"
+      "search_text": "ssp-1 — document subject and association delivery ssp 1 document subject and association delivery sub-scope publishing sub scope publishing 2026-08-04 20:45:35 2026 08 04 20 45 35 d-20260802-194426-087cfe"
+    },
+    {
+      "id": "d-20260804-204535-6c8f2a",
+      "kind": "doc",
+      "title": "SSP-1.0 — Document Subject And Association Sanity Note",
+      "href": "/docs/?scope=studio&doc=d-20260804-204535-6c8f2a",
+      "last_updated": "2026-08-04 20:47:09",
+      "parent_id": "d-20260802-194426-087cfe",
+      "parent_title": "SSP-1 — Document Subject And Association Delivery",
+      "display_meta": "2026-08-04 20:47:09 • SSP-1 — Document Subject And Association Delivery",
+      "search_terms": [
+        "ssp-1.0 — document subject and association sanity note",
+        "ssp",
+        "1",
+        "0",
+        "document",
+        "subject",
+        "and",
+        "association",
+        "sanity",
+        "note",
+        "ssp-1 — document subject and association delivery",
+        "delivery",
+        "2026-08-04 20:47:09",
+        "2026",
+        "08",
+        "04",
+        "20",
+        "47",
+        "09",
+        "d-20260804-204535-6c8f2a"
+      ],
+      "search_text": "ssp-1.0 — document subject and association sanity note ssp 1 0 document subject and association sanity note ssp-1 — document subject and association delivery delivery 2026-08-04 20:47:09 2026 08 04 20 47 09 d-20260804-204535-6c8f2a"
     },
     {
       "id": "d-20260801-133318-15e8fa",
