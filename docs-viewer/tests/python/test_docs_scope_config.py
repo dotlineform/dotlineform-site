@@ -188,9 +188,9 @@ def test_docs_scope_config_accepts_nested_sub_scopes() -> None:
     assert sub_scope.supports_return_import is False
     assert sub_scope.lifecycle is None
     assert sub_scope.ui_statuses == ("draft", "done")
-    assert sub_scope.report_customisation is not None
-    assert sub_scope.report_customisation.customisation_id == "analysis_tags"
-    assert sub_scope.report_customisation.settings == {
+    assert sub_scope.sub_scope_customisation is not None
+    assert sub_scope.sub_scope_customisation.customisation_id == "analysis_tags"
+    assert sub_scope.sub_scope_customisation.settings == {
         "groups": ("subject", "theme")
     }
     assert docs_scope_config.document_source_path(sub_scope).as_posix() == (
@@ -256,13 +256,13 @@ def test_docs_scope_config_accepts_route_specific_sub_scope_public_title() -> No
     assert config.sub_scopes[0].public_title == "Concepts"
 
 
-def test_docs_scope_config_accepts_registered_sub_scope_report_customisation() -> None:
+def test_docs_scope_config_accepts_registered_sub_scope_customisation() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         sub_scope = docs_sub_scope_record(
             "studio",
             "tags",
-            report_customisation={
+            sub_scope_customisation={
                 "id": "analysis_tags",
                 "settings": {"groups": ["Subject", "theme"]},
             },
@@ -274,13 +274,13 @@ def test_docs_scope_config_accepts_registered_sub_scope_report_customisation() -
 
         config = docs_scope_config.load_docs_scope_configs(repo_root)["studio"]
 
-    customisation = config.sub_scopes[0].report_customisation
+    customisation = config.sub_scopes[0].sub_scope_customisation
     assert customisation is not None
     assert customisation.customisation_id == "analysis_tags"
     assert customisation.settings == {"groups": ("subject", "theme")}
 
 
-def test_docs_scope_config_restricts_projects_customisation_to_exact_collection() -> None:
+def test_docs_scope_config_selects_projects_customisation_from_configured_collection() -> None:
     projects_customisation = {
         "id": "dotlineform_projects",
         "settings": {},
@@ -290,40 +290,26 @@ def test_docs_scope_config_restricts_projects_customisation_to_exact_collection(
         write_scope_record(
             repo_root,
             docs_scope_record(
-                "dotlineform",
+                "studio",
                 sub_scopes=[
                     docs_sub_scope_record(
-                        "dotlineform",
-                        "projects",
-                        report_customisation=projects_customisation,
+                        "studio",
+                        "project-notes",
+                        sub_scope_customisation=projects_customisation,
                     )
                 ],
             ),
         )
-        config = docs_scope_config.load_docs_scope_configs(repo_root)["dotlineform"]
+        config = docs_scope_config.load_docs_scope_configs(repo_root)["studio"]
 
-        wrong_collection = docs_scope_record(
-            "studio",
-            sub_scopes=[
-                docs_sub_scope_record(
-                    "studio",
-                    "projects",
-                    report_customisation=projects_customisation,
-                )
-            ],
-        )
-        write_scope_record(repo_root, wrong_collection)
-        with pytest.raises(ValueError, match="unavailable for studio/projects"):
-            docs_scope_config.load_docs_scope_configs(repo_root)
-
-    customisation = config.sub_scopes[0].report_customisation
+    customisation = config.sub_scopes[0].sub_scope_customisation
     assert customisation is not None
     assert customisation.customisation_id == "dotlineform_projects"
     assert customisation.settings == {}
 
 
 @pytest.mark.parametrize(
-    ("report_customisation", "error"),
+    ("sub_scope_customisation", "error"),
     [
         ("analysis_tags", "must be an object"),
         ({"id": "analysis_tags"}, "missing required fields: settings"),
@@ -345,14 +331,14 @@ def test_docs_scope_config_restricts_projects_customisation_to_exact_collection(
         ),
     ],
 )
-def test_docs_scope_config_rejects_invalid_sub_scope_report_customisation(
-    report_customisation: object,
+def test_docs_scope_config_rejects_invalid_sub_scope_customisation(
+    sub_scope_customisation: object,
     error: str,
 ) -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         sub_scope = docs_sub_scope_record("studio", "tags")
-        sub_scope["report_customisation"] = report_customisation
+        sub_scope["sub_scope_customisation"] = sub_scope_customisation
         write_scope_record(
             repo_root,
             docs_scope_record("studio", sub_scopes=[sub_scope]),
@@ -368,7 +354,7 @@ def test_docs_scope_config_rejects_legacy_document_groups_field() -> None:
         sub_scope = docs_sub_scope_record(
             "studio",
             "tags",
-            report_customisation={
+            sub_scope_customisation={
                 "id": "analysis_tags",
                 "settings": {"groups": ["subject"]},
             },
@@ -380,6 +366,20 @@ def test_docs_scope_config_rejects_legacy_document_groups_field() -> None:
         )
 
         with pytest.raises(ValueError, match="document_groups is no longer supported"):
+            docs_scope_config.load_docs_scope_configs(repo_root)
+
+
+def test_docs_scope_config_rejects_unknown_sub_scope_fields() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        sub_scope = docs_sub_scope_record("studio", "notes")
+        sub_scope["unregistered_extension"] = {"id": "example"}
+        write_scope_record(
+            repo_root,
+            docs_scope_record("studio", sub_scopes=[sub_scope]),
+        )
+
+        with pytest.raises(ValueError, match="unknown fields: unregistered_extension"):
             docs_scope_config.load_docs_scope_configs(repo_root)
 
 
@@ -417,9 +417,9 @@ def test_checked_scope_config_opts_only_analysis_tags_into_return_import() -> No
         for sub_scope in configs["analysis"].sub_scopes
     ] == [("tags", True)]
     assert not hasattr(analysis_tags, "document_groups")
-    assert analysis_tags.report_customisation is not None
-    assert analysis_tags.report_customisation.customisation_id == "analysis_tags"
-    assert analysis_tags.report_customisation.settings == {
+    assert analysis_tags.sub_scope_customisation is not None
+    assert analysis_tags.sub_scope_customisation.customisation_id == "analysis_tags"
+    assert analysis_tags.sub_scope_customisation.settings == {
         "groups": ("subject", "domain", "form", "theme")
     }
 

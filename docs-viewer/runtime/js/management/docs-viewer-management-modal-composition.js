@@ -32,7 +32,7 @@ function metadataCustomisationDescriptor(scopeConfig, target) {
   if (!child) {
     throw new Error("Edit Metadata target collection is not configured.");
   }
-  return child.reportCustomisation || null;
+  return child.subScopeCustomisation || null;
 }
 
 function shellRef(shellRefs, name, id) {

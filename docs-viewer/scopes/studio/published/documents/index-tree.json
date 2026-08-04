@@ -887,13 +887,27 @@
           "doc_id": "d-20260804-172011-a4c8e1",
           "title": "Sub-Scope Customisation",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-172011-a4c8e1.json",
-          "ui_status": "proposed",
+          "ui_status": "in-progress",
           "children": [
             {
               "doc_id": "d-20260804-172012-5d91bf",
               "title": "SSC-1 — Unified Sub-Scope Customisation Contract Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-172012-5d91bf.json",
-              "ui_status": "proposed"
+              "ui_status": "in-progress",
+              "children": [
+                {
+                  "doc_id": "d-20260804-182355-7ac901",
+                  "title": "SSC-1.0 — Contract And Cutover Sanity Note",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-182355-7ac901.json",
+                  "ui_status": "done"
+                },
+                {
+                  "doc_id": "d-20260804-183554-0c4be2",
+                  "title": "SSC-1.1 — Contract Rename Checkpoint Evidence",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-183554-0c4be2.json",
+                  "ui_status": "done"
+                }
+              ]
             }
           ]
         },
@@ -1329,5 +1343,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-04T16:22:32Z"
+  "generated_at": "2026-08-04T17:37:00Z"
 }

@@ -577,7 +577,7 @@ def assert_filter_projection(page: Page) -> None:
                 title: 'Tags',
                 manifestUrl: '/filter/manifest.json',
                 byIdUrlBase: '/filter/by-id',
-                reportCustomisation: { id: 'analysis_tags' }
+                subScopeCustomisation: { id: 'analysis_tags' }
               }]
             },
             subscopeReportContribution: contribution,
@@ -1931,7 +1931,7 @@ def assert_manage_report_bridge(page: Page) -> None:
                   title: 'Tags',
                   manifestUrl: '/synthetic/manifest.json',
                   byIdUrlBase: '/synthetic/by-id',
-                  reportCustomisation: { id: 'analysis_tags' }
+                  subScopeCustomisation: { id: 'analysis_tags' }
                 }]
               }],
               uiStatusByValue: new Map([
@@ -3513,7 +3513,7 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
               title: 'Custom',
               manifestUrl: '/candidate/custom-manifest.json',
               byIdUrlBase: '/candidate/by-id',
-              reportCustomisation: { id: 'synthetic' }
+              subScopeCustomisation: { id: 'synthetic' }
             }] },
             subscopeReportContribution: composition.composeDocsViewerManagementSubscopeContributions({
               customisationContribution: customContribution,
@@ -3630,7 +3630,7 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
               subScope: 'mismatch', title: 'Mismatch',
               manifestUrl: '/candidate/mismatch-manifest.json',
               byIdUrlBase: '/candidate/by-id',
-              reportCustomisation: { id: 'analysis_tags' }
+              subScopeCustomisation: { id: 'analysis_tags' }
             }] },
             subscopeReportContribution: {},
             viewerScope: 'studio'
@@ -3648,7 +3648,7 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
               subScope: 'callback', title: 'Callback',
               manifestUrl: '/candidate/custom-manifest.json',
               byIdUrlBase: '/candidate/by-id',
-              reportCustomisation: { id: 'synthetic' }
+              subScopeCustomisation: { id: 'synthetic' }
             }] },
             subscopeReportContribution: composition.composeDocsViewerManagementSubscopeContributions({
               defaultContribution: callbackDefault,
@@ -3869,14 +3869,18 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
           const editorValue = editor.read();
           editor.destroy();
 
-          let collectionError = '';
+          const configuredCollection = module.createDocsViewerManagementSubscopeDotlineformProjects({
+            descriptor: { id: 'dotlineform_projects' },
+            collection: { scope: 'studio', sub_scope: 'project-notes' }
+          });
+          let collectionTargetError = '';
           try {
             module.createDocsViewerManagementSubscopeDotlineformProjects({
               descriptor: { id: 'dotlineform_projects' },
-              collection: { scope: 'studio', sub_scope: 'projects' }
+              collection: { scope: '', sub_scope: 'project-notes' }
             });
           } catch (error) {
-            collectionError = error.message;
+            collectionTargetError = error.message;
           }
           let rowError = '';
           try {
@@ -3886,7 +3890,8 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
           }
 
           return {
-            collectionError,
+            collectionTargetError,
+            configuredCollectionId: configuredCollection.id,
             editorDestroyed: {
               childCount: editorHost.childElementCount,
               hidden: editorHost.hidden
@@ -3919,9 +3924,8 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
     )
 
     assert result == {
-        "collectionError": (
-            "Projects customisation collection did not match dotlineform/projects."
-        ),
+        "collectionTargetError": "Projects customisation collection target is invalid.",
+        "configuredCollectionId": "dotlineform_projects",
         "editorDestroyed": {"childCount": 0, "hidden": True},
         "editorInitial": {
             "hidden": False,

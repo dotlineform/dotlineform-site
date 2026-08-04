@@ -36,10 +36,9 @@ from docs_artifact_locations import (  # noqa: E402
     require_location_capabilities,
 )
 from docs_document_identity import is_immutable_doc_id  # noqa: E402
-from docs_subscope_report_customisations import (  # noqa: E402
-    DocsSubScopeReportCustomisationConfig,
-    normalize_docs_subscope_report_customisation,
-    validate_report_customisation_collection,
+from docs_subscope_customisations import (  # noqa: E402
+    DocsSubScopeCustomisationConfig,
+    normalize_docs_subscope_customisation,
 )
 from studio.shared.python.external_workspace_paths import (  # noqa: E402
     ExternalWorkspaceRoot,
@@ -176,7 +175,7 @@ class DocsSubScopeConfig:
     public_title: str
     supports_return_import: bool
     ui_statuses: tuple[str, ...]
-    report_customisation: DocsSubScopeReportCustomisationConfig | None
+    sub_scope_customisation: DocsSubScopeCustomisationConfig | None
     lifecycle: DocsSubScopeLifecycleConfig | None
     source: DocsSourceConfig
     published: DocsPublishedConfig
@@ -773,6 +772,11 @@ def normalize_sub_scope_configs(
         item_field = f"{field}[{index}]"
         if not isinstance(item, dict):
             raise ValueError(f"docs scope config field {item_field} must be an object")
+        if "document_groups" in item:
+            raise ValueError(
+                f"docs scope config field {item_field}.document_groups is no longer supported; "
+                "configure groups through sub_scope_customisation"
+            )
         sub_scope = str(item.get("sub_scope") or "").strip().lower()
         if not SUB_SCOPE_ID_PATTERN.fullmatch(sub_scope):
             raise ValueError(f"docs scope config field {item_field}.sub_scope is invalid")
@@ -783,6 +787,22 @@ def normalize_sub_scope_configs(
             raise ValueError(
                 f"docs scope config sub-scope {parent.scope_id}/{sub_scope} derives source and published paths "
                 "from its parent scope_root"
+            )
+        supported_fields = {
+            "lifecycle",
+            "public_projection",
+            "public_title",
+            "sub_scope",
+            "sub_scope_customisation",
+            "supports_return_import",
+            "title",
+            "ui_statuses",
+        }
+        unknown_fields = sorted(set(item) - supported_fields)
+        if unknown_fields:
+            raise ValueError(
+                f"docs scope config field {item_field} contains unknown fields: "
+                f"{', '.join(unknown_fields)}"
             )
         source = DocsSourceConfig(
             location=location_child(parent.source.location, SOURCE_SUB_SCOPES_PATH / sub_scope),
@@ -825,19 +845,9 @@ def normalize_sub_scope_configs(
             item.get("ui_statuses"),
             field=f"{item_field}.ui_statuses",
         )
-        if "document_groups" in item:
-            raise ValueError(
-                f"docs scope config field {item_field}.document_groups is no longer supported; "
-                "configure groups through report_customisation"
-            )
-        report_customisation = normalize_docs_subscope_report_customisation(
-            item.get("report_customisation"),
-            field=f"{item_field}.report_customisation",
-        )
-        validate_report_customisation_collection(
-            report_customisation,
-            scope=parent.scope_id,
-            sub_scope=sub_scope,
+        sub_scope_customisation = normalize_docs_subscope_customisation(
+            item.get("sub_scope_customisation"),
+            field=f"{item_field}.sub_scope_customisation",
         )
         lifecycle = normalize_sub_scope_lifecycle(
             item.get("lifecycle"),
@@ -862,7 +872,7 @@ def normalize_sub_scope_configs(
                 public_title=public_title,
                 supports_return_import=supports_return_import,
                 ui_statuses=ui_statuses,
-                report_customisation=report_customisation,
+                sub_scope_customisation=sub_scope_customisation,
                 lifecycle=lifecycle,
                 source=source,
                 published=published,
@@ -1092,7 +1102,7 @@ __all__ = [
     "DocsScopeConfig",
     "DocsSourceConfig",
     "DocsSubScopeConfig",
-    "DocsSubScopeReportCustomisationConfig",
+    "DocsSubScopeCustomisationConfig",
     "EXTERNAL_DATA_ROOT_MARKER",
     "LOCAL_EXTERNAL_SCOPE_TYPE",
     "LOCAL_SCOPE_TYPE",

@@ -3,10 +3,6 @@ import {
 } from "./docs-viewer-management-client.js";
 
 const CUSTOMISATION_ID = "dotlineform_projects";
-const EXPECTED_COLLECTION = Object.freeze({
-  scope: "dotlineform",
-  sub_scope: "projects"
-});
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -20,12 +16,12 @@ function exactCollection(value) {
     keys.length !== 2
     || keys[0] !== "scope"
     || keys[1] !== "sub_scope"
-    || scope !== EXPECTED_COLLECTION.scope
-    || subScope !== EXPECTED_COLLECTION.sub_scope
+    || !scope
+    || !subScope
   ) {
-    throw new Error("Projects customisation collection did not match dotlineform/projects.");
+    throw new Error("Projects customisation collection target is invalid.");
   }
-  return EXPECTED_COLLECTION;
+  return Object.freeze({ scope: scope, sub_scope: subScope });
 }
 
 function folderPath(documentRecord, options = {}) {

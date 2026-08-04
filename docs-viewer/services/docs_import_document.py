@@ -25,8 +25,8 @@ from docs_import_source_helpers import import_summary_text, relative_path, viewe
 from docs_import_source_interactive import materialize_interactive_html_assets  # noqa: E402
 from docs_management_document_target import ManagedDocumentCollection  # noqa: E402
 from docs_management_mutations import metadata_search_doc_ids  # noqa: E402
-from docs_subscope_report_customisations import (  # noqa: E402
-    normalize_report_customisation_import_front_matter,
+from docs_subscope_customisations import (  # noqa: E402
+    normalize_sub_scope_customisation_import_front_matter,
 )
 from docs_source_model import (  # noqa: E402
     ScopeDoc,
@@ -319,8 +319,8 @@ def plan_import_document(
                 "custom import front matter requires a configured sub-scope create"
             )
         normalized_custom_front_matter = (
-            normalize_report_customisation_import_front_matter(
-                collection.document_config.report_customisation,
+            normalize_sub_scope_customisation_import_front_matter(
+                collection.document_config.sub_scope_customisation,
                 custom_front_matter,
                 doc_id=record.doc_id,
             )

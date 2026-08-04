@@ -24,9 +24,9 @@ from docs_scope_config import (
     resolve_external_data_root,
     resolve_scope_path,
 )
-from docs_subscope_report_customisations import (
-    normalize_report_customisation_metadata_update,
-    report_customisation_document_groups,
+from docs_subscope_customisations import (
+    normalize_sub_scope_customisation_metadata_update,
+    sub_scope_customisation_document_groups,
 )
 
 
@@ -246,10 +246,10 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
             source_model.validate_sub_scope_document_metadata(
                 document,
                 ui_statuses=collection.document_config.ui_statuses,
-                document_groups=report_customisation_document_groups(
-                    collection.document_config.report_customisation
+                document_groups=sub_scope_customisation_document_groups(
+                    collection.document_config.sub_scope_customisation
                 ),
-                report_customisation=collection.document_config.report_customisation,
+                sub_scope_customisation=collection.document_config.sub_scope_customisation,
             )
             docs.append(document)
         if "parent_id" in body:
@@ -414,8 +414,8 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
     group_was_provided = resolved.sub_scope and "group" in body
     current_group = target.group
     document_groups = (
-        report_customisation_document_groups(
-            resolved.document_config.report_customisation
+        sub_scope_customisation_document_groups(
+            resolved.document_config.sub_scope_customisation
         )
         if resolved.sub_scope
         else ()
@@ -432,9 +432,9 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         else current_group
     )
     group_changed = group_was_provided and group != current_group
-    customisation_update = normalize_report_customisation_metadata_update(
+    customisation_update = normalize_sub_scope_customisation_metadata_update(
         (
-            resolved.document_config.report_customisation
+            resolved.document_config.sub_scope_customisation
             if resolved.sub_scope
             else None
         ),

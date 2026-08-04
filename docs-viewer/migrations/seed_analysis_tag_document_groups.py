@@ -87,7 +87,7 @@ def _analysis_tag_groups(repo_root: Path) -> list[str]:
         for sub_scope in sub_scopes:
             if not isinstance(sub_scope, dict) or sub_scope.get("sub_scope") != "tags":
                 continue
-            customisation = sub_scope.get("report_customisation")
+            customisation = sub_scope.get("sub_scope_customisation")
             settings = (
                 customisation.get("settings")
                 if isinstance(customisation, dict)

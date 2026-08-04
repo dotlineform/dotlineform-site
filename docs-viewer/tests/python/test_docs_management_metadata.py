@@ -349,7 +349,7 @@ def test_projects_folder_link_read_save_remove_and_strict_rejection(
                         docs_sub_scope_record(
                             "dotlineform",
                             "projects",
-                            report_customisation={
+                            sub_scope_customisation={
                                 "id": "dotlineform_projects",
                                 "settings": {},
                             },

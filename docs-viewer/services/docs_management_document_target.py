@@ -16,9 +16,9 @@ from docs_scope_config import (
     load_docs_scope_configs,
     resolve_scope_path,
 )
-from docs_subscope_report_customisations import (
-    report_customisation_document_groups,
-    report_customisation_metadata_record,
+from docs_subscope_customisations import (
+    sub_scope_customisation_document_groups,
+    sub_scope_customisation_metadata_record,
 )
 
 
@@ -265,10 +265,10 @@ def resolve_managed_document_target(
         source_model.validate_sub_scope_document_metadata(
             document,
             ui_statuses=collection.document_config.ui_statuses,
-            document_groups=report_customisation_document_groups(
-                collection.document_config.report_customisation
+            document_groups=sub_scope_customisation_document_groups(
+                collection.document_config.sub_scope_customisation
             ),
-            report_customisation=collection.document_config.report_customisation,
+            sub_scope_customisation=collection.document_config.sub_scope_customisation,
         )
     else:
         parent_documents = [
@@ -337,8 +337,8 @@ def managed_document_metadata(
     }
     if resolved.sub_scope:
         record["group"] = document.group
-        customisation_record = report_customisation_metadata_record(
-            resolved.document_config.report_customisation,
+        customisation_record = sub_scope_customisation_metadata_record(
+            resolved.document_config.sub_scope_customisation,
             front_matter,
             doc_id=document.doc_id,
         )
@@ -351,8 +351,8 @@ def managed_document_metadata(
         payload["choices"] = {
             "ui_status": list(resolved.document_config.ui_statuses),
             "group": list(
-                report_customisation_document_groups(
-                    resolved.document_config.report_customisation
+                sub_scope_customisation_document_groups(
+                    resolved.document_config.sub_scope_customisation
                 )
             ),
         }

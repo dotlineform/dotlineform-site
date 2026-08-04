@@ -127,7 +127,7 @@
           "title": "Tags",
           "manifest_url": "/docs-viewer/scopes/analysis/published/documents/sub-scopes/tags/manage-manifest.json",
           "by_id_url_base": "/docs-viewer/scopes/analysis/published/documents/sub-scopes/tags/by-id",
-          "report_customisation": {
+          "sub_scope_customisation": {
             "id": "analysis_tags"
           }
         }
@@ -282,7 +282,7 @@
           "title": "Projects",
           "manifest_url": "/docs/published/external/dotlineform/projects/manage-manifest.json",
           "by_id_url_base": "/docs/published/external/dotlineform/projects/by-id",
-          "report_customisation": {
+          "sub_scope_customisation": {
             "id": "dotlineform_projects"
           }
         }

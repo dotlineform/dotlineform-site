@@ -163,12 +163,12 @@ def docs_sub_scope_record(
     public_docs_path: str | None = None,
     ui_statuses: list[str] | None = None,
     analysis_tag_groups: list[str] | None = None,
-    report_customisation: dict[str, object] | None = None,
+    sub_scope_customisation: dict[str, object] | None = None,
     lifecycle: dict[str, object] | None = None,
 ) -> dict[str, object]:
-    if analysis_tag_groups is not None and report_customisation is not None:
+    if analysis_tag_groups is not None and sub_scope_customisation is not None:
         raise ValueError(
-            "analysis_tag_groups and report_customisation are mutually exclusive"
+            "analysis_tag_groups and sub_scope_customisation are mutually exclusive"
         )
     record: dict[str, object] = {
         "sub_scope": sub_scope,
@@ -193,12 +193,12 @@ def docs_sub_scope_record(
     if supports_return_import is not None:
         record["supports_return_import"] = supports_return_import
     if analysis_tag_groups is not None:
-        record["report_customisation"] = {
+        record["sub_scope_customisation"] = {
             "id": "analysis_tags",
             "settings": {"groups": analysis_tag_groups},
         }
-    if report_customisation is not None:
-        record["report_customisation"] = report_customisation
+    if sub_scope_customisation is not None:
+        record["sub_scope_customisation"] = sub_scope_customisation
     if lifecycle is not None:
         record["lifecycle"] = lifecycle
     return record

@@ -31,9 +31,9 @@ from docs_scope_config import (
     document_source_path,
     resolve_scope_path,
 )
-from docs_subscope_report_customisations import (
-    report_customisation_document_groups,
-    validate_report_customisation_document,
+from docs_subscope_customisations import (
+    sub_scope_customisation_document_groups,
+    validate_sub_scope_customisation_document,
 )
 
 
@@ -379,7 +379,7 @@ def validate_sub_scope_document_metadata(
     *,
     ui_statuses: tuple[str, ...],
     document_groups: tuple[str, ...],
-    report_customisation: Any = None,
+    sub_scope_customisation: Any = None,
 ) -> None:
     """Validate metadata owned by one configured sub-scope."""
 
@@ -395,8 +395,8 @@ def validate_sub_scope_document_metadata(
         raise ValueError(
             f"Unknown group {doc.group!r} for sub-scope doc {doc.doc_id!r}"
         )
-    validate_report_customisation_document(
-        report_customisation,
+    validate_sub_scope_customisation_document(
+        sub_scope_customisation,
         doc.front_matter,
         doc_id=doc.doc_id,
     )
@@ -487,10 +487,10 @@ def load_document_collection_docs_for_config(
             validate_sub_scope_document_metadata(
                 doc,
                 ui_statuses=document_config.ui_statuses,
-                document_groups=report_customisation_document_groups(
-                    document_config.report_customisation
+                document_groups=sub_scope_customisation_document_groups(
+                    document_config.sub_scope_customisation
                 ),
-                report_customisation=document_config.report_customisation,
+                sub_scope_customisation=document_config.sub_scope_customisation,
             )
     return docs
 

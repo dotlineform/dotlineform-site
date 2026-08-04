@@ -223,7 +223,7 @@
             "report",
             "research"
           ],
-          "report_customisation": {
+          "sub_scope_customisation": {
             "id": "analysis_tags",
             "settings": {
               "groups": [
@@ -441,7 +441,7 @@
         {
           "sub_scope": "projects",
           "title": "Projects",
-          "report_customisation": {
+          "sub_scope_customisation": {
             "id": "dotlineform_projects",
             "settings": {}
           },

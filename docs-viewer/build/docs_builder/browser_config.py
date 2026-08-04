@@ -19,7 +19,7 @@ from .common import (
     published_search_path,
     scope_uses_external_data,
 )
-from docs_subscope_report_customisations import browser_report_customisation_payload
+from docs_subscope_customisations import browser_sub_scope_customisation_payload
 
 
 def raw_scope_items(repo_root: Path) -> dict[str, dict[str, Any]]:
@@ -105,12 +105,12 @@ def browser_sub_scope_records(
             ),
             "by_id_url_base": f"{output_base}/by-id",
         }
-        report_customisation = browser_report_customisation_payload(
-            sub_scope.report_customisation,
+        sub_scope_customisation = browser_sub_scope_customisation_payload(
+            sub_scope.sub_scope_customisation,
             published=published,
         )
-        if report_customisation is not None:
-            record["report_customisation"] = report_customisation
+        if sub_scope_customisation is not None:
+            record["sub_scope_customisation"] = sub_scope_customisation
         records.append(record)
     return records
 

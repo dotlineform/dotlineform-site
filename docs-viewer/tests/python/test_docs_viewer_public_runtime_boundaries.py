@@ -6,7 +6,7 @@ from __future__ import annotations
 import json
 import re
 
-from docs_subscope_report_customisations import registered_report_customisation_access
+from docs_subscope_customisations import registered_sub_scope_customisation_access
 from docs_viewer_service_test_support import REPO_ROOT, public_entry_static_import_graph
 
 
@@ -133,7 +133,7 @@ def test_subscope_customisation_registry_access_agrees_across_runtimes() -> None
     ).read_text(encoding="utf-8")
     manage_ids = set(re.findall(r"^  ([a-z][a-z0-9_]*): function", manage_source, re.MULTILINE))
     public_ids = set(re.findall(r"^  ([a-z][a-z0-9_]*): function", public_source, re.MULTILINE))
-    python_access = registered_report_customisation_access()
+    python_access = registered_sub_scope_customisation_access()
 
     assert manage_ids == {
         customisation_id

@@ -144,7 +144,7 @@ function resolveReportContribution(context) {
     var subScopeIdValue = cleanId(reportMeta.subScope);
     var subScope = findSubScope(context, subScopeIdValue);
     contribution = resolvePublicDocsSubscopeCustomisation(
-      subScope && subScope.reportCustomisation,
+      subScope && subScope.subScopeCustomisation,
       {
         collection: collectionTarget(
           context && context.viewerScope,
@@ -941,8 +941,8 @@ function publishDocumentsRefresh(state, reason) {
 function applyManifest(state, manifest) {
   var descriptorId = cleanId(
     state.subScope
-    && state.subScope.reportCustomisation
-    && state.subScope.reportCustomisation.id
+    && state.subScope.subScopeCustomisation
+    && state.subScope.subScopeCustomisation.id
   );
   var manifestCustomisation = manifest.customisation;
   var manifestId = cleanId(manifestCustomisation && manifestCustomisation.id);
@@ -1247,7 +1247,7 @@ export function mountDocsSubscopeReport(context) {
         root,
         error && error.message
           ? error.message
-          : "Failed to resolve docs sub-scope report customisation."
+          : "Failed to resolve docs sub-scope customisation."
       );
       return true;
     });

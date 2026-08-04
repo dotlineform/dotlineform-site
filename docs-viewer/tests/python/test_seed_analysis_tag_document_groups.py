@@ -70,7 +70,7 @@ def prepare_repo(repo_root: Path) -> dict[str, Path]:
                         "sub_scopes": [
                             {
                                 "sub_scope": "tags",
-                                "report_customisation": {
+                                "sub_scope_customisation": {
                                     "id": "analysis_tags",
                                     "settings": {
                                         "groups": [

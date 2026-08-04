@@ -123,7 +123,7 @@ def test_document_collection_loader_selects_exact_configured_sub_scope() -> None
     child_config = SimpleNamespace(
         sub_scope="tags",
         ui_statuses=("draft",),
-        report_customisation=SimpleNamespace(
+        sub_scope_customisation=SimpleNamespace(
             customisation_id="analysis_tags",
             settings={"groups": ("subject",)},
         ),
@@ -194,7 +194,7 @@ def test_projects_collection_loader_validates_decoded_relative_folder_path() -> 
     child_config = SimpleNamespace(
         sub_scope="projects",
         ui_statuses=("draft", "done"),
-        report_customisation=SimpleNamespace(
+        sub_scope_customisation=SimpleNamespace(
             customisation_id="dotlineform_projects",
             settings={},
         ),

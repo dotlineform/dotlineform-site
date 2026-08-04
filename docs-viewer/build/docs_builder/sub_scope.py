@@ -17,10 +17,10 @@ from .common import (
 )
 from .pipeline import DocsDataBuilder
 from .source import DocRecord
-from docs_subscope_report_customisations import (
-    project_report_customisation_manifest,
-    report_customisation_document_groups,
-    validate_report_customisation_document,
+from docs_subscope_customisations import (
+    project_sub_scope_customisation_manifest,
+    sub_scope_customisation_document_groups,
+    validate_sub_scope_customisation_document,
 )
 
 
@@ -101,8 +101,8 @@ class SubScopeDocsBuilder(DocsDataBuilder):
                 for doc in visible_docs
             ]
         }
-        projected = project_report_customisation_manifest(
-            self.sub_scope_config.report_customisation,
+        projected = project_sub_scope_customisation_manifest(
+            self.sub_scope_config.sub_scope_customisation,
             visible_docs,
             published=True,
         )
@@ -128,8 +128,8 @@ class SubScopeDocsBuilder(DocsDataBuilder):
                 for doc in ordered_docs
             ]
         }
-        projected = project_report_customisation_manifest(
-            self.sub_scope_config.report_customisation,
+        projected = project_sub_scope_customisation_manifest(
+            self.sub_scope_config.sub_scope_customisation,
             ordered_docs,
             published=False,
         )
@@ -157,8 +157,8 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         super().validate_docs(docs)
         allowed_statuses = set(self.sub_scope_config.ui_statuses)
         allowed_groups = set(
-            report_customisation_document_groups(
-                self.sub_scope_config.report_customisation
+            sub_scope_customisation_document_groups(
+                self.sub_scope_config.sub_scope_customisation
             )
         )
         for doc in docs:
@@ -177,8 +177,8 @@ class SubScopeDocsBuilder(DocsDataBuilder):
                     f"Unknown group {doc.group!r} for "
                     f"{self.scope_id}/{self.sub_scope_id} doc {doc.doc_id!r}"
                 )
-            validate_report_customisation_document(
-                self.sub_scope_config.report_customisation,
+            validate_sub_scope_customisation_document(
+                self.sub_scope_config.sub_scope_customisation,
                 doc.front_matter,
                 doc_id=doc.doc_id,
             )

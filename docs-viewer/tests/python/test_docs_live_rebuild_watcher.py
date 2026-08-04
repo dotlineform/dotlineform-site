@@ -76,7 +76,7 @@ def configured_analysis_tags(
         title="Tags",
         public_title="Concepts",
         ui_statuses=("draft", "done"),
-        report_customisation=SimpleNamespace(
+        sub_scope_customisation=SimpleNamespace(
             customisation_id="analysis_tags",
             settings={"groups": ("subject", "domain")},
         ),

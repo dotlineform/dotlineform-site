@@ -197,7 +197,7 @@ function loadSubscopeContribution(settings, parent, subScope, options) {
       uiStatusByValue: contributionOptions.uiStatusByValue
     });
     return modules[2].resolveManagementDocsSubscopeCustomisation(
-      subScopeConfig.reportCustomisation,
+      subScopeConfig.subScopeCustomisation,
       {
         clientOptions: managementClientOptions(settings),
         collection: { scope: parent.scope, sub_scope: subScope },

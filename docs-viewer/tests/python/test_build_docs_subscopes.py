@@ -125,7 +125,7 @@ def test_python_docs_builder_projects_folder_paths_only_into_manage_manifest() -
                                 "dotlineform",
                                 "projects",
                                 title="Projects",
-                                report_customisation={
+                                sub_scope_customisation={
                                     "id": "dotlineform_projects",
                                     "settings": {},
                                 },
@@ -551,7 +551,7 @@ def test_python_docs_builder_projects_registered_manage_customisation_only() -> 
                 "studio",
                 "tags",
                 title="Tags",
-                report_customisation={
+                sub_scope_customisation={
                     "id": "analysis_tags",
                     "settings": {"groups": ["subject", "theme"]},
                 },
@@ -627,10 +627,10 @@ group: subject
     assert detail["viewer_url"] == (
         f"/docs/?scope=studio&doc={TAGS_REPORT_DOC_ID}&subdoc={DETAIL_DOC_ID}"
     )
-    assert browser_config["scopes"][0]["sub_scopes"][0]["report_customisation"] == {
+    assert browser_config["scopes"][0]["sub_scopes"][0]["sub_scope_customisation"] == {
         "id": "analysis_tags"
     }
-    assert "report_customisation" not in public_browser_config["scopes"][0]["sub_scopes"][0]
+    assert "sub_scope_customisation" not in public_browser_config["scopes"][0]["sub_scopes"][0]
 
 
 def test_python_docs_builder_public_sub_scope_separates_manage_and_public_url_bases() -> None:

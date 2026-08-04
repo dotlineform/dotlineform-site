@@ -57,7 +57,7 @@ def _fixture(tmp_path: Path, projects_base: Path) -> migration.MigrationPaths:
                         "dotlineform",
                         "projects",
                         title="Projects",
-                        report_customisation={
+                        sub_scope_customisation={
                             "id": "dotlineform_projects",
                             "settings": {},
                         },

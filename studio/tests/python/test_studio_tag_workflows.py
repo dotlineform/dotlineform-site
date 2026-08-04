@@ -94,7 +94,7 @@ viewer_report_subscope: tags
                                 "sub_scope": "tags",
                                 "title": "Tags",
                                 "ui_statuses": [],
-                                "report_customisation": {
+                                "sub_scope_customisation": {
                                     "id": "analysis_tags",
                                     "settings": {
                                         "groups": [

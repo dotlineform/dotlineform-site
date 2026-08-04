@@ -68,7 +68,7 @@ def test_projects_create_plan_accepts_only_custom_folder_path(
                         docs_sub_scope_record(
                             "dotlineform",
                             "projects",
-                            report_customisation={
+                            sub_scope_customisation={
                                 "id": "dotlineform_projects",
                                 "settings": {},
                             },
