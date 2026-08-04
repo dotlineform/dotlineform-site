@@ -4,6 +4,22 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260804-211353-669844",
+      "title": "SSP-1.1 — Authoring Subject And Manage Cue Evidence",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-211353-669844.json",
+      "timestamp": "2026-08-04 21:21:01",
+      "parent_id": "d-20260802-194426-087cfe",
+      "parent_title": "SSP-1 — Document Subject And Association Delivery"
+    },
+    {
+      "doc_id": "d-20260802-194426-087cfe",
+      "title": "SSP-1 — Document Subject And Association Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194426-087cfe.json",
+      "timestamp": "2026-08-04 21:19:45",
+      "parent_id": "d-20260802-194357-4d857b",
+      "parent_title": "Sub-Scope Publishing"
+    },
+    {
       "doc_id": "d-20260804-204535-6c8f2a",
       "title": "SSP-1.0 — Document Subject And Association Sanity Note",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-204535-6c8f2a.json",
@@ -18,14 +34,6 @@
       "timestamp": "2026-08-04 20:47:09",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260802-194426-087cfe",
-      "title": "SSP-1 — Document Subject And Association Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194426-087cfe.json",
-      "timestamp": "2026-08-04 20:45:35",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
     },
     {
       "doc_id": "d-20260804-202806-e31b72",
@@ -74,15 +82,7 @@
       "timestamp": "2026-08-04 20:11:11",
       "parent_id": "d-20260804-164519-c7ad4e",
       "parent_title": "SSP-0 — Projects Subject Assignment Foundation Delivery"
-    },
-    {
-      "doc_id": "d-20260804-194710-24329a",
-      "title": "SSP-0.1 — Exact Subject Info Checkpoint Evidence",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-194710-24329a.json",
-      "timestamp": "2026-08-04 19:47:10",
-      "parent_id": "d-20260804-164519-c7ad4e",
-      "parent_title": "SSP-0 — Projects Subject Assignment Foundation Delivery"
     }
   ],
-  "generated_at": "2026-08-04T19:47:09Z"
+  "generated_at": "2026-08-04T20:21:01Z"
 }

@@ -984,6 +984,12 @@
                   "title": "SSP-1.0 — Document Subject And Association Sanity Note",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-204535-6c8f2a.json",
                   "ui_status": "done"
+                },
+                {
+                  "doc_id": "d-20260804-211353-669844",
+                  "title": "SSP-1.1 — Authoring Subject And Manage Cue Evidence",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-211353-669844.json",
+                  "ui_status": "done"
                 }
               ]
             },
@@ -1389,5 +1395,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-04T19:46:45Z"
+  "generated_at": "2026-08-04T20:20:38Z"
 }

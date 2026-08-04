@@ -107,7 +107,7 @@ def test_python_docs_builder_writes_empty_sub_scope_manifest_pair() -> None:
     assert manage_manifest == {"docs": []}
 
 
-def test_python_docs_builder_projects_folder_paths_only_into_manage_manifest() -> None:
+def test_python_docs_builder_projects_subjects_into_private_products() -> None:
     first_doc_id = "d-20260801-101500-a1b2c3"
     second_doc_id = "d-20260801-101501-b2c3d4"
     pathless_doc_id = "d-20260801-101502-c3d4e5"
@@ -193,6 +193,12 @@ title: Pathless
                 "sub-scopes/projects/manage-manifest.json"
             )
         )
+        subject_associations = read_json(
+            root / (
+                "docs-viewer/scopes/dotlineform/published/documents/"
+                "sub-scopes/projects/subject-associations.json"
+            )
+        )
 
     assert exit_code == 0
     assert stderr == ""
@@ -205,6 +211,7 @@ title: Pathless
     }
     assert manage_manifest == {
         "customisation": {"id": "dotlineform_projects", "data": {}},
+        "subject_generation": manage_manifest["subject_generation"],
         "docs": [
             {
                 "doc_id": first_doc_id,
@@ -212,6 +219,12 @@ title: Pathless
                 "ui_status": "",
                 "viewable": True,
                 "last_updated": "",
+                "authoring_subject": {
+                    "state": "valid",
+                    "kind": "folder",
+                    "key": "projects/architecture",
+                    "fields": ["folder_path"],
+                },
                 "customisation": {"folder_path": "projects/architecture"},
             },
             {
@@ -220,6 +233,12 @@ title: Pathless
                 "ui_status": "",
                 "viewable": True,
                 "last_updated": "",
+                "authoring_subject": {
+                    "state": "valid",
+                    "kind": "folder",
+                    "key": "projects/architecture",
+                    "fields": ["folder_path"],
+                },
                 "customisation": {"folder_path": "projects/architecture"},
             },
             {
@@ -228,7 +247,55 @@ title: Pathless
                 "ui_status": "",
                 "viewable": True,
                 "last_updated": "",
+                "authoring_subject": {
+                    "state": "none",
+                    "kind": "none",
+                    "key": "",
+                    "fields": [],
+                },
             },
+        ],
+    }
+    assert subject_associations == {
+        "schema_version": "docs_subject_associations_v1",
+        "scope": "dotlineform",
+        "sub_scope": "projects",
+        "subject_generation": manage_manifest["subject_generation"],
+        "associations": [
+            {
+                "subject": {
+                    "kind": "folder",
+                    "key": "projects/architecture",
+                },
+                "documents": [
+                    {
+                        "target": {
+                            "scope": "dotlineform",
+                            "sub_scope": "projects",
+                            "doc_id": first_doc_id,
+                        },
+                        "locations": [
+                            {
+                                "access": "manage",
+                                "url": f"/docs/?scope=dotlineform&doc={first_doc_id}",
+                            }
+                        ],
+                    },
+                    {
+                        "target": {
+                            "scope": "dotlineform",
+                            "sub_scope": "projects",
+                            "doc_id": second_doc_id,
+                        },
+                        "locations": [
+                            {
+                                "access": "manage",
+                                "url": f"/docs/?scope=dotlineform&doc={second_doc_id}",
+                            }
+                        ],
+                    },
+                ],
+            }
         ],
     }
     assert browser_config["scopes"][0]["sub_scopes"][0][
@@ -242,6 +309,217 @@ title: Pathless
     assert "sub_scope_customisation" not in public_browser_config["scopes"][0][
         "sub_scopes"
     ][0]
+
+
+def test_private_builder_reads_work_and_series_subjects_without_customisation() -> None:
+    work_doc_id = "d-20260801-111500-a1b2c3"
+    series_doc_id = "d-20260801-111501-b2c3d4"
+    malformed_doc_id = "d-20260801-111502-c3d4e5"
+    conflicting_doc_id = "d-20260801-111503-d4e5f6"
+    none_doc_id = "d-20260801-111504-e5f6a7"
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        config_path = root / "docs-viewer/config/scopes/docs_scopes.json"
+        payload = read_json(config_path)
+        payload["scopes"][0]["sub_scopes"] = [
+            docs_sub_scope_record("studio", "works", title="Works")
+        ]
+        write_json(config_path, payload)
+        source_root = root / (
+            "docs-viewer/scopes/studio/source/sub-scopes/works/documents"
+        )
+        fixtures = {
+            work_doc_id: 'work_id: "00123"',
+            series_doc_id: 'series_id: "026"',
+            malformed_doc_id: "work_id: 00123",
+            conflicting_doc_id: 'work_id: "00123"\nseries_id: "026"',
+            none_doc_id: "",
+        }
+        for doc_id, subject_source in fixtures.items():
+            write_text(
+                source_root / f"{doc_id}.md",
+                f"""---
+doc_id: {doc_id}
+title: {doc_id}
+{subject_source}
+---
+# {doc_id}
+""",
+            )
+
+        exit_code, _stdout, stderr = run_cli(
+            root,
+            ["--scope", "studio", "--sub-scope", "works", "--write"],
+        )
+        output_root = root / (
+            "docs-viewer/scopes/studio/published/documents/sub-scopes/works"
+        )
+        manage_manifest = read_json(output_root / "manage-manifest.json")
+        associations = read_json(output_root / "subject-associations.json")
+        write_text(
+            source_root / f"{work_doc_id}.md",
+            f"""---
+doc_id: {work_doc_id}
+title: {work_doc_id}
+---
+# {work_doc_id}
+""",
+        )
+        rerun_exit_code, _rerun_stdout, rerun_stderr = run_cli(
+            root,
+            ["--scope", "studio", "--sub-scope", "works", "--write"],
+        )
+        cleared_manifest = read_json(output_root / "manage-manifest.json")
+        cleared_associations = read_json(output_root / "subject-associations.json")
+        for doc_id in fixtures:
+            write_text(
+                source_root / f"{doc_id}.md",
+                f"""---
+doc_id: {doc_id}
+title: {doc_id}
+---
+# {doc_id}
+""",
+            )
+        empty_exit_code, _empty_stdout, empty_stderr = run_cli(
+            root,
+            ["--scope", "studio", "--sub-scope", "works", "--write"],
+        )
+        empty_manifest = read_json(output_root / "manage-manifest.json")
+        empty_associations = read_json(output_root / "subject-associations.json")
+
+    assert exit_code == 0
+    assert stderr == ""
+    subjects_by_id = {
+        row["doc_id"]: row["authoring_subject"]
+        for row in manage_manifest["docs"]
+    }
+    assert subjects_by_id == {
+        work_doc_id: {
+            "state": "valid", "kind": "work", "key": "00123", "fields": ["work_id"]
+        },
+        series_doc_id: {
+            "state": "valid", "kind": "series", "key": "026", "fields": ["series_id"]
+        },
+        malformed_doc_id: {
+            "state": "malformed",
+            "kind": "work",
+            "key": "",
+            "fields": ["work_id"],
+            "evidence": {"work_id": 123},
+        },
+        conflicting_doc_id: {
+            "state": "conflicting",
+            "kind": "conflict",
+            "key": "",
+            "fields": ["work_id", "series_id"],
+            "evidence": {"work_id": "00123", "series_id": "026"},
+        },
+        none_doc_id: {
+            "state": "none", "kind": "none", "key": "", "fields": []
+        },
+    }
+    assert associations["subject_generation"] == manage_manifest["subject_generation"]
+    assert [record["subject"] for record in associations["associations"]] == [
+        {"kind": "series", "key": "026"},
+        {"kind": "work", "key": "00123"},
+    ]
+    assert [
+        record["documents"][0]["target"]["doc_id"]
+        for record in associations["associations"]
+    ] == [series_doc_id, work_doc_id]
+    assert rerun_exit_code == 0
+    assert rerun_stderr == ""
+    cleared_subjects_by_id = {
+        row["doc_id"]: row["authoring_subject"]
+        for row in cleared_manifest["docs"]
+    }
+    assert cleared_subjects_by_id[work_doc_id] == {
+        "state": "none",
+        "kind": "none",
+        "key": "",
+        "fields": [],
+    }
+    assert cleared_associations["subject_generation"] == cleared_manifest[
+        "subject_generation"
+    ]
+    assert cleared_associations["associations"] == [
+        {
+            "subject": {"kind": "series", "key": "026"},
+            "documents": associations["associations"][0]["documents"],
+        }
+    ]
+    assert empty_exit_code == 0
+    assert empty_stderr == ""
+    assert {
+        row["authoring_subject"]["state"]
+        for row in empty_manifest["docs"]
+    } == {"none"}
+    assert empty_associations == {
+        "schema_version": "docs_subject_associations_v1",
+        "scope": "studio",
+        "sub_scope": "works",
+        "subject_generation": empty_manifest["subject_generation"],
+        "associations": [],
+    }
+
+
+def test_subject_association_uses_composed_sub_scope_manage_location() -> None:
+    report_doc_id = "d-20260801-121500-a1b2c3"
+    work_doc_id = "d-20260801-121501-b2c3d4"
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        config_path = root / "docs-viewer/config/scopes/docs_scopes.json"
+        payload = read_json(config_path)
+        payload["scopes"][0]["sub_scopes"] = [
+            docs_sub_scope_record("studio", "works", title="Works")
+        ]
+        write_json(config_path, payload)
+        write_text(
+            root / f"docs-viewer/scopes/studio/source/documents/{report_doc_id}.md",
+            f"""---
+doc_id: {report_doc_id}
+title: Works
+viewer_report: docs_subscope
+viewer_report_subscope: works
+---
+# Works
+""",
+        )
+        write_text(
+            root / f"docs-viewer/scopes/studio/source/sub-scopes/works/documents/{work_doc_id}.md",
+            f"""---
+doc_id: {work_doc_id}
+title: Work note
+work_id: "00123"
+---
+# Work note
+""",
+        )
+
+        exit_code, _stdout, stderr = run_cli(
+            root,
+            ["--scope", "studio", "--sub-scope", "works", "--write"],
+        )
+        associations = read_json(
+            root / (
+                "docs-viewer/scopes/studio/published/documents/sub-scopes/"
+                "works/subject-associations.json"
+            )
+        )
+
+    assert exit_code == 0
+    assert stderr == ""
+    assert associations["associations"][0]["documents"][0]["locations"] == [
+        {
+            "access": "manage",
+            "url": (
+                f"/docs/?scope=studio&doc={report_doc_id}&subdoc={work_doc_id}"
+            ),
+        }
+    ]
 
 def test_python_docs_builder_writes_sub_scope_payloads_and_minimal_manifest() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
@@ -754,6 +1032,7 @@ doc_id: {DETAIL_DOC_ID}
 title: Detail
 added_date: 2026-06-20
 last_updated: 2026-06-21
+work_id: "00123"
 ---
 # Detail
 """,
@@ -761,6 +1040,10 @@ last_updated: 2026-06-21
 
         exit_code, _stdout, stderr = run_cli(root, ["--scope", "library", "--sub-scope", "tags", "--write"])
         detail = read_json(root / f"docs-viewer/scopes/library/published/documents/sub-scopes/tags/by-id/{DETAIL_DOC_ID}.json")
+        output_root = root / "docs-viewer/scopes/library/published/documents/sub-scopes/tags"
+        manifest = read_json(output_root / "manifest.json")
+        manage_manifest = read_json(output_root / "manage-manifest.json")
+        output_names = sorted(path.name for path in output_root.iterdir())
         config = load_docs_scope_configs(root)["library"]
         browser_config = build_docs.browser_scope_config_payload(root, [config])
         public_browser_config = build_docs.browser_scope_config_payload(
@@ -772,6 +1055,19 @@ last_updated: 2026-06-21
     assert exit_code == 0
     assert stderr == ""
     assert detail["doc_id"] == DETAIL_DOC_ID
+    assert manifest == {"docs": [{"doc_id": DETAIL_DOC_ID, "title": "Detail"}]}
+    assert manage_manifest == {
+        "docs": [
+            {
+                "doc_id": DETAIL_DOC_ID,
+                "title": "Detail",
+                "ui_status": "",
+                "viewable": True,
+                "last_updated": "2026-06-21",
+            }
+        ]
+    }
+    assert output_names == ["by-id", "manage-manifest.json", "manifest.json"]
     assert browser_config["scopes"][0]["sub_scopes"] == [
         {
             "sub_scope": "tags",

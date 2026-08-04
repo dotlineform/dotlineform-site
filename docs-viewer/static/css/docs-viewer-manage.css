@@ -160,37 +160,10 @@
   width: 100%;
 }
 
-.docsViewerReport__projectsFolderCell{
-  grid-column: 1 / -1;
-  min-width: 0;
-}
-
-.docsViewerReport[data-report-leading-column="true"]
-  .docsViewerReport__projectsFolderCell{
-  grid-column: 2 / -1;
-}
-
-.docsViewerReport__projectsFolderState{
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.35rem 0.6rem;
-  color: var(--docs-viewer-muted);
-  font-size: var(--docs-viewer-font-small);
-  overflow-wrap: anywhere;
-}
-
-.docsViewerReport__projectsFolderState[data-projects-folder-state="unlinked"]{
-  font-style: italic;
-}
-
-.docsViewerReport__projectsFolderDuplicate{
+.docsViewerReport__projectSubjectCue{
   display: inline-block;
-  padding: 0.08rem 0.35rem;
-  border: 1px solid var(--docs-viewer-border);
-  border-radius: 999px;
-  font-size: 0.82em;
-  font-style: normal;
+  margin-right: 0.35rem;
+  line-height: 1;
 }
 
 .docsViewerReport__subscopeFilterToolbar

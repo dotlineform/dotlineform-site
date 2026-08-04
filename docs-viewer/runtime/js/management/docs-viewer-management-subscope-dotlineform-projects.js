@@ -7,6 +7,9 @@ import {
 import {
   openDocsViewerProjectSubjectModal
 } from "./docs-viewer-management-project-subject-modal.js";
+import {
+  normalizeDocsViewerAuthoringSubject
+} from "./docs-viewer-management-document-subject.js";
 
 const CUSTOMISATION_ID = "dotlineform_projects";
 const AUTHORING_SUBJECT_GROUP_ID = "authoring_subject";
@@ -19,63 +22,52 @@ function exactCollection(value) {
   var keys = Object.keys(value || {}).sort();
   var scope = cleanString(value && value.scope).toLowerCase();
   var subScope = cleanString(value && value.sub_scope).toLowerCase();
-  if (
-    keys.length !== 2
-    || keys[0] !== "scope"
-    || keys[1] !== "sub_scope"
-    || !scope
-    || !subScope
-  ) {
+  if (keys.length !== 2 || keys[0] !== "scope" || keys[1] !== "sub_scope" || !scope || !subScope) {
     throw new Error("Projects customisation collection target is invalid.");
   }
   return Object.freeze({ scope: scope, sub_scope: subScope });
 }
 
+function authoringSubject(documentRecord) {
+  return normalizeDocsViewerAuthoringSubject(
+    documentRecord && documentRecord.authoring_subject,
+    {
+      errorMessage: "Projects document authoring_subject must be a normalized object."
+    }
+  );
+}
+
 function folderPath(documentRecord) {
-  var customisation = documentRecord && documentRecord.customisation;
-  if (customisation == null) return "";
-  if (typeof customisation !== "object" || Array.isArray(customisation)) {
-    throw new Error("Projects document customisation must be an object.");
-  }
-  var keys = Object.keys(customisation).sort();
-  if (keys.length !== 1 || keys[0] !== "folder_path") {
-    throw new Error("Projects document customisation must contain exactly folder_path.");
-  }
-  if (typeof customisation.folder_path !== "string") {
-    throw new Error("Projects Folder Link must be a string.");
-  }
-  var path = cleanString(customisation.folder_path);
-  return path;
+  var subject = authoringSubject(documentRecord);
+  return subject.state === "valid" && subject.kind === "folder" ? subject.key : "";
 }
 
-function duplicateCount(documents, path) {
-  if (!path) return 0;
-  return (Array.isArray(documents) ? documents : []).filter(function (record) {
-    return folderPath(record) === path;
-  }).length;
+function accessibleSubjectLabel(subject) {
+  if (subject.state === "valid") {
+    return ({ folder: "Folder", work: "Work", series: "Series" })[subject.kind] + " subject " + subject.key;
+  }
+  if (subject.state === "malformed") {
+    return "Malformed " + subject.kind + " subject declaration";
+  }
+  if (subject.state === "conflicting") {
+    return "Conflicting authoring subject declarations";
+  }
+  return "";
 }
 
-function renderFolderState(context) {
+function renderSubjectCue(context) {
   var settings = context || {};
-  var host = settings.trailingHost;
+  var host = settings.titlePrefixHost;
   if (!host) return { accessibleLabels: [] };
-  var path = folderPath(settings.document);
-  var duplicates = duplicateCount(settings.documents, path);
-  var state = host.ownerDocument.createElement("span");
-  state.className = "docsViewerReport__projectsFolderState";
-  state.dataset.projectsFolderState = path ? (duplicates > 1 ? "duplicate" : "linked") : "unlinked";
-  state.textContent = path || "No folder link";
-  host.classList.add("docsViewerReport__projectsFolderCell");
-  host.appendChild(state);
-  var labels = [path ? "Folder Link " + path : "No Folder Link"];
-  if (duplicates > 1) {
-    var duplicate = host.ownerDocument.createElement("span");
-    duplicate.className = "docsViewerReport__projectsFolderDuplicate";
-    duplicate.textContent = duplicates + " documents";
-    state.appendChild(duplicate);
-    labels.push("shared by " + duplicates + " documents");
-  }
-  return { accessibleLabels: labels };
+  var subject = authoringSubject(settings.document);
+  if (subject.state === "none") return { accessibleLabels: [] };
+  var cue = host.ownerDocument.createElement("span");
+  cue.className = "docsViewerReport__projectSubjectCue";
+  cue.dataset.projectSubjectCue = subject.state === "valid" ? subject.kind : "warning";
+  cue.setAttribute("aria-hidden", "true");
+  cue.textContent = subject.state !== "valid" ? "⚠️" : (subject.kind === "folder" ? "📁" : "🏷️");
+  host.appendChild(cue);
+  return { accessibleLabels: [accessibleSubjectLabel(subject)] };
 }
 
 function renderOpenInFinder(context, options) {
@@ -87,24 +79,17 @@ function renderOpenInFinder(context, options) {
     id: "open-project-folder",
     placement: "detail-toolbar",
     targetKind: "validated-detail",
-    capability: path
-      ? true
-      : { available: false, reason: "This Project document has no Folder Link." },
+    capability: path ? true : { available: false, reason: "This document has no valid Folder subject." },
     emptyState: "disabled",
     refreshEffect: "none",
     handler: function () {
-      if (!path) throw new Error("This Project document has no Folder Link.");
+      if (!path) throw new Error("This document has no valid Folder subject.");
       var encodedPath = encodeDecodedLocalTarget(path);
-      if (!encodedPath) throw new Error("This Project document has an invalid Folder Link.");
-      if (typeof options.openLocalTarget !== "function") {
-        throw new Error("Open in Finder is unavailable.");
-      }
+      if (!encodedPath) throw new Error("This document has an invalid Folder subject.");
+      if (typeof options.openLocalTarget !== "function") throw new Error("Open in Finder is unavailable.");
       return options.openLocalTarget(encodedPath, options.clientOptions || {}).then(function (response) {
         if (typeof options.setStatus === "function") {
-          options.setStatus(
-            cleanString(response && response.summary_text) || "Local target opened.",
-            false
-          );
+          options.setStatus(cleanString(response && response.summary_text) || "Local target opened.", false);
         }
         return response;
       });
@@ -120,10 +105,7 @@ function renderOpenInFinder(context, options) {
   button.addEventListener("click", function () {
     registration.invoke().catch(function (error) {
       if (typeof options.setStatus === "function") {
-        options.setStatus(
-          error && error.message ? error.message : "Open in Finder failed.",
-          true
-        );
+        options.setStatus(error && error.message ? error.message : "Open in Finder failed.", true);
       }
     });
   });
@@ -133,28 +115,20 @@ function renderOpenInFinder(context, options) {
 function renderAssignSubject(context, options, assignSubjectAvailable) {
   var settings = context || {};
   var host = settings.host;
-  if (
-    !host
-    || !assignSubjectAvailable
-    || typeof settings.registerAction !== "function"
-  ) return;
-  var serviceAvailable = (
-    typeof options.readMetadata === "function"
-    && typeof options.assignFieldGroup === "function"
-  );
+  if (!host || !assignSubjectAvailable || typeof settings.registerAction !== "function") return;
+  var serviceAvailable = typeof options.readMetadata === "function" && typeof options.assignFieldGroup === "function";
   var button = host.ownerDocument.createElement("button");
   var registration = settings.registerAction({
     id: "assign-subject",
     placement: "detail-toolbar",
     targetKind: "validated-detail",
-    capability: serviceAvailable
-      ? true
-      : { available: false, reason: "Subject assignment service is unavailable." },
+    capability: serviceAvailable ? true : { available: false, reason: "Subject assignment service is unavailable." },
     emptyState: "omitted",
     refreshEffect: "none",
     handler: function (target, actionContext) {
       return openDocsViewerProjectSubjectModal({
         assignFieldGroup: options.assignFieldGroup,
+        fetch: options.fetch,
         readMetadata: options.readMetadata,
         restoreFocus: button,
         root: options.root,
@@ -162,16 +136,10 @@ function renderAssignSubject(context, options, assignSubjectAvailable) {
       }).then(function (result) {
         if (!result || result.confirmed !== true) return result;
         var refresh = actionContext && actionContext.refreshDocument;
-        var refreshed = typeof refresh === "function"
-          ? refresh(target)
-          : Promise.resolve(target);
+        var refreshed = typeof refresh === "function" ? refresh(target) : Promise.resolve(target);
         return Promise.resolve(refreshed).then(function () {
           if (typeof options.setStatus === "function") {
-            options.setStatus(
-              cleanString(result.payload && result.payload.summary_text)
-                || "Subject updated.",
-              false
-            );
+            options.setStatus(cleanString(result.payload && result.payload.summary_text) || "Subject updated.", false);
           }
           return result.payload;
         });
@@ -190,16 +158,54 @@ function renderAssignSubject(context, options, assignSubjectAvailable) {
     button.disabled = true;
     registration.invoke().catch(function (error) {
       if (typeof options.setStatus === "function") {
-        options.setStatus(
-          error && error.message ? error.message : "Subject assignment failed.",
-          true
-        );
+        options.setStatus(error && error.message ? error.message : "Subject assignment failed.", true);
       }
     }).finally(function () {
       if (button.isConnected) button.disabled = !registration.enabled;
     });
   });
   host.appendChild(button);
+}
+
+function subjectInfoField(subject) {
+  if (subject.state === "valid") {
+    return {
+      detail: subject.key,
+      id: AUTHORING_SUBJECT_GROUP_ID,
+      label: "Subject",
+      state: subject.kind,
+      value: ({ folder: "Folder", work: "Work", series: "Series" })[subject.kind]
+    };
+  }
+  if (subject.state === "malformed") {
+    var field = subject.fields[0];
+    return {
+      detail: "Malformed " + field + " declaration: " + JSON.stringify(subject.evidence[field]),
+      id: AUTHORING_SUBJECT_GROUP_ID,
+      label: "Subject",
+      state: "warning",
+      value: "Authoring warning"
+    };
+  }
+  if (subject.state === "conflicting") {
+    var declarations = subject.fields.map(function (field) {
+      return field + "=" + JSON.stringify(subject.evidence[field]);
+    }).join(", ");
+    return {
+      detail: "Conflicting declarations: " + declarations,
+      id: AUTHORING_SUBJECT_GROUP_ID,
+      label: "Subject",
+      state: "warning",
+      value: "Authoring warning"
+    };
+  }
+  return {
+    detail: "",
+    id: AUTHORING_SUBJECT_GROUP_ID,
+    label: "Subject",
+    state: "none",
+    value: "None"
+  };
 }
 
 function projectDetailInfo(context, assignSubjectAvailable) {
@@ -213,20 +219,9 @@ function projectDetailInfo(context, assignSubjectAvailable) {
   ) {
     throw new Error("Projects subject information target is invalid.");
   }
-  var path = folderPath(settings.document);
   return Object.freeze({
-    actions: Object.freeze({
-      assignSubject: assignSubjectAvailable
-    }),
-    fields: Object.freeze([
-      Object.freeze({
-        detail: path,
-        id: AUTHORING_SUBJECT_GROUP_ID,
-        label: "Subject",
-        state: path ? "folder" : "none",
-        value: path ? "Folder" : "None"
-      })
-    ])
+    actions: Object.freeze({ assignSubject: assignSubjectAvailable }),
+    fields: Object.freeze([Object.freeze(subjectInfoField(authoringSubject(settings.document)))])
   });
 }
 
@@ -236,19 +231,14 @@ export function createDocsViewerManagementSubscopeDotlineformProjects(options = 
     throw new Error("Projects customisation identity did not match its registry entry.");
   }
   exactCollection(options.collection);
-  var assignSubjectAvailable = hasDocsViewerAssignableFieldGroup(
-    options.descriptor,
-    AUTHORING_SUBJECT_GROUP_ID
-  );
+  var assignSubjectAvailable = hasDocsViewerAssignableFieldGroup(options.descriptor, AUTHORING_SUBJECT_GROUP_ID);
   return {
     id: CUSTOMISATION_ID,
-    projectDetailInfo: function (context) {
-      return projectDetailInfo(context, assignSubjectAvailable);
-    },
+    projectDetailInfo: function (context) { return projectDetailInfo(context, assignSubjectAvailable); },
     renderDetailToolbar: function (context) {
       renderAssignSubject(context, options, assignSubjectAvailable);
       renderOpenInFinder(context, options);
     },
-    renderRow: renderFolderState
+    renderRow: renderSubjectCue
   };
 }

@@ -21,6 +21,7 @@ from docs_scope_config import (
     SOURCE_SUB_SCOPES_PATH,
     DocsScopeConfig,
     document_source_path,
+    is_public_readonly_scope,
     load_docs_scope_configs,
     normalize_sub_scope_id,
     public_documents_path,
@@ -176,6 +177,18 @@ def sub_scope_path_records(repo_root: Path, parent_config: DocsScopeConfig, sub_
         path_record(repo_root, "sub_scope_manifest", docs_output / "manifest.json", action="generate"),
         path_record(repo_root, "sub_scope_manage_manifest", docs_output / "manage-manifest.json", action="generate"),
     ]
+    if not is_public_readonly_scope(
+        viewer_base_url=parent_config.viewer_base_url,
+        include_scope_param=parent_config.include_scope_param,
+    ):
+        records.append(
+            path_record(
+                repo_root,
+                "sub_scope_subject_associations",
+                docs_output / "subject-associations.json",
+                action="generate",
+            )
+        )
     publish_records: list[dict[str, Any]] = []
     public_output = public_documents_path(parent_config)
     if public_output is not None:

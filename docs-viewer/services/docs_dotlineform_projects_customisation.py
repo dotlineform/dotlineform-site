@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Manage-only Projects report and Folder Link metadata customisation."""
+"""Manage-only Projects report and authoring-subject customisation."""
 
 from __future__ import annotations
 
@@ -11,10 +11,17 @@ from docs_local_links import (
     normalize_decoded_relative_target,
     normalize_structured_local_target_input,
 )
+from docs_document_subjects import (
+    AUTHORING_SUBJECT_FIELDS,
+    FOLDER_PATH_FIELD,
+    SERIES_ID_FIELD,
+    WORK_ID_FIELD,
+    catalogue_subject_key_is_canonical,
+    normalize_authoring_subject,
+)
 
 
 CUSTOMISATION_ID = "dotlineform_projects"
-FOLDER_PATH_FIELD = "folder_path"
 
 
 def normalize_settings(raw: Any, field: str) -> Mapping[str, Any]:
@@ -26,33 +33,6 @@ def normalize_settings(raw: Any, field: str) -> Mapping[str, Any]:
             + ", ".join(sorted(str(key) for key in raw))
         )
     return {}
-
-
-def source_folder_path(front_matter: Mapping[str, Any], *, doc_id: str) -> str:
-    if FOLDER_PATH_FIELD not in front_matter:
-        return ""
-    raw_value = front_matter[FOLDER_PATH_FIELD]
-    if not isinstance(raw_value, str):
-        raise ValueError(
-            f"folder_path must be a scalar string for sub-scope doc {doc_id!r}"
-        )
-    try:
-        return normalize_decoded_relative_target(raw_value)
-    except ValueError as error:
-        raise ValueError(
-            f"Invalid folder_path for sub-scope doc {doc_id!r}: {error}"
-        ) from error
-
-
-def validate_document(
-    settings: Mapping[str, Any],
-    front_matter: Mapping[str, Any],
-    *,
-    doc_id: str,
-) -> None:
-    if settings:
-        raise ValueError("dotlineform_projects settings must be empty")
-    source_folder_path(front_matter, doc_id=doc_id)
 
 
 def project_manifest(
@@ -69,9 +49,12 @@ def project_manifest(
             raise ValueError(
                 f"dotlineform_projects source metadata is unavailable for {doc_id!r}"
             )
-        folder_path = source_folder_path(front_matter, doc_id=doc_id)
-        if folder_path:
-            rows[doc_id] = {FOLDER_PATH_FIELD: folder_path}
+        subject = normalize_authoring_subject(
+            front_matter,
+            folder_supported=True,
+        )
+        if subject["state"] == "valid" and subject["kind"] == "folder":
+            rows[doc_id] = {FOLDER_PATH_FIELD: subject["key"]}
     return {
         "root": {"id": CUSTOMISATION_ID, "data": {}},
         "rows": rows,
@@ -86,7 +69,39 @@ def metadata_record(
 ) -> dict[str, str]:
     if settings:
         raise ValueError("dotlineform_projects settings must be empty")
-    return {FOLDER_PATH_FIELD: source_folder_path(front_matter, doc_id=doc_id)}
+    del doc_id
+    subject = normalize_authoring_subject(front_matter, folder_supported=True)
+    record = dict.fromkeys(AUTHORING_SUBJECT_FIELDS, "")
+    if subject["state"] == "valid":
+        field_name = subject["fields"][0]
+        record[field_name] = subject["key"]
+    return record
+
+
+def _strict_scalar_subject_fields(raw: Any, *, field: str) -> dict[str, str]:
+    if not isinstance(raw, dict):
+        raise ValueError(f"{field} must be an object")
+    if set(raw) != set(AUTHORING_SUBJECT_FIELDS):
+        raise ValueError(
+            f"{field} must contain exactly " + ", ".join(AUTHORING_SUBJECT_FIELDS)
+        )
+    values: dict[str, str] = {}
+    for field_name in AUTHORING_SUBJECT_FIELDS:
+        value = raw[field_name]
+        if not isinstance(value, str):
+            raise ValueError(f"{field}.{field_name} must be a scalar string")
+        if value and value != value.strip():
+            raise ValueError(f"{field}.{field_name} must be one exact nonblank string")
+        values[field_name] = value
+    if sum(bool(value) for value in values.values()) > 1:
+        raise ValueError(f"{field} must select at most one authoring subject")
+    for field_name, kind in ((WORK_ID_FIELD, "work"), (SERIES_ID_FIELD, "series")):
+        if values[field_name] and not catalogue_subject_key_is_canonical(
+            kind,
+            values[field_name],
+        ):
+            raise ValueError(f"{field}.{field_name} must be one canonical {kind} id")
+    return values
 
 
 def normalize_metadata_update(
@@ -99,33 +114,28 @@ def normalize_metadata_update(
 ) -> dict[str, Any]:
     if settings:
         raise ValueError("dotlineform_projects settings must be empty")
-    if not isinstance(raw, dict):
-        raise ValueError("customisation must be an object")
-    if set(raw) != {FOLDER_PATH_FIELD}:
-        raise ValueError("customisation must contain exactly folder_path")
-    raw_folder_path = raw[FOLDER_PATH_FIELD]
-    if not isinstance(raw_folder_path, str):
-        raise ValueError("customisation.folder_path must be a scalar string")
-
-    current_folder_path = source_folder_path(front_matter, doc_id=doc_id)
-    folder_path = ""
-    if raw_folder_path.strip():
+    values = _strict_scalar_subject_fields(raw, field="customisation")
+    if values[FOLDER_PATH_FIELD]:
         base_path = configured_base_dir(repo_root)
         try:
-            folder_path = normalize_structured_local_target_input(
-                raw_folder_path,
+            values[FOLDER_PATH_FIELD] = normalize_structured_local_target_input(
+                values[FOLDER_PATH_FIELD],
                 base_path,
             )
         except ValueError as error:
             raise ValueError(f"customisation.folder_path is invalid: {error}") from error
-
-    changed = folder_path != current_folder_path
+    current = metadata_record(settings, front_matter, doc_id=doc_id)
+    changed = values != current or normalize_authoring_subject(
+        front_matter,
+        folder_supported=True,
+    )["state"] not in {"none", "valid"}
     return {
         "front_matter_updates": {
-            FOLDER_PATH_FIELD: folder_path or None,
+            field_name: values[field_name] or None
+            for field_name in AUTHORING_SUBJECT_FIELDS
         },
-        "record": {FOLDER_PATH_FIELD: folder_path},
-        "changes": {"folder_path_changed": changed},
+        "record": values,
+        "changes": {"authoring_subject_changed": changed},
     }
 
 
@@ -141,31 +151,51 @@ def normalize_import_front_matter(
         raise ValueError("dotlineform_projects settings must be empty")
     if not isinstance(raw, dict):
         raise ValueError("custom import front matter must be an object")
-    if set(raw) - {FOLDER_PATH_FIELD}:
+    if set(raw) - set(AUTHORING_SUBJECT_FIELDS):
         raise ValueError("custom import front matter contains unknown fields")
-    if FOLDER_PATH_FIELD not in raw:
-        return {}
-    value = raw[FOLDER_PATH_FIELD]
-    if not isinstance(value, str):
-        raise ValueError("custom import folder_path must be a scalar string")
-    if not value:
-        return {}
-    try:
-        folder_path = normalize_decoded_relative_target(value)
-    except ValueError as error:
+    values = dict.fromkeys(AUTHORING_SUBJECT_FIELDS, "")
+    for field_name, value in raw.items():
+        if not isinstance(value, str):
+            raise ValueError(f"custom import {field_name} must be a scalar string")
+        if value and value != value.strip():
+            raise ValueError(f"custom import {field_name} must be one exact nonblank string")
+        values[field_name] = value
+    if sum(bool(value) for value in values.values()) > 1:
         raise ValueError(
-            f"custom import folder_path is invalid for {doc_id!r}: {error}"
-        ) from error
-    return {FOLDER_PATH_FIELD: folder_path}
+            f"custom import authoring subject is conflicting for {doc_id!r}"
+        )
+    for field_name, kind in ((WORK_ID_FIELD, "work"), (SERIES_ID_FIELD, "series")):
+        if values[field_name] and not catalogue_subject_key_is_canonical(
+            kind,
+            values[field_name],
+        ):
+            raise ValueError(
+                f"custom import {field_name} must be one canonical {kind} id"
+            )
+    if values[FOLDER_PATH_FIELD]:
+        try:
+            values[FOLDER_PATH_FIELD] = normalize_decoded_relative_target(
+                values[FOLDER_PATH_FIELD]
+            )
+        except ValueError as error:
+            raise ValueError(
+                f"custom import folder_path is invalid for {doc_id!r}: {error}"
+            ) from error
+    return {
+        field_name: value
+        for field_name, value in values.items()
+        if value
+    }
 
 
 __all__ = [
     "CUSTOMISATION_ID",
+    "FOLDER_PATH_FIELD",
+    "SERIES_ID_FIELD",
+    "WORK_ID_FIELD",
     "metadata_record",
     "normalize_metadata_update",
     "normalize_import_front_matter",
     "normalize_settings",
     "project_manifest",
-    "source_folder_path",
-    "validate_document",
 ]

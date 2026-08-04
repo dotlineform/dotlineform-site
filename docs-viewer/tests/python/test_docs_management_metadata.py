@@ -425,12 +425,54 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
                 dry_run=True,
             )
         invalid_assignments = [
-            {**target_body, "confirm": False, "fields": {"folder_path": ""}},
-            {**target_body, "field_group": "AUTHORING_SUBJECT", "fields": {"folder_path": ""}},
-            {**target_body, "field_group": "unknown", "fields": {"folder_path": ""}},
-            {**target_body, "fields": {"folder_path": "", "extra": "rejected"}},
-            {**target_body, "fields": {"folder_path": str(tmp_path / "outside")}},
-            {**target_body, "fields": {"folder_path": "dlf-local:projects/architecture"}},
+            {
+                **target_body,
+                "confirm": False,
+                "fields": {"folder_path": "", "work_id": "", "series_id": ""},
+            },
+            {
+                **target_body,
+                "field_group": "AUTHORING_SUBJECT",
+                "fields": {"folder_path": "", "work_id": "", "series_id": ""},
+            },
+            {
+                **target_body,
+                "field_group": "unknown",
+                "fields": {"folder_path": "", "work_id": "", "series_id": ""},
+            },
+            {
+                **target_body,
+                "fields": {
+                    "folder_path": "",
+                    "work_id": "",
+                    "series_id": "",
+                    "extra": "rejected",
+                },
+            },
+            {
+                **target_body,
+                "fields": {
+                    "folder_path": str(tmp_path / "outside"),
+                    "work_id": "",
+                    "series_id": "",
+                },
+            },
+            {
+                **target_body,
+                "fields": {
+                    "folder_path": "dlf-local:projects/architecture",
+                    "work_id": "",
+                    "series_id": "",
+                },
+            },
+            {
+                **target_body,
+                "fields": {
+                    "folder_path": "",
+                    "work_id": "00123",
+                    "series_id": "026",
+                },
+            },
         ]
         for body in invalid_assignments:
             with pytest.raises(ValueError):
@@ -448,7 +490,11 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
             docs_management_service.routes.ASSIGN_FIELD_GROUP_PATH,
             {
                 **target_body,
-                "fields": {"folder_path": prospective.as_uri()},
+                "fields": {
+                    "folder_path": prospective.as_uri(),
+                    "work_id": "",
+                    "series_id": "",
+                },
             },
             dry_run=False,
         )
@@ -459,13 +505,19 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
                 "sub-scopes/projects/manage-manifest.json"
             )
         )
+        linked_associations = read_json(
+            repo_root / (
+                "docs-viewer/scopes/dotlineform/published/documents/"
+                "sub-scopes/projects/subject-associations.json"
+            )
+        )
 
         stale_status, stale = docs_management_service.docs_management_post_response(
             repo_root,
             docs_management_service.routes.ASSIGN_FIELD_GROUP_PATH,
             {
                 **target_body,
-                "fields": {"folder_path": ""},
+                "fields": {"folder_path": "", "work_id": "", "series_id": ""},
             },
             dry_run=False,
         )
@@ -474,9 +526,9 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
         race_plan = docs_management_mutations.plan_assign_field_group(
             repo_root,
             {
-                **target_body,
-                "source_revision": result["source_revision"],
-                "fields": {"folder_path": ""},
+            **target_body,
+            "source_revision": result["source_revision"],
+            "fields": {"folder_path": "", "work_id": "", "series_id": ""},
             },
         )
         linked_bytes = source_path.read_bytes()
@@ -499,7 +551,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
                 {
                     **target_body,
                     "source_revision": result["source_revision"],
-                    "fields": {"folder_path": ""},
+                    "fields": {"folder_path": "", "work_id": "", "series_id": ""},
                 },
                 dry_run=False,
             )
@@ -511,9 +563,52 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
                 "sub-scopes/projects/manage-manifest.json"
             )
         )
+        removed_associations = read_json(
+            repo_root / (
+                "docs-viewer/scopes/dotlineform/published/documents/"
+                "sub-scopes/projects/subject-associations.json"
+            )
+        )
+        work_status, work_result = (
+            docs_management_service.docs_management_post_response(
+                repo_root,
+                docs_management_service.routes.ASSIGN_FIELD_GROUP_PATH,
+                {
+                    **target_body,
+                    "source_revision": removed["source_revision"],
+                    "fields": {
+                        "folder_path": "",
+                        "work_id": "00123",
+                        "series_id": "",
+                    },
+                },
+                dry_run=False,
+            )
+        )
+        work_source = source_path.read_text(encoding="utf-8")
+        work_manifest = read_json(
+            repo_root / (
+                "docs-viewer/scopes/dotlineform/published/documents/"
+                "sub-scopes/projects/manage-manifest.json"
+            )
+        )
+        work_associations = read_json(
+            repo_root / (
+                "docs-viewer/scopes/dotlineform/published/documents/"
+                "sub-scopes/projects/subject-associations.json"
+            )
+        )
 
     assert metadata["record"]["customisation"] == {
-        "folder_path": "projects/architecture"
+        "folder_path": "projects/architecture",
+        "work_id": "",
+        "series_id": "",
+    }
+    assert metadata["record"]["authoring_subject"] == {
+        "state": "valid",
+        "kind": "folder",
+        "key": "projects/architecture",
+        "fields": ["folder_path"],
     }
     assert status is HTTPStatus.OK
     assert result["target"] == {
@@ -523,13 +618,22 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
     }
     assert result["field_group"] == "authoring_subject"
     assert result["fields"] == {
-        "folder_path": "projects/Future Folder"
+        "folder_path": "projects/Future Folder",
+        "work_id": "",
+        "series_id": "",
     }
-    assert result["changes"]["folder_path_changed"] is True
+    assert result["changes"]["authoring_subject_changed"] is True
     assert "folder_path: projects/Future Folder" in linked_source
     assert 'last_updated: "2026-07-26 11:00:00"' in linked_source
     assert linked_manifest["docs"][0]["customisation"] == {
         "folder_path": "projects/Future Folder"
+    }
+    assert linked_associations["subject_generation"] == linked_manifest[
+        "subject_generation"
+    ]
+    assert linked_associations["associations"][0]["subject"] == {
+        "kind": "folder",
+        "key": "projects/Future Folder",
     }
     assert stale_status is HTTPStatus.CONFLICT
     assert stale["operation"] == "assign_field_group"
@@ -541,9 +645,40 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
     )
     assert race_payload["retry_safe"] is False
     assert status_removed is HTTPStatus.OK
-    assert removed["fields"] == {"folder_path": ""}
+    assert removed["fields"] == {
+        "folder_path": "",
+        "work_id": "",
+        "series_id": "",
+    }
     assert "folder_path:" not in removed_source
     assert "customisation" not in removed_manifest["docs"][0]
+    assert removed_associations == {
+        "schema_version": "docs_subject_associations_v1",
+        "scope": "dotlineform",
+        "sub_scope": "projects",
+        "subject_generation": removed_manifest["subject_generation"],
+        "associations": [],
+    }
+    assert work_status is HTTPStatus.OK
+    assert work_result["fields"] == {
+        "folder_path": "",
+        "work_id": "00123",
+        "series_id": "",
+    }
+    assert 'work_id: "00123"' in work_source
+    assert work_manifest["docs"][0]["authoring_subject"] == {
+        "state": "valid",
+        "kind": "work",
+        "key": "00123",
+        "fields": ["work_id"],
+    }
+    assert work_associations["subject_generation"] == work_manifest[
+        "subject_generation"
+    ]
+    assert work_associations["associations"][0]["subject"] == {
+        "kind": "work",
+        "key": "00123",
+    }
     assert rebuild_calls == [
         {
             "scope": "dotlineform",
@@ -557,7 +692,71 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
             "changed_paths": [f"{SUB_SCOPE_DOC_ID}.md"],
             "suppression_reason": "docs-assign-field-group",
         },
+        {
+            "scope": "dotlineform",
+            "sub_scope": "projects",
+            "changed_paths": [f"{SUB_SCOPE_DOC_ID}.md"],
+            "suppression_reason": "docs-assign-field-group",
+        },
     ]
+
+
+def test_projects_malformed_subject_remains_ordinary_metadata_saveable() -> None:
+    with make_repo() as repo_name:
+        repo_root = Path(repo_name)
+        write_scope_registry(
+            repo_root,
+            [
+                docs_scope_record(
+                    "dotlineform",
+                    sub_scopes=[
+                        docs_sub_scope_record(
+                            "dotlineform",
+                            "projects",
+                            sub_scope_customisation={
+                                "id": "dotlineform_projects",
+                                "settings": {},
+                            },
+                        )
+                    ],
+                )
+            ],
+        )
+        source_path = repo_root / (
+            "docs-viewer/scopes/dotlineform/source/sub-scopes/"
+            f"projects/documents/{SUB_SCOPE_DOC_ID}.md"
+        )
+        source_path.parent.mkdir(parents=True, exist_ok=True)
+        source_path.write_text(
+            f"""---
+doc_id: {SUB_SCOPE_DOC_ID}
+title: Malformed subject
+work_id: 123
+---
+# Malformed subject
+""",
+            encoding="utf-8",
+        )
+
+        plan = docs_management_mutations.plan_update_metadata(
+            repo_root,
+            {
+                "scope": "dotlineform",
+                "sub_scope": "projects",
+                "doc_id": SUB_SCOPE_DOC_ID,
+                "source_revision": (
+                    docs_management_mutations.source_model.source_revision(
+                        source_path.read_bytes()
+                    )
+                ),
+                "title": "Renamed malformed subject",
+            },
+        )
+
+    assert plan.has_source_changes is True
+    assert plan.response["changes"]["title_changed"] is True
+    assert "title: Renamed malformed subject" in plan.source_writes[0].text
+    assert "work_id: 123" in plan.source_writes[0].text
 
 
 def test_sub_scope_metadata_service_rejects_parent_without_writing(

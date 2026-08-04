@@ -58,10 +58,7 @@ def test_current_customisations_declare_explicit_aspects() -> None:
         customisations.DocsSubScopeManifestProjectionAspect,
     )
     assert projects.document_groups is None
-    assert isinstance(
-        projects.source_validation,
-        customisations.DocsSubScopeSourceValidationAspect,
-    )
+    assert projects.source_validation is None
     assert isinstance(projects.metadata, customisations.DocsSubScopeMetadataAspect)
     assert isinstance(
         projects.import_front_matter,
@@ -75,7 +72,7 @@ def test_current_customisations_declare_explicit_aspects() -> None:
     assert projects.assignable_field_groups == (
         customisations.DocsSubScopeAssignableFieldGroup(
             group_id="authoring_subject",
-            field_names=("folder_path",),
+            field_names=("folder_path", "work_id", "series_id"),
         ),
     )
     assert projects.transfer is None

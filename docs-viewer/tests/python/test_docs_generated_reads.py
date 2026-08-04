@@ -452,6 +452,10 @@ def test_external_sub_scope_payload_route_resolves_only_configured_json() -> Non
         write_scope_config(repo_root, [scope])
         output = external_root / "scopes/private/published/documents/sub-scopes/projects"
         write_json(output / "manage-manifest.json", {"docs": [{"doc_id": PRIVATE_DOC_ID}]})
+        write_json(
+            output / "subject-associations.json",
+            {"schema_version": "docs_subject_associations_v1", "associations": []},
+        )
         write_json(output / f"by-id/{PRIVATE_DOC_ID}.json", {"doc_id": PRIVATE_DOC_ID})
 
         try:
@@ -459,6 +463,10 @@ def test_external_sub_scope_payload_route_resolves_only_configured_json() -> Non
                 repo_root,
                 "/docs/published/external/private/projects/manage-manifest.json",
             ) == output / "manage-manifest.json"
+            assert generated_reads.external_sub_scope_payload_path(
+                repo_root,
+                "/docs/published/external/private/projects/subject-associations.json",
+            ) == output / "subject-associations.json"
             assert generated_reads.external_sub_scope_payload_path(
                 repo_root,
                 f"/docs/published/external/private/projects/by-id/{PRIVATE_DOC_ID}.json",

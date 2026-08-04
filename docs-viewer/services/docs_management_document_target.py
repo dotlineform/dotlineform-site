@@ -17,8 +17,14 @@ from docs_scope_config import (
     resolve_scope_path,
 )
 from docs_subscope_customisations import (
+    sub_scope_customisation_assignable_field_groups,
     sub_scope_customisation_document_groups,
     sub_scope_customisation_metadata_record,
+)
+from docs_document_subjects import (
+    AUTHORING_SUBJECT_FIELDS,
+    FOLDER_PATH_FIELD,
+    normalize_authoring_subject,
 )
 
 
@@ -337,6 +343,19 @@ def managed_document_metadata(
     }
     if resolved.sub_scope:
         record["group"] = document.group
+        folder_supported = any(
+            FOLDER_PATH_FIELD in group.field_names
+            for group in sub_scope_customisation_assignable_field_groups(
+                resolved.document_config.sub_scope_customisation
+            )
+        )
+        if folder_supported or any(
+            field_name in front_matter for field_name in AUTHORING_SUBJECT_FIELDS
+        ):
+            record["authoring_subject"] = normalize_authoring_subject(
+                front_matter,
+                folder_supported=folder_supported,
+            )
         customisation_record = sub_scope_customisation_metadata_record(
             resolved.document_config.sub_scope_customisation,
             front_matter,

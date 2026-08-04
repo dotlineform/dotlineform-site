@@ -46,7 +46,11 @@ def external_sub_scope_payload_path(repo_root: Path, request_path: str) -> Path:
     if not request_path.startswith(EXTERNAL_SUB_SCOPE_PUBLISHED_PREFIX):
         raise ValueError("Invalid external Docs sub-scope payload route")
     parts = request_path.removeprefix(EXTERNAL_SUB_SCOPE_PUBLISHED_PREFIX).split("/")
-    if len(parts) == 3 and parts[2] in {"manifest.json", "manage-manifest.json"}:
+    if len(parts) == 3 and parts[2] in {
+        "manifest.json",
+        "manage-manifest.json",
+        "subject-associations.json",
+    }:
         scope, sub_scope, filename = parts
         relative_path = Path(filename)
     elif len(parts) == 4 and parts[2] == "by-id" and parts[3].endswith(".json"):

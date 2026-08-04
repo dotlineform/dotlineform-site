@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-69d44836aed488e659ed25a4882f0728",
-    "generated_at_utc": "2026-08-04T19:47:09Z",
-    "count": 247
+    "version": "blake2b-796174527cce17770a6ead360820589e",
+    "generated_at_utc": "2026-08-04T20:21:01Z",
+    "count": 248
   },
   "entries": [
     {
@@ -4532,10 +4532,10 @@
       "kind": "doc",
       "title": "SSP-1 — Document Subject And Association Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-194426-087cfe",
-      "last_updated": "2026-08-04 20:45:35",
+      "last_updated": "2026-08-04 21:19:45",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-04 20:45:35 • Sub-Scope Publishing",
+      "display_meta": "2026-08-04 21:19:45 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-1 — document subject and association delivery",
         "ssp",
@@ -4549,16 +4549,16 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-04 20:45:35",
+        "2026-08-04 21:19:45",
         "2026",
         "08",
         "04",
-        "20",
+        "21",
+        "19",
         "45",
-        "35",
         "d-20260802-194426-087cfe"
       ],
-      "search_text": "ssp-1 — document subject and association delivery ssp 1 document subject and association delivery sub-scope publishing sub scope publishing 2026-08-04 20:45:35 2026 08 04 20 45 35 d-20260802-194426-087cfe"
+      "search_text": "ssp-1 — document subject and association delivery ssp 1 document subject and association delivery sub-scope publishing sub scope publishing 2026-08-04 21:19:45 2026 08 04 21 19 45 d-20260802-194426-087cfe"
     },
     {
       "id": "d-20260804-204535-6c8f2a",
@@ -4592,6 +4592,39 @@
         "d-20260804-204535-6c8f2a"
       ],
       "search_text": "ssp-1.0 — document subject and association sanity note ssp 1 0 document subject and association sanity note ssp-1 — document subject and association delivery delivery 2026-08-04 20:47:09 2026 08 04 20 47 09 d-20260804-204535-6c8f2a"
+    },
+    {
+      "id": "d-20260804-211353-669844",
+      "kind": "doc",
+      "title": "SSP-1.1 — Authoring Subject And Manage Cue Evidence",
+      "href": "/docs/?scope=studio&doc=d-20260804-211353-669844",
+      "last_updated": "2026-08-04 21:21:01",
+      "parent_id": "d-20260802-194426-087cfe",
+      "parent_title": "SSP-1 — Document Subject And Association Delivery",
+      "display_meta": "2026-08-04 21:21:01 • SSP-1 — Document Subject And Association Delivery",
+      "search_terms": [
+        "ssp-1.1 — authoring subject and manage cue evidence",
+        "ssp",
+        "1",
+        "authoring",
+        "subject",
+        "and",
+        "manage",
+        "cue",
+        "evidence",
+        "ssp-1 — document subject and association delivery",
+        "document",
+        "association",
+        "delivery",
+        "2026-08-04 21:21:01",
+        "2026",
+        "08",
+        "04",
+        "21",
+        "01",
+        "d-20260804-211353-669844"
+      ],
+      "search_text": "ssp-1.1 — authoring subject and manage cue evidence ssp 1 authoring subject and manage cue evidence ssp-1 — document subject and association delivery document association delivery 2026-08-04 21:21:01 2026 08 04 21 01 d-20260804-211353-669844"
     },
     {
       "id": "d-20260801-133318-15e8fa",

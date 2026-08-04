@@ -139,7 +139,11 @@ def format_front_matter_value(value: Any) -> str:
     if isinstance(value, int):
         return str(value)
     text = str(value)
-    if SAFE_PLAIN_PATTERN.match(text) and text not in {"true", "false"}:
+    if (
+        SAFE_PLAIN_PATTERN.match(text)
+        and text not in {"true", "false"}
+        and not INTEGER_PATTERN.fullmatch(text)
+    ):
         return text
     return json.dumps(text, ensure_ascii=False)
 
@@ -156,6 +160,8 @@ def format_source(front_matter: Dict[str, Any], body: str) -> str:
         "ui_status",
         "group",
         "folder_path",
+        "work_id",
+        "series_id",
         "parent_id",
         "viewable",
     ]

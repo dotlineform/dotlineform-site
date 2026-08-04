@@ -305,6 +305,16 @@
   overflow-wrap: anywhere;
 }
 
+.docsViewerProjectSubjectModal__catalogue{
+  display: grid;
+  gap: 0.5rem;
+  min-height: 0;
+}
+
+.docsViewerProjectSubjectModal__warning{
+  color: var(--docs-viewer-danger);
+}
+
 .docsViewerCatalogueTokenInfo__actions{
   display: flex;
   flex-wrap: wrap;

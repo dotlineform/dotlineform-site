@@ -19,8 +19,16 @@ from .pipeline import DocsDataBuilder
 from .source import DocRecord
 from docs_subscope_customisations import (
     project_sub_scope_customisation_manifest,
+    sub_scope_customisation_assignable_field_groups,
     sub_scope_customisation_document_groups,
     validate_sub_scope_customisation_document,
+)
+from docs_document_subjects import (
+    AUTHORING_SUBJECT_FIELDS,
+    FOLDER_PATH_FIELD,
+    normalize_authoring_subject,
+    project_subject_associations,
+    subject_projection_generation,
 )
 
 
@@ -115,7 +123,13 @@ class SubScopeDocsBuilder(DocsDataBuilder):
                     row["customisation"] = row_customisation
         return payload
 
-    def manage_manifest_payload(self, ordered_docs: list[DocRecord]) -> dict[str, Any]:
+    def manage_manifest_payload(
+        self,
+        ordered_docs: list[DocRecord],
+        *,
+        subjects_by_doc_id: dict[str, dict[str, Any]] | None = None,
+        subject_generation: str = "",
+    ) -> dict[str, Any]:
         payload: dict[str, Any] = {
             "docs": [
                 {
@@ -128,6 +142,10 @@ class SubScopeDocsBuilder(DocsDataBuilder):
                 for doc in ordered_docs
             ]
         }
+        if subjects_by_doc_id is not None:
+            payload["subject_generation"] = subject_generation
+            for row in payload["docs"]:
+                row["authoring_subject"] = subjects_by_doc_id[row["doc_id"]]
         projected = project_sub_scope_customisation_manifest(
             self.sub_scope_config.sub_scope_customisation,
             ordered_docs,
@@ -152,6 +170,34 @@ class SubScopeDocsBuilder(DocsDataBuilder):
                         )
                     row["customisation"] = row_customisation
         return payload
+
+    def folder_subject_supported(self) -> bool:
+        return any(
+            FOLDER_PATH_FIELD in group.field_names
+            for group in sub_scope_customisation_assignable_field_groups(
+                self.sub_scope_config.sub_scope_customisation
+            )
+        )
+
+    def private_authoring_subjects(
+        self,
+        ordered_docs: list[DocRecord],
+    ) -> dict[str, dict[str, Any]] | None:
+        if self.public_readonly_scope:
+            return None
+        folder_supported = self.folder_subject_supported()
+        if not folder_supported and not any(
+            any(field_name in doc.front_matter for field_name in AUTHORING_SUBJECT_FIELDS)
+            for doc in ordered_docs
+        ) and not (self.output_dir / "subject-associations.json").is_file():
+            return None
+        return {
+            doc.doc_id: normalize_authoring_subject(
+                doc.front_matter,
+                folder_supported=folder_supported,
+            )
+            for doc in ordered_docs
+        }
 
     def validate_docs(self, docs: list[DocRecord]) -> None:
         super().validate_docs(docs)
@@ -199,10 +245,31 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             for doc in ordered_docs
         }
         manifest_payload = self.manifest_payload(ordered_docs)
-        manage_manifest_payload = self.manage_manifest_payload(ordered_docs)
+        subjects_by_doc_id = self.private_authoring_subjects(ordered_docs)
+        subject_generation = ""
+        subject_associations_payload: dict[str, Any] | None = None
+        if subjects_by_doc_id is not None:
+            subject_generation = subject_projection_generation(
+                scope=self.scope_id,
+                sub_scope=self.sub_scope_id,
+                subjects_by_doc_id=subjects_by_doc_id,
+            )
+            subject_associations_payload = project_subject_associations(
+                scope=self.scope_id,
+                sub_scope=self.sub_scope_id,
+                documents=ordered_docs,
+                subjects_by_doc_id=subjects_by_doc_id,
+                subject_generation=subject_generation,
+            )
+        manage_manifest_payload = self.manage_manifest_payload(
+            ordered_docs,
+            subjects_by_doc_id=subjects_by_doc_id,
+            subject_generation=subject_generation,
+        )
         write_plan = self.build_sub_scope_write_plan(
             manifest_payload,
             manage_manifest_payload,
+            subject_associations_payload,
             item_payloads,
         )
         diagnostics = self.sub_scope_diagnostics_payload(
@@ -219,6 +286,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         return {
             "manifest_payload": manifest_payload,
             "manage_manifest_payload": manage_manifest_payload,
+            "subject_associations_payload": subject_associations_payload,
             "item_payloads": item_payloads,
             "write_plan": write_plan,
             "diagnostics": diagnostics,
@@ -228,10 +296,16 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         self,
         manifest_payload: dict[str, Any],
         manage_manifest_payload: dict[str, Any],
+        subject_associations_payload: dict[str, Any] | None,
         item_payloads: dict[str, dict[str, Any]],
     ) -> dict[str, Any]:
         manifest_text = json_text(manifest_payload)
         manage_manifest_text = json_text(manage_manifest_payload)
+        subject_associations_text = (
+            json_text(subject_associations_payload)
+            if subject_associations_payload is not None
+            else ""
+        )
         item_text_by_id: dict[str, str] = {}
         changed_item_ids: list[str] = []
         for doc_id, payload in item_payloads.items():
@@ -248,6 +322,12 @@ class SubScopeDocsBuilder(DocsDataBuilder):
                 != manage_manifest_text
             ),
             "manage_manifest_text": manage_manifest_text,
+            "subject_associations_write": (
+                subject_associations_payload is not None
+                and read_text(self.output_dir / "subject-associations.json")
+                != subject_associations_text
+            ),
+            "subject_associations_text": subject_associations_text,
             "changed_item_ids": sorted(changed_item_ids),
             "stale_item_ids": sorted(set(existing_item_ids) - set(item_payloads)),
             "item_text_by_id": item_text_by_id,
@@ -262,6 +342,11 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             write_text(
                 self.output_dir / "manage-manifest.json",
                 write_plan["manage_manifest_text"],
+            )
+        if write_plan["subject_associations_write"]:
+            write_text(
+                self.output_dir / "subject-associations.json",
+                write_plan["subject_associations_text"],
             )
         for doc_id in write_plan["changed_item_ids"]:
             write_text(self.items_dir / f"{doc_id}.json", write_plan["item_text_by_id"][doc_id])
@@ -280,6 +365,10 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         print(
             "  manage manifest "
             f"{verb}: {1 if write_plan['manage_manifest_write'] else 0}"
+        )
+        print(
+            "  subject associations "
+            f"{verb}: {1 if write_plan['subject_associations_write'] else 0}"
         )
         print(f"  warnings: {len(self.warnings)}")
 
@@ -301,6 +390,9 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             "manifest_changed": 1 if write_plan["manifest_write"] else 0,
             "manage_manifest_changed": (
                 1 if write_plan["manage_manifest_write"] else 0
+            ),
+            "subject_associations_changed": (
+                1 if write_plan["subject_associations_write"] else 0
             ),
             "warning_count": len(self.warnings),
             "warnings": self.warnings,

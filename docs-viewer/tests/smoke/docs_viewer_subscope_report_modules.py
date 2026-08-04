@@ -3821,13 +3821,22 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
           const documents = [
             {
               doc_id: 'architecture',
+              authoring_subject: {
+                state: 'valid', kind: 'folder', key: 'projects/16 forms', fields: ['folder_path']
+              },
               customisation: { folder_path: 'projects/16 forms' }
             },
             {
               doc_id: 'architecture-notes',
+              authoring_subject: {
+                state: 'valid', kind: 'folder', key: 'projects/16 forms', fields: ['folder_path']
+              },
               customisation: { folder_path: 'projects/16 forms' }
             },
-            { doc_id: 'pathless' }
+            {
+              doc_id: 'pathless',
+              authoring_subject: { state: 'none', kind: 'none', key: '', fields: [] }
+            }
           ];
           const opened = [];
           const statuses = [];
@@ -3847,7 +3856,12 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
               ...target,
               record: {
                 doc_id: target.doc_id,
-                customisation: { folder_path: 'projects/16 forms' }
+                authoring_subject: {
+                  state: 'valid', kind: 'folder', key: 'projects/16 forms', fields: ['folder_path']
+                },
+                customisation: {
+                  folder_path: 'projects/16 forms', work_id: '', series_id: ''
+                }
               },
               source_revision: 'sha256:' + 'a'.repeat(64)
             }),
@@ -3862,7 +3876,7 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
                 sub_scope: target.sub_scope,
                 doc_id: target.doc_id,
                 field_group: 'authoring_subject',
-                fields: { folder_path: 'projects/future' },
+                fields: payload.fields,
                 source_revision: 'sha256:' + 'b'.repeat(64),
                 summary_text: 'Subject updated.'
               };
@@ -3879,7 +3893,7 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
             contribution.renderRow({
               document: documentRecord,
               documents,
-              trailingHost: host
+              titlePrefixHost: host
             });
             return host;
           }
@@ -4004,7 +4018,10 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
           const configuredHost = document.createElement('div');
           const configuredActionIds = [];
           configuredCollection.renderDetailToolbar({
-            document: { doc_id: 'configured' },
+            document: {
+              doc_id: 'configured',
+              authoring_subject: { state: 'none', kind: 'none', key: '', fields: [] }
+            },
             host: configuredHost,
             registerAction: definition => {
               configuredActionIds.push(definition.id);
@@ -4033,7 +4050,11 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
           }
           let rowError = '';
           try {
-            renderRow({ customisation: { folder_path: 'projects/a', extra: true } });
+            renderRow({
+              authoring_subject: {
+                state: 'valid', kind: 'folder', key: 'projects/a', fields: ['extra']
+              }
+            });
           } catch (error) {
             rowError = error.message;
           }
@@ -4061,9 +4082,8 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
             },
             linkedInfo,
             linkedRow: {
-              duplicate: linkedRow.querySelector('.docsViewerReport__projectsFolderDuplicate').textContent,
-              state: linkedRow.querySelector('[data-projects-folder-state]').dataset.projectsFolderState,
-              text: linkedRow.querySelector('[data-projects-folder-state]').firstChild.textContent
+              cue: linkedRow.querySelector('[data-project-subject-cue]').dataset.projectSubjectCue,
+              text: linkedRow.querySelector('[data-project-subject-cue]').textContent
             },
             opened,
             pathlessButton: {
@@ -4072,8 +4092,8 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
             },
             pathlessInfo,
             pathlessRow: {
-              state: pathlessRow.querySelector('[data-projects-folder-state]').dataset.projectsFolderState,
-              text: pathlessRow.querySelector('[data-projects-folder-state]').textContent
+              childCount: pathlessRow.childElementCount,
+              text: pathlessRow.textContent
             },
             registryIds: registry.listManagementDocsSubscopeCustomisationIds(),
             refreshed,
@@ -4094,7 +4114,11 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
                 "payload": {
                     "source_revision": "sha256:" + "a" * 64,
                     "field_group": "authoring_subject",
-                    "fields": {"folder_path": "/configured/base/projects/future"},
+                    "fields": {
+                        "folder_path": "/configured/base/projects/future",
+                        "work_id": "",
+                        "series_id": "",
+                    },
                     "confirm": True,
                 },
             }
@@ -4133,14 +4157,13 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
             ],
         },
         "linkedRow": {
-            "duplicate": "2 documents",
-            "state": "duplicate",
-            "text": "projects/16 forms",
+            "cue": "folder",
+            "text": "📁",
         },
         "opened": ["projects/16%20forms"],
         "pathlessButton": {
             "disabled": True,
-            "title": "This Project document has no Folder Link.",
+            "title": "This document has no valid Folder subject.",
         },
         "pathlessInfo": {
             "actions": {"assignSubject": True},
@@ -4154,7 +4177,7 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
                 }
             ],
         },
-        "pathlessRow": {"state": "unlinked", "text": "No folder link"},
+        "pathlessRow": {"childCount": 0, "text": ""},
         "registryIds": ["analysis_tags", "dotlineform_projects"],
         "refreshed": [
             {
@@ -4164,7 +4187,7 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
             }
         ],
         "rowError": (
-            "Projects document customisation must contain exactly folder_path."
+            "Projects document authoring_subject must be a normalized object."
         ),
         "statuses": [
             {"message": "Local target opened.", "isError": False},
@@ -4258,6 +4281,292 @@ def assert_subscope_customisation_capability_projection(page: Page) -> None:
     }
 
 
+def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+          const module = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-subscope-dotlineform-projects.js'
+          );
+          const records = {
+            work: {
+              doc_id: 'work-doc',
+              authoring_subject: {
+                state: 'valid', kind: 'work', key: '00123', fields: ['work_id']
+              }
+            },
+            series: {
+              doc_id: 'series-doc',
+              authoring_subject: {
+                state: 'valid', kind: 'series', key: '026', fields: ['series_id']
+              }
+            },
+            none: {
+              doc_id: 'none-doc',
+              authoring_subject: { state: 'none', kind: 'none', key: '', fields: [] }
+            },
+            malformed: {
+              doc_id: 'malformed-doc',
+              authoring_subject: {
+                state: 'malformed', kind: 'work', key: '', fields: ['work_id'],
+                evidence: { work_id: 123 }
+              }
+            },
+            conflicting: {
+              doc_id: 'conflicting-doc',
+              authoring_subject: {
+                state: 'conflicting', kind: 'conflict', key: '',
+                fields: ['folder_path', 'series_id'],
+                evidence: { folder_path: 'projects/nerve', series_id: '026' }
+              }
+            }
+          };
+          const registryPayload = {
+            schema_version: 'docs_semantic_token_registry_v1',
+            target_lookup_url: '/target-lookup.json',
+            families: [{
+              key: 'catalogue', labels: {}, occurrence_fields: [], ui_contributions: {},
+              target_types: [
+                { key: 'work', label: 'Work', id_policy: {}, lookup_adapter: 'work', lookup_fields: [] },
+                { key: 'series', label: 'Series', id_policy: {}, lookup_adapter: 'series', lookup_fields: [] },
+                { key: 'moment', label: 'Moment', id_policy: {}, lookup_adapter: 'moment', lookup_fields: [] }
+              ]
+            }]
+          };
+          const lookupPayload = {
+            targets: [
+              { family: 'catalogue', target_type: 'work', target_id: '00123', title: 'Nerve', href: '/works/?work=00123', meta: [] },
+              { family: 'catalogue', target_type: 'series', target_id: '026', title: 'Nerve Series', href: '/series/?series=026', meta: [] },
+              { family: 'catalogue', target_type: 'moment', target_id: '099', title: 'Nerve Moment', href: '/moments/?moment=099', meta: [] }
+            ]
+          };
+          const fetchCalls = [];
+          const fetchImpl = async url => {
+            fetchCalls.push(url);
+            return {
+              ok: true,
+              json: async () => url === '/target-lookup.json' ? lookupPayload : registryPayload
+            };
+          };
+          const assignments = [];
+          const contribution = module.createDocsViewerManagementSubscopeDotlineformProjects({
+            descriptor: {
+              id: 'dotlineform_projects',
+              capabilities: { assignableFieldGroups: ['authoring_subject'] }
+            },
+            collection: { scope: 'dotlineform', sub_scope: 'projects' },
+            root: document.body,
+            fetch: fetchImpl,
+            readMetadata: async target => ({
+              ...target,
+              record: {
+                doc_id: target.doc_id,
+                authoring_subject: records.work.authoring_subject,
+                customisation: { folder_path: '', work_id: '00123', series_id: '' }
+              },
+              source_revision: 'sha256:' + 'a'.repeat(64)
+            }),
+            assignFieldGroup: async (target, payload) => {
+              assignments.push({ target, payload });
+              return {
+                target,
+                field_group: 'authoring_subject',
+                fields: payload.fields,
+                source_revision: 'sha256:' + 'b'.repeat(64),
+                summary_text: 'Subject updated.'
+              };
+            }
+          });
+
+          function cue(record) {
+            const host = document.createElement('span');
+            const projected = contribution.renderRow({ document: record, titlePrefixHost: host });
+            const node = host.querySelector('[data-project-subject-cue]');
+            return {
+              labels: projected.accessibleLabels,
+              state: node ? node.dataset.projectSubjectCue : '',
+              text: node ? node.textContent : ''
+            };
+          }
+          function info(record) {
+            return contribution.projectDetailInfo({
+              collection: { scope: 'dotlineform', sub_scope: 'projects' },
+              document: record,
+              target: {
+                scope: 'dotlineform', sub_scope: 'projects', doc_id: record.doc_id
+              }
+            }).fields[0];
+          }
+
+          const toolbar = document.createElement('div');
+          document.body.appendChild(toolbar);
+          contribution.renderDetailToolbar({
+            document: records.work,
+            host: toolbar,
+            registerAction: definition => ({
+              enabled: definition.capability === true || definition.capability?.available === true,
+              disabledReason: '',
+              hidden: false,
+              invoke: () => Promise.resolve(definition.handler(
+                { scope: 'dotlineform', sub_scope: 'projects', doc_id: 'work-doc' },
+                { refreshDocument: async target => target }
+              ))
+            }),
+            target: { scope: 'dotlineform', sub_scope: 'projects', doc_id: 'work-doc' }
+          });
+          toolbar.querySelector('[data-docs-projects-assign-subject]').click();
+          await new Promise(resolve => setTimeout(resolve, 0));
+          await new Promise(resolve => setTimeout(resolve, 0));
+          let modalHost = document.querySelector('[data-docs-viewer-management-modal-host="true"]');
+          const initial = {
+            checked: modalHost.querySelector('input[name="docs-project-subject"]:checked').value,
+            selected: modalHost.querySelector('[data-project-subject-selected]').textContent,
+            types: Array.from(modalHost.querySelectorAll('[data-target-index]')).map(node => (
+              node.querySelector('.docsViewerCatalogueTargetPicker__rowKind').textContent
+            ))
+          };
+          const seriesRadio = modalHost.querySelector('input[value="series"]');
+          seriesRadio.checked = true;
+          seriesRadio.dispatchEvent(new Event('change', { bubbles: true }));
+          const search = modalHost.querySelector('#docsViewerProjectSubjectCatalogueSearch');
+          search.value = 'Nerve';
+          search.dispatchEvent(new Event('input', { bubbles: true }));
+          const seriesTypes = Array.from(modalHost.querySelectorAll('[data-target-index]')).map(node => (
+            node.querySelector('.docsViewerCatalogueTargetPicker__rowKind').textContent
+          ));
+          modalHost.querySelector('[data-target-index="0"]').click();
+          modalHost.querySelector('button[data-role="modal-primary"]').click();
+          await new Promise(resolve => setTimeout(resolve, 0));
+          await new Promise(resolve => setTimeout(resolve, 0));
+          records.work.authoring_subject = {
+            state: 'valid', kind: 'work', key: '00999', fields: ['work_id']
+          };
+          toolbar.querySelector('[data-docs-projects-assign-subject]').click();
+          await new Promise(resolve => setTimeout(resolve, 0));
+          await new Promise(resolve => setTimeout(resolve, 0));
+          modalHost = document.querySelector('[data-docs-viewer-management-modal-host="true"]');
+          const unavailable = {
+            checked: modalHost.querySelector('input[name="docs-project-subject"]:checked').value,
+            selectedHidden: modalHost.querySelector('[data-project-subject-selected]').hidden,
+            status: modalHost.querySelector('[data-project-subject-search-status]').textContent
+          };
+          modalHost.querySelector('button[data-role="modal-primary"]').click();
+          await new Promise(resolve => setTimeout(resolve, 0));
+          unavailable.submitStatus = modalHost.querySelector('[data-role="modal-status"]').textContent;
+          modalHost.querySelector('button[data-role="modal-cancel"]').click();
+          await new Promise(resolve => setTimeout(resolve, 0));
+          records.work.authoring_subject = {
+            state: 'valid', kind: 'work', key: '00123', fields: ['work_id']
+          };
+          toolbar.remove();
+
+          return {
+            assignments,
+            cues: {
+              work: cue(records.work),
+              series: cue(records.series),
+              none: cue(records.none),
+              malformed: cue(records.malformed),
+              conflicting: cue(records.conflicting)
+            },
+            fetchCalls,
+            info: {
+              work: info(records.work),
+              series: info(records.series),
+              none: info(records.none),
+              malformed: info(records.malformed),
+              conflicting: info(records.conflicting)
+            },
+            initial,
+            seriesTypes,
+            unavailable
+          };
+        }"""
+    )
+
+    assert result == {
+        "assignments": [
+            {
+                "target": {
+                    "scope": "dotlineform",
+                    "sub_scope": "projects",
+                    "doc_id": "work-doc",
+                },
+                "payload": {
+                    "source_revision": "sha256:" + "a" * 64,
+                    "field_group": "authoring_subject",
+                    "fields": {
+                        "folder_path": "",
+                        "work_id": "",
+                        "series_id": "026",
+                    },
+                    "confirm": True,
+                },
+            }
+        ],
+        "cues": {
+            "work": {"labels": ["Work subject 00123"], "state": "work", "text": "🏷️"},
+            "series": {"labels": ["Series subject 026"], "state": "series", "text": "🏷️"},
+            "none": {"labels": [], "state": "", "text": ""},
+            "malformed": {
+                "labels": ["Malformed work subject declaration"],
+                "state": "warning",
+                "text": "⚠️",
+            },
+            "conflicting": {
+                "labels": ["Conflicting authoring subject declarations"],
+                "state": "warning",
+                "text": "⚠️",
+            },
+        },
+        "fetchCalls": [
+            "/docs-viewer/config/semantic-tokens/registry.json",
+            "/target-lookup.json",
+            "/docs-viewer/config/semantic-tokens/registry.json",
+            "/target-lookup.json",
+        ],
+        "info": {
+            "work": {
+                "detail": "00123", "id": "authoring_subject", "label": "Subject",
+                "state": "work", "value": "Work",
+            },
+            "series": {
+                "detail": "026", "id": "authoring_subject", "label": "Subject",
+                "state": "series", "value": "Series",
+            },
+            "none": {
+                "detail": "", "id": "authoring_subject", "label": "Subject",
+                "state": "none", "value": "None",
+            },
+            "malformed": {
+                "detail": "Malformed work_id declaration: 123", "id": "authoring_subject",
+                "label": "Subject", "state": "warning", "value": "Authoring warning",
+            },
+            "conflicting": {
+                "detail": (
+                    'Conflicting declarations: folder_path="projects/nerve", '
+                    'series_id="026"'
+                ),
+                "id": "authoring_subject", "label": "Subject", "state": "warning",
+                "value": "Authoring warning",
+            },
+        },
+        "initial": {
+            "checked": "work",
+            "selected": "work · 00123 · Nerve",
+            "types": ["work"],
+        },
+        "seriesTypes": ["series"],
+        "unavailable": {
+            "checked": "work",
+            "selectedHidden": True,
+            "status": (
+                "Current Work 00999 is unavailable. Choose a current target or another subject."
+            ),
+            "submitStatus": "Choose a current Work target.",
+        },
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--site-root", default=".", help="Repository root to serve.")
@@ -4300,6 +4609,7 @@ def main(argv: list[str] | None = None) -> int:
                 assert_default_report_and_customisation_framework(page)
                 assert_subscope_customisation_capability_projection(page)
                 assert_dotlineform_projects_customisation(page)
+                assert_dotlineform_projects_catalogue_subjects(page)
             finally:
                 browser.close()
             if errors:

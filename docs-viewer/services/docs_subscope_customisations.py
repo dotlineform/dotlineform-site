@@ -179,9 +179,6 @@ SUB_SCOPE_CUSTOMISATION_DEFINITIONS = {
         manifest_projection=DocsSubScopeManifestProjectionAspect(
             project=dotlineform_projects.project_manifest,
         ),
-        source_validation=DocsSubScopeSourceValidationAspect(
-            validate=dotlineform_projects.validate_document,
-        ),
         metadata=DocsSubScopeMetadataAspect(
             read_record=dotlineform_projects.metadata_record,
             normalize_update=dotlineform_projects.normalize_metadata_update,
@@ -195,7 +192,11 @@ SUB_SCOPE_CUSTOMISATION_DEFINITIONS = {
         assignable_field_groups=(
             DocsSubScopeAssignableFieldGroup(
                 group_id="authoring_subject",
-                field_names=(dotlineform_projects.FOLDER_PATH_FIELD,),
+                field_names=(
+                    dotlineform_projects.FOLDER_PATH_FIELD,
+                    dotlineform_projects.WORK_ID_FIELD,
+                    dotlineform_projects.SERIES_ID_FIELD,
+                ),
             ),
         ),
     ),
@@ -537,7 +538,7 @@ def normalize_sub_scope_customisation_metadata_update(
             raise ValueError("customisation metadata is not editable for this sub-scope")
         return None
     if not provided:
-        raise ValueError("customisation is required for this sub-scope metadata update")
+        return None
     return aspect.normalize_update(
         customisation.settings,
         raw,

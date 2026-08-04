@@ -1471,7 +1471,9 @@ def assert_metadata_client_uses_exact_target_requests(page: Page) -> None:
             }, {
                 source_revision: 'sha256:' + 'a'.repeat(64),
                 field_group: 'authoring_subject',
-                fields: { folder_path: 'projects/example' },
+                fields: {
+                    folder_path: 'projects/example', work_id: '', series_id: ''
+                },
                 confirm: true
             }, options);
             let overrideError = '';
@@ -1524,7 +1526,11 @@ def assert_metadata_client_uses_exact_target_requests(page: Page) -> None:
                     "sub_scope": "projects",
                     "source_revision": "sha256:" + "a" * 64,
                     "field_group": "authoring_subject",
-                    "fields": {"folder_path": "projects/example"},
+                    "fields": {
+                        "folder_path": "projects/example",
+                        "work_id": "",
+                        "series_id": "",
+                    },
                     "confirm": True,
                 },
             },

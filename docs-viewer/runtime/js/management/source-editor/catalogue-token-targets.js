@@ -8,11 +8,20 @@ import {
 
 var CATALOGUE_TARGET_TYPES = new Set(["work", "series", "moment"]);
 
-function catalogueTarget(row) {
+function allowedTargetTypes(raw) {
+  var values = Array.isArray(raw) ? raw : Array.from(CATALOGUE_TARGET_TYPES);
+  return new Set(values.map(function (value) {
+    return String(value || "").trim();
+  }).filter(function (value) {
+    return CATALOGUE_TARGET_TYPES.has(value);
+  }));
+}
+
+function catalogueTarget(row, targetTypes) {
   if (
     !row
     || row.family !== "catalogue"
-    || !CATALOGUE_TARGET_TYPES.has(row.targetType)
+    || !targetTypes.has(row.targetType)
     || !row.href
   ) return null;
   return {
@@ -25,13 +34,15 @@ function catalogueTarget(row) {
   };
 }
 
-export function createCatalogueTargetSupport(registry, targets) {
+export function createCatalogueTargetSupport(registry, targets, options = {}) {
+  var targetTypes = allowedTargetTypes(options.allowedTargetTypes);
   var searchableTargets = (Array.isArray(targets) ? targets : []).filter(function (row) {
-    return Boolean(catalogueTarget(row));
+    return Boolean(catalogueTarget(row, targetTypes));
   });
   return {
     registry: registry,
-    searchableTargets: searchableTargets
+    searchableTargets: searchableTargets,
+    targetTypes: targetTypes
   };
 }
 
@@ -42,7 +53,9 @@ export function collectCatalogueTargetMatches(support, query, limit) {
     query,
     source.registry,
     limit
-  ).map(catalogueTarget).filter(Boolean);
+  ).map(function (row) {
+    return catalogueTarget(row, source.targetTypes || CATALOGUE_TARGET_TYPES);
+  }).filter(Boolean);
 }
 
 export function findCatalogueTargetByIdentity(support, identity) {
@@ -60,7 +73,7 @@ export function findCatalogueTargetByIdentity(support, identity) {
       && target.targetId === targetId
     );
   });
-  return catalogueTarget(matched);
+  return catalogueTarget(matched, source.targetTypes || CATALOGUE_TARGET_TYPES);
 }
 
 export function loadCatalogueTargetSupport(options = {}) {
@@ -68,7 +81,9 @@ export function loadCatalogueTargetSupport(options = {}) {
     .then(function (registry) {
       return loadSemanticTokenTargets(registry, { fetch: options.fetch })
         .then(function (targets) {
-          return createCatalogueTargetSupport(registry, targets);
+          return createCatalogueTargetSupport(registry, targets, {
+            allowedTargetTypes: options.allowedTargetTypes
+          });
         });
     });
 }

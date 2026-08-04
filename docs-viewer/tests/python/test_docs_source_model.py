@@ -91,6 +91,24 @@ def test_front_matter_parses_and_formats_supported_scalar_values() -> None:
     assert "viewable: false" in formatted
 
 
+def test_front_matter_formatter_quotes_digit_only_string_identity() -> None:
+    source = source_model.format_source(
+        {
+            "doc_id": FIXTURE_DOC_ID,
+            "title": "Catalogue subject",
+            "work_id": "00123",
+            "series_id": "026",
+        },
+        "# Catalogue subject\n",
+    )
+    front_matter, _body = source_model.parse_source_text(source)
+
+    assert 'work_id: "00123"' in source
+    assert 'series_id: "026"' in source
+    assert front_matter["work_id"] == "00123"
+    assert front_matter["series_id"] == "026"
+
+
 def test_scope_loader_preserves_exact_source_bytes_and_newlines() -> None:
     raw_source = (
         "---\r\n"
@@ -190,7 +208,7 @@ def test_document_collection_loader_selects_exact_configured_sub_scope() -> None
     assert "unknown sub_scope 'missing' for scope 'analysis'" in missing_error
 
 
-def test_projects_collection_loader_validates_decoded_relative_folder_path() -> None:
+def test_projects_collection_loader_keeps_malformed_folder_source_loadable() -> None:
     child_config = SimpleNamespace(
         sub_scope="projects",
         ui_statuses=("draft", "done"),
@@ -246,22 +264,17 @@ def test_projects_collection_loader_validates_decoded_relative_folder_path() -> 
                 ),
                 encoding="utf-8",
             )
-            try:
-                source_model.load_document_collection_docs(
-                    root,
-                    "dotlineform",
-                    "projects",
-                )
-            except ValueError as exc:
-                invalid_error = str(exc)
-            else:
-                raise AssertionError("absolute source folder_path should fail")
+            malformed_docs = source_model.load_document_collection_docs(
+                root,
+                "dotlineform",
+                "projects",
+            )
         finally:
             source_model.DOCS_SCOPE_CONFIGS.clear()
             source_model.DOCS_SCOPE_CONFIGS.update(original_configs)
 
     assert docs[0].front_matter["folder_path"] == "projects/Future Folder"
-    assert "Invalid folder_path" in invalid_error
+    assert malformed_docs[0].front_matter["folder_path"] == "/absolute/not-stored"
 
 
 def test_atomic_new_source_write_refuses_existing_destination() -> None:
