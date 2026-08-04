@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-13c2ec9cd804c6b0a5afdc1588ce2152",
-    "generated_at_utc": "2026-08-04T21:06:03Z",
+    "version": "blake2b-b58cc88462d7ab83a3dde246e9994bf9",
+    "generated_at_utc": "2026-08-04T21:50:55Z",
     "count": 249
   },
   "entries": [
@@ -4306,10 +4306,10 @@
       "kind": "doc",
       "title": "Project State Concept And Architecture",
       "href": "/docs/?scope=studio&doc=d-20260802-121105-c574f9",
-      "last_updated": "2026-08-04 16:30:44",
+      "last_updated": "2026-08-04 22:50:54",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-04 16:30:44 • Sub-Scope Publishing",
+      "display_meta": "2026-08-04 22:50:54 • Sub-Scope Publishing",
       "search_terms": [
         "project state concept and architecture",
         "project",
@@ -4321,16 +4321,16 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-04 16:30:44",
+        "2026-08-04 22:50:54",
         "2026",
         "08",
         "04",
-        "16",
-        "30",
-        "44",
+        "22",
+        "50",
+        "54",
         "d-20260802-121105-c574f9"
       ],
-      "search_text": "project state concept and architecture project state concept and architecture sub-scope publishing sub scope publishing 2026-08-04 16:30:44 2026 08 04 16 30 44 d-20260802-121105-c574f9"
+      "search_text": "project state concept and architecture project state concept and architecture sub-scope publishing sub scope publishing 2026-08-04 22:50:54 2026 08 04 22 50 54 d-20260802-121105-c574f9"
     },
     {
       "id": "d-20260802-174339-53877d",
@@ -4662,10 +4662,10 @@
       "kind": "doc",
       "title": "SSP-2 — Docs Viewer Project State Delivery",
       "href": "/docs/?scope=studio&doc=d-20260801-133318-15e8fa",
-      "last_updated": "2026-08-04 22:06:02",
+      "last_updated": "2026-08-04 22:50:54",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-04 22:06:02 • Sub-Scope Publishing",
+      "display_meta": "2026-08-04 22:50:54 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-2 — docs viewer project state delivery",
         "ssp",
@@ -4679,16 +4679,16 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-04 22:06:02",
+        "2026-08-04 22:50:54",
         "2026",
         "08",
         "04",
         "22",
-        "06",
-        "02",
+        "50",
+        "54",
         "d-20260801-133318-15e8fa"
       ],
-      "search_text": "ssp-2 — docs viewer project state delivery ssp 2 docs viewer project state delivery sub-scope publishing sub scope publishing 2026-08-04 22:06:02 2026 08 04 22 06 02 d-20260801-133318-15e8fa"
+      "search_text": "ssp-2 — docs viewer project state delivery ssp 2 docs viewer project state delivery sub-scope publishing sub scope publishing 2026-08-04 22:50:54 2026 08 04 22 50 54 d-20260801-133318-15e8fa"
     },
     {
       "id": "d-20260802-174340-2fe9f4",
@@ -4794,10 +4794,10 @@
       "kind": "doc",
       "title": "SSP-6 — Project Media Audit Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-121106-15ea55",
-      "last_updated": "2026-08-04 16:02:10",
+      "last_updated": "2026-08-04 22:47:42",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-04 16:02:10 • Sub-Scope Publishing",
+      "display_meta": "2026-08-04 22:47:42 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-6 — project media audit delivery",
         "ssp",
@@ -4810,26 +4810,26 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-04 16:02:10",
+        "2026-08-04 22:47:42",
         "2026",
         "08",
         "04",
-        "16",
-        "02",
-        "10",
+        "22",
+        "47",
+        "42",
         "d-20260802-121106-15ea55"
       ],
-      "search_text": "ssp-6 — project media audit delivery ssp 6 project media audit delivery sub-scope publishing sub scope publishing 2026-08-04 16:02:10 2026 08 04 16 02 10 d-20260802-121106-15ea55"
+      "search_text": "ssp-6 — project media audit delivery ssp 6 project media audit delivery sub-scope publishing sub scope publishing 2026-08-04 22:47:42 2026 08 04 22 47 42 d-20260802-121106-15ea55"
     },
     {
       "id": "d-20260802-194358-7717ee",
       "kind": "doc",
       "title": "Sub-Scope Publishing Concept And Architecture",
       "href": "/docs/?scope=studio&doc=d-20260802-194358-7717ee",
-      "last_updated": "2026-08-04 17:20:12",
+      "last_updated": "2026-08-04 22:47:42",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-04 17:20:12 • Sub-Scope Publishing",
+      "display_meta": "2026-08-04 22:47:42 • Sub-Scope Publishing",
       "search_terms": [
         "sub-scope publishing concept and architecture",
         "sub",
@@ -4839,16 +4839,16 @@
         "and",
         "architecture",
         "sub-scope publishing",
-        "2026-08-04 17:20:12",
+        "2026-08-04 22:47:42",
         "2026",
         "08",
         "04",
-        "17",
-        "20",
-        "12",
+        "22",
+        "47",
+        "42",
         "d-20260802-194358-7717ee"
       ],
-      "search_text": "sub-scope publishing concept and architecture sub scope publishing concept and architecture sub-scope publishing 2026-08-04 17:20:12 2026 08 04 17 20 12 d-20260802-194358-7717ee"
+      "search_text": "sub-scope publishing concept and architecture sub scope publishing concept and architecture sub-scope publishing 2026-08-04 22:47:42 2026 08 04 22 47 42 d-20260802-194358-7717ee"
     },
     {
       "id": "d-20260804-160200-fa7bb7",

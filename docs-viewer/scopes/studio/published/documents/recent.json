@@ -4,10 +4,34 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260802-121105-c574f9",
+      "title": "Project State Concept And Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121105-c574f9.json",
+      "timestamp": "2026-08-04 22:50:54",
+      "parent_id": "d-20260802-194357-4d857b",
+      "parent_title": "Sub-Scope Publishing"
+    },
+    {
       "doc_id": "d-20260801-133318-15e8fa",
       "title": "SSP-2 — Docs Viewer Project State Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133318-15e8fa.json",
-      "timestamp": "2026-08-04 22:06:02",
+      "timestamp": "2026-08-04 22:50:54",
+      "parent_id": "d-20260802-194357-4d857b",
+      "parent_title": "Sub-Scope Publishing"
+    },
+    {
+      "doc_id": "d-20260802-121106-15ea55",
+      "title": "SSP-6 — Project Media Audit Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121106-15ea55.json",
+      "timestamp": "2026-08-04 22:47:42",
+      "parent_id": "d-20260802-194357-4d857b",
+      "parent_title": "Sub-Scope Publishing"
+    },
+    {
+      "doc_id": "d-20260802-194358-7717ee",
+      "title": "Sub-Scope Publishing Concept And Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194358-7717ee.json",
+      "timestamp": "2026-08-04 22:47:42",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
     },
@@ -58,31 +82,7 @@
       "timestamp": "2026-08-04 22:04:04",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
-    },
-    {
-      "doc_id": "d-20260515-000000-f43740",
-      "title": "Scope Lifecycle",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260515-000000-f43740.json",
-      "timestamp": "2026-08-04 21:58:41",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260623-000000-c99cef",
-      "title": "Info Panel",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260623-000000-c99cef.json",
-      "timestamp": "2026-08-04 21:58:37",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260519-202931-66c794",
-      "title": "Management Operations",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260519-202931-66c794.json",
-      "timestamp": "2026-08-04 21:58:37",
-      "parent_id": "d-20260424-000000-04d75e",
-      "parent_title": "Management Services"
     }
   ],
-  "generated_at": "2026-08-04T21:06:03Z"
+  "generated_at": "2026-08-04T21:50:54Z"
 }
