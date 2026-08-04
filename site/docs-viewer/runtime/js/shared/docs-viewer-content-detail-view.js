@@ -1,28 +1,51 @@
 export const CONTENT_DETAIL_BACK_CONTROL_ID = "content-detail-back";
 export const CONTENT_DETAIL_LABEL_CONTROL_ID = "content-detail-label";
+export const CONTENT_DETAIL_OPEN_NEW_TAB_CONTROL_ID = "content-detail-open-new-tab";
 
 function hideContentDetailControls(context) {
   if (!context || !context.mainView) return;
   context.mainView.projectControlState(CONTENT_DETAIL_BACK_CONTROL_ID, { hidden: true });
   context.mainView.projectControlState(CONTENT_DETAIL_LABEL_CONTROL_ID, { hidden: true });
+  context.mainView.projectControlState(CONTENT_DETAIL_OPEN_NEW_TAB_CONTROL_ID, {
+    hidden: true,
+    href: ""
+  });
 }
 
-function showContentDetailControls(context, label) {
+function projectNewTabTarget(context, target) {
+  var href = String(target || "").trim();
+  context.mainView.projectControlState(CONTENT_DETAIL_OPEN_NEW_TAB_CONTROL_ID, {
+    hidden: !href,
+    href: href,
+    label: "Open in new tab"
+  });
+}
+
+function showContentDetailControls(context, presentation) {
   context.mainView.projectControlState(CONTENT_DETAIL_BACK_CONTROL_ID, {
     hidden: false,
     label: "Back to document"
   });
   context.mainView.projectControlState(CONTENT_DETAIL_LABEL_CONTROL_ID, {
     hidden: false,
-    label: label
+    label: presentation.label
   });
+  projectNewTabTarget(context, presentation.newTabTarget);
 }
 
 /** Create the public-safe hosted lifecycle for one exact static presentation. */
 export function createDocsViewerContentDetailView(options) {
   var settings = options || {};
   var tableDetailAdapter = settings.tableDetailAdapter || null;
+  var diagramDetailAdapter = settings.diagramDetailAdapter || null;
   var active = null;
+
+  function presentationAdapter(targetContext) {
+    var kind = String(targetContext && targetContext.kind || "").trim();
+    if (kind === "table") return tableDetailAdapter;
+    if (kind === "diagram") return diagramDetailAdapter;
+    return null;
+  }
 
   function release(context, restoreDocumentContext) {
     if (!active) {
@@ -46,8 +69,9 @@ export function createDocsViewerContentDetailView(options) {
   }
 
   function mount(context) {
-    if (!tableDetailAdapter || typeof tableDetailAdapter.mountPresentation !== "function") {
-      throw new Error("Content Detail View requires a table adapter.");
+    var adapter = presentationAdapter(context.targetContext);
+    if (!adapter || typeof adapter.mountPresentation !== "function") {
+      throw new Error("Content Detail View requires a supported exact target adapter.");
     }
     var mount = context.mount;
     if (!mount || !mount.ownerDocument) {
@@ -55,7 +79,7 @@ export function createDocsViewerContentDetailView(options) {
     }
     var documentRef = mount.ownerDocument;
     var windowRef = documentRef.defaultView;
-    var presentation = tableDetailAdapter.mountPresentation({
+    var presentation = adapter.mountPresentation({
       content: mount,
       document: documentRef,
       targetContext: context.targetContext
@@ -69,13 +93,16 @@ export function createDocsViewerContentDetailView(options) {
     };
     mount.dataset.docsContentDetailActive = "true";
     mount.appendChild(presentation.root);
+    showContentDetailControls(context, presentation);
     if (typeof presentation.activate === "function") {
       presentation.activate({
+        projectNewTabTarget: function (target) {
+          projectNewTabTarget(context, target);
+        },
         projectControlState: context.mainView.projectControlState,
         showWarning: context.mainView.showWarning
       });
     }
-    showContentDetailControls(context, presentation.label);
     presentation.focusTarget.focus({ preventScroll: true });
   }
 
@@ -108,6 +135,7 @@ export function withDocsViewerContentDetailDefinitions(definitions, options) {
       mainLayoutState: "expanded-main",
       load: function () {
         return createDocsViewerContentDetailView({
+          diagramDetailAdapter: settings.diagramDetailAdapter,
           tableDetailAdapter: settings.tableDetailAdapter
         });
       }
@@ -131,6 +159,15 @@ export function withDocsViewerContentDetailDefinitions(definitions, options) {
         surfaceId: "main-view",
         appKinds: ["public", "manage"],
         renderer: "content-detail-label"
+      },
+      {
+        id: CONTENT_DETAIL_OPEN_NEW_TAB_CONTROL_ID,
+        label: "Open in new tab",
+        ownerType: "view",
+        ownerViewId: "content-detail",
+        surfaceId: "main-view",
+        appKinds: ["public", "manage"],
+        renderer: "content-detail-open-new-tab"
       }
     ])
   };

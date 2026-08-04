@@ -35,6 +35,7 @@ import(appendAssetVersion("../shared/docs-viewer-app-boot.js"))
       mountDocumentExtras: mountDocsViewerPublicDocumentExtras,
       tableDetailAdapter: docsViewerTableDetailAdapter,
       viewRegistryContributions: withDocsViewerContentDetailDefinitions(null, {
+        diagramDetailAdapter: docsViewerDiagramDetailAdapter,
         tableDetailAdapter: docsViewerTableDetailAdapter
       }),
       themedDiagramAdapter: themedDiagramAdapter

@@ -123,6 +123,19 @@ function renderContentDetailLabel(context) {
   return label;
 }
 
+function renderContentDetailOpenNewTab(context) {
+  var link = context.existingRoot;
+  if (!link || link.tagName !== "A") {
+    link = context.document.createElement("a");
+    link.className = "docsViewer__actionButton docsViewer__contentDetailOpenNewTab";
+    link.target = "_blank";
+    link.rel = "noopener";
+    link.textContent = "Open in new tab";
+  }
+  link.href = context.control.state && context.control.state.href || "";
+  return link;
+}
+
 export function createDocsViewerSharedControlRenderers() {
   return {
     "recent-button": renderRecentButton,
@@ -131,6 +144,7 @@ export function createDocsViewerSharedControlRenderers() {
     "bookmark-toggle": renderBookmarkToggle,
     "info-toggle": renderInfoToggle,
     "content-detail-back": renderContentDetailBack,
-    "content-detail-label": renderContentDetailLabel
+    "content-detail-label": renderContentDetailLabel,
+    "content-detail-open-new-tab": renderContentDetailOpenNewTab
   };
 }

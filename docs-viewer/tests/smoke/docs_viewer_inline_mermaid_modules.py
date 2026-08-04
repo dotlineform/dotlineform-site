@@ -430,6 +430,16 @@ def assert_registered_theme_refresh_contract(page: Page) -> None:
                 '<pre><code class="language-mermaid">second source</code></pre>'
             ].join('');
             document.body.appendChild(content);
+            const requestedTargets = [];
+            detailAdapter.mountDocument({
+                content,
+                doc: { doc_id: 'theme-refresh-doc' },
+                document,
+                documentMountGeneration: 23,
+                requestContentDetail(target) { requestedTargets.push(target); },
+                viewerScope: 'studio',
+                window
+            });
             const mounted = await adapter.mountDocument({
                 content,
                 diagramDetailAdapter: detailAdapter,
@@ -443,7 +453,18 @@ def assert_registered_theme_refresh_contract(page: Page) -> None:
             ));
             const controls = Array.from(content.querySelectorAll('.docsViewer__diagramDetailControl'));
             const initialSvgs = hosts.map(host => host.firstElementChild);
-            const initialTargets = controls.map(control => control.getAttribute('href'));
+            controls.forEach(control => control.click());
+            const presentationTarget = targetContext => {
+                const presentation = detailAdapter.mountPresentation({
+                    content,
+                    document,
+                    targetContext
+                });
+                const target = presentation.newTabTarget;
+                presentation.release();
+                return target;
+            };
+            const initialTargets = requestedTargets.map(presentationTarget);
 
             const undiscovered = document.createElement('pre');
             undiscovered.innerHTML = '<code class="language-mermaid">not registered</code>';
@@ -452,7 +473,7 @@ def assert_registered_theme_refresh_contract(page: Page) -> None:
             document.documentElement.setAttribute('data-theme', 'dark');
             const refreshed = await adapter.handleThemeChange('dark');
             const currentSvgs = hosts.map(host => host.firstElementChild);
-            const currentTargets = controls.map(control => control.getAttribute('href'));
+            const currentTargets = requestedTargets.map(presentationTarget);
             const panelBackground = getComputedStyle(hosts[0]).backgroundColor;
             const inlineRelease = adapter.releaseDocument({ content });
             const detailRelease = detailAdapter.releaseDocument({ content });
@@ -586,6 +607,16 @@ def assert_theme_refresh_failure_retention(page: Page) -> None:
             const renderContent = document.createElement('article');
             renderContent.innerHTML = '<pre><code class="language-mermaid">render failure source</code></pre>';
             document.body.appendChild(renderContent);
+            const renderTargets = [];
+            renderDetail.mountDocument({
+                content: renderContent,
+                doc: { doc_id: 'render-failure-doc' },
+                document,
+                documentMountGeneration: 29,
+                requestContentDetail(target) { renderTargets.push(target); },
+                viewerScope: 'studio',
+                window
+            });
             await renderAdapter.mountDocument({
                 content: renderContent,
                 diagramDetailAdapter: renderDetail,
@@ -597,7 +628,18 @@ def assert_theme_refresh_failure_retention(page: Page) -> None:
             );
             const renderSvg = renderHost.firstElementChild;
             const renderControl = renderContent.querySelector('.docsViewer__diagramDetailControl');
-            const renderTarget = renderControl.getAttribute('href');
+            renderControl.click();
+            const mountedTarget = (adapter, contentRoot, targetContext) => {
+                const presentation = adapter.mountPresentation({
+                    content: contentRoot,
+                    document,
+                    targetContext
+                });
+                const target = presentation.newTabTarget;
+                presentation.release();
+                return target;
+            };
+            const renderTarget = mountedTarget(renderDetail, renderContent, renderTargets[0]);
             renderShouldFail = true;
             document.documentElement.setAttribute('data-theme', 'dark');
             const renderFailure = await renderAdapter.handleThemeChange('dark');
@@ -638,6 +680,16 @@ def assert_theme_refresh_failure_retention(page: Page) -> None:
             const detailContent = document.createElement('article');
             detailContent.innerHTML = '<pre><code class="language-mermaid">detail failure source</code></pre>';
             document.body.appendChild(detailContent);
+            const detailTargets = [];
+            failingDetail.mountDocument({
+                content: detailContent,
+                doc: { doc_id: 'detail-failure-doc' },
+                document,
+                documentMountGeneration: 31,
+                requestContentDetail(target) { detailTargets.push(target); },
+                viewerScope: 'studio',
+                window
+            });
             await detailAdapter.mountDocument({
                 content: detailContent,
                 diagramDetailAdapter: failingDetail,
@@ -649,20 +701,31 @@ def assert_theme_refresh_failure_retention(page: Page) -> None:
             );
             const detailSvg = detailHost.firstElementChild;
             const detailControl = detailContent.querySelector('.docsViewer__diagramDetailControl');
-            const detailTarget = detailControl.getAttribute('href');
+            detailControl.click();
+            const detailTarget = mountedTarget(failingDetail, detailContent, detailTargets[0]);
             document.documentElement.setAttribute('data-theme', 'dark');
             const detailFailure = await detailAdapter.handleThemeChange('dark');
             const detailRevokedBeforeRelease = detailRevoked.slice();
+            const renderTargetRetained = mountedTarget(
+                renderDetail,
+                renderContent,
+                renderTargets[0]
+            ) === renderTarget;
+            const detailTargetRetained = mountedTarget(
+                failingDetail,
+                detailContent,
+                detailTargets[0]
+            ) === detailTarget;
             const detailRelease = failingDetail.releaseDocument({ content: detailContent });
 
             return {
                 renderFailure,
                 renderSvgRetained: renderHost.firstElementChild === renderSvg,
-                renderTargetRetained: renderControl.getAttribute('href') === renderTarget,
+                renderTargetRetained,
                 renderWarnings,
                 detailFailure,
                 detailSvgRetained: detailHost.firstElementChild === detailSvg,
-                detailTargetRetained: detailControl.getAttribute('href') === detailTarget,
+                detailTargetRetained,
                 detailWarnings,
                 detailWarningsFromInline,
                 detailRevokedBeforeRelease,
@@ -826,6 +889,16 @@ def assert_checked_browser_runtime_renders(page: Page) -> None:
             });
             document.body.appendChild(content);
             const detailAdapter = diagramDetail.createDocsViewerDiagramDetailAdapter();
+            const requestedTargets = [];
+            detailAdapter.mountDocument({
+                content,
+                doc: { doc_id: 'representative-theme-doc' },
+                document,
+                documentMountGeneration: 37,
+                requestContentDetail(target) { requestedTargets.push(target); },
+                viewerScope: 'studio',
+                window
+            });
             document.documentElement.setAttribute('data-theme', 'light');
             const mountResult = await inlineMermaid.docsViewerInlineMermaidAdapter.mountDocument({
                 content,
@@ -839,6 +912,20 @@ def assert_checked_browser_runtime_renders(page: Page) -> None:
                 '.docsViewer__diagram[data-docs-viewer-diagram-kind="inline-mermaid"]'
             ));
             const controls = Array.from(content.querySelectorAll('.docsViewer__diagramDetailControl'));
+            controls.forEach(control => control.click());
+
+            function currentTargets() {
+                return requestedTargets.map(targetContext => {
+                    const presentation = detailAdapter.mountPresentation({
+                        content,
+                        document,
+                        targetContext
+                    });
+                    const target = presentation.newTabTarget;
+                    presentation.release();
+                    return target;
+                });
+            }
 
             function themedState() {
                 const svgs = hosts.map(host => host.querySelector(':scope > svg'));
@@ -848,7 +935,7 @@ def assert_checked_browser_runtime_renders(page: Page) -> None:
                     descriptions: svgs.map(svg => svg?.querySelector('desc')?.textContent || ''),
                     backgrounds: svgs.map(svg => svg?.style.backgroundColor || ''),
                     viewBoxes: svgs.map(svg => svg?.getAttribute('viewBox') || ''),
-                    targets: controls.map(control => control.getAttribute('href') || ''),
+                    targets: currentTargets(),
                     authoredStylePresent: (svgs[0]?.outerHTML || '').toLowerCase().includes('#f4b400'),
                     viewportOverflow: viewports.map(viewport => getComputedStyle(viewport).overflowX),
                     hostOverflow: hosts.map(host => getComputedStyle(host).overflowX)

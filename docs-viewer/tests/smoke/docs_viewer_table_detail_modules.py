@@ -329,6 +329,7 @@ def assert_table_detail_lifecycle(page: Page) -> None:
                 frozenTarget: Object.isFrozen(requestedTarget) && Object.isFrozen(requestedTarget.documentTarget),
                 infoHidden: infoPanel.hidden,
                 layout: root.dataset.viewerLayout,
+                newTabHidden: actions.querySelector('.docsViewer__contentDetailOpenNewTab')?.hidden,
                 originalRetained: content.contains(sourceTable),
                 sidebarHidden: sidebar.hidden,
             };
@@ -371,11 +372,19 @@ def assert_table_detail_lifecycle(page: Page) -> None:
     if result["composition"] != {
         "public": {
             "view": True,
-            "controls": ["content-detail-back", "content-detail-label"],
+            "controls": [
+                "content-detail-back",
+                "content-detail-label",
+                "content-detail-open-new-tab",
+            ],
         },
         "manage": {
             "view": True,
-            "controls": ["content-detail-back", "content-detail-label"],
+            "controls": [
+                "content-detail-back",
+                "content-detail-label",
+                "content-detail-open-new-tab",
+            ],
         },
         "review": {"view": False, "controls": []},
     }:
@@ -402,6 +411,7 @@ def assert_table_detail_lifecycle(page: Page) -> None:
         "frozenTarget": True,
         "infoHidden": True,
         "layout": "expanded-main",
+        "newTabHidden": True,
         "originalRetained": True,
         "sidebarHidden": True,
     }

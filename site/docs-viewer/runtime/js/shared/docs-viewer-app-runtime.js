@@ -766,7 +766,7 @@ export function startDocsViewerRuntime(options) {
           merged[key] = Boolean(merged[key]) || Boolean(current[key]);
         }
       });
-      ["pressed", "expanded", "label", "count"].forEach(function (key) {
+      ["pressed", "expanded", "label", "href", "count"].forEach(function (key) {
         if (Object.prototype.hasOwnProperty.call(current, key)) merged[key] = current[key];
       });
     });

@@ -88,7 +88,10 @@ startDocsViewerManageApp({
   viewRegistryContributions: withDocsViewerManagedTableToolDefinitions(
     withDocsViewerContentDetailDefinitions(
       createDocsViewerManagementViewDefinitions(),
-      { tableDetailAdapter: managedTableDetailAdapter }
+      {
+        diagramDetailAdapter: docsViewerDiagramDetailAdapter,
+        tableDetailAdapter: managedTableDetailAdapter
+      }
     )
   ),
   infoPanelAutoOpenDocumentModes: ["markdown-source"],

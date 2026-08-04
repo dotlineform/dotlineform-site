@@ -73,7 +73,7 @@ export function initDocsViewerDocumentController(context) {
     });
   }
 
-  function mountDiagramDetails(doc, payload) {
+  function mountDiagramDetails(doc, payload, mountGeneration) {
     var adapter = context.diagramDetailAdapter;
     if (!adapter || typeof adapter.mountDocument !== "function") return;
     try {
@@ -81,7 +81,9 @@ export function initDocsViewerDocumentController(context) {
         content: content,
         doc: doc,
         document: content ? content.ownerDocument : null,
+        documentMountGeneration: mountGeneration,
         payload: payload,
+        requestContentDetail: context.requestContentDetail,
         scopeType: currentScopeType(),
         viewerScope: currentViewerScope(),
         window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
@@ -291,7 +293,7 @@ export function initDocsViewerDocumentController(context) {
     content.innerHTML = payload.content_html || "";
     mountTableDetails(doc, payload, mountGeneration);
     mountThemedDiagrams(doc, payload);
-    mountDiagramDetails(doc, payload);
+    mountDiagramDetails(doc, payload, mountGeneration);
     mountInlineMermaid(doc, payload, mountGeneration);
     mountDocumentExtras(doc, payload, mountGeneration);
     document.title = doc.title + " | dotlineform";

@@ -66,15 +66,21 @@ def install_fixture(page: Page) -> None:
                 });
             }
             document.body.classList.add('docsViewer');
+            const controlRenderers = await import('/docs-viewer/runtime/js/shared/docs-viewer-app-control-renderers.js');
+            const contentDetail = await import('/docs-viewer/runtime/js/shared/docs-viewer-content-detail-view.js');
             const diagramDetail = await import('/docs-viewer/runtime/js/shared/docs-viewer-diagram-detail.js');
             const documentController = await import('/docs-viewer/runtime/js/shared/docs-viewer-document-controller.js');
             const inlineMermaid = await import('/docs-viewer/runtime/js/management/docs-viewer-inline-mermaid.js');
             const publicThemedDiagrams = await import('/docs-viewer/runtime/js/public/docs-viewer-public-themed-diagrams.js');
+            const viewRegistry = await import('/docs-viewer/runtime/js/shared/docs-viewer-view-registry.js');
             window.__docsViewerDiagramDetailSmoke = {
+                controlRenderers,
+                contentDetail,
                 diagramDetail,
                 documentController,
                 inlineMermaid,
-                publicThemedDiagrams
+                publicThemedDiagrams,
+                viewRegistry
             };
         }"""
     )
@@ -83,7 +89,12 @@ def install_fixture(page: Page) -> None:
 def assert_persistent_adapter_contract(page: Page) -> None:
     result = page.evaluate(
         """async () => {
-            const { diagramDetail } = window.__docsViewerDiagramDetailSmoke;
+            const {
+                contentDetail,
+                controlRenderers,
+                diagramDetail,
+                viewRegistry
+            } = window.__docsViewerDiagramDetailSmoke;
             const shell = document.createElement('div');
             shell.className = 'docsViewer';
             const content = document.createElement('article');
@@ -100,10 +111,20 @@ def assert_persistent_adapter_contract(page: Page) -> None:
 
             const sameOrigin = content.querySelector('#same-origin');
             const before = sameOrigin.getBoundingClientRect();
+            const requestedTargets = [];
             const adapter = diagramDetail.createDocsViewerDiagramDetailAdapter();
-            const first = adapter.mountDocument({ content, document, window });
+            const mountContext = {
+                content,
+                doc: { doc_id: 'diagram-doc' },
+                document,
+                documentMountGeneration: 7,
+                requestContentDetail(target) { requestedTargets.push(target); },
+                viewerScope: 'studio',
+                window
+            };
+            const first = adapter.mountDocument(mountContext);
             const after = sameOrigin.getBoundingClientRect();
-            const second = adapter.mountDocument({ content, document, window });
+            const second = adapter.mountDocument(mountContext);
             const frames = Array.from(content.querySelectorAll('.docsViewer__diagramFrame'));
             const controls = Array.from(content.querySelectorAll('.docsViewer__diagramDetailControl'));
             const firstControl = controls[0];
@@ -116,13 +137,78 @@ def assert_persistent_adapter_contract(page: Page) -> None:
             firstControl.focus();
             await new Promise(resolve => setTimeout(resolve, 150));
             const focusedStyle = getComputedStyle(firstControl);
+            controls.forEach(control => control.click());
+
+            const controlStates = new Map();
+            const view = contentDetail.createDocsViewerContentDetailView({
+                diagramDetailAdapter: adapter,
+                tableDetailAdapter: null
+            });
+            const viewContext = {
+                mainView: {
+                    projectControlState(controlId, state) {
+                        controlStates.set(controlId, { ...state });
+                    },
+                    showWarning() {}
+                },
+                mount: content,
+                requestReason: 'content-detail-open',
+                targetContext: requestedTargets[0]
+            };
+            view.mount(viewContext);
+            const detailRoot = content.querySelector('[data-docs-content-detail-view="diagram"]');
+            const detailViewport = detailRoot?.querySelector('.docsViewer__diagramDetailViewport');
+            const initialDetail = {
+                active: content.dataset.docsContentDetailActive,
+                label: controlStates.get(contentDetail.CONTENT_DETAIL_LABEL_CONTROL_ID)?.label,
+                newTab: controlStates.get(contentDetail.CONTENT_DETAIL_OPEN_NEW_TAB_CONTROL_ID),
+                movedExactSurface: detailViewport?.firstElementChild === sameOrigin,
+                sourceViewportEmpty: firstViewport.children.length === 0,
+                viewportRole: detailViewport?.getAttribute('role'),
+                viewportLabel: detailViewport?.getAttribute('aria-label')
+            };
+            const normalizedNewTabState = viewRegistry.normalizeDocsViewerControlState(
+                controlStates.get(contentDetail.CONTENT_DETAIL_OPEN_NEW_TAB_CONTROL_ID)
+            );
+            const newTabRenderer = controlRenderers.createDocsViewerSharedControlRenderers()[
+                'content-detail-open-new-tab'
+            ];
+            const newTabLink = newTabRenderer({
+                control: {
+                    label: 'Open in new tab',
+                    state: normalizedNewTabState
+                },
+                document,
+                existingRoot: null
+            });
+            const newTabPresentation = {
+                href: newTabLink.getAttribute('href'),
+                label: newTabLink.textContent,
+                rel: newTabLink.getAttribute('rel'),
+                tagName: newTabLink.tagName,
+                target: newTabLink.getAttribute('target')
+            };
+            sameOrigin.setAttribute('src', '/assets/data/docs/scopes/library/media/svg/one-updated.svg');
+            const refreshed = adapter.refreshPersistentDiagram({ content, diagram: sameOrigin });
+            const refreshedTarget = controlStates.get(
+                contentDetail.CONTENT_DETAIL_OPEN_NEW_TAB_CONTROL_ID
+            )?.href;
+            view.unmount({ ...viewContext, requestReason: 'back' });
+            const restored = {
+                active: content.hasAttribute('data-docs-content-detail-active'),
+                detailRemoved: !content.querySelector('[data-docs-content-detail-view]'),
+                exactSurface: firstViewport.firstElementChild === sameOrigin,
+                focusReturned: document.activeElement === firstControl,
+                newTabHidden: controlStates.get(
+                    contentDetail.CONTENT_DETAIL_OPEN_NEW_TAB_CONTROL_ID
+                )?.hidden
+            };
 
             return {
                 first,
                 second,
                 frameCount: frames.length,
                 controlCount: controls.length,
-                targets: controls.map(control => control.getAttribute('href')),
                 targetAttrs: controls.map(control => ({
                     target: control.getAttribute('target'),
                     rel: control.getAttribute('rel'),
@@ -151,7 +237,14 @@ def assert_persistent_adapter_contract(page: Page) -> None:
                 focusedOpacity: focusedStyle.opacity,
                 focusOutlineWidth: focusedStyle.outlineWidth,
                 imageGeometryStable: before.x === after.x && before.y === after.y && before.width === after.width && before.height === after.height,
-                iconHidden: firstControl.querySelector('svg')?.getAttribute('aria-hidden') === 'true'
+                iconHidden: firstControl.querySelector('svg')?.getAttribute('aria-hidden') === 'true',
+                requestedTargets,
+                initialDetail,
+                normalizedNewTabState,
+                newTabPresentation,
+                refreshed,
+                refreshedTarget,
+                restored
             };
         }"""
     )
@@ -162,18 +255,13 @@ def assert_persistent_adapter_contract(page: Page) -> None:
         raise AssertionError(f"repeat mount duplicated diagram controls: {result!r}")
     if result["frameCount"] != 2 or result["controlCount"] != 2 or not result["exactShape"]:
         raise AssertionError(f"shared persistent frame shape changed: {result!r}")
-    if result["targets"] != [
-        "/assets/data/docs/scopes/library/media/svg/one.svg",
-        "https://media.example.test/docs/two.svg",
-    ]:
-        raise AssertionError(f"stable persistent targets were not preserved: {result!r}")
     expected_attrs = {
-        "target": "_blank",
-        "rel": "noopener",
-        "label": "Open diagram in new tab",
-        "title": "Open diagram in new tab",
+        "target": None,
+        "rel": None,
+        "label": "Open diagram",
+        "title": "Open diagram",
         "tabIndex": 0,
-        "tagName": "A",
+        "tagName": "BUTTON",
     }
     if any(attrs != expected_attrs for attrs in result["targetAttrs"]):
         raise AssertionError(f"native accessible new-tab link contract changed: {result!r}")
@@ -189,6 +277,67 @@ def assert_persistent_adapter_contract(page: Page) -> None:
         raise AssertionError(f"persistent decoration changed image geometry: {result!r}")
     if float(result["focusedOpacity"]) != 1 or result["focusOutlineWidth"] != "2px":
         raise AssertionError(f"focused control is not fully visible: {result!r}")
+    if result["requestedTargets"] != [
+        {
+            "documentTarget": {"scope": "studio", "subScope": "", "docId": "diagram-doc"},
+            "documentMountGeneration": 7,
+            "kind": "diagram",
+            "adapterTargetId": "diagram-0",
+            "occurrence": 1,
+        },
+        {
+            "documentTarget": {"scope": "studio", "subScope": "", "docId": "diagram-doc"},
+            "documentMountGeneration": 7,
+            "kind": "diagram",
+            "adapterTargetId": "diagram-1",
+            "occurrence": 2,
+        },
+    ]:
+        raise AssertionError(f"diagram controls did not request exact mount-bound targets: {result!r}")
+    if result["initialDetail"] != {
+        "active": "true",
+        "label": "One",
+        "newTab": {
+            "hidden": False,
+            "href": "/assets/data/docs/scopes/library/media/svg/one.svg",
+            "label": "Open in new tab",
+        },
+        "movedExactSurface": True,
+        "sourceViewportEmpty": True,
+        "viewportRole": "region",
+        "viewportLabel": "One",
+    }:
+        raise AssertionError(f"persistent diagram did not enter shared Content Detail: {result!r}")
+    if result["normalizedNewTabState"] != {
+        "hidden": False,
+        "href": "/assets/data/docs/scopes/library/media/svg/one.svg",
+        "label": "Open in new tab",
+    } or result["newTabPresentation"] != {
+        "href": "/assets/data/docs/scopes/library/media/svg/one.svg",
+        "label": "Open in new tab",
+        "rel": "noopener",
+        "tagName": "A",
+        "target": "_blank",
+    }:
+        raise AssertionError(f"optional new-tab toolbar projection changed: {result!r}")
+    if (
+        result["refreshed"] != {
+            "refreshed": True,
+            "reason": "",
+            "target": "/assets/data/docs/scopes/library/media/svg/one-updated.svg",
+        }
+        or result["refreshedTarget"]
+        != "/assets/data/docs/scopes/library/media/svg/one-updated.svg"
+    ):
+        raise AssertionError(f"active diagram new-tab target did not refresh: {result!r}")
+    if result["restored"] != {
+        "active": False,
+        "detailRemoved": True,
+        "exactSurface": True,
+        "focusReturned": True,
+        "newTabHidden": True,
+    }:
+        raise AssertionError(f"Back did not restore the exact persistent diagram: {result!r}")
 
 
 def assert_inline_blob_contract(page: Page) -> None:
@@ -219,39 +368,39 @@ def assert_inline_blob_contract(page: Page) -> None:
                     context.window.URL.revokeObjectURL(target);
                 }
             });
-            const first = adapter.registerInlineDiagram({
+            const requestedTargets = [];
+            const registrationContext = {
                 content,
+                doc: { doc_id: 'inline-doc' },
                 document,
-                host: content.querySelector('#inline-one'),
+                mountGeneration: 11,
+                requestContentDetail(target) { requestedTargets.push(target); },
+                viewerScope: 'studio',
                 window
+            };
+            const first = adapter.registerInlineDiagram({
+                ...registrationContext,
+                host: content.querySelector('#inline-one'),
             });
             const second = adapter.registerInlineDiagram({
-                content,
-                document,
+                ...registrationContext,
                 host: content.querySelector('#inline-two'),
-                window
             });
             const repeat = adapter.registerInlineDiagram({
-                content,
-                document,
+                ...registrationContext,
                 host: content.querySelector('#inline-one'),
-                window
             });
             const ordinary = adapter.registerInlineDiagram({
-                content,
-                document,
+                ...registrationContext,
                 host: content.querySelector('#ordinary-svg'),
-                window
             });
             const nested = adapter.registerInlineDiagram({
-                content,
-                document,
+                ...registrationContext,
                 host: content.querySelector('#nested-host'),
-                window
             });
 
             const controls = Array.from(content.querySelectorAll('.docsViewer__diagramDetailControl'));
-            const targets = controls.map(control => control.href);
+            const targets = [first.target, second.target];
             const resources = await Promise.all(targets.map(async target => {
                 const response = await fetch(target);
                 return {
@@ -260,6 +409,14 @@ def assert_inline_blob_contract(page: Page) -> None:
                 };
             }));
             const frames = Array.from(content.querySelectorAll('.docsViewer__diagramFrame'));
+            const exactShape = frames.every(frame =>
+                frame.tagName === 'DIV'
+                && frame.dataset.docsViewerDiagramFrame === 'inline-mermaid'
+                && frame.children.length === 2
+                && frame.firstElementChild?.classList.contains('docsViewer__diagramViewport')
+                && frame.firstElementChild?.children.length === 1
+                && frame.firstElementChild?.firstElementChild?.dataset.docsViewerDiagramKind === 'inline-mermaid'
+            );
             const firstHost = content.querySelector('#inline-one');
             firstHost.innerHTML = '<svg viewBox="0 0 80 40" role="img" style="background-color: rgb(22, 22, 24)"><title>Refreshed system map</title><desc>The themed replacement diagram.</desc><rect width="36" height="20"></rect></svg>';
             const refresh = adapter.refreshInlineDiagram({
@@ -268,7 +425,7 @@ def assert_inline_blob_contract(page: Page) -> None:
                 host: firstHost,
                 window
             });
-            const refreshedTarget = controls[0].href;
+            const refreshedTarget = refresh.target;
             const refreshedResponse = await fetch(refreshedTarget);
             const refreshedResource = {
                 contentType: refreshedResponse.headers.get('content-type'),
@@ -321,14 +478,20 @@ def assert_inline_blob_contract(page: Page) -> None:
                     refreshWarnings.push(message);
                 }
             });
+            const refreshRequestedTargets = [];
             const refreshRegistered = refreshFailureAdapter.registerInlineDiagram({
                 content: refreshFailureContent,
+                doc: { doc_id: 'refresh-doc' },
                 document,
                 host: refreshFailureHost,
+                mountGeneration: 13,
+                requestContentDetail(target) { refreshRequestedTargets.push(target); },
+                viewerScope: 'studio',
                 window
             });
             const refreshControl = refreshFailureContent.querySelector('.docsViewer__diagramDetailControl');
-            const refreshOriginalTarget = refreshControl.href;
+            refreshControl.click();
+            const refreshOriginalTarget = refreshRegistered.target;
             refreshFailureHost.innerHTML = '<svg viewBox="0 0 8 4"><title>Candidate diagram</title><desc>The candidate detail target fails.</desc><rect width="6" height="3"></rect></svg>';
             const refreshFailed = refreshFailureAdapter.refreshInlineDiagram({
                 content: refreshFailureContent,
@@ -336,7 +499,13 @@ def assert_inline_blob_contract(page: Page) -> None:
                 host: refreshFailureHost,
                 window
             });
-            const refreshTargetAfterFailure = refreshControl.href;
+            const refreshPresentation = refreshFailureAdapter.mountPresentation({
+                content: refreshFailureContent,
+                document,
+                targetContext: refreshRequestedTargets[0]
+            });
+            const refreshTargetAfterFailure = refreshPresentation.newTabTarget;
+            refreshPresentation.release();
             const refreshFailureRelease = refreshFailureAdapter.releaseDocument({
                 content: refreshFailureContent
             });
@@ -354,22 +523,17 @@ def assert_inline_blob_contract(page: Page) -> None:
                     target: control.getAttribute('target'),
                     rel: control.getAttribute('rel'),
                     kind: control.dataset.docsViewerDiagramDetailKind,
-                    hrefScheme: control.href.split(':', 1)[0]
+                    label: control.getAttribute('aria-label'),
+                    title: control.getAttribute('title')
                 })),
+                targetSchemes: targets.map(target => target.split(':', 1)[0]),
                 targetCount: new Set(targets).size,
                 resources,
                 refresh,
                 refreshedTarget,
                 refreshedResource,
                 revokedAfterRefresh,
-                exactShape: frames.every(frame =>
-                    frame.tagName === 'DIV'
-                    && frame.dataset.docsViewerDiagramFrame === 'inline-mermaid'
-                    && frame.children.length === 2
-                    && frame.firstElementChild?.classList.contains('docsViewer__diagramViewport')
-                    && frame.firstElementChild?.children.length === 1
-                    && frame.firstElementChild?.firstElementChild?.dataset.docsViewerDiagramKind === 'inline-mermaid'
-                ),
+                exactShape,
                 release,
                 releaseAgain,
                 revoked,
@@ -401,15 +565,16 @@ def assert_inline_blob_contract(page: Page) -> None:
         raise AssertionError(f"inline diagram frame shape changed: {result!r}")
     if result["targetCount"] != 2 or any(
         control != {
-            "tagName": "A",
-            "target": "_blank",
-            "rel": "noopener",
+            "tagName": "BUTTON",
+            "target": None,
+            "rel": None,
             "kind": "inline-mermaid",
-            "hrefScheme": "blob",
+            "label": "Open diagram",
+            "title": "Open diagram",
         }
         for control in result["controls"]
-    ):
-        raise AssertionError(f"inline detail targets are not distinct native Blob links: {result!r}")
+    ) or result["targetSchemes"] != ["blob", "blob"]:
+        raise AssertionError(f"inline entry and optional Blob targets changed: {result!r}")
     for resource in result["resources"]:
         markup = resource["markup"]
         if "image/svg+xml" not in (resource["contentType"] or ""):
@@ -480,7 +645,16 @@ def assert_public_themed_diagram_contract(page: Page) -> None:
             const initialFixed = content.querySelector('#fixed');
             const incomplete = content.querySelector('#incomplete');
             const srcBeforeDetail = initialThemed.getAttribute('src');
-            const detailMounted = detailAdapter.mountDocument({ content, document, window });
+            const requestedTargets = [];
+            const detailMounted = detailAdapter.mountDocument({
+                content,
+                doc: { doc_id: 'public-diagrams' },
+                document,
+                documentMountGeneration: 17,
+                requestContentDetail(target) { requestedTargets.push(target); },
+                viewerScope: 'library',
+                window
+            });
             const controls = Array.from(content.querySelectorAll('.docsViewer__diagramDetailControl'));
             const themedControl = controls.find(control =>
                 control.dataset.docsViewerDiagramDetailKind === 'themed-mermaid'
@@ -488,12 +662,26 @@ def assert_public_themed_diagram_contract(page: Page) -> None:
             const fixedControl = controls.find(control =>
                 control.dataset.docsViewerDiagramDetailKind === 'persistent-svg'
             );
+            themedControl.click();
+            fixedControl.click();
+            let toolbarTarget = '';
+            const themedPresentation = detailAdapter.mountPresentation({
+                content,
+                document,
+                targetContext: requestedTargets[0]
+            });
+            content.appendChild(themedPresentation.root);
+            themedPresentation.activate({
+                projectNewTabTarget(target) { toolbarTarget = target; }
+            });
             const lightState = {
                 imageSrc: initialThemed.getAttribute('src'),
                 imageHidden: initialThemed.hasAttribute('hidden'),
-                detailHref: themedControl?.getAttribute('href'),
+                detailTarget: themedPresentation.newTabTarget,
+                toolbarTarget,
                 fixedSrc: initialFixed.getAttribute('src'),
-                fixedHref: fixedControl?.getAttribute('href')
+                controlTag: themedControl?.tagName,
+                controlLabel: themedControl?.getAttribute('aria-label')
             };
             const connection = publicThemedDiagrams.connectDocsViewerPublicThemeOwner({
                 adapter: themedAdapter,
@@ -509,11 +697,19 @@ def assert_public_themed_diagram_contract(page: Page) -> None:
                 frameCount: content.querySelectorAll('.docsViewer__diagramFrame').length,
                 viewportCount: content.querySelectorAll('.docsViewer__diagramViewport').length,
                 controlCount: controls.length,
-                detailHref: themedControl?.getAttribute('href'),
+                detailTarget: themedPresentation.newTabTarget,
+                toolbarTarget,
                 fixedSrc: initialFixed.getAttribute('src'),
-                fixedHref: fixedControl?.getAttribute('href'),
                 description: document.getElementById('theme-description')?.textContent
             };
+            themedPresentation.release();
+            const fixedPresentation = detailAdapter.mountPresentation({
+                content,
+                document,
+                targetContext: requestedTargets[1]
+            });
+            const fixedTarget = fixedPresentation.newTabTarget;
+            fixedPresentation.release();
             connection.release();
             const released = themedAdapter.releaseDocument({ content });
             const afterRelease = themedAdapter.handleThemeChange('light');
@@ -526,6 +722,7 @@ def assert_public_themed_diagram_contract(page: Page) -> None:
                 darkState,
                 incompleteHidden: incomplete.hasAttribute('hidden'),
                 incompleteSrc: incomplete.getAttribute('src'),
+                fixedTarget,
                 released,
                 afterRelease,
                 themedSrcAfterRelease: initialThemed.getAttribute('src')
@@ -547,9 +744,11 @@ def assert_public_themed_diagram_contract(page: Page) -> None:
     if result["lightState"] != {
         "imageSrc": "/projection/light.svg",
         "imageHidden": False,
-        "detailHref": "/projection/light.svg",
+        "detailTarget": "/projection/light.svg",
+        "toolbarTarget": "/projection/light.svg",
         "fixedSrc": "/projection/fixed.svg",
-        "fixedHref": "/projection/fixed.svg",
+        "controlTag": "BUTTON",
+        "controlLabel": "Open diagram",
     }:
         raise AssertionError(f"initial image and detail target disagree: {result!r}")
     if result["themeOwnerConnected"] is not True:
@@ -560,14 +759,16 @@ def assert_public_themed_diagram_contract(page: Page) -> None:
         "frameCount": 2,
         "viewportCount": 2,
         "controlCount": 2,
-        "detailHref": "/projection/dark.svg",
+        "detailTarget": "/projection/dark.svg",
+        "toolbarTarget": "/projection/dark.svg",
         "fixedSrc": "/projection/fixed.svg",
-        "fixedHref": "/projection/fixed.svg",
         "description": "The active public theme selects one diagram.",
     }:
         raise AssertionError(f"theme switch changed diagram shape or fixed SVG behavior: {result!r}")
     if not result["incompleteHidden"] or result["incompleteSrc"] is not None:
         raise AssertionError(f"incomplete public pair was exposed: {result!r}")
+    if result["fixedTarget"] != "/projection/fixed.svg":
+        raise AssertionError(f"fixed persistent target changed during themed refresh: {result!r}")
     if (
         result["released"] != {"released": 1}
         or result["afterRelease"] != {"theme": "light", "updated": 0}
@@ -596,6 +797,16 @@ def assert_inline_mermaid_registration_contract(page: Page) -> None:
             content.innerHTML = '<pre><code class="language-mermaid">graph TD; A--&gt;B</code></pre>';
             document.body.appendChild(content);
             const detailAdapter = diagramDetail.createDocsViewerDiagramDetailAdapter();
+            const requestedTargets = [];
+            detailAdapter.mountDocument({
+                content,
+                doc: { doc_id: 'inline-mermaid-doc' },
+                document,
+                documentMountGeneration: 19,
+                requestContentDetail(target) { requestedTargets.push(target); },
+                viewerScope: 'studio',
+                window
+            });
             const adapter = inlineMermaid.createDocsViewerInlineMermaidAdapter({
                 loadMermaid: async () => renderer()
             });
@@ -610,7 +821,19 @@ def assert_inline_mermaid_registration_contract(page: Page) -> None:
             const frame = content.querySelector('.docsViewer__diagramFrame');
             const control = content.querySelector('.docsViewer__diagramDetailControl');
             const host = content.querySelector('[data-docs-viewer-diagram-kind="inline-mermaid"]');
-            const serialized = await (await fetch(control.href)).text();
+            control.click();
+            const presentation = detailAdapter.mountPresentation({
+                content,
+                document,
+                targetContext: requestedTargets[0]
+            });
+            content.appendChild(presentation.root);
+            const presentationTarget = presentation.newTabTarget;
+            const movedExactHost = presentation.root.querySelector(
+                '[data-docs-viewer-diagram-kind="inline-mermaid"]'
+            ) === host;
+            const serialized = await (await fetch(presentationTarget)).text();
+            presentation.release();
             const released = detailAdapter.releaseDocument({ content });
 
             const warnings = [];
@@ -640,7 +863,10 @@ def assert_inline_mermaid_registration_contract(page: Page) -> None:
                 mounted,
                 framePresent: Boolean(frame),
                 directSvgOwned: host?.children.length === 1 && host.firstElementChild?.localName === 'svg',
-                controlScheme: control?.href.split(':', 1)[0],
+                controlTag: control?.tagName,
+                controlLabel: control?.getAttribute('aria-label'),
+                targetScheme: presentationTarget.split(':', 1)[0],
+                movedExactHost,
                 serialized,
                 released,
                 fallback,
@@ -654,7 +880,13 @@ def assert_inline_mermaid_registration_contract(page: Page) -> None:
     expected_mount = {"found": 1, "rendered": 1, "failed": 0, "stale": False}
     if result["mounted"] != expected_mount or not result["framePresent"] or not result["directSvgOwned"]:
         raise AssertionError(f"successful Mermaid render did not register its owned SVG: {result!r}")
-    if result["controlScheme"] != "blob" or "Rendered graph" not in result["serialized"]:
+    if (
+        result["controlTag"] != "BUTTON"
+        or result["controlLabel"] != "Open diagram"
+        or result["targetScheme"] != "blob"
+        or not result["movedExactHost"]
+        or "Rendered graph" not in result["serialized"]
+    ):
         raise AssertionError(f"Mermaid producer handoff did not preserve rendered SVG: {result!r}")
     if result["released"] != {"released": 1}:
         raise AssertionError(f"Mermaid detail resource was not releasable: {result!r}")
@@ -676,11 +908,14 @@ def assert_document_controller_mount_contract(page: Page) -> None:
                 const order = [];
                 let detailMount = null;
                 let inlineReceivedDetail = null;
+                const requestContentDetail = () => true;
                 const detailAdapter = {
                     mountDocument(context) {
                         order.push('detail');
                         detailMount = {
                             htmlAtMount: context.content.innerHTML,
+                            documentMountGeneration: context.documentMountGeneration,
+                            receivedRequest: context.requestContentDetail === requestContentDetail,
                             scopeType: context.scopeType,
                             viewerScope: context.viewerScope
                         };
@@ -724,6 +959,7 @@ def assert_document_controller_mount_contract(page: Page) -> None:
                     },
                     selectedDocument: { selectedDocId: '' },
                     routeSession: { managementContext: false },
+                    requestContentDetail,
                     hasActiveQuery: () => false,
                     clearResultsStatus: () => {},
                     setRecentModeActive: () => {},
@@ -744,6 +980,8 @@ def assert_document_controller_mount_contract(page: Page) -> None:
                 return {
                     order,
                     htmlAtMount: detailMount.htmlAtMount,
+                    documentMountGeneration: detailMount.documentMountGeneration,
+                    receivedRequest: detailMount.receivedRequest,
                     inlineReceivedDetail,
                     scopeType: detailMount.scopeType,
                     viewerScope: detailMount.viewerScope
@@ -782,6 +1020,8 @@ def assert_document_controller_mount_contract(page: Page) -> None:
         record = result[key]
         if record["scopeType"] != scope_type or record["viewerScope"] != scope_id:
             raise AssertionError(f"diagram detail scope context changed: {result!r}")
+        if record["documentMountGeneration"] != 1 or record["receivedRequest"] is not True:
+            raise AssertionError(f"diagram detail target context was not mount-bound: {result!r}")
         if 'data-docs-viewer-diagram-kind="' not in record["htmlAtMount"]:
             raise AssertionError(f"detail adapter ran before generated HTML mounted: {result!r}")
     if result["publicScope"]["order"] != [

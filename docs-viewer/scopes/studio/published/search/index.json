@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-05aac0657f8c44c5a707983080cf35f4",
-    "generated_at_utc": "2026-08-04T09:36:22Z",
+    "version": "blake2b-8bef8388a0d530de960a107e87b2fd60",
+    "generated_at_utc": "2026-08-04T09:56:12Z",
     "count": 241
   },
   "entries": [
@@ -4415,25 +4415,25 @@
       "kind": "doc",
       "title": "Table Enhancements",
       "href": "/docs/?scope=studio&doc=d-20260802-150245-4e7f85",
-      "last_updated": "2026-08-04 10:35:40",
+      "last_updated": "2026-08-04 10:55:40",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-04 10:35:40 • Roadmap",
+      "display_meta": "2026-08-04 10:55:40 • Roadmap",
       "search_terms": [
         "table enhancements",
         "table",
         "enhancements",
         "roadmap",
-        "2026-08-04 10:35:40",
+        "2026-08-04 10:55:40",
         "2026",
         "08",
         "04",
         "10",
-        "35",
+        "55",
         "40",
         "d-20260802-150245-4e7f85"
       ],
-      "search_text": "table enhancements table enhancements roadmap 2026-08-04 10:35:40 2026 08 04 10 35 40 d-20260802-150245-4e7f85"
+      "search_text": "table enhancements table enhancements roadmap 2026-08-04 10:55:40 2026 08 04 10 55 40 d-20260802-150245-4e7f85"
     },
     {
       "id": "d-20260802-160429-69a5f6",
@@ -4588,10 +4588,10 @@
       "kind": "doc",
       "title": "TE-4 — Diagram Migration",
       "href": "/docs/?scope=studio&doc=d-20260802-150248-e1461d",
-      "last_updated": "2026-08-04 10:35:40",
+      "last_updated": "2026-08-04 10:55:40",
       "parent_id": "d-20260802-150245-4e7f85",
       "parent_title": "Table Enhancements",
-      "display_meta": "2026-08-04 10:35:40 • Table Enhancements",
+      "display_meta": "2026-08-04 10:55:40 • Table Enhancements",
       "search_terms": [
         "te-4 — diagram migration",
         "te",
@@ -4601,16 +4601,16 @@
         "table enhancements",
         "table",
         "enhancements",
-        "2026-08-04 10:35:40",
+        "2026-08-04 10:55:40",
         "2026",
         "08",
         "04",
         "10",
-        "35",
+        "55",
         "40",
         "d-20260802-150248-e1461d"
       ],
-      "search_text": "te-4 — diagram migration te 4 diagram migration table enhancements table enhancements 2026-08-04 10:35:40 2026 08 04 10 35 40 d-20260802-150248-e1461d"
+      "search_text": "te-4 — diagram migration te 4 diagram migration table enhancements table enhancements 2026-08-04 10:55:40 2026 08 04 10 55 40 d-20260802-150248-e1461d"
     },
     {
       "id": "d-20260802-153340-61863b",

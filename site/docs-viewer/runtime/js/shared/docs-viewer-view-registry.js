@@ -161,7 +161,9 @@ export function normalizeDocsViewerControlState(record) {
   ].forEach(function (key) {
     if (Object.prototype.hasOwnProperty.call(source, key)) state[key] = Boolean(source[key]);
   });
-  if (Object.prototype.hasOwnProperty.call(source, "label")) state.label = cleanString(source.label);
+  ["label", "href"].forEach(function (key) {
+    if (Object.prototype.hasOwnProperty.call(source, key)) state[key] = cleanString(source[key]);
+  });
   ["count", "total"].forEach(function (key) {
     if (!Object.prototype.hasOwnProperty.call(source, key)) return;
     var value = Number(source[key]);
