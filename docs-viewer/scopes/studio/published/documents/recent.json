@@ -4,18 +4,18 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "d-20260802-194358-7717ee",
-      "title": "Sub-Scope Publishing Concept And Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194358-7717ee.json",
-      "timestamp": "2026-08-04 15:56:42",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
+      "doc_id": "d-20260804-172012-5d91bf",
+      "title": "SSC-1 — Unified Sub-Scope Customisation Contract Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-172012-5d91bf.json",
+      "timestamp": "2026-08-04 17:20:12",
+      "parent_id": "d-20260804-172011-a4c8e1",
+      "parent_title": "Sub-Scope Customisation"
     },
     {
-      "doc_id": "d-20260802-195805-94a5be",
-      "title": "SSP-6 — Work And Series Document Metadata Publication Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-195805-94a5be.json",
-      "timestamp": "2026-08-04 15:54:36",
+      "doc_id": "d-20260804-164519-c7ad4e",
+      "title": "SSP-0 — Projects Subject Assignment Foundation Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-164519-c7ad4e.json",
+      "timestamp": "2026-08-04 17:20:12",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
     },
@@ -23,7 +23,15 @@
       "doc_id": "d-20260802-194426-087cfe",
       "title": "SSP-1 — Document Subject And Association Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194426-087cfe.json",
-      "timestamp": "2026-08-04 15:54:35",
+      "timestamp": "2026-08-04 17:20:12",
+      "parent_id": "d-20260802-194357-4d857b",
+      "parent_title": "Sub-Scope Publishing"
+    },
+    {
+      "doc_id": "d-20260801-233534-239eab",
+      "title": "SSP-4 — Collection-Aware Document Copy Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-233534-239eab.json",
+      "timestamp": "2026-08-04 17:20:12",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
     },
@@ -31,58 +39,50 @@
       "doc_id": "d-20260802-194357-4d857b",
       "title": "Sub-Scope Publishing",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194357-4d857b.json",
-      "timestamp": "2026-08-04 15:54:33",
+      "timestamp": "2026-08-04 17:20:12",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
     },
     {
-      "doc_id": "d-20260801-233534-239eab",
-      "title": "SSP-4 — Collection-Aware Document Copy Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-233534-239eab.json",
-      "timestamp": "2026-08-04 15:41:49",
+      "doc_id": "d-20260802-194358-7717ee",
+      "title": "Sub-Scope Publishing Concept And Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194358-7717ee.json",
+      "timestamp": "2026-08-04 17:20:12",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
     },
     {
-      "doc_id": "d-20260802-174340-2fe9f4",
-      "title": "SSP-3 — Resolver Tokens Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-174340-2fe9f4.json",
-      "timestamp": "2026-08-04 15:41:16",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
+      "doc_id": "d-20260804-160200-fa7bb7",
+      "title": "Tag Document Linking",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-160200-fa7bb7.json",
+      "timestamp": "2026-08-04 17:20:12",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
     },
     {
-      "doc_id": "d-20260801-133318-15e8fa",
-      "title": "SSP-2 — Docs Viewer Project State Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133318-15e8fa.json",
-      "timestamp": "2026-08-04 15:40:38",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
+      "doc_id": "d-20260804-170901-b2e74c",
+      "title": "TDL-0 — Tag Document Metadata Authoring Refactor Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-170901-b2e74c.json",
+      "timestamp": "2026-08-04 17:20:12",
+      "parent_id": "d-20260804-160200-fa7bb7",
+      "parent_title": "Tag Document Linking"
     },
     {
-      "doc_id": "d-20260802-121105-c574f9",
-      "title": "Project State Concept And Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121105-c574f9.json",
-      "timestamp": "2026-08-04 15:36:18",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
+      "doc_id": "d-20260804-172011-a4c8e1",
+      "title": "Sub-Scope Customisation",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-172011-a4c8e1.json",
+      "timestamp": "2026-08-04 17:20:11",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
     },
     {
-      "doc_id": "d-20260802-121106-15ea55",
-      "title": "SSP-7 — Project Media Audit Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121106-15ea55.json",
-      "timestamp": "2026-08-04 15:19:56",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
-    },
-    {
-      "doc_id": "d-20260802-002213-b7d4e2",
-      "title": "SSP-5 — Tag Semantic Token Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-002213-b7d4e2.json",
-      "timestamp": "2026-08-04 13:59:03",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
+      "doc_id": "d-20260804-160201-47af2d",
+      "title": "TDL-1 — Tag Document Association Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-160201-47af2d.json",
+      "timestamp": "2026-08-04 17:09:01",
+      "parent_id": "d-20260804-160200-fa7bb7",
+      "parent_title": "Tag Document Linking"
     }
   ],
-  "generated_at": "2026-08-04T14:56:42Z"
+  "generated_at": "2026-08-04T16:27:10Z"
 }
