@@ -4,12 +4,76 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260728-113139-763354",
+      "title": "Sub-Scope Index Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-113139-763354.json",
+      "timestamp": "2026-08-04 19:07:10",
+      "parent_id": "d-20260801-084127-752d7e",
+      "parent_title": "Sub-Scopes"
+    },
+    {
+      "doc_id": "d-20260728-205013-41deb8",
+      "title": "Sub-Scope Public And Manage Manifests",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-205013-41deb8.json",
+      "timestamp": "2026-08-04 19:07:10",
+      "parent_id": "d-20260801-084127-752d7e",
+      "parent_title": "Sub-Scopes"
+    },
+    {
+      "doc_id": "d-20260804-190426-6b11c9",
+      "title": "SSC-1.3 — Registration And Architecture Closeout Evidence",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-190426-6b11c9.json",
+      "timestamp": "2026-08-04 19:06:24",
+      "parent_id": "d-20260804-172012-5d91bf",
+      "parent_title": "SSC-1 — Unified Sub-Scope Customisation Contract Delivery"
+    },
+    {
       "doc_id": "d-20260804-172012-5d91bf",
       "title": "SSC-1 — Unified Sub-Scope Customisation Contract Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-172012-5d91bf.json",
-      "timestamp": "2026-08-04 18:52:24",
+      "timestamp": "2026-08-04 19:04:26",
       "parent_id": "d-20260804-172011-a4c8e1",
       "parent_title": "Sub-Scope Customisation"
+    },
+    {
+      "doc_id": "d-20260804-172011-a4c8e1",
+      "title": "Sub-Scope Customisation",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-172011-a4c8e1.json",
+      "timestamp": "2026-08-04 19:04:26",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260623-221357-a97b66",
+      "title": "Embedded Detail Documents",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260623-221357-a97b66.json",
+      "timestamp": "2026-08-04 18:59:21",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260804-164519-c7ad4e",
+      "title": "SSP-0 — Projects Subject Assignment Foundation Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-164519-c7ad4e.json",
+      "timestamp": "2026-08-04 18:59:21",
+      "parent_id": "d-20260802-194357-4d857b",
+      "parent_title": "Sub-Scope Publishing"
+    },
+    {
+      "doc_id": "d-20260731-155053-3929e2",
+      "title": "Sub-Scope Customisation Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155053-3929e2.json",
+      "timestamp": "2026-08-04 18:59:21",
+      "parent_id": "d-20260801-084127-752d7e",
+      "parent_title": "Sub-Scopes"
+    },
+    {
+      "doc_id": "d-20260804-170901-b2e74c",
+      "title": "TDL-0 — Tag Document Metadata Authoring Refactor Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-170901-b2e74c.json",
+      "timestamp": "2026-08-04 18:59:21",
+      "parent_id": "d-20260804-160200-fa7bb7",
+      "parent_title": "Tag Document Linking"
     },
     {
       "doc_id": "d-20260804-185224-72b1e9",
@@ -18,71 +82,7 @@
       "timestamp": "2026-08-04 18:52:24",
       "parent_id": "d-20260804-172012-5d91bf",
       "parent_title": "SSC-1 — Unified Sub-Scope Customisation Contract Delivery"
-    },
-    {
-      "doc_id": "d-20260804-172011-a4c8e1",
-      "title": "Sub-Scope Customisation",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-172011-a4c8e1.json",
-      "timestamp": "2026-08-04 18:52:24",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260804-183554-0c4be2",
-      "title": "SSC-1.1 — Contract Rename Checkpoint Evidence",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-183554-0c4be2.json",
-      "timestamp": "2026-08-04 18:35:54",
-      "parent_id": "d-20260804-172012-5d91bf",
-      "parent_title": "SSC-1 — Unified Sub-Scope Customisation Contract Delivery"
-    },
-    {
-      "doc_id": "d-20260804-182355-7ac901",
-      "title": "SSC-1.0 — Contract And Cutover Sanity Note",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-182355-7ac901.json",
-      "timestamp": "2026-08-04 18:23:55",
-      "parent_id": "d-20260804-172012-5d91bf",
-      "parent_title": "SSC-1 — Unified Sub-Scope Customisation Contract Delivery"
-    },
-    {
-      "doc_id": "d-20260804-164519-c7ad4e",
-      "title": "SSP-0 — Projects Subject Assignment Foundation Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-164519-c7ad4e.json",
-      "timestamp": "2026-08-04 17:20:12",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
-    },
-    {
-      "doc_id": "d-20260802-194426-087cfe",
-      "title": "SSP-1 — Document Subject And Association Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194426-087cfe.json",
-      "timestamp": "2026-08-04 17:20:12",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
-    },
-    {
-      "doc_id": "d-20260801-233534-239eab",
-      "title": "SSP-4 — Collection-Aware Document Copy Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-233534-239eab.json",
-      "timestamp": "2026-08-04 17:20:12",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
-    },
-    {
-      "doc_id": "d-20260802-194357-4d857b",
-      "title": "Sub-Scope Publishing",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194357-4d857b.json",
-      "timestamp": "2026-08-04 17:20:12",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260802-194358-7717ee",
-      "title": "Sub-Scope Publishing Concept And Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194358-7717ee.json",
-      "timestamp": "2026-08-04 17:20:12",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
     }
   ],
-  "generated_at": "2026-08-04T17:53:20Z"
+  "generated_at": "2026-08-04T18:07:10Z"
 }

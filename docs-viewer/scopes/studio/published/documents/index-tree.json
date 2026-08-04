@@ -589,6 +589,11 @@
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-084127-752d7e.json",
           "children": [
             {
+              "doc_id": "d-20260731-155053-3929e2",
+              "title": "Sub-Scope Customisation Architecture",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155053-3929e2.json"
+            },
+            {
               "doc_id": "d-20260731-185207-2dbb6f",
               "title": "Sub-Scope Default Report",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-185207-2dbb6f.json",
@@ -603,11 +608,6 @@
               "doc_id": "d-20260728-205013-41deb8",
               "title": "Sub-Scope Public And Manage Manifests",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260728-205013-41deb8.json"
-            },
-            {
-              "doc_id": "d-20260731-155053-3929e2",
-              "title": "Sub-Scope Report Customisation Architecture",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155053-3929e2.json"
             }
           ]
         },
@@ -887,13 +887,13 @@
           "doc_id": "d-20260804-172011-a4c8e1",
           "title": "Sub-Scope Customisation",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-172011-a4c8e1.json",
-          "ui_status": "in-progress",
+          "ui_status": "done",
           "children": [
             {
               "doc_id": "d-20260804-172012-5d91bf",
               "title": "SSC-1 — Unified Sub-Scope Customisation Contract Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-172012-5d91bf.json",
-              "ui_status": "in-progress",
+              "ui_status": "done",
               "children": [
                 {
                   "doc_id": "d-20260804-182355-7ac901",
@@ -911,6 +911,12 @@
                   "doc_id": "d-20260804-185224-72b1e9",
                   "title": "SSC-1.2 — Explicit Aspect Checkpoint Evidence",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-185224-72b1e9.json",
+                  "ui_status": "done"
+                },
+                {
+                  "doc_id": "d-20260804-190426-6b11c9",
+                  "title": "SSC-1.3 — Registration And Architecture Closeout Evidence",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-190426-6b11c9.json",
                   "ui_status": "done"
                 }
               ]
@@ -1349,5 +1355,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-04T17:53:20Z"
+  "generated_at": "2026-08-04T18:05:44Z"
 }

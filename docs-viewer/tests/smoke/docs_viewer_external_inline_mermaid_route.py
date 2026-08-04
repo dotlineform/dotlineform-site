@@ -155,6 +155,7 @@ def assert_external_mermaid_route(
                 frameKind: frame?.dataset.docsViewerDiagramFrame || '',
                 controlKind: control?.dataset.docsViewerDiagramDetailKind || '',
                 controlLabel: control?.getAttribute('aria-label') || '',
+                controlTag: control?.tagName || '',
                 controlTarget: control?.getAttribute('target') || '',
                 controlHref: control?.getAttribute('href') || ''
             };
@@ -168,9 +169,10 @@ def assert_external_mermaid_route(
         or not str(state["description"]).startswith("An external local Notes document")
         or state["frameKind"] != "inline-mermaid"
         or state["controlKind"] != "inline-mermaid"
-        or state["controlLabel"] != "Open diagram in new tab"
-        or state["controlTarget"] != "_blank"
-        or not str(state["controlHref"]).startswith("blob:")
+        or state["controlLabel"] != "Open diagram"
+        or state["controlTag"] != "BUTTON"
+        or state["controlTarget"] != ""
+        or state["controlHref"] != ""
     ):
         raise AssertionError(
             f"external-local Mermaid did not receive the managed reader contract: {state!r}"

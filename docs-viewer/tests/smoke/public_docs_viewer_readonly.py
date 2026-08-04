@@ -273,8 +273,10 @@ def exercise_public_inline_mermaid_exclusion(page: Page, base_url: str, timeout_
                 mermaidGlobal: Boolean(window.mermaid),
                 detailFrames: content.querySelectorAll('.docsViewer__diagramFrame').length,
                 detailControls: content.querySelectorAll('.docsViewer__diagramDetailControl').length,
+                detailKind: content.querySelector('.docsViewer__diagramDetailControl')?.dataset.docsViewerDiagramDetailKind || '',
                 detailHref: content.querySelector('.docsViewer__diagramDetailControl')?.getAttribute('href') || '',
-                detailLabel: content.querySelector('.docsViewer__diagramDetailControl')?.getAttribute('aria-label') || ''
+                detailLabel: content.querySelector('.docsViewer__diagramDetailControl')?.getAttribute('aria-label') || '',
+                detailTag: content.querySelector('.docsViewer__diagramDetailControl')?.tagName || ''
             })"""
         )
     finally:
@@ -288,8 +290,10 @@ def exercise_public_inline_mermaid_exclusion(page: Page, base_url: str, timeout_
         "mermaidGlobal": False,
         "detailFrames": 1,
         "detailControls": 1,
-        "detailHref": diagram_path,
-        "detailLabel": "Open diagram in new tab",
+        "detailKind": "persistent-svg",
+        "detailHref": "",
+        "detailLabel": "Open diagram",
+        "detailTag": "BUTTON",
     }
     if state != expected:
         raise AssertionError(
@@ -369,11 +373,42 @@ def exercise_public_route(
     if expect_document_controls:
         assert_public_info_panel(page, route, title, timeout_ms)
     else:
-        unexpected_controls = page.locator(
-            "#docsViewerMainViewToolbar, #docsViewerPath, #docsViewerInfoToggle, #docsViewerBookmarkToggle"
-        ).count()
-        if unexpected_controls:
-            raise AssertionError(f"{route} rendered intentionally hidden document controls")
+        document_control_state = page.locator("#docsViewerRoot").evaluate(
+            """root => {
+                const toolbar = root.querySelector('#docsViewerMainViewToolbar');
+                const path = root.querySelector('#docsViewerPath');
+                const controls = Array.from(
+                    toolbar?.querySelectorAll('[data-docs-viewer-control]') || []
+                );
+                return {
+                    bookmarkToggle: Boolean(root.querySelector('#docsViewerBookmarkToggle')),
+                    contentDetailControlIds: controls.map(control => (
+                        control.dataset.docsViewerControl || ''
+                    )).sort(),
+                    hiddenContentDetailControlIds: controls.filter(control => control.hidden)
+                        .map(control => control.dataset.docsViewerControl || '').sort(),
+                    infoToggle: Boolean(root.querySelector('#docsViewerInfoToggle')),
+                    pathHidden: Boolean(path?.hidden),
+                    pathPresent: Boolean(path),
+                    toolbarHidden: Boolean(toolbar?.hidden),
+                    toolbarPresent: Boolean(toolbar)
+                };
+            }"""
+        )
+        expected_document_control_state = {
+            "bookmarkToggle": False,
+            "contentDetailControlIds": [],
+            "hiddenContentDetailControlIds": [],
+            "infoToggle": False,
+            "pathHidden": True,
+            "pathPresent": True,
+            "toolbarHidden": False,
+            "toolbarPresent": True,
+        }
+        if document_control_state != expected_document_control_state:
+            raise AssertionError(
+                f"{route} document-control policy changed: {document_control_state!r}"
+            )
     page.locator("#docsViewerRecentButton").click()
     page.wait_for_function(
         """(recentAdjective) => {

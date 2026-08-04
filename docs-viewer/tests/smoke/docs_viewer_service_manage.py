@@ -652,8 +652,12 @@ def assert_inline_mermaid_browser_review(page: Page, timeout_ms: int) -> None:
                     svgDisplay: svg ? getComputedStyle(svg).display : '',
                     svgTitle: svg?.querySelector('title')?.textContent.trim() || '',
                     svgDescription: svg?.querySelector('desc')?.textContent.trim() || '',
-                    detailHref: frame?.querySelector('.docsViewer__diagramDetailControl')
+                    detailControlHref: frame?.querySelector('.docsViewer__diagramDetailControl')
                         ?.getAttribute('href') || '',
+                    detailControlLabel: frame?.querySelector('.docsViewer__diagramDetailControl')
+                        ?.getAttribute('aria-label') || '',
+                    detailControlTag: frame?.querySelector('.docsViewer__diagramDetailControl')
+                        ?.tagName || '',
                     hostRole: host?.getAttribute('role'),
                     hostTabIndex: host?.getAttribute('tabindex'),
                     focusableCount: host?.querySelectorAll(focusableSelector).length ?? -1,
@@ -671,29 +675,140 @@ def assert_inline_mermaid_browser_review(page: Page, timeout_ms: int) -> None:
             }"""
         )
 
+    def detail_state() -> dict[str, object]:
+        return page.locator("#docsViewerContent").evaluate(
+            """content => {
+                const detail = content.querySelector('[data-docs-content-detail-view="diagram"]');
+                const host = detail?.querySelector(
+                    '.docsViewer__diagram[data-docs-viewer-diagram-kind="inline-mermaid"]'
+                );
+                const openNewTab = document.querySelector(
+                    '[data-docs-viewer-control="content-detail-open-new-tab"]'
+                );
+                const back = document.querySelector(
+                    '[data-docs-viewer-control="content-detail-back"]'
+                );
+                return {
+                    active: content.dataset.docsContentDetailActive || '',
+                    backLabel: back?.getAttribute('aria-label') || '',
+                    detailKind: detail?.dataset.docsContentDetailView || '',
+                    detailHref: openNewTab?.getAttribute('href') || '',
+                    detailLabel: openNewTab?.getAttribute('aria-label') || '',
+                    detailRel: openNewTab?.getAttribute('rel') || '',
+                    detailTarget: openNewTab?.getAttribute('target') || '',
+                    detailTag: openNewTab?.tagName || '',
+                    movedExactHost: detail?.querySelector('.docsViewer__diagramDetailViewport')
+                        ?.firstElementChild === host,
+                    theme: document.documentElement.getAttribute('data-theme') || ''
+                };
+            }"""
+        )
+
     initial = visual_state()
+    if (
+        initial["detailControlTag"] != "BUTTON"
+        or initial["detailControlLabel"] != "Open diagram"
+        or initial["detailControlHref"] != ""
+    ):
+        raise AssertionError(
+            f"inline diagram source control did not use Content Detail: {initial!r}"
+        )
+
+    page.locator(
+        '.docsViewer__diagramFrame[data-docs-viewer-diagram-frame="inline-mermaid"] '
+        ".docsViewer__diagramDetailControl"
+    ).click()
+    page.wait_for_function(
+        """() => {
+            const content = document.querySelector('#docsViewerContent');
+            const detail = content?.querySelector('[data-docs-content-detail-view="diagram"]');
+            const link = document.querySelector(
+                '[data-docs-viewer-control="content-detail-open-new-tab"]'
+            );
+            return content?.dataset.docsContentDetailActive === 'true'
+                && detail?.querySelector(
+                    '.docsViewer__diagram[data-docs-viewer-diagram-kind="inline-mermaid"]'
+                )
+                && link?.getAttribute('href')?.startsWith('blob:');
+        }""",
+        timeout=timeout_ms,
+    )
+    initial_detail = detail_state()
+
     theme_toggle = page.locator("[data-docs-viewer-theme-toggle]")
     if theme_toggle.count() != 1 or theme_toggle.is_hidden():
         raise AssertionError("Docs Viewer theme toggle is not available for diagram review")
     theme_toggle.click()
     page.wait_for_function(
         "previous => document.documentElement.getAttribute('data-theme') !== previous",
-        arg=initial["theme"],
+        arg=initial_detail["theme"],
         timeout=timeout_ms,
     )
     page.wait_for_function(
         """previous => {
-            const control = document.querySelector(
-                '.docsViewer__diagramFrame[data-docs-viewer-diagram-frame="inline-mermaid"] '
-                + '.docsViewer__diagramDetailControl'
+            const link = document.querySelector(
+                '[data-docs-viewer-control="content-detail-open-new-tab"]'
             );
-            return control?.getAttribute('href') && control.getAttribute('href') !== previous;
+            return link?.getAttribute('href')
+                && link.getAttribute('href') !== previous;
         }""",
-        arg=initial["detailHref"],
+        arg=initial_detail["detailHref"],
         timeout=timeout_ms,
     )
-    toggled = visual_state()
-    states = {str(initial["theme"]): initial, str(toggled["theme"]): toggled}
+    toggled_detail = detail_state()
+    detail_states = [initial_detail, toggled_detail]
+    for state in detail_states:
+        if (
+            state["active"] != "true"
+            or state["backLabel"] != "Back to document"
+            or state["detailKind"] != "diagram"
+            or not str(state["detailHref"]).startswith("blob:")
+            or state["detailLabel"] != "Open in new tab"
+            or state["detailRel"] != "noopener"
+            or state["detailTarget"] != "_blank"
+            or state["detailTag"] != "A"
+            or not state["movedExactHost"]
+        ):
+            raise AssertionError(
+                f"inline diagram did not retain Content Detail ownership: {detail_states!r}"
+            )
+    if initial_detail["detailHref"] == toggled_detail["detailHref"]:
+        raise AssertionError(
+            f"theme change did not replace the active inline detail target: {detail_states!r}"
+        )
+
+    detail_markup = page.evaluate(
+        """async target => {
+            const response = await fetch(target);
+            return response.text();
+        }""",
+        toggled_detail["detailHref"],
+    )
+    if (
+        "Inline Mermaid diagram lifecycle" not in detail_markup
+        or "viewBox=" not in detail_markup
+        or "background-color" not in detail_markup
+    ):
+        raise AssertionError(
+            "refreshed inline detail target lost accessible or themed SVG content"
+        )
+
+    page.locator('[data-docs-viewer-control="content-detail-back"]').click()
+    page.wait_for_function(
+        """() => {
+            const content = document.querySelector('#docsViewerContent');
+            const frame = content?.querySelector(
+                '.docsViewer__diagramFrame[data-docs-viewer-diagram-frame="inline-mermaid"]'
+            );
+            return content && !content.hasAttribute('data-docs-content-detail-active')
+                && frame?.querySelector(
+                    '.docsViewer__diagram[data-docs-viewer-diagram-kind="inline-mermaid"]'
+                );
+        }""",
+        timeout=timeout_ms,
+    )
+    restored = visual_state()
+    states = {str(initial["theme"]): initial, str(restored["theme"]): restored}
     if set(states) != {"light", "dark"}:
         raise AssertionError(f"diagram review did not exercise both themes: {states!r}")
     for theme, state in states.items():
@@ -709,25 +824,8 @@ def assert_inline_mermaid_browser_review(page: Page, timeout_ms: int) -> None:
             "A document mount registers"
         ):
             raise AssertionError(f"inline diagram accessible text changed in {theme}: {state!r}")
-    if initial["detailHref"] == toggled["detailHref"]:
-        raise AssertionError(f"theme change did not replace the inline detail target: {states!r}")
-    detail_markup = page.evaluate(
-        """async target => {
-            const response = await fetch(target);
-            return response.text();
-        }""",
-        toggled["detailHref"],
-    )
-    if (
-        "Inline Mermaid diagram lifecycle" not in detail_markup
-        or "viewBox=" not in detail_markup
-        or "background-color" not in detail_markup
-    ):
-        raise AssertionError(
-            "refreshed inline detail target lost accessible or themed SVG content"
-        )
 
-    reading_state = toggled
+    reading_state = restored
     if (
         reading_state["hostRole"] is not None
         or reading_state["hostTabIndex"] is not None
