@@ -977,7 +977,7 @@
               "doc_id": "d-20260802-194426-087cfe",
               "title": "SSP-1 — Document Subject And Association Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194426-087cfe.json",
-              "ui_status": "in-progress",
+              "ui_status": "done",
               "children": [
                 {
                   "doc_id": "d-20260804-204535-6c8f2a",
@@ -989,6 +989,12 @@
                   "doc_id": "d-20260804-211353-669844",
                   "title": "SSP-1.1 — Authoring Subject And Manage Cue Evidence",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-211353-669844.json",
+                  "ui_status": "done"
+                },
+                {
+                  "doc_id": "d-20260804-220243-b5d7c1",
+                  "title": "SSP-1.2 — Verification And Transfer Evidence",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-220243-b5d7c1.json",
                   "ui_status": "done"
                 }
               ]
@@ -1395,5 +1401,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-04T20:20:38Z"
+  "generated_at": "2026-08-04T21:04:04Z"
 }

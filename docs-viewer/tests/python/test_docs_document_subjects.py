@@ -184,3 +184,43 @@ def test_projection_generation_changes_with_normalized_source_evidence() -> None
     ) != subjects.subject_projection_generation(
         scope="analysis", sub_scope="works", subjects_by_doc_id=malformed
     )
+
+
+def test_associations_use_only_normalized_front_matter_subject_identity() -> None:
+    document = SimpleNamespace(
+        doc_id="d-20260801-000000-000001",
+        title="Work 00123",
+        filename="series-026.md",
+        body="Folder projects/nerve",
+        viewer_url="/docs/?scope=dotlineform&doc=work-00123",
+        selected_row="00123",
+        report_host="series-026",
+        ui_state={"work_id": "00123"},
+    )
+    normalized = {
+        document.doc_id: subjects.normalize_authoring_subject(
+            {},
+            folder_supported=True,
+        )
+    }
+    generation = subjects.subject_projection_generation(
+        scope="dotlineform",
+        sub_scope="projects",
+        subjects_by_doc_id=normalized,
+    )
+
+    payload = subjects.project_subject_associations(
+        scope="dotlineform",
+        sub_scope="projects",
+        documents=[document],
+        subjects_by_doc_id=normalized,
+        subject_generation=generation,
+    )
+
+    assert normalized[document.doc_id] == {
+        "state": "none",
+        "kind": "none",
+        "key": "",
+        "fields": [],
+    }
+    assert payload["associations"] == []

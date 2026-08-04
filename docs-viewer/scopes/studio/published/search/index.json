@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-fa4975a7187264e5b455144ea3314167",
-    "generated_at_utc": "2026-08-04T20:48:38Z",
-    "count": 248
+    "version": "blake2b-13c2ec9cd804c6b0a5afdc1588ce2152",
+    "generated_at_utc": "2026-08-04T21:06:03Z",
+    "count": 249
   },
   "entries": [
     {
@@ -1491,10 +1491,10 @@
       "kind": "doc",
       "title": "Info Panel",
       "href": "/docs/?scope=studio&doc=d-20260623-000000-c99cef",
-      "last_updated": "2026-08-04 20:28:06",
+      "last_updated": "2026-08-04 21:58:37",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-08-04 20:28:06 • Docs Viewer",
+      "display_meta": "2026-08-04 21:58:37 • Docs Viewer",
       "search_terms": [
         "info panel",
         "info",
@@ -1502,16 +1502,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-08-04 20:28:06",
+        "2026-08-04 21:58:37",
         "2026",
         "08",
         "04",
-        "20",
-        "28",
-        "06",
+        "21",
+        "58",
+        "37",
         "d-20260623-000000-c99cef"
       ],
-      "search_text": "info panel info panel docs viewer docs viewer 2026-08-04 20:28:06 2026 08 04 20 28 06 d-20260623-000000-c99cef"
+      "search_text": "info panel info panel docs viewer docs viewer 2026-08-04 21:58:37 2026 08 04 21 58 37 d-20260623-000000-c99cef"
     },
     {
       "id": "d-20260507-123607-fd7cff",
@@ -1876,26 +1876,26 @@
       "kind": "doc",
       "title": "Management Operations",
       "href": "/docs/?scope=studio&doc=d-20260519-202931-66c794",
-      "last_updated": "2026-08-04 20:28:06",
+      "last_updated": "2026-08-04 21:58:37",
       "parent_id": "d-20260424-000000-04d75e",
       "parent_title": "Management Services",
-      "display_meta": "2026-08-04 20:28:06 • Management Services",
+      "display_meta": "2026-08-04 21:58:37 • Management Services",
       "search_terms": [
         "management operations",
         "management",
         "operations",
         "management services",
         "services",
-        "2026-08-04 20:28:06",
+        "2026-08-04 21:58:37",
         "2026",
         "08",
         "04",
-        "20",
-        "28",
-        "06",
+        "21",
+        "58",
+        "37",
         "d-20260519-202931-66c794"
       ],
-      "search_text": "management operations management operations management services services 2026-08-04 20:28:06 2026 08 04 20 28 06 d-20260519-202931-66c794"
+      "search_text": "management operations management operations management services services 2026-08-04 21:58:37 2026 08 04 21 58 37 d-20260519-202931-66c794"
     },
     {
       "id": "d-20260607-222033-2a494e",
@@ -2502,10 +2502,10 @@
       "kind": "doc",
       "title": "Scope Lifecycle",
       "href": "/docs/?scope=studio&doc=d-20260515-000000-f43740",
-      "last_updated": "2026-08-01 07:50:02",
+      "last_updated": "2026-08-04 21:58:41",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-08-01 07:50:02 • Docs Viewer",
+      "display_meta": "2026-08-04 21:58:41 • Docs Viewer",
       "search_terms": [
         "scope lifecycle",
         "scope",
@@ -2513,16 +2513,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-08-01 07:50:02",
+        "2026-08-04 21:58:41",
         "2026",
         "08",
-        "01",
-        "07",
-        "50",
-        "02",
+        "04",
+        "21",
+        "58",
+        "41",
         "d-20260515-000000-f43740"
       ],
-      "search_text": "scope lifecycle scope lifecycle docs viewer docs viewer 2026-08-01 07:50:02 2026 08 01 07 50 02 d-20260515-000000-f43740"
+      "search_text": "scope lifecycle scope lifecycle docs viewer docs viewer 2026-08-04 21:58:41 2026 08 04 21 58 41 d-20260515-000000-f43740"
     },
     {
       "id": "d-20260725-153656-516b61",
@@ -2792,10 +2792,10 @@
       "kind": "doc",
       "title": "Sub-Scope Customisation Architecture",
       "href": "/docs/?scope=studio&doc=d-20260731-155053-3929e2",
-      "last_updated": "2026-08-04 20:28:06",
+      "last_updated": "2026-08-04 22:06:02",
       "parent_id": "d-20260801-084127-752d7e",
       "parent_title": "Sub-Scopes",
-      "display_meta": "2026-08-04 20:28:06 • Sub-Scopes",
+      "display_meta": "2026-08-04 22:06:02 • Sub-Scopes",
       "search_terms": [
         "sub-scope customisation architecture",
         "sub",
@@ -2804,16 +2804,16 @@
         "architecture",
         "sub-scopes",
         "scopes",
-        "2026-08-04 20:28:06",
+        "2026-08-04 22:06:02",
         "2026",
         "08",
         "04",
-        "20",
-        "28",
+        "22",
         "06",
+        "02",
         "d-20260731-155053-3929e2"
       ],
-      "search_text": "sub-scope customisation architecture sub scope customisation architecture sub-scopes scopes 2026-08-04 20:28:06 2026 08 04 20 28 06 d-20260731-155053-3929e2"
+      "search_text": "sub-scope customisation architecture sub scope customisation architecture sub-scopes scopes 2026-08-04 22:06:02 2026 08 04 22 06 02 d-20260731-155053-3929e2"
     },
     {
       "id": "d-20260731-185207-2dbb6f",
@@ -4532,10 +4532,10 @@
       "kind": "doc",
       "title": "SSP-1 — Document Subject And Association Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-194426-087cfe",
-      "last_updated": "2026-08-04 21:19:45",
+      "last_updated": "2026-08-04 22:04:04",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-04 21:19:45 • Sub-Scope Publishing",
+      "display_meta": "2026-08-04 22:04:04 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-1 — document subject and association delivery",
         "ssp",
@@ -4549,16 +4549,14 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-04 21:19:45",
+        "2026-08-04 22:04:04",
         "2026",
         "08",
         "04",
-        "21",
-        "19",
-        "45",
+        "22",
         "d-20260802-194426-087cfe"
       ],
-      "search_text": "ssp-1 — document subject and association delivery ssp 1 document subject and association delivery sub-scope publishing sub scope publishing 2026-08-04 21:19:45 2026 08 04 21 19 45 d-20260802-194426-087cfe"
+      "search_text": "ssp-1 — document subject and association delivery ssp 1 document subject and association delivery sub-scope publishing sub scope publishing 2026-08-04 22:04:04 2026 08 04 22 d-20260802-194426-087cfe"
     },
     {
       "id": "d-20260804-204535-6c8f2a",
@@ -4627,14 +4625,47 @@
       "search_text": "ssp-1.1 — authoring subject and manage cue evidence ssp 1 authoring subject and manage cue evidence ssp-1 — document subject and association delivery document association delivery 2026-08-04 21:21:01 2026 08 04 21 01 d-20260804-211353-669844"
     },
     {
+      "id": "d-20260804-220243-b5d7c1",
+      "kind": "doc",
+      "title": "SSP-1.2 — Verification And Transfer Evidence",
+      "href": "/docs/?scope=studio&doc=d-20260804-220243-b5d7c1",
+      "last_updated": "2026-08-04 22:05:05",
+      "parent_id": "d-20260802-194426-087cfe",
+      "parent_title": "SSP-1 — Document Subject And Association Delivery",
+      "display_meta": "2026-08-04 22:05:05 • SSP-1 — Document Subject And Association Delivery",
+      "search_terms": [
+        "ssp-1.2 — verification and transfer evidence",
+        "ssp",
+        "1",
+        "2",
+        "verification",
+        "and",
+        "transfer",
+        "evidence",
+        "ssp-1 — document subject and association delivery",
+        "document",
+        "subject",
+        "association",
+        "delivery",
+        "2026-08-04 22:05:05",
+        "2026",
+        "08",
+        "04",
+        "22",
+        "05",
+        "d-20260804-220243-b5d7c1"
+      ],
+      "search_text": "ssp-1.2 — verification and transfer evidence ssp 1 2 verification and transfer evidence ssp-1 — document subject and association delivery document subject association delivery 2026-08-04 22:05:05 2026 08 04 22 05 d-20260804-220243-b5d7c1"
+    },
+    {
       "id": "d-20260801-133318-15e8fa",
       "kind": "doc",
       "title": "SSP-2 — Docs Viewer Project State Delivery",
       "href": "/docs/?scope=studio&doc=d-20260801-133318-15e8fa",
-      "last_updated": "2026-08-04 16:30:44",
+      "last_updated": "2026-08-04 22:06:02",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-04 16:30:44 • Sub-Scope Publishing",
+      "display_meta": "2026-08-04 22:06:02 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-2 — docs viewer project state delivery",
         "ssp",
@@ -4648,26 +4679,26 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-04 16:30:44",
+        "2026-08-04 22:06:02",
         "2026",
         "08",
         "04",
-        "16",
-        "30",
-        "44",
+        "22",
+        "06",
+        "02",
         "d-20260801-133318-15e8fa"
       ],
-      "search_text": "ssp-2 — docs viewer project state delivery ssp 2 docs viewer project state delivery sub-scope publishing sub scope publishing 2026-08-04 16:30:44 2026 08 04 16 30 44 d-20260801-133318-15e8fa"
+      "search_text": "ssp-2 — docs viewer project state delivery ssp 2 docs viewer project state delivery sub-scope publishing sub scope publishing 2026-08-04 22:06:02 2026 08 04 22 06 02 d-20260801-133318-15e8fa"
     },
     {
       "id": "d-20260802-174340-2fe9f4",
       "kind": "doc",
       "title": "SSP-3 — Resolver Tokens Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-174340-2fe9f4",
-      "last_updated": "2026-08-04 16:02:08",
+      "last_updated": "2026-08-04 22:06:02",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-04 16:02:08 • Sub-Scope Publishing",
+      "display_meta": "2026-08-04 22:06:02 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-3 — resolver tokens delivery",
         "ssp",
@@ -4679,25 +4710,26 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-04 16:02:08",
+        "2026-08-04 22:06:02",
         "2026",
         "08",
         "04",
-        "16",
+        "22",
+        "06",
         "02",
         "d-20260802-174340-2fe9f4"
       ],
-      "search_text": "ssp-3 — resolver tokens delivery ssp 3 resolver tokens delivery sub-scope publishing sub scope publishing 2026-08-04 16:02:08 2026 08 04 16 02 d-20260802-174340-2fe9f4"
+      "search_text": "ssp-3 — resolver tokens delivery ssp 3 resolver tokens delivery sub-scope publishing sub scope publishing 2026-08-04 22:06:02 2026 08 04 22 06 02 d-20260802-174340-2fe9f4"
     },
     {
       "id": "d-20260801-233534-239eab",
       "kind": "doc",
       "title": "SSP-4 — Collection-Aware Document Copy Delivery",
       "href": "/docs/?scope=studio&doc=d-20260801-233534-239eab",
-      "last_updated": "2026-08-04 19:31:43",
+      "last_updated": "2026-08-04 22:06:02",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-04 19:31:43 • Sub-Scope Publishing",
+      "display_meta": "2026-08-04 22:06:02 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-4 — collection-aware document copy delivery",
         "ssp",
@@ -4711,26 +4743,26 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-04 19:31:43",
+        "2026-08-04 22:06:02",
         "2026",
         "08",
         "04",
-        "19",
-        "31",
-        "43",
+        "22",
+        "06",
+        "02",
         "d-20260801-233534-239eab"
       ],
-      "search_text": "ssp-4 — collection-aware document copy delivery ssp 4 collection aware document copy delivery sub-scope publishing sub scope publishing 2026-08-04 19:31:43 2026 08 04 19 31 43 d-20260801-233534-239eab"
+      "search_text": "ssp-4 — collection-aware document copy delivery ssp 4 collection aware document copy delivery sub-scope publishing sub scope publishing 2026-08-04 22:06:02 2026 08 04 22 06 02 d-20260801-233534-239eab"
     },
     {
       "id": "d-20260802-195805-94a5be",
       "kind": "doc",
       "title": "SSP-5 — Work And Series Document Metadata Publication Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-195805-94a5be",
-      "last_updated": "2026-08-04 16:02:09",
+      "last_updated": "2026-08-04 22:06:02",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-04 16:02:09 • Sub-Scope Publishing",
+      "display_meta": "2026-08-04 22:06:02 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-5 — work and series document metadata publication delivery",
         "ssp",
@@ -4746,16 +4778,16 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-04 16:02:09",
+        "2026-08-04 22:06:02",
         "2026",
         "08",
         "04",
-        "16",
+        "22",
+        "06",
         "02",
-        "09",
         "d-20260802-195805-94a5be"
       ],
-      "search_text": "ssp-5 — work and series document metadata publication delivery ssp 5 work and series document metadata publication delivery sub-scope publishing sub scope publishing 2026-08-04 16:02:09 2026 08 04 16 02 09 d-20260802-195805-94a5be"
+      "search_text": "ssp-5 — work and series document metadata publication delivery ssp 5 work and series document metadata publication delivery sub-scope publishing sub scope publishing 2026-08-04 22:06:02 2026 08 04 22 06 02 d-20260802-195805-94a5be"
     },
     {
       "id": "d-20260802-121106-15ea55",
