@@ -7,7 +7,7 @@
       "doc_id": "d-20260802-121105-c574f9",
       "title": "Project State Concept And Architecture",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121105-c574f9.json",
-      "timestamp": "2026-08-04 22:50:54",
+      "timestamp": "2026-08-04 23:31:24",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
     },
@@ -15,7 +15,7 @@
       "doc_id": "d-20260801-133318-15e8fa",
       "title": "SSP-2 — Docs Viewer Project State Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133318-15e8fa.json",
-      "timestamp": "2026-08-04 22:50:54",
+      "timestamp": "2026-08-04 23:31:24",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
     },
@@ -23,7 +23,7 @@
       "doc_id": "d-20260802-121106-15ea55",
       "title": "SSP-6 — Project Media Audit Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121106-15ea55.json",
-      "timestamp": "2026-08-04 22:47:42",
+      "timestamp": "2026-08-04 23:31:24",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
     },
@@ -31,7 +31,7 @@
       "doc_id": "d-20260802-194358-7717ee",
       "title": "Sub-Scope Publishing Concept And Architecture",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194358-7717ee.json",
-      "timestamp": "2026-08-04 22:47:42",
+      "timestamp": "2026-08-04 23:31:24",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
     },
@@ -84,5 +84,5 @@
       "parent_title": "Sub-Scope Publishing"
     }
   ],
-  "generated_at": "2026-08-04T21:50:54Z"
+  "generated_at": "2026-08-04T22:34:16Z"
 }
