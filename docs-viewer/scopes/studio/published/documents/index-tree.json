@@ -903,7 +903,7 @@
             },
             {
               "doc_id": "d-20260802-194426-087cfe",
-              "title": "SSP-1 — Sub-Scope Subject And Association Delivery",
+              "title": "SSP-1 — Document Subject And Association Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194426-087cfe.json",
               "ui_status": "proposed"
             },
@@ -933,7 +933,7 @@
             },
             {
               "doc_id": "d-20260802-195805-94a5be",
-              "title": "SSP-6 — Work Document Metadata Publication Delivery",
+              "title": "SSP-6 — Work And Series Document Metadata Publication Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-195805-94a5be.json",
               "ui_status": "proposed"
             },
@@ -1289,5 +1289,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-04T13:01:55Z"
+  "generated_at": "2026-08-04T14:44:32Z"
 }
