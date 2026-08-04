@@ -884,6 +884,12 @@
           ]
         },
         {
+          "doc_id": "d-20260804-113507-7a3c1e",
+          "title": "Studio Mermaid SVG-To-Inline Theme Migration",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-113507-7a3c1e.json",
+          "ui_status": "done"
+        },
+        {
           "doc_id": "d-20260802-194357-4d857b",
           "title": "Sub-Scope Publishing",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194357-4d857b.json",
@@ -1345,5 +1351,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-04T10:27:02Z"
+  "generated_at": "2026-08-04T10:55:04Z"
 }

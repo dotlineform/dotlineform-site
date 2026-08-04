@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-20310f3f20fe7992e5b4b1649785ce41",
-    "generated_at_utc": "2026-08-04T10:27:02Z",
-    "count": 241
+    "version": "blake2b-1bb5ecbb9e2003385222b6706d546477",
+    "generated_at_utc": "2026-08-04T10:55:12Z",
+    "count": 242
   },
   "entries": [
     {
@@ -1040,10 +1040,10 @@
       "kind": "doc",
       "title": "Configuration And Extension Points",
       "href": "/docs/?scope=studio&doc=d-20260512-142027-54b354",
-      "last_updated": "2026-07-26 17:54:41",
+      "last_updated": "2026-08-04 11:43:37",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-26 17:54:41 • Docs Viewer",
+      "display_meta": "2026-08-04 11:43:37 • Docs Viewer",
       "search_terms": [
         "configuration and extension points",
         "configuration",
@@ -1053,16 +1053,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-26 17:54:41",
+        "2026-08-04 11:43:37",
         "2026",
-        "07",
-        "26",
-        "17",
-        "54",
-        "41",
+        "08",
+        "04",
+        "11",
+        "43",
+        "37",
         "d-20260512-142027-54b354"
       ],
-      "search_text": "configuration and extension points configuration and extension points docs viewer docs viewer 2026-07-26 17:54:41 2026 07 26 17 54 41 d-20260512-142027-54b354"
+      "search_text": "configuration and extension points configuration and extension points docs viewer docs viewer 2026-08-04 11:43:37 2026 08 04 11 43 37 d-20260512-142027-54b354"
     },
     {
       "id": "d-20260511-200845-2a03a0",
@@ -1170,26 +1170,26 @@
       "kind": "doc",
       "title": "Docs Import",
       "href": "/docs/?scope=studio&doc=d-20260424-000000-fc8b5d",
-      "last_updated": "2026-08-03 13:53:21",
+      "last_updated": "2026-08-04 11:43:37",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-08-03 13:53:21 • Docs Viewer",
+      "display_meta": "2026-08-04 11:43:37 • Docs Viewer",
       "search_terms": [
         "docs import",
         "docs",
         "import",
         "docs viewer",
         "viewer",
-        "2026-08-03 13:53:21",
+        "2026-08-04 11:43:37",
         "2026",
         "08",
-        "03",
-        "13",
-        "53",
-        "21",
+        "04",
+        "11",
+        "43",
+        "37",
         "d-20260424-000000-fc8b5d"
       ],
-      "search_text": "docs import docs import docs viewer viewer 2026-08-03 13:53:21 2026 08 03 13 53 21 d-20260424-000000-fc8b5d"
+      "search_text": "docs import docs import docs viewer viewer 2026-08-04 11:43:37 2026 08 04 11 43 37 d-20260424-000000-fc8b5d"
     },
     {
       "id": "d-20260719-182348-492a48",
@@ -1357,10 +1357,10 @@
       "kind": "doc",
       "title": "Document Diagrams",
       "href": "/docs/?scope=studio&doc=d-20260719-123719-fb7565",
-      "last_updated": "2026-08-04 11:18:11",
+      "last_updated": "2026-08-04 11:44:18",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-08-04 11:18:11 • Docs Viewer",
+      "display_meta": "2026-08-04 11:44:18 • Docs Viewer",
       "search_terms": [
         "document diagrams",
         "document",
@@ -1368,15 +1368,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-08-04 11:18:11",
+        "2026-08-04 11:44:18",
         "2026",
         "08",
         "04",
         "11",
+        "44",
         "18",
         "d-20260719-123719-fb7565"
       ],
-      "search_text": "document diagrams document diagrams docs viewer docs viewer 2026-08-04 11:18:11 2026 08 04 11 18 d-20260719-123719-fb7565"
+      "search_text": "document diagrams document diagrams docs viewer docs viewer 2026-08-04 11:44:18 2026 08 04 11 44 18 d-20260719-123719-fb7565"
     },
     {
       "id": "d-20260715-094411-2b6e65",
@@ -3892,10 +3893,10 @@
       "kind": "doc",
       "title": "Scope Media Management Concept",
       "href": "/docs/?scope=studio&doc=d-20260720-100017-e094d8",
-      "last_updated": "2026-07-20 10:00:17",
+      "last_updated": "2026-08-04 11:43:37",
       "parent_id": "d-20260720-100017-9855dd",
       "parent_title": "Scope Media Management",
-      "display_meta": "2026-07-20 10:00:17 • Scope Media Management",
+      "display_meta": "2026-08-04 11:43:37 • Scope Media Management",
       "search_terms": [
         "scope media management concept",
         "scope",
@@ -3903,16 +3904,16 @@
         "management",
         "concept",
         "scope media management",
-        "2026-07-20 10:00:17",
+        "2026-08-04 11:43:37",
         "2026",
-        "07",
-        "20",
-        "10",
-        "00",
-        "17",
+        "08",
+        "04",
+        "11",
+        "43",
+        "37",
         "d-20260720-100017-e094d8"
       ],
-      "search_text": "scope media management concept scope media management concept scope media management 2026-07-20 10:00:17 2026 07 20 10 00 17 d-20260720-100017-e094d8"
+      "search_text": "scope media management concept scope media management concept scope media management 2026-08-04 11:43:37 2026 08 04 11 43 37 d-20260720-100017-e094d8"
     },
     {
       "id": "d-20260715-092247-6bbb5e",
@@ -4071,6 +4072,35 @@
         "d-20260718-105957-c72b2a"
       ],
       "search_text": "standalone docs viewer concept standalone docs viewer concept standalone docs viewer 2026-07-26 17:54:41 2026 07 26 17 54 41 d-20260718-105957-c72b2a"
+    },
+    {
+      "id": "d-20260804-113507-7a3c1e",
+      "kind": "doc",
+      "title": "Studio Mermaid SVG-To-Inline Theme Migration",
+      "href": "/docs/?scope=studio&doc=d-20260804-113507-7a3c1e",
+      "last_updated": "2026-08-04 11:55:11",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap",
+      "display_meta": "2026-08-04 11:55:11 • Roadmap",
+      "search_terms": [
+        "studio mermaid svg-to-inline theme migration",
+        "studio",
+        "mermaid",
+        "svg",
+        "to",
+        "inline",
+        "theme",
+        "migration",
+        "roadmap",
+        "2026-08-04 11:55:11",
+        "2026",
+        "08",
+        "04",
+        "11",
+        "55",
+        "d-20260804-113507-7a3c1e"
+      ],
+      "search_text": "studio mermaid svg-to-inline theme migration studio mermaid svg to inline theme migration roadmap 2026-08-04 11:55:11 2026 08 04 11 55 d-20260804-113507-7a3c1e"
     },
     {
       "id": "d-20260802-194357-4d857b",
