@@ -4,6 +4,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260508-093841-3e27b1",
+      "title": "Publish Media To R2",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260508-093841-3e27b1.json",
+      "timestamp": "2026-08-04 21:48:38",
+      "parent_id": "d-20260423-000000-d015e6",
+      "parent_title": "Studio"
+    },
+    {
       "doc_id": "d-20260804-211353-669844",
       "title": "SSP-1.1 — Authoring Subject And Manage Cue Evidence",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-211353-669844.json",
@@ -74,15 +82,7 @@
       "timestamp": "2026-08-04 20:28:06",
       "parent_id": "d-20260801-084127-752d7e",
       "parent_title": "Sub-Scopes"
-    },
-    {
-      "doc_id": "d-20260804-201111-a7646e",
-      "title": "SSP-0.2 — Focused Projects Subject Assignment Checkpoint Evidence",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-201111-a7646e.json",
-      "timestamp": "2026-08-04 20:11:11",
-      "parent_id": "d-20260804-164519-c7ad4e",
-      "parent_title": "SSP-0 — Projects Subject Assignment Foundation Delivery"
     }
   ],
-  "generated_at": "2026-08-04T20:21:01Z"
+  "generated_at": "2026-08-04T20:48:38Z"
 }

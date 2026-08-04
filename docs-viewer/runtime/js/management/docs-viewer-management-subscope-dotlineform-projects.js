@@ -138,9 +138,6 @@ function renderAssignSubject(context, options, assignSubjectAvailable) {
         var refresh = actionContext && actionContext.refreshDocument;
         var refreshed = typeof refresh === "function" ? refresh(target) : Promise.resolve(target);
         return Promise.resolve(refreshed).then(function () {
-          if (typeof options.setStatus === "function") {
-            options.setStatus(cleanString(result.payload && result.payload.summary_text) || "Subject updated.", false);
-          }
           return result.payload;
         });
       });

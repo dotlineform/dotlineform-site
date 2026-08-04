@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-796174527cce17770a6ead360820589e",
-    "generated_at_utc": "2026-08-04T20:21:01Z",
+    "version": "blake2b-fa4975a7187264e5b455144ea3314167",
+    "generated_at_utc": "2026-08-04T20:48:38Z",
     "count": 248
   },
   "entries": [
@@ -5920,10 +5920,10 @@
       "kind": "doc",
       "title": "Publish Media To R2",
       "href": "/docs/?scope=studio&doc=d-20260508-093841-3e27b1",
-      "last_updated": "2026-07-15",
+      "last_updated": "2026-08-04 21:48:38",
       "parent_id": "d-20260423-000000-d015e6",
       "parent_title": "Studio",
-      "display_meta": "2026-07-15 • Studio",
+      "display_meta": "2026-08-04 21:48:38 • Studio",
       "search_terms": [
         "publish media to r2",
         "publish",
@@ -5931,13 +5931,16 @@
         "to",
         "r2",
         "studio",
-        "2026-07-15",
+        "2026-08-04 21:48:38",
         "2026",
-        "07",
-        "15",
+        "08",
+        "04",
+        "21",
+        "48",
+        "38",
         "d-20260508-093841-3e27b1"
       ],
-      "search_text": "publish media to r2 publish media to r2 studio 2026-07-15 2026 07 15 d-20260508-093841-3e27b1"
+      "search_text": "publish media to r2 publish media to r2 studio 2026-08-04 21:48:38 2026 08 04 21 48 38 d-20260508-093841-3e27b1"
     },
     {
       "id": "d-20260418-000000-4ec702",

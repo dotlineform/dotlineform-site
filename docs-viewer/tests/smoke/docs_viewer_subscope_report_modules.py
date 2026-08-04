@@ -4191,7 +4191,6 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
         ),
         "statuses": [
             {"message": "Local target opened.", "isError": False},
-            {"message": "Subject updated.", "isError": False},
         ],
     }
 
