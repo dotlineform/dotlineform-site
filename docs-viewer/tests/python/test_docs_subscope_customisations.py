@@ -72,8 +72,31 @@ def test_current_customisations_declare_explicit_aspects() -> None:
             accesses=frozenset({"manage"}),
         )
     )
-    assert projects.assignable_field_groups == ()
+    assert projects.assignable_field_groups == (
+        customisations.DocsSubScopeAssignableFieldGroup(
+            group_id="authoring_subject",
+            field_names=("folder_path",),
+        ),
+    )
     assert projects.transfer is None
+
+    projects_config = customisations.normalize_docs_subscope_customisation(
+        {"id": "dotlineform_projects", "settings": {}},
+        field="sub_scope_customisation",
+    )
+    assert customisations.browser_sub_scope_customisation_payload(
+        projects_config,
+        published=False,
+    ) == {
+        "id": "dotlineform_projects",
+        "capabilities": {
+            "assignable_field_groups": ["authoring_subject"],
+        },
+    }
+    assert customisations.browser_sub_scope_customisation_payload(
+        projects_config,
+        published=True,
+    ) is None
 
 
 def test_assignable_and_transfer_seams_are_typed_and_access_safe() -> None:

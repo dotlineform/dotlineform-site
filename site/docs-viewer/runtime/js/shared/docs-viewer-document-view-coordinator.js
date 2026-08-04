@@ -118,6 +118,7 @@ export function createDocsViewerDocumentViewCoordinator(options) {
     registry: viewRegistry,
     appContext: settings.appContext,
     collectionProvider: settings.collectionProvider,
+    managedDocumentContext: settings.managedDocumentContext,
     scopeConfig: settings.scopeConfig,
     selectedDocument: settings.selectedDocument,
     defaultViewId: function () {

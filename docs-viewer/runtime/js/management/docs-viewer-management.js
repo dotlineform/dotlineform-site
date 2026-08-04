@@ -315,6 +315,8 @@ export function initDocsViewerManagement(context) {
     var parentTarget = null;
     var collectionTarget = null;
     var subdocTarget = null;
+    var subdocRecord = null;
+    var subdocInfo = null;
     try {
       if (activeStateNames.indexOf(stateName) !== -1) {
         parentTarget = normalizeManagedDocumentTarget(state.parentTarget);
@@ -338,12 +340,26 @@ export function initDocsViewerManagement(context) {
           ) {
             throw new Error("Validated sub-scope report target does not match its parent report.");
           }
+          if (
+            !state.subdocRecord
+            || typeof state.subdocRecord !== "object"
+            || Array.isArray(state.subdocRecord)
+            || String(state.subdocRecord.doc_id || "").trim() !== subdocTarget.doc_id
+          ) {
+            throw new Error("Validated sub-scope report record does not match its target.");
+          }
+          subdocRecord = Object.freeze(Object.assign({}, state.subdocRecord));
+          subdocInfo = state.subdocInfo && typeof state.subdocInfo === "object"
+            ? Object.freeze(Object.assign({}, state.subdocInfo))
+            : null;
         }
       }
     } catch (_error) {
       stateName = "inactive";
       parentTarget = null;
       subdocTarget = null;
+      subdocRecord = null;
+      subdocInfo = null;
     }
     subscopeReportState = parentTarget
       ? {
@@ -352,6 +368,8 @@ export function initDocsViewerManagement(context) {
           collectionTarget: collectionTarget,
           collectionLabel: String(state.collectionLabel || "").trim(),
           subdocTarget: subdocTarget,
+          subdocRecord: subdocRecord,
+          subdocInfo: subdocInfo,
           refreshDocument: typeof state.refreshDocument === "function"
             ? state.refreshDocument
             : null,

@@ -73,6 +73,11 @@ def render_context(page: Page, context_expression: str) -> dict[str, object]:
                 title: mount.querySelector('.docsViewer__metadataInfoTitle')?.textContent || '',
                 terms: Array.from(mount.querySelectorAll('dt')).map((node) => node.textContent.trim()),
                 values: Array.from(mount.querySelectorAll('dd')).map((node) => node.textContent.trim()),
+                assignSubjectAvailable: mount.querySelector(
+                    '[data-docs-assign-subject-available="true"]'
+                ) !== null,
+                targetKind: mount.querySelector('.docsViewer__metadataInfo')
+                    ?.dataset.docsMetadataTarget || '',
                 text: mount.textContent
             }};
         }}"""
@@ -265,6 +270,134 @@ def assert_manage_metadata(page: Page) -> None:
         raise AssertionError(f"manage info used selected tree metadata: {result!r}")
 
 
+def assert_manage_subscope_subject_info(page: Page) -> None:
+    result = page.evaluate(
+        """() => {
+            const { module, viewContext } = window.__docsViewerMetadataInfoViewSmoke;
+            const parent = { doc_id: 'parent-report', title: 'Projects report' };
+            const parentPayload = {
+                doc_id: 'parent-report',
+                title: 'Projects report',
+                summary: 'Parent summary'
+            };
+            const detailState = {
+                state: 'detail',
+                subdocTarget: {
+                    scope: 'dotlineform',
+                    sub_scope: 'projects',
+                    doc_id: 'project-note'
+                },
+                subdocRecord: {
+                    doc_id: 'project-note',
+                    title: 'Project note',
+                    summary: 'Exact detail summary',
+                    last_updated: '2026-08-04'
+                },
+                subdocInfo: {
+                    actions: { assignSubject: true },
+                    fields: [{
+                        id: 'authoring_subject',
+                        label: 'Subject',
+                        value: 'Folder',
+                        detail: 'projects/nerve',
+                        state: 'folder'
+                    }]
+                }
+            };
+            const contextFor = (appKind, managedDocumentContext) => (
+                viewContext.createDocsViewerHostedViewContext({
+                    appContext: { kind: appKind, serviceAvailability: {} },
+                    docsById: new Map([[parent.doc_id, parent]]),
+                    payloadCache: new Map([[parent.doc_id, parentPayload]]),
+                    selectedDocId: parent.doc_id,
+                    managedDocumentContext,
+                    sourceTarget: {
+                        scope: 'dotlineform',
+                        doc_id: parent.doc_id
+                    },
+                    viewerScope: 'dotlineform'
+                })
+            );
+            const activeContext = contextFor('manage', detailState);
+            const mount = document.createElement('div');
+            module.createDocsViewerMetadataInfoView().mount({
+                ...activeContext,
+                mount
+            });
+            const wrongTargetContext = contextFor('manage', {
+                ...detailState,
+                subdocRecord: {
+                    ...detailState.subdocRecord,
+                    doc_id: 'other-note'
+                }
+            });
+            const listContext = contextFor('manage', {
+                ...detailState,
+                state: 'list'
+            });
+            const publicContext = contextFor('public', detailState);
+            return {
+                active: {
+                    assignSubject: activeContext.metadataInfo.actions.assignSubject,
+                    metadataDocId: activeContext.selectedMetadata.doc_id,
+                    selectedDocId: activeContext.selectedDoc.doc_id,
+                    sourceTarget: activeContext.sourceTarget,
+                    target: activeContext.managedDocumentTarget,
+                    targetKind: mount.querySelector('.docsViewer__metadataInfo')
+                        ?.dataset.docsMetadataTarget || '',
+                    terms: Array.from(mount.querySelectorAll('dt')).map(
+                        node => node.textContent.trim()
+                    ),
+                    values: Array.from(mount.querySelectorAll('dd')).map(
+                        node => node.textContent.trim()
+                    ),
+                    projectedAvailability: mount.querySelector(
+                        '[data-docs-assign-subject-available="true"]'
+                    ) !== null
+                },
+                listSelectedDocId: listContext.selectedDoc.doc_id,
+                publicSelectedDocId: publicContext.selectedDoc.doc_id,
+                publicSubjectInfo: publicContext.metadataInfo,
+                wrongTargetSelectedDocId: wrongTargetContext.selectedDoc.doc_id,
+                wrongTargetSubjectInfo: wrongTargetContext.metadataInfo
+            };
+        }"""
+    )
+    assert result == {
+        "active": {
+            "assignSubject": True,
+            "metadataDocId": "project-note",
+            "selectedDocId": "project-note",
+            "sourceTarget": {
+                "scope": "dotlineform",
+                "sub_scope": "projects",
+                "doc_id": "project-note",
+            },
+            "target": {
+                "scope": "dotlineform",
+                "sub_scope": "projects",
+                "doc_id": "project-note",
+            },
+            "targetKind": "subscope-document",
+            "terms": ["Doc ID", "Summary", "Date", "Added", "Updated", "Subject"],
+            "values": [
+                "project-note",
+                "Exact detail summary",
+                "Not set",
+                "Not set",
+                "2026-08-04",
+                "Folder — projects/nerve",
+            ],
+            "projectedAvailability": True,
+        },
+        "listSelectedDocId": "parent-report",
+        "publicSelectedDocId": "parent-report",
+        "publicSubjectInfo": None,
+        "wrongTargetSelectedDocId": "parent-report",
+        "wrongTargetSubjectInfo": None,
+    }
+
+
 def assert_manage_diagram_sources_are_logical_vscode_links(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -361,6 +494,7 @@ def run_smoke(page: Page, base_url: str, fixture_path: str) -> None:
     assert_context_hydrates_from_payload(page)
     assert_public_reader_metadata(page)
     assert_manage_metadata(page)
+    assert_manage_subscope_subject_info(page)
     assert_manage_diagram_sources_are_logical_vscode_links(page)
 
 

@@ -180,6 +180,13 @@ title: Pathless
                 "sub-scopes/projects/manifest.json"
             )
         )
+        config = load_docs_scope_configs(root)["dotlineform"]
+        browser_config = build_docs.browser_scope_config_payload(root, [config])
+        public_browser_config = build_docs.browser_scope_config_payload(
+            root,
+            [config],
+            published=True,
+        )
         manage_manifest = read_json(
             root / (
                 "docs-viewer/scopes/dotlineform/published/documents/"
@@ -224,6 +231,17 @@ title: Pathless
             },
         ],
     }
+    assert browser_config["scopes"][0]["sub_scopes"][0][
+        "sub_scope_customisation"
+    ] == {
+        "id": "dotlineform_projects",
+        "capabilities": {
+            "assignable_field_groups": ["authoring_subject"],
+        },
+    }
+    assert "sub_scope_customisation" not in public_browser_config["scopes"][0][
+        "sub_scopes"
+    ][0]
 
 def test_python_docs_builder_writes_sub_scope_payloads_and_minimal_manifest() -> None:
     with tempfile.TemporaryDirectory() as temp_path:

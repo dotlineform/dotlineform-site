@@ -1897,10 +1897,13 @@ def assert_manage_report_bridge(page: Page) -> None:
             return { ok: false, status: 404, json: async () => ({}) };
           };
           const states = [];
+          let latestDetailProjection = null;
           const serialState = state => {
             const {
               refreshCollection,
               refreshDocument,
+              subdocInfo,
+              subdocRecord,
               ...serial
             } = state;
             return serial;
@@ -1917,7 +1920,16 @@ def assert_manage_report_bridge(page: Page) -> None:
               viewer_report_access: 'local',
               viewer_report_subscope: 'tags'
             },
-            publishSubscopeReportState: state => states.push(serialState(state)),
+            publishSubscopeReportState: state => {
+              if (state.state === 'detail') {
+                latestDetailProjection = {
+                  info: state.subdocInfo,
+                  record: state.subdocRecord,
+                  target: state.subdocTarget
+                };
+              }
+              states.push(serialState(state));
+            },
             routeContext: { reportRegistryUrl: '/reports-registry.json' },
             setStatus: (message, isError) => {
               managementStatuses.push({ message, isError });
@@ -1993,6 +2005,7 @@ def assert_manage_report_bridge(page: Page) -> None:
             return button && !button.disabled;
           });
           const beforeClear = {
+            detailProjection: latestDetailProjection,
             requests: requests.slice(),
             states: states.slice(),
             rows: Array.from(content.querySelectorAll(
@@ -2132,6 +2145,20 @@ def assert_manage_report_bridge(page: Page) -> None:
         raise AssertionError(
             f"unexpected sub-scope package bridge state: {mounted['packageState']!r}"
         )
+    assert mounted["beforeClear"]["detailProjection"] == {
+        "info": None,
+        "record": {
+            "doc_id": "detail-doc",
+            "title": "Detail",
+            "ui_status": "draft",
+            "viewable": False,
+        },
+        "target": {
+            "scope": "studio",
+            "sub_scope": "tags",
+            "doc_id": "detail-doc",
+        },
+    }
     manifest_requests = [
         request
         for request in mounted["beforeClear"]["requests"]
@@ -2396,6 +2423,8 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
             const {
               refreshCollection,
               refreshDocument,
+              subdocInfo,
+              subdocRecord,
               ...state
             } = states.at(-1);
             return state;
@@ -3803,7 +3832,12 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
           const opened = [];
           const statuses = [];
           const contribution = module.createDocsViewerManagementSubscopeDotlineformProjects({
-            descriptor: { id: 'dotlineform_projects' },
+            descriptor: {
+              id: 'dotlineform_projects',
+              capabilities: {
+                assignableFieldGroups: ['authoring_subject']
+              }
+            },
             collection: { scope: 'dotlineform', sub_scope: 'projects' },
             openLocalTarget: async target => {
               opened.push(target);
@@ -3823,6 +3857,24 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
           }
           const linkedRow = renderRow(documents[0]);
           const pathlessRow = renderRow(documents[2]);
+          const linkedInfo = contribution.projectDetailInfo({
+            collection: { scope: 'dotlineform', sub_scope: 'projects' },
+            document: documents[0],
+            target: {
+              scope: 'dotlineform',
+              sub_scope: 'projects',
+              doc_id: 'architecture'
+            }
+          });
+          const pathlessInfo = contribution.projectDetailInfo({
+            collection: { scope: 'dotlineform', sub_scope: 'projects' },
+            document: documents[2],
+            target: {
+              scope: 'dotlineform',
+              sub_scope: 'projects',
+              doc_id: 'pathless'
+            }
+          });
 
           function detailButton(documentRecord) {
             const host = document.createElement('div');
@@ -3902,6 +3954,7 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
               disabled: linkedButton.disabled,
               text: linkedButton.textContent
             },
+            linkedInfo,
             linkedRow: {
               duplicate: linkedRow.querySelector('.docsViewerReport__projectsFolderDuplicate').textContent,
               state: linkedRow.querySelector('[data-projects-folder-state]').dataset.projectsFolderState,
@@ -3912,6 +3965,7 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
               disabled: pathlessButton.disabled,
               title: pathlessButton.title
             },
+            pathlessInfo,
             pathlessRow: {
               state: pathlessRow.querySelector('[data-projects-folder-state]').dataset.projectsFolderState,
               text: pathlessRow.querySelector('[data-projects-folder-state]').textContent
@@ -3936,6 +3990,18 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
         },
         "editorValue": {"folder_path": "projects/future"},
         "linkedButton": {"disabled": False, "text": "Open in Finder"},
+        "linkedInfo": {
+            "actions": {"assignSubject": True},
+            "fields": [
+                {
+                    "detail": "projects/16 forms",
+                    "id": "authoring_subject",
+                    "label": "Subject",
+                    "state": "folder",
+                    "value": "Folder",
+                }
+            ],
+        },
         "linkedRow": {
             "duplicate": "2 documents",
             "state": "duplicate",
@@ -3945,6 +4011,18 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
         "pathlessButton": {
             "disabled": True,
             "title": "This Project document has no Folder Link.",
+        },
+        "pathlessInfo": {
+            "actions": {"assignSubject": True},
+            "fields": [
+                {
+                    "detail": "",
+                    "id": "authoring_subject",
+                    "label": "Subject",
+                    "state": "none",
+                    "value": "None",
+                }
+            ],
         },
         "pathlessRow": {"state": "unlinked", "text": "No folder link"},
         "registryIds": ["analysis_tags", "dotlineform_projects"],

@@ -340,10 +340,17 @@ export function composeDocsViewerManagementSubscopeContributions(options = {}) {
     });
   }
 
+  function projectDetailInfo(context) {
+    var project = callback(customisationContribution, "projectDetailInfo");
+    if (!project) return null;
+    return project(Object.assign({}, context, { access: "manage" }));
+  }
+
   return {
     id: "management_composition",
     createFilters: createFilters,
     notify: notify,
+    projectDetailInfo: projectDetailInfo,
     renderDetailToolbar: renderDetailToolbar,
     renderListToolbar: renderListToolbar,
     renderRow: renderRow

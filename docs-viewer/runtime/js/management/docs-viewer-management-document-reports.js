@@ -48,6 +48,24 @@ function parentTarget(settings) {
   });
 }
 
+function exactSubdocRecord(value, target) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw new Error("Docs sub-scope report detail record is invalid.");
+  }
+  if (cleanString(value.doc_id) !== target.doc_id) {
+    throw new Error("Docs sub-scope report detail record did not match its target.");
+  }
+  return Object.freeze(Object.assign({}, value, { doc_id: target.doc_id }));
+}
+
+function optionalSubdocInfo(value) {
+  if (value == null) return null;
+  if (typeof value !== "object" || Array.isArray(value)) {
+    throw new Error("Docs sub-scope report detail information is invalid.");
+  }
+  return Object.freeze(Object.assign({}, value));
+}
+
 function publishReportState(settings, parent, subScope, state) {
   if (typeof settings.publishSubscopeReportState !== "function") return;
   var detail = state && typeof state === "object" ? state : {};
@@ -67,6 +85,10 @@ function publishReportState(settings, parent, subScope, state) {
   ) {
     throw new Error("Docs sub-scope report published a target outside its mounted collection.");
   }
+  var detailRecord = subdocTarget
+    ? exactSubdocRecord(detail.record, subdocTarget)
+    : null;
+  var detailInfo = subdocTarget ? optionalSubdocInfo(detail.info) : null;
   var published = {
     state: cleanString(detail.state) || "inactive",
     reason: cleanString(detail.reason),
@@ -78,6 +100,8 @@ function publishReportState(settings, parent, subScope, state) {
       subScope
     ),
     subdocTarget: subdocTarget,
+    subdocRecord: detailRecord,
+    subdocInfo: detailInfo,
     refreshDocument: typeof detail.refreshDocument === "function"
       ? detail.refreshDocument
       : null,
@@ -308,6 +332,8 @@ export function mountDocsViewerManageDocumentExtras(context) {
         collectionTarget: null,
         collectionLabel: "",
         subdocTarget: null,
+        subdocRecord: null,
+        subdocInfo: null,
         refreshDocument: null,
         refreshCollection: null
       };

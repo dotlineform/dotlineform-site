@@ -49,6 +49,9 @@ export function createDocsViewerInfoPanelController(options) {
       docsById: documentIndex.docsById,
       payloadCache: selectedDocument.payloadCache,
       appContext: appContext(),
+      managedDocumentContext: typeof settings.managedDocumentContext === "function"
+        ? settings.managedDocumentContext()
+        : settings.managedDocumentContext,
       selectedDocId: selectedDocument.selectedDocId,
       sourceEditorServices: typeof settings.sourceEditorServices === "function" ? settings.sourceEditorServices() : settings.sourceEditorServices,
       uiStatusByValue: scopeConfig.uiStatusByValue,

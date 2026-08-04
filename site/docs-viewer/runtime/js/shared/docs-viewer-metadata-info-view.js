@@ -97,6 +97,23 @@ function renderMetadataDetails(context, metadata) {
     var definition = field(metadata);
     appendDefinition(list, definition.label, definition.value);
   });
+  var projectedInfo = context.metadataInfo || {};
+  (Array.isArray(projectedInfo.fields) ? projectedInfo.fields : []).forEach(function (field) {
+    var value = cleanString(field && field.value);
+    var detail = cleanString(field && field.detail);
+    appendDefinition(
+      list,
+      cleanString(field && field.label) || "Information",
+      detail ? value + " — " + detail : value
+    );
+  });
+
+  if (context.managedDocumentTarget) {
+    article.dataset.docsMetadataTarget = "subscope-document";
+  }
+  if (projectedInfo.actions && projectedInfo.actions.assignSubject === true) {
+    article.dataset.docsAssignSubjectAvailable = "true";
+  }
 
   article.append(title, list);
   mount.appendChild(article);
@@ -113,7 +130,7 @@ function renderDiagramSources(context, article, state, requestId) {
   var sourceTarget = adapter && typeof adapter.getDocumentTarget === "function"
     ? adapter.getDocumentTarget()
     : null;
-  var documentTarget = sourceTarget || (
+  var documentTarget = sourceTarget || context.managedDocumentTarget || (
     doc && context.viewerScope
       ? { scope: context.viewerScope, doc_id: doc.doc_id }
       : null

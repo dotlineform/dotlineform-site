@@ -22,6 +22,7 @@ import {
  * @property {function(Object): (Object|void)} [renderRow]
  * @property {function(Object): void} [renderListToolbar]
  * @property {function(Object): void} [renderDetailToolbar]
+ * @property {function(Object): (Object|null)} [projectDetailInfo]
  */
 
 var filterIdSequence = 0;
@@ -234,6 +235,48 @@ function detailTarget(state, docId) {
 
 function documentRecord(doc) {
   return doc && doc.record ? doc.record : Object.freeze({});
+}
+
+function detailMetadataRecord(state, docId, payload) {
+  var doc = state.docs.find(function (record) { return record.docId === docId; });
+  var manifestRecord = documentRecord(doc);
+  var payloadRecord = payload && typeof payload === "object" ? payload : {};
+  var record = { doc_id: docId };
+  [
+    "title",
+    "summary",
+    "date",
+    "date_display",
+    "added_date",
+    "last_updated",
+    "ui_status",
+    "viewable"
+  ].forEach(function (fieldName) {
+    if (Object.prototype.hasOwnProperty.call(payloadRecord, fieldName)) {
+      record[fieldName] = payloadRecord[fieldName];
+    } else if (Object.prototype.hasOwnProperty.call(manifestRecord, fieldName)) {
+      record[fieldName] = manifestRecord[fieldName];
+    }
+  });
+  return Object.freeze(record);
+}
+
+function projectDetailInfo(state, docId, payload, metadata) {
+  var project = contributionCallback(state.contribution, "projectDetailInfo");
+  if (!project) return null;
+  var doc = state.docs.find(function (record) { return record.docId === docId; });
+  var projected = project({
+    collection: collectionTarget(state.viewerScope, state.subScopeId),
+    document: documentRecord(doc),
+    metadata: metadata,
+    payload: payload,
+    target: detailTarget(state, docId)
+  });
+  if (projected == null) return null;
+  if (typeof projected !== "object" || Array.isArray(projected)) {
+    throw new Error("Docs sub-scope detail information projection is invalid.");
+  }
+  return projected;
 }
 
 function contributionEvent(context, subScopeIdValue, detail) {
@@ -681,8 +724,8 @@ function renderRows(state, docs) {
   });
 }
 
-function publishState(state, reportState, target, reason) {
-  notifyContribution(state, {
+function publishState(state, reportState, target, reason, detail) {
+  notifyContribution(state, Object.assign({
     type: "state",
     state: cleanString(reportState),
     reason: cleanString(reason),
@@ -693,7 +736,7 @@ function publishState(state, reportState, target, reason) {
     refreshCollection: function (collection) {
       return refreshCollection(state, collection);
     }
-  });
+  }, detail || {}));
 }
 
 function invalidateDetailRequest(state) {
@@ -828,11 +871,15 @@ function renderDetailPayload(state, docId, payload) {
   state.detailBodyNode.innerHTML = payload && payload.content_html ? payload.content_html : "";
   state.validDetailId = docId;
   renderDetailToolbar(state, docId);
+  var metadata = detailMetadataRecord(state, docId, payload);
   publishState(state, "detail", {
     scope: state.viewerScope,
     sub_scope: state.subScopeId,
     doc_id: docId
-  }, "detail-loaded");
+  }, "detail-loaded", {
+    info: projectDetailInfo(state, docId, payload, metadata),
+    record: metadata
+  });
 }
 
 function renderDetailById(state, docId, options) {

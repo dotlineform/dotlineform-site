@@ -164,6 +164,8 @@ export function startDocsViewerRuntime(options) {
     collectionTarget: null,
     collectionLabel: "",
     subdocTarget: null,
+    subdocRecord: null,
+    subdocInfo: null,
     refreshDocument: null,
     refreshCollection: null
   };
@@ -192,6 +194,8 @@ export function startDocsViewerRuntime(options) {
           collectionTarget: null,
           collectionLabel: "",
           subdocTarget: null,
+          subdocRecord: null,
+          subdocInfo: null,
           refreshDocument: null,
           refreshCollection: null
         };
@@ -199,6 +203,7 @@ export function startDocsViewerRuntime(options) {
     if (controller && typeof controller.publishSubscopeReportState === "function") {
       controller.publishSubscopeReportState(latestSubscopeReportState);
     }
+    if (documentViewCoordinator) documentViewCoordinator.updateInfoPanel();
   }
 
   var appSession = composition.appSession;
@@ -336,6 +341,7 @@ export function startDocsViewerRuntime(options) {
     infoPanelAutoOpenDocumentModes: settings.infoPanelAutoOpenDocumentModes,
     infoPanelDefaultViewByDocumentMode: settings.infoPanelDefaultViewByDocumentMode,
     infoPanelRefs: infoPanelRefs,
+    managedDocumentContext: function () { return latestSubscopeReportState; },
     mount: content,
     panelLayout: panelLayout,
     panelView: appSession.domains.panelView,

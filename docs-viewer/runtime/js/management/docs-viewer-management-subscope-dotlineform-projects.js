@@ -1,8 +1,12 @@
 import {
   encodeDecodedLocalTarget
 } from "./docs-viewer-management-client.js";
+import {
+  hasDocsViewerAssignableFieldGroup
+} from "../shared/docs-viewer-config-controller.js";
 
 const CUSTOMISATION_ID = "dotlineform_projects";
+const AUTHORING_SUBJECT_GROUP_ID = "authoring_subject";
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -128,6 +132,34 @@ function renderOpenInFinder(context, options) {
   host.appendChild(button);
 }
 
+function projectDetailInfo(context, assignSubjectAvailable) {
+  var settings = context || {};
+  var collection = exactCollection(settings.collection);
+  var target = settings.target || {};
+  if (
+    cleanString(target.scope).toLowerCase() !== collection.scope
+    || cleanString(target.sub_scope).toLowerCase() !== collection.sub_scope
+    || cleanString(target.doc_id) !== cleanString(settings.document && settings.document.doc_id)
+  ) {
+    throw new Error("Projects subject information target is invalid.");
+  }
+  var path = folderPath(settings.document);
+  return Object.freeze({
+    actions: Object.freeze({
+      assignSubject: assignSubjectAvailable
+    }),
+    fields: Object.freeze([
+      Object.freeze({
+        detail: path,
+        id: AUTHORING_SUBJECT_GROUP_ID,
+        label: "Subject",
+        state: path ? "folder" : "none",
+        value: path ? "Folder" : "None"
+      })
+    ])
+  });
+}
+
 function mountMetadataEditor(context) {
   var settings = context || {};
   var host = settings.host;
@@ -171,9 +203,16 @@ export function createDocsViewerManagementSubscopeDotlineformProjects(options = 
     throw new Error("Projects customisation identity did not match its registry entry.");
   }
   exactCollection(options.collection);
+  var assignSubjectAvailable = hasDocsViewerAssignableFieldGroup(
+    options.descriptor,
+    AUTHORING_SUBJECT_GROUP_ID
+  );
   return {
     id: CUSTOMISATION_ID,
     mountMetadataEditor: mountMetadataEditor,
+    projectDetailInfo: function (context) {
+      return projectDetailInfo(context, assignSubjectAvailable);
+    },
     renderDetailToolbar: function (context) {
       renderOpenInFinder(context, options);
     },

@@ -192,6 +192,12 @@ SUB_SCOPE_CUSTOMISATION_DEFINITIONS = {
         browser_composition=DocsSubScopeBrowserCompositionAspect(
             accesses=frozenset({MANAGE_ACCESS}),
         ),
+        assignable_field_groups=(
+            DocsSubScopeAssignableFieldGroup(
+                group_id="authoring_subject",
+                field_names=(dotlineform_projects.FOLDER_PATH_FIELD,),
+            ),
+        ),
     ),
 }
 

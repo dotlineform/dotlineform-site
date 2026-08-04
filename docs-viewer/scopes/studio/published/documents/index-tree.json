@@ -927,7 +927,7 @@
           "doc_id": "d-20260802-194357-4d857b",
           "title": "Sub-Scope Publishing",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194357-4d857b.json",
-          "ui_status": "proposed",
+          "ui_status": "in-progress",
           "children": [
             {
               "doc_id": "d-20260802-121105-c574f9",
@@ -945,7 +945,21 @@
               "doc_id": "d-20260804-164519-c7ad4e",
               "title": "SSP-0 — Projects Subject Assignment Foundation Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-164519-c7ad4e.json",
-              "ui_status": "proposed"
+              "ui_status": "in-progress",
+              "children": [
+                {
+                  "doc_id": "d-20260804-192419-9c2f64",
+                  "title": "SSP-0.0 — Projects Subject Assignment Sanity Note",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-192419-9c2f64.json",
+                  "ui_status": "done"
+                },
+                {
+                  "doc_id": "d-20260804-194710-24329a",
+                  "title": "SSP-0.1 — Exact Subject Info Checkpoint Evidence",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-194710-24329a.json",
+                  "ui_status": "done"
+                }
+              ]
             },
             {
               "doc_id": "d-20260802-194426-087cfe",
@@ -1355,5 +1369,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-04T18:05:44Z"
+  "generated_at": "2026-08-04T18:48:31Z"
 }
