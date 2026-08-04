@@ -130,8 +130,15 @@ function renderContentDetailOpenNewTab(context) {
     link.className = "docsViewer__actionButton docsViewer__contentDetailOpenNewTab";
     link.target = "_blank";
     link.rel = "noopener";
-    link.textContent = "Open in new tab";
+    link.innerHTML = [
+      '<svg class="docsViewer__diagramDetailIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">',
+      '  <path d="M14 5h5v5M19 5l-8 8M19 13v6H5V5h6"></path>',
+      "</svg>"
+    ].join("");
   }
+  var label = context.control.state && context.control.state.label || context.control.label;
+  link.setAttribute("aria-label", label);
+  link.title = label;
   link.href = context.control.state && context.control.state.href || "";
   return link;
 }

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8bef8388a0d530de960a107e87b2fd60",
-    "generated_at_utc": "2026-08-04T09:56:12Z",
+    "version": "blake2b-20310f3f20fe7992e5b4b1649785ce41",
+    "generated_at_utc": "2026-08-04T10:27:02Z",
     "count": 241
   },
   "entries": [
@@ -1357,10 +1357,10 @@
       "kind": "doc",
       "title": "Document Diagrams",
       "href": "/docs/?scope=studio&doc=d-20260719-123719-fb7565",
-      "last_updated": "2026-08-03 00:00:00",
+      "last_updated": "2026-08-04 11:18:11",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-08-03 00:00:00 • Docs Viewer",
+      "display_meta": "2026-08-04 11:18:11 • Docs Viewer",
       "search_terms": [
         "document diagrams",
         "document",
@@ -1368,14 +1368,15 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-08-03 00:00:00",
+        "2026-08-04 11:18:11",
         "2026",
         "08",
-        "03",
-        "00",
+        "04",
+        "11",
+        "18",
         "d-20260719-123719-fb7565"
       ],
-      "search_text": "document diagrams document diagrams docs viewer docs viewer 2026-08-03 00:00:00 2026 08 03 00 d-20260719-123719-fb7565"
+      "search_text": "document diagrams document diagrams docs viewer docs viewer 2026-08-04 11:18:11 2026 08 04 11 18 d-20260719-123719-fb7565"
     },
     {
       "id": "d-20260715-094411-2b6e65",
@@ -4415,25 +4416,25 @@
       "kind": "doc",
       "title": "Table Enhancements",
       "href": "/docs/?scope=studio&doc=d-20260802-150245-4e7f85",
-      "last_updated": "2026-08-04 10:55:40",
+      "last_updated": "2026-08-04 11:27:02",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-04 10:55:40 • Roadmap",
+      "display_meta": "2026-08-04 11:27:02 • Roadmap",
       "search_terms": [
         "table enhancements",
         "table",
         "enhancements",
         "roadmap",
-        "2026-08-04 10:55:40",
+        "2026-08-04 11:27:02",
         "2026",
         "08",
         "04",
-        "10",
-        "55",
-        "40",
+        "11",
+        "27",
+        "02",
         "d-20260802-150245-4e7f85"
       ],
-      "search_text": "table enhancements table enhancements roadmap 2026-08-04 10:55:40 2026 08 04 10 55 40 d-20260802-150245-4e7f85"
+      "search_text": "table enhancements table enhancements roadmap 2026-08-04 11:27:02 2026 08 04 11 27 02 d-20260802-150245-4e7f85"
     },
     {
       "id": "d-20260802-160429-69a5f6",
@@ -4470,10 +4471,10 @@
       "kind": "doc",
       "title": "Content Detail View Concept And Architecture",
       "href": "/docs/?scope=studio&doc=d-20260802-150246-bb3f88",
-      "last_updated": "2026-08-03 22:14:36",
+      "last_updated": "2026-08-04 11:18:11",
       "parent_id": "d-20260802-150245-4e7f85",
       "parent_title": "Table Enhancements",
-      "display_meta": "2026-08-03 22:14:36 • Table Enhancements",
+      "display_meta": "2026-08-04 11:18:11 • Table Enhancements",
       "search_terms": [
         "content detail view concept and architecture",
         "content",
@@ -4485,16 +4486,15 @@
         "table enhancements",
         "table",
         "enhancements",
-        "2026-08-03 22:14:36",
+        "2026-08-04 11:18:11",
         "2026",
         "08",
-        "03",
-        "22",
-        "14",
-        "36",
+        "04",
+        "11",
+        "18",
         "d-20260802-150246-bb3f88"
       ],
-      "search_text": "content detail view concept and architecture content detail view concept and architecture table enhancements table enhancements 2026-08-03 22:14:36 2026 08 03 22 14 36 d-20260802-150246-bb3f88"
+      "search_text": "content detail view concept and architecture content detail view concept and architecture table enhancements table enhancements 2026-08-04 11:18:11 2026 08 04 11 18 d-20260802-150246-bb3f88"
     },
     {
       "id": "d-20260802-163320-9015b0",
@@ -4588,10 +4588,10 @@
       "kind": "doc",
       "title": "TE-4 — Diagram Migration",
       "href": "/docs/?scope=studio&doc=d-20260802-150248-e1461d",
-      "last_updated": "2026-08-04 10:55:40",
+      "last_updated": "2026-08-04 11:27:02",
       "parent_id": "d-20260802-150245-4e7f85",
       "parent_title": "Table Enhancements",
-      "display_meta": "2026-08-04 10:55:40 • Table Enhancements",
+      "display_meta": "2026-08-04 11:27:02 • Table Enhancements",
       "search_terms": [
         "te-4 — diagram migration",
         "te",
@@ -4601,16 +4601,16 @@
         "table enhancements",
         "table",
         "enhancements",
-        "2026-08-04 10:55:40",
+        "2026-08-04 11:27:02",
         "2026",
         "08",
         "04",
-        "10",
-        "55",
-        "40",
+        "11",
+        "27",
+        "02",
         "d-20260802-150248-e1461d"
       ],
-      "search_text": "te-4 — diagram migration te 4 diagram migration table enhancements table enhancements 2026-08-04 10:55:40 2026 08 04 10 55 40 d-20260802-150248-e1461d"
+      "search_text": "te-4 — diagram migration te 4 diagram migration table enhancements table enhancements 2026-08-04 11:27:02 2026 08 04 11 27 02 d-20260802-150248-e1461d"
     },
     {
       "id": "d-20260802-153340-61863b",

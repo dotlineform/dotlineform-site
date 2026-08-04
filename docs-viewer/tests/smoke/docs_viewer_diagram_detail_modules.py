@@ -182,11 +182,14 @@ def assert_persistent_adapter_contract(page: Page) -> None:
                 existingRoot: null
             });
             const newTabPresentation = {
+                accessibleLabel: newTabLink.getAttribute('aria-label'),
                 href: newTabLink.getAttribute('href'),
-                label: newTabLink.textContent,
+                iconClass: newTabLink.querySelector('svg')?.classList.contains('docsViewer__diagramDetailIcon') || false,
+                iconPath: newTabLink.querySelector('path')?.getAttribute('d') || '',
                 rel: newTabLink.getAttribute('rel'),
                 tagName: newTabLink.tagName,
-                target: newTabLink.getAttribute('target')
+                target: newTabLink.getAttribute('target'),
+                title: newTabLink.getAttribute('title')
             };
             sameOrigin.setAttribute('src', '/assets/data/docs/scopes/library/media/svg/one-updated.svg');
             const refreshed = adapter.refreshPersistentDiagram({ content, diagram: sameOrigin });
@@ -313,11 +316,14 @@ def assert_persistent_adapter_contract(page: Page) -> None:
         "href": "/assets/data/docs/scopes/library/media/svg/one.svg",
         "label": "Open in new tab",
     } or result["newTabPresentation"] != {
+        "accessibleLabel": "Open in new tab",
         "href": "/assets/data/docs/scopes/library/media/svg/one.svg",
-        "label": "Open in new tab",
+        "iconClass": True,
+        "iconPath": "M14 5h5v5M19 5l-8 8M19 13v6H5V5h6",
         "rel": "noopener",
         "tagName": "A",
         "target": "_blank",
+        "title": "Open in new tab",
     }:
         raise AssertionError(f"optional new-tab toolbar projection changed: {result!r}")
     if (

@@ -1274,7 +1274,16 @@ body.docs-viewer-service{
 .docsViewer__contentDetailOpenNewTab:visited{
   display: inline-flex;
   align-items: center;
-  min-width: max-content;
+  justify-content: center;
+  width: 2.75rem;
+  min-width: 2.75rem;
+  height: 2rem;
+  min-height: 2rem;
+  padding: 0;
+  border-color: var(--docs-viewer-border-strong);
+  border-radius: 999px;
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--docs-viewer-text) 12%, transparent);
+  color: var(--docs-viewer-link);
   text-decoration: none;
 }
 
