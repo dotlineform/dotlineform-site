@@ -928,6 +928,7 @@ def assert_route_feature_projection_and_startup(page: Page) -> None:
         "uiStatuses": [
             ["draft", "📝"],
             ["done", "✅"],
+            ["stopped", "🚫"],
             ["urgent", "❗"],
             ["review", "👀"],
             ["in-progress", "🔄"],

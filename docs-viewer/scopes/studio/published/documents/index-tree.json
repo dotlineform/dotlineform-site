@@ -961,19 +961,19 @@
           "doc_id": "d-20260802-150245-4e7f85",
           "title": "Table Enhancements",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-150245-4e7f85.json",
-          "ui_status": "in-progress",
+          "ui_status": "done",
           "children": [
             {
               "doc_id": "d-20260802-160429-69a5f6",
               "title": "Authoring Directives Concept And Examples",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-160429-69a5f6.json",
-              "ui_status": "in-progress"
+              "ui_status": "done"
             },
             {
               "doc_id": "d-20260802-150246-bb3f88",
               "title": "Content Detail View Concept And Architecture",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-150246-bb3f88.json",
-              "ui_status": "in-progress"
+              "ui_status": "done"
             },
             {
               "doc_id": "d-20260802-163320-9015b0",
@@ -1003,13 +1003,13 @@
               "doc_id": "d-20260802-153340-61863b",
               "title": "TE-5 — Default Presentation",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-153340-61863b.json",
-              "ui_status": "proposed"
+              "ui_status": "stopped"
             },
             {
               "doc_id": "d-20260802-160430-34cb3b",
               "title": "TE-6 — Table-to-SVG Publication",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-160430-34cb3b.json",
-              "ui_status": "proposed"
+              "ui_status": "stopped"
             }
           ]
         },
@@ -1351,5 +1351,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-04T10:55:04Z"
+  "generated_at": "2026-08-04T11:05:54Z"
 }

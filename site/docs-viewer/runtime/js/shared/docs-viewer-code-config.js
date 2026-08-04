@@ -25,6 +25,11 @@ export var DOCS_VIEWER_CODE_CONFIG = {
       emoji: "✅"
     },
     {
+      ui_status: "stopped",
+      label: "Stopped",
+      emoji: "🚫"
+    },
+    {
       ui_status: "urgent",
       label: "Urgent",
       emoji: "❗"

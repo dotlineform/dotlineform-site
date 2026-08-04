@@ -4,74 +4,10 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "d-20260804-113507-7a3c1e",
-      "title": "Studio Mermaid SVG-To-Inline Theme Migration",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-113507-7a3c1e.json",
-      "timestamp": "2026-08-04 11:55:11",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260719-123719-fb7565",
-      "title": "Document Diagrams",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260719-123719-fb7565.json",
-      "timestamp": "2026-08-04 11:44:18",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260512-142027-54b354",
-      "title": "Configuration And Extension Points",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260512-142027-54b354.json",
-      "timestamp": "2026-08-04 11:43:37",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260424-000000-fc8b5d",
-      "title": "Docs Import",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260424-000000-fc8b5d.json",
-      "timestamp": "2026-08-04 11:43:37",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260720-100017-e094d8",
-      "title": "Scope Media Management Concept",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-100017-e094d8.json",
-      "timestamp": "2026-08-04 11:43:37",
-      "parent_id": "d-20260720-100017-9855dd",
-      "parent_title": "Scope Media Management"
-    },
-    {
-      "doc_id": "d-20260802-150245-4e7f85",
-      "title": "Table Enhancements",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-150245-4e7f85.json",
-      "timestamp": "2026-08-04 11:27:02",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260802-150248-e1461d",
-      "title": "TE-4 — Diagram Migration",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-150248-e1461d.json",
-      "timestamp": "2026-08-04 11:27:02",
-      "parent_id": "d-20260802-150245-4e7f85",
-      "parent_title": "Table Enhancements"
-    },
-    {
-      "doc_id": "d-20260802-150246-bb3f88",
-      "title": "Content Detail View Concept And Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-150246-bb3f88.json",
-      "timestamp": "2026-08-04 11:18:11",
-      "parent_id": "d-20260802-150245-4e7f85",
-      "parent_title": "Table Enhancements"
-    },
-    {
-      "doc_id": "d-20260802-151403-d381d6",
-      "title": "TE-3 — Managed Table Tools",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-151403-d381d6.json",
-      "timestamp": "2026-08-03 22:24:15",
+      "doc_id": "d-20260802-163320-9015b0",
+      "title": "TE-1 — Directive Insertion",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-163320-9015b0.json",
+      "timestamp": "2026-08-04 12:06:35",
       "parent_id": "d-20260802-150245-4e7f85",
       "parent_title": "Table Enhancements"
     },
@@ -79,10 +15,74 @@
       "doc_id": "d-20260802-162149-3ba013",
       "title": "TE-2 — Table Detail View",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-162149-3ba013.json",
-      "timestamp": "2026-08-03 21:39:26",
+      "timestamp": "2026-08-04 12:06:35",
       "parent_id": "d-20260802-150245-4e7f85",
       "parent_title": "Table Enhancements"
+    },
+    {
+      "doc_id": "d-20260802-151403-d381d6",
+      "title": "TE-3 — Managed Table Tools",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-151403-d381d6.json",
+      "timestamp": "2026-08-04 12:06:35",
+      "parent_id": "d-20260802-150245-4e7f85",
+      "parent_title": "Table Enhancements"
+    },
+    {
+      "doc_id": "d-20260802-150248-e1461d",
+      "title": "TE-4 — Diagram Migration",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-150248-e1461d.json",
+      "timestamp": "2026-08-04 12:06:35",
+      "parent_id": "d-20260802-150245-4e7f85",
+      "parent_title": "Table Enhancements"
+    },
+    {
+      "doc_id": "d-20260802-150246-bb3f88",
+      "title": "Content Detail View Concept And Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-150246-bb3f88.json",
+      "timestamp": "2026-08-04 12:05:54",
+      "parent_id": "d-20260802-150245-4e7f85",
+      "parent_title": "Table Enhancements"
+    },
+    {
+      "doc_id": "d-20260802-160429-69a5f6",
+      "title": "Authoring Directives Concept And Examples",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-160429-69a5f6.json",
+      "timestamp": "2026-08-04 12:05:31",
+      "parent_id": "d-20260802-150245-4e7f85",
+      "parent_title": "Table Enhancements"
+    },
+    {
+      "doc_id": "d-20260802-153340-61863b",
+      "title": "TE-5 — Default Presentation",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-153340-61863b.json",
+      "timestamp": "2026-08-04 12:04:17",
+      "parent_id": "d-20260802-150245-4e7f85",
+      "parent_title": "Table Enhancements"
+    },
+    {
+      "doc_id": "d-20260802-160430-34cb3b",
+      "title": "TE-6 — Table-to-SVG Publication",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-160430-34cb3b.json",
+      "timestamp": "2026-08-04 12:04:17",
+      "parent_id": "d-20260802-150245-4e7f85",
+      "parent_title": "Table Enhancements"
+    },
+    {
+      "doc_id": "d-20260802-150245-4e7f85",
+      "title": "Table Enhancements",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-150245-4e7f85.json",
+      "timestamp": "2026-08-04 12:03:49",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260513-214100-0a7f44",
+      "title": "UI Status",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260513-214100-0a7f44.json",
+      "timestamp": "2026-08-04 12:02:52",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-08-04T10:55:12Z"
+  "generated_at": "2026-08-04T11:06:35Z"
 }
