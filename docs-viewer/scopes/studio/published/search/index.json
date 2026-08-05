@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a4cb6c4c7d80b6ae7c48194212ebcd93",
-    "generated_at_utc": "2026-08-05T19:31:44Z",
+    "version": "blake2b-285374b4943ffa34f4ba350fb791e4ea",
+    "generated_at_utc": "2026-08-05T19:43:56Z",
     "count": 254
   },
   "entries": [
@@ -4661,10 +4661,10 @@
       "kind": "doc",
       "title": "SSP-2 — Docs Viewer Project State Delivery",
       "href": "/docs/?scope=studio&doc=d-20260801-133318-15e8fa",
-      "last_updated": "2026-08-05 20:27:42",
+      "last_updated": "2026-08-05 20:43:40",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-05 20:27:42 • Sub-Scope Publishing",
+      "display_meta": "2026-08-05 20:43:40 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-2 — docs viewer project state delivery",
         "ssp",
@@ -4678,16 +4678,16 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-05 20:27:42",
+        "2026-08-05 20:43:40",
         "2026",
         "08",
         "05",
         "20",
-        "27",
-        "42",
+        "43",
+        "40",
         "d-20260801-133318-15e8fa"
       ],
-      "search_text": "ssp-2 — docs viewer project state delivery ssp 2 docs viewer project state delivery sub-scope publishing sub scope publishing 2026-08-05 20:27:42 2026 08 05 20 27 42 d-20260801-133318-15e8fa"
+      "search_text": "ssp-2 — docs viewer project state delivery ssp 2 docs viewer project state delivery sub-scope publishing sub scope publishing 2026-08-05 20:43:40 2026 08 05 20 43 40 d-20260801-133318-15e8fa"
     },
     {
       "id": "d-20260805-141842-8115c8",
@@ -4991,10 +4991,10 @@
       "kind": "doc",
       "title": "Sub-Scope Publishing Concept And Architecture",
       "href": "/docs/?scope=studio&doc=d-20260802-194358-7717ee",
-      "last_updated": "2026-08-05 20:27:42",
+      "last_updated": "2026-08-05 20:43:40",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-05 20:27:42 • Sub-Scope Publishing",
+      "display_meta": "2026-08-05 20:43:40 • Sub-Scope Publishing",
       "search_terms": [
         "sub-scope publishing concept and architecture",
         "sub",
@@ -5004,16 +5004,16 @@
         "and",
         "architecture",
         "sub-scope publishing",
-        "2026-08-05 20:27:42",
+        "2026-08-05 20:43:40",
         "2026",
         "08",
         "05",
         "20",
-        "27",
-        "42",
+        "43",
+        "40",
         "d-20260802-194358-7717ee"
       ],
-      "search_text": "sub-scope publishing concept and architecture sub scope publishing concept and architecture sub-scope publishing 2026-08-05 20:27:42 2026 08 05 20 27 42 d-20260802-194358-7717ee"
+      "search_text": "sub-scope publishing concept and architecture sub scope publishing concept and architecture sub-scope publishing 2026-08-05 20:43:40 2026 08 05 20 43 40 d-20260802-194358-7717ee"
     },
     {
       "id": "d-20260804-160200-fa7bb7",

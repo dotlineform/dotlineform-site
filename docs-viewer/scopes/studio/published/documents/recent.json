@@ -4,17 +4,25 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "d-20260802-121105-c574f9",
-      "title": "Project State Concept And Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121105-c574f9.json",
-      "timestamp": "2026-08-05 20:27:42",
+      "doc_id": "d-20260801-133318-15e8fa",
+      "title": "SSP-2 — Docs Viewer Project State Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133318-15e8fa.json",
+      "timestamp": "2026-08-05 20:43:40",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
     },
     {
-      "doc_id": "d-20260801-133318-15e8fa",
-      "title": "SSP-2 — Docs Viewer Project State Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133318-15e8fa.json",
+      "doc_id": "d-20260802-194358-7717ee",
+      "title": "Sub-Scope Publishing Concept And Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194358-7717ee.json",
+      "timestamp": "2026-08-05 20:43:40",
+      "parent_id": "d-20260802-194357-4d857b",
+      "parent_title": "Sub-Scope Publishing"
+    },
+    {
+      "doc_id": "d-20260802-121105-c574f9",
+      "title": "Project State Concept And Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121105-c574f9.json",
       "timestamp": "2026-08-05 20:27:42",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
@@ -42,14 +50,6 @@
       "timestamp": "2026-08-05 20:27:42",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260802-194358-7717ee",
-      "title": "Sub-Scope Publishing Concept And Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194358-7717ee.json",
-      "timestamp": "2026-08-05 20:27:42",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
     },
     {
       "doc_id": "d-20260801-233534-239eab",
@@ -84,5 +84,5 @@
       "parent_title": "SSP-2 — Docs Viewer Project State Delivery"
     }
   ],
-  "generated_at": "2026-08-05T19:31:44Z"
+  "generated_at": "2026-08-05T19:43:56Z"
 }

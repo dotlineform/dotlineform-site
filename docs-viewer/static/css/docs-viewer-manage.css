@@ -161,9 +161,36 @@
 }
 
 .docsViewerReport__projectSubjectCue{
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   margin-right: 0.35rem;
   line-height: 1;
+}
+
+.docsViewerReport[data-report-subscope="projects"] .docsViewerReport__row{
+  align-items: center;
+}
+
+.docsViewerReport[data-report-subscope="projects"][data-report-subscope-selection="inactive"]
+  [data-report-contribution-host="row-leading"]{
+  display: none;
+}
+
+.docsViewerReport[data-report-subscope="projects"] .docsViewerReport__subscopeButton{
+  display: inline-flex;
+  align-items: center;
+}
+
+.docsViewerReport__projectSubjectIcon{
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transform: translateY(0.125em);
+  pointer-events: none;
 }
 
 .docsViewerReport__subscopeFilterToolbar

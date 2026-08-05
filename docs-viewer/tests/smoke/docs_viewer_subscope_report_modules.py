@@ -4380,10 +4380,14 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
             const host = document.createElement('span');
             const projected = contribution.renderRow({ document: record, titlePrefixHost: host });
             const node = host.querySelector('[data-project-subject-cue]');
+            const icon = node ? node.querySelector('[data-project-subject-icon]') : null;
             return {
               labels: projected.accessibleLabels,
               state: node ? node.dataset.projectSubjectCue : '',
-              text: node ? node.textContent : ''
+              text: node ? node.textContent : '',
+              icon: icon ? icon.dataset.projectSubjectIcon : '',
+              paths: icon ? icon.querySelectorAll('path').length : 0,
+              bullets: icon ? icon.querySelectorAll('rect').length : 0
             };
           }
           function info(record) {
@@ -4503,18 +4507,33 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
             }
         ],
         "cues": {
-            "work": {"labels": ["Work subject 00123"], "state": "work", "text": "🏷️"},
-            "series": {"labels": ["Series subject 026"], "state": "series", "text": "🏷️"},
-            "none": {"labels": [], "state": "", "text": ""},
+            "work": {
+                "labels": ["Work subject 00123"], "state": "work", "text": "",
+                "icon": "work", "paths": 1, "bullets": 1,
+            },
+            "series": {
+                "labels": ["Series subject 026"], "state": "series", "text": "",
+                "icon": "series", "paths": 3, "bullets": 3,
+            },
+            "none": {
+                "labels": [], "state": "", "text": "", "icon": "", "paths": 0,
+                "bullets": 0,
+            },
             "malformed": {
                 "labels": ["Malformed work subject declaration"],
                 "state": "warning",
                 "text": "⚠️",
+                "icon": "",
+                "paths": 0,
+                "bullets": 0,
             },
             "conflicting": {
                 "labels": ["Conflicting authoring subject declarations"],
                 "state": "warning",
                 "text": "⚠️",
+                "icon": "",
+                "paths": 0,
+                "bullets": 0,
             },
         },
         "fetchCalls": [
