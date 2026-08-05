@@ -1003,7 +1003,7 @@
               "doc_id": "d-20260801-133318-15e8fa",
               "title": "SSP-2 — Docs Viewer Project State Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133318-15e8fa.json",
-              "ui_status": "done",
+              "ui_status": "in-progress",
               "children": [
                 {
                   "doc_id": "d-20260805-141842-8115c8",
@@ -1427,5 +1427,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-05T17:21:49Z"
+  "generated_at": "2026-08-05T18:55:54Z"
 }
