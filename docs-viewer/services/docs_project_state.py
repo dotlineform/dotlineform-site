@@ -43,8 +43,8 @@ from studio.shared.python.projects_directories import (  # noqa: E402
     normalize_projects_directory_marker,
 )
 
-REPORT_SCHEMA_VERSION = "docs_project_state_report_v1"
-LOOKUP_SCHEMA_VERSION = "docs_project_state_folder_lookup_v1"
+REPORT_SCHEMA_VERSION = "docs_project_state_report_v2"
+LOOKUP_SCHEMA_VERSION = "docs_project_state_folder_lookup_v2"
 SUBJECT_ASSOCIATIONS_SCHEMA_VERSION = "docs_subject_associations_v1"
 PROJECTS_SCOPE = "dotlineform"
 PROJECTS_SUB_SCOPE = "projects"
@@ -137,7 +137,7 @@ def _folder_keys(projects_base_dir: Path) -> list[str]:
 
 def _subject_documents(
     manifest: Mapping[str, Any], associations: Mapping[str, Any]
-) -> tuple[str, dict[str, list[dict[str, Any]]], int]:
+) -> tuple[str, dict[tuple[str, str], list[dict[str, Any]]], int]:
     generation = str(manifest.get("subject_generation") or "").strip()
     manifest_rows = manifest.get("docs")
     if not GENERATION_PATTERN.fullmatch(generation) or not isinstance(manifest_rows, list):
@@ -175,7 +175,7 @@ def _subject_documents(
 
     actual: set[tuple[str, str, str]] = set()
     subject_groups: set[tuple[str, str]] = set()
-    by_folder: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    by_subject: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     for association in association_rows:
         subject = association.get("subject") if isinstance(association, dict) else None
         documents = association.get("documents") if isinstance(association, dict) else None
@@ -200,8 +200,6 @@ def _subject_documents(
             ):
                 raise ValueError("Projects subject association contains a mismatched document target")
             actual.add(identity)
-            if kind != "folder":
-                continue
             if not isinstance(locations, list) or len(locations) != 1:
                 raise ValueError("Project document association must contain one exact Manage location")
             location = locations[0]
@@ -213,24 +211,27 @@ def _subject_documents(
                 or not title
             ):
                 raise ValueError("Project document association has invalid presentation")
-            by_folder[key].append(
+            by_subject[(kind, key)].append(
                 {
                     "target": {"scope": PROJECTS_SCOPE, "sub_scope": PROJECTS_SUB_SCOPE, "doc_id": doc_id},
                     "title": title,
                     "last_updated": str(manifest_by_id[doc_id].get("last_updated") or "").strip(),
                     "href": str(location["url"]).strip(),
+                    "declared_subject": {"kind": kind, "key": key},
                 }
             )
     if actual != expected:
         raise ValueError("Projects Manage manifest and subject associations contain different collections")
-    for values in by_folder.values():
+    for values in by_subject.values():
         values.sort(key=lambda value: (value["title"].casefold(), value["title"], value["target"]["doc_id"]))
-    return generation, dict(by_folder), len(manifest_by_id)
+    return generation, dict(by_subject), len(manifest_by_id)
 
 
 def _catalogue_indexes(source_dir: Path) -> tuple[
     dict[str, dict[str, str]],
     dict[str, list[dict[str, Any]]],
+    dict[str, dict[str, Any]],
+    dict[str, list[str]],
     dict[str, list[dict[str, Any]]],
     int,
 ]:
@@ -244,6 +245,8 @@ def _catalogue_indexes(source_dir: Path) -> tuple[
         series_by_id[series_id] = {"series_id": series_id, "title": title}
 
     works_by_folder: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    work_placement_by_id: dict[str, dict[str, Any]] = {}
+    folder_keys_by_series: dict[str, set[str]] = defaultdict(set)
     issues_by_work: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for source_id, work in records.works.items():
         work_id = normalize_text(work.get("work_id") or source_id)
@@ -277,15 +280,99 @@ def _catalogue_indexes(source_dir: Path) -> tuple[
         series_ids.sort()
         if not series_ids and not issues_by_work[work_id]:
             issues_by_work[work_id].append({"state": "missing_series", "work_id": work_id})
-        works_by_folder[folder_key].append(
-            {
-                "target": {"family": "catalogue", "target_type": "work", "target_id": work_id},
-                "series_ids": series_ids,
-            }
-        )
+        report_work = {
+            "target": {"family": "catalogue", "target_type": "work", "target_id": work_id},
+            "series_ids": series_ids,
+        }
+        works_by_folder[folder_key].append(report_work)
+        applicable_series_ids = [series_id for series_id in series_ids if series_id in series_by_id]
+        work_placement_by_id[work_id] = {
+            "folder_key": folder_key,
+            "applicable_series_ids": applicable_series_ids,
+        }
+        for series_id in applicable_series_ids:
+            folder_keys_by_series[series_id].add(folder_key)
     for values in works_by_folder.values():
         values.sort(key=lambda value: value["target"]["target_id"])
-    return series_by_id, dict(works_by_folder), dict(issues_by_work), len(records.works)
+    return (
+        series_by_id,
+        dict(works_by_folder),
+        work_placement_by_id,
+        {
+            series_id: sorted(folder_keys, key=lambda value: (value.casefold(), value))
+            for series_id, folder_keys in folder_keys_by_series.items()
+        },
+        dict(issues_by_work),
+        len(records.works),
+    )
+
+
+def _place_documents(
+    folder_keys: list[str],
+    documents_by_subject: Mapping[tuple[str, str], list[dict[str, Any]]],
+    work_placement_by_id: Mapping[str, Mapping[str, Any]],
+    folder_keys_by_series: Mapping[str, list[str]],
+) -> tuple[dict[str, list[dict[str, Any]]], dict[str, int]]:
+    scanned_folders = set(folder_keys)
+    series_ids_by_folder: dict[str, set[str]] = defaultdict(set)
+    for series_id, series_folder_keys in folder_keys_by_series.items():
+        for folder_key in series_folder_keys:
+            series_ids_by_folder[folder_key].add(series_id)
+
+    placed_by_folder: dict[str, dict[str, dict[str, Any]]] = defaultdict(dict)
+    matched_document_ids: set[str] = set()
+    unmatched_document_ids: set[str] = set()
+    recorded_only_folder_subjects: set[str] = set()
+
+    for (kind, key), documents in sorted(documents_by_subject.items()):
+        placements: list[tuple[str, list[str]]] = []
+        if kind == "folder":
+            if key in scanned_folders:
+                placements.append((key, sorted(series_ids_by_folder.get(key, set()))))
+            else:
+                recorded_only_folder_subjects.add(key)
+        elif kind == "work":
+            work_placement = work_placement_by_id.get(key)
+            folder_key = str(work_placement.get("folder_key") or "") if work_placement else ""
+            if folder_key in scanned_folders:
+                placements.append(
+                    (folder_key, list(work_placement.get("applicable_series_ids") or []))
+                )
+        elif kind == "series":
+            placements.extend(
+                (folder_key, [key])
+                for folder_key in folder_keys_by_series.get(key, [])
+                if folder_key in scanned_folders
+            )
+
+        if not placements:
+            unmatched_document_ids.update(document["target"]["doc_id"] for document in documents)
+            continue
+
+        for document in documents:
+            doc_id = document["target"]["doc_id"]
+            matched_document_ids.add(doc_id)
+            for folder_key, applicable_series_ids in placements:
+                placed_document = dict(document)
+                placed_document["declared_subject"] = dict(document["declared_subject"])
+                placed_document["applicable_series_ids"] = list(applicable_series_ids)
+                existing = placed_by_folder[folder_key].get(doc_id)
+                if existing is not None and existing != placed_document:
+                    raise ValueError("Project document produced conflicting Folder placements")
+                placed_by_folder[folder_key][doc_id] = placed_document
+
+    documents_by_folder: dict[str, list[dict[str, Any]]] = {}
+    for folder_key, documents in placed_by_folder.items():
+        documents_by_folder[folder_key] = sorted(
+            documents.values(),
+            key=lambda value: (value["title"].casefold(), value["title"], value["target"]["doc_id"]),
+        )
+    return documents_by_folder, {
+        "matched_document_count": len(matched_document_ids),
+        "document_placement_count": sum(len(documents) for documents in documents_by_folder.values()),
+        "unmatched_document_count": len(unmatched_document_ids),
+        "recorded_only_document_folder_count": len(recorded_only_folder_subjects),
+    }
 
 
 def _state(document_count: int, work_count: int) -> str:
@@ -344,6 +431,7 @@ def _rows(
                 "works": works,
                 "series": series,
                 "series_issues": issues,
+                "matched_document_count": len(documents),
                 "matched_work_count": len(works),
                 "states": {
                     "reconciliation": _state(len(documents), len(works)),
@@ -381,7 +469,14 @@ def _lookup(
                 {"target": dict(series["target"]), "work_ids": list(series["work_ids"])}
                 for series in row["series"]
             ],
-            "documents": [{"target": dict(document["target"])} for document in row["documents"]],
+            "documents": [
+                {
+                    "target": dict(document["target"]),
+                    "declared_subject": dict(document["declared_subject"]),
+                    "applicable_series_ids": list(document["applicable_series_ids"]),
+                }
+                for document in row["documents"]
+            ],
         }
     return {
         "schema_version": LOOKUP_SCHEMA_VERSION,
@@ -396,23 +491,114 @@ def _lookup(
 def validate_products(report: Mapping[str, Any], lookup: Mapping[str, Any]) -> None:
     rows = report.get("rows")
     folders = lookup.get("folders")
+    summary = report.get("summary")
+    inputs = report.get("inputs")
     if (
         report.get("schema_version") != REPORT_SCHEMA_VERSION
         or lookup.get("schema_version") != LOOKUP_SCHEMA_VERSION
         or not GENERATION_PATTERN.fullmatch(str(report.get("generation") or ""))
         or lookup.get("generation") != report.get("generation")
+        or lookup.get("generated_at") != report.get("generated_at")
+        or not isinstance(inputs, dict)
+        or lookup.get("subject_generation") != inputs.get("subject_generation")
+        or lookup.get("status") != {"state": "current"}
         or not isinstance(rows, list)
         or not isinstance(folders, dict)
+        or not isinstance(summary, dict)
     ):
         raise ValueError("Project State products failed envelope validation")
     row_keys = [row.get("folder", {}).get("key") for row in rows if isinstance(row, dict)]
     if len(row_keys) != len(rows) or row_keys != list(folders):
         raise ValueError("Project State report and lookup folder collections do not match")
+    matched_document_ids: set[str] = set()
+    document_placement_count = 0
     for row in rows:
-        if row["folder"].get("present") is not True or row["matched_work_count"] != len(row["works"]):
-            raise ValueError("Project State row failed folder or Work-count validation")
-        if any(series["work_count"] != len(series["work_ids"]) for series in row["series"]):
+        documents = row.get("documents")
+        works = row.get("works")
+        series = row.get("series")
+        if not isinstance(documents, list) or not isinstance(works, list) or not isinstance(series, list):
+            raise ValueError("Project State row contains invalid relationship collections")
+        if (
+            row["folder"].get("present") is not True
+            or row.get("matched_document_count") != len(documents)
+            or row.get("matched_work_count") != len(works)
+        ):
+            raise ValueError("Project State row failed relationship-count validation")
+        if any(series_record["work_count"] != len(series_record["work_ids"]) for series_record in series):
             raise ValueError("Project State row failed Series-count validation")
+        folder_key = row["folder"]["key"]
+        series_ids = [series_record["target"]["target_id"] for series_record in series]
+        work_by_id = {work["target"]["target_id"]: work for work in works}
+        document_ids: set[str] = set()
+        expected_lookup_documents: list[dict[str, Any]] = []
+        for document in documents:
+            target = document.get("target")
+            subject = document.get("declared_subject")
+            applicable_series_ids = document.get("applicable_series_ids")
+            doc_id = str(target.get("doc_id") or "") if isinstance(target, dict) else ""
+            kind = str(subject.get("kind") or "") if isinstance(subject, dict) else ""
+            key = str(subject.get("key") or "") if isinstance(subject, dict) else ""
+            if (
+                not doc_id
+                or not is_immutable_doc_id(doc_id)
+                or target.get("scope") != PROJECTS_SCOPE
+                or target.get("sub_scope") != PROJECTS_SUB_SCOPE
+                or not str(document.get("title") or "").strip()
+                or not str(document.get("href") or "").strip()
+                or doc_id in document_ids
+                or kind not in {"folder", "work", "series"}
+                or not key
+                or not isinstance(applicable_series_ids, list)
+                or any(not isinstance(series_id, str) or not series_id for series_id in applicable_series_ids)
+                or len(applicable_series_ids) != len(set(applicable_series_ids))
+                or any(series_id not in series_ids for series_id in applicable_series_ids)
+            ):
+                raise ValueError("Project State row failed document-placement validation")
+            if kind == "folder":
+                expected_series_ids = series_ids if key == folder_key else None
+            elif kind == "work":
+                work = work_by_id.get(key)
+                expected_series_ids = (
+                    [series_id for series_id in work["series_ids"] if series_id in series_ids]
+                    if work is not None
+                    else None
+                )
+            else:
+                expected_series_ids = [key] if key in series_ids else None
+            if expected_series_ids is None or applicable_series_ids != expected_series_ids:
+                raise ValueError("Project State document provenance does not match its Folder row")
+            document_ids.add(doc_id)
+            matched_document_ids.add(doc_id)
+            expected_lookup_documents.append(
+                {
+                    "target": dict(target),
+                    "declared_subject": dict(subject),
+                    "applicable_series_ids": list(applicable_series_ids),
+                }
+            )
+        document_placement_count += len(documents)
+        lookup_row = folders.get(folder_key)
+        expected_lookup_works = [
+            {"target": dict(work["target"]), "series_ids": list(work["series_ids"])}
+            for work in works
+        ]
+        expected_lookup_series = [
+            {"target": dict(series_record["target"]), "work_ids": list(series_record["work_ids"])}
+            for series_record in series
+        ]
+        if (
+            not isinstance(lookup_row, dict)
+            or lookup_row.get("subject") != {"kind": "folder", "key": folder_key}
+            or lookup_row.get("works") != expected_lookup_works
+            or lookup_row.get("series") != expected_lookup_series
+            or lookup_row.get("documents") != expected_lookup_documents
+        ):
+            raise ValueError("Project State report and lookup relationships do not match")
+    if (
+        summary.get("matched_document_count") != len(matched_document_ids)
+        or summary.get("document_placement_count") != document_placement_count
+    ):
+        raise ValueError("Project State summary failed document-count validation")
 
 
 def mark_existing_lookup_stale(path: Path, *, failed_at: str, error: Exception) -> bool:
@@ -448,22 +634,32 @@ class ProjectStateProducer:
 
     def build(self, *, generated_at: str) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
         folder_keys = _folder_keys(self.paths.projects_base_dir)
-        subject_generation, documents_by_folder, manifest_count = _subject_documents(
+        subject_generation, documents_by_subject, manifest_count = _subject_documents(
             _read_json(self.paths.manage_manifest_path, "Projects Manage manifest"),
             _read_json(self.paths.subject_associations_path, "Projects subject associations"),
         )
-        series_by_id, works_by_folder, issues_by_work, work_count = _catalogue_indexes(
-            self.paths.catalogue_source_dir
+        (
+            series_by_id,
+            works_by_folder,
+            work_placement_by_id,
+            folder_keys_by_series,
+            issues_by_work,
+            work_count,
+        ) = _catalogue_indexes(self.paths.catalogue_source_dir)
+        documents_by_folder, document_diagnostics = _place_documents(
+            folder_keys,
+            documents_by_subject,
+            work_placement_by_id,
+            folder_keys_by_series,
         )
         rows = _rows(folder_keys, documents_by_folder, works_by_folder, series_by_id, issues_by_work)
         generation = _generation(subject_generation, rows)
         diagnostics = {
             "scanned_folder_count": len(folder_keys),
-            "matched_document_count": sum(len(row["documents"]) for row in rows),
+            **document_diagnostics,
             "matched_work_count": sum(len(row["works"]) for row in rows),
             "series_membership_count": sum(series["work_count"] for row in rows for series in row["series"]),
             "series_issue_count": sum(len(row["series_issues"]) for row in rows),
-            "recorded_only_document_folder_count": len(set(documents_by_folder) - set(folder_keys)),
             "recorded_only_work_folder_count": len(set(works_by_folder) - set(folder_keys)),
             "manifest_document_count": manifest_count,
             "canonical_work_count": work_count,

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a187fa47b91bdb3b5c84d9422a7322c1",
-    "generated_at_utc": "2026-08-05T19:03:16Z",
-    "count": 253
+    "version": "blake2b-a4cb6c4c7d80b6ae7c48194212ebcd93",
+    "generated_at_utc": "2026-08-05T19:31:44Z",
+    "count": 254
   },
   "entries": [
     {
@@ -4280,36 +4280,36 @@
       "kind": "doc",
       "title": "Sub-Scope Publishing",
       "href": "/docs/?scope=studio&doc=d-20260802-194357-4d857b",
-      "last_updated": "2026-08-05 19:54:58",
+      "last_updated": "2026-08-05 20:27:42",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-05 19:54:58 • Roadmap",
+      "display_meta": "2026-08-05 20:27:42 • Roadmap",
       "search_terms": [
         "sub-scope publishing",
         "sub",
         "scope",
         "publishing",
         "roadmap",
-        "2026-08-05 19:54:58",
+        "2026-08-05 20:27:42",
         "2026",
         "08",
         "05",
-        "19",
-        "54",
-        "58",
+        "20",
+        "27",
+        "42",
         "d-20260802-194357-4d857b"
       ],
-      "search_text": "sub-scope publishing sub scope publishing roadmap 2026-08-05 19:54:58 2026 08 05 19 54 58 d-20260802-194357-4d857b"
+      "search_text": "sub-scope publishing sub scope publishing roadmap 2026-08-05 20:27:42 2026 08 05 20 27 42 d-20260802-194357-4d857b"
     },
     {
       "id": "d-20260802-121105-c574f9",
       "kind": "doc",
       "title": "Project State Concept And Architecture",
       "href": "/docs/?scope=studio&doc=d-20260802-121105-c574f9",
-      "last_updated": "2026-08-05 20:03:16",
+      "last_updated": "2026-08-05 20:27:42",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-05 20:03:16 • Sub-Scope Publishing",
+      "display_meta": "2026-08-05 20:27:42 • Sub-Scope Publishing",
       "search_terms": [
         "project state concept and architecture",
         "project",
@@ -4321,16 +4321,16 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-05 20:03:16",
+        "2026-08-05 20:27:42",
         "2026",
         "08",
         "05",
         "20",
-        "03",
-        "16",
+        "27",
+        "42",
         "d-20260802-121105-c574f9"
       ],
-      "search_text": "project state concept and architecture project state concept and architecture sub-scope publishing sub scope publishing 2026-08-05 20:03:16 2026 08 05 20 03 16 d-20260802-121105-c574f9"
+      "search_text": "project state concept and architecture project state concept and architecture sub-scope publishing sub scope publishing 2026-08-05 20:27:42 2026 08 05 20 27 42 d-20260802-121105-c574f9"
     },
     {
       "id": "d-20260802-174339-53877d",
@@ -4661,10 +4661,10 @@
       "kind": "doc",
       "title": "SSP-2 — Docs Viewer Project State Delivery",
       "href": "/docs/?scope=studio&doc=d-20260801-133318-15e8fa",
-      "last_updated": "2026-08-05 19:59:37",
+      "last_updated": "2026-08-05 20:27:42",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-05 19:59:37 • Sub-Scope Publishing",
+      "display_meta": "2026-08-05 20:27:42 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-2 — docs viewer project state delivery",
         "ssp",
@@ -4678,16 +4678,16 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-05 19:59:37",
+        "2026-08-05 20:27:42",
         "2026",
         "08",
         "05",
-        "19",
-        "59",
-        "37",
+        "20",
+        "27",
+        "42",
         "d-20260801-133318-15e8fa"
       ],
-      "search_text": "ssp-2 — docs viewer project state delivery ssp 2 docs viewer project state delivery sub-scope publishing sub scope publishing 2026-08-05 19:59:37 2026 08 05 19 59 37 d-20260801-133318-15e8fa"
+      "search_text": "ssp-2 — docs viewer project state delivery ssp 2 docs viewer project state delivery sub-scope publishing sub scope publishing 2026-08-05 20:27:42 2026 08 05 20 27 42 d-20260801-133318-15e8fa"
     },
     {
       "id": "d-20260805-141842-8115c8",
@@ -4822,14 +4822,48 @@
       "search_text": "ssp-2.3 — project state interaction evidence ssp 2 3 project state interaction evidence ssp-2 — docs viewer project state delivery docs viewer delivery 2026-08-05 18:20:58 2026 08 05 18 20 58 d-20260805-172714-9c2a6e"
     },
     {
+      "id": "d-20260805-202742-c6e13d",
+      "kind": "doc",
+      "title": "SSP-2.5 — Project State Document Tracing Evidence",
+      "href": "/docs/?scope=studio&doc=d-20260805-202742-c6e13d",
+      "last_updated": "2026-08-05 20:27:42",
+      "parent_id": "d-20260801-133318-15e8fa",
+      "parent_title": "SSP-2 — Docs Viewer Project State Delivery",
+      "display_meta": "2026-08-05 20:27:42 • SSP-2 — Docs Viewer Project State Delivery",
+      "search_terms": [
+        "ssp-2.5 — project state document tracing evidence",
+        "ssp",
+        "2",
+        "5",
+        "project",
+        "state",
+        "document",
+        "tracing",
+        "evidence",
+        "ssp-2 — docs viewer project state delivery",
+        "docs",
+        "viewer",
+        "delivery",
+        "2026-08-05 20:27:42",
+        "2026",
+        "08",
+        "05",
+        "20",
+        "27",
+        "42",
+        "d-20260805-202742-c6e13d"
+      ],
+      "search_text": "ssp-2.5 — project state document tracing evidence ssp 2 5 project state document tracing evidence ssp-2 — docs viewer project state delivery docs viewer delivery 2026-08-05 20:27:42 2026 08 05 20 27 42 d-20260805-202742-c6e13d"
+    },
+    {
       "id": "d-20260802-174340-2fe9f4",
       "kind": "doc",
       "title": "SSP-3 — Resolver Tokens Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-174340-2fe9f4",
-      "last_updated": "2026-08-05 19:54:58",
+      "last_updated": "2026-08-05 20:27:42",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-05 19:54:58 • Sub-Scope Publishing",
+      "display_meta": "2026-08-05 20:27:42 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-3 — resolver tokens delivery",
         "ssp",
@@ -4841,16 +4875,16 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-05 19:54:58",
+        "2026-08-05 20:27:42",
         "2026",
         "08",
         "05",
-        "19",
-        "54",
-        "58",
+        "20",
+        "27",
+        "42",
         "d-20260802-174340-2fe9f4"
       ],
-      "search_text": "ssp-3 — resolver tokens delivery ssp 3 resolver tokens delivery sub-scope publishing sub scope publishing 2026-08-05 19:54:58 2026 08 05 19 54 58 d-20260802-174340-2fe9f4"
+      "search_text": "ssp-3 — resolver tokens delivery ssp 3 resolver tokens delivery sub-scope publishing sub scope publishing 2026-08-05 20:27:42 2026 08 05 20 27 42 d-20260802-174340-2fe9f4"
     },
     {
       "id": "d-20260801-233534-239eab",
@@ -4957,10 +4991,10 @@
       "kind": "doc",
       "title": "Sub-Scope Publishing Concept And Architecture",
       "href": "/docs/?scope=studio&doc=d-20260802-194358-7717ee",
-      "last_updated": "2026-08-05 20:01:59",
+      "last_updated": "2026-08-05 20:27:42",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-05 20:01:59 • Sub-Scope Publishing",
+      "display_meta": "2026-08-05 20:27:42 • Sub-Scope Publishing",
       "search_terms": [
         "sub-scope publishing concept and architecture",
         "sub",
@@ -4970,16 +5004,16 @@
         "and",
         "architecture",
         "sub-scope publishing",
-        "2026-08-05 20:01:59",
+        "2026-08-05 20:27:42",
         "2026",
         "08",
         "05",
         "20",
-        "01",
-        "59",
+        "27",
+        "42",
         "d-20260802-194358-7717ee"
       ],
-      "search_text": "sub-scope publishing concept and architecture sub scope publishing concept and architecture sub-scope publishing 2026-08-05 20:01:59 2026 08 05 20 01 59 d-20260802-194358-7717ee"
+      "search_text": "sub-scope publishing concept and architecture sub scope publishing concept and architecture sub-scope publishing 2026-08-05 20:27:42 2026 08 05 20 27 42 d-20260802-194358-7717ee"
     },
     {
       "id": "d-20260804-160200-fa7bb7",

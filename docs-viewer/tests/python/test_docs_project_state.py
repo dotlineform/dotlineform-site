@@ -34,7 +34,11 @@ DOC_BETA = "d-20260101-000000-000003"
 DOC_DELTA = "d-20260101-000000-000004"
 DOC_RECORDED_ONLY = "d-20260101-000000-000005"
 DOC_WORK = "d-20260101-000000-000006"
-DOC_NONE = "d-20260101-000000-000007"
+DOC_SERIES = "d-20260101-000000-000007"
+DOC_WORK_NO_SERIES = "d-20260101-000000-000008"
+DOC_UNKNOWN_WORK = "d-20260101-000000-000009"
+DOC_EMPTY_SERIES = "d-20260101-000000-000010"
+DOC_NONE = "d-20260101-000000-000011"
 
 
 def write_json(path: Path, payload: object) -> None:
@@ -75,6 +79,22 @@ def fixture_manifest() -> dict[str, object]:
                 valid_subject("folder", "projects/recorded-only", "folder_path"),
             ),
             manifest_doc(DOC_WORK, "Work note", valid_subject("work", "00001", "work_id")),
+            manifest_doc(DOC_SERIES, "Series one note", valid_subject("series", "001", "series_id")),
+            manifest_doc(
+                DOC_WORK_NO_SERIES,
+                "Work without Series note",
+                valid_subject("work", "00003", "work_id"),
+            ),
+            manifest_doc(
+                DOC_UNKNOWN_WORK,
+                "Unknown Work note",
+                valid_subject("work", "99999", "work_id"),
+            ),
+            manifest_doc(
+                DOC_EMPTY_SERIES,
+                "Empty Series note",
+                valid_subject("series", "003", "series_id"),
+            ),
             manifest_doc(
                 DOC_NONE,
                 "Ordinary note",
@@ -112,7 +132,7 @@ def fixture_associations(manifest: dict[str, object]) -> dict[str, object]:
         "schema_version": "docs_subject_associations_v1",
         "scope": "dotlineform",
         "sub_scope": "projects",
-        "subject_generation": SUBJECT_GENERATION,
+        "subject_generation": manifest["subject_generation"],
         "associations": [
             {
                 "subject": {"kind": kind, "key": key},
@@ -125,7 +145,7 @@ def fixture_associations(manifest: dict[str, object]) -> dict[str, object]:
 
 def fixture_works() -> dict[str, object]:
     return {
-        "header": {"schema": "catalogue_source_works_v1", "count": 5},
+        "header": {"schema": "catalogue_source_works_v1", "count": 6},
         "works": {
             "00001": {
                 "work_id": "00001",
@@ -169,16 +189,25 @@ def fixture_works() -> dict[str, object]:
                 "project_filename": "recorded.jpg",
                 "title": "Recorded only",
             },
+            "00006": {
+                "work_id": "00006",
+                "status": "published",
+                "series_ids": ["001"],
+                "project_folder": "epsilon",
+                "project_filename": "epsilon.jpg",
+                "title": "Epsilon",
+            },
         },
     }
 
 
 def fixture_series() -> dict[str, object]:
     return {
-        "header": {"schema": "catalogue_source_series_v1", "count": 2},
+        "header": {"schema": "catalogue_source_series_v1", "count": 3},
         "series": {
             "001": {"series_id": "001", "title": "Series one", "status": "published"},
             "002": {"series_id": "002", "title": "Series two", "status": "draft"},
+            "003": {"series_id": "003", "title": "Series three", "status": "draft"},
         },
     }
 
@@ -274,6 +303,7 @@ def test_project_state_builds_only_scanned_folder_rows_and_exact_relationships()
         "series": "complete",
     }
     assert alpha["matched_work_count"] == 2
+    assert alpha["matched_document_count"] == 4
     assert [work["target"]["target_id"] for work in alpha["works"]] == ["00001", "00002"]
     assert [(series["target"]["target_id"], series["work_count"]) for series in alpha["series"]] == [
         ("001", 2),
@@ -284,7 +314,11 @@ def test_project_state_builds_only_scanned_folder_rows_and_exact_relationships()
     assert beta["states"]["series"] == "incomplete"
     assert beta["series_issues"] == [{"state": "missing_series", "work_id": "00003"}]
     assert row_by_key(report, "projects/delta")["states"]["reconciliation"] == "documents_only"
-    assert row_by_key(report, "projects/epsilon")["states"]["reconciliation"] == "folder_only"
+    epsilon = row_by_key(report, "projects/epsilon")
+    assert epsilon["states"]["reconciliation"] == "reconciled"
+    assert [document["target"]["doc_id"] for document in epsilon["documents"]] == [DOC_SERIES]
+    assert epsilon["documents"][0]["declared_subject"] == {"kind": "series", "key": "001"}
+    assert epsilon["documents"][0]["applicable_series_ids"] == ["001"]
     gamma = row_by_key(report, "projects/gamma")
     assert gamma["states"]["reconciliation"] == "works_only"
     assert gamma["series_issues"] == [
@@ -293,9 +327,11 @@ def test_project_state_builds_only_scanned_folder_rows_and_exact_relationships()
 
     assert report["summary"]["recorded_only_document_folder_count"] == 1
     assert report["summary"]["recorded_only_work_folder_count"] == 1
-    assert report["summary"]["matched_document_count"] == 4
-    assert report["summary"]["matched_work_count"] == 4
-    assert report["summary"]["series_membership_count"] == 3
+    assert report["summary"]["matched_document_count"] == 7
+    assert report["summary"]["document_placement_count"] == 8
+    assert report["summary"]["unmatched_document_count"] == 3
+    assert report["summary"]["matched_work_count"] == 5
+    assert report["summary"]["series_membership_count"] == 4
 
     alpha_lookup = lookup["folders"]["projects/alpha"]
     assert alpha_lookup["works"][0] == {
@@ -307,9 +343,30 @@ def test_project_state_builds_only_scanned_folder_rows_and_exact_relationships()
         "work_ids": ["00001", "00002"],
     }
     assert alpha_lookup["documents"] == [
-        {"target": {"scope": "dotlineform", "sub_scope": "projects", "doc_id": DOC_ALPHA_A}},
-        {"target": {"scope": "dotlineform", "sub_scope": "projects", "doc_id": DOC_ALPHA_B}},
+        {
+            "target": {"scope": "dotlineform", "sub_scope": "projects", "doc_id": DOC_ALPHA_A},
+            "declared_subject": {"kind": "folder", "key": "projects/alpha"},
+            "applicable_series_ids": ["001", "002"],
+        },
+        {
+            "target": {"scope": "dotlineform", "sub_scope": "projects", "doc_id": DOC_ALPHA_B},
+            "declared_subject": {"kind": "folder", "key": "projects/alpha"},
+            "applicable_series_ids": ["001", "002"],
+        },
+        {
+            "target": {"scope": "dotlineform", "sub_scope": "projects", "doc_id": DOC_SERIES},
+            "declared_subject": {"kind": "series", "key": "001"},
+            "applicable_series_ids": ["001"],
+        },
+        {
+            "target": {"scope": "dotlineform", "sub_scope": "projects", "doc_id": DOC_WORK},
+            "declared_subject": {"kind": "work", "key": "00001"},
+            "applicable_series_ids": ["001", "002"],
+        },
     ]
+    beta = row_by_key(report, "projects/beta")
+    assert beta["matched_document_count"] == 2
+    assert all(not document["applicable_series_ids"] for document in beta["documents"])
     lookup_text = json.dumps(lookup)
     for excluded in (
         "project_subfolder",
@@ -363,6 +420,42 @@ def test_project_state_relationship_changes_replace_the_generation() -> None:
         ("001", 1),
         ("002", 2),
     ]
+
+
+def test_series_subject_reaches_each_distinct_member_work_folder() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        paths = build_fixture(root)
+        manifest = read_json(paths.manage_manifest_path)
+        alpha_document = next(document for document in manifest["docs"] if document["doc_id"] == DOC_ALPHA_A)
+        alpha_document["authoring_subject"] = valid_subject("series", "001", "series_id")
+        manifest["subject_generation"] = "sha256:" + "3" * 64
+        write_json(paths.manage_manifest_path, manifest)
+        write_json(paths.subject_associations_path, fixture_associations(manifest))
+
+        report = ProjectStateProducer(
+            repo_root=root,
+            paths=paths,
+            clock=lambda: GENERATED_AT,
+        ).run(write_lookup=False)["report"]
+
+    placements = [
+        (row["folder"]["key"], document)
+        for row in report["rows"]
+        for document in row["documents"]
+        if document["target"]["doc_id"] == DOC_ALPHA_A
+    ]
+    assert [folder_key for folder_key, _document in placements] == [
+        "projects/alpha",
+        "projects/epsilon",
+    ]
+    assert all(
+        document["declared_subject"] == {"kind": "series", "key": "001"}
+        and document["applicable_series_ids"] == ["001"]
+        for _folder_key, document in placements
+    )
+    assert report["summary"]["matched_document_count"] == 7
+    assert report["summary"]["document_placement_count"] == 9
 
 
 def test_failed_refresh_preserves_the_complete_lookup_and_marks_it_stale() -> None:

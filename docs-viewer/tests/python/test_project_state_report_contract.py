@@ -88,13 +88,13 @@ def test_management_service_runs_producer_and_returns_matching_products(
     management_service = load_management_service(tmp_path, monkeypatch)
     calls: list[dict[str, object]] = []
     report = {
-        "schema_version": "docs_project_state_report_v1",
+        "schema_version": "docs_project_state_report_v2",
         "generation": "sha256:" + "a" * 64,
         "generated_at": "2026-08-05T15:10:00Z",
         "rows": [],
     }
     lookup = {
-        "schema_version": "docs_project_state_folder_lookup_v1",
+        "schema_version": "docs_project_state_folder_lookup_v2",
         "generation": report["generation"],
         "generated_at": report["generated_at"],
         "folders": {},

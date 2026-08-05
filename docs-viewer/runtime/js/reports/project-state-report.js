@@ -1,5 +1,5 @@
-const REPORT_SCHEMA = "docs_project_state_report_v1";
-const LOOKUP_SCHEMA = "docs_project_state_folder_lookup_v1";
+const REPORT_SCHEMA = "docs_project_state_report_v2";
+const LOOKUP_SCHEMA = "docs_project_state_folder_lookup_v2";
 const LOCAL_TARGET_PREFIX = "dlf-local:";
 const GROUP_KEYS = Object.freeze(["folder", "series"]);
 const COLUMN_KEYS = Object.freeze(["folder", "series", "docs"]);
@@ -64,19 +64,36 @@ function requireArray(value, label) {
 
 function normalizeDocument(value) {
   const target = value && value.target;
+  const declaredSubject = value && value.declared_subject;
   const docId = cleanString(target && target.doc_id);
   const title = cleanString(value && value.title);
   const href = cleanString(value && value.href);
+  const subjectKind = cleanString(declaredSubject && declaredSubject.kind);
+  const subjectKey = cleanString(declaredSubject && declaredSubject.key);
+  const applicableSeriesIds = requireArray(
+    value && value.applicable_series_ids,
+    "document applicable Series"
+  ).map(cleanString);
   if (
     cleanString(target && target.scope) !== "dotlineform"
     || cleanString(target && target.sub_scope) !== "projects"
     || !docId
     || !title
     || !href
+    || !["folder", "work", "series"].includes(subjectKind)
+    || !subjectKey
+    || applicableSeriesIds.some((seriesId) => !seriesId)
+    || new Set(applicableSeriesIds).size !== applicableSeriesIds.length
   ) {
     throw new Error("Project State document target is invalid.");
   }
-  return { target, title, href };
+  return {
+    target,
+    title,
+    href,
+    declaredSubject: { kind: subjectKind, key: subjectKey },
+    applicableSeriesIds
+  };
 }
 
 function normalizeSeries(value) {
@@ -105,23 +122,33 @@ function normalizeRow(value) {
   const label = cleanString(folder && folder.label);
   const href = cleanString(folder && folder.href);
   const states = value && value.states;
+  const matchedDocumentCount = Number(value && value.matched_document_count);
   const matchedWorkCount = Number(value && value.matched_work_count);
+  const documents = requireArray(value && value.documents, "documents").map(normalizeDocument);
+  const series = requireArray(value && value.series, "Series").map(normalizeSeries);
+  const seriesIds = new Set(series.map((record) => cleanString(record.target && record.target.target_id)));
   if (
     !key.startsWith("projects/")
     || !label.startsWith("/")
     || !href.startsWith(LOCAL_TARGET_PREFIX)
     || !states
     || typeof states !== "object"
+    || !Number.isInteger(matchedDocumentCount)
+    || matchedDocumentCount !== documents.length
     || !Number.isInteger(matchedWorkCount)
     || matchedWorkCount < 0
+    || documents.some((documentRecord) => (
+      documentRecord.applicableSeriesIds.some((seriesId) => !seriesIds.has(seriesId))
+    ))
   ) {
     throw new Error("Project State folder row is invalid.");
   }
   return {
     folder: { key, label, href },
-    documents: requireArray(value.documents, "documents").map(normalizeDocument),
-    series: requireArray(value.series, "Series").map(normalizeSeries),
+    documents,
+    series,
     seriesIssues: requireArray(value.series_issues, "Series issues"),
+    matchedDocumentCount,
     matchedWorkCount,
     reconciliation: cleanString(states.reconciliation)
   };
@@ -166,10 +193,10 @@ function folderLabel(row) {
   return cleanString(row && row.folder && row.folder.label).slice(1);
 }
 
-function projectionRow(row, series) {
+function projectionRow(row, series, documents) {
   return {
     folder: row.folder,
-    documents: row.documents,
+    documents,
     series,
     folderKey: row.folder.key
   };
@@ -179,16 +206,25 @@ function expandedRows(rows, groupBy) {
   const expanded = [];
   rows.forEach((row) => {
     if (groupBy !== "series") {
-      expanded.push(projectionRow(row, row.series));
+      expanded.push(projectionRow(row, row.series, row.documents));
       return;
     }
     if (!row.series.length) {
-      expanded.push(projectionRow(row, []));
+      expanded.push(projectionRow(row, [], row.documents));
       return;
     }
     row.series.forEach((series) => {
-      expanded.push(projectionRow(row, [series]));
+      const seriesId = cleanString(series.target && series.target.target_id);
+      expanded.push(projectionRow(
+        row,
+        [series],
+        row.documents.filter((documentRecord) => documentRecord.applicableSeriesIds.includes(seriesId))
+      ));
     });
+    const unroutedDocuments = row.documents.filter(
+      (documentRecord) => !documentRecord.applicableSeriesIds.length
+    );
+    if (unroutedDocuments.length) expanded.push(projectionRow(row, [], unroutedDocuments));
   });
   return expanded;
 }

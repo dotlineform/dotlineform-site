@@ -304,7 +304,21 @@ def assert_project_state_projection_and_serialization(page: Page) -> None:
                 documents: [{
                     target: { doc_id: 'alpha-doc' },
                     title: 'Alpha | Note [draft]',
-                    href: '/docs/?scope=dotlineform&doc=alpha-doc'
+                    href: '/docs/?scope=dotlineform&doc=alpha-doc',
+                    declaredSubject: { kind: 'folder', key: 'projects/alpha' },
+                    applicableSeriesIds: ['001', '002']
+                }, {
+                    target: { doc_id: 'series-doc' },
+                    title: 'Series one only',
+                    href: '/docs/?scope=dotlineform&doc=series-doc',
+                    declaredSubject: { kind: 'series', key: '001' },
+                    applicableSeriesIds: ['001']
+                }, {
+                    target: { doc_id: 'unrouted-doc' },
+                    title: 'Unrouted work note',
+                    href: '/docs/?scope=dotlineform&doc=unrouted-doc',
+                    declaredSubject: { kind: 'work', key: '00003' },
+                    applicableSeriesIds: []
                 }],
                 series: [{
                     target: { target_id: '001' },
@@ -346,6 +360,12 @@ def assert_project_state_projection_and_serialization(page: Page) -> None:
                 sortKey: 'folder',
                 sortDir: 'asc'
             });
+            const seriesFiltered = projectStateReport.buildProjectStateProjection(rows, {
+                groupBy: 'series',
+                searchText: 'series one only',
+                sortKey: 'series',
+                sortDir: 'asc'
+            });
             return {
                 unchanged: before === JSON.stringify(rows),
                 folder: {
@@ -364,7 +384,12 @@ def assert_project_state_projection_and_serialization(page: Page) -> None:
                         'http://127.0.0.1:4000'
                     )
                 },
-                filteredKeys: filtered.rows.map((row) => row.folderKey)
+                filteredKeys: filtered.rows.map((row) => row.folderKey),
+                seriesFiltered: seriesFiltered.rows.map((row) => ({
+                    folderKey: row.folderKey,
+                    seriesId: row.series[0] ? row.series[0].target.target_id : '',
+                    documentIds: row.documents.map((documentRecord) => documentRecord.target.doc_id)
+                }))
             };
         }"""
     )
@@ -374,11 +399,16 @@ def assert_project_state_projection_and_serialization(page: Page) -> None:
             "",
             "| Series | Folder | Docs |",
             "| --- | --- | --- |",
+            (
+                "|  | [alpha](dlf-local:projects/alpha) "
+                "| [Unrouted work note](/docs/?scope=dotlineform&doc=unrouted-doc) |"
+            ),
             "|  | [beta](dlf-local:projects/beta) |  |",
             (
                 "| [Alpha Series](http://127.0.0.1:4000/series/?series=001) "
                 "| [alpha](dlf-local:projects/alpha) "
-                "| [Alpha \\| Note \\[draft\\]](/docs/?scope=dotlineform&doc=alpha-doc) |"
+                "| [Alpha \\| Note \\[draft\\]](/docs/?scope=dotlineform&doc=alpha-doc); "
+                "[Series one only](/docs/?scope=dotlineform&doc=series-doc) |"
             ),
             (
                 "| [Zeta Series](http://127.0.0.1:4000/series/?series=002) "
@@ -394,18 +424,23 @@ def assert_project_state_projection_and_serialization(page: Page) -> None:
             "keys": ["projects/alpha", "projects/beta"],
             "tsv": (
                 "Folder\tSeries\tDocs\n"
-                "alpha\tAlpha Series; Zeta Series\tAlpha | Note [draft]\n"
+                "alpha\tAlpha Series; Zeta Series\tAlpha | Note [draft]; Series one only; Unrouted work note\n"
                 "beta\t\t"
             ),
         },
         "folderDescending": ["projects/beta", "projects/alpha"],
         "series": {
             "columns": ["series", "folder", "docs"],
-            "keys": ["projects/beta", "projects/alpha", "projects/alpha"],
-            "labels": ["", "Alpha Series", "Zeta Series"],
+            "keys": ["projects/alpha", "projects/beta", "projects/alpha", "projects/alpha"],
+            "labels": ["", "", "Alpha Series", "Zeta Series"],
             "markdown": expected_markdown,
         },
         "filteredKeys": ["projects/alpha"],
+        "seriesFiltered": [{
+            "folderKey": "projects/alpha",
+            "seriesId": "001",
+            "documentIds": ["alpha-doc", "series-doc"],
+        }],
     }
     if result != expected:
         raise AssertionError(f"Project State pure projection changed: {result!r}")
@@ -431,14 +466,14 @@ def assert_project_state_report_mount_refresh_and_failure(page: Page) -> None:
             const response = (rows, generatedAt, counts) => ({
                 ok: true,
                 report: {
-                    schema_version: 'docs_project_state_report_v1',
+                    schema_version: 'docs_project_state_report_v2',
                     generation: 'sha256:' + 'a'.repeat(64),
                     generated_at: generatedAt,
                     summary: counts,
                     rows
                 },
                 lookup: {
-                    schema_version: 'docs_project_state_folder_lookup_v1',
+                    schema_version: 'docs_project_state_folder_lookup_v2',
                     generation: 'sha256:' + 'a'.repeat(64)
                 }
             });
@@ -455,7 +490,9 @@ def assert_project_state_report_mount_refresh_and_failure(page: Page) -> None:
                         doc_id: 'd-20260805-151000-abcdef'
                     },
                     title: 'Alpha project note with a deliberately long title',
-                    href: '/docs/?scope=dotlineform&doc=d-20260801-073826-8865a8&subdoc=d-20260805-151000-abcdef'
+                    href: '/docs/?scope=dotlineform&doc=d-20260801-073826-8865a8&subdoc=d-20260805-151000-abcdef',
+                    declared_subject: { kind: 'folder', key: 'projects/alpha with a very long folder name' },
+                    applicable_series_ids: ['001', '002']
                 }],
                 works: [],
                 series: [{
@@ -480,6 +517,7 @@ def assert_project_state_report_mount_refresh_and_failure(page: Page) -> None:
                     work_ids: ['00002']
                 }],
                 series_issues: [],
+                matched_document_count: 1,
                 matched_work_count: 2,
                 states: {
                     reconciliation: 'reconciled',
@@ -497,6 +535,7 @@ def assert_project_state_report_mount_refresh_and_failure(page: Page) -> None:
                 works: [],
                 series: [],
                 series_issues: [{ work_id: '00003', reason: 'unknown_series' }],
+                matched_document_count: 0,
                 matched_work_count: 1,
                 states: {
                     reconciliation: 'works_only',

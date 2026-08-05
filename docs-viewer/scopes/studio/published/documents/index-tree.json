@@ -1028,6 +1028,12 @@
                   "title": "SSP-2.3 — Project State Interaction Evidence",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-172714-9c2a6e.json",
                   "ui_status": "done"
+                },
+                {
+                  "doc_id": "d-20260805-202742-c6e13d",
+                  "title": "SSP-2.5 — Project State Document Tracing Evidence",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-202742-c6e13d.json",
+                  "ui_status": "done"
                 }
               ]
             },
@@ -1427,5 +1433,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-05T18:55:54Z"
+  "generated_at": "2026-08-05T19:28:28Z"
 }
