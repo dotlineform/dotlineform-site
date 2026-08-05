@@ -70,8 +70,9 @@ def install_fixture(page: Page) -> None:
             const appShell = await import('/docs-viewer/runtime/js/shared/docs-viewer-app-shell.js');
             const brokenLinksReport = await import('/docs-viewer/runtime/js/reports/docs-broken-links-report.js');
             const semanticTokensReport = await import('/docs-viewer/runtime/js/reports/semantic-tokens-report.js');
+            const projectStateReport = await import('/docs-viewer/runtime/js/reports/project-state-report.js');
             const reportService = await import('/docs-viewer/runtime/js/reports/docs-viewer-report-service.js');
-            window.__docsViewerRouterModuleSmoke = { router, routeConfig, appContext, serviceContext, configuredScopeProvider, routeFeatures, appComposition, toolbarRenderer, configController, viewRegistry, mainViewRenderer, appSession, documentViewCoordinator, generatedDataRuntime, statusController, controlSurfaceHost, appControlRenderers, appShell, brokenLinksReport, semanticTokensReport, reportService };
+            window.__docsViewerRouterModuleSmoke = { router, routeConfig, appContext, serviceContext, configuredScopeProvider, routeFeatures, appComposition, toolbarRenderer, configController, viewRegistry, mainViewRenderer, appSession, documentViewCoordinator, generatedDataRuntime, statusController, controlSurfaceHost, appControlRenderers, appShell, brokenLinksReport, semanticTokensReport, projectStateReport, reportService };
         }"""
     )
 
@@ -288,6 +289,278 @@ def assert_semantic_tokens_report_service_path(page: Page) -> None:
     }
     if result != expected:
         raise AssertionError(f"semantic-tokens report service path changed: {result!r}")
+
+
+def assert_project_state_report_mount_refresh_and_failure(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const { projectStateReport } = window.__docsViewerRouterModuleSmoke;
+            const root = document.createElement('div');
+            document.body.appendChild(root);
+            const pending = [];
+            const defer = () => {
+                let resolve;
+                let reject;
+                const promise = new Promise((resolvePromise, rejectPromise) => {
+                    resolve = resolvePromise;
+                    reject = rejectPromise;
+                });
+                pending.push({ resolve, reject });
+                return promise;
+            };
+            const response = (rows, generatedAt, counts) => ({
+                ok: true,
+                report: {
+                    schema_version: 'docs_project_state_report_v1',
+                    generation: 'sha256:' + 'a'.repeat(64),
+                    generated_at: generatedAt,
+                    summary: counts,
+                    rows
+                },
+                lookup: {
+                    schema_version: 'docs_project_state_folder_lookup_v1',
+                    generation: 'sha256:' + 'a'.repeat(64)
+                }
+            });
+            const row = {
+                folder: {
+                    key: 'projects/alpha with a very long folder name',
+                    label: '/alpha with a very long folder name',
+                    href: 'dlf-local:projects/alpha%20with%20a%20very%20long%20folder%20name'
+                },
+                documents: [{
+                    target: {
+                        scope: 'dotlineform',
+                        sub_scope: 'projects',
+                        doc_id: 'd-20260805-151000-abcdef'
+                    },
+                    title: 'Alpha project note with a deliberately long title',
+                    href: '/docs/?scope=dotlineform&doc=d-20260801-073826-8865a8&subdoc=d-20260805-151000-abcdef'
+                }],
+                works: [],
+                series: [{
+                    target: {
+                        family: 'catalogue',
+                        target_type: 'series',
+                        target_id: '001'
+                    },
+                    title: 'Series One With A Deliberately Long Title',
+                    href: '/series/?series=001',
+                    work_count: 2,
+                    work_ids: ['00001', '00002']
+                }],
+                series_issues: [],
+                matched_work_count: 2,
+                states: {
+                    reconciliation: 'reconciled',
+                    documents: 'one',
+                    series: 'complete'
+                }
+            };
+            const blankRow = {
+                folder: {
+                    key: 'projects/blank',
+                    label: '/blank',
+                    href: 'dlf-local:projects/blank'
+                },
+                documents: [],
+                works: [],
+                series: [],
+                series_issues: [{ work_id: '00003', reason: 'unknown_series' }],
+                matched_work_count: 1,
+                states: {
+                    reconciliation: 'works_only',
+                    documents: 'none',
+                    series: 'incomplete'
+                }
+            };
+            const service = {
+                calls: 0,
+                runProjectState: function () {
+                    this.calls += 1;
+                    return defer();
+                }
+            };
+            const mountPromise = projectStateReport.mountProjectStateReport({
+                reportRoot: root,
+                reportService: service,
+                publicPreviewBase: 'http://127.0.0.1:4000'
+            });
+            const button = root.querySelector('#docsProjectStateReportRun');
+            const mountBusy = {
+                disabled: button.disabled,
+                label: button.textContent,
+                ariaBusy: button.getAttribute('aria-busy'),
+                status: root.querySelector('.docsViewerReport__status').textContent,
+                rows: root.querySelectorAll('.docsViewerReport__row').length
+            };
+            pending[0].resolve(response([row, blankRow], '2026-08-05T15:10:00Z', {
+                scanned_folder_count: 2,
+                matched_work_count: 2,
+                matched_document_count: 1
+            }));
+            await mountPromise;
+            const renderedRow = root.querySelector('.docsViewerReport__row');
+            const folderLink = renderedRow.children[0].querySelector('a');
+            const seriesLink = renderedRow.children[1].querySelector('a');
+            const documentLink = renderedRow.children[2].querySelector('a');
+            const afterMount = {
+                calls: service.calls,
+                status: root.querySelector('.docsViewerReport__status').textContent,
+                headings: Array.from(root.querySelectorAll('.docsViewerReport__headLabel')).map((node) => node.textContent),
+                columns: root.dataset.reportColumns,
+                folder: {
+                    label: folderLink.textContent,
+                    href: folderLink.getAttribute('href'),
+                    target: folderLink.dataset.docsViewerLocalTarget,
+                    key: folderLink.dataset.projectFolderKey,
+                    stateCount: renderedRow.children[0].querySelectorAll('.docsViewerReport__cellMeta').length
+                },
+                series: { label: seriesLink.textContent, href: seriesLink.getAttribute('href') },
+                document: {
+                    label: documentLink.textContent,
+                    href: documentLink.getAttribute('href'),
+                    scope: documentLink.dataset.docsViewerScope,
+                    subScope: documentLink.dataset.docsViewerSubscope,
+                    docId: documentLink.dataset.docsViewerDocId
+                },
+                blankCells: Array.from(root.querySelectorAll('.docsViewerReport__row')[1].children).map((cell) => cell.textContent),
+                button: {
+                    label: button.textContent,
+                    ariaLabel: button.getAttribute('aria-label'),
+                    title: button.title,
+                    pill: button.classList.contains('docsViewerReport__button--pill')
+                }
+            };
+            button.click();
+            const refreshBusy = {
+                disabled: button.disabled,
+                label: button.textContent,
+                ariaBusy: button.getAttribute('aria-busy'),
+                rows: root.querySelectorAll('.docsViewerReport__row').length
+            };
+            pending[1].resolve(response([], '2026-08-05T15:11:00Z', {
+                scanned_folder_count: 0,
+                matched_work_count: 0,
+                matched_document_count: 0
+            }));
+            await new Promise((resolve) => setTimeout(resolve, 0));
+            const afterEmptyRefresh = {
+                calls: service.calls,
+                status: root.querySelector('.docsViewerReport__status').textContent,
+                empty: root.querySelector('.docsViewerReport__empty').textContent,
+                emptyHidden: root.querySelector('.docsViewerReport__empty').hidden
+            };
+            button.click();
+            pending[2].reject(new Error('Current Project State failed'));
+            await new Promise((resolve) => setTimeout(resolve, 0));
+            const afterFailure = {
+                calls: service.calls,
+                status: root.querySelector('.docsViewerReport__status').textContent,
+                empty: root.querySelector('.docsViewerReport__empty').textContent,
+                rows: root.querySelectorAll('.docsViewerReport__row').length,
+                disabled: button.disabled,
+                label: button.textContent,
+                ariaBusy: button.getAttribute('aria-busy')
+            };
+            root.remove();
+            return { mountBusy, afterMount, refreshBusy, afterEmptyRefresh, afterFailure };
+        }"""
+    )
+    expected = {
+        "mountBusy": {
+            "disabled": True,
+            "label": "🔄",
+            "ariaBusy": "true",
+            "status": "Running Project State...",
+            "rows": 0,
+        },
+        "afterMount": {
+            "calls": 1,
+            "status": "2026-08-05 15:10 · 2 folders · 2 Works · 1 Doc",
+            "headings": ["Folder", "Series", "Docs"],
+            "columns": "3",
+            "folder": {
+                "label": "alpha with a very long folder name",
+                "href": "#",
+                "target": "projects/alpha%20with%20a%20very%20long%20folder%20name",
+                "key": "projects/alpha with a very long folder name",
+                "stateCount": 0,
+            },
+            "series": {
+                "label": "Series One With A Deliberately Long Title",
+                "href": "http://127.0.0.1:4000/series/?series=001",
+            },
+            "document": {
+                "label": "Alpha project note with a deliberately long title",
+                "href": "/docs/?scope=dotlineform&doc=d-20260801-073826-8865a8&subdoc=d-20260805-151000-abcdef",
+                "scope": "dotlineform",
+                "subScope": "projects",
+                "docId": "d-20260805-151000-abcdef",
+            },
+            "blankCells": ["blank", "", ""],
+            "button": {
+                "label": "🔄",
+                "ariaLabel": "Run/Refresh",
+                "title": "Run/Refresh",
+                "pill": True,
+            },
+        },
+        "refreshBusy": {"disabled": True, "label": "🔄", "ariaBusy": "true", "rows": 0},
+        "afterEmptyRefresh": {
+            "calls": 2,
+            "status": "2026-08-05 15:11 · 0 folders · 0 Works · 0 Docs",
+            "empty": "No immediate project folders were found.",
+            "emptyHidden": False,
+        },
+        "afterFailure": {
+            "calls": 3,
+            "status": "Current Project State failed",
+            "empty": "The current Project State run could not complete.",
+            "rows": 0,
+            "disabled": False,
+            "label": "🔄",
+            "ariaBusy": "false",
+        },
+    }
+    if result != expected:
+        raise AssertionError(f"Project State report lifecycle changed: {result!r}")
+
+
+def assert_project_state_report_service_path(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const { reportService } = window.__docsViewerRouterModuleSmoke;
+            const requests = [];
+            const service = reportService.createDocsViewerReportService({
+                baseUrl: 'http://127.0.0.1:8795/',
+                fetch: (url, options) => {
+                    requests.push({
+                        url,
+                        method: options.method,
+                        body: options.body ? JSON.parse(options.body) : null
+                    });
+                    return Promise.resolve({
+                        ok: true,
+                        status: 200,
+                        json: () => Promise.resolve({ ok: true, report: {}, lookup: {} })
+                    });
+                }
+            });
+            const payload = await service.runProjectState();
+            return { requests, payload };
+        }"""
+    )
+    expected = {
+        "requests": [{
+            "url": "http://127.0.0.1:8795/docs/project-state",
+            "method": "POST",
+            "body": {},
+        }],
+        "payload": {"ok": True, "report": {}, "lookup": {}},
+    }
+    if result != expected:
+        raise AssertionError(f"Project State report service changed: {result!r}")
 
 
 def assert_control_surface_host(page: Page) -> None:
@@ -1655,6 +1928,8 @@ def run_smoke(page: Page, base_url: str) -> None:
     assert_broken_links_report_source_handoff(page)
     assert_semantic_tokens_report_scope_and_document_link(page)
     assert_semantic_tokens_report_service_path(page)
+    assert_project_state_report_mount_refresh_and_failure(page)
+    assert_project_state_report_service_path(page)
     assert_configured_scope_provider(page)
     assert_phase_five_runtime_owners(page)
 

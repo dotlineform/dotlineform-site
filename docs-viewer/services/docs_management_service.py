@@ -30,6 +30,7 @@ import docs_local_links  # noqa: E402
 import docs_management_mutations as mutations  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
 import docs_publish_gate  # noqa: E402
+import docs_project_state  # noqa: E402
 import docs_scope_create  # noqa: E402
 import docs_scope_delete  # noqa: E402
 import docs_scope_manifest  # noqa: E402
@@ -123,6 +124,14 @@ def docs_management_post_response(
     if path == routes.BROKEN_LINKS_PATH:
         payload = handle_broken_links(repo_root, body)
         docs_activity.maybe_attach_broken_links_activity(repo_root, body, payload)
+        return HTTPStatus.OK, payload
+    if path == routes.PROJECT_STATE_PATH:
+        payload = docs_project_state.ProjectStateProducer(repo_root=repo_root).run(
+            write_lookup=not dry_run
+        )
+        payload["ok"] = True
+        payload["dry_run"] = dry_run
+        payload["summary_text"] = "Project State refreshed."
         return HTTPStatus.OK, payload
     if path == routes.SOURCE_CONFIG_SETTINGS_PATH:
         scope = source_model.normalize_scope(body.get("scope"))

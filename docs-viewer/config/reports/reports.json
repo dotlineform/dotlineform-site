@@ -66,6 +66,14 @@
       "default_access": "local",
       "loader_id": "semantic_tokens",
       "presets": []
+    },
+    {
+      "report_id": "project_state",
+      "title": "Project State",
+      "description": "Reconciles immediate project folders with canonical Works, Series, and Project documents.",
+      "default_access": "local",
+      "loader_id": "project_state",
+      "presets": []
     }
   ]
 }

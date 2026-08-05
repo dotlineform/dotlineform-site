@@ -44,6 +44,13 @@ const REPORT_LOADERS = {
         return module.mountSemanticTokensReport;
       });
     }
+  },
+  project_state: {
+    load: function () {
+      return import("./project-state-report.js").then(function (module) {
+        return module.mountProjectStateReport;
+      });
+    }
   }
 };
 

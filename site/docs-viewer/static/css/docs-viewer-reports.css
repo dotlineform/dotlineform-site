@@ -119,6 +119,13 @@
   opacity: 1;
 }
 
+.docsViewerReport__button--pill{
+  min-width: var(--docs-viewer-report-control-height);
+  width: var(--docs-viewer-report-control-height);
+  border-radius: 999px;
+  padding: 0;
+}
+
 .docsViewerReport__search{
   position: relative;
   display: flex;
@@ -212,6 +219,17 @@
 .docsViewerReport[data-report-id="semantic_tokens"] .docsViewerReport__head,
 .docsViewerReport[data-report-id="semantic_tokens"] .docsViewerReport__row{
   grid-template-columns: minmax(10rem, 1fr) minmax(13rem, 1fr) minmax(10rem, 1fr);
+}
+
+.docsViewerReport[data-report-id="project_state"] .docsViewerReport__head,
+.docsViewerReport[data-report-id="project_state"] .docsViewerReport__row{
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.15fr) minmax(0, 1fr);
+}
+
+.docsViewerReport__cellStack{
+  display: grid;
+  gap: 0.22rem;
+  min-width: 0;
 }
 
 .docsViewerReport__head{

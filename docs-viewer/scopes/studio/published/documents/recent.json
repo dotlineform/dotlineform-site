@@ -4,18 +4,10 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "d-20260805-153653-597788",
-      "title": "SSP-2.1 — Project State Producer Evidence",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-153653-597788.json",
-      "timestamp": "2026-08-05 15:39:00",
-      "parent_id": "d-20260801-133318-15e8fa",
-      "parent_title": "SSP-2 — Docs Viewer Project State Delivery"
-    },
-    {
       "doc_id": "d-20260802-121105-c574f9",
       "title": "Project State Concept And Architecture",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121105-c574f9.json",
-      "timestamp": "2026-08-05 15:36:53",
+      "timestamp": "2026-08-05 17:12:06",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
     },
@@ -23,9 +15,25 @@
       "doc_id": "d-20260801-133318-15e8fa",
       "title": "SSP-2 — Docs Viewer Project State Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133318-15e8fa.json",
-      "timestamp": "2026-08-05 15:36:53",
+      "timestamp": "2026-08-05 17:12:06",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
+    },
+    {
+      "doc_id": "d-20260805-155935-66b9d4",
+      "title": "SSP-2.2 — Basic Project State Report Evidence",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-155935-66b9d4.json",
+      "timestamp": "2026-08-05 17:12:06",
+      "parent_id": "d-20260801-133318-15e8fa",
+      "parent_title": "SSP-2 — Docs Viewer Project State Delivery"
+    },
+    {
+      "doc_id": "d-20260805-153653-597788",
+      "title": "SSP-2.1 — Project State Producer Evidence",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-153653-597788.json",
+      "timestamp": "2026-08-05 15:39:00",
+      "parent_id": "d-20260801-133318-15e8fa",
+      "parent_title": "SSP-2 — Docs Viewer Project State Delivery"
     },
     {
       "doc_id": "d-20260805-141842-8115c8",
@@ -74,15 +82,7 @@
       "timestamp": "2026-08-04 22:06:02",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
-    },
-    {
-      "doc_id": "d-20260802-195805-94a5be",
-      "title": "SSP-5 — Work And Series Document Metadata Publication Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-195805-94a5be.json",
-      "timestamp": "2026-08-04 22:06:02",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
     }
   ],
-  "generated_at": "2026-08-05T14:39:00Z"
+  "generated_at": "2026-08-05T16:12:27Z"
 }

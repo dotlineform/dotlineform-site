@@ -80,6 +80,13 @@ export function createDocsViewerReportService(options) {
         requireOkEnvelope: true
       }));
     },
+    runProjectState: function () {
+      return fetchReportJson("/docs/project-state", Object.assign({}, serviceOptions, {
+        method: "POST",
+        payload: {},
+        requireOkEnvelope: true
+      }));
+    },
     openSourceDoc: function (request) {
       var target = normalizeManagedDocumentTarget(request && request.target);
       return fetchReportJson("/docs/open-source", Object.assign({}, serviceOptions, {
