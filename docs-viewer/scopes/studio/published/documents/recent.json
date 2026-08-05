@@ -7,7 +7,7 @@
       "doc_id": "d-20260802-121105-c574f9",
       "title": "Project State Concept And Architecture",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121105-c574f9.json",
-      "timestamp": "2026-08-05 14:51:01",
+      "timestamp": "2026-08-05 15:13:05",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
     },
@@ -15,7 +15,7 @@
       "doc_id": "d-20260801-133318-15e8fa",
       "title": "SSP-2 — Docs Viewer Project State Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133318-15e8fa.json",
-      "timestamp": "2026-08-05 14:51:01",
+      "timestamp": "2026-08-05 15:13:05",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
     },
@@ -84,5 +84,5 @@
       "parent_title": "Sub-Scopes"
     }
   ],
-  "generated_at": "2026-08-05T13:53:30Z"
+  "generated_at": "2026-08-05T14:13:45Z"
 }
