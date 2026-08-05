@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-95503d3ccd0fd3a1bdd6c07dc558c04c",
-    "generated_at_utc": "2026-08-05T14:13:45Z",
-    "count": 250
+    "version": "blake2b-ae597fbbc061ad814ca3e546ffb5ecef",
+    "generated_at_utc": "2026-08-05T14:39:00Z",
+    "count": 251
   },
   "entries": [
     {
@@ -4306,10 +4306,10 @@
       "kind": "doc",
       "title": "Project State Concept And Architecture",
       "href": "/docs/?scope=studio&doc=d-20260802-121105-c574f9",
-      "last_updated": "2026-08-05 15:13:05",
+      "last_updated": "2026-08-05 15:36:53",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-05 15:13:05 • Sub-Scope Publishing",
+      "display_meta": "2026-08-05 15:36:53 • Sub-Scope Publishing",
       "search_terms": [
         "project state concept and architecture",
         "project",
@@ -4321,15 +4321,16 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-05 15:13:05",
+        "2026-08-05 15:36:53",
         "2026",
         "08",
         "05",
         "15",
-        "13",
+        "36",
+        "53",
         "d-20260802-121105-c574f9"
       ],
-      "search_text": "project state concept and architecture project state concept and architecture sub-scope publishing sub scope publishing 2026-08-05 15:13:05 2026 08 05 15 13 d-20260802-121105-c574f9"
+      "search_text": "project state concept and architecture project state concept and architecture sub-scope publishing sub scope publishing 2026-08-05 15:36:53 2026 08 05 15 36 53 d-20260802-121105-c574f9"
     },
     {
       "id": "d-20260802-174339-53877d",
@@ -4661,10 +4662,10 @@
       "kind": "doc",
       "title": "SSP-2 — Docs Viewer Project State Delivery",
       "href": "/docs/?scope=studio&doc=d-20260801-133318-15e8fa",
-      "last_updated": "2026-08-05 15:13:05",
+      "last_updated": "2026-08-05 15:36:53",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-05 15:13:05 • Sub-Scope Publishing",
+      "display_meta": "2026-08-05 15:36:53 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-2 — docs viewer project state delivery",
         "ssp",
@@ -4678,15 +4679,16 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-05 15:13:05",
+        "2026-08-05 15:36:53",
         "2026",
         "08",
         "05",
         "15",
-        "13",
+        "36",
+        "53",
         "d-20260801-133318-15e8fa"
       ],
-      "search_text": "ssp-2 — docs viewer project state delivery ssp 2 docs viewer project state delivery sub-scope publishing sub scope publishing 2026-08-05 15:13:05 2026 08 05 15 13 d-20260801-133318-15e8fa"
+      "search_text": "ssp-2 — docs viewer project state delivery ssp 2 docs viewer project state delivery sub-scope publishing sub scope publishing 2026-08-05 15:36:53 2026 08 05 15 36 53 d-20260801-133318-15e8fa"
     },
     {
       "id": "d-20260805-141842-8115c8",
@@ -4720,6 +4722,39 @@
         "d-20260805-141842-8115c8"
       ],
       "search_text": "ssp-2.0 — project state sanity note ssp 2 0 project state sanity note ssp-2 — docs viewer project state delivery docs viewer delivery 2026-08-05 14:51:01 2026 08 05 14 51 01 d-20260805-141842-8115c8"
+    },
+    {
+      "id": "d-20260805-153653-597788",
+      "kind": "doc",
+      "title": "SSP-2.1 — Project State Producer Evidence",
+      "href": "/docs/?scope=studio&doc=d-20260805-153653-597788",
+      "last_updated": "2026-08-05 15:39:00",
+      "parent_id": "d-20260801-133318-15e8fa",
+      "parent_title": "SSP-2 — Docs Viewer Project State Delivery",
+      "display_meta": "2026-08-05 15:39:00 • SSP-2 — Docs Viewer Project State Delivery",
+      "search_terms": [
+        "ssp-2.1 — project state producer evidence",
+        "ssp",
+        "2",
+        "1",
+        "project",
+        "state",
+        "producer",
+        "evidence",
+        "ssp-2 — docs viewer project state delivery",
+        "docs",
+        "viewer",
+        "delivery",
+        "2026-08-05 15:39:00",
+        "2026",
+        "08",
+        "05",
+        "15",
+        "39",
+        "00",
+        "d-20260805-153653-597788"
+      ],
+      "search_text": "ssp-2.1 — project state producer evidence ssp 2 1 project state producer evidence ssp-2 — docs viewer project state delivery docs viewer delivery 2026-08-05 15:39:00 2026 08 05 15 39 00 d-20260805-153653-597788"
     },
     {
       "id": "d-20260802-174340-2fe9f4",

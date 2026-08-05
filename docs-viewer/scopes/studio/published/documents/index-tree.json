@@ -1010,6 +1010,12 @@
                   "title": "SSP-2.0 — Project State Sanity Note",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-141842-8115c8.json",
                   "ui_status": "done"
+                },
+                {
+                  "doc_id": "d-20260805-153653-597788",
+                  "title": "SSP-2.1 — Project State Producer Evidence",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-153653-597788.json",
+                  "ui_status": "done"
                 }
               ]
             },
@@ -1409,5 +1415,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-05T13:22:54Z"
+  "generated_at": "2026-08-05T14:38:12Z"
 }
