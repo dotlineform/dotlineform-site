@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-285374b4943ffa34f4ba350fb791e4ea",
-    "generated_at_utc": "2026-08-05T19:43:56Z",
+    "version": "blake2b-bef11dd99c437b009edfd55f9ec2b118",
+    "generated_at_utc": "2026-08-05T20:30:50Z",
     "count": 254
   },
   "entries": [
@@ -4531,10 +4531,10 @@
       "kind": "doc",
       "title": "SSP-1 — Document Subject And Association Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-194426-087cfe",
-      "last_updated": "2026-08-04 22:04:04",
+      "last_updated": "2026-08-05 21:30:49",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-04 22:04:04 • Sub-Scope Publishing",
+      "display_meta": "2026-08-05 21:30:49 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-1 — document subject and association delivery",
         "ssp",
@@ -4548,14 +4548,16 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-04 22:04:04",
+        "2026-08-05 21:30:49",
         "2026",
         "08",
-        "04",
-        "22",
+        "05",
+        "21",
+        "30",
+        "49",
         "d-20260802-194426-087cfe"
       ],
-      "search_text": "ssp-1 — document subject and association delivery ssp 1 document subject and association delivery sub-scope publishing sub scope publishing 2026-08-04 22:04:04 2026 08 04 22 d-20260802-194426-087cfe"
+      "search_text": "ssp-1 — document subject and association delivery ssp 1 document subject and association delivery sub-scope publishing sub scope publishing 2026-08-05 21:30:49 2026 08 05 21 30 49 d-20260802-194426-087cfe"
     },
     {
       "id": "d-20260804-204535-6c8f2a",
@@ -4661,10 +4663,10 @@
       "kind": "doc",
       "title": "SSP-2 — Docs Viewer Project State Delivery",
       "href": "/docs/?scope=studio&doc=d-20260801-133318-15e8fa",
-      "last_updated": "2026-08-05 20:43:40",
+      "last_updated": "2026-08-05 21:03:47",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-05 20:43:40 • Sub-Scope Publishing",
+      "display_meta": "2026-08-05 21:03:47 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-2 — docs viewer project state delivery",
         "ssp",
@@ -4678,16 +4680,16 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-05 20:43:40",
+        "2026-08-05 21:03:47",
         "2026",
         "08",
         "05",
-        "20",
-        "43",
-        "40",
+        "21",
+        "03",
+        "47",
         "d-20260801-133318-15e8fa"
       ],
-      "search_text": "ssp-2 — docs viewer project state delivery ssp 2 docs viewer project state delivery sub-scope publishing sub scope publishing 2026-08-05 20:43:40 2026 08 05 20 43 40 d-20260801-133318-15e8fa"
+      "search_text": "ssp-2 — docs viewer project state delivery ssp 2 docs viewer project state delivery sub-scope publishing sub scope publishing 2026-08-05 21:03:47 2026 08 05 21 03 47 d-20260801-133318-15e8fa"
     },
     {
       "id": "d-20260805-141842-8115c8",

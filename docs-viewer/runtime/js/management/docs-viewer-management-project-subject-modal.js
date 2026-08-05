@@ -126,16 +126,14 @@ function radio(value, label, selected) {
   "</label>";
 }
 
-function modalBody(target, subject) {
+function modalBody(subject) {
   var selected = selectedKind(subject);
   var folderValue = subject.state === "valid" && subject.kind === "folder" ? subject.key : "";
   var evidence = evidenceText(subject);
   return "" +
-    '<p class="docsViewer__modalNote muted small">Assign the authoring subject for <code>' +
-      escapeHtml(target.doc_id) + "</code>.</p>" +
     (evidence ? '<p class="docsViewer__modalNote docsViewerProjectSubjectModal__warning small" data-project-subject-evidence>' + escapeHtml(evidence) + "</p>" : "") +
     '<fieldset class="docsViewer__fieldGroup" data-project-subject-options>' +
-      '<legend class="docsViewer__fieldLabel">Subject</legend>' +
+      '<legend class="visually-hidden">Subject</legend>' +
       radio("none", "None", selected) +
       radio("folder", "Folder", selected) +
       radio("work", "Work", selected) +
@@ -151,16 +149,11 @@ function modalBody(target, subject) {
       (["work", "series"].includes(selected) ? "" : " hidden") + ">" +
       '<label class="docsViewer__field" for="' + SEARCH_INPUT_ID + '">' +
         '<span class="docsViewer__fieldLabel">Search Catalogue</span>' +
-        '<input class="docsViewer__fieldInput" id="' + SEARCH_INPUT_ID + '" type="search" role="combobox" aria-autocomplete="list" aria-controls="' + RESULTS_ID + '" aria-expanded="true" autocomplete="off" spellcheck="false" disabled>' +
+        '<input class="docsViewer__fieldInput" id="' + SEARCH_INPUT_ID + '" type="search" role="combobox" aria-autocomplete="list" aria-controls="' + RESULTS_ID + '" aria-expanded="false" autocomplete="off" spellcheck="false" disabled>' +
       "</label>" +
       '<p class="docsViewerCatalogueTokenModal__searchStatus muted small" data-project-subject-search-status>Choose Work or Series to load Catalogue targets.</p>' +
-      '<div class="docsViewerCatalogueTargetPicker__results docsViewerCatalogueTokenModal__results" id="' + RESULTS_ID + '" role="listbox" aria-label="Work and Series targets" data-project-subject-results tabindex="0"></div>' +
-      '<div class="docsViewerCatalogueTokenModal__selected" data-project-subject-selected hidden></div>' +
+      '<div class="docsViewerCatalogueTargetPicker__results docsViewerCatalogueTokenModal__results" id="' + RESULTS_ID + '" role="listbox" aria-label="Work and Series targets" data-project-subject-results tabindex="0" hidden></div>' +
     "</section>";
-}
-
-function targetSummary(target) {
-  return [target.targetType, target.targetId, target.title].concat(target.meta || []).filter(Boolean).join(" · ");
 }
 
 function openSubjectModal(options, target, loaded) {
@@ -176,10 +169,10 @@ function openSubjectModal(options, target, loaded) {
     restoreFocus: options.restoreFocus,
     title: "Assign subject",
     size: "document",
-    bodyHtml: modalBody(target, loaded.subject),
+    bodyHtml: modalBody(loaded.subject),
     focusSelector: 'input[name="docs-project-subject"]:checked, input[name="docs-project-subject"]',
     actions: [
-      { role: "modal-primary", label: "Save subject" },
+      { role: "modal-primary", label: "OK" },
       { role: "modal-cancel", label: "Cancel" }
     ],
     onOpen: function (api) {
@@ -189,18 +182,32 @@ function openSubjectModal(options, target, loaded) {
       var searchInput = api.host.querySelector("#" + SEARCH_INPUT_ID);
       var results = api.host.querySelector("[data-project-subject-results]");
       var searchStatus = api.host.querySelector("[data-project-subject-search-status]");
-      var selectedHost = api.host.querySelector("[data-project-subject-selected]");
 
       function chosenKind() {
         var chosen = api.host.querySelector('input[name="docs-project-subject"]:checked');
         return chosen ? chosen.value : "";
       }
 
-      function renderSelected(targetRecord) {
+      function showResults(visible) {
+        if (results) results.hidden = !visible;
+        if (searchInput) searchInput.setAttribute("aria-expanded", visible ? "true" : "false");
+      }
+
+      function clearSearchStatus() {
+        if (!searchStatus) return;
+        searchStatus.classList.remove("is-error");
+        searchStatus.textContent = "";
+        searchStatus.hidden = true;
+      }
+
+      function selectCatalogueTarget(targetRecord, focusInput) {
         state.selectedTarget = targetRecord || null;
-        if (!selectedHost) return;
-        selectedHost.textContent = targetRecord ? targetSummary(targetRecord) : "";
-        selectedHost.hidden = !targetRecord;
+        if (!targetRecord) return;
+        if (searchInput) searchInput.value = targetRecord.title;
+        if (state.list) state.list.setTargets([]);
+        showResults(false);
+        clearSearchStatus();
+        if (focusInput && searchInput) searchInput.focus();
       }
 
       function supportFor(kind) {
@@ -216,9 +223,10 @@ function openSubjectModal(options, target, loaded) {
       function updateMatches() {
         var kind = chosenKind();
         if (!state.list || !state.support || !searchInput || !["work", "series"].includes(kind)) return;
-        renderSelected(null);
+        state.selectedTarget = null;
         var matches = collectCatalogueTargetMatches(supportFor(kind), searchInput.value, 20);
         state.list.setTargets(matches);
+        showResults(true);
         if (searchStatus) {
           searchStatus.classList.remove("is-error");
           searchStatus.textContent = searchInput.value.trim() && !matches.length
@@ -243,13 +251,13 @@ function openSubjectModal(options, target, loaded) {
           targetType: subject.kind,
           targetId: subject.key
         });
-        if (searchInput) searchInput.value = subject.kind + ":" + subject.key;
-        state.list.setTargets(found ? [found] : []);
-        renderSelected(null);
         if (found) {
-          state.list.selectTarget(found);
-          if (searchStatus) searchStatus.hidden = true;
+          selectCatalogueTarget(found, false);
         } else if (searchStatus) {
+          if (searchInput) searchInput.value = subject.kind + ":" + subject.key;
+          state.list.setTargets([]);
+          state.selectedTarget = null;
+          showResults(false);
           searchStatus.textContent = "Current " + (subject.kind === "work" ? "Work" : "Series") + " " + subject.key + " is unavailable. Choose a current target or another subject.";
           searchStatus.hidden = false;
         }
@@ -290,11 +298,16 @@ function openSubjectModal(options, target, loaded) {
         if (folderField) folderField.hidden = !folderSelected;
         if (folderInput) folderInput.disabled = busy || !folderSelected;
         if (catalogue) catalogue.hidden = !catalogueSelected;
+        if (searchInput) searchInput.disabled = busy || !catalogueSelected || !state.support;
         if (catalogueSelected) {
-          if (state.support) updateMatches();
-          else loadSupport();
+          if (state.support) {
+            if (!state.selectedTarget || state.selectedTarget.targetType !== kind) updateMatches();
+          } else {
+            loadSupport();
+          }
         } else {
-          renderSelected(null);
+          state.selectedTarget = null;
+          showResults(false);
         }
       }
 
@@ -309,7 +322,7 @@ function openSubjectModal(options, target, loaded) {
         id: function (record) { return record.targetId; },
         title: function (record) { return record.title; },
         meta: function (record) { return record.meta; },
-        onSelect: renderSelected
+        onSelect: function (record) { selectCatalogueTarget(record, true); }
       });
       api.host.querySelectorAll('input[name="docs-project-subject"]').forEach(function (radioNode) {
         radioNode.addEventListener("change", projectChoice);

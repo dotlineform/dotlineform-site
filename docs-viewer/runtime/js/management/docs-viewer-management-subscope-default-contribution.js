@@ -586,10 +586,12 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
         }
       });
       var copyButton = host.ownerDocument.createElement("button");
-      copyButton.className = "docsViewerReport__button docsReportDetail__iconButton docsReportDetail__copyLink";
+      copyButton.className = "docsViewerReport__button docsViewerReport__button--pill docsReportDetail__iconButton docsReportDetail__copyLink";
       copyButton.type = "button";
       copyButton.dataset.docsSubscopeCopyLink = "true";
-      copyButton.textContent = "Copy Link";
+      copyButton.setAttribute("aria-label", "Copy link");
+      copyButton.title = "Copy link";
+      copyButton.textContent = "🔗";
       copyButton.disabled = !copyRegistration.enabled;
       copyButton.addEventListener("click", function () {
         copyRegistration.invoke().catch(function (error) {

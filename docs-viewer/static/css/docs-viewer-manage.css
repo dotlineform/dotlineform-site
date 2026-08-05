@@ -193,6 +193,12 @@
   pointer-events: none;
 }
 
+.docsViewerReport__projectStateDocumentLink{
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+}
+
 .docsViewerReport__subscopeFilterToolbar
   > .docsViewerReport__contributionToolbar--list{
   flex: 0 0 auto;

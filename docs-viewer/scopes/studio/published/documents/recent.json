@@ -4,10 +4,18 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260802-194426-087cfe",
+      "title": "SSP-1 — Document Subject And Association Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194426-087cfe.json",
+      "timestamp": "2026-08-05 21:30:49",
+      "parent_id": "d-20260802-194357-4d857b",
+      "parent_title": "Sub-Scope Publishing"
+    },
+    {
       "doc_id": "d-20260801-133318-15e8fa",
       "title": "SSP-2 — Docs Viewer Project State Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133318-15e8fa.json",
-      "timestamp": "2026-08-05 20:43:40",
+      "timestamp": "2026-08-05 21:03:47",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
     },
@@ -74,15 +82,7 @@
       "timestamp": "2026-08-05 18:27:54",
       "parent_id": "d-20260802-123451-d0e52e",
       "parent_title": "Data Models Diagrams"
-    },
-    {
-      "doc_id": "d-20260805-141842-8115c8",
-      "title": "SSP-2.0 — Project State Sanity Note",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-141842-8115c8.json",
-      "timestamp": "2026-08-05 18:25:27",
-      "parent_id": "d-20260801-133318-15e8fa",
-      "parent_title": "SSP-2 — Docs Viewer Project State Delivery"
     }
   ],
-  "generated_at": "2026-08-05T19:43:56Z"
+  "generated_at": "2026-08-05T20:30:50Z"
 }

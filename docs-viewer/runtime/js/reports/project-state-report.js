@@ -8,6 +8,29 @@ const COLUMN_LABELS = Object.freeze({
   series: "Series",
   docs: "Docs"
 });
+const SUBJECT_LABELS = Object.freeze({
+  folder: "Folder",
+  work: "Work",
+  series: "Series"
+});
+const SUBJECT_ICON_MARKUP = Object.freeze({
+  work: [
+    '<svg class="docsViewerReport__projectSubjectIcon" data-project-subject-icon="work" viewBox="0 0 24 24" aria-hidden="true" focusable="false">',
+    '<rect x="4" y="10.75" width="2.5" height="2.5" rx="1"></rect>',
+    '<path d="M10 12H20"></path>',
+    "</svg>"
+  ].join(""),
+  series: [
+    '<svg class="docsViewerReport__projectSubjectIcon" data-project-subject-icon="series" viewBox="0 0 24 24" aria-hidden="true" focusable="false">',
+    '<rect x="4" y="5" width="2.5" height="2.5" rx="1"></rect>',
+    '<rect x="4" y="10.75" width="2.5" height="2.5" rx="1"></rect>',
+    '<rect x="4" y="16.5" width="2.5" height="2.5" rx="1"></rect>',
+    '<path d="M10 6.25H20"></path>',
+    '<path d="M10 12H20"></path>',
+    '<path d="M10 17.75H20"></path>',
+    "</svg>"
+  ].join("")
+});
 const CONTROL_ICON_MARKUP = Object.freeze({
   copy: [
     '<svg class="docsViewerReport__buttonIcon" data-report-icon="copy" viewBox="0 0 24 24" aria-hidden="true" focusable="false">',
@@ -381,11 +404,32 @@ function appendSeriesCell(rowNode, row, context) {
   rowNode.appendChild(cell);
 }
 
+function appendDocumentSubjectCue(link, documentRecord) {
+  const subject = documentRecord.declaredSubject;
+  const cue = document.createElement("span");
+  cue.className = "docsViewerReport__projectSubjectCue";
+  cue.dataset.projectSubjectCue = subject.kind;
+  cue.setAttribute("aria-hidden", "true");
+  if (SUBJECT_ICON_MARKUP[subject.kind]) cue.innerHTML = SUBJECT_ICON_MARKUP[subject.kind];
+  else cue.textContent = "📁";
+  link.appendChild(cue);
+}
+
 function appendDocumentsCell(rowNode, row) {
   const cell = document.createElement("span");
   cell.className = "docsViewerReport__cellStack";
   row.documents.forEach((documentRecord) => {
-    const link = appendLink(cell, documentRecord.title, documentRecord.href);
+    const link = appendLink(cell, "", documentRecord.href);
+    link.classList.add("docsViewerReport__projectStateDocumentLink");
+    appendDocumentSubjectCue(link, documentRecord);
+    const title = document.createElement("span");
+    title.dataset.projectStateDocumentTitle = "true";
+    title.textContent = documentRecord.title;
+    link.appendChild(title);
+    link.setAttribute("aria-label", [
+      documentRecord.title,
+      SUBJECT_LABELS[documentRecord.declaredSubject.kind] + " subject " + documentRecord.declaredSubject.key
+    ].join(", "));
     link.dataset.docsViewerScope = cleanString(documentRecord.target && documentRecord.target.scope);
     link.dataset.docsViewerSubscope = cleanString(documentRecord.target && documentRecord.target.sub_scope);
     link.dataset.docsViewerDocId = cleanString(documentRecord.target && documentRecord.target.doc_id);

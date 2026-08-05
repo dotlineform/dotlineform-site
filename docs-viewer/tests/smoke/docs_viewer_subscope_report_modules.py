@@ -4124,7 +4124,7 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
             }
         ],
         "analysisSubjectAction": "undefined",
-        "assignButton": {"disabled": False, "text": "Assign subject"},
+        "assignButton": {"disabled": False, "text": "Subject"},
         "cancelled": {"assignments": 0, "refreshed": 0},
         "collectionTargetError": "Projects customisation collection target is invalid.",
         "configuredCollectionId": "dotlineform_projects",
@@ -4420,9 +4420,16 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
           await new Promise(resolve => setTimeout(resolve, 0));
           await new Promise(resolve => setTimeout(resolve, 0));
           let modalHost = document.querySelector('[data-docs-viewer-management-modal-host="true"]');
+          let search = modalHost.querySelector('#docsViewerProjectSubjectCatalogueSearch');
           const initial = {
             checked: modalHost.querySelector('input[name="docs-project-subject"]:checked').value,
-            selected: modalHost.querySelector('[data-project-subject-selected]').textContent,
+            hasIntro: modalHost.textContent.includes('Assign the authoring subject for'),
+            hiddenLegend: modalHost.querySelector('[data-project-subject-options] legend').classList.contains('visually-hidden'),
+            primaryLabel: modalHost.querySelector('button[data-role="modal-primary"]').textContent,
+            searchValue: search.value,
+            resultsHidden: modalHost.querySelector('[data-project-subject-results]').hidden,
+            expanded: search.getAttribute('aria-expanded'),
+            selectedSummaryAbsent: !modalHost.querySelector('[data-project-subject-selected]'),
             types: Array.from(modalHost.querySelectorAll('[data-target-index]')).map(node => (
               node.querySelector('.docsViewerCatalogueTargetPicker__rowKind').textContent
             ))
@@ -4430,12 +4437,27 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
           const seriesRadio = modalHost.querySelector('input[value="series"]');
           seriesRadio.checked = true;
           seriesRadio.dispatchEvent(new Event('change', { bubbles: true }));
-          const search = modalHost.querySelector('#docsViewerProjectSubjectCatalogueSearch');
           search.value = 'Nerve';
           search.dispatchEvent(new Event('input', { bubbles: true }));
           const seriesTypes = Array.from(modalHost.querySelectorAll('[data-target-index]')).map(node => (
             node.querySelector('.docsViewerCatalogueTargetPicker__rowKind').textContent
           ));
+          modalHost.querySelector('[data-target-index="0"]').click();
+          const selectedSeries = {
+            searchValue: search.value,
+            resultsHidden: modalHost.querySelector('[data-project-subject-results]').hidden,
+            expanded: search.getAttribute('aria-expanded'),
+            resultCount: modalHost.querySelectorAll('[data-target-index]').length
+          };
+          search.value = 'Nerve';
+          search.dispatchEvent(new Event('input', { bubbles: true }));
+          const editedSeries = {
+            resultsHidden: modalHost.querySelector('[data-project-subject-results]').hidden,
+            expanded: search.getAttribute('aria-expanded'),
+            types: Array.from(modalHost.querySelectorAll('[data-target-index]')).map(node => (
+              node.querySelector('.docsViewerCatalogueTargetPicker__rowKind').textContent
+            ))
+          };
           modalHost.querySelector('[data-target-index="0"]').click();
           modalHost.querySelector('button[data-role="modal-primary"]').click();
           await new Promise(resolve => setTimeout(resolve, 0));
@@ -4447,9 +4469,12 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
           await new Promise(resolve => setTimeout(resolve, 0));
           await new Promise(resolve => setTimeout(resolve, 0));
           modalHost = document.querySelector('[data-docs-viewer-management-modal-host="true"]');
+          search = modalHost.querySelector('#docsViewerProjectSubjectCatalogueSearch');
           const unavailable = {
             checked: modalHost.querySelector('input[name="docs-project-subject"]:checked').value,
-            selectedHidden: modalHost.querySelector('[data-project-subject-selected]').hidden,
+            searchValue: search.value,
+            resultsHidden: modalHost.querySelector('[data-project-subject-results]').hidden,
+            expanded: search.getAttribute('aria-expanded'),
             status: modalHost.querySelector('[data-project-subject-search-status]').textContent
           };
           modalHost.querySelector('button[data-role="modal-primary"]').click();
@@ -4480,6 +4505,8 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
               conflicting: info(records.conflicting)
             },
             initial,
+            selectedSeries,
+            editedSeries,
             seriesTypes,
             unavailable
           };
@@ -4570,13 +4597,32 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
         },
         "initial": {
             "checked": "work",
-            "selected": "work · 00123 · Nerve",
-            "types": ["work"],
+            "hasIntro": False,
+            "hiddenLegend": True,
+            "primaryLabel": "OK",
+            "searchValue": "Nerve",
+            "resultsHidden": True,
+            "expanded": "false",
+            "selectedSummaryAbsent": True,
+            "types": [],
+        },
+        "selectedSeries": {
+            "searchValue": "Nerve Series",
+            "resultsHidden": True,
+            "expanded": "false",
+            "resultCount": 0,
+        },
+        "editedSeries": {
+            "resultsHidden": False,
+            "expanded": "true",
+            "types": ["series"],
         },
         "seriesTypes": ["series"],
         "unavailable": {
             "checked": "work",
-            "selectedHidden": True,
+            "searchValue": "work:00999",
+            "resultsHidden": True,
+            "expanded": "false",
             "status": (
                 "Current Work 00999 is unavailable. Choose a current target or another subject."
             ),

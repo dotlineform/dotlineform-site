@@ -169,7 +169,7 @@ function renderAssignSubject(context, options, assignSubjectAvailable) {
   button.className = "docsViewerReport__button docsReportDetail__iconButton docsReportDetail__assignSubject";
   button.type = "button";
   button.dataset.docsProjectsAssignSubject = "true";
-  button.textContent = "Assign subject";
+  button.textContent = "Subject";
   button.disabled = !registration.enabled;
   if (registration.disabledReason) button.title = registration.disabledReason;
   button.addEventListener("click", function () {

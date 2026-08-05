@@ -493,6 +493,26 @@ def assert_project_state_report_mount_refresh_and_failure(page: Page) -> None:
                     href: '/docs/?scope=dotlineform&doc=d-20260801-073826-8865a8&subdoc=d-20260805-151000-abcdef',
                     declared_subject: { kind: 'folder', key: 'projects/alpha with a very long folder name' },
                     applicable_series_ids: ['001', '002']
+                }, {
+                    target: {
+                        scope: 'dotlineform',
+                        sub_scope: 'projects',
+                        doc_id: 'd-20260805-151001-abcdef'
+                    },
+                    title: 'Work-subject project note',
+                    href: '/docs/?scope=dotlineform&doc=d-20260801-073826-8865a8&subdoc=d-20260805-151001-abcdef',
+                    declared_subject: { kind: 'work', key: '00001' },
+                    applicable_series_ids: ['001', '002']
+                }, {
+                    target: {
+                        scope: 'dotlineform',
+                        sub_scope: 'projects',
+                        doc_id: 'd-20260805-151002-abcdef'
+                    },
+                    title: 'Series-subject project note',
+                    href: '/docs/?scope=dotlineform&doc=d-20260801-073826-8865a8&subdoc=d-20260805-151002-abcdef',
+                    declared_subject: { kind: 'series', key: '001' },
+                    applicable_series_ids: ['001']
                 }],
                 works: [],
                 series: [{
@@ -517,11 +537,11 @@ def assert_project_state_report_mount_refresh_and_failure(page: Page) -> None:
                     work_ids: ['00002']
                 }],
                 series_issues: [],
-                matched_document_count: 1,
+                matched_document_count: 3,
                 matched_work_count: 2,
                 states: {
                     reconciliation: 'reconciled',
-                    documents: 'one',
+                    documents: 'many',
                     series: 'complete'
                 }
             };
@@ -571,13 +591,13 @@ def assert_project_state_report_mount_refresh_and_failure(page: Page) -> None:
             pending[0].resolve(response([row, blankRow], '2026-08-05T15:10:00Z', {
                 scanned_folder_count: 2,
                 matched_work_count: 2,
-                matched_document_count: 1
+                matched_document_count: 3
             }));
             await mountPromise;
             const renderedRow = root.querySelector('.docsViewerReport__row');
             const folderLink = renderedRow.children[0].querySelector('a');
             const seriesLink = renderedRow.children[1].querySelector('a');
-            const documentLink = renderedRow.children[2].querySelector('a');
+            const documentLinks = Array.from(renderedRow.children[2].querySelectorAll('a'));
             const afterMount = {
                 calls: service.calls,
                 status: root.querySelector('.docsViewerReport__status').textContent,
@@ -597,13 +617,23 @@ def assert_project_state_report_mount_refresh_and_failure(page: Page) -> None:
                     labels: Array.from(renderedRow.children[1].querySelectorAll('a')).map((node) => node.textContent),
                     href: seriesLink.getAttribute('href')
                 },
-                document: {
-                    label: documentLink.textContent,
-                    href: documentLink.getAttribute('href'),
-                    scope: documentLink.dataset.docsViewerScope,
-                    subScope: documentLink.dataset.docsViewerSubscope,
-                    docId: documentLink.dataset.docsViewerDocId
-                },
+                documents: documentLinks.map((documentLink) => {
+                    const cue = documentLink.querySelector('[data-project-subject-cue]');
+                    const icon = cue.querySelector('[data-project-subject-icon]');
+                    return {
+                        label: documentLink.querySelector('[data-project-state-document-title]').textContent,
+                        ariaLabel: documentLink.getAttribute('aria-label'),
+                        href: documentLink.getAttribute('href'),
+                        scope: documentLink.dataset.docsViewerScope,
+                        subScope: documentLink.dataset.docsViewerSubscope,
+                        docId: documentLink.dataset.docsViewerDocId,
+                        subject: cue.dataset.projectSubjectCue,
+                        cueText: cue.textContent,
+                        icon: icon ? icon.dataset.projectSubjectIcon : '',
+                        paths: icon ? icon.querySelectorAll('path').length : 0,
+                        bullets: icon ? icon.querySelectorAll('rect').length : 0
+                    };
+                }),
                 blankCells: Array.from(root.querySelectorAll('.docsViewerReport__row')[1].children).map((cell) => cell.textContent),
                 button: {
                     label: button.textContent,
@@ -682,7 +712,7 @@ def assert_project_state_report_mount_refresh_and_failure(page: Page) -> None:
         },
         "afterMount": {
             "calls": 1,
-            "status": "2026-08-05 15:10 · 2 folders · 2 Works · 1 Doc",
+            "status": "2026-08-05 15:10 · 2 folders · 2 Works · 3 Docs",
             "headings": [
                 {"key": "folder", "indicator": "▲"},
                 {"key": "series", "indicator": ""},
@@ -700,13 +730,46 @@ def assert_project_state_report_mount_refresh_and_failure(page: Page) -> None:
                 "labels": ["Series One With A Deliberately Long Title", "Series Two"],
                 "href": "http://127.0.0.1:4000/series/?series=001",
             },
-            "document": {
+            "documents": [{
                 "label": "Alpha project note with a deliberately long title",
+                "ariaLabel": (
+                    "Alpha project note with a deliberately long title, "
+                    "Folder subject projects/alpha with a very long folder name"
+                ),
                 "href": "/docs/?scope=dotlineform&doc=d-20260801-073826-8865a8&subdoc=d-20260805-151000-abcdef",
                 "scope": "dotlineform",
                 "subScope": "projects",
                 "docId": "d-20260805-151000-abcdef",
-            },
+                "subject": "folder",
+                "cueText": "📁",
+                "icon": "",
+                "paths": 0,
+                "bullets": 0,
+            }, {
+                "label": "Work-subject project note",
+                "ariaLabel": "Work-subject project note, Work subject 00001",
+                "href": "/docs/?scope=dotlineform&doc=d-20260801-073826-8865a8&subdoc=d-20260805-151001-abcdef",
+                "scope": "dotlineform",
+                "subScope": "projects",
+                "docId": "d-20260805-151001-abcdef",
+                "subject": "work",
+                "cueText": "",
+                "icon": "work",
+                "paths": 1,
+                "bullets": 1,
+            }, {
+                "label": "Series-subject project note",
+                "ariaLabel": "Series-subject project note, Series subject 001",
+                "href": "/docs/?scope=dotlineform&doc=d-20260801-073826-8865a8&subdoc=d-20260805-151002-abcdef",
+                "scope": "dotlineform",
+                "subScope": "projects",
+                "docId": "d-20260805-151002-abcdef",
+                "subject": "series",
+                "cueText": "",
+                "icon": "series",
+                "paths": 3,
+                "bullets": 3,
+            }],
             "blankCells": ["blank", "", ""],
             "button": {
                 "label": "🔄",
