@@ -126,6 +126,23 @@
   padding: 0;
 }
 
+.docsViewerReport__buttonIcon{
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.docsViewerReport__button--markdown{
+  font-size: var(--docs-viewer-font-caption, 0.75rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
 .docsViewerReport__search{
   position: relative;
   display: flex;
@@ -224,6 +241,10 @@
 .docsViewerReport[data-report-id="project_state"] .docsViewerReport__head,
 .docsViewerReport[data-report-id="project_state"] .docsViewerReport__row{
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.15fr) minmax(0, 1fr);
+}
+
+.docsViewerReport[data-report-id="project_state"] .docsViewerReport__sortButton{
+  text-transform: none;
 }
 
 .docsViewerReport__cellStack{

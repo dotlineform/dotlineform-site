@@ -291,6 +291,126 @@ def assert_semantic_tokens_report_service_path(page: Page) -> None:
         raise AssertionError(f"semantic-tokens report service path changed: {result!r}")
 
 
+def assert_project_state_projection_and_serialization(page: Page) -> None:
+    result = page.evaluate(
+        """() => {
+            const { projectStateReport } = window.__docsViewerRouterModuleSmoke;
+            const rows = [{
+                folder: {
+                    key: 'projects/alpha',
+                    label: '/alpha',
+                    href: 'dlf-local:projects/alpha'
+                },
+                documents: [{
+                    target: { doc_id: 'alpha-doc' },
+                    title: 'Alpha | Note [draft]',
+                    href: '/docs/?scope=dotlineform&doc=alpha-doc'
+                }],
+                series: [{
+                    target: { target_id: '001' },
+                    title: 'Alpha Series',
+                    href: '/series/?series=001'
+                }, {
+                    target: { target_id: '002' },
+                    title: 'Zeta Series',
+                    href: '/series/?series=002'
+                }]
+            }, {
+                folder: {
+                    key: 'projects/beta',
+                    label: '/beta',
+                    href: 'dlf-local:projects/beta'
+                },
+                documents: [],
+                series: []
+            }];
+            const before = JSON.stringify(rows);
+            const folder = projectStateReport.buildProjectStateProjection(rows, {
+                groupBy: 'folder',
+                sortKey: 'folder',
+                sortDir: 'asc'
+            });
+            const folderDescending = projectStateReport.buildProjectStateProjection(rows, {
+                groupBy: 'folder',
+                sortKey: 'folder',
+                sortDir: 'desc'
+            });
+            const series = projectStateReport.buildProjectStateProjection(rows, {
+                groupBy: 'series',
+                sortKey: 'series',
+                sortDir: 'asc'
+            });
+            const filtered = projectStateReport.buildProjectStateProjection(rows, {
+                groupBy: 'folder',
+                searchText: 'alpha | note',
+                sortKey: 'folder',
+                sortDir: 'asc'
+            });
+            return {
+                unchanged: before === JSON.stringify(rows),
+                folder: {
+                    columns: folder.columns,
+                    keys: folder.rows.map((row) => row.folderKey),
+                    tsv: projectStateReport.serializeProjectStateTsv(folder)
+                },
+                folderDescending: folderDescending.rows.map((row) => row.folderKey),
+                series: {
+                    columns: series.columns,
+                    keys: series.rows.map((row) => row.folderKey),
+                    labels: series.rows.map((row) => row.series[0] ? row.series[0].title : ''),
+                    markdown: projectStateReport.serializeProjectStateMarkdown(
+                        series,
+                        '2026-08-05T16:10:59+01:00',
+                        'http://127.0.0.1:4000'
+                    )
+                },
+                filteredKeys: filtered.rows.map((row) => row.folderKey)
+            };
+        }"""
+    )
+    expected_markdown = "\n".join(
+        [
+            "Project State - 2026-08-05 15:10",
+            "",
+            "| Series | Folder | Docs |",
+            "| --- | --- | --- |",
+            "|  | [beta](dlf-local:projects/beta) |  |",
+            (
+                "| [Alpha Series](http://127.0.0.1:4000/series/?series=001) "
+                "| [alpha](dlf-local:projects/alpha) "
+                "| [Alpha \\| Note \\[draft\\]](/docs/?scope=dotlineform&doc=alpha-doc) |"
+            ),
+            (
+                "| [Zeta Series](http://127.0.0.1:4000/series/?series=002) "
+                "| [alpha](dlf-local:projects/alpha) "
+                "| [Alpha \\| Note \\[draft\\]](/docs/?scope=dotlineform&doc=alpha-doc) |"
+            ),
+        ]
+    )
+    expected = {
+        "unchanged": True,
+        "folder": {
+            "columns": ["folder", "series", "docs"],
+            "keys": ["projects/alpha", "projects/beta"],
+            "tsv": (
+                "Folder\tSeries\tDocs\n"
+                "alpha\tAlpha Series; Zeta Series\tAlpha | Note [draft]\n"
+                "beta\t\t"
+            ),
+        },
+        "folderDescending": ["projects/beta", "projects/alpha"],
+        "series": {
+            "columns": ["series", "folder", "docs"],
+            "keys": ["projects/beta", "projects/alpha", "projects/alpha"],
+            "labels": ["", "Alpha Series", "Zeta Series"],
+            "markdown": expected_markdown,
+        },
+        "filteredKeys": ["projects/alpha"],
+    }
+    if result != expected:
+        raise AssertionError(f"Project State pure projection changed: {result!r}")
+
+
 def assert_project_state_report_mount_refresh_and_failure(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -348,6 +468,16 @@ def assert_project_state_report_mount_refresh_and_failure(page: Page) -> None:
                     href: '/series/?series=001',
                     work_count: 2,
                     work_ids: ['00001', '00002']
+                }, {
+                    target: {
+                        family: 'catalogue',
+                        target_type: 'series',
+                        target_id: '002'
+                    },
+                    title: 'Series Two',
+                    href: '/series/?series=002',
+                    work_count: 1,
+                    work_ids: ['00002']
                 }],
                 series_issues: [],
                 matched_work_count: 2,
@@ -387,12 +517,17 @@ def assert_project_state_report_mount_refresh_and_failure(page: Page) -> None:
                 publicPreviewBase: 'http://127.0.0.1:4000'
             });
             const button = root.querySelector('#docsProjectStateReportRun');
+            const group = root.querySelector('#docsProjectStateReportGroup');
+            const search = root.querySelector('#docsProjectStateReportSearch');
+            const copyTable = root.querySelector('#docsProjectStateReportCopyTable');
+            const copyMarkdown = root.querySelector('#docsProjectStateReportCopyMarkdown');
             const mountBusy = {
                 disabled: button.disabled,
                 label: button.textContent,
                 ariaBusy: button.getAttribute('aria-busy'),
                 status: root.querySelector('.docsViewerReport__status').textContent,
-                rows: root.querySelectorAll('.docsViewerReport__row').length
+                rows: root.querySelectorAll('.docsViewerReport__row').length,
+                controlsDisabled: [group, search, copyTable, copyMarkdown].map((node) => node.disabled)
             };
             pending[0].resolve(response([row, blankRow], '2026-08-05T15:10:00Z', {
                 scanned_folder_count: 2,
@@ -407,7 +542,10 @@ def assert_project_state_report_mount_refresh_and_failure(page: Page) -> None:
             const afterMount = {
                 calls: service.calls,
                 status: root.querySelector('.docsViewerReport__status').textContent,
-                headings: Array.from(root.querySelectorAll('.docsViewerReport__headLabel')).map((node) => node.textContent),
+                headings: Array.from(root.querySelectorAll('[data-report-sort]')).map((node) => ({
+                    key: node.dataset.reportSort,
+                    indicator: node.querySelector('.docsViewerReport__sortIndicator').textContent
+                })),
                 columns: root.dataset.reportColumns,
                 folder: {
                     label: folderLink.textContent,
@@ -416,7 +554,10 @@ def assert_project_state_report_mount_refresh_and_failure(page: Page) -> None:
                     key: folderLink.dataset.projectFolderKey,
                     stateCount: renderedRow.children[0].querySelectorAll('.docsViewerReport__cellMeta').length
                 },
-                series: { label: seriesLink.textContent, href: seriesLink.getAttribute('href') },
+                series: {
+                    labels: Array.from(renderedRow.children[1].querySelectorAll('a')).map((node) => node.textContent),
+                    href: seriesLink.getAttribute('href')
+                },
                 document: {
                     label: documentLink.textContent,
                     href: documentLink.getAttribute('href'),
@@ -430,14 +571,38 @@ def assert_project_state_report_mount_refresh_and_failure(page: Page) -> None:
                     ariaLabel: button.getAttribute('aria-label'),
                     title: button.title,
                     pill: button.classList.contains('docsViewerReport__button--pill')
+                },
+                controls: {
+                    groupTarget: group.dataset.groupTarget,
+                    groupLabel: group.getAttribute('aria-label'),
+                    groupTitle: group.title,
+                    groupIcon: group.querySelector('[data-report-icon]').dataset.reportIcon,
+                    groupPill: group.classList.contains('docsViewerReport__button--pill'),
+                    searchPlaceholder: search.placeholder,
+                    copyLabels: [copyTable.getAttribute('aria-label'), copyMarkdown.getAttribute('aria-label')],
+                    copyTitles: [copyTable.title, copyMarkdown.title],
+                    copyContents: [copyTable.querySelector('[data-report-icon]').dataset.reportIcon, copyMarkdown.textContent],
+                    copyPills: [copyTable, copyMarkdown].map((node) => node.classList.contains('docsViewerReport__button--pill')),
+                    copyDisabled: [copyTable.disabled, copyMarkdown.disabled]
                 }
             };
+
+            group.click();
+            const afterGroupToggle = {
+                target: group.dataset.groupTarget,
+                label: group.getAttribute('aria-label'),
+                title: group.title,
+                icon: group.querySelector('[data-report-icon]').dataset.reportIcon,
+                headings: Array.from(root.querySelectorAll('[data-report-sort]')).map((node) => node.dataset.reportSort)
+            };
+
             button.click();
             const refreshBusy = {
                 disabled: button.disabled,
                 label: button.textContent,
                 ariaBusy: button.getAttribute('aria-busy'),
-                rows: root.querySelectorAll('.docsViewerReport__row').length
+                rows: root.querySelectorAll('.docsViewerReport__row').length,
+                controlsDisabled: [group, search, copyTable, copyMarkdown].map((node) => node.disabled)
             };
             pending[1].resolve(response([], '2026-08-05T15:11:00Z', {
                 scanned_folder_count: 0,
@@ -464,7 +629,7 @@ def assert_project_state_report_mount_refresh_and_failure(page: Page) -> None:
                 ariaBusy: button.getAttribute('aria-busy')
             };
             root.remove();
-            return { mountBusy, afterMount, refreshBusy, afterEmptyRefresh, afterFailure };
+            return { mountBusy, afterMount, afterGroupToggle, refreshBusy, afterEmptyRefresh, afterFailure };
         }"""
     )
     expected = {
@@ -474,11 +639,16 @@ def assert_project_state_report_mount_refresh_and_failure(page: Page) -> None:
             "ariaBusy": "true",
             "status": "Running Project State...",
             "rows": 0,
+            "controlsDisabled": [True, True, True, True],
         },
         "afterMount": {
             "calls": 1,
             "status": "2026-08-05 15:10 · 2 folders · 2 Works · 1 Doc",
-            "headings": ["Folder", "Series", "Docs"],
+            "headings": [
+                {"key": "folder", "indicator": "▲"},
+                {"key": "series", "indicator": ""},
+                {"key": "docs", "indicator": ""},
+            ],
             "columns": "3",
             "folder": {
                 "label": "alpha with a very long folder name",
@@ -488,7 +658,7 @@ def assert_project_state_report_mount_refresh_and_failure(page: Page) -> None:
                 "stateCount": 0,
             },
             "series": {
-                "label": "Series One With A Deliberately Long Title",
+                "labels": ["Series One With A Deliberately Long Title", "Series Two"],
                 "href": "http://127.0.0.1:4000/series/?series=001",
             },
             "document": {
@@ -505,8 +675,34 @@ def assert_project_state_report_mount_refresh_and_failure(page: Page) -> None:
                 "title": "Run/Refresh",
                 "pill": True,
             },
+            "controls": {
+                "groupTarget": "series",
+                "groupLabel": "Group by Series",
+                "groupTitle": "Group by Series",
+                "groupIcon": "list",
+                "groupPill": True,
+                "searchPlaceholder": "Search",
+                "copyLabels": ["Copy table", "Copy Markdown"],
+                "copyTitles": ["Copy table", "Copy Markdown"],
+                "copyContents": ["copy", "MD"],
+                "copyPills": [True, True],
+                "copyDisabled": [False, False],
+            },
         },
-        "refreshBusy": {"disabled": True, "label": "🔄", "ariaBusy": "true", "rows": 0},
+        "afterGroupToggle": {
+            "target": "folder",
+            "label": "Group by Folder",
+            "title": "Group by Folder",
+            "icon": "folder",
+            "headings": ["series", "folder", "docs"],
+        },
+        "refreshBusy": {
+            "disabled": True,
+            "label": "🔄",
+            "ariaBusy": "true",
+            "rows": 0,
+            "controlsDisabled": [True, True, True, True],
+        },
         "afterEmptyRefresh": {
             "calls": 2,
             "status": "2026-08-05 15:11 · 0 folders · 0 Works · 0 Docs",
@@ -1928,6 +2124,7 @@ def run_smoke(page: Page, base_url: str) -> None:
     assert_broken_links_report_source_handoff(page)
     assert_semantic_tokens_report_scope_and_document_link(page)
     assert_semantic_tokens_report_service_path(page)
+    assert_project_state_projection_and_serialization(page)
     assert_project_state_report_mount_refresh_and_failure(page)
     assert_project_state_report_service_path(page)
     assert_configured_scope_provider(page)
