@@ -1003,7 +1003,15 @@
               "doc_id": "d-20260801-133318-15e8fa",
               "title": "SSP-2 — Docs Viewer Project State Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133318-15e8fa.json",
-              "ui_status": "proposed"
+              "ui_status": "in-progress",
+              "children": [
+                {
+                  "doc_id": "d-20260805-141842-8115c8",
+                  "title": "SSP-2.0 — Project State Sanity Note",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-141842-8115c8.json",
+                  "ui_status": "done"
+                }
+              ]
             },
             {
               "doc_id": "d-20260802-174340-2fe9f4",
@@ -1401,5 +1409,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-04T21:04:04Z"
+  "generated_at": "2026-08-05T13:22:54Z"
 }

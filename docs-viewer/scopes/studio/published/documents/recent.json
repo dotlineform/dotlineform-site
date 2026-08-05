@@ -7,7 +7,7 @@
       "doc_id": "d-20260802-121105-c574f9",
       "title": "Project State Concept And Architecture",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121105-c574f9.json",
-      "timestamp": "2026-08-05 12:02:47",
+      "timestamp": "2026-08-05 14:51:01",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
     },
@@ -15,17 +15,33 @@
       "doc_id": "d-20260801-133318-15e8fa",
       "title": "SSP-2 — Docs Viewer Project State Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133318-15e8fa.json",
-      "timestamp": "2026-08-05 12:02:47",
+      "timestamp": "2026-08-05 14:51:01",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
+    },
+    {
+      "doc_id": "d-20260805-141842-8115c8",
+      "title": "SSP-2.0 — Project State Sanity Note",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-141842-8115c8.json",
+      "timestamp": "2026-08-05 14:51:01",
+      "parent_id": "d-20260801-133318-15e8fa",
+      "parent_title": "SSP-2 — Docs Viewer Project State Delivery"
     },
     {
       "doc_id": "d-20260802-194358-7717ee",
       "title": "Sub-Scope Publishing Concept And Architecture",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194358-7717ee.json",
-      "timestamp": "2026-08-05 11:15:19",
+      "timestamp": "2026-08-05 14:51:01",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
+    },
+    {
+      "doc_id": "d-20260802-194357-4d857b",
+      "title": "Sub-Scope Publishing",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194357-4d857b.json",
+      "timestamp": "2026-08-05 14:18:42",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
     },
     {
       "doc_id": "d-20260802-121106-15ea55",
@@ -66,23 +82,7 @@
       "timestamp": "2026-08-04 22:06:02",
       "parent_id": "d-20260801-084127-752d7e",
       "parent_title": "Sub-Scopes"
-    },
-    {
-      "doc_id": "d-20260804-220243-b5d7c1",
-      "title": "SSP-1.2 — Verification And Transfer Evidence",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-220243-b5d7c1.json",
-      "timestamp": "2026-08-04 22:05:05",
-      "parent_id": "d-20260802-194426-087cfe",
-      "parent_title": "SSP-1 — Document Subject And Association Delivery"
-    },
-    {
-      "doc_id": "d-20260802-194426-087cfe",
-      "title": "SSP-1 — Document Subject And Association Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194426-087cfe.json",
-      "timestamp": "2026-08-04 22:04:04",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
     }
   ],
-  "generated_at": "2026-08-05T11:04:47Z"
+  "generated_at": "2026-08-05T13:53:30Z"
 }
