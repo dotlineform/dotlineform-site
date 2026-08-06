@@ -1,5 +1,4 @@
 const REPORT_SCHEMA = "docs_project_state_report_v2";
-const LOOKUP_SCHEMA = "docs_project_state_folder_lookup_v2";
 const LOCAL_TARGET_PREFIX = "dlf-local:";
 const GROUP_KEYS = Object.freeze(["folder", "series"]);
 const COLUMN_KEYS = Object.freeze(["folder", "series", "docs"]);
@@ -179,7 +178,6 @@ function normalizeRow(value) {
 
 function normalizeResponse(payload) {
   const report = payload && payload.report;
-  const lookup = payload && payload.lookup;
   const generation = cleanString(report && report.generation);
   const generatedAt = cleanString(report && report.generated_at);
   if (
@@ -187,13 +185,10 @@ function normalizeResponse(payload) {
     || payload.ok !== true
     || !report
     || report.schema_version !== REPORT_SCHEMA
-    || !lookup
-    || lookup.schema_version !== LOOKUP_SCHEMA
-    || cleanString(lookup.generation) !== generation
     || !generation
     || !generatedAt
   ) {
-    throw new Error("Project State report and lookup did not agree.");
+    throw new Error("Project State report is invalid.");
   }
   return {
     generatedAt,

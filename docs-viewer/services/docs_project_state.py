@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
-"""Build the local folder-centred Project State report and resolver lookup."""
+"""Build the local folder-centred Project State report."""
 
 from __future__ import annotations
 
 import hashlib
 import json
-import os
 import re
 import sys
-import tempfile
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -44,11 +42,9 @@ from studio.shared.python.projects_directories import (  # noqa: E402
 )
 
 REPORT_SCHEMA_VERSION = "docs_project_state_report_v2"
-LOOKUP_SCHEMA_VERSION = "docs_project_state_folder_lookup_v2"
 SUBJECT_ASSOCIATIONS_SCHEMA_VERSION = "docs_subject_associations_v1"
 PROJECTS_SCOPE = "dotlineform"
 PROJECTS_SUB_SCOPE = "projects"
-DEFAULT_LOOKUP_REL_PATH = Path("var/docs/project-state/folder-lookup.json")
 GENERATION_PATTERN = re.compile(r"\Asha256:[0-9a-f]{64}\Z")
 WORK_ID_PATTERN = re.compile(r"\A[0-9]{5}\Z")
 
@@ -59,7 +55,6 @@ class ProjectStatePaths:
     manage_manifest_path: Path
     subject_associations_path: Path
     catalogue_source_dir: Path
-    lookup_path: Path
 
 
 def utc_timestamp() -> str:
@@ -80,7 +75,6 @@ def default_project_state_paths(repo_root: Path) -> ProjectStatePaths:
         manage_manifest_path=published_root / "manage-manifest.json",
         subject_associations_path=published_root / "subject-associations.json",
         catalogue_source_dir=root / DEFAULT_SOURCE_DIR,
-        lookup_path=root / DEFAULT_LOOKUP_REL_PATH,
     )
 
 
@@ -94,24 +88,6 @@ def _read_json(path: Path, label: str) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValueError(f"{label} must contain one JSON object")
     return payload
-
-
-def _atomic_write(path: Path, payload: Mapping[str, Any]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temp_path: Path | None = None
-    try:
-        with tempfile.NamedTemporaryFile(
-            "w", encoding="utf-8", dir=path.parent, prefix=f".{path.name}.", suffix=".tmp", delete=False
-        ) as handle:
-            temp_path = Path(handle.name)
-            handle.write(json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(temp_path, path)
-        temp_path = None
-    finally:
-        if temp_path is not None:
-            temp_path.unlink(missing_ok=True)
 
 
 def _folder_keys(projects_base_dir: Path) -> list[str]:
@@ -453,63 +429,26 @@ def _generation(subject_generation: str, rows: list[dict[str, Any]]) -> str:
     return "sha256:" + hashlib.sha256(source).hexdigest()
 
 
-def _lookup(
-    generation: str, generated_at: str, subject_generation: str, rows: list[dict[str, Any]]
-) -> dict[str, Any]:
-    folders: dict[str, Any] = {}
-    for row in rows:
-        key = row["folder"]["key"]
-        folders[key] = {
-            "subject": {"kind": "folder", "key": key},
-            "works": [
-                {"target": dict(work["target"]), "series_ids": list(work["series_ids"])}
-                for work in row["works"]
-            ],
-            "series": [
-                {"target": dict(series["target"]), "work_ids": list(series["work_ids"])}
-                for series in row["series"]
-            ],
-            "documents": [
-                {
-                    "target": dict(document["target"]),
-                    "declared_subject": dict(document["declared_subject"]),
-                    "applicable_series_ids": list(document["applicable_series_ids"]),
-                }
-                for document in row["documents"]
-            ],
-        }
-    return {
-        "schema_version": LOOKUP_SCHEMA_VERSION,
-        "generation": generation,
-        "generated_at": generated_at,
-        "subject_generation": subject_generation,
-        "status": {"state": "current"},
-        "folders": folders,
-    }
-
-
-def validate_products(report: Mapping[str, Any], lookup: Mapping[str, Any]) -> None:
+def validate_report(report: Mapping[str, Any]) -> None:
     rows = report.get("rows")
-    folders = lookup.get("folders")
     summary = report.get("summary")
     inputs = report.get("inputs")
     if (
         report.get("schema_version") != REPORT_SCHEMA_VERSION
-        or lookup.get("schema_version") != LOOKUP_SCHEMA_VERSION
         or not GENERATION_PATTERN.fullmatch(str(report.get("generation") or ""))
-        or lookup.get("generation") != report.get("generation")
-        or lookup.get("generated_at") != report.get("generated_at")
+        or not str(report.get("generated_at") or "").strip()
         or not isinstance(inputs, dict)
-        or lookup.get("subject_generation") != inputs.get("subject_generation")
-        or lookup.get("status") != {"state": "current"}
+        or inputs.get("scope") != PROJECTS_SCOPE
+        or inputs.get("sub_scope") != PROJECTS_SUB_SCOPE
+        or not GENERATION_PATTERN.fullmatch(str(inputs.get("subject_generation") or ""))
+        or inputs.get("folder_scan") != {"root": "projects", "depth": "immediate_children"}
         or not isinstance(rows, list)
-        or not isinstance(folders, dict)
         or not isinstance(summary, dict)
     ):
-        raise ValueError("Project State products failed envelope validation")
+        raise ValueError("Project State report failed envelope validation")
     row_keys = [row.get("folder", {}).get("key") for row in rows if isinstance(row, dict)]
-    if len(row_keys) != len(rows) or row_keys != list(folders):
-        raise ValueError("Project State report and lookup folder collections do not match")
+    if len(row_keys) != len(rows) or len(row_keys) != len(set(row_keys)):
+        raise ValueError("Project State report contains invalid or duplicate Folder rows")
     matched_document_ids: set[str] = set()
     document_placement_count = 0
     for row in rows:
@@ -530,7 +469,6 @@ def validate_products(report: Mapping[str, Any], lookup: Mapping[str, Any]) -> N
         series_ids = [series_record["target"]["target_id"] for series_record in series]
         work_by_id = {work["target"]["target_id"]: work for work in works}
         document_ids: set[str] = set()
-        expected_lookup_documents: list[dict[str, Any]] = []
         for document in documents:
             target = document.get("target")
             subject = document.get("declared_subject")
@@ -569,55 +507,12 @@ def validate_products(report: Mapping[str, Any], lookup: Mapping[str, Any]) -> N
                 raise ValueError("Project State document provenance does not match its Folder row")
             document_ids.add(doc_id)
             matched_document_ids.add(doc_id)
-            expected_lookup_documents.append(
-                {
-                    "target": dict(target),
-                    "declared_subject": dict(subject),
-                    "applicable_series_ids": list(applicable_series_ids),
-                }
-            )
         document_placement_count += len(documents)
-        lookup_row = folders.get(folder_key)
-        expected_lookup_works = [
-            {"target": dict(work["target"]), "series_ids": list(work["series_ids"])}
-            for work in works
-        ]
-        expected_lookup_series = [
-            {"target": dict(series_record["target"]), "work_ids": list(series_record["work_ids"])}
-            for series_record in series
-        ]
-        if (
-            not isinstance(lookup_row, dict)
-            or lookup_row.get("subject") != {"kind": "folder", "key": folder_key}
-            or lookup_row.get("works") != expected_lookup_works
-            or lookup_row.get("series") != expected_lookup_series
-            or lookup_row.get("documents") != expected_lookup_documents
-        ):
-            raise ValueError("Project State report and lookup relationships do not match")
     if (
         summary.get("matched_document_count") != len(matched_document_ids)
         or summary.get("document_placement_count") != document_placement_count
     ):
         raise ValueError("Project State summary failed document-count validation")
-
-
-def mark_existing_lookup_stale(path: Path, *, failed_at: str, error: Exception) -> bool:
-    if not path.is_file():
-        return False
-    try:
-        payload = _read_json(path, "existing Project State lookup")
-    except ValueError:
-        return False
-    if (
-        payload.get("schema_version") != LOOKUP_SCHEMA_VERSION
-        or not GENERATION_PATTERN.fullmatch(str(payload.get("generation") or ""))
-        or not isinstance(payload.get("folders"), dict)
-    ):
-        return False
-    reason = re.sub(r"\s+", " ", str(error)).strip()[:500] or error.__class__.__name__
-    payload["status"] = {"state": "stale", "failed_at": failed_at, "reason": reason}
-    _atomic_write(path, payload)
-    return True
 
 
 class ProjectStateProducer:
@@ -632,7 +527,7 @@ class ProjectStateProducer:
         self.paths = paths or default_project_state_paths(self.repo_root)
         self.clock = clock
 
-    def build(self, *, generated_at: str) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    def build(self, *, generated_at: str) -> tuple[dict[str, Any], dict[str, Any]]:
         folder_keys = _folder_keys(self.paths.projects_base_dir)
         subject_generation, documents_by_subject, manifest_count = _subject_documents(
             _read_json(self.paths.manage_manifest_path, "Projects Manage manifest"),
@@ -678,43 +573,24 @@ class ProjectStateProducer:
             "summary": dict(diagnostics),
             "rows": rows,
         }
-        lookup = _lookup(generation, generated_at, subject_generation, rows)
-        validate_products(report, lookup)
-        return report, lookup, diagnostics
+        validate_report(report)
+        return report, diagnostics
 
-    def run(self, *, write_lookup: bool) -> dict[str, Any]:
+    def run(self) -> dict[str, Any]:
         generated_at = self.clock()
-        try:
-            report, lookup, diagnostics = self.build(generated_at=generated_at)
-            if write_lookup:
-                _atomic_write(self.paths.lookup_path, lookup)
-        except Exception as error:
-            if write_lookup:
-                try:
-                    mark_existing_lookup_stale(self.paths.lookup_path, failed_at=generated_at, error=error)
-                except OSError as stale_error:
-                    raise RuntimeError(
-                        "Project State refresh failed and its prior lookup could not be marked stale"
-                    ) from stale_error
-            raise
+        report, diagnostics = self.build(generated_at=generated_at)
         return {
             "report": report,
-            "lookup": lookup,
             "diagnostics": diagnostics,
-            "lookup_written": write_lookup,
-            "lookup_path": str(self.paths.lookup_path),
         }
 
 
 __all__ = [
-    "DEFAULT_LOOKUP_REL_PATH",
-    "LOOKUP_SCHEMA_VERSION",
     "PROJECTS_SCOPE",
     "PROJECTS_SUB_SCOPE",
     "ProjectStatePaths",
     "ProjectStateProducer",
     "REPORT_SCHEMA_VERSION",
     "default_project_state_paths",
-    "mark_existing_lookup_stale",
-    "validate_products",
+    "validate_report",
 ]

@@ -81,7 +81,7 @@ def test_manage_report_context_passes_public_preview_base() -> None:
     assert source.count("publicPreviewBase: cleanString(routeContext.publicPreviewBase)") == 2
 
 
-def test_management_service_runs_producer_and_returns_matching_products(
+def test_management_service_runs_producer_and_returns_live_report(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -93,25 +93,15 @@ def test_management_service_runs_producer_and_returns_matching_products(
         "generated_at": "2026-08-05T15:10:00Z",
         "rows": [],
     }
-    lookup = {
-        "schema_version": "docs_project_state_folder_lookup_v2",
-        "generation": report["generation"],
-        "generated_at": report["generated_at"],
-        "folders": {},
-    }
 
     class FakeProducer:
         def __init__(self, *, repo_root: Path) -> None:
             calls.append({"repo_root": repo_root})
 
-        def run(self, *, write_lookup: bool) -> dict[str, object]:
-            calls[-1]["write_lookup"] = write_lookup
+        def run(self) -> dict[str, object]:
             return {
                 "report": report,
-                "lookup": lookup,
                 "diagnostics": {},
-                "lookup_written": write_lookup,
-                "lookup_path": "var/docs/project-state/folder-lookup.json",
             }
 
     monkeypatch.setattr(management_service, "refresh_source_model_scope_configs", lambda _root: None)
@@ -127,25 +117,24 @@ def test_management_service_runs_producer_and_returns_matching_products(
     assert payload["ok"] is True
     assert payload["dry_run"] is False
     assert payload["report"] is report
-    assert payload["lookup"] is lookup
-    assert payload["report"]["generation"] == payload["lookup"]["generation"]
-    assert calls == [{"repo_root": tmp_path, "write_lookup": True}]
+    assert "lookup" not in payload
+    assert calls == [{"repo_root": tmp_path}]
 
 
-def test_management_service_dry_run_keeps_lookup_write_free(
+def test_management_service_dry_run_uses_the_same_read_only_operation(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     management_service = load_management_service(tmp_path, monkeypatch)
-    writes: list[bool] = []
+    runs: list[bool] = []
 
     class FakeProducer:
         def __init__(self, *, repo_root: Path) -> None:
             assert repo_root == tmp_path
 
-        def run(self, *, write_lookup: bool) -> dict[str, object]:
-            writes.append(write_lookup)
-            return {"report": {}, "lookup": {}}
+        def run(self) -> dict[str, object]:
+            runs.append(True)
+            return {"report": {}, "diagnostics": {}}
 
     monkeypatch.setattr(management_service, "refresh_source_model_scope_configs", lambda _root: None)
     monkeypatch.setattr(management_service.docs_project_state, "ProjectStateProducer", FakeProducer)
@@ -159,4 +148,5 @@ def test_management_service_dry_run_keeps_lookup_write_free(
 
     assert status == HTTPStatus.OK
     assert payload["dry_run"] is True
-    assert writes == [False]
+    assert runs == [True]
+    assert "lookup" not in payload

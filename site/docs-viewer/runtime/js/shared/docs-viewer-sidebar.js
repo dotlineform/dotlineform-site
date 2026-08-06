@@ -96,6 +96,9 @@ export function initDocsViewerSidebarRenderer(context) {
       }
       link.textContent = "";
       var uiStatus = context.statusForIndexDoc(doc);
+      var nonViewableEmoji = isDocNonViewable(doc)
+        ? String(context.scopeConfig && context.scopeConfig.docNonViewableEmoji || "\uD83D\uDEAB")
+        : "";
       if (uiStatus) {
         var statusIcon = document.createElement("span");
         statusIcon.className = "docsViewer__navStatus";
@@ -103,11 +106,11 @@ export function initDocsViewerSidebarRenderer(context) {
         statusIcon.textContent = uiStatus.emoji;
         link.appendChild(statusIcon);
       }
-      if (isDocNonViewable(doc)) {
+      if (nonViewableEmoji && (!uiStatus || uiStatus.emoji !== nonViewableEmoji)) {
         var draftIcon = document.createElement("span");
         draftIcon.className = "docsViewer__draftPrefix";
         draftIcon.setAttribute("aria-hidden", "true");
-        draftIcon.textContent = String(context.scopeConfig && context.scopeConfig.docNonViewableEmoji || "\uD83D\uDEAB");
+        draftIcon.textContent = nonViewableEmoji;
         link.appendChild(draftIcon);
       }
       link.appendChild(document.createTextNode(doc.title));

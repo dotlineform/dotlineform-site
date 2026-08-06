@@ -940,7 +940,7 @@
               "title": "Resolver Tokens Architecture (Retired)",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-174339-53877d.json",
               "viewable": false,
-              "ui_status": "done"
+              "ui_status": "stopped"
             },
             {
               "doc_id": "d-20260804-164519-c7ad4e",
@@ -1004,7 +1004,7 @@
               "doc_id": "d-20260801-133318-15e8fa",
               "title": "SSP-2 — Docs Viewer Project State Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133318-15e8fa.json",
-              "ui_status": "in-progress",
+              "ui_status": "done",
               "children": [
                 {
                   "doc_id": "d-20260805-141842-8115c8",
@@ -1034,6 +1034,12 @@
                   "doc_id": "d-20260805-202742-c6e13d",
                   "title": "SSP-2.5 — Project State Document Tracing Evidence",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-202742-c6e13d.json",
+                  "ui_status": "done"
+                },
+                {
+                  "doc_id": "d-20260806-073328-5c55a3",
+                  "title": "SSP-2.6 — Project State Lookup Retirement Evidence",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260806-073328-5c55a3.json",
                   "ui_status": "done"
                 }
               ]
@@ -1440,5 +1446,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-05T22:20:57Z"
+  "generated_at": "2026-08-06T07:36:35Z"
 }

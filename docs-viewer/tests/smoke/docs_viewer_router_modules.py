@@ -471,10 +471,6 @@ def assert_project_state_report_mount_refresh_and_failure(page: Page) -> None:
                     generated_at: generatedAt,
                     summary: counts,
                     rows
-                },
-                lookup: {
-                    schema_version: 'docs_project_state_folder_lookup_v2',
-                    generation: 'sha256:' + 'a'.repeat(64)
                 }
             });
             const row = {
@@ -841,7 +837,7 @@ def assert_project_state_report_service_path(page: Page) -> None:
                     return Promise.resolve({
                         ok: true,
                         status: 200,
-                        json: () => Promise.resolve({ ok: true, report: {}, lookup: {} })
+                        json: () => Promise.resolve({ ok: true, report: {} })
                     });
                 }
             });
@@ -855,7 +851,7 @@ def assert_project_state_report_service_path(page: Page) -> None:
             "method": "POST",
             "body": {},
         }],
-        "payload": {"ok": True, "report": {}, "lookup": {}},
+        "payload": {"ok": True, "report": {}},
     }
     if result != expected:
         raise AssertionError(f"Project State report service changed: {result!r}")

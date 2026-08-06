@@ -4,66 +4,42 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "d-20260802-123452-6a2fd3",
-      "title": "DMM-1 — Data Model Maps Foundation Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123452-6a2fd3.json",
-      "timestamp": "2026-08-05 23:23:59",
-      "parent_id": "d-20260802-123450-f7493d",
-      "parent_title": "Data Model Maps"
+      "doc_id": "d-20260806-073328-5c55a3",
+      "title": "SSP-2.6 — Project State Lookup Retirement Evidence",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260806-073328-5c55a3.json",
+      "timestamp": "2026-08-06 08:41:08",
+      "parent_id": "d-20260801-133318-15e8fa",
+      "parent_title": "SSP-2 — Docs Viewer Project State Delivery"
     },
     {
       "doc_id": "d-20260802-205912-16bc10",
       "title": "Cross-System Relationship Map",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-205912-16bc10.json",
-      "timestamp": "2026-08-05 23:23:49",
+      "timestamp": "2026-08-06 07:33:28",
       "parent_id": "d-20260802-123451-d0e52e",
       "parent_title": "Data Models Diagrams"
     },
     {
-      "doc_id": "d-20260802-194358-7717ee",
-      "title": "Sub-Scope Publishing Concept And Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194358-7717ee.json",
-      "timestamp": "2026-08-05 23:23:04",
+      "doc_id": "d-20260802-123452-6a2fd3",
+      "title": "DMM-1 — Data Model Maps Foundation Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123452-6a2fd3.json",
+      "timestamp": "2026-08-06 07:33:28",
+      "parent_id": "d-20260802-123450-f7493d",
+      "parent_title": "Data Model Maps"
+    },
+    {
+      "doc_id": "d-20260802-121105-c574f9",
+      "title": "Project State Concept And Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121105-c574f9.json",
+      "timestamp": "2026-08-06 07:33:28",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
     },
     {
-      "doc_id": "d-20260801-233534-239eab",
-      "title": "SSP-4 — Collection-Aware Document Copy Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-233534-239eab.json",
-      "timestamp": "2026-08-05 23:21:37",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
-    },
-    {
-      "doc_id": "d-20260802-194357-4d857b",
-      "title": "Sub-Scope Publishing",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194357-4d857b.json",
-      "timestamp": "2026-08-05 23:21:37",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260805-231829-947705",
-      "title": "SSP-7 — Document Lineage And Publication State Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-231829-947705.json",
-      "timestamp": "2026-08-05 23:18:29",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
-    },
-    {
-      "doc_id": "d-20260802-195805-94a5be",
-      "title": "SSP-5 — Work And Series Document Metadata Publication Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-195805-94a5be.json",
-      "timestamp": "2026-08-05 22:57:29",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
-    },
-    {
-      "doc_id": "d-20260802-174339-53877d",
-      "title": "Resolver Tokens Architecture (Retired)",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-174339-53877d.json",
-      "timestamp": "2026-08-05 22:48:00",
+      "doc_id": "d-20260801-133318-15e8fa",
+      "title": "SSP-2 — Docs Viewer Project State Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133318-15e8fa.json",
+      "timestamp": "2026-08-06 07:33:28",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
     },
@@ -71,7 +47,15 @@
       "doc_id": "d-20260805-141842-8115c8",
       "title": "SSP-2.0 — Project State Sanity Note",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-141842-8115c8.json",
-      "timestamp": "2026-08-05 22:47:26",
+      "timestamp": "2026-08-06 07:33:28",
+      "parent_id": "d-20260801-133318-15e8fa",
+      "parent_title": "SSP-2 — Docs Viewer Project State Delivery"
+    },
+    {
+      "doc_id": "d-20260805-153653-597788",
+      "title": "SSP-2.1 — Project State Producer Evidence",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-153653-597788.json",
+      "timestamp": "2026-08-06 07:33:28",
       "parent_id": "d-20260801-133318-15e8fa",
       "parent_title": "SSP-2 — Docs Viewer Project State Delivery"
     },
@@ -79,10 +63,26 @@
       "doc_id": "d-20260805-155935-66b9d4",
       "title": "SSP-2.2 — Basic Project State Report Evidence",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-155935-66b9d4.json",
-      "timestamp": "2026-08-05 22:47:26",
+      "timestamp": "2026-08-06 07:33:28",
+      "parent_id": "d-20260801-133318-15e8fa",
+      "parent_title": "SSP-2 — Docs Viewer Project State Delivery"
+    },
+    {
+      "doc_id": "d-20260805-172714-9c2a6e",
+      "title": "SSP-2.3 — Project State Interaction Evidence",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-172714-9c2a6e.json",
+      "timestamp": "2026-08-06 07:33:28",
+      "parent_id": "d-20260801-133318-15e8fa",
+      "parent_title": "SSP-2 — Docs Viewer Project State Delivery"
+    },
+    {
+      "doc_id": "d-20260805-202742-c6e13d",
+      "title": "SSP-2.5 — Project State Document Tracing Evidence",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-202742-c6e13d.json",
+      "timestamp": "2026-08-06 07:33:28",
       "parent_id": "d-20260801-133318-15e8fa",
       "parent_title": "SSP-2 — Docs Viewer Project State Delivery"
     }
   ],
-  "generated_at": "2026-08-05T22:23:59Z"
+  "generated_at": "2026-08-06T07:41:08Z"
 }

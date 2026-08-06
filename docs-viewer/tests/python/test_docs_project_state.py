@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Focused checks for the folder-centred Project State producer and lookup."""
+"""Focused checks for the folder-centred Project State producer."""
 
 from __future__ import annotations
 
@@ -19,7 +19,6 @@ if str(DOCS_SERVICES_DIR) not in sys.path:
     sys.path.insert(0, str(DOCS_SERVICES_DIR))
 
 from docs_project_state import (  # noqa: E402
-    LOOKUP_SCHEMA_VERSION,
     REPORT_SCHEMA_VERSION,
     ProjectStatePaths,
     ProjectStateProducer,
@@ -224,7 +223,6 @@ def build_fixture(root: Path) -> ProjectStatePaths:
     manifest_path = root / "inputs/manage-manifest.json"
     associations_path = root / "inputs/subject-associations.json"
     catalogue_dir = root / "studio/data/canonical/catalogue"
-    lookup_path = root / "var/docs/project-state/folder-lookup.json"
     manifest = fixture_manifest()
     write_json(manifest_path, manifest)
     write_json(associations_path, fixture_associations(manifest))
@@ -236,7 +234,6 @@ def build_fixture(root: Path) -> ProjectStatePaths:
         manage_manifest_path=manifest_path,
         subject_associations_path=associations_path,
         catalogue_source_dir=catalogue_dir,
-        lookup_path=lookup_path,
     )
 
 
@@ -272,14 +269,11 @@ def test_project_state_builds_only_scanned_folder_rows_and_exact_relationships()
             repo_root=root,
             paths=paths,
             clock=lambda: GENERATED_AT,
-        ).run(write_lookup=True)
+        ).run()
         report = result["report"]
-        lookup = read_json(paths.lookup_path)
 
     assert report["schema_version"] == REPORT_SCHEMA_VERSION
-    assert lookup["schema_version"] == LOOKUP_SCHEMA_VERSION
-    assert report["generation"] == lookup["generation"]
-    assert lookup["status"] == {"state": "current"}
+    assert set(result) == {"report", "diagnostics"}
     assert [row["folder"]["key"] for row in report["rows"]] == [
         "projects/alpha",
         "projects/beta",
@@ -287,8 +281,8 @@ def test_project_state_builds_only_scanned_folder_rows_and_exact_relationships()
         "projects/epsilon",
         "projects/gamma",
     ]
-    assert "projects/alpha/ink" not in lookup["folders"]
-    assert "projects/recorded-only" not in lookup["folders"]
+    assert "projects/alpha/ink" not in [row["folder"]["key"] for row in report["rows"]]
+    assert "projects/recorded-only" not in [row["folder"]["key"] for row in report["rows"]]
 
     alpha = row_by_key(report, "projects/alpha")
     assert alpha["folder"] == {
@@ -308,6 +302,19 @@ def test_project_state_builds_only_scanned_folder_rows_and_exact_relationships()
     assert [(series["target"]["target_id"], series["work_count"]) for series in alpha["series"]] == [
         ("001", 2),
         ("002", 1),
+    ]
+    assert [
+        (
+            document["target"]["doc_id"],
+            document["declared_subject"],
+            document["applicable_series_ids"],
+        )
+        for document in alpha["documents"]
+    ] == [
+        (DOC_ALPHA_A, {"kind": "folder", "key": "projects/alpha"}, ["001", "002"]),
+        (DOC_ALPHA_B, {"kind": "folder", "key": "projects/alpha"}, ["001", "002"]),
+        (DOC_SERIES, {"kind": "series", "key": "001"}, ["001"]),
+        (DOC_WORK, {"kind": "work", "key": "00001"}, ["001", "002"]),
     ]
 
     beta = row_by_key(report, "projects/beta")
@@ -333,50 +340,18 @@ def test_project_state_builds_only_scanned_folder_rows_and_exact_relationships()
     assert report["summary"]["matched_work_count"] == 5
     assert report["summary"]["series_membership_count"] == 4
 
-    alpha_lookup = lookup["folders"]["projects/alpha"]
-    assert alpha_lookup["works"][0] == {
-        "target": {"family": "catalogue", "target_type": "work", "target_id": "00001"},
-        "series_ids": ["001", "002"],
-    }
-    assert alpha_lookup["series"][0] == {
-        "target": {"family": "catalogue", "target_type": "series", "target_id": "001"},
-        "work_ids": ["00001", "00002"],
-    }
-    assert alpha_lookup["documents"] == [
-        {
-            "target": {"scope": "dotlineform", "sub_scope": "projects", "doc_id": DOC_ALPHA_A},
-            "declared_subject": {"kind": "folder", "key": "projects/alpha"},
-            "applicable_series_ids": ["001", "002"],
-        },
-        {
-            "target": {"scope": "dotlineform", "sub_scope": "projects", "doc_id": DOC_ALPHA_B},
-            "declared_subject": {"kind": "folder", "key": "projects/alpha"},
-            "applicable_series_ids": ["001", "002"],
-        },
-        {
-            "target": {"scope": "dotlineform", "sub_scope": "projects", "doc_id": DOC_SERIES},
-            "declared_subject": {"kind": "series", "key": "001"},
-            "applicable_series_ids": ["001"],
-        },
-        {
-            "target": {"scope": "dotlineform", "sub_scope": "projects", "doc_id": DOC_WORK},
-            "declared_subject": {"kind": "work", "key": "00001"},
-            "applicable_series_ids": ["001", "002"],
-        },
-    ]
     beta = row_by_key(report, "projects/beta")
     assert beta["matched_document_count"] == 2
     assert all(not document["applicable_series_ids"] for document in beta["documents"])
-    lookup_text = json.dumps(lookup)
+    report_text = json.dumps(report)
     for excluded in (
         "project_subfolder",
         "project_filename",
         "published_date",
         "Alpha one",
-        "/series/?series=",
-        "/docs/?scope=",
     ):
-        assert excluded not in lookup_text
+        assert excluded not in report_text
+    assert not (root / "var/docs/project-state").exists()
     assert not (root / "site/assets/data/docs/project-state").exists()
 
 
@@ -385,7 +360,7 @@ def test_project_state_ignores_non_relationship_work_fields() -> None:
         root = Path(temp_path)
         paths = build_fixture(root)
         producer = ProjectStateProducer(repo_root=root, paths=paths, clock=lambda: GENERATED_AT)
-        before = producer.run(write_lookup=False)
+        before = producer.run()
         works_payload = read_json(paths.catalogue_source_dir / "works.json")
         works_payload["works"]["00001"].update(
             {
@@ -397,10 +372,9 @@ def test_project_state_ignores_non_relationship_work_fields() -> None:
             }
         )
         write_json(paths.catalogue_source_dir / "works.json", works_payload)
-        after = producer.run(write_lookup=False)
+        after = producer.run()
 
     assert after["report"] == before["report"]
-    assert after["lookup"] == before["lookup"]
 
 
 def test_project_state_relationship_changes_replace_the_generation() -> None:
@@ -408,11 +382,11 @@ def test_project_state_relationship_changes_replace_the_generation() -> None:
         root = Path(temp_path)
         paths = build_fixture(root)
         producer = ProjectStateProducer(repo_root=root, paths=paths, clock=lambda: GENERATED_AT)
-        before = producer.run(write_lookup=False)
+        before = producer.run()
         works_payload = read_json(paths.catalogue_source_dir / "works.json")
         works_payload["works"]["00002"]["series_ids"] = ["002"]
         write_json(paths.catalogue_source_dir / "works.json", works_payload)
-        after = producer.run(write_lookup=False)
+        after = producer.run()
 
     assert after["report"]["generation"] != before["report"]["generation"]
     alpha = row_by_key(after["report"], "projects/alpha")
@@ -437,7 +411,7 @@ def test_series_subject_reaches_each_distinct_member_work_folder() -> None:
             repo_root=root,
             paths=paths,
             clock=lambda: GENERATED_AT,
-        ).run(write_lookup=False)["report"]
+        ).run()["report"]
 
     placements = [
         (row["folder"]["key"], document)
@@ -458,41 +432,17 @@ def test_series_subject_reaches_each_distinct_member_work_folder() -> None:
     assert report["summary"]["document_placement_count"] == 9
 
 
-def test_failed_refresh_preserves_the_complete_lookup_and_marks_it_stale() -> None:
+def test_failed_run_creates_no_persisted_product() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         paths = build_fixture(root)
-        timestamps = iter([GENERATED_AT, "2026-08-05T14:20:00Z"])
-        producer = ProjectStateProducer(repo_root=root, paths=paths, clock=lambda: next(timestamps))
-        producer.run(write_lookup=True)
-        complete = read_json(paths.lookup_path)
+        producer = ProjectStateProducer(repo_root=root, paths=paths, clock=lambda: GENERATED_AT)
+        producer.run()
         associations = read_json(paths.subject_associations_path)
         associations["subject_generation"] = "sha256:" + "2" * 64
         write_json(paths.subject_associations_path, associations)
 
         with pytest.raises(ValueError, match="generation receipts do not match"):
-            producer.run(write_lookup=True)
-        stale = read_json(paths.lookup_path)
+            producer.run()
 
-    assert stale["generation"] == complete["generation"]
-    assert stale["folders"] == complete["folders"]
-    assert stale["status"] == {
-        "state": "stale",
-        "failed_at": "2026-08-05T14:20:00Z",
-        "reason": "Projects subject generation receipts do not match",
-    }
-
-
-def test_failed_dry_run_does_not_create_a_lookup() -> None:
-    with tempfile.TemporaryDirectory() as temp_path:
-        root = Path(temp_path)
-        paths = build_fixture(root)
-        associations = read_json(paths.subject_associations_path)
-        associations["scope"] = "studio"
-        write_json(paths.subject_associations_path, associations)
-        producer = ProjectStateProducer(repo_root=root, paths=paths, clock=lambda: GENERATED_AT)
-
-        with pytest.raises(ValueError, match="wrong collection"):
-            producer.run(write_lookup=False)
-
-        assert not paths.lookup_path.exists()
+        assert not (root / "var/docs/project-state").exists()

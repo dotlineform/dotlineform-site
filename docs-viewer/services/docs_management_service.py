@@ -126,9 +126,7 @@ def docs_management_post_response(
         docs_activity.maybe_attach_broken_links_activity(repo_root, body, payload)
         return HTTPStatus.OK, payload
     if path == routes.PROJECT_STATE_PATH:
-        payload = docs_project_state.ProjectStateProducer(repo_root=repo_root).run(
-            write_lookup=not dry_run
-        )
+        payload = docs_project_state.ProjectStateProducer(repo_root=repo_root).run()
         payload["ok"] = True
         payload["dry_run"] = dry_run
         payload["summary_text"] = "Project State refreshed."
