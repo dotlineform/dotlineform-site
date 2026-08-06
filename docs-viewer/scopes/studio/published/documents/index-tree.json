@@ -1048,7 +1048,15 @@
               "doc_id": "d-20260802-174340-2fe9f4",
               "title": "SSP-3 — Insert Subject Link Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-174340-2fe9f4.json",
-              "ui_status": "proposed"
+              "ui_status": "in-progress",
+              "children": [
+                {
+                  "doc_id": "d-20260806-075026-50978e",
+                  "title": "SSP-3.0 — Insert Subject Link Sanity Note",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260806-075026-50978e.json",
+                  "ui_status": "done"
+                }
+              ]
             },
             {
               "doc_id": "d-20260801-233534-239eab",
@@ -1446,5 +1454,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-06T07:36:35Z"
+  "generated_at": "2026-08-06T07:52:15Z"
 }

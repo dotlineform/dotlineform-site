@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-da507753d99a5afa90447b9416b73680",
-    "generated_at_utc": "2026-08-06T07:41:08Z",
-    "count": 255
+    "version": "blake2b-e08e73394e4a5dcca2b0a0a2c9ed4db3",
+    "generated_at_utc": "2026-08-06T08:00:45Z",
+    "count": 256
   },
   "entries": [
     {
@@ -4282,26 +4282,26 @@
       "kind": "doc",
       "title": "Sub-Scope Publishing",
       "href": "/docs/?scope=studio&doc=d-20260802-194357-4d857b",
-      "last_updated": "2026-08-06 07:33:28",
+      "last_updated": "2026-08-06 07:54:16",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-06 07:33:28 • Roadmap",
+      "display_meta": "2026-08-06 07:54:16 • Roadmap",
       "search_terms": [
         "sub-scope publishing",
         "sub",
         "scope",
         "publishing",
         "roadmap",
-        "2026-08-06 07:33:28",
+        "2026-08-06 07:54:16",
         "2026",
         "08",
         "06",
         "07",
-        "33",
-        "28",
+        "54",
+        "16",
         "d-20260802-194357-4d857b"
       ],
-      "search_text": "sub-scope publishing sub scope publishing roadmap 2026-08-06 07:33:28 2026 08 06 07 33 28 d-20260802-194357-4d857b"
+      "search_text": "sub-scope publishing sub scope publishing roadmap 2026-08-06 07:54:16 2026 08 06 07 54 16 d-20260802-194357-4d857b"
     },
     {
       "id": "d-20260802-121105-c574f9",
@@ -4870,10 +4870,10 @@
       "kind": "doc",
       "title": "SSP-3 — Insert Subject Link Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-174340-2fe9f4",
-      "last_updated": "2026-08-05 21:34:00",
+      "last_updated": "2026-08-06 07:59:56",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-05 21:34:00 • Sub-Scope Publishing",
+      "display_meta": "2026-08-06 07:59:56 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-3 — insert subject link delivery",
         "ssp",
@@ -4886,16 +4886,48 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-05 21:34:00",
+        "2026-08-06 07:59:56",
         "2026",
         "08",
-        "05",
-        "21",
-        "34",
-        "00",
+        "06",
+        "07",
+        "59",
+        "56",
         "d-20260802-174340-2fe9f4"
       ],
-      "search_text": "ssp-3 — insert subject link delivery ssp 3 insert subject link delivery sub-scope publishing sub scope publishing 2026-08-05 21:34:00 2026 08 05 21 34 00 d-20260802-174340-2fe9f4"
+      "search_text": "ssp-3 — insert subject link delivery ssp 3 insert subject link delivery sub-scope publishing sub scope publishing 2026-08-06 07:59:56 2026 08 06 07 59 56 d-20260802-174340-2fe9f4"
+    },
+    {
+      "id": "d-20260806-075026-50978e",
+      "kind": "doc",
+      "title": "SSP-3.0 — Insert Subject Link Sanity Note",
+      "href": "/docs/?scope=studio&doc=d-20260806-075026-50978e",
+      "last_updated": "2026-08-06 07:59:56",
+      "parent_id": "d-20260802-174340-2fe9f4",
+      "parent_title": "SSP-3 — Insert Subject Link Delivery",
+      "display_meta": "2026-08-06 07:59:56 • SSP-3 — Insert Subject Link Delivery",
+      "search_terms": [
+        "ssp-3.0 — insert subject link sanity note",
+        "ssp",
+        "3",
+        "0",
+        "insert",
+        "subject",
+        "link",
+        "sanity",
+        "note",
+        "ssp-3 — insert subject link delivery",
+        "delivery",
+        "2026-08-06 07:59:56",
+        "2026",
+        "08",
+        "06",
+        "07",
+        "59",
+        "56",
+        "d-20260806-075026-50978e"
+      ],
+      "search_text": "ssp-3.0 — insert subject link sanity note ssp 3 0 insert subject link sanity note ssp-3 — insert subject link delivery delivery 2026-08-06 07:59:56 2026 08 06 07 59 56 d-20260806-075026-50978e"
     },
     {
       "id": "d-20260801-233534-239eab",
