@@ -82,6 +82,9 @@ def install_modules(page: Page) -> None:
             const sourceClient = await import(
                 '/docs-viewer/runtime/js/management/docs-viewer-management-client.js'
             );
+            const subjectLink = await import(
+                '/docs-viewer/runtime/js/management/source-editor/subject-link-contribution.js'
+            );
             const documentTarget = await import(
                 '/docs-viewer/runtime/js/management/docs-viewer-management-document-target.js'
             );
@@ -102,6 +105,7 @@ def install_modules(page: Page) -> None:
                 sourceAdapter,
                 sourceClient,
                 sourceEditor,
+                subjectLink,
                 targets
             };
         }"""
@@ -639,6 +643,8 @@ def assert_source_target_transport_and_fixed_session(page: Page) -> None:
             };
             await smoke.sourceClient.readManagedDocSource(parent, options);
             await smoke.sourceClient.readManagedDocSource(detail, options);
+            await smoke.sourceClient.readManagedDocMetadata(detail, options);
+            await smoke.sourceClient.validateLocalTarget('projects/nerve', options);
             await smoke.sourceClient.rebuildManagedDocSource(detail, {
                 source_revision: 'r1',
                 source_body: '# Detail'
@@ -669,6 +675,8 @@ def assert_source_target_transport_and_fixed_session(page: Page) -> None:
                 }
             });
             await adapter.readSource(detail);
+            await adapter.readMetadata(detail);
+            await adapter.validateLocalTarget('projects/nerve');
             await adapter.writeSource(detail, {
                 source_revision: 'r2',
                 source_body: '# Adapter'
@@ -898,6 +906,16 @@ def assert_source_target_transport_and_fixed_session(page: Page) -> None:
             "body": None,
         },
         {
+            "url": "http://manage.test/docs/metadata?scope=studio&sub_scope=tags&doc_id=detail-doc",
+            "method": "GET",
+            "body": None,
+        },
+        {
+            "url": "http://manage.test/docs/validate-local-target",
+            "method": "POST",
+            "body": {"target": "projects/nerve"},
+        },
+        {
             "url": "http://manage.test/docs/source/rebuild",
             "method": "POST",
             "body": {
@@ -940,6 +958,14 @@ def assert_source_target_transport_and_fixed_session(page: Page) -> None:
         {
             "url": "http://adapter.test/docs/source?scope=studio&sub_scope=tags&doc_id=detail-doc",
             "body": None,
+        },
+        {
+            "url": "http://adapter.test/docs/metadata?scope=studio&sub_scope=tags&doc_id=detail-doc",
+            "body": None,
+        },
+        {
+            "url": "http://adapter.test/docs/validate-local-target",
+            "body": {"target": "projects/nerve"},
         },
         {
             "url": "http://adapter.test/docs/source/rebuild",
@@ -1833,6 +1859,354 @@ def assert_real_keyboard_tab_and_scroll_flow(page: Page) -> None:
     )
 
 
+def assert_subject_link_planning_and_source_integration(page: Page) -> None:
+    result = page.evaluate(
+        r"""async () => {
+            const smoke = window.__catalogueTokenSmoke;
+            const subjectLinks = smoke.subjectLink;
+            const registry = smoke.registry.normalizeSemanticTokenRegistry({
+                schema_version: 'docs_semantic_token_registry_v1',
+                target_lookup_url: '/targets.json',
+                families: [{
+                    key: 'catalogue',
+                    target_types: [
+                        { key: 'work', id_policy: { canonical_pattern: '^\\d{5}$' } },
+                        { key: 'series', id_policy: { canonical_pattern: '^[a-z0-9][a-z0-9-]*$' } }
+                    ]
+                }]
+            });
+            const workTarget = {
+                family: 'catalogue', targetType: 'work', targetId: '00123',
+                title: 'Work | title', href: '/works/?work=00123', meta: []
+            };
+            const seriesTarget = {
+                family: 'catalogue', targetType: 'series', targetId: '026',
+                title: 'Series title', href: '/series/?series=026', meta: []
+            };
+            const subjects = {
+                none: { state: 'none', kind: 'none', key: '', fields: [] },
+                work: { state: 'valid', kind: 'work', key: '00123', fields: ['work_id'] },
+                series: { state: 'valid', kind: 'series', key: '026', fields: ['series_id'] },
+                folder: {
+                    state: 'valid', kind: 'folder', key: 'projects/3 symbols/[draft]',
+                    fields: ['folder_path']
+                },
+                invalidFolder: {
+                    state: 'valid', kind: 'folder', key: '../draft', fields: ['folder_path']
+                },
+                malformed: {
+                    state: 'malformed', kind: 'work', key: '', fields: ['work_id'],
+                    evidence: { work_id: '123' }
+                },
+                conflicting: {
+                    state: 'conflicting', kind: 'conflict', key: '',
+                    fields: ['work_id', 'series_id'],
+                    evidence: { work_id: '00123', series_id: '026' }
+                }
+            };
+            const plans = {
+                work: subjectLinks.createSubjectLinkInsertionPlan({
+                    subject: subjects.work, registry, catalogueTarget: workTarget
+                }),
+                series: subjectLinks.createSubjectLinkInsertionPlan({
+                    subject: subjects.series, registry, catalogueTarget: seriesTarget
+                }),
+                folder: subjectLinks.createSubjectLinkInsertionPlan({
+                    subject: subjects.folder, localTargetValidated: true
+                }),
+                none: subjectLinks.createSubjectLinkInsertionPlan({ subject: subjects.none }),
+                malformed: subjectLinks.createSubjectLinkInsertionPlan({ subject: subjects.malformed }),
+                conflicting: subjectLinks.createSubjectLinkInsertionPlan({ subject: subjects.conflicting }),
+                unavailableWork: subjectLinks.createSubjectLinkInsertionPlan({ subject: subjects.work }),
+                invalidFolder: subjectLinks.createSubjectLinkInsertionPlan({
+                    subject: subjects.invalidFolder, localTargetValidated: true
+                }),
+                unavailableFolder: subjectLinks.createSubjectLinkInsertionPlan({
+                    subject: subjects.folder,
+                    unavailableMessage: 'The local-folder target does not exist.'
+                })
+            };
+
+            const definition = subjectLinks.subjectLinkControlDefinition();
+            const renderedButton = subjectLinks.subjectLinkControlRenderer({ document });
+            const handlers = subjectLinks.createSubjectLinkMainViewControlHandlers();
+            const exactTarget = {
+                scope: 'studio', sub_scope: 'projects', doc_id: 'subject-doc'
+            };
+            const exactResponse = subject => ({
+                ok: true,
+                ...exactTarget,
+                record: { doc_id: exactTarget.doc_id, authoring_subject: subject }
+            });
+            const exactSubject = subjectLinks.subjectFromMetadataResponse(
+                exactResponse(subjects.work), exactTarget
+            );
+            let mismatchMessage = '';
+            try {
+                subjectLinks.subjectFromMetadataResponse({
+                    ...exactResponse(subjects.work), doc_id: 'different-doc',
+                    record: { doc_id: 'different-doc', authoring_subject: subjects.work }
+                }, exactTarget);
+            } catch (error) {
+                mismatchMessage = String(error && error.message || '');
+            }
+
+            const root = document.createElement('div');
+            const mount = document.createElement('div');
+            root.appendChild(mount);
+            document.body.appendChild(root);
+            let activeAdapter = null;
+            const metadataTargets = [];
+            const writeCalls = [];
+            const controlStates = {};
+            let currentMetadataSubject = subjects.work;
+            const mode = smoke.sourceEditor.createDocsViewerSourceEditorMode();
+            await mode.mount({
+                root,
+                mount,
+                sourceTarget: exactTarget,
+                collectionProvider: {
+                    readSource() {
+                        return Promise.resolve({
+                            ...exactTarget,
+                            source_revision: 'r1',
+                            source_body: 'Before after'
+                        });
+                    },
+                    readMetadata(target) {
+                        metadataTargets.push({ ...target });
+                        return Promise.resolve(exactResponse(currentMetadataSubject));
+                    },
+                    validateLocalTarget() {
+                        throw new Error('Work insertion must not validate a local target.');
+                    },
+                    writeSource(target, payload) {
+                        writeCalls.push({ target: { ...target }, payload: { ...payload } });
+                        return Promise.resolve({ ...target, source_revision: 'r2' });
+                    }
+                },
+                documentView: {
+                    projectToolbar() {},
+                    requestMode() {}
+                },
+                sourceEditorServices: {
+                    projectMainViewControlState(controlId, state) {
+                        controlStates[controlId] = { ...state };
+                    },
+                    setActiveSourceEditorContextAdapter(adapter) {
+                        activeAdapter = adapter;
+                    },
+                    sourceEditorActionControlIds: [subjectLinks.SUBJECT_LINK_CONTROL_ID]
+                }
+            });
+            const textarea = mount.querySelector('textarea');
+            textarea.setSelectionRange(7, 12);
+            let busyStarts = 0;
+            let busyStops = 0;
+            const support = {
+                registry,
+                searchableTargets: [workTarget, seriesTarget],
+                targetTypes: new Set(['work', 'series'])
+            };
+            const integrationHandlers = subjectLinks.createSubjectLinkMainViewControlHandlers({
+                loadCatalogueTargetSupport() { return Promise.resolve(support); }
+            });
+            const inserted = await integrationHandlers[subjectLinks.SUBJECT_LINK_CONTROL_ID]({
+                root,
+                sourceEditorServices: {
+                    getActiveSourceEditorContextAdapter() { return activeAdapter; },
+                    startBusy() {
+                        busyStarts += 1;
+                        return () => { busyStops += 1; };
+                    }
+                }
+            });
+            const insertedSnapshot = textarea.value;
+            currentMetadataSubject = subjects.series;
+            await Promise.resolve();
+            const integration = {
+                activeElement: document.activeElement === textarea,
+                busyStarts,
+                busyStops,
+                controlState: controlStates[subjectLinks.SUBJECT_LINK_CONTROL_ID],
+                dirty: !mount.querySelector('.docsViewerSourceEditor__dirty').hidden,
+                inserted,
+                metadataTargets,
+                statusHidden: mount.querySelector('.docsViewerSourceEditor__status').hidden,
+                statusText: mount.querySelector('.docsViewerSourceEditor__status').textContent,
+                subjectReassignmentSnapshot: {
+                    before: insertedSnapshot,
+                    after: textarea.value
+                },
+                value: textarea.value,
+                writeCalls
+            };
+            mode.unmount({ root, mount, sourceEditorServices: {} });
+            root.remove();
+
+            async function runActionCase(subject, options = {}) {
+                const statuses = [];
+                const replacements = [];
+                const adapter = {
+                    getDocumentTarget() { return { ...exactTarget }; },
+                    readDocumentMetadata() {
+                        if (options.metadataError) return Promise.reject(new Error(options.metadataError));
+                        return Promise.resolve(options.response || exactResponse(subject));
+                    },
+                    replaceSelection(value) {
+                        replacements.push(value);
+                        return options.replaceResult !== false;
+                    },
+                    setStatus(message, isError) { statuses.push({ message, isError }); },
+                    validateLocalTarget(target) {
+                        if (options.validationError) {
+                            return Promise.reject(new Error(options.validationError));
+                        }
+                        return Promise.resolve({ ok: true, state: 'valid', target });
+                    }
+                };
+                const caseSupport = {
+                    registry,
+                    searchableTargets: options.targets || [workTarget, seriesTarget],
+                    targetTypes: new Set(['work', 'series'])
+                };
+                const result = await subjectLinks.insertSubjectLink({
+                    sourceEditorServices: {
+                        getActiveSourceEditorContextAdapter() { return adapter; },
+                        localFolderLinksCapability() {
+                            return options.localCapability === false ? null : { authoring: true };
+                        }
+                    }
+                }, {
+                    loadCatalogueTargetSupport() {
+                        return options.catalogueError
+                            ? Promise.reject(new Error('lookup unavailable'))
+                            : Promise.resolve(caseSupport);
+                    }
+                });
+                return { replacements, result, statuses };
+            }
+
+            const actions = {
+                series: await runActionCase(subjects.series),
+                folder: await runActionCase(subjects.folder),
+                none: await runActionCase(subjects.none),
+                malformed: await runActionCase(subjects.malformed),
+                conflicting: await runActionCase(subjects.conflicting),
+                unknownWork: await runActionCase(subjects.work, { targets: [] }),
+                catalogueError: await runActionCase(subjects.work, { catalogueError: true }),
+                invalidFolder: await runActionCase(subjects.invalidFolder),
+                missingFolder: await runActionCase(subjects.folder, {
+                    validationError: 'The local-folder target does not exist.'
+                }),
+                unavailableLocal: await runActionCase(subjects.folder, { localCapability: false }),
+                missingMetadata: await runActionCase(subjects.none, {
+                    response: { ok: true, ...exactTarget, record: { doc_id: exactTarget.doc_id } }
+                }),
+                mismatchedMetadata: await runActionCase(subjects.work, {
+                    response: {
+                        ...exactResponse(subjects.work), doc_id: 'different-doc',
+                        record: { doc_id: 'different-doc', authoring_subject: subjects.work }
+                    }
+                }),
+                failedReplacement: await runActionCase(subjects.series, { replaceResult: false })
+            };
+            return {
+                actions,
+                definition,
+                exactSubject,
+                handlerIds: Object.keys(handlers),
+                integration,
+                mismatchMessage,
+                plans,
+                rendererIcon: renderedButton.textContent
+            };
+        }"""
+    )
+    if result["definition"] != {
+        "id": "source-insert-subject-link",
+        "actionId": "source-insert-subject-link",
+        "label": "Insert subject link",
+        "ownerType": "view",
+        "ownerViewId": "rendered-document",
+        "modeIds": ["markdown-source"],
+        "surfaceId": "main-view",
+        "appKinds": ["manage"],
+        "features": ["source-editing"],
+        "renderer": "source-insert-subject-link",
+    } or result["handlerIds"] != ["source-insert-subject-link"] or result["rendererIcon"] != "🔗":
+        raise AssertionError(f"subject-link control composition changed: {result!r}")
+    if result["exactSubject"] != {
+        "state": "valid",
+        "kind": "work",
+        "key": "00123",
+        "fields": ["work_id"],
+    } or result["mismatchMessage"] != "Document subject metadata did not match the active document.":
+        raise AssertionError(f"subject-link metadata targeting changed: {result!r}")
+    expected_plans = {
+        "work": {"ok": True, "state": "ready", "message": "", "value": r"[[catalogue:work:00123|Work \| title]]"},
+        "series": {"ok": True, "state": "ready", "message": "", "value": "[[catalogue:series:026|Series title]]"},
+        "folder": {"ok": True, "state": "ready", "message": "", "value": r"[\[draft\]](dlf-local:projects/3%20symbols/%5Bdraft%5D)"},
+        "none": {"ok": False, "state": "none", "message": "This document has no subject link to insert.", "value": ""},
+        "malformed": {"ok": False, "state": "malformed", "message": "The document subject is malformed.", "value": ""},
+        "conflicting": {"ok": False, "state": "conflicting", "message": "The document has conflicting subject fields.", "value": ""},
+        "unavailableWork": {"ok": False, "state": "unavailable-catalogue", "message": "The Work subject target is unavailable.", "value": ""},
+        "invalidFolder": {"ok": False, "state": "invalid-folder", "message": "The Folder subject path is invalid.", "value": ""},
+        "unavailableFolder": {"ok": False, "state": "unavailable-folder", "message": "The local-folder target does not exist.", "value": ""},
+    }
+    if result["plans"] != expected_plans:
+        raise AssertionError(f"subject-link pure plans changed: {result!r}")
+    if result["integration"] != {
+        "activeElement": True,
+        "busyStarts": 1,
+        "busyStops": 1,
+        "controlState": {"busy": False, "disabled": False},
+        "dirty": True,
+        "inserted": True,
+        "metadataTargets": [{
+            "scope": "studio", "sub_scope": "projects", "doc_id": "subject-doc",
+        }],
+        "statusHidden": True,
+        "statusText": "",
+        "subjectReassignmentSnapshot": {
+            "before": r"Before [[catalogue:work:00123|Work \| title]]",
+            "after": r"Before [[catalogue:work:00123|Work \| title]]",
+        },
+        "value": r"Before [[catalogue:work:00123|Work \| title]]",
+        "writeCalls": [],
+    }:
+        raise AssertionError(f"subject-link Source integration changed: {result!r}")
+    actions = result["actions"]
+    if actions["series"]["replacements"] != ["[[catalogue:series:026|Series title]]"]:
+        raise AssertionError(f"Series subject action changed: {result!r}")
+    if actions["folder"]["replacements"] != [r"[\[draft\]](dlf-local:projects/3%20symbols/%5Bdraft%5D)"]:
+        raise AssertionError(f"Folder subject action changed: {result!r}")
+    expected_failures = {
+        "none": "This document has no subject link to insert.",
+        "malformed": "The document subject is malformed.",
+        "conflicting": "The document has conflicting subject fields.",
+        "unknownWork": "The Work subject target is unavailable.",
+        "catalogueError": "The Work subject target is unavailable.",
+        "invalidFolder": "The Folder subject path is invalid.",
+        "missingFolder": "The local-folder target does not exist.",
+        "unavailableLocal": "The Folder subject target is unavailable.",
+        "missingMetadata": "This document does not expose subject metadata.",
+        "mismatchedMetadata": "Document subject metadata did not match the active document.",
+        "failedReplacement": "Subject link could not be inserted.",
+    }
+    for case_id, message in expected_failures.items():
+        case = actions[case_id]
+        expected_replacements = (
+            ["[[catalogue:series:026|Series title]]"]
+            if case_id == "failedReplacement"
+            else []
+        )
+        if case["result"] is not False or case["replacements"] != expected_replacements:
+            raise AssertionError(f"failed subject-link action mutated unexpectedly: {case_id} {case!r}")
+        if case["statuses"][-1] != {"message": message, "isError": True}:
+            raise AssertionError(f"subject-link contained reason changed: {case_id} {case!r}")
+
+
 def run_smoke(page: Page, base_url: str) -> None:
     page.goto(base_url, wait_until="domcontentloaded")
     install_styles(page, base_url)
@@ -1841,6 +2215,7 @@ def run_smoke(page: Page, base_url: str) -> None:
     assert_source_adapter_captures_and_guards_range(page)
     assert_directive_actions_insertion_and_menu_contract(page)
     assert_source_target_transport_and_fixed_session(page)
+    assert_subject_link_planning_and_source_integration(page)
     assert_modal_insertion_cancellation_and_stale_guard(page)
     assert_catalogue_info_exact_range_update_remove_and_stale_guard(page)
     assert_real_keyboard_tab_and_scroll_flow(page)

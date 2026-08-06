@@ -377,6 +377,10 @@ def install_smoke_document_routes(
                     f"<h1>{subscope_state['title']}</h1>"
                     f'<p data-smoke-detail-version="{version}">'
                     f"Synthetic detail version {version}.</p>"
+                    '<p><a href="/series/?series=001"'
+                    ' data-semantic-token-family="catalogue"'
+                    ' data-semantic-token-target-type="series"'
+                    ' data-semantic-token-target-id="001">Smoke Series</a></p>'
                 ),
             },
         )
@@ -1718,6 +1722,7 @@ def assert_action_target_definitions(page: Page) -> None:
             "source-add-catalogue-token",
             "source-add-file",
             "source-add-image",
+            "source-insert-subject-link",
         ],
         "all": ["copy", "delete", "export-docs", "move", "prepare-document-package"],
         "document": [
@@ -2483,9 +2488,13 @@ def wait_for_subscope_detail(
             const versionNode = document.querySelector('[data-smoke-detail-version]');
             const parentSource = document.querySelector('#docsViewerManageSourceButton');
             const subdocSource = document.querySelector('#docsViewerManageSubdocSourceButton');
+            const semanticLink = detail?.querySelector(
+                'a[data-semantic-token-family="catalogue"]'
+            );
             return report?.dataset.reportState === 'detail'
                 && detail?.dataset.reportSubdocTitle === expectedTitle
                 && versionNode?.dataset.smokeDetailVersion === String(expectedVersion)
+                && semanticLink?.href === 'http://127.0.0.1:4000/series/?series=001'
                 && parentSource?.getAttribute('aria-label') === 'Parent Source'
                 && subdocSource?.disabled === false;
         }""",
@@ -3082,7 +3091,7 @@ def exercise_manage_route(
             const actions = document.querySelector('[data-docs-viewer-control-surface-mount="main-view"]');
             return root?.dataset.documentDisplayMode === 'markdown-source'
                 && actions
-                && Array.from(actions.children).map(node => node.dataset.docsViewerControl).join(',') === 'open-vscode,source-add-image,source-add-file,source-add-catalogue-token,source-directives,save-markdown-source,markdown-source,subdoc-source,return-to-doc,info'
+                && Array.from(actions.children).map(node => node.dataset.docsViewerControl).join(',') === 'open-vscode,source-add-image,source-add-file,source-add-catalogue-token,source-insert-subject-link,source-directives,save-markdown-source,markdown-source,subdoc-source,return-to-doc,info'
                 && !document.querySelector('#docsViewerManageSourceSaveButton')?.disabled
                 && !document.querySelector('#docsViewerManageSourceDirectivesButton')?.disabled
                 && document.querySelector('#docsViewerManageSourceButton')?.disabled

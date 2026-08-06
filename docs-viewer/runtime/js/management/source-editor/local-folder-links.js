@@ -22,6 +22,21 @@ function shellUnescape(value) {
   return output;
 }
 
+export function createLocalFolderLink(value) {
+  var target = typeof value === "string" ? value : "";
+  var encodedTarget = encodeDecodedLocalTarget(target);
+  if (!encodedTarget) return null;
+  var parts = target.split("/");
+  var label = parts[parts.length - 1];
+  var escapedLabel = label.replace(/\\/g, "\\\\").replace(/\[/g, "\\[").replace(/\]/g, "\\]");
+  return {
+    target: target,
+    encodedTarget: encodedTarget,
+    label: label,
+    markdown: "[" + escapedLabel + "](dlf-local:" + encodedTarget + ")"
+  };
+}
+
 export function normalizeLocalFolderPath(value, basePath) {
   if (typeof value !== "string" || !value || value !== value.trim() || hasControl(value)) return null;
   var absolute;
@@ -40,11 +55,7 @@ export function normalizeLocalFolderPath(value, basePath) {
   if (!candidate || !base || candidate.length === base.length) return null;
   if (!base.every(function (part, index) { return candidate[index] === part; })) return null;
   var relativeParts = candidate.slice(base.length);
-  var target = encodeDecodedLocalTarget(relativeParts.join("/"));
-  if (!target) return null;
-  var label = relativeParts[relativeParts.length - 1];
-  var escapedLabel = label.replace(/\\/g, "\\\\").replace(/\[/g, "\\[").replace(/\]/g, "\\]");
-  return { target: relativeParts.join("/"), encodedTarget: target, label: label, markdown: "[" + escapedLabel + "](dlf-local:" + target + ")" };
+  return createLocalFolderLink(relativeParts.join("/"));
 }
 
 export function markdownRangeIsOrdinary(markdown, start, end) {

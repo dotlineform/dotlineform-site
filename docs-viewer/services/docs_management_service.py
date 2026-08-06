@@ -121,6 +121,8 @@ def docs_management_post_response(
         return HTTPStatus.OK, docs_diagram_source_service.open_diagram_source(repo_root, body, dry_run)
     if path == routes.OPEN_LOCAL_TARGET_PATH:
         return docs_local_links.open_local_target_response(repo_root, body, dry_run=dry_run)
+    if path == routes.VALIDATE_LOCAL_TARGET_PATH:
+        return docs_local_links.validate_local_target_response(repo_root, body)
     if path == routes.BROKEN_LINKS_PATH:
         payload = handle_broken_links(repo_root, body)
         docs_activity.maybe_attach_broken_links_activity(repo_root, body, payload)

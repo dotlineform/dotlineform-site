@@ -90,6 +90,10 @@ export function openLocalTarget(target, options) {
   return fetchManagementJson("/docs/open-local-target", "POST", { target: String(target || "") }, options);
 }
 
+export function validateLocalTarget(target, options) {
+  return fetchManagementJson("/docs/validate-local-target", "POST", { target: String(target || "") }, options);
+}
+
 export function createManagedDoc(payload, options) {
   return fetchManagementJson("/docs/create", "POST", scopedPayload(payload, options), options);
 }

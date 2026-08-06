@@ -7,6 +7,9 @@ import {
 import {
   directiveActionsControlDefinition
 } from "./source-editor/directive-actions.js";
+import {
+  subjectLinkControlDefinition
+} from "./source-editor/subject-link-contribution.js";
 
 export function createDocsViewerManagementViewDefinitions() {
   return {
@@ -166,6 +169,7 @@ export function createDocsViewerManagementViewDefinitions() {
         renderer: "source-add-file"
       },
       catalogueTokenControlDefinition(),
+      subjectLinkControlDefinition(),
       directiveActionsControlDefinition(),
       {
         id: "save-markdown-source",

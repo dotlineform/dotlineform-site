@@ -4,85 +4,85 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "d-20260806-073328-5c55a3",
-      "title": "SSP-2.6 — Project State Lookup Retirement Evidence",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260806-073328-5c55a3.json",
-      "timestamp": "2026-08-06 08:41:08",
-      "parent_id": "d-20260801-133318-15e8fa",
-      "parent_title": "SSP-2 — Docs Viewer Project State Delivery"
-    },
-    {
-      "doc_id": "d-20260802-174340-2fe9f4",
-      "title": "SSP-3 — Insert Subject Link Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-174340-2fe9f4.json",
-      "timestamp": "2026-08-06 07:59:56",
+      "doc_id": "d-20260801-233534-239eab",
+      "title": "SSP-4 — Collection-Aware Document Copy Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-233534-239eab.json",
+      "timestamp": "2026-08-06 22:57:24",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
     },
     {
-      "doc_id": "d-20260806-075026-50978e",
-      "title": "SSP-3.0 — Insert Subject Link Sanity Note",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260806-075026-50978e.json",
-      "timestamp": "2026-08-06 07:59:56",
-      "parent_id": "d-20260802-174340-2fe9f4",
-      "parent_title": "SSP-3 — Insert Subject Link Delivery"
+      "doc_id": "d-20260806-225724-aa5e6a",
+      "title": "SSP-4.0 — Collection-Aware Copy Sanity Note",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260806-225724-aa5e6a.json",
+      "timestamp": "2026-08-06 22:57:24",
+      "parent_id": "d-20260801-233534-239eab",
+      "parent_title": "SSP-4 — Collection-Aware Document Copy Delivery"
     },
     {
       "doc_id": "d-20260802-194357-4d857b",
       "title": "Sub-Scope Publishing",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194357-4d857b.json",
-      "timestamp": "2026-08-06 07:54:16",
+      "timestamp": "2026-08-06 22:57:24",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
     },
     {
-      "doc_id": "d-20260802-205912-16bc10",
-      "title": "Cross-System Relationship Map",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-205912-16bc10.json",
-      "timestamp": "2026-08-06 07:33:28",
-      "parent_id": "d-20260802-123451-d0e52e",
-      "parent_title": "Data Models Diagrams"
+      "doc_id": "d-20260806-224924-7a3c91",
+      "title": "SSP-3.2 — Verification And Owner Transfer Evidence",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260806-224924-7a3c91.json",
+      "timestamp": "2026-08-06 22:50:44",
+      "parent_id": "d-20260802-174340-2fe9f4",
+      "parent_title": "SSP-3 — Insert Subject Link Delivery"
     },
     {
-      "doc_id": "d-20260802-123452-6a2fd3",
-      "title": "DMM-1 — Data Model Maps Foundation Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123452-6a2fd3.json",
-      "timestamp": "2026-08-06 07:33:28",
-      "parent_id": "d-20260802-123450-f7493d",
-      "parent_title": "Data Model Maps"
-    },
-    {
-      "doc_id": "d-20260802-121105-c574f9",
-      "title": "Project State Concept And Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121105-c574f9.json",
-      "timestamp": "2026-08-06 07:33:28",
+      "doc_id": "d-20260802-174340-2fe9f4",
+      "title": "SSP-3 — Insert Subject Link Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-174340-2fe9f4.json",
+      "timestamp": "2026-08-06 22:49:24",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
     },
     {
-      "doc_id": "d-20260801-133318-15e8fa",
-      "title": "SSP-2 — Docs Viewer Project State Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133318-15e8fa.json",
-      "timestamp": "2026-08-06 07:33:28",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
+      "doc_id": "d-20260714-234030-434069",
+      "title": "Semantic Tokens Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-434069.json",
+      "timestamp": "2026-08-06 22:47:23",
+      "parent_id": "d-20260725-153656-516b61",
+      "parent_title": "Semantic Tokens"
     },
     {
-      "doc_id": "d-20260805-141842-8115c8",
-      "title": "SSP-2.0 — Project State Sanity Note",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-141842-8115c8.json",
-      "timestamp": "2026-08-06 07:33:28",
-      "parent_id": "d-20260801-133318-15e8fa",
-      "parent_title": "SSP-2 — Docs Viewer Project State Delivery"
+      "doc_id": "d-20260623-180405-631ef4",
+      "title": "Semantic Tokens Source Editor UI",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260623-180405-631ef4.json",
+      "timestamp": "2026-08-06 22:47:23",
+      "parent_id": "d-20260725-153656-516b61",
+      "parent_title": "Semantic Tokens"
     },
     {
-      "doc_id": "d-20260805-153653-597788",
-      "title": "SSP-2.1 — Project State Producer Evidence",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-153653-597788.json",
-      "timestamp": "2026-08-06 07:33:28",
-      "parent_id": "d-20260801-133318-15e8fa",
-      "parent_title": "SSP-2 — Docs Viewer Project State Delivery"
+      "doc_id": "d-20260607-222033-4b1d77",
+      "title": "Source Editor Endpoints",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-4b1d77.json",
+      "timestamp": "2026-08-06 22:47:23",
+      "parent_id": "d-20260607-222033-647b52",
+      "parent_title": "Endpoint Overview"
+    },
+    {
+      "doc_id": "d-20260607-222033-704641",
+      "title": "Source Editor Scripts",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-704641.json",
+      "timestamp": "2026-08-06 22:47:23",
+      "parent_id": "d-20260607-222033-2a494e",
+      "parent_title": "Scripts Overview"
+    },
+    {
+      "doc_id": "d-20260806-082057-355d34",
+      "title": "SSP-3.1 — Insert Subject Link Evidence",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260806-082057-355d34.json",
+      "timestamp": "2026-08-06 21:39:55",
+      "parent_id": "d-20260802-174340-2fe9f4",
+      "parent_title": "SSP-3 — Insert Subject Link Delivery"
     }
   ],
-  "generated_at": "2026-08-06T08:00:45Z"
+  "generated_at": "2026-08-06T21:59:00Z"
 }

@@ -54,16 +54,23 @@ import {
 import {
   mountLocalFolderLinkActivation
 } from "./source-editor/local-folder-links.js";
+import {
+  SUBJECT_LINK_CONTROL_ID,
+  createSubjectLinkMainViewControlHandlers,
+  subjectLinkControlRenderer
+} from "./source-editor/subject-link-contribution.js";
 
 function mountDocsViewerManageExtras(context) {
   var settings = context || {};
   var routeContext = settings.routeContext || {};
-  mountSemanticTokenTargetLinks(
-    settings.content,
-    routeContext.publicPreviewBase
-  );
-  mountLocalFolderLinkActivation(settings);
-  return mountDocsViewerManageDocumentExtras(settings);
+  return Promise.resolve(mountDocsViewerManageDocumentExtras(settings)).then(function (result) {
+    mountSemanticTokenTargetLinks(
+      settings.content,
+      routeContext.publicPreviewBase
+    );
+    mountLocalFolderLinkActivation(settings);
+    return result;
+  });
 }
 
 const managedTableTools = createDocsViewerManagedTableTools();
@@ -80,6 +87,7 @@ startDocsViewerManageApp({
     createDocsViewerManagedTableToolControlRenderers(),
     {
       [CATALOGUE_TOKEN_CONTROL_ID]: catalogueTokenControlRenderer,
+      [SUBJECT_LINK_CONTROL_ID]: subjectLinkControlRenderer,
       [DIRECTIVE_ACTIONS_CONTROL_ID]: directiveActionsControlRenderer
     }
   ),
@@ -103,12 +111,17 @@ startDocsViewerManageApp({
   mainViewControlHandlerContributions: Object.assign(
     {},
     createCatalogueTokenMainViewControlHandlers(),
+    createSubjectLinkMainViewControlHandlers(),
     createDirectiveActionsMainViewControlHandlers(),
     managedTableTools.controlHandlers()
   ),
   managementShellRenderers: createDocsViewerManagementShellRenderers(),
   mountDocumentExtras: mountDocsViewerManageExtras,
-  sourceEditorActionControlIds: [CATALOGUE_TOKEN_CONTROL_ID, DIRECTIVE_ACTIONS_CONTROL_ID],
+  sourceEditorActionControlIds: [
+    CATALOGUE_TOKEN_CONTROL_ID,
+    SUBJECT_LINK_CONTROL_ID,
+    DIRECTIVE_ACTIONS_CONTROL_ID
+  ],
   sourceEditorInfoViewResolver: createCatalogueTokenInfoViewResolver(),
   tableDetailAdapter: managedTableDetailAdapter
 });

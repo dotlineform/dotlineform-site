@@ -110,6 +110,8 @@ def test_diagram_source_routes_are_management_owned() -> None:
 def test_local_target_route_is_management_owned() -> None:
     assert routes.OPEN_LOCAL_TARGET_PATH == "/docs/open-local-target"
     assert routes.OPEN_LOCAL_TARGET_PATH in routes.POST_PATHS
+    assert routes.VALIDATE_LOCAL_TARGET_PATH == "/docs/validate-local-target"
+    assert routes.VALIDATE_LOCAL_TARGET_PATH in routes.POST_PATHS
 
 
 def test_assignable_field_group_route_is_management_owned() -> None:

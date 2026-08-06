@@ -170,28 +170,57 @@ def _response(status: HTTPStatus, state: str, *, target: str = "") -> tuple[HTTP
     return status, payload
 
 
-def open_local_target_response(
-    repo_root: Path, body: dict[str, Any], *, dry_run: bool = False,
-) -> tuple[HTTPStatus, dict[str, object]]:
+def _validated_local_target(
+    repo_root: Path,
+    body: dict[str, Any],
+) -> tuple[HTTPStatus, dict[str, object], Path | None]:
     if set(body) != {"target"}:
-        return _response(HTTPStatus.BAD_REQUEST, "invalid_target")
+        status, payload = _response(HTTPStatus.BAD_REQUEST, "invalid_target")
+        return status, payload, None
     try:
         decoded = decode_relative_target(body["target"])
     except LocalLinkInputError:
-        return _response(HTTPStatus.BAD_REQUEST, "invalid_target")
+        status, payload = _response(HTTPStatus.BAD_REQUEST, "invalid_target")
+        return status, payload, None
     target = encode_relative_target(decoded)
     try:
         base = configured_base_dir(repo_root).resolve(strict=True)
     except (OSError, ValueError):
-        return _response(HTTPStatus.SERVICE_UNAVAILABLE, "base_unavailable", target=target)
+        status, payload = _response(HTTPStatus.SERVICE_UNAVAILABLE, "base_unavailable", target=target)
+        return status, payload, None
     try:
         resolved = base.joinpath(*decoded.split("/")).resolve(strict=True)
     except (OSError, RuntimeError):
-        return _response(HTTPStatus.NOT_FOUND, "missing_target", target=target)
+        status, payload = _response(HTTPStatus.NOT_FOUND, "missing_target", target=target)
+        return status, payload, None
     try:
         resolved.relative_to(base)
     except ValueError:
-        return _response(HTTPStatus.FORBIDDEN, "outside_root", target=target)
+        status, payload = _response(HTTPStatus.FORBIDDEN, "outside_root", target=target)
+        return status, payload, None
+    return HTTPStatus.OK, {
+        "ok": True,
+        "state": "valid",
+        "summary_text": "Local target validated.",
+        "target": target,
+    }, resolved
+
+
+def validate_local_target_response(
+    repo_root: Path,
+    body: dict[str, Any],
+) -> tuple[HTTPStatus, dict[str, object]]:
+    status, payload, _ = _validated_local_target(repo_root, body)
+    return status, payload
+
+
+def open_local_target_response(
+    repo_root: Path, body: dict[str, Any], *, dry_run: bool = False,
+) -> tuple[HTTPStatus, dict[str, object]]:
+    status, payload, resolved = _validated_local_target(repo_root, body)
+    if resolved is None:
+        return status, payload
+    target = str(payload["target"])
     if sys.platform != "darwin":
         return _response(HTTPStatus.NOT_IMPLEMENTED, "unsupported_platform", target=target)
     command = ["open", str(resolved)] if resolved.is_dir() else ["open", "-R", str(resolved)]

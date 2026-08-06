@@ -1048,12 +1048,24 @@
               "doc_id": "d-20260802-174340-2fe9f4",
               "title": "SSP-3 — Insert Subject Link Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-174340-2fe9f4.json",
-              "ui_status": "in-progress",
+              "ui_status": "done",
               "children": [
                 {
                   "doc_id": "d-20260806-075026-50978e",
                   "title": "SSP-3.0 — Insert Subject Link Sanity Note",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260806-075026-50978e.json",
+                  "ui_status": "done"
+                },
+                {
+                  "doc_id": "d-20260806-082057-355d34",
+                  "title": "SSP-3.1 — Insert Subject Link Evidence",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260806-082057-355d34.json",
+                  "ui_status": "done"
+                },
+                {
+                  "doc_id": "d-20260806-224924-7a3c91",
+                  "title": "SSP-3.2 — Verification And Owner Transfer Evidence",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260806-224924-7a3c91.json",
                   "ui_status": "done"
                 }
               ]
@@ -1062,7 +1074,15 @@
               "doc_id": "d-20260801-233534-239eab",
               "title": "SSP-4 — Collection-Aware Document Copy Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-233534-239eab.json",
-              "ui_status": "proposed"
+              "ui_status": "in-progress",
+              "children": [
+                {
+                  "doc_id": "d-20260806-225724-aa5e6a",
+                  "title": "SSP-4.0 — Collection-Aware Copy Sanity Note",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260806-225724-aa5e6a.json",
+                  "ui_status": "done"
+                }
+              ]
             },
             {
               "doc_id": "d-20260802-195805-94a5be",
@@ -1454,5 +1474,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-06T07:52:15Z"
+  "generated_at": "2026-08-06T21:59:00Z"
 }

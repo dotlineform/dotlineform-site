@@ -101,9 +101,19 @@ export function createDocsViewerConfiguredScopeProvider(options) {
       return source.readSource(target, optionsForRead || {});
     };
   }
+  if (source && typeof source.readMetadata === "function") {
+    provider.readMetadata = function (target, optionsForRead) {
+      return source.readMetadata(target, optionsForRead || {});
+    };
+  }
   if (source && typeof source.writeSource === "function") {
     provider.writeSource = function (target, payload, optionsForWrite) {
       return source.writeSource(target, payload, optionsForWrite || {});
+    };
+  }
+  if (source && typeof source.validateLocalTarget === "function") {
+    provider.validateLocalTarget = function (target, optionsForValidation) {
+      return source.validateLocalTarget(target, optionsForValidation || {});
     };
   }
   if (source && typeof source.readDiagramSources === "function") {

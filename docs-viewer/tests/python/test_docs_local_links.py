@@ -203,3 +203,31 @@ def test_management_endpoint_dry_run_validates_without_invoking_finder(
     assert payload["state"] == "opened"
     assert payload["summary_text"] == "Local target validated."
     assert payload["dry_run"] is True
+
+
+def test_management_validation_endpoint_never_invokes_finder(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    with make_repo() as repo_name:
+        repo_root = Path(repo_name)
+        base = configure_base(monkeypatch, tmp_path)
+        (base / "project").mkdir()
+        monkeypatch.setattr(
+            docs_local_links.subprocess,
+            "run",
+            lambda *args, **kwargs: pytest.fail("Finder must not run during validation"),
+        )
+        status, payload = docs_management_service.docs_management_post_response(
+            repo_root,
+            routes.VALIDATE_LOCAL_TARGET_PATH,
+            {"target": "project"},
+        )
+
+    assert status == HTTPStatus.OK
+    assert payload == {
+        "ok": True,
+        "state": "valid",
+        "summary_text": "Local target validated.",
+        "target": "project",
+    }

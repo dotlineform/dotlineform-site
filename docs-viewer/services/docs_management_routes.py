@@ -22,6 +22,7 @@ SOURCE_REBUILD_PATH = "/docs/source/rebuild"
 OPEN_SOURCE_PATH = "/docs/open-source"
 OPEN_DIAGRAM_SOURCE_PATH = "/docs/open-diagram-source"
 OPEN_LOCAL_TARGET_PATH = "/docs/open-local-target"
+VALIDATE_LOCAL_TARGET_PATH = "/docs/validate-local-target"
 BROKEN_LINKS_PATH = "/docs/broken-links"
 PROJECT_STATE_PATH = "/docs/project-state"
 IMPORT_SOURCE_PATH = "/docs/import-source"
@@ -76,6 +77,7 @@ POST_PATHS = (
     OPEN_SOURCE_PATH,
     OPEN_DIAGRAM_SOURCE_PATH,
     OPEN_LOCAL_TARGET_PATH,
+    VALIDATE_LOCAL_TARGET_PATH,
     BROKEN_LINKS_PATH,
     PROJECT_STATE_PATH,
     SOURCE_CONFIG_SETTINGS_PATH,

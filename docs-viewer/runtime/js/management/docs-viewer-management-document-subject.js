@@ -89,13 +89,14 @@ export function normalizeDocsViewerAuthoringSubject(value, options = {}) {
   if (!valid && !none && !malformed && !conflicting) {
     invalidSubject(message);
   }
-  return Object.freeze({
+  var normalized = {
     state: state,
     kind: kind,
     key: key,
-    fields: Object.freeze(fields),
-    evidence: hasEvidence
-      ? Object.freeze(Object.assign({}, subject.evidence))
-      : null
-  });
+    fields: Object.freeze(fields)
+  };
+  if (hasEvidence) {
+    normalized.evidence = Object.freeze(Object.assign({}, subject.evidence));
+  }
+  return Object.freeze(normalized);
 }

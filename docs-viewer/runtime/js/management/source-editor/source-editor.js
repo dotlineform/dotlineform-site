@@ -188,6 +188,13 @@ function createSourceEditorContextAdapter(state) {
     getDocumentTarget: function () {
       return state.target ? Object.assign({}, state.target) : null;
     },
+    readDocumentMetadata: function () {
+      var provider = state.collectionProvider || {};
+      if (typeof provider.readMetadata !== "function") {
+        return Promise.reject(new Error("Document subject metadata is unavailable."));
+      }
+      return provider.readMetadata(state.target);
+    },
     getSelection: function () {
       return sourceSelection(state);
     },
@@ -222,6 +229,13 @@ function createSourceEditorContextAdapter(state) {
     },
     setStatus: function (message, isError) {
       setStatus(state, message, isError);
+    },
+    validateLocalTarget: function (target) {
+      var provider = state.collectionProvider || {};
+      if (typeof provider.validateLocalTarget !== "function") {
+        return Promise.reject(new Error("Local Folder target validation is unavailable."));
+      }
+      return provider.validateLocalTarget(target);
     }
   };
 }
@@ -461,6 +475,7 @@ export function createDocsViewerSourceEditorMode() {
     dirtyValue: false,
     lastCleanBody: "",
     loaded: false,
+    collectionProvider: null,
     revision: "",
     root: null,
     selectionListeners: new Set(),
@@ -479,6 +494,7 @@ export function createDocsViewerSourceEditorMode() {
       state.dirtyValue = false;
       state.lastCleanBody = "";
       state.loaded = false;
+      state.collectionProvider = context.collectionProvider || null;
       state.revision = "";
       context.documentView.projectToolbar({
         toolbarHidden: false,

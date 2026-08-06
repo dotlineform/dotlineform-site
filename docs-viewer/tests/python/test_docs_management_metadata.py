@@ -298,6 +298,11 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
     tmp_path: Path,
 ) -> None:
     rebuild_calls: list[dict[str, object]] = []
+    authored_body = (
+        "# Architecture\n\n"
+        "Existing [[catalogue:work:00638|3 symbols]] and "
+        "[Folder](dlf-local:projects/architecture).\n"
+    )
 
     def fake_sub_scope_rebuild(
         repo_root,
@@ -373,7 +378,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
                     "last_updated": "2026-07-26 11:00:00",
                     "folder_path": "projects/architecture",
                 },
-                "# Architecture\n",
+                authored_body,
             ),
             encoding="utf-8",
         )
@@ -624,6 +629,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
     }
     assert result["changes"]["authoring_subject_changed"] is True
     assert "folder_path: projects/Future Folder" in linked_source
+    assert linked_source.endswith(authored_body)
     assert 'last_updated: "2026-07-26 11:00:00"' in linked_source
     assert linked_manifest["docs"][0]["customisation"] == {
         "folder_path": "projects/Future Folder"
@@ -639,6 +645,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
     assert stale["operation"] == "assign_field_group"
     assert stale["retry_safe"] is False
     assert "folder_path: projects/Future Folder" in stale_source
+    assert stale_source.endswith(authored_body)
     assert race_payload["operation"] == "assign_field_group"
     assert race_payload["error"] == (
         "managed document source changed before field group assignment"
@@ -651,6 +658,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
         "series_id": "",
     }
     assert "folder_path:" not in removed_source
+    assert removed_source.endswith(authored_body)
     assert "customisation" not in removed_manifest["docs"][0]
     assert removed_associations == {
         "schema_version": "docs_subject_associations_v1",
@@ -666,6 +674,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
         "series_id": "",
     }
     assert 'work_id: "00123"' in work_source
+    assert work_source.endswith(authored_body)
     assert work_manifest["docs"][0]["authoring_subject"] == {
         "state": "valid",
         "kind": "work",

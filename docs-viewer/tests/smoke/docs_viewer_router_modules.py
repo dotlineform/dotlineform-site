@@ -1886,7 +1886,9 @@ def assert_configured_scope_provider(page: Page) -> None:
                 window,
                 source: {
                     readSource: (target, options) => { sourceCalls.push(['read', target, options]); return Promise.resolve(target); },
+                    readMetadata: (target, options) => { sourceCalls.push(['metadata', target, options]); return Promise.resolve(target); },
                     writeSource: (target, payload, options) => { sourceCalls.push(['write', target, payload.source_body, options]); return Promise.resolve(target); },
+                    validateLocalTarget: (target, options) => { sourceCalls.push(['validate-local', target, options]); return Promise.resolve(target); },
                     readDiagramSources: (target, options) => { sourceCalls.push(['read-diagrams', target, options]); return Promise.resolve({ sources: [] }); },
                     openDiagramSource: (target, payload, options) => { sourceCalls.push(['open-diagram', target, payload.media_identity, options]); return Promise.resolve({ ok: true }); },
                     listStagedMedia: (kind, options) => { sourceCalls.push(['list-media', kind, options]); return Promise.resolve({ files: [] }); },
@@ -1896,7 +1898,9 @@ def assert_configured_scope_provider(page: Page) -> None:
             });
             const sourceTarget = { scope: 'beta', sub_scope: 'tags', doc_id: 'doc-b' };
             await withSource.readSource(sourceTarget);
+            await withSource.readMetadata(sourceTarget);
             await withSource.writeSource(sourceTarget, { source_body: '# B' });
+            await withSource.validateLocalTarget('projects/example');
             await withSource.readDiagramSources(sourceTarget);
             await withSource.openDiagramSource(sourceTarget, {
                 media_identity: 'docs/beta/svg/diagram.svg'
@@ -1962,7 +1966,9 @@ def assert_configured_scope_provider(page: Page) -> None:
         "previewStagedMedia",
         *expected_read_only_keys,
         "readDiagramSources",
+        "readMetadata",
         "readSource",
+        "validateLocalTarget",
         "writeSource",
     ]
     if result["withSourceKeys"] != sorted(expected_source_keys):
@@ -1986,7 +1992,9 @@ def assert_configured_scope_provider(page: Page) -> None:
         raise AssertionError(f"configured-scope provider transport delegation changed: {result!r}")
     if result["sourceCalls"] != [
         ["read", {"scope": "beta", "sub_scope": "tags", "doc_id": "doc-b"}, {}],
+        ["metadata", {"scope": "beta", "sub_scope": "tags", "doc_id": "doc-b"}, {}],
         ["write", {"scope": "beta", "sub_scope": "tags", "doc_id": "doc-b"}, "# B", {}],
+        ["validate-local", "projects/example", {}],
         ["read-diagrams", {"scope": "beta", "sub_scope": "tags", "doc_id": "doc-b"}, {}],
         [
             "open-diagram",
