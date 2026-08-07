@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-fafc10b8d73bc25b36a124c6781cb4ce",
-    "generated_at_utc": "2026-08-07T19:54:29Z",
-    "count": 268
+    "version": "blake2b-5020d53c2b7fbfbe08ea8ba4ba03f1d1",
+    "generated_at_utc": "2026-08-07T20:36:12Z",
+    "count": 270
   },
   "entries": [
     {
@@ -4284,26 +4284,26 @@
       "kind": "doc",
       "title": "Sub-Scope Publishing",
       "href": "/docs/?scope=studio&doc=d-20260802-194357-4d857b",
-      "last_updated": "2026-08-07 18:49:59",
+      "last_updated": "2026-08-07 21:36:03",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-07 18:49:59 • Roadmap",
+      "display_meta": "2026-08-07 21:36:03 • Roadmap",
       "search_terms": [
         "sub-scope publishing",
         "sub",
         "scope",
         "publishing",
         "roadmap",
-        "2026-08-07 18:49:59",
+        "2026-08-07 21:36:03",
         "2026",
         "08",
         "07",
-        "18",
-        "49",
-        "59",
+        "21",
+        "36",
+        "03",
         "d-20260802-194357-4d857b"
       ],
-      "search_text": "sub-scope publishing sub scope publishing roadmap 2026-08-07 18:49:59 2026 08 07 18 49 59 d-20260802-194357-4d857b"
+      "search_text": "sub-scope publishing sub scope publishing roadmap 2026-08-07 21:36:03 2026 08 07 21 36 03 d-20260802-194357-4d857b"
     },
     {
       "id": "d-20260802-121105-c574f9",
@@ -4335,6 +4335,36 @@
         "d-20260802-121105-c574f9"
       ],
       "search_text": "project state concept and architecture project state concept and architecture sub-scope publishing sub scope publishing 2026-08-07 18:49:59 2026 08 07 18 49 59 d-20260802-121105-c574f9"
+    },
+    {
+      "id": "d-20260802-174339-53877d",
+      "kind": "doc",
+      "title": "Resolver Tokens Architecture (Retired)",
+      "href": "/docs/?scope=studio&doc=d-20260802-174339-53877d",
+      "last_updated": "2026-08-05 22:48:00",
+      "parent_id": "d-20260802-194357-4d857b",
+      "parent_title": "Sub-Scope Publishing",
+      "display_meta": "2026-08-05 22:48:00 • Sub-Scope Publishing",
+      "search_terms": [
+        "resolver tokens architecture (retired)",
+        "resolver",
+        "tokens",
+        "architecture",
+        "retired",
+        "sub-scope publishing",
+        "sub",
+        "scope",
+        "publishing",
+        "2026-08-05 22:48:00",
+        "2026",
+        "08",
+        "05",
+        "22",
+        "48",
+        "00",
+        "d-20260802-174339-53877d"
+      ],
+      "search_text": "resolver tokens architecture (retired) resolver tokens architecture retired sub-scope publishing sub scope publishing 2026-08-05 22:48:00 2026 08 05 22 48 00 d-20260802-174339-53877d"
     },
     {
       "id": "d-20260804-164519-c7ad4e",
@@ -5458,10 +5488,10 @@
       "kind": "doc",
       "title": "SSP-7 — Document Lineage And Publication State Delivery",
       "href": "/docs/?scope=studio&doc=d-20260805-231829-947705",
-      "last_updated": "2026-08-07 20:53:05",
+      "last_updated": "2026-08-07 21:36:12",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-07 20:53:05 • Sub-Scope Publishing",
+      "display_meta": "2026-08-07 21:36:12 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-7 — document lineage and publication state delivery",
         "ssp",
@@ -5476,16 +5506,50 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-07 20:53:05",
+        "2026-08-07 21:36:12",
         "2026",
         "08",
         "07",
-        "20",
-        "53",
-        "05",
+        "21",
+        "36",
+        "12",
         "d-20260805-231829-947705"
       ],
-      "search_text": "ssp-7 — document lineage and publication state delivery ssp 7 document lineage and publication state delivery sub-scope publishing sub scope publishing 2026-08-07 20:53:05 2026 08 07 20 53 05 d-20260805-231829-947705"
+      "search_text": "ssp-7 — document lineage and publication state delivery ssp 7 document lineage and publication state delivery sub-scope publishing sub scope publishing 2026-08-07 21:36:12 2026 08 07 21 36 12 d-20260805-231829-947705"
+    },
+    {
+      "id": "d-20260807-210803-ad1f6f",
+      "kind": "doc",
+      "title": "SSP-7.0 — Document Lineage And Publication State Sanity Note",
+      "href": "/docs/?scope=studio&doc=d-20260807-210803-ad1f6f",
+      "last_updated": "2026-08-07 21:35:22",
+      "parent_id": "d-20260805-231829-947705",
+      "parent_title": "SSP-7 — Document Lineage And Publication State Delivery",
+      "display_meta": "2026-08-07 21:35:22 • SSP-7 — Document Lineage And Publication State Delivery",
+      "search_terms": [
+        "ssp-7.0 — document lineage and publication state sanity note",
+        "ssp",
+        "7",
+        "0",
+        "document",
+        "lineage",
+        "and",
+        "publication",
+        "state",
+        "sanity",
+        "note",
+        "ssp-7 — document lineage and publication state delivery",
+        "delivery",
+        "2026-08-07 21:35:22",
+        "2026",
+        "08",
+        "07",
+        "21",
+        "35",
+        "22",
+        "d-20260807-210803-ad1f6f"
+      ],
+      "search_text": "ssp-7.0 — document lineage and publication state sanity note ssp 7 0 document lineage and publication state sanity note ssp-7 — document lineage and publication state delivery delivery 2026-08-07 21:35:22 2026 08 07 21 35 22 d-20260807-210803-ad1f6f"
     },
     {
       "id": "d-20260802-194358-7717ee",

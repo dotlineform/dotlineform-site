@@ -939,7 +939,6 @@
               "doc_id": "d-20260802-174339-53877d",
               "title": "Resolver Tokens Architecture (Retired)",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-174339-53877d.json",
-              "viewable": false,
               "ui_status": "stopped"
             },
             {
@@ -1158,7 +1157,15 @@
               "doc_id": "d-20260805-231829-947705",
               "title": "SSP-7 — Document Lineage And Publication State Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-231829-947705.json",
-              "ui_status": "proposed"
+              "ui_status": "in-progress",
+              "children": [
+                {
+                  "doc_id": "d-20260807-210803-ad1f6f",
+                  "title": "SSP-7.0 — Document Lineage And Publication State Sanity Note",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-210803-ad1f6f.json",
+                  "ui_status": "done"
+                }
+              ]
             },
             {
               "doc_id": "d-20260802-194358-7717ee",
@@ -1534,5 +1541,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-07T17:53:08Z"
+  "generated_at": "2026-08-07T20:17:07Z"
 }
