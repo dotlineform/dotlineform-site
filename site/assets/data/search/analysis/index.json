@@ -2,33 +2,11 @@
   "header": {
     "schema": "search_index_analysis_v1",
     "scope": "analysis",
-    "version": "blake2b-0488d6594aa2559b069c4eec18fdfec7",
-    "generated_at_utc": "2026-08-07T18:02:10Z",
-    "count": 4
+    "version": "blake2b-8f40d989ea45fd6cffd7ccad04378088",
+    "generated_at_utc": "2026-08-07T19:05:10Z",
+    "count": 3
   },
   "entries": [
-    {
-      "id": "d-20260518-180700-214487",
-      "kind": "doc",
-      "title": "3 symbols",
-      "href": "/analysis/?doc=d-20260518-180700-214487",
-      "last_updated": "2026-07-31 11:24:51",
-      "display_meta": "2026-07-31 11:24:51",
-      "search_terms": [
-        "3 symbols",
-        "3",
-        "symbols",
-        "2026-07-31 11:24:51",
-        "2026",
-        "07",
-        "31",
-        "11",
-        "24",
-        "51",
-        "d-20260518-180700-214487"
-      ],
-      "search_text": "3 symbols 3 symbols 2026-07-31 11:24:51 2026 07 31 11 24 51 d-20260518-180700-214487"
-    },
     {
       "id": "d-20260426-164043-e14f49",
       "kind": "doc",
