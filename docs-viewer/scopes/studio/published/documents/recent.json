@@ -4,6 +4,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260802-121106-15ea55",
+      "title": "SSP-6 — Uncataloged And Missing Source Files Reports Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121106-15ea55.json",
+      "timestamp": "2026-08-07 16:06:21",
+      "parent_id": "d-20260802-194357-4d857b",
+      "parent_title": "Sub-Scope Publishing"
+    },
+    {
       "doc_id": "d-20260802-121105-c574f9",
       "title": "Project State Concept And Architecture",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121105-c574f9.json",
@@ -15,14 +23,6 @@
       "doc_id": "d-20260801-133318-15e8fa",
       "title": "SSP-2 — Docs Viewer Project State Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133318-15e8fa.json",
-      "timestamp": "2026-08-07 15:56:48",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
-    },
-    {
-      "doc_id": "d-20260802-121106-15ea55",
-      "title": "SSP-6 — Uncataloged And Missing Source Files Reports Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121106-15ea55.json",
       "timestamp": "2026-08-07 15:56:48",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
@@ -84,5 +84,5 @@
       "parent_title": "SSP-4 — Collection-Aware Document Copy Delivery"
     }
   ],
-  "generated_at": "2026-08-07T15:01:16Z"
+  "generated_at": "2026-08-07T15:06:44Z"
 }

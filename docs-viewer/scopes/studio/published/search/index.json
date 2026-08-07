@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3f8564f922dbad98401027b963cd9cc3",
-    "generated_at_utc": "2026-08-07T15:01:16Z",
+    "version": "blake2b-f0d55c3a8c1e5bf345fad4d2bc618968",
+    "generated_at_utc": "2026-08-07T15:06:44Z",
     "count": 264
   },
   "entries": [
@@ -5279,10 +5279,10 @@
       "kind": "doc",
       "title": "SSP-6 — Uncataloged And Missing Source Files Reports Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-121106-15ea55",
-      "last_updated": "2026-08-07 15:56:48",
+      "last_updated": "2026-08-07 16:06:21",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-07 15:56:48 • Sub-Scope Publishing",
+      "display_meta": "2026-08-07 16:06:21 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-6 — uncataloged and missing source files reports delivery",
         "ssp",
@@ -5298,16 +5298,16 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-07 15:56:48",
+        "2026-08-07 16:06:21",
         "2026",
         "08",
         "07",
-        "15",
-        "56",
-        "48",
+        "16",
+        "06",
+        "21",
         "d-20260802-121106-15ea55"
       ],
-      "search_text": "ssp-6 — uncataloged and missing source files reports delivery ssp 6 uncataloged and missing source files reports delivery sub-scope publishing sub scope publishing 2026-08-07 15:56:48 2026 08 07 15 56 48 d-20260802-121106-15ea55"
+      "search_text": "ssp-6 — uncataloged and missing source files reports delivery ssp 6 uncataloged and missing source files reports delivery sub-scope publishing sub scope publishing 2026-08-07 16:06:21 2026 08 07 16 06 21 d-20260802-121106-15ea55"
     },
     {
       "id": "d-20260805-231829-947705",
