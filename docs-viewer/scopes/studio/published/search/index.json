@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ce5d2d74d9eb5b7112fdedb1d7c66e86",
-    "generated_at_utc": "2026-08-07T09:03:22Z",
+    "version": "blake2b-a69f98402de4dd3101d3325df091e078",
+    "generated_at_utc": "2026-08-07T12:16:49Z",
     "count": 263
   },
   "entries": [
@@ -4284,26 +4284,26 @@
       "kind": "doc",
       "title": "Sub-Scope Publishing",
       "href": "/docs/?scope=studio&doc=d-20260802-194357-4d857b",
-      "last_updated": "2026-08-07 09:58:55",
+      "last_updated": "2026-08-07 12:55:58",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-07 09:58:55 • Roadmap",
+      "display_meta": "2026-08-07 12:55:58 • Roadmap",
       "search_terms": [
         "sub-scope publishing",
         "sub",
         "scope",
         "publishing",
         "roadmap",
-        "2026-08-07 09:58:55",
+        "2026-08-07 12:55:58",
         "2026",
         "08",
         "07",
-        "09",
-        "58",
+        "12",
         "55",
+        "58",
         "d-20260802-194357-4d857b"
       ],
-      "search_text": "sub-scope publishing sub scope publishing roadmap 2026-08-07 09:58:55 2026 08 07 09 58 55 d-20260802-194357-4d857b"
+      "search_text": "sub-scope publishing sub scope publishing roadmap 2026-08-07 12:55:58 2026 08 07 12 55 58 d-20260802-194357-4d857b"
     },
     {
       "id": "d-20260802-121105-c574f9",
@@ -4607,10 +4607,10 @@
       "kind": "doc",
       "title": "SSP-1.2 — Verification And Transfer Evidence",
       "href": "/docs/?scope=studio&doc=d-20260804-220243-b5d7c1",
-      "last_updated": "2026-08-05 22:44:38",
+      "last_updated": "2026-08-07 12:55:58",
       "parent_id": "d-20260802-194426-087cfe",
       "parent_title": "SSP-1 — Document Subject And Association Delivery",
-      "display_meta": "2026-08-05 22:44:38 • SSP-1 — Document Subject And Association Delivery",
+      "display_meta": "2026-08-07 12:55:58 • SSP-1 — Document Subject And Association Delivery",
       "search_terms": [
         "ssp-1.2 — verification and transfer evidence",
         "ssp",
@@ -4625,16 +4625,16 @@
         "subject",
         "association",
         "delivery",
-        "2026-08-05 22:44:38",
+        "2026-08-07 12:55:58",
         "2026",
         "08",
-        "05",
-        "22",
-        "44",
-        "38",
+        "07",
+        "12",
+        "55",
+        "58",
         "d-20260804-220243-b5d7c1"
       ],
-      "search_text": "ssp-1.2 — verification and transfer evidence ssp 1 2 verification and transfer evidence ssp-1 — document subject and association delivery document subject association delivery 2026-08-05 22:44:38 2026 08 05 22 44 38 d-20260804-220243-b5d7c1"
+      "search_text": "ssp-1.2 — verification and transfer evidence ssp 1 2 verification and transfer evidence ssp-1 — document subject and association delivery document subject association delivery 2026-08-07 12:55:58 2026 08 07 12 55 58 d-20260804-220243-b5d7c1"
     },
     {
       "id": "d-20260801-133318-15e8fa",
@@ -5208,10 +5208,10 @@
       "kind": "doc",
       "title": "SSP-5 — Work And Series Document Metadata Publication Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-195805-94a5be",
-      "last_updated": "2026-08-05 22:57:29",
+      "last_updated": "2026-08-07 13:16:48",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-05 22:57:29 • Sub-Scope Publishing",
+      "display_meta": "2026-08-07 13:16:48 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-5 — work and series document metadata publication delivery",
         "ssp",
@@ -5227,16 +5227,16 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-05 22:57:29",
+        "2026-08-07 13:16:48",
         "2026",
         "08",
-        "05",
-        "22",
-        "57",
-        "29",
+        "07",
+        "13",
+        "16",
+        "48",
         "d-20260802-195805-94a5be"
       ],
-      "search_text": "ssp-5 — work and series document metadata publication delivery ssp 5 work and series document metadata publication delivery sub-scope publishing sub scope publishing 2026-08-05 22:57:29 2026 08 05 22 57 29 d-20260802-195805-94a5be"
+      "search_text": "ssp-5 — work and series document metadata publication delivery ssp 5 work and series document metadata publication delivery sub-scope publishing sub scope publishing 2026-08-07 13:16:48 2026 08 07 13 16 48 d-20260802-195805-94a5be"
     },
     {
       "id": "d-20260802-121106-15ea55",
@@ -5309,10 +5309,10 @@
       "kind": "doc",
       "title": "Sub-Scope Publishing Concept And Architecture",
       "href": "/docs/?scope=studio&doc=d-20260802-194358-7717ee",
-      "last_updated": "2026-08-06 07:33:28",
+      "last_updated": "2026-08-07 13:16:48",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-06 07:33:28 • Sub-Scope Publishing",
+      "display_meta": "2026-08-07 13:16:48 • Sub-Scope Publishing",
       "search_terms": [
         "sub-scope publishing concept and architecture",
         "sub",
@@ -5322,16 +5322,16 @@
         "and",
         "architecture",
         "sub-scope publishing",
-        "2026-08-06 07:33:28",
+        "2026-08-07 13:16:48",
         "2026",
         "08",
-        "06",
         "07",
-        "33",
-        "28",
+        "13",
+        "16",
+        "48",
         "d-20260802-194358-7717ee"
       ],
-      "search_text": "sub-scope publishing concept and architecture sub scope publishing concept and architecture sub-scope publishing 2026-08-06 07:33:28 2026 08 06 07 33 28 d-20260802-194358-7717ee"
+      "search_text": "sub-scope publishing concept and architecture sub scope publishing concept and architecture sub-scope publishing 2026-08-07 13:16:48 2026 08 07 13 16 48 d-20260802-194358-7717ee"
     },
     {
       "id": "d-20260804-160200-fa7bb7",
