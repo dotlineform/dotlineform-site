@@ -130,6 +130,12 @@
           "sub_scope_customisation": {
             "id": "analysis_tags"
           }
+        },
+        {
+          "sub_scope": "works",
+          "title": "Works",
+          "manifest_url": "/docs-viewer/scopes/analysis/published/documents/sub-scopes/works/manage-manifest.json",
+          "by_id_url_base": "/docs-viewer/scopes/analysis/published/documents/sub-scopes/works/by-id"
         }
       ]
     },

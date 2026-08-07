@@ -243,6 +243,40 @@
             },
             "search": null
           }
+        },
+        {
+          "sub_scope": "works",
+          "title": "Works",
+          "ui_statuses": [
+            "draft",
+            "done",
+            "urgent",
+            "review",
+            "in-progress",
+            "planned",
+            "paused",
+            "deferred",
+            "report",
+            "research"
+          ],
+          "sub_scope_customisation": {
+            "id": "analysis_works",
+            "settings": {}
+          },
+          "public_projection": {
+            "documents": {
+              "location": {
+                "provider": "repository",
+                "path": "site/assets/data/docs/scopes/analysis/works"
+              }
+            },
+            "search": null
+          },
+          "lifecycle": {
+            "tool_id": "docs-viewer-scope-lifecycle",
+            "report_host_doc_id": "d-20260807-082735-54d9d5",
+            "report_host_source_revision": "sha256:4150e978506f73651cfe3cf160300ff251844673ba8699fcddd00fac22fe5146"
+          }
         }
       ],
       "scope_root": {

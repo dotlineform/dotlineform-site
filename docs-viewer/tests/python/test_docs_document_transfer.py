@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from repo_factory import docs_scope_record
+from repo_factory import docs_scope_record, docs_sub_scope_record
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -35,6 +35,7 @@ def write_doc(
     title: str,
     parent_id: str = "",
     body: str = "",
+    extra_front_matter: dict[str, object] | None = None,
 ) -> None:
     documents_root.mkdir(parents=True, exist_ok=True)
     front_matter = {
@@ -45,6 +46,7 @@ def write_doc(
         "parent_id": parent_id,
         "viewable": True,
     }
+    front_matter.update(extra_front_matter or {})
     (documents_root / f"{doc_id}.md").write_text(
         source_model.format_source(front_matter, body or f"# {title}\n"),
         encoding="utf-8",
@@ -138,6 +140,111 @@ def make_repo(
     return repo_root
 
 
+def sub_scope_documents_root(repo_root: Path, scope: str, sub_scope: str) -> Path:
+    return (
+        repo_root
+        / "docs-viewer/scopes"
+        / scope
+        / "source/sub-scopes"
+        / sub_scope
+        / "documents"
+    )
+
+
+def make_collection_repo(tmp_path: Path) -> Path:
+    repo_root = tmp_path / "repo"
+    source_sub_scopes = [
+        docs_sub_scope_record(
+            "source",
+            "tags",
+            title="Tags",
+            analysis_tag_groups=["subject", "domain"],
+        ),
+        docs_sub_scope_record(
+            "source",
+            "works",
+            title="Works",
+            sub_scope_customisation={"id": "analysis_works", "settings": {}},
+        ),
+    ]
+    target_sub_scopes = [
+        docs_sub_scope_record(
+            "target",
+            "tags",
+            title="Tags",
+            analysis_tag_groups=["subject"],
+        ),
+        docs_sub_scope_record(
+            "target",
+            "works",
+            title="Works",
+            sub_scope_customisation={"id": "analysis_works", "settings": {}},
+        ),
+    ]
+    write_json(
+        repo_root / "docs-viewer/config/scopes/docs_scopes.json",
+        {
+            "schema_version": "docs_scopes_v3",
+            "scopes": [
+                base_scope("source", sub_scopes=source_sub_scopes),
+                base_scope("target", sub_scopes=target_sub_scopes),
+            ],
+        },
+    )
+    source_root = local_documents_root(repo_root, "source")
+    target_root = local_documents_root(repo_root, "target")
+    write_doc(source_root, doc_id="parent-a", title="Parent A")
+    write_doc(source_root, doc_id="parent-b", title="Parent B")
+    target_root.mkdir(parents=True, exist_ok=True)
+    report_ids = {
+        ("source", "tags"): "d-20260701-100000-aaaaaa",
+        ("source", "works"): "d-20260701-100001-bbbbbb",
+        ("target", "tags"): "d-20260701-100002-cccccc",
+        ("target", "works"): "d-20260701-100003-dddddd",
+    }
+    for (scope, sub_scope), report_id in report_ids.items():
+        write_doc(
+            local_documents_root(repo_root, scope),
+            doc_id=report_id,
+            title=f"{scope.title()} {sub_scope.title()}",
+            extra_front_matter={
+                "viewer_report": "docs_subscope",
+                "viewer_report_access": "local",
+                "viewer_report_subscope": sub_scope,
+            },
+        )
+        sub_scope_documents_root(repo_root, scope, sub_scope).mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+    write_doc(
+        sub_scope_documents_root(repo_root, "source", "tags"),
+        doc_id="tag-a",
+        title="Tag A",
+        body=(
+            "# Tag A\n\n"
+            "[Tag B](/docs/?scope=source&doc="
+            f"{report_ids[('source', 'tags')]}&subdoc=tag-b)\n\n"
+            "[[media:docs/source/img/photo.png Photo]]\n"
+        ),
+        extra_front_matter={"group": "subject", "work_id": "00123"},
+    )
+    write_doc(
+        sub_scope_documents_root(repo_root, "source", "tags"),
+        doc_id="tag-b",
+        title="Tag B",
+        extra_front_matter={"group": "domain"},
+    )
+    write_doc(
+        sub_scope_documents_root(repo_root, "source", "works"),
+        doc_id="work-a",
+        title="Work A",
+        extra_front_matter={"folder_path": "2026/work-a"},
+    )
+    write_bytes(media_path(repo_root, "source", "img", "photo.png"), b"photo")
+    return repo_root
+
+
 def sequential_tokens(*values: str) -> transfer.IdentityTokenFactory:
     iterator: Iterator[str] = iter(values)
     return lambda _size: next(iterator)
@@ -194,7 +301,7 @@ def test_copy_selection_is_deterministic_deduplicated_and_write_free(tmp_path: P
     assert exact.preview_payload()["effective_root_count"] == 2
     assert exact.preview_payload()["descendant_count"] == 0
     assert exact.preview_payload()["apply_plan"]["schema_version"] == (
-        "docs_document_transfer_apply_plan_v1"
+        "docs_document_transfer_apply_plan_v2"
     )
     serialized = json.dumps(exact.preview_payload()["apply_plan"])
     assert str(repo_root) not in serialized
@@ -229,6 +336,266 @@ def test_copy_optional_descendants_unions_overlapping_checked_subtrees(tmp_path:
         plan.documents[1].target_doc_id,
         plan.documents[0].target_doc_id,
     ]
+
+
+@pytest.mark.parametrize(
+    (
+        "source_sub_scope",
+        "requested_doc_ids",
+        "target_sub_scope",
+        "expected_source",
+        "expected_target",
+    ),
+    [
+        ("", ["parent-a"], "", {"scope": "source"}, {"scope": "target"}),
+        (
+            "",
+            ["parent-a"],
+            "works",
+            {"scope": "source"},
+            {"scope": "target", "sub_scope": "works"},
+        ),
+        (
+            "tags",
+            ["tag-a"],
+            "",
+            {"scope": "source", "sub_scope": "tags"},
+            {"scope": "target"},
+        ),
+        (
+            "tags",
+            ["tag-a"],
+            "works",
+            {"scope": "source", "sub_scope": "tags"},
+            {"scope": "target", "sub_scope": "works"},
+        ),
+    ],
+)
+def test_copy_plans_all_exact_parent_and_child_collection_shapes(
+    tmp_path: Path,
+    source_sub_scope: str,
+    requested_doc_ids: list[str],
+    target_sub_scope: str,
+    expected_source: dict[str, str],
+    expected_target: dict[str, str],
+) -> None:
+    repo_root = make_collection_repo(tmp_path)
+
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        source_sub_scope=source_sub_scope or None,
+        requested_doc_ids=requested_doc_ids,
+        target_scope="target",
+        target_sub_scope=target_sub_scope or None,
+        transfer_mode="copy",
+        operation_timestamp="2026-07-24 09:10:11",
+        token_factory=sequential_tokens("aaaaaa"),
+    )
+
+    assert plan.ok
+    assert plan.source_collection.request_target() == expected_source
+    assert plan.target_collection.request_target() == expected_target
+    assert plan.documents[0].target_path.parent == plan.target_collection.source_root
+    assert plan.preview_payload()["source"] == expected_source
+    assert {
+        key: value
+        for key, value in plan.preview_payload()["target"].items()
+        if key != "placement"
+    } == expected_target
+
+
+def test_child_copy_receipt_freezes_collections_metadata_links_and_owners(
+    tmp_path: Path,
+) -> None:
+    repo_root = make_collection_repo(tmp_path)
+    before = snapshot(repo_root)
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        source_sub_scope="tags",
+        requested_doc_ids=["tag-a", "tag-b"],
+        target_scope="target",
+        target_sub_scope="works",
+        transfer_mode="copy",
+        operation_timestamp="2026-07-24 09:10:11",
+        token_factory=sequential_tokens("aaaaaa", "bbbbbb"),
+    )
+
+    assert plan.ok
+    assert snapshot(repo_root) == before
+    preview = plan.preview_payload()
+    assert preview["target"] == {
+        "scope": "target",
+        "sub_scope": "works",
+        "placement": "sub_scope_root",
+    }
+    assert preview["target_default_viewable"] is True
+    assert preview["custom_metadata"]["retained"] == []
+    assert preview["custom_metadata"]["rejected"] == []
+    assert {
+        (item["source_doc_id"], item["field_name"], item["status"])
+        for item in preview["custom_metadata"]["omitted"]
+    } == {
+        ("tag-a", "group", "omitted"),
+        ("tag-b", "group", "omitted"),
+    }
+    assert {item.field_name for item in plan.custom_metadata} == {"group"}
+    assert plan.link_decisions == (
+        transfer.TransferLinkDecision(
+            source_doc_id="tag-a",
+            referenced_doc_id="tag-b",
+            target_doc_id=plan.id_map["tag-b"],
+            status="remap",
+            occurrence_count=1,
+        ),
+    )
+    receipt = plan.apply_plan_payload()
+    assert receipt["source"] == {"scope": "source", "sub_scope": "tags"}
+    assert receipt["target"] == {"scope": "target", "sub_scope": "works"}
+    assert receipt["media_owners"] == {
+        "source": {"scope": "source"},
+        "target": {"scope": "target"},
+    }
+    assert len(plan.media) == 1
+    assert plan.media[0].source_reference == "docs/source/img/photo.png"
+    assert plan.media[0].target_reference == "docs/target/img/photo.png"
+    assert plan.media[0].target_status == "create"
+    assert receipt["target_rebuild_owner"] == {
+        "scope": "target",
+        "sub_scope": "works",
+    }
+    assert receipt["target_default_viewable"] is True
+    restored = transfer.restore_document_transfer_apply_plan(repo_root, receipt)
+    assert restored == plan
+    assert snapshot(repo_root) == before
+
+
+def test_custom_metadata_contract_retains_omits_and_rejects_by_target_settings(
+    tmp_path: Path,
+) -> None:
+    repo_root = make_collection_repo(tmp_path)
+    retained = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        source_sub_scope="tags",
+        requested_doc_ids=["tag-a"],
+        target_scope="target",
+        target_sub_scope="tags",
+        transfer_mode="copy",
+        operation_timestamp="2026-07-24 09:10:11",
+        token_factory=sequential_tokens("aaaaaa"),
+    )
+    omitted = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        source_sub_scope="tags",
+        requested_doc_ids=["tag-a"],
+        target_scope="target",
+        target_sub_scope="works",
+        transfer_mode="copy",
+        operation_timestamp="2026-07-24 09:10:11",
+        token_factory=sequential_tokens("bbbbbb"),
+    )
+    rejected = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        source_sub_scope="tags",
+        requested_doc_ids=["tag-b"],
+        target_scope="target",
+        target_sub_scope="tags",
+        transfer_mode="copy",
+        operation_timestamp="2026-07-24 09:10:11",
+        token_factory=sequential_tokens("cccccc"),
+    )
+
+    assert retained.ok
+    assert retained.custom_metadata[0].status == "retained"
+    assert omitted.ok
+    assert omitted.custom_metadata[0].status == "omitted"
+    assert not rejected.ok
+    assert rejected.custom_metadata[0].status == "rejected"
+    assert blocker_codes(rejected) == {"target_custom_metadata_rejected"}
+    assert rejected.preview_payload()["apply_plan"] is None
+
+
+def test_child_flatness_and_move_boundaries_are_explicit(tmp_path: Path) -> None:
+    repo_root = make_collection_repo(tmp_path)
+    with pytest.raises(ValueError, match="does not support descendant"):
+        transfer.plan_document_transfer(
+            repo_root,
+            source_scope="source",
+            source_sub_scope="tags",
+            requested_doc_ids=["tag-a"],
+            target_scope="target",
+            transfer_mode="copy",
+            include_descendants=True,
+        )
+    with pytest.raises(ValueError, match="parent-scope collections only"):
+        transfer.plan_document_transfer(
+            repo_root,
+            source_scope="source",
+            source_sub_scope="tags",
+            requested_doc_ids=["tag-a"],
+            target_scope="target",
+            transfer_mode="move",
+        )
+    write_doc(
+        sub_scope_documents_root(repo_root, "source", "tags"),
+        doc_id="tag-child",
+        title="Tag Child",
+        parent_id="tag-a",
+        extra_front_matter={"group": "subject"},
+    )
+    with pytest.raises(ValueError, match="contains a parent/child relationship"):
+        transfer.plan_document_transfer(
+            repo_root,
+            source_scope="source",
+            source_sub_scope="tags",
+            requested_doc_ids=["tag-a", "tag-child"],
+            target_scope="target",
+            target_sub_scope="works",
+            transfer_mode="copy",
+        )
+
+    write_doc(
+        local_documents_root(repo_root, "source"),
+        doc_id="parent-child",
+        title="Parent Child",
+        parent_id="parent-a",
+    )
+    blocked = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        requested_doc_ids=["parent-a", "parent-child"],
+        target_scope="target",
+        target_sub_scope="works",
+        transfer_mode="copy",
+        operation_timestamp="2026-07-24 09:10:11",
+        token_factory=sequential_tokens("aaaaaa", "bbbbbb"),
+    )
+    assert blocker_codes(blocked) == {"flat_target_hierarchy"}
+    assert blocked.preview_payload()["apply_plan"] is None
+
+
+def test_same_parent_different_child_copy_is_valid(tmp_path: Path) -> None:
+    repo_root = make_collection_repo(tmp_path)
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        source_sub_scope="tags",
+        requested_doc_ids=["tag-a"],
+        target_scope="source",
+        target_sub_scope="works",
+        transfer_mode="copy",
+        operation_timestamp="2026-07-24 09:10:11",
+        token_factory=sequential_tokens("aaaaaa"),
+    )
+
+    assert plan.ok
+    assert plan.source_scope == plan.target_scope == "source"
+    assert plan.source_sub_scope == "tags"
+    assert plan.target_sub_scope == "works"
 
 
 def test_move_forces_descendants_preserves_identity_and_reports_shared_media(
@@ -718,4 +1085,74 @@ def test_public_target_and_public_move_are_rejected(tmp_path: Path) -> None:
             requested_doc_ids=["root"],
             target_scope="target",
             transfer_mode="move",
+        )
+
+
+def test_public_parent_child_can_accept_copy_without_relaxing_parent_target(
+    tmp_path: Path,
+) -> None:
+    public_target = docs_scope_record(
+        "target",
+        scope_type="public",
+        viewer_base_url="/target/",
+        include_scope_param=False,
+        sub_scopes=[
+            docs_sub_scope_record(
+                "target",
+                "works",
+                title="Works",
+                scope_type="public",
+                sub_scope_customisation={
+                    "id": "analysis_works",
+                    "settings": {},
+                },
+            )
+        ],
+    )
+    repo_root = make_repo(tmp_path, target_scope=public_target)
+    report_id = "d-20260701-100003-dddddd"
+    write_doc(
+        local_documents_root(repo_root, "target"),
+        doc_id=report_id,
+        title="Works",
+        extra_front_matter={
+            "viewer_report": "docs_subscope",
+            "viewer_report_access": "local",
+            "viewer_report_subscope": "works",
+        },
+    )
+    sub_scope_documents_root(repo_root, "target", "works").mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    child_plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        requested_doc_ids=["other"],
+        target_scope="target",
+        target_sub_scope="works",
+        transfer_mode="copy",
+        operation_timestamp="2026-07-24 09:10:11",
+        token_factory=sequential_tokens("aaaaaa"),
+    )
+    capabilities = transfer.document_transfer_collection_capabilities(
+        child_plan.target_collection
+    )
+
+    assert child_plan.ok
+    assert child_plan.preview_payload()["target_default_viewable"] is False
+    assert capabilities == {
+        "copy_source": True,
+        "move_source": False,
+        "copy_target": True,
+        "move_target": False,
+    }
+    with pytest.raises(ValueError, match="public target scope"):
+        transfer.plan_document_transfer(
+            repo_root,
+            source_scope="source",
+            requested_doc_ids=["other"],
+            target_scope="target",
+            transfer_mode="copy",
         )

@@ -17,7 +17,7 @@ from docs_scope_config import (
     resolve_scope_path,
 )
 from docs_subscope_customisations import (
-    sub_scope_customisation_assignable_field_groups,
+    sub_scope_customisation_authoring_subject_fields,
     sub_scope_customisation_document_groups,
     sub_scope_customisation_metadata_record,
 )
@@ -343,9 +343,8 @@ def managed_document_metadata(
     }
     if resolved.sub_scope:
         record["group"] = document.group
-        folder_supported = any(
-            FOLDER_PATH_FIELD in group.field_names
-            for group in sub_scope_customisation_assignable_field_groups(
+        folder_supported = FOLDER_PATH_FIELD in (
+            sub_scope_customisation_authoring_subject_fields(
                 resolved.document_config.sub_scope_customisation
             )
         )

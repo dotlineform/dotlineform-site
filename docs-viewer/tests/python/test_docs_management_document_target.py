@@ -38,6 +38,7 @@ def write_source_doc(
     group: str = "",
     viewable: bool = True,
     sub_scope: str = "",
+    extra_front_matter: dict[str, str] | None = None,
 ) -> Path:
     documents_root = (
         scope_root / "source/sub-scopes" / sub_scope / "documents"
@@ -55,6 +56,8 @@ def write_source_doc(
         front_matter.append(f"group: {group}")
     if not viewable:
         front_matter.append("viewable: false")
+    for field_name, value in (extra_front_matter or {}).items():
+        front_matter.append(f"{field_name}: {value}")
     front_matter.extend(["---", "", f"# {title or doc_id.title()}", "", "Body.", ""])
     path = documents_root / f"{doc_id}.md"
     write_text(path, "\n".join(front_matter))
@@ -296,6 +299,69 @@ def test_resolver_rejects_unlisted_mismatched_and_escaping_sources(tmp_path: Pat
             tmp_path,
             {"scope": "analysis", "doc_id": "escaped-parent"},
         )
+
+
+@pytest.mark.parametrize(
+    ("field_name", "value", "kind"),
+    [
+        ("folder_path", "2026/work-a", "folder"),
+        ("work_id", "00123", "work"),
+        ("series_id", "selected-series", "series"),
+    ],
+)
+def test_analysis_works_reads_subjects_without_assignment_capability(
+    tmp_path: Path,
+    field_name: str,
+    value: str,
+    kind: str,
+) -> None:
+    write_site_tools_config(tmp_path)
+    write_docs_scope_config(
+        tmp_path,
+        [
+            docs_scope_record(
+                "analysis",
+                sub_scopes=[
+                    docs_sub_scope_record(
+                        "analysis",
+                        "works",
+                        title="Works",
+                        sub_scope_customisation={
+                            "id": "analysis_works",
+                            "settings": {},
+                        },
+                    )
+                ],
+            )
+        ],
+    )
+    scope_root = tmp_path / "docs-viewer/scopes/analysis"
+    write_source_doc(scope_root, "report", title="Works")
+    write_source_doc(
+        scope_root,
+        "detail-doc",
+        title="Detail",
+        sub_scope="works",
+        extra_front_matter={field_name: f'"{value}"'},
+    )
+
+    payload = target_service.managed_document_metadata(
+        tmp_path,
+        {
+            "scope": "analysis",
+            "sub_scope": "works",
+            "doc_id": "detail-doc",
+        },
+    )
+
+    assert payload["record"]["authoring_subject"] == {
+        "state": "valid",
+        "kind": kind,
+        "key": value,
+        "fields": [field_name],
+    }
+    assert payload["choices"] == {"ui_status": ["draft", "done"], "group": []}
+    assert "customisation" not in payload["record"]
 
 
 def test_metadata_route_hydrates_parent_and_sub_scope_records_from_source(

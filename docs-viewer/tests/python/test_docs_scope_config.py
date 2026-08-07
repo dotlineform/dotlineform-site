@@ -412,16 +412,28 @@ def test_checked_scope_config_opts_only_analysis_tags_into_return_import() -> No
     )
 
     analysis_tags = configs["analysis"].sub_scopes[0]
+    analysis_works = configs["analysis"].sub_scopes[1]
     assert [
         (sub_scope.sub_scope, sub_scope.supports_return_import)
         for sub_scope in configs["analysis"].sub_scopes
-    ] == [("tags", True)]
+    ] == [("tags", True), ("works", False)]
     assert not hasattr(analysis_tags, "document_groups")
     assert analysis_tags.sub_scope_customisation is not None
     assert analysis_tags.sub_scope_customisation.customisation_id == "analysis_tags"
     assert analysis_tags.sub_scope_customisation.settings == {
         "groups": ("subject", "domain", "form", "theme")
     }
+    assert analysis_works.sub_scope_customisation is not None
+    assert analysis_works.sub_scope_customisation.customisation_id == "analysis_works"
+    assert analysis_works.sub_scope_customisation.settings == {}
+    assert analysis_works.lifecycle is not None
+    assert analysis_works.lifecycle.report_host_doc_id == (
+        "d-20260807-082735-54d9d5"
+    )
+    assert analysis_works.public_projection is not None
+    assert analysis_works.public_projection.documents.location.path.as_posix() == (
+        "site/assets/data/docs/scopes/analysis/works"
+    )
 
 
 @pytest.mark.parametrize("value", [None, 1, "true", []])

@@ -4,12 +4,52 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260807-085247-4c2a9e",
+      "title": "SSP-4.2 — Exact Collection Copy Apply Evidence",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-085247-4c2a9e.json",
+      "timestamp": "2026-08-07 08:56:36",
+      "parent_id": "d-20260801-233534-239eab",
+      "parent_title": "SSP-4 — Collection-Aware Document Copy Delivery"
+    },
+    {
+      "doc_id": "d-20260607-222033-78a47c",
+      "title": "Create And Import Endpoints",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-78a47c.json",
+      "timestamp": "2026-08-07 08:52:47",
+      "parent_id": "d-20260607-222033-647b52",
+      "parent_title": "Endpoint Overview"
+    },
+    {
       "doc_id": "d-20260801-233534-239eab",
       "title": "SSP-4 — Collection-Aware Document Copy Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-233534-239eab.json",
-      "timestamp": "2026-08-06 22:57:24",
+      "timestamp": "2026-08-07 08:52:47",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
+    },
+    {
+      "doc_id": "d-20260731-155053-3929e2",
+      "title": "Sub-Scope Customisation Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155053-3929e2.json",
+      "timestamp": "2026-08-07 08:52:47",
+      "parent_id": "d-20260801-084127-752d7e",
+      "parent_title": "Sub-Scopes"
+    },
+    {
+      "doc_id": "d-20260802-194357-4d857b",
+      "title": "Sub-Scope Publishing",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194357-4d857b.json",
+      "timestamp": "2026-08-07 08:52:47",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260807-083338-7e4a91",
+      "title": "SSP-4.1 — Exact Collection Planner And Receipt Evidence",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-083338-7e4a91.json",
+      "timestamp": "2026-08-07 08:38:22",
+      "parent_id": "d-20260801-233534-239eab",
+      "parent_title": "SSP-4 — Collection-Aware Document Copy Delivery"
     },
     {
       "doc_id": "d-20260806-225724-aa5e6a",
@@ -18,14 +58,6 @@
       "timestamp": "2026-08-06 22:57:24",
       "parent_id": "d-20260801-233534-239eab",
       "parent_title": "SSP-4 — Collection-Aware Document Copy Delivery"
-    },
-    {
-      "doc_id": "d-20260802-194357-4d857b",
-      "title": "Sub-Scope Publishing",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194357-4d857b.json",
-      "timestamp": "2026-08-06 22:57:24",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
     },
     {
       "doc_id": "d-20260806-224924-7a3c91",
@@ -50,39 +82,7 @@
       "timestamp": "2026-08-06 22:47:23",
       "parent_id": "d-20260725-153656-516b61",
       "parent_title": "Semantic Tokens"
-    },
-    {
-      "doc_id": "d-20260623-180405-631ef4",
-      "title": "Semantic Tokens Source Editor UI",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260623-180405-631ef4.json",
-      "timestamp": "2026-08-06 22:47:23",
-      "parent_id": "d-20260725-153656-516b61",
-      "parent_title": "Semantic Tokens"
-    },
-    {
-      "doc_id": "d-20260607-222033-4b1d77",
-      "title": "Source Editor Endpoints",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-4b1d77.json",
-      "timestamp": "2026-08-06 22:47:23",
-      "parent_id": "d-20260607-222033-647b52",
-      "parent_title": "Endpoint Overview"
-    },
-    {
-      "doc_id": "d-20260607-222033-704641",
-      "title": "Source Editor Scripts",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-704641.json",
-      "timestamp": "2026-08-06 22:47:23",
-      "parent_id": "d-20260607-222033-2a494e",
-      "parent_title": "Scripts Overview"
-    },
-    {
-      "doc_id": "d-20260806-082057-355d34",
-      "title": "SSP-3.1 — Insert Subject Link Evidence",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260806-082057-355d34.json",
-      "timestamp": "2026-08-06 21:39:55",
-      "parent_id": "d-20260802-174340-2fe9f4",
-      "parent_title": "SSP-3 — Insert Subject Link Delivery"
     }
   ],
-  "generated_at": "2026-08-06T21:59:00Z"
+  "generated_at": "2026-08-07T07:56:37Z"
 }

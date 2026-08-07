@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pytest
 
-from repo_factory import docs_scope_record
+from repo_factory import docs_scope_record, docs_sub_scope_record
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -24,12 +24,17 @@ import docs_document_transfer as transfer  # noqa: E402
 import docs_document_transfer_apply as transfer_apply  # noqa: E402
 import docs_artifact_locations as artifact_locations  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
+import docs_scope_config  # noqa: E402
 import build_docs  # noqa: E402
 import build_search  # noqa: E402
 from build_docs_test_support import (  # noqa: E402
     write_route_config,
     write_semantic_token_contract,
     write_site_tools_config,
+)
+from test_docs_document_transfer import (  # noqa: E402
+    make_collection_repo,
+    sub_scope_documents_root,
 )
 
 
@@ -205,6 +210,29 @@ def fake_rebuild(
             }
         )
         return {"ok": True, "call": len(calls)}
+
+    return perform
+
+
+def fake_sub_scope_rebuild(calls: list[dict[str, object]]):
+    def perform(
+        _repo_root: Path,
+        scope: str,
+        sub_scope: str,
+        changed_paths: list[Path],
+        write_operation,
+        **kwargs,
+    ) -> dict[str, object]:
+        write_operation()
+        calls.append(
+            {
+                "scope": scope,
+                "sub_scope": sub_scope,
+                "changed_paths": list(changed_paths),
+                "kwargs": kwargs,
+            }
+        )
+        return {"ok": True, "mode": "sub_scope", "sub_scope": sub_scope}
 
     return perform
 
@@ -444,7 +472,7 @@ def test_apply_copy_builds_loadable_target_documents_and_search_once(
         rebuild_calls += 1
         assert kwargs["skip_media_builds"] is True
         write_operation()
-        config = transfer.load_docs_scope_configs(repo_root)[scope]
+        config = docs_scope_config.load_docs_scope_configs(repo_root)[scope]
         docs_result = build_docs.DocsDataBuilder(
             repo_root=repo_root,
             config=config,
@@ -808,3 +836,468 @@ def test_apply_copy_writes_external_local_target_documents_and_media(
         external_root / "published/media/img/photo.png"
     ).read_bytes() == b"photo"
     assert "docs/target/img/photo.png" in copied_path.read_text(encoding="utf-8")
+
+
+def test_apply_child_to_child_copy_uses_exact_transform_rebuild_and_result(
+    tmp_path: Path,
+) -> None:
+    repo_root = make_collection_repo(tmp_path)
+    source_before = snapshot(repo_root / "docs-viewer/scopes/source")
+    rebuild_calls: list[dict[str, object]] = []
+    activity_calls: list[tuple[Path, str, dict[str, object]]] = []
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        source_sub_scope="tags",
+        requested_doc_ids=["tag-a", "tag-b"],
+        target_scope="target",
+        target_sub_scope="works",
+        transfer_mode="copy",
+        operation_timestamp=COPY_TIMESTAMP,
+        token_factory=sequential_tokens("aaaaaa", "bbbbbb"),
+    )
+
+    def reject_parent_rebuild(*_args, **_kwargs):
+        raise AssertionError("parent rebuild must not own a child target")
+
+    result = transfer_apply.apply_document_copy(
+        repo_root,
+        plan,
+        confirm=True,
+        perform_source_write_and_rebuild=reject_parent_rebuild,
+        perform_sub_scope_source_write_and_rebuild=fake_sub_scope_rebuild(
+            rebuild_calls
+        ),
+        activity_logger=lambda root, event, payload: activity_calls.append(
+            (root, event, payload)
+        ),
+    )
+
+    target_ids = result["created_doc_ids"]
+    target_root = sub_scope_documents_root(repo_root, "target", "works")
+    alpha_front_matter, alpha_body = source_model.parse_source(
+        target_root / f"{target_ids[0]}.md"
+    )
+    beta_front_matter, _beta_body = source_model.parse_source(
+        target_root / f"{target_ids[1]}.md"
+    )
+    target_report_id = "d-20260701-100003-dddddd"
+
+    assert result["schema_version"] == "docs_document_copy_apply_v2"
+    assert result["source"] == {"scope": "source", "sub_scope": "tags"}
+    assert result["target"] == {"scope": "target", "sub_scope": "works"}
+    assert "source_scope" not in result
+    assert "target_scope" not in result
+    assert alpha_front_matter["work_id"] == "00123"
+    assert "group" not in alpha_front_matter
+    assert "group" not in beta_front_matter
+    assert "viewable" not in alpha_front_matter
+    assert alpha_front_matter["parent_id"] == ""
+    assert (
+        f"/docs/?scope=target&doc={target_report_id}&subdoc={target_ids[1]}"
+        in alpha_body
+    )
+    assert "docs/target/img/photo.png" in alpha_body
+    assert media_path(repo_root, "target", "img", "photo.png").read_bytes() == b"photo"
+    assert rebuild_calls == [
+        {
+            "scope": "target",
+            "sub_scope": "works",
+            "changed_paths": [
+                target_root / f"{target_ids[0]}.md",
+                target_root / f"{target_ids[1]}.md",
+            ],
+            "kwargs": {
+                "suppression_reason": transfer_apply.DOCUMENT_COPY_SUPPRESSION_REASON
+            },
+        }
+    ]
+    assert result["effective_roots"] == [
+        {
+            "source_doc_id": "tag-a",
+            "target_doc_id": target_ids[0],
+            "target_viewer_url": (
+                f"/docs/?scope=target&doc={target_report_id}"
+                f"&subdoc={target_ids[0]}"
+            ),
+        },
+        {
+            "source_doc_id": "tag-b",
+            "target_doc_id": target_ids[1],
+            "target_viewer_url": (
+                f"/docs/?scope=target&doc={target_report_id}"
+                f"&subdoc={target_ids[1]}"
+            ),
+        },
+    ]
+    assert activity_calls[0][1:] == (
+        transfer_apply.DOCUMENT_COPY_ACTIVITY_EVENT,
+        {
+            "source": {"scope": "source", "sub_scope": "tags"},
+            "requested_doc_ids": ["tag-a", "tag-b"],
+            "target": {"scope": "target", "sub_scope": "works"},
+            "effective_roots": result["effective_roots"],
+            "created_count": 2,
+            "unique_media_count": 1,
+        },
+    )
+    assert snapshot(repo_root / "docs-viewer/scopes/source") == source_before
+
+
+def test_apply_child_to_parent_copy_rewrites_subdoc_as_doc(
+    tmp_path: Path,
+) -> None:
+    repo_root = make_collection_repo(tmp_path)
+    rebuild_calls: list[dict[str, object]] = []
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        source_sub_scope="tags",
+        requested_doc_ids=["tag-a", "tag-b"],
+        target_scope="target",
+        transfer_mode="copy",
+        operation_timestamp=COPY_TIMESTAMP,
+        token_factory=sequential_tokens("cccccc", "dddddd"),
+    )
+
+    result = transfer_apply.apply_document_copy(
+        repo_root,
+        plan,
+        confirm=True,
+        perform_source_write_and_rebuild=fake_rebuild(rebuild_calls),
+        activity_logger=lambda *_args, **_kwargs: None,
+    )
+
+    target_ids = result["created_doc_ids"]
+    copied = local_documents_root(repo_root, "target") / f"{target_ids[0]}.md"
+    front_matter, body = source_model.parse_source(copied)
+    assert result["target"] == {"scope": "target"}
+    assert front_matter["work_id"] == "00123"
+    assert "group" not in front_matter
+    assert f"/docs/?scope=target&doc={target_ids[1]}" in body
+    assert "subdoc=" not in body
+    assert rebuild_calls[0]["scope"] == "target"
+    assert rebuild_calls[0]["kwargs"]["docs_doc_ids"] == target_ids
+
+
+def test_apply_parent_to_public_child_sets_false_default_and_subdoc_links(
+    tmp_path: Path,
+) -> None:
+    target_scope = docs_scope_record(
+        "target",
+        scope_type="public",
+        viewer_base_url="/target/",
+        include_scope_param=False,
+        sub_scopes=[
+            docs_sub_scope_record(
+                "target",
+                "works",
+                title="Works",
+                scope_type="public",
+                sub_scope_customisation={
+                    "id": "analysis_works",
+                    "settings": {},
+                },
+            )
+        ],
+    )
+    repo_root = make_repo(tmp_path, target_scope=target_scope)
+    target_report_id = "d-20260701-100003-dddddd"
+    write_doc(
+        local_documents_root(repo_root, "target"),
+        doc_id=target_report_id,
+        title="Target Works",
+        body="# Target Works\n",
+    )
+    report_path = local_documents_root(repo_root, "target") / f"{target_report_id}.md"
+    report_front_matter, report_body = source_model.parse_source(report_path)
+    report_front_matter.update(
+        {
+            "viewer_report": "docs_subscope",
+            "viewer_report_access": "local",
+            "viewer_report_subscope": "works",
+        }
+    )
+    report_path.write_text(
+        source_model.format_source(report_front_matter, report_body),
+        encoding="utf-8",
+    )
+    target_root = sub_scope_documents_root(repo_root, "target", "works")
+    target_root.mkdir(parents=True, exist_ok=True)
+    write_doc(
+        local_documents_root(repo_root, "source"),
+        doc_id="alpha",
+        title="Alpha",
+        parent_id="root",
+        body="# Alpha\n\n[Beta](/docs/?scope=source&doc=beta#detail)\n",
+    )
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        requested_doc_ids=["alpha", "beta"],
+        target_scope="target",
+        target_sub_scope="works",
+        transfer_mode="copy",
+        operation_timestamp=COPY_TIMESTAMP,
+        token_factory=sequential_tokens("eeeeee", "ffffff"),
+    )
+
+    result = transfer_apply.apply_document_copy(
+        repo_root,
+        plan,
+        confirm=True,
+        perform_sub_scope_source_write_and_rebuild=fake_sub_scope_rebuild([]),
+        activity_logger=lambda *_args, **_kwargs: None,
+    )
+
+    target_ids = result["created_doc_ids"]
+    front_matter, body = source_model.parse_source(
+        target_root / f"{target_ids[0]}.md"
+    )
+    assert front_matter["viewable"] is False
+    assert front_matter["parent_id"] == ""
+    assert f"/target/?doc={target_report_id}&subdoc={target_ids[1]}#detail" in body
+    assert result["effective_roots"][0]["target_viewer_url"] == (
+        f"/docs/?scope=target&doc={target_report_id}&subdoc={target_ids[0]}"
+    )
+
+
+def test_child_copy_stale_target_fails_before_media_or_document_writes(
+    tmp_path: Path,
+) -> None:
+    repo_root = make_collection_repo(tmp_path)
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        source_sub_scope="tags",
+        requested_doc_ids=["tag-a"],
+        target_scope="target",
+        target_sub_scope="works",
+        transfer_mode="copy",
+        operation_timestamp=COPY_TIMESTAMP,
+        token_factory=sequential_tokens("aaaaaa"),
+    )
+    target_path = plan.documents[0].target_path
+    write_doc(
+        target_path.parent,
+        doc_id=plan.documents[0].target_doc_id,
+        title="Concurrent target",
+    )
+    media_before = snapshot(repo_root / "docs-viewer/scopes/target/published")
+
+    with pytest.raises(
+        transfer_apply.DocumentTransferPlanStaleError,
+        match="document transfer preview is stale",
+    ):
+        transfer_apply.apply_document_copy(
+            repo_root,
+            plan,
+            confirm=True,
+            perform_sub_scope_source_write_and_rebuild=fake_sub_scope_rebuild([]),
+            activity_logger=lambda *_args, **_kwargs: None,
+        )
+
+    assert target_path.read_text(encoding="utf-8").find("Concurrent target") >= 0
+    assert snapshot(repo_root / "docs-viewer/scopes/target/published") == media_before
+
+
+def test_apply_child_copy_retains_matching_custom_metadata(
+    tmp_path: Path,
+) -> None:
+    repo_root = make_collection_repo(tmp_path)
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        source_sub_scope="tags",
+        requested_doc_ids=["tag-a"],
+        target_scope="target",
+        target_sub_scope="tags",
+        transfer_mode="copy",
+        operation_timestamp=COPY_TIMESTAMP,
+        token_factory=sequential_tokens("aaaaaa"),
+    )
+
+    result = transfer_apply.apply_document_copy(
+        repo_root,
+        plan,
+        confirm=True,
+        perform_sub_scope_source_write_and_rebuild=fake_sub_scope_rebuild([]),
+        activity_logger=lambda *_args, **_kwargs: None,
+    )
+
+    front_matter, body = source_model.parse_source(
+        sub_scope_documents_root(repo_root, "target", "tags")
+        / f"{result['created_doc_ids'][0]}.md"
+    )
+    assert front_matter["group"] == "subject"
+    assert front_matter["work_id"] == "00123"
+    assert "scope=source" in body
+    assert "subdoc=tag-b" in body
+
+
+@pytest.mark.parametrize("stale_fact", ["collection_config", "metadata", "media"])
+def test_child_copy_revalidates_complete_collection_receipt_before_writes(
+    tmp_path: Path,
+    stale_fact: str,
+) -> None:
+    repo_root = make_collection_repo(tmp_path)
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        source_sub_scope="tags",
+        requested_doc_ids=["tag-a"],
+        target_scope="target",
+        target_sub_scope="works",
+        transfer_mode="copy",
+        operation_timestamp=COPY_TIMESTAMP,
+        token_factory=sequential_tokens("aaaaaa"),
+    )
+    if stale_fact == "collection_config":
+        config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
+        config_payload = json.loads(config_path.read_text(encoding="utf-8"))
+        config_payload["scopes"][1]["sub_scopes"][1]["title"] = "Changed Works"
+        write_json(config_path, config_payload)
+    elif stale_fact == "metadata":
+        source_path = (
+            sub_scope_documents_root(repo_root, "source", "tags") / "tag-a.md"
+        )
+        front_matter, body = source_model.parse_source(source_path)
+        front_matter["group"] = "domain"
+        source_path.write_text(
+            source_model.format_source(front_matter, body),
+            encoding="utf-8",
+        )
+    else:
+        write_bytes(media_path(repo_root, "source", "img", "photo.png"), b"changed")
+
+    with pytest.raises(
+        transfer_apply.DocumentTransferPlanStaleError,
+        match="document transfer preview is stale",
+    ):
+        transfer_apply.apply_document_copy(
+            repo_root,
+            plan,
+            confirm=True,
+            perform_sub_scope_source_write_and_rebuild=fake_sub_scope_rebuild([]),
+            activity_logger=lambda *_args, **_kwargs: None,
+        )
+
+    assert not any(
+        sub_scope_documents_root(repo_root, "target", "works").glob("*.md")
+    )
+    assert not media_path(repo_root, "target", "img", "photo.png").exists()
+
+
+def test_copy_revalidates_registered_build_source_before_writes(
+    tmp_path: Path,
+) -> None:
+    source_scope = base_scope("source", media_types=("svg",))
+    target_scope = base_scope("target", media_types=("svg",))
+    add_mermaid_build(source_scope)
+    add_mermaid_build(target_scope)
+    repo_root = make_repo(
+        tmp_path,
+        source_scope=source_scope,
+        target_scope=target_scope,
+    )
+    write_doc(
+        local_documents_root(repo_root, "source"),
+        doc_id="alpha",
+        title="Alpha",
+        parent_id="root",
+        body="# Alpha\n\n[[media:docs/source/svg/diagram.svg Diagram]]\n",
+    )
+    source_build = build_source_path(
+        repo_root,
+        "source",
+        "mermaid",
+        "diagram.mmd",
+    )
+    write_bytes(source_build, b"flowchart LR\n  A --> B\n")
+    write_bytes(media_path(repo_root, "source", "svg", "diagram.svg"), b"source-svg")
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        requested_doc_ids=["alpha"],
+        target_scope="target",
+        transfer_mode="copy",
+        operation_timestamp=COPY_TIMESTAMP,
+        token_factory=sequential_tokens("aaaaaa"),
+    )
+    write_bytes(source_build, b"flowchart LR\n  A --> Changed\n")
+
+    with pytest.raises(
+        transfer_apply.DocumentTransferPlanStaleError,
+        match="document transfer preview is stale",
+    ):
+        transfer_apply.apply_document_copy(
+            repo_root,
+            plan,
+            confirm=True,
+            perform_source_write_and_rebuild=fake_rebuild([]),
+            activity_logger=lambda *_args, **_kwargs: None,
+        )
+
+    assert not any(local_documents_root(repo_root, "target").glob("*.md"))
+    assert not build_source_path(
+        repo_root,
+        "target",
+        "mermaid",
+        "diagram.mmd",
+    ).exists()
+
+
+def test_child_copy_failure_reports_only_the_exact_target_collection(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo_root = make_collection_repo(tmp_path)
+    parent_target_before = snapshot(
+        local_documents_root(repo_root, "target")
+    )
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        source_sub_scope="tags",
+        requested_doc_ids=["tag-a", "tag-b"],
+        target_scope="target",
+        target_sub_scope="works",
+        transfer_mode="copy",
+        operation_timestamp=COPY_TIMESTAMP,
+        token_factory=sequential_tokens("aaaaaa", "bbbbbb"),
+    )
+    original_write = transfer_apply.source_model.write_text_atomic_new
+    writes = 0
+
+    def fail_second_write(path: Path, text: str) -> None:
+        nonlocal writes
+        writes += 1
+        if writes == 2:
+            raise RuntimeError("simulated child document write failure")
+        original_write(path, text)
+
+    monkeypatch.setattr(
+        transfer_apply.source_model,
+        "write_text_atomic_new",
+        fail_second_write,
+    )
+
+    with pytest.raises(
+        transfer_apply.DocumentTransferApplyError,
+        match="documents_and_rebuild",
+    ) as captured:
+        transfer_apply.apply_document_copy(
+            repo_root,
+            plan,
+            confirm=True,
+            perform_sub_scope_source_write_and_rebuild=fake_sub_scope_rebuild([]),
+            activity_logger=lambda *_args, **_kwargs: None,
+        )
+
+    failure = captured.value.result
+    assert failure["source"] == {"scope": "source", "sub_scope": "tags"}
+    assert failure["target"] == {"scope": "target", "sub_scope": "works"}
+    assert [
+        item["state"] for item in failure["target_state"]["documents"]
+    ] == ["exact", "missing"]
+    assert snapshot(local_documents_root(repo_root, "target")) == parent_target_before

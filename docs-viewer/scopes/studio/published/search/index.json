@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-80f0bbc390c3212172106bc8f2adb88d",
-    "generated_at_utc": "2026-08-06T21:59:00Z",
-    "count": 259
+    "version": "blake2b-bc8c82085b5124cd817ec6b5619e95ea",
+    "generated_at_utc": "2026-08-07T07:56:37Z",
+    "count": 261
   },
   "entries": [
     {
@@ -1627,10 +1627,10 @@
       "kind": "doc",
       "title": "Create And Import Endpoints",
       "href": "/docs/?scope=studio&doc=d-20260607-222033-78a47c",
-      "last_updated": "2026-07-31 00:09:51",
+      "last_updated": "2026-08-07 08:52:47",
       "parent_id": "d-20260607-222033-647b52",
       "parent_title": "Endpoint Overview",
-      "display_meta": "2026-07-31 00:09:51 • Endpoint Overview",
+      "display_meta": "2026-08-07 08:52:47 • Endpoint Overview",
       "search_terms": [
         "create and import endpoints",
         "create",
@@ -1640,16 +1640,15 @@
         "endpoint overview",
         "endpoint",
         "overview",
-        "2026-07-31 00:09:51",
+        "2026-08-07 08:52:47",
         "2026",
+        "08",
         "07",
-        "31",
-        "00",
-        "09",
-        "51",
+        "52",
+        "47",
         "d-20260607-222033-78a47c"
       ],
-      "search_text": "create and import endpoints create and import endpoints endpoint overview endpoint overview 2026-07-31 00:09:51 2026 07 31 00 09 51 d-20260607-222033-78a47c"
+      "search_text": "create and import endpoints create and import endpoints endpoint overview endpoint overview 2026-08-07 08:52:47 2026 08 07 52 47 d-20260607-222033-78a47c"
     },
     {
       "id": "d-20260711-214307-6d6d46",
@@ -2794,10 +2793,10 @@
       "kind": "doc",
       "title": "Sub-Scope Customisation Architecture",
       "href": "/docs/?scope=studio&doc=d-20260731-155053-3929e2",
-      "last_updated": "2026-08-04 22:06:02",
+      "last_updated": "2026-08-07 08:52:47",
       "parent_id": "d-20260801-084127-752d7e",
       "parent_title": "Sub-Scopes",
-      "display_meta": "2026-08-04 22:06:02 • Sub-Scopes",
+      "display_meta": "2026-08-07 08:52:47 • Sub-Scopes",
       "search_terms": [
         "sub-scope customisation architecture",
         "sub",
@@ -2806,16 +2805,15 @@
         "architecture",
         "sub-scopes",
         "scopes",
-        "2026-08-04 22:06:02",
+        "2026-08-07 08:52:47",
         "2026",
         "08",
-        "04",
-        "22",
-        "06",
-        "02",
+        "07",
+        "52",
+        "47",
         "d-20260731-155053-3929e2"
       ],
-      "search_text": "sub-scope customisation architecture sub scope customisation architecture sub-scopes scopes 2026-08-04 22:06:02 2026 08 04 22 06 02 d-20260731-155053-3929e2"
+      "search_text": "sub-scope customisation architecture sub scope customisation architecture sub-scopes scopes 2026-08-07 08:52:47 2026 08 07 52 47 d-20260731-155053-3929e2"
     },
     {
       "id": "d-20260731-185207-2dbb6f",
@@ -4284,26 +4282,25 @@
       "kind": "doc",
       "title": "Sub-Scope Publishing",
       "href": "/docs/?scope=studio&doc=d-20260802-194357-4d857b",
-      "last_updated": "2026-08-06 22:57:24",
+      "last_updated": "2026-08-07 08:52:47",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-06 22:57:24 • Roadmap",
+      "display_meta": "2026-08-07 08:52:47 • Roadmap",
       "search_terms": [
         "sub-scope publishing",
         "sub",
         "scope",
         "publishing",
         "roadmap",
-        "2026-08-06 22:57:24",
+        "2026-08-07 08:52:47",
         "2026",
         "08",
-        "06",
-        "22",
-        "57",
-        "24",
+        "07",
+        "52",
+        "47",
         "d-20260802-194357-4d857b"
       ],
-      "search_text": "sub-scope publishing sub scope publishing roadmap 2026-08-06 22:57:24 2026 08 06 22 57 24 d-20260802-194357-4d857b"
+      "search_text": "sub-scope publishing sub scope publishing roadmap 2026-08-07 08:52:47 2026 08 07 52 47 d-20260802-194357-4d857b"
     },
     {
       "id": "d-20260802-121105-c574f9",
@@ -5002,10 +4999,10 @@
       "kind": "doc",
       "title": "SSP-4 — Collection-Aware Document Copy Delivery",
       "href": "/docs/?scope=studio&doc=d-20260801-233534-239eab",
-      "last_updated": "2026-08-06 22:57:24",
+      "last_updated": "2026-08-07 08:52:47",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-06 22:57:24 • Sub-Scope Publishing",
+      "display_meta": "2026-08-07 08:52:47 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-4 — collection-aware document copy delivery",
         "ssp",
@@ -5019,16 +5016,15 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-06 22:57:24",
+        "2026-08-07 08:52:47",
         "2026",
         "08",
-        "06",
-        "22",
-        "57",
-        "24",
+        "07",
+        "52",
+        "47",
         "d-20260801-233534-239eab"
       ],
-      "search_text": "ssp-4 — collection-aware document copy delivery ssp 4 collection aware document copy delivery sub-scope publishing sub scope publishing 2026-08-06 22:57:24 2026 08 06 22 57 24 d-20260801-233534-239eab"
+      "search_text": "ssp-4 — collection-aware document copy delivery ssp 4 collection aware document copy delivery sub-scope publishing sub scope publishing 2026-08-07 08:52:47 2026 08 07 52 47 d-20260801-233534-239eab"
     },
     {
       "id": "d-20260806-225724-aa5e6a",
@@ -5062,6 +5058,74 @@
         "d-20260806-225724-aa5e6a"
       ],
       "search_text": "ssp-4.0 — collection-aware copy sanity note ssp 4 0 collection aware copy sanity note ssp-4 — collection-aware document copy delivery document delivery 2026-08-06 22:57:24 2026 08 06 22 57 24 d-20260806-225724-aa5e6a"
+    },
+    {
+      "id": "d-20260807-083338-7e4a91",
+      "kind": "doc",
+      "title": "SSP-4.1 — Exact Collection Planner And Receipt Evidence",
+      "href": "/docs/?scope=studio&doc=d-20260807-083338-7e4a91",
+      "last_updated": "2026-08-07 08:38:22",
+      "parent_id": "d-20260801-233534-239eab",
+      "parent_title": "SSP-4 — Collection-Aware Document Copy Delivery",
+      "display_meta": "2026-08-07 08:38:22 • SSP-4 — Collection-Aware Document Copy Delivery",
+      "search_terms": [
+        "ssp-4.1 — exact collection planner and receipt evidence",
+        "ssp",
+        "4",
+        "1",
+        "exact",
+        "collection",
+        "planner",
+        "and",
+        "receipt",
+        "evidence",
+        "ssp-4 — collection-aware document copy delivery",
+        "aware",
+        "document",
+        "copy",
+        "delivery",
+        "2026-08-07 08:38:22",
+        "2026",
+        "08",
+        "07",
+        "38",
+        "22",
+        "d-20260807-083338-7e4a91"
+      ],
+      "search_text": "ssp-4.1 — exact collection planner and receipt evidence ssp 4 1 exact collection planner and receipt evidence ssp-4 — collection-aware document copy delivery aware document copy delivery 2026-08-07 08:38:22 2026 08 07 38 22 d-20260807-083338-7e4a91"
+    },
+    {
+      "id": "d-20260807-085247-4c2a9e",
+      "kind": "doc",
+      "title": "SSP-4.2 — Exact Collection Copy Apply Evidence",
+      "href": "/docs/?scope=studio&doc=d-20260807-085247-4c2a9e",
+      "last_updated": "2026-08-07 08:56:36",
+      "parent_id": "d-20260801-233534-239eab",
+      "parent_title": "SSP-4 — Collection-Aware Document Copy Delivery",
+      "display_meta": "2026-08-07 08:56:36 • SSP-4 — Collection-Aware Document Copy Delivery",
+      "search_terms": [
+        "ssp-4.2 — exact collection copy apply evidence",
+        "ssp",
+        "4",
+        "2",
+        "exact",
+        "collection",
+        "copy",
+        "apply",
+        "evidence",
+        "ssp-4 — collection-aware document copy delivery",
+        "aware",
+        "document",
+        "delivery",
+        "2026-08-07 08:56:36",
+        "2026",
+        "08",
+        "07",
+        "56",
+        "36",
+        "d-20260807-085247-4c2a9e"
+      ],
+      "search_text": "ssp-4.2 — exact collection copy apply evidence ssp 4 2 exact collection copy apply evidence ssp-4 — collection-aware document copy delivery aware document delivery 2026-08-07 08:56:36 2026 08 07 56 36 d-20260807-085247-4c2a9e"
     },
     {
       "id": "d-20260802-195805-94a5be",

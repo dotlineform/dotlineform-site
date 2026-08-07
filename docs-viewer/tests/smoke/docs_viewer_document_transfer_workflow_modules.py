@@ -67,7 +67,7 @@ def assert_transfer_workflow(page: Page) -> None:
                 requests.push({ url, method: options.method, body });
                 if (url.endsWith('/docs/document-transfer-preview')) {
                     return response({
-                        schema_version: 'docs_document_transfer_preview_v1',
+                        schema_version: 'docs_document_transfer_preview_v2',
                         ok: true,
                         mode: body.transfer_mode,
                         source: { scope: body.scope },
@@ -88,7 +88,7 @@ def assert_transfer_workflow(page: Page) -> None:
                         ],
                         blockers: [],
                         apply_plan: {
-                            schema_version: 'docs_document_transfer_apply_plan_v1',
+                            schema_version: 'docs_document_transfer_apply_plan_v2',
                             mode: body.transfer_mode,
                             source_scope: body.scope,
                             target_scope: body.target_scope
@@ -269,7 +269,7 @@ def assert_transfer_workflow(page: Page) -> None:
                     code: 'retained_dependency',
                     message: 'An unrelated dependency will remain unchanged.'
                 }],
-                apply_plan: { schema_version: 'docs_document_transfer_apply_plan_v1' }
+                apply_plan: { schema_version: 'docs_document_transfer_apply_plan_v2' }
             };
             return {
                 optionsState,
@@ -363,7 +363,7 @@ def assert_transfer_workflow(page: Page) -> None:
             "body": {
                 "scope": "studio",
                 "apply_plan": {
-                    "schema_version": "docs_document_transfer_apply_plan_v1",
+                    "schema_version": "docs_document_transfer_apply_plan_v2",
                     "mode": "copy",
                     "source_scope": "studio",
                     "target_scope": "notes",

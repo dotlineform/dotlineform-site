@@ -33,14 +33,18 @@ from docs_media_inventory import (
 from docs_scope_config import (
     PUBLIC_SCOPE_TYPE,
     DocsScopeConfig,
-    document_source_path,
-    load_docs_scope_configs,
-    resolve_scope_path,
+)
+from docs_management_document_target import (
+    ManagedDocumentCollection,
+    resolve_managed_document_collection,
+)
+from docs_subscope_customisations import (
+    sub_scope_customisation_transfer_contract,
 )
 
 
-TRANSFER_PREVIEW_SCHEMA_VERSION = "docs_document_transfer_preview_v1"
-TRANSFER_APPLY_PLAN_SCHEMA_VERSION = "docs_document_transfer_apply_plan_v1"
+TRANSFER_PREVIEW_SCHEMA_VERSION = "docs_document_transfer_preview_v2"
+TRANSFER_APPLY_PLAN_SCHEMA_VERSION = "docs_document_transfer_apply_plan_v2"
 COPY_MODE = "copy"
 MOVE_MODE = "move"
 SUPPORTED_TRANSFER_MODES = frozenset({COPY_MODE, MOVE_MODE})
@@ -94,6 +98,26 @@ class TransferWarning:
 
 
 @dataclass(frozen=True)
+class TransferCustomMetadataDecision:
+    source_doc_id: str
+    field_name: str
+    source_customisation: str
+    target_customisation: str
+    contract_id: str
+    status: str
+    reason: str
+
+
+@dataclass(frozen=True)
+class TransferLinkDecision:
+    source_doc_id: str
+    referenced_doc_id: str
+    target_doc_id: str
+    status: str
+    occurrence_count: int
+
+
+@dataclass(frozen=True)
 class RetainedExternalDependency:
     kind: str
     reference: str
@@ -142,19 +166,43 @@ class TransferDocumentPlan:
 @dataclass(frozen=True)
 class DocumentTransferPlan:
     mode: str
-    source_scope: str
-    target_scope: str
-    source_config: DocsScopeConfig
-    target_config: DocsScopeConfig
+    source_collection: ManagedDocumentCollection
+    target_collection: ManagedDocumentCollection
     operation_timestamp: str
     include_descendants: bool
     descendants_forced: bool
     requested_doc_ids: tuple[str, ...]
     documents: tuple[TransferDocumentPlan, ...]
     media: tuple[TransferMediaPlan, ...]
+    custom_metadata: tuple[TransferCustomMetadataDecision, ...]
+    link_decisions: tuple[TransferLinkDecision, ...]
     retained_external_dependencies: tuple[RetainedExternalDependency, ...]
     blockers: tuple[TransferBlocker, ...]
     warnings: tuple[TransferWarning, ...]
+
+    @property
+    def source_scope(self) -> str:
+        return self.source_collection.scope
+
+    @property
+    def source_sub_scope(self) -> str:
+        return self.source_collection.sub_scope
+
+    @property
+    def target_scope(self) -> str:
+        return self.target_collection.scope
+
+    @property
+    def target_sub_scope(self) -> str:
+        return self.target_collection.sub_scope
+
+    @property
+    def source_config(self) -> DocsScopeConfig:
+        return self.source_collection.parent_config
+
+    @property
+    def target_config(self) -> DocsScopeConfig:
+        return self.target_collection.parent_config
 
     @property
     def ok(self) -> bool:
@@ -176,14 +224,24 @@ class DocumentTransferPlan:
         }
 
     def preview_payload(self) -> dict[str, Any]:
+        source = self.source_collection.request_target()
+        target = {
+            **self.target_collection.request_target(),
+            "placement": (
+                "sub_scope_root" if self.target_sub_scope else "scope_root"
+            ),
+        }
         return {
             "schema_version": TRANSFER_PREVIEW_SCHEMA_VERSION,
             "ok": self.ok,
             "mode": self.mode,
             "include_descendants": self.include_descendants,
             "descendants_forced": self.descendants_forced,
-            "source": {"scope": self.source_scope},
-            "target": {"scope": self.target_scope, "placement": "scope_root"},
+            "source": source,
+            "target": target,
+            "target_default_viewable": source_model.default_viewable_for_config(
+                self.target_config
+            ),
             "requested_count": len(self.requested_doc_ids),
             "effective_root_count": self.effective_root_count,
             "descendant_count": self.descendant_count,
@@ -202,6 +260,15 @@ class DocumentTransferPlan:
                 for document in self.documents
             ],
             "media": [_media_payload(item) for item in self.media],
+            "custom_metadata": {
+                status: [
+                    asdict(item)
+                    for item in self.custom_metadata
+                    if item.status == status
+                ]
+                for status in ("retained", "omitted", "rejected")
+            },
+            "link_decisions": [asdict(item) for item in self.link_decisions],
             "retained_external_dependencies": [
                 asdict(dependency)
                 for dependency in self.retained_external_dependencies
@@ -217,13 +284,27 @@ class DocumentTransferPlan:
         return {
             "schema_version": TRANSFER_APPLY_PLAN_SCHEMA_VERSION,
             "mode": self.mode,
-            "source_scope": self.source_scope,
-            "target_scope": self.target_scope,
+            "source": self.source_collection.request_target(),
+            "target": self.target_collection.request_target(),
             "operation_timestamp": self.operation_timestamp,
             "include_descendants": self.include_descendants,
             "requested_doc_ids": list(self.requested_doc_ids),
-            "source_config_sha256": _scope_config_sha256(self.source_config),
-            "target_config_sha256": _scope_config_sha256(self.target_config),
+            "source_parent_config_sha256": _config_sha256(self.source_config),
+            "source_collection_config_sha256": _config_sha256(
+                self.source_collection.document_config
+            ),
+            "target_parent_config_sha256": _config_sha256(self.target_config),
+            "target_collection_config_sha256": _config_sha256(
+                self.target_collection.document_config
+            ),
+            "media_owners": {
+                "source": {"scope": self.source_scope},
+                "target": {"scope": self.target_scope},
+            },
+            "target_rebuild_owner": self.target_collection.request_target(),
+            "target_default_viewable": source_model.default_viewable_for_config(
+                self.target_config
+            ),
             "documents": [
                 {
                     "source_doc_id": document.source_doc.doc_id,
@@ -252,6 +333,14 @@ class DocumentTransferPlan:
                 }
                 for item in self.media
             ],
+            "custom_metadata": [
+                asdict(item)
+                for item in self.custom_metadata
+            ],
+            "link_decisions": [
+                asdict(item)
+                for item in self.link_decisions
+            ],
         }
 
 
@@ -276,7 +365,7 @@ def _jsonable_receipt_value(value: Any) -> Any:
     return value
 
 
-def _scope_config_sha256(config: DocsScopeConfig) -> str:
+def _config_sha256(config: Any) -> str:
     serialized = json.dumps(
         _jsonable_receipt_value(config),
         ensure_ascii=False,
@@ -334,23 +423,71 @@ def _stale_receipt(message: str) -> ValueError:
     return ValueError(f"document transfer preview is stale: {message}")
 
 
-def _require_document_root(
-    repo_root: Path,
-    config: DocsScopeConfig,
+def _require_collection_root(
+    collection: ManagedDocumentCollection,
     *,
     role: str,
     writable: bool,
+    mode: str,
 ) -> Path:
-    if writable and config.scope_type == PUBLIC_SCOPE_TYPE:
-        raise ValueError(f"public {role} scope {config.scope_id!r} is not writable")
-    root = resolve_scope_path(repo_root, document_source_path(config))
+    if (
+        writable
+        and collection.parent_config.scope_type == PUBLIC_SCOPE_TYPE
+        and not (mode == COPY_MODE and collection.sub_scope)
+    ):
+        raise ValueError(f"public {role} scope {collection.scope!r} is not writable")
+    root = collection.source_root
+    label = (
+        f"{collection.scope}/{collection.sub_scope}"
+        if collection.sub_scope
+        else collection.scope
+    )
     if not root.exists() or not root.is_dir():
-        raise ValueError(f"{role} document root for scope {config.scope_id!r} is unavailable")
+        raise ValueError(f"{role} document root for collection {label!r} is unavailable")
     if not os.access(root, os.R_OK | os.X_OK):
-        raise ValueError(f"{role} document root for scope {config.scope_id!r} is unavailable")
+        raise ValueError(f"{role} document root for collection {label!r} is unavailable")
     if writable and not os.access(root, os.W_OK | os.X_OK):
-        raise ValueError(f"{role} scope {config.scope_id!r} cannot accept canonical writes")
+        raise ValueError(f"{role} collection {label!r} cannot accept canonical writes")
     return root
+
+
+def document_transfer_collection_capabilities(
+    collection: ManagedDocumentCollection,
+) -> dict[str, bool]:
+    """Report operation eligibility for one exact configured collection."""
+
+    def available(*, role: str, writable: bool, mode: str) -> bool:
+        try:
+            _require_collection_root(
+                collection,
+                role=role,
+                writable=writable,
+                mode=mode,
+            )
+        except (OSError, ValueError):
+            return False
+        return True
+
+    return {
+        "copy_source": available(
+            role="source",
+            writable=False,
+            mode=COPY_MODE,
+        ),
+        "move_source": (
+            not collection.sub_scope
+            and available(role="source", writable=True, mode=MOVE_MODE)
+        ),
+        "copy_target": available(
+            role="target",
+            writable=True,
+            mode=COPY_MODE,
+        ),
+        "move_target": (
+            not collection.sub_scope
+            and available(role="target", writable=True, mode=MOVE_MODE)
+        ),
+    }
 
 
 def document_transfer_scope_capabilities(
@@ -358,23 +495,22 @@ def document_transfer_scope_capabilities(
     config: DocsScopeConfig,
 ) -> dict[str, bool]:
     """Report mode-aware source and target eligibility through planner rules."""
-
-    def available(*, role: str, writable: bool) -> bool:
-        try:
-            _require_document_root(
-                repo_root,
-                config,
-                role=role,
-                writable=writable,
-            )
-        except (OSError, ValueError):
-            return False
-        return True
-
+    try:
+        collection = resolve_managed_document_collection(
+            repo_root,
+            scope=config.scope_id,
+        )
+    except (OSError, ValueError):
+        return {
+            "copy_source": False,
+            "move_source": False,
+            "target": False,
+        }
+    capabilities = document_transfer_collection_capabilities(collection)
     return {
-        "copy_source": available(role="source", writable=False),
-        "move_source": available(role="source", writable=True),
-        "target": available(role="target", writable=True),
+        "copy_source": capabilities["copy_source"],
+        "move_source": capabilities["move_source"],
+        "target": capabilities["copy_target"] and capabilities["move_target"],
     }
 
 
@@ -1000,12 +1136,228 @@ def _move_inbound_link_warnings(
     return warnings
 
 
+def _collection_customisation(
+    collection: ManagedDocumentCollection,
+) -> Any:
+    return getattr(collection.document_config, "sub_scope_customisation", None)
+
+
+def _custom_metadata_decisions(
+    source_collection: ManagedDocumentCollection,
+    target_collection: ManagedDocumentCollection,
+    documents: Iterable[source_model.ScopeDoc],
+    blockers: list[TransferBlocker],
+) -> tuple[TransferCustomMetadataDecision, ...]:
+    source_customisation = _collection_customisation(source_collection)
+    source_contract = sub_scope_customisation_transfer_contract(
+        source_customisation
+    )
+    if source_contract is None:
+        return ()
+    target_customisation = _collection_customisation(target_collection)
+    target_contract = sub_scope_customisation_transfer_contract(
+        target_customisation
+    )
+    source_customisation_id = str(
+        getattr(source_customisation, "customisation_id", "") or ""
+    )
+    target_customisation_id = str(
+        getattr(target_customisation, "customisation_id", "") or ""
+    )
+    decisions: list[TransferCustomMetadataDecision] = []
+    for document in documents:
+        for field_name in source_contract.owned_field_names:
+            if field_name not in document.front_matter:
+                continue
+            status = "retained"
+            reason = "target advertises the same transfer contract"
+            if (
+                target_contract is None
+                or target_contract.contract_id != source_contract.contract_id
+            ):
+                status = "omitted"
+                reason = "target does not advertise the source transfer contract"
+            elif field_name not in target_contract.owned_field_names:
+                status = "rejected"
+                reason = "target transfer contract does not declare this field"
+            else:
+                try:
+                    target_contract.validate_field(
+                        target_customisation.settings,
+                        field_name,
+                        document.front_matter[field_name],
+                    )
+                except ValueError as exc:
+                    status = "rejected"
+                    reason = str(exc)
+            decision = TransferCustomMetadataDecision(
+                source_doc_id=document.doc_id,
+                field_name=field_name,
+                source_customisation=source_customisation_id,
+                target_customisation=target_customisation_id,
+                contract_id=source_contract.contract_id,
+                status=status,
+                reason=reason,
+            )
+            decisions.append(decision)
+            if status == "rejected":
+                blockers.append(
+                    TransferBlocker(
+                        code="target_custom_metadata_rejected",
+                        message=(
+                            f"target rejected custom field {field_name!r} from "
+                            f"{source_customisation_id!r} for document "
+                            f"{document.doc_id!r}: {reason}"
+                        ),
+                        identity=field_name,
+                        document_ids=(document.doc_id,),
+                    )
+                )
+    return tuple(
+        sorted(
+            decisions,
+            key=lambda item: (
+                item.source_doc_id,
+                item.field_name,
+                item.status,
+            ),
+        )
+    )
+
+
+def collection_report_host_doc_id(
+    repo_root: Path,
+    collection: ManagedDocumentCollection,
+) -> str:
+    if not collection.sub_scope:
+        return ""
+    lifecycle = getattr(collection.document_config, "lifecycle", None)
+    if lifecycle is not None:
+        return lifecycle.report_host_doc_id
+    parent_documents = source_model.load_scope_docs_for_config(
+        repo_root,
+        collection.parent_config,
+    )
+    matching = [
+        document.doc_id
+        for document in parent_documents
+        if (
+            document.front_matter.get("viewer_report") == "docs_subscope"
+            and document.front_matter.get("viewer_report_subscope")
+            == collection.sub_scope
+        )
+    ]
+    if len(matching) != 1:
+        raise ValueError(
+            "source sub-scope report must resolve exactly once for "
+            f"{collection.scope}/{collection.sub_scope}"
+        )
+    return matching[0]
+
+
+def viewer_link_collection_doc_id(
+    raw_url: str,
+    collection: ManagedDocumentCollection,
+    *,
+    report_host_doc_id: str,
+) -> str:
+    parsed = urlsplit(raw_url)
+    config = collection.parent_config
+    if parsed.path != config.viewer_base_url:
+        return ""
+    query = parse_qs(parsed.query, keep_blank_values=True)
+    scope_values = query.get("scope", ())
+    if len(scope_values) > 1:
+        return ""
+    scope = (
+        scope_values[0]
+        if scope_values
+        else config.scope_id if not config.include_scope_param else ""
+    )
+    if scope != collection.scope:
+        return ""
+    doc_values = query.get("doc", ())
+    subdoc_values = query.get("subdoc", ())
+    if collection.sub_scope:
+        if (
+            len(doc_values) != 1
+            or doc_values[0] != report_host_doc_id
+            or len(subdoc_values) != 1
+        ):
+            return ""
+        return subdoc_values[0]
+    if len(doc_values) != 1 or subdoc_values:
+        return ""
+    return doc_values[0]
+
+
+def _link_decisions(
+    repo_root: Path,
+    source_collection: ManagedDocumentCollection,
+    documents: Iterable[source_model.ScopeDoc],
+    id_map: Mapping[str, str],
+) -> tuple[TransferLinkDecision, ...]:
+    report_host_doc_id = collection_report_host_doc_id(
+        repo_root,
+        source_collection,
+    )
+    occurrences: dict[tuple[str, str, str, str], int] = {}
+    for document in documents:
+        for match in ROOT_RELATIVE_VIEWER_URL_PATTERN.finditer(document.body):
+            referenced_doc_id = viewer_link_collection_doc_id(
+                match.group(0),
+                source_collection,
+                report_host_doc_id=report_host_doc_id,
+            )
+            if not referenced_doc_id:
+                continue
+            target_doc_id = id_map.get(referenced_doc_id, "")
+            status = "remap" if target_doc_id else "retain"
+            key = (
+                document.doc_id,
+                referenced_doc_id,
+                target_doc_id,
+                status,
+            )
+            occurrences[key] = occurrences.get(key, 0) + 1
+    return tuple(
+        TransferLinkDecision(
+            source_doc_id=source_doc_id,
+            referenced_doc_id=referenced_doc_id,
+            target_doc_id=target_doc_id,
+            status=status,
+            occurrence_count=count,
+        )
+        for (
+            source_doc_id,
+            referenced_doc_id,
+            target_doc_id,
+            status,
+        ), count in sorted(occurrences.items())
+    )
+
+
+def _internal_parent_relationships(
+    documents: Iterable[source_model.ScopeDoc],
+) -> tuple[tuple[str, str], ...]:
+    documents_by_id = {document.doc_id: document for document in documents}
+    return tuple(
+        sorted(
+            (document.parent_id, document.doc_id)
+            for document in documents_by_id.values()
+            if document.parent_id in documents_by_id
+        )
+    )
+
+
 def plan_document_transfer(
     repo_root: Path,
     *,
     source_scope: Any,
+    source_sub_scope: Any | None = None,
     requested_doc_ids: Any,
     target_scope: Any,
+    target_sub_scope: Any | None = None,
     transfer_mode: Any,
     include_descendants: Any = False,
     operation_timestamp: str | None = None,
@@ -1020,50 +1372,66 @@ def plan_document_transfer(
     mode = _normalize_mode(transfer_mode)
     normalized_source_scope = _normalize_scope(source_scope, field="source_scope")
     normalized_target_scope = _normalize_scope(target_scope, field="target_scope")
-    if normalized_source_scope == normalized_target_scope:
-        raise ValueError("target_scope must differ from source_scope")
+    source_collection = resolve_managed_document_collection(
+        repo_root,
+        scope=normalized_source_scope,
+        sub_scope=source_sub_scope,
+    )
+    target_collection = resolve_managed_document_collection(
+        repo_root,
+        scope=normalized_target_scope,
+        sub_scope=target_sub_scope,
+    )
+    if source_collection.request_target() == target_collection.request_target():
+        raise ValueError("target collection must differ from source collection")
     normalized_requested_ids = _normalize_requested_doc_ids(requested_doc_ids)
     if not isinstance(include_descendants, bool):
         raise ValueError("include_descendants must be a boolean")
     descendants_forced = mode == MOVE_MODE
     effective_include_descendants = include_descendants or descendants_forced
-
-    configs = load_docs_scope_configs(
-        repo_root,
-        scope_ids=(normalized_source_scope, normalized_target_scope),
-    )
-    if normalized_source_scope not in configs:
-        raise ValueError(
-            f"source_scope {normalized_source_scope!r} is not a configured Docs Viewer scope"
-        )
-    if normalized_target_scope not in configs:
-        raise ValueError(
-            f"target_scope {normalized_target_scope!r} is not a configured Docs Viewer scope"
-        )
-    source_config = configs[normalized_source_scope]
-    target_config = configs[normalized_target_scope]
+    if mode == MOVE_MODE and (
+        source_collection.sub_scope or target_collection.sub_scope
+    ):
+        raise ValueError("Move supports parent-scope collections only")
+    source_config = source_collection.parent_config
+    target_config = target_collection.parent_config
     if mode == MOVE_MODE and source_config.scope_type == PUBLIC_SCOPE_TYPE:
         raise ValueError("public source scopes cannot be moved")
+    if source_collection.sub_scope and include_descendants:
+        raise ValueError("sub-scope Copy does not support descendant inclusion")
 
-    _require_document_root(
-        repo_root,
-        source_config,
+    _require_collection_root(
+        source_collection,
         role="source",
         writable=mode == MOVE_MODE,
+        mode=mode,
     )
-    target_root = _require_document_root(
-        repo_root,
-        target_config,
+    target_root = _require_collection_root(
+        target_collection,
         role="target",
         writable=True,
+        mode=mode,
     )
-    source_docs = source_model.load_scope_docs_for_config(repo_root, source_config)
-    target_docs = source_model.load_scope_docs_for_config(repo_root, target_config)
+    source_docs = source_model.load_document_collection_docs_for_config(
+        repo_root,
+        source_collection.parent_config,
+        source_collection.document_config,
+    )
+    target_docs = source_model.load_document_collection_docs_for_config(
+        repo_root,
+        target_collection.parent_config,
+        target_collection.document_config,
+    )
     effective_docs, ordered_requested_ids = _effective_documents(
         source_docs,
         normalized_requested_ids,
         include_descendants=effective_include_descendants,
     )
+    relationships = _internal_parent_relationships(effective_docs)
+    if source_collection.sub_scope and relationships:
+        raise ValueError(
+            "sub-scope Copy selection contains a parent/child relationship"
+        )
 
     timestamp = str(operation_timestamp or source_model.current_doc_timestamp()).strip()
     if not source_model.is_doc_timestamp(timestamp):
@@ -1071,6 +1439,25 @@ def plan_document_transfer(
 
     blockers: list[TransferBlocker] = []
     warnings: list[TransferWarning] = []
+    if target_collection.sub_scope and relationships:
+        blockers.append(
+            TransferBlocker(
+                code="flat_target_hierarchy",
+                message=(
+                    "sub-scope target cannot accept an internal parent/child "
+                    "selection"
+                ),
+                document_ids=tuple(
+                    sorted(
+                        {
+                            doc_id
+                            for relationship in relationships
+                            for doc_id in relationship
+                        }
+                    )
+                ),
+            )
+        )
     documents = _planned_documents(
         effective_docs,
         ordered_requested_ids,
@@ -1094,6 +1481,16 @@ def plan_document_transfer(
         source_config,
         effective_docs,
         blockers,
+    )
+    custom_metadata = (
+        _custom_metadata_decisions(
+            source_collection,
+            target_collection,
+            effective_docs,
+            blockers,
+        )
+        if mode == COPY_MODE
+        else ()
     )
     media = _media_plans(
         repo_root,
@@ -1129,18 +1526,27 @@ def plan_document_transfer(
             ),
         )
     )
+    link_decisions = _link_decisions(
+        repo_root,
+        source_collection,
+        effective_docs,
+        {
+            document.source_doc.doc_id: document.target_doc_id
+            for document in documents
+        },
+    )
     return DocumentTransferPlan(
         mode=mode,
-        source_scope=normalized_source_scope,
-        target_scope=normalized_target_scope,
-        source_config=source_config,
-        target_config=target_config,
+        source_collection=source_collection,
+        target_collection=target_collection,
         operation_timestamp=timestamp,
         include_descendants=effective_include_descendants,
         descendants_forced=descendants_forced,
         requested_doc_ids=ordered_requested_ids,
         documents=documents,
         media=media,
+        custom_metadata=custom_metadata,
+        link_decisions=link_decisions,
         retained_external_dependencies=retained_dependencies,
         blockers=unique_blockers,
         warnings=unique_warnings,
@@ -1164,10 +1570,41 @@ def restore_document_transfer_apply_plan(
         raise ValueError("document transfer apply_plan schema_version is invalid")
 
     mode = _normalize_mode(payload.get("mode"))
-    source_scope = _normalize_scope(payload.get("source_scope"), field="source_scope")
-    target_scope = _normalize_scope(payload.get("target_scope"), field="target_scope")
-    if source_scope == target_scope:
-        raise _stale_receipt("target scope matches source scope")
+    source_target = payload.get("source")
+    target_target = payload.get("target")
+    if not isinstance(source_target, Mapping) or not isinstance(
+        target_target,
+        Mapping,
+    ):
+        raise ValueError(
+            "document transfer apply_plan source and target collections are required"
+        )
+    source_collection = resolve_managed_document_collection(
+        repo_root,
+        scope=source_target.get("scope"),
+        sub_scope=(
+            source_target.get("sub_scope")
+            if "sub_scope" in source_target
+            else None
+        ),
+    )
+    target_collection = resolve_managed_document_collection(
+        repo_root,
+        scope=target_target.get("scope"),
+        sub_scope=(
+            target_target.get("sub_scope")
+            if "sub_scope" in target_target
+            else None
+        ),
+    )
+    if frozenset(source_target) != frozenset(
+        source_collection.request_target()
+    ) or frozenset(target_target) != frozenset(target_collection.request_target()):
+        raise ValueError(
+            "document transfer apply_plan collection targets contain unknown fields"
+        )
+    if source_collection.request_target() == target_collection.request_target():
+        raise _stale_receipt("target collection matches source collection")
     operation_timestamp = _receipt_text(payload, "operation_timestamp")
     if not source_model.is_doc_timestamp(operation_timestamp):
         raise ValueError("document transfer apply_plan operation_timestamp is invalid")
@@ -1228,9 +1665,11 @@ def restore_document_transfer_apply_plan(
     try:
         restored = plan_document_transfer(
             repo_root,
-            source_scope=source_scope,
+            source_scope=source_collection.scope,
+            source_sub_scope=source_collection.sub_scope or None,
             requested_doc_ids=requested_doc_ids,
-            target_scope=target_scope,
+            target_scope=target_collection.scope,
+            target_sub_scope=target_collection.sub_scope or None,
             transfer_mode=mode,
             include_descendants=include_descendants,
             operation_timestamp=operation_timestamp,
@@ -1261,12 +1700,17 @@ __all__ = [
     "RetainedExternalDependency",
     "TransferBlocker",
     "TransferBuildSourcePlan",
+    "TransferCustomMetadataDecision",
     "TransferDocumentPlan",
+    "TransferLinkDecision",
     "TransferMediaPlan",
     "TransferWarning",
+    "collection_report_host_doc_id",
+    "document_transfer_collection_capabilities",
     "document_transfer_scope_capabilities",
     "plan_document_transfer",
     "published_transfer_adapters",
     "restore_document_transfer_apply_plan",
     "transfer_build_source_adapter",
+    "viewer_link_collection_doc_id",
 ]

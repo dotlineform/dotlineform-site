@@ -23,6 +23,7 @@ import docs_artifact_locations as artifact_locations  # noqa: E402
 import docs_document_move_apply as move_apply  # noqa: E402
 import docs_document_transfer as transfer  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
+import docs_scope_config  # noqa: E402
 from test_docs_document_transfer_apply import (  # noqa: E402
     COPY_TIMESTAMP,
     add_mermaid_build,
@@ -587,7 +588,7 @@ def test_apply_move_rebuilds_loadable_target_and_removes_source_outputs(
         parent_id=alpha_id,
     )
     plan = plan_move(repo_root, [alpha_id])
-    configs = transfer.load_docs_scope_configs(repo_root)
+    configs = docs_scope_config.load_docs_scope_configs(repo_root)
     build_docs.DocsDataBuilder(
         repo_root=repo_root,
         config=configs["source"],
@@ -608,7 +609,7 @@ def test_apply_move_rebuilds_loadable_target_and_removes_source_outputs(
     ) -> dict[str, object]:
         assert kwargs["skip_media_builds"] is True
         write_operation()
-        current_config = transfer.load_docs_scope_configs(repo_root)[scope]
+        current_config = docs_scope_config.load_docs_scope_configs(repo_root)[scope]
         docs_result = build_docs.DocsDataBuilder(
             repo_root=repo_root,
             config=current_config,

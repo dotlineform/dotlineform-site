@@ -19,7 +19,7 @@ from .pipeline import DocsDataBuilder
 from .source import DocRecord
 from docs_subscope_customisations import (
     project_sub_scope_customisation_manifest,
-    sub_scope_customisation_assignable_field_groups,
+    sub_scope_customisation_authoring_subject_fields,
     sub_scope_customisation_document_groups,
     validate_sub_scope_customisation_document,
 )
@@ -172,11 +172,8 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         return payload
 
     def folder_subject_supported(self) -> bool:
-        return any(
-            FOLDER_PATH_FIELD in group.field_names
-            for group in sub_scope_customisation_assignable_field_groups(
-                self.sub_scope_config.sub_scope_customisation
-            )
+        return FOLDER_PATH_FIELD in sub_scope_customisation_authoring_subject_fields(
+            self.sub_scope_config.sub_scope_customisation
         )
 
     def private_authoring_subjects(

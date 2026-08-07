@@ -8,11 +8,13 @@ import re
 from typing import Any, Callable, Mapping, Sequence
 
 import docs_dotlineform_projects_customisation as dotlineform_projects
+from docs_document_subjects import AUTHORING_SUBJECT_FIELDS
 
 
 CUSTOMISATION_ID_PATTERN = re.compile(r"\A[a-z][a-z0-9_]*\Z")
 VALUE_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9_-]*\Z")
 ANALYSIS_TAGS_CUSTOMISATION_ID = "analysis_tags"
+ANALYSIS_WORKS_CUSTOMISATION_ID = "analysis_works"
 DOTLINEFORM_PROJECTS_CUSTOMISATION_ID = dotlineform_projects.CUSTOMISATION_ID
 PUBLIC_ACCESS = "public"
 MANAGE_ACCESS = "manage"
@@ -63,9 +65,15 @@ class DocsSubScopeAssignableFieldGroup:
 
 
 @dataclass(frozen=True)
+class DocsSubScopeAuthoringSubjectAspect:
+    field_names: tuple[str, ...]
+
+
+@dataclass(frozen=True)
 class DocsSubScopeTransferAspect:
     contract_id: str
     owned_field_names: tuple[str, ...]
+    validate_field: Callable[[Mapping[str, Any], str, Any], None]
 
 
 @dataclass(frozen=True)
@@ -79,6 +87,7 @@ class DocsSubScopeCustomisationDefinition:
     import_front_matter: DocsSubScopeImportFrontMatterAspect | None = None
     browser_composition: DocsSubScopeBrowserCompositionAspect | None = None
     assignable_field_groups: tuple[DocsSubScopeAssignableFieldGroup, ...] = ()
+    authoring_subject: DocsSubScopeAuthoringSubjectAspect | None = None
     transfer: DocsSubScopeTransferAspect | None = None
 
 
@@ -140,6 +149,27 @@ def _analysis_tags_document_groups(settings: Mapping[str, Any]) -> tuple[str, ..
     return tuple(str(value) for value in settings.get("groups", ()))
 
 
+def _validate_analysis_tags_transfer_field(
+    settings: Mapping[str, Any],
+    field_name: str,
+    value: Any,
+) -> None:
+    if field_name != "group":
+        raise ValueError(f"unsupported Analysis Tags field {field_name!r}")
+    if value is None:
+        return
+    if not isinstance(value, str):
+        raise ValueError("group must be a scalar string")
+    normalized = value.strip().lower()
+    if normalized and normalized not in _analysis_tags_document_groups(settings):
+        raise ValueError(f"group {normalized!r} is not configured for the target")
+
+
+def _normalize_empty_settings(raw: Any, field: str) -> Mapping[str, Any]:
+    settings = _strict_object(raw, field=field, keys=set())
+    return settings
+
+
 def _project_analysis_tags_manifest(
     settings: Mapping[str, Any],
     documents: Sequence[Any],
@@ -172,6 +202,18 @@ SUB_SCOPE_CUSTOMISATION_DEFINITIONS = {
         browser_composition=DocsSubScopeBrowserCompositionAspect(
             accesses=frozenset({MANAGE_ACCESS}),
         ),
+        transfer=DocsSubScopeTransferAspect(
+            contract_id="analysis_tag_fields",
+            owned_field_names=("group",),
+            validate_field=_validate_analysis_tags_transfer_field,
+        ),
+    ),
+    ANALYSIS_WORKS_CUSTOMISATION_ID: DocsSubScopeCustomisationDefinition(
+        customisation_id=ANALYSIS_WORKS_CUSTOMISATION_ID,
+        normalize_settings=_normalize_empty_settings,
+        authoring_subject=DocsSubScopeAuthoringSubjectAspect(
+            field_names=AUTHORING_SUBJECT_FIELDS,
+        ),
     ),
     DOTLINEFORM_PROJECTS_CUSTOMISATION_ID: DocsSubScopeCustomisationDefinition(
         customisation_id=DOTLINEFORM_PROJECTS_CUSTOMISATION_ID,
@@ -198,6 +240,9 @@ SUB_SCOPE_CUSTOMISATION_DEFINITIONS = {
                     dotlineform_projects.SERIES_ID_FIELD,
                 ),
             ),
+        ),
+        authoring_subject=DocsSubScopeAuthoringSubjectAspect(
+            field_names=AUTHORING_SUBJECT_FIELDS,
         ),
     ),
 }
@@ -257,6 +302,11 @@ def _validate_definition(
             "browser_composition",
             definition.browser_composition,
             DocsSubScopeBrowserCompositionAspect,
+        ),
+        (
+            "authoring_subject",
+            definition.authoring_subject,
+            DocsSubScopeAuthoringSubjectAspect,
         ),
         ("transfer", definition.transfer, DocsSubScopeTransferAspect),
     )
@@ -355,6 +405,21 @@ def _validate_definition(
     ):
         raise ValueError(f"{field} assignable_field_groups require Manage browser access")
 
+    authoring_subject = definition.authoring_subject
+    if authoring_subject is not None:
+        _validate_owned_field_names(
+            authoring_subject.field_names,
+            field=f"{field} authoring_subject field_names",
+        )
+        unknown_subject_fields = sorted(
+            set(authoring_subject.field_names) - set(AUTHORING_SUBJECT_FIELDS)
+        )
+        if unknown_subject_fields:
+            raise ValueError(
+                f"{field} authoring_subject contains unknown fields: "
+                f"{', '.join(unknown_subject_fields)}"
+            )
+
     transfer = definition.transfer
     if transfer is not None:
         if not isinstance(
@@ -366,6 +431,12 @@ def _validate_definition(
             transfer.owned_field_names,
             field=f"{field} transfer owned_field_names",
         )
+        if set(transfer.owned_field_names) & set(AUTHORING_SUBJECT_FIELDS):
+            raise ValueError(
+                f"{field} transfer must not own shared authoring-subject fields"
+            )
+        if not callable(transfer.validate_field):
+            raise ValueError(f"{field} transfer validate_field must be callable")
     return definition
 
 
@@ -438,6 +509,15 @@ def sub_scope_customisation_assignable_field_groups(
     if customisation is None:
         return ()
     return _definition_for(customisation).assignable_field_groups
+
+
+def sub_scope_customisation_authoring_subject_fields(
+    customisation: DocsSubScopeCustomisationConfig | None,
+) -> tuple[str, ...]:
+    if customisation is None:
+        return ()
+    aspect = _definition_for(customisation).authoring_subject
+    return aspect.field_names if aspect is not None else ()
 
 
 def sub_scope_customisation_transfer_contract(
@@ -581,8 +661,10 @@ def registered_sub_scope_customisation_access() -> dict[str, tuple[str, ...]]:
 
 __all__ = [
     "ANALYSIS_TAGS_CUSTOMISATION_ID",
+    "ANALYSIS_WORKS_CUSTOMISATION_ID",
     "DOTLINEFORM_PROJECTS_CUSTOMISATION_ID",
     "DocsSubScopeAssignableFieldGroup",
+    "DocsSubScopeAuthoringSubjectAspect",
     "DocsSubScopeBrowserCompositionAspect",
     "DocsSubScopeCustomisationConfig",
     "DocsSubScopeCustomisationDefinition",
@@ -599,6 +681,7 @@ __all__ = [
     "normalize_sub_scope_customisation_metadata_update",
     "normalize_sub_scope_customisation_import_front_matter",
     "sub_scope_customisation_assignable_field_groups",
+    "sub_scope_customisation_authoring_subject_fields",
     "sub_scope_customisation_metadata_record",
     "sub_scope_customisation_document_groups",
     "sub_scope_customisation_transfer_contract",

@@ -12,14 +12,16 @@ from typing import Any, Callable, Iterable, Mapping
 from urllib.parse import quote, unquote_plus
 
 import docs_document_transfer as transfer
+import docs_document_location as document_location
 import docs_source_model as source_model
 from docs_artifact_locations import ArtifactLocationAdapter
 
 
-DOCUMENT_COPY_APPLY_SCHEMA_VERSION = "docs_document_copy_apply_v1"
+DOCUMENT_COPY_APPLY_SCHEMA_VERSION = "docs_document_copy_apply_v2"
 DOCUMENT_COPY_ACTIVITY_EVENT = "docs-document-copy"
 DOCUMENT_COPY_SUPPRESSION_REASON = "docs-document-copy"
 PerformSourceWriteAndRebuild = Callable[..., dict[str, Any]]
+PerformSubScopeSourceWriteAndRebuild = Callable[..., dict[str, Any]]
 MediaBuilder = Callable[..., list[dict[str, object]]]
 ActivityLogger = Callable[[Path, str, dict[str, Any]], None]
 
@@ -166,6 +168,111 @@ def rewrite_transferred_viewer_links(
     return transfer.ROOT_RELATIVE_VIEWER_URL_PATTERN.sub(replace_url, body), changed
 
 
+def _target_copy_viewer_url(
+    raw_url: str,
+    plan: transfer.DocumentTransferPlan,
+    *,
+    repo_root: Path,
+    target_doc_id: str,
+) -> str:
+    _path, query_parts, fragment_suffix = _query_parts(raw_url)
+    retained_parts = [
+        part
+        for part in query_parts
+        if unquote_plus(part.partition("=")[0])
+        not in {"scope", "doc", "subdoc"}
+    ]
+    target_parts: list[str] = []
+    if plan.target_config.include_scope_param:
+        target_parts.append(f"scope={quote(plan.target_scope, safe='')}")
+    if plan.target_sub_scope:
+        target_parts.append(
+            "doc="
+            + quote(
+                transfer.collection_report_host_doc_id(
+                    repo_root,
+                    plan.target_collection,
+                ),
+                safe="",
+            )
+        )
+        target_parts.append(f"subdoc={quote(target_doc_id, safe='')}")
+    else:
+        target_parts.append(f"doc={quote(target_doc_id, safe='')}")
+    target_parts.extend(retained_parts)
+    return (
+        f"{plan.target_config.viewer_base_url}?"
+        f"{'&'.join(target_parts)}{fragment_suffix}"
+    )
+
+
+def rewrite_document_copy_viewer_links(
+    body: str,
+    plan: transfer.DocumentTransferPlan,
+    *,
+    repo_root: Path,
+    source_doc_id: str,
+    require_complete_decisions: bool = True,
+) -> tuple[str, int]:
+    """Apply only the exact link decisions frozen for one copied document."""
+
+    decisions = {
+        decision.referenced_doc_id: decision
+        for decision in plan.link_decisions
+        if decision.source_doc_id == source_doc_id
+    }
+    observed: dict[str, int] = {}
+    source_report_host_id = transfer.collection_report_host_doc_id(
+        repo_root,
+        plan.source_collection,
+    )
+    changed = 0
+
+    def replace_url(match: re.Match[str]) -> str:
+        nonlocal changed
+        raw_url = match.group(0)
+        referenced_doc_id = transfer.viewer_link_collection_doc_id(
+            raw_url,
+            plan.source_collection,
+            report_host_doc_id=source_report_host_id,
+        )
+        if not referenced_doc_id:
+            return raw_url
+        decision = decisions.get(referenced_doc_id)
+        if decision is None:
+            raise DocumentTransferPlanStaleError(
+                "document transfer plan is stale: exact source link decision "
+                f"is missing for {source_doc_id!r} to {referenced_doc_id!r}"
+            )
+        observed[referenced_doc_id] = observed.get(referenced_doc_id, 0) + 1
+        if decision.status == "retain":
+            return raw_url
+        if decision.status != "remap" or not decision.target_doc_id:
+            raise DocumentTransferPlanStaleError(
+                "document transfer plan is stale: exact source link decision "
+                f"is invalid for {source_doc_id!r} to {referenced_doc_id!r}"
+            )
+        changed += 1
+        return _target_copy_viewer_url(
+            raw_url,
+            plan,
+            repo_root=repo_root,
+            target_doc_id=decision.target_doc_id,
+        )
+
+    rewritten = transfer.ROOT_RELATIVE_VIEWER_URL_PATTERN.sub(replace_url, body)
+    expected = {
+        referenced_doc_id: decision.occurrence_count
+        for referenced_doc_id, decision in decisions.items()
+    }
+    if require_complete_decisions and observed != expected:
+        raise DocumentTransferPlanStaleError(
+            "document transfer plan is stale: exact source link occurrences changed "
+            f"for {source_doc_id!r}"
+        )
+    return rewritten, changed
+
+
 def _media_reference_replacements(
     plan: transfer.DocumentTransferPlan,
 ) -> tuple[tuple[str, str], ...]:
@@ -207,6 +314,8 @@ def rewrite_transferred_media_links(
 
 def transform_document_copy(
     plan: transfer.DocumentTransferPlan,
+    *,
+    repo_root: Path | None = None,
 ) -> DocumentCopyTransformation:
     """Render candidate Copy sources without writing documents or media."""
 
@@ -214,6 +323,12 @@ def transform_document_copy(
         raise ValueError("document Copy transformation requires copy mode")
     if not plan.ok:
         raise ValueError("blocked document transfer cannot be transformed")
+    if repo_root is None:
+        if plan.source_sub_scope or plan.target_sub_scope:
+            raise ValueError(
+                "repo_root is required to transform an exact child collection"
+            )
+        repo_root = Path(".")
 
     transformed: list[DocumentCopySourceTransform] = []
     for planned_document in plan.documents:
@@ -222,10 +337,24 @@ def transform_document_copy(
         front_matter["added_date"] = plan.operation_timestamp
         front_matter["last_updated"] = plan.operation_timestamp
         front_matter["parent_id"] = planned_document.target_parent_id
-        front_matter.pop("viewable", None)
-        body, viewer_link_rewrites = rewrite_transferred_viewer_links(
+        if source_model.default_viewable_for_config(plan.target_config):
+            front_matter.pop("viewable", None)
+        else:
+            front_matter["viewable"] = False
+        for decision in plan.custom_metadata:
+            if decision.source_doc_id != planned_document.source_doc.doc_id:
+                continue
+            if decision.status == "omitted":
+                front_matter.pop(decision.field_name, None)
+            elif decision.status != "retained":
+                raise ValueError(
+                    "blocked custom metadata decision cannot be transformed"
+                )
+        body, viewer_link_rewrites = rewrite_document_copy_viewer_links(
             planned_document.source_doc.body,
             plan,
+            repo_root=repo_root,
+            source_doc_id=planned_document.source_doc.doc_id,
         )
         body, media_link_rewrites = rewrite_transferred_media_links(body, plan)
         transformed.append(
@@ -239,7 +368,10 @@ def transform_document_copy(
     return DocumentCopyTransformation(plan=plan, documents=tuple(transformed))
 
 
-def _validate_transformation(transformation: DocumentCopyTransformation) -> None:
+def _validate_transformation(
+    repo_root: Path,
+    transformation: DocumentCopyTransformation,
+) -> None:
     plan = transformation.plan
     if len(transformation.documents) != len(plan.documents):
         raise DocumentTransferPlanStaleError(
@@ -275,9 +407,29 @@ def _validate_transformation(transformation: DocumentCopyTransformation) -> None
                 f"document transfer plan is stale: candidate viewability changed "
                 f"for {planned.target_doc_id!r}"
             )
-        _remaining_body, remaining_viewer_links = rewrite_transferred_viewer_links(
+        for decision in plan.custom_metadata:
+            if decision.source_doc_id != planned.source_doc.doc_id:
+                continue
+            if decision.status == "omitted" and decision.field_name in front_matter:
+                raise DocumentTransferPlanStaleError(
+                    "document transfer plan is stale: omitted custom metadata "
+                    f"remains for {planned.target_doc_id!r}"
+                )
+            if (
+                decision.status == "retained"
+                and front_matter.get(decision.field_name)
+                != planned.source_doc.front_matter.get(decision.field_name)
+            ):
+                raise DocumentTransferPlanStaleError(
+                    "document transfer plan is stale: retained custom metadata "
+                    f"changed for {planned.target_doc_id!r}"
+                )
+        _remaining_body, remaining_viewer_links = rewrite_document_copy_viewer_links(
             body,
             plan,
+            repo_root=repo_root,
+            source_doc_id=planned.source_doc.doc_id,
+            require_complete_decisions=False,
         )
         _remaining_body, remaining_media_links = rewrite_transferred_media_links(
             body,
@@ -318,13 +470,30 @@ def revalidate_document_copy_plan(
         )
     except ValueError as exc:
         raise DocumentTransferPlanStaleError(str(exc)) from exc
-    transformation = transform_document_copy(current_plan)
-    _validate_transformation(transformation)
+    transformation = transform_document_copy(current_plan, repo_root=repo_root)
+    _validate_transformation(repo_root, transformation)
     return transformation
 
 
 def management_viewer_url(scope: str, doc_id: str) -> str:
     return f"/docs/?scope={quote(scope, safe='')}&doc={quote(doc_id, safe='')}"
+
+
+def management_collection_document_url(
+    repo_root: Path,
+    collection: transfer.ManagedDocumentCollection,
+    doc_id: str,
+) -> str:
+    collection_url = document_location.management_collection_viewer_url(
+        repo_root,
+        collection.scope,
+        collection.sub_scope,
+    )
+    return document_location.management_document_viewer_url(
+        collection_url,
+        doc_id,
+        sub_scope=bool(collection.sub_scope),
+    )
 
 
 def _content_type(identity: str) -> str:
@@ -649,8 +818,8 @@ def _failure_result(
         "schema_version": DOCUMENT_COPY_APPLY_SCHEMA_VERSION,
         "ok": False,
         "mode": transfer.COPY_MODE,
-        "source_scope": plan.source_scope,
-        "target_scope": plan.target_scope,
+        "source": plan.source_collection.request_target(),
+        "target": plan.target_collection.request_target(),
         "operation_timestamp": plan.operation_timestamp,
         "phase": phase,
         "error": {"type": type(error).__name__, "message": str(error)},
@@ -675,6 +844,9 @@ def apply_document_copy(
     environ: Mapping[str, str] | None = None,
     media_builder: MediaBuilder | None = None,
     perform_source_write_and_rebuild: PerformSourceWriteAndRebuild | None = None,
+    perform_sub_scope_source_write_and_rebuild: (
+        PerformSubScopeSourceWriteAndRebuild | None
+    ) = None,
     activity_logger: ActivityLogger | None = None,
 ) -> dict[str, Any]:
     """Apply one confirmed Copy plan without overwriting target artifacts."""
@@ -734,24 +906,42 @@ def apply_document_copy(
                 source_model.write_text_atomic_new(item.target_path, item.source_text)
                 written_paths.append(item.target_path)
 
-        if perform_source_write_and_rebuild is None:
-            from docs_write_rebuild import (
-                perform_source_write_and_rebuild as coordinated_write,
-            )
+        if current_plan.target_sub_scope:
+            if perform_sub_scope_source_write_and_rebuild is None:
+                from docs_write_rebuild import (
+                    perform_sub_scope_source_write_and_rebuild as coordinated_sub_scope_write,
+                )
 
-            perform_source_write_and_rebuild = coordinated_write
-        rebuild = perform_source_write_and_rebuild(
-            repo_root,
-            current_plan.target_scope,
-            target_paths,
-            write_operation,
-            suppression_reason=DOCUMENT_COPY_SUPPRESSION_REASON,
-            include_search=True,
-            docs_doc_ids=created_doc_ids,
-            search_doc_ids=created_doc_ids,
-            written_paths=written_paths,
-            skip_media_builds=True,
-        )
+                perform_sub_scope_source_write_and_rebuild = (
+                    coordinated_sub_scope_write
+                )
+            rebuild = perform_sub_scope_source_write_and_rebuild(
+                repo_root,
+                current_plan.target_scope,
+                current_plan.target_sub_scope,
+                target_paths,
+                write_operation,
+                suppression_reason=DOCUMENT_COPY_SUPPRESSION_REASON,
+            )
+        else:
+            if perform_source_write_and_rebuild is None:
+                from docs_write_rebuild import (
+                    perform_source_write_and_rebuild as coordinated_write,
+                )
+
+                perform_source_write_and_rebuild = coordinated_write
+            rebuild = perform_source_write_and_rebuild(
+                repo_root,
+                current_plan.target_scope,
+                target_paths,
+                write_operation,
+                suppression_reason=DOCUMENT_COPY_SUPPRESSION_REASON,
+                include_search=True,
+                docs_doc_ids=created_doc_ids,
+                search_doc_ids=created_doc_ids,
+                written_paths=written_paths,
+                skip_media_builds=True,
+            )
         rebuild_complete = True
 
         phase = "activity"
@@ -763,8 +953,9 @@ def apply_document_copy(
             {
                 "source_doc_id": item.source_doc.doc_id,
                 "target_doc_id": item.target_doc_id,
-                "target_viewer_url": management_viewer_url(
-                    current_plan.target_scope,
+                "target_viewer_url": management_collection_document_url(
+                    repo_root,
+                    current_plan.target_collection,
                     item.target_doc_id,
                 ),
             }
@@ -775,9 +966,9 @@ def apply_document_copy(
             repo_root,
             DOCUMENT_COPY_ACTIVITY_EVENT,
             {
-                "source_scope": current_plan.source_scope,
+                "source": current_plan.source_collection.request_target(),
                 "requested_doc_ids": list(current_plan.requested_doc_ids),
-                "target_scope": current_plan.target_scope,
+                "target": current_plan.target_collection.request_target(),
                 "effective_roots": effective_roots,
                 "created_count": len(created_doc_ids),
                 "unique_media_count": len(current_plan.media),
@@ -810,9 +1001,9 @@ def apply_document_copy(
         "schema_version": DOCUMENT_COPY_APPLY_SCHEMA_VERSION,
         "ok": True,
         "mode": transfer.COPY_MODE,
-        "source_scope": current_plan.source_scope,
+        "source": current_plan.source_collection.request_target(),
         "requested_doc_ids": list(current_plan.requested_doc_ids),
-        "target_scope": current_plan.target_scope,
+        "target": current_plan.target_collection.request_target(),
         "operation_timestamp": current_plan.operation_timestamp,
         "created_doc_ids": created_doc_ids,
         "document_count": len(created_doc_ids),
@@ -832,7 +1023,10 @@ def apply_document_copy(
         "summary_text": (
             f"Copied {len(created_doc_ids)} documents and "
             f"{len(current_plan.media)} unique media items from "
-            f"{current_plan.source_scope} to {current_plan.target_scope}."
+            f"{current_plan.source_scope}"
+            f"{'/' + current_plan.source_sub_scope if current_plan.source_sub_scope else ''} "
+            f"to {current_plan.target_scope}"
+            f"{'/' + current_plan.target_sub_scope if current_plan.target_sub_scope else ''}."
         ),
     }
 
@@ -848,9 +1042,11 @@ __all__ = [
     "TargetMediaTransferResult",
     "apply_document_copy",
     "apply_target_media_transfer",
+    "management_collection_document_url",
     "management_viewer_url",
     "revalidate_document_copy_plan",
     "rewrite_transferred_media_links",
     "rewrite_transferred_viewer_links",
+    "rewrite_document_copy_viewer_links",
     "transform_document_copy",
 ]

@@ -30,6 +30,7 @@ def _empty_manifest(
 
 def test_current_customisations_declare_explicit_aspects() -> None:
     analysis = customisations.SUB_SCOPE_CUSTOMISATION_DEFINITIONS["analysis_tags"]
+    works = customisations.SUB_SCOPE_CUSTOMISATION_DEFINITIONS["analysis_works"]
     projects = customisations.SUB_SCOPE_CUSTOMISATION_DEFINITIONS[
         "dotlineform_projects"
     ]
@@ -51,7 +52,18 @@ def test_current_customisations_declare_explicit_aspects() -> None:
         )
     )
     assert analysis.assignable_field_groups == ()
-    assert analysis.transfer is None
+    assert analysis.transfer is not None
+    assert analysis.transfer.contract_id == "analysis_tag_fields"
+    assert analysis.transfer.owned_field_names == ("group",)
+
+    assert works.browser_composition is None
+    assert works.assignable_field_groups == ()
+    assert works.authoring_subject == (
+        customisations.DocsSubScopeAuthoringSubjectAspect(
+            field_names=("folder_path", "work_id", "series_id"),
+        )
+    )
+    assert works.transfer is None
 
     assert isinstance(
         projects.manifest_projection,
@@ -95,6 +107,21 @@ def test_current_customisations_declare_explicit_aspects() -> None:
         published=True,
     ) is None
 
+    works_config = customisations.normalize_docs_subscope_customisation(
+        {"id": "analysis_works", "settings": {}},
+        field="sub_scope_customisation",
+    )
+    assert customisations.browser_sub_scope_customisation_payload(
+        works_config,
+        published=False,
+    ) is None
+    assert customisations.sub_scope_customisation_assignable_field_groups(
+        works_config
+    ) == ()
+    assert customisations.sub_scope_customisation_authoring_subject_fields(
+        works_config
+    ) == ("folder_path", "work_id", "series_id")
+
 
 def test_assignable_and_transfer_seams_are_typed_and_access_safe() -> None:
     definition = customisations.DocsSubScopeCustomisationDefinition(
@@ -113,8 +140,9 @@ def test_assignable_and_transfer_seams_are_typed_and_access_safe() -> None:
             ),
         ),
         transfer=customisations.DocsSubScopeTransferAspect(
-            contract_id="subject_fields",
-            owned_field_names=("folder_path", "work_id", "series_id"),
+            contract_id="synthetic_fields",
+            owned_field_names=("synthetic_field",),
+            validate_field=lambda _settings, _field_name, _value: None,
         ),
     )
     with patch.dict(
@@ -190,6 +218,27 @@ def test_browser_composition_requires_manifest_projection() -> None:
         {"synthetic": definition},
     ):
         with pytest.raises(ValueError, match="requires manifest_projection"):
+            customisations.normalize_docs_subscope_customisation(
+                {"id": "synthetic", "settings": {}},
+                field="sub_scope_customisation",
+            )
+
+
+def test_transfer_contract_cannot_claim_shared_subject_fields() -> None:
+    definition = customisations.DocsSubScopeCustomisationDefinition(
+        customisation_id="synthetic",
+        normalize_settings=_empty_settings,
+        transfer=customisations.DocsSubScopeTransferAspect(
+            contract_id="synthetic_fields",
+            owned_field_names=("work_id",),
+            validate_field=lambda _settings, _field_name, _value: None,
+        ),
+    )
+    with patch.dict(
+        customisations.SUB_SCOPE_CUSTOMISATION_DEFINITIONS,
+        {"synthetic": definition},
+    ):
+        with pytest.raises(ValueError, match="must not own shared"):
             customisations.normalize_docs_subscope_customisation(
                 {"id": "synthetic", "settings": {}},
                 field="sub_scope_customisation",

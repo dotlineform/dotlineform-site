@@ -1081,6 +1081,18 @@
                   "title": "SSP-4.0 — Collection-Aware Copy Sanity Note",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260806-225724-aa5e6a.json",
                   "ui_status": "done"
+                },
+                {
+                  "doc_id": "d-20260807-083338-7e4a91",
+                  "title": "SSP-4.1 — Exact Collection Planner And Receipt Evidence",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-083338-7e4a91.json",
+                  "ui_status": "done"
+                },
+                {
+                  "doc_id": "d-20260807-085247-4c2a9e",
+                  "title": "SSP-4.2 — Exact Collection Copy Apply Evidence",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-085247-4c2a9e.json",
+                  "ui_status": "done"
                 }
               ]
             },
@@ -1474,5 +1486,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-06T21:59:00Z"
+  "generated_at": "2026-08-07T07:54:16Z"
 }
