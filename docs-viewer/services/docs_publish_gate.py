@@ -652,6 +652,53 @@ def copy_file_atomic(source_path: Path, target_path: Path) -> None:
     temp_path.replace(target_path)
 
 
+def stale_catalogue_document_url_result(
+    error: Exception,
+    *,
+    affected_targets: list[dict[str, str]] | None = None,
+) -> dict[str, Any]:
+    return {
+        "status": "stale",
+        "stale": True,
+        "affected_targets": affected_targets or [],
+        "updated_paths": [],
+        "error": str(error),
+    }
+
+
+def catalogue_document_url_follow_through(repo_root: Path) -> dict[str, Any]:
+    """Refresh only exact generated Catalogue targets after Docs Publish."""
+
+    affected_targets: list[dict[str, str]] = []
+    try:
+        from docs_catalogue_document_urls import load_public_catalogue_document_urls
+        from catalogue.catalogue_document_url_refresh import (
+            apply_catalogue_document_url_refresh_plan,
+            build_catalogue_document_url_refresh_plan,
+        )
+
+        projection = load_public_catalogue_document_urls(repo_root)
+        plan = build_catalogue_document_url_refresh_plan(repo_root, projection)
+        affected_targets = [
+            {"kind": kind, "key": key}
+            for kind, key in plan.affected_targets
+        ]
+        result = apply_catalogue_document_url_refresh_plan(plan)
+    except Exception as exc:  # Publication remains complete when follow-through fails.
+        return stale_catalogue_document_url_result(
+            exc,
+            affected_targets=affected_targets,
+        )
+
+    updated_paths = [repo_relative(repo_root, path) for path in result.written_paths]
+    return {
+        "status": "updated" if updated_paths else "unchanged",
+        "stale": False,
+        "affected_targets": affected_targets,
+        "updated_paths": updated_paths,
+    }
+
+
 def publish_apply(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     if body.get("confirm") is not True:
         raise ValueError("confirm must be true to publish docs")
@@ -702,4 +749,16 @@ def publish_apply(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         f"Published docs for {payload['scope']}: "
         f"{payload['changed_count']} changed, {payload['removed_count']} stale."
     )
+    try:
+        catalogue_document_urls = catalogue_document_url_follow_through(repo_root)
+    except Exception as exc:  # Defensive: post-success follow-through never rolls back Docs.
+        catalogue_document_urls = stale_catalogue_document_url_result(exc)
+    payload["catalogue_document_urls"] = catalogue_document_urls
+    if catalogue_document_urls["status"] == "updated":
+        payload["summary_text"] += (
+            " Updated "
+            f"{len(catalogue_document_urls['updated_paths'])} Catalogue document URL payloads."
+        )
+    elif catalogue_document_urls["status"] == "stale":
+        payload["summary_text"] += " Catalogue document URL follow-through is stale."
     return payload

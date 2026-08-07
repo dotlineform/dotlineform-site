@@ -12,6 +12,7 @@ try:
         coerce_numeric,
         coerce_string,
         compact_json_object,
+        compute_payload_version,
         is_empty,
         parse_list,
     )
@@ -21,6 +22,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
         coerce_numeric,
         coerce_string,
         compact_json_object,
+        compute_payload_version,
         is_empty,
         parse_list,
     )
@@ -220,6 +222,83 @@ def build_series_json_record(
     public_record.pop("notes", None)
     public_record["doc_url"] = normalize_document_urls(doc_urls)
     return compact_json_object(public_record)
+
+
+def build_work_json_payload(
+    *,
+    work_id: str,
+    work_record: Mapping[str, Any],
+    sections: Sequence[Mapping[str, Any]],
+    content_html: str | None,
+    generated_at_utc: str,
+    count: int,
+) -> Dict[str, Any]:
+    """Finalize one complete public Work by-ID payload."""
+
+    public_record = dict(work_record)
+    raw_doc_urls = public_record.get("doc_url", [])
+    if not isinstance(raw_doc_urls, list):
+        raise ValueError("work.doc_url must be an array")
+    public_record["doc_url"] = normalize_document_urls(raw_doc_urls)
+    public_sections = [dict(section) for section in sections]
+    version_input = compact_json_object(
+        {
+            "work": public_record,
+            "sections": public_sections,
+            "content_html": content_html,
+        }
+    )
+    return compact_json_object(
+        {
+            "header": {
+                "schema": WORK_RECORD_SCHEMA_VERSION,
+                "version": compute_payload_version(version_input),
+                "generated_at_utc": generated_at_utc,
+                "work_id": work_id,
+                "count": count,
+            },
+            "work": public_record,
+            "sections": public_sections,
+            "content_html": content_html,
+        }
+    )
+
+
+def build_series_json_payload(
+    *,
+    series_id: str,
+    series_record: Mapping[str, Any],
+    content_html: str | None,
+    generated_at_utc: str,
+    count: int,
+) -> Dict[str, Any]:
+    """Finalize one complete public Series by-ID payload."""
+
+    public_record = dict(series_record)
+    raw_doc_urls = public_record.get("doc_url", [])
+    if not isinstance(raw_doc_urls, list):
+        raise ValueError("series.doc_url must be an array")
+    public_record["doc_url"] = normalize_document_urls(raw_doc_urls)
+    version_input = compact_json_object(
+        {
+            "series": public_record,
+            "content_html": content_html,
+            "work_count": count,
+        }
+    )
+    return compact_json_object(
+        {
+            "header": {
+                "schema": SERIES_RECORD_SCHEMA_VERSION,
+                "version": compute_payload_version(version_input),
+                "generated_at_utc": generated_at_utc,
+                "series_id": series_id,
+                "count": count,
+            },
+            "series": public_record,
+            "content_html": content_html,
+        }
+    )
 
 
 def build_sections_from_detail_sections(detail_sections: List[Mapping[str, Any]]) -> List[Dict[str, Any]]:

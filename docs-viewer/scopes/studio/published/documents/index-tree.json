@@ -1112,7 +1112,7 @@
               "doc_id": "d-20260802-195805-94a5be",
               "title": "SSP-5 — Work And Series Document Metadata Publication Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-195805-94a5be.json",
-              "ui_status": "in-progress",
+              "ui_status": "done",
               "children": [
                 {
                   "doc_id": "d-20260807-132505-d0570b",
@@ -1506,5 +1506,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-07T12:26:14Z"
+  "generated_at": "2026-08-07T13:54:08Z"
 }

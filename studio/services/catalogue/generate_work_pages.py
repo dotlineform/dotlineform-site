@@ -85,7 +85,6 @@ try:
         coerce_int,
         coerce_string,
         compact_json_object,
-        compute_payload_version,
         is_empty,
         normalize_status,
         normalize_text,
@@ -103,7 +102,6 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
         coerce_int,
         coerce_string,
         compact_json_object,
-        compute_payload_version,
         is_empty,
         normalize_status,
         normalize_text,
@@ -904,24 +902,14 @@ def main() -> None:
                 if source_prose_path.exists():
                     content_html = render_catalogue_prose_markdown(source_prose_path)
 
-                payload_version = compute_payload_version(
-                    compact_json_object({
-                        "series": public_series_record,
-                        "content_html": content_html,
-                        "work_count": len(series_work_ids_sorted),
-                    })
+                payload = records.build_series_json_payload(
+                    series_id=series_id,
+                    series_record=public_series_record,
+                    content_html=content_html,
+                    generated_at_utc=utc_timestamp_now(),
+                    count=len(series_work_ids_sorted),
                 )
-                payload = compact_json_object({
-                    "header": {
-                        "schema": records.SERIES_RECORD_SCHEMA_VERSION,
-                        "version": payload_version,
-                        "generated_at_utc": utc_timestamp_now(),
-                        "series_id": series_id,
-                        "count": len(series_work_ids_sorted),
-                    },
-                    "series": public_series_record,
-                    "content_html": content_html,
-                })
+                payload_version = payload["header"]["version"]
                 out_json_path = series_json_dir / f"{series_id}.json"
                 out_exists = out_json_path.exists()
                 existing_payload_version = extract_existing_header_scalar(out_json_path, "version") if out_exists else None
@@ -1125,20 +1113,14 @@ def main() -> None:
                 content_html: Optional[str] = None
                 if source_prose_path.exists():
                     content_html = render_catalogue_prose_markdown(source_prose_path)
-                payload_version = compute_payload_version(compact_json_object({"work": work_record, "sections": sections, "content_html": content_html}))
-
-                payload = compact_json_object({
-                    "header": {
-                        "schema": records.WORK_RECORD_SCHEMA_VERSION,
-                        "version": payload_version,
-                        "generated_at_utc": generated_at_utc,
-                        "work_id": wid,
-                        "count": details_total,
-                    },
-                    "work": work_record,
-                    "sections": sections,
-                    "content_html": content_html,
-                })
+                payload = records.build_work_json_payload(
+                    work_id=wid,
+                    work_record=work_record,
+                    sections=sections,
+                    content_html=content_html,
+                    generated_at_utc=generated_at_utc,
+                    count=details_total,
+                )
                 out_json_path = works_json_dir / f"{wid}.json"
                 exists = out_json_path.exists()
                 existing_version = extract_existing_header_scalar(out_json_path, "version") if exists else None

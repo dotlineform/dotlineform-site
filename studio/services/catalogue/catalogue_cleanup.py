@@ -109,22 +109,15 @@ def finalize_work_record_payload(payload: Dict[str, Any], work_id: str) -> Dict[
     sections = payload.get("sections")
     if not isinstance(sections, list):
         sections = []
-        payload["sections"] = sections
     content_html = payload.get("content_html")
-    payload["header"] = {
-        "schema": generation_records.WORK_RECORD_SCHEMA_VERSION,
-        "version": compute_payload_version(
-            {
-                "work": work_record,
-                "sections": sections,
-                "content_html": content_html,
-            }
-        ),
-        "generated_at_utc": activity.utc_now(),
-        "work_id": work_id,
-        "count": work_record_detail_count(payload),
-    }
-    return payload
+    return generation_records.build_work_json_payload(
+        work_id=work_id,
+        work_record=work_record,
+        sections=sections,
+        content_html=content_html if isinstance(content_html, str) else None,
+        generated_at_utc=activity.utc_now(),
+        count=work_record_detail_count(payload),
+    )
 
 
 def finalize_series_record_payload(payload: Dict[str, Any], series_id: str) -> Dict[str, Any]:
@@ -140,20 +133,14 @@ def finalize_series_record_payload(payload: Dict[str, Any], series_id: str) -> D
     count = len(works) if isinstance(works, list) else header.get("count")
     if not isinstance(count, int):
         count = 0
-    payload["header"] = {
-        "schema": generation_records.SERIES_RECORD_SCHEMA_VERSION,
-        "version": compute_payload_version(
-            {
-                "series": series_record,
-                "content_html": payload.get("content_html"),
-                "work_count": count,
-            }
-        ),
-        "generated_at_utc": activity.utc_now(),
-        "series_id": series_id,
-        "count": count,
-    }
-    return payload
+    content_html = payload.get("content_html")
+    return generation_records.build_series_json_payload(
+        series_id=series_id,
+        series_record=series_record,
+        content_html=content_html if isinstance(content_html, str) else None,
+        generated_at_utc=activity.utc_now(),
+        count=count,
+    )
 
 
 def finalize_recent_index_payload(payload: Dict[str, Any]) -> Dict[str, Any]:

@@ -8,6 +8,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+import pytest
+
 from repo_factory import docs_scope_record, docs_sub_scope_record
 
 
@@ -17,6 +19,7 @@ if str(DOCS_SERVICES_DIR) not in sys.path:
     sys.path.insert(0, str(DOCS_SERVICES_DIR))
 
 import docs_publish_gate  # noqa: E402
+from catalogue import catalogue_document_url_refresh  # noqa: E402
 
 
 LIBRARY_DOC_ID = "d-20260330-172255-8399b7"
@@ -188,6 +191,52 @@ def prepare_publish_repo(root: Path) -> None:
     write_json(root / "site/assets/data/search/library/index.json", {"entries": []})
 
 
+def write_library_subject_source(root: Path, field_name: str, value: str) -> None:
+    write_text(
+        root / f"docs-viewer/scopes/library/source/documents/{LIBRARY_DOC_ID}.md",
+        "\n".join(
+            [
+                "---",
+                f'doc_id: "{LIBRARY_DOC_ID}"',
+                'title: "Library"',
+                "viewable: true",
+                f'{field_name}: "{value}"',
+                "---",
+                "",
+                "# Library",
+                "",
+            ]
+        ),
+    )
+
+
+def catalogue_work_payload(work_id: str, urls: list[str]) -> dict[str, object]:
+    return {
+        "header": {
+            "schema": "work_record_v4",
+            "version": "before",
+            "generated_at_utc": "2026-08-01T00:00:00Z",
+            "work_id": work_id,
+            "count": 0,
+        },
+        "work": {"work_id": work_id, "title": "Work", "doc_url": urls},
+        "sections": [],
+    }
+
+
+def catalogue_series_payload(series_id: str, urls: list[str]) -> dict[str, object]:
+    return {
+        "header": {
+            "schema": "series_record_v2",
+            "version": "before",
+            "generated_at_utc": "2026-08-01T00:00:00Z",
+            "series_id": series_id,
+            "count": 0,
+        },
+        "series": {"series_id": series_id, "title": "Series", "doc_url": urls},
+    }
+
+
 def test_publish_confirm_reports_changes_and_apply_syncs_stale_files() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
@@ -255,6 +304,103 @@ def test_publish_confirm_reports_changes_and_apply_syncs_stale_files() -> None:
                 }
             ],
         }
+
+
+def test_publish_follow_through_adds_reassigns_and_removes_exact_catalogue_urls() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        prepare_publish_repo(repo_root)
+        work_path = repo_root / "site/assets/works/index/00042.json"
+        series_path = repo_root / "site/assets/series/index/009.json"
+        write_json(work_path, catalogue_work_payload("00042", []))
+        write_json(series_path, catalogue_series_payload("009", []))
+        write_library_subject_source(repo_root, "work_id", "00042")
+        public_url = f"/library/?doc={LIBRARY_DOC_ID}"
+
+        first = docs_publish_gate.publish_apply(
+            repo_root,
+            {"scope": "library", "confirm": True},
+        )
+
+        assert first["catalogue_document_urls"] == {
+            "status": "updated",
+            "stale": False,
+            "affected_targets": [{"kind": "work", "key": "00042"}],
+            "updated_paths": ["site/assets/works/index/00042.json"],
+        }
+        assert json.loads(work_path.read_text(encoding="utf-8"))["work"]["doc_url"] == [public_url]
+
+        write_library_subject_source(repo_root, "series_id", "009")
+        reassigned = docs_publish_gate.publish_apply(
+            repo_root,
+            {"scope": "library", "confirm": True},
+        )
+
+        assert reassigned["catalogue_document_urls"]["affected_targets"] == [
+            {"kind": "series", "key": "009"},
+            {"kind": "work", "key": "00042"},
+        ]
+        assert json.loads(work_path.read_text(encoding="utf-8"))["work"]["doc_url"] == []
+        assert json.loads(series_path.read_text(encoding="utf-8"))["series"]["doc_url"] == [public_url]
+
+        working_tree_path = repo_root / "docs-viewer/scopes/library/published/documents/index-tree.json"
+        working_tree = json.loads(working_tree_path.read_text(encoding="utf-8"))
+        working_tree["docs"] = []
+        write_json(working_tree_path, working_tree)
+        working_search_path = repo_root / "docs-viewer/scopes/library/published/search/index.json"
+        working_search = json.loads(working_search_path.read_text(encoding="utf-8"))
+        working_search["entries"] = []
+        working_search["header"]["count"] = 0
+        write_json(working_search_path, working_search)
+        unpublished = docs_publish_gate.publish_apply(
+            repo_root,
+            {"scope": "library", "confirm": True},
+        )
+
+        assert unpublished["catalogue_document_urls"]["affected_targets"] == [
+            {"kind": "series", "key": "009"}
+        ]
+        assert json.loads(series_path.read_text(encoding="utf-8"))["series"]["doc_url"] == []
+
+
+def test_publish_remains_applied_when_catalogue_follow_through_fails(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        prepare_publish_repo(repo_root)
+        work_path = repo_root / "site/assets/works/index/00042.json"
+        write_json(work_path, catalogue_work_payload("00042", []))
+        work_before = work_path.read_bytes()
+        write_library_subject_source(repo_root, "work_id", "00042")
+
+        def fail_follow_through(_plan: object) -> object:
+            raise OSError("simulated post-publication Catalogue failure")
+
+        monkeypatch.setattr(
+            catalogue_document_url_refresh,
+            "apply_catalogue_document_url_refresh_plan",
+            fail_follow_through,
+        )
+
+        applied = docs_publish_gate.publish_apply(
+            repo_root,
+            {"scope": "library", "confirm": True},
+        )
+
+        assert applied["applied"] is True
+        assert applied["catalogue_document_urls"] == {
+            "status": "stale",
+            "stale": True,
+            "affected_targets": [{"kind": "work", "key": "00042"}],
+            "updated_paths": [],
+            "error": "simulated post-publication Catalogue failure",
+        }
+        assert (
+            repo_root
+            / f"site/assets/data/docs/scopes/library/by-id/{LIBRARY_DOC_ID}.json"
+        ).is_file()
+        assert work_path.read_bytes() == work_before
 
 
 def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> None:
