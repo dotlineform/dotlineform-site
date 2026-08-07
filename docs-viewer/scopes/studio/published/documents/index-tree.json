@@ -1139,6 +1139,12 @@
                   "title": "SSP-6.1 — Uncataloged Files Report Evidence",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-163925-a460e9.json",
                   "ui_status": "done"
+                },
+                {
+                  "doc_id": "d-20260807-175827-3229db",
+                  "title": "SSP-6.2 — Missing Source Files Report Evidence",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-175827-3229db.json",
+                  "ui_status": "done"
                 }
               ]
             },
@@ -1520,5 +1526,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-07T15:42:21Z"
+  "generated_at": "2026-08-07T16:59:51Z"
 }

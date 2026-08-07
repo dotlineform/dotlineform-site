@@ -26,6 +26,7 @@ VALIDATE_LOCAL_TARGET_PATH = "/docs/validate-local-target"
 BROKEN_LINKS_PATH = "/docs/broken-links"
 PROJECT_STATE_PATH = "/docs/project-state"
 UNCATALOGED_FILES_PATH = "/docs/uncataloged-files"
+MISSING_SOURCE_FILES_PATH = "/docs/missing-source-files"
 IMPORT_SOURCE_PATH = "/docs/import-source"
 STAGED_MEDIA_PREVIEW_PATH = "/docs/staged-media-preview"
 STAGED_MEDIA_APPLY_PATH = "/docs/staged-media-apply"
@@ -82,6 +83,7 @@ POST_PATHS = (
     BROKEN_LINKS_PATH,
     PROJECT_STATE_PATH,
     UNCATALOGED_FILES_PATH,
+    MISSING_SOURCE_FILES_PATH,
     SOURCE_CONFIG_SETTINGS_PATH,
     IMPORT_SOURCE_PATH,
     STAGED_MEDIA_PREVIEW_PATH,

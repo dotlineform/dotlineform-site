@@ -58,6 +58,13 @@ const REPORT_LOADERS = {
         return module.mountUncatalogedFilesReport;
       });
     }
+  },
+  missing_source_files: {
+    load: function () {
+      return import("./missing-source-files-report.js").then(function (module) {
+        return module.mountMissingSourceFilesReport;
+      });
+    }
   }
 };
 

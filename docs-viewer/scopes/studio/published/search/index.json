@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c9589078ed8f59087ce003185d331b5f",
-    "generated_at_utc": "2026-08-07T15:42:21Z",
-    "count": 266
+    "version": "blake2b-e0bb4d99df07990f636221c4daa12d60",
+    "generated_at_utc": "2026-08-07T17:32:52Z",
+    "count": 267
   },
   "entries": [
     {
@@ -4284,26 +4284,26 @@
       "kind": "doc",
       "title": "Sub-Scope Publishing",
       "href": "/docs/?scope=studio&doc=d-20260802-194357-4d857b",
-      "last_updated": "2026-08-07 16:39:25",
+      "last_updated": "2026-08-07 17:58:27",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-07 16:39:25 • Roadmap",
+      "display_meta": "2026-08-07 17:58:27 • Roadmap",
       "search_terms": [
         "sub-scope publishing",
         "sub",
         "scope",
         "publishing",
         "roadmap",
-        "2026-08-07 16:39:25",
+        "2026-08-07 17:58:27",
         "2026",
         "08",
         "07",
-        "16",
-        "39",
-        "25",
+        "17",
+        "58",
+        "27",
         "d-20260802-194357-4d857b"
       ],
-      "search_text": "sub-scope publishing sub scope publishing roadmap 2026-08-07 16:39:25 2026 08 07 16 39 25 d-20260802-194357-4d857b"
+      "search_text": "sub-scope publishing sub scope publishing roadmap 2026-08-07 17:58:27 2026 08 07 17 58 27 d-20260802-194357-4d857b"
     },
     {
       "id": "d-20260802-121105-c574f9",
@@ -5279,10 +5279,10 @@
       "kind": "doc",
       "title": "SSP-6 — Uncataloged And Missing Source Files Reports Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-121106-15ea55",
-      "last_updated": "2026-08-07 16:39:25",
+      "last_updated": "2026-08-07 18:32:33",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-07 16:39:25 • Sub-Scope Publishing",
+      "display_meta": "2026-08-07 18:32:33 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-6 — uncataloged and missing source files reports delivery",
         "ssp",
@@ -5298,16 +5298,16 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-07 16:39:25",
+        "2026-08-07 18:32:33",
         "2026",
         "08",
         "07",
-        "16",
-        "39",
-        "25",
+        "18",
+        "32",
+        "33",
         "d-20260802-121106-15ea55"
       ],
-      "search_text": "ssp-6 — uncataloged and missing source files reports delivery ssp 6 uncataloged and missing source files reports delivery sub-scope publishing sub scope publishing 2026-08-07 16:39:25 2026 08 07 16 39 25 d-20260802-121106-15ea55"
+      "search_text": "ssp-6 — uncataloged and missing source files reports delivery ssp 6 uncataloged and missing source files reports delivery sub-scope publishing sub scope publishing 2026-08-07 18:32:33 2026 08 07 18 32 33 d-20260802-121106-15ea55"
     },
     {
       "id": "d-20260807-161305-326ba1",
@@ -5380,6 +5380,41 @@
       "search_text": "ssp-6.1 — uncataloged files report evidence ssp 6 1 uncataloged files report evidence ssp-6 — uncataloged and missing source files reports delivery and missing source reports delivery 2026-08-07 16:39:25 2026 08 07 16 39 25 d-20260807-163925-a460e9"
     },
     {
+      "id": "d-20260807-175827-3229db",
+      "kind": "doc",
+      "title": "SSP-6.2 — Missing Source Files Report Evidence",
+      "href": "/docs/?scope=studio&doc=d-20260807-175827-3229db",
+      "last_updated": "2026-08-07 18:32:33",
+      "parent_id": "d-20260802-121106-15ea55",
+      "parent_title": "SSP-6 — Uncataloged And Missing Source Files Reports Delivery",
+      "display_meta": "2026-08-07 18:32:33 • SSP-6 — Uncataloged And Missing Source Files Reports Delivery",
+      "search_terms": [
+        "ssp-6.2 — missing source files report evidence",
+        "ssp",
+        "6",
+        "2",
+        "missing",
+        "source",
+        "files",
+        "report",
+        "evidence",
+        "ssp-6 — uncataloged and missing source files reports delivery",
+        "uncataloged",
+        "and",
+        "reports",
+        "delivery",
+        "2026-08-07 18:32:33",
+        "2026",
+        "08",
+        "07",
+        "18",
+        "32",
+        "33",
+        "d-20260807-175827-3229db"
+      ],
+      "search_text": "ssp-6.2 — missing source files report evidence ssp 6 2 missing source files report evidence ssp-6 — uncataloged and missing source files reports delivery uncataloged and reports delivery 2026-08-07 18:32:33 2026 08 07 18 32 33 d-20260807-175827-3229db"
+    },
+    {
       "id": "d-20260805-231829-947705",
       "kind": "doc",
       "title": "SSP-7 — Document Lineage And Publication State Delivery",
@@ -5418,10 +5453,10 @@
       "kind": "doc",
       "title": "Sub-Scope Publishing Concept And Architecture",
       "href": "/docs/?scope=studio&doc=d-20260802-194358-7717ee",
-      "last_updated": "2026-08-07 16:39:25",
+      "last_updated": "2026-08-07 17:58:27",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-07 16:39:25 • Sub-Scope Publishing",
+      "display_meta": "2026-08-07 17:58:27 • Sub-Scope Publishing",
       "search_terms": [
         "sub-scope publishing concept and architecture",
         "sub",
@@ -5431,16 +5466,16 @@
         "and",
         "architecture",
         "sub-scope publishing",
-        "2026-08-07 16:39:25",
+        "2026-08-07 17:58:27",
         "2026",
         "08",
         "07",
-        "16",
-        "39",
-        "25",
+        "17",
+        "58",
+        "27",
         "d-20260802-194358-7717ee"
       ],
-      "search_text": "sub-scope publishing concept and architecture sub scope publishing concept and architecture sub-scope publishing 2026-08-07 16:39:25 2026 08 07 16 39 25 d-20260802-194358-7717ee"
+      "search_text": "sub-scope publishing concept and architecture sub scope publishing concept and architecture sub-scope publishing 2026-08-07 17:58:27 2026 08 07 17 58 27 d-20260802-194358-7717ee"
     },
     {
       "id": "d-20260804-160200-fa7bb7",

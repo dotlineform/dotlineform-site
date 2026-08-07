@@ -32,6 +32,7 @@ import docs_management_mutations as mutations  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
 import docs_publish_gate  # noqa: E402
 import docs_project_state  # noqa: E402
+import docs_missing_source_files  # noqa: E402
 import docs_uncataloged_files  # noqa: E402
 import docs_scope_create  # noqa: E402
 import docs_scope_delete  # noqa: E402
@@ -142,6 +143,14 @@ def docs_management_post_response(
         payload["ok"] = True
         payload["dry_run"] = dry_run
         payload["summary_text"] = "Uncataloged Files refreshed."
+        return HTTPStatus.OK, payload
+    if path == routes.MISSING_SOURCE_FILES_PATH:
+        if body:
+            raise ValueError("Missing Source Files request must be empty")
+        payload = docs_missing_source_files.MissingSourceFilesProducer(repo_root=repo_root).run()
+        payload["ok"] = True
+        payload["dry_run"] = dry_run
+        payload["summary_text"] = "Missing Source Files refreshed."
         return HTTPStatus.OK, payload
     if path == routes.SOURCE_CONFIG_SETTINGS_PATH:
         scope = source_model.normalize_scope(body.get("scope"))

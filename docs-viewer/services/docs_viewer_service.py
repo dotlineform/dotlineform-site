@@ -141,6 +141,7 @@ class DocsViewerServiceConfig:
     watch_enabled: bool
     review_enabled: bool = False
     public_preview_base: str = "http://127.0.0.1:4000"
+    studio_base_url: str = "http://127.0.0.1:8765"
 
 
 def parse_site_env(path: Path) -> dict[str, str]:
@@ -212,6 +213,15 @@ def load_service_config(
     public_preview_base = str(
         env.get("SITE_PREVIEW_BASE") or f"http://{public_site_host}:{public_site_port}"
     ).strip().rstrip("/")
+    studio_host = str(env.get("STUDIO_APP_HOST") or "127.0.0.1").strip()
+    try:
+        studio_port = int(env.get("STUDIO_APP_PORT") or "8765")
+    except (TypeError, ValueError) as error:
+        raise ValueError("STUDIO_APP_PORT must be an integer") from error
+    if studio_port <= 0 or studio_port > 65535:
+        raise ValueError("STUDIO_APP_PORT must be between 1 and 65535")
+    studio_url_host = f"[{studio_host}]" if ":" in studio_host else studio_host
+    studio_base_url = f"http://{studio_url_host}:{studio_port}"
     config = DocsViewerServiceConfig(
         host=host,
         port=port,
@@ -221,6 +231,7 @@ def load_service_config(
         watch_enabled=env_bool(env, "DOCS_VIEWER_WATCH_ENABLED", defaults["watch_enabled"]),
         review_enabled=env_bool(env, "DOCS_VIEWER_REVIEW_ENABLED", defaults["review_enabled"]),
         public_preview_base=public_preview_base,
+        studio_base_url=studio_base_url,
     )
     validate_service_config(config)
     return config
@@ -249,6 +260,21 @@ def validate_service_config(config: DocsViewerServiceConfig) -> None:
         or preview.fragment
     ):
         raise ValueError("SITE_PREVIEW_BASE must be an absolute http(s) URL without credentials, query, or fragment")
+    studio = urlparse(config.studio_base_url)
+    if (
+        studio.scheme != "http"
+        or studio.hostname not in LOOPBACK_HOSTS
+        or studio.username
+        or studio.password
+        or studio.port is None
+        or studio.port <= 0
+        or studio.port > 65535
+        or studio.path not in {"", "/"}
+        or studio.params
+        or studio.query
+        or studio.fragment
+    ):
+        raise ValueError("Studio base URL must identify a local HTTP server origin")
 
 
 def asset_version(repo_root: Path) -> str:
@@ -312,6 +338,9 @@ def render_route_config_registry(repo_root: Path, config: DocsViewerServiceConfi
             route["sites"] = {
                 "public_preview": {
                     "base": config.public_preview_base,
+                },
+                "studio": {
+                    "base": config.studio_base_url,
                 },
             }
     return payload

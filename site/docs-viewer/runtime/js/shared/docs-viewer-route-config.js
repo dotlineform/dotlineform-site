@@ -252,14 +252,14 @@ function normalizeRecentBasis(value, enabled) {
   return basis;
 }
 
-function normalizePublicPreviewBase(value) {
+function normalizeSiteBase(value, siteId) {
   var sites = value && typeof value === "object" && !Array.isArray(value) ? value : {};
-  var publicPreview = sites.public_preview
-    && typeof sites.public_preview === "object"
-    && !Array.isArray(sites.public_preview)
-    ? sites.public_preview
+  var site = sites[siteId]
+    && typeof sites[siteId] === "object"
+    && !Array.isArray(sites[siteId])
+    ? sites[siteId]
     : {};
-  return cleanString(publicPreview.base).replace(/\/+$/, "");
+  return cleanString(site.base).replace(/\/+$/, "");
 }
 
 export function resolveDocsViewerRouteConfig(options) {
@@ -307,7 +307,8 @@ export function resolveDocsViewerRouteConfig(options) {
     reportRegistryUrl: reportsEnabled
       ? requireRouteConfigField(configUrls.report_registry, "config_urls.report_registry")
       : cleanString(configUrls.report_registry),
-    publicPreviewBase: normalizePublicPreviewBase(rawConfig.sites),
+    publicPreviewBase: normalizeSiteBase(rawConfig.sites, "public_preview"),
+    studioBaseUrl: normalizeSiteBase(rawConfig.sites, "studio"),
     indexTreeUrl: normalizePath(requireRouteConfigField(docsPaths.index_tree_url, "docs_paths.index_tree_url")),
     recentUrl: normalizePath(recentEnabled
       ? requireRouteConfigField(docsPaths.recent_url, "docs_paths.recent_url")

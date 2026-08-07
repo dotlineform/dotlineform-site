@@ -79,6 +79,8 @@ def test_load_service_config_reads_env_local() -> None:
                     'export DOCS_VIEWER_GENERATED_READS_ENABLED="0"',
                     'export DOCS_VIEWER_WATCH_ENABLED="0"',
                     'export SITE_PREVIEW_BASE="http://127.0.0.1:4011"',
+                    'export STUDIO_APP_HOST="localhost"',
+                    'export STUDIO_APP_PORT="8877"',
                 ]
             ),
             encoding="utf-8",
@@ -94,6 +96,7 @@ def test_load_service_config_reads_env_local() -> None:
     assert config.generated_reads_enabled is False
     assert config.watch_enabled is False
     assert config.public_preview_base == "http://127.0.0.1:4011"
+    assert config.studio_base_url == "http://localhost:8877"
 
 @pytest.mark.parametrize(
     ("host", "base_url", "message"),
@@ -127,6 +130,7 @@ def test_management_service_api_base_lives_in_route_config() -> None:
         generated_reads_enabled=True,
         watch_enabled=True,
         public_preview_base="http://127.0.0.1:4011",
+        studio_base_url="http://localhost:8877",
     )
 
     route_registry = docs_viewer_service.render_route_config_registry(REPO_ROOT, config)
@@ -143,6 +147,7 @@ def test_management_service_api_base_lives_in_route_config() -> None:
     assert manage_route["services"]["source"]["base_url"] == "http://127.0.0.1:8776"
     assert manage_route["services"]["management"]["base_url"] == "http://127.0.0.1:8776"
     assert manage_route["sites"]["public_preview"]["base"] == "http://127.0.0.1:4011"
+    assert manage_route["sites"]["studio"]["base"] == "http://localhost:8877"
 
 
 def test_load_service_config_rejects_invalid_public_preview_base() -> None:
@@ -171,6 +176,32 @@ def test_load_service_config_defaults_public_preview_to_site_binding() -> None:
     )
 
     assert config.public_preview_base == "http://localhost:4444"
+    assert config.studio_base_url == "http://127.0.0.1:8765"
+
+
+@pytest.mark.parametrize(
+    ("host", "port", "message"),
+    [
+        ("example.com", "8765", "Studio base URL"),
+        ("127.0.0.1", "70000", "STUDIO_APP_PORT"),
+    ],
+)
+def test_load_service_config_rejects_invalid_studio_binding(
+    host: str,
+    port: str,
+    message: str,
+) -> None:
+    with pytest.raises(ValueError, match=message):
+        docs_viewer_service.load_service_config(
+            REPO_ROOT,
+            environ={
+                "DOCS_VIEWER_HOST": "127.0.0.1",
+                "DOCS_VIEWER_PORT": "8776",
+                "DOCS_VIEWER_BASE_URL": "http://127.0.0.1:8776",
+                "STUDIO_APP_HOST": host,
+                "STUDIO_APP_PORT": port,
+            },
+        )
 
 
 def test_manage_route_config_separates_generated_reads_from_management_services() -> None:

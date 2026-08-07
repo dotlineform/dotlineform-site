@@ -82,6 +82,14 @@
       "default_access": "local",
       "loader_id": "uncataloged_files",
       "presets": []
+    },
+    {
+      "report_id": "missing_source_files",
+      "title": "Missing Source Files",
+      "description": "Lists canonical Works whose complete expected source path does not resolve to a file.",
+      "default_access": "local",
+      "loader_id": "missing_source_files",
+      "presets": []
     }
   ]
 }

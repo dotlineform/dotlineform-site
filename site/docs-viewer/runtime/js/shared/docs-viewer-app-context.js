@@ -68,6 +68,7 @@ export function createDocsViewerRouteContext(options) {
     isDocsManagementRoute: docsManagementRoute,
     docsViewerConfigUrl: routeConfig.docsViewerConfigUrl,
     publicPreviewBase: routeConfig.publicPreviewBase,
+    studioBaseUrl: routeConfig.studioBaseUrl,
     routeViewerBaseUrl: routeViewerBaseUrl,
     indexTreeUrl: appendAssetVersion(routeConfig.indexTreeUrl, assetVersion),
     recentUrl: appendAssetVersion(routeConfig.recentUrl, assetVersion),

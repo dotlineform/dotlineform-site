@@ -1215,6 +1215,23 @@ def assert_route_config_scope_default(page: Page) -> None:
                 appKind: 'public',
                 routeConfig: rawRouteConfig
             });
+            const manageRouteConfig = JSON.parse(JSON.stringify(rawRouteConfig));
+            manageRouteConfig.app_kind = 'manage';
+            manageRouteConfig.route_id = 'docs-manage';
+            manageRouteConfig.route_path = '/docs/';
+            manageRouteConfig.default_scope_id = 'studio';
+            manageRouteConfig.include_scope_param = true;
+            manageRouteConfig.viewer_base_url = '/docs/';
+            manageRouteConfig.access.management_ui = true;
+            manageRouteConfig.sites = {
+                studio: {
+                    base: 'http://127.0.0.1:8765/'
+                }
+            };
+            const resolvedManage = routeConfig.resolveDocsViewerRouteConfig({
+                appKind: 'manage',
+                routeConfig: manageRouteConfig
+            });
             let mismatchRejected = false;
             try {
                 routeConfig.resolveDocsViewerRouteConfig({
@@ -1238,6 +1255,7 @@ def assert_route_config_scope_default(page: Page) -> None:
                 mismatchRejected,
                 defaultScopeId: resolved.defaultScopeId,
                 publicPreviewBase: resolved.publicPreviewBase,
+                studioBaseUrl: resolvedManage.studioBaseUrl,
                 viewerBaseUrl: resolved.viewerBaseUrl,
                 defaultRouteDocId: projection.defaultRouteDocId
             };
@@ -1248,6 +1266,7 @@ def assert_route_config_scope_default(page: Page) -> None:
         "mismatchRejected": True,
         "defaultScopeId": "library",
         "publicPreviewBase": "http://127.0.0.1:4000",
+        "studioBaseUrl": "http://127.0.0.1:8765",
         "viewerBaseUrl": "/library/",
         "defaultRouteDocId": "library-root",
     }:
@@ -1609,6 +1628,7 @@ def assert_explicit_app_and_service_context(page: Page) -> None:
                     appKind: 'manage',
                     defaultScopeId: 'studio',
                     includeScopeParam: true,
+                    studioBaseUrl: 'http://127.0.0.1:8765',
                     viewerBaseUrl: '/docs/'
                 },
                 window: {
@@ -1635,6 +1655,7 @@ def assert_explicit_app_and_service_context(page: Page) -> None:
                     sourceRoute,
                     'openSourceDocIdOnLoad'
                 ),
+                studioBaseUrl: sourceRoute.studioBaseUrl,
                 availability: projected.serviceAvailability,
                 generatedAuthority: services.generatedData.authority,
                 generatedBaseUrl: services.generatedData.baseUrl,
@@ -1649,6 +1670,7 @@ def assert_explicit_app_and_service_context(page: Page) -> None:
         "managementUi": False,
         "backendCapabilities": None,
         "sourceRouteHasUrlTargetFallback": False,
+        "studioBaseUrl": "http://127.0.0.1:8765",
         "availability": {
             "generatedData": {"available": True, "local": True},
             "source": {"available": True},

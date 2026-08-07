@@ -419,6 +419,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
       managementService: managementService,
       payload: payload,
       publicPreviewBase: cleanString(routeContext.publicPreviewBase),
+      studioBaseUrl: cleanString(routeContext.studioBaseUrl),
       reportRegistryUrl: cleanString(routeContext.reportRegistryUrl),
       reportService: reportManagementBaseUrl
         ? createDocsViewerReportService({ baseUrl: reportManagementBaseUrl })
@@ -490,6 +491,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
     managementService: managementService,
     payload: payload,
     publicPreviewBase: cleanString(routeContext.publicPreviewBase),
+    studioBaseUrl: cleanString(routeContext.studioBaseUrl),
     reportRegistryUrl: cleanString(routeContext.reportRegistryUrl),
     reportService: reportManagementBaseUrl
       ? createDocsViewerReportService({ baseUrl: reportManagementBaseUrl })
