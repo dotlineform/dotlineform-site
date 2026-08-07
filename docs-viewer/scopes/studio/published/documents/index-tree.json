@@ -1124,7 +1124,7 @@
             },
             {
               "doc_id": "d-20260802-121106-15ea55",
-              "title": "SSP-6 — Project Media Audit Delivery",
+              "title": "SSP-6 — Uncataloged And Missing Source Files Reports Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121106-15ea55.json",
               "ui_status": "proposed"
             },
@@ -1506,5 +1506,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-07T13:54:08Z"
+  "generated_at": "2026-08-07T15:00:30Z"
 }
