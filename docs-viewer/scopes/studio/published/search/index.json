@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-cc72bfe3b782222842f7a6c6b38906fe",
-    "generated_at_utc": "2026-08-07T17:56:06Z",
+    "version": "blake2b-fafc10b8d73bc25b36a124c6781cb4ce",
+    "generated_at_utc": "2026-08-07T19:54:29Z",
     "count": 268
   },
   "entries": [
@@ -5458,10 +5458,10 @@
       "kind": "doc",
       "title": "SSP-7 — Document Lineage And Publication State Delivery",
       "href": "/docs/?scope=studio&doc=d-20260805-231829-947705",
-      "last_updated": "2026-08-05 23:18:29",
+      "last_updated": "2026-08-07 20:53:05",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-05 23:18:29 • Sub-Scope Publishing",
+      "display_meta": "2026-08-07 20:53:05 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-7 — document lineage and publication state delivery",
         "ssp",
@@ -5476,16 +5476,16 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-05 23:18:29",
+        "2026-08-07 20:53:05",
         "2026",
         "08",
+        "07",
+        "20",
+        "53",
         "05",
-        "23",
-        "18",
-        "29",
         "d-20260805-231829-947705"
       ],
-      "search_text": "ssp-7 — document lineage and publication state delivery ssp 7 document lineage and publication state delivery sub-scope publishing sub scope publishing 2026-08-05 23:18:29 2026 08 05 23 18 29 d-20260805-231829-947705"
+      "search_text": "ssp-7 — document lineage and publication state delivery ssp 7 document lineage and publication state delivery sub-scope publishing sub scope publishing 2026-08-07 20:53:05 2026 08 07 20 53 05 d-20260805-231829-947705"
     },
     {
       "id": "d-20260802-194358-7717ee",
