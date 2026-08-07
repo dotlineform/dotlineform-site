@@ -415,6 +415,8 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/python/test_docs_management_capabilities.py",
                 "docs-viewer/tests/python/test_docs_management_metadata.py",
                 "docs-viewer/tests/python/test_docs_management_routes.py",
+                "docs-viewer/tests/python/test_docs_uncataloged_files.py",
+                "docs-viewer/tests/python/test_uncataloged_files_report_contract.py",
                 "docs-viewer/tests/python/test_docs_scope_config.py",
                 "docs-viewer/tests/python/test_docs_scope_lifecycle.py",
                 "docs-viewer/tests/python/test_docs_source_config_settings.py",
@@ -463,6 +465,16 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 str(PUBLIC_SITE_ROOT),
             ),
             "Smoke-check explicit app context, route access, service surfaces, and router module contracts.",
+        ),
+        CheckCommand(
+            "docs-viewer-uncataloged-files-report-module-smoke",
+            (
+                sys.executable,
+                "docs-viewer/tests/smoke/docs_viewer_uncataloged_files_report_modules.py",
+                "--site-root",
+                str(REPO_ROOT),
+            ),
+            "Smoke-check table-only Uncataloged Files rendering, failure clearing, and exact Finder targets.",
         ),
         CheckCommand(
             "docs-viewer-management-create-module-smoke",

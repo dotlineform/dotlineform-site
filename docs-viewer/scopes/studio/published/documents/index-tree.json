@@ -1133,6 +1133,12 @@
                   "title": "SSP-6.0 — Uncataloged And Missing Source Files Sanity Note",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-161305-326ba1.json",
                   "ui_status": "done"
+                },
+                {
+                  "doc_id": "d-20260807-163925-a460e9",
+                  "title": "SSP-6.1 — Uncataloged Files Report Evidence",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-163925-a460e9.json",
+                  "ui_status": "done"
                 }
               ]
             },
@@ -1514,5 +1520,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-07T15:14:41Z"
+  "generated_at": "2026-08-07T15:42:21Z"
 }

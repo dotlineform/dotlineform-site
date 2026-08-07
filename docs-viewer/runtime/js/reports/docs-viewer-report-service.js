@@ -87,6 +87,20 @@ export function createDocsViewerReportService(options) {
         requireOkEnvelope: true
       }));
     },
+    runUncatalogedFiles: function () {
+      return fetchReportJson("/docs/uncataloged-files", Object.assign({}, serviceOptions, {
+        method: "POST",
+        payload: {},
+        requireOkEnvelope: true
+      }));
+    },
+    openLocalTarget: function (target) {
+      return fetchReportJson("/docs/open-local-target", Object.assign({}, serviceOptions, {
+        method: "POST",
+        payload: { target: cleanString(target) },
+        requireOkEnvelope: true
+      }));
+    },
     openSourceDoc: function (request) {
       var target = normalizeManagedDocumentTarget(request && request.target);
       return fetchReportJson("/docs/open-source", Object.assign({}, serviceOptions, {

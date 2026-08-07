@@ -74,6 +74,14 @@
       "default_access": "local",
       "loader_id": "project_state",
       "presets": []
+    },
+    {
+      "report_id": "uncataloged_files",
+      "title": "Uncataloged Files",
+      "description": "Lists ordinary files in represented Work source folders that are not canonical Work primary sources.",
+      "default_access": "local",
+      "loader_id": "uncataloged_files",
+      "presets": []
     }
   ]
 }

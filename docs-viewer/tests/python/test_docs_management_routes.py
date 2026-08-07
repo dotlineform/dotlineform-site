@@ -131,6 +131,11 @@ def test_project_state_route_is_management_owned() -> None:
     assert routes.PROJECT_STATE_PATH in routes.POST_PATHS
 
 
+def test_uncataloged_files_route_is_management_owned() -> None:
+    assert routes.UNCATALOGED_FILES_PATH == "/docs/uncataloged-files"
+    assert routes.UNCATALOGED_FILES_PATH in routes.POST_PATHS
+
+
 def test_source_backed_sub_scope_document_inventory_route_is_retired() -> None:
     assert "/docs/sub-scope-documents" not in routes.GET_PATHS
     config_path = REPO_ROOT / "docs-viewer/config/defaults/docs-viewer-service.json"
@@ -161,6 +166,7 @@ def main() -> None:
     test_local_target_route_is_management_owned()
     test_semantic_token_usage_route_is_management_owned()
     test_project_state_route_is_management_owned()
+    test_uncataloged_files_route_is_management_owned()
     test_source_backed_sub_scope_document_inventory_route_is_retired()
     test_metadata_read_route_is_management_owned()
     print("Docs Management route tests OK")

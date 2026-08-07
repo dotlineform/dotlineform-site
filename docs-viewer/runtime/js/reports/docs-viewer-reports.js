@@ -51,6 +51,13 @@ const REPORT_LOADERS = {
         return module.mountProjectStateReport;
       });
     }
+  },
+  uncataloged_files: {
+    load: function () {
+      return import("./uncataloged-files-report.js").then(function (module) {
+        return module.mountUncatalogedFilesReport;
+      });
+    }
   }
 };
 
