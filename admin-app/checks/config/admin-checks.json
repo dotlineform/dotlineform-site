@@ -476,21 +476,6 @@
       ],
       "areas": []
     },
-    "/studio/project-state/": {
-      "label": "Studio Project State",
-      "path": "/studio/project-state/",
-      "status": "inventory-only",
-      "include": [
-        "studio/app/frontend/js/project-state*",
-        "studio/app/frontend/js/studio-ui-text.js"
-      ],
-      "shared": [
-        "studio/app/server/studio/studio_app_server.py"
-      ],
-      "areas": [
-        "activity"
-      ]
-    },
     "/studio/bulk-add-work/": {
       "label": "Studio Bulk Add Work",
       "path": "/studio/bulk-add-work/",

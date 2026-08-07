@@ -197,17 +197,6 @@ ACTIVITY_PROFILE_IMPORT_WORKBOOK_RECORDS = ActivityActionProfile(
     record_id_field="import_mode",
     script_purpose_ids=("import-source-data", "rebuild-lookups"),
 )
-ACTIVITY_PROFILE_RUN_PROJECT_STATE_REPORT = ActivityActionProfile(
-    page_id="project-state",
-    action_id="run-project-state-report",
-    route="/studio/project-state/",
-    control_id="projectStateRunButton",
-    control_selector="#projectStateRunButton",
-    endpoint="/studio/api/catalogue/project-state-report",
-    record_family="report",
-    record_id_field="activity_target",
-    script_purpose_ids=("generate-report",),
-)
 ACTIVITY_ACTION_PROFILES: tuple[ActivityActionProfile, ...] = (
     ACTIVITY_PROFILE_SAVE_WORK,
     ACTIVITY_PROFILE_SAVE_SERIES,
@@ -217,7 +206,6 @@ ACTIVITY_ACTION_PROFILES: tuple[ActivityActionProfile, ...] = (
     *ACTIVITY_PUBLICATION_PROFILES.values(),
     *ACTIVITY_DELETE_PROFILES.values(),
     ACTIVITY_PROFILE_IMPORT_WORKBOOK_RECORDS,
-    ACTIVITY_PROFILE_RUN_PROJECT_STATE_REPORT,
 )
 
 

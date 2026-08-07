@@ -434,32 +434,6 @@
         }
       }
     },
-    "project-state": {
-      "label": "project state",
-      "route": "/studio/project-state/",
-      "actions": {
-        "run-project-state-report": {
-          "label": "run project-state report",
-          "status": "v1-target",
-          "control_id": "projectStateRunButton",
-          "control_selector": "#projectStateRunButton",
-          "control_label": "Run",
-          "endpoint": "/studio/api/catalogue/project-state-report",
-          "record_family": "report",
-          "record_id_field": "activity_target",
-          "no_change_activity": "report",
-          "report_forced_rewrites": true,
-          "notes": "Covers generating the local project-state Markdown report. Opening the report source remains excluded.",
-          "script_purposes": [
-            {
-              "id": "generate-report",
-              "optional": false,
-              "when": "the project-state Markdown report is written"
-            }
-          ]
-        }
-      }
-    },
     "docs-import": {
       "label": "docs import",
       "surface": "docs",

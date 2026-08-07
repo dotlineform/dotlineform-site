@@ -19,8 +19,23 @@ for candidate in (SERVICES_DIR, SHARED_PYTHON_DIR):
 
 from catalogue.catalogue_build_media import PROJECTS_BASE_DIR_ENV_NAME  # noqa: E402
 from catalogue import catalogue_detail_section_service as detail_section_service  # noqa: E402
+from catalogue.catalogue_media_files import IMAGE_EXTENSIONS  # noqa: E402
 from catalogue.catalogue_service_context import build_catalogue_write_context  # noqa: E402
 from catalogue.catalogue_source import load_json_file, write_work_detail_payloads  # noqa: E402
+
+
+def test_catalogue_source_image_extension_policy_is_unchanged() -> None:
+    assert IMAGE_EXTENSIONS == {
+        ".avif",
+        ".gif",
+        ".heic",
+        ".jpeg",
+        ".jpg",
+        ".png",
+        ".tif",
+        ".tiff",
+        ".webp",
+    }
 
 
 def write_work_details_source(repo_root: Path, payload: dict) -> Path:

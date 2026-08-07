@@ -5,87 +5,17 @@ from __future__ import annotations
 
 import json
 import tempfile
-from http import HTTPStatus
 from pathlib import Path
 
 import pytest
 
 from studio_app_server_test_support import catalogue_get_payload, catalogue_post_response, write_repo_marker
 
-def test_catalogue_project_state_route_uses_fixture_source(monkeypatch) -> None:
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        repo_root = Path(tmp_dir) / "repo"
-        projects_base = Path(tmp_dir) / "source"
-        source_dir = repo_root / "studio" / "data" / "canonical" / "catalogue"
-        project_dir = projects_base / "projects" / "alpha"
-        source_dir.mkdir(parents=True)
-        project_dir.mkdir(parents=True)
-        write_repo_marker(repo_root)
-        (project_dir / "one.jpg").write_bytes(b"")
-        (project_dir / "extra.jpg").write_bytes(b"")
-        (source_dir / "works.json").write_text(
-            json.dumps(
-                {
-                    "catalogue_source_works_version": "catalogue_source_works_v1",
-                    "works": {
-                        "00001": {
-                            "title": "One",
-                            "status": "draft",
-                            "project_folder": "alpha",
-                            "project_filename": "one.jpg",
-                        }
-                    },
-                }
-            ),
-            encoding="utf-8",
-        )
-        (source_dir / "work_details").mkdir(parents=True, exist_ok=True)
-        (source_dir / "series.json").write_text(
-            json.dumps({"catalogue_source_series_version": "catalogue_source_series_v1", "series": {}}),
-            encoding="utf-8",
-        )
-        monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
 
-        health_payload = catalogue_get_payload(repo_root, "/health")
-        status, payload = catalogue_post_response(
-            repo_root,
-            "/project-state-report",
-            {"include_subfolders": False},
-            dry_run=True,
-        )
-
-        assert health_payload["ok"] is True
-        assert "project-media" in health_payload["routes"]
-        assert status == HTTPStatus.OK
-        assert payload["ok"] is True
-        assert payload["dry_run"] is True
-        assert payload["written"] is False
-        assert payload["summary"]["source_folder_count"] == 1
-        assert payload["summary"]["unrepresented_image_count"] == 1
-
-        write_status, write_payload = catalogue_post_response(
-            repo_root,
-            "/project-state-report",
-            {"include_subfolders": False},
-            dry_run=False,
-        )
-        report_path = repo_root / "var/studio/reports/project-state.md"
-        assert write_status == HTTPStatus.OK
-        assert write_payload["ok"] is True
-        assert write_payload["output_path"] == "var/studio/reports/project-state.md"
-        assert report_path.exists()
-        assert "published:" not in report_path.read_text(encoding="utf-8")
-
-        open_status, open_payload = catalogue_post_response(
-            repo_root,
-            "/project-state-open-report",
-            {"editor": "vscode"},
-            dry_run=True,
-        )
-        assert open_status == HTTPStatus.OK
-        assert open_payload["ok"] is True
-        assert open_payload["path"] == "var/studio/reports/project-state.md"
-        assert open_payload["editor"] == "vscode"
+@pytest.mark.parametrize("api_path", ["/project-state-report", "/project-state-open-report"])
+def test_retired_project_state_routes_are_not_dispatched(api_path: str) -> None:
+    with pytest.raises(FileNotFoundError, match="Unknown catalogue API route"):
+        catalogue_post_response(Path.cwd(), api_path, {}, dry_run=True)
 
 def test_catalogue_read_route_returns_source_payloads() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
@@ -131,6 +61,8 @@ def test_catalogue_project_media_route_lists_allowed_project_images(monkeypatch)
         (nerve / "nerve.webp").write_bytes(b"")
         monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
 
+        health_payload = catalogue_get_payload(repo_root, "/health")
+
         folders_payload = catalogue_get_payload(repo_root, "/project-media", {"mode": ["folders"], "q": ["nat"]})
         files_payload = catalogue_get_payload(
             repo_root,
@@ -148,6 +80,9 @@ def test_catalogue_project_media_route_lists_allowed_project_images(monkeypatch)
         assert [item["project_subfolder"] for item in files_payload["subfolders"]] == ["install"]
         assert [item["filename"] for item in files_payload["files"]] == ["cover.jpg"]
         assert [item["filename"] for item in subfolder_payload["files"]] == ["detail.png"]
+        assert "project-media" in health_payload["routes"]
+        assert "project-state-report" not in health_payload["routes"]
+        assert "project-state-open-report" not in health_payload["routes"]
 
         with pytest.raises(ValueError, match="project_subfolder must be a single path segment"):
             catalogue_get_payload(

@@ -16,17 +16,9 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   saveSeries: "/studio/api/catalogue/series/save",
   buildPreview: "/studio/api/catalogue/build-preview",
   buildApply: "/studio/api/catalogue/build-apply",
-  projectStateReport: "/studio/api/catalogue/project-state-report",
-  projectStateOpenReport: "/studio/api/catalogue/project-state-open-report",
   projectMedia: "/studio/api/catalogue/project-media",
   read: "/studio/api/catalogue/read",
   health: "/studio/api/catalogue/health"
-});
-
-const PROJECT_STATE_ENDPOINTS = Object.freeze({
-  catalogueHealth: "/studio/api/catalogue/health",
-  report: "/studio/api/catalogue/project-state-report",
-  openReport: "/studio/api/catalogue/project-state-open-report"
 });
 
 const CATALOGUE_READ_ENDPOINTS = Object.freeze({
@@ -60,7 +52,6 @@ export {
   BULK_ADD_WORK_ENDPOINTS,
   CATALOGUE_READ_ENDPOINTS,
   CATALOGUE_WRITE_ENDPOINTS,
-  PROJECT_STATE_ENDPOINTS,
 };
 
 export function configureStudioTransport(config) {
@@ -81,14 +72,6 @@ export async function probeStudioTagHealth(timeoutMs = 500, options = {}) {
 
 export async function probeCatalogueHealth(timeoutMs = 500) {
   return probeHealth(CATALOGUE_WRITE_ENDPOINTS.health, timeoutMs);
-}
-
-export async function probeProjectStateCatalogueHealth(timeoutMs = 500) {
-  return probeHealth(PROJECT_STATE_ENDPOINTS.catalogueHealth, timeoutMs);
-}
-
-export async function probeProjectStateCatalogueOpenHealth(timeoutMs = 500) {
-  return probeHealth(PROJECT_STATE_ENDPOINTS.catalogueHealth, timeoutMs);
 }
 
 export async function probeCatalogueReadHealth(timeoutMs = 500) {

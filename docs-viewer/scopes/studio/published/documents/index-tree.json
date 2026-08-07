@@ -1126,7 +1126,7 @@
               "doc_id": "d-20260802-121106-15ea55",
               "title": "SSP-6 — Uncataloged And Missing Source Files Reports Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121106-15ea55.json",
-              "ui_status": "proposed",
+              "ui_status": "done",
               "children": [
                 {
                   "doc_id": "d-20260807-161305-326ba1",
@@ -1144,6 +1144,12 @@
                   "doc_id": "d-20260807-175827-3229db",
                   "title": "SSP-6.2 — Missing Source Files Report Evidence",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-175827-3229db.json",
+                  "ui_status": "done"
+                },
+                {
+                  "doc_id": "d-20260807-184959-09e16f",
+                  "title": "SSP-6.3 — Studio Project State Workflow Retirement Evidence",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-184959-09e16f.json",
                   "ui_status": "done"
                 }
               ]
@@ -1412,7 +1418,8 @@
         {
           "doc_id": "d-20260427-223830-e0b422",
           "title": "Project State Report",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260427-223830-e0b422.json"
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260427-223830-e0b422.json",
+          "ui_status": "done"
         },
         {
           "doc_id": "d-20260508-093841-3e27b1",
@@ -1452,7 +1459,8 @@
         {
           "doc_id": "d-20260427-223830-ad1ab0",
           "title": "Studio Project State",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260427-223830-ad1ab0.json"
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260427-223830-ad1ab0.json",
+          "ui_status": "done"
         },
         {
           "doc_id": "d-20260422-000000-c3135c",
@@ -1526,5 +1534,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-07T16:59:51Z"
+  "generated_at": "2026-08-07T17:53:08Z"
 }

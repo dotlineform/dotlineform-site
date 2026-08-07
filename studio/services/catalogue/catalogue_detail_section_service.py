@@ -10,6 +10,7 @@ from catalogue import catalogue_transactions as transactions
 from catalogue.catalogue_build_media import PIPELINE_CONFIG, detect_projects_base_dir, read_image_dims_px
 from catalogue.catalogue_build_service import run_build_operation
 from catalogue.catalogue_generation_common import compact_json_object
+from catalogue.catalogue_media_files import IMAGE_EXTENSIONS
 from catalogue.catalogue_service_context import (
     CatalogueWriteContext,
     log_event,
@@ -32,7 +33,6 @@ from catalogue.catalogue_source import (
     validate_source_records,
     work_details_payload_for_maps,
 )
-from catalogue.project_state_report import IMAGE_EXTENSIONS
 from local_env import runtime_env
 from pipeline_config import source_works_root_subdir
 from studio.services.media.publish_media_to_r2 import run_catalogue_upload_targets

@@ -43,10 +43,10 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["sites"]["public_preview"]["base"] == "http://127.0.0.1:4000"
     assert runtime["sites"]["production"]["base"] == "https://dotlineform.com"
     assert payload["app"]["routes"]["studio_home"]["path"] == "/studio/"
+    assert "project_state" not in payload["app"]["routes"]
     assert payload["app"]["routes"]["studio_home"]["shell_type"] == "html-template"
     assert payload["app"]["routes"]["studio_home"]["template"] == "/studio/app/frontend/routes/studio-home.html"
     assert payload["app"]["routes"]["catalogue_work_editor"]["path"] == "/studio/catalogue-work/"
-    assert payload["app"]["routes"]["project_state"]["shell_type"] == "html-template"
     assert payload["app"]["routes"]["bulk_add_work"]["shell_type"] == "html-template"
     assert payload["app"]["routes"]["catalogue_field_registry"]["shell_type"] == "html-template"
     assert payload["app"]["routes"]["catalogue_status"]["shell_type"] == "html-template"
@@ -54,7 +54,6 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert payload["app"]["routes"]["catalogue_series_editor"]["shell_type"] == "html-template"
     assert payload["app"]["routes"]["catalogue_work_editor"]["shell_type"] == "html-template"
     assert "catalogue_moment_editor" not in payload["app"]["routes"]
-    assert payload["app"]["routes"]["project_state"]["shell_type"] == "html-template"
     assert not any(route["shell_type"] == "python" for route in payload["app"]["routes"].values())
     assert payload["app"]["routes"]["catalogue_work_editor"]["ready_state_route_id"] == "catalogue-work"
     assert "routes" not in payload["paths"]
@@ -70,7 +69,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert any(view["id"] == "series_tag_editor" and view["path"] == "/studio/series-tag-editor/" for view in runtime["views"])
     assert not any(view["id"] in {"data_sharing_prepare", "data_sharing_review"} for view in runtime["views"])
     assert not any(view["id"] in {"studio_audits", "studio_risk", "activity"} for view in runtime["views"])
-    assert any(view["id"] == "project_state" and view["path"] == "/studio/project-state/" for view in runtime["views"])
+    assert not any(view["id"] == "project_state" or view["path"] == "/studio/project-state/" for view in runtime["views"])
     assert not any(view["id"] == "thumbnail_quality" for view in runtime["views"])
     assert not any("doc_id" in view for view in runtime["views"])
     assert not any("docId" in view for view in runtime["views"])
@@ -122,8 +121,8 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["catalogue"]["save_series"] == "/studio/api/catalogue/series/save"
     assert runtime["services"]["catalogue"]["build_preview"] == "/studio/api/catalogue/build-preview"
     assert runtime["services"]["catalogue"]["build_apply"] == "/studio/api/catalogue/build-apply"
-    assert runtime["services"]["catalogue"]["project_state_report"] == "/studio/api/catalogue/project-state-report"
-    assert runtime["services"]["catalogue"]["project_state_open_report"] == "/studio/api/catalogue/project-state-open-report"
+    assert "project_state_report" not in runtime["services"]["catalogue"]
+    assert "project_state_open_report" not in runtime["services"]["catalogue"]
     assert runtime["services"]["tags"]["base"] == "/studio/api/tags"
     assert runtime["services"]["tags"]["health"] == "/studio/api/tags/health"
     assert runtime["services"]["tags"]["tag_groups"] == "/studio/api/tags/tag-groups"
@@ -164,28 +163,28 @@ def test_studio_route_registry_validation_rejects_invalid_routes() -> None:
     routes = payload["app"]["routes"]
 
     duplicate_path = json.loads(json.dumps(payload))
-    duplicate_path["app"]["routes"]["project_state"]["path"] = routes["bulk_add_work"]["path"]
+    duplicate_path["app"]["routes"]["bulk_add_work"]["path"] = routes["catalogue_field_registry"]["path"]
     with pytest.raises(RuntimeError, match="duplicate path"):
         validate_studio_route_registry(REPO_ROOT, duplicate_path)
 
     missing_script = json.loads(json.dumps(payload))
-    missing_script["app"]["routes"]["project_state"].pop("script")
-    with pytest.raises(RuntimeError, match="project_state: shell route is missing script"):
+    missing_script["app"]["routes"]["bulk_add_work"].pop("script")
+    with pytest.raises(RuntimeError, match="bulk_add_work: shell route is missing script"):
         validate_studio_route_registry(REPO_ROOT, missing_script)
 
     missing_template = json.loads(json.dumps(payload))
-    missing_template["app"]["routes"]["project_state"].pop("template")
-    with pytest.raises(RuntimeError, match="project_state: missing required field template"):
+    missing_template["app"]["routes"]["bulk_add_work"].pop("template")
+    with pytest.raises(RuntimeError, match="bulk_add_work: missing required field template"):
         validate_studio_route_registry(REPO_ROOT, missing_template)
 
     missing_template_path = json.loads(json.dumps(payload))
-    missing_template_path["app"]["routes"]["project_state"]["template"] = "/studio/app/frontend/routes/missing.html"
-    with pytest.raises(RuntimeError, match="project_state: template does not exist"):
+    missing_template_path["app"]["routes"]["bulk_add_work"]["template"] = "/studio/app/frontend/routes/missing.html"
+    with pytest.raises(RuntimeError, match="bulk_add_work: template does not exist"):
         validate_studio_route_registry(REPO_ROOT, missing_template_path)
 
     unsupported_shell = json.loads(json.dumps(payload))
-    unsupported_shell["app"]["routes"]["project_state"]["shell_type"] = "server"
-    with pytest.raises(RuntimeError, match="project_state: unsupported shell_type"):
+    unsupported_shell["app"]["routes"]["bulk_add_work"]["shell_type"] = "server"
+    with pytest.raises(RuntimeError, match="bulk_add_work: unsupported shell_type"):
         validate_studio_route_registry(REPO_ROOT, unsupported_shell)
 
     external_route = json.loads(json.dumps(payload))
@@ -193,8 +192,8 @@ def test_studio_route_registry_validation_rejects_invalid_routes() -> None:
         "label": "external",
         "title": "External",
         "path": "/external/",
-        "template": "/studio/app/frontend/routes/project-state.html",
-        "script": "/studio/app/frontend/js/project-state.js",
+        "template": "/studio/app/frontend/routes/bulk-add-work.html",
+        "script": "/studio/app/frontend/js/bulk-add-work.js",
         "nav": False,
         "shell_type": "html-template",
         "ready_state_route_id": "external",
@@ -207,8 +206,8 @@ def test_studio_route_registry_validation_rejects_invalid_routes() -> None:
         "label": "configured",
         "title": "Configured",
         "path": "/studio/configured/",
-        "template": "/studio/app/frontend/routes/project-state.html",
-        "script": "/studio/app/frontend/js/project-state.js",
+        "template": "/studio/app/frontend/routes/bulk-add-work.html",
+        "script": "/studio/app/frontend/js/bulk-add-work.js",
         "nav": False,
         "shell_type": "html-template",
         "ready_state_route_id": "configured",
@@ -258,7 +257,7 @@ def test_static_path_policy_serves_current_studio_allowlists() -> None:
     assert allowed("/docs-viewer/config/document-packages/profiles.json") is False
     assert allowed("/assets/works/img/00001.jpg") is True
     assert allowed("/assets/js/work.js") is True
-    assert allowed("/studio/data/generated/project-state/report.json") is False
+    assert allowed("/studio/data/generated/private/report.json") is False
 
     assert allowed("/assets/studio/js/catalogue-work-editor.js") is False
     assert allowed("/assets/studio/css/studio.css") is False

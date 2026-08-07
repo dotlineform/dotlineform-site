@@ -160,7 +160,6 @@ def test_batch_c_catalogue_service_contexts_are_normalized() -> None:
     scenarios = [
         (activity.ACTIVITY_PROFILE_IMPORT_WORKBOOK_RECORDS, "works"),
         (activity.ACTIVITY_PROFILE_IMPORT_WORKBOOK_RECORDS, "work_details"),
-        (activity.ACTIVITY_PROFILE_RUN_PROJECT_STATE_REPORT, "project-state"),
     ]
     for profile, record_id in scenarios:
         context = normalize_for_profile(
@@ -186,6 +185,7 @@ def test_batch_c_catalogue_service_contexts_are_normalized() -> None:
 def test_activity_profiles_match_registry() -> None:
     contract = json.loads((REPO_ROOT / "studio/data/config/runtime/activity-contract.json").read_text(encoding="utf-8"))
     pages = contract["pages"]
+    assert "project-state" not in pages
     for profile in activity.ACTIVITY_ACTION_PROFILES:
         page = pages.get(profile.page_id)
         if not isinstance(page, dict):

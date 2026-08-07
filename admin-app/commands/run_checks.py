@@ -113,7 +113,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/services/catalogue/catalogue_generation_source_updates.py",
                 "studio/services/catalogue/catalogue_generation_writes.py",
                 "studio/services/media/make_srcset_images.py",
-                "studio/services/catalogue/project_state_report.py",
+                "studio/services/catalogue/catalogue_media_files.py",
                 "studio/services/catalogue/catalogue_bulk_service.py",
                 "studio/services/catalogue/catalogue_build_service.py",
                 "studio/services/catalogue/catalogue_delete_service.py",

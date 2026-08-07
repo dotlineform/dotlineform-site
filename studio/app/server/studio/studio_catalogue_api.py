@@ -27,6 +27,7 @@ for candidate in (SCRIPTS_DIR, STUDIO_DIR):
 from catalogue import catalogue_activity as activity  # noqa: E402
 from catalogue import catalogue_lookup_refresh as lookup_refresh  # noqa: E402
 from catalogue import catalogue_write_service  # noqa: E402
+from catalogue.catalogue_build_media import PIPELINE_CONFIG, detect_projects_base_dir  # noqa: E402
 from catalogue.catalogue_lookup import (  # noqa: E402
     DEFAULT_LOOKUP_DIR,
     build_series_lookup_payload,
@@ -35,6 +36,7 @@ from catalogue.catalogue_lookup import (  # noqa: E402
     build_work_lookup_payload,
     build_work_search_payload,
 )
+from catalogue.catalogue_media_files import IMAGE_EXTENSIONS  # noqa: E402
 from catalogue.catalogue_source import (  # noqa: E402
     DEFAULT_SOURCE_DIR,
     SOURCE_FILES,
@@ -55,15 +57,6 @@ from catalogue.catalogue_workbook_import import (  # noqa: E402
     normalize_import_mode,
     plan_to_response,
 )
-from catalogue.project_state_report import (  # noqa: E402
-    DEFAULT_OUTPUT_REL_PATH,
-    IMAGE_EXTENSIONS,
-    PIPELINE_CONFIG,
-    PROJECTS_BASE_DIR_ENV_NAME,
-    build_project_state_report,
-    open_project_state_report,
-    resolve_projects_base_dir,
-)
 from pipeline_config import source_works_root_subdir  # noqa: E402
 from catalogue.series_ids import normalize_series_id  # noqa: E402
 from local_env import runtime_env  # noqa: E402
@@ -72,7 +65,6 @@ from studio_activity import append_studio_activity  # noqa: E402
 
 
 LOGS_REL_DIR = Path("var/studio/catalogue/logs")
-PROJECT_STATE_REPORT_API_PATH = "/studio/api/catalogue/project-state-report"
 CATALOGUE_READ_KEYS = {
     "catalogue_works",
     "catalogue_series",
@@ -105,8 +97,6 @@ def catalogue_get_payload(repo_root: Path, api_path: str, query: Mapping[str, li
                 "build-apply",
                 "import-preview",
                 "import-apply",
-                "project-state-report",
-                "project-state-open-report",
                 "project-media",
             ],
         }
@@ -124,10 +114,6 @@ def catalogue_post_response(
     *,
     dry_run: bool = False,
 ) -> tuple[HTTPStatus, dict[str, Any]]:
-    if api_path == "/project-state-report":
-        return HTTPStatus.OK, project_state_report_payload(repo_root, body, dry_run=dry_run)
-    if api_path == "/project-state-open-report":
-        return HTTPStatus.OK, open_project_state_report_payload(repo_root, body, dry_run=dry_run)
     if api_path == "/import-preview":
         return HTTPStatus.OK, import_preview_payload(repo_root, body)
     if api_path == "/import-apply":
@@ -174,7 +160,7 @@ def catalogue_read_payload(repo_root: Path, query: Mapping[str, list[str]]) -> d
 
 def project_media_payload(repo_root: Path, query: Mapping[str, list[str]]) -> dict[str, Any]:
     mode = str((query.get("mode") or ["folders"])[0] or "folders").strip().lower()
-    projects_base_dir = resolve_projects_base_dir(env=runtime_env(repo_root=repo_root))
+    projects_base_dir = detect_projects_base_dir(runtime_env(repo_root=repo_root))
     projects_root = (projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)).resolve()
     if not projects_root.exists():
         raise ValueError(f"Projects source root does not exist: {projects_root}")
@@ -387,110 +373,6 @@ def import_apply_response(repo_root: Path, body: Mapping[str, Any], *, dry_run: 
         )
         activity.increment_studio_activity_count(response_payload, 2)
     return HTTPStatus.OK, response_payload
-
-
-def project_state_report_payload(
-    repo_root: Path,
-    body: Mapping[str, Any],
-    *,
-    dry_run: bool = False,
-) -> dict[str, Any]:
-    include_subfolders = bool(body.get("include_subfolders"))
-    activity_context = activity.normalize_activity_context(
-        body.get("activity_context"),
-        page_id=activity.ACTIVITY_PROFILE_RUN_PROJECT_STATE_REPORT.page_id,
-        action_id=activity.ACTIVITY_PROFILE_RUN_PROJECT_STATE_REPORT.action_id,
-        route="/studio/project-state/",
-        control_id=activity.ACTIVITY_PROFILE_RUN_PROJECT_STATE_REPORT.control_id,
-        record_id_field=activity.ACTIVITY_PROFILE_RUN_PROJECT_STATE_REPORT.record_id_field,
-        record_id="project-state",
-    )
-    projects_base_dir = resolve_projects_base_dir(env=runtime_env(repo_root=repo_root))
-    result = build_project_state_report(
-        repo_root=repo_root,
-        projects_base_dir=projects_base_dir,
-        output_path=repo_root / DEFAULT_OUTPUT_REL_PATH,
-        write=not dry_run,
-        include_subfolders=include_subfolders,
-    )
-    payload: dict[str, Any] = {
-        "ok": True,
-        "generated_at_utc": result["generated_at_utc"],
-        "output_path": result["output_path"],
-        "projects_root": result["projects_root_display"],
-        "catalogue_source_path": result["catalogue_source_path"],
-        "include_subfolders": result["include_subfolders"],
-        "summary": result["summary"],
-        "written": result["written"],
-        "dry_run": dry_run,
-    }
-    if activity_context:
-        payload["activity_context"] = activity_context
-
-    log_event(
-        repo_root,
-        "project_state_report",
-        {
-            "output_path": result["output_path"],
-            "written": result["written"],
-            "dry_run": dry_run,
-            "include_subfolders": result["include_subfolders"],
-            "projects_base_env": PROJECTS_BASE_DIR_ENV_NAME,
-            "summary": result["summary"],
-        },
-    )
-    if activity_context and not dry_run and result["written"]:
-        summary = result["summary"] if isinstance(result.get("summary"), Mapping) else {}
-        append_studio_activity(
-            repo_root,
-            [
-                activity.studio_activity_entry(
-                    activity_context,
-                    now_utc=str(result["generated_at_utc"]),
-                    script_purpose_id="generate-report",
-                    status="completed",
-                    record_groups={
-                        "works": [],
-                        "series": [],
-                        "work_details": [],
-                        "files": [str(result["output_path"])],
-                    },
-                    detail_items=[
-                        f"Wrote project-state report to {result['output_path']}",
-                        f"Source folders: {int(summary.get('source_folder_count') or 0)}",
-                        f"Source images: {int(summary.get('source_image_count') or 0)}",
-                        f"Unrepresented folders: {int(summary.get('unrepresented_folder_count') or 0)}",
-                        f"Unrepresented images: {int(summary.get('unrepresented_image_count') or 0)}",
-                    ],
-                    source_refs=[
-                        {"kind": "report", "path": str(result["output_path"])},
-                        {"kind": "log", "path": str(LOGS_REL_DIR / "studio_catalogue_api.log")},
-                    ],
-                )
-            ],
-        )
-        activity.increment_studio_activity_count(payload, 1)
-    return payload
-
-
-def open_project_state_report_payload(
-    repo_root: Path,
-    body: Mapping[str, Any],
-    *,
-    dry_run: bool = False,
-) -> dict[str, Any]:
-    editor = str(body.get("editor") or "default").strip().lower()
-    payload = open_project_state_report(repo_root, editor=editor, dry_run=dry_run)
-    log_event(
-        repo_root,
-        "project_state_open_report",
-        {
-            "path": payload["path"],
-            "editor": payload["editor"],
-            "dry_run": dry_run,
-        },
-    )
-    return payload
 
 
 def catalogue_paths(repo_root: Path) -> dict[str, Any]:

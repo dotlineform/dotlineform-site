@@ -24,7 +24,6 @@ PUBLICATION_PREVIEW_PATH = "/catalogue/publication-preview"
 PUBLICATION_APPLY_PATH = "/catalogue/publication-apply"
 MEDIA_PUBLISH_PREVIEW_PATH = "/catalogue/media-publish-preview"
 MEDIA_PUBLISH_APPLY_PATH = "/catalogue/media-publish-apply"
-PROJECT_STATE_REPORT_PATH = "/catalogue/project-state-report"
 THUMBNAIL_QUALITY_PREVIEW_PATH = "/catalogue/thumbnail-quality-preview"
 
 POST_PATHS = (
@@ -49,7 +48,6 @@ POST_PATHS = (
     SERIES_CREATE_PATH,
     BUILD_PREVIEW_PATH,
     BUILD_APPLY_PATH,
-    PROJECT_STATE_REPORT_PATH,
     THUMBNAIL_QUALITY_PREVIEW_PATH,
 )
 

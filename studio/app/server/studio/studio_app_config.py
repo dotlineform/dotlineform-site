@@ -80,8 +80,6 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
         "save_series": "/studio/api/catalogue/series/save",
         "build_preview": "/studio/api/catalogue/build-preview",
         "build_apply": "/studio/api/catalogue/build-apply",
-        "project_state_report": "/studio/api/catalogue/project-state-report",
-        "project_state_open_report": "/studio/api/catalogue/project-state-open-report",
     },
     "tags": {
         "base": "/studio/api/tags",
@@ -279,9 +277,7 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "studio" / "app" / "frontend" / "routes" / "catalogue-series.html",
         repo_root / "studio" / "app" / "frontend" / "routes" / "catalogue-status.html",
         repo_root / "studio" / "app" / "frontend" / "routes" / "catalogue-work.html",
-        repo_root / "studio" / "app" / "frontend" / "routes" / "project-state.html",
         repo_root / "studio" / "app" / "frontend" / "routes" / "studio-works.html",
-        repo_root / "studio" / "app" / "frontend" / "js" / "project-state.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "bulk-add-work.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-field-registry-review.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-works.js",

@@ -39,6 +39,7 @@ def test_options_routes_are_post_routes_plus_catalogue_read() -> None:
     assert_equal(set(routes.OPTIONS_PATHS), {*routes.POST_PATHS, routes.CATALOGUE_READ_PATH}, "OPTIONS_PATHS")
     if routes.HEALTH_PATH in routes.OPTIONS_PATHS:
         raise AssertionError("health route should not gain CORS preflight handling implicitly")
+    assert "/catalogue/project-state-report" not in routes.POST_PATHS
 
 
 def test_activity_profile_endpoints_are_known_post_routes() -> None:
@@ -47,7 +48,6 @@ def test_activity_profile_endpoints_are_known_post_routes() -> None:
         for api_path in {
             "/import-preview",
             "/import-apply",
-            "/project-state-report",
             *studio_catalogue_api.catalogue_write_service.SERVICE_POST_PATHS,
         }
     }

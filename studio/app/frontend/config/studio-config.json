@@ -13,16 +13,6 @@
         "shell_type": "html-template",
         "ready_state_route_id": "studio-home"
       },
-      "project_state": {
-        "label": "project state",
-        "title": "Project State",
-        "path": "/studio/project-state/",
-        "template": "/studio/app/frontend/routes/project-state.html",
-        "script": "/studio/app/frontend/js/project-state.js",
-        "nav": false,
-        "shell_type": "html-template",
-        "ready_state_route_id": "project-state"
-      },
       "bulk_add_work": {
         "label": "bulk add",
         "title": "Bulk Add Work",

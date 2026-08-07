@@ -79,25 +79,11 @@ def assert_operational_route_helpers(page: Page) -> None:
                 isBusy: (routeState) => routeState.isRunning,
                 recordLoaded: true
             });
-            await Promise.all([
-                import('/studio/app/frontend/js/bulk-add-work.js'),
-                import('/studio/app/frontend/js/project-state.js'),
-            ]);
+            await import('/studio/app/frontend/js/bulk-add-work.js');
             const registry = await import('/studio/app/frontend/js/studio-route-registry.js');
             const config = {
                 app: {
                     routes: {
-                        project_state: {
-                            label: 'project state',
-                            title: 'Project State',
-                            path: '/studio/project-state/',
-                            template: '/studio/app/frontend/routes/project-state.html',
-                            script: '/studio/app/frontend/js/project-state.js',
-                            doc_id: 'project-state-page',
-                            nav: false,
-                            shell_type: 'html-template',
-                            ready_state_route_id: 'project-state'
-                        },
                         catalogue_work_editor: {
                             label: 'work editor',
                             title: 'Catalogue Work Editor',
@@ -112,8 +98,8 @@ def assert_operational_route_helpers(page: Page) -> None:
                     }
                 }
             };
-            const route = registry.resolveStudioRoute(config, { pathname: '/studio/project-state/' });
-            const contract = registry.buildStudioShellContract(config, { pathname: '/studio/project-state/' });
+            const route = registry.resolveStudioRoute(config, { pathname: '/studio/catalogue-work/' });
+            const contract = registry.buildStudioShellContract(config, { pathname: '/studio/catalogue-work/' });
             const missing = registry.buildStudioShellContract(config, { pathname: '/studio/not-registered/' });
             const workRoute = registry.findStudioRoute(config, 'catalogue-work-editor');
             return {
@@ -159,8 +145,8 @@ def assert_operational_route_helpers(page: Page) -> None:
         "service": "available",
         "recordLoaded": True,
     }
-    assert result["resolvedRouteId"] == "project_state"
-    assert result["resolvedRouteReadyId"] == "project-state"
+    assert result["resolvedRouteId"] == "catalogue_work_editor"
+    assert result["resolvedRouteReadyId"] == "catalogue-work"
     assert result["contractShouldRenderShell"] is True
     assert result["contractReason"] == ""
     assert result["missingContractReason"] == "route_not_registered"

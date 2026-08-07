@@ -22,11 +22,6 @@ ROUTES = [
         "root": "#bulkAddWorkRoot",
         "button": "#bulkAddWorkPreview",
     },
-    {
-        "path": "/studio/project-state/",
-        "root": "#projectStateRoot",
-        "button": "#projectStateRunButton",
-    },
 ]
 
 
