@@ -1449,12 +1449,14 @@ def assert_subscope_selection_contribution(page: Page) -> None:
             }
             return { ok: false, status: 404, json: async () => ({}) };
           };
+          const copied = [];
           const prepared = [];
           const root = document.querySelector('#selection-report');
           const defaultContribution = defaults.createDocsViewerManagementSubscopeDefaultContribution({
             clientOptions: { baseUrl: window.location.origin },
             managementContext: true,
             nonViewableEmoji: '🚫',
+            onCopyDocuments: payload => copied.push(payload),
             onPreparePackage: payload => prepared.push(payload),
             root: document.querySelector('.docsViewer'),
             uiStatusByValue: new Map([
@@ -1531,6 +1533,23 @@ def assert_subscope_selection_contribution(page: Page) -> None:
             reportState: root.dataset.reportState,
             subdoc: new URLSearchParams(location.search).get('subdoc')
           };
+          const copyButton = root.querySelector(
+            '[data-docs-viewer-action="copy"]'
+          );
+          const copyBefore = {
+            disabled: copyButton.disabled,
+            label: copyButton.textContent,
+            reason: copyButton.dataset.docsViewerDisabledReason || ''
+          };
+          copyButton.click();
+          await Promise.resolve();
+          await Promise.resolve();
+          const copiedState = {
+            copied,
+            menuHidden: root.querySelector(
+              '.docsViewerReport__subscopeActionsMenu'
+            ).hidden
+          };
           const filterInput = root.querySelector('.docsViewerReport__searchInput');
           filterInput.value = 'B';
           filterInput.dispatchEvent(new Event('input', { bubbles: true }));
@@ -1605,6 +1624,8 @@ def assert_subscope_selection_contribution(page: Page) -> None:
           return {
             afterBack,
             cleared,
+            copyBefore,
+            copiedState,
             detail,
             done,
             escaped,
@@ -1629,7 +1650,7 @@ def assert_subscope_selection_contribution(page: Page) -> None:
         "selectionControlHidden": True,
         "selectionState": "inactive",
         "visibleCheckboxes": 3,
-        "actionIds": ["prepare-document-package"],
+        "actionIds": ["copy", "prepare-document-package"],
         "nonViewableIcons": 1,
         "rowIds": ["a", "b", "c"],
         "statusIcons": 1,
@@ -1660,6 +1681,21 @@ def assert_subscope_selection_contribution(page: Page) -> None:
         "visibleCheckboxes": 3,
         "reportState": "list",
         "subdoc": None,
+    }
+    assert result["copyBefore"] == {
+        "disabled": False,
+        "label": "⧉Copy to…",
+        "reason": "",
+    }
+    assert result["copiedState"] == {
+        "copied": [
+            {
+                "scope": "studio",
+                "sub_scope": "tags",
+                "doc_ids": ["a", "b", "c"],
+            }
+        ],
+        "menuHidden": True,
     }
     assert result["preparedState"] == {
         "actionsExpanded": "false",
@@ -2354,6 +2390,7 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
             return { ok: false, status: 404, json: async () => ({}) };
           };
 
+          const copyCalls = [];
           const createCalls = [];
           const releases = [];
           const states = [];
@@ -2365,6 +2402,13 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
             doc: { doc_id: 'parent-doc' },
             managementContext: true,
             managementDocumentActions: {
+              copySubscopeDocuments: (selection, options) => {
+                copyCalls.push({
+                  selection,
+                  hasRestoreFocus: Boolean(options.restoreFocus)
+                });
+                return Promise.resolve(null);
+              },
               createSubscopeDocument: (collection, options) => {
                 createCalls.push({
                   collection,
@@ -2515,6 +2559,14 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
               ?.dataset.reportSubscopeSelection || '',
             subdoc: new URLSearchParams(location.search).get('subdoc')
           };
+          content.querySelector('[data-docs-subscope-actions]').click();
+          content.querySelector(
+            '[data-docs-subscope-selection-command="select-all"]'
+          ).click();
+          content.querySelector('[data-docs-viewer-action="copy"]').click();
+          await Promise.resolve();
+          await Promise.resolve();
+          const copied = copyCalls.slice();
           newButton().click();
           const inFlight = {
             ariaLabel: newButton().getAttribute('aria-label'),
@@ -2567,6 +2619,7 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
           };
 
           return {
+            copied,
             fetches: fetches.filter(record => (
               record.path.startsWith('/synthetic/')
             )),
@@ -2598,6 +2651,15 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
         "callsAfterSecondClick": 1,
     }
     expected_collection = {"scope": "studio", "sub_scope": "tags"}
+    assert result["copied"] == [
+        {
+            "selection": {
+                **expected_collection,
+                "doc_ids": ["imported-first", "package-imported"],
+            },
+            "hasRestoreFocus": True,
+        }
+    ]
     assert result["refreshTypes"] == {
         "collection": "function",
         "document": "function",

@@ -514,6 +514,45 @@ def document_transfer_scope_capabilities(
     }
 
 
+def document_transfer_collection_capability_records(
+    repo_root: Path,
+    config: DocsScopeConfig,
+) -> list[dict[str, Any]]:
+    """Project server-owned eligibility for every configured exact collection."""
+
+    records: list[dict[str, Any]] = []
+    configured = [("", config.scope_id)] + [
+        (sub_scope.sub_scope, f"{config.scope_id} / {sub_scope.title}")
+        for sub_scope in config.sub_scopes
+    ]
+    for sub_scope, label in configured:
+        target = {"scope": config.scope_id}
+        if sub_scope:
+            target["sub_scope"] = sub_scope
+        try:
+            collection = resolve_managed_document_collection(
+                repo_root,
+                scope=config.scope_id,
+                sub_scope=sub_scope or None,
+            )
+            capabilities = document_transfer_collection_capabilities(collection)
+        except (OSError, ValueError):
+            capabilities = {
+                "copy_source": False,
+                "move_source": False,
+                "copy_target": False,
+                "move_target": False,
+            }
+        records.append(
+            {
+                "target": target,
+                "label": label,
+                **capabilities,
+            }
+        )
+    return records
+
+
 def _effective_documents(
     docs: list[source_model.ScopeDoc],
     requested_doc_ids: tuple[str, ...],
@@ -1706,6 +1745,7 @@ __all__ = [
     "TransferMediaPlan",
     "TransferWarning",
     "collection_report_host_doc_id",
+    "document_transfer_collection_capability_records",
     "document_transfer_collection_capabilities",
     "document_transfer_scope_capabilities",
     "plan_document_transfer",

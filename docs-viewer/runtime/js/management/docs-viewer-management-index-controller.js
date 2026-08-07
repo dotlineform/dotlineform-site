@@ -2,7 +2,7 @@ import {
   documentPackagePrepareCapability,
   documentTransferSourceSupported,
   documentTransferSupported,
-  documentTransferTargetScopes,
+  documentTransferTargets,
   scopeStaticHtmlExportCapability
 } from "./docs-viewer-management-capabilities.js";
 import {
@@ -16,6 +16,9 @@ import {
 import {
   openStaticHtmlSnapshotExportWorkflow
 } from "./docs-viewer-static-html-export-workflow.js";
+import {
+  normalizeManagedDocumentCollectionTarget
+} from "./docs-viewer-management-document-target.js";
 
 export function docsViewerPreparePackageActionControlState(options = {}) {
   var resolution = options.resolution || null;
@@ -59,10 +62,10 @@ export function docsViewerDocumentTransferActionControlState(options = {}) {
       : "Select one or more documents.";
   } else if (!documentTransferSupported(options.capabilities)) {
     disabledReason = label + " is unavailable.";
-  } else if (!documentTransferSourceSupported(options.capabilities, options.scope, mode)) {
-    disabledReason = label + " is not supported from this scope.";
+  } else if (!documentTransferSourceSupported(options.capabilities, options.source, mode)) {
+    disabledReason = label + " is not supported from this collection.";
   } else if (!targets.length) {
-    disabledReason = "No other writable Docs Viewer scope is available.";
+    disabledReason = "No other writable Docs Viewer collection is available.";
   }
   return {
     disabled: Boolean(disabledReason),
@@ -242,9 +245,11 @@ export function createDocsViewerManagementIndexController(options = {}) {
 
   function documentTransferActionControlState(mode) {
     var actionId = mode === "move" ? DOCS_VIEWER_ACTION_IDS.MOVE : DOCS_VIEWER_ACTION_IDS.COPY;
-    var targets = documentTransferTargetScopes(
+    var source = { scope: viewerScope() };
+    var targets = documentTransferTargets(
       management.managementCapabilities,
-      viewerScope()
+      source,
+      mode
     );
     return docsViewerDocumentTransferActionControlState({
       capabilities: management.managementCapabilities,
@@ -253,7 +258,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
       managementChecked: management.managementChecked,
       mode: mode,
       resolution: resolveAction(actionId),
-      scope: viewerScope(),
+      source: source,
       targets: targets,
       workflowActive: documentTransferWorkflowActive
     });
@@ -429,33 +434,21 @@ export function createDocsViewerManagementIndexController(options = {}) {
     return documentTransferWorkflowRequest;
   }
 
-  function handleDocumentTransfer(mode) {
-    var normalizedMode = mode === "move" ? "move" : "copy";
-    var actionId = normalizedMode === "move"
-      ? DOCS_VIEWER_ACTION_IDS.MOVE
-      : DOCS_VIEWER_ACTION_IDS.COPY;
-    var resolution = resolveAction(actionId);
-    var controlState = documentTransferActionControlState(normalizedMode);
-    if (
-      !resolution
-      || !resolution.enabled
-      || controlState.disabled
-      || documentTransferWorkflowActive
-    ) {
-      return Promise.resolve(null);
-    }
-    var checkedDocIds = resolution.targetDocIds.slice();
+  function openDocumentTransfer(options) {
+    var settings = options || {};
+    var checkedDocIds = settings.checkedDocIds.slice();
     documentTransferWorkflowActive = true;
     renderManagementUi();
     return loadDocumentTransferWorkflow()
       .then(function (module) {
         return module.openDocumentTransferWorkflow({
           root: root,
-          restoreFocus: indexActionsButton(),
-          mode: normalizedMode,
+          restoreFocus: settings.restoreFocus,
+          source: settings.source,
+          mode: settings.mode,
           checkedDocIds: checkedDocIds,
-          targets: controlState.targets,
-          copyDescendantsAvailable: checkedSelectionHasDescendants(checkedDocIds),
+          targets: settings.targets,
+          copyDescendantsAvailable: settings.copyDescendantsAvailable === true,
           clientOptions: managementClientOptions(),
           callbacks: {
             setBusy: setManagementBusy,
@@ -488,6 +481,96 @@ export function createDocsViewerManagementIndexController(options = {}) {
         documentTransferWorkflowActive = false;
         renderManagementUi();
       });
+  }
+
+  function handleDocumentTransfer(mode) {
+    var normalizedMode = mode === "move" ? "move" : "copy";
+    var actionId = normalizedMode === "move"
+      ? DOCS_VIEWER_ACTION_IDS.MOVE
+      : DOCS_VIEWER_ACTION_IDS.COPY;
+    var resolution = resolveAction(actionId);
+    var controlState = documentTransferActionControlState(normalizedMode);
+    if (
+      !resolution
+      || !resolution.enabled
+      || controlState.disabled
+      || documentTransferWorkflowActive
+    ) {
+      return Promise.resolve(null);
+    }
+    var checkedDocIds = resolution.targetDocIds.slice();
+    return openDocumentTransfer({
+      source: { scope: viewerScope() },
+      mode: normalizedMode,
+      checkedDocIds: checkedDocIds,
+      targets: controlState.targets,
+      copyDescendantsAvailable: checkedSelectionHasDescendants(checkedDocIds),
+      restoreFocus: indexActionsButton()
+    });
+  }
+
+  function normalizeSubscopeCopyRequest(value) {
+    if (!value || typeof value !== "object" || Array.isArray(value)) {
+      throw new Error("Sub-scope Copy request must be an object.");
+    }
+    var keys = Object.keys(value).sort();
+    if (keys.join("\u0000") !== ["doc_ids", "scope", "sub_scope"].join("\u0000")) {
+      throw new Error(
+        "Sub-scope Copy request must contain exactly scope, sub_scope, and doc_ids."
+      );
+    }
+    var source = normalizeManagedDocumentCollectionTarget({
+      scope: value.scope,
+      sub_scope: value.sub_scope
+    });
+    var seen = new Set();
+    var docIds = Array.isArray(value.doc_ids)
+      ? value.doc_ids.map(function (docId) {
+          return String(docId || "").trim();
+        }).filter(function (docId) {
+          if (!docId || seen.has(docId)) return false;
+          seen.add(docId);
+          return true;
+        })
+      : [];
+    if (!docIds.length) throw new Error("Select one or more documents.");
+    return { source: source, docIds: docIds };
+  }
+
+  function copySubscopeDocuments(request, options) {
+    var normalized;
+    try {
+      normalized = normalizeSubscopeCopyRequest(request);
+    } catch (error) {
+      return Promise.reject(error);
+    }
+    var targets = documentTransferTargets(
+      management.managementCapabilities,
+      normalized.source,
+      "copy"
+    );
+    var controlState = docsViewerDocumentTransferActionControlState({
+      capabilities: management.managementCapabilities,
+      managementAvailable: management.managementAvailable,
+      managementBusy: management.managementBusy,
+      managementChecked: management.managementChecked,
+      mode: "copy",
+      resolution: { enabled: true },
+      source: normalized.source,
+      targets: targets,
+      workflowActive: documentTransferWorkflowActive
+    });
+    if (controlState.disabled) {
+      return Promise.reject(new Error(controlState.disabledReason));
+    }
+    return openDocumentTransfer({
+      source: normalized.source,
+      mode: "copy",
+      checkedDocIds: normalized.docIds,
+      targets: targets,
+      copyDescendantsAvailable: false,
+      restoreFocus: options && options.restoreFocus
+    });
   }
 
   function handleSnapshotExport() {
@@ -605,6 +688,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
   return {
     actionsButton: indexActionsButton,
     actionsMenu: indexActionsMenu,
+    copySubscopeDocuments: copySubscopeDocuments,
     handleControl: handleControl,
     handleViewChange: handleViewChange,
     indexSelection: indexSelection,

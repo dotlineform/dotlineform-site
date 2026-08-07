@@ -55,6 +55,7 @@ def assert_transfer_workflow(page: Page) -> None:
             const messages = [];
             const busy = [];
             let appliedPayload = null;
+            let transferError = '';
             const response = payload => Promise.resolve(new Response(
                 JSON.stringify(payload),
                 {
@@ -71,7 +72,17 @@ def assert_transfer_workflow(page: Page) -> None:
                         ok: true,
                         mode: body.transfer_mode,
                         source: { scope: body.scope },
-                        target: { scope: body.target_scope, placement: 'scope_root' },
+                        target: {
+                            scope: body.target_scope,
+                            sub_scope: body.target_sub_scope,
+                            placement: 'sub_scope_root'
+                        },
+                        target_default_viewable: false,
+                        custom_metadata: {
+                            retained: [],
+                            omitted: [{ field: 'project_status' }],
+                            rejected: []
+                        },
                         document_count: 3,
                         effective_root_count: 2,
                         descendant_count: 1,
@@ -90,8 +101,11 @@ def assert_transfer_workflow(page: Page) -> None:
                         apply_plan: {
                             schema_version: 'docs_document_transfer_apply_plan_v2',
                             mode: body.transfer_mode,
-                            source_scope: body.scope,
-                            target_scope: body.target_scope
+                            source: { scope: body.scope },
+                            target: {
+                                scope: body.target_scope,
+                                sub_scope: body.target_sub_scope
+                            }
                         }
                     });
                 }
@@ -105,6 +119,7 @@ def assert_transfer_workflow(page: Page) -> None:
             };
             const waitFor = async predicate => {
                 for (let attempt = 0; attempt < 50; attempt += 1) {
+                    if (transferError) throw new Error(transferError);
                     const value = predicate();
                     if (value) return value;
                     await new Promise(resolve => setTimeout(resolve, 0));
@@ -114,11 +129,15 @@ def assert_transfer_workflow(page: Page) -> None:
             const transferPromise = workflow.openDocumentTransferWorkflow({
                 root,
                 restoreFocus: restore,
+                source: { scope: 'studio' },
                 mode: 'copy',
                 checkedDocIds: ['checked-a', 'checked-b'],
                 targets: [
-                    { scopeId: 'notes', label: 'Notes' },
-                    { scopeId: 'processing', label: 'Processing' }
+                    {
+                        target: { scope: 'analysis', sub_scope: 'works' },
+                        label: 'analysis / Works'
+                    },
+                    { target: { scope: 'processing' }, label: 'processing' }
                 ],
                 copyDescendantsAvailable: true,
                 clientOptions: {
@@ -132,6 +151,9 @@ def assert_transfer_workflow(page: Page) -> None:
                     render: () => {},
                     onApplied: payload => { appliedPayload = payload; }
                 }
+            }).catch(error => {
+                transferError = error?.message || String(error);
+                throw error;
             });
             const optionsTitle = await waitFor(
                 () => document.querySelector('.docsViewer__modalTitle')
@@ -175,9 +197,10 @@ def assert_transfer_workflow(page: Page) -> None:
             const blockedPromise = workflow.openDocumentTransferWorkflow({
                 root,
                 restoreFocus: restore,
+                source: { scope: 'studio' },
                 mode: 'move',
                 checkedDocIds: ['checked-a'],
-                targets: [{ scopeId: 'notes', label: 'Notes' }],
+                targets: [{ target: { scope: 'notes' }, label: 'notes' }],
                 clientOptions: {
                     baseUrl: 'http://manage.test',
                     scope: 'studio',
@@ -234,7 +257,15 @@ def assert_transfer_workflow(page: Page) -> None:
                         document_transfer: {
                             copy_source: true,
                             move_source: true,
-                            target: true
+                            target: true,
+                            collections: [{
+                                target: { scope: 'studio' },
+                                label: 'studio',
+                                copy_source: true,
+                                move_source: true,
+                                copy_target: true,
+                                move_target: true
+                            }]
                         }
                     },
                     notes: {
@@ -242,7 +273,15 @@ def assert_transfer_workflow(page: Page) -> None:
                         document_transfer: {
                             copy_source: true,
                             move_source: true,
-                            target: true
+                            target: true,
+                            collections: [{
+                                target: { scope: 'notes' },
+                                label: 'notes',
+                                copy_source: true,
+                                move_source: true,
+                                copy_target: true,
+                                move_target: true
+                            }]
                         }
                     }
                 }
@@ -303,8 +342,8 @@ def assert_transfer_workflow(page: Page) -> None:
                             'copy',
                             definitions.createDocsViewerActionContext({ activeDocId: 'active' })
                         ),
-                        scope: 'studio',
-                        targets: [{ scopeId: 'notes' }]
+                        source: { scope: 'studio' },
+                        targets: [{ target: { scope: 'notes' }, label: 'notes' }]
                     }),
                     ready: indexManagement.docsViewerDocumentTransferActionControlState({
                         mode: 'move',
@@ -319,8 +358,8 @@ def assert_transfer_workflow(page: Page) -> None:
                                 selectedDocIds: ['checked-a']
                             })
                         ),
-                        scope: 'studio',
-                        targets: [{ scopeId: 'notes' }]
+                        source: { scope: 'studio' },
+                        targets: [{ target: { scope: 'notes' }, label: 'notes' }]
                     })
                 }
             };
@@ -328,9 +367,9 @@ def assert_transfer_workflow(page: Page) -> None:
     )
 
     if result["optionsState"] != {
-        "title": "Copy to scope",
+        "title": "Copy to…",
         "focusedRole": "modal-cancel",
-        "targetValues": ["notes", "processing"],
+        "targetValues": ["0", "1"],
         "firstTargetChecked": True,
         "hasDescendantsChoice": True,
     }:
@@ -338,10 +377,12 @@ def assert_transfer_workflow(page: Page) -> None:
     if result["confirmation"] != {
         "focusedRole": "modal-cancel",
         "body": [
-            "Copy 3 documents to notes",
+            "Copy 3 documents to analysis / works",
             "includes 2 media",
+            "New documents will be non-viewable.",
+            "1 custom metadata field will be omitted because the target does not support it.",
         ],
-        "bold": ["3", "notes", "2"],
+        "bold": ["3", "analysis / works", "2"],
         "primaryDisabled": False,
     }:
         raise AssertionError(f"unexpected Copy confirmation: {result['confirmation']!r}")
@@ -352,7 +393,8 @@ def assert_transfer_workflow(page: Page) -> None:
             "body": {
                 "scope": "studio",
                 "doc_ids": ["checked-a", "checked-b"],
-                "target_scope": "notes",
+                "target_scope": "analysis",
+                "target_sub_scope": "works",
                 "transfer_mode": "copy",
                 "include_descendants": True,
             },
@@ -365,8 +407,8 @@ def assert_transfer_workflow(page: Page) -> None:
                 "apply_plan": {
                     "schema_version": "docs_document_transfer_apply_plan_v2",
                     "mode": "copy",
-                    "source_scope": "studio",
-                    "target_scope": "notes",
+                    "source": {"scope": "studio"},
+                    "target": {"scope": "analysis", "sub_scope": "works"},
                 },
                 "confirm": True,
             },
@@ -457,12 +499,12 @@ def assert_transfer_workflow(page: Page) -> None:
         "empty": {
             "disabled": True,
             "disabledReason": "Select one or more documents.",
-            "targets": [{"scopeId": "notes"}],
+            "targets": [{"target": {"scope": "notes"}, "label": "notes"}],
         },
         "ready": {
             "disabled": False,
             "disabledReason": "",
-            "targets": [{"scopeId": "notes"}],
+            "targets": [{"target": {"scope": "notes"}, "label": "notes"}],
         },
     }:
         raise AssertionError(

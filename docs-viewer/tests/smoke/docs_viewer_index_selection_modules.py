@@ -771,10 +771,10 @@ def assert_index_actions_menu_projection(page: Page) -> None:
             },
             {
                 "actionId": "copy",
-                "label": "Copy to scope…",
+                "label": "Copy to…",
                 "disabled": True,
                 "reason": "Select one or more documents.",
-                "ariaLabel": "Copy to scope… Select one or more documents.",
+                "ariaLabel": "Copy to… Select one or more documents.",
             },
             {
                 "actionId": "move",

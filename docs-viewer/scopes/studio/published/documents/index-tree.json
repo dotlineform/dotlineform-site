@@ -1074,7 +1074,7 @@
               "doc_id": "d-20260801-233534-239eab",
               "title": "SSP-4 — Collection-Aware Document Copy Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-233534-239eab.json",
-              "ui_status": "in-progress",
+              "ui_status": "done",
               "children": [
                 {
                   "doc_id": "d-20260806-225724-aa5e6a",
@@ -1092,6 +1092,18 @@
                   "doc_id": "d-20260807-085247-4c2a9e",
                   "title": "SSP-4.2 — Exact Collection Copy Apply Evidence",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-085247-4c2a9e.json",
+                  "ui_status": "done"
+                },
+                {
+                  "doc_id": "d-20260807-093311-8f2c4a",
+                  "title": "SSP-4.3 — Main And Sub-Scope Copy Surface Evidence",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-093311-8f2c4a.json",
+                  "ui_status": "done"
+                },
+                {
+                  "doc_id": "d-20260807-095855-6c52de",
+                  "title": "SSP-4.4 — Regression, Publication, And Closeout Evidence",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-095855-6c52de.json",
                   "ui_status": "done"
                 }
               ]
@@ -1486,5 +1498,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-07T07:54:16Z"
+  "generated_at": "2026-08-07T09:00:49Z"
 }

@@ -2,6 +2,9 @@ import {
   DOCS_MANAGEMENT_UNAVAILABLE_MESSAGE,
   readManagementCapabilities
 } from "./docs-viewer-management-client.js";
+import {
+  normalizeManagedDocumentCollectionTarget
+} from "./docs-viewer-management-document-target.js";
 
 function normalizeScopeId(scope) {
   return String(scope || "").trim();
@@ -143,41 +146,79 @@ export function documentTransferSupported(capabilities) {
   return Boolean(documentTransfer && documentTransfer.preview && documentTransfer.apply);
 }
 
-export function documentTransferSourceSupported(capabilities, activeScope, mode) {
-  var scopeCaps = scopeManagementCapabilities(capabilities, activeScope);
-  var transfer = scopeCaps && scopeCaps.document_transfer && typeof scopeCaps.document_transfer === "object"
-    ? scopeCaps.document_transfer
-    : null;
-  var normalizedMode = String(mode || "").trim().toLowerCase();
-  if (!transfer || !documentTransferSupported(capabilities)) return false;
-  if (normalizedMode === "copy") return transfer.copy_source === true;
-  if (normalizedMode === "move") return transfer.move_source === true;
-  return false;
+function documentTransferCollectionKey(target) {
+  var normalized = normalizeManagedDocumentCollectionTarget(target);
+  return normalized.scope + "\u0000" + String(normalized.sub_scope || "");
 }
 
-export function documentTransferTargetScopes(capabilities, activeScope) {
-  var currentScope = normalizeScopeId(activeScope);
+function documentTransferCollectionRecords(capabilities) {
   var scopes = capabilities && capabilities.scopes && typeof capabilities.scopes === "object"
     ? capabilities.scopes
     : {};
-  return Object.keys(scopes).sort().map(function (scopeId) {
+  var records = [];
+  Object.keys(scopes).sort().forEach(function (scopeId) {
     var scopeCaps = scopes[scopeId] || {};
-    return {
-      scopeId: scopeId,
-      label: scopeId,
-      root: String(scopeCaps.root || "").trim()
-    };
-  }).filter(function (record) {
-    var scopeCaps = scopes[record.scopeId] || {};
     var transfer = scopeCaps.document_transfer && typeof scopeCaps.document_transfer === "object"
       ? scopeCaps.document_transfer
       : null;
-    return (
-      record.scopeId !== currentScope &&
-      scopeCaps.available === true &&
-      transfer &&
-      transfer.target === true
-    );
+    var collections = transfer && Array.isArray(transfer.collections)
+      ? transfer.collections
+      : [];
+    collections.forEach(function (record) {
+      try {
+        var target = normalizeManagedDocumentCollectionTarget(record && record.target);
+        records.push({
+          target: target,
+          label: String(record && record.label || "").trim(),
+          copySource: record && record.copy_source === true,
+          moveSource: record && record.move_source === true,
+          copyTarget: record && record.copy_target === true,
+          moveTarget: record && record.move_target === true
+        });
+      } catch (_error) {
+        return;
+      }
+    });
+  });
+  return records;
+}
+
+export function documentTransferSourceSupported(capabilities, source, mode) {
+  var sourceKey;
+  try {
+    sourceKey = documentTransferCollectionKey(source);
+  } catch (_error) {
+    return false;
+  }
+  var normalizedMode = String(mode || "").trim().toLowerCase();
+  if (!documentTransferSupported(capabilities)) return false;
+  var record = documentTransferCollectionRecords(capabilities).find(function (candidate) {
+    return documentTransferCollectionKey(candidate.target) === sourceKey;
+  });
+  if (!record) return false;
+  if (normalizedMode === "copy") return record.copySource;
+  if (normalizedMode === "move") return record.moveSource;
+  return false;
+}
+
+export function documentTransferTargets(capabilities, source, mode) {
+  var sourceKey;
+  try {
+    sourceKey = documentTransferCollectionKey(source);
+  } catch (_error) {
+    return [];
+  }
+  var normalizedMode = String(mode || "").trim().toLowerCase();
+  return documentTransferCollectionRecords(capabilities).filter(function (record) {
+    if (documentTransferCollectionKey(record.target) === sourceKey) return false;
+    if (normalizedMode === "copy") return record.copyTarget;
+    if (normalizedMode === "move") return record.moveTarget;
+    return false;
+  }).map(function (record) {
+    return {
+      target: record.target,
+      label: record.label
+    };
   });
 }
 

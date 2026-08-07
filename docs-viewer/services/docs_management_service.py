@@ -25,6 +25,7 @@ import docs_diagram_source_service  # noqa: E402
 import docs_document_move_apply  # noqa: E402
 import docs_document_transfer  # noqa: E402
 import docs_document_transfer_apply  # noqa: E402
+import docs_management_document_target  # noqa: E402
 import docs_import_source_service as import_source_service  # noqa: E402
 import docs_local_links  # noqa: E402
 import docs_management_mutations as mutations  # noqa: E402
@@ -206,8 +207,16 @@ def docs_management_post_response(
         plan = docs_document_transfer.plan_document_transfer(
             repo_root,
             source_scope=source_scope,
+            source_sub_scope=(
+                body.get("sub_scope") if "sub_scope" in body else None
+            ),
             requested_doc_ids=body.get("doc_ids"),
             target_scope=body.get("target_scope"),
+            target_sub_scope=(
+                body.get("target_sub_scope")
+                if "target_sub_scope" in body
+                else None
+            ),
             transfer_mode=body.get("transfer_mode"),
             include_descendants=body.get("include_descendants", False),
         )
@@ -222,9 +231,17 @@ def docs_management_post_response(
             repo_root,
             body.get("apply_plan"),
         )
-        if plan.source_scope != source_scope:
+        request_source = {"scope": source_scope}
+        if "sub_scope" in body:
+            request_source["sub_scope"] = body.get("sub_scope")
+        normalized_request_source = (
+            docs_management_document_target.normalize_managed_document_collection_target(
+                request_source
+            )
+        )
+        if plan.source_collection.request_target() != normalized_request_source:
             raise ValueError(
-                "document transfer apply_plan source scope does not match request scope"
+                "document transfer apply_plan source collection does not match request"
             )
         try:
             if plan.mode == docs_document_transfer.COPY_MODE:

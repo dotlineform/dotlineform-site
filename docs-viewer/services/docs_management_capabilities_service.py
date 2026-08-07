@@ -94,6 +94,12 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 config,
             )
         )
+        transfer_capabilities["collections"] = (
+            docs_document_transfer.document_transfer_collection_capability_records(
+                repo_root,
+                config,
+            )
+        )
         scopes[scope] = {
             "available": root.exists(),
             "scope_type": config.scope_type,

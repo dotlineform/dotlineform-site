@@ -138,6 +138,13 @@ function createSubscopeDocumentAction(settings) {
     : null;
 }
 
+function copySubscopeDocumentsAction(settings) {
+  var actions = settings && settings.managementDocumentActions;
+  return actions && typeof actions.copySubscopeDocuments === "function"
+    ? actions.copySubscopeDocuments
+    : null;
+}
+
 function configuredSubScopeLabel(settings, scope, subScope) {
   var child = configuredSubScope(settings, scope, subScope);
   var normalizedScope = cleanString(scope).toLowerCase();
@@ -221,6 +228,7 @@ function loadSubscopeContribution(settings, parent, subScope, options) {
       },
       nonViewableEmoji: contributionOptions.nonViewableEmoji,
       onCreateDocument: contributionOptions.onCreateDocument,
+      onCopyDocuments: contributionOptions.onCopyDocuments,
       onLifecycleEvent: contributionOptions.onLifecycleEvent,
       onPreparePackage: contributionOptions.onPreparePackage,
       root: managementModalRoot(settings),
@@ -289,6 +297,38 @@ function openSubscopeCreate(settings, parent, subScope, request, context) {
     },
     {
       refreshAndSelect: refreshAndOpenDocument
+    }
+  );
+}
+
+function openSubscopeCopy(settings, parent, subScope, request, context) {
+  var selection = request && typeof request === "object" ? request : {};
+  var keys = Object.keys(selection).sort();
+  var docIds = Array.isArray(selection.doc_ids)
+    ? selection.doc_ids.map(cleanString).filter(Boolean)
+    : [];
+  if (
+    keys.join("\u0000") !== ["doc_ids", "scope", "sub_scope"].join("\u0000")
+    || cleanString(selection.scope).toLowerCase() !== parent.scope
+    || cleanString(selection.sub_scope).toLowerCase() !== subScope
+    || !docIds.length
+  ) {
+    return Promise.reject(new Error(
+      "Sub-scope Copy selection did not match the mounted report."
+    ));
+  }
+  var action = copySubscopeDocumentsAction(settings);
+  if (!action) {
+    return Promise.reject(new Error("Sub-scope document Copy is unavailable."));
+  }
+  return action(
+    {
+      scope: parent.scope,
+      sub_scope: subScope,
+      doc_ids: docIds
+    },
+    {
+      restoreFocus: context && context.restoreFocus
     }
   );
 }
@@ -397,6 +437,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
   });
   var scopeConfig = settings.scopeConfigState || {};
   var createAction = createSubscopeDocumentAction(settings);
+  var copyAction = copySubscopeDocumentsAction(settings);
   var contribution = loadSubscopeContribution(settings, parent, subScope, {
     nonViewableEmoji: cleanString(scopeConfig.docNonViewableEmoji),
     onCreateDocument: (
@@ -406,6 +447,15 @@ export function mountDocsViewerManageDocumentExtras(context) {
     )
       ? function (request, context) {
           return openSubscopeCreate(settings, parent, subScope, request, context);
+        }
+      : null,
+    onCopyDocuments: (
+      settings.managementContext
+      && reportManagementBaseUrl
+      && copyAction
+    )
+      ? function (request, context) {
+          return openSubscopeCopy(settings, parent, subScope, request, context);
         }
       : null,
     onLifecycleEvent: function (event) {

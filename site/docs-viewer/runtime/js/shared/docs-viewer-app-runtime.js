@@ -380,6 +380,14 @@ export function startDocsViewerRuntime(options) {
     inlineMermaidAdapter: settings.inlineMermaidAdapter,
     managementService: managementService,
     managementDocumentActions: {
+      copySubscopeDocuments: function (selection, options) {
+        return loadManagementController().then(function (controller) {
+          if (!controller || typeof controller.copySubscopeDocuments !== "function") {
+            throw new Error("Sub-scope document Copy is unavailable.");
+          }
+          return controller.copySubscopeDocuments(selection, options);
+        });
+      },
       createSubscopeDocument: function (collection, options) {
         return loadManagementController().then(function (controller) {
           if (!controller || typeof controller.createSubscopeDocument !== "function") {

@@ -63,7 +63,7 @@ var INDEX_ACTION_ITEMS = [
     id: "docsViewerIndexCopyButton",
     actionId: "copy",
     emoji: "⧉",
-    label: "Copy to scope…"
+    label: "Copy to…"
   },
   {
     id: "docsViewerIndexMoveButton",

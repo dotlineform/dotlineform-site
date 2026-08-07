@@ -7,11 +7,14 @@ import {
   openDocsViewerConfirmModal,
   openDocsViewerManagementModal
 } from "./docs-viewer-management-modal-shell.js";
+import {
+  normalizeManagedDocumentCollectionTarget
+} from "./docs-viewer-management-document-target.js";
 
 var TRANSFER_TEXT = {
   copy: {
-    optionsTitle: "Copy to scope",
-    optionsIntro: "Choose the scope that will receive independent copies of the checked documents.",
+    optionsTitle: "Copy to…",
+    optionsIntro: "Choose the collection that will receive independent copies of the checked documents.",
     previewButton: "Preview copy",
     previewing: "Planning document copy...",
     confirmTitle: "Confirm copy",
@@ -45,17 +48,32 @@ function noteMarkup(text) {
   return '<p class="docsViewer__modalNote muted small">' + escapeHtml(text) + "</p>";
 }
 
+function collectionLabel(target) {
+  var exact = { scope: target && target.scope };
+  if (target && Object.prototype.hasOwnProperty.call(target, "sub_scope")) {
+    exact.sub_scope = target.sub_scope;
+  }
+  var normalized = normalizeManagedDocumentCollectionTarget(exact);
+  return normalized.sub_scope
+    ? normalized.scope + " / " + normalized.sub_scope
+    : normalized.scope;
+}
+
+function collectionKey(target) {
+  var normalized = normalizeManagedDocumentCollectionTarget(target);
+  return normalized.scope + "\u0000" + String(normalized.sub_scope || "");
+}
+
 function optionMarkup(options) {
   var mode = normalizedMode(options.mode);
   var targets = Array.isArray(options.targets) ? options.targets : [];
-  var selectedTarget = String(options.selectedTarget || "").trim();
   var markup = noteMarkup(TRANSFER_TEXT[mode].optionsIntro);
-  markup += targets.map(function (target) {
-    var scopeId = String(target && target.scopeId || "").trim();
-    var label = String(target && target.label || scopeId).trim();
+  markup += targets.map(function (record, index) {
+    var target = normalizeManagedDocumentCollectionTarget(record && record.target);
+    var label = String(record && record.label || collectionLabel(target)).trim();
     return [
       '<label class="docsViewer__field docsViewer__field--checkbox">',
-      '  <input class="docsViewer__checkboxInput" type="radio" name="docsViewerDocumentTransferTarget" value="' + escapeHtml(scopeId) + '"' + (scopeId === selectedTarget ? " checked" : "") + ">",
+      '  <input class="docsViewer__checkboxInput" type="radio" name="docsViewerDocumentTransferTarget" value="' + index + '"' + (index === 0 ? " checked" : "") + ">",
       '  <span class="docsViewer__fieldLabel">' + escapeHtml(label) + "</span>",
       "</label>"
     ].join("");
@@ -81,11 +99,11 @@ export function buildDocumentTransferConfirmationBody(preview) {
   var blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
   var warnings = Array.isArray(preview && preview.warnings) ? preview.warnings : [];
   var target = preview && preview.target || {};
-  var targetScope = String(target.scope || "").trim();
+  var targetName = collectionLabel(target);
   var documentNoun = documentCount === 1 ? "document" : "documents";
   var lines = [
     (mode === "copy" ? "Copy" : "Move") + " " + documentCount +
-      " " + documentNoun + " to " + targetScope,
+      " " + documentNoun + " to " + targetName,
     "includes " + mediaCount + " media"
   ];
   blockers.forEach(function (blocker) {
@@ -112,6 +130,23 @@ export function buildDocumentTransferConfirmationBody(preview) {
   }).forEach(function (warning) {
     lines.push("Warning: " + String(warning && warning.message || warning || "").trim());
   });
+  if (mode === "copy") {
+    lines.push(
+      preview.target_default_viewable === false
+        ? "New documents will be non-viewable."
+        : "New documents will use the target's viewable default."
+    );
+    var omitted = preview && preview.custom_metadata && Array.isArray(preview.custom_metadata.omitted)
+      ? preview.custom_metadata.omitted
+      : [];
+    if (omitted.length) {
+      lines.push(
+        countLabel(omitted.length, "custom metadata field", "custom metadata fields")
+        + " will be omitted because the target does not support "
+        + (omitted.length === 1 ? "it." : "them.")
+      );
+    }
+  }
   return lines.filter(Boolean);
 }
 
@@ -120,13 +155,13 @@ function documentTransferConfirmationBodyHtml(preview) {
   var lines = buildDocumentTransferConfirmationBody(preview);
   var documentCount = Number(preview && preview.document_count) || 0;
   var mediaCount = Number(preview && preview.unique_media_count) || 0;
-  var targetScope = String(preview && preview.target && preview.target.scope || "").trim();
+  var targetName = collectionLabel(preview && preview.target || {});
   var documentNoun = documentCount === 1 ? "document" : "documents";
   return [
     '<p class="docsViewer__modalNote muted small">' +
       (mode === "copy" ? "Copy" : "Move") + " <strong>" +
       escapeHtml(documentCount) + "</strong> " + documentNoun + " to <strong>" +
-      escapeHtml(targetScope) + "</strong></p>",
+      escapeHtml(targetName) + "</strong></p>",
     '<p class="docsViewer__modalNote muted small">includes <strong>' +
       escapeHtml(mediaCount) + "</strong> media</p>",
     lines.slice(2).map(noteMarkup).join("")
@@ -162,7 +197,6 @@ function openTransferOptions(options) {
     bodyHtml: optionMarkup({
       mode: mode,
       targets: targets,
-      selectedTarget: targets[0] && targets[0].scopeId,
       copyDescendantsAvailable: options.copyDescendantsAvailable
     }),
     focusSelector: 'button[data-role="modal-cancel"]',
@@ -172,15 +206,15 @@ function openTransferOptions(options) {
     ],
     onSubmit: function (api) {
       var selected = api.host.querySelector('input[name="docsViewerDocumentTransferTarget"]:checked');
-      var targetScope = String(selected && selected.value || "").trim();
-      if (!targetScope) {
-        api.setStatus("Choose a target scope.");
+      var targetIndex = Number(selected && selected.value);
+      if (!Number.isInteger(targetIndex) || !targets[targetIndex]) {
+        api.setStatus("Choose a target collection.");
         return false;
       }
       var descendants = api.host.querySelector('[data-role="document-transfer-descendants"]');
       return {
         confirmed: true,
-        targetScope: targetScope,
+        target: normalizeManagedDocumentCollectionTarget(targets[targetIndex].target),
         includeDescendants: mode === "copy" && Boolean(descendants && descendants.checked)
       };
     }
@@ -189,13 +223,14 @@ function openTransferOptions(options) {
 
 export async function openDocumentTransferWorkflow(options = {}) {
   var mode = normalizedMode(options.mode);
+  var source = normalizeManagedDocumentCollectionTarget(options.source);
   var checkedDocIds = Array.isArray(options.checkedDocIds)
     ? options.checkedDocIds.map(function (docId) { return String(docId || "").trim(); }).filter(Boolean)
     : [];
   var targets = Array.isArray(options.targets) ? options.targets : [];
   var callbacks = options.callbacks || {};
   if (!checkedDocIds.length) throw new Error("Select one or more documents.");
-  if (!targets.length) throw new Error("No other writable Docs Viewer scope is available.");
+  if (!targets.length) throw new Error("No other writable Docs Viewer collection is available.");
 
   var choice = await openTransferOptions({
     root: options.root,
@@ -205,8 +240,10 @@ export async function openDocumentTransferWorkflow(options = {}) {
     copyDescendantsAvailable: options.copyDescendantsAvailable === true
   });
   if (!choice || !choice.confirmed) return null;
-  if (!targets.some(function (target) { return target.scopeId === choice.targetScope; })) {
-    throw new Error("The selected target scope is no longer available.");
+  if (!targets.some(function (record) {
+    return collectionKey(record.target) === collectionKey(choice.target);
+  })) {
+    throw new Error("The selected target collection is no longer available.");
   }
 
   var preview;
@@ -214,8 +251,9 @@ export async function openDocumentTransferWorkflow(options = {}) {
   setMessage(callbacks, TRANSFER_TEXT[mode].previewing, false);
   try {
     preview = await previewManagedDocumentTransfer(
+      source,
       checkedDocIds,
-      choice.targetScope,
+      choice.target,
       mode,
       choice.includeDescendants,
       options.clientOptions || {}

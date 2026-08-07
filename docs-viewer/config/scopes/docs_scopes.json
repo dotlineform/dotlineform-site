@@ -275,7 +275,7 @@
           "lifecycle": {
             "tool_id": "docs-viewer-scope-lifecycle",
             "report_host_doc_id": "d-20260807-082735-54d9d5",
-            "report_host_source_revision": "sha256:4150e978506f73651cfe3cf160300ff251844673ba8699fcddd00fac22fe5146"
+            "report_host_source_revision": "sha256:34da2e2af5fd86303069ff08137c32c87c6a20e14f70e81ada57b1b553cfc0c3"
           }
         }
       ],

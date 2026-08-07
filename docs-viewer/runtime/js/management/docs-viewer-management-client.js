@@ -1,4 +1,5 @@
 import {
+  normalizeManagedDocumentCollectionTarget,
   normalizeManagedDocumentTarget
 } from "./docs-viewer-management-document-target.js";
 
@@ -340,21 +341,33 @@ export function moveManagedDoc(docId, parentId, options) {
   }, options), options);
 }
 
-export function previewManagedDocumentTransfer(docIds, targetScope, transferMode, includeDescendants, options) {
+export function previewManagedDocumentTransfer(source, docIds, target, transferMode, includeDescendants, options) {
   var settings = Object.assign({}, options || {}, { acceptNotOk: true });
-  return fetchManagementJson("/docs/document-transfer-preview", "POST", scopedPayload({
+  var sourceCollection = normalizeManagedDocumentCollectionTarget(source);
+  var targetCollection = normalizeManagedDocumentCollectionTarget(target);
+  var payload = {
+    scope: sourceCollection.scope,
     doc_ids: docIds,
-    target_scope: targetScope,
+    target_scope: targetCollection.scope,
     transfer_mode: transferMode,
     include_descendants: includeDescendants === true
-  }, settings), settings);
+  };
+  if (sourceCollection.sub_scope) payload.sub_scope = sourceCollection.sub_scope;
+  if (targetCollection.sub_scope) payload.target_sub_scope = targetCollection.sub_scope;
+  return fetchManagementJson("/docs/document-transfer-preview", "POST", payload, settings);
 }
 
 export function applyManagedDocumentTransfer(applyPlan, options) {
-  return fetchManagementJson("/docs/document-transfer-apply", "POST", scopedPayload({
+  var sourceCollection = normalizeManagedDocumentCollectionTarget(
+    applyPlan && applyPlan.source
+  );
+  var payload = {
+    scope: sourceCollection.scope,
     apply_plan: applyPlan,
     confirm: true
-  }, options), options);
+  };
+  if (sourceCollection.sub_scope) payload.sub_scope = sourceCollection.sub_scope;
+  return fetchManagementJson("/docs/document-transfer-apply", "POST", payload, options);
 }
 
 export function openManagedDocSource(target, editor, options) {

@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -19,6 +20,7 @@ from docs_management_capabilities_service import (
     capability_scope_root_label,
 )
 import docs_local_links
+from repo_factory import docs_sub_scope_record
 
 def test_capabilities_advertise_generated_data_reads() -> None:
     with make_repo() as temp_path:
@@ -117,6 +119,16 @@ def test_capabilities_advertise_source_config_reads() -> None:
         "copy_source": True,
         "move_source": True,
         "target": True,
+        "collections": [
+            {
+                "target": {"scope": "studio"},
+                "label": "studio",
+                "copy_source": True,
+                "move_source": True,
+                "copy_target": True,
+                "move_target": True,
+            },
+        ],
     }
 
 
@@ -137,7 +149,59 @@ def test_public_scope_is_copy_source_but_not_move_source_or_transfer_target() ->
         "copy_source": True,
         "move_source": False,
         "target": False,
+        "collections": [
+            {
+                "target": {"scope": "studio"},
+                "label": "studio",
+                "copy_source": True,
+                "move_source": False,
+                "copy_target": False,
+                "move_target": False,
+            },
+        ],
     }
+
+
+def test_capabilities_list_exact_parent_and_child_transfer_collections() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
+        config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
+        config = json.loads(config_path.read_text(encoding="utf-8"))
+        config["scopes"][0]["sub_scopes"] = [
+            docs_sub_scope_record("studio", "works", title="Works"),
+        ]
+        config_path.write_text(
+            json.dumps(config, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        (
+            repo_root
+            / "docs-viewer/scopes/studio/source/sub-scopes/works/documents"
+        ).mkdir(parents=True)
+        payload = docs_management_service.capabilities_payload(repo_root)
+
+    collections = payload["capabilities"]["scopes"]["studio"][
+        "document_transfer"
+    ]["collections"]
+    assert collections == [
+        {
+            "target": {"scope": "studio"},
+            "label": "studio",
+            "copy_source": True,
+            "move_source": True,
+            "copy_target": True,
+            "move_target": True,
+        },
+        {
+            "target": {"scope": "studio", "sub_scope": "works"},
+            "label": "studio / Works",
+            "copy_source": True,
+            "move_source": False,
+            "copy_target": True,
+            "move_target": False,
+        },
+    ]
 
 
 def test_external_scope_capability_uses_portable_root_label() -> None:

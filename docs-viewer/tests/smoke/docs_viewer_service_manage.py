@@ -2343,37 +2343,62 @@ def assert_document_transfer_module_contract(page: Page) -> None:
                     studio: {
                         scope_type: 'local',
                         available: true,
-                        document_transfer: { copy_source: true, move_source: true, target: true },
+                        document_transfer: {
+                            collections: [{
+                                target: { scope: 'studio', sub_scope: 'projects' },
+                                label: 'studio / Projects',
+                                copy_source: true,
+                                move_source: false,
+                                copy_target: true,
+                                move_target: false
+                            }]
+                        },
                         root: 'scopes/studio'
                     },
                     public: {
                         scope_type: 'public',
                         available: true,
-                        document_transfer: { copy_source: true, move_source: false, target: false },
+                        document_transfer: { collections: [{
+                            target: { scope: 'public' }, label: 'public',
+                            copy_source: true, move_source: false,
+                            copy_target: false, move_target: false
+                        }] },
                         root: 'scopes/public'
                     },
                     notes: {
                         scope_type: 'local_external',
                         available: true,
-                        document_transfer: { copy_source: true, move_source: true, target: true },
+                        document_transfer: { collections: [{
+                            target: { scope: 'notes', sub_scope: 'works' },
+                            label: 'notes / Works', copy_source: true, move_source: false,
+                            copy_target: true, move_target: false
+                        }] },
                         root: 'scopes/notes'
                     },
                     processing: {
                         scope_type: 'local',
                         available: true,
-                        document_transfer: { copy_source: true, move_source: true, target: true },
+                        document_transfer: { collections: [{
+                            target: { scope: 'processing' }, label: 'processing',
+                            copy_source: true, move_source: true,
+                            copy_target: true, move_target: true
+                        }] },
                         root: 'scopes/processing'
                     },
                     missing: {
                         scope_type: 'local',
                         available: false,
-                        document_transfer: { copy_source: false, move_source: false, target: false },
+                        document_transfer: { collections: [] },
                         root: 'scopes/missing'
                     },
                     readonly: {
                         scope_type: 'local',
                         available: true,
-                        document_transfer: { copy_source: true, move_source: false, target: false },
+                        document_transfer: { collections: [{
+                            target: { scope: 'readonly' }, label: 'readonly',
+                            copy_source: true, move_source: false,
+                            copy_target: false, move_target: false
+                        }] },
                         root: 'scopes/readonly'
                     }
                 }
@@ -2387,17 +2412,31 @@ def assert_document_transfer_module_contract(page: Page) -> None:
                     json: () => Promise.resolve({ ok: true })
                 });
             };
-            await client.previewManagedDocumentTransfer(['source-a', 'source-b'], 'notes', 'copy', true, {
-                baseUrl: 'http://manage.test', scope: 'studio', fetch
-            });
-            await client.applyManagedDocumentTransfer({ schema_version: 'receipt' }, {
-                baseUrl: 'http://manage.test', scope: 'studio', fetch
+            await client.previewManagedDocumentTransfer(
+                { scope: 'studio', sub_scope: 'projects' },
+                ['source-a', 'source-b'],
+                { scope: 'notes', sub_scope: 'works' },
+                'copy',
+                false,
+                { baseUrl: 'http://manage.test', fetch }
+            );
+            await client.applyManagedDocumentTransfer({
+                schema_version: 'receipt',
+                source: { scope: 'studio', sub_scope: 'projects' }
+            }, {
+                baseUrl: 'http://manage.test', fetch
             });
             return {
                 supported: capabilities.documentTransferSupported(payload),
-                copySource: capabilities.documentTransferSourceSupported(payload, 'studio', 'copy'),
-                moveSource: capabilities.documentTransferSourceSupported(payload, 'public', 'move'),
-                targets: capabilities.documentTransferTargetScopes(payload, 'studio'),
+                copySource: capabilities.documentTransferSourceSupported(
+                    payload, { scope: 'studio', sub_scope: 'projects' }, 'copy'
+                ),
+                moveSource: capabilities.documentTransferSourceSupported(
+                    payload, { scope: 'public' }, 'move'
+                ),
+                targets: capabilities.documentTransferTargets(
+                    payload, { scope: 'studio', sub_scope: 'projects' }, 'copy'
+                ),
                 requests
             };
         }"""
@@ -2407,25 +2446,31 @@ def assert_document_transfer_module_contract(page: Page) -> None:
         "copySource": True,
         "moveSource": False,
         "targets": [
-            {"scopeId": "notes", "label": "notes", "root": "scopes/notes"},
-            {"scopeId": "processing", "label": "processing", "root": "scopes/processing"},
+            {"target": {"scope": "notes", "sub_scope": "works"}, "label": "notes / Works"},
+            {"target": {"scope": "processing"}, "label": "processing"},
         ],
         "requests": [
             {
                 "url": "http://manage.test/docs/document-transfer-preview",
                 "body": {
                     "scope": "studio",
+                    "sub_scope": "projects",
                     "doc_ids": ["source-a", "source-b"],
                     "target_scope": "notes",
+                    "target_sub_scope": "works",
                     "transfer_mode": "copy",
-                    "include_descendants": True,
+                    "include_descendants": False,
                 },
             },
             {
                 "url": "http://manage.test/docs/document-transfer-apply",
                 "body": {
                     "scope": "studio",
-                    "apply_plan": {"schema_version": "receipt"},
+                    "sub_scope": "projects",
+                    "apply_plan": {
+                        "schema_version": "receipt",
+                        "source": {"scope": "studio", "sub_scope": "projects"},
+                    },
                     "confirm": True,
                 },
             },

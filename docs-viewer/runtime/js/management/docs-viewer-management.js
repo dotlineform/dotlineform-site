@@ -1026,6 +1026,7 @@ export function initDocsViewerManagement(context) {
   return {
     applyConfig: applyConfig,
     canDragCurrentDoc: canDragCurrentDoc,
+    copySubscopeDocuments: indexController.copySubscopeDocuments,
     createSubscopeDocument: actionController.handleCreateSubscopeDocument,
     handleDocumentKeydown: eventRouter.handleDocumentKeydown,
     handleAppManagementControl: handleAppManagementControl,

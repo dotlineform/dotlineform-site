@@ -430,6 +430,22 @@ def test_checked_scope_config_opts_only_analysis_tags_into_return_import() -> No
     assert analysis_works.lifecycle.report_host_doc_id == (
         "d-20260807-082735-54d9d5"
     )
+    report_host_source = (
+        REPO_ROOT
+        / "docs-viewer/scopes/analysis/source/documents"
+        / "d-20260807-082735-54d9d5.md"
+    ).read_text(encoding="utf-8")
+    assert "viewer_report_access: public\n" in report_host_source
+    report_host_payload = json.loads(
+        (
+            REPO_ROOT
+            / "docs-viewer/scopes/analysis/published/documents/by-id"
+            / "d-20260807-082735-54d9d5.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert report_host_payload["viewer_report"] == "docs_subscope"
+    assert report_host_payload["viewer_report_access"] == "public"
+    assert report_host_payload["viewer_report_subscope"] == "works"
     assert analysis_works.public_projection is not None
     assert analysis_works.public_projection.documents.location.path.as_posix() == (
         "site/assets/data/docs/scopes/analysis/works"
