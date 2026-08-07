@@ -17,6 +17,8 @@ html[data-theme="light"]{
   --docs-viewer-theme-link: #3f3f3f;
   --docs-viewer-theme-link-hover: #1e1e1e;
   --docs-viewer-theme-link-visited: #5b2aa6;
+  --docs-viewer-theme-content-link: #005fcc;
+  --docs-viewer-theme-content-link-visited: #5b2aa6;
   --docs-viewer-theme-focus-ring: #3f3f3f;
   --docs-viewer-theme-selection-surface: #dce8f8;
   --docs-viewer-theme-selection-text: #111;
@@ -41,6 +43,8 @@ html[data-theme="dark"]{
   --docs-viewer-theme-link: #7bb0ff;
   --docs-viewer-theme-link-hover: #a7c9ff;
   --docs-viewer-theme-link-visited: #c39bff;
+  --docs-viewer-theme-content-link: #7bb0ff;
+  --docs-viewer-theme-content-link-visited: #c39bff;
   --docs-viewer-theme-focus-ring: #a7c9ff;
   --docs-viewer-theme-selection-surface: #263b60;
   --docs-viewer-theme-selection-text: #f2f2f2;

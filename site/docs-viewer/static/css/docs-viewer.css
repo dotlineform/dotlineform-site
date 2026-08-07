@@ -33,6 +33,8 @@
   --docs-viewer-link: var(--docs-viewer-theme-link);
   --docs-viewer-link-hover: var(--docs-viewer-theme-link-hover);
   --docs-viewer-link-visited: var(--docs-viewer-theme-link-visited);
+  --docs-viewer-content-link: var(--docs-viewer-theme-content-link);
+  --docs-viewer-content-link-visited: var(--docs-viewer-theme-content-link-visited);
   --docs-viewer-focus-ring: var(--docs-viewer-theme-focus-ring);
   --docs-viewer-selection-bg: var(--docs-viewer-theme-selection-surface);
   --docs-viewer-selection-text: var(--docs-viewer-theme-selection-text);
@@ -926,6 +928,35 @@ body.docs-viewer-service{
 .docsViewer__content code{
   overflow-wrap: normal;
   word-break: normal;
+}
+
+.docsViewer__content :where(a:not(.docsViewer__diagramDetailControl, .docsViewer__contentDetailOpenNewTab, .docsViewerReport__cellLink)):link{
+  color: var(--docs-viewer-content-link);
+  text-decoration: none;
+}
+
+.docsViewer__content :where(a:not(.docsViewer__diagramDetailControl, .docsViewer__contentDetailOpenNewTab, .docsViewerReport__cellLink)):visited{
+  color: var(--docs-viewer-content-link-visited);
+  text-decoration: none;
+}
+
+.docsViewer__content :where(a:not(.docsViewer__diagramDetailControl, .docsViewer__contentDetailOpenNewTab, .docsViewerReport__cellLink)):link:hover{
+  color: var(--docs-viewer-content-link);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.docsViewer__content :where(a:not(.docsViewer__diagramDetailControl, .docsViewer__contentDetailOpenNewTab, .docsViewerReport__cellLink)):visited:hover{
+  color: var(--docs-viewer-content-link-visited);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.docsViewer__content :where(a:not(.docsViewer__diagramDetailControl, .docsViewer__contentDetailOpenNewTab, .docsViewerReport__cellLink)):focus-visible{
+  outline: 2px solid var(--docs-viewer-focus-ring);
+  outline-offset: 2px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .docsViewer__content pre{
