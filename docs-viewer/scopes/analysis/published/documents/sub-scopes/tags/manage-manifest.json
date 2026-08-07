@@ -4,7 +4,6 @@
       "doc_id": "d-20260727-225608-579c27",
       "title": "absence",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-31 07:02:25",
       "customisation": {
         "group": "theme"
@@ -14,7 +13,6 @@
       "doc_id": "d-20260727-225608-b5e4f7",
       "title": "alienation",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -24,7 +22,6 @@
       "doc_id": "d-20260727-225608-51df31",
       "title": "ambiguity",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -34,7 +31,6 @@
       "doc_id": "d-20260727-225608-79f04e",
       "title": "angular",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -44,7 +40,6 @@
       "doc_id": "d-20260727-225608-84a2a1",
       "title": "animal",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -54,7 +49,6 @@
       "doc_id": "d-20260727-225608-651586",
       "title": "anxiety",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -64,7 +58,6 @@
       "doc_id": "d-20260727-225608-208450",
       "title": "architecture",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -74,7 +67,6 @@
       "doc_id": "d-20260727-225608-24dfb5",
       "title": "astronomy",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -84,7 +76,6 @@
       "doc_id": "d-20260727-225608-ac0827",
       "title": "asymmetric",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -94,7 +85,6 @@
       "doc_id": "d-20260727-225608-ecb7a9",
       "title": "attention",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -104,7 +94,6 @@
       "doc_id": "d-20260727-225608-32e172",
       "title": "awe",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -114,7 +103,6 @@
       "doc_id": "d-20260727-225608-c4b45c",
       "title": "balanced",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -124,7 +112,6 @@
       "doc_id": "d-20260727-225608-87a3e0",
       "title": "becoming",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -134,7 +121,6 @@
       "doc_id": "d-20260727-225608-10fc9c",
       "title": "biology",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -144,14 +130,12 @@
       "doc_id": "d-20260624-204534-0d6ae2",
       "title": "bird",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-06-24"
     },
     {
       "doc_id": "d-20260727-225608-f7402d",
       "title": "bird",
       "ui_status": "review",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -161,14 +145,13 @@
       "doc_id": "d-20260730-143553-290a71",
       "title": "bird 2",
       "ui_status": "",
-      "viewable": false,
-      "last_updated": "2026-07-30 14:35:53"
+      "last_updated": "2026-07-30 14:35:53",
+      "publishable": false
     },
     {
       "doc_id": "d-20260727-225608-932f79",
       "title": "blurred",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -178,7 +161,6 @@
       "doc_id": "d-20260727-225608-7fbfa5",
       "title": "body",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -188,7 +170,6 @@
       "doc_id": "d-20260727-225608-381c61",
       "title": "botany",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -198,7 +179,6 @@
       "doc_id": "d-20260727-225608-440ecd",
       "title": "boundary",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -208,7 +188,6 @@
       "doc_id": "d-20260727-225608-833b94",
       "title": "braided",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -218,7 +197,6 @@
       "doc_id": "d-20260727-225608-84a22b",
       "title": "branch",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -228,7 +206,6 @@
       "doc_id": "d-20260727-225608-591e49",
       "title": "branching",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -238,7 +215,6 @@
       "doc_id": "d-20260727-225608-b85e09",
       "title": "broken",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -248,7 +224,6 @@
       "doc_id": "d-20260727-225608-ecf994",
       "title": "building",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -258,7 +233,6 @@
       "doc_id": "d-20260727-225608-1e1df9",
       "title": "calm",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -268,7 +242,6 @@
       "doc_id": "d-20260727-225608-ecb267",
       "title": "cellular",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -278,7 +251,6 @@
       "doc_id": "d-20260727-225608-75f272",
       "title": "central",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -288,7 +260,6 @@
       "doc_id": "d-20260727-225608-8d753d",
       "title": "chance",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -298,7 +269,6 @@
       "doc_id": "d-20260727-225608-30dfef",
       "title": "change",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -308,7 +278,6 @@
       "doc_id": "d-20260727-225608-afb0a7",
       "title": "chaotic",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -318,7 +287,6 @@
       "doc_id": "d-20260727-225608-0d540d",
       "title": "clarity",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -328,7 +296,6 @@
       "doc_id": "d-20260727-225608-e546d0",
       "title": "cloud",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -338,7 +305,6 @@
       "doc_id": "d-20260727-225608-0fa362",
       "title": "cloudlike",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -348,7 +314,6 @@
       "doc_id": "d-20260727-225608-8b320d",
       "title": "communication",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -358,7 +323,6 @@
       "doc_id": "d-20260727-225608-cfc88e",
       "title": "compressed",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -368,7 +332,6 @@
       "doc_id": "d-20260727-225608-616fda",
       "title": "confusion",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -378,7 +341,6 @@
       "doc_id": "d-20260727-225608-45ac22",
       "title": "connection",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -388,7 +350,6 @@
       "doc_id": "d-20260727-225608-bed170",
       "title": "consciousness",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -398,7 +359,6 @@
       "doc_id": "d-20260727-225608-686651",
       "title": "containment",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -408,7 +368,6 @@
       "doc_id": "d-20260727-225608-3374bd",
       "title": "contemplation",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -418,7 +377,6 @@
       "doc_id": "d-20260727-225608-2497a8",
       "title": "continuous",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -428,7 +386,6 @@
       "doc_id": "d-20260727-225608-330a89",
       "title": "contour",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -438,7 +395,6 @@
       "doc_id": "d-20260727-225608-f8abb3",
       "title": "contoured",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -448,7 +404,6 @@
       "doc_id": "d-20260727-225608-8dc973",
       "title": "control",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -458,7 +413,6 @@
       "doc_id": "d-20260727-225608-6d8930",
       "title": "craft",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -468,7 +422,6 @@
       "doc_id": "d-20260727-225608-21836e",
       "title": "curve",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -478,7 +431,6 @@
       "doc_id": "d-20260727-225608-a34891",
       "title": "curvilinear",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -488,7 +440,6 @@
       "doc_id": "d-20260727-225608-db297c",
       "title": "cutoff",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -498,7 +449,6 @@
       "doc_id": "d-20260727-225608-c04eca",
       "title": "cycle",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -508,7 +458,6 @@
       "doc_id": "d-20260727-225608-a60c24",
       "title": "dark",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -518,7 +467,6 @@
       "doc_id": "d-20260727-225608-78ee39",
       "title": "decay",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -528,7 +476,6 @@
       "doc_id": "d-20260727-225608-ca7056",
       "title": "decoding",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -538,7 +485,6 @@
       "doc_id": "d-20260727-225608-2af018",
       "title": "dense",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -548,7 +494,6 @@
       "doc_id": "d-20260727-225608-c88144",
       "title": "depth",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -558,7 +503,6 @@
       "doc_id": "d-20260727-225608-1ee86d",
       "title": "diagram",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -568,7 +512,6 @@
       "doc_id": "d-20260727-225608-be5e27",
       "title": "digital",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -578,7 +521,6 @@
       "doc_id": "d-20260727-225608-a45198",
       "title": "dispersed",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -588,7 +530,6 @@
       "doc_id": "d-20260727-225608-6c8101",
       "title": "door",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -598,7 +539,6 @@
       "doc_id": "d-20260727-225608-90eabc",
       "title": "dot",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -608,7 +548,6 @@
       "doc_id": "d-20260727-225608-22f690",
       "title": "drawing",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -618,7 +557,6 @@
       "doc_id": "d-20260727-225608-b5542c",
       "title": "drift",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -628,7 +566,6 @@
       "doc_id": "d-20260727-225608-44902d",
       "title": "droplet",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -638,7 +575,6 @@
       "doc_id": "d-20260727-225608-f1e271",
       "title": "duration",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -648,7 +584,6 @@
       "doc_id": "d-20260727-225608-fb78ac",
       "title": "ecology",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -658,7 +593,6 @@
       "doc_id": "d-20260727-225608-57a4c7",
       "title": "edge",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -668,7 +602,6 @@
       "doc_id": "d-20260727-225608-0d87ce",
       "title": "embodiment",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -678,7 +611,6 @@
       "doc_id": "d-20260727-225608-55e44d",
       "title": "emergence",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -688,7 +620,6 @@
       "doc_id": "d-20260727-225608-0ccf1f",
       "title": "emptiness",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -698,7 +629,6 @@
       "doc_id": "d-20260727-225608-82cce1",
       "title": "enclosed",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -708,7 +638,6 @@
       "doc_id": "d-20260727-225608-11de40",
       "title": "encoding",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -718,7 +647,6 @@
       "doc_id": "d-20260727-225608-295b0c",
       "title": "entanglement",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -728,7 +656,6 @@
       "doc_id": "d-20260727-225608-04889f",
       "title": "eye",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -738,7 +665,6 @@
       "doc_id": "d-20260727-225608-3cd1dd",
       "title": "face",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -748,7 +674,6 @@
       "doc_id": "d-20260727-225608-32eda3",
       "title": "fear",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -758,7 +683,6 @@
       "doc_id": "d-20260727-225608-a607e0",
       "title": "fence",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -768,7 +692,6 @@
       "doc_id": "d-20260727-225608-531c17",
       "title": "fiber",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -778,7 +701,6 @@
       "doc_id": "d-20260727-225608-c913bf",
       "title": "field",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -788,7 +710,6 @@
       "doc_id": "d-20260727-225608-6c146c",
       "title": "fieldlike",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -798,7 +719,6 @@
       "doc_id": "d-20260727-225608-4ab240",
       "title": "figure",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -808,7 +728,6 @@
       "doc_id": "d-20260727-225608-8a0601",
       "title": "filament",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -818,7 +737,6 @@
       "doc_id": "d-20260727-225608-3899cc",
       "title": "flat",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -828,7 +746,6 @@
       "doc_id": "d-20260727-225608-c21bf0",
       "title": "flow",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -838,7 +755,6 @@
       "doc_id": "d-20260727-225608-63967a",
       "title": "flower",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -848,7 +764,6 @@
       "doc_id": "d-20260727-225608-6f0bef",
       "title": "fog",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -858,7 +773,6 @@
       "doc_id": "d-20260727-225608-f3f980",
       "title": "form",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -868,7 +782,6 @@
       "doc_id": "d-20260727-225608-0066f5",
       "title": "fragility",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -878,7 +791,6 @@
       "doc_id": "d-20260727-225608-3bf2bc",
       "title": "fragment",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -888,7 +800,6 @@
       "doc_id": "d-20260727-225608-e124eb",
       "title": "fragmentation",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -898,7 +809,6 @@
       "doc_id": "d-20260727-225608-e8d7a7",
       "title": "fragmented",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -908,7 +818,6 @@
       "doc_id": "d-20260727-225608-f9d97a",
       "title": "frame",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -918,7 +827,6 @@
       "doc_id": "d-20260727-225608-ef31f9",
       "title": "freedom",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -928,7 +836,6 @@
       "doc_id": "d-20260727-225608-3a5f20",
       "title": "geology",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -938,7 +845,6 @@
       "doc_id": "d-20260727-225608-ba99c7",
       "title": "gesture",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -948,7 +854,6 @@
       "doc_id": "d-20260727-225608-d9afd4",
       "title": "glitch",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -958,7 +863,6 @@
       "doc_id": "d-20260727-225608-34d9fb",
       "title": "grainy",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -968,7 +872,6 @@
       "doc_id": "d-20260727-225608-c474d0",
       "title": "granular",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -978,7 +881,6 @@
       "doc_id": "d-20260727-225608-93f7d5",
       "title": "grass",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -988,7 +890,6 @@
       "doc_id": "d-20260727-225608-723889",
       "title": "grid",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -998,7 +899,6 @@
       "doc_id": "d-20260727-225608-aa54c9",
       "title": "grief",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1008,7 +908,6 @@
       "doc_id": "d-20260727-225608-fd71ef",
       "title": "growth",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1018,7 +917,6 @@
       "doc_id": "d-20260727-225608-dc2548",
       "title": "hand",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1028,7 +926,6 @@
       "doc_id": "d-20260727-225608-2d38a1",
       "title": "hard",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -1038,7 +935,6 @@
       "doc_id": "d-20260727-225608-31a370",
       "title": "hope",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1048,7 +944,6 @@
       "doc_id": "d-20260727-225608-1091be",
       "title": "i-ching",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -1058,7 +953,6 @@
       "doc_id": "d-20260727-225608-13749a",
       "title": "identity",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -1068,7 +962,6 @@
       "doc_id": "d-20260727-225608-dd62ff",
       "title": "information",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -1078,7 +971,6 @@
       "doc_id": "d-20260727-225608-ce80bb",
       "title": "insect",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1088,7 +980,6 @@
       "doc_id": "d-20260727-225608-37bb5c",
       "title": "interpretation",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1098,7 +989,6 @@
       "doc_id": "d-20260727-225608-ef7408",
       "title": "intimacy",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1108,7 +998,6 @@
       "doc_id": "d-20260727-225608-107781",
       "title": "joy",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1118,7 +1007,6 @@
       "doc_id": "d-20260727-225608-7927df",
       "title": "knotted",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -1128,7 +1016,6 @@
       "doc_id": "d-20260727-225608-b61c55",
       "title": "landscape",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -1138,7 +1025,6 @@
       "doc_id": "d-20260727-225608-9eb839",
       "title": "language",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -1148,7 +1034,6 @@
       "doc_id": "d-20260727-225608-7abff3",
       "title": "layered",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -1158,7 +1043,6 @@
       "doc_id": "d-20260727-225608-bd3137",
       "title": "leaf",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1168,7 +1052,6 @@
       "doc_id": "d-20260727-225608-2c1b7a",
       "title": "letter",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1178,7 +1061,6 @@
       "doc_id": "d-20260727-225608-e943ff",
       "title": "lichen",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1188,7 +1070,6 @@
       "doc_id": "d-20260727-225608-200179",
       "title": "light",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -1198,7 +1079,6 @@
       "doc_id": "d-20260727-225608-85a70e",
       "title": "line",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -1208,7 +1088,6 @@
       "doc_id": "d-20260727-225608-6e75fd",
       "title": "linear",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -1218,7 +1097,6 @@
       "doc_id": "d-20260727-225608-603ccd",
       "title": "loop",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1228,7 +1106,6 @@
       "doc_id": "d-20260727-225608-b2a6f0",
       "title": "looped",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -1238,7 +1115,6 @@
       "doc_id": "d-20260727-225608-476c0b",
       "title": "low-contrast",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -1248,7 +1124,6 @@
       "doc_id": "d-20260727-225608-20f785",
       "title": "map",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1258,7 +1133,6 @@
       "doc_id": "d-20260727-225608-012951",
       "title": "margin",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -1268,7 +1142,6 @@
       "doc_id": "d-20260727-225608-452c13",
       "title": "mark",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1278,7 +1151,6 @@
       "doc_id": "d-20260727-225608-07e0eb",
       "title": "materiality",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -1288,7 +1160,6 @@
       "doc_id": "d-20260727-225608-d39666",
       "title": "mathematics",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -1298,7 +1169,6 @@
       "doc_id": "d-20260727-225608-b7eb37",
       "title": "maximal",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -1308,7 +1178,6 @@
       "doc_id": "d-20260727-225608-5cb64c",
       "title": "melancholy",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1318,7 +1187,6 @@
       "doc_id": "d-20260727-225608-169780",
       "title": "memory",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -1328,7 +1196,6 @@
       "doc_id": "d-20260727-225608-38c206",
       "title": "memory-trace",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1338,7 +1205,6 @@
       "doc_id": "d-20260727-225608-7fe018",
       "title": "micro-macro",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1348,7 +1214,6 @@
       "doc_id": "d-20260727-225608-96dc3a",
       "title": "minimal",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -1358,7 +1223,6 @@
       "doc_id": "d-20260727-225608-753567",
       "title": "mirror",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1368,7 +1232,6 @@
       "doc_id": "d-20260727-225608-955195",
       "title": "monochrome",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -1378,7 +1241,6 @@
       "doc_id": "d-20260727-225608-6cac49",
       "title": "moon",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1388,7 +1250,6 @@
       "doc_id": "d-20260727-225608-7d2c08",
       "title": "moss",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1398,7 +1259,6 @@
       "doc_id": "d-20260727-225608-422df7",
       "title": "movement",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1408,7 +1268,6 @@
       "doc_id": "d-20260727-225608-84860c",
       "title": "music",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -1418,7 +1277,6 @@
       "doc_id": "d-20260727-225608-626b4c",
       "title": "myth",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1428,7 +1286,6 @@
       "doc_id": "d-20260727-225608-03e966",
       "title": "nature",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -1438,14 +1295,12 @@
       "doc_id": "d-20260624-204534-ecfc12",
       "title": "nerve",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27 21:46:03"
     },
     {
       "doc_id": "d-20260727-225608-2517eb",
       "title": "nerve",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -1455,7 +1310,6 @@
       "doc_id": "d-20260727-225608-438fab",
       "title": "net",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1465,7 +1319,6 @@
       "doc_id": "d-20260727-225608-6b3825",
       "title": "netted",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -1475,7 +1328,6 @@
       "doc_id": "d-20260727-225608-8104f2",
       "title": "networks",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -1485,7 +1337,6 @@
       "doc_id": "d-20260727-225608-6796ef",
       "title": "noise",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1495,7 +1346,6 @@
       "doc_id": "d-20260727-225608-1bf2c3",
       "title": "number",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1505,7 +1355,6 @@
       "doc_id": "d-20260727-225608-23cb8e",
       "title": "object",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1515,7 +1364,6 @@
       "doc_id": "d-20260727-225608-0e1745",
       "title": "open",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -1525,7 +1373,6 @@
       "doc_id": "d-20260727-225608-dbeb69",
       "title": "order",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1535,14 +1382,12 @@
       "doc_id": "d-20260624-204534-e3de0b",
       "title": "ordered",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-06-24"
     },
     {
       "doc_id": "d-20260727-225608-4c56a9",
       "title": "overlay",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -1552,7 +1397,6 @@
       "doc_id": "d-20260727-225608-44c370",
       "title": "overwhelm",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1562,7 +1406,6 @@
       "doc_id": "d-20260727-225608-6e036f",
       "title": "path",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1572,7 +1415,6 @@
       "doc_id": "d-20260727-225608-f5791d",
       "title": "pattern",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1582,7 +1424,6 @@
       "doc_id": "d-20260727-225608-16b7b8",
       "title": "perception",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -1592,7 +1433,6 @@
       "doc_id": "d-20260727-225608-6250bf",
       "title": "peripheral",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -1602,7 +1442,6 @@
       "doc_id": "d-20260727-225608-0b3df4",
       "title": "photography",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -1612,7 +1451,6 @@
       "doc_id": "d-20260727-225608-58741a",
       "title": "physics",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -1622,7 +1460,6 @@
       "doc_id": "d-20260727-225608-b84d7e",
       "title": "play",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1632,7 +1469,6 @@
       "doc_id": "d-20260727-225608-9e62b8",
       "title": "point",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1642,7 +1478,6 @@
       "doc_id": "d-20260727-225608-27bc3b",
       "title": "polychrome",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -1652,7 +1487,6 @@
       "doc_id": "d-20260727-225608-4e62cb",
       "title": "porous",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -1662,7 +1496,6 @@
       "doc_id": "d-20260727-225608-2f1649",
       "title": "presence",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1672,7 +1505,6 @@
       "doc_id": "d-20260727-225608-759902",
       "title": "print",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -1682,7 +1514,6 @@
       "doc_id": "d-20260727-225608-d2e201",
       "title": "quantum",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -1692,7 +1523,6 @@
       "doc_id": "d-20260727-225608-761a32",
       "title": "quiet",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -1702,7 +1532,6 @@
       "doc_id": "d-20260727-225608-812ad8",
       "title": "radial",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -1712,7 +1541,6 @@
       "doc_id": "d-20260727-225608-085a6c",
       "title": "rain",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1722,7 +1550,6 @@
       "doc_id": "d-20260727-225608-b10f2d",
       "title": "random",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -1732,7 +1559,6 @@
       "doc_id": "d-20260727-225608-8258a1",
       "title": "reconstruction",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1742,7 +1568,6 @@
       "doc_id": "d-20260727-225608-60991f",
       "title": "recurrence",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1752,7 +1577,6 @@
       "doc_id": "d-20260727-225608-a4d142",
       "title": "reflection",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1762,7 +1586,6 @@
       "doc_id": "d-20260727-225608-9c842f",
       "title": "release",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1772,7 +1595,6 @@
       "doc_id": "d-20260727-225608-3eabe1",
       "title": "renewal",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1782,7 +1604,6 @@
       "doc_id": "d-20260727-225608-520788",
       "title": "repair",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1792,7 +1613,6 @@
       "doc_id": "d-20260727-225608-708a9e",
       "title": "repetition",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1802,7 +1622,6 @@
       "doc_id": "d-20260727-225608-e97d11",
       "title": "resilience",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1812,7 +1631,6 @@
       "doc_id": "d-20260727-225608-2a8ef3",
       "title": "resistance",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1822,7 +1640,6 @@
       "doc_id": "d-20260727-225608-6555f7",
       "title": "restlessness",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1832,7 +1649,6 @@
       "doc_id": "d-20260727-225608-f589fc",
       "title": "return",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1842,7 +1658,6 @@
       "doc_id": "d-20260727-225608-5b31e2",
       "title": "rhythmic",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -1852,7 +1667,6 @@
       "doc_id": "d-20260727-225608-d6cc89",
       "title": "ritual",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1862,7 +1676,6 @@
       "doc_id": "d-20260727-225608-52dcb3",
       "title": "road",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1872,7 +1685,6 @@
       "doc_id": "d-20260727-225608-36c93d",
       "title": "rock",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1882,7 +1694,6 @@
       "doc_id": "d-20260727-225608-5296a2",
       "title": "root",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1892,7 +1703,6 @@
       "doc_id": "d-20260727-225608-d41939",
       "title": "ruin",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1902,7 +1712,6 @@
       "doc_id": "d-20260727-225608-8fec97",
       "title": "sand",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1912,7 +1721,6 @@
       "doc_id": "d-20260727-225608-2dd29d",
       "title": "scale",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -1922,7 +1730,6 @@
       "doc_id": "d-20260727-225608-42c9e0",
       "title": "science",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -1932,7 +1739,6 @@
       "doc_id": "d-20260727-225608-8d3c1d",
       "title": "screen",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1942,7 +1748,6 @@
       "doc_id": "d-20260727-225608-2ded48",
       "title": "seed",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1952,7 +1757,6 @@
       "doc_id": "d-20260727-225608-388a29",
       "title": "shadow",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1962,7 +1766,6 @@
       "doc_id": "d-20260727-225608-e18b6c",
       "title": "shallow",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -1972,7 +1775,6 @@
       "doc_id": "d-20260727-225608-b2d217",
       "title": "shape",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -1982,7 +1784,6 @@
       "doc_id": "d-20260727-225608-6bdf47",
       "title": "sharp",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -1992,7 +1793,6 @@
       "doc_id": "d-20260727-225608-c11b96",
       "title": "signal",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -2002,7 +1802,6 @@
       "doc_id": "d-20260727-225608-9b8192",
       "title": "silhouette",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -2012,7 +1811,6 @@
       "doc_id": "d-20260727-225608-99c3be",
       "title": "skin",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -2022,7 +1820,6 @@
       "doc_id": "d-20260727-225608-ed1025",
       "title": "sky",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -2032,7 +1829,6 @@
       "doc_id": "d-20260727-225608-3239cc",
       "title": "slaughter",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -2042,7 +1838,6 @@
       "doc_id": "d-20260727-225608-0813e3",
       "title": "smooth",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -2052,7 +1847,6 @@
       "doc_id": "d-20260727-225608-dc0028",
       "title": "soft",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -2062,7 +1856,6 @@
       "doc_id": "d-20260727-225608-482c64",
       "title": "sorrow",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -2072,7 +1865,6 @@
       "doc_id": "d-20260727-225608-24efce",
       "title": "sparse",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -2082,7 +1874,6 @@
       "doc_id": "d-20260727-225608-391f5b",
       "title": "spiralling",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -2092,7 +1883,6 @@
       "doc_id": "d-20260727-225608-25c814",
       "title": "splash",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -2102,7 +1892,6 @@
       "doc_id": "d-20260727-225608-e3851f",
       "title": "stacked",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -2112,7 +1901,6 @@
       "doc_id": "d-20260727-225608-f543c8",
       "title": "stain",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -2122,7 +1910,6 @@
       "doc_id": "d-20260727-225608-933750",
       "title": "stairs",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -2132,7 +1919,6 @@
       "doc_id": "d-20260727-225608-f5ddde",
       "title": "stillness",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -2142,7 +1928,6 @@
       "doc_id": "d-20260727-225608-6f785e",
       "title": "stone",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -2152,7 +1937,6 @@
       "doc_id": "d-20260727-225608-7be84b",
       "title": "stroke",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -2162,7 +1946,6 @@
       "doc_id": "d-20260727-225608-49e2d4",
       "title": "sun",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -2172,7 +1955,6 @@
       "doc_id": "d-20260727-225608-124217",
       "title": "surface",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -2182,7 +1964,6 @@
       "doc_id": "d-20260727-225608-43e86d",
       "title": "symbol",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -2192,7 +1973,6 @@
       "doc_id": "d-20260727-225608-557834",
       "title": "symmetric",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -2202,7 +1982,6 @@
       "doc_id": "d-20260727-225608-3ccb9e",
       "title": "system",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -2212,7 +1991,6 @@
       "doc_id": "d-20260727-225608-f16645",
       "title": "tangled",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -2222,7 +2000,6 @@
       "doc_id": "d-20260727-225608-4c4195",
       "title": "technology",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -2232,7 +2009,6 @@
       "doc_id": "d-20260727-225608-2c1750",
       "title": "tension",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -2242,7 +2018,6 @@
       "doc_id": "d-20260727-225608-6c7384",
       "title": "text",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -2252,7 +2027,6 @@
       "doc_id": "d-20260727-225608-fb0e11",
       "title": "textured",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -2262,7 +2036,6 @@
       "doc_id": "d-20260727-225608-ae606d",
       "title": "threadlike",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -2272,7 +2045,6 @@
       "doc_id": "d-20260727-225608-cbb3d7",
       "title": "threshold",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -2282,7 +2054,6 @@
       "doc_id": "d-20260727-225608-edadc1",
       "title": "time",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -2292,7 +2063,6 @@
       "doc_id": "d-20260727-225608-7893a2",
       "title": "trace",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -2302,7 +2072,6 @@
       "doc_id": "d-20260727-225608-12c5ee",
       "title": "transformation",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -2312,7 +2081,6 @@
       "doc_id": "d-20260727-225608-8be4b8",
       "title": "translation",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -2322,7 +2090,6 @@
       "doc_id": "d-20260727-225608-e0e993",
       "title": "tree",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -2332,7 +2099,6 @@
       "doc_id": "d-20260727-225608-c7b1f6",
       "title": "unbalanced",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -2342,7 +2108,6 @@
       "doc_id": "d-20260727-225608-c844db",
       "title": "uncertainty",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -2352,7 +2117,6 @@
       "doc_id": "d-20260727-225608-d81ffc",
       "title": "urban",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -2362,7 +2126,6 @@
       "doc_id": "d-20260727-225608-8a8d26",
       "title": "violent",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -2372,7 +2135,6 @@
       "doc_id": "d-20260727-225608-80e8b0",
       "title": "volumetric",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -2382,7 +2144,6 @@
       "doc_id": "d-20260727-225608-1864ea",
       "title": "wall",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -2392,7 +2153,6 @@
       "doc_id": "d-20260727-225608-4c0762",
       "title": "water",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -2402,7 +2162,6 @@
       "doc_id": "d-20260727-225608-a05992",
       "title": "wave",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -2412,7 +2171,6 @@
       "doc_id": "d-20260727-225608-b235c6",
       "title": "weather",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"
@@ -2422,7 +2180,6 @@
       "doc_id": "d-20260727-225608-2fffa8",
       "title": "weed",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -2432,7 +2189,6 @@
       "doc_id": "d-20260727-225608-2a27c8",
       "title": "window",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -2442,7 +2198,6 @@
       "doc_id": "d-20260727-225608-2617b3",
       "title": "wire",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "subject"
@@ -2452,7 +2207,6 @@
       "doc_id": "d-20260727-225608-ab4327",
       "title": "wonder",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "theme"
@@ -2462,7 +2216,6 @@
       "doc_id": "d-20260727-225608-d0194d",
       "title": "woven",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "form"
@@ -2472,7 +2225,6 @@
       "doc_id": "d-20260727-225608-defa99",
       "title": "writing",
       "ui_status": "",
-      "viewable": true,
       "last_updated": "2026-07-27",
       "customisation": {
         "group": "domain"

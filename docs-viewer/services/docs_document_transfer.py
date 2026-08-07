@@ -231,7 +231,7 @@ class DocumentTransferPlan:
                 "sub_scope_root" if self.target_sub_scope else "scope_root"
             ),
         }
-        return {
+        payload = {
             "schema_version": TRANSFER_PREVIEW_SCHEMA_VERSION,
             "ok": self.ok,
             "mode": self.mode,
@@ -239,9 +239,6 @@ class DocumentTransferPlan:
             "descendants_forced": self.descendants_forced,
             "source": source,
             "target": target,
-            "target_default_viewable": source_model.default_viewable_for_config(
-                self.target_config
-            ),
             "requested_count": len(self.requested_doc_ids),
             "effective_root_count": self.effective_root_count,
             "descendant_count": self.descendant_count,
@@ -277,11 +274,16 @@ class DocumentTransferPlan:
             "warnings": [asdict(warning) for warning in self.warnings],
             "apply_plan": self.apply_plan_payload() if self.ok else None,
         }
+        if source_model.collection_supports_publishable(
+            self.target_collection.document_config
+        ):
+            payload["target_default_publishable"] = True
+        return payload
 
     def apply_plan_payload(self) -> dict[str, Any]:
         if not self.ok:
             raise ValueError("blocked document transfer has no apply plan")
-        return {
+        payload = {
             "schema_version": TRANSFER_APPLY_PLAN_SCHEMA_VERSION,
             "mode": self.mode,
             "source": self.source_collection.request_target(),
@@ -302,9 +304,6 @@ class DocumentTransferPlan:
                 "target": {"scope": self.target_scope},
             },
             "target_rebuild_owner": self.target_collection.request_target(),
-            "target_default_viewable": source_model.default_viewable_for_config(
-                self.target_config
-            ),
             "documents": [
                 {
                     "source_doc_id": document.source_doc.doc_id,
@@ -342,6 +341,11 @@ class DocumentTransferPlan:
                 for item in self.link_decisions
             ],
         }
+        if source_model.collection_supports_publishable(
+            self.target_collection.document_config
+        ):
+            payload["target_default_publishable"] = True
+        return payload
 
 
 def _media_payload(item: TransferMediaPlan) -> dict[str, Any]:

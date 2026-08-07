@@ -136,7 +136,7 @@ def _validate_default_doc_id(repo_root: Path, config: Any, value: str) -> list[s
                 title=str(front_matter.get("title") or path.stem).strip(),
                 ui_status=source_model.normalize_ui_status(front_matter.get("ui_status")),
                 parent_id=str(front_matter.get("parent_id") or "").strip(),
-                viewable=source_model.doc_is_viewable(front_matter),
+                publishable=source_model.doc_is_publishable(front_matter),
             )
         )
     docs_by_id = {doc.doc_id: doc for doc in docs}
@@ -145,8 +145,8 @@ def _validate_default_doc_id(repo_root: Path, config: Any, value: str) -> list[s
         raise ValueError(f"default_doc_id must match a document in scope {config.scope_id}: {value}")
     if value in set(config.non_loadable_doc_ids):
         raise ValueError(f"default_doc_id must be loadable in scope {config.scope_id}: {value}")
-    if doc.viewable is False:
-        return ["Default doc id points at a non-viewable document; public routes may hide it."]
+    if doc.publishable is False:
+        return ["Default doc id points at a non-publishable document; public routes may hide it."]
     return []
 
 

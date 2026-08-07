@@ -594,7 +594,7 @@ def assert_metadata_status_list_selection(page: Page) -> None:
             date_display: '',
             ui_status: 'done',
             parent_id: '',
-            viewable: true
+            publishable: true
           };
           const management = {
             managementBusy: false,
@@ -615,7 +615,7 @@ def assert_metadata_status_list_selection(page: Page) -> None:
             callbacks: {
               currentActiveDoc: () => doc,
               hideContextMenu: () => {},
-              isDocNonViewable: () => false,
+              isDocNonPublishable: () => false,
               metadataParentOptions: () => [{ value: '', label: 'Root' }],
               onMetadataSubmit: () => {},
               onSettingsSubmit: event => event.preventDefault(),
@@ -688,7 +688,7 @@ def assert_metadata_parent_duplicate_title_selection(page: Page) -> None:
             date_display: '',
             ui_status: 'draft',
             parent_id: 'd-semantic-b',
-            viewable: true
+            publishable: true
           };
           const controller = modalModule.createDocsViewerManagementModalController({
             refs,
@@ -706,7 +706,7 @@ def assert_metadata_parent_duplicate_title_selection(page: Page) -> None:
             },
             callbacks: {
               hideContextMenu: () => {},
-              isDocNonViewable: () => false,
+              isDocNonPublishable: () => false,
               metadataParentOptions: () => [
                 { value: '', label: 'Root' },
                 { value: 'd-semantic-a', label: 'Semantic Tokens' },
@@ -840,7 +840,7 @@ def assert_sub_scope_metadata_omits_parent_field(page: Page) -> None:
             date_display: 'July 2026',
             ui_status: 'draft',
             group: 'subject',
-            viewable: false
+            publishable: false
           };
           const controller = modalModule.createDocsViewerManagementModalController({
             refs,
@@ -862,7 +862,7 @@ def assert_sub_scope_metadata_omits_parent_field(page: Page) -> None:
             },
             callbacks: {
               hideContextMenu: () => {},
-              isDocNonViewable: record => record.viewable === false,
+              isDocNonPublishable: record => record.publishable === false,
               metadataParentOptions: () => {
                 throw new Error('Sub-scope modal must not build Parent options.');
               },
@@ -897,7 +897,6 @@ def assert_sub_scope_metadata_omits_parent_field(page: Page) -> None:
             status: refs.metadataStatusInput.value,
             group: refs.metadataGroupInput.value,
             groupOptions: Array.from(refs.metadataGroupInput.options).map(option => option.value),
-            nonViewable: refs.metadataNonViewableInput.checked,
             editingDocId: refs.metadataDocId.textContent
           };
         }"""
@@ -910,7 +909,6 @@ def assert_sub_scope_metadata_omits_parent_field(page: Page) -> None:
             "date_display",
             "ui_status",
             "group",
-            "non_viewable",
         ],
         "parentHidden": True,
         "parentDisabled": True,
@@ -921,7 +919,6 @@ def assert_sub_scope_metadata_omits_parent_field(page: Page) -> None:
         "status": "draft",
         "group": "subject",
         "groupOptions": ["", "subject", "domain", "form", "theme"],
-        "nonViewable": True,
         "editingDocId": "detail-doc",
     }:
         raise AssertionError(f"unexpected sub-scope metadata field shape: {result!r}")

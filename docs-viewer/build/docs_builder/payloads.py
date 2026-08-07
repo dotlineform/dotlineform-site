@@ -80,8 +80,8 @@ class PayloadBuilderMixin:
             "title": doc.title,
             "content_url": doc.content_url,
         }
-        if not doc.viewable:
-            entry["viewable"] = False
+        if not doc.publishable:
+            entry["publishable"] = False
         if doc.ui_status:
             entry["ui_status"] = doc.ui_status
         return entry
@@ -195,7 +195,7 @@ class PayloadBuilderMixin:
 
     def public_recent_docs(self, docs: list[DocRecord]) -> list[DocRecord]:
         hidden_ids = set(self.manage_only_tree_root_ids)
-        hidden_ids.update(doc.doc_id for doc in docs if not doc.viewable)
+        hidden_ids.update(doc.doc_id for doc in docs if not doc.publishable)
         children_by_parent: dict[str, list[str]] = {}
         for doc in docs:
             if doc.parent_id:

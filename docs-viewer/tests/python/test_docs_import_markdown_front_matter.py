@@ -34,7 +34,7 @@ def test_well_formed_front_matter_is_stripped_and_only_title_can_fallback() -> N
 title: Front Matter Title
 doc_id: existing-document
 summary: Ignored summary
-viewable: false
+publishable: false
 ---
 
 Body without a heading.
@@ -44,13 +44,13 @@ Body without a heading.
     assert body == "\nBody without a heading.\n"
     assert diagnostics == {
         "stripped": True,
-        "fields": ["title", "doc_id", "summary", "viewable"],
-        "ignored_fields": ["doc_id", "summary", "viewable"],
+        "fields": ["title", "doc_id", "summary", "publishable"],
+        "ignored_fields": ["doc_id", "summary", "publishable"],
         "title_used": True,
     }
     assert warnings == [
         "Ignored ordinary Markdown front matter fields: "
-        "doc_id, summary, viewable.",
+        "doc_id, summary, publishable.",
     ]
     assert summary["title"] == "Front Matter Title"
     assert summary["title_source"] == "front_matter"

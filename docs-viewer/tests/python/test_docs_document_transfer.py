@@ -44,7 +44,6 @@ def write_doc(
         "added_date": "2026-07-01 10:00:00",
         "last_updated": "2026-07-02 11:00:00",
         "parent_id": parent_id,
-        "viewable": True,
     }
     front_matter.update(extra_front_matter or {})
     (documents_root / f"{doc_id}.md").write_text(
@@ -430,7 +429,7 @@ def test_child_copy_receipt_freezes_collections_metadata_links_and_owners(
         "sub_scope": "works",
         "placement": "sub_scope_root",
     }
-    assert preview["target_default_viewable"] is True
+    assert "target_default_publishable" not in preview
     assert preview["custom_metadata"]["retained"] == []
     assert preview["custom_metadata"]["rejected"] == []
     assert {
@@ -465,7 +464,7 @@ def test_child_copy_receipt_freezes_collections_metadata_links_and_owners(
         "scope": "target",
         "sub_scope": "works",
     }
-    assert receipt["target_default_viewable"] is True
+    assert "target_default_publishable" not in receipt
     restored = transfer.restore_document_transfer_apply_plan(repo_root, receipt)
     assert restored == plan
     assert snapshot(repo_root) == before
@@ -1141,7 +1140,7 @@ def test_public_parent_child_can_accept_copy_without_relaxing_parent_target(
     )
 
     assert child_plan.ok
-    assert child_plan.preview_payload()["target_default_viewable"] is False
+    assert child_plan.preview_payload()["target_default_publishable"] is True
     assert capabilities == {
         "copy_source": True,
         "move_source": False,

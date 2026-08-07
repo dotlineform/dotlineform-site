@@ -303,7 +303,7 @@ def build_export(
     missing_summary_only: bool | None,
     write: bool,
     sub_scope: str = "",
-    include_non_viewable: bool | None = None,
+    include_non_publishable: bool | None = None,
     expand_document_tree_descendants: bool = True,
     data_domain: str = "documents",
     config_path: str | None = None,
@@ -355,14 +355,14 @@ def build_export(
         errors.append(f"config {config_id}: missing_summary_only must be true, false, or null")
     elif missing_summary_only is True and not selection_config.get("supports_missing_summary_only"):
         errors.append(f"config {config_id}: missing_summary_only true is not supported")
-    if include_non_viewable is not None and not isinstance(include_non_viewable, bool):
-        errors.append(f"config {config_id}: include_non_viewable must be true, false, or null")
+    if include_non_publishable is not None and not isinstance(include_non_publishable, bool):
+        errors.append(f"config {config_id}: include_non_publishable must be true, false, or null")
     elif (
-        include_non_viewable is not None
-        and not selection_config.get("supports_include_non_viewable")
-        and include_non_viewable != (selection_config.get("include_non_viewable") is not False)
+        include_non_publishable is not None
+        and not selection_config.get("supports_include_non_publishable")
+        and include_non_publishable != (selection_config.get("include_non_publishable") is not False)
     ):
-        errors.append(f"config {config_id}: include_non_viewable cannot override the profile default")
+        errors.append(f"config {config_id}: include_non_publishable cannot override the profile default")
 
     output_config = config.get("output") if isinstance(config.get("output"), dict) else {}
     target_config = config.get("target") if isinstance(config.get("target"), dict) else {}
@@ -453,7 +453,7 @@ def build_export(
         selected_doc_ids=selected_doc_ids,
         select_all=select_all,
         missing_summary_only=missing_summary_only,
-        include_non_viewable=include_non_viewable,
+        include_non_publishable=include_non_publishable,
     )
 
     record_shape = normalize_text(target_config.get("record_shape"))

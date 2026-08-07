@@ -296,7 +296,7 @@ export function createDocsViewerManagementModalController(options = {}) {
   function openMetadataModal(doc, options) {
     var settings = options || {};
     var target = settings.target || null;
-    if (!doc || !target || !refs.metadataModal || !refs.metadataForm || !refs.metadataTitleInput || !refs.metadataSummaryInput || !refs.metadataDateInput || !refs.metadataDateDisplayInput || !refs.metadataStatusInput || !refs.metadataGroupField || !refs.metadataGroupInput || !refs.metadataNonViewableInput || !refs.metadataParentField || !refs.metadataParentInput) {
+    if (!doc || !target || !refs.metadataModal || !refs.metadataForm || !refs.metadataTitleInput || !refs.metadataSummaryInput || !refs.metadataDateInput || !refs.metadataDateDisplayInput || !refs.metadataStatusInput || !refs.metadataGroupField || !refs.metadataGroupInput || !refs.metadataParentField || !refs.metadataParentInput) {
       return Promise.resolve(null);
     }
     if (typeof callbacks.hideContextMenu === "function") callbacks.hideContextMenu();
@@ -318,7 +318,6 @@ export function createDocsViewerManagementModalController(options = {}) {
       doc,
       target
     );
-    refs.metadataNonViewableInput.checked = typeof callbacks.isDocNonViewable === "function" ? callbacks.isDocNonViewable(doc) : doc.viewable === false;
     var showParent = settings.showParent === true;
     refs.metadataParentField.hidden = !showParent;
     refs.metadataParentInput.disabled = !showParent;

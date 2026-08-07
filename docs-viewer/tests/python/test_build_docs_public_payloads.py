@@ -126,7 +126,7 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
         "viewer_report_access",
         "viewer_report_preset",
         "viewer_report_subscope",
-        "viewable",
+        "publishable",
         "ui_status",
     }
     public_by_id_forbidden_keys = {
@@ -136,7 +136,7 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
         "source_path",
         "viewer_url",
         "ui_status",
-        "viewable",
+        "publishable",
         "content_text_length",
         "viewer_report",
         "viewer_report_scope",
@@ -158,7 +158,7 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
         *index_tree["docs"][1]["children"][1]["children"],
     ]
     assert all("parent_id" not in doc for doc in flattened_tree_docs)
-    assert index_tree["docs"][1]["children"][1]["viewable"] is False
+    assert index_tree["docs"][1]["children"][1]["publishable"] is False
     assert all(public_tree_forbidden_keys.isdisjoint(doc) for doc in flattened_tree_docs)
     assert recent["schema"] == "docs_recent_v1"
     assert recent["basis"] == "edited"

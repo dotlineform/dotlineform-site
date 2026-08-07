@@ -43,7 +43,6 @@ doc_id: fixture-root
 title: Fixture root
 added_date: 2026-07-11
 last_updated: 2026-07-11
-viewable: true
 ---
 # Fixture root
 

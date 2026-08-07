@@ -2052,7 +2052,7 @@ def assert_phase_five_runtime_owners(page: Page) -> None:
                 panelRegistry: session.domains.panelView.has('viewRegistry'),
                 documentStatusMap: session.domains.documentIndex.has('uiStatusByValue'),
                 managementContext: session.domains.management.has('managementContext'),
-                managementEmoji: session.domains.management.has('docNonViewableEmoji'),
+                managementEmoji: session.domains.management.has('docNonPublishableEmoji'),
                 generatedCapabilities: session.domains.generatedData.has('managementCapabilities'),
                 generatedOwnCapabilities: session.domains.generatedData.has('generatedDataCapabilities'),
                 generatedReload: session.domains.generatedData.has('reloadNonce'),

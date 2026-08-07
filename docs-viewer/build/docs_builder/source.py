@@ -19,6 +19,7 @@ from .common import (
     scope_uses_external_data,
 )
 from docs_document_identity import is_immutable_doc_id
+from docs_source_model import validate_publishable_front_matter
 
 
 class FrontMatterSyntaxError(Exception):
@@ -45,7 +46,7 @@ class DocRecord:
     summary: str
     ui_status: str
     parent_id: str
-    viewable: bool
+    publishable: bool
     source_path: str
     viewer_url: str
     content_url: str
@@ -153,7 +154,16 @@ class SourceLoadingMixin:
                     f"group must be a scalar string in {relative_path}"
                 )
             group = str(raw_group or "").strip().lower()
-            viewable = front_matter_boolean(front_matter, "viewable", True)
+            document_config = getattr(self, "sub_scope_config", self.config)
+            try:
+                validate_publishable_front_matter(
+                    front_matter,
+                    collection_config=document_config,
+                    source_name=relative_path,
+                )
+            except ValueError as exc:
+                raise FrontMatterSyntaxError(str(exc)) from exc
+            publishable = front_matter_boolean(front_matter, "publishable", True)
             docs.append(
                 DocRecord(
                     scope_id=self.scope_id,
@@ -166,7 +176,7 @@ class SourceLoadingMixin:
                     summary=summary,
                     ui_status=ui_status,
                     parent_id=parent_id,
-                    viewable=viewable,
+                    publishable=publishable,
                     source_path=relative_path,
                     viewer_url=self.viewer_url_for(doc_id),
                     content_url=self.content_url_for(doc_id),
@@ -269,8 +279,8 @@ class SourceLoadingMixin:
         parent_id = self.effective_parent_id(doc, docs)
         if parent_id:
             entry["parent_id"] = parent_id
-        if not doc.viewable:
-            entry["viewable"] = False
+        if not doc.publishable:
+            entry["publishable"] = False
         if doc.summary:
             entry["summary"] = doc.summary
         if doc.ui_status:

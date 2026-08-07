@@ -399,7 +399,7 @@ def test_sub_scope_delete_apply_removes_config_source_generated_and_published_pa
     assert payload["ok"] is True
     assert payload["action"] == "delete_sub_scope"
     assert payload["committed"] is True
-    assert host_front_matter["viewable"] is False
+    assert "publishable" not in host_front_matter
     assert public_manifest_after_create is False
     assert source_root_exists is False
     assert generated_root_exists is False
@@ -595,7 +595,7 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     assert any(file["kind"] == "scope_media_svg_root" for file in payload["created_files"])
     assert any(file["kind"] == "scope_media_files_root" for file in payload["created_files"])
     assert not any(file["kind"] == "source_sub_scopes_root" for file in payload["created_files"])
-    assert "viewable:" not in default_doc_text
+    assert "publishable:" not in default_doc_text
     assert "published:" not in default_doc_text
     assert "hidden:" not in default_doc_text
     assert route_exists is False
@@ -932,7 +932,7 @@ def test_scope_create_apply_skips_public_route_for_local_scopes() -> None:
     assert route_exists is False
     assert media_directories_exist is True
     assert media_markers_exist is True
-    assert "viewable:" not in default_doc_text
+    assert "publishable:" not in default_doc_text
     assert "published:" not in default_doc_text
     assert "hidden:" not in default_doc_text
     assert source_payload["scopes"][1]["viewer_base_url"] == "/docs/"

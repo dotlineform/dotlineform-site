@@ -36,7 +36,7 @@ def write_source_doc(
     title: str = "",
     ui_status: str = "",
     group: str = "",
-    viewable: bool = True,
+    publishable: bool | None = None,
     sub_scope: str = "",
     extra_front_matter: dict[str, str] | None = None,
 ) -> Path:
@@ -54,8 +54,8 @@ def write_source_doc(
         front_matter.append(f"ui_status: {ui_status}")
     if group:
         front_matter.append(f"group: {group}")
-    if not viewable:
-        front_matter.append("viewable: false")
+    if publishable is not None:
+        front_matter.append(f"publishable: {'true' if publishable else 'false'}")
     for field_name, value in (extra_front_matter or {}).items():
         front_matter.append(f"{field_name}: {value}")
     front_matter.extend(["---", "", f"# {title or doc_id.title()}", "", "Body.", ""])
@@ -106,7 +106,7 @@ def prepare_repo(
         scope_root,
         "hidden-doc",
         title="Hidden",
-        viewable=False,
+        publishable=False if scope_type == "public" else None,
         sub_scope="tags",
     )
     return scope_root
@@ -381,7 +381,6 @@ date: 2026-07-27
 date_display: July 2026
 ui_status: draft
 group: theme
-viewable: false
 parent_id: retained-sub-scope-parent
 ---
 # Detail
@@ -415,7 +414,6 @@ parent_id: retained-sub-scope-parent
             "date": "",
             "date_display": "",
             "ui_status": "",
-            "viewable": True,
             "parent_id": "",
         },
     }
@@ -438,7 +436,6 @@ parent_id: retained-sub-scope-parent
             "date": "2026-07-27",
             "date_display": "July 2026",
             "ui_status": "draft",
-            "viewable": False,
             "group": "theme",
         },
     }

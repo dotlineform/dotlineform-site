@@ -508,6 +508,11 @@
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-f992b9.json"
         },
         {
+          "doc_id": "d-20260424-000000-e2408a",
+          "title": "Publishable field",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260424-000000-e2408a.json"
+        },
+        {
           "doc_id": "d-20260513-105343-6de36b",
           "title": "Reports",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260513-105343-6de36b.json"
@@ -620,11 +625,6 @@
           "doc_id": "d-20260513-214100-0a7f44",
           "title": "UI Status",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260513-214100-0a7f44.json"
-        },
-        {
-          "doc_id": "d-20260424-000000-e2408a",
-          "title": "Viewable field",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260424-000000-e2408a.json"
         }
       ]
     },
@@ -1164,6 +1164,12 @@
                   "title": "SSP-7.0 — Document Lineage And Publication State Sanity Note",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-210803-ad1f6f.json",
                   "ui_status": "done"
+                },
+                {
+                  "doc_id": "d-20260807-224018-4c1687",
+                  "title": "SSP-7.1a — Publishable Contract Cutover Evidence",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-224018-4c1687.json",
+                  "ui_status": "done"
                 }
               ]
             },
@@ -1541,5 +1547,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-07T20:17:07Z"
+  "generated_at": "2026-08-07T21:40:53Z"
 }

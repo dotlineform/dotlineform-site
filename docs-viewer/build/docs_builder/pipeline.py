@@ -195,6 +195,11 @@ class DocsDataBuilder(
         }
 
     @property
+    def publishable_supported(self) -> bool:
+        document_config = getattr(self, "sub_scope_config", self.config)
+        return document_config.public_projection is not None
+
+    @property
     def public_readonly_scope(self) -> bool:
         return is_public_readonly_scope(
             viewer_base_url=self.viewer_base_url,

@@ -128,7 +128,7 @@
 }
 
 
-.docsViewer__draftPrefix{
+.docsViewer__publishableExclusion{
   display: inline-block;
   margin-right: 0.35rem;
   line-height: 1;
@@ -303,7 +303,7 @@
   display: none;
 }
 
-.docsViewer__navRow.is-draft .docsViewer__navLink{
+.docsViewer__navRow.is-publication-excluded .docsViewer__navLink{
   color: var(--docs-viewer-draft-color);
 }
 

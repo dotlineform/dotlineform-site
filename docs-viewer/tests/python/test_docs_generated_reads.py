@@ -85,15 +85,15 @@ def write_generated_docs(root: Path) -> None:
         {
             "scope": "studio",
             "doc_id": NON_VIEWABLE_DOC_ID,
-            "title": "Non-viewable Doc",
-            "viewable": False,
+            "title": "Non-publishable Doc",
+            "publishable": False,
             "content_url": f"/docs-viewer/scopes/studio/published/documents/by-id/{NON_VIEWABLE_DOC_ID}.json",
         },
         {
             "scope": "studio",
             "doc_id": CHILD_DOC_ID,
             "title": "Child",
-            "viewable": True,
+            "publishable": True,
             "content_url": f"/docs-viewer/scopes/studio/published/documents/by-id/{CHILD_DOC_ID}.json",
         },
     ]
@@ -185,7 +185,7 @@ def test_docs_scope_config_default_doc_id_is_optional() -> None:
     assert configs["moments"].default_doc_id == ""
 
 
-def test_generated_doc_payload_allows_non_viewable_tree_doc() -> None:
+def test_generated_doc_payload_allows_non_publishable_tree_doc() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
         write_generated_docs(repo_root)
@@ -502,7 +502,7 @@ def test_read_generated_json_reports_invalid_json() -> None:
 
 def main() -> None:
     test_generated_data_availability_checks_scope_files()
-    test_generated_doc_payload_allows_non_viewable_tree_doc()
+    test_generated_doc_payload_allows_non_publishable_tree_doc()
     test_generated_doc_payload_rejects_unsafe_doc_id()
     test_generated_doc_payload_requires_tree_record()
     test_generated_doc_payload_rejects_unexpected_content_url()

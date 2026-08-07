@@ -55,7 +55,6 @@ title: Fixture root
 summary: Returned fixture summary.
 added_date: 2026-07-11
 last_updated: 2026-07-11
-viewable: true
 ---
 # Fixture root
 
@@ -70,7 +69,6 @@ title: Fixture child
 parent_id: fixture-root
 added_date: 2026-07-11
 last_updated: 2026-07-11
-viewable: true
 ---
 # Fixture child
 

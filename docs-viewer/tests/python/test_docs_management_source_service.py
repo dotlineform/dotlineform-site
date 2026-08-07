@@ -64,7 +64,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         "---\n"
         "doc_id: target\n"
         "title: Target\n"
-        "viewable: true\n"
         "---\n"
         "# Target\n\nOriginal body.\n",
     )
@@ -74,7 +73,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         "---\n"
         "doc_id: detail\n"
         "title: Detail\n"
-        "viewable: true\n"
         "---\n"
         "# Detail\n\nSub-scope body.\n",
         sub_scope="tags",
@@ -230,7 +228,6 @@ def test_rebuild_source_body_preserves_front_matter_exactly_and_targets_selected
             "title: Target\n"
             "# keep comment\n"
             "doc_id: target\n"
-            "viewable: true\n"
             "---\n"
             "# Old\n",
         )
@@ -262,7 +259,6 @@ def test_rebuild_source_body_preserves_front_matter_exactly_and_targets_selected
         "title: Target\n"
         "# keep comment\n"
         "doc_id: target\n"
-        "viewable: true\n"
         "added_date: \"2026-07-16 12:34:56\"\n"
         "last_updated: \"2026-07-16 12:34:56\"\n"
         "---\n"

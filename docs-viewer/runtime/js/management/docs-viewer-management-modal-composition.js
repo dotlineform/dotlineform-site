@@ -71,7 +71,6 @@ export function createDocsViewerManagementModalComposition(options = {}) {
     metadataCustomisationHost: shellRef(shellRefs, "metadataCustomisationHost", "docsViewerMetadataCustomisationHost"),
     metadataDateDisplayInput: shellRef(shellRefs, "metadataDateDisplayInput", "docsViewerMetadataDateDisplayInput"),
     metadataDateInput: shellRef(shellRefs, "metadataDateInput", "docsViewerMetadataDateInput"),
-    metadataNonViewableInput: shellRef(shellRefs, "metadataNonViewableInput", "docsViewerMetadataNonViewableInput"),
     metadataModal: shellRef(shellRefs, "metadataModal", "docsViewerMetadataModal"),
     metadataParentField: shellRef(shellRefs, "metadataParentField", "docsViewerMetadataParentField"),
     metadataParentInput: shellRef(shellRefs, "metadataParentInput", "docsViewerMetadataParentInput"),
@@ -104,7 +103,6 @@ export function createDocsViewerManagementModalComposition(options = {}) {
     refs: {
       dateDisplayInput: refs.metadataDateDisplayInput,
       dateInput: refs.metadataDateInput,
-      nonViewableInput: refs.metadataNonViewableInput,
       groupInput: refs.metadataGroupInput,
       parentInput: refs.metadataParentInput,
       saveButton: refs.metadataSaveButton,
@@ -155,7 +153,6 @@ export function createDocsViewerManagementModalComposition(options = {}) {
     callbacks: {
       hideContextMenu: callbacks.hideContextMenu,
       hideManageActionsMenu: callbacks.hideManageActionsMenu,
-      isDocNonViewable: callbacks.isDocNonViewable,
       metadataParentOptions: metadataWorkflow.parentOptions,
       onImportOpen: callbacks.onImportOpen,
       onMetadataSubmit: metadataWorkflow.confirm,

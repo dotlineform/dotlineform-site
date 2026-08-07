@@ -81,9 +81,9 @@ function optionsBodyHtml() {
     '  <input class="docsViewer__checkboxInput" type="checkbox" data-package-missing-summary-only>',
     '  <span class="docsViewer__fieldLabel">Only documents missing summaries</span>',
     '</label>',
-    '<label class="docsViewer__field docsViewer__field--checkbox" data-package-include-non-viewable-field>',
-    '  <input class="docsViewer__checkboxInput" type="checkbox" data-package-include-non-viewable>',
-    '  <span class="docsViewer__fieldLabel">Include non-viewable documents</span>',
+    '<label class="docsViewer__field docsViewer__field--checkbox" data-package-include-non-publishable-field>',
+    '  <input class="docsViewer__checkboxInput" type="checkbox" data-package-include-non-publishable>',
+    '  <span class="docsViewer__fieldLabel">Include non-publishable documents</span>',
     '</label>',
     '<section class="docsViewerPackagePrepare__selectionSummary" aria-live="polite">',
     '  <p data-package-effective-total></p>',
@@ -101,12 +101,12 @@ function selectionProjectionMessages(projection) {
   if (projection.total === 0) {
     messages.push("No documents remain after applying the selected package filters.");
   }
-  if (projection.excludedNonViewableCount) {
+  if (projection.excludedNonPublishableCount) {
     messages.push(
       countLabel(
-        projection.excludedNonViewableCount,
-        "non-viewable document excluded.",
-        "non-viewable documents excluded."
+        projection.excludedNonPublishableCount,
+        "non-publishable document excluded.",
+        "non-publishable documents excluded."
       )
     );
   }
@@ -128,12 +128,12 @@ function selectionProjectionMessages(projection) {
       )
     );
   }
-  if (projection.includedNonViewableCount) {
+  if (projection.includedNonPublishableCount) {
     messages.push(
       countLabel(
-        projection.includedNonViewableCount,
-        "non-viewable document included.",
-        "non-viewable documents included."
+        projection.includedNonPublishableCount,
+        "non-publishable document included.",
+        "non-publishable documents included."
       )
     );
   }
@@ -219,8 +219,8 @@ function openPrepareOptions(options) {
       const descendantsInput = api.host.querySelector("[data-package-include-descendants]");
       const missingSummaryField = api.host.querySelector("[data-package-missing-summary-field]");
       const missingSummaryInput = api.host.querySelector("[data-package-missing-summary-only]");
-      const includeNonViewableField = api.host.querySelector("[data-package-include-non-viewable-field]");
-      const includeNonViewableInput = api.host.querySelector("[data-package-include-non-viewable]");
+      const includeNonPublishableField = api.host.querySelector("[data-package-include-non-publishable-field]");
+      const includeNonPublishableInput = api.host.querySelector("[data-package-include-non-publishable]");
       const description = api.host.querySelector("[data-package-profile-description]");
       let currentProjection = null;
 
@@ -231,7 +231,7 @@ function openPrepareOptions(options) {
           contentFormat: packageText(contentFormatSelect && contentFormatSelect.value),
           includeDescendants: Boolean(descendantsInput && descendantsInput.checked),
           missingSummaryOnly: Boolean(missingSummaryInput && missingSummaryInput.checked),
-          includeNonViewable: Boolean(includeNonViewableInput && includeNonViewableInput.checked)
+          includeNonPublishable: Boolean(includeNonPublishableInput && includeNonPublishableInput.checked)
         });
       }
 
@@ -245,7 +245,7 @@ function openPrepareOptions(options) {
           flatCollection: options.flatCollection === true,
           includeDescendants: Boolean(descendantsInput && descendantsInput.checked),
           missingSummaryOnly: Boolean(missingSummaryInput && missingSummaryInput.checked),
-          includeNonViewable: Boolean(includeNonViewableInput && includeNonViewableInput.checked)
+          includeNonPublishable: Boolean(includeNonPublishableInput && includeNonPublishableInput.checked)
         });
         writeSelectionProjection(api.host, currentProjection);
       }
@@ -291,14 +291,14 @@ function openPrepareOptions(options) {
             ? choice.missingSummaryOnly
             : selection.default_missing_summary_only === true
           : false;
-        const supportsIncludeNonViewable = selection.supports_include_non_viewable === true;
-        includeNonViewableField.hidden = !supportsIncludeNonViewable;
-        includeNonViewableInput.disabled = !supportsIncludeNonViewable;
-        includeNonViewableInput.checked = supportsIncludeNonViewable
-          ? Object.prototype.hasOwnProperty.call(choice, "includeNonViewable")
-            ? choice.includeNonViewable
-            : selection.include_non_viewable !== false
-          : selection.include_non_viewable !== false;
+        const supportsIncludeNonPublishable = selection.supports_include_non_publishable === true;
+        includeNonPublishableField.hidden = !supportsIncludeNonPublishable;
+        includeNonPublishableInput.disabled = !supportsIncludeNonPublishable;
+        includeNonPublishableInput.checked = supportsIncludeNonPublishable
+          ? Object.prototype.hasOwnProperty.call(choice, "includeNonPublishable")
+            ? choice.includeNonPublishable
+            : selection.include_non_publishable !== false
+          : selection.include_non_publishable !== false;
         description.textContent = packageText(profile.description);
         updateSelectionProjection();
       }
@@ -314,7 +314,7 @@ function openPrepareOptions(options) {
         currentProfileId = packageText(profileSelect.value);
         renderCurrentProfile();
       });
-      [descendantsInput, missingSummaryInput, includeNonViewableInput].forEach((input) => {
+      [descendantsInput, missingSummaryInput, includeNonPublishableInput].forEach((input) => {
         input.addEventListener("change", updateSelectionProjection);
       });
       api.prepareOptionState = function () {
@@ -347,7 +347,7 @@ function openPrepareOptions(options) {
           documents: options.documents,
           effectiveDocIds: state.projection.docIds,
           missingSummaryOnly: state.projection.missingSummaryOnly,
-          includeNonViewable: state.projection.includeNonViewable,
+          includeNonPublishable: state.projection.includeNonPublishable,
           targetFormat: state.choices.targetFormat,
           contentFormat: state.choices.contentFormat,
           activityContext: options.activityContext

@@ -158,7 +158,7 @@ def hidden_doc_ids_from_tree(index_tree: dict[str, Any]) -> set[str]:
         clean_doc_id(value)
         for value in (index_tree.get("viewer_options") or {}).get("manage_only_tree_root_ids", [])
     }
-    roots.update(clean_doc_id(row.get("doc_id")) for row in rows if row.get("viewable") is False)
+    roots.update(clean_doc_id(row.get("doc_id")) for row in rows if row.get("publishable") is False)
     roots.discard("")
     by_parent: dict[str, list[str]] = {}
     for row in rows:
@@ -187,7 +187,7 @@ def public_tree_node(row: Any, hidden_doc_ids: set[str]) -> dict[str, Any] | Non
     node = {
         key: value
         for key, value in row.items()
-        if key != "children" and not (key == "viewable" and value is not False)
+        if key not in {"children", "publishable"}
     }
     children = [
         child

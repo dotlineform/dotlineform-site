@@ -53,22 +53,22 @@ def test_management_request_refreshes_scope_model_from_config() -> None:
         source_model.DOCUMENT_SOURCE_ROOTS.clear()
         source_model.DOCUMENT_SOURCE_ROOTS.update(original_roots)
 
-def test_hidden_doc_is_editable_in_dry_run() -> None:
+def test_local_doc_is_editable_in_dry_run_without_publishable_metadata() -> None:
     with make_repo() as repo_name:
         repo_root = Path(repo_name)
         result = docs_management_service.handle_update_metadata(
             repo_root,
             {
                 "scope": "studio",
-                "doc_id": "non-viewable-doc",
-                "title": "Non-viewable Doc",
+                "doc_id": "non-publishable-doc",
+                "title": "Non-publishable Doc",
                 "parent_id": "",
             },
             dry_run=True,
         )
 
     assert result["ok"] is True
-    assert result["doc_id"] == "non-viewable-doc"
+    assert result["doc_id"] == "non-publishable-doc"
     assert result["record"]["parent_id"] == ""
     assert "sub_scope" not in result
     assert set(result["record"]) == {
@@ -79,29 +79,24 @@ def test_hidden_doc_is_editable_in_dry_run() -> None:
         "date",
         "date_display",
         "ui_status",
-        "viewable",
     }
 
-def test_update_metadata_can_change_viewability_in_dry_run() -> None:
+def test_update_metadata_rejects_publishable() -> None:
     with make_repo() as repo_name:
         repo_root = Path(repo_name)
-        result = docs_management_service.handle_update_metadata(
-            repo_root,
-            {
-                "scope": "studio",
-                "doc_id": "other",
-                "title": "Other",
-                "parent_id": "",
-                "ui_status": "",
-                "viewable": False,
-            },
-            dry_run=True,
-        )
-
-    assert result["ok"] is True
-    assert result["record"]["viewable"] is False
-    assert result["changes"]["viewable_changed"] is True
-    assert result["changes"]["status_changed"] is False
+        with pytest.raises(ValueError, match="not editable through metadata"):
+            docs_management_service.handle_update_metadata(
+                repo_root,
+                {
+                    "scope": "studio",
+                    "doc_id": "other",
+                    "title": "Other",
+                    "parent_id": "",
+                    "ui_status": "",
+                    "publishable": False,
+                },
+                dry_run=True,
+            )
 
 
 def test_sub_scope_metadata_write_rebuilds_detail_and_both_manifests(
@@ -188,7 +183,6 @@ def test_sub_scope_metadata_write_rebuilds_detail_and_both_manifests(
                     "last_updated": "2026-07-26 11:00",
                     "ui_status": "draft",
                     "group": "subject",
-                    "viewable": True,
                     "parent_id": "retained-parent",
                 },
                 "# Detail\n",
@@ -224,7 +218,6 @@ def test_sub_scope_metadata_write_rebuilds_detail_and_both_manifests(
                 "date_display": "late July 2026",
                 "ui_status": "done",
                 "group": "theme",
-                "viewable": False,
             },
             dry_run=False,
         )
@@ -250,7 +243,6 @@ def test_sub_scope_metadata_write_rebuilds_detail_and_both_manifests(
         "date_display": "late July 2026",
         "ui_status": "done",
         "group": "theme",
-        "viewable": False,
     }
     assert result["sub_scope"] == "tags"
     assert manifest_before == {
@@ -279,15 +271,16 @@ def test_sub_scope_metadata_write_rebuilds_detail_and_both_manifests(
                 "doc_id": SUB_SCOPE_DOC_ID,
                 "title": "Renamed Detail",
                 "ui_status": "done",
-                "viewable": False,
                 "last_updated": "2026-07-27 21:15:00",
                 "customisation": {"group": "theme"},
             }
         ],
     }
-    assert manifest == {"docs": []}
+    assert manifest == {
+        "docs": [{"doc_id": SUB_SCOPE_DOC_ID, "title": "Renamed Detail"}]
+    }
     assert set(detail_payload) >= {"doc_id", "title", "content_html"}
-    assert "viewable" not in manifest
+    assert "publishable" not in manifest
     assert all(set(record) == {"doc_id", "title"} for record in manifest["docs"])
     assert "parent_id: retained-parent" in source_after
     assert 'last_updated: "2026-07-27 21:15:00"' in source_after
@@ -915,11 +908,11 @@ def test_sub_scope_metadata_service_returns_conflict_for_write_race(
 def test_hidden_parent_delete_includes_children() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
-        result = docs_management_mutations.plan_delete_preview(repo_root, "studio", ["non-viewable-doc"])
+        result = docs_management_mutations.plan_delete_preview(repo_root, "studio", ["non-publishable-doc"])
 
     assert result["allowed"] is True
     assert result["blockers"] == []
-    assert result["delete_doc_ids"] == ["non-viewable-doc", "child"]
+    assert result["delete_doc_ids"] == ["non-publishable-doc", "child"]
     assert result["delete_count"] == 2
     assert result["additional_descendant_count"] == 1
 
@@ -944,23 +937,23 @@ def test_parent_delete_removes_subtree_and_rebuilds_every_deleted_id(monkeypatch
             repo_root,
             {
                 "scope": "studio",
-                "doc_ids": ["non-viewable-doc"],
+                "doc_ids": ["non-publishable-doc"],
                 "confirm": True,
             },
             dry_run=False,
         )
 
-        assert not (source_root / "non-viewable-doc.md").exists()
+        assert not (source_root / "non-publishable-doc.md").exists()
         assert not (source_root / "child.md").exists()
         assert (source_root / "other.md").exists()
 
-    assert result["deleted_doc_ids"] == ["non-viewable-doc", "child"]
+    assert result["deleted_doc_ids"] == ["non-publishable-doc", "child"]
     assert rebuild_calls == [
         {
             "scope": "studio",
             "include_search": True,
-            "search_doc_ids": ["non-viewable-doc", "child"],
-            "docs_doc_ids": ["non-viewable-doc", "child"],
+            "search_doc_ids": ["non-publishable-doc", "child"],
+            "docs_doc_ids": ["non-publishable-doc", "child"],
             "skip_media_builds": False,
         }
     ]
@@ -986,25 +979,25 @@ def test_multi_selection_delete_applies_union_once(monkeypatch) -> None:
             repo_root,
             {
                 "scope": "studio",
-                "doc_ids": ["child", "non-viewable-doc", "other"],
+                "doc_ids": ["child", "non-publishable-doc", "other"],
                 "confirm": True,
             },
             dry_run=False,
         )
 
-        assert not (source_root / "non-viewable-doc.md").exists()
+        assert not (source_root / "non-publishable-doc.md").exists()
         assert not (source_root / "child.md").exists()
         assert not (source_root / "other.md").exists()
 
-    assert result["requested_doc_ids"] == ["child", "non-viewable-doc", "other"]
-    assert result["effective_root_doc_ids"] == ["non-viewable-doc", "other"]
-    assert result["deleted_doc_ids"] == ["non-viewable-doc", "child", "other"]
+    assert result["requested_doc_ids"] == ["child", "non-publishable-doc", "other"]
+    assert result["effective_root_doc_ids"] == ["non-publishable-doc", "other"]
+    assert result["deleted_doc_ids"] == ["non-publishable-doc", "child", "other"]
     assert rebuild_calls == [
         {
             "scope": "studio",
             "include_search": True,
-            "search_doc_ids": ["non-viewable-doc", "child", "other"],
-            "docs_doc_ids": ["non-viewable-doc", "child", "other"],
+            "search_doc_ids": ["non-publishable-doc", "child", "other"],
+            "docs_doc_ids": ["non-publishable-doc", "child", "other"],
             "skip_media_builds": False,
         }
     ]

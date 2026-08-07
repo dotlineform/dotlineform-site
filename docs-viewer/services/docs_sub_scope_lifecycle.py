@@ -244,8 +244,6 @@ def report_host_source(parent_config: DocsScopeConfig, sub_scope: str, title: st
         "added_date": identity["added_date"],
         "last_updated": identity["added_date"],
     }
-    if not source_model.default_viewable_for_config(parent_config):
-        front_matter["viewable"] = False
     front_matter.update({
         "viewer_report": REPORT_ID,
         "viewer_report_access": REPORT_ACCESS,

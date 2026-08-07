@@ -239,41 +239,50 @@ class ManagementMutationPlan:
 
 
 def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
+    if "viewable" in body:
+        raise ValueError("legacy viewable is not accepted")
+    if "publishable" in body:
+        raise ValueError("publishable is not accepted by Create")
     sub_scope_requested = "sub_scope" in body
-    sub_scope = ""
-    target_root: Path
-    if sub_scope_requested:
-        collection = resolve_managed_document_collection(
-            repo_root,
-            scope=body.get("scope"),
-            sub_scope=body.get("sub_scope"),
+    collection = resolve_managed_document_collection(
+        repo_root,
+        scope=body.get("scope"),
+        sub_scope=body.get("sub_scope") if sub_scope_requested else None,
+    )
+    scope = collection.scope
+    sub_scope = collection.sub_scope
+    target_root = collection.source_root
+    docs: list[source_model.ScopeDoc] = []
+    for candidate in source_model.scope_markdown_paths(target_root):
+        confined = confined_source_path(target_root, candidate)
+        document = source_doc_from_path(
+            path=confined,
+            scope=scope,
+            requested_doc_id=candidate.stem if sub_scope else None,
         )
-        scope = collection.scope
-        sub_scope = collection.sub_scope
-        target_root = collection.source_root
-        docs = []
-        for candidate in source_model.scope_markdown_paths(target_root):
-            confined = confined_source_path(target_root, candidate)
-            document = source_doc_from_path(
-                path=confined,
-                scope=scope,
-                requested_doc_id=candidate.stem,
-            )
+        source_model.validate_publishable_front_matter(
+            document.front_matter,
+            collection_config=collection.document_config,
+            source_name=candidate.name,
+        )
+        if sub_scope:
             source_model.validate_sub_scope_document_metadata(
                 document,
                 ui_statuses=collection.document_config.ui_statuses,
                 document_groups=sub_scope_customisation_document_groups(
                     collection.document_config.sub_scope_customisation
                 ),
-                sub_scope_customisation=collection.document_config.sub_scope_customisation,
+                sub_scope_customisation=(
+                    collection.document_config.sub_scope_customisation
+                ),
             )
-            docs.append(document)
-        if "parent_id" in body:
-            raise ValueError("parent_id is not accepted for a sub-scope document")
-    else:
-        scope = source_model.normalize_scope(body.get("scope"))
-        docs = source_model.load_scope_docs(repo_root, scope)
-        target_root = source_model.scope_root(repo_root, scope)
+        docs.append(document)
+    source_model.validate_scope_docs(
+        docs,
+        allow_unknown_parent_ids=collection.parent_config.allow_unresolved_parent_ids,
+    )
+    if sub_scope and "parent_id" in body:
+        raise ValueError("parent_id is not accepted for a sub-scope document")
     title = str(body.get("title") or "New Doc").strip() or "New Doc"
     docs_by_id = {doc.doc_id: doc for doc in docs}
     parent_id = str(body.get("parent_id") or "").strip()
@@ -298,9 +307,6 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
         front_matter_seed,
         timestamp=timestamp,
     )
-    viewable = source_model.default_viewable_for_scope(scope)
-    if not viewable:
-        front_matter["viewable"] = False
     source_text = source_model.format_source(front_matter, f"# {title}\n")
     path = relative_path(repo_root, target_path)
     target = {"scope": scope, "doc_id": doc_id}
@@ -309,8 +315,9 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
     record: Dict[str, Any] = {
         "doc_id": doc_id,
         "title": title,
-        "viewable": viewable,
     }
+    if source_model.collection_supports_publishable(collection.document_config):
+        record["publishable"] = True
     if not sub_scope:
         record["parent_id"] = parent_id
     response: Dict[str, Any] = {
@@ -540,6 +547,10 @@ def plan_assign_field_group(
 
 
 def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
+    if "viewable" in body:
+        raise ValueError("legacy viewable is not accepted")
+    if "publishable" in body:
+        raise ValueError("publishable is not editable through metadata")
     resolved = resolve_managed_document_target(
         repo_root,
         managed_document_target_request(body),
@@ -651,10 +662,6 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         front_matter=target.front_matter,
         doc_id=target.doc_id,
     )
-    viewable_was_provided = "viewable" in body
-    current_viewable = target.viewable
-    viewable = source_model.front_matter_boolean(body, "viewable", True) if viewable_was_provided else current_viewable
-    viewable_changed = viewable_was_provided and viewable != current_viewable
     changes = {
         "title_changed": title_changed,
         "parent_changed": parent_changed,
@@ -662,7 +669,6 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         "date_changed": date_changed,
         "date_display_changed": date_display_changed,
         "status_changed": status_changed,
-        "viewable_changed": viewable_changed,
     }
     if resolved.sub_scope:
         changes["group_changed"] = group_changed
@@ -676,8 +682,9 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
             "date": current_date,
             "date_display": current_date_display,
             "ui_status": current_ui_status,
-            "viewable": current_viewable,
         }
+        if source_model.collection_supports_publishable(resolved.document_config):
+            record["publishable"] = target.publishable
         if not resolved.sub_scope:
             record["parent_id"] = target.parent_id
         else:
@@ -724,11 +731,6 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
             updated_front_matter["ui_status"] = ui_status
         else:
             updated_front_matter.pop("ui_status", None)
-    if viewable_was_provided:
-        if viewable:
-            updated_front_matter.pop("viewable", None)
-        else:
-            updated_front_matter["viewable"] = False
     if group_was_provided:
         if group:
             updated_front_matter["group"] = group
@@ -760,7 +762,7 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
             title_changed=title_changed,
         )
         if status_changed and not (
-            title_changed or parent_changed or summary_changed or viewable_changed
+            title_changed or parent_changed or summary_changed
         ):
             search_doc_ids = []
 
@@ -771,8 +773,9 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         "date": date,
         "date_display": date_display,
         "ui_status": ui_status,
-        "viewable": viewable,
     }
+    if source_model.collection_supports_publishable(resolved.document_config):
+        record["publishable"] = target.publishable
     if not resolved.sub_scope:
         record["parent_id"] = parent_id
     else:
@@ -804,7 +807,6 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         "date_changed": date_changed,
         "date_display_changed": date_display_changed,
         "status_changed": status_changed,
-        "viewable_changed": viewable_changed,
     }
     if resolved.sub_scope:
         log_details["sub_scope"] = resolved.sub_scope

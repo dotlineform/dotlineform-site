@@ -45,28 +45,28 @@ def test_docs_management_routes_do_not_publish_data_sharing_endpoints() -> None:
         raise AssertionError("Docs Management routes must not publish Data Sharing endpoints")
 
 
-def test_dedicated_viewability_routes_are_retired() -> None:
+def test_dedicated_publishability_routes_are_retired() -> None:
     paths = (*routes.GET_PATHS, *routes.POST_PATHS, *routes.OPTIONS_PATHS)
     retired_paths = {
-        "/docs/update-viewability",
-        "/docs/update-viewability-bulk",
+        "/docs/update-publishability",
+        "/docs/update-publishability-bulk",
     }
     published_retired_paths = sorted(retired_paths.intersection(paths))
     if published_retired_paths:
         raise AssertionError(
-            f"Dedicated viewability routes must remain retired: {published_retired_paths!r}"
+            f"Dedicated publishability routes must remain retired: {published_retired_paths!r}"
         )
 
 
-def test_dedicated_viewability_config_entries_are_retired() -> None:
+def test_dedicated_publishability_config_entries_are_retired() -> None:
     config_path = REPO_ROOT / "docs-viewer/config/defaults/docs-viewer-service.json"
     config = json.loads(config_path.read_text(encoding="utf-8"))
     endpoint_keys = set(config.get("endpoints", {}))
-    retired_keys = {"update_viewability", "update_viewability_bulk"}
+    retired_keys = {"update_publishability", "update_publishability_bulk"}
     configured_retired_keys = sorted(retired_keys.intersection(endpoint_keys))
     if configured_retired_keys:
         raise AssertionError(
-            f"Dedicated viewability config entries must remain retired: {configured_retired_keys!r}"
+            f"Dedicated publishability config entries must remain retired: {configured_retired_keys!r}"
         )
 
 
@@ -160,8 +160,8 @@ def main() -> None:
     test_post_routes_are_unique()
     test_options_routes_are_get_and_post_routes()
     test_docs_management_routes_do_not_publish_data_sharing_endpoints()
-    test_dedicated_viewability_routes_are_retired()
-    test_dedicated_viewability_config_entries_are_retired()
+    test_dedicated_publishability_routes_are_retired()
+    test_dedicated_publishability_config_entries_are_retired()
     test_abandoned_review_session_routes_remain_retired()
     test_static_html_export_routes_are_management_owned()
     test_document_transfer_routes_are_management_owned_and_singular_copy_is_retired()

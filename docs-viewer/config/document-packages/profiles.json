@@ -23,8 +23,8 @@
       "selection": {
         "mode": "explicit_doc_ids",
         "include_descendants": true,
-        "include_non_viewable": true,
-        "supports_include_non_viewable": true,
+        "include_non_publishable": true,
+        "supports_include_non_publishable": true,
         "supports_missing_summary_only": true,
         "default_missing_summary_only": false
       },
@@ -138,8 +138,8 @@
       "selection": {
         "mode": "explicit_doc_ids",
         "include_descendants": true,
-        "include_non_viewable": true,
-        "supports_include_non_viewable": false,
+        "include_non_publishable": true,
+        "supports_include_non_publishable": false,
         "supports_missing_summary_only": false,
         "default_missing_summary_only": false
       },

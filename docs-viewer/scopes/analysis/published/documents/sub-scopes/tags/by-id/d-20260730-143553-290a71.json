@@ -4,6 +4,6 @@
   "added_date": "2026-07-30 14:35:53",
   "last_updated": "2026-07-30 14:35:53",
   "viewer_url": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260730-143553-290a71",
-  "viewable": false,
+  "publishable": false,
   "content_html": "<h1>bird 2</h1>\n<p><strong>subject</strong></p>\n<p>Depicted bird: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.</p>\n<p>Related to bird-nerve</p>\n"
 }

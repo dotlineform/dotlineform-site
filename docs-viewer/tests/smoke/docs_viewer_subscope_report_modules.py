@@ -737,13 +737,13 @@ def assert_report_module(page: Page) -> None:
               doc_id: 'visible-doc',
               title: 'Visible document',
               ui_status: 'done',
-              viewable: true
+              publishable: true
             },
             {
               doc_id: 'hidden-doc',
               title: 'Hidden document',
               ui_status: 'draft',
-              viewable: false
+              publishable: false
             }
           ];
           window.syntheticManifestFailure = false;
@@ -1378,7 +1378,7 @@ def assert_report_module(page: Page) -> None:
             status: status?.textContent || '',
             statusHidden: status?.classList.contains('visually-hidden') || false,
             statusIcons: root.querySelectorAll('.docsViewer__navStatus').length,
-            nonViewableIcons: root.querySelectorAll('.docsViewer__draftPrefix').length,
+            nonPublishableIcons: root.querySelectorAll('.docsViewer__publishableExclusion').length,
             contributionHosts: root.querySelectorAll(
               '[data-report-contribution-host]'
             ).length,
@@ -1396,7 +1396,7 @@ def assert_report_module(page: Page) -> None:
         "status": "1 Concepts document",
         "statusHidden": True,
         "statusIcons": 0,
-        "nonViewableIcons": 0,
+        "nonPublishableIcons": 0,
         "contributionHosts": 0,
         "ariaLabel": None,
     }
@@ -1431,9 +1431,9 @@ def assert_subscope_selection_contribution(page: Page) -> None:
             if (url.pathname === '/synthetic/manifest.json') {
               return response({
                 docs: [
-                  { doc_id: 'a', title: 'A', viewable: true },
-                  { doc_id: 'b', title: 'B', ui_status: 'draft', viewable: false },
-                  { doc_id: 'c', title: 'C', viewable: true }
+                  { doc_id: 'a', title: 'A', publishable: true },
+                  { doc_id: 'b', title: 'B', ui_status: 'draft', publishable: false },
+                  { doc_id: 'c', title: 'C', publishable: true }
                 ]
               });
             }
@@ -1455,7 +1455,7 @@ def assert_subscope_selection_contribution(page: Page) -> None:
           const defaultContribution = defaults.createDocsViewerManagementSubscopeDefaultContribution({
             clientOptions: { baseUrl: window.location.origin },
             managementContext: true,
-            nonViewableEmoji: '🚫',
+            nonPublishableEmoji: '🚫',
             onCopyDocuments: payload => copied.push(payload),
             onPreparePackage: payload => prepared.push(payload),
             root: document.querySelector('.docsViewer'),
@@ -1511,7 +1511,7 @@ def assert_subscope_selection_contribution(page: Page) -> None:
             ...selectionSnapshot(),
             actionIds: Array.from(root.querySelectorAll('[data-docs-viewer-action]'))
               .map(button => button.dataset.docsViewerAction),
-            nonViewableIcons: root.querySelectorAll('.docsViewer__draftPrefix').length,
+            nonPublishableIcons: root.querySelectorAll('.docsViewer__publishableExclusion').length,
             rowIds: Array.from(root.querySelectorAll('[data-report-subdoc-id]'))
               .map(row => row.dataset.reportSubdocId),
             statusIcons: root.querySelectorAll('.docsViewer__navStatus').length,
@@ -1651,7 +1651,7 @@ def assert_subscope_selection_contribution(page: Page) -> None:
         "selectionState": "inactive",
         "visibleCheckboxes": 3,
         "actionIds": ["copy", "prepare-document-package"],
-        "nonViewableIcons": 1,
+        "nonPublishableIcons": 1,
         "rowIds": ["a", "b", "c"],
         "statusIcons": 1,
         "toolbarInFilterRow": True,
@@ -1820,13 +1820,13 @@ def assert_manage_report_bridge(page: Page) -> None:
                     doc_id: 'detail-doc',
                     title: 'Detail',
                     ui_status: 'draft',
-                    viewable: false,
+                    publishable: false,
                     customisation: { group: 'subject' }
                   },
                   {
                     doc_id: 'no-status-doc',
                     title: 'No status',
-                    viewable: true,
+                    publishable: true,
                     customisation: { group: 'domain' }
                   }
                 ]
@@ -1851,8 +1851,8 @@ def assert_manage_report_bridge(page: Page) -> None:
                   record_shape: 'document_rows',
                   selection: {
                     include_descendants: false,
-                    include_non_viewable: true,
-                    supports_include_non_viewable: true,
+                    include_non_publishable: true,
+                    supports_include_non_publishable: true,
                     supports_missing_summary_only: true,
                     default_missing_summary_only: false
                   },
@@ -1873,7 +1873,7 @@ def assert_manage_report_bridge(page: Page) -> None:
                     title: 'Detail',
                     summary: '',
                     selectable: true,
-                    viewable: false
+                    publishable: false
                   },
                   {
                     doc_id: 'no-status-doc',
@@ -1881,7 +1881,7 @@ def assert_manage_report_bridge(page: Page) -> None:
                     title: 'No status',
                     summary: '',
                     selectable: true,
-                    viewable: true
+                    publishable: true
                   }
                 ]
               });
@@ -1971,7 +1971,7 @@ def assert_manage_report_bridge(page: Page) -> None:
               managementStatuses.push({ message, isError });
             },
             scopeConfigState: {
-              docNonViewableEmoji: '🚫',
+              docNonPublishableEmoji: '🚫',
               scopeConfigs: [{
                 scope_id: 'studio',
                 subScopes: [{
@@ -2052,7 +2052,7 @@ def assert_manage_report_bridge(page: Page) -> None:
                 label: row.querySelector('button')?.getAttribute('aria-label')
               })),
             statusIcons: content.querySelectorAll('.docsViewer__navStatus').length,
-            nonViewableIcons: content.querySelectorAll('.docsViewer__draftPrefix').length,
+            nonPublishableIcons: content.querySelectorAll('.docsViewer__publishableExclusion').length,
             listToolbarHosts: content.querySelectorAll(
               '[data-report-contribution-host="list-toolbar"]'
             ).length,
@@ -2187,7 +2187,7 @@ def assert_manage_report_bridge(page: Page) -> None:
             "doc_id": "detail-doc",
             "title": "Detail",
             "ui_status": "draft",
-            "viewable": False,
+            "publishable": False,
         },
         "target": {
             "scope": "studio",
@@ -2204,7 +2204,7 @@ def assert_manage_report_bridge(page: Page) -> None:
     expected_rows = [
         {
             "docId": "detail-doc",
-            "label": "Detail, Draft, non-viewable",
+            "label": "Detail, Draft, Excluded from next Publish",
         },
         {
             "docId": "no-status-doc",
@@ -2216,7 +2216,7 @@ def assert_manage_report_bridge(page: Page) -> None:
             f"unexpected managed contribution rows: {mounted['beforeClear']['rows']!r}"
         )
     assert mounted["beforeClear"]["statusIcons"] == 1
-    assert mounted["beforeClear"]["nonViewableIcons"] == 1
+    assert mounted["beforeClear"]["nonPublishableIcons"] == 1
     assert mounted["beforeClear"]["listToolbarHosts"] == 1
     assert mounted["beforeClear"]["detailToolbarHosts"] == 1
     assert mounted["beforeClear"]["groupLabels"] == [
@@ -2504,7 +2504,7 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
           const importedRecord = {
             doc_id: 'imported-first',
             title: 'Imported first',
-            viewable: false
+            publishable: false
           };
           window.syntheticCreatedDocs.push(importedRecord);
           await states.at(-1).refreshDocument({
@@ -2536,7 +2536,7 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
           window.syntheticCreatedDocs.push({
             doc_id: 'package-imported',
             title: 'Package imported',
-            viewable: true
+            publishable: true
           });
           await states.at(-1).refreshCollection({
             scope: 'studio',
@@ -2578,7 +2578,7 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
           releases[0]({
             doc_id: 'created-first',
             title: 'Created first',
-            viewable: false
+            publishable: false
           });
           await waitFor(() => (
             content.querySelector('.docsReportDetail')
@@ -2601,7 +2601,7 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
           releases[1]({
             doc_id: 'created-second',
             title: 'Created second',
-            viewable: false
+            publishable: false
           });
           await waitFor(() => (
             content.querySelector('.docsReportDetail')
@@ -3343,18 +3343,18 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
               return response({ docs: [
                 {
                   doc_id: 'alpha', title: 'Alpha', ui_status: 'done',
-                  viewable: true, last_updated: '2026-07-30 09:00:00'
+                  publishable: true, last_updated: '2026-07-30 09:00:00'
                 },
                 {
                   doc_id: 'alpha-2', title: 'Alpha', ui_status: 'draft',
-                  viewable: false, last_updated: '2026-07-30 09:00:00'
+                  publishable: false, last_updated: '2026-07-30 09:00:00'
                 },
                 {
-                  doc_id: 'beta', title: 'Beta', viewable: true,
+                  doc_id: 'beta', title: 'Beta', publishable: true,
                   last_updated: 'not-a-date'
                 },
                 {
-                  doc_id: 'zeta', title: 'Zeta', viewable: true,
+                  doc_id: 'zeta', title: 'Zeta', publishable: true,
                   last_updated: '2026-07-31 09:00:00'
                 }
               ] });
@@ -3370,11 +3370,11 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
                 },
                 docs: [
                   {
-                    doc_id: 'x-one', title: 'X One', viewable: true,
+                    doc_id: 'x-one', title: 'X One', publishable: true,
                     last_updated: '', customisation: { category: 'x' }
                   },
                   {
-                    doc_id: 'y-one', title: 'Y One', viewable: true,
+                    doc_id: 'y-one', title: 'Y One', publishable: true,
                     last_updated: '', customisation: { category: 'y' }
                   }
                 ]
@@ -3448,7 +3448,7 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
             newPresent: root.querySelector('[data-docs-subscope-new]') !== null,
             customFilters: root.querySelectorAll('[data-docs-subscope-custom-filter]').length,
             statusIcons: root.querySelectorAll('.docsViewer__navStatus').length,
-            nonViewableIcons: root.querySelectorAll('.docsViewer__draftPrefix').length
+            nonPublishableIcons: root.querySelectorAll('.docsViewer__publishableExclusion').length
           };
           root.querySelector('[data-docs-subscope-new]').click();
           await Promise.resolve();
@@ -3795,7 +3795,7 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
         "newPresent": True,
         "customFilters": 0,
         "statusIcons": 2,
-        "nonViewableIcons": 1,
+        "nonPublishableIcons": 1,
     }
     assert result["selectedBeforeSort"] == ["zeta"]
     assert result["created"] == [

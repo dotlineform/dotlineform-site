@@ -15,7 +15,7 @@ from docs_document_packages.export_common import normalize_text
 SKIPPED_REASON_LABELS = {
     "has_summary": "already have summaries",
     "max_documents": "exceeded the configured maximum document count",
-    "non_viewable": "are not viewable",
+    "non_publishable": "are not publishable",
     "unknown_doc_id": "were not found",
 }
 
@@ -36,7 +36,7 @@ class ExportContext:
 
 
 def source_record_to_export_doc(record: source_records.DocumentPackageSourceRecord) -> dict[str, Any]:
-    return {
+    doc = {
         "doc_id": record.doc_id,
         "scope": record.scope,
         "title": record.title,
@@ -45,12 +45,14 @@ def source_record_to_export_doc(record: source_records.DocumentPackageSourceReco
         "last_updated": record.last_updated,
         "parent_id": record.parent_id,
         "parent_title": record.parent_title,
-        "viewable": record.viewable,
         "ui_status": record.ui_status,
         "source_path": record.source_path,
         "viewer_url": record.viewer_url,
         "content_text_length": record.content_text_length,
     }
+    if record.publishable is not None:
+        doc["publishable"] = record.publishable
+    return doc
 
 
 def load_source_export_context(
@@ -102,7 +104,7 @@ def selected_docs(
     selected_doc_ids: list[str],
     select_all: bool,
     missing_summary_only: bool | None,
-    include_non_viewable: bool | None,
+    include_non_publishable: bool | None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, str]], list[str], list[str]]:
     selection = context.config.get("selection", {})
     mode = normalize_text(selection.get("mode"))
@@ -128,8 +130,8 @@ def selected_docs(
         if doc is None:
             skipped.append({"doc_id": doc_id, "reason": "unknown_doc_id"})
             continue
-        if not effective_include_non_viewable(context.config, include_non_viewable) and doc.get("viewable") is False:
-            skipped.append({"doc_id": doc_id, "reason": "non_viewable"})
+        if not effective_include_non_publishable(context.config, include_non_publishable) and doc.get("publishable") is False:
+            skipped.append({"doc_id": doc_id, "reason": "non_publishable"})
             continue
         if effective_missing_summary_only(context.config, missing_summary_only) and normalize_text(doc.get("summary")):
             skipped.append({"doc_id": doc_id, "reason": "has_summary"})
@@ -187,11 +189,11 @@ def effective_missing_summary_only(config: dict[str, Any], override: bool | None
     return bool(selection.get("default_missing_summary_only")) if selection.get("supports_missing_summary_only") else False
 
 
-def effective_include_non_viewable(config: dict[str, Any], override: bool | None) -> bool:
+def effective_include_non_publishable(config: dict[str, Any], override: bool | None) -> bool:
     selection = config.get("selection", {})
-    if override is not None and selection.get("supports_include_non_viewable"):
+    if override is not None and selection.get("supports_include_non_publishable"):
         return override
-    return selection.get("include_non_viewable") is not False
+    return selection.get("include_non_publishable") is not False
 
 
 def skipped_reason_counts(skipped: list[dict[str, str]]) -> dict[str, int]:

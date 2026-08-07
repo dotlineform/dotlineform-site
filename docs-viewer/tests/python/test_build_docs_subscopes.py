@@ -21,6 +21,7 @@ from build_docs_test_support import (
     write_json,
     write_public_scope_config,
     write_public_source_docs,
+    write_route_config,
     write_site_tools_config,
     write_text,
 )
@@ -217,7 +218,6 @@ title: Pathless
                 "doc_id": first_doc_id,
                 "title": "Architecture",
                 "ui_status": "",
-                "viewable": True,
                 "last_updated": "",
                 "authoring_subject": {
                     "state": "valid",
@@ -231,7 +231,6 @@ title: Pathless
                 "doc_id": second_doc_id,
                 "title": "Architecture notes",
                 "ui_status": "",
-                "viewable": True,
                 "last_updated": "",
                 "authoring_subject": {
                     "state": "valid",
@@ -245,7 +244,6 @@ title: Pathless
                 "doc_id": pathless_doc_id,
                 "title": "Pathless",
                 "ui_status": "",
-                "viewable": True,
                 "last_updated": "",
                 "authoring_subject": {
                     "state": "none",
@@ -617,7 +615,6 @@ Related body.
                 "doc_id": DETAIL_DOC_ID,
                 "title": "Detail",
                 "ui_status": "draft",
-                "viewable": True,
                 "last_updated": "2026-06-21",
                 "customisation": {"group": "subject"},
             },
@@ -625,7 +622,6 @@ Related body.
                 "doc_id": RELATED_DOC_ID,
                 "title": "Related",
                 "ui_status": "",
-                "viewable": True,
                 "last_updated": "2026-06-23",
             },
         ],
@@ -761,15 +757,27 @@ def test_python_docs_builder_rejects_browser_config_suppression_outside_sub_scop
             )
 
 
-def test_python_docs_builder_keeps_non_viewable_docs_out_of_public_manifest() -> None:
+def test_python_docs_builder_keeps_non_publishable_docs_out_of_public_manifest() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         prepare_repo(root)
+        write_route_config(root, public_scope="studio", public_basis="edited")
         config_path = root / "docs-viewer/config/scopes/docs_scopes.json"
         payload = read_json(config_path)
-        payload["scopes"][0]["sub_scopes"] = [
-            docs_sub_scope_record("studio", "tags")
-        ]
+        payload["scopes"][0] = docs_scope_record(
+            "studio",
+            scope_type="public",
+            viewer_base_url="/studio/",
+            include_scope_param=False,
+            default_doc_id=PARENT_DOC_ID,
+            sub_scopes=[
+                docs_sub_scope_record(
+                    "studio",
+                    "tags",
+                    scope_type="public",
+                )
+            ],
+        )
         write_json(config_path, payload)
         write_text(
             root / f"docs-viewer/scopes/studio/source/sub-scopes/tags/documents/{DETAIL_DOC_ID}.md",
@@ -785,7 +793,7 @@ title: Detail
             f"""---
 doc_id: {HIDDEN_DOC_ID}
 title: Hidden
-viewable: false
+publishable: false
 ---
 # Hidden
 """,
@@ -821,14 +829,13 @@ viewable: false
                 "doc_id": DETAIL_DOC_ID,
                 "title": "Detail",
                 "ui_status": "",
-                "viewable": True,
                 "last_updated": "",
             },
             {
                 "doc_id": HIDDEN_DOC_ID,
                 "title": "Hidden",
                 "ui_status": "",
-                "viewable": False,
+                "publishable": False,
                 "last_updated": "",
             },
         ]
@@ -915,7 +922,6 @@ group: subject
                 "doc_id": DETAIL_DOC_ID,
                 "title": "Detail",
                 "ui_status": "",
-                "viewable": True,
                 "last_updated": "2026-06-21",
                 "customisation": {"group": "subject"},
             }
@@ -1062,7 +1068,6 @@ work_id: "00123"
                 "doc_id": DETAIL_DOC_ID,
                 "title": "Detail",
                 "ui_status": "",
-                "viewable": True,
                 "last_updated": "2026-06-21",
             }
         ]

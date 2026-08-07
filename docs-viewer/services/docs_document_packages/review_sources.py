@@ -48,7 +48,7 @@ FOLDER_ID_SOURCE = "export_metadata"
 SAFE_FOLDER_ID_RE = re.compile(r"\A[A-Za-z0-9][A-Za-z0-9._-]*\Z")
 SAFE_DOC_ID_RE = re.compile(r"\A[A-Za-z0-9][A-Za-z0-9._-]*\Z")
 SAFE_FILENAME_RE = re.compile(r"[^A-Za-z0-9._-]+")
-FRONT_MATTER_FIELDS = ("title", "parent_id", "summary", "viewable")
+FRONT_MATTER_FIELDS = ("title", "parent_id", "summary")
 CONTENT_FIELD = "content"
 CONTENT_FORMAT_FIELD = "content_format"
 
@@ -350,7 +350,6 @@ def source_markdown(body: str, front_matter: dict[str, Any]) -> str:
         "last_updated",
         "summary",
         "parent_id",
-        "viewable",
     ]
     ordered_keys = [key for key in preferred_order if key in front_matter]
     ordered_keys.extend(sorted(key for key in front_matter.keys() if key not in ordered_keys))

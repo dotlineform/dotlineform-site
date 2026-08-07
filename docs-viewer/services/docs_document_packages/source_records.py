@@ -20,7 +20,7 @@ class DocumentPackageSourceRecord:
     last_updated: str
     parent_id: str
     parent_title: str
-    viewable: bool
+    publishable: bool | None
     ui_status: str
     source_path: str
     viewer_url: str
@@ -40,6 +40,7 @@ def source_record_from_doc(
     doc: Any,
     parent_title: str,
     content_text_length: int,
+    publishable: bool | None,
 ) -> DocumentPackageSourceRecord:
     return DocumentPackageSourceRecord(
         doc_id=doc.doc_id,
@@ -50,7 +51,7 @@ def source_record_from_doc(
         last_updated=doc.last_updated,
         parent_id=doc.parent_id,
         parent_title=parent_title,
-        viewable=doc.viewable,
+        publishable=publishable,
         ui_status=doc.ui_status,
         source_path=source_path_for_record(repo_root, source_root, doc),
         viewer_url=doc.viewer_url,

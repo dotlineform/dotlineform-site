@@ -190,7 +190,7 @@ def insert_missing_group(source_text: str, group: str) -> str:
     lines = raw_front_matter.splitlines(keepends=True)
     insert_at = len(lines)
     for index, line in enumerate(lines):
-        if line.lstrip().startswith(("parent_id:", "viewable:")):
+        if line.lstrip().startswith(("parent_id:", "publishable:")):
             insert_at = index
             break
 

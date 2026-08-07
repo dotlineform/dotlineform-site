@@ -22,6 +22,17 @@ def normalize_record(row: dict[str, Any], record_index: int, line: int | None) -
         issues.append(issue("error", "missing_doc_id", "record is missing doc_id", record_index=record_index, line=line))
     if not title:
         issues.append(issue("error", "missing_title", "record is missing title", record_index=record_index, line=line, doc_id=doc_id))
+    if "viewable" in row:
+        issues.append(
+            issue(
+                "error",
+                "legacy_viewable",
+                "record uses retired viewable metadata; regenerate the package with publishable",
+                record_index=record_index,
+                line=line,
+                doc_id=doc_id,
+            )
+        )
 
     normalized: dict[str, Any] = {
         "record_index": record_index,
@@ -41,7 +52,7 @@ def normalize_record(row: dict[str, Any], record_index: int, line: int | None) -
     for key in ["summary", "current_summary"]:
         if key in row:
             normalized["metadata"][key] = str(row.get(key) or "")
-    for key in ["viewable"]:
+    for key in ["publishable"]:
         if key in row:
             normalized["metadata"][key] = row.get(key)
     if "headings" in row:

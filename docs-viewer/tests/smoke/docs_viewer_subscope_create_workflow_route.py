@@ -605,19 +605,19 @@ def exercise_report_create(
     third_metadata, third_body = source_model.parse_source(third_source)
     if (
         first_metadata.get("title") != FIRST_TITLE
-        or source_model.doc_is_viewable(first_metadata) is not True
+        or source_model.doc_is_publishable(first_metadata) is not True
         or first_body != f"# {FIRST_TITLE}\n"
     ):
         raise AssertionError("first created source did not retain its generated start")
     if (
         second_metadata.get("title") != SECOND_TITLE
-        or source_model.doc_is_viewable(second_metadata) is not True
+        or source_model.doc_is_publishable(second_metadata) is not True
         or second_body != SECOND_BODY
     ):
         raise AssertionError("second created source did not retain its saved body")
     if (
         third_metadata.get("title") != THIRD_TITLE
-        or source_model.doc_is_viewable(third_metadata) is not True
+        or source_model.doc_is_publishable(third_metadata) is not True
         or third_body != f"# {THIRD_TITLE}\n"
     ):
         raise AssertionError(
@@ -626,11 +626,11 @@ def exercise_report_create(
 
     manage_docs = read_json(Path(paths["manage_manifest"])).get("docs")
     if [
-        (record.get("doc_id"), record.get("title"), record.get("viewable"))
+        (record.get("doc_id"), record.get("title"), record.get("publishable"))
         for record in manage_docs or []
     ] != [
-        (FIRST_DOC_ID, FIRST_TITLE, True),
-        (SECOND_DOC_ID, SECOND_TITLE, True),
+        (FIRST_DOC_ID, FIRST_TITLE, None),
+        (SECOND_DOC_ID, SECOND_TITLE, None),
     ]:
         raise AssertionError(f"manage manifest did not retain both creates: {manage_docs!r}")
     public_docs = read_json(Path(paths["public_manifest"])).get("docs")

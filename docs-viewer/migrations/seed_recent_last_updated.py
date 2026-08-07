@@ -257,7 +257,7 @@ def _hidden_doc_ids(
     manage_only_tree_root_ids: Iterable[str],
 ) -> set[str]:
     hidden = {str(doc_id or "").strip() for doc_id in manage_only_tree_root_ids}
-    hidden.update(doc.doc_id for doc in docs if not doc.viewable)
+    hidden.update(doc.doc_id for doc in docs if not doc.publishable)
     hidden.discard("")
     children_by_parent: dict[str, list[str]] = {}
     for doc in docs:

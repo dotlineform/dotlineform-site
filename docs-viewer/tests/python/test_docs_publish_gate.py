@@ -90,7 +90,7 @@ def prepare_publish_repo(root: Path) -> None:
                             "doc_id": "hidden",
                             "title": "Hidden",
                             "content_url": "/assets/data/docs/scopes/library/by-id/hidden.json",
-                            "viewable": False,
+                            "publishable": False,
                             "children": [
                                 {
                                     "doc_id": "hidden-child",
@@ -199,7 +199,7 @@ def write_library_subject_source(root: Path, field_name: str, value: str) -> Non
                 "---",
                 f'doc_id: "{LIBRARY_DOC_ID}"',
                 'title: "Library"',
-                "viewable: true",
+                "publishable: true",
                 f'{field_name}: "{value}"',
                 "---",
                 "",
@@ -426,7 +426,7 @@ def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> No
                         "doc_id": "scale",
                         "title": "Scale",
                         "ui_status": "draft",
-                        "viewable": True,
+                        "publishable": True,
                     }
                 ]
             },

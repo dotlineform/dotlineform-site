@@ -122,6 +122,7 @@ def load_document_package_source_context(
                 doc=doc,
                 parent_title=parent.title if parent else "",
                 content_text_length=len(content_text),
+                publishable=(doc.publishable if builder.publishable_supported else None),
             )
         )
 

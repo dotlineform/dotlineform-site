@@ -70,17 +70,16 @@ def write_external_scope_config(root: Path, external_root: Path) -> None:
     )
 
 
-def write_source_docs(root: Path, *, child_title: str = "Child", child_viewable: bool = True) -> None:
+def write_source_docs(root: Path, *, child_title: str = "Child") -> None:
     rows = [
-        ("parent", "Parent Page", "2026-06-01", "", True),
-        ("child", child_title, "2026-06-02", "parent", child_viewable),
-        ("draft", "Draft", "2026-06-03", "", False),
-        ("draft-child", "Draft Child", "2026-06-04", "draft", True),
-        ("manage-root", "Manage Root", "2026-06-04", "", True),
-        ("manage-child", "Manage Child", "2026-06-05", "manage-root", True),
+        ("parent", "Parent Page", "2026-06-01", ""),
+        ("child", child_title, "2026-06-02", "parent"),
+        ("draft", "Draft", "2026-06-03", ""),
+        ("draft-child", "Draft Child", "2026-06-04", "draft"),
+        ("manage-root", "Manage Root", "2026-06-04", ""),
+        ("manage-child", "Manage Child", "2026-06-05", "manage-root"),
     ]
-    for doc_id, title, last_updated, parent_id, viewable in rows:
-        viewable_line = "" if viewable else "viewable: false\n"
+    for doc_id, title, last_updated, parent_id in rows:
         parent_line = f"parent_id: {parent_id}\n" if parent_id else ""
         write_text(
             root / f"docs-viewer/scopes/studio/source/documents/{doc_id}.md",
@@ -88,7 +87,7 @@ def write_source_docs(root: Path, *, child_title: str = "Child", child_viewable:
 doc_id: {doc_id}
 title: {json.dumps(title)}
 last_updated: {last_updated}
-{parent_line}{viewable_line}---
+{parent_line}---
 # {title}
 
 Search source body.
@@ -123,15 +122,15 @@ def test_python_docs_search_builder_writes_current_schema_and_hash() -> None:
 
     assert exit_code == 0
     assert stderr == ""
-    assert "Wrote docs-viewer/scopes/studio/published/search/index.json with 2 studio search entries" in stdout
+    assert "Wrote docs-viewer/scopes/studio/published/search/index.json with 4 studio search entries" in stdout
     header = payload["header"]
     entries = payload["entries"]
     assert header["schema"] == "search_index_studio_v1"
     assert header["scope"] == "studio"
     assert header["version"].startswith("blake2b-")
-    assert header["count"] == 2
-    assert [entry["id"] for entry in entries] == ["parent", "child"]
-    child = entries[1]
+    assert header["count"] == 4
+    assert [entry["id"] for entry in entries] == ["draft", "draft-child", "parent", "child"]
+    child = entries[3]
     assert child["kind"] == "doc"
     assert child["href"] == "/docs/?scope=studio&doc=child"
     assert child["parent_title"] == "Parent Page"
@@ -233,7 +232,7 @@ Sub-scope detail body.
 
     assert exit_code == 0
     assert stderr == ""
-    assert "Wrote docs-viewer/scopes/studio/published/search/index.json with 2 studio search entries" in stdout
+    assert "Wrote docs-viewer/scopes/studio/published/search/index.json with 4 studio search entries" in stdout
     assert "detail" not in {entry["id"] for entry in payload["entries"]}
 
 
@@ -245,7 +244,7 @@ def test_python_docs_search_builder_dry_run_does_not_write() -> None:
 
         assert exit_code == 0
         assert stderr == ""
-        assert "Dry run: 2 studio search entries" in stdout
+        assert "Dry run: 4 studio search entries" in stdout
         assert "Would write: docs-viewer/scopes/studio/published/search/index.json" in stdout
         assert not (root / "docs-viewer/scopes/studio/published/search/index.json").exists()
 
@@ -265,7 +264,7 @@ def test_python_docs_search_builder_skips_unchanged_second_write_and_force_rewri
     assert "Search index JSON done. Wrote: 0. Skipped: 1." in second_stdout
     assert force_exit == 0
     assert force_stderr == ""
-    assert "Wrote docs-viewer/scopes/studio/published/search/index.json with 2 studio search entries" in force_stdout
+    assert "Wrote docs-viewer/scopes/studio/published/search/index.json with 4 studio search entries" in force_stdout
     assert force_payload["header"]["version"] == first_payload["header"]["version"]
 
 
@@ -282,8 +281,8 @@ def test_python_docs_search_builder_targeted_update_patches_existing_entry() -> 
     assert exit_code == 0
     assert stderr == ""
     assert "Targeted search index JSON done. Wrote: 1. Skipped: 0. Changed: 1. Removed: 0. Unchanged: 0. Full fallback: 0." in stdout
-    assert [entry["id"] for entry in payload["entries"]] == ["parent", "child"]
-    assert payload["entries"][1]["title"] == "Child Updated"
+    assert [entry["id"] for entry in payload["entries"]] == ["draft", "draft-child", "parent", "child"]
+    assert payload["entries"][3]["title"] == "Child Updated"
 
 
 def test_python_docs_search_builder_targeted_remove_requires_remove_missing() -> None:
@@ -291,7 +290,7 @@ def test_python_docs_search_builder_targeted_remove_requires_remove_missing() ->
         root = Path(temp_path)
         prepare_repo(root)
         run_cli(root, ["--scope", "studio", "--write"])
-        write_source_docs(root, child_viewable=False)
+        (root / "docs-viewer/scopes/studio/source/documents/child.md").unlink()
 
         try:
             run_cli(root, ["--scope", "studio", "--write", "--only-doc-ids", "child"])
@@ -307,7 +306,7 @@ def test_python_docs_search_builder_targeted_remove_requires_remove_missing() ->
     assert exit_code == 0
     assert stderr == ""
     assert "Changed: 0. Removed: 1. Unchanged: 0. Full fallback: 0." in stdout
-    assert [entry["id"] for entry in payload["entries"]] == ["parent"]
+    assert [entry["id"] for entry in payload["entries"]] == ["draft", "draft-child", "parent"]
 
 
 def test_python_docs_search_builder_targeted_without_existing_index_falls_back_full() -> None:
@@ -319,8 +318,8 @@ def test_python_docs_search_builder_targeted_without_existing_index_falls_back_f
 
     assert exit_code == 0
     assert stderr == ""
-    assert "Changed: 2. Removed: 0. Unchanged: 0. Full fallback: 1." in stdout
-    assert [entry["id"] for entry in payload["entries"]] == ["parent", "child"]
+    assert "Changed: 4. Removed: 0. Unchanged: 0. Full fallback: 1." in stdout
+    assert [entry["id"] for entry in payload["entries"]] == ["draft", "draft-child", "parent", "child"]
 
 
 def test_python_docs_search_builder_rejects_catalogue_targeted_records_flag() -> None:

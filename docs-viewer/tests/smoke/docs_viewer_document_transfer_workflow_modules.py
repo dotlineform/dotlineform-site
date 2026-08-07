@@ -77,7 +77,7 @@ def assert_transfer_workflow(page: Page) -> None:
                             sub_scope: body.target_sub_scope,
                             placement: 'sub_scope_root'
                         },
-                        target_default_viewable: false,
+                        target_default_publishable: true,
                         custom_metadata: {
                             retained: [],
                             omitted: [{ field: 'project_status' }],
@@ -379,7 +379,7 @@ def assert_transfer_workflow(page: Page) -> None:
         "body": [
             "Copy 3 documents to analysis / works",
             "includes 2 media",
-            "New documents will be non-viewable.",
+            "New documents will be included in the next Publish.",
             "1 custom metadata field will be omitted because the target does not support it.",
         ],
         "bold": ["3", "analysis / works", "2"],

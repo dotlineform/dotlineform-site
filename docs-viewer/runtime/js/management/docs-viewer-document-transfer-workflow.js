@@ -130,12 +130,11 @@ export function buildDocumentTransferConfirmationBody(preview) {
   }).forEach(function (warning) {
     lines.push("Warning: " + String(warning && warning.message || warning || "").trim());
   });
-  if (mode === "copy") {
-    lines.push(
-      preview.target_default_viewable === false
-        ? "New documents will be non-viewable."
-        : "New documents will use the target's viewable default."
-    );
+  if (
+    mode === "copy"
+    && Object.prototype.hasOwnProperty.call(preview, "target_default_publishable")
+  ) {
+    lines.push("New documents will be included in the next Publish.");
     var omitted = preview && preview.custom_metadata && Array.isArray(preview.custom_metadata.omitted)
       ? preview.custom_metadata.omitted
       : [];

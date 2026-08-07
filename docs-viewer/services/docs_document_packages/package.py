@@ -28,12 +28,13 @@ import docs_source_model as source_model
 def document_selectable_record(doc: Dict[str, Any]) -> Dict[str, Any]:
     doc_id = str(doc.get("doc_id") or "").strip()
     title = str(doc.get("title") or doc_id).strip()
-    viewable = doc.get("viewable") is not False
+    publishable_value = doc.get("publishable")
+    publishable = publishable_value is not False
     selectable = bool(doc_id)
     issues: list[Dict[str, str]] = []
-    if not viewable:
-        issues.append({"level": "warning", "message": "Document is not viewable."})
-    return {
+    if publishable_value is False:
+        issues.append({"level": "warning", "message": "Document is not publishable."})
+    record = {
         "id": doc_id,
         "name": title,
         "doc_id": doc_id,
@@ -41,13 +42,15 @@ def document_selectable_record(doc: Dict[str, Any]) -> Dict[str, Any]:
         "type": "document",
         "meta": doc_id,
         "parent_id": str(doc.get("parent_id") or "").strip(),
-        "viewable": viewable,
         "selectable": selectable,
         "children": [],
         "issues": issues,
         "content_text_length": int(doc.get("content_text_length") or 0),
         "summary": str(doc.get("summary") or ""),
     }
+    if isinstance(publishable_value, bool):
+        record["publishable"] = publishable
+    return record
 
 
 def selectable_document_records(
@@ -70,7 +73,7 @@ def selectable_document_records(
                 "doc_id": item.doc_id,
                 "title": item.title,
                 "parent_id": item.parent_id,
-                "viewable": item.viewable,
+                "publishable": item.publishable,
                 "content_text_length": item.content_text_length,
                 "summary": item.summary,
             }
@@ -107,7 +110,7 @@ def build_document_package(
     raw_doc_ids: Any,
     select_all: bool,
     missing_summary_only: Any,
-    include_non_viewable: Any,
+    include_non_publishable: Any,
     dry_run: bool,
     config_path: str,
     target_format: str,
@@ -127,8 +130,8 @@ def build_document_package(
     doc_ids = parse_export_doc_ids([str(doc_id or "") for doc_id in raw_doc_ids])
     if missing_summary_only is not None and not isinstance(missing_summary_only, bool):
         raise ValueError("missing_summary_only must be true, false, or null")
-    if include_non_viewable is not None and not isinstance(include_non_viewable, bool):
-        raise ValueError("include_non_viewable must be true, false, or null")
+    if include_non_publishable is not None and not isinstance(include_non_publishable, bool):
+        raise ValueError("include_non_publishable must be true, false, or null")
 
     return build_export(
         repo_root=repo_root,
@@ -139,7 +142,7 @@ def build_document_package(
         selected_doc_ids=doc_ids,
         select_all=select_all,
         missing_summary_only=missing_summary_only,
-        include_non_viewable=include_non_viewable,
+        include_non_publishable=include_non_publishable,
         expand_document_tree_descendants=False,
         write=not dry_run,
         config_path=config_path,

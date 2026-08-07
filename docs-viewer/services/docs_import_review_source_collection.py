@@ -32,7 +32,6 @@ from docs_import_review_source_folder import (
 from docs_management_document_target import ManagedDocumentCollection
 from docs_source_model import (
     load_document_collection_docs_for_config,
-    load_scope_docs,
     normalize_scope,
 )
 from docs_document_packages.workspace import marker_path
@@ -56,8 +55,8 @@ def _record_state(
         front_matter["summary"] = source.summary
     if source.parent_id_present and not sub_scope:
         front_matter["parent_id"] = source.parent_id
-    if source.viewable_present and not sub_scope:
-        front_matter["viewable"] = source.viewable
+    if source.publishable_present:
+        front_matter["publishable"] = source.publishable
     normalized = ImportContent(
         source_kind=EDITED_REVIEW_SOURCE_FORMAT,
         source_identity=folder.staged_filename,
@@ -140,14 +139,10 @@ def plan_edited_review_source_collection(
 
     _validate_destination(folder, collection)
     scope = normalize_scope(collection.scope)
-    docs = (
-        load_document_collection_docs_for_config(
-            repo_root,
-            collection.parent_config,
-            collection.document_config,
-        )
-        if collection.sub_scope
-        else load_scope_docs(repo_root, scope)
+    docs = load_document_collection_docs_for_config(
+        repo_root,
+        collection.parent_config,
+        collection.document_config,
     )
     source_versions = dict(folder.source_last_updated)
     blockers = validate_prepared_source_versions(

@@ -110,7 +110,6 @@ def prepare_delete_repo(repo_root: Path) -> dict[str, object]:
             "# Smoke Detail\n\nDelete only this synthetic source.",
             summary="Synthetic exact-delete target.",
             ui_status="draft",
-            viewable="true",
         ),
     )
     write_text(
@@ -121,7 +120,6 @@ def prepare_delete_repo(repo_root: Path) -> dict[str, object]:
             "# Retained Smoke Sibling\n\nThis sibling must survive.",
             summary="Synthetic retained sibling.",
             ui_status="done",
-            viewable="true",
         ),
     )
 

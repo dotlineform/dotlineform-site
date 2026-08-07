@@ -186,7 +186,6 @@ Body without an H1.
     assert payload["record"] == {
         "doc_id": payload["doc_id"],
         "title": "Imported Tag Note",
-        "viewable": False,
     }
     assert source_model.is_immutable_doc_id(payload["doc_id"])
     assert payload["doc_id"] != "existing-tag-doc"
@@ -199,7 +198,7 @@ Body without an H1.
     ] == [f"{REPORT_DOC_ID}.md"]
     assert front_matter["doc_id"] == payload["doc_id"]
     assert front_matter["title"] == "Imported Tag Note"
-    assert front_matter["viewable"] is False
+    assert "publishable" not in front_matter
     assert "parent_id" not in front_matter
     assert "summary" not in front_matter
     assert "group" not in front_matter

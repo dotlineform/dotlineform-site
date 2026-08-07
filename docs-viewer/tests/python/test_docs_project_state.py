@@ -54,7 +54,7 @@ def manifest_doc(doc_id: str, title: str, subject: dict[str, object]) -> dict[st
         "doc_id": doc_id,
         "title": title,
         "ui_status": "",
-        "viewable": True,
+        "publishable": True,
         "last_updated": "2026-08-05 12:00:00",
         "authoring_subject": subject,
     }

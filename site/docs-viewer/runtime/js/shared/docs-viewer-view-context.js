@@ -77,7 +77,7 @@ function selectedPayloadMetadata(payload, appContext, docId) {
       last_updated: cleanString(record.last_updated)
     };
   }
-  return {
+  var metadata = {
     doc_id: cleanString(record.doc_id) || cleanString(docId),
     title: cleanString(record.title),
     summary: cleanString(record.summary),
@@ -87,9 +87,12 @@ function selectedPayloadMetadata(payload, appContext, docId) {
     added_date: cleanString(record.added_date),
     last_updated: cleanString(record.last_updated),
     ui_status: cleanString(record.ui_status),
-    viewable: record.viewable === false ? false : true,
     viewer_url: cleanString(record.viewer_url)
   };
+  if (Object.prototype.hasOwnProperty.call(record, "publishable")) {
+    metadata.publishable = record.publishable !== false;
+  }
+  return metadata;
 }
 
 export function resolveDocsViewerSelectedDoc(options = {}) {

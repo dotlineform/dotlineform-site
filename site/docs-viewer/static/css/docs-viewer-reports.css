@@ -368,7 +368,7 @@
   overflow-wrap: anywhere;
 }
 
-.docsViewerReport__viewable{
+.docsViewerReport__publishable{
   display: inline-block;
   justify-self: start;
   margin-top: 0.35rem;
@@ -379,7 +379,7 @@
   background: transparent;
 }
 
-.docsViewerReport__viewable.is-viewable{
+.docsViewerReport__publishable.is-publishable{
   border-color: var(--docs-viewer-link);
   background: var(--docs-viewer-link);
 }

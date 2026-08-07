@@ -30,21 +30,21 @@ export function buildChildrenMap(docs) {
   return childrenByParent;
 }
 
-export function isDocViewable(doc) {
-  return !isDocNonViewable(doc);
+export function isDocPublishable(doc) {
+  return !isDocNonPublishable(doc);
 }
 
-export function isDocNonViewable(doc) {
+export function isDocNonPublishable(doc) {
   if (!doc) return false;
-  return doc.viewable === false;
+  return doc.publishable === false;
 }
 
-export function hasNonViewableAncestor(doc, docsById) {
+export function hasNonPublishableAncestor(doc, docsById) {
   if (!doc || !doc.parent_id || !docsById) return false;
   var visited = new Set([doc.doc_id]);
   var current = docsById.get(doc.parent_id);
   while (current && current.doc_id && !visited.has(current.doc_id)) {
-    if (!isDocViewable(current)) return true;
+    if (!isDocPublishable(current)) return true;
     visited.add(current.doc_id);
     current = current.parent_id ? docsById.get(current.parent_id) : null;
   }

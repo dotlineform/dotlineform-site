@@ -73,7 +73,6 @@ def front_matter_block(record: dict[str, Any]) -> str:
         "date_display",
         "added_date",
         "parent_id",
-        "viewable",
     ]
     lines = ["---"]
     for key in preferred_order:
@@ -160,7 +159,6 @@ def render_moment_source(
             "date_display": date_display,
             "added_date": added_date,
             "parent_id": "",
-            "viewable": True,
         }
     )
     parts = [

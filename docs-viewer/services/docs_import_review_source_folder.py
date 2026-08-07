@@ -43,7 +43,7 @@ ALLOWED_FRONT_MATTER_FIELDS = {
     OPTIONAL_REVIEW_FIELD,
     "summary",
     "parent_id",
-    "viewable",
+    "publishable",
 }
 PROVENANCE_FIELDS = (
     "review_folder_id",
@@ -220,12 +220,12 @@ def _source_record(path: Path) -> dict[str, Any]:
             raise ValueError(
                 f"edited review source {path.name} {field} must be a string",
             )
-    if "viewable" in front_matter and not isinstance(
-        front_matter["viewable"],
+    if "publishable" in front_matter and not isinstance(
+        front_matter["publishable"],
         bool,
     ):
         raise ValueError(
-            f"edited review source {path.name} viewable must be true or false",
+            f"edited review source {path.name} publishable must be true or false",
         )
     return {
         "doc_id": doc_id,
@@ -400,8 +400,8 @@ class EditedReviewSourceRecord:
     summary: str
     parent_id_present: bool
     parent_id: str
-    viewable_present: bool
-    viewable: bool
+    publishable_present: bool
+    publishable: bool
 
 
 @dataclass(frozen=True)
@@ -587,8 +587,8 @@ def recognize_edited_review_source_folder(
                 summary=str(record["front_matter"].get("summary") or ""),
                 parent_id_present="parent_id" in record["front_matter"],
                 parent_id=str(record["front_matter"].get("parent_id") or ""),
-                viewable_present="viewable" in record["front_matter"],
-                viewable=bool(record["front_matter"].get("viewable", True)),
+                publishable_present="publishable" in record["front_matter"],
+                publishable=bool(record["front_matter"].get("publishable", True)),
             )
             for record in records
         ),

@@ -386,21 +386,23 @@ def parsed_doc_snapshot(
         normalized_sub_scope,
     )
     root = resolve_scope_path(repo_root, document_source_path(document_config))
-    return {
-        doc.path.relative_to(root).as_posix(): {
+    snapshot: Dict[str, Dict[str, Any]] = {}
+    for doc in docs:
+        row: Dict[str, Any] = {
             "filename": doc.path.relative_to(root).as_posix(),
             "doc_id": doc.doc_id,
             "title": doc.title,
             "parent_id": doc.parent_id,
-            "viewable": doc.viewable,
             "added_date": str(doc.front_matter.get("added_date") or "").strip(),
             "last_updated": str(doc.front_matter.get("last_updated") or "").strip(),
             "recent_edit_content": recent_edit_content(doc.front_matter, doc.body),
             "source_revision": source_revision(doc.source_text.encode("utf-8")),
             "sort_key": scope_doc_sort_key(doc),
         }
-        for doc in docs
-    }
+        if getattr(document_config, "public_projection", None) is not None:
+            row["publishable"] = doc.publishable
+        snapshot[doc.path.relative_to(root).as_posix()] = row
+    return snapshot
 
 
 def try_parsed_doc_snapshot(

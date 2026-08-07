@@ -55,7 +55,7 @@ KNOWN_RECORD_FIELDS = {
     "headings",
     "content",
     "last_updated",
-    "viewable",
+    "publishable",
 }
 DOCS_REVIEW_CAPABILITY = "supports_docs_review"
 RETURN_IMPORT_CAPABILITY = "supports_return_import"

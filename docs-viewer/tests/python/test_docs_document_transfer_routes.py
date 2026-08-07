@@ -40,7 +40,6 @@ def write_doc(
         "doc_id": doc_id,
         "title": title,
         "parent_id": parent_id,
-        "viewable": True,
     }
     front_matter.update(extra_front_matter or {})
     (documents_root / f"{doc_id}.md").write_text(

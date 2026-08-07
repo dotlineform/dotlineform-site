@@ -8,6 +8,8 @@ import tempfile
 from pathlib import Path
 from types import SimpleNamespace
 
+import pytest
+
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DOCS_SERVICES_DIR = REPO_ROOT / "docs-viewer" / "services"
@@ -49,15 +51,46 @@ def make_doc(
         title=str(front_matter["title"]),
         ui_status="",
         parent_id=parent_id,
-        viewable=True,
+        publishable=True,
     )
 
 
-def test_default_viewability_follows_scope_type() -> None:
-    assert source_model.default_viewable_for_scope("library") is False
-    assert source_model.default_viewable_for_scope("analysis") is False
-    assert source_model.default_viewable_for_scope("moments") is False
-    assert source_model.default_viewable_for_scope("studio") is True
+def test_publishable_support_follows_exact_public_projection() -> None:
+    assert source_model.collection_supports_publishable(
+        SimpleNamespace(public_projection=object())
+    ) is True
+    assert source_model.collection_supports_publishable(
+        SimpleNamespace(public_projection=None)
+    ) is False
+
+
+def test_publishable_front_matter_rejects_legacy_and_local_fields() -> None:
+    public = SimpleNamespace(public_projection=object())
+    local = SimpleNamespace(public_projection=None)
+
+    source_model.validate_publishable_front_matter(
+        {"publishable": False},
+        collection_config=public,
+        source_name="public.md",
+    )
+    with pytest.raises(ValueError, match="legacy viewable"):
+        source_model.validate_publishable_front_matter(
+            {"viewable": False},
+            collection_config=public,
+            source_name="legacy.md",
+        )
+    with pytest.raises(ValueError, match="not supported in local collection"):
+        source_model.validate_publishable_front_matter(
+            {"publishable": False},
+            collection_config=local,
+            source_name="local.md",
+        )
+    with pytest.raises(ValueError, match="must be a boolean"):
+        source_model.validate_publishable_front_matter(
+            {"publishable": "false"},
+            collection_config=public,
+            source_name="invalid.md",
+        )
 
 
 def test_front_matter_parses_and_formats_supported_scalar_values() -> None:
@@ -70,7 +103,7 @@ def test_front_matter_parses_and_formats_supported_scalar_values() -> None:
                     "doc_id: sample",
                     "title: \"Quoted Title\"",
                     "parent_id: \"\"",
-                    "viewable: false",
+                    "publishable: false",
                     "summary: \"\"",
                     "---",
                     "# Sample",
@@ -85,10 +118,10 @@ def test_front_matter_parses_and_formats_supported_scalar_values() -> None:
 
     assert front_matter["title"] == "Quoted Title"
     assert front_matter["parent_id"] == ""
-    assert front_matter["viewable"] is False
+    assert front_matter["publishable"] is False
     assert front_matter["summary"] == ""
     assert "parent_id: \"\"" in formatted
-    assert "viewable: false" in formatted
+    assert "publishable: false" in formatted
 
 
 def test_front_matter_formatter_quotes_digit_only_string_identity() -> None:
@@ -415,9 +448,9 @@ def test_source_rewrite_advances_only_for_recent_edit_content() -> None:
         doc.front_matter["added_date"] = "2026-01-01"
         doc.front_matter["last_updated"] = "2026-01-02 09:00"
 
-        doc.front_matter["viewable"] = True
+        doc.front_matter["publishable"] = True
 
-        metadata_text = source_model.rewrite_doc_source(doc, {"title": "Updated", "viewable": False})
+        metadata_text = source_model.rewrite_doc_source(doc, {"title": "Updated", "publishable": False})
         placement_text = source_model.rewrite_doc_placement_source(doc, "")
     finally:
         source_model.current_doc_timestamp = original_timestamp
@@ -436,7 +469,7 @@ def test_source_rewrite_advances_only_for_recent_edit_content() -> None:
         "added_date": "2026-01-01",
         "last_updated": "2026-05-09 13:00:00",
         "parent_id": "parent",
-        "viewable": False,
+        "publishable": False,
     }
     assert placement_front_matter == {
         "doc_id": "sample",
@@ -444,7 +477,7 @@ def test_source_rewrite_advances_only_for_recent_edit_content() -> None:
         "added_date": "2026-01-01",
         "last_updated": "2026-01-02 09:00",
         "parent_id": "",
-        "viewable": True,
+        "publishable": True,
     }
 
 

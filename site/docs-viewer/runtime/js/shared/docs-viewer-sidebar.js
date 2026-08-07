@@ -1,5 +1,5 @@
 import {
-  isDocNonViewable
+  isDocNonPublishable
 } from "./docs-viewer-tree.js";
 import {
   projectCommittedTreeMoveDom
@@ -54,8 +54,8 @@ export function initDocsViewerSidebarRenderer(context) {
       item.className = "docsViewer__navItem";
       var row = document.createElement("div");
       row.className = "docsViewer__navRow";
-      if (isDocNonViewable(doc)) {
-        row.className += " is-draft";
+      if (isDocNonPublishable(doc)) {
+        row.className += " is-publication-excluded";
       }
       row.dataset.docRowId = doc.doc_id;
       var children = docChildren(doc.doc_id);
@@ -84,9 +84,9 @@ export function initDocsViewerSidebarRenderer(context) {
         link.className += " is-active";
         link.setAttribute("aria-current", "page");
       }
-      if (isDocNonViewable(doc)) {
-        link.setAttribute("data-draft-doc", "true");
-        link.title = "non-viewable";
+      if (isDocNonPublishable(doc)) {
+        link.setAttribute("data-publishable", "false");
+        link.title = "Excluded from next Publish";
       }
       link.href = context.viewerUrl(context.viewerTargetDocId(doc.doc_id));
       link.dataset.docId = doc.doc_id;
@@ -96,8 +96,8 @@ export function initDocsViewerSidebarRenderer(context) {
       }
       link.textContent = "";
       var uiStatus = context.statusForIndexDoc(doc);
-      var nonViewableEmoji = isDocNonViewable(doc)
-        ? String(context.scopeConfig && context.scopeConfig.docNonViewableEmoji || "\uD83D\uDEAB")
+      var nonPublishableEmoji = isDocNonPublishable(doc)
+        ? String(context.scopeConfig && context.scopeConfig.docNonPublishableEmoji || "\uD83D\uDEAB")
         : "";
       if (uiStatus) {
         var statusIcon = document.createElement("span");
@@ -106,11 +106,11 @@ export function initDocsViewerSidebarRenderer(context) {
         statusIcon.textContent = uiStatus.emoji;
         link.appendChild(statusIcon);
       }
-      if (nonViewableEmoji && (!uiStatus || uiStatus.emoji !== nonViewableEmoji)) {
+      if (nonPublishableEmoji && (!uiStatus || uiStatus.emoji !== nonPublishableEmoji)) {
         var draftIcon = document.createElement("span");
-        draftIcon.className = "docsViewer__draftPrefix";
+        draftIcon.className = "docsViewer__publishableExclusion";
         draftIcon.setAttribute("aria-hidden", "true");
-        draftIcon.textContent = nonViewableEmoji;
+        draftIcon.textContent = nonPublishableEmoji;
         link.appendChild(draftIcon);
       }
       link.appendChild(document.createTextNode(doc.title));

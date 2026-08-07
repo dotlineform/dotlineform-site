@@ -169,7 +169,7 @@ def test_review_source_folder_uses_shared_markdown_content_normalization() -> No
                     "doc_id": "alpha",
                     "title": "Alpha",
                     "summary": "Returned summary.",
-                    "viewable": False,
+                    "publishable": False,
                     "content": returned_content,
                 },
             ],
@@ -212,13 +212,13 @@ def test_review_source_folder_uses_shared_markdown_content_normalization() -> No
     assert manifest["content_mapping"] == {
         "content_field": "content",
         "content_format_field": "content_format",
-        "front_matter_fields": ["title", "parent_id", "summary", "viewable"],
+        "front_matter_fields": ["title", "parent_id", "summary"],
     }
     assert front_matter["doc_id"] == "alpha"
     assert front_matter["title"] == "Alpha"
     assert "parent_id" not in front_matter
     assert front_matter["summary"] == "Returned summary."
-    assert front_matter["viewable"] is False
+    assert "publishable" not in front_matter
     assert "children" not in front_matter
     assert raw_body == returned_content.strip()
     assert listed["packages"][0]["package_id"] == payload["folder_id"]

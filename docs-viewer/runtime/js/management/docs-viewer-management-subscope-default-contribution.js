@@ -88,7 +88,7 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
   var statuses = options.uiStatusByValue instanceof Map
     ? options.uiStatusByValue
     : new Map();
-  var nonViewableEmoji = cleanString(options.nonViewableEmoji) || "\uD83D\uDEAB";
+  var nonPublishableEmoji = cleanString(options.nonPublishableEmoji) || "\uD83D\uDEAB";
   var onLifecycleEvent = typeof options.onLifecycleEvent === "function"
     ? options.onLifecycleEvent
     : null;
@@ -322,8 +322,8 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
     if (uiStatus && appendIcon(host, "docsViewer__navStatus", uiStatus.emoji)) {
       accessibleLabels.push(cleanString(uiStatus.label) || cleanString(doc.ui_status));
     }
-    if (doc.viewable === false && appendIcon(host, "docsViewer__draftPrefix", nonViewableEmoji)) {
-      accessibleLabels.push("non-viewable");
+    if (doc.publishable === false && appendIcon(host, "docsViewer__publishableExclusion", nonPublishableEmoji)) {
+      accessibleLabels.push("Excluded from next Publish");
     }
     return { accessibleLabels: accessibleLabels };
   }

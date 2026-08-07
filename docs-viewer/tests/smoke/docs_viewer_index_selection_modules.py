@@ -44,7 +44,7 @@ def assert_selection_state(page: Page) -> None:
             });
             const inactiveSelectAll = module.selectAllDocsViewerIndexSelection(
                 inactive,
-                ['non-viewable', 'collapsed-child']
+                ['non-publishable', 'collapsed-child']
             );
             const owner = module.createDocsViewerIndexSelectionOwner();
             const entered = owner.enter();
@@ -57,7 +57,7 @@ def assert_selection_state(page: Page) -> None:
             const missingAnchorRange = owner.selectRange('a', ['a', 'b', 'c']);
             const selectedAll = owner.selectAll([
                 'root',
-                'non-viewable',
+                'non-publishable',
                 'collapsed-child',
                 'root'
             ]);
@@ -164,7 +164,7 @@ def assert_selection_state(page: Page) -> None:
         },
         "selectedAll": {
             "selectionModeActive": True,
-            "selectedDocIds": ["root", "non-viewable", "collapsed-child"],
+            "selectedDocIds": ["root", "non-publishable", "collapsed-child"],
             "rangeAnchorDocId": "",
         },
         "exited": {
@@ -603,9 +603,9 @@ def assert_manage_index_visibility_contract(page: Page) -> None:
             const indexState = await import('/docs-viewer/runtime/js/shared/docs-viewer-document-index-state.js');
             const selection = await import('/docs-viewer/runtime/js/management/docs-viewer-index-selection.js');
             const docs = [
-                { doc_id: 'root', parent_id: '', title: 'Root', viewable: true },
-                { doc_id: 'non-viewable', parent_id: 'root', title: 'Non-viewable', viewable: false },
-                { doc_id: 'gated-child', parent_id: 'non-viewable', title: 'Gated child', viewable: true }
+                { doc_id: 'root', parent_id: '', title: 'Root', publishable: true },
+                { doc_id: 'non-publishable', parent_id: 'root', title: 'Non-publishable', publishable: false },
+                { doc_id: 'gated-child', parent_id: 'non-publishable', title: 'Gated child', publishable: true }
             ];
             const createIndex = managementContext => {
                 const session = appSession.createDocsViewerAppSession({});
@@ -619,35 +619,35 @@ def assert_manage_index_visibility_contract(page: Page) -> None:
             const owner = selection.createDocsViewerIndexSelectionOwner({
                 initialState: {
                     selectionModeActive: true,
-                    selectedDocIds: ['non-viewable'],
-                    rangeAnchorDocId: 'non-viewable'
+                    selectedDocIds: ['non-publishable'],
+                    rangeAnchorDocId: 'non-publishable'
                 }
             });
-            managed.session.state.allDocs.find(doc => doc.doc_id === 'non-viewable').viewable = true;
+            managed.session.state.allDocs.find(doc => doc.doc_id === 'non-publishable').publishable = true;
             managed.index.applyDocVisibility();
-            const afterViewabilityChange = owner.snapshot();
+            const afterPublishabilityChange = owner.snapshot();
             const publicIndex = createIndex(false);
             return {
                 manageDocIds: managed.session.state.docs.map(doc => doc.doc_id),
-                manageChildIds: (managed.session.state.childrenByParent.get('non-viewable') || [])
+                manageChildIds: (managed.session.state.childrenByParent.get('non-publishable') || [])
                     .map(doc => doc.doc_id),
                 publicDocIds: publicIndex.session.state.docs.map(doc => doc.doc_id),
-                selectedAfterViewabilityChange: afterViewabilityChange.selectedDocIds,
-                anchorAfterViewabilityChange: afterViewabilityChange.rangeAnchorDocId,
+                selectedAfterPublishabilityChange: afterPublishabilityChange.selectedDocIds,
+                anchorAfterPublishabilityChange: afterPublishabilityChange.rangeAnchorDocId,
                 stateOwnsVisibilityToggle: Object.prototype.hasOwnProperty.call(
                     managed.session.state,
-                    'showNonViewable'
+                    'showNonPublishable'
                 ),
-                domainOwnsVisibilityToggle: managed.session.domains.documentIndex.has('showNonViewable')
+                domainOwnsVisibilityToggle: managed.session.domains.documentIndex.has('showNonPublishable')
             };
         }"""
     )
     expected = {
-        "manageDocIds": ["gated-child", "non-viewable", "root"],
+        "manageDocIds": ["gated-child", "non-publishable", "root"],
         "manageChildIds": ["gated-child"],
         "publicDocIds": ["root"],
-        "selectedAfterViewabilityChange": ["non-viewable"],
-        "anchorAfterViewabilityChange": "non-viewable",
+        "selectedAfterPublishabilityChange": ["non-publishable"],
+        "anchorAfterPublishabilityChange": "non-publishable",
         "stateOwnsVisibilityToggle": False,
         "domainOwnsVisibilityToggle": False,
     }
@@ -1512,9 +1512,9 @@ def assert_selection_projection_and_interaction(page: Page) -> None:
                 linkGeometryStable: before.x === after.x && before.y === after.y
                     && before.width === after.width && before.height === after.height,
                 projectionCount,
-                removedViewabilityControls: !controlDefinitions.some(
-                    control => ['manage-show', 'manage-show-non-viewable'].includes(control.id)
-                ) && ['manage-show', 'manage-show-non-viewable'].every(controlId => (
+                removedPublishabilityControls: !controlDefinitions.some(
+                    control => ['manage-show', 'manage-show-non-publishable'].includes(control.id)
+                ) && ['manage-show', 'manage-show-non-publishable'].every(controlId => (
                     !Object.prototype.hasOwnProperty.call(
                         appRenderers.createDocsViewerManagementAppControlRenderers(),
                         controlId
@@ -1550,7 +1550,7 @@ def assert_selection_projection_and_interaction(page: Page) -> None:
         "gutterIsRowSibling": True,
         "linkGeometryStable": True,
         "projectionCount": 2,
-        "removedViewabilityControls": True,
+        "removedPublishabilityControls": True,
         "selectedDocIds": ["b", "c", "d"],
         "visibleDocIds": ["a", "b", "c", "d"],
     }

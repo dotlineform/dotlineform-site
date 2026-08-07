@@ -93,7 +93,6 @@ def add_current_library_report(
 
         current_state: dict[str, Any] = {
             "exists": bool(current_doc),
-            "viewable": None,
             "source_exists": bool(current_doc),
             "source_renderable": False,
             "current_summary": "",
@@ -103,7 +102,8 @@ def add_current_library_report(
             "parent_source_renderable": None,
         }
         if current_doc:
-            current_state["viewable"] = current_doc.viewable
+            if isinstance(current_doc.publishable, bool):
+                current_state["publishable"] = current_doc.publishable
             current_state["source_renderable"] = doc_id in renderable_ids
             current_state["current_summary"] = current_doc.summary
             if "current_summary" in metadata:

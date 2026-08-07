@@ -226,7 +226,7 @@ function loadSubscopeContribution(settings, parent, subScope, options) {
           documentRecord
         );
       },
-      nonViewableEmoji: contributionOptions.nonViewableEmoji,
+      nonPublishableEmoji: contributionOptions.nonPublishableEmoji,
       onCreateDocument: contributionOptions.onCreateDocument,
       onCopyDocuments: contributionOptions.onCopyDocuments,
       onLifecycleEvent: contributionOptions.onLifecycleEvent,
@@ -440,7 +440,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
   var createAction = createSubscopeDocumentAction(settings);
   var copyAction = copySubscopeDocumentsAction(settings);
   var contribution = loadSubscopeContribution(settings, parent, subScope, {
-    nonViewableEmoji: cleanString(scopeConfig.docNonViewableEmoji),
+    nonPublishableEmoji: cleanString(scopeConfig.docNonPublishableEmoji),
     onCreateDocument: (
       settings.managementContext
       && reportManagementBaseUrl

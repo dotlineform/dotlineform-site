@@ -352,7 +352,7 @@ def test_collection_plan_blocks_invalid_front_matter_for_the_whole_package(monke
                 {
                     "doc_id": "invalid-metadata",
                     "title": "Invalid Metadata",
-                    "viewable": "false",
+                    "publishable": "false",
                     "content": "Body.",
                 },
             ],

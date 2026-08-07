@@ -337,10 +337,7 @@ def transform_document_copy(
         front_matter["added_date"] = plan.operation_timestamp
         front_matter["last_updated"] = plan.operation_timestamp
         front_matter["parent_id"] = planned_document.target_parent_id
-        if source_model.default_viewable_for_config(plan.target_config):
-            front_matter.pop("viewable", None)
-        else:
-            front_matter["viewable"] = False
+        front_matter.pop("publishable", None)
         for decision in plan.custom_metadata:
             if decision.source_doc_id != planned_document.source_doc.doc_id:
                 continue
@@ -377,7 +374,7 @@ def _validate_transformation(
         raise DocumentTransferPlanStaleError(
             "document transfer plan is stale: transformed document count changed"
         )
-    target_viewable = source_model.default_viewable_for_config(plan.target_config)
+    target_document_config = plan.target_collection.document_config
     for transformed in transformation.documents:
         planned = transformed.planned_document
         try:
@@ -402,9 +399,23 @@ def _validate_transformation(
                     f"document transfer plan is stale: candidate {key} changed "
                     f"for {planned.target_doc_id!r}"
                 )
-        if source_model.doc_is_viewable(front_matter) is not target_viewable:
+        try:
+            source_model.validate_publishable_front_matter(
+                front_matter,
+                collection_config=target_document_config,
+                source_name=planned.target_path.name,
+            )
+        except ValueError as exc:
             raise DocumentTransferPlanStaleError(
-                f"document transfer plan is stale: candidate viewability changed "
+                f"document transfer plan is stale: candidate publishability changed "
+                f"for {planned.target_doc_id!r}: {exc}"
+            ) from exc
+        if (
+            source_model.collection_supports_publishable(target_document_config)
+            and not source_model.doc_is_publishable(front_matter)
+        ):
+            raise DocumentTransferPlanStaleError(
+                f"document transfer plan is stale: candidate publishability changed "
                 f"for {planned.target_doc_id!r}"
             )
         for decision in plan.custom_metadata:

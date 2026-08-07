@@ -25,7 +25,7 @@ function normalizeTreeDoc(row, parentId, depth, treeOrder) {
   };
   var uiStatus = optionalStringRecordValue(row, "ui_status");
   if (parentId) doc.parent_id = parentId;
-  if (row.viewable === false) doc.viewable = false;
+  if (row.publishable === false) doc.publishable = false;
   if (uiStatus) doc.ui_status = uiStatus;
   return doc;
 }

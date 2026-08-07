@@ -99,7 +99,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         return self.metadata_entry(doc, docs)
 
     def manifest_payload(self, ordered_docs: list[DocRecord]) -> dict[str, Any]:
-        visible_docs = [doc for doc in ordered_docs if doc.viewable]
+        visible_docs = [doc for doc in ordered_docs if doc.publishable]
         payload: dict[str, Any] = {
             "docs": [
                 {
@@ -130,18 +130,18 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         subjects_by_doc_id: dict[str, dict[str, Any]] | None = None,
         subject_generation: str = "",
     ) -> dict[str, Any]:
-        payload: dict[str, Any] = {
-            "docs": [
-                {
-                    "doc_id": doc.doc_id,
-                    "title": doc.title,
-                    "ui_status": doc.ui_status,
-                    "viewable": doc.viewable,
-                    "last_updated": doc.last_updated,
-                }
-                for doc in ordered_docs
-            ]
-        }
+        rows: list[dict[str, Any]] = []
+        for doc in ordered_docs:
+            row: dict[str, Any] = {
+                "doc_id": doc.doc_id,
+                "title": doc.title,
+                "ui_status": doc.ui_status,
+                "last_updated": doc.last_updated,
+            }
+            if self.publishable_supported and not doc.publishable:
+                row["publishable"] = False
+            rows.append(row)
+        payload: dict[str, Any] = {"docs": rows}
         if subjects_by_doc_id is not None:
             payload["subject_generation"] = subject_generation
             for row in payload["docs"]:

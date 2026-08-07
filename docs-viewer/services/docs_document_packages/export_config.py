@@ -38,7 +38,7 @@ SUPPORTED_FIELD_SOURCES = {
     "headings",
     "content",
     "last_updated",
-    "viewable",
+    "publishable",
 }
 SUPPORTED_TARGET_FORMATS = {"json", "jsonl"}
 SUPPORTED_CONTENT_FORMATS = {"markdown", "plain_text"}
@@ -235,8 +235,8 @@ def validate_export_config(config: dict[str, Any]) -> tuple[list[str], list[str]
         errors.append(f"config {config_id}: unsupported selection.mode {selection_mode!r}")
     for key in [
         "include_descendants",
-        "include_non_viewable",
-        "supports_include_non_viewable",
+        "include_non_publishable",
+        "supports_include_non_publishable",
         "supports_missing_summary_only",
         "default_missing_summary_only",
     ]:

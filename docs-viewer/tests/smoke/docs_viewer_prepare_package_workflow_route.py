@@ -119,7 +119,7 @@ def exercise_prepare_action(page: Page, base_url: str, timeout_ms: int) -> None:
                             "parent_id": "",
                             "title": DOCS_VIEWER_DOC_TITLE,
                             "selectable": True,
-                            "viewable": True,
+                            "publishable": True,
                             "summary": "Synthetic package source document.",
                         }
                     ],
@@ -153,8 +153,8 @@ def exercise_prepare_action(page: Page, base_url: str, timeout_ms: int) -> None:
         raise AssertionError("Prepare modal should contain descendants and both content filters")
     if option_modal.locator("[data-package-missing-summary-only]").is_checked():
         raise AssertionError("missing-summary filter should default off")
-    if not option_modal.locator("[data-package-include-non-viewable]").is_checked():
-        raise AssertionError("non-viewable inclusion should default on")
+    if not option_modal.locator("[data-package-include-non-publishable]").is_checked():
+        raise AssertionError("non-publishable inclusion should default on")
     option_modal.locator("[data-package-include-descendants]").uncheck()
 
     install_busy_observer(page)

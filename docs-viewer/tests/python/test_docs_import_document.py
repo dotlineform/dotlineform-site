@@ -142,7 +142,7 @@ def test_create_plan_applies_allowed_front_matter_and_empty_new_body() -> None:
                 "title": "New Parent",
                 "parent_id": "library",
                 "summary": "Structural parent.",
-                "viewable": False,
+                "publishable": False,
                 "children": ["ignored-child"],
             },
         )
@@ -161,10 +161,10 @@ def test_create_plan_applies_allowed_front_matter_and_empty_new_body() -> None:
     assert source_model.is_immutable_doc_id(plan.doc_id)
     assert plan.record.provenance["source_doc_id"] == "new-parent"
     assert plan.parent_id == "library"
-    assert plan.viewable is False
+    assert plan.publishable is False
     assert plan.search_doc_ids == (plan.doc_id,)
     assert front_matter["summary"] == "Structural parent."
-    assert front_matter["viewable"] is False
+    assert front_matter["publishable"] is False
     assert "children" not in front_matter
     assert body == ""
 
@@ -185,7 +185,7 @@ def test_preserve_existing_plan_changes_only_allowed_front_matter_and_keeps_body
                 "ui_status": "active",
                 "sort_order": 7,
                 "custom_field": "preserve me",
-                "viewable": False,
+                "publishable": False,
             },
             body="# Canonical Alpha\n\nKeep this exact canonical body.\n",
         )
@@ -201,7 +201,7 @@ def test_preserve_existing_plan_changes_only_allowed_front_matter_and_keeps_body
                 "title": "Returned Alpha",
                 "parent_id": "parent",
                 "summary": "Returned summary.",
-                "viewable": True,
+                "publishable": True,
                 "children": ["ignored-child"],
             },
         )
@@ -226,7 +226,7 @@ def test_preserve_existing_plan_changes_only_allowed_front_matter_and_keeps_body
     assert front_matter["ui_status"] == "active"
     assert front_matter["sort_order"] == 7
     assert front_matter["custom_field"] == "preserve me"
-    assert "viewable" not in front_matter
+    assert "publishable" not in front_matter
     assert "children" not in front_matter
 
 
@@ -361,7 +361,7 @@ def test_plan_rejects_ambiguous_parent_metadata() -> None:
     [
         ({"title": "Different"}, "title must match"),
         ({"summary": ["not", "text"]}, "summary must be a string"),
-        ({"viewable": "false"}, "viewable must be a boolean"),
+        ({"publishable": "false"}, "publishable must be a boolean"),
     ],
 )
 def test_plan_rejects_invalid_allowed_front_matter(

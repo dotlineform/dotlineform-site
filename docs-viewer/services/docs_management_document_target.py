@@ -246,7 +246,7 @@ def source_doc_from_path(
         title=title or existing_doc_id,
         ui_status=source_model.normalize_ui_status(front_matter.get("ui_status")),
         parent_id=str(front_matter.get("parent_id") or "").strip(),
-        viewable=source_model.doc_is_viewable(front_matter),
+        publishable=source_model.doc_is_publishable(front_matter),
         group=source_model.normalize_document_group(front_matter.get("group")),
     )
 
@@ -268,6 +268,11 @@ def resolve_managed_document_target(
             scope=collection.scope,
             requested_doc_id=normalized["doc_id"],
         )
+        source_model.validate_publishable_front_matter(
+            document.front_matter,
+            collection_config=collection.document_config,
+            source_name=path.name,
+        )
         source_model.validate_sub_scope_document_metadata(
             document,
             ui_statuses=collection.document_config.ui_statuses,
@@ -284,6 +289,12 @@ def resolve_managed_document_target(
             )
             for candidate in source_model.scope_markdown_paths(collection.source_root)
         ]
+        for candidate in parent_documents:
+            source_model.validate_publishable_front_matter(
+                candidate.front_matter,
+                collection_config=collection.document_config,
+                source_name=candidate.path.name,
+            )
         source_model.validate_scope_docs(
             parent_documents,
             allow_unknown_parent_ids=collection.parent_config.allow_unresolved_parent_ids,
@@ -330,8 +341,9 @@ def managed_document_metadata(
         "date": str(front_matter.get("date") or "").strip(),
         "date_display": str(front_matter.get("date_display") or "").strip(),
         "ui_status": document.ui_status,
-        "viewable": document.viewable,
     }
+    if source_model.collection_supports_publishable(resolved.document_config):
+        record["publishable"] = document.publishable
     if not resolved.sub_scope:
         record["parent_id"] = document.parent_id
 

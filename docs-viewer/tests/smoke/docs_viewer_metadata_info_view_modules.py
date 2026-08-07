@@ -102,8 +102,7 @@ def assert_context_hydrates_from_payload(page: Page) -> None:
                 date_display: 'June 2026',
                 added_date: '2026-06-03',
                 last_updated: '2026-06-05',
-                ui_status: 'done',
-                viewable: false
+                ui_status: 'done'
             };
             const publicContext = viewContext.createDocsViewerHostedViewContext({
                 docsById: new Map([['selected', selectedDoc]]),
@@ -195,8 +194,7 @@ def assert_public_reader_metadata(page: Page) -> None:
                 summary: 'Tree summary',
                 added_date: '2026-06-01',
                 last_updated: '2026-06-01',
-                ui_status: 'draft',
-                viewable: false
+                ui_status: 'draft'
             },
             selectedMetadata: {
                 doc_id: 'payload-doc',
@@ -248,8 +246,7 @@ def assert_manage_metadata(page: Page) -> None:
                 date_display: 'June 2026',
                 added_date: '2026-06-01',
                 last_updated: '2026-06-05',
-                ui_status: 'done',
-                viewable: false
+                ui_status: 'done'
             },
             statusLabel: 'Done',
             viewerScope: 'studio'
@@ -262,7 +259,7 @@ def assert_manage_metadata(page: Page) -> None:
     for expected in ["payload-doc", "Payload summary", "June 2026", "2026-06-01", "2026-06-05"]:
         if expected not in text:
             raise AssertionError(f"manage info missing {expected!r}: {result!r}")
-    blocked = ["Scope", "Parent path", "UI status", "Visibility", "Route", "Done", "Non-viewable"]
+    blocked = ["Scope", "Parent path", "UI status", "Visibility", "Route", "Done", "Non-publishable"]
     leaked = [item for item in blocked if item in text]
     if leaked:
         raise AssertionError(f"manage info leaked removed metadata {leaked!r}: {result!r}")

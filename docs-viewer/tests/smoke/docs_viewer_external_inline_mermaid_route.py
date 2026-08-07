@@ -27,7 +27,6 @@ added_date: "2026-07-24 13:19:00"
 last_updated: "2026-07-24 13:19:00"
 ui_status: in-progress
 parent_id: ""
-viewable: true
 ---
 {body}
 """

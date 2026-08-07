@@ -64,7 +64,6 @@ def write_doc(
                 "added_date": "2026-07-01 10:00:00",
                 "last_updated": "2026-07-02 11:00:00",
                 "parent_id": parent_id,
-                "viewable": True,
             },
             body or f"# {title}\n",
         ),
@@ -294,7 +293,7 @@ flowchart LR
     assert front_matter["doc_id"] == plan.id_map["alpha"]
     assert front_matter["added_date"] == COPY_TIMESTAMP
     assert front_matter["last_updated"] == COPY_TIMESTAMP
-    assert "viewable" not in front_matter
+    assert "publishable" not in front_matter
     assert (
         f"/docs/?scope=target&doc={plan.id_map['grand']}#detail"
         in body
@@ -891,7 +890,7 @@ def test_apply_child_to_child_copy_uses_exact_transform_rebuild_and_result(
     assert alpha_front_matter["work_id"] == "00123"
     assert "group" not in alpha_front_matter
     assert "group" not in beta_front_matter
-    assert "viewable" not in alpha_front_matter
+    assert "publishable" not in alpha_front_matter
     assert alpha_front_matter["parent_id"] == ""
     assert (
         f"/docs/?scope=target&doc={target_report_id}&subdoc={target_ids[1]}"
@@ -980,7 +979,7 @@ def test_apply_child_to_parent_copy_rewrites_subdoc_as_doc(
     assert rebuild_calls[0]["kwargs"]["docs_doc_ids"] == target_ids
 
 
-def test_apply_parent_to_public_child_sets_false_default_and_subdoc_links(
+def test_apply_parent_to_public_child_uses_omitted_true_default_and_subdoc_links(
     tmp_path: Path,
 ) -> None:
     target_scope = docs_scope_record(
@@ -1054,7 +1053,7 @@ def test_apply_parent_to_public_child_sets_false_default_and_subdoc_links(
     front_matter, body = source_model.parse_source(
         target_root / f"{target_ids[0]}.md"
     )
-    assert front_matter["viewable"] is False
+    assert "publishable" not in front_matter
     assert front_matter["parent_id"] == ""
     assert f"/target/?doc={target_report_id}&subdoc={target_ids[1]}#detail" in body
     assert result["effective_roots"][0]["target_viewer_url"] == (

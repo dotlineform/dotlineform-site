@@ -1,7 +1,4 @@
 import {
-  isDocNonViewable
-} from "../shared/docs-viewer-tree.js";
-import {
   createDocsViewerManagementCapabilityController,
   scopePublishSupported
 } from "./docs-viewer-management-capabilities.js";
@@ -998,7 +995,6 @@ export function initDocsViewerManagement(context) {
     callbacks: {
       hideContextMenu: hideContextMenu,
       hideManageActionsMenu: eventRouter.hideManageActionsMenu,
-      isDocNonViewable: isDocNonViewable,
       onImportOpen: importController.initialize,
       loadMetadataDoc: function (target) {
         return readManagedDocMetadata(target, managementClientOptions());

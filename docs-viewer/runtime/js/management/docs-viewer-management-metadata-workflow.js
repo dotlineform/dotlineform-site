@@ -50,7 +50,7 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
 
   function payloadFromModal() {
     var modal = modalController();
-    if (!modal || !editingTarget || !editingDoc || !refs.titleInput || !refs.summaryInput || !refs.dateInput || !refs.dateDisplayInput || !refs.statusInput || !refs.nonViewableInput) return null;
+    if (!modal || !editingTarget || !editingDoc || !refs.titleInput || !refs.summaryInput || !refs.dateInput || !refs.dateDisplayInput || !refs.statusInput) return null;
 
     var title = String(refs.titleInput.value || "").trim();
     if (!title) {
@@ -64,8 +64,7 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
       summary: String(refs.summaryInput.value || "").replace(/\s+/g, " ").trim(),
       date: String(refs.dateInput.value || "").trim(),
       date_display: String(refs.dateDisplayInput.value || "").trim(),
-      ui_status: String(refs.statusInput.value || "").trim(),
-      viewable: !refs.nonViewableInput.checked
+      ui_status: String(refs.statusInput.value || "").trim()
     };
     if (editingRevision) payload.source_revision = editingRevision;
     var customisation = typeof modal.readMetadataCustomisation === "function"

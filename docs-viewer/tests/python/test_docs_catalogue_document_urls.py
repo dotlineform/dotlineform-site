@@ -188,7 +188,7 @@ def test_loader_joins_public_parent_and_sub_scope_sources_across_configured_scop
 
         write_source(
             root / f"docs-viewer/scopes/analysis/source/documents/{REPORT_ID}.md",
-            {"doc_id": REPORT_ID, "title": "Works", "viewable": True},
+            {"doc_id": REPORT_ID, "title": "Works", "publishable": True},
         )
         write_source(
             root
@@ -198,7 +198,7 @@ def test_loader_joins_public_parent_and_sub_scope_sources_across_configured_scop
                 "title": "Public Series Note",
                 "series_id": "001",
                 "ui_status": "done",
-                "viewable": True,
+                "publishable": True,
             },
         )
         write_source(
@@ -209,7 +209,7 @@ def test_loader_joins_public_parent_and_sub_scope_sources_across_configured_scop
                 "title": "Private Work Note",
                 "work_id": "00001",
                 "ui_status": "done",
-                "viewable": False,
+                "publishable": False,
             },
         )
         write_source(
@@ -218,7 +218,7 @@ def test_loader_joins_public_parent_and_sub_scope_sources_across_configured_scop
                 "doc_id": MOMENT_ID,
                 "title": "Public Work Moment",
                 "work_id": "00002",
-                "viewable": True,
+                "publishable": True,
             },
             body="A semantic token mention does not change the declared subject.",
         )

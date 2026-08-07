@@ -269,8 +269,8 @@ def write_public_source_docs(root: Path) -> None:
         (MANAGE_ROOT_DOC_ID, "Manage Root", "2026-06-05", "2026-06-05 10:00:00", "", True),
         (MANAGE_CHILD_DOC_ID, "Manage Child", "2026-06-06", "2026-06-06 10:00:00", MANAGE_ROOT_DOC_ID, True),
     ]
-    for doc_id, title, added_date, last_updated, parent_id, viewable in rows:
-        viewable_line = "" if viewable else "viewable: false\n"
+    for doc_id, title, added_date, last_updated, parent_id, publishable in rows:
+        publishable_line = "" if publishable else "publishable: false\n"
         parent_line = f"parent_id: {parent_id}\n" if parent_id else ""
         date_lines = "date: 2026-06-02\ndate_display: June 2026\n" if doc_id == CHILD_DOC_ID else ""
         write_text(
@@ -282,7 +282,7 @@ title: {json.dumps(title)}
 last_updated: {last_updated}
 summary: {json.dumps(title + " summary")}
 ui_status: done
-{parent_line}{viewable_line}---
+{parent_line}{publishable_line}---
 # {title}
 
 {title} body.

@@ -127,7 +127,7 @@ def configure_importable_tags_collection(root: Path) -> dict[str, Path]:
                 "summary": "Original A.",
                 "ui_status": "draft",
                 "group": "theme",
-                "viewable": False,
+                "publishable": False,
             },
             "# Tag A\n\nOriginal A body.\n",
         ),
@@ -376,7 +376,7 @@ def test_sub_scope_package_preview_and_apply_overwrites_every_exact_target(
                     "doc_id": "tag-a",
                     "title": "Returned Tag A",
                     "summary": "Returned A summary.",
-                    "viewable": True,
+                    "publishable": True,
                     "content": "# Returned Tag A\n\nReturned A body.",
                 },
                 {
@@ -431,7 +431,7 @@ def test_sub_scope_package_preview_and_apply_overwrites_every_exact_target(
     assert tag_a_front_matter["added_date"] == "2026-07-01 10:00:00"
     assert tag_a_front_matter["group"] == "theme"
     assert tag_a_front_matter["ui_status"] == "draft"
-    assert tag_a_front_matter["viewable"] is False
+    assert tag_a_front_matter["publishable"] is False
     assert tag_a_front_matter["title"] == "Returned Tag A"
     assert tag_a_front_matter["summary"] == "Returned A summary."
     assert "Returned A body." in tag_a_body
@@ -1039,7 +1039,7 @@ def test_preserve_existing_apply_uses_current_body_without_revision_reconfirmati
                 "title": "Old title",
                 "parent_id": "library",
                 "summary": "Current summary",
-                "viewable": False,
+                "publishable": False,
                 "custom_field": "before",
             },
             body="# Current\n\nInitial canonical body.\n",
@@ -1067,7 +1067,7 @@ def test_preserve_existing_apply_uses_current_body_without_revision_reconfirmati
                 "title": "Changed after preview",
                 "parent_id": "library",
                 "summary": "Newest summary",
-                "viewable": False,
+                "publishable": False,
                 "custom_field": "changed after preview",
             },
             body="# Current\n\nNewest canonical body.\n",
@@ -1100,7 +1100,7 @@ def test_preserve_existing_apply_uses_current_body_without_revision_reconfirmati
     assert front_matter["title"] == "Returned title"
     assert front_matter["parent_id"] == "library"
     assert front_matter["summary"] == "Newest summary"
-    assert front_matter["viewable"] is False
+    assert front_matter["publishable"] is False
     assert front_matter["custom_field"] == "changed after preview"
     assert "Newest canonical body." in body
 
@@ -1257,7 +1257,7 @@ def test_collection_apply_rejects_browser_plan_fields_and_blocks_invalid_package
             root,
             "parent-skip.jsonl",
             [
-                {"doc_id": "parent", "title": "Parent", "content": "", "viewable": "false"},
+                {"doc_id": "parent", "title": "Parent", "content": "", "publishable": "false"},
                 {"doc_id": "child", "title": "Child", "parent_id": "parent", "content": "Child."},
             ],
             "ds_20260712T160005Z",

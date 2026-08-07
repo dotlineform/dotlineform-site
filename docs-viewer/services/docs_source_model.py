@@ -55,7 +55,7 @@ class ScopeDoc:
     title: str
     ui_status: str
     parent_id: str
-    viewable: bool
+    publishable: bool
     group: str = ""
 
 
@@ -163,7 +163,7 @@ def format_source(front_matter: Dict[str, Any], body: str) -> str:
         "work_id",
         "series_id",
         "parent_id",
-        "viewable",
+        "publishable",
     ]
     ordered_keys = [key for key in preferred_order if key in front_matter]
     ordered_keys.extend(sorted(key for key in front_matter.keys() if key not in ordered_keys))
@@ -355,8 +355,8 @@ def rewrite_front_matter_source_timestamp(
     return "".join(lines)
 
 
-def doc_is_viewable(front_matter: Dict[str, Any]) -> bool:
-    return front_matter_boolean(front_matter, "viewable", True)
+def doc_is_publishable(front_matter: Dict[str, Any]) -> bool:
+    return front_matter_boolean(front_matter, "publishable", True)
 
 
 def front_matter_boolean(front_matter: Dict[str, Any], key: str, default: bool) -> bool:
@@ -408,12 +408,35 @@ def validate_sub_scope_document_metadata(
     )
 
 
-def default_viewable_for_scope(scope: str) -> bool:
-    return default_viewable_for_config(DOCS_SCOPE_CONFIGS[scope])
+def collection_supports_publishable(
+    config: DocsScopeConfig | DocsSubScopeConfig,
+) -> bool:
+    """Return whether one exact collection participates in public Publish."""
+
+    return getattr(config, "public_projection", None) is not None
 
 
-def default_viewable_for_config(config: DocsScopeConfig) -> bool:
-    return config.scope_type != "public"
+def validate_publishable_front_matter(
+    front_matter: Dict[str, Any],
+    *,
+    collection_config: DocsScopeConfig | DocsSubScopeConfig,
+    source_name: str,
+) -> None:
+    """Enforce the clean-cut publication field for one exact collection."""
+
+    if "viewable" in front_matter:
+        raise ValueError(
+            f"legacy viewable front matter is not supported in {source_name}; "
+            "use publishable only in a publish-capable collection"
+        )
+    if "publishable" not in front_matter:
+        return
+    if not collection_supports_publishable(collection_config):
+        raise ValueError(
+            f"publishable front matter is not supported in local collection {source_name}"
+        )
+    if not isinstance(front_matter["publishable"], bool):
+        raise ValueError(f"publishable front matter must be a boolean in {source_name}")
 
 
 def normalize_scope(scope: Any) -> str:
@@ -468,7 +491,12 @@ def load_document_collection_docs_for_config(
         ui_status = normalize_ui_status(front_matter.get("ui_status"))
         group = normalize_document_group(front_matter.get("group"))
         parent_id = str(front_matter.get("parent_id") or "").strip()
-        viewable = doc_is_viewable(front_matter)
+        validate_publishable_front_matter(
+            front_matter,
+            collection_config=document_config,
+            source_name=path.name,
+        )
+        publishable = doc_is_publishable(front_matter)
         docs.append(
             ScopeDoc(
                 scope=scope,
@@ -480,7 +508,7 @@ def load_document_collection_docs_for_config(
                 title=title,
                 ui_status=ui_status,
                 parent_id=parent_id,
-                viewable=viewable,
+                publishable=publishable,
                 group=group,
             )
         )

@@ -152,7 +152,7 @@ def _write_generated_manifests(
             "doc_id": document["doc_id"],
             "title": document["title"],
             "ui_status": "",
-            "viewable": True,
+            "publishable": True,
             "last_updated": "",
         }
         if document["folder_path"]:

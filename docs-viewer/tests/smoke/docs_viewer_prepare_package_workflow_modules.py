@@ -37,11 +37,11 @@ def assert_prepare_model(page: Page) -> None:
         """async () => {
             const model = await import('/docs-viewer/runtime/js/packages/document-package-prepare-model.js');
             const documents = [
-                { doc_id: 'root', parent_id: '', selectable: true, viewable: true, summary: '' },
-                { doc_id: 'child', parent_id: 'root', selectable: true, viewable: false, summary: '' },
-                { doc_id: 'grandchild', parent_id: 'child', selectable: true, viewable: true, summary: 'Existing' },
-                { doc_id: 'sibling', parent_id: '', selectable: true, viewable: false, summary: '' },
-                { doc_id: 'blocked', parent_id: 'root', selectable: false, viewable: false, summary: '' }
+                { doc_id: 'root', parent_id: '', selectable: true, publishable: true, summary: '' },
+                { doc_id: 'child', parent_id: 'root', selectable: true, publishable: false, summary: '' },
+                { doc_id: 'grandchild', parent_id: 'child', selectable: true, publishable: true, summary: 'Existing' },
+                { doc_id: 'sibling', parent_id: '', selectable: true, publishable: false, summary: '' },
+                { doc_id: 'blocked', parent_id: 'root', selectable: false, publishable: false, summary: '' }
             ];
             const contentProfile = {
                 profile_id: 'document-content',
@@ -52,8 +52,8 @@ def assert_prepare_model(page: Page) -> None:
                 record_shape: 'document_rows',
                 selection: {
                     include_descendants: true,
-                    include_non_viewable: true,
-                    supports_include_non_viewable: true,
+                    include_non_publishable: true,
+                    supports_include_non_publishable: true,
                     supports_missing_summary_only: true,
                     default_missing_summary_only: false
                 },
@@ -69,8 +69,8 @@ def assert_prepare_model(page: Page) -> None:
                 record_shape: 'document_tree',
                 selection: {
                     include_descendants: true,
-                    include_non_viewable: true,
-                    supports_include_non_viewable: false,
+                    include_non_publishable: true,
+                    supports_include_non_publishable: false,
                     supports_missing_summary_only: false,
                     default_missing_summary_only: false
                 }
@@ -81,7 +81,7 @@ def assert_prepare_model(page: Page) -> None:
                 checkedDocIds: ['root', 'sibling'],
                 includeDescendants: true,
                 missingSummaryOnly: true,
-                includeNonViewable: false
+                includeNonPublishable: false
             });
             const limitedProjection = model.projectDocumentPackageSelection({
                 profile: { ...contentProfile, limits: { max_documents: 2 } },
@@ -89,7 +89,7 @@ def assert_prepare_model(page: Page) -> None:
                 checkedDocIds: ['root', 'sibling'],
                 includeDescendants: true,
                 missingSummaryOnly: false,
-                includeNonViewable: true
+                includeNonPublishable: true
             });
             const treeProjection = model.projectDocumentPackageSelection({
                 profile: treeProfile,
@@ -97,7 +97,7 @@ def assert_prepare_model(page: Page) -> None:
                 checkedDocIds: ['root'],
                 includeDescendants: false,
                 missingSummaryOnly: true,
-                includeNonViewable: false
+                includeNonPublishable: false
             });
             const childTreeProjection = model.projectDocumentPackageSelection({
                 profile: treeProfile,
@@ -106,7 +106,7 @@ def assert_prepare_model(page: Page) -> None:
                 flatCollection: true,
                 includeDescendants: true,
                 missingSummaryOnly: true,
-                includeNonViewable: false
+                includeNonPublishable: false
             });
             let ineligibleMessage = '';
             try {
@@ -116,7 +116,7 @@ def assert_prepare_model(page: Page) -> None:
                     documents,
                     effectiveDocIds: ['blocked'],
                     missingSummaryOnly: false,
-                    includeNonViewable: true
+                    includeNonPublishable: true
                 });
             } catch (error) {
                 ineligibleMessage = error.message;
@@ -135,7 +135,7 @@ def assert_prepare_model(page: Page) -> None:
                     documents,
                     effectiveDocIds: filteredProjection.docIds,
                     missingSummaryOnly: filteredProjection.missingSummaryOnly,
-                    includeNonViewable: filteredProjection.includeNonViewable,
+                    includeNonPublishable: filteredProjection.includeNonPublishable,
                     targetFormat: 'json',
                     contentFormat: 'plain_text'
                 }),
@@ -145,7 +145,7 @@ def assert_prepare_model(page: Page) -> None:
                     documents,
                     effectiveDocIds: treeProjection.docIds,
                     missingSummaryOnly: treeProjection.missingSummaryOnly,
-                    includeNonViewable: treeProjection.includeNonViewable
+                    includeNonPublishable: treeProjection.includeNonPublishable
                 }),
                 childTreeRequest: model.createDocumentPackagePrepareRequest({
                     scope: 'STUDIO',
@@ -154,7 +154,7 @@ def assert_prepare_model(page: Page) -> None:
                     documents,
                     effectiveDocIds: childTreeProjection.docIds,
                     missingSummaryOnly: childTreeProjection.missingSummaryOnly,
-                    includeNonViewable: childTreeProjection.includeNonViewable
+                    includeNonPublishable: childTreeProjection.includeNonPublishable
                 }),
                 ineligibleMessage
             };
@@ -171,53 +171,53 @@ def assert_prepare_model(page: Page) -> None:
             "docIds": ["root"],
             "includeDescendants": True,
             "missingSummaryOnly": True,
-            "includeNonViewable": False,
+            "includeNonPublishable": False,
             "supportsMissingSummaryOnly": True,
-            "supportsIncludeNonViewable": True,
+            "supportsIncludeNonPublishable": True,
             "total": 1,
-            "excludedNonViewableCount": 2,
+            "excludedNonPublishableCount": 2,
             "excludedWithSummaryCount": 1,
             "excludedByLimitCount": 0,
-            "includedNonViewableCount": 0,
+            "includedNonPublishableCount": 0,
         },
         "limitedProjection": {
             "docIds": ["root", "child"],
             "includeDescendants": True,
             "missingSummaryOnly": False,
-            "includeNonViewable": True,
+            "includeNonPublishable": True,
             "supportsMissingSummaryOnly": True,
-            "supportsIncludeNonViewable": True,
+            "supportsIncludeNonPublishable": True,
             "total": 2,
-            "excludedNonViewableCount": 0,
+            "excludedNonPublishableCount": 0,
             "excludedWithSummaryCount": 0,
             "excludedByLimitCount": 2,
-            "includedNonViewableCount": 1,
+            "includedNonPublishableCount": 1,
         },
         "treeProjection": {
             "docIds": ["root", "child", "grandchild"],
             "includeDescendants": True,
             "missingSummaryOnly": False,
-            "includeNonViewable": True,
+            "includeNonPublishable": True,
             "supportsMissingSummaryOnly": False,
-            "supportsIncludeNonViewable": False,
+            "supportsIncludeNonPublishable": False,
             "total": 3,
-            "excludedNonViewableCount": 0,
+            "excludedNonPublishableCount": 0,
             "excludedWithSummaryCount": 0,
             "excludedByLimitCount": 0,
-            "includedNonViewableCount": 1,
+            "includedNonPublishableCount": 1,
         },
         "childTreeProjection": {
             "docIds": ["root"],
             "includeDescendants": False,
             "missingSummaryOnly": False,
-            "includeNonViewable": True,
+            "includeNonPublishable": True,
             "supportsMissingSummaryOnly": False,
-            "supportsIncludeNonViewable": False,
+            "supportsIncludeNonPublishable": False,
             "total": 1,
-            "excludedNonViewableCount": 0,
+            "excludedNonPublishableCount": 0,
             "excludedWithSummaryCount": 0,
             "excludedByLimitCount": 0,
-            "includedNonViewableCount": 0,
+            "includedNonPublishableCount": 0,
         },
         "exactRequest": {
             "scope": "studio",
@@ -225,7 +225,7 @@ def assert_prepare_model(page: Page) -> None:
             "doc_ids": ["root"],
             "select_all": False,
             "missing_summary_only": True,
-            "include_non_viewable": False,
+            "include_non_publishable": False,
             "target_format": "json",
             "content_format": "plain_text",
             "dry_run": False,
@@ -237,7 +237,7 @@ def assert_prepare_model(page: Page) -> None:
             "doc_ids": ["root", "child", "grandchild"],
             "select_all": False,
             "missing_summary_only": False,
-            "include_non_viewable": True,
+            "include_non_publishable": True,
             "target_format": "json",
             "content_format": "",
             "dry_run": False,
@@ -250,7 +250,7 @@ def assert_prepare_model(page: Page) -> None:
             "doc_ids": ["root"],
             "select_all": False,
             "missing_summary_only": False,
-            "include_non_viewable": True,
+            "include_non_publishable": True,
             "target_format": "json",
             "content_format": "",
             "dry_run": False,
@@ -367,8 +367,8 @@ def install_workflow_fixture(page: Page, prepare_outcome: str = "success") -> No
                 record_shape: 'document_rows',
                 selection: {
                     include_descendants: true,
-                    include_non_viewable: true,
-                    supports_include_non_viewable: true,
+                    include_non_publishable: true,
+                    supports_include_non_publishable: true,
                     supports_missing_summary_only: true,
                     default_missing_summary_only: false
                 },
@@ -387,17 +387,17 @@ def install_workflow_fixture(page: Page, prepare_outcome: str = "success") -> No
                 record_shape: 'document_tree',
                 selection: {
                     include_descendants: true,
-                    include_non_viewable: true,
-                    supports_include_non_viewable: false,
+                    include_non_publishable: true,
+                    supports_include_non_publishable: false,
                     supports_missing_summary_only: false,
                     default_missing_summary_only: false
                 }
             }];
             const documents = [
-                { doc_id: 'root', parent_id: '', title: 'Root', selectable: true, viewable: true, summary: zeroTarget ? 'Done' : '' },
-                { doc_id: 'child', parent_id: 'root', title: 'Child', selectable: true, viewable: false, summary: zeroTarget ? 'Done' : '' },
-                { doc_id: 'grandchild', parent_id: 'child', title: 'Grandchild', selectable: true, viewable: true, summary: 'Done' },
-                { doc_id: 'sibling', parent_id: '', title: 'Sibling', selectable: true, viewable: false, summary: zeroTarget ? 'Done' : '' }
+                { doc_id: 'root', parent_id: '', title: 'Root', selectable: true, publishable: true, summary: zeroTarget ? 'Done' : '' },
+                { doc_id: 'child', parent_id: 'root', title: 'Child', selectable: true, publishable: false, summary: zeroTarget ? 'Done' : '' },
+                { doc_id: 'grandchild', parent_id: 'child', title: 'Grandchild', selectable: true, publishable: true, summary: 'Done' },
+                { doc_id: 'sibling', parent_id: '', title: 'Sibling', selectable: true, publishable: false, summary: zeroTarget ? 'Done' : '' }
             ];
             const client = {
                 getConfig: async () => {
@@ -494,8 +494,8 @@ def exercise_success(page: Page, timeout_ms: int) -> None:
         raise AssertionError(f"Prepare workflow retained the raw checked-count note: {modal_text!r}")
     if "Total documents to be prepared: 4" not in modal_text:
         raise AssertionError(f"Prepare workflow omitted the initial effective total: {modal_text!r}")
-    if "2 non-viewable documents included." not in modal_text:
-        raise AssertionError(f"Prepare workflow omitted included non-viewable detail: {modal_text!r}")
+    if "2 non-publishable documents included." not in modal_text:
+        raise AssertionError(f"Prepare workflow omitted included non-publishable detail: {modal_text!r}")
 
     page.locator("[data-package-include-descendants]").uncheck()
     descendants_text = page.locator('[data-role="docs-viewer-management-modal"]').inner_text()
@@ -510,12 +510,12 @@ def exercise_success(page: Page, timeout_ms: int) -> None:
     if "1 document excluded because it already has a summary." not in filtered_text:
         raise AssertionError(f"missing-summary exclusion was not explained: {filtered_text!r}")
 
-    page.locator("[data-package-include-non-viewable]").uncheck()
+    page.locator("[data-package-include-non-publishable]").uncheck()
     filtered_text = page.locator('[data-role="docs-viewer-management-modal"]').inner_text()
     if "Total documents to be prepared: 1" not in filtered_text:
-        raise AssertionError(f"non-viewable choice did not recalculate the total: {filtered_text!r}")
-    if "2 non-viewable documents excluded." not in filtered_text:
-        raise AssertionError(f"non-viewable exclusions were not explained: {filtered_text!r}")
+        raise AssertionError(f"non-publishable choice did not recalculate the total: {filtered_text!r}")
+    if "2 non-publishable documents excluded." not in filtered_text:
+        raise AssertionError(f"non-publishable exclusions were not explained: {filtered_text!r}")
 
     page.locator("[data-package-profile]").select_option("document-tree")
     tree_text = page.locator('[data-role="docs-viewer-management-modal"]').inner_text()
@@ -523,14 +523,14 @@ def exercise_success(page: Page, timeout_ms: int) -> None:
         raise AssertionError(f"tree profile did not retain its complete target: {tree_text!r}")
     if not page.locator("[data-package-missing-summary-field]").is_hidden():
         raise AssertionError("tree profile exposed the unsupported missing-summary choice")
-    if not page.locator("[data-package-include-non-viewable-field]").is_hidden():
-        raise AssertionError("tree profile exposed the unsupported non-viewable choice")
+    if not page.locator("[data-package-include-non-publishable-field]").is_hidden():
+        raise AssertionError("tree profile exposed the unsupported non-publishable choice")
 
     page.locator("[data-package-profile]").select_option("document-content")
     if not page.locator("[data-package-missing-summary-only]").is_checked():
         raise AssertionError("content profile lost its missing-summary choice after profile switching")
-    if page.locator("[data-package-include-non-viewable]").is_checked():
-        raise AssertionError("content profile lost its non-viewable choice after profile switching")
+    if page.locator("[data-package-include-non-publishable]").is_checked():
+        raise AssertionError("content profile lost its non-publishable choice after profile switching")
     restored_text = page.locator('[data-role="docs-viewer-management-modal"]').inner_text()
     if "Total documents to be prepared: 1" not in restored_text:
         raise AssertionError(f"profile switching did not restore the effective target: {restored_text!r}")
@@ -572,7 +572,7 @@ def exercise_success(page: Page, timeout_ms: int) -> None:
     if (
         request["content_format"] != "plain_text"
         or request["missing_summary_only"] is not True
-        or request["include_non_viewable"] is not False
+        or request["include_non_publishable"] is not False
         or request["activity_context"]["page_id"] != "docs-manage"
         or request["activity_context"]["control_id"] != "docsViewerIndexPreparePackageButton"
     ):
@@ -684,17 +684,17 @@ def exercise_subscope_success(page: Page, timeout_ms: int) -> None:
                 record_shape: 'document_tree',
                 selection: {
                     include_descendants: false,
-                    include_non_viewable: true,
-                    supports_include_non_viewable: false,
+                    include_non_publishable: true,
+                    supports_include_non_publishable: false,
                     supports_missing_summary_only: false,
                     default_missing_summary_only: false
                 },
                 limits: { max_documents: null },
             };
             const documents = [
-                { doc_id: 'root', parent_id: '', title: 'Root', selectable: true, viewable: true },
-                { doc_id: 'child', parent_id: 'root', title: 'Child', selectable: true, viewable: true },
-                { doc_id: 'sibling', parent_id: '', title: 'Sibling', selectable: true, viewable: false }
+                { doc_id: 'root', parent_id: '', title: 'Root', selectable: true, publishable: true },
+                { doc_id: 'child', parent_id: 'root', title: 'Child', selectable: true, publishable: true },
+                { doc_id: 'sibling', parent_id: '', title: 'Sibling', selectable: true, publishable: false }
             ];
             window.subscopePrepareFixture = {
                 calls: [],

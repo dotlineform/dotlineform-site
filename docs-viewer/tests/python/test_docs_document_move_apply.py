@@ -130,7 +130,7 @@ flowchart LR
     assert alpha_front_matter["added_date"] == "2026-07-01 10:00:00"
     assert alpha_front_matter["last_updated"] == "2026-07-02 11:00:00"
     assert alpha_front_matter["parent_id"] == ""
-    assert alpha_front_matter["viewable"] is True
+    assert "publishable" not in alpha_front_matter
     assert grand_front_matter["parent_id"] == "alpha"
     assert "/docs/?scope=target&doc=grand#detail" in alpha_body
     assert "/docs/?scope=source&doc=beta" in alpha_body

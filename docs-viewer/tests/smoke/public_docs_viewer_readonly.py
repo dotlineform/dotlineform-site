@@ -453,7 +453,7 @@ def exercise_public_subscope_report(page: Page, base_url: str, timeout_ms: int) 
     management_projection = page.locator(".docsViewerReport").evaluate(
         """report => ({
             managementIcons: report.querySelectorAll(
-                '.docsViewer__navStatus, .docsViewer__draftPrefix'
+                '.docsViewer__navStatus, .docsViewer__publishableExclusion'
             ).length,
             sourceControls: document.querySelectorAll(
                 '[data-docs-viewer-control="markdown-source"], '
@@ -557,7 +557,7 @@ def exercise_public_subscope_report(page: Page, base_url: str, timeout_ms: int) 
     detail_management_projection = page.locator(".docsViewerReport").evaluate(
         """report => ({
             managementIcons: report.querySelectorAll(
-                '.docsViewer__navStatus, .docsViewer__draftPrefix'
+                '.docsViewer__navStatus, .docsViewer__publishableExclusion'
             ).length,
             sourceControls: document.querySelectorAll(
                 '[data-docs-viewer-control="markdown-source"], '

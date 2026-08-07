@@ -9,7 +9,7 @@
       "doc_id": "d-20260518-180700-214487",
       "title": "3 symbols",
       "content_url": "/assets/data/docs/scopes/analysis/by-id/d-20260518-180700-214487.json",
-      "viewable": false
+      "publishable": false
     },
     {
       "doc_id": "d-20260426-164043-e14f49",
@@ -29,5 +29,5 @@
       "content_url": "/assets/data/docs/scopes/analysis/by-id/d-20260807-082735-54d9d5.json"
     }
   ],
-  "generated_at": "2026-08-07T19:05:09Z"
+  "generated_at": "2026-08-07T20:59:11Z"
 }

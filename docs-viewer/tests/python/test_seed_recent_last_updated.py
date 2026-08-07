@@ -31,14 +31,14 @@ def test_hidden_doc_ids_include_descendants_and_manage_roots() -> None:
     module = load_module()
 
     class Doc:
-        def __init__(self, doc_id: str, parent_id: str = "", viewable: bool = True):
+        def __init__(self, doc_id: str, parent_id: str = "", publishable: bool = True):
             self.doc_id = doc_id
             self.parent_id = parent_id
-            self.viewable = viewable
+            self.publishable = publishable
 
     docs = [
         Doc("root"),
-        Doc("hidden", viewable=False),
+        Doc("hidden", publishable=False),
         Doc("hidden-child", "hidden"),
         Doc("managed"),
         Doc("managed-child", "managed"),

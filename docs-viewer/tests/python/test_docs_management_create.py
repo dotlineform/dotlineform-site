@@ -182,7 +182,6 @@ def test_parent_create_keeps_response_and_rebuild_contract_with_exact_target(
     assert payload["record"] == {
         "doc_id": FIXED_DOC_ID,
         "title": "Parent Child",
-        "viewable": True,
         "parent_id": "report",
     }
     assert payload["rebuild"] == {"ok": True, "mode": "parent"}
@@ -271,14 +270,14 @@ def test_empty_sub_scope_create_is_confined_and_returns_exact_child_target(
     assert payload["record"] == {
         "doc_id": FIXED_DOC_ID,
         "title": "First Concept",
-        "viewable": False,
+        "publishable": True,
     }
     assert payload["rebuild"] == {"ok": True, "mode": "sub_scope"}
     assert expected_path.is_file()
     front_matter, body = source_model.parse_source(expected_path)
     assert front_matter["doc_id"] == FIXED_DOC_ID
     assert front_matter["title"] == "First Concept"
-    assert front_matter["viewable"] is False
+    assert "publishable" not in front_matter
     assert "parent_id" not in front_matter
     assert body == "# First Concept\n"
     assert list(parent_root.glob(f"{FIXED_DOC_ID}.md")) == []

@@ -60,21 +60,19 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
     write_docs_scope_config(repo_root)
     write_doc(
         repo_root,
-        "non-viewable-doc.md",
+        "non-publishable-doc.md",
         {
-            "doc_id": "non-viewable-doc",
-            "title": "Non-viewable Doc",
-            "viewable": False,
+            "doc_id": "non-publishable-doc",
+            "title": "Non-publishable Doc",
         },
         scope="scratch",
     )
     write_doc(
         repo_root,
-        "non-viewable-doc.md",
+        "non-publishable-doc.md",
         {
-            "doc_id": "non-viewable-doc",
-            "title": "Non-viewable Doc",
-            "viewable": False,
+            "doc_id": "non-publishable-doc",
+            "title": "Non-publishable Doc",
         },
     )
     write_doc(
@@ -83,8 +81,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         {
             "doc_id": "child",
             "title": "Child",
-            "parent_id": "non-viewable-doc",
-            "viewable": True,
+            "parent_id": "non-publishable-doc",
         },
     )
     write_doc(
@@ -93,7 +90,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         {
             "doc_id": "other",
             "title": "Other",
-            "viewable": True,
         },
     )
     return temp_dir
@@ -109,16 +105,14 @@ def write_generated_docs(root: Path) -> None:
     docs = [
         {
             "scope": "studio",
-            "doc_id": "non-viewable-doc",
-            "title": "Non-viewable Doc",
-            "viewable": False,
-            "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/non-viewable-doc.json",
+            "doc_id": "non-publishable-doc",
+            "title": "Non-publishable Doc",
+            "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/non-publishable-doc.json",
         },
         {
             "scope": "studio",
             "doc_id": "child",
             "title": "Child",
-            "viewable": True,
             "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/child.json",
         },
     ]
@@ -142,7 +136,7 @@ def write_generated_docs(root: Path) -> None:
             "docs": [docs[1]],
         },
     )
-    write_json(root / "docs-viewer/scopes/studio/published/documents/by-id/non-viewable-doc.json", {"doc_id": "non-viewable-doc"})
+    write_json(root / "docs-viewer/scopes/studio/published/documents/by-id/non-publishable-doc.json", {"doc_id": "non-publishable-doc"})
     write_json(root / "docs-viewer/scopes/studio/published/documents/by-id/child.json", {"doc_id": "child"})
     write_json(root / "docs-viewer/scopes/studio/published/search/index.json", {"entries": [{"doc_id": "child"}]})
 

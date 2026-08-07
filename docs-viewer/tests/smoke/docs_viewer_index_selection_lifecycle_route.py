@@ -154,13 +154,13 @@ def assert_selection_lifecycle(page: Page, base_url: str, timeout_ms: int) -> No
     page.goto(f"{base_url}/docs/?scope=studio&doc={DOCS_VIEWER_DOC_ID}", wait_until="domcontentloaded")
     wait_for_manage_doc(page, DOCS_VIEWER_DOC_TITLE, timeout_ms)
 
-    if page.locator('[data-docs-viewer-control="manage-show-non-viewable"]').count():
-        raise AssertionError("manage route retained the Show non-viewable control")
+    if page.locator('[data-docs-viewer-control="manage-show-non-publishable"]').count():
+        raise AssertionError("manage route retained the Show non-publishable control")
     if page.locator("#docsViewerDraftToggle").count():
-        raise AssertionError("manage route retained the Show non-viewable input")
+        raise AssertionError("manage route retained the Show non-publishable input")
     if page.locator('[data-docs-viewer-control="manage-show"]').count():
         raise AssertionError("manage route retained the Show control")
-    if page.locator("#docsViewerManageViewableButton").count():
+    if page.locator("#docsViewerManagePublishableButton").count():
         raise AssertionError("manage route retained the Show action button")
     if not initial_index_docs:
         raise AssertionError("manage route did not load the canonical index population")

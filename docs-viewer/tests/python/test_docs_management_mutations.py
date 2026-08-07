@@ -66,21 +66,19 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
     )
     write_doc(
         repo_root,
-        "non-viewable-doc.md",
+        "non-publishable-doc.md",
         {
-            "doc_id": "non-viewable-doc",
-            "title": "Non-viewable Doc",
-            "viewable": False,
+            "doc_id": "non-publishable-doc",
+            "title": "Non-publishable Doc",
         },
         scope="scratch",
     )
     write_doc(
         repo_root,
-        "non-viewable-doc.md",
+        "non-publishable-doc.md",
         {
-            "doc_id": "non-viewable-doc",
-            "title": "Non-viewable Doc",
-            "viewable": False,
+            "doc_id": "non-publishable-doc",
+            "title": "Non-publishable Doc",
         },
     )
     write_doc(
@@ -89,7 +87,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         {
             "doc_id": "parent",
             "title": "Parent",
-            "viewable": True,
         },
         "See /docs/?scope=studio&doc=target-child and target-child.md\n",
     )
@@ -100,7 +97,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
             "doc_id": "child",
             "title": "Child",
             "parent_id": "parent",
-            "viewable": True,
         },
     )
     write_doc(
@@ -114,7 +110,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
             "last_updated": "2026-05-01 10:00",
             "summary": "old summary",
             "ui_status": "ready",
-            "viewable": True,
         },
     )
     write_doc(
@@ -124,7 +119,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
             "doc_id": "target-child",
             "title": "Target Child",
             "parent_id": "target",
-            "viewable": True,
         },
     )
     write_doc(
@@ -134,7 +128,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
             "doc_id": "sibling",
             "title": "Sibling",
             "last_updated": "2026-05-02 11:00",
-            "viewable": False,
         },
     )
     sub_scope_path = (
@@ -154,7 +147,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
                 "last_updated": "2026-05-01 10:00",
                 "ui_status": "draft",
                 "group": "subject",
-                "viewable": True,
                 "parent_id": "retained-parent",
                 "sort_order": 4,
             },
@@ -198,7 +190,6 @@ def test_metadata_plan_keeps_child_search_target_for_title_changes() -> None:
                 "date": "2026-05-04",
                 "date_display": "early May 2026",
                 "ui_status": "ready",
-                "viewable": True,
             },
     )
 
@@ -252,24 +243,20 @@ def test_metadata_status_only_plan_suppresses_search_target() -> None:
     assert 'last_updated: "2026-05-01 10:00"' in plan.source_writes[0].text
 
 
-def test_metadata_viewable_plan_writes_current_viewability() -> None:
+def test_metadata_plan_rejects_publishable() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
-        plan = mutations.plan_update_metadata(
-            repo_root,
-            {
-                "scope": "studio",
-                "doc_id": "target",
-                "title": "Target",
-                "parent_id": "",
-                "viewable": False,
-            },
-        )
-
-    assert plan.response["record"]["viewable"] is False
-    assert "viewable: false" in plan.source_writes[0].text
-    assert "hidden:" not in plan.source_writes[0].text
-    assert 'last_updated: "2026-05-01 10:00"' in plan.source_writes[0].text
+        with pytest.raises(ValueError, match="not editable through metadata"):
+            mutations.plan_update_metadata(
+                repo_root,
+                {
+                    "scope": "studio",
+                    "doc_id": "target",
+                    "title": "Target",
+                    "parent_id": "",
+                    "publishable": False,
+                },
+            )
 
 
 def test_sub_scope_metadata_plan_updates_every_editable_field_without_parentage() -> None:
@@ -294,7 +281,6 @@ def test_sub_scope_metadata_plan_updates_every_editable_field_without_parentage(
                 "date_display": "early May 2026",
                 "ui_status": "done",
                 "group": "theme",
-                "viewable": False,
             },
         )
 
@@ -308,7 +294,6 @@ def test_sub_scope_metadata_plan_updates_every_editable_field_without_parentage(
         "date_display": "early May 2026",
         "ui_status": "done",
         "group": "theme",
-        "viewable": False,
     }
     assert plan.response["changes"] == {
         "title_changed": True,
@@ -317,7 +302,6 @@ def test_sub_scope_metadata_plan_updates_every_editable_field_without_parentage(
         "date_changed": True,
         "date_display_changed": True,
         "status_changed": True,
-        "viewable_changed": True,
         "group_changed": True,
     }
     assert plan.build_doc_ids == []
@@ -354,12 +338,11 @@ def test_sub_scope_metadata_plan_noops_without_advancing_timestamp() -> None:
                 "date_display": "May 2026",
                 "ui_status": "draft",
                 "group": "subject",
-                "viewable": True,
             },
         )
 
     assert plan.source_writes == ()
-    assert plan.response["record"]["viewable"] is True
+    assert "publishable" not in plan.response["record"]
     assert plan.response["record"]["group"] == "subject"
     assert "parent_id" not in plan.response["record"]
     assert all(changed is False for changed in plan.response["changes"].values())
@@ -392,7 +375,6 @@ def test_sub_scope_group_only_metadata_change_preserves_last_updated() -> None:
         "date_changed": False,
         "date_display_changed": False,
         "status_changed": False,
-        "viewable_changed": False,
         "group_changed": True,
     }
     assert plan.response["record"]["group"] == "domain"
@@ -667,7 +649,7 @@ def main() -> None:
         test_metadata_plan_keeps_child_search_target_for_title_changes,
         test_metadata_plan_removes_empty_date_fields,
         test_metadata_status_only_plan_suppresses_search_target,
-        test_metadata_viewable_plan_writes_current_viewability,
+        test_metadata_plan_rejects_publishable,
         test_move_plan_noops_when_parent_is_unchanged,
         test_move_plan_keeps_search_target_for_reparent,
         test_move_plan_supports_moving_parent_subtree,

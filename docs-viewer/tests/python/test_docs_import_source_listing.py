@@ -308,7 +308,7 @@ def configure_review_sub_scope_targets(root: Path) -> dict[str, Path]:
                 "summary": "Original Tag A summary.",
                 "ui_status": "draft",
                 "group": "theme",
-                "viewable": False,
+                "publishable": False,
             },
             "# Tag A\n",
         ),
@@ -370,6 +370,9 @@ def configure_analysis_tags_round_trip_targets(root: Path) -> dict[str, Path]:
     config["scopes"].append(
         docs_scope_record(
             "analysis",
+            scope_type="public",
+            viewer_base_url="/analysis/",
+            include_scope_param=False,
             default_doc_id="analysis-root",
             media_provider="repository",
             sub_scopes=[
@@ -378,6 +381,7 @@ def configure_analysis_tags_round_trip_targets(root: Path) -> dict[str, Path]:
                     "tags",
                     title="Tags",
                     supports_return_import=True,
+                    scope_type="public",
                     analysis_tag_groups=["theme"],
                 )
             ],
@@ -433,7 +437,7 @@ def configure_analysis_tags_round_trip_targets(root: Path) -> dict[str, Path]:
                 "summary": "Original Tag A summary.",
                 "ui_status": "draft",
                 "group": "theme",
-                "viewable": False,
+                "publishable": False,
             },
             "# Tag A\n",
         ),
@@ -499,7 +503,6 @@ def edit_review_alpha(
             "---\n# Alpha",
             "summary: Edited Alpha summary.\n"
             f"{inserted_parent}"
-            "viewable: false\n"
             "---\n"
             "# Edited Alpha\n\nEdited reviewed body.",
         ),
@@ -517,7 +520,6 @@ def edit_review_tag_a(staged_folder: Path, *, parent_id: str = "") -> None:
             "---\n# Tag A",
             "summary: Edited Tag A summary.\n"
             f"{inserted_parent}"
-            "viewable: true\n"
             "---\n"
             "# Edited Tag A\n\nEdited tag body.",
         ),
@@ -1156,7 +1158,7 @@ def test_edited_review_scope_apply_preserves_authority_and_refreshes_scope(
     assert alpha_front_matter["title"] == "Edited Alpha"
     assert alpha_front_matter["summary"] == "Edited Alpha summary."
     assert alpha_front_matter["parent_id"] == "library"
-    assert alpha_front_matter["viewable"] is False
+    assert "publishable" not in alpha_front_matter
     assert alpha_front_matter["last_updated"] not in {
         "2026-07-29 12:00:00",
         "2026-07-30",
@@ -1465,7 +1467,7 @@ def test_edited_review_sub_scope_preview_apply_and_discovery_are_exact(
     assert tag_a_front_matter["added_date"] == "2026-07-01 10:00:00"
     assert tag_a_front_matter["group"] == "theme"
     assert tag_a_front_matter["ui_status"] == "draft"
-    assert tag_a_front_matter["viewable"] is False
+    assert tag_a_front_matter["publishable"] is False
     assert tag_a_front_matter["title"] == "Edited Tag A"
     assert tag_a_front_matter["summary"] == "Edited Tag A summary."
     assert "parent_id" not in tag_a_front_matter
@@ -1867,7 +1869,7 @@ def test_edited_review_scope_and_analysis_tags_round_trip_render_end_to_end(
         ]
         assert child_front_matter["group"] == "theme"
         assert child_front_matter["ui_status"] == "draft"
-        assert child_front_matter["viewable"] is False
+        assert child_front_matter["publishable"] is False
         assert next(
             record
             for record in child_listing["files"]

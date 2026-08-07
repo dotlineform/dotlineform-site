@@ -302,7 +302,7 @@
   ],
   "docs_viewer": {
     "recent_limit": 10,
-    "non_viewable_nav_color": "var(--muted)",
-    "doc_non_viewable_emoji": "🚫"
+    "non_publishable_nav_color": "var(--muted)",
+    "doc_non_publishable_emoji": "🚫"
   }
 }

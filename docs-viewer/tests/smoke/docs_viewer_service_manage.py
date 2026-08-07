@@ -130,7 +130,6 @@ def install_smoke_document_routes(
         "date_display": "January 2000",
         "ui_status": "draft",
         "group": "subject",
-        "viewable": True,
         "source_body": "# Smoke Detail\n\nTest-owned sub-scope source.\n",
         "source_revision": "sha256:" + ("1" * 64),
         "detail_version": 1,
@@ -229,7 +228,6 @@ def install_smoke_document_routes(
                         "date_display": subscope_state["date_display"],
                         "ui_status": subscope_state["ui_status"],
                         "group": subscope_state["group"],
-                        "viewable": subscope_state["viewable"],
                     },
                 },
             )
@@ -251,7 +249,6 @@ def install_smoke_document_routes(
                     "date": "",
                     "date_display": "",
                     "ui_status": "",
-                    "viewable": True,
                     "parent_id": "",
                 },
             },
@@ -306,7 +303,6 @@ def install_smoke_document_routes(
             "date_display",
             "ui_status",
             "group",
-            "viewable",
         ):
             subscope_state[field] = payload.get(field)
         subscope_state["source_revision"] = "sha256:" + ("3" * 64)
@@ -327,7 +323,6 @@ def install_smoke_document_routes(
                     "date_display": subscope_state["date_display"],
                     "ui_status": subscope_state["ui_status"],
                     "group": subscope_state["group"],
-                    "viewable": subscope_state["viewable"],
                 },
             },
         )
@@ -341,7 +336,6 @@ def install_smoke_document_routes(
                 "doc_id": SUBSCOPE_DOC_ID,
                 "title": subscope_state["title"],
                 "ui_status": subscope_state["ui_status"],
-                "viewable": subscope_state["viewable"],
             }
         ]
         if include_subscope_sibling:
@@ -350,7 +344,6 @@ def install_smoke_document_routes(
                     "doc_id": SUBSCOPE_SIBLING_DOC_ID,
                     "title": SUBSCOPE_SIBLING_DOC_TITLE,
                     "ui_status": "done",
-                    "viewable": True,
                 }
             )
         fulfill_json(
@@ -585,9 +578,9 @@ def assert_origin_rejection(base_url: str) -> None:
         raise AssertionError("metadata read should reject a disallowed Origin")
 
 
-def assert_dedicated_viewability_endpoints_retired(base_url: str) -> None:
+def assert_dedicated_publishability_endpoints_retired(base_url: str) -> None:
     payload = json.dumps({"scope": "studio", "doc_id": DOCS_VIEWER_DOC_ID}).encode("utf-8")
-    for path in ("/docs/update-viewability", "/docs/update-viewability-bulk"):
+    for path in ("/docs/update-publishability", "/docs/update-publishability-bulk"):
         request = urllib.request.Request(
             f"{base_url}{path}",
             data=payload,
@@ -1180,7 +1173,6 @@ def assert_metadata_workflow_uses_exact_sub_scope_target(page: Page) -> None:
                 dateDisplayInput: { value: 'July 2026' },
                 statusInput: { value: 'done' },
                 groupInput: { value: 'theme' },
-                nonViewableInput: { checked: true },
                 parentInput: {
                     value: 'selected-fallback',
                     focus: () => {}
@@ -1241,7 +1233,7 @@ def assert_metadata_workflow_uses_exact_sub_scope_target(page: Page) -> None:
                                 date_display: 'July 2026',
                                 ui_status: 'draft',
                                 group: 'subject',
-                                viewable: true
+                                publishable: true
                             }
                         };
                     },
@@ -1274,7 +1266,6 @@ def assert_metadata_workflow_uses_exact_sub_scope_target(page: Page) -> None:
         "date_display": "July 2026",
         "ui_status": "done",
         "group": "theme",
-        "viewable": False,
         "source_revision": "sha256:" + ("a" * 64),
     }
     if result["loadedTarget"] != expected_target:
@@ -1288,7 +1279,7 @@ def assert_metadata_workflow_uses_exact_sub_scope_target(page: Page) -> None:
             "date_display": "July 2026",
             "ui_status": "draft",
             "group": "subject",
-            "viewable": True,
+            "publishable": True,
         },
         "options": {
             "target": expected_target,
@@ -1329,7 +1320,6 @@ def assert_metadata_workflow_collects_projects_customisation(page: Page) -> None
                 dateDisplayInput: { value: '' },
                 statusInput: { value: '' },
                 groupInput: { value: '' },
-                nonViewableInput: { checked: false },
                 parentInput: { value: '', focus: () => {} }
             };
             let modalResolve = null;
@@ -1381,7 +1371,6 @@ def assert_metadata_workflow_collects_projects_customisation(page: Page) -> None
                             date_display: '',
                             ui_status: '',
                             group: '',
-                            viewable: true,
                             customisation: { folder_path: 'projects/current' }
                         }
                     }),
@@ -1412,7 +1401,6 @@ def assert_metadata_workflow_collects_projects_customisation(page: Page) -> None
         "date": "",
         "date_display": "",
         "ui_status": "",
-        "viewable": True,
         "source_revision": "sha256:" + ("b" * 64),
         "customisation": {"folder_path": "projects/future"},
     }
@@ -1465,8 +1453,7 @@ def assert_metadata_client_uses_exact_target_requests(page: Page) -> None:
                 summary: 'Summary',
                 date: '2026-07-27',
                 date_display: 'July 2026',
-                ui_status: 'done',
-                viewable: false
+                ui_status: 'done'
             }, options);
             await client.assignManagedDocFieldGroup({
                 scope: 'dotlineform',
@@ -1518,7 +1505,6 @@ def assert_metadata_client_uses_exact_target_requests(page: Page) -> None:
                     "date": "2026-07-27",
                     "date_display": "July 2026",
                     "ui_status": "done",
-                    "viewable": False,
                 },
             },
             {
@@ -1608,8 +1594,7 @@ def assert_metadata_response_refreshes_exact_target(page: Page) -> None:
                 summary: 'Summary',
                 date: '2026-07-27',
                 date_display: 'July 2026',
-                ui_status: 'done',
-                viewable: false
+                ui_status: 'done'
             });
             return { reloads, requests, result };
         }"""
@@ -1633,7 +1618,6 @@ def assert_metadata_response_refreshes_exact_target(page: Page) -> None:
                     "date": "2026-07-27",
                     "date_display": "July 2026",
                     "ui_status": "done",
-                    "viewable": False,
                 },
             }
         ],
@@ -2747,7 +2731,6 @@ def exercise_subscope_editing_route(
     page.locator("#docsViewerMetadataDateDisplayInput").fill("July 2026")
     page.locator("#docsViewerMetadataStatusInput").select_option("done")
     page.locator("#docsViewerMetadataGroupInput").select_option("theme")
-    page.locator("#docsViewerMetadataNonViewableInput").check()
     page.locator("#docsViewerMetadataSaveButton").click()
     wait_for_subscope_detail(
         page,
@@ -2768,8 +2751,8 @@ def exercise_subscope_editing_route(
         raise AssertionError("metadata rebuild did not refresh the Manage manifest row")
     if refreshed_manifest_row.locator(".docsViewer__navStatus").count() != 1:
         raise AssertionError("metadata rebuild did not refresh the manifest status icon")
-    if refreshed_manifest_row.locator(".docsViewer__draftPrefix").count() != 1:
-        raise AssertionError("metadata rebuild did not refresh the manifest viewability icon")
+    if refreshed_manifest_row.locator(".docsViewer__publishableExclusion").count() != 0:
+        raise AssertionError("local metadata rebuild exposed a publication-exclusion icon")
     page.go_back(wait_until="domcontentloaded")
     wait_for_subscope_detail(
         page,
@@ -2892,7 +2875,6 @@ def assert_subscope_request_log(request_log: list[dict[str, object]]) -> None:
                 "date_display": "July 2026",
                 "ui_status": "done",
                 "group": "theme",
-                "viewable": False,
                 "source_revision": "sha256:" + ("2" * 64),
             },
         }
@@ -3119,14 +3101,8 @@ def exercise_manage_route(
             "Edit metadata did not hydrate summary from the local source record: "
             f"{metadata_summary!r}"
         )
-    metadata_viewability = page.locator("#docsViewerMetadataNonViewableInput")
-    metadata_viewability_description = page.locator("#docsViewerMetadataNonViewableDescription")
-    if metadata_viewability.get_attribute("aria-describedby") != "docsViewerMetadataNonViewableDescription":
-        raise AssertionError("metadata viewability checkbox should expose its ancestor-effect guidance")
-    if metadata_viewability_description.inner_text().strip() != (
-        "Changes only this document. A non-viewable parent still prevents it from appearing publicly."
-    ):
-        raise AssertionError("metadata viewability guidance did not explain non-viewable ancestors")
+    if page.locator("#docsViewerMetadataNonPublishableInput").count() != 0:
+        raise AssertionError("Edit metadata retained the retired publication checkbox")
     page.locator("#docsViewerMetadataCancelButton").evaluate("button => button.click()")
 
     page.locator("#docsViewerManageSourceButton").evaluate("button => button.click()")
@@ -3316,7 +3292,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         assert_service_basics(base_url)
         assert_origin_rejection(base_url)
-        assert_dedicated_viewability_endpoints_retired(base_url)
+        assert_dedicated_publishability_endpoints_retired(base_url)
 
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)

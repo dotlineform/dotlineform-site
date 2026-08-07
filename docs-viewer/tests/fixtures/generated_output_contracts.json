@@ -64,7 +64,7 @@
         "title",
         "content_url",
         "parent_id",
-        "viewable",
+        "publishable",
         "ui_status"
       ]
     },

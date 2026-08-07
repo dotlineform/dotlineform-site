@@ -120,21 +120,21 @@ const METADATA_DOCS = [
     date_display: "23 July 2026",
     ui_status: "in-progress",
     parent_id: "d-workbench-guide",
-    viewable: true
+    publishable: true
   },
   {
     doc_id: "d-workbench-guide",
     title: "Docs Viewer guide",
     summary: "",
     parent_id: "",
-    viewable: true
+    publishable: true
   },
   {
     doc_id: "d-workbench-archive",
     title: "Archived delivery notes",
     summary: "",
     parent_id: "",
-    viewable: false
+    publishable: false
   }
 ];
 
@@ -178,7 +178,7 @@ function createPersistentFixture(context) {
       currentActiveDoc: () => METADATA_DOCS[0],
       hideContextMenu: () => {},
       hideManageActionsMenu: () => {},
-      isDocNonViewable: (doc) => doc?.viewable === false,
+      isDocNonPublishable: (doc) => doc?.publishable === false,
       metadataParentOptions,
       onImportOpen: () => Promise.resolve(),
       onMetadataSubmit: () => {},

@@ -49,7 +49,7 @@ def source(
         'last_updated: "2026-07-27"\n'
         f"{group_line}"
         'parent_id: ""\n'
-        "viewable: true\n"
+        "publishable: true\n"
         "---\n"
         f"# {title}\n"
         f"{marker_text}"

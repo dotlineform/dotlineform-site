@@ -45,6 +45,7 @@ from docs_scope_config import (  # noqa: E402
     published_search_path,
     resolve_scope_path,
 )
+from docs_source_model import validate_publishable_front_matter  # noqa: E402
 
 
 DEFAULT_SCOPE = "studio"
@@ -57,7 +58,7 @@ class SearchDocRecord:
     last_updated: str
     parent_id: str
     viewer_url: str
-    viewable: bool
+    publishable: bool
 
 
 def utc_timestamp() -> str:
@@ -239,6 +240,14 @@ class DocsViewerSearchDataBuilder:
             title = normalize_text(front_matter.get("title") or extract_title(body_markdown) or humanize(stem))
             if not doc_id or not title:
                 continue
+            try:
+                validate_publishable_front_matter(
+                    front_matter,
+                    collection_config=self.scope_config,
+                    source_name=path.relative_to(source_dir).as_posix(),
+                )
+            except ValueError as exc:
+                raise SystemExit(str(exc)) from exc
             raw_records.append(
                 {
                     "doc_id": doc_id,
@@ -246,7 +255,7 @@ class DocsViewerSearchDataBuilder:
                     "last_updated": normalize_text(front_matter.get("last_updated")),
                     "parent_id": normalize_text(front_matter.get("parent_id") if "parent_id" in front_matter else ""),
                     "viewer_url": self.viewer_url_for(doc_id),
-                    "viewable": front_matter_boolean(front_matter, "viewable", True),
+                    "publishable": front_matter_boolean(front_matter, "publishable", True),
                 }
             )
         return self.search_records_from_source_rows(self.ordered_source_rows(raw_records))
@@ -270,7 +279,7 @@ class DocsViewerSearchDataBuilder:
             viewer_url = normalize_text(row.get("viewer_url"))
             if not doc_id or not title or not viewer_url:
                 continue
-            if doc_id in hidden_ids or not boolean_field(row, "viewable", True):
+            if doc_id in hidden_ids or not boolean_field(row, "publishable", True):
                 continue
             parent_id = normalize_text(row.get("parent_id"))
             if parent_id and parent_id not in all_doc_ids:
@@ -282,7 +291,7 @@ class DocsViewerSearchDataBuilder:
                     last_updated=normalize_text(row.get("last_updated")),
                     parent_id=parent_id,
                     viewer_url=viewer_url,
-                    viewable=True,
+                    publishable=True,
                 )
             )
         return records
@@ -325,7 +334,7 @@ class DocsViewerSearchDataBuilder:
         roots.extend(
             normalize_text(row.get("doc_id"))
             for row in docs
-            if isinstance(row, dict) and not boolean_field(row, "viewable", True)
+            if isinstance(row, dict) and not boolean_field(row, "publishable", True)
         )
         roots = [value for value in roots if value]
         if not roots:
@@ -407,7 +416,7 @@ class DocsViewerSearchDataBuilder:
                 if not remove_missing:
                     raise SystemExit(
                         f"Targeted docs search update for {self.scope} requires --remove-missing "
-                        "when affected ids may be missing or non-viewable"
+                        "when affected ids may be missing or non-publishable"
                     )
                 if current_entry is not None:
                     existing_by_id.pop(doc_id, None)
@@ -549,7 +558,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--output", help="Generated search index output path.")
     parser.add_argument("--only-doc-ids", action="append", default=[], help="Comma-separated doc ids for targeted docs-domain search updates.")
     parser.add_argument("--only-records", help="Catalogue-only targeted search records.")
-    parser.add_argument("--remove-missing", action="store_true", help="Allow targeted docs-domain updates to remove missing or non-viewable ids.")
+    parser.add_argument("--remove-missing", action="store_true", help="Allow targeted docs-domain updates to remove missing or non-publishable ids.")
     parser.add_argument("--write", action="store_true", help="Persist generated files; default is dry-run.")
     parser.add_argument("--force", action="store_true", help="Write even when the content version matches.")
     args = parser.parse_args(argv)

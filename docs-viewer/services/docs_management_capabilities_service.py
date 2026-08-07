@@ -52,7 +52,7 @@ def capability_scope_docs(repo_root: Path, scope: str, root: Path) -> list[Any]:
                 title=title,
                 ui_status=source_model.normalize_ui_status(front_matter.get("ui_status")),
                 parent_id=str(front_matter.get("parent_id") or "").strip(),
-                viewable=source_model.doc_is_viewable(front_matter),
+                publishable=source_model.doc_is_publishable(front_matter),
             )
         )
     return docs
