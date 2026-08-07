@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f0d55c3a8c1e5bf345fad4d2bc618968",
-    "generated_at_utc": "2026-08-07T15:06:44Z",
-    "count": 264
+    "version": "blake2b-866c957e943cc563c2043fa48c34c0e7",
+    "generated_at_utc": "2026-08-07T15:14:41Z",
+    "count": 265
   },
   "entries": [
     {
@@ -4284,26 +4284,26 @@
       "kind": "doc",
       "title": "Sub-Scope Publishing",
       "href": "/docs/?scope=studio&doc=d-20260802-194357-4d857b",
-      "last_updated": "2026-08-07 15:56:48",
+      "last_updated": "2026-08-07 16:13:05",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-07 15:56:48 • Roadmap",
+      "display_meta": "2026-08-07 16:13:05 • Roadmap",
       "search_terms": [
         "sub-scope publishing",
         "sub",
         "scope",
         "publishing",
         "roadmap",
-        "2026-08-07 15:56:48",
+        "2026-08-07 16:13:05",
         "2026",
         "08",
         "07",
-        "15",
-        "56",
-        "48",
+        "16",
+        "13",
+        "05",
         "d-20260802-194357-4d857b"
       ],
-      "search_text": "sub-scope publishing sub scope publishing roadmap 2026-08-07 15:56:48 2026 08 07 15 56 48 d-20260802-194357-4d857b"
+      "search_text": "sub-scope publishing sub scope publishing roadmap 2026-08-07 16:13:05 2026 08 07 16 13 05 d-20260802-194357-4d857b"
     },
     {
       "id": "d-20260802-121105-c574f9",
@@ -5279,10 +5279,10 @@
       "kind": "doc",
       "title": "SSP-6 — Uncataloged And Missing Source Files Reports Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-121106-15ea55",
-      "last_updated": "2026-08-07 16:06:21",
+      "last_updated": "2026-08-07 16:13:05",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-07 16:06:21 • Sub-Scope Publishing",
+      "display_meta": "2026-08-07 16:13:05 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-6 — uncataloged and missing source files reports delivery",
         "ssp",
@@ -5298,16 +5298,51 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-07 16:06:21",
+        "2026-08-07 16:13:05",
         "2026",
         "08",
         "07",
         "16",
-        "06",
-        "21",
+        "13",
+        "05",
         "d-20260802-121106-15ea55"
       ],
-      "search_text": "ssp-6 — uncataloged and missing source files reports delivery ssp 6 uncataloged and missing source files reports delivery sub-scope publishing sub scope publishing 2026-08-07 16:06:21 2026 08 07 16 06 21 d-20260802-121106-15ea55"
+      "search_text": "ssp-6 — uncataloged and missing source files reports delivery ssp 6 uncataloged and missing source files reports delivery sub-scope publishing sub scope publishing 2026-08-07 16:13:05 2026 08 07 16 13 05 d-20260802-121106-15ea55"
+    },
+    {
+      "id": "d-20260807-161305-326ba1",
+      "kind": "doc",
+      "title": "SSP-6.0 — Uncataloged And Missing Source Files Sanity Note",
+      "href": "/docs/?scope=studio&doc=d-20260807-161305-326ba1",
+      "last_updated": "2026-08-07 16:13:05",
+      "parent_id": "d-20260802-121106-15ea55",
+      "parent_title": "SSP-6 — Uncataloged And Missing Source Files Reports Delivery",
+      "display_meta": "2026-08-07 16:13:05 • SSP-6 — Uncataloged And Missing Source Files Reports Delivery",
+      "search_terms": [
+        "ssp-6.0 — uncataloged and missing source files sanity note",
+        "ssp",
+        "6",
+        "0",
+        "uncataloged",
+        "and",
+        "missing",
+        "source",
+        "files",
+        "sanity",
+        "note",
+        "ssp-6 — uncataloged and missing source files reports delivery",
+        "reports",
+        "delivery",
+        "2026-08-07 16:13:05",
+        "2026",
+        "08",
+        "07",
+        "16",
+        "13",
+        "05",
+        "d-20260807-161305-326ba1"
+      ],
+      "search_text": "ssp-6.0 — uncataloged and missing source files sanity note ssp 6 0 uncataloged and missing source files sanity note ssp-6 — uncataloged and missing source files reports delivery reports delivery 2026-08-07 16:13:05 2026 08 07 16 13 05 d-20260807-161305-326ba1"
     },
     {
       "id": "d-20260805-231829-947705",
