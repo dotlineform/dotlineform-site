@@ -1112,7 +1112,15 @@
               "doc_id": "d-20260802-195805-94a5be",
               "title": "SSP-5 — Work And Series Document Metadata Publication Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-195805-94a5be.json",
-              "ui_status": "proposed"
+              "ui_status": "in-progress",
+              "children": [
+                {
+                  "doc_id": "d-20260807-132505-d0570b",
+                  "title": "SSP-5.0 — Public Work And Series Metadata Sanity Note",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-132505-d0570b.json",
+                  "ui_status": "done"
+                }
+              ]
             },
             {
               "doc_id": "d-20260802-121106-15ea55",
@@ -1498,5 +1506,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-07T09:00:49Z"
+  "generated_at": "2026-08-07T12:26:14Z"
 }
