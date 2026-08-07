@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-4f843ee2e7173e22f78a14c3bfa9444b",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-bb69df4369230e40dc04d97e19ce6565",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "110",
     "count": 5
   },
@@ -17,6 +17,7 @@
     "year_display": "2008",
     "project_folders": [
       "particle theory"
-    ]
+    ],
+    "doc_url": []
   }
 }

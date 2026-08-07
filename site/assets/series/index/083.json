@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-1d0ed654a9a213d054504be00506c3ed",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-854948d0c7ca1f3eac814efdcaa601b0",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "083",
     "count": 3
   },
@@ -17,6 +17,7 @@
     "year_display": "2008",
     "project_folders": [
       "k particles"
-    ]
+    ],
+    "doc_url": []
   }
 }

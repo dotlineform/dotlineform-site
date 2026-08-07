@@ -114,6 +114,40 @@ def build_document_location_payload(
 
     if config.scope_id not in SUPPORTED_DOCUMENT_LOCATION_SCOPE_IDS:
         raise ValueError(f"unsupported document-location scope: {config.scope_id}")
+    exact_records = build_exact_document_location_records(
+        config,
+        search_payload=search_payload,
+        parent_documents=parent_documents,
+        sub_scope_manifests=sub_scope_manifests,
+    )
+    return {
+        "schema_version": DOCUMENT_LOCATION_SCHEMA_VERSION,
+        "scope_id": config.scope_id,
+        "records": [
+            {
+                "url": record["url"],
+                "scope_id": record["scope_id"],
+                "document_title": record["document_title"],
+                "report_title": record["report_title"],
+            }
+            for record in exact_records
+        ],
+    }
+
+
+def build_exact_document_location_records(
+    config: DocsScopeConfig,
+    *,
+    search_payload: Any,
+    parent_documents: Mapping[str, Any],
+    sub_scope_manifests: Mapping[str, Any],
+) -> list[dict[str, str]]:
+    """Retain exact source identity while projecting current public URLs.
+
+    This is an internal producer seam. The public document-location payload
+    intentionally continues to omit source identity.
+    """
+
     if not isinstance(search_payload, dict) or not isinstance(search_payload.get("entries"), list):
         raise ValueError("public search entries must be an array")
 
@@ -129,6 +163,8 @@ def build_document_location_payload(
 
     def append_record(
         *,
+        doc_id: str,
+        sub_scope: str,
         url: str,
         document_title: str,
         report_title: str = "",
@@ -140,6 +176,8 @@ def build_document_location_payload(
             {
                 "url": url,
                 "scope_id": config.scope_id,
+                "sub_scope": sub_scope,
+                "doc_id": doc_id,
                 "document_title": document_title,
                 "report_title": report_title,
             }
@@ -151,7 +189,12 @@ def build_document_location_payload(
             raw_entry,
             field=f"search.entries[{index}]",
         )
-        append_record(url=href, document_title=title)
+        append_record(
+            doc_id=doc_id,
+            sub_scope="",
+            url=href,
+            document_title=title,
+        )
 
         parent_payload = parent_documents.get(doc_id)
         if not isinstance(parent_payload, dict):
@@ -174,23 +217,21 @@ def build_document_location_payload(
             )
         for child_doc_id, child_title in manifest_records[sub_scope_id]:
             append_record(
+                doc_id=child_doc_id,
+                sub_scope=sub_scope_id,
                 url=canonical_sub_scope_url(href, child_doc_id),
                 document_title=child_title,
                 report_title=title,
             )
 
-    return {
-        "schema_version": DOCUMENT_LOCATION_SCHEMA_VERSION,
-        "scope_id": config.scope_id,
-        "records": records,
-    }
+    return records
 
 
-def load_public_document_location_payload(
+def load_public_document_location_inputs(
     repo_root: Path,
     config: DocsScopeConfig,
-) -> dict[str, Any]:
-    """Build from the currently published site projection without source reads."""
+) -> tuple[Any, dict[str, Any], dict[str, Any]]:
+    """Load the exact currently public inputs shared by location consumers."""
 
     search_path = public_search_path(config)
     documents_path = public_documents_path(config)
@@ -240,8 +281,37 @@ def load_public_document_location_payload(
         sub_scope_manifests[sub_scope.sub_scope] = json.loads(
             manifest_path.read_text(encoding="utf-8")
         )
+    return search_payload, parent_documents, sub_scope_manifests
+
+
+def load_public_document_location_payload(
+    repo_root: Path,
+    config: DocsScopeConfig,
+) -> dict[str, Any]:
+    """Build from the currently published site projection without source reads."""
+
+    search_payload, parent_documents, sub_scope_manifests = (
+        load_public_document_location_inputs(repo_root, config)
+    )
 
     return build_document_location_payload(
+        config,
+        search_payload=search_payload,
+        parent_documents=parent_documents,
+        sub_scope_manifests=sub_scope_manifests,
+    )
+
+
+def load_public_exact_document_location_records(
+    repo_root: Path,
+    config: DocsScopeConfig,
+) -> list[dict[str, str]]:
+    """Build exact internal records for any configured public scope."""
+
+    search_payload, parent_documents, sub_scope_manifests = (
+        load_public_document_location_inputs(repo_root, config)
+    )
+    return build_exact_document_location_records(
         config,
         search_payload=search_payload,
         parent_documents=parent_documents,
@@ -253,9 +323,12 @@ __all__ = [
     "DOCUMENT_LOCATION_SCHEMA_VERSION",
     "SUPPORTED_DOCUMENT_LOCATION_SCOPE_IDS",
     "build_document_location_payload",
+    "build_exact_document_location_records",
     "canonical_search_entry",
     "canonical_sub_scope_url",
     "document_location_projection_path",
     "json_bytes",
+    "load_public_exact_document_location_records",
     "load_public_document_location_payload",
+    "load_public_document_location_inputs",
 ]

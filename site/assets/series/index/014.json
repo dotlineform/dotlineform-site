@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-4f0ac56b586fa2ea1e866c04d340c7be",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-105edf8f890e0850c5f1d3e091310bc0",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "014",
     "count": 3
   },
@@ -17,6 +17,7 @@
     "year_display": "2023",
     "project_folders": [
       "assembly codes"
-    ]
+    ],
+    "doc_url": []
   }
 }

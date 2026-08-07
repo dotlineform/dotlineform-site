@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-2d8b9a21bf8219c2971fc099b11b5bd3",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-0bf96a0287e39f490eafee40aef40392",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "142",
     "count": 3
   },
@@ -17,6 +17,7 @@
     "year_display": "2023",
     "project_folders": [
       "water sea pond"
-    ]
+    ],
+    "doc_url": []
   }
 }

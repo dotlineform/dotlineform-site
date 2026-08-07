@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-25ce22eae9e358eb04899cb95ef4840f",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-e415db7e9ad6862844c0d00745df577a",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "133",
     "count": 18
   },
@@ -17,6 +17,7 @@
     "year_display": "2006",
     "project_folders": [
       "thorns"
-    ]
+    ],
+    "doc_url": []
   }
 }

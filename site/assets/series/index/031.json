@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-4730b3357439b4204009148cb159ba68",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-9c7cfdad51dc9e0c49fb85ebf4d5367e",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "031",
     "count": 14
   },
@@ -17,6 +17,7 @@
     "year_display": "2012",
     "project_folders": [
       "concrete"
-    ]
+    ],
+    "doc_url": []
   }
 }

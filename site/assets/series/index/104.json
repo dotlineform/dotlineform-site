@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-44d8fe864e8565f4b6383d0d514f24cb",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-1a1bb2014bb634e1adb53b8861c7de09",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "104",
     "count": 3
   },
@@ -17,6 +17,7 @@
     "year_display": "1991-93",
     "project_folders": [
       "mouse story"
-    ]
+    ],
+    "doc_url": []
   }
 }

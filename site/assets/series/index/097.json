@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-4a95926ec383644db813822d3530188e",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-acc3cc88e613bbb2296fa13a49192776",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "097",
     "count": 4
   },
@@ -17,6 +17,7 @@
     "year_display": "2023",
     "project_folders": [
       "memory loss vessels"
-    ]
+    ],
+    "doc_url": []
   }
 }

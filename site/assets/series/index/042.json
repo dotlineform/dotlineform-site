@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-5b983eb9400a0d6658f2c2c54ad3e9d2",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-a3113094e1899527099893146bc701b6",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "042",
     "count": 35
   },
@@ -17,6 +17,7 @@
     "year_display": "2021",
     "project_folders": [
       "dotlineform (2021)"
-    ]
+    ],
+    "doc_url": []
   }
 }

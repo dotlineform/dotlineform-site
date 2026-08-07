@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-4444925a3e21fe0a2a4960f0d3ad2e57",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-e04da8040a57172b969629df3c31f7b6",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "062",
     "count": 4
   },
@@ -17,6 +17,7 @@
     "year_display": "2023",
     "project_folders": [
       "forests (2023)"
-    ]
+    ],
+    "doc_url": []
   }
 }

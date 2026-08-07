@@ -72,6 +72,7 @@ REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 
 from markdown_renderer import render_markdown_to_html  # noqa: E402
+from docs_catalogue_document_urls import load_public_catalogue_document_urls  # noqa: E402
 
 try:
     from catalogue import catalogue_generation_indexes as indexes
@@ -539,6 +540,17 @@ def main() -> None:
             f"Missing projects base directory. Add {PROJECTS_BASE_DIR_ENV_NAME} "
             "to .env.local or pass --projects-base-dir."
         )
+    catalogue_document_urls: Dict[str, Dict[str, List[str]]] = {
+        "work": {},
+        "series": {},
+    }
+    if run_work_json or run_series_pages:
+        try:
+            catalogue_document_urls = load_public_catalogue_document_urls(repo_root)
+        except (OSError, ValueError) as exc:
+            raise SystemExit(
+                f"Public Catalogue document URL projection failed: {exc}"
+            ) from exc
     series_json_dir = Path(args.series_json_dir).expanduser()
     series_json_dir.mkdir(parents=True, exist_ok=True)
 
@@ -883,7 +895,10 @@ def main() -> None:
                     "project_folders": series_project_folders_by_id.get(series_id, []),
                 })
 
-                public_series_record = records.build_series_json_record(series_output_record)
+                public_series_record = records.build_series_json_record(
+                    series_output_record,
+                    doc_urls=catalogue_document_urls["series"].get(series_id, []),
+                )
                 source_prose_path = resolve_series_prose_source_path(series_id)
                 content_html: Optional[str] = None
                 if source_prose_path.exists():
@@ -898,7 +913,7 @@ def main() -> None:
                 )
                 payload = compact_json_object({
                     "header": {
-                        "schema": "series_record_v1",
+                        "schema": records.SERIES_RECORD_SCHEMA_VERSION,
                         "version": payload_version,
                         "generated_at_utc": utc_timestamp_now(),
                         "series_id": series_id,
@@ -1103,7 +1118,10 @@ def main() -> None:
                     source_sections.append(section_payload)
                 sections = records.build_sections_from_detail_sections(source_sections)
                 details_total = sum(len(s.get("details", [])) for s in sections)
-                work_record = records.build_work_json_record(canonical_work_record_by_id.get(wid, {"work_id": wid}))
+                work_record = records.build_work_json_record(
+                    canonical_work_record_by_id.get(wid, {"work_id": wid}),
+                    doc_urls=catalogue_document_urls["work"].get(wid, []),
+                )
                 content_html: Optional[str] = None
                 if source_prose_path.exists():
                     content_html = render_catalogue_prose_markdown(source_prose_path)
@@ -1111,7 +1129,7 @@ def main() -> None:
 
                 payload = compact_json_object({
                     "header": {
-                        "schema": "work_record_v3",
+                        "schema": records.WORK_RECORD_SCHEMA_VERSION,
                         "version": payload_version,
                         "generated_at_utc": generated_at_utc,
                         "work_id": wid,

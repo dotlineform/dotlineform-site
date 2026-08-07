@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-530939a704f055274d5f9f22efda3a5d",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-4a51609b959b0ee9f9c73951c4d5c55c",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "087",
     "count": 3
   },
@@ -17,6 +17,7 @@
     "year_display": "2023",
     "project_folders": [
       "landscapes"
-    ]
+    ],
+    "doc_url": []
   }
 }

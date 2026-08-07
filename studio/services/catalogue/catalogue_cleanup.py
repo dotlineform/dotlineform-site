@@ -12,6 +12,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 
 from catalogue import catalogue_activity as activity
 from catalogue.catalogue_build_media import PIPELINE_CONFIG, detect_projects_base_dir
+from catalogue import catalogue_generation_records as generation_records
 from catalogue import catalogue_public_paths as public_paths
 from catalogue.catalogue_source import load_json_file, normalize_detail_uid_value, normalize_series_ids_value, slug_id
 from catalogue.series_ids import normalize_series_id
@@ -101,13 +102,17 @@ def finalize_work_record_payload(payload: Dict[str, Any], work_id: str) -> Dict[
     work_record = payload.get("work")
     if not isinstance(work_record, dict):
         raise ValueError("work record payload must include a work object")
+    raw_doc_urls = work_record.get("doc_url", [])
+    if not isinstance(raw_doc_urls, list):
+        raise ValueError("work.doc_url must be an array")
+    work_record["doc_url"] = generation_records.normalize_document_urls(raw_doc_urls)
     sections = payload.get("sections")
     if not isinstance(sections, list):
         sections = []
         payload["sections"] = sections
     content_html = payload.get("content_html")
     payload["header"] = {
-        "schema": str((payload.get("header") or {}).get("schema") or "work_record_v3"),
+        "schema": generation_records.WORK_RECORD_SCHEMA_VERSION,
         "version": compute_payload_version(
             {
                 "work": work_record,
@@ -126,13 +131,17 @@ def finalize_series_record_payload(payload: Dict[str, Any], series_id: str) -> D
     series_record = payload.get("series")
     if not isinstance(series_record, dict):
         raise ValueError("series record payload must include a series object")
+    raw_doc_urls = series_record.get("doc_url", [])
+    if not isinstance(raw_doc_urls, list):
+        raise ValueError("series.doc_url must be an array")
+    series_record["doc_url"] = generation_records.normalize_document_urls(raw_doc_urls)
     header = payload.get("header") if isinstance(payload.get("header"), dict) else {}
     works = series_record.get("works")
     count = len(works) if isinstance(works, list) else header.get("count")
     if not isinstance(count, int):
         count = 0
     payload["header"] = {
-        "schema": str(header.get("schema") or "series_record_v1"),
+        "schema": generation_records.SERIES_RECORD_SCHEMA_VERSION,
         "version": compute_payload_version(
             {
                 "series": series_record,

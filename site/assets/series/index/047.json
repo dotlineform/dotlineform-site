@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-62c5cea5bdf0dd0b95d22213b41d3a95",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-2fb9ad3c4bdeafaf18ac48d8356fb9c7",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "047",
     "count": 6
   },
@@ -17,6 +17,7 @@
     "year_display": "2012",
     "project_folders": [
       "egg prints"
-    ]
+    ],
+    "doc_url": []
   }
 }

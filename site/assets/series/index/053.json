@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-759e71bb7878839c65245b149bbf8c23",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-c8a6517db9d669dd2c172bc0f9eaa712",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "053",
     "count": 16
   },
@@ -17,6 +17,7 @@
     "year_display": "2012",
     "project_folders": [
       "fluid forms"
-    ]
+    ],
+    "doc_url": []
   }
 }

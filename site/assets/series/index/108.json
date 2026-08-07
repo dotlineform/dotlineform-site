@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-8623fcebae0de5ce53e5e02aea77207e",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-fbfd4796e268076a6e1ed012398f9855",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "108",
     "count": 1
   },
@@ -17,6 +17,7 @@
     "year_display": "2012",
     "project_folders": [
       "olive tree"
-    ]
+    ],
+    "doc_url": []
   }
 }

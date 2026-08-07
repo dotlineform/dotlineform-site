@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-b1cdcd6fb6224ee65fcfaba218b0fc25",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-d59f287cd0ebde53326b7e1f0312d293",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "134",
     "count": 7
   },
@@ -17,6 +17,7 @@
     "year_display": "2023",
     "project_folders": [
       "through a glass clearly"
-    ]
+    ],
+    "doc_url": []
   }
 }

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-0cbba358153df6948533f1ec0ca34eec",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-5b798f52cf9d72d3d4a9f54996026782",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "105",
     "count": 3
   },
@@ -19,6 +19,7 @@
       "nerve",
       "nerve (abattoir)",
       "nerve (formaldehyde form)"
-    ]
+    ],
+    "doc_url": []
   }
 }

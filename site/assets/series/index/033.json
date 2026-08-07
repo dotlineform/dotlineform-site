@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-bbbe5d845a2616eec56b91bf10c1f0fb",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-80924999ef3edef69d439b05813b2a71",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "033",
     "count": 12
   },
@@ -17,6 +17,7 @@
     "year_display": "2011",
     "project_folders": [
       "cube structure"
-    ]
+    ],
+    "doc_url": []
   }
 }

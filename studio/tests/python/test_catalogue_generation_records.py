@@ -6,6 +6,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import pytest
+
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SERVICES_DIR = REPO_ROOT / "studio/services"
@@ -13,6 +15,7 @@ if str(SERVICES_DIR) not in sys.path:
     sys.path.insert(0, str(SERVICES_DIR))
 
 from catalogue import catalogue_generation_records as records  # noqa: E402
+from catalogue.catalogue_generation_common import compute_payload_version  # noqa: E402
 
 
 def test_work_projection_order_and_coercion() -> None:
@@ -101,6 +104,7 @@ def test_canonical_work_record_orders_fields_and_prunes_public_record() -> None:
     assert "checksum" not in public_record
     assert "year_display" not in public_record
     assert public_record["series_ids"] == ["009", "010"]
+    assert public_record["doc_url"] == []
 
 
 def test_public_series_records_prune_internal_fields() -> None:
@@ -115,7 +119,28 @@ def test_public_series_records_prune_internal_fields() -> None:
             "notes": "Retired source note",
         }
     )
-    assert series == {"series_id": "009", "title": "Series"}
+    assert series == {"series_id": "009", "title": "Series", "doc_url": []}
+
+
+def test_public_document_urls_are_sorted_deduped_and_versioned() -> None:
+    work = records.build_work_json_record(
+        {"work_id": "00042", "title": "Work"},
+        doc_urls=["/z", "/a", "/a"],
+    )
+    series = records.build_series_json_record(
+        {"series_id": "009", "title": "Series"},
+        doc_urls=["/series"],
+    )
+
+    assert records.WORK_RECORD_SCHEMA_VERSION == "work_record_v4"
+    assert records.SERIES_RECORD_SCHEMA_VERSION == "series_record_v2"
+    assert work["doc_url"] == ["/a", "/z"]
+    assert series["doc_url"] == ["/series"]
+    assert compute_payload_version({"work": work}) != compute_payload_version(
+        {"work": {**work, "doc_url": ["/a"]}}
+    )
+    with pytest.raises(ValueError, match="doc_url must be an array"):
+        records.normalize_document_urls("/not-an-array")
 
 def test_detail_record_grouping_is_deterministic() -> None:
     detail_record = records.build_canonical_detail_record(

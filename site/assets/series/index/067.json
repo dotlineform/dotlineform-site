@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-3b23e1b61f1650f2cc44e1a271ba2e0a",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-c33e1dab8cdf34fa06890d9c7d65173f",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "067",
     "count": 51
   },
@@ -17,6 +17,7 @@
     "year_display": "2017-25",
     "project_folders": [
       "found forms"
-    ]
+    ],
+    "doc_url": []
   }
 }

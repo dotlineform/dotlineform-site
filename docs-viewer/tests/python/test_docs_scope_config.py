@@ -64,6 +64,41 @@ def test_docs_scope_config_selected_local_scope_does_not_resolve_external_worksp
     assert "external_data_root does not exist" in external_error
 
 
+def test_docs_scope_config_public_only_does_not_resolve_external_workspace() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_json(
+            repo_root / "docs-viewer/config/scopes/docs_scopes.json",
+            {
+                "schema_version": "docs_scopes_v3",
+                "scopes": [
+                    docs_scope_record(
+                        "analysis",
+                        scope_type="public",
+                        viewer_base_url="/analysis/",
+                        include_scope_param=False,
+                    ),
+                    docs_scope_record(
+                        "private",
+                        scope_type="local_external",
+                        default_doc_id="private",
+                    ),
+                ],
+            },
+        )
+        unavailable_projects = repo_root / "unavailable-projects"
+        with patch.dict(
+            "os.environ",
+            {"DOTLINEFORM_PROJECTS_BASE_DIR": str(unavailable_projects)},
+        ):
+            configs = docs_scope_config.load_docs_scope_configs(
+                repo_root,
+                public_only=True,
+            )
+
+    assert list(configs) == ["analysis"]
+
+
 def sub_scope_record(
     scope_id: str,
     sub_scope: str,

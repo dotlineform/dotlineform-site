@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-5a00527be970545776b3dd56e7a1e472",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-b94a80f64cb2e0b9c5d68cf90e1c3388",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "038",
     "count": 8
   },
@@ -17,6 +17,7 @@
     "year_display": "2024",
     "project_folders": [
       "doll faces"
-    ]
+    ],
+    "doc_url": []
   }
 }

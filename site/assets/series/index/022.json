@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-81a989d765a88dad684a7bf764fefd7e",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-4345b75911823446631e39c9c97e548d",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "022",
     "count": 5
   },
@@ -17,6 +17,7 @@
     "year_display": "2011",
     "project_folders": [
       "book of curves"
-    ]
+    ],
+    "doc_url": []
   }
 }

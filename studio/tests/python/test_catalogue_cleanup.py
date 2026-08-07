@@ -149,6 +149,8 @@ def test_work_delete_generated_payloads_remove_generated_records() -> None:
     ]
     assert "works" not in payloads[(root / "site/assets/series/index/009.json").resolve()]["series"]
     assert "primary_work_id" not in payloads[(root / "site/assets/series/index/009.json").resolve()]["series"]
+    assert payloads[(root / "site/assets/series/index/009.json").resolve()]["series"]["doc_url"] == []
+    assert payloads[(root / "site/assets/series/index/009.json").resolve()]["header"]["schema"] == "series_record_v2"
     assert "00001" not in payloads[(root / TAG_ASSIGNMENTS_PATH).resolve()]["series"]["009"]["works"]
 
 
@@ -194,6 +196,8 @@ def test_work_detail_generated_payloads_remove_all_affected_details() -> None:
     assert preview["staged_media"] == 2
     work_payload = payloads[(root / "site/assets/works/index/00001.json").resolve()]
     assert work_payload["sections"][0]["details"] == [{"detail_uid": "00001-003"}]
+    assert work_payload["work"]["doc_url"] == []
+    assert work_payload["header"]["schema"] == "work_record_v4"
 
 
 def main() -> None:

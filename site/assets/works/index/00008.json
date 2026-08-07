@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v3",
-    "version": "blake2b-e5a61e4eea2f85b2bea1e68dff64e909",
-    "generated_at_utc": "2026-07-13T17:36:45Z",
+    "schema": "work_record_v4",
+    "version": "blake2b-b9fa3bdcd459cfb58c7014b78cccc8f7",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "work_id": "00008",
     "count": 0
   },
@@ -33,7 +33,8 @@
         "filename": "00008-nerve.pdf",
         "label": "nerve.pdf"
       }
-    ]
+    ],
+    "doc_url": []
   },
   "sections": [],
   "content_html": "<p>We can't see through the mist but we can hear rumbling sounds of fog horns - or sirens? - and just as we disappear from view, the voice of a preacher inciting us to give an urgent but undefined commitment</p>\n<p>All our underworlds are dying or useless, either in blissful ignorance or in the violence and cruelty of ghetto culture, but between suppression and stagnation there is still enough space to cultivate our own concealed jewels, revolutions always slowly seeing what underlies the wounds</p>\n<p>our insides once touched always keep a tight grip on finger tips even when closing and growing</p>\n<p>in her smothering snake like forms that move from nerve to nerve</p>\n<p>she lies</p>\n<p>she turns</p>\n<p>she encloses what i need to understand</p>\n<p>there is a very long way to go inside to see where we have touched, and it starts here</p>\n"

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v3",
-    "version": "blake2b-e420efb997918b141a8e465014e88dc5",
-    "generated_at_utc": "2026-07-13T16:18:53Z",
+    "schema": "work_record_v4",
+    "version": "blake2b-208310c816615057b7d11d6394703af5",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "work_id": "00850",
     "count": 0
   },
@@ -20,7 +20,8 @@
     "width_cm": 28.0,
     "width_px": 3308,
     "height_px": 2480,
-    "media_version": 1
+    "media_version": 1,
+    "doc_url": []
   },
   "sections": []
 }

@@ -179,6 +179,66 @@ def test_projection_rejects_noncanonical_search_location() -> None:
             raise AssertionError("projection should reject external search URLs")
 
 
+def test_exact_internal_projection_supports_any_public_scope_without_expanding_public_schema() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        moments_id = "d-20260807-141500-a1b2c3"
+        write_docs_scope_config(
+            root,
+            [
+                docs_scope_record(
+                    "moments",
+                    scope_type="public",
+                    viewer_base_url="/moments/",
+                    include_scope_param=False,
+                    default_doc_id=moments_id,
+                )
+            ],
+        )
+        config = load_docs_scope_configs(root, scope_ids=["moments"])["moments"]
+        search_payload = {
+            "header": {"scope": "moments"},
+            "entries": [
+                {
+                    "id": moments_id,
+                    "kind": "doc",
+                    "title": "Moment",
+                    "href": f"/moments/?doc={moments_id}",
+                }
+            ],
+        }
+        exact_records = projection.build_exact_document_location_records(
+            config,
+            search_payload=search_payload,
+            parent_documents={moments_id: {"title": "Moment"}},
+            sub_scope_manifests={},
+        )
+
+        try:
+            projection.build_document_location_payload(
+                config,
+                search_payload=search_payload,
+                parent_documents={moments_id: {"title": "Moment"}},
+                sub_scope_manifests={},
+            )
+        except ValueError as exc:
+            public_error = str(exc)
+        else:
+            raise AssertionError("Moments should not acquire a public location payload")
+
+    assert exact_records == [
+        {
+            "url": f"/moments/?doc={moments_id}",
+            "scope_id": "moments",
+            "sub_scope": "",
+            "doc_id": moments_id,
+            "document_title": "Moment",
+            "report_title": "",
+        }
+    ]
+    assert "unsupported document-location scope: moments" in public_error
+
+
 def test_public_projection_loader_does_not_read_source_or_manage_manifest() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)

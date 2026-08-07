@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from typing import Any, Dict, List, Mapping, Optional
+from typing import Any, Dict, List, Mapping, Optional, Sequence
 
 try:
     from catalogue.catalogue_generation_common import (
@@ -29,6 +29,10 @@ try:
     from catalogue.series_ids import normalize_series_id
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from catalogue.series_ids import normalize_series_id
+
+
+WORK_RECORD_SCHEMA_VERSION = "work_record_v4"
+SERIES_RECORD_SCHEMA_VERSION = "series_record_v2"
 
 
 # Define the Works source-record projection once so adding a new field is a one-line change.
@@ -176,7 +180,22 @@ def build_canonical_detail_record(
     return compact_json_object(dfm)
 
 
-def build_work_json_record(work_record: Mapping[str, Any]) -> Dict[str, Any]:
+def normalize_document_urls(values: Sequence[str]) -> List[str]:
+    if isinstance(values, (str, bytes)):
+        raise ValueError("doc_url must be an array")
+    urls: set[str] = set()
+    for index, value in enumerate(values):
+        if not isinstance(value, str) or not value or value != value.strip():
+            raise ValueError(f"doc_url[{index}] must be a non-empty trimmed string")
+        urls.add(value)
+    return sorted(urls)
+
+
+def build_work_json_record(
+    work_record: Mapping[str, Any],
+    *,
+    doc_urls: Sequence[str] = (),
+) -> Dict[str, Any]:
     public_record = dict(work_record)
     public_record.pop("series_id", None)
     public_record.pop("series_title", None)
@@ -184,16 +203,22 @@ def build_work_json_record(work_record: Mapping[str, Any]) -> Dict[str, Any]:
     public_record.pop("storage", None)
     public_record.pop("title_sort", None)
     public_record.pop("checksum", None)
+    public_record["doc_url"] = normalize_document_urls(doc_urls)
     return compact_json_object(public_record)
 
 
-def build_series_json_record(series_record: Mapping[str, Any]) -> Dict[str, Any]:
+def build_series_json_record(
+    series_record: Mapping[str, Any],
+    *,
+    doc_urls: Sequence[str] = (),
+) -> Dict[str, Any]:
     public_record = dict(series_record)
     public_record.pop("layout", None)
     public_record.pop("checksum", None)
     public_record.pop("works", None)
     public_record.pop("primary_work_id", None)
     public_record.pop("notes", None)
+    public_record["doc_url"] = normalize_document_urls(doc_urls)
     return compact_json_object(public_record)
 
 

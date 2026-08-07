@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-5bf91a491ffbdabbc18306c61d61bbbb",
-    "generated_at_utc": "2026-04-29T20:59:05Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-cf40f03e4f52e542a7e870d3336c5bbc",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "002",
     "count": 0
   },
@@ -16,6 +16,7 @@
     "year_display": "2023",
     "project_folders": [
       "100 grasping hands"
-    ]
+    ],
+    "doc_url": []
   }
 }

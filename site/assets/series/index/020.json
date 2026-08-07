@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-0bdb3d80fbfc81b1731aa1d3cafcb1b1",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-5d5406e67105f11c9ff976e41149672b",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "020",
     "count": 9
   },
@@ -17,6 +17,7 @@
     "year_display": "2019",
     "project_folders": [
       "body space (reclining state)"
-    ]
+    ],
+    "doc_url": []
   }
 }

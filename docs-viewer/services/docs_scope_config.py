@@ -886,6 +886,7 @@ def load_docs_scope_configs(
     repo_root: Path | None = None,
     *,
     scope_ids: Iterable[str] | None = None,
+    public_only: bool = False,
 ) -> dict[str, DocsScopeConfig]:
     root = repo_root or default_repo_root()
     config_path = root / CONFIG_REL_PATH
@@ -931,6 +932,8 @@ def load_docs_scope_configs(
             continue
         field = f"scopes[{index}]"
         scope_type = str(item.get("scope_type") or "").strip().lower()
+        if public_only and scope_type != PUBLIC_SCOPE_TYPE:
+            continue
         if scope_type not in SUPPORTED_SCOPE_TYPES:
             supported = ", ".join(sorted(SUPPORTED_SCOPE_TYPES))
             raise ValueError(f"docs scope config {field}.scope_type must be one of: {supported}")

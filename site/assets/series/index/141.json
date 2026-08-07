@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-c5e3bc10e718b4f0fd4d9c6058847d92",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-11a7da3f4a28cdb7050393a155c5703b",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "141",
     "count": 28
   },
@@ -17,6 +17,7 @@
     "year_display": "2005-13",
     "project_folders": [
       "water"
-    ]
+    ],
+    "doc_url": []
   }
 }

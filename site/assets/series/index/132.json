@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-e001dbbeda3521111c3ad5c0af4ce0a1",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-33f017c9a3f6946bfcd06c4e7d34cd48",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "132",
     "count": 1
   },
@@ -17,6 +17,7 @@
     "year_display": "2008",
     "project_folders": [
       "tabula rasa"
-    ]
+    ],
+    "doc_url": []
   }
 }

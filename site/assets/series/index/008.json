@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-a9580d47bbccaed045d24d64aea45163",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-70bfde868f4be4aeb3b061287fe3fa7f",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "008",
     "count": 12
   },
@@ -17,6 +17,7 @@
     "year_display": "2013",
     "project_folders": [
       "a humid home full of light"
-    ]
+    ],
+    "doc_url": []
   }
 }

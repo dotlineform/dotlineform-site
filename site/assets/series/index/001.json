@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-5c4297c48585fb15b151392f44eadf4b",
-    "generated_at_utc": "2026-05-08T17:05:42Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-6b60d498c0c18145acaf72efa37b83ca",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "001",
     "count": 3
   },
@@ -17,6 +17,9 @@
     "year_display": "2009",
     "project_folders": [
       "10000"
+    ],
+    "doc_url": [
+      "/analysis/?doc=d-20260807-082735-54d9d5&subdoc=d-20260807-094819-5712bd"
     ]
   }
 }

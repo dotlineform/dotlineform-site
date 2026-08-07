@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-6e4af3c2f647a9b309fa741273bbd45a",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-7317f6631805a86f3be6b26373e82de1",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "049",
     "count": 1
   },
@@ -17,6 +17,7 @@
     "year_display": "2012",
     "project_folders": [
       "espresso"
-    ]
+    ],
+    "doc_url": []
   }
 }

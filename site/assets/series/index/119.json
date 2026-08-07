@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-957e059f14893448c97a77acfd9caf33",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-4d0c07cc5589c00ad94276f69bdee212",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "119",
     "count": 27
   },
@@ -17,6 +17,7 @@
     "year_display": "2001",
     "project_folders": [
       "r"
-    ]
+    ],
+    "doc_url": []
   }
 }

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-ac64658713ec23248ebc401f1df03a83",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-8a9a152b9ff1ef899a878832a72e8347",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "085",
     "count": 6
   },
@@ -17,6 +17,7 @@
     "year_display": "2024",
     "project_folders": [
       "kylie wax model"
-    ]
+    ],
+    "doc_url": []
   }
 }

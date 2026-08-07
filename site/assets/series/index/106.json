@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-e99d7e034e3a945d7e75d8df7253a798",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-0b8e6b444dbb89801f8d37c8b8a0ac25",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "106",
     "count": 5
   },
@@ -17,6 +17,7 @@
     "year_display": "2004",
     "project_folders": [
       "nerve forms"
-    ]
+    ],
+    "doc_url": []
   }
 }

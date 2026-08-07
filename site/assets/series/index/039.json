@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-f89bac6e008aa9636a772ea93e8c34ea",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-edd719d4bbcc2c15f590b6d5d38db158",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "039",
     "count": 17
   },
@@ -17,6 +17,7 @@
     "year_display": "2023",
     "project_folders": [
       "doll sees everything"
-    ]
+    ],
+    "doc_url": []
   }
 }

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-af3c9db87c26e25fba638818ee5c179b",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-9a4734adc4dd2e632e0ebaab0721cc49",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "109",
     "count": 11
   },
@@ -17,6 +17,7 @@
     "year_display": "2020",
     "project_folders": [
       "particle machine"
-    ]
+    ],
+    "doc_url": []
   }
 }

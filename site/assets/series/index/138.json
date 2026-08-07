@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-c3694f180b244fb345d8e1103c53700a",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-17059f22e1504825ddc538b593f94709",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "138",
     "count": 9
   },
@@ -17,6 +17,7 @@
     "year_display": "2023",
     "project_folders": [
       "untitled composites"
-    ]
+    ],
+    "doc_url": []
   }
 }

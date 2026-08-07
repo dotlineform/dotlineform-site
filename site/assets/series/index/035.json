@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v1",
-    "version": "blake2b-13e6f6424a49071045488f7ff18a183a",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "schema": "series_record_v2",
+    "version": "blake2b-61155fd5758c01308f79be28f667df0e",
+    "generated_at_utc": "2026-08-07T13:20:27Z",
     "series_id": "035",
     "count": 5
   },
@@ -17,6 +17,7 @@
     "year_display": "2020",
     "project_folders": [
       "curve machine"
-    ]
+    ],
+    "doc_url": []
   }
 }
