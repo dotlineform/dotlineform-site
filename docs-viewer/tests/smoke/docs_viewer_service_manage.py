@@ -1708,7 +1708,14 @@ def assert_action_target_definitions(page: Page) -> None:
             "source-add-image",
             "source-insert-subject-link",
         ],
-        "all": ["copy", "delete", "export-docs", "move", "prepare-document-package"],
+        "all": [
+            "copy",
+            "delete",
+            "export-docs",
+            "move",
+            "prepare-document-package",
+            "set-publishable",
+        ],
         "document": [
             "copy-link",
             "new-child",
@@ -1878,6 +1885,7 @@ def assert_action_target_definitions(page: Page) -> None:
             "publish-docs",
             "rebuild-docs",
             "rename-scope",
+            "set-publishable",
             "settings",
         ],
         "unknownRejected": True,

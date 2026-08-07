@@ -27,6 +27,7 @@ export const DOCS_VIEWER_ACTION_IDS = Object.freeze({
   PUBLISH_DOCS: "publish-docs",
   REBUILD_DOCS: "rebuild-docs",
   RENAME_SCOPE: "rename-scope",
+  SET_PUBLISHABLE: "set-publishable",
   SETTINGS: "settings"
 });
 
@@ -82,6 +83,7 @@ export const DOCS_VIEWER_ACTION_DEFINITIONS = Object.freeze({
   [IDS.PUBLISH_DOCS]: actionDefinition(IDS.PUBLISH_DOCS, TARGETS.SCOPE),
   [IDS.REBUILD_DOCS]: actionDefinition(IDS.REBUILD_DOCS, TARGETS.SCOPE),
   [IDS.RENAME_SCOPE]: actionDefinition(IDS.RENAME_SCOPE, TARGETS.SCOPE),
+  [IDS.SET_PUBLISHABLE]: actionDefinition(IDS.SET_PUBLISHABLE, TARGETS.SELECTION, POLICIES.ALL),
   [IDS.SETTINGS]: actionDefinition(IDS.SETTINGS, TARGETS.SCOPE)
 });
 

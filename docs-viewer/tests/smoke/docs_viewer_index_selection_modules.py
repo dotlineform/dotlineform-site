@@ -517,7 +517,14 @@ def assert_action_target_isolation(page: Page) -> None:
             "primaryDocId": "context",
             "selectedDocIds": ["checked-a", "checked-b"],
         },
-        "selectionActionIds": ["copy", "delete", "export-docs", "move", "prepare-document-package"],
+        "selectionActionIds": [
+            "copy",
+            "delete",
+            "export-docs",
+            "move",
+            "prepare-document-package",
+            "set-publishable",
+        ],
         "prepareControlStates": {
             "empty": {
                 "disabled": True,
@@ -668,10 +675,22 @@ def assert_index_actions_menu_projection(page: Page) -> None:
                 existingRoot: null
             });
             const render = controlRenderers.createDocsViewerManagementControlRenderers()['manage-index-actions'];
+            const actionIds = [
+                'export-docs',
+                'prepare-document-package',
+                'set-publishable',
+                'copy',
+                'move',
+                'delete'
+            ];
             const itemStates = Object.fromEntries(
-                ['export-docs', 'prepare-document-package', 'copy', 'move', 'delete'].map(actionId => [
+                actionIds.map(actionId => [
                     actionId,
-                    { disabled: true, disabledReason: 'Select one or more documents.' }
+                    {
+                        disabled: true,
+                        disabledReason: 'Select one or more documents.',
+                        hidden: actionId === 'set-publishable'
+                    }
                 ])
             );
             const rendered = render({
@@ -688,6 +707,7 @@ def assert_index_actions_menu_projection(page: Page) -> None:
                 actionId: item.dataset.docsViewerAction,
                 label: item.querySelector('.docsViewer__actionMenuLabel')?.textContent || '',
                 disabled: item.disabled,
+                hidden: item.hidden,
                 reason: item.dataset.docsViewerDisabledReason,
                 ariaLabel: item.getAttribute('aria-label')
             }));
@@ -699,7 +719,7 @@ def assert_index_actions_menu_projection(page: Page) -> None:
                     state: {
                         disabled: false,
                         items: Object.fromEntries(
-                            ['export-docs', 'prepare-document-package', 'copy', 'move', 'delete'].map(
+                            actionIds.map(
                                 actionId => [actionId, { disabled: false, disabledReason: '' }]
                             )
                         )
@@ -736,6 +756,9 @@ def assert_index_actions_menu_projection(page: Page) -> None:
                     menuStayedOpen: !menu.hidden,
                     enabledItems: Array.from(menu.querySelectorAll('[data-docs-viewer-action]'))
                         .every(item => !item.disabled),
+                    setPublishableVisible: !menu.querySelector(
+                        '[data-docs-viewer-action="set-publishable"]'
+                    ).hidden,
                     buttonStillEnabled: !button.disabled
                 }
             };
@@ -759,6 +782,7 @@ def assert_index_actions_menu_projection(page: Page) -> None:
                 "actionId": "export-docs",
                 "label": "Export…",
                 "disabled": True,
+                "hidden": False,
                 "reason": "Select one or more documents.",
                 "ariaLabel": "Export… Select one or more documents.",
             },
@@ -766,13 +790,23 @@ def assert_index_actions_menu_projection(page: Page) -> None:
                 "actionId": "prepare-document-package",
                 "label": "Prepare package…",
                 "disabled": True,
+                "hidden": False,
                 "reason": "Select one or more documents.",
                 "ariaLabel": "Prepare package… Select one or more documents.",
+            },
+            {
+                "actionId": "set-publishable",
+                "label": "Set Publishable…",
+                "disabled": True,
+                "hidden": True,
+                "reason": "Select one or more documents.",
+                "ariaLabel": "Set Publishable… Select one or more documents.",
             },
             {
                 "actionId": "copy",
                 "label": "Copy to…",
                 "disabled": True,
+                "hidden": False,
                 "reason": "Select one or more documents.",
                 "ariaLabel": "Copy to… Select one or more documents.",
             },
@@ -780,6 +814,7 @@ def assert_index_actions_menu_projection(page: Page) -> None:
                 "actionId": "move",
                 "label": "Move to scope…",
                 "disabled": True,
+                "hidden": False,
                 "reason": "Select one or more documents.",
                 "ariaLabel": "Move to scope… Select one or more documents.",
             },
@@ -787,6 +822,7 @@ def assert_index_actions_menu_projection(page: Page) -> None:
                 "actionId": "delete",
                 "label": "Delete…",
                 "disabled": True,
+                "hidden": False,
                 "reason": "Select one or more documents.",
                 "ariaLabel": "Delete… Select one or more documents.",
             },
@@ -800,6 +836,7 @@ def assert_index_actions_menu_projection(page: Page) -> None:
             "sameRoot": True,
             "menuStayedOpen": True,
             "enabledItems": True,
+            "setPublishableVisible": True,
             "buttonStillEnabled": True,
         },
     }
@@ -911,6 +948,239 @@ def assert_index_actions_selection_entry(page: Page) -> None:
     }
     if result != expected:
         raise AssertionError(f"unexpected Index actions selection entry: {result!r}")
+
+
+def assert_set_publishable_workflow(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const client = await import(
+                '/docs-viewer/runtime/js/management/docs-viewer-management-client.js'
+            );
+            const controller = await import(
+                '/docs-viewer/runtime/js/management/docs-viewer-management-index-controller.js'
+            );
+            const workflow = await import(
+                '/docs-viewer/runtime/js/management/docs-viewer-management-publishable-workflow.js'
+            );
+            const capabilities = {
+                publishing: { confirm: true, apply: true },
+                scopes: {
+                    studio: {
+                        available: true,
+                        publishable: true,
+                        publishing: { confirm: true, apply: true }
+                    },
+                    local: {
+                        available: true,
+                        publishable: false,
+                        publishing: { confirm: true, apply: true }
+                    }
+                }
+            };
+            const resolution = {
+                enabled: true,
+                disabledReason: '',
+                targetDocIds: ['checked-a', 'checked-b']
+            };
+            const control = options => controller.docsViewerSetPublishableActionControlState({
+                capabilities,
+                managementAvailable: true,
+                managementBusy: false,
+                managementChecked: true,
+                resolution,
+                source: { scope: 'studio' },
+                ...options
+            });
+            const modalOptions = workflow.setPublishableChoiceOptions({
+                checkedDocIds: ['checked-a', 'checked-b']
+            });
+            const appliedCalls = [];
+            const appliedEvents = [];
+            const busy = [];
+            const messages = [];
+            let choiceOptions = null;
+            const applied = await workflow.openDocsViewerSetPublishableWorkflow({
+                source: { scope: 'studio', sub_scope: 'works' },
+                checkedDocIds: ['checked-a', 'checked-b'],
+                choose: options => {
+                    choiceOptions = options;
+                    return Promise.resolve({ confirmed: true, value: 'exclude' });
+                },
+                apply: (source, docIds, publishable) => {
+                    appliedCalls.push({ source, docIds, publishable });
+                    return Promise.resolve({
+                        ok: true,
+                        operation: 'set_publishable',
+                        target: source,
+                        requested_doc_ids: docIds,
+                        publishable,
+                        summary_text: '2 documents excluded from next Publish.'
+                    });
+                },
+                callbacks: {
+                    onApplied: payload => appliedEvents.push(payload.requested_doc_ids.slice()),
+                    setBusy: value => busy.push(value),
+                    setMessage: (message, isError) => messages.push({ message, isError })
+                }
+            });
+            let cancelledApplyCount = 0;
+            const cancelled = await workflow.openDocsViewerSetPublishableWorkflow({
+                source: { scope: 'studio' },
+                checkedDocIds: ['checked-a'],
+                choose: () => Promise.resolve({ confirmed: false, value: '' }),
+                apply: () => { cancelledApplyCount += 1; }
+            });
+            let duplicateRejected = false;
+            try {
+                await workflow.openDocsViewerSetPublishableWorkflow({
+                    source: { scope: 'studio' },
+                    checkedDocIds: ['checked-a', 'checked-a']
+                });
+            } catch (error) {
+                duplicateRejected = /must not contain duplicates/.test(
+                    String(error && error.message || '')
+                );
+            }
+            const mismatchMessages = [];
+            const mismatch = await workflow.openDocsViewerSetPublishableWorkflow({
+                source: { scope: 'studio' },
+                checkedDocIds: ['checked-a', 'checked-b'],
+                choose: () => Promise.resolve({ confirmed: true, value: 'include' }),
+                apply: () => Promise.resolve({
+                    ok: true,
+                    operation: 'set_publishable',
+                    target: { scope: 'studio' },
+                    requested_doc_ids: ['checked-b', 'checked-a'],
+                    publishable: true
+                }),
+                callbacks: {
+                    setMessage: (message, isError) => mismatchMessages.push({ message, isError })
+                }
+            });
+            const fetchCalls = [];
+            await client.setManagedDocsPublishable(
+                { scope: 'studio', sub_scope: 'works' },
+                ['checked-a', 'checked-b'],
+                false,
+                {
+                    baseUrl: '/manage',
+                    fetch: async (url, options) => {
+                        fetchCalls.push({
+                            url,
+                            method: options.method,
+                            payload: JSON.parse(options.body)
+                        });
+                        return {
+                            ok: true,
+                            status: 200,
+                            json: async () => ({ ok: true })
+                        };
+                    }
+                }
+            );
+            const summarizeModal = options => ({
+                title: options.title,
+                body: options.body,
+                name: options.name,
+                choices: options.choices,
+                primaryLabel: options.primaryLabel,
+                cancelLabel: options.cancelLabel,
+                requiredMessage: options.requiredMessage
+            });
+            return {
+                applied: applied && applied.requested_doc_ids,
+                appliedCalls,
+                appliedEvents,
+                busy,
+                cancelled,
+                cancelledApplyCount,
+                choiceOptions: summarizeModal(choiceOptions),
+                controlStates: {
+                    ready: control({}),
+                    empty: control({
+                        resolution: {
+                            enabled: false,
+                            disabledReason: 'Select one or more documents.'
+                        }
+                    }),
+                    busy: control({ managementBusy: true }),
+                    local: control({ source: { scope: 'local' } }),
+                    unchecked: control({ managementChecked: false })
+                },
+                duplicateRejected,
+                fetchCalls,
+                messages,
+                mismatch,
+                mismatchMessages,
+                modalOptions: summarizeModal(modalOptions)
+            };
+        }"""
+    )
+    expected_modal = {
+        "title": "Set Publishable…",
+        "body": "2 checked documents.",
+        "name": "docsViewerSetPublishableChoice",
+        "choices": [
+            {"value": "include", "label": "Include in next Publish"},
+            {"value": "exclude", "label": "Exclude from next Publish"},
+        ],
+        "primaryLabel": "OK",
+        "cancelLabel": "Cancel",
+        "requiredMessage": "Choose whether to include or exclude the checked documents.",
+    }
+    assert result == {
+        "applied": ["checked-a", "checked-b"],
+        "appliedCalls": [{
+            "source": {"scope": "studio", "sub_scope": "works"},
+            "docIds": ["checked-a", "checked-b"],
+            "publishable": False,
+        }],
+        "appliedEvents": [["checked-a", "checked-b"]],
+        "busy": [True, False],
+        "cancelled": None,
+        "cancelledApplyCount": 0,
+        "choiceOptions": expected_modal,
+        "controlStates": {
+            "ready": {"hidden": False, "disabled": False, "disabledReason": ""},
+            "empty": {
+                "hidden": False,
+                "disabled": True,
+                "disabledReason": "Select one or more documents.",
+            },
+            "busy": {
+                "hidden": False,
+                "disabled": True,
+                "disabledReason": "Docs management is busy.",
+            },
+            "local": {"hidden": True, "disabled": True, "disabledReason": ""},
+            "unchecked": {"hidden": True, "disabled": True, "disabledReason": ""},
+        },
+        "duplicateRejected": True,
+        "fetchCalls": [{
+            "url": "/manage/docs/set-publishable",
+            "method": "POST",
+            "payload": {
+                "scope": "studio",
+                "sub_scope": "works",
+                "doc_ids": ["checked-a", "checked-b"],
+                "publishable": False,
+                "confirm": True,
+            },
+        }],
+        "messages": [
+            {"message": "Updating checked documents…", "isError": False},
+            {"message": "2 documents excluded from next Publish.", "isError": False},
+        ],
+        "mismatch": None,
+        "mismatchMessages": [
+            {"message": "Updating checked documents…", "isError": False},
+            {
+                "message": "Set Publishable response did not match the exact checked selection.",
+                "isError": True,
+            },
+        ],
+        "modalOptions": expected_modal,
+    }, result
 
 
 def assert_static_snapshot_export_workflow(page: Page) -> None:
@@ -1578,6 +1848,7 @@ def main(argv: list[str] | None = None) -> int:
             assert_action_target_isolation(page)
             assert_index_actions_menu_projection(page)
             assert_index_actions_selection_entry(page)
+            assert_set_publishable_workflow(page)
             assert_static_snapshot_export_workflow(page)
             assert_selection_projection_and_interaction(page)
             browser.close()

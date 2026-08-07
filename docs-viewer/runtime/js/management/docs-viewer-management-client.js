@@ -178,6 +178,20 @@ export function updateManagedDocMetadata(target, payload, options) {
   );
 }
 
+export function setManagedDocsPublishable(collection, docIds, publishable, options) {
+  var target = normalizeManagedDocumentCollectionTarget(collection);
+  return fetchManagementJson(
+    "/docs/set-publishable",
+    "POST",
+    Object.assign({}, target, {
+      doc_ids: Array.isArray(docIds) ? docIds.slice() : [],
+      publishable: publishable,
+      confirm: true
+    }),
+    options
+  );
+}
+
 export function assignManagedDocFieldGroup(target, payload, options) {
   return fetchManagementJson(
     "/docs/assign-field-group",

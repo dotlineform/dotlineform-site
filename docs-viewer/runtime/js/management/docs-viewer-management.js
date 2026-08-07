@@ -226,6 +226,7 @@ export function initDocsViewerManagement(context) {
         return null;
       },
       refreshManagementCapabilities: refreshManagementCapabilities,
+      reloadDocsIndex: reloadDocsIndex,
       renderManagementUi: renderManagementUi,
       renderSidebar: function () {
         if (typeof context.renderSidebar === "function") context.renderSidebar();
@@ -1038,6 +1039,7 @@ export function initDocsViewerManagement(context) {
     reconcileIndexSelectionReload: indexController.reconcileReload,
     render: renderManagementUi,
     renderIndexSelectionGutter: indexController.renderSelectionGutter,
+    setSubscopePublishable: indexController.setSubscopePublishable,
     updateNavDragState: updateNavDragState
   };
 }

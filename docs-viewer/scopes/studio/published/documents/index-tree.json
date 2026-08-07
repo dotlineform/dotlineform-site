@@ -1170,6 +1170,12 @@
                   "title": "SSP-7.1a — Publishable Contract Cutover Evidence",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-224018-4c1687.json",
                   "ui_status": "done"
+                },
+                {
+                  "doc_id": "d-20260807-235046-5c0d8a",
+                  "title": "SSP-7.1b — Set Publishable Evidence",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-235046-5c0d8a.json",
+                  "ui_status": "done"
                 }
               ]
             },
@@ -1547,5 +1553,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-07T21:40:53Z"
+  "generated_at": "2026-08-07T22:52:04Z"
 }

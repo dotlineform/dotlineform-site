@@ -60,6 +60,12 @@ var INDEX_ACTION_ITEMS = [
     label: "Prepare package…"
   },
   {
+    id: "docsViewerIndexSetPublishableButton",
+    actionId: "set-publishable",
+    emoji: "🌐",
+    label: "Set Publishable…"
+  },
+  {
     id: "docsViewerIndexCopyButton",
     actionId: "copy",
     emoji: "⧉",
@@ -131,6 +137,7 @@ function renderIndexActionsControl(context) {
     var reason = String(itemState.disabledReason || "").trim();
     var accessibleLabel = reason ? definition.label + " " + reason : definition.label;
     item.disabled = Boolean(itemState.disabled);
+    item.hidden = Boolean(itemState.hidden);
     item.title = accessibleLabel;
     item.setAttribute("aria-label", accessibleLabel);
     if (reason) item.dataset.docsViewerDisabledReason = reason;

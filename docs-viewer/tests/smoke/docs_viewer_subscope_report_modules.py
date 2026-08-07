@@ -3399,6 +3399,8 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
           const lifecycle = [];
           const created = [];
           const prepared = [];
+          const publishableTargets = [];
+          const publishableContexts = [];
           const copyTargets = [];
           const copyStatuses = [];
           const defaultContribution = defaults.createDocsViewerManagementSubscopeDefaultContribution({
@@ -3410,6 +3412,14 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
             onCreateDocument: target => created.push(target),
             onLifecycleEvent: event => lifecycle.push(event.type),
             onPreparePackage: target => prepared.push(target),
+            onSetPublishable: (target, context) => {
+              publishableTargets.push(target);
+              publishableContexts.push({
+                hasRefreshCollection: typeof context.refreshCollection === 'function',
+                hasRestoreFocus: Boolean(context.restoreFocus)
+              });
+              return Promise.resolve();
+            },
             setStatus: (message, isError) => copyStatuses.push({ message, isError }),
             uiStatusByValue: new Map([
               ['done', { label: 'Done', emoji: '✅' }],
@@ -3448,7 +3458,10 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
             newPresent: root.querySelector('[data-docs-subscope-new]') !== null,
             customFilters: root.querySelectorAll('[data-docs-subscope-custom-filter]').length,
             statusIcons: root.querySelectorAll('.docsViewer__navStatus').length,
-            nonPublishableIcons: root.querySelectorAll('.docsViewer__publishableExclusion').length
+            nonPublishableIcons: root.querySelectorAll('.docsViewer__publishableExclusion').length,
+            setPublishablePresent: root.querySelector(
+              '[data-docs-viewer-action="set-publishable"]'
+            ) !== null
           };
           root.querySelector('[data-docs-subscope-new]').click();
           await Promise.resolve();
@@ -3465,6 +3478,10 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
           root.querySelector('[data-docs-subscope-selection-command="select-all"]').click();
           root.querySelector('[data-docs-subscope-actions]').click();
           root.querySelector('[data-docs-viewer-action="prepare-document-package"]').click();
+          await Promise.resolve();
+          await Promise.resolve();
+          root.querySelector('[data-docs-subscope-actions]').click();
+          root.querySelector('[data-docs-viewer-action="set-publishable"]').click();
           await Promise.resolve();
           await Promise.resolve();
           root.querySelector(
@@ -3515,6 +3532,9 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
           const emptySnapshot = {
             actionsDisabled: emptyRoot.querySelector('[data-docs-subscope-actions]')?.disabled ?? null,
             newDisabled: emptyRoot.querySelector('[data-docs-subscope-new]')?.disabled ?? null,
+            setPublishablePresent: emptyRoot.querySelector(
+              '[data-docs-viewer-action="set-publishable"]'
+            ) !== null,
             text: emptyRoot.querySelector('.docsViewerReport__empty')?.textContent || ''
           };
           emptyRoot.querySelector('[data-docs-subscope-new]')?.click();
@@ -3779,6 +3799,8 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
               text: mismatchRoot.textContent
             },
             prepared,
+            publishableContexts,
+            publishableTargets,
             registries: {
               manage: manageRegistry.listManagementDocsSubscopeCustomisationIds(),
               public: publicRegistry.listPublicDocsSubscopeCustomisationIds(),
@@ -3796,6 +3818,7 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
         "customFilters": 0,
         "statusIcons": 2,
         "nonPublishableIcons": 1,
+        "setPublishablePresent": True,
     }
     assert result["selectedBeforeSort"] == ["zeta"]
     assert result["created"] == [
@@ -3811,6 +3834,15 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
     assert sorted(result["prepared"][0]["doc_ids"]) == [
         "alpha", "alpha-2", "beta", "zeta"
     ]
+    assert result["publishableTargets"] == [{
+        "scope": "studio",
+        "sub_scope": "default",
+        "doc_ids": ["zeta", "alpha", "alpha-2", "beta"],
+    }], result
+    assert result["publishableContexts"] == [{
+        "hasRefreshCollection": True,
+        "hasRestoreFocus": True,
+    }], result
     assert result["detail"] == {
         "copied": [
             "[Alpha](/docs/?scope=studio&doc=parent-doc&subdoc=alpha)"
@@ -3825,6 +3857,7 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
     assert result["emptySnapshot"] == {
         "actionsDisabled": True,
         "newDisabled": False,
+        "setPublishablePresent": False,
         "text": "No documents are available in Empty.",
     }, result
     assert result["emptyCreated"] == [

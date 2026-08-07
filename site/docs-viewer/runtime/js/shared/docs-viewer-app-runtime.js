@@ -395,6 +395,14 @@ export function startDocsViewerRuntime(options) {
           }
           return controller.createSubscopeDocument(collection, options);
         });
+      },
+      setSubscopePublishable: function (selection, options) {
+        return loadManagementController().then(function (controller) {
+          if (!controller || typeof controller.setSubscopePublishable !== "function") {
+            throw new Error("Sub-scope Set Publishable is unavailable.");
+          }
+          return controller.setSubscopePublishable(selection, options);
+        });
       }
     },
     mountDocumentExtras: settings.mountDocumentExtras,

@@ -26,6 +26,7 @@ import docs_document_move_apply  # noqa: E402
 import docs_document_transfer  # noqa: E402
 import docs_document_transfer_apply  # noqa: E402
 import docs_management_document_target  # noqa: E402
+import docs_management_publishable  # noqa: E402
 import docs_import_source_service as import_source_service  # noqa: E402
 import docs_local_links  # noqa: E402
 import docs_management_mutations as mutations  # noqa: E402
@@ -203,6 +204,20 @@ def docs_management_post_response(
             return HTTPStatus.OK, handle_update_metadata(repo_root, body, dry_run)
         except mutations.ManagedDocumentRevisionConflict as error:
             return HTTPStatus.CONFLICT, error.payload
+    if path == routes.SET_PUBLISHABLE_PATH:
+        try:
+            return (
+                HTTPStatus.OK,
+                docs_management_publishable.set_publishable(
+                    repo_root,
+                    body,
+                    dry_run=dry_run,
+                ),
+            )
+        except docs_management_publishable.PublishableSelectionConflict as error:
+            return HTTPStatus.CONFLICT, error.payload
+        except docs_management_publishable.PublishableSelectionApplyError as error:
+            return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
     if path == routes.ASSIGN_FIELD_GROUP_PATH:
         try:
             return HTTPStatus.OK, handle_assign_field_group(repo_root, body, dry_run)

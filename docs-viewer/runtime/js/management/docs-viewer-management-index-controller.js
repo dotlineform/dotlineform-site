@@ -3,6 +3,7 @@ import {
   documentTransferSourceSupported,
   documentTransferSupported,
   documentTransferTargets,
+  scopePublishSupported,
   scopeStaticHtmlExportCapability
 } from "./docs-viewer-management-capabilities.js";
 import {
@@ -16,6 +17,9 @@ import {
 import {
   openStaticHtmlSnapshotExportWorkflow
 } from "./docs-viewer-static-html-export-workflow.js";
+import {
+  openDocsViewerSetPublishableWorkflow
+} from "./docs-viewer-management-publishable-workflow.js";
 import {
   normalizeManagedDocumentCollectionTarget
 } from "./docs-viewer-management-document-target.js";
@@ -96,6 +100,29 @@ export function docsViewerStaticHtmlExportActionControlState(options = {}) {
   };
 }
 
+export function docsViewerSetPublishableActionControlState(options = {}) {
+  var resolution = options.resolution || null;
+  var hidden = !options.managementChecked || !scopePublishSupported(
+    options.capabilities,
+    options.source && options.source.scope
+  );
+  var disabledReason = "";
+  if (!hidden && !options.managementAvailable) {
+    disabledReason = "Set Publishable is unavailable.";
+  } else if (!hidden && (options.managementBusy || options.workflowActive)) {
+    disabledReason = "Docs management is busy.";
+  } else if (!hidden && (!resolution || !resolution.enabled)) {
+    disabledReason = resolution && resolution.disabledReason
+      ? resolution.disabledReason
+      : "Select one or more documents.";
+  }
+  return {
+    hidden: hidden,
+    disabled: hidden || Boolean(disabledReason),
+    disabledReason: disabledReason
+  };
+}
+
 export function createDocsViewerManagementIndexController(options = {}) {
   var root = options.root || null;
   var nav = options.nav || null;
@@ -107,6 +134,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
   var documentRef = options.document || document;
   var windowRef = options.window || window;
   var openSnapshotExportWorkflow = options.openSnapshotExportWorkflow || openStaticHtmlSnapshotExportWorkflow;
+  var openSetPublishableWorkflow = options.openSetPublishableWorkflow || openDocsViewerSetPublishableWorkflow;
   var indexSelection = options.indexSelection || createDocsViewerIndexSelectionOwner({
     initialScopeId: viewerScope()
   });
@@ -114,6 +142,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
   var documentTransferWorkflowRequest = null;
   var preparePackageWorkflowRequest = null;
   var snapshotExportWorkflowActive = false;
+  var setPublishableWorkflowActive = false;
 
   function viewerScope() {
     return typeof callbacks.viewerScope === "function" ? callbacks.viewerScope() : "";
@@ -275,6 +304,18 @@ export function createDocsViewerManagementIndexController(options = {}) {
     });
   }
 
+  function setPublishableActionControlState(source, resolution) {
+    return docsViewerSetPublishableActionControlState({
+      capabilities: management.managementCapabilities,
+      managementAvailable: management.managementAvailable,
+      managementBusy: management.managementBusy,
+      managementChecked: management.managementChecked,
+      resolution: resolution || resolveAction(DOCS_VIEWER_ACTION_IDS.SET_PUBLISHABLE),
+      source: source,
+      workflowActive: setPublishableWorkflowActive
+    });
+  }
+
   function projectActions() {
     if (typeof callbacks.projectIndexViewControlState !== "function") return null;
     var visible = Boolean(
@@ -287,6 +328,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
       items: {
         [DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS]: snapshotExportActionControlState(),
         [DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE]: preparePackageActionControlState(),
+        [DOCS_VIEWER_ACTION_IDS.SET_PUBLISHABLE]: setPublishableActionControlState({ scope: viewerScope() }),
         [DOCS_VIEWER_ACTION_IDS.COPY]: documentTransferActionControlState("copy"),
         [DOCS_VIEWER_ACTION_IDS.MOVE]: documentTransferActionControlState("move"),
         [DOCS_VIEWER_ACTION_IDS.DELETE]: deleteActionControlState()
@@ -523,17 +565,20 @@ export function createDocsViewerManagementIndexController(options = {}) {
       scope: value.scope,
       sub_scope: value.sub_scope
     });
+    if (!Array.isArray(value.doc_ids) || !value.doc_ids.length) {
+      throw new Error("Select one or more documents.");
+    }
     var seen = new Set();
-    var docIds = Array.isArray(value.doc_ids)
-      ? value.doc_ids.map(function (docId) {
-          return String(docId || "").trim();
-        }).filter(function (docId) {
-          if (!docId || seen.has(docId)) return false;
-          seen.add(docId);
-          return true;
-        })
-      : [];
-    if (!docIds.length) throw new Error("Select one or more documents.");
+    var docIds = value.doc_ids.map(function (docId) {
+      if (typeof docId !== "string" || !docId || docId !== docId.trim()) {
+        throw new Error("Every checked document id must be exact and non-blank.");
+      }
+      if (seen.has(docId)) {
+        throw new Error("Checked document ids must not contain duplicates.");
+      }
+      seen.add(docId);
+      return docId;
+    });
     return { source: source, docIds: docIds };
   }
 
@@ -617,6 +662,103 @@ export function createDocsViewerManagementIndexController(options = {}) {
     });
   }
 
+  function openSetPublishable(source, checkedDocIds, options) {
+    var settings = options || {};
+    setPublishableWorkflowActive = true;
+    renderManagementUi();
+    return openSetPublishableWorkflow({
+      root: root,
+      source: source,
+      checkedDocIds: checkedDocIds,
+      restoreFocus: settings.restoreFocus,
+      clientOptions: managementClientOptions(),
+      callbacks: {
+        setBusy: setManagementBusy,
+        setMessage: setManagementMessage,
+        render: renderManagementUi,
+        onApplied: settings.onApplied
+      }
+    }).finally(function () {
+      setPublishableWorkflowActive = false;
+      renderManagementUi();
+    });
+  }
+
+  function handleSetPublishable() {
+    var resolution = resolveAction(DOCS_VIEWER_ACTION_IDS.SET_PUBLISHABLE);
+    var source = { scope: viewerScope() };
+    var controlState = setPublishableActionControlState(source);
+    if (!resolution || !resolution.enabled || controlState.disabled) {
+      return Promise.resolve(null);
+    }
+    return openSetPublishable(source, resolution.targetDocIds.slice(), {
+      restoreFocus: indexActionsButton(),
+      onApplied: function () {
+        return typeof callbacks.reloadDocsIndex === "function"
+          ? callbacks.reloadDocsIndex(activeDocId(), "")
+          : null;
+      }
+    });
+  }
+
+  function normalizeSubscopePublishableRequest(value) {
+    if (!value || typeof value !== "object" || Array.isArray(value)) {
+      throw new Error("Sub-scope Set Publishable request must be an object.");
+    }
+    var keys = Object.keys(value).sort();
+    if (keys.join("\u0000") !== ["doc_ids", "scope", "sub_scope"].join("\u0000")) {
+      throw new Error(
+        "Sub-scope Set Publishable request must contain exactly scope, sub_scope, and doc_ids."
+      );
+    }
+    var source = normalizeManagedDocumentCollectionTarget({
+      scope: value.scope,
+      sub_scope: value.sub_scope
+    });
+    var seen = new Set();
+    var docIds = Array.isArray(value.doc_ids)
+      ? value.doc_ids.map(function (docId) {
+          return String(docId || "").trim();
+        }).filter(function (docId) {
+          if (!docId || seen.has(docId)) return false;
+          seen.add(docId);
+          return true;
+        })
+      : [];
+    if (!docIds.length) throw new Error("Select one or more documents.");
+    return { source: source, docIds: docIds };
+  }
+
+  function setSubscopePublishable(request, options) {
+    var normalized;
+    try {
+      normalized = normalizeSubscopePublishableRequest(request);
+    } catch (error) {
+      return Promise.reject(error);
+    }
+    var controlState = setPublishableActionControlState(
+      normalized.source,
+      { enabled: true, disabledReason: "", targetDocIds: normalized.docIds }
+    );
+    if (controlState.hidden || controlState.disabled) {
+      return Promise.reject(new Error(
+        controlState.disabledReason || "Set Publishable is unavailable for this collection."
+      ));
+    }
+    var refreshCollection = options && options.refreshCollection;
+    if (typeof refreshCollection !== "function") {
+      return Promise.reject(new Error(
+        "The exact Set Publishable sub-scope collection cannot be refreshed."
+      ));
+    }
+    return openSetPublishable(normalized.source, normalized.docIds, {
+      restoreFocus: options && options.restoreFocus,
+      onApplied: function () {
+        return refreshCollection(normalized.source);
+      }
+    });
+  }
+
   function handleControl(detail) {
     var controlId = String(detail && detail.controlId || "").trim();
     var actionId = String(detail && detail.actionId || "").trim();
@@ -673,6 +815,8 @@ export function createDocsViewerManagementIndexController(options = {}) {
       handlePreparePackage();
     } else if (actionId === DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS) {
       handleSnapshotExport();
+    } else if (actionId === DOCS_VIEWER_ACTION_IDS.SET_PUBLISHABLE) {
+      handleSetPublishable();
     } else if (actionId === DOCS_VIEWER_ACTION_IDS.COPY) {
       handleDocumentTransfer("copy");
     } else if (actionId === DOCS_VIEWER_ACTION_IDS.MOVE) {
@@ -695,6 +839,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
     projectSelection: projectSelection,
     reconcileReload: reconcileReload,
     render: render,
-    renderSelectionGutter: renderIndexSelectionGutter
+    renderSelectionGutter: renderIndexSelectionGutter,
+    setSubscopePublishable: setSubscopePublishable
   };
 }

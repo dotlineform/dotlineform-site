@@ -145,6 +145,13 @@ function copySubscopeDocumentsAction(settings) {
     : null;
 }
 
+function setSubscopePublishableAction(settings) {
+  var actions = settings && settings.managementDocumentActions;
+  return actions && typeof actions.setSubscopePublishable === "function"
+    ? actions.setSubscopePublishable
+    : null;
+}
+
 function configuredSubScopeLabel(settings, scope, subScope) {
   var child = configuredSubScope(settings, scope, subScope);
   var normalizedScope = cleanString(scope).toLowerCase();
@@ -168,6 +175,20 @@ function configuredSubScope(settings, scope, subScope) {
       === normalizedSubScope;
   });
   return child || null;
+}
+
+function subScopeSupportsPublishable(settings, scope, subScope) {
+  var normalizedScope = cleanString(scope).toLowerCase();
+  var parentConfig = scopeConfigs(settings).find(function (config) {
+    return cleanString(config && (config.scope_id || config.scopeId)).toLowerCase()
+      === normalizedScope;
+  });
+  return Boolean(
+    parentConfig
+    && cleanString(parentConfig.scopeType || parentConfig.scope_type).toLowerCase()
+      === "public"
+    && configuredSubScope(settings, scope, subScope)
+  );
 }
 
 function escapeMarkdownLinkText(value) {
@@ -231,6 +252,7 @@ function loadSubscopeContribution(settings, parent, subScope, options) {
       onCopyDocuments: contributionOptions.onCopyDocuments,
       onLifecycleEvent: contributionOptions.onLifecycleEvent,
       onPreparePackage: contributionOptions.onPreparePackage,
+      onSetPublishable: contributionOptions.onSetPublishable,
       root: managementModalRoot(settings),
       setStatus: settings.setStatus,
       uiStatusByValue: contributionOptions.uiStatusByValue
@@ -304,14 +326,16 @@ function openSubscopeCreate(settings, parent, subScope, request, context) {
 function openSubscopeCopy(settings, parent, subScope, request, context) {
   var selection = request && typeof request === "object" ? request : {};
   var keys = Object.keys(selection).sort();
-  var docIds = Array.isArray(selection.doc_ids)
-    ? selection.doc_ids.map(cleanString).filter(Boolean)
-    : [];
+  var rawDocIds = Array.isArray(selection.doc_ids) ? selection.doc_ids : [];
+  var docIds = rawDocIds.slice();
+  var exactDocIds = docIds.length > 0 && docIds.every(function (docId) {
+    return typeof docId === "string" && docId && docId === docId.trim();
+  }) && new Set(docIds).size === docIds.length;
   if (
     keys.join("\u0000") !== ["doc_ids", "scope", "sub_scope"].join("\u0000")
     || cleanString(selection.scope).toLowerCase() !== parent.scope
     || cleanString(selection.sub_scope).toLowerCase() !== subScope
-    || !docIds.length
+    || !exactDocIds
   ) {
     return Promise.reject(new Error(
       "Sub-scope Copy selection did not match the mounted report."
@@ -328,6 +352,45 @@ function openSubscopeCopy(settings, parent, subScope, request, context) {
       doc_ids: docIds
     },
     {
+      restoreFocus: context && context.restoreFocus
+    }
+  );
+}
+
+function openSubscopeSetPublishable(settings, parent, subScope, request, context) {
+  var selection = request && typeof request === "object" ? request : {};
+  var keys = Object.keys(selection).sort();
+  var docIds = Array.isArray(selection.doc_ids)
+    ? selection.doc_ids.map(cleanString).filter(Boolean)
+    : [];
+  if (
+    keys.join("\u0000") !== ["doc_ids", "scope", "sub_scope"].join("\u0000")
+    || cleanString(selection.scope).toLowerCase() !== parent.scope
+    || cleanString(selection.sub_scope).toLowerCase() !== subScope
+    || !docIds.length
+  ) {
+    return Promise.reject(new Error(
+      "Sub-scope Set Publishable selection did not match the mounted report."
+    ));
+  }
+  var action = setSubscopePublishableAction(settings);
+  if (!action) {
+    return Promise.reject(new Error("Sub-scope Set Publishable is unavailable."));
+  }
+  var refreshCollection = context && context.refreshCollection;
+  if (typeof refreshCollection !== "function") {
+    return Promise.reject(new Error(
+      "The exact Set Publishable sub-scope collection cannot be refreshed."
+    ));
+  }
+  return action(
+    {
+      scope: parent.scope,
+      sub_scope: subScope,
+      doc_ids: docIds
+    },
+    {
+      refreshCollection: refreshCollection,
       restoreFocus: context && context.restoreFocus
     }
   );
@@ -439,6 +502,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
   var scopeConfig = settings.scopeConfigState || {};
   var createAction = createSubscopeDocumentAction(settings);
   var copyAction = copySubscopeDocumentsAction(settings);
+  var publishableAction = setSubscopePublishableAction(settings);
   var contribution = loadSubscopeContribution(settings, parent, subScope, {
     nonPublishableEmoji: cleanString(scopeConfig.docNonPublishableEmoji),
     onCreateDocument: (
@@ -467,6 +531,22 @@ export function mountDocsViewerManageDocumentExtras(context) {
     onPreparePackage: reportManagementBaseUrl
       ? function (request, context) {
           return openSubScopePreparePackage(settings, request, context);
+        }
+      : null,
+    onSetPublishable: (
+      settings.managementContext
+      && reportManagementBaseUrl
+      && publishableAction
+      && subScopeSupportsPublishable(settings, parent.scope, subScope)
+    )
+      ? function (request, context) {
+          return openSubscopeSetPublishable(
+            settings,
+            parent,
+            subScope,
+            request,
+            context
+          );
         }
       : null,
     uiStatusByValue: scopeConfig.uiStatusByValue instanceof Map
