@@ -1233,7 +1233,7 @@
               "doc_id": "d-20260808-153226-a067d9",
               "title": "SSP-8 — Revised Model",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-153226-a067d9.json",
-              "ui_status": "in-progress",
+              "ui_status": "done",
               "children": [
                 {
                   "doc_id": "d-20260808-154427-50f717",
@@ -1253,7 +1253,7 @@
               "doc_id": "d-20260802-194358-7717ee",
               "title": "Sub-Scope Publishing Concept And Architecture",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194358-7717ee.json",
-              "ui_status": "proposed"
+              "ui_status": "stable"
             }
           ]
         },
@@ -1623,5 +1623,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-08T17:58:35Z"
+  "generated_at": "2026-08-08T18:51:55Z"
 }

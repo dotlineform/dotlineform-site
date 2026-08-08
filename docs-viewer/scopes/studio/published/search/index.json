@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-61585a28f284ab7685b6a9378dd22181",
-    "generated_at_utc": "2026-08-08T18:38:29Z",
+    "version": "blake2b-26b36cfdf6bc95afb600787334e5fb88",
+    "generated_at_utc": "2026-08-08T18:54:49Z",
     "count": 283
   },
   "entries": [
@@ -2374,10 +2374,10 @@
       "kind": "doc",
       "title": "Public Scopes",
       "href": "/docs/?scope=studio&doc=d-20260331-000000-f992b9",
-      "last_updated": "2026-08-08 18:53:51",
+      "last_updated": "2026-08-08 19:54:49",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-08-08 18:53:51 • Docs Viewer",
+      "display_meta": "2026-08-08 19:54:49 • Docs Viewer",
       "search_terms": [
         "public scopes",
         "public",
@@ -2385,15 +2385,15 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-08-08 18:53:51",
+        "2026-08-08 19:54:49",
         "2026",
         "08",
-        "18",
-        "53",
-        "51",
+        "19",
+        "54",
+        "49",
         "d-20260331-000000-f992b9"
       ],
-      "search_text": "public scopes public scopes docs viewer docs viewer 2026-08-08 18:53:51 2026 08 18 53 51 d-20260331-000000-f992b9"
+      "search_text": "public scopes public scopes docs viewer docs viewer 2026-08-08 19:54:49 2026 08 19 54 49 d-20260331-000000-f992b9"
     },
     {
       "id": "d-20260424-000000-e2408a",
@@ -2817,10 +2817,10 @@
       "kind": "doc",
       "title": "Sub-Scope Customisation Architecture",
       "href": "/docs/?scope=studio&doc=d-20260731-155053-3929e2",
-      "last_updated": "2026-08-08 11:04:34",
+      "last_updated": "2026-08-08 19:50:01",
       "parent_id": "d-20260801-084127-752d7e",
       "parent_title": "Sub-Scopes",
-      "display_meta": "2026-08-08 11:04:34 • Sub-Scopes",
+      "display_meta": "2026-08-08 19:50:01 • Sub-Scopes",
       "search_terms": [
         "sub-scope customisation architecture",
         "sub",
@@ -2829,15 +2829,15 @@
         "architecture",
         "sub-scopes",
         "scopes",
-        "2026-08-08 11:04:34",
+        "2026-08-08 19:50:01",
         "2026",
         "08",
-        "11",
-        "04",
-        "34",
+        "19",
+        "50",
+        "01",
         "d-20260731-155053-3929e2"
       ],
-      "search_text": "sub-scope customisation architecture sub scope customisation architecture sub-scopes scopes 2026-08-08 11:04:34 2026 08 11 04 34 d-20260731-155053-3929e2"
+      "search_text": "sub-scope customisation architecture sub scope customisation architecture sub-scopes scopes 2026-08-08 19:50:01 2026 08 19 50 01 d-20260731-155053-3929e2"
     },
     {
       "id": "d-20260731-185207-2dbb6f",
@@ -4456,25 +4456,25 @@
       "kind": "doc",
       "title": "Sub-Scope Publishing",
       "href": "/docs/?scope=studio&doc=d-20260802-194357-4d857b",
-      "last_updated": "2026-08-08 16:57:51",
+      "last_updated": "2026-08-08 19:50:01",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-08 16:57:51 • Roadmap",
+      "display_meta": "2026-08-08 19:50:01 • Roadmap",
       "search_terms": [
         "sub-scope publishing",
         "sub",
         "scope",
         "publishing",
         "roadmap",
-        "2026-08-08 16:57:51",
+        "2026-08-08 19:50:01",
         "2026",
         "08",
-        "16",
-        "57",
-        "51",
+        "19",
+        "50",
+        "01",
         "d-20260802-194357-4d857b"
       ],
-      "search_text": "sub-scope publishing sub scope publishing roadmap 2026-08-08 16:57:51 2026 08 16 57 51 d-20260802-194357-4d857b"
+      "search_text": "sub-scope publishing sub scope publishing roadmap 2026-08-08 19:50:01 2026 08 19 50 01 d-20260802-194357-4d857b"
     },
     {
       "id": "d-20260802-121105-c574f9",
@@ -5901,10 +5901,10 @@
       "kind": "doc",
       "title": "SSP-8 — Revised Model",
       "href": "/docs/?scope=studio&doc=d-20260808-153226-a067d9",
-      "last_updated": "2026-08-08 19:38:06",
+      "last_updated": "2026-08-08 19:50:01",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-08 19:38:06 • Sub-Scope Publishing",
+      "display_meta": "2026-08-08 19:50:01 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-8 — revised model",
         "ssp",
@@ -5915,15 +5915,15 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-08 19:38:06",
+        "2026-08-08 19:50:01",
         "2026",
         "08",
         "19",
-        "38",
-        "06",
+        "50",
+        "01",
         "d-20260808-153226-a067d9"
       ],
-      "search_text": "ssp-8 — revised model ssp 8 revised model sub-scope publishing sub scope publishing 2026-08-08 19:38:06 2026 08 19 38 06 d-20260808-153226-a067d9"
+      "search_text": "ssp-8 — revised model ssp 8 revised model sub-scope publishing sub scope publishing 2026-08-08 19:50:01 2026 08 19 50 01 d-20260808-153226-a067d9"
     },
     {
       "id": "d-20260808-154427-50f717",
@@ -5994,10 +5994,10 @@
       "kind": "doc",
       "title": "Sub-Scope Publishing Concept And Architecture",
       "href": "/docs/?scope=studio&doc=d-20260802-194358-7717ee",
-      "last_updated": "2026-08-08 17:13:08",
+      "last_updated": "2026-08-08 19:54:49",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-08 17:13:08 • Sub-Scope Publishing",
+      "display_meta": "2026-08-08 19:54:49 • Sub-Scope Publishing",
       "search_terms": [
         "sub-scope publishing concept and architecture",
         "sub",
@@ -6007,14 +6007,15 @@
         "and",
         "architecture",
         "sub-scope publishing",
-        "2026-08-08 17:13:08",
+        "2026-08-08 19:54:49",
         "2026",
         "08",
-        "17",
-        "13",
+        "19",
+        "54",
+        "49",
         "d-20260802-194358-7717ee"
       ],
-      "search_text": "sub-scope publishing concept and architecture sub scope publishing concept and architecture sub-scope publishing 2026-08-08 17:13:08 2026 08 17 13 d-20260802-194358-7717ee"
+      "search_text": "sub-scope publishing concept and architecture sub scope publishing concept and architecture sub-scope publishing 2026-08-08 19:54:49 2026 08 19 54 49 d-20260802-194358-7717ee"
     },
     {
       "id": "d-20260804-160200-fa7bb7",
