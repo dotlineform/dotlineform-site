@@ -488,9 +488,19 @@ def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> No
         assert not (repo_root / "site/assets/data/docs/scopes/library/sub-scopes/tags").exists()
 
 
-def test_successful_publish_sets_retains_and_clears_lineage_publication() -> None:
+def test_successful_publish_sets_retains_and_clears_lineage_publication(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
+        rebuilds: list[tuple[str, str]] = []
+        monkeypatch.setattr(
+            docs_publish_gate,
+            "rebuild_sub_scope_outputs",
+            lambda _repo_root, scope, sub_scope: rebuilds.append(
+                (scope, sub_scope)
+            ),
+        )
         prepare_publish_repo(repo_root)
         config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
         config = json.loads(config_path.read_text(encoding="utf-8"))
@@ -565,6 +575,7 @@ def test_successful_publish_sets_retains_and_clears_lineage_publication() -> Non
                 f"&subdoc={LINEAGE_EDITORIAL_ID}"
             )
         }
+        assert rebuilds == [("dotlineform", "projects")]
         published_bytes = lineage_path.read_bytes()
         write_json(
             working_root / f"by-id/{LINEAGE_EDITORIAL_ID}.json",
@@ -575,6 +586,7 @@ def test_successful_publish_sets_retains_and_clears_lineage_publication() -> Non
             {"scope": "library", "confirm": True},
         )
         assert lineage_path.read_bytes() == published_bytes
+        assert rebuilds == [("dotlineform", "projects")]
         assert json.loads(
             (
                 repo_root
@@ -590,6 +602,10 @@ def test_successful_publish_sets_retains_and_clears_lineage_publication() -> Non
 
         table = json.loads(lineage_path.read_text(encoding="utf-8"))
         assert table["rows"][0]["publication"] is None
+        assert rebuilds == [
+            ("dotlineform", "projects"),
+            ("dotlineform", "projects"),
+        ]
         assert not (
             repo_root
             / f"site/assets/data/docs/scopes/library/works/by-id/{LINEAGE_EDITORIAL_ID}.json"

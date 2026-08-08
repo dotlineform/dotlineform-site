@@ -1015,6 +1015,16 @@ def apply_document_copy(
                 "schema_version": publication_lineage.LINEAGE_SCHEMA_VERSION,
                 "row_count": len(lineage_rows),
             }
+            if perform_sub_scope_source_write_and_rebuild is None:
+                raise RuntimeError("lineage source rebuild is unavailable")
+            perform_sub_scope_source_write_and_rebuild(
+                repo_root,
+                current_plan.source_scope,
+                current_plan.source_sub_scope,
+                [],
+                lambda: None,
+                suppression_reason=DOCUMENT_COPY_SUPPRESSION_REASON,
+            )
 
         phase = "activity"
         if activity_logger is None:

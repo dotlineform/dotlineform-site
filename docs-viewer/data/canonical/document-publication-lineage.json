@@ -1,4 +1,20 @@
 {
   "schema_version": "docs_document_publication_lineage_v1",
-  "rows": []
+  "rows": [
+    {
+      "source": {
+        "scope": "dotlineform",
+        "sub_scope": "projects",
+        "doc_id": "d-20260801-212422-43b47c"
+      },
+      "editorial": {
+        "scope": "analysis",
+        "sub_scope": "works",
+        "doc_id": "d-20260808-142721-28e3d4"
+      },
+      "created_at": "2026-08-08T13:27:27Z",
+      "last_copied_at": "2026-08-08T13:27:27Z",
+      "publication": null
+    }
+  ]
 }

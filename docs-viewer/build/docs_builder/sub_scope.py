@@ -113,6 +113,9 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             self.sub_scope_config.sub_scope_customisation,
             visible_docs,
             published=True,
+            repo_root=self.repo_root,
+            scope=self.scope_id,
+            sub_scope=self.sub_scope_id,
         )
         if projected is not None:
             payload["customisation"] = projected["root"]
@@ -150,6 +153,9 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             self.sub_scope_config.sub_scope_customisation,
             ordered_docs,
             published=False,
+            repo_root=self.repo_root,
+            scope=self.scope_id,
+            sub_scope=self.sub_scope_id,
         )
         if projected is not None:
             payload["customisation"] = projected["root"]

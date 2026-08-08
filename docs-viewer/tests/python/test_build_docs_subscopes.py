@@ -112,6 +112,10 @@ def test_python_docs_builder_projects_subjects_into_private_products() -> None:
     first_doc_id = "d-20260801-101500-a1b2c3"
     second_doc_id = "d-20260801-101501-b2c3d4"
     pathless_doc_id = "d-20260801-101502-c3d4e5"
+    pre_publish_doc_id = "d-20260802-101500-d4e5f6"
+    published_doc_id = "d-20260802-101501-e5f6a7"
+    unavailable_doc_id = "d-20260802-101502-f6a7b8"
+    analysis_report_doc_id = "d-20260802-090000-abcdef"
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         prepare_repo(root)
@@ -133,7 +137,25 @@ def test_python_docs_builder_projects_subjects_into_private_products() -> None:
                                 },
                             )
                         ],
-                    )
+                    ),
+                    docs_scope_record(
+                        "analysis",
+                        scope_type="public",
+                        viewer_base_url="/analysis/",
+                        include_scope_param=False,
+                        sub_scopes=[
+                            docs_sub_scope_record(
+                                "analysis",
+                                "works",
+                                title="Works",
+                                scope_type="public",
+                                sub_scope_customisation={
+                                    "id": "analysis_works",
+                                    "settings": {},
+                                },
+                            )
+                        ],
+                    ),
                 ],
             },
         )
@@ -169,6 +191,102 @@ title: Pathless
 ---
 # Pathless
 """,
+        )
+        target_root = root / (
+            "docs-viewer/scopes/analysis/published/documents/"
+            "sub-scopes/works/by-id"
+        )
+        pre_publish_url = (
+            f"/docs/?scope=analysis&doc={analysis_report_doc_id}"
+            f"&subdoc={pre_publish_doc_id}"
+        )
+        published_url = (
+            f"/docs/?scope=analysis&doc={analysis_report_doc_id}"
+            f"&subdoc={published_doc_id}"
+        )
+        write_text(
+            root / (
+                "docs-viewer/scopes/analysis/source/documents/"
+                f"{analysis_report_doc_id}.md"
+            ),
+            f"""---
+doc_id: {analysis_report_doc_id}
+title: Works
+viewer_report: docs_subscope
+viewer_report_access: public
+viewer_report_subscope: works
+---
+# Works
+""",
+        )
+        write_json(
+            target_root / f"{pre_publish_doc_id}.json",
+            {
+                "doc_id": pre_publish_doc_id,
+                "title": "Editorial draft",
+                "viewer_url": pre_publish_url,
+            },
+        )
+        write_json(
+            target_root / f"{published_doc_id}.json",
+            {
+                "doc_id": published_doc_id,
+                "title": "Published editorial",
+                "viewer_url": published_url,
+            },
+        )
+        write_json(
+            root / "docs-viewer/data/canonical/document-publication-lineage.json",
+            {
+                "schema_version": "docs_document_publication_lineage_v1",
+                "rows": [
+                    {
+                        "source": {
+                            "scope": "dotlineform",
+                            "sub_scope": "projects",
+                            "doc_id": first_doc_id,
+                        },
+                        "editorial": {
+                            "scope": "analysis",
+                            "sub_scope": "works",
+                            "doc_id": pre_publish_doc_id,
+                        },
+                        "created_at": "2026-08-08T10:00:00Z",
+                        "last_copied_at": "2026-08-08T10:00:00Z",
+                        "publication": None,
+                    },
+                    {
+                        "source": {
+                            "scope": "dotlineform",
+                            "sub_scope": "projects",
+                            "doc_id": first_doc_id,
+                        },
+                        "editorial": {
+                            "scope": "analysis",
+                            "sub_scope": "works",
+                            "doc_id": published_doc_id,
+                        },
+                        "created_at": "2026-08-08T11:00:00Z",
+                        "last_copied_at": "2026-08-08T11:00:00Z",
+                        "publication": {"public_url": "/analysis/published"},
+                    },
+                    {
+                        "source": {
+                            "scope": "dotlineform",
+                            "sub_scope": "projects",
+                            "doc_id": pathless_doc_id,
+                        },
+                        "editorial": {
+                            "scope": "analysis",
+                            "sub_scope": "works",
+                            "doc_id": unavailable_doc_id,
+                        },
+                        "created_at": "2026-08-08T12:00:00Z",
+                        "last_copied_at": "2026-08-08T12:00:00Z",
+                        "publication": None,
+                    },
+                ],
+            },
         )
 
         exit_code, _stdout, stderr = run_cli(
@@ -225,7 +343,33 @@ title: Pathless
                     "key": "projects/architecture",
                     "fields": ["folder_path"],
                 },
-                "customisation": {"folder_path": "projects/architecture"},
+                "customisation": {
+                    "folder_path": "projects/architecture",
+                    "publication_targets": [
+                        {
+                            "editorial": {
+                                "scope": "analysis",
+                                "sub_scope": "works",
+                                "doc_id": pre_publish_doc_id,
+                            },
+                            "available": True,
+                            "title": "Editorial draft",
+                            "viewer_url": pre_publish_url,
+                            "publication": None,
+                        },
+                        {
+                            "editorial": {
+                                "scope": "analysis",
+                                "sub_scope": "works",
+                                "doc_id": published_doc_id,
+                            },
+                            "available": True,
+                            "title": "Published editorial",
+                            "viewer_url": published_url,
+                            "publication": {"public_url": "/analysis/published"},
+                        },
+                    ],
+                },
             },
             {
                 "doc_id": second_doc_id,
@@ -250,6 +394,21 @@ title: Pathless
                     "kind": "none",
                     "key": "",
                     "fields": [],
+                },
+                "customisation": {
+                    "publication_targets": [
+                        {
+                            "editorial": {
+                                "scope": "analysis",
+                                "sub_scope": "works",
+                                "doc_id": unavailable_doc_id,
+                            },
+                            "available": False,
+                            "title": "",
+                            "viewer_url": "",
+                            "publication": None,
+                        }
+                    ]
                 },
             },
         ],
@@ -947,9 +1106,15 @@ def test_browser_config_projects_assignable_group_for_exact_configured_collectio
     def project_manifest(
         settings: object,
         documents: object,
+        repo_root: Path,
+        scope: str,
+        sub_scope: str,
     ) -> dict[str, object]:
         assert settings == {}
         assert documents == ()
+        assert repo_root
+        assert scope == "studio"
+        assert sub_scope == "project-notes"
         return {
             "root": {"id": "synthetic_fields", "data": {}},
             "rows": {},

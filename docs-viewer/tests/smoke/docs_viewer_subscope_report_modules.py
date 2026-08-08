@@ -3984,13 +3984,15 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
           });
 
           function renderRow(documentRecord) {
-            const host = document.createElement('span');
+            const titlePrefixHost = document.createElement('span');
+            const trailingHost = document.createElement('span');
             contribution.renderRow({
               document: documentRecord,
               documents,
-              titlePrefixHost: host
+              titlePrefixHost,
+              trailingHost
             });
-            return host;
+            return trailingHost;
           }
           const linkedRow = renderRow(documents[0]);
           const pathlessRow = renderRow(documents[2]);
@@ -4145,9 +4147,16 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
           }
           let rowError = '';
           try {
-            renderRow({
-              authoring_subject: {
-                state: 'valid', kind: 'folder', key: 'projects/a', fields: ['extra']
+            contribution.projectDetailInfo({
+              collection: { scope: 'dotlineform', sub_scope: 'projects' },
+              document: {
+                doc_id: 'invalid-subject',
+                authoring_subject: {
+                  state: 'valid', kind: 'folder', key: 'projects/a', fields: ['extra']
+                }
+              },
+              target: {
+                scope: 'dotlineform', sub_scope: 'projects', doc_id: 'invalid-subject'
               }
             });
           } catch (error) {
@@ -4177,8 +4186,8 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
             },
             linkedInfo,
             linkedRow: {
-              cue: linkedRow.querySelector('[data-project-subject-cue]').dataset.projectSubjectCue,
-              text: linkedRow.querySelector('[data-project-subject-cue]').textContent
+              stage: linkedRow.querySelector('[data-project-publication-stage]').dataset.projectPublicationStage,
+              text: linkedRow.querySelector('[data-project-publication-stage]').textContent
             },
             opened,
             pathlessButton: {
@@ -4248,12 +4257,19 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
                     "label": "Subject",
                     "state": "folder",
                     "value": "Folder",
+                },
+                {
+                    "detail": "No editorial copy",
+                    "id": "publication",
+                    "label": "Publication",
+                    "state": "working",
+                    "value": "Working",
                 }
             ],
         },
         "linkedRow": {
-            "cue": "folder",
-            "text": "📁",
+            "stage": "working",
+            "text": "Working",
         },
         "opened": ["projects/16%20forms"],
         "pathlessButton": {
@@ -4269,10 +4285,17 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
                     "label": "Subject",
                     "state": "none",
                     "value": "None",
+                },
+                {
+                    "detail": "No editorial copy",
+                    "id": "publication",
+                    "label": "Publication",
+                    "state": "working",
+                    "value": "Working",
                 }
             ],
         },
-        "pathlessRow": {"childCount": 0, "text": ""},
+        "pathlessRow": {"childCount": 1, "text": "Working"},
         "registryIds": ["analysis_tags", "dotlineform_projects"],
         "refreshed": [
             {
@@ -4386,7 +4409,26 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
               doc_id: 'work-doc',
               authoring_subject: {
                 state: 'valid', kind: 'work', key: '00123', fields: ['work_id']
-              }
+              },
+              customisation: { publication_targets: [{
+                editorial: {
+                  scope: 'analysis', sub_scope: 'works',
+                  doc_id: 'd-20260802-101500-a1b2c3'
+                },
+                available: true,
+                title: 'Editorial draft',
+                viewer_url: '/docs/?scope=analysis&doc=works&subdoc=d-20260802-101500-a1b2c3',
+                publication: null
+              }, {
+                editorial: {
+                  scope: 'analysis', sub_scope: 'works',
+                  doc_id: 'd-20260802-101501-b2c3d4'
+                },
+                available: true,
+                title: 'Published editorial',
+                viewer_url: '/docs/?scope=analysis&doc=works&subdoc=d-20260802-101501-b2c3d4',
+                publication: { public_url: '/analysis/published' }
+              }] }
             },
             series: {
               doc_id: 'series-doc',
@@ -4396,7 +4438,17 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
             },
             none: {
               doc_id: 'none-doc',
-              authoring_subject: { state: 'none', kind: 'none', key: '', fields: [] }
+              authoring_subject: { state: 'none', kind: 'none', key: '', fields: [] },
+              customisation: { publication_targets: [{
+                editorial: {
+                  scope: 'analysis', sub_scope: 'works',
+                  doc_id: 'd-20260802-101502-c3d4e5'
+                },
+                available: false,
+                title: '',
+                viewer_url: '',
+                publication: null
+              }] }
             },
             malformed: {
               doc_id: 'malformed-doc',
@@ -4472,17 +4524,22 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
           });
 
           function cue(record) {
-            const host = document.createElement('span');
-            const projected = contribution.renderRow({ document: record, titlePrefixHost: host });
-            const node = host.querySelector('[data-project-subject-cue]');
-            const icon = node ? node.querySelector('[data-project-subject-icon]') : null;
+            const titleHost = document.createElement('span');
+            const trailingHost = document.createElement('span');
+            const projected = contribution.renderRow({
+              document: record,
+              titlePrefixHost: titleHost,
+              trailingHost
+            });
+            const nodes = Array.from(
+              trailingHost.querySelectorAll('[data-project-publication-stage]')
+            );
             return {
               labels: projected.accessibleLabels,
-              state: node ? node.dataset.projectSubjectCue : '',
-              text: node ? node.textContent : '',
-              icon: icon ? icon.dataset.projectSubjectIcon : '',
-              paths: icon ? icon.querySelectorAll('path').length : 0,
-              bullets: icon ? icon.querySelectorAll('rect').length : 0
+              stages: nodes.map(node => node.dataset.projectPublicationStage),
+              text: nodes.map(node => node.textContent).join(''),
+              hrefs: nodes.map(node => node.getAttribute('href') || ''),
+              subjectIcons: titleHost.querySelectorAll('[data-project-subject-icon]').length
             };
           }
           function info(record) {
@@ -4493,6 +4550,15 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
                 scope: 'dotlineform', sub_scope: 'projects', doc_id: record.doc_id
               }
             }).fields[0];
+          }
+          function publicationInfo(record) {
+            return contribution.projectDetailInfo({
+              collection: { scope: 'dotlineform', sub_scope: 'projects' },
+              document: record,
+              target: {
+                scope: 'dotlineform', sub_scope: 'projects', doc_id: record.doc_id
+              }
+            }).fields.slice(1);
           }
 
           const toolbar = document.createElement('div');
@@ -4599,6 +4665,11 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
               malformed: info(records.malformed),
               conflicting: info(records.conflicting)
             },
+            publicationInfo: {
+              work: publicationInfo(records.work),
+              series: publicationInfo(records.series),
+              none: publicationInfo(records.none)
+            },
             initial,
             selectedSeries,
             editedSeries,
@@ -4630,32 +4701,59 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
         ],
         "cues": {
             "work": {
-                "labels": ["Work subject 00123"], "state": "work", "text": "",
-                "icon": "work", "paths": 1, "bullets": 1,
+                "labels": [
+                    (
+                        "Pre-publish: Editorial draft "
+                        "(analysis/works/d-20260802-101500-a1b2c3)"
+                    ),
+                    (
+                        "Published: Published editorial "
+                        "(analysis/works/d-20260802-101501-b2c3d4)"
+                    ),
+                ],
+                "stages": ["pre-publish", "published"],
+                "text": "🟠🟢",
+                "hrefs": [
+                    (
+                        "/docs/?scope=analysis&doc=works"
+                        "&subdoc=d-20260802-101500-a1b2c3"
+                    ),
+                    (
+                        "/docs/?scope=analysis&doc=works"
+                        "&subdoc=d-20260802-101501-b2c3d4"
+                    ),
+                ],
+                "subjectIcons": 0,
             },
             "series": {
-                "labels": ["Series subject 026"], "state": "series", "text": "",
-                "icon": "series", "paths": 3, "bullets": 3,
+                "labels": ["Working"],
+                "stages": ["working"],
+                "text": "Working",
+                "hrefs": [""],
+                "subjectIcons": 0,
             },
             "none": {
-                "labels": [], "state": "", "text": "", "icon": "", "paths": 0,
-                "bullets": 0,
+                "labels": [
+                    "Unavailable: analysis/works/d-20260802-101502-c3d4e5"
+                ],
+                "stages": ["unavailable"],
+                "text": "⚠️",
+                "hrefs": [""],
+                "subjectIcons": 0,
             },
             "malformed": {
-                "labels": ["Malformed work subject declaration"],
-                "state": "warning",
-                "text": "⚠️",
-                "icon": "",
-                "paths": 0,
-                "bullets": 0,
+                "labels": ["Working"],
+                "stages": ["working"],
+                "text": "Working",
+                "hrefs": [""],
+                "subjectIcons": 0,
             },
             "conflicting": {
-                "labels": ["Conflicting authoring subject declarations"],
-                "state": "warning",
-                "text": "⚠️",
-                "icon": "",
-                "paths": 0,
-                "bullets": 0,
+                "labels": ["Working"],
+                "stages": ["working"],
+                "text": "Working",
+                "hrefs": [""],
+                "subjectIcons": 0,
             },
         },
         "fetchCalls": [
@@ -4689,6 +4787,42 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
                 "id": "authoring_subject", "label": "Subject", "state": "warning",
                 "value": "Authoring warning",
             },
+        },
+        "publicationInfo": {
+            "work": [
+                {
+                    "detail": "analysis/works/d-20260802-101500-a1b2c3",
+                    "id": "publication_1",
+                    "label": "Publication",
+                    "state": "pre-publish",
+                    "value": "🟠 Pre-publish — Editorial draft",
+                },
+                {
+                    "detail": "analysis/works/d-20260802-101501-b2c3d4",
+                    "id": "publication_2",
+                    "label": "Publication",
+                    "state": "published",
+                    "value": "🟢 Published — Published editorial",
+                },
+            ],
+            "series": [
+                {
+                    "detail": "No editorial copy",
+                    "id": "publication",
+                    "label": "Publication",
+                    "state": "working",
+                    "value": "Working",
+                }
+            ],
+            "none": [
+                {
+                    "detail": "analysis/works/d-20260802-101502-c3d4e5",
+                    "id": "publication_1",
+                    "label": "Publication",
+                    "state": "unavailable",
+                    "value": "⚠️ Unavailable",
+                }
+            ],
         },
         "initial": {
             "checked": "work",

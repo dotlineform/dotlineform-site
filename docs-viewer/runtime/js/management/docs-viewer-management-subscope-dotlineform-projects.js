@@ -13,24 +13,6 @@ import {
 
 const CUSTOMISATION_ID = "dotlineform_projects";
 const AUTHORING_SUBJECT_GROUP_ID = "authoring_subject";
-const SUBJECT_ICON_MARKUP = Object.freeze({
-  work: [
-    '<svg class="docsViewerReport__projectSubjectIcon" data-project-subject-icon="work" viewBox="0 0 24 24" aria-hidden="true" focusable="false">',
-    '<rect x="4" y="10.75" width="2.5" height="2.5" rx="1"></rect>',
-    '<path d="M10 12H20"></path>',
-    "</svg>"
-  ].join(""),
-  series: [
-    '<svg class="docsViewerReport__projectSubjectIcon" data-project-subject-icon="series" viewBox="0 0 24 24" aria-hidden="true" focusable="false">',
-    '<rect x="4" y="5" width="2.5" height="2.5" rx="1"></rect>',
-    '<rect x="4" y="10.75" width="2.5" height="2.5" rx="1"></rect>',
-    '<rect x="4" y="16.5" width="2.5" height="2.5" rx="1"></rect>',
-    '<path d="M10 6.25H20"></path>',
-    '<path d="M10 12H20"></path>',
-    '<path d="M10 17.75H20"></path>',
-    "</svg>"
-  ].join("")
-});
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -60,36 +42,81 @@ function folderPath(documentRecord) {
   return subject.state === "valid" && subject.kind === "folder" ? subject.key : "";
 }
 
-function accessibleSubjectLabel(subject) {
-  if (subject.state === "valid") {
-    return ({ folder: "Folder", work: "Work", series: "Series" })[subject.kind] + " subject " + subject.key;
-  }
-  if (subject.state === "malformed") {
-    return "Malformed " + subject.kind + " subject declaration";
-  }
-  if (subject.state === "conflicting") {
-    return "Conflicting authoring subject declarations";
-  }
-  return "";
+function publicationTargets(documentRecord) {
+  var customisation = documentRecord && documentRecord.customisation;
+  var targets = customisation && customisation.publication_targets;
+  return Array.isArray(targets) ? targets.map(function (target) {
+    var editorial = target && target.editorial;
+    return {
+      available: target && target.available === true,
+      docId: cleanString(editorial && editorial.doc_id),
+      publicUrl: cleanString(target && target.publication && target.publication.public_url),
+      scope: cleanString(editorial && editorial.scope).toLowerCase(),
+      subScope: cleanString(editorial && editorial.sub_scope).toLowerCase(),
+      title: cleanString(target && target.title),
+      viewerUrl: cleanString(target && target.viewer_url)
+    };
+  }).filter(function (target) {
+    return target.scope && target.subScope && target.docId;
+  }) : [];
 }
 
-function renderSubjectCue(context) {
+function publicationStage(target) {
+  if (!target.available) return "unavailable";
+  return target.publicUrl ? "published" : "pre-publish";
+}
+
+function publicationStageLabel(stage) {
+  return ({
+    "pre-publish": "Pre-publish",
+    published: "Published",
+    unavailable: "Unavailable"
+  })[stage] || "Working";
+}
+
+function publicationIdentity(target) {
+  return target.scope + "/" + target.subScope + "/" + target.docId;
+}
+
+function publicationAccessibleLabel(target) {
+  var stage = publicationStage(target);
+  var identity = publicationIdentity(target);
+  var targetLabel = target.title ? target.title + " (" + identity + ")" : identity;
+  return publicationStageLabel(stage) + ": " + targetLabel;
+}
+
+function renderPublicationCues(context) {
   var settings = context || {};
-  var host = settings.titlePrefixHost;
+  var host = settings.trailingHost;
   if (!host) return { accessibleLabels: [] };
-  var subject = authoringSubject(settings.document);
-  if (subject.state === "none") return { accessibleLabels: [] };
-  var cue = host.ownerDocument.createElement("span");
-  cue.className = "docsViewerReport__projectSubjectCue";
-  cue.dataset.projectSubjectCue = subject.state === "valid" ? subject.kind : "warning";
-  cue.setAttribute("aria-hidden", "true");
-  if (subject.state === "valid" && SUBJECT_ICON_MARKUP[subject.kind]) {
-    cue.innerHTML = SUBJECT_ICON_MARKUP[subject.kind];
-  } else {
-    cue.textContent = subject.state !== "valid" ? "⚠️" : "📁";
+  var targets = publicationTargets(settings.document);
+  var group = host.ownerDocument.createElement("span");
+  group.className = "docsViewerReport__projectPublicationCues";
+  if (!targets.length) {
+    var working = host.ownerDocument.createElement("span");
+    working.className = "docsViewerReport__projectPublicationCue";
+    working.dataset.projectPublicationStage = "working";
+    working.textContent = "Working";
+    group.appendChild(working);
+    host.appendChild(group);
+    return { accessibleLabels: ["Working"] };
   }
-  host.appendChild(cue);
-  return { accessibleLabels: [accessibleSubjectLabel(subject)] };
+  var labels = targets.map(function (target) {
+    var stage = publicationStage(target);
+    var label = publicationAccessibleLabel(target);
+    var cue = host.ownerDocument.createElement(target.available ? "a" : "span");
+    cue.className = "docsViewerReport__projectPublicationCue";
+    cue.dataset.projectPublicationStage = stage;
+    cue.dataset.projectPublicationTarget = publicationIdentity(target);
+    cue.textContent = ({ "pre-publish": "🟠", published: "🟢" })[stage] || "⚠️";
+    cue.title = label;
+    cue.setAttribute("aria-label", label);
+    if (target.available) cue.href = target.viewerUrl;
+    group.appendChild(cue);
+    return label;
+  });
+  host.appendChild(group);
+  return { accessibleLabels: labels };
 }
 
 function renderOpenInFinder(context, options) {
@@ -238,9 +265,34 @@ function projectDetailInfo(context, assignSubjectAvailable) {
   ) {
     throw new Error("Projects subject information target is invalid.");
   }
+  var publicationFields = publicationTargets(settings.document).map(function (publication, index) {
+    var stage = publicationStage(publication);
+    return Object.freeze({
+      detail: publicationIdentity(publication),
+      id: "publication_" + (index + 1),
+      label: "Publication",
+      state: stage,
+      value: (
+        ({ "pre-publish": "🟠", published: "🟢", unavailable: "⚠️" })[stage]
+        + " " + publicationStageLabel(stage)
+        + (publication.title ? " — " + publication.title : "")
+      )
+    });
+  });
+  if (!publicationFields.length) {
+    publicationFields.push(Object.freeze({
+      detail: "No editorial copy",
+      id: "publication",
+      label: "Publication",
+      state: "working",
+      value: "Working"
+    }));
+  }
   return Object.freeze({
     actions: Object.freeze({ assignSubject: assignSubjectAvailable }),
-    fields: Object.freeze([Object.freeze(subjectInfoField(authoringSubject(settings.document)))])
+    fields: Object.freeze([
+      Object.freeze(subjectInfoField(authoringSubject(settings.document)))
+    ].concat(publicationFields))
   });
 }
 
@@ -258,6 +310,6 @@ export function createDocsViewerManagementSubscopeDotlineformProjects(options = 
       renderAssignSubject(context, options, assignSubjectAvailable);
       renderOpenInFinder(context, options);
     },
-    renderRow: renderSubjectCue
+    renderRow: renderPublicationCues
   };
 }

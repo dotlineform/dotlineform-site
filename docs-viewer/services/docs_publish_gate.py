@@ -38,6 +38,7 @@ from docs_document_location_projection import (
     document_location_projection_path,
     json_bytes as document_location_json_bytes,
 )
+from docs_write_rebuild import rebuild_sub_scope_outputs
 
 
 PUBLISH_SCHEMA_VERSION = "docs_publish_gate_v1"
@@ -741,11 +742,20 @@ def reconcile_document_publication_lineage(
                 }
             )
         )
-    publication_lineage.reconcile_publications(
+    reconciled = publication_lineage.reconcile_publications(
         repo_root,
         editorial_collections=editorial_collections,
         publication_urls=publication_urls,
     )
+    if reconciled == rows:
+        return
+    source_collections = sorted({
+        (row.source.scope, row.source.sub_scope)
+        for row in reconciled
+        if (row.editorial.scope, row.editorial.sub_scope) in editorial_collections
+    })
+    for source_scope, source_sub_scope in source_collections:
+        rebuild_sub_scope_outputs(repo_root, source_scope, source_sub_scope)
 
 
 def publish_apply(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:

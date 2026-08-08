@@ -35,7 +35,10 @@ class DocsSubScopeCustomisationConfig:
 
 @dataclass(frozen=True)
 class DocsSubScopeManifestProjectionAspect:
-    project: Callable[[Mapping[str, Any], Sequence[Any]], dict[str, Any]]
+    project: Callable[
+        [Mapping[str, Any], Sequence[Any], Path, str, str],
+        dict[str, Any],
+    ]
 
 
 @dataclass(frozen=True)
@@ -186,7 +189,11 @@ def _normalize_empty_settings(raw: Any, field: str) -> Mapping[str, Any]:
 def _project_analysis_tags_manifest(
     settings: Mapping[str, Any],
     documents: Sequence[Any],
+    repo_root: Path,
+    scope: str,
+    sub_scope: str,
 ) -> dict[str, Any]:
+    del repo_root, scope, sub_scope
     groups = _analysis_tags_document_groups(settings)
     rows = {
         str(document.doc_id): {"group": str(document.group)}
@@ -591,6 +598,9 @@ def project_sub_scope_customisation_manifest(
     documents: Sequence[Any],
     *,
     published: bool,
+    repo_root: Path,
+    scope: str,
+    sub_scope: str,
 ) -> dict[str, Any] | None:
     if customisation is None:
         return None
@@ -605,7 +615,13 @@ def project_sub_scope_customisation_manifest(
             "Docs sub-scope customisation browser access has no manifest projection: "
             f"{customisation.customisation_id}"
         )
-    return aspect.project(customisation.settings, documents)
+    return aspect.project(
+        customisation.settings,
+        documents,
+        repo_root,
+        scope,
+        sub_scope,
+    )
 
 
 def validate_sub_scope_customisation_document(

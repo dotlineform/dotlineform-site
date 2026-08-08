@@ -365,6 +365,19 @@ def test_lineage_new_and_replace_commit_exact_rows_and_preserve_editorial_gate(
     )
     assert exact_row["created_at"] == "2026-08-07T20:00:00Z"
     assert exact_row["last_copied_at"] == "2026-08-08T11:00:00Z"
+    assert [
+        (call["scope"], call["sub_scope"], call["changed_paths"])
+        for call in rebuild_calls
+    ] == [
+        ("analysis", "works", [sub_scope_documents_root(
+            repo_root,
+            "analysis",
+            "works",
+        ) / f"{new_target_id}.md"]),
+        ("dotlineform", "projects", []),
+        ("analysis", "works", [target_path]),
+        ("dotlineform", "projects", []),
+    ]
     assert source_model.parse_source(source_path)[1].endswith(
         "Replacement body from A.\n"
     )

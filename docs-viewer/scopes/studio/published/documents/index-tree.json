@@ -1188,8 +1188,20 @@
                   "title": "SSP-7.3 — Successful Publish Reconciliation Evidence",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-131132-c93e41.json",
                   "ui_status": "done"
+                },
+                {
+                  "doc_id": "d-20260808-134503-a4caeb",
+                  "title": "SSP-7.4 — Projects Publication Stage Evidence",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-134503-a4caeb.json",
+                  "ui_status": "review"
                 }
               ]
+            },
+            {
+              "doc_id": "d-20260808-153226-a067d9",
+              "title": "SSP-8 — Revised Model",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-153226-a067d9.json",
+              "ui_status": "proposed"
             },
             {
               "doc_id": "d-20260802-194358-7717ee",
@@ -1565,5 +1577,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-08T12:16:42Z"
+  "generated_at": "2026-08-08T14:34:13Z"
 }

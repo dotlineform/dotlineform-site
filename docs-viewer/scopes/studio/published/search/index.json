@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-bdac85aa5aedcbf5c3b3b36349bd90d3",
-    "generated_at_utc": "2026-08-08T12:16:42Z",
-    "count": 274
+    "version": "blake2b-054147982a31afc86b3c208ff8aa95f8",
+    "generated_at_utc": "2026-08-08T14:34:13Z",
+    "count": 276
   },
   "entries": [
     {
@@ -430,10 +430,10 @@
       "kind": "doc",
       "title": "Cross-System Relationship Map",
       "href": "/docs/?scope=studio&doc=d-20260802-205912-16bc10",
-      "last_updated": "2026-08-08 13:12:48",
+      "last_updated": "2026-08-08 13:45:03",
       "parent_id": "d-20260802-123451-d0e52e",
       "parent_title": "Data Models Diagrams",
-      "display_meta": "2026-08-08 13:12:48 • Data Models Diagrams",
+      "display_meta": "2026-08-08 13:45:03 • Data Models Diagrams",
       "search_terms": [
         "cross-system relationship map",
         "cross",
@@ -444,15 +444,15 @@
         "data",
         "models",
         "diagrams",
-        "2026-08-08 13:12:48",
+        "2026-08-08 13:45:03",
         "2026",
         "08",
         "13",
-        "12",
-        "48",
+        "45",
+        "03",
         "d-20260802-205912-16bc10"
       ],
-      "search_text": "cross-system relationship map cross system relationship map data models diagrams data models diagrams 2026-08-08 13:12:48 2026 08 13 12 48 d-20260802-205912-16bc10"
+      "search_text": "cross-system relationship map cross system relationship map data models diagrams data models diagrams 2026-08-08 13:45:03 2026 08 13 45 03 d-20260802-205912-16bc10"
     },
     {
       "id": "d-20260802-205911-bec41f",
@@ -1116,25 +1116,25 @@
       "kind": "doc",
       "title": "Docs Data",
       "href": "/docs/?scope=studio&doc=d-20260419-000000-0516ab",
-      "last_updated": "2026-08-08 13:12:48",
+      "last_updated": "2026-08-08 13:45:03",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-08-08 13:12:48 • Docs Viewer",
+      "display_meta": "2026-08-08 13:45:03 • Docs Viewer",
       "search_terms": [
         "docs data",
         "docs",
         "data",
         "docs viewer",
         "viewer",
-        "2026-08-08 13:12:48",
+        "2026-08-08 13:45:03",
         "2026",
         "08",
         "13",
-        "12",
-        "48",
+        "45",
+        "03",
         "d-20260419-000000-0516ab"
       ],
-      "search_text": "docs data docs data docs viewer viewer 2026-08-08 13:12:48 2026 08 13 12 48 d-20260419-000000-0516ab"
+      "search_text": "docs data docs data docs viewer viewer 2026-08-08 13:45:03 2026 08 13 45 03 d-20260419-000000-0516ab"
     },
     {
       "id": "d-20260423-155039-e36925",
@@ -4286,25 +4286,25 @@
       "kind": "doc",
       "title": "Sub-Scope Publishing",
       "href": "/docs/?scope=studio&doc=d-20260802-194357-4d857b",
-      "last_updated": "2026-08-08 13:12:48",
+      "last_updated": "2026-08-08 15:32:26",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-08 13:12:48 • Roadmap",
+      "display_meta": "2026-08-08 15:32:26 • Roadmap",
       "search_terms": [
         "sub-scope publishing",
         "sub",
         "scope",
         "publishing",
         "roadmap",
-        "2026-08-08 13:12:48",
+        "2026-08-08 15:32:26",
         "2026",
         "08",
-        "13",
-        "12",
-        "48",
+        "15",
+        "32",
+        "26",
         "d-20260802-194357-4d857b"
       ],
-      "search_text": "sub-scope publishing sub scope publishing roadmap 2026-08-08 13:12:48 2026 08 13 12 48 d-20260802-194357-4d857b"
+      "search_text": "sub-scope publishing sub scope publishing roadmap 2026-08-08 15:32:26 2026 08 15 32 26 d-20260802-194357-4d857b"
     },
     {
       "id": "d-20260802-121105-c574f9",
@@ -5489,10 +5489,10 @@
       "kind": "doc",
       "title": "SSP-7 — Document Lineage And Publication State Delivery",
       "href": "/docs/?scope=studio&doc=d-20260805-231829-947705",
-      "last_updated": "2026-08-08 13:12:48",
+      "last_updated": "2026-08-08 15:32:26",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-08 13:12:48 • Sub-Scope Publishing",
+      "display_meta": "2026-08-08 15:32:26 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-7 — document lineage and publication state delivery",
         "ssp",
@@ -5507,15 +5507,15 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-08 13:12:48",
+        "2026-08-08 15:32:26",
         "2026",
         "08",
-        "13",
-        "12",
-        "48",
+        "15",
+        "32",
+        "26",
         "d-20260805-231829-947705"
       ],
-      "search_text": "ssp-7 — document lineage and publication state delivery ssp 7 document lineage and publication state delivery sub-scope publishing sub scope publishing 2026-08-08 13:12:48 2026 08 13 12 48 d-20260805-231829-947705"
+      "search_text": "ssp-7 — document lineage and publication state delivery ssp 7 document lineage and publication state delivery sub-scope publishing sub scope publishing 2026-08-08 15:32:26 2026 08 15 32 26 d-20260805-231829-947705"
     },
     {
       "id": "d-20260807-210803-ad1f6f",
@@ -5693,14 +5693,77 @@
       "search_text": "ssp-7.3 — successful publish reconciliation evidence ssp 7 3 successful publish reconciliation evidence ssp-7 — document lineage and publication state delivery document lineage and publication state delivery 2026-08-08 13:16:24 2026 08 13 16 24 d-20260808-131132-c93e41"
     },
     {
+      "id": "d-20260808-134503-a4caeb",
+      "kind": "doc",
+      "title": "SSP-7.4 — Projects Publication Stage Evidence",
+      "href": "/docs/?scope=studio&doc=d-20260808-134503-a4caeb",
+      "last_updated": "2026-08-08 13:45:03",
+      "parent_id": "d-20260805-231829-947705",
+      "parent_title": "SSP-7 — Document Lineage And Publication State Delivery",
+      "display_meta": "2026-08-08 13:45:03 • SSP-7 — Document Lineage And Publication State Delivery",
+      "search_terms": [
+        "ssp-7.4 — projects publication stage evidence",
+        "ssp",
+        "7",
+        "4",
+        "projects",
+        "publication",
+        "stage",
+        "evidence",
+        "ssp-7 — document lineage and publication state delivery",
+        "document",
+        "lineage",
+        "and",
+        "state",
+        "delivery",
+        "2026-08-08 13:45:03",
+        "2026",
+        "08",
+        "13",
+        "45",
+        "03",
+        "d-20260808-134503-a4caeb"
+      ],
+      "search_text": "ssp-7.4 — projects publication stage evidence ssp 7 4 projects publication stage evidence ssp-7 — document lineage and publication state delivery document lineage and state delivery 2026-08-08 13:45:03 2026 08 13 45 03 d-20260808-134503-a4caeb"
+    },
+    {
+      "id": "d-20260808-153226-a067d9",
+      "kind": "doc",
+      "title": "SSP-8 — Revised Model",
+      "href": "/docs/?scope=studio&doc=d-20260808-153226-a067d9",
+      "last_updated": "2026-08-08 15:32:26",
+      "parent_id": "d-20260802-194357-4d857b",
+      "parent_title": "Sub-Scope Publishing",
+      "display_meta": "2026-08-08 15:32:26 • Sub-Scope Publishing",
+      "search_terms": [
+        "ssp-8 — revised model",
+        "ssp",
+        "8",
+        "revised",
+        "model",
+        "sub-scope publishing",
+        "sub",
+        "scope",
+        "publishing",
+        "2026-08-08 15:32:26",
+        "2026",
+        "08",
+        "15",
+        "32",
+        "26",
+        "d-20260808-153226-a067d9"
+      ],
+      "search_text": "ssp-8 — revised model ssp 8 revised model sub-scope publishing sub scope publishing 2026-08-08 15:32:26 2026 08 15 32 26 d-20260808-153226-a067d9"
+    },
+    {
       "id": "d-20260802-194358-7717ee",
       "kind": "doc",
       "title": "Sub-Scope Publishing Concept And Architecture",
       "href": "/docs/?scope=studio&doc=d-20260802-194358-7717ee",
-      "last_updated": "2026-08-08 13:12:48",
+      "last_updated": "2026-08-08 13:45:03",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-08 13:12:48 • Sub-Scope Publishing",
+      "display_meta": "2026-08-08 13:45:03 • Sub-Scope Publishing",
       "search_terms": [
         "sub-scope publishing concept and architecture",
         "sub",
@@ -5710,15 +5773,15 @@
         "and",
         "architecture",
         "sub-scope publishing",
-        "2026-08-08 13:12:48",
+        "2026-08-08 13:45:03",
         "2026",
         "08",
         "13",
-        "12",
-        "48",
+        "45",
+        "03",
         "d-20260802-194358-7717ee"
       ],
-      "search_text": "sub-scope publishing concept and architecture sub scope publishing concept and architecture sub-scope publishing 2026-08-08 13:12:48 2026 08 13 12 48 d-20260802-194358-7717ee"
+      "search_text": "sub-scope publishing concept and architecture sub scope publishing concept and architecture sub-scope publishing 2026-08-08 13:45:03 2026 08 13 45 03 d-20260802-194358-7717ee"
     },
     {
       "id": "d-20260804-160200-fa7bb7",

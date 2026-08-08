@@ -167,6 +167,22 @@
   line-height: 1;
 }
 
+.docsViewerReport__projectPublicationCues{
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.docsViewerReport__projectPublicationCue{
+  line-height: 1;
+  text-decoration: none;
+}
+
+.docsViewerReport__projectPublicationCue[data-project-publication-stage="working"]{
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
 .docsViewerReport[data-report-subscope="projects"] .docsViewerReport__row{
   align-items: center;
 }
