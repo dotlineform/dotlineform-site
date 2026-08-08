@@ -4,85 +4,85 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "d-20260331-000000-f992b9",
-      "title": "Public Scopes",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-f992b9.json",
-      "timestamp": "2026-08-08 19:54:49",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
+      "doc_id": "d-20260802-205912-16bc10",
+      "title": "Cross-System Relationship Map",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-205912-16bc10.json",
+      "timestamp": "2026-08-08 20:14:48",
+      "parent_id": "d-20260802-123451-d0e52e",
+      "parent_title": "Data Models Diagrams"
     },
     {
-      "doc_id": "d-20260802-194358-7717ee",
-      "title": "Sub-Scope Publishing Concept And Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194358-7717ee.json",
-      "timestamp": "2026-08-08 19:54:49",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
+      "doc_id": "d-20260607-222033-ce5515",
+      "title": "Source Mutation Endpoints",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-ce5515.json",
+      "timestamp": "2026-08-08 20:14:48",
+      "parent_id": "d-20260607-222033-647b52",
+      "parent_title": "Endpoint Overview"
     },
     {
-      "doc_id": "d-20260808-153226-a067d9",
-      "title": "SSP-8 — Revised Model",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-153226-a067d9.json",
-      "timestamp": "2026-08-08 19:50:01",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
+      "doc_id": "d-20260802-205910-533be0",
+      "title": "Catalogue Data Model Map",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-205910-533be0.json",
+      "timestamp": "2026-08-08 20:12:23",
+      "parent_id": "d-20260802-123451-d0e52e",
+      "parent_title": "Data Models Diagrams"
     },
     {
-      "doc_id": "d-20260731-155053-3929e2",
-      "title": "Sub-Scope Customisation Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155053-3929e2.json",
-      "timestamp": "2026-08-08 19:50:01",
-      "parent_id": "d-20260801-084127-752d7e",
-      "parent_title": "Sub-Scopes"
-    },
-    {
-      "doc_id": "d-20260802-194357-4d857b",
-      "title": "Sub-Scope Publishing",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194357-4d857b.json",
-      "timestamp": "2026-08-08 19:50:01",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260808-185725-9520b6",
-      "title": "DPD-1.3 — Verification And Contract Transfer Evidence",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-185725-9520b6.json",
-      "timestamp": "2026-08-08 18:59:29",
-      "parent_id": "d-20260808-165751-1f159a",
-      "parent_title": "DPD-1 — Immediate Public Projection Cleanup On Document Delete"
-    },
-    {
-      "doc_id": "d-20260808-165751-1f159a",
-      "title": "DPD-1 — Immediate Public Projection Cleanup On Document Delete",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-165751-1f159a.json",
-      "timestamp": "2026-08-08 18:57:25",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
+      "doc_id": "d-20260607-222033-78a47c",
+      "title": "Create And Import Endpoints",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-78a47c.json",
+      "timestamp": "2026-08-08 20:12:23",
+      "parent_id": "d-20260607-222033-647b52",
+      "parent_title": "Endpoint Overview"
     },
     {
       "doc_id": "d-20260802-205911-bec41f",
       "title": "Docs Viewer Projection Map",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-205911-bec41f.json",
-      "timestamp": "2026-08-08 18:53:51",
+      "timestamp": "2026-08-08 20:12:23",
       "parent_id": "d-20260802-123451-d0e52e",
       "parent_title": "Data Models Diagrams"
+    },
+    {
+      "doc_id": "d-20260607-222033-647b52",
+      "title": "Endpoint Overview",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-647b52.json",
+      "timestamp": "2026-08-08 20:12:23",
+      "parent_id": "d-20260424-000000-04d75e",
+      "parent_title": "Management Services"
     },
     {
       "doc_id": "d-20260519-202931-66c794",
       "title": "Management Operations",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260519-202931-66c794.json",
-      "timestamp": "2026-08-08 18:53:51",
+      "timestamp": "2026-08-08 20:12:23",
       "parent_id": "d-20260424-000000-04d75e",
       "parent_title": "Management Services"
     },
     {
-      "doc_id": "d-20260523-222005-1085b2",
-      "title": "Projection Contract",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260523-222005-1085b2.json",
-      "timestamp": "2026-08-08 18:53:51",
-      "parent_id": "d-20260331-000000-4a16b0",
-      "parent_title": "Architecture"
+      "doc_id": "d-20260802-194357-4d857b",
+      "title": "Sub-Scope Publishing",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194357-4d857b.json",
+      "timestamp": "2026-08-08 20:06:06",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260805-231829-947705",
+      "title": "SSP-7 — Document Lineage And Publication State Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-231829-947705.json",
+      "timestamp": "2026-08-08 20:01:04",
+      "parent_id": "d-20260802-194357-4d857b",
+      "parent_title": "Sub-Scope Publishing"
+    },
+    {
+      "doc_id": "d-20260808-134503-a4caeb",
+      "title": "SSP-7.4 — Projects Publication Stage Evidence",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-134503-a4caeb.json",
+      "timestamp": "2026-08-08 20:01:04",
+      "parent_id": "d-20260805-231829-947705",
+      "parent_title": "SSP-7 — Document Lineage And Publication State Delivery"
     }
   ],
-  "generated_at": "2026-08-08T18:54:49Z"
+  "generated_at": "2026-08-08T19:14:49Z"
 }

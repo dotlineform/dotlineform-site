@@ -959,7 +959,7 @@
           "doc_id": "d-20260802-194357-4d857b",
           "title": "Sub-Scope Publishing",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194357-4d857b.json",
-          "ui_status": "in-progress",
+          "ui_status": "done",
           "children": [
             {
               "doc_id": "d-20260802-121105-c574f9",
@@ -1189,7 +1189,7 @@
               "doc_id": "d-20260805-231829-947705",
               "title": "SSP-7 — Document Lineage And Publication State Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-231829-947705.json",
-              "ui_status": "in-progress",
+              "ui_status": "done",
               "children": [
                 {
                   "doc_id": "d-20260807-210803-ad1f6f",
@@ -1225,7 +1225,7 @@
                   "doc_id": "d-20260808-134503-a4caeb",
                   "title": "SSP-7.4 — Projects Publication Stage Evidence",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-134503-a4caeb.json",
-                  "ui_status": "review"
+                  "ui_status": "done"
                 }
               ]
             },
@@ -1623,5 +1623,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-08T18:51:55Z"
+  "generated_at": "2026-08-08T19:06:38Z"
 }
