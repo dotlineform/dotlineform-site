@@ -1201,7 +1201,15 @@
               "doc_id": "d-20260808-153226-a067d9",
               "title": "SSP-8 — Revised Model",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-153226-a067d9.json",
-              "ui_status": "proposed"
+              "ui_status": "in-progress",
+              "children": [
+                {
+                  "doc_id": "d-20260808-154427-50f717",
+                  "title": "SSP-8.0 — Revised Model Sanity Note",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-154427-50f717.json",
+                  "ui_status": "done"
+                }
+              ]
             },
             {
               "doc_id": "d-20260802-194358-7717ee",
@@ -1577,5 +1585,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-08T14:34:13Z"
+  "generated_at": "2026-08-08T14:45:59Z"
 }

@@ -4,28 +4,36 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260808-153226-a067d9",
+      "title": "SSP-8 — Revised Model",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-153226-a067d9.json",
+      "timestamp": "2026-08-08 15:46:42",
+      "parent_id": "d-20260802-194357-4d857b",
+      "parent_title": "Sub-Scope Publishing"
+    },
+    {
+      "doc_id": "d-20260808-154427-50f717",
+      "title": "SSP-8.0 — Revised Model Sanity Note",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-154427-50f717.json",
+      "timestamp": "2026-08-08 15:44:27",
+      "parent_id": "d-20260808-153226-a067d9",
+      "parent_title": "SSP-8 — Revised Model"
+    },
+    {
+      "doc_id": "d-20260802-194357-4d857b",
+      "title": "Sub-Scope Publishing",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194357-4d857b.json",
+      "timestamp": "2026-08-08 15:44:27",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
       "doc_id": "d-20260805-231829-947705",
       "title": "SSP-7 — Document Lineage And Publication State Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-231829-947705.json",
       "timestamp": "2026-08-08 15:32:26",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
-    },
-    {
-      "doc_id": "d-20260808-153226-a067d9",
-      "title": "SSP-8 — Revised Model",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-153226-a067d9.json",
-      "timestamp": "2026-08-08 15:32:26",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
-    },
-    {
-      "doc_id": "d-20260802-194357-4d857b",
-      "title": "Sub-Scope Publishing",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194357-4d857b.json",
-      "timestamp": "2026-08-08 15:32:26",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
     },
     {
       "doc_id": "d-20260802-205912-16bc10",
@@ -74,15 +82,7 @@
       "timestamp": "2026-08-08 13:14:51",
       "parent_id": "d-20260424-000000-04d75e",
       "parent_title": "Management Services"
-    },
-    {
-      "doc_id": "d-20260331-000000-f992b9",
-      "title": "Public Scopes",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-f992b9.json",
-      "timestamp": "2026-08-08 13:12:48",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-08-08T14:34:13Z"
+  "generated_at": "2026-08-08T14:46:42Z"
 }
