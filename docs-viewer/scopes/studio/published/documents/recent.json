@@ -4,10 +4,18 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260808-160019-084f3d",
+      "title": "SSP-8.1 — Canonical Lineage V2 Cutover",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-160019-084f3d.json",
+      "timestamp": "2026-08-08 16:03:24",
+      "parent_id": "d-20260808-153226-a067d9",
+      "parent_title": "SSP-8 — Revised Model"
+    },
+    {
       "doc_id": "d-20260808-153226-a067d9",
       "title": "SSP-8 — Revised Model",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-153226-a067d9.json",
-      "timestamp": "2026-08-08 15:46:42",
+      "timestamp": "2026-08-08 16:00:19",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
     },
@@ -74,15 +82,7 @@
       "timestamp": "2026-08-08 13:16:24",
       "parent_id": "d-20260805-231829-947705",
       "parent_title": "SSP-7 — Document Lineage And Publication State Delivery"
-    },
-    {
-      "doc_id": "d-20260607-222033-647b52",
-      "title": "Endpoint Overview",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-647b52.json",
-      "timestamp": "2026-08-08 13:14:51",
-      "parent_id": "d-20260424-000000-04d75e",
-      "parent_title": "Management Services"
     }
   ],
-  "generated_at": "2026-08-08T14:46:42Z"
+  "generated_at": "2026-08-08T15:03:25Z"
 }

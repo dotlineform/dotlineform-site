@@ -723,6 +723,8 @@ def reconcile_document_publication_lineage(
     publication_urls: dict[publication_lineage.DocumentLineageIdentity, str] = {}
     for row in rows:
         editorial = row.editorial
+        if editorial is None:
+            continue
         sub_scope = configured.get(editorial.sub_scope)
         if editorial.scope != config.scope_id or sub_scope is None:
             continue
@@ -750,9 +752,11 @@ def reconcile_document_publication_lineage(
     if reconciled == rows:
         return
     source_collections = sorted({
-        (row.source.scope, row.source.sub_scope)
+        (row.working.scope, row.working.sub_scope)
         for row in reconciled
-        if (row.editorial.scope, row.editorial.sub_scope) in editorial_collections
+        if row.working is not None
+        and row.editorial is not None
+        and (row.editorial.scope, row.editorial.sub_scope) in editorial_collections
     })
     for source_scope, source_sub_scope in source_collections:
         rebuild_sub_scope_outputs(repo_root, source_scope, source_sub_scope)

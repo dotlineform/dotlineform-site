@@ -342,7 +342,19 @@ def make_lineage_repo(tmp_path: Path) -> Path:
     )
     rows = [
         {
-            "source": {
+            "lineage_id": transfer.publication_lineage.lineage_id_for_copy(
+                transfer.publication_lineage.DocumentLineageIdentity(
+                    scope="dotlineform",
+                    sub_scope="projects",
+                    doc_id=source_id,
+                ),
+                transfer.publication_lineage.DocumentLineageIdentity(
+                    scope="analysis",
+                    sub_scope="works",
+                    doc_id=editorial_id,
+                ),
+            ),
+            "working": {
                 "scope": "dotlineform",
                 "sub_scope": "projects",
                 "doc_id": source_id,
@@ -354,14 +366,14 @@ def make_lineage_repo(tmp_path: Path) -> Path:
             },
             "created_at": "2026-08-07T20:00:00Z",
             "last_copied_at": "2026-08-07T20:00:00Z",
-            "publication": None,
+            "published": None,
         }
         for editorial_id in (target_id, second_target_id, missing_target_id)
     ]
     write_json(
         repo_root / "docs-viewer/data/canonical/document-publication-lineage.json",
         {
-            "schema_version": "docs_document_publication_lineage_v1",
+            "schema_version": "docs_document_publication_lineage_v2",
             "rows": rows,
         },
     )

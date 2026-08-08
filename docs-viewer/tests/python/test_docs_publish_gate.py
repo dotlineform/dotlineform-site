@@ -542,10 +542,11 @@ def test_successful_publish_sets_retains_and_clears_lineage_publication(
         write_json(
             lineage_path,
             {
-                "schema_version": "docs_document_publication_lineage_v1",
+                "schema_version": "docs_document_publication_lineage_v2",
                 "rows": [
                     {
-                        "source": {
+                        "lineage_id": "sha256:" + "a" * 64,
+                        "working": {
                             "scope": "dotlineform",
                             "sub_scope": "projects",
                             "doc_id": LINEAGE_SOURCE_ID,
@@ -557,7 +558,19 @@ def test_successful_publish_sets_retains_and_clears_lineage_publication(
                         },
                         "created_at": "2026-08-08T10:00:00Z",
                         "last_copied_at": "2026-08-08T10:00:00Z",
-                        "publication": None,
+                        "published": None,
+                    },
+                    {
+                        "lineage_id": "sha256:" + "b" * 64,
+                        "working": {
+                            "scope": "dotlineform",
+                            "sub_scope": "projects",
+                            "doc_id": "d-20260801-110000-bbbbbb",
+                        },
+                        "editorial": None,
+                        "created_at": "2026-08-08T11:00:00Z",
+                        "last_copied_at": "2026-08-08T11:00:00Z",
+                        "published": None,
                     }
                 ],
             },
@@ -569,12 +582,14 @@ def test_successful_publish_sets_retains_and_clears_lineage_publication(
         )
 
         table = json.loads(lineage_path.read_text(encoding="utf-8"))
-        assert table["rows"][0]["publication"] == {
+        assert table["rows"][0]["published"] == {
             "public_url": (
                 f"/library/?doc={LINEAGE_REPORT_HOST_ID}"
                 f"&subdoc={LINEAGE_EDITORIAL_ID}"
             )
         }
+        assert table["rows"][1]["editorial"] is None
+        assert table["rows"][1]["published"] is None
         assert rebuilds == [("dotlineform", "projects")]
         published_bytes = lineage_path.read_bytes()
         write_json(
@@ -601,7 +616,7 @@ def test_successful_publish_sets_retains_and_clears_lineage_publication(
         )
 
         table = json.loads(lineage_path.read_text(encoding="utf-8"))
-        assert table["rows"][0]["publication"] is None
+        assert table["rows"][0]["published"] is None
         assert rebuilds == [
             ("dotlineform", "projects"),
             ("dotlineform", "projects"),

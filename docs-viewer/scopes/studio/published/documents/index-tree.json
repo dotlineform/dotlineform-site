@@ -1208,6 +1208,12 @@
                   "title": "SSP-8.0 — Revised Model Sanity Note",
                   "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-154427-50f717.json",
                   "ui_status": "done"
+                },
+                {
+                  "doc_id": "d-20260808-160019-084f3d",
+                  "title": "SSP-8.1 — Canonical Lineage V2 Cutover",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-160019-084f3d.json",
+                  "ui_status": "done"
                 }
               ]
             },
@@ -1585,5 +1591,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-08T14:45:59Z"
+  "generated_at": "2026-08-08T15:01:57Z"
 }

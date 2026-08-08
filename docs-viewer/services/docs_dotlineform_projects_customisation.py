@@ -87,12 +87,15 @@ def _publication_targets(
 
     grouped: dict[str, list[Any]] = {}
     for row in publication_lineage.load_rows(repo_root):
+        working = row.working
         if (
-            row.source.scope == source_scope
-            and row.source.sub_scope == source_sub_scope
-            and row.source.doc_id in doc_ids
+            working is not None
+            and row.editorial is not None
+            and working.scope == source_scope
+            and working.sub_scope == source_sub_scope
+            and working.doc_id in doc_ids
         ):
-            grouped.setdefault(row.source.doc_id, []).append(row)
+            grouped.setdefault(working.doc_id, []).append(row)
     collection_cache: dict[tuple[str, str], tuple[Path | None, str]] = {}
     return {
         doc_id: [
@@ -172,7 +175,7 @@ def _publication_target(
         "available": bool(title and viewer_url),
         "title": title,
         "viewer_url": viewer_url,
-        "publication": row.publication.payload() if row.publication is not None else None,
+        "publication": row.published.payload() if row.published is not None else None,
     }
 
 

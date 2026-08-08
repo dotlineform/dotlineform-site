@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""Private working-to-editorial Docs document lineage."""
+"""Private Working, Editorial, and Published document lineage."""
 
 from __future__ import annotations
 
+import hashlib
 import json
+import re
 from dataclasses import dataclass, replace
 from datetime import datetime, timezone
 from pathlib import Path
@@ -12,9 +14,10 @@ from typing import Any, Iterable, Mapping
 import docs_source_model as source_model
 
 
-LINEAGE_SCHEMA_VERSION = "docs_document_publication_lineage_v1"
+LINEAGE_SCHEMA_VERSION = "docs_document_publication_lineage_v2"
 LINEAGE_PATH = Path("docs-viewer/data/canonical/document-publication-lineage.json")
 UTC_TIMESTAMP_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
+LINEAGE_ID_PATTERN = re.compile(r"sha256:[0-9a-f]{64}\Z")
 
 
 @dataclass(frozen=True, order=True)
@@ -32,7 +35,7 @@ class DocumentLineageIdentity:
 
 
 @dataclass(frozen=True)
-class DocumentPublicationEvidence:
+class DocumentPublishedState:
     public_url: str
 
     def payload(self) -> dict[str, str]:
@@ -40,21 +43,25 @@ class DocumentPublicationEvidence:
 
 
 @dataclass(frozen=True)
-class DocumentPublicationLineageRow:
-    source: DocumentLineageIdentity
-    editorial: DocumentLineageIdentity
+class DocumentLineageRow:
+    lineage_id: str
+    working: DocumentLineageIdentity | None
+    editorial: DocumentLineageIdentity | None
     created_at: str
     last_copied_at: str
-    publication: DocumentPublicationEvidence | None
+    published: DocumentPublishedState | None
 
     def payload(self) -> dict[str, Any]:
         return {
-            "source": self.source.payload(),
-            "editorial": self.editorial.payload(),
+            "lineage_id": self.lineage_id,
+            "working": self.working.payload() if self.working is not None else None,
+            "editorial": (
+                self.editorial.payload() if self.editorial is not None else None
+            ),
             "created_at": self.created_at,
             "last_copied_at": self.last_copied_at,
-            "publication": (
-                self.publication.payload() if self.publication is not None else None
+            "published": (
+                self.published.payload() if self.published is not None else None
             ),
         }
 
@@ -67,6 +74,13 @@ def _required_text(raw: Any, *, field: str) -> str:
     if not isinstance(raw, str) or not raw.strip():
         raise ValueError(f"{field} is required")
     return raw.strip()
+
+
+def _lineage_id(raw: Any, *, field: str) -> str:
+    lineage_id = _required_text(raw, field=field)
+    if not LINEAGE_ID_PATTERN.fullmatch(lineage_id):
+        raise ValueError(f"{field} is invalid")
+    return lineage_id
 
 
 def _identity(raw: Any, *, field: str) -> DocumentLineageIdentity:
@@ -82,33 +96,81 @@ def _identity(raw: Any, *, field: str) -> DocumentLineageIdentity:
     return identity
 
 
-def _publication(raw: Any, *, field: str) -> DocumentPublicationEvidence | None:
+def _optional_identity(
+    raw: Any,
+    *,
+    field: str,
+) -> DocumentLineageIdentity | None:
+    if raw is None:
+        return None
+    return _identity(raw, field=field)
+
+
+def _published(raw: Any, *, field: str) -> DocumentPublishedState | None:
     if raw is None:
         return None
     if not isinstance(raw, Mapping):
         raise ValueError(f"{field} must be an object or null")
-    return DocumentPublicationEvidence(
+    return DocumentPublishedState(
         public_url=_required_text(raw.get("public_url"), field=f"{field}.public_url"),
     )
 
 
-def _row(raw: Any, *, index: int) -> DocumentPublicationLineageRow:
+def _validate_row(row: DocumentLineageRow, *, field: str) -> DocumentLineageRow:
+    _lineage_id(row.lineage_id, field=f"{field}.lineage_id")
+    if row.working is None and row.editorial is None and row.published is None:
+        raise ValueError(f"{field} must retain at least one lineage state")
+    return row
+
+
+def _row(raw: Any, *, index: int) -> DocumentLineageRow:
+    field = f"rows[{index}]"
     if not isinstance(raw, Mapping):
-        raise ValueError(f"document publication lineage rows[{index}] must be an object")
-    return DocumentPublicationLineageRow(
-        source=_identity(raw.get("source"), field=f"rows[{index}].source"),
-        editorial=_identity(raw.get("editorial"), field=f"rows[{index}].editorial"),
-        created_at=_required_text(raw.get("created_at"), field=f"rows[{index}].created_at"),
+        raise ValueError(f"document publication lineage {field} must be an object")
+    row = DocumentLineageRow(
+        lineage_id=_lineage_id(raw.get("lineage_id"), field=f"{field}.lineage_id"),
+        working=_optional_identity(raw.get("working"), field=f"{field}.working"),
+        editorial=_optional_identity(raw.get("editorial"), field=f"{field}.editorial"),
+        created_at=_required_text(raw.get("created_at"), field=f"{field}.created_at"),
         last_copied_at=_required_text(
             raw.get("last_copied_at"),
-            field=f"rows[{index}].last_copied_at",
+            field=f"{field}.last_copied_at",
         ),
-        publication=_publication(raw.get("publication"), field=f"rows[{index}].publication"),
+        published=_published(raw.get("published"), field=f"{field}.published"),
     )
+    return _validate_row(row, field=field)
 
 
-def render_table(rows: Iterable[DocumentPublicationLineageRow]) -> bytes:
-    ordered = sorted(rows, key=lambda row: (row.source, row.editorial))
+def lineage_id_for_copy(
+    working: DocumentLineageIdentity,
+    editorial: DocumentLineageIdentity,
+) -> str:
+    identity_payload = {
+        "editorial": editorial.payload(),
+        "working": working.payload(),
+    }
+    canonical = json.dumps(
+        identity_payload,
+        ensure_ascii=True,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return f"sha256:{hashlib.sha256(canonical).hexdigest()}"
+
+
+def _ordered_rows(rows: Iterable[DocumentLineageRow]) -> tuple[DocumentLineageRow, ...]:
+    ordered = tuple(sorted(rows, key=lambda row: row.lineage_id))
+    seen: set[str] = set()
+    for index, row in enumerate(ordered):
+        _validate_row(row, field=f"rows[{index}]")
+        if row.lineage_id in seen:
+            raise ValueError("document publication lineage lineage_id is duplicated")
+        seen.add(row.lineage_id)
+    return ordered
+
+
+def render_table(rows: Iterable[DocumentLineageRow]) -> bytes:
+    ordered = _ordered_rows(rows)
     payload = {
         "schema_version": LINEAGE_SCHEMA_VERSION,
         "rows": [row.payload() for row in ordered],
@@ -120,7 +182,7 @@ def table_path(repo_root: Path) -> Path:
     return repo_root / LINEAGE_PATH
 
 
-def load_rows(repo_root: Path) -> tuple[DocumentPublicationLineageRow, ...]:
+def load_rows(repo_root: Path) -> tuple[DocumentLineageRow, ...]:
     path = table_path(repo_root)
     if not path.is_file():
         return ()
@@ -135,29 +197,30 @@ def load_rows(repo_root: Path) -> tuple[DocumentPublicationLineageRow, ...]:
     raw_rows = payload.get("rows")
     if not isinstance(raw_rows, list):
         raise ValueError("document publication lineage rows must be an array")
-    return tuple(_row(raw, index=index) for index, raw in enumerate(raw_rows))
+    return _ordered_rows(_row(raw, index=index) for index, raw in enumerate(raw_rows))
 
 
 def write_rows_atomic(
     repo_root: Path,
-    rows: Iterable[DocumentPublicationLineageRow],
-) -> tuple[DocumentPublicationLineageRow, ...]:
-    ordered = tuple(sorted(rows, key=lambda row: (row.source, row.editorial)))
+    rows: Iterable[DocumentLineageRow],
+) -> tuple[DocumentLineageRow, ...]:
+    ordered = _ordered_rows(rows)
     source_model.write_bytes_atomic(table_path(repo_root), render_table(ordered))
     return ordered
 
 
-def rows_for_source(
-    rows: Iterable[DocumentPublicationLineageRow],
-    source: DocumentLineageIdentity,
+def rows_for_working(
+    rows: Iterable[DocumentLineageRow],
+    working: DocumentLineageIdentity,
     *,
     editorial_scope: str,
     editorial_sub_scope: str,
-) -> tuple[DocumentPublicationLineageRow, ...]:
+) -> tuple[DocumentLineageRow, ...]:
     return tuple(
         row
         for row in rows
-        if row.source == source
+        if row.working == working
+        and row.editorial is not None
         and row.editorial.scope == editorial_scope
         and row.editorial.sub_scope == editorial_sub_scope
     )
@@ -171,20 +234,17 @@ def apply_copy_results(
     editorial_scope: str,
     editorial_sub_scope: str,
     results: Iterable[Mapping[str, str]],
-) -> tuple[DocumentPublicationLineageRow, ...]:
-    rows_by_pair = {
-        (row.source, row.editorial): row
-        for row in load_rows(repo_root)
-    }
+) -> tuple[DocumentLineageRow, ...]:
+    rows_by_id = {row.lineage_id: row for row in load_rows(repo_root)}
     copied_at = current_timestamp()
     for index, result in enumerate(results):
-        source = _identity(
+        working = _identity(
             {
                 "scope": source_scope,
                 "sub_scope": source_sub_scope,
                 "doc_id": result.get("source_doc_id"),
             },
-            field=f"copy results[{index}].source",
+            field=f"copy results[{index}].working",
         )
         editorial = _identity(
             {
@@ -194,26 +254,31 @@ def apply_copy_results(
             },
             field=f"copy results[{index}].editorial",
         )
-        pair = (source, editorial)
-        existing = rows_by_pair.get(pair)
+        lineage_id = lineage_id_for_copy(working, editorial)
+        existing = rows_by_id.get(lineage_id)
         action = str(result.get("action") or "").strip().lower()
         if action == "new":
             if existing is not None:
-                raise ValueError("New copy would duplicate an exact lineage relationship")
-            rows_by_pair[pair] = DocumentPublicationLineageRow(
-                source=source,
+                raise ValueError("New copy would duplicate an exact lineage branch")
+            rows_by_id[lineage_id] = DocumentLineageRow(
+                lineage_id=lineage_id,
+                working=working,
                 editorial=editorial,
                 created_at=copied_at,
                 last_copied_at=copied_at,
-                publication=None,
+                published=None,
             )
         elif action == "replace":
-            if existing is None:
-                raise ValueError("Replace target is not an exact current lineage row")
-            rows_by_pair[pair] = replace(existing, last_copied_at=copied_at)
+            if (
+                existing is None
+                or existing.working != working
+                or existing.editorial != editorial
+            ):
+                raise ValueError("Replace target is not an exact current lineage branch")
+            rows_by_id[lineage_id] = replace(existing, last_copied_at=copied_at)
         else:
             raise ValueError(f"copy results[{index}].action is invalid")
-    return write_rows_atomic(repo_root, rows_by_pair.values())
+    return write_rows_atomic(repo_root, rows_by_id.values())
 
 
 def reconcile_publications(
@@ -221,24 +286,23 @@ def reconcile_publications(
     *,
     editorial_collections: Iterable[tuple[str, str]],
     publication_urls: Mapping[DocumentLineageIdentity, str],
-) -> tuple[DocumentPublicationLineageRow, ...]:
+) -> tuple[DocumentLineageRow, ...]:
     rows = load_rows(repo_root)
     owned_collections = set(editorial_collections)
     if not rows or not owned_collections:
         return rows
-    reconciled: list[DocumentPublicationLineageRow] = []
+    reconciled: list[DocumentLineageRow] = []
     changed = False
     for row in rows:
-        if (row.editorial.scope, row.editorial.sub_scope) not in owned_collections:
+        if row.editorial is None or (
+            row.editorial.scope,
+            row.editorial.sub_scope,
+        ) not in owned_collections:
             reconciled.append(row)
             continue
         public_url = publication_urls.get(row.editorial)
-        publication = (
-            DocumentPublicationEvidence(public_url=public_url)
-            if public_url
-            else None
-        )
-        reconciled_row = replace(row, publication=publication)
+        published = DocumentPublishedState(public_url=public_url) if public_url else None
+        reconciled_row = replace(row, published=published)
         reconciled.append(reconciled_row)
         changed = changed or reconciled_row != row
     return write_rows_atomic(repo_root, reconciled) if changed else rows
@@ -246,16 +310,17 @@ def reconcile_publications(
 
 __all__ = [
     "DocumentLineageIdentity",
-    "DocumentPublicationEvidence",
-    "DocumentPublicationLineageRow",
+    "DocumentLineageRow",
+    "DocumentPublishedState",
     "LINEAGE_PATH",
     "LINEAGE_SCHEMA_VERSION",
     "apply_copy_results",
     "current_timestamp",
+    "lineage_id_for_copy",
     "load_rows",
     "reconcile_publications",
     "render_table",
-    "rows_for_source",
+    "rows_for_working",
     "table_path",
     "write_rows_atomic",
 ]

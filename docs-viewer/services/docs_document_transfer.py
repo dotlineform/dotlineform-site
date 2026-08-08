@@ -1399,14 +1399,14 @@ def _document_lineage_plan(
     decisions: list[TransferLineageDecision] = []
     selected_replace_targets: set[str] = set()
     for document in source_documents:
-        source_identity = publication_lineage.DocumentLineageIdentity(
+        working_identity = publication_lineage.DocumentLineageIdentity(
             scope=source_collection.scope,
             sub_scope=source_collection.sub_scope,
             doc_id=document.doc_id,
         )
-        rows = publication_lineage.rows_for_source(
+        rows = publication_lineage.rows_for_working(
             lineage_rows,
-            source_identity,
+            working_identity,
             editorial_scope=target_collection.scope,
             editorial_sub_scope=target_collection.sub_scope,
         )

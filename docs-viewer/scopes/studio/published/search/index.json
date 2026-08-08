@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a06dedc0a85389e9dc5982309042d69f",
-    "generated_at_utc": "2026-08-08T14:46:43Z",
-    "count": 277
+    "version": "blake2b-a2b7cd9a7d860805129d9046fd14442f",
+    "generated_at_utc": "2026-08-08T15:03:25Z",
+    "count": 278
   },
   "entries": [
     {
@@ -5731,10 +5731,10 @@
       "kind": "doc",
       "title": "SSP-8 — Revised Model",
       "href": "/docs/?scope=studio&doc=d-20260808-153226-a067d9",
-      "last_updated": "2026-08-08 15:46:42",
+      "last_updated": "2026-08-08 16:00:19",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-08 15:46:42 • Sub-Scope Publishing",
+      "display_meta": "2026-08-08 16:00:19 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-8 — revised model",
         "ssp",
@@ -5745,15 +5745,15 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-08 15:46:42",
+        "2026-08-08 16:00:19",
         "2026",
         "08",
-        "15",
-        "46",
-        "42",
+        "16",
+        "00",
+        "19",
         "d-20260808-153226-a067d9"
       ],
-      "search_text": "ssp-8 — revised model ssp 8 revised model sub-scope publishing sub scope publishing 2026-08-08 15:46:42 2026 08 15 46 42 d-20260808-153226-a067d9"
+      "search_text": "ssp-8 — revised model ssp 8 revised model sub-scope publishing sub scope publishing 2026-08-08 16:00:19 2026 08 16 00 19 d-20260808-153226-a067d9"
     },
     {
       "id": "d-20260808-154427-50f717",
@@ -5783,6 +5783,37 @@
         "d-20260808-154427-50f717"
       ],
       "search_text": "ssp-8.0 — revised model sanity note ssp 8 0 revised model sanity note ssp-8 — revised model 2026-08-08 15:44:27 2026 08 15 44 27 d-20260808-154427-50f717"
+    },
+    {
+      "id": "d-20260808-160019-084f3d",
+      "kind": "doc",
+      "title": "SSP-8.1 — Canonical Lineage V2 Cutover",
+      "href": "/docs/?scope=studio&doc=d-20260808-160019-084f3d",
+      "last_updated": "2026-08-08 16:03:24",
+      "parent_id": "d-20260808-153226-a067d9",
+      "parent_title": "SSP-8 — Revised Model",
+      "display_meta": "2026-08-08 16:03:24 • SSP-8 — Revised Model",
+      "search_terms": [
+        "ssp-8.1 — canonical lineage v2 cutover",
+        "ssp",
+        "8",
+        "1",
+        "canonical",
+        "lineage",
+        "v2",
+        "cutover",
+        "ssp-8 — revised model",
+        "revised",
+        "model",
+        "2026-08-08 16:03:24",
+        "2026",
+        "08",
+        "16",
+        "03",
+        "24",
+        "d-20260808-160019-084f3d"
+      ],
+      "search_text": "ssp-8.1 — canonical lineage v2 cutover ssp 8 1 canonical lineage v2 cutover ssp-8 — revised model revised model 2026-08-08 16:03:24 2026 08 16 03 24 d-20260808-160019-084f3d"
     },
     {
       "id": "d-20260802-194358-7717ee",
