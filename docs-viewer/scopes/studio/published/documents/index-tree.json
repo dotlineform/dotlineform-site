@@ -819,7 +819,7 @@
           "doc_id": "d-20260808-165751-1f159a",
           "title": "DPD-1 — Immediate Public Projection Cleanup On Document Delete",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-165751-1f159a.json",
-          "ui_status": "in-progress",
+          "ui_status": "done",
           "children": [
             {
               "doc_id": "d-20260808-172131-7d4af6",
@@ -837,6 +837,12 @@
               "doc_id": "d-20260808-184353-0f9c24",
               "title": "DPD-1.2 — Browser And Refresh Follow-Through Evidence",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-184353-0f9c24.json",
+              "ui_status": "done"
+            },
+            {
+              "doc_id": "d-20260808-185725-9520b6",
+              "title": "DPD-1.3 — Verification And Contract Transfer Evidence",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-185725-9520b6.json",
               "ui_status": "done"
             }
           ]
@@ -1617,5 +1623,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-08T17:44:40Z"
+  "generated_at": "2026-08-08T17:58:35Z"
 }

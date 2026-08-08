@@ -10,6 +10,7 @@ import pytest
 
 import docs_management_mutation_service as mutation_service
 import docs_management_mutations as mutations
+import docs_publish_gate
 import docs_public_delete_cleanup as cleanup
 import docs_source_model as source_model
 from docs_document_location_projection import build_document_location_payload
@@ -22,6 +23,7 @@ from repo_factory import (
 
 
 PARENT_ID = "d-20260808-100000-aaaaaa"
+DESCENDANT_ID = "d-20260808-100050-ababab"
 SIBLING_ID = "d-20260808-100100-bbbbbb"
 HOST_ID = "d-20260808-110000-cccccc"
 CHILD_ID = "d-20260808-110100-dddddd"
@@ -324,6 +326,106 @@ def test_parent_cleanup_removes_exact_projection_and_updates_inventories_and_cat
         f"/analysis/?doc={SIBLING_ID}"
     ]
     assert read_json(paths["work"])["work"]["doc_url"] == []
+
+
+def test_parent_preview_expands_descendant_public_cleanup(tmp_path: Path) -> None:
+    paths = prepare_parent_repo(tmp_path)
+    write_source(
+        paths["source"].parent / f"{DESCENDANT_ID}.md",
+        DESCENDANT_ID,
+        "Delete descendant",
+        parent_id=PARENT_ID,
+    )
+    tree = read_json(paths["docs_root"] / "index-tree.json")
+    tree["docs"][0]["children"] = [
+        {"doc_id": DESCENDANT_ID, "title": "Delete descendant"}
+    ]
+    write_json(paths["docs_root"] / "index-tree.json", tree)
+    recent = read_json(paths["docs_root"] / "recent.json")
+    recent["docs"].insert(1, {"doc_id": DESCENDANT_ID, "title": "Delete descendant"})
+    write_json(paths["docs_root"] / "recent.json", recent)
+    search = read_json(paths["search"])
+    search["entries"].insert(
+        1,
+        {
+            "id": DESCENDANT_ID,
+            "kind": "doc",
+            "title": "Delete descendant",
+            "href": f"/analysis/?doc={DESCENDANT_ID}",
+        },
+    )
+    write_json(paths["search"], search)
+    write_json(
+        paths["docs_root"] / f"by-id/{DESCENDANT_ID}.json",
+        {"doc_id": DESCENDANT_ID, "title": "Delete descendant"},
+    )
+
+    preview = mutations.plan_delete_preview(tmp_path, "analysis", [PARENT_ID])
+
+    assert preview["delete_doc_ids"] == [PARENT_ID, DESCENDANT_ID]
+    assert preview["additional_descendant_count"] == 1
+    assert preview["public_cleanup"]["projected_doc_ids"] == [
+        PARENT_ID,
+        DESCENDANT_ID,
+    ]
+
+
+def test_already_unprojected_cleanup_is_unchanged(tmp_path: Path) -> None:
+    prepare_parent_repo(tmp_path)
+    initial = cleanup.plan_public_document_delete_cleanup(
+        tmp_path,
+        scope="analysis",
+        doc_ids=[PARENT_ID],
+    )
+    cleanup.apply_public_document_delete_cleanup(tmp_path, initial)
+
+    repeated = cleanup.plan_public_document_delete_cleanup(
+        tmp_path,
+        scope="analysis",
+        doc_ids=[PARENT_ID],
+    )
+    result = cleanup.apply_public_document_delete_cleanup(tmp_path, repeated)
+
+    assert repeated.projected_doc_ids == ()
+    assert repeated.remove_paths == ()
+    assert repeated.writes_by_path == {}
+    assert repeated.removed_urls == ()
+    assert result["status"] == "unchanged"
+
+
+def test_next_publish_is_idempotent_after_immediate_cleanup(tmp_path: Path) -> None:
+    paths = prepare_parent_repo(tmp_path)
+    cleanup_plan = cleanup.plan_public_document_delete_cleanup(
+        tmp_path,
+        scope="analysis",
+        doc_ids=[PARENT_ID],
+    )
+    cleanup.apply_public_document_delete_cleanup(tmp_path, cleanup_plan)
+
+    working_docs = tmp_path / "docs-viewer/scopes/analysis/published/documents"
+    for relative_path in (
+        Path("index-tree.json"),
+        Path("recent.json"),
+        Path(f"by-id/{SIBLING_ID}.json"),
+    ):
+        target = working_docs / relative_path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((paths["docs_root"] / relative_path).read_bytes())
+    publication_recent = working_docs / ".publish/recent.json"
+    publication_recent.parent.mkdir(parents=True, exist_ok=True)
+    publication_recent.write_bytes((paths["docs_root"] / "recent.json").read_bytes())
+    working_search = tmp_path / "docs-viewer/scopes/analysis/published/search/index.json"
+    working_search.parent.mkdir(parents=True, exist_ok=True)
+    working_search.write_bytes(paths["search"].read_bytes())
+
+    preview = docs_publish_gate.publish_confirm(tmp_path, {"scope": "analysis"})
+
+    assert preview["changed_count"] == 0
+    assert preview["excluded_count"] == 0
+    assert preview["up_to_date"] is True
+    assert (
+        paths["docs_root"] / "by-id/out-of-workflow.json"
+    ).is_file()
 
 
 def test_child_cleanup_leaves_host_and_sibling_bytes_unchanged(tmp_path: Path) -> None:
