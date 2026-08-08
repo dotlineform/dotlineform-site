@@ -6,6 +6,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Callable
 
+import docs_public_delete_cleanup as public_delete_cleanup
+
 from docs_lifecycle_paths import (
     delete_manifest_paths,
     load_json_object,
@@ -506,6 +508,11 @@ def plan_delete_sub_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict
 
     delete_files, missing_files = sub_scope_delete_path_records(repo_root, sub_scope_config, parent_config)
     delete_files.append(path_record(repo_root, "report_host_source", host_path, action="delete"))
+    public_cleanup_plan = public_delete_cleanup.plan_public_document_delete_cleanup(
+        repo_root,
+        scope=parent_scope,
+        doc_ids=[lifecycle.report_host_doc_id],
+    )
     return {
         "ok": True,
         "schema_version": LIFECYCLE_PREVIEW_SCHEMA_VERSION,
@@ -527,6 +534,7 @@ def plan_delete_sub_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict
             path_record(repo_root, "scope_config", repo_root / CONFIG_REL_PATH, action="change"),
         ],
         "rebuild_plan": ["parent_docs", "parent_search", "browser_config"],
+        "public_cleanup": public_cleanup_plan.response(repo_root),
         "summary_text": f"Previewed deletion for Docs Viewer sub-scope {parent_scope}/{sub_scope} and report host {lifecycle.report_host_doc_id}.",
     }
 
@@ -560,6 +568,12 @@ def apply_delete_sub_scope(
 
     scope = str(preview["parent_scope"])
     sub_scope = str(preview["sub_scope"])
+    host_id = str(preview["report_host_target"]["doc_id"])
+    public_cleanup_plan = public_delete_cleanup.plan_public_document_delete_cleanup(
+        repo_root,
+        scope=scope,
+        doc_ids=[host_id],
+    )
     try:
         remove_sub_scope_config(repo_root, scope, sub_scope)
     except Exception as error:
@@ -568,12 +582,26 @@ def apply_delete_sub_scope(
     result.update({"committed": True, "retry_delete": False})
     try:
         delete_manifest_paths(repo_root, preview["delete_files"])
-        host_id = str(preview["report_host_target"]["doc_id"])
         result["rebuild"]["parent"] = rebuild_scope_outputs(
             repo_root, scope, include_search=True,
             docs_doc_ids=[host_id], search_doc_ids=[host_id],
         )
+        try:
+            result["public_cleanup"] = (
+                public_delete_cleanup.apply_public_document_delete_cleanup(
+                    repo_root,
+                    public_cleanup_plan,
+                )
+            )
+        except public_delete_cleanup.PublicDeleteCleanupApplyError as error:
+            result["public_cleanup"] = error.result
+            raise
     except Exception as error:
-        raise apply_error(result, error, committed=True, stage="cleanup_rebuild") from error
+        stage = (
+            "public_cleanup"
+            if isinstance(error, public_delete_cleanup.PublicDeleteCleanupApplyError)
+            else "cleanup_rebuild"
+        )
+        raise apply_error(result, error, committed=True, stage=stage) from error
     result["summary_text"] = f"Deleted Docs Viewer sub-scope {scope}/{sub_scope} and report host {host_id}."
     return result

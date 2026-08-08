@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-baa1460beab15ce712b61439c8a4c8e8",
-    "generated_at_utc": "2026-08-08T16:26:12Z",
-    "count": 280
+    "version": "blake2b-93f9f2cfa92610554c9cfa4ed52176b0",
+    "generated_at_utc": "2026-08-08T17:30:33Z",
+    "count": 281
   },
   "entries": [
     {
@@ -3800,10 +3800,10 @@
       "kind": "doc",
       "title": "DPD-1 — Immediate Public Projection Cleanup On Document Delete",
       "href": "/docs/?scope=studio&doc=d-20260808-165751-1f159a",
-      "last_updated": "2026-08-08 17:25:59",
+      "last_updated": "2026-08-08 18:29:50",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-08 17:25:59 • Roadmap",
+      "display_meta": "2026-08-08 18:29:50 • Roadmap",
       "search_terms": [
         "dpd-1 — immediate public projection cleanup on document delete",
         "dpd",
@@ -3816,15 +3816,15 @@
         "document",
         "delete",
         "roadmap",
-        "2026-08-08 17:25:59",
+        "2026-08-08 18:29:50",
         "2026",
         "08",
-        "17",
-        "25",
-        "59",
+        "18",
+        "29",
+        "50",
         "d-20260808-165751-1f159a"
       ],
-      "search_text": "dpd-1 — immediate public projection cleanup on document delete dpd 1 immediate public projection cleanup on document delete roadmap 2026-08-08 17:25:59 2026 08 17 25 59 d-20260808-165751-1f159a"
+      "search_text": "dpd-1 — immediate public projection cleanup on document delete dpd 1 immediate public projection cleanup on document delete roadmap 2026-08-08 18:29:50 2026 08 18 29 50 d-20260808-165751-1f159a"
     },
     {
       "id": "d-20260808-172131-7d4af6",
@@ -3861,6 +3861,40 @@
         "d-20260808-172131-7d4af6"
       ],
       "search_text": "dpd-1.0 — delete and public-projection ownership sanity note dpd 1 0 delete and public projection ownership sanity note dpd-1 — immediate public projection cleanup on document delete immediate cleanup on document 2026-08-08 17:25:59 2026 08 17 25 59 d-20260808-172131-7d4af6"
+    },
+    {
+      "id": "d-20260808-182844-3e9b7c",
+      "kind": "doc",
+      "title": "DPD-1.1 — Shared Server Cleanup Evidence",
+      "href": "/docs/?scope=studio&doc=d-20260808-182844-3e9b7c",
+      "last_updated": "2026-08-08 18:29:50",
+      "parent_id": "d-20260808-165751-1f159a",
+      "parent_title": "DPD-1 — Immediate Public Projection Cleanup On Document Delete",
+      "display_meta": "2026-08-08 18:29:50 • DPD-1 — Immediate Public Projection Cleanup On Document Delete",
+      "search_terms": [
+        "dpd-1.1 — shared server cleanup evidence",
+        "dpd",
+        "1",
+        "shared",
+        "server",
+        "cleanup",
+        "evidence",
+        "dpd-1 — immediate public projection cleanup on document delete",
+        "immediate",
+        "public",
+        "projection",
+        "on",
+        "document",
+        "delete",
+        "2026-08-08 18:29:50",
+        "2026",
+        "08",
+        "18",
+        "29",
+        "50",
+        "d-20260808-182844-3e9b7c"
+      ],
+      "search_text": "dpd-1.1 — shared server cleanup evidence dpd 1 shared server cleanup evidence dpd-1 — immediate public projection cleanup on document delete immediate public projection on document delete 2026-08-08 18:29:50 2026 08 18 29 50 d-20260808-182844-3e9b7c"
     },
     {
       "id": "d-20260723-191039-f8cb88",

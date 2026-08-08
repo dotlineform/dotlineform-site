@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, Dict
 
 import docs_management_mutations as mutations
+import docs_public_delete_cleanup as public_delete_cleanup
 import docs_scope_create
 import docs_scope_delete
 import docs_scope_manifest
@@ -35,6 +36,16 @@ class DocumentCreateCommittedError(RuntimeError):
                 payload.get("error")
                 or "document was created but its projection rebuild failed"
             )
+        )
+        self.payload = payload
+
+
+class DocumentDeletePublicCleanupError(RuntimeError):
+    """A document Delete committed before required public cleanup failed."""
+
+    def __init__(self, payload: Dict[str, Any]) -> None:
+        super().__init__(
+            str(payload.get("error") or "document Delete public cleanup failed")
         )
         self.payload = payload
 
@@ -265,8 +276,48 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
                     create_committed_error_payload(plan, error)
                 ) from error
             raise
-        if plan.log_event_name:
-            log_event(repo_root, plan.log_event_name, plan.log_details)
+    if not dry_run and plan.public_delete_cleanup is not None:
+        try:
+            payload["public_cleanup"] = (
+                public_delete_cleanup.apply_public_document_delete_cleanup(
+                    repo_root,
+                    plan.public_delete_cleanup,
+                )
+            )
+        except public_delete_cleanup.PublicDeleteCleanupApplyError as error:
+            payload.update(
+                {
+                    "ok": False,
+                    "operation": "apply",
+                    "committed": True,
+                    "retry_delete": False,
+                    "failed_stage": error.result.get("stage", "public_cleanup"),
+                    "public_cleanup": error.result,
+                    "dry_run": False,
+                    "summary_text": (
+                        "Document Delete committed, but required public cleanup failed."
+                    ),
+                    "error": (
+                        "document Delete committed but public cleanup failed: "
+                        f"{error}"
+                    ),
+                }
+            )
+            if plan.include_write_result_keys:
+                payload["rebuild"] = rebuild
+            if plan.log_event_name:
+                log_event(
+                    repo_root,
+                    plan.log_event_name,
+                    {
+                        **plan.log_details,
+                        "public_cleanup_ok": False,
+                    },
+                )
+            raise DocumentDeletePublicCleanupError(payload) from error
+
+    if not dry_run and plan.log_event_name and plan.has_source_changes:
+        log_event(repo_root, plan.log_event_name, plan.log_details)
 
     if plan.include_write_result_keys:
         payload["rebuild"] = rebuild

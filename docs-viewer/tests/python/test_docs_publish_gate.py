@@ -179,6 +179,22 @@ def prepare_publish_repo(root: Path) -> None:
     write_json(root / "site/assets/data/docs/scopes/library/by-id/stale.json", {"title": "Stale"})
     write_json(root / "site/assets/data/docs/scopes/library/by-id/hidden.json", {"title": "Old Hidden"})
     write_json(
+        root / "site/assets/data/docs/scopes/library/by-id/hidden-child.json",
+        {"title": "Old Hidden Child"},
+    )
+    write_text(
+        root
+        / "site/assets/data/docs/scopes/library/projection-assets/mermaid"
+        / "hidden--mermaid-0001/dark.svg",
+        "<svg>old hidden dark</svg>",
+    )
+    write_text(
+        root
+        / "site/assets/data/docs/scopes/library/projection-assets/mermaid"
+        / "hidden--mermaid-0001/light.svg",
+        "<svg>old hidden light</svg>",
+    )
+    write_json(
         root / "site/assets/data/docs/scopes/library/semantic-tokens/index.json",
         {"schema_version": "stale"},
     )
@@ -240,7 +256,7 @@ def catalogue_series_payload(series_id: str, urls: list[str]) -> dict[str, objec
     }
 
 
-def test_publish_confirm_reports_changes_and_apply_syncs_stale_files() -> None:
+def test_publish_confirm_applies_explicit_exclusions_and_retains_unrelated_files() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
         prepare_publish_repo(repo_root)
@@ -249,16 +265,30 @@ def test_publish_confirm_reports_changes_and_apply_syncs_stale_files() -> None:
         applied = docs_publish_gate.publish_apply(repo_root, {"scope": "library", "confirm": True})
 
         assert preview["operation"] == "confirm"
+        assert preview["schema_version"] == "docs_publish_gate_v2"
         assert preview["changed_count"] >= 3
-        assert "site/assets/data/docs/scopes/library/by-id/stale.json" in preview["docs"]["removed"]
-        assert "site/assets/data/docs/scopes/library/by-id/hidden.json" in preview["docs"]["removed"]
-        assert "site/assets/data/docs/scopes/library/media/html/widget.html" not in preview["docs"]["removed"]
-        assert "site/assets/data/docs/scopes/library/media/img/diagram.png" not in preview["docs"]["removed"]
+        assert preview["docs"]["excluded"] == [
+            "site/assets/data/docs/scopes/library/by-id/hidden.json",
+            "site/assets/data/docs/scopes/library/by-id/hidden-child.json",
+            (
+                "site/assets/data/docs/scopes/library/projection-assets/mermaid/"
+                "hidden--mermaid-0001/dark.svg"
+            ),
+            (
+                "site/assets/data/docs/scopes/library/projection-assets/mermaid/"
+                "hidden--mermaid-0001/light.svg"
+            ),
+        ]
+        assert "removed" not in preview["docs"]
+        assert "removed_count" not in preview
+        assert "site/assets/data/docs/scopes/library/by-id/stale.json" not in preview["docs"]["excluded"]
+        assert "site/assets/data/docs/scopes/library/media/html/widget.html" not in preview["docs"]["excluded"]
+        assert "site/assets/data/docs/scopes/library/media/img/diagram.png" not in preview["docs"]["excluded"]
         assert preview["document_locations"] == {
             "changed": [
                 "site/assets/data/search/library/document-locations.json"
             ],
-            "removed": [],
+            "excluded": [],
         }
         assert applied["operation"] == "apply"
         public_tree = json.loads((repo_root / "site/assets/data/docs/scopes/library/index-tree.json").read_text(encoding="utf-8"))
@@ -282,10 +312,14 @@ def test_publish_confirm_reports_changes_and_apply_syncs_stale_files() -> None:
         ).exists()
         assert not (repo_root / "site/assets/data/docs/scopes/library/by-id/hidden.json").exists()
         assert not (repo_root / "site/assets/data/docs/scopes/library/by-id/hidden-child.json").exists()
-        assert not (repo_root / "site/assets/data/docs/scopes/library/by-id/manage-root.json").exists()
-        assert not (repo_root / "site/assets/data/docs/scopes/library/references").exists()
-        assert not (repo_root / "site/assets/data/docs/scopes/library/semantic-tokens").exists()
-        assert not (repo_root / "site/assets/data/docs/scopes/library/by-id/stale.json").exists()
+        assert not (
+            repo_root
+            / "site/assets/data/docs/scopes/library/projection-assets/mermaid/hidden--mermaid-0001"
+        ).exists()
+        assert (repo_root / "site/assets/data/docs/scopes/library/by-id/manage-root.json").is_file()
+        assert (repo_root / "site/assets/data/docs/scopes/library/references").is_dir()
+        assert (repo_root / "site/assets/data/docs/scopes/library/semantic-tokens").is_dir()
+        assert (repo_root / "site/assets/data/docs/scopes/library/by-id/stale.json").is_file()
         assert (repo_root / "site/assets/data/docs/scopes/library/media/html/widget.html").is_file()
         assert (repo_root / "site/assets/data/docs/scopes/library/media/img/diagram.png").is_file()
         assert json.loads((repo_root / "site/assets/data/search/library/index.json").read_text(encoding="utf-8"))["entries"][0]["id"] == LIBRARY_DOC_ID
@@ -348,7 +382,16 @@ def test_publish_follow_through_adds_reassigns_and_removes_exact_catalogue_urls(
 
         working_tree_path = repo_root / "docs-viewer/scopes/library/published/documents/index-tree.json"
         working_tree = json.loads(working_tree_path.read_text(encoding="utf-8"))
-        working_tree["docs"] = []
+        working_tree["docs"] = [
+            {
+                "doc_id": LIBRARY_DOC_ID,
+                "title": "Library",
+                "content_url": (
+                    f"/assets/data/docs/scopes/library/by-id/{LIBRARY_DOC_ID}.json"
+                ),
+                "publishable": False,
+            }
+        ]
         write_json(working_tree_path, working_tree)
         working_search_path = repo_root / "docs-viewer/scopes/library/published/search/index.json"
         working_search = json.loads(working_search_path.read_text(encoding="utf-8"))
@@ -430,7 +473,12 @@ def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> No
                         "title": "Scale",
                         "ui_status": "draft",
                         "publishable": True,
-                    }
+                    },
+                    {
+                        "doc_id": "hidden",
+                        "title": "Hidden",
+                        "publishable": False,
+                    },
                 ]
             },
         )
@@ -459,16 +507,14 @@ def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> No
                     "site/assets/data/docs/scopes/library/tags/by-id/scale.json",
                     "site/assets/data/docs/scopes/library/tags/manifest.json",
                 ],
-                "removed": [
+                "excluded": [
                     "site/assets/data/docs/scopes/library/tags/by-id/hidden.json",
-                    "site/assets/data/docs/scopes/library/tags/by-id/old.json",
-                    "site/assets/data/docs/scopes/library/tags/manage-manifest.json",
                 ],
                 "changed_count": 2,
-                "removed_count": 3,
+                "excluded_count": 1,
             }
         ]
-        assert "site/assets/data/docs/scopes/library/tags/by-id/old.json" not in preview["docs"]["removed"]
+        assert "site/assets/data/docs/scopes/library/tags/by-id/old.json" not in preview["docs"]["excluded"]
         assert not any("/sub-scopes/tags/" in path for path in preview["docs"]["changed"])
         assert applied["operation"] == "apply"
         public_manifest = json.loads((repo_root / "site/assets/data/docs/scopes/library/tags/manifest.json").read_text(encoding="utf-8"))
@@ -480,11 +526,11 @@ def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> No
             repo_root / "site/assets/data/docs/scopes/library/tags/by-id/scale.json"
         ).read_bytes() == working_scale_bytes
         assert not (repo_root / "site/assets/data/docs/scopes/library/tags/by-id/hidden.json").exists()
-        assert not (repo_root / "site/assets/data/docs/scopes/library/tags/by-id/old.json").exists()
-        assert not (
+        assert (repo_root / "site/assets/data/docs/scopes/library/tags/by-id/old.json").is_file()
+        assert (
             repo_root
             / "site/assets/data/docs/scopes/library/tags/manage-manifest.json"
-        ).exists()
+        ).is_file()
         assert not (repo_root / "site/assets/data/docs/scopes/library/sub-scopes/tags").exists()
 
 
@@ -610,6 +656,18 @@ def test_successful_publish_sets_retains_and_clears_lineage_publication(
         )["title"] == "Editorial B updated"
 
         write_json(working_root / "manifest.json", {"docs": []})
+        write_json(
+            working_root / "manage-manifest.json",
+            {
+                "docs": [
+                    {
+                        "doc_id": LINEAGE_EDITORIAL_ID,
+                        "title": "Editorial B",
+                        "publishable": False,
+                    }
+                ]
+            },
+        )
         docs_publish_gate.publish_apply(
             repo_root,
             {"scope": "library", "confirm": True},

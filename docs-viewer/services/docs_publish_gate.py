@@ -41,7 +41,7 @@ from docs_document_location_projection import (
 from docs_write_rebuild import rebuild_sub_scope_outputs
 
 
-PUBLISH_SCHEMA_VERSION = "docs_publish_gate_v1"
+PUBLISH_SCHEMA_VERSION = "docs_publish_gate_v2"
 MANAGE_MANIFEST_PATH = Path("manage-manifest.json")
 LOCAL_FOLDER_ANCHOR_PATTERN = re.compile(r"<a\b(?P<attrs>(?:[^>\"']|\"[^\"]*\"|'[^']*')*)>(?P<label>.*?)</a\s*>", re.IGNORECASE | re.DOTALL)
 
@@ -159,10 +159,10 @@ def flatten_tree_docs(rows: Any, *, parent_id: str = "") -> list[dict[str, Any]]
 def hidden_doc_ids_from_tree(index_tree: dict[str, Any]) -> set[str]:
     rows = flatten_tree_docs(index_tree.get("docs"))
     roots = {
-        clean_doc_id(value)
-        for value in (index_tree.get("viewer_options") or {}).get("manage_only_tree_root_ids", [])
+        clean_doc_id(row.get("doc_id"))
+        for row in rows
+        if row.get("publishable") is False
     }
-    roots.update(clean_doc_id(row.get("doc_id")) for row in rows if row.get("publishable") is False)
     roots.discard("")
     by_parent: dict[str, list[str]] = {}
     for row in rows:
@@ -407,30 +407,94 @@ def docs_diff(
     published_root: Path,
     *,
     publishable_files: dict[Path, bytes] | None = None,
-    ignored_existing_prefixes: tuple[Path, ...] = (),
+    excluded_relative_paths: tuple[Path, ...] = (),
 ) -> dict[str, list[str]]:
     if publishable_files is None:
         publishable_files = publishable_docs_files(working_root, published_root.relative_to(repo_root.resolve()))
     changed: list[str] = []
-    removed: list[str] = []
+    excluded: list[str] = []
     for rel, source_bytes in publishable_files.items():
         target_path = published_root / rel
         if not target_path.exists() or target_path.read_bytes() != source_bytes:
             changed.append(repo_relative(repo_root, target_path))
-    for target_path in iter_files(published_root):
-        rel = target_path.relative_to(published_root)
-        if any(path_is_relative_to(rel, prefix) for prefix in ignored_existing_prefixes):
+    for relative_path in excluded_relative_paths:
+        target_path = published_root / relative_path
+        if target_path.is_file():
+            excluded.append(repo_relative(repo_root, target_path))
+    return {"changed": changed, "excluded": excluded}
+
+
+def exact_excluded_mermaid_relative_paths(
+    published_root: Path,
+    doc_ids: set[str],
+) -> tuple[Path, ...]:
+    mermaid_root = published_root / "projection-assets" / "mermaid"
+    if not mermaid_root.is_dir() or not doc_ids:
+        return ()
+    paths: list[Path] = []
+    for directory in sorted(mermaid_root.iterdir()):
+        if not directory.is_dir():
             continue
-        if rel not in publishable_files:
-            removed.append(repo_relative(repo_root, target_path))
-    return {"changed": changed, "removed": removed}
+        for doc_id in doc_ids:
+            if not re.fullmatch(rf"{re.escape(doc_id)}--mermaid-[0-9]{{4}}", directory.name):
+                continue
+            for theme in ("dark", "light"):
+                path = directory / f"{theme}.svg"
+                if path.is_file():
+                    paths.append(path.relative_to(published_root))
+            break
+    return tuple(paths)
+
+
+def explicit_exclusion_relative_paths(
+    published_root: Path,
+    doc_ids: set[str],
+) -> tuple[Path, ...]:
+    by_id_paths = [
+        Path("by-id") / f"{doc_id}.json"
+        for doc_id in sorted(doc_ids)
+        if (published_root / "by-id" / f"{doc_id}.json").is_file()
+    ]
+    return tuple(by_id_paths) + exact_excluded_mermaid_relative_paths(
+        published_root,
+        doc_ids,
+    )
+
+
+def parent_explicit_exclusion_relative_paths(
+    working_root: Path,
+    published_root: Path,
+) -> tuple[Path, ...]:
+    index_tree_path = working_root / "index-tree.json"
+    if not index_tree_path.is_file():
+        return ()
+    return explicit_exclusion_relative_paths(
+        published_root,
+        hidden_doc_ids_from_tree(read_json(index_tree_path)),
+    )
+
+
+def sub_scope_explicit_exclusion_relative_paths(
+    working_root: Path,
+    published_root: Path,
+) -> tuple[Path, ...]:
+    manage_manifest_path = working_root / MANAGE_MANIFEST_PATH
+    if not manage_manifest_path.is_file():
+        return ()
+    payload = read_json(manage_manifest_path)
+    rows = payload.get("docs") if isinstance(payload, dict) else None
+    if not isinstance(rows, list):
+        raise ValueError(f"sub-scope manage manifest docs must be an array: {manage_manifest_path}")
+    excluded_ids = {
+        clean_doc_id(row.get("doc_id"))
+        for row in rows
+        if isinstance(row, dict) and row.get("publishable") is False
+    }
+    excluded_ids.discard("")
+    return explicit_exclusion_relative_paths(published_root, excluded_ids)
 
 
 def parent_docs_diff(repo_root: Path, config: DocsScopeConfig, working_root: Path, published_root: Path) -> dict[str, list[str]]:
-    ignored_prefixes = (
-        sub_scope_relative_prefixes(repo_root, config, published_root)
-        + media_relative_prefixes(repo_root, config, published_root)
-    )
     return docs_diff(
         repo_root,
         working_root,
@@ -441,7 +505,10 @@ def parent_docs_diff(repo_root: Path, config: DocsScopeConfig, working_root: Pat
             working_root,
             published_root.relative_to(repo_root.resolve()),
         ),
-        ignored_existing_prefixes=ignored_prefixes,
+        excluded_relative_paths=parent_explicit_exclusion_relative_paths(
+            working_root,
+            published_root,
+        ),
     )
 
 
@@ -460,20 +527,24 @@ def sub_scope_docs_diff(
             paths["published_docs_root"].relative_to(repo_root.resolve()),
             projection_scope=f"{scope}/{sub_scope.sub_scope}",
         ),
+        excluded_relative_paths=sub_scope_explicit_exclusion_relative_paths(
+            paths["working_docs_root"],
+            paths["published_docs_root"],
+        ),
     )
     return {
         "sub_scope": sub_scope.sub_scope,
         "changed": diff["changed"],
-        "removed": diff["removed"],
+        "excluded": diff["excluded"],
         "changed_count": len(diff["changed"]),
-        "removed_count": len(diff["removed"]),
+        "excluded_count": len(diff["excluded"]),
     }
 
 
 def search_diff(repo_root: Path, working_index: Path, published_index: Path) -> dict[str, list[str]]:
     if not published_index.exists() or not filecmp.cmp(working_index, published_index, shallow=False):
-        return {"changed": [repo_relative(repo_root, published_index)], "removed": []}
-    return {"changed": [], "removed": []}
+        return {"changed": [repo_relative(repo_root, published_index)], "excluded": []}
+    return {"changed": [], "excluded": []}
 
 
 def prospective_document_location_projection(
@@ -548,11 +619,11 @@ def document_location_diff(
     projection: tuple[Path, bytes] | None,
 ) -> dict[str, list[str]]:
     if projection is None:
-        return {"changed": [], "removed": []}
+        return {"changed": [], "excluded": []}
     output_path, output_bytes = projection
     if not output_path.is_file() or output_path.read_bytes() != output_bytes:
-        return {"changed": [repo_relative(repo_root, output_path)], "removed": []}
-    return {"changed": [], "removed": []}
+        return {"changed": [repo_relative(repo_root, output_path)], "excluded": []}
+    return {"changed": [], "excluded": []}
 
 
 def publish_status(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
@@ -580,11 +651,11 @@ def publish_status(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         + len(document_locations["changed"])
         + sum(item["changed_count"] for item in sub_scopes)
     )
-    removed = (
-        len(docs["removed"])
-        + len(search["removed"])
-        + len(document_locations["removed"])
-        + sum(item["removed_count"] for item in sub_scopes)
+    excluded = (
+        len(docs["excluded"])
+        + len(search["excluded"])
+        + len(document_locations["excluded"])
+        + sum(item["excluded_count"] for item in sub_scopes)
     )
     return {
         "ok": True,
@@ -593,14 +664,14 @@ def publish_status(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         "operation": "status",
         "scope": scope,
         "changed_count": changed,
-        "removed_count": removed,
-        "up_to_date": changed == 0 and removed == 0,
+        "excluded_count": excluded,
+        "up_to_date": changed == 0 and excluded == 0,
         "paths": {key: repo_relative(repo_root, value) for key, value in paths.items()},
         "docs": docs,
         "sub_scopes": sub_scopes,
         "search": search,
         "document_locations": document_locations,
-        "summary_text": f"Publish status for {scope}: {changed} changed, {removed} stale.",
+        "summary_text": f"Publish status for {scope}: {changed} changed, {excluded} excluded.",
     }
 
 
@@ -609,7 +680,7 @@ def publish_confirm(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     payload["operation"] = "confirm"
     payload["summary_text"] = (
         f"Publish confirmation for {payload['scope']}: "
-        f"{payload['changed_count']} changed, {payload['removed_count']} stale."
+        f"{payload['changed_count']} changed, {payload['excluded_count']} excluded."
     )
     return payload
 
@@ -620,7 +691,7 @@ def copy_tree(
     target_root: Path,
     *,
     publishable_files: dict[Path, bytes] | None = None,
-    ignored_existing_prefixes: tuple[Path, ...] = (),
+    excluded_relative_paths: tuple[Path, ...] = (),
 ) -> None:
     target_root.mkdir(parents=True, exist_ok=True)
     if publishable_files is None:
@@ -629,17 +700,16 @@ def copy_tree(
         target_path = target_root / rel
         target_path.parent.mkdir(parents=True, exist_ok=True)
         write_bytes_atomic(target_path, source_bytes)
-    for target_path in reversed(iter_files(target_root)):
-        rel = target_path.relative_to(target_root)
-        if any(path_is_relative_to(rel, prefix) for prefix in ignored_existing_prefixes):
-            continue
-        if rel not in publishable_files:
-            target_path.unlink()
-    for directory in sorted((path for path in target_root.rglob("*") if path.is_dir()), key=lambda path: len(path.parts), reverse=True):
-        try:
-            directory.rmdir()
-        except OSError:
-            pass
+    for relative_path in excluded_relative_paths:
+        target_path = target_root / relative_path
+        target_path.unlink(missing_ok=True)
+        directory = target_path.parent
+        while directory != target_root:
+            try:
+                directory.rmdir()
+            except OSError:
+                break
+            directory = directory.parent
 
 
 def write_bytes_atomic(target_path: Path, source_bytes: bytes) -> None:
@@ -785,9 +855,9 @@ def publish_apply(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
             paths["working_docs_root"],
             paths["published_docs_root"].relative_to(repo_root.resolve()),
         ),
-        ignored_existing_prefixes=(
-            sub_scope_relative_prefixes(repo_root, config, paths["published_docs_root"])
-            + media_relative_prefixes(repo_root, config, paths["published_docs_root"])
+        excluded_relative_paths=parent_explicit_exclusion_relative_paths(
+            paths["working_docs_root"],
+            paths["published_docs_root"],
         ),
     )
     for sub_scope in config.sub_scopes:
@@ -801,6 +871,10 @@ def publish_apply(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
                 sub_paths["published_docs_root"].relative_to(repo_root.resolve()),
                 projection_scope=f"{config.scope_id}/{sub_scope.sub_scope}",
             ),
+            excluded_relative_paths=sub_scope_explicit_exclusion_relative_paths(
+                sub_paths["working_docs_root"],
+                sub_paths["published_docs_root"],
+            ),
         )
     copy_file_atomic(paths["working_search_index"], paths["published_search_index"])
     if document_location_projection is not None:
@@ -811,7 +885,7 @@ def publish_apply(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     payload["applied"] = True
     payload["summary_text"] = (
         f"Published docs for {payload['scope']}: "
-        f"{payload['changed_count']} changed, {payload['removed_count']} stale."
+        f"{payload['changed_count']} changed, {payload['excluded_count']} excluded."
     )
     try:
         catalogue_document_urls = catalogue_document_url_follow_through(repo_root)

@@ -6,6 +6,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Callable
 
+import docs_public_delete_cleanup as public_delete_cleanup
+
 from docs_lifecycle_paths import (
     delete_manifest_paths,
     path_record,
@@ -34,6 +36,14 @@ from docs_scope_manifest import (
     require_confirmed,
     scope_delete_eligible,
 )
+
+
+class ScopeDeleteApplyError(RuntimeError):
+    """A scope Delete committed before required public follow-through failed."""
+
+    def __init__(self, payload: dict[str, Any]) -> None:
+        super().__init__(str(payload.get("error") or "scope Delete cleanup failed"))
+        self.payload = payload
 
 def manifest_delete_path_records(repo_root: Path, record: dict[str, Any]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     delete_files = []
@@ -116,12 +126,21 @@ def apply_delete_scope(
         raise ValueError("; ".join(str(blocker) for blocker in blockers) or "scope delete is not allowed")
 
     scope_id = str(preview["scope_id"])
+    public_cleanup_plan = (
+        public_delete_cleanup.plan_public_scope_delete_cleanup(
+            repo_root,
+            scope=scope_id,
+        )
+        if str(preview.get("scope_type") or "").strip() == "public"
+        else None
+    )
     fallback_scope_id = next(
         (configured_scope_id for configured_scope_id in load_docs_scope_configs(repo_root) if configured_scope_id != scope_id),
         "",
     )
     manifest = load_manifest(repo_root)
     rebuild = None
+    public_cleanup = preview.get("public_cleanup")
     if not dry_run:
         delete_manifest_paths(repo_root, preview["delete_files"])
         remove_scope_config(repo_root, scope_id)
@@ -129,6 +148,37 @@ def apply_delete_scope(
             remove_public_route_record(repo_root, scope_id)
         remove_scope_manifest_record(repo_root, scope_id, manifest)
         rebuild = rebuild_all_docs_outputs(repo_root)
+        if public_cleanup_plan is not None:
+            try:
+                public_cleanup = (
+                    public_delete_cleanup.apply_public_scope_delete_cleanup(
+                        repo_root,
+                        public_cleanup_plan,
+                    )
+                )
+            except public_delete_cleanup.PublicDeleteCleanupApplyError as error:
+                failure = {
+                    "ok": False,
+                    "schema_version": LIFECYCLE_APPLY_SCHEMA_VERSION,
+                    "action": "delete_scope",
+                    "operation": "apply",
+                    "scope_id": scope_id,
+                    "committed": True,
+                    "retry_delete": False,
+                    "failed_stage": error.result.get("stage", "public_cleanup"),
+                    "changed_files": preview["changed_files"],
+                    "deleted_files": preview["delete_files"],
+                    "missing_files": preview["missing_files"],
+                    "rebuild": rebuild,
+                    "public_cleanup": error.result,
+                    "dry_run": False,
+                    "summary_text": (
+                        f"Deleted Docs Viewer scope {scope_id}, but required "
+                        "public follow-through failed."
+                    ),
+                    "error": str(error),
+                }
+                raise ScopeDeleteApplyError(failure) from error
 
     return {
         "ok": True,
@@ -147,6 +197,7 @@ def apply_delete_scope(
             "public": "",
         },
         "rebuild": rebuild,
+        "public_cleanup": public_cleanup,
         "summary_text": (
             f"Deleted Docs Viewer scope {scope_id}."
             if not dry_run
@@ -217,6 +268,13 @@ def plan_delete_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
     if str(record.get("scope_type") or "").strip() == "public":
         changed_files.extend(route_registry_path_records(repo_root, action="change"))
 
+    public_cleanup = None
+    if str(record.get("scope_type") or "").strip() == "public":
+        public_cleanup = public_delete_cleanup.plan_public_scope_delete_cleanup(
+            repo_root,
+            scope=scope_id,
+        ).response()
+
     return {
         "ok": True,
         "schema_version": LIFECYCLE_PREVIEW_SCHEMA_VERSION,
@@ -230,5 +288,6 @@ def plan_delete_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         "scope_type": str(record.get("scope_type") or "").strip(),
         "changed_files": changed_files,
         "build_commands": apply_delete_build_commands(repo_root, scope_id, dry_run=True),
+        "public_cleanup": public_cleanup,
         "summary_text": f"Previewed deletion for Docs Viewer scope {scope_id}.",
     }

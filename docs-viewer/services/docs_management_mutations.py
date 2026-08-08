@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 import docs_source_model as source_model
+import docs_public_delete_cleanup as public_delete_cleanup
 from docs_management_document_target import (
     ManagedDocumentTarget,
     confined_source_path,
@@ -219,6 +220,9 @@ class ManagementMutationPlan:
     build_doc_ids: Optional[list[str]] = None
     search_doc_ids: Optional[list[str]] = None
     rebuilds: tuple[ScopeRebuild, ...] = ()
+    public_delete_cleanup: Optional[
+        public_delete_cleanup.PublicDeleteCleanupPlan
+    ] = None
     log_event_name: Optional[str] = None
     log_details: Dict[str, Any] = field(default_factory=dict)
     include_write_result_keys: bool = False
@@ -914,6 +918,11 @@ def plan_delete_preview(repo_root: Path, scope: str, doc_ids: list[str]) -> Dict
     warnings = [delete_selection_warning(requested_count, additional_descendant_count)]
     configured_default = configured_default_doc_id(repo_root, scope)
     default_doc_id_changed = configured_default in set(delete_doc_ids)
+    cleanup_plan = public_delete_cleanup.plan_public_document_delete_cleanup(
+        repo_root,
+        scope=scope,
+        doc_ids=delete_doc_ids,
+    )
 
     return {
         "ok": True,
@@ -931,6 +940,7 @@ def plan_delete_preview(repo_root: Path, scope: str, doc_ids: list[str]) -> Dict
         "delete_documents": delete_documents,
         "default_doc_id_changed": default_doc_id_changed,
         "default_doc_id": "" if default_doc_id_changed else configured_default,
+        "public_cleanup": cleanup_plan.response(repo_root),
     }
 
 
@@ -950,6 +960,11 @@ def plan_delete_apply(repo_root: Path, body: Dict[str, Any]) -> ManagementMutati
     delete_paths = [relative_path(repo_root, doc.path) for doc in delete_docs]
     delete_count = len(delete_docs)
     additional_descendant_count = len(set(delete_doc_ids) - set(requested_doc_ids))
+    cleanup_plan = public_delete_cleanup.plan_public_document_delete_cleanup(
+        repo_root,
+        scope=scope,
+        doc_ids=delete_doc_ids,
+    )
     summary_text = f"Deleted {delete_count} document{'s' if delete_count != 1 else ''}."
     return ManagementMutationPlan(
         scope=scope,
@@ -967,12 +982,14 @@ def plan_delete_apply(repo_root: Path, body: Dict[str, Any]) -> ManagementMutati
             "warnings": preview["warnings"],
             "default_doc_id_changed": preview["default_doc_id_changed"],
             "default_doc_id": preview["default_doc_id"],
+            "public_cleanup": cleanup_plan.response(repo_root),
             "summary_text": summary_text,
         },
         source_deletes=tuple(SourceDelete(doc.path) for doc in delete_docs),
         suppression_reason="docs-delete",
         build_doc_ids=delete_doc_ids,
         search_doc_ids=delete_doc_ids,
+        public_delete_cleanup=cleanup_plan,
         log_event_name="docs-delete",
         log_details={
             "scope": scope,
@@ -1050,6 +1067,12 @@ def plan_sub_scope_delete_preview(
     source_bytes = document.source_text.encode("utf-8")
     target = resolved.request_target()
     path = relative_path(repo_root, document.path)
+    cleanup_plan = public_delete_cleanup.plan_public_document_delete_cleanup(
+        repo_root,
+        scope=resolved.scope,
+        sub_scope=resolved.sub_scope,
+        doc_ids=[document.doc_id],
+    )
     return {
         "ok": True,
         "operation": "preview",
@@ -1071,6 +1094,7 @@ def plan_sub_scope_delete_preview(
             }
         ],
         "generated_outputs": sub_scope_delete_generated_outputs(repo_root, resolved),
+        "public_cleanup": cleanup_plan.response(repo_root),
     }
 
 
@@ -1132,6 +1156,12 @@ def plan_sub_scope_delete_apply(
         )
 
     path = relative_path(repo_root, document.path)
+    cleanup_plan = public_delete_cleanup.plan_public_document_delete_cleanup(
+        repo_root,
+        scope=resolved.scope,
+        sub_scope=resolved.sub_scope,
+        doc_ids=[document.doc_id],
+    )
     return ManagementMutationPlan(
         scope=resolved.scope,
         sub_scope=resolved.sub_scope,
@@ -1148,10 +1178,12 @@ def plan_sub_scope_delete_apply(
             "deleted_doc_ids": [document.doc_id],
             "delete_count": 1,
             "generated_outputs": sub_scope_delete_generated_outputs(repo_root, resolved),
+            "public_cleanup": cleanup_plan.response(repo_root),
             "summary_text": f"Deleted {document.doc_id}.",
         },
         source_deletes=(SourceDelete(document.path, original_bytes=source_bytes),),
         suppression_reason="docs-sub-scope-document-delete",
+        public_delete_cleanup=cleanup_plan,
         log_event_name="docs-delete",
         log_details={
             "scope": resolved.scope,

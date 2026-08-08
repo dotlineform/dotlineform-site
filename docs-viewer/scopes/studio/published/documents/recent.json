@@ -7,9 +7,17 @@
       "doc_id": "d-20260808-165751-1f159a",
       "title": "DPD-1 — Immediate Public Projection Cleanup On Document Delete",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-165751-1f159a.json",
-      "timestamp": "2026-08-08 17:25:59",
+      "timestamp": "2026-08-08 18:29:50",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260808-182844-3e9b7c",
+      "title": "DPD-1.1 — Shared Server Cleanup Evidence",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-182844-3e9b7c.json",
+      "timestamp": "2026-08-08 18:29:50",
+      "parent_id": "d-20260808-165751-1f159a",
+      "parent_title": "DPD-1 — Immediate Public Projection Cleanup On Document Delete"
     },
     {
       "doc_id": "d-20260808-172131-7d4af6",
@@ -74,15 +82,7 @@
       "timestamp": "2026-08-08 13:45:03",
       "parent_id": "d-20260802-123451-d0e52e",
       "parent_title": "Data Models Diagrams"
-    },
-    {
-      "doc_id": "d-20260419-000000-0516ab",
-      "title": "Docs Data",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260419-000000-0516ab.json",
-      "timestamp": "2026-08-08 13:45:03",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-08-08T16:26:12Z"
+  "generated_at": "2026-08-08T17:30:33Z"
 }

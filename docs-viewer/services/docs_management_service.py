@@ -63,6 +63,7 @@ from docs_management_context import (  # noqa: E402
 from docs_management_import_service import handle_import_source, import_source_dependencies  # noqa: E402
 from docs_management_mutation_service import (  # noqa: E402
     DocumentCreateCommittedError,
+    DocumentDeletePublicCleanupError,
     SubScopeDocumentDeleteApplyError,
     execute_management_mutation_plan,
     handle_assign_field_group,
@@ -314,6 +315,8 @@ def docs_management_post_response(
             return HTTPStatus.CONFLICT, error.payload
         except SubScopeDocumentDeleteApplyError as error:
             return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
+        except DocumentDeletePublicCleanupError as error:
+            return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
     if path == routes.SCOPE_CREATE_PREVIEW_PATH:
         payload = docs_scope_create.plan_create_scope_preview(repo_root, body)
         payload["dry_run"] = True
@@ -331,7 +334,10 @@ def docs_management_post_response(
         payload["dry_run"] = True
         return HTTPStatus.OK, payload
     if path == routes.SCOPE_DELETE_APPLY_PATH:
-        return HTTPStatus.OK, handle_scope_delete_apply(repo_root, body, dry_run)
+        try:
+            return HTTPStatus.OK, handle_scope_delete_apply(repo_root, body, dry_run)
+        except docs_scope_delete.ScopeDeleteApplyError as error:
+            return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
     if path == routes.SUB_SCOPE_CREATE_PREVIEW_PATH:
         payload = docs_sub_scope_lifecycle.plan_create_sub_scope_preview(repo_root, body)
         payload["dry_run"] = True
