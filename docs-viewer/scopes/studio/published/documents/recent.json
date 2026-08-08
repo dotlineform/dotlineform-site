@@ -7,9 +7,17 @@
       "doc_id": "d-20260808-165751-1f159a",
       "title": "DPD-1 — Immediate Public Projection Cleanup On Document Delete",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-165751-1f159a.json",
-      "timestamp": "2026-08-08 17:13:08",
+      "timestamp": "2026-08-08 17:25:59",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260808-172131-7d4af6",
+      "title": "DPD-1.0 — Delete And Public-Projection Ownership Sanity Note",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-172131-7d4af6.json",
+      "timestamp": "2026-08-08 17:25:59",
+      "parent_id": "d-20260808-165751-1f159a",
+      "parent_title": "DPD-1 — Immediate Public Projection Cleanup On Document Delete"
     },
     {
       "doc_id": "d-20260808-153226-a067d9",
@@ -74,15 +82,7 @@
       "timestamp": "2026-08-08 13:45:03",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260808-134503-a4caeb",
-      "title": "SSP-7.4 — Projects Publication Stage Evidence",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-134503-a4caeb.json",
-      "timestamp": "2026-08-08 13:45:03",
-      "parent_id": "d-20260805-231829-947705",
-      "parent_title": "SSP-7 — Document Lineage And Publication State Delivery"
     }
   ],
-  "generated_at": "2026-08-08T16:13:09Z"
+  "generated_at": "2026-08-08T16:26:12Z"
 }
