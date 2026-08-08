@@ -178,11 +178,6 @@
   text-decoration: none;
 }
 
-.docsViewerReport__projectPublicationCue[data-project-publication-stage="working"]{
-  color: var(--muted);
-  font-size: 0.85rem;
-}
-
 .docsViewerReport[data-report-subscope="projects"] .docsViewerReport__row{
   align-items: center;
 }

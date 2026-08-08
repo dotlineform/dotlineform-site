@@ -4200,8 +4200,8 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
             },
             linkedInfo,
             linkedRow: {
-              stage: linkedRow.querySelector('[data-project-publication-stage]').dataset.projectPublicationStage,
-              text: linkedRow.querySelector('[data-project-publication-stage]').textContent
+              childCount: linkedRow.childElementCount,
+              text: linkedRow.textContent
             },
             opened,
             pathlessButton: {
@@ -4271,20 +4271,10 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
                     "label": "Subject",
                     "state": "folder",
                     "value": "Folder",
-                },
-                {
-                    "detail": "No editorial copy",
-                    "id": "publication",
-                    "label": "Publication",
-                    "state": "working",
-                    "value": "Working",
                 }
             ],
         },
-        "linkedRow": {
-            "stage": "working",
-            "text": "Working",
-        },
+        "linkedRow": {"childCount": 0, "text": ""},
         "opened": ["projects/16%20forms"],
         "pathlessButton": {
             "disabled": True,
@@ -4299,17 +4289,10 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
                     "label": "Subject",
                     "state": "none",
                     "value": "None",
-                },
-                {
-                    "detail": "No editorial copy",
-                    "id": "publication",
-                    "label": "Publication",
-                    "state": "working",
-                    "value": "Working",
                 }
             ],
         },
-        "pathlessRow": {"childCount": 1, "text": "Working"},
+        "pathlessRow": {"childCount": 0, "text": ""},
         "registryIds": ["analysis_tags", "dotlineform_projects"],
         "refreshed": [
             {
@@ -4662,6 +4645,27 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
           };
           toolbar.remove();
 
+          const publishedOnly = {
+            doc_id: 'transition-doc',
+            authoring_subject: { state: 'none', kind: 'none', key: '', fields: [] },
+            customisation: {
+              publication_targets: [records.work.customisation.publication_targets[1]]
+            }
+          };
+          const afterEditorialDelete = {
+            ...publishedOnly,
+            customisation: { publication_targets: [] }
+          };
+          const afterPublishExclusion = {
+            ...publishedOnly,
+            customisation: {
+              publication_targets: [{
+                ...publishedOnly.customisation.publication_targets[0],
+                publication: null
+              }]
+            }
+          };
+
           return {
             assignments,
             cues: {
@@ -4683,6 +4687,12 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
               work: publicationInfo(records.work),
               series: publicationInfo(records.series),
               none: publicationInfo(records.none)
+            },
+            transitions: {
+              published: cue(publishedOnly),
+              afterEditorialDelete: cue(afterEditorialDelete),
+              excludedUntilPublish: cue(publishedOnly),
+              afterPublishExclusion: cue(afterPublishExclusion)
             },
             initial,
             selectedSeries,
@@ -4715,58 +4725,38 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
         ],
         "cues": {
             "work": {
-                "labels": [
-                    (
-                        "Pre-publish: Editorial draft "
-                        "(analysis/works/d-20260802-101500-a1b2c3)"
-                    ),
-                    (
-                        "Published: Published editorial "
-                        "(analysis/works/d-20260802-101501-b2c3d4)"
-                    ),
-                ],
-                "stages": ["pre-publish", "published"],
-                "text": "🟠🟢",
-                "hrefs": [
-                    (
-                        "/docs/?scope=analysis&doc=works"
-                        "&subdoc=d-20260802-101500-a1b2c3"
-                    ),
-                    (
-                        "/docs/?scope=analysis&doc=works"
-                        "&subdoc=d-20260802-101501-b2c3d4"
-                    ),
-                ],
-                "subjectIcons": 0,
-            },
-            "series": {
-                "labels": ["Working"],
-                "stages": ["working"],
-                "text": "Working",
+                "labels": ["Published: 2 Editorial children"],
+                "stages": ["published"],
+                "text": "🟢",
                 "hrefs": [""],
                 "subjectIcons": 0,
             },
+            "series": {
+                "labels": [],
+                "stages": [],
+                "text": "",
+                "hrefs": [],
+                "subjectIcons": 0,
+            },
             "none": {
-                "labels": [
-                    "Unavailable: analysis/works/d-20260802-101502-c3d4e5"
-                ],
-                "stages": ["unavailable"],
-                "text": "⚠️",
+                "labels": ["Editorial: 1 Editorial child"],
+                "stages": ["editorial"],
+                "text": "🟠",
                 "hrefs": [""],
                 "subjectIcons": 0,
             },
             "malformed": {
-                "labels": ["Working"],
-                "stages": ["working"],
-                "text": "Working",
-                "hrefs": [""],
+                "labels": [],
+                "stages": [],
+                "text": "",
+                "hrefs": [],
                 "subjectIcons": 0,
             },
             "conflicting": {
-                "labels": ["Working"],
-                "stages": ["working"],
-                "text": "Working",
-                "hrefs": [""],
+                "labels": [],
+                "stages": [],
+                "text": "",
+                "hrefs": [],
                 "subjectIcons": 0,
             },
         },
@@ -4808,8 +4798,8 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
                     "detail": "analysis/works/d-20260802-101500-a1b2c3",
                     "id": "publication_1",
                     "label": "Publication",
-                    "state": "pre-publish",
-                    "value": "🟠 Pre-publish — Editorial draft",
+                    "state": "editorial",
+                    "value": "🟠 Editorial — Editorial draft",
                 },
                 {
                     "detail": "analysis/works/d-20260802-101501-b2c3d4",
@@ -4819,15 +4809,7 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
                     "value": "🟢 Published — Published editorial",
                 },
             ],
-            "series": [
-                {
-                    "detail": "No editorial copy",
-                    "id": "publication",
-                    "label": "Publication",
-                    "state": "working",
-                    "value": "Working",
-                }
-            ],
+            "series": [],
             "none": [
                 {
                     "detail": "analysis/works/d-20260802-101502-c3d4e5",
@@ -4837,6 +4819,36 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
                     "value": "⚠️ Unavailable",
                 }
             ],
+        },
+        "transitions": {
+            "published": {
+                "labels": ["Published: 1 Editorial child"],
+                "stages": ["published"],
+                "text": "🟢",
+                "hrefs": [""],
+                "subjectIcons": 0,
+            },
+            "afterEditorialDelete": {
+                "labels": [],
+                "stages": [],
+                "text": "",
+                "hrefs": [],
+                "subjectIcons": 0,
+            },
+            "excludedUntilPublish": {
+                "labels": ["Published: 1 Editorial child"],
+                "stages": ["published"],
+                "text": "🟢",
+                "hrefs": [""],
+                "subjectIcons": 0,
+            },
+            "afterPublishExclusion": {
+                "labels": ["Editorial: 1 Editorial child"],
+                "stages": ["editorial"],
+                "text": "🟠",
+                "hrefs": [""],
+                "subjectIcons": 0,
+            },
         },
         "initial": {
             "checked": "work",

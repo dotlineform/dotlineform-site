@@ -62,27 +62,32 @@ function publicationTargets(documentRecord) {
 }
 
 function publicationStage(target) {
+  if (target.publicUrl) return "published";
   if (!target.available) return "unavailable";
-  return target.publicUrl ? "published" : "pre-publish";
+  return "editorial";
 }
 
 function publicationStageLabel(stage) {
   return ({
-    "pre-publish": "Pre-publish",
+    editorial: "Editorial",
     published: "Published",
     unavailable: "Unavailable"
-  })[stage] || "Working";
+  })[stage] || "Editorial";
 }
 
 function publicationIdentity(target) {
   return target.scope + "/" + target.subScope + "/" + target.docId;
 }
 
-function publicationAccessibleLabel(target) {
-  var stage = publicationStage(target);
-  var identity = publicationIdentity(target);
-  var targetLabel = target.title ? target.title + " (" + identity + ")" : identity;
-  return publicationStageLabel(stage) + ": " + targetLabel;
+function publicationStatus(targets) {
+  return targets.some(function (target) {
+    return Boolean(target.publicUrl);
+  }) ? "published" : "editorial";
+}
+
+function publicationStatusAccessibleLabel(status, targetCount) {
+  var childLabel = targetCount === 1 ? "1 Editorial child" : targetCount + " Editorial children";
+  return publicationStageLabel(status) + ": " + childLabel;
 }
 
 function renderPublicationCues(context) {
@@ -90,33 +95,20 @@ function renderPublicationCues(context) {
   var host = settings.trailingHost;
   if (!host) return { accessibleLabels: [] };
   var targets = publicationTargets(settings.document);
+  if (!targets.length) return { accessibleLabels: [] };
+  var status = publicationStatus(targets);
+  var label = publicationStatusAccessibleLabel(status, targets.length);
   var group = host.ownerDocument.createElement("span");
   group.className = "docsViewerReport__projectPublicationCues";
-  if (!targets.length) {
-    var working = host.ownerDocument.createElement("span");
-    working.className = "docsViewerReport__projectPublicationCue";
-    working.dataset.projectPublicationStage = "working";
-    working.textContent = "Working";
-    group.appendChild(working);
-    host.appendChild(group);
-    return { accessibleLabels: ["Working"] };
-  }
-  var labels = targets.map(function (target) {
-    var stage = publicationStage(target);
-    var label = publicationAccessibleLabel(target);
-    var cue = host.ownerDocument.createElement(target.available ? "a" : "span");
-    cue.className = "docsViewerReport__projectPublicationCue";
-    cue.dataset.projectPublicationStage = stage;
-    cue.dataset.projectPublicationTarget = publicationIdentity(target);
-    cue.textContent = ({ "pre-publish": "🟠", published: "🟢" })[stage] || "⚠️";
-    cue.title = label;
-    cue.setAttribute("aria-label", label);
-    if (target.available) cue.href = target.viewerUrl;
-    group.appendChild(cue);
-    return label;
-  });
+  var cue = host.ownerDocument.createElement("span");
+  cue.className = "docsViewerReport__projectPublicationCue";
+  cue.dataset.projectPublicationStage = status;
+  cue.textContent = ({ editorial: "🟠", published: "🟢" })[status];
+  cue.title = label;
+  cue.setAttribute("aria-label", label);
+  group.appendChild(cue);
   host.appendChild(group);
-  return { accessibleLabels: labels };
+  return { accessibleLabels: [label] };
 }
 
 function renderOpenInFinder(context, options) {
@@ -273,21 +265,12 @@ function projectDetailInfo(context, assignSubjectAvailable) {
       label: "Publication",
       state: stage,
       value: (
-        ({ "pre-publish": "🟠", published: "🟢", unavailable: "⚠️" })[stage]
+        ({ editorial: "🟠", published: "🟢", unavailable: "⚠️" })[stage]
         + " " + publicationStageLabel(stage)
         + (publication.title ? " — " + publication.title : "")
       )
     });
   });
-  if (!publicationFields.length) {
-    publicationFields.push(Object.freeze({
-      detail: "No editorial copy",
-      id: "publication",
-      label: "Publication",
-      state: "working",
-      value: "Working"
-    }));
-  }
   return Object.freeze({
     actions: Object.freeze({ assignSubject: assignSubjectAvailable }),
     fields: Object.freeze([
