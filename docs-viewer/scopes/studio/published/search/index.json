@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-1ab3fe4fd7fe5cf91b59c29ccbd0ad2c",
-    "generated_at_utc": "2026-08-08T18:17:44Z",
+    "version": "blake2b-b0d5c570ddd5ea092ced0c55f36bf987",
+    "generated_at_utc": "2026-08-08T18:28:57Z",
     "count": 283
   },
   "entries": [
@@ -5901,10 +5901,10 @@
       "kind": "doc",
       "title": "SSP-8 — Revised Model",
       "href": "/docs/?scope=studio&doc=d-20260808-153226-a067d9",
-      "last_updated": "2026-08-08 19:17:43",
+      "last_updated": "2026-08-08 19:28:04",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-08 19:17:43 • Sub-Scope Publishing",
+      "display_meta": "2026-08-08 19:28:04 • Sub-Scope Publishing",
       "search_terms": [
         "ssp-8 — revised model",
         "ssp",
@@ -5915,15 +5915,15 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-08 19:17:43",
+        "2026-08-08 19:28:04",
         "2026",
         "08",
         "19",
-        "17",
-        "43",
+        "28",
+        "04",
         "d-20260808-153226-a067d9"
       ],
-      "search_text": "ssp-8 — revised model ssp 8 revised model sub-scope publishing sub scope publishing 2026-08-08 19:17:43 2026 08 19 17 43 d-20260808-153226-a067d9"
+      "search_text": "ssp-8 — revised model ssp 8 revised model sub-scope publishing sub scope publishing 2026-08-08 19:28:04 2026 08 19 28 04 d-20260808-153226-a067d9"
     },
     {
       "id": "d-20260808-154427-50f717",

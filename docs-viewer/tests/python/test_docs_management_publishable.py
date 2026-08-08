@@ -15,6 +15,7 @@ from repo_factory import (
     write_docs_scope_config,
     write_site_tools_config,
 )
+from test_docs_document_transfer import make_lineage_repo
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -236,6 +237,51 @@ def test_sub_scope_include_removes_false_and_rebuilds_exact_child_once(
     ]
     assert "publishable" not in front_matter(child_root / "x.md")
     assert "publishable" not in front_matter(child_root / "y.md")
+
+
+def test_set_publishable_is_lineage_neutral(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo_root = make_lineage_repo(tmp_path)
+    editorial_id = "d-20260802-120000-cccccc"
+    lineage_path = (
+        repo_root / "docs-viewer/data/canonical/document-publication-lineage.json"
+    )
+    lineage_before = lineage_path.read_bytes()
+
+    def atomic_child_rebuild(
+        _repo_root: Path,
+        _scope: str,
+        _sub_scope: str,
+        _changed_paths: list[Path],
+        write_operation,
+        **_kwargs,
+    ) -> dict[str, object]:
+        write_operation()
+        assert lineage_path.read_bytes() == lineage_before
+        return {"ok": True}
+
+    monkeypatch.setattr(
+        publishable_service.write_rebuild,
+        "perform_sub_scope_source_write_and_rebuild",
+        atomic_child_rebuild,
+    )
+    monkeypatch.setattr(publishable_service, "log_event", lambda *_args: None)
+
+    result = publishable_service.set_publishable(
+        repo_root,
+        {
+            "scope": "analysis",
+            "sub_scope": "works",
+            "doc_ids": [editorial_id],
+            "publishable": False,
+            "confirm": True,
+        },
+    )
+
+    assert result["updated_doc_ids"] == [editorial_id]
+    assert lineage_path.read_bytes() == lineage_before
 
 
 def test_all_no_op_set_skips_write_rebuild_and_activity(

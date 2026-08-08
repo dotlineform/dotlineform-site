@@ -294,6 +294,82 @@ def test_replace_requires_an_exact_current_editorial_child(tmp_path: Path) -> No
         )
 
 
+def test_editorial_delete_removes_exact_children_and_empty_records(
+    tmp_path: Path,
+) -> None:
+    repo_root = tmp_path / "repo"
+    third_editorial_id = "d-20260802-130000-eeeeee"
+    table = replace(
+        empty_table(),
+        records=(
+            record(
+                SOURCE_ID,
+                editorial(EDITORIAL_ID),
+                editorial(SECOND_EDITORIAL_ID),
+            ),
+            record(SECOND_SOURCE_ID, editorial(third_editorial_id)),
+        ),
+    )
+    lineage.write_table_atomic(repo_root, table)
+
+    result = lineage.apply_document_deletes(
+        repo_root,
+        scope="analysis",
+        sub_scope="works",
+        doc_ids=[SECOND_EDITORIAL_ID, third_editorial_id],
+    )
+
+    assert result.role == "editorial"
+    assert result.changed
+    assert result.affected_working_doc_ids == (SOURCE_ID, SECOND_SOURCE_ID)
+    assert result.table is not None
+    assert result.table.records == (record(SOURCE_ID, editorial(EDITORIAL_ID)),)
+    assert lineage.load_table(repo_root) == result.table
+
+
+def test_working_delete_removes_the_record_and_unrelated_delete_is_neutral(
+    tmp_path: Path,
+) -> None:
+    repo_root = tmp_path / "repo"
+    table = replace(
+        empty_table(),
+        records=(record(SOURCE_ID, editorial(EDITORIAL_ID)),),
+    )
+    lineage.write_table_atomic(repo_root, table)
+    before = lineage.table_path(repo_root).read_bytes()
+
+    unrelated = lineage.apply_document_deletes(
+        repo_root,
+        scope="library",
+        sub_scope="works",
+        doc_ids=[EDITORIAL_ID],
+    )
+    assert unrelated.role == ""
+    assert not unrelated.changed
+    assert lineage.table_path(repo_root).read_bytes() == before
+
+    direct_editorial = lineage.apply_document_deletes(
+        repo_root,
+        scope="analysis",
+        sub_scope="works",
+        doc_ids=["d-20260802-140000-ffffff"],
+    )
+    assert direct_editorial.role == "editorial"
+    assert not direct_editorial.changed
+    assert lineage.table_path(repo_root).read_bytes() == before
+
+    deleted = lineage.apply_document_deletes(
+        repo_root,
+        scope="dotlineform",
+        sub_scope="projects",
+        doc_ids=[SOURCE_ID],
+    )
+    assert deleted.role == "working"
+    assert deleted.affected_working_doc_ids == (SOURCE_ID,)
+    assert deleted.table is not None
+    assert deleted.table.records == ()
+
+
 def test_reconcile_publications_updates_urls_on_current_children_only(
     tmp_path: Path,
 ) -> None:

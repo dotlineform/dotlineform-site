@@ -20,6 +20,7 @@ from repo_factory import (
     docs_sub_scope_record,
     write_docs_scope_config,
 )
+from test_docs_document_transfer import make_lineage_repo
 
 
 PARENT_ID = "d-20260808-100000-aaaaaa"
@@ -559,6 +560,241 @@ def test_confirmed_delete_runs_public_cleanup_after_source_commit(
     assert not paths["source"].exists()
     assert not public_path.exists()
     assert result["public_cleanup"]["status"] == "applied"
+
+
+@pytest.mark.parametrize(
+    ("scope", "sub_scope", "doc_id", "role", "remaining_record_count"),
+    [
+        (
+            "analysis",
+            "works",
+            "d-20260802-110000-bbbbbb",
+            "editorial",
+            1,
+        ),
+        (
+            "dotlineform",
+            "projects",
+            "d-20260801-100000-aaaaaa",
+            "working",
+            0,
+        ),
+    ],
+)
+def test_delete_applies_lineage_after_public_cleanup_and_rebuilds_projects_only(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    scope: str,
+    sub_scope: str,
+    doc_id: str,
+    role: str,
+    remaining_record_count: int,
+) -> None:
+    repo_root = make_lineage_repo(tmp_path)
+    source_path = repo_root / (
+        f"docs-viewer/scopes/{scope}/source/sub-scopes/{sub_scope}/"
+        f"documents/{doc_id}.md"
+    )
+    lineage_path = (
+        repo_root / "docs-viewer/data/canonical/document-publication-lineage.json"
+    )
+    lineage_before = lineage_path.read_bytes()
+    working_path = repo_root / (
+        "docs-viewer/scopes/dotlineform/source/sub-scopes/projects/documents/"
+        "d-20260801-100000-aaaaaa.md"
+    )
+    editorial_paths = tuple(
+        repo_root
+        / (
+            "docs-viewer/scopes/analysis/source/sub-scopes/works/documents/"
+            f"{editorial_id}.md"
+        )
+        for editorial_id in (
+            "d-20260802-110000-bbbbbb",
+            "d-20260802-120000-cccccc",
+        )
+    )
+    retained_working_bytes = working_path.read_bytes()
+    retained_editorial_bytes = {
+        path: path.read_bytes()
+        for path in editorial_paths
+        if path != source_path
+    }
+    ordering: list[tuple[str, str, str]] = []
+
+    def fake_source_rebuild(
+        _repo_root: Path,
+        rebuild_scope: str,
+        rebuild_sub_scope: str,
+        _changed_paths: list[Path],
+        write_operation: object,
+        **_kwargs: object,
+    ) -> dict[str, object]:
+        write_operation()  # type: ignore[operator]
+        ordering.append(("source", rebuild_scope, rebuild_sub_scope))
+        assert not source_path.exists()
+        assert lineage_path.read_bytes() == lineage_before
+        return {"ok": True, "kind": "source"}
+
+    def fake_public_cleanup(
+        _repo_root: Path,
+        _plan: object,
+    ) -> dict[str, object]:
+        ordering.append(("public", scope, sub_scope))
+        assert not source_path.exists()
+        assert lineage_path.read_bytes() == lineage_before
+        return {"ok": True, "status": "applied"}
+
+    def fake_lineage_rebuild(
+        _repo_root: Path,
+        rebuild_scope: str,
+        rebuild_sub_scope: str,
+    ) -> dict[str, object]:
+        ordering.append(("lineage", rebuild_scope, rebuild_sub_scope))
+        assert lineage_path.read_bytes() != lineage_before
+        return {"ok": True, "kind": "lineage"}
+
+    monkeypatch.setattr(
+        mutation_service.write_rebuild,
+        "perform_sub_scope_source_write_and_rebuild",
+        fake_source_rebuild,
+    )
+    monkeypatch.setattr(
+        mutation_service.public_delete_cleanup,
+        "apply_public_document_delete_cleanup",
+        fake_public_cleanup,
+    )
+    monkeypatch.setattr(
+        mutation_service.write_rebuild,
+        "rebuild_sub_scope_outputs",
+        fake_lineage_rebuild,
+    )
+    monkeypatch.setattr(mutation_service, "log_event", lambda *_args: None)
+
+    plan = mutations.plan_sub_scope_delete_apply(
+        repo_root,
+        {
+            "scope": scope,
+            "sub_scope": sub_scope,
+            "doc_id": doc_id,
+            "source_revision": mutations.source_revision(source_path.read_bytes()),
+            "confirm": True,
+        },
+    )
+    result = mutation_service.execute_management_mutation_plan(
+        repo_root,
+        plan,
+        dry_run=False,
+    )
+
+    assert ordering == [
+        ("source", scope, sub_scope),
+        ("public", scope, sub_scope),
+        ("lineage", "dotlineform", "projects"),
+    ]
+    assert result["lineage"] == {
+        "schema_version": "docs_document_publication_lineage_v3",
+        "status": "updated",
+        "role": role,
+        "affected_working_doc_ids": ["d-20260801-100000-aaaaaa"],
+        "record_count": remaining_record_count,
+        "rebuild": {"ok": True, "kind": "lineage"},
+    }
+    table = read_json(lineage_path)
+    assert len(table["records"]) == remaining_record_count
+    if role == "editorial":
+        assert working_path.read_bytes() == retained_working_bytes
+        assert [
+            editorial["doc_id"]
+            for editorial in table["records"][0]["editorials"]
+        ] == [
+            "d-20260802-120000-cccccc",
+            "d-20260802-130000-dddddd",
+        ]
+    else:
+        assert {
+            path: path.read_bytes()
+            for path in retained_editorial_bytes
+        } == retained_editorial_bytes
+
+
+def test_failed_public_cleanup_leaves_lineage_unchanged(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo_root = make_lineage_repo(tmp_path)
+    doc_id = "d-20260802-110000-bbbbbb"
+    source_path = repo_root / (
+        "docs-viewer/scopes/analysis/source/sub-scopes/works/documents/"
+        f"{doc_id}.md"
+    )
+    lineage_path = (
+        repo_root / "docs-viewer/data/canonical/document-publication-lineage.json"
+    )
+    lineage_before = lineage_path.read_bytes()
+    lineage_rebuilds: list[object] = []
+
+    def fake_source_rebuild(
+        _repo_root: Path,
+        _scope: str,
+        _sub_scope: str,
+        _changed_paths: list[Path],
+        write_operation: object,
+        **_kwargs: object,
+    ) -> dict[str, object]:
+        write_operation()  # type: ignore[operator]
+        return {"ok": True}
+
+    def failed_public_cleanup(
+        _repo_root: Path,
+        _plan: object,
+    ) -> dict[str, object]:
+        raise cleanup.PublicDeleteCleanupApplyError(
+            {
+                "ok": False,
+                "status": "failed",
+                "stage": "public_products",
+                "error": "simulated public cleanup failure",
+            }
+        )
+
+    monkeypatch.setattr(
+        mutation_service.write_rebuild,
+        "perform_sub_scope_source_write_and_rebuild",
+        fake_source_rebuild,
+    )
+    monkeypatch.setattr(
+        mutation_service.public_delete_cleanup,
+        "apply_public_document_delete_cleanup",
+        failed_public_cleanup,
+    )
+    monkeypatch.setattr(
+        mutation_service.write_rebuild,
+        "rebuild_sub_scope_outputs",
+        lambda *_args: lineage_rebuilds.append(object()),
+    )
+    monkeypatch.setattr(mutation_service, "log_event", lambda *_args: None)
+    plan = mutations.plan_sub_scope_delete_apply(
+        repo_root,
+        {
+            "scope": "analysis",
+            "sub_scope": "works",
+            "doc_id": doc_id,
+            "source_revision": mutations.source_revision(source_path.read_bytes()),
+            "confirm": True,
+        },
+    )
+
+    with pytest.raises(mutation_service.DocumentDeletePublicCleanupError):
+        mutation_service.execute_management_mutation_plan(
+            repo_root,
+            plan,
+            dry_run=False,
+        )
+
+    assert not source_path.exists()
+    assert lineage_path.read_bytes() == lineage_before
+    assert lineage_rebuilds == []
 
 
 def test_catalogue_failure_returns_committed_non_success(

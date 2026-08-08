@@ -69,6 +69,17 @@ class DocumentLineageTable:
         }
 
 
+@dataclass(frozen=True)
+class DocumentLineageDeleteResult:
+    table: DocumentLineageTable | None
+    role: str
+    affected_working_doc_ids: tuple[str, ...]
+
+    @property
+    def changed(self) -> bool:
+        return bool(self.affected_working_doc_ids)
+
+
 def current_timestamp() -> str:
     return datetime.now(timezone.utc).strftime(UTC_TIMESTAMP_FORMAT)
 
@@ -439,6 +450,81 @@ def apply_copy_results(
     return write_table_atomic(repo_root, replace(table, records=tuple(records.values())))
 
 
+def apply_document_deletes(
+    repo_root: Path,
+    *,
+    scope: str,
+    sub_scope: str,
+    doc_ids: Iterable[str],
+) -> DocumentLineageDeleteResult:
+    """Remove exact Working records or Editorial children after confirmed Delete."""
+
+    table = load_table(repo_root)
+    if table is None:
+        return DocumentLineageDeleteResult(
+            table=None,
+            role="",
+            affected_working_doc_ids=(),
+        )
+
+    target_collection = DocumentLineageCollection(
+        scope=_required_text(scope, field="delete collection.scope"),
+        sub_scope=_required_text(
+            sub_scope,
+            field="delete collection.sub_scope",
+        ),
+    )
+    deleted_doc_ids = {
+        _doc_id(doc_id, field=f"deleted doc_ids[{index}]")
+        for index, doc_id in enumerate(doc_ids)
+    }
+    if target_collection == table.working_collection:
+        affected = tuple(
+            record.working_doc_id
+            for record in table.records
+            if record.working_doc_id in deleted_doc_ids
+        )
+        records = tuple(
+            record
+            for record in table.records
+            if record.working_doc_id not in deleted_doc_ids
+        )
+        role = "working"
+    elif target_collection == table.editorial_collection:
+        affected_working_ids: list[str] = []
+        retained_records: list[DocumentLineageRecord] = []
+        for record in table.records:
+            editorials = tuple(
+                editorial
+                for editorial in record.editorials
+                if editorial.doc_id not in deleted_doc_ids
+            )
+            if editorials != record.editorials:
+                affected_working_ids.append(record.working_doc_id)
+            if editorials:
+                retained_records.append(replace(record, editorials=editorials))
+        affected = tuple(affected_working_ids)
+        records = tuple(retained_records)
+        role = "editorial"
+    else:
+        return DocumentLineageDeleteResult(
+            table=table,
+            role="",
+            affected_working_doc_ids=(),
+        )
+
+    updated = (
+        write_table_atomic(repo_root, replace(table, records=records))
+        if affected
+        else table
+    )
+    return DocumentLineageDeleteResult(
+        table=updated,
+        role=role,
+        affected_working_doc_ids=affected,
+    )
+
+
 def reconcile_publications(
     repo_root: Path,
     *,
@@ -474,11 +560,13 @@ def reconcile_publications(
 __all__ = [
     "DocumentEditorialChild",
     "DocumentLineageCollection",
+    "DocumentLineageDeleteResult",
     "DocumentLineageRecord",
     "DocumentLineageTable",
     "LINEAGE_PATH",
     "LINEAGE_SCHEMA_VERSION",
     "apply_copy_results",
+    "apply_document_deletes",
     "current_timestamp",
     "editorials_for_working",
     "empty_table",

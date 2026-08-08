@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Dict
 
+import docs_document_publication_lineage as publication_lineage
 import docs_management_mutations as mutations
 import docs_public_delete_cleanup as public_delete_cleanup
 import docs_scope_create
@@ -315,6 +316,41 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
                     },
                 )
             raise DocumentDeletePublicCleanupError(payload) from error
+
+        if plan.sub_scope:
+            lineage_delete = publication_lineage.apply_document_deletes(
+                repo_root,
+                scope=plan.scope,
+                sub_scope=plan.sub_scope,
+                doc_ids=payload.get("deleted_doc_ids", ()),
+            )
+            if lineage_delete.role:
+                lineage_rebuild = None
+                if lineage_delete.changed:
+                    table = lineage_delete.table
+                    if table is None:
+                        raise RuntimeError(
+                            "document lineage Delete changed an unavailable table"
+                        )
+                    lineage_rebuild = write_rebuild.rebuild_sub_scope_outputs(
+                        repo_root,
+                        table.working_collection.scope,
+                        table.working_collection.sub_scope,
+                    )
+                payload["lineage"] = {
+                    "schema_version": publication_lineage.LINEAGE_SCHEMA_VERSION,
+                    "status": "updated" if lineage_delete.changed else "unchanged",
+                    "role": lineage_delete.role,
+                    "affected_working_doc_ids": list(
+                        lineage_delete.affected_working_doc_ids
+                    ),
+                    "record_count": (
+                        len(lineage_delete.table.records)
+                        if lineage_delete.table is not None
+                        else 0
+                    ),
+                    "rebuild": lineage_rebuild,
+                }
 
     if not dry_run and plan.log_event_name and plan.has_source_changes:
         log_event(repo_root, plan.log_event_name, plan.log_details)
