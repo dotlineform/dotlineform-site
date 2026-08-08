@@ -19,6 +19,12 @@ DOTLINEFORM_PROJECTS_CUSTOMISATION_ID = dotlineform_projects.CUSTOMISATION_ID
 PUBLIC_ACCESS = "public"
 MANAGE_ACCESS = "manage"
 SUPPORTED_BROWSER_ACCESSES = frozenset({PUBLIC_ACCESS, MANAGE_ACCESS})
+LINEAGE_SOURCE_ROLE = "source"
+LINEAGE_EDITORIAL_ROLE = "editorial"
+SUPPORTED_LINEAGE_ROLES = frozenset({LINEAGE_SOURCE_ROLE, LINEAGE_EDITORIAL_ROLE})
+PROJECTS_TO_ANALYSIS_WORKS_LINEAGE_CONTRACT = (
+    "dotlineform_projects_to_analysis_works"
+)
 
 
 @dataclass(frozen=True)
@@ -77,6 +83,12 @@ class DocsSubScopeTransferAspect:
 
 
 @dataclass(frozen=True)
+class DocsSubScopeDocumentLineageAspect:
+    contract_id: str
+    role: str
+
+
+@dataclass(frozen=True)
 class DocsSubScopeCustomisationDefinition:
     customisation_id: str
     normalize_settings: Callable[[Any, str], Mapping[str, Any]]
@@ -89,6 +101,7 @@ class DocsSubScopeCustomisationDefinition:
     assignable_field_groups: tuple[DocsSubScopeAssignableFieldGroup, ...] = ()
     authoring_subject: DocsSubScopeAuthoringSubjectAspect | None = None
     transfer: DocsSubScopeTransferAspect | None = None
+    document_lineage: DocsSubScopeDocumentLineageAspect | None = None
 
 
 def _strict_object(raw: Any, *, field: str, keys: set[str]) -> dict[str, Any]:
@@ -214,6 +227,10 @@ SUB_SCOPE_CUSTOMISATION_DEFINITIONS = {
         authoring_subject=DocsSubScopeAuthoringSubjectAspect(
             field_names=AUTHORING_SUBJECT_FIELDS,
         ),
+        document_lineage=DocsSubScopeDocumentLineageAspect(
+            contract_id=PROJECTS_TO_ANALYSIS_WORKS_LINEAGE_CONTRACT,
+            role=LINEAGE_EDITORIAL_ROLE,
+        ),
     ),
     DOTLINEFORM_PROJECTS_CUSTOMISATION_ID: DocsSubScopeCustomisationDefinition(
         customisation_id=DOTLINEFORM_PROJECTS_CUSTOMISATION_ID,
@@ -243,6 +260,10 @@ SUB_SCOPE_CUSTOMISATION_DEFINITIONS = {
         ),
         authoring_subject=DocsSubScopeAuthoringSubjectAspect(
             field_names=AUTHORING_SUBJECT_FIELDS,
+        ),
+        document_lineage=DocsSubScopeDocumentLineageAspect(
+            contract_id=PROJECTS_TO_ANALYSIS_WORKS_LINEAGE_CONTRACT,
+            role=LINEAGE_SOURCE_ROLE,
         ),
     ),
 }
@@ -309,6 +330,11 @@ def _validate_definition(
             DocsSubScopeAuthoringSubjectAspect,
         ),
         ("transfer", definition.transfer, DocsSubScopeTransferAspect),
+        (
+            "document_lineage",
+            definition.document_lineage,
+            DocsSubScopeDocumentLineageAspect,
+        ),
     )
     for aspect_name, aspect, aspect_type in aspect_types:
         if aspect is not None and not isinstance(aspect, aspect_type):
@@ -437,6 +463,16 @@ def _validate_definition(
             )
         if not callable(transfer.validate_field):
             raise ValueError(f"{field} transfer validate_field must be callable")
+
+    document_lineage = definition.document_lineage
+    if document_lineage is not None:
+        if not isinstance(
+            document_lineage.contract_id,
+            str,
+        ) or not CUSTOMISATION_ID_PATTERN.fullmatch(document_lineage.contract_id):
+            raise ValueError(f"{field} document_lineage contains an invalid contract id")
+        if document_lineage.role not in SUPPORTED_LINEAGE_ROLES:
+            raise ValueError(f"{field} document_lineage contains an invalid role")
     return definition
 
 
@@ -526,6 +562,14 @@ def sub_scope_customisation_transfer_contract(
     if customisation is None:
         return None
     return _definition_for(customisation).transfer
+
+
+def sub_scope_customisation_document_lineage_contract(
+    customisation: DocsSubScopeCustomisationConfig | None,
+) -> DocsSubScopeDocumentLineageAspect | None:
+    if customisation is None:
+        return None
+    return _definition_for(customisation).document_lineage
 
 
 def sub_scope_customisation_document_groups(
@@ -669,6 +713,7 @@ __all__ = [
     "DocsSubScopeCustomisationConfig",
     "DocsSubScopeCustomisationDefinition",
     "DocsSubScopeDocumentGroupsAspect",
+    "DocsSubScopeDocumentLineageAspect",
     "DocsSubScopeImportFrontMatterAspect",
     "DocsSubScopeManifestProjectionAspect",
     "DocsSubScopeMetadataAspect",
@@ -684,6 +729,7 @@ __all__ = [
     "sub_scope_customisation_authoring_subject_fields",
     "sub_scope_customisation_metadata_record",
     "sub_scope_customisation_document_groups",
+    "sub_scope_customisation_document_lineage_contract",
     "sub_scope_customisation_transfer_contract",
     "validate_sub_scope_customisation_document",
 ]

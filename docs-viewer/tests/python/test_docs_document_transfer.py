@@ -244,6 +244,130 @@ def make_collection_repo(tmp_path: Path) -> Path:
     return repo_root
 
 
+def make_lineage_repo(tmp_path: Path) -> Path:
+    repo_root = tmp_path / "repo"
+    source_id = "d-20260801-100000-aaaaaa"
+    target_id = "d-20260802-110000-bbbbbb"
+    second_target_id = "d-20260802-120000-cccccc"
+    missing_target_id = "d-20260802-130000-dddddd"
+    source_sub_scope = docs_sub_scope_record(
+        "dotlineform",
+        "projects",
+        title="Projects",
+        sub_scope_customisation={"id": "dotlineform_projects", "settings": {}},
+        lifecycle={
+            "tool_id": "docs-viewer-scope-lifecycle",
+            "report_host_doc_id": "d-20260801-090000-eeeeee",
+            "report_host_source_revision": "sha256:" + "1" * 64,
+        },
+    )
+    target_sub_scope = docs_sub_scope_record(
+        "analysis",
+        "works",
+        title="Works",
+        scope_type="public",
+        sub_scope_customisation={"id": "analysis_works", "settings": {}},
+        lifecycle={
+            "tool_id": "docs-viewer-scope-lifecycle",
+            "report_host_doc_id": "d-20260802-090000-ffffff",
+            "report_host_source_revision": "sha256:" + "2" * 64,
+        },
+    )
+    write_json(
+        repo_root / "docs-viewer/config/scopes/docs_scopes.json",
+        {
+            "schema_version": "docs_scopes_v3",
+            "scopes": [
+                base_scope("dotlineform", sub_scopes=[source_sub_scope]),
+                docs_scope_record(
+                    "analysis",
+                    scope_type="public",
+                    viewer_base_url="/analysis/",
+                    include_scope_param=False,
+                    sub_scopes=[target_sub_scope],
+                ),
+            ],
+        },
+    )
+    local_documents_root(repo_root, "dotlineform").mkdir(parents=True, exist_ok=True)
+    local_documents_root(repo_root, "analysis").mkdir(parents=True, exist_ok=True)
+    write_doc(
+        local_documents_root(repo_root, "dotlineform"),
+        doc_id="d-20260801-090000-eeeeee",
+        title="Projects Report",
+        extra_front_matter={
+            "viewer_report": "docs_subscope",
+            "viewer_report_access": "local",
+            "viewer_report_subscope": "projects",
+        },
+    )
+    write_doc(
+        local_documents_root(repo_root, "analysis"),
+        doc_id="d-20260802-090000-ffffff",
+        title="Works Report",
+        extra_front_matter={
+            "viewer_report": "docs_subscope",
+            "viewer_report_access": "local",
+            "viewer_report_subscope": "works",
+        },
+    )
+    source_root = sub_scope_documents_root(repo_root, "dotlineform", "projects")
+    target_root = sub_scope_documents_root(repo_root, "analysis", "works")
+    write_doc(
+        source_root,
+        doc_id=source_id,
+        title="Working A",
+        body="# Working A\n\nCurrent working body.\n",
+        extra_front_matter={"folder_path": "2026/working-a", "work_id": "00123"},
+    )
+    write_doc(
+        source_root,
+        doc_id="d-20260801-101000-999999",
+        title="Working Without Editorial",
+        body="# Working Without Editorial\n",
+        extra_front_matter={"folder_path": "2026/working-new"},
+    )
+    write_doc(
+        target_root,
+        doc_id=target_id,
+        title="Editorial B One",
+        body="# Editorial B One\n\nEditorial body one.\n",
+        extra_front_matter={"publishable": False},
+    )
+    write_doc(
+        target_root,
+        doc_id=second_target_id,
+        title="Editorial B Two",
+        body="# Editorial B Two\n\nEditorial body two.\n",
+    )
+    rows = [
+        {
+            "source": {
+                "scope": "dotlineform",
+                "sub_scope": "projects",
+                "doc_id": source_id,
+            },
+            "editorial": {
+                "scope": "analysis",
+                "sub_scope": "works",
+                "doc_id": editorial_id,
+            },
+            "created_at": "2026-08-07T20:00:00Z",
+            "last_copied_at": "2026-08-07T20:00:00Z",
+            "publication": None,
+        }
+        for editorial_id in (target_id, second_target_id, missing_target_id)
+    ]
+    write_json(
+        repo_root / "docs-viewer/data/canonical/document-publication-lineage.json",
+        {
+            "schema_version": "docs_document_publication_lineage_v1",
+            "rows": rows,
+        },
+    )
+    return repo_root
+
+
 def sequential_tokens(*values: str) -> transfer.IdentityTokenFactory:
     iterator: Iterator[str] = iter(values)
     return lambda _size: next(iterator)
@@ -263,6 +387,170 @@ def blocker_codes(plan: transfer.DocumentTransferPlan) -> set[str]:
 
 def warning_codes(plan: transfer.DocumentTransferPlan) -> set[str]:
     return {warning.code for warning in plan.warnings}
+
+
+def test_lineage_copy_requires_explicit_new_or_exact_replace_and_lists_unavailable(
+    tmp_path: Path,
+) -> None:
+    repo_root = make_lineage_repo(tmp_path)
+    source_id = "d-20260801-100000-aaaaaa"
+    target_id = "d-20260802-110000-bbbbbb"
+    second_target_id = "d-20260802-120000-cccccc"
+    missing_target_id = "d-20260802-130000-dddddd"
+    common = {
+        "source_scope": "dotlineform",
+        "source_sub_scope": "projects",
+        "requested_doc_ids": [source_id],
+        "target_scope": "analysis",
+        "target_sub_scope": "works",
+        "transfer_mode": "copy",
+        "operation_timestamp": "2026-08-08 10:00:00",
+    }
+
+    no_existing = transfer.plan_document_transfer(
+        repo_root,
+        **{
+            **common,
+            "requested_doc_ids": ["d-20260801-101000-999999"],
+        },
+        token_factory=sequential_tokens("999999"),
+    )
+    assert no_existing.ok
+    assert no_existing.lineage is not None
+    assert no_existing.lineage.decisions[0].action == transfer.COPY_ACTION_NEW
+    assert no_existing.lineage.decisions[0].existing_editorials == ()
+
+    undecided = transfer.plan_document_transfer(repo_root, **common)
+    assert not undecided.ok
+    assert blocker_codes(undecided) == {"lineage_copy_action_required"}
+    assert undecided.preview_payload()["apply_plan"] is None
+    lineage_payload = undecided.preview_payload()["lineage"]
+    assert lineage_payload["choice_required"] is True
+    assert lineage_payload["sources"] == [
+        {
+            "source_doc_id": source_id,
+            "title": "Working A",
+            "action": "",
+            "replace_target_doc_id": "",
+            "existing_editorials": [
+                {
+                    "editorial_doc_id": target_id,
+                    "title": "Editorial B One",
+                    "available": True,
+                },
+                {
+                    "editorial_doc_id": second_target_id,
+                    "title": "Editorial B Two",
+                    "available": True,
+                },
+                {
+                    "editorial_doc_id": missing_target_id,
+                    "title": "",
+                    "available": False,
+                },
+            ],
+        }
+    ]
+    with pytest.raises(ValueError, match="must not be empty"):
+        transfer.plan_document_transfer(
+            repo_root,
+            **common,
+            copy_lineage_actions=[],
+        )
+
+    new_plan = transfer.plan_document_transfer(
+        repo_root,
+        **common,
+        copy_lineage_actions=[
+            {
+                "source_doc_id": source_id,
+                "action": "new",
+                "replace_target_doc_id": "",
+            }
+        ],
+        token_factory=sequential_tokens("eeeeee"),
+    )
+    assert new_plan.ok
+    assert new_plan.documents[0].copy_action == transfer.COPY_ACTION_NEW
+    assert new_plan.documents[0].target_doc_id == "d-20260808-100000-eeeeee"
+
+    replace_plan = transfer.plan_document_transfer(
+        repo_root,
+        **common,
+        copy_lineage_actions=[
+            {
+                "source_doc_id": source_id,
+                "action": "replace",
+                "replace_target_doc_id": target_id,
+            }
+        ],
+    )
+    assert replace_plan.ok
+    assert replace_plan.documents[0].target_doc_id == target_id
+    assert replace_plan.documents[0].target_path.name == f"{target_id}.md"
+    assert replace_plan.apply_plan_payload()["lineage"]["decisions"] == [
+        {
+            "source_doc_id": source_id,
+            "action": "replace",
+            "replace_target_doc_id": target_id,
+        }
+    ]
+
+    with pytest.raises(ValueError, match="not an available lineage row"):
+        transfer.plan_document_transfer(
+            repo_root,
+            **common,
+            copy_lineage_actions=[
+                {
+                    "source_doc_id": source_id,
+                    "action": "replace",
+                    "replace_target_doc_id": missing_target_id,
+                }
+            ],
+        )
+
+
+def test_lineage_replace_receipt_keeps_exact_target_after_target_edit(tmp_path: Path) -> None:
+    repo_root = make_lineage_repo(tmp_path)
+    source_id = "d-20260801-100000-aaaaaa"
+    target_id = "d-20260802-110000-bbbbbb"
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="dotlineform",
+        source_sub_scope="projects",
+        requested_doc_ids=[source_id],
+        target_scope="analysis",
+        target_sub_scope="works",
+        transfer_mode="copy",
+        operation_timestamp="2026-08-08 10:00:00",
+        copy_lineage_actions=[
+            {
+                "source_doc_id": source_id,
+                "action": "replace",
+                "replace_target_doc_id": target_id,
+            }
+        ],
+    )
+    target_path = sub_scope_documents_root(
+        repo_root,
+        "analysis",
+        "works",
+    ) / f"{target_id}.md"
+    target_path.write_text(
+        target_path.read_text(encoding="utf-8") + "\nChanged after preview.\n",
+        encoding="utf-8",
+    )
+
+    restored = transfer.restore_document_transfer_apply_plan(
+        repo_root,
+        plan.apply_plan_payload(),
+    )
+
+    assert restored.documents[0].target_doc_id == target_id
+    assert restored.documents[0].replacement_doc is not None
+    assert restored.documents[0].replacement_doc.source_text.endswith(
+        "Changed after preview.\n"
+    )
 
 
 def test_copy_selection_is_deterministic_deduplicated_and_write_free(tmp_path: Path) -> None:
@@ -300,7 +588,7 @@ def test_copy_selection_is_deterministic_deduplicated_and_write_free(tmp_path: P
     assert exact.preview_payload()["effective_root_count"] == 2
     assert exact.preview_payload()["descendant_count"] == 0
     assert exact.preview_payload()["apply_plan"]["schema_version"] == (
-        "docs_document_transfer_apply_plan_v2"
+            "docs_document_transfer_apply_plan_v3"
     )
     serialized = json.dumps(exact.preview_payload()["apply_plan"])
     assert str(repo_root) not in serialized

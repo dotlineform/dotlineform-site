@@ -13,6 +13,7 @@ from typing import Any, Callable, Iterable, Mapping
 from urllib.parse import parse_qs, urlsplit
 
 import docs_source_model as source_model
+import docs_document_publication_lineage as publication_lineage
 from docs_artifact_locations import (
     DELETE_CAPABILITY,
     READ_CAPABILITY,
@@ -39,15 +40,21 @@ from docs_management_document_target import (
     resolve_managed_document_collection,
 )
 from docs_subscope_customisations import (
+    LINEAGE_EDITORIAL_ROLE,
+    LINEAGE_SOURCE_ROLE,
+    sub_scope_customisation_document_lineage_contract,
     sub_scope_customisation_transfer_contract,
 )
 
 
-TRANSFER_PREVIEW_SCHEMA_VERSION = "docs_document_transfer_preview_v2"
-TRANSFER_APPLY_PLAN_SCHEMA_VERSION = "docs_document_transfer_apply_plan_v2"
+TRANSFER_PREVIEW_SCHEMA_VERSION = "docs_document_transfer_preview_v3"
+TRANSFER_APPLY_PLAN_SCHEMA_VERSION = "docs_document_transfer_apply_plan_v3"
 COPY_MODE = "copy"
 MOVE_MODE = "move"
 SUPPORTED_TRANSFER_MODES = frozenset({COPY_MODE, MOVE_MODE})
+COPY_ACTION_NEW = "new"
+COPY_ACTION_REPLACE = "replace"
+SUPPORTED_COPY_ACTIONS = frozenset({COPY_ACTION_NEW, COPY_ACTION_REPLACE})
 IdentityTokenFactory = Callable[[int], str]
 BuildSourceIdentityResolver = Callable[[str], str]
 
@@ -154,6 +161,28 @@ class TransferMediaPlan:
 
 
 @dataclass(frozen=True)
+class TransferLineageEditorialChoice:
+    editorial_doc_id: str
+    title: str
+    available: bool
+
+
+@dataclass(frozen=True)
+class TransferLineageDecision:
+    source_doc_id: str
+    source_title: str
+    action: str
+    replace_target_doc_id: str
+    existing_editorials: tuple[TransferLineageEditorialChoice, ...]
+
+
+@dataclass(frozen=True)
+class DocumentLineageTransferPlan:
+    contract_id: str
+    decisions: tuple[TransferLineageDecision, ...]
+
+
+@dataclass(frozen=True)
 class TransferDocumentPlan:
     source_doc: source_model.ScopeDoc
     target_doc_id: str
@@ -161,6 +190,8 @@ class TransferDocumentPlan:
     target_path: Path
     requested: bool
     effective_root: bool
+    copy_action: str
+    replacement_doc: source_model.ScopeDoc | None
 
 
 @dataclass(frozen=True)
@@ -177,6 +208,7 @@ class DocumentTransferPlan:
     custom_metadata: tuple[TransferCustomMetadataDecision, ...]
     link_decisions: tuple[TransferLinkDecision, ...]
     retained_external_dependencies: tuple[RetainedExternalDependency, ...]
+    lineage: DocumentLineageTransferPlan | None
     blockers: tuple[TransferBlocker, ...]
     warnings: tuple[TransferWarning, ...]
 
@@ -253,6 +285,7 @@ class DocumentTransferPlan:
                     "target_parent_id": document.target_parent_id,
                     "requested": document.requested,
                     "effective_root": document.effective_root,
+                    "copy_action": document.copy_action,
                 }
                 for document in self.documents
             ],
@@ -270,6 +303,7 @@ class DocumentTransferPlan:
                 asdict(dependency)
                 for dependency in self.retained_external_dependencies
             ],
+            "lineage": _lineage_preview_payload(self.lineage),
             "blockers": [asdict(blocker) for blocker in self.blockers],
             "warnings": [asdict(warning) for warning in self.warnings],
             "apply_plan": self.apply_plan_payload() if self.ok else None,
@@ -310,6 +344,7 @@ class DocumentTransferPlan:
                     "source_sha256": _source_sha256(document.source_doc.source_text),
                     "target_doc_id": document.target_doc_id,
                     "target_parent_id": document.target_parent_id,
+                    "copy_action": document.copy_action,
                 }
                 for document in self.documents
             ],
@@ -340,12 +375,52 @@ class DocumentTransferPlan:
                 asdict(item)
                 for item in self.link_decisions
             ],
+            "lineage": _lineage_apply_payload(self.lineage),
         }
         if source_model.collection_supports_publishable(
             self.target_collection.document_config
         ):
             payload["target_default_publishable"] = True
         return payload
+
+
+def _lineage_preview_payload(
+    lineage: DocumentLineageTransferPlan | None,
+) -> dict[str, Any] | None:
+    if lineage is None:
+        return None
+    return {
+        "contract_id": lineage.contract_id,
+        "choice_required": any(not decision.action for decision in lineage.decisions),
+        "sources": [
+            {
+                "source_doc_id": decision.source_doc_id,
+                "title": decision.source_title,
+                "action": decision.action,
+                "replace_target_doc_id": decision.replace_target_doc_id,
+                "existing_editorials": [asdict(choice) for choice in decision.existing_editorials],
+            }
+            for decision in lineage.decisions
+        ],
+    }
+
+
+def _lineage_apply_payload(
+    lineage: DocumentLineageTransferPlan | None,
+) -> dict[str, Any] | None:
+    if lineage is None:
+        return None
+    return {
+        "contract_id": lineage.contract_id,
+        "decisions": [
+            {
+                "source_doc_id": decision.source_doc_id,
+                "action": decision.action,
+                "replace_target_doc_id": decision.replace_target_doc_id,
+            }
+            for decision in lineage.decisions
+        ],
+    }
 
 
 def _media_payload(item: TransferMediaPlan) -> dict[str, Any]:
@@ -641,20 +716,43 @@ def _planned_documents(
     timestamp: str,
     target_root: Path,
     token_factory: IdentityTokenFactory | None,
+    lineage: DocumentLineageTransferPlan | None,
     blockers: list[TransferBlocker],
 ) -> tuple[TransferDocumentPlan, ...]:
     source_ids = {doc.doc_id for doc in source_docs}
     requested_ids = set(requested_doc_ids)
     if mode == COPY_MODE:
+        decisions = {
+            decision.source_doc_id: decision
+            for decision in lineage.decisions
+        } if lineage is not None else {}
+        new_docs = [
+            source_doc
+            for source_doc in source_docs
+            if lineage is None
+            or decisions[source_doc.doc_id].action == COPY_ACTION_NEW
+        ]
         id_map = _allocate_copy_ids(
-            source_docs,
+            new_docs,
             target_docs,
             timestamp=timestamp,
             target_root=target_root,
             token_factory=token_factory,
         )
+        replacement_docs: dict[str, source_model.ScopeDoc] = {}
+        target_docs_by_id = {document.doc_id: document for document in target_docs}
+        if lineage is not None:
+            for source_doc in source_docs:
+                decision = decisions[source_doc.doc_id]
+                if decision.action == COPY_ACTION_REPLACE:
+                    replacement = target_docs_by_id[decision.replace_target_doc_id]
+                    id_map[source_doc.doc_id] = replacement.doc_id
+                    replacement_docs[source_doc.doc_id] = replacement
+                elif not decision.action:
+                    id_map[source_doc.doc_id] = ""
     else:
         id_map = {doc.doc_id: doc.doc_id for doc in source_docs}
+        replacement_docs = {}
         target_ids = {doc.doc_id for doc in target_docs}
         for source_doc in source_docs:
             if source_doc.doc_id in target_ids or (target_root / f"{source_doc.doc_id}.md").exists():
@@ -674,13 +772,27 @@ def _planned_documents(
             source_doc=source_doc,
             target_doc_id=id_map[source_doc.doc_id],
             target_parent_id=(
-                id_map[source_doc.parent_id]
-                if source_doc.parent_id in source_ids
-                else ""
+                replacement_docs[source_doc.doc_id].parent_id
+                if source_doc.doc_id in replacement_docs
+                else (
+                    id_map[source_doc.parent_id]
+                    if source_doc.parent_id in source_ids
+                    else ""
+                )
             ),
-            target_path=target_root / f"{id_map[source_doc.doc_id]}.md",
+            target_path=(
+                replacement_docs[source_doc.doc_id].path
+                if source_doc.doc_id in replacement_docs
+                else target_root / f"{id_map[source_doc.doc_id]}.md"
+            ),
             requested=source_doc.doc_id in requested_ids,
             effective_root=source_doc.parent_id not in source_ids,
+            copy_action=(
+                decisions[source_doc.doc_id].action
+                if lineage is not None
+                else COPY_ACTION_NEW if mode == COPY_MODE else ""
+            ),
+            replacement_doc=replacement_docs.get(source_doc.doc_id),
         )
         for source_doc in source_docs
     )
@@ -1185,6 +1297,183 @@ def _collection_customisation(
     return getattr(collection.document_config, "sub_scope_customisation", None)
 
 
+def _normalize_copy_lineage_actions(
+    raw: Any,
+) -> dict[str, tuple[str, str]]:
+    if raw is None:
+        return {}
+    if not isinstance(raw, (list, tuple)):
+        raise ValueError("copy_lineage_actions must be an array")
+    if not raw:
+        raise ValueError("copy_lineage_actions must not be empty")
+    actions: dict[str, tuple[str, str]] = {}
+    expected_fields = frozenset(
+        {"source_doc_id", "action", "replace_target_doc_id"}
+    )
+    for index, item in enumerate(raw):
+        if not isinstance(item, Mapping):
+            raise ValueError(f"copy_lineage_actions[{index}] must be an object")
+        if frozenset(item) != expected_fields:
+            raise ValueError(
+                f"copy_lineage_actions[{index}] fields must be "
+                "source_doc_id, action, replace_target_doc_id"
+            )
+        source_doc_id = str(item.get("source_doc_id") or "").strip()
+        action = str(item.get("action") or "").strip().lower()
+        replace_target_doc_id = str(
+            item.get("replace_target_doc_id") or ""
+        ).strip()
+        if not source_doc_id:
+            raise ValueError(
+                f"copy_lineage_actions[{index}].source_doc_id is required"
+            )
+        if source_doc_id in actions:
+            raise ValueError("copy_lineage_actions contains a duplicate source")
+        if action not in SUPPORTED_COPY_ACTIONS:
+            raise ValueError(f"copy_lineage_actions[{index}].action is invalid")
+        if action == COPY_ACTION_NEW and replace_target_doc_id:
+            raise ValueError(
+                f"copy_lineage_actions[{index}] New must not select a target"
+            )
+        if action == COPY_ACTION_REPLACE and not replace_target_doc_id:
+            raise ValueError(
+                f"copy_lineage_actions[{index}] Replace requires an exact target"
+            )
+        actions[source_doc_id] = (action, replace_target_doc_id)
+    return actions
+
+
+def _document_lineage_plan(
+    repo_root: Path,
+    source_collection: ManagedDocumentCollection,
+    target_collection: ManagedDocumentCollection,
+    source_docs: Iterable[source_model.ScopeDoc],
+    target_docs: Iterable[source_model.ScopeDoc],
+    *,
+    mode: str,
+    raw_actions: Any,
+    blockers: list[TransferBlocker],
+) -> DocumentLineageTransferPlan | None:
+    source_aspect = sub_scope_customisation_document_lineage_contract(
+        _collection_customisation(source_collection)
+    )
+    target_aspect = sub_scope_customisation_document_lineage_contract(
+        _collection_customisation(target_collection)
+    )
+    enabled = (
+        mode == COPY_MODE
+        and source_aspect is not None
+        and target_aspect is not None
+        and source_aspect.role == LINEAGE_SOURCE_ROLE
+        and target_aspect.role == LINEAGE_EDITORIAL_ROLE
+        and source_aspect.contract_id == target_aspect.contract_id
+    )
+    if not enabled:
+        if raw_actions is not None:
+            raise ValueError(
+                "copy_lineage_actions are not supported for this exact transfer"
+            )
+        return None
+    if not source_collection.sub_scope or not target_collection.sub_scope:
+        raise ValueError("document lineage requires exact sub-scope collections")
+
+    normalized_actions = _normalize_copy_lineage_actions(raw_actions)
+    source_documents = tuple(source_docs)
+    source_ids = {document.doc_id for document in source_documents}
+    unknown_sources = sorted(set(normalized_actions) - source_ids)
+    if unknown_sources:
+        raise ValueError(
+            "copy_lineage_actions contains documents outside the exact selection: "
+            + ", ".join(unknown_sources)
+        )
+    if raw_actions is not None:
+        missing_sources = sorted(source_ids - set(normalized_actions))
+        if missing_sources:
+            raise ValueError(
+                "copy_lineage_actions is missing exact selected documents: "
+                + ", ".join(missing_sources)
+            )
+
+    lineage_rows = publication_lineage.load_rows(repo_root)
+    target_by_id = {document.doc_id: document for document in target_docs}
+    decisions: list[TransferLineageDecision] = []
+    selected_replace_targets: set[str] = set()
+    for document in source_documents:
+        source_identity = publication_lineage.DocumentLineageIdentity(
+            scope=source_collection.scope,
+            sub_scope=source_collection.sub_scope,
+            doc_id=document.doc_id,
+        )
+        rows = publication_lineage.rows_for_source(
+            lineage_rows,
+            source_identity,
+            editorial_scope=target_collection.scope,
+            editorial_sub_scope=target_collection.sub_scope,
+        )
+        choices = tuple(
+            TransferLineageEditorialChoice(
+                editorial_doc_id=row.editorial.doc_id,
+                title=(
+                    target_by_id[row.editorial.doc_id].title
+                    if row.editorial.doc_id in target_by_id
+                    else ""
+                ),
+                available=row.editorial.doc_id in target_by_id,
+            )
+            for row in rows
+        )
+        available_ids = {
+            choice.editorial_doc_id
+            for choice in choices
+            if choice.available
+        }
+        selected = normalized_actions.get(document.doc_id)
+        if selected is None:
+            action = COPY_ACTION_NEW if not available_ids else ""
+            replace_target_doc_id = ""
+            if available_ids:
+                blockers.append(
+                    TransferBlocker(
+                        code="lineage_copy_action_required",
+                        message=(
+                            f"choose New or one exact Replace target for "
+                            f"{document.doc_id!r}"
+                        ),
+                        document_ids=(document.doc_id,),
+                    )
+                )
+        else:
+            action, replace_target_doc_id = selected
+            if (
+                action == COPY_ACTION_REPLACE
+                and replace_target_doc_id not in available_ids
+            ):
+                raise ValueError(
+                    f"Replace target {replace_target_doc_id!r} is not an available "
+                    f"lineage row for {document.doc_id!r}"
+                )
+            if action == COPY_ACTION_REPLACE:
+                if replace_target_doc_id in selected_replace_targets:
+                    raise ValueError(
+                        f"Replace target {replace_target_doc_id!r} was selected "
+                        "for more than one source"
+                    )
+                selected_replace_targets.add(replace_target_doc_id)
+        decisions.append(
+            TransferLineageDecision(
+                source_doc_id=document.doc_id,
+                source_title=document.title,
+                action=action,
+                replace_target_doc_id=replace_target_doc_id,
+                existing_editorials=choices,
+            )
+        )
+    return DocumentLineageTransferPlan(
+        contract_id=source_aspect.contract_id,
+        decisions=tuple(decisions),
+    )
+
+
 def _custom_metadata_decisions(
     source_collection: ManagedDocumentCollection,
     target_collection: ManagedDocumentCollection,
@@ -1403,6 +1692,7 @@ def plan_document_transfer(
     target_sub_scope: Any | None = None,
     transfer_mode: Any,
     include_descendants: Any = False,
+    copy_lineage_actions: Any = None,
     operation_timestamp: str | None = None,
     token_factory: IdentityTokenFactory | None = None,
     source_media_client: object | None = None,
@@ -1501,6 +1791,16 @@ def plan_document_transfer(
                 ),
             )
         )
+    lineage = _document_lineage_plan(
+        repo_root,
+        source_collection,
+        target_collection,
+        effective_docs,
+        target_docs,
+        mode=mode,
+        raw_actions=copy_lineage_actions,
+        blockers=blockers,
+    )
     documents = _planned_documents(
         effective_docs,
         ordered_requested_ids,
@@ -1509,6 +1809,7 @@ def plan_document_transfer(
         timestamp=timestamp,
         target_root=target_root,
         token_factory=token_factory,
+        lineage=lineage,
         blockers=blockers,
     )
     if mode == MOVE_MODE:
@@ -1591,6 +1892,7 @@ def plan_document_transfer(
         custom_metadata=custom_metadata,
         link_decisions=link_decisions,
         retained_external_dependencies=retained_dependencies,
+        lineage=lineage,
         blockers=unique_blockers,
         warnings=unique_warnings,
     )
@@ -1662,6 +1964,18 @@ def restore_document_transfer_apply_plan(
     if not isinstance(receipt_documents, list) or not receipt_documents:
         raise ValueError("document transfer apply_plan documents are required")
 
+    lineage_payload = payload.get("lineage")
+    copy_lineage_actions: Any = None
+    if lineage_payload is not None:
+        if not isinstance(lineage_payload, Mapping):
+            raise ValueError("document transfer apply_plan lineage is invalid")
+        decisions = lineage_payload.get("decisions")
+        if not isinstance(decisions, list):
+            raise ValueError(
+                "document transfer apply_plan lineage decisions are required"
+            )
+        copy_lineage_actions = decisions
+
     token_factory: IdentityTokenFactory | None = None
     if mode == COPY_MODE:
         tokens: list[str] = []
@@ -1677,21 +1991,27 @@ def restore_document_transfer_apply_plan(
                     f"document transfer apply_plan target identity "
                     f"{target_doc_id!r} is invalid"
                 )
-            if not source_model.doc_id_matches_added_date(
-                target_doc_id,
-                operation_timestamp,
-            ):
+            copy_action = _receipt_text(record, "copy_action")
+            if copy_action not in SUPPORTED_COPY_ACTIONS:
                 raise ValueError(
-                    f"document transfer apply_plan target identity "
-                    f"{target_doc_id!r} does not match the operation timestamp"
+                    "document transfer apply_plan copy action is invalid"
                 )
+            if copy_action == COPY_ACTION_NEW:
+                if not source_model.doc_id_matches_added_date(
+                    target_doc_id,
+                    operation_timestamp,
+                ):
+                    raise ValueError(
+                        f"document transfer apply_plan target identity "
+                        f"{target_doc_id!r} does not match the operation timestamp"
+                    )
+                tokens.append(target_doc_id.rsplit("-", 1)[-1])
             if target_doc_id in planned_target_ids:
                 raise ValueError(
                     f"document transfer apply_plan target identity "
                     f"{target_doc_id!r} is duplicated"
                 )
             planned_target_ids.add(target_doc_id)
-            tokens.append(target_doc_id.rsplit("-", 1)[-1])
 
         token_index = 0
 
@@ -1703,7 +2023,8 @@ def restore_document_transfer_apply_plan(
             token_index += 1
             return token
 
-        token_factory = receipt_token_factory
+        if tokens:
+            token_factory = receipt_token_factory
 
     try:
         restored = plan_document_transfer(
@@ -1715,6 +2036,7 @@ def restore_document_transfer_apply_plan(
             target_sub_scope=target_collection.sub_scope or None,
             transfer_mode=mode,
             include_descendants=include_descendants,
+            copy_lineage_actions=copy_lineage_actions,
             operation_timestamp=operation_timestamp,
             token_factory=token_factory,
             source_media_client=source_media_client,
@@ -1731,6 +2053,8 @@ def restore_document_transfer_apply_plan(
 
 
 __all__ = [
+    "COPY_ACTION_NEW",
+    "COPY_ACTION_REPLACE",
     "COPY_MODE",
     "MOVE_MODE",
     "REGISTERED_BUILD_SOURCE_IDENTITY_RESOLVERS",
@@ -1738,6 +2062,7 @@ __all__ = [
     "TRANSFER_APPLY_PLAN_SCHEMA_VERSION",
     "TRANSFER_PREVIEW_SCHEMA_VERSION",
     "DocumentTransferPlan",
+    "DocumentLineageTransferPlan",
     "BuildSourceIdentityResolver",
     "IdentityTokenFactory",
     "RetainedExternalDependency",
@@ -1746,6 +2071,8 @@ __all__ = [
     "TransferCustomMetadataDecision",
     "TransferDocumentPlan",
     "TransferLinkDecision",
+    "TransferLineageDecision",
+    "TransferLineageEditorialChoice",
     "TransferMediaPlan",
     "TransferWarning",
     "collection_report_host_doc_id",

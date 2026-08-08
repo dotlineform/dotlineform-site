@@ -64,6 +64,12 @@ def test_current_customisations_declare_explicit_aspects() -> None:
         )
     )
     assert works.transfer is None
+    assert works.document_lineage == (
+        customisations.DocsSubScopeDocumentLineageAspect(
+            contract_id="dotlineform_projects_to_analysis_works",
+            role="editorial",
+        )
+    )
 
     assert isinstance(
         projects.manifest_projection,
@@ -88,6 +94,12 @@ def test_current_customisations_declare_explicit_aspects() -> None:
         ),
     )
     assert projects.transfer is None
+    assert projects.document_lineage == (
+        customisations.DocsSubScopeDocumentLineageAspect(
+            contract_id="dotlineform_projects_to_analysis_works",
+            role="source",
+        )
+    )
 
     projects_config = customisations.normalize_docs_subscope_customisation(
         {"id": "dotlineform_projects", "settings": {}},
@@ -121,6 +133,12 @@ def test_current_customisations_declare_explicit_aspects() -> None:
     assert customisations.sub_scope_customisation_authoring_subject_fields(
         works_config
     ) == ("folder_path", "work_id", "series_id")
+    assert customisations.sub_scope_customisation_document_lineage_contract(
+        works_config
+    ) == works.document_lineage
+    assert customisations.sub_scope_customisation_document_lineage_contract(
+        projects_config
+    ) == projects.document_lineage
 
 
 def test_assignable_and_transfer_seams_are_typed_and_access_safe() -> None:
@@ -239,6 +257,26 @@ def test_transfer_contract_cannot_claim_shared_subject_fields() -> None:
         {"synthetic": definition},
     ):
         with pytest.raises(ValueError, match="must not own shared"):
+            customisations.normalize_docs_subscope_customisation(
+                {"id": "synthetic", "settings": {}},
+                field="sub_scope_customisation",
+            )
+
+
+def test_document_lineage_contract_requires_a_supported_exact_role() -> None:
+    definition = customisations.DocsSubScopeCustomisationDefinition(
+        customisation_id="synthetic",
+        normalize_settings=_empty_settings,
+        document_lineage=customisations.DocsSubScopeDocumentLineageAspect(
+            contract_id="synthetic_lineage",
+            role="primary",
+        ),
+    )
+    with patch.dict(
+        customisations.SUB_SCOPE_CUSTOMISATION_DEFINITIONS,
+        {"synthetic": definition},
+    ):
+        with pytest.raises(ValueError, match="invalid role"):
             customisations.normalize_docs_subscope_customisation(
                 {"id": "synthetic", "settings": {}},
                 field="sub_scope_customisation",

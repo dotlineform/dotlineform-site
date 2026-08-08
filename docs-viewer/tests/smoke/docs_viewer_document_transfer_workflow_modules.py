@@ -68,7 +68,7 @@ def assert_transfer_workflow(page: Page) -> None:
                 requests.push({ url, method: options.method, body });
                 if (url.endsWith('/docs/document-transfer-preview')) {
                     return response({
-                        schema_version: 'docs_document_transfer_preview_v2',
+                        schema_version: 'docs_document_transfer_preview_v3',
                         ok: true,
                         mode: body.transfer_mode,
                         source: { scope: body.scope },
@@ -99,7 +99,7 @@ def assert_transfer_workflow(page: Page) -> None:
                         ],
                         blockers: [],
                         apply_plan: {
-                            schema_version: 'docs_document_transfer_apply_plan_v2',
+                            schema_version: 'docs_document_transfer_apply_plan_v3',
                             mode: body.transfer_mode,
                             source: { scope: body.scope },
                             target: {
@@ -248,6 +248,122 @@ def assert_transfer_workflow(page: Page) -> None:
             };
             document.querySelector('[data-role="modal-cancel"]').click();
             const blockedResult = await blockedPromise;
+            const blockedFocusRestored = document.activeElement === restore;
+
+            const lineageRequests = [];
+            const lineageFetch = (url, options) => {
+                const body = JSON.parse(options.body);
+                lineageRequests.push({ url, body });
+                if (url.endsWith('/docs/document-transfer-apply')) {
+                    return response({
+                        ok: true,
+                        summary_text: 'Copied 1 document (0 New, 1 Replace).',
+                        effective_roots: [{
+                            target_viewer_url: '/docs/?scope=analysis&doc=host&subdoc=editorial-b'
+                        }]
+                    });
+                }
+                const decided = Array.isArray(body.copy_lineage_actions);
+                return response({
+                    schema_version: 'docs_document_transfer_preview_v3',
+                    ok: decided,
+                    mode: 'copy',
+                    source: { scope: 'dotlineform', sub_scope: 'projects' },
+                    target: {
+                        scope: 'analysis',
+                        sub_scope: 'works',
+                        placement: 'sub_scope_root'
+                    },
+                    target_default_publishable: true,
+                    custom_metadata: { retained: [], omitted: [], rejected: [] },
+                    document_count: 1,
+                    effective_root_count: 1,
+                    descendant_count: 0,
+                    unique_media_count: 0,
+                    retained_external_dependencies: [],
+                    media: [],
+                    warnings: [],
+                    blockers: decided ? [] : [{
+                        code: 'lineage_copy_action_required',
+                        message: 'choose New or one exact Replace target'
+                    }],
+                    lineage: {
+                        contract_id: 'dotlineform_projects_to_analysis_works',
+                        choice_required: !decided,
+                        sources: [{
+                            source_doc_id: 'working-a',
+                            title: 'Working A',
+                            action: decided ? body.copy_lineage_actions[0].action : '',
+                            replace_target_doc_id: decided
+                                ? body.copy_lineage_actions[0].replace_target_doc_id
+                                : '',
+                            existing_editorials: [{
+                                editorial_doc_id: 'editorial-b',
+                                title: 'Editorial B',
+                                available: true
+                            }, {
+                                editorial_doc_id: 'missing-b',
+                                title: '',
+                                available: false
+                            }]
+                        }]
+                    },
+                    apply_plan: decided ? {
+                        schema_version: 'docs_document_transfer_apply_plan_v3',
+                        mode: 'copy',
+                        source: { scope: 'dotlineform', sub_scope: 'projects' },
+                        target: { scope: 'analysis', sub_scope: 'works' }
+                    } : null
+                });
+            };
+            const lineagePromise = workflow.openDocumentTransferWorkflow({
+                root,
+                restoreFocus: restore,
+                source: { scope: 'dotlineform', sub_scope: 'projects' },
+                mode: 'copy',
+                checkedDocIds: ['working-a'],
+                targets: [{
+                    target: { scope: 'analysis', sub_scope: 'works' },
+                    label: 'analysis / Works'
+                }],
+                clientOptions: {
+                    baseUrl: 'http://manage.test',
+                    scope: 'dotlineform',
+                    fetch: lineageFetch
+                }
+            });
+            await waitFor(
+                () => document.querySelector('.docsViewer__modalTitle')?.textContent === 'Copy to…'
+            );
+            document.querySelector('[data-role="modal-primary"]').click();
+            await waitFor(
+                () => document.querySelector('.docsViewer__modalTitle')?.textContent === 'Choose New or Replace'
+            );
+            await waitFor(
+                () => document.activeElement?.dataset.role === 'modal-cancel'
+            );
+            const lineageChoice = {
+                focusedRole: document.activeElement?.dataset.role || '',
+                labels: Array.from(document.querySelectorAll('.docsViewer__fieldLabel'))
+                    .map(node => node.textContent),
+                checkedCount: document.querySelectorAll(
+                    'input[name="docsViewerDocumentLineageAction-0"]:checked'
+                ).length
+            };
+            document.querySelector(
+                'input[name="docsViewerDocumentLineageAction-0"][value="replace:0"]'
+            ).click();
+            document.querySelector('[data-role="modal-primary"]').click();
+            await waitFor(
+                () => document.querySelector('.docsViewer__modalTitle')?.textContent === 'Confirm copy'
+            );
+            const lineageConfirmation = {
+                primaryLabel: document.querySelector('[data-role="modal-primary"]').textContent,
+                body: Array.from(document.querySelectorAll('.docsViewer__modalBody p'))
+                    .map(node => node.textContent)
+            };
+            document.querySelector('[data-role="modal-primary"]').click();
+            const lineageApplied = await lineagePromise;
 
             const transferCapabilities = {
                 document_transfer: { preview: true, apply: true },
@@ -308,7 +424,7 @@ def assert_transfer_workflow(page: Page) -> None:
                     code: 'retained_dependency',
                     message: 'An unrelated dependency will remain unchanged.'
                 }],
-                apply_plan: { schema_version: 'docs_document_transfer_apply_plan_v2' }
+                apply_plan: { schema_version: 'docs_document_transfer_apply_plan_v3' }
             };
             return {
                 optionsState,
@@ -318,11 +434,15 @@ def assert_transfer_workflow(page: Page) -> None:
                 appliedPayload,
                 busy,
                 messages,
-                focusRestored: document.activeElement === restore,
+                focusRestored: blockedFocusRestored,
                 moveOptions,
                 blockedConfirmation,
                 blockedRequests,
                 blockedResult,
+                lineageRequests,
+                lineageChoice,
+                lineageConfirmation,
+                lineageApplied,
                 warningConfirmation: workflow.buildDocumentTransferConfirmationBody(
                     warningPreview
                 ),
@@ -405,7 +525,7 @@ def assert_transfer_workflow(page: Page) -> None:
             "body": {
                 "scope": "studio",
                 "apply_plan": {
-                    "schema_version": "docs_document_transfer_apply_plan_v2",
+                    "schema_version": "docs_document_transfer_apply_plan_v3",
                     "mode": "copy",
                     "source": {"scope": "studio"},
                     "target": {"scope": "analysis", "sub_scope": "works"},
@@ -447,6 +567,57 @@ def assert_transfer_workflow(page: Page) -> None:
         raise AssertionError("Move client request unexpectedly invented a descendant choice")
     if result["blockedResult"] is not None or not result["focusRestored"]:
         raise AssertionError("cancelled blocked transfer did not restore focus")
+    if result["lineageChoice"] != {
+        "focusedRole": "modal-cancel",
+        "labels": [
+            "New editorial copy",
+            "Replace Editorial B (editorial-b)",
+            "Unavailable editorial target (missing-b)",
+        ],
+        "checkedCount": 0,
+    }:
+        raise AssertionError(
+            f"unexpected lineage choice state: {result['lineageChoice']!r}"
+        )
+    if result["lineageConfirmation"]["primaryLabel"] != "Replace selected documents":
+        raise AssertionError(
+            f"Replace confirmation lost its destructive label: "
+            f"{result['lineageConfirmation']!r}"
+        )
+    if not any(
+        "Replace editorial-b from working-a" in line
+        for line in result["lineageConfirmation"]["body"]
+    ):
+        raise AssertionError(
+            f"Replace confirmation omitted exact identities: "
+            f"{result['lineageConfirmation']!r}"
+        )
+    if any(
+        "New documents will be included" in line
+        for line in result["lineageConfirmation"]["body"]
+    ):
+        raise AssertionError(
+            f"Replace confirmation claimed New publication behavior: "
+            f"{result['lineageConfirmation']!r}"
+        )
+    if len(result["lineageRequests"]) != 3:
+        raise AssertionError(
+            f"lineage workflow request count changed: {result['lineageRequests']!r}"
+        )
+    first_lineage_preview = result["lineageRequests"][0]["body"]
+    decided_lineage_preview = result["lineageRequests"][1]["body"]
+    if "copy_lineage_actions" in first_lineage_preview:
+        raise AssertionError("initial lineage preview invented a New/Replace choice")
+    if decided_lineage_preview.get("copy_lineage_actions") != [{
+        "source_doc_id": "working-a",
+        "action": "replace",
+        "replace_target_doc_id": "editorial-b",
+    }]:
+        raise AssertionError(
+            f"lineage workflow changed the exact choice: {decided_lineage_preview!r}"
+        )
+    if result["lineageApplied"].get("ok") is not True:
+        raise AssertionError("lineage workflow did not return its exact apply result")
     if not result["warningCanApply"]:
         raise AssertionError("warning-only transfer was incorrectly blocked")
     aggregated_warning_lines = [

@@ -92,6 +92,117 @@ function optionMarkup(options) {
   return markup;
 }
 
+function lineageSources(preview) {
+  return preview && preview.lineage && Array.isArray(preview.lineage.sources)
+    ? preview.lineage.sources
+    : [];
+}
+
+function lineageChoiceMarkup(preview) {
+  var sources = lineageSources(preview);
+  var markup = noteMarkup(
+    "Choose New or one exact existing editorial document for every working document that already has a current target."
+  );
+  sources.forEach(function (source, sourceIndex) {
+    var existing = Array.isArray(source && source.existing_editorials)
+      ? source.existing_editorials
+      : [];
+    var available = existing.filter(function (choice) { return choice && choice.available === true; });
+    var unavailable = existing.filter(function (choice) { return choice && choice.available !== true; });
+    if (!available.length) return;
+    var sourceLabel = String(source && source.title || source && source.source_doc_id || "Working document").trim();
+    markup += '<p class="docsViewer__modalNote"><strong>' + escapeHtml(sourceLabel) + "</strong></p>";
+    markup += [
+      '<label class="docsViewer__field docsViewer__field--checkbox">',
+      '  <input class="docsViewer__checkboxInput" type="radio" name="docsViewerDocumentLineageAction-' + sourceIndex + '" value="new">',
+      '  <span class="docsViewer__fieldLabel">New editorial copy</span>',
+      "</label>"
+    ].join("");
+    available.forEach(function (choice, choiceIndex) {
+      var choiceLabel = String(choice.title || choice.editorial_doc_id).trim();
+      markup += [
+        '<label class="docsViewer__field docsViewer__field--checkbox">',
+        '  <input class="docsViewer__checkboxInput" type="radio" name="docsViewerDocumentLineageAction-' + sourceIndex + '" value="replace:' + choiceIndex + '">',
+        '  <span class="docsViewer__fieldLabel">Replace ' + escapeHtml(choiceLabel) + " (" + escapeHtml(choice.editorial_doc_id) + ")</span>",
+        "</label>"
+      ].join("");
+    });
+    unavailable.forEach(function (choice) {
+      markup += [
+        '<label class="docsViewer__field docsViewer__field--checkbox">',
+        '  <input class="docsViewer__checkboxInput" type="radio" disabled>',
+        '  <span class="docsViewer__fieldLabel">Unavailable editorial target (' + escapeHtml(choice.editorial_doc_id) + ")</span>",
+        "</label>"
+      ].join("");
+    });
+  });
+  markup += noteMarkup(
+    "Replace preserves the selected editorial identity, placement, added date, and current Publish inclusion gate. It overwrites its content without comparison or merge."
+  );
+  return markup;
+}
+
+function openLineageChoices(options) {
+  var preview = options.preview || {};
+  var sources = lineageSources(preview);
+  return openDocsViewerManagementModal({
+    root: options.root,
+    restoreFocus: options.restoreFocus,
+    title: "Choose New or Replace",
+    size: "compact",
+    bodyHtml: lineageChoiceMarkup(preview),
+    focusSelector: 'button[data-role="modal-cancel"]',
+    actions: [
+      { role: "modal-primary", label: "Preview choice" },
+      { role: "modal-cancel", label: "Cancel" }
+    ],
+    onSubmit: function (api) {
+      var actions = [];
+      for (var sourceIndex = 0; sourceIndex < sources.length; sourceIndex += 1) {
+        var source = sources[sourceIndex] || {};
+        var available = Array.isArray(source.existing_editorials)
+          ? source.existing_editorials.filter(function (choice) { return choice && choice.available === true; })
+          : [];
+        if (!available.length) {
+          actions.push({
+            source_doc_id: source.source_doc_id,
+            action: "new",
+            replace_target_doc_id: ""
+          });
+          continue;
+        }
+        var selected = api.host.querySelector(
+          'input[name="docsViewerDocumentLineageAction-' + sourceIndex + '"]:checked'
+        );
+        if (!selected) {
+          api.setStatus("Choose New or Replace for every listed working document.");
+          return false;
+        }
+        var value = String(selected.value || "");
+        if (value === "new") {
+          actions.push({
+            source_doc_id: source.source_doc_id,
+            action: "new",
+            replace_target_doc_id: ""
+          });
+          continue;
+        }
+        var choiceIndex = Number(value.slice("replace:".length));
+        if (!value.startsWith("replace:") || !Number.isInteger(choiceIndex) || !available[choiceIndex]) {
+          api.setStatus("The selected Replace target is unavailable.");
+          return false;
+        }
+        actions.push({
+          source_doc_id: source.source_doc_id,
+          action: "replace",
+          replace_target_doc_id: available[choiceIndex].editorial_doc_id
+        });
+      }
+      return { confirmed: true, actions: actions };
+    }
+  });
+}
+
 export function buildDocumentTransferConfirmationBody(preview) {
   var mode = normalizedMode(preview && preview.mode);
   var documentCount = Number(preview && preview.document_count) || 0;
@@ -130,22 +241,49 @@ export function buildDocumentTransferConfirmationBody(preview) {
   }).forEach(function (warning) {
     lines.push("Warning: " + String(warning && warning.message || warning || "").trim());
   });
+  var lineage = lineageSources(preview);
+  var includesNew = !lineage.length || lineage.some(function (source) {
+    return source && source.action === "new";
+  });
   if (
     mode === "copy"
+    && includesNew
     && Object.prototype.hasOwnProperty.call(preview, "target_default_publishable")
   ) {
     lines.push("New documents will be included in the next Publish.");
-    var omitted = preview && preview.custom_metadata && Array.isArray(preview.custom_metadata.omitted)
-      ? preview.custom_metadata.omitted
-      : [];
-    if (omitted.length) {
+  }
+  var omitted = preview && preview.custom_metadata && Array.isArray(preview.custom_metadata.omitted)
+    ? preview.custom_metadata.omitted
+    : [];
+  if (mode === "copy" && omitted.length) {
+    lines.push(
+      countLabel(omitted.length, "custom metadata field", "custom metadata fields")
+      + " will be omitted because the target does not support "
+      + (omitted.length === 1 ? "it." : "them.")
+    );
+  }
+  lineageSources(preview).forEach(function (source) {
+    if (source.action === "replace") {
       lines.push(
-        countLabel(omitted.length, "custom metadata field", "custom metadata fields")
-        + " will be omitted because the target does not support "
-        + (omitted.length === 1 ? "it." : "them.")
+        "Replace " + String(source.replace_target_doc_id || "") +
+        " from " + String(source.source_doc_id || "") +
+        "; its identity and current Publish inclusion gate are preserved."
+      );
+    } else if (source.action === "new") {
+      lines.push("Create a new editorial copy from " + String(source.source_doc_id || "") + ".");
+    }
+    var unavailableCount = Array.isArray(source.existing_editorials)
+      ? source.existing_editorials.filter(function (choice) {
+        return choice && choice.available !== true;
+      }).length
+      : 0;
+    if (unavailableCount) {
+      lines.push(
+        countLabel(unavailableCount, "recorded editorial target is", "recorded editorial targets are")
+        + " unavailable and cannot be replaced for " + String(source.source_doc_id || "") + "."
       );
     }
-  }
+  });
   return lines.filter(Boolean);
 }
 
@@ -255,20 +393,55 @@ export async function openDocumentTransferWorkflow(options = {}) {
       choice.target,
       mode,
       choice.includeDescendants,
-      options.clientOptions || {}
+      options.clientOptions || {},
+      null
     );
   } finally {
     setBusy(callbacks, false);
   }
   setMessage(callbacks, "", false);
 
+  if (
+    mode === "copy"
+    && preview
+    && preview.lineage
+    && preview.lineage.choice_required === true
+  ) {
+    var lineageChoice = await openLineageChoices({
+      root: options.root,
+      restoreFocus: options.restoreFocus,
+      preview: preview
+    });
+    if (!lineageChoice || !lineageChoice.confirmed) return null;
+    setBusy(callbacks, true);
+    setMessage(callbacks, TRANSFER_TEXT[mode].previewing, false);
+    try {
+      preview = await previewManagedDocumentTransfer(
+        source,
+        checkedDocIds,
+        choice.target,
+        mode,
+        choice.includeDescendants,
+        options.clientOptions || {},
+        lineageChoice.actions
+      );
+    } finally {
+      setBusy(callbacks, false);
+    }
+    setMessage(callbacks, "", false);
+  }
+
   var canApply = documentTransferPreviewCanApply(preview);
+  var hasReplace = lineageSources(preview).some(function (sourceRecord) {
+    return sourceRecord && sourceRecord.action === "replace";
+  });
   var confirmed = await openDocsViewerConfirmModal({
     root: options.root,
     restoreFocus: options.restoreFocus,
     title: TRANSFER_TEXT[mode].confirmTitle,
     bodyHtml: documentTransferConfirmationBodyHtml(preview),
-    primaryLabel: TRANSFER_TEXT[mode].confirmButton,
+    primaryLabel: hasReplace ? "Replace selected documents" : TRANSFER_TEXT[mode].confirmButton,
+    primaryTone: hasReplace ? "danger" : "",
     primaryDisabled: !canApply,
     initialFocus: "cancel",
     cancelLabel: "Cancel"

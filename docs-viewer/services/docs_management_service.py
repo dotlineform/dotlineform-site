@@ -252,6 +252,7 @@ def docs_management_post_response(
             ),
             transfer_mode=body.get("transfer_mode"),
             include_descendants=body.get("include_descendants", False),
+            copy_lineage_actions=body.get("copy_lineage_actions"),
         )
         payload = plan.preview_payload()
         payload["dry_run"] = True

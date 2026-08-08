@@ -34,6 +34,7 @@ from build_docs_test_support import (  # noqa: E402
 )
 from test_docs_document_transfer import (  # noqa: E402
     make_collection_repo,
+    make_lineage_repo,
     sub_scope_documents_root,
 )
 
@@ -236,6 +237,137 @@ def fake_sub_scope_rebuild(calls: list[dict[str, object]]):
     return perform
 
 
+def test_lineage_new_and_replace_commit_exact_rows_and_preserve_editorial_gate(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo_root = make_lineage_repo(tmp_path)
+    source_id = "d-20260801-100000-aaaaaa"
+    existing_target_id = "d-20260802-110000-bbbbbb"
+    source_path = sub_scope_documents_root(
+        repo_root,
+        "dotlineform",
+        "projects",
+    ) / f"{source_id}.md"
+    target_path = sub_scope_documents_root(
+        repo_root,
+        "analysis",
+        "works",
+    ) / f"{existing_target_id}.md"
+    target_before, _body = source_model.parse_source(target_path)
+    rebuild_calls: list[dict[str, object]] = []
+
+    new_plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="dotlineform",
+        source_sub_scope="projects",
+        requested_doc_ids=[source_id],
+        target_scope="analysis",
+        target_sub_scope="works",
+        transfer_mode="copy",
+        operation_timestamp="2026-08-08 10:00:00",
+        copy_lineage_actions=[
+            {
+                "source_doc_id": source_id,
+                "action": "new",
+                "replace_target_doc_id": "",
+            }
+        ],
+        token_factory=sequential_tokens("eeeeee"),
+    )
+    monkeypatch.setattr(
+        transfer_apply.publication_lineage,
+        "current_timestamp",
+        lambda: "2026-08-08T10:00:00Z",
+    )
+    new_result = transfer_apply.apply_document_copy(
+        repo_root,
+        new_plan,
+        confirm=True,
+        perform_sub_scope_source_write_and_rebuild=fake_sub_scope_rebuild(
+            rebuild_calls
+        ),
+        activity_logger=lambda *_args: None,
+    )
+    new_target_id = "d-20260808-100000-eeeeee"
+    assert new_result["created_doc_ids"] == [new_target_id]
+    assert new_result["replaced_doc_ids"] == []
+    assert new_result["copy_results"] == [
+        {
+            "source_doc_id": source_id,
+            "target_doc_id": new_target_id,
+            "action": "new",
+        }
+    ]
+
+    source_front_matter, _source_body = source_model.parse_source(source_path)
+    source_front_matter["title"] = "Working A Updated"
+    source_path.write_text(
+        source_model.format_source(
+            source_front_matter,
+            "# Working A Updated\n\nReplacement body from A.\n",
+        ),
+        encoding="utf-8",
+    )
+    replace_plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="dotlineform",
+        source_sub_scope="projects",
+        requested_doc_ids=[source_id],
+        target_scope="analysis",
+        target_sub_scope="works",
+        transfer_mode="copy",
+        operation_timestamp="2026-08-08 11:00:00",
+        copy_lineage_actions=[
+            {
+                "source_doc_id": source_id,
+                "action": "replace",
+                "replace_target_doc_id": existing_target_id,
+            }
+        ],
+    )
+    monkeypatch.setattr(
+        transfer_apply.publication_lineage,
+        "current_timestamp",
+        lambda: "2026-08-08T11:00:00Z",
+    )
+    replace_result = transfer_apply.apply_document_copy(
+        repo_root,
+        replace_plan,
+        confirm=True,
+        perform_sub_scope_source_write_and_rebuild=fake_sub_scope_rebuild(
+            rebuild_calls
+        ),
+        activity_logger=lambda *_args: None,
+    )
+
+    replaced_front_matter, replaced_body = source_model.parse_source(target_path)
+    assert replace_result["created_doc_ids"] == []
+    assert replace_result["replaced_doc_ids"] == [existing_target_id]
+    assert replaced_front_matter["doc_id"] == existing_target_id
+    assert replaced_front_matter["added_date"] == target_before["added_date"]
+    assert replaced_front_matter["last_updated"] == "2026-08-08 11:00:00"
+    assert replaced_front_matter["publishable"] is False
+    assert replaced_front_matter["folder_path"] == "2026/working-a"
+    assert replaced_front_matter["work_id"] == "00123"
+    assert "Replacement body from A." in replaced_body
+
+    table = json.loads(
+        (
+            repo_root
+            / "docs-viewer/data/canonical/document-publication-lineage.json"
+        ).read_text(encoding="utf-8")
+    )
+    exact_row = next(
+        row
+        for row in table["rows"]
+        if row["editorial"]["doc_id"] == existing_target_id
+    )
+    assert exact_row["created_at"] == "2026-08-07T20:00:00Z"
+    assert exact_row["last_copied_at"] == "2026-08-08T11:00:00Z"
+    assert source_model.parse_source(source_path)[1].endswith(
+        "Replacement body from A.\n"
+    )
 def test_transform_copy_preserves_selected_hierarchy_and_rewrites_owned_links(
     tmp_path: Path,
 ) -> None:
@@ -882,7 +1014,7 @@ def test_apply_child_to_child_copy_uses_exact_transform_rebuild_and_result(
     )
     target_report_id = "d-20260701-100003-dddddd"
 
-    assert result["schema_version"] == "docs_document_copy_apply_v2"
+    assert result["schema_version"] == "docs_document_copy_apply_v3"
     assert result["source"] == {"scope": "source", "sub_scope": "tags"}
     assert result["target"] == {"scope": "target", "sub_scope": "works"}
     assert "source_scope" not in result

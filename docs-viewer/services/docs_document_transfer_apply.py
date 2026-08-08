@@ -12,12 +12,13 @@ from typing import Any, Callable, Iterable, Mapping
 from urllib.parse import quote, unquote_plus
 
 import docs_document_transfer as transfer
+import docs_document_publication_lineage as publication_lineage
 import docs_document_location as document_location
 import docs_source_model as source_model
 from docs_artifact_locations import ArtifactLocationAdapter
 
 
-DOCUMENT_COPY_APPLY_SCHEMA_VERSION = "docs_document_copy_apply_v2"
+DOCUMENT_COPY_APPLY_SCHEMA_VERSION = "docs_document_copy_apply_v3"
 DOCUMENT_COPY_ACTIVITY_EVENT = "docs-document-copy"
 DOCUMENT_COPY_SUPPRESSION_REASON = "docs-document-copy"
 PerformSourceWriteAndRebuild = Callable[..., dict[str, Any]]
@@ -334,10 +335,23 @@ def transform_document_copy(
     for planned_document in plan.documents:
         front_matter = dict(planned_document.source_doc.front_matter)
         front_matter["doc_id"] = planned_document.target_doc_id
-        front_matter["added_date"] = plan.operation_timestamp
         front_matter["last_updated"] = plan.operation_timestamp
         front_matter["parent_id"] = planned_document.target_parent_id
-        front_matter.pop("publishable", None)
+        replacement = planned_document.replacement_doc
+        if planned_document.copy_action == transfer.COPY_ACTION_NEW:
+            front_matter["added_date"] = plan.operation_timestamp
+            front_matter.pop("publishable", None)
+        elif (
+            planned_document.copy_action == transfer.COPY_ACTION_REPLACE
+            and replacement is not None
+        ):
+            front_matter["added_date"] = replacement.front_matter.get("added_date")
+            if "publishable" in replacement.front_matter:
+                front_matter["publishable"] = replacement.front_matter["publishable"]
+            else:
+                front_matter.pop("publishable", None)
+        else:
+            raise ValueError("document Copy transformation contains an invalid action")
         for decision in plan.custom_metadata:
             if decision.source_doc_id != planned_document.source_doc.doc_id:
                 continue
@@ -390,7 +404,11 @@ def _validate_transformation(
         expected = {
             "doc_id": planned.target_doc_id,
             "parent_id": planned.target_parent_id,
-            "added_date": plan.operation_timestamp,
+            "added_date": (
+                planned.replacement_doc.front_matter.get("added_date")
+                if planned.replacement_doc is not None
+                else plan.operation_timestamp
+            ),
             "last_updated": plan.operation_timestamp,
         }
         for key, value in expected.items():
@@ -410,14 +428,24 @@ def _validate_transformation(
                 f"document transfer plan is stale: candidate publishability changed "
                 f"for {planned.target_doc_id!r}: {exc}"
             ) from exc
-        if (
-            source_model.collection_supports_publishable(target_document_config)
-            and not source_model.doc_is_publishable(front_matter)
-        ):
-            raise DocumentTransferPlanStaleError(
-                f"document transfer plan is stale: candidate publishability changed "
-                f"for {planned.target_doc_id!r}"
-            )
+        if source_model.collection_supports_publishable(target_document_config):
+            if planned.replacement_doc is None:
+                publishability_changed = not source_model.doc_is_publishable(
+                    front_matter
+                )
+            else:
+                replacement_front_matter = planned.replacement_doc.front_matter
+                publishability_changed = (
+                    ("publishable" in front_matter)
+                    != ("publishable" in replacement_front_matter)
+                    or front_matter.get("publishable")
+                    != replacement_front_matter.get("publishable")
+                )
+            if publishability_changed:
+                raise DocumentTransferPlanStaleError(
+                    f"document transfer plan is stale: candidate publishability changed "
+                    f"for {planned.target_doc_id!r}"
+                )
         for decision in plan.custom_metadata:
             if decision.source_doc_id != planned.source_doc.doc_id:
                 continue
@@ -860,7 +888,7 @@ def apply_document_copy(
     ) = None,
     activity_logger: ActivityLogger | None = None,
 ) -> dict[str, Any]:
-    """Apply one confirmed Copy plan without overwriting target artifacts."""
+    """Apply one confirmed New/Replace Copy plan at its exact target boundary."""
 
     if confirm is not True:
         raise ValueError("confirm must be true to copy documents")
@@ -879,6 +907,24 @@ def apply_document_copy(
     phase = "media"
     media_complete = False
     rebuild_complete = False
+    copy_results = [
+        {
+            "source_doc_id": item.planned_document.source_doc.doc_id,
+            "target_doc_id": item.planned_document.target_doc_id,
+            "action": item.planned_document.copy_action,
+        }
+        for item in transformation.documents
+    ]
+    created_doc_ids = [
+        result["target_doc_id"]
+        for result in copy_results
+        if result["action"] == transfer.COPY_ACTION_NEW
+    ]
+    replaced_doc_ids = [
+        result["target_doc_id"]
+        for result in copy_results
+        if result["action"] == transfer.COPY_ACTION_REPLACE
+    ]
 
     try:
         target_media_adapters = transfer.published_transfer_adapters(
@@ -905,16 +951,15 @@ def apply_document_copy(
         media_complete = True
 
         phase = "documents_and_rebuild"
-        created_doc_ids = [
-            item.planned_document.target_doc_id
-            for item in transformation.documents
-        ]
         target_paths = [item.target_path for item in transformation.documents]
         written_paths: list[Path] = []
 
         def write_operation() -> None:
             for item in transformation.documents:
-                source_model.write_text_atomic_new(item.target_path, item.source_text)
+                if item.planned_document.copy_action == transfer.COPY_ACTION_REPLACE:
+                    source_model.write_text_atomic(item.target_path, item.source_text)
+                else:
+                    source_model.write_text_atomic_new(item.target_path, item.source_text)
                 written_paths.append(item.target_path)
 
         if current_plan.target_sub_scope:
@@ -955,6 +1000,22 @@ def apply_document_copy(
             )
         rebuild_complete = True
 
+        phase = "lineage"
+        lineage_result: dict[str, Any] | None = None
+        if current_plan.lineage is not None:
+            lineage_rows = publication_lineage.apply_copy_results(
+                repo_root,
+                source_scope=current_plan.source_scope,
+                source_sub_scope=current_plan.source_sub_scope,
+                editorial_scope=current_plan.target_scope,
+                editorial_sub_scope=current_plan.target_sub_scope,
+                results=copy_results,
+            )
+            lineage_result = {
+                "schema_version": publication_lineage.LINEAGE_SCHEMA_VERSION,
+                "row_count": len(lineage_rows),
+            }
+
         phase = "activity"
         if activity_logger is None:
             from docs_management_context import log_event
@@ -973,17 +1034,21 @@ def apply_document_copy(
             for item in current_plan.documents
             if item.effective_root
         ]
+        activity_payload = {
+            "source": current_plan.source_collection.request_target(),
+            "requested_doc_ids": list(current_plan.requested_doc_ids),
+            "target": current_plan.target_collection.request_target(),
+            "effective_roots": effective_roots,
+            "created_count": len(created_doc_ids),
+            "unique_media_count": len(current_plan.media),
+        }
+        if current_plan.lineage is not None:
+            activity_payload["replaced_count"] = len(replaced_doc_ids)
+            activity_payload["copy_results"] = copy_results
         activity_logger(
             repo_root,
             DOCUMENT_COPY_ACTIVITY_EVENT,
-            {
-                "source": current_plan.source_collection.request_target(),
-                "requested_doc_ids": list(current_plan.requested_doc_ids),
-                "target": current_plan.target_collection.request_target(),
-                "effective_roots": effective_roots,
-                "created_count": len(created_doc_ids),
-                "unique_media_count": len(current_plan.media),
-            },
+            activity_payload,
         )
     except Exception as exc:
         result = _failure_result(
@@ -1017,7 +1082,9 @@ def apply_document_copy(
         "target": current_plan.target_collection.request_target(),
         "operation_timestamp": current_plan.operation_timestamp,
         "created_doc_ids": created_doc_ids,
-        "document_count": len(created_doc_ids),
+        "replaced_doc_ids": replaced_doc_ids,
+        "document_count": len(copy_results),
+        "copy_results": copy_results,
         "effective_roots": effective_roots,
         "viewer_link_rewrites": transformation.viewer_link_rewrites,
         "media_link_rewrites": transformation.media_link_rewrites,
@@ -1030,9 +1097,11 @@ def apply_document_copy(
             asdict(item)
             for item in current_plan.retained_external_dependencies
         ],
+        "lineage": lineage_result,
         "rebuild": rebuild,
         "summary_text": (
-            f"Copied {len(created_doc_ids)} documents and "
+            f"Copied {len(copy_results)} documents "
+            f"({len(created_doc_ids)} New, {len(replaced_doc_ids)} Replace) and "
             f"{len(current_plan.media)} unique media items from "
             f"{current_plan.source_scope}"
             f"{'/' + current_plan.source_sub_scope if current_plan.source_sub_scope else ''} "

@@ -355,7 +355,7 @@ export function moveManagedDoc(docId, parentId, options) {
   }, options), options);
 }
 
-export function previewManagedDocumentTransfer(source, docIds, target, transferMode, includeDescendants, options) {
+export function previewManagedDocumentTransfer(source, docIds, target, transferMode, includeDescendants, options, copyLineageActions) {
   var settings = Object.assign({}, options || {}, { acceptNotOk: true });
   var sourceCollection = normalizeManagedDocumentCollectionTarget(source);
   var targetCollection = normalizeManagedDocumentCollectionTarget(target);
@@ -366,6 +366,9 @@ export function previewManagedDocumentTransfer(source, docIds, target, transferM
     transfer_mode: transferMode,
     include_descendants: includeDescendants === true
   };
+  if (Array.isArray(copyLineageActions) && copyLineageActions.length) {
+    payload.copy_lineage_actions = copyLineageActions;
+  }
   if (sourceCollection.sub_scope) payload.sub_scope = sourceCollection.sub_scope;
   if (targetCollection.sub_scope) payload.target_sub_scope = targetCollection.sub_scope;
   return fetchManagementJson("/docs/document-transfer-preview", "POST", payload, settings);
