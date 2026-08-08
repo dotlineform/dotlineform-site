@@ -128,6 +128,12 @@
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260711-012238-814555.json"
         },
         {
+          "doc_id": "d-20260808-215338-6b1e8c",
+          "title": "Local Authoring Service And Publication Boundaries",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-215338-6b1e8c.json",
+          "ui_status": "stable"
+        },
+        {
           "doc_id": "d-20260523-222005-1085b2",
           "title": "Projection Contract",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260523-222005-1085b2.json"
@@ -816,6 +822,34 @@
           ]
         },
         {
+          "doc_id": "d-20260808-222435-e0d29a",
+          "title": "Docs Viewer External Scope Availability",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-222435-e0d29a.json",
+          "ui_status": "proposed",
+          "children": [
+            {
+              "doc_id": "d-20260808-222436-4f7c81",
+              "title": "ESA-1 — Graceful Per-Scope Availability Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-222436-4f7c81.json",
+              "ui_status": "proposed"
+            }
+          ]
+        },
+        {
+          "doc_id": "d-20260808-225257-c06ae2",
+          "title": "Docs Viewer Scope Type Migration",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-225257-c06ae2.json",
+          "ui_status": "proposed",
+          "children": [
+            {
+              "doc_id": "d-20260808-225258-245f13",
+              "title": "Docs Viewer Scope Type Migration Concept",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-225258-245f13.json",
+              "ui_status": "proposed"
+            }
+          ]
+        },
+        {
           "doc_id": "d-20260808-165751-1f159a",
           "title": "DPD-1 — Immediate Public Projection Cleanup On Document Delete",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-165751-1f159a.json",
@@ -848,6 +882,32 @@
           ]
         },
         {
+          "doc_id": "d-20260808-205414-91040a",
+          "title": "iPad Docs Viewer",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-205414-91040a.json",
+          "ui_status": "proposed",
+          "children": [
+            {
+              "doc_id": "d-20260808-205415-750cfd",
+              "title": "iPad Docs Viewer Concept And Feasibility",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-205415-750cfd.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "d-20260808-205416-9f6d6c",
+              "title": "iPad Docs Viewer Installation And Proof",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-205416-9f6d6c.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "d-20260808-212749-af71c2",
+              "title": "iPad Studio Working Slice And Proof",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-212749-af71c2.json",
+              "ui_status": "proposed"
+            }
+          ]
+        },
+        {
           "doc_id": "d-20260723-191039-f8cb88",
           "title": "Public Docs Viewer Mobile Experience",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-191039-f8cb88.json"
@@ -872,6 +932,20 @@
               "doc_id": "d-20260720-100017-e094d8",
               "title": "Scope Media Management Concept",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-100017-e094d8.json",
+              "ui_status": "proposed"
+            }
+          ]
+        },
+        {
+          "doc_id": "d-20260808-231126-6a5d72",
+          "title": "Scope Media Storage Locations",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-231126-6a5d72.json",
+          "ui_status": "proposed",
+          "children": [
+            {
+              "doc_id": "d-20260808-231127-db19cc",
+              "title": "Scope Media Storage Locations Concept",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-231127-db19cc.json",
               "ui_status": "proposed"
             }
           ]
@@ -1623,5 +1697,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-08T19:06:38Z"
+  "generated_at": "2026-08-08T22:15:10Z"
 }

@@ -4,85 +4,83 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "d-20260802-205912-16bc10",
-      "title": "Cross-System Relationship Map",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-205912-16bc10.json",
-      "timestamp": "2026-08-08 20:14:48",
-      "parent_id": "d-20260802-123451-d0e52e",
-      "parent_title": "Data Models Diagrams"
+      "doc_id": "d-20260808-225258-245f13",
+      "title": "Docs Viewer Scope Type Migration Concept",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-225258-245f13.json",
+      "timestamp": "2026-08-08 23:18:32",
+      "parent_id": "d-20260808-225257-c06ae2",
+      "parent_title": "Docs Viewer Scope Type Migration"
     },
     {
-      "doc_id": "d-20260607-222033-ce5515",
-      "title": "Source Mutation Endpoints",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-ce5515.json",
-      "timestamp": "2026-08-08 20:14:48",
-      "parent_id": "d-20260607-222033-647b52",
-      "parent_title": "Endpoint Overview"
-    },
-    {
-      "doc_id": "d-20260802-205910-533be0",
-      "title": "Catalogue Data Model Map",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-205910-533be0.json",
-      "timestamp": "2026-08-08 20:12:23",
-      "parent_id": "d-20260802-123451-d0e52e",
-      "parent_title": "Data Models Diagrams"
-    },
-    {
-      "doc_id": "d-20260607-222033-78a47c",
-      "title": "Create And Import Endpoints",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-78a47c.json",
-      "timestamp": "2026-08-08 20:12:23",
-      "parent_id": "d-20260607-222033-647b52",
-      "parent_title": "Endpoint Overview"
-    },
-    {
-      "doc_id": "d-20260802-205911-bec41f",
-      "title": "Docs Viewer Projection Map",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-205911-bec41f.json",
-      "timestamp": "2026-08-08 20:12:23",
-      "parent_id": "d-20260802-123451-d0e52e",
-      "parent_title": "Data Models Diagrams"
-    },
-    {
-      "doc_id": "d-20260607-222033-647b52",
-      "title": "Endpoint Overview",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-647b52.json",
-      "timestamp": "2026-08-08 20:12:23",
-      "parent_id": "d-20260424-000000-04d75e",
-      "parent_title": "Management Services"
-    },
-    {
-      "doc_id": "d-20260519-202931-66c794",
-      "title": "Management Operations",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260519-202931-66c794.json",
-      "timestamp": "2026-08-08 20:12:23",
-      "parent_id": "d-20260424-000000-04d75e",
-      "parent_title": "Management Services"
-    },
-    {
-      "doc_id": "d-20260802-194357-4d857b",
-      "title": "Sub-Scope Publishing",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194357-4d857b.json",
-      "timestamp": "2026-08-08 20:06:06",
+      "doc_id": "d-20260808-225257-c06ae2",
+      "title": "Docs Viewer Scope Type Migration",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-225257-c06ae2.json",
+      "timestamp": "2026-08-08 23:11:28",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
     },
     {
-      "doc_id": "d-20260805-231829-947705",
-      "title": "SSP-7 — Document Lineage And Publication State Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-231829-947705.json",
-      "timestamp": "2026-08-08 20:01:04",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
+      "doc_id": "d-20260720-100017-9855dd",
+      "title": "Scope Media Management",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-100017-9855dd.json",
+      "timestamp": "2026-08-08 23:11:28",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
     },
     {
-      "doc_id": "d-20260808-134503-a4caeb",
-      "title": "SSP-7.4 — Projects Publication Stage Evidence",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-134503-a4caeb.json",
-      "timestamp": "2026-08-08 20:01:04",
-      "parent_id": "d-20260805-231829-947705",
-      "parent_title": "SSP-7 — Document Lineage And Publication State Delivery"
+      "doc_id": "d-20260720-100017-e094d8",
+      "title": "Scope Media Management Concept",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-100017-e094d8.json",
+      "timestamp": "2026-08-08 23:11:28",
+      "parent_id": "d-20260720-100017-9855dd",
+      "parent_title": "Scope Media Management"
+    },
+    {
+      "doc_id": "d-20260808-231127-db19cc",
+      "title": "Scope Media Storage Locations Concept",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-231127-db19cc.json",
+      "timestamp": "2026-08-08 23:11:27",
+      "parent_id": "d-20260808-231126-6a5d72",
+      "parent_title": "Scope Media Storage Locations"
+    },
+    {
+      "doc_id": "d-20260808-231126-6a5d72",
+      "title": "Scope Media Storage Locations",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-231126-6a5d72.json",
+      "timestamp": "2026-08-08 23:11:26",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260808-222436-4f7c81",
+      "title": "ESA-1 — Graceful Per-Scope Availability Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-222436-4f7c81.json",
+      "timestamp": "2026-08-08 22:24:36",
+      "parent_id": "d-20260808-222435-e0d29a",
+      "parent_title": "Docs Viewer External Scope Availability"
+    },
+    {
+      "doc_id": "d-20260808-222435-e0d29a",
+      "title": "Docs Viewer External Scope Availability",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-222435-e0d29a.json",
+      "timestamp": "2026-08-08 22:24:35",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260808-215338-6b1e8c",
+      "title": "Local Authoring Service And Publication Boundaries",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-215338-6b1e8c.json",
+      "timestamp": "2026-08-08 22:24:35",
+      "parent_id": "d-20260331-000000-4a16b0",
+      "parent_title": "Architecture"
+    },
+    {
+      "doc_id": "d-20260331-000000-4a16b0",
+      "title": "Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-4a16b0.json",
+      "timestamp": "2026-08-08 21:53:38"
     }
   ],
-  "generated_at": "2026-08-08T19:14:49Z"
+  "generated_at": "2026-08-08T22:18:32Z"
 }
