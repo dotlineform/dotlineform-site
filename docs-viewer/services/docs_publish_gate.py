@@ -10,6 +10,9 @@ import re
 import shutil
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlencode
+
+import docs_document_publication_lineage as publication_lineage
 
 from docs_scope_config import (
     DocsScopeConfig,
@@ -699,6 +702,52 @@ def catalogue_document_url_follow_through(repo_root: Path) -> dict[str, Any]:
     }
 
 
+def reconcile_document_publication_lineage(
+    repo_root: Path,
+    config: DocsScopeConfig,
+    sub_scope_paths: dict[str, dict[str, Path]],
+) -> None:
+    rows = publication_lineage.load_rows(repo_root)
+    if not rows:
+        return
+    configured = {
+        sub_scope.sub_scope: sub_scope
+        for sub_scope in config.sub_scopes
+        if sub_scope.lifecycle is not None
+    }
+    editorial_collections = {
+        (config.scope_id, sub_scope_id)
+        for sub_scope_id in configured
+    }
+    publication_urls: dict[publication_lineage.DocumentLineageIdentity, str] = {}
+    for row in rows:
+        editorial = row.editorial
+        sub_scope = configured.get(editorial.sub_scope)
+        if editorial.scope != config.scope_id or sub_scope is None:
+            continue
+        public_path = (
+            sub_scope_paths[editorial.sub_scope]["published_docs_root"]
+            / "by-id"
+            / f"{editorial.doc_id}.json"
+        )
+        if not public_path.is_file():
+            continue
+        publication_urls[editorial] = (
+            f"{config.viewer_base_url}?"
+            + urlencode(
+                {
+                    "doc": sub_scope.lifecycle.report_host_doc_id,
+                    "subdoc": editorial.doc_id,
+                }
+            )
+        )
+    publication_lineage.reconcile_publications(
+        repo_root,
+        editorial_collections=editorial_collections,
+        publication_urls=publication_urls,
+    )
+
+
 def publish_apply(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     if body.get("confirm") is not True:
         raise ValueError("confirm must be true to publish docs")
@@ -743,6 +792,7 @@ def publish_apply(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     if document_location_projection is not None:
         output_path, output_bytes = document_location_projection
         write_bytes_atomic(output_path, output_bytes)
+    reconcile_document_publication_lineage(repo_root, config, sub_scope_paths)
     payload["operation"] = "apply"
     payload["applied"] = True
     payload["summary_text"] = (

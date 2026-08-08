@@ -23,6 +23,9 @@ from catalogue import catalogue_document_url_refresh  # noqa: E402
 
 
 LIBRARY_DOC_ID = "d-20260330-172255-8399b7"
+LINEAGE_SOURCE_ID = "d-20260801-100000-aaaaaa"
+LINEAGE_EDITORIAL_ID = "d-20260802-110000-bbbbbb"
+LINEAGE_REPORT_HOST_ID = "d-20260807-082735-54d9d5"
 
 
 def write_json(path: Path, payload: dict[str, object]) -> None:
@@ -483,6 +486,114 @@ def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> No
             / "site/assets/data/docs/scopes/library/tags/manage-manifest.json"
         ).exists()
         assert not (repo_root / "site/assets/data/docs/scopes/library/sub-scopes/tags").exists()
+
+
+def test_successful_publish_sets_retains_and_clears_lineage_publication() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        prepare_publish_repo(repo_root)
+        config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
+        config = json.loads(config_path.read_text(encoding="utf-8"))
+        config["scopes"][1]["sub_scopes"] = [
+            docs_sub_scope_record(
+                "library",
+                "works",
+                title="Works",
+                scope_type="public",
+                sub_scope_customisation={"id": "analysis_works", "settings": {}},
+                lifecycle={
+                    "tool_id": "docs-viewer-scope-lifecycle",
+                    "report_host_doc_id": LINEAGE_REPORT_HOST_ID,
+                    "report_host_source_revision": "sha256:" + "1" * 64,
+                },
+            )
+        ]
+        write_json(config_path, config)
+        working_root = (
+            repo_root
+            / "docs-viewer/scopes/library/published/documents/sub-scopes/works"
+        )
+        write_json(
+            working_root / "manifest.json",
+            {
+                "docs": [
+                    {"doc_id": LINEAGE_EDITORIAL_ID, "title": "Editorial B"}
+                ]
+            },
+        )
+        write_json(
+            working_root / f"by-id/{LINEAGE_EDITORIAL_ID}.json",
+            {"doc_id": LINEAGE_EDITORIAL_ID, "title": "Editorial B"},
+        )
+        lineage_path = (
+            repo_root
+            / "docs-viewer/data/canonical/document-publication-lineage.json"
+        )
+        write_json(
+            lineage_path,
+            {
+                "schema_version": "docs_document_publication_lineage_v1",
+                "rows": [
+                    {
+                        "source": {
+                            "scope": "dotlineform",
+                            "sub_scope": "projects",
+                            "doc_id": LINEAGE_SOURCE_ID,
+                        },
+                        "editorial": {
+                            "scope": "library",
+                            "sub_scope": "works",
+                            "doc_id": LINEAGE_EDITORIAL_ID,
+                        },
+                        "created_at": "2026-08-08T10:00:00Z",
+                        "last_copied_at": "2026-08-08T10:00:00Z",
+                        "publication": None,
+                    }
+                ],
+            },
+        )
+
+        docs_publish_gate.publish_apply(
+            repo_root,
+            {"scope": "library", "confirm": True},
+        )
+
+        table = json.loads(lineage_path.read_text(encoding="utf-8"))
+        assert table["rows"][0]["publication"] == {
+            "public_url": (
+                f"/library/?doc={LINEAGE_REPORT_HOST_ID}"
+                f"&subdoc={LINEAGE_EDITORIAL_ID}"
+            )
+        }
+        published_bytes = lineage_path.read_bytes()
+        write_json(
+            working_root / f"by-id/{LINEAGE_EDITORIAL_ID}.json",
+            {"doc_id": LINEAGE_EDITORIAL_ID, "title": "Editorial B updated"},
+        )
+        docs_publish_gate.publish_apply(
+            repo_root,
+            {"scope": "library", "confirm": True},
+        )
+        assert lineage_path.read_bytes() == published_bytes
+        assert json.loads(
+            (
+                repo_root
+                / f"site/assets/data/docs/scopes/library/works/by-id/{LINEAGE_EDITORIAL_ID}.json"
+            ).read_text(encoding="utf-8")
+        )["title"] == "Editorial B updated"
+
+        write_json(working_root / "manifest.json", {"docs": []})
+        docs_publish_gate.publish_apply(
+            repo_root,
+            {"scope": "library", "confirm": True},
+        )
+
+        table = json.loads(lineage_path.read_text(encoding="utf-8"))
+        assert table["rows"][0]["publication"] is None
+        assert not (
+            repo_root
+            / f"site/assets/data/docs/scopes/library/works/by-id/{LINEAGE_EDITORIAL_ID}.json"
+        ).exists()
 
 
 def test_publish_rejects_configured_sub_scope_without_manifest() -> None:

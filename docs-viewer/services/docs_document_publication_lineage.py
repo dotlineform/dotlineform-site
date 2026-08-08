@@ -34,15 +34,9 @@ class DocumentLineageIdentity:
 @dataclass(frozen=True)
 class DocumentPublicationEvidence:
     public_url: str
-    published_at: str
-    generation: str
 
     def payload(self) -> dict[str, str]:
-        return {
-            "public_url": self.public_url,
-            "published_at": self.published_at,
-            "generation": self.generation,
-        }
+        return {"public_url": self.public_url}
 
 
 @dataclass(frozen=True)
@@ -95,11 +89,6 @@ def _publication(raw: Any, *, field: str) -> DocumentPublicationEvidence | None:
         raise ValueError(f"{field} must be an object or null")
     return DocumentPublicationEvidence(
         public_url=_required_text(raw.get("public_url"), field=f"{field}.public_url"),
-        published_at=_required_text(
-            raw.get("published_at"),
-            field=f"{field}.published_at",
-        ),
-        generation=_required_text(raw.get("generation"), field=f"{field}.generation"),
     )
 
 
@@ -227,6 +216,34 @@ def apply_copy_results(
     return write_rows_atomic(repo_root, rows_by_pair.values())
 
 
+def reconcile_publications(
+    repo_root: Path,
+    *,
+    editorial_collections: Iterable[tuple[str, str]],
+    publication_urls: Mapping[DocumentLineageIdentity, str],
+) -> tuple[DocumentPublicationLineageRow, ...]:
+    rows = load_rows(repo_root)
+    owned_collections = set(editorial_collections)
+    if not rows or not owned_collections:
+        return rows
+    reconciled: list[DocumentPublicationLineageRow] = []
+    changed = False
+    for row in rows:
+        if (row.editorial.scope, row.editorial.sub_scope) not in owned_collections:
+            reconciled.append(row)
+            continue
+        public_url = publication_urls.get(row.editorial)
+        publication = (
+            DocumentPublicationEvidence(public_url=public_url)
+            if public_url
+            else None
+        )
+        reconciled_row = replace(row, publication=publication)
+        reconciled.append(reconciled_row)
+        changed = changed or reconciled_row != row
+    return write_rows_atomic(repo_root, reconciled) if changed else rows
+
+
 __all__ = [
     "DocumentLineageIdentity",
     "DocumentPublicationEvidence",
@@ -236,6 +253,7 @@ __all__ = [
     "apply_copy_results",
     "current_timestamp",
     "load_rows",
+    "reconcile_publications",
     "render_table",
     "rows_for_source",
     "table_path",

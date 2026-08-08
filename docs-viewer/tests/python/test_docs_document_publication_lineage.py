@@ -106,3 +106,66 @@ def test_table_requires_its_basic_schema_and_exact_replace_row(tmp_path: Path) -
                 }
             ],
         )
+
+
+def test_reconcile_publications_sets_clears_and_leaves_other_collections(
+    tmp_path: Path,
+) -> None:
+    repo_root = tmp_path / "repo"
+    published_editorial = identity("analysis", "works", EDITORIAL_ID)
+    removed_editorial = identity(
+        "analysis",
+        "works",
+        "d-20260802-120000-cccccc",
+    )
+    other_editorial = identity(
+        "library",
+        "works",
+        "d-20260802-130000-dddddd",
+    )
+    rows = tuple(
+        lineage.DocumentPublicationLineageRow(
+            source=identity("dotlineform", "projects", source_doc_id),
+            editorial=editorial,
+            created_at="2026-08-08T10:00:00Z",
+            last_copied_at="2026-08-08T10:00:00Z",
+            publication=publication,
+        )
+        for source_doc_id, editorial, publication in (
+            (SOURCE_ID, published_editorial, None),
+            (
+                "d-20260801-110000-bbbbbb",
+                removed_editorial,
+                lineage.DocumentPublicationEvidence(public_url="/analysis/old"),
+            ),
+            (
+                "d-20260801-120000-cccccc",
+                other_editorial,
+                lineage.DocumentPublicationEvidence(public_url="/library/current"),
+            ),
+        )
+    )
+    lineage.write_rows_atomic(repo_root, rows)
+
+    reconciled = lineage.reconcile_publications(
+        repo_root,
+        editorial_collections={("analysis", "works")},
+        publication_urls={
+            published_editorial: "/analysis/?doc=d-20260807-082735-54d9d5&subdoc="
+            + EDITORIAL_ID,
+        },
+    )
+    by_editorial = {row.editorial: row for row in reconciled}
+
+    assert by_editorial[published_editorial].publication == (
+        lineage.DocumentPublicationEvidence(
+            public_url=(
+                "/analysis/?doc=d-20260807-082735-54d9d5&subdoc="
+                + EDITORIAL_ID
+            )
+        )
+    )
+    assert by_editorial[removed_editorial].publication is None
+    assert by_editorial[other_editorial].publication == (
+        lineage.DocumentPublicationEvidence(public_url="/library/current")
+    )
