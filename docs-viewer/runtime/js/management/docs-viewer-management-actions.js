@@ -18,6 +18,7 @@ import {
 } from "./docs-viewer-management-document-target.js";
 import {
   buildDocsViewerDeletePreviewBody,
+  docsViewerDeleteCompletionMessage,
   openDocsViewerConfirmModal,
   openDocsViewerTextInputModal
 } from "./docs-viewer-management-modals.js";
@@ -259,6 +260,27 @@ export function firstRemainingRootDocId(docs, deletedDocIds, resolveLoadableDocI
     if (loadableDocId) return loadableDocId;
   }
   return "";
+}
+
+export function docsViewerPublishConfirmBody(preview) {
+  var changed = Number(preview && preview.changed_count || 0);
+  var excluded = Number(preview && preview.excluded_count || 0);
+  var paths = preview && preview.paths ? preview.paths : {};
+  return [
+    "Copy reviewed working docs to the site assets for this public route?",
+    "",
+    "Changed files: " + changed,
+    "Files removed by current Publish exclusions: " + excluded,
+    "",
+    "From: " + String(paths.working_docs_root || ""),
+    "To: " + String(paths.published_docs_root || "")
+  ].join("\n");
+}
+
+export function docsViewerPublishHasChanges(preview) {
+  var changed = Number(preview && preview.changed_count || 0);
+  var excluded = Number(preview && preview.excluded_count || 0);
+  return changed + excluded > 0;
 }
 
 export function createDocsViewerManagementActionController(options) {
@@ -576,27 +598,6 @@ export function createDocsViewerManagementActionController(options) {
       });
   }
 
-  function publishConfirmBody(preview) {
-    var changed = Number(preview && preview.changed_count || 0);
-    var removed = Number(preview && preview.removed_count || 0);
-    var paths = preview && preview.paths ? preview.paths : {};
-    return [
-      "Copy reviewed working docs to the site assets for this public route?",
-      "",
-      "Changed files: " + changed,
-      "Stale files to remove: " + removed,
-      "",
-      "From: " + String(paths.working_docs_root || ""),
-      "To: " + String(paths.published_docs_root || "")
-    ].join("\n");
-  }
-
-  function publishHasChanges(preview) {
-    var changed = Number(preview && preview.changed_count || 0);
-    var removed = Number(preview && preview.removed_count || 0);
-    return changed + removed > 0;
-  }
-
   function handlePublishDocs() {
     setManagementBusy(true);
     setManagementMessage(ACTION_TEXT.publishChecking, false);
@@ -607,10 +608,10 @@ export function createDocsViewerManagementActionController(options) {
         return openDocsViewerConfirmModal({
           root: root,
           title: ACTION_TEXT.publishConfirmTitle,
-          body: publishConfirmBody(preview),
+          body: docsViewerPublishConfirmBody(preview),
           primaryLabel: ACTION_TEXT.publishConfirmButton,
           cancelLabel: ACTION_TEXT.cancelButton,
-          primaryDisabled: !publishHasChanges(preview)
+          primaryDisabled: !docsViewerPublishHasChanges(preview)
         });
       })
       .then(function (confirmed) {
@@ -759,6 +760,10 @@ export function createDocsViewerManagementActionController(options) {
           : Promise.resolve(null);
         return configReload.then(function () {
           return reloadDocsIndex(fallbackDocId, "");
+        }).then(function (result) {
+          var completionMessage = docsViewerDeleteCompletionMessage(payload);
+          if (completionMessage) setManagementMessage(completionMessage, false);
+          return result;
         });
       })
       .catch(function (error) {

@@ -7,8 +7,10 @@ import {
   normalizeManagedDocumentTarget
 } from "./docs-viewer-management-document-target.js";
 import {
+  buildDocsViewerDeletePreviewBody,
+  docsViewerDeleteCompletionMessage,
   openDocsViewerConfirmModal
-} from "./docs-viewer-management-modal-shell.js";
+} from "./docs-viewer-management-modals.js";
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -84,13 +86,7 @@ function previewBody(preview, target, title) {
     "Document ID: " + target.doc_id,
     "Sub-scope: " + target.scope + "/" + target.sub_scope
   ];
-  (Array.isArray(preview && preview.warnings) ? preview.warnings : [])
-    .map(cleanString)
-    .filter(Boolean)
-    .forEach(function (warning) {
-      body.push(warning);
-    });
-  return body;
+  return body.concat(buildDocsViewerDeletePreviewBody(preview));
 }
 
 function deleteErrorMessage(error) {
@@ -208,8 +204,10 @@ export function createDocsViewerManagementSubscopeDeleteWorkflow(options = {}) {
       visibleStatus("Deleting " + title + "...", false);
       var applied = await applyDelete(target, sourceRevision, clientOptions);
       assertApplyReceipt(applied, target, sourceRevision);
-      visibleStatus("", false);
+      var completionMessage = docsViewerDeleteCompletionMessage(applied);
+      visibleStatus(completionMessage, false);
       await commitDeletedDocument(target);
+      if (active && completionMessage) visibleStatus(completionMessage, false);
       return applied;
     } catch (error) {
       if (active) {

@@ -1069,7 +1069,54 @@ def assert_delete_uses_first_remaining_root(page: Page) -> None:
                         { doc_id: 'research', title: 'Research' },
                         { doc_id: 'one', title: 'One' },
                         { doc_id: 'two', title: 'Two' }
-                    ]
+                    ],
+                    public_cleanup: {
+                        applicable: true,
+                        projected_doc_ids: ['research', 'one'],
+                        removed_urls: [
+                            '/docs/?scope=studio&doc=research',
+                            '/docs/?scope=studio&doc=one',
+                            '/docs/?scope=studio&doc=one&subdoc=child'
+                        ]
+                    }
+                }),
+                localWarningBody: modals.buildDocsViewerDeletePreviewBody({
+                    warnings: ['This permanently deletes 1 document.'],
+                    public_cleanup: { applicable: false }
+                }),
+                completionMessage: modals.docsViewerDeleteCompletionMessage({
+                    summary_text: 'Deleted 2 documents.',
+                    public_cleanup: {
+                        applicable: true,
+                        projected_doc_ids: ['research', 'one', 'one'],
+                        removed_urls: [
+                            '/docs/?scope=studio&doc=research',
+                            '/docs/?scope=studio&doc=one',
+                            '/docs/?scope=studio&doc=one&subdoc=child'
+                        ]
+                    }
+                }),
+                localCompletionMessage: modals.docsViewerDeleteCompletionMessage({
+                    summary_text: 'Deleted 1 document.',
+                    public_cleanup: { applicable: false }
+                }),
+                publishBody: module.docsViewerPublishConfirmBody({
+                    changed_count: 0,
+                    excluded_count: 2,
+                    removed_count: 99,
+                    paths: {
+                        working_docs_root: '/working',
+                        published_docs_root: '/public'
+                    }
+                }),
+                publishHasExclusions: module.docsViewerPublishHasChanges({
+                    changed_count: 0,
+                    excluded_count: 2
+                }),
+                publishIgnoresRemovedAlias: module.docsViewerPublishHasChanges({
+                    changed_count: 0,
+                    excluded_count: 0,
+                    removed_count: 99
                 }),
                 requests
             };
@@ -1082,7 +1129,24 @@ def assert_delete_uses_first_remaining_root(page: Page) -> None:
         "afterSubtree": "analytics",
         "warningBody": [
             "This permanently deletes 2 checked documents and 1 additional descendant document.",
+            "Current public projections to remove immediately: 2",
+            "Public document URLs to remove immediately: 3",
         ],
+        "localWarningBody": ["This permanently deletes 1 document."],
+        "completionMessage": (
+            "Deleted 2 documents. Removed 2 current public projections immediately. "
+            "Removed 3 public document URLs."
+        ),
+        "localCompletionMessage": "",
+        "publishBody": (
+            "Copy reviewed working docs to the site assets for this public route?\n\n"
+            "Changed files: 0\n"
+            "Files removed by current Publish exclusions: 2\n\n"
+            "From: /working\n"
+            "To: /public"
+        ),
+        "publishHasExclusions": True,
+        "publishIgnoresRemovedAlias": False,
         "requests": [
             {
                 "url": "http://manage.test/docs/delete-preview",

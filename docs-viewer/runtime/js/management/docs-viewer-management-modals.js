@@ -30,10 +30,53 @@ var MODAL_TEXT = {
   settingsLoadFailed: "Settings unavailable."
 };
 
+function publicCleanupCounts(payload) {
+  var cleanup = payload && payload.public_cleanup;
+  if (!cleanup || cleanup.applicable !== true) {
+    return { projected: 0, urls: 0 };
+  }
+  var projected = new Set(
+    (Array.isArray(cleanup.projected_doc_ids) ? cleanup.projected_doc_ids : [])
+      .map(normalizeText)
+      .filter(Boolean)
+  ).size;
+  var urls = new Set(
+    (Array.isArray(cleanup.removed_urls) ? cleanup.removed_urls : [])
+      .map(normalizeText)
+      .filter(Boolean)
+  ).size;
+  return { projected: projected, urls: urls };
+}
+
+export function docsViewerDeletePublicCleanupLines(payload) {
+  var counts = publicCleanupCounts(payload);
+  if (!counts.projected) return [];
+  var lines = [
+    "Current public projections to remove immediately: " + counts.projected
+  ];
+  if (counts.urls > counts.projected) {
+    lines.push("Public document URLs to remove immediately: " + counts.urls);
+  }
+  return lines;
+}
+
+export function docsViewerDeleteCompletionMessage(payload) {
+  var counts = publicCleanupCounts(payload);
+  if (!counts.projected) return "";
+  var message = normalizeText(payload && payload.summary_text) || "Delete complete.";
+  message += " Removed " + counts.projected + " current public projection";
+  message += counts.projected === 1 ? " immediately." : "s immediately.";
+  if (counts.urls > counts.projected) {
+    message += " Removed " + counts.urls + " public document URLs.";
+  }
+  return message;
+}
+
 export function buildDocsViewerDeletePreviewBody(preview) {
-  return (Array.isArray(preview && preview.warnings) ? preview.warnings : [])
+  var warnings = (Array.isArray(preview && preview.warnings) ? preview.warnings : [])
     .map(normalizeText)
     .filter(Boolean);
+  return warnings.concat(docsViewerDeletePublicCleanupLines(preview));
 }
 
 export function createDocsViewerManagementModalController(options = {}) {

@@ -2923,6 +2923,11 @@ def assert_delete_workflow(page: Page) -> None:
             allowed: true,
             blockers: [],
             warnings: ['Synthetic warning.'],
+            public_cleanup: {
+              applicable: true,
+              projected_doc_ids: [target.doc_id],
+              removed_urls: ['/analysis/?doc=host&subdoc=detail-doc']
+            },
             delete_count: 1
           };
           const applied = {
@@ -2933,7 +2938,13 @@ def assert_delete_workflow(page: Page) -> None:
             doc_id: target.doc_id,
             source_revision: revision,
             deleted_doc_ids: [target.doc_id],
-            delete_count: 1
+            delete_count: 1,
+            public_cleanup: {
+              applicable: true,
+              projected_doc_ids: [target.doc_id],
+              removed_urls: ['/analysis/?doc=host&subdoc=detail-doc']
+            },
+            summary_text: 'Deleted detail-doc.'
           };
 
           function button() {
@@ -3237,6 +3248,7 @@ def assert_delete_workflow(page: Page) -> None:
             "Document ID: detail-doc",
             "Sub-scope: studio/tags",
             "Synthetic warning.",
+            "Current public projections to remove immediately: 1",
         ],
         "cancelLabel": "Cancel",
         "initialFocus": "cancel",
@@ -3248,7 +3260,9 @@ def assert_delete_workflow(page: Page) -> None:
     }
     assert result["success"]["result"]["deleted_doc_ids"] == ["detail-doc"]
     assert result["success"]["statuses"][-1] == {
-        "message": "",
+        "message": (
+            "Deleted detail-doc. Removed 1 current public projection immediately."
+        ),
         "isError": False,
     }
     assert result["cancel"] == {"applyCount": 0, "enabled": True}
