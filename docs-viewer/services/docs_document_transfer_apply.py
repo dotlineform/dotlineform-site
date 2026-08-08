@@ -1003,7 +1003,7 @@ def apply_document_copy(
         phase = "lineage"
         lineage_result: dict[str, Any] | None = None
         if current_plan.lineage is not None:
-            lineage_rows = publication_lineage.apply_copy_results(
+            lineage_table = publication_lineage.apply_copy_results(
                 repo_root,
                 source_scope=current_plan.source_scope,
                 source_sub_scope=current_plan.source_sub_scope,
@@ -1013,7 +1013,7 @@ def apply_document_copy(
             )
             lineage_result = {
                 "schema_version": publication_lineage.LINEAGE_SCHEMA_VERSION,
-                "row_count": len(lineage_rows),
+                "record_count": len(lineage_table.records),
             }
             if perform_sub_scope_source_write_and_rebuild is None:
                 raise RuntimeError("lineage source rebuild is unavailable")

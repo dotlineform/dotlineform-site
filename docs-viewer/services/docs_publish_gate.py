@@ -778,58 +778,50 @@ def reconcile_document_publication_lineage(
     config: DocsScopeConfig,
     sub_scope_paths: dict[str, dict[str, Path]],
 ) -> None:
-    rows = publication_lineage.load_rows(repo_root)
-    if not rows:
+    table = publication_lineage.load_table(repo_root)
+    if table is None or not table.records:
         return
     configured = {
         sub_scope.sub_scope: sub_scope
         for sub_scope in config.sub_scopes
         if sub_scope.lifecycle is not None
     }
-    editorial_collections = {
-        (config.scope_id, sub_scope_id)
-        for sub_scope_id in configured
-    }
-    publication_urls: dict[publication_lineage.DocumentLineageIdentity, str] = {}
-    for row in rows:
-        editorial = row.editorial
-        if editorial is None:
-            continue
-        sub_scope = configured.get(editorial.sub_scope)
-        if editorial.scope != config.scope_id or sub_scope is None:
-            continue
-        public_path = (
-            sub_scope_paths[editorial.sub_scope]["published_docs_root"]
-            / "by-id"
-            / f"{editorial.doc_id}.json"
-        )
-        if not public_path.is_file():
-            continue
-        publication_urls[editorial] = (
-            f"{config.viewer_base_url}?"
-            + urlencode(
-                {
-                    "doc": sub_scope.lifecycle.report_host_doc_id,
-                    "subdoc": editorial.doc_id,
-                }
+    editorial_collection = table.editorial_collection
+    sub_scope = configured.get(editorial_collection.sub_scope)
+    if editorial_collection.scope != config.scope_id or sub_scope is None:
+        return
+    publication_urls: dict[str, str] = {}
+    for record in table.records:
+        for editorial in record.editorials:
+            public_path = (
+                sub_scope_paths[editorial_collection.sub_scope]["published_docs_root"]
+                / "by-id"
+                / f"{editorial.doc_id}.json"
             )
-        )
+            if not public_path.is_file():
+                continue
+            publication_urls[editorial.doc_id] = (
+                f"{config.viewer_base_url}?"
+                + urlencode(
+                    {
+                        "doc": sub_scope.lifecycle.report_host_doc_id,
+                        "subdoc": editorial.doc_id,
+                    }
+                )
+            )
     reconciled = publication_lineage.reconcile_publications(
         repo_root,
-        editorial_collections=editorial_collections,
+        editorial_scope=editorial_collection.scope,
+        editorial_sub_scope=editorial_collection.sub_scope,
         publication_urls=publication_urls,
     )
-    if reconciled == rows:
+    if reconciled == table:
         return
-    source_collections = sorted({
-        (row.working.scope, row.working.sub_scope)
-        for row in reconciled
-        if row.working is not None
-        and row.editorial is not None
-        and (row.editorial.scope, row.editorial.sub_scope) in editorial_collections
-    })
-    for source_scope, source_sub_scope in source_collections:
-        rebuild_sub_scope_outputs(repo_root, source_scope, source_sub_scope)
+    rebuild_sub_scope_outputs(
+        repo_root,
+        table.working_collection.scope,
+        table.working_collection.sub_scope,
+    )
 
 
 def publish_apply(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:

@@ -238,67 +238,43 @@ viewer_report_subscope: works
         write_json(
             root / "docs-viewer/data/canonical/document-publication-lineage.json",
             {
-                "schema_version": "docs_document_publication_lineage_v2",
-                "rows": [
+                "schema_version": "docs_document_publication_lineage_v3",
+                "working_collection": {
+                    "scope": "dotlineform",
+                    "sub_scope": "projects",
+                },
+                "editorial_collection": {
+                    "scope": "analysis",
+                    "sub_scope": "works",
+                },
+                "records": [
                     {
-                        "lineage_id": "sha256:" + "a" * 64,
-                        "working": {
-                            "scope": "dotlineform",
-                            "sub_scope": "projects",
-                            "doc_id": first_doc_id,
-                        },
-                        "editorial": {
-                            "scope": "analysis",
-                            "sub_scope": "works",
-                            "doc_id": pre_publish_doc_id,
-                        },
-                        "created_at": "2026-08-08T10:00:00Z",
-                        "last_copied_at": "2026-08-08T10:00:00Z",
-                        "published": None,
+                        "working_doc_id": first_doc_id,
+                        "editorials": [
+                            {
+                                "doc_id": pre_publish_doc_id,
+                                "created_at": "2026-08-08T10:00:00Z",
+                                "last_copied_at": "2026-08-08T10:00:00Z",
+                                "published_url": None,
+                            },
+                            {
+                                "doc_id": published_doc_id,
+                                "created_at": "2026-08-08T11:00:00Z",
+                                "last_copied_at": "2026-08-08T11:00:00Z",
+                                "published_url": "/analysis/published",
+                            },
+                        ],
                     },
                     {
-                        "lineage_id": "sha256:" + "b" * 64,
-                        "working": {
-                            "scope": "dotlineform",
-                            "sub_scope": "projects",
-                            "doc_id": first_doc_id,
-                        },
-                        "editorial": {
-                            "scope": "analysis",
-                            "sub_scope": "works",
-                            "doc_id": published_doc_id,
-                        },
-                        "created_at": "2026-08-08T11:00:00Z",
-                        "last_copied_at": "2026-08-08T11:00:00Z",
-                        "published": {"public_url": "/analysis/published"},
-                    },
-                    {
-                        "lineage_id": "sha256:" + "c" * 64,
-                        "working": {
-                            "scope": "dotlineform",
-                            "sub_scope": "projects",
-                            "doc_id": pathless_doc_id,
-                        },
-                        "editorial": {
-                            "scope": "analysis",
-                            "sub_scope": "works",
-                            "doc_id": unavailable_doc_id,
-                        },
-                        "created_at": "2026-08-08T12:00:00Z",
-                        "last_copied_at": "2026-08-08T12:00:00Z",
-                        "published": None,
-                    },
-                    {
-                        "lineage_id": "sha256:" + "d" * 64,
-                        "working": {
-                            "scope": "dotlineform",
-                            "sub_scope": "projects",
-                            "doc_id": second_doc_id,
-                        },
-                        "editorial": None,
-                        "created_at": "2026-08-08T13:00:00Z",
-                        "last_copied_at": "2026-08-08T13:00:00Z",
-                        "published": None,
+                        "working_doc_id": pathless_doc_id,
+                        "editorials": [
+                            {
+                                "doc_id": unavailable_doc_id,
+                                "created_at": "2026-08-08T12:00:00Z",
+                                "last_copied_at": "2026-08-08T12:00:00Z",
+                                "published_url": None,
+                            }
+                        ],
                     },
                 ],
             },

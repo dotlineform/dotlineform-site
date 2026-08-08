@@ -1394,33 +1394,30 @@ def _document_lineage_plan(
                 + ", ".join(missing_sources)
             )
 
-    lineage_rows = publication_lineage.load_rows(repo_root)
+    lineage_table = publication_lineage.load_table(repo_root)
     target_by_id = {document.doc_id: document for document in target_docs}
     decisions: list[TransferLineageDecision] = []
     selected_replace_targets: set[str] = set()
     for document in source_documents:
-        working_identity = publication_lineage.DocumentLineageIdentity(
-            scope=source_collection.scope,
-            sub_scope=source_collection.sub_scope,
-            doc_id=document.doc_id,
-        )
-        rows = publication_lineage.rows_for_working(
-            lineage_rows,
-            working_identity,
+        editorials = publication_lineage.editorials_for_working(
+            lineage_table,
+            working_scope=source_collection.scope,
+            working_sub_scope=source_collection.sub_scope,
             editorial_scope=target_collection.scope,
             editorial_sub_scope=target_collection.sub_scope,
+            working_doc_id=document.doc_id,
         )
         choices = tuple(
             TransferLineageEditorialChoice(
-                editorial_doc_id=row.editorial.doc_id,
+                editorial_doc_id=editorial.doc_id,
                 title=(
-                    target_by_id[row.editorial.doc_id].title
-                    if row.editorial.doc_id in target_by_id
+                    target_by_id[editorial.doc_id].title
+                    if editorial.doc_id in target_by_id
                     else ""
                 ),
-                available=row.editorial.doc_id in target_by_id,
+                available=editorial.doc_id in target_by_id,
             )
-            for row in rows
+            for editorial in editorials
         )
         available_ids = {
             choice.editorial_doc_id
@@ -1450,7 +1447,7 @@ def _document_lineage_plan(
             ):
                 raise ValueError(
                     f"Replace target {replace_target_doc_id!r} is not an available "
-                    f"lineage row for {document.doc_id!r}"
+                    f"Editorial child for {document.doc_id!r}"
                 )
             if action == COPY_ACTION_REPLACE:
                 if replace_target_doc_id in selected_replace_targets:

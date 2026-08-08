@@ -299,6 +299,10 @@ def test_lineage_new_and_replace_commit_exact_rows_and_preserve_editorial_gate(
             "action": "new",
         }
     ]
+    assert new_result["lineage"] == {
+        "schema_version": "docs_document_publication_lineage_v3",
+        "record_count": 1,
+    }
 
     source_front_matter, _source_body = source_model.parse_source(source_path)
     source_front_matter["title"] = "Working A Updated"
@@ -344,6 +348,10 @@ def test_lineage_new_and_replace_commit_exact_rows_and_preserve_editorial_gate(
     replaced_front_matter, replaced_body = source_model.parse_source(target_path)
     assert replace_result["created_doc_ids"] == []
     assert replace_result["replaced_doc_ids"] == [existing_target_id]
+    assert replace_result["lineage"] == {
+        "schema_version": "docs_document_publication_lineage_v3",
+        "record_count": 1,
+    }
     assert replaced_front_matter["doc_id"] == existing_target_id
     assert replaced_front_matter["added_date"] == target_before["added_date"]
     assert replaced_front_matter["last_updated"] == "2026-08-08 11:00:00"
@@ -358,13 +366,14 @@ def test_lineage_new_and_replace_commit_exact_rows_and_preserve_editorial_gate(
             / "docs-viewer/data/canonical/document-publication-lineage.json"
         ).read_text(encoding="utf-8")
     )
-    exact_row = next(
-        row
-        for row in table["rows"]
-        if row["editorial"]["doc_id"] == existing_target_id
+    exact_child = next(
+        editorial
+        for record in table["records"]
+        for editorial in record["editorials"]
+        if editorial["doc_id"] == existing_target_id
     )
-    assert exact_row["created_at"] == "2026-08-07T20:00:00Z"
-    assert exact_row["last_copied_at"] == "2026-08-08T11:00:00Z"
+    assert exact_child["created_at"] == "2026-08-07T20:00:00Z"
+    assert exact_child["last_copied_at"] == "2026-08-08T11:00:00Z"
     assert [
         (call["scope"], call["sub_scope"], call["changed_paths"])
         for call in rebuild_calls

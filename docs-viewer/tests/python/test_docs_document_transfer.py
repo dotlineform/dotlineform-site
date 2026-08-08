@@ -340,41 +340,36 @@ def make_lineage_repo(tmp_path: Path) -> Path:
         title="Editorial B Two",
         body="# Editorial B Two\n\nEditorial body two.\n",
     )
-    rows = [
-        {
-            "lineage_id": transfer.publication_lineage.lineage_id_for_copy(
-                transfer.publication_lineage.DocumentLineageIdentity(
-                    scope="dotlineform",
-                    sub_scope="projects",
-                    doc_id=source_id,
-                ),
-                transfer.publication_lineage.DocumentLineageIdentity(
-                    scope="analysis",
-                    sub_scope="works",
-                    doc_id=editorial_id,
-                ),
-            ),
-            "working": {
-                "scope": "dotlineform",
-                "sub_scope": "projects",
-                "doc_id": source_id,
-            },
-            "editorial": {
-                "scope": "analysis",
-                "sub_scope": "works",
-                "doc_id": editorial_id,
-            },
-            "created_at": "2026-08-07T20:00:00Z",
-            "last_copied_at": "2026-08-07T20:00:00Z",
-            "published": None,
-        }
-        for editorial_id in (target_id, second_target_id, missing_target_id)
-    ]
     write_json(
         repo_root / "docs-viewer/data/canonical/document-publication-lineage.json",
         {
-            "schema_version": "docs_document_publication_lineage_v2",
-            "rows": rows,
+            "schema_version": "docs_document_publication_lineage_v3",
+            "working_collection": {
+                "scope": "dotlineform",
+                "sub_scope": "projects",
+            },
+            "editorial_collection": {
+                "scope": "analysis",
+                "sub_scope": "works",
+            },
+            "records": [
+                {
+                    "working_doc_id": source_id,
+                    "editorials": [
+                        {
+                            "doc_id": editorial_id,
+                            "created_at": "2026-08-07T20:00:00Z",
+                            "last_copied_at": "2026-08-07T20:00:00Z",
+                            "published_url": None,
+                        }
+                        for editorial_id in (
+                            target_id,
+                            second_target_id,
+                            missing_target_id,
+                        )
+                    ],
+                }
+            ],
         },
     )
     return repo_root
@@ -508,7 +503,7 @@ def test_lineage_copy_requires_explicit_new_or_exact_replace_and_lists_unavailab
         }
     ]
 
-    with pytest.raises(ValueError, match="not an available lineage row"):
+    with pytest.raises(ValueError, match="not an available Editorial child"):
         transfer.plan_document_transfer(
             repo_root,
             **common,

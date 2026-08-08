@@ -85,30 +85,38 @@ def _publication_targets(
 ) -> dict[str, list[dict[str, Any]]]:
     import docs_document_publication_lineage as publication_lineage
 
-    grouped: dict[str, list[Any]] = {}
-    for row in publication_lineage.load_rows(repo_root):
-        working = row.working
-        if (
-            working is not None
-            and row.editorial is not None
-            and working.scope == source_scope
-            and working.sub_scope == source_sub_scope
-            and working.doc_id in doc_ids
-        ):
-            grouped.setdefault(working.doc_id, []).append(row)
+    table = publication_lineage.load_table(repo_root)
+    if table is None or table.working_collection != (
+        publication_lineage.DocumentLineageCollection(
+            scope=source_scope,
+            sub_scope=source_sub_scope,
+        )
+    ):
+        return {}
+    grouped = {
+        record.working_doc_id: record.editorials
+        for record in table.records
+        if record.working_doc_id in doc_ids
+    }
     collection_cache: dict[tuple[str, str], tuple[Path | None, str]] = {}
     return {
         doc_id: [
-            _publication_target(repo_root, row, collection_cache)
-            for row in sorted(rows, key=lambda item: item.editorial)
+            _publication_target(
+                repo_root,
+                editorial,
+                table.editorial_collection,
+                collection_cache,
+            )
+            for editorial in editorials
         ]
-        for doc_id, rows in grouped.items()
+        for doc_id, editorials in grouped.items()
     }
 
 
 def _publication_target(
     repo_root: Path,
-    row: Any,
+    editorial: Any,
+    editorial_collection: Any,
     collection_cache: dict[tuple[str, str], tuple[Path | None, str]],
 ) -> dict[str, Any]:
     import docs_document_location as document_location
@@ -118,24 +126,29 @@ def _publication_target(
         resolve_scope_path,
     )
 
-    editorial = row.editorial
     target = {
-        "scope": editorial.scope,
-        "sub_scope": editorial.sub_scope,
+        "scope": editorial_collection.scope,
+        "sub_scope": editorial_collection.sub_scope,
         "doc_id": editorial.doc_id,
     }
     title = ""
     viewer_url = ""
-    collection_key = (editorial.scope, editorial.sub_scope)
+    collection_key = (
+        editorial_collection.scope,
+        editorial_collection.sub_scope,
+    )
     if collection_key not in collection_cache:
         output_root: Path | None = None
         collection_url = ""
-        configs = load_docs_scope_configs(repo_root, scope_ids=[editorial.scope])
-        config = configs.get(editorial.scope)
+        configs = load_docs_scope_configs(
+            repo_root,
+            scope_ids=[editorial_collection.scope],
+        )
+        config = configs.get(editorial_collection.scope)
         sub_scopes = [
             item
             for item in (config.sub_scopes if config is not None else ())
-            if item.sub_scope == editorial.sub_scope
+            if item.sub_scope == editorial_collection.sub_scope
         ]
         if len(sub_scopes) == 1:
             output_root = resolve_scope_path(
@@ -145,8 +158,8 @@ def _publication_target(
             try:
                 collection_url = document_location.management_collection_viewer_url(
                     repo_root,
-                    editorial.scope,
-                    editorial.sub_scope,
+                    editorial_collection.scope,
+                    editorial_collection.sub_scope,
                 )
             except ValueError:
                 collection_url = ""
@@ -175,7 +188,11 @@ def _publication_target(
         "available": bool(title and viewer_url),
         "title": title,
         "viewer_url": viewer_url,
-        "publication": row.published.payload() if row.published is not None else None,
+        "publication": (
+            {"public_url": editorial.published_url}
+            if editorial.published_url is not None
+            else None
+        ),
     }
 
 

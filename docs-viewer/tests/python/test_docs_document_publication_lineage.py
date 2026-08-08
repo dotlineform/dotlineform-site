@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Focused checks for the private document-publication lineage table."""
+"""Focused checks for the private Working-owned Editorial lineage table."""
 
 from __future__ import annotations
 
 import json
 import sys
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -19,47 +20,74 @@ import docs_document_publication_lineage as lineage  # noqa: E402
 
 
 SOURCE_ID = "d-20260801-100000-aaaaaa"
-EDITORIAL_ID = "d-20260802-110000-bbbbbb"
+SECOND_SOURCE_ID = "d-20260801-101000-bbbbbb"
+EDITORIAL_ID = "d-20260802-110000-cccccc"
+SECOND_EDITORIAL_ID = "d-20260802-120000-dddddd"
 
 
-def identity(scope: str, sub_scope: str, doc_id: str) -> lineage.DocumentLineageIdentity:
-    return lineage.DocumentLineageIdentity(
-        scope=scope,
-        sub_scope=sub_scope,
+def empty_table() -> lineage.DocumentLineageTable:
+    return lineage.empty_table(
+        working_scope="dotlineform",
+        working_sub_scope="projects",
+        editorial_scope="analysis",
+        editorial_sub_scope="works",
+    )
+
+
+def editorial(
+    doc_id: str,
+    *,
+    published_url: str | None = None,
+) -> lineage.DocumentEditorialChild:
+    return lineage.DocumentEditorialChild(
         doc_id=doc_id,
+        created_at="2026-08-08T10:00:00Z",
+        last_copied_at="2026-08-08T10:00:00Z",
+        published_url=published_url,
     )
 
 
-def branch_id(character: str) -> str:
-    return f"sha256:{character * 64}"
-
-
-def test_lineage_id_is_sha256_of_the_canonical_initial_copy_pair() -> None:
-    assert lineage.lineage_id_for_copy(
-        identity("dotlineform", "projects", SOURCE_ID),
-        identity("analysis", "works", EDITORIAL_ID),
-    ) == (
-        "sha256:5b3f7cbe35d9ed4598f857f97e286c05"
-        "e1e183b8380345f59bec164d209d8a98"
+def record(
+    working_doc_id: str,
+    *editorials: lineage.DocumentEditorialChild,
+) -> lineage.DocumentLineageRecord:
+    return lineage.DocumentLineageRecord(
+        working_doc_id=working_doc_id,
+        editorials=tuple(editorials),
     )
 
 
-def test_new_then_replace_updates_one_exact_branch(
+def test_empty_table_freezes_the_exact_v3_envelope(tmp_path: Path) -> None:
+    repo_root = tmp_path / "repo"
+
+    assert lineage.load_table(repo_root) is None
+    assert json.loads(lineage.render_table(empty_table())) == {
+        "schema_version": "docs_document_publication_lineage_v3",
+        "working_collection": {
+            "scope": "dotlineform",
+            "sub_scope": "projects",
+        },
+        "editorial_collection": {
+            "scope": "analysis",
+            "sub_scope": "works",
+        },
+        "records": [],
+    }
+
+    written = lineage.write_table_atomic(repo_root, empty_table())
+    assert lineage.load_table(repo_root) == written
+    assert not hasattr(lineage, "lineage_id_for_copy")
+    assert not hasattr(lineage, "load_rows")
+    assert not hasattr(lineage, "write_rows_atomic")
+
+
+def test_new_creates_ordered_children_and_replace_updates_one_exact_child(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     repo_root = tmp_path / "repo"
-    assert lineage.load_rows(repo_root) == ()
-    assert json.loads(lineage.render_table(())) == {
-        "schema_version": "docs_document_publication_lineage_v2",
-        "rows": [],
-    }
-
-    working = identity("dotlineform", "projects", SOURCE_ID)
-    editorial = identity("analysis", "works", EDITORIAL_ID)
-    expected_lineage_id = lineage.lineage_id_for_copy(working, editorial)
-
     monkeypatch.setattr(lineage, "current_timestamp", lambda: "2026-08-08T10:00:00Z")
+
     created = lineage.apply_copy_results(
         repo_root,
         source_scope="dotlineform",
@@ -69,23 +97,46 @@ def test_new_then_replace_updates_one_exact_branch(
         results=[
             {
                 "source_doc_id": SOURCE_ID,
+                "target_doc_id": SECOND_EDITORIAL_ID,
+                "action": "new",
+            },
+            {
+                "source_doc_id": SOURCE_ID,
                 "target_doc_id": EDITORIAL_ID,
                 "action": "new",
-            }
+            },
+            {
+                "source_doc_id": SECOND_SOURCE_ID,
+                "target_doc_id": "d-20260802-130000-eeeeee",
+                "action": "new",
+            },
         ],
     )
-    row = created[0]
-    assert row.lineage_id == expected_lineage_id
-    assert row.working == working
-    assert row.editorial == editorial
-    assert row.created_at == "2026-08-08T10:00:00Z"
-    assert row.last_copied_at == row.created_at
-    assert row.published is None
 
-    lineage.write_rows_atomic(
-        repo_root,
-        (replace_published(row, "/analysis/current"),),
+    assert tuple(item.working_doc_id for item in created.records) == (
+        SOURCE_ID,
+        SECOND_SOURCE_ID,
     )
+    assert tuple(item.doc_id for item in created.records[0].editorials) == (
+        EDITORIAL_ID,
+        SECOND_EDITORIAL_ID,
+    )
+    published = replace(
+        created.records[0].editorials[0],
+        published_url="/analysis/current",
+    )
+    seeded = replace(
+        created,
+        records=(
+            replace(
+                created.records[0],
+                editorials=(published, created.records[0].editorials[1]),
+            ),
+            created.records[1],
+        ),
+    )
+    lineage.write_table_atomic(repo_root, seeded)
+
     monkeypatch.setattr(lineage, "current_timestamp", lambda: "2026-08-08T11:00:00Z")
     replaced = lineage.apply_copy_results(
         repo_root,
@@ -101,144 +152,134 @@ def test_new_then_replace_updates_one_exact_branch(
             }
         ],
     )
-    assert replaced[0].lineage_id == expected_lineage_id
-    assert replaced[0].created_at == "2026-08-08T10:00:00Z"
-    assert replaced[0].last_copied_at == "2026-08-08T11:00:00Z"
-    assert replaced[0].published == lineage.DocumentPublishedState(
-        public_url="/analysis/current"
+    exact_child = replaced.records[0].editorials[0]
+    assert exact_child.created_at == "2026-08-08T10:00:00Z"
+    assert exact_child.last_copied_at == "2026-08-08T11:00:00Z"
+    assert exact_child.published_url == "/analysis/current"
+
+
+def test_editorials_for_working_requires_the_exact_configured_collections() -> None:
+    table = replace(
+        empty_table(),
+        records=(record(SOURCE_ID, editorial(EDITORIAL_ID)),),
     )
 
+    assert lineage.editorials_for_working(
+        table,
+        working_scope="dotlineform",
+        working_sub_scope="projects",
+        editorial_scope="analysis",
+        editorial_sub_scope="works",
+        working_doc_id=SOURCE_ID,
+    ) == (editorial(EDITORIAL_ID),)
+    assert lineage.editorials_for_working(
+        table,
+        working_scope="dotlineform",
+        working_sub_scope="projects",
+        editorial_scope="analysis",
+        editorial_sub_scope="works",
+        working_doc_id=SECOND_SOURCE_ID,
+    ) == ()
+    with pytest.raises(ValueError, match="collections do not match Copy"):
+        lineage.editorials_for_working(
+            table,
+            working_scope="dotlineform",
+            working_sub_scope="projects",
+            editorial_scope="library",
+            editorial_sub_scope="works",
+            working_doc_id=SOURCE_ID,
+        )
 
-def replace_published(
-    row: lineage.DocumentLineageRow,
-    public_url: str,
-) -> lineage.DocumentLineageRow:
-    return lineage.DocumentLineageRow(
-        lineage_id=row.lineage_id,
-        working=row.working,
-        editorial=row.editorial,
-        created_at=row.created_at,
-        last_copied_at=row.last_copied_at,
-        published=lineage.DocumentPublishedState(public_url=public_url),
-    )
 
-
-def test_optional_states_round_trip_and_sort_by_stable_branch_id(tmp_path: Path) -> None:
-    repo_root = tmp_path / "repo"
-    working = identity("dotlineform", "projects", SOURCE_ID)
-    editorial = identity("analysis", "works", EDITORIAL_ID)
-    rows = (
-        lineage.DocumentLineageRow(
-            lineage_id=branch_id("c"),
-            working=None,
-            editorial=None,
-            created_at="2026-08-08T10:00:00Z",
-            last_copied_at="2026-08-08T10:00:00Z",
-            published=lineage.DocumentPublishedState(public_url="/analysis/published"),
+@pytest.mark.parametrize(
+    ("payload", "error"),
+    [
+        (
+            {"schema_version": "docs_document_publication_lineage_v2", "rows": []},
+            "unknown fields",
         ),
-        lineage.DocumentLineageRow(
-            lineage_id=branch_id("a"),
-            working=working,
-            editorial=None,
-            created_at="2026-08-08T10:00:00Z",
-            last_copied_at="2026-08-08T10:00:00Z",
-            published=None,
+        (
+            {
+                "schema_version": "docs_document_publication_lineage_v3",
+                "working_collection": {
+                    "scope": "dotlineform",
+                    "sub_scope": "projects",
+                },
+                "editorial_collection": {
+                    "scope": "analysis",
+                    "sub_scope": "works",
+                },
+                "records": [
+                    {"working_doc_id": SOURCE_ID, "editorials": []}
+                ],
+            },
+            "at least one Editorial child",
         ),
-        lineage.DocumentLineageRow(
-            lineage_id=branch_id("b"),
-            working=None,
-            editorial=editorial,
-            created_at="2026-08-08T10:00:00Z",
-            last_copied_at="2026-08-08T10:00:00Z",
-            published=None,
+        (
+            {
+                "schema_version": "docs_document_publication_lineage_v3",
+                "working_collection": {
+                    "scope": "dotlineform",
+                    "sub_scope": "projects",
+                },
+                "editorial_collection": {
+                    "scope": "analysis",
+                    "sub_scope": "works",
+                },
+                "records": [
+                    {
+                        "working_doc_id": SOURCE_ID,
+                        "editorials": [
+                            editorial(EDITORIAL_ID).payload(),
+                            editorial(EDITORIAL_ID).payload(),
+                        ],
+                    }
+                ],
+            },
+            "Editorial doc_id is duplicated",
         ),
-    )
-
-    written = lineage.write_rows_atomic(repo_root, rows)
-
-    assert tuple(row.lineage_id for row in written) == (
-        branch_id("a"),
-        branch_id("b"),
-        branch_id("c"),
-    )
-    assert lineage.load_rows(repo_root) == written
-    payload = json.loads(lineage.table_path(repo_root).read_text(encoding="utf-8"))
-    assert payload["rows"][0] == {
-        "lineage_id": branch_id("a"),
-        "working": working.payload(),
-        "editorial": None,
-        "created_at": "2026-08-08T10:00:00Z",
-        "last_copied_at": "2026-08-08T10:00:00Z",
-        "published": None,
-    }
-
-
-def test_table_rejects_v1_empty_duplicate_and_invalid_branches(tmp_path: Path) -> None:
+    ],
+)
+def test_table_rejects_v2_nullable_and_non_exact_shapes(
+    tmp_path: Path,
+    payload: dict[str, object],
+    error: str,
+) -> None:
     repo_root = tmp_path / "repo"
     path = lineage.table_path(repo_root)
     path.parent.mkdir(parents=True)
-    path.write_text(
-        '{"schema_version":"docs_document_publication_lineage_v1","rows":[]}',
-        encoding="utf-8",
-    )
-    with pytest.raises(ValueError, match="schema_version"):
-        lineage.load_rows(repo_root)
+    path.write_text(json.dumps(payload), encoding="utf-8")
 
-    empty = lineage.DocumentLineageRow(
-        lineage_id=branch_id("a"),
-        working=None,
-        editorial=None,
-        created_at="2026-08-08T10:00:00Z",
-        last_copied_at="2026-08-08T10:00:00Z",
-        published=None,
-    )
-    with pytest.raises(ValueError, match="at least one lineage state"):
-        lineage.render_table((empty,))
-
-    valid = lineage.DocumentLineageRow(
-        lineage_id=branch_id("b"),
-        working=identity("dotlineform", "projects", SOURCE_ID),
-        editorial=None,
-        created_at="2026-08-08T10:00:00Z",
-        last_copied_at="2026-08-08T10:00:00Z",
-        published=None,
-    )
-    with pytest.raises(ValueError, match="duplicated"):
-        lineage.render_table((valid, valid))
-
-    invalid = lineage.DocumentLineageRow(
-        lineage_id="branch-1",
-        working=valid.working,
-        editorial=None,
-        created_at=valid.created_at,
-        last_copied_at=valid.last_copied_at,
-        published=None,
-    )
-    with pytest.raises(ValueError, match="lineage_id is invalid"):
-        lineage.render_table((invalid,))
+    with pytest.raises(ValueError, match=error):
+        lineage.load_table(repo_root)
 
 
-def test_replace_requires_exact_current_states(tmp_path: Path) -> None:
-    repo_root = tmp_path / "repo"
-    working = identity("dotlineform", "projects", SOURCE_ID)
-    editorial = identity("analysis", "works", EDITORIAL_ID)
-    lineage.write_rows_atomic(
-        repo_root,
-        (
-            lineage.DocumentLineageRow(
-                lineage_id=lineage.lineage_id_for_copy(working, editorial),
-                working=working,
-                editorial=None,
-                created_at="2026-08-08T10:00:00Z",
-                last_copied_at="2026-08-08T10:00:00Z",
-                published=None,
-            ),
+def test_table_rejects_duplicate_working_and_cross_record_editorial_ids() -> None:
+    duplicate_working = replace(
+        empty_table(),
+        records=(
+            record(SOURCE_ID, editorial(EDITORIAL_ID)),
+            record(SOURCE_ID, editorial(SECOND_EDITORIAL_ID)),
         ),
     )
+    with pytest.raises(ValueError, match="Working doc_id is duplicated"):
+        lineage.render_table(duplicate_working)
 
-    with pytest.raises(ValueError, match="exact current lineage branch"):
+    duplicate_editorial = replace(
+        empty_table(),
+        records=(
+            record(SOURCE_ID, editorial(EDITORIAL_ID)),
+            record(SECOND_SOURCE_ID, editorial(EDITORIAL_ID)),
+        ),
+    )
+    with pytest.raises(ValueError, match="Editorial doc_id is duplicated"):
+        lineage.render_table(duplicate_editorial)
+
+
+def test_replace_requires_an_exact_current_editorial_child(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="exact current Editorial child"):
         lineage.apply_copy_results(
-            repo_root,
+            tmp_path / "repo",
             source_scope="dotlineform",
             source_sub_scope="projects",
             editorial_scope="analysis",
@@ -253,75 +294,31 @@ def test_replace_requires_exact_current_states(tmp_path: Path) -> None:
         )
 
 
-def test_reconcile_publications_changes_only_rows_with_current_editorial(
+def test_reconcile_publications_updates_urls_on_current_children_only(
     tmp_path: Path,
 ) -> None:
     repo_root = tmp_path / "repo"
-    working = identity("dotlineform", "projects", SOURCE_ID)
-    published_editorial = identity("analysis", "works", EDITORIAL_ID)
-    removed_editorial = identity(
-        "analysis",
-        "works",
-        "d-20260802-120000-cccccc",
-    )
-    other_editorial = identity(
-        "library",
-        "works",
-        "d-20260802-130000-dddddd",
-    )
-    published_only = lineage.DocumentLineageRow(
-        lineage_id=branch_id("d"),
-        working=None,
-        editorial=None,
-        created_at="2026-08-08T10:00:00Z",
-        last_copied_at="2026-08-08T10:00:00Z",
-        published=lineage.DocumentPublishedState(public_url="/analysis/retained"),
-    )
-    rows = (
-        lineage.DocumentLineageRow(
-            lineage_id=lineage.lineage_id_for_copy(working, published_editorial),
-            working=working,
-            editorial=published_editorial,
-            created_at="2026-08-08T10:00:00Z",
-            last_copied_at="2026-08-08T10:00:00Z",
-            published=None,
+    table = replace(
+        empty_table(),
+        records=(
+            record(
+                SOURCE_ID,
+                editorial(EDITORIAL_ID),
+                editorial(SECOND_EDITORIAL_ID, published_url="/analysis/old"),
+            ),
         ),
-        lineage.DocumentLineageRow(
-            lineage_id=lineage.lineage_id_for_copy(working, removed_editorial),
-            working=working,
-            editorial=removed_editorial,
-            created_at="2026-08-08T10:00:00Z",
-            last_copied_at="2026-08-08T10:00:00Z",
-            published=lineage.DocumentPublishedState(public_url="/analysis/old"),
-        ),
-        lineage.DocumentLineageRow(
-            lineage_id=lineage.lineage_id_for_copy(working, other_editorial),
-            working=working,
-            editorial=other_editorial,
-            created_at="2026-08-08T10:00:00Z",
-            last_copied_at="2026-08-08T10:00:00Z",
-            published=lineage.DocumentPublishedState(public_url="/library/current"),
-        ),
-        published_only,
     )
-    lineage.write_rows_atomic(repo_root, rows)
+    lineage.write_table_atomic(repo_root, table)
 
     reconciled = lineage.reconcile_publications(
         repo_root,
-        editorial_collections={("analysis", "works")},
-        publication_urls={
-            published_editorial: "/analysis/?doc=report&subdoc=" + EDITORIAL_ID,
-        },
+        editorial_scope="analysis",
+        editorial_sub_scope="works",
+        publication_urls={EDITORIAL_ID: "/analysis/current"},
     )
-    by_id = {row.lineage_id: row for row in reconciled}
 
-    assert by_id[lineage.lineage_id_for_copy(working, published_editorial)].published == (
-        lineage.DocumentPublishedState(
-            public_url="/analysis/?doc=report&subdoc=" + EDITORIAL_ID
-        )
+    assert reconciled is not None
+    assert reconciled.records[0].editorials == (
+        editorial(EDITORIAL_ID, published_url="/analysis/current"),
+        editorial(SECOND_EDITORIAL_ID),
     )
-    assert by_id[lineage.lineage_id_for_copy(working, removed_editorial)].published is None
-    assert by_id[lineage.lineage_id_for_copy(working, other_editorial)].published == (
-        lineage.DocumentPublishedState(public_url="/library/current")
-    )
-    assert by_id[published_only.lineage_id] == published_only
