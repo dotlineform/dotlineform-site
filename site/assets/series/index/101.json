@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-8ab732bbc5cc6aafb5811661f403ec3c",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-cb117c86cc77988310691978be3dbf8d",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "101",
     "count": 3
   },
@@ -19,5 +19,25 @@
       "molecules"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "00460",
+      "title": "molecules",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "00461",
+      "title": "molecules symbols",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "00462",
+      "title": "equilibrium",
+      "year": 2013,
+      "year_display": "2013"
+    }
+  ]
 }

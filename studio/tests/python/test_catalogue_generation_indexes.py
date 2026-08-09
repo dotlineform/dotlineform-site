@@ -119,16 +119,37 @@ def test_series_index_payload_is_published_only_and_validates_primary_work() -> 
         generated_at_utc="2026-05-09T12:00:00Z",
     )
 
-    assert payload["header"]["schema"] == "series_index_v2"
+    assert payload["header"]["schema"] == "series_index_v3"
     assert payload["header"]["generated_at_utc"] == "2026-05-09T12:00:00Z"
     assert payload["header"]["count"] == 2
     assert list(payload["series"].keys()) == ["009", "010"]
-    assert payload["series"]["009"]["works"] == ["00002", "00001"]
     assert payload["series"]["009"]["primary_work_id"] == "00002"
-    assert payload["series"]["009"]["published_date"] == "2026-05-01"
-    assert "notes" not in payload["series"]["009"]
-    assert payload["series"]["010"]["works"] == ["00004", "00002"]
+    assert set(payload["series"]["009"]) == {"series_id", "title", "primary_work_id"}
+    assert "single_work_id" not in payload["series"]["010"]
     assert "011" not in payload["series"]
+
+    members = indexes.build_series_member_work_records(context=context, series_id="009")
+    assert members == [
+        {"work_id": "00002", "title": "Work 2", "year": 2022, "year_display": "2022"},
+        {"work_id": "00001", "title": "Work 10", "year": 2021, "year_display": "2021"},
+    ]
+
+    solo_series = {
+        "012": {"series_id": "012", "status": "published", "title": "Solo", "primary_work_id": "6"}
+    }
+    solo_works = {
+        "00006": {"work_id": "6", "status": "published", "title": "Only", "series_ids": ["012"]}
+    }
+    solo_context = indexes.build_series_work_index_context(
+        series_records=solo_series,
+        work_records=solo_works,
+    )
+    solo_payload = indexes.build_series_index_payload(
+        series_records=solo_series,
+        context=solo_context,
+        generated_at_utc="2026-05-09T12:00:00Z",
+    )
+    assert solo_payload["series"]["012"]["single_work_id"] == "00006"
 
     broken_records = sample_series_records()
     broken_records["009"] = dict(broken_records["009"], primary_work_id="3")

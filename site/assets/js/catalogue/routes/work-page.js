@@ -208,7 +208,7 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
     if (!link) return;
     if (routeState.series) {
       link.textContent = '\u2190 series';
-      link.href = catalogueIndexUrl(baseurl, { series: routeState.series, seriesPage: routeState.seriesPage });
+      link.href = catalogueIndexUrl(baseurl);
       return;
     }
     if (routeState.from === 'recent') {
@@ -216,7 +216,7 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
       link.href = buildPath(baseurl, '/recent/');
       return;
     }
-    link.textContent = '\u2190 works';
+    link.textContent = '\u2190 series';
     link.href = catalogueIndexUrl(baseurl);
   }
 
@@ -414,7 +414,7 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
       nav.setAttribute('data-series', primarySeries);
       nav.setAttribute('data-series-ids', seriesIds.join(','));
     }
-    seriesNavigation.update({ workId: workId, seriesId: primarySeries });
+    seriesNavigation.update({ workId: workId, seriesId: primarySeries, seriesIds: seriesIds });
     document.dispatchEvent(new CustomEvent('dlf:work-metadata-applied', {
       detail: { work_id: workId, series_id: primarySeries, series_ids: seriesIds }
     }));

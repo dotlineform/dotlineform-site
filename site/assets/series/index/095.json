@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-2fe7f8699a6f870e3d7b7c37d568401d",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-009115b18d3350c1544dbd12f8924b3f",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "095",
     "count": 18
   },
@@ -19,5 +19,115 @@
       "melancholy hope cell"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "01423",
+      "title": "melancholy hope cell (2016-08-07 10-51-55)",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "01424",
+      "title": "melancholy hope cell (2016-10-01 11-58-15)",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "01425",
+      "title": "melancholy hope cell (2016-10-01 11-58-31)",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "01426",
+      "title": "melancholy hope cell (2016-10-30 12-31-48)",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "01427",
+      "title": "melancholy hope cell (2017-01-02 12-33-42)",
+      "year": 2017,
+      "year_display": "2017"
+    },
+    {
+      "work_id": "01428",
+      "title": "melancholy hope cell (2017-03-21 23-29-31)",
+      "year": 2017,
+      "year_display": "2017"
+    },
+    {
+      "work_id": "01429",
+      "title": "melancholy hope cell (2017-03-21 23-29-44)",
+      "year": 2017,
+      "year_display": "2017"
+    },
+    {
+      "work_id": "01430",
+      "title": "melancholy hope cell (2017-04-26 17-19-12)",
+      "year": 2017,
+      "year_display": "2017"
+    },
+    {
+      "work_id": "01431",
+      "title": "melancholy hope cell (2017-06-25 11-13-56)",
+      "year": 2017,
+      "year_display": "2017"
+    },
+    {
+      "work_id": "01432",
+      "title": "melancholy hope cell (2017-06-25 11-14-09)",
+      "year": 2017,
+      "year_display": "2017"
+    },
+    {
+      "work_id": "01433",
+      "title": "melancholy hope cell (version 2022-10-16 18꞉10꞉34)",
+      "year": 2022,
+      "year_display": "2022"
+    },
+    {
+      "work_id": "01434",
+      "title": "melancholy hope cell (version 2022-10-16 18꞉10꞉36)",
+      "year": 2022,
+      "year_display": "2022"
+    },
+    {
+      "work_id": "01435",
+      "title": "melancholy hope cell (version 2022-10-16 18꞉10꞉39)",
+      "year": 2022,
+      "year_display": "2022"
+    },
+    {
+      "work_id": "01436",
+      "title": "melancholy hope cell (version 2022-10-16 18꞉10꞉42)",
+      "year": 2022,
+      "year_display": "2022"
+    },
+    {
+      "work_id": "01437",
+      "title": "melancholy hope cell (version 2022-10-16 18꞉11꞉04)",
+      "year": 2022,
+      "year_display": "2022"
+    },
+    {
+      "work_id": "01438",
+      "title": "melancholy hope cell (version 2022-10-16 18꞉11꞉06)",
+      "year": 2022,
+      "year_display": "2022"
+    },
+    {
+      "work_id": "01439",
+      "title": "melancholy hope cell (version 2022-10-16 18꞉11꞉09)",
+      "year": 2022,
+      "year_display": "2022"
+    },
+    {
+      "work_id": "01440",
+      "title": "melancholy hope cell (version 2022-10-16 18꞉11꞉11)",
+      "year": 2022,
+      "year_display": "2022"
+    }
+  ]
 }

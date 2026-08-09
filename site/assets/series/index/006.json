@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-329a39c8630069884109b022a587412f",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-7ee4a3a6f5b91b6b9c72f25403707a42",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "006",
     "count": 75
   },
@@ -19,5 +19,457 @@
       "a doll story"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "00641",
+      "title": "a doll story - doll 1",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00642",
+      "title": "a doll story - doll 2",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00643",
+      "title": "a doll story - doll 3",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00644",
+      "title": "a doll story - doll 4",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00645",
+      "title": "a doll story - doll 5",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00646",
+      "title": "a doll story - doll 6",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00647",
+      "title": "a doll story - doll 7",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00648",
+      "title": "a doll story - doll 8",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00649",
+      "title": "a doll story - doll 9",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00650",
+      "title": "a doll story - doll 10",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00651",
+      "title": "a doll story - doll 11",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00652",
+      "title": "a doll story - doll 12",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00653",
+      "title": "a doll story - doll 13",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00654",
+      "title": "a doll story - doll 14",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00655",
+      "title": "a doll story - doll 15",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00656",
+      "title": "a doll story - doll 16",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00657",
+      "title": "a doll story - doll 17",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00658",
+      "title": "a doll story - doll 18",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00659",
+      "title": "a doll story - doll 19",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00660",
+      "title": "a doll story - doll 20",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00661",
+      "title": "a doll story - doll 21",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00662",
+      "title": "a doll story - doll 22",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00663",
+      "title": "a doll story - doll 23",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00664",
+      "title": "a doll story - doll 24",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00665",
+      "title": "a doll story - doll 25",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00666",
+      "title": "a doll story - doll 26 (2015)",
+      "year": 2015,
+      "year_display": "2015"
+    },
+    {
+      "work_id": "00667",
+      "title": "a doll story - doll 27 (2014)",
+      "year": 2014,
+      "year_display": "2014"
+    },
+    {
+      "work_id": "00668",
+      "title": "a doll story - doll glass 1",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00669",
+      "title": "a doll story - doll glass 2",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00670",
+      "title": "a doll story - doll glass 3",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00671",
+      "title": "a doll story - doll glass 4",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00672",
+      "title": "a doll story - doll glass 5",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00673",
+      "title": "a doll story - doll glass 6",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00674",
+      "title": "a doll story - doll glass 7",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00675",
+      "title": "a doll story - doll glass 8",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00676",
+      "title": "a doll story - doll glass 9",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00677",
+      "title": "a doll story - doll glass 10",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00678",
+      "title": "a doll story - doll glass 11",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00679",
+      "title": "a doll story - doll glass 12",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00680",
+      "title": "a doll story - doll glass 13",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00681",
+      "title": "a doll story - doll glass 14",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00682",
+      "title": "a doll story - doll glass 15",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00683",
+      "title": "a doll story - doll glass 16",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00684",
+      "title": "a doll story - doll glass 17",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00685",
+      "title": "a doll story - doll glass 18",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00686",
+      "title": "a doll story - doll glass 19",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00687",
+      "title": "a doll story - doll glass 20",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00688",
+      "title": "a doll story - doll glass 21",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00689",
+      "title": "a doll story - doll glass 22",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00690",
+      "title": "a doll story - doll glass 23",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00691",
+      "title": "a doll story - doll glass 24",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00692",
+      "title": "a doll story - doll glass 25",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00693",
+      "title": "a doll story - doll glass 26",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00694",
+      "title": "a doll story - doll glass 27",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00695",
+      "title": "a doll story - doll glass 28",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00696",
+      "title": "a doll story - doll glass 29",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00697",
+      "title": "a doll story - doll glass 30",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00698",
+      "title": "a doll story - glass 1",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00699",
+      "title": "a doll story - glass 2",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00700",
+      "title": "a doll story - glass 3",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00701",
+      "title": "a doll story - glass 4",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00702",
+      "title": "a doll story - glass 5",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00703",
+      "title": "a doll story - glass 6",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00704",
+      "title": "a doll story - glass 7",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00705",
+      "title": "a doll story - glass 8",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00706",
+      "title": "a doll story - glass 9",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00707",
+      "title": "a doll story - glass 10",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00708",
+      "title": "a doll story - glass 11",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00709",
+      "title": "a doll story - shelf 1",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00710",
+      "title": "a doll story - shelf 2",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00711",
+      "title": "a doll story - shelf 3",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00712",
+      "title": "a doll story - shelf 4",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00713",
+      "title": "a doll story - weights 1",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00714",
+      "title": "a doll story - weights 2",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00715",
+      "title": "a doll story - weights 3",
+      "year": 2024,
+      "year_display": "2024"
+    }
+  ]
 }

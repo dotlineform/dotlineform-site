@@ -49,7 +49,7 @@ def work_payload(work_id: str, urls: list[str]) -> dict[str, object]:
 def series_payload(series_id: str, urls: list[str]) -> dict[str, object]:
     return {
         "header": {
-            "schema": "series_record_v2",
+            "schema": "series_record_v3",
             "version": f"before-{series_id}",
             "generated_at_utc": "2026-08-01T00:00:00Z",
             "series_id": series_id,
@@ -60,6 +60,10 @@ def series_payload(series_id: str, urls: list[str]) -> dict[str, object]:
             "title": f"Series {series_id}",
             "doc_url": urls,
         },
+        "member_works": [
+            {"work_id": "00001", "title": "One"},
+            {"work_id": "00002", "title": "Two"},
+        ],
     }
 
 
@@ -98,11 +102,11 @@ def test_refresh_reassigns_removes_and_adds_only_exact_affected_payloads(tmp_pat
     assert series_after["series"]["doc_url"] == [old_url]  # type: ignore[index]
     assert series_after["header"]["version"] == compute_payload_version(  # type: ignore[index]
         compact_json_object(
-            {
-                "series": series_after["series"],
-                "content_html": None,
-                "work_count": 2,
-            }
+                {
+                    "series": series_after["series"],
+                    "member_works": series_after["member_works"],
+                    "content_html": None,
+                }
         )
     )
     assert unaffected.read_bytes() == unaffected_before

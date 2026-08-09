@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-d519ea0283b13517cd70e3fd1b77a157",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-d0f148030ac7277e1f3c13b3f33cf2af",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "009",
     "count": 4
   },
@@ -19,5 +19,31 @@
       "a poem divided into 4 parts"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "00001",
+      "title": "a poem divided into 4 parts (\"our dreams are real\")",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00002",
+      "title": "a poem divided into 4 parts (\"there must be hope\")",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00003",
+      "title": "a poem divided into 4 parts (\"we are not lost\")",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00004",
+      "title": "a poem divided into 4 parts (\"we only feel love\")",
+      "year": 2025,
+      "year_display": "2025"
+    }
+  ]
 }

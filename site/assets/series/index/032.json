@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-10f864668e5670ed0165d147c9f828cc",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-060433b77ab1ed8d5fc5032c9af271b6",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "032",
     "count": 6
   },
@@ -19,5 +19,43 @@
       "creases"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "00832",
+      "title": "creases 1",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "00833",
+      "title": "creases 1 (version)",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "00834",
+      "title": "creases 2",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "00835",
+      "title": "creases 2 (version)",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "00836",
+      "title": "creases 3",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "00837",
+      "title": "creases 3 (version)",
+      "year": 2016,
+      "year_display": "2016"
+    }
+  ]
 }

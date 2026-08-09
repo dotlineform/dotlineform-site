@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-0b0436058751e867ef06fa77beba331a",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-c16772e8be0e2f4997f73506062a3729",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "112",
     "count": 22
   },
@@ -19,5 +19,139 @@
       "petri"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "01501",
+      "title": "petri 1",
+      "year": 2004,
+      "year_display": "2004"
+    },
+    {
+      "work_id": "01502",
+      "title": "petri 2",
+      "year": 2004,
+      "year_display": "2004"
+    },
+    {
+      "work_id": "01503",
+      "title": "petri 3",
+      "year": 2004,
+      "year_display": "2004"
+    },
+    {
+      "work_id": "01504",
+      "title": "petri 4",
+      "year": 2004,
+      "year_display": "2004"
+    },
+    {
+      "work_id": "01505",
+      "title": "petri 5",
+      "year": 2004,
+      "year_display": "2004"
+    },
+    {
+      "work_id": "01506",
+      "title": "petri 6",
+      "year": 2004,
+      "year_display": "2004"
+    },
+    {
+      "work_id": "01507",
+      "title": "petri 7",
+      "year": 2004,
+      "year_display": "2004"
+    },
+    {
+      "work_id": "01508",
+      "title": "petri 8",
+      "year": 2004,
+      "year_display": "2004"
+    },
+    {
+      "work_id": "01509",
+      "title": "petri 9",
+      "year": 2004,
+      "year_display": "2004"
+    },
+    {
+      "work_id": "01510",
+      "title": "petri 10",
+      "year": 2004,
+      "year_display": "2004"
+    },
+    {
+      "work_id": "01511",
+      "title": "petri 11",
+      "year": 2004,
+      "year_display": "2004"
+    },
+    {
+      "work_id": "01512",
+      "title": "petri 12",
+      "year": 2004,
+      "year_display": "2004"
+    },
+    {
+      "work_id": "01513",
+      "title": "petri 13",
+      "year": 2004,
+      "year_display": "2004"
+    },
+    {
+      "work_id": "01514",
+      "title": "petri 14",
+      "year": 2004,
+      "year_display": "2004"
+    },
+    {
+      "work_id": "01515",
+      "title": "petri 15",
+      "year": 2004,
+      "year_display": "2004"
+    },
+    {
+      "work_id": "01516",
+      "title": "petri 16",
+      "year": 2004,
+      "year_display": "2004"
+    },
+    {
+      "work_id": "01517",
+      "title": "petri 17",
+      "year": 2004,
+      "year_display": "2004"
+    },
+    {
+      "work_id": "01518",
+      "title": "petri 18",
+      "year": 2004,
+      "year_display": "2004"
+    },
+    {
+      "work_id": "01519",
+      "title": "petri 19",
+      "year": 2004,
+      "year_display": "2004"
+    },
+    {
+      "work_id": "01520",
+      "title": "petri 20",
+      "year": 2004,
+      "year_display": "2004"
+    },
+    {
+      "work_id": "01521",
+      "title": "petri 21",
+      "year": 2004,
+      "year_display": "2004"
+    },
+    {
+      "work_id": "01522",
+      "title": "petri 22",
+      "year": 2004,
+      "year_display": "2004"
+    }
+  ]
 }

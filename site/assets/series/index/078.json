@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-9202301a2d24cf5167a32f789cbd866b",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-f8ca7185176fdf8aa87176f1b027c1fe",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "078",
     "count": 3
   },
@@ -19,5 +19,25 @@
       "home land loss"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "01372",
+      "title": "home",
+      "year": 2021,
+      "year_display": "2021"
+    },
+    {
+      "work_id": "01373",
+      "title": "land",
+      "year": 2021,
+      "year_display": "2021"
+    },
+    {
+      "work_id": "01374",
+      "title": "loss",
+      "year": 2021,
+      "year_display": "2021"
+    }
+  ]
 }

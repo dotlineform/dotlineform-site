@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-e535abab8f9bcfa2cfb785714d17aad1",
-    "generated_at_utc": "2026-08-09T12:34:37Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-df46a95afeef7edd4faa4fa0f1bf82c2",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "001",
     "count": 3
   },
@@ -21,5 +21,25 @@
     "doc_url": [
       "/analysis/?doc=d-20260807-082735-54d9d5&subdoc=d-20260808-194215-9b0545"
     ]
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "00635",
+      "title": "10,000 (1)",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00636",
+      "title": "10,000 (2)",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00637",
+      "title": "10,000 (3)",
+      "year": 2009,
+      "year_display": "2009"
+    }
+  ]
 }

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-00e4b3e1474b1c85bb18cfae14c20930",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-22b10cce86dea5c1cb0b9bf677aedd82",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "012",
     "count": 2
   },
@@ -19,5 +19,19 @@
       "all the little cracks"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "00751",
+      "title": "all the little cracks",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "00752",
+      "title": "all the little cracks again",
+      "year": 2016,
+      "year_display": "2016"
+    }
+  ]
 }

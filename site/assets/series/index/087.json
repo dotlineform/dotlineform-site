@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-4a51609b959b0ee9f9c73951c4d5c55c",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-e2e6fc9472591b8312496ef9c94fa123",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "087",
     "count": 3
   },
@@ -19,5 +19,25 @@
       "landscapes"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "00516",
+      "title": "landscape 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00517",
+      "title": "landscape 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00518",
+      "title": "landscape 2.1",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
 }

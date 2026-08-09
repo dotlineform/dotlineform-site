@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-df4ed86add071bde035af5b1f71097e0",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-940d363f6edafcb00740a3dcd4f4d8bf",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "124",
     "count": 45
   },
@@ -19,5 +19,277 @@
       "spider webs"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "01675",
+      "title": "spider webs 1",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01676",
+      "title": "spider webs 2",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01677",
+      "title": "spider webs 3",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01678",
+      "title": "spider webs 4",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01679",
+      "title": "spider webs 5",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01680",
+      "title": "spider webs 6",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01681",
+      "title": "spider webs 7",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01682",
+      "title": "spider webs 8",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01683",
+      "title": "spider webs 9",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01684",
+      "title": "spider webs 10",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01685",
+      "title": "spider webs 11",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01686",
+      "title": "spider webs 12",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01687",
+      "title": "spider webs 13",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01688",
+      "title": "spider webs 14",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01689",
+      "title": "spider webs 15",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01690",
+      "title": "spider webs 16",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01691",
+      "title": "spider webs 17",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01692",
+      "title": "spider webs 18",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01693",
+      "title": "spider webs 19",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01694",
+      "title": "spider webs 20",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01695",
+      "title": "spider webs 21",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01696",
+      "title": "spider webs 22",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01697",
+      "title": "spider webs 23",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01698",
+      "title": "spider webs 24",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01699",
+      "title": "spider webs 25",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01700",
+      "title": "spider webs 26",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01701",
+      "title": "spider webs 27",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01702",
+      "title": "spider webs distillation 1",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01703",
+      "title": "spider webs distillation 2",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01704",
+      "title": "spider webs distillation 3",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01705",
+      "title": "spider webs distillation 4",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01706",
+      "title": "spider webs distillation 5",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01707",
+      "title": "spider webs distillation 6",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01708",
+      "title": "spider webs distillation 7",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01709",
+      "title": "spider webs distillation 8",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01710",
+      "title": "spider webs distillation 9",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01711",
+      "title": "spider webs distillation 10",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01712",
+      "title": "spider webs distillation 11",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01713",
+      "title": "spider webs distillation 12",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01714",
+      "title": "spider webs distillation 13",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01715",
+      "title": "spider webs distillation 14",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01716",
+      "title": "spider webs distillation 15",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01717",
+      "title": "spider webs distillation 16",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01718",
+      "title": "spider webs distillation 17",
+      "year": 2023,
+      "year_display": "2023-24"
+    },
+    {
+      "work_id": "01719",
+      "title": "spider webs distillation 18",
+      "year": 2023,
+      "year_display": "2023-24"
+    }
+  ]
 }

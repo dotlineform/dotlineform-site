@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-b1ad8f00698dfcb336a343121e195744",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-dcc48aee073968d160445ece6c1a6a4d",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "114",
     "count": 7
   },
@@ -19,5 +19,49 @@
       "plant forms"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "01527",
+      "title": "plant form 1",
+      "year": 2022,
+      "year_display": "2022"
+    },
+    {
+      "work_id": "01528",
+      "title": "plant form 2",
+      "year": 2022,
+      "year_display": "2022"
+    },
+    {
+      "work_id": "01529",
+      "title": "plant form 3",
+      "year": 2022,
+      "year_display": "2022"
+    },
+    {
+      "work_id": "01530",
+      "title": "plant form 4",
+      "year": 2022,
+      "year_display": "2022"
+    },
+    {
+      "work_id": "01531",
+      "title": "plant form 5",
+      "year": 2022,
+      "year_display": "2022"
+    },
+    {
+      "work_id": "01532",
+      "title": "plant form 6",
+      "year": 2022,
+      "year_display": "2022"
+    },
+    {
+      "work_id": "01533",
+      "title": "plant form 7",
+      "year": 2022,
+      "year_display": "2022"
+    }
+  ]
 }

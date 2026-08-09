@@ -77,7 +77,7 @@ def finalize_works_index_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def finalize_series_index_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
-    return finalize_object_map_payload(payload, "series", "series_index_v2")
+    return finalize_object_map_payload(payload, "series", "series_index_v3")
 
 
 def finalize_work_storage_index_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
@@ -124,22 +124,22 @@ def finalize_series_record_payload(payload: Dict[str, Any], series_id: str) -> D
     series_record = payload.get("series")
     if not isinstance(series_record, dict):
         raise ValueError("series record payload must include a series object")
+    if str(series_record.get("series_id") or "") != series_id:
+        raise ValueError(f"series record payload does not match exact target {series_id}")
     raw_doc_urls = series_record.get("doc_url", [])
     if not isinstance(raw_doc_urls, list):
         raise ValueError("series.doc_url must be an array")
     series_record["doc_url"] = generation_records.normalize_document_urls(raw_doc_urls)
-    header = payload.get("header") if isinstance(payload.get("header"), dict) else {}
-    works = series_record.get("works")
-    count = len(works) if isinstance(works, list) else header.get("count")
-    if not isinstance(count, int):
-        count = 0
+    member_works = payload.get("member_works")
+    if not isinstance(member_works, list):
+        raise ValueError("series record payload must include a member_works array")
     content_html = payload.get("content_html")
     return generation_records.build_series_json_payload(
         series_id=series_id,
         series_record=series_record,
+        member_works=member_works,
         content_html=content_html if isinstance(content_html, str) else None,
         generated_at_utc=activity.utc_now(),
-        count=count,
     )
 
 
@@ -457,18 +457,20 @@ def remove_work_from_series_record_payload(payload: Dict[str, Any], series_id: s
     series_record = payload.get("series")
     if not isinstance(series_record, dict):
         return False
-    changed = False
-    works = series_record.get("works")
-    if isinstance(works, list):
-        next_works = [str(value) for value in works if str(value) != work_id]
-        if isinstance(payload.get("header"), dict):
-            payload["header"]["count"] = len(next_works)
-        series_record.pop("works", None)
-        changed = True
-    if "primary_work_id" in series_record:
-        series_record.pop("primary_work_id", None)
-        changed = True
-    return changed
+    if str(series_record.get("series_id") or "") != series_id:
+        raise ValueError(f"series record payload does not match exact target {series_id}")
+    member_works = payload.get("member_works")
+    if not isinstance(member_works, list):
+        return False
+    next_member_works = [
+        member
+        for member in member_works
+        if not (isinstance(member, dict) and str(member.get("work_id") or "") == work_id)
+    ]
+    if len(next_member_works) == len(member_works):
+        return False
+    payload["member_works"] = next_member_works
+    return True
 
 
 def remove_series_from_work_record_payload(payload: Dict[str, Any], work_id: str, series_id: str) -> bool:
@@ -482,7 +484,12 @@ def remove_series_from_work_record_payload(payload: Dict[str, Any], work_id: str
     return True
 
 
-def update_recent_entries_for_work_delete(payload: Dict[str, Any], work_id: str, series_index_payload: Mapping[str, Any]) -> bool:
+def update_recent_entries_for_work_delete(
+    payload: Dict[str, Any],
+    work_id: str,
+    series_index_payload: Mapping[str, Any],
+    member_work_ids_by_series: Mapping[str, list[str]],
+) -> bool:
     entries = payload.get("entries")
     if not isinstance(entries, list):
         raise ValueError("recent_index.json must include an entries array")
@@ -503,7 +510,7 @@ def update_recent_entries_for_work_delete(payload: Dict[str, Any], work_id: str,
         if kind == "series":
             series_record = series_map.get(target_id)
             if isinstance(series_record, dict):
-                works = [str(value) for value in series_record.get("works") or [] if str(value)]
+                works = member_work_ids_by_series.get(target_id, [])
                 next_entry = dict(entry)
                 next_entry["caption"] = f"{len(works)} work" if len(works) == 1 else f"{len(works)} works"
                 if str(next_entry.get("thumb_id") or "") == work_id:
@@ -599,6 +606,22 @@ def build_catalogue_delete_generated_payloads(
                 del works[record_id]
                 payloads[path] = finalize_work_storage_index_payload(payload)
 
+        member_work_ids_by_series: Dict[str, list[str]] = {}
+        for series_id in affected.get("series") or []:
+            normalized_series_id = str(series_id)
+            series_payload = load_existing(public_paths.series_record_path(normalized_series_id))
+            if series_payload is None:
+                continue
+            path, payload = series_payload
+            if remove_work_from_series_record_payload(payload, normalized_series_id, record_id):
+                finalized_payload = finalize_series_record_payload(payload, normalized_series_id)
+                payloads[path] = finalized_payload
+                member_work_ids_by_series[normalized_series_id] = [
+                    str(member.get("work_id") or "")
+                    for member in finalized_payload.get("member_works") or []
+                    if isinstance(member, dict) and str(member.get("work_id") or "")
+                ]
+
         series_index_payload: Dict[str, Any] | None = None
         series_index = load_existing(public_paths.SERIES_INDEX_JSON_PATH)
         if series_index is not None:
@@ -607,29 +630,34 @@ def build_catalogue_delete_generated_payloads(
             changed = False
             if isinstance(series_map, dict):
                 for series_id in affected.get("series") or []:
-                    series_record = series_map.get(str(series_id))
+                    normalized_series_id = str(series_id)
+                    series_record = series_map.get(normalized_series_id)
                     if not isinstance(series_record, dict):
                         continue
-                    works = [str(value) for value in series_record.get("works") or [] if str(value) != record_id]
-                    if works != series_record.get("works"):
-                        series_record["works"] = works
+                    remaining_work_ids = member_work_ids_by_series.get(normalized_series_id)
+                    if remaining_work_ids is None:
+                        continue
+                    next_single_work_id = remaining_work_ids[0] if len(remaining_work_ids) == 1 else ""
+                    current_single_work_id = str(series_record.get("single_work_id") or "")
+                    if next_single_work_id and next_single_work_id != current_single_work_id:
+                        series_record["single_work_id"] = next_single_work_id
+                        changed = True
+                    elif not next_single_work_id and "single_work_id" in series_record:
+                        series_record.pop("single_work_id", None)
                         changed = True
             if changed:
                 payloads[path] = finalize_series_index_payload(payload)
             series_index_payload = payload
 
-        for series_id in affected.get("series") or []:
-            series_payload = load_existing(public_paths.series_record_path(str(series_id)))
-            if series_payload is None:
-                continue
-            path, payload = series_payload
-            if remove_work_from_series_record_payload(payload, str(series_id), record_id):
-                payloads[path] = finalize_series_record_payload(payload, str(series_id))
-
         recent_index = load_existing(public_paths.RECENT_INDEX_JSON_PATH)
         if recent_index is not None:
             path, payload = recent_index
-            if update_recent_entries_for_work_delete(payload, record_id, series_index_payload or {}):
+            if update_recent_entries_for_work_delete(
+                payload,
+                record_id,
+                series_index_payload or {},
+                member_work_ids_by_series,
+            ):
                 payloads[path] = finalize_recent_index_payload(payload)
 
         tag_assignments = load_existing(tag_source_paths.TAG_ASSIGNMENTS_REL_PATH)

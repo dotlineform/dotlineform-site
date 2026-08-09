@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-00a84e8b5ad7b4fce4c06fb0dbd1ee04",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-b29cabb4d09abc8f7389218b03931a14",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "046",
     "count": 1
   },
@@ -19,5 +19,13 @@
       "egg forms"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "01037",
+      "title": "egg forms",
+      "year": 2024,
+      "year_display": "2024"
+    }
+  ]
 }

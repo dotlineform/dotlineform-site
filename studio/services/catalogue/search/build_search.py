@@ -13,14 +13,18 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-CATALOGUE_SERVICES_DIR = Path(__file__).resolve().parents[1]
-if str(CATALOGUE_SERVICES_DIR) not in sys.path:
-    sys.path.insert(0, str(CATALOGUE_SERVICES_DIR))
+STUDIO_SERVICES_DIR = Path(__file__).resolve().parents[2]
+if str(STUDIO_SERVICES_DIR) not in sys.path:
+    sys.path.insert(0, str(STUDIO_SERVICES_DIR))
 
 try:
     from catalogue import catalogue_public_paths as public_paths
+    from catalogue import catalogue_generation_records as generation_records
+    from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source, slug_id
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     import catalogue_public_paths as public_paths
+    import catalogue_generation_records as generation_records
+    from catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source, slug_id
 
 
 DEFAULT_SCOPE = "catalogue"
@@ -34,8 +38,7 @@ CATALOGUE_TARGET_KINDS = {"series", "work"}
 CATALOGUE_DEFAULTS = {
     "schema": "search_index_v1",
     "output_path": public_paths.CATALOGUE_SEARCH_INDEX_JSON_PATH.as_posix(),
-    "series_index_path": public_paths.SERIES_INDEX_JSON_PATH.as_posix(),
-    "works_index_path": public_paths.WORKS_INDEX_JSON_PATH.as_posix(),
+    "source_dir": DEFAULT_SOURCE_DIR.as_posix(),
 }
 
 
@@ -144,17 +147,13 @@ class CatalogueSearchDataBuilder:
         repo_root: Path,
         scope: str,
         output_path: Path | None = None,
-        series_index_path: Path | None = None,
-        works_index_path: Path | None = None,
+        source_dir: Path | None = None,
     ) -> None:
         self.repo_root = repo_root.resolve()
         self.scope = normalize(scope)
         self.schema = CATALOGUE_DEFAULTS["schema"]
         self.output_path = self.resolve_path(output_path or CATALOGUE_DEFAULTS["output_path"])
-        self.series_index_path = self.resolve_path(series_index_path or CATALOGUE_DEFAULTS["series_index_path"])
-        self.works_index_path = self.resolve_path(works_index_path or CATALOGUE_DEFAULTS["works_index_path"])
-        self.works_json_dir = self.resolve_path(public_paths.WORKS_JSON_DIR)
-        self.work_search_metadata_by_id: dict[str, dict[str, str]] = {}
+        self.source_dir = self.resolve_path(source_dir or CATALOGUE_DEFAULTS["source_dir"])
         self.search_build_config: dict[str, Any] = {}
 
     def run(
@@ -187,7 +186,7 @@ class CatalogueSearchDataBuilder:
         self.search_build_config = config
 
         version = normalize_text(config.get("search_build_config_version"))
-        if version != "search_build_config_v2":
+        if version != "search_build_config_v3":
             raise SystemExit(f"Invalid search build config version: {version or '(missing)'}")
 
         source_families = config.get("source_families")
@@ -281,8 +280,23 @@ class CatalogueSearchDataBuilder:
         target_records: list[CatalogueSearchTarget] | None,
     ) -> tuple[dict[str, Any], dict[str, int] | None]:
         target_records = target_records or []
-        series_payload = self.load_index_hash(self.series_index_path, "series")
-        works_payload = self.load_index_hash(self.works_index_path, "works")
+        if self.source_dir is None:
+            raise SystemExit("Canonical Catalogue source directory is required")
+        try:
+            source_records = records_from_json_source(self.source_dir)
+        except ValueError as exc:
+            raise SystemExit(str(exc)) from exc
+
+        series_payload = {
+            normalize_text(record.get("series_id") or series_id): record
+            for series_id, record in source_records.series.items()
+            if normalize(record.get("status")) == "published"
+        }
+        works_payload = {
+            slug_id(record.get("work_id") or work_id): record
+            for work_id, record in source_records.works.items()
+            if normalize(record.get("status")) == "published"
+        }
         series_title_by_id = {
             series_id: normalize_text(row.get("title")) for series_id, row in series_payload.items()
         }
@@ -304,8 +318,7 @@ class CatalogueSearchDataBuilder:
 
         for work_id in sorted(works_payload):
             work_record = works_payload[work_id]
-            work_search_metadata = self.resolve_work_search_metadata(work_id)
-            series_ids = normalize_string_array(work_record.get("series_ids"))
+            series_ids = generation_records.parse_work_record_series_ids(work_record)
             series_titles = [series_title_by_id.get(series_id, series_id) for series_id in series_ids]
             title = normalize_text(work_record.get("title")) or work_id
             entries.append(
@@ -317,8 +330,8 @@ class CatalogueSearchDataBuilder:
                     display_meta=normalize_text(work_record.get("year_display")),
                     series_ids=series_ids,
                     series_titles=series_titles,
-                    medium_type=work_search_metadata["medium_type"],
-                    medium_caption=work_search_metadata["medium_caption"],
+                    medium_type=normalize_text(work_record.get("medium_type")),
+                    medium_caption=normalize_text(work_record.get("medium_caption")),
                 )
             )
 
@@ -333,13 +346,6 @@ class CatalogueSearchDataBuilder:
         if not target_records:
             return self.build_catalogue_search_payload(ordered_entries), None
         return self.build_targeted_catalogue_payload(ordered_entries, target_records)
-
-    def load_index_hash(self, path: Path | None, key: str) -> dict[str, dict[str, Any]]:
-        payload = self.load_json(path)
-        rows = payload.get(key) if isinstance(payload, dict) else None
-        if not isinstance(rows, dict):
-            raise SystemExit(f"Invalid {key} index payload: expected top-level {key} object")
-        return {str(row_key): row if isinstance(row, dict) else {} for row_key, row in rows.items()}
 
     def load_json(self, path: Path | None) -> Any:
         if not path or not path.exists():
@@ -470,25 +476,6 @@ class CatalogueSearchDataBuilder:
             return False
         return empty_scalar(value)
 
-    def resolve_work_search_metadata(self, work_id: str) -> dict[str, str]:
-        cached = self.work_search_metadata_by_id.get(work_id)
-        if cached:
-            return cached
-
-        metadata = {"medium_type": "", "medium_caption": ""}
-        work_json_path = self.works_json_dir / f"{work_id}.json" if self.works_json_dir else None
-        if not work_json_path or not work_json_path.exists():
-            self.work_search_metadata_by_id[work_id] = metadata
-            return metadata
-
-        payload = self.load_json(work_json_path)
-        work_payload = payload.get("work") if isinstance(payload, dict) else None
-        if isinstance(work_payload, dict):
-            metadata["medium_type"] = normalize_text(work_payload.get("medium_type"))
-            metadata["medium_caption"] = normalize_text(work_payload.get("medium_caption"))
-        self.work_search_metadata_by_id[work_id] = metadata
-        return metadata
-
     def write_payload(
         self,
         payload: dict[str, Any],
@@ -602,8 +589,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build catalogue search indexes.")
     parser.add_argument("--scope", default=DEFAULT_SCOPE, help="Catalogue search scope to build.")
     parser.add_argument("--source-index", help="Docs Viewer-only source index path.")
-    parser.add_argument("--series-index", help="Canonical series index JSON path for catalogue scope.")
-    parser.add_argument("--works-index", help="Canonical works index JSON path for catalogue scope.")
+    parser.add_argument("--source-dir", help="Canonical Catalogue JSON source directory.")
     parser.add_argument("--output", help="Generated search index output path.")
     parser.add_argument("--only-doc-ids", help="Docs Viewer-only targeted search ids.")
     parser.add_argument(
@@ -632,8 +618,7 @@ def main(argv: list[str] | None = None) -> int:
         repo_root=repo_root,
         scope=args.scope,
         output_path=Path(args.output) if args.output else None,
-        series_index_path=Path(args.series_index) if args.series_index else None,
-        works_index_path=Path(args.works_index) if args.works_index else None,
+        source_dir=Path(args.source_dir) if args.source_dir else None,
     )
     builder.run(write=args.write, force=args.force, only_records=args.only_records)
     return 0

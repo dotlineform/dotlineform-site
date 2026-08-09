@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-c33e1dab8cdf34fa06890d9c7d65173f",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-9ddd35be80f0ae532fd521060afdaf7c",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "067",
     "count": 51
   },
@@ -19,5 +19,313 @@
       "found forms"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "00403",
+      "title": "found form (2017-06-29)",
+      "year": 2017,
+      "year_display": "2017"
+    },
+    {
+      "work_id": "00404",
+      "title": "found form (2017-07-09)",
+      "year": 2017,
+      "year_display": "2017"
+    },
+    {
+      "work_id": "00405",
+      "title": "found form (2017-07-22)",
+      "year": 2017,
+      "year_display": "2017"
+    },
+    {
+      "work_id": "00406",
+      "title": "found form (2017-07-29)",
+      "year": 2017,
+      "year_display": "2017"
+    },
+    {
+      "work_id": "00407",
+      "title": "found form (2024-11-18 I)",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00408",
+      "title": "found form (2024-11-18 II)",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00409",
+      "title": "found form (2024-11-18 III)",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00410",
+      "title": "found form (2025-07-02)",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00411",
+      "title": "found form (2025-07-15 I)",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00412",
+      "title": "found form (2025-07-15 II)",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00413",
+      "title": "found form (2025-07-26)",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00414",
+      "title": "found form (2025-11-01 I)",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00415",
+      "title": "found form (2025-11-01 II)",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00416",
+      "title": "found form 01",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00417",
+      "title": "found form 02",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00418",
+      "title": "found form 03",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00419",
+      "title": "found form 04",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00420",
+      "title": "found form 05",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00421",
+      "title": "found form 06",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00422",
+      "title": "found form 07",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00423",
+      "title": "found form 08",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00424",
+      "title": "found form 09",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00425",
+      "title": "found form 10",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00426",
+      "title": "found form 11",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00427",
+      "title": "found form 12",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00428",
+      "title": "found form 13 (mother and child)",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00429",
+      "title": "found form 14",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00430",
+      "title": "found form 15",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00431",
+      "title": "found form 16",
+      "year": 2021,
+      "year_display": "2021"
+    },
+    {
+      "work_id": "00432",
+      "title": "found form 17",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00433",
+      "title": "found form 18",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00434",
+      "title": "found form 19",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00435",
+      "title": "found form 20",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00436",
+      "title": "found form 21",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00437",
+      "title": "found form 22",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00438",
+      "title": "found form 23",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00439",
+      "title": "found form 24",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00440",
+      "title": "found form 25",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00441",
+      "title": "found form 26",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00442",
+      "title": "found form 27",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00443",
+      "title": "found form 28",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00444",
+      "title": "found form 29",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00445",
+      "title": "found form 30",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00446",
+      "title": "found form 31",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00447",
+      "title": "found form 32",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00448",
+      "title": "found form 33",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00449",
+      "title": "found form 34",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00450",
+      "title": "found form 35",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00451",
+      "title": "found form 36",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00452",
+      "title": "found form 37",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00453",
+      "title": "found form 38",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
 }

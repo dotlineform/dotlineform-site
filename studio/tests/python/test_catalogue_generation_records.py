@@ -133,7 +133,7 @@ def test_public_document_urls_are_sorted_deduped_and_versioned() -> None:
     )
 
     assert records.WORK_RECORD_SCHEMA_VERSION == "work_record_v4"
-    assert records.SERIES_RECORD_SCHEMA_VERSION == "series_record_v2"
+    assert records.SERIES_RECORD_SCHEMA_VERSION == "series_record_v3"
     assert work["doc_url"] == ["/a", "/z"]
     assert series["doc_url"] == ["/series"]
     assert compute_payload_version({"work": work}) != compute_payload_version(
@@ -141,6 +141,27 @@ def test_public_document_urls_are_sorted_deduped_and_versioned() -> None:
     )
     with pytest.raises(ValueError, match="doc_url must be an array"):
         records.normalize_document_urls("/not-an-array")
+
+    series_payload = records.build_series_json_payload(
+        series_id="009",
+        series_record=series,
+        member_works=[{"work_id": "00001", "title": "Only", "year": 2026, "year_display": "2026"}],
+        content_html="<p>Series prose</p>",
+        generated_at_utc="2026-08-09T20:00:00Z",
+    )
+    assert series_payload["header"]["schema"] == "series_record_v3"
+    assert series_payload["header"]["count"] == 1
+    assert series_payload["member_works"] == [
+        {"work_id": "00001", "title": "Only", "year": 2026, "year_display": "2026"}
+    ]
+    with pytest.raises(ValueError, match="must match exact payload target 010"):
+        records.build_series_json_payload(
+            series_id="010",
+            series_record=series,
+            member_works=[],
+            content_html=None,
+            generated_at_utc="2026-08-09T20:00:00Z",
+        )
 
 def test_detail_record_grouping_is_deterministic() -> None:
     detail_record = records.build_canonical_detail_record(

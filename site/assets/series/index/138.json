@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-17059f22e1504825ddc538b593f94709",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-4fd9ececd231142e882b9db16f4bf5d6",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "138",
     "count": 9
   },
@@ -19,5 +19,61 @@
       "untitled composites"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "01874",
+      "title": "untitled composites (source)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01875",
+      "title": "untitled composite 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01876",
+      "title": "untitled composite 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01877",
+      "title": "untitled composite 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01878",
+      "title": "untitled composite 4",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01879",
+      "title": "untitled composite 5",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01880",
+      "title": "untitled composite 6",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01881",
+      "title": "untitled composites 1-3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01882",
+      "title": "untitled composites 4-6",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
 }

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-f27f09d9dee8cc0c874a578890adf496",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-6a00e07839fc1bc4b10a000ceb2defe1",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "036",
     "count": 87
   },
@@ -19,5 +19,529 @@
       "curve poems (2025)"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "00286",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00287",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00288",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00289",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00290",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00291",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00292",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00293",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00294",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00295",
+      "title": "64 symbols",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00296",
+      "title": "4 things that are completely different but at the same time are the same",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00297",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00298",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00299",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00300",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00301",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00302",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00303",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00304",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00305",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00306",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00307",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00308",
+      "title": "our paths may cross",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00309",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00310",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00311",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00312",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00313",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00314",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00315",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00316",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00317",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00318",
+      "title": "grid",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00319",
+      "title": "it never ends",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00320",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00321",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00322",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00323",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00324",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00325",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00326",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00327",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00328",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00329",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00330",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00331",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00332",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00333",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00334",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00335",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00336",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00337",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00338",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00339",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00340",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00341",
+      "title": "untitled",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00342",
+      "title": "9 moments that are exactly the same but different and unique",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00343",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00344",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00345",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00347",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00348",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00349",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00350",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00351",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00352",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00353",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00354",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00355",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00356",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00357",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00358",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00359",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00360",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00361",
+      "title": "83 particles",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00362",
+      "title": "13 particles",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00363",
+      "title": "7 particles",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00364",
+      "title": "grid",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00365",
+      "title": "the eye",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00366",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00367",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00368",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00369",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00370",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00371",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00372",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00454",
+      "title": "I bet you look good on the dancefloor",
+      "year": 2025,
+      "year_display": "2025"
+    }
+  ]
 }

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-acd5866567f7395ee1d321fc609f7099",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-5ebbf98173be4a8f7561ec06ffc9b990",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "082",
     "count": 8
   },
@@ -19,5 +19,55 @@
       "k crystals"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "00621",
+      "title": "crystal",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00622",
+      "title": "k crystals",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00623",
+      "title": "k crystals (transparent)",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00624",
+      "title": "k crystals (squared transparent)",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00625",
+      "title": "k crystals (squared solid)",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00626",
+      "title": "k-crystals source",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00627",
+      "title": "k-crystals squared source",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00628",
+      "title": "group theory",
+      "year": 2009,
+      "year_display": "2009"
+    }
+  ]
 }

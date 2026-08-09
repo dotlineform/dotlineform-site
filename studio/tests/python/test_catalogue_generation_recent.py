@@ -25,13 +25,12 @@ def sample_series_payload() -> dict[str, dict[str, object]]:
             "series_id": "009",
             "title": "Alpha",
             "primary_work_id": "00001",
-            "works": ["00001", "00002", "00003"],
         },
         "010": {
             "series_id": "010",
             "title": "Beta",
             "primary_work_id": "00004",
-            "works": ["00004"],
+            "single_work_id": "00004",
         },
     }
 
@@ -68,6 +67,7 @@ def build_entries(
         series_publish_transitions=series_publish_transitions or [],
         work_publish_transitions=work_publish_transitions or [],
         series_payload=sample_series_payload(),
+        series_work_ids_by_id={"009": ["00002", "00003", "00001"], "010": ["00004"]},
         works_payload=sample_works_payload(),
         work_meta_by_id=sample_work_meta(),
         work_status_by_id=work_status_by_id or {

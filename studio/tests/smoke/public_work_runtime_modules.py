@@ -29,46 +29,48 @@ def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
 
 
 def assert_public_work_runtime(page: Page, base_url: str) -> None:
-    page.add_script_tag(url=f"{base_url}/assets/js/public-catalogue-runtime.js")
     result = page.evaluate(
-        """() => {
-            const runtime = window.__dlfPublicCatalogueRuntime;
+        """async () => {
+            const runtime = await import('/assets/js/catalogue/navigation/work-series-navigation.js');
             const payload = {
-                series: {
-                    '009': {
-                        title: 'Poems',
-                        works: ['00001', '00002', '00003']
-                    },
-                    solo: {
-                        title: 'Solo',
-                        works: ['01000']
-                    }
-                }
+                series: { series_id: '009', title: 'Poems', status: 'published' },
+                member_works: [
+                    { work_id: '00001', title: 'One' },
+                    { work_id: '00002', title: 'Two' },
+                    { work_id: '00003', title: 'Three' }
+                ]
+            };
+            const soloPayload = {
+                series: { series_id: 'solo', title: 'Solo', status: 'published' },
+                member_works: [{ work_id: '01000', title: 'Only' }]
             };
             return {
-                ids: runtime.seriesIndexWorkIds(payload, '009'),
-                title: runtime.seriesIndexTitle(payload, '009'),
-                link: runtime.projectWorkSeriesLink(payload, '009', '/base'),
-                soloLink: runtime.projectWorkSeriesLink(payload, 'solo', '/base'),
-                emptyLink: runtime.projectWorkSeriesLink(payload, '', '/base'),
-                backFromQuery: runtime.projectWorkBackLink(payload, {
+                ids: runtime.exactSeriesWorkIds(payload, '009'),
+                title: runtime.exactSeriesTitle(payload, '009'),
+                link: runtime.projectExactSeriesLink(payload, '009', '00002', '/base'),
+                soloLink: runtime.projectExactSeriesLink(soloPayload, 'solo', '01000', '/base'),
+                wrongTargetLink: runtime.projectExactSeriesLink(payload, '010', '00002', '/base'),
+                backFromQuery: runtime.projectExactSeriesBackLink(payload, {
                     seriesId: '009',
+                    currentWorkId: '00002',
                     seriesFromQuery: '009',
+                    seriesPage: 2,
                     fromContext: '',
                     baseurl: '/base'
                 }),
-                backDefault: runtime.projectWorkBackLink(payload, {
+                backDefault: runtime.projectExactSeriesBackLink(payload, {
                     seriesId: '009',
+                    currentWorkId: '00002',
                     seriesFromQuery: '',
                     fromContext: '',
                     baseurl: '/base'
                 }),
-                nav: runtime.projectWorkSeriesNavigation(['00001', '00002', '00003'], '00002', {
+                nav: runtime.projectSeriesNavigation(['00001', '00002', '00003'], '00002', {
                     seriesId: '009',
                     seriesPage: 2,
                     baseurl: '/base'
                 }),
-                hiddenNav: runtime.projectWorkSeriesNavigation(['00001'], '00001', {
+                hiddenNav: runtime.projectSeriesNavigation(['00001'], '00001', {
                     seriesId: '009',
                     baseurl: '/base'
                 })
@@ -83,7 +85,7 @@ def assert_public_work_runtime(page: Page, base_url: str) -> None:
         "hidden": False,
     }
     assert result["soloLink"]["hidden"] is True
-    assert result["emptyLink"] == {
+    assert result["wrongTargetLink"] == {
         "label": "",
         "href": "/base/series/",
         "hidden": True,
@@ -91,7 +93,7 @@ def assert_public_work_runtime(page: Page, base_url: str) -> None:
     assert result["backFromQuery"] == {
         "label": "\u2190 Poems",
         "seriesLabel": "Poems",
-        "href": "",
+        "href": "/base/series/?series=009&series_page=2",
     }
     assert result["backDefault"] == {
         "label": "\u2190 Poems",

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-6f70c158fd5a4e3271827b708bd98b5c",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-8c8877c67ad54aefc4c42ab7660cb53b",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "122",
     "count": 4
   },
@@ -19,5 +19,31 @@
       "room"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "01629",
+      "title": "room 1",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "01630",
+      "title": "room 2",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "01631",
+      "title": "room 3",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "01632",
+      "title": "room 4",
+      "year": 2008,
+      "year_display": "2008"
+    }
+  ]
 }

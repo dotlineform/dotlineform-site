@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-ce7b71a205e6298cd0b6baaa5c1885d8",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-44c64c0a19485d0e3546c16f3b8d0304",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "113",
     "count": 4
   },
@@ -19,5 +19,31 @@
       "pi particles"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "01523",
+      "title": "pi",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "01524",
+      "title": "pi molecule grid",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "01525",
+      "title": "pi circle",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "01526",
+      "title": "all the particles are connected",
+      "year": 2012,
+      "year_display": "2012"
+    }
+  ]
 }

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-4cfcfbab960a80c8aee5f9350de5d3eb",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-ea656654d7cb939968882e1c44649a4f",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "026",
     "count": 167
   },
@@ -20,5 +20,1009 @@
       "nerve"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "00093",
+      "title": "3 elements of a body",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00174",
+      "title": "all chemical 1",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00175",
+      "title": "all chemical 2",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00176",
+      "title": "all chemical 3",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00177",
+      "title": "all chemical 4",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00165",
+      "title": "angels",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00179",
+      "title": "body cast 1",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00180",
+      "title": "body cast 2",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00181",
+      "title": "body cast 3",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00094",
+      "title": "body forms 1",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00075",
+      "title": "body forms 2",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00076",
+      "title": "body forms 3",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00077",
+      "title": "body forms 4",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00078",
+      "title": "body forms 5",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00079",
+      "title": "body forms 6",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00080",
+      "title": "body forms 7",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00081",
+      "title": "body forms 8",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00082",
+      "title": "body series dissected 1",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00083",
+      "title": "body series dissected 2",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00084",
+      "title": "body series dissected 3",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00085",
+      "title": "body series dissected 4",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00086",
+      "title": "body series opened 1",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00087",
+      "title": "body series opened 2",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00088",
+      "title": "body series opened 3",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00089",
+      "title": "body series opened 4",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00197",
+      "title": "book of curves 0",
+      "year": 1994,
+      "year_display": "1994"
+    },
+    {
+      "work_id": "00198",
+      "title": "book of curves 1",
+      "year": 1994,
+      "year_display": "1994"
+    },
+    {
+      "work_id": "00199",
+      "title": "book of curves 2",
+      "year": 1994,
+      "year_display": "1994"
+    },
+    {
+      "work_id": "00200",
+      "title": "book of curves 3",
+      "year": 1994,
+      "year_display": "1994"
+    },
+    {
+      "work_id": "00201",
+      "title": "book of curves 4",
+      "year": 1994,
+      "year_display": "1994"
+    },
+    {
+      "work_id": "00202",
+      "title": "book of curves 5",
+      "year": 1994,
+      "year_display": "1994"
+    },
+    {
+      "work_id": "00203",
+      "title": "book of curves 6",
+      "year": 1994,
+      "year_display": "1994"
+    },
+    {
+      "work_id": "00204",
+      "title": "book of curves 7",
+      "year": 1994,
+      "year_display": "1994"
+    },
+    {
+      "work_id": "00205",
+      "title": "book of curves 8",
+      "year": 1994,
+      "year_display": "1994"
+    },
+    {
+      "work_id": "00206",
+      "title": "book of curves 9",
+      "year": 1994,
+      "year_display": "1994"
+    },
+    {
+      "work_id": "00207",
+      "title": "book of curves 10",
+      "year": 1994,
+      "year_display": "1994"
+    },
+    {
+      "work_id": "00208",
+      "title": "book of curves 11",
+      "year": 1994,
+      "year_display": "1994"
+    },
+    {
+      "work_id": "00178",
+      "title": "carpet pattern",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00185",
+      "title": "cell 1",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00186",
+      "title": "cell 2",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00187",
+      "title": "cell 3",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00188",
+      "title": "cell 4",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00189",
+      "title": "cell 5",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00190",
+      "title": "cell 6",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00022",
+      "title": "collage 1",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00023",
+      "title": "collage 2",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00024",
+      "title": "collage 3",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00025",
+      "title": "collage 4",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00026",
+      "title": "collage 5",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00095",
+      "title": "death",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00098",
+      "title": "dissected body 1",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00099",
+      "title": "dissected body 2",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00062",
+      "title": "dissecting forms 1",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00063",
+      "title": "dissecting forms 2",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00091",
+      "title": "dissection",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00090",
+      "title": "dissection (identification of points on a surface)",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00096",
+      "title": "dissection (prepared body 1)",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00097",
+      "title": "dissection (prepared body 2)",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00101",
+      "title": "dissection in progress",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00027",
+      "title": "doll forms",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00182",
+      "title": "drunken vultures",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00064",
+      "title": "fly",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00065",
+      "title": "fly (broken)",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00106",
+      "title": "form 1",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00107",
+      "title": "form 2",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00043",
+      "title": "form symbol (superimposed) 1",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00044",
+      "title": "form symbol (superimposed) 2",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00028",
+      "title": "forms",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00029",
+      "title": "forms",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00030",
+      "title": "forms",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00014",
+      "title": "forms (ink and water 1)",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "00015",
+      "title": "forms (ink and water 2)",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "00016",
+      "title": "forms (ink and water 3)",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "00017",
+      "title": "forms (ink and water 4)",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "00018",
+      "title": "forms (ink and water 5)",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "00019",
+      "title": "forms (ink and water 6)",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "00020",
+      "title": "forms (internal 1)",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "00021",
+      "title": "forms (internal 2)",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "00013",
+      "title": "frame (negative)",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00012",
+      "title": "frame (positive)",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00006",
+      "title": "gesture in grey 1",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00113",
+      "title": "gesture in grey 1",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00158",
+      "title": "grid dissection",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "00041",
+      "title": "hair",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00167",
+      "title": "hand life 1",
+      "year": 1989,
+      "year_display": "1989"
+    },
+    {
+      "work_id": "00168",
+      "title": "hand life 2",
+      "year": 1989,
+      "year_display": "1989"
+    },
+    {
+      "work_id": "00169",
+      "title": "hand life 3",
+      "year": 1989,
+      "year_display": "1989"
+    },
+    {
+      "work_id": "00170",
+      "title": "hand life 5",
+      "year": 1989,
+      "year_display": "1989"
+    },
+    {
+      "work_id": "00171",
+      "title": "hand life 7",
+      "year": 1989,
+      "year_display": "1989"
+    },
+    {
+      "work_id": "00184",
+      "title": "heal us",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00092",
+      "title": "healing dissection",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00104",
+      "title": "healing symbol",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00110",
+      "title": "healing symbol joined",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00103",
+      "title": "ink (back)",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00102",
+      "title": "ink (front)",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00046",
+      "title": "ink legs",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00209",
+      "title": "internal form 1",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00210",
+      "title": "internal form 2",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00211",
+      "title": "internal form 3",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00212",
+      "title": "internal form 4",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00213",
+      "title": "internal form 5",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00131",
+      "title": "internal forms",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00215",
+      "title": "internal forms (body)",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00009",
+      "title": "internal organs (wireframe)",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00053",
+      "title": "internal organs of doll",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00108",
+      "title": "joined forms",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00109",
+      "title": "joined forms 2",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00057",
+      "title": "joining forms 1",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00058",
+      "title": "joining forms 2",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00059",
+      "title": "joining forms 3",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00112",
+      "title": "life",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00183",
+      "title": "little clear vessel",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00055",
+      "title": "mannequin (legs)",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00060",
+      "title": "mesh forms 1",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00061",
+      "title": "mesh forms 2",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00159",
+      "title": "Michelle Pfeiffer",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00042",
+      "title": "model face",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00214",
+      "title": "mother and child",
+      "year": 1995,
+      "year_display": "c. 1995?"
+    },
+    {
+      "work_id": "00216",
+      "title": "nature 1",
+      "year": 1996,
+      "year_display": "1996"
+    },
+    {
+      "work_id": "00008",
+      "title": "nerve",
+      "year": 1995,
+      "year_display": "July 1990 – January 1995"
+    },
+    {
+      "work_id": "00191",
+      "title": "nude frame",
+      "year": 1992,
+      "year_display": "1992"
+    },
+    {
+      "work_id": "00066",
+      "title": "nude frame 1",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00067",
+      "title": "nude frame 2",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00068",
+      "title": "nude frame 3",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00069",
+      "title": "nude frame 4",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00070",
+      "title": "nude frame 5",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00071",
+      "title": "nude frame 6",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00072",
+      "title": "nude frame 7",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00073",
+      "title": "nude frame 8 (internal frame)",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00074",
+      "title": "nude frame 9",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00038",
+      "title": "nude frame 10 (surface)",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00039",
+      "title": "nude frame 11 (surface)",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00040",
+      "title": "nude frame 12",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00192",
+      "title": "nude frame a",
+      "year": 1992,
+      "year_display": "1992"
+    },
+    {
+      "work_id": "00193",
+      "title": "nude frame b",
+      "year": 1992,
+      "year_display": "1992"
+    },
+    {
+      "work_id": "00194",
+      "title": "nude frame c",
+      "year": 1992,
+      "year_display": "1992"
+    },
+    {
+      "work_id": "00195",
+      "title": "nude frame d",
+      "year": 1992,
+      "year_display": "1992"
+    },
+    {
+      "work_id": "00196",
+      "title": "nude frame e",
+      "year": 1992,
+      "year_display": "1992"
+    },
+    {
+      "work_id": "00056",
+      "title": "open form",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00172",
+      "title": "orange mesh",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00173",
+      "title": "orange mesh compact",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00045",
+      "title": "outline form",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00050",
+      "title": "perspective 1",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00051",
+      "title": "perspective 2",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00052",
+      "title": "perspective 3",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00100",
+      "title": "preparation for dissection",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00054",
+      "title": "preparation for mannequin",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00011",
+      "title": "prototype for repeating pattern",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00111",
+      "title": "response to standing nude",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "00007",
+      "title": "skeletal",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00010",
+      "title": "slaughter (composite)",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00035",
+      "title": "slaughter (nerve 1)",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00036",
+      "title": "slaughter (nerve 2)",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00037",
+      "title": "slaughter (nerve 3)",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00047",
+      "title": "slaughter 1",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00048",
+      "title": "slaughter 2",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00049",
+      "title": "slaughter 3",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00031",
+      "title": "slaughter 4",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00032",
+      "title": "slaughter 5",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00033",
+      "title": "slaughter 6",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00034",
+      "title": "slaughter 7",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00105",
+      "title": "symbol frame",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00164",
+      "title": "unrelated commentaries",
+      "year": 1997,
+      "year_display": "1997"
+    },
+    {
+      "work_id": "00233",
+      "title": "untitled [0233]",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00234",
+      "title": "untitled [0234]",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00247",
+      "title": "untitled [0247]",
+      "year": 1989,
+      "year_display": "c. 1989-98"
+    },
+    {
+      "work_id": "00005",
+      "title": "untitled forms",
+      "year": 1998,
+      "year_display": "c. 1989-98"
+    }
+  ]
 }

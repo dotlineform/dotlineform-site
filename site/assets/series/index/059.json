@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-8d6751a840bc56bdf5291624695efbd1",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-e077c85826d82273e41799bd2b8a2330",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "059",
     "count": 5
   },
@@ -19,5 +19,37 @@
       "forest"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "00619",
+      "title": "body 1",
+      "year": 2003,
+      "year_display": "2003"
+    },
+    {
+      "work_id": "00392",
+      "title": "forest 1",
+      "year": 2003,
+      "year_display": "2003"
+    },
+    {
+      "work_id": "00618",
+      "title": "forest 2",
+      "year": 2003,
+      "year_display": "2003"
+    },
+    {
+      "work_id": "00390",
+      "title": "forest 3",
+      "year": 2003,
+      "year_display": "2003"
+    },
+    {
+      "work_id": "00393",
+      "title": "model 500",
+      "year": 2003,
+      "year_display": "2003"
+    }
+  ]
 }

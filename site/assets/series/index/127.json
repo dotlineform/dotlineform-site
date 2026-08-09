@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-8d58635f0aeee9b827077cdf8f259e5b",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-0803e8c467434da3026a596ecc48c6fa",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "127",
     "count": 1
   },
@@ -19,5 +19,13 @@
       "state of mind"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "01721",
+      "title": "state of mind",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
 }

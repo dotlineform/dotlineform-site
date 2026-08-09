@@ -63,10 +63,8 @@ def build_search_command(repo_root: Path, *, write: bool, force: bool, env: Mapp
         "catalogue",
         "--output",
         public_paths.CATALOGUE_SEARCH_INDEX_JSON_PATH.as_posix(),
-        "--series-index",
-        public_paths.SERIES_INDEX_JSON_PATH.as_posix(),
-        "--works-index",
-        public_paths.WORKS_INDEX_JSON_PATH.as_posix(),
+        "--source-dir",
+        "studio/data/canonical/catalogue",
     ]
     if write:
         cmd.append("--write")

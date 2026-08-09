@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-7ae1c60837c6181d7bffdead47bedd5b",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-fdc6a3459fdb3a22f629cf809c39ba6b",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "061",
     "count": 1
   },
@@ -19,5 +19,13 @@
       "forest memories 1-48"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "00464",
+      "title": "forest memories 1-48",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
 }

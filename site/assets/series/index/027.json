@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-6698b5eb0cf25a780ba0b15a70281a22",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-8ea713900d4257fe90508e56d61b7bf2",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "027",
     "count": 57
   },
@@ -19,5 +19,349 @@
       "collected digital c. 1998"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "00226",
+      "title": "untitled [226]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00227",
+      "title": "untitled [227]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00228",
+      "title": "untitled [228]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00229",
+      "title": "untitled [229]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00230",
+      "title": "untitled [230]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00231",
+      "title": "untitled [231]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00232",
+      "title": "untitled [232]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00235",
+      "title": "untitled [235]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00236",
+      "title": "untitled [236]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00237",
+      "title": "untitled [237]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00238",
+      "title": "untitled [238]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00239",
+      "title": "untitled [239]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00240",
+      "title": "untitled [240]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00241",
+      "title": "untitled [241]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00242",
+      "title": "untitled [242]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00243",
+      "title": "untitled [243]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00244",
+      "title": "untitled [244]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00245",
+      "title": "untitled [245]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00246",
+      "title": "untitled [246]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00248",
+      "title": "untitled [248]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00249",
+      "title": "untitled [249]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00250",
+      "title": "untitled [250]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00251",
+      "title": "untitled [251]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00252",
+      "title": "untitled [252]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00253",
+      "title": "untitled [253]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00254",
+      "title": "untitled [254]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00255",
+      "title": "untitled [255]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00256",
+      "title": "untitled [256]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00257",
+      "title": "untitled [257]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00258",
+      "title": "untitled [258]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00259",
+      "title": "untitled [259]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00260",
+      "title": "untitled [260]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00261",
+      "title": "untitled [261]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00262",
+      "title": "untitled [262]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00263",
+      "title": "untitled [263]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00264",
+      "title": "untitled [264]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00265",
+      "title": "untitled [265]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00266",
+      "title": "untitled [266]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00267",
+      "title": "untitled [267]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00268",
+      "title": "untitled [268]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00269",
+      "title": "untitled [269]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00270",
+      "title": "untitled [270]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00271",
+      "title": "untitled [271]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00272",
+      "title": "untitled [272]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00273",
+      "title": "untitled [273]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00274",
+      "title": "untitled [274]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00275",
+      "title": "untitled [275]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00276",
+      "title": "untitled [276]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00277",
+      "title": "untitled [277]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00278",
+      "title": "untitled [278]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00279",
+      "title": "untitled [279]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00280",
+      "title": "untitled [280]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00281",
+      "title": "untitled [281]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00282",
+      "title": "untitled [282]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00283",
+      "title": "untitled [283]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00284",
+      "title": "untitled [284]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    },
+    {
+      "work_id": "00285",
+      "title": "untitled [285]",
+      "year": 1998,
+      "year_display": "c. 1998"
+    }
+  ]
 }

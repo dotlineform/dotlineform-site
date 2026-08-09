@@ -1,4 +1,4 @@
-import { catalogueIndexUrl, seriesIndexUrl, trimBaseurl, workUrl } from '../shared/catalogue-urls.js';
+import { catalogueIndexUrl, seriesPayloadUrl, trimBaseurl, workUrl } from '../shared/catalogue-urls.js';
 import { fetchJson } from '../shared/fetch-json.js';
 import { text, toPositiveInteger } from '../shared/text.js';
 
@@ -7,63 +7,67 @@ function normalizeIds(raw) {
   return raw.map(function (id) { return text(id); }).filter(Boolean);
 }
 
-function seriesIndexRow(payload, seriesId) {
-  if (!payload || !payload.series || typeof payload.series !== 'object') return null;
-  var row = payload.series[text(seriesId)];
-  return row && typeof row === 'object' ? row : null;
+function exactSeriesRecord(payload, seriesId) {
+  var expectedId = text(seriesId);
+  var series = payload && payload.series && typeof payload.series === 'object' ? payload.series : null;
+  if (!expectedId || !series) return null;
+  if (text(series.series_id) !== expectedId || text(series.status).toLowerCase() !== 'published') return null;
+  return series;
 }
 
-function seriesIndexWorkIds(payload, seriesId) {
-  var row = seriesIndexRow(payload, seriesId);
-  return row && Array.isArray(row.works) ? normalizeIds(row.works) : [];
+export function exactSeriesWorkIds(payload, seriesId) {
+  if (!exactSeriesRecord(payload, seriesId)) return [];
+  var memberWorks = Array.isArray(payload && payload.member_works) ? payload.member_works : [];
+  return normalizeIds(memberWorks.map(function (work) {
+    return work && typeof work === 'object' ? work.work_id : '';
+  }));
 }
 
-function seriesIndexTitle(payload, seriesId) {
-  var row = seriesIndexRow(payload, seriesId);
-  return row ? text(row.title) : '';
+export function exactSeriesTitle(payload, seriesId) {
+  var series = exactSeriesRecord(payload, seriesId);
+  return series ? text(series.title) : '';
 }
 
-function projectSeriesLink(payload, seriesId, baseurl) {
+export function projectExactSeriesLink(payload, seriesId, currentWorkId, baseurl) {
   var id = text(seriesId);
-  if (!id) {
+  var workId = text(currentWorkId);
+  var ids = exactSeriesWorkIds(payload, id);
+  var title = exactSeriesTitle(payload, id);
+  if (!id || !workId || !title || ids.indexOf(workId) === -1) {
     return {
       label: '',
       href: trimBaseurl(baseurl) + '/series/',
       hidden: true
     };
   }
-  var ids = seriesIndexWorkIds(payload, id);
   return {
-    label: seriesIndexTitle(payload, id) || id,
+    label: title,
     href: catalogueIndexUrl(baseurl, { series: id }),
     hidden: ids.length <= 1
   };
 }
 
-function projectBackLink(payload, options) {
+export function projectExactSeriesBackLink(payload, options) {
   var seriesId = text(options && options.seriesId);
-  if (!seriesId) return null;
-  var label = seriesIndexTitle(payload, seriesId);
-  if (!label) return null;
-  var baseurl = trimBaseurl(options && options.baseurl);
+  var currentWorkId = text(options && options.currentWorkId);
+  var ids = exactSeriesWorkIds(payload, seriesId);
+  var label = exactSeriesTitle(payload, seriesId);
+  if (!seriesId || !currentWorkId || !label || ids.indexOf(currentWorkId) === -1) return null;
   var fromSeriesId = text(options && options.seriesFromQuery);
   var fromContext = text(options && options.fromContext).toLowerCase();
-  var href = '';
-  var textValue = '';
-  if (fromSeriesId && fromSeriesId === seriesId) {
-    textValue = '\u2190 ' + label;
-  } else if (!fromSeriesId && !fromContext) {
-    textValue = '\u2190 ' + label;
-    href = catalogueIndexUrl(baseurl, { series: seriesId });
-  }
+  if (fromSeriesId && fromSeriesId !== seriesId) return null;
+  if (!fromSeriesId && fromContext) return null;
   return {
-    label: textValue,
+    label: '\u2190 ' + label,
     seriesLabel: label,
-    href: href
+    href: catalogueIndexUrl(options && options.baseurl, {
+      series: seriesId,
+      seriesPage: options && options.seriesPage
+    })
   };
 }
 
-function projectSeriesNavigation(ids, currentId, options) {
+export function projectSeriesNavigation(ids, currentId, options) {
   var workIds = normalizeIds(ids);
   var current = text(currentId);
   var seriesId = text(options && options.seriesId);
@@ -98,36 +102,61 @@ export function createSelectedWorkSeriesNavigation(options) {
   var seriesFromQuery = text(routeState.series);
   var seriesPage = toPositiveInteger(routeState.seriesPage);
   var fromContext = text(routeState.from).toLowerCase();
-  var seriesIndexData = null;
   var currentWorkId = '';
   var primarySeriesId = '';
+  var currentSeriesIds = [];
+  var refreshRevision = 0;
+  var payloadPromises = new Map();
 
-  function setSeriesLinkTarget(seriesId) {
-    var projection = projectSeriesLink(seriesIndexData, seriesId, baseurl);
+  function hideNavigation() {
+    if (nav) nav.hidden = true;
+    if (counter) {
+      counter.textContent = '';
+      counter.hidden = true;
+    }
+  }
+
+  function loadExactSeries(seriesId) {
+    var id = text(seriesId);
+    if (!id) return Promise.resolve(null);
+    if (!payloadPromises.has(id)) {
+      payloadPromises.set(id, fetchJson(seriesPayloadUrl(id, baseurl)).then(function (payload) {
+        return exactSeriesRecord(payload, id) ? payload : null;
+      }).catch(function () {
+        return null;
+      }));
+    }
+    return payloadPromises.get(id);
+  }
+
+  function setSeriesLinkTarget(payload, seriesId) {
+    var projection = projectExactSeriesLink(payload, seriesId, currentWorkId, baseurl);
     if (seriesLinkWrap) seriesLinkWrap.hidden = projection.hidden;
     if (!seriesLink) return;
     seriesLink.textContent = projection.label;
     seriesLink.setAttribute('href', projection.href);
   }
 
-  function setBackLinkLabel(seriesId) {
+  function setBackLinkTarget(payload, seriesId) {
     if (!backLink) return;
-    var projection = projectBackLink(seriesIndexData, {
+    var projection = projectExactSeriesBackLink(payload, {
       seriesId: seriesId,
+      currentWorkId: currentWorkId,
       seriesFromQuery: seriesFromQuery,
+      seriesPage: seriesPage,
       fromContext: fromContext,
       baseurl: baseurl
     });
     if (!projection) return;
     backLink.setAttribute('data-series-label', projection.seriesLabel);
-    if (projection.label) backLink.textContent = projection.label;
-    if (projection.href) backLink.setAttribute('href', projection.href);
+    backLink.textContent = projection.label;
+    backLink.setAttribute('href', projection.href);
   }
 
-  function configureNavigation(ids) {
-    if (!nav || !prevLink || !nextLink || !seriesFromQuery || !currentWorkId) return;
-    var projection = projectSeriesNavigation(ids, currentWorkId, {
-      seriesId: seriesFromQuery,
+  function configureNavigation(payload, seriesId) {
+    if (!nav || !prevLink || !nextLink || !seriesId || !currentWorkId) return;
+    var projection = projectSeriesNavigation(exactSeriesWorkIds(payload, seriesId), currentWorkId, {
+      seriesId: seriesId,
       seriesPage: seriesPage,
       baseurl: baseurl
     });
@@ -141,38 +170,45 @@ export function createSelectedWorkSeriesNavigation(options) {
     nextLink.href = projection.nextHref;
   }
 
-  function refresh() {
-    if (!seriesIndexData) return;
-    if (primarySeriesId) {
-      setSeriesLinkTarget(primarySeriesId);
-      setBackLinkLabel(primarySeriesId);
-    } else if (seriesLinkWrap) {
-      seriesLinkWrap.hidden = true;
-      setSeriesLinkTarget('');
-    }
+  async function refresh() {
+    var revision = ++refreshRevision;
+    hideNavigation();
+    if (seriesLinkWrap) seriesLinkWrap.hidden = true;
+    if (!currentWorkId) return;
 
-    if (!seriesFromQuery) {
-      if (nav) nav.hidden = true;
+    var primaryTarget = primarySeriesId && currentSeriesIds.indexOf(primarySeriesId) !== -1
+      ? primarySeriesId
+      : '';
+    var queryTarget = seriesFromQuery && currentSeriesIds.indexOf(seriesFromQuery) !== -1
+      ? seriesFromQuery
+      : '';
+    var payloads = await Promise.all([
+      primaryTarget ? loadExactSeries(primaryTarget) : Promise.resolve(null),
+      queryTarget && queryTarget !== primaryTarget ? loadExactSeries(queryTarget) : Promise.resolve(null)
+    ]);
+    if (revision !== refreshRevision) return;
+
+    var primaryPayload = payloads[0];
+    var queryPayload = queryTarget === primaryTarget ? primaryPayload : payloads[1];
+    if (primaryTarget && primaryPayload) setSeriesLinkTarget(primaryPayload, primaryTarget);
+
+    if (seriesFromQuery) {
+      if (!queryTarget || !queryPayload) return;
+      var queryWorkIds = exactSeriesWorkIds(queryPayload, queryTarget);
+      if (queryWorkIds.indexOf(currentWorkId) === -1) return;
+      setBackLinkTarget(queryPayload, queryTarget);
+      configureNavigation(queryPayload, queryTarget);
       return;
     }
-    setBackLinkLabel(seriesFromQuery);
-    configureNavigation(seriesIndexWorkIds(seriesIndexData, seriesFromQuery));
-  }
 
-  fetchJson(seriesIndexUrl(baseurl))
-    .then(function (data) {
-      seriesIndexData = data;
-      refresh();
-    })
-    .catch(function () {
-      if (seriesLinkWrap) seriesLinkWrap.hidden = true;
-      if (nav) nav.hidden = true;
-    });
+    if (primaryTarget && primaryPayload) setBackLinkTarget(primaryPayload, primaryTarget);
+  }
 
   return {
     update: function (metadata) {
       currentWorkId = text(metadata && (metadata.workId || metadata.work_id));
       primarySeriesId = text(metadata && (metadata.seriesId || metadata.series_id));
+      currentSeriesIds = normalizeIds(metadata && (metadata.seriesIds || metadata.series_ids));
       refresh();
     }
   };

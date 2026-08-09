@@ -137,7 +137,10 @@ def test_work_delete_generated_payloads_remove_generated_records() -> None:
         write_json(root / "studio/data/generated/activity/work-storage-index.json", {"header": {"schema": "work_storage_index_v1"}, "works": {"00001": {}, "00002": {}}})
         write_json(
             root / "site/assets/data/series_index.json",
-            {"header": {"schema": "series_index_v2"}, "series": {"009": {"works": ["00001", "00002"], "primary_work_id": "00001"}}},
+            {
+                "header": {"schema": "series_index_v3"},
+                "series": {"009": {"series_id": "009", "title": "Series", "primary_work_id": "00002"}},
+            },
         )
         write_json(
             root / "site/assets/data/recent_index.json",
@@ -151,7 +154,14 @@ def test_work_delete_generated_payloads_remove_generated_records() -> None:
         )
         write_json(
             root / "site/assets/series/index/009.json",
-            {"header": {"schema": "series_record_v1"}, "series": {"works": ["00001", "00002"], "primary_work_id": "00001"}},
+            {
+                "header": {"schema": "series_record_v3"},
+                "series": {"series_id": "009", "title": "Series"},
+                "member_works": [
+                    {"work_id": "00001", "title": "One"},
+                    {"work_id": "00002", "title": "Two"},
+                ],
+            },
         )
         write_json(root / TAG_ASSIGNMENTS_PATH, {"series": {"009": {"works": {"00001": ["tag"], "00002": ["tag"]}}}})
 
@@ -171,14 +181,15 @@ def test_work_delete_generated_payloads_remove_generated_records() -> None:
         "studio/data/generated/activity/work-storage-index.json",
     ]
     assert "00001" not in payloads[(root / "site/assets/data/works_index.json").resolve()]["works"]
-    assert payloads[(root / "site/assets/data/series_index.json").resolve()]["series"]["009"]["works"] == ["00002"]
+    assert payloads[(root / "site/assets/data/series_index.json").resolve()]["series"]["009"]["single_work_id"] == "00002"
     assert payloads[(root / "site/assets/data/recent_index.json").resolve()]["entries"] == [
-        {"kind": "series", "target_id": "009", "thumb_id": "00001", "caption": "1 work"}
+        {"kind": "series", "target_id": "009", "thumb_id": "00002", "caption": "1 work"}
     ]
-    assert "works" not in payloads[(root / "site/assets/series/index/009.json").resolve()]["series"]
-    assert "primary_work_id" not in payloads[(root / "site/assets/series/index/009.json").resolve()]["series"]
+    assert payloads[(root / "site/assets/series/index/009.json").resolve()]["member_works"] == [
+        {"work_id": "00002", "title": "Two"}
+    ]
     assert payloads[(root / "site/assets/series/index/009.json").resolve()]["series"]["doc_url"] == []
-    assert payloads[(root / "site/assets/series/index/009.json").resolve()]["header"]["schema"] == "series_record_v2"
+    assert payloads[(root / "site/assets/series/index/009.json").resolve()]["header"]["schema"] == "series_record_v3"
     assert "00001" not in payloads[(root / TAG_ASSIGNMENTS_PATH).resolve()]["series"]["009"]["works"]
 
 

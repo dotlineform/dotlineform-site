@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-c37682d53b916fa7e3beeb4b380ba4df",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-7202bc0c28d1a6a549e9122c2f9b86da",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "051",
     "count": 3
   },
@@ -19,5 +19,25 @@
       "fireworks form"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "01049",
+      "title": "fireworks form",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01050",
+      "title": "fireworks particles",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01051",
+      "title": "fireworks particles version",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
 }

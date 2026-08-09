@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-5d9a10031dbed9022d87873f4d606e06",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-e1484dd6af26bc90c1d136afca72ace1",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "043",
     "count": 18
   },
@@ -19,5 +19,115 @@
       "dotlineform (2023)"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "00455",
+      "title": "dotlineform",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00984",
+      "title": "dotlineform - monoprint 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00985",
+      "title": "dotlineform - monoprint 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00986",
+      "title": "dotlineform - monoprint 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00987",
+      "title": "dotlineform - monoprint 4",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00988",
+      "title": "dotlineform - monoprint 5",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00989",
+      "title": "dotlineform - monoprint 6",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00990",
+      "title": "dotlineform - monoprint 7",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00991",
+      "title": "dotlineform - monoprint 7 (detail)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00992",
+      "title": "dotlineform - monoprint 8",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00993",
+      "title": "dotlineform - monoprint 9",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00994",
+      "title": "dotlineform - monoprint 10",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00995",
+      "title": "dotlineform - monoprint 11",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00996",
+      "title": "dotlineform - monoprint 12",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00997",
+      "title": "dotlineform - monoprint 13",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00998",
+      "title": "dotlineform - monoprint 14",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00999",
+      "title": "dotlineform - monoprint 15",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01000",
+      "title": "dotlineform - monoprint 16",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
 }

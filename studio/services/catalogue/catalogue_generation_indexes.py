@@ -17,7 +17,6 @@ try:
         normalize_status,
         normalize_text,
         numeric_aware_sort_key,
-        parse_date,
         slug_id,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
@@ -32,7 +31,6 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
         normalize_status,
         normalize_text,
         numeric_aware_sort_key,
-        parse_date,
         slug_id,
     )
 
@@ -223,6 +221,28 @@ def ordered_published_work_ids_by_series(context: SeriesWorkIndexContext) -> Dic
     return ordered
 
 
+def build_series_member_work_records(
+    *,
+    context: SeriesWorkIndexContext,
+    series_id: str,
+) -> List[Dict[str, Any]]:
+    ordered_work_ids = ordered_published_work_ids_by_series(context).get(series_id, [])
+    member_works: List[Dict[str, Any]] = []
+    for work_id in ordered_work_ids:
+        work_meta = context.work_meta_by_id.get(work_id, {})
+        year = coerce_int(work_meta.get("year"))
+        year_display = coerce_string(work_meta.get("year_display"))
+        if year_display is None:
+            year_display = str(year) if year is not None else None
+        member_works.append(compact_json_object({
+            "work_id": work_id,
+            "title": coerce_string(work_meta.get("title")) or work_id,
+            "year": year,
+            "year_display": year_display,
+        }))
+    return member_works
+
+
 def build_series_index_records(
     *,
     series_records: Mapping[str, Mapping[str, Any]],
@@ -251,19 +271,13 @@ def build_series_index_records(
             ordered_work_ids=ordered_work_ids,
         )
 
-        sort_fields = ",".join(context.series_sort_fields_by_series_id.get(sid, ["work_id"]))
         series_payload_unsorted[sid] = compact_json_object({
             "series_id": sid,
-            "status": status,
-            "published_date": parse_date(series_record.get("published_date")),
             "title": series_title,
-            "sort_fields": sort_fields,
-            "series_type": coerce_string(series_record.get("series_type")),
             "year": year,
             "year_display": year_display,
             "primary_work_id": primary_work_id,
-            "project_folders": context.series_project_folders_by_id.get(sid, []),
-            "works": ordered_work_ids,
+            "single_work_id": ordered_work_ids[0] if len(ordered_work_ids) == 1 else None,
         })
 
     return {sid: series_payload_unsorted[sid] for sid in sorted(series_payload_unsorted.keys())}
@@ -277,13 +291,13 @@ def build_series_index_payload(
 ) -> Dict[str, Any]:
     series_payload = build_series_index_records(series_records=series_records, context=context)
     version_payload = compact_json_object({
-        "schema": "series_index_v2",
+        "schema": "series_index_v3",
         "series": series_payload,
     })
     version = compute_payload_version(version_payload)
     return compact_json_object({
         "header": {
-            "schema": "series_index_v2",
+            "schema": "series_index_v3",
             "version": version,
             "generated_at_utc": generated_at_utc,
             "count": len(series_payload),

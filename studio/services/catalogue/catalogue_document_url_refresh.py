@@ -176,12 +176,15 @@ def updated_payload(
             generated_at_utc=generated_at_utc,
             count=count,
         )
+    member_works = result.get("member_works")
+    if not isinstance(member_works, list):
+        raise ValueError(f"generated Catalogue series payload has invalid member_works: {path.name}")
     return build_series_json_payload(
         series_id=key,
         series_record=record,
+        member_works=member_works,
         content_html=content_html,
         generated_at_utc=generated_at_utc,
-        count=count,
     )
 
 

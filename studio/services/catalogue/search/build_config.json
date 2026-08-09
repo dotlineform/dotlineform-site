@@ -1,20 +1,12 @@
 {
-  "search_build_config_version": "search_build_config_v2",
+  "search_build_config_version": "search_build_config_v3",
   "source_families": {
-    "catalogue_indexes": {
-      "description": "Generated catalogue aggregate indexes for series and works.",
+    "canonical_catalogue": {
+      "description": "Canonical Catalogue Works and Series source records.",
       "scopes": ["catalogue"],
       "targeted_policy": "additive_only",
       "targeted_operations": ["create"],
       "id_field": "id",
-      "fallback": "full_rebuild"
-    },
-    "catalogue_work_payloads": {
-      "description": "Generated per-work JSON payloads used for work-level search enrichment.",
-      "scopes": ["catalogue"],
-      "targeted_policy": "additive_only",
-      "targeted_operations": ["create"],
-      "id_field": "work_id",
       "fallback": "full_rebuild"
     }
   },
@@ -24,28 +16,22 @@
       "targeted_policy": "additive_only",
       "targeted_operations": ["create"],
       "fields": {
-        "kind": { "source_families": ["catalogue_indexes"] },
-        "id": { "source_families": ["catalogue_indexes"] },
-        "title": { "source_families": ["catalogue_indexes"] },
-        "year": { "source_families": ["catalogue_indexes"] },
-        "display_meta": { "source_families": ["catalogue_indexes"] },
-        "series_ids": { "source_families": ["catalogue_indexes"] },
-        "series_titles": { "source_families": ["catalogue_indexes"] },
-        "medium_type": { "source_families": ["catalogue_work_payloads"] },
-        "medium_caption": { "source_families": ["catalogue_work_payloads"] },
-        "series_type": { "source_families": ["catalogue_indexes"] },
+        "kind": { "source_families": ["canonical_catalogue"] },
+        "id": { "source_families": ["canonical_catalogue"] },
+        "title": { "source_families": ["canonical_catalogue"] },
+        "year": { "source_families": ["canonical_catalogue"] },
+        "display_meta": { "source_families": ["canonical_catalogue"] },
+        "series_ids": { "source_families": ["canonical_catalogue"] },
+        "series_titles": { "source_families": ["canonical_catalogue"] },
+        "medium_type": { "source_families": ["canonical_catalogue"] },
+        "medium_caption": { "source_families": ["canonical_catalogue"] },
+        "series_type": { "source_families": ["canonical_catalogue"] },
         "search_terms": {
-          "source_families": [
-            "catalogue_indexes",
-            "catalogue_work_payloads"
-          ],
+          "source_families": ["canonical_catalogue"],
           "derived": true
         },
         "search_text": {
-          "source_families": [
-            "catalogue_indexes",
-            "catalogue_work_payloads"
-          ],
+          "source_families": ["canonical_catalogue"],
           "derived": true
         }
       }

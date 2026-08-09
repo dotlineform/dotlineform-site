@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-61155fd5758c01308f79be28f667df0e",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-dc3fb2503acc28ce1daabdf24c358ee9",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "035",
     "count": 5
   },
@@ -19,5 +19,37 @@
       "curve machine"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "00867",
+      "title": "curve machine",
+      "year": 2020,
+      "year_display": "2020"
+    },
+    {
+      "work_id": "00868",
+      "title": "curve machine (off)",
+      "year": 2020,
+      "year_display": "2020"
+    },
+    {
+      "work_id": "00869",
+      "title": "curves",
+      "year": 2020,
+      "year_display": "2020"
+    },
+    {
+      "work_id": "00870",
+      "title": "holes",
+      "year": 2020,
+      "year_display": "2020"
+    },
+    {
+      "work_id": "00871",
+      "title": "loops",
+      "year": 2020,
+      "year_display": "2020"
+    }
+  ]
 }

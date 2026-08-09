@@ -6,7 +6,6 @@ import {
   seriesIndexUrl,
   seriesPayloadUrl,
   trimBaseurl,
-  worksIndexUrl,
   workUrl
 } from '../shared/catalogue-urls.js';
 import { fetchJson } from '../shared/fetch-json.js';
@@ -363,9 +362,9 @@ function initSeriesIndexRoute() {
 
   function cardHref(seriesItem) {
     var sid = text(seriesItem && seriesItem.series_id);
-    var works = Array.isArray(seriesItem && seriesItem.works) ? seriesItem.works : [];
-    if (works.length === 1) {
-      return workUrl(String(works[0]), baseurl);
+    var singleWorkId = text(seriesItem && seriesItem.single_work_id);
+    if (singleWorkId) {
+      return workUrl(singleWorkId, baseurl);
     }
     return catalogueIndexUrl(baseurl, { series: sid });
   }
@@ -386,10 +385,9 @@ function initSeriesIndexRoute() {
     };
   }
 
-  function buildWorkItem(workId, worksMap, seriesRow) {
-    var wid = text(workId);
+  function buildWorkItem(work, seriesRow) {
+    var wid = text(work && work.work_id);
     if (!wid) return null;
-    var work = worksMap && worksMap[wid] && typeof worksMap[wid] === 'object' ? worksMap[wid] : {};
     var title = text((work && work.title) || wid);
     var yearDisplay = text(work && (work.year_display != null ? work.year_display : work.year));
     var numericYear = Number(work && work.year);
@@ -430,32 +428,29 @@ function initSeriesIndexRoute() {
     });
   });
 
-  Promise.all([
-    fetchJson(seriesIndexUrl(baseurl)),
-    selectedSeriesId ? fetchJson(worksIndexUrl(baseurl)).catch(function () { return {}; }) : Promise.resolve({}),
-    selectedSeriesId ? fetchJson(seriesPayloadUrl(selectedSeriesId, baseurl)).catch(function () { return {}; }) : Promise.resolve({})
-  ])
-    .then(function (results) {
-      var seriesPayload = results[0];
-      var worksPayload = results[1];
-      var seriesMap = seriesPayload && seriesPayload.series && typeof seriesPayload.series === 'object'
-        ? seriesPayload.series
-        : {};
-      var worksMap = worksPayload && worksPayload.works && typeof worksPayload.works === 'object'
-        ? worksPayload.works
-        : {};
-
+  var routePayloadPromise = selectedSeriesId
+    ? fetchJson(seriesPayloadUrl(selectedSeriesId, baseurl))
+    : fetchJson(seriesIndexUrl(baseurl));
+  routePayloadPromise
+    .then(function (payload) {
       uiText = copyUiText(UI_TEXT_DEFAULTS);
       if (selectedSeriesId) {
-        var selectedSeries = seriesMap[selectedSeriesId] && typeof seriesMap[selectedSeriesId] === 'object'
-          ? seriesMap[selectedSeriesId]
+        var selectedSeries = payload && payload.series && typeof payload.series === 'object'
+          ? payload.series
           : null;
-        var selectedWorkIds = Array.isArray(selectedSeries && selectedSeries.works) ? selectedSeries.works : [];
-        catalogueItems = selectedWorkIds.map(function (workId) {
-          return buildWorkItem(workId, worksMap, selectedSeries);
+        var resolvedSeriesId = text(selectedSeries && selectedSeries.series_id).toLowerCase();
+        var status = text(selectedSeries && selectedSeries.status).toLowerCase();
+        var memberWorks = resolvedSeriesId === selectedSeriesId && status === 'published' && Array.isArray(payload && payload.member_works)
+          ? payload.member_works
+          : [];
+        catalogueItems = memberWorks.map(function (work) {
+          return buildWorkItem(work, selectedSeries);
         }).filter(Boolean);
-        renderSeriesMetadata(results[2]);
+        renderSeriesMetadata(payload);
       } else {
+        var seriesMap = payload && payload.series && typeof payload.series === 'object'
+          ? payload.series
+          : {};
         catalogueItems = Object.keys(seriesMap).map(function (sid) {
           return buildSeriesItem(seriesMap[sid]);
         }).filter(Boolean);

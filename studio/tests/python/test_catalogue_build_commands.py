@@ -84,10 +84,8 @@ def test_search_command_uses_python_builder_and_catalogue_scope() -> None:
         "catalogue",
         "--output",
         public_paths.CATALOGUE_SEARCH_INDEX_JSON_PATH.as_posix(),
-        "--series-index",
-        public_paths.SERIES_INDEX_JSON_PATH.as_posix(),
-        "--works-index",
-        public_paths.WORKS_INDEX_JSON_PATH.as_posix(),
+        "--source-dir",
+        "studio/data/canonical/catalogue",
         "--write",
         "--force",
     ]

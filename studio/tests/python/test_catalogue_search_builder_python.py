@@ -40,21 +40,13 @@ def search_build_config() -> dict[str, Any]:
         "targeted_operations": ["create"],
     }
     return {
-        "search_build_config_version": "search_build_config_v2",
+        "search_build_config_version": "search_build_config_v3",
         "source_families": {
-            "catalogue_indexes": {
-                "description": "Generated catalogue aggregate indexes for series and works.",
+            "canonical_catalogue": {
+                "description": "Canonical Catalogue Works and Series source records.",
                 "scopes": ["catalogue"],
                 **family_policy,
                 "id_field": "id",
-                "fallback": "full_rebuild",
-            },
-            "catalogue_work_payloads": {
-                "description": "Generated per-work JSON payloads used for work-level search enrichment.",
-                "scopes": ["catalogue"],
-                "targeted_policy": "additive_only",
-                "targeted_operations": ["create"],
-                "id_field": "work_id",
                 "fallback": "full_rebuild",
             },
         },
@@ -63,22 +55,22 @@ def search_build_config() -> dict[str, Any]:
                 "artifact_strategy": "combined",
                 **scope_policy,
                 "fields": {
-                    "kind": {"source_families": ["catalogue_indexes"]},
-                    "id": {"source_families": ["catalogue_indexes"]},
-                    "title": {"source_families": ["catalogue_indexes"]},
-                    "year": {"source_families": ["catalogue_indexes"]},
-                    "display_meta": {"source_families": ["catalogue_indexes"]},
-                    "series_ids": {"source_families": ["catalogue_indexes"]},
-                    "series_titles": {"source_families": ["catalogue_indexes"]},
-                    "medium_type": {"source_families": ["catalogue_work_payloads"]},
-                    "medium_caption": {"source_families": ["catalogue_work_payloads"]},
-                    "series_type": {"source_families": ["catalogue_indexes"]},
+                    "kind": {"source_families": ["canonical_catalogue"]},
+                    "id": {"source_families": ["canonical_catalogue"]},
+                    "title": {"source_families": ["canonical_catalogue"]},
+                    "year": {"source_families": ["canonical_catalogue"]},
+                    "display_meta": {"source_families": ["canonical_catalogue"]},
+                    "series_ids": {"source_families": ["canonical_catalogue"]},
+                    "series_titles": {"source_families": ["canonical_catalogue"]},
+                    "medium_type": {"source_families": ["canonical_catalogue"]},
+                    "medium_caption": {"source_families": ["canonical_catalogue"]},
+                    "series_type": {"source_families": ["canonical_catalogue"]},
                     "search_terms": {
-                        "source_families": ["catalogue_indexes", "catalogue_work_payloads"],
+                        "source_families": ["canonical_catalogue"],
                         "derived": True,
                     },
                     "search_text": {
-                        "source_families": ["catalogue_indexes", "catalogue_work_payloads"],
+                        "source_families": ["canonical_catalogue"],
                         "derived": True,
                     },
                 },
@@ -87,61 +79,73 @@ def search_build_config() -> dict[str, Any]:
     }
 
 
-def series_index_payload() -> dict[str, Any]:
+def series_source_payload() -> dict[str, Any]:
     return {
+        "catalogue_source_series_version": "catalogue_source_series_v1",
         "series": {
             "009": {
+                "series_id": "009",
                 "title": "Field Notes",
+                "status": "published",
                 "year": 2024,
                 "year_display": "2024",
                 "series_type": "sequence",
-            }
+                "primary_work_id": "00001",
+            },
+            "010": {
+                "series_id": "010",
+                "title": "Draft Series",
+                "status": "draft",
+                "primary_work_id": "00003",
+            },
         }
     }
 
 
-def works_index_payload(*, extra_work: bool = False, first_title: str = "Blue Field") -> dict[str, Any]:
+def works_source_payload(*, extra_work: bool = False, first_title: str = "Blue Field") -> dict[str, Any]:
     works = {
         "00001": {
+            "work_id": "00001",
+            "status": "published",
             "title": first_title,
             "year": 2025,
             "year_display": "2025",
             "series_ids": ["009"],
+            "medium_type": "drawing",
+            "medium_caption": "Graphite on paper",
+        },
+        "00003": {
+            "work_id": "00003",
+            "status": "draft",
+            "title": "Draft Work",
+            "series_ids": ["010"],
         }
     }
     if extra_work:
         works["00002"] = {
+            "work_id": "00002",
+            "status": "published",
             "title": "Blue Sky",
             "year": 2026,
             "year_display": "2026",
             "series_ids": ["009"],
+            "medium_type": "painting",
+            "medium_caption": "Ink on panel",
         }
-    return {"works": works}
+    return {"catalogue_source_works_version": "catalogue_source_works_v1", "works": works}
 
 
 def prepare_repo(root: Path, *, extra_work: bool = False, first_work_title: str = "Blue Field") -> None:
     write_json(root / "studio/services/catalogue/search/build_config.json", search_build_config())
-    write_json(root / "site/assets/data/series_index.json", series_index_payload())
-    write_json(root / "site/assets/data/works_index.json", works_index_payload(extra_work=extra_work, first_title=first_work_title))
+    source_dir = root / "studio/data/canonical/catalogue"
+    write_json(source_dir / "series.json", series_source_payload())
     write_json(
-        root / "site/assets/works/index/00001.json",
-        {
-            "work": {
-                "medium_type": "drawing",
-                "medium_caption": "Graphite on paper",
-            }
-        },
+        source_dir / "works.json",
+        works_source_payload(extra_work=extra_work, first_title=first_work_title),
     )
-    if extra_work:
-        write_json(
-            root / "site/assets/works/index/00002.json",
-            {
-                "work": {
-                    "medium_type": "painting",
-                    "medium_caption": "Ink on panel",
-                }
-            },
-        )
+    (source_dir / "work_details").mkdir(parents=True, exist_ok=True)
+    write_json(root / "site/assets/data/series_index.json", {"series": {"wrong": {"title": "Wrong"}}})
+    write_json(root / "site/assets/data/works_index.json", {"works": {"99999": {"title": "Wrong"}}})
 
 
 def run_cli(root: Path, args: list[str]) -> tuple[int, str, str]:

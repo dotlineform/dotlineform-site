@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-2749c72d897b63b4944571b8016a5c18",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-82c8f8cf42cd79aa879e4d8fab9ea7d9",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "075",
     "count": 5
   },
@@ -19,5 +19,37 @@
       "harmony"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "00380",
+      "title": "harmony 1",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00381",
+      "title": "harmony 2",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00382",
+      "title": "harmony 2 residue",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00379",
+      "title": "harmony 3",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00620",
+      "title": "harmony 3 (version)",
+      "year": 2009,
+      "year_display": "2009"
+    }
+  ]
 }

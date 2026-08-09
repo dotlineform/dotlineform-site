@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-430d2a9f24be5631a433053109256086",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-d1e091a979a02603b7a84537bbc69ac7",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "021",
     "count": 5
   },
@@ -19,5 +19,37 @@
       "book dna"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "00801",
+      "title": "book dna",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "00802",
+      "title": "book atomic",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "00803",
+      "title": "book diagrams 1",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "00804",
+      "title": "book diagrams 2",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "00805",
+      "title": "book dna sequence",
+      "year": 2010,
+      "year_display": "2010"
+    }
+  ]
 }

@@ -34,7 +34,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
 
 
 WORK_RECORD_SCHEMA_VERSION = "work_record_v4"
-SERIES_RECORD_SCHEMA_VERSION = "series_record_v2"
+SERIES_RECORD_SCHEMA_VERSION = "series_record_v3"
 
 
 # Define the Works source-record projection once so adding a new field is a one-line change.
@@ -268,9 +268,9 @@ def build_series_json_payload(
     *,
     series_id: str,
     series_record: Mapping[str, Any],
+    member_works: Sequence[Mapping[str, Any]],
     content_html: str | None,
     generated_at_utc: str,
-    count: int,
 ) -> Dict[str, Any]:
     """Finalize one complete public Series by-ID payload."""
 
@@ -278,12 +278,15 @@ def build_series_json_payload(
     raw_doc_urls = public_record.get("doc_url", [])
     if not isinstance(raw_doc_urls, list):
         raise ValueError("series.doc_url must be an array")
+    if str(public_record.get("series_id") or "") != series_id:
+        raise ValueError(f"series.series_id must match exact payload target {series_id}")
     public_record["doc_url"] = normalize_document_urls(raw_doc_urls)
+    public_member_works = [compact_json_object(dict(work)) for work in member_works]
     version_input = compact_json_object(
         {
             "series": public_record,
+            "member_works": public_member_works,
             "content_html": content_html,
-            "work_count": count,
         }
     )
     return compact_json_object(
@@ -293,9 +296,10 @@ def build_series_json_payload(
                 "version": compute_payload_version(version_input),
                 "generated_at_utc": generated_at_utc,
                 "series_id": series_id,
-                "count": count,
+                "count": len(public_member_works),
             },
             "series": public_record,
+            "member_works": public_member_works,
             "content_html": content_html,
         }
     )

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-11a1c80fd8bf15cc6e239071e574e8a7",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-cd397fc425f521a16c8835f0bb9f7e79",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "060",
     "count": 1
   },
@@ -19,5 +19,13 @@
       "forest (2024)"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "01175",
+      "title": "forest",
+      "year": 2024,
+      "year_display": "2024"
+    }
+  ]
 }

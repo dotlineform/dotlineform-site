@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-5dca39ce4a2ebabf0f2d3ae0cf807c4e",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-55409abe7c488cba9f0aa51c12691d2f",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "013",
     "count": 15
   },
@@ -19,5 +19,97 @@
       "an act of kindness"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "00736",
+      "title": "an act of kindness [1]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00737",
+      "title": "an act of kindness [2]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00738",
+      "title": "an act of kindness [3]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00739",
+      "title": "an act of kindness [4]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00740",
+      "title": "an act of kindness [5]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00741",
+      "title": "a partial act of kindness [1.1]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00742",
+      "title": "a partial act of kindness [1.2]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00743",
+      "title": "a partial act of kindness [2.1]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00744",
+      "title": "a partial act of kindness [2.2]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00745",
+      "title": "a partial act of kindness [3.1]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00746",
+      "title": "a partial act of kindness [3.2]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00747",
+      "title": "a partial act of kindness [4.1]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00748",
+      "title": "a partial act of kindness [4.2]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00749",
+      "title": "a partial act of kindness [5.1]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00750",
+      "title": "a partial act of kindness [5.2]",
+      "year": 2024,
+      "year_display": "2024"
+    }
+  ]
 }

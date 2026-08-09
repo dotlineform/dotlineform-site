@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-c23c2e66fca1f9a1445c9c8d4827a15e",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-4cc0c46511b5b44cf835467561ee0e25",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "044",
     "count": 7
   },
@@ -19,5 +19,49 @@
       "dots"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "00456",
+      "title": "dots",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "01001",
+      "title": "dots (inside)",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "01002",
+      "title": "dots (first normal form)",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "01003",
+      "title": "dots (second normal form)",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "01004",
+      "title": "dots (equations)",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "01005",
+      "title": "dots (equations particles)",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "01006",
+      "title": "dots (equations sample grid)",
+      "year": 2010,
+      "year_display": "2010"
+    }
+  ]
 }

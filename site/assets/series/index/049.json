@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-7317f6631805a86f3be6b26373e82de1",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-5bffaa8e49448a83acc8b474a68533f5",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "049",
     "count": 1
   },
@@ -19,5 +19,13 @@
       "espresso"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "01046",
+      "title": "espresso",
+      "year": 2012,
+      "year_display": "2012"
+    }
+  ]
 }

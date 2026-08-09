@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-9de52ac6a7cdf2e922a65edcb50823b2",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-3253a8e695580d5b98f72c2730d7d70e",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "129",
     "count": 27
   },
@@ -19,5 +19,169 @@
       "string theory"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "00554",
+      "title": "string theory 1",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "00555",
+      "title": "string theory 2",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "00556",
+      "title": "string theory 3",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "00557",
+      "title": "string theory 4",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "00558",
+      "title": "string theory 5",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "00559",
+      "title": "string theory 6",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "00560",
+      "title": "string theory 1 duality",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "00561",
+      "title": "string theory forms 1",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "00562",
+      "title": "string theory forms 2",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "00563",
+      "title": "string theory forms 3",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "00564",
+      "title": "string theory forms 4",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "00565",
+      "title": "string theory forms 5",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "00566",
+      "title": "string theory forms 6",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "00567",
+      "title": "forms scan 1",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "00568",
+      "title": "forms scan 2",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "00569",
+      "title": "forms scan 3",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "00570",
+      "title": "forms scan 4",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "00571",
+      "title": "forms scan 5",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "00572",
+      "title": "forms scan 6",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "00573",
+      "title": "path form 1",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "00574",
+      "title": "path form 2",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "00575",
+      "title": "path form 3",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "00576",
+      "title": "path form 4",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "00577",
+      "title": "path form 5",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "00578",
+      "title": "path form 6",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "00579",
+      "title": "path form 7",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "00580",
+      "title": "path form 8",
+      "year": 2012,
+      "year_display": "2012"
+    }
+  ]
 }

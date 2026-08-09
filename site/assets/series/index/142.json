@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-0bf96a0287e39f490eafee40aef40392",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-ed8fbcb0f84adabd98f04b2d47609177",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "142",
     "count": 3
   },
@@ -19,5 +19,25 @@
       "water sea pond"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "01938",
+      "title": "water",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01939",
+      "title": "sea",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01940",
+      "title": "pond",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
 }

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-aff32398e495d4c192de8f5dd95c3bba",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-ce8a421c313aeac918755f0533af5667",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "068",
     "count": 48
   },
@@ -19,5 +19,295 @@
       "fragments"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "01202",
+      "title": "fragment 01",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01203",
+      "title": "fragment 02",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01204",
+      "title": "fragment 03",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01205",
+      "title": "fragment 04",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01206",
+      "title": "fragment 05",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01207",
+      "title": "fragment 06",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01208",
+      "title": "fragment 07",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01209",
+      "title": "fragment 08",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01210",
+      "title": "fragment 09",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01211",
+      "title": "fragment 10",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01212",
+      "title": "fragment 11",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01213",
+      "title": "fragment 12",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01214",
+      "title": "fragment 13",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01215",
+      "title": "fragment 14",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01216",
+      "title": "fragment 15",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01217",
+      "title": "fragment 16",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01218",
+      "title": "fragment 17",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01219",
+      "title": "fragment 18",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01220",
+      "title": "fragment 19",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01221",
+      "title": "fragment 20",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01222",
+      "title": "fragment 21",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01223",
+      "title": "fragment 22",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01224",
+      "title": "fragment 23",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01225",
+      "title": "fragment 24",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01226",
+      "title": "fragment 25",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01227",
+      "title": "fragment 26",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01228",
+      "title": "fragment 27",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01229",
+      "title": "fragment 28",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01230",
+      "title": "fragment 29",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01231",
+      "title": "fragment 30",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01232",
+      "title": "fragment 31",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01233",
+      "title": "fragment 32",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01234",
+      "title": "fragment 33",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01235",
+      "title": "fragment 34",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01236",
+      "title": "fragment 35",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01237",
+      "title": "fragment 36",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01238",
+      "title": "fragment 37",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01239",
+      "title": "fragment 38",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01240",
+      "title": "fragment 39",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01241",
+      "title": "fragment 40",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01242",
+      "title": "fragment 41",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01243",
+      "title": "fragment 42",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01244",
+      "title": "fragment 43",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01245",
+      "title": "fragment 44",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01246",
+      "title": "fragment 45",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01247",
+      "title": "fragment 46",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01248",
+      "title": "fragment 47",
+      "year": 1990,
+      "year_display": "1990"
+    },
+    {
+      "work_id": "01249",
+      "title": "fragment 48",
+      "year": 1990,
+      "year_display": "1990"
+    }
+  ]
 }

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-2f23e2474b04e83a168557ed6cabb61a",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-3289eaea6d474b4e803510255c5d0cde",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "081",
     "count": 1
   },
@@ -19,5 +19,13 @@
       "intuition (2020)"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "00457",
+      "title": "intuition (2020)",
+      "year": 2020,
+      "year_display": "c. 2001-11"
+    }
+  ]
 }

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-58e99125629b89aab562fb93bc8f9236",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-f21752dfa22e813d3a82f84e9c749945",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "136",
     "count": 3
   },
@@ -19,5 +19,25 @@
       "tree"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "00546",
+      "title": "tree",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00547",
+      "title": "tree (tint)",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00548",
+      "title": "tree source",
+      "year": 2024,
+      "year_display": "2024"
+    }
+  ]
 }

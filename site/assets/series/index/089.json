@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-0c8429ace32af59c71e5682fed665d53",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-6ebb00c84c857aac0baab8e37bba15dd",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "089",
     "count": 17
   },
@@ -19,5 +19,109 @@
       "learning to draw landscapes"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "00114",
+      "title": "learning to draw landscapes 1",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00115",
+      "title": "learning to draw landscapes 2",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00116",
+      "title": "learning to draw landscapes 3",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00117",
+      "title": "learning to draw landscapes 4",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00118",
+      "title": "learning to draw landscapes 5",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00119",
+      "title": "learning to draw landscapes 6",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00120",
+      "title": "learning to draw landscapes 7",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00121",
+      "title": "learning to draw landscapes 8",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00122",
+      "title": "learning to draw landscapes 9",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00123",
+      "title": "learning to draw landscapes 10",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00124",
+      "title": "learning to draw landscapes 11",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00125",
+      "title": "learning to draw landscapes 12",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00126",
+      "title": "learning to draw landscapes 13",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00127",
+      "title": "learning to draw landscapes 14",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00128",
+      "title": "learning to draw landscapes 15",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00129",
+      "title": "learning to draw landscapes 16",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00519",
+      "title": "learning to draw landscapes (versions)",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    }
+  ]
 }

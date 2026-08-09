@@ -54,9 +54,9 @@ function bootRecentIndexRoute(rootNode, listNode, emptyNode) {
     if (!targetId) return '';
     if (kind === 'series') {
       var seriesItem = seriesMap && typeof seriesMap === 'object' ? seriesMap[targetId] : null;
-      var works = Array.isArray(seriesItem && seriesItem.works) ? seriesItem.works : [];
-      if (works.length === 1) {
-        return workUrl(String(works[0]), baseurl, { from: 'recent' });
+      var singleWorkId = text(seriesItem && seriesItem.single_work_id);
+      if (singleWorkId) {
+        return workUrl(singleWorkId, baseurl, { from: 'recent' });
       }
       return catalogueIndexUrl(baseurl, { series: targetId, from: 'recent' });
     }

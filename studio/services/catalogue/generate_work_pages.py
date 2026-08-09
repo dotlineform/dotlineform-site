@@ -600,7 +600,6 @@ def main() -> None:
     series_project_folders_by_id = series_work_context.series_project_folders_by_id
     work_meta_by_id = series_work_context.work_meta_by_id
     work_status_by_id = series_work_context.work_status_by_id
-    work_ids_by_series_all = series_work_context.work_ids_by_series_all
     series_sort_by_series_id = series_work_context.series_sort_by_series_id
     series_sort_fields_by_series_id = series_work_context.series_sort_fields_by_series_id
 
@@ -870,15 +869,16 @@ def main() -> None:
                 if year_display is None:
                     year_display = str(year) if year is not None else None
 
-                series_work_ids_sorted = sorted(
-                    work_id for work_id in work_ids_by_series_all.get(series_id, [])
-                    if work_status_by_id.get(work_id) == "published"
+                member_works = indexes.build_series_member_work_records(
+                    context=series_work_context,
+                    series_id=series_id,
                 )
+                ordered_work_ids = [str(work.get("work_id") or "") for work in member_works]
                 try:
                     indexes.require_series_primary_work_id(
                         series_id,
                         series_record,
-                        ordered_work_ids=series_work_ids_sorted,
+                        ordered_work_ids=ordered_work_ids,
                     )
                 except indexes.CatalogueGenerationIndexError as exc:
                     raise SystemExit(str(exc)) from exc
@@ -907,9 +907,9 @@ def main() -> None:
                 payload = records.build_series_json_payload(
                     series_id=series_id,
                     series_record=public_series_record,
+                    member_works=member_works,
                     content_html=content_html,
                     generated_at_utc=utc_timestamp_now(),
-                    count=len(series_work_ids_sorted),
                 )
                 payload_version = payload["header"]["version"]
                 out_json_path = series_json_dir / f"{series_id}.json"
@@ -1218,6 +1218,7 @@ def main() -> None:
         series_publish_transitions=series_publish_transitions,
         work_publish_transitions=work_publish_transitions,
         series_payload=series_payload,
+        series_work_ids_by_id=indexes.ordered_published_work_ids_by_series(series_work_context),
         works_payload=works_payload,
         work_meta_by_id=work_meta_by_id,
         work_status_by_id=work_status_by_id,

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-9db43298570a8a478c1e21e1809234cd",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-03dd7404ae60c98683926f5afaace864",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "070",
     "count": 1
   },
@@ -19,5 +19,13 @@
       "glass forms"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "00384",
+      "title": "glass forms",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    }
+  ]
 }

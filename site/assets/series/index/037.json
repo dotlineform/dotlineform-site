@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v2",
-    "version": "blake2b-7f46a013f8736de4e63a789b466d9119",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "series_record_v3",
+    "version": "blake2b-153c044eb89553f7ddc48f7537647807",
+    "generated_at_utc": "2026-08-09T20:15:25Z",
     "series_id": "037",
     "count": 29
   },
@@ -19,5 +19,181 @@
       "doll"
     ],
     "doc_url": []
-  }
+  },
+  "member_works": [
+    {
+      "work_id": "00872",
+      "title": "doll bandage",
+      "year": 1989,
+      "year_display": "c. 1989"
+    },
+    {
+      "work_id": "00877",
+      "title": "doll face 1",
+      "year": 1989,
+      "year_display": "c. 1989"
+    },
+    {
+      "work_id": "00878",
+      "title": "doll face 2",
+      "year": 1989,
+      "year_display": "c. 1989"
+    },
+    {
+      "work_id": "00879",
+      "title": "doll face 3",
+      "year": 1989,
+      "year_display": "c. 1989"
+    },
+    {
+      "work_id": "00880",
+      "title": "doll face 4",
+      "year": 1989,
+      "year_display": "c. 1989"
+    },
+    {
+      "work_id": "00881",
+      "title": "doll face and hair",
+      "year": 1989,
+      "year_display": "c. 1989"
+    },
+    {
+      "work_id": "00892",
+      "title": "doll hand",
+      "year": 1989,
+      "year_display": "c. 1989"
+    },
+    {
+      "work_id": "00887",
+      "title": "doll formaldehyde form [1]",
+      "year": 1990,
+      "year_display": "c. 1990"
+    },
+    {
+      "work_id": "00888",
+      "title": "doll formaldehyde form [2]",
+      "year": 1990,
+      "year_display": "c. 1990"
+    },
+    {
+      "work_id": "00889",
+      "title": "doll frame [1]",
+      "year": 1990,
+      "year_display": "c. 1990"
+    },
+    {
+      "work_id": "00890",
+      "title": "doll frame [2]",
+      "year": 1990,
+      "year_display": "c. 1990"
+    },
+    {
+      "work_id": "00891",
+      "title": "doll frame [3]",
+      "year": 1990,
+      "year_display": "c. 1990"
+    },
+    {
+      "work_id": "00876",
+      "title": "doll components",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "00896",
+      "title": "doll still life 1",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "00897",
+      "title": "doll still life 2",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "00898",
+      "title": "doll still life 3",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "00899",
+      "title": "doll still life 4",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "00873",
+      "title": "doll cell [framed version]",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "00874",
+      "title": "doll cell (stairs)",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "00875",
+      "title": "doll cell",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "00882",
+      "title": "doll forest (cell)",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "00883",
+      "title": "doll forest (green)",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "00884",
+      "title": "doll forest (dissolve)",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "00885",
+      "title": "doll forest (transform)",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "00886",
+      "title": "doll forest",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "00900",
+      "title": "doll still life 5",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "00893",
+      "title": "doll moiré",
+      "year": 2008,
+      "year_display": "c. 2008"
+    },
+    {
+      "work_id": "00894",
+      "title": "doll moiré reduced",
+      "year": 2008,
+      "year_display": "c. 2008"
+    },
+    {
+      "work_id": "00895",
+      "title": "doll moiré structures",
+      "year": 2008,
+      "year_display": "c. 2008"
+    }
+  ]
 }
