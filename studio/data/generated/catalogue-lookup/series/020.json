@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "020",
@@ -17,83 +17,115 @@
     {
       "work_id": "00792",
       "title": "body space (reclining state) 1",
+      "year": 2019,
       "year_display": "2019",
       "status": "published",
       "series_ids": [
         "020"
-      ]
+      ],
+      "project_folder": "body space (reclining state)"
     },
     {
       "work_id": "00793",
       "title": "body space (reclining state) 2",
+      "year": 2019,
       "year_display": "2019",
       "status": "published",
       "series_ids": [
         "020"
-      ]
+      ],
+      "project_folder": "body space (reclining state)"
     },
     {
       "work_id": "00794",
       "title": "body space (reclining state) 3",
+      "year": 2019,
       "year_display": "2019",
       "status": "published",
       "series_ids": [
         "020"
-      ]
+      ],
+      "project_folder": "body space (reclining state)"
     },
     {
       "work_id": "00795",
       "title": "body space (reclining state) 4",
+      "year": 2019,
       "year_display": "2019",
       "status": "published",
       "series_ids": [
         "020"
-      ]
+      ],
+      "project_folder": "body space (reclining state)"
     },
     {
       "work_id": "00796",
       "title": "body space (reclining state) 5",
+      "year": 2019,
       "year_display": "2019",
       "status": "published",
       "series_ids": [
         "020"
-      ]
+      ],
+      "project_folder": "body space (reclining state)"
     },
     {
       "work_id": "00797",
       "title": "body space (reclining state) 6",
+      "year": 2019,
       "year_display": "2019",
       "status": "published",
       "series_ids": [
         "020"
-      ]
+      ],
+      "project_folder": "body space (reclining state)"
     },
     {
       "work_id": "00798",
       "title": "body space (reclining state) 7",
+      "year": 2019,
       "year_display": "2019",
       "status": "published",
       "series_ids": [
         "020"
-      ]
+      ],
+      "project_folder": "body space (reclining state)"
     },
     {
       "work_id": "00799",
       "title": "body space (reclining state) 8",
+      "year": 2019,
       "year_display": "2019",
       "status": "published",
       "series_ids": [
         "020"
-      ]
+      ],
+      "project_folder": "body space (reclining state)"
     },
     {
       "work_id": "00800",
       "title": "body space (reclining state) 9",
+      "year": 2019,
       "year_display": "2019",
       "status": "published",
       "series_ids": [
         "020"
-      ]
+      ],
+      "project_folder": "body space (reclining state)"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00792",
+    "00793",
+    "00794",
+    "00795",
+    "00796",
+    "00797",
+    "00798",
+    "00799",
+    "00800"
+  ],
+  "project_folders": [
+    "body space (reclining state)"
   ]
 }

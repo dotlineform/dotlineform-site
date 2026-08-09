@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "132",
@@ -17,11 +17,19 @@
     {
       "work_id": "01744",
       "title": "tabula rasa",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "132"
-      ]
+      ],
+      "project_folder": "tabula rasa"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01744"
+  ],
+  "project_folders": [
+    "tabula rasa"
   ]
 }

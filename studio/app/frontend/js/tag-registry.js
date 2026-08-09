@@ -7,11 +7,11 @@ import {
 import {
   buildAnalyticsGroupDescriptionMap,
   getAnalyticsAssignmentsSeries,
-  loadSiteSeriesIndexJson,
   loadAnalyticsAssignmentsJson,
   loadAnalyticsAliasesJson,
   loadAnalyticsGroupsJson,
-  loadAnalyticsRegistryJson
+  loadAnalyticsRegistryJson,
+  loadStudioSeriesSearchJson
 } from "./studio-tag-data.js";
 import {
   buildAliasKeySet,
@@ -413,9 +413,9 @@ async function loadRegistry(state, options = {}) {
     loadAnalyticsRegistryJson(state.config, options),
     loadAnalyticsAliasesJson(state.config, options)
   ]);
-  const [assignmentsResult, seriesIndexResult] = await Promise.allSettled([
+  const [assignmentsResult, seriesSearchResult] = await Promise.allSettled([
     loadAnalyticsAssignmentsJson(state.config, options),
-    loadSiteSeriesIndexJson(state.config, options)
+    loadStudioSeriesSearchJson(state.config, options)
   ]);
   let groupsData;
   try {
@@ -438,8 +438,8 @@ async function loadRegistry(state, options = {}) {
   state.assignmentsSeries = assignmentsResult.status === "fulfilled"
     ? getAnalyticsAssignmentsSeries(assignmentsResult.value)
     : {};
-  state.seriesMetaById = seriesIndexResult.status === "fulfilled"
-    ? buildTagRegistrySeriesMetaById(state.config, seriesIndexResult.value)
+  state.seriesMetaById = seriesSearchResult.status === "fulfilled"
+    ? buildTagRegistrySeriesMetaById(state.config, seriesSearchResult.value)
     : new Map();
   state.groupDescriptions = buildAnalyticsGroupDescriptionMap(groupsData, STUDIO_GROUPS);
   state.registryOptions = buildRegistryOptions(state.tags);

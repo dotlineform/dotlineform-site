@@ -23,12 +23,37 @@ def run(base_url: str, series_id: str) -> None:
         browser = playwright.chromium.launch(headless=True)
         page = browser.new_page()
         errors: list[str] = []
+        requests: list[str] = []
         page.on("pageerror", lambda error: errors.append(str(error)))
+        page.on("request", lambda request: requests.append(request.url))
         page.goto(target, wait_until="domcontentloaded")
         root = page.locator("#seriesTagEditorRoot")
         wait_for_route_ready(page, "#seriesTagEditorRoot", "data-studio-ready", "data-studio-busy")
         expect(root).to_have_attribute("data-studio-record-loaded", "true", timeout=10_000)
         expect(page.locator("#analytics-tag-editor")).to_have_attribute("data-series-id", series_id, timeout=10_000)
+
+        page.goto(f"{base_url.rstrip('/')}/studio/series-tag-editor/?series=002", wait_until="domcontentloaded")
+        expect(page.locator("#seriesTagEditorRoot")).to_have_attribute("data-studio-ready", "true", timeout=10_000)
+        expect(page.locator("#seriesTagEditorRoot")).to_have_attribute("data-studio-busy", "false", timeout=10_000)
+        expect(page.locator("#seriesTagEditorEmpty")).to_have_text("Unknown series id: 002", timeout=10_000)
+
+        expected_reads = (
+            f"key=catalogue_lookup_series_base&record_id={series_id}",
+            "key=catalogue_work_record&record_id=",
+            "key=catalogue_lookup_series_base&record_id=002",
+        )
+        missing_reads = [token for token in expected_reads if not any(token in url for url in requests)]
+        if missing_reads:
+            raise AssertionError(f"Series Tag Editor missed exact Studio reads {missing_reads!r}: {requests!r}")
+        public_reads = [
+            url for url in requests
+            if "/assets/data/series_index.json" in url
+            or "/assets/data/works_index.json" in url
+            or "/assets/series/index/" in url
+            or "/assets/works/index/" in url
+        ]
+        if public_reads:
+            raise AssertionError(f"Series Tag Editor retained public Catalogue reads: {public_reads!r}")
         if errors:
             raise AssertionError(f"page errors during Series Tag Editor route smoke: {errors!r}")
         browser.close()

@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "123",
@@ -17,182 +17,247 @@
     {
       "work_id": "01655",
       "title": "snow",
+      "year": 2018,
       "year_display": "2018",
       "status": "published",
       "series_ids": [
         "123"
-      ]
+      ],
+      "project_folder": "snow"
     },
     {
       "work_id": "01656",
       "title": "snow",
+      "year": 2018,
       "year_display": "2018",
       "status": "published",
       "series_ids": [
         "123"
-      ]
+      ],
+      "project_folder": "snow"
     },
     {
       "work_id": "01657",
       "title": "snow",
+      "year": 2018,
       "year_display": "2018",
       "status": "published",
       "series_ids": [
         "123"
-      ]
+      ],
+      "project_folder": "snow"
     },
     {
       "work_id": "01658",
       "title": "snow",
+      "year": 2018,
       "year_display": "2018",
       "status": "published",
       "series_ids": [
         "123"
-      ]
+      ],
+      "project_folder": "snow"
     },
     {
       "work_id": "01659",
       "title": "snow",
+      "year": 2018,
       "year_display": "2018",
       "status": "published",
       "series_ids": [
         "123"
-      ]
+      ],
+      "project_folder": "snow"
     },
     {
       "work_id": "01660",
       "title": "snow",
+      "year": 2018,
       "year_display": "2018",
       "status": "published",
       "series_ids": [
         "123"
-      ]
+      ],
+      "project_folder": "snow"
     },
     {
       "work_id": "01661",
       "title": "snow",
+      "year": 2018,
       "year_display": "2018",
       "status": "published",
       "series_ids": [
         "123"
-      ]
+      ],
+      "project_folder": "snow"
     },
     {
       "work_id": "01662",
       "title": "snow",
+      "year": 2018,
       "year_display": "2018",
       "status": "published",
       "series_ids": [
         "123"
-      ]
+      ],
+      "project_folder": "snow"
     },
     {
       "work_id": "01663",
       "title": "snow",
+      "year": 2018,
       "year_display": "2018",
       "status": "published",
       "series_ids": [
         "123"
-      ]
+      ],
+      "project_folder": "snow"
     },
     {
       "work_id": "01664",
       "title": "snow",
+      "year": 2018,
       "year_display": "2018",
       "status": "published",
       "series_ids": [
         "123"
-      ]
+      ],
+      "project_folder": "snow"
     },
     {
       "work_id": "01665",
       "title": "snow",
+      "year": 2018,
       "year_display": "2018",
       "status": "published",
       "series_ids": [
         "123"
-      ]
+      ],
+      "project_folder": "snow"
     },
     {
       "work_id": "01666",
       "title": "snow",
+      "year": 2018,
       "year_display": "2018",
       "status": "published",
       "series_ids": [
         "123"
-      ]
+      ],
+      "project_folder": "snow"
     },
     {
       "work_id": "01667",
       "title": "snow",
+      "year": 2018,
       "year_display": "2018",
       "status": "published",
       "series_ids": [
         "123"
-      ]
+      ],
+      "project_folder": "snow"
     },
     {
       "work_id": "01668",
       "title": "snow",
+      "year": 2018,
       "year_display": "2018",
       "status": "published",
       "series_ids": [
         "123"
-      ]
+      ],
+      "project_folder": "snow"
     },
     {
       "work_id": "01669",
       "title": "snow",
+      "year": 2018,
       "year_display": "2018",
       "status": "published",
       "series_ids": [
         "123"
-      ]
+      ],
+      "project_folder": "snow"
     },
     {
       "work_id": "01670",
       "title": "snow",
+      "year": 2018,
       "year_display": "2018",
       "status": "published",
       "series_ids": [
         "123"
-      ]
+      ],
+      "project_folder": "snow"
     },
     {
       "work_id": "01671",
       "title": "snow",
+      "year": 2018,
       "year_display": "2018",
       "status": "published",
       "series_ids": [
         "123"
-      ]
+      ],
+      "project_folder": "snow"
     },
     {
       "work_id": "01672",
       "title": "snow",
+      "year": 2018,
       "year_display": "2018",
       "status": "published",
       "series_ids": [
         "123"
-      ]
+      ],
+      "project_folder": "snow"
     },
     {
       "work_id": "01673",
       "title": "snow",
+      "year": 2018,
       "year_display": "2018",
       "status": "published",
       "series_ids": [
         "123"
-      ]
+      ],
+      "project_folder": "snow"
     },
     {
       "work_id": "01674",
       "title": "snow",
+      "year": 2018,
       "year_display": "2018",
       "status": "published",
       "series_ids": [
         "123"
-      ]
+      ],
+      "project_folder": "snow"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01655",
+    "01656",
+    "01657",
+    "01658",
+    "01659",
+    "01660",
+    "01661",
+    "01662",
+    "01663",
+    "01664",
+    "01665",
+    "01666",
+    "01667",
+    "01668",
+    "01669",
+    "01670",
+    "01671",
+    "01672",
+    "01673",
+    "01674"
+  ],
+  "project_folders": [
+    "snow"
   ]
 }

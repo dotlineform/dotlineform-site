@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "072",
@@ -17,20 +17,31 @@
     {
       "work_id": "01363",
       "title": "grid cells",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "072"
-      ]
+      ],
+      "project_folder": "grid cells"
     },
     {
       "work_id": "01364",
       "title": "grid",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "072"
-      ]
+      ],
+      "project_folder": "grid cells"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01363",
+    "01364"
+  ],
+  "project_folders": [
+    "grid cells"
   ]
 }

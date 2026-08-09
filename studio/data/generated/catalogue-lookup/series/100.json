@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "100",
@@ -17,11 +17,19 @@
     {
       "work_id": "00459",
       "title": "molecule forms",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "100"
-      ]
+      ],
+      "project_folder": "molecule forms"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00459"
+  ],
+  "project_folders": [
+    "molecule forms"
   ]
 }

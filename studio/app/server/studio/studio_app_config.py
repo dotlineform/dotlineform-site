@@ -343,7 +343,7 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
             "encoding": pipeline_encoding,
             "workbooks": pipeline_workbooks,
         },
-        "series_tag_editor": series_tag_editor_runtime_settings(payload, pipeline_payload),
+        "series_tag_editor": series_tag_editor_runtime_settings(pipeline_payload),
         "views": [
             {"id": view_id, **view}
             for view_id, view in views.items()
@@ -360,7 +360,6 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
 
 
 def series_tag_editor_runtime_settings(
-    payload: dict[str, object],
     pipeline_payload: dict[str, object],
 ) -> dict[str, object]:
     variants = pipeline_payload.get("variants") if isinstance(pipeline_payload.get("variants"), dict) else {}
@@ -381,19 +380,13 @@ def series_tag_editor_runtime_settings(
     media_config = STUDIO_MEDIA.get("media") if isinstance(STUDIO_MEDIA.get("media"), dict) else {}
     media_base = str(media_config.get("base") or "")
     media_works = str(media_config.get("works_images") or "/works/img")
-    paths = payload.get("paths") if isinstance(payload.get("paths"), dict) else {}
-    data_paths = paths.get("data") if isinstance(paths.get("data"), dict) else {}
-    site_paths = data_paths.get("site") if isinstance(data_paths.get("site"), dict) else {}
-
     return {
-        "baseurl": "",
         "media_image_works_base": f"{media_base}{media_works}/",
         "primary_render_widths": render_widths,
         "primary_display_width": display_width,
         "primary_full_width": full_width,
         "primary_suffix": str(primary_variants.get("suffix") or "primary"),
         "asset_format": str(encoding.get("format") or "webp"),
-        "series_index_url": str(site_paths.get("series_index") or "/assets/data/series_index.json"),
         "tag_editor_module_url": "/studio/app/frontend/js/analytics-tag-editor.js",
     }
 

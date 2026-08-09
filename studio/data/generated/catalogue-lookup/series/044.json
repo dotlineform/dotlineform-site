@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "044",
@@ -17,65 +17,91 @@
     {
       "work_id": "00456",
       "title": "dots",
+      "year": 2010,
       "year_display": "2010",
       "status": "published",
       "series_ids": [
         "044"
-      ]
+      ],
+      "project_folder": "dots"
     },
     {
       "work_id": "01001",
       "title": "dots (inside)",
+      "year": 2010,
       "year_display": "2010",
       "status": "published",
       "series_ids": [
         "044"
-      ]
+      ],
+      "project_folder": "dots"
     },
     {
       "work_id": "01002",
       "title": "dots (first normal form)",
+      "year": 2010,
       "year_display": "2010",
       "status": "published",
       "series_ids": [
         "044"
-      ]
+      ],
+      "project_folder": "dots"
     },
     {
       "work_id": "01003",
       "title": "dots (second normal form)",
+      "year": 2010,
       "year_display": "2010",
       "status": "published",
       "series_ids": [
         "044"
-      ]
+      ],
+      "project_folder": "dots"
     },
     {
       "work_id": "01004",
       "title": "dots (equations)",
+      "year": 2010,
       "year_display": "2010",
       "status": "published",
       "series_ids": [
         "044"
-      ]
+      ],
+      "project_folder": "dots"
     },
     {
       "work_id": "01005",
       "title": "dots (equations particles)",
+      "year": 2010,
       "year_display": "2010",
       "status": "published",
       "series_ids": [
         "044"
-      ]
+      ],
+      "project_folder": "dots"
     },
     {
       "work_id": "01006",
       "title": "dots (equations sample grid)",
+      "year": 2010,
       "year_display": "2010",
       "status": "published",
       "series_ids": [
         "044"
-      ]
+      ],
+      "project_folder": "dots"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00456",
+    "01001",
+    "01002",
+    "01003",
+    "01004",
+    "01005",
+    "01006"
+  ],
+  "project_folders": [
+    "dots"
   ]
 }

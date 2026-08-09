@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "090",
@@ -17,146 +17,199 @@
     {
       "work_id": "01401",
       "title": "lights 1",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "090"
-      ]
+      ],
+      "project_folder": "lights"
     },
     {
       "work_id": "01402",
       "title": "lights 2",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "090"
-      ]
+      ],
+      "project_folder": "lights"
     },
     {
       "work_id": "01403",
       "title": "lights 3",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "090"
-      ]
+      ],
+      "project_folder": "lights"
     },
     {
       "work_id": "01404",
       "title": "lights 4",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "090"
-      ]
+      ],
+      "project_folder": "lights"
     },
     {
       "work_id": "01405",
       "title": "lights 5",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "090"
-      ]
+      ],
+      "project_folder": "lights"
     },
     {
       "work_id": "01406",
       "title": "lights 6",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "090"
-      ]
+      ],
+      "project_folder": "lights"
     },
     {
       "work_id": "01407",
       "title": "lights 7",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "090"
-      ]
+      ],
+      "project_folder": "lights"
     },
     {
       "work_id": "01408",
       "title": "lights 8",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "090"
-      ]
+      ],
+      "project_folder": "lights"
     },
     {
       "work_id": "01409",
       "title": "lights 9",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "090"
-      ]
+      ],
+      "project_folder": "lights"
     },
     {
       "work_id": "01410",
       "title": "lights 10",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "090"
-      ]
+      ],
+      "project_folder": "lights"
     },
     {
       "work_id": "01411",
       "title": "lights 11",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "090"
-      ]
+      ],
+      "project_folder": "lights"
     },
     {
       "work_id": "01412",
       "title": "lights 12",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "090"
-      ]
+      ],
+      "project_folder": "lights"
     },
     {
       "work_id": "01413",
       "title": "lights 13",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "090"
-      ]
+      ],
+      "project_folder": "lights"
     },
     {
       "work_id": "01414",
       "title": "lights 14",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "090"
-      ]
+      ],
+      "project_folder": "lights"
     },
     {
       "work_id": "01415",
       "title": "lights 15",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "090"
-      ]
+      ],
+      "project_folder": "lights"
     },
     {
       "work_id": "01416",
       "title": "lights 16",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "090"
-      ]
+      ],
+      "project_folder": "lights"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01401",
+    "01402",
+    "01403",
+    "01404",
+    "01405",
+    "01406",
+    "01407",
+    "01408",
+    "01409",
+    "01410",
+    "01411",
+    "01412",
+    "01413",
+    "01414",
+    "01415",
+    "01416"
+  ],
+  "project_folders": [
+    "lights"
   ]
 }

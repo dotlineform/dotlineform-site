@@ -63,9 +63,10 @@ def main(argv: list[str] | None = None) -> int:
                 page.on(
                     "request",
                     lambda request: data_requests.append(request.url)
-                    if "/assets/data/works_index.json" in request.url
-                    or "/assets/data/series_index.json" in request.url
+                    if "/studio/api/catalogue/read" in request.url
                     or "/studio/data/generated/activity/work-storage-index.json" in request.url
+                    or "/assets/data/works_index.json" in request.url
+                    or "/assets/data/series_index.json" in request.url
                     else None,
                 )
 
@@ -75,7 +76,7 @@ def main(argv: list[str] | None = None) -> int:
                 expect(root).to_have_attribute("data-studio-mode", "list", timeout=10_000)
                 expect(root).to_have_attribute("data-studio-record-loaded", "true", timeout=10_000)
                 expect(page.locator(".worksList__item").first).to_be_visible(timeout=10_000)
-                expect(page.locator("#worksListCount")).to_contain_text("works", timeout=10_000)
+                expect(page.locator("#worksListCount")).to_contain_text("1935 works", timeout=10_000)
 
                 static_series_base = root.get_attribute("data-series-base-href")
                 back_href = page.locator("#worksIndexBackLink").get_attribute("href")
@@ -88,8 +89,8 @@ def main(argv: list[str] | None = None) -> int:
                 series_href = page.locator(".worksList__series").first.get_attribute("href")
                 if not title_href or not title_href.startswith("http://127.0.0.1:4000/works/"):
                     raise AssertionError(f"work link did not resolve through the public preview base: {title_href!r}")
-                if "from=works_index" not in title_href:
-                    raise AssertionError(f"work link lost public works-index return marker: {title_href!r}")
+                if "from=works_index" in title_href or "return_sort=" in title_href:
+                    raise AssertionError(f"work link retained retired public index state: {title_href!r}")
                 if not series_href or not series_href.startswith("http://127.0.0.1:4000/series/"):
                     raise AssertionError(f"series link did not resolve through the public preview base: {series_href!r}")
 
@@ -98,9 +99,27 @@ def main(argv: list[str] | None = None) -> int:
                     raise AssertionError("studio-works still renders header doc pill")
                 if page.locator('.site-nav [data-studio-navigate="studio_works"]').count():
                     raise AssertionError("studio-works should not appear as a top-nav item")
+
+                page.goto(f"{base_url}/studio/studio-works/?series=059", wait_until="domcontentloaded")
+                wait_for_route_ready(page, "#worksStudioRoot", "data-studio-ready", "data-studio-busy")
+                expect(page.locator(".worksList__cat").first).to_have_text("00619", timeout=10_000)
                 page.close()
-            if len(data_requests) < 3:
-                raise AssertionError(f"studio-works route did not request all expected data sources: {data_requests!r}")
+
+            expected_reads = (
+                "key=catalogue_works",
+                "key=catalogue_series",
+                "key=catalogue_lookup_series_base&record_id=059",
+                "/studio/data/generated/activity/work-storage-index.json",
+            )
+            missing_reads = [token for token in expected_reads if not any(token in url for url in data_requests)]
+            if missing_reads:
+                raise AssertionError(f"studio-works route missed Studio-owned reads {missing_reads!r}: {data_requests!r}")
+            public_reads = [
+                url for url in data_requests
+                if "/assets/data/works_index.json" in url or "/assets/data/series_index.json" in url
+            ]
+            if public_reads:
+                raise AssertionError(f"studio-works retained public Catalogue data reads: {public_reads!r}")
 
             browser.close()
 

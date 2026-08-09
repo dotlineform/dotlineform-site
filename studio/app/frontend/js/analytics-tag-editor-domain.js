@@ -45,16 +45,6 @@ export function pushMapList(map, key, value) {
   map.get(key).push(value);
 }
 
-export function getSeriesIndexRow(seriesMap, seriesId) {
-  if (seriesMap[seriesId]) return seriesMap[seriesId];
-
-  const normalizedSeriesId = normalize(seriesId);
-  for (const [key, value] of Object.entries(seriesMap)) {
-    if (normalize(key) === normalizedSeriesId) return value;
-  }
-  return null;
-}
-
 export function getSeriesAssignment(seriesAssignments, seriesId) {
   if (seriesAssignments[seriesId]) return seriesAssignments[seriesId];
 
@@ -65,16 +55,37 @@ export function getSeriesAssignment(seriesAssignments, seriesId) {
   return null;
 }
 
-export function buildSeriesWorkOptions(seriesId, seriesRow, worksIndexMap) {
-  const works = Array.isArray(seriesRow && seriesRow.works) ? seriesRow.works : [];
+export function buildExactSeriesWorkOptions(seriesId, seriesRecordJson) {
+  const normalizedSeriesId = normalize(seriesId);
+  const series = seriesRecordJson && seriesRecordJson.series && typeof seriesRecordJson.series === "object"
+    ? seriesRecordJson.series
+    : null;
+  const resolvedSeriesId = normalize(series && series.series_id);
+  const seriesStatus = normalize(series && series.status);
+  if (!normalizedSeriesId || resolvedSeriesId !== normalizedSeriesId || seriesStatus !== "published") return [];
+
+  const orderedWorkIds = Array.isArray(seriesRecordJson && seriesRecordJson.ordered_published_work_ids)
+    ? seriesRecordJson.ordered_published_work_ids
+    : [];
+  const memberWorks = Array.isArray(seriesRecordJson && seriesRecordJson.member_works)
+    ? seriesRecordJson.member_works
+    : [];
+  const memberById = new Map();
+  memberWorks.forEach((work) => {
+    const workId = normalizeWorkId(work && work.work_id);
+    const workSeriesIds = Array.isArray(work && work.series_ids) ? work.series_ids.map(normalize) : [];
+    if (!workId || normalize(work && work.status) !== "published" || !workSeriesIds.includes(normalizedSeriesId)) return;
+    memberById.set(workId, work);
+  });
   const out = [];
   const seen = new Set();
 
-  for (const rawWorkId of works) {
+  for (const rawWorkId of orderedWorkIds) {
     const workId = normalizeWorkId(rawWorkId);
     if (!workId || seen.has(workId)) continue;
+    const workMeta = memberById.get(workId);
+    if (!workMeta) continue;
     seen.add(workId);
-    const workMeta = getWorkIndexRow(worksIndexMap, workId);
     const title = String(workMeta && workMeta.title || "").trim();
     const shortWorkId = String(Number(workId));
     out.push({
@@ -87,14 +98,6 @@ export function buildSeriesWorkOptions(seriesId, seriesRow, worksIndexMap) {
   }
 
   return out;
-}
-
-export function getWorkIndexRow(worksMap, workId) {
-  if (worksMap[workId]) return worksMap[workId];
-  for (const [key, value] of Object.entries(worksMap)) {
-    if (normalizeWorkId(key) === workId) return value;
-  }
-  return null;
 }
 
 export function createResolvedEntries(rows, tagsById, nextEntryId = 1) {

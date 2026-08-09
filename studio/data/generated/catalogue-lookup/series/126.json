@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "126",
@@ -17,11 +17,19 @@
     {
       "work_id": "01720",
       "title": "spine symbols",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "126"
-      ]
+      ],
+      "project_folder": "spine symbols"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01720"
+  ],
+  "project_folders": [
+    "spine symbols"
   ]
 }

@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "133",
@@ -17,164 +17,223 @@
     {
       "work_id": "01745",
       "title": "2006-12-27 - 14-01-14",
+      "year": 2006,
       "year_display": "2006",
       "status": "published",
       "series_ids": [
         "133"
-      ]
+      ],
+      "project_folder": "thorns"
     },
     {
       "work_id": "01746",
       "title": "2006-12-27 - 14-01-26",
+      "year": 2006,
       "year_display": "2006",
       "status": "published",
       "series_ids": [
         "133"
-      ]
+      ],
+      "project_folder": "thorns"
     },
     {
       "work_id": "01747",
       "title": "2006-12-27 - 14-01-34",
+      "year": 2006,
       "year_display": "2006",
       "status": "published",
       "series_ids": [
         "133"
-      ]
+      ],
+      "project_folder": "thorns"
     },
     {
       "work_id": "01748",
       "title": "2006-12-27 - 14-01-47",
+      "year": 2006,
       "year_display": "2006",
       "status": "published",
       "series_ids": [
         "133"
-      ]
+      ],
+      "project_folder": "thorns"
     },
     {
       "work_id": "01749",
       "title": "2006-12-27 - 14-01-54",
+      "year": 2006,
       "year_display": "2006",
       "status": "published",
       "series_ids": [
         "133"
-      ]
+      ],
+      "project_folder": "thorns"
     },
     {
       "work_id": "01750",
       "title": "2006-12-27 - 14-02-04",
+      "year": 2006,
       "year_display": "2006",
       "status": "published",
       "series_ids": [
         "133"
-      ]
+      ],
+      "project_folder": "thorns"
     },
     {
       "work_id": "01751",
       "title": "2006-12-27 - 14-02-16",
+      "year": 2006,
       "year_display": "2006",
       "status": "published",
       "series_ids": [
         "133"
-      ]
+      ],
+      "project_folder": "thorns"
     },
     {
       "work_id": "01752",
       "title": "2006-12-27 - 14-02-21",
+      "year": 2006,
       "year_display": "2006",
       "status": "published",
       "series_ids": [
         "133"
-      ]
+      ],
+      "project_folder": "thorns"
     },
     {
       "work_id": "01753",
       "title": "2006-12-27 - 14-02-24",
+      "year": 2006,
       "year_display": "2006",
       "status": "published",
       "series_ids": [
         "133"
-      ]
+      ],
+      "project_folder": "thorns"
     },
     {
       "work_id": "01754",
       "title": "2006-12-27 - 14-02-34",
+      "year": 2006,
       "year_display": "2006",
       "status": "published",
       "series_ids": [
         "133"
-      ]
+      ],
+      "project_folder": "thorns"
     },
     {
       "work_id": "01755",
       "title": "2006-12-27 - 14-02-59",
+      "year": 2006,
       "year_display": "2006",
       "status": "published",
       "series_ids": [
         "133"
-      ]
+      ],
+      "project_folder": "thorns"
     },
     {
       "work_id": "01756",
       "title": "2006-12-27 - 14-03-09",
+      "year": 2006,
       "year_display": "2006",
       "status": "published",
       "series_ids": [
         "133"
-      ]
+      ],
+      "project_folder": "thorns"
     },
     {
       "work_id": "01757",
       "title": "2006-12-27 - 14-03-17",
+      "year": 2006,
       "year_display": "2006",
       "status": "published",
       "series_ids": [
         "133"
-      ]
+      ],
+      "project_folder": "thorns"
     },
     {
       "work_id": "01758",
       "title": "2006-12-27 - 14-03-22",
+      "year": 2006,
       "year_display": "2006",
       "status": "published",
       "series_ids": [
         "133"
-      ]
+      ],
+      "project_folder": "thorns"
     },
     {
       "work_id": "01759",
       "title": "2006-12-27 - 14-03-31",
+      "year": 2006,
       "year_display": "2006",
       "status": "published",
       "series_ids": [
         "133"
-      ]
+      ],
+      "project_folder": "thorns"
     },
     {
       "work_id": "01760",
       "title": "2006-12-27 - 14-03-40",
+      "year": 2006,
       "year_display": "2006",
       "status": "published",
       "series_ids": [
         "133"
-      ]
+      ],
+      "project_folder": "thorns"
     },
     {
       "work_id": "01761",
       "title": "2006-12-27 - 14-04-01",
+      "year": 2006,
       "year_display": "2006",
       "status": "published",
       "series_ids": [
         "133"
-      ]
+      ],
+      "project_folder": "thorns"
     },
     {
       "work_id": "01762",
       "title": "2006-12-27 - 14-04-12",
+      "year": 2006,
       "year_display": "2006",
       "status": "published",
       "series_ids": [
         "133"
-      ]
+      ],
+      "project_folder": "thorns"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01745",
+    "01746",
+    "01747",
+    "01748",
+    "01749",
+    "01750",
+    "01751",
+    "01752",
+    "01753",
+    "01754",
+    "01755",
+    "01756",
+    "01757",
+    "01758",
+    "01759",
+    "01760",
+    "01761",
+    "01762"
+  ],
+  "project_folders": [
+    "thorns"
   ]
 }

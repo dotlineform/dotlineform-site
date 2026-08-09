@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "074",
@@ -17,38 +17,55 @@
     {
       "work_id": "01359",
       "title": "grid theory 1.1",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "074"
-      ]
+      ],
+      "project_folder": "grid theory"
     },
     {
       "work_id": "01360",
       "title": "grid theory 1.2",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "074"
-      ]
+      ],
+      "project_folder": "grid theory"
     },
     {
       "work_id": "01361",
       "title": "grid theory 1.3",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "074"
-      ]
+      ],
+      "project_folder": "grid theory"
     },
     {
       "work_id": "01362",
       "title": "grid theory 1.3 version",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "074"
-      ]
+      ],
+      "project_folder": "grid theory"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01359",
+    "01360",
+    "01361",
+    "01362"
+  ],
+  "project_folders": [
+    "grid theory"
   ]
 }

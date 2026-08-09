@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "086",
@@ -17,11 +17,19 @@
     {
       "work_id": "01400",
       "title": "landscape for symbols",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "086"
-      ]
+      ],
+      "project_folder": "landscape for symbols"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01400"
+  ],
+  "project_folders": [
+    "landscape for symbols"
   ]
 }

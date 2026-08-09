@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "063",
@@ -17,173 +17,235 @@
     {
       "work_id": "00535",
       "title": "form mobile",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "063"
-      ]
+      ],
+      "project_folder": "form mobile"
     },
     {
       "work_id": "00582",
       "title": "form mobile 1",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "063"
-      ]
+      ],
+      "project_folder": "form mobile"
     },
     {
       "work_id": "00583",
       "title": "form mobile 2",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "063"
-      ]
+      ],
+      "project_folder": "form mobile"
     },
     {
       "work_id": "00584",
       "title": "form mobile 3",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "063"
-      ]
+      ],
+      "project_folder": "form mobile"
     },
     {
       "work_id": "00585",
       "title": "form mobile 4",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "063"
-      ]
+      ],
+      "project_folder": "form mobile"
     },
     {
       "work_id": "00586",
       "title": "form mobile 5",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "063"
-      ]
+      ],
+      "project_folder": "form mobile"
     },
     {
       "work_id": "00587",
       "title": "form mobile 6",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "063"
-      ]
+      ],
+      "project_folder": "form mobile"
     },
     {
       "work_id": "00588",
       "title": "form mobile 7",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "063"
-      ]
+      ],
+      "project_folder": "form mobile"
     },
     {
       "work_id": "00589",
       "title": "form mobile 8",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "063"
-      ]
+      ],
+      "project_folder": "form mobile"
     },
     {
       "work_id": "00590",
       "title": "curve 1",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "063"
-      ]
+      ],
+      "project_folder": "form mobile"
     },
     {
       "work_id": "00591",
       "title": "curve 1'",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "063"
-      ]
+      ],
+      "project_folder": "form mobile"
     },
     {
       "work_id": "00592",
       "title": "curve 2",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "063"
-      ]
+      ],
+      "project_folder": "form mobile"
     },
     {
       "work_id": "00593",
       "title": "curve 2'",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "063"
-      ]
+      ],
+      "project_folder": "form mobile"
     },
     {
       "work_id": "00594",
       "title": "curve 3",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "063"
-      ]
+      ],
+      "project_folder": "form mobile"
     },
     {
       "work_id": "00595",
       "title": "curve 3'",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "063"
-      ]
+      ],
+      "project_folder": "form mobile"
     },
     {
       "work_id": "00596",
       "title": "curve 4",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "063"
-      ]
+      ],
+      "project_folder": "form mobile"
     },
     {
       "work_id": "00597",
       "title": "curve 4'",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "063"
-      ]
+      ],
+      "project_folder": "form mobile"
     },
     {
       "work_id": "00598",
       "title": "curve 5",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "063"
-      ]
+      ],
+      "project_folder": "form mobile"
     },
     {
       "work_id": "00599",
       "title": "curve 5'",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "063"
-      ]
+      ],
+      "project_folder": "form mobile"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00535",
+    "00582",
+    "00583",
+    "00584",
+    "00585",
+    "00586",
+    "00587",
+    "00588",
+    "00589",
+    "00590",
+    "00591",
+    "00592",
+    "00593",
+    "00594",
+    "00595",
+    "00596",
+    "00597",
+    "00598",
+    "00599"
+  ],
+  "project_folders": [
+    "form mobile"
   ]
 }

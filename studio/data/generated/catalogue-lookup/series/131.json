@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "131",
@@ -17,56 +17,79 @@
     {
       "work_id": "01738",
       "title": "2017-02-11 13꞉01",
+      "year": 2017,
       "year_display": "2017",
       "status": "published",
       "series_ids": [
         "131"
-      ]
+      ],
+      "project_folder": "surface history"
     },
     {
       "work_id": "01739",
       "title": "2017-10-30 21꞉11",
+      "year": 2017,
       "year_display": "2017",
       "status": "published",
       "series_ids": [
         "131"
-      ]
+      ],
+      "project_folder": "surface history"
     },
     {
       "work_id": "01740",
       "title": "2017-11-04 15꞉42",
+      "year": 2017,
       "year_display": "2017",
       "status": "published",
       "series_ids": [
         "131"
-      ]
+      ],
+      "project_folder": "surface history"
     },
     {
       "work_id": "01741",
       "title": "2018-01-20 15꞉52",
+      "year": 2018,
       "year_display": "2018",
       "status": "published",
       "series_ids": [
         "131"
-      ]
+      ],
+      "project_folder": "surface history"
     },
     {
       "work_id": "01742",
       "title": "2018-01-20 15꞉53",
+      "year": 2018,
       "year_display": "2018",
       "status": "published",
       "series_ids": [
         "131"
-      ]
+      ],
+      "project_folder": "surface history"
     },
     {
       "work_id": "01743",
       "title": "2018-02-10 10꞉35",
+      "year": 2018,
       "year_display": "2018",
       "status": "published",
       "series_ids": [
         "131"
-      ]
+      ],
+      "project_folder": "surface history"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01738",
+    "01739",
+    "01740",
+    "01741",
+    "01742",
+    "01743"
+  ],
+  "project_folders": [
+    "surface history"
   ]
 }

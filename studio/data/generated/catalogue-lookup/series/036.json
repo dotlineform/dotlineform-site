@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "036",
@@ -17,785 +17,1051 @@
     {
       "work_id": "00286",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00287",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00288",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00289",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00290",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00291",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00292",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00293",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00294",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00295",
       "title": "64 symbols",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00296",
       "title": "4 things that are completely different but at the same time are the same",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00297",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00298",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00299",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00300",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00301",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00302",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00303",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00304",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00305",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00306",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00307",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00308",
       "title": "our paths may cross",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00309",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00310",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00311",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00312",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00313",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00314",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00315",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00316",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00317",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00318",
       "title": "grid",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00319",
       "title": "it never ends",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00320",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00321",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00322",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00323",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00324",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00325",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00326",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00327",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00328",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00329",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00330",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00331",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00332",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00333",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00334",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00335",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00336",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00337",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00338",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00339",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00340",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00341",
       "title": "untitled",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00342",
       "title": "9 moments that are exactly the same but different and unique",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00343",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00344",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00345",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00347",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00348",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00349",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00350",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00351",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00352",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00353",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00354",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00355",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00356",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00357",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00358",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00359",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00360",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00361",
       "title": "83 particles",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00362",
       "title": "13 particles",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00363",
       "title": "7 particles",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00364",
       "title": "grid",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00365",
       "title": "the eye",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00366",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00367",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00368",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00369",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00370",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00371",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00372",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00454",
       "title": "I bet you look good on the dancefloor",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "036"
-      ]
+      ],
+      "project_folder": "curve poems (2025)"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00286",
+    "00287",
+    "00288",
+    "00289",
+    "00290",
+    "00291",
+    "00292",
+    "00293",
+    "00294",
+    "00295",
+    "00296",
+    "00297",
+    "00298",
+    "00299",
+    "00300",
+    "00301",
+    "00302",
+    "00303",
+    "00304",
+    "00305",
+    "00306",
+    "00307",
+    "00308",
+    "00309",
+    "00310",
+    "00311",
+    "00312",
+    "00313",
+    "00314",
+    "00315",
+    "00316",
+    "00317",
+    "00318",
+    "00319",
+    "00320",
+    "00321",
+    "00322",
+    "00323",
+    "00324",
+    "00325",
+    "00326",
+    "00327",
+    "00328",
+    "00329",
+    "00330",
+    "00331",
+    "00332",
+    "00333",
+    "00334",
+    "00335",
+    "00336",
+    "00337",
+    "00338",
+    "00339",
+    "00340",
+    "00341",
+    "00342",
+    "00343",
+    "00344",
+    "00345",
+    "00347",
+    "00348",
+    "00349",
+    "00350",
+    "00351",
+    "00352",
+    "00353",
+    "00354",
+    "00355",
+    "00356",
+    "00357",
+    "00358",
+    "00359",
+    "00360",
+    "00361",
+    "00362",
+    "00363",
+    "00364",
+    "00365",
+    "00366",
+    "00367",
+    "00368",
+    "00369",
+    "00370",
+    "00371",
+    "00372",
+    "00454"
+  ],
+  "project_folders": [
+    "curve poems (2025)"
   ]
 }

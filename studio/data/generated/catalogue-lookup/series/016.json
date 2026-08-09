@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "016",
@@ -17,74 +17,103 @@
     {
       "work_id": "00774",
       "title": "birds [1]",
+      "year": 2020,
       "year_display": "2020",
       "status": "published",
       "series_ids": [
         "016"
-      ]
+      ],
+      "project_folder": "birds"
     },
     {
       "work_id": "00775",
       "title": "birds [2]",
+      "year": 2020,
       "year_display": "2020",
       "status": "published",
       "series_ids": [
         "016"
-      ]
+      ],
+      "project_folder": "birds"
     },
     {
       "work_id": "00776",
       "title": "birds [3]",
+      "year": 2020,
       "year_display": "2020",
       "status": "published",
       "series_ids": [
         "016"
-      ]
+      ],
+      "project_folder": "birds"
     },
     {
       "work_id": "00777",
       "title": "birds [4]",
+      "year": 2020,
       "year_display": "2020",
       "status": "published",
       "series_ids": [
         "016"
-      ]
+      ],
+      "project_folder": "birds"
     },
     {
       "work_id": "00778",
       "title": "birds [5]",
+      "year": 2020,
       "year_display": "2020",
       "status": "published",
       "series_ids": [
         "016"
-      ]
+      ],
+      "project_folder": "birds"
     },
     {
       "work_id": "00779",
       "title": "birds [6]",
+      "year": 2020,
       "year_display": "2020",
       "status": "published",
       "series_ids": [
         "016"
-      ]
+      ],
+      "project_folder": "birds"
     },
     {
       "work_id": "00780",
       "title": "birds [7]",
+      "year": 2020,
       "year_display": "2020",
       "status": "published",
       "series_ids": [
         "016"
-      ]
+      ],
+      "project_folder": "birds"
     },
     {
       "work_id": "00781",
       "title": "birds [8]",
+      "year": 2020,
       "year_display": "2020",
       "status": "published",
       "series_ids": [
         "016"
-      ]
+      ],
+      "project_folder": "birds"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00774",
+    "00775",
+    "00776",
+    "00777",
+    "00778",
+    "00779",
+    "00780",
+    "00781"
+  ],
+  "project_folders": [
+    "birds"
   ]
 }

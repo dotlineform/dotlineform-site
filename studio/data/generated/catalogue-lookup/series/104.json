@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "104",
@@ -17,29 +17,43 @@
     {
       "work_id": "00160",
       "title": "mouse story",
+      "year": 1991,
       "year_display": "1991",
       "status": "published",
       "series_ids": [
         "104"
-      ]
+      ],
+      "project_folder": "mouse story"
     },
     {
       "work_id": "00161",
       "title": "mouse story (extended version)",
+      "year": 1993,
       "year_display": "1993",
       "status": "published",
       "series_ids": [
         "104"
-      ]
+      ],
+      "project_folder": "mouse story"
     },
     {
       "work_id": "00162",
       "title": "mouse story (fragment)",
+      "year": 1993,
       "year_display": "c. 1993?",
       "status": "published",
       "series_ids": [
         "104"
-      ]
+      ],
+      "project_folder": "mouse story"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00160",
+    "00161",
+    "00162"
+  ],
+  "project_folders": [
+    "mouse story"
   ]
 }

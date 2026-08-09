@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "051",
@@ -17,29 +17,43 @@
     {
       "work_id": "01049",
       "title": "fireworks form",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "051"
-      ]
+      ],
+      "project_folder": "fireworks form"
     },
     {
       "work_id": "01050",
       "title": "fireworks particles",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "051"
-      ]
+      ],
+      "project_folder": "fireworks form"
     },
     {
       "work_id": "01051",
       "title": "fireworks particles version",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "051"
-      ]
+      ],
+      "project_folder": "fireworks form"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01049",
+    "01050",
+    "01051"
+  ],
+  "project_folders": [
+    "fireworks form"
   ]
 }

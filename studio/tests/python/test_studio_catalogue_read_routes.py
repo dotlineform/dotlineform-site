@@ -24,18 +24,83 @@ def test_catalogue_read_route_returns_source_payloads() -> None:
         source_dir.mkdir(parents=True)
         write_repo_marker(repo_root)
         (source_dir / "works.json").write_text(
-            json.dumps({"catalogue_source_works_version": "catalogue_source_works_v1", "works": {"00001": {"work_id": "00001", "title": "One", "status": "draft"}}}),
+            json.dumps(
+                {
+                    "catalogue_source_works_version": "catalogue_source_works_v1",
+                    "works": {
+                        "00001": {
+                            "work_id": "00001",
+                            "title": "Draft One",
+                            "status": "draft",
+                            "series_ids": ["001"],
+                            "project_folder": "Alpha",
+                        },
+                        "00002": {
+                            "work_id": "00002",
+                            "title": "Published A",
+                            "status": "published",
+                            "series_ids": ["001"],
+                            "project_folder": "Beta",
+                        },
+                        "00003": {
+                            "work_id": "00003",
+                            "title": "Published B",
+                            "status": "published",
+                            "series_ids": ["001"],
+                            "project_folder": "Alpha",
+                        },
+                    },
+                }
+            ),
             encoding="utf-8",
         )
         (source_dir / "work_details").mkdir(parents=True, exist_ok=True)
         (source_dir / "series.json").write_text(
-            json.dumps({"catalogue_source_series_version": "catalogue_source_series_v1", "series": {"001": {"series_id": "001", "title": "Series", "status": "draft"}}}),
+            json.dumps(
+                {
+                    "catalogue_source_series_version": "catalogue_source_series_v1",
+                    "series": {
+                        "001": {
+                            "series_id": "001",
+                            "title": "Series",
+                            "series_type": "primary",
+                            "status": "published",
+                            "primary_work_id": "00002",
+                            "sort_fields": "title,work_id",
+                        }
+                    },
+                }
+            ),
             encoding="utf-8",
         )
 
         works_payload = catalogue_get_payload(repo_root, "/read", {"key": ["catalogue_works"]})
+        series_payload = catalogue_get_payload(repo_root, "/read", {"key": ["catalogue_series"]})
+        exact_series_payload = catalogue_get_payload(
+            repo_root,
+            "/read",
+            {"key": ["catalogue_lookup_series_base"], "record_id": ["001"]},
+        )
+        exact_work_payload = catalogue_get_payload(
+            repo_root,
+            "/read",
+            {"key": ["catalogue_work_record"], "record_id": ["00002"]},
+        )
 
-        assert works_payload["works"]["00001"]["title"] == "One"
+        assert works_payload["works"]["00001"]["title"] == "Draft One"
+        assert series_payload["series"]["001"]["title"] == "Series"
+        assert exact_series_payload["header"]["schema"] == "studio_catalogue_lookup_series_record_v2"
+        assert exact_series_payload["series"]["series_id"] == "001"
+        assert exact_series_payload["ordered_published_work_ids"] == ["00002", "00003"]
+        assert exact_series_payload["project_folders"] == ["Alpha", "Beta"]
+        assert [row["work_id"] for row in exact_series_payload["member_works"]] == ["00001", "00002", "00003"]
+        assert exact_work_payload["work"]["work_id"] == "00002"
+        with pytest.raises(KeyError, match="series_id not found: 999"):
+            catalogue_get_payload(
+                repo_root,
+                "/read",
+                {"key": ["catalogue_lookup_series_base"], "record_id": ["999"]},
+            )
         with pytest.raises(ValueError, match="unsupported catalogue read key"):
             catalogue_get_payload(repo_root, "/read", {"key": ["activity_log"]})
 

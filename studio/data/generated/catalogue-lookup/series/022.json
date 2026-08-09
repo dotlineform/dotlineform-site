@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "022",
@@ -17,47 +17,67 @@
     {
       "work_id": "00806",
       "title": "book of curves 0",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "022"
-      ]
+      ],
+      "project_folder": "book of curves"
     },
     {
       "work_id": "00807",
       "title": "book of curves 1 and 10",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "022"
-      ]
+      ],
+      "project_folder": "book of curves"
     },
     {
       "work_id": "00808",
       "title": "book of curves 2-6",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "022"
-      ]
+      ],
+      "project_folder": "book of curves"
     },
     {
       "work_id": "00809",
       "title": "book of curves 7 and 8",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "022"
-      ]
+      ],
+      "project_folder": "book of curves"
     },
     {
       "work_id": "00810",
       "title": "book of curves 9 and 11",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "022"
-      ]
+      ],
+      "project_folder": "book of curves"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00806",
+    "00807",
+    "00808",
+    "00809",
+    "00810"
+  ],
+  "project_folders": [
+    "book of curves"
   ]
 }

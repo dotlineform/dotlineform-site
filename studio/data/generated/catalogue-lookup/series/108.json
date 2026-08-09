@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "108",
@@ -17,11 +17,19 @@
     {
       "work_id": "01479",
       "title": "olive tree",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "108"
-      ]
+      ],
+      "project_folder": "olive tree"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01479"
+  ],
+  "project_folders": [
+    "olive tree"
   ]
 }

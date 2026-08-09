@@ -1,5 +1,6 @@
 import {
-  fetchJson
+  loadStudioSeriesRecordJson,
+  loadStudioWorkRecordJson
 } from "./studio-tag-data.js";
 import {
   loadStudioConfig
@@ -39,7 +40,6 @@ async function initSeriesTagEditorPage() {
   const mediaLinkEl = document.getElementById("seriesTagEditorMediaLink");
   const mediaImgEl = document.getElementById("seriesTagEditorMediaImg");
   const mediaCaptionEl = document.getElementById("seriesTagEditorMediaCaption");
-  const baseurl = String(root.dataset.baseurl || "");
   const mediaImageWorksBase = String(root.dataset.mediaImageWorksBase || "");
   const primaryDisplayWidth = Number(root.dataset.primaryDisplayWidth || "0");
   const primaryFullWidth = Number(root.dataset.primaryFullWidth || root.dataset.primaryDisplayWidth || "0");
@@ -56,7 +56,6 @@ async function initSeriesTagEditorPage() {
     return Number.isFinite(n) && n > 0 ? Math.floor(n) : 0;
   }).filter((value) => value > 0) : [];
   if (!primaryRenderWidths.length) primaryRenderWidths = [800, 1200, 1600];
-  const seriesIndexUrl = String(root.dataset.seriesIndexUrl || "");
   const tagEditorModuleUrl = String(root.dataset.tagEditorModuleUrl || "");
   const params = new URLSearchParams(window.location.search);
   const seriesIdQuery = String(params.get("series") || "").trim().toLowerCase();
@@ -96,17 +95,6 @@ async function initSeriesTagEditorPage() {
     el.appendChild(link);
   }
 
-  function normalizeSeriesMap(seriesMap) {
-    const map = {};
-    if (!seriesMap || typeof seriesMap !== "object") return map;
-    Object.keys(seriesMap).forEach((key) => {
-      const id = String(key || "").trim().toLowerCase();
-      if (!id) return;
-      map[id] = seriesMap[key];
-    });
-    return map;
-  }
-
   function worksImgBasePath() {
     return String(mediaImageWorksBase || "");
   }
@@ -120,9 +108,8 @@ async function initSeriesTagEditorPage() {
   }
 
   async function fetchWorkRecord(primaryWorkId) {
-    const url = `${baseurl}/assets/works/index/${encodeURIComponent(primaryWorkId)}.json`;
     try {
-      const payload = await fetchJson(url);
+      const payload = await loadStudioWorkRecordJson(config, primaryWorkId, { cache: "no-store" });
       return payload && payload.work && typeof payload.work === "object" ? payload.work : null;
     } catch (error) {
       return null;
@@ -179,12 +166,12 @@ async function initSeriesTagEditorPage() {
     return;
   }
 
-  fetchJson(seriesIndexUrl)
+  loadStudioSeriesRecordJson(config, seriesIdQuery, { cache: "no-store" })
     .then((payload) => {
-      const rawSeriesMap = payload && payload.series && typeof payload.series === "object" ? payload.series : {};
-      const seriesMap = normalizeSeriesMap(rawSeriesMap);
-      const row = seriesMap[seriesIdQuery];
-      if (!row || typeof row !== "object") {
+      const row = payload && payload.series && typeof payload.series === "object" ? payload.series : null;
+      const resolvedSeriesId = String(row && row.series_id || "").trim().toLowerCase();
+      const status = String(row && row.status || "").trim().toLowerCase();
+      if (!row || resolvedSeriesId !== seriesIdQuery || status !== "published") {
         showError(`Unknown series id: ${seriesIdQuery}`);
         return;
       }
@@ -203,8 +190,8 @@ async function initSeriesTagEditorPage() {
         primaryWorkEl.textContent = "—";
       }
 
-      const folders = Array.isArray(row.project_folders) ? row.project_folders.filter(Boolean) : [];
-      foldersEl.textContent = folders.length ? folders.join(", ") : textOrDash(row.project_folders);
+      const folders = Array.isArray(payload.project_folders) ? payload.project_folders.filter(Boolean) : [];
+      foldersEl.textContent = folders.length ? folders.join(", ") : "—";
       defaultMediaWorkId = primaryWorkId;
       defaultMediaTitle = seriesTitle;
       currentMediaWorkId = "";
@@ -238,23 +225,20 @@ async function initSeriesTagEditorPage() {
       });
     })
     .catch((err) => {
-      console.error("series_tag_editor: failed to load series index", err);
+      console.error("series_tag_editor: failed to load exact series record", err);
       showError("Failed to load series metadata.");
     });
 }
 
 function applySeriesTagEditorRuntimeConfig(root, config) {
   const settings = pathValue(config, ["app", "runtime", "series_tag_editor"]) || {};
-  const dataPaths = pathValue(config, ["app", "runtime", "data_paths", "site"]) || pathValue(config, ["paths", "data", "site"]) || {};
   const assetVersion = readAssetVersion();
-  setDatasetValue(root, "baseurl", settings.baseurl || "");
   setDatasetValue(root, "mediaImageWorksBase", settings.media_image_works_base || "");
   setDatasetValue(root, "primaryRenderWidths", JSON.stringify(arrayOrDefault(settings.primary_render_widths, [800, 1200, 1600])));
   setDatasetValue(root, "primaryDisplayWidth", settings.primary_display_width || "");
   setDatasetValue(root, "primaryFullWidth", settings.primary_full_width || settings.primary_display_width || "");
   setDatasetValue(root, "primarySuffix", settings.primary_suffix || "primary");
   setDatasetValue(root, "assetFormat", settings.asset_format || "webp");
-  setDatasetValue(root, "seriesIndexUrl", settings.series_index_url || dataPaths.series_index || "/assets/data/series_index.json");
   setDatasetValue(
     root,
     "tagEditorModuleUrl",

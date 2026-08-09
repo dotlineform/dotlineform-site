@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "001",
@@ -17,29 +17,43 @@
     {
       "work_id": "00635",
       "title": "10,000 (1)",
+      "year": 2009,
       "year_display": "2009",
       "status": "published",
       "series_ids": [
         "001"
-      ]
+      ],
+      "project_folder": "10000"
     },
     {
       "work_id": "00636",
       "title": "10,000 (2)",
+      "year": 2009,
       "year_display": "2009",
       "status": "published",
       "series_ids": [
         "001"
-      ]
+      ],
+      "project_folder": "10000"
     },
     {
       "work_id": "00637",
       "title": "10,000 (3)",
+      "year": 2009,
       "year_display": "2009",
       "status": "published",
       "series_ids": [
         "001"
-      ]
+      ],
+      "project_folder": "10000"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00635",
+    "00636",
+    "00637"
+  ],
+  "project_folders": [
+    "10000"
   ]
 }

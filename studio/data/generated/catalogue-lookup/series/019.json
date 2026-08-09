@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "019",
@@ -17,83 +17,115 @@
     {
       "work_id": "00783",
       "title": "body space 1",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "019"
-      ]
+      ],
+      "project_folder": "body space"
     },
     {
       "work_id": "00784",
       "title": "body space 2",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "019"
-      ]
+      ],
+      "project_folder": "body space"
     },
     {
       "work_id": "00785",
       "title": "body space 3",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "019"
-      ]
+      ],
+      "project_folder": "body space"
     },
     {
       "work_id": "00786",
       "title": "body space 4",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "019"
-      ]
+      ],
+      "project_folder": "body space"
     },
     {
       "work_id": "00787",
       "title": "body space 5",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "019"
-      ]
+      ],
+      "project_folder": "body space"
     },
     {
       "work_id": "00788",
       "title": "body space (boundary condition 1)",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "019"
-      ]
+      ],
+      "project_folder": "body space"
     },
     {
       "work_id": "00789",
       "title": "body space (boundary condition 2)",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "019"
-      ]
+      ],
+      "project_folder": "body space"
     },
     {
       "work_id": "00790",
       "title": "body space (empty cell)",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "019"
-      ]
+      ],
+      "project_folder": "body space"
     },
     {
       "work_id": "00791",
       "title": "body space (joined cells)",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "019"
-      ]
+      ],
+      "project_folder": "body space"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00783",
+    "00784",
+    "00785",
+    "00786",
+    "00787",
+    "00788",
+    "00789",
+    "00790",
+    "00791"
+  ],
+  "project_folders": [
+    "body space"
   ]
 }

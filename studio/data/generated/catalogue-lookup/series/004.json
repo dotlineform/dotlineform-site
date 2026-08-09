@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "004",
@@ -17,83 +17,115 @@
     {
       "work_id": "00526",
       "title": "body",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "004"
-      ]
+      ],
+      "project_folder": "2 bodies"
     },
     {
       "work_id": "00527",
       "title": "body",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "004"
-      ]
+      ],
+      "project_folder": "2 bodies"
     },
     {
       "work_id": "00528",
       "title": "body",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "004"
-      ]
+      ],
+      "project_folder": "2 bodies"
     },
     {
       "work_id": "00529",
       "title": "body residue",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "004"
-      ]
+      ],
+      "project_folder": "2 bodies"
     },
     {
       "work_id": "00530",
       "title": "body curves",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "004"
-      ]
+      ],
+      "project_folder": "2 bodies"
     },
     {
       "work_id": "00531",
       "title": "body monoprint",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "004"
-      ]
+      ],
+      "project_folder": "2 bodies"
     },
     {
       "work_id": "00532",
       "title": "body monoprint petals",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "004"
-      ]
+      ],
+      "project_folder": "2 bodies"
     },
     {
       "work_id": "00533",
       "title": "2 bodies monoprint",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "004"
-      ]
+      ],
+      "project_folder": "2 bodies"
     },
     {
       "work_id": "00534",
       "title": "2 bodies monoprint",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "004"
-      ]
+      ],
+      "project_folder": "2 bodies"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00526",
+    "00527",
+    "00528",
+    "00529",
+    "00530",
+    "00531",
+    "00532",
+    "00533",
+    "00534"
+  ],
+  "project_folders": [
+    "2 bodies"
   ]
 }

@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "088",
@@ -17,11 +17,19 @@
     {
       "work_id": "00458",
       "title": "leaf",
+      "year": 2016,
       "year_display": "2016",
       "status": "published",
       "series_ids": [
         "088"
-      ]
+      ],
+      "project_folder": "leaf"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00458"
+  ],
+  "project_folders": [
+    "leaf"
   ]
 }

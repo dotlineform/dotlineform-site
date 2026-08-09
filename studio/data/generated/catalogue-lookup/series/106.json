@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "106",
@@ -17,47 +17,67 @@
     {
       "work_id": "00385",
       "title": "nerve 1",
+      "year": 2004,
       "year_display": "2004",
       "status": "published",
       "series_ids": [
         "106"
-      ]
+      ],
+      "project_folder": "nerve forms"
     },
     {
       "work_id": "00386",
       "title": "nerve 3",
+      "year": 2004,
       "year_display": "2004",
       "status": "published",
       "series_ids": [
         "106"
-      ]
+      ],
+      "project_folder": "nerve forms"
     },
     {
       "work_id": "00387",
       "title": "nerve 3",
+      "year": 2004,
       "year_display": "2004",
       "status": "published",
       "series_ids": [
         "106"
-      ]
+      ],
+      "project_folder": "nerve forms"
     },
     {
       "work_id": "00525",
       "title": "nerve 2",
+      "year": 2004,
       "year_display": "2004",
       "status": "published",
       "series_ids": [
         "106"
-      ]
+      ],
+      "project_folder": "nerve forms"
     },
     {
       "work_id": "00581",
       "title": "nerve forms",
+      "year": 2004,
       "year_display": "2004",
       "status": "published",
       "series_ids": [
         "106"
-      ]
+      ],
+      "project_folder": "nerve forms"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00385",
+    "00386",
+    "00387",
+    "00525",
+    "00581"
+  ],
+  "project_folders": [
+    "nerve forms"
   ]
 }

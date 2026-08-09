@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "101",
@@ -17,29 +17,43 @@
     {
       "work_id": "00460",
       "title": "molecules",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "101"
-      ]
+      ],
+      "project_folder": "molecules"
     },
     {
       "work_id": "00461",
       "title": "molecules symbols",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "101"
-      ]
+      ],
+      "project_folder": "molecules"
     },
     {
       "work_id": "00462",
       "title": "equilibrium",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "101"
-      ]
+      ],
+      "project_folder": "molecules"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00460",
+    "00461",
+    "00462"
+  ],
+  "project_folders": [
+    "molecules"
   ]
 }

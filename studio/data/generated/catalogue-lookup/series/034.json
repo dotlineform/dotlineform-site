@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "034",
@@ -17,155 +17,211 @@
     {
       "work_id": "00850",
       "title": "curl",
+      "year": 2017,
       "year_display": "2017",
       "status": "published",
       "series_ids": [
         "034"
-      ]
+      ],
+      "project_folder": "curl"
     },
     {
       "work_id": "00851",
       "title": "curl",
+      "year": 2017,
       "year_display": "2017",
       "status": "published",
       "series_ids": [
         "034"
-      ]
+      ],
+      "project_folder": "curl"
     },
     {
       "work_id": "00852",
       "title": "curl",
+      "year": 2017,
       "year_display": "2017",
       "status": "published",
       "series_ids": [
         "034"
-      ]
+      ],
+      "project_folder": "curl"
     },
     {
       "work_id": "00853",
       "title": "curl",
+      "year": 2017,
       "year_display": "2017",
       "status": "published",
       "series_ids": [
         "034"
-      ]
+      ],
+      "project_folder": "curl"
     },
     {
       "work_id": "00854",
       "title": "curl",
+      "year": 2017,
       "year_display": "2017",
       "status": "published",
       "series_ids": [
         "034"
-      ]
+      ],
+      "project_folder": "curl"
     },
     {
       "work_id": "00855",
       "title": "curl",
+      "year": 2017,
       "year_display": "2017",
       "status": "published",
       "series_ids": [
         "034"
-      ]
+      ],
+      "project_folder": "curl"
     },
     {
       "work_id": "00856",
       "title": "curl",
+      "year": 2017,
       "year_display": "2017",
       "status": "published",
       "series_ids": [
         "034"
-      ]
+      ],
+      "project_folder": "curl"
     },
     {
       "work_id": "00857",
       "title": "curl",
+      "year": 2017,
       "year_display": "2017",
       "status": "published",
       "series_ids": [
         "034"
-      ]
+      ],
+      "project_folder": "curl"
     },
     {
       "work_id": "00858",
       "title": "curl version",
+      "year": 2022,
       "year_display": "2022",
       "status": "published",
       "series_ids": [
         "034"
-      ]
+      ],
+      "project_folder": "curl"
     },
     {
       "work_id": "00859",
       "title": "curl version",
+      "year": 2022,
       "year_display": "2022",
       "status": "published",
       "series_ids": [
         "034"
-      ]
+      ],
+      "project_folder": "curl"
     },
     {
       "work_id": "00860",
       "title": "curl version",
+      "year": 2022,
       "year_display": "2022",
       "status": "published",
       "series_ids": [
         "034"
-      ]
+      ],
+      "project_folder": "curl"
     },
     {
       "work_id": "00861",
       "title": "curl version",
+      "year": 2022,
       "year_display": "2022",
       "status": "published",
       "series_ids": [
         "034"
-      ]
+      ],
+      "project_folder": "curl"
     },
     {
       "work_id": "00862",
       "title": "curl version",
+      "year": 2022,
       "year_display": "2022",
       "status": "published",
       "series_ids": [
         "034"
-      ]
+      ],
+      "project_folder": "curl"
     },
     {
       "work_id": "00863",
       "title": "curl version",
+      "year": 2022,
       "year_display": "2022",
       "status": "published",
       "series_ids": [
         "034"
-      ]
+      ],
+      "project_folder": "curl"
     },
     {
       "work_id": "00864",
       "title": "curl version",
+      "year": 2022,
       "year_display": "2022",
       "status": "published",
       "series_ids": [
         "034"
-      ]
+      ],
+      "project_folder": "curl"
     },
     {
       "work_id": "00865",
       "title": "curl version",
+      "year": 2022,
       "year_display": "2022",
       "status": "published",
       "series_ids": [
         "034"
-      ]
+      ],
+      "project_folder": "curl"
     },
     {
       "work_id": "00866",
       "title": "curl version",
+      "year": 2022,
       "year_display": "2022",
       "status": "published",
       "series_ids": [
         "034"
-      ]
+      ],
+      "project_folder": "curl"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00850",
+    "00851",
+    "00852",
+    "00853",
+    "00854",
+    "00855",
+    "00856",
+    "00857",
+    "00858",
+    "00859",
+    "00860",
+    "00861",
+    "00862",
+    "00863",
+    "00864",
+    "00865",
+    "00866"
+  ],
+  "project_folders": [
+    "curl"
   ]
 }

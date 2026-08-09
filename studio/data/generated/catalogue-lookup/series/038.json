@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "038",
@@ -17,74 +17,103 @@
     {
       "work_id": "00901",
       "title": "doll face 1",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "038"
-      ]
+      ],
+      "project_folder": "doll faces"
     },
     {
       "work_id": "00902",
       "title": "doll face 2",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "038"
-      ]
+      ],
+      "project_folder": "doll faces"
     },
     {
       "work_id": "00903",
       "title": "doll face 3",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "038"
-      ]
+      ],
+      "project_folder": "doll faces"
     },
     {
       "work_id": "00904",
       "title": "doll face 4",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "038"
-      ]
+      ],
+      "project_folder": "doll faces"
     },
     {
       "work_id": "00905",
       "title": "doll face 5",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "038"
-      ]
+      ],
+      "project_folder": "doll faces"
     },
     {
       "work_id": "00906",
       "title": "doll face 6",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "038"
-      ]
+      ],
+      "project_folder": "doll faces"
     },
     {
       "work_id": "00907",
       "title": "doll face 7",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "038"
-      ]
+      ],
+      "project_folder": "doll faces"
     },
     {
       "work_id": "00908",
       "title": "doll face 8",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "038"
-      ]
+      ],
+      "project_folder": "doll faces"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00901",
+    "00902",
+    "00903",
+    "00904",
+    "00905",
+    "00906",
+    "00907",
+    "00908"
+  ],
+  "project_folders": [
+    "doll faces"
   ]
 }

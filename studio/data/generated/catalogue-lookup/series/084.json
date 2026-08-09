@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "084",
@@ -17,38 +17,55 @@
     {
       "work_id": "00520",
       "title": "kylie structure 1",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "084"
-      ]
+      ],
+      "project_folder": "kylie structures"
     },
     {
       "work_id": "00521",
       "title": "kylie structure 2",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "084"
-      ]
+      ],
+      "project_folder": "kylie structures"
     },
     {
       "work_id": "00522",
       "title": "kylie structure 3",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "084"
-      ]
+      ],
+      "project_folder": "kylie structures"
     },
     {
       "work_id": "00523",
       "title": "kylie structure 4",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "084"
-      ]
+      ],
+      "project_folder": "kylie structures"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00520",
+    "00521",
+    "00522",
+    "00523"
+  ],
+  "project_folders": [
+    "kylie structures"
   ]
 }

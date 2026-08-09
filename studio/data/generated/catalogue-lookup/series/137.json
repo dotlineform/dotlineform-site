@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "137",
@@ -17,47 +17,67 @@
     {
       "work_id": "01869",
       "title": "tulips 1",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "137"
-      ]
+      ],
+      "project_folder": "tulips"
     },
     {
       "work_id": "01870",
       "title": "tulips 2",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "137"
-      ]
+      ],
+      "project_folder": "tulips"
     },
     {
       "work_id": "01871",
       "title": "tulips 3",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "137"
-      ]
+      ],
+      "project_folder": "tulips"
     },
     {
       "work_id": "01872",
       "title": "tulips 4",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "137"
-      ]
+      ],
+      "project_folder": "tulips"
     },
     {
       "work_id": "01873",
       "title": "tulips 5",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "137"
-      ]
+      ],
+      "project_folder": "tulips"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01869",
+    "01870",
+    "01871",
+    "01872",
+    "01873"
+  ],
+  "project_folders": [
+    "tulips"
   ]
 }

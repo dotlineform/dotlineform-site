@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "048",
@@ -17,20 +17,31 @@
     {
       "work_id": "01044",
       "title": "entangled form",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "048"
-      ]
+      ],
+      "project_folder": "entangled form"
     },
     {
       "work_id": "01045",
       "title": "entangled form'",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "048"
-      ]
+      ],
+      "project_folder": "entangled form"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01044",
+    "01045"
+  ],
+  "project_folders": [
+    "entangled form"
   ]
 }

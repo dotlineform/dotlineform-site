@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "065",
@@ -17,38 +17,55 @@
     {
       "work_id": "01196",
       "title": "forms",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "065"
-      ]
+      ],
+      "project_folder": "forms"
     },
     {
       "work_id": "01197",
       "title": "form paths",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "065"
-      ]
+      ],
+      "project_folder": "forms"
     },
     {
       "work_id": "01198",
       "title": "4 form paths",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "065"
-      ]
+      ],
+      "project_folder": "forms"
     },
     {
       "work_id": "01199",
       "title": "form particles",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "065"
-      ]
+      ],
+      "project_folder": "forms"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01196",
+    "01197",
+    "01198",
+    "01199"
+  ],
+  "project_folders": [
+    "forms"
   ]
 }

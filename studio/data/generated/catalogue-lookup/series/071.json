@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "071",
@@ -17,119 +17,163 @@
     {
       "work_id": "01251",
       "title": "grey series 1",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "071"
-      ]
+      ],
+      "project_folder": "grey series"
     },
     {
       "work_id": "01252",
       "title": "grey series 2",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "071"
-      ]
+      ],
+      "project_folder": "grey series"
     },
     {
       "work_id": "01253",
       "title": "grey series 3",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "071"
-      ]
+      ],
+      "project_folder": "grey series"
     },
     {
       "work_id": "01254",
       "title": "grey series 4",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "071"
-      ]
+      ],
+      "project_folder": "grey series"
     },
     {
       "work_id": "01255",
       "title": "grey series 5",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "071"
-      ]
+      ],
+      "project_folder": "grey series"
     },
     {
       "work_id": "01256",
       "title": "grey series 6",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "071"
-      ]
+      ],
+      "project_folder": "grey series"
     },
     {
       "work_id": "01257",
       "title": "grey series 7",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "071"
-      ]
+      ],
+      "project_folder": "grey series"
     },
     {
       "work_id": "01258",
       "title": "grey series 8",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "071"
-      ]
+      ],
+      "project_folder": "grey series"
     },
     {
       "work_id": "01259",
       "title": "grey series 9",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "071"
-      ]
+      ],
+      "project_folder": "grey series"
     },
     {
       "work_id": "01260",
       "title": "grey series 10",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "071"
-      ]
+      ],
+      "project_folder": "grey series"
     },
     {
       "work_id": "01261",
       "title": "grey series 11",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "071"
-      ]
+      ],
+      "project_folder": "grey series"
     },
     {
       "work_id": "01262",
       "title": "grey series 12",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "071"
-      ]
+      ],
+      "project_folder": "grey series"
     },
     {
       "work_id": "01263",
       "title": "grey series 13",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "071"
-      ]
+      ],
+      "project_folder": "grey series"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01251",
+    "01252",
+    "01253",
+    "01254",
+    "01255",
+    "01256",
+    "01257",
+    "01258",
+    "01259",
+    "01260",
+    "01261",
+    "01262",
+    "01263"
+  ],
+  "project_folders": [
+    "grey series"
   ]
 }

@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "092",
@@ -17,11 +17,19 @@
     {
       "work_id": "00463",
       "title": "living surface hand form",
+      "year": 2004,
       "year_display": "1989, 2004",
       "status": "published",
       "series_ids": [
         "092"
-      ]
+      ],
+      "project_folder": "living surface hand form"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00463"
+  ],
+  "project_folders": [
+    "living surface hand form"
   ]
 }

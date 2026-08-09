@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "109",
@@ -17,101 +17,139 @@
     {
       "work_id": "01480",
       "title": "particle path 1",
+      "year": 2020,
       "year_display": "2020",
       "status": "published",
       "series_ids": [
         "109"
-      ]
+      ],
+      "project_folder": "particle machine"
     },
     {
       "work_id": "01481",
       "title": "particle path 2",
+      "year": 2020,
       "year_display": "2020",
       "status": "published",
       "series_ids": [
         "109"
-      ]
+      ],
+      "project_folder": "particle machine"
     },
     {
       "work_id": "01482",
       "title": "particle path 3",
+      "year": 2020,
       "year_display": "2020",
       "status": "published",
       "series_ids": [
         "109"
-      ]
+      ],
+      "project_folder": "particle machine"
     },
     {
       "work_id": "01483",
       "title": "particle path 4",
+      "year": 2020,
       "year_display": "2020",
       "status": "published",
       "series_ids": [
         "109"
-      ]
+      ],
+      "project_folder": "particle machine"
     },
     {
       "work_id": "01484",
       "title": "particle path 5",
+      "year": 2020,
       "year_display": "2020",
       "status": "published",
       "series_ids": [
         "109"
-      ]
+      ],
+      "project_folder": "particle machine"
     },
     {
       "work_id": "01485",
       "title": "surface 1",
+      "year": 2020,
       "year_display": "2020",
       "status": "published",
       "series_ids": [
         "109"
-      ]
+      ],
+      "project_folder": "particle machine"
     },
     {
       "work_id": "01486",
       "title": "surface 2",
+      "year": 2020,
       "year_display": "2020",
       "status": "published",
       "series_ids": [
         "109"
-      ]
+      ],
+      "project_folder": "particle machine"
     },
     {
       "work_id": "01487",
       "title": "surface 3",
+      "year": 2020,
       "year_display": "2020",
       "status": "published",
       "series_ids": [
         "109"
-      ]
+      ],
+      "project_folder": "particle machine"
     },
     {
       "work_id": "01488",
       "title": "surface 4",
+      "year": 2020,
       "year_display": "2020",
       "status": "published",
       "series_ids": [
         "109"
-      ]
+      ],
+      "project_folder": "particle machine"
     },
     {
       "work_id": "01489",
       "title": "surface 5",
+      "year": 2020,
       "year_display": "2020",
       "status": "published",
       "series_ids": [
         "109"
-      ]
+      ],
+      "project_folder": "particle machine"
     },
     {
       "work_id": "01490",
       "title": "surface 6",
+      "year": 2020,
       "year_display": "2020",
       "status": "published",
       "series_ids": [
         "109"
-      ]
+      ],
+      "project_folder": "particle machine"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01480",
+    "01481",
+    "01482",
+    "01483",
+    "01484",
+    "01485",
+    "01486",
+    "01487",
+    "01488",
+    "01489",
+    "01490"
+  ],
+  "project_folders": [
+    "particle machine"
   ]
 }

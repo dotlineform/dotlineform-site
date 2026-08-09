@@ -88,11 +88,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert "risk" not in runtime["services"]
     assert "external_links" not in payload
     assert "catalogue" not in payload
-    assert set(runtime["data_paths"]) == {"site", "studio"}
-    assert runtime["data_paths"]["site"] == {
-        "series_index": "/assets/data/series_index.json",
-        "works_index": "/assets/data/works_index.json",
-    }
+    assert set(runtime["data_paths"]) == {"studio"}
     assert set(runtime["data_paths"]["studio"]) == {
         "catalogue_works",
         "catalogue_series",
@@ -139,7 +135,8 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["tags"]["create_tag_alias"] == "/studio/api/tags/create-tag-alias"
     assert "import_tag_registry" not in runtime["services"]["tags"]
     assert "import_tag_aliases" not in runtime["services"]["tags"]
-    assert runtime["series_tag_editor"]["series_index_url"] == "/assets/data/series_index.json"
+    assert "series_index_url" not in runtime["series_tag_editor"]
+    assert "baseurl" not in runtime["series_tag_editor"]
     assert runtime["series_tag_editor"]["tag_editor_module_url"] == "/studio/app/frontend/js/analytics-tag-editor.js"
     assert payload["analysis"]["groups"]["ordered"] == ["subject", "domain", "form", "theme"]
     assert payload["analysis"]["groups"]["coverage_groups"] == ["subject", "domain", "form", "theme"]

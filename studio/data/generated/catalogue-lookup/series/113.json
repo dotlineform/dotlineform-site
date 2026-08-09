@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "113",
@@ -17,38 +17,55 @@
     {
       "work_id": "01523",
       "title": "pi",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "113"
-      ]
+      ],
+      "project_folder": "pi particles"
     },
     {
       "work_id": "01524",
       "title": "pi molecule grid",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "113"
-      ]
+      ],
+      "project_folder": "pi particles"
     },
     {
       "work_id": "01525",
       "title": "pi circle",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "113"
-      ]
+      ],
+      "project_folder": "pi particles"
     },
     {
       "work_id": "01526",
       "title": "all the particles are connected",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "113"
-      ]
+      ],
+      "project_folder": "pi particles"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01523",
+    "01524",
+    "01525",
+    "01526"
+  ],
+  "project_folders": [
+    "pi particles"
   ]
 }

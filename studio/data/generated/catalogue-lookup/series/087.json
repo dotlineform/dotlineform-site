@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "087",
@@ -17,29 +17,43 @@
     {
       "work_id": "00516",
       "title": "landscape 1",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "087"
-      ]
+      ],
+      "project_folder": "landscapes"
     },
     {
       "work_id": "00517",
       "title": "landscape 2",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "087"
-      ]
+      ],
+      "project_folder": "landscapes"
     },
     {
       "work_id": "00518",
       "title": "landscape 2.1",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "087"
-      ]
+      ],
+      "project_folder": "landscapes"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00516",
+    "00517",
+    "00518"
+  ],
+  "project_folders": [
+    "landscapes"
   ]
 }

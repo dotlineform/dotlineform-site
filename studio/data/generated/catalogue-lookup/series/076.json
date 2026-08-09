@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "076",
@@ -17,29 +17,43 @@
     {
       "work_id": "00469",
       "title": "heaven and earth",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "076"
-      ]
+      ],
+      "project_folder": "heaven and earth"
     },
     {
       "work_id": "01365",
       "title": "heaven and earth (grey series)",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "076"
-      ]
+      ],
+      "project_folder": "heaven and earth"
     },
     {
       "work_id": "01366",
       "title": "heaven and earth (colour series)",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "076"
-      ]
+      ],
+      "project_folder": "heaven and earth"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00469",
+    "01365",
+    "01366"
+  ],
+  "project_folders": [
+    "heaven and earth"
   ]
 }

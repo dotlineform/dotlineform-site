@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "082",
@@ -17,74 +17,103 @@
     {
       "work_id": "00621",
       "title": "crystal",
+      "year": 2009,
       "year_display": "2009",
       "status": "published",
       "series_ids": [
         "082"
-      ]
+      ],
+      "project_folder": "k crystals"
     },
     {
       "work_id": "00622",
       "title": "k crystals",
+      "year": 2009,
       "year_display": "2009",
       "status": "published",
       "series_ids": [
         "082"
-      ]
+      ],
+      "project_folder": "k crystals"
     },
     {
       "work_id": "00623",
       "title": "k crystals (transparent)",
+      "year": 2009,
       "year_display": "2009",
       "status": "published",
       "series_ids": [
         "082"
-      ]
+      ],
+      "project_folder": "k crystals"
     },
     {
       "work_id": "00624",
       "title": "k crystals (squared transparent)",
+      "year": 2009,
       "year_display": "2009",
       "status": "published",
       "series_ids": [
         "082"
-      ]
+      ],
+      "project_folder": "k crystals"
     },
     {
       "work_id": "00625",
       "title": "k crystals (squared solid)",
+      "year": 2009,
       "year_display": "2009",
       "status": "published",
       "series_ids": [
         "082"
-      ]
+      ],
+      "project_folder": "k crystals"
     },
     {
       "work_id": "00626",
       "title": "k-crystals source",
+      "year": 2009,
       "year_display": "2009",
       "status": "published",
       "series_ids": [
         "082"
-      ]
+      ],
+      "project_folder": "k crystals"
     },
     {
       "work_id": "00627",
       "title": "k-crystals squared source",
+      "year": 2009,
       "year_display": "2009",
       "status": "published",
       "series_ids": [
         "082"
-      ]
+      ],
+      "project_folder": "k crystals"
     },
     {
       "work_id": "00628",
       "title": "group theory",
+      "year": 2009,
       "year_display": "2009",
       "status": "published",
       "series_ids": [
         "082"
-      ]
+      ],
+      "project_folder": "k crystals"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00621",
+    "00622",
+    "00623",
+    "00624",
+    "00625",
+    "00626",
+    "00627",
+    "00628"
+  ],
+  "project_folders": [
+    "k crystals"
   ]
 }

@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "117",
@@ -17,119 +17,163 @@
     {
       "work_id": "01583",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "117"
-      ]
+      ],
+      "project_folder": "porto santo"
     },
     {
       "work_id": "01584",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "117"
-      ]
+      ],
+      "project_folder": "porto santo"
     },
     {
       "work_id": "01585",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "117"
-      ]
+      ],
+      "project_folder": "porto santo"
     },
     {
       "work_id": "01586",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "117"
-      ]
+      ],
+      "project_folder": "porto santo"
     },
     {
       "work_id": "01587",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "117"
-      ]
+      ],
+      "project_folder": "porto santo"
     },
     {
       "work_id": "01588",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "117"
-      ]
+      ],
+      "project_folder": "porto santo"
     },
     {
       "work_id": "01589",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "117"
-      ]
+      ],
+      "project_folder": "porto santo"
     },
     {
       "work_id": "01590",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "117"
-      ]
+      ],
+      "project_folder": "porto santo"
     },
     {
       "work_id": "01591",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "117"
-      ]
+      ],
+      "project_folder": "porto santo"
     },
     {
       "work_id": "01592",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "117"
-      ]
+      ],
+      "project_folder": "porto santo"
     },
     {
       "work_id": "01593",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "117"
-      ]
+      ],
+      "project_folder": "porto santo"
     },
     {
       "work_id": "01594",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "117"
-      ]
+      ],
+      "project_folder": "porto santo"
     },
     {
       "work_id": "01595",
       "title": "untitled",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "117"
-      ]
+      ],
+      "project_folder": "porto santo"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01583",
+    "01584",
+    "01585",
+    "01586",
+    "01587",
+    "01588",
+    "01589",
+    "01590",
+    "01591",
+    "01592",
+    "01593",
+    "01594",
+    "01595"
+  ],
+  "project_folders": [
+    "porto santo"
   ]
 }

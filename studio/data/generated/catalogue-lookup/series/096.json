@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "096",
@@ -17,20 +17,31 @@
     {
       "work_id": "01441",
       "title": "memory loss hope",
+      "year": 2010,
       "year_display": "2010",
       "status": "published",
       "series_ids": [
         "096"
-      ]
+      ],
+      "project_folder": "memory loss hope"
     },
     {
       "work_id": "01442",
       "title": "memory loss hope (set theory)",
+      "year": 2010,
       "year_display": "2010",
       "status": "published",
       "series_ids": [
         "096"
-      ]
+      ],
+      "project_folder": "memory loss hope"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01441",
+    "01442"
+  ],
+  "project_folders": [
+    "memory loss hope"
   ]
 }

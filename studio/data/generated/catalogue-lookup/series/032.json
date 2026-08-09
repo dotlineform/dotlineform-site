@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "032",
@@ -17,56 +17,79 @@
     {
       "work_id": "00832",
       "title": "creases 1",
+      "year": 2016,
       "year_display": "2016",
       "status": "published",
       "series_ids": [
         "032"
-      ]
+      ],
+      "project_folder": "creases"
     },
     {
       "work_id": "00833",
       "title": "creases 1 (version)",
+      "year": 2016,
       "year_display": "2016",
       "status": "published",
       "series_ids": [
         "032"
-      ]
+      ],
+      "project_folder": "creases"
     },
     {
       "work_id": "00834",
       "title": "creases 2",
+      "year": 2016,
       "year_display": "2016",
       "status": "published",
       "series_ids": [
         "032"
-      ]
+      ],
+      "project_folder": "creases"
     },
     {
       "work_id": "00835",
       "title": "creases 2 (version)",
+      "year": 2016,
       "year_display": "2016",
       "status": "published",
       "series_ids": [
         "032"
-      ]
+      ],
+      "project_folder": "creases"
     },
     {
       "work_id": "00836",
       "title": "creases 3",
+      "year": 2016,
       "year_display": "2016",
       "status": "published",
       "series_ids": [
         "032"
-      ]
+      ],
+      "project_folder": "creases"
     },
     {
       "work_id": "00837",
       "title": "creases 3 (version)",
+      "year": 2016,
       "year_display": "2016",
       "status": "published",
       "series_ids": [
         "032"
-      ]
+      ],
+      "project_folder": "creases"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00832",
+    "00833",
+    "00834",
+    "00835",
+    "00836",
+    "00837"
+  ],
+  "project_folders": [
+    "creases"
   ]
 }

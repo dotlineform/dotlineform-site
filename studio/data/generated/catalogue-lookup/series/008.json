@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "008",
@@ -17,110 +17,151 @@
     {
       "work_id": "00722",
       "title": "a humid home full of light [1]",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "008"
-      ]
+      ],
+      "project_folder": "a humid home full of light"
     },
     {
       "work_id": "00723",
       "title": "a humid home full of light [2]",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "008"
-      ]
+      ],
+      "project_folder": "a humid home full of light"
     },
     {
       "work_id": "00724",
       "title": "a humid home full of light [3]",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "008"
-      ]
+      ],
+      "project_folder": "a humid home full of light"
     },
     {
       "work_id": "00725",
       "title": "a humid home full of light [4]",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "008"
-      ]
+      ],
+      "project_folder": "a humid home full of light"
     },
     {
       "work_id": "00726",
       "title": "a humid home full of light [5]",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "008"
-      ]
+      ],
+      "project_folder": "a humid home full of light"
     },
     {
       "work_id": "00727",
       "title": "a humid home full of light [6]",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "008"
-      ]
+      ],
+      "project_folder": "a humid home full of light"
     },
     {
       "work_id": "00728",
       "title": "a humid home full of light [7]",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "008"
-      ]
+      ],
+      "project_folder": "a humid home full of light"
     },
     {
       "work_id": "00729",
       "title": "a humid home full of light [8]",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "008"
-      ]
+      ],
+      "project_folder": "a humid home full of light"
     },
     {
       "work_id": "00730",
       "title": "a humid home full of light [9]",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "008"
-      ]
+      ],
+      "project_folder": "a humid home full of light"
     },
     {
       "work_id": "00731",
       "title": "a humid home full of light [10]",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "008"
-      ]
+      ],
+      "project_folder": "a humid home full of light"
     },
     {
       "work_id": "00732",
       "title": "a humid home full of light [11]",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "008"
-      ]
+      ],
+      "project_folder": "a humid home full of light"
     },
     {
       "work_id": "00733",
       "title": "a humid home full of light [12]",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "008"
-      ]
+      ],
+      "project_folder": "a humid home full of light"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00722",
+    "00723",
+    "00724",
+    "00725",
+    "00726",
+    "00727",
+    "00728",
+    "00729",
+    "00730",
+    "00731",
+    "00732",
+    "00733"
+  ],
+  "project_folders": [
+    "a humid home full of light"
   ]
 }

@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "003",
@@ -17,11 +17,19 @@
     {
       "work_id": "00639",
       "title": "16 forms",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "003"
-      ]
+      ],
+      "project_folder": "16 forms"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00639"
+  ],
+  "project_folders": [
+    "16 forms"
   ]
 }

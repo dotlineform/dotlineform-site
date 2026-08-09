@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "064",
@@ -17,182 +17,247 @@
     {
       "work_id": "01176",
       "title": "form space 1",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "064"
-      ]
+      ],
+      "project_folder": "form space"
     },
     {
       "work_id": "01177",
       "title": "form space 2",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "064"
-      ]
+      ],
+      "project_folder": "form space"
     },
     {
       "work_id": "01178",
       "title": "form space 3",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "064"
-      ]
+      ],
+      "project_folder": "form space"
     },
     {
       "work_id": "01179",
       "title": "form space 4",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "064"
-      ]
+      ],
+      "project_folder": "form space"
     },
     {
       "work_id": "01180",
       "title": "form space 5",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "064"
-      ]
+      ],
+      "project_folder": "form space"
     },
     {
       "work_id": "01181",
       "title": "form space 6",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "064"
-      ]
+      ],
+      "project_folder": "form space"
     },
     {
       "work_id": "01182",
       "title": "form space 7",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "064"
-      ]
+      ],
+      "project_folder": "form space"
     },
     {
       "work_id": "01183",
       "title": "form space 8",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "064"
-      ]
+      ],
+      "project_folder": "form space"
     },
     {
       "work_id": "01184",
       "title": "form space 9",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "064"
-      ]
+      ],
+      "project_folder": "form space"
     },
     {
       "work_id": "01185",
       "title": "form space 10",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "064"
-      ]
+      ],
+      "project_folder": "form space"
     },
     {
       "work_id": "01186",
       "title": "form space 11",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "064"
-      ]
+      ],
+      "project_folder": "form space"
     },
     {
       "work_id": "01187",
       "title": "form space 12",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "064"
-      ]
+      ],
+      "project_folder": "form space"
     },
     {
       "work_id": "01188",
       "title": "form space 13",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "064"
-      ]
+      ],
+      "project_folder": "form space"
     },
     {
       "work_id": "01189",
       "title": "form space 14",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "064"
-      ]
+      ],
+      "project_folder": "form space"
     },
     {
       "work_id": "01190",
       "title": "form space 15",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "064"
-      ]
+      ],
+      "project_folder": "form space"
     },
     {
       "work_id": "01191",
       "title": "form space 16",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "064"
-      ]
+      ],
+      "project_folder": "form space"
     },
     {
       "work_id": "01192",
       "title": "form space 17",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "064"
-      ]
+      ],
+      "project_folder": "form space"
     },
     {
       "work_id": "01193",
       "title": "form space 18",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "064"
-      ]
+      ],
+      "project_folder": "form space"
     },
     {
       "work_id": "01194",
       "title": "form space 19",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "064"
-      ]
+      ],
+      "project_folder": "form space"
     },
     {
       "work_id": "01195",
       "title": "form space 20",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "064"
-      ]
+      ],
+      "project_folder": "form space"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01176",
+    "01177",
+    "01178",
+    "01179",
+    "01180",
+    "01181",
+    "01182",
+    "01183",
+    "01184",
+    "01185",
+    "01186",
+    "01187",
+    "01188",
+    "01189",
+    "01190",
+    "01191",
+    "01192",
+    "01193",
+    "01194",
+    "01195"
+  ],
+  "project_folders": [
+    "form space"
   ]
 }

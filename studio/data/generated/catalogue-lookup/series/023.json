@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "023",
@@ -17,11 +17,19 @@
     {
       "work_id": "00389",
       "title": "certainty",
+      "year": 2026,
       "year_display": "2001-26",
       "status": "published",
       "series_ids": [
         "023"
-      ]
+      ],
+      "project_folder": "certainty"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00389"
+  ],
+  "project_folders": [
+    "certainty"
   ]
 }

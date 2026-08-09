@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "042",
@@ -17,317 +17,427 @@
     {
       "work_id": "00949",
       "title": "dotlineform",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00950",
       "title": "dotlineform surface (1)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00951",
       "title": "dotlineform surface (2)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00952",
       "title": "dotlineform surface (3)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00953",
       "title": "dotlineform surface (4)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00954",
       "title": "dotlineform surface (5)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00955",
       "title": "dotlineform surface (6)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00956",
       "title": "dotlineform surface (7)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00957",
       "title": "dotlineform surface (8)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00958",
       "title": "dotlineform surface (9)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00959",
       "title": "dotlineform surface (10)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00960",
       "title": "dotlineform surface (11)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00961",
       "title": "dotlineform surface (12)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00962",
       "title": "dotlineform surface (13)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00963",
       "title": "dotlineform surface (14)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00964",
       "title": "dotlineform surface (15)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00965",
       "title": "dotlineform surface (16)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00966",
       "title": "dotlineform surface (17)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00967",
       "title": "dotlineform surface (18)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00968",
       "title": "dotlineform surface (19)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00969",
       "title": "dotlineform surface (20)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00970",
       "title": "dotlineform surface (21)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00971",
       "title": "dotlineform surface (22)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00972",
       "title": "dotlineform surface (23)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00973",
       "title": "dotlineform surface (24)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00974",
       "title": "dotlineform surface (25)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00975",
       "title": "dotlineform surface (26)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00976",
       "title": "dotlineform surface (27)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00977",
       "title": "dotlineform surface (28)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00978",
       "title": "dotlineform surface (29)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00979",
       "title": "dotlineform surface (30)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00980",
       "title": "dotlineform surface (31)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00981",
       "title": "dotlineform surface (32)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00982",
       "title": "dotlineform surface (33)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00983",
       "title": "dotlineform surface (34)",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "042"
-      ]
+      ],
+      "project_folder": "dotlineform (2021)"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00949",
+    "00950",
+    "00951",
+    "00952",
+    "00953",
+    "00954",
+    "00955",
+    "00956",
+    "00957",
+    "00958",
+    "00959",
+    "00960",
+    "00961",
+    "00962",
+    "00963",
+    "00964",
+    "00965",
+    "00966",
+    "00967",
+    "00968",
+    "00969",
+    "00970",
+    "00971",
+    "00972",
+    "00973",
+    "00974",
+    "00975",
+    "00976",
+    "00977",
+    "00978",
+    "00979",
+    "00980",
+    "00981",
+    "00982",
+    "00983"
+  ],
+  "project_folders": [
+    "dotlineform (2021)"
   ]
 }

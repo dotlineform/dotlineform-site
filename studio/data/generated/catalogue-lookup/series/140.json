@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "140",
@@ -17,218 +17,295 @@
     {
       "work_id": "00394",
       "title": "wa (yoko takenami)",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "140"
-      ]
+      ],
+      "project_folder": "wa"
     },
     {
       "work_id": "00395",
       "title": "wa (6)",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "140"
-      ]
+      ],
+      "project_folder": "wa"
     },
     {
       "work_id": "00396",
       "title": "wa (5)",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "140"
-      ]
+      ],
+      "project_folder": "wa"
     },
     {
       "work_id": "00397",
       "title": "wa (4)",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "140"
-      ]
+      ],
+      "project_folder": "wa"
     },
     {
       "work_id": "00398",
       "title": "wa (7)",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "140"
-      ]
+      ],
+      "project_folder": "wa"
     },
     {
       "work_id": "00399",
       "title": "wa (3)",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "140"
-      ]
+      ],
+      "project_folder": "wa"
     },
     {
       "work_id": "00400",
       "title": "wa (2)",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "140"
-      ]
+      ],
+      "project_folder": "wa"
     },
     {
       "work_id": "00401",
       "title": "wa",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "140"
-      ]
+      ],
+      "project_folder": "wa"
     },
     {
       "work_id": "00600",
       "title": "wa 1",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "140"
-      ]
+      ],
+      "project_folder": "wa"
     },
     {
       "work_id": "00601",
       "title": "wa 2",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "140"
-      ]
+      ],
+      "project_folder": "wa"
     },
     {
       "work_id": "00602",
       "title": "wa 3",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "140"
-      ]
+      ],
+      "project_folder": "wa"
     },
     {
       "work_id": "00603",
       "title": "wa 4",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "140"
-      ]
+      ],
+      "project_folder": "wa"
     },
     {
       "work_id": "00604",
       "title": "wa 5",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "140"
-      ]
+      ],
+      "project_folder": "wa"
     },
     {
       "work_id": "00605",
       "title": "wa 6",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "140"
-      ]
+      ],
+      "project_folder": "wa"
     },
     {
       "work_id": "00606",
       "title": "wa 7",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "140"
-      ]
+      ],
+      "project_folder": "wa"
     },
     {
       "work_id": "00607",
       "title": "wa 8",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "140"
-      ]
+      ],
+      "project_folder": "wa"
     },
     {
       "work_id": "00608",
       "title": "wa 9",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "140"
-      ]
+      ],
+      "project_folder": "wa"
     },
     {
       "work_id": "00609",
       "title": "wa 10",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "140"
-      ]
+      ],
+      "project_folder": "wa"
     },
     {
       "work_id": "00610",
       "title": "wa 11",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "140"
-      ]
+      ],
+      "project_folder": "wa"
     },
     {
       "work_id": "00611",
       "title": "wa 12",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "140"
-      ]
+      ],
+      "project_folder": "wa"
     },
     {
       "work_id": "00612",
       "title": "wa 13",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "140"
-      ]
+      ],
+      "project_folder": "wa"
     },
     {
       "work_id": "00613",
       "title": "wa 14",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "140"
-      ]
+      ],
+      "project_folder": "wa"
     },
     {
       "work_id": "00614",
       "title": "wa 15",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "140"
-      ]
+      ],
+      "project_folder": "wa"
     },
     {
       "work_id": "00615",
       "title": "wa 16",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "140"
-      ]
+      ],
+      "project_folder": "wa"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00394",
+    "00395",
+    "00396",
+    "00397",
+    "00398",
+    "00399",
+    "00400",
+    "00401",
+    "00600",
+    "00601",
+    "00602",
+    "00603",
+    "00604",
+    "00605",
+    "00606",
+    "00607",
+    "00608",
+    "00609",
+    "00610",
+    "00611",
+    "00612",
+    "00613",
+    "00614",
+    "00615"
+  ],
+  "project_folders": [
+    "wa"
   ]
 }

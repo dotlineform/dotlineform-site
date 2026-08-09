@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "031",
@@ -17,128 +17,175 @@
     {
       "work_id": "00818",
       "title": "concrete [1]",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "031"
-      ]
+      ],
+      "project_folder": "concrete"
     },
     {
       "work_id": "00819",
       "title": "concrete [2]",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "031"
-      ]
+      ],
+      "project_folder": "concrete"
     },
     {
       "work_id": "00820",
       "title": "concrete [3]",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "031"
-      ]
+      ],
+      "project_folder": "concrete"
     },
     {
       "work_id": "00821",
       "title": "concrete [4]",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "031"
-      ]
+      ],
+      "project_folder": "concrete"
     },
     {
       "work_id": "00822",
       "title": "concrete [5]",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "031"
-      ]
+      ],
+      "project_folder": "concrete"
     },
     {
       "work_id": "00823",
       "title": "concrete [6]",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "031"
-      ]
+      ],
+      "project_folder": "concrete"
     },
     {
       "work_id": "00824",
       "title": "concrete [7]",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "031"
-      ]
+      ],
+      "project_folder": "concrete"
     },
     {
       "work_id": "00825",
       "title": "concrete [8]",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "031"
-      ]
+      ],
+      "project_folder": "concrete"
     },
     {
       "work_id": "00826",
       "title": "concrete [9]",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "031"
-      ]
+      ],
+      "project_folder": "concrete"
     },
     {
       "work_id": "00827",
       "title": "concrete [10]",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "031"
-      ]
+      ],
+      "project_folder": "concrete"
     },
     {
       "work_id": "00828",
       "title": "concrete [11]",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "031"
-      ]
+      ],
+      "project_folder": "concrete"
     },
     {
       "work_id": "00829",
       "title": "concrete [12]",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "031"
-      ]
+      ],
+      "project_folder": "concrete"
     },
     {
       "work_id": "00830",
       "title": "concrete [13]",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "031"
-      ]
+      ],
+      "project_folder": "concrete"
     },
     {
       "work_id": "00831",
       "title": "concrete [14]",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "031"
-      ]
+      ],
+      "project_folder": "concrete"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00818",
+    "00819",
+    "00820",
+    "00821",
+    "00822",
+    "00823",
+    "00824",
+    "00825",
+    "00826",
+    "00827",
+    "00828",
+    "00829",
+    "00830",
+    "00831"
+  ],
+  "project_folders": [
+    "concrete"
   ]
 }

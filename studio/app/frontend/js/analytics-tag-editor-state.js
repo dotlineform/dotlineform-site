@@ -1,12 +1,11 @@
 // Studio-owned tag editor state.
 import {
-  buildSeriesWorkOptions,
+  buildExactSeriesWorkOptions,
   cloneWorkStateMap,
   compareTagDisplay,
   createResolvedEntries,
   buildEditorStateDiff,
   getSeriesAssignment,
-  getSeriesIndexRow,
   normalize,
   normalizeAliasTargets,
   normalizeAssignmentRows,
@@ -25,8 +24,7 @@ export function buildAnalyticsTagEditorState(options) {
   const registryJson = options.registryJson;
   const aliasesJson = options.aliasesJson;
   const assignmentsJson = options.assignmentsJson;
-  const seriesIndexJson = options.seriesIndexJson;
-  const worksIndexJson = options.worksIndexJson;
+  const seriesRecordJson = options.seriesRecordJson;
   const config = options.config;
   const studioGroups = Array.isArray(options.studioGroups) && options.studioGroups.length
     ? options.studioGroups
@@ -68,10 +66,7 @@ export function buildAnalyticsTagEditorState(options) {
   }
   const aliasOptions = buildAliasOptions(aliases, tagsById);
 
-  const seriesIndexMap = seriesIndexJson && typeof seriesIndexJson.series === "object" ? seriesIndexJson.series : {};
-  const worksIndexMap = worksIndexJson && typeof worksIndexJson.works === "object" ? worksIndexJson.works : {};
-  const seriesRow = getSeriesIndexRow(seriesIndexMap, seriesId);
-  const seriesWorkOptions = buildSeriesWorkOptions(seriesId, seriesRow, worksIndexMap);
+  const seriesWorkOptions = buildExactSeriesWorkOptions(seriesId, seriesRecordJson);
   const seriesWorkIds = new Set(seriesWorkOptions.map((item) => item.workId));
 
   const assignmentsSeries = assignmentsJson && typeof assignmentsJson.series === "object" ? assignmentsJson.series : {};

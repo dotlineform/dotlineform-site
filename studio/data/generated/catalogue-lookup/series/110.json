@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "110",
@@ -17,47 +17,67 @@
     {
       "work_id": "00549",
       "title": "particle theory (1 layer - partial)",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "110"
-      ]
+      ],
+      "project_folder": "particle theory"
     },
     {
       "work_id": "00550",
       "title": "particle theory (1 layer)",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "110"
-      ]
+      ],
+      "project_folder": "particle theory"
     },
     {
       "work_id": "00551",
       "title": "particle theory (3 layers)",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "110"
-      ]
+      ],
+      "project_folder": "particle theory"
     },
     {
       "work_id": "00552",
       "title": "particle theory (2 layers)",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "110"
-      ]
+      ],
+      "project_folder": "particle theory"
     },
     {
       "work_id": "00553",
       "title": "particle theory (4 layers)",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "110"
-      ]
+      ],
+      "project_folder": "particle theory"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00549",
+    "00550",
+    "00551",
+    "00552",
+    "00553"
+  ],
+  "project_folders": [
+    "particle theory"
   ]
 }

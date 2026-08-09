@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "142",
@@ -17,29 +17,43 @@
     {
       "work_id": "01938",
       "title": "water",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "142"
-      ]
+      ],
+      "project_folder": "water sea pond"
     },
     {
       "work_id": "01939",
       "title": "sea",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "142"
-      ]
+      ],
+      "project_folder": "water sea pond"
     },
     {
       "work_id": "01940",
       "title": "pond",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "142"
-      ]
+      ],
+      "project_folder": "water sea pond"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01938",
+    "01939",
+    "01940"
+  ],
+  "project_folders": [
+    "water sea pond"
   ]
 }

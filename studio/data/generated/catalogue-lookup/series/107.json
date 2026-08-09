@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "107",
@@ -17,281 +17,379 @@
     {
       "work_id": "01448",
       "title": "nothing is missing - I - 1 (2023-10-08 19꞉09)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01449",
       "title": "nothing is missing - I - 2 (2023-10-08 19꞉10)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01450",
       "title": "nothing is missing - I - 3 (2023-10-08 19꞉10)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01451",
       "title": "nothing is missing - I - 4 (2023-10-08 19꞉11)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01452",
       "title": "nothing is missing - I - 5 (2023-10-08 19꞉11)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01453",
       "title": "nothing is missing - I - 6 (2023-10-09 21꞉01)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01454",
       "title": "nothing is missing - I - 7 (2023-10-09 21꞉03)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01455",
       "title": "nothing is missing - I - 8 (2023-10-11 18꞉43)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01456",
       "title": "nothing is missing - I - 9 (2023-10-11 18꞉45)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01457",
       "title": "nothing is missing - I - 10 (2023-10-11 18꞉46)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01458",
       "title": "nothing is missing - I - 11 (2023-10-11 18꞉46)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01459",
       "title": "nothing is missing - I - 12 (2023-10-11 18꞉47)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01460",
       "title": "nothing is missing - I - 13 (2023-10-11 18꞉48)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01461",
       "title": "nothing is missing - II - 1 - 1 (2023-10-12 19꞉48)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01462",
       "title": "nothing is missing - II - 1 - 2 (2023-10-12 19꞉48)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01463",
       "title": "nothing is missing - II - 2 - 1 (2023-10-12 19꞉48)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01464",
       "title": "nothing is missing - II - 2 - 2 (2023-10-12 19꞉48)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01465",
       "title": "nothing is missing - II - 2 - 3 (2023-10-12 19꞉48)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01466",
       "title": "nothing is missing - II - 2 - 4 (2023-10-12 19꞉48)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01467",
       "title": "nothing is missing - II - 3 - 1 (2023-10-12 19꞉48)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01468",
       "title": "nothing is missing - II - 3 - 2 (2023-10-12 19꞉48)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01469",
       "title": "nothing is missing - II - 4 - 1 (2023-10-12 19꞉48)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01470",
       "title": "nothing is missing - II - 4 - 2 (2023-10-12 19꞉48)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01471",
       "title": "nothing is missing - II - 4 - 3 (2023-10-12 19꞉48)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01472",
       "title": "nothing is missing - II - 5 - 1 (2023-10-12 19꞉48)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01473",
       "title": "nothing is missing - II - 5 - 2 (2023-10-12 19꞉48)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01474",
       "title": "nothing is missing - II - 6 - 1 (2023-10-12 19꞉48)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01475",
       "title": "nothing is missing - II - 6 - 2 (2023-10-12 19꞉48)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01476",
       "title": "nothing is missing - II - 6 - 3 (2023-10-12 19꞉48)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01477",
       "title": "nothing is missing - II - 7 - 1 (2023-10-12 19꞉48)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     },
     {
       "work_id": "01478",
       "title": "nothing is missing - II - 7 - 2 (2023-10-12 19꞉48)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "107"
-      ]
+      ],
+      "project_folder": "nothing is missing"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01448",
+    "01449",
+    "01450",
+    "01451",
+    "01452",
+    "01453",
+    "01454",
+    "01455",
+    "01456",
+    "01457",
+    "01458",
+    "01459",
+    "01460",
+    "01461",
+    "01462",
+    "01463",
+    "01464",
+    "01465",
+    "01466",
+    "01467",
+    "01468",
+    "01469",
+    "01470",
+    "01471",
+    "01472",
+    "01473",
+    "01474",
+    "01475",
+    "01476",
+    "01477",
+    "01478"
+  ],
+  "project_folders": [
+    "nothing is missing"
   ]
 }

@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "115",
@@ -17,290 +17,391 @@
     {
       "work_id": "01534",
       "title": "poa 1 (map 1-500)",
+      "year": 2001,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01535",
       "title": "poa 1 (map 501-1000)",
+      "year": 2001,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01536",
       "title": "poa 1 (map 1001-1500)",
+      "year": 2001,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01537",
       "title": "poa 1 (map 1501-2000)",
+      "year": 2001,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01538",
       "title": "poa 2.1",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01539",
       "title": "poa 2.2",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01540",
       "title": "poa 2.3",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01541",
       "title": "poa 2.4",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01542",
       "title": "poa 2.5",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01543",
       "title": "poa 2.6",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01544",
       "title": "poa 2.7",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01545",
       "title": "poa 2.8",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01546",
       "title": "poa 2.9",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01547",
       "title": "poa 2.10",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01548",
       "title": "poa 2.11",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01549",
       "title": "poa 2.12",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01550",
       "title": "poa 2.13",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01551",
       "title": "poa 3.1.1",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01552",
       "title": "poa 3.1.2",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01553",
       "title": "poa 3.1.3",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01554",
       "title": "poa 3.2.1",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01555",
       "title": "poa 3.2.2",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01556",
       "title": "poa 3.2.3",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01557",
       "title": "poa 3.3.1",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01558",
       "title": "poa 3.3.2",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01559",
       "title": "poa 3.3.3",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01560",
       "title": "poa 3.4.1",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01561",
       "title": "poa 3.4.2",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01562",
       "title": "poa 3.4.3",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01563",
       "title": "poa 3.5.1",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01564",
       "title": "poa 3.5.2",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     },
     {
       "work_id": "01565",
       "title": "poa 3.5.3",
+      "year": 2004,
       "year_display": "2001-04",
       "status": "published",
       "series_ids": [
         "115"
-      ]
+      ],
+      "project_folder": "poa"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01534",
+    "01535",
+    "01536",
+    "01537",
+    "01538",
+    "01539",
+    "01540",
+    "01541",
+    "01542",
+    "01543",
+    "01544",
+    "01545",
+    "01546",
+    "01547",
+    "01548",
+    "01549",
+    "01550",
+    "01551",
+    "01552",
+    "01553",
+    "01554",
+    "01555",
+    "01556",
+    "01557",
+    "01558",
+    "01559",
+    "01560",
+    "01561",
+    "01562",
+    "01563",
+    "01564",
+    "01565"
+  ],
+  "project_folders": [
+    "poa"
   ]
 }

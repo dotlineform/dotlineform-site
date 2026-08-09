@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "062",
@@ -17,38 +17,55 @@
     {
       "work_id": "00465",
       "title": "forest 1",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "062"
-      ]
+      ],
+      "project_folder": "forests (2023)"
     },
     {
       "work_id": "00466",
       "title": "forest 2",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "062"
-      ]
+      ],
+      "project_folder": "forests (2023)"
     },
     {
       "work_id": "00467",
       "title": "forest 3",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "062"
-      ]
+      ],
+      "project_folder": "forests (2023)"
     },
     {
       "work_id": "00468",
       "title": "forest 4",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "062"
-      ]
+      ],
+      "project_folder": "forests (2023)"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00465",
+    "00466",
+    "00467",
+    "00468"
+  ],
+  "project_folders": [
+    "forests (2023)"
   ]
 }

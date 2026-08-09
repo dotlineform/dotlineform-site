@@ -4,11 +4,10 @@ import {
   loadStudioConfig
 } from "./studio-config.js";
 import {
-  loadSiteSeriesIndexJson,
-  loadSiteWorksIndexJson,
   loadAnalyticsAliasesJson,
   loadAnalyticsAssignmentsJson,
-  loadAnalyticsRegistryJson
+  loadAnalyticsRegistryJson,
+  loadStudioSeriesRecordJson
 } from "./studio-tag-data.js";
 import {
   configureAnalyticsTagEditorDomain,
@@ -108,12 +107,11 @@ async function initAnalyticsTagEditor() {
   }
 
   try {
-    const [registryJson, aliasesJson, assignmentsJson, seriesIndexJson, worksIndexJson] = await Promise.all([
+    const [registryJson, aliasesJson, assignmentsJson, seriesRecordJson] = await Promise.all([
       loadAnalyticsRegistryJson(config),
       loadAnalyticsAliasesJson(config),
       loadAnalyticsAssignmentsJson(config),
-      loadSiteSeriesIndexJson(config),
-      loadSiteWorksIndexJson(config)
+      loadStudioSeriesRecordJson(config, seriesId, { cache: "no-store" })
     ]);
     const state = buildAnalyticsTagEditorState({
       mount,
@@ -121,8 +119,7 @@ async function initAnalyticsTagEditor() {
       registryJson,
       aliasesJson,
       assignmentsJson,
-      seriesIndexJson,
-      worksIndexJson,
+      seriesRecordJson,
       config,
       studioGroups: ANALYTICS_GROUPS,
       defaultWeight: DEFAULT_WEIGHT
@@ -140,7 +137,7 @@ async function initAnalyticsTagEditor() {
       analyticsTagEditorText(
         config,
         "load_failed_error",
-        "Failed to load tag data. Check /studio/api/tags/tag-registry, /studio/api/tags/tag-aliases, /studio/api/tags/tag-assignments, /assets/data/series_index.json, and /assets/data/works_index.json."
+        "Failed to load tag data. Check the Studio tag APIs and exact Catalogue Series read service."
       )
     );
     setStudioRouteReady(routeRoot, true, {

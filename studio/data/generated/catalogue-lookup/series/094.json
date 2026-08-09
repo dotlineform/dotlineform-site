@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "094",
@@ -17,11 +17,19 @@
     {
       "work_id": "01422",
       "title": "matter",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "094"
-      ]
+      ],
+      "project_folder": "matter"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01422"
+  ],
+  "project_folders": [
+    "matter"
   ]
 }

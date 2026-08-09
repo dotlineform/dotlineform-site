@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "021",
@@ -17,47 +17,67 @@
     {
       "work_id": "00801",
       "title": "book dna",
+      "year": 2010,
       "year_display": "2010",
       "status": "published",
       "series_ids": [
         "021"
-      ]
+      ],
+      "project_folder": "book dna"
     },
     {
       "work_id": "00802",
       "title": "book atomic",
+      "year": 2010,
       "year_display": "2010",
       "status": "published",
       "series_ids": [
         "021"
-      ]
+      ],
+      "project_folder": "book dna"
     },
     {
       "work_id": "00803",
       "title": "book diagrams 1",
+      "year": 2010,
       "year_display": "2010",
       "status": "published",
       "series_ids": [
         "021"
-      ]
+      ],
+      "project_folder": "book dna"
     },
     {
       "work_id": "00804",
       "title": "book diagrams 2",
+      "year": 2010,
       "year_display": "2010",
       "status": "published",
       "series_ids": [
         "021"
-      ]
+      ],
+      "project_folder": "book dna"
     },
     {
       "work_id": "00805",
       "title": "book dna sequence",
+      "year": 2010,
       "year_display": "2010",
       "status": "published",
       "series_ids": [
         "021"
-      ]
+      ],
+      "project_folder": "book dna"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00801",
+    "00802",
+    "00803",
+    "00804",
+    "00805"
+  ],
+  "project_folders": [
+    "book dna"
   ]
 }

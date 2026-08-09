@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "130",
@@ -17,29 +17,43 @@
     {
       "work_id": "01735",
       "title": "sunflower forms",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "130"
-      ]
+      ],
+      "project_folder": "sunflower"
     },
     {
       "work_id": "01736",
       "title": "sunflower forms grid",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "130"
-      ]
+      ],
+      "project_folder": "sunflower"
     },
     {
       "work_id": "01737",
       "title": "sunflower path",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "130"
-      ]
+      ],
+      "project_folder": "sunflower"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01735",
+    "01736",
+    "01737"
+  ],
+  "project_folders": [
+    "sunflower"
   ]
 }

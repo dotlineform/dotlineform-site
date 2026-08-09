@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "116",
@@ -17,155 +17,211 @@
     {
       "work_id": "01566",
       "title": "pole vault (1)",
+      "year": 2004,
       "year_display": "2004",
       "status": "published",
       "series_ids": [
         "116"
-      ]
+      ],
+      "project_folder": "pole vault"
     },
     {
       "work_id": "01567",
       "title": "pole vault (2)",
+      "year": 2004,
       "year_display": "2004",
       "status": "published",
       "series_ids": [
         "116"
-      ]
+      ],
+      "project_folder": "pole vault"
     },
     {
       "work_id": "01568",
       "title": "pole vault (3)",
+      "year": 2004,
       "year_display": "2004",
       "status": "published",
       "series_ids": [
         "116"
-      ]
+      ],
+      "project_folder": "pole vault"
     },
     {
       "work_id": "01569",
       "title": "pole vault (4)",
+      "year": 2004,
       "year_display": "2004",
       "status": "published",
       "series_ids": [
         "116"
-      ]
+      ],
+      "project_folder": "pole vault"
     },
     {
       "work_id": "01570",
       "title": "pole vault (5)",
+      "year": 2004,
       "year_display": "2004",
       "status": "published",
       "series_ids": [
         "116"
-      ]
+      ],
+      "project_folder": "pole vault"
     },
     {
       "work_id": "01571",
       "title": "pole vault (becker)",
+      "year": 2004,
       "year_display": "2004",
       "status": "published",
       "series_ids": [
         "116"
-      ]
+      ],
+      "project_folder": "pole vault"
     },
     {
       "work_id": "01572",
       "title": "pole vault (elisdottir 1)",
+      "year": 2004,
       "year_display": "2004",
       "status": "published",
       "series_ids": [
         "116"
-      ]
+      ],
+      "project_folder": "pole vault"
     },
     {
       "work_id": "01573",
       "title": "pole vault (elisdottir 2)",
+      "year": 2004,
       "year_display": "2004",
       "status": "published",
       "series_ids": [
         "116"
-      ]
+      ],
+      "project_folder": "pole vault"
     },
     {
       "work_id": "01574",
       "title": "pole vault (feofanova 1)",
+      "year": 2004,
       "year_display": "2004",
       "status": "published",
       "series_ids": [
         "116"
-      ]
+      ],
+      "project_folder": "pole vault"
     },
     {
       "work_id": "01575",
       "title": "pole vault (grigorieva 1)",
+      "year": 2004,
       "year_display": "2004",
       "status": "published",
       "series_ids": [
         "116"
-      ]
+      ],
+      "project_folder": "pole vault"
     },
     {
       "work_id": "01576",
       "title": "pole vault (grigorieva 2)",
+      "year": 2004,
       "year_display": "2004",
       "status": "published",
       "series_ids": [
         "116"
-      ]
+      ],
+      "project_folder": "pole vault"
     },
     {
       "work_id": "01577",
       "title": "pole vault (grigorieva 3)",
+      "year": 2004,
       "year_display": "2004",
       "status": "published",
       "series_ids": [
         "116"
-      ]
+      ],
+      "project_folder": "pole vault"
     },
     {
       "work_id": "01578",
       "title": "pole vault (isinbajeva 1)",
+      "year": 2004,
       "year_display": "2004",
       "status": "published",
       "series_ids": [
         "116"
-      ]
+      ],
+      "project_folder": "pole vault"
     },
     {
       "work_id": "01579",
       "title": "pole vault (pyrek 1)",
+      "year": 2004,
       "year_display": "2004",
       "status": "published",
       "series_ids": [
         "116"
-      ]
+      ],
+      "project_folder": "pole vault"
     },
     {
       "work_id": "01580",
       "title": "pole vault (pyrek 2)",
+      "year": 2004,
       "year_display": "2004",
       "status": "published",
       "series_ids": [
         "116"
-      ]
+      ],
+      "project_folder": "pole vault"
     },
     {
       "work_id": "01581",
       "title": "pole vault (pyrek 3)",
+      "year": 2004,
       "year_display": "2004",
       "status": "published",
       "series_ids": [
         "116"
-      ]
+      ],
+      "project_folder": "pole vault"
     },
     {
       "work_id": "01582",
       "title": "pole vault (pyrek 4)",
+      "year": 2004,
       "year_display": "2004",
       "status": "published",
       "series_ids": [
         "116"
-      ]
+      ],
+      "project_folder": "pole vault"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01566",
+    "01567",
+    "01568",
+    "01569",
+    "01570",
+    "01571",
+    "01572",
+    "01573",
+    "01574",
+    "01575",
+    "01576",
+    "01577",
+    "01578",
+    "01579",
+    "01580",
+    "01581",
+    "01582"
+  ],
+  "project_folders": [
+    "pole vault"
   ]
 }

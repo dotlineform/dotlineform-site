@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "015",
@@ -17,164 +17,223 @@
     {
       "work_id": "00756",
       "title": "base cs",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "015"
-      ]
+      ],
+      "project_folder": "base series"
     },
     {
       "work_id": "00757",
       "title": "base k (1)",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "015"
-      ]
+      ],
+      "project_folder": "base series"
     },
     {
       "work_id": "00758",
       "title": "base k (2)",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "015"
-      ]
+      ],
+      "project_folder": "base series"
     },
     {
       "work_id": "00759",
       "title": "base k (2) dissected 1",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "015"
-      ]
+      ],
+      "project_folder": "base series"
     },
     {
       "work_id": "00760",
       "title": "base k (2) dissected 2",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "015"
-      ]
+      ],
+      "project_folder": "base series"
     },
     {
       "work_id": "00761",
       "title": "base k (2) edit",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "015"
-      ]
+      ],
+      "project_folder": "base series"
     },
     {
       "work_id": "00762",
       "title": "base k (3)",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "015"
-      ]
+      ],
+      "project_folder": "base series"
     },
     {
       "work_id": "00763",
       "title": "base m",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "015"
-      ]
+      ],
+      "project_folder": "base series"
     },
     {
       "work_id": "00764",
       "title": "base nerve (1)",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "015"
-      ]
+      ],
+      "project_folder": "base series"
     },
     {
       "work_id": "00765",
       "title": "base nerve (2)",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "015"
-      ]
+      ],
+      "project_folder": "base series"
     },
     {
       "work_id": "00766",
       "title": "base nerve (2) edges 1",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "015"
-      ]
+      ],
+      "project_folder": "base series"
     },
     {
       "work_id": "00767",
       "title": "base nerve (2) edges 2",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "015"
-      ]
+      ],
+      "project_folder": "base series"
     },
     {
       "work_id": "00768",
       "title": "base nerve (2) edges 3",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "015"
-      ]
+      ],
+      "project_folder": "base series"
     },
     {
       "work_id": "00769",
       "title": "base nerve (2) edges 4",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "015"
-      ]
+      ],
+      "project_folder": "base series"
     },
     {
       "work_id": "00770",
       "title": "base nerve (3)",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "015"
-      ]
+      ],
+      "project_folder": "base series"
     },
     {
       "work_id": "00771",
       "title": "base pearls",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "015"
-      ]
+      ],
+      "project_folder": "base series"
     },
     {
       "work_id": "00772",
       "title": "base s",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "015"
-      ]
+      ],
+      "project_folder": "base series"
     },
     {
       "work_id": "00773",
       "title": "base sb",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "015"
-      ]
+      ],
+      "project_folder": "base series"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00756",
+    "00757",
+    "00758",
+    "00759",
+    "00760",
+    "00761",
+    "00762",
+    "00763",
+    "00764",
+    "00765",
+    "00766",
+    "00767",
+    "00768",
+    "00769",
+    "00770",
+    "00771",
+    "00772",
+    "00773"
+  ],
+  "project_folders": [
+    "base series"
   ]
 }

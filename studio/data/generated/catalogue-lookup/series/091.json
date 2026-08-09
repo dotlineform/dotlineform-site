@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "091",
@@ -17,11 +17,19 @@
     {
       "work_id": "00388",
       "title": "lipseyes",
+      "year": 2003,
       "year_display": "2003",
       "status": "published",
       "series_ids": [
         "091"
-      ]
+      ],
+      "project_folder": "lipseyes"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00388"
+  ],
+  "project_folders": [
+    "lipseyes"
   ]
 }

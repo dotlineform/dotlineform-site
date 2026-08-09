@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "080",
@@ -17,29 +17,43 @@
     {
       "work_id": "01391",
       "title": "interior design 1",
+      "year": 2005,
       "year_display": "2005",
       "status": "published",
       "series_ids": [
         "080"
-      ]
+      ],
+      "project_folder": "interior design"
     },
     {
       "work_id": "01392",
       "title": "interior design 2",
+      "year": 2005,
       "year_display": "2005",
       "status": "published",
       "series_ids": [
         "080"
-      ]
+      ],
+      "project_folder": "interior design"
     },
     {
       "work_id": "01393",
       "title": "interior design 3",
+      "year": 2005,
       "year_display": "2005",
       "status": "published",
       "series_ids": [
         "080"
-      ]
+      ],
+      "project_folder": "interior design"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01391",
+    "01392",
+    "01393"
+  ],
+  "project_folders": [
+    "interior design"
   ]
 }

@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "066",
@@ -17,20 +17,31 @@
     {
       "work_id": "01200",
       "title": "forms painting",
+      "year": 1990,
       "year_display": "c. 1990-92?",
       "status": "published",
       "series_ids": [
         "066"
-      ]
+      ],
+      "project_folder": "forms painting"
     },
     {
       "work_id": "01201",
       "title": "forms painting (reverse)",
+      "year": 1990,
       "year_display": "c. 1990-92?",
       "status": "published",
       "series_ids": [
         "066"
-      ]
+      ],
+      "project_folder": "forms painting"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01200",
+    "01201"
+  ],
+  "project_folders": [
+    "forms painting"
   ]
 }

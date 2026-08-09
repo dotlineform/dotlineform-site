@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "029",
@@ -17,47 +17,67 @@
     {
       "work_id": "00813",
       "title": "colours 1958-2001",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "029"
-      ]
+      ],
+      "project_folder": "colours"
     },
     {
       "work_id": "00814",
       "title": "colours belsen",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "029"
-      ]
+      ],
+      "project_folder": "colours"
     },
     {
       "work_id": "00815",
       "title": "colours dachau",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "029"
-      ]
+      ],
+      "project_folder": "colours"
     },
     {
       "work_id": "00816",
       "title": "colours kylie",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "029"
-      ]
+      ],
+      "project_folder": "colours"
     },
     {
       "work_id": "00817",
       "title": "colours marilyn",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "029"
-      ]
+      ],
+      "project_folder": "colours"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00813",
+    "00814",
+    "00815",
+    "00816",
+    "00817"
+  ],
+  "project_folders": [
+    "colours"
   ]
 }

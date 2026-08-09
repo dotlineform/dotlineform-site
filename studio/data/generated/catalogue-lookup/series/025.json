@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "025",
@@ -17,20 +17,31 @@
     {
       "work_id": "00811",
       "title": "close",
+      "year": 2017,
       "year_display": "2017",
       "status": "published",
       "series_ids": [
         "025"
-      ]
+      ],
+      "project_folder": "closeness"
     },
     {
       "work_id": "00812",
       "title": "closer",
+      "year": 2017,
       "year_display": "2017",
       "status": "published",
       "series_ids": [
         "025"
-      ]
+      ],
+      "project_folder": "closeness"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00811",
+    "00812"
+  ],
+  "project_folders": [
+    "closeness"
   ]
 }

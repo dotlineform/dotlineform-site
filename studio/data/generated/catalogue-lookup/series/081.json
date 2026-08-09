@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "081",
@@ -17,11 +17,19 @@
     {
       "work_id": "00457",
       "title": "intuition (2020)",
+      "year": 2020,
       "year_display": "c. 2001-11",
       "status": "published",
       "series_ids": [
         "081"
-      ]
+      ],
+      "project_folder": "intuition (2020)"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00457"
+  ],
+  "project_folders": [
+    "intuition (2020)"
   ]
 }

@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "077",
@@ -17,47 +17,67 @@
     {
       "work_id": "01367",
       "title": "home 1",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "077"
-      ]
+      ],
+      "project_folder": "home"
     },
     {
       "work_id": "01368",
       "title": "home 2",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "077"
-      ]
+      ],
+      "project_folder": "home"
     },
     {
       "work_id": "01369",
       "title": "home 3",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "077"
-      ]
+      ],
+      "project_folder": "home"
     },
     {
       "work_id": "01370",
       "title": "home 4",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "077"
-      ]
+      ],
+      "project_folder": "home"
     },
     {
       "work_id": "01371",
       "title": "home 5",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "077"
-      ]
+      ],
+      "project_folder": "home"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01367",
+    "01368",
+    "01369",
+    "01370",
+    "01371"
+  ],
+  "project_folders": [
+    "home"
   ]
 }

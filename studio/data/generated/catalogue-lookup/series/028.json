@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "028",
@@ -17,83 +17,115 @@
     {
       "work_id": "00217",
       "title": "colouring book 1",
+      "year": 1996,
       "year_display": "1996",
       "status": "published",
       "series_ids": [
         "028"
-      ]
+      ],
+      "project_folder": "colouring book"
     },
     {
       "work_id": "00218",
       "title": "colouring book 2",
+      "year": 1996,
       "year_display": "1996",
       "status": "published",
       "series_ids": [
         "028"
-      ]
+      ],
+      "project_folder": "colouring book"
     },
     {
       "work_id": "00219",
       "title": "colouring book 3",
+      "year": 1996,
       "year_display": "1996",
       "status": "published",
       "series_ids": [
         "028"
-      ]
+      ],
+      "project_folder": "colouring book"
     },
     {
       "work_id": "00220",
       "title": "colouring book 4",
+      "year": 1996,
       "year_display": "1996",
       "status": "published",
       "series_ids": [
         "028"
-      ]
+      ],
+      "project_folder": "colouring book"
     },
     {
       "work_id": "00221",
       "title": "colouring book 5",
+      "year": 1996,
       "year_display": "1996",
       "status": "published",
       "series_ids": [
         "028"
-      ]
+      ],
+      "project_folder": "colouring book"
     },
     {
       "work_id": "00222",
       "title": "colouring book 6",
+      "year": 1996,
       "year_display": "1996",
       "status": "published",
       "series_ids": [
         "028"
-      ]
+      ],
+      "project_folder": "colouring book"
     },
     {
       "work_id": "00223",
       "title": "colouring book 7",
+      "year": 1996,
       "year_display": "1996",
       "status": "published",
       "series_ids": [
         "028"
-      ]
+      ],
+      "project_folder": "colouring book"
     },
     {
       "work_id": "00224",
       "title": "colouring book 8",
+      "year": 1996,
       "year_display": "1996",
       "status": "published",
       "series_ids": [
         "028"
-      ]
+      ],
+      "project_folder": "colouring book"
     },
     {
       "work_id": "00225",
       "title": "colouring book 9",
+      "year": 1996,
       "year_display": "1996",
       "status": "published",
       "series_ids": [
         "028"
-      ]
+      ],
+      "project_folder": "colouring book"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00217",
+    "00218",
+    "00219",
+    "00220",
+    "00221",
+    "00222",
+    "00223",
+    "00224",
+    "00225"
+  ],
+  "project_folders": [
+    "colouring book"
   ]
 }

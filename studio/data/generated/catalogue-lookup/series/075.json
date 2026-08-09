@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "075",
@@ -17,47 +17,67 @@
     {
       "work_id": "00379",
       "title": "harmony 3",
+      "year": 2009,
       "year_display": "2009",
       "status": "published",
       "series_ids": [
         "075"
-      ]
+      ],
+      "project_folder": "harmony"
     },
     {
       "work_id": "00380",
       "title": "harmony 1",
+      "year": 2009,
       "year_display": "2009",
       "status": "published",
       "series_ids": [
         "075"
-      ]
+      ],
+      "project_folder": "harmony"
     },
     {
       "work_id": "00381",
       "title": "harmony 2",
+      "year": 2009,
       "year_display": "2009",
       "status": "published",
       "series_ids": [
         "075"
-      ]
+      ],
+      "project_folder": "harmony"
     },
     {
       "work_id": "00382",
       "title": "harmony 2 residue",
+      "year": 2009,
       "year_display": "2009",
       "status": "published",
       "series_ids": [
         "075"
-      ]
+      ],
+      "project_folder": "harmony"
     },
     {
       "work_id": "00620",
       "title": "harmony 3 (version)",
+      "year": 2009,
       "year_display": "2009",
       "status": "published",
       "series_ids": [
         "075"
-      ]
+      ],
+      "project_folder": "harmony"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00380",
+    "00381",
+    "00382",
+    "00379",
+    "00620"
+  ],
+  "project_folders": [
+    "harmony"
   ]
 }

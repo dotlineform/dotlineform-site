@@ -31,6 +31,7 @@ ROUTES = [
             "/studio/api/tags/tag-aliases",
             "/studio/api/tags/tag-assignments",
             "/studio/api/tags/tag-groups",
+            "/studio/api/catalogue/read?key=catalogue_lookup_series_search",
         ],
     },
     {
@@ -55,6 +56,7 @@ ROUTES = [
             "/studio/api/tags/tag-assignments",
             "/studio/api/tags/tag-registry",
             "/studio/api/tags/tag-groups",
+            "/studio/api/catalogue/read?key=catalogue_lookup_series_search",
         ],
     },
     {
@@ -68,6 +70,8 @@ ROUTES = [
             "/studio/api/tags/tag-aliases",
             "/studio/api/tags/tag-assignments",
             "/studio/api/tags/health",
+            "/studio/api/catalogue/read?key=catalogue_lookup_series_base&record_id=036",
+            "/studio/api/catalogue/read?key=catalogue_work_record&record_id=00361",
         ],
     },
 ]
@@ -106,10 +110,25 @@ def main(argv: list[str] | None = None) -> int:
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
             page = browser.new_page()
+            page.route(
+                "**/assets/data/search/library/document-locations.json",
+                lambda route: route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps(
+                        {
+                            "schema_version": "docs_document_locations_v1",
+                            "scope_id": "library",
+                            "records": [],
+                        }
+                    ),
+                ),
+            )
             console_errors: list[str] = []
             page_errors: list[str] = []
             requests: list[str] = []
             external_tag_requests: list[str] = []
+            public_catalogue_data_requests: list[str] = []
             page.on("console", lambda message: console_errors.append(message.text) if message.type == "error" else None)
             page.on("pageerror", lambda error: page_errors.append(str(error)))
             page.on("request", lambda request: requests.append(request.url))
@@ -117,6 +136,15 @@ def main(argv: list[str] | None = None) -> int:
                 "request",
                 lambda request: external_tag_requests.append(request.url)
                 if "/studio/api/tags/" in request.url and not request.url.startswith(base_url)
+                else None,
+            )
+            page.on(
+                "request",
+                lambda request: public_catalogue_data_requests.append(request.url)
+                if "/assets/data/series_index.json" in request.url
+                or "/assets/data/works_index.json" in request.url
+                or "/assets/series/index/" in request.url
+                or "/assets/works/index/" in request.url
                 else None,
             )
 
@@ -200,6 +228,10 @@ def main(argv: list[str] | None = None) -> int:
                 raise AssertionError(f"{route['path']} did not request expected local APIs: {missing!r}")
         if external_tag_requests:
             raise AssertionError(f"Studio tag routes should use same-origin APIs: {external_tag_requests!r}")
+        if public_catalogue_data_requests:
+            raise AssertionError(
+                f"Studio tag routes retained public Catalogue data reads: {public_catalogue_data_requests!r}"
+            )
         if console_errors:
             raise AssertionError(f"console errors: {console_errors}")
         if page_errors:

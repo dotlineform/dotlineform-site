@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "069",
@@ -17,11 +17,19 @@
     {
       "work_id": "01250",
       "title": "genetic",
+      "year": 2020,
       "year_display": "c. 2001-11",
       "status": "published",
       "series_ids": [
         "069"
-      ]
+      ],
+      "project_folder": "genetic (2020)"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01250"
+  ],
+  "project_folders": [
+    "genetic (2020)"
   ]
 }

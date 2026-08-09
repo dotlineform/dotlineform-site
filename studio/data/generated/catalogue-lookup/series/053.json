@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "053",
@@ -17,146 +17,199 @@
     {
       "work_id": "01055",
       "title": "fluid form 1",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "053"
-      ]
+      ],
+      "project_folder": "fluid forms"
     },
     {
       "work_id": "01056",
       "title": "fluid form 2",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "053"
-      ]
+      ],
+      "project_folder": "fluid forms"
     },
     {
       "work_id": "01057",
       "title": "fluid form 3",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "053"
-      ]
+      ],
+      "project_folder": "fluid forms"
     },
     {
       "work_id": "01058",
       "title": "fluid form 4",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "053"
-      ]
+      ],
+      "project_folder": "fluid forms"
     },
     {
       "work_id": "01059",
       "title": "fluid form 5",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "053"
-      ]
+      ],
+      "project_folder": "fluid forms"
     },
     {
       "work_id": "01060",
       "title": "fluid form 6",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "053"
-      ]
+      ],
+      "project_folder": "fluid forms"
     },
     {
       "work_id": "01061",
       "title": "fluid form 7",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "053"
-      ]
+      ],
+      "project_folder": "fluid forms"
     },
     {
       "work_id": "01062",
       "title": "fluid form 8",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "053"
-      ]
+      ],
+      "project_folder": "fluid forms"
     },
     {
       "work_id": "01063",
       "title": "fluid form 9",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "053"
-      ]
+      ],
+      "project_folder": "fluid forms"
     },
     {
       "work_id": "01064",
       "title": "fluid form 10",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "053"
-      ]
+      ],
+      "project_folder": "fluid forms"
     },
     {
       "work_id": "01065",
       "title": "fluid form 11",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "053"
-      ]
+      ],
+      "project_folder": "fluid forms"
     },
     {
       "work_id": "01066",
       "title": "fluid form 12",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "053"
-      ]
+      ],
+      "project_folder": "fluid forms"
     },
     {
       "work_id": "01067",
       "title": "fluid form 13",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "053"
-      ]
+      ],
+      "project_folder": "fluid forms"
     },
     {
       "work_id": "01068",
       "title": "fluid form 14",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "053"
-      ]
+      ],
+      "project_folder": "fluid forms"
     },
     {
       "work_id": "01069",
       "title": "fluid form 15",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "053"
-      ]
+      ],
+      "project_folder": "fluid forms"
     },
     {
       "work_id": "01070",
       "title": "fluid form 16",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "053"
-      ]
+      ],
+      "project_folder": "fluid forms"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01055",
+    "01056",
+    "01057",
+    "01058",
+    "01059",
+    "01060",
+    "01061",
+    "01062",
+    "01063",
+    "01064",
+    "01065",
+    "01066",
+    "01067",
+    "01068",
+    "01069",
+    "01070"
+  ],
+  "project_folders": [
+    "fluid forms"
   ]
 }

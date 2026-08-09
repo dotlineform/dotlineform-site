@@ -1416,6 +1416,7 @@ def assert_studio_tag_editor_direct_save_failure(page: Page) -> None:
         """async () => {
             document.body.innerHTML = '<main><div id="seriesTagEditorRoot"></div></main>';
             const stateModule = await import('/studio/app/frontend/js/analytics-tag-editor-state.js');
+            const domain = await import('/studio/app/frontend/js/analytics-tag-editor-domain.js');
             const interactions = await import('/studio/app/frontend/js/analytics-tag-editor-interactions.js');
             const saveController = await import('/studio/app/frontend/js/analytics-tag-editor-save-controller.js');
             const alpha = { tag_id: 'alpha', group: 'subject', slug: 'alpha' };
@@ -1432,13 +1433,21 @@ def assert_studio_tag_editor_direct_save_failure(page: Page) -> None:
                         }
                     }
                 },
-                seriesIndexJson: { series: { demo: { works: [] } } },
-                worksIndexJson: { works: {} },
+                seriesRecordJson: {
+                    series: { series_id: 'demo', status: 'published' },
+                    ordered_published_work_ids: [],
+                    member_works: []
+                },
                 config: {},
                 studioGroups: ['subject', 'domain'],
                 defaultWeight: 0.6
             });
             interactions.addAnalyticsTagEditorResolvedTag(state, beta, { rawInput: 'beta' });
+            const wrongTargetOptions = domain.buildExactSeriesWorkOptions('demo', {
+                series: { series_id: 'other', status: 'published' },
+                ordered_published_work_ids: ['00001'],
+                member_works: [{ work_id: '00001', title: 'Wrong', status: 'published', series_ids: ['other'] }]
+            });
             const baselineBefore = JSON.stringify(state.baselineSeriesRows);
             let saveResult = null;
             let renderCount = 0;
@@ -1464,7 +1473,8 @@ def assert_studio_tag_editor_direct_save_failure(page: Page) -> None:
                 saveResult,
                 serviceAvailable: state.serviceAvailable,
                 isBusy: state.isBusy,
-                renderCount
+                renderCount,
+                wrongTargetOptionCount: wrongTargetOptions.length
             };
         }"""
     )
@@ -1479,6 +1489,7 @@ def assert_studio_tag_editor_direct_save_failure(page: Page) -> None:
     assert result["serviceAvailable"] is False
     assert result["isBusy"] is False
     assert result["renderCount"] == 1
+    assert result["wrongTargetOptionCount"] == 0
 
 
 def run(site_root: Path) -> None:

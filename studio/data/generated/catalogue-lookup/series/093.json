@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "093",
@@ -17,47 +17,67 @@
     {
       "work_id": "01417",
       "title": "fur map",
+      "year": 2004,
       "year_display": "2004, 2011",
       "status": "published",
       "series_ids": [
         "093"
-      ]
+      ],
+      "project_folder": "maps"
     },
     {
       "work_id": "01418",
       "title": "hudf (black)",
+      "year": 2004,
       "year_display": "2004, 2011",
       "status": "published",
       "series_ids": [
         "093"
-      ]
+      ],
+      "project_folder": "maps"
     },
     {
       "work_id": "01419",
       "title": "hudf (white)",
+      "year": 2004,
       "year_display": "2004, 2011",
       "status": "published",
       "series_ids": [
         "093"
-      ]
+      ],
+      "project_folder": "maps"
     },
     {
       "work_id": "01420",
       "title": "kylie grid map",
+      "year": 2004,
       "year_display": "2004, 2011",
       "status": "published",
       "series_ids": [
         "093"
-      ]
+      ],
+      "project_folder": "maps"
     },
     {
       "work_id": "01421",
       "title": "kylie map",
+      "year": 2004,
       "year_display": "2004, 2011",
       "status": "published",
       "series_ids": [
         "093"
-      ]
+      ],
+      "project_folder": "maps"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01417",
+    "01418",
+    "01419",
+    "01420",
+    "01421"
+  ],
+  "project_folders": [
+    "maps"
   ]
 }

@@ -9,10 +9,10 @@ import {
   buildAnalyticsGroupDescriptionMap,
   buildAnalyticsRegistryLookup,
   getAnalyticsAssignmentsSeries,
-  loadSiteSeriesIndexJson,
   loadAnalyticsAssignmentsJson,
   loadAnalyticsGroupsJson,
   loadAnalyticsRegistryJson,
+  loadStudioSeriesSearchJson,
   normalizeAnalyticsValue as normalize
 } from "./studio-tag-data.js";
 import {
@@ -169,15 +169,12 @@ function parseSeriesDataFromInline(config) {
 }
 
 async function fetchSeriesDataFromIndex(config) {
-  const payload = await loadSiteSeriesIndexJson(config);
-  const seriesMap = payload && typeof payload.series === "object" && payload.series !== null
-    ? payload.series
-    : {};
-  return Object.keys(seriesMap)
-    .filter((seriesId) => isPrimarySeriesEntry(seriesMap[seriesId]))
-    .map((seriesId) => {
-      const row = seriesMap[seriesId];
-      const sid = normalize(seriesId);
+  const payload = await loadStudioSeriesSearchJson(config, { cache: "no-store" });
+  const items = Array.isArray(payload && payload.items) ? payload.items : [];
+  return items
+    .filter((row) => isPrimarySeriesEntry(row) && normalize(row && row.status) === "published")
+    .map((row) => {
+      const sid = normalize(row && row.series_id);
       const title = String((row && row.title) || sid).trim();
       return {
         seriesId: sid,

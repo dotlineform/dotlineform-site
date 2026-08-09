@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "136",
@@ -17,29 +17,43 @@
     {
       "work_id": "00546",
       "title": "tree",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "136"
-      ]
+      ],
+      "project_folder": "tree"
     },
     {
       "work_id": "00547",
       "title": "tree (tint)",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "136"
-      ]
+      ],
+      "project_folder": "tree"
     },
     {
       "work_id": "00548",
       "title": "tree source",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "136"
-      ]
+      ],
+      "project_folder": "tree"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00546",
+    "00547",
+    "00548"
+  ],
+  "project_folders": [
+    "tree"
   ]
 }

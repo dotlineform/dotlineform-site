@@ -127,10 +127,6 @@
   },
   "paths": {
     "data": {
-      "site": {
-        "series_index": "/assets/data/series_index.json",
-        "works_index": "/assets/data/works_index.json"
-      },
       "studio": {
         "catalogue_works": "/studio/data/canonical/catalogue/works.json",
         "catalogue_series": "/studio/data/canonical/catalogue/series.json",

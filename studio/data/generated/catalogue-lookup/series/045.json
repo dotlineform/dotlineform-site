@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "045",
@@ -17,272 +17,367 @@
     {
       "work_id": "01007",
       "title": "droplets (2014-04-21 - 18-43-56)",
+      "year": 2014,
       "year_display": "2014",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01008",
       "title": "droplets (2014-04-29 - 10-46-33)",
+      "year": 2014,
       "year_display": "2014",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01009",
       "title": "droplets (2014-06-14 - 21-11-55)",
+      "year": 2014,
       "year_display": "2014",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01010",
       "title": "droplets (2014-06-22 - 11-16-46)",
+      "year": 2014,
       "year_display": "2014",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01011",
       "title": "droplets (2014-06-22 - 13-57-44)",
+      "year": 2014,
       "year_display": "2014",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01012",
       "title": "droplets (2014-12-18 - 09-36-41)",
+      "year": 2014,
       "year_display": "2014",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01013",
       "title": "droplets (2015-02-10 - 14-57-00)",
+      "year": 2015,
       "year_display": "2015",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01014",
       "title": "droplets (2015-06-08 - 10-25-53)",
+      "year": 2015,
       "year_display": "2015",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01015",
       "title": "droplets (2015-06-11 - 20-28-37)",
+      "year": 2015,
       "year_display": "2015",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01016",
       "title": "droplets (2015-06-14 - 16-49-51)",
+      "year": 2015,
       "year_display": "2015",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01017",
       "title": "droplets (2015-06-16 - 11-28-38)",
+      "year": 2015,
       "year_display": "2015",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01018",
       "title": "droplets (2015-06-21 - 18-03-26)",
+      "year": 2015,
       "year_display": "2015",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01019",
       "title": "droplets (2015-06-25 - 15-54-18)",
+      "year": 2015,
       "year_display": "2015",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01020",
       "title": "droplets (2015-07-05 - 13-04-54)",
+      "year": 2015,
       "year_display": "2015",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01021",
       "title": "droplets (2015-07-13 - 09-43-57)",
+      "year": 2015,
       "year_display": "2015",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01022",
       "title": "droplets (2015-07-13 - 09-44-01)",
+      "year": 2015,
       "year_display": "2015",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01023",
       "title": "droplets (2015-07-13 - 09-44-08)",
+      "year": 2015,
       "year_display": "2015",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01024",
       "title": "droplets (2015-07-13 - 10-41-46)",
+      "year": 2015,
       "year_display": "2015",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01025",
       "title": "droplets (2015-07-13 - 12-45-05)",
+      "year": 2015,
       "year_display": "2015",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01026",
       "title": "droplets (2015-07-13 - 12-46-24)",
+      "year": 2015,
       "year_display": "2015",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01027",
       "title": "droplets (2015-07-15 - 11-11-16)",
+      "year": 2015,
       "year_display": "2015",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01028",
       "title": "droplets (2015-07-20 - 13-14-34)",
+      "year": 2015,
       "year_display": "2015",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01029",
       "title": "droplets (2015-07-20 - 17-42-37)",
+      "year": 2015,
       "year_display": "2015",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01030",
       "title": "droplets (2015-07-20 - 17-42-49)",
+      "year": 2015,
       "year_display": "2015",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01031",
       "title": "droplets (2015-07-27 - 13-27-17)",
+      "year": 2015,
       "year_display": "2015",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01032",
       "title": "droplets (2015-08-03 - 09-31-45)",
+      "year": 2015,
       "year_display": "2015",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01033",
       "title": "droplets (2015-08-03 - 10-38-26)",
+      "year": 2015,
       "year_display": "2015",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01034",
       "title": "droplets (2016-04-02 - 19-17-11)",
+      "year": 2016,
       "year_display": "2016",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01035",
       "title": "droplets (2016-05-23 - 17-59-55)",
+      "year": 2016,
       "year_display": "2016",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     },
     {
       "work_id": "01036",
       "title": "droplets (2016-05-23 - 17-59-58)",
+      "year": 2016,
       "year_display": "2016",
       "status": "published",
       "series_ids": [
         "045"
-      ]
+      ],
+      "project_folder": "droplets"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01007",
+    "01008",
+    "01009",
+    "01010",
+    "01011",
+    "01012",
+    "01013",
+    "01014",
+    "01015",
+    "01016",
+    "01017",
+    "01018",
+    "01019",
+    "01020",
+    "01021",
+    "01022",
+    "01023",
+    "01024",
+    "01025",
+    "01026",
+    "01027",
+    "01028",
+    "01029",
+    "01030",
+    "01031",
+    "01032",
+    "01033",
+    "01034",
+    "01035",
+    "01036"
+  ],
+  "project_folders": [
+    "droplets"
   ]
 }

@@ -1,5 +1,6 @@
 import {
-  fetchJson
+  fetchJson,
+  loadStudioServerReadJson
 } from "./studio-data.js";
 import {
   getStudioText,
@@ -48,9 +49,7 @@ function initStudioWorksPage() {
   initializeStudioRouteState(worksListRoot, { route: "studio-works", mode: "list" });
   setStudioRouteBusy(worksListRoot, true, { route: "studio-works", mode: "list" });
 
-  const worksIndexUrl = String(worksListRoot.dataset.worksIndexUrl || "");
   const workStorageIndexUrl = String(worksListRoot.dataset.workStorageIndexUrl || "");
-  const seriesIndexUrl = String(worksListRoot.dataset.seriesIndexUrl || "");
   const validKeys = { cat: true, year: true, title: true, series: true, storage: true, seriessort: true };
   const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
   const params = new URLSearchParams(window.location.search);
@@ -153,15 +152,24 @@ function initStudioWorksPage() {
     return nonWork > 0;
   }
 
-  function buildSeriesMeta(seriesMap) {
+  function buildSeriesMeta(seriesMap, selectedSeriesPayload) {
     const out = {};
     if (!seriesMap || typeof seriesMap !== "object") return out;
+    const selectedSeries = selectedSeriesPayload && selectedSeriesPayload.series && typeof selectedSeriesPayload.series === "object"
+      ? selectedSeriesPayload.series
+      : null;
+    const selectedSeriesId = slugSortKey(selectedSeries && selectedSeries.series_id);
+    const selectedSeriesStatus = slugSortKey(selectedSeries && selectedSeries.status);
+    const selectedOrder = selectedSeriesId === seriesFilter && selectedSeriesStatus === "published"
+      && Array.isArray(selectedSeriesPayload.ordered_published_work_ids)
+      ? selectedSeriesPayload.ordered_published_work_ids.map(normalizeText).filter(Boolean)
+      : [];
     Object.keys(seriesMap).forEach((sidRaw) => {
       const sid = slugSortKey(sidRaw);
       if (!sid) return;
       const row = seriesMap[sidRaw];
-      if (!row || typeof row !== "object") return;
-      const works = Array.isArray(row.works) ? row.works.map(normalizeText).filter(Boolean) : [];
+      if (!row || typeof row !== "object" || slugSortKey(row.status) !== "published") return;
+      const works = sid === selectedSeriesId ? selectedOrder : [];
       const rankMap = {};
       const rankWidth = Math.max(3, String(works.length).length);
       for (let idx = 0; idx < works.length; idx += 1) {
@@ -233,33 +241,6 @@ function initStudioWorksPage() {
     return collator.compare(as, bs);
   }
 
-  function updateRowLinks(key, dir) {
-    const rows = Array.prototype.slice.call(list.querySelectorAll(".worksList__item"));
-    rows.forEach((row) => {
-      const titleLink = row.querySelector(".worksList__title");
-      if (!titleLink) return;
-      let href = String(titleLink.getAttribute("href") || "");
-      const hashIndex = href.indexOf("#");
-      let hash = "";
-      if (hashIndex >= 0) {
-        hash = href.slice(hashIndex);
-        href = href.slice(0, hashIndex);
-      }
-      const qIndex = href.indexOf("?");
-      const base = qIndex >= 0 ? href.slice(0, qIndex) : href;
-      const query = new URLSearchParams(qIndex >= 0 ? href.slice(qIndex + 1) : "");
-      query.set("from", "works_index");
-      query.set("return_sort", key);
-      query.set("return_dir", dir);
-      if (hasSeriesFilter) {
-        query.set("return_series", seriesFilter);
-      } else {
-        query.delete("return_series");
-      }
-      titleLink.setAttribute("href", `${base}?${query.toString()}${hash}`);
-    });
-  }
-
   function applySort(key, dir) {
     const rows = Array.prototype.slice.call(list.querySelectorAll(".worksList__item"));
     const visibleRows = rows.filter(rowMatchesSeries);
@@ -280,7 +261,6 @@ function initStudioWorksPage() {
       list.appendChild(row);
     });
     updateCount(visibleRows);
-    updateRowLinks(key, dir);
   }
 
   function updateHeaderState(key, dir) {
@@ -366,9 +346,7 @@ function initStudioWorksPage() {
     li.setAttribute("data-series-id", sid);
     li.setAttribute("data-series-label", seriesLabel);
 
-    const workHref = buildPublicWorkUrl(config, wid, {
-      from: "works_index"
-    });
+    const workHref = buildPublicWorkUrl(config, wid);
 
     const catA = document.createElement("a");
     catA.className = "studioList__cellLink worksList__cat";
@@ -401,16 +379,16 @@ function initStudioWorksPage() {
     return li;
   }
 
-  function renderFromJson(worksPayload, seriesPayload, workStoragePayload) {
+  function renderFromJson(worksPayload, seriesPayload, workStoragePayload, selectedSeriesPayload) {
     const worksMap = worksPayload && worksPayload.works && typeof worksPayload.works === "object" ? worksPayload.works : {};
     const seriesMap = seriesPayload && seriesPayload.series && typeof seriesPayload.series === "object" ? seriesPayload.series : {};
     const workStorageMap = workStoragePayload && workStoragePayload.works && typeof workStoragePayload.works === "object" ? workStoragePayload.works : {};
-    const seriesMetaById = buildSeriesMeta(seriesMap);
+    const seriesMetaById = buildSeriesMeta(seriesMap, selectedSeriesPayload);
     const rows = [];
     const seriesIdSet = {};
     const seriesRows = Object.keys(seriesMap)
       .map((sid) => seriesMap[sid])
-      .filter((row) => row && typeof row === "object");
+      .filter((row) => row && typeof row === "object" && slugSortKey(row.status) === "published");
 
     seriesRows.sort(compareSeriesRows);
     copySeriesText = seriesRows
@@ -420,6 +398,7 @@ function initStudioWorksPage() {
     copySeriesButton.disabled = !copySeriesText;
 
     Object.keys(worksMap).forEach((wid) => {
+      if (slugSortKey(worksMap[wid] && worksMap[wid].status) !== "published") return;
       const row = makeWorkRow(worksMap[wid], seriesMetaById, workStorageMap[wid]);
       if (!row) return;
       rows.push(row);
@@ -469,14 +448,17 @@ function initStudioWorksPage() {
 
   Promise.all([
     loadStudioConfig().catch(() => null),
-    fetchJson(worksIndexUrl),
+    loadStudioServerReadJson("catalogue_works", "", { cache: "no-store" }),
     workStorageIndexUrl ? fetchJson(workStorageIndexUrl).catch(() => null) : Promise.resolve(null),
-    fetchJson(seriesIndexUrl).catch(() => null)
+    loadStudioServerReadJson("catalogue_series", "", { cache: "no-store" }),
+    hasSeriesFilter
+      ? loadStudioServerReadJson("catalogue_lookup_series_base", seriesFilter, { cache: "no-store" }).catch(() => null)
+      : Promise.resolve(null)
   ])
       .then((parts) => {
         config = parts[0];
         copySeriesButton.textContent = worksText("copy_series_button", "copy series");
-        const hasRows = renderFromJson(parts[1], parts[3], parts[2]);
+        const hasRows = renderFromJson(parts[1], parts[3], parts[2], parts[4]);
         if (!hasRows) {
           worksListRoot.hidden = true;
           emptyEl.hidden = false;

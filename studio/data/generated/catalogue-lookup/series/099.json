@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "099",
@@ -17,101 +17,139 @@
     {
       "work_id": "00130",
       "title": "model 1",
+      "year": 1994,
       "year_display": "1994",
       "status": "published",
       "series_ids": [
         "099"
-      ]
+      ],
+      "project_folder": "models"
     },
     {
       "work_id": "00536",
       "title": "model 2",
+      "year": 1994,
       "year_display": "1994",
       "status": "published",
       "series_ids": [
         "099"
-      ]
+      ],
+      "project_folder": "models"
     },
     {
       "work_id": "00537",
       "title": "model 3",
+      "year": 1994,
       "year_display": "1994",
       "status": "published",
       "series_ids": [
         "099"
-      ]
+      ],
+      "project_folder": "models"
     },
     {
       "work_id": "00538",
       "title": "model 4",
+      "year": 1994,
       "year_display": "1994",
       "status": "published",
       "series_ids": [
         "099"
-      ]
+      ],
+      "project_folder": "models"
     },
     {
       "work_id": "00539",
       "title": "model 5",
+      "year": 1994,
       "year_display": "1994",
       "status": "published",
       "series_ids": [
         "099"
-      ]
+      ],
+      "project_folder": "models"
     },
     {
       "work_id": "00540",
       "title": "model 6",
+      "year": 1994,
       "year_display": "1994",
       "status": "published",
       "series_ids": [
         "099"
-      ]
+      ],
+      "project_folder": "models"
     },
     {
       "work_id": "00541",
       "title": "model 7",
+      "year": 1994,
       "year_display": "1994",
       "status": "published",
       "series_ids": [
         "099"
-      ]
+      ],
+      "project_folder": "models"
     },
     {
       "work_id": "00542",
       "title": "model 8",
+      "year": 1994,
       "year_display": "1994",
       "status": "published",
       "series_ids": [
         "099"
-      ]
+      ],
+      "project_folder": "models"
     },
     {
       "work_id": "00543",
       "title": "model 9",
+      "year": 1994,
       "year_display": "1994",
       "status": "published",
       "series_ids": [
         "099"
-      ]
+      ],
+      "project_folder": "models"
     },
     {
       "work_id": "00544",
       "title": "model 10",
+      "year": 1994,
       "year_display": "1994",
       "status": "published",
       "series_ids": [
         "099"
-      ]
+      ],
+      "project_folder": "models"
     },
     {
       "work_id": "00545",
       "title": "model 11",
+      "year": 1994,
       "year_display": "1994",
       "status": "published",
       "series_ids": [
         "099"
-      ]
+      ],
+      "project_folder": "models"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00130",
+    "00536",
+    "00537",
+    "00538",
+    "00539",
+    "00540",
+    "00541",
+    "00542",
+    "00543",
+    "00544",
+    "00545"
+  ],
+  "project_folders": [
+    "models"
   ]
 }

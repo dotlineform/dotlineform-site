@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "011",
@@ -17,11 +17,17 @@
     {
       "work_id": "00375",
       "title": "00375 - colours",
+      "year": 2024,
       "year_display": "2024",
       "status": "draft",
       "series_ids": [
         "011"
-      ]
+      ],
+      "project_folder": "all the colours"
     }
+  ],
+  "ordered_published_work_ids": [],
+  "project_folders": [
+    "all the colours"
   ]
 }

@@ -38,11 +38,6 @@ export function getStudioDataPath(config, key) {
   return resolveSiteAssetPath(typeof path === "string" ? path : "");
 }
 
-export function getSiteDataPath(config, key) {
-  const path = pathValue(config, ["paths", "data", "site", key]);
-  return resolveSiteAssetPath(typeof path === "string" ? path : "");
-}
-
 export function getStudioGroups(config) {
   return sanitizeStringArray(pathValue(config, ["analysis", "groups", "ordered"]), []);
 }

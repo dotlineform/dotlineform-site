@@ -1,7 +1,7 @@
 export const DEFAULT_TAG_UI_TEXT = {
   series_tag_editor: {
     missing_series_id_error: "Tag editor error: missing series id.",
-    load_failed_error: "Failed to load tag data. Check /studio/api/tags/tag-registry, /studio/api/tags/tag-aliases, /studio/api/tags/tag-assignments, /assets/data/series_index.json, and /assets/data/works_index.json.",
+    load_failed_error: "Failed to load tag data. Check the Studio tag APIs and exact Catalogue Series read service.",
     work_input_placeholder: "add works in this series",
     tag_input_placeholder: "tag or alias",
     add_button: "Add",

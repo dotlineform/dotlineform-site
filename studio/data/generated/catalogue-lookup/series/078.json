@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "078",
@@ -17,29 +17,43 @@
     {
       "work_id": "01372",
       "title": "home",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "078"
-      ]
+      ],
+      "project_folder": "home land loss"
     },
     {
       "work_id": "01373",
       "title": "land",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "078"
-      ]
+      ],
+      "project_folder": "home land loss"
     },
     {
       "work_id": "01374",
       "title": "loss",
+      "year": 2021,
       "year_display": "2021",
       "status": "published",
       "series_ids": [
         "078"
-      ]
+      ],
+      "project_folder": "home land loss"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01372",
+    "01373",
+    "01374"
+  ],
+  "project_folders": [
+    "home land loss"
   ]
 }

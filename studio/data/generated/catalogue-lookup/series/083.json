@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "083",
@@ -17,29 +17,43 @@
     {
       "work_id": "01498",
       "title": "k particles",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "083"
-      ]
+      ],
+      "project_folder": "k particles"
     },
     {
       "work_id": "01499",
       "title": "k particle",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "083"
-      ]
+      ],
+      "project_folder": "k particles"
     },
     {
       "work_id": "01500",
       "title": "k particles grid",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "083"
-      ]
+      ],
+      "project_folder": "k particles"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01498",
+    "01499",
+    "01500"
+  ],
+  "project_folders": [
+    "k particles"
   ]
 }

@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "009",
@@ -17,38 +17,55 @@
     {
       "work_id": "00001",
       "title": "a poem divided into 4 parts (\"our dreams are real\")",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "009"
-      ]
+      ],
+      "project_folder": "a poem divided into 4 parts"
     },
     {
       "work_id": "00002",
       "title": "a poem divided into 4 parts (\"there must be hope\")",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "009"
-      ]
+      ],
+      "project_folder": "a poem divided into 4 parts"
     },
     {
       "work_id": "00003",
       "title": "a poem divided into 4 parts (\"we are not lost\")",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "009"
-      ]
+      ],
+      "project_folder": "a poem divided into 4 parts"
     },
     {
       "work_id": "00004",
       "title": "a poem divided into 4 parts (\"we only feel love\")",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "009"
-      ]
+      ],
+      "project_folder": "a poem divided into 4 parts"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00001",
+    "00002",
+    "00003",
+    "00004"
+  ],
+  "project_folders": [
+    "a poem divided into 4 parts"
   ]
 }

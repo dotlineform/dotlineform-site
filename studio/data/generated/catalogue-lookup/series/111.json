@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "111",
@@ -17,65 +17,91 @@
     {
       "work_id": "01491",
       "title": "particles 1",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "111"
-      ]
+      ],
+      "project_folder": "particles"
     },
     {
       "work_id": "01492",
       "title": "particles 2",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "111"
-      ]
+      ],
+      "project_folder": "particles"
     },
     {
       "work_id": "01493",
       "title": "particles 3",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "111"
-      ]
+      ],
+      "project_folder": "particles"
     },
     {
       "work_id": "01494",
       "title": "particles 4",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "111"
-      ]
+      ],
+      "project_folder": "particles"
     },
     {
       "work_id": "01495",
       "title": "particles 5",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "111"
-      ]
+      ],
+      "project_folder": "particles"
     },
     {
       "work_id": "01496",
       "title": "particles 6",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "111"
-      ]
+      ],
+      "project_folder": "particles"
     },
     {
       "work_id": "01497",
       "title": "particles 7",
+      "year": 2013,
       "year_display": "2013",
       "status": "published",
       "series_ids": [
         "111"
-      ]
+      ],
+      "project_folder": "particles"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01491",
+    "01492",
+    "01493",
+    "01494",
+    "01495",
+    "01496",
+    "01497"
+  ],
+  "project_folders": [
+    "particles"
   ]
 }

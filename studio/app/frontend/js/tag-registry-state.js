@@ -96,12 +96,12 @@ export function getTagRegistryDeleteImpactSeries(state, tagId) {
 }
 
 export function buildTagRegistrySeriesMetaById(config, payload) {
-  const seriesMap = payload && payload.series && typeof payload.series === "object" ? payload.series : {};
+  const items = Array.isArray(payload && payload.items) ? payload.items : [];
   const out = new Map();
-  Object.keys(seriesMap).forEach((rawSeriesId) => {
-    const seriesId = normalize(rawSeriesId);
+  items.forEach((row) => {
+    if (normalize(row && row.status) !== "published") return;
+    const seriesId = normalize(row && row.series_id);
     if (!seriesId) return;
-    const row = seriesMap[rawSeriesId];
     const title = String((row && row.title) || seriesId).trim();
     out.set(seriesId, {
       title,

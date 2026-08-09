@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "005",
@@ -17,11 +17,19 @@
     {
       "work_id": "00638",
       "title": "3 symbols",
+      "year": 2007,
       "year_display": "2007",
       "status": "published",
       "series_ids": [
         "005"
-      ]
+      ],
+      "project_folder": "3 symbols"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00638"
+  ],
+  "project_folders": [
+    "3 symbols"
   ]
 }

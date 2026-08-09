@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "039",
@@ -17,155 +17,211 @@
     {
       "work_id": "00909",
       "title": "doll sees everything (1)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "039"
-      ]
+      ],
+      "project_folder": "doll sees everything"
     },
     {
       "work_id": "00910",
       "title": "doll sees everything (2)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "039"
-      ]
+      ],
+      "project_folder": "doll sees everything"
     },
     {
       "work_id": "00911",
       "title": "doll sees everything (3)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "039"
-      ]
+      ],
+      "project_folder": "doll sees everything"
     },
     {
       "work_id": "00912",
       "title": "doll sees everything (4)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "039"
-      ]
+      ],
+      "project_folder": "doll sees everything"
     },
     {
       "work_id": "00913",
       "title": "doll sees everything (5)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "039"
-      ]
+      ],
+      "project_folder": "doll sees everything"
     },
     {
       "work_id": "00914",
       "title": "doll sees everything (6)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "039"
-      ]
+      ],
+      "project_folder": "doll sees everything"
     },
     {
       "work_id": "00915",
       "title": "doll sees everything (7)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "039"
-      ]
+      ],
+      "project_folder": "doll sees everything"
     },
     {
       "work_id": "00916",
       "title": "doll sees everything (8)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "039"
-      ]
+      ],
+      "project_folder": "doll sees everything"
     },
     {
       "work_id": "00917",
       "title": "doll sees everything (9)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "039"
-      ]
+      ],
+      "project_folder": "doll sees everything"
     },
     {
       "work_id": "00918",
       "title": "doll sees everything (10)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "039"
-      ]
+      ],
+      "project_folder": "doll sees everything"
     },
     {
       "work_id": "00919",
       "title": "doll sees everything (11)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "039"
-      ]
+      ],
+      "project_folder": "doll sees everything"
     },
     {
       "work_id": "00920",
       "title": "doll sees everything (12)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "039"
-      ]
+      ],
+      "project_folder": "doll sees everything"
     },
     {
       "work_id": "00921",
       "title": "doll sees everything (13)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "039"
-      ]
+      ],
+      "project_folder": "doll sees everything"
     },
     {
       "work_id": "00922",
       "title": "doll sees everything (14)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "039"
-      ]
+      ],
+      "project_folder": "doll sees everything"
     },
     {
       "work_id": "00923",
       "title": "doll sees everything (15)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "039"
-      ]
+      ],
+      "project_folder": "doll sees everything"
     },
     {
       "work_id": "00924",
       "title": "doll sees everything (16)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "039"
-      ]
+      ],
+      "project_folder": "doll sees everything"
     },
     {
       "work_id": "00925",
       "title": "doll sees everything (17)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "039"
-      ]
+      ],
+      "project_folder": "doll sees everything"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00909",
+    "00910",
+    "00911",
+    "00912",
+    "00913",
+    "00914",
+    "00915",
+    "00916",
+    "00917",
+    "00918",
+    "00919",
+    "00920",
+    "00921",
+    "00922",
+    "00923",
+    "00924",
+    "00925"
+  ],
+  "project_folders": [
+    "doll sees everything"
   ]
 }

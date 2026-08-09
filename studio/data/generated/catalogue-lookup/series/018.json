@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "018",
@@ -17,11 +17,19 @@
     {
       "work_id": "01633",
       "title": "body form",
+      "year": 2008,
       "year_display": "2008",
       "status": "published",
       "series_ids": [
         "018"
-      ]
+      ],
+      "project_folder": "body form"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01633"
+  ],
+  "project_folders": [
+    "body form"
   ]
 }

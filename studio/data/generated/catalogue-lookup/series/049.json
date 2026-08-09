@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "049",
@@ -17,11 +17,19 @@
     {
       "work_id": "01046",
       "title": "espresso",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "049"
-      ]
+      ],
+      "project_folder": "espresso"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01046"
+  ],
+  "project_folders": [
+    "espresso"
   ]
 }

@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "070",
@@ -17,11 +17,19 @@
     {
       "work_id": "00384",
       "title": "glass forms",
+      "year": 2010,
       "year_display": "c. 2010?",
       "status": "published",
       "series_ids": [
         "070"
-      ]
+      ],
+      "project_folder": "glass forms"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00384"
+  ],
+  "project_folders": [
+    "glass forms"
   ]
 }

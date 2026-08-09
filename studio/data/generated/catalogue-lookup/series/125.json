@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "125",
@@ -17,11 +17,19 @@
     {
       "work_id": "00402",
       "title": "spiders",
+      "year": 2006,
       "year_display": "2006",
       "status": "published",
       "series_ids": [
         "125"
-      ]
+      ],
+      "project_folder": "spiders"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00402"
+  ],
+  "project_folders": [
+    "spiders"
   ]
 }

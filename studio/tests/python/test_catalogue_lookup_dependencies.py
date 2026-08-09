@@ -56,6 +56,7 @@ def dependency_fixture_records() -> CatalogueSourceRecords:
     work.update(
         {
             "work_id": WORK_ID,
+            "year": 2026,
             "series_ids": [SERIES_ID],
             "downloads": [{"filename": "work-download-filename-sentinel", "label": "work-download-label-sentinel"}],
             "links": [{"url": "https://example.invalid/work-link-sentinel", "label": "work-link-label-sentinel"}],
@@ -85,6 +86,7 @@ def dependency_fixture_records() -> CatalogueSourceRecords:
         {
             "series_id": SERIES_ID,
             "primary_work_id": WORK_ID,
+            "sort_fields": "work_id",
         }
     )
 

@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "134",
@@ -17,65 +17,91 @@
     {
       "work_id": "01763",
       "title": "through a glass clearly (1)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "134"
-      ]
+      ],
+      "project_folder": "through a glass clearly"
     },
     {
       "work_id": "01764",
       "title": "through a glass clearly (2)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "134"
-      ]
+      ],
+      "project_folder": "through a glass clearly"
     },
     {
       "work_id": "01765",
       "title": "through a glass clearly (3)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "134"
-      ]
+      ],
+      "project_folder": "through a glass clearly"
     },
     {
       "work_id": "01766",
       "title": "through a glass clearly (4)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "134"
-      ]
+      ],
+      "project_folder": "through a glass clearly"
     },
     {
       "work_id": "01767",
       "title": "through a glass clearly (5)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "134"
-      ]
+      ],
+      "project_folder": "through a glass clearly"
     },
     {
       "work_id": "01768",
       "title": "through a glass clearly (6)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "134"
-      ]
+      ],
+      "project_folder": "through a glass clearly"
     },
     {
       "work_id": "01769",
       "title": "through a glass clearly (7)",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "134"
-      ]
+      ],
+      "project_folder": "through a glass clearly"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01763",
+    "01764",
+    "01765",
+    "01766",
+    "01767",
+    "01768",
+    "01769"
+  ],
+  "project_folders": [
+    "through a glass clearly"
   ]
 }

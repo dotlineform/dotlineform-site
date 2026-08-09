@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "102",
@@ -17,38 +17,50 @@
     {
       "work_id": "00373",
       "title": "00373 - monoprint",
+      "year": 2024,
       "year_display": "2024?",
       "status": "draft",
       "series_ids": [
         "102"
-      ]
+      ],
+      "project_folder": "monoprints and residues"
     },
     {
       "work_id": "00374",
       "title": "00374 - monoprint",
+      "year": 2024,
       "year_display": "2024?",
       "status": "draft",
       "series_ids": [
         "102"
-      ]
+      ],
+      "project_folder": "monoprints and residues"
     },
     {
       "work_id": "00376",
       "title": "00376 - residues",
+      "year": 2024,
       "year_display": "2024?",
       "status": "draft",
       "series_ids": [
         "102"
-      ]
+      ],
+      "project_folder": "monoprints and residues"
     },
     {
       "work_id": "00377",
       "title": "00377 - residue - monoprint",
+      "year": 2024,
       "year_display": "2024?",
       "status": "draft",
       "series_ids": [
         "102"
-      ]
+      ],
+      "project_folder": "monoprints and residues"
     }
+  ],
+  "ordered_published_work_ids": [],
+  "project_folders": [
+    "monoprints and residues"
   ]
 }

@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "118",
@@ -17,65 +17,92 @@
     {
       "work_id": "00383",
       "title": "qrnt",
+      "year": 2009,
       "year_display": "2009",
       "status": "published",
       "series_ids": [
         "118"
-      ]
+      ],
+      "project_folder": "qrnt"
     },
     {
       "work_id": "00629",
       "title": "quantum random number theory",
+      "year": 2009,
       "year_display": "2009",
       "status": "published",
       "series_ids": [
         "118"
-      ]
+      ],
+      "project_folder": "qrnt"
     },
     {
       "work_id": "00630",
       "title": "quantum random number theory (version)",
+      "year": 2010,
       "year_display": "2010",
       "status": "published",
       "series_ids": [
         "118"
-      ]
+      ],
+      "project_folder": "qrnt"
     },
     {
       "work_id": "00631",
       "title": "quantum random number theory (form)",
+      "year": 2015,
       "year_display": "2015",
       "status": "published",
       "series_ids": [
         "118"
-      ]
+      ],
+      "project_folder": "qrnt"
     },
     {
       "work_id": "00632",
       "title": "quantum random number theory (circle)",
+      "year": 2009,
       "year_display": "2009",
       "status": "published",
       "series_ids": [
         "118"
-      ]
+      ],
+      "project_folder": "qrnt"
     },
     {
       "work_id": "00633",
       "title": "quantum random number theory (4 circles)",
+      "year": 2009,
       "year_display": "2009",
       "status": "published",
       "series_ids": [
         "118"
-      ]
+      ],
+      "project_folder": "qrnt"
     },
     {
       "work_id": "00634",
       "title": "bits symbols 1",
+      "year": 2009,
       "year_display": "2009",
       "status": "published",
       "series_ids": [
         "118"
-      ]
+      ],
+      "project_folder": "qrnt (bits symbols)"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00383",
+    "00629",
+    "00630",
+    "00631",
+    "00632",
+    "00633",
+    "00634"
+  ],
+  "project_folders": [
+    "qrnt",
+    "qrnt (bits symbols)"
   ]
 }

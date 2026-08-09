@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "139",
@@ -17,245 +17,331 @@
     {
       "work_id": "01883",
       "title": "untitled [destroyed]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01884",
       "title": "untitled [1]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01885",
       "title": "untitled [2]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01886",
       "title": "untitled [3]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01887",
       "title": "untitled [4]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01888",
       "title": "untitled [5]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01889",
       "title": "untitled [6]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01890",
       "title": "untitled [7]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01891",
       "title": "untitled [8]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01892",
       "title": "untitled [9]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01893",
       "title": "untitled [10]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01894",
       "title": "untitled [11]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01895",
       "title": "untitled [12]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01896",
       "title": "untitled [13]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01897",
       "title": "untitled [14]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01898",
       "title": "untitled [15]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01899",
       "title": "untitled [16]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01900",
       "title": "untitled [17]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01901",
       "title": "untitled [18]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01902",
       "title": "untitled [19]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01903",
       "title": "untitled [20]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01904",
       "title": "untitled [21]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01905",
       "title": "untitled [22]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01906",
       "title": "untitled [23]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01907",
       "title": "untitled [24]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01908",
       "title": "untitled [25]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01909",
       "title": "untitled [26]",
+      "year": 2025,
       "year_display": "2025",
       "status": "published",
       "series_ids": [
         "139"
-      ]
+      ],
+      "project_folder": "untitled (destroyed)"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01883",
+    "01884",
+    "01885",
+    "01886",
+    "01887",
+    "01888",
+    "01889",
+    "01890",
+    "01891",
+    "01892",
+    "01893",
+    "01894",
+    "01895",
+    "01896",
+    "01897",
+    "01898",
+    "01899",
+    "01900",
+    "01901",
+    "01902",
+    "01903",
+    "01904",
+    "01905",
+    "01906",
+    "01907",
+    "01908",
+    "01909"
+  ],
+  "project_folders": [
+    "untitled (destroyed)"
   ]
 }

@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "046",
@@ -17,11 +17,19 @@
     {
       "work_id": "01037",
       "title": "egg forms",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "046"
-      ]
+      ],
+      "project_folder": "egg forms"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01037"
+  ],
+  "project_folders": [
+    "egg forms"
   ]
 }

@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "103",
@@ -17,21 +17,33 @@
     {
       "work_id": "00214",
       "title": "mother and child",
+      "year": 1995,
       "year_display": "c. 1995?",
       "status": "published",
       "series_ids": [
         "103",
         "026"
-      ]
+      ],
+      "project_folder": "collected 1989-1998"
     },
     {
       "work_id": "01447",
       "title": "mother and child",
+      "year": 1995,
       "year_display": "1995",
       "status": "published",
       "series_ids": [
         "103"
-      ]
+      ],
+      "project_folder": "mother and child"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00214",
+    "01447"
+  ],
+  "project_folders": [
+    "collected 1989-1998",
+    "mother and child"
   ]
 }

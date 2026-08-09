@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "017",
@@ -17,11 +17,19 @@
     {
       "work_id": "00782",
       "title": "birth of healing forms",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "017"
-      ]
+      ],
+      "project_folder": "birth of healing forms"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00782"
+  ],
+  "project_folders": [
+    "birth of healing forms"
   ]
 }

@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "033",
@@ -17,110 +17,151 @@
     {
       "work_id": "00838",
       "title": "structure a",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "033"
-      ]
+      ],
+      "project_folder": "cube structure"
     },
     {
       "work_id": "00839",
       "title": "structure b",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "033"
-      ]
+      ],
+      "project_folder": "cube structure"
     },
     {
       "work_id": "00840",
       "title": "structure c",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "033"
-      ]
+      ],
+      "project_folder": "cube structure"
     },
     {
       "work_id": "00841",
       "title": "structure d",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "033"
-      ]
+      ],
+      "project_folder": "cube structure"
     },
     {
       "work_id": "00842",
       "title": "structure i",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "033"
-      ]
+      ],
+      "project_folder": "cube structure"
     },
     {
       "work_id": "00843",
       "title": "structure ii ~",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "033"
-      ]
+      ],
+      "project_folder": "cube structure"
     },
     {
       "work_id": "00844",
       "title": "structure ii",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "033"
-      ]
+      ],
+      "project_folder": "cube structure"
     },
     {
       "work_id": "00845",
       "title": "structure iii",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "033"
-      ]
+      ],
+      "project_folder": "cube structure"
     },
     {
       "work_id": "00846",
       "title": "structure iv",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "033"
-      ]
+      ],
+      "project_folder": "cube structure"
     },
     {
       "work_id": "00847",
       "title": "structure v composite",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "033"
-      ]
+      ],
+      "project_folder": "cube structure"
     },
     {
       "work_id": "00848",
       "title": "structure v",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "033"
-      ]
+      ],
+      "project_folder": "cube structure"
     },
     {
       "work_id": "00849",
       "title": "structure vi",
+      "year": 2011,
       "year_display": "2011",
       "status": "published",
       "series_ids": [
         "033"
-      ]
+      ],
+      "project_folder": "cube structure"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00838",
+    "00839",
+    "00840",
+    "00841",
+    "00842",
+    "00843",
+    "00844",
+    "00845",
+    "00846",
+    "00847",
+    "00848",
+    "00849"
+  ],
+  "project_folders": [
+    "cube structure"
   ]
 }

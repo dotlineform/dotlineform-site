@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "007",
@@ -17,56 +17,79 @@
     {
       "work_id": "00716",
       "title": "a feeling that we are part of a structure - 01",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "007"
-      ]
+      ],
+      "project_folder": "a feeling that we are part of a structure"
     },
     {
       "work_id": "00717",
       "title": "a feeling that we are part of a structure - 02",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "007"
-      ]
+      ],
+      "project_folder": "a feeling that we are part of a structure"
     },
     {
       "work_id": "00718",
       "title": "a feeling that we are part of a structure - 03",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "007"
-      ]
+      ],
+      "project_folder": "a feeling that we are part of a structure"
     },
     {
       "work_id": "00719",
       "title": "a feeling that we are part of a structure - 04",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "007"
-      ]
+      ],
+      "project_folder": "a feeling that we are part of a structure"
     },
     {
       "work_id": "00720",
       "title": "a feeling that we are part of a structure - 05",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "007"
-      ]
+      ],
+      "project_folder": "a feeling that we are part of a structure"
     },
     {
       "work_id": "00721",
       "title": "a feeling that we are part of a structure - 06",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "007"
-      ]
+      ],
+      "project_folder": "a feeling that we are part of a structure"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00716",
+    "00717",
+    "00718",
+    "00719",
+    "00720",
+    "00721"
+  ],
+  "project_folders": [
+    "a feeling that we are part of a structure"
   ]
 }

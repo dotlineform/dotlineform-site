@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "030",
@@ -17,29 +17,43 @@
     {
       "work_id": "00391",
       "title": "composite (blue)",
+      "year": 2004,
       "year_display": "2004",
       "status": "published",
       "series_ids": [
         "030"
-      ]
+      ],
+      "project_folder": "composite (blue red smoke)"
     },
     {
       "work_id": "00616",
       "title": "composite (smoke)",
+      "year": 2004,
       "year_display": "2004",
       "status": "published",
       "series_ids": [
         "030"
-      ]
+      ],
+      "project_folder": "composite (blue red smoke)"
     },
     {
       "work_id": "00617",
       "title": "composite (red)",
+      "year": 2004,
       "year_display": "2004",
       "status": "published",
       "series_ids": [
         "030"
-      ]
+      ],
+      "project_folder": "composite (blue red smoke)"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00391",
+    "00616",
+    "00617"
+  ],
+  "project_folders": [
+    "composite (blue red smoke)"
   ]
 }

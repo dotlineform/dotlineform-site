@@ -29,11 +29,11 @@ export async function loadStudioLookupJson(config, key, options) {
   return fetchJson(getStudioDataPath(config, key), options);
 }
 
-export async function loadStudioServerReadJson(key, options) {
+export async function loadStudioServerReadJson(key, recordId = "", options = {}) {
   if (!CATALOGUE_SERVER_READ_KEYS.has(key)) {
     throw new Error(`Unsupported catalogue server read key: ${key}`);
   }
-  return fetchJson(buildCatalogueReadUrl(key), options);
+  return fetchJson(buildCatalogueReadUrl(key, recordId), options);
 }
 
 export async function loadStudioLookupRecordJson(config, baseKey, recordId, options) {

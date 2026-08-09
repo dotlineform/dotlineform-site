@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "127",
@@ -17,11 +17,19 @@
     {
       "work_id": "01721",
       "title": "state of mind",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "127"
-      ]
+      ],
+      "project_folder": "state of mind"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01721"
+  ],
+  "project_folders": [
+    "state of mind"
   ]
 }

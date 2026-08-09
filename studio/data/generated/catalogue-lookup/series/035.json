@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "035",
@@ -17,47 +17,67 @@
     {
       "work_id": "00867",
       "title": "curve machine",
+      "year": 2020,
       "year_display": "2020",
       "status": "published",
       "series_ids": [
         "035"
-      ]
+      ],
+      "project_folder": "curve machine"
     },
     {
       "work_id": "00868",
       "title": "curve machine (off)",
+      "year": 2020,
       "year_display": "2020",
       "status": "published",
       "series_ids": [
         "035"
-      ]
+      ],
+      "project_folder": "curve machine"
     },
     {
       "work_id": "00869",
       "title": "curves",
+      "year": 2020,
       "year_display": "2020",
       "status": "published",
       "series_ids": [
         "035"
-      ]
+      ],
+      "project_folder": "curve machine"
     },
     {
       "work_id": "00870",
       "title": "holes",
+      "year": 2020,
       "year_display": "2020",
       "status": "published",
       "series_ids": [
         "035"
-      ]
+      ],
+      "project_folder": "curve machine"
     },
     {
       "work_id": "00871",
       "title": "loops",
+      "year": 2020,
       "year_display": "2020",
       "status": "published",
       "series_ids": [
         "035"
-      ]
+      ],
+      "project_folder": "curve machine"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00867",
+    "00868",
+    "00869",
+    "00870",
+    "00871"
+  ],
+  "project_folders": [
+    "curve machine"
   ]
 }

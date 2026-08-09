@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, Dict, Mapping
 
 try:
+    from catalogue import catalogue_generation_indexes as generation_indexes
     from catalogue.catalogue_source import (
         CatalogueSourceRecords,
         build_detail_section_resolution_by_uid,
@@ -14,6 +15,7 @@ try:
         records_from_json_source,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from catalogue import catalogue_generation_indexes as generation_indexes  # type: ignore
     from catalogue.catalogue_source import (  # type: ignore
         CatalogueSourceRecords,
         build_detail_section_resolution_by_uid,
@@ -31,11 +33,19 @@ SCHEMAS = {
     "work_detail_search": "studio_catalogue_lookup_work_detail_search_v1",
     "work_record": "studio_catalogue_work_record_v1",
     "work_detail_record": "studio_catalogue_work_detail_record_v1",
-    "series_record": "studio_catalogue_lookup_series_record_v1",
+    "series_record": "studio_catalogue_lookup_series_record_v2",
 }
 
 WORK_SEARCH_FIELDS = frozenset({"work_id", "title", "year_display", "status", "series_ids"})
-SERIES_MEMBER_WORK_FIELDS = frozenset({"work_id", "title", "year_display", "status", "series_ids"})
+SERIES_MEMBER_WORK_FIELDS = frozenset({
+    "work_id",
+    "title",
+    "year",
+    "year_display",
+    "status",
+    "series_ids",
+    "project_folder",
+})
 WORK_DETAIL_WORK_SUMMARY_FIELDS = frozenset({"title"})
 
 WORK_DETAIL_SEARCH_FIELDS = frozenset({
@@ -62,7 +72,7 @@ WORK_DETAIL_PARENT_WORK_FIELDS = frozenset({
     "project_filename",
 })
 
-SERIES_SEARCH_FIELDS = frozenset({"series_id", "title", "status", "primary_work_id"})
+SERIES_SEARCH_FIELDS = frozenset({"series_id", "title", "series_type", "status", "primary_work_id"})
 WORK_SERIES_SUMMARY_FIELDS = frozenset({"title"})
 
 
@@ -101,9 +111,11 @@ def build_series_member_work_item(work_id: str, record: Mapping[str, Any]) -> Di
     return {
         "work_id": work_id,
         "title": normalize_text(record.get("title")),
+        "year": normalize_optional_int(record.get("year")),
         "year_display": normalize_text(record.get("year_display")),
         "status": normalize_text(record.get("status")),
         "series_ids": list(record.get("series_ids", [])) if isinstance(record.get("series_ids"), list) else [],
+        "project_folder": normalize_text(record.get("project_folder")),
     }
 
 
@@ -111,6 +123,7 @@ def build_series_search_item(series_id: str, record: Mapping[str, Any]) -> Dict[
     return {
         "series_id": series_id,
         "title": normalize_text(record.get("title")),
+        "series_type": normalize_text(record.get("series_type")),
         "status": normalize_text(record.get("status")),
         "primary_work_id": normalize_text(record.get("primary_work_id")),
     }
@@ -212,10 +225,24 @@ def build_work_detail_lookup_payload(records: CatalogueSourceRecords, detail_uid
     }
 
 
-def build_series_lookup_payload(records: CatalogueSourceRecords, series_id: str) -> Dict[str, Any]:
+def build_series_lookup_payload(
+    records: CatalogueSourceRecords,
+    series_id: str,
+    *,
+    context: generation_indexes.SeriesWorkIndexContext | None = None,
+) -> Dict[str, Any]:
     record = records.series.get(series_id)
     if not isinstance(record, Mapping):
         raise KeyError(f"series_id not found: {series_id}")
+
+    series_context = context or generation_indexes.build_series_work_index_context(
+        series_records=records.series,
+        work_records=records.works,
+    )
+    ordered_published_work_ids = generation_indexes.ordered_published_work_ids_by_series(series_context).get(
+        series_id,
+        [],
+    )
 
     members = []
     for work_id, work_record in records.works.items():
@@ -231,6 +258,8 @@ def build_series_lookup_payload(records: CatalogueSourceRecords, series_id: str)
         },
         "series": dict(record),
         "member_works": members,
+        "ordered_published_work_ids": ordered_published_work_ids,
+        "project_folders": list(series_context.series_project_folders_by_id.get(series_id, [])),
     }
 
 
@@ -284,26 +313,21 @@ def build_catalogue_lookup_payloads(records: CatalogueSourceRecords) -> Dict[str
     work_search_items = []
     series_search_items = []
     series_by_id: Dict[str, Dict[str, Any]] = {}
+    series_context = generation_indexes.build_series_work_index_context(
+        series_records=records.series,
+        work_records=records.works,
+    )
 
     for work_id, record in records.works.items():
         work_search_items.append(build_work_search_item(work_id, record))
 
     for series_id, record in records.series.items():
         series_search_items.append(build_series_search_item(series_id, record))
-        members = []
-        for work_id, work_record in records.works.items():
-            series_ids = work_record.get("series_ids", [])
-            if not isinstance(series_ids, list) or series_id not in series_ids:
-                continue
-            members.append(build_series_member_work_item(work_id, work_record))
-        members.sort(key=lambda item: item["work_id"])
-        series_by_id[series_id] = {
-            "header": {
-                "schema": SCHEMAS["series_record"],
-            },
-            "series": record,
-            "member_works": members,
-        }
+        series_by_id[series_id] = build_series_lookup_payload(
+            records,
+            series_id,
+            context=series_context,
+        )
 
     work_search_items.sort(key=lambda item: item["work_id"])
     series_search_items.sort(key=lambda item: item["series_id"])

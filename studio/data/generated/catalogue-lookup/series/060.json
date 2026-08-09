@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "060",
@@ -17,11 +17,19 @@
     {
       "work_id": "01175",
       "title": "forest",
+      "year": 2024,
       "year_display": "2024",
       "status": "published",
       "series_ids": [
         "060"
-      ]
+      ],
+      "project_folder": "forest (2024)"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01175"
+  ],
+  "project_folders": [
+    "forest (2024)"
   ]
 }

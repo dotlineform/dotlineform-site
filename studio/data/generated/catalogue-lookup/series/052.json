@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "052",
@@ -17,29 +17,43 @@
     {
       "work_id": "01052",
       "title": "flowers 1",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "052"
-      ]
+      ],
+      "project_folder": "flowers"
     },
     {
       "work_id": "01053",
       "title": "flowers 2",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "052"
-      ]
+      ],
+      "project_folder": "flowers"
     },
     {
       "work_id": "01054",
       "title": "flowers 3",
+      "year": 2023,
       "year_display": "2023",
       "status": "published",
       "series_ids": [
         "052"
-      ]
+      ],
+      "project_folder": "flowers"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01052",
+    "01053",
+    "01054"
+  ],
+  "project_folders": [
+    "flowers"
   ]
 }

@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "114",
@@ -17,65 +17,91 @@
     {
       "work_id": "01527",
       "title": "plant form 1",
+      "year": 2022,
       "year_display": "2022",
       "status": "published",
       "series_ids": [
         "114"
-      ]
+      ],
+      "project_folder": "plant forms"
     },
     {
       "work_id": "01528",
       "title": "plant form 2",
+      "year": 2022,
       "year_display": "2022",
       "status": "published",
       "series_ids": [
         "114"
-      ]
+      ],
+      "project_folder": "plant forms"
     },
     {
       "work_id": "01529",
       "title": "plant form 3",
+      "year": 2022,
       "year_display": "2022",
       "status": "published",
       "series_ids": [
         "114"
-      ]
+      ],
+      "project_folder": "plant forms"
     },
     {
       "work_id": "01530",
       "title": "plant form 4",
+      "year": 2022,
       "year_display": "2022",
       "status": "published",
       "series_ids": [
         "114"
-      ]
+      ],
+      "project_folder": "plant forms"
     },
     {
       "work_id": "01531",
       "title": "plant form 5",
+      "year": 2022,
       "year_display": "2022",
       "status": "published",
       "series_ids": [
         "114"
-      ]
+      ],
+      "project_folder": "plant forms"
     },
     {
       "work_id": "01532",
       "title": "plant form 6",
+      "year": 2022,
       "year_display": "2022",
       "status": "published",
       "series_ids": [
         "114"
-      ]
+      ],
+      "project_folder": "plant forms"
     },
     {
       "work_id": "01533",
       "title": "plant form 7",
+      "year": 2022,
       "year_display": "2022",
       "status": "published",
       "series_ids": [
         "114"
-      ]
+      ],
+      "project_folder": "plant forms"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01527",
+    "01528",
+    "01529",
+    "01530",
+    "01531",
+    "01532",
+    "01533"
+  ],
+  "project_folders": [
+    "plant forms"
   ]
 }

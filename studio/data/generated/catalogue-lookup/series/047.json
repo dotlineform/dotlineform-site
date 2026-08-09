@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "047",
@@ -17,56 +17,79 @@
     {
       "work_id": "01038",
       "title": "egg print 1",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "047"
-      ]
+      ],
+      "project_folder": "egg prints"
     },
     {
       "work_id": "01039",
       "title": "egg print 2",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "047"
-      ]
+      ],
+      "project_folder": "egg prints"
     },
     {
       "work_id": "01040",
       "title": "egg print 2 (reverse)",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "047"
-      ]
+      ],
+      "project_folder": "egg prints"
     },
     {
       "work_id": "01041",
       "title": "egg print 3",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "047"
-      ]
+      ],
+      "project_folder": "egg prints"
     },
     {
       "work_id": "01042",
       "title": "egg print 4",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "047"
-      ]
+      ],
+      "project_folder": "egg prints"
     },
     {
       "work_id": "01043",
       "title": "egg print 5",
+      "year": 2012,
       "year_display": "2012",
       "status": "published",
       "series_ids": [
         "047"
-      ]
+      ],
+      "project_folder": "egg prints"
     }
+  ],
+  "ordered_published_work_ids": [
+    "01038",
+    "01039",
+    "01040",
+    "01041",
+    "01042",
+    "01043"
+  ],
+  "project_folders": [
+    "egg prints"
   ]
 }

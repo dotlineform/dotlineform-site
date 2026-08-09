@@ -1,4 +1,4 @@
-let studioConfigModulePromise = null;
+import { loadStudioServerReadJson } from "./studio-data.js";
 
 export async function fetchJson(url, options = {}) {
   const cache = String(options.cache || "default");
@@ -28,14 +28,16 @@ export async function loadAnalyticsGroupsJson(config, options) {
   return fetchJson(requiredStudioTagServicePath(config, "tags", "tag_groups"), options);
 }
 
-export async function loadSiteSeriesIndexJson(config, options) {
-  const { getSiteDataPath } = await loadStudioConfigModule();
-  return fetchJson(getSiteDataPath(config, "series_index"), options);
+export async function loadStudioSeriesSearchJson(_config, options) {
+  return loadStudioServerReadJson("catalogue_lookup_series_search", "", options);
 }
 
-export async function loadSiteWorksIndexJson(config, options) {
-  const { getSiteDataPath } = await loadStudioConfigModule();
-  return fetchJson(getSiteDataPath(config, "works_index"), options);
+export async function loadStudioSeriesRecordJson(_config, seriesId, options) {
+  return loadStudioServerReadJson("catalogue_lookup_series_base", seriesId, options);
+}
+
+export async function loadStudioWorkRecordJson(_config, workId, options) {
+  return loadStudioServerReadJson("catalogue_work_record", workId, options);
 }
 
 function studioTagServicePath(config, serviceName, key) {
@@ -169,33 +171,4 @@ function sanitizeGroupSet(studioGroups) {
     ? studioGroups.map((group) => normalizeAnalyticsValue(group)).filter(Boolean)
     : [];
   return groups.length ? new Set(groups) : null;
-}
-
-async function loadStudioConfigModule() {
-  if (!studioConfigModulePromise) {
-    const url = new URL("./studio-config.js", import.meta.url);
-    const assetVersion = readAssetVersion(import.meta.url);
-    if (assetVersion) {
-      url.searchParams.set("v", assetVersion);
-    }
-    studioConfigModulePromise = import(url.href);
-  }
-  return studioConfigModulePromise;
-}
-
-function readAssetVersion(importUrl = "") {
-  try {
-    const importVersion = new URL(importUrl).searchParams.get("v");
-    if (importVersion) return importVersion;
-  } catch (_error) {
-    // Ignore malformed import URLs and continue to DOM-based lookup.
-  }
-
-  if (typeof document !== "undefined") {
-    const meta = document.querySelector('meta[name="dlf-asset-version"]');
-    const value = meta ? String(meta.getAttribute("content") || "").trim() : "";
-    if (value) return value;
-  }
-
-  return "";
 }

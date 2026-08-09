@@ -1,6 +1,6 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v1"
+    "schema": "studio_catalogue_lookup_series_record_v2"
   },
   "series": {
     "series_id": "012",
@@ -17,20 +17,31 @@
     {
       "work_id": "00751",
       "title": "all the little cracks",
+      "year": 2010,
       "year_display": "2010",
       "status": "published",
       "series_ids": [
         "012"
-      ]
+      ],
+      "project_folder": "all the little cracks"
     },
     {
       "work_id": "00752",
       "title": "all the little cracks again",
+      "year": 2016,
       "year_display": "2016",
       "status": "published",
       "series_ids": [
         "012"
-      ]
+      ],
+      "project_folder": "all the little cracks"
     }
+  ],
+  "ordered_published_work_ids": [
+    "00751",
+    "00752"
+  ],
+  "project_folders": [
+    "all the little cracks"
   ]
 }
