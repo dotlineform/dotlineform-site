@@ -805,7 +805,7 @@
           "doc_id": "d-20260809-155631-ab527b",
           "title": "CII-1 — Catalogue Image Source Insertion Delivery",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260809-155631-ab527b.json",
-          "ui_status": "done"
+          "ui_status": "in-progress"
         },
         {
           "doc_id": "d-20260802-123450-f7493d",
@@ -1709,5 +1709,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-09T17:04:53Z"
+  "generated_at": "2026-08-09T17:23:45Z"
 }
