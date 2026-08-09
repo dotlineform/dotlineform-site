@@ -140,42 +140,6 @@
       ]
     },
     {
-      "scope_id": "moments",
-      "scope_type": "public",
-      "meta": "public scope",
-      "viewer_base_url": "/moments/",
-      "include_scope_param": false,
-      "default_doc_id": "",
-      "media": {
-        "files": {
-          "reference_prefix": "docs/moments/files",
-          "served_path_prefix": "https://media.dotlineform.com/docs/moments/files"
-        },
-        "img": {
-          "reference_prefix": "docs/moments/img",
-          "served_path_prefix": "https://media.dotlineform.com/docs/moments/img"
-        },
-        "svg": {
-          "reference_prefix": "docs/moments/svg",
-          "served_path_prefix": "/assets/data/docs/scopes/moments/media/svg"
-        }
-      },
-      "index_tree_url": "/docs-viewer/scopes/moments/published/documents/index-tree.json",
-      "recent_url": "/docs-viewer/scopes/moments/published/documents/recent.json",
-      "search_index_url": "/docs-viewer/scopes/moments/published/search/index.json",
-      "search": {
-        "domain": "docs_viewer",
-        "schema": "search_index_moments_v1",
-        "index_url": "/docs-viewer/scopes/moments/published/search/index.json",
-        "targeted_policy": "record_update",
-        "targeted_operations": [
-          "create",
-          "update",
-          "delete"
-        ]
-      }
-    },
-    {
       "scope_id": "notes",
       "scope_type": "local_external",
       "meta": "external local",

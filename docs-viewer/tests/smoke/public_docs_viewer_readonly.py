@@ -31,7 +31,6 @@ TAGS_DOC_ID = "d-20260624-213316-478639"
 BIRD_SUBDOC_ID = "d-20260624-204534-0d6ae2"
 NERVE_SUBDOC_ID = "d-20260624-204534-ecfc12"
 ORDERED_SUBDOC_ID = "d-20260624-204534-e3de0b"
-MOMENTS_DOC_ID = "d-20260215-000000-8c3fcc"
 
 
 class QuietStaticHandler(SimpleHTTPRequestHandler):
@@ -415,7 +414,7 @@ def exercise_public_route(
             const status = document.querySelector("#docsViewerResultsStatus");
             return status && !status.hidden && status.textContent.includes(recentAdjective);
         }""",
-        arg="recently added" if urlparse(route).path.startswith("/moments/") else "recently edited",
+        arg="recently edited",
         timeout=timeout_ms,
     )
     exercise_search(page, route, title, timeout_ms)
@@ -699,15 +698,6 @@ def main() -> int:
                     args.timeout_ms,
                 )
                 exercise_public_subscope_report(page, base_url, args.timeout_ms)
-                exercise_public_route(
-                    page,
-                    base_url,
-                    f"/moments/?doc={MOMENTS_DOC_ID}",
-                    MOMENTS_DOC_ID,
-                    "a feeling of free will",
-                    args.timeout_ms,
-                    expect_document_controls=False,
-                )
             finally:
                 browser.close()
 
@@ -719,7 +709,7 @@ def main() -> int:
             raise AssertionError(f"HTTP failures during public Docs Viewer read-only smoke: {http_failures!r}")
         print(
             "public Docs Viewer read-only OK: "
-            f"{base_url}/library/, {base_url}/analysis/, and {base_url}/moments/"
+            f"{base_url}/library/ and {base_url}/analysis/"
         )
         return 0
     finally:

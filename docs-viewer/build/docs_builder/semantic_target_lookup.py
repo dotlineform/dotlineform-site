@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
-from .common import load_docs_scope_configs, published_documents_path, read_text, write_text
+from .common import read_text, write_text
 from .semantic_token_registry import (
     SemanticTokenFamily,
     SemanticTokenTargetType,
@@ -35,16 +35,9 @@ CATALOGUE_KIND_SOURCES = {
     },
 }
 
-DOCS_SCOPE_KIND_SOURCES = {
-    "moment": {
-        "scope_id": "moments",
-    },
-}
-
 CATALOGUE_TARGET_DESTINATIONS = {
     "catalogue-work-target-lookup": ("/works/", "work"),
     "catalogue-series-target-lookup": ("/series/", "series"),
-    "catalogue-moment-target-lookup": ("/moments/", "doc"),
 }
 
 
@@ -72,23 +65,6 @@ def json_rows(payload: Any, root_key: str) -> list[dict[str, Any]]:
     records = payload.get(root_key) if isinstance(payload, dict) else None
     rows = records.values() if isinstance(records, dict) else records if isinstance(records, list) else []
     return [dict(row) for row in rows if isinstance(row, dict)]
-
-
-def docs_index_rows(payload: Any) -> list[dict[str, Any]]:
-    rows: list[dict[str, Any]] = []
-
-    def collect(records: Any) -> None:
-        if not isinstance(records, list):
-            return
-        for record in records:
-            if not isinstance(record, dict):
-                continue
-            rows.append(dict(record))
-            collect(record.get("children"))
-
-    if isinstance(payload, dict):
-        collect(payload.get("docs"))
-    return rows
 
 
 def load_json(path: Path) -> Any:
@@ -144,14 +120,6 @@ def target_meta(kind: str, record: dict[str, Any], *, series_titles: dict[str, s
     return meta
 
 
-def docs_scope_target_meta(payload: dict[str, Any]) -> list[str]:
-    meta: list[str] = []
-    date_value = display_date(payload)
-    if date_value:
-        meta.append(date_value)
-    return meta
-
-
 def target_row(
     family: SemanticTokenFamily,
     target_type: SemanticTokenTargetType,
@@ -175,34 +143,6 @@ def target_row(
         "title": title,
         "href": href,
         "meta": target_meta(target_type.key, record, series_titles=series_titles),
-    }
-
-
-def docs_scope_target_row(
-    family: SemanticTokenFamily,
-    target_type: SemanticTokenTargetType,
-    index_row: dict[str, Any],
-    source: dict[str, Any],
-    *,
-    repo_root: Path,
-) -> dict[str, Any] | None:
-    non_loadable = source.get("non_loadable_doc_ids")
-    if isinstance(non_loadable, set) and index_row.get("doc_id") in non_loadable:
-        return None
-    doc_id = str(index_row.get("doc_id") or "").strip()
-    normalized_id = normalize_semantic_token_id(doc_id, target_type.id_policy)
-    title = str(index_row.get("title") or "").strip()
-    href = semantic_token_target_href(target_type, normalized_id or "")
-    if not normalized_id or not title or not href:
-        return None
-    payload = load_json(repo_root / str(source["by_id"]) / f"{normalized_id}.json")
-    return {
-        "family": family.key,
-        "target_type": target_type.key,
-        "target_id": normalized_id,
-        "title": title,
-        "href": href,
-        "meta": docs_scope_target_meta(payload if isinstance(payload, dict) else {}),
     }
 
 
@@ -260,33 +200,6 @@ class SemanticTargetLookupBuilder:
                     if row is not None:
                         targets.append(row)
                 continue
-            docs_source = DOCS_SCOPE_KIND_SOURCES.get(target_type.key)
-            if docs_source is None:
-                continue
-            scope_id = str(docs_source["scope_id"])
-            scope_config = load_docs_scope_configs(
-                self.repo_root,
-                scope_ids=[scope_id],
-            )[scope_id]
-            docs_root = published_documents_path(scope_config)
-            payload = load_json(self.repo_root / docs_root / "index-tree.json")
-            source_with_options = {
-                **docs_source,
-                "by_id": (docs_root / "by-id").as_posix(),
-            }
-            viewer_options = payload.get("viewer_options") if isinstance(payload, dict) else {}
-            non_loadable_doc_ids = viewer_options.get("non_loadable_doc_ids") if isinstance(viewer_options, dict) else []
-            source_with_options["non_loadable_doc_ids"] = set(non_loadable_doc_ids or [])
-            for record in docs_index_rows(payload):
-                row = docs_scope_target_row(
-                    family,
-                    target_type,
-                    record,
-                    source_with_options,
-                    repo_root=self.repo_root,
-                )
-                if row is not None:
-                    targets.append(row)
         targets.sort(
             key=lambda row: (
                 family.target_type(row["target_type"]).order

@@ -224,7 +224,7 @@ def test_route_configs_separate_app_kind_from_service_presence() -> None:
         ]
         assert route["access"] == {"allow_scope_query": False, "management_ui": False}
         assert all(not surface["base_url"] for surface in route["services"].values())
-        assert route["recent_basis"] == ("added" if route["route_id"] == "moments" else "edited")
+        assert route["recent_basis"] == "edited"
 
     manage_route = next(route for route in manage_payload["routes"] if route["route_id"] == "docs-manage")
     review_route = next(route for route in manage_payload["routes"] if route["route_id"] == "docs-review")

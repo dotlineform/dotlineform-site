@@ -80,21 +80,6 @@
           "href",
           "meta"
         ]
-      },
-      {
-        "key": "moment",
-        "label": "Moment",
-        "id_policy": {
-          "normalizer": "slug",
-          "input_pattern": "^[a-z0-9][a-z0-9-]*$",
-          "canonical_pattern": "^[a-z0-9][a-z0-9-]*$"
-        },
-        "lookup_adapter": "catalogue-moment-target-lookup",
-        "lookup_fields": [
-          "title",
-          "href",
-          "meta"
-        ]
       }
     ]
   },
@@ -188,16 +173,6 @@
         "href": "/series/?series=105",
         "meta": [
           "1990-95"
-        ]
-      },
-      {
-        "family": "catalogue",
-        "target_type": "moment",
-        "target_id": "d-20260215-000000-02a1a4",
-        "title": "13 moments in october",
-        "href": "/moments/?doc=d-20260215-000000-02a1a4",
-        "meta": [
-          "23 Oct 2024"
         ]
       }
     ]
@@ -327,19 +302,19 @@
         "valid",
         "code-context"
       ],
-      "source": "Inline `[[catalogue:work:00638|3 symbols]]` stays literal.\n\n```markdown\n[[catalogue:series:105|nerve]]\n```\n\n<!-- [[catalogue:work:00638|commented]] -->\n\nOutside [[catalogue:moment:d-20260215-000000-02a1a4|13 moments in october]].",
+      "source": "Inline `[[catalogue:work:00638|3 symbols]]` stays literal.\n\n```markdown\n[[catalogue:series:105|nerve]]\n```\n\n<!-- [[catalogue:work:00638|commented]] -->\n\nOutside [[catalogue:series:105|nerve]].",
       "tokens": [
         {
           "source_range": {
             "start": 161,
-            "end": 228
+            "end": 191
           },
-          "raw": "[[catalogue:moment:d-20260215-000000-02a1a4|13 moments in october]]",
+          "raw": "[[catalogue:series:105|nerve]]",
           "family": "catalogue",
-          "target_type": "moment",
-          "target_id": "d-20260215-000000-02a1a4",
-          "title": "13 moments in october",
-          "serialized": "[[catalogue:moment:d-20260215-000000-02a1a4|13 moments in october]]",
+          "target_type": "series",
+          "target_id": "105",
+          "title": "nerve",
+          "serialized": "[[catalogue:series:105|nerve]]",
           "supported": true,
           "activatable": true
         }

@@ -91,42 +91,6 @@
           "by_id_url_base": "/assets/data/docs/scopes/analysis/works/by-id"
         }
       ]
-    },
-    {
-      "scope_id": "moments",
-      "scope_type": "public",
-      "meta": "public scope",
-      "viewer_base_url": "/moments/",
-      "include_scope_param": false,
-      "default_doc_id": "",
-      "media": {
-        "files": {
-          "reference_prefix": "docs/moments/files",
-          "served_path_prefix": "https://media.dotlineform.com/docs/moments/files"
-        },
-        "img": {
-          "reference_prefix": "docs/moments/img",
-          "served_path_prefix": "https://media.dotlineform.com/docs/moments/img"
-        },
-        "svg": {
-          "reference_prefix": "docs/moments/svg",
-          "served_path_prefix": "/assets/data/docs/scopes/moments/media/svg"
-        }
-      },
-      "index_tree_url": "/assets/data/docs/scopes/moments/index-tree.json",
-      "recent_url": "/assets/data/docs/scopes/moments/recent.json",
-      "search_index_url": "/assets/data/search/moments/index.json",
-      "search": {
-        "domain": "docs_viewer",
-        "schema": "search_index_moments_v1",
-        "index_url": "/assets/data/search/moments/index.json",
-        "targeted_policy": "record_update",
-        "targeted_operations": [
-          "create",
-          "update",
-          "delete"
-        ]
-      }
     }
   ],
   "docs_viewer": {

@@ -8,7 +8,9 @@
       "route_path": "/docs-review/",
       "default_scope_id": "review",
       "include_scope_param": false,
-      "preserve_query_params": ["package"],
+      "preserve_query_params": [
+        "package"
+      ],
       "viewer_base_url": "/docs-review/",
       "features": [],
       "access": {
@@ -16,9 +18,15 @@
         "management_ui": false
       },
       "services": {
-        "generated_data": { "base_url": "" },
-        "source": { "base_url": "" },
-        "management": { "base_url": "" }
+        "generated_data": {
+          "base_url": ""
+        },
+        "source": {
+          "base_url": ""
+        },
+        "management": {
+          "base_url": ""
+        }
       },
       "docs_paths": {
         "index_tree_url": "/docs-review/packages/index-tree",
@@ -44,7 +52,9 @@
         }
       },
       "view_policy": {
-        "hidden_controls": ["bookmark"]
+        "hidden_controls": [
+          "bookmark"
+        ]
       }
     },
     {
@@ -71,9 +81,15 @@
         "management_ui": true
       },
       "services": {
-        "generated_data": { "base_url": "" },
-        "source": { "base_url": "" },
-        "management": { "base_url": "" }
+        "generated_data": {
+          "base_url": ""
+        },
+        "source": {
+          "base_url": ""
+        },
+        "management": {
+          "base_url": ""
+        }
       },
       "docs_paths": {
         "index_tree_url": "/docs-viewer/scopes/studio/published/documents/index-tree.json",
@@ -120,9 +136,15 @@
         "management_ui": false
       },
       "services": {
-        "generated_data": { "base_url": "" },
-        "source": { "base_url": "" },
-        "management": { "base_url": "" }
+        "generated_data": {
+          "base_url": ""
+        },
+        "source": {
+          "base_url": ""
+        },
+        "management": {
+          "base_url": ""
+        }
       },
       "docs_paths": {
         "index_tree_url": "/assets/data/docs/scopes/library/index-tree.json",
@@ -169,9 +191,15 @@
         "management_ui": false
       },
       "services": {
-        "generated_data": { "base_url": "" },
-        "source": { "base_url": "" },
-        "management": { "base_url": "" }
+        "generated_data": {
+          "base_url": ""
+        },
+        "source": {
+          "base_url": ""
+        },
+        "management": {
+          "base_url": ""
+        }
       },
       "docs_paths": {
         "index_tree_url": "/assets/data/docs/scopes/analysis/index-tree.json",
@@ -195,58 +223,6 @@
           "enabled": true,
           "default_view": "metadata-info"
         }
-      }
-    },
-    {
-      "schema_version": "docs_viewer_route_config_v4",
-      "app_kind": "public",
-      "route_id": "moments",
-      "route_path": "/moments/",
-      "default_scope_id": "moments",
-      "include_scope_param": false,
-      "viewer_base_url": "/moments/",
-      "features": [
-        "configured-scope-discovery",
-        "search",
-        "recent",
-        "bookmarks",
-        "reports"
-      ],
-      "recent_basis": "added",
-      "access": {
-        "allow_scope_query": false,
-        "management_ui": false
-      },
-      "services": {
-        "generated_data": { "base_url": "" },
-        "source": { "base_url": "" },
-        "management": { "base_url": "" }
-      },
-      "docs_paths": {
-        "index_tree_url": "/assets/data/docs/scopes/moments/index-tree.json",
-        "recent_url": "/assets/data/docs/scopes/moments/recent.json",
-        "search_index_url": "/assets/data/search/moments/index.json"
-      },
-      "config_urls": {
-        "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-public-config.json",
-        "report_registry": "/assets/data/docs/public-reports.json"
-      },
-      "panels": {
-        "index": {
-          "enabled": true,
-          "default_state": "normal"
-        },
-        "main": {
-          "enabled": true,
-          "default_view": "rendered-document"
-        },
-        "info": {
-          "enabled": true,
-          "default_view": "metadata-info"
-        }
-      },
-      "view_policy": {
-        "hidden_controls": ["bookmark", "info"]
       }
     }
   ]

@@ -55,21 +55,6 @@
             "href",
             "meta"
           ]
-        },
-        {
-          "key": "moment",
-          "label": "Moment",
-          "id_policy": {
-            "normalizer": "slug",
-            "input_pattern": "^[a-z0-9][a-z0-9-]*$",
-            "canonical_pattern": "^[a-z0-9][a-z0-9-]*$"
-          },
-          "lookup_adapter": "catalogue-moment-target-lookup",
-          "lookup_fields": [
-            "title",
-            "href",
-            "meta"
-          ]
         }
       ]
     }

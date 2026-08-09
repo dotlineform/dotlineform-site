@@ -759,7 +759,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "--site-root",
                 str(PUBLIC_SITE_ROOT),
             ),
-            "Smoke-check the simplified public route contract for series, works, details, moments, search, and 404 recovery.",
+            "Smoke-check the simplified public route contract for series, works, details, search, and 404 recovery.",
         ),
         CheckCommand(
             "catalogue-editor-route-boot-module-smoke",

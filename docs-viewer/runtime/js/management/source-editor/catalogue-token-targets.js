@@ -6,7 +6,7 @@ import {
   loadSemanticTokenTargets
 } from "./semantic-token-targets.js";
 
-var CATALOGUE_TARGET_TYPES = new Set(["work", "series", "moment"]);
+var CATALOGUE_TARGET_TYPES = new Set(["work", "series"]);
 
 function allowedTargetTypes(raw) {
   var values = Array.isArray(raw) ? raw : Array.from(CATALOGUE_TARGET_TYPES);

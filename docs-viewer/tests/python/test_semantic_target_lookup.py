@@ -11,9 +11,6 @@ from contextlib import redirect_stdout
 from io import StringIO
 from pathlib import Path
 
-from repo_factory import docs_scope_record
-
-
 REPO_ROOT = Path(__file__).resolve().parents[3]
 BUILD_DIR = REPO_ROOT / "docs-viewer" / "build"
 if str(BUILD_DIR) not in sys.path:
@@ -44,21 +41,6 @@ def write_registry(root: Path) -> None:
 
 
 def write_catalogue(root: Path) -> None:
-    write_json(
-        root / "docs-viewer/config/scopes/docs_scopes.json",
-        {
-            "schema_version": "docs_scopes_v3",
-            "scopes": [
-                docs_scope_record(
-                    "moments",
-                    scope_type="public",
-                    viewer_base_url="/moments/",
-                    include_scope_param=False,
-                    default_doc_id="moments",
-                )
-            ],
-        },
-    )
     base = root / "studio/data/canonical/catalogue"
     write_json(
         base / "series.json",
@@ -84,23 +66,6 @@ def write_catalogue(root: Path) -> None:
             }
         },
     )
-    write_json(
-        root / "docs-viewer/scopes/moments/published/documents/index-tree.json",
-        {
-            "schema": "docs_index_tree_v1",
-            "viewer_options": {"non_loadable_doc_ids": ["moments"]},
-            "docs": [
-                {"doc_id": "lotus-pond", "title": "lotus pond", "content_url": "/assets/data/docs/scopes/moments/by-id/lotus-pond.json"},
-                {"doc_id": "moments", "title": "Moments", "content_url": "/assets/data/docs/scopes/moments/by-id/moments.json"},
-            ],
-        },
-    )
-    write_json(
-        root / "docs-viewer/scopes/moments/published/documents/by-id/lotus-pond.json",
-        {"title": "lotus pond", "date": "2024-10-23", "date_display": "c. 2024"},
-    )
-
-
 def test_semantic_target_lookup_builder_writes_compact_published_rows() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
@@ -111,7 +76,7 @@ def test_semantic_target_lookup_builder_writes_compact_published_rows() -> None:
         output_text = output_path.read_text(encoding="utf-8")
         payload = read_json(output_path)
 
-    assert result["diagnostics"]["target_count"] == 3
+    assert result["diagnostics"]["target_count"] == 2
     assert payload["schema_version"] == "docs_semantic_token_target_lookup_v1"
     assert [
         (row["family"], row["target_type"], row["target_id"])
@@ -119,7 +84,6 @@ def test_semantic_target_lookup_builder_writes_compact_published_rows() -> None:
     ] == [
         ("catalogue", "work", "00638"),
         ("catalogue", "series", "005"),
-        ("catalogue", "moment", "lotus-pond"),
     ]
     assert payload["targets"][0] == {
         "family": "catalogue",
@@ -137,14 +101,6 @@ def test_semantic_target_lookup_builder_writes_compact_published_rows() -> None:
         "href": "/series/?series=005",
         "meta": ["2007"],
     }
-    assert payload["targets"][2] == {
-        "family": "catalogue",
-        "target_type": "moment",
-        "target_id": "lotus-pond",
-        "title": "lotus pond",
-        "href": "/moments/?doc=lotus-pond",
-        "meta": ["c. 2024"],
-    }
     assert output_text.endswith("\n")
     assert (
         '    {"family":"catalogue","target_type":"work","target_id":"00638",'
@@ -152,11 +108,7 @@ def test_semantic_target_lookup_builder_writes_compact_published_rows() -> None:
     ) in output_text
     assert (
         '    {"family":"catalogue","target_type":"series","target_id":"005",'
-        '"title":"3 symbols","href":"/series/?series=005","meta":["2007"]},\n'
-    ) in output_text
-    assert (
-        '    {"family":"catalogue","target_type":"moment","target_id":"lotus-pond","title":"lotus pond",'
-        '"href":"/moments/?doc=lotus-pond","meta":["c. 2024"]}\n'
+        '"title":"3 symbols","href":"/series/?series=005","meta":["2007"]}\n'
     ) in output_text
 
 
@@ -178,7 +130,7 @@ def test_semantic_target_lookup_cli_writes_payload() -> None:
 
     assert exit_code == 0
     assert "Semantic target lookup (write)" in stdout.getvalue()
-    assert len(payload["targets"]) == 3
+    assert len(payload["targets"]) == 2
 
 
 def main_test() -> None:

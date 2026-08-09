@@ -1023,8 +1023,7 @@ def assert_modal_insertion_cancellation_and_stale_guard(page: Page) -> None:
                     key: 'catalogue',
                     target_types: [
                         { key: 'work' },
-                        { key: 'series' },
-                        { key: 'moment' }
+                        { key: 'series' }
                     ]
                 }]
             };
@@ -1706,8 +1705,7 @@ def assert_real_keyboard_tab_and_scroll_flow(page: Page) -> None:
                     key: 'catalogue',
                     target_types: [
                         { key: 'work' },
-                        { key: 'series' },
-                        { key: 'moment' }
+                        { key: 'series' }
                     ]
                 }]
             };

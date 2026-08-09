@@ -4470,16 +4470,14 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
               key: 'catalogue', labels: {}, occurrence_fields: [], ui_contributions: {},
               target_types: [
                 { key: 'work', label: 'Work', id_policy: {}, lookup_adapter: 'work', lookup_fields: [] },
-                { key: 'series', label: 'Series', id_policy: {}, lookup_adapter: 'series', lookup_fields: [] },
-                { key: 'moment', label: 'Moment', id_policy: {}, lookup_adapter: 'moment', lookup_fields: [] }
+                { key: 'series', label: 'Series', id_policy: {}, lookup_adapter: 'series', lookup_fields: [] }
               ]
             }]
           };
           const lookupPayload = {
             targets: [
               { family: 'catalogue', target_type: 'work', target_id: '00123', title: 'Nerve', href: '/works/?work=00123', meta: [] },
-              { family: 'catalogue', target_type: 'series', target_id: '026', title: 'Nerve Series', href: '/series/?series=026', meta: [] },
-              { family: 'catalogue', target_type: 'moment', target_id: '099', title: 'Nerve Moment', href: '/moments/?moment=099', meta: [] }
+              { family: 'catalogue', target_type: 'series', target_id: '026', title: 'Nerve Series', href: '/series/?series=026', meta: [] }
             ]
           };
           const fetchCalls = [];

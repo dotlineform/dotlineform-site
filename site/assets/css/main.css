@@ -2046,10 +2046,6 @@ Use “structure-first” naming and scope section-specific differences via the 
   /* works section wrapper */
 }
 
-.moments{
-  /* moments section wrapper */
-}
-
 /* Note: section index pages use the shared `.index` / `.index__*` component classes. */
 
 .work .supplements{

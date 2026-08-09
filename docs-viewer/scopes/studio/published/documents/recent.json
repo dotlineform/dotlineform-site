@@ -4,85 +4,85 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "d-20260629-152159-ac1af9",
-      "title": "Export",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260629-152159-ac1af9.json",
-      "timestamp": "2026-08-09 11:42:13",
+      "doc_id": "d-20260523-222005-1085b2",
+      "title": "Projection Contract",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260523-222005-1085b2.json",
+      "timestamp": "2026-08-09 12:09:25",
+      "parent_id": "d-20260331-000000-4a16b0",
+      "parent_title": "Architecture"
+    },
+    {
+      "doc_id": "d-20260423-000000-8fd731",
+      "title": "Source Organisation",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260423-000000-8fd731.json",
+      "timestamp": "2026-08-09 12:08:14",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer"
     },
     {
-      "doc_id": "d-20260809-103047-b7d8c8",
-      "title": "DXM-1 — Packaged Media In Dated Export Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260809-103047-b7d8c8.json",
-      "timestamp": "2026-08-09 11:40:41",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
+      "doc_id": "d-20260511-200845-2a03a0",
+      "title": "CSS Ownership",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260511-200845-2a03a0.json",
+      "timestamp": "2026-08-09 12:06:07",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
     },
     {
-      "doc_id": "d-20260808-225258-245f13",
-      "title": "Docs Viewer Scope Type Migration Concept",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-225258-245f13.json",
-      "timestamp": "2026-08-08 23:18:32",
-      "parent_id": "d-20260808-225257-c06ae2",
-      "parent_title": "Docs Viewer Scope Type Migration"
+      "doc_id": "d-20260613-115624-3d377c",
+      "title": "Docs Viewer Public Route Shell Template",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260613-115624-3d377c.json",
+      "timestamp": "2026-08-09 12:06:07",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
     },
     {
-      "doc_id": "d-20260808-225257-c06ae2",
-      "title": "Docs Viewer Scope Type Migration",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-225257-c06ae2.json",
-      "timestamp": "2026-08-08 23:11:28",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
+      "doc_id": "d-20260331-000000-33a9c5",
+      "title": "Public Catalogue Data Flow",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-33a9c5.json",
+      "timestamp": "2026-08-09 12:06:07",
+      "parent_id": "d-20260720-161656-1357d0",
+      "parent_title": "Site"
     },
     {
-      "doc_id": "d-20260720-100017-9855dd",
-      "title": "Scope Media Management",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-100017-9855dd.json",
-      "timestamp": "2026-08-08 23:11:28",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
+      "doc_id": "d-20260602-192905-260208",
+      "title": "Public Route Model",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-192905-260208.json",
+      "timestamp": "2026-08-09 12:06:07",
+      "parent_id": "d-20260720-161656-1357d0",
+      "parent_title": "Site"
     },
     {
-      "doc_id": "d-20260720-100017-e094d8",
-      "title": "Scope Media Management Concept",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-100017-e094d8.json",
-      "timestamp": "2026-08-08 23:11:28",
-      "parent_id": "d-20260720-100017-9855dd",
-      "parent_title": "Scope Media Management"
+      "doc_id": "d-20260331-000000-c313fd",
+      "title": "Runtime",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-c313fd.json",
+      "timestamp": "2026-08-09 12:06:07",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
     },
     {
-      "doc_id": "d-20260808-231127-db19cc",
-      "title": "Scope Media Storage Locations Concept",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-231127-db19cc.json",
-      "timestamp": "2026-08-08 23:11:27",
-      "parent_id": "d-20260808-231126-6a5d72",
-      "parent_title": "Scope Media Storage Locations"
+      "doc_id": "d-20260714-234030-434069",
+      "title": "Semantic Tokens Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-434069.json",
+      "timestamp": "2026-08-09 12:06:07",
+      "parent_id": "d-20260725-153656-516b61",
+      "parent_title": "Semantic Tokens"
     },
     {
-      "doc_id": "d-20260808-231126-6a5d72",
-      "title": "Scope Media Storage Locations",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-231126-6a5d72.json",
-      "timestamp": "2026-08-08 23:11:26",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
+      "doc_id": "d-20260720-161657-0f6696",
+      "title": "Site Overview",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-161657-0f6696.json",
+      "timestamp": "2026-08-09 12:06:07",
+      "parent_id": "d-20260720-161656-1357d0",
+      "parent_title": "Site"
     },
     {
-      "doc_id": "d-20260808-222436-4f7c81",
-      "title": "ESA-1 — Graceful Per-Scope Availability Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-222436-4f7c81.json",
-      "timestamp": "2026-08-08 22:24:36",
-      "parent_id": "d-20260808-222435-e0d29a",
-      "parent_title": "Docs Viewer External Scope Availability"
-    },
-    {
-      "doc_id": "d-20260808-222435-e0d29a",
-      "title": "Docs Viewer External Scope Availability",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-222435-e0d29a.json",
-      "timestamp": "2026-08-08 22:24:35",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
+      "doc_id": "d-20260331-000000-6d51e9",
+      "title": "Site Shell Runtime",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-6d51e9.json",
+      "timestamp": "2026-08-09 12:06:07",
+      "parent_id": "d-20260720-161656-1357d0",
+      "parent_title": "Site"
     }
   ],
-  "generated_at": "2026-08-09T10:42:13Z"
+  "generated_at": "2026-08-09T11:09:25Z"
 }

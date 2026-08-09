@@ -107,16 +107,6 @@ def assert_public_routes(page: Page, base_url: str) -> None:
     if "/works/?" not in detail_back_href or "work=00001" not in detail_back_href or "series=009" not in detail_back_href:
         raise AssertionError(f"detail back link is not canonical: {detail_back_href!r}")
 
-    goto(page, base_url, "/moments/?doc=a-doll-story")
-    expect(page.locator("#docsViewerRoot[data-route-id='moments']")).to_be_visible(timeout=10_000)
-
-    response = page.context.request.get(f"{base_url.rstrip('/')}/moments/")
-    body = response.text()
-    if response.status != 200 or 'id="docsViewerRoot"' not in body:
-        raise AssertionError("moments shell did not render")
-    goto(page, base_url, "/moments/")
-    expect(page.locator("#docsViewerRoot[data-route-id='moments']")).to_be_visible(timeout=10_000)
-
     goto(page, base_url, "/catalogue/search/")
     expect(page.locator("#studioSearchRoot")).to_be_visible(timeout=10_000)
     page.locator("#studioSearchInput").fill("00001")
