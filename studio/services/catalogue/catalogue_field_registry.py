@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping
 
-from catalogue.catalogue_source import CatalogueSourceRecords, load_json_file
+from catalogue.catalogue_source import load_json_file
 from catalogue.series_ids import normalize_series_id, parse_series_ids
 
 
@@ -17,7 +17,6 @@ REGISTRY_ARTIFACT_TO_GENERATE_ONLY = {
     "work-details-page": "work-details-pages",
     "series-page": "series-pages",
     "work-json": "work-json",
-    "works-index-json": "works-index-json",
     "work-storage-index-json": "work-json",
     "series-json": "series-pages",
     "series-index-json": "series-index-json",
@@ -30,7 +29,6 @@ BUILD_ARTIFACT_ORDER = [
     "work-details-pages",
     "series-pages",
     "series-index-json",
-    "works-index-json",
     "recent-index-json",
 ]
 
@@ -157,20 +155,6 @@ def fallback_registry_artifacts_for_record_family(
     raise ValueError(f"catalogue field registry default {default_key} is missing fallback artifacts for {record_family}")
 
 
-def series_sort_fields_for_work(records: CatalogueSourceRecords, work_record: Mapping[str, Any]) -> set[str]:
-    fields: set[str] = set()
-    for series_id in normalize_series_ids_value(work_record.get("series_ids")):
-        series_record = records.series.get(series_id)
-        if not isinstance(series_record, Mapping):
-            continue
-        raw_sort_fields = str(series_record.get("sort_fields") or "").strip()
-        for raw_field in raw_sort_fields.split(","):
-            field = raw_field.strip()
-            if field:
-                fields.add(field)
-    return fields
-
-
 def conditional_artifact_applies(
     artifact: str,
     *,
@@ -179,18 +163,7 @@ def conditional_artifact_applies(
     changed_field_names: set[str],
     context: Mapping[str, Any],
 ) -> bool:
-    if artifact == "series-index-json" and record_family == "work" and rule_id == "work_display_core":
-        source_records = context.get("source_records")
-        current_record = context.get("current_record")
-        updated_record = context.get("updated_record")
-        if not isinstance(source_records, CatalogueSourceRecords):
-            return False
-        sort_fields: set[str] = set()
-        if isinstance(current_record, Mapping):
-            sort_fields.update(series_sort_fields_for_work(source_records, current_record))
-        if isinstance(updated_record, Mapping):
-            sort_fields.update(series_sort_fields_for_work(source_records, updated_record))
-        return bool(sort_fields.intersection(changed_field_names))
+    _ = artifact, rule_id, record_family, changed_field_names, context
     return False
 
 

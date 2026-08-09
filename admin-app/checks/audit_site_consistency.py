@@ -5,7 +5,7 @@ Audit generated site consistency (read-only).
 Checks:
 - cross_refs: validate key cross-artifact references and duplicate IDs
 - schema: generated route contract ID format + generated JSON consistency rules
-- json_schema: generated JSON shape and count checks (series/work indexes + work detail JSON)
+- json_schema: generated JSON shape and count checks (lean Series, exact Series/Work, and Work detail JSON)
 - links: generated link target existence + query-contract sanity
 - media: expected media/download file presence checks
 - orphans: orphan generated route contracts/JSON (and optional media scan)
@@ -182,24 +182,29 @@ def add_sample(samples: List[Dict[str, Any]], item: Dict[str, Any], max_samples:
         samples.append(item)
 
 
-def load_series_work_counts_from_index(site_root: Path) -> Optional[Dict[str, int]]:
-    series_index_path = site_root / "assets/data/series_index.json"
-    if not series_index_path.exists():
-        return None
-    try:
-        payload = json.loads(series_index_path.read_text(encoding="utf-8"))
-    except Exception:
-        return None
-    series_map = payload.get("series")
-    if not isinstance(series_map, dict):
-        return None
-    counts: Dict[str, int] = {}
-    for raw_sid, raw_row in series_map.items():
-        sid = normalize_text(raw_sid)
-        if sid == "" or not isinstance(raw_row, dict):
+def load_exact_series_member_ids(site_root: Path) -> Dict[str, List[str]]:
+    members_by_series: Dict[str, List[str]] = {}
+    for path in sorted((site_root / "assets/series/index").glob("*.json")):
+        series_id = normalize_text(path.stem)
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
             continue
-        works = raw_row.get("works")
-        counts[sid] = len(works) if isinstance(works, list) else 0
+        members = payload.get("member_works") if isinstance(payload, dict) else None
+        if series_id == "" or not isinstance(members, list):
+            continue
+        members_by_series[series_id] = [
+            work_id
+            for member in members
+            if isinstance(member, dict) and (work_id := normalize_text(member.get("work_id"))) != ""
+        ]
+    return members_by_series
+
+
+def load_exact_series_work_counts(site_root: Path) -> Dict[str, int]:
+    counts: Dict[str, int] = {}
+    for series_id, member_work_ids in load_exact_series_member_ids(site_root).items():
+        counts[series_id] = len(member_work_ids)
     return counts
 
 
@@ -237,21 +242,29 @@ def load_detail_refs_from_work_json(site_root: Path, work_ids_scope: Optional[se
     return refs
 
 
-def load_object_map_keys(path: Path, map_key: str) -> Dict[str, Dict[str, Any]]:
-    if not path.exists():
-        return {}
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except Exception:
-        return {}
-    rows = payload.get(map_key) if isinstance(payload, dict) else None
-    if not isinstance(rows, dict):
-        return {}
-    return {
-        normalize_text(key): {"path": str(path), "fm": {}}
-        for key in rows.keys()
-        if normalize_text(key) != ""
-    }
+def load_exact_record_contracts(
+    directory: Path,
+    *,
+    record_key: str,
+    id_field: str,
+) -> Dict[str, Dict[str, Any]]:
+    records: Dict[str, Dict[str, Any]] = {}
+    for path in sorted(directory.glob("*.json")):
+        record_id = normalize_text(path.stem)
+        if record_id == "":
+            continue
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            payload = {}
+        record = payload.get(record_key) if isinstance(payload, dict) else None
+        fm = dict(record) if isinstance(record, dict) else {}
+        fm.setdefault(id_field, "")
+        if record_key == "work":
+            series_ids = fm.get("series_ids")
+            fm["series_id"] = normalize_text(series_ids[0]) if isinstance(series_ids, list) and series_ids else ""
+        records[record_id] = {"path": str(path), "fm": fm}
+    return records
 
 
 def load_generated_route_contracts(site_root: Path) -> Tuple[
@@ -259,8 +272,16 @@ def load_generated_route_contracts(site_root: Path) -> Tuple[
     Dict[str, Dict[str, Any]],
     Dict[str, Dict[str, Any]],
 ]:
-    works = load_object_map_keys(site_root / "assets/data/works_index.json", "works")
-    series = load_object_map_keys(site_root / "assets/data/series_index.json", "series")
+    works = load_exact_record_contracts(
+        site_root / "assets/works/index",
+        record_key="work",
+        id_field="work_id",
+    )
+    series = load_exact_record_contracts(
+        site_root / "assets/series/index",
+        record_key="series",
+        id_field="series_id",
+    )
     details = {
         detail_uid: {"path": ref.get("path", ""), "fm": {"work_id": ref.get("work_id", "")}}
         for detail_uid, ref in load_detail_refs_from_work_json(site_root).items()
@@ -356,7 +377,7 @@ def check_cross_refs(
             errors += 1
             add_sample(samples, {"check": "cross_refs", "id": duid, "path": row["path"], "message": f"work detail references missing work_id '{wid}'"}, max_samples)
 
-    # series_index -> series/work route contract references
+    # Lean Series index -> exact Series/Work route contract references.
     series_index_path = site_root / "assets/data/series_index.json"
     series_map = None
     if not series_index_path.exists():
@@ -384,31 +405,33 @@ def check_cross_refs(
                 if sid_norm not in series:
                     errors += 1
                     add_sample(samples, {"check": "cross_refs", "id": sid_norm, "path": str(series_index_path), "message": "series_index references missing series contract"}, max_samples)
-                works_list = srow.get("works") if isinstance(srow, dict) else None
-                if not isinstance(works_list, list):
+                if not isinstance(srow, dict):
                     errors += 1
-                    add_sample(samples, {"check": "cross_refs", "id": sid_norm, "path": str(series_index_path), "message": "series_index series entry missing works list"}, max_samples)
+                    add_sample(samples, {"check": "cross_refs", "id": sid_norm, "path": str(series_index_path), "message": "series_index entry must be an object"}, max_samples)
                     continue
-                for wid_raw in works_list:
-                    wid = normalize_text(wid_raw)
-                    if wid == "":
-                        continue
-                    if work_ids_scope is not None and wid not in work_ids_scope:
-                        continue
-                    if wid not in works:
+                for field in ("primary_work_id", "single_work_id"):
+                    work_id = normalize_text(srow.get(field))
+                    if work_id and (work_ids_scope is None or work_id in work_ids_scope) and work_id not in works:
                         errors += 1
-                        add_sample(samples, {"check": "cross_refs", "id": sid_norm, "path": str(series_index_path), "message": f"series_index references missing work_id '{wid}'"}, max_samples)
+                        add_sample(samples, {"check": "cross_refs", "id": sid_norm, "path": str(series_index_path), "message": f"series_index {field} references missing work_id '{work_id}'"}, max_samples)
 
-    works_index_map: Dict[str, Any] = {}
-    works_index_path = site_root / "assets/data/works_index.json"
-    if works_index_path.exists():
-        try:
-            works_index_obj = json.loads(works_index_path.read_text(encoding="utf-8"))
-        except Exception:
-            works_index_obj = {}
-        maybe_works_map = works_index_obj.get("works") if isinstance(works_index_obj, dict) else None
-        if isinstance(maybe_works_map, dict):
-            works_index_map = maybe_works_map
+            for sid_norm, series_row in series.items():
+                if series_ids_scope is not None and sid_norm not in series_ids_scope:
+                    continue
+                if sid_norm not in series_map:
+                    errors += 1
+                    add_sample(samples, {"check": "cross_refs", "id": sid_norm, "path": series_row["path"], "message": "exact Series payload is missing from series_index"}, max_samples)
+
+    series_membership = load_exact_series_member_ids(site_root)
+    for series_id, member_work_ids in series_membership.items():
+        if series_ids_scope is not None and series_id not in series_ids_scope:
+            continue
+        for work_id in member_work_ids:
+            if work_ids_scope is not None and work_id not in work_ids_scope:
+                continue
+            if work_id not in works:
+                errors += 1
+                add_sample(samples, {"check": "cross_refs", "id": series_id, "path": series.get(series_id, {}).get("path", ""), "message": f"exact Series member references missing work_id '{work_id}'"}, max_samples)
 
     # Per-work JSON -> work-detail/work route contract references
     detail_refs = load_detail_refs_from_work_json(site_root=site_root, work_ids_scope=work_ids_scope)
@@ -423,7 +446,7 @@ def check_cross_refs(
             errors += 1
             add_sample(samples, {"check": "cross_refs", "id": detail_uid_norm, "path": ref.get("path", ""), "message": "work JSON references missing work detail contract"}, max_samples)
 
-    # tag_assignments -> series_index / works_index references
+    # Tag assignments -> lean Series identity and exact Series membership.
     assignments_path = resolve_repo_source_path(tag_source_paths.TAG_ASSIGNMENTS_REL_PATH)
     if not assignments_path.exists():
         warnings += 1
@@ -444,15 +467,10 @@ def check_cross_refs(
             known_series_index_ids = set(series_map.keys()) if isinstance(series_map, dict) else set()
             source_series_status_by_id = load_source_series_statuses()
             known_work_ids = {normalize_text(wid) for wid in works.keys()}
-            known_work_ids.update(normalize_text(wid) for wid in works_index_map.keys())
-            series_membership: Dict[str, Set[str]] = {}
-            if isinstance(series_map, dict):
-                for sid, row in series_map.items():
-                    sid_norm = normalize_text(sid)
-                    raw_works = row.get("works") if isinstance(row, dict) else None
-                    if sid_norm == "" or not isinstance(raw_works, list):
-                        continue
-                    series_membership[sid_norm] = {normalize_text(item) for item in raw_works if normalize_text(item) != ""}
+            series_member_sets: Dict[str, Set[str]] = {
+                series_id: set(member_work_ids)
+                for series_id, member_work_ids in series_membership.items()
+            }
 
             for sid, row in assignments_series.items():
                 sid_norm = normalize_text(sid)
@@ -478,10 +496,10 @@ def check_cross_refs(
                     if work_id_norm not in known_work_ids:
                         warnings += 1
                         add_sample(samples, {"check": "cross_refs", "id": work_id_norm, "path": str(assignments_path), "message": f"tag_assignments work override references unknown work_id '{work_id_norm}'"}, max_samples)
-                    members = series_membership.get(sid_norm, set())
+                    members = series_member_sets.get(sid_norm, set())
                     if members and work_id_norm not in members:
                         warnings += 1
-                        add_sample(samples, {"check": "cross_refs", "id": work_id_norm, "path": str(assignments_path), "message": f"tag_assignments work override for series '{sid_norm}' is not present in series_index membership"}, max_samples)
+                        add_sample(samples, {"check": "cross_refs", "id": work_id_norm, "path": str(assignments_path), "message": f"tag_assignments work override for series '{sid_norm}' is not present in exact Series membership"}, max_samples)
 
     return {"name": "cross_refs", "error_count": errors, "warning_count": warnings, "samples": samples}
 
@@ -503,8 +521,7 @@ def check_schema(
     re_detail_uid = re.compile(r"^\d{5}-\d{3}$")
     allowed_sort_fields = {"title", "year", "work_id", "title_sort"}
 
-    # Parse/validate series sort_fields once for downstream work-level checks.
-    # Prefer canonical series_index.json data; keep fallback support for imported rows.
+    # Parse and validate exact Series sort_fields once for downstream Work checks.
     sort_fields_by_series: Dict[str, List[str]] = {}
     sort_fields_raw_by_series: Dict[str, tuple[str, str]] = {}
     series_index_path = site_root / "assets/data/series_index.json"
@@ -652,6 +669,7 @@ def check_json_schema(
 
     # Series index JSON
     series_index_path = site_root / "assets/data/series_index.json"
+    series_map: Any = None
     try:
         series_index_obj = json.loads(series_index_path.read_text(encoding="utf-8"))
     except Exception as e:
@@ -673,6 +691,9 @@ def check_json_schema(
                 if key not in header:
                     errors += 1
                     add_sample(samples, {"check": "json_schema", "id": "series_index", "path": str(series_index_path), "message": f"series index header missing '{key}'"}, max_samples)
+            if normalize_text(header.get("schema")) != "series_index_v3":
+                errors += 1
+                add_sample(samples, {"check": "json_schema", "id": "series_index", "path": str(series_index_path), "message": "series index schema must be series_index_v3"}, max_samples)
         if not isinstance(series_map, dict):
             errors += 1
             add_sample(samples, {"check": "json_schema", "id": "series_index", "path": str(series_index_path), "message": "series index series must be object map"}, max_samples)
@@ -690,75 +711,73 @@ def check_json_schema(
                     errors += 1
                     add_sample(samples, {"check": "json_schema", "id": sid_norm, "path": str(series_index_path), "message": "series index entry must be object"}, max_samples)
                     continue
-                works = row.get("works")
-                if not isinstance(works, list):
+                allowed_fields = {"series_id", "title", "year", "year_display", "primary_work_id", "single_work_id"}
+                extra_fields = sorted(set(row) - allowed_fields)
+                if extra_fields:
                     errors += 1
-                    add_sample(samples, {"check": "json_schema", "id": sid_norm, "path": str(series_index_path), "message": "series index entry missing works list"}, max_samples)
-                sort_fields = normalize_text(row.get("sort_fields"))
-                if sort_fields == "":
-                    warnings += 1
-                    add_sample(samples, {"check": "json_schema", "id": sid_norm, "path": str(series_index_path), "message": "series index entry missing sort_fields"}, max_samples)
-                if "series_type" in row and row.get("series_type") is not None and not isinstance(row.get("series_type"), str):
-                    warnings += 1
-                    add_sample(samples, {"check": "json_schema", "id": sid_norm, "path": str(series_index_path), "message": "series index series_type should be string or null"}, max_samples)
-
-    # Works index JSON
-    works_index_path = site_root / "assets/data/works_index.json"
-    try:
-        works_index_obj = json.loads(works_index_path.read_text(encoding="utf-8"))
-    except Exception as e:
-        errors += 1
-        add_sample(samples, {"check": "json_schema", "id": "works_index", "path": str(works_index_path), "message": f"invalid json: {e}"}, max_samples)
-        works_index_obj = None
-
-    if not isinstance(works_index_obj, dict):
-        errors += 1
-        add_sample(samples, {"check": "json_schema", "id": "works_index", "path": str(works_index_path), "message": "works index root must be object"}, max_samples)
-    else:
-        header = works_index_obj.get("header")
-        works_map = works_index_obj.get("works")
-        if not isinstance(header, dict):
-            errors += 1
-            add_sample(samples, {"check": "json_schema", "id": "works_index", "path": str(works_index_path), "message": "missing/invalid header object"}, max_samples)
-        else:
-            for key in ("schema", "version", "generated_at_utc", "count"):
-                if key not in header:
+                    add_sample(samples, {"check": "json_schema", "id": sid_norm, "path": str(series_index_path), "message": f"series index entry has non-lean fields: {', '.join(extra_fields)}"}, max_samples)
+                for field in ("series_id", "title", "primary_work_id"):
+                    if normalize_text(row.get(field)) == "":
+                        errors += 1
+                        add_sample(samples, {"check": "json_schema", "id": sid_norm, "path": str(series_index_path), "message": f"series index entry missing {field}"}, max_samples)
+                if normalize_text(row.get("series_id")) != sid_norm:
                     errors += 1
-                    add_sample(samples, {"check": "json_schema", "id": "works_index", "path": str(works_index_path), "message": f"works index header missing '{key}'"}, max_samples)
-        if not isinstance(works_map, dict):
+                    add_sample(samples, {"check": "json_schema", "id": sid_norm, "path": str(series_index_path), "message": "series index key does not match series_id"}, max_samples)
+
+    # Exact Series JSON owns selected Series metadata and ordered lightweight members.
+    for path in sorted((site_root / "assets/series/index").glob("*.json")):
+        series_id = normalize_text(path.stem)
+        if series_ids_scope is not None and series_id not in series_ids_scope:
+            continue
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except Exception as exc:
             errors += 1
-            add_sample(samples, {"check": "json_schema", "id": "works_index", "path": str(works_index_path), "message": "works index works must be object map"}, max_samples)
-        else:
-            if isinstance(header, dict) and isinstance(header.get("count"), int) and header["count"] != len(works_map):
+            add_sample(samples, {"check": "json_schema", "id": series_id, "path": str(path), "message": f"invalid exact Series JSON: {exc}"}, max_samples)
+            continue
+        header = payload.get("header") if isinstance(payload, dict) else None
+        series_record = payload.get("series") if isinstance(payload, dict) else None
+        member_works = payload.get("member_works") if isinstance(payload, dict) else None
+        if not isinstance(header, dict) or normalize_text(header.get("schema")) != "series_record_v3":
+            errors += 1
+            add_sample(samples, {"check": "json_schema", "id": series_id, "path": str(path), "message": "exact Series header must use series_record_v3"}, max_samples)
+        elif normalize_text(header.get("series_id")) != series_id:
+            errors += 1
+            add_sample(samples, {"check": "json_schema", "id": series_id, "path": str(path), "message": "exact Series header identity does not match its file target"}, max_samples)
+        if not isinstance(series_record, dict) or normalize_text(series_record.get("series_id")) != series_id:
+            errors += 1
+            add_sample(samples, {"check": "json_schema", "id": series_id, "path": str(path), "message": "exact Series identity does not match its file target"}, max_samples)
+        if not isinstance(member_works, list):
+            errors += 1
+            add_sample(samples, {"check": "json_schema", "id": series_id, "path": str(path), "message": "exact Series member_works must be an array"}, max_samples)
+            continue
+        if isinstance(header, dict) and header.get("count") != len(member_works):
+            errors += 1
+            add_sample(samples, {"check": "json_schema", "id": series_id, "path": str(path), "message": "exact Series header.count does not match member_works"}, max_samples)
+        member_ids: List[str] = []
+        for member in member_works:
+            if not isinstance(member, dict):
                 errors += 1
-                add_sample(samples, {"check": "json_schema", "id": "works_index", "path": str(works_index_path), "message": "works index header.count does not match works map size"}, max_samples)
-            for wid, row in works_map.items():
-                wid_norm = normalize_text(wid)
-                if wid_norm == "":
-                    continue
-                if work_ids_scope is not None and wid_norm not in work_ids_scope:
-                    continue
-                if not isinstance(row, dict):
-                    errors += 1
-                    add_sample(samples, {"check": "json_schema", "id": wid_norm, "path": str(works_index_path), "message": "works index entry must be object"}, max_samples)
-                    continue
-                if normalize_text(row.get("work_id")) == "":
-                    errors += 1
-                    add_sample(samples, {"check": "json_schema", "id": wid_norm, "path": str(works_index_path), "message": "works index entry missing work_id"}, max_samples)
-                if "series_ids" not in row:
-                    errors += 1
-                    add_sample(samples, {"check": "json_schema", "id": wid_norm, "path": str(works_index_path), "message": "works index entry missing series_ids"}, max_samples)
-                elif not isinstance(row.get("series_ids"), list):
-                    errors += 1
-                    add_sample(samples, {"check": "json_schema", "id": wid_norm, "path": str(works_index_path), "message": "works index entry series_ids must be list"}, max_samples)
-                else:
-                    series_ids = [normalize_text(item) for item in row.get("series_ids", [])]
-                    if not series_ids:
-                        errors += 1
-                        add_sample(samples, {"check": "json_schema", "id": wid_norm, "path": str(works_index_path), "message": "works index entry series_ids must not be empty"}, max_samples)
-                    elif any(item == "" for item in series_ids):
-                        errors += 1
-                        add_sample(samples, {"check": "json_schema", "id": wid_norm, "path": str(works_index_path), "message": "works index entry series_ids must not contain empty values"}, max_samples)
+                add_sample(samples, {"check": "json_schema", "id": series_id, "path": str(path), "message": "exact Series member must be an object"}, max_samples)
+                continue
+            extra_fields = sorted(set(member) - {"work_id", "title", "year", "year_display"})
+            work_id = normalize_text(member.get("work_id"))
+            if extra_fields or work_id == "" or normalize_text(member.get("title")) == "":
+                errors += 1
+                add_sample(samples, {"check": "json_schema", "id": series_id, "path": str(path), "message": "exact Series member must contain only a work_id, title, year, and year_display"}, max_samples)
+            if work_id:
+                member_ids.append(work_id)
+        lean_row = series_map.get(series_id) if isinstance(series_map, dict) else None
+        primary_work_id = normalize_text(lean_row.get("primary_work_id")) if isinstance(lean_row, dict) else ""
+        if primary_work_id not in member_ids:
+            errors += 1
+            add_sample(samples, {"check": "json_schema", "id": series_id, "path": str(path), "message": "lean primary_work_id is not an exact Series member"}, max_samples)
+        if isinstance(lean_row, dict):
+            single_work_id = normalize_text(lean_row.get("single_work_id"))
+            expected_single_work_id = member_ids[0] if len(member_ids) == 1 else ""
+            if single_work_id != expected_single_work_id:
+                errors += 1
+                add_sample(samples, {"check": "json_schema", "id": series_id, "path": str(series_index_path), "message": "lean single_work_id does not match exact Series membership"}, max_samples)
 
     tag_assignments_path = resolve_repo_source_path(tag_source_paths.TAG_ASSIGNMENTS_REL_PATH)
     try:
@@ -867,8 +886,14 @@ def check_json_schema(
             if key not in header:
                 errors += 1
                 add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": f"work header missing '{key}'"}, max_samples)
+        if normalize_text(header.get("schema")) != "work_record_v4" or normalize_text(header.get("work_id")) != wid:
+            errors += 1
+            add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "exact Work header schema or identity does not match its file target"}, max_samples)
         work_obj = obj.get("work")
-        if isinstance(work_obj, dict):
+        if not isinstance(work_obj, dict) or normalize_text(work_obj.get("work_id")) != wid:
+            errors += 1
+            add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "exact Work identity does not match its file target"}, max_samples)
+        else:
             if "series_ids" not in work_obj:
                 errors += 1
                 add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "work.series_ids missing"}, max_samples)
@@ -968,7 +993,6 @@ def check_links(
 
     producers = [
         ("series->work", {"series", "series_page"}, work_page_accepts),
-        ("works-index->work", {"from", "return_sort", "return_dir", "return_series"}, work_page_accepts),
         ("work->details-index", {"from_work", "from_work_title", "section", "section_label", "series", "series_page"}, details_index_accepts),
         ("work->details-page", {"from_work", "from_work_title", "section", "details_section", "details_page", "series", "series_page"}, details_page_accepts),
         ("details-page->work", {"series", "series_page", "details_section", "details_page"}, work_page_accepts),
@@ -1050,9 +1074,8 @@ def check_orphans(
     detail_ids = set(work_details.keys())
     canonical_detail_refs = load_detail_refs_from_work_json(site_root=site_root, work_ids_scope=work_ids_scope)
     canonical_detail_ids = set(canonical_detail_refs.keys())
-    works_by_series = load_series_work_counts_from_index(site_root)
-    if works_by_series is None:
-        works_by_series = {}
+    works_by_series = load_exact_series_work_counts(site_root)
+    if not works_by_series:
         for wid, row in works.items():
             if work_ids_scope is not None and wid not in work_ids_scope:
                 continue

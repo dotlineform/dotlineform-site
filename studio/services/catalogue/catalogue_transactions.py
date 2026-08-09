@@ -191,7 +191,6 @@ def ensure_catalogue_delete_payload_scope(
         repo_root / public_paths.SERIES_JSON_DIR,
     ]
     generated_paths = {
-        (repo_root / public_paths.WORKS_INDEX_JSON_PATH).resolve(),
         (repo_root / public_paths.SERIES_INDEX_JSON_PATH).resolve(),
         (repo_root / public_paths.RECENT_INDEX_JSON_PATH).resolve(),
         (repo_root / catalogue_cleanup.tag_source_paths.TAG_ASSIGNMENTS_REL_PATH).resolve(),

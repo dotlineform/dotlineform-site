@@ -33,8 +33,6 @@ def build_generate_command(
         public_paths.SERIES_INDEX_JSON_PATH.as_posix(),
         "--works-json-dir",
         public_paths.WORKS_JSON_DIR.as_posix(),
-        "--works-index-json-path",
-        public_paths.WORKS_INDEX_JSON_PATH.as_posix(),
         "--recent-index-json-path",
         public_paths.RECENT_INDEX_JSON_PATH.as_posix(),
     ]

@@ -15,7 +15,6 @@ DEFAULT_ARTIFACTS = [
     "work-json",
     "series-pages",
     "series-index-json",
-    "works-index-json",
     "recent-index-json",
 ]
 

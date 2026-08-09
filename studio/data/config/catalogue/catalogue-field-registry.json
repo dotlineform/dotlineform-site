@@ -1,10 +1,10 @@
 {
   "schema": "catalogue_field_registry_v1",
-  "status": "task_2_initial_registry",
-  "last_updated": "2026-05-02",
+  "status": "active",
+  "last_updated": "2026-08-09",
   "source_doc": "/docs/?scope=studio&doc=data-models-catalogue-source",
   "inventory_doc": "/docs/?scope=studio&doc=catalogue-field-registry-review",
-  "description": "Field-to-artifact dependency registry for catalogue source edits. Task 2 records current selected behavior and target behavior; later tasks wire the target rules into build planning.",
+  "description": "Field-to-artifact dependency registry for canonical Catalogue source edits and their Studio and public projections.",
   "artifact_families": {
     "source-json": "Canonical Studio catalogue source JSON.",
     "studio-lookup": "Studio read payloads and search/open payloads under studio/data/generated/catalogue-lookup/.",
@@ -12,7 +12,6 @@
     "work-details-page": "Metadata-free public work-detail route shell.",
     "series-page": "Metadata-free public series route shell.",
     "work-json": "Focused public work JSON.",
-    "works-index-json": "Aggregate public works index JSON.",
     "work-storage-index-json": "Studio storage lookup derived from work storage metadata.",
     "series-json": "Focused public series JSON.",
     "series-index-json": "Aggregate public series index JSON.",
@@ -34,7 +33,6 @@
             "studio-lookup",
             "work-page",
             "work-json",
-            "works-index-json",
             "series-page",
             "series-json",
             "series-index-json",
@@ -56,7 +54,6 @@
             "series-page",
             "series-json",
             "series-index-json",
-            "works-index-json",
             "recent-index-json",
             "catalogue-search"
           ]
@@ -73,7 +70,6 @@
             "studio-lookup",
             "work-page",
             "work-json",
-            "works-index-json",
             "series-page",
             "series-json",
             "series-index-json",
@@ -95,7 +91,6 @@
             "series-page",
             "series-json",
             "series-index-json",
-            "works-index-json",
             "recent-index-json",
             "catalogue-search"
           ]
@@ -118,7 +113,6 @@
           "studio-lookup",
           "work-page",
           "work-json",
-          "works-index-json",
           "series-page",
           "series-index-json",
           "recent-index-json",
@@ -133,14 +127,14 @@
           "studio-lookup",
           "work-page",
           "work-json",
-          "works-index-json",
+          "series-json",
           "series-index-json",
           "recent-index-json",
           "catalogue-search",
           "local-media"
         ],
         "fallback": false,
-        "reason": "Work identity controls route creation/removal, public payload identity, aggregate membership references, search identity, and media output names."
+        "reason": "Work identity controls exact payload creation/removal, related Series member projections, lean Series membership facts, search identity, and media output names."
       }
     },
     {
@@ -160,7 +154,6 @@
           "work-json",
           "series-page",
           "series-index-json",
-          "works-index-json",
           "recent-index-json",
           "catalogue-search"
         ],
@@ -171,7 +164,7 @@
           "source-json",
           "studio-lookup",
           "work-json",
-          "works-index-json",
+          "series-json",
           "series-index-json",
           "recent-index-json",
           "catalogue-search"
@@ -187,7 +180,7 @@
           }
         ],
         "fallback": false,
-        "reason": "Publication state and membership affect public inclusion, related series membership, /recent/, and search."
+        "reason": "Publication state and membership affect exact Work inclusion, related exact Series members, lean Series membership facts, /recent/, and search."
       }
     },
     {
@@ -207,7 +200,6 @@
           "work-json",
           "series-page",
           "series-index-json",
-          "works-index-json",
           "recent-index-json",
           "catalogue-search"
         ],
@@ -218,18 +210,12 @@
           "source-json",
           "studio-lookup",
           "work-json",
-          "works-index-json",
+          "series-json",
           "recent-index-json",
           "catalogue-search"
         ],
-        "conditional_artifacts": [
-          {
-            "artifact": "series-index-json",
-            "when": "a related series sort_fields rule uses the changed field"
-          }
-        ],
         "fallback": false,
-        "reason": "Core display fields are serialized to focused work JSON, aggregate works index, /recent/ entries, and catalogue search."
+        "reason": "Core display fields are serialized to focused Work JSON, related exact Series member rows, /recent/ entries, and Catalogue Search."
       }
     },
     {
@@ -248,7 +234,6 @@
           "work-json",
           "series-page",
           "series-index-json",
-          "works-index-json",
           "recent-index-json",
           "catalogue-search"
         ],
@@ -286,7 +271,6 @@
           "work-json",
           "series-page",
           "series-index-json",
-          "works-index-json",
           "recent-index-json",
           "catalogue-search"
         ],
@@ -317,7 +301,6 @@
           "work-json",
           "series-page",
           "series-index-json",
-          "works-index-json",
           "recent-index-json",
           "catalogue-search"
         ],
@@ -351,7 +334,6 @@
           "work-json",
           "series-page",
           "series-index-json",
-          "works-index-json",
           "recent-index-json",
           "catalogue-search",
           "local-media"
@@ -390,7 +372,6 @@
           "work-json",
           "series-page",
           "series-index-json",
-          "works-index-json",
           "recent-index-json",
           "catalogue-search"
         ],
@@ -642,7 +623,6 @@
           "series-page",
           "series-json",
           "series-index-json",
-          "works-index-json",
           "recent-index-json",
           "catalogue-search"
         ],
@@ -655,12 +635,11 @@
           "series-page",
           "series-json",
           "series-index-json",
-          "works-index-json",
           "recent-index-json",
           "catalogue-search"
         ],
         "fallback": false,
-        "reason": "Series identity controls route creation/removal, related work membership references, public aggregate indexes, recent entries, and search."
+        "reason": "Series identity controls exact payload creation/removal, lean list identity, related exact Work membership references, Recent entries, and search."
       }
     },
     {
@@ -680,7 +659,6 @@
           "series-page",
           "series-json",
           "series-index-json",
-          "works-index-json",
           "recent-index-json",
           "catalogue-search"
         ],
@@ -696,7 +674,7 @@
           "catalogue-search"
         ],
         "fallback": false,
-        "reason": "Series display fields affect focused series JSON, aggregate series data, related search entries, and recent display context."
+        "reason": "Series display fields affect exact Series JSON, the lean Series list, related search entries, and Recent display context."
       }
     },
     {
@@ -716,7 +694,6 @@
           "series-page",
           "series-json",
           "series-index-json",
-          "works-index-json",
           "recent-index-json",
           "catalogue-search"
         ],
@@ -730,12 +707,6 @@
           "series-index-json",
           "recent-index-json",
           "catalogue-search"
-        ],
-        "conditional_artifacts": [
-          {
-            "artifact": "works-index-json",
-            "when": "series status or identity affects public work membership context"
-          }
         ],
         "fallback": false,
         "reason": "Publication state, primary work, and ordering affect public series membership, thumbnails, recent pruning, and search."

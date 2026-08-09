@@ -68,7 +68,7 @@ def build_entries(
         work_publish_transitions=work_publish_transitions or [],
         series_payload=sample_series_payload(),
         series_work_ids_by_id={"009": ["00002", "00003", "00001"], "010": ["00004"]},
-        works_payload=sample_works_payload(),
+        published_work_ids=sample_works_payload(),
         work_meta_by_id=sample_work_meta(),
         work_status_by_id=work_status_by_id or {
             "00001": "published",

@@ -186,7 +186,7 @@ def test_series_index_payload_is_published_only_and_validates_primary_work() -> 
         raise AssertionError("expected missing primary-work validation failure")
 
 
-def test_works_and_storage_index_payloads() -> None:
+def test_storage_index_payload_is_studio_only() -> None:
     work_records = {
         "00001": {"work_id": "1", "status": "published"},
         "00002": {"work_id": "2", "status": "draft"},
@@ -217,28 +217,6 @@ def test_works_and_storage_index_payloads() -> None:
         },
     }
 
-    works = indexes.build_works_index_records(
-        work_records=work_records,
-        canonical_work_record_by_id=canonical,
-    )
-    assert works == {
-        "00001": {
-            "work_id": "00001",
-            "title": "Stored Work",
-            "year": 2024,
-            "year_display": "2024",
-            "series_ids": ["009"],
-        }
-    }
-
-    works_payload = indexes.build_works_index_payload(
-        works=works,
-        generated_at_utc="2026-05-09T12:30:00Z",
-    )
-    assert works_payload["header"]["schema"] == "works_index_v4"
-    assert works_payload["header"]["count"] == 1
-    assert works_payload["works"] == works
-
     storage_eligible_works = {
         work_id: canonical[work_id]
         for work_id, work_record in work_records.items()
@@ -265,7 +243,7 @@ def test_works_and_storage_index_payloads() -> None:
 def main() -> None:
     test_series_context_sorts_title_aliases_and_numeric_values()
     test_series_index_payload_is_published_only_and_validates_primary_work()
-    test_works_and_storage_index_payloads()
+    test_storage_index_payload_is_studio_only()
     print("Catalogue generation index tests OK")
 
 

@@ -66,19 +66,15 @@ def assert_public_routes(page: Page, base_url: str) -> None:
     def has_request(path: str) -> bool:
         return any(path in url for url in requests)
 
-    def assert_no_aggregate_reads(label: str) -> None:
-        aggregate_reads = [
-            url for url in requests
-            if "/assets/data/series_index.json" in url or "/assets/data/works_index.json" in url
-        ]
-        if aggregate_reads:
-            raise AssertionError(f"{label} retained aggregate Catalogue reads: {aggregate_reads!r}")
+    def assert_no_list_index_reads(label: str) -> None:
+        list_reads = [url for url in requests if "/assets/data/series_index.json" in url]
+        if list_reads:
+            raise AssertionError(f"{label} retained list-index reads: {list_reads!r}")
 
     def public_catalogue_payload_reads() -> list[str]:
         markers = (
             "/assets/data/recent_index.json",
             "/assets/data/series_index.json",
-            "/assets/data/works_index.json",
             "/assets/series/index/",
             "/assets/works/index/",
             "/assets/data/search/catalogue/index.json",
@@ -92,7 +88,7 @@ def assert_public_routes(page: Page, base_url: str) -> None:
     expect(page.locator("#seriesIndexList .catalogueGridList__item").first).to_be_visible(timeout=10_000)
     if not has_request("/assets/data/series_index.json"):
         raise AssertionError(f"Series list missed its lean index read: {requests!r}")
-    if has_request("/assets/data/works_index.json") or has_request("/assets/series/index/"):
+    if has_request("/assets/series/index/"):
         raise AssertionError(f"Series list loaded selected-record data: {requests!r}")
 
     goto(page, base_url, "/series/?mode=moments")
@@ -113,10 +109,20 @@ def assert_public_routes(page: Page, base_url: str) -> None:
         raise AssertionError(f"selected-series work link is not canonical: {series_work_href!r}")
     if not has_request("/assets/series/index/009.json"):
         raise AssertionError(f"selected Series missed its exact payload: {requests!r}")
-    assert_no_aggregate_reads("selected Series")
+    assert_no_list_index_reads("selected Series")
     works_nav_href = first_href(page, ".site-nav .nav-item[href$='/series/']")
     if not works_nav_href.endswith("/series/"):
         raise AssertionError(f"works top nav should be a reset link on selected-series state: {works_nav_href!r}")
+
+    page.locator("#seriesIndexList .catalogueGridList__item").first.click()
+    page.wait_for_url(re.compile(re.escape(series_work_href) + r"$"), timeout=10_000)
+    expect(page.locator("#selectedWorkRoot")).to_be_visible(timeout=10_000)
+    page.go_back(wait_until="domcontentloaded")
+    page.wait_for_url(re.compile(r"/series/\?series=009&from=recent$"), timeout=10_000)
+    expect(page.locator("#seriesIndexList .catalogueGridList__item").first).to_contain_text(
+        "a poem divided into 4 parts",
+        timeout=10_000,
+    )
 
     goto(page, base_url, "/works/")
     page.wait_for_url(re.compile(re.escape(base_url.rstrip("/")) + r"/series/$"), timeout=10_000)
@@ -133,7 +139,7 @@ def assert_public_routes(page: Page, base_url: str) -> None:
         raise AssertionError(f"work back link should fall back to canonical series state: {work_back_href!r}")
     if not has_request("/assets/works/index/00001.json") or not has_request("/assets/series/index/009.json"):
         raise AssertionError(f"selected Work missed exact Work/primary-Series reads: {requests!r}")
-    assert_no_aggregate_reads("selected Work")
+    assert_no_list_index_reads("selected Work")
 
     requests.clear()
     goto(page, base_url, "/works/?work=00001&series=009")
@@ -142,7 +148,7 @@ def assert_public_routes(page: Page, base_url: str) -> None:
     nav_href = first_href(page, "#seriesNavNext")
     if "/works/?" not in nav_href or "work=00002" not in nav_href or "series=009" not in nav_href:
         raise AssertionError(f"series navigation link is not canonical: {nav_href!r}")
-    assert_no_aggregate_reads("selected Work navigation")
+    assert_no_list_index_reads("selected Work navigation")
 
     requests.clear()
     goto(page, base_url, "/works/?work=00008&series=026")
@@ -150,7 +156,7 @@ def assert_public_routes(page: Page, base_url: str) -> None:
     expect(page.locator("#seriesNav")).to_be_visible(timeout=10_000)
     if not has_request("/assets/series/index/105.json") or not has_request("/assets/series/index/026.json"):
         raise AssertionError(f"non-primary Work context missed its two exact Series reads: {requests!r}")
-    assert_no_aggregate_reads("non-primary Work navigation")
+    assert_no_list_index_reads("non-primary Work navigation")
 
     requests.clear()
     goto(page, base_url, "/works/?work=00001&series=999")
@@ -159,14 +165,14 @@ def assert_public_routes(page: Page, base_url: str) -> None:
     expect(page.locator("#pageBackLink")).to_have_attribute("href", re.compile(r"/series/$"), timeout=10_000)
     if has_request("/assets/series/index/999.json"):
         raise AssertionError(f"invalid Series query was fetched as navigation context: {requests!r}")
-    assert_no_aggregate_reads("invalid Work navigation target")
+    assert_no_list_index_reads("invalid Work navigation target")
 
     requests.clear()
     goto(page, base_url, "/series/?series=999")
     expect(page.locator("#seriesIndexEmpty")).to_contain_text("problem loading content", timeout=10_000)
     if not has_request("/assets/series/index/999.json"):
         raise AssertionError(f"missing selected Series did not use its exact target: {requests!r}")
-    assert_no_aggregate_reads("missing selected Series")
+    assert_no_list_index_reads("missing selected Series")
 
     goto(page, base_url, "/works/?work=00373")
     expect(page.locator("#selectedWorkRoot")).to_be_visible(timeout=10_000)

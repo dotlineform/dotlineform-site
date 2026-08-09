@@ -145,7 +145,6 @@ def prepare_repo(root: Path, *, extra_work: bool = False, first_work_title: str 
     )
     (source_dir / "work_details").mkdir(parents=True, exist_ok=True)
     write_json(root / "site/assets/data/series_index.json", {"series": {"wrong": {"title": "Wrong"}}})
-    write_json(root / "site/assets/data/works_index.json", {"works": {"99999": {"title": "Wrong"}}})
 
 
 def run_cli(root: Path, args: list[str]) -> tuple[int, str, str]:

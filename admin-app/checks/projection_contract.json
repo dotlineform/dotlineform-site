@@ -21,14 +21,12 @@
       "id": "catalogue_public_indexes",
       "classification": "public_projection",
       "repo_paths": [
-        "site/assets/data/works_index.json",
         "site/assets/data/series_index.json",
         "site/assets/data/recent_index.json"
       ],
       "public_output": {
         "policy": "required",
         "paths": [
-          "assets/data/works_index.json",
           "assets/data/series_index.json",
           "assets/data/recent_index.json"
         ]
@@ -346,7 +344,6 @@
         "notes"
       ],
       "public_paths": [
-        "site/assets/data/works_index.json",
         "site/assets/data/series_index.json",
         "site/assets/data/recent_index.json",
         "site/assets/works/index/*.json",

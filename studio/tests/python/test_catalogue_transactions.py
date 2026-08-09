@@ -34,7 +34,7 @@ def write_text(path: Path, text: str) -> None:
 def test_transaction_snapshots_capture_existing_unique_paths() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp) / "repo"
-        repo_target = root / "site/assets/data/works_index.json"
+        repo_target = root / "site/assets/data/recent_index.json"
         external_target = Path(tmp) / "external-source.md"
         write_text(repo_target, "repo")
         write_text(external_target, "external")

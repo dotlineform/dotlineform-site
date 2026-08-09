@@ -65,7 +65,6 @@ def main(argv: list[str] | None = None) -> int:
                     lambda request: data_requests.append(request.url)
                     if "/studio/api/catalogue/read" in request.url
                     or "/studio/data/generated/activity/work-storage-index.json" in request.url
-                    or "/assets/data/works_index.json" in request.url
                     or "/assets/data/series_index.json" in request.url
                     else None,
                 )
@@ -89,7 +88,7 @@ def main(argv: list[str] | None = None) -> int:
                 series_href = page.locator(".worksList__series").first.get_attribute("href")
                 if not title_href or not title_href.startswith("http://127.0.0.1:4000/works/"):
                     raise AssertionError(f"work link did not resolve through the public preview base: {title_href!r}")
-                if "from=works_index" in title_href or "return_sort=" in title_href:
+                if "return_sort=" in title_href:
                     raise AssertionError(f"work link retained retired public index state: {title_href!r}")
                 if not series_href or not series_href.startswith("http://127.0.0.1:4000/series/"):
                     raise AssertionError(f"series link did not resolve through the public preview base: {series_href!r}")
@@ -116,7 +115,7 @@ def main(argv: list[str] | None = None) -> int:
                 raise AssertionError(f"studio-works route missed Studio-owned reads {missing_reads!r}: {data_requests!r}")
             public_reads = [
                 url for url in data_requests
-                if "/assets/data/works_index.json" in url or "/assets/data/series_index.json" in url
+                if "/assets/data/series_index.json" in url
             ]
             if public_reads:
                 raise AssertionError(f"studio-works retained public Catalogue data reads: {public_reads!r}")

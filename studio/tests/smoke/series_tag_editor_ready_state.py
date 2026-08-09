@@ -48,7 +48,6 @@ def run(base_url: str, series_id: str) -> None:
         public_reads = [
             url for url in requests
             if "/assets/data/series_index.json" in url
-            or "/assets/data/works_index.json" in url
             or "/assets/series/index/" in url
             or "/assets/works/index/" in url
         ]

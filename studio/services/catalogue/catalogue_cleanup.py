@@ -73,10 +73,6 @@ def finalize_object_map_payload(payload: Dict[str, Any], map_key: str, default_s
     return payload
 
 
-def finalize_works_index_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
-    return finalize_object_map_payload(payload, "works", "works_index_v4")
-
-
 def finalize_series_index_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
     return finalize_object_map_payload(payload, "series", "series_index_v3")
 
@@ -308,7 +304,6 @@ def collect_catalogue_delete_cleanup(
             existing_repo_paths(
                 repo_root,
                 [
-                    public_paths.WORKS_INDEX_JSON_PATH,
                     public_paths.SERIES_INDEX_JSON_PATH,
                     public_paths.RECENT_INDEX_JSON_PATH,
                 ],
@@ -341,7 +336,6 @@ def collect_catalogue_delete_cleanup(
                 repo_root,
                 [
                     public_paths.SERIES_INDEX_JSON_PATH,
-                    public_paths.WORKS_INDEX_JSON_PATH,
                     public_paths.RECENT_INDEX_JSON_PATH,
                 ],
             )
@@ -380,7 +374,6 @@ def ensure_catalogue_delete_cleanup_scope(repo_root: Path, cleanup: Mapping[str,
         repo_root / public_paths.SERIES_JSON_DIR,
     ]
     update_paths = {
-        (repo_root / public_paths.WORKS_INDEX_JSON_PATH).resolve(),
         (repo_root / public_paths.SERIES_INDEX_JSON_PATH).resolve(),
         (repo_root / public_paths.RECENT_INDEX_JSON_PATH).resolve(),
         (repo_root / tag_source_paths.TAG_ASSIGNMENTS_REL_PATH).resolve(),
@@ -592,14 +585,6 @@ def build_catalogue_delete_generated_payloads(
         return path, load_json_file(path)
 
     if kind == "work":
-        works_index = load_existing(public_paths.WORKS_INDEX_JSON_PATH)
-        if works_index is not None:
-            path, payload = works_index
-            works = payload.get("works")
-            if isinstance(works, dict) and record_id in works:
-                del works[record_id]
-                payloads[path] = finalize_works_index_payload(payload)
-
         work_storage = load_existing(Path("studio/data/generated/activity/work-storage-index.json"))
         if work_storage is not None:
             path, payload = work_storage
@@ -693,23 +678,6 @@ def build_catalogue_delete_generated_payloads(
             if isinstance(series_map, dict) and record_id in series_map:
                 del series_map[record_id]
                 payloads[path] = finalize_series_index_payload(payload)
-
-        works_index = load_existing(public_paths.WORKS_INDEX_JSON_PATH)
-        if works_index is not None:
-            path, payload = works_index
-            works = payload.get("works")
-            changed = False
-            if isinstance(works, dict):
-                for work_id in affected.get("works") or []:
-                    work_record = works.get(str(work_id))
-                    if not isinstance(work_record, dict):
-                        continue
-                    series_ids = normalize_series_ids_value(work_record.get("series_ids"))
-                    if record_id in series_ids:
-                        work_record["series_ids"] = [value for value in series_ids if value != record_id]
-                        changed = True
-            if changed:
-                payloads[path] = finalize_works_index_payload(payload)
 
         for work_id in affected.get("works") or []:
             work_payload = load_existing(public_paths.work_record_path(str(work_id)))

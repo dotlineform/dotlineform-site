@@ -832,7 +832,6 @@
       "status": "v1-target",
       "artifact_families": [
         "work-json",
-        "works-index-json",
         "series-index-json",
         "recent-index-json"
       ],
@@ -846,7 +845,6 @@
       "artifact_families": [
         "series-json",
         "work-json",
-        "works-index-json",
         "series-index-json",
         "recent-index-json"
       ],

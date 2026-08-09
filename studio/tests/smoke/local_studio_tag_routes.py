@@ -142,7 +142,6 @@ def main(argv: list[str] | None = None) -> int:
                 "request",
                 lambda request: public_catalogue_data_requests.append(request.url)
                 if "/assets/data/series_index.json" in request.url
-                or "/assets/data/works_index.json" in request.url
                 or "/assets/series/index/" in request.url
                 or "/assets/works/index/" in request.url
                 else None,

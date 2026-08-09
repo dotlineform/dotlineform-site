@@ -16,6 +16,11 @@ audit = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(audit)
 
 
+def write_json(path: Path, payload: object) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+
 def test_studio_source_paths_resolve_from_repo_root(tmp_path: Path) -> None:
     assignments_path = audit.resolve_repo_source_path(
         audit.tag_source_paths.TAG_ASSIGNMENTS_REL_PATH,
@@ -45,3 +50,51 @@ def test_studio_source_paths_resolve_from_repo_root(tmp_path: Path) -> None:
         "009": "published",
         "010": "draft",
     }
+
+
+def test_generated_route_contracts_use_exact_records_without_works_aggregate(tmp_path: Path) -> None:
+    write_json(
+        tmp_path / "assets/works/index/00001.json",
+        {
+            "work": {
+                "work_id": "00001",
+                "series_ids": ["009"],
+            }
+        },
+    )
+    write_json(
+        tmp_path / "assets/series/index/009.json",
+        {
+            "series": {
+                "series_id": "009",
+                "sort_fields": "work_id",
+            },
+            "member_works": [
+                {"work_id": "00001", "title": "One", "year": 2025, "year_display": "2025"},
+            ],
+        },
+    )
+
+    works, series, work_details = audit.load_generated_route_contracts(tmp_path)
+
+    assert works == {
+        "00001": {
+            "path": str(tmp_path / "assets/works/index/00001.json"),
+            "fm": {
+                "work_id": "00001",
+                "series_ids": ["009"],
+                "series_id": "009",
+            },
+        }
+    }
+    assert series == {
+        "009": {
+            "path": str(tmp_path / "assets/series/index/009.json"),
+            "fm": {
+                "series_id": "009",
+                "sort_fields": "work_id",
+            },
+        }
+    }
+    assert work_details == {}
+    assert audit.load_exact_series_member_ids(tmp_path) == {"009": ["00001"]}

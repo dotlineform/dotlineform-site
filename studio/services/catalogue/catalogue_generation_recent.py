@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Mapping, Optional
+from typing import Any, Dict, Iterable, List, Mapping, Optional
 from urllib.parse import urlencode
 
 try:
@@ -140,7 +140,7 @@ def build_recent_publication_entries(
     work_publish_transitions: List[Dict[str, Any]],
     series_payload: Mapping[str, Mapping[str, Any]],
     series_work_ids_by_id: Mapping[str, List[str]],
-    works_payload: Mapping[str, Mapping[str, Any]],
+    published_work_ids: Iterable[str],
     work_meta_by_id: Mapping[str, Mapping[str, Any]],
     work_status_by_id: Mapping[str, str],
     series_status_by_id: Mapping[str, str],
@@ -148,7 +148,7 @@ def build_recent_publication_entries(
     series_title_by_id: Mapping[str, str],
     recorded_at_utc: str,
 ) -> List[Dict[str, Any]]:
-    current_work_ids = set(works_payload.keys())
+    current_work_ids = {str(work_id) for work_id in published_work_ids}
     current_series_ids = set(series_payload.keys())
     retained_recent_entries = [
         entry

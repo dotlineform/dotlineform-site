@@ -12,7 +12,6 @@ PUBLIC_DATA_ROOT = PUBLIC_ASSETS_ROOT / "data"
 SERIES_JSON_DIR = PUBLIC_ASSETS_ROOT / "series" / "index"
 SERIES_INDEX_JSON_PATH = PUBLIC_DATA_ROOT / "series_index.json"
 WORKS_JSON_DIR = PUBLIC_ASSETS_ROOT / "works" / "index"
-WORKS_INDEX_JSON_PATH = PUBLIC_DATA_ROOT / "works_index.json"
 RECENT_INDEX_JSON_PATH = PUBLIC_DATA_ROOT / "recent_index.json"
 CATALOGUE_SEARCH_INDEX_JSON_PATH = PUBLIC_DATA_ROOT / "search" / "catalogue" / "index.json"
 

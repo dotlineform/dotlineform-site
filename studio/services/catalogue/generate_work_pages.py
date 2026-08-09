@@ -6,7 +6,6 @@ This repo stores public catalogue runtime metadata in generated JSON artifacts.
 
 Series index JSON is written to site/assets/data/series_index.json.
 Work-details JSON index files are written to site/assets/works/index/<work_id>.json (work-driven; one per selected work).
-Lightweight works index JSON is written to site/assets/data/works_index.json (object keyed by work_id).
 Recent publications JSON is written to site/assets/data/recent_index.json.
 Studio-only work storage index JSON is written to studio/data/generated/activity/work-storage-index.json (object keyed by work_id).
 
@@ -393,7 +392,6 @@ def main() -> None:
     ap.add_argument("--series-index-json-path", default=public_paths.SERIES_INDEX_JSON_PATH.as_posix(), help="Output path for generated series index JSON")
     ap.add_argument("--work-details-output-dir", default="_work_details", help="Retired compatibility option; work detail route stubs are no longer written")
     ap.add_argument("--works-json-dir", default=public_paths.WORKS_JSON_DIR.as_posix(), help="Output folder for generated per-work detail JSON index files")
-    ap.add_argument("--works-index-json-path", default=public_paths.WORKS_INDEX_JSON_PATH.as_posix(), help="Output path for generated lightweight works index JSON")
     ap.add_argument("--recent-index-json-path", default=public_paths.RECENT_INDEX_JSON_PATH.as_posix(), help="Output path for generated recent publications index JSON")
     ap.add_argument("--work-storage-index-json-path", default="studio/data/generated/activity/work-storage-index.json", help="Output path for generated Studio-only work storage index JSON")
     ap.add_argument(
@@ -444,9 +442,9 @@ def main() -> None:
         default=[],
         help=(
             "Limit run to selected artifacts. Repeat flag and/or pass comma-separated values. "
-            "Allowed: work-pages,series-pages,series-index-json,work-details-pages,work-json,works-index-json,recent-index-json. "
+            "Allowed: work-pages,series-pages,series-index-json,work-details-pages,work-json,recent-index-json. "
             "Retired page artifact names are accepted as aliases for the current generated JSON/index contracts. "
-            "Aggregate index JSON artifacts are always rebuilt on every run."
+            "List index JSON artifacts are always rebuilt on every run."
         ),
     )
     args = ap.parse_args()
@@ -499,7 +497,6 @@ def main() -> None:
         "series-index-json",
         "work-details-pages",
         "work-json",
-        "works-index-json",
         "recent-index-json",
     }
     selected_artifacts: Optional[set[str]] = None
@@ -532,7 +529,6 @@ def main() -> None:
     run_series_pages = requested_series_pages
     run_work_details_pages = False
     run_work_json = artifact_enabled("work-json") or requested_work_pages or requested_work_details_pages
-    run_works_index_json = True
 
     needs_projects_base = run_work_details_pages or run_work_json or run_series_pages
     if needs_projects_base and normalize_text(args.projects_base_dir) == "":
@@ -560,8 +556,6 @@ def main() -> None:
     series_index_json_path.parent.mkdir(parents=True, exist_ok=True)
     works_json_dir = Path(args.works_json_dir).expanduser()
     works_json_dir.mkdir(parents=True, exist_ok=True)
-    works_index_json_path = Path(args.works_index_json_path).expanduser()
-    works_index_json_path.parent.mkdir(parents=True, exist_ok=True)
     recent_index_json_path = Path(args.recent_index_json_path).expanduser()
     recent_index_json_path.parent.mkdir(parents=True, exist_ok=True)
     work_storage_index_json_path = Path(args.work_storage_index_json_path).expanduser()
@@ -1014,8 +1008,8 @@ def main() -> None:
     # Work detail page generation + per-work detail JSON (WorkDetails)
     # ----------------------------
     if not source_records.work_details:
-        if run_work_details_pages or run_work_json or run_works_index_json:
-            print("No work detail pages/JSON/index rows found (work detail source records empty or missing).")
+        if run_work_details_pages or run_work_json:
+            print("No work detail pages/JSON found (work detail source records empty or missing).")
         else:
             print("Work detail pages/JSON skipped: not selected by --only.")
     else:
@@ -1184,10 +1178,11 @@ def main() -> None:
     elif run_work_json or run_series_pages:
         print("Stale public record cleanup: no stale JSON artifacts.")
 
-    works_payload = indexes.build_works_index_records(
-        work_records=source_records.works,
-        canonical_work_record_by_id=canonical_work_record_by_id,
-    )
+    published_work_ids = {
+        work_id
+        for work_id, status in work_status_by_id.items()
+        if status == "published" and work_id in canonical_work_record_by_id
+    }
     storage_eligible_works = {
         work_id: canonical_work_record_by_id[work_id]
         for work_id, status in work_status_by_id.items()
@@ -1198,28 +1193,13 @@ def main() -> None:
         canonical_work_record_by_id=canonical_work_record_by_id,
     )
 
-    payload = indexes.build_works_index_payload(
-        works=works_payload,
-        generated_at_utc=utc_timestamp_now(),
-    )
-    payload_version = payload["header"]["version"]
-    write_index_json_payload(
-        label="Works index JSON",
-        path=works_index_json_path,
-        payload=payload,
-        payload_version=payload_version,
-        write=args.write,
-        force=args.force,
-        display_path=display_path,
-    )
-
     recent_entries = recent.build_recent_publication_entries(
         existing_entries=load_recent_entries(recent_index_json_path),
         series_publish_transitions=series_publish_transitions,
         work_publish_transitions=work_publish_transitions,
         series_payload=series_payload,
         series_work_ids_by_id=indexes.ordered_published_work_ids_by_series(series_work_context),
-        works_payload=works_payload,
+        published_work_ids=published_work_ids,
         work_meta_by_id=work_meta_by_id,
         work_status_by_id=work_status_by_id,
         series_status_by_id=series_status_by_id,
