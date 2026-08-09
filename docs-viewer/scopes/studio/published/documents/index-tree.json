@@ -882,6 +882,12 @@
           ]
         },
         {
+          "doc_id": "d-20260809-103047-b7d8c8",
+          "title": "DXM-1 — Packaged Media In Dated Export Delivery",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260809-103047-b7d8c8.json",
+          "ui_status": "proposed"
+        },
+        {
           "doc_id": "d-20260808-205414-91040a",
           "title": "iPad Docs Viewer",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-205414-91040a.json",
@@ -1697,5 +1703,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-08T22:15:10Z"
+  "generated_at": "2026-08-09T09:32:10Z"
 }
