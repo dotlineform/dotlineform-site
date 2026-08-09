@@ -19,7 +19,7 @@ Required Docs Viewer smoke entrypoints:
 - `docs_viewer_service_manage.py`: standalone manage route boot, service generated reads, and one representative management action.
 - `docs_viewer_ui_workbench_route.py`: sole Admin route and Docs Viewer-owned pack boot, registry validation, every specimen mount, named sequential/side-by-side recipes, retired-route checks, and rejection of mutation requests without an external workspace.
 - `docs_viewer_modal_focus_modules.py`: focused shared lifecycle behavior for the dynamic management shell; no layout or screenshot assertions.
-- `public_docs_viewer_readonly.py`: public Library, Analysis, and no-toolbar Moments route boot, read-only state, document-control policy, and compact payload requests.
+- `public_docs_viewer_readonly.py`: public Analysis route boot, read-only state, document-control policy, compact payload requests, report projection, theme persistence, and public Mermaid exclusion.
 
 Focused route slice scripts such as `docs_viewer_routes.py` remain available for targeted route work when `/docs/` is served by an appropriate local target, but they are not part of the default Docs Viewer smoke profile.
 

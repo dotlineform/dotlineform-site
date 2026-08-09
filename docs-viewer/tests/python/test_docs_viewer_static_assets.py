@@ -119,7 +119,6 @@ def test_docs_viewer_shells_load_shared_theme_before_base_css() -> None:
         "docs-viewer/shell/docs-viewer-review.html",
         "docs-viewer/templates/public-route/index.html",
         "site/analysis/index.html",
-        "site/library/index.html",
     )
 
     for relative_path in shell_paths:

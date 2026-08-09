@@ -25,7 +25,7 @@ def test_site_validation_accepts_tracked_site_root() -> None:
 
     assert result.required_file_count == len(config.validation.required_files)
     assert result.docs_viewer_runtime_count == len(config.validation.docs_viewer_runtime.manifest)
-    assert result.docs_viewer_route_count == 3
+    assert result.docs_viewer_route_count == 1
     assert result.docs_viewer_route_file_count >= result.docs_viewer_route_count
 
 
@@ -52,9 +52,12 @@ def test_site_validation_rejects_missing_docs_viewer_route_file(tmp_path: Path) 
     config = load_config(CONFIG_PATH)
     site_root = resolve_site_root(REPO_ROOT, config)
     _copy_validation_site(site_root, tmp_path, config)
-    (tmp_path / "moments/index.html").unlink()
+    route_config_path = tmp_path / _site_relative_url_path(config.docs_viewer["route_config_url"])
+    route_config = json.loads(route_config_path.read_text(encoding="utf-8"))
+    route_config["routes"][0]["route_path"] = "/missing-analysis/"
+    route_config_path.write_text(json.dumps(route_config), encoding="utf-8")
 
-    with pytest.raises(RuntimeError, match="moments route_path"):
+    with pytest.raises(RuntimeError, match="analysis route_path"):
         validate_site(tmp_path, config)
 
 
@@ -62,9 +65,14 @@ def test_site_validation_rejects_missing_docs_viewer_route_payload(tmp_path: Pat
     config = load_config(CONFIG_PATH)
     site_root = resolve_site_root(REPO_ROOT, config)
     _copy_validation_site(site_root, tmp_path, config)
-    (tmp_path / "assets/data/search/moments/index.json").unlink()
+    route_config_path = tmp_path / _site_relative_url_path(config.docs_viewer["route_config_url"])
+    route_config = json.loads(route_config_path.read_text(encoding="utf-8"))
+    route_config["routes"][0]["docs_paths"]["search_index_url"] = (
+        "/assets/data/search/analysis/missing-index.json"
+    )
+    route_config_path.write_text(json.dumps(route_config), encoding="utf-8")
 
-    with pytest.raises(RuntimeError, match="moments docs_paths.search_index_url"):
+    with pytest.raises(RuntimeError, match="analysis docs_paths.search_index_url"):
         validate_site(tmp_path, config)
 
 
@@ -77,14 +85,14 @@ def test_site_validation_rejects_missing_configured_default_doc_payload(tmp_path
             encoding="utf-8"
         )
     )
-    library = next(scope for scope in viewer_config["scopes"] if scope["scope_id"] == "library")
+    analysis = next(scope for scope in viewer_config["scopes"] if scope["scope_id"] == "analysis")
     (
         tmp_path
-        / "assets/data/docs/scopes/library/by-id"
-        / f"{library['default_doc_id']}.json"
+        / "assets/data/docs/scopes/analysis/by-id"
+        / f"{analysis['default_doc_id']}.json"
     ).unlink()
 
-    with pytest.raises(RuntimeError, match="library default document"):
+    with pytest.raises(RuntimeError, match="analysis default document"):
         validate_site(tmp_path, config)
 
 

@@ -59,87 +59,6 @@
       }
     },
     {
-      "scope_id": "library",
-      "scope_type": "public",
-      "meta": "public scope",
-      "source": {
-        "build_media": {
-          "mermaid": {
-            "path": "media/mermaid",
-            "producer": "mermaid",
-            "publishes_to": "svg"
-          }
-        }
-      },
-      "published": {
-        "media": {
-          "img": {
-            "reference_prefix": "docs/library/img",
-            "location": {
-              "provider": "repository",
-              "path": "site/assets/data/docs/scopes/library/media/img"
-            },
-            "served_path_prefix": "/assets/data/docs/scopes/library/media/img",
-            "build_inputs": []
-          },
-          "svg": {
-            "reference_prefix": "docs/library/svg",
-            "location": {
-              "provider": "repository",
-              "path": "site/assets/data/docs/scopes/library/media/svg"
-            },
-            "served_path_prefix": "/assets/data/docs/scopes/library/media/svg",
-            "build_inputs": [
-              "mermaid"
-            ]
-          },
-          "files": {
-            "reference_prefix": "docs/library/files",
-            "location": {
-              "provider": "r2",
-              "path": "docs/library/files"
-            },
-            "served_path_prefix": "https://media.dotlineform.com/docs/library/files",
-            "build_inputs": []
-          },
-          "html": {
-            "reference_prefix": "docs/library/html",
-            "location": {
-              "provider": "repository",
-              "path": "site/assets/data/docs/scopes/library/media/html"
-            },
-            "served_path_prefix": "/assets/data/docs/scopes/library/media/html",
-            "build_inputs": []
-          }
-        }
-      },
-      "public_projection": {
-        "documents": {
-          "location": {
-            "provider": "repository",
-            "path": "site/assets/data/docs/scopes/library"
-          }
-        },
-        "search": {
-          "location": {
-            "provider": "repository",
-            "path": "site/assets/data/search/library/index.json"
-          }
-        }
-      },
-      "viewer_base_url": "/library/",
-      "include_scope_param": false,
-      "default_doc_id": "d-20260330-172255-8399b7",
-      "non_loadable_doc_ids": [],
-      "manage_only_tree_root_ids": [],
-      "allow_unresolved_parent_ids": true,
-      "sub_scopes": [],
-      "scope_root": {
-        "provider": "repository",
-        "path": "docs-viewer/scopes/library"
-      }
-    },
-    {
       "scope_id": "analysis",
       "scope_type": "public",
       "meta": "public scope",
@@ -181,6 +100,15 @@
               "path": "docs/analysis/files"
             },
             "served_path_prefix": "https://media.dotlineform.com/docs/analysis/files",
+            "build_inputs": []
+          },
+          "html": {
+            "reference_prefix": "docs/analysis/html",
+            "location": {
+              "provider": "repository",
+              "path": "site/assets/data/docs/scopes/analysis/media/html"
+            },
+            "served_path_prefix": "/assets/data/docs/scopes/analysis/media/html",
             "build_inputs": []
           }
         }

@@ -47,46 +47,6 @@
       ]
     },
     {
-      "scope_id": "library",
-      "scope_type": "public",
-      "meta": "public scope",
-      "viewer_base_url": "/library/",
-      "include_scope_param": false,
-      "default_doc_id": "d-20260330-172255-8399b7",
-      "media": {
-        "files": {
-          "reference_prefix": "docs/library/files",
-          "served_path_prefix": "https://media.dotlineform.com/docs/library/files"
-        },
-        "html": {
-          "reference_prefix": "docs/library/html",
-          "served_path_prefix": "/assets/data/docs/scopes/library/media/html"
-        },
-        "img": {
-          "reference_prefix": "docs/library/img",
-          "served_path_prefix": "/assets/data/docs/scopes/library/media/img"
-        },
-        "svg": {
-          "reference_prefix": "docs/library/svg",
-          "served_path_prefix": "/assets/data/docs/scopes/library/media/svg"
-        }
-      },
-      "index_tree_url": "/docs-viewer/scopes/library/published/documents/index-tree.json",
-      "recent_url": "/docs-viewer/scopes/library/published/documents/recent.json",
-      "search_index_url": "/docs-viewer/scopes/library/published/search/index.json",
-      "search": {
-        "domain": "docs_viewer",
-        "schema": "search_index_library_v1",
-        "index_url": "/docs-viewer/scopes/library/published/search/index.json",
-        "targeted_policy": "record_update",
-        "targeted_operations": [
-          "create",
-          "update",
-          "delete"
-        ]
-      }
-    },
-    {
       "scope_id": "analysis",
       "scope_type": "public",
       "meta": "public scope",
@@ -97,6 +57,10 @@
         "files": {
           "reference_prefix": "docs/analysis/files",
           "served_path_prefix": "https://media.dotlineform.com/docs/analysis/files"
+        },
+        "html": {
+          "reference_prefix": "docs/analysis/html",
+          "served_path_prefix": "/assets/data/docs/scopes/analysis/media/html"
         },
         "img": {
           "reference_prefix": "docs/analysis/img",

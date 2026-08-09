@@ -54,7 +54,7 @@ def test_resolve_scope_reports_families_routes_shared_and_exclusions() -> None:
     assert by_path["site/docs-viewer/static/css/docs-viewer.css"]["families"] == ["runtime-assets"]
     assert by_path["site/docs-viewer/runtime/js/shared/docs-viewer-search.js"]["families"] == ["runtime-js"]
     assert "search" in by_path["site/docs-viewer/runtime/js/shared/docs-viewer-search.js"]["areas"]
-    assert "/library/" in by_path["site/docs-viewer/runtime/js/shared/docs-viewer-search.js"]["shared_routes"]
+    assert "/analysis/" in by_path["site/docs-viewer/runtime/js/shared/docs-viewer-search.js"]["shared_routes"]
     assert "/docs/" in by_path["docs-viewer/services/docs_management_routes.py"]["shared_routes"]
     assert scope["totals"]["excluded_files"] == 1
 
@@ -68,15 +68,15 @@ def test_resolve_run_files_intersects_selected_targets_and_keeps_shared_dependen
         "docs-viewer/services/docs_management_routes.py",
     ]
 
-    search_library = resolver.resolve_run_files(
+    search_analysis = resolver.resolve_run_files(
         config,
         scope_id="docs-viewer",
         families=["runtime-js"],
         areas=["search"],
-        routes=["/library/"],
+        routes=["/analysis/"],
         source_files=source_files,
     )
-    assert [row["path"] for row in search_library] == ["site/docs-viewer/runtime/js/shared/docs-viewer-search.js"]
+    assert [row["path"] for row in search_analysis] == ["site/docs-viewer/runtime/js/shared/docs-viewer-search.js"]
 
     docs_route = resolver.resolve_run_files(
         config,

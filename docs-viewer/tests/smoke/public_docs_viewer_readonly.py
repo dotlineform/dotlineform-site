@@ -25,7 +25,6 @@ from docs_viewer_theme_smoke_helpers import (
 )
 
 
-LIBRARY_DOC_ID = "d-20260330-172255-8399b7"
 ANALYSIS_DOC_ID = "d-20260426-164043-e14f49"
 TAGS_DOC_ID = "d-20260624-213316-478639"
 BIRD_SUBDOC_ID = "d-20260624-204534-0d6ae2"
@@ -232,9 +231,9 @@ def assert_no_inline_mermaid_asset_request(route: str, paths: set[str]) -> None:
 def exercise_public_inline_mermaid_exclusion(page: Page, base_url: str, timeout_ms: int) -> None:
     request_urls: list[str] = []
     page.on("request", lambda request: request_urls.append(request.url))
-    payload_path = f"/assets/data/docs/scopes/library/by-id/{LIBRARY_DOC_ID}.json"
+    payload_path = f"/assets/data/docs/scopes/analysis/by-id/{ANALYSIS_DOC_ID}.json"
     payload_pattern = f"**{payload_path}*"
-    diagram_path = "/assets/data/docs/scopes/library/media/svg/detail-proof.svg"
+    diagram_path = "/assets/data/docs/scopes/analysis/media/svg/detail-proof.svg"
     diagram_pattern = f"**{diagram_path}*"
 
     def add_inline_mermaid_fence(route) -> None:
@@ -260,10 +259,10 @@ def exercise_public_inline_mermaid_exclusion(page: Page, base_url: str, timeout_
     page.route(diagram_pattern, serve_detail_proof)
     try:
         page.goto(
-            route_url(base_url, f"/library/?doc={LIBRARY_DOC_ID}"),
+            route_url(base_url, f"/analysis/?doc={ANALYSIS_DOC_ID}"),
             wait_until="domcontentloaded",
         )
-        wait_for_rendered_doc(page, LIBRARY_DOC_ID, "Library", timeout_ms)
+        wait_for_rendered_doc(page, ANALYSIS_DOC_ID, "Analysis", timeout_ms)
         state = page.locator("#docsViewerContent").evaluate(
             """content => ({
                 diagrams: content.querySelectorAll('.docsViewer__diagram').length,
@@ -299,7 +298,7 @@ def exercise_public_inline_mermaid_exclusion(page: Page, base_url: str, timeout_
             f"public Mermaid fence did not remain readable source: {state!r}; "
             f"requests={sorted(request_paths(request_urls))!r}"
         )
-    assert_no_inline_mermaid_asset_request("/library/ injected Mermaid fence", request_paths(request_urls))
+    assert_no_inline_mermaid_asset_request("/analysis/ injected Mermaid fence", request_paths(request_urls))
 
 
 def assert_public_info_panel(page: Page, route: str, title: str, timeout_ms: int) -> None:
@@ -683,19 +682,11 @@ def main() -> int:
                 exercise_public_route(
                     page,
                     base_url,
-                    f"/library/?doc={LIBRARY_DOC_ID}&mode={legacy_mode}",
-                    LIBRARY_DOC_ID,
-                    "Library",
-                    args.timeout_ms,
-                    verify_theme=True,
-                )
-                exercise_public_route(
-                    page,
-                    base_url,
-                    f"/analysis/?doc={ANALYSIS_DOC_ID}",
+                    f"/analysis/?doc={ANALYSIS_DOC_ID}&mode={legacy_mode}",
                     ANALYSIS_DOC_ID,
                     "Analysis",
                     args.timeout_ms,
+                    verify_theme=True,
                 )
                 exercise_public_subscope_report(page, base_url, args.timeout_ms)
             finally:
@@ -707,10 +698,7 @@ def main() -> int:
             raise AssertionError(f"request failures during public Docs Viewer read-only smoke: {request_failures!r}")
         if http_failures:
             raise AssertionError(f"HTTP failures during public Docs Viewer read-only smoke: {http_failures!r}")
-        print(
-            "public Docs Viewer read-only OK: "
-            f"{base_url}/library/ and {base_url}/analysis/"
-        )
+        print(f"public Docs Viewer read-only OK: {base_url}/analysis/")
         return 0
     finally:
         static_server.shutdown()

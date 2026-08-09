@@ -1,5 +1,5 @@
 const PRESETS = {
-  library_documents_admin: {
+  scope_documents_admin: {
     columns: ["title", "doc_id", "publishable"],
     filters: ["non_publishable"],
     sortable: ["title", "doc_id", "publishable"],
@@ -17,7 +17,7 @@ const PRESETS = {
   }
 };
 
-const DEFAULT_PRESET = PRESETS.library_documents_admin;
+const DEFAULT_PRESET = PRESETS.scope_documents_admin;
 const FILTER_LABELS = {
   non_publishable: "Excluded from next Publish"
 };

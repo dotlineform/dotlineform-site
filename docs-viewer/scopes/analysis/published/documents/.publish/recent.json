@@ -4,25 +4,85 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "d-20260807-082735-54d9d5",
-      "title": "Works",
-      "content_url": "/assets/data/docs/scopes/analysis/by-id/d-20260807-082735-54d9d5.json",
-      "timestamp": "2026-08-07 08:27:35"
+      "doc_id": "d-20260809-130120-461754",
+      "title": "Abstract Thought and Physical Processes",
+      "content_url": "/assets/data/docs/scopes/analysis/by-id/d-20260809-130120-461754.json",
+      "timestamp": "2026-08-09 13:01:20",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library"
     },
     {
-      "doc_id": "d-20260624-213316-478639",
-      "title": "Concepts",
-      "content_url": "/assets/data/docs/scopes/analysis/by-id/d-20260624-213316-478639.json",
-      "timestamp": "2026-07-29 11:30:02",
-      "parent_id": "d-20260426-164043-e14f49",
-      "parent_title": "Analysis"
+      "doc_id": "d-20260809-130120-91c97f",
+      "title": "Bayesian Reasoning",
+      "content_url": "/assets/data/docs/scopes/analysis/by-id/d-20260809-130120-91c97f.json",
+      "timestamp": "2026-08-09 13:01:20",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library"
     },
     {
-      "doc_id": "d-20260426-164043-e14f49",
-      "title": "Analysis",
-      "content_url": "/assets/data/docs/scopes/analysis/by-id/d-20260426-164043-e14f49.json",
-      "timestamp": "2026-05-11 19:17:51"
+      "doc_id": "d-20260809-130120-837891",
+      "title": "Beauty",
+      "content_url": "/assets/data/docs/scopes/analysis/by-id/d-20260809-130120-837891.json",
+      "timestamp": "2026-08-09 13:01:20",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library"
+    },
+    {
+      "doc_id": "d-20260809-130120-28fb85",
+      "title": "Beauty × Memory × Meaning",
+      "content_url": "/assets/data/docs/scopes/analysis/by-id/d-20260809-130120-28fb85.json",
+      "timestamp": "2026-08-09 13:01:20",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library"
+    },
+    {
+      "doc_id": "d-20260809-130120-44384d",
+      "title": "Beyond Conscious vs. Subconscious",
+      "content_url": "/assets/data/docs/scopes/analysis/by-id/d-20260809-130120-44384d.json",
+      "timestamp": "2026-08-09 13:01:20",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library"
+    },
+    {
+      "doc_id": "d-20260809-130120-d66e0b",
+      "title": "Can the Brain Comprehend How It Works?",
+      "content_url": "/assets/data/docs/scopes/analysis/by-id/d-20260809-130120-d66e0b.json",
+      "timestamp": "2026-08-09 13:01:20",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library"
+    },
+    {
+      "doc_id": "d-20260809-130120-c5c511",
+      "title": "Coincidence Inevitability",
+      "content_url": "/assets/data/docs/scopes/analysis/by-id/d-20260809-130120-c5c511.json",
+      "timestamp": "2026-08-09 13:01:20",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library"
+    },
+    {
+      "doc_id": "d-20260809-130120-ed5b30",
+      "title": "Coincidence Salience Worksheet",
+      "content_url": "/assets/data/docs/scopes/analysis/by-id/d-20260809-130120-ed5b30.json",
+      "timestamp": "2026-08-09 13:01:20",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library"
+    },
+    {
+      "doc_id": "d-20260809-130120-e6793d",
+      "title": "Defining \"Information\" for Cross‑Boundary Comparisons",
+      "content_url": "/assets/data/docs/scopes/analysis/by-id/d-20260809-130120-e6793d.json",
+      "timestamp": "2026-08-09 13:01:20",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library"
+    },
+    {
+      "doc_id": "d-20260809-130120-afeb4d",
+      "title": "Dreaming is Active",
+      "content_url": "/assets/data/docs/scopes/analysis/by-id/d-20260809-130120-afeb4d.json",
+      "timestamp": "2026-08-09 13:01:20",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library"
     }
   ],
-  "generated_at": "2026-08-07T19:05:09Z"
+  "generated_at": "2026-08-09T12:01:22Z"
 }

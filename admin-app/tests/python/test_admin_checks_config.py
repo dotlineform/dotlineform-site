@@ -33,7 +33,7 @@ def test_load_checks_config_accepts_v1_config() -> None:
     assert set(config["scopes"]) == {"admin", "docs-viewer", "public-site", "studio", "all"}
     assert "runtime-assets" in config["families"]
     assert "source-docs" not in config["families"]
-    assert config["routes"]["/library/"]["status"] == "mapped"
+    assert config["routes"]["/analysis/"]["status"] == "mapped"
     assert "/works/" not in config["routes"]
     assert config["routes"]["/studio/catalogue-work/"]["status"] == "inventory-only"
     assert config["reports"]["files"]["script"] == "admin-app/checks/reports/files.py"
@@ -134,7 +134,7 @@ def test_validate_run_request_returns_normalized_selection() -> None:
             "scope": "docs-viewer",
             "families": ["runtime-js"],
             "areas": ["search"],
-            "routes": ["/library/"],
+            "routes": ["/analysis/"],
             "reports": ["files"],
             "options": {"files": {"limit": 10}},
             "write": True,

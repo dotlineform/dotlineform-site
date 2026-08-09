@@ -34,7 +34,6 @@
         "_data/",
         "site/assets/css/",
         "site/assets/data/",
-        "site/assets/docs/interactive/library/",
         "site/assets/js/",
         "site/assets/series/",
         "site/assets/site/",
@@ -190,7 +189,6 @@
         "site/docs-viewer/runtime/js/shared/docs-viewer-generated-data-runtime.js"
       ],
       "routes": [
-        "/library/",
         "/analysis/"
       ]
     },
@@ -585,25 +583,6 @@
         "studio/app/server/studio/studio_app_server.py"
       ],
       "areas": [
-        "catalogue"
-      ]
-    },
-    "/library/": {
-      "label": "Library",
-      "path": "/library/",
-      "status": "mapped",
-      "include": [
-        "docs-viewer/config/scopes/docs_scopes.json",
-        "site/docs-viewer/config/routes/docs-viewer-public-routes.json",
-        "site/assets/js/search/"
-      ],
-      "shared": [
-        "site/docs-viewer/runtime/js/public/docs-viewer-public.js",
-        "site/docs-viewer/runtime/js/shared/docs-viewer-route-config.js",
-        "site/docs-viewer/runtime/js/shared/docs-viewer-search*"
-      ],
-      "areas": [
-        "search",
         "catalogue"
       ]
     },

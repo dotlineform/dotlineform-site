@@ -118,61 +118,6 @@
     {
       "schema_version": "docs_viewer_route_config_v4",
       "app_kind": "public",
-      "route_id": "library",
-      "route_path": "/library/",
-      "default_scope_id": "library",
-      "include_scope_param": false,
-      "viewer_base_url": "/library/",
-      "features": [
-        "configured-scope-discovery",
-        "search",
-        "recent",
-        "bookmarks",
-        "reports"
-      ],
-      "recent_basis": "edited",
-      "access": {
-        "allow_scope_query": false,
-        "management_ui": false
-      },
-      "services": {
-        "generated_data": {
-          "base_url": ""
-        },
-        "source": {
-          "base_url": ""
-        },
-        "management": {
-          "base_url": ""
-        }
-      },
-      "docs_paths": {
-        "index_tree_url": "/assets/data/docs/scopes/library/index-tree.json",
-        "recent_url": "/assets/data/docs/scopes/library/recent.json",
-        "search_index_url": "/assets/data/search/library/index.json"
-      },
-      "config_urls": {
-        "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-public-config.json",
-        "report_registry": "/assets/data/docs/public-reports.json"
-      },
-      "panels": {
-        "index": {
-          "enabled": true,
-          "default_state": "normal"
-        },
-        "main": {
-          "enabled": true,
-          "default_view": "rendered-document"
-        },
-        "info": {
-          "enabled": true,
-          "default_view": "metadata-info"
-        }
-      }
-    },
-    {
-      "schema_version": "docs_viewer_route_config_v4",
-      "app_kind": "public",
       "route_id": "analysis",
       "route_path": "/analysis/",
       "default_scope_id": "analysis",

@@ -88,7 +88,6 @@ APP_CONFIGS = (
         path_patterns=(
             "docs-viewer/templates/public-route/index.html",
             "docs-viewer/shell/docs-viewer-manage.html",
-            "site/library/index.html",
             "site/analysis/index.html",
         ),
         ready_attr="data-docs-viewer-ready",

@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "series_record_v2",
-    "version": "blake2b-610f2e013fa1cb9bbeb917e652cda018",
-    "generated_at_utc": "2026-08-08T18:41:49Z",
+    "version": "blake2b-e535abab8f9bcfa2cfb785714d17aad1",
+    "generated_at_utc": "2026-08-09T12:34:37Z",
     "series_id": "001",
     "count": 3
   },
@@ -18,6 +18,8 @@
     "project_folders": [
       "10000"
     ],
-    "doc_url": []
+    "doc_url": [
+      "/analysis/?doc=d-20260807-082735-54d9d5&subdoc=d-20260808-194215-9b0545"
+    ]
   }
 }

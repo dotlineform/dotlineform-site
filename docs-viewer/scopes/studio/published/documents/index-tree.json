@@ -233,6 +233,12 @@
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260424-000000-50b63f.json",
       "children": [
         {
+          "doc_id": "d-20260507-123607-fd7cff",
+          "title": "Analysis Documents",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260507-123607-fd7cff.json",
+          "ui_status": "report"
+        },
+        {
           "doc_id": "d-20260423-165116-e7f7e9",
           "title": "Broken Links",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260423-165116-e7f7e9.json",
@@ -340,12 +346,6 @@
           "doc_id": "d-20260623-000000-c99cef",
           "title": "Info Panel",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260623-000000-c99cef.json"
-        },
-        {
-          "doc_id": "d-20260507-123607-fd7cff",
-          "title": "Library Documents",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260507-123607-fd7cff.json",
-          "ui_status": "report"
         },
         {
           "doc_id": "d-20260424-000000-5b64f6",
@@ -1703,5 +1703,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-09T10:40:33Z"
+  "generated_at": "2026-08-09T12:24:23Z"
 }

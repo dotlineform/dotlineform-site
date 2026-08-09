@@ -9,10 +9,10 @@
       "loader_id": "docs_index_table",
       "presets": [
         {
-          "preset_id": "library_documents_admin",
-          "title": "Library Documents Admin",
-          "description": "Management report for reviewing Library documents by title, doc_id, and publishability.",
-          "default_scope": "library",
+          "preset_id": "scope_documents_admin",
+          "title": "Scope Documents Admin",
+          "description": "Management report for reviewing a publish-capable scope by title, doc_id, and publishability.",
+          "default_scope": "analysis",
           "columns": ["title", "doc_id", "publishable"],
           "filters": ["non_publishable"],
           "sortable": ["title", "doc_id", "publishable"]
