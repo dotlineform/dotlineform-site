@@ -4,10 +4,18 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260629-152159-ac1af9",
+      "title": "Export",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260629-152159-ac1af9.json",
+      "timestamp": "2026-08-09 11:42:13",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
       "doc_id": "d-20260809-103047-b7d8c8",
       "title": "DXM-1 — Packaged Media In Dated Export Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260809-103047-b7d8c8.json",
-      "timestamp": "2026-08-09 11:29:22",
+      "timestamp": "2026-08-09 11:40:41",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
     },
@@ -74,15 +82,7 @@
       "timestamp": "2026-08-08 22:24:35",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260808-215338-6b1e8c",
-      "title": "Local Authoring Service And Publication Boundaries",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-215338-6b1e8c.json",
-      "timestamp": "2026-08-08 22:24:35",
-      "parent_id": "d-20260331-000000-4a16b0",
-      "parent_title": "Architecture"
     }
   ],
-  "generated_at": "2026-08-09T10:29:48Z"
+  "generated_at": "2026-08-09T10:42:13Z"
 }

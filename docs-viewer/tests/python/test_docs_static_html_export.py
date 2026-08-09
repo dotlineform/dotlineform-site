@@ -25,6 +25,7 @@ if str(DOCS_SERVICES_DIR) not in sys.path:
 import docs_management_routes as routes  # noqa: E402
 import docs_management_service  # noqa: E402
 import docs_static_html_export as exporter  # noqa: E402
+import docs_static_html_export_media as media_export  # noqa: E402
 
 
 FIXED_EXPORT_DATE = date(2026, 7, 31)
@@ -53,7 +54,11 @@ def write_scope_config(root: Path) -> None:
         {
             "schema_version": "docs_scopes_v3",
             "scopes": [
-                docs_scope_record("studio", default_doc_id="parent"),
+                docs_scope_record(
+                    "studio",
+                    default_doc_id="parent",
+                    media_types=("img", "svg", "files", "html"),
+                ),
                 docs_scope_record(
                     "library",
                     scope_type="public",
@@ -592,14 +597,25 @@ def test_snapshot_packages_only_selected_owned_media_and_records_external_depend
         repo_root = Path(repo_path)
         projects_root = Path(projects_path)
         prepare_repo(repo_root, projects_root)
-        media_root = repo_root / "docs-viewer/scopes/studio/published/media/img"
-        media_root.mkdir(parents=True)
-        (media_root / "photo one.png").write_bytes(b"photo")
-        (media_root / "unchecked.png").write_bytes(b"unchecked")
+        media_root = repo_root / "docs-viewer/scopes/studio/published/media"
+        media_objects = {
+            "img/photo one.png": b"photo",
+            "svg/diagram.svg": b"<svg/>",
+            "files/manual.pdf": b"manual",
+            "html/widget.html": b"<p>widget</p>",
+            "img/unchecked.png": b"unchecked",
+        }
+        for relative_path, content in media_objects.items():
+            path = media_root / relative_path
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(content)
         parent_payload_path = repo_root / "docs-viewer/scopes/studio/published/documents/by-id/parent.json"
         parent_payload = json.loads(parent_payload_path.read_text(encoding="utf-8"))
         parent_payload["content_html"] = (
             '<p><img src="/docs/media/studio/img/photo%20one.png?cache=1#view">'
+            '<img src="/docs/media/studio/svg/diagram.svg">'
+            '<a href="/docs/media/studio/files/manual.pdf">Manual</a>'
+            '<iframe src="/docs/media/studio/html/widget.html"></iframe>'
             '<img src="images/external.png?cache=2"></p>'
         )
         write_json(parent_payload_path, parent_payload)
@@ -615,32 +631,67 @@ def test_snapshot_packages_only_selected_owned_media_and_records_external_depend
         )
 
         assert preview["schema_version"] == "docs_static_html_snapshot_preview_v2"
-        assert preview["media_count"] == 1
-        assert preview["media_bytes"] == 5
+        assert preview["media_count"] == 4
+        assert preview["media_bytes"] == 30
         assert preview["external_dependency_count"] == 1
-        payload = exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(preview))
+        with patch("urllib.request.urlopen", side_effect=AssertionError("served URL fetch attempted")):
+            payload = exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(preview))
         destination = projects_root / "docs-export/studio selection - 2026-07-31"
-        assert payload["media_count"] == 1
-        assert payload["media_bytes"] == 5
+        assert payload["media_count"] == 4
+        assert payload["media_bytes"] == 30
         assert payload["external_dependency_count"] == 1
-        assert payload["file_count"] == 5
+        assert payload["file_count"] == 8
         assert (destination / "media/img/photo one.png").read_bytes() == b"photo"
+        assert (destination / "media/svg/diagram.svg").read_bytes() == b"<svg/>"
+        assert (destination / "media/files/manual.pdf").read_bytes() == b"manual"
+        assert (destination / "media/html/widget.html").read_bytes() == b"<p>widget</p>"
         assert not (destination / "media/img/unchecked.png").exists()
         document_html = (destination / "docs/parent.html").read_text(encoding="utf-8")
         assert 'src="../media/img/photo%20one.png#view"' in document_html
+        assert 'src="../media/svg/diagram.svg"' in document_html
+        assert 'href="../media/files/manual.pdf"' in document_html
+        assert 'src="../media/html/widget.html"' in document_html
         assert 'src="images/external.png?cache=2"' in document_html
         provenance = json.loads((destination / exporter.SNAPSHOT_PROVENANCE_FILENAME).read_text(encoding="utf-8"))
-        assert provenance["media"] == [
-            {
-                "media_type": "img",
-                "identity": "photo one.png",
-                "provider": "repository",
-                "packaged_path": "media/img/photo one.png",
-                "size": 5,
-                "sha256": hashlib.sha256(b"photo").hexdigest(),
-                "doc_ids": ["parent"],
-            }
-        ]
+        assert {
+            (item["media_type"], item["identity"]): (
+                item["provider"],
+                item["packaged_path"],
+                item["size"],
+                item["sha256"],
+                item["doc_ids"],
+            )
+            for item in provenance["media"]
+        } == {
+            ("files", "manual.pdf"): (
+                "repository",
+                "media/files/manual.pdf",
+                6,
+                hashlib.sha256(b"manual").hexdigest(),
+                ["parent"],
+            ),
+            ("html", "widget.html"): (
+                "repository",
+                "media/html/widget.html",
+                13,
+                hashlib.sha256(b"<p>widget</p>").hexdigest(),
+                ["parent"],
+            ),
+            ("img", "photo one.png"): (
+                "repository",
+                "media/img/photo one.png",
+                5,
+                hashlib.sha256(b"photo").hexdigest(),
+                ["parent"],
+            ),
+            ("svg", "diagram.svg"): (
+                "repository",
+                "media/svg/diagram.svg",
+                6,
+                hashlib.sha256(b"<svg/>").hexdigest(),
+                ["parent"],
+            ),
+        }
         assert provenance["external_dependencies"] == [
             {
                 "reference": "images/external.png",
@@ -708,6 +759,13 @@ def test_snapshot_apply_reads_public_and_external_local_generated_scopes() -> No
         repo_root = Path(repo_path)
         projects_root = Path(projects_path)
         prepare_repo(repo_root, projects_root)
+        external_payload_path = projects_root / "docs-viewer/scopes/external/published/documents/by-id/external.json"
+        external_payload = json.loads(external_payload_path.read_text(encoding="utf-8"))
+        external_payload["content_html"] = '<img src="/docs/media/external/svg/diagram.svg">'
+        write_json(external_payload_path, external_payload)
+        external_svg = projects_root / "docs-viewer/scopes/external/published/media/svg/diagram.svg"
+        external_svg.parent.mkdir(parents=True)
+        external_svg.write_bytes(b"<svg>external</svg>")
 
         for scope in ("library", "external"):
             preview = exporter.preview_static_html_export(
@@ -720,6 +778,53 @@ def test_snapshot_apply_reads_public_and_external_local_generated_scopes() -> No
             assert payload["scope"] == scope
             assert payload["selection_kind"] == "complete"
             assert (projects_root / f"docs-export/{scope} - 2026-07-31/docs/{scope}.html").is_file()
+            if scope == "external":
+                destination = projects_root / "docs-export/external - 2026-07-31"
+                assert (destination / "media/svg/diagram.svg").read_bytes() == b"<svg>external</svg>"
+                assert 'src="../media/svg/diagram.svg"' in (
+                    destination / "docs/external.html"
+                ).read_text(encoding="utf-8")
+
+
+def test_snapshot_apply_packages_r2_fixture_without_fetching_served_url() -> None:
+    with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
+        repo_root = Path(repo_path)
+        projects_root = Path(projects_path)
+        prepare_repo(repo_root, projects_root)
+        library_payload_path = repo_root / "docs-viewer/scopes/library/published/documents/by-id/library.json"
+        library_payload = json.loads(library_payload_path.read_text(encoding="utf-8"))
+        library_payload["content_html"] = (
+            '<img src="https://media.example.test/docs/library/img/photo.webp?cache=1">'
+        )
+        write_json(library_payload_path, library_payload)
+
+        class ReadOnlyR2Fixture:
+            def get_object(self, key: str) -> bytes:
+                if key != "docs/library/img/photo.webp":
+                    raise FileNotFoundError(key)
+                return b"r2-photo"
+
+        with (
+            patch.object(
+                media_export,
+                "authenticated_remote_client_for_locations",
+                return_value=ReadOnlyR2Fixture(),
+            ),
+            patch("urllib.request.urlopen", side_effect=AssertionError("served URL fetch attempted")),
+        ):
+            preview = exporter.preview_static_html_export(
+                repo_root,
+                {"scope": "library", "doc_ids": ["library"]},
+                export_date=FIXED_EXPORT_DATE,
+            )
+            payload = exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(preview))
+
+        destination = projects_root / "docs-export/library - 2026-07-31"
+        assert payload["media_count"] == 1
+        assert (destination / "media/img/photo.webp").read_bytes() == b"r2-photo"
+        assert 'src="../media/img/photo.webp"' in (
+            destination / "docs/library.html"
+        ).read_text(encoding="utf-8")
 
 
 def test_snapshot_apply_replaces_only_explicitly_confirmed_existing_target() -> None:
