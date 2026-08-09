@@ -38,6 +38,11 @@ import {
   createDocsViewerManagementSourceAdapter
 } from "./docs-viewer-management-source-adapter.js";
 import {
+  CATALOGUE_IMAGE_CONTROL_ID,
+  catalogueImageControlRenderer,
+  createCatalogueImageMainViewControlHandlers
+} from "./source-editor/catalogue-image-contribution.js";
+import {
   CATALOGUE_TOKEN_CONTROL_ID,
   catalogueTokenControlRenderer,
   createCatalogueTokenInfoViewResolver,
@@ -86,6 +91,7 @@ startDocsViewerManageApp({
     createDocsViewerManagementControlRenderers(),
     createDocsViewerManagedTableToolControlRenderers(),
     {
+      [CATALOGUE_IMAGE_CONTROL_ID]: catalogueImageControlRenderer,
       [CATALOGUE_TOKEN_CONTROL_ID]: catalogueTokenControlRenderer,
       [SUBJECT_LINK_CONTROL_ID]: subjectLinkControlRenderer,
       [DIRECTIVE_ACTIONS_CONTROL_ID]: directiveActionsControlRenderer
@@ -110,6 +116,7 @@ startDocsViewerManageApp({
   inlineMermaidAdapter: docsViewerInlineMermaidAdapter,
   mainViewControlHandlerContributions: Object.assign(
     {},
+    createCatalogueImageMainViewControlHandlers(),
     createCatalogueTokenMainViewControlHandlers(),
     createSubjectLinkMainViewControlHandlers(),
     createDirectiveActionsMainViewControlHandlers(),
@@ -118,6 +125,7 @@ startDocsViewerManageApp({
   managementShellRenderers: createDocsViewerManagementShellRenderers(),
   mountDocumentExtras: mountDocsViewerManageExtras,
   sourceEditorActionControlIds: [
+    CATALOGUE_IMAGE_CONTROL_ID,
     CATALOGUE_TOKEN_CONTROL_ID,
     SUBJECT_LINK_CONTROL_ID,
     DIRECTIVE_ACTIONS_CONTROL_ID

@@ -1,8 +1,38 @@
 var LEXICAL_KEY_PATTERN = /^[a-z][a-z0-9-]*$/;
 var LEXICAL_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
+var IMAGE_FIELDS = new Set(["alt", "caption", "summary", "placement", "fill_width"]);
+var IMAGE_PLACEMENTS = new Set(["full", "left", "right"]);
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
+}
+
+function plainText(value) {
+  return cleanString(value).replace(/\s+/g, " ");
+}
+
+function summaryText(value) {
+  return String(value == null ? "" : value)
+    .replace(/\r\n?/g, "\n")
+    .split("\n")
+    .map(function (line) { return line.trim().replace(/\s+/g, " "); })
+    .join("\n")
+    .trim();
+}
+
+function encodeImageValue(value) {
+  return encodeURIComponent(value).replace(/[!'()*]/g, function (character) {
+    return "%" + character.charCodeAt(0).toString(16).toUpperCase();
+  });
+}
+
+function decodeImageValue(value) {
+  try {
+    var decoded = decodeURIComponent(value);
+    return encodeImageValue(decoded) === value ? decoded : null;
+  } catch (_error) {
+    return null;
+  }
 }
 
 function escapedTitle(value) {
@@ -66,6 +96,81 @@ export function serializeCatalogueToken(options = {}) {
   return "[[catalogue:" + targetType + ":" + targetId + "|" + escapedTitle(title) + "]]";
 }
 
+export function serializeCatalogueImageToken(options = {}) {
+  var targetType = cleanString(options.targetType);
+  var targetId = cleanString(options.targetId);
+  var alt = plainText(options.alt);
+  if (
+    !LEXICAL_KEY_PATTERN.test(targetType)
+    || !LEXICAL_ID_PATTERN.test(targetId)
+    || !alt
+  ) return "";
+  var definition = targetDefinition(options.registry, "catalogue", targetType);
+  if (definition && definition.idPolicy.canonicalPattern) {
+    var canonicalPattern = new RegExp(definition.idPolicy.canonicalPattern);
+    if (!canonicalPattern.test(targetId)) return "";
+  }
+  var caption = plainText(options.caption);
+  var summary = summaryText(options.summary);
+  var placement = cleanString(options.placement).toLowerCase();
+  var fields = [["alt", alt]];
+  if (caption) {
+    if (!IMAGE_PLACEMENTS.has(placement) || typeof options.fillWidth !== "boolean") return "";
+    fields.push(["caption", caption]);
+    if (summary) fields.push(["summary", summary]);
+    fields.push(["placement", placement]);
+    fields.push(["fill_width", options.fillWidth ? "true" : "false"]);
+  } else if (summary || placement || typeof options.fillWidth === "boolean") {
+    return "";
+  }
+  var query = fields.map(function (field) {
+    return field[0] + "=" + encodeImageValue(field[1]);
+  }).join("&");
+  return "[[catalogue:image:" + targetType + ":" + targetId + "|" + query + "]]";
+}
+
+function parseCatalogueImageFields(rawQuery, options) {
+  if (!rawQuery) return null;
+  var fields = {};
+  var pairs = rawQuery.split("&");
+  for (var index = 0; index < pairs.length; index += 1) {
+    var separator = pairs[index].indexOf("=");
+    if (separator < 1) return null;
+    var key = pairs[index].slice(0, separator);
+    var encodedValue = pairs[index].slice(separator + 1);
+    if (!IMAGE_FIELDS.has(key) || Object.prototype.hasOwnProperty.call(fields, key) || !encodedValue) {
+      return null;
+    }
+    var value = decodeImageValue(encodedValue);
+    if (value === null) return null;
+    fields[key] = value;
+  }
+  if (!fields.alt) return null;
+  var fillWidth;
+  if (Object.prototype.hasOwnProperty.call(fields, "fill_width")) {
+    if (fields.fill_width !== "true" && fields.fill_width !== "false") return null;
+    fillWidth = fields.fill_width === "true";
+  }
+  var serialized = serializeCatalogueImageToken({
+    registry: options.registry,
+    targetType: options.targetType,
+    targetId: options.targetId,
+    alt: fields.alt,
+    caption: fields.caption || "",
+    summary: fields.summary || "",
+    placement: fields.placement || "",
+    fillWidth: typeof fillWidth === "boolean" ? fillWidth : null
+  });
+  if (!serialized || serialized.slice(serialized.indexOf("|") + 1, -2) !== rawQuery) return null;
+  return {
+    alt: plainText(fields.alt),
+    caption: plainText(fields.caption),
+    summary: summaryText(fields.summary),
+    placement: cleanString(fields.placement),
+    fillWidth: typeof fillWidth === "boolean" ? fillWidth : null
+  };
+}
+
 export function parseCatalogueToken(raw, options = {}) {
   var source = String(raw || "");
   if (!source.startsWith("[[") || !source.endsWith("]]") || /[\r\n]/.test(source)) return null;
@@ -73,11 +178,22 @@ export function parseCatalogueToken(raw, options = {}) {
   var separator = body.indexOf("|");
   if (separator < 0) return null;
   var identity = body.slice(0, separator).split(":");
-  if (identity.length !== 3) return null;
+  var imagePresentation = identity.length === 4 && identity[1] === "image";
+  if (identity.length !== 3 && !imagePresentation) return null;
   var family = identity[0];
-  var targetType = identity[1];
-  var targetId = identity[2];
-  var title = unescapeTitle(body.slice(separator + 1));
+  var targetType = identity[identity.length - 2];
+  var targetId = identity[identity.length - 1];
+  var rawFields = body.slice(separator + 1);
+  var imageFields = imagePresentation
+    ? parseCatalogueImageFields(rawFields, {
+        registry: options.registry,
+        targetType: targetType,
+        targetId: targetId
+      })
+    : null;
+  var title = imagePresentation
+    ? imageFields && (imageFields.caption || imageFields.alt)
+    : unescapeTitle(rawFields);
   if (
     family !== "catalogue"
     || !LEXICAL_KEY_PATTERN.test(family)
@@ -101,7 +217,13 @@ export function parseCatalogueToken(raw, options = {}) {
     start: start,
     end: start + source.length,
     supported: supported,
-    activatable: supported
+    activatable: supported,
+    presentation: imagePresentation ? "image" : "text",
+    alt: imageFields ? imageFields.alt : "",
+    caption: imageFields ? imageFields.caption : "",
+    summary: imageFields ? imageFields.summary : "",
+    placement: imageFields ? imageFields.placement : "",
+    fillWidth: imageFields ? imageFields.fillWidth : null
   };
 }
 

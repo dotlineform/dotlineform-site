@@ -1,6 +1,7 @@
 import {
   catalogueTokenAtSelection,
   parseCatalogueTokens,
+  serializeCatalogueImageToken,
   serializeCatalogueToken
 } from "./catalogue-token-parser.js";
 import {
@@ -10,6 +11,12 @@ import {
   loadSemanticTokenTargets,
   resolveSemanticTokenTargetHref
 } from "./semantic-token-targets.js";
+import {
+  bindImagePresentation,
+  hydrateImagePresentation,
+  imagePresentationHtml,
+  readImagePresentation
+} from "./source-editor-image-presentation.js";
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -90,7 +97,7 @@ function renderToken(context, state, active) {
   article.className = "docsViewer__metadataInfo docsViewerCatalogueTokenInfo";
   var heading = document.createElement("h3");
   heading.className = "docsViewer__metadataInfoTitle";
-  heading.textContent = "Catalogue token";
+  heading.textContent = token.presentation === "image" ? "Catalogue image" : "Catalogue token";
 
   var list = document.createElement("dl");
   list.className = "docsViewer__metadataInfoList";
@@ -105,17 +112,33 @@ function renderToken(context, state, active) {
     destinationHref
   );
 
-  var titleField = document.createElement("label");
-  titleField.className = "docsViewer__field";
-  var titleLabel = document.createElement("span");
-  titleLabel.className = "docsViewer__fieldLabel";
-  titleLabel.textContent = "Title";
-  var titleInput = document.createElement("input");
-  titleInput.className = "docsViewer__fieldInput";
-  titleInput.type = "text";
-  titleInput.required = true;
-  titleInput.value = token.title;
-  titleField.append(titleLabel, titleInput);
+  var occurrenceField = document.createElement("label");
+  occurrenceField.className = "docsViewer__field";
+  var occurrenceLabel = document.createElement("span");
+  occurrenceLabel.className = "docsViewer__fieldLabel";
+  occurrenceLabel.textContent = token.presentation === "image" ? "Alt text" : "Title";
+  var occurrenceInput = document.createElement("input");
+  occurrenceInput.className = "docsViewer__fieldInput";
+  occurrenceInput.type = "text";
+  occurrenceInput.required = true;
+  occurrenceInput.value = token.presentation === "image" ? token.alt : token.title;
+  occurrenceField.append(occurrenceLabel, occurrenceInput);
+
+  var imagePresentation = null;
+  if (token.presentation === "image") {
+    imagePresentation = document.createElement("div");
+    imagePresentation.innerHTML = imagePresentationHtml({
+      idPrefix: "docsViewerCatalogueImageInfo"
+    });
+    hydrateImagePresentation(imagePresentation, {
+      addCaption: Boolean(token.caption),
+      caption: token.caption,
+      summary: token.summary,
+      placement: token.placement || "full",
+      fillWidth: typeof token.fillWidth === "boolean" ? token.fillWidth : true
+    });
+    bindImagePresentation(imagePresentation);
+  }
 
   var status = document.createElement("p");
   status.className = "docsViewer__metadataInfoEmpty muted small";
@@ -126,11 +149,11 @@ function renderToken(context, state, active) {
   var updateButton = document.createElement("button");
   updateButton.className = "docsViewer__button";
   updateButton.type = "button";
-  updateButton.textContent = "Update token";
+  updateButton.textContent = token.presentation === "image" ? "Update image" : "Update token";
   var removeButton = document.createElement("button");
   removeButton.className = "docsViewer__button";
   removeButton.type = "button";
-  removeButton.textContent = "Remove token";
+  removeButton.textContent = token.presentation === "image" ? "Remove image" : "Remove token";
 
   function setStatus(message, isError) {
     status.textContent = message || "";
@@ -139,16 +162,41 @@ function renderToken(context, state, active) {
   }
 
   updateButton.addEventListener("click", function () {
-    var title = cleanString(titleInput.value);
-    var serialized = serializeCatalogueToken({
-      registry: state.registry,
-      targetType: token.targetType,
-      targetId: token.targetId,
-      title: title
-    });
+    var value = cleanString(occurrenceInput.value);
+    var serialized;
+    if (token.presentation === "image") {
+      var presentation = readImagePresentation(imagePresentation);
+      var serialization = {
+        registry: state.registry,
+        targetType: token.targetType,
+        targetId: token.targetId,
+        alt: value
+      };
+      if (presentation.addCaption) {
+        Object.assign(serialization, {
+          caption: presentation.caption,
+          summary: presentation.summary,
+          placement: presentation.placement,
+          fillWidth: presentation.fillWidth
+        });
+      }
+      serialized = serializeCatalogueImageToken(serialization);
+    } else {
+      serialized = serializeCatalogueToken({
+        registry: state.registry,
+        targetType: token.targetType,
+        targetId: token.targetId,
+        title: value
+      });
+    }
     if (!serialized) {
-      setStatus("Enter a single-line Title.", true);
-      titleInput.focus();
+      setStatus(
+        token.presentation === "image"
+          ? "Enter alt text and complete the enabled caption presentation."
+          : "Enter a single-line Title.",
+        true
+      );
+      occurrenceInput.focus();
       return;
     }
     if (
@@ -173,7 +221,9 @@ function renderToken(context, state, active) {
   });
 
   actions.append(updateButton, removeButton);
-  article.append(heading, list, titleField, status, actions);
+  article.append(heading, list, occurrenceField);
+  if (imagePresentation) article.appendChild(imagePresentation);
+  article.append(status, actions);
   mount.appendChild(article);
 }
 

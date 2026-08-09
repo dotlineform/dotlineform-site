@@ -58,6 +58,15 @@ def install_modules(page: Page) -> None:
             const contribution = await import(
                 '/docs-viewer/runtime/js/management/source-editor/catalogue-token-contribution.js'
             );
+            const imageModal = await import(
+                '/docs-viewer/runtime/js/management/source-editor/catalogue-image-modal.js'
+            );
+            const imageContribution = await import(
+                '/docs-viewer/runtime/js/management/source-editor/catalogue-image-contribution.js'
+            );
+            const imagePresentation = await import(
+                '/docs-viewer/runtime/js/management/source-editor/source-editor-image-presentation.js'
+            );
             const directiveActions = await import(
                 '/docs-viewer/runtime/js/management/source-editor/directive-actions.js'
             );
@@ -97,6 +106,9 @@ def install_modules(page: Page) -> None:
                 directiveActions,
                 documentTarget,
                 infoView,
+                imageContribution,
+                imageModal,
+                imagePresentation,
                 managementActions,
                 modal,
                 parser,
@@ -1536,6 +1548,302 @@ def assert_modal_insertion_cancellation_and_stale_guard(page: Page) -> None:
         raise AssertionError(f"unavailable token identity fell back to fuzzy search: {result!r}")
 
 
+def assert_catalogue_image_parser_modal_and_contribution(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const smoke = window.__catalogueTokenSmoke;
+            const registryPayload = {
+                schema_version: 'docs_semantic_token_registry_v1',
+                target_lookup_url: '/target-lookup.json',
+                families: [{
+                    key: 'catalogue',
+                    labels: {},
+                    occurrence_fields: [],
+                    ui_contributions: {},
+                    target_types: [{
+                        key: 'work', label: 'Work', lookup_fields: [],
+                        id_policy: { canonical_pattern: '^\\\\d{5}$' }
+                    }, {
+                        key: 'series', label: 'Series', lookup_fields: [],
+                        id_policy: { canonical_pattern: '^[a-z0-9][a-z0-9-]*$' }
+                    }]
+                }]
+            };
+            const targetPayload = {
+                schema_version: 'docs_semantic_token_target_lookup_v2',
+                targets: [{
+                    family: 'catalogue', target_type: 'work', target_id: '00638',
+                    title: '3 symbols', href: '/works/?work=00638', meta: ['2007'],
+                    image: { src: 'https://media.dotlineform.test/works/img/00638-primary-1600.webp?v=1' }
+                }, {
+                    family: 'catalogue', target_type: 'series', target_id: '005',
+                    title: '3 symbols', href: '/series/?series=005', meta: ['2007'],
+                    image: { src: 'https://media.dotlineform.test/works/img/00638-primary-1600.webp?v=1' }
+                }, {
+                    family: 'catalogue', target_type: 'work', target_id: '00008',
+                    title: 'nerve', href: '/works/?work=00008', meta: [], image: null
+                }]
+            };
+            const fakeFetch = async url => ({
+                ok: true,
+                json: async () => String(url).includes('target-lookup')
+                    ? targetPayload
+                    : registryPayload
+            });
+            const registry = smoke.registry.normalizeSemanticTokenRegistry(registryPayload);
+            const plain = '[[catalogue:image:work:00638|alt=3%20symbols]]';
+            const figure = '[[catalogue:image:series:005|alt=Alternative%20text&caption=Visible%20caption&summary=Supporting%20copy&placement=right&fill_width=false]]';
+            const parsed = [plain, figure].map(raw => smoke.parser.parseCatalogueToken(raw, {
+                registry
+            }));
+            const malformed = [
+                '[[catalogue:image:work:00638|caption=caption&alt=alt&placement=left&fill_width=true]]',
+                '[[catalogue:image:work:00638|alt=alt&alt=again]]',
+                '[[catalogue:image:work:00638|alt=alt&summary=extra]]',
+                '[[catalogue:image:work:00638|alt=detail%2fview]]'
+            ].map(raw => smoke.parser.parseCatalogueToken(raw, { registry }));
+            const imageSupport = await smoke.targets.loadCatalogueTargetSupport({
+                fetch: fakeFetch,
+                requireImage: true
+            });
+            const supportMatches = {
+                series: smoke.targets.collectCatalogueTargetMatches(imageSupport, 'series:005', 10),
+                withoutImage: smoke.targets.collectCatalogueTargetMatches(imageSupport, 'nerve', 10)
+            };
+
+            function createState() {
+                const state = {
+                    focusCount: 0,
+                    revision: 0,
+                    value: 'Before  after'
+                };
+                state.capture = { start: 7, end: 7, text: '', revision: 0 };
+                state.adapter = {
+                    focus() { state.focusCount += 1; },
+                    replaceCapturedSelection(capture, replacement) {
+                        if (
+                            capture.revision !== state.revision
+                            || state.value.slice(capture.start, capture.end) !== capture.text
+                        ) return false;
+                        state.value = state.value.slice(0, capture.start)
+                            + replacement + state.value.slice(capture.end);
+                        state.revision += 1;
+                        return true;
+                    }
+                };
+                return state;
+            }
+
+            async function waitForLoaded(root) {
+                for (let index = 0; index < 30; index += 1) {
+                    const input = root.querySelector('#docsViewerCatalogueImageSearch');
+                    if (input && !input.disabled) return input;
+                    await new Promise(resolve => setTimeout(resolve, 0));
+                }
+                throw new Error('Catalogue image modal did not load.');
+            }
+
+            const insertedState = createState();
+            const insertedRoot = document.createElement('div');
+            document.body.appendChild(insertedRoot);
+            const inserting = smoke.imageModal.openCatalogueImageModal({
+                adapter: insertedState.adapter,
+                capture: insertedState.capture,
+                fetch: fakeFetch,
+                root: insertedRoot
+            });
+            const search = await waitForLoaded(insertedRoot);
+            search.value = 'series:005';
+            search.dispatchEvent(new Event('input', { bubbles: true }));
+            search.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+            const alt = insertedRoot.querySelector('#docsViewerCatalogueImageAlt');
+            const caption = insertedRoot.querySelector('[data-role="staged-media-caption-text"]');
+            const summary = insertedRoot.querySelector('[data-role="staged-media-summary"]');
+            const right = insertedRoot.querySelector('[data-role="staged-media-placement"][value="right"]');
+            const fill = insertedRoot.querySelector('[data-role="staged-media-fill-width"]');
+            const suggestions = { alt: alt.value, caption: caption.value };
+            const selectionProjection = {
+                expanded: search.getAttribute('aria-expanded'),
+                resultCount: insertedRoot.querySelectorAll('[data-target-index]').length,
+                resultsHidden: insertedRoot.querySelector('[data-role="catalogue-results"]').hidden,
+                searchValue: search.value,
+                selectedSummaryAbsent: !insertedRoot.querySelector('[data-role="catalogue-selected"]')
+            };
+            alt.value = 'Alternative text';
+            caption.value = 'Visible caption';
+            summary.value = 'Supporting copy';
+            right.checked = true;
+            fill.checked = false;
+            insertedRoot.querySelector('[data-role="modal-primary"]').click();
+            const insertedResult = await inserting;
+            const inserted = {
+                focusCount: insertedState.focusCount,
+                resultToken: insertedResult.token,
+                value: insertedState.value
+            };
+            insertedRoot.remove();
+
+            const cancelledState = createState();
+            const cancelledRoot = document.createElement('div');
+            document.body.appendChild(cancelledRoot);
+            const cancelling = smoke.imageModal.openCatalogueImageModal({
+                adapter: cancelledState.adapter,
+                capture: cancelledState.capture,
+                fetch: fakeFetch,
+                root: cancelledRoot
+            });
+            await waitForLoaded(cancelledRoot);
+            cancelledRoot.querySelector('button[data-role="modal-cancel"]').click();
+            const cancelledResult = await cancelling;
+            const cancelled = {
+                confirmed: cancelledResult.confirmed,
+                focusCount: cancelledState.focusCount,
+                value: cancelledState.value
+            };
+            cancelledRoot.remove();
+
+            const staleState = createState();
+            const staleRoot = document.createElement('div');
+            document.body.appendChild(staleRoot);
+            const stalePromise = smoke.imageModal.openCatalogueImageModal({
+                adapter: staleState.adapter,
+                capture: staleState.capture,
+                fetch: fakeFetch,
+                root: staleRoot
+            });
+            const staleSearch = await waitForLoaded(staleRoot);
+            staleSearch.value = 'work:00638';
+            staleSearch.dispatchEvent(new Event('input', { bubbles: true }));
+            staleSearch.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+            staleState.revision += 1;
+            staleRoot.querySelector('[data-role="modal-primary"]').click();
+            await new Promise(resolve => setTimeout(resolve, 0));
+            const stale = {
+                remainedOpen: Boolean(staleRoot.querySelector('#catalogue-image-add-modal')),
+                status: staleRoot.querySelector('[data-role="modal-status"]').textContent,
+                value: staleState.value
+            };
+            staleRoot.querySelector('button[data-role="modal-cancel"]').click();
+            await stalePromise;
+            staleRoot.remove();
+
+            const definition = smoke.imageContribution.catalogueImageControlDefinition();
+            const handlers = smoke.imageContribution.createCatalogueImageMainViewControlHandlers();
+            const button = smoke.imageContribution.catalogueImageControlRenderer({
+                document,
+                existingRoot: null
+            });
+            return {
+                cancelled,
+                contribution: {
+                    buttonText: button.textContent,
+                    definition,
+                    handlerIds: Object.keys(handlers)
+                },
+                inserted,
+                malformedAccepted: malformed.filter(Boolean).length,
+                parsed: parsed.map(token => ({
+                    alt: token.alt,
+                    caption: token.caption,
+                    fillWidth: token.fillWidth,
+                    placement: token.placement,
+                    presentation: token.presentation,
+                    summary: token.summary,
+                    targetId: token.targetId,
+                    targetType: token.targetType,
+                    title: token.title
+                })),
+                serialized: {
+                    figure: smoke.parser.serializeCatalogueImageToken({
+                        registry, targetType: 'series', targetId: '005',
+                        alt: 'Alternative text', caption: 'Visible caption',
+                        summary: 'Supporting copy', placement: 'right', fillWidth: false
+                    }),
+                    plain: smoke.parser.serializeCatalogueImageToken({
+                        registry, targetType: 'work', targetId: '00638', alt: '3 symbols'
+                    })
+                },
+                stale,
+                suggestions,
+                selectionProjection,
+                support: {
+                    series: supportMatches.series.map(target => [target.targetType, target.targetId]),
+                    withoutImage: supportMatches.withoutImage.length
+                }
+            };
+        }"""
+    )
+    expected_figure = (
+        "[[catalogue:image:series:005|alt=Alternative%20text&caption=Visible%20caption&"
+        "summary=Supporting%20copy&placement=right&fill_width=false]]"
+    )
+    if result["serialized"] != {
+        "plain": "[[catalogue:image:work:00638|alt=3%20symbols]]",
+        "figure": expected_figure,
+    } or result["malformedAccepted"] != 0:
+        raise AssertionError(f"Catalogue image parser/serializer drifted: {result!r}")
+    if result["parsed"] != [
+        {
+            "alt": "3 symbols", "caption": "", "fillWidth": None,
+            "placement": "", "presentation": "image", "summary": "",
+            "targetId": "00638", "targetType": "work", "title": "3 symbols",
+        },
+        {
+            "alt": "Alternative text", "caption": "Visible caption", "fillWidth": False,
+            "placement": "right", "presentation": "image", "summary": "Supporting copy",
+            "targetId": "005", "targetType": "series", "title": "Visible caption",
+        },
+    ]:
+        raise AssertionError(f"Catalogue image parsed presentation changed: {result!r}")
+    if result["support"] != {"series": [["series", "005"]], "withoutImage": 0}:
+        raise AssertionError(f"Catalogue image target eligibility changed: {result!r}")
+    if result["suggestions"] != {"alt": "3 symbols", "caption": "3 symbols"}:
+        raise AssertionError(f"Catalogue image suggestions changed: {result!r}")
+    if result["selectionProjection"] != {
+        "expanded": "false",
+        "resultCount": 0,
+        "resultsHidden": True,
+        "searchValue": "3 symbols",
+        "selectedSummaryAbsent": True,
+    }:
+        raise AssertionError(f"Catalogue image selection projection changed: {result!r}")
+    if result["inserted"] != {
+        "focusCount": 1,
+        "resultToken": expected_figure,
+        "value": f"Before {expected_figure} after",
+    }:
+        raise AssertionError(f"Catalogue image exact insertion changed: {result!r}")
+    if result["cancelled"] != {
+        "confirmed": False,
+        "focusCount": 1,
+        "value": "Before  after",
+    }:
+        raise AssertionError(f"Catalogue image cancellation changed source: {result!r}")
+    if result["stale"] != {
+        "remainedOpen": True,
+        "status": "Markdown source changed while this modal was open. Cancel and try again.",
+        "value": "Before  after",
+    }:
+        raise AssertionError(f"Catalogue image stale guard changed: {result!r}")
+    if result["contribution"] != {
+        "buttonText": "🏞️",
+        "definition": {
+            "id": "source-add-catalogue-image",
+            "actionId": "source-add-catalogue-image",
+            "label": "Add Catalogue image",
+            "ownerType": "view",
+            "ownerViewId": "rendered-document",
+            "modeIds": ["markdown-source"],
+            "surfaceId": "main-view",
+            "appKinds": ["manage"],
+            "features": ["source-editing"],
+            "renderer": "source-add-catalogue-image",
+        },
+        "handlerIds": ["source-add-catalogue-image"],
+    }:
+        raise AssertionError(f"Catalogue image contribution changed: {result!r}")
+
+
 def assert_catalogue_info_exact_range_update_remove_and_stale_guard(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -1566,7 +1874,10 @@ def assert_catalogue_info_exact_range_update_remove_and_stale_guard(page: Page) 
                     target_id: '00638',
                     title: '3 symbols',
                     href: '/works/?work=00638',
-                    meta: ['2007']
+                    meta: ['2007'],
+                    image: {
+                        src: 'https://media.dotlineform.test/works/img/00638-primary-1600.webp?v=1'
+                    }
                 }]
             };
             const fakeFetch = async url => ({
@@ -1576,11 +1887,11 @@ def assert_catalogue_info_exact_range_update_remove_and_stale_guard(page: Page) 
                     : registryPayload
             });
 
-            function createState() {
+            function createState(initialValue, initialSelection) {
                 const state = {
-                    value: 'Before [[catalogue:work:00638|3 symbols]] after',
+                    value: initialValue || 'Before [[catalogue:work:00638|3 symbols]] after',
                     revision: 0,
-                    selection: { start: 18, end: 18 },
+                    selection: initialSelection || { start: 18, end: 18 },
                     listeners: new Set(),
                     status: ''
                 };
@@ -1695,6 +2006,73 @@ def assert_catalogue_info_exact_range_update_remove_and_stale_guard(page: Page) 
             };
             staleMounted.view.unmount(staleMounted.context);
             staleMounted.mount.remove();
+
+            const imageRaw = '[[catalogue:image:work:00638|alt=3%20symbols&caption=3%20symbols&summary=Old%20summary&placement=left&fill_width=true]]';
+            const imageValue = 'Before ' + imageRaw + ' after';
+            const imageState = createState(imageValue, { start: 18, end: 18 });
+            const imageMounted = await mountView(imageState);
+            const imageAlt = imageMounted.mount.querySelector(
+                '.docsViewer__metadataInfoList + .docsViewer__field input'
+            );
+            const imageCaption = imageMounted.mount.querySelector(
+                '[data-role="staged-media-caption-text"]'
+            );
+            const imageSummary = imageMounted.mount.querySelector('[data-role="staged-media-summary"]');
+            const imageFillWidth = imageMounted.mount.querySelector(
+                '[data-role="staged-media-fill-width"]'
+            );
+            const imageInitial = {
+                alt: imageAlt.value,
+                caption: imageCaption.value,
+                fillWidth: imageFillWidth.checked,
+                heading: imageMounted.mount.querySelector('h3').textContent,
+                placement: imageMounted.mount.querySelector(
+                    '[data-role="staged-media-placement"]:checked'
+                ).value,
+                selection: Object.assign({}, imageState.selection),
+                summary: imageSummary.value
+            };
+            imageAlt.value = 'Alternative text';
+            imageCaption.value = 'Visible caption';
+            imageSummary.value = 'Supporting copy';
+            imageMounted.mount.querySelector(
+                '[data-role="staged-media-placement"][value="right"]'
+            ).checked = true;
+            imageFillWidth.checked = false;
+            Array.from(imageMounted.mount.querySelectorAll('button'))
+                .find(button => button.textContent === 'Update image')
+                .click();
+            const imageAfterUpdate = {
+                selection: Object.assign({}, imageState.selection),
+                value: imageState.value
+            };
+            Array.from(imageMounted.mount.querySelectorAll('button'))
+                .find(button => button.textContent === 'Remove image')
+                .click();
+            const imageAfterRemove = {
+                empty: imageMounted.mount.textContent.includes(
+                    'Place the caret inside a Catalogue token'
+                ),
+                value: imageState.value
+            };
+            imageMounted.view.unmount(imageMounted.context);
+            imageMounted.mount.remove();
+
+            const imageStaleState = createState(imageValue, { start: 18, end: 18 });
+            const imageStaleMounted = await mountView(imageStaleState);
+            imageStaleState.revision += 1;
+            Array.from(imageStaleMounted.mount.querySelectorAll('button'))
+                .find(button => button.textContent === 'Update image')
+                .click();
+            const imageStale = {
+                error: imageStaleMounted.mount.textContent.includes(
+                    'Markdown source changed. Select the token again.'
+                ),
+                value: imageStaleState.value
+            };
+            imageStaleMounted.view.unmount(imageStaleMounted.context);
+            imageStaleMounted.mount.remove();
+
             const rendered = document.createElement('div');
             rendered.innerHTML = [
                 '<a href="/works/?work=00638"',
@@ -1709,6 +2087,10 @@ def assert_catalogue_info_exact_range_update_remove_and_stale_guard(page: Page) 
             return {
                 afterRemove,
                 afterUpdate,
+                imageAfterRemove,
+                imageAfterUpdate,
+                imageInitial,
+                imageStale,
                 initial,
                 rendered: {
                     href: rendered.querySelector('a').href,
@@ -1719,6 +2101,14 @@ def assert_catalogue_info_exact_range_update_remove_and_stale_guard(page: Page) 
         }"""
     )
     expected_raw = "[[catalogue:work:00638|3 symbols]]"
+    initial_image_raw = (
+        "[[catalogue:image:work:00638|alt=3%20symbols&caption=3%20symbols&"
+        "summary=Old%20summary&placement=left&fill_width=true]]"
+    )
+    expected_image_raw = (
+        "[[catalogue:image:work:00638|alt=Alternative%20text&caption=Visible%20caption&"
+        "summary=Supporting%20copy&placement=right&fill_width=false]]"
+    )
     if result["initial"] != {
         "selection": {"start": 7, "end": 41},
         "rows": [
@@ -1750,6 +2140,31 @@ def assert_catalogue_info_exact_range_update_remove_and_stale_guard(page: Page) 
         "value": f"Before {expected_raw} after",
     }:
         raise AssertionError(f"Catalogue Info stale-range guard changed: {result!r}")
+    if result["imageInitial"] != {
+        "alt": "3 symbols",
+        "caption": "3 symbols",
+        "fillWidth": True,
+        "heading": "Catalogue image",
+        "placement": "left",
+        "selection": {"start": 7, "end": 7 + len(initial_image_raw)},
+        "summary": "Old summary",
+    }:
+        raise AssertionError(f"Catalogue image Info hydration changed: {result!r}")
+    if result["imageAfterUpdate"] != {
+        "selection": {"start": 7, "end": 7 + len(expected_image_raw)},
+        "value": f"Before {expected_image_raw} after",
+    }:
+        raise AssertionError(f"Catalogue image Info update changed: {result!r}")
+    if result["imageAfterRemove"] != {
+        "empty": True,
+        "value": "Before  after",
+    }:
+        raise AssertionError(f"Catalogue image Info removal changed: {result!r}")
+    if result["imageStale"] != {
+        "error": True,
+        "value": f"Before {initial_image_raw} after",
+    }:
+        raise AssertionError(f"Catalogue image Info stale guard changed: {result!r}")
     if result["rendered"] != {
         "href": "http://127.0.0.1:4000/works/?work=00638",
         "mountedLinkCount": 1,
@@ -2281,6 +2696,7 @@ def run_smoke(page: Page, base_url: str) -> None:
     assert_source_target_transport_and_fixed_session(page)
     assert_subject_link_planning_and_source_integration(page)
     assert_modal_insertion_cancellation_and_stale_guard(page)
+    assert_catalogue_image_parser_modal_and_contribution(page)
     assert_catalogue_info_exact_range_update_remove_and_stale_guard(page)
     assert_real_keyboard_tab_and_scroll_flow(page)
 

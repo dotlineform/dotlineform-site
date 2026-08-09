@@ -2,6 +2,11 @@ import {
   escapeHtml,
   openDocsViewerManagementModal
 } from "../docs-viewer-management-modal-shell.js";
+import {
+  bindImagePresentation,
+  imagePresentationHtml,
+  readImagePresentation
+} from "./source-editor-image-presentation.js";
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -11,54 +16,6 @@ function actionCopy(kind) {
   return kind === "file"
     ? { title: "Add file", fieldLabel: "Link label", empty: "No staged files are available.", primary: "Add file" }
     : { title: "Add image", fieldLabel: "Alt text", empty: "No staged images are available.", primary: "Add image" };
-}
-
-function imagePresentationHtml() {
-  return "" +
-    '<label class="docsViewer__field docsViewer__field--checkbox">' +
-      '<input class="docsViewer__checkboxInput" data-role="staged-media-caption" type="checkbox" checked>' +
-      '<span class="docsViewer__fieldLabel">Add caption</span>' +
-    "</label>" +
-    '<div class="docsViewerSourceEditorMedia__presentation" data-role="staged-media-presentation">' +
-      '<label class="docsViewer__field" for="docsViewerStagedMediaCaption">' +
-        '<span class="docsViewer__fieldLabel">Caption</span>' +
-        '<input class="docsViewer__fieldInput" id="docsViewerStagedMediaCaption" data-role="staged-media-caption-text" type="text" required>' +
-      "</label>" +
-      '<label class="docsViewer__field docsViewer__field--textarea" for="docsViewerStagedMediaSummary">' +
-        '<span class="docsViewer__fieldLabel">Summary</span>' +
-        '<textarea class="docsViewer__fieldInput docsViewer__fieldInput--textarea" id="docsViewerStagedMediaSummary" data-role="staged-media-summary" rows="3"></textarea>' +
-      "</label>" +
-      '<div class="docsViewerSourceEditorMedia__placement" role="group" aria-labelledby="docsViewerStagedMediaPlacementLabel">' +
-        '<span class="docsViewer__fieldLabel" id="docsViewerStagedMediaPlacementLabel">Placement</span>' +
-        '<div class="docsViewerSourceEditorMedia__placementOptions">' +
-          '<label class="docsViewerSourceEditorMedia__placementOption">' +
-            '<input class="docsViewerSourceEditorMedia__radioInput" data-role="staged-media-placement" type="radio" name="docsViewerStagedMediaPlacement" value="full" checked>' +
-            '<span>Full column</span>' +
-          "</label>" +
-          '<label class="docsViewerSourceEditorMedia__placementOption">' +
-            '<input class="docsViewerSourceEditorMedia__radioInput" data-role="staged-media-placement" type="radio" name="docsViewerStagedMediaPlacement" value="left">' +
-            '<span>Image left</span>' +
-          "</label>" +
-          '<label class="docsViewerSourceEditorMedia__placementOption">' +
-            '<input class="docsViewerSourceEditorMedia__radioInput" data-role="staged-media-placement" type="radio" name="docsViewerStagedMediaPlacement" value="right">' +
-            '<span>Image right</span>' +
-          "</label>" +
-        "</div>" +
-      "</div>" +
-      '<label class="docsViewer__field docsViewer__field--checkbox">' +
-        '<input class="docsViewer__checkboxInput" data-role="staged-media-fill-width" type="checkbox" checked>' +
-        '<span class="docsViewer__fieldLabel">Fill available width</span>' +
-      "</label>" +
-    "</div>";
-}
-
-function setImagePresentationEnabled(host, enabled) {
-  var presentation = host.querySelector('[data-role="staged-media-presentation"]');
-  if (!presentation) return;
-  presentation.hidden = !enabled;
-  presentation.querySelectorAll("input, textarea").forEach(function (control) {
-    control.disabled = !enabled;
-  });
 }
 
 function chooseStagedMedia(root, kind, files) {
@@ -105,9 +62,6 @@ function chooseStagedMedia(root, kind, files) {
       function projectCaptionSuggestion() {
         if (captionInput && !captionEdited) captionInput.value = label.value;
       }
-      function projectCaptionAvailability() {
-        setImagePresentationEnabled(api.host, Boolean(captionToggle && captionToggle.checked));
-      }
       select.addEventListener("change", projectSuggestedLabel);
       label.addEventListener("input", projectCaptionSuggestion);
       if (captionInput) {
@@ -115,35 +69,27 @@ function chooseStagedMedia(root, kind, files) {
           captionEdited = true;
         });
       }
-      if (captionToggle) captionToggle.addEventListener("change", projectCaptionAvailability);
+      if (captionToggle) bindImagePresentation(api.host);
       projectSuggestedLabel();
-      projectCaptionAvailability();
     },
     onSubmit: function (api) {
       var select = api.host.querySelector('[data-role="staged-media-file"]');
       var label = api.host.querySelector('[data-role="staged-media-label"]');
-      var captionToggle = api.host.querySelector('[data-role="staged-media-caption"]');
-      var captionInput = api.host.querySelector('[data-role="staged-media-caption-text"]');
-      var summaryInput = api.host.querySelector('[data-role="staged-media-summary"]');
-      var placementInput = api.host.querySelector('[data-role="staged-media-placement"]:checked');
-      var fillWidthInput = api.host.querySelector('[data-role="staged-media-fill-width"]');
       var filename = cleanString(select && select.value);
       var labelValue = cleanString(label && label.value);
-      var addCaption = Boolean(captionToggle && captionToggle.checked);
-      var captionValue = cleanString(captionInput && captionInput.value);
-      var summaryValue = cleanString(summaryInput && summaryInput.value);
-      var placementValue = cleanString(placementInput && placementInput.value);
-      var fillWidth = Boolean(fillWidthInput && fillWidthInput.checked);
+      var presentation = readImagePresentation(api.host);
+      var addCaption = kind === "image" && presentation.addCaption;
       if (!filename || !labelValue) {
         api.setStatus("Choose a staged file and enter " + copy.fieldLabel.toLowerCase() + ".");
         return false;
       }
-      if (addCaption && !captionValue) {
+      if (addCaption && !presentation.caption) {
         api.setStatus("Enter caption text or turn off Add caption.");
+        var captionInput = api.host.querySelector('[data-role="staged-media-caption-text"]');
         if (captionInput) captionInput.focus();
         return false;
       }
-      if (addCaption && !placementValue) {
+      if (addCaption && !presentation.placement) {
         api.setStatus("Choose an image placement.");
         return false;
       }
@@ -152,10 +98,10 @@ function chooseStagedMedia(root, kind, files) {
         stagedFilename: filename,
         label: labelValue,
         addCaption: addCaption,
-        caption: captionValue,
-        summary: summaryValue,
-        placement: placementValue,
-        fillWidth: fillWidth
+        caption: presentation.caption,
+        summary: presentation.summary,
+        placement: presentation.placement,
+        fillWidth: presentation.fillWidth
       };
     }
   }).then(function (result) {

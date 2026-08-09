@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-fe3a151e4eb6817c2be010d21c378f05",
-    "generated_at_utc": "2026-08-09T15:34:49Z",
+    "version": "blake2b-7bdba17764cad0561dcec9b93c52c677",
+    "generated_at_utc": "2026-08-09T16:50:00Z",
     "count": 296
   },
   "entries": [
@@ -3748,10 +3748,10 @@
       "kind": "doc",
       "title": "CII-1 — Catalogue Image Source Insertion Delivery",
       "href": "/docs/?scope=studio&doc=d-20260809-155631-ab527b",
-      "last_updated": "2026-08-09 16:34:15",
+      "last_updated": "2026-08-09 17:49:47",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-09 16:34:15 • Roadmap",
+      "display_meta": "2026-08-09 17:49:47 • Roadmap",
       "search_terms": [
         "cii-1 — catalogue image source insertion delivery",
         "cii",
@@ -3762,16 +3762,16 @@
         "insertion",
         "delivery",
         "roadmap",
-        "2026-08-09 16:34:15",
+        "2026-08-09 17:49:47",
         "2026",
         "08",
         "09",
-        "16",
-        "34",
-        "15",
+        "17",
+        "49",
+        "47",
         "d-20260809-155631-ab527b"
       ],
-      "search_text": "cii-1 — catalogue image source insertion delivery cii 1 catalogue image source insertion delivery roadmap 2026-08-09 16:34:15 2026 08 09 16 34 15 d-20260809-155631-ab527b"
+      "search_text": "cii-1 — catalogue image source insertion delivery cii 1 catalogue image source insertion delivery roadmap 2026-08-09 17:49:47 2026 08 09 17 49 47 d-20260809-155631-ab527b"
     },
     {
       "id": "d-20260802-123450-f7493d",

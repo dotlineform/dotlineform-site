@@ -2,6 +2,9 @@ import {
   DOCS_VIEWER_ACTION_IDS
 } from "./docs-viewer-action-definitions.js";
 import {
+  catalogueImageControlDefinition
+} from "./source-editor/catalogue-image-contribution.js";
+import {
   catalogueTokenControlDefinition
 } from "./source-editor/catalogue-token-contribution.js";
 import {
@@ -156,6 +159,7 @@ export function createDocsViewerManagementViewDefinitions() {
         features: ["source-editing"],
         renderer: "source-add-image"
       },
+      catalogueImageControlDefinition(),
       {
         id: "source-add-file",
         actionId: DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_FILE,
