@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3d90976f3f13bb39bc77ef2f35458e38",
-    "generated_at_utc": "2026-08-09T18:07:42Z",
-    "count": 296
+    "version": "blake2b-8c61eb57eaf63234628ae3a29018b421",
+    "generated_at_utc": "2026-08-09T19:24:47Z",
+    "count": 297
   },
   "entries": [
     {
@@ -3772,6 +3772,36 @@
         "d-20260809-155631-ab527b"
       ],
       "search_text": "cii-1 — catalogue image source insertion delivery cii 1 catalogue image source insertion delivery roadmap 2026-08-09 19:07:41 2026 08 09 19 07 41 d-20260809-155631-ab527b"
+    },
+    {
+      "id": "d-20260809-201029-0f7596",
+      "kind": "doc",
+      "title": "CPB-1 — Catalogue Projection Boundary Cutover Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260809-201029-0f7596",
+      "last_updated": "2026-08-09 20:24:38",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap",
+      "display_meta": "2026-08-09 20:24:38 • Roadmap",
+      "search_terms": [
+        "cpb-1 — catalogue projection boundary cutover delivery",
+        "cpb",
+        "1",
+        "catalogue",
+        "projection",
+        "boundary",
+        "cutover",
+        "delivery",
+        "roadmap",
+        "2026-08-09 20:24:38",
+        "2026",
+        "08",
+        "09",
+        "20",
+        "24",
+        "38",
+        "d-20260809-201029-0f7596"
+      ],
+      "search_text": "cpb-1 — catalogue projection boundary cutover delivery cpb 1 catalogue projection boundary cutover delivery roadmap 2026-08-09 20:24:38 2026 08 09 20 24 38 d-20260809-201029-0f7596"
     },
     {
       "id": "d-20260802-123450-f7493d",
