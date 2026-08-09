@@ -811,7 +811,7 @@
           "doc_id": "d-20260809-201029-0f7596",
           "title": "CPB-1 — Catalogue Projection Boundary Cutover Delivery",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260809-201029-0f7596.json",
-          "ui_status": "in-progress"
+          "ui_status": "done"
         },
         {
           "doc_id": "d-20260802-123450-f7493d",
@@ -1715,5 +1715,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-09T19:23:59Z"
+  "generated_at": "2026-08-09T21:09:29Z"
 }
