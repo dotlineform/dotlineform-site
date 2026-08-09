@@ -69,6 +69,10 @@ export function seriesIndexUrl(baseurl) {
   return buildPath(baseurl, '/assets/data/series_index.json');
 }
 
+export function seriesPayloadUrl(seriesId, baseurl) {
+  return buildPath(baseurl, '/assets/series/index/' + encodeURIComponent(text(seriesId)) + '.json');
+}
+
 export function worksIndexUrl(baseurl) {
   return buildPath(baseurl, '/assets/data/works_index.json');
 }

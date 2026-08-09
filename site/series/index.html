@@ -86,10 +86,19 @@
       </div>
       <div class="catalogueGridList catalogueGridList--list" id="seriesIndexList" aria-live="polite"></div>
       <div class="catalogueGridList catalogueGridList--grid" id="seriesIndexThumbGrid" aria-live="polite" hidden></div>
-      <nav class="catalogueGridList__pager" id="seriesIndexPager" aria-label="catalog index pagination" hidden>
-        <span class="catalogueGridList__pagerStatus" id="seriesIndexPagerStatus"></span>
-        <button class="catalogueGridList__pagerButton" type="button" id="seriesIndexPrev" aria-label="Previous page">&larr;</button>
-        <button class="catalogueGridList__pagerButton" type="button" id="seriesIndexNext" aria-label="Next page">&rarr;</button>
+      <div class="seriesIndex__footer">
+        <section class="catalogueMetadata page__media seriesIndex__metadata" id="selectedSeriesMetadata" hidden>
+          <h2 class="visually-hidden">series details</h2>
+          <div class="catalogueMetadata__rows" id="selectedSeriesMetadataRows"></div>
+        </section>
+        <nav class="catalogueGridList__pager" id="seriesIndexPager" aria-label="catalog index pagination" hidden>
+          <span class="catalogueGridList__pagerStatus" id="seriesIndexPagerStatus"></span>
+          <button class="catalogueGridList__pagerButton" type="button" id="seriesIndexPrev" aria-label="Previous page">&larr;</button>
+          <button class="catalogueGridList__pagerButton" type="button" id="seriesIndexNext" aria-label="Next page">&rarr;</button>
+        </nav>
+      </div>
+      <nav class="page__nav" id="seriesIndexBackNav" hidden>
+        <a class="page__back" id="seriesIndexBackLink" href="/series/" aria-label="Back to works index">&larr;</a>
       </nav>
     </div>
     <p id="seriesIndexEmpty" hidden>no works yet</p>

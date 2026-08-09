@@ -1,8 +1,10 @@
 import { createThumbnailGridList } from '../components/thumbnail-grid-list.js';
+import { renderMetadataPanel } from '../components/metadata-panel.js';
 import {
   catalogueIndexUrl,
   parseRouteState,
   seriesIndexUrl,
+  seriesPayloadUrl,
   trimBaseurl,
   worksIndexUrl,
   workUrl
@@ -231,12 +233,16 @@ function initSeriesIndexRoute() {
   var root = document.getElementById('seriesIndexRoot');
   var list = document.getElementById('seriesIndexList');
   var thumbGrid = document.getElementById('seriesIndexThumbGrid');
+  var metadata = document.getElementById('selectedSeriesMetadata');
+  var metadataRows = document.getElementById('selectedSeriesMetadataRows');
+  var backNav = document.getElementById('seriesIndexBackNav');
+  var backLink = document.getElementById('seriesIndexBackLink');
   var pager = document.getElementById('seriesIndexPager');
   var pagerStatus = document.getElementById('seriesIndexPagerStatus');
   var prevBtn = document.getElementById('seriesIndexPrev');
   var nextBtn = document.getElementById('seriesIndexNext');
   var empty = document.getElementById('seriesIndexEmpty');
-  if (!root || !list || !thumbGrid || !pager || !pagerStatus || !prevBtn || !nextBtn || !empty) return;
+  if (!root || !list || !thumbGrid || !metadata || !metadataRows || !backNav || !backLink || !pager || !pagerStatus || !prevBtn || !nextBtn || !empty) return;
 
   var viewButtons = Array.prototype.slice.call(root.querySelectorAll('[data-role="catalog-index-view-btn"]'));
   var sortButtons = Array.prototype.slice.call(root.querySelectorAll('[data-role="catalog-index-sort-btn"]'));
@@ -248,12 +254,19 @@ function initSeriesIndexRoute() {
   var state = {
     view: readStoredView(),
     sort: readStoredSort(),
-    page: readStoredPage()
+    page: selectedSeriesId ? normalizePage(routeState.seriesPage) : readStoredPage()
   };
   var uiText = copyUiText(UI_TEXT_DEFAULTS);
   var catalogueItems = [];
   var getSortedItems = createCatalogueSorter();
   var itemThumbnail = createThumbProjector(root);
+
+  backNav.hidden = !selectedSeriesId;
+  backLink.href = catalogueIndexUrl(baseurl);
+
+  function persistRoutePage(page) {
+    if (!selectedSeriesId) persistPage(page);
+  }
 
   var thumbnailGridList = createThumbnailGridList({
     listElement: list,
@@ -269,7 +282,7 @@ function initSeriesIndexRoute() {
     },
     onPageChange: function (page) {
       state.page = normalizePage(page);
-      persistPage(state.page);
+      persistRoutePage(state.page);
     }
   });
 
@@ -322,8 +335,30 @@ function initSeriesIndexRoute() {
       page: state.page
     });
     state.page = normalizePage(result.page);
-    persistPage(state.page);
+    persistRoutePage(state.page);
     updateViewUi();
+  }
+
+  function renderSeriesMetadata(payload) {
+    var series = payload && payload.series && typeof payload.series === 'object' ? payload.series : {};
+    var title = text(series.title);
+    var yearDisplay = text(series.year_display);
+    renderMetadataPanel({
+      rootElement: metadata,
+      rowsElement: metadataRows,
+      hideRootWhenEmpty: true,
+      rows: [
+        {
+          modifier: 'title',
+          hidden: !title,
+          segments: [{ text: title, className: 'catalogueMetadata__titleMain' }]
+        },
+        {
+          hidden: !yearDisplay,
+          segments: [{ text: yearDisplay }]
+        }
+      ]
+    });
   }
 
   function cardHref(seriesItem) {
@@ -397,7 +432,8 @@ function initSeriesIndexRoute() {
 
   Promise.all([
     fetchJson(seriesIndexUrl(baseurl)),
-    selectedSeriesId ? fetchJson(worksIndexUrl(baseurl)).catch(function () { return {}; }) : Promise.resolve({})
+    selectedSeriesId ? fetchJson(worksIndexUrl(baseurl)).catch(function () { return {}; }) : Promise.resolve({}),
+    selectedSeriesId ? fetchJson(seriesPayloadUrl(selectedSeriesId, baseurl)).catch(function () { return {}; }) : Promise.resolve({})
   ])
     .then(function (results) {
       var seriesPayload = results[0];
@@ -418,6 +454,7 @@ function initSeriesIndexRoute() {
         catalogueItems = selectedWorkIds.map(function (workId) {
           return buildWorkItem(workId, worksMap, selectedSeries);
         }).filter(Boolean);
+        renderSeriesMetadata(results[2]);
       } else {
         catalogueItems = Object.keys(seriesMap).map(function (sid) {
           return buildSeriesItem(seriesMap[sid]);

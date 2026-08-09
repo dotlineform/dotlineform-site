@@ -1101,6 +1101,32 @@ body:not(.studio-local-app) .site-header .container{
   flex-wrap: nowrap;
 }
 
+.seriesIndex__footer{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  max-width: var(--content-measure);
+  margin: 0 auto;
+}
+
+.seriesIndex__metadata{
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.seriesIndex__metadata:not([hidden]) + .catalogueGridList__pager{
+  flex: 0 0 auto;
+  justify-content: flex-end;
+  width: auto;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+}
+
 .seriesIndex__toolbarPrimary,
 .seriesIndex__toolbarSecondary,
 .seriesIndex__viewControls,
