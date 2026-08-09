@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "recent_index_v1",
-    "version": "blake2b-c3680f1d9f3a7a0b200c0e7d58579def",
-    "generated_at_utc": "2026-06-16T19:13:03Z",
+    "schema": "recent_index_v2",
+    "version": "blake2b-941ef7228c2b739c5dfd75f459e8f081",
+    "generated_at_utc": "2026-08-09T20:29:06Z",
     "count": 12
   },
   "entries": [
@@ -15,7 +15,8 @@
       "published_date": "2026-04-01",
       "thumb_id": "01941",
       "recorded_at_utc": "2026-04-01T21:17:07Z",
-      "session_order": 1
+      "session_order": 1,
+      "href": "/series/?series=143&from=recent"
     },
     {
       "id": "series:142",
@@ -26,7 +27,8 @@
       "published_date": "2026-03-27",
       "thumb_id": "01938",
       "recorded_at_utc": "2026-03-27T19:17:21Z",
-      "session_order": 1
+      "session_order": 1,
+      "href": "/series/?series=142&from=recent"
     },
     {
       "id": "series:095",
@@ -37,7 +39,8 @@
       "published_date": "2026-03-24",
       "thumb_id": "01423",
       "recorded_at_utc": "2026-03-24T17:17:56Z",
-      "session_order": 1
+      "session_order": 1,
+      "href": "/series/?series=095&from=recent"
     },
     {
       "id": "series:060",
@@ -48,7 +51,8 @@
       "published_date": "2026-03-22",
       "thumb_id": "01175",
       "recorded_at_utc": "2026-03-22T21:25:06Z",
-      "session_order": 1
+      "session_order": 1,
+      "href": "/works/?from=recent&work=01175"
     },
     {
       "id": "series:046",
@@ -59,7 +63,8 @@
       "published_date": "2026-03-18",
       "thumb_id": "01037",
       "recorded_at_utc": "2026-03-18T22:19:31Z",
-      "session_order": 1
+      "session_order": 1,
+      "href": "/works/?from=recent&work=01037"
     },
     {
       "id": "series:032",
@@ -70,7 +75,8 @@
       "published_date": "2026-03-15",
       "thumb_id": "00833",
       "recorded_at_utc": "2026-03-15T21:13:44Z",
-      "session_order": 1
+      "session_order": 1,
+      "href": "/series/?series=032&from=recent"
     },
     {
       "id": "series:019",
@@ -81,7 +87,8 @@
       "published_date": "2026-03-15",
       "thumb_id": "00783",
       "recorded_at_utc": "2026-03-15T18:25:12Z",
-      "session_order": 1
+      "session_order": 1,
+      "href": "/series/?series=019&from=recent"
     },
     {
       "id": "series:020",
@@ -92,7 +99,8 @@
       "published_date": "2026-03-15",
       "thumb_id": "00792",
       "recorded_at_utc": "2026-03-15T18:25:12Z",
-      "session_order": 3
+      "session_order": 3,
+      "href": "/series/?series=020&from=recent"
     },
     {
       "id": "work:00753",
@@ -103,7 +111,8 @@
       "published_date": "2026-03-15",
       "thumb_id": "00753",
       "recorded_at_utc": "2026-03-15T16:35:38Z",
-      "session_order": 1
+      "session_order": 1,
+      "href": "/works/?from=recent&work=00753"
     },
     {
       "id": "work:00722",
@@ -114,7 +123,8 @@
       "published_date": "2026-03-15",
       "thumb_id": "00722",
       "recorded_at_utc": "2026-03-15T16:16:56Z",
-      "session_order": 1
+      "session_order": 1,
+      "href": "/works/?from=recent&work=00722"
     },
     {
       "id": "work:00716",
@@ -125,7 +135,8 @@
       "published_date": "2026-03-15",
       "thumb_id": "00716",
       "recorded_at_utc": "2026-03-15T12:27:59Z",
-      "session_order": 1
+      "session_order": 1,
+      "href": "/works/?from=recent&work=00716"
     },
     {
       "id": "series:140",
@@ -136,7 +147,8 @@
       "published_date": "2026-03-13",
       "thumb_id": "00615",
       "recorded_at_utc": "2026-03-13T14:36:23Z",
-      "session_order": 1
+      "session_order": 1,
+      "href": "/series/?series=140&from=recent"
     }
   ]
 }

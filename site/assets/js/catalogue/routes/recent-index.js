@@ -1,9 +1,6 @@
 import {
   buildPath,
-  catalogueIndexUrl,
-  seriesIndexUrl,
-  trimBaseurl,
-  workUrl
+  trimBaseurl
 } from '../shared/catalogue-urls.js';
 import { fetchJson } from '../shared/fetch-json.js';
 import { normalizePositiveSizes, text } from '../shared/text.js';
@@ -48,19 +45,9 @@ function bootRecentIndexRoute(rootNode, listNode, emptyNode) {
     return String(day) + ' ' + monthNames[month - 1] + ' ' + String(year);
   }
 
-  function entryHref(entry, seriesMap) {
-    var kind = text(entry && entry.kind).toLowerCase();
-    var targetId = text(entry && entry.target_id);
-    if (!targetId) return '';
-    if (kind === 'series') {
-      var seriesItem = seriesMap && typeof seriesMap === 'object' ? seriesMap[targetId] : null;
-      var singleWorkId = text(seriesItem && seriesItem.single_work_id);
-      if (singleWorkId) {
-        return workUrl(singleWorkId, baseurl, { from: 'recent' });
-      }
-      return catalogueIndexUrl(baseurl, { series: targetId, from: 'recent' });
-    }
-    return workUrl(targetId, baseurl, { from: 'recent' });
+  function entryHref(entry) {
+    var href = text(entry && entry.href);
+    return href ? buildPath(baseurl, href) : '';
   }
 
   function compareEntries(a, b) {
@@ -71,8 +58,8 @@ function bootRecentIndexRoute(rootNode, listNode, emptyNode) {
     return text(a && a.title).localeCompare(text(b && b.title), undefined, { numeric: true, sensitivity: 'base' });
   }
 
-  function renderEntry(entry, seriesMap) {
-    var href = entryHref(entry, seriesMap);
+  function renderEntry(entry) {
+    var href = entryHref(entry);
     if (!href) return null;
 
     var title = text(entry && entry.title) || text(entry && entry.target_id);
@@ -126,21 +113,16 @@ function bootRecentIndexRoute(rootNode, listNode, emptyNode) {
     return item;
   }
 
-  Promise.all([
-    fetchJson(buildPath(baseurl, '/assets/data/recent_index.json')),
-    fetchJson(seriesIndexUrl(baseurl)).catch(function () { return {}; })
-  ])
-    .then(function (responses) {
-      var payload = responses[0] || {};
-      var seriesPayload = responses[1] || {};
-      var seriesMap = seriesPayload && typeof seriesPayload.series === 'object' ? seriesPayload.series : {};
+  fetchJson(buildPath(baseurl, '/assets/data/recent_index.json'))
+    .then(function (payload) {
+      payload = payload || {};
       var entries = payload && Array.isArray(payload.entries) ? payload.entries.slice() : [];
       entries.sort(compareEntries);
       entries = entries.slice(0, 50);
 
       listNode.innerHTML = '';
       entries.forEach(function (entry) {
-        var item = renderEntry(entry, seriesMap);
+        var item = renderEntry(entry);
         if (item) listNode.appendChild(item);
       });
 

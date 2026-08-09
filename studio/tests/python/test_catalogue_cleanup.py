@@ -139,16 +139,20 @@ def test_work_delete_generated_payloads_remove_generated_records() -> None:
             root / "site/assets/data/series_index.json",
             {
                 "header": {"schema": "series_index_v3"},
-                "series": {"009": {"series_id": "009", "title": "Series", "primary_work_id": "00002"}},
+                "series": {
+                    "009": {"series_id": "009", "title": "Series", "primary_work_id": "00002"},
+                    "010": {"series_id": "010", "title": "Other", "primary_work_id": "00003"},
+                },
             },
         )
         write_json(
             root / "site/assets/data/recent_index.json",
             {
-                "header": {"schema": "recent_index_v1"},
+                "header": {"schema": "recent_index_v2"},
                 "entries": [
-                    {"kind": "work", "target_id": "00001"},
-                    {"kind": "series", "target_id": "009", "thumb_id": "00001", "caption": "2 works"},
+                    {"kind": "work", "target_id": "00001", "href": "/works/?from=recent&work=00001"},
+                    {"kind": "series", "target_id": "009", "thumb_id": "00001", "caption": "2 works", "href": "/series/?series=009&from=recent"},
+                    {"kind": "series", "target_id": "010", "thumb_id": "00003", "caption": "2 works", "href": "/series/?series=010&from=recent"},
                 ],
             },
         )
@@ -183,8 +187,10 @@ def test_work_delete_generated_payloads_remove_generated_records() -> None:
     assert "00001" not in payloads[(root / "site/assets/data/works_index.json").resolve()]["works"]
     assert payloads[(root / "site/assets/data/series_index.json").resolve()]["series"]["009"]["single_work_id"] == "00002"
     assert payloads[(root / "site/assets/data/recent_index.json").resolve()]["entries"] == [
-        {"kind": "series", "target_id": "009", "thumb_id": "00002", "caption": "1 work"}
+        {"kind": "series", "target_id": "010", "thumb_id": "00003", "caption": "2 works", "href": "/series/?series=010&from=recent"},
+        {"kind": "series", "target_id": "009", "thumb_id": "00002", "caption": "1 work", "href": "/works/?from=recent&work=00002"},
     ]
+    assert payloads[(root / "site/assets/data/recent_index.json").resolve()]["header"]["schema"] == "recent_index_v2"
     assert payloads[(root / "site/assets/series/index/009.json").resolve()]["member_works"] == [
         {"work_id": "00002", "title": "Two"}
     ]

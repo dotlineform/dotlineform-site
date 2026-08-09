@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from typing import Any, Dict, List, Mapping, Optional
+from urllib.parse import urlencode
 
 try:
     from catalogue.catalogue_generation_common import (
@@ -24,8 +25,39 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
     )
 
 
-RECENT_INDEX_SCHEMA = "recent_index_v1"
+RECENT_INDEX_SCHEMA = "recent_index_v2"
 RECENT_INDEX_LIMIT = 50
+
+
+def recent_work_href(work_id: Any) -> str:
+    normalized_work_id = normalize_text(work_id)
+    if not normalized_work_id:
+        return ""
+    return f"/works/?{urlencode((('from', 'recent'), ('work', normalized_work_id)))}"
+
+
+def recent_series_href(series_id: Any, member_work_ids: List[str]) -> str:
+    normalized_series_id = normalize_text(series_id)
+    if not normalized_series_id:
+        return ""
+    normalized_work_ids = [normalize_text(work_id) for work_id in member_work_ids if normalize_text(work_id)]
+    if len(normalized_work_ids) == 1:
+        return recent_work_href(normalized_work_ids[0])
+    return f"/series/?{urlencode((('series', normalized_series_id), ('from', 'recent')))}"
+
+
+def recent_entry_href(
+    entry: Mapping[str, Any],
+    *,
+    series_work_ids_by_id: Mapping[str, List[str]],
+) -> str:
+    kind = normalize_text(entry.get("kind")).lower()
+    target_id = normalize_text(entry.get("target_id"))
+    if kind == "work":
+        return recent_work_href(target_id)
+    if kind == "series":
+        return recent_series_href(target_id, series_work_ids_by_id.get(target_id, []))
+    return ""
 
 
 def normalize_recent_entry(entry: Any) -> Optional[Dict[str, Any]]:
@@ -41,6 +73,7 @@ def normalize_recent_entry(entry: Any) -> Optional[Dict[str, Any]]:
     thumb_id = coerce_string(entry.get("thumb_id"))
     recorded_at_utc = coerce_string(entry.get("recorded_at_utc"))
     session_order = coerce_int(entry.get("session_order"))
+    href = coerce_string(entry.get("href"))
     if not target_id or not title or not published_date:
         return None
     return compact_json_object({
@@ -53,6 +86,7 @@ def normalize_recent_entry(entry: Any) -> Optional[Dict[str, Any]]:
         "thumb_id": thumb_id,
         "recorded_at_utc": recorded_at_utc,
         "session_order": session_order,
+        "href": href,
     })
 
 
@@ -265,7 +299,7 @@ def build_recent_publication_entries(
         if normalized is not None:
             existing_by_id[str(normalized.get("id") or "")] = normalized
 
-    return [
+    current_entries = [
         entry
         for entry in existing_by_id.values()
         if is_current_published_recent_target(
@@ -276,6 +310,13 @@ def build_recent_publication_entries(
             series_status_by_id=series_status_by_id,
         )
     ]
+    return [
+        compact_json_object({
+            **entry,
+            "href": recent_entry_href(entry, series_work_ids_by_id=series_work_ids_by_id),
+        })
+        for entry in current_entries
+    ]
 
 
 def build_recent_index_payload(
@@ -285,6 +326,8 @@ def build_recent_index_payload(
     limit: int = RECENT_INDEX_LIMIT,
 ) -> Dict[str, Any]:
     sorted_entries = sort_recent_entries(entries)[:limit]
+    if any(not coerce_string(entry.get("href")) for entry in sorted_entries):
+        raise ValueError("recent index entries must include href")
     version_payload = compact_json_object({
         "schema": RECENT_INDEX_SCHEMA,
         "entries": sorted_entries,

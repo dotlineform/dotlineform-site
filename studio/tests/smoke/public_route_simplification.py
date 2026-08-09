@@ -74,6 +74,17 @@ def assert_public_routes(page: Page, base_url: str) -> None:
         if aggregate_reads:
             raise AssertionError(f"{label} retained aggregate Catalogue reads: {aggregate_reads!r}")
 
+    def public_catalogue_payload_reads() -> list[str]:
+        markers = (
+            "/assets/data/recent_index.json",
+            "/assets/data/series_index.json",
+            "/assets/data/works_index.json",
+            "/assets/series/index/",
+            "/assets/works/index/",
+            "/assets/data/search/catalogue/index.json",
+        )
+        return [url for url in requests if any(marker in url for marker in markers)]
+
     requests.clear()
     goto(page, base_url, "/series/")
     expect(page.locator("#seriesIndexRoot")).to_be_visible(timeout=10_000)
@@ -174,9 +185,18 @@ def assert_public_routes(page: Page, base_url: str) -> None:
     goto(page, base_url, "/recent/")
     expect(page.locator("#recentIndexRoot")).to_be_visible(timeout=10_000)
     expect(page.locator("#recentIndexList a[href*='work=01175']")).to_be_visible(timeout=10_000)
-    if not has_request("/assets/data/recent_index.json") or not has_request("/assets/data/series_index.json"):
-        raise AssertionError(f"Recent missed its current projection and lean Series lookup: {requests!r}")
+    if not has_request("/assets/data/recent_index.json"):
+        raise AssertionError(f"Recent missed its owned projection: {requests!r}")
+    if has_request("/assets/data/series_index.json"):
+        raise AssertionError(f"Recent retained its Series-index dependency: {requests!r}")
+    unexpected_recent_reads = [
+        url for url in public_catalogue_payload_reads()
+        if "/assets/data/recent_index.json" not in url
+    ]
+    if unexpected_recent_reads:
+        raise AssertionError(f"Recent loaded another Catalogue projection: {unexpected_recent_reads!r}")
 
+    requests.clear()
     goto(page, base_url, "/catalogue/search/")
     expect(page.locator("#studioSearchRoot")).to_be_visible(timeout=10_000)
     page.locator("#studioSearchInput").fill("00001")
@@ -184,6 +204,14 @@ def assert_public_routes(page: Page, base_url: str) -> None:
     search_href = first_href(page, "#studioSearchResults .studioSearch__title")
     if "/works/?" not in search_href or "work=00001" not in search_href:
         raise AssertionError(f"catalogue search result link is not canonical: {search_href!r}")
+    if not has_request("/assets/data/search/catalogue/index.json"):
+        raise AssertionError(f"Catalogue Search missed its owned projection: {requests!r}")
+    unexpected_search_reads = [
+        url for url in public_catalogue_payload_reads()
+        if "/assets/data/search/catalogue/index.json" not in url
+    ]
+    if unexpected_search_reads:
+        raise AssertionError(f"Catalogue Search loaded another Catalogue projection: {unexpected_search_reads!r}")
 
     goto(page, base_url, "/work_details/not-a-real-detail/")
     expect(page.locator("body")).to_contain_text("page is unavailable", timeout=10_000)

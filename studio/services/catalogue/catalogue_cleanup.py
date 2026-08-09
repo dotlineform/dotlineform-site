@@ -12,6 +12,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 
 from catalogue import catalogue_activity as activity
 from catalogue.catalogue_build_media import PIPELINE_CONFIG, detect_projects_base_dir
+from catalogue import catalogue_generation_recent as recent
 from catalogue import catalogue_generation_records as generation_records
 from catalogue import catalogue_public_paths as public_paths
 from catalogue.catalogue_source import load_json_file, normalize_detail_uid_value, normalize_series_ids_value, slug_id
@@ -147,14 +148,11 @@ def finalize_recent_index_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
     entries = payload.get("entries")
     if not isinstance(entries, list):
         raise ValueError("recent_index.json must include an entries array")
-    schema = str((payload.get("header") or {}).get("schema") or "recent_index_v1")
-    payload["header"] = {
-        "schema": schema,
-        "version": compute_payload_version({"schema": schema, "entries": entries}),
-        "generated_at_utc": activity.utc_now(),
-        "count": len(entries),
-    }
-    return payload
+    return recent.build_recent_index_payload(
+        entries=entries,
+        generated_at_utc=activity.utc_now(),
+        limit=len(entries),
+    )
 
 
 def collect_matching_paths(root: Path, patterns: Iterable[str]) -> list[Path]:
@@ -508,11 +506,15 @@ def update_recent_entries_for_work_delete(
             changed = True
             continue
         if kind == "series":
+            if target_id not in member_work_ids_by_series:
+                next_entries.append(entry)
+                continue
             series_record = series_map.get(target_id)
             if isinstance(series_record, dict):
                 works = member_work_ids_by_series.get(target_id, [])
                 next_entry = dict(entry)
                 next_entry["caption"] = f"{len(works)} work" if len(works) == 1 else f"{len(works)} works"
+                next_entry["href"] = recent.recent_series_href(target_id, works)
                 if str(next_entry.get("thumb_id") or "") == work_id:
                     next_entry["thumb_id"] = str(series_record.get("primary_work_id") or (works[0] if works else ""))
                 if next_entry != entry:
