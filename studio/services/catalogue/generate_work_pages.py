@@ -75,6 +75,7 @@ from markdown_renderer import render_markdown_to_html  # noqa: E402
 from docs_catalogue_document_urls import load_public_catalogue_document_urls  # noqa: E402
 
 try:
+    from catalogue import catalogue_cleanup
     from catalogue import catalogue_generation_indexes as indexes
     from catalogue import catalogue_generation_recent as recent
     from catalogue import catalogue_generation_records as records
@@ -92,6 +93,7 @@ try:
         parse_date,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from catalogue import catalogue_cleanup
     from catalogue import catalogue_generation_indexes as indexes
     from catalogue import catalogue_generation_recent as recent
     from catalogue import catalogue_generation_records as records
@@ -1046,7 +1048,7 @@ def main() -> None:
                 if selected_ids is not None and wid not in selected_ids:
                     continue
                 status = normalize_status(work_record.get("status"))
-                if status not in {"draft", "published"}:
+                if status != "published":
                     continue
                 if wid not in canonical_work_record_by_id:
                     continue
@@ -1150,12 +1152,49 @@ def main() -> None:
         else:
             print("Work detail JSON skipped: not selected by --only.")
 
+    published_work_ids = {
+        slug_id(work_record.get("work_id"))
+        for work_record in source_records.works.values()
+        if not is_empty(work_record.get("work_id"))
+        and normalize_status(work_record.get("status")) == "published"
+    }
+    published_series_ids = {
+        normalize_series_id(series_record.get("series_id"))
+        for series_record in source_records.series.values()
+        if not is_empty(series_record.get("series_id"))
+        and normalize_status(series_record.get("status")) == "published"
+    }
+    stale_record_paths: list[Path] = []
+    if run_work_json:
+        stale_record_paths.extend(
+            catalogue_cleanup.collect_stale_work_record_artifacts(works_json_dir, published_work_ids)
+        )
+    if run_series_pages:
+        stale_record_paths.extend(
+            catalogue_cleanup.collect_stale_series_record_artifacts(series_json_dir, published_series_ids)
+        )
+    if stale_record_paths:
+        if args.write:
+            deleted_count = catalogue_cleanup.delete_existing_files(stale_record_paths)
+            print(f"Stale public record cleanup: deleted {deleted_count} JSON artifact(s).")
+        else:
+            print(f"Stale public record cleanup: would delete {len(stale_record_paths)} JSON artifact(s).")
+        for stale_path in stale_record_paths:
+            print(f"  - {display_path(stale_path)}")
+    elif run_work_json or run_series_pages:
+        print("Stale public record cleanup: no stale JSON artifacts.")
+
     works_payload = indexes.build_works_index_records(
         work_records=source_records.works,
         canonical_work_record_by_id=canonical_work_record_by_id,
     )
+    storage_eligible_works = {
+        work_id: canonical_work_record_by_id[work_id]
+        for work_id, status in work_status_by_id.items()
+        if status in {"draft", "published"} and work_id in canonical_work_record_by_id
+    }
     work_storage_payload = indexes.build_work_storage_index_records(
-        works=works_payload,
+        works=storage_eligible_works,
         canonical_work_record_by_id=canonical_work_record_by_id,
     )
 

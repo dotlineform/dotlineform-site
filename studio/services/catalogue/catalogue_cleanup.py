@@ -238,6 +238,24 @@ def collect_series_repo_artifacts(repo_root: Path, series_id: str) -> list[Path]
     )
 
 
+def collect_stale_work_record_artifacts(record_dir: Path, published_work_ids: Iterable[str]) -> list[Path]:
+    expected_ids = {str(work_id) for work_id in published_work_ids}
+    return [
+        path
+        for path in sorted(record_dir.glob("*.json"))
+        if path.is_file() and path.stem not in expected_ids
+    ]
+
+
+def collect_stale_series_record_artifacts(record_dir: Path, published_series_ids: Iterable[str]) -> list[Path]:
+    expected_ids = {str(series_id) for series_id in published_series_ids}
+    return [
+        path
+        for path in sorted(record_dir.glob("*.json"))
+        if path.is_file() and path.stem not in expected_ids
+    ]
+
+
 def path_is_under(path: Path, root: Path) -> bool:
     try:
         path.resolve().relative_to(root.resolve())

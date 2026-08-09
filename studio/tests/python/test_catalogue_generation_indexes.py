@@ -185,7 +185,7 @@ def test_works_and_storage_index_payloads() -> None:
             "title": "Draft Work",
             "year_display": "ongoing",
             "series_ids": [],
-            "storage": "",
+            "storage": "Shelf D",
         },
         "00003": {
             "work_id": "00003",
@@ -207,13 +207,7 @@ def test_works_and_storage_index_payloads() -> None:
             "year": 2024,
             "year_display": "2024",
             "series_ids": ["009"],
-        },
-        "00002": {
-            "work_id": "00002",
-            "title": "Draft Work",
-            "year_display": "ongoing",
-            "series_ids": [],
-        },
+        }
     }
 
     works_payload = indexes.build_works_index_payload(
@@ -221,21 +215,29 @@ def test_works_and_storage_index_payloads() -> None:
         generated_at_utc="2026-05-09T12:30:00Z",
     )
     assert works_payload["header"]["schema"] == "works_index_v4"
-    assert works_payload["header"]["count"] == 2
+    assert works_payload["header"]["count"] == 1
     assert works_payload["works"] == works
 
+    storage_eligible_works = {
+        work_id: canonical[work_id]
+        for work_id, work_record in work_records.items()
+        if work_record["status"] in {"draft", "published"} and work_id in canonical
+    }
     storage = indexes.build_work_storage_index_records(
-        works=works,
+        works=storage_eligible_works,
         canonical_work_record_by_id=canonical,
     )
-    assert storage == {"00001": {"storage": "Shelf A"}}
+    assert storage == {
+        "00001": {"storage": "Shelf A"},
+        "00002": {"storage": "Shelf D"},
+    }
 
     storage_payload = indexes.build_work_storage_index_payload(
         works=storage,
         generated_at_utc="2026-05-09T12:30:00Z",
     )
     assert storage_payload["header"]["schema"] == "work_storage_index_v1"
-    assert storage_payload["header"]["count"] == 1
+    assert storage_payload["header"]["count"] == 2
     assert storage_payload["works"] == storage
 
 

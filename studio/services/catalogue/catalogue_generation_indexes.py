@@ -326,7 +326,7 @@ def build_works_index_records(
         if is_empty(wid_raw):
             continue
         status = normalize_status(work_record.get("status"))
-        if status not in {"draft", "published"}:
+        if status != "published":
             continue
         wid = slug_id(wid_raw)
         record = canonical_work_record_by_id.get(wid)

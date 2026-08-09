@@ -84,6 +84,12 @@ def assert_public_routes(page: Page, base_url: str) -> None:
     if not works_nav_href.endswith("/series/"):
         raise AssertionError(f"works top nav should be a reset link on selected-series state: {works_nav_href!r}")
 
+    goto(page, base_url, "/works/")
+    page.wait_for_url(re.compile(re.escape(base_url.rstrip("/")) + r"/series/$"), timeout=10_000)
+
+    goto(page, base_url, "/works/?series=009&sort=year")
+    page.wait_for_url(re.compile(re.escape(base_url.rstrip("/")) + r"/series/$"), timeout=10_000)
+
     goto(page, base_url, "/works/?work=00001")
     expect(page.locator("#selectedWorkRoot")).to_be_visible(timeout=10_000)
     expect(page.locator("#selectedWorkTitleText")).to_contain_text("a poem divided into 4 parts", timeout=10_000)
@@ -97,6 +103,10 @@ def assert_public_routes(page: Page, base_url: str) -> None:
     nav_href = first_href(page, "#seriesNavNext")
     if "/works/?" not in nav_href or "work=00002" not in nav_href or "series=009" not in nav_href:
         raise AssertionError(f"series navigation link is not canonical: {nav_href!r}")
+
+    goto(page, base_url, "/works/?work=00373")
+    expect(page.locator("#selectedWorkRoot")).to_be_visible(timeout=10_000)
+    expect(page.locator("#selectedWorkTitleText")).to_contain_text("info not available", timeout=10_000)
 
     goto(page, base_url, "/work-details/?detail=00001-001&from_work=00001&series=009")
     expect(page.locator("#detailPageRoot")).to_be_visible(timeout=10_000)

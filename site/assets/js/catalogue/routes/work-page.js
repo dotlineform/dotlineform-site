@@ -21,7 +21,11 @@ var root = document.getElementById('selectedWorkRoot');
 if (root) {
   var routeState = parseRouteState(window.location);
   var workId = text(routeState.work);
-  if (workId) bootSelectedWorkRoute(root, routeState, workId);
+  if (workId) {
+    bootSelectedWorkRoute(root, routeState, workId);
+  } else {
+    window.location.replace(catalogueIndexUrl(trimBaseurl(root.getAttribute('data-baseurl'))));
+  }
 }
 
 function jsonAttribute(node, name, fallback) {

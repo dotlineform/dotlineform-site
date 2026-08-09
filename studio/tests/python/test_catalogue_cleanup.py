@@ -102,6 +102,34 @@ def test_cleanup_scope_rejects_unallowlisted_delete_path() -> None:
             raise AssertionError("expected cleanup scope rejection")
 
 
+def test_stale_public_record_cleanup_keeps_only_published_exact_payloads() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        works_dir = root / "works"
+        series_dir = root / "series"
+        for work_id in ("00001", "00002", "99999"):
+            touch(works_dir / f"{work_id}.json")
+        for series_id in ("001", "002", "999"):
+            touch(series_dir / f"{series_id}.json")
+
+        stale_paths = [
+            *catalogue_cleanup.collect_stale_work_record_artifacts(works_dir, {"00001"}),
+            *catalogue_cleanup.collect_stale_series_record_artifacts(series_dir, {"001"}),
+        ]
+        assert rel_paths(root, stale_paths) == [
+            "series/002.json",
+            "series/999.json",
+            "works/00002.json",
+            "works/99999.json",
+        ]
+
+        assert catalogue_cleanup.delete_existing_files(stale_paths) == 4
+        assert rel_paths(root, [*works_dir.glob("*.json"), *series_dir.glob("*.json")]) == [
+            "series/001.json",
+            "works/00001.json",
+        ]
+
+
 def test_work_delete_generated_payloads_remove_generated_records() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
@@ -203,6 +231,7 @@ def test_work_detail_generated_payloads_remove_all_affected_details() -> None:
 def main() -> None:
     test_work_delete_cleanup_preview_counts_generated_and_media_paths()
     test_cleanup_scope_rejects_unallowlisted_delete_path()
+    test_stale_public_record_cleanup_keeps_only_published_exact_payloads()
     test_work_delete_generated_payloads_remove_generated_records()
     test_work_detail_generated_payloads_remove_all_affected_details()
     print("Catalogue cleanup tests OK")
