@@ -50,7 +50,8 @@ export function createCatalogueImageMainViewControlHandlers() {
       return openCatalogueImageModal({
         adapter: adapter,
         capture: adapter.captureSelection(),
-        root: context.root
+        root: context.root,
+        studioBaseUrl: services.studioBaseUrl
       });
     }
   };

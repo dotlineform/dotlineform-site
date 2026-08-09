@@ -1,5 +1,6 @@
 import {
   catalogueTokenAtSelection,
+  normalizeCatalogueDetailId,
   parseCatalogueTokens,
   serializeCatalogueImageToken,
   serializeCatalogueToken
@@ -48,6 +49,22 @@ function targetKey(token) {
   return [token.family, token.targetType, token.targetId].join(":");
 }
 
+function occurrenceDestination(token, target) {
+  if (!target) return "";
+  if (
+    token.presentation === "image"
+    && token.targetType === "work"
+    && token.detailId
+  ) {
+    var detailUid = token.targetId + "-" + token.detailId;
+    return (
+      "/work-details/?detail=" + encodeURIComponent(detailUid)
+      + "&from_work=" + encodeURIComponent(token.targetId)
+    );
+  }
+  return target.href || "";
+}
+
 function emptyMessage(mount, message) {
   mount.replaceChildren();
   var empty = document.createElement("p");
@@ -88,8 +105,9 @@ function renderToken(context, state, active) {
   var token = active.token;
   var capture = active.capture;
   var target = state.targetsByKey.get(targetKey(token)) || null;
-  var destinationHref = target && target.href
-    ? resolveSemanticTokenTargetHref(target.href, state.publicPreviewBase)
+  var occurrenceHref = occurrenceDestination(token, target);
+  var destinationHref = occurrenceHref
+    ? resolveSemanticTokenTargetHref(occurrenceHref, state.publicPreviewBase)
     : "";
   mount.replaceChildren();
 
@@ -108,9 +126,32 @@ function renderToken(context, state, active) {
   appendReadOnlyRow(
     list,
     "Destination",
-    target && target.href ? target.href : "No resolved destination",
+    occurrenceHref || "No resolved destination",
     destinationHref
   );
+
+  var detailField = null;
+  var detailInput = null;
+  if (token.presentation === "image") {
+    detailField = document.createElement("label");
+    detailField.className = "docsViewer__field";
+    var detailLabel = document.createElement("span");
+    detailLabel.className = "docsViewer__fieldLabel";
+    detailLabel.textContent = "Work Detail ID";
+    detailInput = document.createElement("input");
+    detailInput.className = "docsViewer__fieldInput";
+    detailInput.type = "text";
+    detailInput.dataset.role = "catalogue-work-detail-id";
+    detailInput.inputMode = "numeric";
+    detailInput.pattern = "[0-9]*";
+    detailInput.value = token.detailId;
+    detailInput.disabled = (
+      token.targetType !== "work"
+      || !target
+      || target.hasDetails !== true
+    );
+    detailField.append(detailLabel, detailInput);
+  }
 
   var occurrenceField = document.createElement("label");
   occurrenceField.className = "docsViewer__field";
@@ -165,11 +206,18 @@ function renderToken(context, state, active) {
     var value = cleanString(occurrenceInput.value);
     var serialized;
     if (token.presentation === "image") {
+      var detailId = normalizeCatalogueDetailId(detailInput ? detailInput.value : "");
+      if (detailId === null) {
+        setStatus("Enter a positive Work Detail ID using digits only, or leave it blank.", true);
+        detailInput.focus();
+        return;
+      }
       var presentation = readImagePresentation(imagePresentation);
       var serialization = {
         registry: state.registry,
         targetType: token.targetType,
         targetId: token.targetId,
+        detailId: detailId,
         alt: value
       };
       if (presentation.addCaption) {
@@ -221,7 +269,9 @@ function renderToken(context, state, active) {
   });
 
   actions.append(updateButton, removeButton);
-  article.append(heading, list, occurrenceField);
+  article.append(heading, list);
+  if (detailField) article.appendChild(detailField);
+  article.appendChild(occurrenceField);
   if (imagePresentation) article.appendChild(imagePresentation);
   article.append(status, actions);
   mount.appendChild(article);

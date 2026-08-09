@@ -39,7 +39,8 @@
             "title",
             "href",
             "meta",
-            "image"
+            "image",
+            "has_details"
           ]
         },
         {

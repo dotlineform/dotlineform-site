@@ -9,6 +9,7 @@ from urllib.parse import quote, unquote_to_bytes, urlsplit
 
 from .common import read_json
 from .semantic_token_registry import SemanticTokenRegistry
+from .semantic_target_lookup import positive_integer, primary_image_settings
 from .source import DocRecord
 from docs_staged_media_fragments import (
     FIGURE_NATURAL_WIDTH_CLASS,
@@ -23,6 +24,9 @@ FENCE_PATTERN = re.compile(r"\A {0,3}(`{3,}|~{3,})")
 SEMANTIC_TOKEN_TARGET_LOOKUP_SCHEMA_VERSION = "docs_semantic_token_target_lookup_v2"
 SEMANTIC_TOKEN_TARGET_LOOKUP_PATH = Path(
     "docs-viewer/data/generated/semantic-tokens/target-lookup.json"
+)
+CATALOGUE_WORK_DETAILS_SOURCE_DIR = Path(
+    "studio/data/canonical/catalogue/work_details"
 )
 
 
@@ -42,6 +46,7 @@ class SemanticTokenOccurrence:
     summary: str = ""
     placement: str = ""
     fill_width: bool | None = None
+    detail_id: str = ""
 
     @property
     def source_range(self) -> dict[str, int]:
@@ -113,6 +118,20 @@ def decode_catalogue_image_value(value: str) -> str | None:
     return decoded if encode_catalogue_image_value(decoded) == value else None
 
 
+def normalize_catalogue_detail_id(value: Any) -> str | None:
+    if value is None or value == "":
+        return ""
+    if isinstance(value, bool):
+        return None
+    raw = str(value).strip()
+    if not re.fullmatch(r"\d+", raw):
+        return None
+    number = int(raw)
+    if number < 1:
+        return None
+    return str(number).zfill(3)
+
+
 def serialize_catalogue_image_token(
     *,
     target_type: str,
@@ -122,6 +141,7 @@ def serialize_catalogue_image_token(
     summary: Any = "",
     placement: Any = "",
     fill_width: Any = None,
+    detail_id: Any = "",
 ) -> str:
     if (
         not LEXICAL_KEY_PATTERN.fullmatch(str(target_type or ""))
@@ -131,8 +151,13 @@ def serialize_catalogue_image_token(
     alt_text = normalize_plain_text(alt, required=True)
     if not alt_text:
         return ""
+    detail_id_value = normalize_catalogue_detail_id(detail_id)
+    if detail_id_value is None or (detail_id_value and target_type != "work"):
+        return ""
     caption_text = normalize_plain_text(caption, required=False)
     fields: list[tuple[str, str]] = [("alt", alt_text)]
+    if detail_id_value:
+        fields.append(("detail_id", detail_id_value))
     if caption_text:
         try:
             caption_text, summary_text, placement_value, fill_width_value = (
@@ -164,7 +189,7 @@ def serialize_catalogue_image_token(
     return f"[[catalogue:image:{target_type}:{target_id}|{query}]]"
 
 
-def parse_catalogue_image_fields(raw_query: str) -> dict[str, Any] | None:
+def parse_catalogue_image_fields(raw_query: str, *, target_type: str) -> dict[str, Any] | None:
     if not raw_query:
         return None
     fields: dict[str, str] = {}
@@ -172,7 +197,7 @@ def parse_catalogue_image_fields(raw_query: str) -> dict[str, Any] | None:
         key, separator, encoded_value = pair.partition("=")
         if (
             not separator
-            or key not in {"alt", "caption", "summary", "placement", "fill_width"}
+            or key not in {"alt", "detail_id", "caption", "summary", "placement", "fill_width"}
             or key in fields
             or not encoded_value
         ):
@@ -191,9 +216,10 @@ def parse_catalogue_image_fields(raw_query: str) -> dict[str, Any] | None:
             return None
         fill_width = fields["fill_width"] == "true"
     token = serialize_catalogue_image_token(
-        target_type="work",
+        target_type=target_type,
         target_id="00000",
         alt=alt,
+        detail_id=fields.get("detail_id", ""),
         caption=caption,
         summary=fields.get("summary", ""),
         placement=fields.get("placement", ""),
@@ -210,6 +236,7 @@ def parse_catalogue_image_fields(raw_query: str) -> dict[str, Any] | None:
         "summary": normalize_summary_text(fields.get("summary", "")),
         "placement": normalize_plain_text(fields.get("placement", ""), required=False),
         "fill_width": fill_width,
+        "detail_id": normalize_catalogue_detail_id(fields.get("detail_id", "")) or "",
     }
 
 
@@ -249,7 +276,11 @@ def parse_catalogue_token(
         or not LEXICAL_ID_PATTERN.fullmatch(target_id)
     ):
         return None
-    image_fields = parse_catalogue_image_fields(raw_fields) if is_image else None
+    image_fields = (
+        parse_catalogue_image_fields(raw_fields, target_type=target_type)
+        if is_image
+        else None
+    )
     title = (
         image_fields["caption"] or image_fields["alt"]
         if image_fields is not None
@@ -277,6 +308,7 @@ def parse_catalogue_token(
         summary=image_fields["summary"] if image_fields else "",
         placement=image_fields["placement"] if image_fields else "",
         fill_width=image_fields["fill_width"] if image_fields else None,
+        detail_id=image_fields["detail_id"] if image_fields else "",
     )
 
 
@@ -465,6 +497,80 @@ def render_catalogue_token(token: SemanticTokenOccurrence, target: dict[str, Any
     )
 
 
+def resolve_catalogue_image_target(
+    repo_root: Path,
+    token: SemanticTokenOccurrence,
+    target: dict[str, Any],
+) -> dict[str, Any] | None:
+    if token.presentation != "image":
+        return target
+    if not token.detail_id:
+        return target if target.get("image") else None
+    if token.target_type != "work":
+        return None
+    payload = read_json(
+        repo_root
+        / CATALOGUE_WORK_DETAILS_SOURCE_DIR
+        / f"{token.target_id}.json"
+    )
+    if not isinstance(payload, dict):
+        return None
+    header = payload.get("header") if isinstance(payload.get("header"), dict) else {}
+    source_work_id = str(payload.get("work_id") or header.get("work_id") or "").strip()
+    if source_work_id != token.target_id:
+        return None
+    detail_uid = f"{token.target_id}-{token.detail_id}"
+    detail_record: dict[str, Any] | None = None
+    sections = payload.get("detail_sections")
+    if not isinstance(sections, list):
+        return None
+    for section in sections:
+        details = section.get("details") if isinstance(section, dict) else None
+        if not isinstance(details, list):
+            continue
+        for raw_detail in details:
+            if not isinstance(raw_detail, dict):
+                continue
+            if str(raw_detail.get("detail_uid") or "").strip() == detail_uid:
+                detail_record = raw_detail
+                break
+        if detail_record is not None:
+            break
+    if (
+        detail_record is None
+        or str(detail_record.get("detail_id") or "").strip() != token.detail_id
+        or not str(detail_record.get("project_filename") or "").strip()
+        or positive_integer(detail_record.get("media_version")) is None
+        or positive_integer(detail_record.get("width_px")) is None
+        or positive_integer(detail_record.get("height_px")) is None
+    ):
+        return None
+    try:
+        settings = primary_image_settings(
+            repo_root,
+            media_path_key="image_work_details",
+        )
+    except ValueError:
+        return None
+    filename = (
+        f"{detail_uid}-{settings['suffix']}-{settings['width']}."
+        f"{settings['format']}"
+    )
+    src = browser_safe_image_src(
+        f"{settings['base']}{settings['path']}/{quote(filename)}"
+        f"?v={positive_integer(detail_record.get('media_version'))}"
+    )
+    if not src:
+        return None
+    resolved = dict(target)
+    resolved["href"] = (
+        f"/work-details/?detail={quote(detail_uid)}"
+        f"&from_work={quote(token.target_id)}"
+    )
+    resolved["image"] = {"src": src}
+    return resolved
+
+
 def browser_safe_image_src(value: Any) -> str:
     src = str(value or "").strip()
     if not src:
@@ -525,6 +631,8 @@ def load_semantic_token_target_records(
         )
         if image_src:
             target["image"] = {"src": image_src}
+        if raw_target.get("has_details") is True:
+            target["has_details"] = True
         targets[(family, target_type, target_id)] = target
     return targets
 
@@ -555,7 +663,12 @@ class SemanticTokensMixin:
             )
             if target is None:
                 return token.raw
-            if token.presentation == "image" and not target.get("image"):
+            resolved_target = (
+                resolve_catalogue_image_target(self.repo_root, token, target)
+                if token.presentation == "image"
+                else target
+            )
+            if resolved_target is None:
                 return token.raw
             occurrences.append(
                 {
@@ -567,10 +680,10 @@ class SemanticTokensMixin:
                     "family": token.family,
                     "target_type": token.target_type,
                     "target_id": token.target_id,
-                    "href": target["href"],
+                    "href": resolved_target["href"],
                 }
             )
-            return render_catalogue_token(token, target)
+            return render_catalogue_token(token, resolved_target)
 
         rendered = replace_catalogue_tokens(
             markdown,

@@ -909,6 +909,7 @@ export function startDocsViewerRuntime(options) {
         projectMainViewControlState("source-editor", controlId, controlState);
       },
       publicPreviewBase: routeContext.publicPreviewBase || "",
+      studioBaseUrl: routeContext.studioBaseUrl || "",
       sourceEditorActionControlIds: Array.isArray(settings.sourceEditorActionControlIds)
         ? settings.sourceEditorActionControlIds.slice()
         : [],

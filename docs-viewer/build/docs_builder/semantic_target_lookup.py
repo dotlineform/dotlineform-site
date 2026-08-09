@@ -106,7 +106,11 @@ def browser_safe_image_src(value: Any) -> str:
     return ""
 
 
-def primary_image_settings(repo_root: Path) -> dict[str, Any]:
+def primary_image_settings(
+    repo_root: Path,
+    *,
+    media_path_key: str = "image_works",
+) -> dict[str, Any]:
     site_config = load_site_tools_config(repo_root)
     pipeline_config = load_pipeline_config(repo_root=repo_root)
     media = site_config.get("media") if isinstance(site_config.get("media"), dict) else {}
@@ -125,7 +129,7 @@ def primary_image_settings(repo_root: Path) -> dict[str, Any]:
     suffix = str(primary.get("suffix") or "").strip().lower()
     image_format = str(encoding.get("format") or "").strip().lower()
     media_base = str(media.get("base") or "").strip().rstrip("/")
-    image_path = "/" + str(media.get("image_works") or "").strip().strip("/")
+    image_path = "/" + str(media.get(media_path_key) or "").strip().strip("/")
     if not width or not re.fullmatch(r"[a-z0-9-]+", suffix):
         raise ValueError("primary image pipeline settings are invalid")
     if not re.fullmatch(r"[a-z0-9]+", image_format):
@@ -235,6 +239,7 @@ def target_row(
     *,
     series_titles: dict[str, str],
     image_src: str = "",
+    has_details: bool = False,
 ) -> dict[str, Any] | None:
     if not is_published(record):
         return None
@@ -252,6 +257,8 @@ def target_row(
         "href": href,
         "meta": target_meta(target_type.key, record, series_titles=series_titles),
     }
+    if has_details:
+        row["has_details"] = True
     if image_src:
         row["image"] = {"src": image_src}
     return row
@@ -342,6 +349,10 @@ class SemanticTargetLookupBuilder:
                         source,
                         series_titles=series_titles,
                         image_src=image_src,
+                        has_details=(
+                            target_type.key == "work"
+                            and (source_root / "work_details" / f"{normalized_id}.json").is_file()
+                        ),
                     )
                     if row is not None:
                         targets.append(row)

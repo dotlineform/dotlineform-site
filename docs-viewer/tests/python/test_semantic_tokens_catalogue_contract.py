@@ -90,9 +90,12 @@ def test_catalogue_definition_freezes_minimum_additive_contract() -> None:
 
     targets = {target["key"]: target for target in definition["target_types"]}
     assert set(targets) == {"work", "series"}
+    assert targets["work"]["lookup_fields"] == [
+        "title", "href", "meta", "image", "has_details",
+    ]
+    assert targets["series"]["lookup_fields"] == ["title", "href", "meta", "image"]
     for target in targets.values():
         assert target["lookup_adapter"]
-        assert target["lookup_fields"] == ["title", "href", "meta", "image"]
         re.compile(target["id_policy"]["input_pattern"])
         re.compile(target["id_policy"]["canonical_pattern"])
 

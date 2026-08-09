@@ -48,6 +48,7 @@ def write_media_config(root: Path) -> None:
             "media": {
                 "base": "https://media.dotlineform.test",
                 "image_works": "/works/img",
+                "image_work_details": "/work_details/img",
             },
         },
     )
@@ -102,6 +103,19 @@ def write_catalogue(root: Path) -> None:
             }
         },
     )
+    write_json(
+        base / "work_details/00638.json",
+        {
+            "header": {
+                "schema": "catalogue_source_work_detail_record_v1",
+                "work_id": "00638",
+            },
+            "work_id": "00638",
+            "detail_sections": [],
+        },
+    )
+
+
 def test_semantic_target_lookup_builder_writes_compact_published_rows() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
@@ -129,6 +143,7 @@ def test_semantic_target_lookup_builder_writes_compact_published_rows() -> None:
         "title": "3 symbols",
         "href": "/works/?work=00638",
         "meta": ["2007", "3 symbols"],
+        "has_details": True,
         "image": {
             "src": "https://media.dotlineform.test/works/img/00638-primary-1600.webp?v=2"
         },
@@ -148,8 +163,10 @@ def test_semantic_target_lookup_builder_writes_compact_published_rows() -> None:
     assert (
         '    {"family":"catalogue","target_type":"work","target_id":"00638",'
         '"title":"3 symbols","href":"/works/?work=00638","meta":["2007","3 symbols"],'
+        '"has_details":true,'
         '"image":{"src":"https://media.dotlineform.test/works/img/00638-primary-1600.webp?v=2"}},\n'
     ) in output_text
+    assert all("details" not in row for row in payload["targets"])
     assert (
         '    {"family":"catalogue","target_type":"series","target_id":"005",'
         '"title":"3 symbols","href":"/series/?series=005","meta":["2007"],'

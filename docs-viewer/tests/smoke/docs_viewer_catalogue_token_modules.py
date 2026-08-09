@@ -61,6 +61,9 @@ def install_modules(page: Page) -> None:
             const imageModal = await import(
                 '/docs-viewer/runtime/js/management/source-editor/catalogue-image-modal.js'
             );
+            const detailTitle = await import(
+                '/docs-viewer/runtime/js/management/source-editor/catalogue-work-detail-title.js'
+            );
             const imageContribution = await import(
                 '/docs-viewer/runtime/js/management/source-editor/catalogue-image-contribution.js'
             );
@@ -104,6 +107,7 @@ def install_modules(page: Page) -> None:
                 contract,
                 contribution,
                 directiveActions,
+                detailTitle,
                 documentTarget,
                 infoView,
                 imageContribution,
@@ -326,6 +330,7 @@ def assert_contract_fixture_and_mixed_search(page: Page) -> None:
         "targetId": "00008",
         "title": "nerve",
         "href": "/works/?work=00008",
+        "hasDetails": False,
         "meta": ["July 1990 – January 1995", "nerve"],
     }
     if (
@@ -1574,33 +1579,59 @@ def assert_catalogue_image_parser_modal_and_contribution(page: Page) -> None:
                 targets: [{
                     family: 'catalogue', target_type: 'work', target_id: '00638',
                     title: '3 symbols', href: '/works/?work=00638', meta: ['2007'],
+                    has_details: true,
                     image: { src: 'https://media.dotlineform.test/works/img/00638-primary-1600.webp?v=1' }
                 }, {
                     family: 'catalogue', target_type: 'series', target_id: '005',
                     title: '3 symbols', href: '/series/?series=005', meta: ['2007'],
                     image: { src: 'https://media.dotlineform.test/works/img/00638-primary-1600.webp?v=1' }
                 }, {
+                    family: 'catalogue', target_type: 'work', target_id: '00010',
+                    title: 'Primary only', href: '/works/?work=00010', meta: [],
+                    image: { src: 'https://media.dotlineform.test/works/img/00010-primary-1600.webp?v=1' }
+                }, {
                     family: 'catalogue', target_type: 'work', target_id: '00008',
                     title: 'nerve', href: '/works/?work=00008', meta: [], image: null
                 }]
             };
-            const fakeFetch = async url => ({
-                ok: true,
-                json: async () => String(url).includes('target-lookup')
-                    ? targetPayload
-                    : registryPayload
-            });
+            const detailPayload = {
+                header: { schema: 'studio_catalogue_work_detail_record_v1' },
+                work_detail: {
+                    work_id: '00638', detail_id: '003', detail_uid: '00638-003',
+                    title: '3 symbols (detail 1)'
+                },
+                work_summary: { work_id: '00638', title: '3 symbols' }
+            };
+            const detailReadUrls = [];
+            const fakeFetch = async url => {
+                const requestUrl = String(url);
+                if (requestUrl.includes('catalogue_work_detail_record')) {
+                    detailReadUrls.push(requestUrl);
+                }
+                return {
+                    ok: true,
+                    json: async () => requestUrl.includes('catalogue_work_detail_record')
+                        ? detailPayload
+                        : requestUrl.includes('target-lookup')
+                            ? targetPayload
+                            : registryPayload
+                };
+            };
             const registry = smoke.registry.normalizeSemanticTokenRegistry(registryPayload);
             const plain = '[[catalogue:image:work:00638|alt=3%20symbols]]';
+            const detail = '[[catalogue:image:work:00638|alt=3%20symbols%20detail&detail_id=001]]';
             const figure = '[[catalogue:image:series:005|alt=Alternative%20text&caption=Visible%20caption&summary=Supporting%20copy&placement=right&fill_width=false]]';
-            const parsed = [plain, figure].map(raw => smoke.parser.parseCatalogueToken(raw, {
+            const parsed = [plain, detail, figure].map(raw => smoke.parser.parseCatalogueToken(raw, {
                 registry
             }));
             const malformed = [
                 '[[catalogue:image:work:00638|caption=caption&alt=alt&placement=left&fill_width=true]]',
                 '[[catalogue:image:work:00638|alt=alt&alt=again]]',
                 '[[catalogue:image:work:00638|alt=alt&summary=extra]]',
-                '[[catalogue:image:work:00638|alt=detail%2fview]]'
+                '[[catalogue:image:work:00638|alt=detail%2fview]]',
+                '[[catalogue:image:work:00638|alt=detail&detail_id=1]]',
+                '[[catalogue:image:work:00638|alt=detail&detail_id=000]]',
+                '[[catalogue:image:series:005|alt=detail&detail_id=001]]'
             ].map(raw => smoke.parser.parseCatalogueToken(raw, { registry }));
             const imageSupport = await smoke.targets.loadCatalogueTargetSupport({
                 fetch: fakeFetch,
@@ -1643,6 +1674,14 @@ def assert_catalogue_image_parser_modal_and_contribution(page: Page) -> None:
                 throw new Error('Catalogue image modal did not load.');
             }
 
+            async function waitForValue(input, value) {
+                for (let index = 0; index < 30; index += 1) {
+                    if (input && input.value === value) return;
+                    await new Promise(resolve => setTimeout(resolve, 0));
+                }
+                throw new Error('Catalogue image field did not receive its expected value.');
+            }
+
             const insertedState = createState();
             const insertedRoot = document.createElement('div');
             document.body.appendChild(insertedRoot);
@@ -1667,7 +1706,8 @@ def assert_catalogue_image_parser_modal_and_contribution(page: Page) -> None:
                 resultCount: insertedRoot.querySelectorAll('[data-target-index]').length,
                 resultsHidden: insertedRoot.querySelector('[data-role="catalogue-results"]').hidden,
                 searchValue: search.value,
-                selectedSummaryAbsent: !insertedRoot.querySelector('[data-role="catalogue-selected"]')
+                selectedSummaryAbsent: !insertedRoot.querySelector('[data-role="catalogue-selected"]'),
+                detailDisabled: insertedRoot.querySelector('#docsViewerCatalogueImageDetailId').disabled
             };
             alt.value = 'Alternative text';
             caption.value = 'Visible caption';
@@ -1682,6 +1722,66 @@ def assert_catalogue_image_parser_modal_and_contribution(page: Page) -> None:
                 value: insertedState.value
             };
             insertedRoot.remove();
+
+            const detailState = createState();
+            const detailRoot = document.createElement('div');
+            document.body.appendChild(detailRoot);
+            const detailPromise = smoke.imageModal.openCatalogueImageModal({
+                adapter: detailState.adapter,
+                capture: detailState.capture,
+                fetch: fakeFetch,
+                root: detailRoot,
+                studioBaseUrl: 'http://127.0.0.1:8765'
+            });
+            const detailSearch = await waitForLoaded(detailRoot);
+            detailSearch.value = 'work:00638';
+            detailSearch.dispatchEvent(new Event('input', { bubbles: true }));
+            detailSearch.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+            const detailInput = detailRoot.querySelector('#docsViewerCatalogueImageDetailId');
+            const detailEnabled = !detailInput.disabled;
+            detailInput.value = 'invalid';
+            detailRoot.querySelector('[data-role="modal-primary"]').click();
+            await new Promise(resolve => setTimeout(resolve, 0));
+            const invalidDetail = {
+                remainedOpen: Boolean(detailRoot.querySelector('#catalogue-image-add-modal')),
+                status: detailRoot.querySelector('[data-role="modal-status"]').textContent
+            };
+            detailInput.value = '3';
+            detailInput.dispatchEvent(new Event('input', { bubbles: true }));
+            const detailCaption = detailRoot.querySelector(
+                '[data-role="staged-media-caption-text"]'
+            );
+            await waitForValue(detailCaption, '3 symbols (detail 1)');
+            detailRoot.querySelector('[data-role="modal-primary"]').click();
+            const detailResult = await detailPromise;
+            const detailInserted = {
+                caption: detailCaption.value,
+                enabled: detailEnabled,
+                readUrls: detailReadUrls.slice(),
+                resultToken: detailResult.token,
+                value: detailState.value
+            };
+            detailRoot.remove();
+
+            const primaryOnlyState = createState();
+            const primaryOnlyRoot = document.createElement('div');
+            document.body.appendChild(primaryOnlyRoot);
+            const primaryOnlyPromise = smoke.imageModal.openCatalogueImageModal({
+                adapter: primaryOnlyState.adapter,
+                capture: primaryOnlyState.capture,
+                fetch: fakeFetch,
+                root: primaryOnlyRoot
+            });
+            const primaryOnlySearch = await waitForLoaded(primaryOnlyRoot);
+            primaryOnlySearch.value = 'work:00010';
+            primaryOnlySearch.dispatchEvent(new Event('input', { bubbles: true }));
+            primaryOnlySearch.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+            const primaryOnlyDetailDisabled = primaryOnlyRoot.querySelector(
+                '#docsViewerCatalogueImageDetailId'
+            ).disabled;
+            primaryOnlyRoot.querySelector('button[data-role="modal-cancel"]').click();
+            await primaryOnlyPromise;
+            primaryOnlyRoot.remove();
 
             const cancelledState = createState();
             const cancelledRoot = document.createElement('div');
@@ -1740,12 +1840,23 @@ def assert_catalogue_image_parser_modal_and_contribution(page: Page) -> None:
                     definition,
                     handlerIds: Object.keys(handlers)
                 },
+                detailInserted,
+                detailTitleProjection: {
+                    exact: smoke.detailTitle.catalogueWorkDetailTitle(
+                        detailPayload, '00638', '003'
+                    ),
+                    mismatch: smoke.detailTitle.catalogueWorkDetailTitle(
+                        detailPayload, '00638', '004'
+                    )
+                },
+                invalidDetail,
                 inserted,
                 malformedAccepted: malformed.filter(Boolean).length,
                 parsed: parsed.map(token => ({
                     alt: token.alt,
                     caption: token.caption,
                     fillWidth: token.fillWidth,
+                    detailId: token.detailId,
                     placement: token.placement,
                     presentation: token.presentation,
                     summary: token.summary,
@@ -1761,11 +1872,16 @@ def assert_catalogue_image_parser_modal_and_contribution(page: Page) -> None:
                     }),
                     plain: smoke.parser.serializeCatalogueImageToken({
                         registry, targetType: 'work', targetId: '00638', alt: '3 symbols'
+                    }),
+                    detail: smoke.parser.serializeCatalogueImageToken({
+                        registry, targetType: 'work', targetId: '00638',
+                        alt: '3 symbols detail', detailId: '1'
                     })
                 },
                 stale,
                 suggestions,
                 selectionProjection,
+                primaryOnlyDetailDisabled,
                 support: {
                     series: supportMatches.series.map(target => [target.targetType, target.targetId]),
                     withoutImage: supportMatches.withoutImage.length
@@ -1779,17 +1895,23 @@ def assert_catalogue_image_parser_modal_and_contribution(page: Page) -> None:
     )
     if result["serialized"] != {
         "plain": "[[catalogue:image:work:00638|alt=3%20symbols]]",
+        "detail": "[[catalogue:image:work:00638|alt=3%20symbols%20detail&detail_id=001]]",
         "figure": expected_figure,
     } or result["malformedAccepted"] != 0:
         raise AssertionError(f"Catalogue image parser/serializer drifted: {result!r}")
     if result["parsed"] != [
         {
-            "alt": "3 symbols", "caption": "", "fillWidth": None,
+            "alt": "3 symbols", "caption": "", "detailId": "", "fillWidth": None,
             "placement": "", "presentation": "image", "summary": "",
             "targetId": "00638", "targetType": "work", "title": "3 symbols",
         },
         {
-            "alt": "Alternative text", "caption": "Visible caption", "fillWidth": False,
+            "alt": "3 symbols detail", "caption": "", "detailId": "001", "fillWidth": None,
+            "placement": "", "presentation": "image", "summary": "",
+            "targetId": "00638", "targetType": "work", "title": "3 symbols detail",
+        },
+        {
+            "alt": "Alternative text", "caption": "Visible caption", "detailId": "", "fillWidth": False,
             "placement": "right", "presentation": "image", "summary": "Supporting copy",
             "targetId": "005", "targetType": "series", "title": "Visible caption",
         },
@@ -1805,8 +1927,36 @@ def assert_catalogue_image_parser_modal_and_contribution(page: Page) -> None:
         "resultsHidden": True,
         "searchValue": "3 symbols",
         "selectedSummaryAbsent": True,
+        "detailDisabled": True,
     }:
         raise AssertionError(f"Catalogue image selection projection changed: {result!r}")
+    expected_detail = (
+        "[[catalogue:image:work:00638|alt=3%20symbols&detail_id=003&"
+        "caption=3%20symbols%20%28detail%201%29&placement=full&fill_width=true]]"
+    )
+    if result["detailInserted"] != {
+        "caption": "3 symbols (detail 1)",
+        "enabled": True,
+        "readUrls": [
+            "http://127.0.0.1:8765/studio/api/catalogue/read?"
+            "key=catalogue_work_detail_record&record_id=00638-003",
+        ],
+        "resultToken": expected_detail,
+        "value": f"Before {expected_detail} after",
+    }:
+        raise AssertionError(f"Work Detail image insertion changed: {result!r}")
+    if result["detailTitleProjection"] != {
+        "exact": "3 symbols (detail 1)",
+        "mismatch": "",
+    }:
+        raise AssertionError(f"Work Detail title identity changed: {result!r}")
+    if result["invalidDetail"] != {
+        "remainedOpen": True,
+        "status": "Enter a positive Work Detail ID using digits only, or leave it blank.",
+    }:
+        raise AssertionError(f"Work Detail ID validation changed: {result!r}")
+    if result["primaryOnlyDetailDisabled"] is not True:
+        raise AssertionError(f"primary-only Work exposed Work Detail ID: {result!r}")
     if result["inserted"] != {
         "focusCount": 1,
         "resultToken": expected_figure,
@@ -1875,6 +2025,7 @@ def assert_catalogue_info_exact_range_update_remove_and_stale_guard(page: Page) 
                     title: '3 symbols',
                     href: '/works/?work=00638',
                     meta: ['2007'],
+                    has_details: true,
                     image: {
                         src: 'https://media.dotlineform.test/works/img/00638-primary-1600.webp?v=1'
                     }
@@ -2007,12 +2158,15 @@ def assert_catalogue_info_exact_range_update_remove_and_stale_guard(page: Page) 
             staleMounted.view.unmount(staleMounted.context);
             staleMounted.mount.remove();
 
-            const imageRaw = '[[catalogue:image:work:00638|alt=3%20symbols&caption=3%20symbols&summary=Old%20summary&placement=left&fill_width=true]]';
+            const imageRaw = '[[catalogue:image:work:00638|alt=3%20symbols&detail_id=001&caption=3%20symbols&summary=Old%20summary&placement=left&fill_width=true]]';
             const imageValue = 'Before ' + imageRaw + ' after';
             const imageState = createState(imageValue, { start: 18, end: 18 });
             const imageMounted = await mountView(imageState);
             const imageAlt = imageMounted.mount.querySelector(
-                '.docsViewer__metadataInfoList + .docsViewer__field input'
+                'input[required]'
+            );
+            const imageDetail = imageMounted.mount.querySelector(
+                '[data-role="catalogue-work-detail-id"]'
             );
             const imageCaption = imageMounted.mount.querySelector(
                 '[data-role="staged-media-caption-text"]'
@@ -2024,6 +2178,11 @@ def assert_catalogue_info_exact_range_update_remove_and_stale_guard(page: Page) 
             const imageInitial = {
                 alt: imageAlt.value,
                 caption: imageCaption.value,
+                detailDisabled: imageDetail.disabled,
+                detailId: imageDetail.value,
+                destinationHref: imageMounted.mount.querySelector(
+                    '.docsViewer__metadataInfoRow a'
+                ).href,
                 fillWidth: imageFillWidth.checked,
                 heading: imageMounted.mount.querySelector('h3').textContent,
                 placement: imageMounted.mount.querySelector(
@@ -2033,6 +2192,7 @@ def assert_catalogue_info_exact_range_update_remove_and_stale_guard(page: Page) 
                 summary: imageSummary.value
             };
             imageAlt.value = 'Alternative text';
+            imageDetail.value = '1';
             imageCaption.value = 'Visible caption';
             imageSummary.value = 'Supporting copy';
             imageMounted.mount.querySelector(
@@ -2102,11 +2262,11 @@ def assert_catalogue_info_exact_range_update_remove_and_stale_guard(page: Page) 
     )
     expected_raw = "[[catalogue:work:00638|3 symbols]]"
     initial_image_raw = (
-        "[[catalogue:image:work:00638|alt=3%20symbols&caption=3%20symbols&"
+        "[[catalogue:image:work:00638|alt=3%20symbols&detail_id=001&caption=3%20symbols&"
         "summary=Old%20summary&placement=left&fill_width=true]]"
     )
     expected_image_raw = (
-        "[[catalogue:image:work:00638|alt=Alternative%20text&caption=Visible%20caption&"
+        "[[catalogue:image:work:00638|alt=Alternative%20text&detail_id=001&caption=Visible%20caption&"
         "summary=Supporting%20copy&placement=right&fill_width=false]]"
     )
     if result["initial"] != {
@@ -2143,6 +2303,9 @@ def assert_catalogue_info_exact_range_update_remove_and_stale_guard(page: Page) 
     if result["imageInitial"] != {
         "alt": "3 symbols",
         "caption": "3 symbols",
+        "detailDisabled": False,
+        "detailId": "001",
+        "destinationHref": "http://127.0.0.1:4000/work-details/?detail=00638-001&from_work=00638",
         "fillWidth": True,
         "heading": "Catalogue image",
         "placement": "left",

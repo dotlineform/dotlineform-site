@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-452cb979db5b4b5942599e6293dab6e2",
-    "generated_at_utc": "2026-08-09T17:24:23Z",
+    "version": "blake2b-3d90976f3f13bb39bc77ef2f35458e38",
+    "generated_at_utc": "2026-08-09T18:07:42Z",
     "count": 296
   },
   "entries": [
@@ -2671,10 +2671,10 @@
       "kind": "doc",
       "title": "Semantic Tokens Source Editor UI",
       "href": "/docs/?scope=studio&doc=d-20260623-180405-631ef4",
-      "last_updated": "2026-08-09 18:03:28",
+      "last_updated": "2026-08-09 19:05:31",
       "parent_id": "d-20260725-153656-516b61",
       "parent_title": "Semantic Tokens",
-      "display_meta": "2026-08-09 18:03:28 • Semantic Tokens",
+      "display_meta": "2026-08-09 19:05:31 • Semantic Tokens",
       "search_terms": [
         "semantic tokens source editor ui",
         "semantic",
@@ -2683,26 +2683,26 @@
         "editor",
         "ui",
         "semantic tokens",
-        "2026-08-09 18:03:28",
+        "2026-08-09 19:05:31",
         "2026",
         "08",
         "09",
-        "18",
-        "03",
-        "28",
+        "19",
+        "05",
+        "31",
         "d-20260623-180405-631ef4"
       ],
-      "search_text": "semantic tokens source editor ui semantic tokens source editor ui semantic tokens 2026-08-09 18:03:28 2026 08 09 18 03 28 d-20260623-180405-631ef4"
+      "search_text": "semantic tokens source editor ui semantic tokens source editor ui semantic tokens 2026-08-09 19:05:31 2026 08 09 19 05 31 d-20260623-180405-631ef4"
     },
     {
       "id": "d-20260726-185814-c5e581",
       "kind": "doc",
       "title": "Target Lookup",
       "href": "/docs/?scope=studio&doc=d-20260726-185814-c5e581",
-      "last_updated": "2026-08-09 18:03:47",
+      "last_updated": "2026-08-09 18:44:12",
       "parent_id": "d-20260725-153656-516b61",
       "parent_title": "Semantic Tokens",
-      "display_meta": "2026-08-09 18:03:47 • Semantic Tokens",
+      "display_meta": "2026-08-09 18:44:12 • Semantic Tokens",
       "search_terms": [
         "target lookup",
         "target",
@@ -2710,16 +2710,16 @@
         "semantic tokens",
         "semantic",
         "tokens",
-        "2026-08-09 18:03:47",
+        "2026-08-09 18:44:12",
         "2026",
         "08",
         "09",
         "18",
-        "03",
-        "47",
+        "44",
+        "12",
         "d-20260726-185814-c5e581"
       ],
-      "search_text": "target lookup target lookup semantic tokens semantic tokens 2026-08-09 18:03:47 2026 08 09 18 03 47 d-20260726-185814-c5e581"
+      "search_text": "target lookup target lookup semantic tokens semantic tokens 2026-08-09 18:44:12 2026 08 09 18 44 12 d-20260726-185814-c5e581"
     },
     {
       "id": "d-20260726-191340-d00c52",
@@ -3748,10 +3748,10 @@
       "kind": "doc",
       "title": "CII-1 — Catalogue Image Source Insertion Delivery",
       "href": "/docs/?scope=studio&doc=d-20260809-155631-ab527b",
-      "last_updated": "2026-08-09 18:24:23",
+      "last_updated": "2026-08-09 19:07:41",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-09 18:24:23 • Roadmap",
+      "display_meta": "2026-08-09 19:07:41 • Roadmap",
       "search_terms": [
         "cii-1 — catalogue image source insertion delivery",
         "cii",
@@ -3762,16 +3762,16 @@
         "insertion",
         "delivery",
         "roadmap",
-        "2026-08-09 18:24:23",
+        "2026-08-09 19:07:41",
         "2026",
         "08",
         "09",
-        "18",
-        "24",
-        "23",
+        "19",
+        "07",
+        "41",
         "d-20260809-155631-ab527b"
       ],
-      "search_text": "cii-1 — catalogue image source insertion delivery cii 1 catalogue image source insertion delivery roadmap 2026-08-09 18:24:23 2026 08 09 18 24 23 d-20260809-155631-ab527b"
+      "search_text": "cii-1 — catalogue image source insertion delivery cii 1 catalogue image source insertion delivery roadmap 2026-08-09 19:07:41 2026 08 09 19 07 41 d-20260809-155631-ab527b"
     },
     {
       "id": "d-20260802-123450-f7493d",

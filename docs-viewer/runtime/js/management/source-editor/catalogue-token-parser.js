@@ -1,6 +1,6 @@
 var LEXICAL_KEY_PATTERN = /^[a-z][a-z0-9-]*$/;
 var LEXICAL_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
-var IMAGE_FIELDS = new Set(["alt", "caption", "summary", "placement", "fill_width"]);
+var IMAGE_FIELDS = new Set(["alt", "detail_id", "caption", "summary", "placement", "fill_width"]);
 var IMAGE_PLACEMENTS = new Set(["full", "left", "right"]);
 
 function cleanString(value) {
@@ -33,6 +33,15 @@ function decodeImageValue(value) {
   } catch (_error) {
     return null;
   }
+}
+
+export function normalizeCatalogueDetailId(value) {
+  var raw = cleanString(value);
+  if (!raw) return "";
+  if (!/^\d+$/.test(raw)) return null;
+  var significant = raw.replace(/^0+/, "");
+  if (!significant) return null;
+  return significant.padStart(3, "0");
 }
 
 function escapedTitle(value) {
@@ -114,6 +123,9 @@ export function serializeCatalogueImageToken(options = {}) {
   var summary = summaryText(options.summary);
   var placement = cleanString(options.placement).toLowerCase();
   var fields = [["alt", alt]];
+  var detailId = normalizeCatalogueDetailId(options.detailId);
+  if (detailId === null || (detailId && targetType !== "work")) return "";
+  if (detailId) fields.push(["detail_id", detailId]);
   if (caption) {
     if (!IMAGE_PLACEMENTS.has(placement) || typeof options.fillWidth !== "boolean") return "";
     fields.push(["caption", caption]);
@@ -156,6 +168,7 @@ function parseCatalogueImageFields(rawQuery, options) {
     targetType: options.targetType,
     targetId: options.targetId,
     alt: fields.alt,
+    detailId: fields.detail_id || "",
     caption: fields.caption || "",
     summary: fields.summary || "",
     placement: fields.placement || "",
@@ -164,6 +177,7 @@ function parseCatalogueImageFields(rawQuery, options) {
   if (!serialized || serialized.slice(serialized.indexOf("|") + 1, -2) !== rawQuery) return null;
   return {
     alt: plainText(fields.alt),
+    detailId: normalizeCatalogueDetailId(fields.detail_id),
     caption: plainText(fields.caption),
     summary: summaryText(fields.summary),
     placement: cleanString(fields.placement),
@@ -223,7 +237,8 @@ export function parseCatalogueToken(raw, options = {}) {
     caption: imageFields ? imageFields.caption : "",
     summary: imageFields ? imageFields.summary : "",
     placement: imageFields ? imageFields.placement : "",
-    fillWidth: imageFields ? imageFields.fillWidth : null
+    fillWidth: imageFields ? imageFields.fillWidth : null,
+    detailId: imageFields ? imageFields.detailId : ""
   };
 }
 

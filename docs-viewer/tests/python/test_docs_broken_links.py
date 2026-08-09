@@ -107,6 +107,7 @@ def write_semantic_token_contract(repo_root: Path) -> None:
                     "target_id": "00638",
                     "title": "3 symbols",
                     "href": "/works/?work=00638",
+                    "has_details": True,
                     "image": {
                         "src": "https://media.dotlineform.test/works/img/00638-primary-1600.webp?v=1"
                     },
@@ -152,8 +153,46 @@ def make_repo(content_html: str, *, source_body: str = "") -> Iterator[str]:
         with patch.object(docs_broken_links, "SCOPE_OUTPUT_DIRS", FIXTURE_SCOPE_OUTPUT_DIRS):
             (repo_root / "site-tools/config").mkdir(parents=True, exist_ok=True)
             (repo_root / "site-tools/config/site-tools.json").write_text(
-                '{"schema_version":"site_tools_config_v1"}\n',
+                '{"schema_version":"site_tools_config_v1","media":{"base":"https://media.dotlineform.test","image_work_details":"/work_details/img"}}\n',
                 encoding="utf-8",
+            )
+            write_json(
+                repo_root / "_data/pipeline.json",
+                {
+                    "variants": {
+                        "primary": {
+                            "preferred_width": 1600,
+                            "suffix": "primary",
+                        },
+                    },
+                    "encoding": {"format": "webp"},
+                },
+            )
+            write_json(
+                repo_root / "studio/data/canonical/catalogue/work_details/00638.json",
+                {
+                    "header": {
+                        "schema": "catalogue_source_work_detail_record_v1",
+                        "work_id": "00638",
+                    },
+                    "work_id": "00638",
+                    "detail_sections": [
+                        {
+                            "section_id": "00638-1",
+                            "details": [
+                                {
+                                    "detail_uid": "00638-001",
+                                    "detail_id": "001",
+                                    "project_filename": "3 symbols detail.jpg",
+                                    "media_version": 1,
+                                    "title": "3 symbols detail",
+                                    "width_px": 1600,
+                                    "height_px": 1200,
+                                },
+                            ],
+                        },
+                    ],
+                },
             )
             write_semantic_token_contract(repo_root)
             write_json(
@@ -253,6 +292,8 @@ def test_semantic_token_audit_reads_source_independently_of_rendered_usage() -> 
         "No destination [[catalogue:work:00008|nerve]].\n"
         "Missing image [[catalogue:image:work:00009|alt=image%20unavailable]].\n"
         "Resolved image [[catalogue:image:work:00638|alt=3%20symbols]].\n"
+        "Missing detail [[catalogue:image:work:00638|alt=missing%20detail&detail_id=999]].\n"
+        "Resolved detail [[catalogue:image:work:00638|alt=3%20symbols%20detail&detail_id=001]].\n"
         "Unsupported [[catalogue:asset:abc|asset]].\n"
         "`Ignored [[catalogue:work:99998|inline code]]`.\n"
     )
@@ -268,11 +309,16 @@ def test_semantic_token_audit_reads_source_independently_of_rendered_usage() -> 
         "missing_target",
         "missing_destination",
         "missing_image",
+        "missing_detail_image",
     ])
     assert all(entry["source_scope"] == "studio" for entry in semantic_entries)
     assert all(entry["source_doc_id"] == "source" for entry in semantic_entries)
     assert all(entry["source_range"]["end"] > entry["source_range"]["start"] for entry in semantic_entries)
-    assert not any("00638" in entry["raw"] for entry in semantic_entries)
+    assert not any(
+        entry["raw"] == "[[catalogue:image:work:00638|alt=3%20symbols]]"
+        for entry in semantic_entries
+    )
+    assert not any("detail_id=001" in entry["raw"] for entry in semantic_entries)
     assert not any("99998" in entry["raw"] for entry in semantic_entries)
 
 

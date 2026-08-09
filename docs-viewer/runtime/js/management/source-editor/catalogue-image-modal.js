@@ -10,11 +10,15 @@ import {
   loadCatalogueTargetSupport
 } from "./catalogue-token-targets.js";
 import {
+  normalizeCatalogueDetailId,
   serializeCatalogueImageToken
 } from "./catalogue-token-parser.js";
 import {
   createCatalogueTargetPickerList
 } from "./catalogue-target-picker.js";
+import {
+  loadCatalogueWorkDetailTitle
+} from "./catalogue-work-detail-title.js";
 import {
   bindImagePresentation,
   hydrateImagePresentation,
@@ -25,6 +29,7 @@ import {
 var SEARCH_INPUT_ID = "docsViewerCatalogueImageSearch";
 var RESULTS_ID = "docsViewerCatalogueImageResults";
 var ALT_INPUT_ID = "docsViewerCatalogueImageAlt";
+var DETAIL_INPUT_ID = "docsViewerCatalogueImageDetailId";
 
 export const CATALOGUE_IMAGE_MODAL_ID = "catalogue-image-add-modal";
 
@@ -37,6 +42,10 @@ function modalBody(searchQuery, alt) {
       "</label>" +
       '<p class="docsViewerCatalogueTokenModal__searchStatus muted small" data-role="catalogue-search-status">Loading Catalogue…</p>' +
       '<div class="docsViewerCatalogueTargetPicker__results docsViewerCatalogueTokenModal__results" id="' + RESULTS_ID + '" role="listbox" aria-label="Catalogue image targets" data-role="catalogue-results" tabindex="0" hidden></div>' +
+      '<label class="docsViewer__field" for="' + DETAIL_INPUT_ID + '">' +
+        '<span class="docsViewer__fieldLabel">Work Detail ID</span>' +
+        '<input class="docsViewer__fieldInput" id="' + DETAIL_INPUT_ID + '" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" disabled>' +
+      "</label>" +
       '<label class="docsViewer__field" for="' + ALT_INPUT_ID + '">' +
         '<span class="docsViewer__fieldLabel">Alt text</span>' +
         '<input class="docsViewer__fieldInput" id="' + ALT_INPUT_ID + '" type="text" autocomplete="off" value="' + escapeHtml(alt) + '" required>' +
@@ -61,7 +70,11 @@ export function openCatalogueImageModal(options = {}) {
   var selectionText = selectedTextForCatalogueTitle(capture && capture.text);
   var state = {
     disposed: false,
+    captionDefault: selectionText,
+    detailCaptionRequest: 0,
+    detailTitles: new Map(),
     list: null,
+    loadDetailTitle: null,
     selectedTarget: null,
     support: null
   };
@@ -80,6 +93,7 @@ export function openCatalogueImageModal(options = {}) {
     onOpen: function (api) {
       var modalRoot = api.host.querySelector('[data-role="docs-viewer-management-modal"]');
       var searchInput = api.host.querySelector("#" + SEARCH_INPUT_ID);
+      var detailInput = api.host.querySelector("#" + DETAIL_INPUT_ID);
       var altInput = api.host.querySelector("#" + ALT_INPUT_ID);
       var captionInput = api.host.querySelector('[data-role="staged-media-caption-text"]');
       var results = api.host.querySelector('[data-role="catalogue-results"]');
@@ -106,21 +120,74 @@ export function openCatalogueImageModal(options = {}) {
         searchStatus.hidden = true;
       }
 
+      function replaceDefaultCaption(value) {
+        var nextDefault = String(value || "").trim();
+        var previousDefault = state.captionDefault;
+        state.captionDefault = nextDefault;
+        if (
+          captionInput
+          && (!captionInput.value || captionInput.value === previousDefault)
+        ) captionInput.value = nextDefault;
+      }
+
+      function detailTitle(workId, detailId) {
+        var detailUid = workId + "-" + detailId;
+        if (!state.detailTitles.has(detailUid)) {
+          state.detailTitles.set(detailUid, loadCatalogueWorkDetailTitle(workId, detailId, {
+            fetch: options.fetch,
+            studioBaseUrl: options.studioBaseUrl
+          }));
+        }
+        return state.detailTitles.get(detailUid);
+      }
+      state.loadDetailTitle = detailTitle;
+
+      function projectDetailCaption() {
+        var target = state.selectedTarget;
+        var request = state.detailCaptionRequest + 1;
+        state.detailCaptionRequest = request;
+        if (!target || target.targetType !== "work" || !detailInput) return;
+        var detailId = normalizeCatalogueDetailId(detailInput.value);
+        if (detailId === null) return;
+        replaceDefaultCaption(target.title);
+        if (!detailId) return;
+        detailTitle(target.targetId, detailId).then(function (title) {
+          if (
+            state.disposed
+            || request !== state.detailCaptionRequest
+            || target !== state.selectedTarget
+            || detailId !== normalizeCatalogueDetailId(detailInput.value)
+          ) return;
+          if (title) replaceDefaultCaption(title);
+        });
+      }
+
       function selectCatalogueTarget(target) {
         state.selectedTarget = target || null;
         if (!target) return;
+        state.detailCaptionRequest += 1;
+        if (detailInput) {
+          detailInput.value = "";
+          detailInput.disabled = target.targetType !== "work" || target.hasDetails !== true;
+        }
         if (searchInput) searchInput.value = target.title;
         if (state.list) state.list.setTargets([]);
         showResults(false);
         clearSearchStatus();
         if (altInput) altInput.value = target.title;
-        if (captionInput) captionInput.value = target.title;
+        state.captionDefault = target.title;
+        if (captionInput) captionInput.value = state.captionDefault;
         if (searchInput) searchInput.focus();
       }
 
       function updateMatches() {
         if (!state.list || !state.support || !searchInput) return;
         state.selectedTarget = null;
+        state.detailCaptionRequest += 1;
+        if (detailInput) {
+          detailInput.value = "";
+          detailInput.disabled = true;
+        }
         var matches = collectCatalogueTargetMatches(state.support, searchInput.value, 20);
         state.list.setTargets(matches);
         showResults(true);
@@ -159,6 +226,7 @@ export function openCatalogueImageModal(options = {}) {
           if (state.list) state.list.handleKeydown(event);
         });
       }
+      if (detailInput) detailInput.addEventListener("input", projectDetailCaption);
       loadCatalogueTargetSupport({ fetch: options.fetch, requireImage: true })
         .then(function (support) {
           if (state.disposed) return;
@@ -179,8 +247,11 @@ export function openCatalogueImageModal(options = {}) {
     },
     onSubmit: function (api) {
       var altInput = api.host.querySelector("#" + ALT_INPUT_ID);
+      var detailInput = api.host.querySelector("#" + DETAIL_INPUT_ID);
       var alt = String(altInput && altInput.value || "").trim();
-      var presentation = readImagePresentation(api.host);
+      var detailId = normalizeCatalogueDetailId(
+        detailInput && !detailInput.disabled ? detailInput.value : ""
+      );
       if (!state.selectedTarget || !state.selectedTarget.image) {
         api.setStatus("Choose a current Catalogue image.");
         return false;
@@ -190,49 +261,74 @@ export function openCatalogueImageModal(options = {}) {
         if (altInput) altInput.focus();
         return false;
       }
-      if (presentation.addCaption && !presentation.caption) {
-        api.setStatus("Enter caption text or turn off Add caption.");
+      if (detailId === null) {
+        api.setStatus("Enter a positive Work Detail ID using digits only, or leave it blank.");
+        if (detailInput) detailInput.focus();
+        return false;
+      }
+      function completeSubmission(detailTitle) {
         var captionInput = api.host.querySelector('[data-role="staged-media-caption-text"]');
-        if (captionInput) captionInput.focus();
-        return false;
+        if (
+          detailTitle
+          && captionInput
+          && (!captionInput.value || captionInput.value === state.captionDefault)
+        ) {
+          captionInput.value = detailTitle;
+          state.captionDefault = detailTitle;
+        }
+        var presentation = readImagePresentation(api.host);
+        if (presentation.addCaption && !presentation.caption) {
+          api.setStatus("Enter caption text or turn off Add caption.");
+          if (captionInput) captionInput.focus();
+          return false;
+        }
+        var serialization = {
+          registry: state.support && state.support.registry,
+          targetType: state.selectedTarget.targetType,
+          targetId: state.selectedTarget.targetId,
+          detailId: detailId,
+          alt: alt
+        };
+        if (presentation.addCaption) {
+          Object.assign(serialization, {
+            caption: presentation.caption,
+            summary: presentation.summary,
+            placement: presentation.placement,
+            fillWidth: presentation.fillWidth
+          });
+        }
+        var token = serializeCatalogueImageToken(serialization);
+        if (!token) {
+          api.setStatus("The selected image and presentation cannot be serialized.");
+          return false;
+        }
+        if (
+          !adapter
+          || typeof adapter.replaceCapturedSelection !== "function"
+          || !adapter.replaceCapturedSelection(capture, token)
+        ) {
+          api.setStatus("Markdown source changed while this modal was open. Cancel and try again.");
+          return false;
+        }
+        return {
+          confirmed: true,
+          target: state.selectedTarget,
+          token: token
+        };
       }
-      var serialization = {
-        registry: state.support && state.support.registry,
-        targetType: state.selectedTarget.targetType,
-        targetId: state.selectedTarget.targetId,
-        alt: alt
-      };
-      if (presentation.addCaption) {
-        Object.assign(serialization, {
-          caption: presentation.caption,
-          summary: presentation.summary,
-          placement: presentation.placement,
-          fillWidth: presentation.fillWidth
-        });
+      if (!detailId || typeof state.loadDetailTitle !== "function") {
+        return completeSubmission("");
       }
-      var token = serializeCatalogueImageToken(serialization);
-      if (!token) {
-        api.setStatus("The selected image and presentation cannot be serialized.");
-        return false;
-      }
-      if (
-        !adapter
-        || typeof adapter.replaceCapturedSelection !== "function"
-        || !adapter.replaceCapturedSelection(capture, token)
-      ) {
-        api.setStatus("Markdown source changed while this modal was open. Cancel and try again.");
-        return false;
-      }
-      return {
-        confirmed: true,
-        target: state.selectedTarget,
-        token: token
-      };
+      var selectedTarget = state.selectedTarget;
+      return state.loadDetailTitle(selectedTarget.targetId, detailId).then(function (title) {
+        return completeSubmission(title);
+      });
     }
   });
 
   return modalPromise.then(function (result) {
     state.disposed = true;
+    state.detailCaptionRequest += 1;
     if (state.list) state.list.destroy();
     if (adapter && typeof adapter.focus === "function") adapter.focus();
     return result;

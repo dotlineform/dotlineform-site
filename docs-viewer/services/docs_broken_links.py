@@ -29,6 +29,7 @@ from docs_builder.semantic_token_registry import load_semantic_token_registry  #
 from docs_builder.semantic_tokens import (  # noqa: E402
     load_semantic_token_target_records,
     parse_catalogue_tokens,
+    resolve_catalogue_image_target,
 )
 from docs_source_model import load_scope_docs_for_config  # noqa: E402
 
@@ -278,8 +279,10 @@ def semantic_token_broken_entries(repo_root: Path, scope: str) -> list[dict[str,
                 reason = "missing_target"
             elif not str(target.get("href") or "").strip().startswith("/"):
                 reason = "missing_destination"
-            elif token.presentation == "image" and not target.get("image"):
-                reason = "missing_image"
+            elif token.presentation == "image":
+                resolved_target = resolve_catalogue_image_target(repo_root, token, target)
+                if resolved_target is None:
+                    reason = "missing_detail_image" if token.detail_id else "missing_image"
             if not reason:
                 continue
             entries.append(

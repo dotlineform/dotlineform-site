@@ -45,6 +45,7 @@ function normalizeTarget(record, registry) {
     targetId: targetId,
     title: title,
     href: cleanString(row.href),
+    hasDetails: row.has_details === true,
     meta: Array.isArray(row.meta) ? row.meta.map(cleanString).filter(Boolean) : [],
     image: normalizeTargetImage(row.image),
     targetIdNorm: targetIdNorm,

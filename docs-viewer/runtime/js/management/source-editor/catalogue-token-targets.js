@@ -34,6 +34,7 @@ function catalogueTarget(row, targetTypes, requireImage) {
     targetId: row.targetId,
     title: row.title,
     href: row.href,
+    hasDetails: row.hasDetails === true,
     meta: row.meta.slice()
   };
   if (image) target.image = image;
