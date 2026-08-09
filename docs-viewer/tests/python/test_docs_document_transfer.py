@@ -1348,30 +1348,39 @@ def test_external_local_source_can_plan_move_to_repository_target(
     assert plan.media[0].target_status == "create"
 
 
-def test_public_target_and_public_move_are_rejected(tmp_path: Path) -> None:
-    public_target = docs_scope_record(
-        "target",
-        scope_type="public",
-        viewer_base_url="/target/",
-        include_scope_param=False,
-    )
-    repo_root = make_repo(tmp_path, target_scope=public_target)
-    with pytest.raises(ValueError, match="public target scope"):
-        transfer.plan_document_transfer(
-            repo_root,
-            source_scope="source",
-            requested_doc_ids=["root"],
-            target_scope="target",
-            transfer_mode="copy",
-        )
-
+def test_public_copy_target_is_allowed_but_public_moves_are_rejected(
+    tmp_path: Path,
+) -> None:
     public_source = docs_scope_record(
         "source",
         scope_type="public",
         viewer_base_url="/source/",
         include_scope_param=False,
     )
-    repo_root = make_repo(tmp_path / "second", source_scope=public_source)
+    public_target = docs_scope_record(
+        "target",
+        scope_type="public",
+        viewer_base_url="/target/",
+        include_scope_param=False,
+    )
+    repo_root = make_repo(
+        tmp_path,
+        source_scope=public_source,
+        target_scope=public_target,
+    )
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        requested_doc_ids=["root"],
+        target_scope="target",
+        transfer_mode="copy",
+        operation_timestamp="2026-07-24 09:10:11",
+        token_factory=sequential_tokens("aaaaaa"),
+    )
+
+    assert plan.ok
+    assert plan.preview_payload()["target_default_publishable"] is True
+
     with pytest.raises(ValueError, match="public source scopes cannot be moved"):
         transfer.plan_document_transfer(
             repo_root,
@@ -1381,8 +1390,21 @@ def test_public_target_and_public_move_are_rejected(tmp_path: Path) -> None:
             transfer_mode="move",
         )
 
+    target_move_repo = make_repo(
+        tmp_path / "target-move",
+        target_scope=public_target,
+    )
+    with pytest.raises(ValueError, match="public target scope"):
+        transfer.plan_document_transfer(
+            target_move_repo,
+            source_scope="source",
+            requested_doc_ids=["root"],
+            target_scope="target",
+            transfer_mode="move",
+        )
 
-def test_public_parent_child_can_accept_copy_without_relaxing_parent_target(
+
+def test_public_parent_and_child_can_accept_copy(
     tmp_path: Path,
 ) -> None:
     public_target = docs_scope_record(
@@ -1442,11 +1464,24 @@ def test_public_parent_child_can_accept_copy_without_relaxing_parent_target(
         "copy_target": True,
         "move_target": False,
     }
-    with pytest.raises(ValueError, match="public target scope"):
-        transfer.plan_document_transfer(
-            repo_root,
-            source_scope="source",
-            requested_doc_ids=["other"],
-            target_scope="target",
-            transfer_mode="copy",
-        )
+    parent_plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        requested_doc_ids=["other"],
+        target_scope="target",
+        transfer_mode="copy",
+        operation_timestamp="2026-07-24 09:10:12",
+        token_factory=sequential_tokens("bbbbbb"),
+    )
+    parent_capabilities = transfer.document_transfer_collection_capabilities(
+        parent_plan.target_collection
+    )
+
+    assert parent_plan.ok
+    assert parent_plan.preview_payload()["target_default_publishable"] is True
+    assert parent_capabilities == {
+        "copy_source": True,
+        "move_source": False,
+        "copy_target": True,
+        "move_target": False,
+    }

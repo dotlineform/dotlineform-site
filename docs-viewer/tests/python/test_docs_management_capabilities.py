@@ -132,7 +132,7 @@ def test_capabilities_advertise_source_config_reads() -> None:
     }
 
 
-def test_public_scope_is_copy_source_but_not_move_source_or_transfer_target() -> None:
+def test_public_scope_is_copy_source_and_target_but_not_move_source_or_target() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         write_docs_scope_config(repo_root)
@@ -148,14 +148,14 @@ def test_public_scope_is_copy_source_but_not_move_source_or_transfer_target() ->
     assert payload["capabilities"]["scopes"]["studio"]["document_transfer"] == {
         "copy_source": True,
         "move_source": False,
-        "target": False,
+        "target": True,
         "collections": [
             {
                 "target": {"scope": "studio"},
                 "label": "studio",
                 "copy_source": True,
                 "move_source": False,
-                "copy_target": False,
+                "copy_target": True,
                 "move_target": False,
             },
         ],

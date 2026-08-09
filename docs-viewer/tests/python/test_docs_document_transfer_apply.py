@@ -1215,6 +1215,72 @@ def test_apply_parent_to_public_child_uses_omitted_true_default_and_subdoc_links
     )
 
 
+def test_apply_public_parent_to_public_parent_uses_working_projection_without_publishing(
+    tmp_path: Path,
+) -> None:
+    source_scope = docs_scope_record(
+        "source",
+        scope_type="public",
+        viewer_base_url="/source/",
+        include_scope_param=False,
+    )
+    target_scope = docs_scope_record(
+        "target",
+        scope_type="public",
+        viewer_base_url="/target/",
+        include_scope_param=False,
+    )
+    repo_root = make_repo(
+        tmp_path,
+        source_scope=source_scope,
+        target_scope=target_scope,
+    )
+    write_doc(
+        local_documents_root(repo_root, "source"),
+        doc_id="alpha",
+        title="Alpha",
+        parent_id="root",
+        body="# Alpha\n\n[Beta](/source/?doc=beta#detail)\n",
+    )
+    public_root = repo_root / "site/assets/data/docs/scopes/target"
+    write_json(public_root / "by-id/existing.json", {"doc_id": "existing"})
+    public_before = snapshot(public_root)
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        requested_doc_ids=["alpha", "beta"],
+        target_scope="target",
+        transfer_mode="copy",
+        operation_timestamp=COPY_TIMESTAMP,
+        token_factory=sequential_tokens("111111", "222222"),
+    )
+
+    result = transfer_apply.apply_document_copy(
+        repo_root,
+        plan,
+        confirm=True,
+        perform_source_write_and_rebuild=fake_rebuild([]),
+        activity_logger=lambda *_args, **_kwargs: None,
+    )
+
+    target_ids = result["created_doc_ids"]
+    first_front_matter, first_body = source_model.parse_source(
+        local_documents_root(repo_root, "target") / f"{target_ids[0]}.md"
+    )
+    second_front_matter, _second_body = source_model.parse_source(
+        local_documents_root(repo_root, "target") / f"{target_ids[1]}.md"
+    )
+    assert plan.preview_payload()["target_default_publishable"] is True
+    assert "publishable" not in first_front_matter
+    assert "publishable" not in second_front_matter
+    assert f"/target/?doc={target_ids[1]}#detail" in first_body
+    assert result["target"] == {"scope": "target"}
+    assert result["effective_roots"][0]["target_viewer_url"] == (
+        f"/docs/?scope=target&doc={target_ids[0]}"
+    )
+    assert snapshot(public_root) == public_before
+
+
 def test_child_copy_stale_target_fails_before_media_or_document_writes(
     tmp_path: Path,
 ) -> None:

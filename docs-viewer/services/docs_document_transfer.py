@@ -512,7 +512,7 @@ def _require_collection_root(
     if (
         writable
         and collection.parent_config.scope_type == PUBLIC_SCOPE_TYPE
-        and not (mode == COPY_MODE and collection.sub_scope)
+        and mode != COPY_MODE
     ):
         raise ValueError(f"public {role} scope {collection.scope!r} is not writable")
     root = collection.source_root
@@ -589,7 +589,7 @@ def document_transfer_scope_capabilities(
     return {
         "copy_source": capabilities["copy_source"],
         "move_source": capabilities["move_source"],
-        "target": capabilities["copy_target"] and capabilities["move_target"],
+        "target": capabilities["copy_target"] or capabilities["move_target"],
     }
 
 

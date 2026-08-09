@@ -2417,7 +2417,7 @@ def assert_document_transfer_module_contract(page: Page) -> None:
                         document_transfer: { collections: [{
                             target: { scope: 'public' }, label: 'public',
                             copy_source: true, move_source: false,
-                            copy_target: false, move_target: false
+                            copy_target: true, move_target: false
                         }] },
                         root: 'scopes/public'
                     },
@@ -2504,6 +2504,7 @@ def assert_document_transfer_module_contract(page: Page) -> None:
         "targets": [
             {"target": {"scope": "notes", "sub_scope": "works"}, "label": "notes / Works"},
             {"target": {"scope": "processing"}, "label": "processing"},
+            {"target": {"scope": "public"}, "label": "public"},
         ],
         "requests": [
             {
