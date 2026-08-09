@@ -76,7 +76,6 @@ function summarizeRecords(config, recordGroups) {
     recordCountLabel(config, "record_group_works", "works", recordGroups && recordGroups.works),
     recordCountLabel(config, "record_group_series", "series", recordGroups && recordGroups.series),
     recordCountLabel(config, "record_group_details", "details", recordGroups && recordGroups.work_details),
-    recordCountLabel(config, "record_group_moments", "moments", recordGroups && recordGroups.moments),
     recordCountLabel(config, "record_group_docs", "docs", recordGroups && recordGroups.docs),
     recordCountLabel(config, "record_group_files", "files", recordGroups && recordGroups.files),
     recordCountLabel(config, "record_group_tags", "tags", recordGroups && recordGroups.tags),

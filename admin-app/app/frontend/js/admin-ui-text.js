@@ -16,7 +16,6 @@ export const DEFAULT_ADMIN_UI_TEXT = {
     record_group_works: "works",
     record_group_series: "series",
     record_group_details: "details",
-    record_group_moments: "moments",
     record_group_docs: "docs",
     record_group_files: "files",
     record_group_search: "search",

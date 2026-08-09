@@ -38,12 +38,11 @@ SOURCE_DOCUMENTS_PATH = "documents"
 SOURCE_SUB_SCOPES_PATH = "sub-scopes"
 DEFAULT_PLAN_PATH = Path("var/docs/document-identity/mapping.json")
 FRONT_MATTER_PATTERN = re.compile(r"\A---\s*\n(?P<header>.*?)\n---(?P<tail>\s*\n?)", re.DOTALL)
-URL_PATTERN = re.compile(r"/(?:docs|library|analysis|moments)/\?[^\s)>'\"<]+")
+URL_PATTERN = re.compile(r"/(?:docs|library|analysis)/\?[^\s)>'\"<]+")
 ROUTE_SCOPES = {
     "/docs/": "studio",
     "/library/": "library",
     "/analysis/": "analysis",
-    "/moments/": "moments",
 }
 IDENTITY_CONFIG_FIELDS = {
     "default_doc_id",

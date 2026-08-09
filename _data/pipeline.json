@@ -10,11 +10,9 @@
       "bulk_import": "data/works_bulk_import.xlsx"
     },
     "source_roots": {
-      "works": "projects",
-      "moments": "moments"
+      "works": "projects"
     },
     "source_subdirs": {
-      "moments_images": "images",
       "prose": "site text"
     },
     "media": {
@@ -26,10 +24,6 @@
       "work_details": {
         "input_subdir": "work_details/make_srcset_images",
         "output_subdir": "work_details/srcset_images"
-      },
-      "moment": {
-        "input_subdir": "moments/make_srcset_images",
-        "output_subdir": "moments/srcset_images"
       },
       "work_files_subdir": "works/files"
     }

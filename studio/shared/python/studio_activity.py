@@ -192,7 +192,6 @@ def _compact_record_groups(groups: Any) -> Dict[str, Any]:
         "works": _compact_ids(raw_groups.get("works")),
         "series": _compact_ids(raw_groups.get("series")),
         "work_details": _compact_ids(raw_groups.get("work_details")),
-        "moments": _compact_ids(raw_groups.get("moments")),
         "docs": _compact_ids(raw_groups.get("docs")),
         "files": _compact_ids(raw_groups.get("files")),
         "tags": _compact_ids(raw_groups.get("tags")),

@@ -131,10 +131,6 @@ def parse_front_matter(path: Path) -> Dict[str, Any]:
     return fm
 
 
-def is_slug_safe(s: str) -> bool:
-    return re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", s or "") is not None
-
-
 def normalize_series_ref(value: Any) -> str:
     raw = normalize_text(value)
     if raw == "":
@@ -262,7 +258,6 @@ def load_generated_route_contracts(site_root: Path) -> Tuple[
     Dict[str, Dict[str, Any]],
     Dict[str, Dict[str, Any]],
     Dict[str, Dict[str, Any]],
-    Dict[str, Dict[str, Any]],
 ]:
     works = load_object_map_keys(site_root / "assets/data/works_index.json", "works")
     series = load_object_map_keys(site_root / "assets/data/series_index.json", "series")
@@ -271,8 +266,7 @@ def load_generated_route_contracts(site_root: Path) -> Tuple[
         for detail_uid, ref in load_detail_refs_from_work_json(site_root).items()
         if normalize_text(detail_uid) != ""
     }
-    moments: Dict[str, Dict[str, Any]] = {}
-    return works, series, details, moments
+    return works, series, details
 
 
 def resolve_repo_source_path(rel_path: Path, repo_root: Path = REPO_ROOT) -> Path:
@@ -497,7 +491,6 @@ def check_schema(
     works: Dict[str, Dict[str, Any]],
     series: Dict[str, Dict[str, Any]],
     work_details: Dict[str, Dict[str, Any]],
-    moments: Dict[str, Dict[str, Any]],
     series_ids_scope: Optional[set[str]],
     work_ids_scope: Optional[set[str]],
     max_samples: int,
@@ -643,17 +636,6 @@ def check_schema(
             if detail_work_id != wid:
                 errors += 1
                 add_sample(samples, {"check": "schema", "id": duid, "path": row["path"], "message": "detail_uid prefix must match work_id"}, max_samples)
-
-    # Moment route contracts
-    for mid, row in moments.items():
-        fm = row["fm"]
-        fm_moment_id = normalize_text(fm.get("moment_id"))
-        if fm_moment_id and fm_moment_id != mid:
-            errors += 1
-            add_sample(samples, {"check": "schema", "id": mid, "path": row["path"], "message": "moment_id does not match generated contract id"}, max_samples)
-        if not is_slug_safe(mid):
-            errors += 1
-            add_sample(samples, {"check": "schema", "id": mid, "path": row["path"], "message": "invalid moment_id slug format"}, max_samples)
 
     return {"name": "schema", "error_count": errors, "warning_count": warnings, "samples": samples}
 
@@ -948,7 +930,6 @@ def check_links(
     works: Dict[str, Dict[str, Any]],
     series: Dict[str, Dict[str, Any]],
     work_details: Dict[str, Dict[str, Any]],
-    moments: Dict[str, Dict[str, Any]],
     series_ids_scope: Optional[set[str]],
     work_ids_scope: Optional[set[str]],
     max_samples: int,
@@ -1252,7 +1233,7 @@ def main() -> None:
         import os
         os.chdir(site_root)
 
-        works, series, work_details, moments = load_generated_route_contracts(site_root)
+        works, series, work_details = load_generated_route_contracts(site_root)
         works_dups: List[str] = []
         series_dups: List[str] = []
         detail_dups: List[str] = []
@@ -1280,7 +1261,6 @@ def main() -> None:
                     works=works,
                     series=series,
                     work_details=work_details,
-                    moments=moments,
                     series_ids_scope=series_ids_scope,
                     work_ids_scope=work_ids_scope,
                     max_samples=args.max_samples,
@@ -1302,7 +1282,6 @@ def main() -> None:
                     works=works,
                     series=series,
                     work_details=work_details,
-                    moments=moments,
                     series_ids_scope=series_ids_scope,
                     work_ids_scope=work_ids_scope,
                     max_samples=args.max_samples,
