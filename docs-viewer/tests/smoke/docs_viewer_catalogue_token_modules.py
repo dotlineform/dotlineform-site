@@ -148,6 +148,21 @@ def assert_contract_fixture_and_mixed_search(page: Page) -> None:
                 fixture.target_lookup_example,
                 registry
             );
+            const legacyTargets = smoke.semanticTargets.normalizeSemanticTokenTargets({
+                schema_version: 'docs_semantic_token_target_lookup_v1',
+                targets: fixture.target_lookup_example.targets
+            }, registry);
+            const unsafeImageTargets = smoke.semanticTargets.normalizeSemanticTokenTargets({
+                schema_version: 'docs_semantic_token_target_lookup_v2',
+                targets: [{
+                    family: 'catalogue',
+                    target_type: 'work',
+                    target_id: '00638',
+                    title: '3 symbols',
+                    href: '/works/?work=00638',
+                    image: { src: 'javascript:alert(1)' }
+                }]
+            }, registry);
             const support = smoke.targets.createCatalogueTargetSupport(registry, semanticTargets);
             const matches = smoke.targets.collectCatalogueTargetMatches(support, 'nerve', 10);
             const idMatches = smoke.targets.collectCatalogueTargetMatches(support, '00008', 10);
@@ -237,6 +252,8 @@ def assert_contract_fixture_and_mixed_search(page: Page) -> None:
                 fixtureUiContributions: fixture.catalogue_definition.ui_contributions,
                 handlerIds: Object.keys(handlers),
                 idMatches,
+                image: semanticTargets.find(target => target.targetId === '00638').image,
+                legacyTargetCount: legacyTargets.length,
                 matches: matches.map(target => ({
                     family: target.family,
                     targetType: target.targetType,
@@ -250,7 +267,8 @@ def assert_contract_fixture_and_mixed_search(page: Page) -> None:
                 qualifiedIdMatches,
                 rendererIcon: renderedButton.textContent,
                 resolvedInfoViews,
-                serialized
+                serialized,
+                unsafeImage: unsafeImageTargets[0].image
             };
         }"""
     )
@@ -267,6 +285,10 @@ def assert_contract_fixture_and_mixed_search(page: Page) -> None:
     ]
     if parser_mismatches:
         raise AssertionError(f"browser parser drifted from the P0 fixture: {parser_mismatches!r}")
+    if result["image"] != {
+        "src": "https://media.dotlineform.com/works/img/00638-primary-1600.webp?v=1",
+    } or result["legacyTargetCount"] != 0 or result["unsafeImage"] is not None:
+        raise AssertionError(f"v2 target image normalization changed: {result!r}")
     if result["matches"] != [
         {
             "family": "catalogue",
@@ -325,6 +347,49 @@ def assert_contract_fixture_and_mixed_search(page: Page) -> None:
         "info_view": "catalogue-token-info",
     }:
         raise AssertionError(f"browser UI contribution ids drifted from the P0 fixture: {result!r}")
+
+
+def assert_linked_image_css(page: Page) -> None:
+    result = page.evaluate(
+        """() => {
+            const viewer = document.createElement('div');
+            viewer.className = 'docsViewer';
+            viewer.dataset.docsViewerAppKind = 'public';
+            viewer.innerHTML = `
+                <div class="docsViewer__content">
+                  <a class="docsViewerCatalogueImageLink" href="/works/?work=00638">
+                    <img alt="3 symbols">
+                  </a>
+                  <figure class="docsViewerFigure docsViewerFigure--image-right docsViewerFigure--natural-width">
+                    <a class="docsViewerFigure__imageLink" href="/works/?work=00638">
+                      <img alt="3 symbols">
+                    </a>
+                    <figcaption>Caption</figcaption>
+                  </figure>
+                </div>`;
+            document.body.appendChild(viewer);
+            const plain = viewer.querySelector('.docsViewerCatalogueImageLink');
+            const figure = viewer.querySelector('.docsViewerFigure');
+            const figureLink = viewer.querySelector('.docsViewerFigure__imageLink');
+            const result = {
+                figureDisplay: getComputedStyle(figure).display,
+                figureLinkDisplay: getComputedStyle(figureLink).display,
+                figureLinkGridColumnStart: getComputedStyle(figureLink).gridColumnStart,
+                plainDisplay: getComputedStyle(plain).display,
+                plainMaxWidth: getComputedStyle(plain).maxWidth
+            };
+            viewer.remove();
+            return result;
+        }"""
+    )
+    if result != {
+        "figureDisplay": "grid",
+        "figureLinkDisplay": "block",
+        "figureLinkGridColumnStart": "2",
+        "plainDisplay": "block",
+        "plainMaxWidth": "100%",
+    }:
+        raise AssertionError(f"linked Catalogue image CSS changed: {result!r}")
 
 
 def assert_source_adapter_captures_and_guards_range(page: Page) -> None:
@@ -1028,7 +1093,7 @@ def assert_modal_insertion_cancellation_and_stale_guard(page: Page) -> None:
                 }]
             };
             const targetPayload = {
-                schema_version: 'docs_semantic_token_target_lookup_v1',
+                schema_version: 'docs_semantic_token_target_lookup_v2',
                 targets: [
                     {
                         family: 'catalogue',
@@ -1494,7 +1559,7 @@ def assert_catalogue_info_exact_range_update_remove_and_stale_guard(page: Page) 
                 }]
             };
             const targetPayload = {
-                schema_version: 'docs_semantic_token_target_lookup_v1',
+                schema_version: 'docs_semantic_token_target_lookup_v2',
                 targets: [{
                     family: 'catalogue',
                     target_type: 'work',
@@ -1710,7 +1775,7 @@ def assert_real_keyboard_tab_and_scroll_flow(page: Page) -> None:
                 }]
             };
             const targetPayload = {
-                schema_version: 'docs_semantic_token_target_lookup_v1',
+                schema_version: 'docs_semantic_token_target_lookup_v2',
                 targets: Array.from({ length: 25 }, (_value, index) => {
                     const id = String(index + 1).padStart(5, '0');
                     return {
@@ -2210,6 +2275,7 @@ def run_smoke(page: Page, base_url: str) -> None:
     install_styles(page, base_url)
     install_modules(page)
     assert_contract_fixture_and_mixed_search(page)
+    assert_linked_image_css(page)
     assert_source_adapter_captures_and_guards_range(page)
     assert_directive_actions_insertion_and_menu_contract(page)
     assert_source_target_transport_and_fixed_session(page)

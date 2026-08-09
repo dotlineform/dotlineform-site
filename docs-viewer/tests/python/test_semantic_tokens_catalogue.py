@@ -26,6 +26,7 @@ from docs_builder.semantic_token_registry import (  # noqa: E402
 from docs_builder.semantic_tokens import (  # noqa: E402
     parse_catalogue_tokens,
     semantic_token_at_selection,
+    serialize_catalogue_image_token,
     serialize_semantic_token,
 )
 from docs_scope_config import load_docs_scope_configs  # noqa: E402
@@ -89,6 +90,51 @@ def test_production_registry_is_the_accepted_catalogue_definition() -> None:
     assert load_semantic_token_registry(REPO_ROOT) is not None
 
 
+def test_visual_occurrence_parser_is_canonical_and_context_aware() -> None:
+    registry = parse_semantic_token_registry(fixture_registry_payload())
+    assert registry is not None
+    plain = "[[catalogue:image:work:00638|alt=3%20symbols]]"
+    figure = (
+        "[[catalogue:image:series:105|alt=nerve&caption=nerve&"
+        "summary=intangible%0Ashifting%20boundaries&placement=left&fill_width=true]]"
+    )
+    source = f"{plain}\n{figure}\n`{plain}`\n<!-- {figure} -->\n"
+    tokens = parse_catalogue_tokens(source, registry=registry)
+
+    assert len(tokens) == 2
+    assert tokens[0].presentation == "image"
+    assert tokens[0].title == tokens[0].alt == "3 symbols"
+    assert tokens[0].caption == ""
+    assert tokens[0].fill_width is None
+    assert tokens[1].title == tokens[1].caption == "nerve"
+    assert tokens[1].summary == "intangible\nshifting boundaries"
+    assert tokens[1].placement == "left"
+    assert tokens[1].fill_width is True
+    assert source[tokens[1].start:tokens[1].end] == figure
+    assert serialize_catalogue_image_token(
+        target_type="series",
+        target_id="105",
+        alt="nerve",
+        caption="nerve",
+        summary="intangible\nshifting boundaries",
+        placement="left",
+        fill_width=True,
+    ) == figure
+
+    malformed = [
+        "[[catalogue:image:work:00638|caption=3%20symbols&alt=3%20symbols&placement=left&fill_width=true]]",
+        "[[catalogue:image:work:00638|alt=3%20symbols&alt=again]]",
+        "[[catalogue:image:work:00638|alt=3%20symbols&unknown=value]]",
+        "[[catalogue:image:work:00638|alt=3%20symbols&summary=extra]]",
+        "[[catalogue:image:work:00638|alt=3%20symbols&caption=caption&placement=left]]",
+        "[[catalogue:image:work:00638|alt=3%20symbols&caption=caption&placement=left&fill_width=1]]",
+        "[[catalogue:image:work:00638|alt=3%20symbols&caption=caption&placement=LEFT&fill_width=true]]",
+        "[[catalogue:image:work:00638|alt=3%20symbols%2fdetail]]",
+    ]
+    for raw in malformed:
+        assert parse_catalogue_tokens(raw, registry=registry) == [], raw
+
+
 def write_builder_fixture(root: Path) -> tuple[str, str]:
     resolved_case = next(
         case for case in load_fixture()["cases"] if case["id"] == "resolved_work_00638"
@@ -130,6 +176,19 @@ def write_builder_fixture(root: Path) -> tuple[str, str]:
             "title": "missing work",
             "href": "",
             "meta": [],
+        }
+    )
+    target_lookup["targets"].append(
+        {
+            "family": "catalogue",
+            "target_type": "series",
+            "target_id": "005",
+            "title": "3 symbols",
+            "href": "/series/?series=005",
+            "meta": ["2007"],
+            "image": {
+                "src": "https://media.dotlineform.com/works/img/00638-primary-1600.webp?v=1"
+            },
         }
     )
     write_json(
@@ -207,3 +266,70 @@ def test_builder_projects_only_resolved_lookup_rows_and_writes_usage() -> None:
     assert usage_index == load_fixture()["usage_index_example"]
     assert not by_document_exists
     assert not by_target_exists
+
+
+def test_builder_projects_linked_visual_occurrences_and_preserves_missing_images() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        write_builder_fixture(root)
+        doc_id = "d-20260809-120000-a1b2c3"
+        plain = "[[catalogue:image:work:00638|alt=3%20symbols]]"
+        figure = (
+            "[[catalogue:image:series:005|alt=3%20symbols&caption=Quiet%20field&"
+            "summary=Supporting%20copy&placement=right&fill_width=false]]"
+        )
+        missing_image = "[[catalogue:image:work:00008|alt=nerve]]"
+        text_same_target = "[[catalogue:work:00008|nerve]]"
+        write_text(
+            root / f"docs-viewer/scopes/analysis/source/documents/{doc_id}.md",
+            (
+                "---\n"
+                f"doc_id: {doc_id}\n"
+                "title: Visual fixture\n"
+                "added_date: 2026-08-09\n"
+                "last_updated: 2026-08-09 12:00:00\n"
+                'parent_id: ""\n'
+                "---\n"
+                f"{plain}\n\n{figure}\n\n{missing_image}\n\n{text_same_target}\n"
+            ),
+        )
+        builder = DocsDataBuilder(
+            repo_root=root,
+            config=load_docs_scope_configs(root)["analysis"],
+            skip_media_builds=True,
+        )
+        builder.run(write=True)
+        payload = json.loads(
+            (
+                root
+                / f"docs-viewer/scopes/analysis/published/documents/by-id/{doc_id}.json"
+            ).read_text(encoding="utf-8")
+        )
+        usage = json.loads(
+            (
+                root
+                / "docs-viewer/scopes/analysis/published/documents/semantic-tokens/index.json"
+            ).read_text(encoding="utf-8")
+        )
+
+    html = payload["content_html"]
+    assert '<a class="docsViewerCatalogueImageLink" href="/works/?work=00638"' in html
+    assert 'src="https://media.dotlineform.com/works/img/00638-primary-1600.webp?v=1"' in html
+    assert 'data-semantic-token-target-id="00638"' in html
+    assert 'target="_blank" rel="noopener noreferrer"' in html
+    assert '<figure class="docsViewerFigure docsViewerFigure--image-right docsViewerFigure--natural-width">' in html
+    assert '<a class="docsViewerFigure__imageLink" href="/series/?series=005"' in html
+    assert 'data-semantic-token-target-type="series"' in html
+    assert 'data-semantic-token-target-id="005"' in html
+    assert '<span class="docsViewerFigure__caption">Quiet field</span>' in html
+    assert '<span class="docsViewerFigure__summary">Supporting copy</span>' in html
+    assert missing_image in html
+    assert '<a href="/works/?work=00008" data-semantic-token-family="catalogue"' in html
+    resolved_rows = [row for row in usage["occurrences"] if row["source_doc_id"] == doc_id]
+    assert usage["schema_version"] == "docs_semantic_token_usage_index_v1"
+    assert [row["title"] for row in resolved_rows] == ["3 symbols", "Quiet field", "nerve"]
+    assert resolved_rows[1]["target_type"] == "series"
+    assert resolved_rows[1]["target_id"] == "005"
+    assert resolved_rows[1]["href"] == "/series/?series=005"
+    assert resolved_rows[2]["raw"] == text_same_target
+    assert not any(row["raw"] == missing_image for row in resolved_rows)

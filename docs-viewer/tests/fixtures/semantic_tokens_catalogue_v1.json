@@ -63,7 +63,8 @@
         "lookup_fields": [
           "title",
           "href",
-          "meta"
+          "meta",
+          "image"
         ]
       },
       {
@@ -78,14 +79,15 @@
         "lookup_fields": [
           "title",
           "href",
-          "meta"
+          "meta",
+          "image"
         ]
       }
     ]
   },
   "json_shapes": {
     "target_lookup": {
-      "schema_version": "docs_semantic_token_target_lookup_v1",
+      "schema_version": "docs_semantic_token_target_lookup_v2",
       "required_envelope_fields": [
         "schema_version",
         "targets"
@@ -98,7 +100,8 @@
         "href"
       ],
       "optional_row_fields": [
-        "meta"
+        "meta",
+        "image"
       ]
     },
     "usage_index": {
@@ -136,12 +139,13 @@
       "reason_values": [
         "unsupported_kind",
         "missing_target",
-        "missing_destination"
+        "missing_destination",
+        "missing_image"
       ]
     }
   },
   "target_lookup_example": {
-    "schema_version": "docs_semantic_token_target_lookup_v1",
+    "schema_version": "docs_semantic_token_target_lookup_v2",
     "targets": [
       {
         "family": "catalogue",
@@ -152,7 +156,10 @@
         "meta": [
           "2007",
           "3 symbols"
-        ]
+        ],
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/00638-primary-1600.webp?v=1"
+        }
       },
       {
         "family": "catalogue",

@@ -278,6 +278,8 @@ def semantic_token_broken_entries(repo_root: Path, scope: str) -> list[dict[str,
                 reason = "missing_target"
             elif not str(target.get("href") or "").strip().startswith("/"):
                 reason = "missing_destination"
+            elif token.presentation == "image" and not target.get("image"):
+                reason = "missing_image"
             if not reason:
                 continue
             entries.append(

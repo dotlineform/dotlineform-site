@@ -5,16 +5,22 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Iterable
+from urllib.parse import quote, unquote_to_bytes, urlsplit
 
 from .common import read_json
 from .semantic_token_registry import SemanticTokenRegistry
 from .source import DocRecord
+from docs_staged_media_fragments import (
+    FIGURE_NATURAL_WIDTH_CLASS,
+    FIGURE_PLACEMENT_CLASSES,
+    validate_figure_presentation,
+)
 
 
 LEXICAL_KEY_PATTERN = re.compile(r"[a-z][a-z0-9-]*")
 LEXICAL_ID_PATTERN = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*")
 FENCE_PATTERN = re.compile(r"\A {0,3}(`{3,}|~{3,})")
-SEMANTIC_TOKEN_TARGET_LOOKUP_SCHEMA_VERSION = "docs_semantic_token_target_lookup_v1"
+SEMANTIC_TOKEN_TARGET_LOOKUP_SCHEMA_VERSION = "docs_semantic_token_target_lookup_v2"
 SEMANTIC_TOKEN_TARGET_LOOKUP_PATH = Path(
     "docs-viewer/data/generated/semantic-tokens/target-lookup.json"
 )
@@ -30,6 +36,12 @@ class SemanticTokenOccurrence:
     start: int
     end: int
     supported: bool
+    presentation: str = "text"
+    alt: str = ""
+    caption: str = ""
+    summary: str = ""
+    placement: str = ""
+    fill_width: bool | None = None
 
     @property
     def source_range(self) -> dict[str, int]:
@@ -73,6 +85,134 @@ def unescape_semantic_token_title(value: str) -> str | None:
     return title or None
 
 
+def normalize_plain_text(value: Any, *, required: bool) -> str:
+    if not isinstance(value, str):
+        return ""
+    text = " ".join(value.split())
+    return text if text or not required else ""
+
+
+def normalize_summary_text(value: Any) -> str:
+    if not isinstance(value, str):
+        return ""
+    normalized = value.replace("\r\n", "\n").replace("\r", "\n")
+    return "\n".join(" ".join(line.split()) for line in normalized.split("\n")).strip()
+
+
+def encode_catalogue_image_value(value: str) -> str:
+    return quote(value, safe="-._~")
+
+
+def decode_catalogue_image_value(value: str) -> str | None:
+    if re.search(r"%(?![0-9A-Fa-f]{2})", value):
+        return None
+    try:
+        decoded = unquote_to_bytes(value).decode("utf-8")
+    except UnicodeDecodeError:
+        return None
+    return decoded if encode_catalogue_image_value(decoded) == value else None
+
+
+def serialize_catalogue_image_token(
+    *,
+    target_type: str,
+    target_id: str,
+    alt: Any,
+    caption: Any = "",
+    summary: Any = "",
+    placement: Any = "",
+    fill_width: Any = None,
+) -> str:
+    if (
+        not LEXICAL_KEY_PATTERN.fullmatch(str(target_type or ""))
+        or not LEXICAL_ID_PATTERN.fullmatch(str(target_id or ""))
+    ):
+        return ""
+    alt_text = normalize_plain_text(alt, required=True)
+    if not alt_text:
+        return ""
+    caption_text = normalize_plain_text(caption, required=False)
+    fields: list[tuple[str, str]] = [("alt", alt_text)]
+    if caption_text:
+        try:
+            caption_text, summary_text, placement_value, fill_width_value = (
+                validate_figure_presentation(
+                    caption,
+                    summary,
+                    placement,
+                    fill_width,
+                )
+            )
+        except ValueError:
+            return ""
+        fields.append(("caption", caption_text))
+        if summary_text:
+            fields.append(("summary", summary_text))
+        fields.extend(
+            [
+                ("placement", placement_value),
+                ("fill_width", "true" if fill_width_value else "false"),
+            ]
+        )
+    elif normalize_summary_text(summary) or normalize_plain_text(placement, required=False):
+        return ""
+    elif fill_width is not None:
+        return ""
+    query = "&".join(
+        f"{key}={encode_catalogue_image_value(value)}" for key, value in fields
+    )
+    return f"[[catalogue:image:{target_type}:{target_id}|{query}]]"
+
+
+def parse_catalogue_image_fields(raw_query: str) -> dict[str, Any] | None:
+    if not raw_query:
+        return None
+    fields: dict[str, str] = {}
+    for pair in raw_query.split("&"):
+        key, separator, encoded_value = pair.partition("=")
+        if (
+            not separator
+            or key not in {"alt", "caption", "summary", "placement", "fill_width"}
+            or key in fields
+            or not encoded_value
+        ):
+            return None
+        value = decode_catalogue_image_value(encoded_value)
+        if value is None:
+            return None
+        fields[key] = value
+    alt = fields.get("alt", "")
+    caption = fields.get("caption", "")
+    if not alt:
+        return None
+    fill_width: bool | None = None
+    if "fill_width" in fields:
+        if fields["fill_width"] not in {"true", "false"}:
+            return None
+        fill_width = fields["fill_width"] == "true"
+    token = serialize_catalogue_image_token(
+        target_type="work",
+        target_id="00000",
+        alt=alt,
+        caption=caption,
+        summary=fields.get("summary", ""),
+        placement=fields.get("placement", ""),
+        fill_width=fill_width,
+    )
+    if not token:
+        return None
+    canonical_query = token.partition("|")[2][:-2]
+    if canonical_query != raw_query:
+        return None
+    return {
+        "alt": normalize_plain_text(alt, required=True),
+        "caption": normalize_plain_text(caption, required=False),
+        "summary": normalize_summary_text(fields.get("summary", "")),
+        "placement": normalize_plain_text(fields.get("placement", ""), required=False),
+        "fill_width": fill_width,
+    }
+
+
 def token_closing_index(text: str, start: int) -> int:
     index = start
     while index < len(text) - 1:
@@ -94,11 +234,14 @@ def parse_catalogue_token(
     if not raw.startswith("[[") or not raw.endswith("]]") or "\n" in raw or "\r" in raw:
         return None
     body = raw[2:-2]
-    identity, separator, raw_title = body.partition("|")
+    identity, separator, raw_fields = body.partition("|")
     parts = identity.split(":")
-    if not separator or len(parts) != 3:
+    is_image = len(parts) == 4 and parts[1] == "image"
+    if not separator or (len(parts) != 3 and not is_image):
         return None
-    family, target_type, target_id = parts
+    family = parts[0]
+    target_type = parts[-2]
+    target_id = parts[-1]
     if (
         family != "catalogue"
         or not LEXICAL_KEY_PATTERN.fullmatch(family)
@@ -106,8 +249,13 @@ def parse_catalogue_token(
         or not LEXICAL_ID_PATTERN.fullmatch(target_id)
     ):
         return None
-    title = unescape_semantic_token_title(raw_title)
-    if title is None:
+    image_fields = parse_catalogue_image_fields(raw_fields) if is_image else None
+    title = (
+        image_fields["caption"] or image_fields["alt"]
+        if image_fields is not None
+        else unescape_semantic_token_title(raw_fields)
+    )
+    if title is None or (is_image and image_fields is None):
         return None
     family_definition = registry.family(family) if registry else None
     target_definition = family_definition.target_type(target_type) if family_definition else None
@@ -123,6 +271,12 @@ def parse_catalogue_token(
         start=start,
         end=start + len(raw),
         supported=supported,
+        presentation="image" if is_image else "text",
+        alt=image_fields["alt"] if image_fields else "",
+        caption=image_fields["caption"] if image_fields else "",
+        summary=image_fields["summary"] if image_fields else "",
+        placement=image_fields["placement"] if image_fields else "",
+        fill_width=image_fields["fill_width"] if image_fields else None,
     )
 
 
@@ -271,10 +425,61 @@ def render_catalogue_token(token: SemanticTokenOccurrence, target: dict[str, Any
         f'data-semantic-token-target-id="{html.escape(token.target_id, quote=True)}" '
         'target="_blank" rel="noopener noreferrer"'
     )
-    return (
-        f'<a href="{html.escape(href, quote=True)}" {attrs}>'
-        f"{html.escape(token.title)}</a>"
+    if token.presentation != "image":
+        return (
+            f'<a href="{html.escape(href, quote=True)}" {attrs}>'
+            f"{html.escape(token.title)}</a>"
+        )
+    image = target.get("image") if isinstance(target.get("image"), dict) else {}
+    src = browser_safe_image_src(image.get("src"))
+    if not src:
+        return token.raw
+    link_attrs = f'href="{html.escape(href, quote=True)}" {attrs}'
+    image_html = (
+        f'<img src="{html.escape(src, quote=True)}" '
+        f'alt="{html.escape(token.alt, quote=True)}">'
     )
+    if not token.caption:
+        return (
+            f'<a class="docsViewerCatalogueImageLink" {link_attrs}>'
+            f"{image_html}</a>"
+        )
+    modifiers = [FIGURE_PLACEMENT_CLASSES[token.placement]]
+    if not token.fill_width:
+        modifiers.append(FIGURE_NATURAL_WIDTH_CLASS)
+    summary_html = (
+        f'\n    <span class="docsViewerFigure__summary">'
+        f'{html.escape(token.summary, quote=False)}</span>'
+        if token.summary
+        else ""
+    )
+    return (
+        f'<figure class="docsViewerFigure {" ".join(modifiers)}">\n'
+        f'  <a class="docsViewerFigure__imageLink" {link_attrs}>{image_html}</a>\n'
+        "  <figcaption>\n"
+        f'    <span class="docsViewerFigure__caption">'
+        f'{html.escape(token.caption, quote=False)}</span>'
+        f"{summary_html}\n"
+        "  </figcaption>\n"
+        "</figure>"
+    )
+
+
+def browser_safe_image_src(value: Any) -> str:
+    src = str(value or "").strip()
+    if not src:
+        return ""
+    if src.startswith("/") and not src.startswith("//"):
+        return src
+    parsed = urlsplit(src)
+    if (
+        parsed.scheme == "https"
+        and parsed.netloc
+        and parsed.username is None
+        and parsed.password is None
+    ):
+        return src
+    return ""
 
 
 def load_semantic_token_target_records(
@@ -298,7 +503,7 @@ def load_semantic_token_target_records(
         href = str(raw_target.get("href") or "").strip()
         if not family or not target_type or not target_id or not title:
             continue
-        targets[(family, target_type, target_id)] = {
+        target = {
             "family": family,
             "target_type": target_type,
             "target_id": target_id,
@@ -312,6 +517,15 @@ def load_semantic_token_target_records(
             if isinstance(raw_target.get("meta"), list)
             else [],
         }
+        raw_image = raw_target.get("image")
+        image_src = (
+            browser_safe_image_src(raw_image.get("src"))
+            if isinstance(raw_image, dict)
+            else ""
+        )
+        if image_src:
+            target["image"] = {"src": image_src}
+        targets[(family, target_type, target_id)] = target
     return targets
 
 
@@ -340,6 +554,8 @@ class SemanticTokensMixin:
                 (token.family, token.target_type, token.target_id)
             )
             if target is None:
+                return token.raw
+            if token.presentation == "image" and not target.get("image"):
                 return token.raw
             occurrences.append(
                 {

@@ -89,7 +89,7 @@ def write_semantic_token_contract(repo_root: Path) -> None:
                                 "canonical_pattern": "^\\d{5}$",
                             },
                             "lookup_adapter": "catalogue-work-target-lookup",
-                            "lookup_fields": ["title", "href"],
+                            "lookup_fields": ["title", "href", "image"],
                         }
                     ],
                 }
@@ -99,7 +99,7 @@ def write_semantic_token_contract(repo_root: Path) -> None:
     write_json(
         repo_root / "docs-viewer/data/generated/semantic-tokens/target-lookup.json",
         {
-            "schema_version": "docs_semantic_token_target_lookup_v1",
+            "schema_version": "docs_semantic_token_target_lookup_v2",
             "targets": [
                 {
                     "family": "catalogue",
@@ -107,6 +107,9 @@ def write_semantic_token_contract(repo_root: Path) -> None:
                     "target_id": "00638",
                     "title": "3 symbols",
                     "href": "/works/?work=00638",
+                    "image": {
+                        "src": "https://media.dotlineform.test/works/img/00638-primary-1600.webp?v=1"
+                    },
                 },
                 {
                     "family": "catalogue",
@@ -114,6 +117,13 @@ def write_semantic_token_contract(repo_root: Path) -> None:
                     "target_id": "00008",
                     "title": "nerve",
                     "href": "",
+                },
+                {
+                    "family": "catalogue",
+                    "target_type": "work",
+                    "target_id": "00009",
+                    "title": "image unavailable",
+                    "href": "/works/?work=00009",
                 },
             ],
         },
@@ -241,6 +251,8 @@ def test_semantic_token_audit_reads_source_independently_of_rendered_usage() -> 
         "Resolved [[catalogue:work:00638|3 symbols]].\n"
         "Missing [[catalogue:work:99999|missing work]].\n"
         "No destination [[catalogue:work:00008|nerve]].\n"
+        "Missing image [[catalogue:image:work:00009|alt=image%20unavailable]].\n"
+        "Resolved image [[catalogue:image:work:00638|alt=3%20symbols]].\n"
         "Unsupported [[catalogue:asset:abc|asset]].\n"
         "`Ignored [[catalogue:work:99998|inline code]]`.\n"
     )
@@ -251,11 +263,12 @@ def test_semantic_token_audit_reads_source_independently_of_rendered_usage() -> 
         entry for entry in result["entries"]
         if entry.get("issue_type") == "semantic_token"
     ]
-    assert [entry["reason"] for entry in semantic_entries] == [
+    assert sorted(entry["reason"] for entry in semantic_entries) == sorted([
         "unsupported_kind",
         "missing_target",
         "missing_destination",
-    ]
+        "missing_image",
+    ])
     assert all(entry["source_scope"] == "studio" for entry in semantic_entries)
     assert all(entry["source_doc_id"] == "source" for entry in semantic_entries)
     assert all(entry["source_range"]["end"] > entry["source_range"]["start"] for entry in semantic_entries)

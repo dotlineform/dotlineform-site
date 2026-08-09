@@ -4475,6 +4475,7 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
             }]
           };
           const lookupPayload = {
+            schema_version: 'docs_semantic_token_target_lookup_v2',
             targets: [
               { family: 'catalogue', target_type: 'work', target_id: '00123', title: 'Nerve', href: '/works/?work=00123', meta: [] },
               { family: 'catalogue', target_type: 'series', target_id: '026', title: 'Nerve Series', href: '/series/?series=026', meta: [] }

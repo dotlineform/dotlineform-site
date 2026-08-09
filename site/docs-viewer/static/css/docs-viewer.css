@@ -1350,6 +1350,20 @@ body.docs-viewer-service{
   display: block;
 }
 
+.docsViewer__content .docsViewerCatalogueImageLink{
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin-block: 1rem;
+}
+
+.docsViewer__content .docsViewerCatalogueImageLink > img{
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0;
+}
+
 .docsViewer__content .docsViewerFigure{
   box-sizing: border-box;
   display: grid;
@@ -1360,7 +1374,8 @@ body.docs-viewer-service{
   gap: var(--docs-viewer-space-3);
 }
 
-.docsViewer__content .docsViewerFigure > img{
+.docsViewer__content .docsViewerFigure > img,
+.docsViewer__content .docsViewerFigure > .docsViewerFigure__imageLink > img{
   display: block;
   width: 100%;
   max-width: 100%;
@@ -1369,7 +1384,15 @@ body.docs-viewer-service{
   margin: 0;
 }
 
-.docsViewer__content .docsViewerFigure--natural-width > img{
+.docsViewer__content .docsViewerFigure > .docsViewerFigure__imageLink{
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.docsViewer__content .docsViewerFigure--natural-width > img,
+.docsViewer__content .docsViewerFigure--natural-width > .docsViewerFigure__imageLink{
   width: auto;
   justify-self: start;
 }
@@ -1406,12 +1429,14 @@ body.docs-viewer-service{
   gap: var(--docs-viewer-space-5);
 }
 
-.docsViewer__content .docsViewerFigure--image-right > img{
+.docsViewer__content .docsViewerFigure--image-right > img,
+.docsViewer__content .docsViewerFigure--image-right > .docsViewerFigure__imageLink{
   grid-column: 2;
   grid-row: 1;
 }
 
-.docsViewer__content .docsViewerFigure--image-right.docsViewerFigure--natural-width > img{
+.docsViewer__content .docsViewerFigure--image-right.docsViewerFigure--natural-width > img,
+.docsViewer__content .docsViewerFigure--image-right.docsViewerFigure--natural-width > .docsViewerFigure__imageLink{
   justify-self: end;
 }
 
@@ -1429,13 +1454,15 @@ body.docs-viewer-service{
   }
 
   .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__content .docsViewerFigure--image-right > img,
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__content .docsViewerFigure--image-right > .docsViewerFigure__imageLink,
   .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__content .docsViewerFigure--image-right > figcaption{
     grid-column: 1;
     grid-row: auto;
     text-align: left;
   }
 
-  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__content .docsViewerFigure--image-right.docsViewerFigure--natural-width > img{
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__content .docsViewerFigure--image-right.docsViewerFigure--natural-width > img,
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__content .docsViewerFigure--image-right.docsViewerFigure--natural-width > .docsViewerFigure__imageLink{
     justify-self: start;
   }
 }

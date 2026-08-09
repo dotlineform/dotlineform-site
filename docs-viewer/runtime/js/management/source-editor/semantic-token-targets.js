@@ -1,5 +1,21 @@
+const SEMANTIC_TOKEN_TARGET_LOOKUP_SCHEMA_VERSION = "docs_semantic_token_target_lookup_v2";
+
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
+}
+
+function normalizeTargetImage(value) {
+  var row = value && typeof value === "object" && !Array.isArray(value) ? value : {};
+  var src = cleanString(row.src);
+  if (!src) return null;
+  if (src.startsWith("/") && !src.startsWith("//")) return { src: src };
+  try {
+    var url = new URL(src);
+    if (url.protocol !== "https:" || !url.host || url.username || url.password) return null;
+  } catch (_error) {
+    return null;
+  }
+  return { src: src };
 }
 
 function normalizeSearchText(value) {
@@ -30,6 +46,7 @@ function normalizeTarget(record, registry) {
     title: title,
     href: cleanString(row.href),
     meta: Array.isArray(row.meta) ? row.meta.map(cleanString).filter(Boolean) : [],
+    image: normalizeTargetImage(row.image),
     targetIdNorm: targetIdNorm,
     targetTypeNorm: targetTypeNorm,
     titleNorm: titleNorm,
@@ -64,7 +81,12 @@ export function mountSemanticTokenTargetLinks(root, publicPreviewBase) {
 }
 
 export function normalizeSemanticTokenTargets(payload, registry) {
-  var rows = payload && typeof payload === "object" && Array.isArray(payload.targets) ? payload.targets : [];
+  var rows = payload
+    && typeof payload === "object"
+    && payload.schema_version === SEMANTIC_TOKEN_TARGET_LOOKUP_SCHEMA_VERSION
+    && Array.isArray(payload.targets)
+    ? payload.targets
+    : [];
   return rows.map(function (row) {
     return normalizeTarget(row, registry);
   }).filter(Boolean);

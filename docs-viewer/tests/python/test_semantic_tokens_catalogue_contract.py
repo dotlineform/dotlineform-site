@@ -92,7 +92,7 @@ def test_catalogue_definition_freezes_minimum_additive_contract() -> None:
     assert set(targets) == {"work", "series"}
     for target in targets.values():
         assert target["lookup_adapter"]
-        assert target["lookup_fields"] == ["title", "href", "meta"]
+        assert target["lookup_fields"] == ["title", "href", "meta", "image"]
         re.compile(target["id_policy"]["input_pattern"])
         re.compile(target["id_policy"]["canonical_pattern"])
 
@@ -132,6 +132,8 @@ def test_versioned_json_examples_include_the_required_minimum() -> None:
         assert_required_fields(row, shapes["target_lookup"]["required_row_fields"])
         assert row["href"].startswith("/")
         assert isinstance(row.get("meta", []), list)
+        if "image" in row:
+            assert row["image"]["src"].startswith("https://")
 
     assert usage["schema_version"] == shapes["usage_index"]["schema_version"]
     assert_required_fields(usage, shapes["usage_index"]["required_envelope_fields"])

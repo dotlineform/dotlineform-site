@@ -75,7 +75,7 @@ def write_semantic_token_contract(root: Path) -> None:
     write_json(
         root / "docs-viewer/data/generated/semantic-tokens/target-lookup.json",
         {
-            "schema_version": "docs_semantic_token_target_lookup_v1",
+            "schema_version": "docs_semantic_token_target_lookup_v2",
             "targets": [
                 {
                     "family": "catalogue",
