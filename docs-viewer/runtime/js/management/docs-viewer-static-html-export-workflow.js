@@ -6,7 +6,7 @@ import {
   openDocsViewerConfirmModal
 } from "./docs-viewer-management-modals.js";
 
-const PREVIEW_SCHEMA_VERSION = "docs_static_html_snapshot_preview_v1";
+const PREVIEW_SCHEMA_VERSION = "docs_static_html_snapshot_preview_v2";
 const REVISION_PATTERN = /^[0-9a-f]{64}$/;
 const TARGET_STATES = new Set(["absent", "recognized", "unrecognized", "non_directory"]);
 
@@ -25,6 +25,24 @@ function sameIds(left, right) {
   if (left.length !== right.length) return false;
   var expected = new Set(left);
   return right.every(function (docId) { return expected.has(docId); });
+}
+
+function nonNegativeInteger(value) {
+  return Number.isSafeInteger(value) && value >= 0;
+}
+
+function formatByteCount(value) {
+  var bytes = Number(value || 0);
+  if (bytes < 1024) return bytes + " B";
+  var units = ["KB", "MB", "GB", "TB"];
+  var amount = bytes;
+  var unit = "B";
+  for (var index = 0; index < units.length && amount >= 1024; index += 1) {
+    amount /= 1024;
+    unit = units[index];
+  }
+  var precision = amount >= 10 ? 0 : 1;
+  return amount.toFixed(precision).replace(/\.0$/, "") + " " + unit;
 }
 
 function setBusy(callbacks, busy) {
@@ -64,6 +82,13 @@ export function validateStaticHtmlSnapshotPreview(preview, options = {}) {
   }
   if (Number(payload.document_count) !== previewDocIds.length) {
     throw new Error("Snapshot preview document count is invalid.");
+  }
+  if (
+    !nonNegativeInteger(payload.media_count)
+    || !nonNegativeInteger(payload.media_bytes)
+    || !nonNegativeInteger(payload.external_dependency_count)
+  ) {
+    throw new Error("Snapshot preview media summary is invalid.");
   }
   var selectionKind = String(payload.selection_kind || "");
   if (!["single", "partial", "complete"].includes(selectionKind)) {
@@ -112,7 +137,20 @@ export function staticHtmlSnapshotPreviewCanApply(preview) {
 }
 
 export function buildStaticHtmlSnapshotConfirmationBody(preview) {
-  return [preview.destination_label];
+  var mediaCount = Number(preview.media_count || 0);
+  var externalCount = Number(preview.external_dependency_count || 0);
+  var body = [
+    preview.destination_label,
+    "Includes " + mediaCount + " media file" + (mediaCount === 1 ? "" : "s")
+      + " (" + formatByteCount(preview.media_bytes) + ")."
+  ];
+  if (externalCount > 0) {
+    body.push(
+      "Leaves " + externalCount + " external media reference"
+        + (externalCount === 1 ? "" : "s") + " unchanged."
+    );
+  }
+  return body;
 }
 
 export function staticHtmlSnapshotConfirmationTitle(preview) {

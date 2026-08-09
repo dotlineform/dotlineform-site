@@ -1194,12 +1194,15 @@ def assert_static_snapshot_export_workflow(page: Page) -> None:
             const workflow = await import('/docs-viewer/runtime/js/management/docs-viewer-static-html-export-workflow.js');
             const preview = {
                 ok: true,
-                schema_version: 'docs_static_html_snapshot_preview_v1',
+                schema_version: 'docs_static_html_snapshot_preview_v2',
                 operation: 'preview',
                 dry_run: true,
                 scope: 'studio',
                 doc_ids: ['a', 'b'],
                 document_count: 2,
+                media_count: 2,
+                media_bytes: 1536,
+                external_dependency_count: 1,
                 selection_kind: 'partial',
                 default_doc_id: 'a',
                 export_date: '2026-07-31',
@@ -1313,6 +1316,15 @@ def assert_static_snapshot_export_workflow(page: Page) -> None:
                 );
             } catch (error) {
                 duplicateError = String(error && error.message || '');
+            }
+            let mediaSummaryError = '';
+            try {
+                workflow.validateStaticHtmlSnapshotPreview(
+                    { ...preview, media_count: -1 },
+                    { scope: 'studio', checkedDocIds: ['a', 'b'] }
+                );
+            } catch (error) {
+                mediaSummaryError = String(error && error.message || '');
             }
 
             document.body.innerHTML = `
@@ -1484,6 +1496,7 @@ def assert_static_snapshot_export_workflow(page: Page) -> None:
                     scope: dispatchedOptions && dispatchedOptions.scope
                 },
                 duplicateError,
+                mediaSummaryError,
                 messages,
                 modalFlow: {
                     handled: modalHandled,
@@ -1543,6 +1556,8 @@ def assert_static_snapshot_export_workflow(page: Page) -> None:
         "confirmation": {
             "body": [
                 "/docs-export/studio selection - 2026-07-31/",
+                "Includes 2 media files (1.5 KB).",
+                "Leaves 1 external media reference unchanged.",
             ],
             "primaryDisabled": False,
             "primaryLabel": "Create snapshot",
@@ -1550,6 +1565,7 @@ def assert_static_snapshot_export_workflow(page: Page) -> None:
         },
         "dispatched": {"checkedDocIds": ["a"], "handled": True, "scope": "studio"},
         "duplicateError": "Snapshot preview documents no longer match the checked selection.",
+        "mediaSummaryError": "Snapshot preview media summary is invalid.",
         "messages": [
             ["Preparing dated snapshot…", False],
             ["", False],
@@ -1567,6 +1583,8 @@ def assert_static_snapshot_export_workflow(page: Page) -> None:
             "modalText": [
                 "Export 1 document to:",
                 "/docs-export/studio selection - 2026-07-31/",
+                "Includes 2 media files (1.5 KB).",
+                "Leaves 1 external media reference unchanged.",
                 "Cancel",
                 "Create snapshot",
             ],
@@ -1598,6 +1616,8 @@ def assert_static_snapshot_export_workflow(page: Page) -> None:
         "recognized": {
             "body": [
                 "/docs-export/studio selection - 2026-07-31/",
+                "Includes 2 media files (1.5 KB).",
+                "Leaves 1 external media reference unchanged.",
             ],
             "initialFocus": "cancel",
             "primaryLabel": "Replace",
@@ -1606,6 +1626,8 @@ def assert_static_snapshot_export_workflow(page: Page) -> None:
         "blocked": {
             "body": [
                 "/docs-export/studio selection - 2026-07-31/",
+                "Includes 2 media files (1.5 KB).",
+                "Leaves 1 external media reference unchanged.",
             ],
             "primaryDisabled": True,
             "primaryLabel": "Unavailable",
@@ -1613,6 +1635,8 @@ def assert_static_snapshot_export_workflow(page: Page) -> None:
         "unrecognized": {
             "body": [
                 "/docs-export/studio selection - 2026-07-31/",
+                "Includes 2 media files (1.5 KB).",
+                "Leaves 1 external media reference unchanged.",
             ],
             "primaryLabel": "Replace",
         },

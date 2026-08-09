@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import sys
@@ -10,6 +11,8 @@ import tempfile
 from datetime import date
 from pathlib import Path
 from unittest.mock import patch
+
+import pytest
 
 from repo_factory import docs_scope_record
 
@@ -305,6 +308,11 @@ def test_snapshot_preview_reports_absent_recognized_unrecognized_and_non_directo
                 "doc_ids": ["parent"],
                 "selection_kind": "single",
                 "document_count": 1,
+                "media_count": 0,
+                "media_bytes": 0,
+                "media": [],
+                "external_dependency_count": 0,
+                "external_dependencies": [],
                 "generated_at": "2026-07-31T12:00:00+01:00",
             },
         )
@@ -318,6 +326,9 @@ def test_snapshot_preview_reports_absent_recognized_unrecognized_and_non_directo
         assert recognized["existing_snapshot"]["scope"] == "studio"
         assert recognized["existing_snapshot"]["selection_kind"] == "single"
         assert recognized["existing_snapshot"]["document_count"] == 1
+        assert recognized["existing_snapshot"]["media_count"] == 0
+        assert recognized["existing_snapshot"]["media_bytes"] == 0
+        assert recognized["existing_snapshot"]["external_dependency_count"] == 0
         assert recognized["existing_snapshot"]["generated_at"] == "2026-07-31T12:00:00+01:00"
         assert len(recognized["existing_snapshot"]["selection_revision"]) == 64
         first_target_revision = recognized["target_revision"]
@@ -379,6 +390,26 @@ def test_snapshot_preview_reports_absent_recognized_unrecognized_and_non_directo
         )
         assert symlink["target_state"] == "non_directory"
         assert symlink["replace_allowed"] is False
+
+        version_one_root = projects_root / "docs-export/studio selection - 2026-07-28"
+        write_json(
+            version_one_root / exporter.SNAPSHOT_PROVENANCE_FILENAME,
+            {
+                "schema_version": "docs_static_html_snapshot_v1",
+                "scope": "studio",
+                "doc_ids": ["parent"],
+                "selection_kind": "single",
+                "document_count": 1,
+                "generated_at": "2026-07-31T12:00:00+01:00",
+            },
+        )
+        version_one = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=date(2026, 7, 28),
+        )
+        assert version_one["target_state"] == "unrecognized"
+        assert version_one["replacement_required"] is True
 
 
 def test_snapshot_link_rewriting_only_localizes_included_documents() -> None:
@@ -544,11 +575,121 @@ def test_snapshot_apply_creates_exact_partial_artifact_with_provenance() -> None
             "doc_ids": ["child", "sibling"],
             "selection_kind": "partial",
             "document_count": 2,
+            "media_count": 0,
+            "media_bytes": 0,
+            "media": [],
+            "external_dependency_count": 0,
+            "external_dependencies": [],
             "default_doc_id": "child",
             "export_date": "2026-07-31",
             "generated_at": payload["generated_at"],
             "plan_revision": preview["plan_revision"],
         }
+
+
+def test_snapshot_packages_only_selected_owned_media_and_records_external_dependencies() -> None:
+    with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
+        repo_root = Path(repo_path)
+        projects_root = Path(projects_path)
+        prepare_repo(repo_root, projects_root)
+        media_root = repo_root / "docs-viewer/scopes/studio/published/media/img"
+        media_root.mkdir(parents=True)
+        (media_root / "photo one.png").write_bytes(b"photo")
+        (media_root / "unchecked.png").write_bytes(b"unchecked")
+        parent_payload_path = repo_root / "docs-viewer/scopes/studio/published/documents/by-id/parent.json"
+        parent_payload = json.loads(parent_payload_path.read_text(encoding="utf-8"))
+        parent_payload["content_html"] = (
+            '<p><img src="/docs/media/studio/img/photo%20one.png?cache=1#view">'
+            '<img src="images/external.png?cache=2"></p>'
+        )
+        write_json(parent_payload_path, parent_payload)
+        sibling_payload_path = repo_root / "docs-viewer/scopes/studio/published/documents/by-id/sibling.json"
+        sibling_payload = json.loads(sibling_payload_path.read_text(encoding="utf-8"))
+        sibling_payload["content_html"] = '<img src="/docs/media/studio/img/unchecked.png">'
+        write_json(sibling_payload_path, sibling_payload)
+
+        preview = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+
+        assert preview["schema_version"] == "docs_static_html_snapshot_preview_v2"
+        assert preview["media_count"] == 1
+        assert preview["media_bytes"] == 5
+        assert preview["external_dependency_count"] == 1
+        payload = exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(preview))
+        destination = projects_root / "docs-export/studio selection - 2026-07-31"
+        assert payload["media_count"] == 1
+        assert payload["media_bytes"] == 5
+        assert payload["external_dependency_count"] == 1
+        assert payload["file_count"] == 5
+        assert (destination / "media/img/photo one.png").read_bytes() == b"photo"
+        assert not (destination / "media/img/unchecked.png").exists()
+        document_html = (destination / "docs/parent.html").read_text(encoding="utf-8")
+        assert 'src="../media/img/photo%20one.png#view"' in document_html
+        assert 'src="images/external.png?cache=2"' in document_html
+        provenance = json.loads((destination / exporter.SNAPSHOT_PROVENANCE_FILENAME).read_text(encoding="utf-8"))
+        assert provenance["media"] == [
+            {
+                "media_type": "img",
+                "identity": "photo one.png",
+                "provider": "repository",
+                "packaged_path": "media/img/photo one.png",
+                "size": 5,
+                "sha256": hashlib.sha256(b"photo").hexdigest(),
+                "doc_ids": ["parent"],
+            }
+        ]
+        assert provenance["external_dependencies"] == [
+            {
+                "reference": "images/external.png",
+                "element": "img",
+                "attribute": "src",
+                "doc_ids": ["parent"],
+            }
+        ]
+
+
+def test_snapshot_plan_revision_detects_body_and_media_byte_changes() -> None:
+    with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
+        repo_root = Path(repo_path)
+        prepare_repo(repo_root, Path(projects_path))
+        payload_path = repo_root / "docs-viewer/scopes/studio/published/documents/by-id/parent.json"
+        first = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        payload = json.loads(payload_path.read_text(encoding="utf-8"))
+        payload["content_html"] = "<p>Changed body without a title change.</p>"
+        write_json(payload_path, payload)
+        body_changed = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        assert body_changed["plan_revision"] != first["plan_revision"]
+
+        media_path = repo_root / "docs-viewer/scopes/studio/published/media/img/photo.png"
+        media_path.parent.mkdir(parents=True)
+        media_path.write_bytes(b"first")
+        payload["content_html"] = '<img src="/docs/media/studio/img/photo.png">'
+        write_json(payload_path, payload)
+        media_first = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        media_path.write_bytes(b"second")
+        media_changed = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        assert media_changed["plan_revision"] != media_first["plan_revision"]
+        with pytest.raises(exporter.StaticHtmlSnapshotApplyConflict, match="plan changed"):
+            exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(media_first))
 
 
 def test_output_path_validation_requires_projects_export_root() -> None:
@@ -918,6 +1059,9 @@ def test_management_preview_route_returns_write_free_browser_safe_plan() -> None
         assert payload["operation"] == "preview"
         assert payload["dry_run"] is True
         assert payload["doc_ids"] == ["child", "sibling"]
+        assert payload["media_count"] == 0
+        assert payload["media_bytes"] == 0
+        assert payload["external_dependency_count"] == 0
         assert payload["selection_kind"] == "partial"
         assert payload["destination_label"].startswith("/docs-export/studio selection - ")
         assert "destination" not in payload

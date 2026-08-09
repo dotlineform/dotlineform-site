@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-da29fd535ac50f585469159462e3e490",
-    "generated_at_utc": "2026-08-09T09:49:02Z",
+    "version": "blake2b-69ce0814d626f05bb7fa47da3a7b6870",
+    "generated_at_utc": "2026-08-09T10:29:48Z",
     "count": 295
   },
   "entries": [
@@ -4110,10 +4110,10 @@
       "kind": "doc",
       "title": "DXM-1 — Packaged Media In Dated Export Delivery",
       "href": "/docs/?scope=studio&doc=d-20260809-103047-b7d8c8",
-      "last_updated": "2026-08-09 10:47:19",
+      "last_updated": "2026-08-09 11:29:22",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-09 10:47:19 • Roadmap",
+      "display_meta": "2026-08-09 11:29:22 • Roadmap",
       "search_terms": [
         "dxm-1 — packaged media in dated export delivery",
         "dxm",
@@ -4125,16 +4125,16 @@
         "export",
         "delivery",
         "roadmap",
-        "2026-08-09 10:47:19",
+        "2026-08-09 11:29:22",
         "2026",
         "08",
         "09",
-        "10",
-        "47",
-        "19",
+        "11",
+        "29",
+        "22",
         "d-20260809-103047-b7d8c8"
       ],
-      "search_text": "dxm-1 — packaged media in dated export delivery dxm 1 packaged media in dated export delivery roadmap 2026-08-09 10:47:19 2026 08 09 10 47 19 d-20260809-103047-b7d8c8"
+      "search_text": "dxm-1 — packaged media in dated export delivery dxm 1 packaged media in dated export delivery roadmap 2026-08-09 11:29:22 2026 08 09 11 29 22 d-20260809-103047-b7d8c8"
     },
     {
       "id": "d-20260808-205414-91040a",

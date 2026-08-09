@@ -20,6 +20,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, urlsplit
 
+from docs_static_html_export_media import SnapshotMediaPlan, plan_snapshot_media
 from docs_scope_config import (
     DocsScopeConfig,
     load_docs_scope_configs,
@@ -32,9 +33,9 @@ from studio.shared.python.external_workspace_paths import (
 )
 
 
-SNAPSHOT_SCHEMA_VERSION = "docs_static_html_snapshot_v1"
-SNAPSHOT_PREVIEW_SCHEMA_VERSION = "docs_static_html_snapshot_preview_v1"
-SNAPSHOT_APPLY_SCHEMA_VERSION = "docs_static_html_snapshot_apply_v1"
+SNAPSHOT_SCHEMA_VERSION = "docs_static_html_snapshot_v2"
+SNAPSHOT_PREVIEW_SCHEMA_VERSION = "docs_static_html_snapshot_preview_v2"
+SNAPSHOT_APPLY_SCHEMA_VERSION = "docs_static_html_snapshot_apply_v2"
 SNAPSHOT_PROVENANCE_FILENAME = "snapshot.json"
 SAFE_DOC_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9_-]*\Z")
 REVISION_PATTERN = re.compile(r"\A[0-9a-f]{64}\Z")
@@ -68,6 +69,7 @@ class StaticHtmlSnapshotPlan:
     destination_label: str
     index_tree: dict[str, Any]
     doc_payloads: dict[str, dict[str, Any]]
+    media_plan: SnapshotMediaPlan
     plan_revision: str
     target_state: str
     target_revision: str
@@ -390,12 +392,69 @@ def load_existing_snapshot_summary(destination_root: Path) -> dict[str, Any] | N
         generated_time = datetime.fromisoformat(generated_at)
         if generated_time.tzinfo is None or generated_time.utcoffset() is None:
             return None
+        media = payload.get("media")
+        external_dependencies = payload.get("external_dependencies")
+        if not isinstance(media, list) or not isinstance(external_dependencies, list):
+            return None
+        media_count = payload.get("media_count")
+        media_bytes = payload.get("media_bytes")
+        external_dependency_count = payload.get("external_dependency_count")
+        if (
+            isinstance(media_count, bool)
+            or not isinstance(media_count, int)
+            or media_count != len(media)
+            or isinstance(media_bytes, bool)
+            or not isinstance(media_bytes, int)
+            or media_bytes < 0
+            or isinstance(external_dependency_count, bool)
+            or not isinstance(external_dependency_count, int)
+            or external_dependency_count != len(external_dependencies)
+        ):
+            return None
+        media_sizes: list[int] = []
+        selected_doc_ids = list(doc_ids)
+        for item in media:
+            if not isinstance(item, dict):
+                return None
+            media_type = str(item.get("media_type") or "")
+            identity = str(item.get("identity") or "")
+            packaged_path = Path(str(item.get("packaged_path") or ""))
+            item_size = item.get("size")
+            if (
+                not SAFE_DOC_ID_PATTERN.fullmatch(media_type)
+                or not identity
+                or Path(identity).is_absolute()
+                or ".." in Path(identity).parts
+                or packaged_path != Path("media") / media_type / identity
+                or not str(item.get("provider") or "").strip()
+                or isinstance(item_size, bool)
+                or not isinstance(item_size, int)
+                or item_size < 0
+                or not REVISION_PATTERN.fullmatch(str(item.get("sha256") or ""))
+            ):
+                return None
+            normalize_snapshot_doc_ids(item.get("doc_ids"), selected_doc_ids)
+            media_sizes.append(item_size)
+        if media_bytes != sum(media_sizes):
+            return None
+        for item in external_dependencies:
+            if (
+                not isinstance(item, dict)
+                or not str(item.get("reference") or "").strip()
+                or not str(item.get("element") or "").strip()
+                or not str(item.get("attribute") or "").strip()
+            ):
+                return None
+            normalize_snapshot_doc_ids(item.get("doc_ids"), selected_doc_ids)
     except (OSError, ValueError, json.JSONDecodeError, TypeError):
         return None
     return {
         "scope": scope,
         "selection_kind": selection_kind,
         "document_count": len(doc_ids),
+        "media_count": media_count,
+        "media_bytes": media_bytes,
+        "external_dependency_count": external_dependency_count,
         "generated_at": generated_at,
         "selection_revision": _revision({"scope": scope, "doc_ids": doc_ids}),
     }
@@ -434,6 +493,7 @@ def _snapshot_plan_revision(
     default_doc_id: str,
     index_tree: dict[str, Any],
     doc_payloads: dict[str, dict[str, Any]],
+    media_plan: SnapshotMediaPlan,
 ) -> str:
     return _revision(
         {
@@ -444,6 +504,12 @@ def _snapshot_plan_revision(
             "default_doc_id": default_doc_id,
             "tree": index_tree.get("docs", []),
             "titles": {doc_id: str(doc_payloads[doc_id].get("title") or doc_id) for doc_id in doc_ids},
+            "content_sha256": {
+                doc_id: hashlib.sha256(str(doc_payloads[doc_id].get("content_html") or "").encode("utf-8")).hexdigest()
+                for doc_id in doc_ids
+            },
+            "media": media_plan.manifest_records(),
+            "external_dependencies": media_plan.external_dependency_records(),
         }
     )
 
@@ -471,6 +537,7 @@ def plan_static_html_snapshot(
     except FileNotFoundError as exc:
         raise FileNotFoundError(f"selected document payload not found for scope {scope}") from exc
     included_doc_ids = set(doc_ids)
+    media_plan = plan_snapshot_media(repo_root, config, doc_payloads)
     selected_tree = {**index_tree, "docs": filter_index_tree_rows(index_tree.get("docs"), included_doc_ids)}
     selection_kind = snapshot_selection_kind(doc_ids, available_doc_ids)
     selected_date = export_date or datetime.now().astimezone().date()
@@ -496,6 +563,7 @@ def plan_static_html_snapshot(
         default_doc_id=default_doc_id,
         index_tree=selected_tree,
         doc_payloads=doc_payloads,
+        media_plan=media_plan,
     )
     return StaticHtmlSnapshotPlan(
         scope=scope,
@@ -508,6 +576,7 @@ def plan_static_html_snapshot(
         destination_label=destination_label_value,
         index_tree=selected_tree,
         doc_payloads=doc_payloads,
+        media_plan=media_plan,
         plan_revision=plan_revision,
         target_state=target_state,
         target_revision=target_revision,
@@ -531,6 +600,9 @@ def preview_static_html_export(
         "scope": plan.scope,
         "doc_ids": list(plan.doc_ids),
         "document_count": len(plan.doc_ids),
+        "media_count": len(plan.media_plan.items),
+        "media_bytes": plan.media_plan.media_bytes,
+        "external_dependency_count": len(plan.media_plan.external_dependencies),
         "selection_kind": plan.selection_kind,
         "default_doc_id": plan.default_doc_id,
         "export_date": plan.export_date,
@@ -708,10 +780,15 @@ def render_doc_html(
     *,
     scope: str,
     included_doc_ids: set[str] | None = None,
+    content_html_override: str | None = None,
 ) -> str:
     doc_id = validate_doc_id_for_html_filename(str(payload.get("doc_id") or ""))
     title = str(payload.get("title") or doc_id).strip() or doc_id
-    content_html = str(payload.get("content_html") or "")
+    content_html = (
+        str(payload.get("content_html") or "")
+        if content_html_override is None
+        else content_html_override
+    )
     content_html = rewrite_internal_docs_viewer_links(
         content_html,
         scope=scope,
@@ -747,6 +824,11 @@ def snapshot_provenance(plan: StaticHtmlSnapshotPlan, *, generated_at: str) -> d
         "doc_ids": list(plan.doc_ids),
         "selection_kind": plan.selection_kind,
         "document_count": len(plan.doc_ids),
+        "media_count": len(plan.media_plan.items),
+        "media_bytes": plan.media_plan.media_bytes,
+        "media": plan.media_plan.manifest_records(),
+        "external_dependency_count": len(plan.media_plan.external_dependencies),
+        "external_dependencies": plan.media_plan.external_dependency_records(),
         "default_doc_id": plan.default_doc_id,
         "export_date": plan.export_date,
         "generated_at": generated_at,
@@ -773,7 +855,10 @@ def compute_snapshot_files(plan: StaticHtmlSnapshotPlan, *, generated_at: str) -
             plan.doc_payloads[doc_id],
             scope=plan.scope,
             included_doc_ids=included_doc_ids,
+            content_html_override=plan.media_plan.rewritten_html_by_doc[doc_id],
         ).encode("utf-8")
+    for item in plan.media_plan.items:
+        files[item.packaged_path] = item.data
     return files
 
 
@@ -953,6 +1038,9 @@ def apply_static_html_snapshot(repo_root: Path, body: dict[str, Any]) -> dict[st
         "scope": plan.scope,
         "doc_ids": list(plan.doc_ids),
         "document_count": len(plan.doc_ids),
+        "media_count": len(plan.media_plan.items),
+        "media_bytes": plan.media_plan.media_bytes,
+        "external_dependency_count": len(plan.media_plan.external_dependencies),
         "file_count": len(files),
         "selection_kind": plan.selection_kind,
         "default_doc_id": plan.default_doc_id,
