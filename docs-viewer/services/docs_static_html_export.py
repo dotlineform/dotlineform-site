@@ -203,7 +203,7 @@ def load_doc_payload(payload_root: Path, doc_id: str) -> dict[str, Any]:
     payload_doc_id = str(payload.get("doc_id") or safe_doc_id).strip()
     if payload_doc_id != safe_doc_id:
         raise ValueError(f"doc payload id mismatch for {safe_doc_id}: {payload_doc_id}")
-    return payload
+    return {**payload, "doc_id": safe_doc_id}
 
 
 def normalize_snapshot_doc_ids(value: Any, available_doc_ids: list[str]) -> tuple[str, ...]:

@@ -129,6 +129,10 @@ def prepare_repo(root: Path, projects_root: Path) -> None:
         [{"doc_id": "library", "title": "Library"}],
         [{"doc_id": "library", "title": "Library", "content_html": "<p>Library body</p>"}],
     )
+    write_json(
+        root / "docs-viewer/scopes/library/published/documents/by-id/library.json",
+        {"title": "Library", "content_html": "<p>Library body</p>"},
+    )
     write_generated_scope(
         projects_root / "docs-viewer/scopes/external/published/documents",
         [{"doc_id": "external", "title": "External"}],
@@ -223,7 +227,7 @@ def test_snapshot_preview_rejects_invalid_or_inferred_selection_fields() -> None
                 raise AssertionError(f"invalid snapshot request should fail: {body!r}")
 
 
-def test_snapshot_preview_reads_repo_public_and_external_local_generated_payloads() -> None:
+def test_snapshot_plans_and_renders_repo_public_and_external_local_generated_payloads() -> None:
     with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
         repo_root = Path(repo_path)
         prepare_repo(repo_root, Path(projects_path))
@@ -241,6 +245,8 @@ def test_snapshot_preview_reads_repo_public_and_external_local_generated_payload
             assert plan.scope == scope
             assert plan.doc_ids == (doc_id,)
             assert plan.folder_name == folder_name
+            files = exporter.compute_snapshot_files(plan, generated_at="2026-07-31T12:00:00+01:00")
+            assert Path("docs") / f"{doc_id}.html" in files
 
 
 def test_snapshot_capability_accepts_readable_repo_public_and_external_generated_payloads() -> None:
@@ -409,12 +415,17 @@ def test_snapshot_preview_missing_payload_error_omits_filesystem_path() -> None:
             raise AssertionError("missing selected payload should fail")
 
 
-def test_load_doc_payload_and_reject_unsafe_doc_id() -> None:
+def test_load_doc_payload_normalizes_filename_identity_and_rejects_unsafe_doc_id() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         write_json(root / "by-id/valid-doc.json", {"doc_id": "valid-doc", "title": "Valid"})
+        write_json(root / "by-id/public-doc.json", {"title": "Public"})
 
         assert exporter.load_doc_payload(root / "by-id", "valid-doc")["title"] == "Valid"
+        assert exporter.load_doc_payload(root / "by-id", "public-doc") == {
+            "doc_id": "public-doc",
+            "title": "Public",
+        }
         try:
             exporter.load_doc_payload(root / "by-id", "../escape")
         except ValueError as exc:
