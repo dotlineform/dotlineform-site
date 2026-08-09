@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>I Ching × QRNG — Processing App (v2)</title>
+<style>
+  body{font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.6;color:#111;margin:0}
+  header{background:#f6f7f9;border-bottom:1px solid #e6e8eb;padding:16px 20px}
+  main{max-width:900px;margin:0 auto;padding:24px} h1,h2,h3{line-height:1.25} code{background:#f1f4f8;padding:2px 4px;border-radius:4px}
+  .kbd{background:#111;color:#fff;padding:2px 6px;border-radius:4px;font-family:ui-monospace,Menlo,Consolas,monospace}
+  .tips{background:#fafbfc;border:1px solid #e6e8eb;border-radius:12px;padding:12px}
+  a{color:#0b5fff;text-decoration:none} a:hover{text-decoration:underline}
+</style></head>
+<body>
+<header><h1>I Ching × QRNG — Processing App (v2)</h1><p>Exported: 2025-09-25 14:44:51 BST</p></header>
+<main>
+  <h2>What’s new in v2</h2>
+  <ul>
+    <li><strong>Tibetan <em>mo</em> mode</strong> — press <span class="kbd">M</span> to toggle between <em>I Ching</em> and <em>mo</em>. QRNG generates two independent 1–6 samples to preserve the natural 2–12 bell curve.</li>
+    <li><strong>Logging</strong> — press <span class="kbd">L</span> to toggle logging. When on, each cast is saved to <code>data/log.csv</code> (timestamp, mode, question, hexagram/mo result, changing lines, source).</li>
+    <li><strong>Question prompt</strong> — press <span class="kbd">Q</span> to enter an optional question; it’s stamped into the next logged record.</li>
+  </ul>
+
+  <h2>Controls</h2>
+  <p><span class="kbd">SPACE</span> new cast • <span class="kbd">R</span> auto-refresh • <span class="kbd">S</span> screenshot • <span class="kbd">M</span> I Ching/mo • <span class="kbd">L</span> logging • <span class="kbd">Q</span> set question</p>
+
+  <div class="tips">
+    <p><strong>QRNG mapping (I Ching):</strong> uses 3 bits per line (000→6, 111→9, one‑hot→7, two‑hot→8) to match the 3‑coin probabilities (1/8, 3/8, 3/8, 1/8).</p>
+    <p><strong>QRNG mapping (mo):</strong> samples two independent 1–6 values; sum → 2–12 with natural dice probabilities. Manual lookup is up to your chosen lineage table.</p>
+    <p><strong>Online/offline:</strong> If the ANU QRNG API is unreachable, the app falls back to PRNG and marks the source in the UI and log.</p>
+  </div>
+
+  <h2>Citations</h2>
+  <ul>
+    <li><strong>ANU QRNG JSON API:</strong> endpoints & docs. <a href="https://qrng.anu.edu.au/contact/api-documentation/">API docs</a>; <a href="https://quantumnumbers.anu.edu.au/documentation">Quantum Numbers docs</a>. citeturn0search0turn0search4</li>
+    <li><strong>Yijing structure/method:</strong> 64 hexagrams; coin/yarrow casting; changing lines. <a href="https://www.britannica.com/topic/Yijing">Encyclopaedia Britannica — Yijing</a>. citeturn0search2</li>
+    <li><strong>Dice distributions/2d6 curve:</strong> standard probability of two six‑sided dice. (Common textbook knowledge.)</li>
+  </ul>
+</main></body></html>

@@ -1,0 +1,210 @@
+\
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+		000000000000000000002000 /* VideoBlendGUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000001000 /* VideoBlendGUIApp.swift */; };
+		000000000000000000002001 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000001001 /* ContentView.swift */; };
+		000000000000000000002002 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000001002 /* Models.swift */; };
+		000000000000000000002003 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000001003 /* Settings.swift */; };
+		000000000000000000002004 /* BlendViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000001004 /* BlendViewModel.swift */; };
+		000000000000000000002005 /* FFmpegCommandBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000001005 /* FFmpegCommandBuilder.swift */; };
+		000000000000000000002006 /* ProbeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000001006 /* ProbeService.swift */; };
+		000000000000000000002007 /* ColorTokenMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000001007 /* ColorTokenMapper.swift */; };
+		000000000000000000002009 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 000000000000000000001009 /* Assets.xcassets */; };
+
+		000000000000000000001000 /* VideoBlendGUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = VideoBlendGUIApp.swift; path = VideoBlendGUIApp.swift; sourceTree = <group>; };
+		000000000000000000001001 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContentView.swift; path = ContentView.swift; sourceTree = <group>; };
+		000000000000000000001002 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Models.swift; path = Models.swift; sourceTree = <group>; };
+		000000000000000000001003 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Settings.swift; path = Settings.swift; sourceTree = <group>; };
+		000000000000000000001004 /* BlendViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BlendViewModel.swift; path = BlendViewModel.swift; sourceTree = <group>; };
+		000000000000000000001005 /* FFmpegCommandBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FFmpegCommandBuilder.swift; path = FFmpegCommandBuilder.swift; sourceTree = <group>; };
+		000000000000000000001006 /* ProbeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ProbeService.swift; path = ProbeService.swift; sourceTree = <group>; };
+		000000000000000000001007 /* ColorTokenMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ColorTokenMapper.swift; path = ColorTokenMapper.swift; sourceTree = <group>; };
+		000000000000000000001008 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = Info.plist; sourceTree = <group>; };
+		000000000000000000001009 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Assets.xcassets; sourceTree = <group>; };
+
+
+		000000000000000000003000 /* VideoBlendGUI */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000001000 /* VideoBlendGUIApp.swift */,
+				000000000000000000001001 /* ContentView.swift */,
+				000000000000000000001002 /* Models.swift */,
+				000000000000000000001003 /* Settings.swift */,
+				000000000000000000001004 /* BlendViewModel.swift */,
+				000000000000000000001005 /* FFmpegCommandBuilder.swift */,
+				000000000000000000001006 /* ProbeService.swift */,
+				000000000000000000001007 /* ColorTokenMapper.swift */,
+				000000000000000000001008 /* Info.plist */,
+				000000000000000000001009 /* Assets.xcassets */,
+			);
+			path = VideoBlendGUI;
+			sourceTree = "<group>";
+		};
+		000000000000000000003001 = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000003000 /* VideoBlendGUI */,
+			);
+			sourceTree = "<group>";
+		};
+		000000000000000000008000 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				000000000000000000002000 /* VideoBlendGUIApp.swift in Sources */,
+				000000000000000000002001 /* ContentView.swift in Sources */,
+				000000000000000000002002 /* Models.swift in Sources */,
+				000000000000000000002003 /* Settings.swift in Sources */,
+				000000000000000000002004 /* BlendViewModel.swift in Sources */,
+				000000000000000000002005 /* FFmpegCommandBuilder.swift in Sources */,
+				000000000000000000002006 /* ProbeService.swift in Sources */,
+				000000000000000000002007 /* ColorTokenMapper.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		000000000000000000008001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		000000000000000000008002 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				000000000000000000002009 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		000000000000000000004000 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1510;
+				LastUpgradeCheck = 1510;
+				TargetAttributes = {
+					000000000000000000005000 = {
+						CreatedOnToolsVersion = 15.1;
+					};
+				};
+			};
+			buildConfigurationList = 000000000000000000007000 /* Build configuration list for PBXProject "VideoBlendGUI" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 000000000000000000003001;
+			productRefGroup = 000000000000000000003000 /* VideoBlendGUI */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				000000000000000000005000 /* VideoBlendGUI */,
+			);
+		};
+		000000000000000000005000 /* VideoBlendGUI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 00000000000000000000B000 /* Build configuration list for PBXNativeTarget "VideoBlendGUI" */;
+			buildPhases = (
+				000000000000000000008000 /* Sources */,
+				000000000000000000008001 /* Frameworks */,
+				000000000000000000008002 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = VideoBlendGUI;
+			productName = VideoBlendGUI;
+			productReference = 000000000000000000009000 /* VideoBlendGUI.app */;
+			productType = "com.apple.product-type.application";
+		};
+		000000000000000000009000 /* VideoBlendGUI.app */ = {
+			isa = PBXFileReference;
+			explicitFileType = wrapper.application;
+			path = VideoBlendGUI.app;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		00000000000000000000B000 /* Build configuration list for PBXNativeTarget "VideoBlendGUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				000000000000000000006001 /* Debug */,
+				000000000000000000006000 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		000000000000000000007000 /* Build configuration list for PBXProject "VideoBlendGUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				00000000000000000000A000 /* Debug */,
+				00000000000000000000A001 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		000000000000000000006001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = VideoBlendGUI/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.VideoBlendGUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				ENABLE_HARDENED_RUNTIME = YES;
+			};
+			name = Debug;
+		};
+		000000000000000000006000 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = VideoBlendGUI/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.VideoBlendGUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				ENABLE_HARDENED_RUNTIME = YES;
+			};
+			name = Release;
+		};
+		00000000000000000000A000 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		00000000000000000000A001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+	};
+	rootObject = 000000000000000000004000 /* Project object */;
+}

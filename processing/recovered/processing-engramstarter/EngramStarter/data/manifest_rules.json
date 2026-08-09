@@ -1,0 +1,36 @@
+{
+  "version": "1.0",
+  "defaults": {
+    "targetWidth": 1920,
+    "targetHeight": 1080,
+    "strategy": "SEQUENTIAL",
+    "rngSeed": 12345
+  },
+  "runs": [
+    {
+      "filename": "engrams_output.png",
+      "group": "month_2025_09",
+      "paletteId": "default",
+      "modeStack": [
+        "MULTIPLY",
+        "SCREEN",
+        "ADD"
+      ],
+      "opacityStack": [
+        0.6,
+        0.5,
+        0.4
+      ],
+      "weightStack": [
+        1,
+        1,
+        1
+      ],
+      "maskSubset": [
+        "edges",
+        "interestPoints"
+      ],
+      "notes": "example run"
+    }
+  ]
+}

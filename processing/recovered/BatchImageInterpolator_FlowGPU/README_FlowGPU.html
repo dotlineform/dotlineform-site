@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Batch Image Interpolator — GPU Flow Warper</title>
+<style>
+  body { font: 16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","Roboto"; padding: 28px; }
+  pre { background:#0b1021; color:#f1f5ff; padding:14px 16px; border-radius:10px; overflow:auto; }
+  .note { color:#555; }
+  .block { background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;padding:12px 14px; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:13px; }
+  .code { font-family:ui-monospace,Menlo,Consolas,monospace; }
+</style>
+</head><body>
+<h1>Batch Image Interpolator — GPU Flow Warper</h1>
+<div class="block"><strong>Prepared</strong> — <em>2025-09-02 15:57:37 (Europe/London)</em><br>
+<code>Computes/caches optical flow (CPU), packs to RG flow texture, warps on GPU (GLSL) per frame.</code></div>
+
+<ol>
+  <li>Place ordered images in <span class="code">input/</span>.</li>
+  <li>Adjust <span class="code">QUICK CONFIG</span> in <span class="code">BatchImageInterpolator_FlowGPU.pde</span>.</li>
+  <li>Run. Frames in <span class="code">out/</span>; flows cached in <span class="code">out/flows/</span>.</li>
+</ol>
+
+<h2>Why GPU?</h2>
+<ul>
+  <li>CPU computes flow once per pair; GPU does all per-frame warps and blending.</li>
+  <li>Flow packed into an 8-bit RG texture; decoded in shader with a per-pair scale.</li>
+  <li>Gamma-correct + premultiplied alpha blending in the shader.</li>
+</ul>
+
+<h2>FFmpeg</h2>
+<pre>ffmpeg -r 25 -i out/frame%06d.png -c:v libx264 -crf 18 -preset medium -pix_fmt yuv420p slow_morph_gpu_25fps.mp4</pre>
+
+<h2>Notes</h2>
+<ul>
+  <li>We disable mipmaps for the flow texture to avoid sampling artifacts.</li>
+  <li>The flow scale is computed per pair (max |u| or |v| in pixels) and passed as a uniform.</li>
+  <li>If you want higher precision flow textures, switch to OpenGL float textures; this 8-bit RG pack is usually sufficient.</li>
+</ul>
+</body></html>

@@ -1,0 +1,41 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build (xcodebuild)",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/build.sh",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "group": "build"
+    },
+    {
+      "label": "Run .app",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/run.sh",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "dependsOn": [
+        "Build (xcodebuild)"
+      ]
+    },
+    {
+      "label": "Clean (DerivedData)",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/clean.sh",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "Open in Xcode",
+      "type": "shell",
+      "command": "open ${workspaceFolder}/VideoBlendGUI.xcodeproj"
+    }
+  ]
+}

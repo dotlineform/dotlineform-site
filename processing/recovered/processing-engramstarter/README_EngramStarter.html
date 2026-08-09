@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Engram Starter — Processing</title>
+<style>body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif;padding:24px;max-width:900px;margin:auto;background:#0b0f14;color:#e6edf3}.prompt{white-space:pre-wrap;background:#111827;border:1px solid #1f2937;border-radius:10px;padding:12px;color:#9fb0c0}a{color:#9bd1ff}</style>
+</head><body>
+<div class="prompt">[Prompt @ 2025-09-10 19:01:39 UTC+01:00]
+User: "Generate a Processing starter sketch implementing Substrate/Emergence/Experience with empty methods and parameter structs, plus manifest CSV/JSON templates."</div>
+<h1>Engram Starter — Processing</h1>
+<p>This starter kit scaffolds a deterministic, batch‑oriented Processing workflow aligned to Substrate · Emergence · Experience. It includes PDE classes, a main sketch, and CSV/JSON manifest templates.</p>
+<h2>Structure</h2>
+<ul>
+  <li><code>EngramStarter/EngramStarter.pde</code> — main entry (static render, <em>noLoop</em> default)</li>
+  <li><code>EngramStarter/Substrate.pde</code></li>
+  <li><code>EngramStarter/Emergence.pde</code></li>
+  <li><code>EngramStarter/Experience.pde</code></li>
+  <li><code>EngramStarter/Params.pde</code></li>
+  <li><code>EngramStarter/data/manifest_rules.csv</code>, <code>manifest_rules.json</code></li>
+</ul>
+<h2>Notes</h2>
+<ol>
+  <li>Static renderer: uses <em>noLoop()</em> so <code>draw()</code> runs once. Use <em>loop()</em> to iterate or export multiple frames.</li>
+  <li>Use <em>settings()</em> when size is parameterized. The starter uses <code>size(1920,1080,P2D)</code> by default.</li>
+  <li>CSV manifests follow common conventions; JSON manifests are read via Processing’s JSON API.</li>
+</ol>
+<h2>Citations (docs)</h2>
+<ul>
+  <li>Processing JSON API: <a href="https://processing.org/reference/JSONObject.html">JSONObject</a>, <a href="https://processing.org/reference/loadJSONObject_.html">loadJSONObject()</a></li>
+  <li>Processing tabular data: <a href="https://processing.org/reference/loadTable_.html">loadTable()</a>, example: <a href="https://processing.org/examples/loadsavetable.html">Loading Tabular Data</a></li>
+  <li>Sketch flow control: <a href="https://processing.org/reference/noLoop_.html">noLoop()</a> and example: <a href="https://processing.org/examples/noloop.html">No Loop</a></li>
+  <li>Core context: <a href="https://processing.github.io/processing-javadocs/core/processing/core/PApplet.html">PApplet javadoc</a>; window sizing: <a href="https://processing.org/reference/size_.html">size()</a></li>
+  <li>CSV format reference: <a href="https://www.rfc-editor.org/info/rfc4180">RFC 4180</a></li>
+</ul>
+</body></html>

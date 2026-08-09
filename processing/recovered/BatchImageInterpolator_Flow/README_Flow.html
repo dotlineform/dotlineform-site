@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Batch Image Interpolator — Optical Flow (HS) with Cache</title>
+<style>
+  body { font: 16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","Roboto"; padding: 28px; }
+  pre { background:#0b1021; color:#f1f5ff; padding:14px 16px; border-radius:10px; overflow:auto; }
+  .note { color:#555; }
+  .block { background:#f5f5f7;border:1px solid #e5e5ea;border-radius:8px;padding:12px 14px; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:13px; }
+  .code { font-family:ui-monospace,Menlo,Consolas,monospace; }
+</style>
+</head><body>
+<h1>Batch Image Interpolator — Optical Flow (Horn–Schunck) with Per‑Pair Cache</h1>
+<div class="block"><strong>Prepared</strong> — <em>2025-09-02 15:50:52 (Europe/London)</em><br>
+<code>Drop-in replacement for crossfade: computes & caches flow per pair, then morphs frames offline.</code></div>
+
+<ol>
+  <li>Put ordered images in <span class="code">input/</span>.</li>
+  <li>Adjust <span class="code">QUICK CONFIG</span> in the PDE (canvas size, INTER_FRAMES, HOLDs, FIT_MODE).</li>
+  <li>Run the sketch. Outputs appear in <span class="code">out/</span>; flow caches in <span class="code">out/flows/</span>.</li>
+  <li>Re-runs will reuse cached flow unless you delete it.</li>
+</ol>
+
+<h2>FFmpeg stitching</h2>
+<pre>ffmpeg -r 25 -i out/frame%06d.png -c:v libx264 -crf 18 -preset medium -pix_fmt yuv420p slow_morph_25fps.mp4</pre>
+
+<h2>Notes</h2>
+<ul>
+  <li>Flow is computed on the canvas-sized, prepared images (after FIT/FILL/STRETCH). This guarantees coordinate consistency.</li>
+  <li>For UHD, consider increasing <span class="code">LEVELS</span> and reducing <span class="code">HS_ITERS</span> per level.</li>
+  <li>Set <span class="code">SHOW_PREVIEW=false</span> in very large runs.</li>
+</ul>
+</body></html>

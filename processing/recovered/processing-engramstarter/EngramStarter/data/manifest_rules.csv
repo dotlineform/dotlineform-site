@@ -1,0 +1,2 @@
+filename,strategy,seed,paletteId,modeStack,opacityStack,weightStack,group,maskSubset,notes
+engrams_output.png,SEQUENTIAL,12345,default,"MULTIPLY>SCREEN>ADD","0.6>0.5>0.4","1>1>1","month_2025_09","edges;interestPoints","example run"

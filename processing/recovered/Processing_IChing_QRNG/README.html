@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>I Ching × QRNG — Processing App (Guide)</title>
+<style>
+  body{font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.6;color:#111;margin:0}
+  header{background:#f6f7f9;border-bottom:1px solid #e6e8eb;padding:16px 20px}
+  main{max-width:900px;margin:0 auto;padding:24px}
+  h1,h2,h3{line-height:1.25}
+  code{background:#f1f4f8;padding:2px 4px;border-radius:4px}
+  .tips{background:#fafbfc;border:1px solid #e6e8eb;border-radius:12px;padding:12px}
+  .cite{font-size:.95em;color:#444}
+  a{color:#0b5fff;text-decoration:none} a:hover{text-decoration:underline}
+</style></head>
+<body>
+<header>
+  <h1>I Ching × QRNG — Processing App</h1>
+  <p>Exported: 2025-09-25 14:37:28 BST</p>
+</header>
+<main>
+  <h2>What this is</h2>
+  <p>A Processing (Java mode) app that casts the <em>I Ching</em> using a <strong>real‑time quantum random number generator (QRNG)</strong> from ANU. It maps QRNG bits to the 3‑coin probabilities (old yin/yang = 1/8; young yin/yang = 3/8) and produces a primary hexagram and an optional resulting hexagram (from changing lines). It includes short hexagram names; bring your own translation for judgments/lines.</p>
+
+  <h2>How to run</h2>
+  <ol>
+    <li>Install <a href="https://processing.org/download">Processing</a> (Java mode).</li>
+    <li>Open the folder <strong>Processing_IChing_QRNG</strong> in Processing (open the <em>.pde</em> file).</li>
+    <li>Run. Press <strong>SPACE</strong> for a new cast. Press <strong>R</strong> to toggle auto‑refresh (default 10s). Press <strong>S</strong> to save a PNG.</li>
+  </ol>
+
+  <div class="tips">
+    <p><strong>Online vs offline:</strong> If the QRNG API call fails, the app gracefully falls back to a local PRNG (not quantum). The status line at the top shows which source was used.</p>
+    <p><strong>Mapping logic:</strong> Three QRNG bits per line →
+      <em>000</em> = 6 (old yin, changing), <em>111</em> = 9 (old yang, changing),
+      one‑hot = 7 (young yang), two‑hot = 8 (young yin). This reproduces the 3‑coin distribution.</p>
+    <p><strong>Indexing:</strong> Bottom line is line 1 (LSB). The primary hexagram index is 0‑63 where yang=1, yin=0. Changing lines flip in the resulting hexagram.</p>
+  </div>
+
+  <h2>Citations (inline)</h2>
+  <ul class="cite">
+    <li><strong>ANU QRNG JSON API:</strong> Endpoints and parameters for <em>uint8</em>/<em>uint16</em> random values; JSON <code>data</code> array. See API docs. <a href="https://qrng.anu.edu.au/contact/api-documentation/">ANU QRNG API docs</a>; <a href="https://quantumnumbers.anu.edu.au/documentation">ANU Quantum Numbers documentation</a>. citeturn0search0turn0search4</li>
+    <li><strong>Yijing structure:</strong> 64 hexagrams, line building from bottom, 6/7/8/9 values; coin/yarrow casting. <a href="https://www.britannica.com/topic/Yijing">Encyclopaedia Britannica — Yijing</a>. citeturn0search2</li>
+    <li><strong>Randomness beacons/QRNG context:</strong> NIST Interoperable Randomness Beacons & notes on quantum RNG use. <a href="https://csrc.nist.gov/projects/interoperable-randomness-beacons">NIST CSRC</a>; <a href="https://nvlpubs.nist.gov/nistpubs/ir/2019/NIST.IR.8213-draft.pdf">NISTIR 8213 draft</a>. citeturn0search1turn0search5</li>
+  </ul>
+
+  <h2>Notes & extensions</h2>
+  <ul>
+    <li><strong>Add texts:</strong> You can attach your preferred translation’s judgments/line texts (check copyright). The app exposes the hexagram index and changing lines for lookup.</li>
+    <li><strong>Logging:</strong> Add a CSV/JSON log with timestamps and questions to build a personal corpus for reflection.</li>
+    <li><strong>UI:</strong> Map number keys to bookmark hexagrams; show trigram pair names; add “flip to resulting” animation.</li>
+    <li><strong>Mo mode:</strong> Switch mapping to Tibetan <em>mo</em> (two 1–6 samples from QRNG) and table lookup.</li>
+  </ul>
+</main>
+</body></html>

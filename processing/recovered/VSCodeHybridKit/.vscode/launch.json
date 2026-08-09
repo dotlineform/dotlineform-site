@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run app (after build)",
+      "type": "lldb",
+      "request": "custom",
+      "targetCreateCommands": [
+        "settings set target.inline-breakpoint-strategy always"
+      ],
+      "preLaunchTask": "Run .app"
+    }
+  ]
+}

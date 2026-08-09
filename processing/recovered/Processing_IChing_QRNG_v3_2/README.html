@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>I Ching × QRNG — Processing App (v3.2)</title>
+<style>
+  body{font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.6;color:#111;margin:0}
+  header{background:#f6f7f9;border-bottom:1px solid #e6e8eb;padding:16px 20px}
+  main{max-width:900px;margin:0 auto;padding:24px} h1,h2,h3{line-height:1.25} code{background:#f1f4f8;padding:2px 4px;border-radius:4px}
+  .kbd{background:#111;color:#fff;padding:2px 6px;border-radius:4px;font-family:ui-monospace,Menlo,Consolas,monospace}
+  a{color:#0b5fff;text-decoration:none} a:hover{text-decoration:underline}
+</style></head>
+<body>
+<header><h1>I Ching × QRNG — Processing App (v3.2)</h1><p>Exported: 2025-09-25 16:51:43 BST</p></header>
+<main>
+  <h2>What’s new</h2>
+  <ul>
+    <li><strong>Prefetch ring buffer:</strong> async QRNG pulls (1024 uint8) into a local pool; low-/high-water marks and exponential backoff.</li>
+    <li><strong>Ritual pause:</strong> breathing overlay before reveal; cycle <span class="kbd">P</span> for 4/8/12 s.</li>
+    <li><strong>Instant casts:</strong> results are drawn from the local pool; network latency is invisible.</li>
+  </ul>
+
+  <h2>Controls</h2>
+  <p><span class="kbd">SPACE</span> cast • <span class="kbd">R</span> auto • <span class="kbd">S</span> screenshot • <span class="kbd">M</span> I Ching/mo • <span class="kbd">L</span> logging • <span class="kbd">Q</span> question • <span class="kbd">P</span> pause length</p>
+
+  <h2>Citations</h2>
+  <ul>
+    <li>ANU Quantum Random Numbers — JSON API (array length up to 1024 for <em>uint8</em>), general docs & FAQ.</li>
+    <li>NIST Interoperable Randomness Beacons — project overview (for optional audit anchoring).</li>
+  </ul>
+
+  <h2>Notes</h2>
+  <p>The Manjushri pair table (36 outcomes) is supported if <code>data/manjushri_mo_lineage_template.csv</code> is present (see earlier builds in your toolkit for the template).</p>
+</main></body></html>
