@@ -19,7 +19,9 @@ import {
  * @typedef {Object} DocsSubscopeReportContribution
  * @property {function(Object): void} [notify]
  * @property {function(Object): Array<Object>} [createFilters]
+ * @property {function(Object): number} [compareListDocuments]
  * @property {function(Object): (Object|void)} [renderRow]
+ * @property {function(Object): void} [renderListHead]
  * @property {function(Object): void} [renderListToolbar]
  * @property {function(Object): void} [renderDetailToolbar]
  * @property {function(Object): (Object|null)} [projectDetailInfo]
@@ -465,10 +467,15 @@ function renderShell(context, subScope) {
   var table = document.createElement("div");
   table.className = "docsViewerReport__table";
 
+  var head = document.createElement("div");
+  head.className = "docsViewerReport__head";
+  head.hidden = true;
+
   var rows = document.createElement("ul");
   rows.className = "docsViewerReport__rows";
   rows.setAttribute("aria-label", subScopeTitle(subScope, subScopeId(subScope)));
 
+  table.appendChild(head);
   table.appendChild(rows);
   root.appendChild(filters.toolbarNode);
   root.appendChild(status);
@@ -479,6 +486,7 @@ function renderShell(context, subScope) {
     filterExtensionsNode: filters.extensionsNode,
     filterInputNode: filters.inputNode,
     filterToolbarNode: filters.toolbarNode,
+    headNode: head,
     rowsNode: rows,
     statusNode: status,
     tableNode: table
@@ -630,9 +638,24 @@ function visibleDocuments(state) {
       return matches;
     });
   });
-  return visible.slice().sort(state.sortMode === "last-updated-desc"
-    ? compareLastUpdatedDescending
-    : compareTitleAscending);
+  var compareCustom = contributionCallback(state.contribution, "compareListDocuments");
+  return visible.slice().sort(function (left, right) {
+    if (!compareCustom) {
+      return state.sortMode === "last-updated-desc"
+        ? compareLastUpdatedDescending(left, right)
+        : compareTitleAscending(left, right);
+    }
+    var comparison = compareCustom({
+      collection: collectionTarget(state.viewerScope, state.subScopeId),
+      left: documentRecord(left),
+      right: documentRecord(right),
+      sortMode: state.sortMode
+    });
+    if (!Number.isFinite(comparison)) {
+      throw new Error("Docs sub-scope custom list comparator must return a finite number.");
+    }
+    return comparison;
+  });
 }
 
 function bindFilterControls(state) {
@@ -646,6 +669,42 @@ function bindFilterControls(state) {
     renderListProjectionContained(state, "title-filter-clear");
     state.filterInputNode.focus();
   });
+}
+
+function listSortContext(state) {
+  return {
+    mode: state.sortMode,
+    setMode: function (mode) {
+      var nextMode = cleanString(mode);
+      var compareCustom = contributionCallback(state.contribution, "compareListDocuments");
+      if (
+        !nextMode
+        || (
+          !["title-asc", "last-updated-desc"].includes(nextMode)
+          && !compareCustom
+        )
+      ) {
+        throw new Error("Docs sub-scope sort mode is invalid: " + nextMode);
+      }
+      state.sortMode = nextMode;
+      renderListProjectionContained(state, "sort-change");
+      return nextMode;
+    }
+  };
+}
+
+function renderListHead(state, documents) {
+  clearNode(state.headNode);
+  state.headNode.hidden = true;
+  var renderHead = contributionCallback(state.contribution, "renderListHead");
+  if (!renderHead) return;
+  renderHead({
+    collection: collectionTarget(state.viewerScope, state.subScopeId),
+    documents: Object.freeze(documents.map(documentRecord)),
+    host: state.headNode,
+    sort: listSortContext(state)
+  });
+  state.headNode.hidden = !state.headNode.childNodes.length;
 }
 
 function renderListToolbar(state, documents) {
@@ -681,18 +740,7 @@ function renderListToolbar(state, documents) {
     refreshCollection: function (target) {
       return refreshCollection(state, target);
     },
-    sort: {
-      mode: state.sortMode,
-      setMode: function (mode) {
-        var nextMode = cleanString(mode);
-        if (!["title-asc", "last-updated-desc"].includes(nextMode)) {
-          throw new Error("Docs sub-scope sort mode is invalid: " + nextMode);
-        }
-        state.sortMode = nextMode;
-        renderListProjectionContained(state, "sort-change");
-        return nextMode;
-      }
-    }
+    sort: listSortContext(state)
   });
   if (!host.childNodes.length) return;
   state.filterToolbarNode.appendChild(host);
@@ -748,6 +796,7 @@ function renderListProjection(state) {
   var documents = visibleDocuments(state);
   updateFilterControls(state);
   renderListToolbar(state, documents);
+  renderListHead(state, documents);
   renderRows(state, documents);
   notifyContribution(state, {
     type: "projection",
@@ -1211,6 +1260,7 @@ function mountResolvedDocsSubscopeReport(context, contribution) {
     filterToolbarNode: refs.filterToolbarNode,
     filters: [],
     filterValues: new Map(),
+    headNode: refs.headNode,
     listToolbarNode: null,
     statusNode: refs.statusNode,
     tableNode: refs.tableNode,

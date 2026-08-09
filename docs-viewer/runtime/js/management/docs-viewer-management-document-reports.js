@@ -268,6 +268,7 @@ function loadSubscopeContribution(settings, parent, subScope, options) {
         clientOptions: clientOptions,
         collection: { scope: parent.scope, sub_scope: subScope },
         openLocalTarget: openLocalTarget,
+        publicPreviewBase: cleanString(settings.routeContext && settings.routeContext.publicPreviewBase),
         readMetadata: mutationAvailable
           ? function (target) {
               return readManagedDocMetadata(target, clientOptions);

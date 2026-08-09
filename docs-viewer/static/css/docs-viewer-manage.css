@@ -178,20 +178,27 @@
   text-decoration: none;
 }
 
+.docsViewerReport[data-report-subscope="projects"] .docsViewerReport__head,
 .docsViewerReport[data-report-subscope="projects"] .docsViewerReport__row{
   align-items: center;
+  grid-template-areas: "publication title subject";
+  grid-template-columns: 1rem repeat(2, minmax(0, 1fr));
 }
 
 .docsViewerReport[data-report-subscope="projects"][data-report-leading-column="true"]
+  .docsViewerReport__head,
+.docsViewerReport[data-report-subscope="projects"][data-report-leading-column="true"]
   .docsViewerReport__row{
-  grid-template-areas: "selection publication title";
-  grid-template-columns: max-content 1rem minmax(0, 1fr);
+  grid-template-areas: "selection publication title subject";
+  grid-template-columns: max-content 1rem repeat(2, minmax(0, 1fr));
 }
 
 .docsViewerReport[data-report-subscope="projects"][data-report-subscope-selection="inactive"]
+  .docsViewerReport__head,
+.docsViewerReport[data-report-subscope="projects"][data-report-subscope-selection="inactive"]
   .docsViewerReport__row{
-  grid-template-areas: "publication title";
-  grid-template-columns: 1rem minmax(0, 1fr);
+  grid-template-areas: "publication title subject";
+  grid-template-columns: 1rem repeat(2, minmax(0, 1fr));
 }
 
 .docsViewerReport[data-report-subscope="projects"]
@@ -200,12 +207,18 @@
 }
 
 .docsViewerReport[data-report-subscope="projects"]
-  [data-report-contribution-host="row-trailing"]{
-  grid-area: publication;
+  [data-report-contribution-position="list-head"],
+.docsViewerReport[data-report-subscope="projects"]
+  [data-report-contribution-host="row-trailing"],
+.docsViewerReport[data-report-subscope="projects"]
+  [data-report-contribution-position="row-trailing"]{
+  display: contents;
 }
 
 .docsViewerReport[data-report-subscope="projects"][data-report-subscope-selection="inactive"]
-  [data-report-contribution-host="row-leading"]{
+  [data-report-contribution-host="row-leading"],
+.docsViewerReport[data-report-subscope="projects"][data-report-subscope-selection="inactive"]
+  .docsViewerReport__projectSelectionHead{
   display: none;
 }
 
@@ -213,6 +226,41 @@
   display: inline-flex;
   grid-area: title;
   align-items: center;
+  min-width: 0;
+}
+
+.docsViewerReport[data-report-subscope="projects"] .docsViewerReport__projectSelectionHead{
+  grid-area: selection;
+}
+
+.docsViewerReport[data-report-subscope="projects"] [data-project-sort="title"]{
+  grid-area: title;
+}
+
+.docsViewerReport[data-report-subscope="projects"] [data-project-sort="subject"]{
+  grid-area: subject;
+}
+
+.docsViewerReport[data-report-subscope="projects"] .docsViewerReport__projectSubjectCell{
+  grid-area: subject;
+  min-width: 0;
+  color: var(--docs-viewer-muted);
+  overflow-wrap: anywhere;
+}
+
+.docsViewerReport[data-report-subscope="projects"] .docsViewerReport__projectSubjectLink{
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+}
+
+.docsViewerReport[data-report-subscope="projects"] .docsViewerReport__projectPublicationHead,
+.docsViewerReport[data-report-subscope="projects"] .docsViewerReport__projectPublicationCues{
+  grid-area: publication;
+}
+
+.docsViewerReport[data-report-subscope="projects"] .docsViewerReport__sortButton{
+  text-transform: none;
 }
 
 .docsViewerReport__projectSubjectIcon{

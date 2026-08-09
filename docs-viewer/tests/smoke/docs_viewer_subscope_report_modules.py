@@ -3558,6 +3558,10 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
           const customTargets = { list: [], selection: [], detail: [] };
           const customContribution = {
             id: 'synthetic',
+            compareListDocuments: ({ left, right, sortMode }) => {
+              const direction = sortMode === 'custom-desc' ? -1 : 1;
+              return left.title.localeCompare(right.title) * direction;
+            },
             createFilters: ({ data }) => [{
               id: 'category',
               initialValue: 'x',
@@ -3581,6 +3585,14 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
               marker.dataset.syntheticRow = doc.doc_id;
               marker.textContent = doc.customisation.category;
               trailingHost.appendChild(marker);
+            },
+            renderListHead: ({ host: headHost, sort }) => {
+              const button = headHost.ownerDocument.createElement('button');
+              button.type = 'button';
+              button.dataset.syntheticHead = sort.mode;
+              button.textContent = 'Synthetic heading';
+              button.addEventListener('click', () => sort.setMode('custom-desc'));
+              headHost.appendChild(button);
             },
             renderListToolbar: ({ host: toolbarHost, registerAction }) => {
               const action = registerAction({
@@ -3647,12 +3659,19 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
             viewerScope: 'studio'
           });
           const customInitial = {
+            defaultSortPresent: customRoot.querySelector('[data-docs-subscope-sort]') !== null,
+            headMode: customRoot.querySelector('[data-synthetic-head]')?.dataset.syntheticHead || '',
             rows: rowIds(customRoot),
             rowFeatures: customRoot.querySelectorAll('[data-synthetic-row]').length,
             listAction: customRoot.querySelector('[data-synthetic-list-action]') !== null,
             selectionActionDisabled: customRoot.querySelector(
               '[data-synthetic-selection-action]'
             )?.disabled ?? null
+          };
+          customRoot.querySelector('[data-synthetic-head]')?.click();
+          const customAfterHeadSort = {
+            headMode: customRoot.querySelector('[data-synthetic-head]')?.dataset.syntheticHead || '',
+            rows: rowIds(customRoot)
           };
           customRoot.querySelector('[data-synthetic-list-action]')?.click();
           customRoot.querySelector('[data-docs-subscope-actions]')?.click();
@@ -3796,6 +3815,7 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
             callbackFailure,
             created,
             customFiltered,
+            customAfterHeadSort,
             customInitial,
             customTargets,
             detail,
@@ -3878,10 +3898,16 @@ def assert_default_report_and_customisation_framework(page: Page) -> None:
         {"scope": "studio", "sub_scope": "empty"}
     ]
     assert result["customInitial"] == {
+        "defaultSortPresent": False,
+        "headMode": "title-asc",
         "rows": ["x-one"],
         "rowFeatures": 1,
         "listAction": True,
         "selectionActionDisabled": True,
+    }
+    assert result["customAfterHeadSort"] == {
+        "headMode": "custom-desc",
+        "rows": ["x-one"],
     }
     assert result["customFiltered"] == ["y-one"]
     assert result["customTargets"] == {
@@ -3952,7 +3978,7 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
           const assignments = [];
           const refreshed = [];
           let rejectAssignment = false;
-          const contribution = module.createDocsViewerManagementSubscopeDotlineformProjects({
+          const contribution = await module.createDocsViewerManagementSubscopeDotlineformProjects({
             descriptor: {
               id: 'dotlineform_projects',
               capabilities: {
@@ -4122,7 +4148,7 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
           modalHost.querySelector('button[data-role="modal-cancel"]').click();
           await new Promise(resolve => setTimeout(resolve, 0));
 
-          const configuredCollection = module.createDocsViewerManagementSubscopeDotlineformProjects({
+          const configuredCollection = await module.createDocsViewerManagementSubscopeDotlineformProjects({
             descriptor: { id: 'dotlineform_projects' },
             collection: { scope: 'studio', sub_scope: 'project-notes' }
           });
@@ -4201,6 +4227,9 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
             linkedInfo,
             linkedRow: {
               childCount: linkedRow.childElementCount,
+              href: linkedRow.querySelector('[data-project-subject-kind]')?.getAttribute('href') || '',
+              localTarget: linkedRow.querySelector('[data-docs-viewer-local-target]')
+                ?.dataset.docsViewerLocalTarget || '',
               text: linkedRow.textContent
             },
             opened,
@@ -4274,7 +4303,12 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
                 }
             ],
         },
-        "linkedRow": {"childCount": 0, "text": ""},
+        "linkedRow": {
+            "childCount": 1,
+            "href": "#",
+            "localTarget": "projects/16%20forms",
+            "text": "📁projects/16 forms",
+        },
         "opened": ["projects/16%20forms"],
         "pathlessButton": {
             "disabled": True,
@@ -4292,7 +4326,7 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
                 }
             ],
         },
-        "pathlessRow": {"childCount": 0, "text": ""},
+        "pathlessRow": {"childCount": 1, "text": "—"},
         "registryIds": ["analysis_tags", "dotlineform_projects"],
         "refreshed": [
             {
@@ -4404,6 +4438,7 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
           const records = {
             work: {
               doc_id: 'work-doc',
+              title: 'Unrelated Work note',
               authoring_subject: {
                 state: 'valid', kind: 'work', key: '00123', fields: ['work_id']
               },
@@ -4429,6 +4464,7 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
             },
             series: {
               doc_id: 'series-doc',
+              title: 'A Series note',
               authoring_subject: {
                 state: 'valid', kind: 'series', key: '026', fields: ['series_id']
               }
@@ -4490,12 +4526,13 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
             };
           };
           const assignments = [];
-          const contribution = module.createDocsViewerManagementSubscopeDotlineformProjects({
+          const contribution = await module.createDocsViewerManagementSubscopeDotlineformProjects({
             descriptor: {
               id: 'dotlineform_projects',
               capabilities: { assignableFieldGroups: ['authoring_subject'] }
             },
             collection: { scope: 'dotlineform', sub_scope: 'projects' },
+            publicPreviewBase: 'http://127.0.0.1:4011',
             root: document.body,
             fetch: fetchImpl,
             readMetadata: async target => ({
@@ -4535,7 +4572,25 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
               stages: nodes.map(node => node.dataset.projectPublicationStage),
               text: nodes.map(node => node.textContent).join(''),
               hrefs: nodes.map(node => node.getAttribute('href') || ''),
-              subjectIcons: titleHost.querySelectorAll('[data-project-subject-icon]').length
+              subjectIcons: trailingHost.querySelectorAll('[data-project-subject-icon]').length
+            };
+          }
+          function subjectCell(record) {
+            const trailingHost = document.createElement('span');
+            contribution.renderRow({
+              document: record,
+              titlePrefixHost: document.createElement('span'),
+              trailingHost
+            });
+            const cell = trailingHost.querySelector('[data-project-subject-state]');
+            const link = cell?.querySelector('[data-project-subject-kind]');
+            return {
+              href: link?.getAttribute('href') || '',
+              kind: link?.dataset.projectSubjectKind || '',
+              key: link?.dataset.projectSubjectKey || '',
+              localTarget: link?.dataset.docsViewerLocalTarget || '',
+              state: cell?.dataset.projectSubjectState || '',
+              text: cell?.textContent || ''
             };
           }
           function info(record) {
@@ -4664,6 +4719,21 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
               }]
             }
           };
+          const head = document.createElement('div');
+          const selectedSortModes = [];
+          contribution.renderListHead({
+            host: head,
+            sort: {
+              mode: 'title-asc',
+              setMode: mode => selectedSortModes.push(mode)
+            }
+          });
+          head.querySelector('[data-project-sort="subject"]').click();
+          function sortedIds(mode) {
+            return [records.work, records.series].slice().sort((left, right) => (
+              contribution.compareListDocuments({ left, right, sortMode: mode })
+            )).map(record => record.doc_id);
+          }
 
           return {
             assignments,
@@ -4675,6 +4745,11 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
               conflicting: cue(records.conflicting)
             },
             fetchCalls,
+            head: {
+              active: head.querySelector('[data-project-sort="title"]')?.dataset.state || '',
+              labels: Array.from(head.querySelectorAll('[data-project-sort]')).map(node => node.textContent),
+              selectedSortModes
+            },
             info: {
               work: info(records.work),
               series: info(records.series),
@@ -4686,6 +4761,19 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
               work: publicationInfo(records.work),
               series: publicationInfo(records.series),
               none: publicationInfo(records.none)
+            },
+            sortOrders: {
+              subjectAsc: sortedIds('subject-asc'),
+              subjectDesc: sortedIds('subject-desc'),
+              titleAsc: sortedIds('title-asc'),
+              titleDesc: sortedIds('title-desc')
+            },
+            subjectCells: {
+              work: subjectCell(records.work),
+              series: subjectCell(records.series),
+              none: subjectCell(records.none),
+              malformed: subjectCell(records.malformed),
+              conflicting: subjectCell(records.conflicting)
             },
             transitions: {
               published: cue(publishedOnly),
@@ -4728,14 +4816,14 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
                 "stages": ["published"],
                 "text": "🟢",
                 "hrefs": [""],
-                "subjectIcons": 0,
+                "subjectIcons": 1,
             },
             "series": {
                 "labels": [],
                 "stages": [],
                 "text": "",
                 "hrefs": [],
-                "subjectIcons": 0,
+                "subjectIcons": 1,
             },
             "none": {
                 "labels": ["Editorial: 1 Editorial child"],
@@ -4764,7 +4852,14 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
             "/target-lookup.json",
             "/docs-viewer/config/semantic-tokens/registry.json",
             "/target-lookup.json",
+            "/docs-viewer/config/semantic-tokens/registry.json",
+            "/target-lookup.json",
         ],
+        "head": {
+            "active": "active",
+            "labels": ["Doc title▲", "Subject"],
+            "selectedSortModes": ["subject-asc"],
+        },
         "info": {
             "work": {
                 "detail": "00123", "id": "authoring_subject", "label": "Subject",
@@ -4818,6 +4913,54 @@ def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
                     "value": "⚠️ Unavailable",
                 }
             ],
+        },
+        "sortOrders": {
+            "subjectAsc": ["work-doc", "series-doc"],
+            "subjectDesc": ["series-doc", "work-doc"],
+            "titleAsc": ["series-doc", "work-doc"],
+            "titleDesc": ["work-doc", "series-doc"],
+        },
+        "subjectCells": {
+            "work": {
+                "href": "http://127.0.0.1:4011/works/?work=00123",
+                "kind": "work",
+                "key": "00123",
+                "localTarget": "",
+                "state": "valid",
+                "text": "Nerve",
+            },
+            "series": {
+                "href": "http://127.0.0.1:4011/series/?series=026",
+                "kind": "series",
+                "key": "026",
+                "localTarget": "",
+                "state": "valid",
+                "text": "Nerve Series",
+            },
+            "none": {
+                "href": "",
+                "kind": "",
+                "key": "",
+                "localTarget": "",
+                "state": "none",
+                "text": "—",
+            },
+            "malformed": {
+                "href": "",
+                "kind": "",
+                "key": "",
+                "localTarget": "",
+                "state": "warning",
+                "text": "⚠️ Subject warning",
+            },
+            "conflicting": {
+                "href": "",
+                "kind": "",
+                "key": "",
+                "localTarget": "",
+                "state": "warning",
+                "text": "⚠️ Subject warning",
+            },
         },
         "transitions": {
             "published": {

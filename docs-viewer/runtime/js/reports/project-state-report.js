@@ -1,3 +1,7 @@
+import {
+  appendProjectSubjectIcon
+} from "./project-subject-icons.js";
+
 const REPORT_SCHEMA = "docs_project_state_report_v2";
 const LOCAL_TARGET_PREFIX = "dlf-local:";
 const GROUP_KEYS = Object.freeze(["folder", "series"]);
@@ -11,24 +15,6 @@ const SUBJECT_LABELS = Object.freeze({
   folder: "Folder",
   work: "Work",
   series: "Series"
-});
-const SUBJECT_ICON_MARKUP = Object.freeze({
-  work: [
-    '<svg class="docsViewerReport__projectSubjectIcon" data-project-subject-icon="work" viewBox="0 0 24 24" aria-hidden="true" focusable="false">',
-    '<rect x="4" y="10.75" width="2.5" height="2.5" rx="1"></rect>',
-    '<path d="M10 12H20"></path>',
-    "</svg>"
-  ].join(""),
-  series: [
-    '<svg class="docsViewerReport__projectSubjectIcon" data-project-subject-icon="series" viewBox="0 0 24 24" aria-hidden="true" focusable="false">',
-    '<rect x="4" y="5" width="2.5" height="2.5" rx="1"></rect>',
-    '<rect x="4" y="10.75" width="2.5" height="2.5" rx="1"></rect>',
-    '<rect x="4" y="16.5" width="2.5" height="2.5" rx="1"></rect>',
-    '<path d="M10 6.25H20"></path>',
-    '<path d="M10 12H20"></path>',
-    '<path d="M10 17.75H20"></path>',
-    "</svg>"
-  ].join("")
 });
 const CONTROL_ICON_MARKUP = Object.freeze({
   copy: [
@@ -400,14 +386,7 @@ function appendSeriesCell(rowNode, row, context) {
 }
 
 function appendDocumentSubjectCue(link, documentRecord) {
-  const subject = documentRecord.declaredSubject;
-  const cue = document.createElement("span");
-  cue.className = "docsViewerReport__projectSubjectCue";
-  cue.dataset.projectSubjectCue = subject.kind;
-  cue.setAttribute("aria-hidden", "true");
-  if (SUBJECT_ICON_MARKUP[subject.kind]) cue.innerHTML = SUBJECT_ICON_MARKUP[subject.kind];
-  else cue.textContent = "📁";
-  link.appendChild(cue);
+  appendProjectSubjectIcon(link, documentRecord.declaredSubject.kind);
 }
 
 function appendDocumentsCell(rowNode, row) {

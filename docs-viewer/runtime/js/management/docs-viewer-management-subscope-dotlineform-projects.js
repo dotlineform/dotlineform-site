@@ -10,9 +10,21 @@ import {
 import {
   normalizeDocsViewerAuthoringSubject
 } from "./docs-viewer-management-document-subject.js";
+import {
+  appendProjectSubjectIcon
+} from "../reports/project-subject-icons.js";
+import {
+  loadCatalogueTargetSupport
+} from "./source-editor/catalogue-token-targets.js";
 
 const CUSTOMISATION_ID = "dotlineform_projects";
 const AUTHORING_SUBJECT_GROUP_ID = "authoring_subject";
+const PROJECT_SORT_MODES = Object.freeze([
+  "title-asc",
+  "title-desc",
+  "subject-asc",
+  "subject-desc"
+]);
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -35,6 +47,201 @@ function authoringSubject(documentRecord) {
       errorMessage: "Projects document authoring_subject must be a normalized object."
     }
   );
+}
+
+function subjectTargetIdentity(kind, key) {
+  return cleanString(kind) + ":" + cleanString(key);
+}
+
+function subjectTargetTitles(support) {
+  var titles = new Map();
+  var targets = support && Array.isArray(support.searchableTargets)
+    ? support.searchableTargets
+    : [];
+  targets.forEach(function (target) {
+    var kind = cleanString(target && target.targetType);
+    var key = cleanString(target && target.targetId);
+    var title = cleanString(target && target.title);
+    if (!["work", "series"].includes(kind) || !key || !title) return;
+    titles.set(subjectTargetIdentity(kind, key), title);
+  });
+  return titles;
+}
+
+function loadSubjectTargetTitles(options) {
+  return loadCatalogueTargetSupport({
+    fetch: options.fetch,
+    allowedTargetTypes: ["work", "series"]
+  }).then(subjectTargetTitles).catch(function () {
+    return new Map();
+  });
+}
+
+function subjectProjection(documentRecord, targetTitles) {
+  var subject = authoringSubject(documentRecord);
+  if (subject.state === "valid") {
+    var targetTitle = targetTitles.get(subjectTargetIdentity(subject.kind, subject.key)) || "";
+    return {
+      kind: subject.kind,
+      key: subject.key,
+      label: targetTitle || subject.key,
+      state: "valid",
+      targetTitle: targetTitle
+    };
+  }
+  if (["malformed", "conflicting"].includes(subject.state)) {
+    return {
+      kind: subject.kind,
+      key: "",
+      label: "Subject warning",
+      state: "warning",
+      targetTitle: ""
+    };
+  }
+  return {
+    kind: "none",
+    key: "",
+    label: "",
+    state: "none",
+    targetTitle: ""
+  };
+}
+
+function previewSubjectHref(options, subject) {
+  var base = cleanString(options.publicPreviewBase).replace(/\/+$/, "");
+  if (!base) throw new Error("Projects subject preview is not configured.");
+  var path = subject.kind === "work"
+    ? "/works/?work=" + encodeURIComponent(subject.key)
+    : "/series/?series=" + encodeURIComponent(subject.key);
+  return new URL(path, base + "/").toString();
+}
+
+function subjectAccessibleLabel(subject) {
+  var kindLabel = ({ folder: "Folder", work: "Work", series: "Series" })[subject.kind];
+  if (!kindLabel) return "";
+  if (subject.targetTitle) {
+    return kindLabel + " subject " + subject.targetTitle + ", " + subject.key;
+  }
+  return kindLabel + " subject " + subject.key;
+}
+
+function renderSubjectCell(context, options, targetTitles) {
+  var settings = context || {};
+  var host = settings.trailingHost;
+  if (!host) return;
+  var subject = subjectProjection(settings.document, targetTitles);
+  var cell = host.ownerDocument.createElement("span");
+  cell.className = "docsViewerReport__projectSubjectCell";
+  cell.dataset.projectSubjectState = subject.state;
+  if (subject.state === "none") {
+    cell.textContent = "—";
+    cell.setAttribute("aria-label", "No subject");
+    host.appendChild(cell);
+    return;
+  }
+  if (subject.state === "warning") {
+    cell.textContent = "⚠️ Subject warning";
+    host.appendChild(cell);
+    return;
+  }
+  var link = host.ownerDocument.createElement("a");
+  link.className = "docsViewerReport__cellLink docsViewerReport__projectSubjectLink";
+  link.dataset.projectSubjectKind = subject.kind;
+  link.dataset.projectSubjectKey = subject.key;
+  appendProjectSubjectIcon(link, subject.kind);
+  var label = host.ownerDocument.createElement("span");
+  label.textContent = subject.label;
+  link.appendChild(label);
+  link.setAttribute("aria-label", subjectAccessibleLabel(subject));
+  if (subject.kind === "folder") {
+    var encodedPath = encodeDecodedLocalTarget(subject.key);
+    if (!encodedPath) throw new Error("Projects document Folder subject is invalid.");
+    link.href = "#";
+    link.dataset.docsViewerLocalTarget = encodedPath;
+    link.title = "Open " + subject.key + " in Finder";
+  } else {
+    link.href = previewSubjectHref(options, subject);
+    link.title = "Open " + subjectAccessibleLabel(subject) + " in local preview";
+  }
+  cell.appendChild(link);
+  host.appendChild(cell);
+}
+
+function compareText(collator, left, right) {
+  return collator.compare(cleanString(left), cleanString(right));
+}
+
+function compareProjectDocuments(context, targetTitles, collator) {
+  var settings = context || {};
+  var sortMode = cleanString(settings.sortMode);
+  if (!PROJECT_SORT_MODES.includes(sortMode)) {
+    throw new Error("Projects list sort mode is invalid: " + sortMode);
+  }
+  var direction = sortMode.endsWith("-desc") ? -1 : 1;
+  var left = settings.left || {};
+  var right = settings.right || {};
+  var comparison;
+  if (sortMode.startsWith("subject-")) {
+    var leftSubject = subjectProjection(left, targetTitles);
+    var rightSubject = subjectProjection(right, targetTitles);
+    var stateOrder = { valid: 0, warning: 1, none: 2 };
+    comparison = stateOrder[leftSubject.state] - stateOrder[rightSubject.state];
+    if (comparison) return comparison;
+    comparison = compareText(collator, leftSubject.label, rightSubject.label) * direction;
+    if (comparison) return comparison;
+    comparison = compareText(collator, leftSubject.kind, rightSubject.kind) * direction;
+    if (comparison) return comparison;
+    comparison = compareText(collator, leftSubject.key, rightSubject.key) * direction;
+    if (comparison) return comparison;
+  } else {
+    comparison = compareText(collator, left.title, right.title) * direction;
+    if (comparison) return comparison;
+  }
+  comparison = compareText(collator, left.title, right.title);
+  if (comparison) return comparison;
+  return compareText(collator, left.doc_id, right.doc_id);
+}
+
+function listSortButton(context, key, label) {
+  var settings = context || {};
+  var sort = settings.sort || {};
+  var active = cleanString(sort.mode).startsWith(key + "-");
+  var ascending = cleanString(sort.mode) === key + "-asc";
+  var button = settings.host.ownerDocument.createElement("button");
+  button.className = "docsViewerReport__sortButton";
+  button.type = "button";
+  button.dataset.projectSort = key;
+  button.textContent = label;
+  if (active) button.dataset.state = "active";
+  var indicator = settings.host.ownerDocument.createElement("span");
+  indicator.className = "docsViewerReport__sortIndicator";
+  indicator.setAttribute("aria-hidden", "true");
+  indicator.textContent = active ? (ascending ? "▲" : "▼") : "";
+  button.appendChild(indicator);
+  button.setAttribute(
+    "aria-label",
+    "Sort by " + label + (active ? (ascending ? " descending" : " ascending") : " ascending")
+  );
+  button.addEventListener("click", function () {
+    sort.setMode(key + (active && ascending ? "-desc" : "-asc"));
+  });
+  return button;
+}
+
+function renderListHead(context) {
+  var settings = context || {};
+  var host = settings.host;
+  if (!host || !settings.sort || typeof settings.sort.setMode !== "function") return;
+  var selection = host.ownerDocument.createElement("span");
+  selection.className = "docsViewerReport__projectSelectionHead";
+  selection.setAttribute("aria-hidden", "true");
+  var publication = host.ownerDocument.createElement("span");
+  publication.className = "docsViewerReport__projectPublicationHead";
+  publication.setAttribute("aria-hidden", "true");
+  host.appendChild(selection);
+  host.appendChild(listSortButton(settings, "title", "Doc title"));
+  host.appendChild(listSortButton(settings, "subject", "Subject"));
+  host.appendChild(publication);
 }
 
 function folderPath(documentRecord) {
@@ -109,6 +316,11 @@ function renderPublicationCues(context) {
   group.appendChild(cue);
   host.appendChild(group);
   return { accessibleLabels: [label] };
+}
+
+function renderProjectRow(context, options, targetTitles) {
+  renderSubjectCell(context, options, targetTitles);
+  return renderPublicationCues(context);
 }
 
 function renderOpenInFinder(context, options) {
@@ -286,13 +498,24 @@ export function createDocsViewerManagementSubscopeDotlineformProjects(options = 
   }
   exactCollection(options.collection);
   var assignSubjectAvailable = hasDocsViewerAssignableFieldGroup(options.descriptor, AUTHORING_SUBJECT_GROUP_ID);
-  return {
-    id: CUSTOMISATION_ID,
-    projectDetailInfo: function (context) { return projectDetailInfo(context, assignSubjectAvailable); },
-    renderDetailToolbar: function (context) {
-      renderAssignSubject(context, options, assignSubjectAvailable);
-      renderOpenInFinder(context, options);
-    },
-    renderRow: renderPublicationCues
-  };
+  var collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
+  return loadSubjectTargetTitles(options).then(function (targetTitles) {
+    return {
+      id: CUSTOMISATION_ID,
+      compareListDocuments: function (context) {
+        return compareProjectDocuments(context, targetTitles, collator);
+      },
+      projectDetailInfo: function (context) {
+        return projectDetailInfo(context, assignSubjectAvailable);
+      },
+      renderDetailToolbar: function (context) {
+        renderAssignSubject(context, options, assignSubjectAvailable);
+        renderOpenInFinder(context, options);
+      },
+      renderListHead: renderListHead,
+      renderRow: function (context) {
+        return renderProjectRow(context, options, targetTitles);
+      }
+    };
+  });
 }

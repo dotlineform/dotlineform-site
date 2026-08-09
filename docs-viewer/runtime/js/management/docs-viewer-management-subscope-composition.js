@@ -255,6 +255,26 @@ export function composeDocsViewerManagementSubscopeContributions(options = {}) {
     return filters;
   }
 
+  function compareListDocuments(context) {
+    var compare = callback(customisationContribution, "compareListDocuments");
+    if (!compare) return 0;
+    return compare(Object.assign({}, context, { access: "manage" }));
+  }
+
+  function renderListHead(context) {
+    owners.forEach(function (owner, index) {
+      var render = callback(owner, "renderListHead");
+      if (!render) return;
+      var ownerId = contributionId(owner, index === 0 ? "default" : "customisation");
+      var child = createHost(context.host, "span", ownerId, "list-head");
+      render(Object.assign({}, context, {
+        access: "manage",
+        host: child
+      }));
+      appendWhenPopulated(context.host, child);
+    });
+  }
+
   function renderRow(context) {
     var accessibleLabels = [];
     owners.forEach(function (owner, index) {
@@ -286,6 +306,7 @@ export function composeDocsViewerManagementSubscopeContributions(options = {}) {
 
   function renderListToolbar(context) {
     var host = context.host;
+    var customListHead = callback(customisationContribution, "renderListHead");
     currentList = {
       context: context,
       host: host,
@@ -300,6 +321,7 @@ export function composeDocsViewerManagementSubscopeContributions(options = {}) {
         access: "manage",
         host: child,
         publishSelection: publishSelection,
+        sort: index === 0 && customListHead ? null : context.sort,
         registerAction: actionRegistrar({
           collection: context.collection,
           refreshAndOpenDocument: context.refreshAndOpenDocument,
@@ -346,7 +368,7 @@ export function composeDocsViewerManagementSubscopeContributions(options = {}) {
     return project(Object.assign({}, context, { access: "manage" }));
   }
 
-  return {
+  var composed = {
     id: "management_composition",
     createFilters: createFilters,
     notify: notify,
@@ -355,4 +377,11 @@ export function composeDocsViewerManagementSubscopeContributions(options = {}) {
     renderListToolbar: renderListToolbar,
     renderRow: renderRow
   };
+  if (callback(customisationContribution, "compareListDocuments")) {
+    composed.compareListDocuments = compareListDocuments;
+  }
+  if (callback(customisationContribution, "renderListHead")) {
+    composed.renderListHead = renderListHead;
+  }
+  return composed;
 }
