@@ -802,6 +802,12 @@
           "ui_status": "proposed"
         },
         {
+          "doc_id": "d-20260809-155631-ab527b",
+          "title": "CII-1 — Catalogue Image Source Insertion Delivery",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260809-155631-ab527b.json",
+          "ui_status": "proposed"
+        },
+        {
           "doc_id": "d-20260802-123450-f7493d",
           "title": "Data Model Maps",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123450-f7493d.json",
@@ -1703,5 +1709,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-09T12:24:23Z"
+  "generated_at": "2026-08-09T14:59:13Z"
 }

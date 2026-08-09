@@ -182,6 +182,28 @@
   align-items: center;
 }
 
+.docsViewerReport[data-report-subscope="projects"][data-report-leading-column="true"]
+  .docsViewerReport__row{
+  grid-template-areas: "selection publication title";
+  grid-template-columns: max-content 1rem minmax(0, 1fr);
+}
+
+.docsViewerReport[data-report-subscope="projects"][data-report-subscope-selection="inactive"]
+  .docsViewerReport__row{
+  grid-template-areas: "publication title";
+  grid-template-columns: 1rem minmax(0, 1fr);
+}
+
+.docsViewerReport[data-report-subscope="projects"]
+  [data-report-contribution-host="row-leading"]{
+  grid-area: selection;
+}
+
+.docsViewerReport[data-report-subscope="projects"]
+  [data-report-contribution-host="row-trailing"]{
+  grid-area: publication;
+}
+
 .docsViewerReport[data-report-subscope="projects"][data-report-subscope-selection="inactive"]
   [data-report-contribution-host="row-leading"]{
   display: none;
@@ -189,6 +211,7 @@
 
 .docsViewerReport[data-report-subscope="projects"] .docsViewerReport__subscopeButton{
   display: inline-flex;
+  grid-area: title;
   align-items: center;
 }
 
