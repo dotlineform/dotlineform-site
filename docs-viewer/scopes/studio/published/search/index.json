@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f6968badb0e266a188cc2e801ac1d595",
-    "generated_at_utc": "2026-08-10T20:34:59Z",
-    "count": 305
+    "version": "blake2b-3e19f790b3913064a160f39d1159f1d7",
+    "generated_at_utc": "2026-08-10T20:48:06Z",
+    "count": 306
   },
   "entries": [
     {
@@ -3831,10 +3831,10 @@
       "kind": "doc",
       "title": "Catalogue Works Report Migration",
       "href": "/docs/?scope=studio&doc=d-20260810-181816-dc9891",
-      "last_updated": "2026-08-10 18:18:16",
+      "last_updated": "2026-08-10 21:47:08",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-10 18:18:16 • Roadmap",
+      "display_meta": "2026-08-10 21:47:08 • Roadmap",
       "search_terms": [
         "catalogue works report migration",
         "catalogue",
@@ -3842,15 +3842,44 @@
         "report",
         "migration",
         "roadmap",
-        "2026-08-10 18:18:16",
+        "2026-08-10 21:47:08",
         "2026",
         "08",
         "10",
-        "18",
-        "16",
+        "21",
+        "47",
         "d-20260810-181816-dc9891"
       ],
-      "search_text": "catalogue works report migration catalogue works report migration roadmap 2026-08-10 18:18:16 2026 08 10 18 16 d-20260810-181816-dc9891"
+      "search_text": "catalogue works report migration catalogue works report migration roadmap 2026-08-10 21:47:08 2026 08 10 21 47 d-20260810-181816-dc9891"
+    },
+    {
+      "id": "d-20260810-214708-b96106",
+      "kind": "doc",
+      "title": "CWR-1 — Catalogue Works Report Migration Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260810-214708-b96106",
+      "last_updated": "2026-08-10 21:47:08",
+      "parent_id": "d-20260810-181816-dc9891",
+      "parent_title": "Catalogue Works Report Migration",
+      "display_meta": "2026-08-10 21:47:08 • Catalogue Works Report Migration",
+      "search_terms": [
+        "cwr-1 — catalogue works report migration delivery",
+        "cwr",
+        "1",
+        "catalogue",
+        "works",
+        "report",
+        "migration",
+        "delivery",
+        "catalogue works report migration",
+        "2026-08-10 21:47:08",
+        "2026",
+        "08",
+        "10",
+        "21",
+        "47",
+        "d-20260810-214708-b96106"
+      ],
+      "search_text": "cwr-1 — catalogue works report migration delivery cwr 1 catalogue works report migration delivery catalogue works report migration 2026-08-10 21:47:08 2026 08 10 21 47 d-20260810-214708-b96106"
     },
     {
       "id": "d-20260809-155631-ab527b",

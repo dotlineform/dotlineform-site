@@ -822,7 +822,15 @@
           "doc_id": "d-20260810-181816-dc9891",
           "title": "Catalogue Works Report Migration",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-181816-dc9891.json",
-          "ui_status": "draft"
+          "ui_status": "draft",
+          "children": [
+            {
+              "doc_id": "d-20260810-214708-b96106",
+              "title": "CWR-1 — Catalogue Works Report Migration Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-214708-b96106.json",
+              "ui_status": "draft"
+            }
+          ]
         },
         {
           "doc_id": "d-20260809-155631-ab527b",
@@ -1764,5 +1772,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-10T20:36:42Z"
+  "generated_at": "2026-08-10T20:48:06Z"
 }
