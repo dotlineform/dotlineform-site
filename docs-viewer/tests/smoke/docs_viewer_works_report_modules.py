@@ -62,7 +62,10 @@ def run_smoke(base_url: str) -> None:
                     authoring_subject: authoringSubject
                 });
                 const projectDocs = [
-                    record('d-20260801-010101-a1b2c3', 'A work note', subject('work', '00008')),
+                    {
+                        ...record('d-20260801-010101-a1b2c3', 'A work note', subject('work', '00008')),
+                        customisation: { publication_targets: [] }
+                    },
                     record('d-20260801-010102-b2c3d4', 'B work note', subject('work', '00009')),
                     record('d-20260801-010103-c3d4e5', 'Series note', subject('series', '026')),
                     record('d-20260801-010104-d4e5f6', 'Other Series note', subject('series', '009')),
@@ -172,6 +175,12 @@ def run_smoke(base_url: str) -> None:
                         docs: [{ ...projectDocs[0], viewer_url: '/inferred' }]
                     });
                 } catch (error) { invalidMessages.push(error.message); }
+                try {
+                    module.normalizeWorksProjectsManifest({
+                        ...manifestPayload,
+                        docs: [{ ...projectDocs[0], customisation: [] }]
+                    });
+                } catch (error) { invalidMessages.push(error.message); }
 
                 phase = 'fail-work';
                 root.querySelector('#docsWorksReportRefresh').click();
@@ -233,6 +242,7 @@ def run_smoke(base_url: str) -> None:
     assert result["invalidMessages"] == [
         "Works Series lookup is invalid.",
         "Works Work lookup is invalid.",
+        "Works Projects manifest is invalid.",
         "Works Projects manifest is invalid.",
     ]
     assert result["clearedImmediately"] == 0

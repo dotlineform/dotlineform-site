@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-36c7a8e30b951996ca463a884d35866f",
-    "generated_at_utc": "2026-08-10T14:19:43Z",
-    "count": 300
+    "version": "blake2b-01965021809b3d9324a743ad6eaccf49",
+    "generated_at_utc": "2026-08-10T14:35:32Z",
+    "count": 299
   },
   "entries": [
     {
@@ -2464,25 +2464,25 @@
       "kind": "doc",
       "title": "Reports",
       "href": "/docs/?scope=studio&doc=d-20260513-105343-6de36b",
-      "last_updated": "2026-08-09 13:25:06",
+      "last_updated": "2026-08-10 15:26:37",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-08-09 13:25:06 • Docs Viewer",
+      "display_meta": "2026-08-10 15:26:37 • Docs Viewer",
       "search_terms": [
         "reports",
         "docs viewer",
         "docs",
         "viewer",
-        "2026-08-09 13:25:06",
+        "2026-08-10 15:26:37",
         "2026",
         "08",
-        "09",
-        "13",
-        "25",
-        "06",
+        "10",
+        "15",
+        "26",
+        "37",
         "d-20260513-105343-6de36b"
       ],
-      "search_text": "reports docs viewer docs viewer 2026-08-09 13:25:06 2026 08 09 13 25 06 d-20260513-105343-6de36b"
+      "search_text": "reports docs viewer docs viewer 2026-08-10 15:26:37 2026 08 10 15 26 37 d-20260513-105343-6de36b"
     },
     {
       "id": "d-20260331-000000-c313fd",
@@ -6400,10 +6400,10 @@
       "kind": "doc",
       "title": "Sub-Scope Publishing Concept And Architecture",
       "href": "/docs/?scope=studio&doc=d-20260802-194358-7717ee",
-      "last_updated": "2026-08-10 12:36:29",
+      "last_updated": "2026-08-10 15:26:37",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-10 12:36:29 • Sub-Scope Publishing",
+      "display_meta": "2026-08-10 15:26:37 • Sub-Scope Publishing",
       "search_terms": [
         "sub-scope publishing concept and architecture",
         "sub",
@@ -6413,16 +6413,16 @@
         "and",
         "architecture",
         "sub-scope publishing",
-        "2026-08-10 12:36:29",
+        "2026-08-10 15:26:37",
         "2026",
         "08",
         "10",
-        "12",
-        "36",
-        "29",
+        "15",
+        "26",
+        "37",
         "d-20260802-194358-7717ee"
       ],
-      "search_text": "sub-scope publishing concept and architecture sub scope publishing concept and architecture sub-scope publishing 2026-08-10 12:36:29 2026 08 10 12 36 29 d-20260802-194358-7717ee"
+      "search_text": "sub-scope publishing concept and architecture sub scope publishing concept and architecture sub-scope publishing 2026-08-10 15:26:37 2026 08 10 15 26 37 d-20260802-194358-7717ee"
     },
     {
       "id": "d-20260804-160200-fa7bb7",
@@ -6550,35 +6550,35 @@
       "kind": "doc",
       "title": "Works Report",
       "href": "/docs/?scope=studio&doc=d-20260810-115737-901d0f",
-      "last_updated": "2026-08-10 15:19:04",
+      "last_updated": "2026-08-10 15:35:12",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-10 15:19:04 • Roadmap",
+      "display_meta": "2026-08-10 15:35:12 • Roadmap",
       "search_terms": [
         "works report",
         "works",
         "report",
         "roadmap",
-        "2026-08-10 15:19:04",
+        "2026-08-10 15:35:12",
         "2026",
         "08",
         "10",
         "15",
-        "19",
-        "04",
+        "35",
+        "12",
         "d-20260810-115737-901d0f"
       ],
-      "search_text": "works report works report roadmap 2026-08-10 15:19:04 2026 08 10 15 19 04 d-20260810-115737-901d0f"
+      "search_text": "works report works report roadmap 2026-08-10 15:35:12 2026 08 10 15 35 12 d-20260810-115737-901d0f"
     },
     {
       "id": "d-20260810-115737-741620",
       "kind": "doc",
       "title": "Works Report Concept And Architecture",
       "href": "/docs/?scope=studio&doc=d-20260810-115737-741620",
-      "last_updated": "2026-08-10 12:43:35",
+      "last_updated": "2026-08-10 15:26:37",
       "parent_id": "d-20260810-115737-901d0f",
       "parent_title": "Works Report",
-      "display_meta": "2026-08-10 12:43:35 • Works Report",
+      "display_meta": "2026-08-10 15:26:37 • Works Report",
       "search_terms": [
         "works report concept and architecture",
         "works",
@@ -6587,48 +6587,16 @@
         "and",
         "architecture",
         "works report",
-        "2026-08-10 12:43:35",
-        "2026",
-        "08",
-        "10",
-        "12",
-        "43",
-        "35",
-        "d-20260810-115737-741620"
-      ],
-      "search_text": "works report concept and architecture works report concept and architecture works report 2026-08-10 12:43:35 2026 08 10 12 43 35 d-20260810-115737-741620"
-    },
-    {
-      "id": "d-20260810-115737-01cace",
-      "kind": "doc",
-      "title": "WRK-1 — Published Series Documentation Coverage Report Delivery",
-      "href": "/docs/?scope=studio&doc=d-20260810-115737-01cace",
-      "last_updated": "2026-08-10 15:19:04",
-      "parent_id": "d-20260810-115737-901d0f",
-      "parent_title": "Works Report",
-      "display_meta": "2026-08-10 15:19:04 • Works Report",
-      "search_terms": [
-        "wrk-1 — published series documentation coverage report delivery",
-        "wrk",
-        "1",
-        "published",
-        "series",
-        "documentation",
-        "coverage",
-        "report",
-        "delivery",
-        "works report",
-        "works",
-        "2026-08-10 15:19:04",
+        "2026-08-10 15:26:37",
         "2026",
         "08",
         "10",
         "15",
-        "19",
-        "04",
-        "d-20260810-115737-01cace"
+        "26",
+        "37",
+        "d-20260810-115737-741620"
       ],
-      "search_text": "wrk-1 — published series documentation coverage report delivery wrk 1 published series documentation coverage report delivery works report works 2026-08-10 15:19:04 2026 08 10 15 19 04 d-20260810-115737-01cace"
+      "search_text": "works report concept and architecture works report concept and architecture works report 2026-08-10 15:26:37 2026 08 10 15 26 37 d-20260810-115737-741620"
     },
     {
       "id": "d-20260712-213026-ee0f22",

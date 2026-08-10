@@ -109,7 +109,23 @@ export function normalizeWorksWorkLookup(payload) {
 }
 
 function normalizeProjectDocument(value) {
-  if (!exactKeys(value, ["authoring_subject", "doc_id", "last_updated", "title", "ui_status"])) {
+  const keys = value && typeof value === "object" && !Array.isArray(value)
+    ? Object.keys(value).sort().join(",")
+    : "";
+  if (
+    ![
+      "authoring_subject,doc_id,last_updated,title,ui_status",
+      "authoring_subject,customisation,doc_id,last_updated,title,ui_status"
+    ].includes(keys)
+    || (
+      Object.prototype.hasOwnProperty.call(value, "customisation")
+      && (
+        !value.customisation
+        || typeof value.customisation !== "object"
+        || Array.isArray(value.customisation)
+      )
+    )
+  ) {
     throw new Error("Works Projects manifest is invalid.");
   }
   const docId = cleanString(value.doc_id);
