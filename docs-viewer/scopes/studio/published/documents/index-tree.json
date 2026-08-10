@@ -1379,7 +1379,7 @@
           "doc_id": "d-20260810-115737-901d0f",
           "title": "Works Report",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-115737-901d0f.json",
-          "ui_status": "proposed",
+          "ui_status": "in-progress",
           "children": [
             {
               "doc_id": "d-20260810-115737-741620",
@@ -1391,7 +1391,7 @@
               "doc_id": "d-20260810-115737-01cace",
               "title": "WRK-1 — Published Series Documentation Coverage Report Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-115737-01cace.json",
-              "ui_status": "proposed"
+              "ui_status": "in-progress"
             }
           ]
         },
@@ -1735,5 +1735,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-10T11:00:44Z"
+  "generated_at": "2026-08-10T14:05:26Z"
 }

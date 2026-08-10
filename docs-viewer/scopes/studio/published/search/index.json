@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-0ad91cb8aa8860b509ee9a70ac585717",
-    "generated_at_utc": "2026-08-10T13:46:39Z",
+    "version": "blake2b-aa2f73255d64ad77c11c0ef1d57226d6",
+    "generated_at_utc": "2026-08-10T14:05:26Z",
     "count": 300
   },
   "entries": [
@@ -6550,25 +6550,25 @@
       "kind": "doc",
       "title": "Works Report",
       "href": "/docs/?scope=studio&doc=d-20260810-115737-901d0f",
-      "last_updated": "2026-08-10 12:35:51",
+      "last_updated": "2026-08-10 15:03:46",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-10 12:35:51 • Roadmap",
+      "display_meta": "2026-08-10 15:03:46 • Roadmap",
       "search_terms": [
         "works report",
         "works",
         "report",
         "roadmap",
-        "2026-08-10 12:35:51",
+        "2026-08-10 15:03:46",
         "2026",
         "08",
         "10",
-        "12",
-        "35",
-        "51",
+        "15",
+        "03",
+        "46",
         "d-20260810-115737-901d0f"
       ],
-      "search_text": "works report works report roadmap 2026-08-10 12:35:51 2026 08 10 12 35 51 d-20260810-115737-901d0f"
+      "search_text": "works report works report roadmap 2026-08-10 15:03:46 2026 08 10 15 03 46 d-20260810-115737-901d0f"
     },
     {
       "id": "d-20260810-115737-741620",
@@ -6603,10 +6603,10 @@
       "kind": "doc",
       "title": "WRK-1 — Published Series Documentation Coverage Report Delivery",
       "href": "/docs/?scope=studio&doc=d-20260810-115737-01cace",
-      "last_updated": "2026-08-10 12:35:51",
+      "last_updated": "2026-08-10 15:03:46",
       "parent_id": "d-20260810-115737-901d0f",
       "parent_title": "Works Report",
-      "display_meta": "2026-08-10 12:35:51 • Works Report",
+      "display_meta": "2026-08-10 15:03:46 • Works Report",
       "search_terms": [
         "wrk-1 — published series documentation coverage report delivery",
         "wrk",
@@ -6619,16 +6619,16 @@
         "delivery",
         "works report",
         "works",
-        "2026-08-10 12:35:51",
+        "2026-08-10 15:03:46",
         "2026",
         "08",
         "10",
-        "12",
-        "35",
-        "51",
+        "15",
+        "03",
+        "46",
         "d-20260810-115737-01cace"
       ],
-      "search_text": "wrk-1 — published series documentation coverage report delivery wrk 1 published series documentation coverage report delivery works report works 2026-08-10 12:35:51 2026 08 10 12 35 51 d-20260810-115737-01cace"
+      "search_text": "wrk-1 — published series documentation coverage report delivery wrk 1 published series documentation coverage report delivery works report works 2026-08-10 15:03:46 2026 08 10 15 03 46 d-20260810-115737-01cace"
     },
     {
       "id": "d-20260712-213026-ee0f22",
