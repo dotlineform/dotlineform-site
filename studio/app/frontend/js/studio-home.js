@@ -1,4 +1,5 @@
 import { loadStudioConfig } from "./studio-config.js";
+import { getStudioSiteBase } from "./studio-navigation.js";
 import { findStudioRoute } from "./studio-route-registry.js";
 
 const HOME_COLUMNS = Object.freeze([
@@ -10,7 +11,11 @@ const HOME_COLUMNS = Object.freeze([
       Object.freeze({ routeId: "catalogue_work_editor" }),
       Object.freeze({ routeId: "bulk_add_work" }),
       Object.freeze({ routeId: "catalogue_field_registry" }),
-      Object.freeze({ routeId: "studio_works", params: Object.freeze({ sort: "cat", dir: "asc" }) })
+      Object.freeze({
+        href: "/docs/?scope=dotlineform&doc=d-20260810-222148-99daec",
+        label: "works",
+        siteKey: "docs_viewer"
+      })
     ])
   }),
   Object.freeze({
@@ -52,7 +57,13 @@ function renderHomeColumn(config, column) {
 
 function renderHomeLink(config, link) {
   if (link.href) {
-    return `<li><a class="studioHomeLinks__pill studioLinkList__item" href="${escapeHtml(link.href, true)}">${escapeHtml(link.label || link.href)}</a></li>`;
+    let href = link.href;
+    if (link.siteKey) {
+      const base = getStudioSiteBase(config, link.siteKey);
+      if (!base) return "";
+      href = new URL(String(link.href), `${base}/`).href;
+    }
+    return `<li><a class="studioHomeLinks__pill studioLinkList__item" href="${escapeHtml(href, true)}">${escapeHtml(link.label || link.href)}</a></li>`;
   }
   const route = findStudioRoute(config, link.routeId);
   if (!route) return "";

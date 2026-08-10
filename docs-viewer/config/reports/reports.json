@@ -84,6 +84,14 @@
       "presets": []
     },
     {
+      "report_id": "catalogue_works",
+      "title": "Catalogue Works",
+      "description": "Searches every published canonical Work with exact Series and storage context.",
+      "default_access": "local",
+      "loader_id": "catalogue_works",
+      "presets": []
+    },
+    {
       "report_id": "uncataloged_files",
       "title": "Uncataloged Files",
       "description": "Lists ordinary files in represented Work source folders that are not canonical Work primary sources.",

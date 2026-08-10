@@ -373,8 +373,5 @@ export const DEFAULT_STUDIO_UI_TEXT = {
     "entry_modal_cancel_button": "Cancel",
     "entry_modal_delete_button": "Delete",
     "summary_rebuild_needed": "public update failed in this session"
-  },
-  "studio_works": {
-    "copy_series_button": "copy series"
   }
 };

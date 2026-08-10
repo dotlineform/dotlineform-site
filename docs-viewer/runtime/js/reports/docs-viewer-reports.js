@@ -59,6 +59,13 @@ const REPORT_LOADERS = {
       });
     }
   },
+  catalogue_works: {
+    load: function () {
+      return import("./catalogue-works-report.js").then(function (module) {
+        return module.mountCatalogueWorksReport;
+      });
+    }
+  },
   uncataloged_files: {
     load: function () {
       return import("./uncataloged-files-report.js").then(function (module) {

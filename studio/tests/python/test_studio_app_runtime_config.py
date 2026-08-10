@@ -22,11 +22,25 @@ from studio_app_server_test_support import (
 )
 
 def test_runtime_config_exposes_adapter_contract() -> None:
-    original_env = {key: os.environ.get(key) for key in ("SITE_HOST", "SITE_PORT", "SITE_PREVIEW_BASE", "PRODUCTION_SITE_BASE")}
+    original_env = {
+        key: os.environ.get(key)
+        for key in (
+            "SITE_HOST",
+            "SITE_PORT",
+            "SITE_PREVIEW_BASE",
+            "PRODUCTION_SITE_BASE",
+            "DOCS_VIEWER_HOST",
+            "DOCS_VIEWER_PORT",
+            "DOCS_VIEWER_BASE_URL",
+        )
+    }
     os.environ["SITE_HOST"] = "127.0.0.1"
     os.environ["SITE_PORT"] = "4000"
     os.environ.pop("SITE_PREVIEW_BASE", None)
     os.environ.pop("PRODUCTION_SITE_BASE", None)
+    os.environ["DOCS_VIEWER_HOST"] = "127.0.0.1"
+    os.environ["DOCS_VIEWER_PORT"] = "8877"
+    os.environ.pop("DOCS_VIEWER_BASE_URL", None)
     try:
         payload = runtime_config(REPO_ROOT, "test-version")
     finally:
@@ -40,6 +54,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["host"] == "local-studio-app"
     assert runtime["asset_version"] == "test-version"
     assert runtime["routes"]["runtime_config"] == "/studio/runtime-config.json"
+    assert runtime["sites"]["docs_viewer"]["base"] == "http://127.0.0.1:8877"
     assert runtime["sites"]["public_preview"]["base"] == "http://127.0.0.1:4000"
     assert runtime["sites"]["production"]["base"] == "https://dotlineform.com"
     assert payload["app"]["routes"]["studio_home"]["path"] == "/studio/"
@@ -50,7 +65,6 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert payload["app"]["routes"]["bulk_add_work"]["shell_type"] == "html-template"
     assert payload["app"]["routes"]["catalogue_field_registry"]["shell_type"] == "html-template"
     assert payload["app"]["routes"]["catalogue_status"]["shell_type"] == "html-template"
-    assert payload["app"]["routes"]["studio_works"]["shell_type"] == "html-template"
     assert payload["app"]["routes"]["catalogue_series_editor"]["shell_type"] == "html-template"
     assert payload["app"]["routes"]["catalogue_work_editor"]["shell_type"] == "html-template"
     assert "catalogue_moment_editor" not in payload["app"]["routes"]
@@ -76,7 +90,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert any(view["id"] == "bulk_add_work" and view["path"] == "/studio/bulk-add-work/" for view in runtime["views"])
     assert any(view["id"] == "catalogue_field_registry" and view["path"] == "/studio/catalogue-field-registry/" for view in runtime["views"])
     assert any(view["id"] == "catalogue_status" and view["path"] == "/studio/catalogue-status/" for view in runtime["views"])
-    assert any(view["id"] == "studio_works" and view["path"] == "/studio/studio-works/" for view in runtime["views"])
+    assert not any(view["id"] == "studio_works" or view["path"] == "/studio/studio-works/" for view in runtime["views"])
     assert any(view["id"] == "catalogue_series_editor" and view["path"] == "/studio/catalogue-series/" for view in runtime["views"])
     assert any(view["id"] == "catalogue_work_editor" and view["path"] == "/studio/catalogue-work/" for view in runtime["views"])
     assert not any(view["id"] == "catalogue_moment_editor" or view["path"] == "/studio/catalogue-moment/" for view in runtime["views"])

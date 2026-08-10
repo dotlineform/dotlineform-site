@@ -1164,23 +1164,6 @@ button.studioList__cellLink {
   margin: 0;
 }
 
-.worksList--studio .worksList__head {
-  grid-template-columns: 7ch 10.5ch minmax(0, 1.35fr) minmax(0, 1fr) 8ch;
-  margin: var(--list-section-gap) 0 4px;
-}
-
-.worksList--studio .worksList__item {
-  grid-template-columns: 7ch 10.5ch minmax(0, 1.35fr) minmax(0, 1fr) 8ch;
-}
-
-.worksList--studio.worksList--singleSeries .worksList__head {
-  grid-template-columns: 7ch 10.5ch minmax(0, 1fr) 8ch;
-}
-
-.worksList--studio.worksList--singleSeries .worksList__item {
-  grid-template-columns: 7ch 10.5ch minmax(0, 1fr) 8ch;
-}
-
 .catalogueStatusPage__filters {
   margin-bottom: var(--studio-shell-gap-md);
 }

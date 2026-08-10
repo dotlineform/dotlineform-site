@@ -95,6 +95,40 @@
   grid-template-columns: 3.25rem repeat(2, minmax(0, 1fr));
 }
 
+.docsViewerReport[data-report-id="catalogue_works"]{
+  max-width: 100%;
+}
+
+.catalogueWorksReport__table{
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.catalogueWorksReport__table th,
+.catalogueWorksReport__table td{
+  min-width: 0;
+  border-bottom: 1px solid var(--docs-viewer-border);
+  padding: 0.55rem 0.65rem 0.55rem 0;
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.catalogueWorksReport__table th:nth-child(1){ width: 8ch; }
+.catalogueWorksReport__table th:nth-child(2){ width: 14ch; }
+.catalogueWorksReport__table th:nth-child(4){ width: 24%; }
+.catalogueWorksReport__table th:nth-child(5){ width: 10ch; }
+
+.catalogueWorksReport__seriesList{
+  display: grid;
+  gap: 0.2rem;
+}
+
+.catalogueWorksReport__cellMeta{
+  color: var(--docs-viewer-muted);
+}
+
 .docsViewerReport[data-report-id="project_state"] .docsViewerReport__sortButton{
   text-transform: none;
 }

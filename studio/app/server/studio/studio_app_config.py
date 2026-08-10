@@ -277,10 +277,8 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "studio" / "app" / "frontend" / "routes" / "catalogue-series.html",
         repo_root / "studio" / "app" / "frontend" / "routes" / "catalogue-status.html",
         repo_root / "studio" / "app" / "frontend" / "routes" / "catalogue-work.html",
-        repo_root / "studio" / "app" / "frontend" / "routes" / "studio-works.html",
         repo_root / "studio" / "app" / "frontend" / "js" / "bulk-add-work.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-field-registry-review.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "studio-works.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-series-editor.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-project-media-picker.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-work-editor.js",
@@ -397,9 +395,17 @@ def runtime_site_bases() -> dict[str, object]:
     public_preview_base = os.environ.get("SITE_PREVIEW_BASE", "").strip()
     if not public_preview_base:
         public_preview_base = f"http://{public_site_host}:{public_site_port}"
+    docs_viewer_host = os.environ.get("DOCS_VIEWER_HOST", "127.0.0.1").strip() or "127.0.0.1"
+    docs_viewer_port = os.environ.get("DOCS_VIEWER_PORT", "8776").strip() or "8776"
+    docs_viewer_base = os.environ.get("DOCS_VIEWER_BASE_URL", "").strip()
+    if not docs_viewer_base:
+        docs_viewer_base = f"http://{docs_viewer_host}:{docs_viewer_port}"
     production_base = os.environ.get("PRODUCTION_SITE_BASE", PRODUCTION_SITE_BASE).strip() or PRODUCTION_SITE_BASE
 
     return {
+        "docs_viewer": {
+            "base": normalize_base_url(docs_viewer_base),
+        },
         "public_preview": {
             "base": normalize_base_url(public_preview_base),
         },

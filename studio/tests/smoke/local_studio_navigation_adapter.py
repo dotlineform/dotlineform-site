@@ -90,6 +90,7 @@ def main(argv: list[str] | None = None) -> int:
                     return {
                         hasDocsService: Object.prototype.hasOwnProperty.call(services, "docs"),
                         hasExternalLinks: Object.prototype.hasOwnProperty.call(config, "external_links"),
+                        docsViewerBase: mod.getStudioSiteBase(config, "docs_viewer"),
                         publicPreviewBase: mod.getStudioSiteBase(config, "public_preview"),
                         productionBase: mod.getStudioSiteBase(config, "production"),
                         hasUiTextDataPaths: Object.prototype.hasOwnProperty.call(config.app.runtime.data_paths, "ui_text"),
@@ -117,6 +118,8 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError("runtime services unexpectedly exposed a Docs Viewer service")
         if result["hasExternalLinks"]:
             raise AssertionError("runtime config unexpectedly exposed external link config")
+        if result["docsViewerBase"] != "http://127.0.0.1:8776":
+            raise AssertionError(f"unexpected Docs Viewer base: {result['docsViewerBase']!r}")
         if result["publicPreviewBase"] != "http://127.0.0.1:4000":
             raise AssertionError(f"unexpected public preview base: {result['publicPreviewBase']!r}")
         if result["productionBase"] != "https://dotlineform.com":
@@ -158,7 +161,7 @@ def main(argv: list[str] | None = None) -> int:
             "/studio/catalogue-work/",
             "/studio/bulk-add-work/",
             "/studio/catalogue-field-registry/",
-            "/studio/studio-works/?sort=cat&dir=asc",
+            "http://127.0.0.1:8776/docs/?scope=dotlineform&doc=d-20260810-222148-99daec",
         }
         if expected_home_hrefs - home_link_hrefs:
             raise AssertionError(f"Studio home missing expected links: {result['homeLinks']!r}")

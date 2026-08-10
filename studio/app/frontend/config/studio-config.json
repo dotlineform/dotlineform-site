@@ -43,16 +43,6 @@
         "shell_type": "html-template",
         "ready_state_route_id": "catalogue-status"
       },
-      "studio_works": {
-        "label": "works",
-        "title": "Studio Works",
-        "path": "/studio/studio-works/",
-        "template": "/studio/app/frontend/routes/studio-works.html",
-        "script": "/studio/app/frontend/js/studio-works.js",
-        "nav": false,
-        "shell_type": "html-template",
-        "ready_state_route_id": "studio-works"
-      },
       "catalogue_series_editor": {
         "label": "series editor",
         "title": "Catalogue Series Editor",
