@@ -4,6 +4,22 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260810-182610-c274f0",
+      "title": "RB-1 — Report Blocks Cutover Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-182610-c274f0.json",
+      "timestamp": "2026-08-10 18:50:43",
+      "parent_id": "d-20260810-180114-003d2a",
+      "parent_title": "Report Blocks"
+    },
+    {
+      "doc_id": "d-20260810-180114-003d2a",
+      "title": "Report Blocks",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-180114-003d2a.json",
+      "timestamp": "2026-08-10 18:26:10",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
       "doc_id": "d-20260810-181816-dc9891",
       "title": "Catalogue Works Report Migration",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-181816-dc9891.json",
@@ -15,14 +31,6 @@
       "doc_id": "d-20260810-165949-ee4d35",
       "title": "Expanded Report View",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-165949-ee4d35.json",
-      "timestamp": "2026-08-10 18:18:16",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260810-180114-003d2a",
-      "title": "Report Blocks",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-180114-003d2a.json",
       "timestamp": "2026-08-10 18:18:16",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
@@ -74,15 +82,7 @@
       "timestamp": "2026-08-10 14:46:16",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260514-184303-7914e2",
-      "title": "Media And Asset Handling",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260514-184303-7914e2.json",
-      "timestamp": "2026-08-10 14:31:24",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-08-10T17:20:09Z"
+  "generated_at": "2026-08-10T17:51:06Z"
 }

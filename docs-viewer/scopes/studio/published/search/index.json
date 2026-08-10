@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ff661fe647c4a205b0c574347003cbb9",
-    "generated_at_utc": "2026-08-10T17:20:09Z",
-    "count": 303
+    "version": "blake2b-52f676cf8fae4ae1d7da80e1f9362bbb",
+    "generated_at_utc": "2026-08-10T17:51:06Z",
+    "count": 304
   },
   "entries": [
     {
@@ -4459,24 +4459,53 @@
       "kind": "doc",
       "title": "Report Blocks",
       "href": "/docs/?scope=studio&doc=d-20260810-180114-003d2a",
-      "last_updated": "2026-08-10 18:18:16",
+      "last_updated": "2026-08-10 18:26:10",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-10 18:18:16 • Roadmap",
+      "display_meta": "2026-08-10 18:26:10 • Roadmap",
       "search_terms": [
         "report blocks",
         "report",
         "blocks",
         "roadmap",
-        "2026-08-10 18:18:16",
+        "2026-08-10 18:26:10",
         "2026",
         "08",
         "10",
         "18",
-        "16",
+        "26",
         "d-20260810-180114-003d2a"
       ],
-      "search_text": "report blocks report blocks roadmap 2026-08-10 18:18:16 2026 08 10 18 16 d-20260810-180114-003d2a"
+      "search_text": "report blocks report blocks roadmap 2026-08-10 18:26:10 2026 08 10 18 26 d-20260810-180114-003d2a"
+    },
+    {
+      "id": "d-20260810-182610-c274f0",
+      "kind": "doc",
+      "title": "RB-1 — Report Blocks Cutover Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260810-182610-c274f0",
+      "last_updated": "2026-08-10 18:50:43",
+      "parent_id": "d-20260810-180114-003d2a",
+      "parent_title": "Report Blocks",
+      "display_meta": "2026-08-10 18:50:43 • Report Blocks",
+      "search_terms": [
+        "rb-1 — report blocks cutover delivery",
+        "rb",
+        "1",
+        "report",
+        "blocks",
+        "cutover",
+        "delivery",
+        "report blocks",
+        "2026-08-10 18:50:43",
+        "2026",
+        "08",
+        "10",
+        "18",
+        "50",
+        "43",
+        "d-20260810-182610-c274f0"
+      ],
+      "search_text": "rb-1 — report blocks cutover delivery rb 1 report blocks cutover delivery report blocks 2026-08-10 18:50:43 2026 08 10 18 50 43 d-20260810-182610-c274f0"
     },
     {
       "id": "d-20260715-084611-7c7c8d",

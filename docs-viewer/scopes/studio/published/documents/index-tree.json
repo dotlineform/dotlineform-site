@@ -958,7 +958,15 @@
           "doc_id": "d-20260810-180114-003d2a",
           "title": "Report Blocks",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-180114-003d2a.json",
-          "ui_status": "draft"
+          "ui_status": "draft",
+          "children": [
+            {
+              "doc_id": "d-20260810-182610-c274f0",
+              "title": "RB-1 — Report Blocks Cutover Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-182610-c274f0.json",
+              "ui_status": "proposed"
+            }
+          ]
         },
         {
           "doc_id": "d-20260715-084611-7c7c8d",
@@ -1751,5 +1759,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-10T17:20:09Z"
+  "generated_at": "2026-08-10T17:27:39Z"
 }
