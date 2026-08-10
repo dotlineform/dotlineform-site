@@ -519,6 +519,11 @@
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260424-000000-e2408a.json"
         },
         {
+          "doc_id": "d-20260810-211748-1f8b6f",
+          "title": "Report Block Tokens",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-211748-1f8b6f.json"
+        },
+        {
           "doc_id": "d-20260513-105343-6de36b",
           "title": "Reports",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260513-105343-6de36b.json",
@@ -958,13 +963,13 @@
           "doc_id": "d-20260810-180114-003d2a",
           "title": "Report Blocks",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-180114-003d2a.json",
-          "ui_status": "draft",
+          "ui_status": "done",
           "children": [
             {
               "doc_id": "d-20260810-182610-c274f0",
               "title": "RB-1 — Report Blocks Cutover Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-182610-c274f0.json",
-              "ui_status": "in-progress"
+              "ui_status": "done"
             }
           ]
         },
@@ -1759,5 +1764,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-10T18:23:20Z"
+  "generated_at": "2026-08-10T20:36:42Z"
 }

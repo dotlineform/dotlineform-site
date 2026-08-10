@@ -553,12 +553,9 @@ export function createDocsViewerManagementActionController(options) {
   function handleEditMetadataSave(target, payload) {
     if (!target || !payload) return Promise.resolve(null);
     var normalizedTarget = normalizeManagedDocumentTarget(target);
-    var doc = documentIndex.docsById.get(normalizedTarget.doc_id);
-    var title = doc && doc.title ? doc.title : payload.title;
 
     setManagementBusy(true);
     renderManagementUi();
-    setManagementMessage("Saving metadata for " + title + "...", false);
 
     return updateManagedDocMetadata(normalizedTarget, payload, managementClientOptions())
       .then(function (response) {

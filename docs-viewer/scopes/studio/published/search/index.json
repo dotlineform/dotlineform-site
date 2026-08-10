@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-60b3d747143b37816a1b8454e15b3ee5",
-    "generated_at_utc": "2026-08-10T20:14:04Z",
-    "count": 304
+    "version": "blake2b-f6968badb0e266a188cc2e801ac1d595",
+    "generated_at_utc": "2026-08-10T20:34:59Z",
+    "count": 305
   },
   "entries": [
     {
@@ -961,31 +961,32 @@
       "kind": "doc",
       "title": "Docs Viewer",
       "href": "/docs/?scope=studio&doc=d-20260424-000000-50b63f",
-      "last_updated": "2026-07-28 21:58:58",
-      "display_meta": "2026-07-28 21:58:58",
+      "last_updated": "2026-08-10 21:20:11",
+      "display_meta": "2026-08-10 21:20:11",
       "search_terms": [
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-28 21:58:58",
+        "2026-08-10 21:20:11",
         "2026",
-        "07",
-        "28",
+        "08",
+        "10",
         "21",
-        "58",
+        "20",
+        "11",
         "d-20260424-000000-50b63f"
       ],
-      "search_text": "docs viewer docs viewer 2026-07-28 21:58:58 2026 07 28 21 58 d-20260424-000000-50b63f"
+      "search_text": "docs viewer docs viewer 2026-08-10 21:20:11 2026 08 10 21 20 11 d-20260424-000000-50b63f"
     },
     {
       "id": "d-20260507-123607-fd7cff",
       "kind": "doc",
       "title": "Analysis Documents",
       "href": "/docs/?scope=studio&doc=d-20260507-123607-fd7cff",
-      "last_updated": "2026-08-09 13:25:06",
+      "last_updated": "2026-08-10 21:21:25",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-08-09 13:25:06 • Docs Viewer",
+      "display_meta": "2026-08-10 21:21:25 • Docs Viewer",
       "search_terms": [
         "analysis documents",
         "analysis",
@@ -993,16 +994,15 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-08-09 13:25:06",
+        "2026-08-10 21:21:25",
         "2026",
         "08",
-        "09",
-        "13",
+        "10",
+        "21",
         "25",
-        "06",
         "d-20260507-123607-fd7cff"
       ],
-      "search_text": "analysis documents analysis documents docs viewer docs viewer 2026-08-09 13:25:06 2026 08 09 13 25 06 d-20260507-123607-fd7cff"
+      "search_text": "analysis documents analysis documents docs viewer docs viewer 2026-08-10 21:21:25 2026 08 10 21 25 d-20260507-123607-fd7cff"
     },
     {
       "id": "d-20260423-165116-e7f7e9",
@@ -1463,10 +1463,10 @@
       "kind": "doc",
       "title": "Embedded Detail Documents",
       "href": "/docs/?scope=studio&doc=d-20260623-221357-a97b66",
-      "last_updated": "2026-08-07 22:29:41",
+      "last_updated": "2026-08-10 21:21:25",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-08-07 22:29:41 • Docs Viewer",
+      "display_meta": "2026-08-10 21:21:25 • Docs Viewer",
       "search_terms": [
         "embedded detail documents",
         "embedded",
@@ -1475,16 +1475,15 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-08-07 22:29:41",
+        "2026-08-10 21:21:25",
         "2026",
         "08",
-        "07",
-        "22",
-        "29",
-        "41",
+        "10",
+        "21",
+        "25",
         "d-20260623-221357-a97b66"
       ],
-      "search_text": "embedded detail documents embedded detail documents docs viewer docs viewer 2026-08-07 22:29:41 2026 08 07 22 29 41 d-20260623-221357-a97b66"
+      "search_text": "embedded detail documents embedded detail documents docs viewer docs viewer 2026-08-10 21:21:25 2026 08 10 21 25 d-20260623-221357-a97b66"
     },
     {
       "id": "d-20260629-152159-ac1af9",
@@ -2460,39 +2459,67 @@
       "search_text": "publishable field publishable field docs viewer docs viewer 2026-08-08 18:53:51 2026 08 18 53 51 d-20260424-000000-e2408a"
     },
     {
+      "id": "d-20260810-211748-1f8b6f",
+      "kind": "doc",
+      "title": "Report Block Tokens",
+      "href": "/docs/?scope=studio&doc=d-20260810-211748-1f8b6f",
+      "last_updated": "2026-08-10 21:32:57",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-08-10 21:32:57 • Docs Viewer",
+      "search_terms": [
+        "report block tokens",
+        "report",
+        "block",
+        "tokens",
+        "docs viewer",
+        "docs",
+        "viewer",
+        "2026-08-10 21:32:57",
+        "2026",
+        "08",
+        "10",
+        "21",
+        "32",
+        "57",
+        "d-20260810-211748-1f8b6f"
+      ],
+      "search_text": "report block tokens report block tokens docs viewer docs viewer 2026-08-10 21:32:57 2026 08 10 21 32 57 d-20260810-211748-1f8b6f"
+    },
+    {
       "id": "d-20260513-105343-6de36b",
       "kind": "doc",
       "title": "Reports",
       "href": "/docs/?scope=studio&doc=d-20260513-105343-6de36b",
-      "last_updated": "2026-08-10 17:45:13",
+      "last_updated": "2026-08-10 21:20:06",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-08-10 17:45:13 • Docs Viewer",
+      "display_meta": "2026-08-10 21:20:06 • Docs Viewer",
       "search_terms": [
         "reports",
         "docs viewer",
         "docs",
         "viewer",
-        "2026-08-10 17:45:13",
+        "2026-08-10 21:20:06",
         "2026",
         "08",
         "10",
-        "17",
-        "45",
-        "13",
+        "21",
+        "20",
+        "06",
         "d-20260513-105343-6de36b"
       ],
-      "search_text": "reports docs viewer docs viewer 2026-08-10 17:45:13 2026 08 10 17 45 13 d-20260513-105343-6de36b"
+      "search_text": "reports docs viewer docs viewer 2026-08-10 21:20:06 2026 08 10 21 20 06 d-20260513-105343-6de36b"
     },
     {
       "id": "d-20260810-173738-703ecd",
       "kind": "doc",
       "title": "Report Capability and Composition",
       "href": "/docs/?scope=studio&doc=d-20260810-173738-703ecd",
-      "last_updated": "2026-08-10 17:45:21",
+      "last_updated": "2026-08-10 21:20:11",
       "parent_id": "d-20260513-105343-6de36b",
       "parent_title": "Reports",
-      "display_meta": "2026-08-10 17:45:21 • Reports",
+      "display_meta": "2026-08-10 21:20:11 • Reports",
       "search_terms": [
         "report capability and composition",
         "report",
@@ -2500,16 +2527,16 @@
         "and",
         "composition",
         "reports",
-        "2026-08-10 17:45:21",
+        "2026-08-10 21:20:11",
         "2026",
         "08",
         "10",
-        "17",
-        "45",
         "21",
+        "20",
+        "11",
         "d-20260810-173738-703ecd"
       ],
-      "search_text": "report capability and composition report capability and composition reports 2026-08-10 17:45:21 2026 08 10 17 45 21 d-20260810-173738-703ecd"
+      "search_text": "report capability and composition report capability and composition reports 2026-08-10 21:20:11 2026 08 10 21 20 11 d-20260810-173738-703ecd"
     },
     {
       "id": "d-20260331-000000-c313fd",
@@ -2884,10 +2911,10 @@
       "kind": "doc",
       "title": "Sub-Scope Customisation Architecture",
       "href": "/docs/?scope=studio&doc=d-20260731-155053-3929e2",
-      "last_updated": "2026-08-09 22:41:25",
+      "last_updated": "2026-08-10 21:20:11",
       "parent_id": "d-20260801-084127-752d7e",
       "parent_title": "Sub-Scopes",
-      "display_meta": "2026-08-09 22:41:25 • Sub-Scopes",
+      "display_meta": "2026-08-10 21:20:11 • Sub-Scopes",
       "search_terms": [
         "sub-scope customisation architecture",
         "sub",
@@ -2896,16 +2923,16 @@
         "architecture",
         "sub-scopes",
         "scopes",
-        "2026-08-09 22:41:25",
+        "2026-08-10 21:20:11",
         "2026",
         "08",
-        "09",
-        "22",
-        "41",
-        "25",
+        "10",
+        "21",
+        "20",
+        "11",
         "d-20260731-155053-3929e2"
       ],
-      "search_text": "sub-scope customisation architecture sub scope customisation architecture sub-scopes scopes 2026-08-09 22:41:25 2026 08 09 22 41 25 d-20260731-155053-3929e2"
+      "search_text": "sub-scope customisation architecture sub scope customisation architecture sub-scopes scopes 2026-08-10 21:20:11 2026 08 10 21 20 11 d-20260731-155053-3929e2"
     },
     {
       "id": "d-20260731-185207-2dbb6f",
@@ -2939,10 +2966,10 @@
       "kind": "doc",
       "title": "Sub-Scope Index Architecture",
       "href": "/docs/?scope=studio&doc=d-20260728-113139-763354",
-      "last_updated": "2026-08-07 22:29:14",
+      "last_updated": "2026-08-10 21:21:25",
       "parent_id": "d-20260801-084127-752d7e",
       "parent_title": "Sub-Scopes",
-      "display_meta": "2026-08-07 22:29:14 • Sub-Scopes",
+      "display_meta": "2026-08-10 21:21:25 • Sub-Scopes",
       "search_terms": [
         "sub-scope index architecture",
         "sub",
@@ -2951,16 +2978,15 @@
         "architecture",
         "sub-scopes",
         "scopes",
-        "2026-08-07 22:29:14",
+        "2026-08-10 21:21:25",
         "2026",
         "08",
-        "07",
-        "22",
-        "29",
-        "14",
+        "10",
+        "21",
+        "25",
         "d-20260728-113139-763354"
       ],
-      "search_text": "sub-scope index architecture sub scope index architecture sub-scopes scopes 2026-08-07 22:29:14 2026 08 07 22 29 14 d-20260728-113139-763354"
+      "search_text": "sub-scope index architecture sub scope index architecture sub-scopes scopes 2026-08-10 21:21:25 2026 08 10 21 25 d-20260728-113139-763354"
     },
     {
       "id": "d-20260728-205013-41deb8",
@@ -4483,10 +4509,10 @@
       "kind": "doc",
       "title": "RB-1 — Report Blocks Cutover Delivery",
       "href": "/docs/?scope=studio&doc=d-20260810-182610-c274f0",
-      "last_updated": "2026-08-10 21:13:54",
+      "last_updated": "2026-08-10 21:34:38",
       "parent_id": "d-20260810-180114-003d2a",
       "parent_title": "Report Blocks",
-      "display_meta": "2026-08-10 21:13:54 • Report Blocks",
+      "display_meta": "2026-08-10 21:34:38 • Report Blocks",
       "search_terms": [
         "rb-1 — report blocks cutover delivery",
         "rb",
@@ -4496,16 +4522,16 @@
         "cutover",
         "delivery",
         "report blocks",
-        "2026-08-10 21:13:54",
+        "2026-08-10 21:34:38",
         "2026",
         "08",
         "10",
         "21",
-        "13",
-        "54",
+        "34",
+        "38",
         "d-20260810-182610-c274f0"
       ],
-      "search_text": "rb-1 — report blocks cutover delivery rb 1 report blocks cutover delivery report blocks 2026-08-10 21:13:54 2026 08 10 21 13 54 d-20260810-182610-c274f0"
+      "search_text": "rb-1 — report blocks cutover delivery rb 1 report blocks cutover delivery report blocks 2026-08-10 21:34:38 2026 08 10 21 34 38 d-20260810-182610-c274f0"
     },
     {
       "id": "d-20260715-084611-7c7c8d",
@@ -5047,10 +5073,10 @@
       "kind": "doc",
       "title": "Project State Concept And Architecture",
       "href": "/docs/?scope=studio&doc=d-20260802-121105-c574f9",
-      "last_updated": "2026-08-10 12:00:44",
+      "last_updated": "2026-08-10 21:21:25",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-10 12:00:44 • Sub-Scope Publishing",
+      "display_meta": "2026-08-10 21:21:25 • Sub-Scope Publishing",
       "search_terms": [
         "project state concept and architecture",
         "project",
@@ -5062,16 +5088,15 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-10 12:00:44",
+        "2026-08-10 21:21:25",
         "2026",
         "08",
         "10",
-        "12",
-        "00",
-        "44",
+        "21",
+        "25",
         "d-20260802-121105-c574f9"
       ],
-      "search_text": "project state concept and architecture project state concept and architecture sub-scope publishing sub scope publishing 2026-08-10 12:00:44 2026 08 10 12 00 44 d-20260802-121105-c574f9"
+      "search_text": "project state concept and architecture project state concept and architecture sub-scope publishing sub scope publishing 2026-08-10 21:21:25 2026 08 10 21 25 d-20260802-121105-c574f9"
     },
     {
       "id": "d-20260802-174339-53877d",

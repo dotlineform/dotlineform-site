@@ -1,0 +1,10 @@
+{
+  "doc_id": "d-20260810-211748-1f8b6f",
+  "title": "Report Block Tokens",
+  "added_date": "2026-08-10 21:17:48",
+  "last_updated": "2026-08-10 21:32:57",
+  "viewer_url": "/docs/?scope=studio&doc=d-20260810-211748-1f8b6f",
+  "parent_id": "d-20260424-000000-50b63f",
+  "summary": "current registered report block tokens",
+  "content_html": "<h1>Report Block Tokens</h1>\n<table>\n<thead>\n<tr>\n<th>Token</th>\n<th>Report</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>docs_index_table</code></td>\n<td>Docs Index Table</td>\n</tr>\n<tr>\n<td><code>reports_list</code></td>\n<td>Reports List</td>\n</tr>\n<tr>\n<td><code>docs_subscope</code></td>\n<td>Docs Sub-Scope</td>\n</tr>\n<tr>\n<td><code>source_config</code></td>\n<td>Source Config</td>\n</tr>\n<tr>\n<td><code>docs_broken_links</code></td>\n<td>Docs Broken Links</td>\n</tr>\n<tr>\n<td><code>semantic_tokens</code></td>\n<td>Semantic Tokens</td>\n</tr>\n<tr>\n<td><code>project_state</code></td>\n<td>Project State</td>\n</tr>\n<tr>\n<td><code>works</code></td>\n<td>Works</td>\n</tr>\n<tr>\n<td><code>uncataloged_files</code></td>\n<td>Uncataloged Files</td>\n</tr>\n<tr>\n<td><code>missing_source_files</code></td>\n<td>Missing Source Files</td>\n</tr>\n</tbody>\n</table>\n<p>example block:</p>\n<pre><code>:::report\nid: project_state\naccess: local\n:::\n</code></pre>\n"
+}
