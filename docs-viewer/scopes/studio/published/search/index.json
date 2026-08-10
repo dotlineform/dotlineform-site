@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c3e5cadb92851bb943a81e43b5df088e",
-    "generated_at_utc": "2026-08-10T16:45:44Z",
-    "count": 301
+    "version": "blake2b-7d3ab4c1d506ee7d2d758d46322462c2",
+    "generated_at_utc": "2026-08-10T17:02:43Z",
+    "count": 302
   },
   "entries": [
     {
@@ -4271,26 +4271,26 @@
       "kind": "doc",
       "title": "Expanded Report View",
       "href": "/docs/?scope=studio&doc=d-20260810-165949-ee4d35",
-      "last_updated": "2026-08-10 17:45:21",
+      "last_updated": "2026-08-10 18:01:14",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-10 17:45:21 • Roadmap",
+      "display_meta": "2026-08-10 18:01:14 • Roadmap",
       "search_terms": [
         "expanded report view",
         "expanded",
         "report",
         "view",
         "roadmap",
-        "2026-08-10 17:45:21",
+        "2026-08-10 18:01:14",
         "2026",
         "08",
         "10",
-        "17",
-        "45",
-        "21",
+        "18",
+        "01",
+        "14",
         "d-20260810-165949-ee4d35"
       ],
-      "search_text": "expanded report view expanded report view roadmap 2026-08-10 17:45:21 2026 08 10 17 45 21 d-20260810-165949-ee4d35"
+      "search_text": "expanded report view expanded report view roadmap 2026-08-10 18:01:14 2026 08 10 18 01 14 d-20260810-165949-ee4d35"
     },
     {
       "id": "d-20260808-205414-91040a",
@@ -4428,6 +4428,31 @@
         "d-20260723-191039-f8cb88"
       ],
       "search_text": "public docs viewer mobile experience public docs viewer mobile experience roadmap 2026-08-03 00:00:00 2026 08 03 00 d-20260723-191039-f8cb88"
+    },
+    {
+      "id": "d-20260810-180114-003d2a",
+      "kind": "doc",
+      "title": "Report Blocks",
+      "href": "/docs/?scope=studio&doc=d-20260810-180114-003d2a",
+      "last_updated": "2026-08-10 18:01:14",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap",
+      "display_meta": "2026-08-10 18:01:14 • Roadmap",
+      "search_terms": [
+        "report blocks",
+        "report",
+        "blocks",
+        "roadmap",
+        "2026-08-10 18:01:14",
+        "2026",
+        "08",
+        "10",
+        "18",
+        "01",
+        "14",
+        "d-20260810-180114-003d2a"
+      ],
+      "search_text": "report blocks report blocks roadmap 2026-08-10 18:01:14 2026 08 10 18 01 14 d-20260810-180114-003d2a"
     },
     {
       "id": "d-20260715-084611-7c7c8d",

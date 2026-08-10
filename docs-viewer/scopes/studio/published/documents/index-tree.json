@@ -949,6 +949,12 @@
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-191039-f8cb88.json"
         },
         {
+          "doc_id": "d-20260810-180114-003d2a",
+          "title": "Report Blocks",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-180114-003d2a.json",
+          "ui_status": "draft"
+        },
+        {
           "doc_id": "d-20260715-084611-7c7c8d",
           "title": "Repository Maintenance",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-7c7c8d.json"
@@ -1739,5 +1745,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-10T16:39:02Z"
+  "generated_at": "2026-08-10T17:02:43Z"
 }
