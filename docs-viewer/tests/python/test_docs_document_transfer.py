@@ -26,6 +26,26 @@ import docs_source_model as source_model  # noqa: E402
 def write_json(path: Path, payload: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    if path.name == "docs_scopes.json":
+        registry_path = path.parents[1] / "reports/reports.json"
+        registry_path.parent.mkdir(parents=True, exist_ok=True)
+        registry_path.write_text(
+            (REPO_ROOT / "docs-viewer/config/reports/reports.json").read_text(
+                encoding="utf-8"
+            ),
+            encoding="utf-8",
+        )
+
+
+def report_body(title: str, sub_scope: str) -> str:
+    return (
+        f"# {title}\n\n"
+        ":::report\n"
+        "id: docs_subscope\n"
+        "access: local\n"
+        f"sub_scope: {sub_scope}\n"
+        ":::\n"
+    )
 
 
 def write_doc(
@@ -206,11 +226,7 @@ def make_collection_repo(tmp_path: Path) -> Path:
             local_documents_root(repo_root, scope),
             doc_id=report_id,
             title=f"{scope.title()} {sub_scope.title()}",
-            extra_front_matter={
-                "viewer_report": "docs_subscope",
-                "viewer_report_access": "local",
-                "viewer_report_subscope": sub_scope,
-            },
+            body=report_body(f"{scope.title()} {sub_scope.title()}", sub_scope),
         )
         sub_scope_documents_root(repo_root, scope, sub_scope).mkdir(
             parents=True,
@@ -295,21 +311,13 @@ def make_lineage_repo(tmp_path: Path) -> Path:
         local_documents_root(repo_root, "dotlineform"),
         doc_id="d-20260801-090000-eeeeee",
         title="Projects Report",
-        extra_front_matter={
-            "viewer_report": "docs_subscope",
-            "viewer_report_access": "local",
-            "viewer_report_subscope": "projects",
-        },
+        body=report_body("Projects Report", "projects"),
     )
     write_doc(
         local_documents_root(repo_root, "analysis"),
         doc_id="d-20260802-090000-ffffff",
         title="Works Report",
-        extra_front_matter={
-            "viewer_report": "docs_subscope",
-            "viewer_report_access": "local",
-            "viewer_report_subscope": "works",
-        },
+        body=report_body("Works Report", "works"),
     )
     source_root = sub_scope_documents_root(repo_root, "dotlineform", "projects")
     target_root = sub_scope_documents_root(repo_root, "analysis", "works")
@@ -390,6 +398,25 @@ def snapshot(root: Path) -> dict[str, bytes]:
 
 def blocker_codes(plan: transfer.DocumentTransferPlan) -> set[str]:
     return {blocker.code for blocker in plan.blockers}
+
+
+def test_report_host_document_is_not_transferable(tmp_path: Path) -> None:
+    repo_root = make_collection_repo(tmp_path)
+    report_id = "d-20260701-100000-aaaaaa"
+
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        requested_doc_ids=[report_id],
+        target_scope="target",
+        transfer_mode="copy",
+        operation_timestamp="2026-07-24 09:10:11",
+        token_factory=sequential_tokens("ffffff"),
+    )
+
+    assert not plan.ok
+    assert blocker_codes(plan) == {"source_report_host_forbidden"}
+    assert plan.blockers[0].document_ids == (report_id,)
 
 
 def warning_codes(plan: transfer.DocumentTransferPlan) -> set[str]:
@@ -1431,11 +1458,7 @@ def test_public_parent_and_child_can_accept_copy(
         local_documents_root(repo_root, "target"),
         doc_id=report_id,
         title="Works",
-        extra_front_matter={
-            "viewer_report": "docs_subscope",
-            "viewer_report_access": "local",
-            "viewer_report_subscope": "works",
-        },
+        body=report_body("Works", "works"),
     )
     sub_scope_documents_root(repo_root, "target", "works").mkdir(
         parents=True,

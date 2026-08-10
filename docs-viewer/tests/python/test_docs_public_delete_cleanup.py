@@ -44,6 +44,7 @@ def write_source(
     path: Path,
     doc_id: str,
     title: str,
+    body: str | None = None,
     **front_matter: object,
 ) -> None:
     payload = {
@@ -55,7 +56,7 @@ def write_source(
     }
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        source_model.format_source(payload, f"# {title}\n"),
+        source_model.format_source(payload, body or f"# {title}\n"),
         encoding="utf-8",
     )
 
@@ -77,13 +78,14 @@ def work_payload(urls: list[str]) -> dict[str, object]:
 def series_payload(urls: list[str]) -> dict[str, object]:
     return {
         "header": {
-            "schema": "series_record_v2",
+            "schema": "series_record_v3",
             "version": "fixture",
             "generated_at_utc": "2026-08-08T10:00:00Z",
             "series_id": "001",
             "count": 0,
         },
         "series": {"series_id": "001", "title": "Series", "doc_url": urls},
+        "member_works": [],
     }
 
 
@@ -221,9 +223,14 @@ def prepare_child_repo(repo_root: Path) -> dict[str, Path]:
         parent_source_root / f"{HOST_ID}.md",
         HOST_ID,
         "Works",
-        viewer_report="docs_subscope",
-        viewer_report_access="public",
-        viewer_report_subscope="works",
+        body=(
+            "# Works\n\n"
+            ":::report\n"
+            "id: docs_subscope\n"
+            "access: public\n"
+            "sub_scope: works\n"
+            ":::\n"
+        ),
     )
     write_source(
         child_source_root / f"{CHILD_ID}.md",
@@ -256,9 +263,13 @@ def prepare_child_repo(repo_root: Path) -> dict[str, Path]:
     host_payload = {
         "doc_id": HOST_ID,
         "title": "Works",
-        "viewer_report": "docs_subscope",
-        "viewer_report_access": "public",
-        "viewer_report_subscope": "works",
+        "report": {
+            "id": "docs_subscope",
+            "access": "public",
+            "scope": None,
+            "preset": None,
+            "sub_scope": "works",
+        },
     }
     manifest = {
         "docs": [

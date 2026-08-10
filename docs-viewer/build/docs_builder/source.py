@@ -19,7 +19,12 @@ from .common import (
     scope_uses_external_data,
 )
 from docs_document_identity import is_immutable_doc_id
-from docs_source_model import validate_publishable_front_matter
+from docs_report_source import ReportDescriptor, ReportSourceContractRequired
+from docs_source_model import (
+    parse_document_report,
+    report_source_contract_for_collection,
+    validate_publishable_front_matter,
+)
 
 
 class FrontMatterSyntaxError(Exception):
@@ -50,11 +55,7 @@ class DocRecord:
     source_path: str
     viewer_url: str
     content_url: str
-    viewer_report: str
-    viewer_report_scope: str
-    viewer_report_access: str
-    viewer_report_preset: str
-    viewer_report_subscope: str
+    report: ReportDescriptor | None
     body_markdown: str
     group: str = ""
     front_matter: dict[str, Any] = field(default_factory=dict)
@@ -83,8 +84,7 @@ def parse_front_matter_value(raw_value: str) -> Any:
     return value
 
 
-def parse_source(path: Path) -> tuple[dict[str, Any], str]:
-    raw = path.read_text(encoding="utf-8")
+def parse_source_text(raw: str, *, source_name: str) -> tuple[dict[str, Any], str]:
     match = FRONT_MATTER_PATTERN.match(raw)
     if not match:
         return {}, raw
@@ -95,15 +95,20 @@ def parse_source(path: Path) -> tuple[dict[str, Any], str]:
         if not stripped or stripped.startswith("#"):
             continue
         if ":" not in stripped:
-            rel = path.as_posix()
-            raise FrontMatterSyntaxError(f"problem with front-matter on doc {rel} at line {index}: expected key: value")
+            raise FrontMatterSyntaxError(f"problem with front-matter on doc {source_name} at line {index}: expected key: value")
         key, value = stripped.split(":", 1)
         key = key.strip()
         if not key:
-            rel = path.as_posix()
-            raise FrontMatterSyntaxError(f"problem with front-matter on doc {rel} at line {index}: empty key")
+            raise FrontMatterSyntaxError(f"problem with front-matter on doc {source_name} at line {index}: empty key")
         front_matter[key] = parse_front_matter_value(value)
     return front_matter, raw[match.end() :]
+
+
+def parse_source(path: Path) -> tuple[dict[str, Any], str]:
+    return parse_source_text(
+        path.read_text(encoding="utf-8"),
+        source_name=path.as_posix(),
+    )
 
 
 def front_matter_boolean(front_matter: dict[str, Any], key: str, default: bool) -> bool:
@@ -135,7 +140,11 @@ class SourceLoadingMixin:
         docs: list[DocRecord] = []
         for path in paths:
             relative_path = path.relative_to(self.source_dir).as_posix()
-            front_matter, body_markdown = parse_source(path)
+            source_text = path.read_text(encoding="utf-8")
+            front_matter, body_markdown = parse_source_text(
+                source_text,
+                source_name=relative_path,
+            )
             stem = path.stem
             doc_id = str(front_matter.get("doc_id") or "").strip()
             if not doc_id:
@@ -164,6 +173,30 @@ class SourceLoadingMixin:
             except ValueError as exc:
                 raise FrontMatterSyntaxError(str(exc)) from exc
             publishable = front_matter_boolean(front_matter, "publishable", True)
+            try:
+                try:
+                    report = parse_document_report(
+                        source_text,
+                        front_matter,
+                        body_markdown,
+                        source_name=relative_path,
+                        contract=self.report_source_contract,
+                    )
+                except ReportSourceContractRequired:
+                    self.report_source_contract = report_source_contract_for_collection(
+                        self.repo_root,
+                        self.config,
+                        getattr(self, "sub_scope_config", self.config),
+                    )
+                    report = parse_document_report(
+                        source_text,
+                        front_matter,
+                        body_markdown,
+                        source_name=relative_path,
+                        contract=self.report_source_contract,
+                    )
+            except ValueError as exc:
+                raise FrontMatterSyntaxError(str(exc)) from exc
             docs.append(
                 DocRecord(
                     scope_id=self.scope_id,
@@ -180,11 +213,7 @@ class SourceLoadingMixin:
                     source_path=relative_path,
                     viewer_url=self.viewer_url_for(doc_id),
                     content_url=self.content_url_for(doc_id),
-                    viewer_report=str(front_matter.get("viewer_report") or "").strip(),
-                    viewer_report_scope=str(front_matter.get("viewer_report_scope") or "").strip(),
-                    viewer_report_access=str(front_matter.get("viewer_report_access") or "").strip(),
-                    viewer_report_preset=str(front_matter.get("viewer_report_preset") or "").strip(),
-                    viewer_report_subscope=str(front_matter.get("viewer_report_subscope") or "").strip(),
+                    report=report,
                     body_markdown=body_markdown,
                     group=group,
                     front_matter=dict(front_matter),
@@ -285,16 +314,6 @@ class SourceLoadingMixin:
             entry["summary"] = doc.summary
         if doc.ui_status:
             entry["ui_status"] = doc.ui_status
-        for key in (
-            "viewer_report",
-            "viewer_report_scope",
-            "viewer_report_access",
-            "viewer_report_preset",
-            "viewer_report_subscope",
-        ):
-            value = getattr(doc, key)
-            if value:
-                entry[key] = value
         return entry
 
     def reader_metadata_entry(self, doc: DocRecord) -> dict[str, Any]:
@@ -308,21 +327,17 @@ class SourceLoadingMixin:
             entry["date_display"] = doc.date_display
         if doc.summary:
             entry["summary"] = doc.summary
-        if doc.viewer_report and doc.viewer_report_access == "public":
-            entry["viewer_report"] = doc.viewer_report
-            entry["viewer_report_access"] = doc.viewer_report_access
-            if doc.viewer_report_scope:
-                entry["viewer_report_scope"] = doc.viewer_report_scope
-            if doc.viewer_report_preset:
-                entry["viewer_report_preset"] = doc.viewer_report_preset
-            if doc.viewer_report_subscope:
-                entry["viewer_report_subscope"] = doc.viewer_report_subscope
         return entry
 
     def by_id_metadata_entry(self, doc: DocRecord, docs: list[DocRecord]) -> dict[str, Any]:
-        if self.public_readonly_scope:
-            return self.reader_metadata_entry(doc)
-        return self.metadata_entry(doc, docs)
+        entry = (
+            self.reader_metadata_entry(doc)
+            if self.public_readonly_scope
+            else self.metadata_entry(doc, docs)
+        )
+        if doc.report is not None:
+            entry["report"] = dict(doc.report.as_payload())
+        return entry
 
     def index_entry(self, doc: DocRecord, docs: list[DocRecord], item_payload: dict[str, Any] | None) -> dict[str, Any]:
         item = item_payload if item_payload is not None else read_json(self.items_dir / f"{doc.doc_id}.json")

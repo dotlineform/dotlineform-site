@@ -203,7 +203,7 @@
           "lifecycle": {
             "tool_id": "docs-viewer-scope-lifecycle",
             "report_host_doc_id": "d-20260807-082735-54d9d5",
-            "report_host_source_revision": "sha256:34da2e2af5fd86303069ff08137c32c87c6a20e14f70e81ada57b1b553cfc0c3"
+            "report_host_source_revision": "sha256:833512fc6654a465739c4dea8ef9f3aa6e83ea4622eea5a423691cf15882799b"
           }
         }
       ],
@@ -347,7 +347,7 @@
           "lifecycle": {
             "tool_id": "docs-viewer-scope-lifecycle",
             "report_host_doc_id": "d-20260801-073826-8865a8",
-            "report_host_source_revision": "sha256:e1931a79360f5fb98ffc3bc0b2e2f518f7da04ebdae1309eb8233cf180eb7ab5"
+            "report_host_source_revision": "sha256:593939012219207e056b0af2a135de905d5a0d4b31d4919e88131dcc177d3506"
           }
         }
       ]

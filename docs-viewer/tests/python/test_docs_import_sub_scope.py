@@ -61,10 +61,13 @@ def prepare_repo(repo_root: Path) -> None:
             "---\n"
             f"doc_id: {REPORT_DOC_ID}\n"
             "title: Tags\n"
-            "viewer_report: docs_subscope\n"
-            "viewer_report_subscope: tags\n"
             "---\n"
-            "# Tags\n"
+            "# Tags\n\n"
+            ":::report\n"
+            "id: docs_subscope\n"
+            "access: public\n"
+            "sub_scope: tags\n"
+            ":::\n"
         ),
         encoding="utf-8",
     )

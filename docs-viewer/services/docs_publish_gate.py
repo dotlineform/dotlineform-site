@@ -39,6 +39,7 @@ from docs_document_location_projection import (
     json_bytes as document_location_json_bytes,
 )
 from docs_write_rebuild import rebuild_sub_scope_outputs
+from docs_report_source import REPORT_HOST_HTML
 
 
 PUBLISH_SCHEMA_VERSION = "docs_publish_gate_v2"
@@ -249,6 +250,27 @@ def project_public_local_folder_links(content_html: str) -> str:
     return LOCAL_FOLDER_ANCHOR_PATTERN.sub(replace, content_html)
 
 
+def project_public_report_payload(payload: dict[str, Any]) -> bool:
+    """Keep public report intent and remove local-only report configuration."""
+
+    report = payload.get("report")
+    if report is None:
+        return False
+    if not isinstance(report, dict):
+        raise ValueError("working document report must be an object")
+    content_html = payload.get("content_html")
+    if not isinstance(content_html, str) or content_html.count(REPORT_HOST_HTML) != 1:
+        raise ValueError("working report document must contain exactly one generated host")
+    access = str(report.get("access") or "").strip()
+    if access == "public":
+        return False
+    if access != "local":
+        raise ValueError(f"working document report has invalid access: {access!r}")
+    payload.pop("report")
+    payload["content_html"] = content_html.replace(REPORT_HOST_HTML, "", 1)
+    return True
+
+
 def publishable_docs_files(
     working_root: Path,
     published_root: Path,
@@ -303,7 +325,7 @@ def publishable_docs_files(
             continue
         if by_id_doc_id:
             payload = read_json(source_path)
-            payload_changed = False
+            payload_changed = project_public_report_payload(payload)
             content_html = payload.get("content_html") if isinstance(payload, dict) else None
             if isinstance(content_html, str):
                 projected_html = project_public_local_folder_links(content_html)
@@ -573,11 +595,12 @@ def prospective_document_location_projection(
         sub_scope.sub_scope: sub_scope for sub_scope in config.sub_scopes
     }
     placed_sub_scope_ids = {
-        str(payload.get("viewer_report_subscope") or "").strip().lower()
+        str(payload["report"].get("sub_scope") or "").strip().lower()
         for payload in parent_documents.values()
         if isinstance(payload, dict)
-        and str(payload.get("viewer_report") or "").strip() == "docs_subscope"
-        and str(payload.get("viewer_report_access") or "").strip() == "public"
+        and isinstance(payload.get("report"), dict)
+        and str(payload["report"].get("id") or "").strip() == "docs_subscope"
+        and str(payload["report"].get("access") or "").strip() == "public"
     }
     sub_scope_manifests: dict[str, Any] = {}
     for sub_scope_id in sorted(placed_sub_scope_ids):

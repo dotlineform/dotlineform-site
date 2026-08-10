@@ -80,15 +80,31 @@ function loadReportRegistry(context) {
 }
 
 function normalizeReportMetadata(payload) {
-  const reportId = cleanString(payload && payload.viewer_report);
+  const report = payload && payload.report;
+  const reportId = cleanString(report && report.id);
   if (!reportId) return null;
   return {
     reportId,
-    scope: cleanString(payload.viewer_report_scope),
-    access: cleanString(payload.viewer_report_access),
-    preset: cleanString(payload.viewer_report_preset),
-    subScope: cleanString(payload.viewer_report_subscope)
+    scope: cleanString(report.scope),
+    access: cleanString(report.access),
+    preset: cleanString(report.preset),
+    subScope: cleanString(report.sub_scope)
   };
+}
+
+function generatedReportHost(context) {
+  const content = context && context.content;
+  const hosts = content && typeof content.querySelectorAll === "function"
+    ? content.querySelectorAll("[data-docs-viewer-report-host]")
+    : [];
+  if (hosts.length !== 1) {
+    throw new Error("Report document must contain exactly one generated host.");
+  }
+  return hosts[0];
+}
+
+function hostIsCurrent(root, content) {
+  return !content || typeof content.contains !== "function" || content.contains(root);
 }
 
 function unavailable(root, message) {
@@ -117,13 +133,16 @@ export function mountDocsViewerPublicReport(context) {
   const meta = normalizeReportMetadata(context && context.payload);
   if (!meta) return Promise.resolve(false);
 
-  const root = document.createElement("section");
-  root.className = "docsViewerReport";
+  let root;
+  try {
+    root = generatedReportHost(context);
+  } catch (error) {
+    return Promise.reject(error);
+  }
   root.dataset.reportId = meta.reportId;
-  root.setAttribute("aria-label", "Document report");
-  context.content.appendChild(root);
 
   return loadReportRegistry(context).then(function (registry) {
+    if (!hostIsCurrent(root, context.content)) return false;
     const reportMeta = registry.reportsById.get(meta.reportId);
     if (!reportMeta) {
       unavailable(root, "This report has not been promoted for public routes.");
@@ -138,6 +157,7 @@ export function mountDocsViewerPublicReport(context) {
 
     root.innerHTML = '<p class="docsViewer__panelStatus muted small">Loading report...</p>';
     return PUBLIC_REPORT_LOADERS[reportMeta.loaderId].load().then(function (mount) {
+      if (!hostIsCurrent(root, context.content)) return false;
       return Promise.resolve(mount(Object.assign({}, context, {
         reportRoot: root,
         reportMeta: Object.assign({}, meta, { registryEntry: reportMeta }),
@@ -147,7 +167,9 @@ export function mountDocsViewerPublicReport(context) {
       });
     });
   }).catch((error) => {
-    unavailable(root, error && error.message ? error.message : "Failed to render report.");
+    if (hostIsCurrent(root, context.content)) {
+      unavailable(root, error && error.message ? error.message : "Failed to render report.");
+    }
     return true;
   });
 }

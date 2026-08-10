@@ -72,6 +72,12 @@ def write_scope_config(root: Path, scopes: list[dict[str, object]]) -> None:
             "scopes": scopes,
         },
     )
+    write_text(
+        root / "docs-viewer/config/reports/reports.json",
+        (REPO_ROOT / "docs-viewer/config/reports/reports.json").read_text(
+            encoding="utf-8"
+        ),
+    )
 
 
 def write_doc(
@@ -236,6 +242,34 @@ def test_helper_loads_source_context() -> None:
 
     assert context.records_by_id["doc"].title == "Source Title"
     assert rendered_content.doc_content_text(context, "doc") == "Source body."
+
+
+def test_rendered_package_content_omits_inert_report_host() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        write_scope_config(repo_root, [scope_config("studio")])
+        write_doc(
+            repo_root,
+            "studio",
+            "report.md",
+            doc_id="report",
+            title="Report",
+            body=(
+                "# Report\n\n"
+                ":::report\n"
+                "id: reports_list\n"
+                "access: public\n"
+                ":::\n"
+            ),
+        )
+
+        context = source_context.load_document_package_source_context(
+            repo_root,
+            "studio",
+        )
+        content_html = rendered_content.render_doc_html(context, "report")
+
+    assert "data-docs-viewer-report-host" not in content_html
 
 
 def test_selectable_document_records_use_source_context() -> None:

@@ -21,6 +21,7 @@ from docs_import_document import (
     plan_import_document,
 )
 from docs_management_document_target import resolve_managed_document_collection
+from docs_scope_config import load_docs_scope_configs
 import docs_source_model as source_model
 
 from docs_import_test_support import make_repo, write_library_doc
@@ -290,6 +291,65 @@ def test_replace_plan_normalizes_unicode_markdown_separators() -> None:
         _front_matter, body = source_model.parse_source_text(plan.source_text)
 
     assert body == "# Alpha\n\nFirst  \nSecond\n\nThird\n"
+
+
+def test_import_rejects_report_host_targets_and_incoming_report_blocks(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_library_doc(
+            root,
+            "alpha.md",
+            {"doc_id": "alpha", "title": "Alpha", "parent_id": ""},
+            body=(
+                "# Alpha\n\n"
+                ":::report\n"
+                "id: reports_list\n"
+                "access: public\n"
+                ":::\n"
+            ),
+        )
+        config = load_docs_scope_configs(root)["library"]
+        monkeypatch.setitem(source_model.DOCS_SCOPE_CONFIGS, "library", config)
+        monkeypatch.setitem(
+            source_model.DOCUMENT_SOURCE_ROOTS,
+            "library",
+            root / "docs-viewer/scopes/library/source/documents",
+        )
+        docs = source_model.load_scope_docs_for_config(root, config)
+        target = next(doc for doc in docs if doc.doc_id == "alpha")
+        overwrite = import_content()
+        incoming = import_content(
+            doc_id="incoming-report",
+            content=(
+                "# Incoming\n\n"
+                ":::report\n"
+                "id: reports_list\n"
+                "access: public\n"
+                ":::\n"
+            ),
+        )
+
+        with pytest.raises(ValueError, match="cannot replace a report-host"):
+            plan_import_document(
+                root,
+                "library",
+                overwrite,
+                operation=IMPORT_DOCUMENT_OVERWRITE,
+                docs=docs,
+                target=target,
+                import_preview=normalized_preview(overwrite),
+            )
+        with pytest.raises(ValueError, match="cannot create report-host"):
+            plan_import_document(
+                root,
+                "library",
+                incoming,
+                operation=IMPORT_DOCUMENT_CREATE,
+                docs=docs,
+                import_preview=normalized_preview(incoming),
+            )
 
 
 @pytest.mark.parametrize(

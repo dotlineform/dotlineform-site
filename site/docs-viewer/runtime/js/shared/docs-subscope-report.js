@@ -1208,7 +1208,7 @@ function mountResolvedDocsSubscopeReport(context, contribution) {
       reason: "missing-sub-scope",
       target: null
     });
-    renderError(root, "This report is missing viewer_report_subscope.");
+    renderError(root, "This report is missing report sub_scope.");
     return Promise.resolve(true);
   }
 

@@ -169,7 +169,6 @@ def test_plan_adds_only_doc_ids_and_fixed_sources() -> None:
         'added_date: "2026-07-27 23:15:00"\n'
         'last_updated: "2026-07-27"\n'
         'parent_id: ""\n'
-        "viewable: true\n"
         "---\n"
         "# flower\n\n"
         "**subject**\n\n"

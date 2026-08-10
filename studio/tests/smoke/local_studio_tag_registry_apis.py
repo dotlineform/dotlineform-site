@@ -59,11 +59,14 @@ title: Tags
 added_date: "2026-04-30 23:00:00"
 last_updated: 2026-04-30
 parent_id: ""
-viewable: true
-viewer_report: docs_subscope
-viewer_report_subscope: tags
 ---
 # Tags
+
+:::report
+id: docs_subscope
+access: public
+sub_scope: tags
+:::
 """,
         encoding="utf-8",
     )
@@ -124,6 +127,14 @@ viewer_report_subscope: tags
         + "\n",
         encoding="utf-8",
     )
+    reports_path = repo_root / "docs-viewer/config/reports/reports.json"
+    reports_path.parent.mkdir(parents=True, exist_ok=True)
+    reports_path.write_text(
+        (REPO_ROOT / "docs-viewer/config/reports/reports.json").read_text(
+            encoding="utf-8"
+        ),
+        encoding="utf-8",
+    )
     documents_root = (
         repo_root
         / "docs-viewer/scopes/analysis/source/sub-scopes/tags/documents"
@@ -141,7 +152,6 @@ added_date: "2026-05-01 00:00:00"
 last_updated: 2026-05-01
 group: {group}
 parent_id: ""
-viewable: true
 ---
 # {tag_id}
 

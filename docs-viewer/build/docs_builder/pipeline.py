@@ -48,6 +48,7 @@ class DocsDataBuilder(
         self.repo_root = repo_root.resolve()
         self.config = config
         self.scope_id = config.scope_id
+        self.report_source_contract = None
         self.source_dir = resolve_scope_path(self.repo_root, source_dir or document_source_path(config))
         self.output_dir = resolve_scope_path(self.repo_root, output_dir or published_documents_path(config))
         self.items_dir = self.output_dir / "by-id"

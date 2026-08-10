@@ -199,12 +199,13 @@ def build_exact_document_location_records(
         parent_payload = parent_documents.get(doc_id)
         if not isinstance(parent_payload, dict):
             raise ValueError(f"public parent payload is missing for search document {doc_id!r}")
-        if clean_text(parent_payload.get("viewer_report")) != "docs_subscope":
+        report = parent_payload.get("report")
+        if not isinstance(report, dict) or clean_text(report.get("id")) != "docs_subscope":
             continue
-        if clean_text(parent_payload.get("viewer_report_access")) != "public":
+        if clean_text(report.get("access")) != "public":
             continue
 
-        sub_scope_id = clean_text(parent_payload.get("viewer_report_subscope")).lower()
+        sub_scope_id = clean_text(report.get("sub_scope")).lower()
         if sub_scope_id not in configured_sub_scopes:
             raise ValueError(
                 f"public report {doc_id!r} references unsupported sub-scope "
@@ -259,12 +260,13 @@ def load_public_document_location_inputs(
         sub_scope.sub_scope: sub_scope for sub_scope in config.sub_scopes
     }
     placed_sub_scope_ids = {
-        clean_text(payload.get("viewer_report_subscope")).lower()
+        clean_text(payload["report"].get("sub_scope")).lower()
         for doc_id, payload in parent_documents.items()
         if doc_id in search_doc_ids
         if isinstance(payload, dict)
-        and clean_text(payload.get("viewer_report")) == "docs_subscope"
-        and clean_text(payload.get("viewer_report_access")) == "public"
+        and isinstance(payload.get("report"), dict)
+        and clean_text(payload["report"].get("id")) == "docs_subscope"
+        and clean_text(payload["report"].get("access")) == "public"
     }
     for sub_scope_id in sorted(placed_sub_scope_ids):
         sub_scope = configured_sub_scopes.get(sub_scope_id)

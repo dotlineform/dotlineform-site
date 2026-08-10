@@ -34,6 +34,22 @@ def test_capabilities_advertise_generated_data_reads() -> None:
     assert payload["capabilities"]["scopes"]["studio"]["generated_search_reads"] is True
 
 
+def test_capabilities_do_not_parse_scope_documents_for_unused_counts() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        source_path = (
+            repo_root
+            / "docs-viewer/scopes/studio/source/documents/non-publishable-doc.md"
+        )
+        source_path.write_text("not valid document source\n", encoding="utf-8")
+
+        payload = docs_management_service.capabilities_payload(repo_root)
+
+    scope = payload["capabilities"]["scopes"]["studio"]
+    assert scope["available"] is True
+    assert "count" not in scope
+
+
 def test_capabilities_expose_exact_local_folder_link_shape(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

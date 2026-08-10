@@ -100,14 +100,22 @@ def test_projection_emits_only_actual_public_report_placements() -> None:
             parent_documents={
                 ROOT_ID: {"title": "Analysis"},
                 REPORT_ONE_ID: {
-                    "viewer_report": "docs_subscope",
-                    "viewer_report_access": "public",
-                    "viewer_report_subscope": "tags",
+                    "report": {
+                        "id": "docs_subscope",
+                        "access": "public",
+                        "scope": None,
+                        "preset": None,
+                        "sub_scope": "tags",
+                    },
                 },
                 REPORT_TWO_ID: {
-                    "viewer_report": "docs_subscope",
-                    "viewer_report_access": "public",
-                    "viewer_report_subscope": "tags",
+                    "report": {
+                        "id": "docs_subscope",
+                        "access": "public",
+                        "scope": None,
+                        "preset": None,
+                        "sub_scope": "tags",
+                    },
                 },
             },
             sub_scope_manifests={
@@ -261,9 +269,13 @@ def test_public_projection_loader_does_not_read_source_or_manage_manifest() -> N
             root
             / f"site/assets/data/docs/scopes/analysis/by-id/{REPORT_ONE_ID}.json",
             {
-                "viewer_report": "docs_subscope",
-                "viewer_report_access": "public",
-                "viewer_report_subscope": "tags",
+                "report": {
+                    "id": "docs_subscope",
+                    "access": "public",
+                    "scope": None,
+                    "preset": None,
+                    "sub_scope": "tags",
+                },
             },
         )
         write_json(

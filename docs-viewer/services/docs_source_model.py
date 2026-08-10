@@ -11,7 +11,7 @@ import re
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Mapping, Optional
 
 from docs_document_identity import (
     DOC_TIMESTAMP_FORMAT,
@@ -29,7 +29,15 @@ from docs_scope_config import (
     DocsScopeConfig,
     DocsSubScopeConfig,
     document_source_path,
+    path_label,
     resolve_scope_path,
+)
+from docs_report_source import (
+    ReportDescriptor,
+    ReportSourceContractRequired,
+    ReportSourceContract,
+    build_report_source_contract,
+    parse_report_source,
 )
 from docs_subscope_customisations import (
     sub_scope_customisation_document_groups,
@@ -57,6 +65,7 @@ class ScopeDoc:
     parent_id: str
     publishable: bool
     group: str = ""
+    report: ReportDescriptor | None = None
 
 
 def humanize(value: str) -> str:
@@ -113,6 +122,80 @@ def parse_source_text(raw: str, *, source_name: str = "source") -> tuple[Dict[st
 
 def parse_source(path: Path) -> tuple[Dict[str, Any], str]:
     return parse_source_text(path.read_text(encoding="utf-8"), source_name=path.name)
+
+
+def report_source_contract_for_collection(
+    repo_root: Path,
+    parent_config: DocsScopeConfig,
+    document_config: DocsScopeConfig | DocsSubScopeConfig,
+) -> ReportSourceContract:
+    """Load the one report registry with exact configured host context."""
+
+    registry_path = repo_root / "docs-viewer/config/reports/reports.json"
+    registry_payload = json.loads(registry_path.read_text(encoding="utf-8"))
+    scope_payload = json.loads(
+        (repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    configured_scope_ids = (
+        str(item.get("scope_id") or "").strip()
+        for item in scope_payload.get("scopes", ())
+        if isinstance(item, dict)
+    )
+    return build_report_source_contract(
+        registry_payload,
+        source_scope_id=parent_config.scope_id,
+        configured_scope_ids=configured_scope_ids,
+        configured_sub_scope_ids=(item.sub_scope for item in parent_config.sub_scopes),
+        source_sub_scope_id=str(getattr(document_config, "sub_scope", "") or ""),
+    )
+
+
+def parse_document_report(
+    source_text: str,
+    front_matter: Mapping[str, Any],
+    body: str,
+    *,
+    source_name: str,
+    contract: ReportSourceContract | None,
+) -> ReportDescriptor | None:
+    """Parse one document report with full-source line diagnostics."""
+
+    body_offset = len(source_text) - len(body)
+    line_offset = source_text[:body_offset].count("\n")
+    return parse_report_source(
+        body,
+        front_matter=front_matter,
+        source_name=source_name,
+        contract=contract,
+        line_offset=line_offset,
+    )
+
+
+def parse_collection_document_report(
+    repo_root: Path,
+    parent_config: DocsScopeConfig,
+    document_config: DocsScopeConfig | DocsSubScopeConfig,
+    source_text: str,
+    *,
+    source_name: str,
+) -> ReportDescriptor | None:
+    """Parse one complete candidate through its exact collection contract."""
+
+    front_matter, body = parse_source_text(source_text, source_name=source_name)
+    contract = report_source_contract_for_collection(
+        repo_root,
+        parent_config,
+        document_config,
+    )
+    return parse_document_report(
+        source_text,
+        front_matter,
+        body,
+        source_name=source_name,
+        contract=contract,
+    )
 
 
 def split_source_text(
@@ -477,6 +560,7 @@ def load_document_collection_docs_for_config(
         )
         raise ValueError(f"missing source root for scope {collection}: {root}")
 
+    report_contract: ReportSourceContract | None = None
     docs: list[ScopeDoc] = []
     for path in scope_markdown_paths(root):
         source_text = path.read_bytes().decode("utf-8")
@@ -497,6 +581,27 @@ def load_document_collection_docs_for_config(
             source_name=path.name,
         )
         publishable = doc_is_publishable(front_matter)
+        try:
+            report = parse_document_report(
+                source_text,
+                front_matter,
+                body,
+                source_name=path_label(repo_root, path),
+                contract=report_contract,
+            )
+        except ReportSourceContractRequired:
+            report_contract = report_source_contract_for_collection(
+                repo_root,
+                parent_config,
+                document_config,
+            )
+            report = parse_document_report(
+                source_text,
+                front_matter,
+                body,
+                source_name=path_label(repo_root, path),
+                contract=report_contract,
+            )
         docs.append(
             ScopeDoc(
                 scope=scope,
@@ -510,6 +615,7 @@ def load_document_collection_docs_for_config(
                 parent_id=parent_id,
                 publishable=publishable,
                 group=group,
+                report=report,
             )
         )
     validate_scope_docs(

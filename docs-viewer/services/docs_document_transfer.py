@@ -1571,9 +1571,9 @@ def collection_report_host_doc_id(
         document.doc_id
         for document in parent_documents
         if (
-            document.front_matter.get("viewer_report") == "docs_subscope"
-            and document.front_matter.get("viewer_report_subscope")
-            == collection.sub_scope
+            document.report is not None
+            and document.report.id == "docs_subscope"
+            and document.report.sub_scope == collection.sub_scope
         )
     ]
     if len(matching) != 1:
@@ -1757,7 +1757,20 @@ def plan_document_transfer(
         normalized_requested_ids,
         include_descendants=effective_include_descendants,
     )
+    blockers: list[TransferBlocker] = []
+    warnings: list[TransferWarning] = []
     relationships = _internal_parent_relationships(effective_docs)
+    report_host_ids = tuple(
+        sorted(document.doc_id for document in effective_docs if document.report is not None)
+    )
+    if report_host_ids:
+        blockers.append(
+            TransferBlocker(
+                code="source_report_host_forbidden",
+                message="Document Transfer does not copy or move report-host documents.",
+                document_ids=report_host_ids,
+            )
+        )
     if source_collection.sub_scope and relationships:
         raise ValueError(
             "sub-scope Copy selection contains a parent/child relationship"
@@ -1767,8 +1780,6 @@ def plan_document_transfer(
     if not source_model.is_doc_timestamp(timestamp):
         raise ValueError("operation_timestamp must use YYYY-MM-DD HH:MM:SS")
 
-    blockers: list[TransferBlocker] = []
-    warnings: list[TransferWarning] = []
     if target_collection.sub_scope and relationships:
         blockers.append(
             TransferBlocker(

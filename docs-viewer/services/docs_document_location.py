@@ -8,11 +8,7 @@ from urllib.parse import quote
 
 import docs_source_model as source_model
 from docs_document_identity import is_immutable_doc_id
-from docs_scope_config import (
-    document_source_path,
-    load_docs_scope_configs,
-    resolve_scope_path,
-)
+from docs_scope_config import load_docs_scope_configs
 
 
 def _sub_scope_report_doc_id(
@@ -35,18 +31,18 @@ def _sub_scope_report_doc_id(
             f"{scope_id}/{sub_scope_id}"
         )
 
-    parent_root = resolve_scope_path(repo_root, document_source_path(config))
     matching_reports: list[str] = []
-    for path in sorted(parent_root.glob("*.md")):
-        front_matter, _body = source_model.parse_source(path)
+    for document in source_model.load_scope_docs_for_config(repo_root, config):
+        report = document.report
         if (
-            front_matter.get("viewer_report") == "docs_subscope"
-            and front_matter.get("viewer_report_subscope") == sub_scope_id
+            report is not None
+            and report.id == "docs_subscope"
+            and report.sub_scope == sub_scope_id
         ):
-            parent_doc_id = str(front_matter.get("doc_id") or "").strip()
+            parent_doc_id = document.doc_id
             if not is_immutable_doc_id(parent_doc_id):
                 raise ValueError(
-                    f"Docs Viewer sub-scope report has invalid doc_id: {path}"
+                    f"Docs Viewer sub-scope report has invalid doc_id: {document.path}"
                 )
             matching_reports.append(parent_doc_id)
     if len(matching_reports) != 1:

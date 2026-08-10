@@ -11,6 +11,10 @@ from markdown_it import MarkdownIt
 
 
 REPORT_OPENER = ":::report"
+REPORT_HOST_HTML = (
+    '<section class="docsViewerReport" data-docs-viewer-report-host '
+    'aria-label="Document report"></section>'
+)
 RETIRED_REPORT_KEYS = frozenset(
     {
         "viewer_report",
@@ -57,6 +61,21 @@ class ReportDescriptor:
         )
 
 
+def project_report_markdown(
+    markdown: str,
+    descriptor: ReportDescriptor | None,
+    *,
+    include_host: bool,
+) -> str:
+    """Replace a validated report declaration with its inert host or nothing."""
+
+    if descriptor is None:
+        return markdown
+    source_range = descriptor.source_range
+    replacement = REPORT_HOST_HTML if include_host else ""
+    return markdown[: source_range.start] + replacement + markdown[source_range.end :]
+
+
 @dataclass(frozen=True)
 class ReportDefinition:
     report_id: str
@@ -92,6 +111,10 @@ class ReportSourceError(ValueError):
         self.start = start
         self.end = end
         super().__init__(f"{source_name}:{line}: {message} (source range {start}:{end})")
+
+
+class ReportSourceContractRequired(ValueError):
+    """Raised only after one syntactically valid report declaration is found."""
 
 
 @dataclass(frozen=True)
@@ -296,7 +319,7 @@ def parse_report_source(
     *,
     front_matter: Mapping[str, Any] | None,
     source_name: str,
-    contract: ReportSourceContract,
+    contract: ReportSourceContract | None = None,
     line_offset: int = 0,
 ) -> ReportDescriptor | None:
     """Parse zero or one exact report block from a Markdown body."""
@@ -320,6 +343,8 @@ def parse_report_source(
             end=0,
             code="retired_front_matter",
         )
+    if REPORT_OPENER not in markdown:
+        return None
 
     lines = _lines(markdown)
     ignored = _ignored_lines(markdown)
@@ -344,6 +369,10 @@ def parse_report_source(
     if found is None:
         return None
     attributes, source_range = found
+    if contract is None:
+        raise ReportSourceContractRequired(
+            f"{source_name}:{source_range.start_line}: report source contract is required"
+        )
     if contract.source_sub_scope_id:
         raise _invalid("report blocks are forbidden in sub-scope document source", "sub_scope_source", source_name, source_range)
     return _descriptor(attributes, source_range, contract, source_name)

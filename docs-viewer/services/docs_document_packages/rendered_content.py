@@ -14,6 +14,7 @@ if str(SHARED_PYTHON_DIR) not in sys.path:
     sys.path.insert(0, str(SHARED_PYTHON_DIR))
 
 from markdown_renderer import plain_text_from_html  # noqa: E402
+from docs_report_source import REPORT_HOST_HTML  # noqa: E402
 
 
 class HeadingCollector(HTMLParser):
@@ -61,7 +62,11 @@ def render_doc_html(context: Any, doc_id: str) -> str:
     if normalized_doc_id not in context.render_cache:
         doc = source_doc_for_id(context, normalized_doc_id)
         payload = context.builder.item_entry(doc, context.source_docs, {})
-        context.render_cache[normalized_doc_id] = str(payload.get("content_html") or "")
+        content_html = str(payload.get("content_html") or "")
+        context.render_cache[normalized_doc_id] = content_html.replace(
+            REPORT_HOST_HTML,
+            "",
+        )
     return context.render_cache[normalized_doc_id]
 
 

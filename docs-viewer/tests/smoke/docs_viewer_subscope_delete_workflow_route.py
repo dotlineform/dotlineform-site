@@ -91,9 +91,14 @@ def prepare_delete_repo(repo_root: Path) -> dict[str, object]:
         source_text(
             SUBSCOPE_REPORT_DOC_ID,
             SUBSCOPE_REPORT_DOC_TITLE,
-            f"# {SUBSCOPE_REPORT_DOC_TITLE}",
-            viewer_report="docs_subscope",
-            viewer_report_subscope=SUBSCOPE_ID,
+            (
+                f"# {SUBSCOPE_REPORT_DOC_TITLE}\n\n"
+                ":::report\n"
+                "id: docs_subscope\n"
+                "access: public\n"
+                f"sub_scope: {SUBSCOPE_ID}\n"
+                ":::\n"
+            ),
         ),
     )
     child_root = (

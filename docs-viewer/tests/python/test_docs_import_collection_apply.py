@@ -101,10 +101,15 @@ def configure_importable_tags_collection(root: Path) -> dict[str, Path]:
             {
                 "doc_id": REPORT_DOC_ID,
                 "title": "Tags",
-                "viewer_report": "docs_subscope",
-                "viewer_report_subscope": "tags",
             },
-            "# Tags\n",
+            (
+                "# Tags\n\n"
+                ":::report\n"
+                "id: docs_subscope\n"
+                "access: public\n"
+                "sub_scope: tags\n"
+                ":::\n"
+            ),
         ),
         encoding="utf-8",
     )

@@ -10,7 +10,7 @@ import tempfile
 from pathlib import Path
 
 from repo_factory import write_doc as write_fixture_doc
-from repo_factory import docs_scope_record, write_json
+from repo_factory import docs_scope_record, write_json, write_text
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DOCS_DIR = REPO_ROOT / "docs-viewer" / "services"
@@ -153,6 +153,12 @@ def write_docs_scope_config(root: Path) -> None:
                 "recent_limit": 10,
             },
         },
+    )
+    write_text(
+        root / "docs-viewer/config/reports/reports.json",
+        (REPO_ROOT / "docs-viewer/config/reports/reports.json").read_text(
+            encoding="utf-8"
+        ),
     )
 
 

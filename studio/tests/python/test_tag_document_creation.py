@@ -95,6 +95,14 @@ def write_scope_config(repo_root: Path) -> None:
             ],
         },
     )
+    registry_path = repo_root / "docs-viewer/config/reports/reports.json"
+    registry_path.parent.mkdir(parents=True, exist_ok=True)
+    registry_path.write_text(
+        (REPO_ROOT / "docs-viewer/config/reports/reports.json").read_text(
+            encoding="utf-8"
+        ),
+        encoding="utf-8",
+    )
 
 
 def existing_document_source() -> str:
@@ -105,7 +113,6 @@ added_date: "2026-07-28 12:00:00"
 last_updated: 2026-07-28
 group: subject
 parent_id: ""
-viewable: true
 ---
 # trees
 
@@ -135,11 +142,14 @@ title: Tags
 added_date: "2026-07-28 11:00:00"
 last_updated: 2026-07-28
 parent_id: ""
-viewable: true
-viewer_report: docs_subscope
-viewer_report_subscope: tags
 ---
 # Tags
+
+:::report
+id: docs_subscope
+access: public
+sub_scope: tags
+:::
 """,
         encoding="utf-8",
     )
@@ -244,7 +254,6 @@ def test_plan_seeds_linked_registry_row_and_grouped_document(
         "last_updated": "2026-07-29",
         "group": "theme",
         "parent_id": "",
-        "viewable": True,
     }
     assert body == "# renewal\n"
     assert registry_path.read_bytes() == registry_before

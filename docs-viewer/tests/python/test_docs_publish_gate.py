@@ -39,6 +39,12 @@ def write_text(path: Path, text: str) -> None:
 
 
 def write_scope_config(root: Path) -> None:
+    write_text(
+        root / "docs-viewer/config/reports/reports.json",
+        (REPO_ROOT / "docs-viewer/config/reports/reports.json").read_text(
+            encoding="utf-8"
+        ),
+    )
     library = docs_scope_record(
         "library",
         scope_type="public",
@@ -246,13 +252,14 @@ def catalogue_work_payload(work_id: str, urls: list[str]) -> dict[str, object]:
 def catalogue_series_payload(series_id: str, urls: list[str]) -> dict[str, object]:
     return {
         "header": {
-            "schema": "series_record_v2",
+            "schema": "series_record_v3",
             "version": "before",
             "generated_at_utc": "2026-08-01T00:00:00Z",
             "series_id": series_id,
             "count": 0,
         },
         "series": {"series_id": series_id, "title": "Series", "doc_url": urls},
+        "member_works": [],
     }
 
 
@@ -532,6 +539,39 @@ def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> No
             / "site/assets/data/docs/scopes/library/tags/manage-manifest.json"
         ).is_file()
         assert not (repo_root / "site/assets/data/docs/scopes/library/sub-scopes/tags").exists()
+
+
+def test_public_projection_keeps_public_reports_and_strips_local_reports() -> None:
+    host = (
+        '<section class="docsViewerReport" data-docs-viewer-report-host '
+        'aria-label="Document report"></section>'
+    )
+    public_payload = {
+        "report": {
+            "id": "reports_list",
+            "access": "public",
+            "scope": None,
+            "preset": None,
+            "sub_scope": None,
+        },
+        "content_html": f"<h1>Public</h1>{host}",
+    }
+    local_payload = {
+        "report": {
+            "id": "reports_list",
+            "access": "local",
+            "scope": None,
+            "preset": None,
+            "sub_scope": None,
+        },
+        "content_html": f"<h1>Local</h1>{host}",
+    }
+
+    assert docs_publish_gate.project_public_report_payload(public_payload) is False
+    assert public_payload["content_html"].endswith(host)
+    assert docs_publish_gate.project_public_report_payload(local_payload) is True
+    assert "report" not in local_payload
+    assert "data-docs-viewer-report-host" not in local_payload["content_html"]
 
 
 def test_successful_publish_sets_retains_and_clears_lineage_publication(

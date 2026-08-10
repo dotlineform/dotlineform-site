@@ -256,6 +256,11 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
     scope = collection.scope
     sub_scope = collection.sub_scope
     target_root = collection.source_root
+    report_contract = source_model.report_source_contract_for_collection(
+        repo_root,
+        collection.parent_config,
+        collection.document_config,
+    )
     docs: list[source_model.ScopeDoc] = []
     for candidate in source_model.scope_markdown_paths(target_root):
         confined = confined_source_path(target_root, candidate)
@@ -263,6 +268,7 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
             path=confined,
             scope=scope,
             requested_doc_id=candidate.stem if sub_scope else None,
+            report_contract=report_contract,
         )
         source_model.validate_publishable_front_matter(
             document.front_matter,
@@ -517,6 +523,13 @@ def plan_assign_field_group(
     updated_source_text = source_model.format_source(
         updated_front_matter,
         target.body,
+    )
+    source_model.parse_collection_document_report(
+        repo_root,
+        resolved.parent_config,
+        resolved.document_config,
+        updated_source_text,
+        source_name=target.path.as_posix(),
     )
     response["source_revision"] = source_revision(
         updated_source_text.encode("utf-8")
@@ -789,6 +802,13 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
     updated_source_text = source_model.format_source(
         updated_front_matter,
         target.body,
+    )
+    source_model.parse_collection_document_report(
+        repo_root,
+        resolved.parent_config,
+        resolved.document_config,
+        updated_source_text,
+        source_name=target.path.as_posix(),
     )
     response = {
         "ok": True,

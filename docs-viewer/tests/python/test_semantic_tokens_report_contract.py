@@ -38,9 +38,11 @@ def test_report_document_selects_analysis_and_local_access() -> None:
         / f"docs-viewer/scopes/studio/source/documents/{REPORT_DOC_ID}.md"
     ).read_text(encoding="utf-8")
 
-    assert "viewer_report: semantic_tokens" in source
-    assert "viewer_report_scope: analysis" in source
-    assert "viewer_report_access: local" in source
+    assert "viewer_report" not in source.split("---", 2)[1]
+    assert (
+        ":::report\nid: semantic_tokens\naccess: local\nscope: analysis\n:::"
+        in source
+    )
 
 
 def test_public_registry_does_not_expose_semantic_tokens_report() -> None:

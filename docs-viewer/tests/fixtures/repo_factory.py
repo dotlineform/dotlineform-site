@@ -9,6 +9,8 @@ from pathlib import Path
 from typing import Callable
 
 
+REPO_ROOT = Path(__file__).resolve().parents[3]
+
 def write_text(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
@@ -59,6 +61,12 @@ def write_docs_scope_config(root: Path, scopes: list[dict[str, object]], docs_vi
     if docs_viewer is not None:
         payload["docs_viewer"] = docs_viewer
     write_json(root / "docs-viewer/config/scopes/docs_scopes.json", payload, indent=2)
+    write_text(
+        root / "docs-viewer/config/reports/reports.json",
+        (REPO_ROOT / "docs-viewer/config/reports/reports.json").read_text(
+            encoding="utf-8"
+        ),
+    )
 
 
 def docs_scope_record(

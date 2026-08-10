@@ -266,7 +266,7 @@ def test_sub_scope_create_apply_updates_parent_config_and_creates_nested_roots()
         default_doc_exists = (repo_root / "docs-viewer/scopes/studio/source/sub-scopes/tags/documents/tags.md").exists()
         host_id = preview["planned_report_host_identity"]["doc_id"]
         host_path = repo_root / f"docs-viewer/scopes/studio/source/documents/{host_id}.md"
-        host_front_matter, _body = docs_management_service.docs_sub_scope_lifecycle.source_model.parse_source(host_path)
+        host_front_matter, host_body = docs_management_service.docs_sub_scope_lifecycle.source_model.parse_source(host_path)
         manifest = json.loads((repo_root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/manifest.json").read_text())
         index = json.loads((repo_root / "docs-viewer/scopes/studio/published/documents/index-tree.json").read_text())
 
@@ -289,7 +289,10 @@ def test_sub_scope_create_apply_updates_parent_config_and_creates_nested_roots()
     assert "published" not in sub_scope
     assert sub_scope["public_projection"] is None
     assert sub_scope["lifecycle"] == payload["association"]
-    assert host_front_matter["viewer_report_subscope"] == "tags"
+    assert "viewer_report" not in host_front_matter
+    assert host_body.endswith(
+        ":::report\nid: docs_subscope\naccess: local\nsub_scope: tags\n:::\n"
+    )
     assert manifest == {"docs": []}
     assert any(row["doc_id"] == host_id for row in index["docs"])
     assert any(file["path"] == "docs-viewer/scopes/studio/source/sub-scopes/tags" for file in payload["created_files"])

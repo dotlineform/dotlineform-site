@@ -118,7 +118,19 @@ def prepare_repo(root: Path, projects_root: Path) -> None:
             {
                 "doc_id": "parent",
                 "title": "Parent & Root",
-                "content_html": '<p><a href="/docs/?scope=studio&amp;doc=child">Child</a> <a href="https://example.com/">External</a></p>',
+                "report": {
+                    "id": "reports_list",
+                    "access": "local",
+                    "scope": None,
+                    "preset": None,
+                    "sub_scope": None,
+                },
+                "content_html": (
+                    '<p><a href="/docs/?scope=studio&amp;doc=child">Child</a> '
+                    '<a href="https://example.com/">External</a></p>'
+                    '<section class="docsViewerReport" data-docs-viewer-report-host '
+                    'aria-label="Document report"></section>'
+                ),
             },
             {
                 "doc_id": "child",
@@ -255,6 +267,10 @@ def test_snapshot_plans_and_renders_repo_public_and_external_local_generated_pay
             assert plan.folder_name == folder_name
             files = exporter.compute_snapshot_files(plan, generated_at="2026-07-31T12:00:00+01:00")
             assert Path("docs") / f"{doc_id}.html" in files
+            if doc_id == "parent":
+                assert b"data-docs-viewer-report-host" in files[
+                    Path("docs") / "parent.html"
+                ]
 
 
 def test_snapshot_capability_accepts_readable_repo_public_and_external_generated_payloads() -> None:

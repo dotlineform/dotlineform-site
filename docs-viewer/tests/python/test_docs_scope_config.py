@@ -470,7 +470,11 @@ def test_checked_scope_config_opts_only_analysis_tags_into_return_import() -> No
         / "docs-viewer/scopes/analysis/source/documents"
         / "d-20260807-082735-54d9d5.md"
     ).read_text(encoding="utf-8")
-    assert "viewer_report_access: public\n" in report_host_source
+    assert "viewer_report" not in report_host_source.split("---", 2)[1]
+    assert (
+        ":::report\nid: docs_subscope\naccess: public\nsub_scope: works\n:::"
+        in report_host_source
+    )
     report_host_payload = json.loads(
         (
             REPO_ROOT
@@ -478,9 +482,16 @@ def test_checked_scope_config_opts_only_analysis_tags_into_return_import() -> No
             / "d-20260807-082735-54d9d5.json"
         ).read_text(encoding="utf-8")
     )
-    assert report_host_payload["viewer_report"] == "docs_subscope"
-    assert report_host_payload["viewer_report_access"] == "public"
-    assert report_host_payload["viewer_report_subscope"] == "works"
+    assert report_host_payload["report"] == {
+        "id": "docs_subscope",
+        "access": "public",
+        "scope": None,
+        "preset": None,
+        "sub_scope": "works",
+    }
+    assert report_host_payload["content_html"].count(
+        "data-docs-viewer-report-host"
+    ) == 1
     assert analysis_works.public_projection is not None
     assert analysis_works.public_projection.documents.location.path.as_posix() == (
         "site/assets/data/docs/scopes/analysis/works"

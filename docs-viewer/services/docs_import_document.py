@@ -39,6 +39,7 @@ from docs_source_model import (  # noqa: E402
     format_source,
     is_immutable_doc_id,
     normalize_scope,
+    report_source_contract_for_collection,
     scope_root,
     slugify,
     write_text_atomic,
@@ -46,6 +47,7 @@ from docs_source_model import (  # noqa: E402
 )
 from docs_scope_config import load_docs_scope_configs  # noqa: E402
 from markdown_renderer import normalize_markdown_blank_lines  # noqa: E402
+from docs_report_source import RETIRED_REPORT_KEYS, parse_report_source  # noqa: E402
 
 
 IMPORT_DOCUMENT_CREATE = "create"
@@ -116,6 +118,11 @@ def _clean_text(value: Any) -> str:
 def _explicit_front_matter(record: ImportContent) -> dict[str, Any]:
     if "viewable" in record.front_matter:
         raise ValueError("ImportContent legacy viewable front matter is not supported")
+    retired_report_keys = sorted(RETIRED_REPORT_KEYS.intersection(record.front_matter))
+    if retired_report_keys:
+        raise ValueError(
+            f"ImportContent retired report front matter is not supported: {retired_report_keys[0]}"
+        )
     front_matter = {
         field: copy.deepcopy(record.front_matter[field])
         for field in ALLOWED_IMPORT_FRONT_MATTER_FIELDS
@@ -283,9 +290,11 @@ def plan_import_document(
         sub_scope = collection.sub_scope
         create_root = collection.source_root
         document_config = collection.document_config
+        parent_config = collection.parent_config
     else:
         configs = load_docs_scope_configs(repo_root, scope_ids=[normalized_scope])
         document_config = configs[normalized_scope]
+        parent_config = document_config
     publishable_supported = collection_supports_publishable(document_config)
     if operation == IMPORT_DOCUMENT_OVERWRITE and slugify(record.doc_id) != record.doc_id:
         raise ValueError("ImportContent doc_id must be a safe normalized docs id")
@@ -297,10 +306,27 @@ def plan_import_document(
         raise ValueError("overwrite requires an existing import target")
     if target is not None and target.doc_id != record.doc_id:
         raise ValueError("overwrite target doc_id must match ImportContent doc_id")
+    if operation == IMPORT_DOCUMENT_OVERWRITE and target is not None and target.report is not None:
+        raise ValueError("Docs Import cannot replace a report-host document")
     if record.content_intent == CONTENT_INTENT_REPLACE and not isinstance(import_preview, dict):
         raise ValueError("replace content requires a normalized import preview")
 
     preview = copy.deepcopy(import_preview or {})
+    if record.content_intent == CONTENT_INTENT_REPLACE:
+        incoming_body = _replacement_body(preview, record.title)
+        report_contract = report_source_contract_for_collection(
+            repo_root,
+            parent_config,
+            document_config,
+        )
+        incoming_report = parse_report_source(
+            incoming_body,
+            front_matter={},
+            source_name="Docs Import markdown preview",
+            contract=report_contract,
+        )
+        if incoming_report is not None:
+            raise ValueError("Docs Import cannot create report-host configuration")
     if operation == IMPORT_DOCUMENT_CREATE:
         if bool(create_doc_id) != bool(create_added_date):
             raise ValueError("planned create identity requires both doc_id and added_date")

@@ -94,9 +94,14 @@ def prepare_create_repo(repo_root: Path) -> dict[str, object]:
         source_text(
             REPORT_DOC_ID,
             REPORT_TITLE,
-            f"# {REPORT_TITLE}",
-            viewer_report="docs_subscope",
-            viewer_report_subscope=SUB_SCOPE,
+            (
+                f"# {REPORT_TITLE}\n\n"
+                ":::report\n"
+                "id: docs_subscope\n"
+                "access: public\n"
+                f"sub_scope: {SUB_SCOPE}\n"
+                ":::\n"
+            ),
         ),
     )
     child_root = (
@@ -214,11 +219,18 @@ def install_report_routes(page: Page, paths: dict[str, object]) -> None:
         "last_updated": "2000-01-01 00:00:00",
         "viewer_url": f"/docs/?scope=studio&doc={REPORT_DOC_ID}",
         "summary": "Synthetic empty collection for report New.",
-        "viewer_report": "docs_subscope",
-        "viewer_report_subscope": SUB_SCOPE,
+        "report": {
+            "id": "docs_subscope",
+            "access": "public",
+            "scope": None,
+            "preset": None,
+            "sub_scope": SUB_SCOPE,
+        },
         "content_html": (
             f"<h1>{REPORT_TITLE}</h1>"
             "<p>Test-owned report content exercises exact collection creation.</p>"
+            '<section class="docsViewerReport" data-docs-viewer-report-host '
+            'aria-label="Document report"></section>'
         ),
     }
     index_payload = {
@@ -288,7 +300,10 @@ def install_report_routes(page: Page, paths: dict[str, object]) -> None:
         fulfill_by_id,
     )
     page.route(
-        re.compile(r".*/docs/index-tree(?:\?.*)?$"),
+        re.compile(
+            r".*/(?:docs/index-tree|docs-viewer/scopes/studio/published/"
+            r"documents/index-tree\.json)(?:\?.*)?$"
+        ),
         lambda route: fulfill_json(route, index_payload),
     )
     page.route(

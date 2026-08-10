@@ -212,11 +212,14 @@ title: Pathless
             f"""---
 doc_id: {analysis_report_doc_id}
 title: Works
-viewer_report: docs_subscope
-viewer_report_access: public
-viewer_report_subscope: works
 ---
 # Works
+
+:::report
+id: docs_subscope
+access: public
+sub_scope: works
+:::
 """,
         )
         write_json(
@@ -630,10 +633,14 @@ def test_subject_association_uses_composed_sub_scope_manage_location() -> None:
             f"""---
 doc_id: {report_doc_id}
 title: Works
-viewer_report: docs_subscope
-viewer_report_subscope: works
 ---
 # Works
+
+:::report
+id: docs_subscope
+access: local
+sub_scope: works
+:::
 """,
         )
         write_text(
@@ -693,10 +700,14 @@ added_date: 2026-06-20
 last_updated: 2026-06-21
 parent_id: ""
 group: subject
-viewer_report: docs_subscope
-viewer_report_subscope: tags
 ---
 # Tags
+
+:::report
+id: docs_subscope
+access: local
+sub_scope: tags
+:::
 """,
         )
         write_text(
@@ -1017,11 +1028,14 @@ def test_python_docs_builder_projects_registered_manage_customisation_only() -> 
             f"""---
 doc_id: {TAGS_REPORT_DOC_ID}
 title: Tags
-viewer_report: docs_subscope
-viewer_report_access: local
-viewer_report_subscope: tags
 ---
 # Tags
+
+:::report
+id: docs_subscope
+access: local
+sub_scope: tags
+:::
 """,
         )
         write_text(

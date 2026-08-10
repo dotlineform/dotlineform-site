@@ -1761,7 +1761,9 @@ def assert_manage_report_bridge(page: Page) -> None:
           }
           history.replaceState({}, '', '/?scope=studio&doc=parent-doc');
           document.body.innerHTML = (
-            '<section class="docsViewer"><main id="bridge-content"></main></section>'
+            '<section class="docsViewer"><main id="bridge-content">'
+            + '<section class="docsViewerReport" data-docs-viewer-report-host '
+            + 'aria-label="Document report"></section></main></section>'
           );
           const requests = [];
           const requestBodies = [];
@@ -1952,9 +1954,13 @@ def assert_manage_report_bridge(page: Page) -> None:
             managementContext: true,
             managementService: { baseUrl: window.location.origin },
             payload: {
-              viewer_report: 'docs_subscope',
-              viewer_report_access: 'local',
-              viewer_report_subscope: 'tags'
+              report: {
+                id: 'docs_subscope',
+                access: 'local',
+                scope: null,
+                preset: null,
+                sub_scope: 'tags'
+              }
             },
             publishSubscopeReportState: state => {
               if (state.state === 'detail') {
@@ -2134,6 +2140,10 @@ def assert_manage_report_bridge(page: Page) -> None:
           window.syntheticManifestFailure = true;
           const failureStates = [];
           const failureContent = document.createElement('main');
+          failureContent.innerHTML = (
+            '<section class="docsViewerReport" data-docs-viewer-report-host '
+            + 'aria-label="Document report"></section>'
+          );
           document.body.appendChild(failureContent);
           await bridge.mountDocsViewerManageDocumentExtras({
             ...context,
@@ -2340,7 +2350,9 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
           );
           history.replaceState({}, '', '/?scope=studio&doc=parent-doc');
           document.body.innerHTML = (
-            '<section class="docsViewer"><main id="create-report"></main></section>'
+            '<section class="docsViewer"><main id="create-report">'
+            + '<section class="docsViewerReport" data-docs-viewer-report-host '
+            + 'aria-label="Document report"></section></main></section>'
           );
           window.syntheticCreatedDocs = [];
           const fetches = [];
@@ -2430,9 +2442,13 @@ def assert_subscope_create_contribution_and_report_refresh(page: Page) -> None:
             },
             managementService: { baseUrl: window.location.origin },
             payload: {
-              viewer_report: 'docs_subscope',
-              viewer_report_access: 'local',
-              viewer_report_subscope: 'tags'
+              report: {
+                id: 'docs_subscope',
+                access: 'local',
+                scope: null,
+                preset: null,
+                sub_scope: 'tags'
+              }
             },
             publishSubscopeReportState: state => states.push(state),
             routeContext: { reportRegistryUrl: '/reports-registry.json' },

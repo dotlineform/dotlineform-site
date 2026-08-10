@@ -12,6 +12,7 @@ SERVICES_DIR = REPO_ROOT / "docs-viewer" / "services"
 if str(SERVICES_DIR) not in sys.path:
     sys.path.insert(0, str(SERVICES_DIR))
 
+import docs_report_source  # noqa: E402
 from docs_report_source import (  # noqa: E402
     ReportSourceError,
     build_report_source_contract,
@@ -105,6 +106,15 @@ def test_valid_descriptor_is_stable_immutable_and_order_independent() -> None:
 
 
 def test_zero_blocks_returns_none() -> None:
+    assert parse("# Ordinary document\n") is None
+
+
+def test_zero_blocks_skip_commonmark_parse(monkeypatch: pytest.MonkeyPatch) -> None:
+    def fail_if_called(_markdown: str) -> frozenset[int]:
+        raise AssertionError("CommonMark parser should not run without a report token")
+
+    monkeypatch.setattr(docs_report_source, "_ignored_lines", fail_if_called)
+
     assert parse("# Ordinary document\n") is None
 
 

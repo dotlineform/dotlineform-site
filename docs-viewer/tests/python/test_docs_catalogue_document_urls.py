@@ -158,9 +158,13 @@ def test_loader_joins_public_parent_and_sub_scope_sources_across_configured_scop
         write_json(
             root / f"site/assets/data/docs/scopes/analysis/by-id/{REPORT_ID}.json",
             {
-                "viewer_report": "docs_subscope",
-                "viewer_report_access": "public",
-                "viewer_report_subscope": "works",
+                "report": {
+                    "id": "docs_subscope",
+                    "access": "public",
+                    "scope": None,
+                    "preset": None,
+                    "sub_scope": "works",
+                },
             },
         )
         write_json(

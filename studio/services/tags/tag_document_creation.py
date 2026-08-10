@@ -75,7 +75,6 @@ def render_tag_document_source(
             "last_updated": last_updated,
             "group": group,
             "parent_id": "",
-            "viewable": True,
         },
         body,
     )

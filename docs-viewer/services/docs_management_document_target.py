@@ -26,6 +26,7 @@ from docs_document_subjects import (
     FOLDER_PATH_FIELD,
     normalize_authoring_subject,
 )
+from docs_report_source import ReportSourceContract
 
 
 PARENT_TARGET_KEYS = frozenset({"scope", "doc_id"})
@@ -223,6 +224,7 @@ def source_doc_from_path(
     path: Path,
     scope: str,
     requested_doc_id: str | None = None,
+    report_contract: ReportSourceContract | None = None,
 ) -> source_model.ScopeDoc:
     source_text = path.read_bytes().decode("utf-8")
     front_matter, body = source_model.parse_source_text(source_text, source_name=path.name)
@@ -236,6 +238,17 @@ def source_doc_from_path(
             f"does not match requested doc_id {requested_doc_id!r}"
         )
     title = str(front_matter.get("title") or source_model.humanize(existing_doc_id)).strip()
+    report = (
+        source_model.parse_document_report(
+            source_text,
+            front_matter,
+            body,
+            source_name=path.as_posix(),
+            contract=report_contract,
+        )
+        if report_contract is not None
+        else None
+    )
     return source_model.ScopeDoc(
         scope=scope,
         path=path,
@@ -248,6 +261,7 @@ def source_doc_from_path(
         parent_id=str(front_matter.get("parent_id") or "").strip(),
         publishable=source_model.doc_is_publishable(front_matter),
         group=source_model.normalize_document_group(front_matter.get("group")),
+        report=report,
     )
 
 
@@ -261,12 +275,18 @@ def resolve_managed_document_target(
         scope=normalized["scope"],
         sub_scope=normalized.get("sub_scope"),
     )
+    report_contract = source_model.report_source_contract_for_collection(
+        repo_root,
+        collection.parent_config,
+        collection.document_config,
+    )
     if collection.sub_scope:
         path = confined_document_path(collection.source_root, normalized["doc_id"])
         document = source_doc_from_path(
             path=path,
             scope=collection.scope,
             requested_doc_id=normalized["doc_id"],
+            report_contract=report_contract,
         )
         source_model.validate_publishable_front_matter(
             document.front_matter,
@@ -286,6 +306,7 @@ def resolve_managed_document_target(
             source_doc_from_path(
                 path=confined_source_path(collection.source_root, candidate),
                 scope=collection.scope,
+                report_contract=report_contract,
             )
             for candidate in source_model.scope_markdown_paths(collection.source_root)
         ]

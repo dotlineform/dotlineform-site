@@ -119,6 +119,49 @@ def test_rebuild_source_body_rejects_stale_revision() -> None:
             raise AssertionError("expected stale source revision to be rejected")
 
 
+def test_rebuild_source_body_lightly_validates_inserted_report_block() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        current = source_service.read_source_body(
+            repo_root,
+            {"scope": ["studio"], "doc_id": ["target"]},
+        )
+        valid = source_service.rebuild_source_body(
+            repo_root,
+            {
+                "scope": "studio",
+                "doc_id": "target",
+                "source_revision": current["source_revision"],
+                "source_body": (
+                    "# Target\n\n"
+                    ":::report\n"
+                    "id: reports_list\n"
+                    "access: public\n"
+                    ":::\n"
+                ),
+            },
+            dry_run=True,
+        )
+        with pytest.raises(ValueError, match="missing required report attribute"):
+            source_service.rebuild_source_body(
+                repo_root,
+                {
+                    "scope": "studio",
+                    "doc_id": "target",
+                    "source_revision": current["source_revision"],
+                    "source_body": (
+                        "# Target\n\n"
+                        ":::report\n"
+                        "id: reports_list\n"
+                        ":::\n"
+                    ),
+                },
+                dry_run=True,
+            )
+
+    assert valid["source_changed"] is True
+
+
 def test_rebuild_source_body_accepts_exact_crlf_revision() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)

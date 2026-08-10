@@ -35,12 +35,13 @@ function fetchDocsIndexTreeForScope(context, scope) {
 }
 
 function payloadHasReport(payload) {
-  return Boolean(payload && cleanString(payload.viewer_report));
+  return Boolean(payload && payload.report && cleanString(payload.report.id));
 }
 
 function reportSubScope(payload) {
-  if (cleanString(payload && payload.viewer_report) !== "docs_subscope") return "";
-  return cleanString(payload && payload.viewer_report_subscope).toLowerCase();
+  var report = payload && payload.report;
+  if (cleanString(report && report.id) !== "docs_subscope") return "";
+  return cleanString(report && report.sub_scope).toLowerCase();
 }
 
 function parentTarget(settings) {

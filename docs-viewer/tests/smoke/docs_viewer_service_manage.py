@@ -104,11 +104,18 @@ def smoke_document_payloads(
             "last_updated": "2000-01-01 00:00:03",
             "viewer_url": f"/docs/?scope=studio&doc={SUBSCOPE_REPORT_DOC_ID}",
             "summary": "Synthetic report for sub-scope editing integration.",
-            "viewer_report": "docs_subscope",
-            "viewer_report_subscope": SUBSCOPE_ID,
+            "report": {
+                "id": "docs_subscope",
+                "access": "public",
+                "scope": None,
+                "preset": None,
+                "sub_scope": SUBSCOPE_ID,
+            },
             "content_html": (
                 f"<h1>{SUBSCOPE_REPORT_DOC_TITLE}</h1>"
                 "<p>Test-owned report content exercises managed sub-scope editing.</p>"
+                '<section class="docsViewerReport" data-docs-viewer-report-host '
+                'aria-label="Document report"></section>'
             ),
         }
     return payloads
@@ -459,7 +466,10 @@ def install_smoke_document_routes(
             fulfill_open_source,
         )
     page.route(
-        re.compile(r".*/docs/index-tree(?:\?.*)?$"),
+        re.compile(
+            r".*/(?:docs/index-tree|docs-viewer/scopes/studio/published/"
+            r"documents/index-tree\.json)(?:\?.*)?$"
+        ),
         lambda route: fulfill_json(route, index_payload),
     )
     page.route(re.compile(r".*/docs/doc(?:\?.*)?$"), fulfill_document)

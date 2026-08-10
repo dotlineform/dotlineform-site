@@ -112,7 +112,6 @@ def render_tag_document_source(
         f"added_date: {json.dumps(added_date, ensure_ascii=False)}\n"
         f"last_updated: {json.dumps(last_updated, ensure_ascii=False)}\n"
         'parent_id: ""\n'
-        "viewable: true\n"
         "---\n"
         f"{body}\n"
     )

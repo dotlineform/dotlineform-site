@@ -271,10 +271,15 @@ def configure_review_sub_scope_targets(root: Path) -> dict[str, Path]:
             {
                 "doc_id": LIBRARY_TAGS_REPORT_DOC_ID,
                 "title": "Tags",
-                "viewer_report": "docs_subscope",
-                "viewer_report_subscope": "tags",
             },
-            "# Tags\n",
+            (
+                "# Tags\n\n"
+                ":::report\n"
+                "id: docs_subscope\n"
+                "access: public\n"
+                "sub_scope: tags\n"
+                ":::\n"
+            ),
         ),
         encoding="utf-8",
     )
@@ -415,10 +420,15 @@ def configure_analysis_tags_round_trip_targets(root: Path) -> dict[str, Path]:
                 "added_date": "2026-07-01 09:30:00",
                 "last_updated": "2026-07-29 09:30:00",
                 "parent_id": "analysis-root",
-                "viewer_report": "docs_subscope",
-                "viewer_report_subscope": "tags",
             },
-            "# Tags\n",
+            (
+                "# Tags\n\n"
+                ":::report\n"
+                "id: docs_subscope\n"
+                "access: public\n"
+                "sub_scope: tags\n"
+                ":::\n"
+            ),
         ),
         encoding="utf-8",
     )

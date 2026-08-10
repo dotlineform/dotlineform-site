@@ -16,6 +16,7 @@ from .common import (
 from .rendering import add_missing_image_titles
 from .source import DocRecord
 from docs_document_identity import is_doc_timestamp
+from docs_report_source import project_report_markdown
 
 
 class PayloadBuilderMixin:
@@ -25,8 +26,13 @@ class PayloadBuilderMixin:
         docs: list[DocRecord],
         semantic_tokens_by_doc: dict[str, list[dict[str, Any]]],
     ) -> dict[str, Any]:
-        resolved = self.resolve_content_tokens(
+        projected_markdown = project_report_markdown(
             doc.body_markdown,
+            doc.report,
+            include_host=True,
+        )
+        resolved = self.resolve_content_tokens(
+            projected_markdown,
             doc=doc,
             semantic_tokens_by_doc=semantic_tokens_by_doc,
         )

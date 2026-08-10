@@ -7,7 +7,7 @@ function cleanString(value) {
 }
 
 function payloadHasReport(payload) {
-  return Boolean(payload && cleanString(payload.viewer_report));
+  return Boolean(payload && payload.report && cleanString(payload.report.id));
 }
 
 export function mountDocsViewerPublicDocumentExtras(context) {

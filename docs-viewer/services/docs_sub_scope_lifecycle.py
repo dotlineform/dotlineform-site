@@ -204,18 +204,23 @@ def sub_scope_path_records(repo_root: Path, parent_config: DocsScopeConfig, sub_
     return records, publish_records
 
 
-def parent_source_records(repo_root: Path, parent_config: DocsScopeConfig) -> list[tuple[Path, dict[str, Any]]]:
-    source_root = resolve_scope_path(repo_root, document_source_path(parent_config))
-    if not source_root.is_dir():
-        raise ValueError(f"parent source documents root does not exist for {parent_config.scope_id!r}")
-    return [(path, source_model.parse_source(path)[0]) for path in sorted(source_root.glob("*.md"))]
+def parent_source_records(
+    repo_root: Path,
+    parent_config: DocsScopeConfig,
+) -> list[source_model.ScopeDoc]:
+    return source_model.load_scope_docs_for_config(repo_root, parent_config)
 
 
-def report_claimants(records: list[tuple[Path, dict[str, Any]]], sub_scope: str) -> list[tuple[Path, dict[str, Any]]]:
+def report_claimants(
+    records: list[source_model.ScopeDoc],
+    sub_scope: str,
+) -> list[source_model.ScopeDoc]:
     return [
-        item for item in records
-        if str(item[1].get("viewer_report") or "").strip() == REPORT_ID
-        and str(item[1].get("viewer_report_subscope") or "").strip().lower() == sub_scope
+        document
+        for document in records
+        if document.report is not None
+        and document.report.id == REPORT_ID
+        and document.report.sub_scope == sub_scope
     ]
 
 
@@ -246,12 +251,15 @@ def report_host_source(parent_config: DocsScopeConfig, sub_scope: str, title: st
         "added_date": identity["added_date"],
         "last_updated": identity["added_date"],
     }
-    front_matter.update({
-        "viewer_report": REPORT_ID,
-        "viewer_report_access": REPORT_ACCESS,
-        "viewer_report_subscope": sub_scope,
-    })
-    return source_model.format_source(front_matter, f"# {title}\n")
+    body = (
+        f"# {title}\n\n"
+        ":::report\n"
+        f"id: {REPORT_ID}\n"
+        f"access: {REPORT_ACCESS}\n"
+        f"sub_scope: {sub_scope}\n"
+        ":::\n"
+    )
+    return source_model.format_source(front_matter, body)
 
 
 def plan_create_sub_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
@@ -270,12 +278,12 @@ def plan_create_sub_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict
     if claimants:
         raise ValueError(
             f"sub-scope creation found an existing report host for {parent_scope}/{sub_scope}: "
-            + ", ".join(path.name for path, _front_matter in claimants)
+            + ", ".join(document.path.name for document in claimants)
         )
     existing = {
         value
-        for path, front_matter in parent_sources
-        for value in (path.stem, str(front_matter.get("doc_id") or "").strip())
+        for document in parent_sources
+        for value in (document.path.stem, document.doc_id)
         if value
     }
     identity = planned_host_identity(body, existing)
@@ -486,19 +494,29 @@ def plan_delete_sub_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict
         return blocked_delete_preview(parent_scope, sub_scope, ["lifecycle-associated report host source is missing"], **details)
 
     revision = source_model.source_revision(host_path.read_bytes())
-    front_matter, _body = source_model.parse_source(host_path)
+    parent_documents = parent_source_records(repo_root, parent_config)
+    host_document = next(
+        (
+            document
+            for document in parent_documents
+            if document.path.resolve() == host_path.resolve()
+        ),
+        None,
+    )
     blockers = []
     if revision != lifecycle.report_host_source_revision:
         blockers.append("Report host edited since creation")
     if (
-        str(front_matter.get("doc_id") or "").strip() != lifecycle.report_host_doc_id
-        or str(front_matter.get("viewer_report") or "").strip() != REPORT_ID
-        or str(front_matter.get("viewer_report_access") or "").strip() != REPORT_ACCESS
-        or str(front_matter.get("viewer_report_subscope") or "").strip().lower() != sub_scope
+        host_document is None
+        or host_document.doc_id != lifecycle.report_host_doc_id
+        or host_document.report is None
+        or host_document.report.id != REPORT_ID
+        or host_document.report.access != REPORT_ACCESS
+        or host_document.report.sub_scope != sub_scope
     ):
         blockers.append("lifecycle-associated report host is detached")
-    claimants = report_claimants(parent_source_records(repo_root, parent_config), sub_scope)
-    if len(claimants) != 1 or claimants[0][0].resolve() != host_path.resolve():
+    claimants = report_claimants(parent_documents, sub_scope)
+    if len(claimants) != 1 or claimants[0].path.resolve() != host_path.resolve():
         blockers.append("sub-scope report-host association is ambiguous")
     if blockers:
         return blocked_delete_preview(

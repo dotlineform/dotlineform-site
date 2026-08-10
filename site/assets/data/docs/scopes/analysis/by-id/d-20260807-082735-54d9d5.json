@@ -1,8 +1,12 @@
 {
   "title": "Works",
   "last_updated": "2026-08-07 08:27:35",
-  "viewer_report": "docs_subscope",
-  "viewer_report_access": "public",
-  "viewer_report_subscope": "works",
-  "content_html": "<h1>Works</h1>\n"
+  "report": {
+    "id": "docs_subscope",
+    "access": "public",
+    "scope": null,
+    "preset": null,
+    "sub_scope": "works"
+  },
+  "content_html": "<h1>Works</h1>\n<section class=\"docsViewerReport\" data-docs-viewer-report-host aria-label=\"Document report\"></section>"
 }

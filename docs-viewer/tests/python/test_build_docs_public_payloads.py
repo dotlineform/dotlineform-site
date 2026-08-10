@@ -203,11 +203,14 @@ title: Report
 added_date: 2026-06-24
 last_updated: 2026-06-24
 parent_id: {PARENT_DOC_ID}
-viewer_report: docs_subscope
-viewer_report_access: public
-viewer_report_subscope: tags
 ---
 # Report
+
+:::report
+id: docs_subscope
+access: public
+sub_scope: tags
+:::
 """,
         )
         config = load_docs_scope_configs(root)["library"]
@@ -216,11 +219,17 @@ viewer_report_subscope: tags
         report_payload = read_json(root / f"docs-viewer/scopes/library/published/documents/by-id/{REPORT_DOC_ID}.json")
         index_tree = read_json(root / "docs-viewer/scopes/library/published/documents/index-tree.json")
 
-    assert report_payload["viewer_report"] == "docs_subscope"
-    assert report_payload["viewer_report_access"] == "public"
-    assert report_payload["viewer_report_subscope"] == "tags"
+    assert report_payload["report"] == {
+        "id": "docs_subscope",
+        "access": "public",
+        "scope": None,
+        "preset": None,
+        "sub_scope": "tags",
+    }
+    assert report_payload["content_html"].endswith(
+        '<section class="docsViewerReport" data-docs-viewer-report-host '
+        'aria-label="Document report"></section>'
+    )
     report_row = index_tree["docs"][1]["children"][2]
     assert report_row["doc_id"] == REPORT_DOC_ID
-    assert "viewer_report" not in report_row
-    assert "viewer_report_access" not in report_row
-    assert "viewer_report_subscope" not in report_row
+    assert "report" not in report_row

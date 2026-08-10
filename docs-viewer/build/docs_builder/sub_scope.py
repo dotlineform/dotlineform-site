@@ -68,8 +68,9 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         matching = [
             doc.doc_id for doc in parent_docs
             if (
-                doc.viewer_report == "docs_subscope"
-                and doc.viewer_report_subscope == self.sub_scope_id
+                doc.report is not None
+                and doc.report.id == "docs_subscope"
+                and doc.report.sub_scope == self.sub_scope_id
             )
         ]
         if len(matching) == 1:

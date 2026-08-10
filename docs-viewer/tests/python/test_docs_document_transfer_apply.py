@@ -45,6 +45,15 @@ COPY_TIMESTAMP = "2026-07-24 14:00:00"
 def write_json(path: Path, payload: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    if path.name == "docs_scopes.json":
+        registry_path = path.parents[1] / "reports/reports.json"
+        registry_path.parent.mkdir(parents=True, exist_ok=True)
+        registry_path.write_text(
+            (REPO_ROOT / "docs-viewer/config/reports/reports.json").read_text(
+                encoding="utf-8"
+            ),
+            encoding="utf-8",
+        )
 
 
 def write_doc(
@@ -1163,13 +1172,14 @@ def test_apply_parent_to_public_child_uses_omitted_true_default_and_subdoc_links
         body="# Target Works\n",
     )
     report_path = local_documents_root(repo_root, "target") / f"{target_report_id}.md"
-    report_front_matter, report_body = source_model.parse_source(report_path)
-    report_front_matter.update(
-        {
-            "viewer_report": "docs_subscope",
-            "viewer_report_access": "local",
-            "viewer_report_subscope": "works",
-        }
+    report_front_matter, _report_body = source_model.parse_source(report_path)
+    report_body = (
+        "# Target Works\n\n"
+        ":::report\n"
+        "id: docs_subscope\n"
+        "access: local\n"
+        "sub_scope: works\n"
+        ":::\n"
     )
     report_path.write_text(
         source_model.format_source(report_front_matter, report_body),

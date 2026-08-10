@@ -11,10 +11,8 @@ import docs_local_links
 import docs_source_config_settings
 import docs_static_html_export
 import docs_document_transfer
-import docs_source_model as source_model
 from docs_scope_config import (
     DOCS_SCOPE_CONFIGS,
-    DOCUMENT_SOURCE_ROOTS,
     LOCAL_EXTERNAL_SCOPE_TYPE,
     document_source_path,
     is_public_readonly_scope,
@@ -26,36 +24,6 @@ from docs_scope_config import (
     resolve_scope_path,
 )
 from docs_document_packages.workspace import workspace_status
-
-
-def capability_scope_docs(repo_root: Path, scope: str, root: Path) -> list[Any]:
-    if not root.exists():
-        return []
-    if scope in DOCUMENT_SOURCE_ROOTS:
-        return source_model.load_scope_docs(repo_root, scope)
-
-    docs = []
-    for path in source_model.scope_markdown_paths(root):
-        front_matter, body = source_model.parse_source(path)
-        doc_id = str(front_matter.get("doc_id") or "").strip()
-        if not doc_id:
-            raise ValueError(f"missing required doc_id in {path.relative_to(root).as_posix()}")
-        title = str(front_matter.get("title") or source_model.humanize(doc_id or path.stem)).strip() or doc_id
-        docs.append(
-            source_model.ScopeDoc(
-                scope=scope,
-                path=path,
-                source_text=path.read_text(encoding="utf-8"),
-                front_matter=dict(front_matter),
-                body=body,
-                doc_id=doc_id,
-                title=title,
-                ui_status=source_model.normalize_ui_status(front_matter.get("ui_status")),
-                parent_id=str(front_matter.get("parent_id") or "").strip(),
-                publishable=source_model.doc_is_publishable(front_matter),
-            )
-        )
-    return docs
 
 
 def capability_scope_root_label(repo_root: Path, scope: str, config: Any) -> str:
@@ -81,7 +49,6 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
     for scope in sorted(scope_configs):
         config = scope_configs[scope]
         root = resolve_scope_path(repo_root, document_source_path(config))
-        scope_docs = capability_scope_docs(repo_root, scope, root)
         manifest_record = manifest_scopes.get(scope)
         generated_data_path = resolve_scope_path(repo_root, published_documents_path(config)) / "index-tree.json"
         publishable = is_public_readonly_scope(
@@ -108,7 +75,6 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             "generated_search_reads": resolve_scope_path(repo_root, published_search_path(config)).exists(),
             "publishable": publishable,
             "document_transfer": transfer_capabilities,
-            "count": len(scope_docs),
             "scope_lifecycle": {
                 "manifest_recorded": manifest_record is not None,
                 "owner": str((manifest_record or {}).get("owner") or ""),

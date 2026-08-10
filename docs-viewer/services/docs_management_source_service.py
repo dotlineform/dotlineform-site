@@ -121,6 +121,13 @@ def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
     next_source_body = normalize_source_body_for_write(body.get("source_body"))
     source_changed = next_source_body != normalize_source_body(current_source_body)
     next_source_text = front_matter_source + next_source_body
+    source_model.parse_collection_document_report(
+        repo_root,
+        resolved.parent_config,
+        resolved.document_config,
+        next_source_text,
+        source_name=target.path.as_posix(),
+    )
     rebuild = None
 
     if not dry_run and source_changed:

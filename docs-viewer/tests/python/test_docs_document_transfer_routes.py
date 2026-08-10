@@ -25,6 +25,26 @@ import docs_source_model as source_model  # noqa: E402
 def write_json(path: Path, payload: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    if path.name == "docs_scopes.json":
+        registry_path = path.parents[1] / "reports/reports.json"
+        registry_path.parent.mkdir(parents=True, exist_ok=True)
+        registry_path.write_text(
+            (REPO_ROOT / "docs-viewer/config/reports/reports.json").read_text(
+                encoding="utf-8"
+            ),
+            encoding="utf-8",
+        )
+
+
+def report_body(title: str) -> str:
+    return (
+        f"# {title}\n\n"
+        ":::report\n"
+        "id: docs_subscope\n"
+        "access: local\n"
+        "sub_scope: works\n"
+        ":::\n"
+    )
 
 
 def write_doc(
@@ -33,6 +53,7 @@ def write_doc(
     doc_id: str,
     title: str,
     parent_id: str = "",
+    body: str | None = None,
     extra_front_matter: dict[str, object] | None = None,
 ) -> None:
     documents_root.mkdir(parents=True, exist_ok=True)
@@ -43,7 +64,7 @@ def write_doc(
     }
     front_matter.update(extra_front_matter or {})
     (documents_root / f"{doc_id}.md").write_text(
-        source_model.format_source(front_matter, f"# {title}\n"),
+        source_model.format_source(front_matter, body or f"# {title}\n"),
         encoding="utf-8",
     )
 
@@ -92,21 +113,13 @@ def make_repo(tmp_path: Path) -> Path:
         source_root,
         doc_id="source-works-report",
         title="Source Works",
-        extra_front_matter={
-            "viewer_report": "docs_subscope",
-            "viewer_report_access": "local",
-            "viewer_report_subscope": "works",
-        },
+        body=report_body("Source Works"),
     )
     write_doc(
         target_root,
         doc_id="target-works-report",
         title="Target Works",
-        extra_front_matter={
-            "viewer_report": "docs_subscope",
-            "viewer_report_access": "local",
-            "viewer_report_subscope": "works",
-        },
+        body=report_body("Target Works"),
     )
     write_doc(source_works_root, doc_id="work-a", title="Work A")
     target_root.mkdir(parents=True, exist_ok=True)

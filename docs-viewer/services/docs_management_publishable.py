@@ -148,6 +148,13 @@ def plan_set_publishable(
         if source_text is None:
             unchanged_doc_ids.append(doc_id)
             continue
+        source_model.parse_collection_document_report(
+            repo_root,
+            resolved.parent_config,
+            resolved.document_config,
+            source_text,
+            source_name=resolved.document.path.as_posix(),
+        )
         updates.append(
             PublishableSourceUpdate(
                 doc_id=doc_id,

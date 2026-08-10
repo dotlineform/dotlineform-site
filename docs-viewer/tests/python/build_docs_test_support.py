@@ -13,6 +13,7 @@ from pathlib import Path
 
 from repo_factory import (
     docs_scope_record,
+    docs_sub_scope_record,
     read_json,
     write_docs_scope_config,
     write_json,
@@ -39,6 +40,15 @@ HIDDEN_CHILD_DOC_ID = "d-20260601-000000-000004"
 MANAGE_ROOT_DOC_ID = "d-20260601-000000-000005"
 MANAGE_CHILD_DOC_ID = "d-20260601-000000-000006"
 PRIVATE_DOC_ID = "d-20260601-000000-000007"
+
+
+def write_report_registry(root: Path) -> None:
+    write_text(
+        root / "docs-viewer/config/reports/reports.json",
+        (REPO_ROOT / "docs-viewer/config/reports/reports.json").read_text(
+            encoding="utf-8"
+        ),
+    )
 
 
 def write_semantic_token_contract(root: Path) -> None:
@@ -121,6 +131,7 @@ def write_route_config(root: Path, *, public_scope: str = "", public_basis: str 
 
 
 def write_scope_config(root: Path) -> None:
+    write_report_registry(root)
     write_route_config(root)
     studio = docs_scope_record(
         "studio",
@@ -147,6 +158,7 @@ def write_scope_config(root: Path) -> None:
 
 def write_external_scope_config(root: Path, external_root: Path) -> None:
     del external_root
+    write_report_registry(root)
     write_route_config(root)
     write_docs_scope_config(
         root,
@@ -162,20 +174,23 @@ def write_external_scope_config(root: Path, external_root: Path) -> None:
 
 
 def write_public_scope_config(root: Path) -> None:
+    write_report_registry(root)
     write_route_config(root, public_scope="library", public_basis="edited")
+    library = docs_scope_record(
+        "library",
+        scope_type="public",
+        meta="public scope",
+        viewer_base_url="/library/",
+        include_scope_param=False,
+        default_doc_id=PARENT_DOC_ID,
+        manage_only_tree_root_ids=[MANAGE_ROOT_DOC_ID],
+    )
+    library["sub_scopes"] = [
+        docs_sub_scope_record("library", "tags", title="Tags", scope_type="public")
+    ]
     write_docs_scope_config(
         root,
-        [
-            docs_scope_record(
-                "library",
-                scope_type="public",
-                meta="public scope",
-                viewer_base_url="/library/",
-                include_scope_param=False,
-                default_doc_id=PARENT_DOC_ID,
-                manage_only_tree_root_ids=[MANAGE_ROOT_DOC_ID],
-            )
-        ],
+        [library],
         {"recent_limit": 2},
     )
 

@@ -50,7 +50,6 @@ import {
 } from "./docs-viewer-index-selection.js";
 
 var MANAGEMENT_TEXT = {
-  checkingNote: "Checking manage mode...",
   clearSearchNote: "Clear search to manage the current doc.",
   unavailableNote: "Docs management service unavailable."
 };
@@ -642,7 +641,7 @@ export function initDocsViewerManagement(context) {
     var noteText;
     var noteIsError = false;
     if (!management.managementChecked) {
-      noteText = MANAGEMENT_TEXT.checkingNote;
+      noteText = "";
     } else if (!management.managementAvailable) {
       noteText = management.managementCapabilityError || MANAGEMENT_TEXT.unavailableNote;
       noteIsError = true;
