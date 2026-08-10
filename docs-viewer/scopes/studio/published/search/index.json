@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-01965021809b3d9324a743ad6eaccf49",
-    "generated_at_utc": "2026-08-10T14:35:32Z",
-    "count": 299
+    "version": "blake2b-c3e5cadb92851bb943a81e43b5df088e",
+    "generated_at_utc": "2026-08-10T16:45:44Z",
+    "count": 301
   },
   "entries": [
     {
@@ -2464,25 +2464,52 @@
       "kind": "doc",
       "title": "Reports",
       "href": "/docs/?scope=studio&doc=d-20260513-105343-6de36b",
-      "last_updated": "2026-08-10 15:26:37",
+      "last_updated": "2026-08-10 17:45:13",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-08-10 15:26:37 • Docs Viewer",
+      "display_meta": "2026-08-10 17:45:13 • Docs Viewer",
       "search_terms": [
         "reports",
         "docs viewer",
         "docs",
         "viewer",
-        "2026-08-10 15:26:37",
+        "2026-08-10 17:45:13",
         "2026",
         "08",
         "10",
-        "15",
-        "26",
-        "37",
+        "17",
+        "45",
+        "13",
         "d-20260513-105343-6de36b"
       ],
-      "search_text": "reports docs viewer docs viewer 2026-08-10 15:26:37 2026 08 10 15 26 37 d-20260513-105343-6de36b"
+      "search_text": "reports docs viewer docs viewer 2026-08-10 17:45:13 2026 08 10 17 45 13 d-20260513-105343-6de36b"
+    },
+    {
+      "id": "d-20260810-173738-703ecd",
+      "kind": "doc",
+      "title": "Report Capability and Composition",
+      "href": "/docs/?scope=studio&doc=d-20260810-173738-703ecd",
+      "last_updated": "2026-08-10 17:45:21",
+      "parent_id": "d-20260513-105343-6de36b",
+      "parent_title": "Reports",
+      "display_meta": "2026-08-10 17:45:21 • Reports",
+      "search_terms": [
+        "report capability and composition",
+        "report",
+        "capability",
+        "and",
+        "composition",
+        "reports",
+        "2026-08-10 17:45:21",
+        "2026",
+        "08",
+        "10",
+        "17",
+        "45",
+        "21",
+        "d-20260810-173738-703ecd"
+      ],
+      "search_text": "report capability and composition report capability and composition reports 2026-08-10 17:45:21 2026 08 10 17 45 21 d-20260810-173738-703ecd"
     },
     {
       "id": "d-20260331-000000-c313fd",
@@ -3018,6 +3045,36 @@
         "d-20260513-214100-0a7f44"
       ],
       "search_text": "ui status ui status docs viewer docs viewer 2026-08-04 12:02:52 2026 08 04 12 02 52 d-20260513-214100-0a7f44"
+    },
+    {
+      "id": "d-20260810-115737-741620",
+      "kind": "doc",
+      "title": "Works Report Concept And Architecture",
+      "href": "/docs/?scope=studio&doc=d-20260810-115737-741620",
+      "last_updated": "2026-08-10 16:24:01",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-08-10 16:24:01 • Docs Viewer",
+      "search_terms": [
+        "works report concept and architecture",
+        "works",
+        "report",
+        "concept",
+        "and",
+        "architecture",
+        "docs viewer",
+        "docs",
+        "viewer",
+        "2026-08-10 16:24:01",
+        "2026",
+        "08",
+        "10",
+        "16",
+        "24",
+        "01",
+        "d-20260810-115737-741620"
+      ],
+      "search_text": "works report concept and architecture works report concept and architecture docs viewer docs viewer 2026-08-10 16:24:01 2026 08 10 16 24 01 d-20260810-115737-741620"
     },
     {
       "id": "d-20260718-114645-7b9d24",
@@ -4208,6 +4265,32 @@
         "d-20260809-103047-b7d8c8"
       ],
       "search_text": "dxm-1 — packaged media in dated export delivery dxm 1 packaged media in dated export delivery roadmap 2026-08-09 11:40:41 2026 08 09 11 40 41 d-20260809-103047-b7d8c8"
+    },
+    {
+      "id": "d-20260810-165949-ee4d35",
+      "kind": "doc",
+      "title": "Expanded Report View",
+      "href": "/docs/?scope=studio&doc=d-20260810-165949-ee4d35",
+      "last_updated": "2026-08-10 17:45:21",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap",
+      "display_meta": "2026-08-10 17:45:21 • Roadmap",
+      "search_terms": [
+        "expanded report view",
+        "expanded",
+        "report",
+        "view",
+        "roadmap",
+        "2026-08-10 17:45:21",
+        "2026",
+        "08",
+        "10",
+        "17",
+        "45",
+        "21",
+        "d-20260810-165949-ee4d35"
+      ],
+      "search_text": "expanded report view expanded report view roadmap 2026-08-10 17:45:21 2026 08 10 17 45 21 d-20260810-165949-ee4d35"
     },
     {
       "id": "d-20260808-205414-91040a",
@@ -6569,34 +6652,6 @@
         "d-20260810-115737-901d0f"
       ],
       "search_text": "works report works report roadmap 2026-08-10 15:35:12 2026 08 10 15 35 12 d-20260810-115737-901d0f"
-    },
-    {
-      "id": "d-20260810-115737-741620",
-      "kind": "doc",
-      "title": "Works Report Concept And Architecture",
-      "href": "/docs/?scope=studio&doc=d-20260810-115737-741620",
-      "last_updated": "2026-08-10 15:26:37",
-      "parent_id": "d-20260810-115737-901d0f",
-      "parent_title": "Works Report",
-      "display_meta": "2026-08-10 15:26:37 • Works Report",
-      "search_terms": [
-        "works report concept and architecture",
-        "works",
-        "report",
-        "concept",
-        "and",
-        "architecture",
-        "works report",
-        "2026-08-10 15:26:37",
-        "2026",
-        "08",
-        "10",
-        "15",
-        "26",
-        "37",
-        "d-20260810-115737-741620"
-      ],
-      "search_text": "works report concept and architecture works report concept and architecture works report 2026-08-10 15:26:37 2026 08 10 15 26 37 d-20260810-115737-741620"
     },
     {
       "id": "d-20260712-213026-ee0f22",

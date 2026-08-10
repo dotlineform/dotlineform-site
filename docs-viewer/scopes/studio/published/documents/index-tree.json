@@ -521,7 +521,14 @@
         {
           "doc_id": "d-20260513-105343-6de36b",
           "title": "Reports",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260513-105343-6de36b.json"
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260513-105343-6de36b.json",
+          "children": [
+            {
+              "doc_id": "d-20260810-173738-703ecd",
+              "title": "Report Capability and Composition",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-173738-703ecd.json"
+            }
+          ]
         },
         {
           "doc_id": "d-20260331-000000-c313fd",
@@ -631,6 +638,11 @@
           "doc_id": "d-20260513-214100-0a7f44",
           "title": "UI Status",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260513-214100-0a7f44.json"
+        },
+        {
+          "doc_id": "d-20260810-115737-741620",
+          "title": "Works Report Concept And Architecture",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-115737-741620.json"
         }
       ]
     },
@@ -898,6 +910,12 @@
           "title": "DXM-1 — Packaged Media In Dated Export Delivery",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260809-103047-b7d8c8.json",
           "ui_status": "done"
+        },
+        {
+          "doc_id": "d-20260810-165949-ee4d35",
+          "title": "Expanded Report View",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-165949-ee4d35.json",
+          "ui_status": "draft"
         },
         {
           "doc_id": "d-20260808-205414-91040a",
@@ -1379,15 +1397,7 @@
           "doc_id": "d-20260810-115737-901d0f",
           "title": "Works Report",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-115737-901d0f.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "d-20260810-115737-741620",
-              "title": "Works Report Concept And Architecture",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-115737-741620.json",
-              "ui_status": "stable"
-            }
-          ]
+          "ui_status": "done"
         },
         {
           "doc_id": "d-20260712-213026-ee0f22",
@@ -1729,5 +1739,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-10T14:35:32Z"
+  "generated_at": "2026-08-10T16:39:02Z"
 }

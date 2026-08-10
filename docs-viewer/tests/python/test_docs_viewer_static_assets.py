@@ -23,6 +23,18 @@ def test_asset_version_uses_canonical_site_css() -> None:
             assert docs_viewer_service.asset_version(repo_root) != "1"
 
 
+def test_asset_version_uses_local_report_css() -> None:
+    with tempfile.TemporaryDirectory() as temp_dir:
+        repo_root = Path(temp_dir)
+        local_report_css = (
+            repo_root / "docs-viewer/static/css/docs-viewer-local-reports.css"
+        )
+        local_report_css.parent.mkdir(parents=True)
+        local_report_css.write_text("/* local report css */\n", encoding="utf-8")
+
+        assert docs_viewer_service.asset_version(repo_root) != "1"
+
+
 def test_docs_viewer_theme_has_one_shared_palette_owner() -> None:
     theme_css = (
         REPO_ROOT / "site/docs-viewer/static/css/docs-viewer-theme.css"
@@ -138,9 +150,11 @@ def test_docs_viewer_does_not_own_a_ui_workbench_route_or_protocol() -> None:
     assert not (REPO_ROOT / "shared/ui-workbench/workbench-channel.js").exists()
 
 
-def test_manage_shell_loads_feature_owned_css_after_shared_management_css() -> None:
+def test_manage_shell_loads_shared_local_and_feature_css_in_order() -> None:
     shell = (REPO_ROOT / "docs-viewer/shell/docs-viewer-manage.html").read_text(encoding="utf-8")
     stylesheets = [
+        "docs-viewer-reports.css",
+        "docs-viewer-local-reports.css",
         "docs-viewer-manage.css",
         "docs-viewer-source-editor.css",
         "docs-viewer-import.css",
@@ -150,6 +164,38 @@ def test_manage_shell_loads_feature_owned_css_after_shared_management_css() -> N
         shell.index(stylesheet) for stylesheet in stylesheets
     )
     assert "shared-folder-picker.css" in shell
+
+
+def test_report_css_separates_shared_and_local_owners() -> None:
+    shared = (
+        REPO_ROOT / "site/docs-viewer/static/css/docs-viewer-reports.css"
+    ).read_text(encoding="utf-8")
+    local = (
+        REPO_ROOT / "docs-viewer/static/css/docs-viewer-local-reports.css"
+    ).read_text(encoding="utf-8")
+    manage_shell = (
+        REPO_ROOT / "docs-viewer/shell/docs-viewer-manage.html"
+    ).read_text(encoding="utf-8")
+    public_shells = (
+        (REPO_ROOT / "docs-viewer/templates/public-route/index.html").read_text(
+            encoding="utf-8"
+        ),
+        (REPO_ROOT / "site/analysis/index.html").read_text(encoding="utf-8"),
+    )
+
+    local_selectors = (
+        'data-report-id="reports_list"',
+        'data-report-id="docs_broken_links"',
+        'data-report-id="semantic_tokens"',
+        'data-report-id="project_state"',
+        'data-report-id="missing_source_files"',
+        ".docsViewerReport__configScopes",
+        ".docsViewerReport__sortButton",
+    )
+    assert all(selector not in shared for selector in local_selectors)
+    assert all(selector in local for selector in local_selectors)
+    assert "docs-viewer-local-reports.css" in manage_shell
+    assert all("docs-viewer-local-reports.css" not in shell for shell in public_shells)
 
 
 def test_document_package_prepare_and_import_review_own_browser_assets() -> None:
@@ -210,6 +256,7 @@ def test_static_path_policy_is_docs_viewer_scoped() -> None:
     assert allowed("/docs-viewer/static/css/docs-viewer-theme.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-reports.css") is True
+    assert allowed("/docs-viewer/static/css/docs-viewer-local-reports.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-manage.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-source-editor.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-import.css") is True
@@ -280,6 +327,9 @@ def test_shared_static_routes_resolve_to_owning_roots() -> None:
     assert docs_viewer_service.shared_static_relative_path(
         "/docs-viewer/static/css/docs-viewer-reports.css"
     ) == Path("site/docs-viewer/static/css/docs-viewer-reports.css")
+    assert docs_viewer_service.shared_static_relative_path(
+        "/docs-viewer/static/css/docs-viewer-local-reports.css"
+    ) is None
     assert docs_viewer_service.shared_static_relative_path(
         "/docs-viewer/static/css/docs-viewer-manage.css"
     ) is None

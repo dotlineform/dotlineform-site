@@ -4,6 +4,38 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260810-165949-ee4d35",
+      "title": "Expanded Report View",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-165949-ee4d35.json",
+      "timestamp": "2026-08-10 17:45:21",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260810-173738-703ecd",
+      "title": "Report Capability and Composition",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-173738-703ecd.json",
+      "timestamp": "2026-08-10 17:45:21",
+      "parent_id": "d-20260513-105343-6de36b",
+      "parent_title": "Reports"
+    },
+    {
+      "doc_id": "d-20260513-105343-6de36b",
+      "title": "Reports",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260513-105343-6de36b.json",
+      "timestamp": "2026-08-10 17:45:13",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260810-115737-741620",
+      "title": "Works Report Concept And Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-115737-741620.json",
+      "timestamp": "2026-08-10 16:24:01",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
       "doc_id": "d-20260810-115737-901d0f",
       "title": "Works Report",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-115737-901d0f.json",
@@ -12,28 +44,12 @@
       "parent_title": "Roadmap"
     },
     {
-      "doc_id": "d-20260513-105343-6de36b",
-      "title": "Reports",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260513-105343-6de36b.json",
-      "timestamp": "2026-08-10 15:26:37",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
       "doc_id": "d-20260802-194358-7717ee",
       "title": "Sub-Scope Publishing Concept And Architecture",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194358-7717ee.json",
       "timestamp": "2026-08-10 15:26:37",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
-    },
-    {
-      "doc_id": "d-20260810-115737-741620",
-      "title": "Works Report Concept And Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-115737-741620.json",
-      "timestamp": "2026-08-10 15:26:37",
-      "parent_id": "d-20260810-115737-901d0f",
-      "parent_title": "Works Report"
     },
     {
       "doc_id": "d-20260719-123719-fb7565",
@@ -66,23 +82,7 @@
       "timestamp": "2026-08-09 22:50:23",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing"
-    },
-    {
-      "doc_id": "d-20260731-155053-3929e2",
-      "title": "Sub-Scope Customisation Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155053-3929e2.json",
-      "timestamp": "2026-08-09 22:41:25",
-      "parent_id": "d-20260801-084127-752d7e",
-      "parent_title": "Sub-Scopes"
-    },
-    {
-      "doc_id": "d-20260809-201029-0f7596",
-      "title": "CPB-1 — Catalogue Projection Boundary Cutover Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260809-201029-0f7596.json",
-      "timestamp": "2026-08-09 22:09:12",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
     }
   ],
-  "generated_at": "2026-08-10T14:35:32Z"
+  "generated_at": "2026-08-10T16:45:44Z"
 }
