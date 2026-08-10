@@ -964,7 +964,7 @@
               "doc_id": "d-20260810-182610-c274f0",
               "title": "RB-1 — Report Blocks Cutover Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-182610-c274f0.json",
-              "ui_status": "proposed"
+              "ui_status": "in-progress"
             }
           ]
         },
@@ -1759,5 +1759,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-10T17:27:39Z"
+  "generated_at": "2026-08-10T18:23:20Z"
 }
