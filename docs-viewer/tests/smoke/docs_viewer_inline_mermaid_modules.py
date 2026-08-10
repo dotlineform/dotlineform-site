@@ -811,11 +811,17 @@ def assert_stale_mount_cannot_replace_content(page: Page) -> None:
         raise AssertionError(f"stale Mermaid result changed replacement content: {result!r}")
 
 
-def assert_accessible_svg_contract(page: Page) -> None:
+def assert_optional_accessibility_fallback_contract(page: Page) -> None:
     result = page.evaluate(
         """async () => {
             const { inlineMermaid } = window.__docsViewerInlineMermaidSmoke;
             const warnings = [];
+            const detailAdapter = {
+                registerInlineDiagram() {},
+                refreshInlineDiagram() {
+                    return { refreshed: true };
+                }
+            };
             const adapter = inlineMermaid.createDocsViewerInlineMermaidAdapter({
                 loadMermaid: async () => ({
                     initialize() {},
@@ -823,27 +829,73 @@ def assert_accessible_svg_contract(page: Page) -> None:
                         return { svg: '<svg xmlns="http://www.w3.org/2000/svg"><path/></svg>' };
                     }
                 }),
-                warn: (message, error) => warnings.push(error.message)
+                warn: (message, error) => warnings.push({ message, detail: error.message })
             });
             const content = document.createElement('article');
             content.innerHTML = '<pre><code class="language-mermaid">missing accessibility</code></pre>';
             document.body.appendChild(content);
-            const mountResult = await adapter.mountDocument({ content });
+            const mountResult = await adapter.mountDocument({
+                content,
+                diagramDetailAdapter: detailAdapter,
+                doc: { doc_id: 'optional-accessibility', title: 'frontend vs backend' }
+            });
+            const initialSvg = content.querySelector('.docsViewer__diagram > svg');
+            const initialState = {
+                title: initialSvg?.querySelector(':scope > title')?.textContent || '',
+                description: initialSvg?.querySelector(':scope > desc')?.textContent || ''
+            };
+            const themeResult = await adapter.handleThemeChange('dark');
+            const svg = content.querySelector('.docsViewer__diagram > svg');
+            const title = svg?.querySelector(':scope > title');
+            const description = svg?.querySelector(':scope > desc');
             return {
                 mountResult,
-                source: content.querySelector('code')?.textContent || '',
+                themeResult,
+                initialState,
+                title: title?.textContent || '',
+                description: description?.textContent || '',
+                role: svg?.getAttribute('role') || '',
+                labelledByTitle: svg?.getAttribute('aria-labelledby') === title?.id,
+                describedByDescription: svg?.getAttribute('aria-describedby') === description?.id,
+                sourceCount: content.querySelectorAll('pre > code.language-mermaid').length,
                 diagramCount: content.querySelectorAll('.docsViewer__diagram').length,
-                errorText: content.querySelector('.docsViewer__diagramError')?.textContent || '',
+                errorCount: content.querySelectorAll('.docsViewer__diagramError').length,
                 warnings
             };
         }"""
     )
-    if result["mountResult"] != {"found": 1, "rendered": 0, "failed": 1, "stale": False}:
-        raise AssertionError(f"inaccessible Mermaid SVG was accepted: {result!r}")
-    if result["source"] != "missing accessibility" or result["diagramCount"] != 0:
-        raise AssertionError(f"inaccessible Mermaid fallback did not retain source: {result!r}")
-    if result["warnings"] != ["Inline Mermaid SVG requires a non-empty title and description."]:
-        raise AssertionError(f"accessible SVG contract diagnostic changed: {result!r}")
+    expected_text = {
+        "title": "Diagram 1 — frontend vs backend",
+        "description": (
+            "Inline Mermaid diagram 1 in frontend vs backend. "
+            "No authored description was provided."
+        ),
+    }
+    if result["mountResult"] != {"found": 1, "rendered": 1, "failed": 0, "stale": False}:
+        raise AssertionError(f"optional Mermaid accessibility metadata blocked rendering: {result!r}")
+    if result["themeResult"] != {"found": 1, "rendered": 1, "failed": 0}:
+        raise AssertionError(f"fallback accessibility metadata did not survive theme refresh: {result!r}")
+    if result["initialState"] != expected_text or {
+        "title": result["title"],
+        "description": result["description"],
+    } != expected_text:
+        raise AssertionError(f"managed Mermaid accessibility fallback text changed: {result!r}")
+    if (
+        result["role"] != "img"
+        or not result["labelledByTitle"]
+        or not result["describedByDescription"]
+        or result["sourceCount"]
+        or result["diagramCount"] != 1
+        or result["errorCount"]
+    ):
+        raise AssertionError(f"managed Mermaid accessibility fallback structure changed: {result!r}")
+    if result["warnings"] != [
+        {
+            "message": "docs_viewer: inline Mermaid accessibility fallback applied",
+            "detail": "Missing authored Mermaid accessibility metadata: accTitle, accDescr.",
+        }
+    ]:
+        raise AssertionError(f"managed Mermaid accessibility fallback diagnostic changed: {result!r}")
 
 
 def assert_checked_browser_runtime_renders(page: Page) -> None:
@@ -1259,7 +1311,7 @@ def run_smoke(page: Page, base_url: str) -> None:
     assert_registered_theme_refresh_contract(page)
     assert_theme_refresh_failure_retention(page)
     assert_stale_mount_cannot_replace_content(page)
-    assert_accessible_svg_contract(page)
+    assert_optional_accessibility_fallback_contract(page)
     assert_checked_browser_runtime_renders(page)
     assert_document_mount_generation_contract(page)
     assert_exact_scope_gate(page)

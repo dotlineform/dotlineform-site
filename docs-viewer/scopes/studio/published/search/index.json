@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8ca5fb3c0cf53d598fa6b44763c8ea12",
-    "generated_at_utc": "2026-08-10T11:43:36Z",
+    "version": "blake2b-0ad91cb8aa8860b509ee9a70ac585717",
+    "generated_at_utc": "2026-08-10T13:46:39Z",
     "count": 300
   },
   "entries": [
@@ -1410,10 +1410,10 @@
       "kind": "doc",
       "title": "Document Diagrams",
       "href": "/docs/?scope=studio&doc=d-20260719-123719-fb7565",
-      "last_updated": "2026-08-04 11:44:18",
+      "last_updated": "2026-08-10 14:46:16",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-08-04 11:44:18 • Docs Viewer",
+      "display_meta": "2026-08-10 14:46:16 • Docs Viewer",
       "search_terms": [
         "document diagrams",
         "document",
@@ -1421,16 +1421,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-08-04 11:44:18",
+        "2026-08-10 14:46:16",
         "2026",
         "08",
-        "04",
-        "11",
-        "44",
-        "18",
+        "10",
+        "14",
+        "46",
+        "16",
         "d-20260719-123719-fb7565"
       ],
-      "search_text": "document diagrams document diagrams docs viewer docs viewer 2026-08-04 11:44:18 2026 08 04 11 44 18 d-20260719-123719-fb7565"
+      "search_text": "document diagrams document diagrams docs viewer docs viewer 2026-08-10 14:46:16 2026 08 10 14 46 16 d-20260719-123719-fb7565"
     },
     {
       "id": "d-20260715-094411-2b6e65",
@@ -2162,10 +2162,10 @@
       "kind": "doc",
       "title": "Media And Asset Handling",
       "href": "/docs/?scope=studio&doc=d-20260514-184303-7914e2",
-      "last_updated": "2026-08-09 13:25:06",
+      "last_updated": "2026-08-10 14:31:24",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-08-09 13:25:06 • Docs Viewer",
+      "display_meta": "2026-08-10 14:31:24 • Docs Viewer",
       "search_terms": [
         "media and asset handling",
         "media",
@@ -2175,16 +2175,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-08-09 13:25:06",
+        "2026-08-10 14:31:24",
         "2026",
         "08",
-        "09",
-        "13",
-        "25",
-        "06",
+        "10",
+        "14",
+        "31",
+        "24",
         "d-20260514-184303-7914e2"
       ],
-      "search_text": "media and asset handling media and asset handling docs viewer docs viewer 2026-08-09 13:25:06 2026 08 09 13 25 06 d-20260514-184303-7914e2"
+      "search_text": "media and asset handling media and asset handling docs viewer docs viewer 2026-08-10 14:31:24 2026 08 10 14 31 24 d-20260514-184303-7914e2"
     },
     {
       "id": "d-20260424-000000-291cc8",

@@ -155,7 +155,36 @@ function appendDescribedBy(element, id) {
   element.setAttribute("aria-describedby", describedBy.join(" "));
 }
 
-function createDiagramSvg(documentRef, svgMarkup, background) {
+function directSvgChild(svg, localName) {
+  for (var index = 0; index < svg.children.length; index += 1) {
+    var child = svg.children[index];
+    if (child.namespaceURI === "http://www.w3.org/2000/svg" && child.localName === localName) {
+      return child;
+    }
+  }
+  return null;
+}
+
+function appendAriaReference(element, attributeName, id) {
+  var references = String(element.getAttribute(attributeName) || "").trim().split(/\s+/).filter(Boolean);
+  if (references.indexOf(id) === -1) references.push(id);
+  element.setAttribute(attributeName, references.join(" "));
+}
+
+function diagramAccessibilityFallback(context, diagramIndex) {
+  var doc = context && context.doc ? context.doc : {};
+  var documentTitle = String(doc.title || "").trim();
+  var ordinal = Number(diagramIndex) + 1;
+  var diagramLabel = "Diagram " + String(ordinal);
+  return {
+    title: documentTitle ? diagramLabel + " — " + documentTitle : diagramLabel,
+    description: documentTitle
+      ? "Inline Mermaid diagram " + String(ordinal) + " in " + documentTitle + ". No authored description was provided."
+      : "Inline Mermaid diagram " + String(ordinal) + ". No authored description was provided."
+  };
+}
+
+function createDiagramSvg(documentRef, svgMarkup, background, renderId, accessibilityFallback) {
   var template = documentRef.createElement("template");
   template.innerHTML = String(svgMarkup || "").trim();
   var svg = template.content.querySelector("svg");
@@ -163,13 +192,40 @@ function createDiagramSvg(documentRef, svgMarkup, background) {
     throw new Error("Mermaid did not return an SVG document.");
   }
 
-  var title = svg.querySelector("title");
-  var description = svg.querySelector("desc");
-  if (!title || !title.textContent.trim() || !description || !description.textContent.trim()) {
-    throw new Error("Inline Mermaid SVG requires a non-empty title and description.");
+  var fallback = accessibilityFallback || {};
+  var fallbackFields = [];
+  var title = directSvgChild(svg, "title");
+  if (!title) {
+    title = documentRef.createElementNS("http://www.w3.org/2000/svg", "title");
+    svg.insertBefore(title, svg.firstChild);
   }
+  if (!title.textContent.trim()) {
+    title.textContent = String(fallback.title || "Diagram");
+    fallbackFields.push("title");
+  }
+
+  var description = directSvgChild(svg, "desc");
+  if (!description) {
+    description = documentRef.createElementNS("http://www.w3.org/2000/svg", "desc");
+    svg.insertBefore(description, title.nextSibling);
+  }
+  if (!description.textContent.trim()) {
+    description.textContent = String(
+      fallback.description || "Inline Mermaid diagram. No authored description was provided."
+    );
+    fallbackFields.push("description");
+  }
+
+  if (!title.id) title.id = String(renderId || "docs-viewer-inline-mermaid") + "-title";
+  if (!description.id) description.id = String(renderId || "docs-viewer-inline-mermaid") + "-description";
+  if (!svg.getAttribute("role")) svg.setAttribute("role", "img");
+  appendAriaReference(svg, "aria-labelledby", title.id);
+  appendAriaReference(svg, "aria-describedby", description.id);
   svg.style.backgroundColor = background;
-  return svg;
+  return {
+    fallbackFields: fallbackFields,
+    svg: svg
+  };
 }
 
 function createDiagramHost(documentRef, svg) {
@@ -346,12 +402,14 @@ export function createDocsViewerInlineMermaidAdapter(options) {
           viewerRoot: record.viewerRoot,
           window: record.window
         }, refreshTheme);
-        var svg = createDiagramSvg(
+        var svgResult = createDiagramSvg(
           record.document,
           themed.rendered && themed.rendered.svg,
-          themed.themeVariables.background
+          themed.themeVariables.background,
+          renderId,
+          record.accessibilityFallback
         );
-        commitThemedDiagram(record, svg);
+        commitThemedDiagram(record, svgResult.svg);
         applyBindings(themed.rendered, record.host);
         result.rendered += 1;
       } catch (error) {
@@ -388,6 +446,7 @@ export function createDocsViewerInlineMermaidAdapter(options) {
       }
 
       var renderId = "docs-viewer-inline-mermaid-" + String(++renderSequence);
+      var accessibilityFallback = diagramAccessibilityFallback(context, index);
       pre.dataset.docsViewerInlineMermaidState = "rendering";
       pre.setAttribute("aria-busy", "true");
 
@@ -414,12 +473,23 @@ export function createDocsViewerInlineMermaidAdapter(options) {
           break;
         }
 
-        var svg = createDiagramSvg(
+        var svgResult = createDiagramSvg(
           documentRef,
           themed.rendered && themed.rendered.svg,
-          themed.themeVariables.background
+          themed.themeVariables.background,
+          renderId,
+          accessibilityFallback
         );
-        var host = createDiagramHost(documentRef, svg);
+        if (svgResult.fallbackFields.length) {
+          var missingDirectives = svgResult.fallbackFields.map(function (field) {
+            return field === "title" ? "accTitle" : "accDescr";
+          });
+          warn(
+            "docs_viewer: inline Mermaid accessibility fallback applied",
+            new Error("Missing authored Mermaid accessibility metadata: " + missingDirectives.join(", ") + ".")
+          );
+        }
+        var host = createDiagramHost(documentRef, svgResult.svg);
         pre.replaceWith(host);
         result.rendered += 1;
         applyBindings(themed.rendered, host);
@@ -440,6 +510,7 @@ export function createDocsViewerInlineMermaidAdapter(options) {
           }
         }
         recordsForRoot(root).push({
+          accessibilityFallback: accessibilityFallback,
           content: root,
           diagramDetailAdapter: detailAdapter,
           doc: context.doc,

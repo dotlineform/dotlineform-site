@@ -54,8 +54,6 @@ Before the diagram.
 
 ```mermaid
 flowchart LR
-  accTitle: External local runtime proof
-  accDescr: An external local Notes document renders through the managed reader
   Source --> Target
 ```
 
@@ -164,8 +162,12 @@ def assert_external_mermaid_route(
         state["diagrams"] != 1
         or state["fences"] != 0
         or state["failures"] != 0
-        or state["title"] != "External local runtime proof"
-        or not str(state["description"]).startswith("An external local Notes document")
+        or state["title"] != "Diagram 1 — External Notes Mermaid Proof"
+        or state["description"]
+        != (
+            "Inline Mermaid diagram 1 in External Notes Mermaid Proof. "
+            "No authored description was provided."
+        )
         or state["frameKind"] != "inline-mermaid"
         or state["controlKind"] != "inline-mermaid"
         or state["controlLabel"] != "Open diagram"
