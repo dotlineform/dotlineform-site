@@ -76,6 +76,14 @@
       "presets": []
     },
     {
+      "report_id": "works",
+      "title": "Works",
+      "description": "Shows documentation coverage for every published Series.",
+      "default_access": "local",
+      "loader_id": "works",
+      "presets": []
+    },
+    {
       "report_id": "uncataloged_files",
       "title": "Uncataloged Files",
       "description": "Lists ordinary files in represented Work source folders that are not canonical Work primary sources.",

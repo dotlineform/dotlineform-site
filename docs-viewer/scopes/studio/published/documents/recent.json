@@ -7,7 +7,7 @@
       "doc_id": "d-20260810-115737-901d0f",
       "title": "Works Report",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-115737-901d0f.json",
-      "timestamp": "2026-08-10 15:03:46",
+      "timestamp": "2026-08-10 15:19:04",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
     },
@@ -15,7 +15,7 @@
       "doc_id": "d-20260810-115737-01cace",
       "title": "WRK-1 — Published Series Documentation Coverage Report Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-115737-01cace.json",
-      "timestamp": "2026-08-10 15:03:46",
+      "timestamp": "2026-08-10 15:19:04",
       "parent_id": "d-20260810-115737-901d0f",
       "parent_title": "Works Report"
     },
@@ -84,5 +84,5 @@
       "parent_title": "Roadmap"
     }
   ],
-  "generated_at": "2026-08-10T14:05:26Z"
+  "generated_at": "2026-08-10T14:19:43Z"
 }
