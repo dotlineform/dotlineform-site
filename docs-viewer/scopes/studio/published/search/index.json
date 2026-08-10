@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-7e6677ea7130fbd40b0ee92a3267ace8",
-    "generated_at_utc": "2026-08-09T21:50:23Z",
-    "count": 297
+    "version": "blake2b-8ca5fb3c0cf53d598fa6b44763c8ea12",
+    "generated_at_utc": "2026-08-10T11:43:36Z",
+    "count": 300
   },
   "entries": [
     {
@@ -4886,10 +4886,10 @@
       "kind": "doc",
       "title": "Project State Concept And Architecture",
       "href": "/docs/?scope=studio&doc=d-20260802-121105-c574f9",
-      "last_updated": "2026-08-07 18:49:59",
+      "last_updated": "2026-08-10 12:00:44",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-07 18:49:59 • Sub-Scope Publishing",
+      "display_meta": "2026-08-10 12:00:44 • Sub-Scope Publishing",
       "search_terms": [
         "project state concept and architecture",
         "project",
@@ -4901,16 +4901,16 @@
         "sub",
         "scope",
         "publishing",
-        "2026-08-07 18:49:59",
+        "2026-08-10 12:00:44",
         "2026",
         "08",
-        "07",
-        "18",
-        "49",
-        "59",
+        "10",
+        "12",
+        "00",
+        "44",
         "d-20260802-121105-c574f9"
       ],
-      "search_text": "project state concept and architecture project state concept and architecture sub-scope publishing sub scope publishing 2026-08-07 18:49:59 2026 08 07 18 49 59 d-20260802-121105-c574f9"
+      "search_text": "project state concept and architecture project state concept and architecture sub-scope publishing sub scope publishing 2026-08-10 12:00:44 2026 08 10 12 00 44 d-20260802-121105-c574f9"
     },
     {
       "id": "d-20260802-174339-53877d",
@@ -6400,10 +6400,10 @@
       "kind": "doc",
       "title": "Sub-Scope Publishing Concept And Architecture",
       "href": "/docs/?scope=studio&doc=d-20260802-194358-7717ee",
-      "last_updated": "2026-08-09 22:41:25",
+      "last_updated": "2026-08-10 12:36:29",
       "parent_id": "d-20260802-194357-4d857b",
       "parent_title": "Sub-Scope Publishing",
-      "display_meta": "2026-08-09 22:41:25 • Sub-Scope Publishing",
+      "display_meta": "2026-08-10 12:36:29 • Sub-Scope Publishing",
       "search_terms": [
         "sub-scope publishing concept and architecture",
         "sub",
@@ -6413,16 +6413,16 @@
         "and",
         "architecture",
         "sub-scope publishing",
-        "2026-08-09 22:41:25",
+        "2026-08-10 12:36:29",
         "2026",
         "08",
-        "09",
-        "22",
-        "41",
-        "25",
+        "10",
+        "12",
+        "36",
+        "29",
         "d-20260802-194358-7717ee"
       ],
-      "search_text": "sub-scope publishing concept and architecture sub scope publishing concept and architecture sub-scope publishing 2026-08-09 22:41:25 2026 08 09 22 41 25 d-20260802-194358-7717ee"
+      "search_text": "sub-scope publishing concept and architecture sub scope publishing concept and architecture sub-scope publishing 2026-08-10 12:36:29 2026 08 10 12 36 29 d-20260802-194358-7717ee"
     },
     {
       "id": "d-20260804-160200-fa7bb7",
@@ -6544,6 +6544,91 @@
         "d-20260802-002213-b7d4e2"
       ],
       "search_text": "tdl-2 — tag primary document and semantic token delivery tdl 2 tag primary document and semantic token delivery tag document linking linking 2026-08-05 22:43:24 2026 08 05 22 43 24 d-20260802-002213-b7d4e2"
+    },
+    {
+      "id": "d-20260810-115737-901d0f",
+      "kind": "doc",
+      "title": "Works Report",
+      "href": "/docs/?scope=studio&doc=d-20260810-115737-901d0f",
+      "last_updated": "2026-08-10 12:35:51",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap",
+      "display_meta": "2026-08-10 12:35:51 • Roadmap",
+      "search_terms": [
+        "works report",
+        "works",
+        "report",
+        "roadmap",
+        "2026-08-10 12:35:51",
+        "2026",
+        "08",
+        "10",
+        "12",
+        "35",
+        "51",
+        "d-20260810-115737-901d0f"
+      ],
+      "search_text": "works report works report roadmap 2026-08-10 12:35:51 2026 08 10 12 35 51 d-20260810-115737-901d0f"
+    },
+    {
+      "id": "d-20260810-115737-741620",
+      "kind": "doc",
+      "title": "Works Report Concept And Architecture",
+      "href": "/docs/?scope=studio&doc=d-20260810-115737-741620",
+      "last_updated": "2026-08-10 12:43:35",
+      "parent_id": "d-20260810-115737-901d0f",
+      "parent_title": "Works Report",
+      "display_meta": "2026-08-10 12:43:35 • Works Report",
+      "search_terms": [
+        "works report concept and architecture",
+        "works",
+        "report",
+        "concept",
+        "and",
+        "architecture",
+        "works report",
+        "2026-08-10 12:43:35",
+        "2026",
+        "08",
+        "10",
+        "12",
+        "43",
+        "35",
+        "d-20260810-115737-741620"
+      ],
+      "search_text": "works report concept and architecture works report concept and architecture works report 2026-08-10 12:43:35 2026 08 10 12 43 35 d-20260810-115737-741620"
+    },
+    {
+      "id": "d-20260810-115737-01cace",
+      "kind": "doc",
+      "title": "WRK-1 — Published Series Documentation Coverage Report Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260810-115737-01cace",
+      "last_updated": "2026-08-10 12:35:51",
+      "parent_id": "d-20260810-115737-901d0f",
+      "parent_title": "Works Report",
+      "display_meta": "2026-08-10 12:35:51 • Works Report",
+      "search_terms": [
+        "wrk-1 — published series documentation coverage report delivery",
+        "wrk",
+        "1",
+        "published",
+        "series",
+        "documentation",
+        "coverage",
+        "report",
+        "delivery",
+        "works report",
+        "works",
+        "2026-08-10 12:35:51",
+        "2026",
+        "08",
+        "10",
+        "12",
+        "35",
+        "51",
+        "d-20260810-115737-01cace"
+      ],
+      "search_text": "wrk-1 — published series documentation coverage report delivery wrk 1 published series documentation coverage report delivery works report works 2026-08-10 12:35:51 2026 08 10 12 35 51 d-20260810-115737-01cace"
     },
     {
       "id": "d-20260712-213026-ee0f22",

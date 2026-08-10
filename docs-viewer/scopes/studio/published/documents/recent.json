@@ -4,6 +4,46 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260810-115737-741620",
+      "title": "Works Report Concept And Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-115737-741620.json",
+      "timestamp": "2026-08-10 12:43:35",
+      "parent_id": "d-20260810-115737-901d0f",
+      "parent_title": "Works Report"
+    },
+    {
+      "doc_id": "d-20260802-194358-7717ee",
+      "title": "Sub-Scope Publishing Concept And Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194358-7717ee.json",
+      "timestamp": "2026-08-10 12:36:29",
+      "parent_id": "d-20260802-194357-4d857b",
+      "parent_title": "Sub-Scope Publishing"
+    },
+    {
+      "doc_id": "d-20260810-115737-901d0f",
+      "title": "Works Report",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-115737-901d0f.json",
+      "timestamp": "2026-08-10 12:35:51",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260810-115737-01cace",
+      "title": "WRK-1 — Published Series Documentation Coverage Report Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-115737-01cace.json",
+      "timestamp": "2026-08-10 12:35:51",
+      "parent_id": "d-20260810-115737-901d0f",
+      "parent_title": "Works Report"
+    },
+    {
+      "doc_id": "d-20260802-121105-c574f9",
+      "title": "Project State Concept And Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121105-c574f9.json",
+      "timestamp": "2026-08-10 12:00:44",
+      "parent_id": "d-20260802-194357-4d857b",
+      "parent_title": "Sub-Scope Publishing"
+    },
+    {
       "doc_id": "d-20260808-153226-a067d9",
       "title": "SSP-8 — Revised Model",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-153226-a067d9.json",
@@ -18,14 +58,6 @@
       "timestamp": "2026-08-09 22:41:25",
       "parent_id": "d-20260801-084127-752d7e",
       "parent_title": "Sub-Scopes"
-    },
-    {
-      "doc_id": "d-20260802-194358-7717ee",
-      "title": "Sub-Scope Publishing Concept And Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194358-7717ee.json",
-      "timestamp": "2026-08-09 22:41:25",
-      "parent_id": "d-20260802-194357-4d857b",
-      "parent_title": "Sub-Scope Publishing"
     },
     {
       "doc_id": "d-20260809-201029-0f7596",
@@ -50,39 +82,7 @@
       "timestamp": "2026-08-09 22:00:00",
       "parent_id": "d-20260423-000000-d015e6",
       "parent_title": "Studio"
-    },
-    {
-      "doc_id": "d-20260802-205910-533be0",
-      "title": "Catalogue Data Model Map",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-205910-533be0.json",
-      "timestamp": "2026-08-09 22:00:00",
-      "parent_id": "d-20260802-123451-d0e52e",
-      "parent_title": "Data Models Diagrams"
-    },
-    {
-      "doc_id": "d-20260418-000000-16bf7e",
-      "title": "Catalogue Drafts",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260418-000000-16bf7e.json",
-      "timestamp": "2026-08-09 22:00:00",
-      "parent_id": "d-20260423-000000-d015e6",
-      "parent_title": "Studio"
-    },
-    {
-      "doc_id": "d-20260519-202931-b05d27",
-      "title": "Catalogue Indexes And Payloads",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260519-202931-b05d27.json",
-      "timestamp": "2026-08-09 22:00:00",
-      "parent_id": "d-20260423-000000-d015e6",
-      "parent_title": "Studio"
-    },
-    {
-      "doc_id": "d-20260331-154730-885d0f",
-      "title": "Catalogue Search Policy",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-154730-885d0f.json",
-      "timestamp": "2026-08-09 22:00:00",
-      "parent_id": "d-20260602-160839-4ebe27",
-      "parent_title": "Catalogue Search"
     }
   ],
-  "generated_at": "2026-08-09T21:50:23Z"
+  "generated_at": "2026-08-10T11:43:36Z"
 }
