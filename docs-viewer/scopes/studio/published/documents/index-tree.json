@@ -814,6 +814,12 @@
           "ui_status": "proposed"
         },
         {
+          "doc_id": "d-20260810-181816-dc9891",
+          "title": "Catalogue Works Report Migration",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-181816-dc9891.json",
+          "ui_status": "draft"
+        },
+        {
           "doc_id": "d-20260809-155631-ab527b",
           "title": "CII-1 — Catalogue Image Source Insertion Delivery",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260809-155631-ab527b.json",
@@ -1745,5 +1751,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-10T17:02:43Z"
+  "generated_at": "2026-08-10T17:20:09Z"
 }
