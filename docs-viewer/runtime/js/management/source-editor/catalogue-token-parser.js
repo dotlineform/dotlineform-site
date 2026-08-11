@@ -74,7 +74,7 @@ function targetDefinition(registry, family, targetType) {
     : null;
 }
 
-function closingIndex(text, start) {
+export function semanticTokenClosingIndex(text, start) {
   var index = start;
   while (index < text.length - 1) {
     if (text[index] === "\\") {
@@ -283,7 +283,7 @@ function outsideCommentRanges(text, start, end, inComment) {
   return { ranges: ranges, inComment: comment };
 }
 
-function semanticTokenTextRanges(markdown) {
+export function semanticTokenTextRanges(markdown) {
   var ranges = [];
   var lines = String(markdown || "").match(/[^\n]*\n|[^\n]+$/g) || [];
   var offset = 0;
@@ -319,7 +319,7 @@ export function parseCatalogueTokens(markdown, options = {}) {
     while (index < range[1]) {
       var opening = source.indexOf("[[catalogue:", index);
       if (opening < 0 || opening >= range[1]) break;
-      var closing = closingIndex(source, opening + 2);
+      var closing = semanticTokenClosingIndex(source, opening + 2);
       if (closing < 0 || closing + 2 > range[1]) break;
       var token = parseCatalogueToken(source.slice(opening, closing + 2), {
         registry: options.registry,

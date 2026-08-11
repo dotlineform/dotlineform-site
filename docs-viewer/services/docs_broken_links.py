@@ -26,9 +26,10 @@ if str(BUILD_DIR) not in sys.path:
     sys.path.insert(0, str(BUILD_DIR))
 
 from docs_builder.semantic_token_registry import load_semantic_token_registry  # noqa: E402
+from docs_builder.semantic_target_lookup import tag_resolution_states  # noqa: E402
 from docs_builder.semantic_tokens import (  # noqa: E402
     load_semantic_token_target_records,
-    parse_catalogue_tokens,
+    parse_semantic_tokens,
     resolve_catalogue_image_target,
 )
 from docs_source_model import load_scope_docs_for_config  # noqa: E402
@@ -269,12 +270,19 @@ def semantic_token_broken_entries(repo_root: Path, scope: str) -> list[dict[str,
         raise ValueError("Semantic-token registry is unavailable.")
     targets_by_key = load_semantic_token_target_records(repo_root)
     entries: list[dict[str, Any]] = []
+    tag_states: dict[str, str] | None = None
     for doc in load_scope_docs_for_config(repo_root, DOCS_SCOPE_CONFIGS[scope]):
-        for token in parse_catalogue_tokens(doc.body, registry=registry):
+        for token in parse_semantic_tokens(doc.body, registry=registry):
             target = targets_by_key.get((token.family, token.target_type, token.target_id))
             reason = ""
             if not token.supported:
                 reason = "unsupported_kind"
+            elif token.family == "tag":
+                if tag_states is None:
+                    tag_states = tag_resolution_states(repo_root)
+                reason = tag_states.get(token.target_id, "unknown_tag")
+                if not reason and target is None:
+                    reason = "missing_target"
             elif target is None:
                 reason = "missing_target"
             elif not str(target.get("href") or "").strip().startswith("/"):
@@ -285,6 +293,13 @@ def semantic_token_broken_entries(repo_root: Path, scope: str) -> list[dict[str,
                     reason = "missing_detail_image" if token.detail_id else "missing_image"
             if not reason:
                 continue
+            link_url = str((target or {}).get("href") or "").strip()
+            if token.family == "tag" and reason in {
+                "unknown_tag",
+                "missing_tag_association",
+                "missing_tag_destination",
+            }:
+                link_url = ""
             entries.append(
                 {
                     "issue_type": "semantic_token",
@@ -297,7 +312,7 @@ def semantic_token_broken_entries(repo_root: Path, scope: str) -> list[dict[str,
                     "target_id": token.target_id,
                     "reason": reason,
                     "link_text": token.title,
-                    "link_url": str((target or {}).get("href") or "").strip(),
+                    "link_url": link_url,
                     "from_page_text": doc.title,
                     "from_page_url": viewer_url_for(scope, doc.doc_id),
                     "from_page_scope": scope,

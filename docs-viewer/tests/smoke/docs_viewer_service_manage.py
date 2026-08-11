@@ -1850,6 +1850,7 @@ def assert_action_target_definitions(page: Page) -> None:
             "source-add-catalogue-token",
             "source-add-file",
             "source-add-image",
+            "source-add-tag-token",
             "source-insert-subject-link",
         ],
         "all": [
@@ -3395,7 +3396,7 @@ def exercise_manage_route(
             const actions = document.querySelector('[data-docs-viewer-control-surface-mount="main-view"]');
             return root?.dataset.documentDisplayMode === 'markdown-source'
                 && actions
-                && Array.from(actions.children).map(node => node.dataset.docsViewerControl).join(',') === 'open-vscode,source-add-image,source-add-catalogue-image,source-add-file,source-add-catalogue-token,source-insert-subject-link,source-directives,save-markdown-source,markdown-source,subdoc-source,return-to-doc,info'
+                && Array.from(actions.children).map(node => node.dataset.docsViewerControl).join(',') === 'open-vscode,source-add-image,source-add-catalogue-image,source-add-file,source-add-catalogue-token,source-add-tag-token,source-insert-subject-link,source-directives,save-markdown-source,markdown-source,subdoc-source,return-to-doc,info'
                 && !document.querySelector('#docsViewerManageSourceSaveButton')?.disabled
                 && !document.querySelector('#docsViewerManageSourceDirectivesButton')?.disabled
                 && document.querySelector('#docsViewerManageSourceButton')?.disabled

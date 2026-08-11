@@ -24,36 +24,37 @@ var TITLE_INPUT_ID = "docsViewerCatalogueTokenTitle";
 
 export const CATALOGUE_TOKEN_MODAL_ID = "catalogue-token-add-modal";
 
-function modalBody(searchQuery, selectionTitle) {
+function modalBody(settings, searchQuery, selectionTitle) {
   return (
     '<div class="docsViewerCatalogueTokenModal">' +
-      '<label class="docsViewer__field" for="' + SEARCH_INPUT_ID + '">' +
-        '<span class="docsViewer__fieldLabel">Search Catalogue</span>' +
-        '<input class="docsViewer__fieldInput" id="' + SEARCH_INPUT_ID + '" type="search" role="combobox" aria-autocomplete="list" aria-controls="' + RESULTS_ID + '" aria-expanded="true" autocomplete="off" spellcheck="false" value="' + escapeHtml(searchQuery) + '" disabled>' +
+      '<label class="docsViewer__field" for="' + settings.searchInputId + '">' +
+        '<span class="docsViewer__fieldLabel">' + escapeHtml(settings.searchLabel) + '</span>' +
+        '<input class="docsViewer__fieldInput" id="' + settings.searchInputId + '" type="search" role="combobox" aria-autocomplete="list" aria-controls="' + settings.resultsId + '" aria-expanded="true" autocomplete="off" spellcheck="false" value="' + escapeHtml(searchQuery) + '" disabled>' +
       "</label>" +
-      '<p class="docsViewerCatalogueTokenModal__searchStatus muted small" data-role="catalogue-search-status">Loading Catalogue…</p>' +
-      '<div class="docsViewerCatalogueTargetPicker__results docsViewerCatalogueTokenModal__results" id="' + RESULTS_ID + '" role="listbox" aria-label="Catalogue targets" data-role="catalogue-results" tabindex="0"></div>' +
+      '<p class="docsViewerCatalogueTokenModal__searchStatus muted small" data-role="catalogue-search-status">' + escapeHtml(settings.loadingMessage) + '</p>' +
+      '<div class="docsViewerCatalogueTargetPicker__results docsViewerCatalogueTokenModal__results" id="' + settings.resultsId + '" role="listbox" aria-label="' + escapeHtml(settings.resultsLabel) + '" data-role="catalogue-results" tabindex="0"></div>' +
       '<div class="docsViewerCatalogueTokenModal__selected" data-role="catalogue-selected" hidden></div>' +
-      '<label class="docsViewer__field" for="' + TITLE_INPUT_ID + '">' +
+      '<label class="docsViewer__field" for="' + settings.titleInputId + '">' +
         '<span class="docsViewer__fieldLabel">Title</span>' +
-        '<input class="docsViewer__fieldInput" id="' + TITLE_INPUT_ID + '" type="text" autocomplete="off" value="' + escapeHtml(selectionTitle) + '" required>' +
+        '<input class="docsViewer__fieldInput" id="' + settings.titleInputId + '" type="text" autocomplete="off" value="' + escapeHtml(selectionTitle) + '" required>' +
       "</label>" +
     "</div>"
   );
 }
 
-function targetSummary(target) {
-  var parts = [target.targetType, target.targetId, target.title].concat(target.meta || []);
+function targetSummary(target, settings) {
+  var parts = [target.targetType, target.targetId, target.title]
+    .concat(settings.targetMeta(target));
   return parts.filter(Boolean).join(" · ");
 }
 
-export function openCatalogueTokenModal(options = {}) {
+export function openSemanticTextTokenModal(settings, options = {}) {
   var adapter = options.adapter || null;
   var capture = options.capture || null;
-  var selectedToken = parseCatalogueToken(capture && capture.text);
+  var selectedToken = settings.parseToken(capture && capture.text);
   var selectionTitle = selectedToken
     ? selectedToken.title
-    : selectedTextForCatalogueTitle(capture && capture.text);
+    : settings.selectedText(capture && capture.text);
   var searchQuery = selectedToken
     ? selectedToken.targetType + ":" + selectedToken.targetId
     : selectionTitle;
@@ -67,52 +68,52 @@ export function openCatalogueTokenModal(options = {}) {
 
   var modalPromise = openDocsViewerManagementModal({
     root: options.root,
-    title: "Add catalogue token",
+    title: settings.modalTitle,
     size: "document",
-    bodyHtml: modalBody(searchQuery, selectionTitle),
-    focusSelector: "#" + SEARCH_INPUT_ID,
+    bodyHtml: modalBody(settings, searchQuery, selectionTitle),
+    focusSelector: "#" + settings.searchInputId,
     actions: [
       { role: "modal-primary", label: "Add", disabled: true },
       { role: "modal-cancel", label: "Cancel" }
     ],
     onOpen: function (api) {
       var modalRoot = api.host.querySelector('[data-role="docs-viewer-management-modal"]');
-      var searchInput = api.host.querySelector("#" + SEARCH_INPUT_ID);
-      var titleInput = api.host.querySelector("#" + TITLE_INPUT_ID);
+      var searchInput = api.host.querySelector("#" + settings.searchInputId);
+      var titleInput = api.host.querySelector("#" + settings.titleInputId);
       var results = api.host.querySelector('[data-role="catalogue-results"]');
       var searchStatus = api.host.querySelector('[data-role="catalogue-search-status"]');
       var selected = api.host.querySelector('[data-role="catalogue-selected"]');
       var primary = api.host.querySelector('[data-role="modal-primary"]');
-      if (modalRoot) modalRoot.id = CATALOGUE_TOKEN_MODAL_ID;
+      if (modalRoot) modalRoot.id = settings.modalId;
 
       function renderSelectedTarget(target) {
         state.selectedTarget = target || null;
         if (!selected) return;
-        selected.textContent = target ? targetSummary(target) : "";
+        selected.textContent = target ? targetSummary(target, settings) : "";
         selected.hidden = !target;
       }
 
       function updateMatches() {
         if (!state.list || !state.support || !searchInput) return;
         renderSelectedTarget(null);
-        var matches = collectCatalogueTargetMatches(state.support, searchInput.value, 20);
+        var matches = settings.collectMatches(state.support, searchInput.value, 20);
         state.list.setTargets(matches);
         if (searchStatus) {
           searchStatus.textContent = searchInput.value.trim() && !matches.length
-            ? "No matching Catalogue targets."
+            ? settings.noMatchesMessage
             : "";
           searchStatus.hidden = !searchStatus.textContent;
         }
       }
 
       function restoreInitialToken() {
-        var target = findCatalogueTargetByIdentity(state.support, state.initialToken);
+        var target = settings.findByIdentity(state.support, state.initialToken);
         state.list.setTargets(target ? [target] : []);
         renderSelectedTarget(null);
         if (!target) {
           if (searchStatus) {
             searchStatus.textContent = (
-              "Catalogue target "
+              settings.familyLabel + " target "
               + state.initialToken.targetType
               + ":"
               + state.initialToken.targetId
@@ -140,10 +141,12 @@ export function openCatalogueTokenModal(options = {}) {
         kind: function (target) { return target.targetType; },
         id: function (target) { return target.targetId; },
         title: function (target) { return target.title; },
-        meta: function (target) { return target.meta; },
+        meta: function (target) { return settings.targetMeta(target); },
         onSelect: function (target) {
           renderSelectedTarget(target);
-          if (titleInput) titleInput.value = target.title;
+          if (titleInput) {
+            titleInput.value = settings.titleOnSelect(target, titleInput.value);
+          }
         }
       });
       if (searchInput) {
@@ -157,7 +160,7 @@ export function openCatalogueTokenModal(options = {}) {
           if (state.list) state.list.handleKeydown(event);
         });
       }
-      loadCatalogueTargetSupport({ fetch: options.fetch })
+      settings.loadSupport({ fetch: options.fetch })
         .then(function (support) {
           if (state.disposed) return;
           state.support = support;
@@ -172,17 +175,17 @@ export function openCatalogueTokenModal(options = {}) {
           if (searchStatus) {
             searchStatus.textContent = error && error.message
               ? error.message
-              : "Catalogue targets are unavailable.";
+              : settings.unavailableMessage;
             searchStatus.hidden = false;
             searchStatus.classList.add("is-error");
           }
         });
     },
     onSubmit: function (api) {
-      var titleInput = api.host.querySelector("#" + TITLE_INPUT_ID);
+      var titleInput = api.host.querySelector("#" + settings.titleInputId);
       var title = String(titleInput && titleInput.value || "").trim();
       if (!state.selectedTarget) {
-        api.setStatus("Choose a current Catalogue target.");
+        api.setStatus("Choose a current " + settings.familyLabel + " target.");
         return false;
       }
       if (!title) {
@@ -190,7 +193,7 @@ export function openCatalogueTokenModal(options = {}) {
         if (titleInput) titleInput.focus();
         return false;
       }
-      var token = buildCatalogueToken({
+      var token = settings.buildToken({
         targetType: state.selectedTarget.targetType,
         targetId: state.selectedTarget.targetId,
         title: title
@@ -222,4 +225,30 @@ export function openCatalogueTokenModal(options = {}) {
     if (adapter && typeof adapter.focus === "function") adapter.focus();
     return result;
   });
+}
+
+var CATALOGUE_TOKEN_MODAL_SETTINGS = {
+  buildToken: buildCatalogueToken,
+  collectMatches: collectCatalogueTargetMatches,
+  familyLabel: "Catalogue",
+  findByIdentity: findCatalogueTargetByIdentity,
+  loadingMessage: "Loading Catalogue…",
+  loadSupport: loadCatalogueTargetSupport,
+  modalId: CATALOGUE_TOKEN_MODAL_ID,
+  modalTitle: "Add catalogue token",
+  noMatchesMessage: "No matching Catalogue targets.",
+  parseToken: parseCatalogueToken,
+  resultsId: RESULTS_ID,
+  resultsLabel: "Catalogue targets",
+  searchInputId: SEARCH_INPUT_ID,
+  searchLabel: "Search Catalogue",
+  selectedText: selectedTextForCatalogueTitle,
+  targetMeta: function (target) { return target.meta; },
+  titleOnSelect: function (target) { return target.title; },
+  titleInputId: TITLE_INPUT_ID,
+  unavailableMessage: "Catalogue targets are unavailable."
+};
+
+export function openCatalogueTokenModal(options = {}) {
+  return openSemanticTextTokenModal(CATALOGUE_TOKEN_MODAL_SETTINGS, options);
 }

@@ -153,6 +153,50 @@ def builder(root: Path, *, only_doc_ids: list[str] | None = None) -> DocsDataBui
     )
 
 
+def test_tag_registry_defines_separate_authoring_and_info_contributions() -> None:
+    payload = read_json(
+        REPO_ROOT / "docs-viewer/config/semantic-tokens/registry.json"
+    )
+    families = {family["key"]: family for family in payload["families"]}
+    tag = families["tag"]
+
+    assert tag["labels"] == {
+        "family": "Tag",
+        "source_action": "Add tag token",
+        "info_view": "Tag token",
+    }
+    assert tag["ui_contributions"] == {
+        "source_action": "source-add-tag-token",
+        "modal": "tag-token-add-modal",
+        "info_view": "tag-token-info",
+    }
+    assert tag["occurrence_fields"] == [
+        {
+            "key": "title",
+            "label": "Title",
+            "required": True,
+            "editable": True,
+            "control": "text",
+        }
+    ]
+    assert tag["target_types"] == [
+        {
+            "key": "tag",
+            "label": "Tag",
+            "id_policy": {
+                "normalizer": "slug",
+                "input_pattern": "^[a-z0-9][a-z0-9-]*$",
+                "canonical_pattern": "^[a-z0-9][a-z0-9-]*$",
+            },
+            "lookup_adapter": "tag-target-lookup",
+            "lookup_fields": ["title", "href", "meta", "aliases"],
+        }
+    ]
+    assert families["catalogue"]["ui_contributions"]["source_action"] == (
+        "source-add-catalogue-token"
+    )
+
+
 def test_tag_parser_is_tolerant_context_aware_and_exact() -> None:
     registry = load_semantic_token_registry(REPO_ROOT)
     assert registry is not None

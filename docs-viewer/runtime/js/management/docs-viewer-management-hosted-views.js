@@ -13,6 +13,9 @@ import {
 import {
   subjectLinkControlDefinition
 } from "./source-editor/subject-link-contribution.js";
+import {
+  tagTokenControlDefinition
+} from "./source-editor/tag-token-contribution.js";
 
 export function createDocsViewerManagementViewDefinitions() {
   return {
@@ -38,6 +41,19 @@ export function createDocsViewerManagementViewDefinitions() {
           return import("./source-editor/catalogue-token-info-view.js")
             .then(function (module) {
               return module.createCatalogueTokenInfoView();
+            });
+        }
+      },
+      {
+        id: "tag-token-info",
+        label: "Tag token",
+        panel: "info",
+        appKinds: ["manage"],
+        features: ["source-editing"],
+        load: function () {
+          return import("./source-editor/tag-token-info-view.js")
+            .then(function (module) {
+              return module.createTagTokenInfoView();
             });
         }
       }
@@ -173,6 +189,7 @@ export function createDocsViewerManagementViewDefinitions() {
         renderer: "source-add-file"
       },
       catalogueTokenControlDefinition(),
+      tagTokenControlDefinition(),
       subjectLinkControlDefinition(),
       directiveActionsControlDefinition(),
       {

@@ -37,6 +37,7 @@ function normalizeTarget(record, registry) {
     : null;
   if (!familyDefinition || !familyDefinition.targetTypesById.has(targetType) || !targetId || !title) return null;
   var titleNorm = normalizeSearchText(title);
+  var aliases = Array.isArray(row.aliases) ? row.aliases.map(cleanString).filter(Boolean) : [];
   var targetIdNorm = normalizeSearchText(targetId);
   var targetTypeNorm = normalizeSearchText(targetType);
   return {
@@ -47,6 +48,8 @@ function normalizeTarget(record, registry) {
     href: cleanString(row.href),
     hasDetails: row.has_details === true,
     meta: Array.isArray(row.meta) ? row.meta.map(cleanString).filter(Boolean) : [],
+    aliases: aliases,
+    aliasNorms: aliases.map(normalizeSearchText).filter(Boolean),
     image: normalizeTargetImage(row.image),
     targetIdNorm: targetIdNorm,
     targetTypeNorm: targetTypeNorm,
@@ -130,21 +133,35 @@ export function collectSemanticTokenTargetMatches(targets, query, registry, limi
     var titleContainsAll = tokens.every(function (token) {
       return target.titleNorm.indexOf(token) >= 0;
     });
+    var aliasNorms = Array.isArray(target.aliasNorms) ? target.aliasNorms : [];
+    var aliasExact = aliasNorms.some(function (alias) {
+      return alias === normalizedQuery;
+    });
+    var aliasStartsWith = aliasNorms.some(function (alias) {
+      return alias.indexOf(normalizedQuery) === 0;
+    });
+    var aliasContainsAll = aliasNorms.some(function (alias) {
+      return tokens.every(function (token) { return alias.indexOf(token) >= 0; });
+    });
     if (
       !allIdentityTokens
       && !allTitleTokens
       && !titleContainsAll
+      && !aliasContainsAll
       && target.titleNorm.indexOf(normalizedQuery) < 0
     ) return;
     var score = 100;
     if (qualifiedIdentity === normalizedQuery) score = 1300;
     else if (target.targetIdNorm === normalizedQuery) score = 1200;
+    else if (aliasExact) score = 1100;
     else if (target.titleNorm === normalizedQuery) score = 1000;
     else if (allIdentityTokens && tokens.length > 1) score = 920;
     else if (target.targetIdNorm.indexOf(normalizedQuery) === 0) score = 880;
     else if (target.targetTypeNorm === normalizedQuery) score = 860;
     else if (target.titleNorm.indexOf(normalizedQuery) === 0) score = 850;
+    else if (aliasStartsWith) score = 820;
     else if (allTitleTokens) score = 720;
+    else if (aliasContainsAll) score = 680;
     else if (target.titleNorm.indexOf(normalizedQuery) >= 0) score = 620;
     matches.push({ target: target, score: score });
   });

@@ -165,6 +165,52 @@ def public_tag_document_location(document: dict[str, Any]) -> dict[str, str] | N
     return None
 
 
+def selected_tag_document(
+    tag_row: dict[str, Any],
+    documents: list[dict[str, Any]],
+) -> dict[str, Any] | None:
+    if not documents:
+        return None
+    primary = tag_row.get("primary_document")
+    if primary is None:
+        return documents[0]
+    return next(
+        (
+            document
+            for document in documents
+            if document["target"] == primary
+        ),
+        documents[0],
+    )
+
+
+def tag_resolution_states(repo_root: Path) -> dict[str, str]:
+    """Return exact current Tag resolution failures for local diagnosis."""
+
+    registry_payload = tag_source_model.load_registry(
+        repo_root / tag_source_model.REGISTRY_REL_PATH
+    )
+    associations_payload = (
+        tag_document_declarations.load_tag_document_association_payload(repo_root)
+    )
+    documents_by_tag = {
+        association["tag_id"]: association["documents"]
+        for association in associations_payload["associations"]
+    }
+    states: dict[str, str] = {}
+    for tag_row_record in registry_payload["tags"]:
+        tag_id = tag_row_record["tag_id"]
+        documents = documents_by_tag.get(tag_id, [])
+        chosen = selected_tag_document(tag_row_record, documents)
+        if chosen is None:
+            states[tag_id] = "missing_tag_association"
+        elif public_tag_document_location(chosen) is None:
+            states[tag_id] = "missing_tag_destination"
+        else:
+            states[tag_id] = ""
+    return states
+
+
 def tag_target_rows(
     family: SemanticTokenFamily,
     target_type: SemanticTokenTargetType,
@@ -195,20 +241,12 @@ def tag_target_rows(
             raise ValueError(
                 f"Tag {tag_row_record['tag_id']!r} does not match the semantic-token policy"
             )
-        documents = documents_by_tag.get(tag_id, [])
-        if not documents:
+        chosen = selected_tag_document(
+            tag_row_record,
+            documents_by_tag.get(tag_id, []),
+        )
+        if chosen is None:
             continue
-        chosen = documents[0]
-        primary = tag_row_record.get("primary_document")
-        if primary is not None:
-            chosen = next(
-                (
-                    document
-                    for document in documents
-                    if document["target"] == primary
-                ),
-                chosen,
-            )
         location = public_tag_document_location(chosen)
         if location is None:
             continue
