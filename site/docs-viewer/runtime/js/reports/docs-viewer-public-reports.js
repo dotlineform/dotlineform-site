@@ -107,26 +107,6 @@ function hostIsCurrent(root, content) {
   return !content || typeof content.contains !== "function" || content.contains(root);
 }
 
-function registerExpandedPresentation(context, root, reportMeta, mountResult) {
-  const adapter = context && context.reportPresentationAdapter;
-  if (!adapter || typeof adapter.registerMountedReport !== "function") return;
-  try {
-    adapter.registerMountedReport({
-      content: context.content,
-      doc: context.doc,
-      document: root.ownerDocument,
-      documentMountGeneration: context.documentMountGeneration,
-      mountResult,
-      reportMeta,
-      reportRoot: root,
-      requestContentDetail: context.requestContentDetail,
-      viewerScope: context.viewerScope
-    });
-  } catch (error) {
-    console.warn("docs_viewer: expanded report registration unavailable", error);
-  }
-}
-
 function unavailable(root, message) {
   root.innerHTML = "";
   const note = document.createElement("p");
@@ -183,9 +163,8 @@ export function mountDocsViewerPublicReport(context) {
         reportRoot: root,
         reportMeta: resolvedReportMeta,
         reportRegistry: registry
-      }))).then(function (mountResult) {
+      }))).then(function () {
         if (!hostIsCurrent(root, context.content)) return false;
-        registerExpandedPresentation(context, root, resolvedReportMeta, mountResult);
         return true;
       });
     });

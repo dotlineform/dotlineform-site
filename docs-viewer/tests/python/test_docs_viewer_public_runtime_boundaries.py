@@ -57,7 +57,11 @@ def test_persistent_diagram_detail_is_shared_by_public_and_manage_but_not_review
     assert "docs-viewer-diagram-detail.js" not in review_entry
 
 
-def test_expanded_report_adapter_is_shared_by_public_and_manage_but_not_review() -> None:
+def test_expanded_report_adapter_is_public_safe_but_only_manage_composed() -> None:
+    site_tools = json.loads(
+        (REPO_ROOT / "site-tools/config/site-tools.json").read_text(encoding="utf-8")
+    )
+    runtime_manifest = site_tools["validation"]["docs_viewer_runtime"]["manifest"]
     public_entry = REPO_ROOT / "site/docs-viewer/runtime/js/public/docs-viewer-public.js"
     public_graph = {
         path.relative_to(REPO_ROOT).as_posix()
@@ -70,7 +74,8 @@ def test_expanded_report_adapter_is_shared_by_public_and_manage_but_not_review()
         encoding="utf-8"
     )
 
-    assert "site/docs-viewer/runtime/js/shared/docs-viewer-report-presentation.js" in public_graph
+    assert "shared/docs-viewer-report-presentation.js" in runtime_manifest
+    assert "site/docs-viewer/runtime/js/shared/docs-viewer-report-presentation.js" not in public_graph
     assert "docs-viewer-report-presentation.js" in manage_entry
     assert "docs-viewer-report-presentation.js" not in review_entry
 

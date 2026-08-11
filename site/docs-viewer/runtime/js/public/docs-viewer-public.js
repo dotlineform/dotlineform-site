@@ -12,9 +12,6 @@ import {
   docsViewerTableDetailAdapter
 } from "../shared/docs-viewer-table-detail.js";
 import {
-  createDocsViewerReportPresentationAdapter
-} from "../shared/docs-viewer-report-presentation.js";
-import {
   mountDocsViewerPublicDocumentExtras
 } from "./docs-viewer-public-document-reports.js";
 import {
@@ -25,7 +22,6 @@ import {
 var themedDiagramAdapter = createDocsViewerPublicThemedDiagramAdapter({
   diagramDetailAdapter: docsViewerDiagramDetailAdapter
 });
-var reportPresentationAdapter = createDocsViewerReportPresentationAdapter();
 connectDocsViewerPublicThemeOwner({
   adapter: themedDiagramAdapter,
   document: document
@@ -37,11 +33,9 @@ import(appendAssetVersion("../shared/docs-viewer-app-boot.js"))
       contentDetailBackControlId: CONTENT_DETAIL_BACK_CONTROL_ID,
       diagramDetailAdapter: docsViewerDiagramDetailAdapter,
       mountDocumentExtras: mountDocsViewerPublicDocumentExtras,
-      reportPresentationAdapter: reportPresentationAdapter,
       tableDetailAdapter: docsViewerTableDetailAdapter,
       viewRegistryContributions: withDocsViewerContentDetailDefinitions(null, {
         diagramDetailAdapter: docsViewerDiagramDetailAdapter,
-        reportPresentationAdapter: reportPresentationAdapter,
         tableDetailAdapter: docsViewerTableDetailAdapter
       }),
       themedDiagramAdapter: themedDiagramAdapter

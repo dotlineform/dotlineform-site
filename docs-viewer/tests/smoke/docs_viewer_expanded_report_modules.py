@@ -37,6 +37,10 @@ def assert_static_composition() -> None:
     manage_entry = (
         REPO_ROOT / "docs-viewer/runtime/js/management/docs-viewer-manage.js"
     ).read_text(encoding="utf-8")
+    public_extras = (
+        REPO_ROOT
+        / "site/docs-viewer/runtime/js/public/docs-viewer-public-document-reports.js"
+    ).read_text(encoding="utf-8")
     public_controller = (
         REPO_ROOT / "site/docs-viewer/runtime/js/reports/docs-viewer-public-reports.js"
     ).read_text(encoding="utf-8")
@@ -46,6 +50,16 @@ def assert_static_composition() -> None:
     reports_css = (
         REPO_ROOT / "site/docs-viewer/static/css/docs-viewer-reports.css"
     ).read_text(encoding="utf-8")
+    local_reports_css = (
+        REPO_ROOT / "docs-viewer/static/css/docs-viewer-local-reports.css"
+    ).read_text(encoding="utf-8")
+    public_route = (REPO_ROOT / "site/analysis/index.html").read_text(encoding="utf-8")
+    public_route_template = (
+        REPO_ROOT / "docs-viewer/templates/public-route/index.html"
+    ).read_text(encoding="utf-8")
+    manage_shell = (
+        REPO_ROOT / "docs-viewer/shell/docs-viewer-manage.html"
+    ).read_text(encoding="utf-8")
 
     required_entry_values = (
         "createDocsViewerReportPresentationAdapter",
@@ -53,27 +67,61 @@ def assert_static_composition() -> None:
         "reportPresentationAdapter",
         "withDocsViewerContentDetailDefinitions",
     )
-    if any(value not in public_entry for value in required_entry_values):
-        raise AssertionError("public entrypoint did not explicitly compose report expansion")
+    forbidden_public_entry_values = required_entry_values[:-1]
+    if any(value in public_entry for value in forbidden_public_entry_values):
+        raise AssertionError("public entrypoint still composes report expansion")
+    if "withDocsViewerContentDetailDefinitions" not in public_entry:
+        raise AssertionError("public entrypoint lost the shared Content Detail composition")
     if any(value not in manage_entry for value in required_entry_values):
         raise AssertionError("Manage entrypoint did not explicitly compose report expansion")
     if "/management/" in public_entry:
         raise AssertionError("public report expansion imports management runtime")
 
-    for source, label in (
-        (public_controller, "public"),
-        (manage_controller, "Manage"),
-    ):
-        required_controller_values = (
-            ".then(function (mountResult)",
-            "hostIsCurrent(root, context.content)",
-            "registerExpandedPresentation(context, root, resolvedReportMeta, mountResult)",
-        )
-        if any(value not in source for value in required_controller_values):
-            raise AssertionError(f"{label} report controller discards the exact mount result")
+    forbidden_public_context_values = (
+        "documentMountGeneration",
+        "reportPresentationAdapter",
+        "requestContentDetail",
+    )
+    if any(value in public_extras for value in forbidden_public_context_values):
+        raise AssertionError("public document extras still supply report expansion context")
+    forbidden_public_controller_values = (
+        "expandedPresentation",
+        "registerExpandedPresentation",
+        "reportPresentationAdapter",
+    )
+    if any(value in public_controller for value in forbidden_public_controller_values):
+        raise AssertionError("public report controller still registers report expansion")
 
-    if ".docsViewerReport__expandedViewport" not in reports_css or "overflow: auto" not in reports_css:
-        raise AssertionError("shared expanded-report viewport is not horizontally contained")
+    required_manage_controller_values = (
+        ".then(function (mountResult)",
+        "hostIsCurrent(root, context.content)",
+        "registerExpandedPresentation(context, root, resolvedReportMeta, mountResult)",
+    )
+    if any(value not in manage_controller for value in required_manage_controller_values):
+        raise AssertionError("Manage report controller discards the exact mount result")
+
+    expansion_selectors = (
+        ".docsViewerReport__detailControlRow",
+        ".docsViewerReport__detailOpen",
+        ".docsViewerReport__detailIcon",
+        ".docsViewerReport__expandedViewport",
+    )
+    if any(value in reports_css for value in expansion_selectors):
+        raise AssertionError("public-loaded report stylesheet still composes report expansion")
+    if any(value not in local_reports_css for value in expansion_selectors):
+        raise AssertionError("Manage local report stylesheet lost report expansion selectors")
+    if "overflow: auto" not in local_reports_css:
+        raise AssertionError("Manage expanded-report viewport is not horizontally contained")
+    for source, label in (
+        (public_route, "public route"),
+        (public_route_template, "public route template"),
+    ):
+        if "docs-viewer-reports.css" not in source:
+            raise AssertionError(f"{label} lost the shared report stylesheet")
+        if "docs-viewer-local-reports.css" in source:
+            raise AssertionError(f"{label} loads the Manage-only report stylesheet")
+    if "docs-viewer-local-reports.css" not in manage_shell:
+        raise AssertionError("Manage shell lost the local report stylesheet")
 
 
 def install_fixture(page: Page) -> None:

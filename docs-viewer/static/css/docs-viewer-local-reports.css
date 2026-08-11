@@ -1,5 +1,68 @@
 /* Local-only Docs Viewer report implementations and controls. */
 
+.docsViewerReport__detailControlRow{
+  display: flex;
+  justify-content: flex-end;
+  margin: var(--docs-viewer-space-3) 0 calc(-1 * var(--docs-viewer-space-2));
+}
+
+.docsViewerReport__detailOpen{
+  appearance: none;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2rem;
+  padding: 0;
+  border: 1px solid var(--docs-viewer-border-strong);
+  border-radius: 999px;
+  background: var(--docs-viewer-panel);
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--docs-viewer-text) 12%, transparent);
+  color: var(--docs-viewer-link);
+  cursor: pointer;
+}
+
+.docsViewerReport__detailOpen:hover{
+  background: var(--docs-viewer-panel-2);
+}
+
+.docsViewerReport__detailOpen:focus-visible,
+.docsViewerReport__expandedViewport:focus-visible{
+  outline: 2px solid var(--docs-viewer-focus-ring);
+  outline-offset: 2px;
+}
+
+.docsViewerReport__detailIcon{
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.docsViewerReport__expandedViewport{
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: min(60vh, 30rem);
+  max-height: calc(100vh - 9.5rem);
+  padding: var(--docs-viewer-space-3);
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--docs-viewer-border);
+  border-radius: var(--docs-viewer-radius);
+  background: var(--docs-viewer-panel);
+}
+
+.docsViewerReport__expandedViewport > .docsViewerReport{
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
 .docsViewerReport__filter{
   box-sizing: border-box;
   display: inline-flex;

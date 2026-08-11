@@ -20,13 +20,10 @@ export function mountDocsViewerPublicDocumentExtras(context) {
     content: settings.content,
     doc: settings.doc,
     collectionProvider: settings.collectionProvider,
-    documentMountGeneration: settings.documentMountGeneration,
     managementContext: false,
     managementService: null,
     payload: payload,
-    reportPresentationAdapter: settings.reportPresentationAdapter,
     reportRegistryUrl: cleanString(settings.routeContext && settings.routeContext.reportRegistryUrl),
-    requestContentDetail: settings.requestContentDetail,
     routeContext: settings.routeContext,
     scopeConfigs: settings.scopeConfigState && Array.isArray(settings.scopeConfigState.scopeConfigs)
       ? settings.scopeConfigState.scopeConfigs.slice()
