@@ -940,7 +940,7 @@
               "doc_id": "d-20260811-090239-12f6d6",
               "title": "ERV-1 — Expanded Report View Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260811-090239-12f6d6.json",
-              "ui_status": "draft"
+              "ui_status": "in-progress"
             }
           ]
         },
@@ -1780,5 +1780,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-11T08:04:31Z"
+  "generated_at": "2026-08-11T09:13:50Z"
 }

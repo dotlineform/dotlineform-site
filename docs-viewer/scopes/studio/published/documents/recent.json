@@ -4,20 +4,20 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "d-20260810-165949-ee4d35",
-      "title": "Expanded Report View",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-165949-ee4d35.json",
-      "timestamp": "2026-08-11 09:04:50",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
       "doc_id": "d-20260811-090239-12f6d6",
       "title": "ERV-1 — Expanded Report View Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260811-090239-12f6d6.json",
-      "timestamp": "2026-08-11 09:02:39",
+      "timestamp": "2026-08-11 10:14:59",
       "parent_id": "d-20260810-165949-ee4d35",
       "parent_title": "Expanded Report View"
+    },
+    {
+      "doc_id": "d-20260810-165949-ee4d35",
+      "title": "Expanded Report View",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-165949-ee4d35.json",
+      "timestamp": "2026-08-11 10:11:31",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
     },
     {
       "doc_id": "d-20260401-000000-ebf14a",
@@ -84,5 +84,5 @@
       "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-08-11T08:04:50Z"
+  "generated_at": "2026-08-11T09:15:00Z"
 }
