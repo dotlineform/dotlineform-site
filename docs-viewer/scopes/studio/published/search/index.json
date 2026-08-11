@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-65581fd64b609f20983ad3da8b140005",
-    "generated_at_utc": "2026-08-11T18:37:14Z",
+    "version": "blake2b-bcf3af4e2da277d7a8a9b4d3e5220117",
+    "generated_at_utc": "2026-08-11T18:43:13Z",
     "count": 309
   },
   "entries": [
@@ -6733,26 +6733,26 @@
       "kind": "doc",
       "title": "Tag Document Linking",
       "href": "/docs/?scope=studio&doc=d-20260804-160200-fa7bb7",
-      "last_updated": "2026-08-11 18:21:30",
+      "last_updated": "2026-08-11 19:42:26",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-11 18:21:30 • Roadmap",
+      "display_meta": "2026-08-11 19:42:26 • Roadmap",
       "search_terms": [
         "tag document linking",
         "tag",
         "document",
         "linking",
         "roadmap",
-        "2026-08-11 18:21:30",
+        "2026-08-11 19:42:26",
         "2026",
         "08",
         "11",
-        "18",
-        "21",
-        "30",
+        "19",
+        "42",
+        "26",
         "d-20260804-160200-fa7bb7"
       ],
-      "search_text": "tag document linking tag document linking roadmap 2026-08-11 18:21:30 2026 08 11 18 21 30 d-20260804-160200-fa7bb7"
+      "search_text": "tag document linking tag document linking roadmap 2026-08-11 19:42:26 2026 08 11 19 42 26 d-20260804-160200-fa7bb7"
     },
     {
       "id": "d-20260804-170901-b2e74c",
@@ -6791,10 +6791,10 @@
       "kind": "doc",
       "title": "TDL-1 — Tag Document Association Delivery",
       "href": "/docs/?scope=studio&doc=d-20260804-160201-47af2d",
-      "last_updated": "2026-08-11 19:36:49",
+      "last_updated": "2026-08-11 19:42:26",
       "parent_id": "d-20260804-160200-fa7bb7",
       "parent_title": "Tag Document Linking",
-      "display_meta": "2026-08-11 19:36:49 • Tag Document Linking",
+      "display_meta": "2026-08-11 19:42:26 • Tag Document Linking",
       "search_terms": [
         "tdl-1 — tag document association delivery",
         "tdl",
@@ -6805,26 +6805,26 @@
         "delivery",
         "tag document linking",
         "linking",
-        "2026-08-11 19:36:49",
+        "2026-08-11 19:42:26",
         "2026",
         "08",
         "11",
         "19",
-        "36",
-        "49",
+        "42",
+        "26",
         "d-20260804-160201-47af2d"
       ],
-      "search_text": "tdl-1 — tag document association delivery tdl 1 tag document association delivery tag document linking linking 2026-08-11 19:36:49 2026 08 11 19 36 49 d-20260804-160201-47af2d"
+      "search_text": "tdl-1 — tag document association delivery tdl 1 tag document association delivery tag document linking linking 2026-08-11 19:42:26 2026 08 11 19 42 26 d-20260804-160201-47af2d"
     },
     {
       "id": "d-20260802-002213-b7d4e2",
       "kind": "doc",
       "title": "TDL-2 — Tag Primary Document And Semantic Token Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-002213-b7d4e2",
-      "last_updated": "2026-08-11 18:21:30",
+      "last_updated": "2026-08-11 19:42:26",
       "parent_id": "d-20260804-160200-fa7bb7",
       "parent_title": "Tag Document Linking",
-      "display_meta": "2026-08-11 18:21:30 • Tag Document Linking",
+      "display_meta": "2026-08-11 19:42:26 • Tag Document Linking",
       "search_terms": [
         "tdl-2 — tag primary document and semantic token delivery",
         "tdl",
@@ -6838,16 +6838,16 @@
         "delivery",
         "tag document linking",
         "linking",
-        "2026-08-11 18:21:30",
+        "2026-08-11 19:42:26",
         "2026",
         "08",
         "11",
-        "18",
-        "21",
-        "30",
+        "19",
+        "42",
+        "26",
         "d-20260802-002213-b7d4e2"
       ],
-      "search_text": "tdl-2 — tag primary document and semantic token delivery tdl 2 tag primary document and semantic token delivery tag document linking linking 2026-08-11 18:21:30 2026 08 11 18 21 30 d-20260802-002213-b7d4e2"
+      "search_text": "tdl-2 — tag primary document and semantic token delivery tdl 2 tag primary document and semantic token delivery tag document linking linking 2026-08-11 19:42:26 2026 08 11 19 42 26 d-20260802-002213-b7d4e2"
     },
     {
       "id": "d-20260810-115737-901d0f",

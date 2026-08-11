@@ -4,26 +4,26 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "d-20260804-160201-47af2d",
-      "title": "TDL-1 — Tag Document Association Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-160201-47af2d.json",
-      "timestamp": "2026-08-11 19:36:49",
-      "parent_id": "d-20260804-160200-fa7bb7",
-      "parent_title": "Tag Document Linking"
-    },
-    {
       "doc_id": "d-20260804-160200-fa7bb7",
       "title": "Tag Document Linking",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-160200-fa7bb7.json",
-      "timestamp": "2026-08-11 18:21:30",
+      "timestamp": "2026-08-11 19:42:26",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260804-160201-47af2d",
+      "title": "TDL-1 — Tag Document Association Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-160201-47af2d.json",
+      "timestamp": "2026-08-11 19:42:26",
+      "parent_id": "d-20260804-160200-fa7bb7",
+      "parent_title": "Tag Document Linking"
     },
     {
       "doc_id": "d-20260802-002213-b7d4e2",
       "title": "TDL-2 — Tag Primary Document And Semantic Token Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-002213-b7d4e2.json",
-      "timestamp": "2026-08-11 18:21:30",
+      "timestamp": "2026-08-11 19:42:26",
       "parent_id": "d-20260804-160200-fa7bb7",
       "parent_title": "Tag Document Linking"
     },
@@ -84,5 +84,5 @@
       "parent_title": "Roadmap"
     }
   ],
-  "generated_at": "2026-08-11T18:37:13Z"
+  "generated_at": "2026-08-11T18:43:13Z"
 }
