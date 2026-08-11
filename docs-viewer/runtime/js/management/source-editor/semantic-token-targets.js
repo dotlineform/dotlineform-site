@@ -73,6 +73,7 @@ export function mountSemanticTokenTargetLinks(root, publicPreviewBase) {
   if (!root || typeof root.querySelectorAll !== "function") return 0;
   var mounted = 0;
   root.querySelectorAll("a[data-semantic-token-family][href]").forEach(function (link) {
+    if (cleanString(link.getAttribute("data-semantic-token-family")) !== "catalogue") return;
     var resolved = resolveSemanticTokenTargetHref(
       link.getAttribute("href"),
       publicPreviewBase

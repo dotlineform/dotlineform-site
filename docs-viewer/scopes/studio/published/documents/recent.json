@@ -4,12 +4,28 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260804-160200-fa7bb7",
+      "title": "Tag Document Linking",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-160200-fa7bb7.json",
+      "timestamp": "2026-08-11 22:30:20",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
       "doc_id": "d-20260802-002213-b7d4e2",
       "title": "TDL-2 — Tag Primary Document And Semantic Token Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-002213-b7d4e2.json",
-      "timestamp": "2026-08-11 22:10:41",
+      "timestamp": "2026-08-11 22:30:20",
       "parent_id": "d-20260804-160200-fa7bb7",
       "parent_title": "Tag Document Linking"
+    },
+    {
+      "doc_id": "d-20260725-153656-516b61",
+      "title": "Semantic Tokens",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-153656-516b61.json",
+      "timestamp": "2026-08-11 22:26:08",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
     },
     {
       "doc_id": "d-20260714-234030-434069",
@@ -23,14 +39,6 @@
       "doc_id": "d-20260423-165116-e7f7e9",
       "title": "Broken Links",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260423-165116-e7f7e9.json",
-      "timestamp": "2026-08-11 22:03:14",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260725-153656-516b61",
-      "title": "Semantic Tokens",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-153656-516b61.json",
       "timestamp": "2026-08-11 22:03:14",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer"
@@ -74,15 +82,7 @@
       "timestamp": "2026-08-11 22:03:14",
       "parent_id": "d-20260725-153656-516b61",
       "parent_title": "Semantic Tokens"
-    },
-    {
-      "doc_id": "d-20260802-123452-6a2fd3",
-      "title": "DMM-1 — Data Model Maps Foundation Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123452-6a2fd3.json",
-      "timestamp": "2026-08-11 20:44:15",
-      "parent_id": "d-20260802-123450-f7493d",
-      "parent_title": "Data Model Maps"
     }
   ],
-  "generated_at": "2026-08-11T21:11:27Z"
+  "generated_at": "2026-08-11T21:30:47Z"
 }

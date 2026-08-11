@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_analysis_v1",
     "scope": "analysis",
-    "version": "blake2b-eff0fa34ff656c1bb5e49132b86c07cd",
-    "generated_at_utc": "2026-08-11T18:13:03Z",
+    "version": "blake2b-fd038768bb6dfb21825523a7ba32f986",
+    "generated_at_utc": "2026-08-11T21:18:57Z",
     "count": 17
   },
   "entries": [
@@ -128,23 +128,23 @@
       "kind": "doc",
       "title": "Beauty",
       "href": "/analysis/?doc=d-20260809-130120-837891",
-      "last_updated": "2026-08-11 19:13:03",
+      "last_updated": "2026-08-11 22:18:57",
       "parent_id": "d-20260809-130120-870cc2",
       "parent_title": "Library",
-      "display_meta": "2026-08-11 19:13:03 • Library",
+      "display_meta": "2026-08-11 22:18:57 • Library",
       "search_terms": [
         "beauty",
         "library",
-        "2026-08-11 19:13:03",
+        "2026-08-11 22:18:57",
         "2026",
         "08",
         "11",
-        "19",
-        "13",
-        "03",
+        "22",
+        "18",
+        "57",
         "d-20260809-130120-837891"
       ],
-      "search_text": "beauty library 2026-08-11 19:13:03 2026 08 11 19 13 03 d-20260809-130120-837891"
+      "search_text": "beauty library 2026-08-11 22:18:57 2026 08 11 22 18 57 d-20260809-130120-837891"
     },
     {
       "id": "d-20260809-130120-28fb85",

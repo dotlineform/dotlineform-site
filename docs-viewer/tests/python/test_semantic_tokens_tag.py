@@ -63,7 +63,15 @@ def prepare_repo(root: Path) -> None:
     )
     write_docs_scope_config(
         root,
-        [docs_scope_record("analysis", default_doc_id=FIRST_DOC_ID)],
+        [
+            docs_scope_record(
+                "analysis",
+                default_doc_id=FIRST_DOC_ID,
+                include_scope_param=False,
+                scope_type="public",
+                viewer_base_url="/analysis/",
+            )
+        ],
     )
     write_json(
         root / "docs-viewer/config/routes/docs-viewer-routes.json",

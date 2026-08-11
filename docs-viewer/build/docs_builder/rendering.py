@@ -69,7 +69,7 @@ class ContentRenderingMixin:
     def rewrite_doc_links(self, content_html: str, *, current_doc: DocRecord, docs: list[DocRecord]) -> str:
         docs_by_id = {doc.doc_id: doc for doc in docs}
 
-        def replace(match: re.Match[str]) -> str:
+        def replace_href(match: re.Match[str]) -> str:
             quote_char = match.group(1)
             href = match.group(2)
             rewritten = self.rewrite_href(
@@ -79,7 +79,13 @@ class ContentRenderingMixin:
             )
             return f"href={quote_char}{rewritten}{quote_char}"
 
-        return re.sub(r"href=([\"'])(.*?)\1", replace, content_html)
+        def replace_anchor(match: re.Match[str]) -> str:
+            anchor = match.group(0)
+            if re.search(r"\bdata-semantic-token-family\s*=", anchor, re.IGNORECASE):
+                return anchor
+            return re.sub(r"href=([\"'])(.*?)\1", replace_href, anchor)
+
+        return re.sub(r"<a\b[^>]*>", replace_anchor, content_html, flags=re.IGNORECASE)
 
     def rewrite_href(
         self,

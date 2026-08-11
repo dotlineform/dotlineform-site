@@ -414,11 +414,25 @@ def assert_info_exact_range_edit_remove_and_stale_error(page: Page) -> None:
                     ).click();
                 }
                 const status = root.querySelector('.docsViewer__metadataInfoEmpty');
+                const destinationLink = root.querySelector('.docsViewer__metadataInfoRow a');
+                const rendered = document.createElement('div');
+                rendered.innerHTML = [
+                    '<a href="/analysis/?doc=report&amp;subdoc=nerve-doc"',
+                    ' data-semantic-token-family="tag"',
+                    ' data-semantic-token-target-type="tag"',
+                    ' data-semantic-token-target-id="nerve">Nerve</a>'
+                ].join('');
                 const snapshot = {
+                    destinationHref: destinationLink && destinationLink.getAttribute('href'),
                     rows,
                     value: state.value,
                     selectionMode: state.selectionMode || '',
-                    error: status && !status.hidden ? status.textContent : ''
+                    error: status && !status.hidden ? status.textContent : '',
+                    renderedHref: rendered.querySelector('a').getAttribute('href'),
+                    renderedMountCount: smoke.semanticTargets.mountSemanticTokenTargetLinks(
+                        rendered,
+                        'http://127.0.0.1:4000'
+                    )
                 };
                 view.dispose({ mount: root });
                 root.remove();
@@ -440,22 +454,31 @@ def assert_info_exact_range_edit_remove_and_stale_error(page: Page) -> None:
         "Destination": "/analysis/?doc=report&subdoc=nerve-doc",
     }
     assert result["updated"] == {
+        "destinationHref": "/analysis/?doc=report&subdoc=nerve-doc",
         "rows": expected_rows,
         "value": "Before [[tag:tag:nerve|Nerve signal]] after",
         "selectionMode": "select",
         "error": "",
+        "renderedHref": "/analysis/?doc=report&subdoc=nerve-doc",
+        "renderedMountCount": 0,
     }
     assert result["removed"] == {
+        "destinationHref": "/analysis/?doc=report&subdoc=nerve-doc",
         "rows": expected_rows,
         "value": "Before  after",
         "selectionMode": "end",
         "error": "",
+        "renderedHref": "/analysis/?doc=report&subdoc=nerve-doc",
+        "renderedMountCount": 0,
     }
     assert result["stale"] == {
+        "destinationHref": "/analysis/?doc=report&subdoc=nerve-doc",
         "rows": expected_rows,
         "value": "Before [[tag:tag:nerve|Nerve]] after",
         "selectionMode": "",
         "error": "Markdown source changed. Select the token again.",
+        "renderedHref": "/analysis/?doc=report&subdoc=nerve-doc",
+        "renderedMountCount": 0,
     }
 
 

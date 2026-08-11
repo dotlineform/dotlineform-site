@@ -7,8 +7,7 @@ import {
   loadSemanticTokenRegistry
 } from "./semantic-token-registry.js";
 import {
-  loadSemanticTokenTargets,
-  resolveSemanticTokenTargetHref
+  loadSemanticTokenTargets
 } from "./semantic-token-targets.js";
 
 function cleanString(value) {
@@ -74,9 +73,7 @@ function currentToken(state) {
 function renderToken(context, state, active) {
   var token = active.token;
   var target = state.targetsByKey.get(token.targetId) || null;
-  var destination = target
-    ? resolveSemanticTokenTargetHref(target.href, state.publicPreviewBase)
-    : "";
+  var destination = target ? target.href : "";
   context.mount.replaceChildren();
   var article = document.createElement("article");
   article.className = "docsViewer__metadataInfo docsViewerCatalogueTokenInfo";
@@ -189,7 +186,6 @@ export function createTagTokenInfoView(options = {}) {
     adapter: null,
     fetch: options.fetch,
     loaded: false,
-    publicPreviewBase: "",
     registry: null,
     targetsByKey: new Map(),
     unsubscribe: null
@@ -205,7 +201,6 @@ export function createTagTokenInfoView(options = {}) {
       state.adapter = typeof services.getActiveSourceEditorContextAdapter === "function"
         ? services.getActiveSourceEditorContextAdapter()
         : null;
-      state.publicPreviewBase = cleanString(services.publicPreviewBase);
       if (state.adapter && state.adapter.onSelectionChange) {
         state.unsubscribe = state.adapter.onSelectionChange(function () {
           render(context, state);
