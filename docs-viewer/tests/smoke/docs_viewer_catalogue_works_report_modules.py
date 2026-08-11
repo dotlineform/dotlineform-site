@@ -41,22 +41,25 @@ def run_smoke(base_url: str) -> None:
                         '00008': {
                             work_id: '00008', title: 'Shared Work', year: 1990,
                             year_display: '1990–1995', status: 'published',
-                            series_ids: ['105', '026'], storage_location: 'Shelf 1'
+                            series_ids: ['105', '026'], storage_location: 'Shelf 1',
+                            medium_type: 'drawing', medium_caption: 'pencil on paper'
                         },
                         '00009': {
                             work_id: '00009', title: 'Second Work', year: 2001,
                             year_display: '2001', status: 'published', series_ids: ['001'],
-                            storage_location: 'Shelf 2'
+                            storage_location: 'Shelf 2', medium_type: 'painting',
+                            medium_caption: 'acrylic on canvas'
                         },
                         '00010': {
                             work_id: '00010', title: 'Alphabet Study', year: 1985,
                             year_display: '1985', status: 'published', series_ids: [],
-                            storage_location: null
+                            storage_location: null, medium_type: null, medium_caption: null
                         },
                         '00011': {
                             work_id: '00011', title: 'Draft Work', year: 2002,
                             year_display: '2002', status: 'draft', series_ids: ['001'],
-                            storage_location: null
+                            storage_location: null, medium_type: 'print',
+                            medium_caption: 'ink on paper'
                         }
                     }
                 };
@@ -92,11 +95,15 @@ def run_smoke(base_url: str) -> None:
                 });
                 const root = document.createElement('section');
                 document.body.appendChild(root);
-                await module.mountCatalogueWorksReport({
+                const mountResult = await module.mountCatalogueWorksReport({
                     reportRoot: root,
                     studioBaseUrl: 'http://127.0.0.1:8765',
                     publicPreviewBase: 'http://127.0.0.1:4000',
                     window
+                });
+                let refreshCount = 0;
+                const unsubscribe = mountResult.expandedPresentation.subscribe(() => {
+                    refreshCount += 1;
                 });
                 const initial = {
                     copyDisabled: root.querySelector('#docsCatalogueWorksReportCopy').disabled,
@@ -109,7 +116,11 @@ def run_smoke(base_url: str) -> None:
                     tableTag: root.querySelector('table').tagName,
                     headTag: root.querySelector('thead').tagName,
                     bodyTag: root.querySelector('tbody').tagName,
-                    headings: Array.from(root.querySelectorAll('th')).map((node) => node.textContent.trim())
+                    headings: Array.from(root.querySelectorAll('th')).map((node) => node.textContent.trim()),
+                    presentationColumns: mountResult.expandedPresentation.columns,
+                    presentationKind: mountResult.expandedPresentation.kind,
+                    presentationTableExact: mountResult.expandedPresentation.table === root.querySelector('table'),
+                    sortableCount: root.querySelectorAll('[data-report-sort]').length
                 };
 
                 const search = root.querySelector('#docsCatalogueWorksReportSearch');
@@ -124,7 +135,11 @@ def run_smoke(base_url: str) -> None:
                         href: link.getAttribute('href'),
                         text: link.textContent
                     })),
-                    status: root.querySelector('.docsViewerReport__status').textContent
+                    status: root.querySelector('.docsViewerReport__status').textContent,
+                    mediumType: root.querySelector('tbody td:nth-child(6)').textContent,
+                    mediumCaption: root.querySelector('tbody td:nth-child(7)').textContent,
+                    columnIds: Array.from(root.querySelectorAll('tbody td')).map((cell) => cell.dataset.reportColumnId),
+                    visibility: Array.from(root.querySelectorAll('tbody td')).map((cell) => cell.dataset.reportColumnVisibility)
                 };
 
                 search.value = '0';
@@ -141,6 +156,12 @@ def run_smoke(base_url: str) -> None:
                 };
                 root.querySelector('#docsCatalogueWorksReportCopy').click();
                 await new Promise((resolve) => setTimeout(resolve, 0));
+                const expandedViewport = document.createElement('div');
+                expandedViewport.className = 'docsViewerReport__expandedViewport';
+                expandedViewport.appendChild(root);
+                document.body.appendChild(expandedViewport);
+                root.querySelector('#docsCatalogueWorksReportCopy').click();
+                await new Promise((resolve) => setTimeout(resolve, 0));
 
                 root.querySelector('#docsCatalogueWorksReportClear').click();
                 const cleared = {
@@ -152,6 +173,9 @@ def run_smoke(base_url: str) -> None:
                 const pureRows = module.normalizeCatalogueWorksInputs(worksPayload, seriesPayload);
                 const seriesSearch = module.buildCatalogueWorksProjection(pureRows, {
                     searchText: 'collected', sortKey: 'work', sortDir: 'asc'
+                });
+                const hiddenMediumSearch = module.buildCatalogueWorksProjection(pureRows, {
+                    searchText: 'pencil', sortKey: 'work', sortDir: 'asc'
                 });
                 const invalidMessages = [];
                 try {
@@ -166,6 +190,20 @@ def run_smoke(base_url: str) -> None:
                         seriesPayload
                     );
                 } catch (error) { invalidMessages.push(error.message); }
+                try {
+                    module.normalizeCatalogueWorksInputs(
+                        {
+                            ...worksPayload,
+                            works: {
+                                ...worksPayload.works,
+                                '00010': { ...worksPayload.works['00010'], medium_caption: 2 }
+                            }
+                        },
+                        seriesPayload
+                    );
+                } catch (error) { invalidMessages.push(error.message); }
+
+                unsubscribe();
                 try {
                     module.normalizeCatalogueWorksInputs(
                         {
@@ -201,7 +239,9 @@ def run_smoke(base_url: str) -> None:
                     failed,
                     initial,
                     invalidMessages,
+                    hiddenMediumSearchIds: hiddenMediumSearch.rows.map((row) => row.workId),
                     plural,
+                    refreshCount,
                     requests,
                     seriesSearchIds: seriesSearch.rows.map((row) => row.workId),
                     yearAscending,
@@ -222,7 +262,31 @@ def run_smoke(base_url: str) -> None:
         "tableTag": "TABLE",
         "headTag": "THEAD",
         "bodyTag": "TBODY",
-        "headings": ["Work▲", "Year", "Title", "Series", "Storage"],
+        "headings": [
+            "Work▲",
+            "Year",
+            "Title",
+            "Series",
+            "Storage",
+            "Medium type",
+            "Medium caption",
+        ],
+        "presentationColumns": [
+            {"id": "work", "label": "Work", "visibility": "both"},
+            {"id": "year", "label": "Year", "visibility": "both"},
+            {"id": "title", "label": "Title", "visibility": "both"},
+            {"id": "series", "label": "Series", "visibility": "both"},
+            {"id": "storage", "label": "Storage", "visibility": "both"},
+            {"id": "medium_type", "label": "Medium type", "visibility": "expanded"},
+            {
+                "id": "medium_caption",
+                "label": "Medium caption",
+                "visibility": "expanded",
+            },
+        ],
+        "presentationKind": "semantic-table",
+        "presentationTableExact": True,
+        "sortableCount": 5,
     }
     assert result["plural"] == {
         "workId": "00008",
@@ -241,8 +305,21 @@ def run_smoke(base_url: str) -> None:
             },
         ],
         "status": "1 of 3 published Works",
+        "mediumType": "drawing",
+        "mediumCaption": "pencil on paper",
+        "columnIds": [
+            "work",
+            "year",
+            "title",
+            "series",
+            "storage",
+            "medium_type",
+            "medium_caption",
+        ],
+        "visibility": ["both", "both", "both", "both", "both", "expanded", "expanded"],
     }
     assert result["seriesSearchIds"] == ["00008"]
+    assert result["hiddenMediumSearchIds"] == []
     assert result["yearAscending"] == {
         "ariaSort": "ascending",
         "rowIds": ["00010", "00008", "00009"],
@@ -255,7 +332,12 @@ def run_smoke(base_url: str) -> None:
         "Work\tYear\tTitle\tSeries\tStorage\n"
         "00009\t2001\tSecond Work\tBeta [001]\tShelf 2\n"
         "00008\t1990–1995\tShared Work\tAlpha [105]; Collected [026]\tShelf 1\n"
-        "00010\t1985\tAlphabet Study\t—\t—"
+        "00010\t1985\tAlphabet Study\t—\t—",
+        "Work\tYear\tTitle\tSeries\tStorage\tMedium type\tMedium caption\n"
+        "00009\t2001\tSecond Work\tBeta [001]\tShelf 2\tpainting\tacrylic on canvas\n"
+        "00008\t1990–1995\tShared Work\tAlpha [105]; Collected [026]\tShelf 1\t"
+        "drawing\tpencil on paper\n"
+        "00010\t1985\tAlphabet Study\t—\t—\t—\t—",
     ]
     assert result["cleared"] == {
         "rowCount": 0,
@@ -265,7 +347,9 @@ def run_smoke(base_url: str) -> None:
     assert result["invalidMessages"] == [
         "Catalogue Works input is invalid.",
         "Catalogue Works input is invalid.",
+        "Catalogue Works input is invalid.",
     ]
+    assert result["refreshCount"] == 5
     assert result["failed"] == {
         "empty": "The current Catalogue Works report could not complete.",
         "rowCount": 0,

@@ -74,6 +74,7 @@ def assert_static_composition() -> None:
     required_entry_values = (
         "createDocsViewerReportPresentationAdapter",
         "docs-viewer-report-presentation.js",
+        "presentationExtension: managedTableTools.reportPresentationExtension",
         "reportPresentationAdapter",
         "withDocsViewerContentDetailDefinitions",
     )
@@ -300,7 +301,7 @@ def assert_live_report_lifecycle(page: Page) -> None:
                         kind: 'semantic-table',
                         label: 'Semantic report',
                         table: semanticTable,
-                        columns: [{ id: 'work', label: 'Work' }],
+                        columns: [{ id: 'work', label: 'Work', visibility: 'both' }],
                         subscribe: () => () => {}
                     }
                 },
@@ -309,11 +310,36 @@ def assert_live_report_lifecycle(page: Page) -> None:
                 viewerScope: 'studio'
             });
 
+            const invalidSemanticContent = document.createElement('div');
+            const invalidSemanticRoot = document.createElement('div');
+            const invalidSemanticTable = document.createElement('table');
+            invalidSemanticRoot.appendChild(invalidSemanticTable);
+            invalidSemanticContent.appendChild(invalidSemanticRoot);
+            const invalidSemantic = adapter.registerMountedReport({
+                content: invalidSemanticContent,
+                doc: { doc_id: 'd-semantic-invalid' },
+                document,
+                documentMountGeneration: 11,
+                mountResult: {
+                    expandedPresentation: {
+                        kind: 'semantic-table',
+                        label: 'Invalid semantic report',
+                        table: invalidSemanticTable,
+                        columns: [{ id: 'work', label: 'Work', visibility: 'embedded' }],
+                        subscribe: () => () => {}
+                    }
+                },
+                reportMeta: { reportId: 'semantic-invalid' },
+                reportRoot: invalidSemanticRoot,
+                viewerScope: 'studio'
+            });
+
             return {
                 absent,
                 embedded,
                 expanded,
                 invalid,
+                invalidSemantic,
                 navigated,
                 released,
                 restored,
@@ -369,7 +395,9 @@ def assert_live_report_lifecycle(page: Page) -> None:
         raise AssertionError(f"absent capability was not ordinary: {result!r}")
     if result["invalid"] != {"registered": False, "reason": "invalid"}:
         raise AssertionError(f"invalid capability did not fail closed: {result!r}")
-    if result["warningCount"] != 1 or not result["semanticRegistered"]:
+    if result["invalidSemantic"] != {"registered": False, "reason": "invalid"}:
+        raise AssertionError(f"invalid semantic visibility did not fail closed: {result!r}")
+    if result["warningCount"] != 2 or not result["semanticRegistered"]:
         raise AssertionError(f"capability validation changed: {result!r}")
 
 

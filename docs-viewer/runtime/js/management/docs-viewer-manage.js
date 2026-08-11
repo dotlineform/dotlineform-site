@@ -85,7 +85,9 @@ const managedTableTools = createDocsViewerManagedTableTools();
 const managedTableDetailAdapter = createDocsViewerTableDetailAdapter({
   presentationExtension: managedTableTools.presentationExtension
 });
-const reportPresentationAdapter = createDocsViewerReportPresentationAdapter();
+const reportPresentationAdapter = createDocsViewerReportPresentationAdapter({
+  presentationExtension: managedTableTools.reportPresentationExtension
+});
 
 startDocsViewerManageApp({
   contentDetailBackControlId: CONTENT_DETAIL_BACK_CONTROL_ID,

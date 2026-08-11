@@ -535,6 +535,98 @@ def assert_managed_table_tools(page: Page) -> None:
                 resetHidden: controlStates[managed.CONTENT_DETAIL_RESET_WIDTHS_CONTROL_ID].hidden,
                 copyHidden: controlStates[managed.CONTENT_DETAIL_COPY_TABLE_CONTROL_ID].hidden
             };
+
+            const reportControlStates = {};
+            const reportTable = document.createElement('table');
+            reportTable.innerHTML = [
+                '<thead><tr>',
+                '<th data-report-column-id="work" data-report-column-visibility="both">Work</th>',
+                '<th data-report-column-id="medium_type" data-report-column-visibility="expanded">Medium type</th>',
+                '</tr></thead>',
+                '<tbody><tr>',
+                '<td data-report-column-id="work" data-report-column-visibility="both">00001</td>',
+                '<td data-report-column-id="medium_type" data-report-column-visibility="expanded">Drawing</td>',
+                '</tr></tbody>'
+            ].join('');
+            document.body.appendChild(reportTable);
+            let refreshListener = null;
+            let subscriptionCleanups = 0;
+            const reportExtension = tools.reportPresentationExtension.mount({
+                columns: [
+                    { id: 'work', label: 'Work', visibility: 'both' },
+                    { id: 'medium_type', label: 'Medium type', visibility: 'expanded' }
+                ],
+                document,
+                kind: 'semantic-table',
+                subscribe: listener => {
+                    refreshListener = listener;
+                    return () => { refreshListener = null; subscriptionCleanups += 1; };
+                },
+                table: reportTable,
+                viewport: document.body
+            });
+            reportExtension.activate({
+                projectControlState: (id, state) => { reportControlStates[id] = state; }
+            });
+            const initialReportHandles = Array.from(
+                reportTable.querySelectorAll('.docsViewer__tableResizeHandle')
+            );
+            const reportInitial = {
+                copyHidden: reportControlStates[managed.CONTENT_DETAIL_COPY_TABLE_CONTROL_ID].hidden,
+                handleCount: initialReportHandles.length,
+                handleLabels: initialReportHandles.map(handle => handle.getAttribute('aria-label')),
+                resetDisabled: reportControlStates[managed.CONTENT_DETAIL_RESET_WIDTHS_CONTROL_ID].disabled,
+                resetHidden: reportControlStates[managed.CONTENT_DETAIL_RESET_WIDTHS_CONTROL_ID].hidden
+            };
+            const initialReportWidth = Number(initialReportHandles[0].getAttribute('aria-valuenow'));
+            initialReportHandles[0].dispatchEvent(new KeyboardEvent('keydown', {
+                bubbles: true, cancelable: true, key: 'ArrowRight'
+            }));
+            const resizedReportWidth = Number(initialReportHandles[0].getAttribute('aria-valuenow'));
+            reportTable.tHead.rows[0].innerHTML = [
+                '<th data-report-column-id="work" data-report-column-visibility="both">Work</th>',
+                '<th data-report-column-id="medium_type" data-report-column-visibility="expanded">Medium type</th>'
+            ].join('');
+            reportTable.tBodies[0].innerHTML = [
+                '<tr><td data-report-column-id="work" data-report-column-visibility="both">00002</td>',
+                '<td data-report-column-id="medium_type" data-report-column-visibility="expanded">Painting</td></tr>'
+            ].join('');
+            refreshListener();
+            const refreshedReportHandles = Array.from(
+                reportTable.querySelectorAll('.docsViewer__tableResizeHandle')
+            );
+            const reportRefreshed = {
+                handleCount: refreshedReportHandles.length,
+                managedClass: reportTable.classList.contains('docsViewer__tableDetailTable--managedWidths'),
+                oldHandleConnected: initialReportHandles[0].isConnected,
+                resetEnabled: !reportControlStates[managed.CONTENT_DETAIL_RESET_WIDTHS_CONTROL_ID].disabled,
+                retainedWidth: Number(refreshedReportHandles[0].getAttribute('aria-valuenow')) === resizedReportWidth,
+                widthColumns: reportTable.querySelectorAll('colgroup[data-docs-viewer-managed-table-widths] > col').length
+            };
+            reportTable.tBodies[0].rows[0].cells[1].dataset.reportColumnId = 'wrong';
+            refreshListener();
+            const reportMismatch = {
+                copyHidden: reportControlStates[managed.CONTENT_DETAIL_COPY_TABLE_CONTROL_ID].hidden,
+                handles: reportTable.querySelectorAll('.docsViewer__tableResizeHandle').length,
+                managedClass: reportTable.classList.contains('docsViewer__tableDetailTable--managedWidths'),
+                resetHidden: reportControlStates[managed.CONTENT_DETAIL_RESET_WIDTHS_CONTROL_ID].hidden,
+                widthColumns: reportTable.querySelectorAll('colgroup[data-docs-viewer-managed-table-widths] > col').length
+            };
+            reportTable.tBodies[0].rows[0].cells[1].dataset.reportColumnId = 'medium_type';
+            refreshListener();
+            const reportRecovered = {
+                handles: reportTable.querySelectorAll('.docsViewer__tableResizeHandle').length,
+                managedClass: reportTable.classList.contains('docsViewer__tableDetailTable--managedWidths'),
+                resetDisabled: reportControlStates[managed.CONTENT_DETAIL_RESET_WIDTHS_CONTROL_ID].disabled,
+                resetHidden: reportControlStates[managed.CONTENT_DETAIL_RESET_WIDTHS_CONTROL_ID].hidden
+            };
+            reportExtension.release();
+            const reportReleased = {
+                copyHidden: reportControlStates[managed.CONTENT_DETAIL_COPY_TABLE_CONTROL_ID].hidden,
+                handles: reportTable.querySelectorAll('.docsViewer__tableResizeHandle').length,
+                resetHidden: reportControlStates[managed.CONTENT_DETAIL_RESET_WIDTHS_CONTROL_ID].hidden,
+                subscriptionCleanups
+            };
             handlers[managed.CONTENT_DETAIL_COPY_TABLE_CONTROL_ID]({
                 setStatus: (message, error) => statuses.push({ message, error })
             });
@@ -543,8 +635,14 @@ def assert_managed_table_tools(page: Page) -> None:
                 copied,
                 initial,
                 released,
+                reportInitial,
+                reportMismatch,
+                reportRecovered,
+                reportRefreshed,
+                reportReleased,
                 resetState,
                 resized,
+                resizedReportDelta: resizedReportWidth - initialReportWidth,
                 spanTsv,
                 statuses
             };
@@ -585,6 +683,47 @@ def assert_managed_table_tools(page: Page) -> None:
         "resetHidden": True,
     }:
         raise AssertionError(f"Managed Table Tools lifecycle cleanup changed: {result!r}")
+    if result["reportInitial"] != {
+        "copyHidden": True,
+        "handleCount": 2,
+        "handleLabels": ["Resize Work", "Resize Medium type"],
+        "resetDisabled": True,
+        "resetHidden": False,
+    }:
+        raise AssertionError(f"managed report activation changed: {result!r}")
+    if result["resizedReportDelta"] != 16:
+        raise AssertionError(f"managed report keyboard resizing changed: {result!r}")
+    if result["reportRefreshed"] != {
+        "handleCount": 2,
+        "managedClass": True,
+        "oldHandleConnected": False,
+        "resetEnabled": True,
+        "retainedWidth": True,
+        "widthColumns": 2,
+    }:
+        raise AssertionError(f"managed report rerender rebinding changed: {result!r}")
+    if result["reportMismatch"] != {
+        "copyHidden": True,
+        "handles": 0,
+        "managedClass": False,
+        "resetHidden": True,
+        "widthColumns": 0,
+    }:
+        raise AssertionError(f"managed report mismatch did not fail closed: {result!r}")
+    if result["reportRecovered"] != {
+        "handles": 2,
+        "managedClass": False,
+        "resetDisabled": True,
+        "resetHidden": False,
+    }:
+        raise AssertionError(f"managed report did not recover after exact rerender: {result!r}")
+    if result["reportReleased"] != {
+        "copyHidden": True,
+        "handles": 0,
+        "resetHidden": True,
+        "subscriptionCleanups": 1,
+    }:
+        raise AssertionError(f"managed report release cleanup changed: {result!r}")
     if result["statuses"] != [{"message": "Copy table is unavailable.", "error": True}]:
         raise AssertionError(f"Managed Table Tools failure reporting changed: {result!r}")
 

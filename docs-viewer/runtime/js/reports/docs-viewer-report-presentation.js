@@ -56,11 +56,12 @@ function normalizedColumns(rawColumns) {
   var columns = rawColumns.map(function (rawColumn) {
     var id = cleanString(rawColumn && rawColumn.id);
     var label = cleanString(rawColumn && rawColumn.label);
-    if (!id || !label || ids.has(id)) {
-      throw new Error("Semantic-table presentation columns require unique ids and labels.");
+    var visibility = cleanString(rawColumn && rawColumn.visibility);
+    if (!id || !label || !["both", "expanded"].includes(visibility) || ids.has(id)) {
+      throw new Error("Semantic-table presentation columns require unique ids, labels, and valid visibility.");
     }
     ids.add(id);
-    return Object.freeze({ id: id, label: label });
+    return Object.freeze({ id: id, label: label, visibility: visibility });
   });
   return Object.freeze(columns);
 }

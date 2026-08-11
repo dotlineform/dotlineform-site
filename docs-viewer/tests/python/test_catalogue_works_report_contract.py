@@ -65,6 +65,10 @@ def test_module_uses_only_existing_studio_inputs_and_exact_catalogue_targets() -
         'studioReadUrl(context, "catalogue_works")',
         'studioReadUrl(context, "catalogue_series")',
         "value.storage_location",
+        "value.medium_type",
+        "value.medium_caption",
+        'visibility: "expanded"',
+        'kind: "semantic-table"',
         'const path = kind === "work" ? "/works/" : "/series/";',
     ):
         assert fragment in source
@@ -77,6 +81,15 @@ def test_module_uses_only_existing_studio_inputs_and_exact_catalogue_targets() -
         "work-storage-index.json",
     ):
         assert forbidden not in source
+
+    local_css = (
+        REPO_ROOT / "docs-viewer/static/css/docs-viewer-local-reports.css"
+    ).read_text(encoding="utf-8")
+    assert '[data-report-column-visibility="expanded"]' in local_css
+    assert (
+        ".docsViewerReport__expandedViewport .catalogueWorksReport__table "
+        '[data-report-column-visibility="expanded"]'
+    ) in local_css
 
 
 def test_exact_dotlineform_report_host_projects_one_inert_host() -> None:

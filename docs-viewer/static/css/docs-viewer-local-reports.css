@@ -183,6 +183,14 @@
 .catalogueWorksReport__table th:nth-child(4){ width: 24%; }
 .catalogueWorksReport__table th:nth-child(5){ width: 10ch; }
 
+.catalogueWorksReport__table [data-report-column-visibility="expanded"]{
+  display: none;
+}
+
+.docsViewerReport__expandedViewport .catalogueWorksReport__table [data-report-column-visibility="expanded"]{
+  display: table-cell;
+}
+
 .catalogueWorksReport__seriesList{
   display: grid;
   gap: 0.2rem;

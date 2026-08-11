@@ -163,8 +163,8 @@ function projectActiveControls(state) {
     hidden: !state.resizable
   });
   projectControl(state, CONTENT_DETAIL_COPY_TABLE_CONTROL_ID, {
-    disabled: false,
-    hidden: false
+    disabled: !state.copyEnabled,
+    hidden: !state.copyEnabled
   });
 }
 
@@ -285,41 +285,89 @@ function directColgroup(table) {
   }) || null;
 }
 
-function createPresentationState(context) {
-  var table = context && context.table;
-  var documentRef = context && context.document;
-  if (!table || !documentRef) throw new Error("Managed table tools require the active table presentation.");
-  var headerRow = table.tHead && table.tHead.rows.length ? table.tHead.rows[table.tHead.rows.length - 1] : null;
-  var headers = headerRow ? Array.from(headerRow.cells) : [];
-  var resizable = Boolean(
+function headerCells(table) {
+  var headerRow = table.tHead && table.tHead.rows.length
+    ? table.tHead.rows[table.tHead.rows.length - 1]
+    : null;
+  return headerRow ? Array.from(headerRow.cells) : [];
+}
+
+function simpleHeadersMatch(state, headers) {
+  var existingColgroup = directColgroup(state.table);
+  return Boolean(
     headers.length
-    && !directColgroup(table)
+    && (!existingColgroup || existingColgroup === state.colgroup)
     && headers.every(function (header) {
       return positiveSpan(header.colSpan) === 1 && positiveSpan(header.rowSpan) === 1;
     })
   );
-  return {
+}
+
+function cellMatchesColumn(cell, column) {
+  return cleanText(cell && cell.getAttribute("data-report-column-id")) === column.id
+    && cleanText(cell && cell.getAttribute("data-report-column-visibility")) === column.visibility
+    && positiveSpan(cell && cell.colSpan) === 1
+    && positiveSpan(cell && cell.rowSpan) === 1;
+}
+
+function exactReportColumnsMatch(state, headers) {
+  var columns = state.columns;
+  if (!columns || !state.table.tHead || state.table.tHead.rows.length !== 1 || headers.length !== columns.length) {
+    return false;
+  }
+  if (!headers.every(function (header, index) { return cellMatchesColumn(header, columns[index]); })) {
+    return false;
+  }
+  return Array.from(state.table.tBodies || []).every(function (body) {
+    return Array.from(body.rows || []).every(function (row) {
+      var cells = Array.from(row.cells || []);
+      return cells.length === columns.length
+        && cells.every(function (cell, index) { return cellMatchesColumn(cell, columns[index]); });
+    });
+  });
+}
+
+function refreshEligibility(state) {
+  state.headers = headerCells(state.table);
+  state.resizable = simpleHeadersMatch(state, state.headers)
+    && (!state.columns || exactReportColumnsMatch(state, state.headers));
+}
+
+function createPresentationState(context, options) {
+  var table = context && context.table;
+  var documentRef = context && context.document;
+  var settings = options || {};
+  if (!table || !documentRef) throw new Error("Managed table tools require the active table presentation.");
+  var state = {
     active: false,
     activePointer: null,
     cleanup: [],
     colgroup: null,
+    columns: settings.columns || null,
+    copyEnabled: settings.copyEnabled !== false,
     document: documentRef,
+    handleCleanup: [],
     handles: [],
-    headers: headers,
+    headers: [],
     originalTableWidth: table.style.width,
     projectControlState: null,
     released: false,
-    resizable: resizable,
+    resizable: false,
     table: table,
     viewport: context.viewport,
     widths: null
   };
+  refreshEligibility(state);
+  return state;
 }
 
 function mountResizeHandles(state) {
   if (!state.resizable) return;
   state.headers.forEach(function (header, index) {
-    var columnLabel = cleanText(header.textContent) || "Column " + (index + 1);
+    var declaredColumn = state.columns && state.columns[index];
+    var columnLabel = cleanText(declaredColumn && declaredColumn.label)
+      || cleanText(header.textContent)
+      || "Column " + (index + 1);
     var handle = state.document.createElement("span");
     handle.className = "docsViewer__tableResizeHandle";
     handle.tabIndex = 0;
@@ -333,7 +381,7 @@ function mountResizeHandles(state) {
     var onKeyDown = function (event) { handleKeyboardResize(state, index, event); };
     handle.addEventListener("pointerdown", onPointerDown);
     handle.addEventListener("keydown", onKeyDown);
-    state.cleanup.push(function () {
+    state.handleCleanup.push(function () {
       handle.removeEventListener("pointerdown", onPointerDown);
       handle.removeEventListener("keydown", onKeyDown);
     });
@@ -341,6 +389,32 @@ function mountResizeHandles(state) {
     header.appendChild(handle);
     state.handles.push(handle);
   });
+}
+
+function clearResizeHandles(state) {
+  cleanupActivePointer(state);
+  state.handleCleanup.splice(0).forEach(function (cleanup) { cleanup(); });
+  state.handles.forEach(function (handle) { handle.remove(); });
+  state.headers.forEach(function (header) { header.classList.remove("docsViewer__tableResizeHeader"); });
+  state.handles = [];
+}
+
+function refreshReportPresentation(state) {
+  if (state.released) return;
+  var retainedWidths = state.widths ? state.widths.slice() : null;
+  clearResizeHandles(state);
+  refreshEligibility(state);
+  if (!state.resizable) {
+    clearColumnWidths(state);
+    return;
+  }
+  mountResizeHandles(state);
+  if (retainedWidths && retainedWidths.length === state.headers.length) {
+    applyColumnWidths(state, retainedWidths);
+  } else if (state.active) {
+    updateHandleValues(state, measureColumnWidths(state));
+    projectActiveControls(state);
+  }
 }
 
 export function createDocsViewerManagedTableTools(options) {
@@ -353,10 +427,8 @@ export function createDocsViewerManagedTableTools(options) {
   function releaseState(state) {
     if (!state || state.released) return;
     state.released = true;
-    cleanupActivePointer(state);
     state.cleanup.splice(0).forEach(function (cleanup) { cleanup(); });
-    state.handles.forEach(function (handle) { handle.remove(); });
-    state.headers.forEach(function (header) { header.classList.remove("docsViewer__tableResizeHeader"); });
+    clearResizeHandles(state);
     state.active = false;
     clearColumnWidths(state);
     hideControls(state);
@@ -369,7 +441,7 @@ export function createDocsViewerManagedTableTools(options) {
   }
 
   function copyTable() {
-    if (!activeState || activeState.released) {
+    if (!activeState || activeState.released || !activeState.copyEnabled) {
       return Promise.reject(new Error("Copy table is unavailable."));
     }
     var text = serializeDocsViewerTableToTsv(activeState.table);
@@ -403,11 +475,45 @@ export function createDocsViewerManagedTableTools(options) {
     },
     presentationExtension: {
       mount: function (context) {
-        var state = createPresentationState(context);
+        var state = createPresentationState(context, { copyEnabled: true });
         mountResizeHandles(state);
         return {
           activate: function (activationContext) {
             if (state.released) throw new Error("Managed table presentation is unavailable.");
+            activeState = state;
+            state.active = true;
+            state.projectControlState = activationContext && activationContext.projectControlState;
+            if (state.resizable) updateHandleValues(state, measureColumnWidths(state));
+            projectActiveControls(state);
+          },
+          release: function () { releaseState(state); }
+        };
+      }
+    },
+    reportPresentationExtension: {
+      mount: function (context) {
+        if (!context || context.kind !== "semantic-table") return null;
+        var state = createPresentationState(context, {
+          columns: context.columns,
+          copyEnabled: false
+        });
+        mountResizeHandles(state);
+        var subscriptionCleanup;
+        try {
+          subscriptionCleanup = context.subscribe(function () {
+            refreshReportPresentation(state);
+          });
+          if (typeof subscriptionCleanup !== "function") {
+            throw new Error("Managed report table requires refresh-subscription cleanup.");
+          }
+        } catch (error) {
+          clearResizeHandles(state);
+          throw error;
+        }
+        state.cleanup.push(subscriptionCleanup);
+        return {
+          activate: function (activationContext) {
+            if (state.released) throw new Error("Managed report table presentation is unavailable.");
             activeState = state;
             state.active = true;
             state.projectControlState = activationContext && activationContext.projectControlState;

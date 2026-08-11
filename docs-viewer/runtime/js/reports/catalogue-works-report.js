@@ -2,14 +2,26 @@ const WORKS_SCHEMA = "catalogue_source_works_v1";
 const SERIES_SCHEMA = "catalogue_source_series_v1";
 const WORK_ID_PATTERN = /^[0-9]{5}$/;
 const SERIES_ID_PATTERN = /^[0-9]{3}$/;
-const COLUMN_KEYS = Object.freeze(["work", "year", "title", "series", "storage"]);
-const COLUMN_LABELS = Object.freeze({
-  work: "Work",
-  year: "Year",
-  title: "Title",
-  series: "Series",
-  storage: "Storage"
-});
+const COLUMN_MODEL = Object.freeze([
+  { id: "work", label: "Work", visibility: "both", sortable: true, copy: "both" },
+  { id: "year", label: "Year", visibility: "both", sortable: true, copy: "both" },
+  { id: "title", label: "Title", visibility: "both", sortable: true, copy: "both" },
+  { id: "series", label: "Series", visibility: "both", sortable: true, copy: "both" },
+  { id: "storage", label: "Storage", visibility: "both", sortable: true, copy: "both" },
+  { id: "medium_type", label: "Medium type", visibility: "expanded", sortable: false, copy: "expanded" },
+  { id: "medium_caption", label: "Medium caption", visibility: "expanded", sortable: false, copy: "expanded" }
+].map((column) => Object.freeze(column)));
+const SORTABLE_COLUMN_IDS = Object.freeze(COLUMN_MODEL.filter((column) => column.sortable).map((column) => column.id));
+const COPY_COLUMNS = Object.freeze(COLUMN_MODEL.filter((column) => column.copy === "both"));
+const PRESENTATION_COLUMNS = Object.freeze(COLUMN_MODEL.map((column) => Object.freeze({
+  id: column.id,
+  label: column.label,
+  visibility: column.visibility
+})));
+
+function columnDefinition(id) {
+  return COLUMN_MODEL.find((column) => column.id === id);
+}
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -61,6 +73,8 @@ function normalizeWorkRecord(key, value) {
   const yearDisplay = visibleString(value && value.year_display);
   const seriesIds = Array.isArray(value && value.series_ids) ? value.series_ids.slice() : [];
   const storage = visibleString(value && value.storage_location);
+  const mediumType = visibleString(value && value.medium_type);
+  const mediumCaption = visibleString(value && value.medium_caption);
   if (
     !WORK_ID_PATTERN.test(key)
     || workId !== key
@@ -71,6 +85,10 @@ function normalizeWorkRecord(key, value) {
     || !Array.isArray(value && value.series_ids)
     || !Object.prototype.hasOwnProperty.call(value, "storage_location")
     || (value.storage_location !== null && typeof value.storage_location !== "string")
+    || !Object.prototype.hasOwnProperty.call(value, "medium_type")
+    || (value.medium_type !== null && typeof value.medium_type !== "string")
+    || !Object.prototype.hasOwnProperty.call(value, "medium_caption")
+    || (value.medium_caption !== null && typeof value.medium_caption !== "string")
     || seriesIds.some((seriesId) => {
       return typeof seriesId !== "string" || !SERIES_ID_PATTERN.test(seriesId);
     })
@@ -78,7 +96,7 @@ function normalizeWorkRecord(key, value) {
   ) {
     throw new Error("Catalogue Works input is invalid.");
   }
-  return { seriesIds, status, storage, title, workId, year, yearDisplay };
+  return { mediumCaption, mediumType, seriesIds, status, storage, title, workId, year, yearDisplay };
 }
 
 function normalizeSeriesRecord(key, value) {
@@ -120,6 +138,8 @@ export function normalizeCatalogueWorksInputs(worksPayload, seriesPayload) {
       return { seriesId: record.seriesId, title: record.title };
     });
     return {
+      mediumCaption: work.mediumCaption,
+      mediumType: work.mediumType,
       series: memberships,
       storage: work.storage,
       title: work.title,
@@ -158,7 +178,7 @@ function compareRows(collator, left, right, key) {
 export function buildCatalogueWorksProjection(rows, options) {
   const settings = options || {};
   const query = searchString(settings.searchText);
-  const sortKey = COLUMN_KEYS.includes(settings.sortKey) ? settings.sortKey : "work";
+  const sortKey = SORTABLE_COLUMN_IDS.includes(settings.sortKey) ? settings.sortKey : "work";
   const sortDir = settings.sortDir === "desc" ? "desc" : "asc";
   const collator = new Intl.Collator("en", { numeric: true, sensitivity: "base" });
   const matching = query ? rows.filter((row) => rowMatches(row, query)) : [];
@@ -168,7 +188,7 @@ export function buildCatalogueWorksProjection(rows, options) {
     return collator.compare(left.workId, right.workId);
   });
   return {
-    columns: COLUMN_KEYS.slice(),
+    columns: COPY_COLUMNS.map((column) => column.id),
     rows: matching,
     searchText: visibleString(settings.searchText),
     sortDir,
@@ -191,16 +211,23 @@ function tsvCell(value) {
   return visibleString(value).replace(/\t/g, " ");
 }
 
+function copyCellText(row, columnId) {
+  const values = {
+    work: row.workId,
+    year: row.yearDisplay,
+    title: row.title,
+    series: seriesCellText(row),
+    storage: storageCellText(row),
+    medium_type: row.mediumType || "—",
+    medium_caption: row.mediumCaption || "—"
+  };
+  return values[columnId] || "";
+}
+
 export function serializeCatalogueWorksTsv(projection) {
-  const lines = [projection.columns.map((key) => COLUMN_LABELS[key]).join("\t")];
+  const lines = [projection.columns.map((key) => columnDefinition(key).label).join("\t")];
   projection.rows.forEach((row) => {
-    lines.push([
-      row.workId,
-      row.yearDisplay,
-      row.title,
-      seriesCellText(row),
-      storageCellText(row)
-    ].map(tsvCell).join("\t"));
+    lines.push(projection.columns.map((key) => copyCellText(row, key)).map(tsvCell).join("\t"));
   });
   return lines.join("\n");
 }
@@ -284,8 +311,23 @@ function appendLink(cell, className, href, text) {
   return link;
 }
 
+function applyColumnPresentation(cell, columnId) {
+  const column = columnDefinition(columnId);
+  cell.dataset.reportColumnId = column.id;
+  cell.dataset.reportColumnVisibility = column.visibility;
+  return cell;
+}
+
+function appendTextCell(rowNode, columnId, text, className) {
+  const cell = applyColumnPresentation(rowNode.ownerDocument.createElement("td"), columnId);
+  if (className) cell.className = className;
+  cell.textContent = text;
+  rowNode.appendChild(cell);
+  return cell;
+}
+
 function appendSeriesCell(state, rowNode, row) {
-  const cell = rowNode.ownerDocument.createElement("td");
+  const cell = applyColumnPresentation(rowNode.ownerDocument.createElement("td"), "series");
   if (!row.series.length) {
     cell.className = "catalogueWorksReport__cellMeta";
     cell.textContent = "—";
@@ -311,7 +353,7 @@ function appendRow(state, row) {
   const rowNode = state.rowsNode.ownerDocument.createElement("tr");
   rowNode.dataset.workId = row.workId;
 
-  const workCell = rowNode.ownerDocument.createElement("td");
+  const workCell = applyColumnPresentation(rowNode.ownerDocument.createElement("td"), "work");
   appendLink(
     workCell,
     "docsViewerReport__cellLink",
@@ -320,12 +362,9 @@ function appendRow(state, row) {
   );
   rowNode.appendChild(workCell);
 
-  const yearCell = rowNode.ownerDocument.createElement("td");
-  yearCell.className = "catalogueWorksReport__cellMeta";
-  yearCell.textContent = row.yearDisplay;
-  rowNode.appendChild(yearCell);
+  appendTextCell(rowNode, "year", row.yearDisplay, "catalogueWorksReport__cellMeta");
 
-  const titleCell = rowNode.ownerDocument.createElement("td");
+  const titleCell = applyColumnPresentation(rowNode.ownerDocument.createElement("td"), "title");
   appendLink(
     titleCell,
     "docsViewerReport__cellLink docsViewerReport__title",
@@ -336,18 +375,23 @@ function appendRow(state, row) {
 
   appendSeriesCell(state, rowNode, row);
 
-  const storageCell = rowNode.ownerDocument.createElement("td");
-  storageCell.className = "catalogueWorksReport__cellMeta";
-  storageCell.textContent = storageCellText(row);
-  rowNode.appendChild(storageCell);
+  appendTextCell(rowNode, "storage", storageCellText(row), "catalogueWorksReport__cellMeta");
+  appendTextCell(rowNode, "medium_type", row.mediumType || "—", "catalogueWorksReport__cellMeta");
+  appendTextCell(rowNode, "medium_caption", row.mediumCaption || "—", "catalogueWorksReport__cellMeta");
   state.rowsNode.appendChild(rowNode);
 }
 
 function renderHead(state) {
   clearNode(state.headRowNode);
-  COLUMN_KEYS.forEach((key) => {
-    const cell = state.headRowNode.ownerDocument.createElement("th");
+  COLUMN_MODEL.forEach((column) => {
+    const key = column.id;
+    const cell = applyColumnPresentation(state.headRowNode.ownerDocument.createElement("th"), key);
     cell.scope = "col";
+    if (!column.sortable) {
+      cell.textContent = column.label;
+      state.headRowNode.appendChild(cell);
+      return;
+    }
     cell.setAttribute("aria-sort", state.sortKey === key
       ? (state.sortDir === "asc" ? "ascending" : "descending")
       : "none");
@@ -355,7 +399,7 @@ function renderHead(state) {
     button.type = "button";
     button.className = "docsViewerReport__sortButton";
     button.dataset.reportSort = key;
-    button.textContent = COLUMN_LABELS[key];
+    button.textContent = column.label;
     const indicator = state.headRowNode.ownerDocument.createElement("span");
     indicator.className = "docsViewerReport__sortIndicator";
     indicator.setAttribute("aria-hidden", "true");
@@ -363,7 +407,7 @@ function renderHead(state) {
     button.appendChild(indicator);
     button.setAttribute(
       "aria-label",
-      "Sort by " + COLUMN_LABELS[key] + (state.sortKey === key
+      "Sort by " + column.label + (state.sortKey === key
         ? (state.sortDir === "asc" ? " descending" : " ascending")
         : " ascending")
     );
@@ -409,6 +453,7 @@ function renderCurrent(state) {
       + projection.totalCount + " published Works";
   }
   updateControls(state);
+  state.presentationListeners.forEach((listener) => listener());
 }
 
 function updateControls(state) {
@@ -433,7 +478,13 @@ function copyCurrentTable(state) {
     return Promise.resolve();
   }
   const projection = currentProjection(state);
-  return Promise.resolve(clipboard.writeText(serializeCatalogueWorksTsv(projection))).then(() => {
+  const expanded = Boolean(state.tableNode.closest(".docsViewerReport__expandedViewport"));
+  const copyProjection = Object.assign({}, projection, {
+    columns: COLUMN_MODEL.filter((column) => {
+      return column.copy === "both" || (expanded && column.copy === "expanded");
+    }).map((column) => column.id)
+  });
+  return Promise.resolve(clipboard.writeText(serializeCatalogueWorksTsv(copyProjection))).then(() => {
     state.statusNode.textContent = projection.rows.length === 1
       ? "Copied 1 Catalogue Work."
       : "Copied " + projection.rows.length + " Catalogue Works.";
@@ -459,7 +510,7 @@ function attachEvents(state) {
       : null;
     if (!button || state.busy || state.failed) return;
     const key = cleanString(button.getAttribute("data-report-sort")).toLowerCase();
-    if (!COLUMN_KEYS.includes(key)) return;
+    if (!SORTABLE_COLUMN_IDS.includes(key)) return;
     if (state.sortKey === key) state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
     else {
       state.sortKey = key;
@@ -537,7 +588,8 @@ export function mountCatalogueWorksReport(context) {
     busy: true,
     context,
     failed: false,
-    projection: { columns: COLUMN_KEYS.slice(), rows: [] },
+    presentationListeners: new Set(),
+    projection: { columns: COPY_COLUMNS.map((column) => column.id), rows: [] },
     searchText: "",
     sortDir: "asc",
     sortKey: "work",
@@ -553,11 +605,26 @@ export function mountCatalogueWorksReport(context) {
     state.sourceRows = rows;
     state.busy = false;
     renderCurrent(state);
+    return {
+      expandedPresentation: {
+        columns: PRESENTATION_COLUMNS,
+        kind: "semantic-table",
+        label: "Catalogue Works",
+        subscribe: (listener) => {
+          if (typeof listener !== "function") {
+            throw new Error("Catalogue Works presentation refresh requires a listener.");
+          }
+          state.presentationListeners.add(listener);
+          return () => state.presentationListeners.delete(listener);
+        },
+        table: state.tableNode
+      }
+    };
   }).catch((error) => {
     state.sourceRows = [];
     state.busy = false;
     state.failed = true;
-    state.projection = { columns: COLUMN_KEYS.slice(), rows: [] };
+    state.projection = { columns: COPY_COLUMNS.map((column) => column.id), rows: [] };
     clearNode(state.rowsNode);
     state.tableNode.hidden = true;
     state.statusNode.textContent = error && error.message
@@ -566,5 +633,6 @@ export function mountCatalogueWorksReport(context) {
     state.emptyNode.hidden = false;
     state.emptyNode.textContent = "The current Catalogue Works report could not complete.";
     updateControls(state);
+    return undefined;
   });
 }

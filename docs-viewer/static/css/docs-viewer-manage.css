@@ -1115,6 +1115,10 @@ select.docsViewer__fieldInput--listbox{
   padding-inline-end: calc(var(--docs-viewer-space-3) + 0.5rem);
 }
 
+.docsViewer__contentDetail--report .docsViewer__tableResizeHeader{
+  position: relative;
+}
+
 .docsViewer__tableResizeHandle{
   position: absolute;
   inset-block: 0;
