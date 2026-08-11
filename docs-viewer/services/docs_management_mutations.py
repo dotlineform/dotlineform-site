@@ -568,6 +568,8 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         raise ValueError("legacy viewable is not accepted")
     if "publishable" in body:
         raise ValueError("publishable is not editable through metadata")
+    if "group" in body:
+        raise ValueError("group is not editable through generic metadata")
     resolved = resolve_managed_document_target(
         repo_root,
         managed_document_target_request(body),
@@ -641,27 +643,6 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
     else:
         ui_status = source_model.normalize_ui_status(body.get("ui_status")) if status_was_provided else current_ui_status
     status_changed = status_was_provided and ui_status != current_ui_status
-    group_was_provided = resolved.sub_scope and "group" in body
-    current_group = target.group
-    document_groups = (
-        sub_scope_customisation_document_groups(
-            resolved.document_config.sub_scope_customisation
-        )
-        if resolved.sub_scope
-        else ()
-    )
-    if group_was_provided and not document_groups:
-        raise ValueError("group is not configured for this sub-scope")
-    group = (
-        normalize_configured_metadata_choice(
-            body.get("group"),
-            field="group",
-            allowed_values=document_groups,
-        )
-        if group_was_provided
-        else current_group
-    )
-    group_changed = group_was_provided and group != current_group
     _reject_assignable_fields_from_metadata_update(
         resolved,
         body.get("customisation"),
@@ -687,8 +668,6 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         "date_display_changed": date_display_changed,
         "status_changed": status_changed,
     }
-    if resolved.sub_scope:
-        changes["group_changed"] = group_changed
     if customisation_update is not None:
         changes.update(customisation_update["changes"])
     if not any(changes.values()):
@@ -704,10 +683,8 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
             record["publishable"] = target.publishable
         if not resolved.sub_scope:
             record["parent_id"] = target.parent_id
-        else:
-            record["group"] = current_group
-            if customisation_update is not None:
-                record["customisation"] = customisation_update["record"]
+        elif customisation_update is not None:
+            record["customisation"] = customisation_update["record"]
         response: dict[str, Any] = {
             "ok": True,
             "scope": scope,
@@ -748,11 +725,6 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
             updated_front_matter["ui_status"] = ui_status
         else:
             updated_front_matter.pop("ui_status", None)
-    if group_was_provided:
-        if group:
-            updated_front_matter["group"] = group
-        else:
-            updated_front_matter.pop("group", None)
     if customisation_update is not None:
         for field_name, field_value in customisation_update[
             "front_matter_updates"
@@ -795,10 +767,8 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         record["publishable"] = target.publishable
     if not resolved.sub_scope:
         record["parent_id"] = parent_id
-    else:
-        record["group"] = group
-        if customisation_update is not None:
-            record["customisation"] = customisation_update["record"]
+    elif customisation_update is not None:
+        record["customisation"] = customisation_update["record"]
     updated_source_text = source_model.format_source(
         updated_front_matter,
         target.body,
@@ -834,7 +804,6 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
     }
     if resolved.sub_scope:
         log_details["sub_scope"] = resolved.sub_scope
-        log_details["group_changed"] = group_changed
     if customisation_update is not None:
         log_details.update(customisation_update["changes"])
 

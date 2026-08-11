@@ -360,7 +360,7 @@ def test_analysis_works_reads_subjects_without_assignment_capability(
         "key": value,
         "fields": [field_name],
     }
-    assert payload["choices"] == {"ui_status": ["draft", "done"], "group": []}
+    assert payload["choices"] == {"ui_status": ["draft", "done"]}
     assert "customisation" not in payload["record"]
 
 
@@ -427,7 +427,6 @@ parent_id: retained-sub-scope-parent
         ),
         "choices": {
             "ui_status": ["draft", "done"],
-            "group": ["subject", "domain", "form", "theme"],
         },
         "record": {
             "doc_id": "detail-doc",
@@ -436,7 +435,6 @@ parent_id: retained-sub-scope-parent
             "date": "2026-07-27",
             "date_display": "July 2026",
             "ui_status": "draft",
-            "group": "theme",
             "customisation": {"group": "theme"},
         },
     }

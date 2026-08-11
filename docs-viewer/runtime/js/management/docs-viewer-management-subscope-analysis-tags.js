@@ -1,6 +1,9 @@
 import {
   hasDocsViewerAssignableFieldGroup
 } from "../shared/docs-viewer-config-controller.js";
+import {
+  openDocsViewerTagFieldsModal
+} from "./docs-viewer-management-tag-fields-modal.js";
 
 const CUSTOMISATION_ID = "analysis_tags";
 const TAG_FIELDS_GROUP_ID = "tag_fields";
@@ -114,6 +117,75 @@ function projectDetailInfo(context, collection, tagFieldsAvailable) {
   });
 }
 
+function renderTagFields(context, options, tagFieldsAvailable) {
+  var settings = context || {};
+  var host = settings.host;
+  if (!host || !tagFieldsAvailable || typeof settings.registerAction !== "function") return;
+  var groups = normalizedGroups(settings.data);
+  var servicesAvailable = (
+    typeof options.readMetadata === "function"
+    && typeof options.assignFieldGroup === "function"
+  );
+  var capability = servicesAvailable && groups.length
+    ? true
+    : {
+        available: false,
+        reason: groups.length
+          ? "Tag fields service is unavailable."
+          : "Configured Tag groups are unavailable."
+      };
+  var button = host.ownerDocument.createElement("button");
+  var registration = settings.registerAction({
+    id: "assign-tag-fields",
+    placement: "detail-toolbar",
+    targetKind: "validated-detail",
+    capability: capability,
+    emptyState: "omitted",
+    refreshEffect: "none",
+    handler: function (target, actionContext) {
+      return openDocsViewerTagFieldsModal({
+        assignFieldGroup: options.assignFieldGroup,
+        groups: groups,
+        readMetadata: options.readMetadata,
+        restoreFocus: button,
+        root: options.root,
+        target: target
+      }).then(function (result) {
+        if (!result || result.confirmed !== true) return result;
+        var refresh = actionContext && actionContext.refreshDocument;
+        var refreshed = typeof refresh === "function"
+          ? refresh(target)
+          : Promise.resolve(target);
+        return Promise.resolve(refreshed).then(function () {
+          return result.payload;
+        });
+      });
+    }
+  });
+  if (registration.hidden) return;
+  button.className = "docsViewerReport__button docsReportDetail__iconButton docsReportDetail__tagFields";
+  button.type = "button";
+  button.dataset.docsTagFields = "true";
+  button.textContent = "Tag fields";
+  button.disabled = !registration.enabled;
+  if (registration.disabledReason) button.title = registration.disabledReason;
+  button.addEventListener("click", function () {
+    if (button.disabled) return;
+    button.disabled = true;
+    registration.invoke().catch(function (error) {
+      if (typeof options.setStatus === "function") {
+        options.setStatus(
+          error && error.message ? error.message : "Tag fields assignment failed.",
+          true
+        );
+      }
+    }).finally(function () {
+      if (button.isConnected) button.disabled = !registration.enabled;
+    });
+  });
+  host.appendChild(button);
+}
+
 function groupFilter(groups) {
   return {
     id: "group",
@@ -169,6 +241,9 @@ export function createDocsViewerManagementSubscopeAnalysisTags(options = {}) {
     },
     projectDetailInfo: function (context) {
       return projectDetailInfo(context, collection, tagFieldsAvailable);
+    },
+    renderDetailToolbar: function (context) {
+      renderTagFields(context, options, tagFieldsAvailable);
     }
   };
 }

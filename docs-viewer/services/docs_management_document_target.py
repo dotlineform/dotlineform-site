@@ -375,7 +375,6 @@ def managed_document_metadata(
         "record": record,
     }
     if resolved.sub_scope:
-        record["group"] = document.group
         folder_supported = FOLDER_PATH_FIELD in (
             sub_scope_customisation_authoring_subject_fields(
                 resolved.document_config.sub_scope_customisation
@@ -401,10 +400,5 @@ def managed_document_metadata(
         )
         payload["choices"] = {
             "ui_status": list(resolved.document_config.ui_statuses),
-            "group": list(
-                sub_scope_customisation_document_groups(
-                    resolved.document_config.sub_scope_customisation
-                )
-            ),
         }
     return payload

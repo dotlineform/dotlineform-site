@@ -813,7 +813,7 @@ def assert_metadata_parent_duplicate_title_selection(page: Page) -> None:
         raise AssertionError(f"keyboard selection lost duplicate-title identity: {keyboard_selection!r}")
 
 
-def assert_sub_scope_metadata_omits_parent_field(page: Page) -> None:
+def assert_sub_scope_metadata_omits_parent_and_group_fields(page: Page) -> None:
     result = page.evaluate(
         """async () => {
           const modalModule = await import(
@@ -880,8 +880,7 @@ def assert_sub_scope_metadata_omits_parent_field(page: Page) -> None:
             },
             showParent: false,
             choices: {
-              ui_status: ['draft'],
-              group: ['subject', 'domain', 'form', 'theme']
+              ui_status: ['draft']
             }
           });
           return {
@@ -895,8 +894,7 @@ def assert_sub_scope_metadata_omits_parent_field(page: Page) -> None:
             date: refs.metadataDateInput.value,
             dateDisplay: refs.metadataDateDisplayInput.value,
             status: refs.metadataStatusInput.value,
-            group: refs.metadataGroupInput.value,
-            groupOptions: Array.from(refs.metadataGroupInput.options).map(option => option.value),
+            groupFieldCount: document.querySelectorAll('#docsViewerMetadataGroupField').length,
             editingDocId: refs.metadataDocId.textContent
           };
         }"""
@@ -908,7 +906,6 @@ def assert_sub_scope_metadata_omits_parent_field(page: Page) -> None:
             "date",
             "date_display",
             "ui_status",
-            "group",
         ],
         "parentHidden": True,
         "parentDisabled": True,
@@ -917,8 +914,7 @@ def assert_sub_scope_metadata_omits_parent_field(page: Page) -> None:
         "date": "2026-07-27",
         "dateDisplay": "July 2026",
         "status": "draft",
-        "group": "subject",
-        "groupOptions": ["", "subject", "domain", "form", "theme"],
+        "groupFieldCount": 0,
         "editingDocId": "detail-doc",
     }:
         raise AssertionError(f"unexpected sub-scope metadata field shape: {result!r}")
@@ -943,7 +939,7 @@ def main(argv: list[str] | None = None) -> int:
                 assert_sequential_import_folder_modal(page)
                 assert_metadata_status_list_selection(page)
                 assert_metadata_parent_duplicate_title_selection(page)
-                assert_sub_scope_metadata_omits_parent_field(page)
+                assert_sub_scope_metadata_omits_parent_and_group_fields(page)
             finally:
                 browser.close()
             if errors:

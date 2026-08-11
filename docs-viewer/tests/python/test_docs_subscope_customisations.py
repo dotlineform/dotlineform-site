@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -154,6 +155,35 @@ def test_current_customisations_declare_explicit_aspects() -> None:
         {},
         doc_id="untagged-doc",
     ) == {"group": ""}
+    assert customisations.normalize_sub_scope_customisation_metadata_update(
+        analysis_config,
+        {"group": "domain"},
+        provided=True,
+        repo_root=Path("."),
+        front_matter={"group": "theme"},
+        doc_id="tag-doc",
+    ) == {
+        "front_matter_updates": {"group": "domain"},
+        "record": {"group": "domain"},
+        "changes": {"group_changed": True},
+    }
+    assert customisations.normalize_sub_scope_customisation_metadata_update(
+        analysis_config,
+        {"group": ""},
+        provided=True,
+        repo_root=Path("."),
+        front_matter={"group": "theme"},
+        doc_id="tag-doc",
+    )["front_matter_updates"] == {"group": None}
+    with pytest.raises(ValueError, match="one exact configured group"):
+        customisations.normalize_sub_scope_customisation_metadata_update(
+            analysis_config,
+            {"group": " Theme "},
+            provided=True,
+            repo_root=Path("."),
+            front_matter={"group": "theme"},
+            doc_id="tag-doc",
+        )
     with pytest.raises(ValueError, match="not configured for the target"):
         customisations.sub_scope_customisation_metadata_record(
             analysis_config,

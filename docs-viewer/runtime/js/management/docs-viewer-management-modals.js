@@ -193,28 +193,6 @@ export function createDocsViewerManagementModalController(options = {}) {
     refs.metadataStatusInput.size = Math.max(1, refs.metadataStatusInput.options.length);
   }
 
-  function renderMetadataGroupOptions(doc, choices) {
-    if (!refs.metadataGroupField || !refs.metadataGroupInput) return;
-    var values = Array.isArray(choices && choices.group) ? choices.group : [];
-    var showGroup = values.length > 0;
-    refs.metadataGroupField.hidden = !showGroup;
-    refs.metadataGroupInput.disabled = !showGroup;
-    refs.metadataGroupInput.replaceChildren();
-    if (!showGroup) return;
-
-    var emptyOption = document.createElement("option");
-    emptyOption.value = "";
-    emptyOption.textContent = "No group";
-    refs.metadataGroupInput.appendChild(emptyOption);
-    values.forEach(function (value) {
-      var option = document.createElement("option");
-      option.value = value;
-      option.textContent = value;
-      refs.metadataGroupInput.appendChild(option);
-    });
-    refs.metadataGroupInput.value = String(doc && doc.group || "").trim();
-  }
-
   function clearMetadataStatusSelection() {
     if (!refs.metadataStatusInput || refs.metadataStatusInput.selectedIndex < 0) return false;
     refs.metadataStatusInput.selectedIndex = -1;
@@ -339,7 +317,7 @@ export function createDocsViewerManagementModalController(options = {}) {
   function openMetadataModal(doc, options) {
     var settings = options || {};
     var target = settings.target || null;
-    if (!doc || !target || !refs.metadataModal || !refs.metadataForm || !refs.metadataTitleInput || !refs.metadataSummaryInput || !refs.metadataDateInput || !refs.metadataDateDisplayInput || !refs.metadataStatusInput || !refs.metadataGroupField || !refs.metadataGroupInput || !refs.metadataParentField || !refs.metadataParentInput) {
+    if (!doc || !target || !refs.metadataModal || !refs.metadataForm || !refs.metadataTitleInput || !refs.metadataSummaryInput || !refs.metadataDateInput || !refs.metadataDateDisplayInput || !refs.metadataStatusInput || !refs.metadataParentField || !refs.metadataParentInput) {
       return Promise.resolve(null);
     }
     if (typeof callbacks.hideContextMenu === "function") callbacks.hideContextMenu();
@@ -355,7 +333,6 @@ export function createDocsViewerManagementModalController(options = {}) {
     refs.metadataDateInput.value = doc.date || "";
     refs.metadataDateDisplayInput.value = doc.date_display || "";
     renderMetadataStatusOptions(doc, metadataEditingChoices);
-    renderMetadataGroupOptions(doc, metadataEditingChoices);
     mountMetadataCustomisationEditor(
       settings.metadataContribution,
       doc,

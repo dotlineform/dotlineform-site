@@ -66,8 +66,6 @@ export function createDocsViewerManagementModalComposition(options = {}) {
     metadataCancelButton: shellRef(shellRefs, "metadataCancelButton", "docsViewerMetadataCancelButton"),
     metadataDocId: shellRef(shellRefs, "metadataDocId", "docsViewerMetadataDocId"),
     metadataForm: shellRef(shellRefs, "metadataForm", "docsViewerMetadataForm"),
-    metadataGroupField: shellRef(shellRefs, "metadataGroupField", "docsViewerMetadataGroupField"),
-    metadataGroupInput: shellRef(shellRefs, "metadataGroupInput", "docsViewerMetadataGroupInput"),
     metadataCustomisationHost: shellRef(shellRefs, "metadataCustomisationHost", "docsViewerMetadataCustomisationHost"),
     metadataDateDisplayInput: shellRef(shellRefs, "metadataDateDisplayInput", "docsViewerMetadataDateDisplayInput"),
     metadataDateInput: shellRef(shellRefs, "metadataDateInput", "docsViewerMetadataDateInput"),
@@ -103,7 +101,6 @@ export function createDocsViewerManagementModalComposition(options = {}) {
     refs: {
       dateDisplayInput: refs.metadataDateDisplayInput,
       dateInput: refs.metadataDateInput,
-      groupInput: refs.metadataGroupInput,
       parentInput: refs.metadataParentInput,
       saveButton: refs.metadataSaveButton,
       statusInput: refs.metadataStatusInput,

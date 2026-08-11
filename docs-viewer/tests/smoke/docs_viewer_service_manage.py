@@ -225,7 +225,6 @@ def install_smoke_document_routes(
                     "source_revision": subscope_state["source_revision"],
                     "choices": {
                         "ui_status": ["draft", "done"],
-                        "group": ["subject", "domain", "form", "theme"],
                     },
                     "record": {
                         "doc_id": SUBSCOPE_DOC_ID,
@@ -234,7 +233,7 @@ def install_smoke_document_routes(
                         "date": subscope_state["date"],
                         "date_display": subscope_state["date_display"],
                         "ui_status": subscope_state["ui_status"],
-                        "group": subscope_state["group"],
+                        "customisation": {"group": subscope_state["group"]},
                     },
                 },
             )
@@ -309,7 +308,6 @@ def install_smoke_document_routes(
             "date",
             "date_display",
             "ui_status",
-            "group",
         ):
             subscope_state[field] = payload.get(field)
         subscope_state["source_revision"] = "sha256:" + ("3" * 64)
@@ -329,8 +327,44 @@ def install_smoke_document_routes(
                     "date": subscope_state["date"],
                     "date_display": subscope_state["date_display"],
                     "ui_status": subscope_state["ui_status"],
-                    "group": subscope_state["group"],
                 },
+            },
+        )
+
+    def fulfill_assign_field_group(route) -> None:
+        payload = request_json(route)
+        group = (payload.get("fields") or {}).get("group")
+        if (
+            not include_subscope_report
+            or payload.get("scope") != "studio"
+            or payload.get("sub_scope") != SUBSCOPE_ID
+            or payload.get("doc_id") != SUBSCOPE_DOC_ID
+            or payload.get("source_revision") != subscope_state["source_revision"]
+            or payload.get("field_group") != "tag_fields"
+            or payload.get("confirm") is not True
+            or group not in {"", "subject", "domain", "form", "theme"}
+        ):
+            route.fulfill(status=400, content_type="application/json", body='{"error":"Invalid Tag fields request"}')
+            return
+        subscope_state["group"] = group
+        subscope_state["source_revision"] = "sha256:" + ("4" * 64)
+        subscope_state["detail_version"] = int(subscope_state["detail_version"]) + 1
+        fulfill_json(
+            route,
+            {
+                "ok": True,
+                "scope": "studio",
+                "sub_scope": SUBSCOPE_ID,
+                "doc_id": SUBSCOPE_DOC_ID,
+                "target": {
+                    "scope": "studio",
+                    "sub_scope": SUBSCOPE_ID,
+                    "doc_id": SUBSCOPE_DOC_ID,
+                },
+                "field_group": "tag_fields",
+                "fields": {"group": group},
+                "changes": {"group_changed": True},
+                "source_revision": subscope_state["source_revision"],
             },
         )
 
@@ -343,6 +377,7 @@ def install_smoke_document_routes(
                 "doc_id": SUBSCOPE_DOC_ID,
                 "title": subscope_state["title"],
                 "ui_status": subscope_state["ui_status"],
+                "customisation": {"group": subscope_state["group"]},
             }
         ]
         if include_subscope_sibling:
@@ -356,7 +391,12 @@ def install_smoke_document_routes(
         fulfill_json(
             route,
             {
-                "groups": ["subject", "domain", "form", "theme"],
+                "customisation": {
+                    "id": "analysis_tags",
+                    "data": {
+                        "groups": ["subject", "domain", "form", "theme"],
+                    },
+                },
                 "docs": documents,
             },
         )
@@ -428,6 +468,12 @@ def install_smoke_document_routes(
                 "title": "Smoke Documents",
                 "manifest_url": "/__smoke/subscope/manifest.json",
                 "by_id_url_base": "/__smoke/subscope/by-id",
+                "sub_scope_customisation": {
+                    "id": "analysis_tags",
+                    "capabilities": {
+                        "assignable_field_groups": ["tag_fields"],
+                    },
+                },
             }
         ]
         route.fulfill(
@@ -456,6 +502,10 @@ def install_smoke_document_routes(
         page.route(
             re.compile(r".*/docs/update-metadata(?:\?.*)?$"),
             fulfill_metadata_update,
+        )
+        page.route(
+            re.compile(r".*/docs/assign-field-group(?:\?.*)?$"),
+            fulfill_assign_field_group,
         )
         page.route(
             re.compile(r".*/docs/diagram-sources(?:\?.*)?$"),
@@ -1246,7 +1296,6 @@ def assert_metadata_workflow_uses_exact_sub_scope_target(page: Page) -> None:
                 dateInput: { value: '2026-07-27' },
                 dateDisplayInput: { value: 'July 2026' },
                 statusInput: { value: 'done' },
-                groupInput: { value: 'theme' },
                 parentInput: {
                     value: 'selected-fallback',
                     focus: () => {}
@@ -1296,8 +1345,7 @@ def assert_metadata_workflow_uses_exact_sub_scope_target(page: Page) -> None:
                             doc_id: 'detail-doc',
                             source_revision: 'sha256:' + 'a'.repeat(64),
                             choices: {
-                                ui_status: ['draft', 'done'],
-                                group: ['subject', 'domain', 'form', 'theme']
+                                ui_status: ['draft', 'done']
                             },
                             record: {
                                 doc_id: 'detail-doc',
@@ -1306,7 +1354,6 @@ def assert_metadata_workflow_uses_exact_sub_scope_target(page: Page) -> None:
                                 date: '2026-07-26',
                                 date_display: 'July 2026',
                                 ui_status: 'draft',
-                                group: 'subject',
                                 publishable: true
                             }
                         };
@@ -1339,7 +1386,6 @@ def assert_metadata_workflow_uses_exact_sub_scope_target(page: Page) -> None:
         "date": "2026-07-27",
         "date_display": "July 2026",
         "ui_status": "done",
-        "group": "theme",
         "source_revision": "sha256:" + ("a" * 64),
     }
     if result["loadedTarget"] != expected_target:
@@ -1360,7 +1406,6 @@ def assert_metadata_workflow_uses_exact_sub_scope_target(page: Page) -> None:
             "showParent": False,
             "choices": {
                 "ui_status": ["draft", "done"],
-                "group": ["subject", "domain", "form", "theme"],
             },
         },
     }:
@@ -1393,7 +1438,6 @@ def assert_metadata_workflow_collects_projects_customisation(page: Page) -> None
                 dateInput: { value: '' },
                 dateDisplayInput: { value: '' },
                 statusInput: { value: '' },
-                groupInput: { value: '' },
                 parentInput: { value: '', focus: () => {} }
             };
             let modalResolve = null;
@@ -1436,7 +1480,7 @@ def assert_metadata_workflow_collects_projects_customisation(page: Page) -> None
                         sub_scope: 'projects',
                         doc_id: 'project-doc',
                         source_revision: 'sha256:' + 'b'.repeat(64),
-                        choices: { ui_status: [], group: [] },
+                        choices: { ui_status: [] },
                         record: {
                             doc_id: 'project-doc',
                             title: 'Project',
@@ -1444,7 +1488,6 @@ def assert_metadata_workflow_collects_projects_customisation(page: Page) -> None
                             date: '',
                             date_display: '',
                             ui_status: '',
-                            group: '',
                             customisation: { folder_path: 'projects/current' }
                         }
                     }),
@@ -2632,6 +2675,7 @@ def normalized_subscope_request(request) -> dict[str, object] | None:
         "/docs/open-source",
         "/docs/metadata",
         "/docs/update-metadata",
+        "/docs/assign-field-group",
         f"/__smoke/subscope/by-id/{SUBSCOPE_DOC_ID}.json",
     }
     if parsed.path not in tracked_paths:
@@ -2807,20 +2851,59 @@ def exercise_subscope_editing_route(
     )
     if not page.locator("#docsViewerMetadataParentField").is_hidden():
         raise AssertionError("sub-scope metadata form exposed Parent")
-    if page.locator("#docsViewerMetadataGroupField").is_hidden():
-        raise AssertionError("sub-scope metadata form omitted configured group")
+    if page.locator("#docsViewerMetadataGroupField").count() != 0:
+        raise AssertionError("generic metadata form retained its retired Group field")
     page.locator("#docsViewerMetadataTitleInput").fill("Renamed Smoke Detail")
     page.locator("#docsViewerMetadataSummaryInput").fill("Refreshed synthetic metadata")
     page.locator("#docsViewerMetadataDateInput").fill("2026-07-27")
     page.locator("#docsViewerMetadataDateDisplayInput").fill("July 2026")
     page.locator("#docsViewerMetadataStatusInput").select_option("done")
-    page.locator("#docsViewerMetadataGroupInput").select_option("theme")
     page.locator("#docsViewerMetadataSaveButton").click()
     wait_for_subscope_detail(
         page,
         title="Renamed Smoke Detail",
         version=3,
         timeout_ms=timeout_ms,
+    )
+
+    tag_fields_button = page.locator("[data-docs-tag-fields]")
+    if tag_fields_button.is_disabled() or tag_fields_button.inner_text().strip() != "Tag fields":
+        raise AssertionError("configured Tag fields action was not available")
+    tag_fields_button.click()
+    tag_fields_modal = page.locator('[data-role="docs-viewer-management-modal"]')
+    tag_fields_modal.wait_for(state="visible", timeout=timeout_ms)
+    if tag_fields_modal.locator(".docsViewer__modalTitle").inner_text().strip() != "Tag fields":
+        raise AssertionError("Tag fields action opened the wrong modal")
+    group_select = tag_fields_modal.locator("[data-docs-tag-fields-group]")
+    if group_select.locator("option").evaluate_all(
+        "options => options.map(option => option.value)"
+    ) != ["", "subject", "domain", "form", "theme"]:
+        raise AssertionError("Tag fields modal did not preserve configured group order")
+    group_select.select_option("theme")
+    tag_fields_modal.locator('button[data-role="modal-cancel"]').click()
+    tag_fields_modal.wait_for(state="detached", timeout=timeout_ms)
+
+    tag_fields_button.click()
+    tag_fields_modal = page.locator('[data-role="docs-viewer-management-modal"]')
+    tag_fields_modal.wait_for(state="visible", timeout=timeout_ms)
+    tag_fields_modal.locator("[data-docs-tag-fields-group]").select_option("theme")
+    tag_fields_modal.locator('[data-role="modal-primary"]').click()
+    tag_fields_modal.wait_for(state="detached", timeout=timeout_ms)
+    page.wait_for_function(
+        """() => {
+            const report = document.querySelector('.docsViewerReport');
+            const detail = document.querySelector('.docsReportDetail');
+            const versionNode = document.querySelector('[data-smoke-detail-version]');
+            return report?.dataset.reportState === 'detail'
+                && detail?.dataset.reportSubdocTitle === 'Renamed Smoke Detail'
+                && versionNode?.dataset.smokeDetailVersion === '4';
+        }""",
+        timeout=timeout_ms,
+    )
+    assert_subscope_route_state(
+        page,
+        subdoc_id=SUBSCOPE_DOC_ID,
+        display_mode="rendered-document",
     )
     page.locator(".docsReportDetail__back").click()
     page.wait_for_function(
@@ -2841,7 +2924,7 @@ def exercise_subscope_editing_route(
     wait_for_subscope_detail(
         page,
         title="Renamed Smoke Detail",
-        version=3,
+        version=4,
         timeout_ms=timeout_ms,
     )
 
@@ -2935,12 +3018,15 @@ def assert_subscope_request_log(request_log: list[dict[str, object]]) -> None:
         raise AssertionError(f"Open in VS Code target log changed: {request_log!r}")
 
     metadata_reads = get_requests("/docs/metadata")
+    expected_metadata_query = {
+        "scope": "studio",
+        "sub_scope": SUBSCOPE_ID,
+        "doc_id": SUBSCOPE_DOC_ID,
+    }
     if [record["query"] for record in metadata_reads] != [
-        {
-            "scope": "studio",
-            "sub_scope": SUBSCOPE_ID,
-            "doc_id": SUBSCOPE_DOC_ID,
-        }
+        expected_metadata_query,
+        expected_metadata_query,
+        expected_metadata_query,
     ]:
         raise AssertionError(f"metadata read target log changed: {request_log!r}")
     metadata_updates = get_requests("/docs/update-metadata", "POST")
@@ -2958,18 +3044,36 @@ def assert_subscope_request_log(request_log: list[dict[str, object]]) -> None:
                 "date": "2026-07-27",
                 "date_display": "July 2026",
                 "ui_status": "done",
-                "group": "theme",
                 "source_revision": "sha256:" + ("2" * 64),
             },
         }
     ]:
         raise AssertionError(f"metadata update request log changed: {request_log!r}")
 
+    tag_field_updates = get_requests("/docs/assign-field-group", "POST")
+    if tag_field_updates != [
+        {
+            "method": "POST",
+            "path": "/docs/assign-field-group",
+            "query": {},
+            "body": {
+                "scope": "studio",
+                "sub_scope": SUBSCOPE_ID,
+                "doc_id": SUBSCOPE_DOC_ID,
+                "source_revision": "sha256:" + ("3" * 64),
+                "field_group": "tag_fields",
+                "fields": {"group": "theme"},
+                "confirm": True,
+            },
+        }
+    ]:
+        raise AssertionError(f"Tag fields request log changed: {request_log!r}")
+
     manifests = get_requests("/__smoke/subscope/manifest.json")
-    if len(manifests) != 7 or any(record["query"] for record in manifests):
+    if len(manifests) != 8 or any(record["query"] for record in manifests):
         raise AssertionError(f"Manage manifest refresh log changed: {request_log!r}")
     details = get_requests(f"/__smoke/subscope/by-id/{SUBSCOPE_DOC_ID}.json")
-    if len(details) != 6:
+    if len(details) != 7:
         raise AssertionError(f"targeted detail refresh log changed: {request_log!r}")
     indexes = get_requests("/docs/index-tree")
     parent_docs = get_requests("/docs/doc")

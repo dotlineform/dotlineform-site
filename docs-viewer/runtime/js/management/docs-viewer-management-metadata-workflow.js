@@ -71,15 +71,7 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
       ? modal.readMetadataCustomisation()
       : null;
     if (customisation !== null) payload.customisation = customisation;
-    if (editingTarget.sub_scope) {
-      var groupChoices = Array.isArray(editingChoices && editingChoices.group)
-        ? editingChoices.group
-        : [];
-      if (groupChoices.length) {
-        if (!refs.groupInput) return null;
-        payload.group = String(refs.groupInput.value || "").trim();
-      }
-    } else {
+    if (!editingTarget.sub_scope) {
       if (!refs.parentInput) return null;
       var parentId = modal.resolveMetadataParentId(editingDoc);
       if (parentId === null) {
@@ -107,9 +99,6 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
     return {
       ui_status: Array.isArray(rawChoices.ui_status)
         ? rawChoices.ui_status.map(String).map(function (value) { return value.trim(); }).filter(Boolean)
-        : [],
-      group: Array.isArray(rawChoices.group)
-        ? rawChoices.group.map(String).map(function (value) { return value.trim(); }).filter(Boolean)
         : []
     };
   }

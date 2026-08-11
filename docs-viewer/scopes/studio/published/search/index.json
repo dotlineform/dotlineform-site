@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-9bc7c8133aafa533497d5f54983acc8e",
-    "generated_at_utc": "2026-08-11T14:49:53Z",
+    "version": "blake2b-1d2e3a5cfa634f1197e0fbcce7eee97b",
+    "generated_at_utc": "2026-08-11T15:25:38Z",
     "count": 309
   },
   "entries": [
@@ -6759,10 +6759,10 @@
       "kind": "doc",
       "title": "TDL-0 — Tag Document Metadata Authoring Refactor Delivery",
       "href": "/docs/?scope=studio&doc=d-20260804-170901-b2e74c",
-      "last_updated": "2026-08-11 15:49:20",
+      "last_updated": "2026-08-11 16:25:06",
       "parent_id": "d-20260804-160200-fa7bb7",
       "parent_title": "Tag Document Linking",
-      "display_meta": "2026-08-11 15:49:20 • Tag Document Linking",
+      "display_meta": "2026-08-11 16:25:06 • Tag Document Linking",
       "search_terms": [
         "tdl-0 — tag document metadata authoring refactor delivery",
         "tdl",
@@ -6775,16 +6775,16 @@
         "delivery",
         "tag document linking",
         "linking",
-        "2026-08-11 15:49:20",
+        "2026-08-11 16:25:06",
         "2026",
         "08",
         "11",
-        "15",
-        "49",
-        "20",
+        "16",
+        "25",
+        "06",
         "d-20260804-170901-b2e74c"
       ],
-      "search_text": "tdl-0 — tag document metadata authoring refactor delivery tdl 0 tag document metadata authoring refactor delivery tag document linking linking 2026-08-11 15:49:20 2026 08 11 15 49 20 d-20260804-170901-b2e74c"
+      "search_text": "tdl-0 — tag document metadata authoring refactor delivery tdl 0 tag document metadata authoring refactor delivery tag document linking linking 2026-08-11 16:25:06 2026 08 11 16 25 06 d-20260804-170901-b2e74c"
     },
     {
       "id": "d-20260804-160201-47af2d",

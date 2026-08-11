@@ -893,6 +893,7 @@ function renderDetailToolbar(state, docId) {
     commitDeletedDocument: function (target) {
       return reconcileCommittedDeletion(state, target);
     },
+    data: state.customisationData,
     document: documentRecord(doc),
     host: host,
     refreshAndOpenDocument: function (target) {

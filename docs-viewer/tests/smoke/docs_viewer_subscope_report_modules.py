@@ -4234,7 +4234,7 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
 
           return {
             assignments,
-            analysisSubjectAction: typeof analysisContribution.renderDetailToolbar,
+            analysisDetailToolbar: typeof analysisContribution.renderDetailToolbar,
             assignButton: {
               disabled: assignButton.disabled,
               text: assignButton.textContent
@@ -4299,7 +4299,7 @@ def assert_dotlineform_projects_customisation(page: Page) -> None:
                 },
             }
         ],
-        "analysisSubjectAction": "undefined",
+        "analysisDetailToolbar": "function",
         "assignButton": {"disabled": False, "text": "Subject"},
         "cancelled": {"assignments": 0, "refreshed": 0},
         "collectionTargetError": "Projects customisation collection target is invalid.",
@@ -4554,6 +4554,102 @@ def assert_analysis_tags_metadata_customisation(page: Page) -> None:
             },
         ],
         "targetError": "Analysis/Tags metadata target is invalid.",
+    }
+
+
+def assert_analysis_tag_fields_modal_contract(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+          const modal = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-tag-fields-modal.js'
+          );
+          document.body.innerHTML = '<main id="tag-fields-root"></main>';
+          const root = document.querySelector('#tag-fields-root');
+          const target = {
+            scope: 'analysis', sub_scope: 'tags', doc_id: 'tag-doc'
+          };
+          const assignments = [];
+          const pending = modal.openDocsViewerTagFieldsModal({
+            root,
+            target,
+            groups: ['subject', 'domain', 'form', 'theme'],
+            readMetadata: requestedTarget => ({
+              ok: true,
+              ...requestedTarget,
+              source_revision: 'sha256:' + 'a'.repeat(64),
+              record: {
+                doc_id: 'tag-doc', customisation: { group: 'theme' }
+              }
+            }),
+            assignFieldGroup: (requestedTarget, payload) => {
+              assignments.push({ target: requestedTarget, payload });
+              return Promise.reject(new Error('Synthetic Tag fields failure.'));
+            }
+          });
+          await new Promise(resolve => setTimeout(resolve, 0));
+          const host = root.querySelector(
+            '[data-docs-viewer-management-modal-host="true"]'
+          );
+          const select = host.querySelector('[data-docs-tag-fields-group]');
+          const initial = {
+            options: Array.from(select.options).map(option => option.value),
+            selected: select.value,
+            title: host.querySelector('.docsViewer__modalTitle').textContent
+          };
+          select.value = '';
+          host.querySelector('[data-role="modal-primary"]').click();
+          await new Promise(resolve => setTimeout(resolve, 0));
+          await new Promise(resolve => setTimeout(resolve, 0));
+          const contained = {
+            modalOpen: Boolean(host.querySelector(
+              '[data-role="docs-viewer-management-modal"]'
+            )),
+            status: host.querySelector('[data-role="modal-status"]').textContent,
+            submitDisabled: host.querySelector('[data-role="modal-primary"]').disabled
+          };
+          host.querySelector('button[data-role="modal-cancel"]').click();
+          const cancelled = await pending;
+          let serviceError = '';
+          try {
+            await modal.openDocsViewerTagFieldsModal({
+              target,
+              groups: ['theme'],
+              readMetadata: () => ({})
+            });
+          } catch (error) {
+            serviceError = error.message;
+          }
+          return { assignments, cancelled, contained, initial, serviceError };
+        }"""
+    )
+    assert result == {
+        "assignments": [
+            {
+                "target": {
+                    "scope": "analysis",
+                    "sub_scope": "tags",
+                    "doc_id": "tag-doc",
+                },
+                "payload": {
+                    "source_revision": "sha256:" + ("a" * 64),
+                    "field_group": "tag_fields",
+                    "fields": {"group": ""},
+                    "confirm": True,
+                },
+            }
+        ],
+        "cancelled": {"confirmed": False},
+        "contained": {
+            "modalOpen": True,
+            "status": "Synthetic Tag fields failure.",
+            "submitDisabled": False,
+        },
+        "initial": {
+            "options": ["", "subject", "domain", "form", "theme"],
+            "selected": "theme",
+            "title": "Tag fields",
+        },
+        "serviceError": "Tag fields service is unavailable.",
     }
 
 
@@ -5198,6 +5294,7 @@ def main(argv: list[str] | None = None) -> int:
                 assert_default_report_and_customisation_framework(page)
                 assert_subscope_customisation_capability_projection(page)
                 assert_analysis_tags_metadata_customisation(page)
+                assert_analysis_tag_fields_modal_contract(page)
                 assert_dotlineform_projects_customisation(page)
                 assert_dotlineform_projects_catalogue_subjects(page)
             finally:

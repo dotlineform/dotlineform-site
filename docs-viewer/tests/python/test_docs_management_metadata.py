@@ -127,8 +127,11 @@ def test_sub_scope_metadata_write_rebuilds_detail_and_both_manifests(
                 "sub_scope": sub_scope,
                 "changed_paths": [path.name for path in changed_paths],
                 "suppression_reason": kwargs.get("suppression_reason"),
-                "changed_item_ids": build_result["write_plan"]["changed_item_ids"],
-                "manifest_write": build_result["write_plan"]["manifest_write"],
+                    "changed_item_ids": build_result["write_plan"]["changed_item_ids"],
+                    "manifest_write": build_result["write_plan"]["manifest_write"],
+                    "manage_manifest_write": build_result["write_plan"][
+                        "manage_manifest_write"
+                    ],
             }
         )
         return {
@@ -217,7 +220,19 @@ def test_sub_scope_metadata_write_rebuilds_detail_and_both_manifests(
                 "date": "2026-07-27",
                 "date_display": "late July 2026",
                 "ui_status": "done",
-                "group": "theme",
+            },
+            dry_run=False,
+        )
+        assigned = docs_management_service.handle_assign_field_group(
+            repo_root,
+            {
+                "scope": "studio",
+                "sub_scope": "tags",
+                "doc_id": SUB_SCOPE_DOC_ID,
+                "source_revision": result["source_revision"],
+                "field_group": "tag_fields",
+                "fields": {"group": "theme"},
+                "confirm": True,
             },
             dry_run=False,
         )
@@ -242,8 +257,10 @@ def test_sub_scope_metadata_write_rebuilds_detail_and_both_manifests(
         "date": "2026-07-27",
         "date_display": "late July 2026",
         "ui_status": "done",
-        "group": "theme",
     }
+    assert assigned["field_group"] == "tag_fields"
+    assert assigned["fields"] == {"group": "theme"}
+    assert assigned["changes"] == {"group_changed": True}
     assert result["sub_scope"] == "tags"
     assert manifest_before == {
         "docs": [{"doc_id": SUB_SCOPE_DOC_ID, "title": "Detail"}]
@@ -257,7 +274,17 @@ def test_sub_scope_metadata_write_rebuilds_detail_and_both_manifests(
             "suppression_reason": "docs-update-metadata",
             "changed_item_ids": [SUB_SCOPE_DOC_ID],
             "manifest_write": True,
-        }
+            "manage_manifest_write": True,
+        },
+        {
+            "scope": "studio",
+            "sub_scope": "tags",
+            "changed_paths": [f"{SUB_SCOPE_DOC_ID}.md"],
+            "suppression_reason": "docs-assign-field-group",
+            "changed_item_ids": [],
+            "manifest_write": False,
+            "manage_manifest_write": True,
+        },
     ]
     assert manage_manifest == {
         "customisation": {
@@ -889,7 +916,6 @@ def test_sub_scope_metadata_service_returns_conflict_for_write_race(
                     )
                 ),
                 "title": "Renamed Detail",
-                "group": "theme",
             },
         )
 

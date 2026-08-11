@@ -177,6 +177,38 @@ def _analysis_tags_metadata_record(
     return {"group": str(raw_group or "").strip().lower()}
 
 
+def _normalize_analysis_tags_metadata_update(
+    settings: Mapping[str, Any],
+    raw: Any,
+    *,
+    repo_root: Path,
+    front_matter: Mapping[str, Any],
+    doc_id: str,
+) -> dict[str, Any]:
+    del repo_root
+    if not isinstance(raw, dict):
+        raise ValueError("customisation must be an object")
+    if set(raw) != {"group"}:
+        raise ValueError("customisation must contain exactly group")
+    raw_group = raw["group"]
+    if not isinstance(raw_group, str):
+        raise ValueError("customisation.group must be a scalar string")
+    group = raw_group.strip().lower()
+    if raw_group != group:
+        raise ValueError("customisation.group must be one exact configured group")
+    _validate_analysis_tags_transfer_field(settings, "group", group)
+    current = _analysis_tags_metadata_record(
+        settings,
+        front_matter,
+        doc_id=doc_id,
+    )["group"]
+    return {
+        "front_matter_updates": {"group": group or None},
+        "record": {"group": group},
+        "changes": {"group_changed": group != current},
+    }
+
+
 def _validate_analysis_tags_transfer_field(
     settings: Mapping[str, Any],
     field_name: str,
@@ -233,6 +265,7 @@ SUB_SCOPE_CUSTOMISATION_DEFINITIONS = {
         ),
         metadata=DocsSubScopeMetadataAspect(
             read_record=_analysis_tags_metadata_record,
+            normalize_update=_normalize_analysis_tags_metadata_update,
         ),
         browser_composition=DocsSubScopeBrowserCompositionAspect(
             accesses=frozenset({MANAGE_ACCESS}),
