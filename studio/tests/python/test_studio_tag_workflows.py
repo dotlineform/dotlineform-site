@@ -8,10 +8,6 @@ import json
 from pathlib import Path
 import sys
 import tempfile
-from typing import Any, Callable
-
-import pytest
-
 REPO_ROOT = Path(__file__).resolve().parents[3]
 STUDIO_SERVER_DIR = REPO_ROOT / "studio" / "app" / "server" / "studio"
 for path in (REPO_ROOT, STUDIO_SERVER_DIR):
@@ -20,7 +16,6 @@ for path in (REPO_ROOT, STUDIO_SERVER_DIR):
         sys.path.insert(0, text)
 
 from studio_tags_api import tags_get_payload, tags_post_response  # noqa: E402
-from tags import tag_document_creation  # noqa: E402
 
 
 ANALYSIS_TAGS_REPORT_ID = "d-20260430-230000-000099"
@@ -289,17 +284,13 @@ def test_studio_create_tag_dry_run_validates_before_write() -> None:
         assert payload["ok"] is True
         assert payload["action"] == "create"
         assert payload["tag_id"] == "renewal"
-        assert payload["doc_id"].startswith("d-")
-        assert payload["document_target"] == {
-            "scope": "analysis",
-            "sub_scope": "tags",
-            "doc_id": payload["doc_id"],
-        }
+        assert "doc_id" not in payload
+        assert "document_target" not in payload
         assert payload["added"] == 1
         assert payload["final_total"] == 2
         assert payload["dry_run"] is True
         assert payload["would_write"]["tag_id"] == "renewal"
-        assert payload["would_write"]["doc_id"] == payload["doc_id"]
+        assert payload["would_write"]["doc_url"] == []
         assert registry_path.read_bytes() == before
 
         invalid_requests = (
@@ -317,77 +308,26 @@ def test_studio_create_tag_dry_run_validates_before_write() -> None:
                 raise AssertionError(f"invalid create request was accepted: {invalid_body!r}")
             assert registry_path.read_bytes() == before
 
-
-def test_studio_create_tag_returns_compensated_rebuild_failure(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    existing_doc_id = "d-20260501-000000-000001"
-    write_analysis_tags_fixture(tmp_path, existing_doc_id)
-    registry_path = (
-        tmp_path
-        / "studio/data/canonical/tags/tag-registry.json"
-    )
-    registry_path.parent.mkdir(parents=True)
-    registry_path.write_text(
-        """{
-  "tag_registry_version": "tag_registry_v5",
-  "updated_at_utc": "2026-05-01T00:00:00Z",
-  "policy": {"allowed_groups": ["subject", "theme"]},
-  "tags": [{"tag_id": "trees", "group": "subject", "doc_url": ["/docs/?scope=analysis&doc=d-20260430-230000-000099&subdoc=d-20260501-000000-000001"], "updated_at_utc": "2026-05-01T00:00:00Z"}]
-}
-""",
-        encoding="utf-8",
-    )
-    before = registry_path.read_bytes()
-    calls = 0
-
-    def fail_then_recover(
-        _repo_root: Path,
-        _scope: str,
-        _sub_scope: str,
-        _changed_paths: list[Path],
-        write_operation: Callable[[], Any],
-        *,
-        suppression_reason: str,
-    ) -> dict[str, object]:
-        nonlocal calls
-        calls += 1
-        write_operation()
-        if calls == 1:
-            raise RuntimeError("synthetic child builder failure")
-        return {
-            "ok": True,
-            "suppression_reason": suppression_reason,
-        }
-
-    monkeypatch.setattr(
-        tag_document_creation.write_rebuild,
-        "perform_sub_scope_source_write_and_rebuild",
-        fail_then_recover,
-    )
-
-    status, payload = tags_post_response(
-        tmp_path,
-        "/create-tag",
-        {
-            "group": "theme",
-            "tag_id": "renewal",
-        },
-    )
-
-    assert status == HTTPStatus.INTERNAL_SERVER_ERROR
-    assert payload["ok"] is False
-    assert payload["source_restored"] is True
-    assert payload["recovery_rebuild"]["ok"] is True
-    assert payload["retry_safe"] is True
-    assert "creation was not completed" in str(payload["error"])
-    assert registry_path.read_bytes() == before
-    assert not (
-        tmp_path
-        / "docs-viewer/scopes/analysis/source/sub-scopes/tags/documents"
-        / f"{payload['doc_id']}.md"
-    ).exists()
+        documents_root = (
+            repo_root
+            / "docs-viewer/scopes/analysis/source/sub-scopes/tags/documents"
+        )
+        document_names_before = sorted(path.name for path in documents_root.glob("*.md"))
+        status, applied = tags_post_response(
+            repo_root,
+            "/create-tag",
+            {"group": "theme", "tag_id": "renewal"},
+            dry_run=False,
+        )
+        registry = json.loads(registry_path.read_text(encoding="utf-8"))
+        assert status == HTTPStatus.OK
+        assert applied["doc_url"] == []
+        assert "doc_id" not in applied
+        assert registry["tags"][-1]["tag_id"] == "renewal"
+        assert registry["tags"][-1]["doc_url"] == []
+        assert sorted(path.name for path in documents_root.glob("*.md")) == (
+            document_names_before
+        )
 
 
 def test_studio_tag_alias_dry_run_uses_alias_contract() -> None:

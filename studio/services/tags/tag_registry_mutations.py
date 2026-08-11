@@ -275,12 +275,8 @@ def rewrite_assignments_for_tag(
 
 def build_create_summary_text(stats: Dict[str, Any]) -> str:
     tag_id = str(stats.get("tag_id") or "")
-    doc_id = str(stats.get("doc_id") or "")
     final_total = int(stats.get("final_total") or 0)
-    return (
-        f"created tag {tag_id} with linked Analysis document {doc_id}; "
-        f"final {final_total}"
-    )
+    return f"created tag {tag_id}; no document association; final {final_total}"
 
 
 def build_mutation_summary_text(stats: Dict[str, Any]) -> str:

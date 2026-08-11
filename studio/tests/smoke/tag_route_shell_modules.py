@@ -919,17 +919,12 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
                     "action": "create",
                     "tag_id": "renewal",
                     "group": "theme",
-                    "doc_url": [
-                        "/analysis/?doc=d-20260624-213316-478639"
-                        "&subdoc=d-20260729-120000-abcdef"
-                    ],
-                    "doc_id": "d-20260729-120000-abcdef",
+                    "doc_url": [],
                     "added": 1,
                     "final_total": 2,
                     "updated_at_utc": "2026-07-27T12:00:00Z",
                     "summary_text": (
-                        "created tag renewal with linked Analysis document "
-                        "d-20260729-120000-abcdef; final 2"
+                        "created tag renewal; no document association; final 2"
                     ),
                 }
             ),
@@ -965,8 +960,7 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
     assert result["ok"] is True
     assert result["mode"] == "post"
     assert result["summary"] == (
-        "created tag renewal with linked Analysis document "
-        "d-20260729-120000-abcdef; final 2"
+        "created tag renewal; no document association; final 2"
     )
     assert captured["method"] == "POST"
     payload = captured["payload"]
@@ -1046,18 +1040,7 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
                     tag_id: 'renewal',
                     group: 'theme'
                 },
-                config: {
-                    app: {
-                        runtime: {
-                            services: {
-                                tags: {
-                                    analysis_tags_document_url_template:
-                                        '/analysis/?doc=d-20260624-213316-478639&subdoc={doc_id}'
-                                }
-                            }
-                        }
-                    }
-                }
+                config: {}
             });
         }"""
     )
@@ -1065,16 +1048,10 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
     assert patch_mode["mode"] == "patch"
     assert patch_mode["patchResult"]["kind"] == "warn"
     assert patch_mode["patchResult"]["message"] == (
-        "Patch mode: linked Registry row and Analysis tag document prepared; "
-        "nothing has been written."
+        "Patch mode: Registry row prepared; nothing has been written."
     )
     patch_payload = json.loads(patch_mode["patchResult"]["snippet"])
     registry_patch = patch_payload["registry"]
-    patch_doc_id = patch_payload["document"]["path"].rsplit("/", 1)[-1][:-3]
-    assert re.fullmatch(
-        r"d-\d{8}-\d{6}-[0-9a-f]{6}",
-        patch_doc_id,
-    )
     assert registry_patch["path"] == (
         "studio/data/canonical/tags/tag-registry.json"
     )
@@ -1082,20 +1059,10 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
     assert registry_patch["append_row"]["group"] == "theme"
     assert "description" not in registry_patch["append_row"]
     assert "doc_id" not in registry_patch["append_row"]
-    assert registry_patch["append_row"]["doc_url"] == [
-        "/analysis/?doc=d-20260624-213316-478639"
-        f"&subdoc={patch_doc_id}"
-    ]
-    assert patch_payload["document"]["path"].endswith(
-        f"/{patch_doc_id}.md"
-    )
-    assert f"doc_id: {patch_doc_id}" in patch_payload["document"]["source"]
-    assert "group: theme" in patch_payload["document"]["source"]
-    assert "Renewal" not in patch_payload["document"]["source"]
+    assert registry_patch["append_row"]["doc_url"] == []
+    assert "document" not in patch_payload
     assert patch_payload["notice"].startswith("Nothing has been written")
-    assert patch_payload["rebuild"].endswith(
-        "--write --skip-browser-config"
-    )
+    assert "rebuild" not in patch_payload
 
 
 def assert_tag_alias_create_request(page: Page, base_url: str) -> None:

@@ -8,7 +8,6 @@ from typing import Any
 
 from tags import tag_activity
 from tags import tag_alias_mutations as tag_aliases
-from tags import tag_document_creation
 from tags import tag_registry_mutations as tag_registry
 from tags import tag_routes
 from tags import tag_source_model as tag_source
@@ -17,42 +16,38 @@ from studio_tag_api import common
 
 
 def create_tag_response(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -> dict[str, object]:
-    """Create one canonical tag and its linked Analysis document."""
+    """Create one canonical Tag without creating or associating a document."""
     if "description" in body:
         raise ValueError("description is not supported for canonical tags")
     now_utc = common.utc_now()
-    plan = tag_document_creation.build_tag_document_create_plan(
-        repo_root,
+    registry_path = (repo_root / tag_source.REGISTRY_REL_PATH).resolve()
+    registry_payload = tag_source.load_registry(registry_path)
+    registry_updated, stats = tag_registry.create_registry_tag(
+        registry_payload,
         group=body.get("group"),
         tag_id=body.get("tag_id"),
+        doc_url=[],
         now_utc=now_utc,
     )
-    stats = plan.stats
     summary_text = tag_registry.build_create_summary_text(stats)
 
     response_payload: dict[str, object] = {
         "ok": True,
         "updated_at_utc": now_utc,
         "summary_text": summary_text,
-        **tag_document_creation.create_response_payload(repo_root, plan),
+        **stats,
     }
     if dry_run:
         response_payload["dry_run"] = True
         response_payload["would_write"] = {
             "updated_at_utc": now_utc,
             "tag_id": stats["tag_id"],
-            "doc_id": stats["doc_id"],
-            "document_path": response_payload["document_path"],
+            "doc_url": [],
             "added": stats["added"],
             "final_total": stats["final_total"],
         }
     else:
-        response_payload.update(
-            tag_document_creation.execute_tag_document_create(
-                repo_root,
-                plan,
-            )
-        )
+        tag_transactions.atomic_write(registry_path, registry_updated)
 
     common.log_event(
         repo_root,
@@ -73,7 +68,7 @@ def create_tag_response(repo_root: Path, body: dict[str, Any], *, dry_run: bool 
         detail_items=[
             summary_text,
             f"Created canonical tag: {stats['tag_id']}.",
-            f"Linked Analysis/tags document: {stats['doc_id']}.",
+            "No document association was created.",
         ],
         status=tag_activity.tag_activity_status(stats),
     )

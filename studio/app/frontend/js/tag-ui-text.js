@@ -225,6 +225,6 @@ export const DEFAULT_TAG_UI_TEXT = {
     patch_copy_success: "Patch snippet copied to clipboard.",
     patch_copy_failed: "Copy failed. Select and copy the snippet manually.",
     patch_demote_message: "Patch mode: section snippets prepared for demoting \"{tag_id}\".",
-    patch_create_message: "Patch mode: linked Registry row and Analysis tag document prepared; nothing has been written."
+    patch_create_message: "Patch mode: Registry row prepared; nothing has been written."
   }
 };

@@ -7,6 +7,7 @@ import {
 
 const CUSTOMISATION_ID = "analysis_tags";
 const TAG_FIELDS_GROUP_ID = "tag_fields";
+const TAG_ID_FIELD_ID = "tag_id";
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -91,6 +92,52 @@ function groupInfoField(documentRecord, groups) {
   };
 }
 
+function tagIdInfoField(documentRecord) {
+  var customisation = documentRecord && documentRecord.customisation;
+  if (
+    customisation != null
+    && (typeof customisation !== "object" || Array.isArray(customisation))
+  ) {
+    return {
+      detail: "Metadata projection unavailable",
+      id: TAG_ID_FIELD_ID,
+      label: "Tag",
+      state: "unavailable",
+      value: "Unavailable"
+    };
+  }
+  if (!customisation || !Object.prototype.hasOwnProperty.call(customisation, "tag_id")) {
+    return {
+      detail: "",
+      id: TAG_ID_FIELD_ID,
+      label: "Tag",
+      state: "unassigned",
+      value: "Unassigned"
+    };
+  }
+  var rawTagId = customisation.tag_id;
+  if (
+    typeof rawTagId !== "string"
+    || rawTagId !== cleanString(rawTagId)
+    || !/^[a-z0-9][a-z0-9-]*$/.test(rawTagId)
+  ) {
+    return {
+      detail: String(rawTagId),
+      id: TAG_ID_FIELD_ID,
+      label: "Tag",
+      state: "unavailable",
+      value: "Malformed"
+    };
+  }
+  return {
+    detail: "",
+    id: TAG_ID_FIELD_ID,
+    label: "Tag",
+    state: "assigned",
+    value: rawTagId
+  };
+}
+
 function projectDetailInfo(context, collection, tagFieldsAvailable) {
   var settings = context || {};
   assertCollection(settings.collection, collection);
@@ -112,7 +159,8 @@ function projectDetailInfo(context, collection, tagFieldsAvailable) {
   return Object.freeze({
     actions: Object.freeze({ tagFields: tagFieldsAvailable }),
     fields: Object.freeze([
-      Object.freeze(groupInfoField(documentRecord, normalizedGroups(settings.data)))
+      Object.freeze(groupInfoField(documentRecord, normalizedGroups(settings.data))),
+      Object.freeze(tagIdInfoField(documentRecord))
     ])
   });
 }
@@ -125,6 +173,7 @@ function renderTagFields(context, options, tagFieldsAvailable) {
   var servicesAvailable = (
     typeof options.readMetadata === "function"
     && typeof options.assignFieldGroup === "function"
+    && cleanString(options.studioBaseUrl)
   );
   var capability = servicesAvailable && groups.length
     ? true
@@ -149,6 +198,7 @@ function renderTagFields(context, options, tagFieldsAvailable) {
         readMetadata: options.readMetadata,
         restoreFocus: button,
         root: options.root,
+        studioBaseUrl: options.studioBaseUrl,
         target: target
       }).then(function (result) {
         if (!result || result.confirmed !== true) return result;

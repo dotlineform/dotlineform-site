@@ -389,16 +389,16 @@ def test_tag_fields_plan_updates_or_clears_only_the_exact_document() -> None:
         }
         updated = mutations.plan_assign_field_group(
             repo_root,
-            {**target, "fields": {"group": "domain"}},
+            {**target, "fields": {"group": "domain", "tag_id": "absence"}},
         )
         cleared = mutations.plan_assign_field_group(
             repo_root,
-            {**target, "fields": {"group": ""}},
+            {**target, "fields": {"group": "", "tag_id": ""}},
         )
         with pytest.raises(ValueError, match="not configured for the target"):
             mutations.plan_assign_field_group(
                 repo_root,
-                {**target, "fields": {"group": "retired"}},
+                {**target, "fields": {"group": "retired", "tag_id": "absence"}},
             )
         with pytest.raises(
             mutations.ManagedDocumentRevisionConflict,
@@ -409,7 +409,7 @@ def test_tag_fields_plan_updates_or_clears_only_the_exact_document() -> None:
                 {
                     **target,
                     "source_revision": "sha256:" + ("0" * 64),
-                    "fields": {"group": "domain"},
+                    "fields": {"group": "domain", "tag_id": "absence"},
                 },
             )
 
@@ -419,14 +419,19 @@ def test_tag_fields_plan_updates_or_clears_only_the_exact_document() -> None:
         "doc_id": "detail",
     }
     assert updated.response["field_group"] == "tag_fields"
-    assert updated.response["fields"] == {"group": "domain"}
-    assert updated.response["changes"] == {"group_changed": True}
+    assert updated.response["fields"] == {"group": "domain", "tag_id": "absence"}
+    assert updated.response["changes"] == {
+        "group_changed": True,
+        "tag_id_changed": True,
+    }
     assert updated.suppression_reason == "docs-assign-field-group"
     assert len(updated.source_writes) == 1
     assert updated.source_writes[0].path == source_path.resolve()
     assert "group: domain" in updated.source_writes[0].text
+    assert "tag_id: absence" in updated.source_writes[0].text
     assert 'last_updated: "2026-05-01 10:00"' in updated.source_writes[0].text
     assert "\ngroup:" not in cleared.source_writes[0].text
+    assert "\ntag_id:" not in cleared.source_writes[0].text
 
 
 @pytest.mark.parametrize(

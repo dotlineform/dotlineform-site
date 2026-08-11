@@ -148,13 +148,6 @@ def test_registry_group_edit_writes_only_registry_and_preserves_linked_document(
         "atomic_write_many",
         lambda payloads: writes.update(payloads),
     )
-    monkeypatch.setattr(
-        registry.tag_document_creation,
-        "build_tag_document_create_plan",
-        lambda *_args, **_kwargs: (_ for _ in ()).throw(
-            AssertionError("Tag edit must not invoke document creation")
-        ),
-    )
     monkeypatch.setattr(registry.common, "utc_now", lambda: "2026-07-29T12:00:00Z")
     monkeypatch.setattr(registry.common, "log_event", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(

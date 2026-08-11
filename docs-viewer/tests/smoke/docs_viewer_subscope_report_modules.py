@@ -2203,7 +2203,14 @@ def assert_manage_report_bridge(page: Page) -> None:
                     "label": "Group",
                     "state": "assigned",
                     "value": "subject",
-                }
+                },
+                {
+                    "detail": "",
+                    "id": "tag_id",
+                    "label": "Tag",
+                    "state": "unassigned",
+                    "value": "Unassigned",
+                },
             ],
         },
         "record": {
@@ -4505,11 +4512,15 @@ def assert_analysis_tags_metadata_customisation(page: Page) -> None:
             targetError = error.message;
           }
           const assigned = project({
-            doc_id: 'assigned-doc', customisation: { group: 'theme' }
+            doc_id: 'assigned-doc', customisation: {
+              group: 'theme', tag_id: 'absence'
+            }
           });
           const unassigned = project({ doc_id: 'unassigned-doc' });
-          const unavailable = project({
-            doc_id: 'unavailable-doc', customisation: { group: 'retired' }
+          const malformed = project({
+            doc_id: 'malformed-doc', customisation: {
+              group: 'theme', tag_id: 'bad_slug'
+            }
           });
           const noCapability = withoutCapability.projectDetailInfo({
             collection,
@@ -4523,12 +4534,17 @@ def assert_analysis_tags_metadata_customisation(page: Page) -> None:
             actionAvailability: [
               assigned.actions.tagFields, noCapability.actions.tagFields
             ],
-            fieldIdentity: {
-              id: assigned.fields[0].id, label: assigned.fields[0].label
-            },
+            fieldIdentity: assigned.fields.map(field => ({
+              id: field.id, label: field.label
+            })),
             collectionError,
             targetError,
-            groups: [assigned, unassigned, unavailable].map(info => {
+            fields: [assigned, unassigned, malformed].map(info => {
+              return info.fields.map(field => ({
+                detail: field.detail, state: field.state, value: field.value
+              }));
+            }),
+            groups: [assigned, unassigned].map(info => {
               const field = info.fields[0];
               return {
                 detail: field.detail, state: field.state, value: field.value
@@ -4543,15 +4559,27 @@ def assert_analysis_tags_metadata_customisation(page: Page) -> None:
         "collectionError": (
             "Analysis/Tags customisation collection did not match its registry entry."
         ),
-        "fieldIdentity": {"id": "tag_fields", "label": "Group"},
+        "fieldIdentity": [
+            {"id": "tag_fields", "label": "Group"},
+            {"id": "tag_id", "label": "Tag"},
+        ],
+        "fields": [
+            [
+                {"detail": "", "state": "assigned", "value": "theme"},
+                {"detail": "", "state": "assigned", "value": "absence"},
+            ],
+            [
+                {"detail": "", "state": "unassigned", "value": "Unassigned"},
+                {"detail": "", "state": "unassigned", "value": "Unassigned"},
+            ],
+            [
+                {"detail": "", "state": "assigned", "value": "theme"},
+                {"detail": "bad_slug", "state": "unavailable", "value": "Malformed"},
+            ],
+        ],
         "groups": [
             {"detail": "", "state": "assigned", "value": "theme"},
             {"detail": "", "state": "unassigned", "value": "Unassigned"},
-            {
-                "detail": "retired",
-                "state": "unavailable",
-                "value": "Unavailable",
-            },
         ],
         "targetError": "Analysis/Tags metadata target is invalid.",
     }
@@ -4568,17 +4596,27 @@ def assert_analysis_tag_fields_modal_contract(page: Page) -> None:
           const target = {
             scope: 'analysis', sub_scope: 'tags', doc_id: 'tag-doc'
           };
+          const tagPayload = {
+            ok: true,
+            tags: [
+              { tag_id: 'presence', group: 'subject' },
+              { tag_id: 'absence', group: 'theme' }
+            ]
+          };
           const assignments = [];
           const pending = modal.openDocsViewerTagFieldsModal({
             root,
             target,
             groups: ['subject', 'domain', 'form', 'theme'],
+            loadTags: () => tagPayload,
             readMetadata: requestedTarget => ({
               ok: true,
               ...requestedTarget,
               source_revision: 'sha256:' + 'a'.repeat(64),
               record: {
-                doc_id: 'tag-doc', customisation: { group: 'theme' }
+                doc_id: 'tag-doc', customisation: {
+                  group: 'theme', tag_id: 'absence'
+                }
               }
             }),
             assignFieldGroup: (requestedTarget, payload) => {
@@ -4591,12 +4629,16 @@ def assert_analysis_tag_fields_modal_contract(page: Page) -> None:
             '[data-docs-viewer-management-modal-host="true"]'
           );
           const select = host.querySelector('[data-docs-tag-fields-group]');
+          const tagSelect = host.querySelector('[data-docs-tag-fields-tag]');
           const initial = {
             options: Array.from(select.options).map(option => option.value),
             selected: select.value,
+            tagOptions: Array.from(tagSelect.options).map(option => option.value),
+            tagSelected: tagSelect.value,
             title: host.querySelector('.docsViewer__modalTitle').textContent
           };
           select.value = '';
+          tagSelect.value = 'presence';
           host.querySelector('[data-role="modal-primary"]').click();
           await new Promise(resolve => setTimeout(resolve, 0));
           await new Promise(resolve => setTimeout(resolve, 0));
@@ -4609,6 +4651,75 @@ def assert_analysis_tag_fields_modal_contract(page: Page) -> None:
           };
           host.querySelector('button[data-role="modal-cancel"]').click();
           const cancelled = await pending;
+          const unavailablePending = modal.openDocsViewerTagFieldsModal({
+            root,
+            target,
+            groups: ['subject', 'domain', 'form', 'theme'],
+            loadTags: () => tagPayload,
+            readMetadata: requestedTarget => ({
+              ok: true,
+              ...requestedTarget,
+              source_revision: 'sha256:' + 'b'.repeat(64),
+              record: {
+                doc_id: 'tag-doc', customisation: {
+                  group: 'theme', tag_id: 'retired'
+                }
+              }
+            }),
+            assignFieldGroup: () => Promise.reject(new Error('unused'))
+          });
+          await new Promise(resolve => setTimeout(resolve, 0));
+          const unavailableHost = root.querySelector(
+            '[data-docs-viewer-management-modal-host="true"]'
+          );
+          const unavailableSelect = unavailableHost.querySelector(
+            '[data-docs-tag-fields-tag]'
+          );
+          const unavailable = {
+            labels: Array.from(unavailableSelect.options).map(option => option.textContent),
+            selected: unavailableSelect.value
+          };
+          unavailableHost.querySelector('button[data-role="modal-cancel"]').click();
+          await unavailablePending;
+          const malformedAssignments = [];
+          const malformedPending = modal.openDocsViewerTagFieldsModal({
+            root,
+            target,
+            groups: ['subject', 'domain', 'form', 'theme'],
+            loadTags: () => tagPayload,
+            readMetadata: requestedTarget => ({
+              ok: true,
+              ...requestedTarget,
+              source_revision: 'sha256:' + 'c'.repeat(64),
+              record: {
+                doc_id: 'tag-doc', customisation: {
+                  group: 'theme', tag_id: true
+                }
+              }
+            }),
+            assignFieldGroup: (requestedTarget, payload) => {
+              malformedAssignments.push({ target: requestedTarget, payload });
+              return Promise.resolve({
+                ok: true,
+                target: requestedTarget,
+                field_group: 'tag_fields',
+                fields: payload.fields,
+                changes: { group_changed: true, tag_id_changed: false },
+                source_revision: 'sha256:' + 'd'.repeat(64)
+              });
+            }
+          });
+          await new Promise(resolve => setTimeout(resolve, 0));
+          const malformedHost = root.querySelector(
+            '[data-docs-viewer-management-modal-host="true"]'
+          );
+          const malformedTagSelect = malformedHost.querySelector(
+            '[data-docs-tag-fields-tag]'
+          );
+          const malformedSelectedLabel = malformedTagSelect.selectedOptions[0].textContent;
+          malformedHost.querySelector('[data-docs-tag-fields-group]').value = 'domain';
+          malformedHost.querySelector('[data-role="modal-primary"]').click();
+          const malformedResult = await malformedPending;
           let serviceError = '';
           try {
             await modal.openDocsViewerTagFieldsModal({
@@ -4619,7 +4730,17 @@ def assert_analysis_tag_fields_modal_contract(page: Page) -> None:
           } catch (error) {
             serviceError = error.message;
           }
-          return { assignments, cancelled, contained, initial, serviceError };
+          return {
+            assignments,
+            cancelled,
+            contained,
+            initial,
+            malformedAssignments,
+            malformedResult,
+            malformedSelectedLabel,
+            serviceError,
+            unavailable
+          };
         }"""
     )
     assert result == {
@@ -4633,7 +4754,7 @@ def assert_analysis_tag_fields_modal_contract(page: Page) -> None:
                 "payload": {
                     "source_revision": "sha256:" + ("a" * 64),
                     "field_group": "tag_fields",
-                    "fields": {"group": ""},
+                    "fields": {"group": "", "tag_id": "presence"},
                     "confirm": True,
                 },
             }
@@ -4647,9 +4768,51 @@ def assert_analysis_tag_fields_modal_contract(page: Page) -> None:
         "initial": {
             "options": ["", "subject", "domain", "form", "theme"],
             "selected": "theme",
+            "tagOptions": ["", "absence", "presence"],
+            "tagSelected": "absence",
             "title": "Tag fields",
         },
+        "malformedAssignments": [
+            {
+                "target": {
+                    "scope": "analysis",
+                    "sub_scope": "tags",
+                    "doc_id": "tag-doc",
+                },
+                "payload": {
+                    "source_revision": "sha256:" + ("c" * 64),
+                    "field_group": "tag_fields",
+                    "fields": {"group": "domain", "tag_id": True},
+                    "confirm": True,
+                },
+            }
+        ],
+        "malformedResult": {
+            "confirmed": True,
+            "payload": {
+                "ok": True,
+                "target": {
+                    "scope": "analysis",
+                    "sub_scope": "tags",
+                    "doc_id": "tag-doc",
+                },
+                "field_group": "tag_fields",
+                "fields": {"group": "domain", "tag_id": True},
+                "changes": {"group_changed": True, "tag_id_changed": False},
+                "source_revision": "sha256:" + ("d" * 64),
+            },
+        },
+        "malformedSelectedLabel": "Malformed current value",
         "serviceError": "Tag fields service is unavailable.",
+        "unavailable": {
+            "labels": [
+                "No tag",
+                "retired — Unavailable",
+                "absence — theme",
+                "presence — subject",
+            ],
+            "selected": "retired",
+        },
     }
 
 

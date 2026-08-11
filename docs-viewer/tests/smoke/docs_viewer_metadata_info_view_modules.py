@@ -409,6 +409,8 @@ def assert_manage_subscope_tag_info(page: Page) -> None:
                 actions: { assignSubject: false, tagFields: true },
                 fields: [{
                     id: 'tag_fields', label: 'Group', value: 'theme', detail: ''
+                }, {
+                    id: 'tag_id', label: 'Tag', value: 'absence', detail: ''
                 }]
             },
             selectedDoc: { doc_id: 'theme-tag', title: 'Theme tag' },
@@ -418,9 +420,12 @@ def assert_manage_subscope_tag_info(page: Page) -> None:
         })""",
     )
     assert result["targetKind"] == "subscope-document"
-    assert result["terms"] == ["Doc ID", "Summary", "Date", "Added", "Updated", "Group"]
+    assert result["terms"] == [
+        "Doc ID", "Summary", "Date", "Added", "Updated", "Group", "Tag"
+    ]
     assert result["values"] == [
-        "theme-tag", "Exact tag detail", "Not set", "Not set", "Not set", "theme"
+        "theme-tag", "Exact tag detail", "Not set", "Not set", "Not set",
+        "theme", "absence",
     ]
 
 

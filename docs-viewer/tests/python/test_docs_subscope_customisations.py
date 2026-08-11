@@ -44,9 +44,15 @@ def test_current_customisations_declare_explicit_aspects() -> None:
         analysis.document_groups,
         customisations.DocsSubScopeDocumentGroupsAspect,
     )
-    assert analysis.source_validation is None
+    assert isinstance(
+        analysis.source_validation,
+        customisations.DocsSubScopeSourceValidationAspect,
+    )
     assert isinstance(analysis.metadata, customisations.DocsSubScopeMetadataAspect)
-    assert analysis.import_front_matter is None
+    assert isinstance(
+        analysis.import_front_matter,
+        customisations.DocsSubScopeImportFrontMatterAspect,
+    )
     assert analysis.browser_composition == (
         customisations.DocsSubScopeBrowserCompositionAspect(
             accesses=frozenset({"manage"}),
@@ -55,12 +61,12 @@ def test_current_customisations_declare_explicit_aspects() -> None:
     assert analysis.assignable_field_groups == (
         customisations.DocsSubScopeAssignableFieldGroup(
             group_id="tag_fields",
-            field_names=("group",),
+            field_names=("group", "tag_id"),
         ),
     )
     assert analysis.transfer is not None
     assert analysis.transfer.contract_id == "analysis_tag_fields"
-    assert analysis.transfer.owned_field_names == ("group",)
+    assert analysis.transfer.owned_field_names == ("group", "tag_id")
 
     assert works.browser_composition is None
     assert works.assignable_field_groups == ()
@@ -149,41 +155,67 @@ def test_current_customisations_declare_explicit_aspects() -> None:
         analysis_config,
         {"group": " Theme "},
         doc_id="tag-doc",
-    ) == {"group": "theme"}
+    ) == {"group": "theme", "tag_id": ""}
     assert customisations.sub_scope_customisation_metadata_record(
         analysis_config,
         {},
         doc_id="untagged-doc",
-    ) == {"group": ""}
+    ) == {"group": "", "tag_id": ""}
     assert customisations.normalize_sub_scope_customisation_metadata_update(
         analysis_config,
-        {"group": "domain"},
+        {"group": "domain", "tag_id": "absence"},
         provided=True,
         repo_root=Path("."),
-        front_matter={"group": "theme"},
+        front_matter={"group": "theme", "tag_id": "presence"},
         doc_id="tag-doc",
     ) == {
-        "front_matter_updates": {"group": "domain"},
-        "record": {"group": "domain"},
-        "changes": {"group_changed": True},
+        "front_matter_updates": {"group": "domain", "tag_id": "absence"},
+        "record": {"group": "domain", "tag_id": "absence"},
+        "changes": {"group_changed": True, "tag_id_changed": True},
     }
     assert customisations.normalize_sub_scope_customisation_metadata_update(
         analysis_config,
-        {"group": ""},
+        {"group": "", "tag_id": ""},
         provided=True,
         repo_root=Path("."),
         front_matter={"group": "theme"},
         doc_id="tag-doc",
-    )["front_matter_updates"] == {"group": None}
+    )["front_matter_updates"] == {"group": None, "tag_id": None}
+    assert customisations.normalize_sub_scope_customisation_metadata_update(
+        analysis_config,
+        {"group": "domain", "tag_id": True},
+        provided=True,
+        repo_root=Path("."),
+        front_matter={"group": "theme", "tag_id": True},
+        doc_id="malformed-tag-doc",
+    ) == {
+        "front_matter_updates": {"group": "domain", "tag_id": True},
+        "record": {"group": "domain", "tag_id": True},
+        "changes": {"group_changed": True, "tag_id_changed": False},
+    }
     with pytest.raises(ValueError, match="one exact configured group"):
         customisations.normalize_sub_scope_customisation_metadata_update(
             analysis_config,
-            {"group": " Theme "},
+            {"group": " Theme ", "tag_id": "absence"},
             provided=True,
             repo_root=Path("."),
             front_matter={"group": "theme"},
             doc_id="tag-doc",
         )
+    with pytest.raises(ValueError, match="exact canonical tag id"):
+        customisations.normalize_sub_scope_customisation_metadata_update(
+            analysis_config,
+            {"group": "theme", "tag_id": "bad_slug"},
+            provided=True,
+            repo_root=Path("."),
+            front_matter={"group": "theme"},
+            doc_id="tag-doc",
+        )
+    assert customisations.normalize_sub_scope_customisation_import_front_matter(
+        analysis_config,
+        {"group": "theme", "tag_id": "absence"},
+        doc_id="imported-tag-doc",
+    ) == {"group": "theme", "tag_id": "absence"}
     with pytest.raises(ValueError, match="not configured for the target"):
         customisations.sub_scope_customisation_metadata_record(
             analysis_config,

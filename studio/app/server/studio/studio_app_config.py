@@ -11,7 +11,6 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 ensure_studio_python_paths(__file__)
 
-from docs_document_location import canonical_sub_scope_document_url  # noqa: E402
 from tags.tag_management_config import tag_analysis_policy  # noqa: E402
 
 STUDIO_ROUTE_REQUIRED_FIELDS: tuple[str, ...] = (
@@ -237,17 +236,8 @@ def studio_shell_route_paths(repo_root: Path, payload: dict[str, object] | None 
 
 
 def studio_service_endpoints(repo_root: Path) -> dict[str, object]:
+    del repo_root
     endpoints = {service: dict(values) for service, values in STUDIO_SERVICE_ENDPOINTS.items()}
-    sentinel_doc_id = "d-00000000-000000-000000"
-    document_url = canonical_sub_scope_document_url(
-        repo_root,
-        "analysis",
-        "tags",
-        sentinel_doc_id,
-    )
-    endpoints["tags"]["analysis_tags_document_url_template"] = (
-        document_url.replace(sentinel_doc_id, "{doc_id}")
-    )
     return endpoints
 
 

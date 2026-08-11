@@ -21,7 +21,6 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 REPO_ROOT = ensure_studio_python_paths(__file__)
 
 from tags import tag_routes  # noqa: E402
-from tags.tag_document_creation import TagDocumentCreateApplyError  # noqa: E402
 from tags import tag_source_model as tag_source  # noqa: E402
 from studio_tag_api.aliases import create_tag_alias_response  # noqa: E402
 from studio_tag_api.aliases import delete_tag_alias_response  # noqa: E402
@@ -200,7 +199,4 @@ def tags_post_response(
     handler = POST_HANDLERS.get(path)
     if handler is None:
         raise FileNotFoundError("Not found")
-    try:
-        return HTTPStatus.OK, handler(repo_root, body, dry_run)
-    except TagDocumentCreateApplyError as error:
-        return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
+    return HTTPStatus.OK, handler(repo_root, body, dry_run)

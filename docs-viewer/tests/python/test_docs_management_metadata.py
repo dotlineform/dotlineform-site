@@ -231,7 +231,7 @@ def test_sub_scope_metadata_write_rebuilds_detail_and_both_manifests(
                 "doc_id": SUB_SCOPE_DOC_ID,
                 "source_revision": result["source_revision"],
                 "field_group": "tag_fields",
-                "fields": {"group": "theme"},
+                "fields": {"group": "theme", "tag_id": "absence"},
                 "confirm": True,
             },
             dry_run=False,
@@ -259,8 +259,11 @@ def test_sub_scope_metadata_write_rebuilds_detail_and_both_manifests(
         "ui_status": "done",
     }
     assert assigned["field_group"] == "tag_fields"
-    assert assigned["fields"] == {"group": "theme"}
-    assert assigned["changes"] == {"group_changed": True}
+    assert assigned["fields"] == {"group": "theme", "tag_id": "absence"}
+    assert assigned["changes"] == {
+        "group_changed": True,
+        "tag_id_changed": True,
+    }
     assert result["sub_scope"] == "tags"
     assert manifest_before == {
         "docs": [{"doc_id": SUB_SCOPE_DOC_ID, "title": "Detail"}]
@@ -299,7 +302,7 @@ def test_sub_scope_metadata_write_rebuilds_detail_and_both_manifests(
                 "title": "Renamed Detail",
                 "ui_status": "done",
                 "last_updated": "2026-07-27 21:15:00",
-                "customisation": {"group": "theme"},
+                "customisation": {"group": "theme", "tag_id": "absence"},
             }
         ],
     }
@@ -311,6 +314,7 @@ def test_sub_scope_metadata_write_rebuilds_detail_and_both_manifests(
     assert all(set(record) == {"doc_id", "title"} for record in manifest["docs"])
     assert "parent_id: retained-parent" in source_after
     assert 'last_updated: "2026-07-27 21:15:00"' in source_after
+    assert "tag_id: absence" in source_after
 
 
 def test_projects_subject_assignment_read_save_remove_and_strict_rejection(

@@ -23,7 +23,6 @@ for path in (STUDIO_SERVER_DIR,):
         sys.path.insert(0, text)
 
 from studio_app_server import StudioAppServer  # noqa: E402
-from tags import tag_document_creation  # noqa: E402
 
 
 TREES_DOC_ID = "d-20260501-000000-000001"
@@ -251,26 +250,7 @@ def run() -> None:
         registry_path, aliases_path, assignments_path, documents_root = (
             write_fixture_data(fixture_root)
         )
-        rebuild_calls: list[tuple[str, str]] = []
-        original_rebuild = (
-            tag_document_creation.write_rebuild.rebuild_sub_scope_outputs
-        )
-
-        def fixture_rebuild(
-            _repo_root: Path,
-            scope: str,
-            sub_scope: str,
-        ) -> dict[str, object]:
-            rebuild_calls.append((scope, sub_scope))
-            return {
-                "ok": True,
-                "scope": scope,
-                "sub_scope": sub_scope,
-            }
-
-        tag_document_creation.write_rebuild.rebuild_sub_scope_outputs = (
-            fixture_rebuild
-        )
+        document_names_before = sorted(path.name for path in documents_root.glob("*.md"))
         server = StudioAppServer(("127.0.0.1", 0), fixture_root)
         thread = Thread(target=server.serve_forever, daemon=True)
         thread.start()
@@ -328,9 +308,6 @@ def run() -> None:
             server.shutdown()
             server.server_close()
             thread.join(timeout=5)
-            tag_document_creation.write_rebuild.rebuild_sub_scope_outputs = (
-                original_rebuild
-            )
 
         registry = json.loads(registry_path.read_text(encoding="utf-8"))
         aliases = json.loads(aliases_path.read_text(encoding="utf-8"))
@@ -343,29 +320,10 @@ def run() -> None:
 
         if created.get("tag_id") != "renewal" or created.get("activity_log") != {"written_count": 1}:
             raise AssertionError(f"registry create failed: {created!r}")
-        created_doc_id = str(created.get("doc_id") or "")
-        created_source_path = documents_root / f"{created_doc_id}.md"
-        if created.get("document_target") != {
-            "scope": "analysis",
-            "sub_scope": "tags",
-            "doc_id": created_doc_id,
-        }:
-            raise AssertionError(
-                f"registry create document target failed: {created!r}"
-            )
-        if not created_source_path.is_file():
-            raise AssertionError(
-                f"registry create document missing: {created_source_path}"
-            )
-        created_source = created_source_path.read_text(encoding="utf-8")
-        if "group: theme" not in created_source or "# renewal" not in created_source:
-            raise AssertionError(
-                f"registry create document content failed: {created_source!r}"
-            )
-        if rebuild_calls != [("analysis", "tags")]:
-            raise AssertionError(
-                f"registry create rebuild failed: {rebuild_calls!r}"
-            )
+        if "doc_id" in created or "document_target" in created:
+            raise AssertionError(f"registry create returned document identity: {created!r}")
+        if sorted(path.name for path in documents_root.glob("*.md")) != document_names_before:
+            raise AssertionError("registry create changed Analysis Tag documents")
         if len(activity_rows) != 1 or activity_rows[0].get("user_action_id") != "create-tag":
             raise AssertionError(f"registry create activity failed: {activity_rows!r}")
         if activity_rows[0].get("record_groups", {}).get("tags", {}).get("sample_ids") != ["renewal"]:
@@ -392,9 +350,9 @@ def run() -> None:
             raise AssertionError(f"registry delete did not rewrite assignments: {deleted!r}")
         if [row["tag_id"] for row in registry["tags"]] != ["growth", "renewal"]:
             raise AssertionError(f"registry delete did not leave expected tags: {registry!r}")
-        if registry["tags"][1].get("doc_url") != [analysis_url(created_doc_id)]:
+        if registry["tags"][1].get("doc_url") != []:
             raise AssertionError(
-                f"registry create document identity was not retained: {registry!r}"
+                f"registry create unexpectedly associated a document: {registry!r}"
             )
         if aliases["aliases"]["woodland"]["tags"] != ["growth"]:
             raise AssertionError(f"alias references were not rewritten: {aliases!r}")

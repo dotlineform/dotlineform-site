@@ -30,6 +30,12 @@ from docs_document_subjects import (
     project_subject_associations,
     subject_projection_generation,
 )
+from docs_tag_documents import (
+    load_current_public_tag_locations,
+    normalize_tag_declaration,
+    project_tag_associations,
+    tag_declaration_generation,
+)
 
 
 class SubScopeDocsBuilder(DocsDataBuilder):
@@ -203,6 +209,21 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             for doc in ordered_docs
         }
 
+    def private_tag_declarations(
+        self,
+        ordered_docs: list[DocRecord],
+    ) -> dict[str, dict[str, Any]] | None:
+        customisation = self.sub_scope_config.sub_scope_customisation
+        if (
+            customisation is None
+            or customisation.customisation_id != "analysis_tags"
+        ):
+            return None
+        return {
+            doc.doc_id: normalize_tag_declaration(doc.front_matter)
+            for doc in ordered_docs
+        }
+
     def validate_docs(self, docs: list[DocRecord]) -> None:
         super().validate_docs(docs)
         allowed_statuses = set(self.sub_scope_config.ui_statuses)
@@ -265,6 +286,26 @@ class SubScopeDocsBuilder(DocsDataBuilder):
                 subjects_by_doc_id=subjects_by_doc_id,
                 subject_generation=subject_generation,
             )
+        tag_declarations_by_doc_id = self.private_tag_declarations(ordered_docs)
+        tag_associations_payload: dict[str, Any] | None = None
+        if tag_declarations_by_doc_id is not None:
+            declaration_generation = tag_declaration_generation(
+                scope=self.scope_id,
+                sub_scope=self.sub_scope_id,
+                declarations_by_doc_id=tag_declarations_by_doc_id,
+            )
+            tag_associations_payload = project_tag_associations(
+                scope=self.scope_id,
+                sub_scope=self.sub_scope_id,
+                documents=ordered_docs,
+                declarations_by_doc_id=tag_declarations_by_doc_id,
+                declaration_generation=declaration_generation,
+                public_location_records=load_current_public_tag_locations(
+                    self.repo_root,
+                    scope=self.scope_id,
+                    sub_scope=self.sub_scope_id,
+                ),
+            )
         manage_manifest_payload = self.manage_manifest_payload(
             ordered_docs,
             subjects_by_doc_id=subjects_by_doc_id,
@@ -274,6 +315,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             manifest_payload,
             manage_manifest_payload,
             subject_associations_payload,
+            tag_associations_payload,
             item_payloads,
         )
         diagnostics = self.sub_scope_diagnostics_payload(
@@ -291,6 +333,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             "manifest_payload": manifest_payload,
             "manage_manifest_payload": manage_manifest_payload,
             "subject_associations_payload": subject_associations_payload,
+            "tag_associations_payload": tag_associations_payload,
             "item_payloads": item_payloads,
             "write_plan": write_plan,
             "diagnostics": diagnostics,
@@ -301,6 +344,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         manifest_payload: dict[str, Any],
         manage_manifest_payload: dict[str, Any],
         subject_associations_payload: dict[str, Any] | None,
+        tag_associations_payload: dict[str, Any] | None,
         item_payloads: dict[str, dict[str, Any]],
     ) -> dict[str, Any]:
         manifest_text = json_text(manifest_payload)
@@ -308,6 +352,11 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         subject_associations_text = (
             json_text(subject_associations_payload)
             if subject_associations_payload is not None
+            else ""
+        )
+        tag_associations_text = (
+            json_text(tag_associations_payload)
+            if tag_associations_payload is not None
             else ""
         )
         item_text_by_id: dict[str, str] = {}
@@ -332,6 +381,12 @@ class SubScopeDocsBuilder(DocsDataBuilder):
                 != subject_associations_text
             ),
             "subject_associations_text": subject_associations_text,
+            "tag_associations_write": (
+                tag_associations_payload is not None
+                and read_text(self.output_dir / "tag-associations.json")
+                != tag_associations_text
+            ),
+            "tag_associations_text": tag_associations_text,
             "changed_item_ids": sorted(changed_item_ids),
             "stale_item_ids": sorted(set(existing_item_ids) - set(item_payloads)),
             "item_text_by_id": item_text_by_id,
@@ -351,6 +406,11 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             write_text(
                 self.output_dir / "subject-associations.json",
                 write_plan["subject_associations_text"],
+            )
+        if write_plan["tag_associations_write"]:
+            write_text(
+                self.output_dir / "tag-associations.json",
+                write_plan["tag_associations_text"],
             )
         for doc_id in write_plan["changed_item_ids"]:
             write_text(self.items_dir / f"{doc_id}.json", write_plan["item_text_by_id"][doc_id])
@@ -373,6 +433,10 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         print(
             "  subject associations "
             f"{verb}: {1 if write_plan['subject_associations_write'] else 0}"
+        )
+        print(
+            "  tag associations "
+            f"{verb}: {1 if write_plan['tag_associations_write'] else 0}"
         )
         print(f"  warnings: {len(self.warnings)}")
 
@@ -397,6 +461,9 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             ),
             "subject_associations_changed": (
                 1 if write_plan["subject_associations_write"] else 0
+            ),
+            "tag_associations_changed": (
+                1 if write_plan["tag_associations_write"] else 0
             ),
             "warning_count": len(self.warnings),
             "warnings": self.warnings,

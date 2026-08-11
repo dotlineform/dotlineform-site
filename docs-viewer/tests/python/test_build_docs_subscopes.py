@@ -720,6 +720,7 @@ last_updated: 2026-06-21
 parent_id: ""
 ui_status: draft
 group: subject
+tag_id: absence
 ---
 # Detail
 
@@ -734,6 +735,7 @@ title: Related
 added_date: 2026-06-22
 last_updated: 2026-06-23
 parent_id: {DETAIL_DOC_ID}
+tag_id: absence
 ---
 # Related
 
@@ -750,9 +752,45 @@ Related body.
         )
         detail = read_json(root / f"docs-viewer/scopes/studio/published/documents/sub-scopes/tags/by-id/{DETAIL_DOC_ID}.json")
         related = read_json(root / f"docs-viewer/scopes/studio/published/documents/sub-scopes/tags/by-id/{RELATED_DOC_ID}.json")
+        tag_associations = read_json(
+            root
+            / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/tag-associations.json"
+        )
+        related_source_path = (
+            root
+            / f"docs-viewer/scopes/studio/source/sub-scopes/tags/documents/{RELATED_DOC_ID}.md"
+        )
+        related_source_path.write_text(
+            related_source_path.read_text(encoding="utf-8").replace(
+                "tag_id: absence",
+                "tag_id: presence",
+            ),
+            encoding="utf-8",
+        )
+        reassigned_exit_code, _reassigned_stdout, reassigned_stderr = run_cli(
+            root,
+            ["--scope", "studio", "--sub-scope", "tags", "--write"],
+        )
+        reassigned_associations = read_json(
+            root
+            / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/tag-associations.json"
+        )
+        related_source_path.unlink()
+        deleted_exit_code, _deleted_stdout, deleted_stderr = run_cli(
+            root,
+            ["--scope", "studio", "--sub-scope", "tags", "--write"],
+        )
+        deleted_associations = read_json(
+            root
+            / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/tag-associations.json"
+        )
 
     assert exit_code == 0
     assert stderr == ""
+    assert reassigned_exit_code == 0
+    assert reassigned_stderr == ""
+    assert deleted_exit_code == 0
+    assert deleted_stderr == ""
     assert "Docs sub-scope build (write) scope=studio sub_scope=tags" in stdout
     diagnostics = diagnostics_from_stdout(stdout)
     assert diagnostics["build_mode"] == "sub_scope"
@@ -777,13 +815,14 @@ Related body.
                 "title": "Detail",
                 "ui_status": "draft",
                 "last_updated": "2026-06-21",
-                "customisation": {"group": "subject"},
+                "customisation": {"group": "subject", "tag_id": "absence"},
             },
             {
                 "doc_id": RELATED_DOC_ID,
                 "title": "Related",
                 "ui_status": "",
                 "last_updated": "2026-06-23",
+                "customisation": {"tag_id": "absence"},
             },
         ],
     }
@@ -795,6 +834,35 @@ Related body.
     assert detail["viewer_url"] == f"/docs/?scope=studio&doc={TAGS_REPORT_DOC_ID}&subdoc={DETAIL_DOC_ID}"
     assert 'href="related.md"' in detail["content_html"]
     assert related["parent_id"] == DETAIL_DOC_ID
+    assert tag_associations["schema_version"] == "docs_tag_associations_v1"
+    assert tag_associations["scope"] == "studio"
+    assert tag_associations["sub_scope"] == "tags"
+    assert [
+        document["target"]["doc_id"]
+        for document in tag_associations["associations"][0]["documents"]
+    ] == sorted([DETAIL_DOC_ID, RELATED_DOC_ID])
+    assert tag_associations["associations"][0]["tag_id"] == "absence"
+    assert all(
+        [location["access"] for location in document["locations"]] == ["manage"]
+        for document in tag_associations["associations"][0]["documents"]
+    )
+    assert [
+        (
+            association["tag_id"],
+            [document["target"]["doc_id"] for document in association["documents"]],
+        )
+        for association in reassigned_associations["associations"]
+    ] == [
+        ("absence", [DETAIL_DOC_ID]),
+        ("presence", [RELATED_DOC_ID]),
+    ]
+    assert [
+        (
+            association["tag_id"],
+            [document["target"]["doc_id"] for document in association["documents"]],
+        )
+        for association in deleted_associations["associations"]
+    ] == [("absence", [DETAIL_DOC_ID])]
     assert not (root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/by-id/stale.json").exists()
     assert not (root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/index-tree.json").exists()
     assert not (root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/recent.json").exists()

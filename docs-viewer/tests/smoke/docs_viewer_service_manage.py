@@ -137,6 +137,7 @@ def install_smoke_document_routes(
         "date_display": "January 2000",
         "ui_status": "draft",
         "group": "subject",
+        "tag_id": "absence",
         "source_body": "# Smoke Detail\n\nTest-owned sub-scope source.\n",
         "source_revision": "sha256:" + ("1" * 64),
         "detail_version": 1,
@@ -233,7 +234,10 @@ def install_smoke_document_routes(
                         "date": subscope_state["date"],
                         "date_display": subscope_state["date_display"],
                         "ui_status": subscope_state["ui_status"],
-                        "customisation": {"group": subscope_state["group"]},
+                        "customisation": {
+                            "group": subscope_state["group"],
+                            "tag_id": subscope_state["tag_id"],
+                        },
                     },
                 },
             )
@@ -334,6 +338,7 @@ def install_smoke_document_routes(
     def fulfill_assign_field_group(route) -> None:
         payload = request_json(route)
         group = (payload.get("fields") or {}).get("group")
+        tag_id = (payload.get("fields") or {}).get("tag_id")
         if (
             not include_subscope_report
             or payload.get("scope") != "studio"
@@ -343,10 +348,12 @@ def install_smoke_document_routes(
             or payload.get("field_group") != "tag_fields"
             or payload.get("confirm") is not True
             or group not in {"", "subject", "domain", "form", "theme"}
+            or tag_id not in {"", "absence", "presence"}
         ):
             route.fulfill(status=400, content_type="application/json", body='{"error":"Invalid Tag fields request"}')
             return
         subscope_state["group"] = group
+        subscope_state["tag_id"] = tag_id
         subscope_state["source_revision"] = "sha256:" + ("4" * 64)
         subscope_state["detail_version"] = int(subscope_state["detail_version"]) + 1
         fulfill_json(
@@ -362,8 +369,8 @@ def install_smoke_document_routes(
                     "doc_id": SUBSCOPE_DOC_ID,
                 },
                 "field_group": "tag_fields",
-                "fields": {"group": group},
-                "changes": {"group_changed": True},
+                "fields": {"group": group, "tag_id": tag_id},
+                "changes": {"group_changed": True, "tag_id_changed": False},
                 "source_revision": subscope_state["source_revision"],
             },
         )
@@ -377,7 +384,10 @@ def install_smoke_document_routes(
                 "doc_id": SUBSCOPE_DOC_ID,
                 "title": subscope_state["title"],
                 "ui_status": subscope_state["ui_status"],
-                "customisation": {"group": subscope_state["group"]},
+                "customisation": {
+                    "group": subscope_state["group"],
+                    "tag_id": subscope_state["tag_id"],
+                },
             }
         ]
         if include_subscope_sibling:
@@ -422,6 +432,19 @@ def install_smoke_document_routes(
                     ' data-semantic-token-target-type="series"'
                     ' data-semantic-token-target-id="001">Smoke Series</a></p>'
                 ),
+            },
+        )
+
+    def fulfill_tag_registry(route) -> None:
+        fulfill_json(
+            route,
+            {
+                "ok": True,
+                "tag_registry_version": "tag_registry_v5",
+                "tags": [
+                    {"tag_id": "absence", "group": "theme", "doc_url": []},
+                    {"tag_id": "presence", "group": "subject", "doc_url": []},
+                ],
             },
         )
 
@@ -506,6 +529,10 @@ def install_smoke_document_routes(
         page.route(
             re.compile(r".*/docs/assign-field-group(?:\?.*)?$"),
             fulfill_assign_field_group,
+        )
+        page.route(
+            re.compile(r".*/studio/api/tags/tag-registry(?:\?.*)?$"),
+            fulfill_tag_registry,
         )
         page.route(
             re.compile(r".*/docs/diagram-sources(?:\?.*)?$"),
@@ -2875,10 +2902,15 @@ def exercise_subscope_editing_route(
     if tag_fields_modal.locator(".docsViewer__modalTitle").inner_text().strip() != "Tag fields":
         raise AssertionError("Tag fields action opened the wrong modal")
     group_select = tag_fields_modal.locator("[data-docs-tag-fields-group]")
+    tag_select = tag_fields_modal.locator("[data-docs-tag-fields-tag]")
     if group_select.locator("option").evaluate_all(
         "options => options.map(option => option.value)"
     ) != ["", "subject", "domain", "form", "theme"]:
         raise AssertionError("Tag fields modal did not preserve configured group order")
+    if tag_select.locator("option").evaluate_all(
+        "options => options.map(option => option.value)"
+    ) != ["", "absence", "presence"] or tag_select.input_value() != "absence":
+        raise AssertionError("Tag fields modal did not load canonical Tags")
     group_select.select_option("theme")
     tag_fields_modal.locator('button[data-role="modal-cancel"]').click()
     tag_fields_modal.wait_for(state="detached", timeout=timeout_ms)
@@ -3062,7 +3094,7 @@ def assert_subscope_request_log(request_log: list[dict[str, object]]) -> None:
                 "doc_id": SUBSCOPE_DOC_ID,
                 "source_revision": "sha256:" + ("3" * 64),
                 "field_group": "tag_fields",
-                "fields": {"group": "theme"},
+                "fields": {"group": "theme", "tag_id": "absence"},
                 "confirm": True,
             },
         }

@@ -191,6 +191,26 @@ def sub_scope_path_records(repo_root: Path, parent_config: DocsScopeConfig, sub_
                 action="generate",
             )
         )
+    selected_sub_scopes = [
+        item for item in parent_config.sub_scopes if item.sub_scope == sub_scope
+    ]
+    customisation = (
+        selected_sub_scopes[0].sub_scope_customisation
+        if len(selected_sub_scopes) == 1
+        else None
+    )
+    if (
+        customisation is not None
+        and customisation.customisation_id == "analysis_tags"
+    ):
+        records.append(
+            path_record(
+                repo_root,
+                "sub_scope_tag_associations",
+                docs_output / "tag-associations.json",
+                action="generate",
+            )
+        )
     publish_records: list[dict[str, Any]] = []
     public_output = public_documents_path(parent_config)
     if public_output is not None:
