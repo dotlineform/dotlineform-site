@@ -181,6 +181,26 @@ function hostIsCurrent(root, content) {
   return !content || typeof content.contains !== "function" || content.contains(root);
 }
 
+function registerExpandedPresentation(context, root, reportMeta, mountResult) {
+  const adapter = context && context.reportPresentationAdapter;
+  if (!adapter || typeof adapter.registerMountedReport !== "function") return;
+  try {
+    adapter.registerMountedReport({
+      content: context.content,
+      doc: context.doc,
+      document: root.ownerDocument,
+      documentMountGeneration: context.documentMountGeneration,
+      mountResult,
+      reportMeta,
+      reportRoot: root,
+      requestContentDetail: context.requestContentDetail,
+      viewerScope: context.viewerScope
+    });
+  } catch (error) {
+    console.warn("docs_viewer: expanded report registration unavailable", error);
+  }
+}
+
 function unavailable(root, message) {
   root.innerHTML = "";
   const note = document.createElement("p");
@@ -246,11 +266,14 @@ export function mountDocsViewerReport(context) {
       root.innerHTML = '<p class="docsViewerReport__status">Loading report...</p>';
       return loader.load().then(function (mount) {
         if (!hostIsCurrent(root, context.content)) return false;
+        const resolvedReportMeta = Object.assign({}, meta, { registryEntry: reportMeta });
         return Promise.resolve(mount(Object.assign({}, context, {
           reportRoot: root,
-          reportMeta: Object.assign({}, meta, { registryEntry: reportMeta }),
+          reportMeta: resolvedReportMeta,
           reportRegistry: registry
-        }))).then(function () {
+        }))).then(function (mountResult) {
+          if (!hostIsCurrent(root, context.content)) return false;
+          registerExpandedPresentation(context, root, resolvedReportMeta, mountResult);
           return true;
         });
       });

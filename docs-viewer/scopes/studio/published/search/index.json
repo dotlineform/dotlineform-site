@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-1b8f82d753743281d8f8113bad7a995b",
-    "generated_at_utc": "2026-08-11T09:15:00Z",
+    "version": "blake2b-e3e297ab8ab423d330627e993e4185ce",
+    "generated_at_utc": "2026-08-11T09:31:49Z",
     "count": 307
   },
   "entries": [
@@ -4354,35 +4354,36 @@
       "kind": "doc",
       "title": "Expanded Report View",
       "href": "/docs/?scope=studio&doc=d-20260810-165949-ee4d35",
-      "last_updated": "2026-08-11 10:11:31",
+      "last_updated": "2026-08-11 10:31:00",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-11 10:11:31 • Roadmap",
+      "display_meta": "2026-08-11 10:31:00 • Roadmap",
       "search_terms": [
         "expanded report view",
         "expanded",
         "report",
         "view",
         "roadmap",
-        "2026-08-11 10:11:31",
+        "2026-08-11 10:31:00",
         "2026",
         "08",
         "11",
         "10",
         "31",
+        "00",
         "d-20260810-165949-ee4d35"
       ],
-      "search_text": "expanded report view expanded report view roadmap 2026-08-11 10:11:31 2026 08 11 10 31 d-20260810-165949-ee4d35"
+      "search_text": "expanded report view expanded report view roadmap 2026-08-11 10:31:00 2026 08 11 10 31 00 d-20260810-165949-ee4d35"
     },
     {
       "id": "d-20260811-090239-12f6d6",
       "kind": "doc",
       "title": "ERV-1 — Expanded Report View Delivery",
       "href": "/docs/?scope=studio&doc=d-20260811-090239-12f6d6",
-      "last_updated": "2026-08-11 10:14:59",
+      "last_updated": "2026-08-11 10:31:00",
       "parent_id": "d-20260810-165949-ee4d35",
       "parent_title": "Expanded Report View",
-      "display_meta": "2026-08-11 10:14:59 • Expanded Report View",
+      "display_meta": "2026-08-11 10:31:00 • Expanded Report View",
       "search_terms": [
         "erv-1 — expanded report view delivery",
         "erv",
@@ -4392,16 +4393,16 @@
         "view",
         "delivery",
         "expanded report view",
-        "2026-08-11 10:14:59",
+        "2026-08-11 10:31:00",
         "2026",
         "08",
         "11",
         "10",
-        "14",
-        "59",
+        "31",
+        "00",
         "d-20260811-090239-12f6d6"
       ],
-      "search_text": "erv-1 — expanded report view delivery erv 1 expanded report view delivery expanded report view 2026-08-11 10:14:59 2026 08 11 10 14 59 d-20260811-090239-12f6d6"
+      "search_text": "erv-1 — expanded report view delivery erv 1 expanded report view delivery expanded report view 2026-08-11 10:31:00 2026 08 11 10 31 00 d-20260811-090239-12f6d6"
     },
     {
       "id": "d-20260808-205414-91040a",

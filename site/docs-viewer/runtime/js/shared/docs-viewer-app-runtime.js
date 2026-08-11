@@ -406,6 +406,7 @@ export function startDocsViewerRuntime(options) {
       }
     },
     mountDocumentExtras: settings.mountDocumentExtras,
+    reportPresentationAdapter: settings.reportPresentationAdapter,
     more: more,
     projectDocumentShell: panelLayout.projectMainView,
     renderBookmarkToggle: renderBookmarkToggle,

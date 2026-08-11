@@ -62,6 +62,8 @@ export function initDocsViewerDocumentController(context) {
       managementContext: managementContextActive(),
       payload: payload,
       documentMountGeneration: mountGeneration,
+      reportPresentationAdapter: context.reportPresentationAdapter,
+      requestContentDetail: context.requestContentDetail,
       publishSubscopeReportState: context.publishSubscopeReportState,
       routeContext: typeof context.routeContext === "function" ? context.routeContext() : context.routeContext,
       scopeConfigState: scopeConfigState,
@@ -123,6 +125,20 @@ export function initDocsViewerDocumentController(context) {
       });
     } catch (error) {
       console.warn("docs_viewer: table detail cleanup unavailable", error);
+    }
+  }
+
+  function releaseReportPresentation() {
+    var adapter = context.reportPresentationAdapter;
+    if (!adapter || typeof adapter.releaseDocument !== "function") return;
+    try {
+      adapter.releaseDocument({
+        content: content,
+        document: content ? content.ownerDocument : null,
+        window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+      });
+    } catch (error) {
+      console.warn("docs_viewer: report presentation cleanup unavailable", error);
     }
   }
 
@@ -220,6 +236,7 @@ export function initDocsViewerDocumentController(context) {
   function hideDocPane() {
     var mountGeneration = nextDocumentMountGeneration();
     clearSubscopeReportState("document-pane-hidden", mountGeneration);
+    releaseReportPresentation();
     releaseTableDetails();
     projectDocumentShell({
       toolbarHidden: true,
@@ -251,6 +268,7 @@ export function initDocsViewerDocumentController(context) {
       });
     }
     if (!content) return;
+    releaseReportPresentation();
     releaseTableDetails();
     releaseDiagramDetails();
     content.textContent = "";
@@ -288,6 +306,7 @@ export function initDocsViewerDocumentController(context) {
 
     showDocPane();
     context.renderMeta(doc);
+    releaseReportPresentation();
     releaseTableDetails();
     releaseDiagramDetails();
     content.innerHTML = payload.content_html || "";
@@ -319,6 +338,7 @@ export function initDocsViewerDocumentController(context) {
     context.renderSidebar();
     showDocPane();
     context.renderMeta(doc);
+    releaseReportPresentation();
     releaseTableDetails();
     releaseDiagramDetails();
     content.textContent = "";

@@ -12,6 +12,9 @@ import {
   createDocsViewerTableDetailAdapter
 } from "../shared/docs-viewer-table-detail.js";
 import {
+  createDocsViewerReportPresentationAdapter
+} from "../shared/docs-viewer-report-presentation.js";
+import {
   docsViewerInlineMermaidAdapter
 } from "./docs-viewer-inline-mermaid.js";
 import {
@@ -82,6 +85,7 @@ const managedTableTools = createDocsViewerManagedTableTools();
 const managedTableDetailAdapter = createDocsViewerTableDetailAdapter({
   presentationExtension: managedTableTools.presentationExtension
 });
+const reportPresentationAdapter = createDocsViewerReportPresentationAdapter();
 
 startDocsViewerManageApp({
   contentDetailBackControlId: CONTENT_DETAIL_BACK_CONTROL_ID,
@@ -104,6 +108,7 @@ startDocsViewerManageApp({
       createDocsViewerManagementViewDefinitions(),
       {
         diagramDetailAdapter: docsViewerDiagramDetailAdapter,
+        reportPresentationAdapter: reportPresentationAdapter,
         tableDetailAdapter: managedTableDetailAdapter
       }
     )
@@ -124,6 +129,7 @@ startDocsViewerManageApp({
   ),
   managementShellRenderers: createDocsViewerManagementShellRenderers(),
   mountDocumentExtras: mountDocsViewerManageExtras,
+  reportPresentationAdapter: reportPresentationAdapter,
   sourceEditorActionControlIds: [
     CATALOGUE_IMAGE_CONTROL_ID,
     CATALOGUE_TOKEN_CONTROL_ID,

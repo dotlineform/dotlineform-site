@@ -477,18 +477,21 @@ export function mountDocsViewerManageDocumentExtras(context) {
       checkGeneratedDataReadCapability: settings.checkGeneratedDataReadCapability,
       content: settings.content,
       doc: settings.doc,
+      documentMountGeneration: settings.documentMountGeneration,
       fetchDocsIndexTree: function (scope) {
         return fetchDocsIndexTreeForScope(settings, scope);
       },
       managementContext: Boolean(settings.managementContext),
       managementService: managementService,
       payload: payload,
+      reportPresentationAdapter: settings.reportPresentationAdapter,
       publicPreviewBase: cleanString(routeContext.publicPreviewBase),
       studioBaseUrl: cleanString(routeContext.studioBaseUrl),
       reportRegistryUrl: cleanString(routeContext.reportRegistryUrl),
       reportService: reportManagementBaseUrl
         ? createDocsViewerReportService({ baseUrl: reportManagementBaseUrl })
         : null,
+      requestContentDetail: settings.requestContentDetail,
       setStatus: settings.setStatus,
       scopeConfigs: scopeConfigs(settings).slice(),
       viewerScope: currentViewerScope(settings),
@@ -566,18 +569,21 @@ export function mountDocsViewerManageDocumentExtras(context) {
     checkGeneratedDataReadCapability: settings.checkGeneratedDataReadCapability,
     content: settings.content,
     doc: settings.doc,
+    documentMountGeneration: settings.documentMountGeneration,
     fetchDocsIndexTree: function (scope) {
       return fetchDocsIndexTreeForScope(settings, scope);
     },
     managementContext: Boolean(settings.managementContext),
     managementService: managementService,
     payload: payload,
+    reportPresentationAdapter: settings.reportPresentationAdapter,
     publicPreviewBase: cleanString(routeContext.publicPreviewBase),
     studioBaseUrl: cleanString(routeContext.studioBaseUrl),
     reportRegistryUrl: cleanString(routeContext.reportRegistryUrl),
     reportService: reportManagementBaseUrl
       ? createDocsViewerReportService({ baseUrl: reportManagementBaseUrl })
       : null,
+    requestContentDetail: settings.requestContentDetail,
     setStatus: settings.setStatus,
     scopeConfigs: scopeConfigs(settings).slice(),
     subscopeReportContributionPromise: contribution,

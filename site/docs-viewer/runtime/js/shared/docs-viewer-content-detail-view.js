@@ -38,12 +38,14 @@ export function createDocsViewerContentDetailView(options) {
   var settings = options || {};
   var tableDetailAdapter = settings.tableDetailAdapter || null;
   var diagramDetailAdapter = settings.diagramDetailAdapter || null;
+  var reportPresentationAdapter = settings.reportPresentationAdapter || null;
   var active = null;
 
   function presentationAdapter(targetContext) {
     var kind = String(targetContext && targetContext.kind || "").trim();
     if (kind === "table") return tableDetailAdapter;
     if (kind === "diagram") return diagramDetailAdapter;
+    if (kind === "report") return reportPresentationAdapter;
     return null;
   }
 
@@ -54,7 +56,10 @@ export function createDocsViewerContentDetailView(options) {
     }
     var current = active;
     active = null;
-    current.presentation.release();
+    current.presentation.release({
+      requestReason: context.requestReason,
+      restoreDocumentContext: restoreDocumentContext
+    });
     if (current.mount && current.mount.dataset) {
       delete current.mount.dataset.docsContentDetailActive;
     }
@@ -79,6 +84,8 @@ export function createDocsViewerContentDetailView(options) {
     }
     var documentRef = mount.ownerDocument;
     var windowRef = documentRef.defaultView;
+    var scrollX = windowRef ? windowRef.scrollX : 0;
+    var scrollY = windowRef ? windowRef.scrollY : 0;
     var presentation = adapter.mountPresentation({
       content: mount,
       document: documentRef,
@@ -87,8 +94,8 @@ export function createDocsViewerContentDetailView(options) {
     active = {
       mount: mount,
       presentation: presentation,
-      scrollX: windowRef ? windowRef.scrollX : 0,
-      scrollY: windowRef ? windowRef.scrollY : 0,
+      scrollX: scrollX,
+      scrollY: scrollY,
       window: windowRef
     };
     mount.dataset.docsContentDetailActive = "true";
@@ -136,6 +143,7 @@ export function withDocsViewerContentDetailDefinitions(definitions, options) {
       load: function () {
         return createDocsViewerContentDetailView({
           diagramDetailAdapter: settings.diagramDetailAdapter,
+          reportPresentationAdapter: settings.reportPresentationAdapter,
           tableDetailAdapter: settings.tableDetailAdapter
         });
       }

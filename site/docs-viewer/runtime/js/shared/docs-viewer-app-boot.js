@@ -202,6 +202,7 @@ export function resolveDocsViewerAppBootContext(options) {
         inlineMermaidAdapter: settings.inlineMermaidAdapter,
         mainViewControlHandlerContributions: settings.mainViewControlHandlerContributions || {},
         mountDocumentExtras: settings.mountDocumentExtras,
+        reportPresentationAdapter: settings.reportPresentationAdapter,
         sourceEditorActionControlIds: settings.sourceEditorActionControlIds || [],
         sourceEditorInfoViewResolver: settings.sourceEditorInfoViewResolver,
         tableDetailAdapter: settings.tableDetailAdapter,
