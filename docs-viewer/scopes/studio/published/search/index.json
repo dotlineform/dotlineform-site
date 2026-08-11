@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-37c5dd0cabe85b0a4f7f5d7ed21787e8",
-    "generated_at_utc": "2026-08-11T10:51:03Z",
+    "version": "blake2b-141944ecdb4e564a81f60d6d50664500",
+    "generated_at_utc": "2026-08-11T11:07:55Z",
     "count": 309
   },
   "entries": [
@@ -2516,10 +2516,10 @@
       "kind": "doc",
       "title": "Report Capability and Composition",
       "href": "/docs/?scope=studio&doc=d-20260810-173738-703ecd",
-      "last_updated": "2026-08-11 11:48:40",
+      "last_updated": "2026-08-11 12:07:08",
       "parent_id": "d-20260513-105343-6de36b",
       "parent_title": "Reports",
-      "display_meta": "2026-08-11 11:48:40 • Reports",
+      "display_meta": "2026-08-11 12:07:08 • Reports",
       "search_terms": [
         "report capability and composition",
         "report",
@@ -2527,15 +2527,15 @@
         "and",
         "composition",
         "reports",
-        "2026-08-11 11:48:40",
+        "2026-08-11 12:07:08",
         "2026",
         "08",
         "11",
-        "48",
-        "40",
+        "12",
+        "07",
         "d-20260810-173738-703ecd"
       ],
-      "search_text": "report capability and composition report capability and composition reports 2026-08-11 11:48:40 2026 08 11 48 40 d-20260810-173738-703ecd"
+      "search_text": "report capability and composition report capability and composition reports 2026-08-11 12:07:08 2026 08 11 12 07 d-20260810-173738-703ecd"
     },
     {
       "id": "d-20260331-000000-c313fd",
@@ -2593,25 +2593,24 @@
       "kind": "doc",
       "title": "Runtime Module Ownership",
       "href": "/docs/?scope=studio&doc=d-20260605-125108-1d1ef3",
-      "last_updated": "2026-07-31 00:09:51",
+      "last_updated": "2026-08-11 12:07:08",
       "parent_id": "d-20260331-000000-c313fd",
       "parent_title": "Runtime",
-      "display_meta": "2026-07-31 00:09:51 • Runtime",
+      "display_meta": "2026-08-11 12:07:08 • Runtime",
       "search_terms": [
         "runtime module ownership",
         "runtime",
         "module",
         "ownership",
-        "2026-07-31 00:09:51",
+        "2026-08-11 12:07:08",
         "2026",
+        "08",
+        "11",
+        "12",
         "07",
-        "31",
-        "00",
-        "09",
-        "51",
         "d-20260605-125108-1d1ef3"
       ],
-      "search_text": "runtime module ownership runtime module ownership 2026-07-31 00:09:51 2026 07 31 00 09 51 d-20260605-125108-1d1ef3"
+      "search_text": "runtime module ownership runtime module ownership 2026-08-11 12:07:08 2026 08 11 12 07 d-20260605-125108-1d1ef3"
     },
     {
       "id": "d-20260515-000000-f43740",
@@ -4353,35 +4352,35 @@
       "kind": "doc",
       "title": "Expanded Report View",
       "href": "/docs/?scope=studio&doc=d-20260810-165949-ee4d35",
-      "last_updated": "2026-08-11 11:48:40",
+      "last_updated": "2026-08-11 12:07:08",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-11 11:48:40 • Roadmap",
+      "display_meta": "2026-08-11 12:07:08 • Roadmap",
       "search_terms": [
         "expanded report view",
         "expanded",
         "report",
         "view",
         "roadmap",
-        "2026-08-11 11:48:40",
+        "2026-08-11 12:07:08",
         "2026",
         "08",
         "11",
-        "48",
-        "40",
+        "12",
+        "07",
         "d-20260810-165949-ee4d35"
       ],
-      "search_text": "expanded report view expanded report view roadmap 2026-08-11 11:48:40 2026 08 11 48 40 d-20260810-165949-ee4d35"
+      "search_text": "expanded report view expanded report view roadmap 2026-08-11 12:07:08 2026 08 11 12 07 d-20260810-165949-ee4d35"
     },
     {
       "id": "d-20260811-090239-12f6d6",
       "kind": "doc",
       "title": "ERV-1 — Expanded Report View Delivery",
       "href": "/docs/?scope=studio&doc=d-20260811-090239-12f6d6",
-      "last_updated": "2026-08-11 11:48:40",
+      "last_updated": "2026-08-11 12:07:08",
       "parent_id": "d-20260810-165949-ee4d35",
       "parent_title": "Expanded Report View",
-      "display_meta": "2026-08-11 11:48:40 • Expanded Report View",
+      "display_meta": "2026-08-11 12:07:08 • Expanded Report View",
       "search_terms": [
         "erv-1 — expanded report view delivery",
         "erv",
@@ -4391,15 +4390,15 @@
         "view",
         "delivery",
         "expanded report view",
-        "2026-08-11 11:48:40",
+        "2026-08-11 12:07:08",
         "2026",
         "08",
         "11",
-        "48",
-        "40",
+        "12",
+        "07",
         "d-20260811-090239-12f6d6"
       ],
-      "search_text": "erv-1 — expanded report view delivery erv 1 expanded report view delivery expanded report view 2026-08-11 11:48:40 2026 08 11 48 40 d-20260811-090239-12f6d6"
+      "search_text": "erv-1 — expanded report view delivery erv 1 expanded report view delivery expanded report view 2026-08-11 12:07:08 2026 08 11 12 07 d-20260811-090239-12f6d6"
     },
     {
       "id": "d-20260811-113809-ad8110",
@@ -4433,10 +4432,10 @@
       "kind": "doc",
       "title": "Docs Viewer Capability Composition Audit",
       "href": "/docs/?scope=studio&doc=d-20260811-112331-1f131b",
-      "last_updated": "2026-08-11 11:38:09",
+      "last_updated": "2026-08-11 12:07:08",
       "parent_id": "d-20260811-113809-ad8110",
       "parent_title": "Implementation Review and Architectural Conformance",
-      "display_meta": "2026-08-11 11:38:09 • Implementation Review and Architectural Conformance",
+      "display_meta": "2026-08-11 12:07:08 • Implementation Review and Architectural Conformance",
       "search_terms": [
         "docs viewer capability composition audit",
         "docs",
@@ -4450,15 +4449,15 @@
         "and",
         "architectural",
         "conformance",
-        "2026-08-11 11:38:09",
+        "2026-08-11 12:07:08",
         "2026",
         "08",
         "11",
-        "38",
-        "09",
+        "12",
+        "07",
         "d-20260811-112331-1f131b"
       ],
-      "search_text": "docs viewer capability composition audit docs viewer capability composition audit implementation review and architectural conformance implementation review and architectural conformance 2026-08-11 11:38:09 2026 08 11 38 09 d-20260811-112331-1f131b"
+      "search_text": "docs viewer capability composition audit docs viewer capability composition audit implementation review and architectural conformance implementation review and architectural conformance 2026-08-11 12:07:08 2026 08 11 12 07 d-20260811-112331-1f131b"
     },
     {
       "id": "d-20260808-205414-91040a",

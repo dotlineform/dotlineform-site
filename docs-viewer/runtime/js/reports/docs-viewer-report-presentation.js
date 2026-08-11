@@ -126,7 +126,7 @@ function createOpenControl(documentRef, label) {
   return { button: button, row: row };
 }
 
-/** Own one explicit live-report presentation registration per rendered document. */
+/** Create one report-presentation adapter with no management or service authority. */
 export function createDocsViewerReportPresentationAdapter(options) {
   var settings = options || {};
   var presentationExtension = settings.presentationExtension || null;

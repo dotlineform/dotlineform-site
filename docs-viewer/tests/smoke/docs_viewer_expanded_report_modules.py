@@ -13,11 +13,21 @@ from playwright.sync_api import Page, sync_playwright
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+LOCAL_REPORT_PRESENTATION_URL = "/docs-viewer/runtime/js/reports/docs-viewer-report-presentation.js"
+LOCAL_REPORT_PRESENTATION_PATH = (
+    REPO_ROOT / "docs-viewer/runtime/js/reports/docs-viewer-report-presentation.js"
+)
 
 
 class QuietStaticHandler(SimpleHTTPRequestHandler):
     def log_message(self, format, *args):  # noqa: A003
         return
+
+    def translate_path(self, path: str) -> str:
+        request_path = path.partition("?")[0].partition("#")[0]
+        if request_path == LOCAL_REPORT_PRESENTATION_URL:
+            return str(LOCAL_REPORT_PRESENTATION_PATH)
+        return super().translate_path(path)
 
 
 def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
@@ -130,7 +140,7 @@ def install_fixture(page: Page) -> None:
             const modules = await Promise.all([
                 import('/docs-viewer/runtime/js/shared/docs-viewer-content-detail-view.js'),
                 import('/docs-viewer/runtime/js/shared/docs-viewer-document-controller.js'),
-                import('/docs-viewer/runtime/js/shared/docs-viewer-report-presentation.js')
+                import('/docs-viewer/runtime/js/reports/docs-viewer-report-presentation.js')
             ]);
             window.__docsViewerExpandedReportSmoke = {
                 contentDetail: modules[0],

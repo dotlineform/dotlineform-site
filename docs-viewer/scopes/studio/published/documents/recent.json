@@ -4,10 +4,18 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260811-112331-1f131b",
+      "title": "Docs Viewer Capability Composition Audit",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260811-112331-1f131b.json",
+      "timestamp": "2026-08-11 12:07:08",
+      "parent_id": "d-20260811-113809-ad8110",
+      "parent_title": "Implementation Review and Architectural Conformance"
+    },
+    {
       "doc_id": "d-20260811-090239-12f6d6",
       "title": "ERV-1 — Expanded Report View Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260811-090239-12f6d6.json",
-      "timestamp": "2026-08-11 11:48:40",
+      "timestamp": "2026-08-11 12:07:08",
       "parent_id": "d-20260810-165949-ee4d35",
       "parent_title": "Expanded Report View"
     },
@@ -15,7 +23,7 @@
       "doc_id": "d-20260810-165949-ee4d35",
       "title": "Expanded Report View",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-165949-ee4d35.json",
-      "timestamp": "2026-08-11 11:48:40",
+      "timestamp": "2026-08-11 12:07:08",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
     },
@@ -23,17 +31,17 @@
       "doc_id": "d-20260810-173738-703ecd",
       "title": "Report Capability and Composition",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-173738-703ecd.json",
-      "timestamp": "2026-08-11 11:48:40",
+      "timestamp": "2026-08-11 12:07:08",
       "parent_id": "d-20260513-105343-6de36b",
       "parent_title": "Reports"
     },
     {
-      "doc_id": "d-20260811-112331-1f131b",
-      "title": "Docs Viewer Capability Composition Audit",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260811-112331-1f131b.json",
-      "timestamp": "2026-08-11 11:38:09",
-      "parent_id": "d-20260811-113809-ad8110",
-      "parent_title": "Implementation Review and Architectural Conformance"
+      "doc_id": "d-20260605-125108-1d1ef3",
+      "title": "Runtime Module Ownership",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260605-125108-1d1ef3.json",
+      "timestamp": "2026-08-11 12:07:08",
+      "parent_id": "d-20260331-000000-c313fd",
+      "parent_title": "Runtime"
     },
     {
       "doc_id": "d-20260811-113809-ad8110",
@@ -74,15 +82,7 @@
       "timestamp": "2026-08-10 22:45:23",
       "parent_id": "d-20260423-000000-d015e6",
       "parent_title": "Studio"
-    },
-    {
-      "doc_id": "d-20260513-105343-6de36b",
-      "title": "Reports",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260513-105343-6de36b.json",
-      "timestamp": "2026-08-10 22:45:23",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-08-11T10:51:03Z"
+  "generated_at": "2026-08-11T11:07:55Z"
 }

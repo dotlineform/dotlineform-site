@@ -138,7 +138,6 @@
         "shared/docs-viewer-metadata-info-view.js",
         "shared/docs-viewer-panel-layout.js",
         "shared/docs-viewer-render.js",
-        "shared/docs-viewer-report-presentation.js",
         "shared/docs-viewer-route-config.js",
         "shared/docs-viewer-route-features.js",
         "shared/docs-viewer-route-workflow.js",

@@ -13,7 +13,7 @@ import {
 } from "../shared/docs-viewer-table-detail.js";
 import {
   createDocsViewerReportPresentationAdapter
-} from "../shared/docs-viewer-report-presentation.js";
+} from "../reports/docs-viewer-report-presentation.js";
 import {
   docsViewerInlineMermaidAdapter
 } from "./docs-viewer-inline-mermaid.js";
