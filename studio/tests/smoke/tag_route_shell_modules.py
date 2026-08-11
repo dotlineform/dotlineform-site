@@ -138,57 +138,41 @@ def assert_document_location_provider_contract(page: Page) -> None:
             const module = await import('/shared/frontend/js/document-location-provider.js');
             const actualProvider = module.createDocumentLocationProvider();
             const actualAnalysis = await actualProvider.load({ scopeIds: ['analysis'] });
-            const actualLibrary = await actualProvider.load({ scopeIds: ['library'] });
             const calls = [];
-            const payloads = {
-                analysis: {
-                    schema_version: 'docs_document_locations_v1',
-                    scope_id: 'analysis',
-                    records: [
-                        {
-                            url: '/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-63967a',
-                            scope_id: 'analysis',
-                            document_title: 'bird-nerve',
-                            report_title: 'All Tags'
-                        },
-                        {
-                            url: '/analysis/?doc=d-20260729-111111-abcdef&subdoc=d-20260727-225608-63967a',
-                            scope_id: 'analysis',
-                            document_title: 'bird-nerve',
-                            report_title: 'Made-up Tags'
-                        },
-                        {
-                            url: '/analysis/?doc=d-20260426-164043-e14f49',
-                            scope_id: 'analysis',
-                            document_title: 'Analysis',
-                            report_title: ''
-                        },
-                        {
-                            url: '/analysis/?doc=d-20260729-121212-fedcba',
-                            scope_id: 'analysis',
-                            document_title: 'Small bird study',
-                            report_title: ''
-                        }
-                    ]
-                },
-                library: {
-                    schema_version: 'docs_document_locations_v1',
-                    scope_id: 'library',
-                    records: [
-                        {
-                            url: '/library/?doc=d-20260507-172400-74807b',
-                            scope_id: 'library',
-                            document_title: 'Beauty',
-                            report_title: ''
-                        }
-                    ]
-                }
+            const payload = {
+                schema_version: 'docs_document_locations_v1',
+                scope_id: 'analysis',
+                records: [
+                    {
+                        url: '/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-63967a',
+                        scope_id: 'analysis',
+                        document_title: 'bird-nerve',
+                        report_title: 'All Tags'
+                    },
+                    {
+                        url: '/analysis/?doc=d-20260729-111111-abcdef&subdoc=d-20260727-225608-63967a',
+                        scope_id: 'analysis',
+                        document_title: 'bird-nerve',
+                        report_title: 'Made-up Tags'
+                    },
+                    {
+                        url: '/analysis/?doc=d-20260426-164043-e14f49',
+                        scope_id: 'analysis',
+                        document_title: 'Analysis',
+                        report_title: ''
+                    },
+                    {
+                        url: '/analysis/?doc=d-20260729-121212-fedcba',
+                        scope_id: 'analysis',
+                        document_title: 'Small bird study',
+                        report_title: ''
+                    }
+                ]
             };
             const provider = module.createDocumentLocationProvider({
                 fetchJson: async (url) => {
                     calls.push(url);
-                    const scopeId = url.includes('/analysis/') ? 'analysis' : 'library';
-                    return payloads[scopeId];
+                    return payload;
                 }
             });
             const exact = await provider.search({
@@ -198,16 +182,12 @@ def assert_document_location_provider_contract(page: Page) -> None:
             const excluded = await provider.search({
                 scopeIds: ['analysis'],
                 query: 'bird',
-                excludedUrls: [payloads.analysis.records[0].url]
-            });
-            const multi = await provider.search({
-                scopeIds: ['analysis', 'library'],
-                query: 'beauty'
+                excludedUrls: [payload.records[0].url]
             });
             const resolved = await provider.resolve({
                 scopeIds: ['analysis'],
                 urls: [
-                    payloads.analysis.records[0].url,
+                    payload.records[0].url,
                     '/analysis/?doc=d-20260729-131313-a1b2c3',
                     '/docs/?scope=studio&doc=d-20260729-141414-b1c2d3'
                 ]
@@ -221,7 +201,7 @@ def assert_document_location_provider_contract(page: Page) -> None:
                 emptyError = error.message;
             }
             try {
-                await provider.load({ scopeIds: ['studio'] });
+                await provider.load({ scopeIds: ['library'] });
             } catch (error) {
                 unsupportedError = error.message;
             }
@@ -239,14 +219,11 @@ def assert_document_location_provider_contract(page: Page) -> None:
                 actual: {
                     analysisCount: actualAnalysis.length,
                     analysisScopes: [...new Set(actualAnalysis.map((record) => record.scope_id))],
-                    analysisReports: actualAnalysis.filter((record) => record.report_title).length,
-                    libraryCount: actualLibrary.length,
-                    libraryScopes: [...new Set(actualLibrary.map((record) => record.scope_id))]
+                    analysisReports: actualAnalysis.filter((record) => record.report_title).length
                 },
                 calls,
                 exact: exact.map((record) => [record.document_title, record.report_title]),
                 excluded: excluded.map((record) => [record.document_title, record.report_title]),
-                multi: multi.map((record) => [record.scope_id, record.document_title]),
                 resolved: resolved.map((record) => ({
                     url: record.url,
                     scope: record.scope_id,
@@ -262,11 +239,8 @@ def assert_document_location_provider_contract(page: Page) -> None:
     assert result["actual"]["analysisCount"] >= 2
     assert result["actual"]["analysisScopes"] == ["analysis"]
     assert result["actual"]["analysisReports"] >= 1
-    assert result["actual"]["libraryCount"] >= 1
-    assert result["actual"]["libraryScopes"] == ["library"]
     assert result["calls"] == [
-        "/assets/data/search/analysis/document-locations.json",
-        "/assets/data/search/library/document-locations.json",
+        "/assets/data/search/analysis/document-locations.json"
     ]
     assert result["exact"] == [
         ["bird-nerve", "All Tags"],
@@ -276,7 +250,6 @@ def assert_document_location_provider_contract(page: Page) -> None:
         ["bird-nerve", "Made-up Tags"],
         ["Small bird study", ""],
     ]
-    assert result["multi"] == [["library", "Beauty"]]
     assert result["resolved"][0]["available"] is True
     assert result["resolved"][1] == {
         "url": "/analysis/?doc=d-20260729-131313-a1b2c3",
@@ -291,7 +264,7 @@ def assert_document_location_provider_contract(page: Page) -> None:
         "available": False,
     }
     assert "non-empty scopeIds" in result["emptyError"]
-    assert "unsupported document-location scope: studio" in result["unsupportedError"]
+    assert "unsupported document-location scope: library" in result["unsupportedError"]
     assert result["invalidCommitError"] == "document location commit record is invalid"
 
 
@@ -369,20 +342,20 @@ def assert_document_location_picker_interactions(page: Page) -> None:
 
             picker.destroy();
             ({ input, popup } = resetPickerDom());
-            input.value = 'beauty';
-            const libraryRecord = {
-                url: '/library/?doc=d-20260507-172400-74807b',
-                scope_id: 'library',
-                document_title: 'Beauty',
+            input.value = 'planning';
+            const pointerRecord = {
+                url: '/analysis/?doc=d-20260507-172400-74807b',
+                scope_id: 'analysis',
+                document_title: 'Planning',
                 report_title: ''
             };
             picker = pickerModule.bindDocumentLocationPicker(input, popup, {
-                scopeIds: ['analysis', 'library'],
-                provider: { search: async () => [libraryRecord] },
+                scopeIds: ['analysis'],
+                provider: { search: async () => [pointerRecord] },
                 onCommit: (record) => commits.push(record)
             });
             await picker.refresh();
-            const multiScope = {
+            const pointerOptions = {
                 buttonCount: popup.querySelectorAll('button').length,
                 text: popup.textContent
             };
@@ -471,7 +444,7 @@ def assert_document_location_picker_interactions(page: Page) -> None:
             return {
                 singleScope,
                 keyboardCommit,
-                multiScope,
+                pointerOptions,
                 pointerCommit,
                 emptyText,
                 failureText,
@@ -493,9 +466,9 @@ def assert_document_location_picker_interactions(page: Page) -> None:
         "document_title": "bird-nerve",
         "report_title": "Made-up Tags",
     }
-    assert result["multiScope"]["buttonCount"] == 1
-    assert "Library" in result["multiScope"]["text"]
-    assert result["pointerCommit"]["scope_id"] == "library"
+    assert result["pointerOptions"]["buttonCount"] == 1
+    assert "Planning" in result["pointerOptions"]["text"]
+    assert result["pointerCommit"]["scope_id"] == "analysis"
     assert "No matching documents." in result["emptyText"]
     assert "Projection unavailable." in result["failureText"]
     assert "fast" in result["asyncText"]
@@ -527,7 +500,7 @@ def assert_tag_registry_document_contract(page: Page) -> None:
                 '/analysis/?doc=d-20260729-111111-abcdef'
                 + '&subdoc=d-20260727-225608-63967a';
             const staleUrl = '/analysis/?doc=d-20260729-131313-a1b2c3';
-            const libraryUrl = '/library/?doc=d-20260507-172400-74807b';
+            const unsupportedUrl = '/docs/?scope=studio&doc=d-20260507-172400-74807b';
             const firstRecord = {
                 url: firstUrl,
                 scope_id: 'analysis',
@@ -564,7 +537,7 @@ def assert_tag_registry_document_contract(page: Page) -> None:
                 {
                     provider: {
                         resolve: async ({ scopeIds, urls }) => {
-                            if (scopeIds.join(',') !== 'analysis,library') {
+                            if (scopeIds.join(',') !== 'analysis') {
                                 throw new Error('unexpected scopes');
                             }
                             return urls.map((url) => {
@@ -602,19 +575,19 @@ def assert_tag_registry_document_contract(page: Page) -> None:
                 duplicate,
                 firstUrl
             );
-            let libraryError = '';
+            let unsupportedScopeError = '';
             try {
                 documents.appendTagRegistryDocumentUrl(
                     removed,
                     {
-                        url: libraryUrl,
-                        scope_id: 'library',
-                        document_title: 'Beauty',
+                        url: unsupportedUrl,
+                        scope_id: 'studio',
+                        document_title: 'Planning',
                         report_title: ''
                     }
                 );
             } catch (error) {
-                libraryError = error.message;
+                unsupportedScopeError = error.message;
             }
 
             document.body.innerHTML = '<div id="list"></div><div id="modals"></div>';
@@ -735,7 +708,7 @@ def assert_tag_registry_document_contract(page: Page) -> None:
                 added,
                 duplicate,
                 removed,
-                libraryError,
+                unsupportedScopeError,
                 documentSort: domain.compareTags(attached[0], attached[1], 'documents'),
                 table,
                 beforeCancel,
@@ -774,8 +747,8 @@ def assert_tag_registry_document_contract(page: Page) -> None:
             "&subdoc=d-20260727-225608-63967a"
         )
     ]
-    assert result["libraryError"] == (
-        "Tag Registry accepts Analysis document locations only"
+    assert result["unsupportedScopeError"] == (
+        "document location commit record is invalid"
     )
     assert result["documentSort"] > 0
     assert result["table"]["heading"].startswith("documents")

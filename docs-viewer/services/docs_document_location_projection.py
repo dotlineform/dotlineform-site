@@ -18,7 +18,7 @@ from docs_scope_config import (
 
 
 DOCUMENT_LOCATION_SCHEMA_VERSION = "docs_document_locations_v1"
-SUPPORTED_DOCUMENT_LOCATION_SCOPE_IDS = ("analysis", "library")
+SUPPORTED_DOCUMENT_LOCATION_SCOPE_IDS = ("analysis",)
 
 
 def json_bytes(payload: Any) -> bytes:

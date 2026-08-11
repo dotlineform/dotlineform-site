@@ -103,7 +103,7 @@ def test_registry_v5_document_url_validation() -> None:
             {
                 "tag_id": "trees",
                 "group": "subject",
-                "doc_url": [shared, "/library/?doc=d-20260729-120000-000002"],
+                "doc_url": [shared, "/docs/?scope=studio&doc=d-20260729-120000-000002"],
                 "updated_at_utc": "2026-07-28T12:00:00Z",
             },
             {
@@ -121,6 +121,7 @@ def test_registry_v5_document_url_validation() -> None:
     )
     for invalid in (
         "https://example.test/analysis/?doc=d-20260729-120000-000001",
+        "/library/?doc=d-20260729-120000-000001",
         "/moments/?doc=d-20260729-120000-000001",
         "/analysis/?subdoc=d-20260729-120000-000001&doc=d-20260624-213316-478639",
         "/analysis/?doc=d-20260624-213316-478639#fragment",

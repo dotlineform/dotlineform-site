@@ -2,13 +2,11 @@ const DOCUMENT_LOCATION_SCHEMA_VERSION = "docs_document_locations_v1";
 const IMMUTABLE_DOC_ID = "d-\\d{8}-\\d{6}-[a-f0-9]{6}";
 
 export const SUPPORTED_DOCUMENT_LOCATION_SCOPE_IDS = Object.freeze([
-  "analysis",
-  "library"
+  "analysis"
 ]);
 
 const SCOPE_ROUTE_PATTERNS = Object.freeze({
-  analysis: new RegExp(`^/analysis/\\?doc=${IMMUTABLE_DOC_ID}(?:&subdoc=${IMMUTABLE_DOC_ID})?$`),
-  library: new RegExp(`^/library/\\?doc=${IMMUTABLE_DOC_ID}(?:&subdoc=${IMMUTABLE_DOC_ID})?$`)
+  analysis: new RegExp(`^/analysis/\\?doc=${IMMUTABLE_DOC_ID}(?:&subdoc=${IMMUTABLE_DOC_ID})?$`)
 });
 const DOCS_SCOPE_ROUTE_PATTERN = new RegExp(
   `^/docs/\\?scope=(analysis|studio)&doc=${IMMUTABLE_DOC_ID}(?:&subdoc=${IMMUTABLE_DOC_ID})?$`
@@ -179,11 +177,7 @@ export function resolveDocumentLocationRecords(records, urls) {
     const docsScopeMatch = DOCS_SCOPE_ROUTE_PATTERN.exec(url);
     const scopeId = url.startsWith("/analysis/")
       ? "analysis"
-      : (
-          url.startsWith("/library/")
-            ? "library"
-            : (docsScopeMatch ? docsScopeMatch[1] : "")
-        );
+      : (docsScopeMatch ? docsScopeMatch[1] : "");
     return Object.freeze({
       url,
       scope_id: scopeId,

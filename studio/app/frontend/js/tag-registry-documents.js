@@ -6,8 +6,7 @@ import {
 
 
 export const TAG_REGISTRY_DOCUMENT_SCOPE_IDS = Object.freeze([
-  "analysis",
-  "library"
+  "analysis"
 ]);
 
 export function tagRegistryDocumentHref(config, url) {

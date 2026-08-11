@@ -4,6 +4,38 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260804-160200-fa7bb7",
+      "title": "Tag Document Linking",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-160200-fa7bb7.json",
+      "timestamp": "2026-08-11 15:29:28",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260804-170901-b2e74c",
+      "title": "TDL-0 — Tag Document Metadata Authoring Refactor Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-170901-b2e74c.json",
+      "timestamp": "2026-08-11 15:19:20",
+      "parent_id": "d-20260804-160200-fa7bb7",
+      "parent_title": "Tag Document Linking"
+    },
+    {
+      "doc_id": "d-20260804-160201-47af2d",
+      "title": "TDL-1 — Tag Document Association Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-160201-47af2d.json",
+      "timestamp": "2026-08-11 15:19:20",
+      "parent_id": "d-20260804-160200-fa7bb7",
+      "parent_title": "Tag Document Linking"
+    },
+    {
+      "doc_id": "d-20260802-002213-b7d4e2",
+      "title": "TDL-2 — Tag Primary Document And Semantic Token Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-002213-b7d4e2.json",
+      "timestamp": "2026-08-11 15:19:20",
+      "parent_id": "d-20260804-160200-fa7bb7",
+      "parent_title": "Tag Document Linking"
+    },
+    {
       "doc_id": "d-20260811-090239-12f6d6",
       "title": "ERV-1 — Expanded Report View Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260811-090239-12f6d6.json",
@@ -50,39 +82,7 @@
       "timestamp": "2026-08-11 12:07:08",
       "parent_id": "d-20260811-113809-ad8110",
       "parent_title": "Implementation Review and Architectural Conformance"
-    },
-    {
-      "doc_id": "d-20260605-125108-1d1ef3",
-      "title": "Runtime Module Ownership",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260605-125108-1d1ef3.json",
-      "timestamp": "2026-08-11 12:07:08",
-      "parent_id": "d-20260331-000000-c313fd",
-      "parent_title": "Runtime"
-    },
-    {
-      "doc_id": "d-20260811-113809-ad8110",
-      "title": "Implementation Review and Architectural Conformance",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260811-113809-ad8110.json",
-      "timestamp": "2026-08-11 11:38:09",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260810-181816-dc9891",
-      "title": "Catalogue Works Report Migration",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-181816-dc9891.json",
-      "timestamp": "2026-08-10 22:45:23",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260810-214708-b96106",
-      "title": "CWR-1 — Catalogue Works Report Migration Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-214708-b96106.json",
-      "timestamp": "2026-08-10 22:45:23",
-      "parent_id": "d-20260810-181816-dc9891",
-      "parent_title": "Catalogue Works Report Migration"
     }
   ],
-  "generated_at": "2026-08-11T12:03:12Z"
+  "generated_at": "2026-08-11T14:29:28Z"
 }

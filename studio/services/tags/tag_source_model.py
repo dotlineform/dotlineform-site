@@ -18,7 +18,6 @@ TAG_ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 IMMUTABLE_DOC_ID = r"d-\d{8}-\d{6}-[a-f0-9]{6}"
 CANONICAL_DOC_URL_PATTERNS = (
     re.compile(rf"^/analysis/\?doc={IMMUTABLE_DOC_ID}(?:&subdoc={IMMUTABLE_DOC_ID})?$"),
-    re.compile(rf"^/library/\?doc={IMMUTABLE_DOC_ID}(?:&subdoc={IMMUTABLE_DOC_ID})?$"),
     re.compile(
         rf"^/docs/\?scope=(?:analysis|studio)&doc={IMMUTABLE_DOC_ID}"
         rf"(?:&subdoc={IMMUTABLE_DOC_ID})?$"

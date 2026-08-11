@@ -311,23 +311,10 @@ def test_public_projection_loader_does_not_read_source_or_manage_manifest() -> N
     ]
 
 
-def test_builder_writes_analysis_and_library_indexes_from_public_data() -> None:
+def test_builder_writes_analysis_index_from_public_data() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
-        library_id = "d-20260330-172255-8399b7"
-        write_docs_scope_config(
-            root,
-            [
-                analysis_scope(),
-                docs_scope_record(
-                    "library",
-                    scope_type="public",
-                    viewer_base_url="/library/",
-                    include_scope_param=False,
-                    default_doc_id=library_id,
-                ),
-            ],
-        )
+        write_docs_scope_config(root, [analysis_scope()])
         write_json(
             root / "site/assets/data/search/analysis/index.json",
             {
@@ -347,24 +334,6 @@ def test_builder_writes_analysis_and_library_indexes_from_public_data() -> None:
             root / "site/assets/data/docs/scopes/analysis/notes/manifest.json",
             {"docs": []},
         )
-        write_json(
-            root / "site/assets/data/search/library/index.json",
-            {
-                "header": {"scope": "library"},
-                "entries": [
-                    {
-                        "id": library_id,
-                        "kind": "doc",
-                        "title": "Library",
-                        "href": f"/library/?doc={library_id}",
-                    }
-                ],
-            },
-        )
-        write_json(
-            root / f"site/assets/data/docs/scopes/library/by-id/{library_id}.json",
-            {"title": "Library"},
-        )
         stdout = StringIO()
         previous_cwd = Path.cwd()
         try:
@@ -380,24 +349,21 @@ def test_builder_writes_analysis_and_library_indexes_from_public_data() -> None:
                 / "site/assets/data/search/analysis/document-locations.json"
             ).read_text(encoding="utf-8")
         )
-        library_payload = json.loads(
-            (
-                root
-                / "site/assets/data/search/library/document-locations.json"
-            ).read_text(encoding="utf-8")
-        )
+        library_output_exists = (
+            root / "site/assets/data/search/library/document-locations.json"
+        ).exists()
 
     assert exit_code == 0
     assert len(analysis_payload["records"]) == 1
-    assert len(library_payload["records"]) == 1
     assert "scope=analysis: wrote" in stdout.getvalue()
-    assert "scope=library: wrote" in stdout.getvalue()
+    assert not library_output_exists
 
 
 def test_builder_requires_supported_explicit_scopes() -> None:
+    assert build_document_locations.selected_scope_ids([]) == ["analysis"]
     try:
-        build_document_locations.selected_scope_ids(["studio"])
+        build_document_locations.selected_scope_ids(["library"])
     except ValueError as exc:
-        assert "unsupported document-location scope: studio" in str(exc)
+        assert "unsupported document-location scope: library" in str(exc)
     else:
         raise AssertionError("builder should reject unsupported scopes")

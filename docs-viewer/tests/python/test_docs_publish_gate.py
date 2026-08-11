@@ -291,12 +291,7 @@ def test_publish_confirm_applies_explicit_exclusions_and_retains_unrelated_files
         assert "site/assets/data/docs/scopes/library/by-id/stale.json" not in preview["docs"]["excluded"]
         assert "site/assets/data/docs/scopes/library/media/html/widget.html" not in preview["docs"]["excluded"]
         assert "site/assets/data/docs/scopes/library/media/img/diagram.png" not in preview["docs"]["excluded"]
-        assert preview["document_locations"] == {
-            "changed": [
-                "site/assets/data/search/library/document-locations.json"
-            ],
-            "excluded": [],
-        }
+        assert preview["document_locations"] == {"changed": [], "excluded": []}
         assert applied["operation"] == "apply"
         public_tree = json.loads((repo_root / "site/assets/data/docs/scopes/library/index-tree.json").read_text(encoding="utf-8"))
         recent = json.loads((repo_root / "site/assets/data/docs/scopes/library/recent.json").read_text(encoding="utf-8"))
@@ -330,24 +325,9 @@ def test_publish_confirm_applies_explicit_exclusions_and_retains_unrelated_files
         assert (repo_root / "site/assets/data/docs/scopes/library/media/html/widget.html").is_file()
         assert (repo_root / "site/assets/data/docs/scopes/library/media/img/diagram.png").is_file()
         assert json.loads((repo_root / "site/assets/data/search/library/index.json").read_text(encoding="utf-8"))["entries"][0]["id"] == LIBRARY_DOC_ID
-        location_payload = json.loads(
-            (
-                repo_root
-                / "site/assets/data/search/library/document-locations.json"
-            ).read_text(encoding="utf-8")
-        )
-        assert location_payload == {
-            "schema_version": "docs_document_locations_v1",
-            "scope_id": "library",
-            "records": [
-                {
-                    "url": f"/library/?doc={LIBRARY_DOC_ID}",
-                    "scope_id": "library",
-                    "document_title": "Library",
-                    "report_title": "",
-                }
-            ],
-        }
+        assert not (
+            repo_root / "site/assets/data/search/library/document-locations.json"
+        ).exists()
 
 
 def test_publish_follow_through_adds_reassigns_and_removes_exact_catalogue_urls() -> None:

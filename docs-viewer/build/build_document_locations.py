@@ -39,7 +39,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         "--scope",
         action="append",
         default=[],
-        help="Limit the build to analysis or library. Repeat for both.",
+        help="Limit the build to analysis.",
     )
     parser.add_argument(
         "--projects-base-dir",

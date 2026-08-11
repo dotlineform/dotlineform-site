@@ -32,6 +32,7 @@ ROUTES = [
             "/studio/api/tags/tag-assignments",
             "/studio/api/tags/tag-groups",
             "/studio/api/catalogue/read?key=catalogue_lookup_series_search",
+            "/assets/data/search/analysis/document-locations.json",
         ],
     },
     {
@@ -110,20 +111,6 @@ def main(argv: list[str] | None = None) -> int:
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
             page = browser.new_page()
-            page.route(
-                "**/assets/data/search/library/document-locations.json",
-                lambda route: route.fulfill(
-                    status=200,
-                    content_type="application/json",
-                    body=json.dumps(
-                        {
-                            "schema_version": "docs_document_locations_v1",
-                            "scope_id": "library",
-                            "records": [],
-                        }
-                    ),
-                ),
-            )
             console_errors: list[str] = []
             page_errors: list[str] = []
             requests: list[str] = []
@@ -175,6 +162,13 @@ def main(argv: list[str] | None = None) -> int:
                 if doc_link_count:
                     raise AssertionError(f"{route['path']} still renders header doc pill")
                 if route["view_id"] == "tag_registry":
+                    document_titles = page.locator(
+                        ".tagRegistry__documentLink"
+                    ).all_text_contents()
+                    if not document_titles:
+                        raise AssertionError("Tag Registry did not render document links")
+                    if all(title.strip() == "Unavailable document" for title in document_titles):
+                        raise AssertionError("Tag Registry did not resolve any Analysis documents")
                     page.locator('[data-role="open-new-tag"]').click()
                     if page.locator('[data-role="new-modal"]').is_hidden():
                         raise AssertionError("New Tag modal did not open")
@@ -231,6 +225,11 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(
                 f"Studio tag routes retained public Catalogue data reads: {public_catalogue_data_requests!r}"
             )
+        if any(
+            "/assets/data/search/library/document-locations.json" in request
+            for request in requests
+        ):
+            raise AssertionError("Studio tag routes requested the retired Library location projection")
         if console_errors:
             raise AssertionError(f"console errors: {console_errors}")
         if page_errors:

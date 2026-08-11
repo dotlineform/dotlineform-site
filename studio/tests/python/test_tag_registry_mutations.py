@@ -124,7 +124,7 @@ def test_create_registry_tag_preserves_shared_existing_document_link() -> None:
 
 def test_create_registry_tag_guards() -> None:
     payload = registry_payload([row("trees")])
-    document_url = "/library/?doc=d-20260729-120000-000001"
+    document_url = "/analysis/?doc=d-20260729-120000-000001"
     assert_raises_contains(
         lambda: registry.create_registry_tag(
             payload,
@@ -187,7 +187,7 @@ def test_canonical_edit_and_delete_plans() -> None:
         "/analysis/?doc=d-20260624-213316-478639"
         "&subdoc=d-20260727-225608-000001"
     )
-    second_document_url = "/library/?doc=d-20260729-120000-000002"
+    second_document_url = "/analysis/?doc=d-20260729-120000-000002"
     payload = registry_payload([
         row("trees", doc_url=[document_url]),
         row("growth", group="theme"),
@@ -246,7 +246,7 @@ def test_canonical_edit_and_delete_plans() -> None:
 
 
 def test_canonical_mutation_guards() -> None:
-    document_url = "/library/?doc=d-20260729-120000-000002"
+    document_url = "/analysis/?doc=d-20260729-120000-000002"
     payload = registry_payload([
         row("trees", doc_url=[document_url]),
         row("canopy", doc_url=[document_url]),
@@ -291,9 +291,9 @@ def test_canonical_mutation_guards() -> None:
 
 
 def test_canonical_document_edit_preserves_unrelated_rows_and_accepts_unlinked() -> None:
-    first = "/library/?doc=d-20260729-120000-000001"
-    second = "/library/?doc=d-20260729-120000-000002"
-    shared = "/library/?doc=d-20260729-120000-000003"
+    first = "/analysis/?doc=d-20260729-120000-000001"
+    second = "/analysis/?doc=d-20260729-120000-000002"
+    shared = "/analysis/?doc=d-20260729-120000-000003"
     unrelated = row("growth", group="theme", doc_url=[shared])
     payload = registry_payload([
         row("trees", doc_url=[first, second]),
