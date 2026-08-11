@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import sys
 import tempfile
 import urllib.request
@@ -24,7 +25,113 @@ for path in (STUDIO_SERVER_DIR,):
 from studio_app_server import StudioAppServer  # noqa: E402
 
 
+def write_analysis_tags_fixture(repo_root: Path) -> None:
+    report_path = (
+        repo_root
+        / "docs-viewer/scopes/analysis/source/documents"
+        / "d-20260430-230000-000099.md"
+    )
+    report_path.parent.mkdir(parents=True)
+    report_path.write_text(
+        """---
+doc_id: d-20260430-230000-000099
+title: Tags
+added_date: "2026-04-30 23:00:00"
+last_updated: 2026-04-30
+parent_id: ""
+---
+# Tags
+
+:::report
+id: docs_subscope
+access: public
+sub_scope: tags
+:::
+""",
+        encoding="utf-8",
+    )
+    reports_path = repo_root / "docs-viewer/config/reports/reports.json"
+    reports_path.parent.mkdir(parents=True)
+    shutil.copyfile(
+        REPO_ROOT / "docs-viewer/config/reports/reports.json",
+        reports_path,
+    )
+    config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
+    config_path.parent.mkdir(parents=True)
+    config_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "docs_scopes_v3",
+                "scopes": [
+                    {
+                        "scope_id": "analysis",
+                        "scope_type": "local",
+                        "meta": "analysis",
+                        "scope_root": {
+                            "provider": "repository",
+                            "path": "docs-viewer/scopes/analysis",
+                        },
+                        "source": {"build_media": {}},
+                        "published": {
+                            "media": {
+                                "img": {
+                                    "reference_prefix": "docs/analysis/img",
+                                    "served_path_prefix": "/docs/media/analysis/img",
+                                    "build_inputs": [],
+                                }
+                            }
+                        },
+                        "public_projection": None,
+                        "viewer_base_url": "/docs/",
+                        "include_scope_param": True,
+                        "default_doc_id": "",
+                        "non_loadable_doc_ids": [],
+                        "manage_only_tree_root_ids": [],
+                        "allow_unresolved_parent_ids": False,
+                        "sub_scopes": [
+                            {
+                                "sub_scope": "tags",
+                                "title": "Tags",
+                                "ui_statuses": [],
+                                "sub_scope_customisation": {
+                                    "id": "analysis_tags",
+                                    "settings": {
+                                        "groups": ["subject", "theme"]
+                                    },
+                                },
+                                "public_projection": None,
+                            }
+                        ],
+                    }
+                ],
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    documents_root = (
+        repo_root
+        / "docs-viewer/scopes/analysis/source/sub-scopes/tags/documents"
+    )
+    documents_root.mkdir(parents=True)
+    (documents_root / "d-20260501-000000-000001.md").write_text(
+        """---
+doc_id: d-20260501-000000-000001
+title: Unassociated document
+added_date: "2026-05-01 00:00:00"
+last_updated: 2026-05-01
+group: subject
+parent_id: ""
+---
+# Unassociated document
+""",
+        encoding="utf-8",
+    )
+
+
 def write_fixture_data(repo_root: Path) -> tuple[Path, Path, Path]:
+    write_analysis_tags_fixture(repo_root)
     data_root = repo_root / "studio" / "data" / "canonical" / "tags"
     data_root.mkdir(parents=True)
     registry_path = data_root / "tag-registry.json"
@@ -32,7 +139,7 @@ def write_fixture_data(repo_root: Path) -> tuple[Path, Path, Path]:
     assignments_path = data_root / "tag-assignments.json"
     registry_path.write_text(
         """{
-  "tag_registry_version": "tag_registry_v5",
+  "tag_registry_version": "tag_registry_v6",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {
     "allowed_groups": ["subject", "theme"]
@@ -41,13 +148,11 @@ def write_fixture_data(repo_root: Path) -> tuple[Path, Path, Path]:
     {
       "tag_id": "trees",
       "group": "subject",
-      "doc_url": [],
       "updated_at_utc": "2026-05-01T00:00:00Z"
     },
     {
       "tag_id": "growth",
       "group": "theme",
-      "doc_url": [],
       "updated_at_utc": "2026-05-01T00:00:00Z"
     }
   ]

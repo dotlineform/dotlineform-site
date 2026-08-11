@@ -11,6 +11,7 @@ import {
   loadAnalyticsAliasesJson,
   loadAnalyticsGroupsJson,
   loadAnalyticsRegistryJson,
+  loadTagDocumentAssociationsJson,
   loadStudioSeriesSearchJson
 } from "./studio-tag-data.js";
 import {
@@ -32,17 +33,9 @@ import {
   renderTagRegistryList
 } from "./tag-registry-render.js";
 import {
-  bindDocumentLocationPicker
-} from "/shared/frontend/js/document-location-picker.js";
-import {
-  createDocumentLocationProvider
-} from "/shared/frontend/js/document-location-provider.js";
-import {
-  appendTagRegistryDocumentUrl,
   attachTagRegistryDocuments,
-  loadTagRegistryDocumentLocations,
-  removeTagRegistryDocumentUrl,
-  setTagRegistryDocumentLocation
+  normalizeTagDocumentAssociations,
+  sameTagDocumentTarget
 } from "./tag-registry-documents.js";
 import {
   applyTagRegistryPatchFallback,
@@ -86,7 +79,6 @@ import {
   applyTagRegistryCreatePatchResult,
   applyTagRegistryCreatePostResult,
   applyTagRegistryDeleteResult,
-  applyTagRegistryDemotePatchResult,
   applyTagRegistryDemotePostResult,
   applyTagRegistryEditResult,
   getTagRegistryDemoteValidation,
@@ -175,8 +167,10 @@ async function initTagRegistryPage() {
     patchSnippet: "",
     editTagId: "",
     editTagGroup: "",
-    editTagDocUrls: [],
-    editTagPendingDocument: null,
+    editTagPrimaryDocument: null,
+    editTagPrimaryChanged: false,
+    editTagDocuments: [],
+    editTagUnavailablePrimary: null,
     newTagState: null,
     demoteState: null,
     aliasKeys: new Set(),
@@ -185,10 +179,7 @@ async function initTagRegistryPage() {
     deletePreview: "",
     deletePreviewSeq: 0,
     registryOptions: [],
-    documentLocationProvider: createDocumentLocationProvider(),
-    documentLocationsByUrl: new Map(),
-    documentLocationError: "",
-    documentPicker: null,
+    associationsByTagId: new Map(),
     refs: null,
     registryUpdatedAt: "",
     assignmentsSeries: {},
@@ -197,7 +188,6 @@ async function initTagRegistryPage() {
   state.isBusy = false;
 
   renderShell(state);
-  bindRegistryDocumentPicker(state);
   wireEvents(state);
 
   try {
@@ -211,7 +201,7 @@ async function initTagRegistryPage() {
       registryText(
         state.config,
         "load_failed_error",
-        "Failed to load tag data from /studio/api/tags/tag-registry and /studio/api/tags/tag-aliases."
+        "Failed to load Tag Registry data and document associations."
       )
     );
     markRouteReady(state, true);
@@ -326,30 +316,14 @@ function wireEvents(state) {
       void withRouteBusy(state, () => handleTagEdit(state));
     },
     onEditGroupInput: () => setTagRegistryEditStatus(state, "", ""),
-    onEditDocumentAdd: () => {
-      const record = state.editTagPendingDocument;
-      if (!state.editTagId || !record || state.editTagDocUrls.includes(record.url)) {
-        return;
-      }
-      setTagRegistryDocumentLocation(state, record);
-      state.editTagDocUrls = appendTagRegistryDocumentUrl(
-        state.editTagDocUrls,
-        record
-      );
-      state.editTagPendingDocument = null;
-      state.refs.editDocumentSearch.value = "";
+    onEditPrimarySelect: (target) => {
+      if (
+        !state.editTagId
+        || sameTagDocumentTarget(state.editTagPrimaryDocument, target)
+      ) return;
+      state.editTagPrimaryDocument = { ...target };
+      state.editTagPrimaryChanged = true;
       renderTagRegistryEditDocuments(state);
-      void state.documentPicker?.refresh?.();
-      setTagRegistryEditStatus(state, "", "");
-    },
-    onEditDocumentDirectRemove: (url) => {
-      if (!state.editTagDocUrls.includes(url)) return;
-      state.editTagDocUrls = removeTagRegistryDocumentUrl(
-        state.editTagDocUrls,
-        url
-      );
-      renderTagRegistryEditDocuments(state);
-      void state.documentPicker?.refresh?.();
       setTagRegistryEditStatus(state, "", "");
     },
     onNewTagInput: () => updateNewTagUi(state),
@@ -377,31 +351,6 @@ function wireEvents(state) {
   });
 }
 
-function bindRegistryDocumentPicker(state) {
-  state.documentPicker = bindDocumentLocationPicker(
-    state.refs.editDocumentSearch,
-    state.refs.editDocumentPopup,
-    {
-      scopeIds: ["analysis"],
-      provider: state.documentLocationProvider,
-      excludedUrls: () => state.editTagDocUrls,
-      maxOptions: 500,
-      persistent: true,
-      showReport: false,
-      onTransientInput: () => {
-        state.editTagPendingDocument = null;
-        renderTagRegistryEditDocuments(state);
-      },
-      onCommit: (record) => {
-        if (!state.editTagId || state.editTagDocUrls.includes(record.url)) return;
-        state.editTagPendingDocument = record;
-        renderTagRegistryEditDocuments(state);
-        setTagRegistryEditStatus(state, "", "");
-      }
-    }
-  );
-}
-
 async function probeSaveMode(state) {
   await probeTagRouteSaveMode(state, {
     onRouteStateChange: () => syncRouteBusyState(state)
@@ -409,9 +358,10 @@ async function probeSaveMode(state) {
 }
 
 async function loadRegistry(state, options = {}) {
-  const [registryData, aliasesData] = await Promise.all([
+  const [registryData, aliasesData, associationsData] = await Promise.all([
     loadAnalyticsRegistryJson(state.config, options),
-    loadAnalyticsAliasesJson(state.config, options)
+    loadAnalyticsAliasesJson(state.config, options),
+    loadTagDocumentAssociationsJson(state.config, options)
   ]);
   const [assignmentsResult, seriesSearchResult] = await Promise.allSettled([
     loadAnalyticsAssignmentsJson(state.config, options),
@@ -425,14 +375,10 @@ async function loadRegistry(state, options = {}) {
   }
   state.registryUpdatedAt = normalizeTimestamp(registryData && registryData.updated_at_utc);
   state.tags = normalizeRegistryTags(registryData, state.registryUpdatedAt);
-  const documentLocations = await loadTagRegistryDocumentLocations(state.tags, {
-    provider: state.documentLocationProvider
-  });
-  state.documentLocationsByUrl = documentLocations.locationsByUrl;
-  state.documentLocationError = documentLocations.error;
+  state.associationsByTagId = normalizeTagDocumentAssociations(associationsData);
   state.tags = attachTagRegistryDocuments(
     state.tags,
-    state.documentLocationsByUrl
+    state.associationsByTagId
   );
   state.aliasKeys = buildAliasKeySet(aliasesData);
   state.assignmentsSeries = assignmentsResult.status === "fulfilled"
@@ -524,12 +470,15 @@ async function handleTagEdit(state) {
   if (!state.editTagId) return;
   const tagId = state.editTagId;
   const group = normalize(state.editTagGroup);
-  const docUrl = state.editTagDocUrls.slice();
+  const primaryDocument = state.editTagPrimaryDocument
+    ? { ...state.editTagPrimaryDocument }
+    : null;
   const result = await saveTagRegistryEdit({
     saveMode: state.saveMode,
     tag: findTagById(state, tagId),
     group,
-    docUrl,
+    primaryDocument,
+    primaryDocumentChanged: state.editTagPrimaryChanged === true,
     config: state.config
   });
   if (!result.ok) {
@@ -540,7 +489,7 @@ async function handleTagEdit(state) {
   applyTagRegistryEditResult(state, {
     tagId,
     group,
-    docUrl,
+    primaryDocument,
     result
   }, modalWorkflowOptions(state));
 }
@@ -672,6 +621,30 @@ async function handleTagDemote(state) {
       return;
     }
 
+    if (preview.response && preview.response.blocked === true) {
+      const associations = Array.isArray(preview.response.document_associations)
+        ? preview.response.document_associations
+        : [];
+      const names = associations.map((association) => (
+        String(association && association.title || "").trim()
+        || String(
+          association
+          && association.target
+          && association.target.doc_id
+          || ""
+        ).trim()
+      )).filter(Boolean);
+      const message = registryText(
+        state.config,
+        "demote_documents_blocked",
+        "Edit or delete the associated documents before demoting this Tag.{documents}",
+        { documents: names.length ? ` Associated: ${names.join(", ")}.` : "" }
+      );
+      setTagRegistryDemoteStatus(state, "error", message);
+      setRouteResult(state, "error", message);
+      return;
+    }
+
     const previewSummary = preview.summary;
     if (Number(preview.response && preview.response.demoted_alias_overwritten || 0) > 0) {
       const message = registryText(
@@ -718,17 +691,10 @@ async function handleTagDemote(state) {
     setRouteResult(state, "error", result.message);
     return;
   }
-  if (result.mode === "post") {
-    applyTagRegistryDemotePostResult(state, {
-      tagId: tag.tagId,
-      aliasKey,
-      result
-    }, modalWorkflowOptions(state));
-    return;
-  }
-
-  applyTagRegistryDemotePatchResult(state, {
-    patchResult: result.patchResult
+  applyTagRegistryDemotePostResult(state, {
+    tagId: tag.tagId,
+    aliasKey,
+    result
   }, modalWorkflowOptions(state));
 }
 

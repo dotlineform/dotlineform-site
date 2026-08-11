@@ -846,6 +846,19 @@ Related body.
         [location["access"] for location in document["locations"]] == ["manage"]
         for document in tag_associations["associations"][0]["documents"]
     )
+    assert {
+        document["target"]["doc_id"]: document["locations"][0]["url"]
+        for document in tag_associations["associations"][0]["documents"]
+    } == {
+        DETAIL_DOC_ID: (
+            f"/docs/?scope=studio&doc={TAGS_REPORT_DOC_ID}"
+            f"&subdoc={DETAIL_DOC_ID}"
+        ),
+        RELATED_DOC_ID: (
+            f"/docs/?scope=studio&doc={TAGS_REPORT_DOC_ID}"
+            f"&subdoc={RELATED_DOC_ID}"
+        ),
+    }
     assert [
         (
             association["tag_id"],

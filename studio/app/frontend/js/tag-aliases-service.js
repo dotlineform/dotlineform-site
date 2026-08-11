@@ -11,7 +11,6 @@ import {
   buildManualPatchForAliasDelete,
   buildManualPatchForAliasEdit,
   buildManualPatchForAliasPromote,
-  buildManualPatchForDemote,
   utcTimestamp
 } from "./tag-aliases-save.js";
 
@@ -263,31 +262,34 @@ export async function previewTagDemoteFromAliases(options) {
 
 export async function submitTagDemoteFromAliases(options) {
   const { saveMode, canonicalTagId, aliasTargets, config } = options || {};
-  if (saveMode === "post") {
-    try {
-      const response = await postJson(getStudioTagWriteEndpoint("demoteTag", config), {
-        tag_id: canonicalTagId,
-        alias_targets: aliasTargets,
-        client_time_utc: utcTimestamp(),
-        activity_context: aliasesActivityContext("demote-aliases-tag", "confirm-demote", "[data-role=\"confirm-demote\"]", "tag_id", canonicalTagId)
-      });
-      return {
-        ok: true,
-        mode: "post",
-        response
-      };
-    } catch (error) {
-      return {
-        ok: false,
-        mode: "post",
-        message: String(error && error.message ? error.message : "")
-      };
-    }
+  if (saveMode !== "post") {
+    return {
+      ok: false,
+      code: "local_required",
+      message: aliasesText(
+        config,
+        "local_demote_required",
+        "Local server is required for demotion."
+      )
+    };
   }
-
-  return {
-    ok: true,
-    mode: "patch",
-    patchResult: buildManualPatchForDemote(canonicalTagId, aliasTargets)
-  };
+  try {
+    const response = await postJson(getStudioTagWriteEndpoint("demoteTag", config), {
+      tag_id: canonicalTagId,
+      alias_targets: aliasTargets,
+      client_time_utc: utcTimestamp(),
+      activity_context: aliasesActivityContext("demote-aliases-tag", "confirm-demote", "[data-role=\"confirm-demote\"]", "tag_id", canonicalTagId)
+    });
+    return {
+      ok: true,
+      mode: "post",
+      response
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      mode: "post",
+      message: String(error && error.message ? error.message : "")
+    };
+  }
 }

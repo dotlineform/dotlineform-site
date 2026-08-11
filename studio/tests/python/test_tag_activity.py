@@ -78,7 +78,10 @@ def test_activity_changed_suppresses_no_ops() -> None:
     assert_true(activity.tag_activity_changed({"changed": True}), "changed flag")
     assert_true(activity.tag_activity_changed({"canonical_changed": True}), "canonical changed")
     assert_true(activity.tag_activity_changed({"group_changed": True}), "group changed")
-    assert_true(activity.tag_activity_changed({"doc_url_changed": True}), "document URLs changed")
+    assert_true(
+        activity.tag_activity_changed({"primary_document_changed": True}),
+        "primary document changed",
+    )
 
 
 def test_activity_append_is_write_only() -> None:

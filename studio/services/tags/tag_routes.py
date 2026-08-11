@@ -2,6 +2,7 @@
 """Studio tag service endpoint path constants."""
 
 HEALTH_PATH = "/health"
+TAG_ASSOCIATIONS_PATH = "/tag-associations"
 SAVE_TAGS_PATH = "/save-tags"
 CREATE_TAG_PATH = "/create-tag"
 CREATE_ALIAS_PATH = "/create-tag-alias"

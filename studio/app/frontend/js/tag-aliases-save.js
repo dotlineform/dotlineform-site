@@ -107,42 +107,6 @@ export function buildManualPatchForAliasEdit(aliasKey, newAliasKey, description,
   };
 }
 
-export function buildManualPatchForDemote(tagId, aliasTargets) {
-  const aliasKey = normalize(tagId);
-  return {
-    kind: "warn",
-    message: aliasesText(
-      null,
-      "patch_demote_message",
-      "Patch mode: section snippets prepared for demoting \"{tag_id}\".",
-      { tag_id: tagId }
-    ),
-    snippet: JSON.stringify({
-      tag_registry: {
-        remove_tag_ids: [tagId]
-      },
-      tag_aliases: {
-        set_aliases: {
-          [aliasKey]: {
-            description: "",
-            tags: aliasTargets.slice()
-          }
-        },
-        replace_target_refs: {
-          from: tagId,
-          to: aliasTargets
-        }
-      },
-      tag_assignments: {
-        replace_tag_refs: {
-          from: tagId,
-          to: aliasTargets
-        }
-      }
-    }, null, 2)
-  };
-}
-
 export function utcTimestamp() {
   return new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
 }

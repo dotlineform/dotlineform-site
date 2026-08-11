@@ -496,89 +496,40 @@
   text-underline-offset: 0.12em;
 }
 
-.tagRegistryEdit__searchControl {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.tagRegistryEdit__searchControl .studioUi__input {
-  min-width: 0;
-  flex: 1 1 auto;
-}
-
-.tagRegistryEdit__documentAction.studioUi__button {
+.tagRegistryEdit__primarySelector {
+  display: inline-grid;
   flex: 0 0 auto;
-  width: 1.8rem;
-  height: 1.8rem;
-  min-height: 1.8rem;
+  place-items: center;
+  width: 1rem;
+  height: 1rem;
+  margin: 0 0 0 0.12rem;
   padding: 0;
+  border: 1.5px solid currentColor;
   border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
 }
 
-.tagRegistryEdit__documentActionIcon {
-  position: relative;
-  display: block;
-  width: 0.72rem;
-  height: 0.72rem;
-}
-
-.tagRegistryEdit__documentActionIcon::before,
-.tagRegistryEdit__documentActionIcon::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  border-radius: 999px;
+.tagRegistryEdit__primarySelector > span {
+  width: 0.48rem;
+  height: 0.48rem;
+  border-radius: inherit;
   background: currentColor;
-  transform: translate(-50%, -50%);
+  opacity: 0;
 }
 
-.tagRegistryEdit__documentActionIcon::before {
-  width: 0.72rem;
-  height: 0.1rem;
+.tagRegistryEdit__primarySelector[aria-checked="true"] > span {
+  opacity: 1;
 }
 
-.tagRegistryEdit__documentActionIcon::after {
-  width: 0.1rem;
-  height: 0.72rem;
+.tagRegistryEdit__primarySelector:focus-visible {
+  outline: 2px solid var(--studio-focus-ring, currentColor);
+  outline-offset: 2px;
 }
 
-.tagRegistryEdit__picker {
-  display: grid;
-  gap: 0.55rem;
-  padding-top: 0.2rem;
-}
-
-.tagRegistryEdit__resultsFrame {
-  box-sizing: border-box;
-  height: 10.4rem;
-}
-
-.tagRegistryEdit__picker .sharedSearchList__popup {
-  position: static;
-  width: 100%;
-  min-width: 0;
-  max-width: 100%;
-  height: 100%;
-  max-height: none;
-  margin: 0;
-  font-size: var(--font-small);
-  line-height: var(--line-snug);
-}
-
-.tagRegistryEdit__picker .sharedSearchList__option {
-  align-content: center;
-}
-
-.tagRegistryEdit__picker
-  .sharedSearchList__popup[data-navigation="pointer"]
-  .sharedSearchList__option:hover {
-  background: rgba(95, 143, 251, 0.08);
-}
-
-.tagRegistryEdit__picker .sharedSearchList__option[aria-selected="true"] {
-  background: var(--studio-focus-ring, rgba(95, 143, 251, 0.18));
+.tagRegistryEdit__unavailablePrimary {
+  overflow-wrap: anywhere;
 }
 
 .tagRegistryNew__key .studioUi__keyPill {

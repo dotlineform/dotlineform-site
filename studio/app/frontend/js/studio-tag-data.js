@@ -13,6 +13,13 @@ export async function loadAnalyticsRegistryJson(config, options) {
   return fetchJson(requiredStudioTagServicePath(config, "tags", "tag_registry"), options);
 }
 
+export async function loadTagDocumentAssociationsJson(config, options) {
+  return fetchJson(
+    requiredStudioTagServicePath(config, "tags", "tag_associations"),
+    { cache: "no-store", ...(options || {}) }
+  );
+}
+
 export async function loadAnalyticsAliasesJson(config, options) {
   return fetchJson(requiredStudioTagServicePath(config, "tags", "tag_aliases"), options);
 }

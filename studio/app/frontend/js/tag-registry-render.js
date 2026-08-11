@@ -123,14 +123,22 @@ function renderTagRow(state, tag) {
 function renderDocumentLinks(state, tag) {
   const documents = Array.isArray(tag && tag.documents) ? tag.documents : [];
   if (!documents.length) return "—";
-  return `<span class="${UI_CLASS.documentLinks}">${documents.map((record) => `
-    <a
-      class="${UI_CLASS.documentLink}"
-      href="${escapeHtml(tagRegistryDocumentHref(state.config, record.url))}"
-      target="_blank"
-      rel="noopener noreferrer"
-    >${escapeHtml(record.document_title || registryText(state.config, "unavailable_document", "Unavailable document"))}</a>
-  `).join(", ")}</span>`;
+  return `<span class="${UI_CLASS.documentLinks}">${documents.map((record) => {
+    const title = record.title || registryText(
+      state.config,
+      "unavailable_document",
+      "Unavailable document"
+    );
+    if (!record.url) return escapeHtml(title);
+    return `
+      <a
+        class="${UI_CLASS.documentLink}"
+        href="${escapeHtml(tagRegistryDocumentHref(state.config, record.url))}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >${escapeHtml(title)}</a>
+    `;
+  }).join(", ")}</span>`;
 }
 
 function getStudioGroups(state) {

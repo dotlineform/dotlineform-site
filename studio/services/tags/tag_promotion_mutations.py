@@ -178,7 +178,6 @@ def promote_alias_to_canonical_tag(
             {
                 "tag_id": new_tag_id,
                 "group": normalized_group,
-                "doc_url": [],
                 "updated_at_utc": now_utc,
             }
         )

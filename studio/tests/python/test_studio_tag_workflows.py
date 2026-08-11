@@ -8,6 +8,9 @@ import json
 from pathlib import Path
 import sys
 import tempfile
+
+import pytest
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
 STUDIO_SERVER_DIR = REPO_ROOT / "studio" / "app" / "server" / "studio"
 for path in (REPO_ROOT, STUDIO_SERVER_DIR):
@@ -179,6 +182,7 @@ group: subject
 def test_studio_tag_reads_return_existing_payloads() -> None:
     groups_payload = tags_get_payload(REPO_ROOT, "/tag-groups")
     registry_payload = tags_get_payload(REPO_ROOT, "/tag-registry")
+    associations_payload = tags_get_payload(REPO_ROOT, "/tag-associations")
     aliases_payload = tags_get_payload(REPO_ROOT, "/tag-aliases")
     assignments_payload = tags_get_payload(REPO_ROOT, "/tag-assignments")
 
@@ -186,8 +190,14 @@ def test_studio_tag_reads_return_existing_payloads() -> None:
     assert groups_payload["tag_groups_version"] == "tag_groups_v1"
     assert {group["group_id"] for group in groups_payload["groups"]} >= {"subject", "domain", "form", "theme"}
     assert registry_payload["ok"] is True
-    assert registry_payload["tag_registry_version"] == "tag_registry_v5"
+    assert registry_payload["tag_registry_version"] == "tag_registry_v6"
     assert any(tag["tag_id"] == "flower" for tag in registry_payload["tags"])
+    assert associations_payload["ok"] is True
+    assert associations_payload["schema_version"] == "docs_tag_associations_v1"
+    assert any(
+        row["tag_id"] == "flower"
+        for row in associations_payload["associations"]
+    )
     assert aliases_payload["ok"] is True
     assert aliases_payload["tag_aliases_version"] == "tag_aliases_v2"
     assert "floral" in aliases_payload["aliases"]
@@ -241,10 +251,10 @@ def test_studio_tag_registry_dry_run_uses_registry_contract() -> None:
         registry_path.parent.mkdir(parents=True)
         registry_path.write_text(
             """{
-  "tag_registry_version": "tag_registry_v5",
+  "tag_registry_version": "tag_registry_v6",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {"allowed_groups": ["subject", "theme"]},
-  "tags": [{"tag_id": "trees", "group": "subject", "doc_url": [], "updated_at_utc": "2026-05-01T00:00:00Z"}]
+  "tags": [{"tag_id": "trees", "group": "subject", "updated_at_utc": "2026-05-01T00:00:00Z"}]
 }
 """,
             encoding="utf-8",
@@ -306,10 +316,10 @@ def test_tag_delete_blocks_current_declarations_and_revalidates_apply() -> None:
         assignments_path = data_root / "tag-assignments.json"
         registry_path.write_text(
             """{
-  "tag_registry_version": "tag_registry_v5",
+  "tag_registry_version": "tag_registry_v6",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {"allowed_groups": ["subject", "theme"]},
-  "tags": [{"tag_id": "trees", "group": "subject", "doc_url": ["/analysis/?doc=d-20260430-230000-000099&subdoc=d-20260501-999999-999999"], "updated_at_utc": "2026-05-01T00:00:00Z"}]
+  "tags": [{"tag_id": "trees", "group": "subject", "primary_document": {"scope": "analysis", "sub_scope": "tags", "doc_id": "d-20260501-999999-999999"}, "updated_at_utc": "2026-05-01T00:00:00Z"}]
 }
 """,
             encoding="utf-8",
@@ -419,10 +429,10 @@ def test_studio_create_tag_dry_run_validates_before_write() -> None:
         registry_path.parent.mkdir(parents=True)
         registry_path.write_text(
             """{
-  "tag_registry_version": "tag_registry_v5",
+  "tag_registry_version": "tag_registry_v6",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {"allowed_groups": ["subject", "theme"]},
-  "tags": [{"tag_id": "trees", "group": "subject", "doc_url": ["/docs/?scope=analysis&doc=d-20260430-230000-000099&subdoc=d-20260501-000000-000001"], "updated_at_utc": "2026-05-01T00:00:00Z"}]
+  "tags": [{"tag_id": "trees", "group": "subject", "primary_document": {"scope": "analysis", "sub_scope": "tags", "doc_id": "d-20260501-000000-000001"}, "updated_at_utc": "2026-05-01T00:00:00Z"}]
 }
 """,
             encoding="utf-8",
@@ -450,7 +460,7 @@ def test_studio_create_tag_dry_run_validates_before_write() -> None:
         assert payload["final_total"] == 2
         assert payload["dry_run"] is True
         assert payload["would_write"]["tag_id"] == "renewal"
-        assert payload["would_write"]["doc_url"] == []
+        assert payload["would_write"]["primary_document"] is None
         assert registry_path.read_bytes() == before
 
         invalid_requests = (
@@ -481,10 +491,10 @@ def test_studio_create_tag_dry_run_validates_before_write() -> None:
         )
         registry = json.loads(registry_path.read_text(encoding="utf-8"))
         assert status == HTTPStatus.OK
-        assert applied["doc_url"] == []
+        assert applied["primary_document"] is None
         assert "doc_id" not in applied
         assert registry["tags"][-1]["tag_id"] == "renewal"
-        assert registry["tags"][-1]["doc_url"] == []
+        assert "primary_document" not in registry["tags"][-1]
         assert sorted(path.name for path in documents_root.glob("*.md")) == (
             document_names_before
         )
@@ -507,12 +517,12 @@ def test_studio_tag_alias_dry_run_uses_alias_contract() -> None:
         )
         registry_path.write_text(
             """{
-  "tag_registry_version": "tag_registry_v5",
+  "tag_registry_version": "tag_registry_v6",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {"allowed_groups": ["subject", "theme"]},
   "tags": [
-    {"tag_id": "trees", "group": "subject", "doc_url": [], "updated_at_utc": "2026-05-01T00:00:00Z"},
-    {"tag_id": "growth", "group": "theme", "doc_url": [], "updated_at_utc": "2026-05-01T00:00:00Z"}
+    {"tag_id": "trees", "group": "subject", "updated_at_utc": "2026-05-01T00:00:00Z"},
+    {"tag_id": "growth", "group": "theme", "updated_at_utc": "2026-05-01T00:00:00Z"}
   ]
 }
 """,
@@ -598,12 +608,12 @@ def test_studio_promotion_demotion_dry_run_uses_promotion_contract() -> None:
         registry_path.parent.mkdir(parents=True)
         registry_path.write_text(
             """{
-  "tag_registry_version": "tag_registry_v5",
+  "tag_registry_version": "tag_registry_v6",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {"allowed_groups": ["subject", "theme"]},
   "tags": [
-    {"tag_id": "trees", "group": "subject", "doc_url": [], "updated_at_utc": "2026-05-01T00:00:00Z"},
-    {"tag_id": "growth", "group": "theme", "doc_url": [], "updated_at_utc": "2026-05-01T00:00:00Z"}
+    {"tag_id": "trees", "group": "subject", "updated_at_utc": "2026-05-01T00:00:00Z"},
+    {"tag_id": "growth", "group": "theme", "updated_at_utc": "2026-05-01T00:00:00Z"}
   ]
 }
 """,
@@ -626,6 +636,10 @@ def test_studio_promotion_demotion_dry_run_uses_promotion_contract() -> None:
 }
 """,
             encoding="utf-8",
+        )
+        write_analysis_tags_fixture(
+            repo_root,
+            "d-20260501-000000-000001",
         )
 
         promote_status, promote_payload = tags_post_response(
@@ -654,3 +668,64 @@ def test_studio_promotion_demotion_dry_run_uses_promotion_contract() -> None:
         assert demote_payload["series_tag_refs_rewritten"] == 1
         assert '"foliage"' not in registry_persisted
         assert "trees" not in aliases_persisted["aliases"]
+
+
+def test_tag_demote_blocks_current_document_declarations() -> None:
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        repo_root = Path(tmp_dir)
+        doc_id = "d-20260501-000000-000001"
+        source_path = write_analysis_tags_fixture(
+            repo_root,
+            doc_id,
+            title="Trees document",
+            tag_id="trees",
+        )
+        data_root = repo_root / "studio/data/canonical/tags"
+        data_root.mkdir(parents=True)
+        registry_path = data_root / "tag-registry.json"
+        aliases_path = data_root / "tag-aliases.json"
+        assignments_path = data_root / "tag-assignments.json"
+        registry_path.write_text(
+            """{
+  "tag_registry_version": "tag_registry_v6",
+  "updated_at_utc": "2026-05-01T00:00:00Z",
+  "policy": {"allowed_groups": ["subject", "theme"]},
+  "tags": [
+    {"tag_id": "trees", "group": "subject", "updated_at_utc": "2026-05-01T00:00:00Z"},
+    {"tag_id": "growth", "group": "theme", "updated_at_utc": "2026-05-01T00:00:00Z"}
+  ]
+}
+""",
+            encoding="utf-8",
+        )
+        aliases_path.write_text(
+            '{"tag_aliases_version":"tag_aliases_v2","aliases":{}}\n',
+            encoding="utf-8",
+        )
+        assignments_path.write_text(
+            '{"tag_assignments_version":"tag_assignments_v2","series":{}}\n',
+            encoding="utf-8",
+        )
+        before = {
+            path: path.read_bytes()
+            for path in (registry_path, aliases_path, assignments_path, source_path)
+        }
+
+        status, preview = tags_post_response(
+            repo_root,
+            "/demote-tag-preview",
+            {"tag_id": "trees", "alias_targets": ["growth"]},
+        )
+        assert status == HTTPStatus.OK
+        assert preview["blocked"] is True
+        assert preview["document_association_count"] == 1
+        assert preview["document_associations"][0]["target"]["doc_id"] == doc_id
+
+        with pytest.raises(ValueError, match="associated with 1 document"):
+            tags_post_response(
+                repo_root,
+                "/demote-tag",
+                {"tag_id": "trees", "alias_targets": ["growth"]},
+            )
+        for path, expected in before.items():
+            assert path.read_bytes() == expected

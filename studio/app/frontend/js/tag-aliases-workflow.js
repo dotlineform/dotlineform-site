@@ -3,8 +3,7 @@ import {
   buildManualPatchForAliasCreate,
   buildManualPatchForAliasDelete,
   buildManualPatchForAliasEdit,
-  buildManualPatchForAliasPromote,
-  buildManualPatchForDemote
+  buildManualPatchForAliasPromote
 } from "./tag-aliases-save.js";
 import {
   previewAliasPromote,
@@ -70,11 +69,7 @@ export async function previewTagAliasesTagDemote(options) {
 }
 
 export async function demoteTagAliasFromAliases(options) {
-  const { canonicalTagId, aliasTargets } = options || {};
-  return ensurePatchResult(
-    await submitTagDemoteFromAliases(options),
-    () => buildManualPatchForDemote(canonicalTagId, aliasTargets)
-  );
+  return submitTagDemoteFromAliases(options);
 }
 
 function ensurePatchResult(result, buildPatchResult) {

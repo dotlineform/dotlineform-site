@@ -8,7 +8,6 @@ from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
-import re
 from threading import Thread
 from urllib.parse import unquote, urlsplit
 
@@ -573,117 +572,109 @@ def assert_tag_registry_document_contract(page: Page) -> None:
             const modalWorkflow = await import(
                 '/studio/app/frontend/js/tag-registry-modal-workflow.js'
             );
-            const firstUrl =
-                '/analysis/?doc=d-20260624-213316-478639'
-                + '&subdoc=d-20260727-225608-63967a';
-            const secondUrl =
-                '/analysis/?doc=d-20260729-111111-abcdef'
-                + '&subdoc=d-20260727-225608-63967a';
-            const staleUrl = '/analysis/?doc=d-20260729-131313-a1b2c3';
-            const unsupportedUrl = '/docs/?scope=studio&doc=d-20260507-172400-74807b';
-            const firstRecord = {
-                url: firstUrl,
-                scope_id: 'analysis',
-                document_title: 'bird-nerve',
-                report_title: 'All Tags',
-                available: true
+            const firstTarget = {
+                scope: 'analysis',
+                sub_scope: 'tags',
+                doc_id: 'd-20260727-225608-63967a'
             };
-            const secondRecord = {
-                url: secondUrl,
-                scope_id: 'analysis',
-                document_title: 'bird-nerve',
-                report_title: 'Made-up Tags',
-                available: true
+            const secondTarget = {
+                scope: 'analysis',
+                sub_scope: 'tags',
+                doc_id: 'd-20260729-111111-abcdef'
+            };
+            const thirdTarget = {
+                scope: 'analysis',
+                sub_scope: 'tags',
+                doc_id: 'd-20260729-121212-fedcba'
+            };
+            const staleTarget = {
+                scope: 'analysis',
+                sub_scope: 'tags',
+                doc_id: 'd-20260729-131313-a1b2c3'
             };
             const sourceTags = domain.normalizeRegistryTags({
-                tag_registry_version: 'tag_registry_v5',
+                tag_registry_version: 'tag_registry_v6',
                 tags: [
                     {
                         tag_id: 'bird',
                         group: 'subject',
-                        doc_url: [firstUrl, secondUrl, staleUrl],
+                        primary_document: secondTarget,
                         updated_at_utc: '2026-07-29T12:00:00Z'
                     },
                     {
                         tag_id: 'empty',
                         group: 'theme',
-                        doc_url: [],
                         updated_at_utc: '2026-07-29T11:00:00Z'
+                    },
+                    {
+                        tag_id: 'stale',
+                        group: 'theme',
+                        primary_document: staleTarget,
+                        updated_at_utc: '2026-07-29T10:00:00Z'
                     }
                 ]
             }, '');
-            const loaded = await documents.loadTagRegistryDocumentLocations(
-                sourceTags,
-                {
-                    provider: {
-                        resolve: async ({ scopeIds, urls }) => {
-                            if (scopeIds.join(',') !== 'analysis') {
-                                throw new Error('unexpected scopes');
+            const associationPayload = {
+                schema_version: 'docs_tag_associations_v1',
+                scope: 'analysis',
+                sub_scope: 'tags',
+                declaration_generation: 'sha256:test',
+                associations: [
+                    {
+                        tag_id: 'bird',
+                        documents: [
+                            {
+                                target: firstTarget,
+                                title: 'First bird document',
+                                locations: [{
+                                    access: 'manage',
+                                    url: '/docs/?scope=analysis&doc=report&subdoc=' + firstTarget.doc_id
+                                }]
+                            },
+                            {
+                                target: secondTarget,
+                                title: 'Second bird document',
+                                locations: [{
+                                    access: 'manage',
+                                    url: '/docs/?scope=analysis&doc=report&subdoc=' + secondTarget.doc_id
+                                }]
                             }
-                            return urls.map((url) => {
-                                if (url === firstUrl) return firstRecord;
-                                if (url === secondUrl) return secondRecord;
-                                return documents.unavailableTagRegistryDocument(url);
-                            });
-                        }
+                        ]
+                    },
+                    {
+                        tag_id: 'stale',
+                        documents: [{
+                            target: thirdTarget,
+                            title: 'Current stale document',
+                            locations: [{
+                                access: 'manage',
+                                url: '/docs/?scope=analysis&doc=report&subdoc=' + thirdTarget.doc_id
+                            }]
+                        }]
                     }
-                }
+                ]
+            };
+            const associationsByTagId = documents.normalizeTagDocumentAssociations(
+                associationPayload
             );
             const attached = documents.attachTagRegistryDocuments(
                 sourceTags,
-                loaded.locationsByUrl
+                associationsByTagId
             );
-            const failed = await documents.loadTagRegistryDocumentLocations(
-                sourceTags,
-                {
-                    provider: {
-                        resolve: async () => {
-                            throw new Error('Projection unavailable.');
-                        }
-                    }
-                }
-            );
-            const added = documents.appendTagRegistryDocumentUrl(
-                [firstUrl],
-                secondRecord
-            );
-            const duplicate = documents.appendTagRegistryDocumentUrl(
-                added,
-                secondRecord
-            );
-            const removed = documents.removeTagRegistryDocumentUrl(
-                duplicate,
-                firstUrl
-            );
-            let unsupportedScopeError = '';
-            try {
-                documents.appendTagRegistryDocumentUrl(
-                    removed,
-                    {
-                        url: unsupportedUrl,
-                        scope_id: 'studio',
-                        document_title: 'Planning',
-                        report_title: ''
-                    }
-                );
-            } catch (error) {
-                unsupportedScopeError = error.message;
-            }
 
             document.body.innerHTML = '<div id="list"></div><div id="modals"></div>';
             const list = document.getElementById('list');
-            const renderState = {
-                config: {
-                    app: {
-                        runtime: {
-                            sites: {
-                                public_preview: {
-                                    base: 'http://127.0.0.1:4000'
-                                }
-                            }
+            const config = {
+                app: {
+                    runtime: {
+                        sites: {
+                            docs_viewer: { base: 'http://127.0.0.1:8776' }
                         }
                     }
-                },
+                }
+            };
+            const renderState = {
+                config,
                 tags: attached,
                 filterGroup: 'all',
                 searchQuery: '',
@@ -692,75 +683,90 @@ def assert_tag_registry_document_contract(page: Page) -> None:
                 refs: { list }
             };
             render.renderTagRegistryList(renderState);
-            const table = {
-                heading: list.querySelector('[data-sort-key="documents"]').textContent.trim(),
-                links: [...list.querySelectorAll('a')].map((link) => ({
-                    text: link.textContent.trim(),
-                    href: link.getAttribute('href')
-                })),
-                text: list.textContent,
-                textareaCount: list.querySelectorAll('textarea').length
-            };
+            const tableLinks = [...list.querySelectorAll('a')].map((link) => ({
+                text: link.textContent.trim(),
+                href: link.getAttribute('href')
+            }));
 
             const modalRoot = document.getElementById('modals');
             const modalState = {
-                config: renderState.config,
+                config,
                 studioGroups: ['subject', 'domain', 'form', 'theme'],
                 groupDescriptions: new Map(),
                 saveMode: 'post',
                 editTagId: '',
                 editTagGroup: '',
-                editTagDocUrls: [],
-                editTagPendingDocument: null,
+                editTagPrimaryDocument: null,
+                editTagPrimaryChanged: false,
+                editTagDocuments: [],
+                editTagUnavailablePrimary: null,
                 editModalRestoreFocus: null,
-                documentLocationsByUrl: loaded.locationsByUrl,
-                documentPicker: { close: () => {} },
                 tags: attached,
+                associationsByTagId,
                 registryOptions: [],
                 registryUpdatedAt: '2026-07-29T12:00:00Z',
                 refs: {}
             };
             modalRoot.innerHTML = modals.renderTagRegistryModals(modalState);
             modalState.refs = modals.collectTagRegistryModalRefs(modalRoot);
+
             modals.openTagRegistryEditModal(modalState, attached[0]);
-            const beforeCancel = {
-                links: [...modalState.refs.editDocumentList.querySelectorAll('a')].map(
-                    (link) => ({
-                        text: link.textContent.trim(),
-                        href: link.getAttribute('href')
-                    })
-                ),
-                directRemoveCount: modalState.refs.editDocumentList.querySelectorAll(
+            const selectedState = {
+                selectorCount: modalState.refs.editDocumentList.querySelectorAll(
+                    '[data-select-edit-primary]'
+                ).length,
+                checkedIds: [...modalState.refs.editDocumentList.querySelectorAll(
+                    '[data-select-edit-primary][aria-checked="true"]'
+                )].map((button) => button.dataset.selectEditPrimary),
+                removeCount: modalState.refs.editModal.querySelectorAll(
                     '[data-remove-edit-document-url]'
                 ).length,
-                textareaCount: modalState.refs.editModal.querySelectorAll('textarea').length,
-                addDisabled: modalState.refs.addEditDocument.disabled
+                searchCount: modalState.refs.editModal.querySelectorAll(
+                    '[data-role="edit-document-search"]'
+                ).length,
+                addCount: modalState.refs.editModal.querySelectorAll(
+                    '[data-role="add-edit-document"]'
+                ).length,
+                radioGroupCount: modalState.refs.editModal.querySelectorAll(
+                    '[role="radiogroup"]'
+                ).length
             };
-            modalState.editTagDocUrls = documents.removeTagRegistryDocumentUrl(
-                modalState.editTagDocUrls,
-                secondUrl
-            );
+            modalState.editTagPrimaryDocument = { ...firstTarget };
+            modalState.editTagPrimaryChanged = true;
             modals.renderTagRegistryEditDocuments(modalState);
-            const afterRemove = modalState.editTagDocUrls.slice();
+            const replacementChecked = modalState.refs.editDocumentList.querySelector(
+                '[aria-checked="true"]'
+            ).dataset.selectEditPrimary;
             modals.closeTagRegistryEditModal(modalState);
-            const cancelled = {
+            const closedState = {
                 tagId: modalState.editTagId,
-                group: modalState.editTagGroup,
-                urls: modalState.editTagDocUrls,
-                pickerHidden: modalState.refs.editDocumentPicker.hidden
+                primary: modalState.editTagPrimaryDocument,
+                changed: modalState.editTagPrimaryChanged,
+                documents: modalState.editTagDocuments.length
             };
+
+            modals.openTagRegistryEditModal(modalState, attached[2]);
+            const staleState = {
+                text: modalState.refs.editDocumentList.textContent,
+                selectorCount: modalState.refs.editDocumentList.querySelectorAll(
+                    '[data-select-edit-primary]'
+                ).length,
+                checkedCount: modalState.refs.editDocumentList.querySelectorAll(
+                    '[aria-checked="true"]'
+                ).length
+            };
+            modals.closeTagRegistryEditModal(modalState);
 
             modals.openTagRegistryEditModal(modalState, attached[0]);
             const routeResults = [];
             modalWorkflow.applyTagRegistryEditResult(modalState, {
                 tagId: attached[0].tagId,
                 group: attached[0].group,
-                docUrl: afterRemove,
+                primaryDocument: firstTarget,
                 result: {
                     message: 'Saved.',
-                    summary: 'verbose backend audit summary',
                     response: {
-                        doc_url: afterRemove,
+                        primary_document: firstTarget,
                         updated_at_utc: '2026-07-29T13:00:00Z'
                     }
                 }
@@ -770,97 +776,81 @@ def assert_tag_registry_document_contract(page: Page) -> None:
                 renderList: () => {},
                 syncRouteBusyState: () => {}
             });
-            const successfulEdit = {
-                modalHidden: modalState.refs.editModal.hidden,
-                projectedUrls: modalState.tags
-                    .find((tag) => tag.tagId === attached[0].tagId)
-                    .docUrl,
-                routeResults
-            };
+            const projected = modalState.tags.find((tag) => tag.tagId === 'bird');
 
             return {
-                resolvedTitles: attached[0].documents.map((record) => record.document_title),
-                resolvedUrls: attached[0].documents.map((record) => record.url),
-                failed: {
-                    error: failed.error,
-                    titles: failed.records.map((record) => record.document_title)
-                },
-                added,
-                duplicate,
-                removed,
-                unsupportedScopeError,
-                documentSort: domain.compareTags(attached[0], attached[1], 'documents'),
-                table,
-                beforeCancel,
-                afterRemove,
-                cancelled,
-                successfulEdit
+                documentCounts: attached.map((tag) => tag.documents.length),
+                storedPrimaries: attached.map((tag) => (
+                    tag.primaryDocument && tag.primaryDocument.doc_id || ''
+                )),
+                unavailablePrimaries: attached.map((tag) => (
+                    tag.unavailablePrimary
+                    && tag.unavailablePrimary.target.doc_id
+                    || ''
+                )),
+                tableLinks,
+                selectedState,
+                replacementChecked,
+                closedState,
+                staleState,
+                successfulEdit: {
+                    modalHidden: modalState.refs.editModal.hidden,
+                    primary: projected.primaryDocument,
+                    unavailablePrimary: projected.unavailablePrimary,
+                    routeResults
+                }
             };
         }"""
     )
-    assert result["resolvedTitles"] == [
-        "bird-nerve",
-        "bird-nerve",
-        "Unavailable document",
+    assert result["documentCounts"] == [2, 0, 1]
+    assert result["storedPrimaries"] == [
+        "d-20260729-111111-abcdef",
+        "",
+        "d-20260729-131313-a1b2c3",
     ]
-    assert result["resolvedUrls"] == [
-        (
-            "/analysis/?doc=d-20260624-213316-478639"
-            "&subdoc=d-20260727-225608-63967a"
-        ),
-        (
-            "/analysis/?doc=d-20260729-111111-abcdef"
-            "&subdoc=d-20260727-225608-63967a"
-        ),
-        "/analysis/?doc=d-20260729-131313-a1b2c3",
+    assert result["unavailablePrimaries"] == [
+        "",
+        "",
+        "d-20260729-131313-a1b2c3",
     ]
-    assert result["failed"]["error"] == "Projection unavailable."
-    assert result["failed"]["titles"] == [
-        "Unavailable document",
-        "Unavailable document",
-        "Unavailable document",
+    assert [link["text"] for link in result["tableLinks"]] == [
+        "First bird document",
+        "Second bird document",
+        "Current stale document",
     ]
-    assert result["added"] == result["duplicate"]
-    assert result["removed"] == [
-        (
-            "/analysis/?doc=d-20260729-111111-abcdef"
-            "&subdoc=d-20260727-225608-63967a"
-        )
-    ]
-    assert result["unsupportedScopeError"] == (
-        "document location commit record is invalid"
-    )
-    assert result["documentSort"] > 0
-    assert result["table"]["heading"].startswith("documents")
-    assert result["table"]["links"] == result["beforeCancel"]["links"]
-    assert result["table"]["links"][0]["text"] == "bird-nerve"
-    assert result["table"]["links"][1]["text"] == "bird-nerve"
-    assert result["table"]["links"][2] == {
-        "text": "Unavailable document",
-        "href": (
-            "http://127.0.0.1:4000/"
-            "analysis/?doc=d-20260729-131313-a1b2c3"
-        ),
-    }
     assert all(
-        link["href"].startswith("http://127.0.0.1:4000/analysis/")
-        for link in result["table"]["links"]
+        link["href"].startswith(
+            "http://127.0.0.1:8776/docs/?scope=analysis&doc=report&subdoc="
+        )
+        for link in result["tableLinks"]
     )
-    assert "—" in result["table"]["text"]
-    assert result["table"]["textareaCount"] == 0
-    assert result["beforeCancel"]["directRemoveCount"] == 3
-    assert result["beforeCancel"]["textareaCount"] == 0
-    assert result["beforeCancel"]["addDisabled"] is True
-    assert len(result["afterRemove"]) == 2
-    assert result["cancelled"] == {
-        "tagId": "",
-        "group": "",
-        "urls": [],
-        "pickerHidden": False,
+    assert result["selectedState"] == {
+        "selectorCount": 2,
+        "checkedIds": ["d-20260729-111111-abcdef"],
+        "removeCount": 0,
+        "searchCount": 0,
+        "addCount": 0,
+        "radioGroupCount": 1,
     }
+    assert result["replacementChecked"] == "d-20260727-225608-63967a"
+    assert result["closedState"] == {
+        "tagId": "",
+        "primary": None,
+        "changed": False,
+        "documents": 0,
+    }
+    assert result["staleState"]["selectorCount"] == 1
+    assert result["staleState"]["checkedCount"] == 0
+    assert "Unavailable document" in result["staleState"]["text"]
+    assert "d-20260729-131313-a1b2c3" in result["staleState"]["text"]
     assert result["successfulEdit"] == {
         "modalHidden": True,
-        "projectedUrls": result["afterRemove"],
+        "primary": {
+            "scope": "analysis",
+            "sub_scope": "tags",
+            "doc_id": "d-20260727-225608-63967a",
+        },
+        "unavailablePrimary": None,
         "routeResults": [],
     }
 
@@ -868,15 +858,16 @@ def assert_tag_registry_document_contract(page: Page) -> None:
 def assert_tag_registry_edit_request(page: Page, base_url: str) -> None:
     captured: list[dict[str, object]] = []
     endpoint = f"{base_url}/studio/api/tags/mutate-tag"
+    first_target = {
+        "scope": "analysis",
+        "sub_scope": "tags",
+        "doc_id": "d-20260729-111111-abcdef",
+    }
 
     def handle_edit(route) -> None:
         payload = route.request.post_data_json
-        captured.append(
-            {
-                "method": route.request.method,
-                "payload": payload,
-            }
-        )
+        captured.append({"method": route.request.method, "payload": payload})
+        primary = payload.get("primary_document", first_target)
         route.fulfill(
             status=200,
             content_type="application/json",
@@ -886,35 +877,34 @@ def assert_tag_registry_edit_request(page: Page, base_url: str) -> None:
                     "action": "edit",
                     "old_tag_id": "trees",
                     "new_tag_id": "trees",
-                    "doc_url": payload["doc_url"],
-                    "group_changed": False,
-                    "doc_url_changed": True,
-                    "document_urls_added": 1,
-                    "document_urls_removed": 0,
+                    "primary_document": primary,
+                    "group_changed": payload["new_group"] != "subject",
+                    "primary_document_changed": "primary_document" in payload,
                     "updated_at_utc": "2026-07-29T12:00:00Z",
-                    "summary_text": "saved complete document-link draft",
+                    "summary_text": "saved Registry edit",
                 }
             ),
         )
 
     page.route(endpoint, handle_edit)
     result = page.evaluate(
-        """async (editEndpoint) => {
+        """async ({ editEndpoint, firstTarget }) => {
             const service = await import('/studio/app/frontend/js/tag-registry-service.js');
-            const firstUrl = '/analysis/?doc=d-20260729-111111-abcdef';
-            const secondUrl = '/analysis/?doc=d-20260729-121212-fedcba';
+            const secondTarget = {
+                scope: 'analysis',
+                sub_scope: 'tags',
+                doc_id: 'd-20260729-121212-fedcba'
+            };
             const tag = {
                 tagId: 'trees',
                 group: 'subject',
-                docUrl: [firstUrl]
+                primaryDocument: firstTarget
             };
             const config = {
                 app: {
                     runtime: {
                         services: {
-                            tags: {
-                                mutate_tag: editEndpoint
-                            }
+                            tags: { mutate_tag: editEndpoint }
                         }
                     }
                 }
@@ -923,64 +913,66 @@ def assert_tag_registry_edit_request(page: Page, base_url: str) -> None:
                 saveMode: 'post',
                 tag,
                 group: 'subject',
-                docUrl: [firstUrl],
+                primaryDocument: firstTarget,
+                primaryDocumentChanged: false,
                 config
             });
-            const saved = await service.submitTagEdit({
+            const groupOnly = await service.submitTagEdit({
+                saveMode: 'post',
+                tag,
+                group: 'theme',
+                primaryDocument: firstTarget,
+                primaryDocumentChanged: false,
+                config
+            });
+            const primarySaved = await service.submitTagEdit({
                 saveMode: 'post',
                 tag,
                 group: 'subject',
-                docUrl: [firstUrl, secondUrl],
+                primaryDocument: secondTarget,
+                primaryDocumentChanged: true,
                 config
             });
-            const reordered = await service.submitTagEdit({
+            const clearRejected = await service.submitTagEdit({
                 saveMode: 'post',
-                tag: {
-                    ...tag,
-                    docUrl: [firstUrl, secondUrl]
-                },
+                tag,
                 group: 'subject',
-                docUrl: [secondUrl, firstUrl],
+                primaryDocument: null,
+                primaryDocumentChanged: true,
                 config
             });
-            return { unchanged, saved, reordered };
+            return { unchanged, groupOnly, primarySaved, clearRejected };
         }""",
-        endpoint,
+        {"editEndpoint": endpoint, "firstTarget": first_target},
     )
     page.unroute(endpoint, handle_edit)
 
     assert result["unchanged"]["code"] == "no_changes"
-    assert result["saved"]["ok"] is True
-    assert result["saved"]["response"]["doc_url"] == [
-        "/analysis/?doc=d-20260729-111111-abcdef",
-        "/analysis/?doc=d-20260729-121212-fedcba",
-    ]
-    assert result["reordered"]["ok"] is True
+    assert result["groupOnly"]["ok"] is True
+    assert result["primarySaved"]["ok"] is True
+    assert result["clearRejected"]["code"] == "invalid_primary"
     assert len(captured) == 2
     assert all(item["method"] == "POST" for item in captured)
-    first_payload = captured[0]["payload"]
-    assert isinstance(first_payload, dict)
-    assert first_payload["action"] == "edit"
-    assert first_payload["tag_id"] == "trees"
-    assert first_payload["new_group"] == "subject"
-    assert first_payload["doc_url"] == [
-        "/analysis/?doc=d-20260729-111111-abcdef",
-        "/analysis/?doc=d-20260729-121212-fedcba",
-    ]
-    assert "description" not in first_payload
-    assert set(first_payload) == {
+    group_payload = captured[0]["payload"]
+    primary_payload = captured[1]["payload"]
+    assert isinstance(group_payload, dict)
+    assert group_payload["new_group"] == "theme"
+    assert "primary_document" not in group_payload
+    assert set(group_payload) == {
         "action",
         "tag_id",
         "new_group",
-        "doc_url",
         "allow_canonical_rename",
         "client_time_utc",
         "activity_context",
     }
-    assert captured[1]["payload"]["doc_url"] == [
-        "/analysis/?doc=d-20260729-121212-fedcba",
-        "/analysis/?doc=d-20260729-111111-abcdef",
-    ]
+    assert isinstance(primary_payload, dict)
+    assert primary_payload["new_group"] == "subject"
+    assert primary_payload["primary_document"] == {
+        "scope": "analysis",
+        "sub_scope": "tags",
+        "doc_id": "d-20260729-121212-fedcba",
+    }
 
 
 def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
@@ -999,7 +991,7 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
                     "action": "create",
                     "tag_id": "renewal",
                     "group": "theme",
-                    "doc_url": [],
+                    "primary_document": None,
                     "added": 1,
                     "final_total": 2,
                     "updated_at_utc": "2026-07-27T12:00:00Z",
@@ -1139,7 +1131,8 @@ def assert_tag_registry_create_request(page: Page, base_url: str) -> None:
     assert registry_patch["append_row"]["group"] == "theme"
     assert "description" not in registry_patch["append_row"]
     assert "doc_id" not in registry_patch["append_row"]
-    assert registry_patch["append_row"]["doc_url"] == []
+    assert "primary_document" not in registry_patch["append_row"]
+    assert "doc_url" not in registry_patch["append_row"]
     assert "document" not in patch_payload
     assert patch_payload["notice"].startswith("Nothing has been written")
     assert "rebuild" not in patch_payload

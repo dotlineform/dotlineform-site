@@ -538,6 +538,29 @@ async function handleTagDemoteFromAliases(state) {
       setRouteResult(state, "error", preview.message);
       return;
     }
+    if (preview.response && preview.response.blocked === true) {
+      const associations = Array.isArray(preview.response.document_associations)
+        ? preview.response.document_associations
+        : [];
+      const names = associations.map((association) => (
+        String(association && association.title || "").trim()
+        || String(
+          association
+          && association.target
+          && association.target.doc_id
+          || ""
+        ).trim()
+      )).filter(Boolean);
+      const message = aliasesText(
+        state.config,
+        "demote_documents_blocked",
+        "Edit or delete the associated documents before demoting this Tag.{documents}",
+        { documents: names.length ? ` Associated: ${names.join(", ")}.` : "" }
+      );
+      setAliasDemoteStatus(state, "error", message);
+      setRouteResult(state, "error", message);
+      return;
+    }
     const previewSummary = preview.summary;
     const aliasKey = canonicalTagId;
     const confirmResult = await openConfirmDetailModal({
@@ -574,23 +597,15 @@ async function handleTagDemoteFromAliases(state) {
     setRouteResult(state, "error", message);
     return;
   }
-  if (result.mode === "post") {
-    closeAliasDemoteModal(state, modalWorkflowCallbacks());
-    setRouteResult(state, "success", String(result.response.summary_text || aliasesText(state.config, "demoted_success", "Demoted.")));
-    applyTagAliasesDemoteProjection(state, {
-      canonicalTagId,
-      aliasTargets,
-      response: result.response
-    });
-    renderControls(state);
-    renderList(state);
-    return;
-  }
-
-  const patchResult = result.patchResult;
   closeAliasDemoteModal(state, modalWorkflowCallbacks());
-  setRouteResult(state, patchResult.kind, patchResult.message);
-  openPatchModal(state, patchResult.snippet);
+  setRouteResult(state, "success", String(result.response.summary_text || aliasesText(state.config, "demoted_success", "Demoted.")));
+  applyTagAliasesDemoteProjection(state, {
+    canonicalTagId,
+    aliasTargets,
+    response: result.response
+  });
+  renderControls(state);
+  renderList(state);
 }
 
 function openPatchModal(state, snippet) {

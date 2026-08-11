@@ -8,7 +8,6 @@ def tag_row(tag_id: str, group: str, description: str = "") -> dict[str, object]
     return {
         "tag_id": tag_id,
         "group": group,
-        "doc_url": [],
         "updated_at_utc": "2026-05-01T00:00:00Z",
     }
 
@@ -38,7 +37,7 @@ def alias_mutation_registry_payload() -> dict[str, object]:
 
 def promotion_registry_payload() -> dict[str, object]:
     return {
-        "tag_registry_version": "tag_registry_v5",
+        "tag_registry_version": "tag_registry_v6",
         "updated_at_utc": "2026-05-01T00:00:00Z",
         "policy": {"allowed_groups": ["subject", "theme", "domain"]},
         "tags": [

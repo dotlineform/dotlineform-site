@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from tags import tag_activity
+from tags import tag_document_declarations
 from tags import tag_promotion_mutations as tag_promotions
 from tags import tag_routes
 from tags import tag_source_model as tag_source
@@ -121,6 +122,20 @@ def demote_tag_response(
     aliases_payload = tag_source.load_aliases(aliases_path)
     assignments_payload = tag_source.load_assignments(assignments_path)
 
+    document_associations = (
+        tag_document_declarations.current_tag_document_associations(
+            repo_root,
+            old_tag_id,
+        )
+    )
+    if document_associations and not preview:
+        count = len(document_associations)
+        noun = "document" if count == 1 else "documents"
+        raise ValueError(
+            f"Tag {old_tag_id} is associated with {count} {noun}; "
+            "edit or delete those documents before demoting the Tag"
+        )
+
     registry_updated, aliases_updated, assignments_updated, stats, assignments_changed = tag_promotions.demote_tag_to_alias(
         registry_payload=registry_payload,
         aliases_payload=aliases_payload,
@@ -137,6 +152,9 @@ def demote_tag_response(
         "summary_text": summary_text,
         "preview": preview,
         **stats,
+        "blocked": bool(document_associations),
+        "document_association_count": len(document_associations),
+        "document_associations": document_associations,
     }
 
     payloads_to_write: dict[Path, dict[str, Any]] = {

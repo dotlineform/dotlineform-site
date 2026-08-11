@@ -95,6 +95,7 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
         "promote_tag_alias": "/studio/api/tags/promote-tag-alias",
         "promote_tag_alias_preview": "/studio/api/tags/promote-tag-alias-preview",
         "tag_aliases": "/studio/api/tags/tag-aliases",
+        "tag_associations": "/studio/api/tags/tag-associations",
         "tag_assignments": "/studio/api/tags/tag-assignments",
         "tag_groups": "/studio/api/tags/tag-groups",
         "tag_registry": "/studio/api/tags/tag-registry",

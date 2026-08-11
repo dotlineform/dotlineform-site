@@ -30,17 +30,6 @@ GROWTH_DOC_ID = "d-20260501-000001-000002"
 REPORT_DOC_ID = "d-20260430-230000-000099"
 
 
-def analysis_url(doc_id: str) -> str:
-    return (
-        f"/docs/?scope=analysis&doc={REPORT_DOC_ID}"
-        f"&subdoc={doc_id}"
-    )
-
-
-def public_analysis_url(doc_id: str) -> str:
-    return f"/analysis/?doc={REPORT_DOC_ID}&subdoc={doc_id}"
-
-
 def write_fixture_docs(repo_root: Path) -> Path:
     config_path = (
         repo_root / "docs-viewer/config/scopes/docs_scopes.json"
@@ -141,7 +130,7 @@ sub_scope: tags
     documents_root.mkdir(parents=True)
     for doc_id, tag_id, group, description in (
         (TREES_DOC_ID, "trees", "subject", "Trees"),
-        (GROWTH_DOC_ID, "growth", "theme", "Growth"),
+        (GROWTH_DOC_ID, "trees", "theme", "Growth"),
     ):
         (documents_root / f"{doc_id}.md").write_text(
             f"""---
@@ -150,6 +139,7 @@ title: {tag_id}
 added_date: "2026-05-01 00:00:00"
 last_updated: 2026-05-01
 group: {group}
+tag_id: {tag_id}
 parent_id: ""
 ---
 # {tag_id}
@@ -170,7 +160,7 @@ def write_fixture_data(repo_root: Path) -> tuple[Path, Path, Path, Path]:
     assignments_path = data_root / "tag-assignments.json"
     registry_path.write_text(
         """{
-  "tag_registry_version": "tag_registry_v5",
+  "tag_registry_version": "tag_registry_v6",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {
     "allowed_groups": ["subject", "form", "theme"]
@@ -179,13 +169,11 @@ def write_fixture_data(repo_root: Path) -> tuple[Path, Path, Path, Path]:
     {
       "tag_id": "trees",
       "group": "subject",
-      "doc_url": ["/docs/?scope=analysis&doc=d-20260430-230000-000099&subdoc=d-20260501-000000-000001"],
       "updated_at_utc": "2026-05-01T00:00:00Z"
     },
     {
       "tag_id": "growth",
       "group": "theme",
-      "doc_url": ["/docs/?scope=analysis&doc=d-20260430-230000-000099&subdoc=d-20260501-000001-000002"],
       "updated_at_utc": "2026-05-01T00:00:00Z"
     }
   ]
@@ -280,24 +268,17 @@ def run() -> None:
                     "action": "edit",
                     "tag_id": "trees",
                     "new_group": "form",
-                    "doc_url": [
-                        analysis_url(TREES_DOC_ID),
-                        public_analysis_url(GROWTH_DOC_ID),
-                    ],
+                    "primary_document": {
+                        "scope": "analysis",
+                        "sub_scope": "tags",
+                        "doc_id": GROWTH_DOC_ID,
+                    },
                     "allow_canonical_rename": False,
                     "client_time_utc": "2026-05-22T00:00:00Z",
                 },
             )
             preview = post_json(
                 f"{base_url}/mutate-tag-preview",
-                {
-                    "action": "delete",
-                    "tag_id": "trees",
-                    "client_time_utc": "2026-05-22T00:00:00Z",
-                },
-            )
-            deleted = post_json(
-                f"{base_url}/mutate-tag",
                 {
                     "action": "delete",
                     "tag_id": "trees",
@@ -330,40 +311,32 @@ def run() -> None:
             raise AssertionError(f"registry create activity tag identity failed: {activity_rows!r}")
         if not edited.get("group_changed"):
             raise AssertionError(f"registry edit failed: {edited!r}")
-        if edited.get("doc_url") != [
-            analysis_url(TREES_DOC_ID),
-            public_analysis_url(GROWTH_DOC_ID),
-        ]:
+        if edited.get("primary_document") != {
+            "scope": "analysis",
+            "sub_scope": "tags",
+            "doc_id": GROWTH_DOC_ID,
+        }:
             raise AssertionError(
-                f"registry document-link edit failed: {edited!r}"
+                f"registry primary-document edit failed: {edited!r}"
             )
-        if (
-            edited.get("document_urls_added") != 1
-            or edited.get("document_urls_removed") != 0
-        ):
+        if edited.get("primary_document_changed") is not True:
             raise AssertionError(
-                f"registry document-link stats failed: {edited!r}"
+                f"registry primary-document stats failed: {edited!r}"
             )
         if preview.get("series_tag_refs_rewritten") != 1 or preview.get("work_tag_refs_rewritten") != 1:
             raise AssertionError(f"registry delete preview did not report assignment rewrites: {preview!r}")
-        if preview.get("blocked") is not False or preview.get("document_associations") != []:
-            raise AssertionError(f"unassociated registry delete preview was blocked: {preview!r}")
-        if deleted.get("series_tag_refs_rewritten") != 1 or deleted.get("work_tag_refs_rewritten") != 1:
-            raise AssertionError(f"registry delete did not rewrite assignments: {deleted!r}")
-        if deleted.get("blocked") is not False:
-            raise AssertionError(f"unassociated registry delete was blocked: {deleted!r}")
-        if [row["tag_id"] for row in registry["tags"]] != ["growth", "renewal"]:
-            raise AssertionError(f"registry delete did not leave expected tags: {registry!r}")
-        if registry["tags"][1].get("doc_url") != []:
+        if preview.get("blocked") is not True or preview.get("document_association_count") != 2:
+            raise AssertionError(f"associated registry delete preview was not blocked: {preview!r}")
+        if [row["tag_id"] for row in registry["tags"]] != ["trees", "growth", "renewal"]:
+            raise AssertionError(f"registry edit did not leave expected tags: {registry!r}")
+        if "primary_document" in registry["tags"][2]:
             raise AssertionError(
                 f"registry create unexpectedly associated a document: {registry!r}"
             )
-        if aliases["aliases"]["woodland"]["tags"] != ["growth"]:
-            raise AssertionError(f"alias references were not rewritten: {aliases!r}")
-        if assignments["series"]["series-a"].get("tags") != []:
-            raise AssertionError(f"series tag references were not removed: {assignments!r}")
-        if assignments["series"]["series-a"].get("works"):
-            raise AssertionError(f"empty work assignment row was not removed: {assignments!r}")
+        if aliases["aliases"]["woodland"]["tags"] != ["trees", "growth"]:
+            raise AssertionError(f"blocked delete changed alias references: {aliases!r}")
+        if assignments["series"]["series-a"]["tags"][0]["tag_id"] != "trees":
+            raise AssertionError(f"blocked delete changed assignments: {assignments!r}")
 
     print("Studio tag registry APIs OK")
 

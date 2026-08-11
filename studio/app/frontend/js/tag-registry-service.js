@@ -66,7 +66,14 @@ export async function previewDeleteImpact(options) {
 }
 
 export async function submitTagEdit(options) {
-  const { saveMode, tag, group, docUrl, config } = options || {};
+  const {
+    saveMode,
+    tag,
+    group,
+    primaryDocument,
+    primaryDocumentChanged,
+    config
+  } = options || {};
   if (saveMode !== "post") {
     return {
       ok: false,
@@ -81,27 +88,41 @@ export async function submitTagEdit(options) {
       message: registryText(config, "selected_tag_missing", "Selected tag is no longer available.")
     };
   }
-  if (
-    group === String(tag.group || "").trim() &&
-    sameStringArray(docUrl, tag.docUrl)
-  ) {
+  if (group === String(tag.group || "").trim() && !primaryDocumentChanged) {
     return {
       ok: false,
       code: "no_changes",
       message: registryText(config, "edit_no_changes", "No changes to save.")
     };
   }
+  if (primaryDocumentChanged && !primaryDocument) {
+    return {
+      ok: false,
+      code: "invalid_primary",
+      message: registryText(
+        config,
+        "edit_primary_required",
+        "Select a current document as primary."
+      )
+    };
+  }
 
   try {
-    const response = await postJson(getStudioTagWriteEndpoint("mutateTag", config), {
+    const payload = {
       action: "edit",
       tag_id: tag.tagId,
       new_group: group,
-      doc_url: Array.isArray(docUrl) ? docUrl.slice() : [],
       allow_canonical_rename: false,
       client_time_utc: utcTimestamp(),
       activity_context: registryActivityContext("edit-tag", "save-edit", "[data-role=\"save-edit\"]", "tag_id", tag.tagId)
-    });
+    };
+    if (primaryDocumentChanged) {
+      payload.primary_document = { ...primaryDocument };
+    }
+    const response = await postJson(
+      getStudioTagWriteEndpoint("mutateTag", config),
+      payload
+    );
     return {
       ok: true,
       response,
@@ -115,15 +136,6 @@ export async function submitTagEdit(options) {
       message: String(error && error.message ? error.message : registryText(config, "edit_save_failed", "Save failed."))
     };
   }
-}
-
-function sameStringArray(left, right) {
-  const leftValues = Array.isArray(left) ? left : [];
-  const rightValues = Array.isArray(right) ? right : [];
-  return (
-    leftValues.length === rightValues.length
-    && leftValues.every((value, index) => value === rightValues[index])
-  );
 }
 
 export async function submitCreateTag(options) {
@@ -233,31 +245,35 @@ export async function previewTagDemote(options) {
 
 export async function submitTagDemote(options) {
   const { saveMode, tagId, aliasTargets, config } = options || {};
-  if (saveMode === "post") {
-    try {
-      const response = await postJson(getStudioTagWriteEndpoint("demoteTag", config), {
-        tag_id: tagId,
-        alias_targets: aliasTargets,
-        client_time_utc: utcTimestamp(),
-        activity_context: registryActivityContext("demote-registry-tag", "confirm-demote", "[data-role=\"confirm-demote\"]", "tag_id", tagId)
-      });
-      return {
-        ok: true,
-        mode: "post",
-        response,
-        summary: String(response.summary_text || registryText(config, "demoted_success", "Demoted."))
-      };
-    } catch (error) {
-      return {
-        ok: false,
-        mode: "post",
-        message: String(error && error.message ? error.message : registryText(config, "demotion_failed", "Demotion failed."))
-      };
-    }
+  if (saveMode !== "post") {
+    return {
+      ok: false,
+      code: "local_required",
+      message: registryText(
+        config,
+        "local_demote_required",
+        "Local server is required for demotion."
+      )
+    };
   }
-
-  return {
-    ok: true,
-    mode: "patch"
-  };
+  try {
+    const response = await postJson(getStudioTagWriteEndpoint("demoteTag", config), {
+      tag_id: tagId,
+      alias_targets: aliasTargets,
+      client_time_utc: utcTimestamp(),
+      activity_context: registryActivityContext("demote-registry-tag", "confirm-demote", "[data-role=\"confirm-demote\"]", "tag_id", tagId)
+    });
+    return {
+      ok: true,
+      mode: "post",
+      response,
+      summary: String(response.summary_text || registryText(config, "demoted_success", "Demoted."))
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      mode: "post",
+      message: String(error && error.message ? error.message : registryText(config, "demotion_failed", "Demotion failed."))
+    };
+  }
 }

@@ -66,14 +66,14 @@ export function setTagRegistryEditStatus(state, kind, message) {
 export function applyTagRegistryEditResult(state, {
   tagId,
   group,
-  docUrl,
+  primaryDocument,
   result
 } = {}, options = {}) {
   setTagRegistryEditStatus(state, "success", result && result.message);
   applyTagRegistryEditProjection(state, {
     tagId,
     group,
-    docUrl,
+    primaryDocument,
     response: result && result.response
   });
   callback(options, "renderControls");
@@ -234,7 +234,15 @@ export function updateTagRegistryDemoteWorkflow(state, options = {}) {
   const validation = getTagRegistryDemoteValidation(state, options);
   let statusKind = "";
   let statusMessage = "";
-  if (validation.warning) {
+  const localRequired = state.saveMode !== "post";
+  if (localRequired) {
+    statusKind = "error";
+    statusMessage = text(
+      options,
+      "local_demote_required",
+      "Local server is required for demotion."
+    );
+  } else if (validation.warning) {
     const emptyWarning = text(options, "demote_select_target_warning", "Select at least one target tag.");
     statusKind = validation.warning === emptyWarning ? "" : "error";
     statusMessage = validation.warning;
@@ -249,7 +257,7 @@ export function updateTagRegistryDemoteWorkflow(state, options = {}) {
   });
   renderTagRegistryDemoteSelectionState(state, {
     selectedItems,
-    canConfirm: validation.valid,
+    canConfirm: validation.valid && !localRequired,
     statusKind,
     statusMessage
   });
@@ -316,12 +324,4 @@ export function applyTagRegistryDemotePostResult(state, {
   });
   callback(options, "renderControls");
   callback(options, "renderList");
-}
-
-export function applyTagRegistryDemotePatchResult(state, {
-  patchResult
-} = {}, options = {}) {
-  closeTagRegistryDemoteWorkflow(state, options);
-  callback(options, "setRouteResult", patchResult && patchResult.kind, patchResult && patchResult.message);
-  callback(options, "openPatchModal", patchResult && patchResult.snippet);
 }

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-6f2606f6b560f2747fda6b5d3d4af2c2",
-    "generated_at_utc": "2026-08-11T18:52:34Z",
+    "version": "blake2b-7a73cf095007e04fbee0b3be22fead12",
+    "generated_at_utc": "2026-08-11T20:02:52Z",
     "count": 309
   },
   "entries": [
@@ -3971,10 +3971,10 @@
       "kind": "doc",
       "title": "DMM-1 — Data Model Maps Foundation Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-123452-6a2fd3",
-      "last_updated": "2026-08-09 22:00:00",
+      "last_updated": "2026-08-11 20:44:15",
       "parent_id": "d-20260802-123450-f7493d",
       "parent_title": "Data Model Maps",
-      "display_meta": "2026-08-09 22:00:00 • Data Model Maps",
+      "display_meta": "2026-08-11 20:44:15 • Data Model Maps",
       "search_terms": [
         "dmm-1 — data model maps foundation delivery",
         "dmm",
@@ -3985,15 +3985,16 @@
         "foundation",
         "delivery",
         "data model maps",
-        "2026-08-09 22:00:00",
+        "2026-08-11 20:44:15",
         "2026",
         "08",
-        "09",
-        "22",
-        "00",
+        "11",
+        "20",
+        "44",
+        "15",
         "d-20260802-123452-6a2fd3"
       ],
-      "search_text": "dmm-1 — data model maps foundation delivery dmm 1 data model maps foundation delivery data model maps 2026-08-09 22:00:00 2026 08 09 22 00 d-20260802-123452-6a2fd3"
+      "search_text": "dmm-1 — data model maps foundation delivery dmm 1 data model maps foundation delivery data model maps 2026-08-11 20:44:15 2026 08 11 20 44 15 d-20260802-123452-6a2fd3"
     },
     {
       "id": "d-20260802-223430-cf2abe",
@@ -6733,26 +6734,26 @@
       "kind": "doc",
       "title": "Tag Document Linking",
       "href": "/docs/?scope=studio&doc=d-20260804-160200-fa7bb7",
-      "last_updated": "2026-08-11 19:42:26",
+      "last_updated": "2026-08-11 20:39:49",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-11 19:42:26 • Roadmap",
+      "display_meta": "2026-08-11 20:39:49 • Roadmap",
       "search_terms": [
         "tag document linking",
         "tag",
         "document",
         "linking",
         "roadmap",
-        "2026-08-11 19:42:26",
+        "2026-08-11 20:39:49",
         "2026",
         "08",
         "11",
-        "19",
-        "42",
-        "26",
+        "20",
+        "39",
+        "49",
         "d-20260804-160200-fa7bb7"
       ],
-      "search_text": "tag document linking tag document linking roadmap 2026-08-11 19:42:26 2026 08 11 19 42 26 d-20260804-160200-fa7bb7"
+      "search_text": "tag document linking tag document linking roadmap 2026-08-11 20:39:49 2026 08 11 20 39 49 d-20260804-160200-fa7bb7"
     },
     {
       "id": "d-20260804-170901-b2e74c",
@@ -6821,10 +6822,10 @@
       "kind": "doc",
       "title": "TDL-2 — Tag Primary Document And Semantic Token Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-002213-b7d4e2",
-      "last_updated": "2026-08-11 19:51:41",
+      "last_updated": "2026-08-11 21:02:51",
       "parent_id": "d-20260804-160200-fa7bb7",
       "parent_title": "Tag Document Linking",
-      "display_meta": "2026-08-11 19:51:41 • Tag Document Linking",
+      "display_meta": "2026-08-11 21:02:51 • Tag Document Linking",
       "search_terms": [
         "tdl-2 — tag primary document and semantic token delivery",
         "tdl",
@@ -6838,16 +6839,16 @@
         "delivery",
         "tag document linking",
         "linking",
-        "2026-08-11 19:51:41",
+        "2026-08-11 21:02:51",
         "2026",
         "08",
         "11",
-        "19",
+        "21",
+        "02",
         "51",
-        "41",
         "d-20260802-002213-b7d4e2"
       ],
-      "search_text": "tdl-2 — tag primary document and semantic token delivery tdl 2 tag primary document and semantic token delivery tag document linking linking 2026-08-11 19:51:41 2026 08 11 19 51 41 d-20260802-002213-b7d4e2"
+      "search_text": "tdl-2 — tag primary document and semantic token delivery tdl 2 tag primary document and semantic token delivery tag document linking linking 2026-08-11 21:02:51 2026 08 11 21 02 51 d-20260802-002213-b7d4e2"
     },
     {
       "id": "d-20260810-115737-901d0f",
@@ -8131,26 +8132,26 @@
       "kind": "doc",
       "title": "Tag Source Data",
       "href": "/docs/?scope=studio&doc=d-20260419-000000-86255c",
-      "last_updated": "2026-08-09 13:25:06",
+      "last_updated": "2026-08-11 20:39:49",
       "parent_id": "d-20260423-000000-d015e6",
       "parent_title": "Studio",
-      "display_meta": "2026-08-09 13:25:06 • Studio",
+      "display_meta": "2026-08-11 20:39:49 • Studio",
       "search_terms": [
         "tag source data",
         "tag",
         "source",
         "data",
         "studio",
-        "2026-08-09 13:25:06",
+        "2026-08-11 20:39:49",
         "2026",
         "08",
-        "09",
-        "13",
-        "25",
-        "06",
+        "11",
+        "20",
+        "39",
+        "49",
         "d-20260419-000000-86255c"
       ],
-      "search_text": "tag source data tag source data studio 2026-08-09 13:25:06 2026 08 09 13 25 06 d-20260419-000000-86255c"
+      "search_text": "tag source data tag source data studio 2026-08-11 20:39:49 2026 08 11 20 39 49 d-20260419-000000-86255c"
     },
     {
       "id": "d-20260331-000000-643429",
@@ -8267,10 +8268,10 @@
       "kind": "doc",
       "title": "Tag Registry",
       "href": "/docs/?scope=studio&doc=d-20260331-000000-4519a5",
-      "last_updated": "2026-08-09 13:25:06",
+      "last_updated": "2026-08-11 20:42:43",
       "parent_id": "d-20260419-000000-86255c",
       "parent_title": "Tag Source Data",
-      "display_meta": "2026-08-09 13:25:06 • Tag Source Data",
+      "display_meta": "2026-08-11 20:42:43 • Tag Source Data",
       "search_terms": [
         "tag registry",
         "tag",
@@ -8278,16 +8279,16 @@
         "tag source data",
         "source",
         "data",
-        "2026-08-09 13:25:06",
+        "2026-08-11 20:42:43",
         "2026",
         "08",
-        "09",
-        "13",
-        "25",
-        "06",
+        "11",
+        "20",
+        "42",
+        "43",
         "d-20260331-000000-4519a5"
       ],
-      "search_text": "tag registry tag registry tag source data source data 2026-08-09 13:25:06 2026 08 09 13 25 06 d-20260331-000000-4519a5"
+      "search_text": "tag registry tag registry tag source data source data 2026-08-11 20:42:43 2026 08 11 20 42 43 d-20260331-000000-4519a5"
     },
     {
       "id": "d-20260602-000000-9ffb5c",

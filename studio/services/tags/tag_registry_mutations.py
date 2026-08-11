@@ -9,6 +9,7 @@ from tags import tag_source_model as tag_source
 
 
 MUTATE_ACTIONS = {"edit", "delete"}
+PRIMARY_DOCUMENT_UNCHANGED = object()
 
 
 def create_registry_tag(
@@ -16,14 +17,12 @@ def create_registry_tag(
     *,
     group: Any,
     tag_id: Any,
-    doc_url: Any,
     now_utc: str,
 ) -> tuple[Dict[str, Any], Dict[str, Any]]:
     """Plan one canonical tag addition without changing existing rows."""
     allowed_groups = tag_source.extract_allowed_groups(registry_payload)
     normalized_group = tag_source.sanitize_group(group, allowed_groups)
     normalized_tag_id = tag_source.sanitize_tag_id(tag_id)
-    normalized_doc_urls = tag_source.sanitize_tag_document_urls(doc_url)
 
     raw_tags = registry_payload.get("tags")
     if not isinstance(raw_tags, list):
@@ -38,7 +37,6 @@ def create_registry_tag(
     created_row = {
         "tag_id": normalized_tag_id,
         "group": normalized_group,
-        "doc_url": normalized_doc_urls,
         "updated_at_utc": now_utc,
     }
     updated_payload = dict(registry_payload)
@@ -52,7 +50,7 @@ def create_registry_tag(
         "action": "create",
         "tag_id": normalized_tag_id,
         "group": normalized_group,
-        "doc_url": normalized_doc_urls,
+        "primary_document": None,
         "added": 1,
         "final_total": len(updated_payload["tags"]),
     }
@@ -65,7 +63,7 @@ def mutate_registry_tag(
     now_utc: str,
     new_tag_id: Optional[str] = None,
     new_group: Optional[str] = None,
-    new_doc_url: Any = None,
+    new_primary_document: Any = PRIMARY_DOCUMENT_UNCHANGED,
     allow_canonical_rename: bool = False,
 ) -> tuple[Dict[str, Any], Dict[str, Any]]:
     if action not in MUTATE_ACTIONS:
@@ -94,9 +92,13 @@ def mutate_registry_tag(
 
     allowed_groups = tag_source.extract_allowed_groups(registry_payload)
     group = tag_source.sanitize_group(target_row.get("group"), allowed_groups, "group")
-    document_urls = tag_source.sanitize_tag_document_urls(
-        target_row.get("doc_url"),
-        "doc_url",
+    primary_document = (
+        tag_source.sanitize_primary_document(
+            target_row.get("primary_document"),
+            "primary_document",
+        )
+        if "primary_document" in target_row
+        else None
     )
 
     if action == "delete":
@@ -122,14 +124,17 @@ def mutate_registry_tag(
         if new_group is None
         else tag_source.sanitize_group(new_group, allowed_groups, "new_group")
     )
-    normalized_new_document_urls = (
-        document_urls
-        if new_doc_url is None
-        else tag_source.sanitize_tag_document_urls(new_doc_url, "doc_url")
+    normalized_new_primary_document = (
+        primary_document
+        if new_primary_document is PRIMARY_DOCUMENT_UNCHANGED
+        else tag_source.sanitize_primary_document(
+            new_primary_document,
+            "primary_document",
+        )
     )
     canonical_changed = normalized_new_tag_id != old_tag_id
     group_changed = normalized_new_group != group
-    doc_url_changed = normalized_new_document_urls != document_urls
+    primary_document_changed = normalized_new_primary_document != primary_document
     if canonical_changed and not allow_canonical_rename:
         raise ValueError("canonical rename is disabled for this request")
     if canonical_changed and normalized_new_tag_id in existing_ids:
@@ -138,7 +143,10 @@ def mutate_registry_tag(
     updated_row.pop("label", None)
     updated_row["tag_id"] = normalized_new_tag_id
     updated_row["group"] = normalized_new_group
-    updated_row["doc_url"] = normalized_new_document_urls
+    if normalized_new_primary_document is None:
+        updated_row.pop("primary_document", None)
+    else:
+        updated_row["primary_document"] = normalized_new_primary_document
     updated_row["updated_at_utc"] = now_utc
     final_tags = list(tags)
     final_tags[target_idx] = updated_row
@@ -154,16 +162,10 @@ def mutate_registry_tag(
         "old_tag_id": old_tag_id,
         "new_tag_id": normalized_new_tag_id,
         "group": normalized_new_group,
-        "doc_url": normalized_new_document_urls,
+        "primary_document": normalized_new_primary_document,
         "canonical_changed": canonical_changed,
         "group_changed": group_changed,
-        "doc_url_changed": doc_url_changed,
-        "document_urls_added": len(
-            [url for url in normalized_new_document_urls if url not in document_urls]
-        ),
-        "document_urls_removed": len(
-            [url for url in document_urls if url not in normalized_new_document_urls]
-        ),
+        "primary_document_changed": primary_document_changed,
     }
 
 
@@ -291,17 +293,13 @@ def build_mutation_summary_text(stats: Dict[str, Any]) -> str:
     alias_empty = int(stats.get("aliases_removed_empty") or 0)
     alias_redundant = int(stats.get("aliases_removed_redundant") or 0)
     group_changed = 1 if bool(stats.get("group_changed")) else 0
-    doc_url_changed = 1 if bool(stats.get("doc_url_changed")) else 0
-    document_urls_added = int(stats.get("document_urls_added") or 0)
-    document_urls_removed = int(stats.get("document_urls_removed") or 0)
+    primary_document_changed = 1 if bool(stats.get("primary_document_changed")) else 0
 
     id_part = f"{old_tag_id} -> {new_tag_id}" if new_tag_id else old_tag_id
     return (
         f"mode {action}; tag {id_part}; "
         f"group_changed {group_changed}; "
-        f"doc_url_changed {doc_url_changed}; "
-        f"document URLs added {document_urls_added}; "
-        f"document URLs removed {document_urls_removed}; "
+        f"primary_document_changed {primary_document_changed}; "
         f"series rows {series_rows}; series refs {series_refs}; "
         f"work rows {work_rows}; work refs {work_refs}; "
         f"aliases rewritten {alias_rw}; aliases removed-empty {alias_empty}; "

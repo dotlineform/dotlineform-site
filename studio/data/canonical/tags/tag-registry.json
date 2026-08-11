@@ -1,6 +1,6 @@
 {
-  "tag_registry_version": "tag_registry_v5",
-  "updated_at_utc": "2026-07-29T21:48:34Z",
+  "tag_registry_version": "tag_registry_v6",
+  "updated_at_utc": "2026-08-11T19:48:32Z",
   "policy": {
     "allowed_groups": [
       "subject",
@@ -13,1975 +13,1241 @@
     {
       "tag_id": "flower",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-63967a"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "branch",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-84a22b"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "nature",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-03e966"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "memory",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-169780"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "language",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-9eb839"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "system",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3ccb9e"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "line",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-85a70e"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "curvilinear",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-a34891"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "radial",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-812ad8"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "dense",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2af018"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "sparse",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-24efce"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "enclosed",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-82cce1"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "layered",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7abff3"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "fragmented",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e8d7a7"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "growth",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-fd71ef"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "repetition",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-708a9e"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "drift",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b5542c"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "emergence",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-55e44d"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "containment",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-686651"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "connection",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-45ac22"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "curve",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-21836e"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "loop",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-603ccd"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "grid",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-723889"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "point",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-9e62b8"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "dot",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-90eabc"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "droplet",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-44902d"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "splash",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-25c814"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "stain",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f543c8"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "trace",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7893a2"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "mark",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-452c13"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "stroke",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7be84b"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "gesture",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ba99c7"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "edge",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-57a4c7"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "contour",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-330a89"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "silhouette",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-9b8192"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "shape",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b2d217"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "form",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f3f980"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "pattern",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f5791d"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "text",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6c7384"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "letter",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2c1b7a"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "symbol",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-43e86d"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "number",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-1bf2c3"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "diagram",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-1ee86d"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "map",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-20f785"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "wave",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-a05992"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "screen",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8d3c1d"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "window",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2a27c8"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "mirror",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-753567"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "shadow",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-388a29"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "reflection",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-a4d142"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "surface",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-124217"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "stone",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6f785e"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "rock",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-36c93d"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "sand",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8fec97"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "water",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-4c0762"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "rain",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-085a6c"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "fog",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6f0bef"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "cloud",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e546d0"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "sky",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ed1025"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "sun",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-49e2d4"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "moon",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6cac49"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "tree",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e0e993"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "leaf",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-bd3137"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "seed",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2ded48"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "root",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-5296a2"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "grass",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-93f7d5"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "weed",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2fffa8"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "moss",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7d2c08"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "lichen",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e943ff"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "insect",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ce80bb"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "bird",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f7402d"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "animal",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-84a2a1"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "skin",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-99c3be"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "hand",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-dc2548"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "face",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3cd1dd"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "eye",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-04889f"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "figure",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-4ab240"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "object",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-23cb8e"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "fragment",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3bf2bc"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "ruin",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d41939"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "building",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ecf994"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "wall",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-1864ea"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "door",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6c8101"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "stairs",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-933750"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "road",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-52dcb3"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "path",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6e036f"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "fence",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-a607e0"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "wire",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2617b3"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "net",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-438fab"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "fiber",
       "group": "subject",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-531c17"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "ecology",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-fb78ac"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "landscape",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b61c55"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "weather",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b235c6"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "astronomy",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-24dfb5"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "biology",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-10fc9c"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "botany",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-381c61"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "geology",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3a5f20"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "urban",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d81ffc"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "architecture",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-208450"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "digital",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-be5e27"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "networks",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8104f2"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "information",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-dd62ff"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "communication",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8b320d"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "writing",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-defa99"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "music",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-84860c"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "photography",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0b3df4"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "drawing",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-22f690"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "print",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-759902"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "craft",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6d8930"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "materiality",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-07e0eb"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "perception",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-16b7b8"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "consciousness",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-bed170"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "body",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7fbfa5"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "identity",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-13749a"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "science",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-42c9e0"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "mathematics",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d39666"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "physics",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-58741a"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "quantum",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d2e201"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "central",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-75f272"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "peripheral",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6250bf"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "balanced",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c4b45c"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "unbalanced",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c7b1f6"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "symmetric",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-557834"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "asymmetric",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ac0827"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "linear",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6e75fd"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "angular",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-79f04e"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "stacked",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e3851f"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "woven",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d0194d"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "braided",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-833b94"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "netted",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6b3825"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "cellular",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ecb267"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "branching",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-591e49"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "filament",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8a0601"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "threadlike",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ae606d"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "granular",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c474d0"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "cloudlike",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0fa362"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "fieldlike",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6c146c"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "contoured",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f8abb3"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "looped",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b2a6f0"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "spiralling",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-391f5b"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "tangled",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f16645"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "knotted",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7927df"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "continuous",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2497a8"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "broken",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b85e09"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "dispersed",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-a45198"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "compressed",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-cfc88e"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "open",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0e1745"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "porous",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-4e62cb"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "boundary",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-440ecd"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "frame",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f9d97a"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "margin",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-012951"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "cutoff",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-db297c"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "rhythmic",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-5b31e2"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "random",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b10f2d"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "chaotic",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-afb0a7"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "quiet",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-761a32"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "violent",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8a8d26"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "soft",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-dc0028"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "hard",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2d38a1"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "light",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-200179"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "dark",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-a60c24"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "low-contrast",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-476c0b"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "flat",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3899cc"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "volumetric",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-80e8b0"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "depth",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c88144"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "shallow",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e18b6c"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "sharp",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6bdf47"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "blurred",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-932f79"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "grainy",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-34d9fb"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "smooth",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0813e3"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "textured",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-fb0e11"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "minimal",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-96dc3a"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "maximal",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b7eb37"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "monochrome",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-955195"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "polychrome",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-27bc3b"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "glitch",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d9afd4"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "overlay",
       "group": "form",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-4c56a9"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "becoming",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-87a3e0"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "change",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-30dfef"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "transformation",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-12c5ee"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "recurrence",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-60991f"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "cycle",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c04eca"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "return",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f589fc"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "memory-trace",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-38c206"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "reconstruction",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8258a1"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "fragmentation",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e124eb"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "repair",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-520788"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "release",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-9c842f"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "tension",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2c1750"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "stillness",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f5ddde"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "movement",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-422df7"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "flow",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c21bf0"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "resistance",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2a8ef3"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "ambiguity",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-51df31"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "uncertainty",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c844db"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "signal",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c11b96"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "noise",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6796ef"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "translation",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8be4b8"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "encoding",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-11de40"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "decoding",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ca7056"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "attention",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ecb7a9"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "absence",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-579c27"
-      ]
+      "updated_at_utc": "2026-08-11T19:48:32Z",
+      "primary_document": {
+        "scope": "analysis",
+        "sub_scope": "tags",
+        "doc_id": "d-20260727-225608-579c27"
+      }
     },
     {
       "tag_id": "emptiness",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0ccf1f"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "presence",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2f1649"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "threshold",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-cbb3d7"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "entanglement",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-295b0c"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "field",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c913bf"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "scale",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2dd29d"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "micro-macro",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7fe018"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "order",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-dbeb69"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "chance",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8d753d"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "control",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8dc973"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "freedom",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ef31f9"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "embodiment",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0d87ce"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "interpretation",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-37bb5c"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "myth",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-626b4c"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "ritual",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d6cc89"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "time",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-edadc1"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "duration",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f1e271"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "decay",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-78ee39"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "renewal",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3eabe1"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "fragility",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0066f5"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "resilience",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e97d11"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "technology",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-4c4195"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "calm",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-1e1df9"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "restlessness",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6555f7"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "anxiety",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-651586"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "melancholy",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-5cb64c"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "joy",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-107781"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "sorrow",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-482c64"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "fear",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-32eda3"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "wonder",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ab4327"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "awe",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-32e172"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "overwhelm",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-44c370"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "clarity",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0d540d"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "confusion",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-616fda"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "intimacy",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ef7408"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "alienation",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b5e4f7"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "hope",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-31a370"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "grief",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-aa54c9"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "contemplation",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3374bd"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "play",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b84d7e"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "i-ching",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-1091be"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "slaughter",
       "group": "theme",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3239cc"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "nerve",
       "group": "domain",
-      "updated_at_utc": "2026-07-27T15:39:06Z",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2517eb"
-      ]
+      "updated_at_utc": "2026-07-27T15:39:06Z"
     },
     {
       "tag_id": "aaa",
       "group": "domain",
-      "updated_at_utc": "2026-07-29T21:48:34Z",
-      "doc_url": []
+      "updated_at_utc": "2026-07-29T21:48:34Z"
     },
     {
       "tag_id": "bird-nerve",
       "group": "theme",
-      "doc_url": [
-        "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260729-201522-1265a9"
-      ],
       "updated_at_utc": "2026-07-29T19:15:22Z"
     }
   ]

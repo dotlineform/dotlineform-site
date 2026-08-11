@@ -1,4 +1,6 @@
 // Studio-owned tag registry domain.
+import { normalizeTagDocumentTarget } from "./tag-registry-documents.js";
+
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 
 export function configureTagRegistryDomain(options = {}) {
@@ -9,8 +11,8 @@ export function configureTagRegistryDomain(options = {}) {
 }
 
 export function normalizeRegistryTags(data, fallbackUpdatedAt) {
-  if (!data || data.tag_registry_version !== "tag_registry_v5") {
-    throw new Error("Tag Registry must use tag_registry_v5.");
+  if (!data || data.tag_registry_version !== "tag_registry_v6") {
+    throw new Error("Tag Registry must use tag_registry_v6.");
   }
   const rawTags = Array.isArray(data && data.tags) ? data.tags : [];
   const tags = [];
@@ -19,15 +21,24 @@ export function normalizeRegistryTags(data, fallbackUpdatedAt) {
     if (!raw || typeof raw !== "object") continue;
     const group = normalize(raw.group);
     const tagId = normalize(raw.tag_id);
-    const docUrl = Array.isArray(raw.doc_url) ? raw.doc_url.slice() : null;
+    if (Object.prototype.hasOwnProperty.call(raw, "doc_url")) {
+      throw new Error("Tag Registry doc_url is retired.");
+    }
+    const primaryDocument = Object.prototype.hasOwnProperty.call(raw, "primary_document")
+      ? normalizeTagDocumentTarget(raw.primary_document)
+      : null;
+    if (Object.prototype.hasOwnProperty.call(raw, "primary_document") && !primaryDocument) {
+      throw new Error("Tag Registry primary_document is invalid.");
+    }
     const updatedAtUtc = normalizeTimestamp(raw.updated_at_utc) || fallbackUpdatedAt;
 
-    if (!STUDIO_GROUPS.includes(group) || !tagId || !docUrl) continue;
+    if (!STUDIO_GROUPS.includes(group) || !tagId) continue;
     tags.push({
       group,
       tagId,
-      docUrl,
+      primaryDocument,
       documents: [],
+      unavailablePrimary: null,
       updatedAtUtc,
       updatedAtMs: toTimestampMs(updatedAtUtc)
     });
@@ -148,7 +159,7 @@ export function normalize(value) {
 
 function documentSortValue(tag) {
   return (Array.isArray(tag && tag.documents) ? tag.documents : [])
-    .map((record) => normalize(record && record.document_title))
+    .map((record) => normalize(record && record.title))
     .join("\u0000");
 }
 

@@ -63,7 +63,7 @@ def tag_activity_changed(stats: Mapping[str, Any]) -> bool:
     if (
         stats.get("canonical_changed")
         or stats.get("group_changed")
-        or stats.get("doc_url_changed")
+        or stats.get("primary_document_changed")
     ):
         return True
     return False

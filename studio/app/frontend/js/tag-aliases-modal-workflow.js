@@ -115,13 +115,21 @@ export function updateAliasDemoteUi(state, options = {}) {
   const validation = getAliasDemoteValidation(state, options);
   let statusKind = "";
   let statusMessage = "";
-  if (validation.warning) {
+  const localRequired = state.saveMode !== "post";
+  if (localRequired) {
+    statusKind = "error";
+    statusMessage = text(
+      options,
+      "local_demote_required",
+      "Local server is required for demotion."
+    );
+  } else if (validation.warning) {
     const emptyWarning = text(options, "target_tag_required", "At least one canonical target tag is required.");
     statusKind = validation.warning === emptyWarning ? "" : "error";
     statusMessage = validation.warning;
   }
   renderTagAliasesDemoteSelectionState(state, {
-    canConfirm: validation.valid,
+    canConfirm: validation.valid && !localRequired,
     statusKind,
     statusMessage
   });

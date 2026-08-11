@@ -21,6 +21,7 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 REPO_ROOT = ensure_studio_python_paths(__file__)
 
 from tags import tag_routes  # noqa: E402
+from tags import tag_document_declarations  # noqa: E402
 from tags import tag_source_model as tag_source  # noqa: E402
 from studio_tag_api.aliases import create_tag_alias_response  # noqa: E402
 from studio_tag_api.aliases import delete_tag_alias_response  # noqa: E402
@@ -184,6 +185,13 @@ def tags_get_payload(repo_root: Path, path: str) -> dict[str, object]:
             "ok": True,
             **tag_source.load_registry(
                 (repo_root / tag_source.REGISTRY_REL_PATH).resolve()
+            ),
+        }
+    if path == tag_routes.TAG_ASSOCIATIONS_PATH:
+        return {
+            "ok": True,
+            **tag_document_declarations.load_tag_document_association_payload(
+                repo_root
             ),
         }
     return data_payload(repo_root, path)

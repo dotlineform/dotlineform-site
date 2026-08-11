@@ -66,6 +66,31 @@ def test_multi_file_write_replaces_targets() -> None:
         assert_equal(read_json(second), {"after": 2}, "second target")
 
 
+def test_multi_file_byte_write_preserves_exact_payloads() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        first = root / "tag_registry.json"
+        second = root / "document.md"
+
+        transactions.atomic_write_bytes_many(
+            {
+                first: b'{"tag_registry_version":"tag_registry_v6"}\n',
+                second: b"---\r\ntag_id: trees\r\n---\r\n",
+            }
+        )
+
+        assert_equal(
+            first.read_bytes(),
+            b'{"tag_registry_version":"tag_registry_v6"}\n',
+            "exact registry bytes",
+        )
+        assert_equal(
+            second.read_bytes(),
+            b"---\r\ntag_id: trees\r\n---\r\n",
+            "exact source bytes",
+        )
+
+
 def test_multi_file_write_rolls_back_replaced_and_created_files_on_failure() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
@@ -104,6 +129,7 @@ def main() -> None:
     test_single_file_write_replaces_existing_file()
     test_single_file_write_creates_new_file()
     test_multi_file_write_replaces_targets()
+    test_multi_file_byte_write_preserves_exact_payloads()
     test_multi_file_write_rolls_back_replaced_and_created_files_on_failure()
     print("Tag write transaction tests OK")
 

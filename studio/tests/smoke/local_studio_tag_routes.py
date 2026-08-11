@@ -31,8 +31,8 @@ ROUTES = [
             "/studio/api/tags/tag-aliases",
             "/studio/api/tags/tag-assignments",
             "/studio/api/tags/tag-groups",
+            "/studio/api/tags/tag-associations",
             "/studio/api/catalogue/read?key=catalogue_lookup_series_search",
-            "/assets/data/search/analysis/document-locations.json",
         ],
     },
     {

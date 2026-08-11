@@ -36,6 +36,10 @@ from docs_tag_documents import (
     project_tag_associations,
     tag_declaration_generation,
 )
+from docs_document_location import (
+    management_collection_viewer_url,
+    management_document_viewer_url,
+)
 
 
 class SubScopeDocsBuilder(DocsDataBuilder):
@@ -294,12 +298,25 @@ class SubScopeDocsBuilder(DocsDataBuilder):
                 sub_scope=self.sub_scope_id,
                 declarations_by_doc_id=tag_declarations_by_doc_id,
             )
+            management_collection_url = management_collection_viewer_url(
+                self.repo_root,
+                self.scope_id,
+                self.sub_scope_id,
+            )
             tag_associations_payload = project_tag_associations(
                 scope=self.scope_id,
                 sub_scope=self.sub_scope_id,
                 documents=ordered_docs,
                 declarations_by_doc_id=tag_declarations_by_doc_id,
                 declaration_generation=declaration_generation,
+                management_urls_by_doc_id={
+                    doc.doc_id: management_document_viewer_url(
+                        management_collection_url,
+                        doc.doc_id,
+                        sub_scope=True,
+                    )
+                    for doc in ordered_docs
+                },
                 public_location_records=load_current_public_tag_locations(
                     self.repo_root,
                     scope=self.scope_id,

@@ -19,50 +19,6 @@ export function buildDeletePreviewPayload(tagId, utcTimestampFn = utcTimestamp) 
   };
 }
 
-export function buildManualPatchForDemote(tagId, aliasTargets) {
-  const aliasKey = normalize(tagId);
-  const aliasValue = {
-    description: "",
-    tags: aliasTargets.slice()
-  };
-
-  const snippet = JSON.stringify(
-    {
-      tag_registry: {
-        remove_tag_ids: [tagId]
-      },
-      tag_aliases: {
-        set_aliases: {
-          [aliasKey]: aliasValue
-        },
-        replace_target_refs: {
-          from: tagId,
-          to: aliasTargets
-        }
-      },
-      tag_assignments: {
-        replace_tag_refs: {
-          from: tagId,
-          to: aliasTargets
-        }
-      }
-    },
-    null,
-    2
-  );
-
-  return {
-    kind: "warn",
-    message: registryText(
-      null,
-      "patch_demote_message",
-      "Patch mode: section snippets prepared for demoting \"{tag_id}\".",
-      { tag_id: tagId }
-    ),
-    snippet
-  };
-}
-
 export function buildManualPatchForCreateTag(tagRow, options = {}) {
   const normalizedTagId = normalize(tagRow && tagRow.tag_id);
   const group = normalize(tagRow && tagRow.group);
@@ -79,7 +35,6 @@ export function buildManualPatchForCreateTag(tagRow, options = {}) {
         append_row: {
           tag_id: normalizedTagId,
           group,
-          doc_url: [],
           updated_at_utc: updatedAtUtc
         }
       }

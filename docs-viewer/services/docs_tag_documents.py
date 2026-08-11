@@ -94,10 +94,12 @@ def project_tag_associations(
     documents: Sequence[Any],
     declarations_by_doc_id: Mapping[str, Mapping[str, Any]],
     declaration_generation: str,
+    management_urls_by_doc_id: Mapping[str, str] | None = None,
     public_location_records: Sequence[Mapping[str, Any]] = (),
 ) -> dict[str, Any]:
     """Group valid document declarations into a deterministic private product."""
 
+    management_urls = management_urls_by_doc_id or {}
     public_by_doc_id: dict[str, list[dict[str, str]]] = {}
     for raw_location in public_location_records:
         if (
@@ -136,12 +138,12 @@ def project_tag_associations(
         if TAG_ID_PATTERN.fullmatch(tag_id) is None:
             raise ValueError(f"valid Tag declaration is invalid for {doc_id!r}")
         locations: list[dict[str, str]] = []
-        viewer_url = str(getattr(document, "viewer_url", "") or "")
-        if viewer_url:
+        management_url = str(management_urls.get(doc_id) or "")
+        if management_url:
             locations.append(
                 {
                     "access": "manage",
-                    "url": viewer_url,
+                    "url": management_url,
                     "title": str(getattr(document, "title", "") or ""),
                     "report_title": "",
                 }

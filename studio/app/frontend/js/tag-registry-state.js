@@ -16,9 +16,10 @@ import {
 export function applyTagRegistryEditProjection(state, options = {}) {
   const tagId = normalize(options.tagId);
   const group = normalize(options.group);
-  const docUrl = Array.isArray(options.response && options.response.doc_url)
-    ? options.response.doc_url.slice()
-    : (Array.isArray(options.docUrl) ? options.docUrl.slice() : []);
+  const primaryDocument = options.response
+    && Object.prototype.hasOwnProperty.call(options.response, "primary_document")
+    ? options.response.primary_document
+    : options.primaryDocument;
   const updatedAtUtc = registryUpdatedAtFromResponse(options.response, state.registryUpdatedAt);
   const updatedAtMs = timestampMs(updatedAtUtc);
 
@@ -28,12 +29,12 @@ export function applyTagRegistryEditProjection(state, options = {}) {
     return {
       ...tag,
       group,
-      docUrl,
+      primaryDocument: primaryDocument ? { ...primaryDocument } : null,
       updatedAtUtc,
       updatedAtMs: Number.isFinite(updatedAtMs) ? updatedAtMs : tag.updatedAtMs
     };
   });
-  state.tags = attachTagRegistryDocuments(state.tags, state.documentLocationsByUrl);
+  state.tags = attachTagRegistryDocuments(state.tags, state.associationsByTagId);
   syncTagRegistryOptions(state);
 }
 
@@ -48,14 +49,13 @@ export function applyTagRegistryCreateProjection(state, options = {}) {
     .concat([{
       group: validation.group,
       tagId: validation.tagId,
-      docUrl: Array.isArray(options.response && options.response.doc_url)
-        ? options.response.doc_url.slice()
-        : [],
+      primaryDocument: null,
       documents: [],
+      unavailablePrimary: null,
       updatedAtUtc,
       updatedAtMs: Number.isFinite(updatedAtMs) ? updatedAtMs : null
     }]);
-  state.tags = attachTagRegistryDocuments(state.tags, state.documentLocationsByUrl);
+  state.tags = attachTagRegistryDocuments(state.tags, state.associationsByTagId);
   syncTagRegistryOptions(state);
 }
 

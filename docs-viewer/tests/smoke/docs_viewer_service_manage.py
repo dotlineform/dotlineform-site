@@ -440,10 +440,10 @@ def install_smoke_document_routes(
             route,
             {
                 "ok": True,
-                "tag_registry_version": "tag_registry_v5",
+                "tag_registry_version": "tag_registry_v6",
                 "tags": [
-                    {"tag_id": "absence", "group": "theme", "doc_url": []},
-                    {"tag_id": "presence", "group": "subject", "doc_url": []},
+                    {"tag_id": "absence", "group": "theme"},
+                    {"tag_id": "presence", "group": "subject"},
                 ],
             },
         )
@@ -1425,7 +1425,6 @@ def assert_metadata_workflow_uses_exact_sub_scope_target(page: Page) -> None:
             "date": "2026-07-26",
             "date_display": "July 2026",
             "ui_status": "draft",
-            "group": "subject",
             "publishable": True,
         },
         "options": {
@@ -2218,6 +2217,69 @@ def assert_copy_link_success_is_silent(page: Page) -> None:
     }
     if result != expected:
         raise AssertionError(f"Copy Link success feedback changed: {result!r}")
+
+
+def assert_public_docs_links_activate_in_manage(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const links = await import(
+                '/docs-viewer/runtime/js/management/'
+                + 'docs-viewer-management-document-links.js'
+            );
+            const root = document.createElement('div');
+            root.innerHTML = `
+              <a data-case="document" href="/analysis/?doc=analysis-doc#section">Document</a>
+              <a data-case="subdoc" href="/analysis/?doc=report&subdoc=child">Subdoc</a>
+              <a data-case="manage" href="/docs/?scope=analysis&doc=managed">Manage</a>
+              <a data-case="external" href="https://example.com/analysis/?doc=external">External</a>
+              <a data-case="missing" href="/analysis/">Missing</a>
+            `;
+            const calls = [];
+            const mounted = links.mountManagedDocsViewerDocumentLinks(root, {
+                currentHref: 'http://127.0.0.1:8776/docs/?scope=analysis&doc=current',
+                scopeConfigsById: new Map([
+                    ['analysis', {
+                        scopeId: 'analysis',
+                        viewerBaseUrl: '/analysis/'
+                    }],
+                    ['studio', {
+                        scopeId: 'studio',
+                        viewerBaseUrl: '/docs/'
+                    }]
+                ]),
+                viewerUrlForScope: (scope, docId, options) => {
+                    calls.push({ scope, docId, manage: options.manage });
+                    return '/docs/?scope=' + scope + '&doc=' + docId;
+                }
+            });
+            return {
+                mounted,
+                calls,
+                hrefs: Object.fromEntries(
+                    [...root.querySelectorAll('a')].map((link) => [
+                        link.dataset.case,
+                        link.getAttribute('href')
+                    ])
+                )
+            };
+        }"""
+    )
+    expected = {
+        "mounted": 2,
+        "calls": [
+            {"scope": "analysis", "docId": "analysis-doc", "manage": True},
+            {"scope": "analysis", "docId": "report", "manage": True},
+        ],
+        "hrefs": {
+            "document": "/docs/?scope=analysis&doc=analysis-doc#section",
+            "subdoc": "/docs/?scope=analysis&doc=report&subdoc=child",
+            "manage": "/docs/?scope=analysis&doc=managed",
+            "external": "https://example.com/analysis/?doc=external",
+            "missing": "/analysis/",
+        },
+    }
+    if result != expected:
+        raise AssertionError(f"Manage public Docs link activation changed: {result!r}")
 
 
 def assert_source_editor_media_presentation(page: Page) -> None:
@@ -3171,6 +3233,7 @@ def exercise_manage_route(
     assert_metadata_response_refreshes_exact_target(page)
     assert_source_editor_media_presentation(page)
     assert_copy_link_success_is_silent(page)
+    assert_public_docs_links_activate_in_manage(page)
     assert_open_source_target_handoff(page)
     assert_delete_uses_first_remaining_root(page)
     assert_manage_route_contract(manage_route_state(page), base_url)

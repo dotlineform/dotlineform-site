@@ -27,7 +27,6 @@ def create_tag_response(repo_root: Path, body: dict[str, Any], *, dry_run: bool 
         registry_payload,
         group=body.get("group"),
         tag_id=body.get("tag_id"),
-        doc_url=[],
         now_utc=now_utc,
     )
     summary_text = tag_registry.build_create_summary_text(stats)
@@ -43,7 +42,7 @@ def create_tag_response(repo_root: Path, body: dict[str, Any], *, dry_run: bool 
         response_payload["would_write"] = {
             "updated_at_utc": now_utc,
             "tag_id": stats["tag_id"],
-            "doc_url": [],
+            "primary_document": None,
             "added": stats["added"],
             "final_total": stats["final_total"],
         }
@@ -100,7 +99,8 @@ def mutate_tag_response(
 
     new_tag_id = None
     new_group = None
-    new_doc_url = None
+    new_primary_document: dict[str, str] | None = None
+    primary_document_supplied = False
     if action == "edit":
         raw_new_tag_id = body.get("new_tag_id")
         if raw_new_tag_id is not None and str(raw_new_tag_id).strip():
@@ -110,27 +110,54 @@ def mutate_tag_response(
             new_group = str(raw_new_group)
         if "description" in body:
             raise ValueError("description is not supported for canonical tags")
-        if "doc_url" not in body:
-            raise ValueError("doc_url is required for tag edits")
-        new_doc_url = tag_source.sanitize_tag_document_urls(
-            body.get("doc_url"),
-            "doc_url",
-        )
+        if "primary_document" in body:
+            primary_document_supplied = True
+            new_primary_document = tag_source.sanitize_primary_document(
+                body.get("primary_document"),
+                "primary_document",
+            )
+            current_documents = (
+                tag_document_declarations.current_tag_document_associations(
+                    repo_root,
+                    old_tag_id,
+                )
+            )
+            current_targets = {
+                (
+                    item["target"]["scope"],
+                    item["target"]["sub_scope"],
+                    item["target"]["doc_id"],
+                )
+                for item in current_documents
+            }
+            requested_target = (
+                new_primary_document["scope"],
+                new_primary_document["sub_scope"],
+                new_primary_document["doc_id"],
+            )
+            if requested_target not in current_targets:
+                raise ValueError(
+                    "primary_document must be a current associated document"
+                )
 
     now_utc = common.utc_now()
     registry_payload = tag_source.load_registry(registry_path)
     aliases_payload = tag_source.load_aliases(aliases_path)
     assignments_payload = tag_source.load_assignments(assignments_path)
 
+    mutate_options: dict[str, Any] = {
+        "action": action,
+        "old_tag_id": old_tag_id,
+        "now_utc": now_utc,
+        "new_tag_id": new_tag_id,
+        "new_group": new_group,
+        "allow_canonical_rename": allow_canonical_rename,
+    }
+    if primary_document_supplied:
+        mutate_options["new_primary_document"] = new_primary_document
     registry_updated, mutate_meta = tag_registry.mutate_registry_tag(
         registry_payload,
-        action=action,
-        old_tag_id=old_tag_id,
-        now_utc=now_utc,
-        new_tag_id=new_tag_id,
-        new_group=new_group,
-        new_doc_url=new_doc_url,
-        allow_canonical_rename=allow_canonical_rename,
+        **mutate_options,
     )
     document_associations: list[dict[str, Any]] = []
     if action == "delete":
@@ -187,11 +214,9 @@ def mutate_tag_response(
         "new_tag_id": rewrite_to,
         "canonical_changed": bool(mutate_meta.get("canonical_changed")),
         "group_changed": bool(mutate_meta.get("group_changed")),
-        "doc_url": list(mutate_meta.get("doc_url") or []),
-        "doc_url_changed": bool(mutate_meta.get("doc_url_changed")),
-        "document_urls_added": int(mutate_meta.get("document_urls_added") or 0),
-        "document_urls_removed": int(
-            mutate_meta.get("document_urls_removed") or 0
+        "primary_document": mutate_meta.get("primary_document"),
+        "primary_document_changed": bool(
+            mutate_meta.get("primary_document_changed")
         ),
         **alias_stats,
         **assignment_stats,

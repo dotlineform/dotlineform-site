@@ -128,6 +128,8 @@ export const DEFAULT_TAG_UI_TEXT = {
     target_tags_one_per_group: "Only one target tag per group is allowed ({group}).",
     demotion_target_self: "Target list must not include the demoted tag.",
     demotion_preview_failed: "Demotion preview failed.",
+    local_demote_required: "Local server is required for demotion.",
+    demote_documents_blocked: "Edit or delete the associated documents before demoting this Tag.{documents}",
     demoted_success: "Demoted.",
     demotion_failed: "Demotion failed.",
     patch_modal_title: "Aliases Patch Preview",
@@ -140,8 +142,7 @@ export const DEFAULT_TAG_UI_TEXT = {
     patch_delete_message: "Patch mode: remove this alias key from studio/data/canonical/tags/tag-aliases.json aliases object.",
     patch_create_message: "Patch mode: alias fragment prepared for new alias \"{alias_key}\". Paste inside aliases object.",
     patch_edit_rename_note: " Also remove old alias key \"{alias_key}\" from studio/data/canonical/tags/tag-aliases.json.",
-    patch_edit_message: "Patch mode: alias fragment prepared for \"{alias_key}\". Paste inside aliases object.{rename_note}",
-    patch_demote_message: "Patch mode: section snippets prepared for demoting \"{tag_id}\"."
+    patch_edit_message: "Patch mode: alias fragment prepared for \"{alias_key}\". Paste inside aliases object.{rename_note}"
   },
   tag_groups: {
     load_failed_error: "Failed to load group descriptions from /studio/api/tags/tag-groups.",
@@ -149,7 +150,7 @@ export const DEFAULT_TAG_UI_TEXT = {
     description_long_fallback: "No long description available."
   },
   tag_registry: {
-    load_failed_error: "Failed to load tag data from /studio/api/tags/tag-registry and /studio/api/tags/tag-aliases.",
+    load_failed_error: "Failed to load Tag Registry data and document associations.",
     new_tag_button: "New tag",
     search_label: "Search tags",
     search_placeholder: "search",
@@ -160,9 +161,8 @@ export const DEFAULT_TAG_UI_TEXT = {
     table_heading_updated: "updated",
     edit_modal_title: "Edit Tag",
     edit_documents_label: "documents",
-    add_document_button: "Add selected document",
-    find_document_label: "find document",
-    find_document_placeholder: "search published Analysis documents",
+    edit_primary_document_label: "Primary document",
+    edit_primary_required: "Select a current document as primary.",
     unavailable_document: "Unavailable document",
     no_linked_documents: "No linked documents.",
     edit_save_button: "Save",
@@ -218,6 +218,8 @@ export const DEFAULT_TAG_UI_TEXT = {
     demote_invalid_targets: "Invalid target tags.",
     demote_confirm_template: "Demote \"{tag_id}\" to alias \"{alias_key}\"?\n\nTargets: {targets}\n\nImpact:\n{preview_summary}",
     demote_preview_failed: "Demotion preview failed.",
+    local_demote_required: "Local server is required for demotion.",
+    demote_documents_blocked: "Edit or delete the associated documents before demoting this Tag.{documents}",
     demoted_success: "Demoted.",
     demotion_failed: "Demotion failed.",
     patch_modal_title: "Registry Patch Preview",
@@ -226,7 +228,6 @@ export const DEFAULT_TAG_UI_TEXT = {
     patch_modal_close_button: "Close",
     patch_copy_success: "Patch snippet copied to clipboard.",
     patch_copy_failed: "Copy failed. Select and copy the snippet manually.",
-    patch_demote_message: "Patch mode: section snippets prepared for demoting \"{tag_id}\".",
     patch_create_message: "Patch mode: Registry row prepared; nothing has been written."
   }
 };

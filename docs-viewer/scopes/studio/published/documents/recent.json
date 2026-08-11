@@ -7,17 +7,41 @@
       "doc_id": "d-20260802-002213-b7d4e2",
       "title": "TDL-2 — Tag Primary Document And Semantic Token Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-002213-b7d4e2.json",
-      "timestamp": "2026-08-11 19:51:41",
+      "timestamp": "2026-08-11 21:02:51",
       "parent_id": "d-20260804-160200-fa7bb7",
       "parent_title": "Tag Document Linking"
+    },
+    {
+      "doc_id": "d-20260802-123452-6a2fd3",
+      "title": "DMM-1 — Data Model Maps Foundation Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123452-6a2fd3.json",
+      "timestamp": "2026-08-11 20:44:15",
+      "parent_id": "d-20260802-123450-f7493d",
+      "parent_title": "Data Model Maps"
+    },
+    {
+      "doc_id": "d-20260331-000000-4519a5",
+      "title": "Tag Registry",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-4519a5.json",
+      "timestamp": "2026-08-11 20:42:43",
+      "parent_id": "d-20260419-000000-86255c",
+      "parent_title": "Tag Source Data"
     },
     {
       "doc_id": "d-20260804-160200-fa7bb7",
       "title": "Tag Document Linking",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-160200-fa7bb7.json",
-      "timestamp": "2026-08-11 19:42:26",
+      "timestamp": "2026-08-11 20:39:49",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260419-000000-86255c",
+      "title": "Tag Source Data",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260419-000000-86255c.json",
+      "timestamp": "2026-08-11 20:39:49",
+      "parent_id": "d-20260423-000000-d015e6",
+      "parent_title": "Studio"
     },
     {
       "doc_id": "d-20260804-160201-47af2d",
@@ -58,31 +82,7 @@
       "timestamp": "2026-08-11 16:32:18",
       "parent_id": "d-20260801-084127-752d7e",
       "parent_title": "Sub-Scopes"
-    },
-    {
-      "doc_id": "d-20260811-090239-12f6d6",
-      "title": "ERV-1 — Expanded Report View Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260811-090239-12f6d6.json",
-      "timestamp": "2026-08-11 13:03:11",
-      "parent_id": "d-20260810-165949-ee4d35",
-      "parent_title": "Expanded Report View"
-    },
-    {
-      "doc_id": "d-20260401-000000-ebf14a",
-      "title": "Catalogue Works",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260401-000000-ebf14a.json",
-      "timestamp": "2026-08-11 12:58:29",
-      "parent_id": "d-20260423-000000-d015e6",
-      "parent_title": "Studio"
-    },
-    {
-      "doc_id": "d-20260810-165949-ee4d35",
-      "title": "Expanded Report View",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-165949-ee4d35.json",
-      "timestamp": "2026-08-11 12:58:29",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
     }
   ],
-  "generated_at": "2026-08-11T18:52:34Z"
+  "generated_at": "2026-08-11T20:02:51Z"
 }

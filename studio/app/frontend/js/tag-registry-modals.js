@@ -20,7 +20,7 @@ import {
 import { tagRegistryUi } from "./tag-ui.js";
 import {
   tagRegistryDocumentHref,
-  unavailableTagRegistryDocument
+  sameTagDocumentTarget
 } from "./tag-registry-documents.js";
 
 const UI = tagRegistryUi;
@@ -45,10 +45,6 @@ export function collectTagRegistryModalRefs(root) {
     editTitle: root.querySelector(UI_SELECTOR.editTitle),
     editGroupKey: root.querySelector(UI_SELECTOR.editGroupKey),
     editDocumentList: root.querySelector(UI_SELECTOR.editDocumentList),
-    addEditDocument: root.querySelector(UI_SELECTOR.addEditDocument),
-    editDocumentPicker: root.querySelector(UI_SELECTOR.editDocumentPicker),
-    editDocumentSearch: root.querySelector(UI_SELECTOR.editDocumentSearch),
-    editDocumentPopup: root.querySelector(UI_SELECTOR.editDocumentPopup),
     editStatus: root.querySelector(UI_SELECTOR.editStatus),
     saveEdit: root.querySelector(UI_SELECTOR.saveEdit),
     newModal: root.querySelector(UI_SELECTOR.newModal),
@@ -90,17 +86,15 @@ export function wireTagRegistryModalEvents(state, callbacks = {}) {
       callbacks.onModalStateChange?.();
       return;
     }
-    const removeDocumentButton = event.target.closest(
-      "button[data-remove-edit-document-url]"
+    const primaryButton = event.target.closest(
+      "button[data-select-edit-primary]"
     );
-    if (removeDocumentButton && state.editTagId) {
-      callbacks.onEditDocumentDirectRemove?.(
-        removeDocumentButton.getAttribute("data-remove-edit-document-url")
-      );
-      return;
-    }
-    if (event.target.closest(UI_SELECTOR.addEditDocument)) {
-      callbacks.onEditDocumentAdd?.();
+    if (primaryButton && state.editTagId) {
+      callbacks.onEditPrimarySelect?.({
+        scope: "analysis",
+        sub_scope: "tags",
+        doc_id: primaryButton.getAttribute("data-select-edit-primary")
+      });
       return;
     }
     const groupButton = event.target.closest("button[data-edit-group]");
@@ -238,10 +232,20 @@ export function openTagRegistryEditModal(state, tag) {
   captureTagModalRestoreFocus(state, "edit", modalConfigs());
   state.editTagId = tag.tagId;
   state.editTagGroup = tag.group;
-  state.editTagDocUrls = Array.isArray(tag.docUrl) ? tag.docUrl.slice() : [];
-  state.editTagPendingDocument = null;
+  state.editTagPrimaryDocument = tag.primaryDocument
+    ? { ...tag.primaryDocument }
+    : null;
+  state.editTagPrimaryChanged = false;
+  state.editTagDocuments = Array.isArray(tag.documents)
+    ? tag.documents.map((document) => ({
+        ...document,
+        target: { ...document.target }
+      }))
+    : [];
+  state.editTagUnavailablePrimary = tag.unavailablePrimary
+    ? { target: { ...tag.unavailablePrimary.target } }
+    : null;
   state.refs.editTitle.textContent = tag.tagId;
-  state.refs.editDocumentSearch.value = "";
   renderTagRegistryEditGroupKey(state);
   renderTagRegistryEditDocuments(state);
   setStatusText(
@@ -254,7 +258,6 @@ export function openTagRegistryEditModal(state, tag) {
   state.refs.editModal.hidden = false;
   state.editModalFocusReady = false;
   syncTagModalFocusAfterOpen(state, "edit", modalConfigs());
-  void state.documentPicker?.refresh?.();
 }
 
 export function closeTagRegistryEditModal(state) {
@@ -264,8 +267,10 @@ export function closeTagRegistryEditModal(state) {
   state.editModalRestoreFocus = null;
   state.editTagId = "";
   state.editTagGroup = "";
-  state.editTagDocUrls = [];
-  state.editTagPendingDocument = null;
+  state.editTagPrimaryDocument = null;
+  state.editTagPrimaryChanged = false;
+  state.editTagDocuments = [];
+  state.editTagUnavailablePrimary = null;
   state.refs.editTitle.textContent = registryText(
     state.config,
     "edit_modal_title",
@@ -273,54 +278,65 @@ export function closeTagRegistryEditModal(state) {
   );
   state.refs.editGroupKey.innerHTML = "";
   state.refs.editDocumentList.innerHTML = "";
-  if (state.documentPicker && typeof state.documentPicker.close === "function") {
-    state.documentPicker.close({ reset: true });
-  }
-  state.refs.editDocumentSearch.value = "";
   restoreTagModalFocus(restoreTarget);
 }
 
 export function renderTagRegistryEditDocuments(state) {
-  const urls = Array.isArray(state.editTagDocUrls) ? state.editTagDocUrls : [];
-  const byUrl = state.documentLocationsByUrl instanceof Map
-    ? state.documentLocationsByUrl
-    : new Map();
+  const documents = Array.isArray(state.editTagDocuments)
+    ? state.editTagDocuments
+    : [];
   const unavailableText = registryText(
     state.config,
     "unavailable_document",
     "Unavailable document"
   );
-  state.refs.editDocumentList.innerHTML = urls.length
-    ? urls.map((url) => {
-        const record = byUrl.get(url) || unavailableTagRegistryDocument(url);
-        const title = record.document_title || unavailableText;
+  const currentPills = documents.map((record) => {
+        const title = record.title || record.target.doc_id;
+        const selected = sameTagDocumentTarget(
+          state.editTagPrimaryDocument,
+          record.target
+        );
+        const label = record.url
+          ? `<a
+              class="tagRegistryEdit__documentLabel"
+              href="${escapeHtml(tagRegistryDocumentHref(state.config, record.url))}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >${escapeHtml(title)}</a>`
+          : `<span class="tagRegistryEdit__documentLabel">${escapeHtml(title)}</span>`;
         return `
           <span
             class="analytics__chip analytics__chip--inherited tagRegistryEdit__documentPill"
           >
-            <a
-              class="tagRegistryEdit__documentLabel"
-              href="${escapeHtml(tagRegistryDocumentHref(state.config, url))}"
-              target="_blank"
-              rel="noopener noreferrer"
-            >${escapeHtml(title)}</a>
+            ${label}
             <button
               type="button"
-              class="${UI_CLASS.chipRemove}"
-              data-remove-edit-document-url="${escapeHtml(url)}"
-              title="${escapeHtml(`Remove ${title}`)}"
-              aria-label="${escapeHtml(`Remove ${title} (${url})`)}"
-            >×</button>
+              class="tagRegistryEdit__primarySelector"
+              data-select-edit-primary="${escapeHtml(record.target.doc_id)}"
+              role="radio"
+              aria-checked="${selected ? "true" : "false"}"
+              title="${escapeHtml(selected ? `${title} is primary` : `Make ${title} primary`)}"
+              aria-label="${escapeHtml(selected ? `${title} is the primary document` : `Make ${title} the primary document`)}"
+            ><span aria-hidden="true"></span></button>
           </span>
         `;
-      }).join("")
+      }).join("");
+  const showUnavailable = state.editTagUnavailablePrimary
+    && sameTagDocumentTarget(
+      state.editTagPrimaryDocument,
+      state.editTagUnavailablePrimary.target
+    );
+  const unavailablePill = showUnavailable
+    ? `<span
+        class="analytics__chip analytics__chip--warning tagRegistryEdit__documentPill tagRegistryEdit__unavailablePrimary"
+        title="${escapeHtml(state.editTagUnavailablePrimary.target.doc_id)}"
+      >${escapeHtml(unavailableText)} — ${escapeHtml(state.editTagUnavailablePrimary.target.doc_id)}</span>`
+    : "";
+  state.refs.editDocumentList.innerHTML = (currentPills || unavailablePill)
+    ? `${currentPills}${unavailablePill}`
     : `<span class="${UI_CLASS.empty}">${escapeHtml(
         registryText(state.config, "no_linked_documents", "No linked documents.")
       )}</span>`;
-  const pendingUrl = state.editTagPendingDocument
-    && state.editTagPendingDocument.url;
-  state.refs.addEditDocument.disabled = !pendingUrl
-    || urls.includes(pendingUrl);
 }
 
 export function openTagRegistryNewModal(state) {
@@ -545,23 +561,12 @@ function renderEditModal(state) {
         </div>
         <div class="${UI_CLASS.formField}">
           <span class="${UI_CLASS.formLabel}">${escapeHtml(registryText(state.config, "edit_documents_label", "documents"))}</span>
-          <div class="tagRegistryEdit__documents" data-role="${UI.role.editDocumentList}"></div>
-          <div class="tagRegistryEdit__picker" data-role="${UI.role.editDocumentPicker}">
-            <div class="tagRegistryEdit__searchControl">
-              <input id="tagRegistryEditDocumentSearch" type="text" class="studioUi__input" data-role="${UI.role.editDocumentSearch}" autocomplete="off" aria-label="${escapeHtml(registryText(state.config, "find_document_label", "find document"))}" placeholder="${escapeHtml(registryText(state.config, "find_document_placeholder", "search published Analysis documents"))}">
-              <button
-                type="button"
-                class="studioUi__button tagRegistryEdit__documentAction"
-                data-role="${UI.role.addEditDocument}"
-                title="${escapeHtml(registryText(state.config, "add_document_button", "Add selected document"))}"
-                aria-label="${escapeHtml(registryText(state.config, "add_document_button", "Add selected document"))}"
-                disabled
-              ><span class="tagRegistryEdit__documentActionIcon" aria-hidden="true"></span></button>
-            </div>
-            <div class="tagRegistryEdit__resultsFrame">
-              <span data-role="${UI.role.editDocumentPopup}"></span>
-            </div>
-          </div>
+          <div
+            class="tagRegistryEdit__documents"
+            data-role="${UI.role.editDocumentList}"
+            role="radiogroup"
+            aria-label="${escapeHtml(registryText(state.config, "edit_primary_document_label", "Primary document"))}"
+          ></div>
         </div>
       </div>
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.editStatus}"></p>
@@ -674,7 +679,7 @@ function modalConfigs() {
       closeRole: UI.role.editModalClose,
       focusProp: "editModalFocusReady",
       restoreProp: "editModalRestoreFocus",
-      focusSelector: `[data-role="${UI.role.editDocumentSearch}"]`
+      focusSelector: `[data-role="${UI.role.editGroupKey}"] button`
     },
     {
       kind: "new",

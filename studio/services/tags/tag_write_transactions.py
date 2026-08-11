@@ -41,6 +41,15 @@ def atomic_write(path: Path, payload: Mapping[str, Any]) -> None:
 
 
 def atomic_write_many(payloads_by_path: Mapping[Path, Mapping[str, Any]]) -> None:
+    atomic_write_bytes_many(
+        {
+            path: canonical_json_bytes(payload)
+            for path, payload in payloads_by_path.items()
+        }
+    )
+
+
+def atomic_write_bytes_many(payloads_by_path: Mapping[Path, bytes]) -> None:
     temp_paths: Dict[Path, Path] = {}
     replaced_paths: list[Path] = []
     originals: Dict[Path, bytes | None] = {}
@@ -52,9 +61,8 @@ def atomic_write_many(payloads_by_path: Mapping[Path, Mapping[str, Any]]) -> Non
 
             fd, temp_name = tempfile.mkstemp(prefix=f"{path.name}.", suffix=".tmp", dir=str(path.parent))
             temp_path = Path(temp_name)
-            with os.fdopen(fd, "w", encoding="utf-8") as handle:
-                json.dump(payload, handle, ensure_ascii=False, indent=2, sort_keys=False)
-                handle.write("\n")
+            with os.fdopen(fd, "wb") as handle:
+                handle.write(payload)
             temp_paths[path] = temp_path
 
         for path, temp_path in temp_paths.items():

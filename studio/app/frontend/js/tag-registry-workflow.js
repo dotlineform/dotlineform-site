@@ -1,7 +1,6 @@
 // Studio-owned tag registry workflow.
 import {
-  buildManualPatchForCreateTag,
-  buildManualPatchForDemote
+  buildManualPatchForCreateTag
 } from "./tag-registry-save.js";
 import {
   previewDeleteImpact,
@@ -44,11 +43,7 @@ export async function previewTagRegistryDemote(options) {
 }
 
 export async function demoteTagRegistryTag(options) {
-  const { tagId, aliasTargets } = options || {};
-  return ensurePatchResult(
-    await submitTagDemote(options),
-    () => buildManualPatchForDemote(tagId, aliasTargets)
-  );
+  return submitTagDemote(options);
 }
 
 function ensurePatchResult(result, buildPatchResult) {

@@ -23,7 +23,10 @@ CANONICAL_DOC_URL_PATTERNS = (
         rf"(?:&subdoc={IMMUTABLE_DOC_ID})?$"
     ),
 )
-TAG_REGISTRY_ROW_KEYS = frozenset(("tag_id", "group", "doc_url", "updated_at_utc"))
+TAG_REGISTRY_REQUIRED_ROW_KEYS = frozenset(("tag_id", "group", "updated_at_utc"))
+TAG_REGISTRY_OPTIONAL_ROW_KEYS = frozenset(("primary_document",))
+TAG_REGISTRY_ROW_KEYS = TAG_REGISTRY_REQUIRED_ROW_KEYS | TAG_REGISTRY_OPTIONAL_ROW_KEYS
+PRIMARY_DOCUMENT_KEYS = frozenset(("scope", "sub_scope", "doc_id"))
 
 MAX_TAGS = 50
 MAX_ALIAS_TARGETS = 50
@@ -31,7 +34,7 @@ MAX_ALIAS_TAGS_PER_ALIAS = 4
 DEFAULT_ALLOWED_GROUPS = ["subject", "domain", "form", "theme"]
 MANUAL_WEIGHT_VALUES = [0.3, 0.6, 0.9]
 DEFAULT_TAG_WEIGHT = 0.6
-TAG_REGISTRY_VERSION = "tag_registry_v5"
+TAG_REGISTRY_VERSION = "tag_registry_v6"
 TAG_ALIASES_VERSION = "tag_aliases_v2"
 TAG_ASSIGNMENTS_VERSION = "tag_assignments_v2"
 
@@ -266,6 +269,32 @@ def sanitize_tag_document_urls(
     return urls
 
 
+def sanitize_primary_document(
+    raw_value: Any,
+    field_name: str = "primary_document",
+) -> Dict[str, str]:
+    if not isinstance(raw_value, dict):
+        raise ValueError(f"{field_name} must be an exact document target object")
+    unexpected = sorted(set(raw_value) - PRIMARY_DOCUMENT_KEYS)
+    missing = sorted(PRIMARY_DOCUMENT_KEYS - set(raw_value))
+    if unexpected:
+        raise ValueError(f"{field_name} has unsupported fields: {unexpected}")
+    if missing:
+        raise ValueError(f"{field_name} is missing fields: {missing}")
+    scope = str(raw_value.get("scope") or "").strip()
+    sub_scope = str(raw_value.get("sub_scope") or "").strip()
+    doc_id = str(raw_value.get("doc_id") or "").strip()
+    if scope != "analysis" or sub_scope != "tags":
+        raise ValueError(f"{field_name} must target the Analysis Tags collection")
+    if re.fullmatch(IMMUTABLE_DOC_ID, doc_id) is None:
+        raise ValueError(f"{field_name}.doc_id must use immutable document identity")
+    return {
+        "scope": scope,
+        "sub_scope": sub_scope,
+        "doc_id": doc_id,
+    }
+
+
 def validate_registry_payload(payload: Dict[str, Any]) -> Dict[str, int]:
     if payload.get("tag_registry_version") != TAG_REGISTRY_VERSION:
         raise ValueError(f"tag registry must use {TAG_REGISTRY_VERSION}")
@@ -274,7 +303,7 @@ def validate_registry_payload(payload: Dict[str, Any]) -> Dict[str, int]:
         raise ValueError("tag_registry.tags must be an array")
     allowed_groups = extract_allowed_groups(payload)
     seen_tag_ids: set[str] = set()
-    url_count = 0
+    primary_count = 0
     for idx, raw_tag in enumerate(raw_tags):
         field = f"tag_registry.tags[{idx}]"
         if not isinstance(raw_tag, dict):
@@ -282,7 +311,7 @@ def validate_registry_payload(payload: Dict[str, Any]) -> Dict[str, int]:
         unexpected = sorted(set(raw_tag) - TAG_REGISTRY_ROW_KEYS)
         if unexpected:
             raise ValueError(f"{field} has unsupported fields: {unexpected}")
-        missing = sorted(TAG_REGISTRY_ROW_KEYS - set(raw_tag))
+        missing = sorted(TAG_REGISTRY_REQUIRED_ROW_KEYS - set(raw_tag))
         if missing:
             raise ValueError(f"{field} is missing fields: {missing}")
         tag_id = sanitize_tag_id(raw_tag.get("tag_id"), f"{field}.tag_id")
@@ -290,11 +319,15 @@ def validate_registry_payload(payload: Dict[str, Any]) -> Dict[str, int]:
             raise ValueError(f"{field} duplicates tag_id '{tag_id}'")
         seen_tag_ids.add(tag_id)
         sanitize_group(raw_tag.get("group"), allowed_groups, f"{field}.group")
-        urls = sanitize_tag_document_urls(raw_tag.get("doc_url"), f"{field}.doc_url")
-        url_count += len(urls)
+        if "primary_document" in raw_tag:
+            sanitize_primary_document(
+                raw_tag.get("primary_document"),
+                f"{field}.primary_document",
+            )
+            primary_count += 1
         if not isinstance(raw_tag.get("updated_at_utc"), str):
             raise ValueError(f"{field}.updated_at_utc must be a string")
-    return {"tag_count": len(raw_tags), "document_url_count": url_count}
+    return {"tag_count": len(raw_tags), "primary_document_count": primary_count}
 
 
 def sanitize_slug(raw_slug: Any, field_name: str = "slug") -> str:

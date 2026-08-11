@@ -23,19 +23,21 @@ NOW = "2026-05-09T12:00:00Z"
 def row(
     tag_id: str,
     group: str = "subject",
-    doc_url: list[str] | None = None,
+    primary_document: dict[str, str] | None = None,
 ) -> dict[str, Any]:
-    return {
+    result = {
         "tag_id": tag_id,
         "group": group,
-        "doc_url": list(doc_url or []),
         "updated_at_utc": "2026-05-01T00:00:00Z",
     }
+    if primary_document is not None:
+        result["primary_document"] = dict(primary_document)
+    return result
 
 
 def registry_payload(rows: list[dict[str, Any]]) -> dict[str, Any]:
     return {
-        "tag_registry_version": "tag_registry_v5",
+        "tag_registry_version": "tag_registry_v6",
         "updated_at_utc": "2026-05-01T00:00:00Z",
         "policy": {"allowed_groups": ["subject", "theme"]},
         "tags": rows,
@@ -44,6 +46,14 @@ def registry_payload(rows: list[dict[str, Any]]) -> dict[str, Any]:
 
 def assignment_tag(tag_id: str, weight: float = 0.6) -> dict[str, Any]:
     return {"tag_id": tag_id, "w_manual": weight}
+
+
+def target(doc_id: str) -> dict[str, str]:
+    return {
+        "scope": "analysis",
+        "sub_scope": "tags",
+        "doc_id": doc_id,
+    }
 
 
 def assert_equal(actual: Any, expected: Any, label: str) -> None:
@@ -67,16 +77,10 @@ def test_create_registry_tag_adds_one_normalized_row() -> None:
         row("growth", group="theme"),
     ]
     payload = registry_payload(existing_rows)
-    document_url = (
-        "/analysis/?doc=d-20260624-213316-478639"
-        "&subdoc=d-20260729-120000-000003"
-    )
-
     updated, stats = registry.create_registry_tag(
         payload,
         group=" Theme ",
         tag_id="Renewal",
-        doc_url=[document_url],
         now_utc=NOW,
     )
 
@@ -87,25 +91,21 @@ def test_create_registry_tag_adds_one_normalized_row() -> None:
         {
             "tag_id": "renewal",
             "group": "theme",
-            "doc_url": [document_url],
             "updated_at_utc": NOW,
         },
         "created row",
     )
     assert_equal(updated["updated_at_utc"], NOW, "registry timestamp")
     assert_equal(stats["tag_id"], "renewal", "created tag id")
-    assert_equal(stats["doc_url"], [document_url], "created document URL")
+    assert_equal(stats["primary_document"], None, "created primary document")
     assert_equal(stats["added"], 1, "created row count")
     assert_equal(stats["final_total"], 3, "final row count")
 
 
-def test_create_registry_tag_preserves_shared_existing_document_link() -> None:
-    shared_doc_url = (
-        "/analysis/?doc=d-20260624-213316-478639"
-        "&subdoc=d-20260729-120000-000003"
-    )
+def test_create_registry_tag_preserves_existing_primary() -> None:
+    existing_primary = target("d-20260729-120000-000003")
     existing_rows = [
-        row("trees", doc_url=[shared_doc_url]),
+        row("trees", primary_document=existing_primary),
     ]
     payload = registry_payload(existing_rows)
 
@@ -113,24 +113,25 @@ def test_create_registry_tag_preserves_shared_existing_document_link() -> None:
         payload,
         group="theme",
         tag_id="renewal",
-        doc_url=[shared_doc_url],
         now_utc=NOW,
     )
 
     assert_equal(updated["tags"][0], existing_rows[0], "existing row preserved")
-    assert_equal(updated["tags"][1]["doc_url"], [shared_doc_url], "shared link accepted")
-    assert_equal(stats["doc_url"], [shared_doc_url], "created document URL")
+    assert_equal(
+        "primary_document" in updated["tags"][1],
+        False,
+        "new tag has no primary",
+    )
+    assert_equal(stats["primary_document"], None, "created primary document")
 
 
 def test_create_registry_tag_guards() -> None:
     payload = registry_payload([row("trees")])
-    document_url = "/analysis/?doc=d-20260729-120000-000001"
     assert_raises_contains(
         lambda: registry.create_registry_tag(
             payload,
             group="domain",
             tag_id="studio",
-            doc_url=[document_url],
             now_utc=NOW,
         ),
         "group must be one of",
@@ -141,7 +142,6 @@ def test_create_registry_tag_guards() -> None:
             payload,
             group="subject",
             tag_id="Bad Slug",
-            doc_url=[document_url],
             now_utc=NOW,
         ),
         "tag_id must be slug-safe",
@@ -152,44 +152,18 @@ def test_create_registry_tag_guards() -> None:
             payload,
             group="subject",
             tag_id="trees",
-            doc_url=[document_url],
             now_utc=NOW,
         ),
         "tag_id already exists",
         "duplicate tag id",
     )
-    assert_raises_contains(
-        lambda: registry.create_registry_tag(
-            payload,
-            group="subject",
-            tag_id="canopy",
-            doc_url="not-an-array",
-            now_utc=NOW,
-        ),
-        "doc_url must be an array",
-        "malformed document URL array",
-    )
-    assert_raises_contains(
-        lambda: registry.create_registry_tag(
-            payload,
-            group="subject",
-            tag_id="canopy",
-            doc_url=["https://example.test/docs/"],
-            now_utc=NOW,
-        ),
-        "supported canonical Docs Viewer URL",
-        "unsupported document URL",
-    )
 
 
-def test_canonical_edit_and_delete_plans() -> None:
-    document_url = (
-        "/analysis/?doc=d-20260624-213316-478639"
-        "&subdoc=d-20260727-225608-000001"
-    )
-    second_document_url = "/analysis/?doc=d-20260729-120000-000002"
+def test_canonical_primary_edit_and_delete_plans() -> None:
+    first_primary = target("d-20260727-225608-000001")
+    second_primary = target("d-20260729-120000-000002")
     payload = registry_payload([
-        row("trees", doc_url=[document_url]),
+        row("trees", primary_document=first_primary),
         row("growth", group="theme"),
     ])
     edited, edit_meta = registry.mutate_registry_tag(
@@ -197,17 +171,19 @@ def test_canonical_edit_and_delete_plans() -> None:
         action="edit",
         old_tag_id="trees",
         now_utc=NOW,
-        new_doc_url=[document_url, second_document_url],
+        new_primary_document=second_primary,
     )
     assert_equal(edited["tags"][0]["tag_id"], "trees", "edit preserves canonical id by default")
     assert_equal(
-        edited["tags"][0]["doc_url"],
-        [document_url, second_document_url],
-        "edit stores the complete ordered URL draft",
+        edited["tags"][0]["primary_document"],
+        second_primary,
+        "edit replaces the primary document",
     )
-    assert_equal(edit_meta["doc_url_changed"], True, "document URL edit tracked")
-    assert_equal(edit_meta["document_urls_added"], 1, "document URL addition tracked")
-    assert_equal(edit_meta["document_urls_removed"], 0, "document URL removal tracked")
+    assert_equal(
+        edit_meta["primary_document_changed"],
+        True,
+        "primary document edit tracked",
+    )
 
     renamed, rename_meta = registry.mutate_registry_tag(
         edited,
@@ -229,9 +205,9 @@ def test_canonical_edit_and_delete_plans() -> None:
     )
     assert_equal(regrouped["tags"][0]["group"], "theme", "group edit is independent")
     assert_equal(
-        regrouped["tags"][0]["doc_url"],
-        [document_url, second_document_url],
-        "group edit preserves linked document URLs",
+        regrouped["tags"][0]["primary_document"],
+        second_primary,
+        "group edit preserves primary document",
     )
     assert_equal(regroup_meta["group_changed"], True, "group edit tracked")
 
@@ -246,10 +222,9 @@ def test_canonical_edit_and_delete_plans() -> None:
 
 
 def test_canonical_mutation_guards() -> None:
-    document_url = "/analysis/?doc=d-20260729-120000-000002"
     payload = registry_payload([
-        row("trees", doc_url=[document_url]),
-        row("canopy", doc_url=[document_url]),
+        row("trees", primary_document=target("d-20260729-120000-000002")),
+        row("canopy"),
     ])
     assert_raises_contains(
         lambda: registry.mutate_registry_tag(payload, "edit", "trees", NOW, new_tag_id="forest"),
@@ -272,10 +247,10 @@ def test_canonical_mutation_guards() -> None:
             "edit",
             "trees",
             NOW,
-            new_doc_url=[document_url, document_url],
+            new_primary_document=None,
         ),
-        "duplicates URL",
-        "duplicate document URL",
+        "exact document target object",
+        "primary cannot be cleared",
     )
     assert_raises_contains(
         lambda: registry.mutate_registry_tag(
@@ -283,20 +258,26 @@ def test_canonical_mutation_guards() -> None:
             "edit",
             "trees",
             NOW,
-            new_doc_url=["https://example.test/document"],
+            new_primary_document={
+                "scope": "studio",
+                "sub_scope": "tags",
+                "doc_id": "d-20260729-120000-000002",
+            },
         ),
-        "supported canonical Docs Viewer URL",
-        "external document URL",
+        "Analysis Tags collection",
+        "wrong primary collection",
     )
 
 
-def test_canonical_document_edit_preserves_unrelated_rows_and_accepts_unlinked() -> None:
-    first = "/analysis/?doc=d-20260729-120000-000001"
-    second = "/analysis/?doc=d-20260729-120000-000002"
-    shared = "/analysis/?doc=d-20260729-120000-000003"
-    unrelated = row("growth", group="theme", doc_url=[shared])
+def test_omitted_primary_preserves_unrelated_rows_and_stale_primary() -> None:
+    stale = target("d-20260729-120000-000001")
+    unrelated = row(
+        "growth",
+        group="theme",
+        primary_document=target("d-20260729-120000-000003"),
+    )
     payload = registry_payload([
-        row("trees", doc_url=[first, second]),
+        row("trees", primary_document=stale),
         unrelated,
     ])
 
@@ -305,13 +286,16 @@ def test_canonical_document_edit_preserves_unrelated_rows_and_accepts_unlinked()
         "edit",
         "trees",
         NOW,
-        new_doc_url=[],
+        new_group="theme",
     )
 
-    assert_equal(updated["tags"][0]["doc_url"], [], "complete draft removes both URLs")
+    assert_equal(
+        updated["tags"][0]["primary_document"],
+        stale,
+        "omitted primary preserves stored identity",
+    )
     assert_equal(updated["tags"][1], unrelated, "unrelated row remains unchanged")
-    assert_equal(stats["document_urls_removed"], 2, "removed URL count")
-    assert_equal(stats["document_urls_added"], 0, "added URL count")
+    assert_equal(stats["primary_document_changed"], False, "primary unchanged")
 
 
 def test_rewrite_assignments_for_canonical_rename() -> None:
@@ -364,10 +348,11 @@ def test_rewrite_assignments_for_canonical_delete_removes_empty_work_rows() -> N
 
 def main() -> None:
     test_create_registry_tag_adds_one_normalized_row()
-    test_create_registry_tag_preserves_shared_existing_document_link()
+    test_create_registry_tag_preserves_existing_primary()
     test_create_registry_tag_guards()
-    test_canonical_edit_and_delete_plans()
+    test_canonical_primary_edit_and_delete_plans()
     test_canonical_mutation_guards()
+    test_omitted_primary_preserves_unrelated_rows_and_stale_primary()
     test_rewrite_assignments_for_canonical_rename()
     test_rewrite_assignments_for_canonical_delete_removes_empty_work_rows()
     print("Tag registry mutation tests OK")

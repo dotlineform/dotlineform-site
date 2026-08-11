@@ -32,17 +32,17 @@ def test_tag_associations_are_exact_ordered_and_location_optional() -> None:
         SimpleNamespace(
             doc_id="d-20260801-000000-000003",
             title="Third",
-            viewer_url="/docs/?scope=analysis&doc=report&subdoc=third",
+            viewer_url="/analysis/?doc=report&subdoc=third",
         ),
         SimpleNamespace(
             doc_id="d-20260801-000000-000001",
             title="First",
-            viewer_url="/docs/?scope=analysis&doc=report&subdoc=first",
+            viewer_url="/analysis/?doc=report&subdoc=first",
         ),
         SimpleNamespace(
             doc_id="d-20260801-000000-000002",
             title="Malformed",
-            viewer_url="/docs/?scope=analysis&doc=report&subdoc=malformed",
+            viewer_url="/analysis/?doc=report&subdoc=malformed",
         ),
     ]
     declarations = {
@@ -65,6 +65,14 @@ def test_tag_associations_are_exact_ordered_and_location_optional() -> None:
         documents=documents,
         declarations_by_doc_id=declarations,
         declaration_generation=generation,
+        management_urls_by_doc_id={
+            "d-20260801-000000-000001": (
+                "/docs/?scope=analysis&doc=report&subdoc=first"
+            ),
+            "d-20260801-000000-000003": (
+                "/docs/?scope=analysis&doc=report&subdoc=third"
+            ),
+        },
         public_location_records=[
             {
                 "scope_id": "analysis",

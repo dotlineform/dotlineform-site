@@ -4,18 +4,20 @@
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
+import sys
 
 import pytest
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-STUDIO_SERVICES_DIR = REPO_ROOT / "studio" / "services"
-STUDIO_SERVER_DIR = REPO_ROOT / "studio" / "app" / "server" / "studio"
-for path in (STUDIO_SERVICES_DIR, STUDIO_SERVER_DIR):
-    if str(path) not in sys.path:
-        sys.path.insert(0, str(path))
+for path in (
+    REPO_ROOT / "studio" / "services",
+    REPO_ROOT / "studio" / "app" / "server" / "studio",
+):
+    text = str(path)
+    if text not in sys.path:
+        sys.path.insert(0, text)
 
 from tags import tag_routes as routes  # noqa: E402
 from studio_tag_api import aliases  # noqa: E402
@@ -25,15 +27,9 @@ from studio_tag_api import registry  # noqa: E402
 import studio_tags_api  # noqa: E402
 
 
-def assert_equal(actual, expected, label: str) -> None:
-    if actual != expected:
-        raise AssertionError(f"{label}: expected {expected!r}, got {actual!r}")
-
-
 def assert_no_duplicates(values: tuple[str, ...], label: str) -> None:
     duplicates = sorted({value for value in values if values.count(value) > 1})
-    if duplicates:
-        raise AssertionError(f"{label} contains duplicate routes: {duplicates!r}")
+    assert not duplicates, f"{label} contains duplicate routes: {duplicates!r}"
 
 
 def test_post_routes_are_unique() -> None:
@@ -42,26 +38,25 @@ def test_post_routes_are_unique() -> None:
 
 def test_options_routes_cover_each_post_route() -> None:
     assert_no_duplicates(routes.OPTIONS_PATHS, "OPTIONS_PATHS")
-    assert_equal(set(routes.OPTIONS_PATHS), set(routes.POST_PATHS), "OPTIONS_PATHS")
-    if routes.HEALTH_PATH in routes.OPTIONS_PATHS:
-        raise AssertionError("health route should not gain CORS preflight handling implicitly")
+    assert set(routes.OPTIONS_PATHS) == set(routes.POST_PATHS)
+    assert routes.HEALTH_PATH not in routes.OPTIONS_PATHS
 
 
-def test_studio_adapter_covers_each_post_route() -> None:
-    assert_equal(set(studio_tags_api.TAG_POST_PATHS), set(routes.POST_PATHS), "Studio tag route keys")
-    assert_equal(set(studio_tags_api.POST_HANDLERS), set(routes.POST_PATHS), "Studio tag handler keys")
+def test_studio_adapter_covers_each_tag_route() -> None:
+    assert set(studio_tags_api.TAG_POST_PATHS) == set(routes.POST_PATHS)
+    assert set(studio_tags_api.POST_HANDLERS) == set(routes.POST_PATHS)
+    assert routes.TAG_ASSOCIATIONS_PATH == "/tag-associations"
 
 
-def test_retired_vocabulary_import_routes_are_absent() -> None:
-    retired_paths = {"/import-tag-registry", "/import-tag-aliases"}
-    assert_equal(retired_paths.isdisjoint(routes.POST_PATHS), True, "retired routes in POST_PATHS")
-    assert_equal(retired_paths.isdisjoint(studio_tags_api.POST_HANDLERS), True, "retired routes in POST_HANDLERS")
-
-
-def test_retired_assignment_import_routes_are_absent() -> None:
-    retired_paths = {"/import-tag-assignments-preview", "/import-tag-assignments"}
-    assert_equal(retired_paths.isdisjoint(routes.POST_PATHS), True, "retired assignment routes in POST_PATHS")
-    assert_equal(retired_paths.isdisjoint(studio_tags_api.POST_HANDLERS), True, "retired assignment routes in POST_HANDLERS")
+def test_retired_import_routes_are_absent() -> None:
+    retired_paths = {
+        "/import-tag-registry",
+        "/import-tag-aliases",
+        "/import-tag-assignments-preview",
+        "/import-tag-assignments",
+    }
+    assert retired_paths.isdisjoint(routes.POST_PATHS)
+    assert retired_paths.isdisjoint(studio_tags_api.POST_HANDLERS)
 
 
 def test_tag_write_handlers_live_in_functional_modules() -> None:
@@ -75,13 +70,12 @@ def test_tag_write_handlers_live_in_functional_modules() -> None:
         promotions.promote_tag_alias_response,
         promotions.demote_tag_response,
     )
-    if not all(callable(handler) for handler in expected_handlers):
-        raise AssertionError("tag write handlers must be callable from functional modules")
+    assert all(callable(handler) for handler in expected_handlers)
 
 
-def test_registry_group_edit_writes_only_registry_and_preserves_linked_document(
-    tmp_path,
-    monkeypatch,
+def test_registry_edit_preserves_source_and_omitted_primary(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     registry_path = tmp_path / registry.tag_source.REGISTRY_REL_PATH
     aliases_path = tmp_path / registry.tag_source.ALIASES_REL_PATH
@@ -93,20 +87,22 @@ def test_registry_group_edit_writes_only_registry_and_preserves_linked_document(
     )
     for path in (registry_path, aliases_path, assignments_path, document_path):
         path.parent.mkdir(parents=True, exist_ok=True)
+    primary = {
+        "scope": "analysis",
+        "sub_scope": "tags",
+        "doc_id": "d-20260727-225608-000001",
+    }
     registry_path.write_text(
         json.dumps(
             {
-                "tag_registry_version": "tag_registry_v5",
+                "tag_registry_version": "tag_registry_v6",
                 "updated_at_utc": "2026-07-28T12:00:00Z",
                 "policy": {"allowed_groups": ["subject", "theme"]},
                 "tags": [
                     {
                         "tag_id": "trees",
                         "group": "subject",
-                        "doc_url": [
-                            "/analysis/?doc=d-20260624-213316-478639"
-                            "&subdoc=d-20260727-225608-000001"
-                        ],
+                        "primary_document": primary,
                         "updated_at_utc": "2026-07-28T12:00:00Z",
                     }
                 ],
@@ -115,21 +111,11 @@ def test_registry_group_edit_writes_only_registry_and_preserves_linked_document(
         encoding="utf-8",
     )
     aliases_path.write_text(
-        json.dumps(
-            {
-                "tag_aliases_version": "tag_aliases_v2",
-                "aliases": {},
-            }
-        ),
+        json.dumps({"tag_aliases_version": "tag_aliases_v2", "aliases": {}}),
         encoding="utf-8",
     )
     assignments_path.write_text(
-        json.dumps(
-            {
-                "tag_assignments_version": "tag_assignments_v2",
-                "series": {},
-            }
-        ),
+        json.dumps({"tag_assignments_version": "tag_assignments_v2", "series": {}}),
         encoding="utf-8",
     )
     document_path.write_text(
@@ -137,12 +123,13 @@ def test_registry_group_edit_writes_only_registry_and_preserves_linked_document(
         "doc_id: d-20260727-225608-000001\n"
         "title: trees\n"
         "group: subject\n"
+        "tag_id: trees\n"
         "---\n"
         "# trees\n",
         encoding="utf-8",
     )
     document_before = document_path.read_bytes()
-    writes = {}
+    writes: dict[Path, dict[str, object]] = {}
     monkeypatch.setattr(
         registry.tag_transactions,
         "atomic_write_many",
@@ -158,111 +145,86 @@ def test_registry_group_edit_writes_only_registry_and_preserves_linked_document(
 
     result = registry.mutate_tag_response(
         tmp_path,
-        {
-            "action": "edit",
-            "tag_id": "trees",
-            "new_group": "theme",
-            "doc_url": [
-                "/analysis/?doc=d-20260624-213316-478639"
-                "&subdoc=d-20260727-225608-000001"
-            ],
-        },
+        {"action": "edit", "tag_id": "trees", "new_group": "theme"},
         preview=False,
     )
 
     assert result["group_changed"] is True
-    assert result["doc_url_changed"] is False
+    assert result["primary_document_changed"] is False
     assert set(writes) == {registry_path.resolve()}
-    assert writes[registry_path.resolve()]["tags"][0]["group"] == "theme"
-    assert (
-        writes[registry_path.resolve()]["tags"][0]["doc_url"]
-        == [
-            "/analysis/?doc=d-20260624-213316-478639"
-            "&subdoc=d-20260727-225608-000001"
-        ]
-    )
+    assert writes[registry_path.resolve()]["tags"][0]["primary_document"] == primary
     assert document_path.read_bytes() == document_before
 
-    with pytest.raises(ValueError, match="doc_url is required"):
-        registry.mutate_tag_response(
-            tmp_path,
+
+def test_registry_primary_replacement_requires_current_association(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    registry_path = tmp_path / registry.tag_source.REGISTRY_REL_PATH
+    aliases_path = tmp_path / registry.tag_source.ALIASES_REL_PATH
+    assignments_path = tmp_path / registry.tag_source.ASSIGNMENTS_REL_PATH
+    registry_path.parent.mkdir(parents=True)
+    registry_path.write_text(
+        json.dumps(
             {
-                "action": "edit",
-                "tag_id": "trees",
-                "new_group": "theme",
-            },
-            preview=False,
-        )
-    with pytest.raises(ValueError, match="description is not supported"):
-        registry.mutate_tag_response(
-            tmp_path,
-            {
-                "action": "edit",
-                "tag_id": "trees",
-                "new_group": "theme",
-                "doc_url": [],
-                "description": "",
-            },
-            preview=False,
-        )
-
-    source_before_retry = registry_path.read_bytes()
-    retry_attempts = 0
-    retry_writes: dict[Path, dict[str, object]] = {}
-
-    def fail_once_then_capture(payloads):
-        nonlocal retry_attempts
-        retry_attempts += 1
-        if retry_attempts == 1:
-            raise OSError("simulated atomic write failure")
-        retry_writes.update(payloads)
-
+                "tag_registry_version": "tag_registry_v6",
+                "updated_at_utc": "2026-07-28T12:00:00Z",
+                "policy": {"allowed_groups": ["subject", "theme"]},
+                "tags": [
+                    {
+                        "tag_id": "trees",
+                        "group": "subject",
+                        "updated_at_utc": "2026-07-28T12:00:00Z",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    aliases_path.write_text(json.dumps({"aliases": {}}), encoding="utf-8")
+    assignments_path.write_text(json.dumps({"series": {}}), encoding="utf-8")
+    current = {
+        "scope": "analysis",
+        "sub_scope": "tags",
+        "doc_id": "d-20260729-111111-abcdef",
+    }
+    monkeypatch.setattr(
+        registry.tag_document_declarations,
+        "current_tag_document_associations",
+        lambda *_args: [{"target": current, "title": "Current", "url": "/analysis/"}],
+    )
+    writes: dict[Path, dict[str, object]] = {}
     monkeypatch.setattr(
         registry.tag_transactions,
         "atomic_write_many",
-        fail_once_then_capture,
+        lambda payloads: writes.update(payloads),
     )
-    retry_body = {
-        "action": "edit",
-        "tag_id": "trees",
-        "new_group": "theme",
-        "doc_url": [
-            "/analysis/?doc=d-20260624-213316-478639"
-            "&subdoc=d-20260727-225608-000001",
-            "/analysis/?doc=d-20260729-111111-abcdef",
-        ],
-    }
-    with pytest.raises(OSError, match="simulated atomic write failure"):
-        registry.mutate_tag_response(
-            tmp_path,
-            retry_body,
-            preview=False,
-        )
-    assert registry_path.read_bytes() == source_before_retry
+    monkeypatch.setattr(registry.common, "log_event", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(
+        registry.common,
+        "attach_tag_activity",
+        lambda *_args, **_kwargs: None,
+    )
 
-    retried = registry.mutate_tag_response(
+    result = registry.mutate_tag_response(
         tmp_path,
-        retry_body,
+        {
+            "action": "edit",
+            "tag_id": "trees",
+            "primary_document": current,
+        },
         preview=False,
     )
-    assert retry_attempts == 2
-    assert retried["doc_url_changed"] is True
-    assert retried["document_urls_added"] == 1
-    assert (
-        retry_writes[registry_path.resolve()]["tags"][0]["doc_url"]
-        == retry_body["doc_url"]
-    )
+    assert result["primary_document_changed"] is True
+    assert writes[registry_path.resolve()]["tags"][0]["primary_document"] == current
 
-
-def main() -> None:
-    test_post_routes_are_unique()
-    test_options_routes_cover_each_post_route()
-    test_studio_adapter_covers_each_post_route()
-    test_retired_vocabulary_import_routes_are_absent()
-    test_retired_assignment_import_routes_are_absent()
-    test_tag_write_handlers_live_in_functional_modules()
-    print("Tag route tests OK")
-
-
-if __name__ == "__main__":
-    main()
+    with pytest.raises(ValueError, match="current associated document"):
+        registry.mutate_tag_response(
+            tmp_path,
+            {
+                "action": "edit",
+                "tag_id": "trees",
+                "primary_document": {**current, "doc_id": "d-20260729-222222-fedcba"},
+            },
+            preview=False,
+        )

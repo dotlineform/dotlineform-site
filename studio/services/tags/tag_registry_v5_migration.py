@@ -10,6 +10,8 @@ from tags import tag_source_model as tag_source
 
 
 LEGACY_REGISTRY_VERSION = "tag_registry_v4"
+TARGET_REGISTRY_VERSION = "tag_registry_v5"
+TARGET_ROW_KEYS = frozenset(("tag_id", "group", "doc_url", "updated_at_utc"))
 DocumentUrlFactory = Callable[[str], str]
 
 
@@ -51,7 +53,7 @@ def project_tag_registry_v5(
         projected_tags.append(projected_row)
 
     projected_registry = copy.deepcopy(registry_payload)
-    projected_registry["tag_registry_version"] = tag_source.TAG_REGISTRY_VERSION
+    projected_registry["tag_registry_version"] = TARGET_REGISTRY_VERSION
     projected_registry["updated_at_utc"] = now_utc
     projected_registry["tags"] = projected_tags
     reconciliation = validate_tag_registry_v5(
@@ -80,18 +82,47 @@ def validate_tag_registry_v5(
     aliases_payload: Dict[str, Any],
     assignments_payload: Dict[str, Any],
 ) -> Dict[str, int]:
-    registry_stats = tag_source.validate_registry_payload(registry_payload)
+    if registry_payload.get("tag_registry_version") != TARGET_REGISTRY_VERSION:
+        raise ValueError(f"tag registry must use {TARGET_REGISTRY_VERSION}")
+    raw_tags = registry_payload.get("tags")
+    if not isinstance(raw_tags, list):
+        raise ValueError("tag_registry.tags must be an array")
+    allowed_groups = tag_source.extract_allowed_groups(registry_payload)
+    seen_tag_ids: set[str] = set()
+    document_url_count = 0
+    for index, raw_tag in enumerate(raw_tags):
+        field = f"tag_registry.tags[{index}]"
+        if not isinstance(raw_tag, dict) or set(raw_tag) != TARGET_ROW_KEYS:
+            raise ValueError(f"{field} must use the exact Registry v5 row schema")
+        tag_id = tag_source.sanitize_tag_id(raw_tag.get("tag_id"), f"{field}.tag_id")
+        if tag_id in seen_tag_ids:
+            raise ValueError(f"{field} duplicates tag_id '{tag_id}'")
+        seen_tag_ids.add(tag_id)
+        tag_source.sanitize_group(raw_tag.get("group"), allowed_groups, f"{field}.group")
+        document_url_count += len(
+            tag_source.sanitize_tag_document_urls(
+                raw_tag.get("doc_url"),
+                f"{field}.doc_url",
+            )
+        )
+        if not isinstance(raw_tag.get("updated_at_utc"), str):
+            raise ValueError(f"{field}.updated_at_utc must be a string")
+    registry_stats = {
+        "tag_count": len(raw_tags),
+        "document_url_count": document_url_count,
+    }
     reconciliation = tag_flat_identity_migration.validate_flat_identity_sources(
         registry_payload,
         aliases_payload,
         assignments_payload,
-        expected_registry_version=tag_source.TAG_REGISTRY_VERSION,
+        expected_registry_version=TARGET_REGISTRY_VERSION,
     )
     return {**registry_stats, **reconciliation}
 
 
 __all__ = [
     "LEGACY_REGISTRY_VERSION",
+    "TARGET_REGISTRY_VERSION",
     "project_tag_registry_v5",
     "validate_tag_registry_v5",
 ]

@@ -41,6 +41,9 @@ import {
   createDocsViewerManagementSourceAdapter
 } from "./docs-viewer-management-source-adapter.js";
 import {
+  mountManagedDocsViewerDocumentLinks
+} from "./docs-viewer-management-document-links.js";
+import {
   CATALOGUE_IMAGE_CONTROL_ID,
   catalogueImageControlRenderer,
   createCatalogueImageMainViewControlHandlers
@@ -71,6 +74,12 @@ import {
 function mountDocsViewerManageExtras(context) {
   var settings = context || {};
   var routeContext = settings.routeContext || {};
+  var scopeConfigState = settings.scopeConfigState || {};
+  mountManagedDocsViewerDocumentLinks(settings.content, {
+    currentHref: window.location.href,
+    scopeConfigsById: scopeConfigState.scopeConfigsById,
+    viewerUrlForScope: settings.viewerUrlForScope
+  });
   return Promise.resolve(mountDocsViewerManageDocumentExtras(settings)).then(function (result) {
     mountSemanticTokenTargetLinks(
       settings.content,
