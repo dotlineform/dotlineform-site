@@ -441,7 +441,7 @@ export function openTagRegistryDeleteModal(state, tag) {
   state.refs.deleteTagMeta.innerHTML = renderDeleteTagMeta(state, tag);
   setStatusText(state.refs.deleteImpact, "", "", UI_CLASS.formImpact);
   setStatusText(state.refs.deleteStatus, "", "");
-  state.refs.confirmDeleteTag.disabled = state.saveMode !== "post";
+  state.refs.confirmDeleteTag.disabled = true;
   state.refs.deleteModal.hidden = false;
   state.deleteModalFocusReady = false;
   syncTagModalFocusAfterOpen(state, "delete", modalConfigs());
@@ -469,12 +469,17 @@ export function setTagRegistryDeleteImpactStatus(state, kind, message) {
 export function renderTagRegistryDeleteImpactPreview(state, options = {}) {
   const stats = options.response && typeof options.response === "object" ? options.response : {};
   const affectedSeries = Array.isArray(options.affectedSeries) ? options.affectedSeries : [];
+  const documentAssociations = Array.isArray(stats.document_associations)
+    ? stats.document_associations
+    : [];
+  const blocked = stats.blocked === true || documentAssociations.length > 0;
   const aliasesUpdated = Math.max(
     0,
     Number(stats.aliases_rewritten || 0) - Number(stats.aliases_removed_empty || 0) - Number(stats.aliases_removed_redundant || 0)
   );
   const aliasesDeleted = Number(stats.aliases_removed_empty || 0) + Number(stats.aliases_removed_redundant || 0);
   const items = [
+    renderDeleteImpactDocumentsItem(state, documentAssociations),
     renderDeleteImpactSeriesItem(state, affectedSeries),
     renderDeleteImpactCountItem(
       registryText(state.config, "delete_impact_aliases_updated", "aliases updated"),
@@ -492,6 +497,18 @@ export function renderTagRegistryDeleteImpactPreview(state, options = {}) {
       ${items.join("")}
     </ul>
   `;
+  state.refs.confirmDeleteTag.disabled = blocked || state.saveMode !== "post";
+  if (blocked) {
+    setStatusText(
+      state.refs.deleteStatus,
+      "error",
+      registryText(
+        state.config,
+        "delete_documents_blocked",
+        "Edit or delete the associated documents before deleting this Tag."
+      )
+    );
+  }
 }
 
 function renderPatchModal(state) {
@@ -620,7 +637,7 @@ function renderDeleteModal(state) {
         ${escapeHtml(registryText(
           state.config,
           "delete_impact_intro",
-          "Deleting this tag also removes matching tag assignments and removes this tag from aliases. Aliases left with no targets are deleted."
+          "Delete is blocked while a document is associated with this Tag. Otherwise, deleting it also removes matching tag assignments and removes it from aliases. Aliases left with no targets are deleted."
         ))}
       </p>
       <div class="${UI_CLASS.formImpact} tagRegistryDelete__impactPanel" data-role="${UI.role.deleteImpact}"></div>
@@ -793,6 +810,38 @@ function renderDeleteImpactCountItem(label, value) {
   return `
     <li class="${UI_CLASS.deleteImpactItem}">
       <span>${escapeHtml(label)}: ${escapeHtml(String(value))}</span>
+    </li>
+  `;
+}
+
+function renderDeleteImpactDocumentsItem(state, associations) {
+  const label = registryText(
+    state.config,
+    "delete_impact_documents",
+    "associated documents"
+  );
+  const emptyLabel = registryText(state.config, "empty_state", "none");
+  const links = associations.map((association) => {
+    const target = association && association.target;
+    const docId = String(target && target.doc_id || "").trim();
+    const title = String(association && association.title || "").trim() || docId;
+    const url = String(association && association.url || "").trim();
+    if (!docId || !url) return "";
+    return `
+      <a
+        class="${UI_CLASS.deleteImpactLink}"
+        href="${escapeHtml(url)}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >${escapeHtml(title)} — ${escapeHtml(docId)}</a>
+    `;
+  }).filter(Boolean);
+  const content = links.length
+    ? `<span class="${UI_CLASS.deleteImpactLinks}">${links.join(", ")}</span>`
+    : `<span>${escapeHtml(emptyLabel)}</span>`;
+  return `
+    <li class="${UI_CLASS.deleteImpactItem}">
+      <span>${escapeHtml(label)}: </span>${content}
     </li>
   `;
 }

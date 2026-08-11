@@ -516,6 +516,7 @@ async function refreshDeleteImpactPreview(state) {
     });
     return;
   }
+  state.refs.confirmDeleteTag.disabled = true;
   setTagRegistryDeleteImpactStatus(state, "error", result.message);
 }
 
@@ -595,6 +596,9 @@ async function handleDeleteFromModal(state) {
   });
   if (!result.ok) {
     setTagRegistryDeleteStatus(state, "error", result.message);
+    if (result.code === "request_failed") {
+      await refreshDeleteImpactPreview(state);
+    }
     return;
   }
 

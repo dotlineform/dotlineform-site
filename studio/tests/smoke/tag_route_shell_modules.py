@@ -132,6 +132,86 @@ def assert_tag_save_session_helpers(page: Page) -> None:
     assert result["routeImports"] is True
 
 
+def assert_tag_delete_document_blockers(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const modals = await import(
+                '/studio/app/frontend/js/tag-registry-modals.js'
+            );
+            document.body.innerHTML = '<main id="tag-delete-smoke"></main>';
+            const root = document.getElementById('tag-delete-smoke');
+            const state = {
+                config: null,
+                saveMode: 'post',
+                refs: null,
+                deleteModalFocusReady: false,
+                deleteModalRestoreFocus: null,
+                deletePreview: '',
+                deletePreviewSeq: 0,
+                deleteTagId: ''
+            };
+            root.innerHTML = modals.renderTagRegistryModals(state);
+            state.refs = modals.collectTagRegistryModalRefs(root);
+            modals.openTagRegistryDeleteModal(state, {
+                tagId: 'trees',
+                group: 'subject'
+            });
+            const waitingDisabled = state.refs.confirmDeleteTag.disabled;
+            modals.renderTagRegistryDeleteImpactPreview(state, {
+                response: {
+                    blocked: true,
+                    document_associations: [{
+                        target: {
+                            scope: 'analysis',
+                            sub_scope: 'tags',
+                            doc_id: 'd-20260811-000001-000001'
+                        },
+                        title: 'Trees overview',
+                        url: '/docs/?scope=analysis&doc=d-20260430-230000-000099&subdoc=d-20260811-000001-000001'
+                    }]
+                },
+                affectedSeries: []
+            });
+            const blocked = {
+                disabled: state.refs.confirmDeleteTag.disabled,
+                impact: state.refs.deleteImpact.textContent.replace(/\\s+/g, ' ').trim(),
+                status: state.refs.deleteStatus.textContent.trim(),
+                href: state.refs.deleteImpact.querySelector('a').getAttribute('href')
+            };
+            modals.closeTagRegistryDeleteModal(state);
+            modals.openTagRegistryDeleteModal(state, {
+                tagId: 'growth',
+                group: 'theme'
+            });
+            modals.renderTagRegistryDeleteImpactPreview(state, {
+                response: {
+                    blocked: false,
+                    document_associations: []
+                },
+                affectedSeries: []
+            });
+            return {
+                waitingDisabled,
+                blocked,
+                unblockedDisabled: state.refs.confirmDeleteTag.disabled
+            };
+        }"""
+    )
+    assert result["waitingDisabled"] is True
+    assert result["blocked"]["disabled"] is True
+    assert "associated documents: Trees overview — d-20260811-000001-000001" in (
+        result["blocked"]["impact"]
+    )
+    assert result["blocked"]["status"] == (
+        "Edit or delete the associated documents before deleting this Tag."
+    )
+    assert result["blocked"]["href"] == (
+        "/docs/?scope=analysis&doc=d-20260430-230000-000099"
+        "&subdoc=d-20260811-000001-000001"
+    )
+    assert result["unblockedDisabled"] is False
+
+
 def assert_document_location_provider_contract(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -1442,6 +1522,7 @@ def run(site_root: Path) -> None:
             errors: list[str] = []
             page.on("pageerror", lambda error: errors.append(str(error)))
             assert_tag_save_session_helpers(page)
+            assert_tag_delete_document_blockers(page)
             assert_tag_registry_document_contract(page)
             assert_tag_registry_edit_request(page, base_url)
             assert_tag_registry_create_request(page, base_url)

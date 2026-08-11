@@ -346,8 +346,12 @@ def run() -> None:
             )
         if preview.get("series_tag_refs_rewritten") != 1 or preview.get("work_tag_refs_rewritten") != 1:
             raise AssertionError(f"registry delete preview did not report assignment rewrites: {preview!r}")
+        if preview.get("blocked") is not False or preview.get("document_associations") != []:
+            raise AssertionError(f"unassociated registry delete preview was blocked: {preview!r}")
         if deleted.get("series_tag_refs_rewritten") != 1 or deleted.get("work_tag_refs_rewritten") != 1:
             raise AssertionError(f"registry delete did not rewrite assignments: {deleted!r}")
+        if deleted.get("blocked") is not False:
+            raise AssertionError(f"unassociated registry delete was blocked: {deleted!r}")
         if [row["tag_id"] for row in registry["tags"]] != ["growth", "renewal"]:
             raise AssertionError(f"registry delete did not leave expected tags: {registry!r}")
         if registry["tags"][1].get("doc_url") != []:

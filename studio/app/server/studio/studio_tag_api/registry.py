@@ -8,6 +8,7 @@ from typing import Any
 
 from tags import tag_activity
 from tags import tag_alias_mutations as tag_aliases
+from tags import tag_document_declarations
 from tags import tag_registry_mutations as tag_registry
 from tags import tag_routes
 from tags import tag_source_model as tag_source
@@ -131,6 +132,21 @@ def mutate_tag_response(
         new_doc_url=new_doc_url,
         allow_canonical_rename=allow_canonical_rename,
     )
+    document_associations: list[dict[str, Any]] = []
+    if action == "delete":
+        document_associations = (
+            tag_document_declarations.current_tag_document_associations(
+                repo_root,
+                old_tag_id,
+            )
+        )
+        if document_associations and not preview:
+            count = len(document_associations)
+            noun = "document" if count == 1 else "documents"
+            raise ValueError(
+                f"Tag {old_tag_id} is associated with {count} {noun}; "
+                "edit or delete those documents before deleting the Tag"
+            )
     new_tag_id = mutate_meta.get("new_tag_id")
     rewrite_to = str(new_tag_id) if new_tag_id else None
     should_rewrite_refs = (action == "delete") or (rewrite_to is not None and rewrite_to != old_tag_id)
@@ -180,6 +196,14 @@ def mutate_tag_response(
         **alias_stats,
         **assignment_stats,
     }
+    if action == "delete":
+        stats.update(
+            {
+                "blocked": bool(document_associations),
+                "document_association_count": len(document_associations),
+                "document_associations": document_associations,
+            }
+        )
     summary_text = tag_registry.build_mutation_summary_text(stats)
 
     response_payload: dict[str, object] = {

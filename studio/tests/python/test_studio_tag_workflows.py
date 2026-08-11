@@ -28,7 +28,14 @@ def analysis_tag_url(doc_id: str) -> str:
     )
 
 
-def write_analysis_tags_fixture(repo_root: Path, doc_id: str) -> None:
+def write_analysis_tags_fixture(
+    repo_root: Path,
+    doc_id: str,
+    *,
+    title: str = "trees",
+    tag_id: str = "",
+    publishable: bool = True,
+) -> Path:
     config_path = (
         repo_root / "docs-viewer/config/scopes/docs_scopes.json"
     )
@@ -37,7 +44,7 @@ def write_analysis_tags_fixture(repo_root: Path, doc_id: str) -> None:
         / "docs-viewer/scopes/analysis/source/documents"
         / f"{ANALYSIS_TAGS_REPORT_ID}.md"
     )
-    report_path.parent.mkdir(parents=True)
+    report_path.parent.mkdir(parents=True, exist_ok=True)
     report_path.write_text(
         f"""---
 doc_id: {ANALYSIS_TAGS_REPORT_ID}
@@ -56,7 +63,7 @@ sub_scope: tags
 """,
         encoding="utf-8",
     )
-    config_path.parent.mkdir(parents=True)
+    config_path.parent.mkdir(parents=True, exist_ok=True)
     config_path.write_text(
         json.dumps(
             {
@@ -64,8 +71,8 @@ sub_scope: tags
                 "scopes": [
                     {
                         "scope_id": "analysis",
-                        "scope_type": "local",
-                        "meta": "analysis",
+                        "scope_type": "public",
+                        "meta": "public scope",
                         "scope_root": {
                             "provider": "repository",
                             "path": "docs-viewer/scopes/analysis",
@@ -80,9 +87,22 @@ sub_scope: tags
                                 }
                             }
                         },
-                        "public_projection": None,
-                        "viewer_base_url": "/docs/",
-                        "include_scope_param": True,
+                        "public_projection": {
+                            "documents": {
+                                "location": {
+                                    "provider": "repository",
+                                    "path": "site/assets/data/docs/scopes/analysis",
+                                }
+                            },
+                            "search": {
+                                "location": {
+                                    "provider": "repository",
+                                    "path": "site/assets/data/search/analysis/index.json",
+                                }
+                            },
+                        },
+                        "viewer_base_url": "/analysis/",
+                        "include_scope_param": False,
                         "default_doc_id": "",
                         "non_loadable_doc_ids": [],
                         "manage_only_tree_root_ids": [],
@@ -101,7 +121,17 @@ sub_scope: tags
                                         ]
                                     },
                                 },
-                                "public_projection": None,
+                                "public_projection": {
+                                    "documents": {
+                                        "location": {
+                                            "provider": "repository",
+                                            "path": (
+                                                "site/assets/data/docs/scopes/analysis/tags"
+                                            ),
+                                        }
+                                    },
+                                    "search": None,
+                                },
                             }
                         ],
                     }
@@ -125,22 +155,25 @@ sub_scope: tags
         / "docs-viewer/scopes/analysis/source/sub-scopes/tags/documents"
         / f"{doc_id}.md"
     )
-    source_path.parent.mkdir(parents=True)
+    source_path.parent.mkdir(parents=True, exist_ok=True)
+    tag_line = f"tag_id: {tag_id}\n" if tag_id else ""
+    publishable_line = "" if publishable else "publishable: false\n"
     source_path.write_text(
         f"""---
 doc_id: {doc_id}
-title: trees
+title: {title}
 added_date: "2026-05-01 00:00:00"
 last_updated: 2026-05-01
 group: subject
-parent_id: ""
+{tag_line}{publishable_line}parent_id: ""
 ---
-# trees
+# {title}
 
-Trees
+{title}
 """,
         encoding="utf-8",
     )
+    return source_path
 
 
 def test_studio_tag_reads_return_existing_payloads() -> None:
@@ -234,6 +267,10 @@ def test_studio_tag_registry_dry_run_uses_registry_contract() -> None:
 """,
             encoding="utf-8",
         )
+        write_analysis_tags_fixture(
+            repo_root,
+            "d-20260501-000000-000001",
+        )
         before = registry_path.read_bytes()
         preview_status, preview_payload = tags_post_response(
             repo_root,
@@ -246,8 +283,131 @@ def test_studio_tag_registry_dry_run_uses_registry_contract() -> None:
         assert preview_payload["ok"] is True
         assert preview_payload["preview"] is True
         assert preview_payload["action"] == "delete"
+        assert preview_payload["blocked"] is False
+        assert preview_payload["document_associations"] == []
         assert preview_payload["series_tag_refs_rewritten"] == 1
         assert registry_path.read_bytes() == before
+
+
+def test_tag_delete_blocks_current_declarations_and_revalidates_apply() -> None:
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        repo_root = Path(tmp_dir)
+        first_doc_id = "d-20260501-000000-000001"
+        second_doc_id = "d-20260501-000001-000002"
+        first_path = write_analysis_tags_fixture(
+            repo_root,
+            first_doc_id,
+            title="First trees document",
+        )
+        data_root = repo_root / "studio/data/canonical/tags"
+        data_root.mkdir(parents=True)
+        registry_path = data_root / "tag-registry.json"
+        aliases_path = data_root / "tag-aliases.json"
+        assignments_path = data_root / "tag-assignments.json"
+        registry_path.write_text(
+            """{
+  "tag_registry_version": "tag_registry_v5",
+  "updated_at_utc": "2026-05-01T00:00:00Z",
+  "policy": {"allowed_groups": ["subject", "theme"]},
+  "tags": [{"tag_id": "trees", "group": "subject", "doc_url": ["/analysis/?doc=d-20260430-230000-000099&subdoc=d-20260501-999999-999999"], "updated_at_utc": "2026-05-01T00:00:00Z"}]
+}
+""",
+            encoding="utf-8",
+        )
+        aliases_path.write_text(
+            """{
+  "tag_aliases_version": "tag_aliases_v2",
+  "updated_at_utc": "2026-05-01T00:00:00Z",
+  "aliases": {}
+}
+""",
+            encoding="utf-8",
+        )
+        assignments_path.write_text(
+            """{
+  "tag_assignments_version": "tag_assignments_v2",
+  "updated_at_utc": "2026-05-01T00:00:00Z",
+  "series": {}
+}
+""",
+            encoding="utf-8",
+        )
+        registry_before = registry_path.read_bytes()
+
+        _status, clear_preview = tags_post_response(
+            repo_root,
+            "/mutate-tag-preview",
+            {"action": "delete", "tag_id": "trees"},
+        )
+        assert clear_preview["blocked"] is False
+        assert clear_preview["document_associations"] == []
+
+        first_path.write_text(
+            first_path.read_text(encoding="utf-8").replace(
+                "group: subject\n",
+                "group: subject\ntag_id: trees\n",
+            ),
+            encoding="utf-8",
+        )
+        first_associated_source = first_path.read_bytes()
+        aliases_before = aliases_path.read_bytes()
+        assignments_before = assignments_path.read_bytes()
+        try:
+            tags_post_response(
+                repo_root,
+                "/mutate-tag",
+                {"action": "delete", "tag_id": "trees"},
+            )
+        except ValueError as error:
+            assert "associated with 1 document" in str(error)
+        else:
+            raise AssertionError("stale clear preview authorized an associated Tag delete")
+        assert registry_path.read_bytes() == registry_before
+        assert aliases_path.read_bytes() == aliases_before
+        assert assignments_path.read_bytes() == assignments_before
+        assert first_path.read_bytes() == first_associated_source
+
+        second_path = write_analysis_tags_fixture(
+            repo_root,
+            second_doc_id,
+            title="Second trees document",
+            tag_id="trees",
+            publishable=False,
+        )
+        _status, blocked_preview = tags_post_response(
+            repo_root,
+            "/mutate-tag-preview",
+            {"action": "delete", "tag_id": "trees"},
+        )
+        assert blocked_preview["blocked"] is True
+        assert blocked_preview["document_association_count"] == 2
+        assert [
+            item["target"]["doc_id"]
+            for item in blocked_preview["document_associations"]
+        ] == [first_doc_id, second_doc_id]
+        assert blocked_preview["document_associations"][0]["title"] == (
+            "First trees document"
+        )
+        assert blocked_preview["document_associations"][1]["url"] == (
+            analysis_tag_url(second_doc_id)
+        )
+
+        for source_path in (first_path, second_path):
+            source_path.write_text(
+                source_path.read_text(encoding="utf-8").replace(
+                    "tag_id: trees\n",
+                    "",
+                ),
+                encoding="utf-8",
+            )
+        status, deleted = tags_post_response(
+            repo_root,
+            "/mutate-tag",
+            {"action": "delete", "tag_id": "trees"},
+        )
+        assert status == HTTPStatus.OK
+        assert deleted["blocked"] is False
+        assert json.loads(registry_path.read_text(encoding="utf-8"))["tags"] == []
 
 
 def test_studio_create_tag_dry_run_validates_before_write() -> None:
